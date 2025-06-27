@@ -1,209 +1,570 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2076.outbound.protection.outlook.com [40.107.102.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5383B17BA9
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750988382; cv=none; b=X0yon2WTbQS8kS4jNjWTpss2hP4EKxySmuRphZimNcLnfJkEMSvJ9szeyn5yb+5P0WpP7pPVcgLFX2TAmRkHf0fhBBxwuD6YfapHS/3qYqtR1Y3U36ceJFOrwvmiROkzML+3YT9hkXkMcmK2uBzXu013EPIapI3Yc2KlS9/rS5U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750988382; c=relaxed/simple;
-	bh=6TThhaEFXKt7oMDwWiPmowjM0iOmKad84XYhgMs5R2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MlEHPxhwCXygNJ9gCSg2hCF96GtJAnk7r6s96ccD44zaMcbp68PqhfB9lbt/iIwWzmKZ23sEomD+MMw3JdLk+NG0RGf9GQHfV1Ev72kHRngzAOP+I2WTIhurhaUpfeuwii79hB7sI1QBjUhDKh7J3nY6xrjD9DFR6TTFHiFyfYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cJY89QDA; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A48CA6F;
+	Fri, 27 Jun 2025 01:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750988448; cv=fail; b=d9i8H79pODAtFf0uXIoM28at+qOorngxDNZBEMqJedsbBhTLawfwHMYy6N1An6NlD5sze+eATIh2o2/N+YLh77fF7I3F9Mlz2JyYAfzcLRjRI5WREuVLVXebIE5rZnTVv+FRYg3ZBRfkm0WeQYsGzhR5DIk1AF5m4FkYvLSF9ac=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750988448; c=relaxed/simple;
+	bh=zdv+fNKsRrVNTZCtHJ/09M4eBjMGtyKuLtowEuPpYGw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Pv20MIWpQn3+QmFFK5u0aKl68DByDS77+0l04AmWT5py8Vx2rzpvA9s/40pfFdjkEBbHoC5+XSopYcyJGNNXGc7BJ4JwvFrXAI3OOXSuGvBWWsbqmUQ1odyvyCxdYtLOwNJ0olpfMWYBjbScK0oD9P/ujgt/TQDSqt/q56jOEBI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=hPHvf8X0; arc=fail smtp.client-ip=40.107.102.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cJY89QDA"
-Message-ID: <df0cd2fd-8b87-4550-ad53-a728ec4d7e15@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750988378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eIZEEgEPk3np9VoOFW1WtCMsTGLsXyTGUuivGuTdKNU=;
-	b=cJY89QDANRzvv6Iv/gXxCPNavnII62WkncIGK8X4n0KNzCokx58EIlBaVLSw1BGCXqbRdf
-	b3cTXDQIR7FbZZlsB387+VOE2AejxTtrvfJIbB1SXsyp81MLtH+6fS/G0wShkATcU+nvMm
-	PlfbadlbI6Kp8l8x4BiTL0tkJoCTxuo=
-Date: Fri, 27 Jun 2025 09:39:31 +0800
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="hPHvf8X0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nUmpYn41uTu0wfw66uj4X4Q8FyEfw5ssEGsV3yX8iVMg69Dqx4crNy72Aw+YkP2/jYpDSM7f2nxMN/BNUbfIu0Y3f0pYAAY3DhNHi1IsMUE8DcfkltsKRFfhiqokIfW+A6NMX0heiXuvkFv2S1nA1599ylStTn9E3ImmUjGrv+KZefTovy1C5TVRv6DGhiusl5H0R9q6LjkmctnqZuIBg2mGNgIsqa61EabjghYYS3e4W48L63vEY7DBE5vD2s9wqLtnHHxGYyguaW7PT93Oox3AlmLW7Tls/MvC9by+MMAAtVhIRj4HxWx040heMcb66gLxqFIx2Rf6a/38JT5DfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fQL+UyEQ2v9hRR+3G//zlqMiLrTwwAI9mRrQtS93Rsg=;
+ b=BDo3igDbdRAL0aPcGH0gj7uKyrcvMjMFLDhIVvnbXciKVmNELq3QFDXbLf9rEA6Qi3fIR6Cp2eIFSHo3l15zIjtZf7MTj1w5uBAZFxblljUGEbK39uuq2PeUgz/1OaQnL2S1Fhlq0fJQQwLxhXLAYP8VtbYq4O+GcmygBnLEuL297dQPB/5RdtyokLxNeJR7IQfOrlmLkazF87icFQs2oTck45txLLdwwQ3R2Ta6g0OudCxWRVEgx69skxEb0LUXf8F6ZjzR0Y91jJz77iWlbrqCVlFz7MDQ6DwtegytR17aRLVaSUS9xdymP7eBqgBq5nwVvFMSfKhDYvCpgB9j2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fQL+UyEQ2v9hRR+3G//zlqMiLrTwwAI9mRrQtS93Rsg=;
+ b=hPHvf8X05KzsKgshEzrCiUipIoAXvfSFflHE1EE99pKeo6lV8bo7Ybt3lBqkqixlxli7aMyt1M7BMxHfQJ0VZh2Hk+LFHoZbF6yy3VIkOUiriG4Cz5VCOBdNnC8k5PUqEYYqVxFlPBmPZKMXHKFdxmybFKwPUrAaDVLErHME3Y/vVepbylYYM8vcqBijLh9Ek2PRpRi/5Hhu7FUFUqR+Ku1aO6t7sEVwpZJtxsZgLiiUo1FKjpSPK25sTOuzfbx+E6N8Etxr2wdwFmzfQuApL28zpIrP7aHzNXGNVT1e2l4wyn1Fw5esBwSUHb8lsD8YjqC4GuQvc5uy06m0P4smrA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
+ by BY5PR03MB5127.namprd03.prod.outlook.com (2603:10b6:a03:1f0::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Fri, 27 Jun
+ 2025 01:40:41 +0000
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c%6]) with mapi id 15.20.8880.015; Fri, 27 Jun 2025
+ 01:40:41 +0000
+Message-ID: <fe705ffc-9a4c-462c-a1bf-e14c55cdb2cd@altera.com>
+Date: Thu, 26 Jun 2025 18:40:32 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] dt-bindings: net: Convert socfpga-dwmac bindings to
+ yaml
+To: Rob Herring <robh@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ maxime.chevallier@bootlin.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com, richardcochran@gmail.com,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, Mun Yew Tham <mun.yew.tham@altera.com>
+References: <20250613225844.43148-1-matthew.gerlach@altera.com>
+ <20250626234816.GB1398428-robh@kernel.org>
+Content-Language: en-US
+From: Matthew Gerlach <matthew.gerlach@altera.com>
+In-Reply-To: <20250626234816.GB1398428-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR08CA0068.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::45) To BYAPR03MB3461.namprd03.prod.outlook.com
+ (2603:10b6:a02:b4::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3 linux next v2] Docs/zh_CN: Translate netif-msg.rst to
- Simplified Chinese
-To: jiang.kun2@zte.com.cn, alexs@kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, wang.yaxin@zte.com.cn,
- fan.yu9@zte.com.cn, he.peilin@zte.com.cn, tu.qiang35@zte.com.cn,
- qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn, ye.xingchen@zte.com.cn
-References: <20250626185224281uob0b6opNV8WcLja16SOg@zte.com.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250626185224281uob0b6opNV8WcLja16SOg@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|BY5PR03MB5127:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3b6e0ed-62de-4310-d4b3-08ddb51b9ff7
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cUZrL1VqVnh5RzVtY2RIMDRFZzI4UDJlZ25jcnBBNHppcmNiTE1BV1VuZlhM?=
+ =?utf-8?B?WC95QmJvZk9nbDhtMmkxQ1l3UXFWc0NIVkdFeVBiRXVkSzVhbDRQQkJYMnZM?=
+ =?utf-8?B?MnNOOUsyYmZTN3R0UldpU2svaVVyei90UVYrMllRcy8yRkNCaUlOeXFaMWZY?=
+ =?utf-8?B?L2YvZjlqOUFFbzl6bDNaakd0a3E4bGVFYWRHbXhIWXpTQ1FaWXZMbTVjMzc4?=
+ =?utf-8?B?VlFVMGx6RXU1M3VuR0FMcDNUM0VubG5qWWpTVlE3aWJWM3dub0xFMkduZTJL?=
+ =?utf-8?B?blBOTjJKc0k1UzNoaVpGL1V1STFpQzZIdHhJaENQS3FzY0VxaXFwV2NhN2J5?=
+ =?utf-8?B?aUxYZytFZG55UGF5NVZuZm9FWFRhUkcvV0d5SGdZTUFOY3BzVU1GQmZpTzA3?=
+ =?utf-8?B?cnowVUduWjZxZDlSQUp5RVBQOXFUaWxOcjZQZDBHbll3cy9nV1B3ZVZPRXZl?=
+ =?utf-8?B?OXBrSGVpOXMxL1Vzb3dWTHpiK0dWWW5lWGZ3OG96WFFSSnFYY0Zhc1lqMmdB?=
+ =?utf-8?B?TDVqdWNJd01XWDJxOGdKQXRKbnhHeGlCTXdBVVJvY1R2ME1lQjdFQVJoVjZ0?=
+ =?utf-8?B?dC85OEQ0VFV1ZlBISGhiVHcvcmFIbFdaanpEUkV5NzlBMkU0YXZ2UkdvRGpO?=
+ =?utf-8?B?U2RUendYZ3o1b1lEWm52bGdiS2R4L0J3b0NqbTBoVVZrOCtpNWhhbE00YU5y?=
+ =?utf-8?B?eXZaSXI3dS82MFhKaHNFZytOQ2hGM1VhSFROSTdtb2VOY0o4SXdMb1I1Uyt3?=
+ =?utf-8?B?MmFlS05BaUErTHJVcXBvaklRNEVwdWdmUVZVWk5PVjZKTlN1ZDM5dTFVQWE4?=
+ =?utf-8?B?QUxRRWpzNDVqNExubUFnazBBN1VwQmxqMEdRVXlBT0FJUzZEeFYyNDdBdVVS?=
+ =?utf-8?B?M2lyb2dwRGx5TUF6TndBVEx5U3U2d000OHdtSWlYVlJJUUxxTlYyRi9qTGhH?=
+ =?utf-8?B?S0lmSWo5NVIvYnlTeUpuQXR1Um5sZFZycjZHN0QxUS9ST1NUd3N0NmNwSG14?=
+ =?utf-8?B?eE1FVjlYMWhtU2FZa2Vwb29aMGlSNHUrazBYTnR1WXA1cURhOGRQSFhhUjQr?=
+ =?utf-8?B?WGJJaGFQNm1rV3NkUVptaTFHcFVTQ3d6bWMranJ2a2s0NzNMVUI3UEh4VjRx?=
+ =?utf-8?B?U2k2b1lYOVJtaVkvZ3BWMVRiSXdMMFBCTS9vKytwOEQ2V0UzZ1hzc2QvaW1E?=
+ =?utf-8?B?NzlVZlZFbjFjc1ZGSjdTcmpzdXJrWWlGQ0k5Z21UREpvZUtFVmlZRDRPcHdT?=
+ =?utf-8?B?c1pVOExCNkRSVXpWRTdidTVNSDVMeXdEZHFDMnNjdHlzOXZqUnVPZlRFRDd2?=
+ =?utf-8?B?SmlyMzN3L05wQkc2NXZ1eW51MnR4SFdYYkg0OUNudVgyWUgvcFpHVjNHYnYv?=
+ =?utf-8?B?T29PdG84aHR2NGg5czBPUE5qbXMyN3YrUXRzWkNTVERCNW9CeGpYYjIyTys4?=
+ =?utf-8?B?SGkvYlc4NEZlcnpSZ2UrMHVYQVJ5ZHJ1V0ZPYUVvME1HMUIyS1MwNXVZMmx4?=
+ =?utf-8?B?Q2p6TDEvOUFpeEw5SXA4OXRoYXRhSzM5ZFE0YjB3Y3lab0d6dkI4Wjl5V2JM?=
+ =?utf-8?B?QnNLR0wwdmluWkZJSXVsT0txczlVYjZSWU1Xb2syQVJ4bHBvaVZ0TzU2WUN4?=
+ =?utf-8?B?WXZCVXFNTjkzc1I3TklFNk9jbTRPWTNDWmIxUDhzbTRFQ3J4OXdlQXd6K2Fo?=
+ =?utf-8?B?U3RVOXpDS3o4VXFMdHVUazI4bGYyTHpPdHJXMWJLYnJqSmFtYmhjVDFiTDYw?=
+ =?utf-8?B?Q01BVEhYNWRSdklJUjFmS1UyNVB5dGFSSmNKZXMwSHhEUEFDNE9JZzMxSmt4?=
+ =?utf-8?Q?44PsW89Kz2yfVE1z77KxFBrg+QySI7ci25AxE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NHRlYTdmOHFqQ3NHcUxYOEl5NjJ4MDVUZDlXMzBhUktJTld5TTBCTjBMMGxl?=
+ =?utf-8?B?Y1MyYzBnSHlNWTVKSm9oVFlLcUlCcnpKVGNXa2VWdUVyOEZMS3BsWk5MbmFF?=
+ =?utf-8?B?QlZ2a3J2Y1dLVGVXcWJoVkZ0cXdzR0lKcDJ0cnAzODcvMG1FLy9tWTJRYjQ3?=
+ =?utf-8?B?T2R5WHZaM3I2ZVJQdU5Fcmd6VkZMWGRDQzZUZHRDL3NpUWk3VUd4K2Urb3da?=
+ =?utf-8?B?bmJWaXh5eE4rZ1ZGYm9xYnAycnpHVXJDTXJvMS9YdE9kdm5tVmZod05rbEo1?=
+ =?utf-8?B?bFA2eDlFUkk3Y0VKT2IyT1NBa1Z6YzVUMFRmaXJFanh3UVEwNEtrNmhpZ2Nr?=
+ =?utf-8?B?MERrbmZDMzl4Sko0aEZXZ1Y4TVVQeUhzRURrWjU3NWpGVERyWjMwQXFkTXd0?=
+ =?utf-8?B?dGdmNHRwaEtmTXJoVW9lOG13aFBBbE5VazllUGFKN29jRjJhMjRFbW5vaFhw?=
+ =?utf-8?B?b3I3aHRmM3NaaGNFYzFZdVBkdWEwRGliTm1jemZHRmpqVkwyOUxYU1lLSmpj?=
+ =?utf-8?B?ZWZnMVRzQ3FPc1NXUGl2U3BUeW5FbkR4cm9LMTlaY1BLVkRvcXlrQXFvWFpL?=
+ =?utf-8?B?djA0VkIwY2F1RzlrOHd6RnphNkF6U0JyRFJoSVRsUkVKZ3NTWkNLNFFhL0lD?=
+ =?utf-8?B?UDIvWEtzNHU1Wm1IV3IzN0k2RXptQ0p5Um5DM292S3h2UHdqd2grV3l3VlFT?=
+ =?utf-8?B?L28vKzVXaDVuMmRrZmI5dUhxbkplK0xBV1U4Ri9XKzFXZVJiaTlxU1pMdVZR?=
+ =?utf-8?B?algvaWsxYkRFWVdoM25HYS9TRHR3OVkycENvTmplVTJNdEJNdTNCaUZrdnBW?=
+ =?utf-8?B?eE5hRFl6b2x0bkl1WWI2TE9jWUNZTzJJb1ZrM3BqZ1VyU1lTYnVPOGFDaDBl?=
+ =?utf-8?B?ZmYxS2htZ2ZMVXJkQlFLdjZpR0h3RVY2Wm13VWtMOXFUenR2MVFFUjBEYSsy?=
+ =?utf-8?B?YU5Hd1lUY1BSUytSeTBoVmtydjNmclpkM1BBcVRlY0NtckxiSFovMDNyLzZU?=
+ =?utf-8?B?TFIrU0tmdXZxRis3REQ5Um5tU1dsdlRxZkprcGx4N3lEZDR5bWpvcVQzNno4?=
+ =?utf-8?B?bHRrc3JSdktHaEdQTG1ydlg1TEZLV01qd2Vub0paZWdnZEVQTjA3Skc2K3hy?=
+ =?utf-8?B?NzNpNC9vcDNEUm1OOW5PKytkWDhvVC91b2cyVm5rc3lLd0w4bHBZUlZvMHZR?=
+ =?utf-8?B?TnRNWmNyTXB4eVBwblZmTkFMMm5aL0hRb2poTFNlSDh2TmNtZVpQd1FEd3Vi?=
+ =?utf-8?B?ZGZhWitWWDQyYlkydHllU09GNDFnOXQ4VnJudEE4d0RtOGtOVnBaSWdjb0xh?=
+ =?utf-8?B?SDNPMFVwU0JlZzY4VjZNUXNxZEI0aDJYNGFhZ0JtQXIrVUdNY0ZiSUFXV2F1?=
+ =?utf-8?B?Y05HdFZ2bXJZMW1NSEVWakNYcHluUFFIM2E4VjhmdXRIU2JlOUxiRU1yL2s3?=
+ =?utf-8?B?R3JOeGJQdE9YVitTV004am16SFUyTlBISUF3d2RlOUdtNG9HSmJWRnBZYysw?=
+ =?utf-8?B?TFJ1blJhM3BoY1dkR28xK0h6eS9aeC9VWXBGN2NkU0NHUzVsbytqamwrcVVL?=
+ =?utf-8?B?QW5MWDhJdjFaK0k5U01lWDMrcm5QcVdFeUZSc0doY1NYTUg1c2EvUTUrM1Mx?=
+ =?utf-8?B?K0xvSHpnRzNIeG5rSkFnNnVwOUplOGdpTktvb29HanlFWGtBWjJvN2hQSXZK?=
+ =?utf-8?B?YTJPaTUvUTBkOWpwMzJGOVJGV1dhemtOYWtRZGVLaWdsUlpVcVVIOHkwa2tK?=
+ =?utf-8?B?VUhxWnVxMm9BL1JrVDg1TnJnNk5tdExUa0ZKU1Y1MEFZeThxNUFRTzlSY09l?=
+ =?utf-8?B?OTY1d2pXaWZ1MkRZUlpudHU3ZjNmK0RRMWRRTnhWYjIvZHlDWVZPejRBMVVM?=
+ =?utf-8?B?dW1lZktjNndjSmVQMjJaanhLbUxQYTJ1OWdKUFdYdlFpdDFKeUtBTUdteDBI?=
+ =?utf-8?B?NlZyMXVmTUJEZjI4OFJ4bXc5c0w1WGxrQWxhNTZWem13WjFYaHVReVJqeFVQ?=
+ =?utf-8?B?UVgra1NlYkVXazVrSHdVck9pOHQvL3ZoNXYxVDFXK0RGTmROeVowWFdIb1NW?=
+ =?utf-8?B?cHVJSTRiNzRTOXF0SHhFbnhBakFsWjFjSEo2dGJvNjhUVlJ1RlNIRk1qYmQ3?=
+ =?utf-8?B?S0J0M1dRNUxrRGJCZGhvUUlJd2xxa0l2amZYa2tpcVowdHRZNmhVS2RxcEpv?=
+ =?utf-8?B?OHc9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3b6e0ed-62de-4310-d4b3-08ddb51b9ff7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 01:40:41.0339
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VmSkRF64J8+np9WPB/CxFliUQuLkTZuPd0IVD5KIEbTpxgyvLYStAjRz+iybVY5Kue4XsPWFXHT2edOeG8Sd4IfY+dzJRP02vzwrIvjmG1Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5127
 
 
-在 6/26/25 6:52 PM, jiang.kun2@zte.com.cn 写道:
-> From: Wang Yaxin <wang.yaxin@zte.com.cn>
->
-> translate the "netif-msg.rst" into Simplified Chinese.
->
-> Update to commit c4d5dff60f0a("docs: networking: convert
->  netif-msg.txt to ReST")
->
-> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
-> ---
-> v1->v2:
-> 1. adjust table format.
-> 2. correct some Chinese expressions.
->
->  .../translations/zh_CN/networking/index.rst  |  2 +-
->  .../zh_CN/networking/netif-msg.rst           | 93 +++++++++++++++++++
->  2 files changed, 94 insertions(+), 1 deletion(-)
->  create mode 100644 
-> Documentation/translations/zh_CN/networking/netif-msg.rst
->
-> diff --git a/Documentation/translations/zh_CN/networking/index.rst 
-> b/Documentation/translations/zh_CN/networking/index.rst
-> index 07a3933afe92..4dd75ec27dec 100644
-> --- a/Documentation/translations/zh_CN/networking/index.rst
-> +++ b/Documentation/translations/zh_CN/networking/index.rst
-> @@ -22,6 +22,7 @@
->     msg_zerocopy
->     napi.rst
-> +   netif-msg
->  Todolist:
-> @@ -100,7 +101,6 @@ Todolist:
->  *   netdev-features
->  *   netdevices
->  *   netfilter-sysctl
-> -*   netif-msg
->  *   netmem
->  *   nexthop-group-resilient
->  *   nf_conntrack-sysctl
-> diff --git a/Documentation/translations/zh_CN/networking/netif-msg.rst 
-> b/Documentation/translations/zh_CN/networking/netif-msg.rst
-> new file mode 100644
-> index 000000000000..4810a3f8fc7c
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/networking/netif-msg.rst
-> @@ -0,0 +1,93 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +.. include:: ../disclaimer-zh_CN.rst
-> +
-> +:Original: Documentation/networking/netif-msg.rst
-> +
-> +:翻译:
-> +
-> +   王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
-> +
-> +================
-> +网络接口消息级别
-> +================
-> +
-> +网络接口消息级别设置的设计方案。
-> +
-> +历史背景
-> +--------
-> +
-> +调试消息接口的设计遵循并受制于向后兼容性及历史实践。理解其发展历史有助于把握
-> +当前实践，并将其与旧版驱动代码相关联。
-> +
-> +自Linux诞生之初，每个网络设备驱动均包含一个本地整型变量以控制调试消息级别。
-> +消息级别范围为0至7，数值越大表示输出越详细。
-> +
-> +消息级别的定义在3级之后未明确细化，但实际实现通常与指定级别相差±1。驱动程序
-> +成熟后，冗余的详细级别消息常被移除。
-> +
-> +  - 0  最简消息，仅显示致命错误的关键信息。
-> +  - 1  标准消息，初始化状态。无运行时消息。
-> +  - 2  特殊介质选择消息，通常由定时器驱动。
-> +  - 3  接口开启和停止消息，包括正常状态信息。
-> +  - 4  Tx/Rx帧错误消息及异常驱动操作。
-> +  - 5  Tx数据包队列信息、中断事件。
-> +  - 6  每个完成的Tx数据包和接收的Rx数据包状态。
-> +  - 7  Tx/Rx数据包初始内容。
-> +
-> +最初，该消息级别变量在各驱动中具有唯一名称（如"lance_debug"），便于通过
-> +内核符号调试器定位和修改其设置。模块化内核出现后，变量统一重命名为"debug"，
-> +并作为模块参数设置。
-> +
-> +这种方法效果良好。然而，人们始终对附加功能存在需求。多年来，以下功能逐渐
-> +成为合理且易于实现的增强方案：
-> +
-> +  - 通过ioctl()调用修改消息级别。
-> +  - 按接口而非驱动设置消息级别。
-> +  - 对发出的消息类型进行更具选择性的控制。
-> +
-> +netif_msg 建议添加了这些功能，仅带来了轻微的复杂性增加和代码规模增长。
-> +
-> +推荐方案如下：
-> +
-> +  - 保留驱动级整型变量"debug"作为模块参数，默认值为'1'。
-> +
-> +  - 添加一个名为 "msg_enable" 的接口私有变量。该变量是位图而非级别，
-> +    并按如下方式初始化::
-> +
-> +       1 << debug
-> +
-> +     或更精确地说::
-> +
-> +debug < 0 ? 0 : 1 << min(sizeof(int)-1, debug)
-> +
-> +    消息应从以下形式更改::
-> +
-> +      if (debug > 1)
-> + printk(MSG_DEBUG "%s: ...
-> +
-> +    改为::
-> +
-> +      if (np->msg_enable & NETIF_MSG_LINK)
-> + printk(MSG_DEBUG "%s: ...
-> +
-> +消息级别命名对应关系
-> +
-> +
 
-> +  =========  ===============================
-> +  旧级别       名称            位位置
-> +  =========  ===============================
-> +    0         NETIF_MSG_DRV0x0001
-> +    1         NETIF_MSG_PROBE0x0002
-> +    2         NETIF_MSG_LINK0x0004
-> +    2         NETIF_MSG_TIMER0x0004
-> +    3         NETIF_MSG_IFDOWN0x0008
-> +    3         NETIF_MSG_IFUP0x0008
-> +    4         NETIF_MSG_RX_ERR0x0010
-> +    4         NETIF_MSG_TX_ERR0x0010
-> +    5  NETIF_MSG_TX_QUEUED0x0020
-> +    5         NETIF_MSG_INTR0x0020
-> +    6         NETIF_MSG_TX_DONE0x0040
-> +    6  NETIF_MSG_RX_STATUS0x0040
-> +    7         NETIF_MSG_PKTDATA0x0080
-> +  =========  ===============================
+On 6/26/25 4:48 PM, Rob Herring wrote:
+> On Fri, Jun 13, 2025 at 03:58:44PM -0700, Matthew Gerlach wrote:
+> > Convert the bindings for socfpga-dwmac to yaml. Since the original
+> > text contained descriptions for two separate nodes, two separate
+> > yaml files were created.
+>
+> Sigh I just reviewed a conversion from Dinh:
+>
+> https://lore.kernel.org/all/20250624191549.474686-1-dinguyen@kernel.org/
+>
+> I prefer this one as it has altr,gmii-to-sgmii-2.0.yaml, but I see some
+> issues compared to Dinh's.
+I am sorry for my part in the duplicate review. I just rechecked the 
+output of get_maintainers.pl, and Dinh was not listed, and I should have 
+known better.
 
-Can this table be polished? Improve the readability of Vim
+I am happy to do the work to resolve the differences and resubmit with 
+Dinh as the maintainer.
 
-while ensuring the readability of HTML.
-
-Thanks,
-
-Yanteng
-
-> -- 
-> 2.25.1
+>
+> > 
+> > Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> > Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > ---
+> > v6:
+> >  - Fix reference to altr,gmii-to-sgmii-2.0.yaml in MAINTAINERS.
+> >  - Add Reviewed-by:
+> > 
+> > v5:
+> >  - Fix dt_binding_check error: comptabile.
+> >  - Rename altr,gmii-to-sgmii.yaml to altr,gmii-to-sgmii-2.0.yaml
+> > 
+> > v4:
+> >  - Change filename from socfpga,dwmac.yaml to altr,socfpga-stmmac.yaml.
+> >  - Updated compatible in select properties and main properties.
+> >  - Fixed clocks so stmmaceth clock is required.
+> >  - Added binding for altr,gmii-to-sgmii.
+> >  - Update MAINTAINERS.
+> > 
+> > v3:
+> >  - Add missing supported phy-modes.
+> > 
+> > v2:
+> >  - Add compatible to required.
+> >  - Add descriptions for clocks.
+> >  - Add clock-names.
+> >  - Clean up items: in altr,sysmgr-syscon.
+> >  - Change "additionalProperties: true" to "unevaluatedProperties: false".
+> >  - Add properties needed for "unevaluatedProperties: false".
+> >  - Fix indentation in examples.
+> >  - Drop gmac0: label in examples.
+> >  - Exclude support for Arria10 that is not validating.
+> > ---
+> >  .../bindings/net/altr,gmii-to-sgmii-2.0.yaml  |  49 ++++++
+> >  .../bindings/net/altr,socfpga-stmmac.yaml     | 162 ++++++++++++++++++
+> >  .../devicetree/bindings/net/socfpga-dwmac.txt |  57 ------
+> >  MAINTAINERS                                   |   7 +-
+> >  4 files changed, 217 insertions(+), 58 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml b/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> > new file mode 100644
+> > index 000000000000..aafb6447b6c2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> > @@ -0,0 +1,49 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +# Copyright (C) 2025 Altera Corporation
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/altr,gmii-to-sgmii-2.0.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Altera GMII to SGMII Converter
+> > +
+> > +maintainers:
+> > +  - Matthew Gerlach <matthew.gerlach@altera.com>
+> > +
+> > +description:
+> > +  This binding describes the Altera GMII to SGMII converter.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: altr,gmii-to-sgmii-2.0
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: Registers for the emac splitter IP
+> > +      - description: Registers for the GMII to SGMII converter.
+> > +      - description: Registers for TSE control.
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: hps_emac_interface_splitter_avalon_slave
+> > +      - const: gmii_to_sgmii_adapter_avalon_slave
+> > +      - const: eth_tse_control_port
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    phy@ff000240 {
+> > +        compatible = "altr,gmii-to-sgmii-2.0";
+> > +        reg = <0xff000240 0x00000008>,
+> > +              <0xff000200 0x00000040>,
+> > +              <0xff000250 0x00000008>;
+> > +        reg-names = "hps_emac_interface_splitter_avalon_slave",
+> > +                    "gmii_to_sgmii_adapter_avalon_slave",
+> > +                    "eth_tse_control_port";
+> > +    };
+> > diff --git a/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml b/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> > new file mode 100644
+> > index 000000000000..ccbbdb870755
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> > @@ -0,0 +1,162 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/altr,socfpga-stmmac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Altera SOCFPGA SoC DWMAC controller
+> > +
+> > +maintainers:
+> > +  - Matthew Gerlach <matthew.gerlach@altera.com>
+> > +
+> > +description:
+> > +  This binding describes the Altera SOCFPGA SoC implementation of the
+> > +  Synopsys DWMAC for the Cyclone5, Arria5, Stratix10, and Agilex7 families
+> > +  of chips.
+> > +  # TODO: Determine how to handle the Arria10 reset-name, stmmaceth-ocp, that
+> > +  # does not validate against net/snps,dwmac.yaml.
+> > +
+> > +select:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - altr,socfpga-stmmac
+> > +          - altr,socfpga-stmmac-a10-s10
+> > +
+> > +  required:
+> > +    - compatible
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - const: altr,socfpga-stmmac
+> > +          - const: snps,dwmac-3.70a
+> > +          - const: snps,dwmac
+> > +      - items:
+> > +          - const: altr,socfpga-stmmac-a10-s10
+> > +          - const: snps,dwmac-3.74a
+> > +          - const: snps,dwmac
+>
+> You are missing the snps,dwmac-3.72a version.
+Yes, leaving out the snps,dwmac-3.72a version was a conscience decision. 
+Please see TODO above. Since I was stuck figuring out how to address the 
+reset-names issue with the Arria10, I thought it was better to leave it 
+out to keep the Arria10 schema errors the same rather than changing the 
+error. Should net/snps,dwmac.yaml be changed to handle the stmmaceth-ocp 
+reset-name, or is there something that can be done in this file to 
+handle it?
 >
 >
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    items:
+> > +      - description: GMAC main clock
+> > +      - description:
+> > +          PTP reference clock. This clock is used for programming the
+> > +          Timestamp Addend Register. If not passed then the system
+> > +          clock will be used and this is fine on some platforms.
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: stmmaceth
+> > +      - const: ptp_ref
+> > +
+> > +  iommus:
+> > +    maxItems: 1
 >
+> Dinh's says there can be 2?
+I don't see any dts or dtsi with 2 iommus, but more importantly does the 
+hardware support 2 iommus? Dinh can you comment?
+
 >
+> > +
+> > +  phy-mode:
+> > +    enum:
+> > +      - gmii
+> > +      - mii
+> > +      - rgmii
+> > +      - rgmii-id
+> > +      - rgmii-rxid
+> > +      - rgmii-txid
+> > +      - sgmii
+> > +      - 1000base-x
 >
+> Dinh's says only rgmii, gmii, and mii supported?
+The example in the original text lists sgmii, and there was some good 
+feedback from Maxime Chevallier and Andrew Lunn on this subject in 
+https://lore.kernel.org/lkml/20250528144650.48343-1-matthew.gerlach@altera.com/T/#u 
+
+
+Thanks for the feedback,
+Matthew Gerlach
+
+>
+> > +
+> > +  rxc-skew-ps:
+> > +    description: Skew control of RXC pad
+> > +
+> > +  rxd0-skew-ps:
+> > +    description: Skew control of RX data 0 pad
+> > +
+> > +  rxd1-skew-ps:
+> > +    description: Skew control of RX data 1 pad
+> > +
+> > +  rxd2-skew-ps:
+> > +    description: Skew control of RX data 2 pad
+> > +
+> > +  rxd3-skew-ps:
+> > +    description: Skew control of RX data 3 pad
+> > +
+> > +  rxdv-skew-ps:
+> > +    description: Skew control of RX CTL pad
+> > +
+> > +  txc-skew-ps:
+> > +    description: Skew control of TXC pad
+> > +
+> > +  txen-skew-ps:
+> > +    description: Skew control of TXC pad
+> > +
+> > +  altr,emac-splitter:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      Should be the phandle to the emac splitter soft IP node if DWMAC
+> > +      controller is connected an emac splitter.
+> > +
+> > +  altr,f2h_ptp_ref_clk:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      Phandle to Precision Time Protocol reference clock. This clock is
+> > +      common to gmac instances and defaults to osc1.
+> > +
+> > +  altr,gmii-to-sgmii-converter:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      Should be the phandle to the gmii to sgmii converter soft IP.
+> > +
+> > +  altr,sysmgr-syscon:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +    description:
+> > +      Should be the phandle to the system manager node that encompass
+> > +      the glue register, the register offset, and the register shift.
+> > +      On Cyclone5/Arria5, the register shift represents the PHY mode
+> > +      bits, while on the Arria10/Stratix10/Agilex platforms, the
+> > +      register shift represents bit for each emac to enable/disable
+> > +      signals from the FPGA fabric to the EMAC modules.
+> > +    items:
+> > +      - items:
+> > +          - description: phandle to the system manager node
+> > +          - description: offset of the control register
+> > +          - description: shift within the control register
+> > +
+> > +patternProperties:
+> > +  "^mdio[0-9]$":
+> > +    type: object
+> > +
+> > +required:
+> > +  - compatible
+> > +  - clocks
+> > +  - clock-names
+> > +  - altr,sysmgr-syscon
+> > +
+> > +allOf:
+> > +  - $ref: snps,dwmac.yaml#
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    soc {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ethernet@ff700000 {
+> > +            compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a",
+> > +            "snps,dwmac";
+> > +            altr,sysmgr-syscon = <&sysmgr 0x60 0>;
+> > +            reg = <0xff700000 0x2000>;
+> > +            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> > +            interrupt-names = "macirq";
+> > +            mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+> > +            clocks = <&emac_0_clk>;
+> > +            clock-names = "stmmaceth";
+> > +            phy-mode = "sgmii";
+> > +        };
+> > +    };
+> > diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > deleted file mode 100644
+> > index 612a8e8abc88..000000000000
+> > --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > +++ /dev/null
+> > @@ -1,57 +0,0 @@
+> > -Altera SOCFPGA SoC DWMAC controller
+> > -
+> > -This is a variant of the dwmac/stmmac driver an inherits all descriptions
+> > -present in Documentation/devicetree/bindings/net/stmmac.txt.
+> > -
+> > -The device node has additional properties:
+> > -
+> > -Required properties:
+> > - - compatible	: For Cyclone5/Arria5 SoCs it should contain
+> > -		  "altr,socfpga-stmmac". For Arria10/Agilex/Stratix10 SoCs
+> > -		  "altr,socfpga-stmmac-a10-s10".
+> > -		  Along with "snps,dwmac" and any applicable more detailed
+> > -		  designware version numbers documented in stmmac.txt
+> > - - altr,sysmgr-syscon : Should be the phandle to the system manager node that
+> > -   encompasses the glue register, the register offset, and the register shift.
+> > -   On Cyclone5/Arria5, the register shift represents the PHY mode bits, while
+> > -   on the Arria10/Stratix10/Agilex platforms, the register shift represents
+> > -   bit for each emac to enable/disable signals from the FPGA fabric to the
+> > -   EMAC modules.
+> > - - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
+> > -   for ptp ref clk. This affects all emacs as the clock is common.
+> > -
+> > -Optional properties:
+> > -altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
+> > -		DWMAC controller is connected emac splitter.
+> > -phy-mode: The phy mode the ethernet operates in
+> > -altr,sgmii-to-sgmii-converter: phandle to the TSE SGMII converter
+> > -
+> > -This device node has additional phandle dependency, the sgmii converter:
+> > -
+> > -Required properties:
+> > - - compatible	: Should be altr,gmii-to-sgmii-2.0
+> > - - reg-names	: Should be "eth_tse_control_port"
+> > -
+> > -Example:
+> > -
+> > -gmii_to_sgmii_converter: phy@100000240 {
+> > -	compatible = "altr,gmii-to-sgmii-2.0";
+> > -	reg = <0x00000001 0x00000240 0x00000008>,
+> > -		<0x00000001 0x00000200 0x00000040>;
+> > -	reg-names = "eth_tse_control_port";
+> > -	clocks = <&sgmii_1_clk_0 &emac1 1 &sgmii_clk_125 &sgmii_clk_125>;
+> > -	clock-names = "tse_pcs_ref_clk_clock_connection", "tse_rx_cdr_refclk";
+> > -};
+> > -
+> > -gmac0: ethernet@ff700000 {
+> > -	compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
+> > -	altr,sysmgr-syscon = <&sysmgr 0x60 0>;
+> > -	reg = <0xff700000 0x2000>;
+> > -	interrupts = <0 115 4>;
+> > -	interrupt-names = "macirq";
+> > -	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+> > -	clocks = <&emac_0_clk>;
+> > -	clock-names = "stmmaceth";
+> > -	phy-mode = "sgmii";
+> > -	altr,gmii-to-sgmii-converter = <&gmii_to_sgmii_converter>;
+> > -};
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c2b570ed5f2f..d308789d9877 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -3262,10 +3262,15 @@ M:	Dinh Nguyen <dinguyen@kernel.org>
+> >  S:	Maintained
+> >  F:	drivers/clk/socfpga/
+> >  
+> > +ARM/SOCFPGA DWMAC GLUE LAYER BINDINGS
+> > +M:	Matthew Gerlach <matthew.gerlach@altera.com>
+> > +S:	Maintained
+> > +F:	Documentation/devicetree/bindings/net/altr,gmii-to-sgmii-2.0.yaml
+> > +F:	Documentation/devicetree/bindings/net/altr,socfpga-stmmac.yaml
+> > +
+> >  ARM/SOCFPGA DWMAC GLUE LAYER
+> >  M:	Maxime Chevallier <maxime.chevallier@bootlin.com>
+> >  S:	Maintained
+> > -F:	Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> >  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+> >  
+> >  ARM/SOCFPGA EDAC BINDINGS
+> > -- 
+> > 2.35.3
+> > 
+
