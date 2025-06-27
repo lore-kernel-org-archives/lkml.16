@@ -1,136 +1,143 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916819D89B;
-	Fri, 27 Jun 2025 15:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A662E88A6
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751039666; cv=none; b=UIybUva11SO24oivp+zHLTH+8/b0ggd/3/L3oGalvvKpAvi4n/Q/naIZJZlv0vq+gF8BUoTJE75bslFblRKRLRuPQCFPNGb9FCC7RvVfEfu3pEuup+TUFWJY9uPavZojghfZWxc0ck/qSy9DC3BHu5fki2OAbGY7L42gIVRV6r0=
+	t=1751039677; cv=none; b=qeTN6s5HTEXsPKSrnj5Z8sLpCjRLCgZSZq7gQsaYtNPrPCSaUjS9lq3DNCtynFB3u39fUedI4xSshNr/2Y9GfdB+gipBxdgi5wghHPBLIEkY6CPIz/aSykJr8dEsNtbw+lofjw21ewSN1wdZ94n4zR+/VHPybhe61MP+/IzKFhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751039666; c=relaxed/simple;
-	bh=Dzk7FkZrP0cI66APZQkjMGI2vyePpXuiq+b5mTMeppg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IiNrzCU3jQfj3LiLGQVlGf0fkE7nzuPVPv3cS4i1tbZynGNf4asLRKuzB0Fo7ATlSFByXn9y5Ogp2Wl3C/3uKFKHGiGEjIyXyqPECrG/FCYdzjuyQCtXKkpdiDaQot7eXxZGYqhX3sXMzRnstDA7JtIxP5Ithmt4s00H8XfMdPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fVKxqA29; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751039677; c=relaxed/simple;
+	bh=S8bnZFwqOefSjfjbTJZ426XN8OOe081rliiCwRtOwVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MYe7JM5ZepdeQbNi637oit7gu3NLvP47eFZWEeq4Z6g03JLGqjMeFKCfAGsQZYZwcADLKcpSyySKbw1W+2rpb0g1wXc/RanT0V7PccovzbNVIcZbOcBSIEcpHuqawl9vCCW8zuQiZ2nKFsblbjlwNKnCSSpawyVPsYnE2ivZCwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nmao1MSX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVKxqA29"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-453066fad06so14758545e9.2;
-        Fri, 27 Jun 2025 08:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751039664; x=1751644464; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tr68OiRxkYNsG7/O5fexvNcA0uazWCS0xz7KV2c9znY=;
-        b=fVKxqA295SDiLFRxtvRmnuqdpCucuXF0URpBsU+GnCJYZuaALAa11yo/guOszb/qkO
-         qyr5J6Pxnzl2BWvx+rjuP2fKjfb8ZzPkWBYwe7w71rPu7Z+6iBY1a8H+ms4CMiwKFxMU
-         P8kFBvZwTvNX/aD+XNiwwcHYSHgJO4oBf+l7urpONY8SfmBZ6JjtnGlRMW6G8spOU3iA
-         7hHD/6pGHrZ9hJpHeuhFUdA0YsTxdffaglXEcZVDSh2g+SiPfcDeLX43MBfPYC7QHbbJ
-         e9yqcdaAQcIatCCsEl8LgZH6+Go17CMQiqINhZVGbdUkCdIjXSdzWG20GBs7nZQUKHAq
-         1qAQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nmao1MSX"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55RC0JwD009547
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:54:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pZr7iAj8/Dq9pOneeMlm+pgyY2ynqbotMAGjlAeCcLw=; b=nmao1MSXUtZjQUoq
+	SDTHRsY0Hg3VjpLw/0Ii6jsLVDVb+o6Yohs8y3iHUebXf0FRWOQk/sjhIqZJBEBY
+	BSo32OJ3lGaKxUevBvFPf56KEC7/lfJ8pBNAv2D1F7XYnaQcpdiQDhvfhyTtTLUa
+	ACryQoaz9l4DhHiiNizuY9qmTnWFmSIdOOZm+Bhwi7pEu78jtRObXxWSPQkzbkr7
+	6hLAhByJHsqGgfYv6o4x9hV1eGwsL1pu1qSch+fMTKpYF2mpUw7cbCeVr9XfhuLV
+	SdoaqoIPwjllHbjr22wrAx2Oe6drE/2Vv2f0sFHDlO2CaXmEVdGj0lSD6dHuDHmj
+	Z8Dviw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b4796c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 15:54:35 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d0979e6263so3349785a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:54:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751039664; x=1751644464;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tr68OiRxkYNsG7/O5fexvNcA0uazWCS0xz7KV2c9znY=;
-        b=ZLc6AE+cc/MvB9vC+90pgGGS95mb/6V6mouaoS6PQ7seT3vchFjbrCOPSSzN2v33sU
-         NPtNAQ+WthNa5J6F9/nzCEOYsqJbj+phZQBObWtqsDYQY0dKdxRsigXwTHmQANP+4hDX
-         plfGaUyWN5Odyyc/Wlv7wA77tXsXubMSm0kYTE6eUPYOXi4hBsdUhyOCDN2qF0UBduku
-         DsjJlSv72DGdcceDNxoNwIo7qOkTOC6cYMHFFvKLSLo6SFwB999Do0OknGFH02Om440Q
-         DiRryFQiJzd8C0OeTTEBSMCGrdmNwjQub7GpJeBl/eCw8/+6cARm7qB4JEYJGs66/8RX
-         6Sbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ37ZNU/03AQaJQXmNg5peyo3lotjYyLIw70h/rkMiNBB71QHNPLeYoaMTzxm3e5Ewv6e824eHT8A=@vger.kernel.org, AJvYcCWXkRN/oKGePzxXGIkD19ckLFtszJVTmDgtG3mxUFK8f+RnvU31wyDeuyBYtGR2JyzP/mR5uuz5r5AteoP0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhbvQHFqs1VVhaRz20g5MuQhf3Ticca0e99MrpEvAbkg/pijGA
-	rEQA/4ZTkim7wkmlD2RuncOjas1sVdgrM7lopzBSUz0s9uYekZ76Y98V
-X-Gm-Gg: ASbGncvlbQcr3PBEOoJtpnY9cLy7FqwbdKyhtShVgQUAwiMYaCemmNG18WIqqiVy/Sm
-	fyj5qgnz+HxOp04qJpamYBfewHOicbYDSFDLMDOnKyHmBdfW2q4Be7iXdEQNvdFN8EWHedxTg0E
-	5dZKOrY481rYFe6IEP7Ur5ytsBiaVxoP0rc+ThVM17+0BT7LJvJTaLOWXMKygmO+OLwambCx+kW
-	g7K2Md1y6eKBvO9/pMBF/LT0/uM+OBu9tB/1vfBkkYPuG31CLqTo8w8fGFjU+kXiSDFI6WG60g5
-	P8OFfzNOXRoo61XuMoSS4P3UL7DebNxNkH0uHhsMUFa/TIFbVwEtyqzPtGY4dkxnOfbT8g==
-X-Google-Smtp-Source: AGHT+IG52LLY5tfp79dpkJwmL3CkYmsnztQvfc0hEH9hajFNoydKgQhJZ+OGgT451bj5FJaXII5dnQ==
-X-Received: by 2002:a05:600c:1c9d:b0:453:c39:d0d0 with SMTP id 5b1f17b1804b1-45392e83a55mr18445845e9.13.1751039663395;
-        Fri, 27 Jun 2025 08:54:23 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234bc1fsm84064705e9.14.2025.06.27.08.54.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 08:54:23 -0700 (PDT)
-Message-ID: <c0f4907eb762e618dcf64a6821320f814715be5f.camel@gmail.com>
-Subject: Re: [PATCH] iio: dac: ad3530r: Fix incorrect masking for channels
- 4-7 in powerdown mode
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Kim Seer Paller <kimseer.paller@analog.com>, Lars-Peter Clausen
-	 <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron
-	 <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Fri, 27 Jun 2025 16:54:33 +0100
-In-Reply-To: <20250626-bug_fix-v1-1-eb3c2b370f10@analog.com>
-References: <20250626-bug_fix-v1-1-eb3c2b370f10@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+        d=1e100.net; s=20230601; t=1751039674; x=1751644474;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pZr7iAj8/Dq9pOneeMlm+pgyY2ynqbotMAGjlAeCcLw=;
+        b=IH/PXd5lKTCxAOYwtOFEwa1BkXahWrtEb1+QFwiem/HWeN79Ty0UHWJ18zN2wbEWNJ
+         kV9z7Ti3H0hOg9I9lLvAhRdOsrnGlU3crypKMxdxQ5pECJ3uBKZdL4G5ZesgAdGIr+yM
+         onnnYhL8Efc9KfRWjU2O/4lO9o9Z4f9JSYl8waDaNFD9aWGjyn+Ack/8t7AHd2CGbpCG
+         SJxxGRqG814a1shgM/FvXSKBFq9/Xl9gnVmyDvG/AM+DZ7+lm6JOCab1oLnwgYeydGAu
+         iRuxarZ/KEBc1+8QORXNU7734Zxm3+jGSUkvNZ7PQXKgNhkBq6mF2qJPSm+krkVn22yI
+         b5VA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnEvGP4Eq6ldWf7bXFBS3NmCB4iTDKeIjHdydC04KHkfBvTpFQGa8Sr0hbHYu5lPSY1yy5RvfkazHjuiU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXKBq7PqSsRkzK8JCk63icDzLYvuqDDlILYMOMkERtk95hfVrZ
+	7bX1oyiEc4lMI7SshmzpgZPox5xDNIDNMatMK9vXjwLtaX6JdxS9u5/BqEDZJYkYDnr4WjS2SSx
+	mxMglpfE91wUnDlBAbDyQeVy+fxivpuqF81J0LvZG9VuXxMxtdrKANRSlOEeeiI3HUWU=
+X-Gm-Gg: ASbGncvXyRv8dNypIS6Xad84u7VePRNvmEuNJTFmie3zXgV4+l7VS5f+SBbr59Jlj/y
+	Di8hJfFyF6CYOpgM2SETz7F8+d37eXwVAdmSs4chDC7xyPJONFSk8yxQTfcx4BZPrxSEOsfmrQn
+	DJaFHxZYJv71VYAMXUyTzdmsp8Zs+i3+oZid1s789F83Cbnj+fAmsK+qaq8EQ+HjLJsmHlRikzg
+	8nAqMImE5wd9A22AE7DXnfSlQrYSKkle5dQ42DqPVXSAK2crXiK4Yn7pnaXO+6tnyhWPpYyG/HT
+	l0sqDq2fiq1EciG0AC9LidkTZALmLd2CV7TzOy+3dgQHKFkuHqG/SbptYVbEmvRwIe0Z2e4B4sg
+	h4IA=
+X-Received: by 2002:a05:620a:404c:b0:7d3:b0a3:6aa7 with SMTP id af79cd13be357-7d4438e31e4mr210379785a.3.1751039673895;
+        Fri, 27 Jun 2025 08:54:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnVBSJATURZomyb5icuOPlYo1v/x1ajNUslEnC5Ai/XTvP7ZKMpfHMiKxOU0P7qaWYMS3lXg==
+X-Received: by 2002:a05:620a:404c:b0:7d3:b0a3:6aa7 with SMTP id af79cd13be357-7d4438e31e4mr210378085a.3.1751039673452;
+        Fri, 27 Jun 2025 08:54:33 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353639bfcsm147793566b.11.2025.06.27.08.54.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 08:54:32 -0700 (PDT)
+Message-ID: <68c06500-a776-4f56-8514-c180b23f7715@oss.qualcomm.com>
+Date: Fri, 27 Jun 2025 17:54:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] soundwire: bus: add sdw_slave_get_current_bank helper
+To: srinivas.kandagatla@oss.qualcomm.com, vkoul@kernel.org, broonie@kernel.org
+Cc: yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250627155103.441547-1-srinivas.kandagatla@oss.qualcomm.com>
+ <20250627155103.441547-3-srinivas.kandagatla@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250627155103.441547-3-srinivas.kandagatla@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEyOSBTYWx0ZWRfX9OPIvukg0K0T
+ I6iXvAFRg+XuOmlTHL9G+dJjJeTQe/SAEZ5f143n1Vww0fbd6dZApli6ffdS8raqMbbs4O2YLhn
+ A5SGmS9kTuby96Ht9ZqkDx9O8bu9R49EFDK5D9H6C+IFR26f8jeTrx2i3h/OFCvyKrza/aOSZ4E
+ Ff+ph1t/9rUMv45+3VzkO1FlkTKdp5Od7FVWc6Yjub0wPDYQu3UgWPs27lQRRMRF8WPXHIhdbzI
+ CTV0n1BcKPMTJ95aN4ayt+6rpPiKZcW1eTvJApr5WROLQte1ujrl/ejeH6VLUkBQs5pX8r2vi+h
+ 7jwYTUyn4fV0/k5kZ/1QH13ZInVhxwYD7C+fMIWqb/+ylhLpBOvEQCKD1ohNwLanlO1ncL0bgzL
+ f1eP1HM1FCnMkq6W2psh0lb1zQDPp/EiLcQnHXfya45PK58Ncu59GSpe53ok/9uYzAH3K68G
+X-Proofpoint-ORIG-GUID: pK39CbzsQ3WOWrk8gRI82uC1bKk6V4Tp
+X-Proofpoint-GUID: pK39CbzsQ3WOWrk8gRI82uC1bKk6V4Tp
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685ebebb cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=7h2XZbHhf3WDBbgsTHsA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506270129
 
-On Thu, 2025-06-26 at 16:38 +0800, Kim Seer Paller wrote:
-> In the current implementation of ad3530r_set_dac_powerdown() function,
-> the macro AD3530R_OP_MODE_CHAN_MSK(chan->channel) is used to generate
-> the bitmask for the operating mode of a specific channel. However, this
-> macro does not account for channels 4-7, which map to the second
-> register AD3530R_OUTPUT_OPERATING_MODE_1 for the 8 channeled device. As
-> a result, the bitmask is incorrectly calculated for these channels,
-> leading to improper configuration of the powerdown mode. Resolve this
-> issue by adjusting the channel index for channels 4-7 by subtracting 4
-> before applying the macro. This ensures that the correct bitmask is
-> generated for the second register.
->=20
-> Fixes: 93583174a3df ("iio: dac: ad3530r: Add driver for AD3530R and AD353=
-1R")
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+On 6/27/25 5:51 PM, srinivas.kandagatla@oss.qualcomm.com wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+> 
+> There has been 2 instances of this helper in codec drivers,
+> it does not make sense to keep duplicating this part of code.
+> 
+> Lets add a helper sdw_get_current_bank() for codec drivers to use it.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
 > ---
+>  drivers/soundwire/bus.c       | 7 +++++++
+>  include/linux/soundwire/sdw.h | 8 ++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index 39aecd34c641..58306c515ccc 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -1363,6 +1363,13 @@ int sdw_slave_get_scale_index(struct sdw_slave *slave, u8 *base)
+>  }
+>  EXPORT_SYMBOL(sdw_slave_get_scale_index);
+>  
+> +int sdw_slave_get_current_bank(struct sdw_slave *sdev)
+> +{
+> +	return FIELD_GET(SDW_SCP_STAT_CURR_BANK,
+> +			 sdw_read(sdev, SDW_SCP_CTRL));
 
-LGTM,
+sdw_read can fail (miserably)
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-
-> =C2=A0drivers/iio/dac/ad3530r.c | 4 +++-
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
-> index
-> f9752a571aa53ca0d7e199ed6a78550358185bf9..6134613777b8e1d4516109b74e0b3b7=
-9edb1
-> ae75 100644
-> --- a/drivers/iio/dac/ad3530r.c
-> +++ b/drivers/iio/dac/ad3530r.c
-> @@ -166,7 +166,9 @@ static ssize_t ad3530r_set_dac_powerdown(struct iio_d=
-ev
-> *indio_dev,
-> =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD3530R_OUTPUT_OPERATING_MODE_0 :
-> =C2=A0	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD3530R_OUTPUT_OPERATING_MODE_1;
-> =C2=A0	pdmode =3D powerdown ? st->chan[chan->channel].powerdown_mode : 0;
-> -	mask =3D AD3530R_OP_MODE_CHAN_MSK(chan->channel);
-> +	mask =3D chan->channel < AD3531R_MAX_CHANNELS ?
-> +	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD3530R_OP_MODE_CHAN_MSK(chan->cha=
-nnel) :
-> +	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD3530R_OP_MODE_CHAN_MSK(chan->cha=
-nnel - 4);
-> =C2=A0	val =3D field_prep(mask, pdmode);
-> =C2=A0
-> =C2=A0	ret =3D regmap_update_bits(st->regmap, reg, mask, val);
->=20
-> ---
-> base-commit: 0a2857e778599c2794dc89c40dc79ead631b34df
-> change-id: 20250626-bug_fix-404361f2f190
->=20
-> Best regards,
+Konrad
