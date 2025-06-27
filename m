@@ -1,173 +1,120 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF554C8E;
-	Fri, 27 Jun 2025 14:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5523A4C8E;
+	Fri, 27 Jun 2025 14:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751033470; cv=none; b=YecxJC4ISKm4VqVQgmIjIiy0c+i9J8IVZSXAKdKDp7DYNaKMNZ9T0/6CZGcKBOBQkv2oRIOctiGo7ZfYGpsXCsMk2Fl45nGLJBLiBrQ3p4kIIloUpHgwU4aJUcz6HbsHLr9kh4hrC+yqLNnzCPsE5uEf5RM78uE0JnFZUlnkESk=
+	t=1751033538; cv=none; b=mjU5oKbvBgBVQKGmB8h+/WxAnFCVA+SASekxOiSFpzBRE/SYYsQeemHkTEKWlnZD2883h9OH8cxH42UX+Az5Tv+j+u+fi6R56HkSwaV0REUcS+KhKVAMvgmNK3Gis0aC1zgv552UgHJXp5sp9ScSTFvuMfhS11/iwIl3Wd6m3OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751033470; c=relaxed/simple;
-	bh=uboYNezb36JpMkieHdIf/S5jZXhofYW9pF0BqpdRV18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TbaToBWwgveowofi/M+RmS+MXpzW521evEpBVtpK3EqXHeZjGkcW7m9N7eJl0yOTP2PTnOf6rdXqJXiWwHJqOvrEUSLoWYhJC0rAOIcQqPlmKGnXVIK/fYVZQzJn81DsEYP4jHnUWig9XqPz0uZn71eF28hnVPWzfJkr6nprDz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5BCE1A00;
-	Fri, 27 Jun 2025 07:10:50 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 111523F58B;
-	Fri, 27 Jun 2025 07:11:05 -0700 (PDT)
-Date: Fri, 27 Jun 2025 15:11:03 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] firmware: imx: sm-misc: Dump syslog and system info
-Message-ID: <aF6md8uMuD8EpXvd@pluto>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-7-2b99481fe825@nxp.com>
+	s=arc-20240116; t=1751033538; c=relaxed/simple;
+	bh=hVxsob2gMzK+yoGT2YTNMVPDuNbFcM9jirOwFff9BWY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=rp72CX6Yc3jjC3Ats8Dk5lbiREM1DNWEJwgVHgjduPp56VdB0420sa9mltowvS+rB23X+qdSMjCpaxICFp5cueJqKJcJtBUeiwFoIcmsN1cmVUAuFDQ0+R8ESV0jk2nxez7nLRk9THOkm6O4GlDzV7lu2nIOl7DqbJUsqRRn2UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPGjOoYm; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPGjOoYm"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d3f192a64eso199491985a.2;
+        Fri, 27 Jun 2025 07:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751033536; x=1751638336; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=N383MBQJeLK+4T/1dattnFOwTJK4B0ZF2Q3FHLC9rnI=;
+        b=mPGjOoYmym24QSLggjMzruxmj/IyvddDRo1CQr5GfjSg/CzGYX0uAXldLWQUe5lSET
+         MdQfj0q0OYPUbFcJGydNSbuStgsHPbO3q5bZJzpz8tJEbyJtQ9rWOp/V20XILIYqpOd2
+         iujtpGnYFqRRosorM6qP+epssp0cUWL7k7+8TyvfUZSxzjz9yp3FpeuJkt45y9mmqoXi
+         MkZUsnddDcr5XqUPjUK3/TgIDOgwZua+LNydN2DAAoo0DR8u5lJxX84QEBhK4Iv2F1dy
+         Aji59D+PRIZvUR7EBz7kZYm3L4JO94fitK2P9RTr1AFzto85Nv1+01ihZB5KyFeIXawV
+         Z88Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751033536; x=1751638336;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N383MBQJeLK+4T/1dattnFOwTJK4B0ZF2Q3FHLC9rnI=;
+        b=GbE76RGNHVOKRePZ+eM+s8rqOW4pE32FPuu9FkWGiTVOsgwyVC9a+Y+cIhuLyHCDVi
+         h21muVKVEetUwrcVaaBdIQvEr/34SPDKD3q7epTdnecrr048yFbXvo193hmd1xkXPQT9
+         rpSANvGeWGtjPEn34IYDvMTCyQcmVzlXYpx/gDddkQe5Hl+048rbp96bKKSzJdccsQ+c
+         Fy3KkgQAsZSECAfmBgr4D5yGz3kCnqVBBEk/nz37JOpEwPbd8vReMyDm7niuG7hJ7eGs
+         8MYytFnwXd4zxGVCrOJO8aDtj996czWrhPWnCbZDIzr4Z0Ri7YF4a9IqLbPYTT3HDyiT
+         edvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/ZrEvITq/oX6FHMB9PhFSk0wXrW1z3vJPIXGK/JGILTitHeQFKfgt7/Vn6jGdj06Wbvhe05YLwq9cnAco@vger.kernel.org, AJvYcCXtIcRc0AaYq6+nIDPB5VhHFUKKOocBIL0J4vnLEW9UgWmIobFueIsRp4BGt2pTLhTrN/6Ctq34Yw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJx0z2bsAPjtDXXdzxOA8yLRngA6d6wDL1Zgc81zAD5XkCsa2T
+	iqKu0B7rR4EpAP4bcoGxua++59EATJR9yG5KY4rb1gj+FNVvERJ2OzBt6hT6Zrut2hWZctToCIp
+	q8rvWMa2eDaQ6Sj9dBUmSXSkGMG7CJNM=
+X-Gm-Gg: ASbGnctqIR26KRRaPjMQLSlrY6F9v78otnCwAyxVY4/x4xbT1Tuc3QdhW4yWZHUaoKJ
+	APdNQVaMt5GoMegNqvJ18Ypchv/b1yrOirJMjatLCJurxlxfxgpdTtkAEFfgFqp3sp69b8Hf3TL
+	8/gS6hQHl0rzMfkP1qmzAQurGU+0bNLKqQIhnBBhK+N8RHzZOesCPL5HjhPoaocv7SyMFkU+5uB
+	/nD
+X-Google-Smtp-Source: AGHT+IGCshPgaxEYsmETIaKF+DIOhmRobs4aM3xROcJI8wsF0mS20ESHDA8BhIyLKEBvDSxZeaqOD+gAJSRl1sdvNMg=
+X-Received: by 2002:a05:620a:1710:b0:7d4:29a5:8143 with SMTP id
+ af79cd13be357-7d443920a06mr539226085a.6.1751033536067; Fri, 27 Jun 2025
+ 07:12:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-7-2b99481fe825@nxp.com>
+From: ritu pal <ritupal888@gmail.com>
+Date: Fri, 27 Jun 2025 19:42:03 +0530
+X-Gm-Features: Ac12FXwl8FSUxystsBE8Cczyv48plmtJeMuC6TbzwCD4uh8t1JhyYcPzuBfN224
+Message-ID: <CAEy91+b+GN1CoX7Y7RVHq2sxjU=OrrPqmbsFuVW3da4YNTH+XQ@mail.gmail.com>
+Subject: [PATCH] certs/blacklist: add error logging for hash blacklisting failures
+To: David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, keyrings@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ritu pal <ritupal888@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 27, 2025 at 02:03:50PM +0800, Peng Fan wrote:
-> Add sysfs interface to read System Manager syslog and system info
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/imx/sm-misc.c | 97 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
-> 
-> diff --git a/drivers/firmware/imx/sm-misc.c b/drivers/firmware/imx/sm-misc.c
-> index fc3ee12c2be878e0285183e3381c9514a63d5142..55485a3c4a5c615102a377f41025a6911d746770 100644
-> --- a/drivers/firmware/imx/sm-misc.c
-> +++ b/drivers/firmware/imx/sm-misc.c
-> @@ -44,6 +44,100 @@ static int scmi_imx_misc_ctrl_notifier(struct notifier_block *nb,
->  	return 0;
->  }
->  
-> +static ssize_t syslog_show(struct device *device, struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct scmi_imx_misc_sys_sleep_rec *rec;
-> +	struct scmi_imx_misc_syslog *syslog;
-> +	int ret;
-> +	size_t len = 0;
-> +
-> +	if (!ph)
-> +		return 0;
-> +
-> +	syslog = kmalloc(sizeof(*syslog), GFP_KERNEL);
-> +	if (!syslog)
-> +		return -ENOMEM;
-> +
-> +	ret = imx_misc_ctrl_ops->misc_syslog(ph, sizeof(*syslog), syslog);
+[PATCH] certs/blacklist: add error logging for hash blacklisting failures
 
-...ah...so you basically cast to void a structure of u32 words and then
-expect that the firmware perfectly aligned with how the struct is
-defined here....size checks assures no out-of-bounds BUT the meaning of
-he blob itself is entirely up to FW and kernel being aligned, since no
-type checking is done of any kind and fields are NOT reference by
-name...so may I ask why ? ..also because the scmi_imx_misc_syslog seems
-pretty tiny to need iterators to parse back the reply...do you have so
-tiny transpotr message size ?
+Previously, errors returned by mark_hash_blacklisted() could be
+silently ignored by callers,
+such as uefi_blacklist_x509_tbs() and uefi_blacklist_binary(),
+which do not check or log the return value.
+This can make it difficult to detect and diagnose failures to add
+hashes to the system blacklist.
 
-..anyway I would suggest at least to add some sort of version-field to
-the struct so that at least you can detect if the FW spits out something
-that is not what your driver expect or is ready to handle...especially
-if you plan to extend or modify the layout of the structs in the future.
+This change adds a pr_err() message in mark_hash_blacklisted() to log
+any failure to blacklist a hash,
+including the error code. This ensures that all blacklisting failures
+are visible in the kernel log,
+improving debuggability and system integrity monitoring, even if the
+upper layers do not handle the error.
 
+No functional changes are made to the blacklisting logic.
 
-> +	if (ret) {
-> +		kfree(syslog);
-> +		return ret;
-> +	}
-> +
-> +	rec = &syslog->syssleeprecord;
-> +
-> +	len += sysfs_emit_at(buf, len, "Wake Vector = %u\n", rec->wakesource);
-> +	len += sysfs_emit_at(buf, len, "Sys sleep mode = %u\n", rec->syssleepmode);
-> +	len += sysfs_emit_at(buf, len, "Sys sleep flags = 0x%08x\n", rec->syssleepflags);
-> +	len += sysfs_emit_at(buf, len, "MIX power status = 0x%08x\n", rec->mixpwrstat);
-> +	len += sysfs_emit_at(buf, len, "MEM power status = 0x%08x\n", rec->mempwrstat);
-> +	len += sysfs_emit_at(buf, len, "PLL power status = 0x%08x\n", rec->pllpwrstat);
-> +	len += sysfs_emit_at(buf, len, "Sleep latency = %u\n", rec->sleepentryusec);
-> +	len += sysfs_emit_at(buf, len, "Wake latency = %u\n", rec->sleepexitusec);
-> +	len += sysfs_emit_at(buf, len, "Sleep count = %u\n", rec->sleepcnt);
-> +
+Signed-off-by: Ritu Pal  <ritupal888@gmail.com>
+---
+ certs/blacklist.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-... how wonder how much is still frowned upon to serve such big multiline
-structured information payloads from sysfs ... (asking for a friend :P)
+diff --git a/certs/blacklist.c b/certs/blacklist.c
+index 675dd7a8f07a..0f5ff29ccb3d 100644
+--- a/certs/blacklist.c
++++ b/certs/blacklist.c
+@@ -208,8 +208,10 @@ int mark_hash_blacklisted(const u8 *hash, size_t hash_len,
+  int err;
 
+  buffer = get_raw_hash(hash, hash_len, hash_type);
+- if (IS_ERR(buffer))
++ if (IS_ERR(buffer)) {
++ pr_err("Failed to blacklist hash: %pe\n", buffer);
+  return PTR_ERR(buffer);
++ }
+  err = mark_raw_hash_blacklisted(buffer);
+  kfree(buffer);
+  return err;
+@@ -229,8 +231,10 @@ int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+  int ret = 0;
 
-> +	kfree(syslog);
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RO(syslog);
-> +
-> +static ssize_t system_info_show(struct device *device, struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct scmi_imx_misc_system_info *info;
-> +	int len = 0;
-> +	int ret;
-> +
-> +	if (!ph)
-> +		return 0;
-> +
-> +	info = kmalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	ret = imx_misc_ctrl_ops->misc_discover_build_info(ph, info);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = imx_misc_ctrl_ops->misc_cfg_info(ph, info);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = imx_misc_ctrl_ops->misc_silicon_info(ph, info);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret = imx_misc_ctrl_ops->misc_board_info(ph, info);
-> +	if (ret)
-> +		goto err;
-> +
-> +	len += sysfs_emit_at(buf, len, "SM Version    = Build %u, Commit 08%x\n",
-> +			     info->buildnum, info->buildcommit);
-> +	len += sysfs_emit_at(buf, len, "SM Config     = %s, mSel=%u\n",
-> +			     info->cfgname, info->msel);
-> +	len += sysfs_emit_at(buf, len, "Silicon       = %s\n", info->siname);
-> +	len += sysfs_emit_at(buf, len, "Board         = %s, attr=0x%08x\n",
-> +			     info->brdname, info->brd_attributes);
-
-...so some of this stuff Build/Silicon/BoaRD info has pretty much
-'forever' lifetime...are you sure you want to query them out of the FW
-each time you issue a sysfs show ?
-
-Cannot you simply dump this stuff once for all at probve time and
-instead query misc_cfg_info() upon each show to refresh only the data
-that will change ?
-
-(this also corroborates my idea that you should somehow partition this
-data into distinct structs by their lifetime...
-
-Thanks,
-Cristian
+  buffer = get_raw_hash(hash, hash_len, hash_type);
+- if (IS_ERR(buffer))
++ if (IS_ERR(buffer)) {
++ pr_err("Failed to blacklist hash: %pe\n", buffer);
+  return PTR_ERR(buffer);
++ }
+  kref = keyring_search(make_key_ref(blacklist_keyring, true),
+        &key_type_blacklist, buffer, false);
+  if (!IS_ERR(kref)) {
+--
