@@ -1,151 +1,111 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ED1237164;
-	Fri, 27 Jun 2025 08:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC2B17741
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012515; cv=none; b=sMrDbB+fhQFr2R24LAaBcX7MUIsNiOHdkP//waXNl/I1qL0hAFVemnMlWa7RbDlBfdfEU8/7S90+Wz7k3i74PbJ/xJth7z4OALn9nHwhOX7NWOnmUUxl9C1RqZQmzhTWU7d8TZh4+/HuEe7TksoAt1P+OFfDYMds4sQPLbZbIm0=
+	t=1751012530; cv=none; b=TaM/IvRsLjOBaK0HE6zcTUm4gaX3JfU2+q72QCPTmmOu7ov9AcW3fIwBCqlS/49YxZxNb7/m/g1pMq3puiJAQ+MQY51qVqGmLMF2zfw9zp2l7xTxyJWR5kmOzj6IMKCe2En13SkCBJbiTEyaZWq/UGM1BPGGQAHX1YyRACEuhQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012515; c=relaxed/simple;
-	bh=DI6dsYu4kQgpnaRia4IpKX7prmm2uj8F/0HVOrRH6CI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=U5lS6Yynxp/WzGBkgNQ15rS+kPeYR/vbHMNOao7vpRyPgs/s24GQFE1jicJ+iuqDNKris1FqqXLuJC0BoxD0cmH24S8QY5GDSyL3vfNrGNCywbXXJSIGyoPWm0ZJKwKZnX+DbrUfziAWJgjI6dKwJ/55i1POLKAmbUe+pWXpuqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eLtUEvbi; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751012530; c=relaxed/simple;
+	bh=7L7gnA+PMqOvFzB9aOAb6Z3I8wPBf+AMV/Vnk3gf7KU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V3FlHW5k5krbOn3y0y4LLwvkrD1DVJiY4s3z9kiLJlz9XUdHy6p9v/3E5Fh6QqK8GBJuiUHD5titSm83KoydceOp+AFEnOtgF5urA6bG6NNPztirsyia3sb3YUv+qTE71q0/BjUIhSZyohKyIwuzufEgsjadNTC+6BjlcE4qyZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MudI3ybf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eLtUEvbi"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QLbw2o010678;
-	Fri, 27 Jun 2025 08:21:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:message-id:mime-version:subject:to; s=
-	pp1; bh=lKFCoWumeX6i41q6QCz+fyt3hfK6+kplYjOdsf8CfYc=; b=eLtUEvbi
-	wAgBa9DZJvuq500WiPQoecVF3wlc2wEpUdNogCfrXTQspczp/eM7f8pkqN/KRAs7
-	2wiHLZNUEJ46WkTam37qBOYAsW4EEUvYgEk3+rVnFmGuobIf8OSts+CmnoFC6BEg
-	5PgOHDKxdtEI3phmtMhW0l3yYpX1D3MUqTdtZDkurQ0VSHoQ/n/Tg858SnAKObGJ
-	SssiOCKBUYMVPcqWG67a3uJr56Ze9coLB8m/vUTIpVOND6nW2fWBhtJmSxOXiHN0
-	23h1gJ+sz/aw07H0FCdOrd51TKyOb/dyvXncUuPS3cYnvnTmLWtoiy9RbMcRaqca
-	vM6m74uJye1b5w==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47gsphswka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:21:51 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55R5XSks002908;
-	Fri, 27 Jun 2025 08:21:50 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jmk334-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 08:21:50 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55R8Lk0p35652100
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 08:21:46 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9B21420043;
-	Fri, 27 Jun 2025 08:21:46 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7BCD420040;
-	Fri, 27 Jun 2025 08:21:46 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 27 Jun 2025 08:21:46 +0000 (GMT)
-Date: Fri, 27 Jun 2025 10:21:45 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] s390 fixes for 6.16-rc4
-Message-ID: <5038bf76-cdda-4ecf-a9d5-b5ded666356f@agordeev.local>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MudI3ybf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751012528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zdhaPmsWFArhsXFsISpX5ZipUl19a5SM0RfIr3emwGI=;
+	b=MudI3ybf3p4McbsDctHqXeaIJ08OchAbiBrufYnX9pFVH0rzQ8YLUVwDNrbWNeXH4fJnxj
+	UO/XUTUIxBhtZ58TnvDEbRlwm9qcWQ2WX1W0Tlqta05Khm69iL5o8x8IDmBS00SOQkDd/m
+	/RQnpYAyksEQNpGFbBOQBRqwtEDm01E=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-_NPqL7NhPzy1lXTEnemzpw-1; Fri, 27 Jun 2025 04:22:05 -0400
+X-MC-Unique: _NPqL7NhPzy1lXTEnemzpw-1
+X-Mimecast-MFC-AGG-ID: _NPqL7NhPzy1lXTEnemzpw_1751012524
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a56b3dee17so1470308f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:22:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751012524; x=1751617324;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdhaPmsWFArhsXFsISpX5ZipUl19a5SM0RfIr3emwGI=;
+        b=KYTEIBsH81dNEhmrh6WKPJJv+gXaF4J9dqLpiEn8cxoxblc2fgFz2uP68Ylf3nHH24
+         Um3G4ooEuTBBMcExZtKA3aMmk/UfXwauMq490ilOsDZt3yhG5U4rHZiT7bKLHsYI3pWT
+         a0DdQWPNAkqWSS+2G9njeUMm3mCSNzorfegJj1aqt/II8UW12Io2jvNsJW9wXNynqFJt
+         fQN5QPMiHV4/tZDSmyFYMAu0wVBHOCdhnZlGOOI7mXh4tKmajE2hWIvXC+tMgNGBjju8
+         qJyryiX0MrUBu4t6uMeXhxSjcAkfciVEM6ZhZ0IWR1uyFpxyXk/UKAENmwrovKiWpFqy
+         Mwrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtvsXAK684osefLewvZzZ0vgfS2V6n9hxEmNaEvSNlYAD6yp622Ol5xyRZMoa1GnYOee8OHUGTaaWSXLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUXavtxdfqjvzZ747Pg7B9B9Pe/INEhCreAgj4OAaRb0S5FGDg
+	RpiEZtyTbeiGQarIzK5m34tjyx3BeI6/cW6aIUAa3OsrGHgz8Q6swpVol2WxYb81o2rIa/xD0OV
+	EsOkX6xJw+4OWEvfhEiJMqQ0AgX84dVRvgQ6Ph24T5g93EDpbHx41yPJGYhHBcfqC
+X-Gm-Gg: ASbGncsSP/cP7ZuHaFiFP/VQmi0+6Eds+RhB2PxGSASLohYabp7/DiCuKVHt2wV4XUR
+	OTZtoH3W/wbd2P6oyebtLwHGDtxVHJ9lP07MWl/UtpHVW4Y2PgvQ4iUqFjdcYFydJPsdqmsy9Wp
+	8FOR88GsXwE66NRcch13mFz7YfUWysjBOrJ64j3abZyW7e8nSrJTfwpDzSmSH7i/FjMXWqoP9qI
+	qDzijY/0qxxWXaK9EMa6YTy00k2N/iVdlf40OYwxgVwNUCxOHLK2EB2u5Wl0FelpTc6Xev5k6ET
+	Kec0gieFwuoVSml9OzB9Jl6w+EHzvOGiV0Z5vo0hu1XuIrxeRV4=
+X-Received: by 2002:adf:9cc9:0:b0:3a5:271e:c684 with SMTP id ffacd0b85a97d-3a6f3153609mr4583316f8f.24.1751012523788;
+        Fri, 27 Jun 2025 01:22:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGE6kxl77BfW2oseBFkSC1JtOT5bepuvfPux+euP6AbKgN4iSeaZr6ihXIz7XSCpkAgQOS7Lw==
+X-Received: by 2002:adf:9cc9:0:b0:3a5:271e:c684 with SMTP id ffacd0b85a97d-3a6f3153609mr4583297f8f.24.1751012523368;
+        Fri, 27 Jun 2025 01:22:03 -0700 (PDT)
+Received: from [192.168.1.108] (ip73.213-181-144.pegonet.sk. [213.181.144.73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52b9esm2024043f8f.61.2025.06.27.01.22.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 01:22:02 -0700 (PDT)
+Message-ID: <bdca5369-57dd-4db4-82db-a2622d26c550@redhat.com>
+Date: Fri, 27 Jun 2025 10:22:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BfYhlY6uWN4jzswOzc6SlrW3D0pcGyRk
-X-Proofpoint-ORIG-GUID: BfYhlY6uWN4jzswOzc6SlrW3D0pcGyRk
-X-Authority-Analysis: v=2.4 cv=Hul2G1TS c=1 sm=1 tr=0 ts=685e54a0 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=jgawQoxS9akQ2SvUetwA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDA2NiBTYWx0ZWRfX511zUGP3YHrh BflqcgVVdKHMbv2uFW3LQrGDZOVyjFlmfCxlxqn2DnVSW/yfpUC7athVUeD8BNOzVUu8EVFvzy8 N/vLxF3VOceEohimfgeclOnkl4cfkru1nJiQ7r/9NV4PQh+tZNTk6TGMOJ42jMAiQ1nXqJHtbrn
- 7C+qEDilSUxVma+9jn9lfcjnYZOy3+WGXyyTOFqNLGxVYlJwbko2L1NRsG0XTJDDFLg2h3uTQY/ ZuFNrCf3NXNr6q06boc77u+EICCzxHJjRY1Dv4L14NVFOisIo9IS0uREz0LID4rrbXVjbFxMh0c apE3Cp1KhBMVgZypgOO/IdqxcPcu43Nj4W1cYiJs3mbcKnwmzxtaAhM22oH57oddgAw5CNroyWI
- d0W1RveblVS9kYamqmOAebLPrk8NBp7H+xjErnpTzNdoaFpUGh6RFSxfDvNN1YZLa6bNHGdF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_03,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=545 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
- impostorscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270066
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build warning after merge of the bpf-next tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250627174759.3a435f86@canb.auug.org.au>
+From: Viktor Malik <vmalik@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250627174759.3a435f86@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On 6/27/25 09:47, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the bpf-next tree, today's linux-next build (htmldocs)
+> produced this warning:
+> 
+> kernel/bpf/helpers.c:3465: warning: expecting prototype for bpf_strlen(). Prototype was for bpf_strnlen() instead
+> kernel/bpf/helpers.c:3557: warning: expecting prototype for strcspn(). Prototype was for bpf_strcspn() instead
+> 
+> Introduced by commit
+> 
+>   e91370550f1f ("bpf: Add kfuncs for read-only string operations")
 
-please pull s390 fixes for 6.16-rc4.
+Oh, good catch, thanks for the report.
 
-Thanks,
-Alexander
+Just sent a fix to bpf-next [1].
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+Viktor
 
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+[1]
+https://lore.kernel.org/bpf/20250627082001.237606-1-vmalik@redhat.com/T/#u
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.16-3
-
-for you to fetch changes up to 7f8073cfb04a97842fe891ca50dad60afd1e3121:
-
-  s390/ptrace: Fix pointer dereferencing in regs_get_kernel_stack_nth() (2025-06-17 18:15:25 +0200)
-
-----------------------------------------------------------------
-s390 fixes for 6.16-rc4
-
-- Fix incorrectly dropped dereferencing of the stack nth entry
-  introduced with a previous KASAN false positive fix
-
-- Use a proper memdup_array_user() helper to prevent overflow
-  in a protected key size calculation
-
-----------------------------------------------------------------
-Fedor Pchelkin (1):
-      s390/pkey: Prevent overflow in size calculation for memdup_user()
-
-Heiko Carstens (1):
-      s390/ptrace: Fix pointer dereferencing in regs_get_kernel_stack_nth()
-
- arch/s390/include/asm/ptrace.h | 2 +-
- drivers/s390/crypto/pkey_api.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/include/asm/ptrace.h b/arch/s390/include/asm/ptrace.h
-index 62c0ab4a4b9d..0905fa99a31e 100644
---- a/arch/s390/include/asm/ptrace.h
-+++ b/arch/s390/include/asm/ptrace.h
-@@ -265,7 +265,7 @@ static __always_inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *r
- 	addr = kernel_stack_pointer(regs) + n * sizeof(long);
- 	if (!regs_within_kernel_stack(regs, addr))
- 		return 0;
--	return READ_ONCE_NOCHECK(addr);
-+	return READ_ONCE_NOCHECK(*(unsigned long *)addr);
- }
- 
- /**
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index cef60770f68b..b3fcdcae379e 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -86,7 +86,7 @@ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
- 	if (!uapqns || nr_apqns == 0)
- 		return NULL;
- 
--	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
-+	return memdup_array_user(uapqns, nr_apqns, sizeof(struct pkey_apqn));
- }
- 
- static int pkey_ioctl_genseck(struct pkey_genseck __user *ugs)
