@@ -1,73 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775232ED15B;
-	Fri, 27 Jun 2025 21:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C97C2EBB9F
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 21:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751058449; cv=none; b=bA+drWgk03xnI4RMs3On/mXQElNwipSmRASd1DTmWrWqGRpvyVRaKSB/kjv6GdeFVQiUnX63V4/u7TUS4Vne4jKzvDsEwCaQ+htauqT9rayVf3lW/h4y35FdCWjx+brPfOgNqbX8WuQSkAyG/nB6kzdzZ2hqSn4AL0RBL2gFPW8=
+	t=1751058573; cv=none; b=tImk5vN/vF0nr0ctAwtPNr4waKu3FM8RpN3Xo+2ZeOMbbLozwPEeqYGIw2PKJG1iH7R9eq8wDX0VEWmwuVnVL69nfkaK91SNiSKgWvF3Xyw7UJ+flaQ/70eZ/+E9ZI7fNJtDky0hYdytYWoPPWbc7Vp+CLrsSQKTPcvXqXtbGaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751058449; c=relaxed/simple;
-	bh=HoAKHVnVB3TJzjVLPcNtHz4b5bTjyeWIfqzTIsuT44c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FwHx97t9xZcsPqs22WNWcB1JzVuAMJU4YBlMRCi8xIo+zwertMNc+gIG2lEMk7RvXLcPU8T0ZgaSCD4vBTIZP6NBsGKg7Ruu+mSr+5DOYA3vlBZsM/SyzNwacZTQp8T9cLDjC3+7jOQylQcP5iC3QHAaYwPtdFtZ7hNYP0MN8oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lv0HznvV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751058573; c=relaxed/simple;
+	bh=pIB7dbUg5YiC8wZop1hSiIBUgou3FUP2dBBIURZS/q0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KA6Z7RK6fjDPoRMAKa/kcVujW7fJ8uEa6QJcqZzKZtLgj+iHjV79QnpxGe+CyAUBQGN/4C/dEN2yOfZtat6OigKhFn7sSpTnkk6QmSQj1WYA+UJ2ICR7nSy4kbWRtHUyEiGFeMVAsalbPjVBPATgU7RtPMjky4CJF0Nx2IOZ2Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=uruW/Syz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lv0HznvV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FEA0C4CEE3;
-	Fri, 27 Jun 2025 21:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751058449;
-	bh=HoAKHVnVB3TJzjVLPcNtHz4b5bTjyeWIfqzTIsuT44c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lv0HznvV+eTyOUirCFk2xwJYwCCGDB+GLUnfF/Z6DyyQheCpor//kTA5vQYBlGGKQ
-	 PlJnL/UH+RLwVFeq02Kd3ywr/U+dGpLt1M2IKhRmvF2w7Q/7XCOkmdBj9LUtfasdV3
-	 qggy2QQ9+J81KdZ88zRSmYClCFP8Ix2Db/7PAbsWQ6kX+7LRi1pVHsrHU7pJBDI8FF
-	 vzLcGqOPD9El6+behuhnvWMmxw0r3VubfnJmJ7Tc+/lE3KcpOWQ10A1+0kIhT+Qiru
-	 4PNqvzjI3S2TAR5GBEF14REjZhA5nqjPmKB4Kq1ehzPlKSPQA+CQ9U4imzK+kTXzVj
-	 cxdcQtj67xQPw==
-Date: Fri, 27 Jun 2025 16:07:28 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: input: touchscreen: convert
- lpc32xx-tsc.txt to yaml format
-Message-ID: <175105844804.146874.1572190783775455795.robh@kernel.org>
-References: <20250625163431.2543597-1-Frank.Li@nxp.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="uruW/Syz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B0C9C4CEE3;
+	Fri, 27 Jun 2025 21:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751058572;
+	bh=pIB7dbUg5YiC8wZop1hSiIBUgou3FUP2dBBIURZS/q0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uruW/Syzqdc+hsDCq7ULTgKSNYLRLjzUUC7iu8inxYx4+v2Oiekd+j/oIz0iJDnDP
+	 +gzxtwuPEMer5swmRyFmFNiOigEZ9VUrntl/SMGRpOvLorWSduONlMsMJpb3uFWok9
+	 ZRyCxewEZonmC2T9HE60xPSd6v+1S19SHskA+qIg=
+Date: Fri, 27 Jun 2025 14:09:32 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: <zhongjinji@honor.com>
+Cc: <linux-mm@kvack.org>, <yuzhao@google.com>,
+ <linux-kernel@vger.kernel.org>, <yipengxiang@honor.com>,
+ <liulu.liu@honor.com>, <feng.han@honor.com>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Greg Thelen
+ <gthelen@google.com>
+Subject: Re: [PATCH] mm: vmscan: Page scanning depends on swappiness and
+ refault
+Message-Id: <20250627140932.1278169c50ba873937444599@linux-foundation.org>
+In-Reply-To: <20250627162606.30609-1-zhongjinji@honor.com>
+References: <20250627162606.30609-1-zhongjinji@honor.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625163431.2543597-1-Frank.Li@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Sat, 28 Jun 2025 00:26:06 +0800 <zhongjinji@honor.com> wrote:
 
-On Wed, 25 Jun 2025 12:34:28 -0400, Frank Li wrote:
-> Convert lpc32xx-tsc.txt to yaml format.
+> From: z00025326 <z00025326@hihonor.com>
 > 
-> Additional changes:
-> - add clocks and put it into required list to match existed lpc32xx.dtsi.
+> The current MGLRU aging strategy isn’t flexible enough. For example,
+> when the system load and pressure are low, reclaiming more anonymous
+> pages might be better. But when the system is under heavy pressure,
+> enough file pages are needed for quick reclaim. Right now, when MGLRU
+> is on, changing the swappiness value doesn’t really let you prioritize
+> reclaiming certain types of pages in different situations.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> changes in v2
-> - add clocks and put it into required list to match existed lpc32xx.dtsi.
-> ---
->  .../input/touchscreen/lpc32xx-tsc.txt         | 16 -------
->  .../input/touchscreen/nxp,lpc3220-tsc.yaml    | 43 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 16 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/lpc32xx-tsc.txt
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/nxp,lpc3220-tsc.yaml
+> This patch changes the aging strategy to adjust the reclaim ratio based
+> on swappiness and refault values, allowing anonymous and file pages to
+> age separately. and it can prioritize reclaiming certain types of pages
+> and doesn’t have to wait until all the oldest pages are reclaimed before
+> moving on to the next aging generation.
+> 
+> ...
+>
+>  include/linux/mm_inline.h |  19 +-
+>  include/linux/mmzone.h    |  13 +-
+>  include/linux/swap.h      |   1 +
+>  mm/vmscan.c               | 797 ++++++++++++++++++++++----------------
+>  mm/workingset.c           |  10 +-
+>  5 files changed, 494 insertions(+), 346 deletions(-)
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+(replying to https://lkml.kernel.org/r/20250627162606.30609-1-zhongjinji@honor.com)
+
+That is one big patch!  I'll avoid it at this time, see what the
+reviewers say.
+
+Have you reviewed Documentation/admin-guide/mm/multigen_lru.rst to see
+if any updates are appropriate?
+
+I expect people are going to want to see a lot of detail about the
+runtime effects of this change.  What sort of workloads are being
+targeted, what were the effects on testing results.  What sort of
+workloads might be harmed by the change and what were the effects on
+testing results for those, etcetera.
 
