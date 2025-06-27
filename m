@@ -1,100 +1,161 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9959E243399
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 12:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A83243399;
+	Fri, 27 Jun 2025 12:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751028394; cv=none; b=AzG60i8I7b0W5oTP+gNVlLiuSDR/+NB+5m4a1/x8CYUEjgJd36GInSZbF45FD6S1MlDWz5MoiFQHEj0d2vGPU88pJqoUUs+iLrHbsg2rgw0FC0MKSEPvjoTSWl6e2ByacVZi+dsDuXKlw+En4QMd4egwWKa2yzLh4l3GiEGk3vM=
+	t=1751028398; cv=none; b=coNkJ9t1qwdfbrXm3c2J2lzejaOQpV2NAygAHpZ4k6Qu+8squVoUJm2EA4PL7sPErIfQTggrRWmRrFFL1xq0ksghdqN391f/uN1DPHlQKBQZEzcOH2YXiA1X2Rl3Jt5+HvEipfWWPRL2vfdKj/I4HZ1e18EfPKFp/EhuEBdxexM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751028394; c=relaxed/simple;
-	bh=DOyrnqJ6ATcp18/dk9EAAwqjWkFeX+WDSIW43p1hyrs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=txRjVHRatXcgkZEANR5MKDpfppiPoTJb05i4IapqX30Rvxwkl1sHafe+ZxRt3XDplKJq4+7zeTUbvbEW5xHviZT1cdzprXpX43H7spW1KvJ/P1vGNtosqaTymyCSUy2J/INyGF3uC5Ztaro7sqhS0M76t66TGVKFS3aR2i20H6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I0Nd8Xoy; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751028398; c=relaxed/simple;
+	bh=hdRIwaQfjGhQfLcNXhzn0OydMzDP3qq9qBl4cnmChyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XX5mC0j83yp+/yJUvoLyXnx3+FKAJORySqsFs5xwRVBuwQHPj/s9ltcDYQQq5tnBvGx2nBj7n7Pqd5SHITzoqtAAudZhnWGeTZfGpgSdw6LUly7ui23BB6/V4lhdh0KeLy15miaCWAZ+9BgY8CzlkaQsc/lzQ1uvzagMOOjCJxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WKGU4jzr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0Nd8Xoy"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e9a284c225so575202137.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 05:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751028391; x=1751633191; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Mdop9uKkWlZPGtBxO/wICJeVJXqBGyd03pBu5mrmeeY=;
-        b=I0Nd8Xoy5Enj2ZOPvTG59klC9AhiNdY2Ywpnrensc40mtSjWyv5BY+BybG2K6pUoqB
-         v9xQoYnF8Tb+1kjCQqebWvH8KzN9FlF7e/La9n7inL2RK+YUjWqAaQZdBULsEUTrAiKr
-         XKkIiPQK9/GKzRrorDZyXIEIgzsBAf6UlzzwqaXRRY8ibJYlPtE8i+P2DJMYiUF+SIdU
-         GjRz2jhujeQyDqppY4XZESIxKq8zlO8ieGk/tqEaWKu1ke7L/Z4d3AioMQEQNHda1Yt/
-         oRNVqqUA3rhYOIod/UOtdsNzot21lIBz+7D5N5jSI9dJ89FEd6pfyvDvddXDzCiBkDdB
-         pAFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751028391; x=1751633191;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mdop9uKkWlZPGtBxO/wICJeVJXqBGyd03pBu5mrmeeY=;
-        b=PBJO9ToQSwVGeFyUgN202JOZq4aoqwXNVWWE00CPYEwWabCaPuDJea8fJZoWrF5tpB
-         y1n8NwEH8zaZSK4pzeNri6pPkyJKTrVF4LbCPzeYmX4eozLi9PF23pgT+WSipcmmkrYw
-         UrYSV5xeQZPbkxrVWzq0tUwCcTstqXPMqB9LKyFzLTvLhSYjlZMR/1pH57ZtZSpPSDiM
-         z+Yhk1vRK54aC3E7izXoXDBVKbsrOFfGQNkTKqepgxXg35okUrtB5f1Gw5aW1d0P1Qfv
-         X0pe/zFDgcoslDbGDGOyt/foUi0A4Zy8vWmIYdCs/SJCHvhQciQ4zpWqkUh4iaopDeZW
-         cfNw==
-X-Gm-Message-State: AOJu0YzBC3e2JJAk9z2YjN1zD51J4H8hJAx6hfYIZivWoonJt0sGK8/j
-	iGEN5Ue93SKRk+vaoX3oAvlbl8o1Pe9yv9h9/me8KcdfdRNV739XTcHlYxfR8UE1SI1fwPuw0Zn
-	dpYTl43b20YrYpVr8cu8mfhSnvjinn2rbZL06ymg=
-X-Gm-Gg: ASbGnct3VRLBmHiiDiNtCXbAm5jzfyfVPkKfzopX+5kfJ7+TRmDMhOQC4wPQVwhrQKV
-	V3PK+kjDzlRfmHFmMz4kyO6Fd9ffCOkH35HzlgstZWdnAFBK+722aXLieTa1t9d/Zr9YLYj3ZXJ
-	9kHKRFpalZ0p+OJoVTxKV5ooavfQbZeuLCeADQL+sRcgbWBkOfa4bS+6GLCjSoy8jFhxv7+Eufn
-	fT6
-X-Google-Smtp-Source: AGHT+IG4FIK119VTnYd2jajzuLkcFcE/YJxuC++3ZapcdDcRAcWdQYvOeEcsVvk8CXksMH+NyWXiEoBy0cKdixH6MWI=
-X-Received: by 2002:a05:6102:3e17:b0:4e9:924f:eea2 with SMTP id
- ada2fe7eead31-4ee4f4847c7mr2072911137.4.1751028391404; Fri, 27 Jun 2025
- 05:46:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WKGU4jzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7E0C4CEE3;
+	Fri, 27 Jun 2025 12:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751028398;
+	bh=hdRIwaQfjGhQfLcNXhzn0OydMzDP3qq9qBl4cnmChyc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WKGU4jzrOAQ0YhJEF1QiGBDgYvudn1jp2XBz2jhdVuS7y5vYnRfaHhKz0lkSWyF4l
+	 c8B1My0vnbo25JcYJYqaEuIQVlYDoQqh7ozm043LvkflWYSkMlcZGyg+i+a6Nc1Vyn
+	 hBiPJmZdXZ9BF7aCuqeqY82BKTNoKDm+J5RRrc6rZ6mOZtIqmxd5e8oMn8y4qXVEsZ
+	 A9cg1L2LjERIljLumAF3ED17CZxe/B/9Jsijsef3pFoIXaRZXEZG6A869MOWQ/FuDS
+	 7Eh/7LtHcR2ERwlhk0JtDn6TpM3j3lTsqck+oXdRX/s91yhj0uvpYAUjZYiP6PjNZY
+	 nxLapsirq2mOQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uV8TW-000000004ti-0CrG;
+	Fri, 27 Jun 2025 14:46:38 +0200
+Date: Fri, 27 Jun 2025 14:46:38 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v4 6/8] firmware: qcom: scm: add modparam to control
+ QSEECOM enablement
+Message-ID: <aF6Srse7BhDJkQiH@hovoldconsulting.com>
+References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
+ <20250625-more-qseecom-v4-6-aacca9306cee@oss.qualcomm.com>
+ <aF0cyOpkjUI4R3bv@hovoldconsulting.com>
+ <gqoba4uu62sh4qxapqkhlufxnliatevnsqcxvijvb74tposf2b@iyonh347aext>
+ <aF1EDMsw1KQTlteX@hovoldconsulting.com>
+ <cjinqyqn7qgvdoltoywxa2lq6bjyfrotmon3iv24tqt3bpdlpe@3xb2k42ffegj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: ritu pal <ritupal888@gmail.com>
-Date: Fri, 27 Jun 2025 18:16:19 +0530
-X-Gm-Features: Ac12FXwO6n-DKG3txokXMs3JJhVpee3RTX4l7yZ1Rj4cGtjS3Q_tmpaIM0xUdz8
-Message-ID: <CAEy91+YmfCeA6Y29Bf2Cunk5L3Wrif=1tRFxBOc6iPO6JEtBpw@mail.gmail.com>
-Subject: ipc/mqueue: release spinlock before freeing node_cache in mqueue_evict_inode()
-To: linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Ritu Pal <ritupal888@gmail.com>, 
-	NeilBrown <neil@brown.name>, Chen Ni <nichen@iscas.ac.cn>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cjinqyqn7qgvdoltoywxa2lq6bjyfrotmon3iv24tqt3bpdlpe@3xb2k42ffegj>
 
-Currently, mqueue_evict_inode() holds info->lock while freeing info->node_cache
-with kfree(). Although kfree() does not sleep, it may take a non-trivial amount
-of time, increasing the duration the spinlock is held and potentially impacting
-concurrency.
+On Fri, Jun 27, 2025 at 02:33:27AM +0300, Dmitry Baryshkov wrote:
+> On Thu, Jun 26, 2025 at 02:58:52PM +0200, Johan Hovold wrote:
+> > On Thu, Jun 26, 2025 at 02:08:23PM +0300, Dmitry Baryshkov wrote:
+> > > On Thu, Jun 26, 2025 at 12:11:20PM +0200, Johan Hovold wrote:
+> > > > On Wed, Jun 25, 2025 at 01:53:25AM +0300, Dmitry Baryshkov wrote:
+> > > > > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > 
+> > > > > In preparation to enabling QSEECOM for the platforms rather than
+> > > > > individual machines provide a mechanism for the user to override default
+> > > > > selection. Allow users to use qcom_scm.qseecom modparam.
+> > > > > 
+> > > > > Setting it to 'force' will enable QSEECOM even if it disabled or not
+> > > > > handled by the allowlist.
+> > > > > 
+> > > > > Setting it to 'off' will forcibly disable the QSEECOM interface,
+> > > > > allowing incompatible machines to function.
+> > > > > 
+> > > > > Setting it to 'roefivars' will enable the QSEECOM interface, making UEFI
+> > > > > variables read-only.
+> > > > > 
+> > > > > All other values mean 'auto', trusting the allowlist in the module.
+> > > > 
+> > > > I don't see the need for this. The kernel should just provide sensible
+> > > > defaults.
+> > > 
+> > > It does provide _defaults_. However with the next commit we mass-enable
+> > > QSEECOM for SoC families, which includes untested WoA devices. If the
+> > > user observes a misbehaviour of the UEFI vars or any other
+> > > QSEECOM-related driver on those platforms, it is much easier to let
+> > > users test and workaround UEFI misbehaviour.
+> > 
+> > You basically know by now which machines supports qseecom and which do
+> > not, right (e.g. UFS storage means non-persistent EFI vars)?
 
-This change moves the kfree(info->node_cache) call outside the critical section,
-releasing the spinlock before freeing memory. This reduces lock contention and
-follows kernel best practices of minimising the time spent holding spinlocks,
-especially around potentially slow operations.
+Do you have a theory about why on some platforms, like the one you're
+currently adding support for, writing UEFI variables does not work?
 
-No functional change intended.
-Signed-off-by: Ritu Pal <ritupal888@gmail.com>
----
- ipc/mqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you please include that information in the series so we can consider
+alternate routes for replacing the current whitelist with this black and
+white thing you're going for.
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 82ed2d3c9846..897caf55e217 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -526,8 +526,8 @@ static void mqueue_evict_inode(struct inode *inode)
-  spin_lock(&info->lock);
-  while ((msg = msg_get(info)) != NULL)
-  list_add_tail(&msg->m_list, &tmp_msg);
-- kfree(info->node_cache);
-  spin_unlock(&info->lock);
-+ kfree(info->node_cache);
+Is it related to UFS at all, for example?
 
-  list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
-  list_del(&msg->m_list);
---
-2.39.5 (Apple Git-154)
+> > And it's a pretty bad user experience to have people trying to write
+> > efivariables when setting up a machine and then spend hours trying to
+> > debug why they don't persist after a reboot.
+> > 
+> > I don't think that's fair to users.
+> 
+> So, is it a user or a developer, trying to port Linux to a new hardware?
+> Also, R/O implementation makes it obvious, that the variables do not
+> persist.
+
+A developer enabling support for a new platform can patch the driver and
+does not need a command line option.
+
+If you enable it by default, suddenly a bunch of end-users are going to
+have to debug why storing efi variables silently fails. That would not
+be fair to them.
+
+> > Let whoever brings up a new machine figure this out. It's just one
+> > entry, no scaling issues, and we get accurate information (unless
+> > Qualcomm, who sits on the documentation, is willing to provide it
+> > upfront).
+> 
+> And that's not really scallable. All other parts of a particular device
+> are described by the DT only (that's especially true on the PMIC GLINK
+> machines). If we are to support new laptop in e.g. distro kernel, we
+> need to provide a DT... and a patch for qcom-scm driver. I'd very much
+> prefer to do it other way around: provide a DT and patch qcom-scm if the
+> laptop is any way different from other laptops. E.g. we know that all
+> X1Elite laptops support R/W EFI variables.
+
+But this is just kicking the can and putting the burden on someone else.
+Now a user or distro would need to pass command line parameters after
+spending time debugging why efi variable updates do not persist after a
+reboot.
+
+If we know with reasonable certainty that all, say X1E, devices works,
+then that that's one thing.
+
+But if this series now enables broken EFI variable support on every
+other device then I don't think that's ok (even if you provide a command
+line parameter that each user now have to pass).
+
+Then I'd rather see a proposal for how to determine which machines
+support this or not, information which was not available when this
+interface was reverse engineered and where a conservative whitelist
+approach made perfect sense.
+
+> Except for X1-CRD, which deserves an entry in the driver.
+
+I think you meant my sc8280xp CRD here.
+
+Johan
