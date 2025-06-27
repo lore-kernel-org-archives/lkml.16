@@ -1,146 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864EF1A76DA;
-	Fri, 27 Jun 2025 16:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4AB2E9EC9;
+	Fri, 27 Jun 2025 16:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751042001; cv=none; b=cctoklNMZ0XJQgQ9doC8Uy4eALe4DCO+/Y9nEbZU+9xwgzvMBSt7hy3lXdiLpiQnfYNa6bFGPp44l9c79IXnAAwDJPyWnY6I9fZ8GGsjXA//yqc3mqRv0LHwOoSiTw0XkAtzCGOHIldjRbv0CX1UvmahAKTsXbHO2X3TL0DFDLs=
+	t=1751042012; cv=none; b=gSR2xTOqHylmhMmsvRzyM3pNat1vDwCVAzWom/Yxt3+/PxqOCO8ypTaLqVQCb7otdKgynG4+tovl17qrZ6JDBe4aaMG5rHBnFo55ZsJfr/XRt/lDSIJ4LAMjveOHDwjLHj+T8xND83ndzom5Cqg3lpggR4Pai/bwAXiB1PPglV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751042001; c=relaxed/simple;
-	bh=zIWjkY/wA7AawfJFg0IchWnLZiE5mB3DevemhbDQxrY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L3ABFXkYd3PZeMoG4ObOS1NPghY7B0LLCgOiFfvHAAXcjFvfg1EYR/J9MP4NlDroeIz+Ao+7+p+x8YoCYuOBDniAM70aWdz+fhomCI0ekHWH+kHfS21xvzKhkGYlQFtNYA4oV9bmNB5+Wth513VtRxDIvO8+PiDVRjJhX6MTnqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hVQGysZL; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751042012; c=relaxed/simple;
+	bh=WFhAKwhDV0tYJDjNHwHxrmRVh8mM0OQx2XhK1ipVWb0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UC96sLdbeYuGqvn3TCliSka75AKuMJKlcg2VA8M4HkqmKkbLlMV5bjoCZKBCiOgmA8basLAbhkMuCYF1px6/GQQZxYEBJSlIOuWYc7Jzo6iNqbCqjIjx90A4x2kw2kLmyx+LkxnrV2BCfxT7R1ufAJ5LtaYrsVJhqGsq4OmGGxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvELLEMt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hVQGysZL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751042000; x=1782578000;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zIWjkY/wA7AawfJFg0IchWnLZiE5mB3DevemhbDQxrY=;
-  b=hVQGysZL/wfwSFwmEnSSNfZYYsoKkNVzINg4u3wode+Cr0VoEZKaWHjr
-   Oj2vTWijHUqIbvgb5qQ/gjd/czdkNs9AhfIxn6aNftPnzJwpC9PT0mdh9
-   7G/oJyMFYH9adegWCX2JZByyltV21eKlQbi0se00udFw7pYbkfOxILX3c
-   /2oOXc58aRsZmQ5SqgtYsQ7xai5/c4uzifPzbfLPxkz5D8wOzeiylhUJu
-   Z46cp3+7jRAb0qSeO+LVVCPbQ1O1gQpolGM3jDnLInX1266rzQXXA0pQG
-   HPJArGqXszyCX5MnOneuRDBDuc0lLyA/KQumWKZuinRJeJarFntvAPY5t
-   g==;
-X-CSE-ConnectionGUID: a6fnvEfYT6SXv9ORIDvPOw==
-X-CSE-MsgGUID: IW55LA9yQ6WIhKlrVPWgBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57141326"
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="57141326"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:33:19 -0700
-X-CSE-ConnectionGUID: hm6I/MhwSZeMjqS6qLf8JQ==
-X-CSE-MsgGUID: kEehilr5RBiTYgC3X9pbaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,270,1744095600"; 
-   d="scan'208";a="153556133"
-Received: from spandruv-desk1.amr.corp.intel.com (HELO [10.125.109.66]) ([10.125.109.66])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 09:33:18 -0700
-Message-ID: <79eca29a-8ba4-4ad9-b2e0-54d8e668f731@intel.com>
-Date: Fri, 27 Jun 2025 09:33:18 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvELLEMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13231C4CEE3;
+	Fri, 27 Jun 2025 16:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751042012;
+	bh=WFhAKwhDV0tYJDjNHwHxrmRVh8mM0OQx2XhK1ipVWb0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AvELLEMtW9jgJU3jVQbc/o9w3TRJ2g8otBKa1jWoKxnYTgdKg+ohECLGFouptLwGt
+	 gjqW/SpKF89QWgmy0w7fKEqGSkD59rwIHvYVE/zZyFj12hb463CHlLe0Vbh0VdPTGp
+	 j8azFk3T0pBvrnjWG/aOWhfiDsJKW+2PesglAxnTfhz/0dM7j5kD4asbJVeZ+vQ8ZS
+	 Bek2nrdPf8TtIaCKTznnhlAqDA7K7w8kCtrQgzzcdb59EN7Mcu+2IKy9hSON4Uyd1S
+	 jNCkBiqak3GsnM/JwPXTIgtxk91ct4EMfs3/xNr8Ci8wYZooy6aZV5NSEDMn42I0Vi
+	 6Odf68oC/IeHw==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yunjeong Mun <yunjeong.mun@sk.com>,
+	SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: [PATCH RESEND] samples/damon/mtier: add parameters for node0 memory usage
+Date: Fri, 27 Jun 2025 09:33:29 -0700
+Message-Id: <20250627163329.50997-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/mce: Fix missing address mask in recovery for
- errors in TDX/SEAM non-root mode
-To: "Luck, Tony" <tony.luck@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>
-Cc: "Annapurve, Vishal" <vannapurve@google.com>,
- Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, H Peter Anvin <hpa@zytor.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
- "Huang, Kai" <kai.huang@intel.com>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "tony.lindgren@linux.intel.com" <tony.lindgren@linux.intel.com>,
- "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>, "Gao, Chao" <chao.gao@intel.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
- <20250618120806.113884-2-adrian.hunter@intel.com>
- <487c5e63-07d3-41ad-bfc0-bda14b3c435e@intel.com>
- <ccee2a0f-18fa-4037-bf97-f359e0791bf6@intel.com>
- <d443db90-ced5-43d0-9f85-ad436e445c3a@intel.com>
- <9a4752a4-e783-4f03-babf-23c31cee4ff9@intel.com>
- <SJ1PR11MB60836014330204B2FBCC7418FC45A@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <SJ1PR11MB60836014330204B2FBCC7418FC45A@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/27/25 09:24, Luck, Tony wrote:
-> We've been sending a combined key+address in the "mce->addr" to
-> user space for a while. Has anyone built infrastructure on top of that?
+From: Yunjeong Mun <yunjeong.mun@sk.com>
 
-I'm not sure they can do anything useful with an address that has the
-KeyID in the first place. The partitioning scheme is in an MSR, so
-they'd need to be doing silly gymnastics to even decode the address.
+This patch changes the hard-coded quota goal metric values into sysfs
+knobs: `node0_mem_used_bp` and `node0_mem_free_bp`. These knobs
+represent the used and free memory ratio of node0 in basis points
+(bp, where 1 bp = 0.01%). As mentioned in [1], this patch is developed
+under the assumption that node0 is always the fast-tier in a two-tiers
+memory setup.
 
-Userspace can deal with the KeyID not being in the address. It's been
-the default for ages. So, if we take it back out, I'd expect it fixes
-more things than it breaks.
+[1] https://lore.kernel.org/linux-mm/20250420194030.75838-8-sj@kernel.org/
 
-So, yeah, we should carefully consider it. But it still 100% looks like
-the right thing to me to detangle the KeyID and physical address in the ABI.
+Suggested-by: Honggyu Kim <honggyu.kim@sk.com>
+Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+Link: https://patch.msgid.link/20250619050313.1535-1-yunjeong.mun@sk.com
+Reviewed-by: SeongJae Park <sj@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ samples/damon/mtier.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/samples/damon/mtier.c b/samples/damon/mtier.c
+index 36d2cd933f5a..f3220d6e6739 100644
+--- a/samples/damon/mtier.c
++++ b/samples/damon/mtier.c
+@@ -24,6 +24,12 @@ module_param(node1_start_addr, ulong, 0600);
+ static unsigned long node1_end_addr __read_mostly;
+ module_param(node1_end_addr, ulong, 0600);
+ 
++static unsigned long node0_mem_used_bp __read_mostly = 9970;
++module_param(node0_mem_used_bp, ulong, 0600);
++
++static unsigned long node0_mem_free_bp __read_mostly = 50;
++module_param(node0_mem_free_bp, ulong, 0600);
++
+ static int damon_sample_mtier_enable_store(
+ 		const char *val, const struct kernel_param *kp);
+ 
+@@ -112,7 +118,7 @@ static struct damon_ctx *damon_sample_mtier_build_ctx(bool promote)
+ 	quota_goal = damos_new_quota_goal(
+ 			promote ? DAMOS_QUOTA_NODE_MEM_USED_BP :
+ 			DAMOS_QUOTA_NODE_MEM_FREE_BP,
+-			promote ? 9970 : 50);
++			promote ? node0_mem_used_bp : node0_mem_free_bp);
+ 	if (!quota_goal)
+ 		goto free_out;
+ 	quota_goal->nid = 0;
+
+base-commit: 12c066f7860c9b980fdc8ccad1f98425b3344bf0
+-- 
+2.39.5
