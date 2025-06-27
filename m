@@ -1,105 +1,238 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB40026C393
-	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AAD136327
+	for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751014275; cv=none; b=q5FpNl7P8DcgoZfkNmkwfSObW3SV82xIT0Ik+xgSd03Smbeq6k/d3rzw8ZOkeHXev659XYLs2QF/FBAkZpqKvq2tuk8pvQv4pXZfBnaIxkCCnRztT3ZUk4XEfCzTXouktyAUETCaXDo76k+oySZ/z98YbzghxT0g4W62yTieOC4=
+	t=1751014341; cv=none; b=XSG5752pFAw1CSAIllmu2S0/2eJtEUo51/gvpLBhA5kjLFsQLVCw/WLd/SvApTCbUVaL73VZWUy2SqPefVbbm3O0zOH4AtsJYLbdpvQH2p8MBCMfveVq4gsAHtl4ASxuxCBGNxn4Ftqu7O/VlIvS4iJC5etp4VBQb0QOoeleHYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751014275; c=relaxed/simple;
-	bh=lMIsRDkxKlW2sITXvPt1YCZorjg8GdjUNuUGIzNXHKc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UUJo+RBG72wSQDX2vSlFlNHWvO+v2psKcgfpDUOqJEWCLrb+MzJC3sit+gvloXdY3GO9PInLqLZF3kLFtR5BUTqtsYGx1gSdkpaNowIj6mznWQCMdKw/LAlNdogZdABVcvmLYeya0/6yjPu3m2vog4A+H89MrCUc2BPIYJ4DN24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FgmfI8ib; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751014341; c=relaxed/simple;
+	bh=Trp2tEL9MBTHjgrxShlRCBnJKQ3r7660UkyS6y6g+ls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hw8ot3QZwDTAqEhDT55z822iHfyMdqCidEwLCwsMAf9KQk7sDdL0qAhzopTRLOSYkgTBmd+4xDYHcpmP2UIPkm5Jbxj3196BSSnhKgpn5pVF5n58yrLXaCM67fc1lp9aJRA3XNQpm1ZhiM9d8w2nrARmS0J0GXAPNwK7SWEf0nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JSfFUhJo; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FgmfI8ib"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751014272;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9S5BIwJWhZ7aWoIrg/4Qmnz4yYjjaSexucJJwI2/7U4=;
-	b=FgmfI8ibtGhz3/hlAkyv8/DciBe2Q4l9lqXdLlTrpu/jqGQFl7d9TDEbwHADiW5fpbdIVn
-	t0lZN7RtNZivWBrjDE6oQdzgzfTcZTzsxJdhyOB7kDNzn+5ar7svrwoKAnxm3sZXQffda1
-	zY8XzFQE5UwPkcTzgqzeoeOUwy2427k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-N3LDsnuDP6Gxah7R_nsGTg-1; Fri, 27 Jun 2025 04:51:11 -0400
-X-MC-Unique: N3LDsnuDP6Gxah7R_nsGTg-1
-X-Mimecast-MFC-AGG-ID: N3LDsnuDP6Gxah7R_nsGTg_1751014270
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d6768d4dso10839555e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:51:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JSfFUhJo"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so1745791f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 01:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751014337; x=1751619137; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UoFUdFqAipKbBMVUce6Z7qQLfXF9kagacYpEqN92/d8=;
+        b=JSfFUhJo2F8EXBGUNpMbkIKbjKcklAhHtf115HQiMSX3NE48lYGsc5bfzVRZgZjS95
+         lkebQKemNmbRq9JIlk+nbwbbOGeTVaZAyNfZkcVclvRhBgPNeQ2hT+1Nk6MFcGiBzIMZ
+         XIofhi8v3KXaJLTpIgtX7f5I9OnPSoVpMLDroy9zCJEQBl+KzILcg7+R7VnTgDx3vOZQ
+         qeGyO4rDXMrSoW3kK5xPjO4b/+sl/jhJy7q3HZa8RMEN8PcxHQm01QRTOQ6U8WK/9Kfc
+         nJ/UpC3xDw2RsdUamxKiYfB7MzwmeuNS0i7KZkwPUfAF+nZVZadCQFExY9qVxf2hwIAT
+         bhxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751014270; x=1751619070;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9S5BIwJWhZ7aWoIrg/4Qmnz4yYjjaSexucJJwI2/7U4=;
-        b=nT2nt6y9BdX7FtuoBfehNGftM99+3p8nIYy38CpfSws/5kYJvc+M/8iCS1y5cwR9eS
-         SXFZjFWiWu8S4YABz/8UyOU7rk9LT/9bcaMYI2yu9GWeNIagVWQtmvN1Y/HObcoIvP5h
-         gERQkBORqfGxyhFhwbw2alvJQH9zcG9b1vQOTr7JfzpmbhwbfhY5zdk6IbkZ0RhXy5oi
-         CqJ9GO5oHg0jml/8NlVI0dO4Gt/BAwCXvw36ohWCJ53pDlYUmTYBXbNsaswXyB5C9kaA
-         LbrPwxe7/qbA7CivSdiY3zvpG69t0md6jfS6VZfkz/MAziKSpaQvSx78JcSqLw1YlINK
-         nF+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWskQpqtHYSh+Oi4Mv3fgicO/sW7D1+4wCdjwJWLXOAc2pbDfOEVJWNaeDEYF5SXS8hUdmX/lueCGKmNM4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL9Lso30cFWKaA9i1j/TGAAEFRn83Klhl7v4wVUwpoKJGZOLKA
-	fprpy8nLDbcZgYnyOc8zDG1+nAwUnf+qrOhpwZ9Xg1hwf5JoTyAFo/mO2ZbsvB7RXdkv0DmzZw/
-	CAwLsE1L5ylg64e5PbAZfdTmcrl9gFpDMtNE/ZErZu6oQnn3HrPQIQXuM3TBC5RgM/g==
-X-Gm-Gg: ASbGncsM4H4NKBH9276h5y8dsmlxFaJ0LSv8c4lEYa+tdfclM77ma+LY54mT5oikmiw
-	BntQ/M4dRzJ+aLySk9ZGTLbNAwQ+GyAJxfysPT/LnFRJ9xA1YPZ/C0nUmnVQr9YGNIPbRrdd0sh
-	kz+cBfG1lu+ow/Qils/zdc00mOqpebiDp9d88JDqV9W/4BRDrVkVSkl7UG12b1rWcSGuQeltfPz
-	eYV2ISe65HJqR3hIWU4jSfWihWcqiYxUEu0L0lvKzmwEk4yosEJ3brzHOU4Ki8QEeKhwBtlVILQ
-	EIzJNslo4/zashEEZ+jDgfN4hPiKmSiCMym1RoCcUtBl9CCjDD0A9NTd9uQwXwni6jXc0VsGef6
-	2xprx
-X-Received: by 2002:a05:600c:c111:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-4538f21d22cmr20152315e9.2.1751014269712;
-        Fri, 27 Jun 2025 01:51:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXokL65QImWUWdVGNsBSXoLoc72EgugzTSJPGmsScrWsNWL3lNb3wxJPDeprEOScHkjECCNA==
-X-Received: by 2002:a05:600c:c111:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-4538f21d22cmr20151975e9.2.1751014269256;
-        Fri, 27 Jun 2025 01:51:09 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c42e1sm73481915e9.37.2025.06.27.01.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 01:51:08 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] firmware: sysfb: Don't use "proxy" headers
-In-Reply-To: <20250626172039.329052-3-andriy.shevchenko@linux.intel.com>
-References: <20250626172039.329052-1-andriy.shevchenko@linux.intel.com>
- <20250626172039.329052-3-andriy.shevchenko@linux.intel.com>
-Date: Fri, 27 Jun 2025 10:51:07 +0200
-Message-ID: <87frfld0uc.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1751014337; x=1751619137;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UoFUdFqAipKbBMVUce6Z7qQLfXF9kagacYpEqN92/d8=;
+        b=rqESNTsS2YbQyeRmcTI73BEO2CYYKAV6pPfyyhTlRNF+Qn4y/sZH6hTL0qZ5EA/qid
+         AD6x9Nf+ufQ4xvh+G1YU81RQoKb+af8FUel2OUbP2t1SctrrCBQxiEU/bzrP+lEDsP4U
+         I7cJSjowYVjBOIr6t/v9KnmvJemfBSDmY0sxx/OuNsIrQJbEofFiecN3VFBQHpi6aKdY
+         mcum1s46aOzvYcirn8f4okMXs92BvNnDdvsXv1W6w16COBX8MkXsI+U6Q77wv8mkmHXh
+         Pbhza2oks2gQlDhw59KS9cJh2oqtzqa4ejUgAOA8YCUiqkWBz8HdLgL0e160mrSlYWt9
+         vBrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ6sZ0kmfAGYPTpXzSEOKZPk2FE5JwYtvGOVknXwCe/mTSmIxLIeSQzHvIERxkPRJ10SJkQaxdO44zSB8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo8CXyvkEfiV0e5S7+ozKTjJhIwdSCWE+pqQHZPmtn+sEVJ3l6
+	zcYdb6n1HvYI5tcxHdjvpeqveOiaawBk0pI5VjPbRvEy/Bq3LbV6K4K7yC1rrQQzGPw=
+X-Gm-Gg: ASbGncsv/O+52yaqoonwGZ/Ldvs4MSlqlil55rG76JMXr6U2NdwQmLXiuBf1y+eGQUY
+	MVwyHU2zsNNEXg6aVscIi7IQbmImQh/6Dn+7kTUW74OwlYKEoTXv5iiGJeuCqP0c+Bp8lC1FwN5
+	pZUdfK7auVhc53SV8XIxaZydBSrV6qDzjXK2WO8n7SC0YwDzdQnqEnTbZ7/zqxv7Sb+24Me1Oka
+	V/RlW/m6qKpgzfqt5DDZKrlEmzz13zzsz3lBu+XJdpYgIEfdAZ04iYSRwtgKBBQWfgSMPz9bkbp
+	YHaJMDS7HgyPB4EF8wt26J+7WaO5T6dMvYyajPXmXZ1zEvuQp/PkPK2vhWhAkpNfJoBEm1dxKZh
+	Fow==
+X-Google-Smtp-Source: AGHT+IECZfBrc+AzA+5LfKHuhgle/QkdG0KHezJE31byGodBUKLEFLFk2mmygHC6OYjmlmscdlmdXg==
+X-Received: by 2002:a5d:4a01:0:b0:3a1:fe77:9e1d with SMTP id ffacd0b85a97d-3a90d5a7e61mr1890018f8f.16.1751014337246;
+        Fri, 27 Jun 2025 01:52:17 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e597a8sm2071994f8f.70.2025.06.27.01.52.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 01:52:16 -0700 (PDT)
+Message-ID: <19302e67-7df1-4100-912d-c9b426a4b943@linaro.org>
+Date: Fri, 27 Jun 2025 09:52:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
+To: Frank Li <Frank.li@nxp.com>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+ <20250624-james-nxp-spi-dma-v3-6-e7d574f5f62c@linaro.org>
+ <aFrXRDJmMgt0qTlL@lizhi-Precision-Tower-5810>
+ <0e26494d-7b85-4874-a2e4-a498ce1864c8@linaro.org>
+ <aFwN/LlXEmv82PcF@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aFwN/LlXEmv82PcF@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-> Update header inclusions to follow IWYU (Include What You Use)
-> principle.
->
-> Note that kernel.h is discouraged to be included as it's written
-> at the top of that file.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+On 25/06/2025 3:55 pm, Frank Li wrote:
+> On Wed, Jun 25, 2025 at 11:09:57AM +0100, James Clark wrote:
+>>
+>>
+>> On 24/06/2025 5:50 pm, Frank Li wrote:
+>>> On Tue, Jun 24, 2025 at 11:35:36AM +0100, James Clark wrote:
+>>>> In target mode, the host sending more data than can be consumed would be
+>>>> a common problem for any message exceeding the FIFO or DMA buffer size.
+>>>> Cancel the whole message as soon as this condition is hit as the message
+>>>> will be corrupted.
+>>>>
+>>>> Only do this for target mode in a DMA transfer because we need to add a
+>>>> register read.
+>>>
+>>> "We need to add a register read" is not reason.
+>>>
+>>
+>> Maybe: "It's not likely to catch any errors in host mode so optimize by
+>> avoiding an extra register read"?
+>>
+>>> Add checking FIFO error status at target mode in a DMA transfer since PIO
+>>> mode already do it. It help catch some host mode ...
+>>>
+>>
+>> Are you suggesting that we check for FIFO errors in host mode too? It
+>> requires an extra read and check in dspi_tx_dma_callback(), but I'm not sure
+>> what it could catch. Realistically as long as everything is setup correctly
+>> then neither of those flags will be set. It will either always work or never
+>> work.
+>>
+>> It might be better to add it later if a use becomes apparent otherwise it's
+>> extra noise in the code.
+> 
+> I think your origial last phrase is not good enough. You may rephrase it
+> to make it clear.
+> 
+> for example: according to your patch
+> 
+> "Only do this for target mode in a DMA transfer because we need to add a register read."
+> 
+> "add a register read" is result, not a reason. the reason should be "you want
+> host side capture such error."
+> 
+> Frank
+> 
+> 
 
--- 
-Best regards,
+Got it, thanks
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+>>
+>>>> In IRQ and polling modes always do it because SPI_SR was
+>>>> already read and it might catch some host mode programming/buffer
+>>>> management errors too.
+>>>>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>    drivers/spi/spi-fsl-dspi.c | 28 +++++++++++++++++++++++++++-
+>>>>    1 file changed, 27 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+>>>> index 58881911e74a..16a9769f518d 100644
+>>>> --- a/drivers/spi/spi-fsl-dspi.c
+>>>> +++ b/drivers/spi/spi-fsl-dspi.c
+>>>> @@ -560,12 +560,24 @@ static void dspi_rx_dma_callback(void *arg)
+>>>>    	complete(&dma->cmd_rx_complete);
+>>>>    }
+>>>>
+>>>> +static int dspi_fifo_error(struct fsl_dspi *dspi, u32 spi_sr)
+>>>> +{
+>>>> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
+>>>> +		dev_err_ratelimited(&dspi->pdev->dev, "FIFO errors:%s%s\n",
+>>>> +				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
+>>>> +				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
+>>>> +		return -EIO;
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>    static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>>>>    {
+>>>>    	size_t size = dspi_dma_transfer_size(dspi);
+>>>>    	struct device *dev = &dspi->pdev->dev;
+>>>>    	struct fsl_dspi_dma *dma = dspi->dma;
+>>>>    	int time_left;
+>>>> +	u32 spi_sr;
+>>>>    	int i;
+>>>>
+>>>>    	for (i = 0; i < dspi->words_in_flight; i++)
+>>>> @@ -614,7 +626,8 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+>>>>
+>>>>    	if (spi_controller_is_target(dspi->ctlr)) {
+>>>>    		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
+>>>> -		return 0;
+>>>> +		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+>>>> +		return dspi_fifo_error(dspi, spi_sr);
+>>>>    	}
+>>>>
+>>>>    	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
+>>>> @@ -1069,6 +1082,10 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>>>>
+>>>>    			if (spi_sr & SPI_SR_CMDTCF)
+>>>>    				break;
+>>>> +
+>>>> +			dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
+>>>> +			if (dspi->cur_msg->status)
+>>>> +				return;
+>>>
+>>>
+>>> Although fifo error may happen after you check, it may reduce some possilbity
+>>> and catch some problems.
+>>>
+>>> Frak
+>>>
+>>
+>> Not sure what you mean by this one. But I've seen a few small errors now
+>> that I look again. The error check should be before the transfer complete
+>> break. And tries should be reset for each part of the message.
+>>
+>>>>    		} while (--tries);
+>>>>
+>>>>    		if (!tries) {
+>>>> @@ -1085,6 +1102,7 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>>>>    static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+>>>>    {
+>>>>    	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
+>>>> +	int status;
+>>>>    	u32 spi_sr;
+>>>>
+>>>>    	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+>>>> @@ -1093,6 +1111,14 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+>>>>    	if (!(spi_sr & SPI_SR_CMDTCF))
+>>>>    		return IRQ_NONE;
+>>>>
+>>>> +	status = dspi_fifo_error(dspi, spi_sr);
+>>>> +	if (status) {
+>>>> +		if (dspi->cur_msg)
+>>>> +			WRITE_ONCE(dspi->cur_msg->status, status);
+>>>> +		complete(&dspi->xfer_done);
+>>>> +		return IRQ_HANDLED;
+>>>> +	}
+>>>> +
+>>>>    	dspi_rxtx(dspi);
+>>>>
+>>>>    	if (!dspi->len) {
+>>>>
+>>>> --
+>>>> 2.34.1
+>>>>
+>>
 
