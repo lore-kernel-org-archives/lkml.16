@@ -1,296 +1,647 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2054.outbound.protection.outlook.com [40.107.212.54])
+Received: from out28-49.mail.aliyun.com (out28-49.mail.aliyun.com [115.124.28.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844BB1DE2AD;
-	Fri, 27 Jun 2025 11:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751022179; cv=fail; b=HmRo/KxbfKsT4OblSzno0+MjEkILKm17XRpkuSJohivYKxLNDB9bDCmLL19hWHZw5yUAnGwo62HFhJ7UuxxNpRsAyTwMe1+WaTpCXVEMnYxTAh4TFl5npjfao0J8YI5NjemnbQXubYmFf963V6OqDzPchm58VdA+vTNrxCseaCY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751022179; c=relaxed/simple;
-	bh=V5DxcfjFpRk8SM7L94t/yXvlxoQqmgOi6VCSOH1caiI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IEW+KcbknrM3hDsmzcUsObitIC9EGx5XlMacYsM9R03wQIPcpOQC0b5pyLjcZx7vMz8DB4yXUOjX3MeV/kum1niuB/hTs3E3Vqn5kydIvm5aU06fiAzFiuJc6bt+oprCc306qF2EUeqygcx/GqPI51kzTnQLIRvZPeWIiNf1FVM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=T2Byz3cU; arc=fail smtp.client-ip=40.107.212.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="T2Byz3cU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=THMB+Eomvs03NNsPjQo+8jsnUMsk/W8RLxsrgeYsbtq+qO6kAftW+Erp/KEqdu6e5/uHSjvh6OL4OWUMM4VBa/vHCXW73iPXJHgehl8agUnRhfKO+MDIbfcCT7+ErtkLGcRLobJs8u+NmuvjWT97HQFOiQ7nDAY2RwnuPzV1NDUFgkrn495aQNC5I+wB1QIBY/VEw9tjjxADvgBMyQJZngeJQZ4O7OOM5BH3wutj9tdgjP4YxbYTFfFN+q9IZF6fiElsrweFtG4AQW7h4bWKP+PIjKE+QhzDRygF1Dq2j/OnoZxKdq8+djhCDiHnxXEmueWntAWghoHYl+5MQiy01Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ANsgFne6UlJuXbXePXJt43xIIOcNYx4bL/8b713r8tI=;
- b=CNq4QSVgGZNfqdTkXvudo7Xcr/Y45tyIpymcZE0WSMft4Q8FnXR5BI+kupulMcraS3ihGrLW5t9Ei0hqwJ2lOCF1TXBE5HX43Pgblz4x2HKPpVNxF2h6BJmtJI5pDbBMzkN+ftInLPZ7zolHdWveLy0oPxumhnZJYJwS1gGUngoMXFTCDLJ2Yg08MdHVJDAR2RBx1QP0BXU3Da3ww0lJ1GTBz+DVzXjMqzrP7vh4/HVBIlcd3J6aPbJm4crNWZ0I7+IH1a5aU15MtvedJIr1N+jVgZojc0oZEuSZ9ZOdFS7y/IDuXX6BJ/N2Vypp77EbfMdUW4Src9dj+gvQMXOOGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ANsgFne6UlJuXbXePXJt43xIIOcNYx4bL/8b713r8tI=;
- b=T2Byz3cUwpZ5WRsN8t1/b651DGeWeKVeCc0VHamqYmmXSc83za6emrY8viTdbGlNH/gF7CuKbNj5va45HV/NMWWW6ZEr7xOkihqwSxychtZ+hSi16xvJKj6OlKG+/yKnDrJrM/WvCtZWV2ZbZlRp4EkOavbMA5QUGOGovxyTzZxkLL4uQNbvki7wT3/1h+1AFsQJzUS7Y5Hxg/X4+EsrUmipAIoT55qxh3jX/Z/ek8tr7co2XsrZQwiZcqS3SsxVayjxhGjil/ZgvJpRzMwxnirqXxHPTXHDlvcxSioZSDLWDkaOVRrRIMmXaLUitAJpK15ZcKW8ILPN/6ktaXUnyQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH0PR12MB8773.namprd12.prod.outlook.com (2603:10b6:510:28d::18)
- by SA0PR12MB4365.namprd12.prod.outlook.com (2603:10b6:806:96::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.22; Fri, 27 Jun
- 2025 11:02:54 +0000
-Received: from PH0PR12MB8773.namprd12.prod.outlook.com
- ([fe80::47a4:8efb:3dca:c296]) by PH0PR12MB8773.namprd12.prod.outlook.com
- ([fe80::47a4:8efb:3dca:c296%2]) with mapi id 15.20.8857.026; Fri, 27 Jun 2025
- 11:02:54 +0000
-Message-ID: <6eb19bee-c553-4a28-9342-b2b218deabe7@nvidia.com>
-Date: Fri, 27 Jun 2025 12:02:48 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: register_syctl_init error in linux-next-20250612
-To: Joel Granados <joel.granados@kernel.org>,
- Bert Karwatzki <spasswolf@web.de>
-Cc: linux-kernel@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20250612175515.3251-1-spasswolf@web.de>
- <vvorpevngfle6budlgqhmj3f25lb77czzyvd5aa6jil7zkaqgp@weanygri324r>
- <11898dd756020687c2016a37af3c948b350bdbbc.camel@web.de>
- <szadjbcldmcirdtgiv6wowqumlk4cbthb37f3e42lzcbt4tnla@ilp4m6quqk4b>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <szadjbcldmcirdtgiv6wowqumlk4cbthb37f3e42lzcbt4tnla@ilp4m6quqk4b>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0343.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18d::6) To PH0PR12MB8773.namprd12.prod.outlook.com
- (2603:10b6:510:28d::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CFD29B8FE;
+	Fri, 27 Jun 2025 11:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751022200; cv=none; b=F51Sd9/2uCY88t0TZdFDVKIoh+tK3efJR0/x88hrlC6pp1uSiQkwMP3q0sG8onxLlF3dRhc4J9+/qyZO7eTj8nPQPMbuJYECLPu8dqfAabHvWlsgulskTuo+ZosZHOp74icYEyOvstNKOEjYa34cPp1bIH+H+H0c3j5ORDappa4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751022200; c=relaxed/simple;
+	bh=Pj7fpTDUu89C1rey3F4q85pJ/bzTP2gYVIvI2Cz6q28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7T5rHHN8cNmak/HtDwgY8tbN3Ue0o5DwaC8GFTrxpxgphEW5H8u96rSgsNmtw6ROP5ZEaMETbE9rFgDmV5swkCb7bMUpN2yTb+BYdS+b7xBtcUFCI+VwTNQM0DYQ/SPUdJ2lZjhRhCROVSnG68cM0pNOZIHg9/RGzRTkfVXYpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.dY-WDnk_1751022188 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 27 Jun 2025 19:03:09 +0800
+From: wangweidong.a@awinic.com
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	wangweidong.a@awinic.com,
+	zhujun2@cmss.chinamobile.com,
+	thorsten.blum@linux.dev,
+	colin.i.king@gmail.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yijiangtao@awinic.com
+Subject: [PATCH V3] ASoC: codecs: Add calibration function to aw88399 chip
+Date: Fri, 27 Jun 2025 19:03:06 +0800
+Message-ID: <20250627110306.23488-1-wangweidong.a@awinic.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB8773:EE_|SA0PR12MB4365:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f0b67c0-927a-4103-22e5-08ddb56a2a8f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QlZ1V3B6U1dNcFd0aXVyRFJBMmJPcUJYYTVTaXVra2RLT3FiczliTDFKL2NE?=
- =?utf-8?B?bFlhWFQ2SE9lR0xzUSt4RU50a1hiem93RXk1dzlIWXJyaDkxaW1GaWRqM3JF?=
- =?utf-8?B?VTBBSHgxN0o4SHpybkV4RVFVVzRyQnNMYklTaWxRQ25SUHlUMXVuaTYvanBi?=
- =?utf-8?B?YVZXWE5wajhNbUJzQjhxTFBjRy9WYUtyS0pGd3hsRk1weTZ4WmZHc2xDTjhG?=
- =?utf-8?B?MmRqQVM1TjFoRkJ2bUYyaXF0T3c0SGVNYlVsTE5EcnVSTC9Kbm1ocHo2QU53?=
- =?utf-8?B?alc3ZzBpN1V3QU5vSnZBQWc2aERKNnUvcFJQcVJ1RDhXT1ZUT1hBcStoRXVO?=
- =?utf-8?B?Q2hhMVhBQ0dZb0xzQWV0UWtFQUJRZlBmQVJDaTVmUml0WDZhS3VBRW9rS0pM?=
- =?utf-8?B?bElzamFPVzZCRmtsdlBXSXYzYk9qZHZsZ2cxYnY0WlBnbUpxNVBmNStEb3ZQ?=
- =?utf-8?B?OHBxTzBCK3VJdTNiakQ0ZVZzR2FZWkRuMVhHM2Y1WWJScmI3VXF5a1ZoSzEv?=
- =?utf-8?B?VUZHY3RyaGRjdnQxVnFrUC9BS1Y0YUlwa0M4emF6ZU05V1dXZUF2YnovZDhE?=
- =?utf-8?B?MUVmYlA2dTFvZ1RDT290eGlvSWVwdTI0d092UXFVN2FlTTkwUU1qNm9LZHhq?=
- =?utf-8?B?TkpFTzhjejF4VFZDM24wdUlINzZUV2JCZkErYzEvcllsRWVsWDJkeWhUNE96?=
- =?utf-8?B?QnRqa0V1QjZuaVpXdjRaVWlHdlF5Z2ZBVHU2Ukhrci9SbWVvYS9KTVNzR2s2?=
- =?utf-8?B?ZU5JTk95bmZ2TzBYMi9uTG8yM3lJU3FLY2NvdmlzYUhjNmFYRHY5V090aW1O?=
- =?utf-8?B?U2VUaXNBT0FueWxSdm9qWUQrcFFsYkp1VG9iTFBuQ09udW1jUHR4VVNNSjJ2?=
- =?utf-8?B?QTBIaVBmY0EybnBKMlRQVm5XZ21zS2FCS3ZBRXJhUDAxMDRncUVCMDZtVDBa?=
- =?utf-8?B?Y1FHVEJ6N3JpZGtSaGhRVnIvbCtqZEVYTVhlTkFsckJTVml1SWdycGx2UnpX?=
- =?utf-8?B?S3d4TWpDS1psTlVnekN0US95cnZ2WTNWNG1rSHAwOW85cWpjZ1lVZktFQ0xy?=
- =?utf-8?B?WnU3aUpsUGRZMW5qK3huWTYrQ3VxY0R4bTRHVGp6eTRyNXhtZUVISVNwVUs1?=
- =?utf-8?B?UUtNRUJSR3hmdVNxM1BrN3dTMnl3d2RQY0ZUV3JROHRiVEpFSjQ5ZUlnaW1t?=
- =?utf-8?B?R1BrbHR0U1dEQm1oVi9pcVJJV1JDMEtlZk95WGJvYzBuUGhGa05sek5qaHhr?=
- =?utf-8?B?MlNqZGprbEpTUENNenRLSnRBS3BZeTI2Mk1POFdXbWFLV3IxM2JCSWVpMzhi?=
- =?utf-8?B?Zmp2ZStFYXBoNUtRMHBQZ2UrR2lENGcvcUppWnA3L3JaUW52RlFmQWVIcUNV?=
- =?utf-8?B?T0ZjbU1QbGNPRGcyaE84TTNkWjJaMkF3UjV2b0tCVExnREhYZUY3ZmNCUU5r?=
- =?utf-8?B?aU8zV0N4eXVxL0owRnQ4NHMvYXNkM0RPWUFlZEVIWmx3RXR0UkNqOVBJdGp4?=
- =?utf-8?B?NnhYek1pWVNRVXNaOVpmZFpVeEdjRk1CMUpwdHN3NkJ4SEJ5YndnRCtBTUkv?=
- =?utf-8?B?OVBJT2xpK2h3ak5RVjdkWTRHNVR2VFVzZ243S0FnaUQ5Zmw3aUJhNkVIdTJQ?=
- =?utf-8?B?UVdEWnFNckpHcGxZVUZjTWx1MGRoMzRkVUl3TVE0SGM4YU5oYUtWUkQwT0RO?=
- =?utf-8?B?SzArNUgwTlA1LzhPWGRKYmJwNWYvSmh3UEYvQmdwSXE5bmdCMUVWMU1ZNDdJ?=
- =?utf-8?B?MDNhSGtRbFZGb1BjOS84YWxkNCs5dUxPdmpWREUxR3NSSEV6OE1YRGljTGxu?=
- =?utf-8?B?MzZwR010cXNqb1V6Vjhhd2FjRjZhdGU2ZExVOXQvK2s0SVFKcDhOYW5hWWhu?=
- =?utf-8?B?ZG51Vi81RWZNOTNLbnVhUUZDaDl4WnpoNE45UzB6blA5cW0rRXFTb2ZkMDdW?=
- =?utf-8?Q?X3OFbZ6HQbI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8773.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UGkzSTNXM0hRVjNUM0k0d1F5YjJQdC92aWhGNE1GbmdnaE1IbzZIUS9aV2Jn?=
- =?utf-8?B?WFJKWUc1T3dPOXhUNTIvS0NHbGNVU0FqZElObklhaDhXZTJrYTZXYlV5QXdh?=
- =?utf-8?B?amNqYkJRK1NGVm8xWUE3d2RrYVBWelJ6QXFnMzZONEdMVEEzZE1OczFOYkpN?=
- =?utf-8?B?Q1RCeU5ZQ0xURG5mRy9ES3VUMy9BQVRWUFcxZ1o2SzVjRFpFYVV0ZGNqSlJD?=
- =?utf-8?B?NDhqN1BoY2toK1FObUR0TGVLckN1R09ibzJKUXRPOWU5WlFFQ3dJOTBSTC9J?=
- =?utf-8?B?V0NVdmQvWDZiRzUrbS9rRys0cnM2UGEza3oxbGFxRWdqWFRUWjVHTFVIYW95?=
- =?utf-8?B?MlVGQmhKSCs4WjdmSkVzT21WYTVNU1IvZ2I0bWdhN2ZpLzJIQUdwZ3BOV3FJ?=
- =?utf-8?B?WEp5aE1vQ2RpdkM4YmFKeWhsd2dsN1pYLzBQYllTTU1STllPeTljTUhOMFB5?=
- =?utf-8?B?VFI0MldTaWt3OGF6b1F0WGE4Tm1yWVkyZG82VzZQaGo0UkRaSnBXamlkYjBt?=
- =?utf-8?B?bjQ1OERBenMvdkFsM05Va3hsa29IZzRrbTNjYTFRU3JqTzhhQUU0cjhEN1gy?=
- =?utf-8?B?WHEzb3o4Nmo5eW9LTi9pUWlqWkNrWXZKTzFmNWJaRm5OWmFjdW5LU3hxU0xQ?=
- =?utf-8?B?SmE4ZXNhN2E0b3QyTWplL3VpeTh4aEgxSzBvRldFb1VoTjg1Z284WjUrcHdW?=
- =?utf-8?B?WllYM0xkNG5hSFhYWmd6SC9NVkdOUjNocEVXSmYvQS8wbERGSmtUNFVnK3hj?=
- =?utf-8?B?SXgwYkJpbFhkcFc4VFREN1JzMXd5M0k2aUc2WmZUeWljWUgyL1FLaVhDckdz?=
- =?utf-8?B?cTZORlZsZG5PQ0h6RC9DMW81TGR6U1NnbXhpQkNVbDJqd1h6dHh6QkF5MWVt?=
- =?utf-8?B?TnFreVl1ZFlUYXA1QUl2YkVUZ3N2ZXA3K1RRTEhVVVVNVm9GcWtDdVZBWGV6?=
- =?utf-8?B?R2JoQUlYS3RLZzEzTG0vWTVkQ1A2clV6NmgwTzhRSDEwOUZDNEc5anZScTJo?=
- =?utf-8?B?blJsVVMxa1JZOTNOanphOTI0VGp1UnZsbW8zUER4c0hURUMxdUhwNkMzSEJJ?=
- =?utf-8?B?SDNxVUFYRTY3azlPZ1NLNGhqaDlYQ1dxZkxoVnV6emE3VE4zRUo5cmxNL1Zj?=
- =?utf-8?B?dEJNN2xQbW9ZeW12aDlleDUwN3lXWVVHaGZGN2gydTRibHhJT0J1M05Ia1Bs?=
- =?utf-8?B?U25TMXNzeFE3bDMxT0EvUlBocTBMRWwzMkQ2cDRvb0pqcC9uL2gvdlc2dmRy?=
- =?utf-8?B?ZkY4Z0dEWGRnTEJ1K0lkK1NLRFZScUlQM0daWmx5NDd4Tm41bDJRdEh2NEtr?=
- =?utf-8?B?cldjaGo2L1dTU3dzVFcxdXl2UHNpU3l2VnA2SXRNVi9lZ3Y2bTlHMzJSTEk5?=
- =?utf-8?B?eTJhQUZaUFB2TjFBSGRnMGtnNVVjOHZSVk92NU1jZHl2cDNwcTMxVjZJNWZ6?=
- =?utf-8?B?bEkvRHVBMXRKek95ZXpYUXN3SHRYcEljWXRtNDlXNmttV0tBa0JJdUJJS3ho?=
- =?utf-8?B?dmxNcnROMXVSMXlKbXFKdFR5dlZBYUQ0cmtJdjV6SGVnR3QyOVczN2EvaEZo?=
- =?utf-8?B?Z042aHdqMHlYdkt2cG1RVSsrWG9uRGtTSjNDS1owa3hRTFhvZnp5d2JvbUc4?=
- =?utf-8?B?Z0Q2U3A0UEtxZ2NlWVJuZUxubEp3Y1Z3VitEL3FHYmlYTlljZVpDZ25hNjhI?=
- =?utf-8?B?ZjM2THIrb1dMbmhubVMycHFQNllLaWZWMU9Kd2tiVlZ6M1ArMnhTOTF3WU1n?=
- =?utf-8?B?M1h4ZDVISGNtQ09uNFo2UjhFVnR1R3lmNExlUjhTbDQzS3NHZEI5bXZLWjhr?=
- =?utf-8?B?TkJILzVjb25EZ0ozSDFHOFBaamJCWERjUFVaaERja0RVU1JMSGE5MUNmSVRY?=
- =?utf-8?B?SlJTdmNQNjR5bU1NNTRLcEpQamEyN1M2bEJ1ajhYZ0kvTXN1ZHh4Slc1ZVhV?=
- =?utf-8?B?SnNYbThpZ0VCaWU5SWNQVFo5Zm1ZZ2c0cjY0NGV5bk9pWlIyMXZnS3JDMzFJ?=
- =?utf-8?B?aXNFamM3YXkzbk5CMVAwRkVMV3N4dHJUTFk1dGJmbmp0bS9BYzlqTWJ5OGN1?=
- =?utf-8?B?TFdxZGdjbUp3SEZmRENSUWp5cGNRVFJmWnQzV3BjdVlHb2Z4M01oQ2pycitF?=
- =?utf-8?B?ZG9teVdwdUVnalJKdVFscTM0NjdIZXJrdFhBdmtMckVseEpGQlAyZGhsMHJZ?=
- =?utf-8?Q?2t3t2BK4FT7wDr2l4jRLRw7HOvxgOK3uuvQDupnXaxk9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f0b67c0-927a-4103-22e5-08ddb56a2a8f
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8773.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2025 11:02:54.4569
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dFkx1BGCMAF+ulBNGaKFXu3cXJKZTW0Apg75fhzFQSjLpttBqyK2Ys8lrafsYGAxFbyCMhq/MYQ8fONVfN3THg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4365
+Content-Transfer-Encoding: 8bit
 
-Hi Joel,
+From: Weidong Wang <wangweidong.a@awinic.com>
 
-On 20/06/2025 10:42, Joel Granados wrote:
-> On Thu, Jun 19, 2025 at 04:09:04PM +0200, Bert Karwatzki wrote:
->> Am Donnerstag, dem 19.06.2025 um 13:50 +0200 schrieb Joel Granados:
->>> Hey Bert
->>>
->>> Thx for the report.
->>>
->>> I just tested on my https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-next
->>> and can't see the issue. Maybe its something that I'm missing in the
->>> configuration. Do you happen to have your the .config that you used?
-> ...
->>>> +#endif
->>>>   };
->>>>   
->>>>   int __init sysctl_init_bases(void)
->>>>
->>>>
->>>> Bert Karwatzki
->>
->> I'm running next-20250617 (but I'll also try your sysctl-next branch) with PREEMPT_RT=y, my current theory is that
->> the init_rtmutex_sysctl() is corrupting the rbtree (if I remove init_rtmutex_sysctl() everything works
->> (with the same .config)), and in the process removes the overflow{uid,gid} files.
-> 
-> I think that the error occurs when the register gets called several
-> times for the same path, returns an error resulting in a undefined
-> state. I see that rtmutex.c is included from 4 files, I also see that the
-> registration happens 4 times.
-> 
-> I just did not understand what was being done in my initial patch. The
-> fix is to put the sysctl registration in some "main" file (rtmutx_api?)
-> and to keep the max_lock_depth variable there as well (like it was
-> originally)
-> 
-> 
-> This is my proposal, Does it solve your issue?
-> 
-> 
-> diff --git i/include/linux/rtmutex.h w/include/linux/rtmutex.h
-> index dc9a51cda97c..fa9f1021541e 100644
-> --- i/include/linux/rtmutex.h
-> +++ w/include/linux/rtmutex.h
-> @@ -18,6 +18,8 @@
->   #include <linux/rbtree_types.h>
->   #include <linux/spinlock_types_raw.h>
->   
-> +extern int max_lock_depth;
-> +
->   struct rt_mutex_base {
->   	raw_spinlock_t		wait_lock;
->   	struct rb_root_cached   waiters;
-> diff --git i/kernel/locking/rtmutex.c w/kernel/locking/rtmutex.c
-> index 705a0e0fd72a..c80902eacd79 100644
-> --- i/kernel/locking/rtmutex.c
-> +++ w/kernel/locking/rtmutex.c
-> @@ -29,29 +29,6 @@
->   #include "rtmutex_common.h"
->   #include "lock_events.h"
->   
-> -/*
-> - * Max number of times we'll walk the boosting chain:
-> - */
-> -static int max_lock_depth = 1024;
-> -
-> -static const struct ctl_table rtmutex_sysctl_table[] = {
-> -	{
-> -		.procname	= "max_lock_depth",
-> -		.data		= &max_lock_depth,
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec,
-> -	},
-> -};
-> -
-> -static int __init init_rtmutex_sysctl(void)
-> -{
-> -	register_sysctl_init("kernel", rtmutex_sysctl_table);
-> -	return 0;
-> -}
-> -
-> -subsys_initcall(init_rtmutex_sysctl);
-> -
->   #ifndef WW_RT
->   # define build_ww_mutex()	(false)
->   # define ww_container_of(rtm)	NULL
-> diff --git i/kernel/locking/rtmutex_api.c w/kernel/locking/rtmutex_api.c
-> index 9e00ea0e5cfa..4fa1acceaebb 100644
-> --- i/kernel/locking/rtmutex_api.c
-> +++ w/kernel/locking/rtmutex_api.c
-> @@ -8,6 +8,30 @@
->   #define RT_MUTEX_BUILD_MUTEX
->   #include "rtmutex.c"
->   
-> +/*
-> + * Max number of times we'll walk the boosting chain:
-> + */
-> +int max_lock_depth = 1024;
-> +
-> +static const struct ctl_table rtmutex_sysctl_table[] = {
-> +	{
-> +		.procname	= "max_lock_depth",
-> +		.data		= &max_lock_depth,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec,
-> +	},
-> +};
-> +
-> +static int __init init_rtmutex_sysctl(void)
-> +{
-> +	printk("registering rtmutex");
-> +	register_sysctl_init("kernel", rtmutex_sysctl_table);
-> +	return 0;
-> +}
+Add calibration functionality to the aw88399 chip.
+When the chip is in calibration condition, calibration
+can be achieved by configuring the chip's internal DSP
+and save the calibration values in cali_re.
 
+Signed-off-by: Weidong Wang <wangweidong.a@awinic.com>
+---
+ sound/soc/codecs/aw88395/aw88395_device.h |  21 ++
+ sound/soc/codecs/aw88399.c                | 440 +++++++++++++++++++++-
+ sound/soc/codecs/aw88399.h                |  34 ++
+ 3 files changed, 493 insertions(+), 2 deletions(-)
 
-With recent -next trees I am seeing the following kernel warning when 
-booting -next on our Tegra boards ...
+diff --git a/sound/soc/codecs/aw88395/aw88395_device.h b/sound/soc/codecs/aw88395/aw88395_device.h
+index 0f750f654f3e..6f8b30b475da 100644
+--- a/sound/soc/codecs/aw88395/aw88395_device.h
++++ b/sound/soc/codecs/aw88395/aw88395_device.h
+@@ -102,6 +102,11 @@ struct aw_profctrl_desc {
+ 	unsigned int cur_mode;
+ };
+ 
++enum {
++	CALI_RESULT_NORMAL,
++	CALI_RESULT_ERROR,
++};
++
+ struct aw_volume_desc {
+ 	unsigned int init_volume;
+ 	unsigned int mute_volume;
+@@ -124,9 +129,25 @@ struct aw_cali_delay_desc {
+ 	unsigned int delay;
+ };
+ 
++#define AW_CALI_CFG_NUM (4)
++struct cali_cfg {
++	uint32_t data[AW_CALI_CFG_NUM];
++};
++
++struct aw_cali_backup_desc {
++	unsigned int dsp_ng_cfg;
++	unsigned int dsp_lp_cfg;
++};
++
+ struct aw_cali_desc {
+ 	u32 cali_re;
+ 	u32 ra;
++	bool cali_switch;
++	bool cali_running;
++	uint16_t cali_result;
++	uint16_t store_vol;
++	struct cali_cfg cali_cfg;
++	struct aw_cali_backup_desc backup_info;
+ };
+ 
+ struct aw_container {
+diff --git a/sound/soc/codecs/aw88399.c b/sound/soc/codecs/aw88399.c
+index 4b90133e5ab4..bad3ad6b8c0e 100644
+--- a/sound/soc/codecs/aw88399.c
++++ b/sound/soc/codecs/aw88399.c
+@@ -13,6 +13,7 @@
+ #include <linux/firmware.h>
+ #include <linux/minmax.h>
+ #include <linux/regmap.h>
++#include <linux/sort.h>
+ #include <sound/soc.h>
+ #include "aw88399.h"
+ #include "aw88395/aw88395_device.h"
+@@ -45,6 +46,67 @@ static int aw_dev_dsp_write_16bit(struct aw_device *aw_dev,
+ 	return 0;
+ }
+ 
++static int aw_dev_dsp_write_32bit(struct aw_device *aw_dev,
++		unsigned short dsp_addr, unsigned int dsp_data)
++{
++	unsigned int temp_data;
++	int ret;
++
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMADD_REG, dsp_addr);
++	if (ret) {
++		dev_err(aw_dev->dev, "%s write addr error, ret=%d", __func__, ret);
++		return ret;
++	}
++
++	temp_data = dsp_data & AW88395_DSP_16_DATA_MASK;
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMDAT_REG, temp_data);
++	if (ret) {
++		dev_err(aw_dev->dev, "%s write datal error, ret=%d", __func__, ret);
++		return ret;
++	}
++
++	temp_data = dsp_data >> 16;
++	ret = regmap_write(aw_dev->regmap, AW88399_DSPMDAT_REG, temp_data);
++	if (ret)
++		dev_err(aw_dev->dev, "%s write datah error, ret=%d", __func__, ret);
++
++	return ret;
++}
++
++static int aw_dev_dsp_write(struct aw_device *aw_dev,
++		unsigned short dsp_addr, unsigned int dsp_data, unsigned char data_type)
++{
++	unsigned int reg_value;
++	int ret;
++
++	mutex_lock(&aw_dev->dsp_lock);
++	switch (data_type) {
++	case AW88395_DSP_16_DATA:
++		ret = aw_dev_dsp_write_16bit(aw_dev, dsp_addr, dsp_data);
++		if (ret)
++			dev_err(aw_dev->dev, "write dsp_addr[0x%x] 16-bit dsp_data[0x%x] failed",
++					dsp_addr, dsp_data);
++		break;
++	case AW88395_DSP_32_DATA:
++		ret = aw_dev_dsp_write_32bit(aw_dev, dsp_addr, dsp_data);
++		if (ret)
++			dev_err(aw_dev->dev, "write dsp_addr[0x%x] 32-bit dsp_data[0x%x] failed",
++					dsp_addr, dsp_data);
++		break;
++	default:
++		dev_err(aw_dev->dev, "data type[%d] unsupported", data_type);
++		ret = -EINVAL;
++		break;
++	}
++
++	/* clear dsp chip select state */
++	if (regmap_read(aw_dev->regmap, 0x00, &reg_value))
++		dev_err(aw_dev->dev, "%s fail to clear chip state. Err=%d\n", __func__, ret);
++	mutex_unlock(&aw_dev->dsp_lock);
++
++	return ret;
++}
++
+ static int aw_dev_dsp_read_16bit(struct aw_device *aw_dev,
+ 		unsigned short dsp_addr, unsigned int *dsp_data)
+ {
+@@ -452,14 +514,14 @@ static int aw_dev_set_vcalb(struct aw88399 *aw88399)
+ 	case AW88399_DEV_VDSEL_VSENSE:
+ 		ret = aw88399_dev_get_vcalk(aw88399, &vcalk);
+ 		vcal_k = vcalk * AW88399_VCABLK_FACTOR + AW88399_CABL_BASE_VALUE;
+-		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_FACTOR / AW88399_ISCAL_FACTOR /
++		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_FACTOR / AW88399_ISCAL_FACTOR *
+ 			ical_k / vcal_k * aw88399->vcalb_init_val;
+ 		break;
+ 	case AW88399_DEV_VDSEL_DAC:
+ 		ret = aw88399_dev_get_internal_vcalk(aw88399, &vcalk);
+ 		vcal_k = vcalk * AW88399_VCABLK_DAC_FACTOR + AW88399_CABL_BASE_VALUE;
+ 		vcalb = AW88399_VCALB_ACCURACY * AW88399_VSCAL_DAC_FACTOR /
+-					AW88399_ISCAL_DAC_FACTOR / ical_k /
++					AW88399_ISCAL_DAC_FACTOR * ical_k /
+ 					vcal_k * aw88399->vcalb_init_val;
+ 		break;
+ 	default:
+@@ -1356,6 +1418,329 @@ static struct snd_soc_dai_driver aw88399_dai[] = {
+ 	},
+ };
+ 
++static void aw_cali_svc_run_mute(struct aw_device *aw_dev, uint16_t cali_result)
++{
++	if (cali_result == CALI_RESULT_ERROR)
++		aw88399_dev_mute(aw_dev, true);
++	else if (cali_result == CALI_RESULT_NORMAL)
++		aw88399_dev_mute(aw_dev, false);
++}
++
++static int aw_cali_svc_get_cali_cfg(struct aw_device *aw_dev)
++{
++	struct cali_cfg *cali_cfg = &aw_dev->cali_desc.cali_cfg;
++	int ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH,
++					&cali_cfg->data[0], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH,
++					&cali_cfg->data[1], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_ADPZ_USTEPN,
++					&cali_cfg->data[2], AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CFG_RE_ALPHA,
++					&cali_cfg->data[3], AW88399_DSP_16_DATA);
++
++	return ret;
++}
++
++static int aw_cali_svc_set_cali_cfg(struct aw_device *aw_dev,
++				struct cali_cfg cali_cfg)
++{
++	int ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH,
++					cali_cfg.data[0], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH,
++					cali_cfg.data[1], AW88399_DSP_32_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_ADPZ_USTEPN,
++					cali_cfg.data[2], AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	ret = aw_dev_dsp_write(aw_dev, AW88399_DSP_REG_CFG_RE_ALPHA,
++					cali_cfg.data[3], AW88399_DSP_16_DATA);
++
++	return ret;
++}
++
++static int aw_cali_svc_cali_en(struct aw_device *aw_dev, bool cali_en)
++{
++	struct cali_cfg set_cfg;
++	int ret;
++
++	aw_dev_dsp_enable(aw_dev, false);
++	if (cali_en) {
++		regmap_update_bits(aw_dev->regmap, AW88399_DBGCTRL_REG,
++				~AW883XX_DSP_NG_EN_MASK, AW883XX_DSP_NG_EN_DISABLE_VALUE);
++		aw_dev_dsp_write(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++				AW88399_DSP_LOW_POWER_SWITCH_DISABLE, AW88399_DSP_16_DATA);
++
++		ret = aw_cali_svc_get_cali_cfg(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "get cali cfg failed\n");
++			aw_dev_dsp_enable(aw_dev, true);
++			return ret;
++		}
++		set_cfg.data[0] = 0;
++		set_cfg.data[1] = 0;
++		set_cfg.data[2] = -1;
++		set_cfg.data[3] = 1;
++
++		ret = aw_cali_svc_set_cali_cfg(aw_dev, set_cfg);
++		if (ret) {
++			dev_err(aw_dev->dev, "set cali cfg failed\n");
++			aw_cali_svc_set_cali_cfg(aw_dev, aw_dev->cali_desc.cali_cfg);
++			aw_dev_dsp_enable(aw_dev, true);
++			return ret;
++		}
++	} else {
++		aw_cali_svc_set_cali_cfg(aw_dev, aw_dev->cali_desc.cali_cfg);
++	}
++
++	aw_dev_dsp_enable(aw_dev, true);
++
++	return 0;
++}
++
++static int aw_cali_svc_cali_run_dsp_vol(struct aw_device *aw_dev, bool enable)
++{
++	unsigned int reg_val;
++	int ret;
++
++	if (enable) {
++		ret = regmap_read(aw_dev->regmap, AW88399_DSPCFG_REG, &reg_val);
++		if (ret) {
++			dev_err(aw_dev->dev, "read reg 0x%x failed\n", AW88399_DSPCFG_REG);
++			return ret;
++		}
++
++		aw_dev->cali_desc.store_vol = reg_val & (~AW88399_DSP_VOL_MASK);
++		ret = regmap_update_bits(aw_dev->regmap, AW88399_DSPCFG_REG,
++				~AW88399_DSP_VOL_MASK, AW88399_DSP_VOL_MUTE);
++	} else {
++		ret = regmap_update_bits(aw_dev->regmap, AW88399_DSPCFG_REG,
++				~AW88399_DSP_VOL_MASK, aw_dev->cali_desc.store_vol);
++	}
++
++	return ret;
++}
++
++static void aw_cali_svc_backup_info(struct aw_device *aw_dev)
++{
++	struct aw_cali_backup_desc *backup_desc = &aw_dev->cali_desc.backup_info;
++	unsigned int reg_val, dsp_val;
++
++	regmap_read(aw_dev->regmap, AW88399_DBGCTRL_REG, &reg_val);
++	backup_desc->dsp_ng_cfg = reg_val & (~AW883XX_DSP_NG_EN_MASK);
++
++	aw_dev_dsp_read(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++			&dsp_val, AW88399_DSP_16_DATA);
++
++	backup_desc->dsp_lp_cfg = dsp_val;
++}
++
++static void aw_cali_svc_recover_info(struct aw_device *aw_dev)
++{
++	struct aw_cali_backup_desc *backup_desc = &aw_dev->cali_desc.backup_info;
++
++	regmap_update_bits(aw_dev->regmap, AW88399_DBGCTRL_REG,
++			~AW883XX_DSP_NG_EN_MASK, backup_desc->dsp_ng_cfg);
++
++	aw_dev_dsp_write(aw_dev, AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR,
++			backup_desc->dsp_lp_cfg, AW88399_DSP_16_DATA);
++}
++
++static int aw_cali_svc_cali_re_mode_enable(struct aw_device *aw_dev, bool is_enable)
++{
++	int ret;
++
++	if (is_enable) {
++		ret = aw_dev_check_syspll(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "pll check failed cannot start\n");
++			return ret;
++		}
++
++		ret = aw_dev_get_dsp_status(aw_dev);
++		if (ret) {
++			dev_err(aw_dev->dev, "dsp status error\n");
++			return ret;
++		}
++
++		aw_cali_svc_backup_info(aw_dev);
++		ret = aw_cali_svc_cali_en(aw_dev, true);
++		if (ret) {
++			dev_err(aw_dev->dev, "aw_cali_svc_cali_en failed\n");
++			return ret;
++		}
++
++		ret = aw_cali_svc_cali_run_dsp_vol(aw_dev, true);
++		if (ret) {
++			aw_cali_svc_cali_en(aw_dev, false);
++			return ret;
++		}
++
++	} else {
++		aw_cali_svc_cali_run_dsp_vol(aw_dev, false);
++		aw_cali_svc_recover_info(aw_dev);
++		aw_cali_svc_cali_en(aw_dev, false);
++	}
++
++	return 0;
++}
++
++static int aw_cali_svc_get_dev_re(struct aw_device *aw_dev, uint32_t *re)
++{
++	uint32_t dsp_re, show_re;
++	int ret;
++
++	ret = aw_dev_dsp_read(aw_dev, AW88399_DSP_REG_CALRE, &dsp_re, AW88399_DSP_16_DATA);
++	if (ret)
++		return ret;
++
++	show_re = AW88399_DSP_RE_TO_SHOW_RE(dsp_re, AW88399_DSP_REG_CALRE_SHIFT);
++
++	*re = (uint32_t)(show_re - aw_dev->cali_desc.ra);
++
++	return 0;
++}
++
++static void aw_cali_svc_del_max_min_ave_algo(uint32_t *data, int data_size, uint32_t *dsp_re)
++{
++	int sum = 0, i;
++
++	for (i = 1; i < data_size - 1; i++)
++		sum += data[i];
++
++	*dsp_re = sum / (data_size - AW_CALI_DATA_SUM_RM);
++}
++
++static int aw_cali_svc_get_iv_st(struct aw_device *aw_dev)
++{
++	unsigned int reg_data;
++	int ret, i;
++
++	for (i = 0; i < AW_GET_IV_CNT_MAX; i++) {
++		ret = regmap_read(aw_dev->regmap, AW88399_ASR1_REG, &reg_data);
++		if (ret) {
++			dev_err(aw_dev->dev, "read 0x%x failed\n", AW88399_ASR1_REG);
++			return ret;
++		}
++
++		reg_data &= (~AW88399_REABS_MASK);
++		if (!reg_data)
++			return 0;
++		msleep(30);
++	}
++
++	dev_err(aw_dev->dev, "IV data abnormal, please check\n");
++
++	return -EINVAL;
++}
++
++static int compare_ints(const void *a, const void *b)
++{
++	return *(int *)a - *(int *)b;
++}
++
++static int aw_cali_svc_get_smooth_cali_re(struct aw_device *aw_dev)
++{
++	uint32_t re_temp[AW_CALI_READ_CNT_MAX];
++	uint32_t dsp_re;
++	int ret, i;
++
++	for (i = 0; i < AW_CALI_READ_CNT_MAX; i++) {
++		ret = aw_cali_svc_get_dev_re(aw_dev, &re_temp[i]);
++		if (ret)
++			goto cali_re_fail;
++		msleep(30);
++	}
++
++	sort(re_temp, AW_CALI_READ_CNT_MAX, sizeof(uint32_t), compare_ints, NULL);
++
++	aw_cali_svc_del_max_min_ave_algo(re_temp, AW_CALI_READ_CNT_MAX, &dsp_re);
++
++	ret = aw_cali_svc_get_iv_st(aw_dev);
++	if (ret) {
++		dev_err(aw_dev->dev, "get iv data failed");
++		goto cali_re_fail;
++	}
++
++	if (dsp_re < AW88399_CALI_RE_MIN || dsp_re > AW88399_CALI_RE_MAX) {
++		dev_err(aw_dev->dev, "out range re value: [%d]mohm\n", dsp_re);
++		aw_dev->cali_desc.cali_re = dsp_re;
++		aw_dev->cali_desc.cali_result = CALI_RESULT_ERROR;
++		aw_cali_svc_run_mute(aw_dev, aw_dev->cali_desc.cali_result);
++
++		return 0;
++	}
++
++	aw_dev->cali_desc.cali_result = CALI_RESULT_NORMAL;
++
++	aw_dev->cali_desc.cali_re = dsp_re;
++	dev_dbg(aw_dev->dev, "re[%d]mohm\n", aw_dev->cali_desc.cali_re);
++
++	aw_dev_dsp_enable(aw_dev, false);
++	aw_dev_update_cali_re(&aw_dev->cali_desc);
++	aw_dev_dsp_enable(aw_dev, true);
++
++	return 0;
++
++cali_re_fail:
++	aw_dev->cali_desc.cali_result = CALI_RESULT_ERROR;
++	aw_cali_svc_run_mute(aw_dev, aw_dev->cali_desc.cali_result);
++	return -EINVAL;
++}
++
++static int aw_cali_svc_dev_cali_re(struct aw88399 *aw88399)
++{
++	struct aw_device *aw_dev = aw88399->aw_pa;
++	struct aw_cali_desc *cali_desc = &aw_dev->cali_desc;
++	int ret;
++
++	if (cali_desc->cali_running) {
++		dev_err(aw_dev->dev, "calibration in progress\n");
++		return -EINVAL;
++	}
++
++	cali_desc->cali_running = true;
++	aw_cali_svc_run_mute(aw_dev, CALI_RESULT_NORMAL);
++
++	ret = aw_cali_svc_cali_re_mode_enable(aw_dev, true);
++	if (ret) {
++		dev_err(aw_dev->dev, "start cali re failed\n");
++		goto re_mode_err;
++	}
++
++	msleep(1000);
++
++	ret = aw_cali_svc_get_smooth_cali_re(aw_dev);
++	if (ret)
++		dev_err(aw_dev->dev, "get cali re failed\n");
++
++	aw_cali_svc_cali_re_mode_enable(aw_dev, false);
++
++re_mode_err:
++	cali_desc->cali_running = false;
++
++	return ret;
++}
++
+ static int aw88399_get_fade_in_time(struct snd_kcontrol *kcontrol,
+ 	struct snd_ctl_elem_value *ucontrol)
+ {
+@@ -1616,6 +2001,53 @@ static int aw88399_re_set(struct snd_kcontrol *kcontrol,
+ 	return 0;
+ }
+ 
++static int aw88399_calib_switch_get(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *codec = snd_soc_kcontrol_component(kcontrol);
++	struct aw88399 *aw88399 = snd_soc_component_get_drvdata(codec);
++	struct aw_device *aw_dev = aw88399->aw_pa;
++
++	ucontrol->value.integer.value[0] = aw_dev->cali_desc.cali_switch;
++
++	return 0;
++}
++
++static int aw88399_calib_switch_set(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *codec = snd_soc_kcontrol_component(kcontrol);
++	struct aw88399 *aw88399 = snd_soc_component_get_drvdata(codec);
++	struct aw_device *aw_dev = aw88399->aw_pa;
++
++	if (aw_dev->cali_desc.cali_switch == ucontrol->value.integer.value[0])
++		return 0;
++
++	aw_dev->cali_desc.cali_switch = ucontrol->value.integer.value[0];
++
++	return 1;
++}
++
++static int aw88399_calib_get(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	/* do nothing */
++	return 0;
++}
++
++static int aw88399_calib_set(struct snd_kcontrol *kcontrol,
++				struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *codec = snd_soc_kcontrol_component(kcontrol);
++	struct aw88399 *aw88399 = snd_soc_component_get_drvdata(codec);
++	struct aw_device *aw_dev = aw88399->aw_pa;
++
++	if (aw_dev->status && aw_dev->cali_desc.cali_switch)
++		aw_cali_svc_dev_cali_re(aw88399);
++
++	return 0;
++}
++
+ static int aw88399_dev_init(struct aw88399 *aw88399, struct aw_container *aw_cfg)
+ {
+ 	struct aw_device *aw_dev = aw88399->aw_pa;
+@@ -1708,6 +2140,10 @@ static const struct snd_kcontrol_new aw88399_controls[] = {
+ 		aw88399_get_fade_out_time, aw88399_set_fade_out_time),
+ 	SOC_SINGLE_EXT("Calib", 0, 0, AW88399_CALI_RE_MAX, 0,
+ 		aw88399_re_get, aw88399_re_set),
++	SOC_SINGLE_BOOL_EXT("Calib Switch", 0,
++		aw88399_calib_switch_get, aw88399_calib_switch_set),
++	SOC_SINGLE_EXT("Trigger Calib", SND_SOC_NOPM, 0, 1, 0,
++		aw88399_calib_get, aw88399_calib_set),
+ 	AW88399_PROFILE_EXT("AW88399 Profile Set", aw88399_profile_info,
+ 		aw88399_profile_get, aw88399_profile_set),
+ };
+diff --git a/sound/soc/codecs/aw88399.h b/sound/soc/codecs/aw88399.h
+index 5e9cdf725d3d..7bb6df0822fe 100644
+--- a/sound/soc/codecs/aw88399.h
++++ b/sound/soc/codecs/aw88399.h
+@@ -451,6 +451,24 @@
+ #define AW88399_WDT_CNT_MASK		\
+ 	(~(((1<<AW88399_WDT_CNT_BITS_LEN)-1) << AW88399_WDT_CNT_START_BIT))
+ 
++#define AW88399_REABS_START_BIT	(3)
++#define AW88399_REABS_BITS_LEN		(1)
++#define AW88399_REABS_MASK		\
++	(~(((1<<AW88399_REABS_BITS_LEN)-1) << AW88399_REABS_START_BIT))
++
++#define AW88399_DSP_VOL_START_BIT	(8)
++#define AW88399_DSP_VOL_BITS_LEN	(8)
++#define AW88399_DSP_VOL_MASK		\
++	(~(((1<<AW88399_DSP_VOL_BITS_LEN)-1) << AW88399_DSP_VOL_START_BIT))
++
++#define AW883XX_DSP_NG_EN_START	(13)
++#define AW883XX_DSP_NG_EN_LEN		(1)
++#define AW883XX_DSP_NG_EN_MASK		\
++	(~(((1 << AW883XX_DSP_NG_EN_LEN) - 1) << AW883XX_DSP_NG_EN_START))
++#define AW883XX_DSP_NG_EN_DISABLE	(0)
++#define AW883XX_DSP_NG_EN_DISABLE_VALUE	\
++	(AW883XX_DSP_NG_EN_DISABLE << AW883XX_DSP_NG_EN_START)
++
+ #define AW88399_VOLUME_STEP_DB			(64)
+ #define AW88399_VOL_DEFAULT_VALUE		(0)
+ #define AW88399_DSP_ODD_NUM_BIT_TEST		(0x5555)
+@@ -507,6 +525,22 @@
+ #define FADE_TIME_MAX		100000
+ #define FADE_TIME_MIN		0
+ 
++#define AW_CALI_READ_CNT_MAX			(8)
++#define AW88399_DSP_REG_CALRE			(0x8141)
++#define AW88399_DSP_REG_CALRE_SHIFT		(10)
++#define AW_CALI_DATA_SUM_RM			(2)
++
++#define AW88399_DSP_REG_CFG_MBMEC_ACTAMPTH	(0x9B4C)
++#define AW88399_DSP_REG_CFG_MBMEC_NOISEAMPTH	(0x9B4E)
++#define AW88399_DSP_REG_CFG_ADPZ_USTEPN	(0x9B6E)
++#define AW88399_DSP_REG_CFG_RE_ALPHA		(0x9BD4)
++#define AW_GET_IV_CNT_MAX			(6)
++
++#define AW88399_DSP_VOL_MUTE			(0XFF00)
++
++#define AW88399_DSP_LOW_POWER_SWITCH_CFG_ADDR	(0x9BEC)
++#define AW88399_DSP_LOW_POWER_SWITCH_DISABLE	(0x110b)
++
+ #define AW88399_PROFILE_EXT(xname, profile_info, profile_get, profile_set) \
+ { \
+ 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, \
 
-  boot: logs: [       0.231226] WARNING KERN registering rtmutex
-
-This warning triggers a test failure for us because this is a 
-new/unexpected warning. Looking at the above it seems that making this a 
-pr_debug() or pr_info() would be more appropriate. Let me know if it is 
-OK to update this.
-
-Thanks!
-Jon
-
+base-commit: 67a993863163cb88b1b68974c31b0d84ece4293e
 -- 
-nvpublic
+2.47.0
 
