@@ -1,32 +1,32 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76BC227E88
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D4D22B5AC
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751101428; cv=none; b=F8U+j2rMX5OO59TpbEs7ene9ewd3TGr0+J716+a/u4DRs9wuv85V7Va6sN62FiaEzwbkpL8XggLsDjZ7WDXQaPnSAiVEy8Dd1yjj264JFZ8y7hLutktEvw10qD9LaX1DDjuqXHQck1lGxm8ydku7yp/cN2Op+Xakxzz0Ad5vjTg=
+	t=1751101430; cv=none; b=FV3kVU85Bz6rSfw+ZXJroD7FfC3z37NT9N/PIWEglP3WmJJj+vThg2Ly+phGg6ODF/65mRxwNEX8TRTZC4uysOrGR66hNo+JYpR9vok5kf7KfyZcJYYlE6vNBSsX/JAaz4uN6biFaxvM6TFMf/YoxJktyJlfyxouz2C/cZtLQHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751101428; c=relaxed/simple;
-	bh=Hfaa0gy3uc6c4TBbK3YEGBZqHHPIma4PeUvbj0qjqyE=;
+	s=arc-20240116; t=1751101430; c=relaxed/simple;
+	bh=JgZ1cPMKbEPkJlrteoo8n9KC9VeiMg4oo1zrlG+bnQQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gRCm/oexP4k6h0tSvTbXZ8ez1QCEDFgpk+kiyiOI7l7a4dxo7LvrTC16vJOn7HUhCwJxSmm4puagZMm5B6AWRHCTEidBR61I4WZ5rruDiaVH950O/NtWfmvrg6DaXrsodPaIwp0rlyS+hjG2BoLlj98Z4OQ8X/oYeWYVYohVnm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dclg5z6Z; arc=none smtp.client-ip=91.218.175.174
+	 MIME-Version; b=R7te9NdOaaggynq8nYm5dZF665E7Gf9s0CcS3lfI6WJAATQTcoE1IUX5l/EWcJhJWmumv9LKDY4GwU9x0W929FQkQNdTPItV9B9JZN/Jb3XrLJS8En1OH6ExBTwmMCETYBDjaGsmNhYDy/3Xzs96ZUYi4O7SLNIc3R5qtndiqC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TcJsI78+; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dclg5z6Z"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TcJsI78+"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751101423;
+	t=1751101426;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DgeEoJwP1RRKkglcECdGpkEEfNbWqvY35txVx4ntqiU=;
-	b=dclg5z6ZWyUO1+mQ3fNSyudjds12d4hINXgyeu89+rw2WjDB/kT30o7j4tbBGtYJz1JmLw
-	XPgaS6RPR3EEK9M3jTxq6+g3LdsRBZAZuNNOExrxbttdSfgbDNtMebs8wq/eYC052vKcUs
-	fUy3vL+oCpEve3jiGK20roQbc50C2Y0=
+	bh=R99PFLgv7EGPI4uV/VSEzfV0kYW/ZQPDNvpGbpm2GOY=;
+	b=TcJsI78+NgIXu924lZ2sr7A2ugeLAPv33/1+IhjqkyQEydFW3OEVSp/bTd9IdDqfq2ct3t
+	Kb3FgR22L4CEgzjY0eEy3k2/I5B0s2iBPLMmVaLonu/PJHHcAq3xknaqKtpLDfaHNoLdn0
+	sOg3mCvdKxmYwSMYo/PS5Btq7m0zKr0=
 From: Frank Wunderlich <frank.wunderlich@linux.dev>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -58,9 +58,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v6 03/15] dt-bindings: net: mediatek,net: update for mt7988
-Date: Sat, 28 Jun 2025 11:03:14 +0200
-Message-ID: <20250628090330.57264-4-frank.wunderlich@linux.dev>
+Subject: [PATCH v6 04/15] dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for mt7988
+Date: Sat, 28 Jun 2025 11:03:15 +0200
+Message-ID: <20250628090330.57264-5-frank.wunderlich@linux.dev>
 In-Reply-To: <20250628090330.57264-1-frank.wunderlich@linux.dev>
 References: <20250628090330.57264-1-frank.wunderlich@linux.dev>
 Precedence: bulk
@@ -74,76 +74,48 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Update binding for mt7988 which has 3 gmac and a sram for dma
-operations.
-
-MT7988 has 4 FE IRQs (currently only 2 are used) and 4 IRQs for use
-with RSS/LRO later.
+Add own dsa-port binding for SoC with internal switch where only phy-mode
+'internal' is valid.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
-v6:
-- split out the interrupt-names into separate patch
-- update irq(name) min count to 4
-- add sram-property
-- drop second reg entry and minitems as there is only 1 item left again
+ .../bindings/net/dsa/mediatek,mt7530.yaml          | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-v5:
-- fix v4 logmessage and change description a bit describing how i get
-  the irq count.
-- update binding for 8 irqs with different names (rx,tx => fe0..fe3)
-  including the 2 reserved irqs which can be used later
-- change rx-ringX to pdmaX to be closer to hardware documentation
-
-v4:
-- increase max interrupts to 6 because of adding RSS/LRO interrupts (4)
-  and dropping 2 reserved irqs (0+3) around rx+tx
-- dropped Robs RB due to this change
-- allow interrupt names
-- add interrupt-names without reserved IRQs on mt7988
-  this requires mtk driver patch:
-  https://patchwork.kernel.org/project/netdevbpf/patch/20250616080738.117993-2-linux@fw-web.de/
-
-v2:
-- change reg to list of items
----
- Documentation/devicetree/bindings/net/mediatek,net.yaml | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-index 6672db206b38..74a139000f60 100644
---- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
-+++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
-@@ -28,7 +28,8 @@ properties:
-       - ralink,rt5350-eth
+diff --git a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+index 51205f9f2985..9b983fdbf3c7 100644
+--- a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
++++ b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+@@ -190,6 +190,18 @@ required:
+   - reg
  
-   reg:
--    maxItems: 1
-+    items:
-+      - description: Register for accessing the MACs.
- 
-   clocks:
-     minItems: 2
-@@ -66,6 +67,10 @@ properties:
-       - const: gmac
-       - const: ppe
- 
-+  sram:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to mmio SRAM
+ $defs:
++  builtin-dsa-port:
++    patternProperties:
++      "^(ethernet-)?ports$":
++        patternProperties:
++          "^(ethernet-)?port@[0-6]$":
++            if:
++              required: [ ethernet ]
++            then:
++              properties:
++                phy-mode:
++                  const: internal
 +
-   mediatek,ethsys:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-@@ -418,7 +423,7 @@ allOf:
-             - const: xgp3
- 
- patternProperties:
--  "^mac@[0-1]$":
-+  "^mac@[0-2]$":
-     type: object
-     unevaluatedProperties: false
-     allOf:
+   mt7530-dsa-port:
+     patternProperties:
+       "^(ethernet-)?ports$":
+@@ -297,7 +309,7 @@ allOf:
+             - airoha,en7581-switch
+             - airoha,an7583-switch
+     then:
+-      $ref: "#/$defs/mt7530-dsa-port"
++      $ref: "#/$defs/builtin-dsa-port"
+       properties:
+         gpio-controller: false
+         mediatek,mcm: false
 -- 
 2.43.0
 
