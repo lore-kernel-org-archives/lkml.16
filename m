@@ -1,32 +1,30 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D4D22B5AC
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD2A22ACC6
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751101430; cv=none; b=FV3kVU85Bz6rSfw+ZXJroD7FfC3z37NT9N/PIWEglP3WmJJj+vThg2Ly+phGg6ODF/65mRxwNEX8TRTZC4uysOrGR66hNo+JYpR9vok5kf7KfyZcJYYlE6vNBSsX/JAaz4uN6biFaxvM6TFMf/YoxJktyJlfyxouz2C/cZtLQHM=
+	t=1751101430; cv=none; b=O+GVpPUL0GLiL8aF3NZwNvigExd5TZQc9v+KtomgdfP8E0mv/fZx30k7al6IymbnKsG0uFKe0q7k9RN3lGgGTSyaSqtofZCJhFcBDgF7Vxh/2YTr7KfvNOnbeYk/FGA3F82ASoL1ZiaqriJpI5ugYIHCInD2bj+Ofq0UVLLjxa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751101430; c=relaxed/simple;
-	bh=JgZ1cPMKbEPkJlrteoo8n9KC9VeiMg4oo1zrlG+bnQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R7te9NdOaaggynq8nYm5dZF665E7Gf9s0CcS3lfI6WJAATQTcoE1IUX5l/EWcJhJWmumv9LKDY4GwU9x0W929FQkQNdTPItV9B9JZN/Jb3XrLJS8En1OH6ExBTwmMCETYBDjaGsmNhYDy/3Xzs96ZUYi4O7SLNIc3R5qtndiqC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TcJsI78+; arc=none smtp.client-ip=91.218.175.184
+	bh=MalP5h8rY+8ddDd4DqsyBCGkvFe9zBKO7a3DZScqIDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rEd6L7I0Ys7CIwIWCKtDDtGXz971uZi+ARSWnO1DPhWaOCwI62ygfe29fe9kMWW+EH5CERJyPq6f/KUB3eERcl8Zwv/Fj5Mwa481bGdZgpXuW5S2WF0Nej0lPBD3ffjxqWqMkXU/L6sbnoP9Dg8GrJXqWMCfmEbSQ3WwNCYi9Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VvYviVDe; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TcJsI78+"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VvYviVDe"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751101426;
+	t=1751101416;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R99PFLgv7EGPI4uV/VSEzfV0kYW/ZQPDNvpGbpm2GOY=;
-	b=TcJsI78+NgIXu924lZ2sr7A2ugeLAPv33/1+IhjqkyQEydFW3OEVSp/bTd9IdDqfq2ct3t
-	Kb3FgR22L4CEgzjY0eEy3k2/I5B0s2iBPLMmVaLonu/PJHHcAq3xknaqKtpLDfaHNoLdn0
-	sOg3mCvdKxmYwSMYo/PS5Btq7m0zKr0=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cg6t0GmzXyLQwVr+cFNcsHeCoMT3E75vS7FIvnaXPx0=;
+	b=VvYviVDe590rbGNhEBRSisMwRdgi+FBV1JFAvLsSSi4xvgRuzZwsuLQMVwNaUuIC9d6ygw
+	RVhbZjoqS4dRbBqtXCLZw1ROh8H7kVGNt92/Q8BGzqv+tVxdwX0LkvdjAdVXfq/T1W4C4N
+	604tYVcNXe6PyxT0pfNSm2kWikDsYIM=
 From: Frank Wunderlich <frank.wunderlich@linux.dev>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -58,11 +56,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v6 04/15] dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for mt7988
-Date: Sat, 28 Jun 2025 11:03:15 +0200
-Message-ID: <20250628090330.57264-5-frank.wunderlich@linux.dev>
-In-Reply-To: <20250628090330.57264-1-frank.wunderlich@linux.dev>
-References: <20250628090330.57264-1-frank.wunderlich@linux.dev>
+Subject: [PATCH v6 00/15] further mt7988 devicetree work
+Date: Sat, 28 Jun 2025 11:03:11 +0200
+Message-ID: <20250628090330.57264-1-frank.wunderlich@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,48 +70,124 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add own dsa-port binding for SoC with internal switch where only phy-mode
-'internal' is valid.
+This series continues mt7988 devicetree work
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- .../bindings/net/dsa/mediatek,mt7530.yaml          | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+- Extend cpu frequency scaling with CCI
+- GPIO leds
+- Basic network-support (ethernet controller + builtin switch + SFP Cages)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-index 51205f9f2985..9b983fdbf3c7 100644
---- a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-+++ b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-@@ -190,6 +190,18 @@ required:
-   - reg
- 
- $defs:
-+  builtin-dsa-port:
-+    patternProperties:
-+      "^(ethernet-)?ports$":
-+        patternProperties:
-+          "^(ethernet-)?port@[0-6]$":
-+            if:
-+              required: [ ethernet ]
-+            then:
-+              properties:
-+                phy-mode:
-+                  const: internal
-+
-   mt7530-dsa-port:
-     patternProperties:
-       "^(ethernet-)?ports$":
-@@ -297,7 +309,7 @@ allOf:
-             - airoha,en7581-switch
-             - airoha,an7583-switch
-     then:
--      $ref: "#/$defs/mt7530-dsa-port"
-+      $ref: "#/$defs/builtin-dsa-port"
-       properties:
-         gpio-controller: false
-         mediatek,mcm: false
+depencies (i hope this list is complete and latest patches/series linked):
+
+support interrupt-names is optional again as i re-added the reserved IRQs
+(they are not unusable as i thought and can allow features in future)
+https://patchwork.kernel.org/project/netdevbpf/patch/20250619132125.78368-2-linux@fw-web.de/
+
+needs change in mtk ethernet driver for the sram to be read from separate node:
+https://patchwork.kernel.org/project/netdevbpf/patch/566ca90fc59ad0d3aff8bc8dc22ebaf0544bce47.1751072868.git.daniel@makrotopia.org/
+
+for SFP-Function (macs currently disabled):
+
+PCS clearance which is a 1.5 year discussion currently ongoing
+
+Daniel asked netdev for a way 2 go:
+https://lore.kernel.org/netdev/aEwfME3dYisQtdCj@pidgin.makrotopia.org/
+
+e.g. something like this (one of):
+* https://patchwork.kernel.org/project/netdevbpf/patch/20250610233134.3588011-4-sean.anderson@linux.dev/ (v6)
+* https://patchwork.kernel.org/project/netdevbpf/patch/20250511201250.3789083-4-ansuelsmth@gmail.com/ (v4)
+* https://patchwork.kernel.org/project/netdevbpf/patch/ba4e359584a6b3bc4b3470822c42186d5b0856f9.1721910728.git.daniel@makrotopia.org/
+
+full usxgmii driver:
+https://patchwork.kernel.org/project/netdevbpf/patch/07845ec900ba41ff992875dce12c622277592c32.1702352117.git.daniel@makrotopia.org/
+
+first PCS-discussion is here:
+https://patchwork.kernel.org/project/netdevbpf/patch/8aa905080bdb6760875d62cb3b2b41258837f80e.1702352117.git.daniel@makrotopia.org/
+some more here:
+https://lore.kernel.org/netdev/20250511201250.3789083-4-ansuelsmth@gmail.com/
+
+and then dts nodes for sgmiisys+usxgmii+2g5 firmware
+
+when above depencies are solved the mac1/2 can be enabled and 2.5G phy/SFP slots will work.
+
+changes:
+v6:
+binding:
+- split out the interrupt-names into separate patch
+- update irq(name) min count to 4
+- move interrupt-names up
+- add sram-property
+- drop second reg entry and minitems as there is only 1 item left
+
+dts:
+- fix whitespace-errors for pdma irqs (spaces vs. tabs)
+- move sram from eth reg to own sram node (needs CONFIG_SRAM)
+
+v5:
+- add reserved irqs and change names
+- update binding for 8 irqs with different names (rx,tx => fe1+fe2, rx-ringX => pdmaX)
+(dropped Robs RB due to this change again, sorry)
+
+v4:
+net-binding:
+- allow interrupt names and increase max interrupts to 6 because of RSS/LRO interrupts
+  (dropped Robs RB due to this change)
+
+dts-patches:
+- add interrupts for RSS/LRO and interrupt-names for ethernet node
+- eth-reg and clock whitespace-fix
+- comment for fixed-link on gmac0
+- drop phy-mode properties as suggested by andrew
+- drop phy-connection-type on 2g5 board
+- reorder some properties
+- update 2g5 phy node
+- unit-name dec instead of hex to match reg property
+- move compatible before reg
+- drop phy-mode
+
+v3:
+- dropped patches already applied (SPI+thermal)
+- added soc specific cci compatible (new binding patch + changed dts)
+- enable 2g5 phy because driver is now merged
+- add patch for cleaning up unnecessary pins
+- add patch for gpio-leds
+- add patch for adding ethernet aliases
+
+v2:
+- change reg to list of items in eth binding
+- changed mt7530 binding:
+- unevaluatedProperties=false
+- mediatek,pio subproperty
+- from patternProperty to property
+- board specific properties like led function and labels moved to bpi-r4 dtsi
+
+
+Frank Wunderlich (15):
+  dt-bindings: net: mediatek,net: update for mt7988
+  dt-bindings: net: mediatek,net: allow irq names
+  dt-bindings: net: mediatek,net: update for mt7988
+  dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for
+    mt7988
+  dt-bindings: net: dsa: mediatek,mt7530: add internal mdio bus
+  dt-bindings: interconnect: add mt7988-cci compatible
+  arm64: dts: mediatek: mt7988: add cci node
+  arm64: dts: mediatek: mt7988: add basic ethernet-nodes
+  arm64: dts: mediatek: mt7988: add switch node
+  arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
+  arm64: dts: mediatek: mt7988a-bpi-r4: drop unused pins
+  arm64: dts: mediatek: mt7988a-bpi-r4: add gpio leds
+  arm64: dts: mediatek: mt7988a-bpi-r4: add aliases for ethernet
+  arm64: dts: mediatek: mt7988a-bpi-r4: add sfp cages and link to gmac
+  arm64: dts: mediatek: mt7988a-bpi-r4: configure switch phys and leds
+
+ .../bindings/interconnect/mediatek,cci.yaml   |  11 +-
+ .../bindings/net/dsa/mediatek,mt7530.yaml     |  24 +-
+ .../devicetree/bindings/net/mediatek,net.yaml |  47 ++-
+ .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  |  11 +
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  |  19 ++
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 198 ++++++-----
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi     | 318 +++++++++++++++++-
+ 7 files changed, 529 insertions(+), 99 deletions(-)
+
 -- 
 2.43.0
 
