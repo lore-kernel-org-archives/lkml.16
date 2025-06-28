@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83461220F48;
-	Sat, 28 Jun 2025 18:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3992BCFB;
+	Sat, 28 Jun 2025 18:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751137066; cv=none; b=ufoGm2RSi3G78nD8gy2m93zjTU7mdL6bYLEt9NJAFZTxQv2hxVaFqmgY/kV7ChdSNZ/7zBnweKNNvE0mPLDLus6wkkB/hIs10ronFYBk9XstfI7Eb2uEFAVKn0gd94qPnDPvCDWEi4K58XDg3hSpVLsYx/hwPGsAzOFvO9qe0fU=
+	t=1751137103; cv=none; b=AiORPTs4p6PgmnsNeqJRlvJ1zgKF50eeY1FfUbna4gDfQRNxzycDlj/LiacVxvLUceCVsb/sSNkAAP8DT3SByLapnCUSKkwPymcxtX+OgfVNprzxklsXwqHa6Op2ErgLYEAUdaUk1BkmjcjGrboNebfU0nevn0TpBkkS3/2r4g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751137066; c=relaxed/simple;
-	bh=ZAl987RtnqAA6nEP255KwhOX71RKQ7rq7qAN9e/1jHE=;
+	s=arc-20240116; t=1751137103; c=relaxed/simple;
+	bh=gyGvX5VhpMF7C5td3mJWg76WOm2wWnCvz7We7oIittc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l3sOmzkTYSTfqmmhNr2ivdc8xiTAOuCR5skWHT5Hdb12R+y8rMcXEcU6zVgrOe2z2hMHUK2c8gidiEjIdw/iRLmxCihNHHSy1TwPZYXuwW/Z0k/0WTVFrj68xCBD7VtNb71sOGc9f3TA1RA8KjmYCpDqsaFSA7y6HAlInAGYU/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YBkXNGxJ; arc=none smtp.client-ip=90.155.50.34
+	 In-Reply-To:Content-Type; b=gv04nSbzm7QyK0RjpIWjtZM3oOAiaboU2coqSQolj7d2Nx2oyX72oU49TvyNm1CISbNLSI/Pfr/N+kt8ShKMOqmDc0bq61WWvMYD1DllZzLsuhQHuaLie9ISTSs4MHnj/5OZgCq6bNiRjke4XPn3xyQIQ5iJE2WEpTnL/FW4/HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sgTV00gh; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YBkXNGxJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sgTV00gh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description;
-	bh=WS0+TC72GZxX8qGZhl4eqr21pm5RLZYj9dJ7tqT9W+M=; b=YBkXNGxJjm/YF2TGbCKlg8iric
-	DXQ+QW8+FIM1BEe6GEsM0QSRhlxQ08+vL6DKpKqDlTdTmiiW8P0gWSKOObXEk1rZH2fSrZroIxBYt
-	ofosom1Z3W+0uGjkBAe14OjZE1MKqqi22quwSXZSUJ1MnmWMxOHv8Dxh5ArUve1AOzQC3CgYiemt9
-	QeZmcXfj7Z1rhrG27+j1a2r+dxFeqb83UNS+SCe2bqgxMTFPiCWP1Q/68881p1Vj9GKlZveSlL3+f
-	2C9Y9Qep21P3TVqQkllMF65q7JORSjbnrLvxQuoTHt0FwUZJTK9y9TISEK0F7SitH4peQVHN5TBfK
-	BPYfLrPg==;
+	bh=1XvlWuNp4gjBKcSdNzZU5KMUhpIwvZVJU4F+yvgKsxU=; b=sgTV00ghbPFAZXetQbmng4lo2s
+	Kuh59y57uL4JGNrM5Pv+VbefBqyAKhNjPMUaIRemEMNdGP9+orVIBHtMjE/1mUrPvxDKr3B56VCWX
+	DTBhdPyJKcEX0rUUYnkc+JRiDshMvgC5N6o60Ks8qgjjeUyNGMOQYUWnxDVznR6jPlG/n2tDjSIXD
+	t24n6azfck+LxxBmIVG6pChucWOGlNBb5T3sVVGij+oZ3Xx2GWyKjSObS2FRsIGa7hHvCowS28x/U
+	Jbc50NuYv7Ovm0KqBeE7gpSWXlWNDXdvY4egWy5XS6kKOnkT4eQ+zIzga5R5xNxMbw287JO50lSi6
+	LpNE5rjA==;
 Received: from [50.53.25.54] (helo=[192.168.254.17])
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uVak7-0000000H7ds-2BFC;
-	Sat, 28 Jun 2025 18:57:39 +0000
-Message-ID: <eeaf9f80-7b84-4133-a2c2-be2e9c1e97c9@infradead.org>
-Date: Sat, 28 Jun 2025 11:57:36 -0700
+	id 1uVakh-0000000H7hU-1DZz;
+	Sat, 28 Jun 2025 18:58:15 +0000
+Message-ID: <7a31ca61-755b-46b6-9f49-ec1fe7f59451@infradead.org>
+Date: Sat, 28 Jun 2025 11:58:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] docs: dma-api: replace consistent with coherent
+Subject: Re: [PATCH v2 3/8] docs: dma-api: remove remnants of PCI DMA API
 To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
  Robin Murphy <robin.murphy@arm.com>,
  Marek Szyprowski <m.szyprowski@samsung.com>
@@ -48,34 +48,40 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Keith Busch
  Bagas Sanjaya <bagasdotme@gmail.com>,
  "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
  open list <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>, iommu@lists.linux.dev
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
 References: <20250627101015.1600042-1-ptesarik@suse.com>
- <20250627101015.1600042-3-ptesarik@suse.com>
+ <20250627101015.1600042-4-ptesarik@suse.com>
 Content-Language: en-US
 From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250627101015.1600042-3-ptesarik@suse.com>
+In-Reply-To: <20250627101015.1600042-4-ptesarik@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/27/25 3:10 AM, Petr Tesarik wrote:
-> For consistency, always use the term "coherent" when talking about memory
-> that is not subject to CPU caching effects. The term "consistent" is a
-> relic of a long-removed PCI DMA API (pci_alloc_consistent() and
-> pci_free_consistent() functions).
+> The wording sometimes suggests there are multiple functions for an
+> operation. This was in fact the case before PCI DMA API was removed, but
+> since there is only one API now, the documentation has become confusing.
+> 
+> To improve readability:
+> 
+> * Remove implicit references to the PCI DMA API (plurals, use of "both",
+>   etc.)
+> 
+> * Where possible, refer to an actual function rather than a more generic
+>   description of the operation.
 > 
 > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
 Thanks.
 
 > ---
->  Documentation/core-api/dma-api-howto.rst | 36 ++++++++++++------------
->  Documentation/core-api/dma-api.rst       | 14 ++++-----
->  mm/dmapool.c                             |  6 ++--
->  3 files changed, 28 insertions(+), 28 deletions(-)
+>  Documentation/core-api/dma-api.rst | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
 
 -- 
 ~Randy
