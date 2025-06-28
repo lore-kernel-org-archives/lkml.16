@@ -1,49 +1,49 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739902222C4;
-	Sat, 28 Jun 2025 07:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D04221F18;
+	Sat, 28 Jun 2025 07:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751094911; cv=none; b=D2xTQuqLDLPtszEiYyt57Fin9jkxWDAO8KbykdzKMtR0dvGGsaOqpCv9CRc3IcqfZ8YQUikJeHbIlybSm2ahl9Rn8/NwHrfXKiO//YQR55Ghl1n2Z+w5bt77UE0egwe8WiM1QJjV7WddDdYrhiaxaim6q2Jj+qWsl+JDPC+o408=
+	t=1751094907; cv=none; b=YStvF4G4xICe9c2tuGTrhRTHr3VlPRtoQ9u7NX9jgo6D0KWf3y1OLhT4Q6zMAO8u2OQdE6UM9TCxT8xC9fxqCvli/2CCrTexbeMKfTH+iiYn26c023dYOH1bDYN4MjLTeAfaDwTaJX5AMNd/xsqZNCDsJ+Y4DrxkBSRvhP5HC3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751094911; c=relaxed/simple;
-	bh=dO8TyEeQketmXDO9wMJaVHN74Nx/WX7837+8Dn/518I=;
+	s=arc-20240116; t=1751094907; c=relaxed/simple;
+	bh=MRB+/Aq3H1Zqqh3xycqWGfjKZy4iOHm8Xfa8NSsNE/g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HeCGqjYXcfyfR9nN/YZZCtiPZ5csHNMSgn/CJulQjS6Yj1/zxjz9jV5odcF/mTFAdQRI1BJaFEKlxjTq+JNavl4zYOd8A+PK7WSpCRE4v54cpyFk5Q1qgQuA9bw6djoExlSxIIkf7CT/IoPdLr5/MyWxGzeRwVPUBI3T0eRtAEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=a6jhdcQV; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=f5Me1z7yvTCIqQmkV3kyo/xDeNMQxwCB8r85+2qX7noai5qIqIP3RfsiCd9to0X5SSK6Xx37WSwMirj/SxgUSzT2HA+0cF7+EMWsEslVtetkqPzoSlUOw4ZGh8U1jGHWn+yRwgXPdcgxEFRi4l8h6lvgE1JJ4HgZHOhrXTSTIoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=biQqgQVv; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a6jhdcQV"
-X-UUID: 9c52c02a53ef11f0b33aeb1e7f16c2b6-20250628
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="biQqgQVv"
+X-UUID: 98d85bbc53ef11f0b1510d84776b8c0b-20250628
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PBAECyRU9rZHpz4l0ZgTE0/stNWQm9UrWF2YPYi2omA=;
-	b=a6jhdcQVw5jlajBJIpRvdtfAhC+y4lFh3i6wcxwquEywiLjgKX+kEe/pkneQdPVAIm9rOsGpuEPGPq/JZgYe00z26bu+yvGa83WzD7OJUk3wqJ5CZzzd/BJHx5vpksQK/L8bVN0yrW6npUhxXIFlRBL4pksDDlyVZdPHV60ILXs=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=s9t0wzX5KCmmhYl32vA/3L3R5vX/1yf7QbzO37vhhR0=;
+	b=biQqgQVvB8VlwVAJLJj49K/qd7ZkwihBCqqgjx0Zue1sUz2cKkGHElXhT45pD4MwFP8PaxHimVfPV+9LvQXK4UiANfftxhw4TD/kJYUDsVuRGlap6u+DiItNE7dXt+ziS2FRrohBXtygdHObVq4q7HD+QqjHMrdMk0HTual3ToA=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.2,REQID:6dc8411a-0a38-4636-9738-7614279d0675,IP:0,UR
-	L:25,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:20
-X-CID-META: VersionHash:9eb4ff7,CLOUDID:740ba714-6a0e-4a76-950f-481909c914a4,B
+X-CID-O-INFO: VERSION:1.3.2,REQID:f07d828f-9cde-4827-bd4e-553d5abda48d,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:94feb95f-2aa0-4c76-8faa-804d844c7164,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:11|97|99|83|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 9c52c02a53ef11f0b33aeb1e7f16c2b6-20250628
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+X-UUID: 98d85bbc53ef11f0b1510d84776b8c0b-20250628
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
 	(envelope-from <cyril.chao@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 339936038; Sat, 28 Jun 2025 15:15:03 +0800
+	with ESMTP id 1962213605; Sat, 28 Jun 2025 15:14:57 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Sat, 28 Jun 2025 15:15:01 +0800
+ 15.2.1258.39; Sat, 28 Jun 2025 15:14:56 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Sat, 28 Jun 2025 15:15:01 +0800
+ 15.2.1258.39 via Frontend Transport; Sat, 28 Jun 2025 15:14:55 +0800
 From: Cyril <Cyril.Chao@mediatek.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
  Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
@@ -55,9 +55,9 @@ CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
 	<cyril.chao@mediatek.com>, Cyril Chao <Cyril.Chao@mediatek.com>
-Subject: [PATCH 08/10] ASoC: dt-bindings: mediatek,mt8189-afe-pcm: add audio afe document
-Date: Sat, 28 Jun 2025 15:14:16 +0800
-Message-ID: <20250628071442.31155-9-Cyril.Chao@mediatek.com>
+Subject: [PATCH 05/10] ASoC: mediatek: mt8189: support TDM in platform driver
+Date: Sat, 28 Jun 2025 15:14:13 +0800
+Message-ID: <20250628071442.31155-6-Cyril.Chao@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250628071442.31155-1-Cyril.Chao@mediatek.com>
 References: <20250628071442.31155-1-Cyril.Chao@mediatek.com>
@@ -73,182 +73,848 @@ X-MTK: N
 
 From: Cyril Chao <Cyril.Chao@mediatek.com>
 
-Add mt8189 audio afe document.
+Add mt8189 TDM DAI driver support.
 
 Signed-off-by: Cyril Chao <Cyril.Chao@mediatek.com>
 ---
- .../sound/mediatek,mt8189-afe-pcm.yaml        | 162 ++++++++++++++++++
- 1 file changed, 162 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8189-afe-pcm.yaml
+ sound/soc/mediatek/mt8189/mt8189-dai-tdm.c | 828 +++++++++++++++++++++
+ 1 file changed, 828 insertions(+)
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-dai-tdm.c
 
-diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8189-afe-pcm.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8189-afe-pcm.yaml
+diff --git a/sound/soc/mediatek/mt8189/mt8189-dai-tdm.c b/sound/soc/mediatek/mt8189/mt8189-dai-tdm.c
 new file mode 100644
-index 000000000..f0bfc3bcf
+index 000000000..411a63518
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mediatek,mt8189-afe-pcm.yaml
-@@ -0,0 +1,162 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/mediatek,mt8189-afe-pcm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/mediatek/mt8189/mt8189-dai-tdm.c
+@@ -0,0 +1,828 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  MediaTek ALSA SoC Audio DAI TDM Control
++ *
++ *  Copyright (c) 2025 MediaTek Inc.
++ *  Author: Darren Ye <darren.ye@mediatek.com>
++ */
 +
-+title: MediaTek Audio Front End PCM controller for MT8189
++#include <linux/regmap.h>
++#include <sound/pcm_params.h>
++#include "mt8189-afe-clk.h"
++#include "mt8189-afe-common.h"
++#include "mt8189-interconnection.h"
 +
-+maintainers:
-+  - Darren Ye <darren.ye@mediatek.com>
-+  - Cyril Chao <cyril.chao@mediatek.com>
++enum {
++	SUPPLY_SEQ_APLL,
++	SUPPLY_SEQ_TDM_MCK_EN,
++	SUPPLY_SEQ_TDM_BCK_EN,
++	SUPPLY_SEQ_TDM_DPTX_MCK_EN,
++	SUPPLY_SEQ_TDM_DPTX_BCK_EN,
++	SUPPLY_SEQ_TDM_CG_EN,
++};
 +
-+properties:
-+  compatible:
-+    const: mediatek,mt8189-afe-pcm
++enum {
++	TDM_WLEN_16_BIT = 1,
++	TDM_WLEN_32_BIT = 2,
++};
 +
-+  reg:
-+    maxItems: 1
++enum {
++	TDM_CHANNEL_BCK_16 = 0,
++	TDM_CHANNEL_BCK_24 = 1,
++	TDM_CHANNEL_BCK_32 = 2,
++};
 +
-+  interrupts:
-+    maxItems: 1
++enum {
++	TDM_CHANNEL_NUM_2 = 0,
++	TDM_CHANNEL_NUM_4 = 1,
++	TDM_CHANNEL_NUM_8 = 2,
++};
 +
-+  memory-region:
-+    maxItems: 1
++enum  {
++	TDM_CH_START_O30_O31 = 0,
++	TDM_CH_START_O32_O33,
++	TDM_CH_START_O34_O35,
++	TDM_CH_START_O36_O37,
++	TDM_CH_ZERO,
++};
 +
-+  mediatek,apmixedsys:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: To set up the apll12 tuner
++enum {
++	DPTX_CHANNEL_2,
++	DPTX_CHANNEL_8,
++};
 +
-+  power-domains:
-+    maxItems: 1
++enum {
++	DPTX_WLEN_24_BIT,
++	DPTX_WLEN_16_BIT,
++};
 +
-+  clocks:
-+    items:
-+      - description: mux for audio intbus
-+      - description: mux for audio engen1
-+      - description: mux for audio engen2
-+      - description: mux for audio h
-+      - description: audio apll1 clock
-+      - description: audio apll2 clock
-+      - description: audio apll1 divide4
-+      - description: audio apll2 divide4
-+      - description: audio apll12 divide for i2sin0
-+      - description: audio apll12 divide for i2sin1
-+      - description: audio apll12 divide for fmi2s
-+      - description: audio apll12 divide for tdmout mck
-+      - description: audio apll12 divide for tdmout bck
-+      - description: mux for audio apll1
-+      - description: mux for audio apll2
-+      - description: mux for i2sin0 mck
-+      - description: mux for i2sin1 mck
-+      - description: mux for fmi2s mck
-+      - description: mux for tdmout mck
-+      - description: 26m clock
-+      - description: audio slv clock
-+      - description: audio mst clock
-+      - description: audio intbus clock
++enum {
++	DPTX_CH_EN_MASK_2CH = 0x3,
++	DPTX_CH_EN_MASK_4CH = 0xf,
++	DPTX_CH_EN_MASK_6CH = 0x3f,
++	DPTX_CH_EN_MASK_8CH = 0xff,
++};
 +
-+  clock-names:
-+    items:
-+      - const: top_aud_intbus
-+      - const: top_aud_eng1
-+      - const: top_aud_eng2
-+      - const: top_aud_h
-+      - const: apll1
-+      - const: apll2
-+      - const: apll1_d4
-+      - const: apll2_d4
-+      - const: apll12_div_i2sin0
-+      - const: apll12_div_i2sin1
-+      - const: apll12_div_fmi2s
-+      - const: apll12_div_tdmout_m
-+      - const: apll12_div_tdmout_b
-+      - const: top_apll1
-+      - const: top_apll2
-+      - const: top_i2sin0
-+      - const: top_i2sin1
-+      - const: top_fmi2s
-+      - const: top_dptx
-+      - const: clk26m
-+      - const: aud_slv_ck_peri
-+      - const: aud_mst_ck_peri
-+      - const: aud_intbus_ck_peri
++struct mtk_afe_tdm_priv {
++	int bck_id;
++	int bck_rate;
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - memory-region
-+  - mediatek,apmixedsys
-+  - power-domains
-+  - clocks
-+  - clock-names
++	int mclk_id;
++	int mclk_multiple; /* according to sample rate */
++	int mclk_rate;
++	int mclk_apll;
++};
 +
-+additionalProperties: false
++static unsigned int get_tdm_wlen(snd_pcm_format_t format)
++{
++	return snd_pcm_format_physical_width(format) <= 16 ?
++	       TDM_WLEN_16_BIT : TDM_WLEN_32_BIT;
++}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
++static unsigned int get_tdm_channel_bck(snd_pcm_format_t format)
++{
++	return snd_pcm_format_physical_width(format) <= 16 ?
++	       TDM_CHANNEL_BCK_16 : TDM_CHANNEL_BCK_32;
++}
 +
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++static unsigned int get_tdm_lrck_width(snd_pcm_format_t format)
++{
++	return snd_pcm_format_physical_width(format) - 1;
++}
 +
-+        afe@11050000 {
-+            compatible = "mediatek,mt8189-afe-pcm";
-+            reg = <0 0x11050000 0 0x10000>;
-+            interrupts = <GIC_SPI 392 IRQ_TYPE_LEVEL_HIGH 0>;
-+            memory-region = <&afe_dma_mem_reserved>;
-+            mediatek,apmixedsys = <&apmixedsys_clk>;
-+            power-domains = <&scpsys 1>; //MT8189_POWER_DOMAIN_AUDIO
-+            clocks = <&topckgen_clk 23>, //CLK_TOP_AUD_INTBUS_SEL
-+                     <&topckgen_clk 39>, //CLK_TOP_AUD_ENGEN1_SEL
-+                     <&topckgen_clk 40>, //CLK_TOP_AUD_ENGEN2_SEL
-+                     <&topckgen_clk 49>, //CLK_TOP_AUDIO_H_SEL
-+                     <&topckgen_clk 146>, //CLK_TOP_APLL1
-+                     <&topckgen_clk 151>, //CLK_TOP_APLL2
-+                     <&topckgen_clk 148>, //CLK_TOP_APLL1_D4
-+                     <&topckgen_clk 153>, //CLK_TOP_APLL2_D4
-+                     <&topckgen_clk 93>, //CLK_TOP_APLL12_CK_DIV_I2SIN0
-+                     <&topckgen_clk 94>, //CLK_TOP_APLL12_CK_DIV_I2SIN1
-+                     <&topckgen_clk 97>, //CLK_TOP_APLL12_CK_DIV_FMI2S
-+                     <&topckgen_clk 98>, //CLK_TOP_APLL12_CK_DIV_TDMOUT_M
-+                     <&topckgen_clk 99>, //CLK_TOP_APLL12_CK_DIV_TDMOUT_B
-+                     <&topckgen_clk 44>, //CLK_TOP_AUD_1_SEL
-+                     <&topckgen_clk 45>, //CLK_TOP_AUD_2_SEL
-+                     <&topckgen_clk 78>, //CLK_TOP_APLL_I2SIN0_MCK_SEL
-+                     <&topckgen_clk 79>, //CLK_TOP_APLL_I2SIN1_MCK_SEL
-+                     <&topckgen_clk 90>, //CLK_TOP_APLL_FMI2S_MCK_SEL
-+                     <&topckgen_clk 91>, //CLK_TOP_APLL_TDMOUT_MCK_SEL
-+                     <&topckgen_clk 191>, //CLK_TOP_TCK_26M_MX9
-+                     <&pericfg_ao_clk 77>, //CLK_PERAO_AUDIO0
-+                     <&pericfg_ao_clk 78>, //CLK_PERAO_AUDIO1
-+                     <&pericfg_ao_clk 79>; //CLK_PERAO_AUDIO2
-+            clock-names = "top_aud_intbus",
-+                          "top_aud_eng1",
-+                          "top_aud_eng2",
-+                          "top_aud_h",
-+                          "apll1",
-+                          "apll2",
-+                          "apll1_d4",
-+                          "apll2_d4",
-+                          "apll12_div_i2sin0",
-+                          "apll12_div_i2sin1",
-+                          "apll12_div_fmi2s",
-+                          "apll12_div_tdmout_m",
-+                          "apll12_div_tdmout_b",
-+                          "top_apll1",
-+                          "top_apll2",
-+                          "top_i2sin0",
-+                          "top_i2sin1",
-+                          "top_fmi2s",
-+                          "top_dptx",
-+                          "clk26m",
-+                          "aud_slv_ck_peri",
-+                          "aud_mst_ck_peri",
-+                          "aud_intbus_ck_peri";
-+        };
-+    };
++static unsigned int get_tdm_ch(unsigned int ch)
++{
++	switch (ch) {
++	case 1:
++	case 2:
++		return TDM_CHANNEL_NUM_2;
++	case 3:
++	case 4:
++		return TDM_CHANNEL_NUM_4;
++	case 5:
++	case 6:
++	case 7:
++	case 8:
++	default:
++		return TDM_CHANNEL_NUM_8;
++	}
++}
 +
-+...
++static unsigned int get_dptx_ch_enable_mask(unsigned int ch)
++{
++	switch (ch) {
++	case 1:
++	case 2:
++		return DPTX_CH_EN_MASK_2CH;
++	case 3:
++	case 4:
++		return DPTX_CH_EN_MASK_4CH;
++	case 5:
++	case 6:
++		return DPTX_CH_EN_MASK_6CH;
++	case 7:
++	case 8:
++		return DPTX_CH_EN_MASK_8CH;
++	default:
++		return DPTX_CH_EN_MASK_2CH;
++	}
++}
++
++static unsigned int get_dptx_ch(unsigned int ch)
++{
++	if (ch == 2)
++		return DPTX_CHANNEL_2;
++
++	return DPTX_CHANNEL_8;
++}
++
++static unsigned int get_dptx_wlen(snd_pcm_format_t format)
++{
++	return snd_pcm_format_physical_width(format) <= 16 ?
++	       DPTX_WLEN_16_BIT : DPTX_WLEN_24_BIT;
++}
++
++/* interconnection */
++enum {
++	HDMI_CONN_CH0 = 0,
++	HDMI_CONN_CH1,
++	HDMI_CONN_CH2,
++	HDMI_CONN_CH3,
++	HDMI_CONN_CH4,
++	HDMI_CONN_CH5,
++	HDMI_CONN_CH6,
++	HDMI_CONN_CH7,
++};
++
++static const char *const hdmi_conn_mux_map[] = {
++	"CH0", "CH1", "CH2", "CH3",
++	"CH4", "CH5", "CH6", "CH7",
++};
++
++static int hdmi_conn_mux_map_value[] = {
++	HDMI_CONN_CH0,
++	HDMI_CONN_CH1,
++	HDMI_CONN_CH2,
++	HDMI_CONN_CH3,
++	HDMI_CONN_CH4,
++	HDMI_CONN_CH5,
++	HDMI_CONN_CH6,
++	HDMI_CONN_CH7,
++};
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch0_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_0_SFT,
++				  HDMI_O_0_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch0_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH0_MUX", hdmi_ch0_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch1_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_1_SFT,
++				  HDMI_O_1_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch1_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH1_MUX", hdmi_ch1_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch2_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_2_SFT,
++				  HDMI_O_2_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch2_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH2_MUX", hdmi_ch2_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch3_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_3_SFT,
++				  HDMI_O_3_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch3_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH3_MUX", hdmi_ch3_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch4_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_4_SFT,
++				  HDMI_O_4_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch4_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH4_MUX", hdmi_ch4_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch5_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_5_SFT,
++				  HDMI_O_5_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch5_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH5_MUX", hdmi_ch5_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch6_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_6_SFT,
++				  HDMI_O_6_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch6_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH6_MUX", hdmi_ch6_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_DECL(hdmi_ch7_mux_map_enum,
++				  AFE_HDMI_CONN0,
++				  HDMI_O_7_SFT,
++				  HDMI_O_7_MASK,
++				  hdmi_conn_mux_map,
++				  hdmi_conn_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_ch7_mux_control =
++	SOC_DAPM_ENUM("HDMI_CH7_MUX", hdmi_ch7_mux_map_enum);
++
++static const char *const tdm_out_mux_map[] = {
++	"Disconnect", "Connect",
++};
++
++static int tdm_out_mux_map_value[] = {
++	0, 1,
++};
++
++static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(hdmi_out_mux_map_enum,
++					      SND_SOC_NOPM,
++					      0,
++					      1,
++					      tdm_out_mux_map,
++					      tdm_out_mux_map_value);
++
++static const struct snd_kcontrol_new hdmi_out_mux_control =
++	SOC_DAPM_ENUM("HDMI_OUT_MUX", hdmi_out_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(dptx_out_mux_map_enum,
++					      SND_SOC_NOPM,
++					      0,
++					      1,
++					      tdm_out_mux_map,
++					      tdm_out_mux_map_value);
++
++static const struct snd_kcontrol_new dptx_out_mux_control =
++	SOC_DAPM_ENUM("DPTX_OUT_MUX", dptx_out_mux_map_enum);
++
++static SOC_VALUE_ENUM_SINGLE_AUTODISABLE_DECL(dptx_virtual_out_mux_map_enum,
++					      SND_SOC_NOPM,
++					      0,
++					      1,
++					      tdm_out_mux_map,
++					      tdm_out_mux_map_value);
++
++static const struct snd_kcontrol_new dptx_virtual_out_mux_control =
++	SOC_DAPM_ENUM("DPTX_VIRTUAL_OUT_MUX", dptx_virtual_out_mux_map_enum);
++
++static int get_tdm_id_by_name(const char *name)
++{
++	if (strstr(name, "DPTX"))
++		return MT8189_DAI_TDM_DPTX;
++
++	return MT8189_DAI_TDM;
++}
++
++static int mtk_tdm_bck_en_event(struct snd_soc_dapm_widget *w,
++				struct snd_kcontrol *kcontrol,
++				int event)
++{
++	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
++	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	int dai_id = get_tdm_id_by_name(w->name);
++	struct mtk_afe_tdm_priv *tdm_priv = afe_priv->dai_priv[dai_id];
++
++	dev_dbg(cmpnt->dev, "name %s, event 0x%x, dai_id %d, bck: %d\n",
++		w->name, event, dai_id, tdm_priv->bck_rate);
++
++	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		mt8189_mck_enable(afe, tdm_priv->bck_id, tdm_priv->bck_rate);
++		break;
++	case SND_SOC_DAPM_POST_PMD:
++		mt8189_mck_disable(afe, tdm_priv->bck_id);
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int mtk_tdm_mck_en_event(struct snd_soc_dapm_widget *w,
++				struct snd_kcontrol *kcontrol,
++				int event)
++{
++	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
++	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	int dai_id = get_tdm_id_by_name(w->name);
++	struct mtk_afe_tdm_priv *tdm_priv = afe_priv->dai_priv[dai_id];
++
++	dev_dbg(cmpnt->dev, "name %s, event 0x%x, dai_id %d, mclk %d\n",
++		w->name, event, dai_id, tdm_priv->mclk_rate);
++
++	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		mt8189_mck_enable(afe, tdm_priv->mclk_id, tdm_priv->mclk_rate);
++		break;
++	case SND_SOC_DAPM_POST_PMD:
++		tdm_priv->mclk_rate = 0;
++		mt8189_mck_disable(afe, tdm_priv->mclk_id);
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget mtk_dai_tdm_widgets[] = {
++	SND_SOC_DAPM_MUX("HDMI_CH0_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch0_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH1_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch1_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH2_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch2_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH3_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch3_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH4_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch4_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH5_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch5_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH6_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch6_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_CH7_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_ch7_mux_control),
++	SND_SOC_DAPM_MUX("HDMI_OUT_MUX", SND_SOC_NOPM, 0, 0,
++			 &hdmi_out_mux_control),
++	SND_SOC_DAPM_MUX("DPTX_OUT_MUX", SND_SOC_NOPM, 0, 0,
++			 &dptx_out_mux_control),
++
++	SND_SOC_DAPM_SUPPLY_S("TDM_BCK", SUPPLY_SEQ_TDM_BCK_EN,
++			      SND_SOC_NOPM, 0, 0,
++			      mtk_tdm_bck_en_event,
++			      SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++
++	SND_SOC_DAPM_SUPPLY_S("TDM_MCK", SUPPLY_SEQ_TDM_MCK_EN,
++			      SND_SOC_NOPM, 0, 0,
++			      mtk_tdm_mck_en_event,
++			      SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++
++	SND_SOC_DAPM_SUPPLY_S("TDM_DPTX_BCK", SUPPLY_SEQ_TDM_DPTX_BCK_EN,
++			      SND_SOC_NOPM, 0, 0,
++			      mtk_tdm_bck_en_event,
++			      SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++
++	SND_SOC_DAPM_SUPPLY_S("TDM_DPTX_MCK", SUPPLY_SEQ_TDM_DPTX_MCK_EN,
++			      SND_SOC_NOPM, 0, 0,
++			      mtk_tdm_mck_en_event,
++			      SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
++
++	SND_SOC_DAPM_SUPPLY_S("TDM_CG", SUPPLY_SEQ_TDM_CG_EN,
++			      AUDIO_TOP_CON2, PDN_TDM_OUT_SFT, 1,
++			      NULL, 0),
++
++	SND_SOC_DAPM_MUX("DPTX_VIRTUAL_OUT_MUX",
++			 SND_SOC_NOPM, 0, 0, &dptx_virtual_out_mux_control),
++	SND_SOC_DAPM_OUTPUT("DPTX_VIRTUAL_OUT"),
++};
++
++static int mtk_afe_tdm_apll_connect(struct snd_soc_dapm_widget *source,
++				    struct snd_soc_dapm_widget *sink)
++{
++	struct snd_soc_dapm_widget *w = sink;
++	struct snd_soc_component *cmpnt = snd_soc_dapm_to_component(w->dapm);
++	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(cmpnt);
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	int dai_id = get_tdm_id_by_name(w->name);
++	struct mtk_afe_tdm_priv *tdm_priv = afe_priv->dai_priv[dai_id];
++	int cur_apll;
++
++	/* which apll */
++	cur_apll = mt8189_get_apll_by_name(afe, source->name);
++
++	return (tdm_priv->mclk_apll == cur_apll) ? 1 : 0;
++}
++
++static const struct snd_soc_dapm_route mtk_dai_tdm_routes[] = {
++	{"HDMI_CH0_MUX", "CH0", "HDMI"},
++	{"HDMI_CH0_MUX", "CH1", "HDMI"},
++	{"HDMI_CH0_MUX", "CH2", "HDMI"},
++	{"HDMI_CH0_MUX", "CH3", "HDMI"},
++	{"HDMI_CH0_MUX", "CH4", "HDMI"},
++	{"HDMI_CH0_MUX", "CH5", "HDMI"},
++	{"HDMI_CH0_MUX", "CH6", "HDMI"},
++	{"HDMI_CH0_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH1_MUX", "CH0", "HDMI"},
++	{"HDMI_CH1_MUX", "CH1", "HDMI"},
++	{"HDMI_CH1_MUX", "CH2", "HDMI"},
++	{"HDMI_CH1_MUX", "CH3", "HDMI"},
++	{"HDMI_CH1_MUX", "CH4", "HDMI"},
++	{"HDMI_CH1_MUX", "CH5", "HDMI"},
++	{"HDMI_CH1_MUX", "CH6", "HDMI"},
++	{"HDMI_CH1_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH2_MUX", "CH0", "HDMI"},
++	{"HDMI_CH2_MUX", "CH1", "HDMI"},
++	{"HDMI_CH2_MUX", "CH2", "HDMI"},
++	{"HDMI_CH2_MUX", "CH3", "HDMI"},
++	{"HDMI_CH2_MUX", "CH4", "HDMI"},
++	{"HDMI_CH2_MUX", "CH5", "HDMI"},
++	{"HDMI_CH2_MUX", "CH6", "HDMI"},
++	{"HDMI_CH2_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH3_MUX", "CH0", "HDMI"},
++	{"HDMI_CH3_MUX", "CH1", "HDMI"},
++	{"HDMI_CH3_MUX", "CH2", "HDMI"},
++	{"HDMI_CH3_MUX", "CH3", "HDMI"},
++	{"HDMI_CH3_MUX", "CH4", "HDMI"},
++	{"HDMI_CH3_MUX", "CH5", "HDMI"},
++	{"HDMI_CH3_MUX", "CH6", "HDMI"},
++	{"HDMI_CH3_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH4_MUX", "CH0", "HDMI"},
++	{"HDMI_CH4_MUX", "CH1", "HDMI"},
++	{"HDMI_CH4_MUX", "CH2", "HDMI"},
++	{"HDMI_CH4_MUX", "CH3", "HDMI"},
++	{"HDMI_CH4_MUX", "CH4", "HDMI"},
++	{"HDMI_CH4_MUX", "CH5", "HDMI"},
++	{"HDMI_CH4_MUX", "CH6", "HDMI"},
++	{"HDMI_CH4_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH5_MUX", "CH0", "HDMI"},
++	{"HDMI_CH5_MUX", "CH1", "HDMI"},
++	{"HDMI_CH5_MUX", "CH2", "HDMI"},
++	{"HDMI_CH5_MUX", "CH3", "HDMI"},
++	{"HDMI_CH5_MUX", "CH4", "HDMI"},
++	{"HDMI_CH5_MUX", "CH5", "HDMI"},
++	{"HDMI_CH5_MUX", "CH6", "HDMI"},
++	{"HDMI_CH5_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH6_MUX", "CH0", "HDMI"},
++	{"HDMI_CH6_MUX", "CH1", "HDMI"},
++	{"HDMI_CH6_MUX", "CH2", "HDMI"},
++	{"HDMI_CH6_MUX", "CH3", "HDMI"},
++	{"HDMI_CH6_MUX", "CH4", "HDMI"},
++	{"HDMI_CH6_MUX", "CH5", "HDMI"},
++	{"HDMI_CH6_MUX", "CH6", "HDMI"},
++	{"HDMI_CH6_MUX", "CH7", "HDMI"},
++
++	{"HDMI_CH7_MUX", "CH0", "HDMI"},
++	{"HDMI_CH7_MUX", "CH1", "HDMI"},
++	{"HDMI_CH7_MUX", "CH2", "HDMI"},
++	{"HDMI_CH7_MUX", "CH3", "HDMI"},
++	{"HDMI_CH7_MUX", "CH4", "HDMI"},
++	{"HDMI_CH7_MUX", "CH5", "HDMI"},
++	{"HDMI_CH7_MUX", "CH6", "HDMI"},
++	{"HDMI_CH7_MUX", "CH7", "HDMI"},
++
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH0_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH1_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH2_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH3_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH4_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH5_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH6_MUX"},
++	{"HDMI_OUT_MUX", "Connect", "HDMI_CH7_MUX"},
++
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH0_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH1_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH2_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH3_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH4_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH5_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH6_MUX"},
++	{"DPTX_OUT_MUX", "Connect", "HDMI_CH7_MUX"},
++
++	{"TDM", NULL, "HDMI_OUT_MUX"},
++	{"TDM", NULL, "TDM_BCK"},
++	{"TDM", NULL, "TDM_CG"},
++
++	{"TDM_DPTX", NULL, "DPTX_OUT_MUX"},
++	{"TDM_DPTX", NULL, "TDM_DPTX_BCK"},
++	{"TDM_DPTX", NULL, "TDM_CG"},
++
++	{"TDM_BCK", NULL, "TDM_MCK"},
++	{"TDM_DPTX_BCK", NULL, "TDM_DPTX_MCK"},
++	{"TDM_MCK", NULL, APLL1_W_NAME, mtk_afe_tdm_apll_connect},
++	{"TDM_MCK", NULL, APLL2_W_NAME, mtk_afe_tdm_apll_connect},
++	{"TDM_DPTX_MCK", NULL, APLL1_W_NAME, mtk_afe_tdm_apll_connect},
++	{"TDM_DPTX_MCK", NULL, APLL2_W_NAME, mtk_afe_tdm_apll_connect},
++
++	{"DPTX_VIRTUAL_OUT_MUX", "Connect", "TDM_DPTX"},
++	{"DPTX_VIRTUAL_OUT", NULL, "DPTX_VIRTUAL_OUT_MUX"},
++};
++
++/* dai ops */
++static int mtk_dai_tdm_cal_mclk(struct mtk_base_afe *afe,
++				struct mtk_afe_tdm_priv *tdm_priv,
++				int freq)
++{
++	int apll;
++	int apll_rate;
++
++	apll = mt8189_get_apll_by_rate(afe, freq);
++	apll_rate = mt8189_get_apll_rate(afe, apll);
++
++	if (freq > apll_rate)
++		return -EINVAL;
++
++	if (apll_rate % freq != 0)
++		return -EINVAL;
++
++	tdm_priv->mclk_rate = freq;
++	tdm_priv->mclk_apll = apll;
++
++	return 0;
++}
++
++static int mtk_dai_tdm_hw_params(struct snd_pcm_substream *substream,
++				 struct snd_pcm_hw_params *params,
++				 struct snd_soc_dai *dai)
++{
++	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	int tdm_id = dai->id;
++	struct mtk_afe_tdm_priv *tdm_priv;
++	unsigned int rate = params_rate(params);
++	unsigned int channels = params_channels(params);
++	snd_pcm_format_t format = params_format(params);
++	unsigned int tdm_con = 0;
++
++	if (tdm_id >= MT8189_DAI_NUM || tdm_id < 0)
++		return -EINVAL;
++
++	tdm_priv = afe_priv->dai_priv[tdm_id];
++
++	/* calculate mclk_rate, if not set explicitly */
++	if (!tdm_priv->mclk_rate) {
++		tdm_priv->mclk_rate = rate * tdm_priv->mclk_multiple;
++		mtk_dai_tdm_cal_mclk(afe,
++				     tdm_priv,
++				     tdm_priv->mclk_rate);
++	}
++
++	/* calculate bck */
++	tdm_priv->bck_rate = rate *
++			     channels *
++			     snd_pcm_format_physical_width(format);
++
++	if (tdm_priv->bck_rate > tdm_priv->mclk_rate)
++		return -EINVAL;
++
++	if (tdm_priv->mclk_rate % tdm_priv->bck_rate != 0)
++		return -EINVAL;
++
++	dev_dbg(afe->dev, "id %d, rate %d, channels %d, format %d, mclk_rate %d, bck_rate %d\n",
++		tdm_id, rate, channels, format,
++		tdm_priv->mclk_rate, tdm_priv->bck_rate);
++
++	/* set tdm */
++	tdm_con |= 1 << LEFT_ALIGN_SFT;
++	tdm_con |= get_tdm_wlen(format) << WLEN_SFT;
++	tdm_con |= get_tdm_ch(channels) << CHANNEL_NUM_SFT;
++	tdm_con |= get_tdm_channel_bck(format) << CHANNEL_BCK_CYCLES_SFT;
++	tdm_con |= get_tdm_lrck_width(format) << LRCK_TDM_WIDTH_SFT;
++	regmap_write(afe->regmap, AFE_TDM_CON1, tdm_con);
++
++	/* set dptx */
++	if (tdm_id == MT8189_DAI_TDM_DPTX) {
++		regmap_update_bits(afe->regmap, AFE_DPTX_CON,
++				   DPTX_CHANNEL_ENABLE_MASK_SFT,
++				   get_dptx_ch_enable_mask(channels) <<
++				   DPTX_CHANNEL_ENABLE_SFT);
++		regmap_update_bits(afe->regmap, AFE_DPTX_CON,
++				   DPTX_CHANNEL_NUMBER_MASK_SFT,
++				   get_dptx_ch(channels) <<
++				   DPTX_CHANNEL_NUMBER_SFT);
++		regmap_update_bits(afe->regmap, AFE_DPTX_CON,
++				   DPTX_16BIT_MASK_SFT,
++				   get_dptx_wlen(format) << DPTX_16BIT_SFT);
++	}
++		switch (channels) {
++		case 1:
++		case 2:
++			tdm_con = TDM_CH_START_O30_O31 << ST_CH_PAIR_SOUT0_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT1_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT2_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
++			break;
++		case 3:
++		case 4:
++			tdm_con = TDM_CH_START_O30_O31 << ST_CH_PAIR_SOUT0_SFT;
++			tdm_con |= TDM_CH_START_O32_O33 << ST_CH_PAIR_SOUT1_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT2_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
++			break;
++		case 5:
++		case 6:
++			tdm_con = TDM_CH_START_O30_O31 << ST_CH_PAIR_SOUT0_SFT;
++			tdm_con |= TDM_CH_START_O32_O33 << ST_CH_PAIR_SOUT1_SFT;
++			tdm_con |= TDM_CH_START_O34_O35 << ST_CH_PAIR_SOUT2_SFT;
++			tdm_con |= TDM_CH_ZERO << ST_CH_PAIR_SOUT3_SFT;
++			break;
++		case 7:
++		case 8:
++			tdm_con = TDM_CH_START_O30_O31 << ST_CH_PAIR_SOUT0_SFT;
++			tdm_con |= TDM_CH_START_O32_O33 << ST_CH_PAIR_SOUT1_SFT;
++			tdm_con |= TDM_CH_START_O34_O35 << ST_CH_PAIR_SOUT2_SFT;
++			tdm_con |= TDM_CH_START_O36_O37 << ST_CH_PAIR_SOUT3_SFT;
++			break;
++		default:
++			tdm_con = 0;
++		}
++	regmap_write(afe->regmap, AFE_TDM_CON2, tdm_con);
++	regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
++			   HDMI_CH_NUM_MASK_SFT,
++			   channels << HDMI_CH_NUM_SFT);
++	return 0;
++}
++
++static int mtk_dai_tdm_trigger(struct snd_pcm_substream *substream,
++			       int cmd,
++			       struct snd_soc_dai *dai)
++{
++	struct mtk_base_afe *afe = snd_soc_dai_get_drvdata(dai);
++	int tdm_id = dai->id;
++
++	dev_dbg(afe->dev, "%s(), cmd %d, tdm_id %d\n", __func__, cmd, tdm_id);
++
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++		/* enable Out control */
++		regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
++				   HDMI_OUT_ON_MASK_SFT,
++				   0x1 << HDMI_OUT_ON_SFT);
++
++		/* enable dptx */
++		if (tdm_id == MT8189_DAI_TDM_DPTX) {
++			regmap_update_bits(afe->regmap, AFE_DPTX_CON,
++					   DPTX_ON_MASK_SFT, 0x1 <<
++					   DPTX_ON_SFT);
++		}
++
++		/* enable tdm */
++		regmap_update_bits(afe->regmap, AFE_TDM_CON1,
++				   TDM_EN_MASK_SFT, 0x1 << TDM_EN_SFT);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		/* disable tdm */
++		regmap_update_bits(afe->regmap, AFE_TDM_CON1,
++				   TDM_EN_MASK_SFT, 0);
++
++		/* disable dptx */
++		if (tdm_id == MT8189_DAI_TDM_DPTX) {
++			regmap_update_bits(afe->regmap, AFE_DPTX_CON,
++					   DPTX_ON_MASK_SFT, 0);
++		}
++
++		/* disable Out control */
++		regmap_update_bits(afe->regmap, AFE_HDMI_OUT_CON0,
++				   HDMI_OUT_ON_MASK_SFT, 0);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int mtk_dai_tdm_set_sysclk(struct snd_soc_dai *dai,
++				  int clk_id, unsigned int freq, int dir)
++{
++	struct mtk_base_afe *afe = dev_get_drvdata(dai->dev);
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	struct mtk_afe_tdm_priv *tdm_priv;
++
++	if (dai->id >= MT8189_DAI_NUM || dai->id < 0)
++		return -EINVAL;
++
++	tdm_priv = afe_priv->dai_priv[dai->id];
++
++	if (!tdm_priv)
++		return -EINVAL;
++
++	if (dir != SND_SOC_CLOCK_OUT)
++		return -EINVAL;
++
++	dev_dbg(afe->dev, "%s(), freq %d\n", __func__, freq);
++
++	return mtk_dai_tdm_cal_mclk(afe, tdm_priv, freq);
++}
++
++static const struct snd_soc_dai_ops mtk_dai_tdm_ops = {
++	.hw_params = mtk_dai_tdm_hw_params,
++	.trigger = mtk_dai_tdm_trigger,
++	.set_sysclk = mtk_dai_tdm_set_sysclk,
++};
++
++/* dai driver */
++#define MTK_TDM_RATES (SNDRV_PCM_RATE_8000_48000 |\
++		       SNDRV_PCM_RATE_88200 |\
++		       SNDRV_PCM_RATE_96000 |\
++		       SNDRV_PCM_RATE_176400 |\
++		       SNDRV_PCM_RATE_192000)
++
++#define MTK_TDM_FORMATS (SNDRV_PCM_FMTBIT_S16_LE |\
++			 SNDRV_PCM_FMTBIT_S24_LE |\
++			 SNDRV_PCM_FMTBIT_S32_LE)
++
++static struct snd_soc_dai_driver mtk_dai_tdm_driver[] = {
++	{
++		.name = "TDM",
++		.id = MT8189_DAI_TDM,
++		.playback = {
++			.stream_name = "TDM",
++			.channels_min = 2,
++			.channels_max = 8,
++			.rates = MTK_TDM_RATES,
++			.formats = MTK_TDM_FORMATS,
++		},
++		.ops = &mtk_dai_tdm_ops,
++	},
++	{
++		.name = "TDM_DPTX",
++		.id = MT8189_DAI_TDM_DPTX,
++		.playback = {
++			.stream_name = "TDM_DPTX",
++			.channels_min = 2,
++			.channels_max = 8,
++			.rates = MTK_TDM_RATES,
++			.formats = MTK_TDM_FORMATS,
++		},
++		.ops = &mtk_dai_tdm_ops,
++	},
++};
++
++static struct mtk_afe_tdm_priv *init_tdm_priv_data(struct mtk_base_afe *afe,
++						   int id)
++{
++	struct mtk_afe_tdm_priv *tdm_priv;
++
++	tdm_priv = devm_kzalloc(afe->dev, sizeof(struct mtk_afe_tdm_priv),
++				GFP_KERNEL);
++	if (!tdm_priv)
++		return NULL;
++
++	if (id == MT8189_DAI_TDM_DPTX)
++		tdm_priv->mclk_multiple = 256;
++	else
++		tdm_priv->mclk_multiple = 128;
++
++	tdm_priv->bck_id = MT8189_TDMOUT_BCK;
++	tdm_priv->mclk_id = MT8189_TDMOUT_MCK;
++
++	return tdm_priv;
++}
++
++int mt8189_dai_tdm_register(struct mtk_base_afe *afe)
++{
++	struct mt8189_afe_private *afe_priv = afe->platform_priv;
++	struct mtk_afe_tdm_priv *tdm_priv, *tdm_dptx_priv;
++	struct mtk_base_afe_dai *dai;
++
++	dai = devm_kzalloc(afe->dev, sizeof(*dai), GFP_KERNEL);
++	if (!dai)
++		return -ENOMEM;
++
++	list_add(&dai->list, &afe->sub_dais);
++
++	dai->dai_drivers = mtk_dai_tdm_driver;
++	dai->num_dai_drivers = ARRAY_SIZE(mtk_dai_tdm_driver);
++
++	dai->dapm_widgets = mtk_dai_tdm_widgets;
++	dai->num_dapm_widgets = ARRAY_SIZE(mtk_dai_tdm_widgets);
++	dai->dapm_routes = mtk_dai_tdm_routes;
++	dai->num_dapm_routes = ARRAY_SIZE(mtk_dai_tdm_routes);
++
++	tdm_priv = init_tdm_priv_data(afe, MT8189_DAI_TDM);
++	if (!tdm_priv)
++		return -ENOMEM;
++
++	tdm_dptx_priv = init_tdm_priv_data(afe, MT8189_DAI_TDM_DPTX);
++	if (!tdm_dptx_priv)
++		return -ENOMEM;
++
++	afe_priv->dai_priv[MT8189_DAI_TDM] = tdm_priv;
++	afe_priv->dai_priv[MT8189_DAI_TDM_DPTX] = tdm_dptx_priv;
++
++	return 0;
++}
 -- 
 2.46.0
 
