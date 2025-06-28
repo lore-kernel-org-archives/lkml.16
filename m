@@ -1,159 +1,119 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AAC184F;
-	Sat, 28 Jun 2025 21:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66B1854;
+	Sat, 28 Jun 2025 21:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751144776; cv=none; b=qpJzGKGys+MQNwh6U+eHJPfPn54IYN1+hpVc1lRAyn1r/fM2HMpydS9iw2kDNMlH5Fad7F1ZtmTzWL4ToIZQ7rGw9aK3lfN4JgjNkw/A+/uDnnbUFf2v6ya9+1m6HLTkFeRU0DQfXp2OX1QTN1m5xQaiCurtsDt9Hqp6foYwL64=
+	t=1751145084; cv=none; b=B/dfyajarV0KZNztkYXmqGN78FmQFOivW/s4WWfCVfugsp4f3fZi5znVMleev84YktUHzYKZnqLpSx6ziojPwc3RTckuL9H3m2ZBz4GdEPyhD7xaTibCAmdVS8vkHoiG7/x1SW4oC1YczLU3eLbkK80U6G9oQR94yfWyk/dedwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751144776; c=relaxed/simple;
-	bh=7boEXolkbClomsKZeHkMqS8supeYiTS83LrnJtXxq6I=;
+	s=arc-20240116; t=1751145084; c=relaxed/simple;
+	bh=K5lOL5R+pMRvani4cANrVeMbRi59BKZl5QLUHLJeD4o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uW5jhwpfKCg9f97s8Wzdb7zCFUWVdXXK3x96uea4VWCzjTyf/RUau6Wm1UCn8FQJuvDKc0awwf++vukPe4PiW+C/9EKiy04o+AYakpllmLrbYD21lvdCgxjK8UstWGeo/YYph2IscMLqWjv821hNTZAIztyip1uXUeuZ7qXoFbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZjFc4v4; arc=none smtp.client-ip=209.85.218.44
+	 To:Cc:Content-Type; b=TVW4nL8be6sMy2ByBDUfGiP9gLWW1fJ6dvxV1XHRAgq5Ag8TCw63cpR5QYMVT1H6TNjea/WwOHjEjdvWd27Iu+4yTxmiaHFVU/aX7M8eaA4lx3OnTWut+/rF0hT0xQd01fIph2d+c+GMwKPVBeWU95ozwlw1tujCmqcryonWSV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9C8acx1; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZjFc4v4"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0df6f5758so156669966b.0;
-        Sat, 28 Jun 2025 14:06:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9C8acx1"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e840ff8d8d7so170635276.1;
+        Sat, 28 Jun 2025 14:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751144773; x=1751749573; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751145080; x=1751749880; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=12Sud5wiEMfbfSmkQ2D2+G75AJXdzlA9FkwEtpF29jg=;
-        b=AZjFc4v4jWF/5aR9RvQNT98Ow0pFZrftqetYlYOfLIMCjdU0zsKccuotBUA4YnI8G9
-         2GSYcTqILrrYAAmgDA+Qstwl6LkyFUgYZYi/pfcuvNvRU0nT9mJLxXBzc2M6EJ6gbm7A
-         mYifncurmAI5S4qhJUZivtKOSbDquE2VVbl53AE3+zWjz4eOfC45W1enRX4mxSntV6lo
-         wQa0oRZzu241vF7ZZS0ZBZ7DYp93CbinSMnvRTaqGc6+IEMf3N4BsG9ML8DZmjLdgckK
-         pFZGcyOxYlsGuq50TRVEYBOHz93y3gIBTCHaSFNviYnPr/61L0FI+BVkGhBD2MiEMAVm
-         aAFQ==
+        bh=Vg2ZN4x/jiYpxSvViT0rI/By5pMyua8QKrH6UGvMF7o=;
+        b=h9C8acx1VDiIRw/mUiDkHd1DYaGfyuVo5VhKgJMzkumC8i6q5dpQsBuC7o5X5ESfDJ
+         GXRUQwCvnOnPyGsjN3a9G5mIfSaaJqAxK2LychJed06qDJfG74T/Mfrsp/KyinA4RkHW
+         /4Q18wtU2gzaaQnvlTjzmEm5FszKqIbQRyQcgiQGxUVbZvWA26VSMf/nbcgk71EiEef5
+         vzxlhZMwbmklIdaMpnCkZSft9meM3wcS+z8k4cciiHhUDOhy7aTOpaZXdWR28QRv//xR
+         5yEIixuDGQ6CgGdWdMwMDxfAtHER4Njn/VersElFqfprbk6FOCIpIghcC8XuaHDcJJt3
+         DcJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751144773; x=1751749573;
+        d=1e100.net; s=20230601; t=1751145080; x=1751749880;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=12Sud5wiEMfbfSmkQ2D2+G75AJXdzlA9FkwEtpF29jg=;
-        b=pMJeo2fgZ3SiqL1Yy12wa1I469hcP6lDXlE4lQSmqB4uVNSletvm7/m2kbinmfZP+R
-         F4sB4UBq3FYRXjCh1iaarmzq9x7Rn3aUlC/Y0056zfodb7uqxa4e0v2pSh4NdcvN8vUj
-         Uwziwji2u/MsLXV4cflURnTgy0KOAPJhMPQuh0jQkQr6nzBJVHXvYv+eU2YZJvrGYEmx
-         Zw4LAE1Plw28EFpmxYgZa/8SUab8MrWJZjCh2SBHuG+iXhYOCysCK4yoHi7BIBTpFMwj
-         r3d3U0CfnehnRhBPX5hJhxS8B4xvoW3ZF6xRoW7Z5UtsCgwPu0aonu9jG+H4x0amktx8
-         NT9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBlPXISVprNQEKLPFMJ2KCCuxNls4D8K3Q88EICLhNI7wy6LvLxq8zRtnHjROuXOpCpurvh3An7w2dqA==@vger.kernel.org, AJvYcCXcpSRqCfoki3TaoIaV6y9eqDvkQ11wBEZfk6kxA/zp++cPRbLzFNGBd29FJpYiKfftht0R60aYwImVuHCL@vger.kernel.org, AJvYcCXoYLZH1aFrvVaAjjE/GJ/pcdmbee6lJ28CWyH+gzkKe/f3gFe9z1ql2x2SPl2LicikuSXoD2MO273Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU6uZlTqlxAGTrp7MkJKJvs9RHNN+EgAsRgNuV68YpX2MYi0xD
-	SpR5E79irr0CTmGJd+tEZSM6aZn81G06DhsMa8uiLCSoSEakonZxOl6DRA0lRxKEjbP+rc2vWbH
-	ji4/FhTcUsQ/KEGc14ZPAnCEC316zE9k=
-X-Gm-Gg: ASbGnct+ax5Y5shyO++UjX9tnzLDIJD/+SyqlJJLYbMbzfJHNCUSo61daOPKFqj8IlB
-	yIrQCqTaqIFnut8GvOjmYDq20WOYPz2r19ccIdlnVgaTm8QN4otmpVqna/SoYqZiDNvFN1HyTkn
-	5rt9O7YvoBbUyslkZiZY3CvNEunokLuOxEkMHcPCCk3Tg1PGtPmqiEVfI=
-X-Google-Smtp-Source: AGHT+IFCnRUKLXBXI2ZymcFpPsIBkI1Ko2RO8IfBqPRqH1qr+mtr4ZGU+3SDy4eQPEHcuyDm75oB2EiG6K+Qqc+YtRg=
-X-Received: by 2002:a17:907:7247:b0:ae0:b553:3a0d with SMTP id
- a640c23a62f3a-ae35011f817mr894464866b.48.1751144772356; Sat, 28 Jun 2025
- 14:06:12 -0700 (PDT)
+        bh=Vg2ZN4x/jiYpxSvViT0rI/By5pMyua8QKrH6UGvMF7o=;
+        b=djWp4ylJ+m5uO8/ABTHmftCVWbMsZUaP9j9/e2kPMSmXdkKG00TbnOyTyKHm/hXiDu
+         EBwO6V9Q27GmBxWuyl2i4UhWJN0B9HgO6f40Axm+voaEhCxhzJvoldGeBzcYpRWz7hI2
+         EYmQTEyIWLZaQKJv9PbHpxXClH4dr07uBM3X3qAf/6gac646dHslywNXshL4fVO3J9y6
+         5b9o6m0d8xRmYIKBqZdpTFzj4pOUjvbKKJsAspwMeQRTNCBBhiEDhrR92IsV5av/A6EO
+         VRoQReKtYSPZcY+gEq8UdmBG9FDfwNr8S1jnU3QpZi3+us53cREPd9A5cUaHgdkRqI5B
+         /MiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHjggfnc2fL7A5RzxUNZRFOn0oi/JsrnB+DytB3n7JwU2y8Q3eB/k8/Kl8vPWhdvIbUP9psfTthsJHm/f5@vger.kernel.org, AJvYcCVY5z2ihEyfu781/p05JcZOQ0+t09/OHLcmgDRNlWvqLF3wB8BNClv2+qPopw5qC4aG7QdZlM1vBYw=@vger.kernel.org, AJvYcCXdM78AXLU/B5jTXRhVe4SfQMZRaYVpXGU2PWuxopVOc8kN18fW/+yyQ0NMx5jBr0u88vECfZRA0KWq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKFhtyyrUapc4LBtLI8XC2+Ba4f40jyvDaQE2ecIKCDRN41nbn
+	DzKbujQvcMEDmZmHzF6UI5/3mu4VhZ49yFnvGlws941fphl+hzQDovWijFYSGhv48hRq0qKHJby
+	+AXScq+kGWNCG/lEasJRmRZGwvNpQS+E=
+X-Gm-Gg: ASbGncs1HpZs8JFflfC+ePkAkap5RL3u+eXR/OmZwsdv+5pXRB4MHst/6Etyuz5Ecy1
+	h47dznQC7sAsM3NAtFh8pPgK+YiyoNPN61ipc6xZLK0EeB7cK92rupXlDLczwljSiNjalJxenYk
+	PBdLojKBY8xyx0hTDxUwYFsUYw8M9wnzsj/pslhYFRdZw=
+X-Google-Smtp-Source: AGHT+IHTUCGAoH63GNLK/MPuTMrLTXnWs1MVm745M9pYQVSTlRlKIRjDAN9Q4WMwdtG2YrOyGFwqMh08Ucjwfpk43Qo=
+X-Received: by 2002:a05:690c:74c7:b0:711:7256:54c2 with SMTP id
+ 00721157ae682-71523ccf032mr23088097b3.5.1751145080578; Sat, 28 Jun 2025
+ 14:11:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628161850.38865-1-jefflessard3@gmail.com>
- <20250628161850.38865-7-jefflessard3@gmail.com> <175113330138.2294536.6016522770274673220.robh@kernel.org>
-In-Reply-To: <175113330138.2294536.6016522770274673220.robh@kernel.org>
-From: Jean-Francois Lessard <jefflessard3@gmail.com>
-Date: Sat, 28 Jun 2025 17:06:01 -0400
-X-Gm-Features: Ac12FXyTfui5P6eZOR3EukH-_EqAPsiawqgY5p64hyKlLrMInWx778tfg3tFG38
-Message-ID: <CADsqogCLjN1YQ_G+KXAkauoSdFiH+OLyh5UVAvT261sD2LO0Ng@mail.gmail.com>
-Subject: Re: [PATCH 6/8] dt-bindings: auxdisplay: add Titan Micro Electronics TM16XX
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Boris Gjenero <boris.gjenero@gmail.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, linux-leds@vger.kernel.org, 
-	Christian Hewitt <christianshewitt@gmail.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Paolo Sabatino <paolo.sabatino@gmail.com>, devicetree@vger.kernel.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Conor Dooley <conor+dt@kernel.org>
+References: <20250622155010.164451-1-l.rubusch@gmail.com> <20250622155010.164451-5-l.rubusch@gmail.com>
+ <aFkh-E1dG__p_G4m@smile.fi.intel.com> <20250628170839.482a3d63@jic23-huawei>
+In-Reply-To: <20250628170839.482a3d63@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Sat, 28 Jun 2025 23:10:44 +0200
+X-Gm-Features: Ac12FXzDfEya4tHe5BQ4CX4SgP5_iICg3xqcWHJseES0YJdR7UNgNanLqvpVn8I
+Message-ID: <CAFXKEHZ7bNuy+6X4NgPPMOsT3AkSXhacH=3HS33bLTNgYa3PWg@mail.gmail.com>
+Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, eraretuya@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 28, 2025 at 1:55=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
+Hi Jonathan, Andy and the ML,
+Thank you both for the review and feedback. I'll prepare another
+version for the 313 and the 345.
+
+On Sat, Jun 28, 2025 at 6:08=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
  wrote:
 >
 >
-> On Sat, 28 Jun 2025 12:18:43 -0400, Jean-Fran=C3=A7ois Lessard wrote:
-> > Add documentation for TM16XX and compatible LED display controllers.
+> > ...
 > >
-> > This patch is inspired by previous work from Andreas F=C3=A4rber and He=
-iner Kallweit.
+> > > +   case ADXL345_INACTIVITY:
+> > > +           axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
+> > > +                           ADXL345_INACT_Z_EN;
 > >
-> > Co-developed-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> > Co-developed-by: Heiner Kallweit <hkallweit1@gmail.com>
-> > Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
-> > ---
-> >  .../bindings/auxdisplay/tm16xx.yaml           | 153 ++++++++++++++++++
-> >  1 file changed, 153 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/auxdisplay/tm16xx=
-.yaml
+> > Consider
+> >               axis_ctrl =3D
+> >                       ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | ADXL345=
+_INACT_Z_EN;
 > >
+> > (yes, I see that it's longer than 80, but it might worth doing it for t=
+he sake of
+> >  consistency with the previous suggestion).
+> Hmm. I'd go longer rather than do that just because it looks really ugly.
 >
-> My bot found errors running 'make dt_binding_check' on your patch:
+>                 axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | A=
+DXL345_INACT_Z_EN;
 >
-> yamllint warnings/errors:
+> I don't care that much as long as long lines are justified by readability=
+. Here
+> I think either Andy's suggestion or the all on one line are justified.
 >
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/auxdisplay/tm16xx.example.dts:59.29-83.=
-11: ERROR (duplicate_label): /example-1/spi: Duplicate label 'display_clien=
-t' on /example-1/spi and /example-0/i2c
-> ERROR: Input tree has errors, aborting (use -f to force output)
-> make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/binding=
-s/auxdisplay/tm16xx.example.dtb] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_bin=
-ding_check] Error 2
-> make: *** [Makefile:248: __sub-make] Error 2
+> Tomorrow I may have a different view :(
 >
 
-Thank you for the dt_binding_check feedback =E2=80=93 I=E2=80=99ll prepare =
-v2 shortly
-fixing the duplicate label issue.
+As I=E2=80=99ve seen quite a bit of discussion around this. In fact, using
+binary OR here might not even be necessary, since I can define
+ADXL345_ACT_XYZ_EN and ADXL345_INACT_XYZ_EN directly and OR the fields
+in the header. If you have no objections, I=E2=80=99ll likely prepare this
+change for the next version.
 
-> doc reference errors (make refcheckdocs):
->
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202506=
-28161850.38865-7-jefflessard3@gmail.com
->
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your sch=
-ema.
->
-
-Before I send v2, I=E2=80=99d like your guidance on one specific design que=
-stion:
-
-Currently, the binding uses a 'tm16xx,' prefix for properties
-describing hardware layout (e.g. tm16xx,digits). TM16xx being the
-family name for these compatible controllers (Titanmec, Fuda Hisi,
-Princeton, Winrise, i-Core).
-
-1. Is using 'tm16xx,' as a class prefix appropriate here, or should I
-instead use a vendor-specific prefix (e.g. 'titanmec,') despite
-multiple vendors implementing this hardware design?
-
-2. Should 'tm16xx' also be formally added to vendor-prefixes.yaml or
-handled differently?
-
-Your advice will ensure the next revision aligns with DT conventions.
-
-Thanks again for your review and guidance.
+Best,
+L
