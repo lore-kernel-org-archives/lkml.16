@@ -1,95 +1,93 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4EE1A3177;
-	Sat, 28 Jun 2025 02:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A2C5661;
+	Sat, 28 Jun 2025 02:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751078080; cv=none; b=n/Nt7TkJVeMfGMUd9te+LYNXkdyTFhBxw9q/5jP++TqsRiMqhJmGqkNR+6DoqhFdU7yKgHfSHkwCc90PR6FHFfWEcBVOoh9hMZtiE/ribgL/SIRxyh8V/fg6K/64eSDT38yTVCsMTQg66NKhv8Jc5YyiN94rX9BFDF73kRzn5Q0=
+	t=1751078252; cv=none; b=Ev1FOYcgtBjVkYP1blP8fsfJdtqN8l7Rm1Yd3jsrw/wQDzksM36GfTf45CPHmm17VUMbsvbZSSNPPy/p/fAgYHzMYtAWLXpG98Mqle4oeQj+67Ib0KIRamXsj6COm1qL0O1L5wbg1Sn/r/UPc+6ms6a2oSPMvKzcbqfVJhOj94M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751078080; c=relaxed/simple;
-	bh=bUMjV42AAnUZwQesaTICI2r5JpnBLWkb6qGG/pPC7oo=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BL85gW0kh57jShdiMEZgB9XW8oIFp8fXgjK4HQXnkzT1LugSn3FNKlEFyl7Zpqj3loIK4jarnEzX4JzqoPj+asf8Ho3n7ns/2mE01uUizSWhhWf+htLNHqXykxqoe6vpLOGQyC0QriVUqCb194kY2GxEaSZslq28cJHskAdQfV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSG95FTL; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSG95FTL"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74931666cbcso3100351b3a.0;
-        Fri, 27 Jun 2025 19:34:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751078078; x=1751682878; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OLgSgTS/p6Xn687P1bEfCPfNF/GovvtrQo/hxR5s58I=;
-        b=WSG95FTLwjgcEqIIIaIVBNO9AQVMYUoxKmzkfDeU3OdX9tBTKhw6u2Uj+1E/dEg/5G
-         PfIk9ir2NRoilPDqqoryWoHNu5Lw5lQ0mlr60VzMWw6OGTxiCV7OFzlsgwRErytWJcTx
-         daLAqfemHknmMZWqmmuIm0Kj4QGMyoeDYEKQts77rxBWVCFbklez7zcmhQrio6kBWojx
-         CQfXfIT0QjkoNiFUWUKaXfhJFI6HIvL0fZxTSxztfLK5n/DaQRXmos6lkVFAqqRXBAZm
-         co5PPNU3zPhJumK+SCwfMSeBXd9ZFQZ3/7cot3oWyadYv0KLqNxKMeEx52FYajDrL5AK
-         kJkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751078078; x=1751682878;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OLgSgTS/p6Xn687P1bEfCPfNF/GovvtrQo/hxR5s58I=;
-        b=bLHP8CSwZJoYKFYemkw7gucS7WE+q4KntAL8iXjz0W2lJsvdUqlPXJ5hqJJ8PMbHc8
-         3KAZ44HJx1E2D9JJAPxmtiRzj9BdDLYOtxqn/3m9BQK3VBNrif9HoWwRWNelR4ClBHC8
-         jtNZPSj1dSNQe1q4ji1KXOltEtETnSVD9122SXQkpp1aF5MvyKPS/mDCI1oBBDARwz/+
-         11/yQ4rXLfPrf+s8ltM6AiOwx+g7eM2XN8aWtTRTPYgKL0GiT54jDNjB33ZQJljA+wu0
-         HNjdINWsviMEwhLmILKYPY5KYyIqvkL8WpedQsI+vdmERO5V4d0yfODt6vfu0BnS6EZD
-         5E7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWr/LbG11dc7i6hPP5P1Rx5zRXnMaPOuqc7r+dfaDBKM2R4K9Q0TMG/toAvHmmQTl8cAtsVDb6s@vger.kernel.org, AJvYcCX5hVKcUny8vlpiwGU/WLvioZfSvVz7h9bSftIuvZJlNSKBbZtoKKtKGmlexkcHkvQwZ4UdTHlBpR+4oCA=@vger.kernel.org, AJvYcCXvki9FhHYdxuqJyBxf/rAGBwUuNbt/fFOMuPa06/g+RuCqZVMQJ1wGiQlvirZcO3AMH5q3I6B0JRe0xGq7YqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSobOz6jf+KUS77ytELaVLgBEkV/ES7UDt/W38hL2itxUuYwcR
-	8UlDYUmQ4CyED5chTJO/7eydoEfjsccjcWxH7WL4tS9gtn194QeVfpLAMQEvASwI
-X-Gm-Gg: ASbGncv4sNPKcZMSqkmwzHhye2nb70jimhKy9JwgMFjRnXww1uVmnndhKvCEJspD99a
-	CmMT3EhPwTitiSxeM00UENRiMkgejFx1oQAmhixWdbm67808KN5p3fdMKFu7PtMp6AoLWMXydic
-	jaQeZTnF6fsIOe1iyzDxshoIvMSoWe8XKL03hOTu3nGBR+a/eQ1MOTo1KrZeybvaWUw5LM343Uo
-	ML/2bPO705VvFPe++Rx8fIjKK/vDIBmGOAhi89Q7KXm8P7IemBaSieeFF5wf5ErWsozOo6jMGti
-	G3hMPX5Qc1X8JKrOrHjI38xG88tte/NXJfe4LwHc6LylLp467Q6v7RjA+/HHaF4PDhOy8HA0PLU
-	7/6ZxTzdqI0nyG8jgNQz/xDs4TdezWnB9EWXg6U+E
-X-Google-Smtp-Source: AGHT+IGvspN3xr07jKdiZeyLhaj1qvaD3Xxuzu6awzryXExjC9o/hrNWS8AVStdM6jxTUN1fQ+imeg==
-X-Received: by 2002:a05:6a00:928f:b0:736:6043:69f9 with SMTP id d2e1a72fcca58-74af6f70cc0mr8101229b3a.19.1751078078362;
-        Fri, 27 Jun 2025 19:34:38 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31d855asm2631193a12.55.2025.06.27.19.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 19:34:37 -0700 (PDT)
-Date: Sat, 28 Jun 2025 11:34:32 +0900 (JST)
-Message-Id: <20250628.113432.912890378716072875.fujita.tomonori@gmail.com>
-To: tamird@gmail.com
-Cc: fujita.tomonori@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, dakr@kernel.org, davem@davemloft.net,
- andrew@lunn.ch, netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/2] Use unqualified references to ffi types
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <20250625-correct-type-cast-v2-1-6f2c29729e69@gmail.com>
-References: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
-	<20250625-correct-type-cast-v2-1-6f2c29729e69@gmail.com>
+	s=arc-20240116; t=1751078252; c=relaxed/simple;
+	bh=pupNprCGYkqHbXsGtNUn13adsLGhlEmWMtEyoD/BQ5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Q6jzPBhujLVNALVpt2rdsOEybOZKfay017WAjV33K/otJhveOBBWV9A9LOOk3MfoU8m8kzW4o+pfPLW5IEA3Ph85Q8ad0N8ZUNfRkOk63wgjlonb8HizbYzXvwT3KGSS/mhqgrev9kXBwaWG8rAoavTuzuqNRDduyPy2BCj9ECk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bTc0x6GgWzdbgF;
+	Sat, 28 Jun 2025 10:33:21 +0800 (CST)
+Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id D61BC180B3F;
+	Sat, 28 Jun 2025 10:37:20 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by kwepemg100016.china.huawei.com
+ (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Jun
+ 2025 10:37:19 +0800
+Message-ID: <267d0e56-6040-426c-8b1e-a53b18829871@huawei.com>
+Date: Sat, 28 Jun 2025 10:37:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] integrity: Extract secure boot enquiry function
+ out of IMA
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+CC: Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+	<roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens
+	<hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Eric Snowberg
+	<eric.snowberg@oracle.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, Christian Borntraeger
+	<borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "Lee,
+ Chun-Yi" <jlee@suse.com>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+	<linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>, Lu Jialin
+	<lujialin4@huawei.com>
+References: <20250626023617.3885806-1-gongruiqi1@huawei.com>
+ <aF6/ItTfd7oVN+Sn@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Language: en-US
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+In-Reply-To: <aF6/ItTfd7oVN+Sn@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemg100016.china.huawei.com (7.202.181.57)
 
-On Wed, 25 Jun 2025 05:25:38 -0700
-Tamir Duberstein <tamird@gmail.com> wrote:
 
-> Remove unnecessary qualifications; `kernel::ffi::*` is included in
-> `kernel::prelude`.
+
+On 2025/06/27 23:56, Alexander Gordeev wrote:
+> On Thu, Jun 26, 2025 at 10:36:17AM +0800, GONG Ruiqi wrote:
 > 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  rust/kernel/net/phy.rs | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
+> Hi GONG,
+> 
+> ...
+>> Compile-tested for powerpc, s390 and x86, all with allmodconfig.
+> 
+> This breaks defconfig and debug_defconfig builds on s390
+> since IMA_ARCH_POLICY=n in these configurations and thus
+> CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT=n as well:
 
-Reviewed-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Hi Alexander,
+
+Thanks for the feedback! I'll fix it and send a V2 asap.
+
+BR,
+Ruiqi
+
+> 
+> s390x-15.1.0-ld: security/integrity/ima/ima_main.o: in function `ima_load_data':
+> /home/agordeev/linux.c3/security/integrity/ima/ima_main.c:902:(.text+0x54e): undefined reference to `arch_integrity_get_secureboot'
+> s390x-15.1.0-ld: security/integrity/ima/ima_appraise.o: in function `ima_appraise_parse_cmdline':
+> /home/agordeev/linux.c3/security/integrity/ima/ima_appraise.c:30:(.init.text+0x44): undefined reference to `arch_integrity_get_secureboot'
+> make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux.unstripped] Error 1
+> make[1]: *** [/home/agordeev/linux.c3/Makefile:1236: vmlinux] Error 2
+> make: *** [Makefile:248: __sub-make] Error 2
+> 
+>> Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
+> 
+> Thanks!
