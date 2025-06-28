@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D7125771;
-	Sat, 28 Jun 2025 16:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7320925771;
+	Sat, 28 Jun 2025 16:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751129502; cv=none; b=Pk5gfzd4KERIud3QHKnITq5/GXLSF77Oig1GKwCzQ2LtwlPi8wTkLRmnpzF6vhIGa23yeV85fnpPvXdjCSgxV8ZGeq0N8QKmXS+55pmkCpiPrjS4q1z2hhFXjZaIR1M3UFYAlY3oSbmcBcWvzqlw9odkoZruTSVMsk/QpfcsQm0=
+	t=1751129508; cv=none; b=DKjUV03/gO8gYb77vKjB7ioUVeb2SOXXofzg5kpFD+VmLWGYdKSIYhFvuVXuqxfbToakc++CvoVC0QsxOMO/ZB+DVo31vgxaYD1lf0t9zc/oUfzggWogApDj8F5Zc7D1B6gsCUi5Gl3mMQvktAg0oKyW1GQVwqmU9NzbxJHenKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751129502; c=relaxed/simple;
-	bh=d6lOrT2Qlv9MzEMPDqk7QTa8C21pLsDh/rvOKyGTeuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BzQMd8r+ucZ++MpRMoZo6zWjLKLHDv/aIbWETQ105s+wZnCqpMtjTj9UadsLR/7oDF1Nyf8ZuqTFsUOWV8R0axeoLFAJ+vkgMSCKRSQBSmO+2TkvfaoqOkF78JRs1AWFtFzWBHdejXNvyG17jnRZhnmdSxtkCqALef29AZdiNB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNB2yb5I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751129508; c=relaxed/simple;
+	bh=olJKO0kLyWz1TOYHSyUA5GZthC3GQPte6dBjhm22SWU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S1aZkpZpFXiwzrfXSPVbMtLKL1IBz8JeDcJNXLm4tDQaRhqS8EY5jq20oHMMwkxZ6ijjcA203pUilfwdqM02alclrV2uN5sWcnMsrv4A73/ItEWc79WzMwAMBhib1a1nmzVlfsJl2a8n8bqerhyDD3doB1uhyQCzbcbxQIysS/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xb6oWWRp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNB2yb5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7996BC4CEEA;
-	Sat, 28 Jun 2025 16:51:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xb6oWWRp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD19DC4CEED;
+	Sat, 28 Jun 2025 16:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751129501;
-	bh=d6lOrT2Qlv9MzEMPDqk7QTa8C21pLsDh/rvOKyGTeuw=;
+	s=k20201202; t=1751129508;
+	bh=olJKO0kLyWz1TOYHSyUA5GZthC3GQPte6dBjhm22SWU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=sNB2yb5IVIXNQSsUv8NMJcPTZGcXOCTjm02VhKuS0UdO7hY4eoZRFeZxnXJKU2l+x
-	 PZciWqTo/8MOCA14RcqQctXkauRJNh+234+3U2nkzxqVAKLIXT1HcQ6q/J0PRqp1sC
-	 QKfAwUo51jPeXkRVc9fYydyxC39KzgAIPqbU0pT5acLr7VtpFmZQJUHfgKDk5c1+1O
-	 VsNx/hNcVj/WC5I5OsAvjv0iyo8jshOGImN4hpO8LShg4UQkc7KBBzC4kViVmsi1uh
-	 NLDCw/gF/2btTtJvebx/yltyTQ44/WrdIUuognKOiGw4QdErdl7KtzXCOjlqJ6Y+dp
-	 Q6h0M8Z2IXEsg==
-From: Danilo Krummrich <dakr@kernel.org>
-To: abdiel.janulgue@gmail.com,
-	daniel.almeida@collabora.com,
-	robin.murphy@arm.com,
-	a.hindborg@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	acourbot@nvidia.com
-Cc: rust-for-linux@vger.kernel.org,
+	b=Xb6oWWRpKsdA7r+GNbKMOHLJp2HY7ouxnBxplbcOiuX93qrNvKSeugvkZLq61Ehbq
+	 OaaVhwPmtjyEMhFCwrnw31k2htx2hnzSoCXjsMsK4fcY9kXqIHV2XdjDaBarxbvXYb
+	 et4ueSlxlPzLxoOEyjTyhMf1XG2efmlcFkSrPOqwhIkYXPH7RVdOnsaSXw7jxP9jWX
+	 gculrRZJipGsAqvZHTvj0iR7mEWnDVnwCa2uvGDqafMimsU21vYHDN2g51r9zC/V5a
+	 EqgWwXY4yKn+qiICiFQNV02990I0KMCBvjDw+PCoVgXACZUHUJaYC7mFCKcdcAjUdA
+	 ELusYkCHqrgtA==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH] rust: dma: require mutable reference for as_slice_mut() and write()
-Date: Sat, 28 Jun 2025 18:49:54 +0200
-Message-ID: <20250628165120.90149-1-dakr@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	linux-mm@kvack.org
+Subject: [RFC PATCH 00/11] mm/damon: advance DAMOS-based LRU sorting
+Date: Sat, 28 Jun 2025 09:51:33 -0700
+Message-Id: <20250628165144.55528-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,50 +47,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Given the safety requirements of as_slice_mut() and write() taking an
-immutable reference is technically not incorrect.
+DAMOS_LRU_[DE]PRIO actions were added to DAMOS for more access-aware LRU
+lists sorting.  For simple usage, a specialized kernel module, namely
+DAMON_LRU_SORT, has also introduced.  After the introduction of
+DAMON_LRU_SORT, DAMON got a few important new features, including the
+aim-based quota auto-tuning, young page filter, and monitoring intervals
+auto-tuning.  But DAMOS-based LRU sorting had no many updates.  Now we
+show some rooms to advance for DAMOS-based LRU sorting.
 
-However, let's leverage the compiler's capabilities and require a
-mutable reference to ensure exclusive access.
+DAMON sysfs interface users can utilize all the features, but
+DAMON_LRU_SORT is not updated for such modern features.  Also, even in
+case of DAMON sysfs interface usage, there is no good quota auto-tuning
+goal metric for LRU sorting.  Since it is a sort of balancing of active
+and inactive pages, a metric that represents the size ratio between the
+active and the inactive pages could be useful.  Also, internal behaviors
+of DAMOS_LRU_[DE]PRIO are not very symmetric.
 
-This also fixes a clippy warning introduced with 1.88:
+Advance DAMOS-based LRU sorting by introducing a new DAMOS quota
+auto-tuning target metric for [in]active memory size ratio, making
+DAMOS_LRU_[DE]PRIO behavior more intuitive and symmetric.  Also update
+DAMON_LRU_SORT module to be able to fully utilize the modern features
+including the [in]active memory size ratio, young page filter, and
+monitoring intervals auto-tuning.
 
-  warning: mutable borrow from immutable input(s)
-     --> rust/kernel/dma.rs:297:78
-      |
-  297 |     pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
-      |                                                                              ^^^^^^^^
+With these changes, for example, users can now ask DAMON to "find
+hot/cold memory regions with auto-tuned monitoring intervals, do one
+more page level access check for found hot/cold memory, and move pages
+of those to active or inactive LRU lists accordingly, aiming 50:50
+active to inactive memory ratio."
 
-Fixes: d37a39f607c4 ("rust: dma: add as_slice/write functions for CoherentAllocation")
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- rust/kernel/dma.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Plan for none-RFC Version
+-------------------------
 
-diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-index 25dfa0e6cc3c..2ac4c47aeed3 100644
---- a/rust/kernel/dma.rs
-+++ b/rust/kernel/dma.rs
-@@ -294,7 +294,7 @@ pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result<&[T]> {
-     ///   slice is live.
-     /// * Callers must ensure that this call does not race with a read or write to the same region
-     ///   while the returned slice is live.
--    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
-+    pub unsafe fn as_slice_mut(&mut self, offset: usize, count: usize) -> Result<&mut [T]> {
-         self.validate_range(offset, count)?;
-         // SAFETY:
-         // - The pointer is valid due to type invariant on `CoherentAllocation`,
-@@ -326,7 +326,7 @@ pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T
-     /// unsafe { alloc.write(buf, 0)?; }
-     /// # Ok::<(), Error>(()) }
-     /// ```
--    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-+    pub unsafe fn write(&mut self, src: &[T], offset: usize) -> Result {
-         self.validate_range(offset, src.len())?;
-         // SAFETY:
-         // - The pointer is valid due to type invariant on `CoherentAllocation`
+I'm planning to do more tests and add the results by the final version.
 
-base-commit: c7e03c5cf06a90ff234ae3c628c6b74e5cba7426
+Patches Sequence
+----------------
+
+First four patches extend DAMOS quota auto-tuning to support [in]active
+memory ratio target metric type.  The patches introduce new metrics
+(patch 1), DAMON sysfs support
+(patch 2), and add the document (patch 3).
+
+Following patch (patch 4) makes DAMOS_LRU_PRIO action to directly move
+target pages to active LRU list, instead of marking accessed and
+incrementally be moved to active lists.
+
+Following seven patches (patches 5-11) updates DAMON_LRU_SORT to support
+modern DAMON features.  Patch 5 makes it to use not only access
+frequency but also age at under-quota regions prioritization.  Patch
+6-11 add the support and document it for young page filtering,
+active:inactive memory ratio based quota auto-tuning, and monitoring
+intervals auto-tuning, respectively.
+
+SeongJae Park (11):
+  mm/damon/core: introduce [in]active memory ratio damos quota goal
+    metric
+  mm/damon/sysfs-schemes: support DAMOS_QUOTA_[IN]ACTIVE_MEM_BP
+  Docs/mm/damon/design: document DAMOS_QUOTA_[IN]ACTIVE_MEM_BP
+  mm/damon/paddr: activate DAMOS_LRU_PRIO targets instead of marking
+    accessed
+  mm/damon/lru_sort: consider age for quota prioritization
+  mm/damon/lru_sort: support young page filters
+  Docs/admin-guide/mm/damon/lru_sort: document filter_young_pages
+  mm/damon/lru_sort: support active:inactive memory ratio based
+    auto-tuning
+  Docs/admin-guide/mm/damon/lru_sort: document active_mem_bp parameter
+  mm/damon/lru_sort: add monitoring intervals auto-tuning parameter
+  Docs/admin-guide/mm/damon/lru_sort: document intervals autotuning
+
+ .../admin-guide/mm/damon/lru_sort.rst         |  37 ++++++
+ Documentation/mm/damon/design.rst             |   4 +
+ include/linux/damon.h                         |   4 +
+ mm/damon/core.c                               |  22 ++++
+ mm/damon/lru_sort.c                           | 110 +++++++++++++++++-
+ mm/damon/paddr.c                              |  18 ++-
+ mm/damon/sysfs-schemes.c                      |   8 ++
+ 7 files changed, 189 insertions(+), 14 deletions(-)
+
+
+base-commit: cd5e995caa32062e89e340acb4acbcbe09ad709e
 -- 
-2.50.0
-
+2.39.5
