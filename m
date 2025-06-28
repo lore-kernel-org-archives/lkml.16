@@ -1,95 +1,106 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6A043AA1;
-	Sat, 28 Jun 2025 08:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F8D8635D
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751098449; cv=none; b=W4yutaXTM9WPgZmP8Dau0qxJXpyStkAEBBcCFSWmtaS7KRWmju1yPOl8RDJwNgY5s7U4xSGvwdHtMDWQ2mv8M+ISqzJtuyGmydg58n/IrxnltqMAbqyBxlfB1BnujivJVT7T5h/gonPxMl9XdVBbYg8r03YPFbDguh6mU16lnw8=
+	t=1751098757; cv=none; b=mNmbOzroKQrJPdw+EWmS7aQkdJFnO6KnP+GwaFl9Jw+UKkiWOCjC2tzVT9O5MiY61VnX87w+2f26YwjzyXYWX0eLXbbKLC6/wg7ZjvGQBJ7bPnOA+GRrqWBvltrLsbUfchR2wV6SgZvgrGsxWdL7PyEsoE4m2Ni3kgGmQehH1qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751098449; c=relaxed/simple;
-	bh=SIQH7VRbD0Uzwp1VMHZwhtyTf8NgBvkSohUTtWyPLqc=;
+	s=arc-20240116; t=1751098757; c=relaxed/simple;
+	bh=kWeQEBkGz4f2k7+bgpN5NBO5qLlK9Xf3YPzocVL7GKE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GJpwtYuiaVX5xclwcUEEN5g9J7jjjzpu2Wi1Da10xbKpLItQ2bdLS0vkKwNyLKtVSUDOCvifWxYnARPaxZA6qBymk1U7B8Qn6dkCNfqmagg2R1M2gRPW0JRKdWebz6oY9QlAQVIPxsIeSJYuRYaZUB9RBaXDe4XsTSAEfl4ncEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Y7O3ZS+k; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZL46t0IDzYWZ74CnS336rjLgzFfyxFmcl6DlxleXHOaqcVyWfn9K8WlMxHBdkwK8UHWAASilFDM0dfgCU88YOaVCvqKBsUVooM8/6bLZvWPCOS6xlPL9+4hUajI7UMYa810zJO8t8ODdlkA0sc6lJAF0wNspw655SLIAJqi32s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=LTCDH8q0; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y7O3ZS+k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=CpQ5LeQKLn8DmQkgnLVtZRFeuVCA8DvcNVHpHbSb/zo=; b=Y7O3ZS+kX6ozjbiZFxL/E7Aiyb
-	qhUaXUzRpe4wxEySlH4Pzl3f3E/nJNucCdluAS7TjBczAA5/tbO40+Jl3IAbaAb3NKhnzcFmpIh4M
-	edGZyyZAQYvS3yr2fgMLBguNF2D8983l2oHX7k3zQm29+qffImlGIhpWrdjevUrWqM1A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uVQh5-00HDrs-JU; Sat, 28 Jun 2025 10:13:51 +0200
-Date: Sat, 28 Jun 2025 10:13:51 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net/next 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <f9bec387-1858-4c79-bb4b-60e744457c9f@lunn.ch>
-References: <cover.1751072868.git.daniel@makrotopia.org>
- <566ca90fc59ad0d3aff8bc8dc22ebaf0544bce47.1751072868.git.daniel@makrotopia.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="LTCDH8q0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1751098748;
+	bh=kWeQEBkGz4f2k7+bgpN5NBO5qLlK9Xf3YPzocVL7GKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LTCDH8q0oEtiSdXSZpTV0lq16MHxuoZOBdZ57gyrQgWDUvJs5oEQMXiX/Lcczii1y
+	 IOrNHK+dWVAaVCvT+a1cV42TL2oMPBYVgjeaVs/opbKHLgUn10QmkYLTv0i0QtiE/X
+	 GkmGbPW/4uRjG5s6otFSZC9nkVYzBppFpmqueH+w=
+Date: Sat, 28 Jun 2025 10:19:07 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH 1/6] sysfs: attribute_group: allow registration of const
+ attribute
+Message-ID: <3d4c063e-e56d-466c-a3a7-58566bf1da3c@t-8ch.de>
+References: <20250116-sysfs-const-attr-prep-v1-0-15e72dba4205@weissschuh.net>
+ <20250116-sysfs-const-attr-prep-v1-1-15e72dba4205@weissschuh.net>
+ <2025011714-skeleton-bring-3e77@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <566ca90fc59ad0d3aff8bc8dc22ebaf0544bce47.1751072868.git.daniel@makrotopia.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025011714-skeleton-bring-3e77@gregkh>
 
-> +static void *mtk_dma_ring_alloc(struct mtk_eth *eth, size_t size,
-> +				dma_addr_t *dma_handle)
-> +{
-> +	void *dma_ring;
-> +
-> +	if (WARN_ON(mtk_use_legacy_sram(eth)))
-> +		return -ENOMEM;
-> +
-> +	if (eth->sram_pool) {
-> +		dma_ring = (void *)gen_pool_alloc(eth->sram_pool, size);
-> +		if (!dma_ring)
-> +			return dma_ring;
-> +		*dma_handle = gen_pool_virt_to_phys(eth->sram_pool, (unsigned long)dma_ring);
+Hi Greg,
 
-I don't particularly like all the casting backwards and forwards
-between unsigned long and void *. These two APIs are not really
-compatible with each other. So any sort of wrapping is going to be
-messy.
+On 2025-01-17 08:01:00+0100, Greg Kroah-Hartman wrote:
+> On Thu, Jan 16, 2025 at 06:32:27PM +0100, Thomas Weißschuh wrote:
+> > To be able to constify instances of struct attribute it has to be
+> > possible to add them to struct attribute_group.
+> > The current type of the attrs member however is not compatible with that.
+> > Introduce a union that allows registration of both const and non-const
+> > attributes to enable a piecewise transition.
+> > As both union member types are compatible no logic needs to be adapted.
+> > 
+> > Technically it is now possible register a const struct
+> > attribute and receive it as mutable pointer in the callbacks.
+> > This is a soundness issue.
+> > But this same soundness issue already exists today in
+> > sysfs_create_file().
+> > Also the struct definition and callback implementation are always
+> > closely linked and are meant to be moved to const in lockstep.
+> > 
+> > Similar to commit 906c508afdca ("sysfs: attribute_group: allow registration of const bin_attribute")
+> > 
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > ---
+> >  include/linux/sysfs.h | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> > index 0f2fcd244523f050c5286f19d4fe1846506f9214..f5e25bed777a6a6e717f10973f1abcd12111f5c5 100644
+> > --- a/include/linux/sysfs.h
+> > +++ b/include/linux/sysfs.h
+> > @@ -105,7 +105,10 @@ struct attribute_group {
+> >  	size_t			(*bin_size)(struct kobject *,
+> >  					    const struct bin_attribute *,
+> >  					    int);
+> > -	struct attribute	**attrs;
+> > +	union {
+> > +		struct attribute	**attrs;
+> > +		const struct attribute	*const *attrs_new;
+> > +	};
+> 
+> I'm all for the idea, BUT, let's finish up doing this one:
+> 
+> >  	union {
+> >  		struct bin_attribute		**bin_attrs;
+> >  		const struct bin_attribute	*const *bin_attrs_new;
+> 
+> first please.
+> 
+> That way we can see just how "easy" the switch from _new to not-new goes :)
 
-Maybe define a cookie union:
+I'd like to resend these preparatory patches so they go into v6.17-rc1
+and I can work on the follow-up changes.
+In my opinion the switch from _new will work nicely. There have been no
+new users of _new in -next at all.
 
-struct mtk_dma_cookie {
-	union {
-		unsigned long gen_pool;
-		void *coherent;
-	}
-}
+Any objections?
 
-Only dma_handle appears to be used by the rest of the code, so only
-the _alloc and _free need to know about the union.
 
-	Andrew
+Thomas
