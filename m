@@ -1,108 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CD83A1B6;
-	Sat, 28 Jun 2025 02:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0D6EEAA
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 02:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751076897; cv=none; b=G5dlcNlGfHwPB4oLx+cyNCLn8xWAXXja/pE5+chUit+Sl9+uV5rwd6gKLFFKFhhnqUOpKcBuXHcFgJdGI8mnSB/b2ctYAmFBPlK6kLJseMiyZuUk3z1NrWcZLo4ecVW7cc9ABRsYFMrYkgDLZ/5TWvOvtIrVJqS75h7UC7irDh8=
+	t=1751077531; cv=none; b=Vlb/U6lgdtm24DIPjARFyRqzFYHNKlHWRzkHRuRkUlw89ISA2SALvUm39n1YVe12FW0Xg7N8v2jIiQ4V3ilzrvKvMM6l1dcof5r5oFR/cZSjUeEX9O9uIvE3loq7hdu9FFiX9mn3fSHp19D9EFyrR1bHjGSkzoqPLa9JJjprKLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751076897; c=relaxed/simple;
-	bh=t6pVLr1Tzh3nt6Hh1Jez7jmmRCpveeXCaZpPVc1tWEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyTh2ppBVDJBoDHp55XwkCiw7mGIikxXSasXqsuMhdWIRa82p+nh5VJL2Dw7PrtGf3U7Jv8aExCcQJ0xoJEc2dpo4xRdBdvj+bmdfsSDBu7vPrASk8O7EPiA+cUB32/y3M8m27NnJFPJzqLcv3DMouxrBdoSqHUIL+2eYGbPyhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqlG7F/w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqlG7F/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65FAC4CEE3;
-	Sat, 28 Jun 2025 02:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751076897;
-	bh=t6pVLr1Tzh3nt6Hh1Jez7jmmRCpveeXCaZpPVc1tWEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pqlG7F/wpFW21z8arHkZxp5KoLX1AN61EL81NqKcgYvpMz6jfn/qD0ruyd0nMYntb
-	 t8HKMY09cOn+zAbnjGY4hUN+VhGgBI5F7KtjJZI+vqaZhVZ7rO0D1tg4CmD8tiBJIo
-	 M3hGxD6ktnK7s1Wh/olmlESEzIc3ULFa2A300/sBpAesTzLgj5qBnPlAi01BkKrJe1
-	 azKWhkGGZsWe5Iq34zcM8xQP/cHCJOXYCVrA68zMoZW8Lva66JGsk9OECdS9g1+waJ
-	 ZmfMKhi20Sf85kQ+kOUYN6DS5wEsfalqhE/nOYYlFugx6XTPKjSxnClb691qmMV/vj
-	 nkMTAnpmgroTw==
-Date: Sat, 28 Jun 2025 05:14:53 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v2] tpm: Cleanup class for tpm_buf
-Message-ID: <aF9QHdH9k8x1mVjy@kernel.org>
-References: <20250626101935.1007898-1-jarkko@kernel.org>
+	s=arc-20240116; t=1751077531; c=relaxed/simple;
+	bh=JtQzyn27RMDuTjVIvJMU80N35L2x4wCeYg07utm4mdU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ppMHWsiW3b7e0gloub/dbqMNRthrqQXLU5vE15qP2f/+SxP1kNhhTHu37CnIlRcWm2KgfQ2IbH/6FUDRT4Ttnl8+TqkaMyHr5TPwwQmx3Se2Srnk8iv2qtmI4GtrWGmYRRESEoqQyDpX2HuGGhYM9SLQj6zLIrb6CRfvkRxkwFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc5137992so5031435ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:25:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751077528; x=1751682328;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=17UoAorZRx0TYoS0tsz1k5/Pm+icqHe5YL+HLnq6l6s=;
+        b=hWzEro7VK6WnXoDvLgZ4/9kIGF6Wu9WMi+ON5GTWIRJlFYfj7TB9tGWWkDSV7WPRsE
+         p4xO+q/YUcoBLhTZHmXmVf//lFjmUGrAWmE57o86jTqd9gHidNe5JxbPvALHgrQMUeOn
+         calFibaDMLdDfrgyFqKF4gWSyuhfwH8MAAH/p81ZdMDgzjcRwAU9f5a0/uLqwrGMYydF
+         Kwv7Gd8CSmVK8j9NW/EFMV46ILLTUKJXW5kLpoW5lWAslyY/9+zhBEXCZEckx4+/J8EK
+         H3k5pB6G9QmgnxTQ0EXouLvCDSpgO2ug7zTw76jwXPxQP2aggrkKaJ8o2bC0l6TbgmFt
+         GoOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4ZrEGAuVI/1ENuOiXlCw78UhQii0oaJerw3xKimEQRvmQ6B4EEpHPEFLoCJJAQZkRAEhkUmhd2R91Oq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUYyzlBIvd+M06PTtuGXl705p3kyxaZ+E6S7XklCMCrLFKiWla
+	DXlYqt6V8g1l+iSDrdgyp2YkYGHguGRrh+xDcEgChEhO8wEwsLg0v1LyyPlfua8uiZC4cTl1vy1
+	DCZ/uTF9N0mh5LA9ubnQIoqyYP5DTExM0szZDbwBdiqG2gPjJqM4HsXAObWU=
+X-Google-Smtp-Source: AGHT+IGfMgFi4/i/Yd/+XJAX6Hy5RTpGwYM6JDvMcY6HWtds7v/J0Mg8gpaz7I+ZS5ZVP4FHc+xKNsqrkJ/EFbYeSRFD2fu/kbbL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626101935.1007898-1-jarkko@kernel.org>
+X-Received: by 2002:a05:6e02:2409:b0:3dd:f4d5:1c1a with SMTP id
+ e9e14a558f8ab-3df4abad659mr69311055ab.17.1751077528597; Fri, 27 Jun 2025
+ 19:25:28 -0700 (PDT)
+Date: Fri, 27 Jun 2025 19:25:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685f5298.a70a0220.2f4de1.0006.GAE@google.com>
+Subject: [syzbot] [block?] WARNING in bdev_count_inflight_rw
+From: syzbot <syzbot+f37a847571460b5ac3e4@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 26, 2025 at 01:19:33PM +0300, Jarkko Sakkinen wrote:
-> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> 
-> Create a cleanup class for struct tpm_buf using DEFINE_CLASS(), which will
-> guarantee that the heap allocated memory will be freed automatically for
-> the transient instances of this structure, when they go out of scope.
-> 
-> Wrap this all into help macro CLASS_TPM_BUF().
-> 
-> A TPM buffer can now be declared trivially:
-> 
->     CLASS_TPM_BUF(buf, buf_size);
+Hello,
 
-Right, so learning this while doing and probably DEFINE_CLASS() would be
-a bad idea :-) There's a better fit in cleanup.h: DEFINE_FREE() and
-__free().
+syzbot found the following issue on:
 
-Given thatintroduction of tpm_buf_alloc() wipes out tpm_buf_destroy(),
-we don't need to create any new wrappers with DEFINE_FREE() as
-linux/slab.h has kfree() covered already.
+HEAD commit:    78f4e737a53e Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13fee182580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=f37a847571460b5ac3e4
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
-This leads up to "one step backwards" solution i.e., explicitly call
-tpm_buf_alloc() and implictly destroy (null checks are left out from
-examples):
+Unfortunately, I don't have any reproducer for this issue yet.
 
-	struct tpm_buf *buf __free(kfree) = tpm_buf_alloc();
-	/* 
-	 * I dropped buf_size as it will be gone in v3 as requested by
-	 * James earlier.
-	 */
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-78f4e737.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/25280700ec66/vmlinux-78f4e737.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/612c7f59b159/bzImage-78f4e737.xz
 
-	 /* Or: */
-	struct tpm_buf *buf2 __free(kfree) = NULL;
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f37a847571460b5ac3e4@syzkaller.appspotmail.com
 
-	/* ... */
-	buf2 = tpm_buf_alloc();
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 13932 at block/genhd.c:144 bdev_count_inflight_rw+0x3ba/0x510 block/genhd.c:144
+Modules linked in:
+CPU: 3 UID: 0 PID: 13932 Comm: syz.0.1834 Not tainted 6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:bdev_count_inflight_rw+0x3ba/0x510 block/genhd.c:144
+Code: b6 14 02 4c 89 f0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 4b 01 00 00 c7 43 04 00 00 00 00 e9 5f ff ff ff e8 a7 86 ff fc 90 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 0f b6
+RSP: 0000:ffffc9000c3571a8 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffc9000c357230 RCX: ffffffff84bc0298
+RDX: ffff8880233e0000 RSI: ffffffff84bc0359 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000001 R12: 00000000ffffffff
+R13: dffffc0000000000 R14: ffffc9000c357234 R15: 0000000000000008
+FS:  0000000000000000(0000) GS:ffff888097860000(0063) knlGS:00000000569b2440
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 00000000f71bd12a CR3: 0000000069b94000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bdev_count_inflight+0x74/0xb0 block/genhd.c:163
+ update_io_ticks+0x22a/0x2a0 block/blk-core.c:1021
+ blk_account_io_start block/blk-mq.c:1116 [inline]
+ blk_account_io_start+0x3e9/0x730 block/blk-mq.c:1092
+ blk_mq_bio_to_request block/blk-mq.c:2675 [inline]
+ blk_mq_submit_bio+0xd9d/0x26a0 block/blk-mq.c:3191
+ __submit_bio+0x3cf/0x690 block/blk-core.c:635
+ __submit_bio_noacct_mq block/blk-core.c:722 [inline]
+ submit_bio_noacct_nocheck+0x660/0xd30 block/blk-core.c:751
+ submit_bio_noacct+0x50d/0x1eb0 block/blk-core.c:874
+ ext4_mpage_readpages+0x66d/0x19d0 fs/ext4/readpage.c:395
+ ext4_readahead+0x102/0x140 fs/ext4/inode.c:3337
+ read_pages+0x1c4/0xc70 mm/readahead.c:160
+ page_cache_ra_unbounded+0x5d2/0x7d0 mm/readahead.c:264
+ do_page_cache_ra mm/readahead.c:327 [inline]
+ page_cache_ra_order+0x9c8/0xd00 mm/readahead.c:532
+ do_sync_mmap_readahead mm/filemap.c:3271 [inline]
+ filemap_fault+0x1465/0x26c0 mm/filemap.c:3412
+ __do_fault+0x10a/0x490 mm/memory.c:5169
+ do_read_fault mm/memory.c:5590 [inline]
+ do_fault mm/memory.c:5724 [inline]
+ do_pte_missing mm/memory.c:4251 [inline]
+ handle_pte_fault mm/memory.c:6069 [inline]
+ __handle_mm_fault+0x3c2a/0x5490 mm/memory.c:6212
+ handle_mm_fault+0x589/0xd10 mm/memory.c:6381
+ do_user_addr_fault+0x60c/0x1370 arch/x86/mm/fault.c:1336
+ handle_page_fault arch/x86/mm/fault.c:1476 [inline]
+ exc_page_fault+0x5c/0xb0 arch/x86/mm/fault.c:1532
+ asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+RIP: 0023:0xf71bd12a
+Code: Unable to access opcode bytes at 0xf71bd100.
+RSP: 002b:00000000ff8ced80 EFLAGS: 00010202
+RAX: 00000000000000a0 RBX: 0000000000000000 RCX: 000000000000000b
+RDX: 000000000001c5f8 RSI: 00000000569b7a08 RDI: 0000000000000090
+RBP: 00000000f73f96a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000286 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
-OFF-TOPIC: while doing this patch I noticed maybe 3-5 location where
-we have do this:
 
-1. Init something that is more complex to rollback than rolling back
-   tpm_buf (which is kfree).
-2. Init tpm_buf.
-3. After this guaranteed success.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Only reason for doing the rollback for the "more complex to rollback
-thing" is that stupid placement of tpm_buf_init(). There's no additional
-conditionally failing steps after it.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-I need to relocate these code blocks and do a reorders as split patches
-and place them to the head of the patch set.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-This was mostly reminder for myself :-) 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-BR, Jarkko
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
