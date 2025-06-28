@@ -1,155 +1,282 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FF92500DE
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 15:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE61415DBB3;
+	Sat, 28 Jun 2025 15:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751122803; cv=none; b=dQG+Pd2bqix+H4JQ74u+VYHO13FeqQu7VLuI+jiFvT1IjYq6Z3lh98K2A7q9BFQwSvG0CVGY4fjqWwtwts+uMA+IQlTPLqyK6DYgCYMLoehAUhrsOdDsuM8MBTo49+qEUe/oofX7tpZyOXyRpbbSST/6gsv8S+/WMv53fZWHK6c=
+	t=1751122920; cv=none; b=KpYjJRp9DUv3FJAj+UR9iW2JEeu6zTU02QpHVZEKTUzRlp7P5S/eFj+HT2aXOqlQMmCi+4kh7rt55J1tsidcOSKNPoOIimGe4Vl1OM4Fojq93DPBHfhmEomD4P80zaQUk1u+HpkiSF895PjmPDyDjCfDAn153AygNUZPBFcMTZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751122803; c=relaxed/simple;
-	bh=bMKnRAjj4+BlOLa9W5+0P7HUnfQRmvXx9kbjRTWJfWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=TBlncRLCB2Chc3pX+jJcRW9bVBinbortJc+XLva47k0+F59PCNGVgEmMrc1dtJNaS4eyKgKwpMR7K62T/YtlL00OGvvB4clmEst2FrhO3ueqNNbhqd2yDulzcudjKQoKukxhYlu4PC3pOATYVqrfs3/pnFNvWqoF68PyLsPgN1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mSr5CnBZ; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751122920; c=relaxed/simple;
+	bh=JYSr+4axxHIotvpxTe4hIWmAX2B/c5uvK0LSS2w+C3Q=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jJR1m4vVeB7EpJgc96TN5eFcpv32dmq0Pd4LvbznBMjXQ+klH8LjofMTuuWpXmqK9zTI5pcS0d6egWyWrunVYO+R6HMjtgjDGXQbwBgQWC2CyyKTmEqCA3nQMR4othqC9Zfnw2dL4yfCRfKOdAEMZ5cqB1RXC1i7tmSZJ0yyh74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=z1CxaaF9; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mSr5CnBZ"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250628150000euoutp01b691362e92e89cf4908d478967af071b~NPOircSsE0400004000euoutp01E
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 15:00:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250628150000euoutp01b691362e92e89cf4908d478967af071b~NPOircSsE0400004000euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751122800;
-	bh=iPLiuotXR3pLvhRQOSqtXf5NifLPkVWrQ6ZXxbZuw3Q=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=mSr5CnBZRzfx6aAp1yHyfCqkZDU3yQrUc9FGDXIfhXuN/5RNTxpqMWbve4iE44X3c
-	 z28wZiTlUzWA34JXyivzg5KHAdNqjX1PbVJbSJHmk2NQfq6nF/X9JKKJ9MGtuPDZz3
-	 FSj3tcn/dUE8FYlgx+2howgQo/6AQQnGbtkGw8oE=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250628145958eucas1p2a6252159d9e210271037f04a5f64bcf2~NPOhNrPea2071620716eucas1p2L;
-	Sat, 28 Jun 2025 14:59:58 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250628145957eusmtip27308016313ad13db5410a2ce67c9e323~NPOgCb8Jg2822428224eusmtip2D;
-	Sat, 28 Jun 2025 14:59:57 +0000 (GMT)
-Message-ID: <08b44fb5-1dad-4cc8-a843-85ac2fa6b7e9@samsung.com>
-Date: Sat, 28 Jun 2025 16:59:57 +0200
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="z1CxaaF9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1751122916; bh=rcqvB24Pyxx9S4coBRICiUhH7Jgty3vrOBOTtW7/DS4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From:To:CC:Subject;
+	b=z1CxaaF9NsGWMH3jmIMb7iEKyZ2ye4UdsaLIcIPH7vV14CGLm8/9Kf7XD6MXr4ELP
+	 J+TEj+EKt463xDv9zDqb3pRGzdbBl30jhmC541/kREwC53SVN7OxcUO8BJA6/SJJxg
+	 VyEfVE49AzqkoSrxFNcZ1nNRr0VWi/lh3+0jqLyYaLRTSlYBdqh0n/Dq3swMDLhrNf
+	 +1NqrAs+ELXUTpbHhrjiGpFXA0RTjFPqd/BDr5Lh04ApnS7Q+dpRcBvglx6Q0H2EXY
+	 Gb4g8qkiXyv5YLai8I39T0II1ul/cFANLY2coXPAWTxQdxdymxmuwWB0JXJnyI3iK4
+	 2uQQF2Yci9GJA==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bTwch4h5Zz8v7p;
+	Sat, 28 Jun 2025 17:01:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1+gFv4becOpWZ+vsA9E7Nstjmq1QxCJIsQ=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bTwcd0wD5z8sgD;
+	Sat, 28 Jun 2025 17:01:53 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Peilin Ye <yepeilin@google.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Ihor Solodrai <isolodrai@meta.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Paul Chaignon <paul.chaignon@gmail.com>
+Subject: [PATCH bpf-next v2 3/3] selftests/bpf: Add Spectre v4 tests
+Date: Sat, 28 Jun 2025 16:50:16 +0200
+Message-ID: <20250628145016.784256-4-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250628145016.784256-1-luis.gerhorst@fau.de>
+References: <20250628145016.784256-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/9] rust: pwm: Add core 'Device' and 'Chip' object
- wrappers
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Drew Fustini <drew@pdp7.com>, Guo Ren
-	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
-	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
-	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
-	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aF6Kvrk3UTC1Jj5Q@pollux>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250628145958eucas1p2a6252159d9e210271037f04a5f64bcf2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623180859eucas1p10ebb40f33046d52618ba738ebbbaa664
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623180859eucas1p10ebb40f33046d52618ba738ebbbaa664
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
-	<CGME20250623180859eucas1p10ebb40f33046d52618ba738ebbbaa664@eucas1p1.samsung.com>
-	<20250623-rust-next-pwm-working-fan-for-sending-v5-2-0ca23747c23e@samsung.com>
-	<aF6Kvrk3UTC1Jj5Q@pollux>
+Content-Transfer-Encoding: 8bit
 
+Add the following tests:
 
+1. A test with an (unimportant) ldimm64 (16 byte insn) and a
+   Spectre-v4--induced nospec that clarifies and serves as a basic
+   Spectre v4 test.
 
-On 6/27/25 14:12, Danilo Krummrich wrote:
-> On Mon, Jun 23, 2025 at 08:08:50PM +0200, Michal Wilczynski wrote:
->> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
->> +    pub fn drvdata<T: 'static>(&self) -> &T {
->> +        // SAFETY: `self.as_raw()` gives a valid pwm_chip pointer.
->> +        // `bindings::pwmchip_get_drvdata` is the C function to retrieve driver data.
->> +        let ptr = unsafe { bindings::pwmchip_get_drvdata(self.as_raw()) };
->> +
->> +        // SAFETY: The only way to create a chip is through Chip::new, which initializes
->> +        // this pointer.
->> +        unsafe { &*ptr.cast::<T>() }
->> +    }
->> +
->> +    /// Sets the *typed* driver-specific data associated with this chip's embedded device.
->> +    pub fn set_drvdata<T: 'static + ForeignOwnable>(&self, data: T) {
->> +        // SAFETY: `self.as_raw()` gives a valid pwm_chip pointer.
->> +        // `bindings::pwmchip_set_drvdata` is the C function to set driver data.
->> +        // `data.into_foreign()` provides a valid `*mut c_void`.
->> +        unsafe { bindings::pwmchip_set_drvdata(self.as_raw(), data.into_foreign().cast()) }
->> +    }
-> 
-> I think this is unsound, e.g. what happens if someone calls set_drvdata() twice?
-> Then you leak the ForeignOwnable from the first call.
-> 
-> Anyways, this does not need to be public, you should just call
-> bindings::pwmchip_set_drvdata() once in Self::new().
-> 
-> Please also see [1], where I introduce generic accessors for drvdata for Device.
+2. Make sure a Spectre v4 nospec_result does not prevent a Spectre v1
+   nospec from being added before the dangerous instruction (tests that
+   [1] is fixed).
 
-Thanks, it would be a great idea to update the code after below patchset
-is merged.
+3. Combine the two, which is the combination that triggers the warning
+   in [2]. This is because the unanalyzed stack write has nospec_result
+   set, but the ldimm64 (which was just analyzed) had incremented
+   insn_idx by 2. That violates the assertion that nospec_result is only
+   used after insns that increment insn_idx by 1 (i.e., stack writes).
 
-> 
-> [1] https://lore.kernel.org/lkml/20250621195118.124245-3-dakr@kernel.org/
-> 
->> +    /// Allocates and wraps a PWM chip using `bindings::pwmchip_alloc`.
->> +    ///
->> +    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via refcounting
->> +    /// on its embedded `struct device`.
->> +    pub fn new<T: 'static + ForeignOwnable>(
->> +        parent_dev: &device::Device,
->> +        npwm: u32,
->> +        sizeof_priv: usize,
->> +	drvdata: T,
->> +    ) -> Result<ARef<Self>> {
->> +        // SAFETY: `parent_device_for_dev_field.as_raw()` is valid.
->> +        // `bindings::pwmchip_alloc` returns a valid `*mut bindings::pwm_chip` (refcount 1)
->> +        // or an ERR_PTR.
->> +        let c_chip_ptr_raw =
->> +            unsafe { bindings::pwmchip_alloc(parent_dev.as_raw(), npwm, sizeof_priv) };
->> +
->> +        let c_chip_ptr: *mut bindings::pwm_chip = error::from_err_ptr(c_chip_ptr_raw)?;
->> +
->> +        // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is valid because
->> +        // `Chip` is `repr(transparent)` over `Opaque<bindings::pwm_chip>`, and
->> +        // `Opaque<T>` is `repr(transparent)` over `T`.
->> +        let chip_ptr_as_self = c_chip_ptr.cast::<Self>();
->> +
->> +	// SAFETY: The pointer is valid, so we can create a temporary ref to set data.
->> +        let chip_ref = unsafe { &*chip_ptr_as_self };
->> +        chip_ref.set_drvdata(drvdata);
->> +
->> +        // SAFETY: `chip_ptr_as_self` points to a valid `Chip` (layout-compatible with
->> +        // `bindings::pwm_chip`) whose embedded device has refcount 1.
->> +        // `ARef::from_raw` takes this pointer and manages it via `AlwaysRefCounted`.
->> +        Ok(unsafe { ARef::from_raw(NonNull::new_unchecked(chip_ptr_as_self)) })
->> +    }
->> +}
-> 
+[1] https://lore.kernel.org/bpf/4266fd5de04092aa4971cbef14f1b4b96961f432.camel@gmail.com/
+[2] https://lore.kernel.org/bpf/685b3c1b.050a0220.2303ee.0010.GAE@google.com/
 
-Best regards,
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+---
+ tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +
+ .../selftests/bpf/progs/verifier_unpriv.c     | 149 ++++++++++++++++++
+ 2 files changed, 153 insertions(+)
+
+diff --git a/tools/testing/selftests/bpf/progs/bpf_misc.h b/tools/testing/selftests/bpf/progs/bpf_misc.h
+index a678463e972c..be7d9bfa8390 100644
+--- a/tools/testing/selftests/bpf/progs/bpf_misc.h
++++ b/tools/testing/selftests/bpf/progs/bpf_misc.h
+@@ -235,4 +235,8 @@
+ #define SPEC_V1
+ #endif
+ 
++#if defined(__TARGET_ARCH_x86)
++#define SPEC_V4
++#endif
++
+ #endif
+diff --git a/tools/testing/selftests/bpf/progs/verifier_unpriv.c b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
+index 4470541b5e71..28b4f7035ceb 100644
+--- a/tools/testing/selftests/bpf/progs/verifier_unpriv.c
++++ b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
+@@ -801,4 +801,153 @@ l2_%=:							\
+ 	: __clobber_all);
+ }
+ 
++SEC("socket")
++__description("unpriv: ldimm64 before Spectre v4 barrier")
++__success __success_unpriv
++__retval(0)
++#ifdef SPEC_V4
++__xlated_unpriv("r1 = 0x2020200005642020") /* should not matter */
++__xlated_unpriv("*(u64 *)(r10 -8) = r1")
++__xlated_unpriv("nospec")
++#endif
++__naked void unpriv_ldimm64_spectre_v4(void)
++{
++	asm volatile ("					\
++	r1 = 0x2020200005642020 ll;			\
++	*(u64 *)(r10 -8) = r1;				\
++	r0 = 0;						\
++	exit;						\
++"	::: __clobber_all);
++}
++
++SEC("socket")
++__description("unpriv: Spectre v1 and v4 barrier")
++__success __success_unpriv
++__retval(0)
++#ifdef SPEC_V1
++#ifdef SPEC_V4
++/* starts with r0 == r8 == r9 == 0 */
++__xlated_unpriv("if r8 != 0x0 goto pc+1")
++__xlated_unpriv("goto pc+2")
++__xlated_unpriv("if r9 == 0x0 goto pc+4")
++__xlated_unpriv("r2 = r0")
++/* Following nospec required to prevent following dangerous `*(u64 *)(NOT_FP -64)
++ * = r1` iff `if r9 == 0 goto pc+4` was mispredicted because of Spectre v1. The
++ * test therefore ensures the Spectre-v4--induced nospec does not prevent the
++ * Spectre-v1--induced speculative path from being fully analyzed.
++ */
++__xlated_unpriv("nospec") /* Spectre v1 */
++__xlated_unpriv("*(u64 *)(r2 -64) = r1") /* could be used to leak r2 */
++__xlated_unpriv("nospec") /* Spectre v4 */
++#endif
++#endif
++__naked void unpriv_spectre_v1_and_v4(void)
++{
++	asm volatile ("					\
++	r1 = 0;						\
++	*(u64*)(r10 - 8) = r1;				\
++	r2 = r10;					\
++	r2 += -8;					\
++	r1 = %[map_hash_8b] ll;				\
++	call %[bpf_map_lookup_elem];			\
++	r8 = r0;					\
++	r2 = r10;					\
++	r2 += -8;					\
++	r1 = %[map_hash_8b] ll;				\
++	call %[bpf_map_lookup_elem];			\
++	r9 = r0;					\
++	r0 = r10;					\
++	r1 = 0;						\
++	r2 = r10;					\
++	if r8 != 0 goto l0_%=;				\
++	if r9 != 0 goto l0_%=;				\
++	r0 = 0;						\
++l0_%=:	if r8 != 0 goto l1_%=;				\
++	goto l2_%=;					\
++l1_%=:	if r9 == 0 goto l3_%=;				\
++	r2 = r0;					\
++l2_%=:	*(u64 *)(r2 -64) = r1;				\
++l3_%=:	r0 = 0;						\
++	exit;						\
++"	:
++	: __imm(bpf_map_lookup_elem),
++	  __imm_addr(map_hash_8b)
++	: __clobber_all);
++}
++
++SEC("socket")
++__description("unpriv: Spectre v1 and v4 barrier (simple)")
++__success __success_unpriv
++__retval(0)
++#ifdef SPEC_V1
++#ifdef SPEC_V4
++__xlated_unpriv("if r8 != 0x0 goto pc+1")
++__xlated_unpriv("goto pc+2")
++__xlated_unpriv("goto pc-1") /* if r9 == 0 goto l3_%= */
++__xlated_unpriv("goto pc-1") /* r2 = r0 */
++__xlated_unpriv("nospec")
++__xlated_unpriv("*(u64 *)(r2 -64) = r1")
++__xlated_unpriv("nospec")
++#endif
++#endif
++__naked void unpriv_spectre_v1_and_v4_simple(void)
++{
++	asm volatile ("					\
++	r8 = 0;						\
++	r9 = 0;						\
++	r0 = r10;					\
++	r1 = 0;						\
++	r2 = r10;					\
++	if r8 != 0 goto l0_%=;				\
++	if r9 != 0 goto l0_%=;				\
++	r0 = 0;						\
++l0_%=:	if r8 != 0 goto l1_%=;				\
++	goto l2_%=;					\
++l1_%=:	if r9 == 0 goto l3_%=;				\
++	r2 = r0;					\
++l2_%=:	*(u64 *)(r2 -64) = r1;				\
++l3_%=:	r0 = 0;						\
++	exit;						\
++"	::: __clobber_all);
++}
++
++SEC("socket")
++__description("unpriv: ldimm64 before Spectre v1 and v4 barrier (simple)")
++__success __success_unpriv
++__retval(0)
++#ifdef SPEC_V1
++#ifdef SPEC_V4
++__xlated_unpriv("if r8 != 0x0 goto pc+1")
++__xlated_unpriv("goto pc+4")
++__xlated_unpriv("goto pc-1") /* if r9 == 0 goto l3_%= */
++__xlated_unpriv("goto pc-1") /* r2 = r0 */
++__xlated_unpriv("goto pc-1") /* r1 = 0x2020200005642020 ll */
++__xlated_unpriv("goto pc-1") /* second part of ldimm64 */
++__xlated_unpriv("nospec")
++__xlated_unpriv("*(u64 *)(r2 -64) = r1")
++__xlated_unpriv("nospec")
++#endif
++#endif
++__naked void unpriv_ldimm64_spectre_v1_and_v4_simple(void)
++{
++	asm volatile ("					\
++	r8 = 0;						\
++	r9 = 0;						\
++	r0 = r10;					\
++	r1 = 0;						\
++	r2 = r10;					\
++	if r8 != 0 goto l0_%=;				\
++	if r9 != 0 goto l0_%=;				\
++	r0 = 0;						\
++l0_%=:	if r8 != 0 goto l1_%=;				\
++	goto l2_%=;					\
++l1_%=:	if r9 == 0 goto l3_%=;				\
++	r2 = r0;					\
++	r1 = 0x2020200005642020 ll;			\
++l2_%=:	*(u64 *)(r2 -64) = r1;				\
++l3_%=:	r0 = 0;						\
++	exit;						\
++"	::: __clobber_all);
++}
++
+ char _license[] SEC("license") = "GPL";
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+2.49.0
+
