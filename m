@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C523B621
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195DF246799
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751112637; cv=none; b=YzhWgGt0kibQQASNfQqw259aeYXFkkP0ewvVm825dBrZRMCnBzr8bsXbxBrOVeaG8nPSSz5re+cHcRBwXGLqlybxu/c5Y0vNk9A2l0x4p5PQ1sVUxUA3G98j3CfZgUQGKr//si09DCqYzJaMpcAwi0n6VxVIY4u9BAGNnbeX1DE=
+	t=1751112654; cv=none; b=eSIriZesF9Pj79FSz90fe884/6K0FUNh4omeP4v+FUM59JF0PeyZ5JM5kARvAVB3pFkHL75ID0s1frq8g6zkf/RyoXqalRWc4RhGNml65d+nOegXFzOfTst7ipY12U3rx2PXWIKu7D7sj5rUoaFmA39MN8R7lS2AH3EBCOmpTXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751112637; c=relaxed/simple;
-	bh=qoyAWaQudWyDJZacu3sHFbDrqDG+a9VP9HmNC1j3bnw=;
+	s=arc-20240116; t=1751112654; c=relaxed/simple;
+	bh=NyIeYOz5wm9m9mn9Ik8sH+39tT43JqoBA4N2ywjLUJU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTnEqfQZtFl7oVU5vtwzKCSKK63X8AmBKK79pYgaymgDGrWDc2JNC//snoMWCS0GdH+yp0w7cwmcx3r8h4B/TmAwwu3oRrOUZM76O6ReQmQCEUWVpdJ7foD9lsk53na1brnKDQwyPpDa8iv5kiQTssiG/bPwUtjGOAexgWfEbSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SicAehmL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tlOIvtsQnpyU64KhkHAINDtuOesBGnuiZKljaqoBmdTn2iBhiOZPgtvrz19/CZCrRsqm1DG7Kh9s4n+do2AhPVYchMxrlCHtsLZL3LdY8DBTNzoapJhQkd+ye8ZcCpYIQxQFVEyTv4HwIv2t1xhG4Ye1EKFnDC+Fp8RiU117Nec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YBGtHt33; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SicAehmL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AAA0C4CEEE;
-	Sat, 28 Jun 2025 12:10:36 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YBGtHt33"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5747DC4CEEA;
+	Sat, 28 Jun 2025 12:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751112636;
-	bh=qoyAWaQudWyDJZacu3sHFbDrqDG+a9VP9HmNC1j3bnw=;
+	s=korg; t=1751112653;
+	bh=NyIeYOz5wm9m9mn9Ik8sH+39tT43JqoBA4N2ywjLUJU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SicAehmLV26pVotno99i4fsPMj3KnM/9f194z/adq/W3cbpZXX4YOK260Zz44cgtd
-	 XGG4gp81I43rnWc/oDFyUEYsPcncmiZAY4j0HheT63jTTECvmBRuWQC2VwdU1K3Mvu
-	 FB5jkdsfNPVHz/IXv1xeCK00E9arMrsAgwIsh0IA=
-Date: Sat, 28 Jun 2025 14:10:32 +0200
+	b=YBGtHt33w8OGdiP0giydV9IpK0R5tG/xjRgWc0FlwELxYmJwa51uX+QVm8OWQ4Sse
+	 FSwUed0kHxzar2swelD5kLslJQsEdVaBt0OWjmjpLOpzrzQefpMydQRQuYJWt+/VW4
+	 HjVdNwIPKttcmK/Xk7ozqshNAoXngva6JhIBzKrQ=
+Date: Sat, 28 Jun 2025 14:10:49 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Alexander Usyskin <alexander.usyskin@intel.com>
 Cc: Reuven Abliyev <reuven.abliyev@intel.com>, linux-kernel@vger.kernel.org
 Subject: Re: [char-misc-next v2] mei: bus: fix device leak
-Message-ID: <2025062836-twentieth-kudos-1148@gregkh>
+Message-ID: <2025062837-riverboat-undergrad-0714@gregkh>
 References: <20250624110520.1403597-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,15 +45,6 @@ On Tue, Jun 24, 2025 at 02:05:20PM +0300, Alexander Usyskin wrote:
 > The fixup routine is executed on all devices, unneeded
 > devices are removed and fully initialized once set
 > is_added flag to 1.
-
-I don't understand why the mei bus is so special that it has to have
-this type of flag, when no other bus has that for its devices.  The bus
-code should know if the device has been properly added or not, if not,
-then no release function can be called and the structure isn't even
-viable to be used or touched at all.
-
-So why is this needed?
-
 > 
 > If link to firmware is reset right after all devices are
 > initialized, but before fixup is executed, the rescan tries
@@ -88,11 +79,41 @@ So why is this needed?
 > +		device_del(&cldev->dev);
 > +		cldev->is_added = 0;
 > +	}
+>  
+>  	list_del_init(&cldev->bus_list);
+> -
+> -	cldev->is_added = 0;
+>  	put_device(&cldev->dev);
+>  }
+>  
+> -- 
+> 2.43.0
+> 
 
-How can destroy be called here if the device has not been added before?
-How can it be hanging around in memory at all if the device_add() call
-was not successful when it was originally called?
+Hi,
 
-confused,
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-greg k-h
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
