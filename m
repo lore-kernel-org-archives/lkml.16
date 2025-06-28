@@ -1,126 +1,107 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B59B27FB0D
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1651E21A436
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751135055; cv=none; b=mXM2b+/DbwpfjwMa35hRwuy4/avArYMQI8bFKl0In770AZIzkZTutKXs44FWlAfmjv7QclDLXeC8RqFHqVgyYZf/SVr+rcQo8e+R7KMpHVHBPSrTmFiegACcLicwHNQl4MgM6NJiHbCRCKDYMD2o1huwVMglrV0KQ28/AcXXlSs=
+	t=1751135156; cv=none; b=fXBhKCbyEClMGNNY/2Ny8UP/93gCz3JlcMKbKoqDEbB3NxiuEBhFbajosOka2VpWgv1MW1wfPqAGgN0C2Op6tCeo3VxWszj2lh3sY+5+Pk1bZ3sRfhCyOlNATXmWiDUDV3FCRa32QI8kSdd4LUILdjSDuAHSw0VGlX15fBfQmvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751135055; c=relaxed/simple;
-	bh=zvTslZkwWYmaj+1rmphz7CCJpC4BrBKmjA8AR4hfc60=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=judm5Z6rQM2gXWin1cchPI8i1Lqegqluar3UeOJOrV0rnRlYPNleEiScANDS6/ikNEeyWxsr2O3sO1c/DO2q/ksMgaRHRKrBLvdWYAfMCyRhXKa904yFhLOKlWGvTpCCvOiNZfPsEQVoWC7bgcRFQ4TE9QFNG/iGVkor4aw8NlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Y4GaI6vx; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751135156; c=relaxed/simple;
+	bh=XgzsEwhezMMU+V51Ath1wxKyhOcPF1vUDAXN9/Z3b08=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ee+vP7yzPFgke2nszknIx+6/OFz/2EMH90O6yoRPdmuD3SrVVPeAahARwhr//U6n/kXjRgI5vPr5bB1jhtxVsVd/lrN7G1D7Uhg8ngiXI7nKNiSF0JrLz2a7uaaY3HPVAxiIt9ue+ZEGxeHDDrklgI7ZIN1ZKbFxlIu/OxeVf08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L7AUHiXe; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Y4GaI6vx"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2e999729ccbso478983fac.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751135053; x=1751739853; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7/GRj+PkvEKN4Z22Zblc9MyY7wCT0HaCjefTcIimIwc=;
-        b=Y4GaI6vxNJxodbvSkqqVCATDgDSPuoZrTH37+CPyrtiC3ht/G+5LdapgaQm1eF9Vbp
-         nF/5z4jtjHrWH5KVm162Sef5MOHlOnXE06VDdfC1NH7C6VoIY6G93nGF8Cf622hWCZ61
-         uSGJbO4XvMQQ7kvGxTg2YqwLFfcLvqnBd0hHG12j1ovaLOGHo2mQmrM3F3YbzuGeJIdn
-         MbE0MVQYOeEmkzVRV0lAXhKghN7OXr8b6p6Aum3WRZcL6E2dARHspDJgcnCZbF2LlS7s
-         fPPO9rSw3OoayaV5YQE+NilxFb8w4rnft21yd1r+7GAplrzmrvf++ar8eIqlFh1qYlcp
-         bpwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751135053; x=1751739853;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7/GRj+PkvEKN4Z22Zblc9MyY7wCT0HaCjefTcIimIwc=;
-        b=HZG15MU/BNNSJsNiYQrCkc7KxZdCsV1KXMQ0yT9Ia4sbiYG6fuw+R+IjWZ/beZ20r6
-         7ATTKG6lPilVk9JVDBm66EpPC0e49mYyoZ7fPrZ94Q8xxC/n0SLv2G2U7f5kHalz9r0P
-         1ORkUz2IH6WihupeqZr30EiVDdT+GDnnXVFrp3Ish65/AGSNF/mmCAfIcJ0a+eijiRYV
-         71AJz2DW2u12eq71ckLMZoAU7gBRjZ6HVNdFaqJ42QAq0ogx9WMi2pgC8+swYuQABvVF
-         IM5sR241A/XzQHtXn9TInKY+0XtpjAST215dwcIsEBjws9wxpTLllW4T7YQtKOx7qLmJ
-         5JZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTkNWcXMjnxeAnZyEVPL8r6pOtL/tEdOvVCWWWaiCcM/IEoERFR0Gffu5AkRgY+xlo/FjGBKefypCkLhs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxFgcGYNI2r7F9+iHk5YyHiqGagblQHh8D6FWHHi60CYSapHZD
-	VgRR+YMepvnut++EsPq50BD2k892qPkUP3pZSlN0LoDqUJQ6mjHDMte84/OF7sMbAe/w9FWrPuk
-	O1XwlzCk=
-X-Gm-Gg: ASbGncveRbqnnDuQ/S4r38YFtD68oyzrXCOOMBJ4H+fpqAGsxPxLQdAMEzYjet96QfI
-	izdq0jqTdYliBD8lXX/v5eU9J8b1MlscDJmzBU0ZqeCiw4zMJRLf/V1vWEckePuTxrHlRQxuTsr
-	wTZwvYKvCemXzaMre72poRizLESYIL49FeqyQhQ/35F8hxAnI+n8G74QuLkMB06Bld12KTG3zo3
-	K2IZzd+fJeqZ0iqQwps/HRqYbWQeiS/f2QvJvpsYXiozK1Ii3aZ/OFZ19t5yRdO6Igwb3ef4jsV
-	EiU/+kULTnWq6JEhfABNpiThCX469xvLHKB0+W/zBN4EeoEQWjzUcVbIzzy0kF7DabJR
-X-Google-Smtp-Source: AGHT+IFBaMrFTUPd53dFINSoKrPjy11u7xxaC7DLcu8kNAHIcRRKI8aCX8rOdpDgX7WO2hqYefLjog==
-X-Received: by 2002:a05:6871:5211:b0:2d5:ba2d:80df with SMTP id 586e51a60fabf-2efed424541mr4727633fac.8.1751135053208;
-        Sat, 28 Jun 2025 11:24:13 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afafee682sm902248a34.1.2025.06.28.11.24.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 11:24:11 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 28 Jun 2025 13:23:49 -0500
-Subject: [PATCH 2/2] iio: proximity: vcnl3020: make vcnl3020_property const
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L7AUHiXe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751135155; x=1782671155;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=XgzsEwhezMMU+V51Ath1wxKyhOcPF1vUDAXN9/Z3b08=;
+  b=L7AUHiXehTScKvmsI7slhmPBBZx3WueHDN2lry/t7U95p/Y3jg7oVSl9
+   4JIdYro001sXBAnSPsySDXt2Kib+SaLPhaeSIXW9DxljHWjEFBDkXaUr4
+   FOYel5vxjsybx3ULsb2yneY2bgpbO8XF+2ULLbfRSW4We2Sf0tbgHjeAa
+   GM/GpYK3Bcb0WpgGF1ESGZXe5CBbli0fprsRbRt8XGTX9XdfJFLwhWoJ8
+   IOASnQn3faC9KcK0Mc0uL9tFsOZJqNfp/lIPoTbXluEECtv5/cUe9Vk3e
+   +tJsd6+Q8p/ID2LVsxBN+JX3lqCpfBBIv4XmENC2eu5IqrPkNuX+bTtsL
+   A==;
+X-CSE-ConnectionGUID: OhAXjvNtSJucYRW4KD9G7w==
+X-CSE-MsgGUID: dvCcyNVXRtiSbQooOhAFtQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="52644490"
+X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
+   d="scan'208";a="52644490"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 11:25:55 -0700
+X-CSE-ConnectionGUID: YWNIahcVRQiRNlkPNfk7BQ==
+X-CSE-MsgGUID: kheUMx1hTcugSDHAAN82Mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
+   d="scan'208";a="152808962"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 28 Jun 2025 11:25:52 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVaFK-000XIO-1q;
+	Sat, 28 Jun 2025 18:25:50 +0000
+Date: Sun, 29 Jun 2025 02:25:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: ld.lld: error: Function Import: link error: linking module flags
+ 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at
+ 899876), and 'i32 1' from vmlinux.a(security.o at 937376)
+Message-ID: <202506290255.KBVM83vZ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250628-iio-const-data-25-v1-2-5d99cf17790e@baylibre.com>
-References: <20250628-iio-const-data-25-v1-0-5d99cf17790e@baylibre.com>
-In-Reply-To: <20250628-iio-const-data-25-v1-0-5d99cf17790e@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1103; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=zvTslZkwWYmaj+1rmphz7CCJpC4BrBKmjA8AR4hfc60=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYDNCPAdkIy1Plck4uYTAgL5UZNFjdAGD+G6H5
- +cimwF9eRGJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAzQgAKCRDCzCAB/wGP
- wCpcB/4psnZX0lvKK7pgpvEtULg1xMh6AzoGD/NvOXG7XgEd2uMPdZxWTJHpo9Vhw7e3fm+yDlQ
- bVvW0+vXtbYskOjJdKO3RQ87+sPmdOg39sY9gRSftKgNoF3BRfZNcVYGR+/PMr27ke28PTtKp4i
- 2koo+govDpUaozcAXaIxvt9WwbWxKttoQyoRiQ/wsR6FeAtZX9iplY4TZrLxI/v3FsXNsu+WTIU
- hBMNh5ibT4GB6uv5OOVfZhbIW7Zu/xXmb3BjnSS+HpxxSTdxts5HiwbtNmhpMtezo4VAv62cbHT
- tEc1yXYuLet1LM2ssa/Q8vfgRCqZvYlbbcNVr8gfZDWLcxAr
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add const qualifier to struct vcnl3020_property
-vcnl3020_led_current_property. This is read-only data so it can be made
-const.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   aaf724ed69264719550ec4f194d3ab17b886af9a
+commit: 890ba5be6335dbbbc99af14ea007befb5f83f174 Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
+date:   5 days ago
+config: riscv-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250629/202506290255.KBVM83vZ-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250629/202506290255.KBVM83vZ-lkp@intel.com/reproduce)
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/proximity/vcnl3020.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506290255.KBVM83vZ-lkp@intel.com/
 
-diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-index 234bdad543cc25e59ace336d2870356b9521f8c8..7f417372566a69e43a62accc1ce0cc1586bd8054 100644
---- a/drivers/iio/proximity/vcnl3020.c
-+++ b/drivers/iio/proximity/vcnl3020.c
-@@ -102,14 +102,14 @@ static u32 microamp_to_reg(u32 *val)
- 	return *val /= 10000;
- };
- 
--static struct vcnl3020_property vcnl3020_led_current_property = {
-+static const struct vcnl3020_property vcnl3020_led_current_property = {
- 	.name = "vishay,led-current-microamp",
- 	.reg = VCNL_LED_CURRENT,
- 	.conversion_func = microamp_to_reg,
- };
- 
- static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
--					   struct vcnl3020_property *prop)
-+					   const struct vcnl3020_property *prop)
- {
- 	int rc;
- 	u32 val;
+All errors (new ones prefixed by >>):
+
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(net-traces.o at 1014596)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(e1000_main.o at 992876)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(core.o at 912236)
+>> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(security.o at 937376)
+>> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(sock.o at 1012256)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(ioctl.o at 1015736)
+>> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(socket.o at 1012196)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(ring_buffer.o at 910076)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(hugetlb.o at 919016)
+>> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(btf.o at 913916)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(page_alloc.o at 918536)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(slub.o at 918836)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(spi.o at 992036)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(vmalloc.o at 918296)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(syscall.o at 912296)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(trace.o at 910136)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(skbuff.o at 1012376)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(vmscan.o at 916376)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(xprtsock.o at 1024196)
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(filemap.o at 915776)
+   ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
 
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
