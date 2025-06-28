@@ -1,37 +1,37 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AF92192F4;
-	Sat, 28 Jun 2025 16:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D42325A620;
+	Sat, 28 Jun 2025 16:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751129709; cv=none; b=NSVxmbWbrAW0prsKstkVyXxZHM9mXRzDrYdaQQ6Tsu+gFUJbkp8+Lhvif/C+PyztI7PzrQ1oFg/A5JMkV2fCF+MkT5mPsV163KGN0QDgXzXRVB8QqwSzfvRAaSxIu1CFbsMsvsUc/X8Yr7rFs18KhG52SXw4alvLMCNp1aRLiNY=
+	t=1751129711; cv=none; b=A/qo5UbXu2Jng8opOMtQbRaZ0vKvoh5RNuzTXh0RUZg3e4DuRjq4FfUb2aZTnzT/XngkVvzafIrx/OthOurm8Nu67Q614QxpcM0uMTnuJUgRzvX6iN/8NfPU4Ijv5T69HIdmk3h0Yr2seyFjhX9+G18vCLpNQ7WLNl3zLr3E9JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751129709; c=relaxed/simple;
-	bh=/2RYzQamWMFGRk3UZGy8S3jPYaE9HT85GHRvJ+BZpds=;
+	s=arc-20240116; t=1751129711; c=relaxed/simple;
+	bh=Dgdiq1horuDoHLdNztjJFaG+cA4sLMSMTTMWhbKe7+Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BliCq1a/F7OrDxX7ciHmxOrTdV9h+veWQwfqvL+g1/cMiGmrvs2P2urI/MpPYwJ3mZTUUShC4Ho5h9r1nli4YXu5DEaf/Q1M3DbM1XMyF1+xDdAP52gaQyTnDc8gEmFdBbN5Xe8MNk2MaHVqf5CYGP4ASZx7uXze7IlF3KeP0f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=ExQyKiNR; arc=none smtp.client-ip=134.0.28.8
+	 MIME-Version; b=Ee5LYfdTQ7QCnw4cwNnSLslDYKeFNZ/2gyTSZwSbtZ31P51LiEscNqHULpxVv6Uqxbv/AY9UvQX72KUBoMo4GwJp1OfGtmBBXHYYzCZiApigCaJCkwVr5im/I90+nJxek2kKUk5AFNxBrUramlGzX0RqySBuvLAXBcOv4auMkzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=C9NZI/8M; arc=none smtp.client-ip=134.0.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="ExQyKiNR"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="C9NZI/8M"
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout3.routing.net (Postfix) with ESMTP id ED0A8605E4;
-	Sat, 28 Jun 2025 16:55:03 +0000 (UTC)
+	by mxout1.routing.net (Postfix) with ESMTP id 0700340373;
+	Sat, 28 Jun 2025 16:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1751129704;
+	s=20200217; t=1751129706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hvtxU4D3ohmA54ipUVXLZQjWygAPvZxaNNALd63s61k=;
-	b=ExQyKiNRsmoXHnR0g8DtH9vDjvrn84RSPbd3VEz+LYP+B4ucHibpLrhXX03BAxTRpGxqNm
-	JkcQWgpH9h0eC0umReKmofV4JuzqYf1A8XRa5oZVg3Y4MDASnw/7xxiR+5tJ6ottThC+2T
-	E7C7eOkeBwfgPLONi4U+2bEngn3tnn8=
+	bh=DIMuNne++IWVgY0azMoYkvyXCjaefI/n17TVM+rpZxc=;
+	b=C9NZI/8MAu8+mhyQdSakPXSwZELFqyLuGRIKMtiKDFgT2XSApJd57ZIfVzGVOiO38ouGzr
+	3ougfS5ifP4LgEgkS64U7g3/Idq2D+4jbBO0Apr4KIKAui3899MRkcMqcvGXGZGmiwL04Z
+	3JLL8bU9QVQVW+daGT4Gls5ZIyCYZMg=
 Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 9661A1226EC;
-	Sat, 28 Jun 2025 16:55:03 +0000 (UTC)
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 9F34D12272D;
+	Sat, 28 Jun 2025 16:55:05 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -63,9 +63,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v7 04/14] dt-bindings: net: dsa: mediatek,mt7530: add internal mdio bus
-Date: Sat, 28 Jun 2025 18:54:39 +0200
-Message-ID: <20250628165451.85884-5-linux@fw-web.de>
+Subject: [PATCH v7 09/14] arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
+Date: Sat, 28 Jun 2025 18:54:44 +0200
+Message-ID: <20250628165451.85884-10-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250628165451.85884-1-linux@fw-web.de>
 References: <20250628165451.85884-1-linux@fw-web.de>
@@ -79,41 +79,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Mt7988 buildin switch has own mdio bus where ge-phys are connected.
-Add related property for this.
+CCI requires proc-supply. Add it on board level.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
-v2:
-- change from patternproperty to property
-- add unevaluatedProperties and mediatek,pio subproperty
----
- .../devicetree/bindings/net/dsa/mediatek,mt7530.yaml   | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-index 9b983fdbf3c7..815a90808901 100644
---- a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-+++ b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
-@@ -136,6 +136,16 @@ properties:
-       See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt for
-       details for the regulator setup on these boards.
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+index 81ba045e0e0e..afa9e3b2b16a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+@@ -40,6 +40,10 @@ reg_3p3v: regulator-3p3v {
+ 	};
+ };
  
-+  mdio:
-+    $ref: /schemas/net/mdio.yaml#
-+    unevaluatedProperties: false
++&cci {
++	proc-supply = <&rt5190_buck3>;
++};
 +
-+    properties:
-+      mediatek,pio:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description:
-+          Phandle pointing to the mediatek pinctrl node.
-+
-   mediatek,mcm:
-     type: boolean
-     description:
+ &cpu0 {
+ 	proc-supply = <&rt5190_buck3>;
+ };
 -- 
 2.43.0
 
