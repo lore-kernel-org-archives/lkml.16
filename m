@@ -1,154 +1,244 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3261372
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E27F21FF5F
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751101076; cv=none; b=NpmsWMmExtIzO4E0kxMANIEdhi6AevwrPoB9nl0aai2d3uWQOW669koMNKGp03dOCbNi6qy7pHn+r3mq7716Q8mwWWZpNuEfMr1GLiRSqXbp8ofYB0TX0i70Vj9aVmBREbuKskLvu1IHdiZtdb6jhzRuhiLr+LteQtI7UDJhJjQ=
+	t=1751101422; cv=none; b=hv+9z3nRuXCAT4usg1Whai7xLtkZk4/oSPjORIkk+WNtHsjtI35sc4mreHabDN7Vurw1CwA/yuC0UxLPO7yEX3agmpbJvYMYs/7fAUtuzISf1A+NzAANXJlvGr7usj1Q3PkOjXrlbpFuaZxQoVTJkiM2ekzDJj7Hib0uB8n9iHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751101076; c=relaxed/simple;
-	bh=pLzUu12WEaIgtCdO2e0vn7AW2eyYnzZNKQi/VqabhiM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=K9jqPQKyzzGeWf/7zmaWB4SNajff6DkCO7OAiX1WVBlzrnYsJaicY3Ov/CagupwVTuy1kN3iCRYlk6IDyUBE7sGYSEuH889H8ot6PnnG+l3H+UjD6ZmysPD0iSNuJRNQM+97zQeEBaHsYNh2Nz0puQ+KdNjtVmOwL9Vn1ZHI7Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ROENJZTI; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1751101422; c=relaxed/simple;
+	bh=C1RUEfL3U6ktbAFjvGq274icPXL9Jkfk4QLyxZWoaFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i0PB499t/8Hz4kTd9/kFKNiTYUfF+SAl4b5I3z/AixCMU5tiBglGgjDJhm5lAQpVu5yUI73WTuILBiwsCkodQgrYrV169Evlk2wnGQSY8+9JhuLmczfTtosblg7jL6IbR0pBZmJdPjGp9Lk3zcXWU5QiamUc1MaexMOPJVgB9uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DowkgcTz; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ROENJZTI"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DowkgcTz"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751101418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cu4UvP0WhUrIwMsfp2DxE5DkGiBKGgC1AcTaw2pOQM0=;
+	b=DowkgcTzPoMUYXNZ/UUZrHsp1Jr7ligBEq6CeLZW6hI4E4jn0jxj9D70ZfxqJjUpsmdItl
+	LodzNBsOmPCpUSnNMvQXNHd9HVmQx6l3g8VGg7hjf4GKCVJfR1Oa0nqgi1c95ghq977hyG
+	pvrVmjmMYcCifjyZPGyQ5BVNZ64vgEw=
+From: Frank Wunderlich <frank.wunderlich@linux.dev>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Felix Fietkau <nbd@nbd.name>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v6 01/15] dt-bindings: net: mediatek,net: update for mt7988
+Date: Sat, 28 Jun 2025 11:03:12 +0200
+Message-ID: <20250628090330.57264-2-frank.wunderlich@linux.dev>
+In-Reply-To: <20250628090330.57264-1-frank.wunderlich@linux.dev>
+References: <20250628090330.57264-1-frank.wunderlich@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751101070;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ybqsyqEQtaTyGQvk+BFdCF7y271RgdQMonWszxYB88c=;
-	b=ROENJZTIjZyoCI9g2NPJUEtCzQMHCjP4pthou6YG3P6yiZ2a1ek19Xv1QSzBHZzkaWgQAm
-	3xmFVpxPyobZosVJygZtNI5iEPcIz/nFt5Mi1Gc0t8WkooJHZ4VZCjxfnlm2XBe0aAKk6J
-	4umnJnAB61UfIauxFGLuU7SsDfGL6YYM6ROHv/9Ge7Gvz1h2GptoLGsLO7TiXmULdPMdsC
-	d9ksbrHAIcJaOT53g1FN6EWXLzMCU+ziHi9IXhoOw7M1fBsJ33315yDrQI5J8nUc+uOQI0
-	2HVtYevIo0/JXHjMDXN9et/v3aON1lm6QZ90GzwsA4oYmvanj77wP183v7Bpkw==
-Content-Type: multipart/signed;
- boundary=45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Sat, 28 Jun 2025 10:57:29 +0200
-Message-Id: <DAY1IKPD6TB6.1JICGYYQTWEDR@cknow.org>
-Cc: "Dragan Simic" <dsimic@manjaro.org>, "Johan Jonker" <jbx6244@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
- boards
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "Quentin Schulz"
- <quentin.schulz@cherry.de>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
-References: <20250627152645.740981-1-didi.debian@cknow.org>
- <b1c789bf-1369-42ec-8bb3-d7a45c92abf0@cherry.de>
- <DAXGZG0DEKS2.7RLXKSDO0C9T@cknow.org> <5121698.88bMQJbFj6@diego>
-In-Reply-To: <5121698.88bMQJbFj6@diego>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
---45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Hi Heiko & Quentin,
+Update binding for mt7988 which has 3 gmac and a sram for dma
+operations.
 
-On Fri Jun 27, 2025 at 8:25 PM CEST, Heiko St=C3=BCbner wrote:
-> Am Freitag, 27. Juni 2025, 18:52:08 Mitteleurop=C3=A4ische Sommerzeit sch=
-rieb Diederik de Haas:
->> On Fri Jun 27, 2025 at 6:10 PM CEST, Quentin Schulz wrote:
->> > On 6/27/25 5:16 PM, Diederik de Haas wrote:
->> >> The #address-cells and #size-cells properties are not useful on the D=
-SI
->> >> controller nodes; they are only useful/required on ports and panel(s)=
-.
->> >> So remove them from the controller node and add them where actually
->> >> needed on the various rk3399 based boards.
->> >>=20
->> >> Next to that, there were several (exact) redefinitions of nodes which
->> >> are already present in rk3399-base.dtsi to add a mipi_out endpoint.
->> >> Simplify that by referencing the mipi_out phandle and add the endpoin=
-t
->> >> to that, which allows the removeal of the ports redefinition.
->> >>=20
->> >> And fix 1 instance where the mipi_out referenced node was not sorted
->> >> correctly.
->> >>=20
->> >> This fixes the following DTB validation warnings:
->> >>=20
->> >>    unnecessary #address-cells/#size-cells without "ranges",
->> >>    "dma-ranges" or child "reg" property
->> >>=20
->> >
->> > Too many unrelated changes in this commit, please split into multiple=
-=20
->> > commits.
->> >
->> > I could identify:
->> >
->> > - moving address-cells/size-cells from SoC.dtsi to board dts(i)s,
->> > - reordering properties to better match DT coding style=20
->> > https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-=
-style.html#order-of-properties-in-device-node
->> > - use phandle to directly access ports,
->> > - reorder DT node to better match DT coding style=20
->> > https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-=
-style.html#order-of-nodes
->>=20
->> I initially had it as several commits, but that resulted in (f.e.) 1
->> issue being fixed, but 1 (or more) others would pop up.
->> Those were then fixed in follow-up commits, but I assumed I'd get Rob's
->> bot screaming at me for introducing new warnings (first).
->>=20
->> And as they all relate(d) to fixing the dsi node, I then choose to
->> combine them (but still separated by SoC).
->> IMO there are several ways to organize the commits and each would have
->> their pros and cons, so I 'settled' for this arrangement.
->>=20
->> So I prefer to wait for other people's opinion first before reorganizing
->> the commits again (if there's a different consensus).
->
-> personally, I can live with the current setup here, because as you said
-> it's all DSI related, and also not a functional change ;-) .
->
-> I guess you _could_ move the clock-master + status moves into a separate
-> patch, as that should not trigger any warnings.
+MT7988 has 4 FE IRQs (currently only 2 are used) and 4 IRQs for use
+with RSS/LRO later.
+Add interrupt-names to make them accessible by name.
 
-After having thought a bit more about it, I actually agree that the
-moving of address/size-cells from SoC to board dts[i] should be separate
-from extracting the ports/endpoints into a node with a phandle
-reference. This patch set is actually from 2 branches:
-- dtb-fixes-dsi
-- dtb-fixes-ports-endpoints (although I now use 'dtb-fixes-fruit')
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+---
+v6:
+- update irq(name) min count to 4
+- move interrupt-names up and limiting for all socs below
+- add sram-property and drop second reg entry
+- drop minitems as there is only 1 item left now
 
-ports-endpoints is on top of dsi and came forth as it made sense to do
-the ports/endpoints extraction in more places.
-I'll then also put the DT node movement in a separate patch.
+v5:
+- fix v4 logmessage and change description a bit describing how i get
+  the irq count.
+- update binding for 8 irqs with different names (rx,tx => fe0..fe3)
+  including the 2 reserved irqs which can be used later
+- change rx-ringX to pdmaX to be closer to hardware documentation
 
-I'm not a fan of putting clock-master + status property move into a
-separate patch as then the address/size patch would look weird (to me)
-as you'd see how those properties were inconsistently sorted ... just so
-that can be fixed in a separate patch.
+v4:
+- increase max interrupts to 6 because of adding RSS/LRO interrupts (4)
+  and dropping 2 reserved irqs (0+3) around rx+tx
+- dropped Robs RB due to this change
+- allow interrupt names
+- add interrupt-names without reserved IRQs on mt7988
+  this requires mtk driver patch:
+  https://patchwork.kernel.org/project/netdevbpf/patch/20250616080738.117993-2-linux@fw-web.de/
 
-Cheers,
-  Diederik
+v2:
+- change reg to list of items
+---
+ .../devicetree/bindings/net/mediatek,net.yaml | 47 +++++++++++++++++--
+ 1 file changed, 44 insertions(+), 3 deletions(-)
 
---45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+index 9e02fd80af83..74a139000f60 100644
+--- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
++++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+@@ -28,7 +28,8 @@ properties:
+       - ralink,rt5350-eth
+ 
+   reg:
+-    maxItems: 1
++    items:
++      - description: Register for accessing the MACs.
+ 
+   clocks:
+     minItems: 2
+@@ -40,7 +41,19 @@ properties:
+ 
+   interrupts:
+     minItems: 1
+-    maxItems: 4
++    maxItems: 8
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - const: fe0
++      - const: fe1
++      - const: fe2
++      - const: fe3
++      - const: pdma0
++      - const: pdma1
++      - const: pdma2
++      - const: pdma3
+ 
+   power-domains:
+     maxItems: 1
+@@ -54,6 +67,10 @@ properties:
+       - const: gmac
+       - const: ppe
+ 
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle to mmio SRAM
++
+   mediatek,ethsys:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description:
+@@ -135,6 +152,10 @@ allOf:
+           minItems: 3
+           maxItems: 3
+ 
++        interrupt-names:
++          minItems: 3
++          maxItems: 3
++
+         clocks:
+           minItems: 4
+           maxItems: 4
+@@ -166,6 +187,9 @@ allOf:
+         interrupts:
+           maxItems: 1
+ 
++        interrupt-namess:
++          maxItems: 1
++
+         clocks:
+           minItems: 2
+           maxItems: 2
+@@ -192,6 +216,10 @@ allOf:
+           minItems: 3
+           maxItems: 3
+ 
++        interrupt-names:
++          minItems: 3
++          maxItems: 3
++
+         clocks:
+           minItems: 11
+           maxItems: 11
+@@ -232,6 +260,10 @@ allOf:
+           minItems: 3
+           maxItems: 3
+ 
++        interrupt-names:
++          minItems: 3
++          maxItems: 3
++
+         clocks:
+           minItems: 17
+           maxItems: 17
+@@ -274,6 +306,9 @@ allOf:
+         interrupts:
+           minItems: 4
+ 
++        interrupt-names:
++          minItems: 4
++
+         clocks:
+           minItems: 15
+           maxItems: 15
+@@ -312,6 +347,9 @@ allOf:
+         interrupts:
+           minItems: 4
+ 
++        interrupt-names:
++          minItems: 4
++
+         clocks:
+           minItems: 15
+           maxItems: 15
+@@ -350,6 +388,9 @@ allOf:
+         interrupts:
+           minItems: 4
+ 
++        interrupt-names:
++          minItems: 4
++
+         clocks:
+           minItems: 24
+           maxItems: 24
+@@ -382,7 +423,7 @@ allOf:
+             - const: xgp3
+ 
+ patternProperties:
+-  "^mac@[0-1]$":
++  "^mac@[0-2]$":
+     type: object
+     unevaluatedProperties: false
+     allOf:
+-- 
+2.43.0
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaF+ufwAKCRDXblvOeH7b
-biZgAQCME6QUUiJaphH6VGnwcT9ww6WdV692xu7Owyds/SRnrQD/dSITCnYbGopt
-SHRh40ahmolnhZl8p4Azfb0upjxs9gs=
-=rbBp
------END PGP SIGNATURE-----
-
---45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf--
