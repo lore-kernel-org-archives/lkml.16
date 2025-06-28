@@ -1,110 +1,159 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE07D19C569
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68D119C569
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751075619; cv=none; b=ldPcyeTI8JXLfEUPvQ654aAhkb/nT730SxwzattgAnBfwizxjHWfKc0ve2K2dgJ2iItpGPXJLYKkq4mckpGMLbM6rAujPJc/kPkeNHrBsZe3o7CDLdr6oCk9mmG5IzbpkQ6OEPqaFyhRFQIw/PQMMgsebyG24TvU3FsWf1dGm80=
+	t=1751075693; cv=none; b=JMTL5gYECsM2KuTwuYJ9GKc1soDC5KGs11q/DEkFPjWh/36i1CzOM55MkVqMyHQjrzOcPjSGJL1fIu/1yr0bP1lyCWmLyLjonnIQHAjVcO1BeICPaj6BXRC8n/G9S7lGnpzRtOQfbPtldKXigqrMpT5DDZRuBYB5oNVthjSSRic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751075619; c=relaxed/simple;
-	bh=xAVEsFJaJpe1cuzT3LWf6Yt7wVSF7ac/1D8++/chJis=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rWHq5ZsU/oyIq9CpntJ/wu+Nzn24PiY4pItoooykKoTlWpbac4KLUxaw33r+m0pXc3jtJa+EUFnV33zFG4mngOiPmY0MTs47daU6GLhWpwsFIjoyVPBAdyLRPfH4nSrO3saavX77qA7Y+HHd6JIagqrTD8WEp9x/BEnNDOxNgXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer; spf=none smtp.mailfrom=libretech.co; dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b=gk8BRuiP; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=libre.computer
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=libretech.co
+	s=arc-20240116; t=1751075693; c=relaxed/simple;
+	bh=Xmit7PAFU4uPpqTO+SjZ6NNtdOFDOcNlOas8nGvsAEQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=IgCv0Yji1oG9PU5TG1hxIBuKNYufHM4jBjudIlTSjPzfeyqODih6rCl/tohdp8PQdAXddmBtiPs+xDSl94KCpT2seBAqb/NQ8FAY0W+Om/Uc0RhOFmfqjFPbNFf6rPT9I70ONs6PAGRQXFvXJpy8EgoKK9+yoWZsGBhcJnwYSuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KARi/7zn; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=libre.computer header.i=@libre.computer header.b="gk8BRuiP"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a6f6d07bb5so5323771cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:53:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KARi/7zn"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3df371e1d29so67595ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:54:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=libre.computer; s=google; t=1751075616; x=1751680416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IDgANBooOaHABbpjHHyBVc8hQrSombBZ6qXbl2V9NGc=;
-        b=gk8BRuiP6zV7SsQTXRzhKoEH1aAVPWlIyRbasH9Q8uDyT3xyc0s5EuWKXDabUbBgXP
-         DzxnnOdNCg6uh22ool2WDzIqoiUwuKVTmu+i9naxLUJzarn1Pktm/37KhMoD2f1C5hZx
-         MSrnsUAHKwVs0Nx1LyNHsfMBjjGMtkjm/5avxei9yDmRhYcFcDMPvEfpSFUitUzOLImh
-         TbQOeYOTu9gRTWfG0hn0Dj3ShTPA8fTzcftpblPTjNHrd8eJfDJdsGKbt+YWc/0LiPjn
-         fY393AyVSEEES0RjM4L2llXdiusOcP3wWdlizBJa5p7JCAE4/m76A8TaPNCPbu+AmVgl
-         54iQ==
+        d=google.com; s=20230601; t=1751075691; x=1751680491; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T13yrZPkm9B7si9lBWXzCrRMrh3WP7v1sQI5IZ/gcdI=;
+        b=KARi/7znJnjEDtgrx2aWjQmpD4rsLgsYB4fBHu0SkcLAjUgQPV4a4ElYQ3vDK5VrPD
+         /dAc4tperqLy7ZKxncjRIM+ZdyGCnIfOCzObDq149NkDhYL4oa+8bHbJ5GHxt9TDo+Mc
+         e/LxsjIPPvImLZrtgL2+qeJmCz/hFaQn5fOZENdyKgTksKaARzvE5Duci9+Cw03OFLKm
+         s6g24yEAlrQgJBtcxzfLl55laCAqPZmZxI+vZ7VLTr5As0S6H0J9LXTnLvkJhLM1RMbm
+         WzjbUeqLGGATa6B8CL1rxIMXtzeTylXbbFIMwhPRPsFw6SVn3C8pyhZwXIsOhufQnyIe
+         wj0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751075616; x=1751680416;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IDgANBooOaHABbpjHHyBVc8hQrSombBZ6qXbl2V9NGc=;
-        b=UZlvhas25XrBQYbkqAt+8/pkeFhag0U6Pbj+PU6K3L1Lxl+Vw/qf0xv3Edfwals+Pm
-         h/3C0puJ5rQa4JQDXnslLEUYIriyuoeLyZ03lUS248+PChG7xjsNqHU36MyEVBQmpuTZ
-         SmOxLRWa1n0ZkqyP58vkz65jyFpKOj/KIUxOdY4WNGqdgXst8iurhfq8voEfYYLbebuL
-         SwT5ZyfyzvcUx0cEFM2Idxd874lO5S4WuLwJhIlIWtANCx+SVuN+jGCGrqjJ6GjN4Cjc
-         eIGctn23vknEQC3lMA/Scvc3K1oa1ZeG9/5TifzGeafEYCqZ8UthA2sA1Vuholdj7C5N
-         5Vsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIv3OCldTnYjtqyAxHJ16YhlKBIECh/Fvd9m9CjoLuzzdj2Gnc4C4z+2gZgNQ8JYmvMzUXMSCRbFIBJJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNeaDc1vYPJwJxJWZdBouAll3mVyCUH8yYpLBELhisxZY7w4sy
-	6KetNeJ/FyH2chKYddBV+1T8BffCxus/7UlwQ6qN2wSol237SJ826uirp+pPbf1shg==
-X-Gm-Gg: ASbGncvUdbTm/+msGDp4yy4V/LKPsK9YTH6VrIeI8WqhsvfbMQLIcTmfBp7o5k1VftX
-	FiR9S49hPdzzLw1gVp+Xk3P/RqzNjxDRjWtCaBV79Xk9GFEa5dRKNg+mbXsT3iJ/WcS/Mf5To6T
-	ENTDxGaYPyojM6rdNNCl+nha6aZSAUju/ugKvG3e1qEAImf55rOwq5OilINnRd5mhCiaLpQaQzd
-	itUR/GyXtUvX+yLgNOVWFt2G6YZgKh/06sh8HyyqpSSPKPkfCKVXCsBJnfaQWRu/z8YYYDLgJq2
-	i7oIaD6tbmi0f6wbatgFiadWeeVHfTPVBC29rywjFAGmy+6hHvFnZt4+GCV79yHYjAzvLA==
-X-Google-Smtp-Source: AGHT+IHDOFs/ZbAzvN7ioQVvaBO3tKspbKCC2PmmEG/e0ea92CY3dBFRoIiyAncqYqaZi3cyXQ2vdQ==
-X-Received: by 2002:a05:620a:198b:b0:7d3:f3e1:b8c4 with SMTP id af79cd13be357-7d443944e85mr816887085a.15.1751075615803;
-        Fri, 27 Jun 2025 18:53:35 -0700 (PDT)
-Received: from localhost ([2607:fb90:6159:6306:aa35:a456:78ca:2103])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc55c396sm21861621cf.50.2025.06.27.18.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 18:53:35 -0700 (PDT)
-From: Da Xue <da@libre.computer>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Da Xue <da@libre.computer>,
-	linux-mmc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC] mmc: meson-gx-mmc: add delay during poweroff
-Date: Fri, 27 Jun 2025 21:53:28 -0400
-Message-Id: <20250628015328.249637-1-da@libre.computer>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1751075691; x=1751680491;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T13yrZPkm9B7si9lBWXzCrRMrh3WP7v1sQI5IZ/gcdI=;
+        b=fxjHYr/ZyA4UST2vkKo+2oTOv4+JMdAX4Emw6VJU77VjzFAhb+zlNFM7p8YauKgzIt
+         2sFgb8uCD0YdDHNSgzSLGybxYG2T04bTKIsu+DX9z0A2vEmn81jSMt69M7OxkYthsvC2
+         mdP0+xMJkHYGssVencLhSIQazvmohR0wG5C79N04fpvqsrfjJ1/PvbmD6CfrEdTfMVzG
+         uvTl2SD79zHS8nxUMsiz7VrMAHJ1RxQcenG7J0pnQlPzouRE21EW6dssUbiZ5ZMd9+RR
+         Ue3xa7DNVeT35bbilJr9sNMaGpKgMf6pCzSgEvIlpHqax1cBADWAPHiCxmtRMwlUMv1b
+         Ce6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVkaSyRDCpEtsoMhOVPOl5E9yQx8OL2EPhXjN80EnZ7UY8e5YfVb+Enxrcs3+NB0KJfaaXSt/1AylK2Eic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJhNrI3hLh40dXiXG3wVgW7oPSUX6g0LtrTEEwNwkQYQM1LgjG
+	wVrIuQFhZAsQ6ZpI5hU61tRs51XHt8nm1x2+XaHBFT8WiQG2ElHTgXP7d9hNeHmKofKhCiUQRlz
+	vfphJg7e6lYE6F4pU4RO7oT+RCJl/538Vkse2xLAB
+X-Gm-Gg: ASbGncte14Ki/pjQWFkQ18diLoxdaMdgv3XFaEALmpbDAULXu6xwrYey7C8Q3N7LE4i
+	rNtUzL3ucrstWhe867MAn9CKLZwQSaSWKP6HXEsYCLn144pxLb3yJDnPiQtFMRwK4WcGthYVC/k
+	ZxI1mroU0sGxIxTEo48+eL1tMunCfnwYMoRaL92asRCMFLRDlstNwLzVg=
+X-Google-Smtp-Source: AGHT+IFpQQ4fOtIBLB86Wq7tv6JmCG4A85mmUdq9+I3p3BAvzDlK0Y/drt/JslpGaqJBeR4C9ceY4Pz6GjNFaZBPegc=
+X-Received: by 2002:a05:6e02:1789:b0:3da:7c33:5099 with SMTP id
+ e9e14a558f8ab-3df56cf19fcmr876005ab.13.1751075690548; Fri, 27 Jun 2025
+ 18:54:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250628013543.1250435-1-irogers@google.com>
+In-Reply-To: <20250628013543.1250435-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Jun 2025 18:54:39 -0700
+X-Gm-Features: Ac12FXw8CFIJ61e5Aa7lUgvBQFltAnW9iM-4-Xw4P0Rrrmipm6VreOKcQ3T-ozE
+Message-ID: <CAP-5=fVQEaxsfrCT4kaFu7Ke03fNwbhw8u1V6F045c90MDQ7Gw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Add basic callgraph test to record testing
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Regulators controlling the SD card power need some settling time for SD
-cards to fully reset from UHS modes. The regulator framework seems to
-ignore falling times set in the device tree causing a few boards with the
-same hardware implementation to hang on reboot because the SD card still
-had some voltage and did not reset properly to be initialized again.
+On Fri, Jun 27, 2025 at 6:35=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Give some basic perf record callgraph coverage.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Pick up s390's needed "--call-graph dwarf" as spotted by James
+>     Clark <james.clark@linaro.org>.
 
-Add a delay sufficiently long for the voltage to drop so that the SD card
-can reset properly. Otherwise the reboot will hang at missing SD card
-especially with Samsung cards.
+Sorry the version is wrong in the subject, I'll resend.
 
-Signed-off-by: Da Xue <da@libre.computer>
----
- drivers/mmc/host/meson-gx-mmc.c | 1 +
- 1 file changed, 1 insertion(+)
+Ian
 
-diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index 694bb443d5f3..a39906079d29 100644
---- a/drivers/mmc/host/meson-gx-mmc.c
-+++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -605,6 +605,7 @@ static void meson_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	case MMC_POWER_OFF:
- 		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
- 		mmc_regulator_disable_vqmmc(mmc);
-+		msleep(50);
- 
- 		break;
- 
--- 
-2.39.5
-
+> ---
+>  tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
+cord.sh
+> index 2022a4f739be..b1ad24fb3b33 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -12,8 +12,10 @@ shelldir=3D$(dirname "$0")
+>  . "${shelldir}"/lib/perf_has_symbol.sh
+>
+>  testsym=3D"test_loop"
+> +testsym2=3D"brstack"
+>
+>  skip_test_missing_symbol ${testsym}
+> +skip_test_missing_symbol ${testsym2}
+>
+>  err=3D0
+>  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> @@ -359,6 +361,33 @@ test_precise_max() {
+>    fi
+>  }
+>
+> +test_callgraph() {
+> +  echo "Callgraph test"
+> +
+> +  case $(uname -m)
+> +  in s390x)
+> +       cmd_flags=3D"--call-graph dwarf -e cpu-clock";;
+> +     *)
+> +       cmd_flags=3D"-g";;
+> +  esac
+> +
+> +  if ! perf record -o "${perfdata}" $cmd_flags perf test -w brstack
+> +  then
+> +    echo "Callgraph test [Failed missing output]"
+> +    err=3D1
+> +    return
+> +  fi
+> +
+> +  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
+> +  then
+> +    echo "Callgraph test [Failed missing symbol]"
+> +    err=3D1
+> +    return
+> +  fi
+> +
+> +  echo "Callgraph test [Success]"
+> +}
+> +
+>  # raise the limit of file descriptors to minimum
+>  if [[ $default_fd_limit -lt $min_fd_limit ]]; then
+>         ulimit -Sn $min_fd_limit
+> @@ -374,6 +403,7 @@ test_uid
+>  test_leader_sampling
+>  test_topdown_leader_sampling
+>  test_precise_max
+> +test_callgraph
+>
+>  # restore the default value
+>  ulimit -Sn $default_fd_limit
+> --
+> 2.50.0.727.gbf7dc18ff4-goog
+>
