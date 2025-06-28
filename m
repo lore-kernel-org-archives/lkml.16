@@ -1,110 +1,80 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD61C8626
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2682312EBE7;
+	Sat, 28 Jun 2025 18:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751135656; cv=none; b=hs9c2MNwpFYrsGPQQzOYICkdltvB2C3szi/CmvlTp9hF2/d9XD1GManilMG+Xv8TNEuzEE9seSVNlyJq9gN/lme8zd2/80qkTdrKWVqV27CnuYckt8/YLFsoKbQWc7D6seyZph64KeYDJ06dSGBgHB6xSD1l1j20gKa3asAPcaQ=
+	t=1751137039; cv=none; b=FYS6RESWg8tDoB9Rt8pK2w5gqry+QQ+ZaZ/NYgebBF7I5vDM31eActw2aojWDtBI8sAwkMdnMuVghL5axrOKFr0l+M4VO+0vxkTtuvCaoH8VSKDCN3WRMfF8MN/06uvIzt8MlGP2Vz/4zhHgYfls2wBUSjhlegRGUSXQyjM6yXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751135656; c=relaxed/simple;
-	bh=w8jYnIjaUFwlYoBv8vq/TaGytJQbaOCBQSQujAsVOjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ax8PujKvev8J+SAfj41gj6uIwYkSHQ20ygpfDqvrxXaqdMMUPM4gyZ+Fkpx8LQbvl8BwT1fcsqXAP/Ke7cz7vjCKuxjNgf4NA2WnYYRuSJDUHK2s1K0L/rCPBKoVRcb9CNIAk9HNvzG4GyL82cGhyxodyMZRYfMv/bgMOsDkKzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Y6jULMqz; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1751137039; c=relaxed/simple;
+	bh=orw7uYePXqNFzeqTqAHs8lqewbYqpFHGgIIJgS7y4o0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h/N9INDrjPVWiZTnmob+o+RpUne07/jgqivbCyNAOsXGl9Fn4IqPiPa0CIS7Gw/d/maKmy+W0knQp6topkOHK2pqvop103NSNJc0KppUleU0aHr6Zm6JZpkZQ6lAuRE3QNupepu1VX6ufOoQurXfFfelE1iR7MGxvJ1+3X0duq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FaXUHel8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y6jULMqz"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55SIMucv028453;
-	Sat, 28 Jun 2025 18:34:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=SwGkhS6oU7gBULo49D78+Thb7S/MP
-	pWv2fV2FOTEQw4=; b=Y6jULMqz7yLkO3VSer/QgePL9a1WlJRM4NqBma112Sq1T
-	KP7DSrT7s/L7pWfP4nJl8zUMo0zpqqP4uzNh3ttFapKE8+r0Orh2TjfK524lEPjv
-	Y+HwvSXyTlOrJd/Hh2Fm2AwUZg/qwb/1dF3Ul9UyPjpVDJOHRaJLHNdnZVibRcpD
-	pkgZ1ViQzD7mNeuae5DZ5YTW4/O1OvyyHSBJ8m2M/TdwVtO08VokOhfVZnufERdj
-	G3+ym/TnoQi4m6b3ohn9bhbNGnZdYDpYUp5e7rAh5OLCByMhPPV+bHAk8k3bVLU0
-	5RquboZN9oc+Poupoarinl+oKMThskagX2YUeCcnQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j80w0ej3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 28 Jun 2025 18:34:10 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55SHMKxc014097;
-	Sat, 28 Jun 2025 18:34:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u702ja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 28 Jun 2025 18:34:08 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55SIY8E1017095;
-	Sat, 28 Jun 2025 18:34:08 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47j6u702hw-1;
-	Sat, 28 Jun 2025 18:34:08 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
-        pbonzini@redhat.com, stefanha@redhat.com,
-        virtualization@lists.linux.dev
-Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] vhost-scsi: Fix check for inline_sg_cnt exceeding preallocated limit
-Date: Sat, 28 Jun 2025 11:33:53 -0700
-Message-ID: <20250628183405.3979538-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FaXUHel8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=zZX0bC2DH2MvwuCPp2V/35NYunLcp9WEdDEtiUrQQ2Q=; b=FaXUHel8LbjMXRL7eKzc1etxNG
+	+333bBg+DS2JjqWZfCbmhQIoqQjxjrxolxlFh8XBalD5h7voTbCBIhrWOYqtEsZjNpbwEFiNqntsA
+	RjjEGgqUpYjYorMYEPXQI0O62PpTQWRnOBwOAMA7P1LJv0muFGqkqShFTAg5xL0hS7o/0nm/hgHoz
+	Iv52D+gWNRhlSG9sT1FF0wdOfZLsWJA3sTTtvHo2b/KsRR8Zg8pa/2EzdPCBDDYjw/SuaNqXhF3sJ
+	nk19C32irF3tqayHSZtpcqBs4L/+YD8V6nuYRCjY3GeYJ/KuKiZBen3ZU7lpkw5FJMLDIFmihMLuQ
+	VBarSLPQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVajS-0000000H7cC-1dJJ;
+	Sat, 28 Jun 2025 18:56:58 +0000
+Message-ID: <bac0deae-ce00-4b19-9a34-69ac827f251d@infradead.org>
+Date: Sat, 28 Jun 2025 11:56:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506280156
-X-Proofpoint-GUID: 1QAJbHjjGQ0clRYnLvVijptxGqammU92
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDE1NSBTYWx0ZWRfX5dgC6S8BhIpe 0spaA5wkFe3suwBjGQr30+0Qxek3KiEL6ZLIx5w5Z8UlTVS+PR1rhTCslOX4CVutKUADM64qppx e70GPA1UuSSBJhg3BN1LYfpWjj/uUebPzxwD0Cbo9l07RbGbqWJ+zT5XTZbWX01PsqaRsPjJQzV
- 0ig9DL5L2RQKDhTb+m2XZf0wO1VSG+nOqjmaVva4fCYWiyPPsQKIZlSzUSdlf1XoyXxTlJWMOBz lOUp03bLMuTmHfFhZrMwAyLWOZI1N73G16Pzk/QwzUFApyWC+xPguNrCWOIJNVga8XLT1OtGiiI MeLzIhA31/NHbyEZ0gEFCXOP67OtNDFjAi2t9s6nGyzN1fJxmvnI0jrN6mKtDBZER5UJLqT5DZI
- E8gzwIu55XuJ21Lsk/BC4Xu24gqdD4wVjU+fy8eI3aM8T7PhjnTjR/f5+ZZXobNnrxNIPkHM
-X-Authority-Analysis: v=2.4 cv=D6hHKuRj c=1 sm=1 tr=0 ts=686035a2 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=n7_sAU11hH57P2nxMxEA:9 cc=ntf awl=host:14723
-X-Proofpoint-ORIG-GUID: 1QAJbHjjGQ0clRYnLvVijptxGqammU92
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] docs: dma-api: use "DMA API" consistently
+ throughout the document
+To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Keith Busch
+ <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+References: <20250627101015.1600042-1-ptesarik@suse.com>
+ <20250627101015.1600042-2-ptesarik@suse.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250627101015.1600042-2-ptesarik@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The condition comparing ret to VHOST_SCSI_PREALLOC_SGLS was incorrect,
-as ret holds the result of kstrtouint() (typically 0 on success),
-not the parsed value. Update the check to use cnt, which contains the
-actual user-provided value.
 
-prevents silently accepting values exceeding the maximum inline_sg_cnt.
 
-Fixes: bca939d5bcd0 ("vhost-scsi: Dynamically allocate scatterlists")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
----
-added Reviewed-by Mike Christie and Stefan
----
- drivers/vhost/scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 6/27/25 3:10 AM, Petr Tesarik wrote:
+> Make sure that all occurrences are spelled "DMA API" (all uppercase, no
+> hyphen, no underscore).
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index c12a0d4e6386..8d655b2d15d9 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -71,7 +71,7 @@ static int vhost_scsi_set_inline_sg_cnt(const char *buf,
- 	if (ret)
- 		return ret;
- 
--	if (ret > VHOST_SCSI_PREALLOC_SGLS) {
-+	if (cnt > VHOST_SCSI_PREALLOC_SGLS) {
- 		pr_err("Max inline_sg_cnt is %u\n", VHOST_SCSI_PREALLOC_SGLS);
- 		return -EINVAL;
- 	}
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  Documentation/core-api/dma-api.rst | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+
+
 -- 
-2.47.1
-
+~Randy
