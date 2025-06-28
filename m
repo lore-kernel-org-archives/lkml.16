@@ -1,121 +1,108 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE9223302;
-	Sat, 28 Jun 2025 11:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627E6223302
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751109561; cv=none; b=dkw3jz/K4UYyE2xTz+VP+t+GyofmB/ID6m3xLudWt1d5jWqurU+B8Im86uRbMhbs2JkssQuxZiqA3ea6PTXDXonZIRvavGh82t0XH8dk8JBAP112OwMFmvANs5979d6Y37oWvs4DbCOPVUbYH1qSwn9Ho/A3njTC9AGohRaAP4M=
+	t=1751109655; cv=none; b=HnvEuKqg9snarOWbXDfT+/tkycWjDMgdbwnuu+hVCJQ0j1E1XgXScCqtRWb1FhqQ1gw80hXZDdWYcJuKwpi8XHD4zll89KUu6nmftwEBBF/3hkGZcIoIkFHEumvgwDjhHBdW8ropCyzwKBFKTXmDxN/Be3SnXqrcG61GSWnB5GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751109561; c=relaxed/simple;
-	bh=pxw3nDUKAGeQcIco9JIBBISlTONF1A8sJx3AG2Rsj+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kh8zCB/bzs0yFMMHWr06jSQMRGigWyZVxarlBGmNStnuHkd/gJJG5j+tvBw+ocKv85yxpCAA3LHiD+S023aqkUJPI4MPjUg0WN6YLy6B8caqLI1alfI5MnYtgzAz9liTd5Vk0rRU9gR0gBLdj++0mUYxpjrDXemfjcnGQeBESHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=epc4afNB; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751109655; c=relaxed/simple;
+	bh=5hRsgFtGknKzSmWy0qbz0oiEOBs4iV/BxLCdUTZiHhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NH5t/4pmO2Xj9LF/w4CFEgeihBg6VYQmypZPR67Q5hSHOGORJvESyt48D8knoIOtWRknpAbSFLUnoAY1hvpJwLXu7UZch9rRF5bHrL/GINkckHAoKKMPKA3MVAnZNMQX/9oDS9yUMOzxLdkTrv2laMBsCvIWTPRre13/Mf+o1ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nfs2Bi0G; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epc4afNB"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ae36dc91dc7so87729666b.2;
-        Sat, 28 Jun 2025 04:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751109557; x=1751714357; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YAYlI6JY2Yw3h8d72zKOjYTOygIe2dp0d/3LC01Hhpg=;
-        b=epc4afNBoZ6qvDXDSyC8Aaa1zwBCX5ayoc+5dQi+rin/OsqqL93hkdEGUX9EHEyIKV
-         6VHxDPl7lCcOGbDDiKa5OMFywcWjhiBlP3XlqX/2sGjfgs4KdFJDa2zeJmaaVh6x0g/r
-         0KCdv32vQcUW5WKWe5gpgI8CHDFattI3kj1eFgfA+Lj7fv2GDwjBjKAc1botfRmQ6g3l
-         beGjxun7ntNhk/xiPdv/PnrV3c9gRS+wxnS/O1dazBntb5BGyxTLzlJN3zk7k7KEnxBY
-         cxvTqMla7w5lTNeVqf0F/Y4vrVIBvQrKwI1nYZFFAiJHinaSCAKTjg8AyeE9w+oRNYGZ
-         PANw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751109557; x=1751714357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YAYlI6JY2Yw3h8d72zKOjYTOygIe2dp0d/3LC01Hhpg=;
-        b=J4faWxeSNqwNc3foqFV4J48LG4RNCsoKMFb/4oNxS/B+8NY/xHMMpCtmU5D4lleWjf
-         MTe5aIAKKshy7f+OgAKwVx6hXVJVmmQHlRATPfaVcB6vuyZ/JJge/VOgitNWSRmAX8hZ
-         PpIr797K6g7VB3Dw5n/Q4esudzV7uqmB92VrChO7CLwQz0/iEafE0/pBr1HJuFPH0F3Y
-         lIJoQjC0GHCr6M38VzZdJDeq2Ed1UTgcMZ5THb94N8oGA9g8j6dAeE3wEVhGb6b2jmnN
-         kQ09lQ9I0+/0OXjx0nXtaC9pIj5zTBgtGv0dhFll76Yi5Zrb+CgCtKKf7xTef5JxsyEc
-         Tdlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcg4jrF1HXnLMtOWMpPt6haeQ5ERqXjBWWJEKTVVYuWCldKD7lrnXpGRF0bpXA7lZgn2IBbNRq2yiTW3CMFw==@vger.kernel.org, AJvYcCVJxIJlFsVZ6GPozXRvO+FgErnVm0BdtOU9eR93aD9NB7duXO2jW7OBG93vHFCLk/E+Sq5L2ymD1mA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhC4+QHvfmnL5G6inBKjEqvXNcyLv8fLuzaYYo3TQwwdl/QggD
-	PEFzUAIVjVS3MiyVDZccEc3/eznoPuuBqHiFLRCFpjV5pGxwT8qnCFTrxCjkkvPbqyks1obl4Uh
-	lSY3EfF386A+QNOWEPL8EIo/ws20pNSMj53JQK18=
-X-Gm-Gg: ASbGnctes7GYX/zV3VbiykB1VL+vSgvZGEJCM+vp/+ivDW+wDW9IYyfpE0PjvA18RhF
-	1MHR+doFrE9KHtJX3A7S4WKyqF4CggMElI3lKI9+BW/VrokuR7K4dBaIVBvgt29FpINjoJbwwFa
-	ytYrjWyp6IZeQ55omFJJyzNIHnH6z/F4C71upIii296+4=
-X-Google-Smtp-Source: AGHT+IGBGM0JgepjxQO8SJ3xhL0Qg/5RfAF8UJbZiixxUsfuCppqtXEbq9vFKXwBE92q6DX9ElTj1I9u/f/oIeaJf98=
-X-Received: by 2002:a17:906:f593:b0:ad8:a935:b8e8 with SMTP id
- a640c23a62f3a-ae34fcf546fmr580884266b.5.1751109556273; Sat, 28 Jun 2025
- 04:19:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nfs2Bi0G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751109654; x=1782645654;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=5hRsgFtGknKzSmWy0qbz0oiEOBs4iV/BxLCdUTZiHhE=;
+  b=Nfs2Bi0Ga3NKUrE31tRc3wAA4jlwPo4yG7eAK8xXxjlVkJ1FG9URPNsH
+   0LLHYoJH8wYjOc1gZD0iU4wWhuT7vtLUOpN7UAF+qgyc90SFXLdHblHwb
+   zRdsv3+SLTdjKOIj4sTSoYL9wXti8q5QZq+2ktwQoRPOYjll/jt7Ub828
+   m+5CEoKacxmA7N+wk5Mnr2fz0CbUVJRfdMHXxxza1SlfEvSmD1bGqoOkf
+   +yxDPmwkCIMtoy8kJK5TRdUsy4dqM8AxZgrwJW5x02euM4ZBbOg9lxJnM
+   2d/FBNlbhXVhEWBxF1/EV72R2bOmMP4xu0l4PeVfiO5ptGMDRl8aZpcHF
+   A==;
+X-CSE-ConnectionGUID: Q4C0lueGSbiu/gwmSUG2EA==
+X-CSE-MsgGUID: eXh3PwO3S7eL3Ldr+aQx4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="56026415"
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="56026415"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 04:20:53 -0700
+X-CSE-ConnectionGUID: EAQA53eESNyl2C78KB4Yjg==
+X-CSE-MsgGUID: Y9a4d4aKQOmy9xTW4jv7+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="190199959"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 28 Jun 2025 04:20:52 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVTc1-000X0I-0t;
+	Sat, 28 Jun 2025 11:20:49 +0000
+Date: Sat, 28 Jun 2025 19:20:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Steve French <stfrench@microsoft.com>
+Subject: fs/smb/server/connection.c:42:5-24: WARNING: atomic_dec_and_test
+ variation before object free at line 43.
+Message-ID: <202506281916.wVorCT8Y-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628083205.1066472-1-richard@nod.at>
-In-Reply-To: <20250628083205.1066472-1-richard@nod.at>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sat, 28 Jun 2025 13:19:04 +0200
-X-Gm-Features: Ac12FXy_5jfBfyyYAfYyxsOrZLWLgv6hOd-huSLbpULPyujfRQBW56tkhKVQ2T0
-Message-ID: <CAOQ4uxg=CUmr+6EBPG0MSwDezx3jTxtWaGVLazA3krp7PUU13w@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs.rst: Fix inode table
-To: Richard Weinberger <richard@nod.at>, corbet@lwn.net
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, miklos@szeredi.hu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, Jun 28, 2025 at 10:32=E2=80=AFAM Richard Weinberger <richard@nod.at=
-> wrote:
->
-> The HTML output seems to be correct, but when reading the raw rst file
-> it's annoying.
-> So use "|" for table the border.
->
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-Acked-by: Amir Goldstein <amir73il@gmail.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   aaf724ed69264719550ec4f194d3ab17b886af9a
+commit: ee426bfb9d09b29987369b897fe9b6485ac2be27 ksmbd: add refcnt to ksmbd_conn struct
+date:   10 months ago
+config: i386-randconfig-052-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281916.wVorCT8Y-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
 
-John,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506281916.wVorCT8Y-lkp@intel.com/
 
-Would you mind picking this patch to your tree?
+cocci warnings: (new ones prefixed by >>)
+>> fs/smb/server/connection.c:42:5-24: WARNING: atomic_dec_and_test variation before object free at line 43.
 
-Thanks,
-Amir.
+vim +42 fs/smb/server/connection.c
 
-> ---
->  Documentation/filesystems/overlayfs.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/filesystems/overlayfs.rst b/Documentation/file=
-systems/overlayfs.rst
-> index 4133a336486d5..40c127a52eedd 100644
-> --- a/Documentation/filesystems/overlayfs.rst
-> +++ b/Documentation/filesystems/overlayfs.rst
-> @@ -61,7 +61,7 @@ Inode properties
->  |Configuration | Persistent | Uniform    | st_ino =3D=3D d_ino | d_ino =
-=3D=3D i_ino |
->  |              | st_ino     | st_dev     |                 | [*]        =
-    |
->  +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D+=3D=3D=3D=3D=
-=3D=3D+=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=
-=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D+
-> -|              | dir | !dir | dir | !dir |  dir   +  !dir  |  dir   | !d=
-ir  |
-> +|              | dir | !dir | dir | !dir |  dir   |  !dir  |  dir   | !d=
-ir  |
->  +--------------+-----+------+-----+------+--------+--------+--------+---=
-----+
->  | All layers   |  Y  |  Y   |  Y  |  Y   |  Y     |   Y    |  Y     |  Y=
-    |
->  | on same fs   |     |      |     |      |        |        |        |   =
-    |
-> --
-> 2.49.0
->
+    24	
+    25	/**
+    26	 * ksmbd_conn_free() - free resources of the connection instance
+    27	 *
+    28	 * @conn:	connection instance to be cleand up
+    29	 *
+    30	 * During the thread termination, the corresponding conn instance
+    31	 * resources(sock/memory) are released and finally the conn object is freed.
+    32	 */
+    33	void ksmbd_conn_free(struct ksmbd_conn *conn)
+    34	{
+    35		down_write(&conn_list_lock);
+    36		list_del(&conn->conns_list);
+    37		up_write(&conn_list_lock);
+    38	
+    39		xa_destroy(&conn->sessions);
+    40		kvfree(conn->request_buf);
+    41		kfree(conn->preauth_info);
+  > 42		if (atomic_dec_and_test(&conn->refcnt))
+  > 43			kfree(conn);
+    44	}
+    45	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
