@@ -1,126 +1,75 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E97E552;
-	Sat, 28 Jun 2025 03:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44272D600
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 03:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751079840; cv=none; b=EKp1vVU5UEKHqZCZR3Zas8yF2mFHu+xjgJm1BZOhKDrCgzrmC4/IVxdEOsa4PhjnvyKxroHYlRerUeDYzKT+Ed+kdirYeWbmR9DyYnPaH+zogoTgMO8SsxhmoZ+XuBeE2yLnL1yQqiBWtGrw9H4uQp0fWNOHklhGxDzvDj51Fs8=
+	t=1751079878; cv=none; b=MTLoKz8CU0I4BseLcRZ9rxjK/28vS1iro7UWTaSdI4SpiNpeSKsZv5F/xUGPJrgC7FIaqvjL4vs8lp2ZFwtnbNvgbE03OeAm9rGcoOx+cVRUJ4xLQrNu1X/uMlpUq7iSk08oqR/Xy5G7JS5TpuuNCiBHey7OJCWeynbseLmn0RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751079840; c=relaxed/simple;
-	bh=z2g6FwoM1+yP/R1AO2qvEMxVHFZmKzDH0+Yb2w/7CAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIX7PkAOP4wtOu3K8VQGdGdlvtXJEsXjk8Bn2dTtmSLoMOqwgZWIxRdlgfD6yrWEtv4LZCt257/MwJVnMYVqdq5TBAyqaRPGRFvjVFzttYEs5qHBoC3GGRE7AMQ7oCZPa21x+jT6eS2op+fSwU3l9IH9PZ0c6AZDTW+MaAZaOQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYrWiDjD; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751079878; c=relaxed/simple;
+	bh=e2HPA9/wexrugXoBcyL63QFmQkVRMg3Vbgzl8tLlmv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TMjQScloU+CTA46NWyg0MtdqyjTCkPXkmL7+wlgQ8yg4jpSvHOgApgqUjvrJA5jgfBWU1S9av5uponsENJHyI1kIZNpcSDFOkbfNEWJOvlKhhZpKlOhAp1L+AVOlYIgGAJG9mugC1jkbshppLzJZWZi2g2FhUPjoMF46YHJC7Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tnQflVhU; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYrWiDjD"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a58f79d6e9so39332701cf.2;
-        Fri, 27 Jun 2025 20:03:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tnQflVhU"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-735a6d7c5b1so1460743a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 20:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751079837; x=1751684637; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MKfdkGsHs7NqMRbo/7Qs4sBJbj00KoBTElEavTmIUM0=;
-        b=WYrWiDjD/583qdwndmIIRmRVmA7lrFAgsX9fyg6cwc1Ig0WM8G/kLMMhA0WbNakPO6
-         FBl3rfZieU9O7Qt6cnzDxZx8/PRyhGsvJ1SCYE6jav2MAs9eUCSMZNJC9rzBb+DaDTsl
-         9ZRYn1JRo6X7xAT0XpVfL+hGtPDhbjyh/fQml8bzEWxMpczDEE7rH1jsuPTQqIxDzi6Q
-         p38vi6qWch+1YG8m/CsVUbxKRBDdveFf2RLLF4/6gIA1q4Fa1Pc9KAnXmMFHbXPZQ+Dk
-         WUfGo6uSBoT+IlKKIIMOp6eKg1mVqQqklzNiUzOpjaitaDWQvJL2AAM9/jXqP8HHjR4t
-         2fyA==
+        d=linaro.org; s=google; t=1751079876; x=1751684676; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4mrEXq+k4C9jjEUBgclh5S8eupzCvj0cpocVaBAvBRg=;
+        b=tnQflVhUt/ZBOx/nmfoy83EAHMOMjCpgtl11HXZPOy20rtAS2d+8nTD1YEGiP4Mok+
+         vaNZQzePVRu9z7Y0tEHvbnNL3Gj2EGwYOcayIJd9soYDOQ8pj0mkoOW6y80/6UF8d/Bg
+         6d5u3DGxhK8evRX4AubW87AO6wZ5wgYOein8Y7yX8PviySzYJXk5IL6eWw7pldoWeq/q
+         aPAXltqpa/aHEHngdEtwUCM26BnBFBNEfXGjl5TSSvMYaFdGzXgOXserAXfH67rHsogd
+         5Ylrx1/Ww5mrN6cfMOTB7gdx0YFXkLf2c3sQWBq3dAnz+V9xSFfLG7KLaNR8S/NVpsvL
+         eWZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751079837; x=1751684637;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MKfdkGsHs7NqMRbo/7Qs4sBJbj00KoBTElEavTmIUM0=;
-        b=Vx5POMffR9DaU6Ey9zXo8ZeOSNN8Ezhgs6zR4Watk7a3YHh10PckhNOIXR/Kz54its
-         pvXSbSjZPIVsYPMpY07AcG6kwkZPbRZAIkg3WXrrqg2a24v4Ykb0a+JOwggK2QY0gb1S
-         6oBFKEjkOQ1J5u6af28n+szaP6Ur07P5vqz4SH9KcclarebqRvaSnDf7bTqsTlZrV5gw
-         Qk4lyjq0fSokzotMH+nRRQiiRtX15/d/Uslq99ml/rUoY4MhaUPEiIYSkFNBC9RubSQO
-         tczURrw3OQFp4CxQI8GQ1gIuyiMbObAGrd5ZiEM1brhwtEXjsYvKhMoVXvxxQry/Z7NM
-         zugQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNY5HBQoizynWnaCoulcdD+YM8Zv5TfxJJtgBuHCVt3/5YGDALFetq1QTHevCi3dzjCxsWHrZIAcDPLeCDnV8=@vger.kernel.org, AJvYcCX1PriCYcmz3ed/KGScKZce1g8HLV5mr/HyFka3F1MXWDfBESfYUqEgnv8jI6lsabIGIxafk8VzeTAg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7urnx8F/VkW4gtYsILZoK+MaVrKrYY1wAONVH2ivqpeQoRJYr
-	K1c9WcxqywjjjWRzPXfhWmUCFm4tSW3JkZdN6AtdwNt0DY7HfgheaD85
-X-Gm-Gg: ASbGnct0Ch+AX5Vi8wv71s6jrrCep/dsOHMk7T9x1bo+8c7zzUiKvQGNxaMz58FI79+
-	2cptRdKwohJM/JmyWbMN4xA+MvQvdulEH1l/0xDVNEJpAGl0/vH3sD24kgGYF2hYDjgNrq6RC7v
-	7G171y+PPIHsFcv20+mdfh8TQkiON5n7eOdbXC0z4adITyvkE0N/S/jaesasAqLApim4WahGcaG
-	PbekISffT26WcarsCX2+LS8eq9QsHg5vvLQ2FofRzwl1akf2eCUVPmYpY5Rc5EUirpGZ+bv0zZ3
-	Zp4NZmiLzVWPP0sdHQJv7grYBBAT3CL+h/Bp6RwRAGf1kamWEcKo39p9vom1BFpGvZq7gn929Xk
-	E80oPAGKtzOV3bnI3yr567E2d1dlQfpCC1/A3PNSKnngIn5xZ8TwCgUJTYmG5FzQ=
-X-Google-Smtp-Source: AGHT+IENHGG6gjc1y6TnpBpTdkf27mATfXOIOHmBDYkft5eYdEI+PM3hm40FM9FR4iCyeuRlYqKnJA==
-X-Received: by 2002:a05:622a:4e9a:b0:4a7:b73:5356 with SMTP id d75a77b69052e-4a7fcae8dc1mr89595271cf.40.1751079837258;
-        Fri, 27 Jun 2025 20:03:57 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc55c67esm23103201cf.48.2025.06.27.20.03.56
+        d=1e100.net; s=20230601; t=1751079876; x=1751684676;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4mrEXq+k4C9jjEUBgclh5S8eupzCvj0cpocVaBAvBRg=;
+        b=fpLv/PjkekpLOUianTiOBVNtu0uAC6u1/mRneZauFCIe8MnrZYMwkdXH2/79x5+LtD
+         ah9/DaMQji8OOV9XyJRQBiNszSk05pPvN3HwUckxkdBvnjRe5pTiNgyYl1SrDIP5IKz6
+         gNhnbZuNjWYuWlU1II3SfuT+ToPYAcKdeSdHlUKOX3KWLE8ykWHexijcI+PSUhonCefB
+         KVndKRxgivlD4q845EEdDFmzWxj/Laay8n71jnZZoCrNubIzj/TyKTWS4IAF7q1LfzEL
+         OXrIUKc0yRvjBpuD432sSiz+r4HasT991gPzAXPOHyLdpk//47YD74GS+aljNHWkZtPk
+         l4jA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9UpfnTcTC53Zky12E7norliLwJ4jakOXNe5IuC+KeCuw6i4UJKxYrfqtCDLtLvQu1ouFKZOjgjbSP7RQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEULOMQ1H3ERx1UHmOwxZX3BjQzkgjWWjD6g8yXeNZLMLhaE+P
+	GUcRH9SEvbucq4vIWx6gec08yq4gjqQ91wjbxuwFv26sCiW1F+TbAaQjrOhkxwEfaoQ=
+X-Gm-Gg: ASbGncu0BrulppR9KOryfJO6HqPTsDE5c+1c0+7zByctTk4gSKe22QJ6Uztsp4uYqPJ
+	qE13sJUVZwY6yiwcIWa+gWwARkNBk/Db31pdqLPLM3wnWCY2VYQPR1xNXnQ/5qicNEMkB9XffGZ
+	ovCaY2e89lztM1fQSLW7N+4sQ/m9CN9t70HfH+HzfMXpydhlmsABUKtLvvxc8+RPS7oMvMeZ1eu
+	QgcJ2XG/Gxd0sYazK4meLBfqVtMZEygb+LhSK2P2vdUPQViroWZNG1znoZYboxCLGc0+mRqizAL
+	5BfxHPrlGUOaIKkRqsskPm/N/4CmLoA8xtVyUNYyLH8Z0ws1dvReLKn2ACMt2HvxgguIwA==
+X-Google-Smtp-Source: AGHT+IEIQNB9vXn483lHvLJjj700RgdbzHfAUE56Wc6QSRX5AYvxFzu5TfYpGMA0L0F7fB4pfrcJZw==
+X-Received: by 2002:a05:6830:6f42:b0:739:fe04:7aec with SMTP id 46e09a7af769-73afc6821ffmr3875325a34.26.1751079875682;
+        Fri, 27 Jun 2025 20:04:35 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:f3a4:7b11:3bf4:5d7b])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb124960sm624104a34.66.2025.06.27.20.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 20:03:56 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id F0B08F40066;
-	Fri, 27 Jun 2025 23:03:55 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Fri, 27 Jun 2025 23:03:56 -0400
-X-ME-Sender: <xms:m1tfaNN3CCBDYWLgTmC0HrwD5BOHWjNquEzLHu4PDn5QIoYq6xMvNQ>
-    <xme:m1tfaP-yvPebA6oK2kDQgHqJNNi7aF6qDJCXHJmW9MkFa39sUq8lDt-oxTyVGaz4_
-    P97WMtWxx5knvzvZA>
-X-ME-Received: <xmr:m1tfaMSonSBlVUIF9z5IZl3yqLoUHWYd-ClnofsmSVucMM_PX1CC-FnwUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegkeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhu
-    shhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
-    rghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdr
-    tghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhope
-    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
-X-ME-Proxy: <xmx:m1tfaJtfVFqgsAVdx0fRjarA2xgGOpdHtrpo2iBFtKWS6xxKUIylgw>
-    <xmx:m1tfaFe7-QxzKOy8f9pgXpFhG-Xr-nJ1zzbY4_Eu2NGSK1S3XKvu1A>
-    <xmx:m1tfaF2Kv4sNjvwOCuBiY-nAFnoF-eo9XHoAh3TeApOPkcpCycMATA>
-    <xmx:m1tfaB8JNz01A4lKxbk7szR3jw05_mYcnVRbhm76PgdGXd2wsihjNg>
-    <xmx:m1tfaA-J5dUpJYNnarlWOsRs9W-lyuz-hHMToJZUoWNR7PcwWfldlGFF>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Jun 2025 23:03:55 -0400 (EDT)
-Date: Fri, 27 Jun 2025 20:03:54 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
- operations
-Message-ID: <aF9bmpX-i6HVMlaj@Mac.home>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <jBAtISwM9LKkR7KuCHEnym75NfGOM4z408pMuDfk4U8VzN8PQuk9JJfBc33Usre3YSjbgtFRj8c0ZNeeQMpZsA==@protonmail.internalid>
- <20250618164934.19817-6-boqun.feng@gmail.com>
- <87a55uzlxv.fsf@kernel.org>
+        Fri, 27 Jun 2025 20:04:35 -0700 (PDT)
+Date: Sat, 28 Jun 2025 06:04:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Pranav Tyagi <pranav.tyagi03@gmail.com>,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, ming.li@zohomail.com,
+	rrichter@amd.com, peterz@infradead.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: Re: [PATCH v2] cxl/memdev: automate cleanup with __free()
+Message-ID: <ef5ee5ac-5c8d-4717-aa84-7db085a556a9@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -129,121 +78,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a55uzlxv.fsf@kernel.org>
+In-Reply-To: <20250623083841.364002-1-pranav.tyagi03@gmail.com>
 
-On Thu, Jun 26, 2025 at 03:12:12PM +0200, Andreas Hindborg wrote:
-> "Boqun Feng" <boqun.feng@gmail.com> writes:
-> 
-> > xchg() and cmpxchg() are basic operations on atomic. Provide these based
-> > on C APIs.
-> >
-> > Note that cmpxchg() use the similar function signature as
-> > compare_exchange() in Rust std: returning a `Result`, `Ok(old)` means
-> > the operation succeeds and `Err(old)` means the operation fails.
-> >
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > ---
-> >  rust/kernel/sync/atomic/generic.rs | 154 +++++++++++++++++++++++++++++
-> >  1 file changed, 154 insertions(+)
-> >
-> > diff --git a/rust/kernel/sync/atomic/generic.rs b/rust/kernel/sync/atomic/generic.rs
-> > index 73c26f9cf6b8..bcdbeea45dd8 100644
-> > --- a/rust/kernel/sync/atomic/generic.rs
-> > +++ b/rust/kernel/sync/atomic/generic.rs
-> > @@ -256,3 +256,157 @@ pub fn store<Ordering: ReleaseOrRelaxed>(&self, v: T, _: Ordering) {
-> >          };
-> >      }
-> >  }
-> > +
-> > +impl<T: AllowAtomic> Atomic<T>
-> > +where
-> > +    T::Repr: AtomicHasXchgOps,
-> > +{
-> > +    /// Atomic exchange.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```rust
-> > +    /// use kernel::sync::atomic::{Atomic, Acquire, Relaxed};
-> > +    ///
-> > +    /// let x = Atomic::new(42);
-> > +    ///
-> > +    /// assert_eq!(42, x.xchg(52, Acquire));
-> > +    /// assert_eq!(52, x.load(Relaxed));
-> > +    /// ```
-> > +    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
-> > +    #[inline(always)]
-> > +    pub fn xchg<Ordering: All>(&self, v: T, _: Ordering) -> T {
-> > +        let v = T::into_repr(v);
-> > +        let a = self.as_ptr().cast::<T::Repr>();
-> > +
-> > +        // SAFETY:
-> > +        // - For calling the atomic_xchg*() function:
-> > +        //   - `self.as_ptr()` is a valid pointer, and per the safety requirement of `AllocAtomic`,
-> 
-> Typo: `AllowAtomic`.
-> 
+Hi Pranav,
 
-Fixed.
+kernel test robot noticed the following build warnings:
 
-> > +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a valid pointer,
-> > +        //   - per the type invariants, the following atomic operation won't cause data races.
-> > +        // - For extra safety requirement of usage on pointers returned by `self.as_ptr():
-> > +        //   - atomic operations are used here.
-> > +        let ret = unsafe {
-> > +            match Ordering::TYPE {
-> > +                OrderingType::Full => T::Repr::atomic_xchg(a, v),
-> > +                OrderingType::Acquire => T::Repr::atomic_xchg_acquire(a, v),
-> > +                OrderingType::Release => T::Repr::atomic_xchg_release(a, v),
-> > +                OrderingType::Relaxed => T::Repr::atomic_xchg_relaxed(a, v),
-> > +            }
-> > +        };
-> > +
-> > +        T::from_repr(ret)
-> > +    }
-> > +
-> > +    /// Atomic compare and exchange.
-> > +    ///
-> > +    /// Compare: The comparison is done via the byte level comparison between the atomic variables
-> > +    /// with the `old` value.
-> > +    ///
-> > +    /// Ordering: When succeeds, provides the corresponding ordering as the `Ordering` type
-> > +    /// parameter indicates, and a failed one doesn't provide any ordering, the read part of a
-> > +    /// failed cmpxchg should be treated as a relaxed read.
-> 
-> Rust `core::ptr` functions have this sentence on success ordering for
-> compare_exchange:
-> 
->   Using Acquire as success ordering makes the store part of this
->   operation Relaxed, and using Release makes the successful load
->   Relaxed.
-> 
-> Does this translate to LKMM cmpxchg operations? If so, I think we should
-> include this sentence. This also applies to `Atomic::xchg`.
-> 
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I see this as a different style of documenting, so in my next version,
-I have the following:
+url:    https://github.com/intel-lab-lkp/linux/commits/Pranav-Tyagi/cxl-memdev-automate-cleanup-with-__free/20250623-164014
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20250623083841.364002-1-pranav.tyagi03%40gmail.com
+patch subject: [PATCH v2] cxl/memdev: automate cleanup with __free()
+config: x86_64-randconfig-161-20250627 (https://download.01.org/0day-ci/archive/20250628/202506280653.WmzTbwEN-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
 
-//! - [`Acquire`] provides ordering between the load part of the annotated operation and all the
-//!   following memory accesses.
-//! - [`Release`] provides ordering between all the preceding memory accesses and the store part of
-//!   the annotated operation.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202506280653.WmzTbwEN-lkp@intel.com/
 
-in atomic/ordering.rs, I think I can extend it to:
+smatch warnings:
+drivers/cxl/core/memdev.c:881 cxl_fw_write() error: uninitialized symbol 'transfer'.
+drivers/cxl/core/memdev.c:881 cxl_fw_write() error: uninitialized symbol 'transfer'.
 
-//! - [`Acquire`] provides ordering between the load part of the annotated operation and all the
-//!   following memory accesses, and if there is a store part, it has Relaxed ordering.
-//! - [`Release`] provides ordering between all the preceding memory accesses and the store part of
-//!   the annotated operation, and if there is load part, it has Relaxed ordering
+vim +/transfer +881 drivers/cxl/core/memdev.c
 
-This aligns with what we usually describe things in tool/memory-model/.
+9521875bbe0055 Vishal Verma 2023-06-14  874  static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+9521875bbe0055 Vishal Verma 2023-06-14  875  				       u32 offset, u32 size, u32 *written)
+9521875bbe0055 Vishal Verma 2023-06-14  876  {
+aeaefabc59ec3c Dan Williams 2023-06-25  877  	struct cxl_memdev_state *mds = fwl->dd_handle;
+aeaefabc59ec3c Dan Williams 2023-06-25  878  	struct cxl_dev_state *cxlds = &mds->cxlds;
+8d8081cecfb994 Dave Jiang   2024-09-05  879  	struct cxl_mailbox *cxl_mbox = &cxlds->cxl_mbox;
+9521875bbe0055 Vishal Verma 2023-06-14  880  	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+f76a702ca63e85 Pranav Tyagi 2025-06-23 @881  	struct cxl_mbox_transfer_fw *transfer __free(kfree);
 
-Regards,
-Boqun
+cleanup magic variables need to be initialized to NULL etc.
 
-> 
-> Best regards,
-> Andreas Hindborg
-> 
-> 
+9521875bbe0055 Vishal Verma 2023-06-14  882  	struct cxl_mbox_cmd mbox_cmd;
+9521875bbe0055 Vishal Verma 2023-06-14  883  	u32 cur_size, remaining;
+9521875bbe0055 Vishal Verma 2023-06-14  884  	size_t size_in;
+9521875bbe0055 Vishal Verma 2023-06-14  885  	int rc;
+9521875bbe0055 Vishal Verma 2023-06-14  886  
+9521875bbe0055 Vishal Verma 2023-06-14  887  	*written = 0;
+9521875bbe0055 Vishal Verma 2023-06-14  888  
+9521875bbe0055 Vishal Verma 2023-06-14  889  	/* Offset has to be aligned to 128B (CXL-3.0 8.2.9.3.2 Table 8-57) */
+9521875bbe0055 Vishal Verma 2023-06-14  890  	if (!IS_ALIGNED(offset, CXL_FW_TRANSFER_ALIGNMENT)) {
+9521875bbe0055 Vishal Verma 2023-06-14  891  		dev_err(&cxlmd->dev,
+9521875bbe0055 Vishal Verma 2023-06-14  892  			"misaligned offset for FW transfer slice (%u)\n",
+9521875bbe0055 Vishal Verma 2023-06-14  893  			offset);
+9521875bbe0055 Vishal Verma 2023-06-14  894  		return FW_UPLOAD_ERR_RW_ERROR;
+
+This return will try to free an uninitialized pointer.
+
+9521875bbe0055 Vishal Verma 2023-06-14  895  	}
+9521875bbe0055 Vishal Verma 2023-06-14  896  
+9521875bbe0055 Vishal Verma 2023-06-14  897  	/*
+aeaefabc59ec3c Dan Williams 2023-06-25  898  	 * Pick transfer size based on mds->payload_size @size must bw 128-byte
+aeaefabc59ec3c Dan Williams 2023-06-25  899  	 * aligned, ->payload_size is a power of 2 starting at 256 bytes, and
+aeaefabc59ec3c Dan Williams 2023-06-25  900  	 * sizeof(*transfer) is 128.  These constraints imply that @cur_size
+aeaefabc59ec3c Dan Williams 2023-06-25  901  	 * will always be 128b aligned.
+9521875bbe0055 Vishal Verma 2023-06-14  902  	 */
+8d8081cecfb994 Dave Jiang   2024-09-05  903  	cur_size = min_t(size_t, size, cxl_mbox->payload_size - sizeof(*transfer));
+9521875bbe0055 Vishal Verma 2023-06-14  904  
+9521875bbe0055 Vishal Verma 2023-06-14  905  	remaining = size - cur_size;
+9521875bbe0055 Vishal Verma 2023-06-14  906  	size_in = struct_size(transfer, data, cur_size);
+9521875bbe0055 Vishal Verma 2023-06-14  907  
+aeaefabc59ec3c Dan Williams 2023-06-25  908  	if (test_and_clear_bit(CXL_FW_CANCEL, mds->fw.state))
+9521875bbe0055 Vishal Verma 2023-06-14  909  		return cxl_fw_do_cancel(fwl);
+9521875bbe0055 Vishal Verma 2023-06-14  910  
+9521875bbe0055 Vishal Verma 2023-06-14  911  	/*
+9521875bbe0055 Vishal Verma 2023-06-14  912  	 * Slot numbers are 1-indexed
+9521875bbe0055 Vishal Verma 2023-06-14  913  	 * cur_slot is the 0-indexed next_slot (i.e. 'cur_slot - 1 + 1')
+9521875bbe0055 Vishal Verma 2023-06-14  914  	 * Check for rollover using modulo, and 1-index it by adding 1
+9521875bbe0055 Vishal Verma 2023-06-14  915  	 */
+aeaefabc59ec3c Dan Williams 2023-06-25  916  	mds->fw.next_slot = (mds->fw.cur_slot % mds->fw.num_slots) + 1;
+9521875bbe0055 Vishal Verma 2023-06-14  917  
+9521875bbe0055 Vishal Verma 2023-06-14  918  	/* Do the transfer via mailbox cmd */
+9521875bbe0055 Vishal Verma 2023-06-14  919  	transfer = kzalloc(size_in, GFP_KERNEL);
+9521875bbe0055 Vishal Verma 2023-06-14  920  	if (!transfer)
+9521875bbe0055 Vishal Verma 2023-06-14  921  		return FW_UPLOAD_ERR_RW_ERROR;
+9521875bbe0055 Vishal Verma 2023-06-14  922  
+9521875bbe0055 Vishal Verma 2023-06-14  923  	transfer->offset = cpu_to_le32(offset / CXL_FW_TRANSFER_ALIGNMENT);
+9521875bbe0055 Vishal Verma 2023-06-14  924  	memcpy(transfer->data, data + offset, cur_size);
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
