@@ -1,123 +1,98 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BAB244690;
-	Sat, 28 Jun 2025 12:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C523B621
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751112556; cv=none; b=XFCbjjaVP6J7EW3VIIbEGJOpfpmy1Wjv0WDZV9+YciIW+tW2R8GI0kpdLpnzCCGf0JnYm7obhrffuht3YLbRZONyMHOJW5dqf6qO79CYDGu/7mi0Q94ZDzVy1itr90K6L7K9aXy+D5AIbJ1ndRRfHHaPrGYSyG4iafYoWEiLVu8=
+	t=1751112637; cv=none; b=YzhWgGt0kibQQASNfQqw259aeYXFkkP0ewvVm825dBrZRMCnBzr8bsXbxBrOVeaG8nPSSz5re+cHcRBwXGLqlybxu/c5Y0vNk9A2l0x4p5PQ1sVUxUA3G98j3CfZgUQGKr//si09DCqYzJaMpcAwi0n6VxVIY4u9BAGNnbeX1DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751112556; c=relaxed/simple;
-	bh=3m6qk9sfbOx97xb5co1w7w/o8852kfwjaeLEfUcRfPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S7fNsz1iIXf9h/vZu91wCbItDGkPQGbdE7u7Q8kB8Yi0x75c3EalOEaIWijvCtMN8HX4oa11n1tIFeHIHh1pZkG5kIcgWUcC1PzEZEhVyio/4c8RG7SxdgCh8RzOhMjMhk9IB0EVlUohBOpxkRveWxfwPLxk0QOcvCWul+iUTL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bKR/nBwv; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751112637; c=relaxed/simple;
+	bh=qoyAWaQudWyDJZacu3sHFbDrqDG+a9VP9HmNC1j3bnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTnEqfQZtFl7oVU5vtwzKCSKK63X8AmBKK79pYgaymgDGrWDc2JNC//snoMWCS0GdH+yp0w7cwmcx3r8h4B/TmAwwu3oRrOUZM76O6ReQmQCEUWVpdJ7foD9lsk53na1brnKDQwyPpDa8iv5kiQTssiG/bPwUtjGOAexgWfEbSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SicAehmL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bKR/nBwv"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751112549; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=jG2LawCA1NNYtazKDVvJGkVVtdv0FBm8VQn9Q5cw1nQ=;
-	b=bKR/nBwvhbbX0qTMv2rVPUr0P16VQ0vfxjGO3aredsyOl5eQcs5gpm6Cmc5AjCynWXpGkceHCdmPM/i8+NYzrdK01ZwUXrIfiBpQtvDPETaPI2Zl+m/9JwO4NM8IT5xamVkYseaJ8cfPX9Dk06wHyYMw7pS/3ZgQ/Lk6mpMdRG8=
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WfjZU4-_1751112496 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 28 Jun 2025 20:09:09 +0800
-From: cp0613@linux.alibaba.com
-To: david.laight.linux@gmail.com
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	arnd@arndb.de,
-	cp0613@linux.alibaba.com,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux@rasmusvillemoes.dk,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	yury.norov@gmail.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
-Date: Sat, 28 Jun 2025 20:08:16 +0800
-Message-ID: <20250628120816.1679-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625170234.29605eed@pumpkin>
-References: <20250625170234.29605eed@pumpkin>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SicAehmL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AAA0C4CEEE;
+	Sat, 28 Jun 2025 12:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751112636;
+	bh=qoyAWaQudWyDJZacu3sHFbDrqDG+a9VP9HmNC1j3bnw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SicAehmLV26pVotno99i4fsPMj3KnM/9f194z/adq/W3cbpZXX4YOK260Zz44cgtd
+	 XGG4gp81I43rnWc/oDFyUEYsPcncmiZAY4j0HheT63jTTECvmBRuWQC2VwdU1K3Mvu
+	 FB5jkdsfNPVHz/IXv1xeCK00E9arMrsAgwIsh0IA=
+Date: Sat, 28 Jun 2025 14:10:32 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [char-misc-next v2] mei: bus: fix device leak
+Message-ID: <2025062836-twentieth-kudos-1148@gregkh>
+References: <20250624110520.1403597-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624110520.1403597-1-alexander.usyskin@intel.com>
 
-On Wed, 25 Jun 2025 17:02:34 +0100, david.laight.linux@gmail.com wrote:
+On Tue, Jun 24, 2025 at 02:05:20PM +0300, Alexander Usyskin wrote:
+> The bus rescan function creates bus devices for all clients.
+> The fixup routine is executed on all devices, unneeded
+> devices are removed and fully initialized once set
+> is_added flag to 1.
 
-> Is it even a gain in the zbb case?
-> The "rorw" is only ever going to help full word rotates.
-> Here you might as well do ((word << 8 | word) >> shift).
+I don't understand why the mei bus is so special that it has to have
+this type of flag, when no other bus has that for its devices.  The bus
+code should know if the device has been properly added or not, if not,
+then no release function can be called and the structure isn't even
+viable to be used or touched at all.
+
+So why is this needed?
+
 > 
-> For "rol8" you'd need ((word << 24 | word) 'rol' shift).
-> I still bet the generic code is faster (but see below).
+> If link to firmware is reset right after all devices are
+> initialized, but before fixup is executed, the rescan tries
+> to remove devices.
+> The is_added flag is not set and the mei_cl_bus_dev_destroy
+> returns prematurely.
+> Allow to clean up device when is_added flag is unset to
+> account for above scenario.
 > 
-> Same for 16bit rotates.
+> Fixes: 6009595a66e4 ("mei: bus: link client devices instead of host clients")
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> ---
+>  drivers/misc/mei/bus.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
 > 
-> Actually the generic version is (probably) horrid for everything except x86.
-> See https://www.godbolt.org/z/xTxYj57To
+> diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+> index 67176caf5416..f2e5d550c6b4 100644
+> --- a/drivers/misc/mei/bus.c
+> +++ b/drivers/misc/mei/bus.c
+> @@ -1430,17 +1430,14 @@ static void mei_cl_bus_dev_stop(struct mei_cl_device *cldev)
+>   */
+>  static void mei_cl_bus_dev_destroy(struct mei_cl_device *cldev)
+>  {
+> -
+>  	WARN_ON(!mutex_is_locked(&cldev->bus->cl_bus_lock));
+>  
+> -	if (!cldev->is_added)
+> -		return;
+> -
+> -	device_del(&cldev->dev);
+> +	if (cldev->is_added) {
+> +		device_del(&cldev->dev);
+> +		cldev->is_added = 0;
+> +	}
 
-Thanks for your suggestion, this website is very inspiring. According to the
-results, the generic version is indeed the most friendly to x86. I think this
-is also a reason why other architectures should be optimized. Take the riscv64
-ror32 implementation as an example, compare the number of assembly instructions
-of the following two functions:
-```
-u32 zbb_opt_ror32(u32 word, unsigned int shift)
-{
-	asm volatile(
-		".option push\n"
-		".option arch,+zbb\n"
-		"rorw %0, %1, %2\n"
-		".option pop\n"
-		: "=r" (word) : "r" (word), "r" (shift) :);
+How can destroy be called here if the device has not been added before?
+How can it be hanging around in memory at all if the device_add() call
+was not successful when it was originally called?
 
-	return word;
-}
+confused,
 
-u16 generic_ror32(u16 word, unsigned int shift)
-{
-	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-}
-```
-Their disassembly is:
-```
-zbb_opt_ror32:
-<+0>:     addi    sp,sp,-16
-<+2>:     sd      s0,0(sp)
-<+4>:     sd      ra,8(sp)
-<+6>:     addi    s0,sp,16
-<+8>:     .insn   4, 0x60b5553b
-<+12>:    ld      ra,8(sp)
-<+14>:    ld      s0,0(sp)
-<+16>:    sext.w  a0,a0
-<+18>:    addi    sp,sp,16
-<+20>:    ret
-
-generic_ror32:
-<+0>:     addi    sp,sp,-16
-<+2>:     andi    a1,a1,31
-<+4>:     sd      s0,0(sp)
-<+6>:     sd      ra,8(sp)
-<+8>:     addi    s0,sp,16
-<+10>:    negw    a5,a1
-<+14>:    sllw    a5,a0,a5
-<+18>:    ld      ra,8(sp)
-<+20>:    ld      s0,0(sp)
-<+22>:    srlw    a0,a0,a1
-<+26>:    or      a0,a0,a5
-<+28>:    slli    a0,a0,0x30
-<+30>:    srli    a0,a0,0x30
-<+32>:    addi    sp,sp,16
-<+34>:    ret
-```
-It can be found that the zbb optimized implementation uses fewer instructions,
-even for 16-bit and 8-bit data.
+greg k-h
