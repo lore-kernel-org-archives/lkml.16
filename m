@@ -1,99 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFBD23CB;
-	Sat, 28 Jun 2025 03:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E290C198A09;
+	Sat, 28 Jun 2025 04:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751082950; cv=none; b=iM/lAYgXSjCGXDYlHUvVIpNFyoOo1vD3Gdg8cUpjhNGcszS7UkWddxTLvsxMj8gRyehK2/bDfGswMktMNvPgLUCGJ/b9VManyhPnZBZo8DH2698Ff0+pL+Yb7A5Dptx4MbZNIO1fGiFAaaVL1aJv9nioiAVJgrybD0dUh1fIXY4=
+	t=1751083743; cv=none; b=mZLIPsWcedEoSgFQ639L02hE+lGAfTh7smBKK7pOKuMgpU2spOZ/4H++x5WyboOSjfFGJ8cO1Of/vTw1VoDCmzlHn1OsERr37flSgYnr/rVkZeqgimSG/fNfQImkSzQ4n7hbFWkkEecq3z+vT+KgzCXjfL7LPA9/YOI/5v+/g/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751082950; c=relaxed/simple;
-	bh=AN/QJXPk97fVAvYSLHKMR5kU3rXAQDsVUj3rHUhRyJ8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=q4yMeIBFpszYYMhdLRbjK/SYyj4Tf9W7RY9uQ8tUOy9Xz+XOgK+w6HzXZfYDU9K73YYDpUDSGi2EgqkoK8Q2lbxvCbDUXUtQrNyPVHtBqsOGlnDOBHDyLhlqxto3gB5c8hXFPw7u3X5X2ky4pjYaGF4JY3W90h/iq9sx4uJTIfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ka1LkIU5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751083743; c=relaxed/simple;
+	bh=lMQKY/ZkZtxduR3viyCkwBW+r03pBblru1OA3JOf4O4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IyIYkVrh+aX3xcPuAux1XjEtNns1BKw77LrLuRniXFzCVWmJrIJyUjTZPRtSbHcLTkZyZ18gapVp5fG1QdPQDDtHXk3QyrOtSd1QheS6135U4RZAbcs/j1oR5Z8aT/OfxwkElzhCj7pBQm2tK/7hcHDO4M0nh+vwR/4aFH8L/NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=fGUJH4so; arc=none smtp.client-ip=178.154.239.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ka1LkIU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC0DFC4CEEA;
-	Sat, 28 Jun 2025 03:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751082950;
-	bh=AN/QJXPk97fVAvYSLHKMR5kU3rXAQDsVUj3rHUhRyJ8=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ka1LkIU51t2MsbB5+6t9yZs0Hn0nd8nVJpTQmRIXKs/KBOxObVk/M5eGSwXO+FHaj
-	 JytjfuYxWmY3+c2gbRbqHPHXyy+akM0IhLLBcyEQk2idzI6XtGRv6gjP8CjJW8xzLp
-	 sX9+N1bl0rha6BZJ3tl+VIzlpILEAoiZUSAP1xqlKk84qjDZD9+JtuzW5YAS4SRcjY
-	 U3EBZ0XbvpxUM9iriLfcCv1BXgxKaU3J+a/jzvKcozmD2R79HS6WGaUm3XZaHSoyT/
-	 /Z9SKHF4WsYi+29O85+57eIa1mc0neyOR1Wbu8pgy/QXRY4kCW4AD6Ir3BZRczawyg
-	 jxyvbhKPNmagg==
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="fGUJH4so"
+Received: from mail-nwsmtp-smtp-production-main-67.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-67.sas.yp-c.yandex.net [IPv6:2a02:6b8:c37:71ad:0:640:c587:0])
+	by forward502b.mail.yandex.net (Yandex) with ESMTPS id 59BAC615B6;
+	Sat, 28 Jun 2025 07:03:55 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-67.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id m3ODbJNLlSw0-xbFbnZHy;
+	Sat, 28 Jun 2025 07:03:54 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1751083434;
+	bh=lMQKY/ZkZtxduR3viyCkwBW+r03pBblru1OA3JOf4O4=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=fGUJH4soG8DEFhAQYGm/jUQ7VyxuWbZ7N4vM2Kox9HD3orPM9K+8csVltTiBnDpha
+	 jfi5Eu0Wzo4ONJEVd0bwYGbqScARbgZ8FXrIAmrlMvSDC3Oki0IpdeyGWQhiuK32oZ
+	 midCYPr+pQfVn5i0zQadjq9kIg0m5UpiRIiydds0=
+Authentication-Results: mail-nwsmtp-smtp-production-main-67.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Sat, 28 Jun 2025 07:03:45 +0300
+From: Onur <work@onurozkan.dev>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch,
+ ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+ a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+ rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ davidgow@google.com, nm@ti.com
+Subject: Re: [PATCH v2 0/3] replace `allow(...)` lints with `expect(...)`
+Message-ID: <20250628070345.5499a7bf@nimda.home>
+In-Reply-To: <CANiq72mMEEdP1ZG2brhLWgjaQpnwG+Mcxm43B0hAvZuaq-=jBA@mail.gmail.com>
+References: <20250627065320.9315-1-work@onurozkan.dev>
+	<CANiq72mMEEdP1ZG2brhLWgjaQpnwG+Mcxm43B0hAvZuaq-=jBA@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 28 Jun 2025 05:55:45 +0200
-Message-Id: <DAXV3JY5QPCA.1HKCQZ2V3NVES@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rust: miscdevice: Export vtable testing
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Matthew Maurer" <mmaurer@google.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Isaac J. Manjarres" <isaacmanjarres@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250627-linux-miscident-v1-1-d37c870550ef@google.com>
-In-Reply-To: <20250627-linux-miscident-v1-1-d37c870550ef@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat Jun 28, 2025 at 1:42 AM CEST, Matthew Maurer wrote:
-> A common pattern in the kernel is to test whether a file belongs to a
-> particular driver by checking its `f_op` struct against an expected
-> value. This provides a safe way to perform that test for `MiscDevice`
-> implementations without needing to directly expose the vtable.
->
-> Signed-off-by: Matthew Maurer <mmaurer@google.com>
-> ---
->  rust/kernel/miscdevice.rs | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> index 939278bc7b03489a647b697012e09223871c90cd..5f59eda57c38be5f0d54fa969=
-2fe5b2819e31480 100644
-> --- a/rust/kernel/miscdevice.rs
-> +++ b/rust/kernel/miscdevice.rs
-> @@ -177,6 +177,14 @@ fn show_fdinfo(
->      }
->  }
-> =20
-> +/// Determines whether a given `File` is backed by the `T` `MiscDevice` =
-based on vtable matching.
-> +pub fn is_miscdevice_file<T: MiscDevice>(file: &File) -> bool {
-> +    let vtable =3D core::ptr::from_ref(&MiscdeviceVTable::<T>::VTABLE);
+On Fri, 27 Jun 2025 17:55:41 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
-I don't think this always returns the same pointer. So this function
-might return false in a case where `T` actually backs `file`...
+> On Fri, Jun 27, 2025 at 8:54=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.d=
+ev> wrote:
+> >
+> > The `#[allow(clippy::non_send_fields_in_send_ty)]` removal was
+> > tested on 1.81 and clippy was still happy with it. I couldn't test
+> > it on 1.78 because when I go below 1.81 `menuconfig` no longer
+> > shows the Rust option. And any manual changes I make to `.config`
+> > are immediately reverted on `make` invocations.
+>=20
+> For that, I recommend using the `/` command inside `menuconfig` -- it
+> allows you to see the dependencies of a given symbol, and whether they
+> are met or not. That way, it allows one to understand what else may be
+> missing to enable a symbol.
+>=20
+> I hope that helps.
+>=20
+> Cheers,
+> Miguel
 
----
-Cheers,
-Benno
+I already tried that but it didn't helped. I was able to make it work
+with manually hacking the `init/Kconfig` file.
 
-> +    // SAFETY: `f_op` is not mutated after file creation
-> +    let file_vtable =3D unsafe { (*file.as_ptr()).f_op };
-> +    vtable =3D=3D file_vtable
-> +}
-> +
->  /// A vtable for the file operations of a Rust miscdevice.
->  struct MiscdeviceVTable<T: MiscDevice>(PhantomData<T>);
-> =20
->
-> ---
-> base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-> change-id: 20250627-linux-miscident-7b67db234a5c
->
-> Best regards,
+Removal of `#[allow(clippy::non_send_fields_in_send_ty)]` still works
+as expected, but using `#![expect(internal_features)]` (which was done
+in the first diff) doesn't work on 1.78. I will revert that and send v3
+patch in a short.
 
+
+Regards,
+Onur
