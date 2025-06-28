@@ -1,143 +1,122 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D15419E82A
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0475922577D
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751130377; cv=none; b=LdgEJEwupZbH8Ac78ZAWglP4smM1dEsMQMT+uDarwt94VGBhwj1SqABYKb/6Z6+2wdHkUgW+cRE/yU3kx3FTZqim/OLeFsFDmsLaWVTpAxZLaRL7uaI8/RJ8Cy2Vg7OijCISgQusmstxl/0BBL/YvuEgeV0YerrJUa83qKby8Tg=
+	t=1751130407; cv=none; b=STgqgO88Ju8rl+2auptN+BxEHp8NKS1TDdK6SsddjhW/RK+6wruXcTrua/B8ScR4B2V9ILTxef5/CtRfuk1t5pgFI+h2zygBBIT532VcwccXoRDVTE0Z8CZtI3XVyenuptnLa371q3Hvs2kmnMAZOygXy12j/OSgIC+9jJfObHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751130377; c=relaxed/simple;
-	bh=Lb2qPDYVT8aHwoqcUmEBOYVdgb6bl4lJ9zQmbsokYO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBIZbAw5ea67296Sve6qVExzsQJzYSHBpL+gcdgyiJtvr2LCvgalU3NjVE219TFVQ3AsqKpZOVMWg6sYfjhkuHaMsHqb3SJiIcdMBXkEYVclAqgI5ecO027MoiwFc4kIs9XVtQcbHGG2KFVY7t4HaUVZUW6hhoMOvFuyCsOjWBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JospkXMp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751130407; c=relaxed/simple;
+	bh=kTMoXyiMFCKquBwUavm7Rq/wKtAd7ZUCYz4F1Tbv2Og=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XLClo8GHeW+2pYrZVdc/3o2A/CTRBnTWc9MLymR6Pga0mGviL6UEP5RfW2JkS9aY1tVm4skKpIoGtHD1/5x+ki2r/4ysBBSkcE55XfMgSORFv5Hsl7RrCXiM/78T5N7utFUuurFdzNGafjV62IYB2ia2GDwh9soMm9/MvAK3mGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=czcv0bOK; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JospkXMp"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55SBUg6M015565
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:06:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=P/7DJz4qD1Ux/n9rrB+wA0uP
-	GBpbdiTVQsKaqfj2rGc=; b=JospkXMpyIlPFwWh11b2rCrbiWJgCA9AoqwlmqS6
-	VIWd8Ooe5RuovkHuHuInLkwdyx3ARLi7eI+a6qCWMzOf4bvJI71CfOQit2RISwn4
-	GAoLrGRmic3FC6j3rtXsCycNmJ0goUwuRzpUqDhPc/3W0QIXGI0MqRVskfJwe+vL
-	c2taf0lT85hnsqK7ItQFE05xsRyrcdWH45X3aHXK+olnJNUkdFqbLXRD71bZm6oF
-	Oa83ZcoPpwzUaBdHg/6ROfHvZJIspPhHYg4FSuTCMyLjvptmow/2FZkl+5qqTylV
-	fF7DL4IDCu9KZQQj+9PwyFJQ9RURnKTzOHbweUFgjL+bTA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7d9s0b5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:06:14 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c760637fe5so518529285a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:06:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="czcv0bOK"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2ea6dd628a7so1784366fac.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751130404; x=1751735204; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0V0H+yFnGFJ3mjtoaJcC0YtJ+XENtkBjlElwrlczuu0=;
+        b=czcv0bOK5o7vEVxQEY/x7DvGroBiUPBPntrm+7DBSvHvN0+GSgyeVYpj6YtYutEpIk
+         3Gtyr++kow3x4dJWhvqoJr+myRkVXDTDQ/n1Gw+EdR25xIcYhXNAA1cQW/yS3lZa2Xg7
+         GRY0bzuSUaIoiijvXNV73+3FXLylUSigCcYxwwlw6vfg62PCmAOy4E00b5axb5l/l+sa
+         hMHoQxLcuNLBbPxaIIwVoifJdCG3J4WF17CT4BjWUQmudTpeZKGftgTF1m+rYXGwWuAk
+         hBlrvQqzPBSulBF0JzafSO/8FrvtPrC7a4BMiAwrGDDO9B54GY9sV0Ku8ZYKRJmZT0ji
+         XDhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751130374; x=1751735174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P/7DJz4qD1Ux/n9rrB+wA0uPGBpbdiTVQsKaqfj2rGc=;
-        b=JM7c+h6oD4p1kWLj7ctZ2qMopG1gPZjosh8Lk3TF/KvNNFiz84njGxHfKk6+zExGwP
-         tkABX6cnkypAj5gUBrE0FqTOJZGaJBJOi7G5QbKVD4m4PI5xK1dotl5CFK8JV+N+VJvn
-         DKk7r5M8JPncfBD6stWTR9J1oTelagHw2v4DWgUARe0QdmRow74IjxSlH0mqunY6Tcyz
-         b2xroLwe8kHZwPWREimjpfDp/fb01sgbFGqKpM43MgPYtplo9lCfoh+QB+7dLJKmIIQc
-         erD7Je6dC8jABtJk03HRSvHTLYq+tR3fPJ05+64jgW520YpPBh9319++OvHciAbNLRMg
-         cEZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuk85n79Nz7u4klA1b94m8VqwotrPZT4NRarjlZAroyRHymIKAa49SAX+8tKII163ELLpmJ7oANk9t6FI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN45d19RLIfF05kUHbrhf6Sf5ZHDStvIzttD7p/uSG64zd/xXn
-	Wr98w8MbeYCgl/I5tLGh1CejnkiyLea/JERpZA3IIK2lxC6T7GGIBNd4I7AJM8o7URl5T3nGd1+
-	JPhSRrYJlG2bl8PEnTG513MTA2DeBnugqJh92hh7z+ToBMtTU5/HGKHZBcbqEgnbegLU=
-X-Gm-Gg: ASbGncvNz0o1pMl2kupWNGUHNBBgXvLG+8xxQ3YzEVVQUi3/UK1QYoxyPB+DxHaVWNf
-	YVqcUiLvp+25zz8HUwuYyBpkmadiDYFl3GlwvxRO3dbG3nLjsyxJIgJ6gLTKf8hgJyKfTW4oe71
-	vnlIM0UGb9lwQeve39ai7xEtcAhpZh8eSBQwI1rHHCJ6YwD8BwXvd0rY07kY8NNmXj2juhrf3OF
-	q4dzxmzpVyJjWNkM06VTNqtnphEut6JLAukJ8aaDf5EKLOvRdUzxygKfT/yo4LmmKLZMYdAD9VB
-	OyxiqhSItfsweOtAhIjaennq4hJPPmG5BehuwiMYaMuBn1X3A8fs5rBryrGhgfhrPJ3M375JVhc
-	DJqUNIKNDQWcj/Fb4bC50Qj8+KkijxUBnTHM=
-X-Received: by 2002:a05:620a:2a02:b0:7d0:9847:ff06 with SMTP id af79cd13be357-7d4439a4f72mr926782385a.57.1751130373990;
-        Sat, 28 Jun 2025 10:06:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyWnKOkc8ihmFUbXaoFULP01ull831r7hPeYyszUBXGvTvhS6NFoZSzzvvawSodHDNRCfOrA==
-X-Received: by 2002:a05:620a:2a02:b0:7d0:9847:ff06 with SMTP id af79cd13be357-7d4439a4f72mr926779185a.57.1751130373556;
-        Sat, 28 Jun 2025 10:06:13 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d9cc1sm860337e87.213.2025.06.28.10.06.12
+        d=1e100.net; s=20230601; t=1751130404; x=1751735204;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0V0H+yFnGFJ3mjtoaJcC0YtJ+XENtkBjlElwrlczuu0=;
+        b=pvWKad0qo/A+2kD1un1vLAn4OPVKYNyHyc5U2Bq12qLXh0VbYxBgSRLMQgw1GCa7bL
+         DEUhjyEC1G/BtcwN1mmeD8D6qhREt9HArJiWwLcxH/Aw0ncrt6k3d7oIeYz9Yqp2xxIc
+         dsl1DOsSd6msK+5tjQ2p5RehnRjdal8rA0tuTs4y4eHWgQtbdO+vyepuRavkDB/2UaQu
+         2YJ5c8xCqQ8N/KHNk5xjsPIztB07zFmRs7y9ZIascEPnANOBkFOytJJY36WMv02HSF/i
+         WzkmoHYWWwBmuxsgQ1nFi4b4/X93dnok1bMAdXaghWJHgRiNtM2DK8B8p++qX9R4bnDd
+         UJ8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWZvGotOA25KNmfQ/8O02MIS2qMpEZniavWTzkZI01dsj53+Z4eBiY9XrkbbdakCO4NAhekGimLk6VAnmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkI2Sf+HAqfCHoXEEZZPybbCBRUdaNaz9a3mW9TipAfCpz9W/G
+	9Hq63VbSXzejRoeb7wBGYI0vRvFjcpDZ4yifgeyxwNbsHoBTYZ+H5OGtSR4TVW6eoCk=
+X-Gm-Gg: ASbGncuD/ep5y088nuibGqjYYIXqsZOXAUEClamJ53PSRC4b/0fc05yJHlakvfpax89
+	8OZMvbd0xKdbRktCSlBd7cPPd3Qn5xGlvv+h41zHn9xYfz63sRrZQxmqg8izXzmfZzpo81REOiA
+	W7UAe1VPjO5xCH26++bh+4vo9wrAUmdNOdmv58VlzaSmVOKBqaOaAI0oHEqIefbz7kcdYdHhFqh
+	xMirH2Sb+npFtuJllOdPL0C3TNBhQgOYoc5yj3vBjoDrKtAjeu9pX/HIs+6vVd2jA+i26n8bZaA
+	AuFNN+nanAF75aftwTAYEOhEvoR45u/J8fUJO0w1KvNlNsNPbgGRPffeuH8AAUhZeOZA
+X-Google-Smtp-Source: AGHT+IFvAT3J/Rnzb09eXqDJ14DfPx9e8N5olrNVqt0Nou24JbJaeG+s2fYFr0yytVswuHKpF9xaeg==
+X-Received: by 2002:a05:6870:d146:b0:2ef:17b3:3c9d with SMTP id 586e51a60fabf-2efed44c9f1mr5079195fac.7.1751130404031;
+        Sat, 28 Jun 2025 10:06:44 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b8474dfbsm613686eaf.2.2025.06.28.10.06.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 10:06:12 -0700 (PDT)
-Date: Sat, 28 Jun 2025 20:06:11 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Yongbang Shi <shiyongbang@huawei.com>
-Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-        kong.kongxinwei@hisilicon.com, liangjian010@huawei.com,
-        chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com,
-        shenjian15@huawei.com, shaojijie@huawei.com,
-        jani.nikula@linux.intel.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 drm-dp 07/10] drm/hisilicon/hibmc: fix dp and vga
- cannot show together
-Message-ID: <7mgk3hueodkzodedjxpkzpf2b4x2n3fdqi42lmtsgozlaxv2tc@4cx7nb5pg7tb>
-References: <20250620093104.2016196-1-shiyongbang@huawei.com>
- <20250620093104.2016196-8-shiyongbang@huawei.com>
+        Sat, 28 Jun 2025 10:06:43 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Sat, 28 Jun 2025 12:06:35 -0500
+Subject: [PATCH] iio: chemical: atlas-ezo-sensor: make atlas_ezo_devices
+ const
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620093104.2016196-8-shiyongbang@huawei.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDE0MyBTYWx0ZWRfXygVocnIFAblN
- 1vOWaQV133Azt9241Lb6JPnhadq7iCLRMbdzxW8ajMV84JgCI+eO5aW/EN8jJ+W9+6IdO+p8vgQ
- EU8Xb2l/M/EWJfcjh896XS9vOsjx54odC3jNkeRsjmOGiynF5FNgQCKVoFog2h70xDI3cXe1Aik
- 8bWTwr4Mg1TWQCdzrcou2c0IBU+NMKfnINW4bwUJKQz3MJvvJSf2aIDwZ3L724EmG6V8E7abbMb
- TUq8T+eKruW3KpR9fzTUGGUm6PWZdETAU9UnqM5fpO61mW91LLwtRtXYSxII/ptVw6XGrvw164m
- 8C6nZIFyt+4h0Zbrn9S5mXgq+Ndyuz5hfkdO0SR/1N2F5DteDGLAdnlUjewiwphGXUCiG1k9HWb
- P0XEQyPnaB5dli9IgyiCrxnwZt3DEDtcp1fs3q4e8R9hCJ1mnDy96TCAmZzyTrxTBp8alzWV
-X-Proofpoint-GUID: bK-cT8EYt3VU4i2D5tUVA0hsLmbKQU7C
-X-Authority-Analysis: v=2.4 cv=RrbFLDmK c=1 sm=1 tr=0 ts=68602106 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=i0EeH86SAAAA:8 a=1_qZpLKbntRvsT6nxJwA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: bK-cT8EYt3VU4i2D5tUVA0hsLmbKQU7C
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=703 adultscore=0 clxscore=1015 suspectscore=0
- phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506280143
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250628-iio-const-data-13-v1-1-2a7fd592a07c@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIABohYGgC/x3MTQqAIBBA4avErBsotd+rRAvRqWajoRKBePek5
+ bd4L0OkwBRhbTIEejiydxV924C5tDsJ2VaD6MTQjWJGZo/Gu5jQ6qSxl0izlVLpZVLLBLW7Ax3
+ 8/s9tL+UDNaMATWMAAAA=
+X-Change-ID: 20250628-iio-const-data-13-e8d334a97497
+To: Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1042; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=kTMoXyiMFCKquBwUavm7Rq/wKtAd7ZUCYz4F1Tbv2Og=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYCEc9CPxm5x5qAHsJPSqXj08oq+4nGQm6xEpr
+ 3hhnih3gomJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAhHAAKCRDCzCAB/wGP
+ wJCeB/sFi04FfeURmc9LRy9SBKflwHiuGnJBJ91RNhdyVX5MN42eXeUDF+ARzZR3Kz12sf0oJd9
+ wuRmfUObZF41xgcfvhPB1q7EfvG/TQccXJx6DxDLe3V8sCT2qq7jqLKpHO5NHO7g1SbPgDvHZJc
+ blZVPJKsVpf4vuLQzEfJTUvYhE6vLS9k7KWgSPcNPAWqKbiJkDAT/SpjRhtwwFg99Blz06GKmQt
+ x3oKW+oXdGEIm9LifVhwmjeceG1pph+92qHkJs3Kua669NzecGeHZpjwsKkpe+M8WlL1oEm69f5
+ h4sA/VuFW7g1CBXyhWfU29JCNqvn7XMRyiI0UKuypBm8WpFF
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Fri, Jun 20, 2025 at 05:31:01PM +0800, Yongbang Shi wrote:
-> From: Baihan Li <libaihan@huawei.com>
-> 
-> If VGA and DP connected together, there will be only one can get crtc.
-> Add encoder possible_clones to support two connectors enable.
-> 
-> Fixes: 0ab6ea261c1f ("drm/hisilicon/hibmc: add dp module in hibmc")
-> Fixes: 3c7623fb5bb6 ("drm/hisilicon/hibmc: Enable this hot plug detect of irq feature")
-> Signed-off-by: Baihan Li <libaihan@huawei.com>
-> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-> ---
-> ChangeLog:
-> v1 -> v2:
->   - don't tie VGA and DP status, suggested by Dmitry Baryshkov.
->   - use crtc clone to let 2 connectors can display simultaneous
+Add const qualifier to struct atlas_ezo_device atlas_ezo_devices[]. This
+is read-only data so it can be made const.
 
-How does this help? I had an impression that your hw can actually
-display only either to DP or to VGA. Can it send the same (aka cloned)
-video stream to both connectors at the same time?
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ drivers/iio/chemical/atlas-ezo-sensor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+diff --git a/drivers/iio/chemical/atlas-ezo-sensor.c b/drivers/iio/chemical/atlas-ezo-sensor.c
+index de0b87edd1887f5cf28cc50a36542f65f9d77dc5..59f3a4fa9e9f3b6e185399bad2e15487934ac87e 100644
+--- a/drivers/iio/chemical/atlas-ezo-sensor.c
++++ b/drivers/iio/chemical/atlas-ezo-sensor.c
+@@ -82,7 +82,7 @@ static const struct iio_chan_spec atlas_hum_ezo_channels[] = {
+ 	},
+ };
+ 
+-static struct atlas_ezo_device atlas_ezo_devices[] = {
++static const struct atlas_ezo_device atlas_ezo_devices[] = {
+ 	[ATLAS_CO2_EZO] = {
+ 		.channels = atlas_co2_ezo_channels,
+ 		.num_channels = 1,
 
+---
+base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
+change-id: 20250628-iio-const-data-13-e8d334a97497
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+David Lechner <dlechner@baylibre.com>
+
