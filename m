@@ -1,74 +1,85 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E6A13B5AE;
-	Sat, 28 Jun 2025 14:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B6A1FBEA2
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 14:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751121813; cv=none; b=FYovGvOd39t87WJoXPvfI8TmVZs4HUQlQdrofYIWi6oT2NZ8OwH2bHjhilGRQhJ1InUtZmT+R9yb18kraIRi0U4jfeeRY+BtEPCxqDw8Cj+fV0peVbW34cP498GrrLbwK6IDR+86N2LOPfGOMGjej3ScpvZY6/ayLDXHN0lqino=
+	t=1751121870; cv=none; b=t9+7FKIAyx5vXEgnZKDOvcXM1vjQgxuKqr3DBivIaraRjI4gexkKOiIJc6FbYsfFzKmuB5C7i/ae188dPvwFAQRHv+NEts32Wu5lQoTpTCH2QA5fVD0AWvfv/a7oZmyhddsSt32sA92vlyRFL0H1vO5i0Z7ec+8VbgxL9Xqfc94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751121813; c=relaxed/simple;
-	bh=dQ47HoRLF+6X8CtMhDXpv9EgI5dxjY7My+7toAcFBco=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=aSciOvP9nKp2ss8R26Tb7Hak3f9wW/1TCRQOCh2GNv+PGqrikOsXGn1JV1wPnDuWI9gQwSEI7+3N13Y8qIoks//VcR/6dtr3I2QdDibz0JzAYDxfcEwiNDKA7bAtfKXkIVf1F+C30iBfZFNndkBjF3eb2segtropVJo+IRHdVko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=AU4cLhih; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="AU4cLhih"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net B2515406FF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751121810; bh=dQ47HoRLF+6X8CtMhDXpv9EgI5dxjY7My+7toAcFBco=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AU4cLhihukfdLdYDKOTPOcIro/emdB8IFmnCzoD2tIIFYjY9HcPwVtQzZCQDIZhWN
-	 ibzkYuMc0R3uGaOIAUor3EWSWjhVIP+9L/gyEDdSw5ODcRC/eX+SOSeJalmp96S96s
-	 0tIFeVWyF4iMKdEntTvS0oXCaeaABO1YOSZcpDr7/Y+OtS96wk+iDk2YKNLleFklGR
-	 +OUh/kzsBkk3Ue/4L5fOPBmJWUDA+B18Y4wZkcqtAroE92KQwDen4rtpq6aejmUt0o
-	 IZo98Nxgs3t/6tI4gUU28CTJ/4CBXcZB61e9IiHJhXsX6IRCZFqQhXN9yN9o9owkI+
-	 uWL3wkWZLpDVg==
-Received: from localhost (c-73-14-55-248.hsd1.co.comcast.net [73.14.55.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id B2515406FF;
-	Sat, 28 Jun 2025 14:43:30 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Amir Goldstein <amir73il@gmail.com>, Richard Weinberger <richard@nod.at>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-unionfs@vger.kernel.org, miklos@szeredi.hu
-Subject: Re: [PATCH] overlayfs.rst: Fix inode table
-In-Reply-To: <CAOQ4uxg=CUmr+6EBPG0MSwDezx3jTxtWaGVLazA3krp7PUU13w@mail.gmail.com>
-References: <20250628083205.1066472-1-richard@nod.at>
- <CAOQ4uxg=CUmr+6EBPG0MSwDezx3jTxtWaGVLazA3krp7PUU13w@mail.gmail.com>
-Date: Sat, 28 Jun 2025 08:43:29 -0600
-Message-ID: <87bjq8exke.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1751121870; c=relaxed/simple;
+	bh=LKKcI/g4wEGKKlALVyktoAsOdP8fNQaeNmSsEulzJrA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=LmgW1h/m9ednNQ+R+AVIs9iQewu7RsNdMYuGQZCJddnerybQj/y7b7XRuIM2p5mPezEg2Vy0f2LVY2IWUlH02DGzrqR6zF5hBJ0Zobl2biueyGEL53YHiuNCyPcsoj2FmRg1Howd7o/zv5I7w7jBqxVZU625hpyNLR+b0L8fw+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddc1af1e5bso72140735ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 07:44:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751121868; x=1751726668;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fTzNunO4rfG0fdB04phZ0ETjFxrQY1IFOAPqwxnBfHg=;
+        b=L+euLt4x5F5QXYo7vN7CYbA5qYasImKEmgk5LiA/Uh47NMC0NyKC49HATlbMoo5qnf
+         gAQt0NpHvBfELv43aaCJviPDZk7hLUmNeAKwYWrV7dPXghEy412AP5/ljMKckrPNz01x
+         2bj55IwK1/LN90Aais8i6Zb/6ThIlE4vG47a0xf7N2Fg0/bWVhKmgUraOOUXiPGiEKUv
+         hT/m/P0znOwcbGJtbQdpqfJJM8zgrBLS+hM1SSkcze291PIizclPgeU/AOnIFu4XRs9q
+         97BXn/pm9DIOF5Evsx3AyoQ/MEtakSa0Ngz7FtKV1DL9OdLoF9E4m4t4YRzJzrqasPVy
+         X6Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmuZVDQUJx/4Z+xVq2aL3F2ZaAdvzR2qDoY/PArHkt9E5Qg+E9tUn0fuuxjRD8a7L8sbultcAkn3GHk3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAxA2wlvQk8c+snSCzWG/hNlYaCiSumaDxjmDzdYnkVkswaygn
+	dMKMeQmzepwGSLandHWbHnrTQoSxebbcJmdFeWQdCyq806J4krfRifU/2bFhBJN0y/NgzX3T3ic
+	/tWG0eW0RdlVbcR4dyoRKXxFlFtZ2Sbb5n/AHgXKR8KasvFyEsXhCmIBCFCA=
+X-Google-Smtp-Source: AGHT+IFGNIUoyjIVkiQ/X1QGq48lDsVBwYiB/qjNy7sKa/EEiDX4c0THu7Y8I1BqGRan7zFFLrgLia40oBa+pVfBkKeCpdLmKANQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:4416:20b0:3df:5309:e962 with SMTP id
+ e9e14a558f8ab-3df5309ec82mr37521915ab.19.1751121868218; Sat, 28 Jun 2025
+ 07:44:28 -0700 (PDT)
+Date: Sat, 28 Jun 2025 07:44:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685fffcc.a70a0220.2f4de1.000e.GAE@google.com>
+Subject: [syzbot] Monthly cgroups report (Jun 2025)
+From: syzbot <syzbot+listd2f490173279536fd88e@syzkaller.appspotmail.com>
+To: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Amir Goldstein <amir73il@gmail.com> writes:
+Hello cgroups maintainers/developers,
 
-> On Sat, Jun 28, 2025 at 10:32=E2=80=AFAM Richard Weinberger <richard@nod.=
-at> wrote:
->>
->> The HTML output seems to be correct, but when reading the raw rst file
->> it's annoying.
->> So use "|" for table the border.
->>
->> Signed-off-by: Richard Weinberger <richard@nod.at>
-> Acked-by: Amir Goldstein <amir73il@gmail.com>
->
-> John,
->
-> Would you mind picking this patch to your tree?
+This is a 31-day syzbot report for the cgroups subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/cgroups
 
-Will do.
+During the period, 3 new issues were detected and 0 were fixed.
+In total, 10 issues are still open and 38 have already been fixed.
 
-Thanks,
+Some of the still happening issues:
 
-jon
+Ref Crashes Repro Title
+<1> 3931    Yes   possible deadlock in task_rq_lock
+                  https://syzkaller.appspot.com/bug?extid=ca14b36a46a8c541b509
+<2> 18      No    WARNING in css_rstat_flush
+                  https://syzkaller.appspot.com/bug?extid=7a605e85e5b5a7e4a5e3
+<3> 14      No    BUG: unable to handle kernel paging request in percpu_ref_get_many (2)
+                  https://syzkaller.appspot.com/bug?extid=3109abc43c8fcf15212b
+<4> 10      Yes   BUG: unable to handle kernel paging request in css_rstat_flush
+                  https://syzkaller.appspot.com/bug?extid=36ca05bdc071f7ba8f75
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
