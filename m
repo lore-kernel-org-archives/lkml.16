@@ -1,34 +1,34 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E49A25484A
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 14:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614392512EF
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 14:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751122175; cv=none; b=EvH5HREWnob3+SB9iQ/yDyNymg+oR9yPQTTINw3nrAu3RJbE1Y/rYt0Beam4ehRBWMOC8K7+lJU80QAkvf+ZgQNJSvXUAAhlTvuKWGtG8w8OT6x8HvBEd2tPvceEcIsjRMwx4KiTYc6+V0LrBCOU4HMu53ftSy6jE73MGhcHpuo=
+	t=1751122175; cv=none; b=l8MOdH/Tst7EcIFAoJr0F3JDY89ECfu/rWA9OrITMwEOjQTtXcdOKp/JaO3sNXY1IrqK2vchqhEmtWdnx+YpnsQQLFmRCfGuDnFzjzFDvReHjmwHvnROXTGKGRMFIpTJc+zF5b1k2sV/OThJ/RJpkmULGzHIWShUVjmlqkcEn3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751122175; c=relaxed/simple;
-	bh=X9IwqQTo2UR2KxHZADqXVn1GLFGt+g0mnh2zbr2lFgQ=;
+	bh=++WUmsmG42FBtz0N90d+3dm2z4DuzAvjfBgwxUM5j6Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M1Tc8WDaE7rn4ju1vL85of5IJKJDnIeNzpjPvZt845FGI+loQwFhrBMpSNiEad9TN+JFM+86PLLYf/Tb2qImw/gLzQghkKHhPQzV+9M3wH5+js1WXUns/hC1QAXnqhdYwuNVulLNCXzPKPYtIJK0vUdmYbowTsw1BGJog4laXfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=OPH9awXX; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=ugzIzxtkwVW2jHCfHXDc1IkUSNXVTkDsEy9c2gBc3i4M3+Cf3u9rLQnJxa4vbVIzQygtjp0pGM3gEhPMyDIfOkn65YMiXwuTG+YFrs61jWPTLsfHS9wErcOPDv9b5Pbf41V56gqcE1lN62hwQ5XONTpUIm+rLPq7YbyhtN8afwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=lM4DZ4Kn; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="OPH9awXX"
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="lM4DZ4Kn"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751122171;
+	t=1751122170;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TpHunI4Q5945yEc9hYc94Izz4fWB9Fia9hDC3kt/MFA=;
-	b=OPH9awXXHy0qHBPky613yy557pwSFvvRjvIeVVoQ077ijb6IzrOAtqGUuV3P3Oo4SzZuJH
-	24FJlLvBY06I57jnFa5hBHGAkm4Bt0UX3c00PqGNzR+tm7Hw6/KHV8IBq97mQSNDI3PJ+y
-	4wGm1PdWhfnvfr+imV9e2gMdIKPAOOZm8+oPK0g74U/NyaHfBP/gstr7gNYn2nqZ2y0rhy
-	LhhIyaqE8fRAbXcJqCgP+/JaOnff7vQKE1zv6TCN6m2oMqAHF2XLemjDdI6WuICEG8fYcx
-	wMxP90BlPrjRwS/Ec879dRb9/edF9RHDnm3hP2PWr6auf0pwT8Uz0PnVu0AtjA==
+	bh=JXGz2WRYkb5YR3U/LDov8OvZiUYlL4TD2HwVbGHyw/0=;
+	b=lM4DZ4KnoLlPPUaEu6usoxkV86zoUCnUScVx4Ekwfvf6GaaywSlu+IaZCE5OQvzkLhdz+T
+	u25AI1cJxl6MhWgITj+BYHK5S8uJOkI2m/e75+YSKD4aY+Dxluj6tOusqg53Iy17drQD5y
+	2HVXfhBHPwmOn2QmUOt1+tgh3urKoyJOuYvuDvSWgwjCppUP8YvvwNyP7DTAxU1QJoAu1Q
+	Q7f7IfThfVXlFMn23s2WvcbUKLuu5uexiB4ejWJcbwZIs/j8+HgEHQVbosXkj1XeGmtogK
+	4EP7oat5zIIDj41oHqKLcQBfw1PKHKM/Y990e8Vzuerr8WVgVtFONp855gIo/Q==
 From: Diederik de Haas <didi.debian@cknow.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc: Dragan Simic <dsimic@manjaro.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Diederik de Haas <didi.debian@cknow.org>
-Subject: [PATCH v2 06/10] arm64: dts: rockchip: Simplify mipi_out endpoint on rk3399 RP64 dtso
-Date: Sat, 28 Jun 2025 16:32:40 +0200
-Message-ID: <20250628144915.839338-7-didi.debian@cknow.org>
+Subject: [PATCH v2 05/10] arm64: dts: rockchip: Simplify edp endpoints on several rk3399 boards
+Date: Sat, 28 Jun 2025 16:32:39 +0200
+Message-ID: <20250628144915.839338-6-didi.debian@cknow.org>
 In-Reply-To: <20250628144915.839338-1-didi.debian@cknow.org>
 References: <20250628144915.839338-1-didi.debian@cknow.org>
 Precedence: bulk
@@ -56,52 +56,106 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The only thing actually added here is a single endpoint on mipi_out,
+The only thing actually added here is a single endpoint on edp_out,
 which is already defined in rk3399-base.dtsi, so it's simpler to just
 reference that phandle, which allows the removal of several properties.
 
+This fixes the following DTB validation warnings:
+
+  graph node has single child node 'endpoint@0',
+  #address-cells/#size-cells are not necessary
+
 Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
 ---
- .../dts/rockchip/rk3399-rockpro64-screen.dtso | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ .../boot/dts/rockchip/rk3399-gru-chromebook.dtsi | 15 ++++-----------
+ .../boot/dts/rockchip/rk3399-pinebook-pro.dts    | 15 ++++-----------
+ .../dts/rockchip/rk3399-sapphire-excavator.dts   | 16 ++++------------
+ 3 files changed, 12 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso
-index a26c8e05c13b..77973ae870b6 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso
-@@ -52,19 +52,6 @@ &mipi_dsi {
- 	#size-cells = <0>;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+index a9ea4b0daa04..9d07353df52c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
+@@ -250,18 +250,11 @@ &edp {
+ 	 */
+ 	assigned-clocks = <&cru PCLK_EDP>;
+ 	assigned-clock-rates = <24000000>;
++};
  
 -	ports {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		mipi_out: port@1 {
+-		edp_out: port@1 {
 -			reg = <1>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
 -
--			mipi_out_panel: endpoint {
--				remote-endpoint = <&mipi_in_panel>;
+-			edp_out_panel: endpoint@0 {
+-				reg = <0>;
+-				remote-endpoint = <&panel_in_edp>;
 -			};
 -		};
--	};
--
- 	mipi_panel: panel@0 {
- 		compatible = "feiyang,fy07024di26a30d";
- 		reg = <0>;
-@@ -80,6 +67,12 @@ mipi_in_panel: endpoint {
++&edp_out {
++	edp_out_panel: endpoint {
++		remote-endpoint = <&panel_in_edp>;
  	};
  };
  
-+&mipi_out {
-+	mipi_out_panel: endpoint {
-+		remote-endpoint = <&mipi_in_panel>;
-+	};
-+}
-+
- &pwm0 {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+index 5473070823cb..5a8551d9ffe4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+@@ -404,18 +404,11 @@ &edp {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&edp_hpd>;
  	status = "okay";
++};
+ 
+-	ports {
+-		edp_out: port@1 {
+-			reg = <1>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			edp_out_panel: endpoint@0 {
+-				reg = <0>;
+-				remote-endpoint = <&panel_in_edp>;
+-			};
+-		};
++&edp_out {
++	edp_out_panel: endpoint {
++		remote-endpoint = <&panel_in_edp>;
+ 	};
  };
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+index fdaa8472b7a7..a4ceafe6dd7a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+@@ -142,21 +142,13 @@ sdio_pwrseq: sdio-pwrseq {
+ 
+ &edp {
+ 	status = "okay";
++};
+ 
+-	ports {
+-		edp_out: port@1 {
+-			reg = <1>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			edp_out_panel: endpoint@0 {
+-				reg = <0>;
+-				remote-endpoint = <&panel_in_edp>;
+-			};
+-		};
++&edp_out {
++	edp_out_panel: endpoint {
++		remote-endpoint = <&panel_in_edp>;
+ 	};
+ };
+-
+ &i2c1 {
+ 	i2c-scl-rising-time-ns = <300>;
+ 	i2c-scl-falling-time-ns = <15>;
 -- 
 2.50.0
 
