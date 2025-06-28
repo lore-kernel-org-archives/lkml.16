@@ -1,63 +1,63 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380B2259CBF;
-	Sat, 28 Jun 2025 16:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3928C25B2E1;
+	Sat, 28 Jun 2025 16:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751127546; cv=none; b=G/+Xjz9fpY+PzPHRMpJ0LH/0/tO9mQJEhZOsi0siQUx3AYrqhxmja+pwfjAh19pf/jGhATN+5NnP77RM1bNSirlh4K8lKmiwMPPYyfGMaz5zo3DE/DIjeLxOzADmhfyfsU61OOe6orDTkoe44k5WSZMJj/1FdZXMI8HffIEqjIc=
+	t=1751127550; cv=none; b=oy1NotCDflbQ8HZctqfTvOgKp5hOajSVuGD+ePgeUEIadqmtoOlEuhixht0vlkLWTm8rgRNb0tTo2+TFinqSPCF40DMBuPhOwjJFJzRtRRME43hNYRuq6KgmSQaIh62VBsOg6sX5XNoJ9cOfZIP8zLehJWIy/ec0lxWbN1I8sWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751127546; c=relaxed/simple;
-	bh=X8muxxDxDmy0XqQEk7CC50jn+pIWJ6ls+EuAs/aimpw=;
+	s=arc-20240116; t=1751127550; c=relaxed/simple;
+	bh=qaOX8z5zfg86eK/PQiHHkZK83GpNfHTkKPNUbbYq5lQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VVa6kx2PhTqtac5e2Nfa2DFgO7EzLjkUMWpZQPfZ22klixocL53noyb9WhOaNgXKXWdLwiQ13CRmO91W4sbvawtE8NVhsCxMfqo0CE7v6ouAVVnGAGYp0mJZ78XUmXHjofSgoc79qduR1dFwgJJIB7BgoQUPIEwW6PtaraPtRsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ThWhm193; arc=none smtp.client-ip=209.85.160.175
+	 MIME-Version:Content-Type; b=LhBM9RSd/2prKGyOz5G+l4ylpJxOT3ElnKLIRVPq7UpCL/ulJwIl8OWT5kE3h022YNZQUeQA15uYkuXQU2P6X8u7rKCCXbQJm9I2DEdsD+YAI4u+HlQqeJb8802P4kVKIo/+/U2QpVpb64MLOntMEmmYh7H1BZSEbAnUI5BikLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGTwh4Pr; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThWhm193"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a4323fe8caso4627231cf.2;
-        Sat, 28 Jun 2025 09:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGTwh4Pr"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d20451c016so44603385a.1;
+        Sat, 28 Jun 2025 09:19:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751127544; x=1751732344; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751127548; x=1751732348; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k0k4LhJKqyTvNmQU92jSwlsQ8S/H0we/0goef/do+h4=;
-        b=ThWhm193EE2MTOmu63ToDY7+9vuizc0L2jNhYbZ+21pXDWvBl8nniTouuATt5WCE3w
-         rvUzYiXtZY25Rmwd8FnhtDW1lADLecryqNaz0K3IiOfy5y/0kfljSnt7t7XYQnz1CwOu
-         wUfre2usJLFETOcXh4ElCYr+pDf7iU/dKCxGW8itM8hcFEJkCsJus7fUMIYDqwmfxUjT
-         HZB7rd0ZsYfIwvbkGZCMjcGthIMGSeeMnCNxru4BJr3wN5zih62a7AjVC4kitKJt8mTO
-         okP6djd9Ms+PM46LdBvDvN7gunxDV+BsKxrMSfFRtsO8yafXCQHzhzXYy3UR+Gf8BJmT
-         NL8Q==
+        bh=98CANN2mac+LxQivogTs8pZMoDn+iJwC4xTPGj/jBfs=;
+        b=gGTwh4PrhYgnB3HG5Ewx69jz7XV5Optt63W6VK0e75PDJxlfycwLx6VqKMVOyV73Tz
+         VJynBcp5efKQ67r/7J1TG4sOEKwj3vGGBrDdTGwzdU6tvazI5g45XU5gJTbtBFVw8+6P
+         wLrISsMyqmsvygVJTpSqfE9cxy2eVgOj2W/c+RaRSP0NooamC4uRECFTmkohRNPCl08v
+         t1hA7DIgnV5+zAdFh7YC0OjoRmEn/ecXdPiln3oiVonyBTZddVYTi95pGNL7ybZx+S3Y
+         3hwISYnUZ3PEFeYBWhdbwOCNzD0mL6NYfSdjRhv7QIfKv1PwrBZNlQ+LWzxdvy3N/ZCO
+         rtMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751127544; x=1751732344;
+        d=1e100.net; s=20230601; t=1751127548; x=1751732348;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k0k4LhJKqyTvNmQU92jSwlsQ8S/H0we/0goef/do+h4=;
-        b=jHe5DTM2aigN1LSOe6FcWXRxUOKS2dTnEdtGX7HStaMdsuRWJnCDu0VisfGhrIVYuy
-         D8A6BgZ1dyzJtQD0lWZybtuzgZb/I+/unlXK07kMFpyBpEBPZLPEPa2gxSlZ/aPwP6jo
-         MTNE1LTHZZFA7yXoUwKfBxggidQf0SP5JDVpmQBfujJ5u7LH0rALxkMXccTx5OpWDA3y
-         +ga8pzeSJo9EEoX480YiA3CFhXNU5ynQTDYKxDv85fn+SsR+YpyQ5sdomTegB1257e+0
-         ER2T48Z/fgA796YUNV77zGfvCBfuFrlMu5mYWL/n6sVfpbVHgd+WvNvrNuvzDDYxQmi3
-         rdIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWMTBP3RDe2s3Ddnomuo3iCrNjC5aSOEULWnrZ6+2dwPtnFsfv3uUsho1wRIYw1TFIolCGlEG8AGYh@vger.kernel.org, AJvYcCVt8L9jgYZUhDQ6oPlNqDa5tNONmVVeQjojurZYAux1pcevAcWcwKjxmJ70lvnTHKuJKFTZL7pwCRAi/g==@vger.kernel.org, AJvYcCXYhR1f+xvJdp4I2IIkb3jOPMjAjMvOInAacOeoOuihwvrMsNgHn/s5AyI7OeY/7itY2HEAylZ1qg10oK33@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnKPrPXg302tF7pf93/h2U8HMDuxMTzG9MJcjWNy3bcgMC/tOd
-	QSg8+j6ipWyesSN0nZiF170lTwFAgh/zsHAPvlwUC4kjhv9BKcqlFjV9qqYjtrZv
-X-Gm-Gg: ASbGncsZvlEmRv68n1CgDR3vI8Jc6l1KGf3+4U87g7GNm2clCpO1QpAJyrz2OvKe/ZK
-	jn9zP85YwtlCTvIJzdOoLtdG4yLrW7FN8LGb89PUHPMcxrEeb+udcmXngI7z59WJQIOH97Yxk3A
-	7kD4VASmtlqyrNaA5jxBJQhBkgOo4on5gY/5wRnHYM63S5ScKkJ5FOcub5UUPYOZU8bD9vDJV8S
-	YW2qB8Ysrn0QVjop4Eeaz9cLIwz9PY98/+NWrAii6BUUCL+2RM/5kWwuLXo+85qh1iUzPODgmIH
-	5YDMdMkr4K7rTj0LCXSdmSIx7bpe3da1X62phuJIceSNRy29L2uLmVBEYCCGHMjyBN82C3RC+aH
-	Q5MWhwTbKPq6fqy6we6JzV1AV2ewD3x5P
-X-Google-Smtp-Source: AGHT+IFPTJZsi+eUnIIpGezelkmFlfNJdFrbycaoQTzzSxXtuxbeNSq/ZtPLEipYOfJOoG9XixZAoQ==
-X-Received: by 2002:ac8:5711:0:b0:4a7:14fc:205e with SMTP id d75a77b69052e-4a7fcbf7a94mr130101721cf.50.1751127544004;
-        Sat, 28 Jun 2025 09:19:04 -0700 (PDT)
+        bh=98CANN2mac+LxQivogTs8pZMoDn+iJwC4xTPGj/jBfs=;
+        b=i+AObVFYsGrOdksiDzcVd5W6NbtOiTJasa1V24NXF4x67NkFftTxSHQiyuYfgazi+F
+         qBGXhTmq73vkKx7RmHI37TXTPDRriFygGsc6eETWw062LNARKOhljNlMYCQvNzpGLtvj
+         0sZFwCXK0T1Wahp6gC55x6nttromhqTzAYxLB8Z+BIdVBM4GBu9ZAEHZE7lYdlalwiLR
+         6xDCBlaFdP5xiRB/q2f5urt1soiCEu8TXj1ST3FUDNI572ZpOJRWoS0Qp+ahIAssB5U7
+         mEMsLbx2eLAAA1s1HMJi8PztLL1ac6a8qxobJN2KqI69LuN1rIS6uImeIZJEEA7r3cMj
+         lXqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCzZfaVJVZlqn+ifPRmPkBObRu+8+M8SKxpRVIOGXFW2YWoqKcMo7IXtweATkeLVfRAfSk9EJgCLFQ@vger.kernel.org, AJvYcCVaOjvChqJUXMqKm7VcgoZTSsxfSR/LvSy7y4omHhinydjgZwBIK3k90lbKJT/ovjggxDjfT3MPwzuMCw==@vger.kernel.org, AJvYcCWtzZosOYgSspB/qnwABcu7aEHHaRmh6oz0shznjWjju6G9fLvjKmllKI9t2tckeLf0QJ6fllwohLsAQ1Ns@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf0eEVTL7jwuhGMDZfTGdhSG4lS8Y/tHl7xrPJwnk1YSzIdHIf
+	j0bQ1gZOj3KV9XSk64TTtphNb+wXxIyjLNXrcYGW7C49jJ0YkkP6xG2c
+X-Gm-Gg: ASbGncuM/f6mH/1YFQZAiPoGVrZYkkzmfv7qQBRXnx95zS2B8Xob53w1+U/Fm+u8ePa
+	tK1/a7uUYCZE0gaZRzbfw2hgG0uQi4qMxhDe8/p6No0ZZWSPiHEXufrrCFIRQ93bx9k6xVw6mrc
+	YTaO4Y0Jtd0uRidBfd+wj9qN2fHePzxV1RoS6opuVhcKXWl3lwKPZU80SAIF6u454cFoZ42++kC
+	5p8fX7KM2rwHgGwMk9RsXI2WDekUmwDImS0oJOunQp8hty/eG1G8YUrCd8e4BEa6ROLXXp1+/PZ
+	ofIEXDlseNyVMLStxnfUjTek52Zp8S+/hz/J0D9YVr8Pf41+cVlT4OUF5mINw7MTOE/iSLY729W
+	ZnnijHNanAQICB3b8vU9m97vNJ3qhV2Ms
+X-Google-Smtp-Source: AGHT+IFoFGemIQDODCcxPjL3icl5s+PMS9LVncKIT79PgFSST82p+yBw5aiPdoHzPF733Q40giqM6w==
+X-Received: by 2002:a05:620a:4484:b0:7d3:cf5d:58b4 with SMTP id af79cd13be357-7d4439e27aamr952177585a.33.1751127548193;
+        Sat, 28 Jun 2025 09:19:08 -0700 (PDT)
 Received: from localhost (modemcable197.17-162-184.mc.videotron.ca. [184.162.17.197])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc560477sm30820031cf.41.2025.06.28.09.19.03
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44321fea0sm308592485a.83.2025.06.28.09.19.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 09:19:03 -0700 (PDT)
+        Sat, 28 Jun 2025 09:19:07 -0700 (PDT)
 From: =?UTF-8?q?Jean-Fran=C3=A7ois=20Lessard?= <jefflessard3@gmail.com>
 To: Andy Shevchenko <andy@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -72,9 +72,9 @@ Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
 	Christian Hewitt <christianshewitt@gmail.com>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
 	Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: [PATCH 6/8] dt-bindings: auxdisplay: add Titan Micro Electronics TM16XX
-Date: Sat, 28 Jun 2025 12:18:43 -0400
-Message-ID: <20250628161850.38865-7-jefflessard3@gmail.com>
+Subject: [PATCH 8/8] MAINTAINERS: Add entry for TM16xx driver
+Date: Sat, 28 Jun 2025 12:18:45 -0400
+Message-ID: <20250628161850.38865-9-jefflessard3@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250628161850.38865-1-jefflessard3@gmail.com>
 References: <20250628161850.38865-1-jefflessard3@gmail.com>
@@ -87,177 +87,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add documentation for TM16XX and compatible LED display controllers.
-
-This patch is inspired by previous work from Andreas Färber and Heiner Kallweit.
-
-Co-developed-by: Andreas Färber <afaerber@suse.de>
-Co-developed-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
 ---
- .../bindings/auxdisplay/tm16xx.yaml           | 153 ++++++++++++++++++
- 1 file changed, 153 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml b/Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml
-new file mode 100644
-index 0000000000..eba3d3f3f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/auxdisplay/tm16xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index efb51ee926..eee24ad0a8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25047,6 +25047,12 @@ F:	mm/memfd.c
+ F:	mm/shmem.c
+ F:	mm/shmem_quota.c
+ 
++TM16XX-COMPATIBLE LED CONTROLLERS DISPLAY DRIVER
++M:  Jean-François Lessard <jefflessard3@gmail.com>
++S:  Maintained
++F:  drivers/auxdisplay/tm16xx.c
++F:  Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml
 +
-+title: Auxiliary displays based on TM16xx and compatible LED controllers
-+
-+maintainers:
-+  - Jean-François Lessard <jefflessard3@gmail.com>
-+
-+description: |
-+  TM16xx controllers manage a matrix of LEDs organized in grids (rows) and segments (columns).
-+  Each grid or segment can be wired to drive either a digit or individual icons, depending on the
-+  board design.
-+
-+  Typical display example:
-+
-+           ---    ---       ---    ---
-+    WIFI  |   |  |   |  -  |   |  |   |  USB  PLAY
-+           ---    ---       ---    ---
-+    LAN   |   |  |   |  -  |   |  |   |  BT   PAUSE
-+           ---    ---       ---    ---
-+
-+  The controller itself is agnostic of the display layout. The specific arrangement
-+  (which grids and segments drive which digits or icons) is determined by the board-level
-+  wiring. Therefore, these bindings describe hardware configuration at the PCB level
-+  to enable support of multiple display implementations using these LED controllers.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - titanmec,tm1618
-+      - titanmec,tm1620
-+      - titanmec,tm1628
-+      - titanmec,tm1650
-+      - fdhisi,fd620
-+      - fdhisi,fd628
-+      - fdhisi,fd650
-+      - fdhisi,fd6551
-+      - fdhisi,fd655
-+      - icore,aip650
-+      - icore,aip1618
-+      - icore,aip1628
-+      - princeton,pt6964
-+      - winrise,hbs658
-+
-+  reg:
-+    maxItems: 1
-+
-+  tm16xx,digits:
-+    description: |
-+      Array of grid (row) indexes corresponding to specific wiring of digits in the display matrix.
-+      Defines which grid lines are connected to digit elements.
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    items:
-+      minimum: 0
-+      maximum: 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  tm16xx,segment-mapping:
-+    description: |
-+      Array of segment (column) indexes specifying the hardware layout mapping used for digit display.
-+      Each entry gives the segment index corresponding to a standard 7-segment element (a-g).
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    items:
-+      minimum: 0
-+      maximum: 7
-+    minItems: 7
-+    maxItems: 7
-+
-+  tm16xx,transposed:
-+    description: |
-+      Optional flag indicating if grids and segments are swapped compared to standard matrix orientation.
-+      This accommodates devices where segments are wired to rows and grids to columns.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[0-7],[0-7]$":
-+    $ref: /schemas/leds/common.yaml#
-+    properties:
-+      reg:
-+        description: Grid (row) and segment (column) index in the matrix of this individual LED icon
-+    required:
-+      - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - tm16xx,digits
-+  - tm16xx,segment-mapping
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    display_client: i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        display@24 {
-+            compatible = "titanmec,tm1650";
-+            reg = <0x24>;
-+            tm16xx,digits = /bits/ 8 <0 1 2 3>;
-+            tm16xx,segment-mapping = /bits/ 8 <0 1 2 3 4 5 6>;
-+
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            led@4,0 {
-+                reg = <4 0>;
-+                function = "lan";
-+            };
-+
-+            led@4,1 {
-+                reg = <4 1>;
-+                function = "wlan";
-+            };
-+        };
-+    };
-+  - |
-+    display_client: spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        display@0 {
-+            compatible = "titanmec,tm1628";
-+            reg = <0>;
-+            tm16xx,transposed;
-+            tm16xx,digits = /bits/ 8 <1 2 3 4>;
-+            tm16xx,segment-mapping = /bits/ 8 <0 1 2 3 4 5 6>;
-+
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            led@0,2 {
-+                reg = <0 2>;
-+                function = "usb";
-+            };
-+
-+            led@0,3 {
-+                reg = <0 3>;
-+                function = "power";
-+            };
-+        };
-+    };
+ TOMOYO SECURITY MODULE
+ M:	Kentaro Takeda <takedakn@nttdata.co.jp>
+ M:	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 -- 
 2.43.0
 
