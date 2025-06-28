@@ -1,95 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99CF20125F;
-	Sat, 28 Jun 2025 15:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CD713EFE3;
+	Sat, 28 Jun 2025 15:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751123053; cv=none; b=kvemAkPby89loPEpdEyK+F9u1zmEJitLWjQwvlaKLBBtprhdVAVlIoywLY6dGvkT0uq/RMAwwEHiL5NeRKURcOgiwCs1KpyNL7izfD1qk7A6tF00zf7a2yv7f9ler3OzB8KvKy7oTerf2ezt+smdyVEaBh8B7c8HSk88BfbheF8=
+	t=1751123096; cv=none; b=kfPD7T+8k/QTFmr0XaWR8j3Nd8IZUgA6sjP+hCeMhoeUf7635R/NiqvXRqjuksSjUfOs0/0B/cMCbHQtznBB9oziUnyedrq6+1f2yRJYDUoqgNfJfXli6mPj0DUxkadjJKbkx9csmWhDqfCE40Xr3Ti0tR9cEWBtD3eV4m6px8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751123053; c=relaxed/simple;
-	bh=OD/sDaIteeknyhO36WRs78FTQSA8fSteu6BSvgNmYs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F3L4AjvVwmgcDGXNdrx2JTOR1rodc8uBfE0JPn8/ercuS23k9roB6MUeco1+XM7fzAkWrllpJi5dTQNZ83UQ2P9a1HOlaEQ7gyQPvqd9N03n+hZx7XDNPB5SKZBznLE7UU4Cq82pPrpU1vwl9fLum6kct30Nm32aFG929ckz1fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQMtmK4f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751123096; c=relaxed/simple;
+	bh=0Uv+q8exRiL1GkMTHmMha2ITO2bvRewQYj2lGsHH2xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExMN0ypESRXgdLJ/PHoj+mnrH8vceFEju9dpe7uGai4ptyjKTxFc9i7u+c8LQzCXxf7a/CAP5OeGV1AIBqcqn39K0IqL745T6GVqld3nukLz2gwsEjtUltJg7EjbTp/o5P9pA4Q5tKIj+SWnnFTyGZs4jxJ9QxGsuv9vHJJUyS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mvXZ011K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQMtmK4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EB0C4CEEA;
-	Sat, 28 Jun 2025 15:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751123052;
-	bh=OD/sDaIteeknyhO36WRs78FTQSA8fSteu6BSvgNmYs0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JQMtmK4fnEaiIMTO205snN+7til9HwpCthof3HVgvqmIsBmBqv3iZxJ4YnqAYbCYh
-	 Y/0osQqB7ifSWGmd4Y5ioFu145e54tdq2cn7xK6yDgSGe0Ryx7e0bKuootbsoi6r8q
-	 KPt9Vy1Fm+XoE1LIKdtDgH1XtN895rY/gXtxZOX12zmNDVk3cD620aTNrFcizLpUyd
-	 xbFT3OIYEG0tkfzgMya/SkFnb6z2wfkSpCDUxl4SfbZll2IvWX4A+YKe5Mk1M0TszH
-	 Kmuv2ALavyNIlshn+AyiESll5oqNAdebevsA+gL7m1BXLixFESVlxFQK82R+1JNVbg
-	 kVs4USvtBCpzg==
-Date: Sat, 28 Jun 2025 16:04:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] iio: adc: ad_sigma_delta: don't overallocate
- scan buffer
-Message-ID: <20250628160402.1f97c0fe@jic23-huawei>
-In-Reply-To: <20250628155521.056b3394@jic23-huawei>
-References: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
-	<20250627-iio-adc-ad7173-add-spi-offload-support-v2-1-f49c55599113@baylibre.com>
-	<20250628155521.056b3394@jic23-huawei>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mvXZ011K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64264C4CEEA;
+	Sat, 28 Jun 2025 15:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751123095;
+	bh=0Uv+q8exRiL1GkMTHmMha2ITO2bvRewQYj2lGsHH2xk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mvXZ011Klyqgb/e5srWsSfAhSZLWqO6EyuJeMz9PZaNkc2XVlqGX8zblovVR1s2Bt
+	 ZJkVi/EqQDqm19J7xUzgcN1kRGk0j2wgY2LYfqdSu5y8nVyepSQBPfh8hTNrQaOKTH
+	 1Sn9vO3Oz8a1SAlz8o49bFRQUagIwPe90w+j3Zsk=
+Date: Sat, 28 Jun 2025 17:04:53 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Cc: michal.simek@amd.com, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	shuah@kernel.org
+Subject: Re: [PATCH] usb: gadget: udc-xilinx: validate ep number before
+ indexing rambase[]
+Message-ID: <2025062834-botanist-crop-4aec@gregkh>
+References: <20250627060125.176663-1-sperezglz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627060125.176663-1-sperezglz@gmail.com>
 
-On Sat, 28 Jun 2025 15:55:21 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Fri, Jun 27, 2025 at 12:01:22AM -0600, Sergio Perez Gonzalez wrote:
+> Issue flagged by coverity. The size of the rambase array is 8,
+> usb_enpoint_num() can return 0 to 15, prevent out of bounds reads.
 
-> On Fri, 27 Jun 2025 18:39:57 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
-> > Fix overallocating the size of the scan buffer by converting bits to
-> > bytes. The size is meant to be in bytes, so scanbits needs to be
-> > divided by 8.
-> > 
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > ---
-> >  drivers/iio/adc/ad_sigma_delta.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-> > index 4c5f8d29a559fea7226b84141bcb148fb801f62c..6b3ef7ef403e00804abeb81025ed293b188e492b 100644
-> > --- a/drivers/iio/adc/ad_sigma_delta.c
-> > +++ b/drivers/iio/adc/ad_sigma_delta.c
-> > @@ -489,7 +489,7 @@ static int ad_sd_buffer_postenable(struct iio_dev *indio_dev)
-> >  			return ret;
-> >  	}
-> >  
-> > -	samples_buf_size = ALIGN(slot * indio_dev->channels[0].scan_type.storagebits, 8);
-> > +	samples_buf_size = ALIGN(slot * indio_dev->channels[0].scan_type.storagebits / 8, 8);  
-> 
-> Seems like a good place for BITS_TO_BYTES() from bitops.h.  Given we have another 8
-> kicking around in the same code line it might be a tiny bit confusing as / 8
-> 
-> If everything else is good I'll tweak this whilst applying (and add the include if needed).
+But how can that happen with this hardware?  As the array states, this
+hardware only has that many endpoints availble to it, so how can it ever
+be larger?
 
-Found it in patch 4.   No problem doing it there.  'Maybe' a hint in the description would
-have been a nice to have, but not particularly important.
+> Link: https://scan7.scan.coverity.com/#/project-view/53936/11354?selectedIssue=1644635
+> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
 
-> 
-> >  	samples_buf_size += sizeof(int64_t);
-> >  	samples_buf = devm_krealloc(&sigma_delta->spi->dev, sigma_delta->samples_buf,
-> >  				    samples_buf_size, GFP_KERNEL);
-> >   
-> 
+What commit id does this fix?
 
+
+> ---
+>  drivers/usb/gadget/udc/udc-xilinx.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+> index 8d803a612bb1..0c3714de2e3b 100644
+> --- a/drivers/usb/gadget/udc/udc-xilinx.c
+> +++ b/drivers/usb/gadget/udc/udc-xilinx.c
+> @@ -814,6 +814,12 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
+>  	ep->is_in = ((desc->bEndpointAddress & USB_DIR_IN) != 0);
+>  	/* Bit 3...0:endpoint number */
+>  	ep->epnumber = usb_endpoint_num(desc);
+> +	if (ep->epnumber >= XUSB_MAX_ENDPOINTS) {
+> +		dev_dbg(udc->dev, "bad endpoint index %d: only 0 to %d supported\n",
+> +				ep->epnumber, (XUSB_MAX_ENDPOINTS - 1));
+> +		return -EINVAL;
+
+Any hints as to how this was tested?
+
+thanks,
+
+greg k-h
