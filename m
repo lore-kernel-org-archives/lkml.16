@@ -1,150 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BC81EB5FD;
-	Sat, 28 Jun 2025 15:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5071747;
+	Sat, 28 Jun 2025 15:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751124031; cv=none; b=mXlJrGq/lQkhu1LlSQam4Wb5BlPqe5yqCk8CLOH/19LqeaFictMBiVSLyWB6uppROXqPDxBl0BkDz9bw3yHtG2gcm6+kdOoAuLVSas4EHWQBa/Q/5VOJp3ie0Am3DPnXmE/ck74deRsn8SBbVvjHYdWaV4HKWVlvkCAu6CzGL74=
+	t=1751124163; cv=none; b=uM/JT9SCjgxvVElQGgTXHX8VzZnOAj1kd5FE4DzED2Crj8HRlKG6+lVO4t8iIxk3ZaHH1Ih1W7NfQ3wJSCIsYtMCKk8Kfk/U2UOlu3SEzdYRAtacVxNYMHSaD+S997upp/muM1fUDp4iZnI1CbXL8bvZBI/pGDnWiZYHZLcYGn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751124031; c=relaxed/simple;
-	bh=/mrdRj2so+n3NyWX7vqnHYBbVjK7lHkTasMH9XQNnkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UKYGM61DXmsQadt69f1hRB+E4EtdyZUcvYAFKRJpwrbZ1k7CiPE30GpaLv5Kwoeo0HsoyNflCI0qHz/Euf6Dy6ob2NFEIsqJ/uj9AQgIjZl09/qqU20aXaXQWbBca1QuoUP3T2zd7dTmNa7Zf2b/lJV8mbuV71DV59+V7Mq3mjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnEUKwJ1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751124163; c=relaxed/simple;
+	bh=QdtzsjKkQZhbnLkMPPyAHMKXOyX9JwpL+gRq/g/v0rw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ras94rRY3Pnm1RAHgI8x/ABCF3ZPqw7So9J0qMFjoRk4xsVyR1A4vqUESJi+cgC32OCvuZJbDk2Jqolw7F7JWsXzdWe0er34oBsSBjBQwRItZUYEvwQA1ZDgSeO2CuVelXWjt0nrhep4RLCGD4Cex2HfxUnzVNUq4VQP3a25ovk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=OmM5fgPs; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnEUKwJ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41E4C4CEEA;
-	Sat, 28 Jun 2025 15:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751124031;
-	bh=/mrdRj2so+n3NyWX7vqnHYBbVjK7lHkTasMH9XQNnkc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MnEUKwJ13QIqlt2CA+BhCxuZUnMoo/DxIXwckeRgTd+aVbIJPdThsikMCJimk6OJN
-	 sEL+tAv4ZfJEsSvh/ZgmtnvKbjDLGX7AufWy8v1LQ2Vp0SgxP30UUtbMCACBz/Bbww
-	 zddteANFV7U0islVgXkPuYbDtdLsW8AMpfxq3htMhbHZn/1tdWNN3U5NRnN3Jpau7d
-	 Kbbh83bh/4IRVWlcu2GLAzKalG4AC6f2/L65UMfdWoS4DrndjYd/qzpsZIlkD2SwrN
-	 bqCoCOyxgDi6V2kem5v4GAkXASl+zOVMSRHLE2hLzeoNtUZW1fPfkITKro7K3MGfb0
-	 GKOeSKrtj2xnA==
-Date: Sat, 28 Jun 2025 16:20:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- jmaneyrol@invensense.com, ~lkcamp/patches@lists.sr.ht,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Jean-Baptiste
- Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Subject: Re: [PATCH] dt-bindings: iio: pressure: invensense,icp101xx: add
- binding
-Message-ID: <20250628162024.5316e66e@jic23-huawei>
-In-Reply-To: <20250626212742.7986-1-rodrigo.gobbi.7@gmail.com>
-References: <20250626212742.7986-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="OmM5fgPs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1751124138; x=1751728938;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=QdtzsjKkQZhbnLkMPPyAHMKXOyX9JwpL+gRq/g/v0rw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=OmM5fgPssXXjIeo8YV8jNvXc9jOIL9X4wAz/yt6T/v7Eje1QVZd6/GPmLztto/zC
+	 p32kYAJ4AcRROWPkQVk4mUSsQ+d5T7Rgvxcd/7D+wdZ2Q6ShYgYYXFDxwjxW5Js2M
+	 3+txzFTJu23J35udoV9l70UEfHfkY42AxIJ/wzVVhUvyffdizZfFTddbHwocwAIhm
+	 JyBPeYICnbqDB8PIRf9Ae1wUwvK+PstpJuYw+8xyhj9D2LOqDxwDSV1rDtRLmBoK/
+	 EiDekEPuipraoW1JgRBcVFUj6b/EzNFr3QOmzwcOXc9zP3QdnjRfn4j6keXUZk1Ec
+	 ms5m3HfbCLvBYaunsQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [100.90.8.184] ([47.64.51.232]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MC2o9-1uQLNE3zkj-002XH8; Sat, 28 Jun 2025 17:22:18 +0200
+Message-ID: <1382c27c-66f0-4642-a568-2e86b7c13d7c@oldschoolsolutions.biz>
+Date: Sat, 28 Jun 2025 17:22:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v6 4/4] arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY
+ device tree
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250607-tb16-dt-v6-0-61a31914ee72@oldschoolsolutions.biz>
+ <20250607-tb16-dt-v6-4-61a31914ee72@oldschoolsolutions.biz>
+ <ee088b5a-e792-4704-8f1e-e709f1b0c5fc@oss.qualcomm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <ee088b5a-e792-4704-8f1e-e709f1b0c5fc@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FC5g7i8l9SnsCxLdAyVTEHaZTZS3A15ZhRU+SlYCKfJpW161vWe
+ BVECNRZrF7ZGyz+X13my5zVrvMUI6EwitK7Fjwy3jPgwnpBv9GHo9NVuPz8ai+4XhP4weLx
+ Xu/QdOOpKj024K9z24NcHVbyOyC65njaeWnWgTJZP0hXiMPGfflxsqcBCCBl7t/ommPXw26
+ SrqZzg+ZrnVNCRaHdo+/Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:r2oDkb9hbhU=;8aEzc3IpTIJuwZleJnnKvxG3sUu
+ J2zJKoz7N7li5rfJnVlyU4piAeF5fAQDOZSqB1mwCbO5OFiyricnLucxsh5ERfhcabqiJNjlA
+ OyXHQlW2Mt+OBUm4rUX2/t2okToVPfgpWwc3RMRWGXPeadzlTvXOJqSXkczrpWh9G5HU4OAld
+ iSXBrXjhMHUZfpXkhCnKquue9QfiIIRkSbfmu3leYEC61s8QQkq/ttqs0zRSn16rQEKn87A0l
+ C6FqPjLW8VBj4Tt/MviOw4h56NYICE2sjK9b+aEMaOECewhVTjAziUTp5CkpdMhQIPIbtmztv
+ EvvMyHLIZPVvgyQxhuqeejux/s9wlKRXmwiXqZwxrEcpqu028MtfKguXm62mE7FdsdtER7tF0
+ 4mLJeF80sJZ7Ea8FotyReXWjGrqGMsx3rEOUexkue0cGo7stif3ZUqNAsFdbv5Nb7gJV/IYA1
+ wP6PFyCjOoSevIG0EF7OmlxSGPoGM9udPPP3r995kSd4OZP9frBKYM2pS9iIQSLXCIlTP6qv1
+ dpElsm8ni2sSdeAo0hGTtKX+3EaBGcyRu3B9x3+SIFb9f8aWSaJijwMk5nPOrW+1RSLsK4gOh
+ tnIy5bNUEuApbiI1/xPE64qJRdte8dOKqsTWCyp4VN2poAT+MpaGiyaJG5nDbBFL3MHOmLXUY
+ GWJ1zLrVN83WNwolncCAkalwJKvXprLkjLw8vKBt37y+sKxtxtEEmGuOzoZRUe9bIwvSap4YG
+ zGSMDmLXltjcl3zDehlF48YQRj2llOYRJMWw2rhL9abxru2Mqlo4EPaaBZmechV5v3lprjvNA
+ 1RjofXI36r5hVHybohkceKUbea4FdNir4BBbhgiaUtcs1hUk0j9mTKyo5wpA3PhZZNwZGxZQH
+ 8pkOh8TmY4l3U/0vwfSyrInsviHVG3cQjSDqhvocbEF6o4BuRHEWjukEo7N1nzPUGaTgpPHPZ
+ mqmQQFC/XXNNNrm4Zo/wN5QgPxpesyUZZKphJPS/oFg/0DjmFEC0gjQdRJDbN4W+CYXRBBpUg
+ 6ceOJB6SOdrGHE9cpUoJMgdQnvE/RD89WtD/lwPw4HmHq8gPWSW1aIX+E0CiIsa2PlYy5XbSu
+ 3yhztvGiO7TGN770Q7VKEty9Ocys8QawIqhCqDYCax5zu0/EwTio2HSrWkFsUHMUBatQCPnDx
+ pF6nlTh2IZ9v2VdFc7lLcg3PfEY3uTVLKy4vL9CxaD8n9MAYWmERfeDXzHbEpUd8RvUgc0s3Z
+ iW2HowishAdWBR3/3FYus1rTlTPLiQat6UUtxZ0NxPB1fv7s8L3cjbvVzHJ3zJEcP0PYXAln/
+ ReTKroRNQwkvqbf+Gz0tzbosiHOVHl+MNpt/L30gdSSlfSmkk3LSpgPkLwQQmUQoiEUAt56p7
+ cR9MyDS9uxTvykD13gpqbC4ImZIIG8SyW2yu3Ga9gPLgJExZlGoSkpMUU51W2jJtG/BksBryM
+ mdJMEHE3m78/BmYxyCVbXgxmr7rRLQDZ2TP5pYSCEXXj9iLCH/40KJvy50aVMSXg9EDwqR4r0
+ cnF/F/jVHm7KTjrri88+9ifxUOWSYN3jRaCkYGRTGZ5rWxyDFl+Fj/57e5SDCIprzqUhNz7GB
+ GnnsfpAW+QijFCVMiyzWns3wpCDI+oG
 
-On Thu, 26 Jun 2025 18:12:25 -0300
-Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com> wrote:
+Hi Konrad,
 
-> There is no txt file for it, add yaml for invensense,icp101xx family
-> which is already used in the driver.
+On 6/14/25 21:39, Konrad Dybcio wrote:
+> Looks like DWC3 only does of_platform_populate() ("probe drivers for
+> child nodes") in drd.c, and your dt sets everything to host-only..
+>
+There seems to be a reason for that. [1] Setting the DWC3 host=20
+controllers to OTG on x1e80100 can lead to hotplug failures with=20
+SuperSpeed devices. In v7 there will be a hint to this issue.
 
-Don't mention binding in patch title. The dt-bindings prefix makes that obvious.
+[1]:=20
+https://lore.kernel.org/all/20241210111444.26240-1-johan+linaro@kernel.org=
+/
 
-> 
-> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-> ---
-> Very simple yaml for a i2c device with psu. The pin out for the rest of
-> the family (the other PNs) doesn`t change anything here, since the diff
-> were RESV pins (unused).
-> 
-> This yaml file falls in the same `category` as others that I`ve submitted, the
-> driver author, which might be still interested at this hardware, is no long contributing
-> (at least for what I`ve looked). Also, it`s email is still "at invensense", not "at tdk", either
-> way I`ll ping him here due the mention at the "maintainers" field:
+with best regards
 
-Try a search for their name in recent mails to the list.  +CC Jean-Baptiste at new TDK address.
-People don't always remember to send a mailmap update when their company email
-changes, particularly if it is due to an acquisition.
-
-Jean-Baptiste has been active in the last week so not hard to find!
-
-> 
-> Dear @Jean-Baptiste Maneyrol, I`ve noticed that since the driver was added,
-> there was no binding doc for it and this is what this patch is addressing.
-> In this case, a maintainer ref is required inside the .yaml file and I would
-> like to ask if I can add you in this case.
-> I would appreciate your comment or suggestion over this topic.
-> 
-> Tks all and regards.
-> ---
->  .../iio/pressure/invensense,icp101xx.yaml     | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/pressure/invensense,icp101xx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/invensense,icp101xx.yaml b/Documentation/devicetree/bindings/iio/pressure/invensense,icp101xx.yaml
-> new file mode 100644
-> index 000000000000..439f8aaafbd2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/pressure/invensense,icp101xx.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/pressure/invensense,icp101xx.yaml#
-
-No wild cards in file names please.  Just pick a device to name the binding
-after.  Wild cards have an annoying habit of getting messed up by companies
-releasing completely non compatible parts in the middle of what we thought
-was a reserved number range.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: InvenSense ICP-101xx Barometric Pressure Sensors
-> +
-> +maintainers:
-> +  - Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-
-I'd assume switch to the TDK address +CC but I'll need an Ack or RB from Jean-Baptiste.
-
-> +
-> +description: |
-> +  Support for ICP-101xx family: ICP-10100, ICP-10101, ICP-10110, ICP-10111.
-> +  Those devices uses a simple I2C communication bus, measuring the pressure
-> +  in a ultra-low noise at the lowest power.
-> +  Datasheet: https://product.tdk.com/system/files/dam/doc/product/sensor/pressure/capacitive-pressure/data_sheet/ds-000186-icp-101xx.pdf
-> +
-> +properties:
-> +  compatible:
-> +    const: invensense,icp10100
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        pressure@63 {
-> +            compatible = "invensense,icp10100";
-> +            reg = <0x63>;
-> +            vdd-supply = <&vdd_1v8>;
-> +        };
-> +    };
-> +...
+Jens
 
