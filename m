@@ -1,82 +1,85 @@
 Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932C74D8CE
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011E54D8CE;
+	Sat, 28 Jun 2025 08:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751099709; cv=none; b=htcxBxqs8uOKaHz+xreeBPfPnPXSPakNJ9YthTpjXib9uHuxohLFuWlel+TdYd28PDiBz+TOFVQFCUmHOjqYRxa0zFWpbOjXXCnY0XG2y+86+nhWeZuanHr4hx6dLwly7+ypcvPtX/ykxjTL1bY1JuTS1kTNHb0+mnrJChoTQGU=
+	t=1751099855; cv=none; b=FfSVynL/eijaoWPisJyFJm8nJUGItLCGjy5vmhHAbPLn3AH4bHI5oM+vlnX9CHlE3JH/nu+oAHUzu+/gL6nQrK/++7ZFIX4nCbP9s3zy+AvhOy4u1fixDNq6AL3dyMrugQQIrH7ZmdPDiZvZDoUYpcdjcuHnb0ylSvl/WWCZ8Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751099709; c=relaxed/simple;
-	bh=cqt83ZxI7bSjprmT0OacHDBmZdcH3AKRjRwAruUGXT4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=d0jU3pjTVH7Jws/Cf4DiKJBFp47Rc0gaqndklTInzQXGKbYIqKSVJEM4zc6q81vVjg4kVlI7kKKGZuCAxzy1ZBn+5AKIam+kiD/w33vgZltb8m7O/pcErb7WctN8zVzRv0X8i8snlKzkmfq8X72MXJj/yjh1zc6cb2dVqSJag/8=
+	s=arc-20240116; t=1751099855; c=relaxed/simple;
+	bh=ameMdu84bmUnjMcu+SDmeqNZjQWo0+HATdqIfZkFDDA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WGE64o9EylPB73fjW6zNPNLbi9e0Vkl5WNNM8YEy7mO0NjBikgCGDQo1FwBm+vNU5AxiMHHLbRKgRkHf4/7Sxdi58V+qxWM2Tb/CWmmEKRdYGV2Rx4mXkkdLjv917D3dhh2cpGOzZVzx3ESyJtnVtgr63bnAJeDbhWjhUOOhhCk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 621802A7F4D;
-	Sat, 28 Jun 2025 10:35:01 +0200 (CEST)
+	by lithops.sigma-star.at (Postfix) with ESMTP id C74E02A7F4A;
+	Sat, 28 Jun 2025 10:32:13 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id zk40X_0Amk9y; Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+	with ESMTP id ruW5vJ1vT0kL; Sat, 28 Jun 2025 10:32:13 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id C7CB22A7F4E;
-	Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+	by lithops.sigma-star.at (Postfix) with ESMTP id 7A23F266875;
+	Sat, 28 Jun 2025 10:32:13 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id EXTuODoUP_TT; Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id A63E72A7F4D;
-	Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
-Date: Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+	with ESMTP id oJ0rubv0ZrxV; Sat, 28 Jun 2025 10:32:13 +0200 (CEST)
+Received: from nailgun.corp.sigma-star.at (85-127-104-84.dsl.dynamic.surfer.at [85.127.104.84])
+	by lithops.sigma-star.at (Postfix) with ESMTPSA id 0FEFD28F9EF;
+	Sat, 28 Jun 2025 10:32:13 +0200 (CEST)
 From: Richard Weinberger <richard@nod.at>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux@weissschuh.net
-Message-ID: <1837899202.21230.1751099700585.JavaMail.zimbra@nod.at>
-In-Reply-To: <20250408115823.1358597-1-richard@nod.at>
-References: <20250408115823.1358597-1-richard@nod.at>
-Subject: Re: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	corbet@lwn.net,
+	amir73il@gmail.com,
+	miklos@szeredi.hu,
+	Richard Weinberger <richard@nod.at>
+Subject: [PATCH] overlayfs.rst: Fix inode table
+Date: Sat, 28 Jun 2025 10:32:05 +0200
+Message-ID: <20250628083205.1066472-1-richard@nod.at>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF139 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Docs/ABI: Fix sysfs-kernel-address_bits path
-Thread-Index: TNxI10WWt7tRX8sPUJDcy8arP5Pq0Q==
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "richard" <richard@nod.at>
-> An: "linux-kernel" <linux-kernel@vger.kernel.org>
-> CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, linux@weissschuh.n=
-et, "richard" <richard@nod.at>
-> Gesendet: Dienstag, 8. April 2025 13:58:21
-> Betreff: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
+The HTML output seems to be correct, but when reading the raw rst file
+it's annoying.
+So use "|" for table the border.
 
-> It's address_bits, not address_bit.
->=20
-> Fixes: 00142bfd5a91 ("kernels/ksysfs.c: export kernel address bits")
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
-> Documentation/ABI/testing/sysfs-kernel-address_bits | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-address_bits
-> b/Documentation/ABI/testing/sysfs-kernel-address_bits
-> index 5d09ff84d4d6..3b72e48086aa 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-address_bits
-> +++ b/Documentation/ABI/testing/sysfs-kernel-address_bits
-> @@ -1,4 +1,4 @@
-> -What:=09=09/sys/kernel/address_bit
-> +What:=09=09/sys/kernel/address_bits
-> Date:=09=09May 2023
-> KernelVersion:=096.3
-> Contact:=09Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
-> --
-> 2.48.1
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ Documentation/filesystems/overlayfs.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-*kind ping*
+diff --git a/Documentation/filesystems/overlayfs.rst b/Documentation/file=
+systems/overlayfs.rst
+index 4133a336486d5..40c127a52eedd 100644
+--- a/Documentation/filesystems/overlayfs.rst
++++ b/Documentation/filesystems/overlayfs.rst
+@@ -61,7 +61,7 @@ Inode properties
+ |Configuration | Persistent | Uniform    | st_ino =3D=3D d_ino | d_ino =3D=
+=3D i_ino |
+ |              | st_ino     | st_dev     |                 | [*]        =
+    |
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D+=3D=3D=3D=3D=
+=3D=3D+=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=
+=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D+
+-|              | dir | !dir | dir | !dir |  dir   +  !dir  |  dir   | !d=
+ir  |
++|              | dir | !dir | dir | !dir |  dir   |  !dir  |  dir   | !d=
+ir  |
+ +--------------+-----+------+-----+------+--------+--------+--------+---=
+----+
+ | All layers   |  Y  |  Y   |  Y  |  Y   |  Y     |   Y    |  Y     |  Y=
+    |
+ | on same fs   |     |      |     |      |        |        |        |   =
+    |
+--=20
+2.49.0
+
