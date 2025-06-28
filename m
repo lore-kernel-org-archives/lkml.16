@@ -1,106 +1,210 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B668612EBE7;
-	Sat, 28 Jun 2025 19:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA351D5147
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 19:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751140362; cv=none; b=sxHg85owRcxTv5kwPQaNlgY03RSqM1+sZi+UU9yAtamsshc+4a0twFatvvMALjfVxMCaXa/SHX4b9WO+j6TXG0/6BSUzNmEu7vIlkBAqAzK+IeV1s+k1btzfud0FU+fcsvLrdto/R6ZMDyTFj1QntqwRLVApRhLS4VRpF08OHlY=
+	t=1751140403; cv=none; b=eJlJQ6f4OlTX2BPO4oJsVn/4uYybcaDJ75fOHC5qS471/ExfVCQgF2H1E7GteIG+5FSIK4f74Fj8tdUJ8dlVR2Zna6LN8jqeYbTMgEIK7xriLdPDP2oBy2hzNcftLC+8tiBhu1gP2KwVNUl/CGU9Ks7vp1xdjNf8bly/hmUClsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751140362; c=relaxed/simple;
-	bh=p5dDr/QmlkdAT4RE6psUgiwKICVbxaJ/GCmdG5WoHkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hYtoDYRiUXeH77QkcKOEM+0QVL1iMdaW+/LuLdqYMIx1DlUsU9rhruAT7gb6mnXxLfawfPldm7aYK8tVIqusTrjrQf514+8STLMOSEgqLIWtWgxdWy8ZtgdHQU8YHwuy7SCIBYwBKIb8kD/g0jxIIsRXvcoNRNvLLBewEnD0M10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hznnc77i; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751140403; c=relaxed/simple;
+	bh=KyN7c3OW4XSfhqKxip/xfXDgiwMEBmnDvDrRs2F33Ng=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bTvr7OBrCh8dtlbjSdUkF/bRDZdZ+0N+EzpYTKB3vx3OOzLMyF2e3ymQZ4GUNjDaqljMJWiWKpdqcAaXfqU8mO6/TqcbojZqN8PqR2LAaate/txT4xsHkRDWTKxg1BvTI3Fd5gz96NEp8ODFBo0Ighdn4tahJpl2PflaP2mj/C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WiT70tP6; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hznnc77i"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae360b6249fso274604066b.1;
-        Sat, 28 Jun 2025 12:52:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WiT70tP6"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453643020bdso28367645e9.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:53:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751140359; x=1751745159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1751140400; x=1751745200; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p5dDr/QmlkdAT4RE6psUgiwKICVbxaJ/GCmdG5WoHkg=;
-        b=hznnc77iNCgggBCTe5rDo7K/K/TfJzikNQ/adQD9H9wJj8atcmYPuTzMDSTEU116lX
-         NTC5juxCVxURwnVRJ5WjZueDIgndQbHZMLGB4URs5ox64aP2J+Y9fZQEozj4vMina+ac
-         vXJlvbVJZBGGCkf42Ev0Xy7fFbPgtf5mPwrmgoYkGsC+lv8UHebSPo47G/BZbw6dreuT
-         Az8WkEewyV0u1TgG/DndKQUyQwKMUZg5FuWPr8TgfHqFpzbeQpchIbQN/vCCg5g/4i+x
-         8K0Ja7oEJSl+EUXkhapswnODZokeYU1nZgNLakBZrPaNqcWSRMiU6nCpeJXiRRLK20bh
-         7XDQ==
+        bh=3QyHqQCf1rj8/jNTL5ig8eExEUuZ3Ia42+nYVYWkCr4=;
+        b=WiT70tP6jgausJS9D7abpn0Dy0W8wzPSESY2YBo7hPlvxXCBUZki5VP1KwK4fo5phP
+         QK3J4CViQLNtPOWQP9cD7EeEMTHhBWLR22+uKd/uuY1KlN8v/sWfZlLeBrJVmALkG+8H
+         YA1nXbAtUWNhZ3yjWYbwgp0ucJzJHZPQfmwMiIcpwgia4N3Lv2va8iCcJZtiebEfrd8S
+         vnRz7uKT3HGG3tOuBevj9eAVv3V/PKThANKlO6ncHNvRA7fMY3zAVu2sAiLVbVl1H7OQ
+         9SECGBZbwTRK0rzLpJc8C8YTBwWwxo5TunIqA/7VmFJowBxACbXKoW9Ie5R1ql8N6T3e
+         Diaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751140359; x=1751745159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p5dDr/QmlkdAT4RE6psUgiwKICVbxaJ/GCmdG5WoHkg=;
-        b=c894m90/y8EfSJZajjEn4gWK0orheEaHN42iPtxgiwJbMvZ5GLnR/hW9ss33Dj3UAX
-         gFNg999k8avazUwGHWTtNFa09u4o1xVyrXzmhUfwXgbhmCVRSZt7sJPA7YvVitkZqC29
-         iD+8p4of6CWhLwQ+c7AV1g6MpIEkP4IGWiA01fzaXREL0woksoUWYWVQQhLWrlr+3KsE
-         4J8Ey/8Q5tC6dbW4D3sMp2iOSh0agCjIBZDXUHbQa7/IK7kqYYa/YjOSpBcuuWqtksed
-         mecwCYOF36lwzEEZ0/nYVGziPzw46WA81HOtHyGfVzkgvSZPbiQWn0McahH45Nz6HB9v
-         Df1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW2ILHkj1ZZIH3OrUYwtSzLBIHYWaH1YvzpphrmXUpT9X1ZRs9CZ4c4FD0g445pnOUJ31fzeUSWqocaQQs=@vger.kernel.org, AJvYcCWgWDkylAKdAW78cfaQ60vYgs8Z9oXDJWLKn9cXUhVaKk3fxiXvPnQNnbEFFOPj45dTbAHrOT155Qb3dFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypDTJ0orUjGsM5kvKApPOUllNFPWV/adr53lZSnZLrBtjFMjQj
-	tbXjA8njZlAVSBM/VUTC5wQlZyE9KcGd8F+0ERmukpOS6gyLZflc8CDheBHN0pYxobkYrVdq4n4
-	4RrymhBhNltl0ousJYIAQgr6jJO2kw/4=
-X-Gm-Gg: ASbGnctgrysWFU/N0pR2YlXWjlbQ+jNepvQ91+TGwb8lAwGkHpeBme0n3V9+rspyRc+
-	Lh1UC76Xgf69MknPyiZk75bOceq89ZPcsGCd0iJgPEPbfiT4OaQB5O9mFhd8CIcZSdyN0axs8G9
-	XjvFHamqO5LM3LmXvmiPGdZlDBLUMu3v6HuUixSR6H6Bs=
-X-Google-Smtp-Source: AGHT+IFBHBg3vA0AFVg02J52ULkzSBs1nSVBKO1AVzpVaER5V/vml4hMtzUii6kiTf6eFhi6SMgNg7P5g/X4e+kpJ/4=
-X-Received: by 2002:a17:906:d554:b0:ae0:4820:2474 with SMTP id
- a640c23a62f3a-ae35015c079mr767127866b.43.1751140358759; Sat, 28 Jun 2025
- 12:52:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751140400; x=1751745200;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3QyHqQCf1rj8/jNTL5ig8eExEUuZ3Ia42+nYVYWkCr4=;
+        b=NMZzuYXWIe22/S2W8cj6Uu/SwnqNH9ZCGlO8PfGXi91QNJhba0WwwxB0ZsL4A6L6RA
+         lUlWXJ9wBiuHfi+nwJL8CI97z1Ylf+RmzH8uKVJVJzCLBYQapwsY4jGr8juSZQZgvmNX
+         R2uQMyIxmsmkZunXwkBJ9hryIAPqjAV0EoXDif0YAxXf7MtHK5F/5OucLzqMN4WYhFfr
+         STnGetIznFkKDlhZRPd3wpVtvD5OhQ598XKVYJewVd+jNdqvG+jUJ3zNMWO9rume+UhF
+         q8KYDWHc2KZvUbcu4x5vfKDaayGfBfFlzS4wPq3LZuIxDJYSonncC0/tBNSJHw3RnToJ
+         r+Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCU0XZBgdOoTtKMRgluHd6d8aPEA7xOM9sLtwe0XftECeDNFkUVRmEMA2gjm/rHoMQafgoVudk5K8QKtvfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHCH8QfEMr/RQkz4qd+RjBePsszLpbubpsQr3/WI3xlKtdh6AK
+	EcQmijoMCwN3DzBa+u9PslhBt+31IHB+t4OEWAsXIHwiixyrSQGKnRUF+DZHA1Dvvp4=
+X-Gm-Gg: ASbGnctnHakkgxHkEQtcGsI7z95GQl7hoYzvWdmChdaHTEskwoxzbWupTyUdVJVVul1
+	9SgMRlf+MA3eAmmxWLq0RnbtI0vXcDlQBbc+wlVWncZbEHsZOLouiqzcEYIdDqhNtxRILlwvD5H
+	IWGHK+MxoNhzGkyNW7XesK8VNRAz0rPhcTe1SbmDLqldrDC7GKMaBIGC+myT5imtldHdqRassJv
+	GHaZ8CTjjreE+P8vhfilsuMUq39/1j8haEU9P8GQpJQK+qIZma0LFEZINYtmB7qjkzUYHVnfuuC
+	6fwq6rcPIUUIJBwqVXcntc/Od1nrvIlKtJhOskzjLX9kb03JRBbmxXsC37IBMYnLDnZ3
+X-Google-Smtp-Source: AGHT+IFHukOoSyHfuwr6fdOhiMqwDh6w4eyGrcAqPmtqVI9++TGozuj4ALvF8dEZH78Qc3I+9tpD/w==
+X-Received: by 2002:a05:6000:144d:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a90c07daffmr7119112f8f.58.1751140399497;
+        Sat, 28 Jun 2025 12:53:19 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:e33b:a0ed:df4b:222c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b516sm5871948f8f.41.2025.06.28.12.53.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Jun 2025 12:53:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
-In-Reply-To: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 28 Jun 2025 22:52:02 +0300
-X-Gm-Features: Ac12FXwisHFwiusykwimkGfvNJfdF3Mavaq2pBz6g46Qc34NpDDwkbGORGvQ7S8
-Message-ID: <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
- HMM_BO_DEVICE_INITED flag
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
-	skhan@linuxfoundation.com, dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 28 Jun 2025 20:53:18 +0100
+Message-Id: <DAYFGP9TBU3K.1TEQFWX2GF7OR@linaro.org>
+Cc: <joro@8bytes.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+ <andersson@kernel.org>, <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v2] iommu/arm-smmu-qcom: Add SM6115 MDSS compatible
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: <robin.clark@oss.qualcomm.com>, <will@kernel.org>,
+ <robin.murphy@arm.com>, <iommu@lists.linux.dev>
+X-Mailer: aerc 0.20.0
+References: <20250613173238.15061-1-alexey.klimov@linaro.org>
+In-Reply-To: <20250613173238.15061-1-alexey.klimov@linaro.org>
 
-On Sat, Jun 28, 2025 at 8:26=E2=80=AFAM Abdelrahman Fekry
-<abdelrahmanfekry375@gmail.com> wrote:
+On Fri Jun 13, 2025 at 6:32 PM BST, Alexey Klimov wrote:
+> Add the SM6115 MDSS compatible to clients compatible list, as it also
+> needs that workaround.
+> Without this workaround, for example, QRB4210 RB2 which is based on
+> SM4250/SM6115 generates a lot of smmu unhandled context faults during
+> boot:
 >
-> The HMM_BO_DEVICE_INITED flag was being set in hmm_bo_device_init()
-> before key initialization steps like kmem_cache_create(),
-> kmem_cache_alloc(), and __bo_init().
+> arm_smmu_context_fault: 116854 callbacks suppressed
+> arm-smmu c600000.iommu: Unhandled context fault: fsr=3D0x402,
+> iova=3D0x5c0ec600, fsynr=3D0x320021, cbfrsynra=3D0x420, cb=3D5
+> arm-smmu c600000.iommu: FSR    =3D 00000402 [Format=3D2 TF], SID=3D0x420
+> arm-smmu c600000.iommu: FSYNR0 =3D 00320021 [S1CBNDX=3D50 PNU PLVL=3D1]
+> arm-smmu c600000.iommu: Unhandled context fault: fsr=3D0x402,
+> iova=3D0x5c0d7800, fsynr=3D0x320021, cbfrsynra=3D0x420, cb=3D5
+> arm-smmu c600000.iommu: FSR    =3D 00000402 [Format=3D2 TF], SID=3D0x420
 >
-> This means that if any of these steps fail, the flag remains set,
-> misleading other parts of the driver (e.g. hmm_bo_alloc())
-> into thinking the device is initialized. This could lead
-> to undefined behavior or invalid memory use.
-
-Nice. Can you make some fault injection (temporary by modifying the
-code to always fail, for example) and actually prove this in practice?
-If so, the few (important) lines from the given Oops would be nice to
-have here.
-
-> Additionally, since __bo_init() is called from inside
-> hmm_bo_device_init() after the flag was already set, its internal
-> check for HMM_BO_DEVICE_INITED is redundant.
+> and also failed initialisation of lontium lt9611uxc, gpu and dpu is
+> observed:
+> (binding MDSS components triggered by lt9611uxc have failed)
 >
-> - Move the flag assignment to the end after all allocations succeed.
-> - Remove redundant check of the flag inside __bo_init()
+>  ------------[ cut here ]------------
+>  !aspace
+>  WARNING: CPU: 6 PID: 324 at drivers/gpu/drm/msm/msm_gem_vma.c:130 msm_ge=
+m_vma_init+0x150/0x18c [msm]
+>  Modules linked in: ... (long list of modules)
+>  CPU: 6 UID: 0 PID: 324 Comm: (udev-worker) Not tainted 6.15.0-03037-gaac=
+c73ceeb8b #4 PREEMPT
+>  Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
+>  pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+>  pc : msm_gem_vma_init+0x150/0x18c [msm]
+>  lr : msm_gem_vma_init+0x150/0x18c [msm]
+>  sp : ffff80008144b280
+>   		...
+>  Call trace:
+>   msm_gem_vma_init+0x150/0x18c [msm] (P)
+>   get_vma_locked+0xc0/0x194 [msm]
+>   msm_gem_get_and_pin_iova_range+0x4c/0xdc [msm]
+>   msm_gem_kernel_new+0x48/0x160 [msm]
+>   msm_gpu_init+0x34c/0x53c [msm]
+>   adreno_gpu_init+0x1b0/0x2d8 [msm]
+>   a6xx_gpu_init+0x1e8/0x9e0 [msm]
+>   adreno_bind+0x2b8/0x348 [msm]
+>   component_bind_all+0x100/0x230
+>   msm_drm_bind+0x13c/0x3d0 [msm]
+>   try_to_bring_up_aggregate_device+0x164/0x1d0
+>   __component_add+0xa4/0x174
+>   component_add+0x14/0x20
+>   dsi_dev_attach+0x20/0x34 [msm]
+>   dsi_host_attach+0x58/0x98 [msm]
+>   devm_mipi_dsi_attach+0x34/0x90
+>   lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
+>   lt9611uxc_probe+0x540/0x5fc [lontium_lt9611uxc]
+>   i2c_device_probe+0x148/0x2a8
+>   really_probe+0xbc/0x2c0
+>   __driver_probe_device+0x78/0x120
+>   driver_probe_device+0x3c/0x154
+>   __driver_attach+0x90/0x1a0
+>   bus_for_each_dev+0x68/0xb8
+>   driver_attach+0x24/0x30
+>   bus_add_driver+0xe4/0x208
+>   driver_register+0x68/0x124
+>   i2c_register_driver+0x48/0xcc
+>   lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
+>   do_one_initcall+0x60/0x1d4
+>   do_init_module+0x54/0x1fc
+>   load_module+0x1748/0x1c8c
+>   init_module_from_file+0x74/0xa0
+>   __arm64_sys_finit_module+0x130/0x2f8
+>   invoke_syscall+0x48/0x104
+>   el0_svc_common.constprop.0+0xc0/0xe0
+>   do_el0_svc+0x1c/0x28
+>   el0_svc+0x2c/0x80
+>   el0t_64_sync_handler+0x10c/0x138
+>   el0t_64_sync+0x198/0x19c
+>  ---[ end trace 0000000000000000 ]---
+>  msm_dpu 5e01000.display-controller: [drm:msm_gpu_init [msm]] *ERROR* cou=
+ld not allocate memptrs: -22
+>  msm_dpu 5e01000.display-controller: failed to load adreno gpu
+>  platform a400000.remoteproc:glink-edge:apr:service@7:dais: Adding to iom=
+mu group 19
+>  msm_dpu 5e01000.display-controller: failed to bind 5900000.gpu (ops a3xx=
+_ops [msm]): -22
+>  msm_dpu 5e01000.display-controller: adev bind failed: -22
+>  lt9611uxc 0-002b: failed to attach dsi to host
+>  lt9611uxc 0-002b: probe with driver lt9611uxc failed with error -22
+>
+> Suggested-by: Bjorn Andersson <andersson@kernel.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Fixes: 3581b7062cec ("drm/msm/disp/dpu1: add support for display on SM611=
+5")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> ---
+>
+> v2:
+>  - added tags as suggested by Dmitry;
+>  - slightly updated text in the commit message.
+>
+> Previous version: https://lore.kernel.org/linux-arm-msm/20250528003118.21=
+4093-1-alexey.klimov@linaro.org/
+>
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/a=
+rm/arm-smmu/arm-smmu-qcom.c
+> index 62874b18f645..c75023718595 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> @@ -379,6 +379,7 @@ static const struct of_device_id qcom_smmu_client_of_=
+match[] __maybe_unused =3D {
+>  	{ .compatible =3D "qcom,sdm670-mdss" },
+>  	{ .compatible =3D "qcom,sdm845-mdss" },
+>  	{ .compatible =3D "qcom,sdm845-mss-pil" },
+> +	{ .compatible =3D "qcom,sm6115-mdss" },
+>  	{ .compatible =3D "qcom,sm6350-mdss" },
+>  	{ .compatible =3D "qcom,sm6375-mdss" },
+>  	{ .compatible =3D "qcom,sm8150-mdss" },
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Gentle ping.                                                               =
+                                                                =20
+                                                                           =
+                                                                =20
+This was sent over 2 weeks ago.                                            =
+                                                                =20
+                                                                           =
+                                                                =20
+Thanks,                                                                    =
+                                                                =20
+Alexey Klimov
