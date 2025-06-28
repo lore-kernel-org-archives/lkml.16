@@ -1,91 +1,101 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4354943AA1;
-	Sat, 28 Jun 2025 22:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7387222D7B9
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 22:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751148628; cv=none; b=VOzwbY++h+8M35T2x9ZgfeQcDXcFtlyXfD4nSBYSa2zPNY3dycFUZgLctPP80X/ZtDNpCCJgC6pN3Qg/chd90D58M8Lm6le6FS+sEdGOIVbhFtpOOYHvtJuh1VYOjHf2sxGnMjtDAWX+S5e3m3Cc8L07k+mvEBPNC2X3aXAWec0=
+	t=1751148785; cv=none; b=nNQvuS87Y0j0WQwx6v9ctdOfq3CDbvg/x/KuLfeo34NRxvprCjT1x55cZ6RP8hoy99PAmjcGqq4WvdDpulCmq0rR/urpzLIDNstlfRqGIFeNQRBBIamz4iDECliZiQq8B8XDRhkcj6m/OAGuOA7leUbBCWUmkPrXAUBwzjYSu1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751148628; c=relaxed/simple;
-	bh=7CWQ4hkaoBog1HgMHx6+xqgzrHRz5+hBkn7Mm9goa3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IpNMTiV39qFOr/F74K8bM1yWten1tCyrqzyy1rrDmLy1fYnvzi+PSf0eu1hyOIX4gD2F5JqiwzS5TGSxMtdUoRJE0YN8N3KZ1GgdATP3ke4361qybGavMIFZzubyoK32H/eMGelejli1UE1wcSGlAL4mKXDGCXjOITfhTusSiIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MrSx8MGk; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751148785; c=relaxed/simple;
+	bh=4hIoRo/BUe44/U6WOEvGpQ6TzxbhSycnGnHZnPeiuxw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nJN+UUSqEHs0dkoLYr7jJcyFWIGRIC5NvCHte1IzzJhKJS5XYWT4zPAJJr5LPPgwcT3KuCnFunCs3ty2CWGp7cnXRkV/+TbpdXNpoBCSQEOq8LLE8YUdodSgQar2T9fhvG/KyArCY3Z+kBMrv3eZS4Uj3YwA3zVju+GE86piwS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=atero.ai; spf=pass smtp.mailfrom=atero.ai; dkim=pass (2048-bit key) header.d=atero-ai.20230601.gappssmtp.com header.i=@atero-ai.20230601.gappssmtp.com header.b=JornGeAG; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=atero.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atero.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MrSx8MGk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751148615;
-	bh=5mw9JnC+kRPNRmMSuXtByqvTNgQUPImozED06B1Nbrs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MrSx8MGkb0BTwSgcUc41+jlZgXMEwfgZ0HgUJjmaISMMSz1zyciTyvniNuTf92yH4
-	 hFmWtxMNR2XvX7/vzjH8Y0VNPWu9Bex2QsAHDl70qrbVZOsFg7uT08EPrrQ9mReH4F
-	 dbvUeOGQsRxymz749hb809IvWXF8YDFV7NW3kyid8tUgnCpYb2/r9EXfJ75w5CzOEE
-	 mADg5VXmNAPFPXt45cJLYTXzSqvxR5QqSsilgf4kNIG5wdwiOmsTzNPi2gA9wj/fv1
-	 EWXOjEv+y9zkxbTToJMVAvvu5A7EIXbp7/13+6yUcxjdALjVMkgK8qbDtT+aQ8KxUj
-	 RMmh9H2PAi3ag==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bV66t5KJsz4wcm;
-	Sun, 29 Jun 2025 08:10:14 +1000 (AEST)
-Date: Sun, 29 Jun 2025 08:09:50 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20250629080950.29338ef2@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=atero-ai.20230601.gappssmtp.com header.i=@atero-ai.20230601.gappssmtp.com header.b="JornGeAG"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e733a6ff491so787793276.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 15:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atero-ai.20230601.gappssmtp.com; s=20230601; t=1751148782; x=1751753582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pG0Jf3AyAuPPLWWO8w92wLQs80Toybr3R2SUNpvAU3s=;
+        b=JornGeAGRFCFIZA8nfxooZmGGi0dL4DlXy1++S/NqKp/VM2aSAhoS3rmm9RSrywob6
+         /NULLDBEppbz6jUhkqSZcFKsmKifVXIUuViOTaUENtsuprg/BXolyLuc53rtwXDwf0fC
+         +E1vs4IdLB0fqxWz1beKbCm/1TmQz0MrLHI0dUxuqmTHjmDP993X+0VYtkxSrT6PWxAA
+         5QNpKmBLQC0RRqpI6T1ZpCjGjJPPGh5Vwc+o6Dhp4BcayJtJUqt7WGcVbSo61qFejsRV
+         R+zHfm2hR7cxYON2cvQ2mmCenazbbMcXdz1S2SR+nxnce4rmkXLya8o8Car7Z98PPMZL
+         Mf9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751148782; x=1751753582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pG0Jf3AyAuPPLWWO8w92wLQs80Toybr3R2SUNpvAU3s=;
+        b=LtYDc3rIqQxmuTI5k9GUv60nBsxg4BZJAZ6dz43dFwhz18p+NqfuRt18AP1Z2Jz72k
+         NfMwmYs24rbo1Hlj/c67Zm1vNG74QfjzEkWqe0G3UDnk2wq/cawwzmqy4uzp+rHYt+V6
+         noHe+j1tZ12j3r4+xYLBCKLdxX+UQ0ymWIVjtkuFxw+1kYptCKERVjnEf6m2pccwRuQ8
+         Wzu20WWRCYZyuvWxTcadS28E4q1QW/Lyzr71m6hxRbCE5bJkaggUSVEvQtReQqBDJqGp
+         1ri++UlbJqZfojX0YGw3YI9ZT8un/q1GHdJQKr2cBTp4SQAVLsXyubs4OD+DygkNsyVg
+         nRrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgnjh6zqvK9AwyX8hfYcYRp8hq7QdPmJui81u1Qs31m5eAgGH9LcQ9dCV5TW/ESfWxMRE1SZbPJQ47g/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKwSpMH+yPixdPrSrk9o2yAsO46KOIOeea93gGsYNTdqJrmWjV
+	aMHpTZBP6DitAcL2QzOv0KK6PLbwpMvS1D1NzhRgwP2l1tTNeH5iz1fWE7L0Mj6Irt4YGK9f+Kl
+	zICI8Waq+d7D2WoDy2pLDXbb6sK6FBK3ZA/1CsxwKsg==
+X-Gm-Gg: ASbGncsIWGU37l+YsYnqTfrowMWlBd1fAPqPl2i2cOs84QVwbfyBHXS1iqMteZHK5jm
+	1NyrQ/GLLr47ANF2aiNYs2Lijzl5ebSeNsuwe6Ab59Dq7N1Jz8jeR59mtMWbPDnLiiZUaYh5Cxp
+	fCNb5k30oSJC3MVMYy+Vl4ov/8i4tRACk30P+Qk1HGBkdJ
+X-Google-Smtp-Source: AGHT+IGmZPJroRvvxHKmgN9a0X1tAnR5pbdtgYaEXaOTqCbeF41sWs4hBEm9ibaXTwBW1beTqacoRcXW+Uum57AXsr0=
+X-Received: by 2002:a05:690c:a0a4:10b0:714:4e0:ba42 with SMTP id
+ 00721157ae682-7151714574fmr86419067b3.1.1751148782373; Sat, 28 Jun 2025
+ 15:13:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EMeKWmSeRmJJLyOmIB=Ut6.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/EMeKWmSeRmJJLyOmIB=Ut6.
-Content-Type: text/plain; charset=US-ASCII
+References: <20250618231632.113471-1-sivany32@gmail.com> <CAJZ5v0jXPten8QwruK_Dqzvc0izLCfecMPBWMMoP8cnG4mDY0Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jXPten8QwruK_Dqzvc0izLCfecMPBWMMoP8cnG4mDY0Q@mail.gmail.com>
+From: Elazar Leibovich <elazarl@atero.ai>
+Date: Sun, 29 Jun 2025 01:12:51 +0300
+X-Gm-Features: Ac12FXz7nWMf_ruYnnpMIxVSTL1Pb61zrmsTZHgUhqpM3MMbLMfc5P52r-Ru3vw
+Message-ID: <CAFcvxdMozCv1mJFKemQKhOnZPLpfkWs3d97bHUijRdw7MdFO1w@mail.gmail.com>
+Subject: Re: [PATCH] powercap: dtpm_cpu: Fix NULL pointer dereference race
+ during CPU offlining
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Sivan Zohar-Kotzer <sivany32@gmail.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, elazarl@gmail.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Fri, Jun 27, 2025 at 11:07=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+> > * DTPM power calculations are triggered (e.g., via sysfs reads) while C=
+PU is online
+> > * The CPU goes offline during the calculation, before em_cpu_get() is c=
+alled
+> > * em_cpu_get() now returns NULL since the energy model was unregistered
+>
+> But energy models for CPUs are never unregistered.
+>
 
-Commits
+Can't the following happen (extremely rare, but still):
 
-  4584f5907e79 ("bugs/core: Reorganize fields in the first line of WARNING =
-output, add ->comm[] output")
-  62aa47bc0273 ("bugs/sh: Concatenate 'cond_str' with '__FILE__' in __WARN_=
-FLAGS(), to extend WARN_ON/BUG_ON output")
-  58e421837e2f ("bugs/parisc: Concatenate 'cond_str' with '__FILE__' in __W=
-ARN_FLAGS(), to extend WARN_ON/BUG_ON output")
-  776914942311 ("bugs/riscv: Concatenate 'cond_str' with '__FILE__' in __BU=
-G_FLAGS(), to extend WARN_ON/BUG_ON output")
-  4218dedd47c7 ("bugs/riscv: Pass in 'cond_str' to __BUG_FLAGS()")
+CPU gets set to impossible during shutdown sequence, e.g.
 
-are missing a Signed-off-by from their committers.
+// arch/alpha/kernel/process.c
+common_shutdown_1(void *generic_ptr)
+...
+        set_cpu_possible(boot_cpuid, false);
 
---=20
-Cheers,
-Stephen Rothwell
+Just before `get_cpu_device` is called by `em_cpu_get`.
+Then `get_cpu_device` returns NULL for impossible CPU, causing
+`em_cpu_get` to return NULL.
 
---Sig_/EMeKWmSeRmJJLyOmIB=Ut6.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhgaC8ACgkQAVBC80lX
-0GzHlQf/S+38aQFkoUB7DBIF+lOwKw0jN0eiQ8N+PeY/WJ/EXaCjrTxaQD8AVvD5
-biDu/5zyXembZfOr15ye/PDBexSyUfUcae71qSDLzeimYlKF9fWNe0Y53Zuyf+a6
-99v1Yed2yyDNrRRFE50v7kbe4G0PxgwEqMJAUbNIZ//v2u3iZsMgKcdi7KF/RNWF
-UzzhVzpPowca3GVD97NK4FrljIt0Rxq4YgT7QWA+RmONILMIMzECGUCFKCWWpdMK
-Fdc5BT8x3nwf6nnMXSAj4F/jERUL6by6Z6WW1L7MUe47lTH8c4k6rdqPrVZcxFex
-nj6cJ35MWPDFi6yMjj+PggRzuPCgQw==
-=XwNx
------END PGP SIGNATURE-----
-
---Sig_/EMeKWmSeRmJJLyOmIB=Ut6.--
+It's not a common scenario, but it seems NULL checking doesn't cost much,
+and can assure us no rare case is crashing the system.
