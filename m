@@ -1,164 +1,108 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E3B2F1FF1;
-	Sat, 28 Jun 2025 12:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD051BE4A;
+	Sat, 28 Jun 2025 12:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751115045; cv=none; b=llSAoHxp1mgUPxkRl6pbJp9PtWeGzdr2K1Q/LTWmMDDf/xc90DnL20So4qQbe0agTxNDBmOShEI37kBF3OiSg7KyGpASpPV5lLHpyNMioKrvaQOfKZF9EOOxseP1zmYwEPRP7ejAyuWrk5AYahu3RTV/L64KY97dmgJXjfdGKXE=
+	t=1751115091; cv=none; b=o56tmEQqXo53/Fg2rx8O0wYjNA6/G/Ql2HfHdRkfIEw+VD73MGZmxaoNOnEXTMatmmT4JkYZ1XqdPBEAdiYI+VoR2ZpR0qFHZzIJl8UFpxwJm/gvvkH0I5brJDdKuHqK7vSUSogEg8fNcJic4e1/xDBp/W4ItRFRf1pN8ztdqhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751115045; c=relaxed/simple;
-	bh=+JmxlUms8ba1ram7kTy8gjDP915eQ8RojEt9nzFQck8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L8JgbQr8EhnFNiURYmIaMPg1/xNmBh5Ta4GRosghI1qE2MB5aok2ZvaZUmMirXqbVHB9OUKzRXueAaGwdhev9rMLtPA3E3KD8V9gPCi799bGhQwN7TKL+MEd7hkZKyVnrX43fHivxwyQIojX/U43sMb36eS692Glqq5F1Yak1n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=a5N9NNm3; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751115091; c=relaxed/simple;
+	bh=/XhzeQ/qIyiKPzYwoMFNVjh3bHYTLrPXCW9JC1ZUonE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ohmfjwK8RaSEkaOC6tyaXbb/3y8gbZr7zGGSnHgDhBGJHSBSm0fehae8Wz2d3VY5n5gAG319sKjVbBfCmtNdS5PNsoe23w+LzeQy+xB38lstwu9eQJWj73eT8gPxvjf5HsKCdH3HXA1EOL8wHNonEm93w92ZCnLWI4WJQ7b/NCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D11Rj4F4; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="a5N9NNm3"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BC4A340E0198;
-	Sat, 28 Jun 2025 12:50:32 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Tb8WqKgMt53u; Sat, 28 Jun 2025 12:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751115028; bh=eLc46ItctJeCFTOqG/1cEMrFtQ/BEN7LI1Y39fPMwsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a5N9NNm3jrjATCZFMuROj51umNu2AEsdwEzaywbxkJLZz1j0600Fs4hN46K7L+bo8
-	 eP95aLWHTpEDBQg6ypa8dKw9dQKpYxDi+focSMxeU5I6QnQbDuL626SrTqS/+S83Vu
-	 KfyXuqleLGYsQyjQKb6Rt2TgFqBesuZgGAHYr3qPOmzU+grURFPqRapq/EWSbGeqsa
-	 w0Yiz6IxmjAULk3/rPrWvPEm6c5L1c2th9ghfbSEctF5lpReDCO6yz/xIuTYBZB2oy
-	 wkIuWh5vBRY1FDvWUdpQiLUkMSlEp7Zu6pXmGlK10f5exX/rr1KeLiVc4UzqMlQ0JJ
-	 dc/Vcu5hCX245GU6muztrfvkdVAwsbyWVcKLHi3xjE+auG1Ovm38PTiUZNKPB9Pvz6
-	 pw/WIVrIfKbjGwLRe6kADVkUPkl28ZWWyUtDl323W+B/5rX2zxSsixoU/+OiFK7qoA
-	 X8IL2A9V5mBUzUjaQ6qVIAweLxSvyZg+tPk6UqLmblcYDyB3SFEd9gKoeHbXvURVlz
-	 9rpMcxTlasdsRby125USTE64eLigcXQQXzXszb1knqlG7fAYIRegmfqcUhRQRseCeI
-	 1JGgXXyASIQWmN9aXvazFXc+RtAo+kuzyZT/X6d+Af/+JlSSzfVK38G0sDUt9yX345
-	 dT/xF7Z2NKppW7LpRJJW6/gU=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F81440E00DC;
-	Sat, 28 Jun 2025 12:50:08 +0000 (UTC)
-Date: Sat, 28 Jun 2025 14:50:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kai Huang <kai.huang@intel.com>
-Cc: dave.hansen@intel.com, tglx@linutronix.de, peterz@infradead.org,
-	mingo@redhat.com, hpa@zytor.com, thomas.lendacky@amd.com,
-	x86@kernel.org, kirill.shutemov@linux.intel.com,
-	rick.p.edgecombe@intel.com, linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
-	reinette.chatre@intel.com, isaku.yamahata@intel.com,
-	dan.j.williams@intel.com, ashish.kalra@amd.com,
-	nik.borisov@suse.com, sagis@google.com
-Subject: Re: [PATCH v3 1/6] x86/sme: Use percpu boolean to control wbinvd
- during kexec
-Message-ID: <20250628125001.GDaF_k-e2KTo4QlKjl@fat_crate.local>
-References: <cover.1750934177.git.kai.huang@intel.com>
- <b963fcd60abe26c7ec5dc20b42f1a2ebbcc72397.1750934177.git.kai.huang@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D11Rj4F4"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2fcd6fe970so516202a12.3;
+        Sat, 28 Jun 2025 05:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751115089; x=1751719889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=48TlzH+B/dFIOCV6cmGqmz805LBIodgi+NMhMNWoo4o=;
+        b=D11Rj4F4DeIKIthJo7P5b639mGia8D07ZGgjCzE3RTiyaZaDbEm3UfWAy+BNf1HQb3
+         ewQOzBwEt4ymlD4+yhc5/30yG46bOnYuduk/Wq205hyBDV/14NDpD/mZvyvg+fxzyXUx
+         Ud5C49i3P5K3l6BdMlOyBuphglZ32pH3wvNMt5h2ZY/pPS0QkK31gGnROahPhOaEBiEG
+         /EdP+EvPCYKBNFL0eebLeTAfBg5SvI4ahR/DBjWgbIov8qDQwKuJbOBTehlBXcO7YpgA
+         N0Om4uV5VUL0KkeTj2BbIW3vp2Twu5RA0bsfqU5q9x64y8aK8mtXW+Vy0b1jDXrgW86C
+         PgKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751115089; x=1751719889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=48TlzH+B/dFIOCV6cmGqmz805LBIodgi+NMhMNWoo4o=;
+        b=j+OiVtktOdbp6+ORLf3h1WneuA6/59B4snWKv7ixuikE8w6+M1y9t1UFDabiCDy5RT
+         A8mfggZ9Ax0lhLd3AN3aJ5sGVc1jbOAG+uek6jTHcq6dIbHRm81Oz46UuDWNv+lOt8zf
+         yY/bdFf3Vt9NhoZK48GiMU3062Ho6CHjc0mNn96uk8Dg9RKe+4KpRutttH3o8Kugd83n
+         gcloH4RkdVKbbfze58/FcnbvIORRdX/DW/GluML8a0p9gbt9/g7EoJLsQjU/iYeeP43w
+         UDlyPzYahQBhT2bqIsI6Em8TatAqyPJPbX386LmXmYKqwdipWViytwLAme8p28fBuin1
+         MHkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU24VZOaVVFIK8UfYfWo32qlcMUwJPXAZa4GjAMv2DbcQEImBGuC4Yzs36iT9DANJZVkhK8Z1/RuhlTCA4=@vger.kernel.org, AJvYcCUhrr4wAMRs1uNzYwjV7LpMMUJSa7GBSzI0Dg3u6Yd4Lq7MJpY75m4jBxfjekoY6V1k0KtuBIUChQQU8kPw8NgH@vger.kernel.org, AJvYcCUuJSoelxO0kjWn0w2/vvz8M0LFTk7d684iD1YrzXJbfXj2EpAjA9QjgrW/FwElu3K3HPVWw6IbNc8=@vger.kernel.org, AJvYcCW9llOwyHMBa+4vSTi/IZfrmkQZfG0M/Md6iQVoewpVLdz3rj6HDeORdINWLseYN1Qk+sLBfjNzPHklJO7225o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRGMP6bHOW5OOBPGQch1xMbYYzVAtQMLgUcBe3z2ypi4ZA1Y31
+	Mlu+iJ6KHrghuHN0Ux1HiF0+XKS7odHASbts64dphTNHpr8+iBJy+wArcAwIxcl9fXhJ/cOzzUZ
+	+nPoUYn93w32WPoRVtnfGv9XqD1LR2K8=
+X-Gm-Gg: ASbGncuGEkgfskFRClJAjbgZCS9D3bfxO+lJwDXINA5+fSE4b5cBTIPkR9Yd5CHM97h
+	+JBipZzF4bZJUeoaUZU1ohniha2SeoCvhzJDOMxUv+M6gisJqT6oW6uJsef8b6hBLffGvxmAbTg
+	SYQ+qd31MXCqUPLr3tKoBUOGnDibYUs0hc2drlnlPIL/M=
+X-Google-Smtp-Source: AGHT+IF83NxSga/73IzZHP9ZH+Dk1H5ZVUbTyoqGw/fldWN4ASKVsiyAJbL1eYeoiE4JdtyWY1PN4scS4CZe/X2Kwys=
+X-Received: by 2002:a17:90b:390b:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-318edd3da95mr1411969a91.0.1751115089099; Sat, 28 Jun 2025
+ 05:51:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b963fcd60abe26c7ec5dc20b42f1a2ebbcc72397.1750934177.git.kai.huang@intel.com>
+References: <20250628040956.2181-1-work@onurozkan.dev> <20250628040956.2181-4-work@onurozkan.dev>
+ <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
+ <20250628133013.703461c8@nimda.home> <CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
+ <20250628154237.0f367cee@nimda.home>
+In-Reply-To: <20250628154237.0f367cee@nimda.home>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 28 Jun 2025 14:51:15 +0200
+X-Gm-Features: Ac12FXwgClP6Yp6fHTMMv5JbyNRAPTPAsfggSLj5a6SGwbkwHWoZ1R_RFA_utb8
+Message-ID: <CANiq72mxJM-7WAP8xVDukmiXq=ntThyFESFLs1+dmZJSS2q60Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
+To: Onur <work@onurozkan.dev>
+Cc: viresh.kumar@linaro.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	airlied@gmail.com, simona@ffwll.ch, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com, 
+	tmgross@umich.edu, rafael@kernel.org, gregkh@linuxfoundation.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	davidgow@google.com, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 10:48:47PM +1200, Kai Huang wrote:
+On Sat, Jun 28, 2025 at 2:42=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
+>
+> Yes, I am sure. Just to clarify, I am not testing 5e7c9b84ad08. I am
+> testing c6af9a1191d042839e56abff69e8b0302d117988 where
+> `#[allow(clippy::non_send_fields_in_send_ty)]` was added on
+> `unsafe impl<T: Driver> Send for Registration<T> {}`.
+>
+> Switching from `allow` to `expect` produced the following result on my
+> end:
 
-...
+Yes, of course it does -- what I am telling you (and what 5e7c9b84ad08
+says) is that the lint is disabled.
 
-> Doing WBINVD in stop_this_cpu() could potentially increase the chance to
-> trigger the above "race" despite it's still rare to happen.
+And since it is disabled, if you change the line to `expect`, then it
+will obviously complain.
 
-Oh the amount of text... 
+If you actually enabled the lint with e.g.
 
-Please run it and all your comments through AI to simplify formulations etc.
-It is a lot to read.
+    #![warn(clippy::non_send_fields_in_send_ty)]
 
-> Signed-off-by: Kai Huang <kai.huang@intel.com>
-> ---
->  arch/x86/include/asm/kexec.h         |  2 +-
->  arch/x86/include/asm/processor.h     |  2 ++
->  arch/x86/kernel/cpu/amd.c            | 16 ++++++++++++++++
->  arch/x86/kernel/machine_kexec_64.c   | 15 ++++++++++-----
->  arch/x86/kernel/process.c            | 16 +++-------------
->  arch/x86/kernel/relocate_kernel_64.S | 15 +++++++++++----
->  6 files changed, 43 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index f2ad77929d6e..d7e93522b93d 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -122,7 +122,7 @@ relocate_kernel_fn(unsigned long indirection_page,
->  		   unsigned long pa_control_page,
->  		   unsigned long start_address,
->  		   unsigned int preserve_context,
-> -		   unsigned int host_mem_enc_active);
-> +		   unsigned int cache_incoherent);
+at the top of the file, and then used `expect`, it will build fine.
 
-So preserve_context and cache_incoherent are both a *single* bit of
-information. And we use two u32s for that?!?!
-
-How about flags please?
-
->  #endif
->  extern relocate_kernel_fn relocate_kernel;
->  #define ARCH_HAS_KIMAGE_ARCH
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index bde58f6510ac..a24c7805acdb 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -731,6 +731,8 @@ void __noreturn stop_this_cpu(void *dummy);
->  void microcode_check(struct cpuinfo_x86 *prev_info);
->  void store_cpu_caps(struct cpuinfo_x86 *info);
->  
-
-So much text above - not a single comment here explaining what this var is
-for.
-
-> +DECLARE_PER_CPU(bool, cache_state_incoherent);
-> +
->  enum l1tf_mitigations {
->  	L1TF_MITIGATION_OFF,
->  	L1TF_MITIGATION_AUTO,
-> diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-> index f18f540db58c..4c7fde344216 100644
-> --- a/arch/x86/kernel/cpu/amd.c
-> +++ b/arch/x86/kernel/cpu/amd.c
-> @@ -503,6 +503,22 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
->  {
->  	u64 msr;
->  
-> +	/*
-> +	 * Mark using wbinvd is needed during kexec on processors that
-
-For all text: write insns in caps pls - WBINVD.
-
-> +	 * support SME. This provides support for performing a successful
-> +	 * kexec when going from SME inactive to SME active (or vice-versa).
-> +	 *
-> +	 * The cache must be cleared so that if there are entries with the
-> +	 * same physical address, both with and without the encryption bit,
-> +	 * they don't race each other when flushed and potentially end up
-> +	 * with the wrong entry being committed to memory.
-> +	 *
-> +	 * Test the CPUID bit directly because the machine might've cleared
-> +	 * X86_FEATURE_SME due to cmdline options.
-
-Where?
-
-That same function does the clearing later...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Cheers,
+Miguel
