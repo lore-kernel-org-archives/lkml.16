@@ -1,118 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B2D1E502;
-	Sat, 28 Jun 2025 15:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25DB2046B3;
+	Sat, 28 Jun 2025 15:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751125260; cv=none; b=BAH5XUv6vDviXU7iOuPxkz4O76ybTPAeTGad6z4KgE8a0iPKCVSSs6jx4WtvxklvVs645KV3NioW7wUiD2/IU946xuxrip6YdfqR86e6TrhQZxKc0wK9XAadBhgDAqjs96c1npEod2ikKRC26uUSB1N2y5P5+DYktmU4pyz+Feg=
+	t=1751125297; cv=none; b=jsdGFkVc0bDRqGw6j2T/oehqX+LItrb/9IxHDVoIJvzW1NN4/dWj6v0UDBE2aBZTpfEIWkDJxUbD5HpbYBQAqoguq2Zp/7ADpj2eSkBCybhvHvIZicytKXbXC4EsZ2N3bvjS4fTT9Cqe6qhO3HY4fE1739vIjf/5nkgOgmSWyB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751125260; c=relaxed/simple;
-	bh=1lcgyLVwTfxuqxdF5MYvsRIHyKto1JLmJ3TNgqZ2JRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Em+JvzSAAl3ExNtjb+bM6Z5zx9e4sbjAR+Io9mFlJgI5+cX0mY4tlngGsWpUGtA8HrjSJX/yHL+2AD6htBBcOp96cwiJf1X4KDxGtDo9769D6MV5xnvE/yxrB57qBRG6D238jdstTPp1E/InwkRXe9hHzrX9PaxPcGiSEhMOvbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4g9cMaG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751125297; c=relaxed/simple;
+	bh=udMastp57gciJQEzvVcYCwTuRaTZ5pT71cUP8mFGTWs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NukJA3kCHmOSLPTYpntldsMKeubWX4MNdiMCsldhlBcSFLEDEFAjXJlFGXZ4SaAD9iu5m9iSItdyRAS2KXJKU5U8gRVnxvWAcVlyWjC0ZAhEQLxQT9jMZUgyiV3DUXlzpHT7V+4gFScHSEkkK8hE4I13dIZ3CxG3XWTvZd2u/hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YT5nx9sE; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4g9cMaG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3641C4CEEA;
-	Sat, 28 Jun 2025 15:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751125260;
-	bh=1lcgyLVwTfxuqxdF5MYvsRIHyKto1JLmJ3TNgqZ2JRA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=S4g9cMaGsQbtEqrrcKmHRUmRKvwY4E0fiL6jP6ZFlGfRN2HJUNxgeOyEH8E4wXLDq
-	 HixDQu89vfQPR8Y1aw1Vg3twhs7Yj2CKA8C3S7KicIS3CktKlp3D/nZQhjUUqjucD2
-	 /fUt69WUJJYw/Bk6JtXKkQCdlXeXEMsaXBt7JXZUf0ItYeWKb/xRrovj7SGsWPjFJf
-	 QzBKomAyX+ZTNG0SvEqKGr3jkPEXlSfV20z25zjTC9//vluwKHt2OTvDR94pVkf7sW
-	 /AYjgbXx4nprKZLhgpqZqZAYo2uBRN2KQkOuCxCF+gM0P1ZaUDMbnaNoD765zXypCT
-	 2dj0ekalL5kzA==
-Date: Sat, 28 Jun 2025 16:40:54 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: David Lechner <dlechner@baylibre.com>, jean-baptiste.maneyrol@tdk.com,
- Lars-Peter Clausen <lars@metafoo.de>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Julia Lawall
- <Julia.Lawall@inria.fr>
-Subject: Re: [PATCH v5 2/3] iio: imu: inv_icm42600: add WoM support
-Message-ID: <20250628164054.54ae2e7a@jic23-huawei>
-In-Reply-To: <dcf86acc-567e-48e3-ad15-fd9522b46180@sabinyo.mountain>
-References: <20250623-losd-3-inv-icm42600-add-wom-support-v5-0-4b3b33e028fe@tdk.com>
-	<20250623-losd-3-inv-icm42600-add-wom-support-v5-2-4b3b33e028fe@tdk.com>
-	<CAMknhBHaSBF-a9nLZ0ZxB2-9HzYkPMBqUr4Aa4TthNnJMwtFgg@mail.gmail.com>
-	<20250626195323.6336820c@jic23-huawei>
-	<dcf86acc-567e-48e3-ad15-fd9522b46180@sabinyo.mountain>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YT5nx9sE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:To:
+	Content-Type; bh=n/l1HyF04aNgdp5rJ9CksqiHtOcAKrApwE2nQgpLbbY=;
+	b=YT5nx9sEkKwKs7RpT6eNAiAb+Phs320VaD4DRklT2FrcDSS0IXdJriyC1EJ1Sn
+	5fMSyHXZ4RoCjgEX6fF7y9Ii3HLzRd2co9spLrJv5buGXfeZ15tGVqqPxSjIgM6q
+	freUZQHIlWDvtu/cc220mhjLNqpW304zCXJU/9GxPQcDE=
+Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wB3B_YGDWBoZ6vbBA--.25517S2;
+	Sat, 28 Jun 2025 23:40:55 +0800 (CST)
+Message-ID: <21c6164e-fa2e-4207-910f-1db3ac3df545@163.com>
+Date: Sat, 28 Jun 2025 23:40:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: Extend max-link-speed to support
+ PCIe Gen5/Gen6
+From: Hans Zhang <18255117159@163.com>
+To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250529021026.475861-1-18255117159@163.com>
+ <20250529021026.475861-2-18255117159@163.com>
+ <q5ltnilbdhfxwh6ucjnm3wichrmu5wyjsx6eheiazqypveu3sm@euuvpjwu77h4>
+ <9203cf6e-ca59-416a-9c98-a2d6a5c6ce6f@163.com>
+Content-Language: en-US
+In-Reply-To: <9203cf6e-ca59-416a-9c98-a2d6a5c6ce6f@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3B_YGDWBoZ6vbBA--.25517S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWDAFWrXF1xtr1DKr43Awb_yoW8ur1Dpa
+	y3Ja1FkFWrZFySqrs7Wr1Fgr45Aanrt3y0yr45Gry7Aas3uFyrJFWSga1Ygr1jqrZ5ZFyx
+	ZF1jv3s3Ga1UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRwL0rUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgx6o2hgBsV5LwAAsy
 
-On Thu, 26 Jun 2025 14:48:10 -0500
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-> On Thu, Jun 26, 2025 at 07:53:23PM +0100, Jonathan Cameron wrote:
-> > > > +static int inv_icm42600_accel_disable_wom(struct iio_dev *indio_dev)
-> > > > +{
-> > > > +       struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
-> > > > +       struct device *pdev = regmap_get_device(st->map);
-> > > > +       struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
-> > > > +       unsigned int sleep_ms = 0;
-> > > > +       int ret;
-> > > > +
-> > > > +       scoped_guard(mutex, &st->lock) {
-> > > > +               /*
-> > > > +                * Consider that turning off WoM is always working to avoid
-> > > > +                * blocking the chip in on mode and prevent going back to sleep.
-> > > > +                * If there is an error, the chip will anyway go back to sleep
-> > > > +                * and the feature will not work anymore.
-> > > > +                */
-> > > > +               st->apex.wom.enable = false;
-> > > > +               st->apex.on--;
-> > > > +               ret = inv_icm42600_disable_wom(st);
-> > > > +               if (ret)
-> > > > +                       break;    
-> > > 
-> > > The fact that scoped_guard() uses a for loop is an implementation
-> > > detail so using break here makes this look like improper C code. I
-> > > think this would be better to split out the protected section to a
-> > > separate function and just use the regular guard() macro.  
-> > 
-> > Good catch.  This feels like something we should have some static analysis
-> > around as we definitely don't want code assuming that implementation.
-> > 
-> > +CC Dan / Julia to see if they agree.
-> >   
+
+On 2025/6/18 22:22, Hans Zhang wrote:
 > 
-> I feel like the scoped_guard() macro is so complicated because they
-> wanted break statements to work as expected...  (As opposed to how I write
-> half my loop macros using nested for loops so that when I break it only
-> breaks from the inner loop and corrupts memory).
-
-Was a while back but don't remember that coming up as a reason.
-I thought the for loop construct was just a way to define the scope in
-a place where the following or preceding code couldn't influence what was
-instantiated.
-
-Anyhow I think breaks in a scoped_guard() is a horrible pattern based on hidden
-implementation details so I'm keen to avoid it at least in IIO. 
-Maybe this will become common enough that I'll revisit that view in a year
-or two. Factoring out the code as a function seems the right answer in this
-case.
-
-Never mind on checking for it generally if we think it might be something
-that was intended as a feature not a bug.
-
-Thanks
-
-Jonathan
-
 > 
-> regards,
-> dan carpenter
+> On 2025/6/18 00:45, Manivannan Sadhasivam wrote:
+>> On Thu, May 29, 2025 at 10:10:24AM +0800, Hans Zhang wrote:
+>>> Update the device tree binding documentation for PCI to include
+>>> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
+>>> The original documentation limited the value to 1~4 (Gen1~Gen4),
+>>> but the kernel now supports up to Gen6. This change ensures the
+>>> documentation aligns with the actual code implementation.
+>>>
+>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>> ---
+>>>   dtschema/schemas/pci/pci-bus-common.yaml | 2 +-
+>>
+>> As Rob commented in v1, this file lives in dtschema project. So update 
+>> it there:
+>> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
+>>
 > 
+> Dear Mani,
+> 
+> I made the patch based on the latest dtschema code pulled from github.
+> 
+> Also, I saw similar submissions as follows:
+> https://lore.kernel.org/linux-pci/advhonmqnxm4s6r3cl7ll5y3jfc566fcjvetvlzvy7bztzetev@t75xmo5fktde/
+> 
+> I don't know if Rob obtained this patch from here and then applied it to 
+> the dtschema project? Is there still a special process to submit this 
+> patch?
+> 
+> 
+> Dear Rob,
+> 
+> Can you apply this patch directly to the dtschema project?
+> 
+
+Dear Rob,
+
+Gentle ping.
+
+Best regards,
+Hans
+
+> Best regards,
+> Hans
+> 
+>> - Mani
+>>
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml 
+>>> b/dtschema/schemas/pci/pci-bus-common.yaml
+>>> index ca97a00..413ef05 100644
+>>> --- a/dtschema/schemas/pci/pci-bus-common.yaml
+>>> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
+>>> @@ -121,7 +121,7 @@ properties:
+>>>         unnecessary operation for unsupported link speed, for 
+>>> instance, trying to
+>>>         do training for unsupported link speed, etc.
+>>>       $ref: /schemas/types.yaml#/definitions/uint32
+>>> -    enum: [ 1, 2, 3, 4 ]
+>>> +    enum: [ 1, 2, 3, 4, 5, 6 ]
+>>>     num-lanes:
+>>>       description: The number of PCIe lanes
+>>> -- 
+>>> 2.25.1
+>>>
+>>
 
