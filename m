@@ -1,92 +1,104 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6649219A8E;
-	Sat, 28 Jun 2025 07:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA23F13633F;
+	Sat, 28 Jun 2025 07:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751095098; cv=none; b=R68m5/A7UogKKE+eMS1eAbe9qXPElJBK7udmDJ1UlG3TUUkeU5XTtkBBkBQnxzyButVzVVqkcpDppwedKSHHvIWOIpaEdJ0nuvDRFkdZKn0Ez8w9o/oc54hiHOivVldPbJGHythFaKAxpfIofEPiFZjW7QpJ7ERQNGNbebMCDTM=
+	t=1751095179; cv=none; b=XNTvncS+aJJHE8Dvgc+vazF8+DDaQp9QR62SkskuGloudGo492w24zBj3HlgXKdocY2S6IeDHLPKDQ8I7U0JCsrD4l245p7mJ9kkdDoIhN7VzCQTzttdGpuo0yAoE3Zfm3XgCpKb2SyqamviBdhynUoa6fZMhuRoSvjbYpoyaPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751095098; c=relaxed/simple;
-	bh=0febcdAcwynBf2IwlKyQYt1dntOoEkTW1nH+f8APtlU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xy9JlWs5doWNtWBpJAslhhwl39zAHNMo5/3y4hunh3gTLPan1z052/KQw2Tfiam08USBuCoktPJ705i2aiS8F9KhE+0TgWqDO5TzuxeHR4wBAq21mmXP/a1fLxMY6wPlciUwWx76kW9jC5MUNt9JrPb++TB9EFZtp0CcoqSHXQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GQbSvLnH; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751095179; c=relaxed/simple;
+	bh=pKfvDVcRcDhp3Z+v2Y4AKpYYPrwP+zM1RXX1clGD2PA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=nTRE/BXNsj92A2ENCEi4NzUSJBfqDGTROwPJCbqJZ1hvJ6BTb2tgZY49Cbo+ABxYyq7K8QQOxxe3DV5vMSYO6NTFQi+IyAguKsXRmyj5wyHj5Ikv9sr4/wa3zObzKI25lghnDq37jaqWAL3KMi4FN6VJJVSlzUUgH3gFOKX/TvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=AHra/kG8; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQbSvLnH"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-31305ee3281so389541a91.0;
-        Sat, 28 Jun 2025 00:18:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751095096; x=1751699896; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0febcdAcwynBf2IwlKyQYt1dntOoEkTW1nH+f8APtlU=;
-        b=GQbSvLnHW0lb6DNbTMrwYvLwoTztamHbCxRCxmEzn4H96ANNUloQTVDE2QRkJEKIon
-         PqXpdW24mY43WD8w6ucY6WG54J0IX/lmfOhUdAxmpn69bG/NefXu2lyKuvDTyL+Y3XZT
-         SoO4udDTIo8TYA/6Tyl5NIB64FF+h9wiP2iuQf/KTwkmczc3JAz1fYKWdvtdK3QFlw5m
-         Ysg4bOEqVybyz8JobF+MeaO1da6WOdYhI/AMq/4xh87PtB8sOyLC5v4Kap0+Vvicvls8
-         t1VsGTTzqMsJFupyHsgI6GyEKyRjx6POBuSQfTHAVJHWZX3UkL3x2DRXYOYag7ORQOIJ
-         abag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751095096; x=1751699896;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0febcdAcwynBf2IwlKyQYt1dntOoEkTW1nH+f8APtlU=;
-        b=mF5oFRkxoxlOJa7iesidKDvaEB+F+vMTfMO8aU76IukvINHiFi04JL0sWE3iiV71Dw
-         QIJo9cvT+vrOZCGaQ3m1h5UNkkJtCRhOW6E2F3DIAz7q1r/FJiHnRBAVDGvx/TmjtfEF
-         erGHyz33OJABcsRKgLZZ4DsgpPDIgs7fqkyG5QSv506vihwCdeSTL/l5DIL0TbaEyBfP
-         fPOo9a4yT/9ftW7usBMS8EEryC6ofaf9J/KpSM6N4PlfNi/x6yfyHH8KEVG+NeAZy3fl
-         aQwS6Tc0/4QhD/kKgX3nzS9H7Jw8wNxiQHEIfwFllRYitc2/KA0ak/9kgOdNxbGinEdp
-         nyCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUk71rcoJQYn/l1itkse1Itsi/1L6461yOghjh+BZRSifLBswzQptgWldkkNhgW7MEjSArhTAoB2fEDzn7+dSkR@vger.kernel.org, AJvYcCUzowaKN7mjGGVdOfi2ABYAdEC9KcBuOGrqPAFjKfZcJF8snIFLgDqateN6GeivefnNFPyYV8biMCc=@vger.kernel.org, AJvYcCWVBNqUxXiOAwQwrDklXwL5AkfSIyL8Xmz5EIHJrP4Zeukg5rYqqc6iF3BD3BCleqkV7p7Tyr6N48XZOcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypUi3gtYAaKzdXZy0TeKAqVnxpuubhadLvCn7aLcfHiifnupU8
-	Nze0Pc2fe1R5FvqVgfFxAIcko55we+OQ2QVUAO4uR5TB5IijDcdSs3JhhyXhkP2/HIxs0q0fCJW
-	xbPpvzoVt6xwcfzlMUsyau6tzIXRVphI=
-X-Gm-Gg: ASbGncuV5uk35Ij85yTIcMAFp9/GNZFObdHFYONfrRAD+De7dhuq5CF9D3VQ/40LnPL
-	IPue+paEv2Otmq9GCrHt1iQZia9Wun1e7JX7c7ZC6VSN2MFJDTBCsPkjM/yUKOGWe0mZAQMSQ0l
-	wuTaDfN3T+MDd4wOpLs1NFQ7QTsSkj6PAZ1ysXyvE3DBRwpfz61NItCw==
-X-Google-Smtp-Source: AGHT+IH5LaSkNoggDQYpXdHzsHorCHB3OugN2pInV692ztgRKLp8l9wMjej6EUufsoKeOpCk3LBfANKPFwm6lZJXh84=
-X-Received: by 2002:a17:90b:51cc:b0:312:639:a06d with SMTP id
- 98e67ed59e1d1-318ec43c0d0mr1085996a91.5.1751095096142; Sat, 28 Jun 2025
- 00:18:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="AHra/kG8"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A586022FBD;
+	Sat, 28 Jun 2025 09:19:33 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 2MsP83fmh9-E; Sat, 28 Jun 2025 09:19:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751095172; bh=pKfvDVcRcDhp3Z+v2Y4AKpYYPrwP+zM1RXX1clGD2PA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=AHra/kG8lut6uMn824OiAVCfnpcGcfiwN1zUENBkuttxyKLbi17bOjzAFlRGysU/f
+	 GrdMxS4Wu80qL8PMjDpUYie6Ywj/GIL4cJ35JzMQRPPOJC3uphQdv9SROGbPYUIuvb
+	 TCaZalOFImycAldXu4ObbHJR4Lqrw5XzTiiPqHytVYfjEDQkgUuUNoJbk8JWgMjtYX
+	 wcQ4Zxv2FQ60w/5GNyp9sXm53vK1u1t+BSg05+0uXZv/ZoxUwa3Y6rPL/MSW8HVNEq
+	 yAV74Ar8TucIuJ4ouuTNi0VU7u0MyAzr8St595cFuzfax309WRIr0pvk80g695kZTQ
+	 nQHr+5NfHceqg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627065320.9315-1-work@onurozkan.dev> <CANiq72mMEEdP1ZG2brhLWgjaQpnwG+Mcxm43B0hAvZuaq-=jBA@mail.gmail.com>
- <20250628070345.5499a7bf@nimda.home>
-In-Reply-To: <20250628070345.5499a7bf@nimda.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 28 Jun 2025 09:18:04 +0200
-X-Gm-Features: Ac12FXxNJGj7oMRLRluBODeSjNbnYZFjQxJFGCReld2J8lk997KNAcKWnEbxQ_o
-Message-ID: <CANiq72m=gU-SNcCB6YY0riUsdr+p4Nd6As=vuxpQk4A32RZeAw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] replace `allow(...)` lints with `expect(...)`
-To: Onur <work@onurozkan.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	davidgow@google.com, nm@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Sat, 28 Jun 2025 07:19:32 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Krzysztof
+ Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: soc: samsung: exynos-pmu: allow
+ mipi-phy subnode
+In-Reply-To: <20250627214258.GA189284-robh@kernel.org>
+References: <20250627-exynos7870-drm-dts-v2-0-d4a59207390d@disroot.org>
+ <20250627-exynos7870-drm-dts-v2-2-d4a59207390d@disroot.org>
+ <20250627214258.GA189284-robh@kernel.org>
+Message-ID: <6151f833d5a06369cd3dce5d2b2aca9f@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 6:03=E2=80=AFAM Onur <work@onurozkan.dev> wrote:
->
-> I already tried that but it didn't helped. I was able to make it work
-> with manually hacking the `init/Kconfig` file.
+On 2025-06-27 21:42, Rob Herring wrote:
+> On Fri, Jun 27, 2025 at 01:43:25AM +0530, Kaustabh Chakraborty wrote:
+>> Add Exynos7870's PMU compatible to the list of nodes which allow a 
+>> MIPI
+>> PHY driver.
+>> 
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>>  Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml 
+>> b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+>> index 
+>> f0fb24156da9b8980dcfd5339ae75f12a71cf6d6..45acd6a03d761a833cec435302e5190fb50f7a23 
+>> 100644
+>> --- a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+>> +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+>> @@ -172,6 +172,7 @@ allOf:
+>>                - samsung,exynos5250-pmu
+>>                - samsung,exynos5420-pmu
+>>                - samsung,exynos5433-pmu
+>> +              - samsung,exynos7870-pmu
+> 
+> Don't you need to add this to 'compatible' and under 'select'?
 
-That should not be needed -- the `/` command should tell you what you
-are missing.
+compatible: [1]
 
-Cheers,
-Miguel
+samsung,exynos7-pmu is under select. 7870 has a fallback on 7.
+Do you think samsung,exynos7-pmu should've been added in this patch
+instead?
+
+[1] 
+https://elixir.bootlin.com/linux/v6.16-rc3/source/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml#L56
+
+> 
+>>      then:
+>>        properties:
+>>          mipi-phy: true
+>> 
+>> --
+>> 2.49.0
+>> 
