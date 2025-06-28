@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333661EB36;
-	Sat, 28 Jun 2025 17:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6CF2BCFB;
+	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751131828; cv=none; b=ARaytfP8aWwDa4OMaYADnwvbTFTLge7py34bhLEWzM2OjFlqgzinkw+r9WRQOeUAkkIL+ax2TqJH9yL0o0P9W3QMWVuhg/l9C8U21nxWhBhdLrSHNCHjeQOa4un7wGVON4P7wEkBCPAF5EOm21iY9IE5uiN1u1xadQG7HSlRYQw=
+	t=1751131828; cv=none; b=SAkhAyRYSBPcvbGKysXKP/acQIsD3g1cfGLRTscnCLsU9xqVJS+kvqahsacYL+yoj1z2lR7y1FvMybB90RoihW2c3tf2R17abwOiFM9B3dqAMMHdm0TPVYFYD5goqUIuYZkzmUHT9ZUQSiV1c0MFwrmx5Qs6GWCc04tY1gtBmks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751131828; c=relaxed/simple;
-	bh=LTJgQeXifMFvhewXq1QziXQmUhfSC8Gh4RQFCzcAmcc=;
+	bh=zWAmwKnV6f1cwbtaUPgrJ1lIE+Rc2XJQ33KR+f1+GBg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F5h6b0zFAjO0w1OGu5xPnUdFF+MsFLiGyOIcqOyUFsYGbbbcErtPpCLKYlyCr9ok2NZvi0Arsw0IS5sINcnV68kKppXNl2EnAx02LNx1HMKb4vYk8PwrTgSoFZmHdnsZjrIJL7TKE2FW4wD7Llj2fXf/AEy+uPRgeLy1NwimOCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyAcDTzC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GaGXza3prxWZk7EdYm9ynyo5M9BvXE6YoZ4bQ4JViGB0MnVDVxXpziJPWRX5DVRLas2QEBtX68KYZPvi+0VfdzBHKW2staG7MU6B+6UoUv/Zlvn2cKAH6AnHx/YMltMiCRP9XfkUT7q6K3nrMiJ36/C1ibPUfpcH1z1yMTGCaeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/5rNor2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyAcDTzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3888C4CEEA;
-	Sat, 28 Jun 2025 17:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/5rNor2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA90C4CEEA;
+	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751131827;
-	bh=LTJgQeXifMFvhewXq1QziXQmUhfSC8Gh4RQFCzcAmcc=;
+	s=k20201202; t=1751131828;
+	bh=zWAmwKnV6f1cwbtaUPgrJ1lIE+Rc2XJQ33KR+f1+GBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pyAcDTzCLnxhbBnq6ie4dvRqywD9yApCSndQJcRyr2M7f7vU64foxquEIZGNmvRFY
-	 1iM8GgjF9k14Vf5nl6LvqUU2/LrjArPqX9l+9lB8f82/jtZSHno//oO6dbeE0hBPzZ
-	 euMhMhzxyJXndom80z1ca+tr8u0yAjbfVb4aoS/9nJVKhKT0ekyH79ByX12SujhmE1
-	 3akMbafBNQesEg4lSiEvdbPneLk3PlckhCyj5zItEKSnxh+O7uB7FHrL9kdh88fFH1
-	 +Qf5rUnathXrF6IBi4+0oywzE1ecG59FMv9UASYUipWSE9wMZv6MqxNmssN6Vcqocn
-	 cwK8FaMbbLtMw==
+	b=l/5rNor2Px+Cl03/jN1HOWynCV9eo9DeSLJ6bO8UiztHyxYNqMuyqqhnzMpSnt9TH
+	 3kRNDIs83QmyR1QPNeG7WCWI59VZYaYbtT3Z4uHHSfsVP357KbSIMqAzl2Q/nRTYEx
+	 oL63w2UYzn9/d/mr3Ns+0EL9e7sCXCVWM6oQj0pJKOGAuPh/9Gu2jB2bVawB7D5qxe
+	 2pwPMr0neIm6Fv06BYVWNU26Frt54kD1MzdyyUugfZvBPxEkIGqf5NkJL9DUg0P1rS
+	 ZZIFOxvccdpe4/0TJL6k94CwGN+DGQFO6jwdMb1sn6kDdRXlaVjJusfA+20YePCd3L
+	 BJM2bK8IJ+3/w==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uVZNh-00AqZC-Pf;
-	Sat, 28 Jun 2025 18:30:25 +0100
+	id 1uVZNi-00AqZC-Fv;
+	Sat, 28 Jun 2025 18:30:26 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -43,9 +43,9 @@ Cc: Toan Le <toan@os.amperecomputing.com>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 01/12] genirq: Teach handle_simple_irq() to resend an in-progress interrupt
-Date: Sat, 28 Jun 2025 18:29:54 +0100
-Message-Id: <20250628173005.445013-2-maz@kernel.org>
+Subject: [PATCH 04/12] PCI: xgene: Drop XGENE_PCIE_IP_VER_UNKN
+Date: Sat, 28 Jun 2025 18:29:57 +0100
+Message-Id: <20250628173005.445013-5-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250628173005.445013-1-maz@kernel.org>
 References: <20250628173005.445013-1-maz@kernel.org>
@@ -61,38 +61,45 @@ X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-It appears that the defect outlined in 9c15eeb5362c4 ("genirq: Allow
-fasteoi handler to resend interrupts on concurrent handling") also
-affects some other less stellar MSI controllers, this time using
-the handle_simple_irq() flow.
+XGENE_PCIE_IP_VER_UNKN is only refered to when probing for the
+original XGene PCIe implementation, and get immediately overridden
+if the device has the "apm,xgene-pcie" compatible string.
 
-Teach this flow about irqd_needs_resend_when_in_progress(). Given
-the invasive nature of this workaround, only this flow is updated.
+Given that the only way to get there is by finding this very string in
+the DT, it is obvious that we will always ovwrite the version with
+XGENE_PCIE_IP_VER_1.
+
+Drop the whole thing.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- kernel/irq/chip.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-xgene.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 2b274007e8bab..6e789035919f7 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -559,7 +559,13 @@ void handle_simple_irq(struct irq_desc *desc)
- {
- 	guard(raw_spinlock)(&desc->lock);
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index a848f98203ae4..b95afa35201d0 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -54,7 +54,6 @@
+ #define XGENE_V1_PCI_EXP_CAP		0x40
  
--	if (!irq_can_handle(desc))
-+	if (!irq_can_handle_pm(desc)) {
-+		if (irqd_needs_resend_when_in_progress(&desc->irq_data))
-+			desc->istate |= IRQS_PENDING;
-+		return;
-+	}
-+
-+	if (!irq_can_handle_actions(desc))
- 		return;
+ /* PCIe IP version */
+-#define XGENE_PCIE_IP_VER_UNKN		0
+ #define XGENE_PCIE_IP_VER_1		1
+ #define XGENE_PCIE_IP_VER_2		2
  
- 	kstat_incr_irqs_this_cpu(desc);
+@@ -630,10 +629,7 @@ static int xgene_pcie_probe(struct platform_device *pdev)
+ 
+ 	port->node = of_node_get(dn);
+ 	port->dev = dev;
+-
+-	port->version = XGENE_PCIE_IP_VER_UNKN;
+-	if (of_device_is_compatible(port->node, "apm,xgene-pcie"))
+-		port->version = XGENE_PCIE_IP_VER_1;
++	port->version = XGENE_PCIE_IP_VER_1;
+ 
+ 	ret = xgene_pcie_map_reg(port, pdev);
+ 	if (ret)
 -- 
 2.39.2
 
