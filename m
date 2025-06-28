@@ -1,301 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B074C220F32
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 07:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF791A23B5;
+	Sat, 28 Jun 2025 07:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751097161; cv=none; b=dwFxUytzlQljoP5xO18ZBA7vl/As1ZMEn4qJAIL7R6CDz+o5VWwQGL/F/apb+4jAp0KDvr2CIHzn0CY198R9fXnBloZ0sEFnhvQ8DNVcYHIGzPxY+TWgH8l1RpXGy6MEkPh59STf+q53Qr/3pXxGtJ/Z8Phb8W2A5bNs9WJwvWU=
+	t=1751097192; cv=none; b=YMRaksN+dgA4Z5ZlddQlL5BKMybA0iw1cw7mIWELDWdMh/zETjgPq+B9U68MYwvIGuGeAnbSVO6G1zfLpGDz/p0bdPVjxQq87JvCtRsXUcEQQUFEtiNHEmMRsaYsSV07eBLEPhYIlKcVpA7xkkCxf4KrxAg+IBFQS3fhJfMjbVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751097161; c=relaxed/simple;
-	bh=zw8+XZcRIWHl4Pb7ANDvCfIV/XjuEkN0+TvXI1VOw6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8k/LX6nDm5Ils7j2d2ow+GB1ws6eAWKRBtKVlO/TuKxZ+yQ66c1gx8bcggHghXYzopu4tnJ6KSf7Wybdin1M51SCtPIag0QO0cP3YXl+ivEA+c7C8I0injLzIrkoBb9w9xk2SxsZis8Qexh9WGx9la7TpE8PLmKHrR16VASQMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mz1vALNH; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751097192; c=relaxed/simple;
+	bh=Wt7l/DfLPgfPEwp0qS2mUttKAMudGoB0UoZ0ax3W/fM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=S9Xm6HDwvRz2rgm3/fFGQH6YkpGIpvfNvaZt2kkGt6iOwDflaeQ85g0uP8JM6BOZvTrsjmCOdrqcWaEeiuwt+3MIQT1OZgWgTg8G7AJNAzn5CSBlVJ+JE5IUNmIidMvaiyFo4kgjTRVVugvpSts/Lwc1jcQugm655uVT1kaV220=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GiAykm51; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mz1vALNH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751097158; x=1782633158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zw8+XZcRIWHl4Pb7ANDvCfIV/XjuEkN0+TvXI1VOw6E=;
-  b=mz1vALNHWnfTvWMnUWYOQG1RGcxSM4sA4mbyY16p1myoaqVAPrAjYN1F
-   XU7yzYKdfQ9EepqjxJxsHPCr5H5C7GaoOGgwBY3gy1CKaID5dezRCsGJf
-   89IprmTiWuou++j3/5bScEL0A/pNAdYW2AszLmfzIaW+30Vem3gHv3UKu
-   SoZS/qdxuXUwQfWDed05U0R3JAyk+vOgYLKpmXrLkwRJd0j5Ky2nmWKDx
-   GEXIPBCilC18FLNZH+I/bUeSULHhEkXOD19bfRF4n9chSd6Vj6weA+hgW
-   yStbdNjWjUxYsbm7UuU3MXzLZdwSTFnJSRoBBus44I+jRIcPZNaEgg7EP
-   g==;
-X-CSE-ConnectionGUID: TK7O+chqRWqSvvWlVrZfqg==
-X-CSE-MsgGUID: zcPoH7gZQzCNRsGOj5hkHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57081099"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="57081099"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 00:52:38 -0700
-X-CSE-ConnectionGUID: wIItiP6PSA6co7huGb8zmQ==
-X-CSE-MsgGUID: SPfVjudESzKsKbdwnJfnrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="153088228"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 28 Jun 2025 00:52:35 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVQMT-000Wuk-1w;
-	Sat, 28 Jun 2025 07:52:33 +0000
-Date: Sat, 28 Jun 2025 15:52:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: zhongjinji@honor.com, linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	yuzhao@google.com, linux-kernel@vger.kernel.org,
-	yipengxiang@honor.com, liulu.liu@honor.com, feng.han@honor.com
-Subject: Re: [PATCH] mm: vmscan: Page scanning depends on swappiness and
- refault
-Message-ID: <202506281559.f6IHM6uJ-lkp@intel.com>
-References: <20250627162606.30609-1-zhongjinji@honor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GiAykm51"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C83C4CEEA;
+	Sat, 28 Jun 2025 07:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751097191;
+	bh=Wt7l/DfLPgfPEwp0qS2mUttKAMudGoB0UoZ0ax3W/fM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=GiAykm51isvLyV2Pccs7N91t+eHej+hLyUkmjx1mzDbd+/VrpHVR17B8q2eRFUsmC
+	 7/MWgqTEstp2zDWVPX9bVT+an4M7Sg6UUkVY9mlHwpPNpV4DSHG2VWC20zGFrsuu/Q
+	 F8gv2rvAXh8lBpp+gDP6HGp2FoUq2J5thqdOYhiQZ+wC+9LM+9IypUX5125/zN4Qeu
+	 ++FJ5QWjir6vvO1MitZnhhmdkOP2geUCf6hr1K8G2BZRb+7h02MByRPARzbnxKdOuj
+	 E51SDl4+k9NkRrVrY/Ovn4yVzwIvHKqQHJgzUrnv2oHlCJ95KDmwvAa3jMHXStZA40
+	 zRPuetMhdJAHw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627162606.30609-1-zhongjinji@honor.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 28 Jun 2025 09:53:06 +0200
+Message-Id: <DAY059Y669BX.2GVKH6RBG80B6@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <kwilczynski@kernel.org>,
+ <bhelgaas@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-6-dakr@kernel.org> <aF2vgthQlNA3BsCD@tardis.local>
+ <aF2yA9TbeIrTg-XG@cassiopeiae> <DAWULS8SIOXS.1O4PLL2WCLX74@kernel.org>
+ <aF8V8hqUzjdZMZNe@tardis.local> <DAXXVXNTRLYH.1B8O2LKBF4EW1@kernel.org>
+ <aF-N-luMxFTurl91@Mac.home>
+In-Reply-To: <aF-N-luMxFTurl91@Mac.home>
 
-Hi,
+On Sat Jun 28, 2025 at 8:38 AM CEST, Boqun Feng wrote:
+> On Sat, Jun 28, 2025 at 08:06:52AM +0200, Benno Lossin wrote:
+>> On Sat Jun 28, 2025 at 12:06 AM CEST, Boqun Feng wrote:
+>> > On Fri, Jun 27, 2025 at 01:19:53AM +0200, Benno Lossin wrote:
+>> >> On Thu Jun 26, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+>> >> > On Thu, Jun 26, 2025 at 01:37:22PM -0700, Boqun Feng wrote:
+>> >> >> On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
+>> >> >> > +/// [`Devres`]-releaseable resource.
+>> >> >> > +///
+>> >> >> > +/// Register an object implementing this trait with [`register_=
+release`]. Its `release`
+>> >> >> > +/// function will be called once the device is being unbound.
+>> >> >> > +pub trait Release {
+>> >> >> > +    /// The [`ForeignOwnable`] pointer type consumed by [`regis=
+ter_release`].
+>> >> >> > +    type Ptr: ForeignOwnable;
+>> >> >> > +
+>> >> >> > +    /// Called once the [`Device`] given to [`register_release`=
+] is unbound.
+>> >> >> > +    fn release(this: Self::Ptr);
+>> >> >> > +}
+>> >> >> > +
+>> >> >>=20
+>> >> >> I would like to point out the limitation of this design, say you h=
+ave a
+>> >> >> `Foo` that can ipml `Release`, with this, I think you could only s=
+upport
+>> >> >> either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the i=
+nput
+>> >> >> for `register_release()`. Maybe we want:
+>> >> >>=20
+>> >> >>     pub trait Release<Ptr: ForeignOwnable> {
+>> >> >>         fn release(this: Ptr);
+>> >> >>     }
+>> >> >
+>> >> > Good catch! I think this wasn't possible without ForeignOwnable::Ta=
+rget.
+>> >>=20
+>> >> Hmm do we really need that? Normally you either store a type in a sha=
+red
+>> >
+>> > I think it might be quite common, for example, `Foo` may be a general
+>> > watchdog for a subsystem, for one driver, there might be multiple
+>> > devices that could feed the dog, for another driver, there might be on=
+ly
+>> > one. For the first case we need Arc<Watchdog> or the second we can do
+>> > Box<Watchdog>.
+>>=20
+>> I guess then the original `&self` design is better? Not sure...
+>>=20
+>
+> This is what you said in v3:
+>
+> """
+> and then `register_release` is:
+>
+>     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr=
+) -> Result
+>
+> This way, one can store a `Box<T>` and get access to the `T` at the end.
+> Or if they store the value in an `Arc<T>`, they have the option to clone
+> it and give it to somewhere else.
+> """
+>
+> I think that's the reason why we think the current version (the
+> associate type design) is better than `&self`?
 
-kernel test robot noticed the following build warnings:
+Yeah and I'd still say that that statement is true.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc3]
-[cannot apply to akpm-mm/mm-everything next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> The generic type design (i.e. Release<P: ForeignOwnable>) just further
+> allows this "different behaviors between Box and Arc" for the same type
+> T. I think it's a natural extension of the current design and provides
+> some better flexibility.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/zhongjinji-honor-com/mm-vmscan-Page-scanning-depends-on-swappiness-and-refault/20250628-002820
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250627162606.30609-1-zhongjinji%40honor.com
-patch subject: [PATCH] mm: vmscan: Page scanning depends on swappiness and refault
-config: x86_64-buildonly-randconfig-003-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281559.f6IHM6uJ-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506281559.f6IHM6uJ-lkp@intel.com/reproduce)
+I think that extension is going to end up being too verbose.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506281559.f6IHM6uJ-lkp@intel.com/
+>> > What's the downside?
+>>=20
+>> You'll need to implement `Release` twice:
+>>=20
+>
+> Only if you need to support both for `Foo`, right? You can impl only one
+> if you only need one.
+>
+> Also you can do:
+>
+>     impl<P: ForeignOwnable<Target=3DFoo> + Deref<Target=3DFoo>> Release<P=
+> for Foo {
+>         fn release(this: P) {
+> 	    this.deref().do_sth();
+> 	}
+>     }
 
-All warnings (new ones prefixed by >>):
+Please no. If this is a regular pattern, then let's go back to `&self`.
+You lose all benefits of the generic design if you do it like this,
+because you don't know the concrete type of the foreign ownable.
 
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      49 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
-   mm/vmscan.c:4100:40: error: expected identifier before '.' token
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                                        ^
-   include/linux/compiler_types.h:548:23: note: in definition of macro '__compiletime_assert'
-     548 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:568:9: note: in expansion of macro '_compiletime_assert'
-     568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      49 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
-   mm/vmscan.c:4100:40: error: expected identifier before '.' token
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                                        ^
-   include/linux/compiler_types.h:548:23: note: in definition of macro '__compiletime_assert'
-     548 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:568:9: note: in expansion of macro '_compiletime_assert'
-     568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      49 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
-   mm/vmscan.c:4100:40: error: expected identifier before '.' token
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                                        ^
-   include/linux/compiler_types.h:548:23: note: in definition of macro '__compiletime_assert'
-     548 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:568:9: note: in expansion of macro '_compiletime_assert'
-     568 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:49:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      49 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
-   mm/vmscan.c:4100:40: error: expected identifier before '.' token
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                                        ^
-   include/linux/compiler_types.h:518:27: note: in definition of macro '__unqual_scalar_typeof'
-     518 |                 _Generic((x),                                           \
-         |                           ^
-   include/asm-generic/rwonce.h:50:9: note: in expansion of macro '__READ_ONCE'
-      50 |         __READ_ONCE(x);                                                 \
-         |         ^~~~~~~~~~~
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
-   In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
-                    from include/linux/compiler.h:390,
-                    from include/asm-generic/bug.h:5,
-                    from arch/x86/include/asm/bug.h:103,
-                    from include/linux/bug.h:5,
-                    from include/linux/mmdebug.h:5,
-                    from include/linux/mm.h:6,
-                    from mm/vmscan.c:15:
-   mm/vmscan.c:4100:40: error: expected identifier before '.' token
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                                        ^
-   include/asm-generic/rwonce.h:44:73: note: in definition of macro '__READ_ONCE'
-      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
-         |                                                                         ^
-   mm/vmscan.c:4100:20: note: in expansion of macro 'READ_ONCE'
-    4100 |         if (seq <= READ_ONCE(mm_state->.seq))
-         |                    ^~~~~~~~~
->> mm/vmscan.c:4097:34: warning: variable 'mm_state' set but not used [-Wunused-but-set-variable]
-    4097 |         struct lru_gen_mm_state *mm_state = get_mm_state(lruvec, type);
-         |                                  ^~~~~~~~
-   mm/vmscan.c: In function 'try_to_inc_max_seq':
-   mm/vmscan.c:4154:17: error: implicit declaration of function 'for_each_age_able_type'; did you mean 'for_each_evictable_type'? [-Werror=implicit-function-declaration]
-    4154 |                 for_each_age_able_type(type, can_age) {
-         |                 ^~~~~~~~~~~~~~~~~~~~~~
-         |                 for_each_evictable_type
-   mm/vmscan.c:4154:54: error: expected ';' before '{' token
-    4154 |                 for_each_age_able_type(type, can_age) {
-         |                                                      ^~
-         |                                                      ;
-   mm/vmscan.c: At top level:
->> mm/vmscan.c:3876:13: warning: 'walk_mm' defined but not used [-Wunused-function]
-    3876 | static void walk_mm(struct mm_struct *mm, struct lru_gen_mm_walk *walk)
-         |             ^~~~~~~
->> mm/vmscan.c:3103:13: warning: 'iterate_mm_list' defined but not used [-Wunused-function]
-    3103 | static bool iterate_mm_list(struct lru_gen_mm_walk *walk, struct mm_struct **iter, int type)
-         |             ^~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+> if you want Box and Arc case share the similar behavior, right?
+>
+>>     impl Release<Box<Self>> for Foo {
+>>         fn release(this: Box<Self>) {
+>>             /* ... */
+>>         }
+>>     }
+>>=20
+>>     impl Release<Arc<Self>> for Foo {
+>>         fn release(this: Arc<Self>) {
+>>             /* ... */
+>>         }
+>>     }
+>>=20
+>> This also means that you can have different behavior for `Box` and
+>> `Arc`...
+>
+> That's the point, as one of the benefits you mentioned above for the
+> associate type design, just extending it to the same type.
 
+I'd say that's too verbose for something that's rather supposed to be
+simple.
 
-vim +/mm_state +4097 mm/vmscan.c
+Hmm @Danilo, do you have any use-cases in mind or already done?
 
-  4093	
-  4094	static bool can_mm_list_age(struct lruvec *lruvec, struct lru_gen_mm_walk *walk,
-  4095			  int type, unsigned long seq)
-  4096	{
-> 4097		struct lru_gen_mm_state *mm_state = get_mm_state(lruvec, type);
-  4098	
-  4099		/* see the comment in iterate_mm_list() */
-> 4100		if (seq <= READ_ONCE(mm_state->.seq))
-  4101			return false;
-  4102	
-  4103		/*
-  4104		 * If the hardware doesn't automatically set the accessed bit, fallback
-  4105		 * to lru_gen_look_around(), which only clears the accessed bit in a
-  4106		 * handful of PTEs. Spreading the work out over a period of time usually
-  4107		 * is less efficient, but it avoids bursty page faults.
-  4108		 */
-  4109		if (!should_walk_mmu()) {
-  4110			return iterate_mm_list_nowalk(lruvec, type, seq);
-  4111		}
-  4112	
-  4113		walk = set_mm_walk(NULL, true);
-  4114		if (!walk) {
-  4115			return iterate_mm_list_nowalk(lruvec, type, seq);
-  4116		}
-  4117	
-  4118		return true;
-  4119	}
-  4120	
-  4121	static bool try_to_inc_max_seq(struct lruvec *lruvec, unsigned long *seq,
-  4122				       bool *can_age, bool force_scan)
-  4123	{
-  4124		int type;
-  4125		bool success;
-  4126		struct lru_gen_mm_walk *walk = NULL;
-  4127		struct mm_struct *mm = NULL;
-  4128		struct lru_gen_folio *lrugen = &lruvec->lrugen;
-  4129	
-  4130		if (!walk_mmu_enable())
-  4131			return inc_max_seq(lruvec, seq, can_age);
-  4132	
-  4133		for_each_gen_type(type) {
-  4134			if (!can_age[type])
-  4135				continue;
-  4136			VM_WARN_ON_ONCE(seq[type] > READ_ONCE(lrugen->max_seq[type]));
-  4137	
-  4138			can_age[type] = can_mm_list_age(lruvec, walk, type, seq[type]);
-  4139		}
-  4140	
-  4141		success = can_age[LRU_GEN_ANON] || can_age[LRU_GEN_FILE];
-  4142		if (!success || !walk)
-  4143			goto done;
-  4144	
-  4145		walk->lruvec = lruvec;
-  4146		walk->force_scan = force_scan;
-  4147	
-  4148		for_each_gen_type(type) {
-  4149			walk->seq[type] = seq[type];
-  4150			walk->can_age[type] = can_age[type];
-  4151		}
-  4152	
-  4153		do {
-> 4154			for_each_age_able_type(type, can_age) {
-  4155				can_age[type] = iterate_mm_list(walk, &mm, type);
-  4156			}
-  4157			if (mm)
-  4158				walk_mm(mm, walk);
-  4159		} while (mm);
-  4160	
-  4161		success = can_age[LRU_GEN_ANON] || can_age[LRU_GEN_FILE];
-  4162	done:
-  4163		if (success) {
-  4164			success = inc_max_seq(lruvec, seq, can_age);
-  4165			WARN_ON_ONCE(!success);
-  4166		}
-  4167	
-  4168		return success;
-  4169	}
-  4170	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+Cheers,
+Benno
