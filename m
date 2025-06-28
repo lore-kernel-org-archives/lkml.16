@@ -1,138 +1,84 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2F61799F;
-	Sat, 28 Jun 2025 11:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7101799F;
+	Sat, 28 Jun 2025 12:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751111983; cv=none; b=h+9rVo5+oLrsMiaCsKf5LZFvys7E1rpM7VmS/uOMO3seWFjseL5vsn3wvy/fjulX6hAOpqSwmxU29JvcQLQXHLNr7K85I+JY4T3KqRUD7r00UUwg2OgK2brnhsDtLpKvllsKSM/gpNFTocV9W1Evx9QvP79Ma1J9o3ECk4Uec04=
+	t=1751112221; cv=none; b=KtNei/OdqB89LHe0RF3uRW7Yq+JYXnpV107GoH66pPuXz7fydHDzsMVVwToiFkeHIttwOMJmMHZ0/IDW3Y/kr7+kenIjXkdG0cM1sON+n297Hk9TMAFmm852nFGb/irxheJ0PjbOT+5fWZpYksLkGrQk5t/+JEPzy7qHGJ2n7pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751111983; c=relaxed/simple;
-	bh=Fg0/BiyR1g3lDUB2JV7W8UALU/okaFwpuib4Tj0FX1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gWFQ781Cp/SM+ZydRvF9hNm7UPHZEptAmZ6b9LbEMbmk+XxqeXu7zipiRYSKsZ9ScGhBG9khWoDRhQXg/jYxM/OfZTgFAdNnmIfRbQtBJku4xlJKsn+LwnN7XD6nKZ8wGfP+kr0whBuiOuMyx8O4pI+1COzjGhZzIbkZb8ZBOUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bTrWP1Lyqz1d17S;
-	Sat, 28 Jun 2025 19:57:05 +0800 (CST)
-Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id B116A140109;
-	Sat, 28 Jun 2025 19:59:29 +0800 (CST)
-Received: from [10.164.149.249] (10.164.149.249) by
- kwepemk100010.china.huawei.com (7.202.194.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 28 Jun 2025 19:59:28 +0800
-Message-ID: <61cdc77e-ddcd-4914-9f4c-2d98c2b27156@huawei.com>
-Date: Sat, 28 Jun 2025 19:59:18 +0800
+	s=arc-20240116; t=1751112221; c=relaxed/simple;
+	bh=adw4vx0RKecc9InMMlHCSaFcrV1lp2SGd+hRdGVjNEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMc40r03z11zfMqkeOniHqCakiJj6DwZV3lgXGc2zbjbyO61hOwFzvtxCxn1/XTQr6E84bckFCmMoimPOSy39dQih8bi3EykmOJTNNYt4vo6FuD4eHjqI7/XPSeoLexOd7oBJSoeuEXnO9qK9YhSnE5YirhhSuPMmzYPCA+wjRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOY5riDH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOY5riDH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1EFCC4CEEA;
+	Sat, 28 Jun 2025 12:03:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751112220;
+	bh=adw4vx0RKecc9InMMlHCSaFcrV1lp2SGd+hRdGVjNEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pOY5riDHCyJcLDukUB55YL5gK3oqVWjFCbmkYdYK7e54zPYE57O2LiQnCJEHUyIZ6
+	 jYAJdWIGUutBqp5pd7yGYpxj/9Nr0qs4AKHQJhtlt1bSI7n6YciivHChzylsHbb4xT
+	 y23B3KC2VvnIPUO3h91ylFVjg5G0i35vp7pYNw8303y2PULTBXv8ImwxbDKkotixCa
+	 KmEA27B9ehtFzsNmsLt0IRL9Xib+dN4s4DO9jZ4UGHjAa9YvRDr60wZokJGx2EtSAR
+	 tzqLfa+7OpEK3cEMdWqo/WIjO836yZrXXExZezeiG1FmxDWZ1EwP3U+xfaRmtT323Y
+	 Jw4IolTZijbFQ==
+Date: Sat, 28 Jun 2025 14:03:36 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, 
+	Jiande Lu <jiande.lu@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>, 
+	Chris Lu <chris.lu@mediatek.com>, Hao Qin <Hao.qin@mediatek.com>, 
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek <linux-mediatek@lists.infradead.org>, 
+	devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v5 0/2] Bluetooth: mediatek: add gpio pin to reset bt
+Message-ID: <rthuekbpdfszo2mw4b4zgjlv2nd45zbzzpxdjjxf6gpkrc5g5l@m7kfo7s4ltqv>
+References: <20250627055924.7716-1-ot_zhangchao.zhang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <zhangjianrong5@huawei.com>
-Subject: Re: [PATCH] thunderbolt: Confirm the necessity to configure asym link
- first
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Charalampos Mitrodimas
-	<charmitro@posteo.net>
-CC: <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
-	<YehezkelShB@gmail.com>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <guhengsheng@hisilicon.com>,
-	<caiyadong@huawei.com>, <xuetao09@huawei.com>, <lixinghang1@huawei.com>
-References: <20250626084107.2710306-1-zhangjianrong5@huawei.com>
- <20250626093026.GJ2824380@black.fi.intel.com> <877c0ylo2f.fsf@posteo.net>
- <20250627044615.GM2824380@black.fi.intel.com>
-Content-Language: en-US
-From: "zhangjianrong (E)" <zhangjianrong5@huawei.com>
-In-Reply-To: <20250627044615.GM2824380@black.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemk100010.china.huawei.com (7.202.194.58)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250627055924.7716-1-ot_zhangchao.zhang@mediatek.com>
 
+On Fri, Jun 27, 2025 at 01:59:22PM +0800, Zhangchao Zhang wrote:
+> The enhanced BT reset feature builds upon the previous software-based
+> BT reset by adding support for hardware pin resets.
+> To maintain compatibility with existing projects that
+> still use the software BT reset, both methods are supported.
+> 
+> When performing a BT reset, the system first checks whether the
+> Device Tree Source (DTS) is configured with the appropriate settings.
+> If the specified compatible and BT reset GPIO are defined in the DTS,
+> the system will pull the designated GPIO pin low for at least 200ms,
+> then pull it high to trigger the BT reset. If these settings are not
+> configured, the system will fall back to the original software
+> BT reset methods.
+> 
+> Compared with the previously submitted version, the following
+> information are some specific revision histories
+> 
+> V4-->V5 modifications:
+> -Modify the comments mentioned in v1.
 
+What? This is so vague, means nothing.
 
-On 6/27/2025 12:46 PM, Mika Westerberg wrote:
-> Hi,
-> 
-> On Thu, Jun 26, 2025 at 11:50:00AM +0000, Charalampos Mitrodimas wrote:
->> Mika Westerberg <mika.westerberg@linux.intel.com> writes:
->>
->>> Hi,
->>>
->>> On Thu, Jun 26, 2025 at 04:41:07PM +0800, zhangjianrong wrote:
->>>> Current implementation can cause allocation failures in
->>>> tb_alloc_dp_bandwidth() in some cases. For example:
->>>> allocated_down(30Gbps), allocated_up(50Gbps),
->>>> requested_down(10Gbps).
->>>
->>> I'm not sure I understand the above.
->>>
->>> Can you describe in which real life situation this can happen?
->>
->> I suppose this can happen when reducing bandwidth while total upstream
->> bandwidth usage on the link exceeds TB_ASYM_MIN (36 Gbps). The
->> allocation fails at the asymmetric limit check before checking whether
->> the downstream request actually needs asymmetric mode.
-> 
-> Right, but I would like to see here in the changelog explanation of the
-> situation and preferably parts of the dmesg showing the error as well.
+> -Modify dt_binding files and 
+>    make dt binding a separate patch.
 
-OK, I will update the commit message, but I don't have the dmesg because 
-I can't find a host router that contains two dp adapters.
+This means nothing. Everything is "modify". Your changelog is terribly
+uninforming. This must be detailed.
 
-> 
-> @zhangjianrong, can you do that and resend?
-> 
-> Note, I will be on vacation after today so expect delay from my side.
-> 
->>>>
->>>> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
->>>> ---
->>>>   drivers/thunderbolt/tb.c | 10 +++++-----
->>>>   1 file changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
->>>> index a7c6919fbf97..558455d9716b 100644
->>>> --- a/drivers/thunderbolt/tb.c
->>>> +++ b/drivers/thunderbolt/tb.c
->>>> @@ -1039,6 +1039,9 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
->>>>   			break;
->>>>   
->>>>   		if (downstream) {
->>>> +			/* Does consumed + requested exceed the threshold */
->>>> +			if (consumed_down + requested_down < asym_threshold)
->>>> +				continue;
->>>>   			/*
->>>>   			 * Downstream so make sure upstream is within the 36G
->>>>   			 * (40G - guard band 10%), and the requested is above
->>>> @@ -1048,20 +1051,17 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
->>>>   				ret = -ENOBUFS;
->>>>   				break;
->>>>   			}
->>>> -			/* Does consumed + requested exceed the threshold */
->>>> -			if (consumed_down + requested_down < asym_threshold)
->>>> -				continue;
->>>>   
->>>>   			width_up = TB_LINK_WIDTH_ASYM_RX;
->>>>   			width_down = TB_LINK_WIDTH_ASYM_TX;
->>>>   		} else {
->>>>   			/* Upstream, the opposite of above */
->>>> +			if (consumed_up + requested_up < asym_threshold)
->>>> +				continue;
->>>>   			if (consumed_down + requested_down >= TB_ASYM_MIN) {
->>>>   				ret = -ENOBUFS;
->>>>   				break;
->>>>   			}
->>>> -			if (consumed_up + requested_up < asym_threshold)
->>>> -				continue;
->>>>   
->>>>   			width_up = TB_LINK_WIDTH_ASYM_TX;
->>>>   			width_down = TB_LINK_WIDTH_ASYM_RX;
->>>> -- 
->>>> 2.34.1
-> 
+Best regards,
+Krzysztof
 
