@@ -1,97 +1,87 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6287245006;
-	Sat, 28 Jun 2025 14:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6A71747;
+	Sat, 28 Jun 2025 14:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751120103; cv=none; b=hnXvP3BkmJGTir3ACgaTDPpLRy5xmxHNZ5VtRPFUHHDnjUoHzHzvYDUo2sibBtcsZNkaj/NEWBtQ5h8plItB8n2yim1nLiKTNR78exVDIUQIrVhb1WoxG0H5F4anAFcMW4/kjMvAAs+QbDcLsfOzUbUTtsHQJUiPjF7CvrY3wkE=
+	t=1751120534; cv=none; b=Sn9De1Pqz7FUA/pRi6Z44yV4wuRqUyUFaLm7MCwHimKL5OsU2njluGRFIMfK9Zht/tJBItYwlCF5n6GpXXOsnubWSpjvRuHMv4R2AhbmdRgSEwxt5UqJOqUEdTamtpOE6Mwd2uhXcdYsixnUlRfM0uXPP6QflXDWCO5WipR8uVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751120103; c=relaxed/simple;
-	bh=Ig5METp6TLlVulWx3CtXwo+PGIrd2VeWcYuzRua1aaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TeRFb+tLNkxupHDwN7aWqnjtKoTfyIjxQul44Q5pFZWQMn2jNrh1HxpfblZ+wawf1g1BJDuATHx40ynh9mqBxyzpEplXEUoxMdNHBecgGARqxmBsX0xgpL6NKZI5XfO9DVwRfa8eE2VK7Ioz20i2xtBg401ToFCXA8V7B2Pl4Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSXY2xzJ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751120534; c=relaxed/simple;
+	bh=EBTOgKbMa7ugSS3wz5rgebhS88Gdc0XadFDzXKOAAf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lxy/MRr2lemdgAUYZIRpCYZtmhI7G0Zjdy1ksC09glGxXXQgdo+OpyG1Nqi3nz3AuAAA3dWRGUBIicJz18lyOXJyBEinQSjuSj8ufQo6qSOtTayHGnZbBlJrwgAehQhUVbGwZo/RRlwv2lPR6hlTGuBYc7UWwG/Hnj0Z/uj4M4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8edb7ct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSXY2xzJ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234a45e69c8so2554535ad.2;
-        Sat, 28 Jun 2025 07:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751120101; x=1751724901; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ig5METp6TLlVulWx3CtXwo+PGIrd2VeWcYuzRua1aaY=;
-        b=nSXY2xzJCF4FPTmtbL4n6PpQFEWk0CEYuK5CzPWzLIU9RXQBSo1amS3a4udbPup8pm
-         eRTqg8TefzSWkiP6A5GhikiXw0dQL6tUAZEYrrTMzeIlKxjmf2Tj26o1+OHvraLoThjo
-         l6M7j3/qz+P52W+Ym1RqYOxYQiWRI+hvlnq4NMnaWLXWVZFVhffpuJSrEfiWSEXS/F4t
-         xCBPxNfxrCb8oxv6xss9Ta9j+5LdOQ5ABENTirBXl7pJUXCappYqbOEbvaPgzP5sqI1E
-         N6E7bvfDsrUdi1vwaJ8zQhcjo1It3HMM+9NBqnaqc3B1Ae6uzwJ6NhofP3FRrxw/Bctg
-         o+1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751120101; x=1751724901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ig5METp6TLlVulWx3CtXwo+PGIrd2VeWcYuzRua1aaY=;
-        b=Fdb8h+bwuH4dIUcw1wIvk+dRk4MPWBFgTApSaquYiqtDOXPHkMbRn68f6YLvUPM/Lb
-         1ELgw/mk5rW/HO4t+dc/FxV1oAzGkI7PTW43hDCtYcuBBiweOetyh8f017rzgG/wqyMD
-         bTmRGrUJKsGRLwXds3Ux8G9WRiIPlPUbk+JuE9jBHnVQbVqtd4ChiN6Dj0ZuxKndx5iA
-         Cc70zE4R6z7ENU9aRoNx6E5xZy8OeRyQZy1UjeWkkZrQPGAHR6tOZt9WcWK1wTvYKejd
-         ceEWo31gRKkOuLeBpWysOW/BFFARPx9I2OqVOL0JCiqWKi8RPXqUZpr6BR/61RZweUqh
-         gaTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF+smaci3L8RlqhiffzkzQ8oGscJydN3jdqPZVo/Qx/WR24jaz1QytS4GjVavc7jt/M4ahRqlBgBxzVvIRvkjA@vger.kernel.org, AJvYcCVNziealHrXwgOSB454lU9ZtwyuOr2V0jtgctJaoRG1Gg1NcH7iboHcfdUAqBylYx6FhSkQ4S1wlOpyRCpTF58=@vger.kernel.org, AJvYcCWIl+xwZILcXDw5A70kxysTMDE3/ZzCBiDwgliXS4kwmSvZpGkM2qH+fUiaM2ARCucuxoK0BTwMIXwHm9E=@vger.kernel.org, AJvYcCWu6hDio765OMtMQPED2gaaBeoymLMYxnAayGmkBT6GxW9xk4/hfE9uh6sGt5y225JqvO0Rulpv/Xo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoLqm0Jj4weXIgxcqBHE1rKzdsNUBT8hr08I+nr5A6cpOEQbKS
-	kriHwEuCXNEQgvYerBO/Sgy5dwj8KHP/m9KUXR2ka3+3MKgHNuB6Bv07SCOe6vZND7TrFyCYVV7
-	2kEVlc1woMW3KlvRnP4IBwsSlvM+NcFE=
-X-Gm-Gg: ASbGncuhc0Zs2/JZYZw8hNfeeSyZnGBp9eKtmH8+jOnX/9UNjs6s+ZOp+iRNgrqWcJa
-	HX+GGH7IPByiMvgxRNAiMlWmx7B6WK0+stSO7nPkaJgabeQ9cAYi8G5qSs4tVyxzmkitdIPc8Kv
-	RKY26TH+QVRDP2oPmPzVRYIZu38sxIapOgs+bsq/fQ2ps=
-X-Google-Smtp-Source: AGHT+IEeO+2x4VJdgjbtK/gaI11KSmV/Kxyz5u7U5iNwi1yHjJ8OK31D1ZkQM3+AggaPiGZLAw7Rr4YtZsOk0T6d48A=
-X-Received: by 2002:a17:902:e84e:b0:231:c9bb:6105 with SMTP id
- d9443c01a7336-23ae92220e3mr16180895ad.0.1751120100996; Sat, 28 Jun 2025
- 07:15:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8edb7ct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B0DC4CEEA;
+	Sat, 28 Jun 2025 14:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751120533;
+	bh=EBTOgKbMa7ugSS3wz5rgebhS88Gdc0XadFDzXKOAAf0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M8edb7ct4Ccwo8OtG7mZh6FCrpCzgUB2S4vXyzEmYL/wZ0F9JQJ+aOekarXGsDCvv
+	 uMjrgMYuzDX6aa23j4/8Z7eVJ85GWFX53wqkuc6ceAQHMbY2Zpnzj+8JL5m5Jqlc3C
+	 F3Sv+I8rXwJfz0Es7zipTdChZyauE9jp/RLftu39K2M0ZLUJGCTiJdPoacUiX19kGo
+	 ErJBXdbjkDTAI8BN4I7+Z5BnToQCc9Fntsr/HC8t4TDENy1FpC3QYLgQM4cDDGawJ5
+	 xNv8iWn/JBvu+5uDqV13Kx1cLaUyvnPdOlFGdDpK6FmjiGohI8+NZJpDY1nal+wlif
+	 Ydm+jr3m+1vMg==
+Date: Sat, 28 Jun 2025 16:22:09 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
+ <akiyks@gmail.com>
+Subject: Re: [PATCH 0/8] Yet another set of kerneldoc simplifications
+Message-ID: <20250628162209.0ba297b5@foz.lan>
+In-Reply-To: <20250627184000.132291-1-corbet@lwn.net>
+References: <20250627184000.132291-1-corbet@lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628040956.2181-1-work@onurozkan.dev> <20250628040956.2181-4-work@onurozkan.dev>
- <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
- <20250628133013.703461c8@nimda.home> <CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
- <20250628154237.0f367cee@nimda.home> <CANiq72mxJM-7WAP8xVDukmiXq=ntThyFESFLs1+dmZJSS2q60Q@mail.gmail.com>
- <20250628161117.7786b3a4@nimda.home> <CANiq72kgB6gQ3+etQOYLLDqWt4EQhiDfN3dcwHBOpZh9USt3iA@mail.gmail.com>
- <20250628164235.1376ab5f@nimda.home>
-In-Reply-To: <20250628164235.1376ab5f@nimda.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 28 Jun 2025 16:14:48 +0200
-X-Gm-Features: Ac12FXzI6pvWYheMTVSFPNn1sp8egQG7kNlGhWGI4BCR4Pl6Atn6Fc3iffJxg6M
-Message-ID: <CANiq72kJbyMmRqhdgqFsNyYb_eJFNZQXy4k7bkRNw0-kZURaHg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
-To: Onur <work@onurozkan.dev>
-Cc: viresh.kumar@linaro.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	airlied@gmail.com, simona@ffwll.ch, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, rafael@kernel.org, gregkh@linuxfoundation.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	davidgow@google.com, nm@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 3:42=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
->
-> I don't have enough time to do it right now, but I would be happy
-> to do it in ~3 days during the week (assuming it's still not being
-> reviewed by the maintainers by then).
+Em Fri, 27 Jun 2025 12:39:52 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-No worries, there is no rush on these cleanups. Even if it gets
-reviewed, you can still split, keeping their tag. Thanks!
+> As I continue to work through our shiny new kerneldoc, I keep finding ways
+> to make it (IMO) shinier.  This set covers these basic areas:
+> 
+> - Remove some unused fields from the KernelEntry class, and encapsulate the
+>   handling of the section contentions therein.
+> 
+> - Clean up and optimize the EXPORT_SYMBOL processing slightly.
+> 
+> - Rework the handling of inline comments by getting rid of the substate
+>   design and separating out the processing of the states that remain.
+> 
+> The series results in no changes in the generated output.
 
-Cheers,
-Miguel
+I looked the entire series, although I didn't test. On a visual
+inspection, all changes look good to me.
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+> 
+> Jonathan Corbet (8):
+>   docs: kdoc: remove KernelEntry::in_doc_sect
+>   docs: kdoc: Move content handling into KernelEntry
+>   docs: kdoc: remove a bit of dead code
+>   docs: kdoc: remove KernelEntry::function
+>   docs: kdoc: rework process_export() slightly
+>   docs: kdoc: remove the INLINE_END state
+>   docs: kdoc: remove the inline states-within-a-state
+>   docs: kdoc: split the processing of the two remaining inline states
+> 
+>  scripts/lib/kdoc/kdoc_parser.py | 170 +++++++++++++-------------------
+>  1 file changed, 67 insertions(+), 103 deletions(-)
+> 
+
+
+
+Thanks,
+Mauro
