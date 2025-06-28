@@ -1,186 +1,289 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099031E505;
-	Sat, 28 Jun 2025 00:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEBF12FF69;
+	Sat, 28 Jun 2025 00:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751071120; cv=none; b=VHFXcP9sqNYg7jh1vzw6llqcBRLiGpXC6MCZIl6+RbKQKrn9hoSetCnU1tg5Pg1D45Ul29hiJxo4rykgt0gyPfNMvTXWKCJzP9rUvXHaydaoVA4ekQ9+5WmOupG1Knj0DNaGaKLXnSMaLoSp+nkXEqNEDBNttrKxWF1DP+SkYUc=
+	t=1751071467; cv=none; b=cRIl4TAiE5kUE/YzyY9QFC7/D7sRa2lBpzNW281WrFdx632TG/SZ+U2O6W0CKbpmIOnBvvEXtD4inGx3iCOf03CT+ExwfLJ5a0/hQEZO/YCmkzH9BRBt3uYVrCZXw18ju7yIO55IICA+ioHml5pWkFn/IKym2aI3SFg1mr5FbFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751071120; c=relaxed/simple;
-	bh=qMnr3KPr9Xn+lfvxXZlzLkavCtcmOsXL2ErlM9xNhNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NA26Go99RA4P57GVI4kjEDpCATWngArvL8BhTKIAAk1p3eNF8uthnSiv/yrhOBanVaZR0vcP9Vh0eGJ9D1B85cAas7AQFiIrWlZPZqhZJsX6ZYAyE0W33nhz2ETGgkV9+/cDjHqirUleFldQXhpHvHtGRr6UROQvodCzMnnNkMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmcmYqo/; arc=none smtp.client-ip=209.85.219.54
+	s=arc-20240116; t=1751071467; c=relaxed/simple;
+	bh=3DlYou99xKBPhtCbnrBB02y+pxpHZSdecYrNGaQcjfI=;
+	h=From:To:Cc:Subject:Date:References:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=Lnqdn6AUIgBAFdhICg04g8ihBFMG4bJr8ruXun2AxzZRoGWSDrS4galvbpEFF9bb79F8NRvfgKsntbBpEM8g5n8k9KwQASaGVuvJSqbTIOJ+IwDtf5Od7tfxPEYOOKjjdfVcUXmPIdQB+SWPuxJsJ9dzuy6YXPeIwol8hGsCrVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGXPk980; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmcmYqo/"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fada2dd785so4606846d6.2;
-        Fri, 27 Jun 2025 17:38:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGXPk980"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso759578a12.2;
+        Fri, 27 Jun 2025 17:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751071118; x=1751675918; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3KmbYvv/p8QkJFOIHHC4rmh9tFFrEsA16VC6+yNOxFU=;
-        b=BmcmYqo/JRT6fB9EhmRfqJ5EfUqIHkAwjpBkXcZJTRebsQfVyq9QVBepVU6C90hRMo
-         VEPWYFRK1Ri0c5txlCCi69vb+6esDRqfk0sSqXSP/IoSYA9uY6d0SK2yx7Fcxrlv1Q0l
-         xd6QrunwaBQcGGBV6TXqiUdlSdAaeBVIG5g7q1GseApaWmbOuBEfbRkTyxYs9De7Pd7q
-         9gP9eKS97lvnpdqaT8MTgkDhNJ1gxVtk87lS5DBibxerWuMSuw7LK96pPWjJgXBo0DES
-         VkHJmDAHMEbSaJV/EQhGCnPyDjjFApemSrydygLALT53nQYy0HbgwHiES6HaO8La+ohX
-         /J7Q==
+        d=gmail.com; s=20230601; t=1751071465; x=1751676265; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:user-agent:references:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GpxNzKdU8lMnnqevDa29WkePK3DkzP2rZRE+gu6i3wM=;
+        b=iGXPk980otBXbsvDgpnJNzkCYlqfKKaKY88a2FduJrRBL1vn2WH1eVv5sJGw9v25Fs
+         QOnUjSIuY9RcwmzQ47MBY2EZ8oXvTtPB6jAaO67A8MMpIzly24E9HnIH5lbbbCTFJOHz
+         LK7hn5LsiNL/mArxiq/i6jPdR8+BRABFMyDH64smFS/XGQhH677Ds/pSwI8+CxixrYq8
+         xxbZldE3xer82TYd+JEvh3L3W+XoCBqrjkMeuVTh6DxCjbgFzP+9e+HH6iH6ln+WOKNJ
+         0yixJ2LXkk75Y+jVw+rXiJ+rik7c49TRY1KeyS5L4BWtkCfIOrDUstDomFqY0w0nVkgB
+         dIEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751071118; x=1751675918;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3KmbYvv/p8QkJFOIHHC4rmh9tFFrEsA16VC6+yNOxFU=;
-        b=gNoAdl1RSMN0RRBlpr3Rb0fG66//Xm4M2H7gxR1srwBpg/eHOdl5oTVHRNZgLirjWc
-         DlrH4KKjsXVDtl9G/gzEMfbi1hWvQDQTVRbzl/519rAiC87Wt6rGYEk2NvNxxQLts1Pa
-         bA6+NpJs1I6EiVsJ9A+UbohlS+GVpTHxdzKMOOTm2pIF6mvqAVR74CATNAoe4pBXq280
-         MSpQBQ+LFb38E60XncFXUQqtd7QE0XYZRCqnpROLXHHRNvgavxo5WR0RrljZof72BuSL
-         sCPYXpOYVOv6RrzAfP3lbhjH+YhffuJZLPxUxOl95KMDGdvWzgQrowHXT6GSfMZVxBCm
-         YkmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5nZAWNMwgWpwo4nTEXA7wxO3tPNSPOUqppDIHbw1qDj3c8r8ywfOwpJJOiprvdIvr8HUWE9Ti@vger.kernel.org, AJvYcCUf000A5yLsYP0yZrzLqH5PdjYCjQkRbufILpaWBoHSFQq+hca2MwbYAeO+e5+Bm6ICj/Cg2Bm4iuvoNtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVtXd9naKa0wK1asXtFugf1wl0yBCtE6k7fzR3/GdntNdUObhR
-	wX1KS6x5lcbml7iEsP4rltIsiRRTDr7wR4iKIEPBVCuM0W9WnQQEnLwOV22dxKcoJRzeQi1ruF/
-	nOXmnDkRuumwqzwiEpY0kvABIm0EJwBo=
-X-Gm-Gg: ASbGncsYnnggVld7g5RKILhY53hz3ByyaiiTkinMSry/go7GIDcmUqnenZzA48DNT7v
-	V/7hNehrDyFMH5Qkf484ktm/OSiL41MxTXLvcm7xg/XDhioPmcTeQ1gcj9Xgk/u+11sOblih8hQ
-	/rKLTojSG8FZsGIvRJrNp/DFs/1pJpQ4Pqc6+DWoJC7A==
-X-Google-Smtp-Source: AGHT+IHeXX/ytyIIvpN2oIAb6FB+uwhRuxKdFeJOBggJqqTAJfOjXYxpwE1kJmxFrPksbUis4eMEEXus7Y5v6Tmz1/Q=
-X-Received: by 2002:a05:6214:262f:b0:6fd:cbbb:b02 with SMTP id
- 6a1803df08f44-6ffffd77b1emr97546376d6.15.1751071117860; Fri, 27 Jun 2025
- 17:38:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751071465; x=1751676265;
+        h=mime-version:message-id:in-reply-to:user-agent:references:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GpxNzKdU8lMnnqevDa29WkePK3DkzP2rZRE+gu6i3wM=;
+        b=m5VImUj9wghFKVuFBMX77hUsJ8tNKuVnnUzicnWhjVBz1UDyT15pq4YwcUBKDq16KP
+         6IIUAeCQ/tdu14QPxrtuy5/z7jSV6aeeF0N6BPxCG/oRe1Y7JMxn1f8iT1dvT1OhWfVu
+         9EewfNrO2wN5j4CC9BF5YG5Tzit2G4xwGUocnheoWlDR5rdoV9zNuWk4M0dzjMdb3LIa
+         ZFgGyb+4hOzPxE9gauFUekkrsXs5iTu06X2vSBlMTZE06XICm0YtawVuGvt2clT9QrrI
+         B8qaNckE2zVUho6mi/3ZVX0oBUDjUezsdBzcq8sUbfNGITDf+WfCVV6z5ScINlI5DJxn
+         8xNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVI7IG2NShUte/uJYZEOS9vgB4I3H8VeBfQ+RQicB6b6y4s0vfhVT71q4UOMi6Z0nzhbGDB8n62DpoAFSRk@vger.kernel.org, AJvYcCVlacMV8V6s2Qjh2LmzvsCl4LOXwCMYanIrn1YVoaOTov9hR7cO1GbBWS8+Op/NKgohIX1VL3DpSawpdI14xtg=@vger.kernel.org, AJvYcCVoTqqgMW5OayEGYeM7o2PjVTiz8eBDjEvSbqB7h55uRTslD9HbJADs4PlF+rTmribi+PkEODtlOID8hTQweIYA@vger.kernel.org, AJvYcCXd9yjc8iWaDmzBIUu+6XoMNR4xP2GX5JtwjMAAi1GQwQVx3vZyVYBR4E5HO6QKjV91CFSQJEGLUQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyyry4gTYPUerd2ZDIYVT7UuLsbdU74Zjd2O/6RXU19yJo4OcyN
+	aPK4lhCe8Uw9Xxu6nu8rb5tbDJnuBpbUkPowBlPZ4XLFH4jiNpURaSorTVQti83/9ns=
+X-Gm-Gg: ASbGnctGtRkF1DOA0Xufo8hdvwWCz+4VSPDt5RK7LQQNNHUfm1c4Tb8hMFuqhqa9J9g
+	Sz21MbSRt8WdXrFHbuad/cNlREDHFwG2C+apfC01dclYGZoNLp8ssFJeNQ2vZkYNVPWIkgOmxOV
+	9B96IC+7lwGHHiwj5sqVQbvGxg5jdr7ic21RZXQRZe0S9ilYwhotMXHAyZk19/vz9ETBj+Zq2BX
+	rWmiKHWSsSgDXemScvSX+0twT2dYnelcDGRsl0i11pwMSX4tXoUvRj2bhiJil4CBa+/E+Q2XV67
+	Ymvyojl003G97bi1MkFLTK243xrGI8zlDaLuYuh7P/DOojkMWyKm
+X-Google-Smtp-Source: AGHT+IHFC6aR3irUDLsqIURFtrCziwHLbDvreY8MVz83v50IvdwAMb01cbpFfB+89lcldfKQWSmCTg==
+X-Received: by 2002:a17:902:d603:b0:235:711:f810 with SMTP id d9443c01a7336-23ac43d3283mr84587795ad.23.1751071465118;
+        Fri, 27 Jun 2025 17:44:25 -0700 (PDT)
+Received: from 1337 ([136.159.213.240])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e39d4sm26196845ad.18.2025.06.27.17.44.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 17:44:24 -0700 (PDT)
+From: Abhinav Saxena <xandfury@gmail.com>
+To: xandfury@gmail.com
+Cc: Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Paul Moore
+ <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
+ selinux@vger.kernel.org, kees@kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/2] Possible TTY privilege escalation in TIOCSTI ioctl
+Date: Fri, 27 Jun 2025 18:38:42 -0600
+References: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
+User-agent: mu4e 1.10.8; emacs 30.1
+In-reply-to: <20250622-toicsti-bug-v1-0-f374373b04b2@gmail.com>
+Message-ID: <87y0tcu23d.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410163022.3695-1-ansuelsmth@gmail.com> <aF7xlqRLXlZu0DZr@makrotopia.org>
-In-Reply-To: <aF7xlqRLXlZu0DZr@makrotopia.org>
-From: "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
-Date: Sat, 28 Jun 2025 02:38:25 +0200
-X-Gm-Features: Ac12FXxOGlOHKTJ_xVAxIcad2hrEhIUVAWgcdm3E86cKjX76u9mT4U48z3XgCjA
-Message-ID: <CA+_ehUwzyEXvOj2J2vXaSj0tSsEH-+cktHLkSZ1ieeuK5+NN-A@mail.gmail.com>
-Subject: Re: [net-next PATCH 0/6] net: dsa: mt7530: modernize MIB handling + fix
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: "Chester A. Unal" <chester.a.unal@arinc9.com>, DENG Qingfang <dqfext@gmail.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="=-=-="
 
->
-> Hi Christian,
->
-> On Thu, Apr 10, 2025 at 06:30:08PM +0200, Christian Marangi wrote:
-> > This small series modernize MIB handling for MT7530 and also
-> > implement .get_stats64.
-> >
-> > It was reported that kernel and Switch MIB desync in scenario where
-> > a packet is forwarded from a port to another. In such case, the
-> > forwarding is offloaded and the kernel is not aware of the
-> > transmitted packet. To handle this, read the counter directly
-> > from Switch registers.
-> >
-> > Christian Marangi (6):
-> >   net: dsa: mt7530: generalize read port stats logic
-> >   net: dsa: mt7530: move pkt size and rx err MIB counter to rmon stats
-> >     API
-> >   net: dsa: mt7530: move pause MIB counter to eth_ctrl stats API
-> >   net: dsa: mt7530: move pkt stats and err MIB counter to eth_mac stats
-> >     API
-> >   net: dsa: mt7530: move remaining MIB counter to define
-> >   net: dsa: mt7530: implement .get_stats64
->
-> After this series being applied I see lockdep warnings every time
-> the interface counters are being read on MT7531 connected via MDIO:
->
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the report, I will try to fix this and post a followup
-patch for this.
-Also I assume this is only present for MDIO and MMIO is not affected.
+Abhinav Saxena via B4 Relay <devnull+xandfury.gmail.com@kernel.org> writes:
 
-> [  234.374708] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:579
-> [  234.383200] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 3667, name: ifconfig
-> [  234.391202] preempt_count: 1, expected: 0
-> [  234.395226] INFO: lockdep is turned off.
-> [  234.399150] CPU: 3 UID: 0 PID: 3667 Comm: ifconfig Tainted: G        W  O        6.16.0-rc1+ #0 NONE
-> [  234.399158] Tainted: [W]=WARN, [O]=OOT_MODULE
-> [  234.399160] Hardware name: Bananapi BPI-R3 (DT)
-> [  234.399162] Call trace:
-> [  234.399165]  show_stack+0x28/0x78 (C)
-> [  234.399179]  dump_stack_lvl+0x68/0x8c
-> [  234.399184]  dump_stack+0x14/0x1c
-> [  234.399188]  __might_resched+0x138/0x250
-> [  234.399197]  __might_sleep+0x44/0x80
-> [  234.399201]  __mutex_lock+0x4c/0x934
-> [  234.399209]  mutex_lock_nested+0x20/0x28
-> [  234.399215]  mt7530_get_stats64+0x40/0x2ac
-> [  234.399222]  dsa_user_get_stats64+0x2c/0x40
-> [  234.399229]  dev_get_stats+0x44/0x1e0
-> [  234.399237]  dev_seq_printf_stats+0x24/0xe0
-> [  234.399244]  dev_seq_show+0x14/0x40
-> [  234.399248]  seq_read_iter+0x368/0x464
-> [  234.399257]  seq_read+0xd0/0xfc
-> [  234.399263]  proc_reg_read+0xa8/0xf0
-> [  234.399268]  vfs_read+0x98/0x2b0
-> [  234.399275]  ksys_read+0x54/0xdc
-> [  234.399280]  __arm64_sys_read+0x18/0x20
-> [  234.399286]  invoke_syscall.constprop.0+0x4c/0xd0
-> [  234.399293]  do_el0_svc+0x3c/0xd0
-> [  234.399298]  el0_svc+0x34/0xa0
-> [  234.399303]  el0t_64_sync_handler+0x104/0x138
-> [  234.399308]  el0t_64_sync+0x158/0x15c
+> This patch series was initially sent to security@k.o; resending it in
+> public. I might follow-up with a tests series which addresses similar
+> issues with TIOCLINUX.
 >
-> Note that this only shows with some lock debugging options being set
-> and may not actually be a problem, but I believe it anyway should be
-> fixed somehow.
+> `=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D'
 >
-> #
-> # Lock Debugging (spinlocks, mutexes, etc...)
-> #
-> CONFIG_LOCK_DEBUGGING_SUPPORT=y
-> CONFIG_PROVE_LOCKING=y
-> CONFIG_PROVE_RAW_LOCK_NESTING=y
-> # CONFIG_LOCK_STAT is not set
-> CONFIG_DEBUG_RT_MUTEXES=y
-> CONFIG_DEBUG_SPINLOCK=y
-> CONFIG_DEBUG_MUTEXES=y
-> CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-> CONFIG_DEBUG_RWSEMS=y
-> CONFIG_DEBUG_LOCK_ALLOC=y
-> CONFIG_LOCKDEP=y
-> CONFIG_LOCKDEP_BITS=15
-> CONFIG_LOCKDEP_CHAINS_BITS=16
-> CONFIG_LOCKDEP_STACK_TRACE_BITS=19
-> CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS=14
-> CONFIG_LOCKDEP_CIRCULAR_QUEUE_BITS=12
-> # CONFIG_DEBUG_LOCKDEP is not set
-> CONFIG_DEBUG_ATOMIC_SLEEP=y
-> # CONFIG_DEBUG_LOCKING_API_SELFTESTS is not set
-> # CONFIG_LOCK_TORTURE_TEST is not set
-> # CONFIG_WW_MUTEX_SELFTEST is not set
-> # CONFIG_SCF_TORTURE_TEST is not set
-> # CONFIG_CSD_LOCK_WAIT_DEBUG is not set
-> # end of Lock Debugging (spinlocks, mutexes, etc...)
+> The TIOCSTI ioctl uses capable(CAP_SYS_ADMIN) for access control, which
+> checks the current process=E2=80=99s credentials. However, it doesn=E2=80=
+=99t validate
+> against the file opener=E2=80=99s credentials stored in file->f_cred.
 >
-> CONFIG_TRACE_IRQFLAGS=y
-> CONFIG_TRACE_IRQFLAGS_NMI=y
-> # CONFIG_DEBUG_IRQFLAGS is not set
-> CONFIG_STACKTRACE=y
-> # CONFIG_WARN_ALL_UNSEEDED_RANDOM is not set
-> # CONFIG_DEBUG_KOBJECT is not set
+> This creates a potential security issue where an unprivileged process
+> can open a TTY fd and pass it to a privileged process via SCM_RIGHTS.
+> The privileged process may then inadvertently grant access based on its
+> elevated privileges rather than the original opener=E2=80=99s credentials.
 >
+> Background
+> `=3D=3D=3D=3D=3D=3D=3D=3D'
 >
-> Cheers
+> As noted in previous discussion, while CONFIG_LEGACY_TIOCSTI can restrict
+> TIOCSTI usage, it is enabled by default in most distributions. Even when
+> CONFIG_LEGACY_TIOCSTI=3Dn, processes with CAP_SYS_ADMIN can still use TIO=
+CSTI
+> according to the Kconfig documentation.
 >
+> Additionally, CONFIG_LEGACY_TIOCSTI controls the default value for the
+> dev.tty.legacy_tiocsti sysctl, which remains runtime-configurable. This
+> means the described attack vector could work on systems even with
+> CONFIG_LEGACY_TIOCSTI=3Dn, particularly on Ubuntu 24.04 where it=E2=80=99=
+s =E2=80=9Crestricted=E2=80=9D
+> but still functional.
 >
-> Daniel
+> Solution Approach
+> `=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D'
+>
+> This series addresses the issue through SELinux LSM integration rather
+> than modifying core TTY credential checking to avoid potential compatibil=
+ity
+> issues with existing userspace.
+>
+> The enhancement adds proper current task and file credential capability
+> validation in SELinux=E2=80=99s selinux_file_ioctl() hook specifically for
+> TIOCSTI operations.
+>
+> Testing
+> `=3D=3D=3D=3D=3D'
+>
+> All patches have been validated using:
+> - scripts/checkpatch.pl =E2=80=93strict (0 errors, 0 warnings)
+> - Functional testing on kernel v6.16-rc2
+> - File descriptor passing security test scenarios
+> - SELinux policy enforcement testing
+>
+> The fd_passing_security test demonstrates the security concern.
+> To verify, disable legacy TIOCSTI and run the test:
+>
+> $ echo =E2=80=9C0=E2=80=9D | sudo tee /proc/sys/dev/tty/legacy_tiocsti
+> $ sudo ./tools/testing/selftests/tty/tty_tiocsti_test -t fd_passing_secur=
+ity
+>
+> Patch Overview
+> `=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D'
+>
+> PATCH 1/2: selftests/tty: add TIOCSTI test suite
+> Comprehensive test suite demonstrating the issue and fix validation
+>
+> PATCH 2/2: selinux: add capability checks for TIOCSTI ioctl
+> Core security enhancement via SELinux LSM hook
+>
+> References
+> `=3D=3D=3D=3D=3D=3D=3D=3D'
+>
+> - tty_ioctl(4) - documents TIOCSTI ioctl and capability requirements
+> - commit 83efeeeb3d04 (=E2=80=9Ctty: Allow TIOCSTI to be disabled=E2=80=
+=9D)
+> - Documentation/security/credentials.rst
+> - <https://github.com/KSPP/linux/issues/156>
+> - <https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad>/
+> - drivers/tty/Kconfig
+>
+> Configuration References:
+> [1] - <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
+/tree/drivers/tty/Kconfig#n149>
+> [2] - <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
+/tree/drivers/tty/Kconfig#n162>
+> [3] - <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
+/tree/drivers/tty/Kconfig#n188>
+>
+> To: Shuah Khan <shuah@kernel.org>
+> To: Nathan Chancellor <nathan@kernel.org>
+> To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+> To: Bill Wendling <morbo@google.com>
+> To: Justin Stitt <justinstitt@google.com>
+> To: Paul Moore <paul@paul-moore.com>
+> To: Stephen Smalley <stephen.smalley.work@gmail.com>
+> To: Ondrej Mosnacek <omosnace@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Cc: selinux@vger.kernel.org
+>
+> Signed-off-by: Abhinav Saxena <xandfury@gmail.com>
+> =E2=80=94
+> Abhinav Saxena (2):
+>       selftests/tty: add TIOCSTI test suite
+>       selinux: add capability checks for TIOCSTI ioctl
+>
+>  security/selinux/hooks.c                       |   6 +
+>  tools/testing/selftests/tty/Makefile           |   6 +-
+>  tools/testing/selftests/tty/config             |   1 +
+>  tools/testing/selftests/tty/tty_tiocsti_test.c | 421 +++++++++++++++++++=
+++++++
+>  4 files changed, 433 insertions(+), 1 deletion(-)
+> =E2=80=94
+> base-commit: 5adb635077d1b4bd65b183022775a59a378a9c00
+> change-id: 20250618-toicsti-bug-7822b8e94a32
+>
+> Best regards,
+
+Hi everyone,
+
+Thanks for all the feedback.
+
+SUMMARY OF FEEDBACK RECEIVED
+`=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D'
+
+Re: SELinux, I agree. As I mention in the cover letter, using LSM was just a
+suggested fix (not a solution). In retrospect, I should=E2=80=99ve added RF=
+C to
+the patch series.
+
+I spoke with Kees this past week about the possibility of completely
+disabling TIOCSTI while maintaining backwards compatibility. He confirmed
+the initial focus was just on adding tests and improving test coverage.
+
+OUTSTANDING QUESTIONS/COMMENTS
+`=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D'
+
+Based on the discussion, I have three specific questions:
+
+1) Test coverage: Are the current selftests sufficient, or should I add
+   more comprehensive TIOCSTI-specific tests? Or maybe KUnit tests?
+
+2) SELinux patch: I can remove the SELinux-specific patch from the
+   series.
+
+3) Complete disable option: Is there broader consensus on supporting
+   complete TIOCSTI disabling while maintaining backwards compatibility?
+
+DESIGN OPTIONS FOR EXTENDED CONTROL
+`=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D'
+
+For question 3, I=E2=80=99ve analyzed three approaches for extending the cu=
+rrent
+boolean tty_legacy_tiocsti sysctl:
+
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81
+ Tri-state  Signed    Dual Bool=20
+ (0,1,2)    (0,1,-1)  Controls=20=20
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
+=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
+=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
+=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81
+=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94=E2=80=94|=E2=80=94=
+=E2=80=94=E2=80=94=E2=80=93|=E2=80=94=E2=80=94=E2=80=94-|=E2=80=94=E2=80=94=
+=E2=80=94=E2=80=93|
+Backwards Compat     | No        | No       | Yes       |
+Clear Semantics      | Yes       | Partial  | Yes       |
+Extensibility        | Yes       | Partial  | Yes       |
+Single Control       | Yes       | Yes      | No        |
+Kernel Precedent     | Common    | Rare     | Common    |
+
+**Option 1 (Tri-state):** 0=3DCAP_SYS_ADMIN required, 1=3Dlegacy, 2=3Ddisab=
+led
+**Option 2 (Signed):** -1=3Ddisabled, 0=3Drestricted, 1=3Dlegacy
+**Option 3 (Dual bool):** Keep existing bool + add disable bool
+
+The dual boolean approach preserves compatibility but requires managing
+two separate controls.
+
+NEXT STEPS
+`=3D=3D=3D=3D=3D=3D=3D=3D'
+
+Based on community input, I=E2=80=99ll:
+=E2=80=A2 Focus on test improvements first
+=E2=80=A2 Drop SELinux-specific changes
+=E2=80=A2 Implement extended control only if there=E2=80=99s consensus on t=
+he approach
+
+Feedback welcome on any of these points.
+
+Thanks,
+Abhinav
+
+--=-=-=--
