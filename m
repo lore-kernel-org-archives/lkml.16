@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDFF253B59;
-	Sat, 28 Jun 2025 16:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B657024E4D4;
+	Sat, 28 Jun 2025 16:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751126676; cv=none; b=Rll4Q+xVd0s3tMMuuMkSn5S9J3kkdtDQBRjez7nj6Kzi2H0vabhGEyCLEqe/i9dH829JfOO7nflxaATDuRG49fgi1rXGVdRNzVoH1tK0auantPHOITLidD501YsmJiqsjKO+pU24PXbOfNgqVFFx8O/saA0xz7Me5Lg9A8PdkS8=
+	t=1751126677; cv=none; b=EFGk9NEon6Eic3Vti8ROF3QGvRmlSqbszMdk1ljV/RD4dV0x9JGC247+yqev0KaEqxZcFkqZI5kbJOyMVD6+Z61582JLS9H3lMePa81OkqP9L5C2phLsEisayuW8k8MQHcZaO0/WlyWKB5T0FNDtSOd1zMtSBjHnrjEFXl79ZBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751126676; c=relaxed/simple;
-	bh=miTM6A3QV73RUDWnpfCOrpusoocXXvQwskQZDbdPk1E=;
+	s=arc-20240116; t=1751126677; c=relaxed/simple;
+	bh=pHn9v+99jI3xSiVYbi8lj20xdzjr33kYRD7kjoO8nBY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oQipQA3r/+CC72s1BsnbQrnaVbuBtHDfRXu33+7x9Dx4s+PKfh2usBx1tWCNX6SOBh2OrztKjqOcoy6XGxUOX5NeQ0ung9JvWwRp3bcMeSeaKwBSTv3yWSrBnOaOwYBr/gUjuI+VZQ7pWEQcxmyxccshbKxQFpAVdWOC4Vc15J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYU/71lJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=juJ0+eAQLS9fI+Wt/nEY1vAYkTwPfAX4r6G9R48IpFiBK+zLraiuqHwLOly646UXnVEhNyprO1o4d1lk0GcttpyKm+q2Xm5LaDy6ICLZbwrg19aYsI4r2k7ncZ/ZXOPTkCvyWk/+qjbPal1F4GiImC48upmfh+BGNRATUEx50pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWThUJGM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYU/71lJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07606C4CEEA;
-	Sat, 28 Jun 2025 16:04:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWThUJGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB55C4CEED;
+	Sat, 28 Jun 2025 16:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751126676;
-	bh=miTM6A3QV73RUDWnpfCOrpusoocXXvQwskQZDbdPk1E=;
+	s=k20201202; t=1751126675;
+	bh=pHn9v+99jI3xSiVYbi8lj20xdzjr33kYRD7kjoO8nBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kYU/71lJwh92l6aB/jcxuGPjkDyUhJHP2n6X2qLYacnBgfxpk8Xd0zT96ptt7ggg9
-	 1IB8R6GUq/YVcrTd+Ij2w9a9VbPK1a50qs9o7bk5ioR6UTZGTnUj2si86Y+PeBx+fE
-	 tX2BW/34/4AOSzVFgh/l7DpSUkPkw/3N+M5FxhcWwqIdcVPi+NltK7PBN4pv4drmIN
-	 xSNnAp/WKZ7LVqXOdyiJP7HZbWz20/ftu+23XSUtbt5SwrqiNqo2LTq6fJPtIVYRNL
-	 U/hNrqf5QrHkY+Sj3GWOzwR4/tiZK1LlsY6TziYppW+D7NxAbfE7UQALuS2uhLxLoB
-	 f8rzMNWQaX93g==
+	b=nWThUJGMxmZ9QzBclE+lbiYiSfrIsn1T9tlYlp/FqQuMJEPPDcqepJN5XeHpDzReE
+	 PbqAfvW6Tz0uWXRMGKGVWitby+edQLBAdIX+OM6V5Z6hcz/OHdQqhqMqmfWemabo8E
+	 ohCL68eUSjTEY3Pl3v5tmov4J7y2Px5Qkr3MV5BcXBLeydm1fsxgWvl/8U2mlqb8KA
+	 /Mw03VzTki158ViwLNhGTTYnawJ3IjsesAyW7bSZsnhdG7nZEEZuRSHxMJCDvFNqF/
+	 /KJlLrAYYf58jIK+TlENvlqR463iTv4F7uu9le17ti5hEpp6FINPJeOw70IX7owwYT
+	 b2yu8eZO/kzPA==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -35,9 +35,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 4/6] selftests/damon/sysfs.py: test monitoring attribute parameters
-Date: Sat, 28 Jun 2025 09:04:26 -0700
-Message-Id: <20250628160428.53115-5-sj@kernel.org>
+Subject: [PATCH 3/6] selftests/damon: add python and drgn-based DAMON sysfs test
+Date: Sat, 28 Jun 2025 09:04:25 -0700
+Message-Id: <20250628160428.53115-4-sj@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250628160428.53115-1-sj@kernel.org>
 References: <20250628160428.53115-1-sj@kernel.org>
@@ -49,66 +49,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DAMON sysfs interface functionality tests for DAMON monitoring
-attribute parameters, including intervals, intervals tuning goals, and
-min/max number of regions.
+Add a python-written DAMON sysfs functionality selftest.  It sets DAMON
+parameters using Python module _damon_sysfs, reads updated kernel
+internal DAMON status and parameters using a 'drgn' script, namely
+drgn_dump_damon_status.py, and compare if the resulted DAMON internal
+status is as expected.  The test is very minimum at the moment.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- tools/testing/selftests/damon/sysfs.py | 34 ++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+ tools/testing/selftests/damon/Makefile |  1 +
+ tools/testing/selftests/damon/sysfs.py | 42 ++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
+ create mode 100755 tools/testing/selftests/damon/sysfs.py
 
+diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
+index e888455e3cf8..5b230deb19e8 100644
+--- a/tools/testing/selftests/damon/Makefile
++++ b/tools/testing/selftests/damon/Makefile
+@@ -7,6 +7,7 @@ TEST_FILES = _damon_sysfs.py
+ 
+ # functionality tests
+ TEST_PROGS += sysfs.sh
++TEST_PROGS += sysfs.py
+ TEST_PROGS += sysfs_update_schemes_tried_regions_wss_estimation.py
+ TEST_PROGS += damos_quota.py damos_quota_goal.py damos_apply_interval.py
+ TEST_PROGS += damos_tried_regions.py damon_nr_regions.py
 diff --git a/tools/testing/selftests/damon/sysfs.py b/tools/testing/selftests/damon/sysfs.py
-index 4ff99db0d247..a721901a880d 100755
---- a/tools/testing/selftests/damon/sysfs.py
+new file mode 100755
+index 000000000000..4ff99db0d247
+--- /dev/null
 +++ b/tools/testing/selftests/damon/sysfs.py
-@@ -20,6 +20,11 @@ def dump_damon_status_dict(pid):
-     except Exception as e:
-         return None, 'json.load fail (%s)' % e
- 
-+def fail(expectation, status):
-+    print('unexpected %s' % expectation)
-+    print(json.dumps(status, indent=4))
-+    exit(1)
+@@ -0,0 +1,42 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
 +
- def main():
-     kdamonds = _damon_sysfs.Kdamonds(
-             [_damon_sysfs.Kdamond(contexts=[_damon_sysfs.DamonCtx()])])
-@@ -34,8 +39,33 @@ def main():
-         exit(1)
- 
-     if len(status['contexts']) != 1:
--        print('number of contexts: %d' % len(status['contexts']))
--        exit(1)
-+        fail('number of contexts', status)
++import json
++import os
++import subprocess
 +
-+    ctx = status['contexts'][0]
-+    attrs = ctx['attrs']
-+    if attrs['sample_interval'] != 5000:
-+        fail('sample interval', status)
-+    if attrs['aggr_interval'] != 100000:
-+        fail('aggr interval', status)
-+    if attrs['ops_update_interval'] != 1000000:
-+        fail('ops updte interval', status)
++import _damon_sysfs
 +
-+    if attrs['intervals_goal'] != {
-+            'access_bp': 0, 'aggrs': 0,
-+            'min_sample_us': 0, 'max_sample_us': 0}:
-+        fail('intervals goal')
++def dump_damon_status_dict(pid):
++    file_dir = os.path.dirname(os.path.abspath(__file__))
++    dump_script = os.path.join(file_dir, 'drgn_dump_damon_status.py')
++    rc = subprocess.call(['drgn', dump_script, pid, 'damon_dump_output'],
++                         stderr=subprocess.DEVNULL)
++    if rc != 0:
++        return None, 'drgn fail'
++    try:
++        with open('damon_dump_output', 'r') as f:
++            return json.load(f), None
++    except Exception as e:
++        return None, 'json.load fail (%s)' % e
 +
-+    if attrs['min_nr_regions'] != 10:
-+        fail('min_nr_regions')
-+    if attrs['max_nr_regions'] != 1000:
-+        fail('max_nr_regions')
++def main():
++    kdamonds = _damon_sysfs.Kdamonds(
++            [_damon_sysfs.Kdamond(contexts=[_damon_sysfs.DamonCtx()])])
++    err = kdamonds.start()
++    if err is not None:
++        print('kdamond start failed: %s' % err)
++        exit(1)
 +
-+    if ctx['adaptive_targets'] != []:
-+        fail('adaptive_targets')
++    status, err = dump_damon_status_dict(kdamonds.kdamonds[0].pid)
++    if err is not None:
++        print(err)
++        exit(1)
 +
-+    if ctx['schemes'] != []:
-+        fail('schemes')
++    if len(status['contexts']) != 1:
++        print('number of contexts: %d' % len(status['contexts']))
++        exit(1)
++    kdamonds.stop()
 +
-     kdamonds.stop()
- 
- if __name__ == '__main__':
++if __name__ == '__main__':
++    main()
 -- 
 2.39.5
