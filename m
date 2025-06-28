@@ -1,106 +1,90 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE47C1A239F
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B331B1EF092
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751134381; cv=none; b=BznXSEVBFPdZn1EaNf44089iL3u0AFOn1Z+kyYdT9WteC/JaiK388AKTOQZJ6F+Khjh7fXfnzwKKcrsfYSGufj28hm75FTxMycBlO5eWMrhC6iVXd08mi4UaPczX+ynRiEpm/M+lOMKH8yc62GQ5PeN8ALrqenM/0ib8ZJ2I5MA=
+	t=1751134505; cv=none; b=J2pfXr5/xBz8LPobI38CieDtrM8ionvJL0DkdMcr1JIviOhZb+lbMuYMCRKVHnAimTXk8upXLMv0sVUsvoCWZHNCtYj/+q3USWAGBTrRzTcYtVsqVMP2ziIOtDf4f06Cpf8gcmF/+E7QjfKegs+7RovkoXjcRVncIr+wcaTRPak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751134381; c=relaxed/simple;
-	bh=wS2ta0jPf5nj5DXS3a2vuGruPycuqzuirMGWYz+QfSY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xjn7ROfYelmlYUwsSjNJWVTgcvk8ZK3RyBXArQ1Sz40qxTCVxBUfmwrb2DNuWf6SwEmhzvM2J2MH+7wXoo3DwuDxEAdClqPkM+maGa23L9UsFqNUomLrEEgDjqxk9j6YrYcIsUazO+UK630VZ5Zk9cwG/SVJIk/7GXEO+vLLqw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nMlefoxd; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1751134505; c=relaxed/simple;
+	bh=HhJu0nej6YkZjmJ541Hrwgt9nV16rqq0gQmZuoI48xM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LCV9Yq8IMcxSgPZsExY/OVWpdoaPn2cMcgj0ORI7YjRCmEhGP4BEWyJrlRTM8kcd6ikbEqF0GdEW2kyXbTPjm3FhYhGQujCovvAr2dlMpwycDd7kiJ7PI9kERZsydmpZfCLVH5L6OfgOVEij4aAzWRrHxfuZHVuHAW85cI/hdHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oInSwLpU; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nMlefoxd"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55SHJURv017534;
-	Sat, 28 Jun 2025 18:12:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=L+3Ml7MGMvKIhp7iPbG5EBDt2Nn9V
-	yKSNRG0no/ATvI=; b=nMlefoxdOJjxvoSgVov+mpb9MO3drxho/Buj6OKQ/+9u0
-	+UlTyndICv2ckFuWi3Y2EFRTjKtbzMXdP8UeRGa5aRmueulni2kIdkJxGpTX2Lc2
-	3RFbSV22y2lZQhSoh/rYZgdAXtaKXwQs/1vXTqaxwp27toQRmBsGNKrq+NOixNq1
-	YJoTXOe24drIyLg8SOvwEtou1muuX+KcgMVK2ONsEzKRecprvNEKNW8e7iPQ72gL
-	Nm+Kn6tleCA2HaiD2ETlYNrwMliiiUapI+/JKmNG34K/+xUXzKyc6MhtT498p6fT
-	0u0rI69gWhTyppxDhMZJzsHSLpqbEP7vmQxUfJN3w==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j6tf8f4k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 28 Jun 2025 18:12:38 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55SI9KAp028997;
-	Sat, 28 Jun 2025 18:12:37 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u6ysqn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 28 Jun 2025 18:12:37 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55SI6MIm010792;
-	Sat, 28 Jun 2025 18:12:36 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u6ysqh-1;
-	Sat, 28 Jun 2025 18:12:36 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
-        martin.petersen@oracle.com, linux-nvme@lists.infradead.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        darren.kenny@oracle.com
-Subject: [PATCH RESEND] nvme: Fix incorrect cdw15 value in passthru error logging
-Date: Sat, 28 Jun 2025 11:12:32 -0700
-Message-ID: <20250628181234.3978844-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oInSwLpU"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-736f9e352cbso558867a34.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751134503; x=1751739303; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=opMX1Qwlgu2eO59hinQtvPB+M4svOAtsX/gx/lV1xqg=;
+        b=oInSwLpUKI48r+kfhv4mzfGO3WH2llVMu+CkFNv29gm9JTl8hZL+YwC3rbFCzHMCAV
+         h6d3Mj0dQdY2Wq1YRhO0M5vfF+Mzvx4wF0q3f58CNypYQwOOqn0oJwaIdDbkB88z/7m8
+         p8oj31FLBYL6zHAoH8XLsOZG9SFG+Uv3ot6pw8Aalsnc5XyLkbn8y82I1RLIJhQl1hr/
+         O9SNwD/vCuA1NC6vn/xLqq72yyIsSx6CusxukngGLt8NjEo6wtxO30QYGp2r63XCWMU2
+         ut7KC8nmuJeO0Xbmn5rz7M4XnECQOGWZA2vRopmk3YqugpvJG0hsO7GiIoWZuLYNYoue
+         8kVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751134503; x=1751739303;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=opMX1Qwlgu2eO59hinQtvPB+M4svOAtsX/gx/lV1xqg=;
+        b=eBU+AK1dThW3UwEqoTLS1r5u9GdpIGVVxd8LhhJuMwDUPcxPQpnR/D3pWozdEzeX2q
+         U+4U1WgzFA2c+x/bt/YSSrwRuNyOJGpAMuqmMMAXv7hxe2twzRS4BuLDr+YbyKf/7Pvd
+         DJh2+iF4nO9pHrDcN4lv7fG5L6qWqi4Ejtu64F0M5+fT9C1nFCKOyPHKpF8VhLL4MUNd
+         K6gVylnJw8j8JKfnCcneGajzb1QOxVH+bCyZdYIM8HvSWx+Zs2+iwPS3Q/wH4ICrDUl5
+         i1kaPWT33qdqXzePgt08pzDtgenenDMo+XstQ/4iy41rL4iyY704g4Df2GB6s4p/mqnH
+         qxgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnl31dYIb7Shh5bgGVrkATMl1B/ZUpIa/axPc2QCu2SLMGq3xu6OmHNCgfBdlnh2Tax02Y4r3JyW11sNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGedrtsAd8/9VMrfT5+ybcyctuDI95Qlrv6CbKIyIoj3RQIJOQ
+	Wv3Sk2m6sn0lvFiWl9VSGbvItITtoeYkoKrlFhFtNtrgJiHBN4F6l92N2+NaMDKqA3U=
+X-Gm-Gg: ASbGncsfsoUclYeMrs0R06agXl1XLm0GTJum3ypIG0qkL1/Ab+OMq5tCfJqnH9dEJYw
+	hxxp1jCSHvxdzXALm1IAO/YfZcVeKxdaHekUPrWGzSAQweslpIoWMO06Ee44BgRtaxGc/4RXCMT
+	CUooQzeqtaqNRlhNWuASwqnFVH+FZ7VD/43mmE7MzJ0tM2A3C0/6AYP7k0I7j+oLk0nnr9qC26r
+	D9Ymxtg3o/LpPt5h4BXkn9DqpBCgzjzyYKEqEsp2c798ZbSmJ/JMweKuifeZ7gUcZa6phfh1Sx0
+	IsBOYTNEn/ikhC87xnRUI6pgipLvJiyGLb6d5oM9u5/YkMSuPS8ZZMbvnBOvuKGXznjRv4xiJPd
+	mwnpmhB/3lV3uCwdORjuEV8NIG4CxgJgedkl1alU=
+X-Google-Smtp-Source: AGHT+IEEQkM1gJRIew9gOz8gjXb3IwEUoI9QxGNe8m7jXfBjfsS45L+o6phsIwDzLFXqm/Od5/VXeg==
+X-Received: by 2002:a05:6830:8009:b0:735:b9db:5939 with SMTP id 46e09a7af769-73afc3e703emr4147723a34.10.1751134502681;
+        Sat, 28 Jun 2025 11:15:02 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4? ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb01d79csm905055a34.28.2025.06.28.11.15.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Jun 2025 11:15:02 -0700 (PDT)
+Message-ID: <bc8d1e7b-bcd4-42de-9011-4e1b6fc3a23a@baylibre.com>
+Date: Sat, 28 Jun 2025 13:15:01 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506280152
-X-Authority-Analysis: v=2.4 cv=CMMqXQrD c=1 sm=1 tr=0 ts=68603096 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=AeMM1KqErxL4ncdj0kYA:9
-X-Proofpoint-GUID: W_q7wwMP59uDsSMHsfdD9MRpvRaGL7Mr
-X-Proofpoint-ORIG-GUID: W_q7wwMP59uDsSMHsfdD9MRpvRaGL7Mr
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDE1MiBTYWx0ZWRfX2kjbMkP1/PcF 4irX/vCShlxU+dNmdA6szhO06UC8fbN2O1LIVD6aAdkvFPqGdct1xkzuyg6uhQzaNQDgiPQ7Ln3 DUTkvLn10ps4boUscF91/DS+WRXv7wOmQhT9+EN1B9qgZMkvf1PDIcu5vexpXT3MiU+3y1aTuq8
- 9gdlVlG0cQqgoCFdP0gXtMurthw081ETcQxpzURshgLGOIF2YFYXG4oTJnakoT65tc6cnSWkPCA 6ZZazigxQbMzjfBvcwBIWtI72pslCKk60R+GDxvqqh2x7pi74z0dkI+ede/1m/je9/84Sm4NlrW NuM7ZWTMkQQs/8DCAcdXte/K0txd5VQcBrg3Yodfylx+PqufulsxL4TIhDOMyhA0B8i2sM7ENbm
- VKO74Adc5iPHEQcFt4i1Ne/tZV2BgZdyc/2at3g67XwjSjtDfTyiLGEsaqMfnrdIvO//9GkJ
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: pressure: dlhl60d: make dlh_info_tbl const
+To: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250628-iio-const-data-24-v1-1-353b97281534@baylibre.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250628-iio-const-data-24-v1-1-353b97281534@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix an error in nvme_log_err_passthru() where cdw14 was incorrectly
-printed twice instead of cdw15. This fix ensures accurate logging of
-the full passthrough command payload.
+On 6/28/25 1:00 PM, David Lechner wrote:
+> Add const qualifier to struct dlh_info dlh_info_tbl[]. This is
+> read-only data so it can be made const.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-Fixes: 9f079dda1433 ("nvme: allow passthru cmd error logging")
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
----
-Corrected Christoph Hellwig's email ID
-added Reviewed-by  Martin K. Petersen
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e533d791955d..2ae36bce615e 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -386,7 +386,7 @@ static void nvme_log_err_passthru(struct request *req)
- 		nr->cmd->common.cdw12,
- 		nr->cmd->common.cdw13,
- 		nr->cmd->common.cdw14,
--		nr->cmd->common.cdw14);
-+		nr->cmd->common.cdw15);
- }
- 
- enum nvme_disposition {
--- 
-2.47.1
+I got in too much of a hurry and missed that we can drop the chip info
+array here. So skip ahead to v2 where that is done.
 
