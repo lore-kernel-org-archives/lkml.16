@@ -1,66 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDF51799F;
-	Sat, 28 Jun 2025 12:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BAB244690;
+	Sat, 28 Jun 2025 12:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751112338; cv=none; b=aTuTSMSd6MjmmjyLWQBzU9QacMTGUHU8eR21fOLEr7Nd+eocVZjBuNx322WGAoAEcM0/izNKrna4DQfi/z5uZmkOTPNv6Kv2GkJzoDLKWnKNa2LmSvrlTIChAwLcMmY0JzyN0TTGG9wThgzr9IYpV8AeFZTWqtZjj+XOdeciBnU=
+	t=1751112556; cv=none; b=XFCbjjaVP6J7EW3VIIbEGJOpfpmy1Wjv0WDZV9+YciIW+tW2R8GI0kpdLpnzCCGf0JnYm7obhrffuht3YLbRZONyMHOJW5dqf6qO79CYDGu/7mi0Q94ZDzVy1itr90K6L7K9aXy+D5AIbJ1ndRRfHHaPrGYSyG4iafYoWEiLVu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751112338; c=relaxed/simple;
-	bh=DttSR+loL/+XwutcRtElHNrAyAfQKYpKcvL9oh1brpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UjYuzLq66IMxzxsVV2Ppcgemc99VojYg8A0c4ZUoowFxHDB4ur1oS/3wTFEBBpZQ4tKSfKXLPBFOUL7m60gPuC3kd2f8ciWdBMIkvApR/g6cMUzZge+uWNJO3anfnUnN01b6csex9elTYBMZnv02rPDqGl2qYjBW8yVcsL7D27A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlBSfVn4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751112556; c=relaxed/simple;
+	bh=3m6qk9sfbOx97xb5co1w7w/o8852kfwjaeLEfUcRfPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S7fNsz1iIXf9h/vZu91wCbItDGkPQGbdE7u7Q8kB8Yi0x75c3EalOEaIWijvCtMN8HX4oa11n1tIFeHIHh1pZkG5kIcgWUcC1PzEZEhVyio/4c8RG7SxdgCh8RzOhMjMhk9IB0EVlUohBOpxkRveWxfwPLxk0QOcvCWul+iUTL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bKR/nBwv; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlBSfVn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23FCC4CEEA;
-	Sat, 28 Jun 2025 12:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751112335;
-	bh=DttSR+loL/+XwutcRtElHNrAyAfQKYpKcvL9oh1brpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jlBSfVn4ePgI4Y+1FPzDgHJ46C9P1SILP9iSnzYGnpProm9sYoW/Yfz0dZEYBNbLG
-	 7xgr7rsmMVS1iP7E41jLMCefzSJ3nU5xYHvsMiVAIDmXlJ6IB9hwW22YNfTPHErpDP
-	 a32lkyHkTYoUfFxN8z8ahdTMvan7bAzFaCBh/CKxLsRX2kMdzQc22oBpkWFauji0SX
-	 Pk33L/NS4Euj4O3DueYOGBFQrudskK+xJEIFuu31f0F0J1pLc3x+o1KNtlEySNB2FN
-	 xyc6ouX96CcQfC+WsPLz3B4jZTht0jN6ZaEoZ0TLzlJkJ2T00KQGK+JNVPEgUUlfdt
-	 AJ/oKPUIY/nug==
-Date: Sat, 28 Jun 2025 14:05:31 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Leo Wang <leo.jt.wang@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, bruce.jy.hung@fii-foxconn.com, george.kw.lee@fii-foxconn.com, 
-	Leo Wang <leo.jt.wang@fii-foxconn.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: aspeed: add Meta Clemente board
-Message-ID: <ojyrhi2stm7q6kcd7yl3je36cccbzypsepmc4fvl7venynyu5g@52rs6bntmnwl>
-References: <20250627-add-support-for-meta-clemente-bmc-v4-0-ce7ff23460c4@fii-foxconn.com>
- <20250627-add-support-for-meta-clemente-bmc-v4-1-ce7ff23460c4@fii-foxconn.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bKR/nBwv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751112549; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jG2LawCA1NNYtazKDVvJGkVVtdv0FBm8VQn9Q5cw1nQ=;
+	b=bKR/nBwvhbbX0qTMv2rVPUr0P16VQ0vfxjGO3aredsyOl5eQcs5gpm6Cmc5AjCynWXpGkceHCdmPM/i8+NYzrdK01ZwUXrIfiBpQtvDPETaPI2Zl+m/9JwO4NM8IT5xamVkYseaJ8cfPX9Dk06wHyYMw7pS/3ZgQ/Lk6mpMdRG8=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WfjZU4-_1751112496 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 28 Jun 2025 20:09:09 +0800
+From: cp0613@linux.alibaba.com
+To: david.laight.linux@gmail.com
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	cp0613@linux.alibaba.com,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux@rasmusvillemoes.dk,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	yury.norov@gmail.com
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
+Date: Sat, 28 Jun 2025 20:08:16 +0800
+Message-ID: <20250628120816.1679-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250625170234.29605eed@pumpkin>
+References: <20250625170234.29605eed@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250627-add-support-for-meta-clemente-bmc-v4-1-ce7ff23460c4@fii-foxconn.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 10:59:02AM +0800, Leo Wang wrote:
-> From: Leo Wang <leo.jt.wang@gmail.com>
+On Wed, 25 Jun 2025 17:02:34 +0100, david.laight.linux@gmail.com wrote:
+
+> Is it even a gain in the zbb case?
+> The "rorw" is only ever going to help full word rotates.
+> Here you might as well do ((word << 8 | word) >> shift).
 > 
-> Document the new compatibles used on Meta Clemente.
+> For "rol8" you'd need ((word << 24 | word) 'rol' shift).
+> I still bet the generic code is faster (but see below).
 > 
-> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> Same for 16bit rotates.
+> 
+> Actually the generic version is (probably) horrid for everything except x86.
+> See https://www.godbolt.org/z/xTxYj57To
 
-Checkpatch warnings.
+Thanks for your suggestion, this website is very inspiring. According to the
+results, the generic version is indeed the most friendly to x86. I think this
+is also a reason why other architectures should be optimized. Take the riscv64
+ror32 implementation as an example, compare the number of assembly instructions
+of the following two functions:
+```
+u32 zbb_opt_ror32(u32 word, unsigned int shift)
+{
+	asm volatile(
+		".option push\n"
+		".option arch,+zbb\n"
+		"rorw %0, %1, %2\n"
+		".option pop\n"
+		: "=r" (word) : "r" (word), "r" (shift) :);
 
-Best regards,
-Krzysztof
+	return word;
+}
 
+u16 generic_ror32(u16 word, unsigned int shift)
+{
+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
+}
+```
+Their disassembly is:
+```
+zbb_opt_ror32:
+<+0>:     addi    sp,sp,-16
+<+2>:     sd      s0,0(sp)
+<+4>:     sd      ra,8(sp)
+<+6>:     addi    s0,sp,16
+<+8>:     .insn   4, 0x60b5553b
+<+12>:    ld      ra,8(sp)
+<+14>:    ld      s0,0(sp)
+<+16>:    sext.w  a0,a0
+<+18>:    addi    sp,sp,16
+<+20>:    ret
+
+generic_ror32:
+<+0>:     addi    sp,sp,-16
+<+2>:     andi    a1,a1,31
+<+4>:     sd      s0,0(sp)
+<+6>:     sd      ra,8(sp)
+<+8>:     addi    s0,sp,16
+<+10>:    negw    a5,a1
+<+14>:    sllw    a5,a0,a5
+<+18>:    ld      ra,8(sp)
+<+20>:    ld      s0,0(sp)
+<+22>:    srlw    a0,a0,a1
+<+26>:    or      a0,a0,a5
+<+28>:    slli    a0,a0,0x30
+<+30>:    srli    a0,a0,0x30
+<+32>:    addi    sp,sp,16
+<+34>:    ret
+```
+It can be found that the zbb optimized implementation uses fewer instructions,
+even for 16-bit and 8-bit data.
