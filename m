@@ -1,33 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C449122D7A3;
-	Sat, 28 Jun 2025 09:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751102718; cv=none; b=LH9LroB2YtpZOb2FoH8UCuFIp/nd1UCZhX+8BexJPrHMA9+2k6b8Lu/Xi8LRfYNOmroVeUKFcena9bkzILkSYZOIAyoP+evkylEikAiiDPGBVa7MicDRP80NDqkJEqQv1fnnDrsiiB5wiwmYognvTke6zR0qz2CV2XxtbnsYTh8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751102718; c=relaxed/simple;
-	bh=JojSEzA7X+jR/kNu89V44GciVsM5eLhWK20LdmEerYg=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C9319E992;
+	Sat, 28 Jun 2025 09:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751102970; cv=pass; b=G2qu2pRgqAFkzywvWCSR5HbmJO5Vvl4KHD0Ca3tam/AZ7lYUqqV6/aAlr9dcSUYHgfn1A/wHUVFnkrT4eAFcxWpny4NazFyhGAUZpEi23ZgIophz3kFzLPGZiCfHHGiyzk69sK7Mem9uPq0W7qsBhGyVvFo/eEU6BJERMi1fy/I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751102970; c=relaxed/simple;
+	bh=wUXnKzgbvtT25rCDfOYl322+9yAQAx3rHgAkzEYbFz4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qzkm67DwKIOJR+hcZydIRkXHQRpJtgywErDpIITyInbgT2W1XXDPZ5X3hfk6IHSsGnDQbj37raTI3sgdibsAvBkXFJsvSHykV8hG5/VgsWlTCqq8dhv7Zh13QGRRHOCyiXoPTXJkrc8C43blJRc3QAbdUJ2U+wyRWPHHL43dzFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koMJosSw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mogueLBky8OOvsPl2pFwrJ4qJRsqThOzO+P2aiF5z40dL+iekZCbOUO1u6/WZPxpGkDp19ieb9umuDwfP4L3bfMb9qBb8s+CgQmddAJ6S1G78+9P09a98thvKNPv4SQaTAyaJo2OLtXfwMbLfeD2xUDvIvuxesgzP22/yphlg34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=UrhL/Bgr; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koMJosSw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC08FC4CEEA;
-	Sat, 28 Jun 2025 09:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751102715;
-	bh=JojSEzA7X+jR/kNu89V44GciVsM5eLhWK20LdmEerYg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=koMJosSwX6VQDUq+sHVJSRy77pEEC9ebRBeCWLTcOu9j1hQ4hyc6kBNCPemVMkIb9
-	 aglPZ0E7ilfXJ28eCGOoe0wX/Bbtzx4Bq8Ttyur8syBqFKIezZ4HwK243bqoEZf6sP
-	 pN6DZOe49VDndB4fph8xo5ybJfSEj/nJq0GKa1hffUCxCLYOfjz6LLCLAw8fe0TDy8
-	 /+TpkbZjvjw3t2VwlAQlIT9CQORYQNIDuEpvvlwDWTHhh9u12cUeSJjgudEx5v7inH
-	 6AFAPPppk7Yb3dlcCvk8UY5m2jr0wbBLtaGDi3YfqpmXgpw3Up1mFvztdOoTvxk3qz
-	 /ex/hPMaQ1jig==
-Message-ID: <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org>
-Date: Sat, 28 Jun 2025 11:25:11 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="UrhL/Bgr"
+ARC-Seal: i=1; a=rsa-sha256; t=1751102930; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cWbUTuWqB9x2sQD3DIK5xq7PDr62IZitZP2Wdt6o1RFVmaR/CqqGfW9OAVlsdI1jDIN22VcmTRA/tHNtEHjqKWGv6Rgz9LaKYH7MJMDcrQWtho+AHDpuGdOoWmz5GYrqPbuqV67ARPxCfu9wLf2mxyYOSCkO0c8dGUgV8VdRzCM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751102930; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oVePXl2d+XiNoZkk1lUmaWYsXq/VWl9Vy7svJjVL9LI=; 
+	b=a56zD+GTz269d+12+O2dfrFkw1CVH3BlJR1Ix2Qw1Nzo6Tukp/GpqZzdP7r/JL8PZi4YEcJ6cS2laDOgsr/katT6gfuW5eEPprSDz86T4W95r5kccDVTOqurAt3J8fOecgUuuRvuUKQPfKV0b3/l83CnRY03rI+Ly8F23EXiZa8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751102930;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=oVePXl2d+XiNoZkk1lUmaWYsXq/VWl9Vy7svJjVL9LI=;
+	b=UrhL/Bgrv5vFpriKD1Sojazt8POylqsVk+uwQ8auhjzc7dBlus/3X2MfMbyT6I9/
+	ltH0EP8h/efaPN6IWr1njkxyOUybQn5Vy8m8FRnbePiWSRbZYWn303eVYTk1MqtU4q4
+	436xzCb/V936rImYgLWtkignd2XvJcLHh7r/wiWo=
+Received: by mx.zohomail.com with SMTPS id 1751102928164588.2772597295957;
+	Sat, 28 Jun 2025 02:28:48 -0700 (PDT)
+Message-ID: <0b5231e2-8dd0-4bbf-a0d3-0f6460bc8030@collabora.com>
+Date: Sat, 28 Jun 2025 14:28:42 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,214 +45,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] power: supply: core: Add
- power_supply_get/set_property_direct()
-To: Armin Wolf <W_Armin@gmx.de>, sre@kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250627205124.250433-1-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250627205124.250433-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2] selftests: futex: define SYS_futex on 32-bit
+ architectures with 64-bit time_t
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
+ dvhart@infradead.org, dave@stgolabs.net, andrealmeid@igalia.com,
+ shuah@kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, tim609@andestech.com,
+ Cynthia Huang <cynthia@andestech.com>
+References: <20250627090812.937939-1-ben717@andestech.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250627090812.937939-1-ben717@andestech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi Armin,
-
-On 27-Jun-25 10:51 PM, Armin Wolf wrote:
-> Power supply extensions might want to interact with the underlying
-> power supply to retrieve data like serial numbers, charging status
-> and more. However doing so causes psy->extensions_sem to be locked
-> twice, possibly causing a deadlock.
+On 6/27/25 2:08 PM, Ben Zong-You Xie wrote:
+> glibc does not define SYS_futex for 32-bit architectures using 64-bit
+> time_t e.g. riscv32, therefore this test fails to compile since it does not
+> find SYS_futex in C library headers. Define SYS_futex as SYS_futex_time64
+> in this situation to ensure successful compilation and compatibility.
 > 
-> Provide special variants of power_supply_get/set_property() that
-> ignore any power supply extensions and thus do not touch the
-> associated psy->extensions_sem lock.
-> 
-> Suggested-by: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-
-Thank you for your work on this.
-
-The entire series looks good to me:
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-for the series.
-
-There is the question of how to merge this. I think it might
-be best for the entire series to go through the power-supply
-tree.
-
-Ilpo would that work for you and if yes can we have your ack ?
-
-Sebastian, IMHO this should be merged as fixed not as for-next
-material.
-
-Regards,
-
-Hans
-
-
-
+> Signed-off-by: Cynthia Huang <cynthia@andestech.com>
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
 > ---
->  drivers/power/supply/power_supply_core.c | 82 ++++++++++++++++++++----
->  include/linux/power_supply.h             |  8 +++
->  2 files changed, 78 insertions(+), 12 deletions(-)
+> Changes since v1:
+>   - Fix the SOB chain
 > 
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-> index aedb20c1d276..e70ffedf1a80 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -1241,9 +1241,8 @@ bool power_supply_has_property(struct power_supply *psy,
->  	return false;
->  }
->  
-> -int power_supply_get_property(struct power_supply *psy,
-> -			    enum power_supply_property psp,
-> -			    union power_supply_propval *val)
-> +static int __power_supply_get_property(struct power_supply *psy, enum power_supply_property psp,
-> +				       union power_supply_propval *val, bool use_extensions)
->  {
->  	struct power_supply_ext_registration *reg;
->  
-> @@ -1253,10 +1252,14 @@ int power_supply_get_property(struct power_supply *psy,
->  		return -ENODEV;
->  	}
->  
-> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
-> -		power_supply_for_each_extension(reg, psy) {
-> -			if (power_supply_ext_has_property(reg->ext, psp))
-> +	if (use_extensions) {
-> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
-> +			power_supply_for_each_extension(reg, psy) {
-> +				if (!power_supply_ext_has_property(reg->ext, psp))
-> +					continue;
-> +
->  				return reg->ext->get_property(psy, reg->ext, reg->data, psp, val);
-> +			}
->  		}
->  	}
->  
-> @@ -1267,20 +1270,49 @@ int power_supply_get_property(struct power_supply *psy,
->  	else
->  		return -EINVAL;
->  }
-> +
-> +int power_supply_get_property(struct power_supply *psy, enum power_supply_property psp,
-> +			      union power_supply_propval *val)
-> +{
-> +	return __power_supply_get_property(psy, psp, val, true);
-> +}
->  EXPORT_SYMBOL_GPL(power_supply_get_property);
->  
-> -int power_supply_set_property(struct power_supply *psy,
-> -			    enum power_supply_property psp,
-> -			    const union power_supply_propval *val)
-> +/**
-> + * power_supply_get_property_direct - Read a power supply property without checking for extensions
-> + * @psy: The power supply
-> + * @psp: The power supply property to read
-> + * @val: The resulting value of the power supply property
-> + *
-> + * Read a power supply property without taking into account any power supply extensions registered
-> + * on the given power supply. This is mostly useful for power supply extensions that want to access
-> + * their own power supply as using power_supply_get_property() directly will result in a potential
-> + * deadlock.
-> + *
-> + * Return: 0 on success or negative error code on failure.
-> + */
-> +int power_supply_get_property_direct(struct power_supply *psy, enum power_supply_property psp,
-> +				     union power_supply_propval *val)
-> +{
-> +        return __power_supply_get_property(psy, psp, val, false);
-> +}
-> +EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
-> +
-> +
-> +static int __power_supply_set_property(struct power_supply *psy, enum power_supply_property psp,
-> +				       const union power_supply_propval *val, bool use_extensions)
->  {
->  	struct power_supply_ext_registration *reg;
->  
->  	if (atomic_read(&psy->use_cnt) <= 0)
->  		return -ENODEV;
->  
-> -	scoped_guard(rwsem_read, &psy->extensions_sem) {
-> -		power_supply_for_each_extension(reg, psy) {
-> -			if (power_supply_ext_has_property(reg->ext, psp)) {
-> +	if (use_extensions) {
-> +		scoped_guard(rwsem_read, &psy->extensions_sem) {
-> +			power_supply_for_each_extension(reg, psy) {
-> +				if (!power_supply_ext_has_property(reg->ext, psp))
-> +					continue;
-> +
->  				if (reg->ext->set_property)
->  					return reg->ext->set_property(psy, reg->ext, reg->data,
->  								      psp, val);
-> @@ -1295,8 +1327,34 @@ int power_supply_set_property(struct power_supply *psy,
->  
->  	return psy->desc->set_property(psy, psp, val);
->  }
-> +
-> +int power_supply_set_property(struct power_supply *psy, enum power_supply_property psp,
-> +			      const union power_supply_propval *val)
-> +{
-> +	return __power_supply_set_property(psy, psp, val, true);
-> +}
->  EXPORT_SYMBOL_GPL(power_supply_set_property);
->  
-> +/**
-> + * power_supply_set_property_direct - Write a power supply property without checking for extensions
-> + * @psy: The power supply
-> + * @psp: The power supply property to write
-> + * @val: The value to write to the power supply property
-> + *
-> + * Write a power supply property without taking into account any power supply extensions registered
-> + * on the given power supply. This is mostly useful for power supply extensions that want to access
-> + * their own power supply as using power_supply_set_property() directly will result in a potential
-> + * deadlock.
-> + *
-> + * Return: 0 on success or negative error code on failure.
-> + */
-> +int power_supply_set_property_direct(struct power_supply *psy, enum power_supply_property psp,
-> +				     const union power_supply_propval *val)
-> +{
-> +	return __power_supply_set_property(psy, psp, val, false);
-> +}
-> +EXPORT_SYMBOL_GPL(power_supply_set_property_direct);
-> +
->  int power_supply_property_is_writeable(struct power_supply *psy,
->  					enum power_supply_property psp)
->  {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 45468959dd98..f21f806bfb38 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -878,15 +878,23 @@ static inline int power_supply_is_system_supplied(void) { return -ENOSYS; }
->  extern int power_supply_get_property(struct power_supply *psy,
->  			    enum power_supply_property psp,
->  			    union power_supply_propval *val);
-> +int power_supply_get_property_direct(struct power_supply *psy, enum power_supply_property psp,
-> +				     union power_supply_propval *val);
->  #if IS_ENABLED(CONFIG_POWER_SUPPLY)
->  extern int power_supply_set_property(struct power_supply *psy,
->  			    enum power_supply_property psp,
->  			    const union power_supply_propval *val);
-> +int power_supply_set_property_direct(struct power_supply *psy, enum power_supply_property psp,
-> +				     const union power_supply_propval *val);
->  #else
->  static inline int power_supply_set_property(struct power_supply *psy,
->  			    enum power_supply_property psp,
->  			    const union power_supply_propval *val)
->  { return 0; }
-> +static inline int power_supply_set_property_direct(struct power_supply *psy,
-> +						   enum power_supply_property psp,
-> +						   const union power_supply_propval *val)
-> +{ return 0; }
+> v1 : https://lore.kernel.org/all/20250527093536.3646143-1-ben717@andestech.com/
+> ---
+>  tools/testing/selftests/futex/include/futextest.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/futex/include/futextest.h b/tools/testing/selftests/futex/include/futextest.h
+> index ddbcfc9b7bac..7a5fd1d5355e 100644
+> --- a/tools/testing/selftests/futex/include/futextest.h
+> +++ b/tools/testing/selftests/futex/include/futextest.h
+> @@ -47,6 +47,17 @@ typedef volatile u_int32_t futex_t;
+>  					 FUTEX_PRIVATE_FLAG)
 >  #endif
->  extern void power_supply_external_power_changed(struct power_supply *psy);
->  
+> 
+> +/*
+> + * SYS_futex is expected from system C library, in glibc some 32-bit
+> + * architectures (e.g. RV32) are using 64-bit time_t, therefore it doesn't have
+> + * SYS_futex defined but just SYS_futex_time64. Define SYS_futex as
+> + * SYS_futex_time64 in this situation to ensure the compilation and the
+> + * compatibility.
+> + */
+> +#if !defined(SYS_futex) && defined(SYS_futex_time64)
+> +#define SYS_futex SYS_futex_time64
+> +#endif
+> +
+>  /**
+>   * futex() - SYS_futex syscall wrapper
+>   * @uaddr:	address of first futex
+> --
+> 2.34.1
 
