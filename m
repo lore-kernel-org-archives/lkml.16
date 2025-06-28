@@ -1,198 +1,108 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D7319E82A;
-	Sat, 28 Jun 2025 04:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13E71854;
+	Sat, 28 Jun 2025 05:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751086786; cv=none; b=mLDSA0IepW6Ri1Jk3PyvOW5yZYwwWrSf3iKRiIoAgDsB6HJPVh3mQPjdKLdnfv7Cntyls+GIDzMJKv0hFSkpWHor8zaZbKGDmThUOSszOpgjoNswDAfpFm/fdVCESEL9SFCK0wGbI1fshqdxv+Pi+QbrldyMK6paUCxrplu29FA=
+	t=1751086879; cv=none; b=qPFJHYyDIzYf3+rrMYyZMyeCPUBEmxjn75bRjuOIs+VrImMKUmTgIaNtdoYGnGMkwg/fCamudOcka0gfLtgu8/nswkgpq0YkaFl88O2QZ7SRpez1lncYXi3wBA8rym3wqbQvHZnjIVO4opX0D+n06D+RVF9JqHklmiY1/Z1zm+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751086786; c=relaxed/simple;
-	bh=3AtvpzDjfslHPDxlxx8QNEQnI1HnDgZjUZovpUJ1MOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tBkDGYeHcCWDlUdnj2ZzBQBxVIkLD2a9jiyInNA6Y8TLsbDDGCTvUGTVTrBV0yZ+0jDsnontWDwFTI8kKmafLb0l7zsdGda2C5WG0ekfcyC5Nm/+euEoiI2LwsYd9jbsbAi1J7vSVpgqJF8+bvBdBv/ShT1H4d/QB4ISWeBKgqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2Q1M5A+; arc=none smtp.client-ip=209.85.215.176
+	s=arc-20240116; t=1751086879; c=relaxed/simple;
+	bh=kkcY4QO1Oa0tgwGe1yvZlp1RmVsJ4/W517+w4wgDoIE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YhSoUIMJlNlf8yB0d77cSatTKDNgyS/BU/1Pg/L+55kCtVlrCrOV3BT4tyZDJMWhN1n5kQRPutxNg+4/PeTQ3c2s2m3gZAIyNJP2iGhOJwEDBuqJkzlh5/nshbbu/C5eiv50+GPD+Si9SIQ3hIyVv0CNUa6+ZMgVPZ6kQDbvdJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=apo2Z+8A; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2Q1M5A+"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b321bd36a41so589768a12.2;
-        Fri, 27 Jun 2025 21:59:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apo2Z+8A"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6faf66905baso5824566d6.2;
+        Fri, 27 Jun 2025 22:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751086784; x=1751691584; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6KFydMvKM3jMgYcZFX5+YrAej6q1x9tbL+4kgM9zm0=;
-        b=k2Q1M5A+i+dwEKGs1Vt2Z6gSHeW5XVTyOG4qTry/08b9o0FKgAut/ORv2VYuKqn5AH
-         ttx7qYcNeGs0yG7Mtwf0zRkZtS0pokVITDOLxVkPmBoJi5aIrO+LaNQdHBUXG/z9vmdQ
-         Bw9kuRQmTGfDGGv2vVONrwi2+ciWGC1iyoJmfB9YWNvo24cM/fGjX2HNJ95TbbOaBG8j
-         n1bKDgFoPW/bTY5x4WxqjcbXzWDavl7fuWvtHPTGlk87s2u8bdHdMwYIM879taI95O97
-         e+9uQauxMOrWwslU4U5fTpDlTWfdfXfO3gyKk9mzVdT8jS/M/WHWgqkCzGKd52wmL+wX
-         pvbQ==
+        d=gmail.com; s=20230601; t=1751086876; x=1751691676; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BcuDafpKBlbr5L7tzKb4qdPO1+9STlnsCkt4WJe7uAs=;
+        b=apo2Z+8Ac64KgBD067k8cAni3X72p9bqCai1+0Uk5Bj6irtlAkS0uS6UfYdQLcrOws
+         0aE9Vb/nD7MOgNfloMQqzS/W/fkFbNyHkb9OXninO9R5IZn1LuwSAFs/BglNAzOQXlNT
+         W3giTXh+MB5TQIm+aFaykS5XM+ZtYbCYq6K65M+kwKEa9vuFy+mGM6ghdkk9Vk09CjmN
+         0sCzoDLa+y1Qx62mOZ8cUYOamhYvu5SE8oZz/01PV43gKL5pRuY7WY1aUuDJzxFy+xgF
+         GWHj/4rRIRnBH8AZ7B3aTA1p9Ma8JCNGMDgHtZzBIHd72CX6h76xxJX/fvti0X9oXEDu
+         tR8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751086784; x=1751691584;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W6KFydMvKM3jMgYcZFX5+YrAej6q1x9tbL+4kgM9zm0=;
-        b=olNghL/BPO2LxQUepFa7cpS/hfILpdSMoZy6FA4IZekj2Qp6pb5jmzguKqf/ADtK9Q
-         wBq4M0Hux2r2Wh4Ena9Zp8ftJa7nCKm9AZzZWNhhdbGUaTeLbGjJITfWbFdMrr9QLPcG
-         DaOGT7zgtKbd2ZTiTde6rYTp5hCjjxjUi6GQtVTfDmfHoQOpGjD7a/mhStPrwtFNwnQK
-         smJn4ophXL5y+jFTbxGvVnWLZqBwZURgFnzslOWaR8oUdCwwdXnssnYPd18xamnBDcx5
-         UX+dEJ5zRB8fHC+hZ2xvtrR47wwGRqRYAfsAO+JTaFoS4gQW5lfSWDmHsVPtg4pIXjPH
-         cOXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzx6/IqFEvMmi72BdOuZL8jswB6UMqqgrXmYl7l/84L5kiWtkdR7Da7cms4v4/4H7waBJiMABW+zpoEg==@vger.kernel.org, AJvYcCXQaNCRpaFdQWc9/RVzG0sfpHjKda5A5LHN0si6bHnC0dfK4YIhXNstyVWq0zjy+owUSmOoP/tWsV5mABId@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0yxH10KJkcLb+IXSRiwIntQJ71YBrBNohn8nBS6Nl/idXRlJm
-	2Ql0bImk24iGDSpqI5pKbw/4BArRClVGeYZcb6XmTwdWTuwSTDZcBQmLF5CPUQ==
-X-Gm-Gg: ASbGncvYviGzVOselv9bzUDFTlQ5WcalZB+KAWriQgrA26G19srV9VTZgF88BGac4Hv
-	K4Nu/9sDnhJ26fZRyKN936D4H9gAp+hCmwAs+iErOrag9e8VKKj2po2/KntYFghw14qMcgfDLvG
-	q8MaDDn9d5sIdrd3z2Ue4eY4Qqe7rESX1w0RkS1bpNbX9+DUBM++J9MgHuhCfAgd5cDM980ymFO
-	ip9mlZmizVIlcNh0LrywypsxCLPYrMXt0MX9Ixs2meo79SLNC9cMg42RoGEynRtCeJlpDPNZU60
-	z247XVLn+2+paGD6a5kN2WKyUqkSlag6uRbfKKnj11XJqshryf5NRmnG2PrnVSV/2ZHpKKsMXyi
-	gsz7Rk4ldToKW
-X-Google-Smtp-Source: AGHT+IHa+w+z2zouG9On8VvcTYwX0uju2SQmEjN08Q4IjPHgE02aAZdf8HosYP7aHwVRvq+HXQ+62g==
-X-Received: by 2002:a17:90b:582d:b0:312:f650:c795 with SMTP id 98e67ed59e1d1-318c923b91bmr6942314a91.21.1751086784526;
-        Fri, 27 Jun 2025 21:59:44 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.221.186])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-318c13a271asm3659713a91.17.2025.06.27.21.59.38
+        d=1e100.net; s=20230601; t=1751086876; x=1751691676;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BcuDafpKBlbr5L7tzKb4qdPO1+9STlnsCkt4WJe7uAs=;
+        b=rmcXkzD6Zq+QABnhwZ/ceylOOcNYr8IfJRmG6tBypJtAi5eGl0gq28uD6Mc/CVT9fR
+         tU9kYf5GaBlyjmg3SnK7bSE3g9/rgubqQU+nMgFiLkoEntk5VNG20LZl2Db1nKgvegq/
+         UZBn5Wy1p9h3g7k/sHel+MflH7UGqaeMnGLfnAckfwWnSX1fNEiIkDa3GPaw5FmdiSZ7
+         fk9hRlDWap0bo3upHA5rvMt5DKJxHd8EUyhruvwx72S25l0n9ksMMem7uUI22OTx4hue
+         BnMO5IkFQ+pUPV36cT7adjn13Af+bd6DHNKdGCYuANimW2JD1wRzuZ63O7Qc4gaMgnhF
+         tW5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUhhq9vCU+yxohmEBiB1cqeSUyXVTh5iJNJArf7cffOGWn2bZgL1qOgvGMK1PX2y+SO3vw1BEsuoDuKiKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYnKt2QXvZwQc8udx67eLcuTCsMFg9NaO2xt5HkbD/F05mAJX/
+	J/htZnhJIRuifCIWd0J4CTplyZh2VNVp2Ybz6URFza+4wXrdM6lVs0qrbHSaA3pN
+X-Gm-Gg: ASbGncuEMHgYQcI3wba3iUK8u5PRiuqVNKvelzSEaZaiopWSuCQdGhKeWl1tkhJz+/G
+	XfQlEp2N9HIiS5/Cv94P5i8qcMWQ+oF9WFj1DS/yQLvmr6dEmlkgN/LcovEPx1kLRUgNE6cJGDd
+	oOKiAuTJkPB14a16IDfbSLpKzl5GiyF1phv2cd0/gfjEAbNGjLTu+4cOJ9jAyUenj7X2MztXxBp
+	f8MQ00L5lx+yw1o8CwfqhMbyGQlw+n3YaJwnImQxh8hISYAxWYxKvqgIaoAQHmRyqaqUD7nTK00
+	esNZL8VzVCMyjc57/KTRcdaGjk7A+TQ0V0EQpI5T4WOK2TGACAP6kwjHvp7IzA==
+X-Google-Smtp-Source: AGHT+IE7a9lEhrmhuHGu1oCXy1ot+/dEDjYR5Aby64kvvllOBmoqZlWrDlazOJYhq4lz8b/r+g8DVQ==
+X-Received: by 2002:a05:6214:2aae:b0:6fa:c41e:cc6c with SMTP id 6a1803df08f44-70002dec8ccmr101167506d6.15.1751086876547;
+        Fri, 27 Jun 2025 22:01:16 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e34besm31504966d6.75.2025.06.27.22.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 21:59:44 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: andy@kernel.org
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	dan.carpenter@linaro.org,
-	gregkh@linuxfoundation.org,
-	lorenzo.stoakes@oracle.com,
-	tzimmermann@suse.de,
-	riyandhiman14@gmail.com,
-	willy@infradead.org,
-	notro@tronnes.org,
-	thomas.petazzoni@free-electrons.com,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v2 2/2] staging: fbtft: cleanup error handling in fbtft_framebuffer_alloc()
-Date: Sat, 28 Jun 2025 10:29:07 +0530
-Message-ID: <62320323049c72b6e3fda6fa7a55e080b29491e8.1751086324.git.abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1751086324.git.abdun.nihaal@gmail.com>
-References: <cover.1751086324.git.abdun.nihaal@gmail.com>
+        Fri, 27 Jun 2025 22:01:16 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/3] platform/x86: think-lmi: Fix resource cleanup flaws
+Date: Sat, 28 Jun 2025 02:00:45 -0300
+Message-Id: <20250628-lmi-fix-v1-0-c6eec9aa3ca7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP12X2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyML3ZzcTN20zApdSwtDE+MkQ4MUy7QUJaDqgqJUoDDYpOjY2loAagD
+ RdFkAAAA=
+X-Change-ID: 20250628-lmi-fix-98143b10d9fd
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=614; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=kkcY4QO1Oa0tgwGe1yvZlp1RmVsJ4/W517+w4wgDoIE=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBnx5cJPJJP/6QYtSXLuyFtwV+hz5815W5cFff8veUew7
+ bq1s8eijlIWBjEuBlkxRZb2hEXfHkXlvfU7EHofZg4rE8gQBi5OAZjI7XWMDMczqszvFnMmZc6p
+ Fj322MNYm3FJ03z+VC+r5T1qP3RUMxj+mT3+ZlW+SSTXIuj8mtmZGq0P1+Uc/FiusmPne2FW2Xx
+ NPgA=
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-The error handling in fbtft_framebuffer_alloc() mixes managed allocation
-and plain allocation, and performs error handling in an order different
-from the order in fbtft_framebuffer_release().
+Hi all,
 
-Fix them by moving vmem allocation closer to where it is used, and using
-plain kzalloc() for txbuf allocation.
+First patch is a prerequisite in order to avoid NULL pointer
+dereferences in error paths. Then two fixes follow.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Newly added in v2
+Kurt Borja (3):
+      platform/x86: think-lmi: Create ksets consecutively
+      platform/x86: think-lmi: Fix kobject cleanup
+      platform/x86: think-lmi: Fix sysfs group cleanup
 
- drivers/staging/fbtft/fbtft-core.c | 32 ++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 8538b6bab6a5..f6a147cf0717 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -568,18 +568,13 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 		height = display->height;
- 	}
- 
--	vmem_size = display->width * display->height * bpp / 8;
--	vmem = vzalloc(vmem_size);
--	if (!vmem)
--		goto alloc_fail;
--
- 	fbdefio = devm_kzalloc(dev, sizeof(struct fb_deferred_io), GFP_KERNEL);
- 	if (!fbdefio)
--		goto alloc_fail;
-+		return NULL;
- 
- 	buf = devm_kzalloc(dev, 128, GFP_KERNEL);
- 	if (!buf)
--		goto alloc_fail;
-+		return NULL;
- 
- 	if (display->gamma_num && display->gamma_len) {
- 		gamma_curves = devm_kcalloc(dev,
-@@ -588,12 +583,17 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 					    sizeof(gamma_curves[0]),
- 					    GFP_KERNEL);
- 		if (!gamma_curves)
--			goto alloc_fail;
-+			return NULL;
- 	}
- 
- 	info = framebuffer_alloc(sizeof(struct fbtft_par), dev);
- 	if (!info)
--		goto alloc_fail;
-+		return NULL;
-+
-+	vmem_size = display->width * display->height * bpp / 8;
-+	vmem = vzalloc(vmem_size);
-+	if (!vmem)
-+		goto release_framebuf;
- 
- 	info->screen_buffer = vmem;
- 	info->fbops = &fbtft_ops;
-@@ -613,7 +613,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	info->fix.accel =          FB_ACCEL_NONE;
- 	info->fix.smem_len =       vmem_size;
- 	if (fb_deferred_io_init(info))
--		goto release_framebuf;
-+		goto release_screen_buffer;
- 
- 	info->var.rotate =         pdata->rotate;
- 	info->var.xres =           width;
-@@ -668,7 +668,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- #endif
- 
- 	if (txbuflen > 0) {
--		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
-+		txbuf = kzalloc(txbuflen, GFP_KERNEL);
- 		if (!txbuf)
- 			goto cleanup_deferred;
- 		par->txbuf.buf = txbuf;
-@@ -694,12 +694,10 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 
- cleanup_deferred:
- 	fb_deferred_io_cleanup(info);
-+release_screen_buffer:
-+	vfree(info->screen_buffer);
- release_framebuf:
- 	framebuffer_release(info);
--
--alloc_fail:
--	vfree(vmem);
--
- 	return NULL;
- }
- EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-@@ -712,6 +710,10 @@ EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-  */
- void fbtft_framebuffer_release(struct fb_info *info)
- {
-+	struct fbtft_par *par = info->par;
-+
-+	if (par->txbuf.len > 0)
-+		kfree(par->txbuf.buf);
- 	fb_deferred_io_cleanup(info);
- 	vfree(info->screen_buffer);
- 	framebuffer_release(info);
+ drivers/platform/x86/lenovo/think-lmi.c | 92 ++++++++++++---------------------
+ 1 file changed, 33 insertions(+), 59 deletions(-)
+---
+base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+change-id: 20250628-lmi-fix-98143b10d9fd
 -- 
-2.43.0
+ ~ Kurt
 
