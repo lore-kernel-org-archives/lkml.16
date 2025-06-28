@@ -1,109 +1,104 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0740C125D6;
-	Sat, 28 Jun 2025 01:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3698F4503B
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751073719; cv=none; b=nWDGDsvEEY25nJ71oZy7vlVPwAEdTeM/J96kW0QrSa1gFrZBezK750RXb/0YnG5eeaODyq7LbBN/Pl17KcCAnM/lXUgCSyjwLHgi+piDzMvnatIp3sJGJ2bA32/ShVK2lLiczcN8qztQGGBipEhTW00QjH0mFwusw2tzXc1K948=
+	t=1751073788; cv=none; b=iMtGTb1fd/Ul2d9wEPo8fEHnYZ2dk5iq6tLceFkE29m9hGHnjmBej28pOua+GwZBOAOQ/EIMVI6RAIQdP46rlldnx9fEHYqxvRpx43Ngn0CIAUEoPd/mZ99NjYmd3yK8zLQpn7ynEJpW9CXmpJSBtACssXEl5HNEIN6et5+99GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751073719; c=relaxed/simple;
-	bh=9iEULhb/XPU3L5BGh2VZhi02qzir0c9hgvK+zpaAsL8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K+tx+xjWog+wk7MeRSeVVmKTz9yo0XnSaNI2r8P0H17gSBA6bikN1Qsbzi5v2u/C9hFCbPhzM+DcZzkai5B7gTaVqUfLt+XwIZ8T+wbB6g+46lXpy8TPtOOmqRmgH2/LAusFWNQB/yHQtuBzC5E+pBHBCCWJYqcryWdRyfuY2vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bTZQX16VpzKHLwM;
-	Sat, 28 Jun 2025 09:21:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 8654C1A0B1A;
-	Sat, 28 Jun 2025 09:21:54 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBXu1+wQ19oAwx+Qw--.4287S5;
-	Sat, 28 Jun 2025 09:21:54 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	hch@lst.de
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH] brd: fix leeping function called from invalid context in brd_insert_page()
-Date: Sat, 28 Jun 2025 09:14:59 +0800
-Message-Id: <20250628011459.832760-2-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250628011459.832760-1-yukuai1@huaweicloud.com>
-References: <20250628011459.832760-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1751073788; c=relaxed/simple;
+	bh=je76FBVaj1rB2d3TV3oSpRxQI2J0akk3RWTS5bDyEbk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=gwuVJeYva84r2H+SNJhB1SGOE4wNwX6lwW1MjE98PzWzAAZ5LCZuSgZn8CN2PXslQOHzr+jqMXySHqVtAYY8WXzESadtabHxfF0ocvE3hpWJEP/KAjjan5tJ/tUj5wbBqUCwvEJ6RZohSINyHt8q80wF343Bh4GQjfKbkpDUWJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MX6W9vkG; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MX6W9vkG"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23632fd6248so1232485ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751073786; x=1751678586; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NJdhCyCuh5T0F4HLZedZyEKCTEq47ryiu3yriK9r3BU=;
+        b=MX6W9vkG7uTtv2Al+ouuLhLLuCWTf0+PjkS7T79X2nSEKrRZLWVD1a8rW8xiR1Px8O
+         iPdpTgc0jRR9MaGbn+NTxYRbtAB3dF75q/bF0o5HP0VyqCEn9ZVf2+i59TUXu94jlFyQ
+         nVBXd8M62slyu5wHdk1KcIDS+HMQJ7wNeWEw/PjPzqsFAwfa46zJpXzPDhTvNYPJ468r
+         m7Q1x41S54LeGGbfc4FDp6VszNdgtpQ92ktTeoff8FkfEGFMs4L6Kb2hRQY8IvY/EBcq
+         PYgam0PK5nWom8jPcAa9evCJg3n1tyU3ADklG1dxC6dZDOqQ+1SnhlmlNtZCIgP/WPR7
+         KwgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751073786; x=1751678586;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NJdhCyCuh5T0F4HLZedZyEKCTEq47ryiu3yriK9r3BU=;
+        b=nCsk778B77xjChc2DiEg6xckN+d+aKwhZcPoxNvJmBxGdLWAd5u/o/dw04cnXA0hc9
+         Gj+jt1iFfVpdj9cY3/6oXV2tHEZr8LjNiU9Tx/QhHYsQEDh1O0VF3oKcZ4e76S/WJLK0
+         XbfTkKdSESLF0x9oYc8fTC+UiLAX+j8n3hJ7MwjyxbF/vN3hE1KkqkAjiDejV1u7Ifu7
+         le59hbDaCtmoqUp1yYPS+tcKxMUUoJjefhgBrnntFQXBECZB7T4AzkDYHpMtfojpytnG
+         XW/sHr7KZhFHynriOo6Bc2S03mMniRWkXvzVyS1YiKxK63OocJG8bJj7IvbcvmH9bX7t
+         kpvg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7FaM8+LYoTWv4XQ/X2x5Sq+U/W6bXWWOJnpt2F9wOhyuqEk98XCn9SuUCSNbSBNegEMxtzT4ESeLFjK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQOYJCZgoSpWnoCZofWB9L4G2W6+5umNu9xiQeI1bkDb4/VBQV
+	Tdkc+nyvSsQ+xCKvW2+t8EYFCJJFT+sAC2VEzuEKIKQ7PF14BCp9sBsIKOX221FBA4eB/+X+Txy
+	gKNpRMV4jEQ==
+X-Google-Smtp-Source: AGHT+IHOgbOqwBITWWwyDrtaLdWW5xgdFTxFtL3sTRBkCSKvRIZozfLeDng7N/MD3q93ZJw7ZHf6J9QZQL/6
+X-Received: from plbmo12.prod.google.com ([2002:a17:903:a8c:b0:236:945a:3454])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a08:b0:234:d2fb:2d13
+ with SMTP id d9443c01a7336-23ac3deae06mr64874015ad.18.1751073786652; Fri, 27
+ Jun 2025 18:23:06 -0700 (PDT)
+Date: Fri, 27 Jun 2025 18:23:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXu1+wQ19oAwx+Qw--.4287S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFW5XFW7JFyUGr17WryfZwb_yoW8Gr4DpF
-	ZF9Fy5Cry5CF42v3W7Z3WDCF1rGa95WayIka45Zw4F9rW3Ar9I934Ik34aq3W5GrW7AFs8
-	ZFs8tw1kAFWUAa7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVW8ZVWrXw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRdManUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250628012302.1242532-1-irogers@google.com>
+Subject: [PATCH v3 1/2] perf test workload noploop: Name the noploop process
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Yu Kuai <yukuai3@huawei.com>
+Name the noploop process "perf-noploop" so that tests can easily check
+for its existence.
 
-__xa_cmpxchg() is called with rcu_read_lock(), and it will allocated
-memory if necessary.
-
-Fix the problem by moving rcu_read_lock() after __xa_cmpxchg, meanwhile,
-it still should be held before xa_unlock(), prevent returned page to be
-freed by concurrent discard.
-
-Fixes: bbcacab2e8ee ("brd: avoid extra xarray lookups on first write")
-Reported-by: syzbot+ea4c8fd177a47338881a@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/685ec4c9.a00a0220.129264.000c.GAE@google.com/
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- drivers/block/brd.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+v3: Switch to using pthread_setname_np rather than prctl as glibc and
+    musl having conflicting and mutually broken definitions of which
+    header files to #include for prctl. Suggested by Namhyung Kim
+    <namhyung@kernel.org>.
+---
+ tools/perf/tests/workloads/noploop.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index b1be6c510372..0c2eabe14af3 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -64,13 +64,15 @@ static struct page *brd_insert_page(struct brd_device *brd, sector_t sector,
+diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
+index 940ea5910a84..656e472e6188 100644
+--- a/tools/perf/tests/workloads/noploop.c
++++ b/tools/perf/tests/workloads/noploop.c
+@@ -1,4 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include <pthread.h>
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <unistd.h>
+@@ -16,6 +17,7 @@ static int noploop(int argc, const char **argv)
+ {
+ 	int sec = 1;
  
- 	rcu_read_unlock();
- 	page = alloc_page(gfp | __GFP_ZERO | __GFP_HIGHMEM);
--	rcu_read_lock();
--	if (!page)
-+	if (!page) {
-+		rcu_read_lock();
- 		return ERR_PTR(-ENOMEM);
-+	}
++	pthread_setname_np(pthread_self(), "perf-noploop");
+ 	if (argc > 0)
+ 		sec = atoi(argv[0]);
  
- 	xa_lock(&brd->brd_pages);
- 	ret = __xa_cmpxchg(&brd->brd_pages, sector >> PAGE_SECTORS_SHIFT, NULL,
- 			page, gfp);
-+	rcu_read_lock();
- 	if (ret) {
- 		xa_unlock(&brd->brd_pages);
- 		__free_page(page);
 -- 
-2.39.2
+2.50.0.727.gbf7dc18ff4-goog
 
