@@ -1,79 +1,124 @@
-Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3970C1E32D6;
-	Sat, 28 Jun 2025 12:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C6724A063;
+	Sat, 28 Jun 2025 13:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751115352; cv=none; b=RPF15Z87HsviIqOkjPXhDDTH6VKM9m9f/ZMz2fjk0rYuOLYHIrwbdraJd1+xml3m+3YlUpv0GJeBePJ1MlIKLUrFjHbaSu3lwgnDnRxpChke4dsPQ+qnjg5UPX3CVHxn42OhKoUsGg6iicFY3sqCiOoCOaGGOlWAK9Dexn4Z7zM=
+	t=1751115612; cv=none; b=ff/chGf8btSQ+Cq3cE3SdaOvu3X724l/3WpVk+VeGigBqfPVnt1FC984d3j2Zk/7BHLZSmE1V602o9r7vtf3gaQ/DH+5qOCyOTJtlGmi/6C/mekmREOTU4uKTjtxCjoaKyIcyr46cLUrEQDIH1F+/6xSXJJ+t1ajCIhjKZkDGqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751115352; c=relaxed/simple;
-	bh=S7++PTAr4xAkYMbCgcR89+yGuk3BpPCWsV/+d4CP3oM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nc4IZIHFYmemK581LmI265LGQzOjU05eIdigeVZXtkYyNulAkHoQK4g07CzsJ83YguTC66tFnQgLCNwOmS44VH15+tiB1Y98IsR1uFj+Xr1sy58/zKf8/rMm4rvPk5Qz0cN4zExwuOWtFS7m39Tjgsi29j3bMmTA9lqpzMLMAHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=Rv9Y53q4; arc=none smtp.client-ip=178.154.239.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1751115612; c=relaxed/simple;
+	bh=cQqh4d0YAJXtJthh04L/xkoB8b8oBejLppRDkrOGXJI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=rzyytlKXLX4WGZMikA+PkLSTntK+hHmRMXjuYcoYMWPHKdeKVGoNhGfOhpPdmPQiLO2VqH4oOtxvVIdW2UENLZ9o4meOmtv1DFvzD0IcPE5Hi0q5laobPn4nVmYyPEXFimJ+2qd63QQyglcsn1nww5nY3cPpY3odRi7Lws0yVIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=B0DG5Dwi; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="Rv9Y53q4"
-Received: from mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:bca0:0:640:380a:0])
-	by forward500d.mail.yandex.net (Yandex) with ESMTPS id 58A7B6186F;
-	Sat, 28 Jun 2025 15:48:43 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id bmWfNHHLlSw0-XeRbLXHj;
-	Sat, 28 Jun 2025 15:48:42 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1751114922;
-	bh=ET/LhC8QU7n+a3hSVOWcQEFar31KwcGnUYMpx7mD4JY=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=Rv9Y53q41/X4ucraT7PqIEN6T52TlIy8XH/+OGQzaNmNRU786Bf+1FVa/020sI15D
-	 14EbGI63y5peJj2y0CaM/gokUSC1Ouhz1H0fejxfK/09EL75jgHCH5xGbVgXNi1dWw
-	 4blxx8kcKKplcizUveC+JUbOMrpvNWRPI36Qb4YA=
-Authentication-Results: mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Sat, 28 Jun 2025 15:48:35 +0300
-From: Onur <work@onurozkan.dev>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: viresh.kumar@linaro.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- airlied@gmail.com, simona@ffwll.ch, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu, rafael@kernel.org,
- gregkh@linuxfoundation.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, davidgow@google.com, nm@ti.com
-Subject: Re: [PATCH v3 3/3] rust: remove
- `#[allow(clippy::non_send_fields_in_send_ty)]`
-Message-ID: <20250628154835.4e2e4a92@nimda.home>
-In-Reply-To: <CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
-References: <20250628040956.2181-1-work@onurozkan.dev>
-	<20250628040956.2181-4-work@onurozkan.dev>
-	<CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
-	<20250628133013.703461c8@nimda.home>
-	<CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="B0DG5Dwi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1751115600; bh=oB81lEB+hjj+fyMybBi5rWn/3uMgT2vikvW1lNSLCfM=;
+	h=From:To:Subject:Date:From:To:CC:Subject;
+	b=B0DG5DwiWW6IzKjXOU/VLqjnDOR75cUPQPo2YZbVbW2SlnUjRAwRxgSFu9/5VL9V/
+	 GGW9bpqigjTW4bM4hAwW/ulhmeE4XmsVS+h+kaHBdAEHKHNbUFxjKA6IVRo99sYFQN
+	 KtRKJxP68UqfUA1OykPppjLDOltxie6RdhTXaQnEDsUrCt/Y6jdbNlMbarDhsHtjKs
+	 KWD+bAlFjecYzfyuTVzlfnAt6E+pDMik0pxY1sTXphmIlRNhC1vct2vzg4Cgnb7TyV
+	 qDARnGg6TK9Don4lfDR5H6iWYxVqHhNZ4TnUirYbjWekOrysTGgrdUyudGyJH47mqL
+	 MgipuZ21+3DKw==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bTsw05857z8sjY;
+	Sat, 28 Jun 2025 15:00:00 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1+c2pGUPmdXo6K7E8lEWtTa9cm2lpFP5B4=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bTsvx3TV4z8v9h;
+	Sat, 28 Jun 2025 14:59:57 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Peilin Ye <yepeilin@google.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Ihor Solodrai <isolodrai@meta.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Paul Chaignon <paul.chaignon@gmail.com>
+Subject: [PATCH bpf-next 0/3] bpf: Fix and test aux usage after do_check_insn()
+Date: Sat, 28 Jun 2025 14:59:24 +0200
+Message-ID: <20250628125927.763088-1-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 28 Jun 2025 14:18:53 +0200
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+Fix cur_aux()->nospec_result test after do_check_insn() referring to the
+to-be-analyzed (potentially unsafe) instruction, not the
+already-analyzed (safe) instruction. This might allow a unsafe insn to
+slip through on a speculative path. Create some tests from the
+reproducer [1].
+
+Commit d6f1c85f2253 ("bpf: Fall back to nospec for Spectre v1") should
+not be in any stable kernel yet, therefore bpf-next should suffice.
+
+[1] https://lore.kernel.org/bpf/685b3c1b.050a0220.2303ee.0010.GAE@google.com/
+
+Changes since RFC:
+- Introduce prev_aux() as suggested by Alexei. For this, we must move
+  the env->prev_insn_idx assignment to happen directly after
+  do_check_insn(), for which I have created a separate commit. This
+  patch could be simplified by using a local prev_aux variable as
+  sugested by Eduard, but I figured one might find the new
+  assignment-strategy easier to understand (before, prev_insn_idx and
+  env->prev_insn_idx were out-of-sync for the latter part of the loop).
+  Also, like this we do not have an additional prev_* variable that must
+  be kept in-sync and the local variable's usage (old prev_insn_idx, new
+  tmp) is much more local. If you think it would be better to not take
+  the risk and keep the fix simple by just introducing the prev_aux
+  variable, let me know.
+- Change WARN_ON_ONCE() to verifier_bug_if() as suggested by Alexei
+- Change assertion to check instruction is BPF_JMP[32] as suggested by
+  Eduard
+- RFC: https://lore.kernel.org/bpf/8734bmoemx.fsf@fau.de/
+
+Luis Gerhorst (3):
+  bpf: Update env->prev_insn_idx after do_check_insn()
+  bpf: Fix aux usage after do_check_insn()
+  selftests/bpf: Add Spectre v4 tests
+
+ kernel/bpf/verifier.c                         |  30 ++--
+ tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +
+ .../selftests/bpf/progs/verifier_unpriv.c     | 149 ++++++++++++++++++
+ 3 files changed, 174 insertions(+), 9 deletions(-)
 
 
-> > IMO, we should require people to add a comment explaining the reason
-> > for adding these lint rules to the codebase. It would make both
-> > reading and modifying the code much simpler and clearer.
-> 
-> Do you mean using the lint reasons feature? IIRC we discussed at some
-> point doing that when the feature was added (we enabled it for the
-> `expect` side of things).
+base-commit: d69bafe6ee2b5eff6099fa26626ecc2963f0f363
+-- 
+2.49.0
 
-Yeah, I meant that it't taking more effort than it should, like digging
-through historical changes in the relevant parts of the source code,
-trying to figuring out whether it was just a false positive or if there
-was a specific reason behind it, etc.
