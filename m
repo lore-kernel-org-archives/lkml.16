@@ -1,147 +1,229 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C933136A;
-	Sat, 28 Jun 2025 03:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA7B156F3C;
+	Sat, 28 Jun 2025 03:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751080622; cv=none; b=aTBgEMHkvmoF5FyNqO/bBU75C60dY51HrSD3/KsppDwldz6IHOyIRZ+9vYKjpRq0tOryyrhj0xTyxWIpeSREhfmQOGlsqU71NF/HyMDrE4FhFler5Ehk0cHG6CE86iD+iDLNOI0aSdtjAKT1HckkZnwu8cxVONOO143A7qsd8pY=
+	t=1751080658; cv=none; b=OVolykVFo1/XXLum/J3d8U8bFKocL3+T9LTp64bsUrBs1xqNUo14o1LyENdFjbDpSZGsKqrSZylRC9qLIwH94Qjiy2urkA9zRSdDgyN2juDoDASkxvDtVJXd52BtIDpP3EzfgecxUQ93L6bbF1cR9nAY2iZRMNN9e0mmSwoUw7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751080622; c=relaxed/simple;
-	bh=6mAPUo5M30mh/gfv/HY1yAxEErHGF9CWTrvu3RVcfe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owqNHpGciyerwLnvSvupkQyyzgZjiIVS1nGQO/bVvL8MQhwrD/gMsc9ILU9a3QHLRdhpMiiZAyqRavUEfwi3W1VNr2CaUltpOMHLHqID6wTTl1L/eW3siOE/ijcQhNQXs9JJe+4QMWH/hgB1xoRGAgyzjp2bKQTSwa8PjqbG+Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f44yNolg; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f44yNolg"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae0df6f5758so70899166b.0;
-        Fri, 27 Jun 2025 20:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751080619; x=1751685419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J9dPAwsn+P9UsNtzqpwYoo0ORtcX9rmxgV7CliMPtZM=;
-        b=f44yNolgOnPM4niuN40VPwPzyxLYXcQoOhMsiO3K7mvp9rw2D11WGi+kcT5vmKS+sJ
-         VI3Uqjn2wEOFUzJV0u6MSBCA+QzUg7CgZIFOQLRIUMxjpFuqVAE23fo9Lnc7Jy6X/Zlk
-         HJB3wPrF18MiOrdj/Sy0F1787gilsY30nFX70ySlFLaSStFs2aDrwqw/xGMnFDiDb1Nm
-         HWBtyCKDN6X+JmtpPE1pbjm6NlQ6GJsHeYm5QC44qisYmMoppjx6gItywybLLMlQJsUH
-         vk+h0eCmN9vZi72sgGfRmPq6o7+FXKWWt3YIHk6gj9o3AQuBGdb1km5rOdPjaFsR9yp9
-         MTmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751080619; x=1751685419;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J9dPAwsn+P9UsNtzqpwYoo0ORtcX9rmxgV7CliMPtZM=;
-        b=rjEmmnsQjDkPXXClkYzF+tUnlax9wIXXkBWfgNGPO/qDBFS296X7rrPY1/ok963DWJ
-         BD2McjqdkWNLIXafDqwcuoLK3Mr3qipRCG8i1994M4V2znBTsvbhG2C1y8NHLp2VacAf
-         MZQcPxkVSUSe80eW5VMCUR53vBFeixvvEKvgzJqakEetPK+IdinkVreIfHShb1D2fj80
-         IPX5NuYDB3y2VoJQCqAMHwjz0s4x4JZ4ijI8GUlBSDoNwVtSgTC7GkSxJ6tAyQmoxU0Y
-         9AXdnl2v4JzCvZZg6y1sCybY/6oz/ydNtNxqoDmkNb3i9QoSL+VwVCt9nOZ/VAP6mxmv
-         oZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWAQvbFZ+AF6fpi8SnteN0i0g5oJTHpK0gelwvFAhve7uIkV8QiiDLJh0sE5BULD1tXpSIwE/SkpKKqZQw=@vger.kernel.org, AJvYcCWw9zuCjXPgeGn7bcXTW+2vUL1I+fsFBdF5hHVIO0OI2iJJr/eH7wzHgh6BYILssAbFlhew2tGbUEXeCmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTTz2XqR7NomaWxZ+qm9PB4esW3tPN7mDgT1to4OyaUeqEnBkZ
-	DsetrKgzsuppPuViRbolBySZ2n4K37g4GY7K3k+gNic04GhtXeDb3lnT/z/ZzJmeuVsGHYydry1
-	SEVxl/PHZZSzzOLfGlQ4j2COSRxtDm7w=
-X-Gm-Gg: ASbGnctNF0kORYiA5VFbDQ7WRZH2jJs5fe3pgy5WXvr88zOFubStayn0rGoQgEaj+GA
-	wXHoQW2qfq7c7TtofjPGqG2L7vCgojFe98c28Q+jDsJx5R4QHKdv3DI/ELs5u8/IvcWPuJ2KuV4
-	C+2SBE0AkSahF749Wk3D5JSyHXhMwQCg4iAmKrH66oTVWD9g==
-X-Google-Smtp-Source: AGHT+IEteJajU9ian7N9eS7scey4zLc0G1Nzpgd7jSI+mWoqHjDGRUZ49Gk9VxMXNJBvOtj/Mpn85MpDdpYDRfRKTW0=
-X-Received: by 2002:a17:907:720f:b0:ae0:c86a:12c2 with SMTP id
- a640c23a62f3a-ae35018f413mr583112166b.53.1751080619216; Fri, 27 Jun 2025
- 20:16:59 -0700 (PDT)
+	s=arc-20240116; t=1751080658; c=relaxed/simple;
+	bh=VUaKHrP5LlBsFFjKY4glRjZXTfz/duADGENZ9kfi2xk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=H8wmmn5BPdCTBnGMKC8eYArIYwvlmjjhV9ck3VO+Xf/7JVzd4XySACW0ZUlI09sbV/lSQUB+fmSev0QLRi7ZCe97S7QRQyLoLJgDGv4jmmPE2sad2da3ohZ41VnpyvqZ8Ddf6kdD6ucRrVMERqflkXivhMMCfMlahP3/8epYBZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bTczw5jrszYQtdR;
+	Sat, 28 Jun 2025 11:17:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id AD28F1A0194;
+	Sat, 28 Jun 2025 11:17:31 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1_KXl9o_GaGQw--.5346S3;
+	Sat, 28 Jun 2025 11:17:31 +0800 (CST)
+Subject: Re: [PATCH v3 1/2] md/raid1: change r1conf->r1bio_pool to a pointer
+ type
+To: Wang Jinchao <wangjinchao600@gmail.com>, Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250624015604.70309-1-wangjinchao600@gmail.com>
+ <20250624015604.70309-2-wangjinchao600@gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <c5c4e3e2-930d-f4c1-4d30-f17984079e6e@huaweicloud.com>
+Date: Sat, 28 Jun 2025 11:17:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-bar-v6-1-b22b5ea3ced0@gmail.com> <e201c4b0-4fcc-4d98-9d76-0e9c41dc4d9f@kernel.org>
- <aF7EEAxXsurLvIt9@smile.fi.intel.com>
-In-Reply-To: <aF7EEAxXsurLvIt9@smile.fi.intel.com>
-From: =?UTF-8?B?546L6Imv5Lie?= <zaq14760@gmail.com>
-Date: Sat, 28 Jun 2025 11:16:47 +0800
-X-Gm-Features: Ac12FXxsU5dpiPb917Qnz6Mirm0LCeuQaVZZ2cq-H5v4MpNZKgpLGFZPrQY3-yk
-Message-ID: <CAKEtaPCibkPWtkRi5xJr8__jzsoPwrrb7LaG3p7_kTK-R5p6gQ@mail.gmail.com>
-Subject: Re: [PATCH v6] staging: media: atomisp: apply clang-format and fix
- checkpatch.pl errors
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250624015604.70309-2-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu1_KXl9o_GaGQw--.5346S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3XF1xGw4Dur1DCr43Wr4Durg_yoW7ZryUpa
+	13Jas3ur4UZ3sxGr4UJF4DuFyFv3WSgFWUJrWxJw40qFnaqryfXF1UCry5Gryqva4DGrs7
+	JFn0yrZxZFnFqrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7I
+	JmUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Dear Hans, Andy, and all,
+Hi,
 
-Thank you for the detailed feedback.
+ÔÚ 2025/06/24 9:55, Wang Jinchao Ð´µÀ:
+> In raid1_reshape(), newpool is a stack variable.
+> mempool_init() initializes newpool->wait with the stack address.
+> After assigning newpool to conf->r1bio_pool, the wait queue
+> need to be reinitialized, which is not ideal.
+> 
+> Change raid1_conf->r1bio_pool to a pointer type and
+> replace mempool_init() with mempool_create_kmalloc_pool() to
+> avoid referencing a stack-based wait queue.
+> 
+> Signed-off-by: Wang Jinchao <wangjinchao600@gmail.com>
+> ---
+>   drivers/md/raid1.c | 39 ++++++++++++++++++---------------------
+>   drivers/md/raid1.h |  2 +-
+>   2 files changed, 19 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index fd4ce2a4136f..8249cbb89fec 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -255,7 +255,7 @@ static void free_r1bio(struct r1bio *r1_bio)
+>   	struct r1conf *conf = r1_bio->mddev->private;
+>   
+>   	put_all_bios(conf, r1_bio);
+> -	mempool_free(r1_bio, &conf->r1bio_pool);
+> +	mempool_free(r1_bio, conf->r1bio_pool);
+>   }
+>   
+>   static void put_buf(struct r1bio *r1_bio)
+> @@ -1305,9 +1305,8 @@ alloc_r1bio(struct mddev *mddev, struct bio *bio)
+>   	struct r1conf *conf = mddev->private;
+>   	struct r1bio *r1_bio;
+>   
+> -	r1_bio = mempool_alloc(&conf->r1bio_pool, GFP_NOIO);
+> -	/* Ensure no bio records IO_BLOCKED */
+> -	memset(r1_bio->bios, 0, conf->raid_disks * sizeof(r1_bio->bios[0]));
+> +	r1_bio = mempool_alloc(conf->r1bio_pool, GFP_NOIO);
+> +	memset(r1_bio, 0, offsetof(struct r1bio, bios[conf->raid_disks * 2]));
+>   	init_r1bio(r1_bio, mddev, bio);
+>   	return r1_bio;
+>   }
+> @@ -3084,6 +3083,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+>   	int i;
+>   	struct raid1_info *disk;
+>   	struct md_rdev *rdev;
+> +	size_t r1bio_size;
+>   	int err = -ENOMEM;
+>   
+>   	conf = kzalloc(sizeof(struct r1conf), GFP_KERNEL);
+> @@ -3124,9 +3124,10 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+>   	if (!conf->poolinfo)
+>   		goto abort;
+>   	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+> -	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
+> -			   rbio_pool_free, conf->poolinfo);
+> -	if (err)
+> +
+> +	r1bio_size = offsetof(struct r1bio, bios[mddev->raid_disks * 2]);
 
-I understand the patch is too large and unreviewable in its current
-form. I also see now that splitting the clang-format changes and the
-manual checkpatch.pl ERROR fixes into separate patches would make it
-clearer and easier to review. I will also avoid touching any files
-under drivers/staging/media/i2c/ and any other parts where future
-plans involve rewriting or upstream work.
+The local variable doesn't look necessary, it's just used once anyway.
+> +	conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS, r1bio_size);
+> +	if (!conf->r1bio_pool)
+>   		goto abort;
+>   
+>   	err = bioset_init(&conf->bio_split, BIO_POOL_SIZE, 0, 0);
+> @@ -3197,7 +3198,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+>   
+>    abort:
+>   	if (conf) {
+> -		mempool_exit(&conf->r1bio_pool);
+> +		mempool_destroy(conf->r1bio_pool);
+>   		kfree(conf->mirrors);
+>   		safe_put_page(conf->tmppage);
+>   		kfree(conf->poolinfo);
+> @@ -3310,7 +3311,7 @@ static void raid1_free(struct mddev *mddev, void *priv)
+>   {
+>   	struct r1conf *conf = priv;
+>   
+> -	mempool_exit(&conf->r1bio_pool);
+> +	mempool_destroy(conf->r1bio_pool);
+>   	kfree(conf->mirrors);
+>   	safe_put_page(conf->tmppage);
+>   	kfree(conf->poolinfo);
+> @@ -3366,17 +3367,14 @@ static int raid1_reshape(struct mddev *mddev)
+>   	 * At the same time, we "pack" the devices so that all the missing
+>   	 * devices have the higher raid_disk numbers.
+>   	 */
+> -	mempool_t newpool, oldpool;
+> +	mempool_t *newpool, *oldpool;
+>   	struct pool_info *newpoolinfo;
+> +	size_t new_r1bio_size;
+>   	struct raid1_info *newmirrors;
+>   	struct r1conf *conf = mddev->private;
+>   	int cnt, raid_disks;
+>   	unsigned long flags;
+>   	int d, d2;
+> -	int ret;
+> -
+> -	memset(&newpool, 0, sizeof(newpool));
+> -	memset(&oldpool, 0, sizeof(oldpool));
+>   
+>   	/* Cannot change chunk_size, layout, or level */
+>   	if (mddev->chunk_sectors != mddev->new_chunk_sectors ||
+> @@ -3408,18 +3406,18 @@ static int raid1_reshape(struct mddev *mddev)
+>   	newpoolinfo->mddev = mddev;
+>   	newpoolinfo->raid_disks = raid_disks * 2;
+>   
+> -	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+> -			   rbio_pool_free, newpoolinfo);
+> -	if (ret) {
+> +	new_r1bio_size = offsetof(struct r1bio, bios[raid_disks * 2]);
+same here. Otherwise looks good to me.
 
-For the next version (v7), I plan to:
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> +	newpool = mempool_create_kmalloc_pool(NR_RAID_BIOS, new_r1bio_size);
+> +	if (!newpool) {
+>   		kfree(newpoolinfo);
+> -		return ret;
+> +		return -ENOMEM;
+>   	}
+>   	newmirrors = kzalloc(array3_size(sizeof(struct raid1_info),
+>   					 raid_disks, 2),
+>   			     GFP_KERNEL);
+>   	if (!newmirrors) {
+>   		kfree(newpoolinfo);
+> -		mempool_exit(&newpool);
+> +		mempool_destroy(newpool);
+>   		return -ENOMEM;
+>   	}
+>   
+> @@ -3428,7 +3426,6 @@ static int raid1_reshape(struct mddev *mddev)
+>   	/* ok, everything is stopped */
+>   	oldpool = conf->r1bio_pool;
+>   	conf->r1bio_pool = newpool;
+> -	init_waitqueue_head(&conf->r1bio_pool.wait);
+>   
+>   	for (d = d2 = 0; d < conf->raid_disks; d++) {
+>   		struct md_rdev *rdev = conf->mirrors[d].rdev;
+> @@ -3460,7 +3457,7 @@ static int raid1_reshape(struct mddev *mddev)
+>   	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+>   	md_wakeup_thread(mddev->thread);
+>   
+> -	mempool_exit(&oldpool);
+> +	mempool_destroy(oldpool);
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/md/raid1.h b/drivers/md/raid1.h
+> index 33f318fcc268..652c347b1a70 100644
+> --- a/drivers/md/raid1.h
+> +++ b/drivers/md/raid1.h
+> @@ -118,7 +118,7 @@ struct r1conf {
+>   	 * mempools - it changes when the array grows or shrinks
+>   	 */
+>   	struct pool_info	*poolinfo;
+> -	mempool_t		r1bio_pool;
+> +	mempool_t		*r1bio_pool;
+>   	mempool_t		r1buf_pool;
+>   
+>   	struct bio_set		bio_split;
+> 
 
-Separate the clang-format automated changes into a standalone patch.
-
-Place the manual checkpatch.pl ERROR fixes into another patch.
-
-Remove any changes in drivers/staging/media/i2c/ and leave those untouched.
-
-Ensure that style changes such as macro alignment or tab changes
-respect the existing code style and preferences.
-
-I appreciate your guidance on this and will prepare the updated series
-accordingly.
-
-Best regards,
-LiangCheng Wang
-
-Andy Shevchenko <andriy.shevchenko@intel.com> =E6=96=BC 2025=E5=B9=B46=E6=
-=9C=8828=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8812:18=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> On Fri, Jun 27, 2025 at 06:05:08PM +0200, Hans de Goede wrote:
-> > On 27-Jun-25 4:56 PM, LiangCheng Wang wrote:
->
-> ...
->
-> >       for (i =3D 0; i < count; i++) {
-> > -             err =3D i2c_smbus_write_byte_data(client, reglist[i].reg,=
- reglist[i].val);
-> > +             err =3D i2c_smbus_write_byte_data(client, reglist[i].reg,
-> > +                                             reglist[i].val);
-> >               if (err) {
-> > -                     dev_err(&client->dev, "write error: wrote 0x%x to=
- offset 0x%x error %d",
-> >
-> > The original line here had a length below 100 chars, so it was fine
-> > and log messages are allowed to go over the length limit
->
-> Actually I tend to agree with clang-format on this case and that's why:
-> until V4L2 becomes less pedantic and fanatic about 80 characters
-> limit, the 100 is not applicable for this driver to be moved under
-> their umbrella.
->
-> > +                     dev_err(&client->dev,
-> > +                             "write error: wrote 0x%x to offset 0x%x e=
-rror %d",
-> >                               reglist[i].val, reglist[i].reg, err);
-> >                       return err;
-> >               }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
