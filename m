@@ -1,90 +1,171 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507994503B
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC26EEA8;
+	Sat, 28 Jun 2025 01:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751073926; cv=none; b=myjYRjO+pLofxmR2mgaQzZzMx6Vfw8JofmVzEUdGDpyi0vsmZv0R+FrUKUWKi+Zl/n+oY94Jdg2hhLQP5MU0fBv2zVYadwXlrGEKgOO1xibxgc9DEpN0I6FYbIRDOXnkotBXoTBcDYWuIbHnjhEEGMReh5SqxbU1jtr7Rf5PWG0=
+	t=1751074227; cv=none; b=QpFRFPnJXs/18kLFJzy0IqG9KPw7lUEZsuV+YRFSlNCtKXA3gEuZ+SxgKB+hEaRdYiXwILIfwNa5OZ61YxpiLQJPlq/PgN274W+EZk4NLllRaqZ/SIIXo8h4eSMRn5QBvMGuZyCTKcJgYX7GWjmqTtyBOG4EoAyCct66aZZmkKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751073926; c=relaxed/simple;
-	bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gg+99NaC2Sqfiq0mAUt4/WnyEA4LU5ErvqaFYk5TOjl+k0WVYThk6QHHKq9Pis9chuL0VSlYLtP08vMkoTkD4LHMHQs5uGFDGvsR1rPsQfXsyh21+fzeKDWeqR8o8KVn7SiJ32CAq2pEZfc8M9GFaiTwyESwYodth2TMJDluHYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w6hWUAVj; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751074227; c=relaxed/simple;
+	bh=4Qqib250C3wp/3ZPlTZ2Y0hOef25YveIWChH8p0ROng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NXlJr42D4iswOaX2Q9Hz0C5QiAaOp16JU8fqhmVqDim+A7Vm2eSvgWSXMbs0FMso32ZYgOe/M7rRELSNF6C5U0ko39MlO8HmhJzhJ6Rfh2JAWBQhebUvwbwW80sQLzIefVCCIHXSp1mDAWB0WtICdOJyXPOH6+h2vwVyXffoAtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RaAcVVAq; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w6hWUAVj"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3de210e6076so45185ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:25:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaAcVVAq"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235f9ea8d08so23379825ad.1;
+        Fri, 27 Jun 2025 18:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751073924; x=1751678724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-        b=w6hWUAVjIjFBcJGlqhXkNDVAd6QR3x0pjKzZQYahhycetjcL/r3p+bl45Oa1Z9Qrm6
-         PZoHbZe0irlKK/DEmeWEoXF7eTZKgVwZKpaSECv34TkfxViuJPTHBkpkIV9ta1bL3UcJ
-         Ncw2rCejyFqx9VuEzPtADdAf02Q08DsQk05b8WxLSNhkKvSeCCMGCy2mPKvnPg6WHJkQ
-         kt3HXPUmrOl5Bcr/p5HWHVuQyyUEXwptILL5lfjUV55e42ym0lM8rCdtwFaSo/+CI39P
-         M2aeYc3EemF9iLldHcr70QR0WOh0O9IVS9nvRje2oEAvUA9AAQ2VyhVQGuRnNID8NLO5
-         etqg==
+        d=gmail.com; s=20230601; t=1751074226; x=1751679026; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y8AXPmpG2VMuBb/O9YnQP2cAp0A39EaY7EJfwm1hV+c=;
+        b=RaAcVVAqnux7vagv3HarICFaaclQ8DeyOM+42A/t/YZrKlO/bjY3Zt22h1QrjaHnAK
+         hVDqbx0BgsimJmncYWO4x0pHbzoHg/j2HiCAtQBAYSbcVIeR6QiedB2WAL6XkfUZOKb5
+         /ylU2KR77E/94xCww2+ROfW0VR4RD3nxsXSaU3fM6Bp3uG6bwEPwXI4fV4XjyV3TqlBy
+         ERuDcZRXsNKwp91n1xjoBRvJltqfm+MG5RWQiARLzMkPU2S2+RyWGVhj7Z0CUMzs3eyG
+         uDGpgrGyTEEpkuEByZ8lr9wkHcWloPtQQDCHwTQxygGzek1wwiL5R3SAk5AgKm2vHAxO
+         ckxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751073924; x=1751678724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jBsRv1t+MbjjXt+t5j4i2adx0dnBzatWyL4WvWleFvc=;
-        b=g9EpdKWbRaudpWLhxLjb+G1CVckLTcMlinzh09wneAitzUKltMEBgCV86nKb8mdd3a
-         KWhURC2hDeNKiNeXq7kBRTHCU6b420+B+2eePAlsgyLXoniabnUBLA+hcNSeVoKA7k93
-         YZEham183mnTce1jafsxSmy7DSU7fciOj7IAD1MnMeTGerJM+pL8eMzPNb8htyDFpC+1
-         NF1Bh+tSPXPG0/1gg2T3tVZ6Xt2SBvtcVizUJnIViRNae601mmxsXOJsCtg8zesGWIv2
-         MhYIFlT3tHX1crUwwMg53EkCdrma4OBkS+c7ly4bUcidhJsb70VJf0gvCzkxArxdnJvh
-         LGdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9mRERkQ8lpUAAEzY8MqTb/9ZfN8LQQb+RzKdehyYb1L/2bOm8fFfXkt7K8/uzhrHXhJN+M4lZtZKpfiw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0wbNEDzpfB23Uc0ulhodIRYGitPYuYQHivv5iOXEXCvNowRIv
-	158wSDTjznys+CvXcpoMtuvzxx6Lk1X4kTlU8/duOtr68hp4WQgDgISIO7gVVU2/D8atwpFejM2
-	GBsUMHaCoYlMo9wzKIfu3ot7/QQThZOeeLOBpyMj1
-X-Gm-Gg: ASbGncvtw4aqH5TtEisUHvYooIJtkLgtQZZwe77Bq9v76YudsW7UhfeFSmj+SrKh5Nd
-	t/D4esWP4JyYyioJqbL+P7WN1WBBX1Xv4Dxkxn5Hl8XVfHT+BqUOMKO5EhJ4FZOe8oM2LRQM1/Z
-	X60mSWj8ubp+qwGfOzxR/pCZ0FDal/khWV/8j5IjVP0uNB
-X-Google-Smtp-Source: AGHT+IGSRQuU3jkfhVSsR7FQ8+3yWy141hegDQ6tZdzLnOk8SKukC27fW4TWxHyP/8wMaDTCmusA+LYzQdfWzyTg8YU=
-X-Received: by 2002:a05:6e02:1685:b0:3dd:c526:434f with SMTP id
- e9e14a558f8ab-3df56ce74b3mr774675ab.9.1751073924053; Fri, 27 Jun 2025
- 18:25:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751074226; x=1751679026;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y8AXPmpG2VMuBb/O9YnQP2cAp0A39EaY7EJfwm1hV+c=;
+        b=R5xXmA9Qy/vKZYmEHew7yxdA4HmiYmoD/ncMuHA9VlhNOR5s0bjem4Wr3aGPZWuexj
+         aowk0XgJy5WwZfXG7s8mwlQ8RFZLAMbEMNYR83Rs9Gk1N+7FBprNAlu8YgD+GvEoJKyl
+         b9uVjr+cQPNiPUqpRsGEiDVy2XeZVXkK0CJShcJJBl0VioZyWx7kRJgBDE9ZRSKChZ8D
+         8yKM6XkvIax+riJGmSG0/gbtPKnPYzTgytm8nGLEtPxwdHjmo1N3hd791QsE5beLfZtX
+         3FxxekVZ3LKX40RFYTpfvaGDHPMZNLSzIikQvP3qLHZGNQo+DqAwjOITIkjuVtR0Nw+E
+         sZiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpKD4qKDH+QqznXKYJvMYecCMsdt/HDUr1ImQKJvLx0+M2bW20dKRWtL8JDU/aBBkQAnf887rqa8pL4aOM@vger.kernel.org, AJvYcCW6/8to1WAzP8KzCdndgZFhBOZYBN+Ap1tALFiAQVhf2uCgn7X1nuyf4rLxSLB3uZLYdrQY3Gm+Zuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLjrswcnxmd5OEdILnZZdKwD6ex3g2/VsNWMsmiEL6/39P5Ywc
+	6/WxonbSngSLBZaVGHSjMX+gB+cmQEft4Q64WrltwCmdbFR79+Tetsuj
+X-Gm-Gg: ASbGncsNTpq+AQLi+owZSEwJXiLJsZqI1x5aqA9yRm7fOgfSGgU8mF1WuIjvQRcl8GV
+	YNH9oNZG4VJyqdXI5OX4yysvOCqrktLjSJqVHt/+PCIG/XllkM4yuliW3JwCylOZdgl3DYyxmXs
+	0jfxp8aKGdDY3ujTQEPSAfhZzTFrZgOV4RjP8pJyJHDzpXyYYC0+15v+rTLkNbQC2uVkM5hkhah
+	HrZj6Sh1TATAdtAOKNzjnPD0oOvj5CmLc3xKyyLzQd+Esbw8sTxWiNMcxtzAu7/qAhXUhvErG/V
+	Kxe5RuOcfb0zKaNCRZ9Xfl29ieGSepec3/lJbR2eE+vRl/9aBRJslVv8uno80A==
+X-Google-Smtp-Source: AGHT+IEhpBuJ3GjJ2GV96K93NPQPaz+CSELR+iF2uzhaORXUXQQfB5dul2kwwnAmFKMrTiXr3jo19Q==
+X-Received: by 2002:a17:902:c401:b0:235:f4f7:a62b with SMTP id d9443c01a7336-23ac4665179mr88553105ad.41.1751074225506;
+        Fri, 27 Jun 2025 18:30:25 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c90d5sm26854075ad.247.2025.06.27.18.30.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 18:30:24 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 7A3DF423BF27; Sat, 28 Jun 2025 08:30:21 +0700 (WIB)
+Date: Sat, 28 Jun 2025 08:30:21 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>, airlied@gmail.com,
+	simona@ffwll.ch
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, corbet@lwn.net,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH v2] workaround for Sphinx false positive preventing
+ indexing
+Message-ID: <aF9FrVzkZHrIRKEa@archie.me>
+References: <20250627115718.17673-1-kevinpaul468@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619002034.97007-1-irogers@google.com> <20250619002034.97007-2-irogers@google.com>
- <aFW5aknT69UR3CTV@google.com>
-In-Reply-To: <aFW5aknT69UR3CTV@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 27 Jun 2025 18:25:12 -0700
-X-Gm-Features: Ac12FXzub2qOEvfir724mQtAGRDikXM7527nrJ2YpeWhE0_sq64ArX2SxUeR28k
-Message-ID: <CAP-5=fV2x1EuOuArhLx4QdzYJ3B5S0NTWM3xvVfRNdVni3fTJw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf test: Add sched latency and script shell tests
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jygN2+v8Ef8hw9M2"
+Content-Disposition: inline
+In-Reply-To: <20250627115718.17673-1-kevinpaul468@gmail.com>
+
+
+--jygN2+v8Ef8hw9M2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 12:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
-> You can use 'thloop' workload which runs 2 threads at the same time.
-> Then you don't need to handle the background processes and run it
-> directly with perf test.
+[also Cc'ing Mauro]
 
-v3 sent. I held off changing noploop to thloop as I think 2 separate
-processes is a little clearer:
-https://lore.kernel.org/lkml/20250628012302.1242532-1-irogers@google.com/
+On Fri, Jun 27, 2025 at 05:27:18PM +0530, Kevin Paul Reddy Janagari wrote:
+> Functions drm_format_info, drm_modeset_lock, drm_ioctl_flags are not being
+> indexed in the documentation because there are structs with the same name=
+=20
+> and sphinx is only indexing one of them, Added them to namespaces as a
+> workaround for suppressing the warnings and indexing the functions
+>=20
+> This is a bug of Sphinx >=3D3.1, first reported by Mauro in September 2020
+> Link: https://github.com/sphinx-doc/sphinx/issues/8241
+>=20
+> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
+> ---
+>  Documentation/gpu/drm-kms.rst  | 4 ++++
+>  Documentation/gpu/drm-uapi.rst | 2 ++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/gpu/drm-kms.rst b/Documentation/gpu/drm-kms.rst
+> index abfe220764e1..b18a99869b6d 100644
+> --- a/Documentation/gpu/drm-kms.rst
+> +++ b/Documentation/gpu/drm-kms.rst
+> @@ -357,8 +357,10 @@ Format Functions Reference
+>  .. kernel-doc:: include/drm/drm_fourcc.h
+>     :internal:
+> =20
+> +.. c:namespace-push:: gpu_drm
+>  .. kernel-doc:: drivers/gpu/drm/drm_fourcc.c
+>     :export:
+> +.. c:namespace-pop::
+> =20
+>  .. _kms_dumb_buffer_objects:
+> =20
+> @@ -473,8 +475,10 @@ KMS Locking
+>  .. kernel-doc:: include/drm/drm_modeset_lock.h
+>     :internal:
+> =20
+> +.. c:namespace:: gpu_drm
+>  .. kernel-doc:: drivers/gpu/drm/drm_modeset_lock.c
+>     :export:
+> +.. c:namespace-pop::
+> =20
+>  KMS Properties
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.=
+rst
+> index 69f72e71a96e..e9d7b7282a19 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -554,8 +554,10 @@ DRM specific patterns. Note that ENOTTY has the slig=
+htly unintuitive meaning of
+>  .. kernel-doc:: include/drm/drm_ioctl.h
+>     :internal:
+> =20
+> +.. c:namespace-push:: gpu_drm
+>  .. kernel-doc:: drivers/gpu/drm/drm_ioctl.c
+>     :export:
+> +.. c:namespace-pop::
+> =20
+>  .. kernel-doc:: drivers/gpu/drm/drm_ioc32.c
+>     :export:
 
-Thanks,
-Ian
+Works as expected, thanks!
+
+Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--jygN2+v8Ef8hw9M2
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaF9FpQAKCRD2uYlJVVFO
+o30+AQD0JcVjSsCcFjAd4jMRB1T4R+PpgE/ka0f8n3tq9MD4NwEA+FwOlvSfVA/C
+MuG6SuSMSTogXWQx14VDQqzEGzhx6wQ=
+=PST+
+-----END PGP SIGNATURE-----
+
+--jygN2+v8Ef8hw9M2--
