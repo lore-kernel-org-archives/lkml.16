@@ -1,154 +1,95 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0D6EEAA
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 02:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4EE1A3177;
+	Sat, 28 Jun 2025 02:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751077531; cv=none; b=Vlb/U6lgdtm24DIPjARFyRqzFYHNKlHWRzkHRuRkUlw89ISA2SALvUm39n1YVe12FW0Xg7N8v2jIiQ4V3ilzrvKvMM6l1dcof5r5oFR/cZSjUeEX9O9uIvE3loq7hdu9FFiX9mn3fSHp19D9EFyrR1bHjGSkzoqPLa9JJjprKLc=
+	t=1751078080; cv=none; b=n/Nt7TkJVeMfGMUd9te+LYNXkdyTFhBxw9q/5jP++TqsRiMqhJmGqkNR+6DoqhFdU7yKgHfSHkwCc90PR6FHFfWEcBVOoh9hMZtiE/ribgL/SIRxyh8V/fg6K/64eSDT38yTVCsMTQg66NKhv8Jc5YyiN94rX9BFDF73kRzn5Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751077531; c=relaxed/simple;
-	bh=JtQzyn27RMDuTjVIvJMU80N35L2x4wCeYg07utm4mdU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ppMHWsiW3b7e0gloub/dbqMNRthrqQXLU5vE15qP2f/+SxP1kNhhTHu37CnIlRcWm2KgfQ2IbH/6FUDRT4Ttnl8+TqkaMyHr5TPwwQmx3Se2Srnk8iv2qtmI4GtrWGmYRRESEoqQyDpX2HuGGhYM9SLQj6zLIrb6CRfvkRxkwFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc5137992so5031435ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 19:25:29 -0700 (PDT)
+	s=arc-20240116; t=1751078080; c=relaxed/simple;
+	bh=bUMjV42AAnUZwQesaTICI2r5JpnBLWkb6qGG/pPC7oo=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BL85gW0kh57jShdiMEZgB9XW8oIFp8fXgjK4HQXnkzT1LugSn3FNKlEFyl7Zpqj3loIK4jarnEzX4JzqoPj+asf8Ho3n7ns/2mE01uUizSWhhWf+htLNHqXykxqoe6vpLOGQyC0QriVUqCb194kY2GxEaSZslq28cJHskAdQfV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSG95FTL; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSG95FTL"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74931666cbcso3100351b3a.0;
+        Fri, 27 Jun 2025 19:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751078078; x=1751682878; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OLgSgTS/p6Xn687P1bEfCPfNF/GovvtrQo/hxR5s58I=;
+        b=WSG95FTLwjgcEqIIIaIVBNO9AQVMYUoxKmzkfDeU3OdX9tBTKhw6u2Uj+1E/dEg/5G
+         PfIk9ir2NRoilPDqqoryWoHNu5Lw5lQ0mlr60VzMWw6OGTxiCV7OFzlsgwRErytWJcTx
+         daLAqfemHknmMZWqmmuIm0Kj4QGMyoeDYEKQts77rxBWVCFbklez7zcmhQrio6kBWojx
+         CQfXfIT0QjkoNiFUWUKaXfhJFI6HIvL0fZxTSxztfLK5n/DaQRXmos6lkVFAqqRXBAZm
+         co5PPNU3zPhJumK+SCwfMSeBXd9ZFQZ3/7cot3oWyadYv0KLqNxKMeEx52FYajDrL5AK
+         kJkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751077528; x=1751682328;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=17UoAorZRx0TYoS0tsz1k5/Pm+icqHe5YL+HLnq6l6s=;
-        b=hWzEro7VK6WnXoDvLgZ4/9kIGF6Wu9WMi+ON5GTWIRJlFYfj7TB9tGWWkDSV7WPRsE
-         p4xO+q/YUcoBLhTZHmXmVf//lFjmUGrAWmE57o86jTqd9gHidNe5JxbPvALHgrQMUeOn
-         calFibaDMLdDfrgyFqKF4gWSyuhfwH8MAAH/p81ZdMDgzjcRwAU9f5a0/uLqwrGMYydF
-         Kwv7Gd8CSmVK8j9NW/EFMV46ILLTUKJXW5kLpoW5lWAslyY/9+zhBEXCZEckx4+/J8EK
-         H3k5pB6G9QmgnxTQ0EXouLvCDSpgO2ug7zTw76jwXPxQP2aggrkKaJ8o2bC0l6TbgmFt
-         GoOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ZrEGAuVI/1ENuOiXlCw78UhQii0oaJerw3xKimEQRvmQ6B4EEpHPEFLoCJJAQZkRAEhkUmhd2R91Oq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUYyzlBIvd+M06PTtuGXl705p3kyxaZ+E6S7XklCMCrLFKiWla
-	DXlYqt6V8g1l+iSDrdgyp2YkYGHguGRrh+xDcEgChEhO8wEwsLg0v1LyyPlfua8uiZC4cTl1vy1
-	DCZ/uTF9N0mh5LA9ubnQIoqyYP5DTExM0szZDbwBdiqG2gPjJqM4HsXAObWU=
-X-Google-Smtp-Source: AGHT+IGfMgFi4/i/Yd/+XJAX6Hy5RTpGwYM6JDvMcY6HWtds7v/J0Mg8gpaz7I+ZS5ZVP4FHc+xKNsqrkJ/EFbYeSRFD2fu/kbbL
+        d=1e100.net; s=20230601; t=1751078078; x=1751682878;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OLgSgTS/p6Xn687P1bEfCPfNF/GovvtrQo/hxR5s58I=;
+        b=bLHP8CSwZJoYKFYemkw7gucS7WE+q4KntAL8iXjz0W2lJsvdUqlPXJ5hqJJ8PMbHc8
+         3KAZ44HJx1E2D9JJAPxmtiRzj9BdDLYOtxqn/3m9BQK3VBNrif9HoWwRWNelR4ClBHC8
+         jtNZPSj1dSNQe1q4ji1KXOltEtETnSVD9122SXQkpp1aF5MvyKPS/mDCI1oBBDARwz/+
+         11/yQ4rXLfPrf+s8ltM6AiOwx+g7eM2XN8aWtTRTPYgKL0GiT54jDNjB33ZQJljA+wu0
+         HNjdINWsviMEwhLmILKYPY5KYyIqvkL8WpedQsI+vdmERO5V4d0yfODt6vfu0BnS6EZD
+         5E7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWr/LbG11dc7i6hPP5P1Rx5zRXnMaPOuqc7r+dfaDBKM2R4K9Q0TMG/toAvHmmQTl8cAtsVDb6s@vger.kernel.org, AJvYcCX5hVKcUny8vlpiwGU/WLvioZfSvVz7h9bSftIuvZJlNSKBbZtoKKtKGmlexkcHkvQwZ4UdTHlBpR+4oCA=@vger.kernel.org, AJvYcCXvki9FhHYdxuqJyBxf/rAGBwUuNbt/fFOMuPa06/g+RuCqZVMQJ1wGiQlvirZcO3AMH5q3I6B0JRe0xGq7YqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSobOz6jf+KUS77ytELaVLgBEkV/ES7UDt/W38hL2itxUuYwcR
+	8UlDYUmQ4CyED5chTJO/7eydoEfjsccjcWxH7WL4tS9gtn194QeVfpLAMQEvASwI
+X-Gm-Gg: ASbGncv4sNPKcZMSqkmwzHhye2nb70jimhKy9JwgMFjRnXww1uVmnndhKvCEJspD99a
+	CmMT3EhPwTitiSxeM00UENRiMkgejFx1oQAmhixWdbm67808KN5p3fdMKFu7PtMp6AoLWMXydic
+	jaQeZTnF6fsIOe1iyzDxshoIvMSoWe8XKL03hOTu3nGBR+a/eQ1MOTo1KrZeybvaWUw5LM343Uo
+	ML/2bPO705VvFPe++Rx8fIjKK/vDIBmGOAhi89Q7KXm8P7IemBaSieeFF5wf5ErWsozOo6jMGti
+	G3hMPX5Qc1X8JKrOrHjI38xG88tte/NXJfe4LwHc6LylLp467Q6v7RjA+/HHaF4PDhOy8HA0PLU
+	7/6ZxTzdqI0nyG8jgNQz/xDs4TdezWnB9EWXg6U+E
+X-Google-Smtp-Source: AGHT+IGvspN3xr07jKdiZeyLhaj1qvaD3Xxuzu6awzryXExjC9o/hrNWS8AVStdM6jxTUN1fQ+imeg==
+X-Received: by 2002:a05:6a00:928f:b0:736:6043:69f9 with SMTP id d2e1a72fcca58-74af6f70cc0mr8101229b3a.19.1751078078362;
+        Fri, 27 Jun 2025 19:34:38 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31d855asm2631193a12.55.2025.06.27.19.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 19:34:37 -0700 (PDT)
+Date: Sat, 28 Jun 2025 11:34:32 +0900 (JST)
+Message-Id: <20250628.113432.912890378716072875.fujita.tomonori@gmail.com>
+To: tamird@gmail.com
+Cc: fujita.tomonori@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
+ alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+ aliceryhl@google.com, dakr@kernel.org, davem@davemloft.net,
+ andrew@lunn.ch, netdev@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/2] Use unqualified references to ffi types
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <20250625-correct-type-cast-v2-1-6f2c29729e69@gmail.com>
+References: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
+	<20250625-correct-type-cast-v2-1-6f2c29729e69@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2409:b0:3dd:f4d5:1c1a with SMTP id
- e9e14a558f8ab-3df4abad659mr69311055ab.17.1751077528597; Fri, 27 Jun 2025
- 19:25:28 -0700 (PDT)
-Date: Fri, 27 Jun 2025 19:25:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685f5298.a70a0220.2f4de1.0006.GAE@google.com>
-Subject: [syzbot] [block?] WARNING in bdev_count_inflight_rw
-From: syzbot <syzbot+f37a847571460b5ac3e4@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Wed, 25 Jun 2025 05:25:38 -0700
+Tamir Duberstein <tamird@gmail.com> wrote:
 
-syzbot found the following issue on:
+> Remove unnecessary qualifications; `kernel::ffi::*` is included in
+> `kernel::prelude`.
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/net/phy.rs | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
 
-HEAD commit:    78f4e737a53e Merge tag 'for-6.16/dm-fixes' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13fee182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
-dashboard link: https://syzkaller.appspot.com/bug?extid=f37a847571460b5ac3e4
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-78f4e737.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/25280700ec66/vmlinux-78f4e737.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/612c7f59b159/bzImage-78f4e737.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f37a847571460b5ac3e4@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 13932 at block/genhd.c:144 bdev_count_inflight_rw+0x3ba/0x510 block/genhd.c:144
-Modules linked in:
-CPU: 3 UID: 0 PID: 13932 Comm: syz.0.1834 Not tainted 6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bdev_count_inflight_rw+0x3ba/0x510 block/genhd.c:144
-Code: b6 14 02 4c 89 f0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 4b 01 00 00 c7 43 04 00 00 00 00 e9 5f ff ff ff e8 a7 86 ff fc 90 <0f> 0b 90 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 0f b6
-RSP: 0000:ffffc9000c3571a8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffc9000c357230 RCX: ffffffff84bc0298
-RDX: ffff8880233e0000 RSI: ffffffff84bc0359 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000001 R12: 00000000ffffffff
-R13: dffffc0000000000 R14: ffffc9000c357234 R15: 0000000000000008
-FS:  0000000000000000(0000) GS:ffff888097860000(0063) knlGS:00000000569b2440
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 00000000f71bd12a CR3: 0000000069b94000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bdev_count_inflight+0x74/0xb0 block/genhd.c:163
- update_io_ticks+0x22a/0x2a0 block/blk-core.c:1021
- blk_account_io_start block/blk-mq.c:1116 [inline]
- blk_account_io_start+0x3e9/0x730 block/blk-mq.c:1092
- blk_mq_bio_to_request block/blk-mq.c:2675 [inline]
- blk_mq_submit_bio+0xd9d/0x26a0 block/blk-mq.c:3191
- __submit_bio+0x3cf/0x690 block/blk-core.c:635
- __submit_bio_noacct_mq block/blk-core.c:722 [inline]
- submit_bio_noacct_nocheck+0x660/0xd30 block/blk-core.c:751
- submit_bio_noacct+0x50d/0x1eb0 block/blk-core.c:874
- ext4_mpage_readpages+0x66d/0x19d0 fs/ext4/readpage.c:395
- ext4_readahead+0x102/0x140 fs/ext4/inode.c:3337
- read_pages+0x1c4/0xc70 mm/readahead.c:160
- page_cache_ra_unbounded+0x5d2/0x7d0 mm/readahead.c:264
- do_page_cache_ra mm/readahead.c:327 [inline]
- page_cache_ra_order+0x9c8/0xd00 mm/readahead.c:532
- do_sync_mmap_readahead mm/filemap.c:3271 [inline]
- filemap_fault+0x1465/0x26c0 mm/filemap.c:3412
- __do_fault+0x10a/0x490 mm/memory.c:5169
- do_read_fault mm/memory.c:5590 [inline]
- do_fault mm/memory.c:5724 [inline]
- do_pte_missing mm/memory.c:4251 [inline]
- handle_pte_fault mm/memory.c:6069 [inline]
- __handle_mm_fault+0x3c2a/0x5490 mm/memory.c:6212
- handle_mm_fault+0x589/0xd10 mm/memory.c:6381
- do_user_addr_fault+0x60c/0x1370 arch/x86/mm/fault.c:1336
- handle_page_fault arch/x86/mm/fault.c:1476 [inline]
- exc_page_fault+0x5c/0xb0 arch/x86/mm/fault.c:1532
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0023:0xf71bd12a
-Code: Unable to access opcode bytes at 0xf71bd100.
-RSP: 002b:00000000ff8ced80 EFLAGS: 00010202
-RAX: 00000000000000a0 RBX: 0000000000000000 RCX: 000000000000000b
-RDX: 000000000001c5f8 RSI: 00000000569b7a08 RDI: 0000000000000090
-RBP: 00000000f73f96a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000286 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Reviewed-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
