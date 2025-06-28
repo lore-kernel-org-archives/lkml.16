@@ -1,167 +1,145 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852FA24E016;
-	Sat, 28 Jun 2025 14:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505411FBE80;
+	Sat, 28 Jun 2025 15:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751122665; cv=none; b=MAacog6ViJRxBeQAW4OhGmKc6adK7+W84b1jQ0mgpJL6lHNWt7rNwm1x3+hp7e2mWLmyXFyJtN2A+i/OSFIQhmppHtkRemBdKPvcwq/OFRiH5dpLsyYI5mxtOfRU11CRa9Q5P0ec2vKshK+8tZ0YKqzaou8w8UI+6yKhjZgt3Q0=
+	t=1751122802; cv=none; b=cgMhwbF5zuCviao5MBLGHYSHwaDv/HRdT8dX+1Xdxbsz6UUKzG7sOnajF0ettec9pMDg1bjL7x2Imq2MFVOVP/ITcZ5SlxTwKlm76kQBcjnzKZHzQurjrRERpOjLLnMk8vCMBtIkNII2OIHItYsGGVSRpBtqoCw1ID8sErlgs1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751122665; c=relaxed/simple;
-	bh=HSi06s+PUGxdJBGY6GFxak4sv815cnWzv1NhWB8k274=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=okcejhClzTjC4mUE10AoGcxR+Kzu6JJww1wQzqDXwM7JzqroZ9QYqmUi05DpGHtq3O9A/bAigwYwiufTGodf5TSBeoIjIEGY1MR6E0q5uvaZuw+Ocl6hThEXlallebbKZE9UH5oOdU+teYVtUMuC7SnWzE2hfPbIW+rb2Q0byxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=ynTWNJtw; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1751122802; c=relaxed/simple;
+	bh=/nORueu+E/VVO56WfdHAYQMg0q9l9q7SiKKNWkhQly4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ai9BOPRUpvDn+Gmn8CtMWXbjBLs4DH4jur1YrDXsagIbjEMRS9UhUy0GDriNLSTJJCFosRJEmlrfvtCgEqAmcuDnjJupnNRqaxmLweCHZwdV495ab4qLbKMgdjZW2bdsv/fwq/xzdz8y02T7kTZT9Qxfp0zxgTl/debz6CmsqlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UgNQjIlY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="ynTWNJtw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1751122661; bh=fBaRk57nz6ElXpESIpcHM6WYYqzGAzZVyIAI++LaDzY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=ynTWNJtwzE/kdD8Cgw6335AZ8YpOEyuaH+gya+a7LAKfsbWAHnuDlxLRSIsfhHx6S
-	 1B3d0ZfzYsMD0xlZ62gaOj4bCDD+3QkJ9r2NumRQQW3vtZ1Xc7HYsNXrGf0YtUCKst
-	 EO9WY2b0GiWixZDHzjppuf+xGrNsPrUvA0otTi46PwpYkjIaGHQ2vOxGtzl7w9Du8k
-	 cNaWmZ5CmZW0Xn9f+R7PVGL5rH9xLKYaHn+EpWrktZZK41wR5B/UDur3rMVwnp1uTC
-	 LEBtd/tSThOiyvK/zDE1thr4qw/oFO6QyENKO7udEEHNsdAOEq32HLOanlik9W6P6T
-	 tUnAT4yMOsrzA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bTwWn2G2bzPklm;
-	Sat, 28 Jun 2025 16:57:41 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX18H9PD/qK7m2EViWUok2doCQe0kVAsTFqg=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bTwWj6gbRzPkB5;
-	Sat, 28 Jun 2025 16:57:37 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Peilin Ye <yepeilin@google.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Ihor Solodrai <isolodrai@meta.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Chaignon <paul.chaignon@gmail.com>
-Cc: syzbot+dc27c5fb8388e38d2d37@syzkaller.appspotmail.com
-Subject: [PATCH bpf-next v2 2/3] bpf: Fix aux usage after do_check_insn()
-Date: Sat, 28 Jun 2025 16:50:15 +0200
-Message-ID: <20250628145016.784256-3-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250628145016.784256-1-luis.gerhorst@fau.de>
-References: <20250628145016.784256-1-luis.gerhorst@fau.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UgNQjIlY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174D8C4CEEA;
+	Sat, 28 Jun 2025 15:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751122801;
+	bh=/nORueu+E/VVO56WfdHAYQMg0q9l9q7SiKKNWkhQly4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UgNQjIlYmHLD6XG6SaVW4pdP+XeAJpiD/c3JxhB5Y/ACLEfwgeFk2IJLPQRVBFs3j
+	 oEhxcWRex8TYuDDhZNoYRJNq5/G5A6ZW1vdghMS1GhxegSOuyIzgOACMFaMprcqj7J
+	 krdSA9YXrE7CAbA4lSwNZZYn1p6FTP+MeVrmr87o=
+Date: Sat, 28 Jun 2025 16:59:58 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Akash Kumar <quic_akakum@quicinc.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, Jack Pham <quic_jackp@quicinc.com>,
+	kernel@quicinc.com, Wesley Cheng <quic_wcheng@quicinc.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Vijayavardhan Vennapusa <quic_vvreddy@quicinc.com>,
+	Krishna Kurapati <quic_kriskura@quicinc.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: uvc: Initialize color matching descriptors
+ for frame-based
+Message-ID: <2025062812-surging-defiant-934c@gregkh>
+References: <20250625101639.19788-1-quic_akakum@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625101639.19788-1-quic_akakum@quicinc.com>
 
-We must terminate the speculative analysis if the just-analyzed insn had
-nospec_result set. Using cur_aux() here is wrong because insn_idx might
-have been incremented by do_check_insn(). Therefore, introduce and use
-prev_aux().
+On Wed, Jun 25, 2025 at 03:46:39PM +0530, Akash Kumar wrote:
+> Fix NULL pointer crash in uvcg_framebased_make due to uninitialize
+> color matching descriptor for frame-based format.
+> 
+> [    2.771141][  T486] pc : __uvcg_fill_strm+0x198/0x2cc
+> [    2.771145][  T486] lr : __uvcg_iter_strm_cls+0xc8/0x17c
+> [    2.771146][  T486] sp : ffffffc08140bbb0
+> [    2.771146][  T486] x29: ffffffc08140bbb0 x28: ffffff803bc81380 x27: ffffff8023bbd250
+> [    2.771147][  T486] x26: ffffff8023bbd250 x25: ffffff803c361348 x24: ffffff803d8e6768
+> [    2.771148][  T486] x23: 0000000000000004 x22: 0000000000000003 x21: ffffffc08140bc48
+> [    2.771149][  T486] x20: 0000000000000000 x19: ffffffc08140bc48 x18: ffffffe9f8cf4a00
+> [    2.771150][  T486] x17: 000000001bf64ec3 x16: 000000001bf64ec3 x15: ffffff8023bbd250
+> [    2.771151][  T486] x14: 000000000000000f x13: 004c4b40000f4240 x12: 000a2c2a00051615
+> [    2.771152][  T486] x11: 000000000000004f x10: ffffffe9f76b40ec x9 : ffffffe9f7e389d0
+> [    2.771153][  T486] x8 : ffffff803d0d31ce x7 : 000f4240000a2c2a x6 : 0005161500028b0a
+> [    2.771154][  T486] x5 : ffffff803d0d31ce x4 : 0000000000000003 x3 : 0000000000000000
+> [    2.771155][  T486] x2 : ffffffc08140bc50 x1 : ffffffc08140bc48 x0 : 0000000000000000
+> [    2.771156][  T486] Call trace:
+> [    2.771157][  T486]  __uvcg_fill_strm+0x198/0x2cc
+> [    2.771157][  T486]  __uvcg_iter_strm_cls+0xc8/0x17c
+> [    2.771158][  T486]  uvcg_streaming_class_allow_link+0x240/0x290
+> [    2.771159][  T486]  configfs_symlink+0x1f8/0x630
+> [    2.771161][  T486]  vfs_symlink+0x114/0x1a0
+> [    2.771163][  T486]  do_symlinkat+0x94/0x28c
+> [    2.771164][  T486]  __arm64_sys_symlinkat+0x54/0x70
+> [    2.771164][  T486]  invoke_syscall+0x58/0x114
+> [    2.771166][  T486]  el0_svc_common+0x80/0xe0
+> [    2.771168][  T486]  do_el0_svc+0x1c/0x28
+> [    2.771169][  T486]  el0_svc+0x3c/0x70
+> [    2.771172][  T486]  el0t_64_sync_handler+0x68/0xbc
+> [    2.771173][  T486]  el0t_64_sync+0x1a8/0x1ac
 
-Also change cur_aux(env)->nospec in case do_check_insn() ever manages to
-increment insn_idx but still fail.
+What is "[  T486]"?
 
-Change the warning to check the insn class (which prevents it from
-triggering for ldimm64, for which nospec_result would not be
-problematic) and use verifier_bug_if().
+And where did the beginning of the crash report go?
 
-Fixes: d6f1c85f2253 ("bpf: Fall back to nospec for Spectre v1")
-Reported-by: Paul Chaignon <paul.chaignon@gmail.com>
-Reported-by: Eduard Zingerman <eddyz87@gmail.com>
-Reported-by: syzbot+dc27c5fb8388e38d2d37@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/bpf/685b3c1b.050a0220.2303ee.0010.GAE@google.com/
-Link: https://lore.kernel.org/bpf/4266fd5de04092aa4971cbef14f1b4b96961f432.camel@gmail.com/
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
----
- kernel/bpf/verifier.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+> Initialize color matching descriptor for frame-based format to prevent
+> NULL pointer crash.
+> This fix prevents a NULL pointer crash in uvcg_framebased_make due to
+> an uninitialized color matching descriptor.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index b33bc37d5372..9d066e4b8248 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -11216,6 +11216,11 @@ static struct bpf_insn_aux_data *cur_aux(const struct bpf_verifier_env *env)
- 	return &env->insn_aux_data[env->insn_idx];
- }
- 
-+static struct bpf_insn_aux_data *prev_aux(const struct bpf_verifier_env *env)
-+{
-+	return &env->insn_aux_data[env->prev_insn_idx];
-+}
-+
- static bool loop_flag_is_zero(struct bpf_verifier_env *env)
- {
- 	struct bpf_reg_state *regs = cur_regs(env);
-@@ -19955,11 +19960,11 @@ static int do_check(struct bpf_verifier_env *env)
- 			/* Prevent this speculative path from ever reaching the
- 			 * insn that would have been unsafe to execute.
- 			 */
--			cur_aux(env)->nospec = true;
-+			prev_aux(env)->nospec = true;
- 			/* If it was an ADD/SUB insn, potentially remove any
- 			 * markings for alu sanitization.
- 			 */
--			cur_aux(env)->alu_state = 0;
-+			prev_aux(env)->alu_state = 0;
- 			goto process_bpf_exit;
- 		} else if (err < 0) {
- 			return err;
-@@ -19968,7 +19973,7 @@ static int do_check(struct bpf_verifier_env *env)
- 		}
- 		WARN_ON_ONCE(err);
- 
--		if (state->speculative && cur_aux(env)->nospec_result) {
-+		if (state->speculative && prev_aux(env)->nospec_result) {
- 			/* If we are on a path that performed a jump-op, this
- 			 * may skip a nospec patched-in after the jump. This can
- 			 * currently never happen because nospec_result is only
-@@ -19977,8 +19982,15 @@ static int do_check(struct bpf_verifier_env *env)
- 			 * never skip the following insn. Still, add a warning
- 			 * to document this in case nospec_result is used
- 			 * elsewhere in the future.
-+			 *
-+			 * All non-branch instructions have a single
-+			 * fall-through edge. For these, nospec_result should
-+			 * already work.
- 			 */
--			WARN_ON_ONCE(env->insn_idx != env->prev_insn_idx + 1);
-+			if (verifier_bug_if(BPF_CLASS(insn->code) == BPF_JMP ||
-+					    BPF_CLASS(insn->code) == BPF_JMP32, env,
-+					    "speculation barrier after jump instruction may not have the desired effect"))
-+				return -EFAULT;
- process_bpf_exit:
- 			mark_verifier_state_scratched(env);
- 			err = update_branch_counts(env, env->cur_state);
--- 
-2.49.0
+What causes an unitialized color matching descriptor to happen?  Do we
+have that in the kernel today?  Or is this userspace controlled?
+Hardware controlled?
 
+> 
+> Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
+
+What git id does this fix?
+
+> ---
+>  drivers/usb/gadget/function/uvc_configfs.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+> index f131943254a4..a4a2d3dcb0d6 100644
+> --- a/drivers/usb/gadget/function/uvc_configfs.c
+> +++ b/drivers/usb/gadget/function/uvc_configfs.c
+> @@ -2916,8 +2916,15 @@ static struct config_group *uvcg_framebased_make(struct config_group *group,
+>  		'H',  '2',  '6',  '4', 0x00, 0x00, 0x10, 0x00,
+>  		0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71
+>  	};
+> +	struct uvcg_color_matching *color_match;
+> +	struct config_item *streaming;
+>  	struct uvcg_framebased *h;
+>  
+> +	streaming = group->cg_item.ci_parent;
+> +	color_match = uvcg_format_get_default_color_match(streaming);
+> +	if (!color_match)
+> +		return ERR_PTR(-EINVAL);
+> +
+>  	h = kzalloc(sizeof(*h), GFP_KERNEL);
+>  	if (!h)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -2936,6 +2943,9 @@ static struct config_group *uvcg_framebased_make(struct config_group *group,
+>  
+>  	INIT_LIST_HEAD(&h->fmt.frames);
+>  	h->fmt.type = UVCG_FRAMEBASED;
+> +
+> +	h->fmt.color_matching = color_match;
+> +	color_match->refcnt++;
+
+reference counts are almost never done "by hand" like this, are you sure
+this is right?  I don't see the lock being held that is used when
+reading/writing this value elsewhere in the driver, why is this safe
+here?
+
+And shouldn't the changelog text be something like "mirror what we do in
+the uncompressed mode?"  Or the other modes?  Why is this one the only
+one that does not have this check in it today, was it just forgotten or
+was it intentional?
+
+thanks,
+
+greg k-h
