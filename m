@@ -1,210 +1,200 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA351D5147
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 19:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94D012EBE7;
+	Sat, 28 Jun 2025 19:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751140403; cv=none; b=eJlJQ6f4OlTX2BPO4oJsVn/4uYybcaDJ75fOHC5qS471/ExfVCQgF2H1E7GteIG+5FSIK4f74Fj8tdUJ8dlVR2Zna6LN8jqeYbTMgEIK7xriLdPDP2oBy2hzNcftLC+8tiBhu1gP2KwVNUl/CGU9Ks7vp1xdjNf8bly/hmUClsQ=
+	t=1751140601; cv=none; b=uNaMa09vh2ImeR7/kz4ycXzf+eyETW8TsUhsaT0HYUGvWhr0vifuA7ZwfGWnv68tqMxVP0oETR/eQ2Hnw2OpunsDxgN9BVZbef1kXrtFv6q2TbrhrVBBipCZsKpr2H4+77A6H5ZRnhIw6orvqWJKM2SwdKlcByP8bJXLnAg4joQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751140403; c=relaxed/simple;
-	bh=KyN7c3OW4XSfhqKxip/xfXDgiwMEBmnDvDrRs2F33Ng=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=bTvr7OBrCh8dtlbjSdUkF/bRDZdZ+0N+EzpYTKB3vx3OOzLMyF2e3ymQZ4GUNjDaqljMJWiWKpdqcAaXfqU8mO6/TqcbojZqN8PqR2LAaate/txT4xsHkRDWTKxg1BvTI3Fd5gz96NEp8ODFBo0Ighdn4tahJpl2PflaP2mj/C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WiT70tP6; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751140601; c=relaxed/simple;
+	bh=7EFuR7v62rmp+Nsd6GA8/D69P/09BRwxpEiGB7Qdkw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gqa1EmR9uJ4PbL76rpsiPSEtTJOYEENnQiD5U6AifSNfqH+sHxy6n31zHPQOmo5YOQuJygWQoOiW7K2bDnmS5FGe45N68P71QxtwZo/MyLrc4DnrZGgiTyQRS6OSHjcYdcp3NKcJNEK2MS9Qbk9swxTML/7t/o8L14iTbD0fgMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Xmh1+0NA; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WiT70tP6"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-453643020bdso28367645e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751140400; x=1751745200; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3QyHqQCf1rj8/jNTL5ig8eExEUuZ3Ia42+nYVYWkCr4=;
-        b=WiT70tP6jgausJS9D7abpn0Dy0W8wzPSESY2YBo7hPlvxXCBUZki5VP1KwK4fo5phP
-         QK3J4CViQLNtPOWQP9cD7EeEMTHhBWLR22+uKd/uuY1KlN8v/sWfZlLeBrJVmALkG+8H
-         YA1nXbAtUWNhZ3yjWYbwgp0ucJzJHZPQfmwMiIcpwgia4N3Lv2va8iCcJZtiebEfrd8S
-         vnRz7uKT3HGG3tOuBevj9eAVv3V/PKThANKlO6ncHNvRA7fMY3zAVu2sAiLVbVl1H7OQ
-         9SECGBZbwTRK0rzLpJc8C8YTBwWwxo5TunIqA/7VmFJowBxACbXKoW9Ie5R1ql8N6T3e
-         Diaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751140400; x=1751745200;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3QyHqQCf1rj8/jNTL5ig8eExEUuZ3Ia42+nYVYWkCr4=;
-        b=NMZzuYXWIe22/S2W8cj6Uu/SwnqNH9ZCGlO8PfGXi91QNJhba0WwwxB0ZsL4A6L6RA
-         lUlWXJ9wBiuHfi+nwJL8CI97z1Ylf+RmzH8uKVJVJzCLBYQapwsY4jGr8juSZQZgvmNX
-         R2uQMyIxmsmkZunXwkBJ9hryIAPqjAV0EoXDif0YAxXf7MtHK5F/5OucLzqMN4WYhFfr
-         STnGetIznFkKDlhZRPd3wpVtvD5OhQ598XKVYJewVd+jNdqvG+jUJ3zNMWO9rume+UhF
-         q8KYDWHc2KZvUbcu4x5vfKDaayGfBfFlzS4wPq3LZuIxDJYSonncC0/tBNSJHw3RnToJ
-         r+Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCU0XZBgdOoTtKMRgluHd6d8aPEA7xOM9sLtwe0XftECeDNFkUVRmEMA2gjm/rHoMQafgoVudk5K8QKtvfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHCH8QfEMr/RQkz4qd+RjBePsszLpbubpsQr3/WI3xlKtdh6AK
-	EcQmijoMCwN3DzBa+u9PslhBt+31IHB+t4OEWAsXIHwiixyrSQGKnRUF+DZHA1Dvvp4=
-X-Gm-Gg: ASbGnctnHakkgxHkEQtcGsI7z95GQl7hoYzvWdmChdaHTEskwoxzbWupTyUdVJVVul1
-	9SgMRlf+MA3eAmmxWLq0RnbtI0vXcDlQBbc+wlVWncZbEHsZOLouiqzcEYIdDqhNtxRILlwvD5H
-	IWGHK+MxoNhzGkyNW7XesK8VNRAz0rPhcTe1SbmDLqldrDC7GKMaBIGC+myT5imtldHdqRassJv
-	GHaZ8CTjjreE+P8vhfilsuMUq39/1j8haEU9P8GQpJQK+qIZma0LFEZINYtmB7qjkzUYHVnfuuC
-	6fwq6rcPIUUIJBwqVXcntc/Od1nrvIlKtJhOskzjLX9kb03JRBbmxXsC37IBMYnLDnZ3
-X-Google-Smtp-Source: AGHT+IFHukOoSyHfuwr6fdOhiMqwDh6w4eyGrcAqPmtqVI9++TGozuj4ALvF8dEZH78Qc3I+9tpD/w==
-X-Received: by 2002:a05:6000:144d:b0:3a4:fc37:70e4 with SMTP id ffacd0b85a97d-3a90c07daffmr7119112f8f.58.1751140399497;
-        Sat, 28 Jun 2025 12:53:19 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:e33b:a0ed:df4b:222c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b516sm5871948f8f.41.2025.06.28.12.53.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Jun 2025 12:53:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Xmh1+0NA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CfoIUO+Ef1k+kJgQ4jHgv30hIZLDnCERC1vBwIInGrE=; b=Xmh1+0NAWBIu8Ir8rvjJXALRus
+	epDhg+o1Weqt8Ih+4e5zJSZmQvOevt6/XYDWhGh2mgbYNFNSEfMlup6QnsfpXp466Rpsis76xYAjJ
+	gg86EpOWYVT1TYTbsRPszwB9jRCAOAZ7B3VkIvJh7KinGjCLAts3vgEiqKLslWNavpb079GVorf7f
+	ftt3JERE6+tTcN6z9voxwJQSbPbsjHWadSbUS2uJMK+oJQPvWZ4Hhr2TA4DkvfPG0YX2a4qfiJrLv
+	X1cm1/w5ToFu2DjTjd0JdrTTrwm7HiicGcIELkzt6BG1vhofPaXVS6aTn9MK/F89ITMj1LephYGUF
+	uOxoAjrQ==;
+Received: from [189.7.87.79] (helo=[192.168.0.7])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uVbeW-009qOr-NM; Sat, 28 Jun 2025 21:55:57 +0200
+Message-ID: <f0ad78da-d4ba-44ec-beda-4f8c616053f8@igalia.com>
+Date: Sat, 28 Jun 2025 16:55:44 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 28 Jun 2025 20:53:18 +0100
-Message-Id: <DAYFGP9TBU3K.1TEQFWX2GF7OR@linaro.org>
-Cc: <joro@8bytes.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
- <andersson@kernel.org>, <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v2] iommu/arm-smmu-qcom: Add SM6115 MDSS compatible
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: <robin.clark@oss.qualcomm.com>, <will@kernel.org>,
- <robin.murphy@arm.com>, <iommu@lists.linux.dev>
-X-Mailer: aerc 0.20.0
-References: <20250613173238.15061-1-alexey.klimov@linaro.org>
-In-Reply-To: <20250613173238.15061-1-alexey.klimov@linaro.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Introduce Tyr
+To: Daniel Almeida <daniel.almeida@collabora.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>,
+ Rob Herring <robh@kernel.org>, Alice Ryhl <alice.ryhl@google.com>,
+ Beata Michalska <beata.michalska@arm.com>,
+ Carsten Haitzler <carsten.haitzler@foss.arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Ashley Smith <ashley.smith@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ rust-for-linux@vger.kernel.org, kernel@collabora.com
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+In-Reply-To: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri Jun 13, 2025 at 6:32 PM BST, Alexey Klimov wrote:
-> Add the SM6115 MDSS compatible to clients compatible list, as it also
-> needs that workaround.
-> Without this workaround, for example, QRB4210 RB2 which is based on
-> SM4250/SM6115 generates a lot of smmu unhandled context faults during
-> boot:
->
-> arm_smmu_context_fault: 116854 callbacks suppressed
-> arm-smmu c600000.iommu: Unhandled context fault: fsr=3D0x402,
-> iova=3D0x5c0ec600, fsynr=3D0x320021, cbfrsynra=3D0x420, cb=3D5
-> arm-smmu c600000.iommu: FSR    =3D 00000402 [Format=3D2 TF], SID=3D0x420
-> arm-smmu c600000.iommu: FSYNR0 =3D 00320021 [S1CBNDX=3D50 PNU PLVL=3D1]
-> arm-smmu c600000.iommu: Unhandled context fault: fsr=3D0x402,
-> iova=3D0x5c0d7800, fsynr=3D0x320021, cbfrsynra=3D0x420, cb=3D5
-> arm-smmu c600000.iommu: FSR    =3D 00000402 [Format=3D2 TF], SID=3D0x420
->
-> and also failed initialisation of lontium lt9611uxc, gpu and dpu is
-> observed:
-> (binding MDSS components triggered by lt9611uxc have failed)
->
->  ------------[ cut here ]------------
->  !aspace
->  WARNING: CPU: 6 PID: 324 at drivers/gpu/drm/msm/msm_gem_vma.c:130 msm_ge=
-m_vma_init+0x150/0x18c [msm]
->  Modules linked in: ... (long list of modules)
->  CPU: 6 UID: 0 PID: 324 Comm: (udev-worker) Not tainted 6.15.0-03037-gaac=
-c73ceeb8b #4 PREEMPT
->  Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
->  pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
->  pc : msm_gem_vma_init+0x150/0x18c [msm]
->  lr : msm_gem_vma_init+0x150/0x18c [msm]
->  sp : ffff80008144b280
->   		...
->  Call trace:
->   msm_gem_vma_init+0x150/0x18c [msm] (P)
->   get_vma_locked+0xc0/0x194 [msm]
->   msm_gem_get_and_pin_iova_range+0x4c/0xdc [msm]
->   msm_gem_kernel_new+0x48/0x160 [msm]
->   msm_gpu_init+0x34c/0x53c [msm]
->   adreno_gpu_init+0x1b0/0x2d8 [msm]
->   a6xx_gpu_init+0x1e8/0x9e0 [msm]
->   adreno_bind+0x2b8/0x348 [msm]
->   component_bind_all+0x100/0x230
->   msm_drm_bind+0x13c/0x3d0 [msm]
->   try_to_bring_up_aggregate_device+0x164/0x1d0
->   __component_add+0xa4/0x174
->   component_add+0x14/0x20
->   dsi_dev_attach+0x20/0x34 [msm]
->   dsi_host_attach+0x58/0x98 [msm]
->   devm_mipi_dsi_attach+0x34/0x90
->   lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
->   lt9611uxc_probe+0x540/0x5fc [lontium_lt9611uxc]
->   i2c_device_probe+0x148/0x2a8
->   really_probe+0xbc/0x2c0
->   __driver_probe_device+0x78/0x120
->   driver_probe_device+0x3c/0x154
->   __driver_attach+0x90/0x1a0
->   bus_for_each_dev+0x68/0xb8
->   driver_attach+0x24/0x30
->   bus_add_driver+0xe4/0x208
->   driver_register+0x68/0x124
->   i2c_register_driver+0x48/0xcc
->   lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
->   do_one_initcall+0x60/0x1d4
->   do_init_module+0x54/0x1fc
->   load_module+0x1748/0x1c8c
->   init_module_from_file+0x74/0xa0
->   __arm64_sys_finit_module+0x130/0x2f8
->   invoke_syscall+0x48/0x104
->   el0_svc_common.constprop.0+0xc0/0xe0
->   do_el0_svc+0x1c/0x28
->   el0_svc+0x2c/0x80
->   el0t_64_sync_handler+0x10c/0x138
->   el0t_64_sync+0x198/0x19c
->  ---[ end trace 0000000000000000 ]---
->  msm_dpu 5e01000.display-controller: [drm:msm_gpu_init [msm]] *ERROR* cou=
-ld not allocate memptrs: -22
->  msm_dpu 5e01000.display-controller: failed to load adreno gpu
->  platform a400000.remoteproc:glink-edge:apr:service@7:dais: Adding to iom=
-mu group 19
->  msm_dpu 5e01000.display-controller: failed to bind 5900000.gpu (ops a3xx=
-_ops [msm]): -22
->  msm_dpu 5e01000.display-controller: adev bind failed: -22
->  lt9611uxc 0-002b: failed to attach dsi to host
->  lt9611uxc 0-002b: probe with driver lt9611uxc failed with error -22
->
-> Suggested-by: Bjorn Andersson <andersson@kernel.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Fixes: 3581b7062cec ("drm/msm/disp/dpu1: add support for display on SM611=
-5")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-> ---
->
-> v2:
->  - added tags as suggested by Dmitry;
->  - slightly updated text in the commit message.
->
-> Previous version: https://lore.kernel.org/linux-arm-msm/20250528003118.21=
-4093-1-alexey.klimov@linaro.org/
->
->  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/a=
-rm/arm-smmu/arm-smmu-qcom.c
-> index 62874b18f645..c75023718595 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-> @@ -379,6 +379,7 @@ static const struct of_device_id qcom_smmu_client_of_=
-match[] __maybe_unused =3D {
->  	{ .compatible =3D "qcom,sdm670-mdss" },
->  	{ .compatible =3D "qcom,sdm845-mdss" },
->  	{ .compatible =3D "qcom,sdm845-mss-pil" },
-> +	{ .compatible =3D "qcom,sm6115-mdss" },
->  	{ .compatible =3D "qcom,sm6350-mdss" },
->  	{ .compatible =3D "qcom,sm6375-mdss" },
->  	{ .compatible =3D "qcom,sm8150-mdss" },
+Hi Daniel,
 
-Gentle ping.                                                               =
-                                                                =20
-                                                                           =
-                                                                =20
-This was sent over 2 weeks ago.                                            =
-                                                                =20
-                                                                           =
-                                                                =20
-Thanks,                                                                    =
-                                                                =20
-Alexey Klimov
+On 27/06/25 19:34, Daniel Almeida wrote:
+
+[...]
+
+> diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..2443620e10620585eae3d57978e64d2169a1b2d1
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/driver.rs
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +use core::pin::Pin;
+> +
+> +use kernel::bits::bit_u32;
+> +use kernel::c_str;
+> +use kernel::clk::Clk;
+> +use kernel::device::Core;
+> +use kernel::devres::Devres;
+> +use kernel::drm;
+> +use kernel::drm::ioctl;
+> +use kernel::io;
+> +use kernel::io::mem::IoMem;
+> +use kernel::new_mutex;
+> +use kernel::of;
+> +use kernel::platform;
+> +use kernel::prelude::*;
+> +use kernel::regulator;
+> +use kernel::regulator::Regulator;
+> +use kernel::sync::Arc;
+> +use kernel::sync::Mutex;
+> +use kernel::time;
+> +use kernel::types::ARef;
+> +
+> +use crate::file::File;
+> +use crate::gem::TyrObject;
+> +use crate::gpu;
+> +use crate::gpu::GpuInfo;
+> +use crate::regs;
+> +
+> +/// Convienence type alias for the DRM device type for this driver
+> +pub(crate) type TyrDevice = drm::device::Device<TyrDriver>;
+> +
+> +#[pin_data(PinnedDrop)]
+> +pub(crate) struct TyrDriver {
+> +    device: ARef<TyrDevice>,
+> +}
+> +
+> +#[pin_data]
+> +pub(crate) struct TyrData {
+> +    pub(crate) pdev: ARef<platform::Device>,
+> +
+> +    #[pin]
+> +    clks: Mutex<Clocks>,
+> +
+> +    #[pin]
+> +    regulators: Mutex<Regulators>,
+> +
+> +    // Some inforation on the GPU. This is mainly queried by userspace (mesa).
+
+s/inforation/information
+
+> +    pub(crate) gpu_info: GpuInfo,
+> +}
+> +
+> +unsafe impl Send for TyrData {}
+> +unsafe impl Sync for TyrData {}
+> +
+> +fn issue_soft_reset(iomem: &Devres<IoMem<0>>) -> Result<()> {
+> +    let irq_enable_cmd = 1 | bit_u32(8);
+
+To enhance readability, consider using a regmap similar to
+panthor_regs.h. This would help avoid 'magic numbers' and make the
+code's intent much clearer.
+
+> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
+> +
+> +    let op = || regs::GPU_INT_RAWSTAT.read(iomem);
+> +    let cond = |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 == 1 };
+> +    let res = io::poll::read_poll_timeout(
+> +        op,
+> +        cond,
+> +        time::Delta::from_millis(100),
+> +        Some(time::Delta::from_micros(20000)),
+> +    );
+> +
+> +    if let Err(e) = res {
+> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
+> +        pr_err!(
+> +            "GPU_INT_RAWSTAT is {}\n",
+> +            regs::GPU_INT_RAWSTAT.read(iomem)?
+> +        );
+> +    }
+> +
+> +    Ok(())
+> +}
+> +
+> +kernel::of_device_table!(
+> +    OF_TABLE,
+> +    MODULE_OF_TABLE,
+> +    <TyrDriver as platform::Driver>::IdInfo,
+> +    [
+> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
+> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
+> +    ]
+> +);
+> +
+> +impl platform::Driver for TyrDriver {
+> +    type IdInfo = ();
+> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+> +
+> +    fn probe(
+> +        pdev: &platform::Device<Core>,
+> +        _info: Option<&Self::IdInfo>,
+> +    ) -> Result<Pin<KBox<Self>>> {
+> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
+> +
+> +        let core_clk = Clk::get(pdev.as_ref(), Some(c_str!("core")))?;
+> +        let stacks_clk = Clk::get(pdev.as_ref(), Some(c_str!("stacks")))?;
+
+Shouldn't it be OptionalClk::get? From the DT schema for "arm,mali-
+valhall-csf", I see that "stacks" and "coregroups" are optional.
+
+> +        let coregroup_clk = Clk::get(pdev.as_ref(), Some(c_str!("coregroup")))?;
+
+Same.
+
+Best Regards,
+- Maíra
+
