@@ -1,122 +1,112 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C6512EBE7
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAFE1FBC91;
+	Sat, 28 Jun 2025 16:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751128274; cv=none; b=urCdOfCJYcRrXzZwRSU0bZtQGKZzcsw1Xdj0NwaJGUF+Yloow8LsJDw0Q+Z1p5BNjnrk1C5ey0FAu8muo037MvOgIB1WuMuAST83G8OQKx+t7TgnNxbV6AWaj9aNBi97ViJycDST8GDzEN4pdKTbMXzO0EtORpLgxEIXq4gFS0A=
+	t=1751128290; cv=none; b=pr01PVPTSHTCBt2jf6lX0J65fsenBWujCNNue20F0PmOZICJfXkFFg9knj92X6zDAafrMSOf3XoKM2PDazOih37dRdPr7ZC4sPgRM+mU7X5SSK914i+y4B1ds7+gONDaGemG1d54naVry+MrIg9NzkC2pRa9X7PCtMPauGpuaJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751128274; c=relaxed/simple;
-	bh=NuSWjYuDbtvHzYr4ep+Jz/ihaC1SPZcRNGwd2eQ2BA0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G9QKtfrVPBregpZeJzoHG/EHxMSLR+RiWuzXz1PWqLc2ReOACHliLZyDG+sL/Ig8G32BkUZHYsZZHY4KULP7EcgY5YPf+XOQa0fYXeA3XzefTCGJfEImwfC/0y/u/mfoyDR9urts5rn3OECG81uQ4h1ub59E6MwtpDldOEs3jMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nM26yJkg; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751128290; c=relaxed/simple;
+	bh=ysZnhmJGpruuPPRq6A2SjBxDODaSwvv2FXxAy1Z+NAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JOA7oGGwB2aC+X81oeXVdQfFUc3s7Z0mB1RRtEbv1HqtQ8VK3pgKHcLz1fHKDRPegMi/EtpQ5irUiIYqhalOQaRqFsGQCDtu8B7XHv0Fh/WwhfX5H/spCuw8XxGp1QxAqF891Y53T+HM5zHxbXQv2dQ2jkXVOl+SNqx9kvW1URk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQLRPRhw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nM26yJkg"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-735b2699d5dso468636a34.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751128271; x=1751733071; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2oSI06roPyR3gce1WJPoftcuvRzyCf35AlZzWscM8ko=;
-        b=nM26yJkgzty8cnfBl399A4/HX//oWZaXzkHoF6M5fgZf2XEaUxCK+3jnN52j1gdDIg
-         Sqgvpjc4G+mKgDMhamtpVHG3di73KR3Sr4VOgymyywFIfyrciLDK2ZG2Ks5TPfgjys+F
-         rTcSZvVVJINXBd8gUOc3z5Hi5ruwgYJep6wLViL32OixyNYe/kvG+ZTqsBqF2aYBGwq+
-         h6mcIQfYPN1FlkOkD1MmKH1v87PRPyxn0myC1xYU1DWQQVf+oRMZTHT5Ypp9aFbCNqNN
-         j/I7K08UATOyWN7eTxTu/40KDJbv8/cLrQqeYPY6bX/FNo0evZNl+DqNY7Z/rxyxtBB/
-         PJVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751128271; x=1751733071;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2oSI06roPyR3gce1WJPoftcuvRzyCf35AlZzWscM8ko=;
-        b=R0rdVsnbBT/6f1Rmf9twlzcX/vaz7BZscVnWZMVum0ccNA/CqOIgQLyabv5JlDQ6p8
-         ZpkQN1l/y9NtIbKh9bDgrPkn6Znlwa9EdEjeC4oiV8JZGQSKcKboLiiwSJNwpQFhLMJd
-         aWYvyaEifEkP8vVeqGb1k84HWO4SQBKJGrnUSxr6eC0kVkprXrIy80ZTLi9okDMaH7V5
-         dtqvaQIXqG7S2+BRpvgyb3u88Q2RxJfZ6seNZ1iEiN2Yay57xqNcMVkB20PF+IOu7PKa
-         f1AN5d00B8RtD3fRmQgvFTZiHs+ESMFgPXbG3QJT/rTFJm1H3TkBex6Ohe3etY6IXugQ
-         +nUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWD1lgrWbskywR9Ns53Eeaecr4xxR6BM5VJxkcCmqbOTEUNFDgr6FynXHnUOep/zjopXCZoMa9Fe7hx1hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCzG02s41KSEOmKunozQJfHnID/f9CDxH/cGzEzGEo5810B4De
-	yMGwuZeLpOaIvnknar0c0W93b4fmZMLqj2uRktU4y297R3uM5nnaZk2D++Fjeo02pl4=
-X-Gm-Gg: ASbGnctrefk5w8D//kWLs9Y14p3m7GBMd6MAqMDOtzcD40VXZNi39QPNKWCKIHU4ueT
-	v3ikbAHtDFlXy/63ryhWRgtCHn2mj8VEZ7zsLieYqCxHNPWeTJc2dLmHHxucvLj/thpOJJvL+R2
-	bJGk5Rp3+QtMXKJ0fJo92gmRUqRsrffCcK9bdMrxJ1pHlDldPET0UMITC9nZunuiqPYbxTfNkY/
-	/fbF7YNip5S3VNr1FVMyTSF+jCFSD89Ka6CipANf6dFD4knHMVKFnS1RuV0ojfyS3ZN4/4kevdf
-	DGy7/lTdPSDe+KCMyOC6cHjxWlxLGMUIxHPdLfcKNXLsyFL81GJ/+cCRxZvzw2rtxTXZ
-X-Google-Smtp-Source: AGHT+IFt7C5mybodtg/SdrvpMlb1TDbjb1QGl6NK5TKM8oNXu1+R+kueCdRPXS9P54J6crRQ2or5JA==
-X-Received: by 2002:a05:6808:50ac:b0:407:59ac:d72e with SMTP id 5614622812f47-40b33d978b1mr5453370b6e.12.1751128271457;
-        Sat, 28 Jun 2025 09:31:11 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b322af252sm869172b6e.16.2025.06.28.09.31.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 09:31:11 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 28 Jun 2025 11:31:02 -0500
-Subject: [PATCH] iio: adc: mp2629_adc: make mp2629_channels const
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQLRPRhw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B22FC4CEEA;
+	Sat, 28 Jun 2025 16:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751128289;
+	bh=ysZnhmJGpruuPPRq6A2SjBxDODaSwvv2FXxAy1Z+NAw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tQLRPRhw66r3jlKJvSsokpA4kp2y7IfYSnOzLuHFlNANWAlwbsQKroxvqexfBCtBT
+	 ibCgevepYqNNLNmW+b2sHYFpjTzJrmi1/EE6mHmgURM78btgzKj0RPx/P7SiXFQGoP
+	 8r79mIpKkjRINMdE9p8XvawckltNbQwre6ka0DlFEJA6nm5yQdRpcZfDdLHkI01hC3
+	 zB37K3GcFxk/xjQYjuiRVn6U7nnJwraiWyV2ZlqKucdanxoovTqdr7W5DokKX0VB4Q
+	 Vqb22IaqoYwQttdDphBj9SOG+Fk11E4AV3YYnxtJWiZU3OFioexl9vp6reRWFlRSpm
+	 TEOPM9ofze1AA==
+Date: Sat, 28 Jun 2025 17:31:12 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: robh@kernel.org, krzysztof.kozlowski@linaro.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+ lumag@kernel.org, dmitry.baryshkov@oss.qualcomm.com,
+ konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+ rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+ david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+ quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org,
+ stephan.gerhold@linaro.org
+Subject: Re: [PATCH V6 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+Message-ID: <20250628173112.63d9334e@jic23-huawei>
+In-Reply-To: <ff19780e-5bbd-4074-9db3-b4f27922a093@oss.qualcomm.com>
+References: <20250509110959.3384306-1-jishnu.prakash@oss.qualcomm.com>
+	<20250509110959.3384306-5-jishnu.prakash@oss.qualcomm.com>
+	<20250511140418.33171ca3@jic23-huawei>
+	<ff19780e-5bbd-4074-9db3-b4f27922a093@oss.qualcomm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250628-iio-const-data-8-v1-1-32ce79494d4a@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAMYYYGgC/x3MQQqAIBBA0avErBtQo7CuEi1Mx5qNhkYE4t2Tl
- m/xf4FMiSnD0hVI9HDmGBpk34E9TTgI2TWDEmoUk9LIHNHGkG905jaoUVs9K0k07IOHll2JPL/
- /ct1q/QCqsHWhYgAAAA==
-X-Change-ID: 20250628-iio-const-data-8-8c8921ee3b3f
-To: Saravanan Sekar <sravanhome@gmail.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=994; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=NuSWjYuDbtvHzYr4ep+Jz/ihaC1SPZcRNGwd2eQ2BA0=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYBjIC/n4dGdoK6FDRIfLdfL7rhDdldFujoSby
- Hjkdxn8j8qJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAYyAAKCRDCzCAB/wGP
- wES7B/0WIY1GU4zg9doLTk1Kyw1Fjup5oXM35jymwxEWXwSHFAivvvVpgyUje/VTHy/bHFWOUka
- j7qQDry+2K1q4yIgMY5GkcbEp4OQfa0Z+KOtTYdvNdhcuDKTgdam0Foop75lvuRWmSmoWVkdcz0
- cudD+M9ym91XUAr70q99+Winm4RW1MfD9bCnd56QpwJksczeMjL0FVQnzy9qTbohdUzJaO1Qon/
- JceKDWIdoWES2pG0wlNfMf+r4xvuKM9yAhvi7vzwqAddo0Usvz2sH+VzAPuMSHbFHryNU8cXB6E
- KDzkWXw1oM0aTAPsJMvodvsPHH33mEWJ+JHQmy/rN8aJsbAT
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Add const qualifier to struct iio_chan_spec mp2629_channels[]. This
-is read-only data so it can be made const.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/adc/mp2629_adc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
-index 1cb043b17437780970ce355f9d93fd36cbd26826..5a1d516f8dad8e2cf46a43e1a40d1cc7adaecc13 100644
---- a/drivers/iio/adc/mp2629_adc.c
-+++ b/drivers/iio/adc/mp2629_adc.c
-@@ -44,7 +44,7 @@ struct mp2629_adc {
- 	struct device *dev;
- };
- 
--static struct iio_chan_spec mp2629_channels[] = {
-+static const struct iio_chan_spec mp2629_channels[] = {
- 	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
- 	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
- 	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
+> >> +	.hw_settle_1 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
+> >> +				{ 15, 100, 200, 300, 400, 500, 600, 700,
+> >> +				  1000, 2000, 4000, 8000, 16000, 32000,
+> >> +				  64000, 128000 },  
+> > Andy often points this out, but I'll do it this time. Fixed numbers (typically power of 2)
+> > elements per line make it much easier to see which element is which in these arrays.
+> > Reduce the indent a little to allow that here.  
+> 
+> Does this look fine?
+> 
+> 	.hw_settle_1 = (unsigned int [VADC_HW_SETTLE_SAMPLES_MAX])
+> 			  { 15, 100, 200, 300, 
+> 			    400, 500, 600, 700,
+> 			    1000, 2000, 4000, 8000,
+> 			    16000, 32000, 64000, 128000 },
+Look good.
 
----
-base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-change-id: 20250628-iio-const-data-8-8c8921ee3b3f
+> >> +static int adc5_gen3_probe(struct platform_device *pdev)
+> >> +{  
+> >   
+> >> +
+> >> +	platform_set_drvdata(pdev, indio_dev);
+> >> +	init_completion(&adc->complete);
+> >> +	mutex_init(&adc->lock);  
+> > If spinning again for other reasons, in new code I have slight preference for
+> > 	ret = devm_mutex_init(&adc->lock);
+> > 	if (ret)
+> > 		return ret;
+> > 
+> > It was never worth bothering with release until we had devm managed form but
+> > now we do the code complexity cost is low enough to make it reasonable.
+> >   
+> >> +	indio_dev->name = pdev->name;  
+> > 
+> > Just to check.  Does that end up as a part number or similar?  
+> 
+> I printed this name and it appeared like this:
+> 
+> indio_dev->name: c426000.spmi:pmic@0:adc@9000
+> 
+> It only gets the DT node names, which are generic, there are 
+> no part numbers in this name.
+I thought it might be something along those lines.
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+indio_dev->name should be the part number so hard code it rather than
+getting it from the pdev->name
 
+
+Jonathan
