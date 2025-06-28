@@ -1,81 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5092012FF69;
-	Sat, 28 Jun 2025 09:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B894E1E8332
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751104740; cv=none; b=cxcZZn1hgIwUIZprtHUTEY8m+GJ6z9IsU2KgjZ4VTru3S4nErGRT1Igj7CCMlWEapiuCo7oj9lHuUMQrIWTDmg3chFr120tO5DZ97pBflrasMKuciSliAq1of90N0bvPEMAYJsTeGsEudzQFiaNzMNlnUYC+HPHcHfsFTLfIEhA=
+	t=1751105177; cv=none; b=XN/An/2bsowEWxSk9rH6JX2Qoijy3GvAYrMsX45VX3fJxLcPbBKC4O5xYSHrg4oGz8yMG9+BUlR2hN9PFkIkbLpX41GVYIKsRARku0atjqC2v6JVKqK8f9ltsktJoXxc9gD7cV5riTyU0rCgtOcMy3wQ9HSgsGRnlitGSJ8Upbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751104740; c=relaxed/simple;
-	bh=UN1stUXsni/d6TUJvZpDboqqcUYchqF9z6pjR6r2aIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K7uluJwozXlZlHhG96ifxN3J8JXcMOl7X8zKDy74S9DMNt+v9OgOr/lF7PI7bLk/3Od7DU9kaVfIWiL2kBwZT3SP19+67ch844imAI+W9MQ5dKM4oOanKfYJsXP5pRgi10WdHNgJYjY/K3CmXqo25XcgAfaep4CgdEX97HtkwMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/RbxkOx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751105177; c=relaxed/simple;
+	bh=6nfu5IZBhKE95REwLtCcNXDFz3K7fenEADHBLf0I/18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hwo11RJmctyx7gas8FN3RfcVZFb/f9jmDSxg0Ltbjs92zLhIFQHFA5g6T5hQw2MIt5GRg9jufRVgslmuaHMWRLVc+aBZ3nR0IQLV8ieUkT1hkuEVZh6aWNYzPMs9V0ikVQdZ2J/T9Er4SsKmBwUYOeT0eBj5tRbNs2XMDpGBZbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D51JAG4a; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/RbxkOx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E363C4CEEA;
-	Sat, 28 Jun 2025 09:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751104739;
-	bh=UN1stUXsni/d6TUJvZpDboqqcUYchqF9z6pjR6r2aIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E/RbxkOx0QOABP4ujopxBsEo2wnU4pS8HTyKjBj3hdXAdQJ0xH/Eo17uCisCLDXod
-	 E6H7hnoAUDKTeEooRc+2NMJkyPqDCdhiLqAuncPhswj++/FcYVHGQHlOV08TE0WLGe
-	 TTPBIQOQyGq6/CtJ4kdU+IyXeaaK5666vDVS/P/fY41z2zpZWyMhnXF/UIPLoIAI/f
-	 wFNDyIiQJ0ooT7WiHXoEIRbGkAlST99DGOIWcvyqe0HvO5Yo54WDj237jWg5mdgUJS
-	 UynDuRu0LxQmS0pznCaWeccR73KaO0eO7GNe8p+cqfz0CbdlB5dIjWntlBuThT1LI/
-	 MLZiIu6EQFX8A==
-Date: Sat, 28 Jun 2025 11:58:53 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
-Message-ID: <aF-83Tb4-Sxz_KFk@pollux>
-References: <20250626200054.243480-1-dakr@kernel.org>
- <20250626200054.243480-6-dakr@kernel.org>
- <aF2vgthQlNA3BsCD@tardis.local>
- <aF2yA9TbeIrTg-XG@cassiopeiae>
- <DAWULS8SIOXS.1O4PLL2WCLX74@kernel.org>
- <aF8V8hqUzjdZMZNe@tardis.local>
- <DAXXVXNTRLYH.1B8O2LKBF4EW1@kernel.org>
- <aF-N-luMxFTurl91@Mac.home>
- <DAY059Y669BX.2GVKH6RBG80B6@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D51JAG4a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751105175; x=1782641175;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6nfu5IZBhKE95REwLtCcNXDFz3K7fenEADHBLf0I/18=;
+  b=D51JAG4awZ2bi819q5Ipw7dECkOyQy27sItuVbB0SI7VBRdXbnrEGvH8
+   PGCmXm3ZDGuy0gT2RV7wxirzFxo4CaTs+SWuF33l/rcDmV0RBASKfG5Va
+   oe1JbXOGDjWYHeiLG6YFYw6SKe0bPoapdsBtxXZ389jENYoDv9RjtbrG8
+   PBdq7VASACHyHXTL+4eO/HIYuV+IazLayrcxUVNZ5yfweTNz0GUKGn65B
+   CZKvSsQUcAUqT5DPGO0wfzFYUvjlzj9XmCVPoK7Y94Clz02GOzv+sY/6A
+   0qNPFeaZrtScu/Bca64mCvhKk6g1WFSdL4trLbs2HDjNzKKJsCMAwS1M4
+   w==;
+X-CSE-ConnectionGUID: Llk3BAg7SwyF4gLIbUlvzQ==
+X-CSE-MsgGUID: +e/UjBRzQi2IZP5R97zIWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="64002255"
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="64002255"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 03:06:14 -0700
+X-CSE-ConnectionGUID: rj2RCJnTT3iu62YBDLznQA==
+X-CSE-MsgGUID: VRzeq9MzRtqCrVJelv3VtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="157551286"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa004.jf.intel.com with ESMTP; 28 Jun 2025 03:06:13 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] [PULL REQUEST] iommu/vt-d: Fixes for v6.16-rc
+Date: Sat, 28 Jun 2025 18:03:50 +0800
+Message-ID: <20250628100351.3198955-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAY059Y669BX.2GVKH6RBG80B6@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 28, 2025 at 09:53:06AM +0200, Benno Lossin wrote:
-> Hmm @Danilo, do you have any use-cases in mind or already done?
+Hi Joerg,
 
-There may be other use-cases, but the one that I could forsee is very specific:
+The following fix has been queued for v6.16-rc4:
 
-A Registration type that carries additional reference-counted data, where the
-Registration should be released exactly when the device is unbound, independent
-of the lifetime of the data.
+- Assign devtlb cache tag on ATS enablement
 
-Obviously, this implies that the ForeignOwnable is an Arc.
+It fixes a critical cache invalidation issue for ATS-capable devices. It
+has been reviewed and is ready for merge. Can you please consider it?
 
-With KBox, Release and Drop are pretty much identical, so using
-devres::release() instead, is much simpler and hence what we do for all simple
-class device registrations.
+Best regards,
+baolu
 
-Besides that, the use-case described above can also be covered by Devres with
-the pin-init rework, by having the Registration  embed a Devres<Inner>, which
-is what irq::Registration does and I also do in the MiscDeviceRegistration
-patches.
 
-Hence, I already considered dropping this patch -- and I think we should do this
-for now.
+Lu Baolu (1):
+  iommu/vt-d: Assign devtlb cache tag on ATS enablement
+
+ drivers/iommu/intel/cache.c |  5 ++---
+ drivers/iommu/intel/iommu.c | 11 ++++++++++-
+ drivers/iommu/intel/iommu.h |  2 ++
+ 3 files changed, 14 insertions(+), 4 deletions(-)
+
+-- 
+2.43.0
+
