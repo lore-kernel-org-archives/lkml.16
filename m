@@ -1,111 +1,82 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736271A727D;
-	Sat, 28 Jun 2025 08:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932C74D8CE
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751099629; cv=none; b=kernBs1PNDOKcAI6JPOU/2HVKjISUWWSWHLSwkFNsxlqRar7l3hEQf2AdR696HO4bEcDF3pJknTuFf9u1b+4oeugKVQlfCKuHjCCgafklwagJrE2+oey5x5VfcEkAtEWKvvvahRtsqj1SB0BeCohAcQO0UYa9ywubJnrWOu9muk=
+	t=1751099709; cv=none; b=htcxBxqs8uOKaHz+xreeBPfPnPXSPakNJ9YthTpjXib9uHuxohLFuWlel+TdYd28PDiBz+TOFVQFCUmHOjqYRxa0zFWpbOjXXCnY0XG2y+86+nhWeZuanHr4hx6dLwly7+ypcvPtX/ykxjTL1bY1JuTS1kTNHb0+mnrJChoTQGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751099629; c=relaxed/simple;
-	bh=b7u6Bwt2ZNSo2618uyhqFbiGYaGohf8fOBCJfzXeq9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NWognonHVUNBYFCpCDZfRWIhqdt69j7N/timmXiE4k029jzuwZxbXtE+b8hXv1SWM4W13w/eNsJ3KtLlxh4npD/nqdojGmM4UroNeXGWy6LmSTAAGyfgh+V3J4IJ7umIIg19zpuPcLqLScZcThyfQolMnqae0psJwZti8WVDO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qa0Ud+B+; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qa0Ud+B+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751099625;
-	bh=b7u6Bwt2ZNSo2618uyhqFbiGYaGohf8fOBCJfzXeq9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qa0Ud+B+6b9dNWaEi9O95+hKP+rTkjJNpVCcAMW9KiKHVw2XrN7E5ApXmAFc7Tiya
-	 qTSkyFNOLsK3HL9jCiH5ZDkh23GpMXuH0BuxHRLNSXAQ/neriRsm1CNKXlOEwYLDLu
-	 ACKUuPkED8q09senM2ahGCO4A8ZRzYI1HQ8P2Rlo=
-Date: Sat, 28 Jun 2025 10:33:44 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean <olteanv@gmail.com>, 
-	Srinivas Kandagatla <srini@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
-	Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH v15 08/12] net: dsa: Add Airoha AN8855 5-Port
- Gigabit DSA Switch driver
-Message-ID: <9f60809e-ad8c-4f97-961a-d13fa5031981@t-8ch.de>
-References: <20250626212321.28114-1-ansuelsmth@gmail.com>
- <20250626212321.28114-9-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1751099709; c=relaxed/simple;
+	bh=cqt83ZxI7bSjprmT0OacHDBmZdcH3AKRjRwAruUGXT4=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=d0jU3pjTVH7Jws/Cf4DiKJBFp47Rc0gaqndklTInzQXGKbYIqKSVJEM4zc6q81vVjg4kVlI7kKKGZuCAxzy1ZBn+5AKIam+kiD/w33vgZltb8m7O/pcErb7WctN8zVzRv0X8i8snlKzkmfq8X72MXJj/yjh1zc6cb2dVqSJag/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 621802A7F4D;
+	Sat, 28 Jun 2025 10:35:01 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id zk40X_0Amk9y; Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id C7CB22A7F4E;
+	Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id EXTuODoUP_TT; Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id A63E72A7F4D;
+	Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+Date: Sat, 28 Jun 2025 10:35:00 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux@weissschuh.net
+Message-ID: <1837899202.21230.1751099700585.JavaMail.zimbra@nod.at>
+In-Reply-To: <20250408115823.1358597-1-richard@nod.at>
+References: <20250408115823.1358597-1-richard@nod.at>
+Subject: Re: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626212321.28114-9-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF139 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Docs/ABI: Fix sysfs-kernel-address_bits path
+Thread-Index: TNxI10WWt7tRX8sPUJDcy8arP5Pq0Q==
 
-On 2025-06-26 23:23:07+0200, Christian Marangi wrote:
-> Add Airoha AN8855 5-Port Gigabit DSA switch. Switch can support
-> 10M, 100M, 1Gb, 2.5G and 5G Ethernet Speed but 5G is currently error out
-> as it's not currently supported as requires additional configuration for
-> the PCS.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+----- Urspr=C3=BCngliche Mail -----
+> Von: "richard" <richard@nod.at>
+> An: "linux-kernel" <linux-kernel@vger.kernel.org>
+> CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, linux@weissschuh.n=
+et, "richard" <richard@nod.at>
+> Gesendet: Dienstag, 8. April 2025 13:58:21
+> Betreff: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
+
+> It's address_bits, not address_bit.
+>=20
+> Fixes: 00142bfd5a91 ("kernels/ksysfs.c: export kernel address bits")
+> Signed-off-by: Richard Weinberger <richard@nod.at>
 > ---
->  drivers/net/dsa/Kconfig  |    9 +
->  drivers/net/dsa/Makefile |    1 +
->  drivers/net/dsa/an8855.c | 2386 ++++++++++++++++++++++++++++++++++++++
->  drivers/net/dsa/an8855.h |  773 ++++++++++++
->  4 files changed, 3169 insertions(+)
->  create mode 100644 drivers/net/dsa/an8855.c
->  create mode 100644 drivers/net/dsa/an8855.h
+> Documentation/ABI/testing/sysfs-kernel-address_bits | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-kernel-address_bits
+> b/Documentation/ABI/testing/sysfs-kernel-address_bits
+> index 5d09ff84d4d6..3b72e48086aa 100644
+> --- a/Documentation/ABI/testing/sysfs-kernel-address_bits
+> +++ b/Documentation/ABI/testing/sysfs-kernel-address_bits
+> @@ -1,4 +1,4 @@
+> -What:=09=09/sys/kernel/address_bit
+> +What:=09=09/sys/kernel/address_bits
+> Date:=09=09May 2023
+> KernelVersion:=096.3
+> Contact:=09Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> --
+> 2.48.1
 
-<snip>
-
-> +static int an8855_switch_probe(struct platform_device *pdev)
-> +{
-> +	struct an8855_priv *priv;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/* Get regmap from MFD */
-> +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!priv->regmap)
-> +		return -ENOENT;
-> +
-> +	priv->ds = devm_kzalloc(&pdev->dev, sizeof(*priv->ds), GFP_KERNEL);
-> +	if (!priv->ds)
-> +		return -ENOMEM;
-> +
-> +	priv->ds->dev = &pdev->dev;
-> +	priv->ds->num_ports = AN8855_NUM_PORTS;
-> +	priv->ds->priv = priv;
-> +	priv->ds->ops = &an8855_switch_ops;
-> +	devm_mutex_init(&pdev->dev, &priv->reg_mutex);
-
-Check the return value of devm_mutex_init().
-This will become a compile error soon.
-
-> +	priv->ds->phylink_mac_ops = &an8855_phylink_mac_ops;
-> +
-> +	priv->pcs.ops = &an8855_pcs_ops;
-> +	priv->pcs.poll = true;
-> +
-> +	dev_set_drvdata(&pdev->dev, priv);
-> +
-> +	return dsa_register_switch(priv->ds);
-> +}
-
-<snip>
+*kind ping*
