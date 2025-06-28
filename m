@@ -1,98 +1,144 @@
-Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98E14A3C;
-	Sat, 28 Jun 2025 10:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8598523313E
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751106633; cv=none; b=RKl2tAc7KTHxv4VxYBVNWAifr7IytNmoX/7mhd1XyKfU4t/jnyXwhKein0kbsxeR3IBHDZsxp+75wM+HYXP8qz4281hpobnIU/I7rNd9SGM1RbTn0WjLRw7L12nE/Kf1uC9Ai8Li2EEGrlUFRUzxBPd5rJKTqSM+QdQV2KLv3rg=
+	t=1751107076; cv=none; b=OyWI68j8XI1M7gDi1+P/lM481jlPFTS0OJi0XxWhdEYOdebObgRW1oMUR6SYX1Wnl4f4moB3/E2WzUEvIqZXrWQJjSmSnlEBSupZBAE6v7BPjVDg4ACbeol9zeH7so3o8OSg/+SHmoSIQIpdj20aahNLa7C2tMt+q6c3qD4xEnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751106633; c=relaxed/simple;
-	bh=uQhRKDxK2mabMgCqoieFovOw4kdCdDL7hqMmNvBVq1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hESvwOd4OC7h5GNXqJpXC82a+G+NE9IGAI7wrACh7XKAsPNwvsIpKEIPOcWPfGEICJF84rmONNhCFJjHSBYXMVg2jkp9yD0GfMjhTgZdbsKnAS8pYoAyTD4vahR0QIsRZK+1qqhLEojF/OKnsX9/ICJwb9QrLYtVwMnMvo8il2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=NhjXIQ2b; arc=none smtp.client-ip=178.154.239.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="NhjXIQ2b"
-Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:82a4:0:640:9cc1:0])
-	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 847CA6140A;
-	Sat, 28 Jun 2025 13:30:21 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id FUUIxAMLliE0-iaB20H8x;
-	Sat, 28 Jun 2025 13:30:20 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1751106620;
-	bh=uQhRKDxK2mabMgCqoieFovOw4kdCdDL7hqMmNvBVq1w=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=NhjXIQ2bggrzxKaYhfubQknCHqyk6QZICObr3m6HDPo2sRSdLba6UHytf1es05UqC
-	 CxHrGU8uV2M9ExsJ+PPeniwqeZ9iHt0rKjI+3C58JHDfFrRDXFkRDW3zhEaLLqE2sU
-	 443MrhPJZzvVknbVSGMghG2CUeD4qzdzSWgpkJQE=
-Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Sat, 28 Jun 2025 13:30:13 +0300
-From: Onur <work@onurozkan.dev>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch,
- ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
- a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- davidgow@google.com, nm@ti.com
-Subject: Re: [PATCH v3 3/3] rust: remove
- `#[allow(clippy::non_send_fields_in_send_ty)]`
-Message-ID: <20250628133013.703461c8@nimda.home>
-In-Reply-To: <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
-References: <20250628040956.2181-1-work@onurozkan.dev>
-	<20250628040956.2181-4-work@onurozkan.dev>
-	<CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	s=arc-20240116; t=1751107076; c=relaxed/simple;
+	bh=lcdY5/4igis1D06o50sZUMdu2ySz2CbfqGSKDk9HFPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h7X39TyO+pOYq94NLz4lYruPcFRVJDQ0+ajeMNXZ4XEjtO4jmD2EgVM8l+HQXOflKaTsT97KkQs0K6k/cANfHPIfXXxLdHmG8usHPExNhgLp02JvLw8587qmAW5HXQ6g1GryJHvc0yoNrPTpm0Kyy98wzd7rdllCmdOsJhZCof8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.149])
+	by gateway (Coremail) with SMTP id _____8AxGHH2xV9oJt0eAQ--.5478S3;
+	Sat, 28 Jun 2025 18:37:42 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.149])
+	by front1 (Coremail) with SMTP id qMiowJCxrsPsxV9oHkQBAA--.706S2;
+	Sat, 28 Jun 2025 18:37:41 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.16-rc4
+Date: Sat, 28 Jun 2025 18:37:19 +0800
+Message-ID: <20250628103719.3741195-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxrsPsxV9oHkQBAA--.706S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF48KF4xWr43uFy3Kr4rJFc_yoWrJFWUpF
+	9xCrn7GF4rGr93Arnrt3s8ur1DJr1xCw1aq3Wa9ry8CF4avw1UZr1ktrykXFyUtayrJry0
+	gF1rGws0qF48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jepB-UUUUU=
 
-On Sat, 28 Jun 2025 09:13:50 +0200
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
 
-> On Sat, Jun 28, 2025 at 6:10=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.d=
-ev> wrote:
-> >
-> > Clippy no longer complains about this lint.
->=20
-> Do you have more context? For instance, do you know since when it no
-> longer complains, or why was the reason for the change? i.e. why we
-> had the `allow` in the first place, so that we know we don't need it
-> anymore?
->=20
-> For instance, please how I reasoned about it in commit 5e7c9b84ad08
-> ("rust: sync: remove unneeded
-> `#[allow(clippy::non_send_fields_in_send_ty)]`").
->=20
-> (It may happen to be the same reason, or not.)
->=20
-> Thanks!
->=20
-> Cheers,
-> Miguel
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
 
-It doesn't seem to be the same reason. I rebased over
-c6af9a1191d042839e56abff69e8b0302d117988 (the exact commit where that
-lint was added) but still Clippy did not complain about it on the
-MSRV. So it was either a leftover, or there is a version between
-1.78 and the current stable where Clippy did complain. I can dig into it
-more during the week if you would like.
+are available in the Git repository at:
 
-IMO, we should require people to add a comment explaining the reason
-for adding these lint rules to the codebase. It would make both reading
-and modifying the code much simpler and clearer.
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.16-1
 
-Regards,
-Onur
+for you to fetch changes up to 955853cf83657faa58572ef3f08b44f0f88885c1:
+
+  LoongArch: KVM: Disable updating of "num_cpu" and "feature" (2025-06-27 18:27:44 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.16-rc4
+
+Replace __ASSEMBLY__ with __ASSEMBLER__ in headers like others, fix
+build warnings about export.h, reserve the EFI memory map region for
+kdump, handle __init vs inline mismatches, and fix some bugs about KVM.
+----------------------------------------------------------------
+Bibo Mao (6):
+      LoongArch: KVM: Avoid overflow with array index
+      LoongArch: KVM: Add address alignment check for IOCSR emulation
+      LoongArch: KVM: Fix interrupt route update with EIOINTC
+      LoongArch: KVM: Check interrupt route from physical CPU
+      LoongArch: KVM: Check validity of "num_cpu" from user space
+      LoongArch: KVM: Disable updating of "num_cpu" and "feature"
+
+Huacai Chen (1):
+      LoongArch: Fix build warnings about export.h
+
+Kees Cook (1):
+      LoongArch: Handle KCOV __init vs inline mismatches
+
+Ming Wang (1):
+      LoongArch: Reserve the EFI memory map region
+
+Thomas Huth (1):
+      LoongArch: Replace __ASSEMBLY__ with __ASSEMBLER__ in headers
+
+ arch/loongarch/include/asm/addrspace.h         |  8 +--
+ arch/loongarch/include/asm/alternative-asm.h   |  4 +-
+ arch/loongarch/include/asm/alternative.h       |  4 +-
+ arch/loongarch/include/asm/asm-extable.h       |  6 +-
+ arch/loongarch/include/asm/asm.h               |  8 +--
+ arch/loongarch/include/asm/cpu.h               |  4 +-
+ arch/loongarch/include/asm/ftrace.h            |  4 +-
+ arch/loongarch/include/asm/gpr-num.h           |  6 +-
+ arch/loongarch/include/asm/irqflags.h          |  4 +-
+ arch/loongarch/include/asm/jump_label.h        |  4 +-
+ arch/loongarch/include/asm/kasan.h             |  2 +-
+ arch/loongarch/include/asm/loongarch.h         | 16 ++---
+ arch/loongarch/include/asm/orc_types.h         |  4 +-
+ arch/loongarch/include/asm/page.h              |  4 +-
+ arch/loongarch/include/asm/pgtable-bits.h      |  4 +-
+ arch/loongarch/include/asm/pgtable.h           |  4 +-
+ arch/loongarch/include/asm/prefetch.h          |  2 +-
+ arch/loongarch/include/asm/smp.h               |  2 +-
+ arch/loongarch/include/asm/thread_info.h       |  4 +-
+ arch/loongarch/include/asm/types.h             |  2 +-
+ arch/loongarch/include/asm/unwind_hints.h      |  6 +-
+ arch/loongarch/include/asm/vdso/arch_data.h    |  4 +-
+ arch/loongarch/include/asm/vdso/getrandom.h    |  4 +-
+ arch/loongarch/include/asm/vdso/gettimeofday.h |  4 +-
+ arch/loongarch/include/asm/vdso/processor.h    |  4 +-
+ arch/loongarch/include/asm/vdso/vdso.h         |  4 +-
+ arch/loongarch/include/asm/vdso/vsyscall.h     |  4 +-
+ arch/loongarch/kernel/acpi.c                   |  1 +
+ arch/loongarch/kernel/alternative.c            |  1 +
+ arch/loongarch/kernel/efi.c                    | 12 ++++
+ arch/loongarch/kernel/elf.c                    |  1 -
+ arch/loongarch/kernel/kfpu.c                   |  1 +
+ arch/loongarch/kernel/paravirt.c               |  1 -
+ arch/loongarch/kernel/time.c                   |  2 +-
+ arch/loongarch/kernel/traps.c                  |  1 +
+ arch/loongarch/kernel/unwind_guess.c           |  1 +
+ arch/loongarch/kernel/unwind_orc.c             |  3 +-
+ arch/loongarch/kernel/unwind_prologue.c        |  1 +
+ arch/loongarch/kvm/intc/eiointc.c              | 89 ++++++++++++++++++--------
+ arch/loongarch/lib/crc32-loongarch.c           |  1 +
+ arch/loongarch/lib/csum.c                      |  1 +
+ arch/loongarch/mm/ioremap.c                    |  4 +-
+ arch/loongarch/pci/pci.c                       |  1 -
+ tools/arch/loongarch/include/asm/orc_types.h   |  4 +-
+ 44 files changed, 151 insertions(+), 100 deletions(-)
+
