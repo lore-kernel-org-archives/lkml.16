@@ -1,493 +1,385 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9971C207A0B
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 00:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751069412; cv=none; b=sMj/y7SwMqNQagkGeqIc1DV8FqTMWY1rXWQi53BjNWCTlNVMZGS8H3BeMqN4YAY4k5xrVjulJNgLW1/8rL3YRvIgaBjFszVSYpPAoU0DZ3/3PZUn+R4LfTfvmGtNHmvv5lB23q+k+3xliE7VRrZCV74EZ0mDaziTEK89PTa3G84=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751069412; c=relaxed/simple;
-	bh=D1meKHm9HLxVcV+eADlMNBj+6b4Bh9wc5AOyxldTOIA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=pJtEjpKUzm6KZWmrW7S3In3ejN+Pa3CpjFAM+DrCbZIDtqtvGutVlwiqeLNIm8bXSNuno7WVzl7Z0ITP9MwovfYaHpcVuLmHBc1x/1J5G1QnKMbI3I4Ah61qTsnZHgAX5q8cc8OzkOG49+O8LBsKSpy/CWLOaAS4oZCfsJU7vTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sh1wAB4R; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F824A08;
+	Sat, 28 Jun 2025 00:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751069618; cv=pass; b=NS9ajSr8k01zasylSmYfzOgW7eMnT1wExwNSZyiSksGEeuWbJqmI7B2GKXLy7tdGg/PO7NyW4h8umJcybVTgwW9O440CVoauNpa2ady49fiRofgwnJI5j4b2Qqs7RVyeVvJoDzJAzMXEldHTqf7uC0ltuoB+nknSNi3h/5xCLK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751069618; c=relaxed/simple;
+	bh=MR3mgJVR9hWjT8RT1DnLxhQrmjwNcavTbOK6stqADRc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=V/+rEvucamcK8Y++Nh0bpNfOLfMhGd3rqiTIsJPf7AUKv1oISnYPU3iOBoaCVt90RhQfJAJnvTLR50JzCVjAvvYR9KcifFNU+RZdJTiisKd6JhX+1yfnF5HkevArIWOYYv46jtG0UB7/LNgWq69oGdGVyGCc2CvGuXqRQOaDP4U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=dTvkq1SD; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sh1wAB4R"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311a6b43ed7so84403a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751069410; x=1751674210; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bWGI+WCsIN51TDRPS0BPiVuu9g5rUZhDYM76R7qcpLA=;
-        b=sh1wAB4Req3TMH5QoF2wxxvJ+9lGBF4uImA/x8kBAH2Z69m4RZLeLWDHSUijqQmqXw
-         zoNeidSt04cf4Ddg6h8viSFc38euNjFsRU/4nNE388YatNCXz4b5Gq8aZt0C7vYtFCf2
-         Aa4HneTrAb57Jard+kT/873XktRuVfiaJZHfPu+z0HyXxbu85m51AzUaTGcY8iSdHi0U
-         gqODBzOKopx6v7fRsbltN1w9PkonUQN9Moz4bl6rdgWjDclRJq6PDT99lDJ1VPMnTbr6
-         d5YyShnigiHmmcwzxsNtAFAZe8GlqcihN7rnM1RQVLzzGP47l5bwzeWW1MBsArtFdVCv
-         OAAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751069410; x=1751674210;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bWGI+WCsIN51TDRPS0BPiVuu9g5rUZhDYM76R7qcpLA=;
-        b=rwU583fT+8FjDxeFMkqqbETKMcNhMBz7aDvKxrHd3BKnOLXe7dzE9WjZtuHgk6dzbM
-         LzJD9k9FeMA/vzAsMCzG1Sgwf5uL95qTUCoVXN0L8C21DRC8cHeaHUKmd7iQWU8nLpi7
-         hipQcugCUWiZBX9a86alfTsUfM9r9hA+NxA7L22uzKDYvBjRed4usrtSFu1ZbttYbXxU
-         Jmx/Xzvc4UmvWXHW+6dGquWv6aHaPNEc3kAMPL5clBQ15PdStFxdHWdzHeVQ1jnOYD3w
-         W59XMCFYZBaQ5rCjyCLCLgbz9B/VER/zyHgtN1/sUwsKZIftnnuiABe9aHacnVez2l5A
-         smYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgAG4tSq/JEIY20pmV1hsuf6vIkdLlQ6IgYdpkqImXjmBRrgFGmoyguNIoo3G+1n5NdENn1POTURqKJfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+q5R/jQyaBWti0NVW1nb/P342CtH2IDMU8V3JSAloSgY8inh
-	5gJE/WXw0sYfbFX4ZaVRRVODrDe1QAJr/cXbErXb84h4nx6tWxzlzrbDZzMBPwApd9lGSSAAbdv
-	XpFA/6mKnrQ==
-X-Google-Smtp-Source: AGHT+IGAwnQyRjSgbgapVtoxeh23DljPd0BCoh547jG6xOR+St+CLwjz42P/Xrk5blh9oBXNXXcTwhqXrctn
-X-Received: from pjbcz16.prod.google.com ([2002:a17:90a:d450:b0:313:2ad9:17ec])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5347:b0:311:e8cc:4255
- with SMTP id 98e67ed59e1d1-318c930f93amr6304809a91.31.1751069409879; Fri, 27
- Jun 2025 17:10:09 -0700 (PDT)
-Date: Fri, 27 Jun 2025 17:09:29 -0700
-In-Reply-To: <20250628000929.230406-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="dTvkq1SD"
+ARC-Seal: i=1; a=rsa-sha256; t=1751069570; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=F2doFgpRNe+kctg93ooMSm+aHwQZtQseEHZOkialN4dewhKyPezKXvpu1vJeuSAl6qNmyLWsWh+a93DNumhKPwIEkHGgsC5P3FQctsIK6q36AhpKPTgIjaUh86ue4xwy6SXILugzu7rSAgPYaKywkUIiCgKWGTbRMqYFXwp08n8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751069570; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0H5Q14gT58j9sWQ7Mkf1VLBkEerIw45k/88Qa7/Ee54=; 
+	b=C7t9Oni+dH1ywmeQ8PwSkOjWo3URfX1t3zHGdgYSJGC/b32VGSLRKwxYMLqFfJus4CS0n/zlm8KOB+cdbmMUHaqNohr690vtmgvxy7H8MS/xw7R6SsduDvTHoP9uoTqgFXzHlKGkHLwkYmkZhlQ6TUmBn1Y+sGzLGgWrmge+MGQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751069570;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=0H5Q14gT58j9sWQ7Mkf1VLBkEerIw45k/88Qa7/Ee54=;
+	b=dTvkq1SDplJdHuRfEA3aufvDDPQQr57yXv2ZZ00yiWZoeO7fG93KDCx0J0qY0VHk
+	sODw7Ipu5Zq0fa/6G28QInGEA+pFZvYr9SImHLYlUW1gjGPyra6GqABr2tUHZFff33d
+	ln5y9o6EGdeOynvH/L/kVN3Aw/T5FNaKI+c8OWi8=
+Received: by mx.zohomail.com with SMTPS id 1751069566742886.3233886676038;
+	Fri, 27 Jun 2025 17:12:46 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250628000929.230406-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250628000929.230406-16-irogers@google.com>
-Subject: [PATCH v4 15/15] perf ilist: Add new python ilist command
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH] Introduce Tyr
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aF8lYpK_l2I-ts1k@pollux>
+Date: Fri, 27 Jun 2025 21:12:29 -0300
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Daniel Stone <daniels@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Alice Ryhl <alice.ryhl@google.com>,
+ Beata Michalska <beata.michalska@arm.com>,
+ Carsten Haitzler <carsten.haitzler@foss.arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Ashley Smith <ashley.smith@collabora.com>,
+ linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ rust-for-linux@vger.kernel.org,
+ kernel@collabora.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com>
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
+ <aF8lYpK_l2I-ts1k@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-The perf ilist command is a textual app [1] similar to perf list. In
-the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
-the events within it. Selecting an event displays the `perf list`
-style event information in the top-right pane.
+Hi Danilo, thank you an Boqun for having a look at this,
 
-When an event is selected it is opened and the counters on each CPU
-the event is for are periodically read. The bottom of the screen
-contains a scrollable set of sparklines showing the events in total
-and on each CPU. Scrolling below the sparklines shows the same data as
-raw counts. The sparklines are small graphs where the height of the
-bar is in relation to maximum of the other counts in the graph.
 
-By default the counts are read with an interval of 0.1 seconds (10
-times per second). A -I/--interval command line option allows the
-interval to be changed. The oldest read counts are dropped when the
-counts fill the line causing the sparkline to move from right to left.
+> On 27 Jun 2025, at 20:12, Danilo Krummrich <dakr@kernel.org> wrote:
+>=20
+> On Fri, Jun 27, 2025 at 07:34:04PM -0300, Daniel Almeida wrote:
+>> +#[pin_data]
+>> +pub(crate) struct TyrData {
+>> +    pub(crate) pdev: ARef<platform::Device>,
+>> +
+>> +    #[pin]
+>> +    clks: Mutex<Clocks>,
+>> +
+>> +    #[pin]
+>> +    regulators: Mutex<Regulators>,
+>> +
+>> +    // Some inforation on the GPU. This is mainly queried by =
+userspace (mesa).
+>> +    pub(crate) gpu_info: GpuInfo,
+>> +}
+>> +
+>> +unsafe impl Send for TyrData {}
+>> +unsafe impl Sync for TyrData {}
+>=20
+> What's the safety justification for those? Why do you need them? The =
+fact that
+> you seem to need to implement those traits within a driver indicates =
+an issue.
 
-A search box can be pulled up with the 's' key. 'n' and 'p' iterate
-through the search results. As some PMUs have hundreds of events a 'c'
-key will collapse the events in the current PMU to make navigating the
-PMUs easier.
+This was forgotten when scooped from the downstream code.
 
-[1] https://textual.textualize.io/
+Although I think the problematic members are only Clk and Regulator
+as Boqun pointed out.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/python/ilist.py | 376 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 376 insertions(+)
- create mode 100755 tools/perf/python/ilist.py
+In any case, my bad.
 
-diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-new file mode 100755
-index 000000000000..b986447f8831
---- /dev/null
-+++ b/tools/perf/python/ilist.py
-@@ -0,0 +1,376 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+"""Interactive perf list."""
-+
-+import argparse
-+from typing import Any, Dict, Tuple
-+import perf
-+from textual import on
-+from textual.app import App, ComposeResult
-+from textual.binding import Binding
-+from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
-+from textual.command import SearchIcon
-+from textual.screen import ModalScreen
-+from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Static, Tree
-+from textual.widgets.tree import TreeNode
-+
-+class ErrorScreen(ModalScreen[bool]):
-+    """Pop up dialog for errors."""
-+
-+    CSS="""
-+    ErrorScreen {
-+        align: center middle;
-+    }
-+    """
-+    def __init__(self, error: str):
-+        self.error = error
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        yield Button(f"Error: {self.error}", variant="primary", id="error")
-+
-+    def on_button_pressed(self, event: Button.Pressed) -> None:
-+        self.dismiss(True)
-+
-+
-+class SearchScreen(ModalScreen[str]):
-+    """Pop up dialog for search."""
-+
-+    CSS="""
-+    SearchScreen Horizontal {
-+        align: center middle;
-+        margin-top: 1;
-+    }
-+    SearchScreen Input {
-+        width: 1fr;
-+    }
-+    """
-+    def compose(self) -> ComposeResult:
-+        yield Horizontal(SearchIcon(), Input(placeholder="Event name"))
-+
-+    def on_input_submitted(self, event: Input.Submitted) -> None:
-+        """Handle the user pressing Enter in the input field."""
-+        self.dismiss(event.value)
-+
-+
-+class Counter(HorizontalGroup):
-+    """Two labels for a CPU and its counter value."""
-+
-+    CSS="""
-+    Label {
-+        gutter: 1;
-+    }
-+    """
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label + " ")
-+        yield Label("0", id=f"counter_{label}")
-+
-+
-+class CounterSparkline(HorizontalGroup):
-+    """A Sparkline for a performance counter."""
-+
-+    def __init__(self, cpu: int) -> None:
-+        self.cpu = cpu
-+        super().__init__()
-+
-+    def compose(self) -> ComposeResult:
-+        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-+        yield Label(label)
-+        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
-+
-+
-+class IListApp(App):
-+    TITLE = "Interactive Perf List"
-+
-+    BINDINGS = [
-+        Binding(key="s", action="search", description="Search",
-+                tooltip="Search events and PMUs"),
-+        Binding(key="n", action="next", description="Next",
-+                tooltip="Next search result or item"),
-+        Binding(key="p", action="prev", description="Previous",
-+                tooltip="Previous search result or item"),
-+        Binding(key="q", action="quit", description="Quit the app"),
-+        Binding(key="c", action="collapse", description="Collapse",
-+                tooltip="Collapse the current PMU"),
-+    ]
-+
-+    # Make the 'total' sparkline a different color.
-+    CSS = """
-+        #sparkline_total > .sparkline--min-color {
-+            color: $accent;
-+        }
-+        #sparkline_total > .sparkline--max-color {
-+            color: $accent 30%;
-+        }
-+    """
-+
-+
-+    def __init__(self, interval: float) -> None:
-+        self.interval = interval
-+        self.evlist = None
-+        self.search_results: list[TreeNode[str]] = []
-+        self.cur_search_result: TreeNode[str] | None = None
-+        super().__init__()
-+
-+
-+
-+    def expand_and_select(self, node: TreeNode[Any]) -> None:
-+        """Expand select a node in the tree."""
-+        if node.parent:
-+            node.parent.expand()
-+            if node.parent.parent:
-+                node.parent.parent.expand()
-+        node.expand()
-+        node.tree.select_node(node)
-+        node.tree.scroll_to_node(node)
-+
-+
-+    def set_searched_tree_node(self, previous: bool) -> None:
-+        """Set the cur_search_result node to either the next or previous."""
-+        l = len(self.search_results)
-+
-+        if l < 1:
-+            tree: Tree[str] = self.query_one("#pmus", Tree)
-+            if previous:
-+                tree.action_cursor_up()
-+            else:
-+                tree.action_cursor_down()
-+            return
-+
-+        if self.cur_search_result:
-+            idx = self.search_results.index(self.cur_search_result)
-+            if previous:
-+                idx = idx - 1 if idx > 0 else l - 1
-+            else:
-+                idx = idx + 1 if idx < l - 1 else 0
-+        else:
-+            idx = l - 1 if previous else 0
-+
-+        node = self.search_results[idx]
-+        if node == self.cur_search_result:
-+            return
-+
-+        self.cur_search_result = node
-+        self.expand_and_select(node)
-+
-+    def action_search(self) -> None:
-+        """Search was chosen."""
-+        def set_initial_focus(event: str | None) -> None:
-+            """Sets the focus after the SearchScreen is dismissed."""
-+            if not event:
-+                return
-+
-+            event = event.lower()
-+            self.query_one("#active_search", Label) \
-+                .update(f'Searching for events matching "{event}"')
-+            tree: Tree[str] = self.query_one("#pmus", Tree)
-+            def find_search_results(event: str, node: TreeNode[str], \
-+                                    cursor_seen: bool = False, \
-+                                    match_after_cursor: TreeNode[str] | None = None) \
-+                    -> Tuple[bool, TreeNode[str] | None]:
-+                """Find nodes that match the search remembering the one after the cursor."""
-+                if not cursor_seen and node == tree.cursor_node:
-+                    cursor_seen = True
-+                if node.data and event in node.data:
-+                    if cursor_seen and not match_after_cursor:
-+                        match_after_cursor = node
-+                    self.search_results.append(node)
-+
-+                if node.children:
-+                    for child in node.children:
-+                        (cursor_seen, match_after_cursor) = \
-+                            find_search_results(event, child, cursor_seen, match_after_cursor)
-+                return (cursor_seen, match_after_cursor)
-+
-+            self.search_results.clear()
-+            (_ , self.cur_search_result) = find_search_results(event, tree.root)
-+            if len(self.search_results) < 1:
-+                self.push_screen(ErrorScreen(f"Failed to find pmu/event {event}"))
-+            elif self.cur_search_result:
-+                self.expand_and_select(self.cur_search_result)
-+            else:
-+                self.set_searched_tree_node(previous=False)
-+
-+        self.push_screen(SearchScreen(), set_initial_focus)
-+
-+
-+    def action_next(self) -> None:
-+        """Next was chosen."""
-+        self.set_searched_tree_node(previous=False)
-+
-+
-+    def action_prev(self) -> None:
-+        """Previous was chosen."""
-+        self.set_searched_tree_node(previous=True)
-+
-+
-+    def action_collapse(self) -> None:
-+        """Collapse the potentially large number of events under a PMU."""
-+        tree: Tree[str] = self.query_one("#pmus", Tree)
-+        node = tree.cursor_node
-+        if node and node.parent and node.parent.parent:
-+            node.parent.collapse_all()
-+            node.tree.scroll_to_node(node.parent)
-+
-+
-+    def update_counts(self) -> None:
-+        """Called every interval to update counts."""
-+        if not self.evlist:
-+            return
-+
-+        def update_count(cpu: int, count: int):
-+            # Update the raw count display.
-+            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
-+            if not counter:
-+                return
-+            counter = counter.first(Label)
-+            counter.update(str(count))
-+
-+            # Update the sparkline.
-+            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
-+            if not line:
-+                return
-+            line = line.first(Sparkline)
-+            # If there are more events than the width, remove the front event.
-+            if len(line.data) > line.size.width:
-+                line.data.pop(0)
-+            line.data.append(count)
-+            line.mutate_reactive(Sparkline.data)
-+
-+        # Update the total and each CPU counts, assume there's just 1 evsel.
-+        total = 0
-+        self.evlist.disable()
-+        for evsel in self.evlist:
-+            for cpu in evsel.cpus():
-+                aggr = 0
-+                for thread in evsel.threads():
-+                    counts = evsel.read(cpu, thread)
-+                    aggr += counts.val
-+                update_count(cpu, aggr)
-+                total += aggr
-+        update_count(-1, total)
-+        self.evlist.enable()
-+
-+
-+    def on_mount(self) -> None:
-+        """When App starts set up periodic event updating."""
-+        self.update_counts()
-+        self.set_interval(self.interval, self.update_counts)
-+
-+
-+    def set_pmu_and_event(self, pmu: str, event: str) -> None:
-+        """Updates the event/description and starts the counters."""
-+        # Remove previous event information.
-+        if self.evlist:
-+            self.evlist.disable()
-+            self.evlist.close()
-+            lines = self.query(CounterSparkline)
-+            for line in lines:
-+                line.remove()
-+            lines = self.query(Counter)
-+            for line in lines:
-+                line.remove()
-+
-+        def pmu_event_description(pmu: str, event: str) -> str:
-+            """Find and format event description for {pmu}/{event}/."""
-+            def get_info(info: Dict[str, str], key: str):
-+                return (info[key] + "\n") if key in info else ""
-+
-+            for p in perf.pmus():
-+                if p.name() != pmu:
-+                    continue
-+                for info in p.events():
-+                    if "name" not in info or info["name"] != event:
-+                        continue
-+
-+                    desc = get_info(info, "topic")
-+                    desc += get_info(info, "event_type_desc")
-+                    desc += get_info(info, "desc")
-+                    desc += get_info(info, "long_desc")
-+                    desc += get_info(info, "encoding_desc")
-+                    return desc
-+            return "description"
-+
-+        # Parse event, update event text and description.
-+        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
-+        self.query_one("#event_name", Label).update(full_name)
-+        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
-+
-+        # Open the event.
-+        try:
-+            self.evlist = perf.parse_events(full_name)
-+            if self.evlist:
-+                self.evlist.open()
-+                self.evlist.enable()
-+        except:
-+            self.evlist = None
-+
-+        if not self.evlist:
-+            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
-+            return
-+
-+        # Add spark lines for all the CPUs. Note, must be done after
-+        # open so that the evlist CPUs have been computed by propagate
-+        # maps.
-+        lines = self.query_one("#lines")
-+        line = CounterSparkline(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = CounterSparkline(cpu)
-+            lines.mount(line)
-+        line = Counter(cpu=-1)
-+        lines.mount(line)
-+        for cpu in self.evlist.all_cpus():
-+            line = Counter(cpu)
-+            lines.mount(line)
-+
-+
-+    def compose(self) -> ComposeResult:
-+        """Draws the app."""
-+        def pmu_event_tree() -> Tree:
-+            """Create tree of PMUs with events under."""
-+            tree: Tree[str] = Tree("PMUs", id="pmus")
-+            tree.root.expand()
-+            for pmu in perf.pmus():
-+                pmu_name = pmu.name().lower()
-+                pmu_node = tree.root.add(pmu_name, data=pmu_name)
-+                for event in sorted(pmu.events(), key=lambda x: x["name"]):
-+                    if "name" in event:
-+                        e = event["name"].lower()
-+                        if "alias" in event:
-+                            pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
-+                        else:
-+                            pmu_node.add_leaf(e, data=e)
-+            return tree
-+
-+        yield Header(id="header")
-+        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
-+                         Vertical(Label("event name", id="event_name"),
-+                                  Static("description", markup=False, id="event_description"),
-+                                  Label(id="active_search")
-+                                  ))
-+        yield VerticalScroll(id="lines")
-+        yield Footer(id="footer")
-+
-+
-+    @on(Tree.NodeSelected)
-+    def on_tree_node_selected(self, event: Tree.NodeSelected[str]) -> None:
-+        """Called when a tree node is selected, selecting the event."""
-+        if event.node.parent and event.node.parent.parent:
-+            assert event.node.parent.data is not None
-+            assert event.node.data is not None
-+            self.set_pmu_and_event(event.node.parent.data, event.node.data)
-+
-+
-+if __name__ == "__main__":
-+    ap = argparse.ArgumentParser()
-+    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
-+    args = ap.parse_args()
-+    app = IListApp(float(args.interval))
-+    app.run()
--- 
-2.50.0.727.gbf7dc18ff4-goog
+Also, for some reason the Clippy lint did not save me this time.
+
+>=20
+>> +fn issue_soft_reset(iomem: &Devres<IoMem<0>>) -> Result<()> {
+>> +    let irq_enable_cmd =3D 1 | bit_u32(8);
+>> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
+>> +
+>> +    let op =3D || regs::GPU_INT_RAWSTAT.read(iomem);
+>> +    let cond =3D |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 =3D=3D=
+ 1 };
+>> +    let res =3D io::poll::read_poll_timeout(
+>> +        op,
+>> +        cond,
+>> +        time::Delta::from_millis(100),
+>> +        Some(time::Delta::from_micros(20000)),
+>> +    );
+>> +
+>> +    if let Err(e) =3D res {
+>> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
+>> +        pr_err!(
+>> +            "GPU_INT_RAWSTAT is {}\n",
+>> +            regs::GPU_INT_RAWSTAT.read(iomem)?
+>> +        );
+>=20
+> This is a driver, please use dev_err!().
+>=20
+>> +    }
+>> +
+>> +    Ok(())
+>> +}
+>> +
+>> +kernel::of_device_table!(
+>> +    OF_TABLE,
+>> +    MODULE_OF_TABLE,
+>> +    <TyrDriver as platform::Driver>::IdInfo,
+>> +    [
+>> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
+>> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
+>> +    ]
+>> +);
+>> +
+>> +impl platform::Driver for TyrDriver {
+>> +    type IdInfo =3D ();
+>> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> =3D =
+Some(&OF_TABLE);
+>> +
+>> +    fn probe(
+>> +        pdev: &platform::Device<Core>,
+>> +        _info: Option<&Self::IdInfo>,
+>> +    ) -> Result<Pin<KBox<Self>>> {
+>> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
+>> +
+>> +        let core_clk =3D Clk::get(pdev.as_ref(), =
+Some(c_str!("core")))?;
+>> +        let stacks_clk =3D Clk::get(pdev.as_ref(), =
+Some(c_str!("stacks")))?;
+>> +        let coregroup_clk =3D Clk::get(pdev.as_ref(), =
+Some(c_str!("coregroup")))?;
+>> +
+>> +        core_clk.prepare_enable()?;
+>> +        stacks_clk.prepare_enable()?;
+>> +        coregroup_clk.prepare_enable()?;
+>> +
+>> +        let mali_regulator =3D =
+Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("mali"))?;
+>> +        let sram_regulator =3D =
+Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("sram"))?;
+>> +
+>> +        let resource =3D pdev.resource_by_index(0).ok_or(EINVAL)?;
+>> +
+>> +        let iomem =3D Arc::new(pdev.iomap_resource(resource)?, =
+GFP_KERNEL)?;
+>=20
+> You can do
+>=20
+> let io =3D iomem.access(pdev.as_ref())?;
+>=20
+> which gives you an &IoMem for the whole scope of probe() without any
+> limitations.
+>=20
+> Also, why not use iomap_resource_sized()? Lots of offsets are known at =
+compile
+> time. This allows you to use infallible accesses, e.g. write() instead =
+of
+> try_write().
+
+Right, I did not even consider this. Should be possible indeed.
+
+>=20
+>> +
+>> +        issue_soft_reset(&iomem)?;
+>> +        gpu::l2_power_on(&iomem)?;
+>> +
+>> +        let gpu_info =3D GpuInfo::new(&iomem)?;
+>> +        gpu_info.log(pdev);
+>> +
+>> +        let platform: ARef<platform::Device> =3D pdev.into();
+>> +
+>> +        let data =3D try_pin_init!(TyrData {
+>> +                pdev: platform.clone(),
+>> +                clks <- new_mutex!(Clocks {
+>> +                    core: core_clk,
+>> +                    stacks: stacks_clk,
+>> +                    coregroup: coregroup_clk,
+>> +                }),
+>> +                regulators <- new_mutex!(Regulators {
+>> +                    mali: mali_regulator,
+>> +                    sram: sram_regulator,
+>> +                }),
+>> +                gpu_info,
+>> +        });
+>> +
+>> +        let data =3D Arc::pin_init(data, GFP_KERNEL)?;
+>> +
+>> +        let tdev: ARef<TyrDevice> =3D =
+drm::device::Device::new(pdev.as_ref(), data.clone())?;
+>> +        drm::driver::Registration::new_foreign_owned(&tdev, =
+pdev.as_ref(), 0)?;
+>> +
+>> +        let driver =3D KBox::pin_init(try_pin_init!(TyrDriver { =
+device: tdev }), GFP_KERNEL)?;
+>> +
+>> +        regs::MCU_CONTROL.write(&iomem, regs::MCU_CONTROL_AUTO)?;
+>> +
+>> +        dev_info!(pdev.as_ref(), "Tyr initialized correctly.\n");
+>=20
+> Consider dev_dbg!() instead.
+
+The problem with dev_dbg() is that it doesn't work, as Alex has also =
+found out
+recently. There was a thread on fixing it and I guess Tamir(?) or =
+Andrew(?)
+came up with a patch, but it hasn't seen any traction. I simply don't =
+think
+there is a way to get these to print for now (at least in upstream code)
+
+>=20
+>> +    pub(crate) fn log(&self, pdev: &platform::Device) {
+>> +        let major =3D (self.gpu_id >> 16) & 0xff;
+>> +        let minor =3D (self.gpu_id >> 8) & 0xff;
+>> +        let status =3D self.gpu_id & 0xff;
+>> +
+>> +        let model_name =3D if let Some(model) =3D GPU_MODELS
+>> +            .iter()
+>> +            .find(|&f| f.major =3D=3D major && f.minor =3D=3D minor)
+>> +        {
+>> +            model.name
+>> +        } else {
+>> +            "unknown"
+>> +        };
+>> +
+>> +        dev_info!(
+>> +            pdev.as_ref(),
+>> +            "mali-{} id 0x{:x} major 0x{:x} minor 0x{:x} status =
+0x{:x}",
+>> +            model_name,
+>> +            self.gpu_id >> 16,
+>> +            major,
+>> +            minor,
+>> +            status
+>> +        );
+>> +
+>> +        dev_info!(
+>> +            pdev.as_ref(),
+>> +            "Features: L2:{:#x} Tiler:{:#x} Mem:{:#x} MMU:{:#x} =
+AS:{:#x}",
+>> +            self.l2_features,
+>> +            self.tiler_features,
+>> +            self.mem_features,
+>> +            self.mmu_features,
+>> +            self.as_present
+>> +        );
+>> +
+>> +        dev_info!(
+>> +            pdev.as_ref(),
+>> +            "shader_present=3D0x{:016x} l2_present=3D0x{:016x} =
+tiler_present=3D0x{:016x}",
+>> +            self.shader_present,
+>> +            self.l2_present,
+>> +            self.tiler_present
+>> +        );
+>> +
+>> +        dev_info!(
+>> +            pdev.as_ref(),
+>> +            "PA bits: {}, VA bits: {}",
+>> +            self.pa_bits(),
+>> +            self.va_bits()
+>> +        );
+>> +    }
+>=20
+> This is called from probe() and seems way too verbose for dev_info!(), =
+please
+> use dev_dbg!() instead.
+
+Same comment as above. Although I don=E2=80=99t care about these =
+printing.
+
+I think that at this point we just need one dev_info!() at the end of =
+probe,
+just to make sure it worked. The rest can be converted to dev_dbg!().
+
+OTOH, IIRC these are indeed printed for Panthor, so maybe Boris can
+explain why this would be relevant.
+
+>=20
+>> +/// Represents a register in the Register Set
+>> +pub(crate) struct Register<const OFFSET: usize>;
+>> +
+>> +impl<const OFFSET: usize> Register<OFFSET> {
+>> +    #[inline]
+>> +    pub(crate) fn read(&self, iomem: &Devres<IoMem>) -> Result<u32> =
+{
+>> +        (*iomem).try_access().ok_or(ENODEV)?.try_read32(OFFSET)
+>> +    }
+>> +
+>> +    #[inline]
+>> +    pub(crate) fn write(&self, iomem: &Devres<IoMem>, value: u32) -> =
+Result<()> {
+>> +        (*iomem)
+>> +            .try_access()
+>> +            .ok_or(ENODEV)?
+>> +            .try_write32(value, OFFSET)
+>> +    }
+>> +}
+>=20
+> This seems like a bad idea. You really want to use Devres::access() =
+from each
+> entry point where you have a &Device<Bound> (such as probe()) and use =
+the
+> returned &IoMem instead. Otherwise every read() and write() does an =
+atomic read
+> and RCU read-side critical section, due to try_access().
+>=20
+> If you really run in a case where you don't have a &Device<Bound>, you =
+can use
+> Devres::try_access_with(), which takes a closure that will have an =
+&IoMem as
+> argument, such that you can do things like:
+>=20
+> io.try_access_with(|io| my_register.write(io, ...))
+
+Right, thanks for pointing that out.
+
+>=20
+> Also, you want accessors for read32() and write32() rather than always =
+use
+> try_read32() and try_write32(). The latter you only want to use when =
+the offset
+> isn't known at compile time.
+>=20
+> I also recommend looking at what nova-core does for register accesses. =
+Regarding
+> the register!() macro in nova-core, we're working on providing this as =
+generic
+> infrastructure.
+
+Oh we=E2=80=99ll definitely switch to the nova macro. We just didn=E2=80=99=
+t get to
+work on it yet, and IIUC it's not available atm?
+
+In any case, if you guys post a patch to make the macro available to =
+other
+drivers I'll switch to that instead.
+
+=E2=80=94 Daniel
 
