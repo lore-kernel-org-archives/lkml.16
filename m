@@ -1,95 +1,169 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17C122370F;
-	Sat, 28 Jun 2025 08:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387A7DA9C;
+	Sat, 28 Jun 2025 08:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751099031; cv=none; b=rcrzQ3onVvqIGxyBf3M+/UcsLKBI/gbXr+a1Nk+YgMi5x3xNrbYkfob6sOgM64Qwcxcj4qfNZN8SSVFzodKEdWOwqFfnTjPGczH6FnCFHxLv4TXorZaGEsK5wIF8QERw0BtFTlTsDlsYOqh1aHNaYRzypTxXbdPwGuyv5KLTG1M=
+	t=1751099140; cv=none; b=tklz3EeAZky6ZqhzWlMp1tGnGbnTiJnxGklCk0maqGqq3bAB1i7w28+xCeslL6/1RGld7K2dFkxmSLxNz/9rS9+QHXasKOIb+p8t0Qs+zcUhuysDH8A3eIAuMI8+Z0YhKhN6IgANaBx7SIzsEzbeDvCEipdpeFl1r8BRqhFbVXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751099031; c=relaxed/simple;
-	bh=eqTiPcdvxpKkytUdjM7KlZsZp+DvFgX/PFLwskukbeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxgUQwhCOkpQsGJG4fPKGFqbC4sBQ/bRfp58LLF/f5tEo47G7DrOwXXDzYaLxz0hljlML5KyJhFmMG3bSaNcoAp8/8+2mQWSACYjrLy9qfU5b9so1/K0jOnkY0PYZ8Cu1tk4E+6eFnuO7lAG081TOvRVHC01PcHErTW7UywPb8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=YrISKfHu; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751099140; c=relaxed/simple;
+	bh=JRuHujpJLvDuTGnDYQujAWUeF9qBt6etY3etowHwHMc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NJD/mGqi0SUMd9qVrwsFVyKG2EI1egPUX2+oXIm7FRocjAKEARfMEnX8qZP2eTEFMBTYCJE/bCIqH2lS4PtQnmpNfbl1Y3EI/ychFmUc4WWR05PjVd1yKhC+DmF6fvx1LRnA3Lk1dkro8nezAQMjzVSyih72U49Srj366DaOVos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4YjI3ky; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YrISKfHu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=t3QriktKYw5bEAqOwOcdjwsunvx2BAPD637QxTwxarw=; b=YrISKfHueD60LnInTjLm1DYZtW
-	x5T9mWwliVRYN3Q7FovR6H86M6hWAVrAN2/MHcrXBKQpcurTR2gZY8zdEbRCXO7au4Jsi+O9V0fct
-	qYbEjnG/wTGdjsmASfa7VYSidTX/K+75c66a/c/4KfdhzUJFzvj9CdCbJFxnQtUiQF4Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uVQqc-00HDtx-1Z; Sat, 28 Jun 2025 10:23:42 +0200
-Date: Sat, 28 Jun 2025 10:23:42 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, allison.henderson@oracle.com,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4.1] rds: Expose feature parameters via sysfs
- (and ELF)
-Message-ID: <69ea515b-bc6c-473a-a02f-d126d906784a@lunn.ch>
-References: <20250623155305.3075686-1-konrad.wilk@oracle.com>
- <20250623155305.3075686-2-konrad.wilk@oracle.com>
- <20250625163009.7b3a9ae1@kernel.org>
- <aF87ATSJH3Q9rkju@char.us.oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4YjI3ky"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8C1C4CEEA;
+	Sat, 28 Jun 2025 08:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751099139;
+	bh=JRuHujpJLvDuTGnDYQujAWUeF9qBt6etY3etowHwHMc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J4YjI3kyUvlGF9kiMiy8R2ZDlQlatNjRbS42jx+86DYS257jOgHRY8G5owUKHxt9U
+	 +PuUO1dBHZFg3lFyYcDmVgQD9xSmf/HDlcPjUmXtEjwUf+dKlJH34jLr31dGt4UQdU
+	 SICiNwyZpDxoqgasAugQuU9d07H61itg8DuAfeAQ51EQCnBs90roYqy8AD1Kv9S31n
+	 rYuI3Qrgv2inRLDWKDnLUdWXIhDMlA2W7hvouy4B/gpTCr/EaxpPkAF9lgthxP1yAb
+	 xrF3h9Yd68bT+oLgTSruyR6aUzZFGB609KKXzKQnHHG9WCjPaVePbiNgWMPb1ORStK
+	 WGm2LXTyutCyw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uVQsS-00AlqC-Iu;
+	Sat, 28 Jun 2025 09:25:36 +0100
+Date: Sat, 28 Jun 2025 09:25:35 +0100
+Message-ID: <871pr4ff28.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org,
+	pbonzini@redhat.com,
+	corbet@lwn.net,
+	linux@armlinux.org.uk,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	oliver.upton@linux.dev,
+	mizhang@google.com,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	mark.rutland@arm.com,
+	shuah@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 10/22] KVM: arm64: Set up FGT for Partitioned PMU
+In-Reply-To: <gsntbjq89am2.fsf@coltonlewis-kvm.c.googlers.com>
+References: <86plepb54f.wl-maz@kernel.org>
+	<gsntbjq89am2.fsf@coltonlewis-kvm.c.googlers.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF87ATSJH3Q9rkju@char.us.oracle.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, Jun 27, 2025 at 08:44:49PM -0400, Konrad Rzeszutek Wilk wrote:
-> On Wed, Jun 25, 2025 at 04:30:09PM -0700, Jakub Kicinski wrote:
-> > On Mon, 23 Jun 2025 11:51:36 -0400 Konrad Rzeszutek Wilk wrote:
-> > > With the value of 'supported' in them. In the future this value
-> > > could change to say 'deprecated' or have other values (for example
-> > > different versions) or can be runtime changed.
-> > 
-> > I'm curious how this theoretical 'deprecated' value would work
-> > in context of uAPI which can never regress..
+On Fri, 27 Jun 2025 21:45:57 +0100,
+Colton Lewis <coltonlewis@google.com> wrote:
 > 
-> Kind of sad considering there are some APIs that should really
-> be fixed. Perhaps more of 'it-is-busted-use-this-other-API'?
-
-I expect any attempt to actually use 'deprecated' is going to draw a
-lot of close review and push back. ABI is ABI, even if it is broken.
-
-> > $ git log --oneline --since='6 months ago' -- net/rds/ 
-> > 433dce0692a0 rds: Correct spelling
-> > 6e307a873d30 rds: Correct endian annotation of port and addr assignments
-> > 5bccdc51f90c replace strncpy with strscpy_pad
-> > c50d295c37f2 rds: Use nested-BH locking for rds_page_remainder
-> > 0af5928f358c rds: Acquire per-CPU pointer within BH disabled section
-> > aaaaa6639cf5 rds: Disable only bottom halves in rds_page_remainder_alloc()
-> > 357660d7596b Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> > 5c70eb5c593d net: better track kernel sockets lifetime
-> > c451715d78e3 net/rds: Replace deprecated strncpy() with strscpy_pad()
-> > 7f5611cbc487 rds: sysctl: rds_tcp_{rcv,snd}buf: avoid using current->nsproxy
-> > $
-> > 
-> > IOW applying this patch is a bit of a leap of faith that RDS
-> > upstreaming will restart. I don't have anything against the patch
+> Marc Zyngier <maz@kernel.org> writes:
 > 
-> It has to. We have to make the RDS TCP be bug-free as there are
-> customers demanding that. 
+> > On Thu, 26 Jun 2025 21:04:46 +0100,
+> > Colton Lewis <coltonlewis@google.com> wrote:
+> 
+> >> +static inline void __activate_pmu_fgt(struct kvm_vcpu *vcpu)
+> >> +{
+> >> +	struct kvm_cpu_context *hctxt = host_data_ptr(host_ctxt);
+> >> +	struct kvm *kvm = kern_hyp_va(vcpu->kvm);
+> >> +	u64 set;
+> >> +	u64 clr;
+> >> +
+> >> +	set = HDFGRTR_EL2_PMOVS
+> >> +		| HDFGRTR_EL2_PMCCFILTR_EL0
+> >> +		| HDFGRTR_EL2_PMEVTYPERn_EL0;
+> >> +	clr = HDFGRTR_EL2_PMUSERENR_EL0
+> >> +		| HDFGRTR_EL2_PMSELR_EL0
+> >> +		| HDFGRTR_EL2_PMINTEN
+> >> +		| HDFGRTR_EL2_PMCNTEN
+> >> +		| HDFGRTR_EL2_PMCCNTR_EL0
+> >> +		| HDFGRTR_EL2_PMEVCNTRn_EL0;
+> >> +
+> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR_EL2, clr, set);
+> >> +
+> >> +	set = HDFGWTR_EL2_PMOVS
+> >> +		| HDFGWTR_EL2_PMCCFILTR_EL0
+> >> +		| HDFGWTR_EL2_PMEVTYPERn_EL0;
+> >> +	clr = HDFGWTR_EL2_PMUSERENR_EL0
+> >> +		| HDFGWTR_EL2_PMCR_EL0
+> >> +		| HDFGWTR_EL2_PMSELR_EL0
+> >> +		| HDFGWTR_EL2_PMINTEN
+> >> +		| HDFGWTR_EL2_PMCNTEN
+> >> +		| HDFGWTR_EL2_PMCCNTR_EL0
+> >> +		| HDFGWTR_EL2_PMEVCNTRn_EL0;
+> >> +
+> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR_EL2, clr, set);
+> >> +
+> >> +	if (!cpus_have_final_cap(ARM64_HAS_FGT2))
+> >> +		return;
+> >> +
+> >> +	set = HDFGRTR2_EL2_nPMICFILTR_EL0
+> >> +		| HDFGRTR2_EL2_nPMICNTR_EL0;
+> >> +	clr = 0;
+> >> +
+> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR2_EL2, clr, set);
+> >> +
+> >> +	set = HDFGWTR2_EL2_nPMICFILTR_EL0
+> >> +		| HDFGWTR2_EL2_nPMICNTR_EL0;
+> >> +	clr = 0;
+> >> +
+> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR2_EL2, clr, set);
+> 
+> > This feels wrong. There should be one place to populate the FGTs that
+> > apply to a guest as set from the host, not two or more.
+> 
+> > There is such a construct in the SME series, and maybe you could have
+> > a look at it, specially if the trap configuration is this static.
+> 
+> > 	M.
+> 
+> > --
+> > Without deviation from the norm, progress is not possible.
+> 
+> I'm assuming you are referring to Mark Brown's series [1], specifically
+> patches 5 and 18 and I see what you mean.
+> 
+> You are probably thinking configuration should happen from
+> sys_regs.c:kvm_calculate_traps or thereabout and should be setting bits
+> in the existing kvm->arch.fgt array.
+> 
+> Correct me if I'm mistaken.
 
-Maybe we should hold off on this patch until there is a real need for
-it? Make it part of a patch series which adds new functionality to the
-ABI. It is only when the ABI changes does it make any sense to have
-this API.
+I'm saying there should be exactly one place where we write to the
+individual trap registers, and that the source of these settings
+should be equally unique when they are immutable in the lifetime of
+the guest.
 
-	Andrew
+That's the existing pattern for most trap configuration, including
+HCR_EL2, ICH_HCR_EL2, HCRX_EL2, and the FGU configuration that
+trickles into the actual trap registers, and I want to stick with it
+if at all possible.
+
+The way it is done in the SME series may be reasonable, but I haven't
+reviewed this series at all. I'm merely pointing out that similar
+constructs exist for other features.
+
+	M.
+
+-- 
+Jazz isn't dead. It just smells funny.
