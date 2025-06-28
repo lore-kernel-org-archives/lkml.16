@@ -1,113 +1,77 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5071747;
-	Sat, 28 Jun 2025 15:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3329271747;
+	Sat, 28 Jun 2025 15:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751124163; cv=none; b=uM/JT9SCjgxvVElQGgTXHX8VzZnOAj1kd5FE4DzED2Crj8HRlKG6+lVO4t8iIxk3ZaHH1Ih1W7NfQ3wJSCIsYtMCKk8Kfk/U2UOlu3SEzdYRAtacVxNYMHSaD+S997upp/muM1fUDp4iZnI1CbXL8bvZBI/pGDnWiZYHZLcYGn4=
+	t=1751124225; cv=none; b=GzjwwE6wrP1XJPNV6rhF8Pcv9fx8rqFp2JObV7SGf712vEwFEoCnYkhqjzA8oRHT4CX/B7PGPOpoF9QODMU+i4qSP5KgsIpdr/OnyvQ5zlFO8ya2AqH3AqLVSbwz17x81u2BGKz4OMKyd1d8VmyppKu2KIsGsLxyyNxKyA2yzTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751124163; c=relaxed/simple;
-	bh=QdtzsjKkQZhbnLkMPPyAHMKXOyX9JwpL+gRq/g/v0rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ras94rRY3Pnm1RAHgI8x/ABCF3ZPqw7So9J0qMFjoRk4xsVyR1A4vqUESJi+cgC32OCvuZJbDk2Jqolw7F7JWsXzdWe0er34oBsSBjBQwRItZUYEvwQA1ZDgSeO2CuVelXWjt0nrhep4RLCGD4Cex2HfxUnzVNUq4VQP3a25ovk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=OmM5fgPs; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1751124225; c=relaxed/simple;
+	bh=zkUB9FEEwz5gzjfhnoERP0IXv4N2edG3iKd96FdT6MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L6kJrBTcSwiKvrnq/Ore8BEd58EqSycibBLpVPeUJYG2j8nGtGUlL9Xa6GYQaWt/wlilJeBTglbLWKkMaCNU74ZdTGxG3INuLOFloqtJexitVH7tJWQcBwWIvE7e1U19lmRoga6MNa2UiO5E3mQChOa9nh6HTWLf7aI8LOQAppw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+xsXDh7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="OmM5fgPs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1751124138; x=1751728938;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=QdtzsjKkQZhbnLkMPPyAHMKXOyX9JwpL+gRq/g/v0rw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=OmM5fgPssXXjIeo8YV8jNvXc9jOIL9X4wAz/yt6T/v7Eje1QVZd6/GPmLztto/zC
-	 p32kYAJ4AcRROWPkQVk4mUSsQ+d5T7Rgvxcd/7D+wdZ2Q6ShYgYYXFDxwjxW5Js2M
-	 3+txzFTJu23J35udoV9l70UEfHfkY42AxIJ/wzVVhUvyffdizZfFTddbHwocwAIhm
-	 JyBPeYICnbqDB8PIRf9Ae1wUwvK+PstpJuYw+8xyhj9D2LOqDxwDSV1rDtRLmBoK/
-	 EiDekEPuipraoW1JgRBcVFUj6b/EzNFr3QOmzwcOXc9zP3QdnjRfn4j6keXUZk1Ec
-	 ms5m3HfbCLvBYaunsQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [100.90.8.184] ([47.64.51.232]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MC2o9-1uQLNE3zkj-002XH8; Sat, 28 Jun 2025 17:22:18 +0200
-Message-ID: <1382c27c-66f0-4642-a568-2e86b7c13d7c@oldschoolsolutions.biz>
-Date: Sat, 28 Jun 2025 17:22:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+xsXDh7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C0C4CEED;
+	Sat, 28 Jun 2025 15:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751124224;
+	bh=zkUB9FEEwz5gzjfhnoERP0IXv4N2edG3iKd96FdT6MI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X+xsXDh72stFKixw15YnLdKPsXPj9AB1x9xmR5zA8I292xmyZpV2jCsurc+j/TMKX
+	 A8lMZhE+C5QsRSFHK8o06tvgMrDlpe2J7GSOECvJP0dOy69UVHNm4obcURxgGl1q5O
+	 rZOskMAebOZV8zvy3ivy9ENn4zTRIBhBm4I72X3E/mP/v36OVXCvGca7SWPlJQggl2
+	 90bKwPihvcKilYnGfsPx0M8KvegQCrJfayaTUWG/krX5/tSZB/1QZOhsouwZjGL7iX
+	 VU6YzWkWKANfkHfBk5Ke9MCbcBeIlsHNInHCLJQ9maezkxnz7BrV37mLuHFSAy0JF7
+	 7KEhgI5OlTZIQ==
+Date: Sat, 28 Jun 2025 16:23:40 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ad4851: add spi-3wire
+Message-ID: <20250628162340.721b7462@jic23-huawei>
+In-Reply-To: <20250626104024.8645-1-antoniu.miclaus@analog.com>
+References: <20250626104024.8645-1-antoniu.miclaus@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v6 4/4] arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY
- device tree
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250607-tb16-dt-v6-0-61a31914ee72@oldschoolsolutions.biz>
- <20250607-tb16-dt-v6-4-61a31914ee72@oldschoolsolutions.biz>
- <ee088b5a-e792-4704-8f1e-e709f1b0c5fc@oss.qualcomm.com>
-Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <ee088b5a-e792-4704-8f1e-e709f1b0c5fc@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FC5g7i8l9SnsCxLdAyVTEHaZTZS3A15ZhRU+SlYCKfJpW161vWe
- BVECNRZrF7ZGyz+X13my5zVrvMUI6EwitK7Fjwy3jPgwnpBv9GHo9NVuPz8ai+4XhP4weLx
- Xu/QdOOpKj024K9z24NcHVbyOyC65njaeWnWgTJZP0hXiMPGfflxsqcBCCBl7t/ommPXw26
- SrqZzg+ZrnVNCRaHdo+/Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:r2oDkb9hbhU=;8aEzc3IpTIJuwZleJnnKvxG3sUu
- J2zJKoz7N7li5rfJnVlyU4piAeF5fAQDOZSqB1mwCbO5OFiyricnLucxsh5ERfhcabqiJNjlA
- OyXHQlW2Mt+OBUm4rUX2/t2okToVPfgpWwc3RMRWGXPeadzlTvXOJqSXkczrpWh9G5HU4OAld
- iSXBrXjhMHUZfpXkhCnKquue9QfiIIRkSbfmu3leYEC61s8QQkq/ttqs0zRSn16rQEKn87A0l
- C6FqPjLW8VBj4Tt/MviOw4h56NYICE2sjK9b+aEMaOECewhVTjAziUTp5CkpdMhQIPIbtmztv
- EvvMyHLIZPVvgyQxhuqeejux/s9wlKRXmwiXqZwxrEcpqu028MtfKguXm62mE7FdsdtER7tF0
- 4mLJeF80sJZ7Ea8FotyReXWjGrqGMsx3rEOUexkue0cGo7stif3ZUqNAsFdbv5Nb7gJV/IYA1
- wP6PFyCjOoSevIG0EF7OmlxSGPoGM9udPPP3r995kSd4OZP9frBKYM2pS9iIQSLXCIlTP6qv1
- dpElsm8ni2sSdeAo0hGTtKX+3EaBGcyRu3B9x3+SIFb9f8aWSaJijwMk5nPOrW+1RSLsK4gOh
- tnIy5bNUEuApbiI1/xPE64qJRdte8dOKqsTWCyp4VN2poAT+MpaGiyaJG5nDbBFL3MHOmLXUY
- GWJ1zLrVN83WNwolncCAkalwJKvXprLkjLw8vKBt37y+sKxtxtEEmGuOzoZRUe9bIwvSap4YG
- zGSMDmLXltjcl3zDehlF48YQRj2llOYRJMWw2rhL9abxru2Mqlo4EPaaBZmechV5v3lprjvNA
- 1RjofXI36r5hVHybohkceKUbea4FdNir4BBbhgiaUtcs1hUk0j9mTKyo5wpA3PhZZNwZGxZQH
- 8pkOh8TmY4l3U/0vwfSyrInsviHVG3cQjSDqhvocbEF6o4BuRHEWjukEo7N1nzPUGaTgpPHPZ
- mqmQQFC/XXNNNrm4Zo/wN5QgPxpesyUZZKphJPS/oFg/0DjmFEC0gjQdRJDbN4W+CYXRBBpUg
- 6ceOJB6SOdrGHE9cpUoJMgdQnvE/RD89WtD/lwPw4HmHq8gPWSW1aIX+E0CiIsa2PlYy5XbSu
- 3yhztvGiO7TGN770Q7VKEty9Ocys8QawIqhCqDYCax5zu0/EwTio2HSrWkFsUHMUBatQCPnDx
- pF6nlTh2IZ9v2VdFc7lLcg3PfEY3uTVLKy4vL9CxaD8n9MAYWmERfeDXzHbEpUd8RvUgc0s3Z
- iW2HowishAdWBR3/3FYus1rTlTPLiQat6UUtxZ0NxPB1fv7s8L3cjbvVzHJ3zJEcP0PYXAln/
- ReTKroRNQwkvqbf+Gz0tzbosiHOVHl+MNpt/L30gdSSlfSmkk3LSpgPkLwQQmUQoiEUAt56p7
- cR9MyDS9uxTvykD13gpqbC4ImZIIG8SyW2yu3Ga9gPLgJExZlGoSkpMUU51W2jJtG/BksBryM
- mdJMEHE3m78/BmYxyCVbXgxmr7rRLQDZ2TP5pYSCEXXj9iLCH/40KJvy50aVMSXg9EDwqR4r0
- cnF/F/jVHm7KTjrri88+9ifxUOWSYN3jRaCkYGRTGZ5rWxyDFl+Fj/57e5SDCIprzqUhNz7GB
- GnnsfpAW+QijFCVMiyzWns3wpCDI+oG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Konrad,
+On Thu, 26 Jun 2025 13:40:23 +0300
+Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
 
-On 6/14/25 21:39, Konrad Dybcio wrote:
-> Looks like DWC3 only does of_platform_populate() ("probe drivers for
-> child nodes") in drd.c, and your dt sets everything to host-only..
->
-There seems to be a reason for that. [1] Setting the DWC3 host=20
-controllers to OTG on x1e80100 can lead to hotplug failures with=20
-SuperSpeed devices. In v7 there will be a hint to this issue.
+> Add devicetree support for spi 3-wire configuration.
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Series applied.
 
-[1]:=20
-https://lore.kernel.org/all/20241210111444.26240-1-johan+linaro@kernel.org=
-/
+Thanks,
 
-with best regards
+Jonathan
 
-Jens
+> ---
+>  Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+> index c6676d91b4e6..b107322e0ea3 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+> @@ -69,6 +69,8 @@ properties:
+>    spi-max-frequency:
+>      maximum: 25000000
+>  
+> +  spi-3wire: true
+> +
+>    '#address-cells':
+>      const: 1
+>  
 
