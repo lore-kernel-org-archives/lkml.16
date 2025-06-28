@@ -1,138 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEE7221286;
-	Sat, 28 Jun 2025 03:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3697121C18C;
+	Sat, 28 Jun 2025 03:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751081728; cv=none; b=KxFhxDF9ymrJjfW9l6KerbSMQ9pZafCBTszkTpugHh8YBeneMwwO+M3WwKjkTeqypPXlIGqnXroGCXQEMn3yMuVrVRqfF1+bRz/vo71EblOgcXJBqXm5EfL3Q0/bRRfNh4igD4tRPl9BuAsGs2RKkKbBIUpM7gyxCvFzVgV7dCo=
+	t=1751081868; cv=none; b=IQ15NORr5Cs9M1N+yVkzCyxU+QufU9gX3MntCJPrtV/CveIcSExoe2pjSQUAGPJFLx5Kb2nNSkR0c16DSgDldhurpVx3zpZx0c6lrq/XUxmiedUxeIONp/RAhbILP3n9uLd/Q1fMaFQVKNdqSHkpzHBd4wTxDOnnPSyEUB0tM4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751081728; c=relaxed/simple;
-	bh=T9YueJiAj+n6P/e5GV63Kzix4CrmOOaujBI5JnNGJTE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=usYf28VQ9fkkwqh4y6J/vnGtvegvV5NVYo12DjAHVIIq/u70EraERwEEYnxccTa0id/wTjE8zqLseWwelJMnPCRiVpG3P/aQyDgO++G0jTeSzOXjXpPl15cn3UFDJ24ni8nAYRr6AS03YaQR+vJYvNLCZgG1qMyStvyXP1J031A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AnE3GvH7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751081868; c=relaxed/simple;
+	bh=19szQ2RMVcbO8ZxDOTqWYVmOMQF8Fx8oP4Tck2oIhkE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=n3IB4RSmsZHrRi0AtwYo4q48GpGUdw1PuzSvvy8+Lba0Yiu+kSAh7EeE6MiaoCkNLLasr+uF9yg+LEzWaX0oKAv+YLgJRUT/e64AyMooEp2HID5A70zOWVc2MMQ2xtGHXahjGP+GIY8IpsyzA4s6Alv5uEP3Z9MuP9CzSrycDOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssu2wwiu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AnE3GvH7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751081727; x=1782617727;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=T9YueJiAj+n6P/e5GV63Kzix4CrmOOaujBI5JnNGJTE=;
-  b=AnE3GvH7ccKSJm2EzdnNy2g+yJK/+INoY3Z7WcaLhKHt6TAMi9PPYA2N
-   meQNzdrlUCKtzWvYWciyhxUxk3+Q8swPH7vN1zlznOUPusoFyoFAe2ZOY
-   2RyiNZrtxPfpL+cczSQIJLnmTiQIrhLXKaJ1qTzhWqVztulrdbDEAJpk/
-   3fA3BYlmGyxyTQJLj5prH5ZotW58ekTVMtQkDkmJL7hTTHjngEhnT6F/W
-   XEY7LOURfIl8g6+S9/T0I15e5DsJqtviiss8IhjrQsB00C94DZkEbj2o/
-   9mnEedDHMHBf/nOv7w0VjHEAML/gT1RrolwvgIYcb15OAhtbMbzDgJh6u
-   w==;
-X-CSE-ConnectionGUID: B5MojksGT+WaUwvVrD5EaQ==
-X-CSE-MsgGUID: Ns8rktOYReKuyNLBhoksyg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53335367"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="53335367"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 20:35:23 -0700
-X-CSE-ConnectionGUID: WWKhVj/bQHuwpsuztdkwSg==
-X-CSE-MsgGUID: uwDk4xcSTDKSAvIAx5g4Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="153141960"
-Received: from unknown (HELO [172.25.112.21]) ([172.25.112.21])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 20:35:22 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Date: Fri, 27 Jun 2025 20:35:16 -0700
-Subject: [PATCH v5 10/10] x86/hyperv/vtl: Use the wakeup mailbox to boot
- secondary CPUs
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssu2wwiu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA72DC4CEE3;
+	Sat, 28 Jun 2025 03:37:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751081867;
+	bh=19szQ2RMVcbO8ZxDOTqWYVmOMQF8Fx8oP4Tck2oIhkE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ssu2wwiuY2f5tUKnLbrJRPaJvTFKlAmJh1VxoPY4i9P6GzIyRcWZAAd4HKsQjcB2I
+	 +MyL1uMAJMS7/55v2H824nSIS3lK3gPIYfIiwiaEKi9wAjYpPNP/ndWU+qZvNpW6hd
+	 PE9EAv7fgUjBNhhmxPJZHrdqNE+YgxabF+87Jc6CdikADcI5/xKtqPoO+2Cx2OQQNz
+	 UhxBj1vHwhaj+OdxnLE03eeD7ay3VsIQxKBfkbjGY3MpMUPb4l2SqGfmaCupWTakkx
+	 j0L5n2aamuHu376t7VNU+jO6kc8Ya1JjS8WSzAL8cSlY/WJwfqM4ETmwfZYTLFlvp0
+	 EqMx4iekvWu+Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEE138111CE;
+	Sat, 28 Jun 2025 03:38:14 +0000 (UTC)
+Subject: Re: [GIT PULL] hotfixes for 6.16-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250627165947.26fdc00007e5acb0ac39bc8d@linux-foundation.org>
+References: <20250627165947.26fdc00007e5acb0ac39bc8d@linux-foundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250627165947.26fdc00007e5acb0ac39bc8d@linux-foundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-06-27-16-56
+X-PR-Tracked-Commit-Id: c0cb210a87fcdda3c25f43b5a64420e6b07d3f53
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0fd39af24e37a6866c479ca385301845f6029787
+Message-Id: <175108189362.2126884.4558946833711183611.pr-tracker-bot@kernel.org>
+Date: Sat, 28 Jun 2025 03:38:13 +0000
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250627-rneri-wakeup-mailbox-v5-10-df547b1d196e@linux.intel.com>
-References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
-In-Reply-To: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
-To: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
- "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Saurabh Sengar <ssengar@linux.microsoft.com>, 
- Chris Oo <cho@microsoft.com>, 
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
- linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Neri <ricardo.neri@intel.com>, 
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751081737; l=1858;
- i=ricardo.neri-calderon@linux.intel.com; s=20250602;
- h=from:subject:message-id; bh=T9YueJiAj+n6P/e5GV63Kzix4CrmOOaujBI5JnNGJTE=;
- b=o+h3qNZaK9P6IrPcq4aIXzZ9PfkETm0kElx9WkN8z3CpUP1kRiZ5h2gAds/e7BEHwhMHHQ6l7
- Jj1F9ZMKI8wBRh50Iq+y0zkbQeXAhu1jAWQ8fbvjxpehhno3Ct/4q+o
-X-Developer-Key: i=ricardo.neri-calderon@linux.intel.com; a=ed25519;
- pk=NfZw5SyQ2lxVfmNMaMR6KUj3+0OhcwDPyRzFDH9gY2w=
 
-The hypervisor is an untrusted entity for TDX guests. It cannot be used
-to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
-be used.
+The pull request you sent on Fri, 27 Jun 2025 16:59:47 -0700:
 
-Instead, the virtual firmware boots the secondary CPUs and places them in
-a state to transfer control to the kernel using the wakeup mailbox.
+> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-06-27-16-56
 
-The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
-the mailbox if detected early during boot (enumerated via either an ACPI
-table or a DeviceTree node).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0fd39af24e37a6866c479ca385301845f6029787
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-Changes since v4:
- - None
-
-Changes since v3:
- - Added Reviewed-by tag from Michael. Thanks!
-
-Changes since v2:
- - Unconditionally use the wakeup mailbox in a TDX confidential VM.
-   (Michael).
- - Edited the commit message for clarity.
-
-Changes since v1:
- - None
----
- arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index ed633a7e05b4..d82e040d9d9a 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -264,7 +264,15 @@ int __init hv_vtl_early_init(void)
- 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
- 			  "Please add 'noxsave' to the kernel command line.\n");
- 
--	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
-+	/*
-+	 * TDX confidential VMs do not trust the hypervisor and cannot use it to
-+	 * boot secondary CPUs. Instead, they will be booted using the wakeup
-+	 * mailbox if detected during boot. See setup_arch().
-+	 *
-+	 * There is no paravisor present if we are here.
-+	 */
-+	if (!hv_isolation_type_tdx())
-+		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
- 
- 	return 0;
- }
+Thank you!
 
 -- 
-2.43.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
