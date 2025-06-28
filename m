@@ -1,145 +1,137 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319712857C7
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7419D275AF5
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751130104; cv=none; b=bCjZcvTHDu+/lqemIFInwtYwWxiFQT21jow3uw83SaTYDRvTtkigA8e+85tVVbmwMYa/JWWYoxuj6S9oo4VFjRdxf0wIUult33niMCMMIqnKvezX+9a5n2RXB2QLD3l7HXbkoqW0n65uf7nCpjumxRQ6R3THyVFtdLtofgnR6kU=
+	t=1751130179; cv=none; b=kK5Dp2qAYOFB/ScmNNsD1O6Zjwm00kVPyob4n22hjw/z/Ts5eXPfeZ5p9zU3+QRcc8wLS8xbAwB36QidO3BOiOM7TJC7k0kDoAict10UWlfRhK7B94ZyvmgDG7cfUrtV/OMPu9CFOvYIUDjsq8G1EAHZt1MEzlRqjHGW+0bRRDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751130104; c=relaxed/simple;
-	bh=X2KSmb4HCsHC/HeHjDlqJkqmU0XZcMUMkV1bUX/8/sc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K9hJrcd4a0/t2nUgUZXCw8XSlsWtG54CBdfbdQNtMOREMLhlZfFodTrguHuRLMxOotVcDT96DcKZ5mH6wGLKbhOogLC1ktlxJl78OMUdAtvc7Yw8rt5rn79N5EM+Ljevvqz6cwuZMsLFi+lL3fREnZja+RalhUTf9ie+G0kdVWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kOSzQ18z; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751130179; c=relaxed/simple;
+	bh=VeL9FR4wnl+s6naOeTuls38upzIvMRVBiCfWQn/MRq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSbdc6wrD6/M7g/z2gx9LC55lVjrp0AYs1I0HJmfyY8vzfYVfnSd0aORE3uWu63GXU0lECntFUCXEP5kccviYAc8vVK/jnxaN6x3vzOtXzJJRrBT3rNj9rIZRPKgeYMSYsa65Q9o40mhxyLXyEr9XVIfgHFcVd1jftb0GBhPk78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aWCES6a9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kOSzQ18z"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-60f276c7313so692396eaf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751130100; x=1751734900; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lNEn7suD+Hd2kWZGGFYZnjdopPtytgcb/jMssPmD/3o=;
-        b=kOSzQ18z5Z9Jfi/4BSfxTCFnyflQT/yAfKOBNd0Hiu0CdY2WgusLSGCfYRdW8eDKL5
-         UjW5Czta8iyd4q2+v/QBR3YdBGbHWVigbViH8Vwe0dsr2K5zooOfwf4lDIG31REV1kDy
-         ZbaSPLd1UaMFkoWyEyY2rxFq0RJCNslOBgnc/9RYRzMZr80H4xDeb1aQQz6mHCmwf0WJ
-         GmEiu8THw5VaRfM5dVlFz2ApKrYViVubd3uOp4Q35nxDr2jyq6K/jYJ4ABKyUbGqichj
-         NrtD/1p3ooKCM531iQxLf+F4buKadsIDFHV2fAV/RhbRSkgdnE4GnHxQ96KR6Hl52HNW
-         /phw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aWCES6a9"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55SAqXQP011661
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:02:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Xj48wCGbKF6Pk72+CEinz5Ni
+	1UPAQdUCNNhFshACoN8=; b=aWCES6a9PNuvJBf8I1GOUboxLb+dsJ3NMbLdhhZw
+	EojeEV0V0W0CyJA8cS+gClV2ZJyTGiM77oAsGGaJxaefrs4coLq2F5sPlQVQWSkx
+	2lpeVsJItlLfePj9RYkU/DOdEL/4M7O591yU2I4hTz+O4JpUcBozkwQx2Rq6OZgZ
+	VrA2sghSVGUI6tTJmwXysHSIT6zaWDiJE0KR266LlD59nAbENwlrSneJG+p3zhyf
+	oldGDtI5e2uXZwibIqQhIE/8Zt7WtNYvInH42A8XHJH3rLjUhDhT7CTJUNlGPsIC
+	d6Of7lW6Y9fJMR3AVrt/SLVUMhPzj3ZnfngOfMLwkDpU/Q==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8m60wwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:02:56 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d44d773e23so222810985a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:02:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751130100; x=1751734900;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lNEn7suD+Hd2kWZGGFYZnjdopPtytgcb/jMssPmD/3o=;
-        b=jlCeU3/AsyASql2l1VPMu0xcCtqxmRYtdCDMgHFEVJkxHxvYLJtBs1Vh3pt9CjPkyR
-         MpgrbFRYVHlw2drwfX7+X/OqO0fi+iKw4Haq7GJFQqV6lEhXj9+1csvJhIVrLvvncYl0
-         F7CTjbuYqf9gar+CkNioPxC82InQQnjkpIMijYbRgrADS/ohmG4/hQDiXHRidE/h0Tdi
-         mhTB5pAEKBKyKmqCOFFP6DMiZn1cv+yhJmtQiF5Msxq4cGSlopQs6OxvVQ+bBz/iyNcx
-         jz5oWFyqmxhbl0PxlrwEu78W4+bNRDXuMhoK0Pn16r3pzwMS43y8kecNznNH4BvGOku3
-         hVeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZK24sDyip56PHRO75jWiz+2ypwMWe0SlExO8n/zS4Eyde0MC+hDJ9BKNAm8dmpqlrWtiYaFVXmWmw6eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydY/FQtyy7oG34tYc0yu/SCiVIXdIq8D9V/LWSFDKqoAkK6YGM
-	1ENxqGnMfQHFpCtz+fxfudSb0GkAY3VjCivp8ja/6yjA6stasjAG5w5PPwhmB2AWDlw=
-X-Gm-Gg: ASbGncv7rhWnNXGJYzZLHGwGPq7YuNNTXw6Iq6CIY+awIcOpoJtnHi0XtnupDvYYv3f
-	SErBW/YD6cJzvNHwLoDph+chQrLJP4FVuj51DLQ5ok6iXbOPV56y/piMMFGUhgNWIOAUjOQB7Gv
-	eAFCnwb2wD0+kQrWTmE+W4QWyd6vtqZiN3hMocHjaaB3T/FvGIiQqxAaRAqlp1HOY1796ME4LQJ
-	/PNrJF3OrUrzh6fCaIKW1sCTMaam+o6XDxaNM1+o497/PXouZi0JfqUOuJNlFVCyEcMKvCTctMQ
-	+6Tij9VgvPykz3QEDNALKGObcGXnJYp+4zpll8sexpnINm8f7pfdoUf97QzDOcG4E77J
-X-Google-Smtp-Source: AGHT+IEbaYeotjNAcu6yS3Amk18K1Y9pBzRkOkrHYlQBIJjCg3X86HmLN22n85KsVC/LI8XaPnIEyQ==
-X-Received: by 2002:a05:6871:3806:b0:2d5:ba2d:80ed with SMTP id 586e51a60fabf-2efed68536bmr4922110fac.25.1751130100185;
-        Sat, 28 Jun 2025 10:01:40 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50f852bsm1602028fac.33.2025.06.28.10.01.37
+        d=1e100.net; s=20230601; t=1751130175; x=1751734975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xj48wCGbKF6Pk72+CEinz5Ni1UPAQdUCNNhFshACoN8=;
+        b=K1IFXFaWK1JrQoeu1yWHHGZyMErAh5UmFGGhKK084K8cI7we62DdXskhmi5NhkPKqe
+         UTkdGhP499c0Ql4rBy6N5ktdHoiBPFO9ICi/MUnQuVmudzjCDCv7mJwTqPEJhWHhskZZ
+         ztnCeGNYRLEOjH8pelytE1u0DfnqcRsDBcGXL3i9H/cprex7IVvbTJO2GSbC20gorp3n
+         fTDhi2mZ2aUy1ArGkkWXObi30/rpJ1OF3pRj0xmy2alsbrRsTdc2W3clFpSkcflBaew7
+         LWlv9pi1dQyBIgmgtKB1VHpTm+JGxCH9JThJ5I5JgL99p4/+KMX6ps7+gbAz/ptXwi7u
+         w3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCX5wRiH//TfZ3XJgR9DLNDBoQPjVOrHtNXrDS3cTd0YSa7lHAiN7dtAHjOhAmUn1Ep2WBsWcCG9eEo1eJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBNKsHZhFop2ObobCLNL1WEpQDjDMw0pv1yGlsS8HaT42LSjDU
+	eLJkLCbFMrXVW6W26asaPBmqVwEY0ATZ3dsT621GFnXrjgcXxK5irXMp2x0Lr8db3fPjUtFv36S
+	i/YR11d2M60N41WcPbZlkm/zCvbU2zU4fNdVMb0x90pZ0667lhmXSobrmPx5z2hRG2cA=
+X-Gm-Gg: ASbGnctPm32t162hTpLvlzgJ2jDAfthkR8OljG+007MP5TXerYNHUJ39cSzvxq2Aj9t
+	bMryCoTb/UwpZWGPi69sYFHfHBviHU4lg9Aaf2uxKqgfTw+GLwe7s3JJDX2MeA0ZcPjMvlDSg3a
+	0ZOTisYd8mygg94BQzi1VWiq0IeDheLf+f/BtYy4Q8gM8u2EZUyiiAQCWB+QBmN1xzBLzREiejq
+	ZmndmCOnh51XbS4kIcmnmMf/7fIsi5mfOoVVAf+vzJHDVkERotVsHIdzTJXrMijgvJ+X12S2IPL
+	TOzDcf5jLTQeObnATNDBEdLTVpZBdI7kbRpnznw9RHm8p4Gwge1kzpPJY8O5UaUqOniLOc2xbEQ
+	1fYMRkRSGohHh1G3Ny4Pg0IA3qPPyV9kSjkI=
+X-Received: by 2002:a05:620a:46a1:b0:7d3:b094:d212 with SMTP id af79cd13be357-7d443990ae5mr1065894985a.51.1751130175122;
+        Sat, 28 Jun 2025 10:02:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGY9eY2qjJG5GC1z2t+E/qTvaYQxv7sH6/mlQPjsokwBuEJDcnaEoFuKASuBnrgaF+wIVxjjw==
+X-Received: by 2002:a05:620a:46a1:b0:7d3:b094:d212 with SMTP id af79cd13be357-7d443990ae5mr1065888985a.51.1751130174550;
+        Sat, 28 Jun 2025 10:02:54 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2f01ac0sm8375661fa.101.2025.06.28.10.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 10:01:38 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 28 Jun 2025 12:01:29 -0500
-Subject: [PATCH] iio: accel: adxl345: make ad8366_info const
+        Sat, 28 Jun 2025 10:02:53 -0700 (PDT)
+Date: Sat, 28 Jun 2025 20:02:51 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Yongbang Shi <shiyongbang@huawei.com>
+Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+        kong.kongxinwei@hisilicon.com, liangjian010@huawei.com,
+        chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com,
+        shenjian15@huawei.com, shaojijie@huawei.com,
+        jani.nikula@linux.intel.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 drm-dp 04/10] drm/hisilicon/hibmc: fix the hibmc
+ loaded failed bug
+Message-ID: <hpqbr2xngohjb2kyauwz5gctb7dglvu5tsmapbazy5hbjtho2v@lmkptdfeej7z>
+References: <20250620093104.2016196-1-shiyongbang@huawei.com>
+ <20250620093104.2016196-5-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250628-iio-const-data-12-v1-1-88029e48a26b@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAOgfYGgC/x3MTQqAIBBA4avErBvQ6QfpKtHCcqzZaGhEEN49a
- fkt3nshcxLOMDUvJL4lSwwVum1gO2zYGcVVAyka1EgGRSJuMeQLnb0sakIyrL3Ra9+PHdTuTOz
- l+Z/zUsoH2AVrGmMAAAA=
-X-Change-ID: 20250628-iio-const-data-12-28e1f81b4463
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1757; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=X2KSmb4HCsHC/HeHjDlqJkqmU0XZcMUMkV1bUX/8/sc=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYB/qZu5zS+DAe4bECmTsxhAWRh9ooM0P8eWRq
- Ei43wZbnJeJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAf6gAKCRDCzCAB/wGP
- wN+jB/9JVxJpqA1P4b6s0wgjvSyxzFPFRRrF//MhkCSVx8c9nhRqSn9YKDCpMjxRUVYHB+opvRG
- TBf9mQrilmGQMg2JWBWCD2slnzvyZJjWBsH47mxuZwokQ2EuvfN7x356LLRImXtIBQ4NLjbg93b
- pnVsfmIjqavJ/Fr5KvMAYypWC+GtpK/7KVJ4pTPrhX9ltcIMduWmuTIwX4fARK248oJsDPg6QNu
- V/zECi4hBURPeknDVdFkh0u/dcDwd1qRDQt7m1iWN/wsqukt3UuR9rCYx9cS0i2JoXSV3+EwXZ/
- Gbem147usgwRlvGHZrPZiPMgChJ7bh+nYd/ajaspeOuokYSa
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620093104.2016196-5-shiyongbang@huawei.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDE0MiBTYWx0ZWRfXyah1kU1YGma/
+ CI0+XjaUEgngjuP22+u/u1HtAB63/9W+0KP1lmLieELC2jxrbuB38QVgA5CcX5Q3BaDZtjQRbA2
+ n7gDROwgjzATf1NAHJ8rieNrrT1HB1soNIB7l46BLNNZwGLQjiaeD0MeJyG9wBjPCqoQf2EiMxB
+ P5juFH5UQ+FDneiTDNtNKtlqc8KvuYjiCfibFNXJETbPUJogM0LAo2Y5Y9aT0IpbdqXjvA1tbv6
+ 8fCrQE2i069CU+L05yGUFE2ntE6Rc/jtbt4XgR32UswJuwLnte2EXBuugRdMs/Z5+hHD/TphiZ3
+ w+OVFn/ZCyEMSVF3MZ9dHma225yJ0pN53DNf9SP6tsn34foazAURyOTeL8gzvfCNIj0DAZBtca+
+ C+cHw9yLV1XsqgVIAzFNkWolmRcLMYb3nerqfB8eL3uadekvzph3TFdcO9bEQ4t4oRckHXO4
+X-Authority-Analysis: v=2.4 cv=Fq0F/3rq c=1 sm=1 tr=0 ts=68602040 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=i0EeH86SAAAA:8 a=EUspDBNiAAAA:8 a=Yqf8pivnL-G9Aq_Wef0A:9
+ a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: U0focZKKI2sDsl3AxuobD5cLjRF74fAL
+X-Proofpoint-ORIG-GUID: U0focZKKI2sDsl3AxuobD5cLjRF74fAL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ mlxlogscore=668 impostorscore=0 bulkscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506280142
 
-Add const qualifier to struct ad8366_info ad8366_infos[]. This
-is read-only data so it can be made const.
+On Fri, Jun 20, 2025 at 05:30:58PM +0800, Yongbang Shi wrote:
+> From: Baihan Li <libaihan@huawei.com>
+> 
+> When hibmc loaded failed, the driver use hibmc_unload to free the
+> resource, but the mutexes in mode.config are not init, which will
+> access an NULL pointer. Just change goto statement to return, because
+> hibnc_hw_init() doesn't need to free anything.
+> 
+> Fixes: b3df5e65cc03 ("drm/hibmc: Drop drm_vblank_cleanup")
+> Signed-off-by: Baihan Li <libaihan@huawei.com>
+> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-I looked into dropping use of the chip info array in this one, but
-removing it isn't trivial. There are several switch statements that
-are using the chip ID still. So we'll save that for another day.
----
- drivers/iio/amplifiers/ad8366.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-index e73c9b9833959e498fd03b37f9bedf2226b2f42a..d06ac786501c47518493e382ec2e2ad445349dd6 100644
---- a/drivers/iio/amplifiers/ad8366.c
-+++ b/drivers/iio/amplifiers/ad8366.c
-@@ -45,7 +45,7 @@ struct ad8366_state {
- 	struct gpio_desc	*reset_gpio;
- 	unsigned char		ch[2];
- 	enum ad8366_type	type;
--	struct ad8366_info	*info;
-+	const struct ad8366_info *info;
- 	/*
- 	 * DMA (thus cache coherency maintenance) may require the
- 	 * transfer buffers to live in their own cache lines.
-@@ -53,7 +53,7 @@ struct ad8366_state {
- 	unsigned char		data[2] __aligned(IIO_DMA_MINALIGN);
- };
- 
--static struct ad8366_info ad8366_infos[] = {
-+static const struct ad8366_info ad8366_infos[] = {
- 	[ID_AD8366] = {
- 		.gain_min = 4500,
- 		.gain_max = 20500,
-@@ -163,7 +163,7 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
- 			    long mask)
- {
- 	struct ad8366_state *st = iio_priv(indio_dev);
--	struct ad8366_info *inf = st->info;
-+	const struct ad8366_info *inf = st->info;
- 	int code = 0, gain;
- 	int ret;
- 
 
----
-base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-change-id: 20250628-iio-const-data-12-28e1f81b4463
-
-Best regards,
 -- 
-David Lechner <dlechner@baylibre.com>
-
+With best wishes
+Dmitry
