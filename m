@@ -1,107 +1,127 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C9319E992;
-	Sat, 28 Jun 2025 09:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751102970; cv=pass; b=G2qu2pRgqAFkzywvWCSR5HbmJO5Vvl4KHD0Ca3tam/AZ7lYUqqV6/aAlr9dcSUYHgfn1A/wHUVFnkrT4eAFcxWpny4NazFyhGAUZpEi23ZgIophz3kFzLPGZiCfHHGiyzk69sK7Mem9uPq0W7qsBhGyVvFo/eEU6BJERMi1fy/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751102970; c=relaxed/simple;
-	bh=wUXnKzgbvtT25rCDfOYl322+9yAQAx3rHgAkzEYbFz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mogueLBky8OOvsPl2pFwrJ4qJRsqThOzO+P2aiF5z40dL+iekZCbOUO1u6/WZPxpGkDp19ieb9umuDwfP4L3bfMb9qBb8s+CgQmddAJ6S1G78+9P09a98thvKNPv4SQaTAyaJo2OLtXfwMbLfeD2xUDvIvuxesgzP22/yphlg34=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=UrhL/Bgr; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA6B1D8E10;
+	Sat, 28 Jun 2025 09:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751103096; cv=none; b=TTRgLaqaCj3wP2x1JWP1v13MfdZFR1ssbAPiVr+jD0hjRnXiRCYd8vXj2QWFSzmyg7ZOU7sHHqrsCCtmJCpiYvVz0d96NXAk/Txb3yM6ATfeS3IBKM/mu+3hjXMk+bL+8pWbHjv8zJDPj0zhd2WvIU010HGkDGxLwNrap3yAMKo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751103096; c=relaxed/simple;
+	bh=E5iCuFAULJLPrvVBqO60KGLnFgeUgbEq0Y2AL6LtYPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=erZWZZDNLgnteTL8gKM26WQTssHjm31XdiwiLpKFvqVFX8BL/JPVRruzaVYi5mhd3I65wW751IOQWa9gf35FyE+pe5TufUgGH0Lq9QYas4P0oOwfdVNavhZIYoG4I6kZRKm4kWy5SplEstqZElsVglG+z73gfYg3V3hCs9WglVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DzlnGq3L; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="UrhL/Bgr"
-ARC-Seal: i=1; a=rsa-sha256; t=1751102930; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cWbUTuWqB9x2sQD3DIK5xq7PDr62IZitZP2Wdt6o1RFVmaR/CqqGfW9OAVlsdI1jDIN22VcmTRA/tHNtEHjqKWGv6Rgz9LaKYH7MJMDcrQWtho+AHDpuGdOoWmz5GYrqPbuqV67ARPxCfu9wLf2mxyYOSCkO0c8dGUgV8VdRzCM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751102930; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oVePXl2d+XiNoZkk1lUmaWYsXq/VWl9Vy7svJjVL9LI=; 
-	b=a56zD+GTz269d+12+O2dfrFkw1CVH3BlJR1Ix2Qw1Nzo6Tukp/GpqZzdP7r/JL8PZi4YEcJ6cS2laDOgsr/katT6gfuW5eEPprSDz86T4W95r5kccDVTOqurAt3J8fOecgUuuRvuUKQPfKV0b3/l83CnRY03rI+Ly8F23EXiZa8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751102930;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=oVePXl2d+XiNoZkk1lUmaWYsXq/VWl9Vy7svJjVL9LI=;
-	b=UrhL/Bgrv5vFpriKD1Sojazt8POylqsVk+uwQ8auhjzc7dBlus/3X2MfMbyT6I9/
-	ltH0EP8h/efaPN6IWr1njkxyOUybQn5Vy8m8FRnbePiWSRbZYWn303eVYTk1MqtU4q4
-	436xzCb/V936rImYgLWtkignd2XvJcLHh7r/wiWo=
-Received: by mx.zohomail.com with SMTPS id 1751102928164588.2772597295957;
-	Sat, 28 Jun 2025 02:28:48 -0700 (PDT)
-Message-ID: <0b5231e2-8dd0-4bbf-a0d3-0f6460bc8030@collabora.com>
-Date: Sat, 28 Jun 2025 14:28:42 +0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzlnGq3L"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-235ef29524fso4360675ad.1;
+        Sat, 28 Jun 2025 02:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751103094; x=1751707894; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ONfV0fUcGhjneIypDLDcXnbButNtqOzxMv+hhdKx7Ks=;
+        b=DzlnGq3LORhLA4fYeI1W9Cqa47bvAbgNajdAHVRLUYzsSeyuwKiPYgnzUTxWejbzGW
+         kfYwQ5Td5wdAkU1eXvNMa8Q6M4Yz+SZBMSBH52NHTBocS//MeZkKPGHwekDHpA7aZ/z8
+         Ydpw+bR7j6NYmZpl2WN9NiYKTp6i+Qqegg17RpR67H+++dlLsTYy6ETdXkmzhq1YjXvj
+         GavjEbNvFDFitKwUaSxTk7Dc4uGyevK5e+XaIwW6+m32fpbKytOzIpgvDINn0kvQ2UfI
+         dflwh09MC74vNUoRjXWCnLQwfljDTiuY8B5pR2eVwgR967c/NSV/QTF+JGr36rsEhQ/O
+         5FLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751103094; x=1751707894;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ONfV0fUcGhjneIypDLDcXnbButNtqOzxMv+hhdKx7Ks=;
+        b=IY66XJngUYGELFYQCJv4T8xxu1oJ3W3+yH6P2ehLyQX7SuXTZHwFU3vzojMYBWYIgH
+         a8hTxaWzADfz/NITk2dttbEq2BGF4f2xfUje1aIlxBLXYR4KYFcKWp1DplyOsZCOhKMj
+         V0Va6CX1fFXwq5deTZna944BEoOIkP6fj0EyI0b1x7KzSBQSsDcMzuevz/iThFBN1eC1
+         rQtf7Rq/ZaWMQNq6pw+qwPakB6wttCVqzZfkv6ZsRl6hlZnw+C18jy8SxZYzXXqKie0V
+         3vEub12j1Jx546KvFEsj8HFRL/KSYVY/R2V/MiNoRbAJO3lJRcmQWRrnSYWiVS3VWnkQ
+         lRtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEmj2PugbLiKDh6Pozwu0DXkp55dEFfAabtr/P/SP6zUoItIVpIzDuKJNsN1YJlJTqfBk2Zg0mHTWJJm4AP98=@vger.kernel.org, AJvYcCVL8SNKxZZj3quPuIUbuBW1DaxVM2JwBjrZSymvkG96muIY4KuBxgjUT+YE16byiMqPTGl+CCmv8+FnzDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2Z0mGqUsgowzIgr+HIAznW/R94zGmGin7GrT8LgUocl9PeeVL
+	l0qaqYDmiKH6BbpCUtoIgOHjCrSZoRB949uzDhEWdNqkd05TKeLvjdrl553HeqwE1XmKnWnX+Bk
+	1aP25Aw7gne/dc4Tn0nlouGMmL5xR/pw=
+X-Gm-Gg: ASbGncvhoaC60jOxLGAVcCWKB2ZRhqMS1cq1AU6Zr4cXLy3MOXj9JcoloCwIhPiAkJa
+	RD713zNzUgiKU5JWOtXJLa1lrEXIxnSS4xyooYoi6EUSvAl47fzCwcgjblGjhkGpni+qOWMEUmu
+	GoMmsXo5t2w3l2UpTwPPv9/+uAVflgXRgESdgDPVY5240=
+X-Google-Smtp-Source: AGHT+IGCL1ZwnkZbeKMkXvofitTo9uX9H0CCoXKQQY5hQuH7wk1pXGIhr5xcDOJ2eKhuRox+kb1wdEabGvobYiOsvpE=
+X-Received: by 2002:a17:902:e744:b0:235:f1e4:3381 with SMTP id
+ d9443c01a7336-23ae898f701mr13555125ad.8.1751103094322; Sat, 28 Jun 2025
+ 02:31:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests: futex: define SYS_futex on 32-bit
- architectures with 64-bit time_t
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
- dvhart@infradead.org, dave@stgolabs.net, andrealmeid@igalia.com,
- shuah@kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, tim609@andestech.com,
- Cynthia Huang <cynthia@andestech.com>
-References: <20250627090812.937939-1-ben717@andestech.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20250627090812.937939-1-ben717@andestech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com> <aF8lYpK_l2I-ts1k@pollux>
+ <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com>
+In-Reply-To: <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 28 Jun 2025 11:31:21 +0200
+X-Gm-Features: Ac12FXxAXZ-frqKyQFue1u4JXDf34d02QnAAv4yImOCi7FZMfCJpz2L7ro96pf4
+Message-ID: <CANiq72mgt4ZD43Tm2bFr-gpicXMhFbC2DLqA6F0rN_J4rAe_CQ@mail.gmail.com>
+Subject: Re: [PATCH] Introduce Tyr
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Daniel Stone <daniels@collabora.com>, Rob Herring <robh@kernel.org>, 
+	Alice Ryhl <alice.ryhl@google.com>, Beata Michalska <beata.michalska@arm.com>, 
+	Carsten Haitzler <carsten.haitzler@foss.arm.com>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Ashley Smith <ashley.smith@collabora.com>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/27/25 2:08 PM, Ben Zong-You Xie wrote:
-> glibc does not define SYS_futex for 32-bit architectures using 64-bit
-> time_t e.g. riscv32, therefore this test fails to compile since it does not
-> find SYS_futex in C library headers. Define SYS_futex as SYS_futex_time64
-> in this situation to ensure successful compilation and compatibility.
-> 
-> Signed-off-by: Cynthia Huang <cynthia@andestech.com>
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+On Sat, Jun 28, 2025 at 2:13=E2=80=AFAM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> Also, for some reason the Clippy lint did not save me this time.
 
-> ---
-> Changes since v1:
->   - Fix the SOB chain
-> 
-> v1 : https://lore.kernel.org/all/20250527093536.3646143-1-ben717@andestech.com/
-> ---
->  tools/testing/selftests/futex/include/futextest.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/futex/include/futextest.h b/tools/testing/selftests/futex/include/futextest.h
-> index ddbcfc9b7bac..7a5fd1d5355e 100644
-> --- a/tools/testing/selftests/futex/include/futextest.h
-> +++ b/tools/testing/selftests/futex/include/futextest.h
-> @@ -47,6 +47,17 @@ typedef volatile u_int32_t futex_t;
->  					 FUTEX_PRIVATE_FLAG)
->  #endif
-> 
-> +/*
-> + * SYS_futex is expected from system C library, in glibc some 32-bit
-> + * architectures (e.g. RV32) are using 64-bit time_t, therefore it doesn't have
-> + * SYS_futex defined but just SYS_futex_time64. Define SYS_futex as
-> + * SYS_futex_time64 in this situation to ensure the compilation and the
-> + * compatibility.
-> + */
-> +#if !defined(SYS_futex) && defined(SYS_futex_time64)
-> +#define SYS_futex SYS_futex_time64
-> +#endif
-> +
->  /**
->   * futex() - SYS_futex syscall wrapper
->   * @uaddr:	address of first futex
-> --
-> 2.34.1
+Hmm... it should -- I tried to build it and Clippy reports it. There
+is also another warning too [1].
 
+I see the compiler reporting [2] too.
+
+By the way, do you need to depend on `CONFIG_REGULATOR`?
+
+Thanks!
+
+Cheers,
+Miguel
+
+[1]
+
+error: this operation has no effect
+   --> drivers/gpu/drm/tyr/regs.rs:221:16
+    |
+221 |     (3 << 2) | ((w as u32) << 0) | ((r as u32) << 1)
+    |                ^^^^^^^^^^^^^^^^^ help: consider reducing it to:
+`((w as u32))`
+
+[2]
+
+error: variable does not need to be mutable
+   --> rust/kernel/regulator.rs:295:29
+    |
+295 |     pub fn try_into_enabled(mut self) ->
+Result<Regulator<Enabled>, Error<Disabled>> {
+    |                             ----^^^^
+
+error: variable does not need to be mutable
+   --> rust/kernel/regulator.rs:324:30
+    |
+324 |     pub fn try_into_disabled(mut self) ->
+Result<Regulator<Disabled>, Error<Enabled>> {
+    |                              ----^^^^
