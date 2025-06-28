@@ -1,103 +1,87 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34082F1FF1;
-	Sat, 28 Jun 2025 12:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CE72F1FF1;
+	Sat, 28 Jun 2025 12:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751114101; cv=none; b=RV5I+6OJGsgETEM4ndyL3aDaUTfpYKNAP8voHiylZUvs1DpXVffprQqFITDs+bkEaVQd6gskefr5LNPsG9H1uz6eNNdviOE9jh24d/l62t3sjWNOthNNfHdrOT9THjjveYGceSI6ESEmJmS4ML88K+c4kj5wByP8A9BMp9KrZiQ=
+	t=1751114115; cv=none; b=ZKzLV8VdtEpR6Snp3zXPuZqFW8FcOk1ym9olWrCkQEFTl+bLk3TlC2gT5XsC4c9+kVdlCig/O4STQ/gpBCDP702c/AvXr6DMaoX37PLKGfmqJ3iZziTl9vDYd3SeP0mPaIKOjKLdj6AsK+o8IQM22/NF5jkSU5Uz052wcJRq/Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751114101; c=relaxed/simple;
-	bh=fZb7LpjsVrzlP1r+wCxPxMIKpckAHDhxLgbdubvkivY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u97WmOnSc5Qs97ikmq4V63RNKeRusVopw0F/ut8KLvDyREbF0OObttiHcUmfHQMJ338B5f2ym0A3BQeEcau1Mk0pG0epoiErXnlrpMEdYqQUCifsxv0iXrRY0ZNZ2dGAKBe8vzKIL6WyUVVFjJxwkM3wHDGJZA35h/Wxykd6WLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bTsN65C1Qz27hfZ;
-	Sat, 28 Jun 2025 20:35:50 +0800 (CST)
-Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id F39541402C1;
-	Sat, 28 Jun 2025 20:34:54 +0800 (CST)
-Received: from workspace-z00536909-5022804397323726849.huawei.com
- (7.151.123.135) by kwepemk100010.china.huawei.com (7.202.194.58) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Jun
- 2025 20:34:54 +0800
-From: zhangjianrong <zhangjianrong5@huawei.com>
-To: <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
-	<mika.westerberg@linux.intel.com>, <YehezkelShB@gmail.com>,
-	<linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <guhengsheng@hisilicon.com>, <caiyadong@huawei.com>,
-	<xuetao09@huawei.com>, <lixinghang1@huawei.com>
-Subject: [PATCH v2] thunderbolt: Check whether bandwidth request needs asymmetric mode before check whether it can be done
-Date: Sat, 28 Jun 2025 20:34:53 +0800
-Message-ID: <20250628123453.770988-1-zhangjianrong5@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1751114115; c=relaxed/simple;
+	bh=CYSbec/13UMVZGeQLR3wotXbDDONkq50TGJNSWT436k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uJkEbugklefdOPBizF9ifsvqSf9CbcbMz/mXrJNKcfOTW3V7kJEybaU9HDBE/Fh6eIBbYfRKEALzOzQok+bkPNbcZYKmOZo3+LflSajNao0hokR3IGUEmlacQWRtd71mTPDbN6FyOjbuD0/LIIj7trsNt9q4M6NiY9z5ZWSFUP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQes4/p/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQes4/p/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B29C4CEEE;
+	Sat, 28 Jun 2025 12:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751114114;
+	bh=CYSbec/13UMVZGeQLR3wotXbDDONkq50TGJNSWT436k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IQes4/p/zWhLH1vIXHJ6EYJpbnSlJLSKX/W5m/64aItzRchj+bmijLd8dzlHdxROI
+	 RGK5yGDmHq+IAmK6Oalnz8tYvI6CIRQeta5xo201Osm0+0mbxn53f+l21VwneM+yHB
+	 W2KBhvWhByAAh+gkbh9b3VQKzKngPYghy0Mma6VyvC3sT/SILYwaecpgpAtl6KRnP3
+	 aT7zBPJlt8DjgOyxPPqzTWDV4P5Rarqb01+/jGIqVrJGYifcnazIAU5uZ2eRZlYkbM
+	 gNyKySFC97O/+GwCOeID70B19CoifUoz9c8BvOrpI+2e2LlSUJcz8UAM1w5a5cVAEs
+	 WXjgvbHj6jo+A==
+Date: Sat, 28 Jun 2025 14:35:10 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] dt-binding: pci-imx6: Add external reference
+ clock mode support
+Message-ID: <20250628-petite-fabulous-firefly-80a6f4@krzk-bin>
+References: <20250626073804.3113757-1-hongxing.zhu@nxp.com>
+ <20250626073804.3113757-3-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemk100010.china.huawei.com (7.202.194.58)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250626073804.3113757-3-hongxing.zhu@nxp.com>
 
-Current implementation may cause allocation failures in
-tb_alloc_dp_bandwidth() in some cases. This will happen
-when requesting downstream bandwidth while total upstream
-bandwidth usage on the link exceeds TB_ASYM_MIN (36 Gbps).
-tb_configure_asym() will return -ENOBUFS while asymmetric
-mode isn't necessary.
+On Thu, Jun 26, 2025 at 03:38:03PM +0800, Richard Zhu wrote:
+> On i.MX, the PCIe reference clock might come from either internal
+> system PLL or external clock source.
+> Add the external reference clock source for reference clock.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index ca5f2970f217..a45876aba4da 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -219,7 +219,12 @@ allOf:
+>              - const: pcie_bus
+>              - const: pcie_phy
+>              - const: pcie_aux
+> -            - const: ref
+> +            - description: PCIe reference clock.
+> +              oneOf:
+> +                - description: The controller might be configured clocking
+> +                    coming in from either an internal system PLL or an
+> +                    external clock source.
+> +                  enum: [ref, extref]
 
-Fixes: 3e36528c1127 ("thunderbolt: Configure asymmetric link if needed and bandwidth allows")
-Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
----
-v2: update subject and commit message
-v1: initial submission
+NAK
 
- drivers/thunderbolt/tb.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+As explained in other thread this is the same input and you just
+call it differently.
 
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index a7c6919fbf97..558455d9716b 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -1039,6 +1039,9 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
- 			break;
- 
- 		if (downstream) {
-+			/* Does consumed + requested exceed the threshold */
-+			if (consumed_down + requested_down < asym_threshold)
-+				continue;
- 			/*
- 			 * Downstream so make sure upstream is within the 36G
- 			 * (40G - guard band 10%), and the requested is above
-@@ -1048,20 +1051,17 @@ static int tb_configure_asym(struct tb *tb, struct tb_port *src_port,
- 				ret = -ENOBUFS;
- 				break;
- 			}
--			/* Does consumed + requested exceed the threshold */
--			if (consumed_down + requested_down < asym_threshold)
--				continue;
- 
- 			width_up = TB_LINK_WIDTH_ASYM_RX;
- 			width_down = TB_LINK_WIDTH_ASYM_TX;
- 		} else {
- 			/* Upstream, the opposite of above */
-+			if (consumed_up + requested_up < asym_threshold)
-+				continue;
- 			if (consumed_down + requested_down >= TB_ASYM_MIN) {
- 				ret = -ENOBUFS;
- 				break;
- 			}
--			if (consumed_up + requested_up < asym_threshold)
--				continue;
- 
- 			width_up = TB_LINK_WIDTH_ASYM_TX;
- 			width_down = TB_LINK_WIDTH_ASYM_RX;
--- 
-2.34.1
+Best regards,
+Krzysztof
 
