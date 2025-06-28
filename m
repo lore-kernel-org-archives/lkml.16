@@ -1,37 +1,37 @@
 Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83670224AF7;
-	Sat, 28 Jun 2025 09:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B26224B13;
+	Sat, 28 Jun 2025 09:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751101863; cv=none; b=aF3FzmVGCtN4IrwjDnd1wOLDpk3oO5sgP4E97jzpbJRixEvKG78qngeMxAjwSimihwXVGVGF9fHKq0/ZkA6FewGO7OtTrvfEhJt3MrBw8Q/+4zURdluMw+Efy/KsUeOkJLnqSp+a1uOHk7l6nd2LBz909smGUigK2QdzWyPpWmU=
+	t=1751101863; cv=none; b=gNxFZGWw7DWJkU3hGcS2m4jMdT8PmAvHRQqO1YBFRGUNnHBHCIBv1dtMlyH7YFwu4fpK+yYm6gqzGuCAelFzys8Yh+Or7ZhtvFJnAIP5wh41HC4hszmnBRfwoTpH7+08AEAkrkqKpnMqvPIdZ1T3HXF5z4f+WPCSBlJIl/J6lzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751101863; c=relaxed/simple;
-	bh=P/EOW+pd0YQ7LiMHFX+KMFe53eWNEXq3yNdzkShDgOU=;
+	bh=Dgdiq1horuDoHLdNztjJFaG+cA4sLMSMTTMWhbKe7+Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P/M6/WMOeIWtcewSIgF1GGyVl3lcGbUPXozRKclVIjDg+fOuZlQj90RSsKcHcSaSqPfw/w9VcN6c85UZuc03on8i6jdhAnhYfptKCGDyK77ajWXcjl98XtyD5NBBPC+ChUZlGvyzIeNYWWHhpAm7ZG+Lgr2YVEDKUpdEj4NLSFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=CN8hTQ6F; arc=none smtp.client-ip=134.0.28.8
+	 MIME-Version; b=TCzvMO3EZwIfHz0/zCuCQaJmn10CVyn24OYvwdVoJNgswTXOdoSekURB1r0KDc7OAWJ7OjXPCt7hEH1kEX0nEc9jF6XF1+l6Yu3R7nbTBjvut+Y/C+thnJfVHx7evman9e5k8KKQoUllYMWPerpzlUGtkQrMaLFkvKLdvezUcrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=J7mx63bP; arc=none smtp.client-ip=134.0.28.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="CN8hTQ6F"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="J7mx63bP"
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout3.routing.net (Postfix) with ESMTP id 8491461665;
-	Sat, 28 Jun 2025 09:10:55 +0000 (UTC)
+	by mxout3.routing.net (Postfix) with ESMTP id 51CE661657;
+	Sat, 28 Jun 2025 09:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1751101855;
+	s=20200217; t=1751101854;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c58atM53j6xJlfjeW4uz3/6gYrG19vaD/Ky2Z6w23+4=;
-	b=CN8hTQ6F2JgD81hp5vRG+KaTQmCq/h5BnDTH2xfxCOyxMXx2MqsRyUxIv93BLL/5So2t8c
-	kW3XrAaJvthnvFP1+dzAxC8SESEyaWq1MVaE4isWSNERCz39runHqQYjMD/7cTY1VThfFZ
-	A4ieKYI9gEkzKXA08pIuR3C25iRMiqo=
+	bh=DIMuNne++IWVgY0azMoYkvyXCjaefI/n17TVM+rpZxc=;
+	b=J7mx63bPm9HQTcvKlMeKSfBWzEcqWRcVsPqFXKvMY2ipEcMFrY5sieI5vjx1NWuXi4k5cA
+	JzueiB9r6BYmn6t8RxwxEtBRIp3lHUW8rf6TpnyaET53r1kLVJzCMPN/PTTa0Nq+wcw+vW
+	GyNKbfTbcUU3qFHQJaesAsjKAu5U3zM=
 Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 2C47812272D;
-	Sat, 28 Jun 2025 09:10:55 +0000 (UTC)
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id EE7501226F5;
+	Sat, 28 Jun 2025 09:10:53 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -63,9 +63,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v6 13/15] arm64: dts: mediatek: mt7988a-bpi-r4: add aliases for ethernet
-Date: Sat, 28 Jun 2025 11:10:37 +0200
-Message-ID: <20250628091043.57645-14-linux@fw-web.de>
+Subject: [PATCH v6 10/15] arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
+Date: Sat, 28 Jun 2025 11:10:34 +0200
+Message-ID: <20250628091043.57645-11-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250628091043.57645-1-linux@fw-web.de>
 References: <20250628091043.57645-1-linux@fw-web.de>
@@ -79,31 +79,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add aliases for gmacs to allow bootloader setting mac-adresses.
+CCI requires proc-supply. Add it on board level.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-index 21eb91c8609f..20073eb4d1bd 100644
+index 81ba045e0e0e..afa9e3b2b16a 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -8,6 +8,12 @@
- #include "mt7988a.dtsi"
- 
- / {
-+	aliases {
-+		ethernet0 = &gmac0;
-+		ethernet1 = &gmac1;
-+		ethernet2 = &gmac2;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
+@@ -40,6 +40,10 @@ reg_3p3v: regulator-3p3v {
  	};
+ };
+ 
++&cci {
++	proc-supply = <&rt5190_buck3>;
++};
++
+ &cpu0 {
+ 	proc-supply = <&rt5190_buck3>;
+ };
 -- 
 2.43.0
 
