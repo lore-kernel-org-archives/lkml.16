@@ -1,184 +1,98 @@
-Received: from mailrelay4-3.pub.mailoutpod3-cph3.one.com (mailrelay4-3.pub.mailoutpod3-cph3.one.com [46.30.212.3])
+Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD67224AE6
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98E14A3C;
+	Sat, 28 Jun 2025 10:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751106394; cv=none; b=Tu87RP1m1EuyBjma+3cfC6/avQT9AmiWdYKC18DGzeGQAdBob7NADY/PQNhzpaxgGV8JHh5VAEuf37SmtPBwlZc9pB+4p1VmGeFswE+Bmp1gVRPwxIrL6aQYRnN4uDy8JjtimUVinSAC2NlWiJaTgH7T4yoawzLI7KQwTO6XZLM=
+	t=1751106633; cv=none; b=RKl2tAc7KTHxv4VxYBVNWAifr7IytNmoX/7mhd1XyKfU4t/jnyXwhKein0kbsxeR3IBHDZsxp+75wM+HYXP8qz4281hpobnIU/I7rNd9SGM1RbTn0WjLRw7L12nE/Kf1uC9Ai8Li2EEGrlUFRUzxBPd5rJKTqSM+QdQV2KLv3rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751106394; c=relaxed/simple;
-	bh=+icoHdD16rtAElqIFrplkTciRveLhQeWCFCs/gsB+ig=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NpmiNzyDeaffOJDZn6UzhTzNP1X094g3E5Xlensdn3wBCCyFrngjYFWEfFvPjJyH+IcliQSNsQJ9R27qD/Ir3Rd/5wNonPqQSNiErcEiDoc8A6XE2tgRAGsRZHhNClOGxEw4p2nxFWOReirqWX3Fvuh5cO8KrVDckUJ8llYRcUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=QSZ+lYJi; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=NuIaGDGg; arc=none smtp.client-ip=46.30.212.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751106633; c=relaxed/simple;
+	bh=uQhRKDxK2mabMgCqoieFovOw4kdCdDL7hqMmNvBVq1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hESvwOd4OC7h5GNXqJpXC82a+G+NE9IGAI7wrACh7XKAsPNwvsIpKEIPOcWPfGEICJF84rmONNhCFJjHSBYXMVg2jkp9yD0GfMjhTgZdbsKnAS8pYoAyTD4vahR0QIsRZK+1qqhLEojF/OKnsX9/ICJwb9QrLYtVwMnMvo8il2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=NhjXIQ2b; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="QSZ+lYJi";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="NuIaGDGg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751106390; x=1751711190;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=xlhdGuz/Z+dkJo2xYiSj4xZE1JqckJSK1NBWLMJ0VOE=;
-	b=QSZ+lYJiZSB7Toib+iyiSJ3/SIzdf98oKheYebvFNLbjGPu8zBZE2g7L5gOuiAPO4E7A90ZoPAIJE
-	 6matMIx8TFsgWmyt3HIIySVFKoSE3hkywtECygbxMCT1u67m4QY2GypMiGmblTtgCsMeQ8ujIbkA7B
-	 S5hkwzBE+tzBGCsrwxuowfMXp9xzYw+dmrzZLseZo/5C2sFtiHx3ZHe6sqYEBna47HXkgDsI0lqu+F
-	 T1f4HsOLmTC0Zrvgi/jjIdZTZa3nuw5JsOeU3tNyf9vX5+TEPvvSYSi+6QuXcuj2a79UU+taGa9zV7
-	 gKsLpnBifkaSwOft3eGF2QRWV1kQXFA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751106390; x=1751711190;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:from;
-	bh=xlhdGuz/Z+dkJo2xYiSj4xZE1JqckJSK1NBWLMJ0VOE=;
-	b=NuIaGDGgweqG2u/jIxj6mcXd/5JQk5UQSVMztjkrY8ddwsuy+pc/9KcXSDnDjnWYikhdkRmzsvHdj
-	 MSJLU5HDg==
-X-HalOne-ID: 59c0416d-540a-11f0-8548-29b2d794c87d
-Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
-	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 59c0416d-540a-11f0-8548-29b2d794c87d;
-	Sat, 28 Jun 2025 10:26:30 +0000 (UTC)
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	rust-for-linux@vger.kernel.org,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: [PATCH v8 4/4] rust: support large alignments in allocations
-Date: Sat, 28 Jun 2025 12:26:26 +0200
-Message-Id: <20250628102626.2542946-1-vitaly.wool@konsulko.se>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250628102315.2542656-1-vitaly.wool@konsulko.se>
-References: <20250628102315.2542656-1-vitaly.wool@konsulko.se>
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="NhjXIQ2b"
+Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:82a4:0:640:9cc1:0])
+	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 847CA6140A;
+	Sat, 28 Jun 2025 13:30:21 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id FUUIxAMLliE0-iaB20H8x;
+	Sat, 28 Jun 2025 13:30:20 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1751106620;
+	bh=uQhRKDxK2mabMgCqoieFovOw4kdCdDL7hqMmNvBVq1w=;
+	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+	b=NhjXIQ2bggrzxKaYhfubQknCHqyk6QZICObr3m6HDPo2sRSdLba6UHytf1es05UqC
+	 CxHrGU8uV2M9ExsJ+PPeniwqeZ9iHt0rKjI+3C58JHDfFrRDXFkRDW3zhEaLLqE2sU
+	 443MrhPJZzvVknbVSGMghG2CUeD4qzdzSWgpkJQE=
+Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+Date: Sat, 28 Jun 2025 13:30:13 +0300
+From: Onur <work@onurozkan.dev>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch,
+ ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
+ a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+ rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ davidgow@google.com, nm@ti.com
+Subject: Re: [PATCH v3 3/3] rust: remove
+ `#[allow(clippy::non_send_fields_in_send_ty)]`
+Message-ID: <20250628133013.703461c8@nimda.home>
+In-Reply-To: <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
+References: <20250628040956.2181-1-work@onurozkan.dev>
+	<20250628040956.2181-4-work@onurozkan.dev>
+	<CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add support for large (> PAGE_SIZE) alignments in Rust allocators.
-All the preparations on the C side are already done, we just need
-to add bindings for <alloc>_node_align() functions and start
-using those.
+On Sat, 28 Jun 2025 09:13:50 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
-Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
----
- rust/helpers/slab.c            | 10 ++++++----
- rust/helpers/vmalloc.c         |  5 +++--
- rust/kernel/alloc/allocator.rs | 28 ++++++++--------------------
- 3 files changed, 17 insertions(+), 26 deletions(-)
+> On Sat, Jun 28, 2025 at 6:10=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.d=
+ev> wrote:
+> >
+> > Clippy no longer complains about this lint.
+>=20
+> Do you have more context? For instance, do you know since when it no
+> longer complains, or why was the reason for the change? i.e. why we
+> had the `allow` in the first place, so that we know we don't need it
+> anymore?
+>=20
+> For instance, please how I reasoned about it in commit 5e7c9b84ad08
+> ("rust: sync: remove unneeded
+> `#[allow(clippy::non_send_fields_in_send_ty)]`").
+>=20
+> (It may happen to be the same reason, or not.)
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Miguel
 
-diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
-index 8472370a4338..d729be798f31 100644
---- a/rust/helpers/slab.c
-+++ b/rust/helpers/slab.c
-@@ -3,13 +3,15 @@
- #include <linux/slab.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_krealloc_node(const void *objp, size_t new_size, gfp_t flags, int node)
-+rust_helper_krealloc_node_align(const void *objp, size_t new_size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return krealloc_node(objp, new_size, flags, node);
-+	return krealloc_node_align(objp, new_size, align, flags, node);
- }
- 
- void * __must_check __realloc_size(2)
--rust_helper_kvrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_kvrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return kvrealloc_node(p, size, flags, node);
-+	return kvrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
-index 62d30db9a1a6..7d7f7336b3d2 100644
---- a/rust/helpers/vmalloc.c
-+++ b/rust/helpers/vmalloc.c
-@@ -3,7 +3,8 @@
- #include <linux/vmalloc.h>
- 
- void * __must_check __realloc_size(2)
--rust_helper_vrealloc_node(const void *p, size_t size, gfp_t flags, int node)
-+rust_helper_vrealloc_node_align(const void *p, size_t size, unsigned long align,
-+				gfp_t flags, int node)
- {
--	return vrealloc_node(p, size, flags, node);
-+	return vrealloc_node_align(p, size, align, flags, node);
- }
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index 2e86e9839a1b..58e5bf78c159 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -59,19 +59,19 @@ fn aligned_size(new_layout: Layout) -> usize {
- /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
- struct ReallocFunc(
-     unsafe extern "C" fn(
--        *const crate::ffi::c_void, usize,  u32, crate::ffi::c_int,
-+        *const crate::ffi::c_void, usize, crate::ffi::c_ulong, u32, crate::ffi::c_int,
-     ) -> *mut crate::ffi::c_void,
- );
- 
- impl ReallocFunc {
--    // INVARIANT: `krealloc_node` satisfies the type invariants.
--    const KREALLOC: Self = Self(bindings::krealloc_node);
-+    // INVARIANT: `krealloc_node_align` satisfies the type invariants.
-+    const KREALLOC: Self = Self(bindings::krealloc_node_align);
- 
--    // INVARIANT: `vrealloc_node` satisfies the type invariants.
--    const VREALLOC: Self = Self(bindings::vrealloc_node);
-+    // INVARIANT: `vrealloc_node_align` satisfies the type invariants.
-+    const VREALLOC: Self = Self(bindings::vrealloc_node_align);
- 
--    // INVARIANT: `kvrealloc_node` satisfies the type invariants.
--    const KVREALLOC: Self = Self(bindings::kvrealloc_node);
-+    // INVARIANT: `kvrealloc_node_align` satisfies the type invariants.
-+    const KVREALLOC: Self = Self(bindings::kvrealloc_node_align);
- 
-     /// # Safety
-     ///
-@@ -113,7 +113,7 @@ unsafe fn call(
-         // - Those functions provide the guarantees of this function.
-         let raw_ptr = unsafe {
-             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
--            self.0(ptr.cast(), size, flags.0, nid.0).cast()
-+            self.0(ptr.cast(), size, layout.align(), flags.0, nid.0).cast()
-         };
- 
-         let ptr = if size == 0 {
-@@ -157,12 +157,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags, nid) }
-@@ -182,12 +176,6 @@ unsafe fn realloc_node(
-         flags: Flags,
-         nid: NumaNode,
-     ) -> Result<NonNull<[u8]>, AllocError> {
--        // TODO: Support alignments larger than PAGE_SIZE.
--        if layout.align() > bindings::PAGE_SIZE {
--            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
--            return Err(AllocError);
--        }
--
-         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
-         // allocated with this `Allocator`.
-         unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags, nid) }
--- 
-2.39.2
+It doesn't seem to be the same reason. I rebased over
+c6af9a1191d042839e56abff69e8b0302d117988 (the exact commit where that
+lint was added) but still Clippy did not complain about it on the
+MSRV. So it was either a leftover, or there is a version between
+1.78 and the current stable where Clippy did complain. I can dig into it
+more during the week if you would like.
 
+IMO, we should require people to add a comment explaining the reason
+for adding these lint rules to the codebase. It would make both reading
+and modifying the code much simpler and clearer.
+
+Regards,
+Onur
