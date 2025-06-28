@@ -1,203 +1,107 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E7E23DE;
-	Sat, 28 Jun 2025 08:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BC7145FE0
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751100223; cv=none; b=YAJNoLt/HrsGhycD+y40bLwLukZna6nY3H0PTGbLRbsXM+2YyYFmBM/+82JaWCBpZ2gdDKDBulWOSQ6GdOiBJoJ86FGVzA88KQmQUts5Ld8IfzWRz3ZgcwzGd8wzVYtB1J2Q5e6+SPLsCN99fuCZ+/HoZj3Ttt05/p6Vy0aF0V4=
+	t=1751100283; cv=none; b=o979/JE6+BZcRX4NagC3R8WCe9H2PGTiqZKfIiSuL7DSFgd/ENM9FpUrq/ujSsV7IrYdR6M/8C5zyLx6KbXqBHD45ynt1+AbcC7H8fAmpS1wqDylXKhRe/BFmC3Ket0BlLv/njzuz7wTJyeqHe4tE6zKn8OmngXqe3/J1irpmec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751100223; c=relaxed/simple;
-	bh=2Yhg2EDAhv8zXnryNZ8+WmoQhMBpv71AIS9tGm4BeX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K/R93k9YWrqcHSwJ3j1pvcxybv8IbUOXemSak1oSQUS/0qmZwmvRHRQ4KeKaLjChkawyY/nTIt6Nn3kV15gAz1WC+UuG8hv/nq958Z7xyDxNcn9ERKkacLl3ioQF0klYeb66PVplJ/TT3weFlPNVoZkBkneoYiA6fX9GOKWABsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/79V9FJ; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751100283; c=relaxed/simple;
+	bh=nlrGEI9OpG+H5s+7amgT1YtNa2lY4u4SK6aX0tw6LkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QaivMF4b/pB46wI5ddQ7nzTqG4UnBRU0+vddh2ubv7DHZpoE50ladFXx32XrOBMfXvm//N6BM1H5J/JaJGTX/4wn5haNdmgIf1BFfyYDviBUMxffCv24MzkdnQbCOUaoV61DBVELZqqEOvqXO551xGgRE/vUqW0IKEk/oupQEew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OmMcHvLY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/79V9FJ"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af6a315b491so712552a12.1;
-        Sat, 28 Jun 2025 01:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751100222; x=1751705022; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jy7TEL91BqkyjG4VnW5FClmC8uUXfEkPzrAe3TbCioI=;
-        b=L/79V9FJts0XZErMa1yMD1vStzlkTF7VuZPNd1rPVwTJVLZVFOdS5H5ebTN82Bf+Zf
-         IngOLasx5dE3DMbx+j2SL8IeVXCDsB/J+ujzQREe+Y+lVP4I251ZAKhhUf7wQ90Dq6oH
-         CVw1PgUSUg9EiREhhKZnKp7OloDhH11qY30YjvwnfhR9223AAu6aGX1mvJzYQIu6zJol
-         RGTcR+krcn0KTJkuQsDle5hkaszye/jAsl3HrBiZNCNa03CUNHRSfgxBknVAWmbYsq68
-         g6aG5oc/H4dSDIlOQzF1NNh1Wig76ziko4Exs7IIxXZHaGwrDSC4NaaiRPu9iX/UcIdA
-         ofog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751100222; x=1751705022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jy7TEL91BqkyjG4VnW5FClmC8uUXfEkPzrAe3TbCioI=;
-        b=t4CVHUKXs+tpOpBmNa2Cd+RyfEIGX0YqgbbRT/VdWjffGzqVVkqOJxmkmU+ej7uDYY
-         oxiLnXVM5AR5oNB/0n8tVHR++l7ah6zxrvIqTslVfIh0n0C/8Q0leW6yT8Fwz75/vycg
-         qjU1Ckx4jmjK+1rPKx/3WGrsans0FRsNBAKADghzSt9t1BoRuDf8oWa4aTlY8Dhyjdvz
-         0SDxSt1gmgoe8RwxRPDemKVfTvkJKKhVqdEyrJoe18UyQMau+Ix27S/SEC4HBN4Wr/xr
-         SlT6Ux5DpJq4CrXT/2rWEkuiK9zOsMeMmjiklDNQVa6rNoNXZDNr9kIEBQTjweTf9qNU
-         JRbw==
-X-Forwarded-Encrypted: i=1; AJvYcCULdDk5ti+Pr21sUHK2KZX+Nl4dG5hXlFRTJDLjyiQaOuS3kRRyNoMcjemjG1e+R7ccs7fOe6u6GSz4oGI=@vger.kernel.org, AJvYcCUf99Sr3QBkfrvnNGrMUNOaq8ZMAilaGdo2IoKvzWn22DAISAP0ynH1HzPT9SeRI2xi99xjimBdBTbVti6N@vger.kernel.org, AJvYcCWxvfcEOUp5Acg2UcOWzlqmWAM6Dc3j3BQGQmDFpaOKywB9Oap3d6oXffq3rW/6flX6w6RvcfY2HKDX@vger.kernel.org, AJvYcCXyOmjUQiZge299eDrrohR/P/LBR1jo9cEJfABH4/GiFdcEXBVL7D2H24EFwWQsp7vYL93y0qJwWbmd@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW40n99q1VbFAR29r3dp0GeKfKOS8EbJkUMaoY8gkoTjhSzms8
-	iQ52duFJzlUdI+ovVdjEcqZop9Wu7q0AYKTRMaqt2pI6nsIGtRaP/XwP4sFzm1zbGwkSDNcewmK
-	4kx2VN12g7c+2tv5x+UR28a3AGgN1rXk=
-X-Gm-Gg: ASbGncucVS4CEZ5exTApVA/6ukRQ0o8lWadTNoL5/i7PQYBY7A0hnz035ZHlfeBkp4R
-	Oo2fGfqDC8q8xD0YBPyN1KmsFFHlH5sSI/ILJjLJqULIJodlRgpTKBb3S6bdKRUAnxFdHRHyjgP
-	A3GoLE06z0FmaLw2zO6qf35pSo/q60Z1UBPdX1ud2JS48mNnO2hqgRWEFz0nqvBIRjR+f0odUcZ
-	aHPNDIQmZ7/TYsZ
-X-Google-Smtp-Source: AGHT+IFKlwm6XGn++8Zmma+OVlEv79qu+lYvKQsC5hXOU2GGxy5e73OgJCj8yl2gSF2zX4UMeZOGTHopwxX5mwfyyAo=
-X-Received: by 2002:a17:90b:224c:b0:311:f99e:7f4a with SMTP id
- 98e67ed59e1d1-318c926451dmr7337383a91.26.1751100221531; Sat, 28 Jun 2025
- 01:43:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OmMcHvLY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751100282; x=1782636282;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=nlrGEI9OpG+H5s+7amgT1YtNa2lY4u4SK6aX0tw6LkM=;
+  b=OmMcHvLYJ4CtErckUydVU3IR1z9xpiDGYR9jvanHdfv3aeKmKxzqUPX3
+   HHn3yiY8G3s197eqofibrD/95bRddjPQWEFhycz+YfJddy1pLALBGVC9O
+   JpG4N/uw4+JoL4lSse2OsqMOUx8uq1I1OXnR6wcy/ZMHuXsKiyOwxoHH+
+   2joGWFyCgJodeBWQ0SuZy0PJH4ofFx9TudsYbTgAYKORAKI8rqFsrwGGg
+   P+Im3+ncu6cFZJizNBTBzo5MFuU+v8CiC58Ci8cnRlp1eRf7yitFYR2It
+   S7cACvKa+1ih+2tuR2UCvy5F1YjASzQkyE86B1lcWWG8k5xVDokECjk1m
+   g==;
+X-CSE-ConnectionGUID: qt8WcjvASgqfO1MFKdPcnA==
+X-CSE-MsgGUID: LxEEYzpkSZSii09mq1sbgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="75947238"
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="75947238"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 01:44:41 -0700
+X-CSE-ConnectionGUID: z0yvuWd8QNC5dhLrhpUP3Q==
+X-CSE-MsgGUID: j40ghVhkS+abnqntwCSrHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="152512419"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 28 Jun 2025 01:44:39 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVRAq-000Wvo-2k;
+	Sat, 28 Jun 2025 08:44:36 +0000
+Date: Sat, 28 Jun 2025 16:44:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Jesse Taube <mr.bossman075@gmail.com>
+Subject: ld.lld: error: Function Import: link error: linking module flags
+ 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)'
+ and 'vmlinux.a(net-traces.o at 1409108)'
+Message-ID: <202506281650.jluKcypL-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626113351.52873-1-noltari@gmail.com> <20250626113351.52873-3-noltari@gmail.com>
- <20250627213454.GA179652-robh@kernel.org>
-In-Reply-To: <20250627213454.GA179652-robh@kernel.org>
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Sat, 28 Jun 2025 10:43:05 +0200
-X-Gm-Features: Ac12FXyB5spcQT9l77Ao7kgk6V-2QwXerVK2aE6vHymxZPfo25cAnEbofL-HkQQ
-Message-ID: <CAKR-sGf01xtOF9dY9yb2i67PV5FHHe3GGKk7ingjTOOfqWA5FA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: hwmon: Add Microchip EMC2101 support
-To: Rob Herring <robh@kernel.org>
-Cc: jdelvare@suse.com, linux@roeck-us.net, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, corbet@lwn.net, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Rob,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   aaf724ed69264719550ec4f194d3ab17b886af9a
+commit: 2c0391b29b27f315c1b4c29ffde66f50b29fab99 riscv: Allow NOMMU kernels to access all of RAM
+date:   3 months ago
+config: riscv-randconfig-r131-20250627 (https://download.01.org/0day-ci/archive/20250628/202506281650.jluKcypL-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce: (https://download.01.org/0day-ci/archive/20250628/202506281650.jluKcypL-lkp@intel.com/reproduce)
 
-El vie, 27 jun 2025 a las 23:34, Rob Herring (<robh@kernel.org>) escribi=C3=
-=B3:
->
-> On Thu, Jun 26, 2025 at 01:33:50PM +0200, =C3=81lvaro Fern=C3=A1ndez Roja=
-s wrote:
-> > Introduce yaml schema for Microchip emc2101 pwm fan controller with
-> > temperature monitoring.
-> >
-> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > ---
-> >  .../bindings/hwmon/microchip,emc2101.yaml     | 52 +++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,e=
-mc2101.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/hwmon/microchip,emc2101.=
-yaml b/Documentation/devicetree/bindings/hwmon/microchip,emc2101.yaml
-> > new file mode 100644
-> > index 000000000000..e73f1f9d43f4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/microchip,emc2101.yaml
-> > @@ -0,0 +1,52 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/hwmon/microchip,emc2101.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Microchip EMC2101 SMBus compliant PWM fan controller
-> > +
-> > +maintainers:
-> > +  - =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
-> > +
-> > +description:
-> > +  Microchip EMC2101 pwm controller which supports up to 1 fan, 1 inter=
-nal
-> > +  temperature sensor, 1 external temperature sensor and an 8 entry loo=
-k
-> > +  up table to create a programmable temperature response.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - microchip,emc2101
-> > +      - microchip,emc2101-r
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
->
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
->
-> What are these for? You don't have any child nodes.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506281650.jluKcypL-lkp@intel.com/
 
-EMC2101 can control a single fan, so I guess I should add the following her=
-e:
+All errors (new ones prefixed by >>):
 
-  '#pwm-cells':
-    const: 2
-    description: |
-      Number of cells in a PWM specifier.
-      - cell 0: The PWM frequency
-      - cell 1: The PWM polarity: 0 or PWM_POLARITY_INVERTED
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(trace.o at 1237988)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(mballoc.o at 1255208)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(core.o at 1357508)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(send.o at 1276448)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(slub.o at 1244588)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(skbuff.o at 1406948)'
+>> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(net-traces.o at 1409108)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(inode.o at 1255088)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(volumes.o at 1275308)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(ring_buffer.o at 1237928)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(tcp.o at 1412828)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(syscall.o at 1239488)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(core.o at 1242068)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(blk-mq.o at 1287308)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(af_packet.o at 1418288)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(super.o at 1274168)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(target_core_transport.o at 1358588)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(filter.o at 1408028)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(inode.o at 1274768)'
+   ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values in 'vmlinux.a(init.o at 1228868)' and 'vmlinux.a(vmscan.o at 1243208)'
+   ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
 
-patternProperties:
-  '^fan@0$':
-    $ref: fan-common.yaml#
-    unevaluatedProperties: false
-    properties:
-      reg:
-        description:
-          The fan number used to determine the associated PWM channel.
-        maxItems: 1
-
-    required:
-      - reg
-
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        fan_controller: fan-controller@4c {
-> > +            compatible =3D "microchip,emc2101";
-> > +            reg =3D <0x4c>;
-> > +
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-
-And the following here:
-
-            #pwm-cells =3D <2>;
-
-            fan@0 {
-                reg =3D <0x0>;
-                pwms =3D <&fan_controller 5806 0>;
-                #cooling-cells =3D <2>;
-            };
-
-Would that fix the issue?
-
-> > +        };
-> > +    };
-> > +...
-> > --
-> > 2.39.5
-> >
-
-Best regards,
-=C3=81lvaro.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
