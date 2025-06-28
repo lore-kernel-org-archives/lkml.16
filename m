@@ -1,101 +1,123 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9A28635D;
-	Sat, 28 Jun 2025 07:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20E18635D;
+	Sat, 28 Jun 2025 07:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751094846; cv=none; b=Swp8U7KC9HGo35TDxusYexhm2AmGQt1d/ottYfljluYi63XzlInFZ9gTzXEnXQpytWu3SzkpGi4016/DvP21jCE7uxxOnLldDtLEhzshVC1tr2nfIC5vALG06SHzuGQHkXVu15t+bWQbZS2SlJNo2KHmYNvsBmaskwsEzwIjIIc=
+	t=1751094900; cv=none; b=KFFQwCL37Spy43bTTY9IlWkuPe4kq20R7dkBkpcoonhK/QHucda6iWgRJ26MbVhFch6XfXDILolDOZEoZvvknzrPWX8zdmxgm05rQ28BlNrMyK3+492nJPkEVhZz91BkSCwWqNJqRfl4ZCVJsyTQZvhI0Kwsmb4XBmLfYF/AKsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751094846; c=relaxed/simple;
-	bh=H1N2WeCN9Ubm4R/1tsb3yfHGSgMXi8Z9AP4UNGlOFfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rO7VX5D6/bOL4XxFDpJiuFseq/Xw8tOYROHTMQwVYFTt5q96GuV5rICcdrXEFT0yMwDeCSKujMAF5JC22UGq09uvzii/0vN7LI8dANngERL/CNW548mFp4TlZPDw2mong3SaJELbYC0aKxODsVfjKIouzJDeTttRVCE44MtvCno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFGSgN/E; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751094900; c=relaxed/simple;
+	bh=r8l+tu5sugQIvxlQ0MnusMGkdx0A7k8EXAmrJyIyqCA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d+GysJ57LQ2zRWPmzPD3xDtcK96L3PGo6dXGoL28b3rzUlSSyLERxn/D6SzDQ126Szk0hkWvrG5YjMqJECeLgz8tkwHM7ppQ0PjKSbsI3lxUoOa8euF9SPuMNmGmRvi4geHhRTJVpupENzwnG5nZsn5iRW3+MrphW3/5JaCeyeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PHQzhf4k; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFGSgN/E"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so574963a91.1;
-        Sat, 28 Jun 2025 00:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751094844; x=1751699644; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H1N2WeCN9Ubm4R/1tsb3yfHGSgMXi8Z9AP4UNGlOFfw=;
-        b=jFGSgN/EQnUgnTN4l/bHq52+0ntt7f7YgHsbsqSZsSW0kw0/Ju+hP9RhLzsF+SLTBP
-         h03ajTPMrZPRfppirgUPHEWrpUorGQ+rJv8p6BUGaZ0zKuFfPXvivAK3SuA+bsxWAEz6
-         MrmsT6t0/iMNvBGSCFYIoMuUsWaeKLHwtCTMVNiqHxnxaIerKot4HJZIWeZ/kFBOeUp4
-         Jf6QfHr/VshT9ZkVJ1R+7F0v/LCujOmTEWbL0QpehP8N49V9djidIaLquc2PeHGnYgfz
-         lxzvdfc0bGdLNYDW1C2c9Pc0H67jS0CZEf5ga1mhHO+WU/Yzcb69kG9oMlxdK3+j/TcU
-         A7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751094844; x=1751699644;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H1N2WeCN9Ubm4R/1tsb3yfHGSgMXi8Z9AP4UNGlOFfw=;
-        b=Ll6hEUZEH4+bQfTf73zHxWerFraO6WJjTxqqojYER63ek3uFaKtq9dtiKC3rFjZyoz
-         TUiAMNs+LRYbK1q4cU/CuZ1Qle46BEkRgk7qAr8U/xTyE4psV18lkv+UvkwAKuDkJW5s
-         L8NoEW7yUkAwuMDqC0OslF32H5FHBdGGoj4wGOFycUx43O5/0Qo8QQglDioLER6Nbsyj
-         Wo01c7Pp6amjCjqhfdEvkJNY7bNmhT8QECECN28p8vBx98j9IIlusDU19PcD4YnYe+z0
-         0qX8Jsagh9CkM0gr0b7zu/xd4gp/SD02fxokXTtHBLArWxNA+5CIc89K6HlH8D2vWkH9
-         w3Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUludUmhBYeY8jNJN5B7M6U70zgEiRY+NRY7N06YKsz6isZIdC2PgKBFYRF23T3p4dVw1vf9frSaOo7kXs=@vger.kernel.org, AJvYcCVGq9GN0zkmLEqOz8nCgCjkRpJsWzEKkp1iHCPuChSaXszYYqaCrBOk0YbK379D9lNmAX/tQUv06ac=@vger.kernel.org, AJvYcCXL4a+cl/rEUOC/Ocy82JgZ05Wza34XMgR+gBb4g+I73lUH1zFHf2SotHKS7A87/EF41y8SufW9qFjt5SlEsPix@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzLoUg/Cvl5pLuMAupUp5UrpwyftinLY+WycdggmHXUADlIvDX
-	B2uhHPyVf4R/nNuxINslFrplR1xofWGoJs0hnK3a6W4e8dAyvFnmS1MjdUmCAq7KGQn9VNTjIdP
-	D4kAHJPghF0ETJBPh9EpOtcIIY1hk10A=
-X-Gm-Gg: ASbGncu568OUf0eGxl9mau9hmpQ9Z5vmNor26iXaO0ycsdVr7iGXXY5OHhiKWDNTjzL
-	WsrEZU7cFGlCTKZ5oBF1xElKvCYBFMpPxRk+8xnnmdA0SNHHAotEQjJgd0OG2EYnc87e2P7xILQ
-	a6pIQwLHsrQMc96sG7HXLW3ab3YKhEQLsRWI5mLEq1BwhTmpb5CZiRtg==
-X-Google-Smtp-Source: AGHT+IEiaOH6ajuLpwpwZz2av1oq2F3csYt/I+OBbc6IxDRF5jDVIWZ0gicRa6bCrZYV0QOxsk9yQObhR6Jo8uBU1pg=
-X-Received: by 2002:a17:90b:2e4d:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-318ec4117d4mr1196429a91.3.1751094844258; Sat, 28 Jun 2025
- 00:14:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PHQzhf4k"
+X-UUID: 9312295653ef11f0b33aeb1e7f16c2b6-20250628
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=V6Z/4K6Yt+prO9BrSpsKqwbnEWAEKzGbOjbsOQhnb3g=;
+	b=PHQzhf4k8O8kDrovyVrSlv5biV2etqm6lqCdEszB+smfwKlrZDsncT46fRvPUXIvMV1LArylq5mFiHz9jrXSnahZqlEZ730OQtk2Dk0WqHCqJEySW9NJFbERR6zbHqhzMRboArcqFeoKRseEvbXlzLslf1EKRYMwx934gve34Ps=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.2,REQID:a15e549e-8ff4-4233-a6ee-148f015c0860,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:9eb4ff7,CLOUDID:200ba714-6a0e-4a76-950f-481909c914a4,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 9312295653ef11f0b33aeb1e7f16c2b6-20250628
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
+	(envelope-from <cyril.chao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 140594530; Sat, 28 Jun 2025 15:14:47 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Sat, 28 Jun 2025 15:14:43 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Sat, 28 Jun 2025 15:14:44 +0800
+From: Cyril <Cyril.Chao@mediatek.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<cyril.chao@mediatek.com>, Cyril <Cyril.Chao@mediatek.com>
+Subject: [PATCH 00/10] ASoC: mediatek: Add support for MT8189 SoC
+Date: Sat, 28 Jun 2025 15:14:08 +0800
+Message-ID: <20250628071442.31155-1-Cyril.Chao@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628040956.2181-1-work@onurozkan.dev> <20250628040956.2181-4-work@onurozkan.dev>
-In-Reply-To: <20250628040956.2181-4-work@onurozkan.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 28 Jun 2025 09:13:50 +0200
-X-Gm-Features: Ac12FXwmmYcafnkojfcG5S_KqGaI7dG-A-bId82UJsz_kOdPdtwmEEpPMVImX7I
-Message-ID: <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
-To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	davidgow@google.com, nm@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Sat, Jun 28, 2025 at 6:10=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.dev=
-> wrote:
->
-> Clippy no longer complains about this lint.
+Based on tag: next-20250626, linux-next/master
 
-Do you have more context? For instance, do you know since when it no
-longer complains, or why was the reason for the change? i.e. why we
-had the `allow` in the first place, so that we know we don't need it
-anymore?
+This series of patches adds support for Mediatek AFE of MT8189 SoC.
+Patches are based on broonie tree "for-next" branch.
 
-For instance, please how I reasoned about it in commit 5e7c9b84ad08
-("rust: sync: remove unneeded
-`#[allow(clippy::non_send_fields_in_send_ty)]`").
+Cyril Chao (10):
+  ASoC: mediatek: mt8189: add common header
+  ASoC: mediatek: mt8189: support audio clock control
+  ASoC: mediatek: mt8189: support ADDA in platform driver
+  ASoC: mediatek: mt8189: support I2S in platform driver
+  ASoC: mediatek: mt8189: support TDM in platform driver
+  ASoC: mediatek: mt8189: support PCM in platform driver
+  ASoC: mediatek: mt8189: add platform driver
+  ASoC: dt-bindings: mediatek,mt8189-afe-pcm: add audio afe document
+  ASoC: mediatek: mt8189: add machine driver with nau8825
+  ASoC: dt-bindings: mediatek,mt8189-nau8825: add mt8189-nau8825
+    document
 
-(It may happen to be the same reason, or not.)
+ .../sound/mediatek,mt8189-afe-pcm.yaml        |   162 +
+ .../sound/mediatek,mt8189-nau8825.yaml        |   103 +
+ sound/soc/mediatek/Kconfig                    |    28 +
+ sound/soc/mediatek/Makefile                   |     1 +
+ sound/soc/mediatek/mt8189/Makefile            |    18 +
+ sound/soc/mediatek/mt8189/mt8189-afe-clk.c    |   763 ++
+ sound/soc/mediatek/mt8189/mt8189-afe-clk.h    |   109 +
+ sound/soc/mediatek/mt8189/mt8189-afe-common.h |   294 +
+ sound/soc/mediatek/mt8189/mt8189-afe-pcm.c    |  2682 ++++
+ sound/soc/mediatek/mt8189/mt8189-dai-adda.c   |  1327 ++
+ sound/soc/mediatek/mt8189/mt8189-dai-i2s.c    |  1795 +++
+ sound/soc/mediatek/mt8189/mt8189-dai-pcm.c    |   337 +
+ sound/soc/mediatek/mt8189/mt8189-dai-tdm.c    |   828 ++
+ .../mediatek/mt8189/mt8189-interconnection.h  |    97 +
+ sound/soc/mediatek/mt8189/mt8189-nau8825.c    |  1054 ++
+ sound/soc/mediatek/mt8189/mt8189-reg.h        | 10773 ++++++++++++++++
+ 16 files changed, 20371 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8189-afe-pcm.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt8189-nau8825.yaml
+ create mode 100644 sound/soc/mediatek/mt8189/Makefile
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-afe-clk.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-afe-clk.h
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-afe-common.h
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-afe-pcm.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-dai-adda.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-dai-i2s.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-dai-pcm.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-dai-tdm.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-interconnection.h
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-nau8825.c
+ create mode 100644 sound/soc/mediatek/mt8189/mt8189-reg.h
 
-Thanks!
+-- 
+2.46.0
 
-Cheers,
-Miguel
