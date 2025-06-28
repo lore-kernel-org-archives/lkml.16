@@ -1,147 +1,106 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BC4F9CB;
-	Sat, 28 Jun 2025 01:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0DBF9CB;
+	Sat, 28 Jun 2025 01:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751073652; cv=none; b=LuKkec/G7KNhR+Ug87fIgk0j+j1ep7zG5/HX2l9sQFGQH17OIrUHRAJiyHX9ACCfdfbTHjOK+nctI3uQa/nNUVKIjOSSc5BuuLDfyOTUnnx2pysywbkH3zaNP6esStR7Iw9GwevHD1esk67Pa4kdLzCeQ3lPRRj67I8keDtIw10=
+	t=1751073719; cv=none; b=ngjBr7erVO8hY0nJF6ODVbCfuYDy6VKvc8Iwzz12otm7SQ47e+vHpkgpLNHiIh/Gg79bxzuJVIMS/WWHp9fwH65y/EY8mv9ZpkQnNAHyhDq9FEyO599T3MOg5HPOu2ZwLkGv8ugW0CmVBbDNDvxmgKvzp624IzSTsGLJfp9UllY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751073652; c=relaxed/simple;
-	bh=MpTa9TA9k3b2nQldr89Z/sMqdAW/z9ohFM1koyo5aIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTnPIIniKotrD8Ypnv+76P3bSVMOxhgr22nzLowKvldx4ImyMQ9iGWcMN2hSDAikSZVzXIhotNNyF5vZEKhAl6tHvk/VbtbzWHLl/nx6QYbwKIOhNWud9V/yRT2LRoGxumbPistIfRTftX3ZhHUj+jFueIZ0pAg9npkoI+jX8+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XtODcN+6; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtODcN+6"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7481600130eso743104b3a.3;
-        Fri, 27 Jun 2025 18:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751073650; x=1751678450; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Wfd7qO4PTKRmcWvzovx+PZakUJ6qkobf0UAzYzLZ57Q=;
-        b=XtODcN+6SUy1MXvcXzFpcmQuC0Zx5gL8KweY+DYsZPQ9Gzuioytew9bNd59W0gjS3j
-         FnBzZcn8LXSnxYPSlr0RAj+jz1akV0WIJkIx5dPJgIp6GjNs3rdoq4Y318zCt6JLMpY8
-         BVn5rAF1cGBdYR4pES4gecTZLgwzcS2MIIQIWsMSxVa7SXDWxzz4+lj410ZMIfj88gHp
-         rFsuCchl2Yoq1F5QIna85jVStDHQETpnQil5yhvxQq6gBCHTeFWxKzKFMHkh98W4lV+K
-         wjH6OmhTFgCMSF17OLMZQwYApumDE8co6THrkcRFBarY5PTbf7bl78LEJvOQVIqiIhmR
-         5k4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751073650; x=1751678450;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wfd7qO4PTKRmcWvzovx+PZakUJ6qkobf0UAzYzLZ57Q=;
-        b=URXmowAVRsm39vzidNEPYVewPTcz+jAj6Alzw9R2BTilu6x/Ow2wowUNkmPG9IhUnz
-         YkmeCr+A3nYEuDPu9RJjzk8mGyqSjB2nLqD25z2Osbk9jmvmzllClRwda60KF6mwZJYq
-         1Rq8Yw4v6Lzy0c1KSzIQVhH2kwiEejTV9UWEgLU+8vvqGwr2ZX4eRnA32SJ5m1EsjU8g
-         lEGJQzkqwhL1USAUbn1mptcDT89lur2PNrkdmKFGGmd3qIAxr2dTfsNpUtS3hnW1ueu7
-         hlPzOHFhVpdIq6X+G+nBTmnP86MEJZ8o9gm/T3WsWxgZcQtUfm0XHhedspEO4Fc/zfRr
-         slaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvw9R63weT6CNTaLmuOr3R48tLG89X6sKHShVnUBzH8rU2cvUOXYguzBCRXLbMAEcXnr7aXh2fVnVv@vger.kernel.org, AJvYcCXNFVdRcLGc9CNA8jhuCA+WALz5/a2DUpnNfuLo4u/+mXKRvwlCZbJe5K8s7+cgaPo0lvPpmIWMKVifC2hy@vger.kernel.org, AJvYcCXTs40VSfIaX4YfrOamMtjTnPBZZ5t2TgjCjzRZhpfqbTMYdYIHTQKoFnUzb300qBHUCp0P7wKJCDbXP28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIyfAojRc2aT5Qz7ayx9x0mPKPyQoV1Pk5qjUH7L5L/TafyPa5
-	UE793Mu95GmyxTKfUFVQ3wsQTyTEkf+WjzsM3IOPYFN/0ljYj9J5/Q00
-X-Gm-Gg: ASbGncv+4ElpMA7qxFNxND8A+UfwSn9E+4G7zKJkwPf+ORplcA/XgFx68mY0jL8Mj9Q
-	/M0JjCXoucrzxKd84DAdEdKgek8IteLaT9NFwP9cvSIOpugjGXiB3coAHhfKVENyiRWle8qMpZi
-	vt6C1+T14r8QhXHRjvmNyx/7Mhtej1ymLh9Jbt6B8aC7MbtNcdn9wDjmBnIFX5iVj4OXFNKmICu
-	KvYeUGoivyubmnyGwgF1ut3MQkQ0DeUdI7wSventlyOiEmDOjSmSXSH1lP/lOxU3139FWPKJXkX
-	chINYAS8f0YFbm6xWCpMFgiY1bBTmWrStBLW/isb5GQ8Dpfpb4wIAlgdCYWXZg==
-X-Google-Smtp-Source: AGHT+IEBGAYeUxblbSKmVSbC96IV2BhTEvSty/gbaSqEtqrJoK34EHqFxyQLUsjPWxfjvRrGdgsOVA==
-X-Received: by 2002:a05:6a21:38d:b0:21f:4f34:6b1 with SMTP id adf61e73a8af0-220a127720cmr8399184637.14.1751073649993;
-        Fri, 27 Jun 2025 18:20:49 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:d0c7:d92:6a17:eb62])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56d0cb1sm3156944b3a.134.2025.06.27.18.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 18:20:49 -0700 (PDT)
-Date: Fri, 27 Jun 2025 18:20:46 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH RESEND 0/3] Input: convert GPIO chips to using new value
- setters
-Message-ID: <sxwvtpkdllm2dhb2qw55qgdmfvzhribdfs6bzj5555j23edy6j@tfxcdagawft3>
-References: <20250610-gpiochip-set-rv-input-v1-0-5875240b48d8@linaro.org>
- <CAMRc=MdAKpmVNQe=5yrGkVdmbfZ-Bsh_0p3-mrifEF2x1SVBhw@mail.gmail.com>
- <7pl4kxvzfo3nra5lubfb6tgmaqxex5oylw7coaadz6v7mnx6x3@cole43kvvmx5>
- <CAMRc=Me7dm7BmTSW1U758oCJ+4W4p6ixU30D5YStk3nyuu8rVw@mail.gmail.com>
+	s=arc-20240116; t=1751073719; c=relaxed/simple;
+	bh=9iEULhb/XPU3L5BGh2VZhi02qzir0c9hgvK+zpaAsL8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u2qyppcH9wk0MKztG2dagMCUNiFrNfmq3u201ppSiayDXkNXCcR+2L2UfIAEHw0jPzMspx3Ou1DJB7qU1ciDfe73p8g+1EjSUI3bHSjzO0yeWXLQQLq43uCOLAOiy45gUv8hmcfrHOFyGZB0IVAzyo256BND0AUp5SD+WrYDPpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bTZQW1j8lzYQv7p;
+	Sat, 28 Jun 2025 09:21:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 21DAC1A08FC;
+	Sat, 28 Jun 2025 09:21:54 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1+wQ19oAwx+Qw--.4287S4;
+	Sat, 28 Jun 2025 09:21:53 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	hch@lst.de
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH] brd: fix leeping function called from invalid context in brd_insert_page()
+Date: Sat, 28 Jun 2025 09:14:58 +0800
+Message-Id: <20250628011459.832760-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me7dm7BmTSW1U758oCJ+4W4p6ixU30D5YStk3nyuu8rVw@mail.gmail.com>
+X-CM-TRANSID:gCh0CgBXu1+wQ19oAwx+Qw--.4287S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFW5XFW7JFyUGr17WryfZwb_yoW8Gr4DpF
+	ZF9Fy5Cry5CF42v3W7Z3WDCF1rGa95WayIka45Zw4F9rW3Ar9I934Ik34aq3W5GrW7AFs8
+	ZFs8tw1kAFWUAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUFg4SDU
+	UUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, Jun 26, 2025 at 09:37:08AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jun 26, 2025 at 7:54 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > Hi Bartosz,
-> >
-> > On Mon, Jun 23, 2025 at 09:59:07AM +0200, Bartosz Golaszewski wrote:
-> > > On Tue, Jun 10, 2025 at 11:40 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > >
-> > > > Never got any further feedback on this series last cycle. Resending for
-> > > > v6.17.
-> > > >
-> > > > struct gpio_chip now has callbacks for setting line values that return
-> > > > an integer, allowing to indicate failures. We're in the process of
-> > > > converting all GPIO drivers to using the new API. This series converts
-> > > > all the GPIO controllers under drivers/input/.
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > ---
-> > > > Bartosz Golaszewski (3):
-> > > >       Input: ad7879 - use new GPIO line value setter callbacks
-> > > >       Input: adp5588 - use new GPIO line value setter callbacks
-> > > >       Input: adp5589 - use new GPIO line value setter callbacks
-> > > >
-> > > >  drivers/input/keyboard/adp5588-keys.c |  9 +++++----
-> > > >  drivers/input/keyboard/adp5589-keys.c | 11 ++++++-----
-> > > >  drivers/input/touchscreen/ad7879.c    | 11 +++++++----
-> > > >  3 files changed, 18 insertions(+), 13 deletions(-)
-> > > > ---
-> > > > base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> > > > change-id: 20250331-gpiochip-set-rv-input-bc12818c5732
-> > > >
-> > > > Best regards,
-> > > > --
-> > > > Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > >
-> > > Dmitry,
-> > >
-> > > Could you please pick these patches up for v6.17? They already missed
-> > > the last cycle and we're on track to complete the conversion in the
-> > > next one so I'd really appreciate these going upstream in the next
-> > > merge window.
-> >
-> > My apologies, I was hoping Nuno's conversion of these drivers to MFD
-> > would be accepted and these versions be simply removed...
-> >
-> > I acked all 3.
-> >
-> > Thanks.
-> >
-> > --
-> > Dmitry
-> 
-> Does this mean you prefer me to take them through the GPIO tree? Do
-> you want an immutable branch?
+From: Yu Kuai <yukuai3@huawei.com>
 
-Ah, my bad, I thought there was dependency on -next for these. I applied
-them and sorry for the delay.
+__xa_cmpxchg() is called with rcu_read_lock(), and it will allocated
+memory if necessary.
 
-Thanks.
+Fix the problem by moving rcu_read_lock() after __xa_cmpxchg, meanwhile,
+it still should be held before xa_unlock(), prevent returned page to be
+freed by concurrent discard.
 
+Fixes: bbcacab2e8ee ("brd: avoid extra xarray lookups on first write")
+Reported-by: syzbot+ea4c8fd177a47338881a@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/685ec4c9.a00a0220.129264.000c.GAE@google.com/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/block/brd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index b1be6c510372..0c2eabe14af3 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -64,13 +64,15 @@ static struct page *brd_insert_page(struct brd_device *brd, sector_t sector,
+ 
+ 	rcu_read_unlock();
+ 	page = alloc_page(gfp | __GFP_ZERO | __GFP_HIGHMEM);
+-	rcu_read_lock();
+-	if (!page)
++	if (!page) {
++		rcu_read_lock();
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	xa_lock(&brd->brd_pages);
+ 	ret = __xa_cmpxchg(&brd->brd_pages, sector >> PAGE_SECTORS_SHIFT, NULL,
+ 			page, gfp);
++	rcu_read_lock();
+ 	if (ret) {
+ 		xa_unlock(&brd->brd_pages);
+ 		__free_page(page);
 -- 
-Dmitry
+2.39.2
+
