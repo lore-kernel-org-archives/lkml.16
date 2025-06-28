@@ -1,138 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36201C8626;
-	Sat, 28 Jun 2025 17:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B8921D58C
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751132634; cv=none; b=i/li/ewEs5lD01ZyB9lgQFHZ7wouRN8363z+u7TlG3I07Og544EgrGBXG/DWmL5mAXdj373tgCdf0Y2jdSpS+S7ijO00hmZ70JDU3PojfXRl1mg6L6KoXvR5Cfun3eKWCWd+4M5gjogITzEKuS57cQg5wSm0KzJjIZr7PdFTp48=
+	t=1751133177; cv=none; b=Yppf5xy4MtoOJQ76ksYfKBG7aOVvA2B4YtvvpwKkfa8Ms6N4cYzh4vbvq1GVuV2vjCbCNr0QEXOvJbW2kkuVxZWC+dCO56i3skljBj0oNi4NvjVUjPuPe97MGytZOiNphELPFL1GL9+TodoaZ3pYhoyrVS7K2P20F7xyIYV8MKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751132634; c=relaxed/simple;
-	bh=rJAICa0SpONfxMWg8HAFuYCuf5lAPXPGhxYxcfrSeAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohn2e2LQOV3r6SSYf4/fUDYjDvkK5FZ8a8aYc7zS/Qhdq+nQYEjnqRtZLvk0q8WZ0J6LTdN5cJL5jZZvhCAw8u3jUDE78ZWB4MNYSZb8q6zF84dKRMC6jZEFwsiez/XdXs3pKg5EknS2zFStM1Xjp4J7yCUxilvXNL1+W4PRUYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EljnOWkB; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751133177; c=relaxed/simple;
+	bh=G3Y9nAnQtjyRjf4a+ZR/oAdEauIKbjZi5rgSnqD+vio=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uusS/vm5D+BoKvuASOl1iII29MRCKC+BpQmVoxgZhPudOIoBfoIpQEZlIkq+4WuwBjQKl5yCEzf5oAkSNz6j7P2Lk/b+3ze9djViPCaADFHvDvy4+3sJPNEhbpLZlpOKklLzgpxE3QlCmrgKVHx8DaXwiXmLBT+bjU95EkeYXRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xIlt82+p; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EljnOWkB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751132633; x=1782668633;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rJAICa0SpONfxMWg8HAFuYCuf5lAPXPGhxYxcfrSeAE=;
-  b=EljnOWkBLfcGlvfESdrNVxyXrZ430ZLfI+FDSXP1dBlP/YmHUpG+aRwf
-   fmMG2a13K3yDwWEilpBVB5Y3zC6kYFhmZf8qmW8KfrggrXRT1vTPIgDM6
-   8pQ7UTV6AUZuhNZIeeM7vrCTHsYAVOT5LAvYKSXIU+T4czeORoaK05n4X
-   wusr2df2y8En/CS7lzfi/B3x3BLh4gVRN3kCRYZzzyTvg8hiLNkrfMy/i
-   13Mrth7rCXVrM2v93tjrtR/O7Uv5WIRSOY4CIGuINvv5ppOqWJENMnRhL
-   hE7vcCrrvNi3vZPdd+ny9MtYGvTQTCk9UgYBC+fcqzd4Cef9rfXFwqrnj
-   w==;
-X-CSE-ConnectionGUID: r5kKxVl0SNGOr0o5qioHVw==
-X-CSE-MsgGUID: LG7VLBuxSnWKTEBkScxdYQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="52533115"
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="52533115"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 10:43:52 -0700
-X-CSE-ConnectionGUID: Y7B53AP4RP2en1ZOhu5XUw==
-X-CSE-MsgGUID: jCKBeIUeQUOo9m98bK3rHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="152458874"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 28 Jun 2025 10:43:49 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVZac-000XFm-2e;
-	Sat, 28 Jun 2025 17:43:46 +0000
-Date: Sun, 29 Jun 2025 01:43:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, sgoutham@marvell.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, alok.a.tiwari@oracle.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: thunderx: avoid direct MTU assignment after
- WRITE_ONCE()
-Message-ID: <202506290114.0EPFmc8U-lkp@intel.com>
-References: <20250628095221.461991-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xIlt82+p"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2ea35edc691so769985fac.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751133174; x=1751737974; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mHo0BNmd9O73IqwLXI7ZVxz5ifNWJwu6M7am5hfDqAw=;
+        b=xIlt82+peS1Mb878nRcvAlyyY1s2yh6ltxcnJoGtx/tEoEMJZzqLV9j++YNwxuIHHt
+         T2AL6k9V9PJ/qC3CAaSdqzp4JQgvmcVD5KRFu9HfbTOeW+NGQF376qwQwydFAcKPLWdl
+         fFsYpwsWGtuH9lRQD5HWe/RroMysMH4DhQB1w+qbmDk0r2cJes0hOXMTKQIUzVSuvtL6
+         9hKjKGONsC4eb/SGsAIwbLop30vvjUSxY6e5g+ZzY0W6fi2a3llK7P8PS948F3AfZ8zG
+         s2V39jz4i30vXDFKNziezYwU3cPzKsY7iCpRLS/KCUci77UVo9B6yIDEazW8QHYhIVoG
+         KnIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751133174; x=1751737974;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mHo0BNmd9O73IqwLXI7ZVxz5ifNWJwu6M7am5hfDqAw=;
+        b=O+sHvUaeADLeNuhugVRr1LklLNmEEbCMjoMJV+s1jf+BRclJ0sBIghvM1e7rg+GpD+
+         t4Q3LO+/bXvgb8qFwUq0mRbiEtAOzvMJo2LzSI35bfzRMTe2M9S7RFg62CaT+MKUnN5+
+         FNcoyYTP+gtP7BIZcbDllrK3Lc2/RSA7yzpLW9OtGIPEHMgzjAiXvC5gdkA3zI0eJlTC
+         hBfZiviU2WMBJ/zmMj8fHX7VebxtjKb4y0uVBV6p4Q6TX48yGVmjGOqLWWhjzy0sk6Y8
+         i8ykhkDmpWd83unECR6QB9J3ueZBsfIQMQQNNXEWUb015lw4aUcDe2e0s9Tm7Vv4L+4S
+         SgmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWek9BEQSbg1tGc3hG3XoZS0Qp8U8avW/iv9NRjNPVsJGzxEJ1qg7Wd9eyLBaeaJa/I6lhUM/DTwMGKJcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbHzsZmK4rvva5Anzo/DD/WeH77v4hXofsS6cEu9OCXiKVbvWW
+	OvvyBE5qiFP/7LcoJMTrjMX9kkEGmmB2dUYZKcIBE1sgiFvJ4F7gOobwI2V1va/e0pSPZRZQryS
+	mY2VRWvc=
+X-Gm-Gg: ASbGncv2vlTj60+hZipsUSv4RCseKuf9FO6m/UHC+3EGMR/uugU9AGKBY0cQlwO8TQX
+	GlEV635KITk0Ddxo+M2vof1jPhB3ldSeSncuvKgHbQcdwXyb32o5oQmW6RtZd1jDN00utE5edet
+	RhZ11z/Ty1I+DMoWRAJ9VsXCFFlV3BWeNWM+tZlUnAJJVZumhCFImmIVjn1lYlUdcr/o/Ts9u65
+	qEas16Brbr/wVY4EMHdKYdG1BaHFKbdbGdrWfg6UlqlIFFVshvQ5kQ1WO96vqmQuzr43ZfdcDIr
+	GdAmaE+JcRNx9UL1IPn5u7wj8ySPGymLus+QvceSHyYXFhGO/4adqa9lJQm1PCBMd6vu
+X-Google-Smtp-Source: AGHT+IHMCLIlkhwpjoKd+5r66hiD/rFrgVweC2g79T/XPrWeUJax1Aqm7JCZjalBherHHtL746KLwA==
+X-Received: by 2002:a05:6870:3118:b0:2d5:2955:aa6c with SMTP id 586e51a60fabf-2efed72bbd1mr4915513fac.31.1751133173890;
+        Sat, 28 Jun 2025 10:52:53 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50b4d84sm1593530fac.23.2025.06.28.10.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 10:52:53 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH 0/2] iio: light: cm3232: make struct cm3232_als_info const
+Date: Sat, 28 Jun 2025 12:52:29 -0500
+Message-Id: <20250628-iio-const-data-20-v1-0-2bf90b03f9f1@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250628095221.461991-1-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN0rYGgC/x3MQQqAIBBA0avIrBsYhcK6SrQQnWo2GioRhHdPW
+ r7F/y8UzsIFFvVC5luKpNihBwX+dPFglNANhsxIk7EoktCnWCoGVx0aQr1rRyORtjNB767Muzz
+ /c91a+wCmklZhYwAAAA==
+X-Change-ID: 20250628-iio-const-data-20-1f1a05001890
+To: Kevin Tsai <ktsai@capellamicro.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=661; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=G3Y9nAnQtjyRjf4a+ZR/oAdEauIKbjZi5rgSnqD+vio=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYCvf3RF47torKYrwTGqNjvM+BGYAJPPL8EbV6
+ q4LmPmZWC2JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAr3wAKCRDCzCAB/wGP
+ wE7DB/9JPrm2lZQYqP/P3zkr/AnK1WpXvylRxymdwEdGo6bqo7k+/m+9Fo9qs5VhXFJbvD9TtDa
+ oldzzLxE5PomObtrGv1fQ1X9HgjKNLeA0Hp0WcwLReAktt0MBs5oYGE85NO4YyeHVDMpwfwPh/H
+ pSA7DDZ++T2lliJZTYpSl64CYX24SFYglJoZ9ceBUmZnLv+wxdpyWOzZYyXCLlllHl+eusVUdiv
+ 9d4HDFgshkr1xSuHryEbefMpkNpQujXyN4oXJFb/iAgE2bBwpqx/wasig2QXMMTCnA1H4WiTKIN
+ 9tIqGiRcGPQdgdRrF/GhGi55P+iluwv6o04wzYo9j/nlf9uC
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Hi Alok,
+Typically, chip info structs are const. Before we can make that change,
+we need to move the calibscale field to the driver data struct. This
+also allows individual instances of the driver to have different
+calibscale values.
 
-kernel test robot noticed the following build warnings:
+---
+David Lechner (2):
+      iio: light: cm3232: move calibscale to struct cm3232_chip
+      iio: light: cm3232: make struct cm3232_als_info const
 
-[auto build test WARNING on net-next/main]
-[also build test WARNING on net/main linus/master v6.16-rc3 next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ drivers/iio/light/cm3232.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+---
+base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
+change-id: 20250628-iio-const-data-20-1f1a05001890
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alok-Tiwari/net-thunderx-avoid-direct-MTU-assignment-after-WRITE_ONCE/20250628-175420
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250628095221.461991-1-alok.a.tiwari%40oracle.com
-patch subject: [PATCH] net: thunderx: avoid direct MTU assignment after WRITE_ONCE()
-config: x86_64-buildonly-randconfig-006-20250628 (https://download.01.org/0day-ci/archive/20250629/202506290114.0EPFmc8U-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250629/202506290114.0EPFmc8U-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506290114.0EPFmc8U-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/cavium/thunder/nicvf_main.c: In function 'nicvf_change_mtu':
->> drivers/net/ethernet/cavium/thunder/nicvf_main.c:1581:13: warning: unused variable 'orig_mtu' [-Wunused-variable]
-    1581 |         int orig_mtu = netdev->mtu;
-         |             ^~~~~~~~
-
-
-vim +/orig_mtu +1581 drivers/net/ethernet/cavium/thunder/nicvf_main.c
-
-4863dea3fab0173 Sunil Goutham   2015-05-26  1577  
-4863dea3fab0173 Sunil Goutham   2015-05-26  1578  static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
-4863dea3fab0173 Sunil Goutham   2015-05-26  1579  {
-4863dea3fab0173 Sunil Goutham   2015-05-26  1580  	struct nicvf *nic = netdev_priv(netdev);
-f9aa9dc7d2d00e6 David S. Miller 2016-11-22 @1581  	int orig_mtu = netdev->mtu;
-4863dea3fab0173 Sunil Goutham   2015-05-26  1582  
-1f227d16083b2e2 Matteo Croce    2019-04-11  1583  	/* For now just support only the usual MTU sized frames,
-1f227d16083b2e2 Matteo Croce    2019-04-11  1584  	 * plus some headroom for VLAN, QinQ.
-1f227d16083b2e2 Matteo Croce    2019-04-11  1585  	 */
-1f227d16083b2e2 Matteo Croce    2019-04-11  1586  	if (nic->xdp_prog && new_mtu > MAX_XDP_MTU) {
-1f227d16083b2e2 Matteo Croce    2019-04-11  1587  		netdev_warn(netdev, "Jumbo frames not yet supported with XDP, current MTU %d.\n",
-1f227d16083b2e2 Matteo Croce    2019-04-11  1588  			    netdev->mtu);
-1f227d16083b2e2 Matteo Croce    2019-04-11  1589  		return -EINVAL;
-1f227d16083b2e2 Matteo Croce    2019-04-11  1590  	}
-1f227d16083b2e2 Matteo Croce    2019-04-11  1591  
-712c3185344050c Sunil Goutham   2016-11-15  1592  
-8be8a2ba18f34d5 Alok Tiwari     2025-06-28  1593  	if (!netif_running(netdev)) {
-8be8a2ba18f34d5 Alok Tiwari     2025-06-28  1594  		WRITE_ONCE(netdev->mtu, new_mtu);
-712c3185344050c Sunil Goutham   2016-11-15  1595  		return 0;
-8be8a2ba18f34d5 Alok Tiwari     2025-06-28  1596  	}
-712c3185344050c Sunil Goutham   2016-11-15  1597  
-f9aa9dc7d2d00e6 David S. Miller 2016-11-22  1598  	if (nicvf_update_hw_max_frs(nic, new_mtu)) {
-4863dea3fab0173 Sunil Goutham   2015-05-26  1599  		return -EINVAL;
-f9aa9dc7d2d00e6 David S. Miller 2016-11-22  1600  	}
-4863dea3fab0173 Sunil Goutham   2015-05-26  1601  
-8be8a2ba18f34d5 Alok Tiwari     2025-06-28  1602  	WRITE_ONCE(netdev->mtu, new_mtu);
-8be8a2ba18f34d5 Alok Tiwari     2025-06-28  1603  
-4863dea3fab0173 Sunil Goutham   2015-05-26  1604  	return 0;
-4863dea3fab0173 Sunil Goutham   2015-05-26  1605  }
-4863dea3fab0173 Sunil Goutham   2015-05-26  1606  
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+David Lechner <dlechner@baylibre.com>
+
