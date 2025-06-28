@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A60078F4C;
-	Sat, 28 Jun 2025 03:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A325C21C18D
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 03:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751081276; cv=none; b=I8BsKcbH0lcKQpCLNyATV2/WsG0DOuu0asL1we/quTias5JDsZ4ZxlqXzTFrumytBqekSLjbzkFZQIVk9IgTSBRDBEzu1RO+0/yiM0s8MtAJq0H6WeRPNZqORb3CcGyUJOS+6nBfhWhJ3PtJ10kNPW4zKuYt8biFm2aQL82t00c=
+	t=1751081277; cv=none; b=pmcZE1+dprGmEG+5tXrlzl+QCL8b8BqijHpe+e962NMn45jz16cTn+6LaUKLbjlI0bdaEJm0e3OeRKfckUxTvdOqs7AsvFJ/Zz63b+MZ8HScC/RlhBrTsIYMJ6AHtz5n6kydsv85BKlMcZaikVKrpHyi8EjnArajLrrzQ3WKL20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751081276; c=relaxed/simple;
-	bh=D2Ja0sBoUZLzSe79a0QRlWVmPVJj6bzc2cdNlvx0uio=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=N2gHqvuFQ2MxjrPmyJ9/q8iB5sqLvaJ5SyFxByOFgGzcMkhdaBZa8FaD9o769TYUe9nWPMsQ+dvQs/Njnzd+ITme4PbNR0qPuwPnhwkHyHwrZwXhN07j72lvgZixOzIEQuczvICnVYFXtYbJVD3WRxKGOyGIYrrZca/XgHLiPuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4C5hTqM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751081277; c=relaxed/simple;
+	bh=yZkMuMNgz2W3Jj5uAWkrAjOssfmfYf0vHHTK7Tli594=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZtlmYwXTApX+lw9+4JRWw9zAASbGJ+3X/mcVkfrL/K2DKR6Huua847Ix+CY558uhJ0Y7VtcakkVNGuUoJ/tTFaqzOZ140S5MfspCZOzb8NL8Qifv18G5i9GPTtiEH1D5NqPeT9y12lfUzHtGHV53lnNRNp8GshTuXxwAHtWtg5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+VZ3aCe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4C5hTqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 135E2C4CEE3;
-	Sat, 28 Jun 2025 03:27:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+VZ3aCe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86429C4CEE3;
+	Sat, 28 Jun 2025 03:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751081276;
-	bh=D2Ja0sBoUZLzSe79a0QRlWVmPVJj6bzc2cdNlvx0uio=;
+	s=k20201202; t=1751081277;
+	bh=yZkMuMNgz2W3Jj5uAWkrAjOssfmfYf0vHHTK7Tli594=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=o4C5hTqMEgpyJEf3YA4k60bjyv0jtDjZ3tI4le+BrCyixlKSzEG1fNKaBqtzbPLfU
-	 xUegdv/VUQMBtPjhRdf6dcP7eAaoG/GviKFmIUc+K5wHTuWDzs4KUP9jH9gg5kUNM3
-	 83v+HTSudvmDrPdnxLJl2ht7MarusF8N/62LgebuoSri6J5agkFAvBYoytRRvnciu+
-	 qDdRkQ/wAOLlE1oWM4hB3JIE1XuZfpgVfvuSGfj9rhwxBrWRbaPlpARe42LeH+27FH
-	 hwkchmJM+UQo2LcUc/ZeR53idv4Y+97YNjk69vgjwDgAGqmrtgWUy8II0Tw91EeWrP
-	 wOBGRpmpe+sDQ==
+	b=m+VZ3aCeYgEon3GFD36ok8Bs6wAuE1a+kGs0HvEpUPR38PNM7S7HjL/9joK3e1Kxq
+	 K9wEsw85HGQFy4uRw9HHfLuQA57TuU/b0QnkW3u67pqGXFH4Vca5qoXq9w83l3Guz1
+	 rbB/1TybCtdK6wOHGrknEbKlPjz7RGx4Psw9/gyhiwtBb7e6vxWSbeFup3Rh8swhm9
+	 PxqR/u/sK8ZraoAysa/CKc58YV/ib0pu+4c2yJT/XXvBkCth8PsMr9XT4/9BUdEpEq
+	 LKO0PQ7ZQPz/fwUrfk4UUpyvjuNhoYxlC19mwTehoOavO8Tf4k9sJ7eEkCZVUlyP/7
+	 2rD6a54GyBtbQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C1438111CE;
-	Sat, 28 Jun 2025 03:28:23 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE0238111CE;
+	Sat, 28 Jun 2025 03:28:24 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.16-rc4
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250627202730.GA1683609@bhelgaas>
-References: <20250627202730.GA1683609@bhelgaas>
+In-Reply-To: <CAPM=9tzQhY_VeMkfYO8ZsUYdOrL9bAofZVUHKckjP2zPj_5Q2g@mail.gmail.com>
+References: <CAPM=9tzQhY_VeMkfYO8ZsUYdOrL9bAofZVUHKckjP2zPj_5Q2g@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250627202730.GA1683609@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-fixes-2
-X-PR-Tracked-Commit-Id: 5aa326a6a2ff0a7e7c6e11777045e66704c2d5e4
+X-PR-Tracked-Message-Id: <CAPM=9tzQhY_VeMkfYO8ZsUYdOrL9bAofZVUHKckjP2zPj_5Q2g@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-06-28
+X-PR-Tracked-Commit-Id: 9fbceb37c95939182e1409211447a1d3f3db9274
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fa33adcaf8af147f4238c84d76a316a47e43e091
-Message-Id: <175108130183.2124567.6364679347598492053.pr-tracker-bot@kernel.org>
-Date: Sat, 28 Jun 2025 03:28:21 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Eric Biggers <ebiggers@kernel.org>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+X-PR-Merge-Commit-Id: 7abdafd2343ab199367c8243d6a5f06a9aa6976b
+Message-Id: <175108130337.2124567.16052817178780470142.pr-tracker-bot@kernel.org>
+Date: Sat, 28 Jun 2025 03:28:23 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 27 Jun 2025 15:27:30 -0500:
+The pull request you sent on Sat, 28 Jun 2025 07:05:56 +1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.16-fixes-2
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-06-28
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fa33adcaf8af147f4238c84d76a316a47e43e091
+https://git.kernel.org/torvalds/c/7abdafd2343ab199367c8243d6a5f06a9aa6976b
 
 Thank you!
 
