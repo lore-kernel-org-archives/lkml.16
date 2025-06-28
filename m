@@ -1,163 +1,162 @@
-Received: from mx-rz-3.rrze.uni-erlangen.de (mx-rz-3.rrze.uni-erlangen.de [131.188.11.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825A21FECB1;
-	Sat, 28 Jun 2025 14:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A7C247291;
+	Sat, 28 Jun 2025 14:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751122449; cv=none; b=cKIQLfHBD1pjSyDyw+HBVN0Qzgig+sCSNMEB2MvTK6Yjkq+5Q2r7VuCLSOVG36rItoRYnbBMLog+8SMJsUWpn1/0ve3k1mpGug7wDJ87WMifrWuWSUTgfRrSZVIFLWMlLmcqfhz8VO+18PX7LOhkFDP8PVz+4T3XWnNbKuE+Iss=
+	t=1751122479; cv=none; b=UOAER+LCR27Vo51NgpdiYbQWswDMrxYMnD9zCV8MzgbKYFhOy/Eeg0m0WiyeU3i4yAAthsrKpggAF7mF7NQLRqyVNZR1UzkblNdcCqWKZJg23RlKKn0zeCRaUC0fO50FvW/yK6Kkx4w1c73CL66QRy2CpfQfn9owyFPnqY4ccnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751122449; c=relaxed/simple;
-	bh=p9Kc25E1/YhQv8Ncgikbiw3FqAZ+Fg2257/hti0eskI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WkDocSSoVX7OtnGXMhNelMOJj1fI/WnJjd1zXVa3OayYR0n5mB8VNYeVUqSuOdgMaOHbUIyh5qsnaOVTGcXLCR7Q7XQnnObu7T0FtSo14Wow/RbncghUCbyTigJ4mkjuDJ0lm9AaQfKAQzgV6n5Z0ogP3Q4orZjNtKhWqHjxMmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=slWecvgk; arc=none smtp.client-ip=131.188.11.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1751122479; c=relaxed/simple;
+	bh=Aj+/ns36tbt/Z76fsAuEiVmykGmRcZ9L8AfHcCxkWOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bEpDoqS13SZOJE+SLc1XU9Kp+VY+b16l29YBIOpi6/MoCtSrkT9QTcym8vkA+JKiHisiYwF32Ch4uTs27B9ajya3pYTc4XQEw67uQOuPIJCN2va90MDveM1magkTbvLr9XugKqtc/ORjVj4Jy1L47tMF2+e+QNlh4M1UG4HqHH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R+TtNdQv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="slWecvgk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1751122439; bh=HVuOgJb1q9Zwq0pkkf+xWEQsM3tYtFZlV1G9CpuqQEQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:From:To:CC:Subject;
-	b=slWecvgk94HCsxmaxZdUOHXSWP9Tiau5Z8OVgaPLslm7eBnYn4KctOjiU9ph3d2cD
-	 1jm8vUwKZ0ePOTGUJ04VPV6hdXEKY7/lAb+h3VOTTMIxcUPWRjzFjib/LslUGWjuSZ
-	 GCN3s57YfvRHfyL1ajOjhZnaDu27hASyXwmZuEBS1jwG/I1YJcQz+up8yw7g+Nec+4
-	 vsh/qpTYv7PYFW2nPM0k9ejfLNekVmdbAfTUL9x6t0gKZPPO50L826CpDmxzrrlx0b
-	 4VuFBMX9H9dtoQXY1BiMYQ73CwBKXNImUGp+8S5XMA8Pe3N5wRjVCh3o5MWbx6hcaS
-	 1OIJIuxoh7OsQ==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bTwRW28C0z1yYg;
-	Sat, 28 Jun 2025 16:53:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3601:f400:3a2b:2f7e:18b0:5ef9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1+s4h/sPgxfq6XxQLskiZQotQ0zVKqBPCw=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bTwRR4WLYz1y1R;
-	Sat, 28 Jun 2025 16:53:55 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Peilin Ye <yepeilin@google.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Ihor Solodrai <isolodrai@meta.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Chaignon <paul.chaignon@gmail.com>
-Subject: [PATCH bpf-next v2 1/3] bpf: Update env->prev_insn_idx after do_check_insn()
-Date: Sat, 28 Jun 2025 16:50:14 +0200
-Message-ID: <20250628145016.784256-2-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250628145016.784256-1-luis.gerhorst@fau.de>
-References: <20250628145016.784256-1-luis.gerhorst@fau.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R+TtNdQv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1241BC4CEEA;
+	Sat, 28 Jun 2025 14:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751122478;
+	bh=Aj+/ns36tbt/Z76fsAuEiVmykGmRcZ9L8AfHcCxkWOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R+TtNdQvfARRqoPrm8weDJG787f2s4asB6HneccuByWzTW9mclav7rPMsG2bDiCWh
+	 33jw2fHHl34tri6W1pOAD4P04zWT45DX3akwFX05GnAEtQBgSuKW77Y+4JWahmsckL
+	 MAV0spAVaD/IkgIO1+ngG2kXPJXPdbB1+5igMmM0=
+Date: Sat, 28 Jun 2025 16:54:36 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Abinash Singh <abinashlalotra@gmail.com>
+Cc: oneukum@suse.com, abinashsinghlalotra@gmail.com, johan@kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] usb: serial: usb_wwan: Fix data races by protecting
+ dtr/rts state with a mutex
+Message-ID: <2025062815-uninsured-twentieth-c41c@gregkh>
+References: <f2419bb9-2d81-4a6d-838d-b404e3ce7786@suse.com>
+ <20250626153156.50131-1-abinashsinghlalotra@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626153156.50131-1-abinashsinghlalotra@gmail.com>
 
-To introduce prev_aux(env), env->prev_insn_idx must be up-to-date
-directly after do_check_insn(). To achieve this, replace prev_insn_idx
-with a tmp variable (to discourage use) and update env->prev_insn_idx
-directly after do_check_insn().
+On Thu, Jun 26, 2025 at 09:01:56PM +0530, Abinash Singh wrote:
+> Fix two previously noted locking-related issues in usb_wwan by introducing
+> a mutex to serialize access to the shared `rts_state` and `dtr_state`
+> fields in `struct usb_wwan_port_private`.
+> 
+> - In `usb_wwan_dtr_rts()`, the fields are now updated under the new
+>   `portdata->lock` to prevent concurrent access.
+> - In `usb_wwan_tiocmset()`, the same lock is used to protect both updates
+>   to the modem control lines and the subsequent `usb_wwan_send_setup()`
+>   call.
+> 
+> The mutex is initialized during `usb_wwan_port_probe()` when the port
+> private data is allocated. This ensures consistent state and avoids
+> data races when multiple threads attempt to modify control line state.
+> 
+> This change resolves the two old `FIXME` comments and improves thread
+> safety for modem control signal handling.
 
-A concern would be that some code relied on env->prev_insn_idx still
-having the old value between do_check_insn() and the old
-update-assignment. However, outside the do_check() function it is only
-used through push_jmp_history()/do_check_insn()/is_state_visisted()
-which are not called in-between the old and new assignment location.
-This can also be seen from the -O0 call graph for push_jmp_history()
-[1].
+How was this tested?
 
-[1] https://sys.cs.fau.de/extern/person/gerhorst/25-06_d69baf_push_jmp_history_O0_callgraph.png
+> 
+> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
+> ---
+> Thank You very much for your feedback .
+> You don't have to say sorry , your feedback
+> is valueable for me.
+> 
+> 
+> v2 :
+> 	initialized the mutex during probing
+> 	droping lock after returning from usb_wwan_send_setup()
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
----
- kernel/bpf/verifier.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+You didn't list "v2" in the subject line, which makes this hard for our
+tools to track (and for you to track as well!)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index f403524bd215..b33bc37d5372 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19854,16 +19854,15 @@ static int do_check(struct bpf_verifier_env *env)
- 	struct bpf_insn *insns = env->prog->insnsi;
- 	int insn_cnt = env->prog->len;
- 	bool do_print_state = false;
--	int prev_insn_idx = -1;
- 
-+	env->prev_insn_idx = -1;
- 	for (;;) {
- 		struct bpf_insn *insn;
--		int err;
-+		int err, tmp;
- 
- 		/* reset current history entry on each new instruction */
- 		env->cur_hist_ent = NULL;
- 
--		env->prev_insn_idx = prev_insn_idx;
- 		if (env->insn_idx >= insn_cnt) {
- 			verbose(env, "invalid insn idx %d insn_cnt %d\n",
- 				env->insn_idx, insn_cnt);
-@@ -19942,7 +19941,6 @@ static int do_check(struct bpf_verifier_env *env)
- 		}
- 
- 		sanitize_mark_insn_seen(env);
--		prev_insn_idx = env->insn_idx;
- 
- 		/* Reduce verification complexity by stopping speculative path
- 		 * verification when a nospec is encountered.
-@@ -19950,7 +19948,9 @@ static int do_check(struct bpf_verifier_env *env)
- 		if (state->speculative && cur_aux(env)->nospec)
- 			goto process_bpf_exit;
- 
-+		tmp = env->insn_idx;
- 		err = do_check_insn(env, &do_print_state);
-+		env->prev_insn_idx = tmp;
- 		if (error_recoverable_with_nospec(err) && state->speculative) {
- 			/* Prevent this speculative path from ever reaching the
- 			 * insn that would have been unsafe to execute.
-@@ -19978,13 +19978,13 @@ static int do_check(struct bpf_verifier_env *env)
- 			 * to document this in case nospec_result is used
- 			 * elsewhere in the future.
- 			 */
--			WARN_ON_ONCE(env->insn_idx != prev_insn_idx + 1);
-+			WARN_ON_ONCE(env->insn_idx != env->prev_insn_idx + 1);
- process_bpf_exit:
- 			mark_verifier_state_scratched(env);
- 			err = update_branch_counts(env, env->cur_state);
- 			if (err)
- 				return err;
--			err = pop_stack(env, &prev_insn_idx, &env->insn_idx,
-+			err = pop_stack(env, &env->prev_insn_idx, &env->insn_idx,
- 					pop_log);
- 			if (err < 0) {
- 				if (err != -ENOENT)
--- 
-2.49.0
 
+
+> 
+> Regards
+> Abinash
+> ---
+>  drivers/usb/serial/usb-wwan.h |  1 +
+>  drivers/usb/serial/usb_wwan.c | 12 ++++++++----
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/usb-wwan.h b/drivers/usb/serial/usb-wwan.h
+> index 519101945769..e8d042d9014f 100644
+> --- a/drivers/usb/serial/usb-wwan.h
+> +++ b/drivers/usb/serial/usb-wwan.h
+> @@ -59,6 +59,7 @@ struct usb_wwan_port_private {
+>  	int ri_state;
+>  
+>  	unsigned long tx_start_time[N_OUT_URB];
+> +	struct mutex lock;
+
+You might want to document what this lock is for somewhere, right?
+
+>  };
+>  
+>  #endif /* __LINUX_USB_USB_WWAN */
+> diff --git a/drivers/usb/serial/usb_wwan.c b/drivers/usb/serial/usb_wwan.c
+> index 0017f6e969e1..cd80fbd1dc6f 100644
+> --- a/drivers/usb/serial/usb_wwan.c
+> +++ b/drivers/usb/serial/usb_wwan.c
+> @@ -80,11 +80,12 @@ void usb_wwan_dtr_rts(struct usb_serial_port *port, int on)
+>  		return;
+>  
+>  	portdata = usb_get_serial_port_data(port);
+> -	/* FIXME: locking */
+> +	mutex_lock(&portdata->lock);
+>  	portdata->rts_state = on;
+>  	portdata->dtr_state = on;
+>  
+>  	usb_wwan_send_setup(port);
+
+You are sure it's ok to call a function while the lock is held?  Is it
+now required?  If so, please add the proper static and runtime checking
+for that.  If not, then it's going to get messy very quickly :(
+
+> +	mutex_unlock(&portdata->lock);
+>  }
+>  EXPORT_SYMBOL(usb_wwan_dtr_rts);
+>  
+> @@ -113,6 +114,7 @@ int usb_wwan_tiocmset(struct tty_struct *tty,
+>  	struct usb_serial_port *port = tty->driver_data;
+>  	struct usb_wwan_port_private *portdata;
+>  	struct usb_wwan_intf_private *intfdata;
+> +	int ret;
+>  
+>  	portdata = usb_get_serial_port_data(port);
+>  	intfdata = usb_get_serial_data(port->serial);
+> @@ -120,7 +122,7 @@ int usb_wwan_tiocmset(struct tty_struct *tty,
+>  	if (!intfdata->use_send_setup)
+>  		return -EINVAL;
+>  
+> -	/* FIXME: what locks portdata fields ? */
+> +	mutex_lock(&portdata->lock);
+>  	if (set & TIOCM_RTS)
+>  		portdata->rts_state = 1;
+>  	if (set & TIOCM_DTR)
+> @@ -130,7 +132,9 @@ int usb_wwan_tiocmset(struct tty_struct *tty,
+>  		portdata->rts_state = 0;
+>  	if (clear & TIOCM_DTR)
+>  		portdata->dtr_state = 0;
+> -	return usb_wwan_send_setup(port);
+> +	ret = usb_wwan_send_setup(port);
+
+Again, is this ok to hold a lock across?
+
+> +	mutex_unlock(&portdata->lock);
+
+Why not use the guard() style for all of this to make it simpler
+overall?
+
+thanks,
+
+greg k-h
