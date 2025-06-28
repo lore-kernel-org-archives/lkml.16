@@ -1,172 +1,166 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA50FBF6;
-	Sat, 28 Jun 2025 05:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718CC21C184;
+	Sat, 28 Jun 2025 05:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751088419; cv=none; b=CLNOvFrIjjhtP0PDS4h2xxZHE9tFwZQsqTweH22owIhUQwSvuW+oyr/geIF4FAaCygdj47n9F3cJ+vOKR/3Eg8shLNG2yixf+d8vY4hHoaLRnHonaUGqUTG/JTFbGbwP+7qg25+Wnl+mQrbogOJS5dll/DDdfGjo/D3aRiEEaLI=
+	t=1751088513; cv=none; b=rs8JLDdkTPPRWJcS/0hy3GiF+PkUrHmZRK120P8VDIeMIqFRcU1wTnJzGOo5fdUl/hww9WRbB3wEo9fh6GMNdemNdoWaK+JUeIs8Pvaq3z9oxBRoqiSvXQh0rCY0bi+l5SIlKJw30AFRt93FtQVXyKIVhOmIE9/PVI99hvFiU4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751088419; c=relaxed/simple;
-	bh=DlIGBrInh5K73tNxGyghyJeTrPoHjiJPkT0NdgT6lso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SvbiPkaXtNMw1kvWMYLKUvuf53VwixI67qUxXxsfbvtSnJM/E2puBhmJ+wyvCwGs5CQE0Ob0ox3+52gEtOzzWZDmKITsGYI5WCpy8YNsoEZSwJO8wbCS3/qpspn03TgPkb+ccetO3w8hGGRPoqgLooE58+04rofUyiy3fB3YMnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=Mb8bQ+gV; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1751088513; c=relaxed/simple;
+	bh=/PouR7nev/ceIZ/BO1Yk6lP2sUsqB6YlSfWvYBhCwKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxUndVXAYT6nYSDcIRM1S/d61ECAOVfEo2ymcvDclDOKzE4jHboNKhOE04CwP7ma5Y48ZpNfPrCWA5xKCla5zvvavvMMKxptUAYphgDyuiyHqiMFBAEOpvjioRORax4duYDMwEN4reC8cr8dnqNFIo/1jFpS38b2L9KLu8+M8nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WA5PDo7w; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="Mb8bQ+gV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1751088408; x=1751693208; i=quwenruo.btrfs@gmx.com;
-	bh=/QHW6ByD3GYkEcbhxYRm5epY1RHocJz5KFy5XNtlCgs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Mb8bQ+gVhbjVSOq5LVN2vBJsRrfGotMD036r3GYvHXLAAB1nqnWtZnlr22P2AOPR
-	 pT4OSGtt3yRzTPX0gzLMO3VYbZAzQFzYj92u7MiWTI7vW1SBI1GVcTqhR50NENrTE
-	 YxbAqi1/T3ev2b31tk9nLACo/2bx6/FEet2F2cDgK0dvjwO5fu9MB8cCeWPv0RbLz
-	 l+WBk25XFyd3jPEBj/9LMMChXtgBJneTpIk6JnxhDxPXLmtGyStfIs8gWEnSteCA3
-	 eK05OuI/4IPSNQlXknbDXVPVOb9XHCGW7T9YeftzAAN3/dEAhXL/64qs2IZIbyPT/
-	 9FxsVnaUWqSkbC3XFA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MmDEm-1vDULX1OLo-00aJAC; Sat, 28
- Jun 2025 07:26:47 +0200
-Message-ID: <b316d443-107d-4c85-81cf-37fe653cc8a6@gmx.com>
-Date: Sat, 28 Jun 2025 14:56:42 +0930
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WA5PDo7w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751088512; x=1782624512;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/PouR7nev/ceIZ/BO1Yk6lP2sUsqB6YlSfWvYBhCwKg=;
+  b=WA5PDo7wUCqXytIgvUEsvaE+K68/5WPxwBqK3R6xaWdSpk9M7oU6S5wC
+   J0jKtuznVGkkyFT8hpxksA/wtz4CFyvVuRHxFqRul6Zgk03+MPZNNWeu2
+   tE5Xf7F+vjqH+IKZkw0IYRKi4zb9fDWJp2UDg74r0eHvgucHI//YmG4xa
+   psvCy49b70sTVI7f2mPz4+LZDBRBYKwLW5Bhm5U2fp49agjOZs+a60axo
+   xe+ZCGEcKFmFUjcs/f/lLsvHb4IvTQH1wKeL9AF3szJPQKZ1TbcxwyLwu
+   x8fJXos5ZTHoGGacoIFHxzOnj6w+CFE/eZUJWhnR6BHGGiyUKHhy8ja4Y
+   A==;
+X-CSE-ConnectionGUID: 6AdLmHXDQNGH+M/q73yrFQ==
+X-CSE-MsgGUID: 48fuWyC+RFiGA9f1tPqNxw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="53119934"
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="53119934"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 22:28:31 -0700
+X-CSE-ConnectionGUID: rDEavM7eScyJIozOfi5Adg==
+X-CSE-MsgGUID: aGbsD7QwQ4C31I2aKNUKmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="184012419"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 27 Jun 2025 22:28:25 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVO6w-000WpC-1w;
+	Sat, 28 Jun 2025 05:28:22 +0000
+Date: Sat, 28 Jun 2025 13:28:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <superm1@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	"(open list:INTEL IOMMU (VT-d))" <iommu@lists.linux.dev>,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+	linux-sound@vger.kernel.org, Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
+Message-ID: <202506281332.JQb144bv-lkp@intel.com>
+References: <20250627043108.3141206-10-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] btrfs: replace nested usage of min & max with clamp in
- btrfs_compress_set_level()
-To: George Hu <integral@archlinux.org>, wqu@suse.com
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <669773b7-4428-43ca-ab80-d7ed1c71886c@suse.com>
- <20250628052130.36111-1-integral@archlinux.org>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <20250628052130.36111-1-integral@archlinux.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XiLHCvfjSca7SgrGRmJYrPTR/GV3BW3z0fdAnHJfKw0/4uCq8Za
- BSa0UgiMe3XgPDddzXWrWwbVfNP1RLdHlflg0oAKc1iWBETzqRyx/Yfkc2WhkoDs17IqOi1
- M3cT8rrJFm3+BIuiAmhFZK/IbR8gQZqA9MDSlXhEq57yIF8uqhx1ZSrMqXchoYqRUtPD0SU
- cTcOCkUuiNnSA7gL/V4dg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gAb9zP3rdW4=;j85/ax5tcUn5oIAckDemJjgv28e
- c74zbf8Wo/I/Jb3SohoHIwEgdJ8fdSIuhP2BJE4F+6cqBkn9uJKg8Gt4F1/qOKbVKi3HIhnJ4
- ItMlVF0U5edIM2i9YJrERvistrvDSFEH5kVBcMDlVlG3GrOklvnf4pUcmfB56GHAF+7eLxwE5
- F7EuD5CYET+OR7ae7Ao44JtZ1AvythuIJN7pemSeICwNjsli3FiFlsAcWlRpgPmVWW+9TBecM
- EWpQiseRJTd1nIwjym0i5xuybFQBJcUAs6emSM11wBdS2XkGJSyjbEt2N88yPG9xAzcI9ogpB
- 9V6K/ZI1qrpx2VZvduc/g2f9MIA2jnC5EHoMcK0NDK9WtPyup9mAWWapbJUPQvM1ytkydoJdO
- Yhlud+jAQ0fGUDcUtUats9HJKPNwatYqSr/1hs/XAYPiM80Qqo2RnWlt44zPFtUElZKQyS10S
- 0vAj0tqATr9lFjBShMV6sbhGV/wVmsQVv6C/fxq/YKc5bySABDZl85jEmJpOvgzmszZLU12cf
- RwLi51f6/Pd2nPo/Y4p2QFE9YDmxgsoilv2qcs/+TfUvDD5ijiD3tu0gRJVmJCeeVNp591pJv
- g/xb7CAM/Sfvl85LNIDPn1aAmckbhR0YuDvvxtkfIDItitq+/GNevWJg7nZ5m0MWfXQ1SMRnb
- QQlDv+WzYf1EhLcw5ZPOHar4ipfSekbGUh3qO36anNJ0dQNf2vI2gPaZy0nXcN0Ocq1vrYPm9
- v7+glndxOBn0RY7Uj22FFYKq13S1EGsyNekpOcPlDjDleriKKKf51Ut0MJy7hdjvGeX6s4Rhc
- hIND+mAgq1Sv/GEEuekVRW+UG6cbtL/cPVeU6Vi1aDIJHYB3I5Z1oIASxH6j7SqOzJuRJhGFQ
- Guj5Yw/x62U9lVomfCNNXiLgu1yO1YzjpZJRvmW+Bgsxq0bIRJIMdqtBV4Y1X3znD4T5n9pLt
- XhPNHddjKkmrwX94K02NLYwwoGMVQ3yizMgQIrXVNLqdZ66g6pzYwLOxrrPJ92clzqss1OXan
- AvzRrkOgN92iH3GYabb6oRnfTqx98ypsV7/eAfTHW8rfuM1oOF3REfjzCzeWQBxp9fpnNHfOL
- FqTHMhNmGtgDZT/678aH7Z30ZKQ5L5Ut+rVbWn75IVjcwoAQ1M8vK8WyvKT0cRYfV+DQexf4h
- jWURAzrE8Qcf0HuvkjZ4XKpcvGEl91xfMoVXE8cwOxbITX6OqOpXoMq47744pgWR8wkfVBDNO
- KHfqZRF3PZDq7Mq3fpifeQpPbpH5OXnBeswDn6eJS/dsElZr5i3KPAUUR12mSmxYFFWT5ePZ7
- qvAaxDRrQyu0EJ6Trzp67aQ94OlfQjm1zW/Hc2R5XmwrOuURDkFVT5Wapi7uCpGub5jDP6WAJ
- XAMA6tMF2hPkeekkBl/jZnp8NyB+L0RZbpirXOVuAXa92cOONS2j2T9y/AD7nJerISxPWa9ds
- /cVCSuKbiLRpijaLq8TQqHhVDq+ymWNPecB/dq/eJWYUhZ6CjjB7aYTaCHRNopNysmuDnpWb2
- xXXNFjLr6iseKMIm9NrBld+vdVnGx+OMtZD4Qz/ROLq2jojQZYIF95UYAw62Pqz8T8fJvdkeJ
- nMPoYXLacjS6JIcXnpz3UXVFHLy2uuKDh51USuvtYXYAZ2ia4oi5PE3prVltKKcNUZzEzj6ju
- 9Z7i6+BvKRJnW7I1PgxkEnm9IjUBcQa9DnFQ/AF6sLS7Uoi99/9vtudOPyw0Tzk5l3dvc/spe
- pcm362vYOT3ayFlxYgMo85sOg+d8Q78NH0HMEhoBpdvl73MPDrybeQid6tlieEbDrRDp7GWD2
- Dzw6fDw5asMCwDCOBaTrPDMJrYcBYt+Rp2gU92r+NhkeAjSl1q1hvdl8Y3SXulrmIqVyYFO9d
- sSRunsMwrLK1KlkXiOb8wdtGkJHr1fwKZ0C3H7sYsPeZw0aBGFDozjul72wkpl1i7Dt0C5mmt
- vFw7GdUeT/Emzxbkf6vKJ8h/dosP641XtslryjDMUT0DzuO4q/Y2wgaYPonlrZH3JPsRrH5FR
- ob1ZD47qoQ7wNGR7jPagh+KUWcJA2XOBaJcd4p9ppeBWabMzOwMG4oma+/Zd+fDIMtOCd+vEE
- vxmLYV1QYkayuC0DhXFH2Xnb24bQvr6AZTIe0bTirIUBLr9GVy/D3dIe8BqMf5ZivFQdIVSig
- N9wTIm55FfkHf3EtvAMS9zNHK3ItfjDqNDkcl6dDMC6NUEQKGowhC8sf+y71yyaaFIZrQkG2B
- c2gTreXdkSnszz0DZqnUxaKFlGuIYlab4j8lzxKdW6nNbaiN8og79t368K1TQ83pT0kKZ1wXl
- QWd8KgTrKVMX8kw+YyyZ8XbZUemeM0T3u7utjahrslV2cWLzWIIHBGP6IuAO0LM7FzI94ZNpK
- sM6g5TQfr2j5Hr/8GpvBadEnBWbMiOOgTxTx0rp7A8SPYsLUGBQavTyUKsCvZVRAp5t1w6ZSM
- +BSBGDzbFVvRZvnsEIbi/89sxKadUDajxanXDnX6NCq80OsD4MQGkuDXyoto06uS6ABud26G1
- wGhDyVfTGHNJwIsdQuMwW7V4nZEwauhrUQbvo9iKWevLDDlRTJY3lYoU2HpZNxfBjWDQSX3Xq
- Q3y6DTU0/7L+td27CbLslQR5bQ9WlUYrkStexxsdbmG4/AaKxuFhYxUwxZDwOhr+qhshfa5X6
- Vr7KbMS5HV5PFZUA5ct4BslrBx4NDgTAal6oDsfpME8FE1yyzDo5Na2PYgGLmCCuOYGLqyd45
- 50wM/JM3arV029NIVAt1wnH/d0iIJWW/nvbR5jgE8AF5DWuxr/4wsHAKf8Yg3zgbD7hNwkUct
- l0ttu68BWsOYM3WpuOxsx3BSXNgyZxmkyKmBf6aBePy/kuwzybw4FbY1f4ly5xAu72SjdDPhv
- hExpa0IBMf4+HeaopJCdIOgHCd99IIJyPlB1WEyGvHjTtVbZH3MVBcES6HH8TTOKt09Vv8R5I
- RkVgF4oIUEpcD5YGAeHYLqtQK/Cs1Gr4w/9Bh80v80+oq7hgeTWvwKTV5BVBvKL+g+9gKVSRc
- mlm6njfVqPWbErwkll0qDIKJbBgaub2OnPOXWRUk8jb43RcT0cPWAkwhd9eq6rRB3AOPBeLwT
- xDUDv06ppd+sWb9fXgiM7syI2ztd4etioNHopKyddi+iztHeGANmpPjI+CSZ/YcmQGYvtXGTZ
- T1YAmyDIsb8X2fy6doDswQURRwWzs70w6nejZuTUPvV57MYHQLoVqrw7KYj0/2WueEmPHJUse
- fCIvk2m8Y/8fCzyI30F1S0LDK5bxnkuLUf/cB4a2xAil+WYtvZqdpN4Z429NulVrXjrtbN624
- SgNSP8gpvbC7g7vsSN/Dw9j51DmtnxO1G1YB/N28NDkVDNZCU9akDSDgvf+/H3nrTk/kdc2mz
- rhBkMvcSUrs7XGoBWCeEwnTihItiMzAZXKRjxt3ckaHJACt43q21LjlsE8IhWoVZ4i5UHLPIy
- bAhrjTBU8qL/Fpostt0wVjsbhwFa/nRjB1axoyNJvdchRnkkWYV1x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627043108.3141206-10-superm1@kernel.org>
+
+Hi Mario,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus tiwai-sound/for-next tiwai-sound/for-linus tip/x86/core linus/master v6.16-rc3 next-20250627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/PCI-Add-helper-for-checking-if-a-PCI-device-is-a-display-controller/20250627-123349
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250627043108.3141206-10-superm1%40kernel.org
+patch subject: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
+config: arc-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281332.JQb144bv-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506281332.JQb144bv-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506281332.JQb144bv-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/pci/pci-sysfs.c: In function 'pci_create_sysfs_dev_files':
+>> drivers/pci/pci-sysfs.c:1701:11: error: implicit declaration of function 'pci_create_boot_display_file'; did you mean 'pci_create_sysfs_dev_files'? [-Werror=implicit-function-declaration]
+     retval = pci_create_boot_display_file(pdev);
+              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+              pci_create_sysfs_dev_files
+   drivers/pci/pci-sysfs.c: In function 'pci_remove_sysfs_dev_files':
+>> drivers/pci/pci-sysfs.c:1719:2: error: implicit declaration of function 'pci_remove_boot_display_file'; did you mean 'pci_remove_sysfs_dev_files'? [-Werror=implicit-function-declaration]
+     pci_remove_boot_display_file(pdev);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     pci_remove_sysfs_dev_files
+   In file included from include/linux/pci.h:37,
+                    from drivers/pci/pci-sysfs.c:19:
+   At top level:
+>> include/linux/device.h:199:26: warning: 'dev_attr_boot_display' defined but not used [-Wunused-variable]
+     struct device_attribute dev_attr_##_name = __ATTR_RO(_name)
+                             ^~~~~~~~~
+   drivers/pci/pci-sysfs.c:688:8: note: in expansion of macro 'DEVICE_ATTR_RO'
+    static DEVICE_ATTR_RO(boot_display);
+           ^~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
+vim +1701 drivers/pci/pci-sysfs.c
 
-=E5=9C=A8 2025/6/28 14:51, George Hu =E5=86=99=E9=81=93:
-> Refactor the btrfs_compress_set_level() function by replacing the
-> nested usage of min() and max() macro with clamp() to simplify the
-> code and improve readability.
->=20
-> Signed-off-by: George Hu <integral@archlinux.org>
+  1693	
+  1694	int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+  1695	{
+  1696		int retval;
+  1697	
+  1698		if (!sysfs_initialized)
+  1699			return -EACCES;
+  1700	
+> 1701		retval = pci_create_boot_display_file(pdev);
+  1702		if (retval)
+  1703			return retval;
+  1704	
+  1705		return pci_create_resource_files(pdev);
+  1706	}
+  1707	
+  1708	/**
+  1709	 * pci_remove_sysfs_dev_files - cleanup PCI specific sysfs files
+  1710	 * @pdev: device whose entries we should free
+  1711	 *
+  1712	 * Cleanup when @pdev is removed from sysfs.
+  1713	 */
+  1714	void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
+  1715	{
+  1716		if (!sysfs_initialized)
+  1717			return;
+  1718	
+> 1719		pci_remove_boot_display_file(pdev);
+  1720		pci_remove_resource_files(pdev);
+  1721	}
+  1722	
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-
-And merged into for-next branch.
-
-Thanks,
-Qu
-
-> ---
->   fs/btrfs/compression.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-> index 48d07939fee4..be8d51c53f39 100644
-> --- a/fs/btrfs/compression.c
-> +++ b/fs/btrfs/compression.c
-> @@ -975,7 +975,7 @@ static int btrfs_compress_set_level(unsigned int typ=
-e, int level)
->   	if (level =3D=3D 0)
->   		level =3D ops->default_level;
->   	else
-> -		level =3D min(max(level, ops->min_level), ops->max_level);
-> +		level =3D clamp(level, ops->min_level, ops->max_level);
->  =20
->   	return level;
->   }
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
