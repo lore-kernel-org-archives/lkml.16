@@ -1,108 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627E6223302
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9D1217701;
+	Sat, 28 Jun 2025 11:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751109655; cv=none; b=HnvEuKqg9snarOWbXDfT+/tkycWjDMgdbwnuu+hVCJQ0j1E1XgXScCqtRWb1FhqQ1gw80hXZDdWYcJuKwpi8XHD4zll89KUu6nmftwEBBF/3hkGZcIoIkFHEumvgwDjhHBdW8ropCyzwKBFKTXmDxN/Be3SnXqrcG61GSWnB5GY=
+	t=1751110415; cv=none; b=JuH2PI5isJDzK3jmOsSQjNXAZ3nq8nQZDY2BDHfSJIp2W+PDm/+cH718acR774M311fG+LbTPuV34xiQKlY6GpjbJeAuZkYZYHHUapEDSHcKYfBznwiYN8wF+LRt/L39q3tZEut1DerYNo+sL7bG8iBHZaNa6HLRJ9QVuCyyvDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751109655; c=relaxed/simple;
-	bh=5hRsgFtGknKzSmWy0qbz0oiEOBs4iV/BxLCdUTZiHhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NH5t/4pmO2Xj9LF/w4CFEgeihBg6VYQmypZPR67Q5hSHOGORJvESyt48D8knoIOtWRknpAbSFLUnoAY1hvpJwLXu7UZch9rRF5bHrL/GINkckHAoKKMPKA3MVAnZNMQX/9oDS9yUMOzxLdkTrv2laMBsCvIWTPRre13/Mf+o1ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nfs2Bi0G; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751110415; c=relaxed/simple;
+	bh=OLmIt0NdaTQQio1j6R4DTmPwFYt4BbZfA51Lhm3hYz8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=s4dznl4aImDbGaptUKAgFcPthH6cvF6SFj5i01TZrVcIgxEk/QarZ9z781Y9FxFx+woZ+XEnWl9bOFiV9wNCV0sOTCaIE2ejUcPUW3wvjNb/Zh+qx6+oVewq9LtIGCJKFB/vcCVKLvLdaY4MQ03BfgtHRa/9RxiI+7uHXFSs0Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ISfRGq7x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pl8IWT3Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nfs2Bi0G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751109654; x=1782645654;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5hRsgFtGknKzSmWy0qbz0oiEOBs4iV/BxLCdUTZiHhE=;
-  b=Nfs2Bi0Ga3NKUrE31tRc3wAA4jlwPo4yG7eAK8xXxjlVkJ1FG9URPNsH
-   0LLHYoJH8wYjOc1gZD0iU4wWhuT7vtLUOpN7UAF+qgyc90SFXLdHblHwb
-   zRdsv3+SLTdjKOIj4sTSoYL9wXti8q5QZq+2ktwQoRPOYjll/jt7Ub828
-   m+5CEoKacxmA7N+wk5Mnr2fz0CbUVJRfdMHXxxza1SlfEvSmD1bGqoOkf
-   +yxDPmwkCIMtoy8kJK5TRdUsy4dqM8AxZgrwJW5x02euM4ZBbOg9lxJnM
-   2d/FBNlbhXVhEWBxF1/EV72R2bOmMP4xu0l4PeVfiO5ptGMDRl8aZpcHF
-   A==;
-X-CSE-ConnectionGUID: Q4C0lueGSbiu/gwmSUG2EA==
-X-CSE-MsgGUID: eXh3PwO3S7eL3Ldr+aQx4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="56026415"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="56026415"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 04:20:53 -0700
-X-CSE-ConnectionGUID: EAQA53eESNyl2C78KB4Yjg==
-X-CSE-MsgGUID: Y9a4d4aKQOmy9xTW4jv7+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="190199959"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 28 Jun 2025 04:20:52 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVTc1-000X0I-0t;
-	Sat, 28 Jun 2025 11:20:49 +0000
-Date: Sat, 28 Jun 2025 19:20:38 +0800
-From: kernel test robot <lkp@intel.com>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Steve French <stfrench@microsoft.com>
-Subject: fs/smb/server/connection.c:42:5-24: WARNING: atomic_dec_and_test
- variation before object free at line 43.
-Message-ID: <202506281916.wVorCT8Y-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ISfRGq7x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pl8IWT3Z"
+Date: Sat, 28 Jun 2025 11:33:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751110406;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hLLvKV6PC2ezlAmjaYU+E1HyuVMnXblpdQqr7/rdJ4o=;
+	b=ISfRGq7xNB333K/uTqoQcAoAnNji/G7fUj53N6SOHSrHEWEXrxQe+Lj+o//QJWYBJs4yJn
+	iChQB1eBtkN9RniRMpeuVq1dJYpM2o1KtywnuR4M7Q427wFcSA21Cj+poKOxNHokBUpQUo
+	bdoCPshBZfgzn6YQ71zEYnn3t7D+62IwOvBGL0p92nhokBJHeNx8bz+hHR+kZf3sJKuCRh
+	CN5a4bEY2KncKirLKX7cCmdRKSqcRgMHjiLIU1uGDQ6iqpnzrutd1LljyI5RfkQ++9BU3B
+	jyQwsySubmMgy64gFqrkXYLPMCyDgMc7oUrsJpexiGGPX5/BxLGv/D+l0GEgEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751110406;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hLLvKV6PC2ezlAmjaYU+E1HyuVMnXblpdQqr7/rdJ4o=;
+	b=pl8IWT3ZqjANLNcmX4lNZo0YezJ+/oSv5CAIYd/HRrXq+SUHGQOBVF1v3wIIN+l9ZwBEws
+	QJTpmhHkVLApLVDA==
+From: "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/urgent] x86/mce/amd: Fix threshold limit reset
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250624-wip-mca-updates-v4-4-236dd74f645f@amd.com>
+References: <20250624-wip-mca-updates-v4-4-236dd74f645f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <175111040497.406.16411404951495816487.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   aaf724ed69264719550ec4f194d3ab17b886af9a
-commit: ee426bfb9d09b29987369b897fe9b6485ac2be27 ksmbd: add refcnt to ksmbd_conn struct
-date:   10 months ago
-config: i386-randconfig-052-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281916.wVorCT8Y-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+The following commit has been merged into the ras/urgent branch of tip:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506281916.wVorCT8Y-lkp@intel.com/
+Commit-ID:     5f6e3b720694ad771911f637a51930f511427ce1
+Gitweb:        https://git.kernel.org/tip/5f6e3b720694ad771911f637a51930f511427ce1
+Author:        Yazen Ghannam <yazen.ghannam@amd.com>
+AuthorDate:    Tue, 24 Jun 2025 14:15:59 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 27 Jun 2025 13:16:23 +02:00
 
-cocci warnings: (new ones prefixed by >>)
->> fs/smb/server/connection.c:42:5-24: WARNING: atomic_dec_and_test variation before object free at line 43.
+x86/mce/amd: Fix threshold limit reset
 
-vim +42 fs/smb/server/connection.c
+The MCA threshold limit must be reset after servicing the interrupt.
 
-    24	
-    25	/**
-    26	 * ksmbd_conn_free() - free resources of the connection instance
-    27	 *
-    28	 * @conn:	connection instance to be cleand up
-    29	 *
-    30	 * During the thread termination, the corresponding conn instance
-    31	 * resources(sock/memory) are released and finally the conn object is freed.
-    32	 */
-    33	void ksmbd_conn_free(struct ksmbd_conn *conn)
-    34	{
-    35		down_write(&conn_list_lock);
-    36		list_del(&conn->conns_list);
-    37		up_write(&conn_list_lock);
-    38	
-    39		xa_destroy(&conn->sessions);
-    40		kvfree(conn->request_buf);
-    41		kfree(conn->preauth_info);
-  > 42		if (atomic_dec_and_test(&conn->refcnt))
-  > 43			kfree(conn);
-    44	}
-    45	
+Currently, the restart function doesn't have an explicit check for this.  It
+makes some assumptions based on the current limit and what's in the registers.
+These assumptions don't always hold, so the limit won't be reset in some
+cases.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Make the reset condition explicit. Either an interrupt/overflow has occurred
+or the bank is being initialized.
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/20250624-wip-mca-updates-v4-4-236dd74f645f@amd.com
+---
+ arch/x86/kernel/cpu/mce/amd.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 6820ebc..5c4eb28 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -350,7 +350,6 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+ 
+ struct thresh_restart {
+ 	struct threshold_block	*b;
+-	int			reset;
+ 	int			set_lvt_off;
+ 	int			lvt_off;
+ 	u16			old_limit;
+@@ -432,13 +431,13 @@ static void threshold_restart_bank(void *_tr)
+ 
+ 	rdmsr(tr->b->address, lo, hi);
+ 
+-	if (tr->b->threshold_limit < (hi & THRESHOLD_MAX))
+-		tr->reset = 1;	/* limit cannot be lower than err count */
+-
+-	if (tr->reset) {		/* reset err count and overflow bit */
+-		hi =
+-		    (hi & ~(MASK_ERR_COUNT_HI | MASK_OVERFLOW_HI)) |
+-		    (THRESHOLD_MAX - tr->b->threshold_limit);
++	/*
++	 * Reset error count and overflow bit.
++	 * This is done during init or after handling an interrupt.
++	 */
++	if (hi & MASK_OVERFLOW_HI || tr->set_lvt_off) {
++		hi &= ~(MASK_ERR_COUNT_HI | MASK_OVERFLOW_HI);
++		hi |= THRESHOLD_MAX - tr->b->threshold_limit;
+ 	} else if (tr->old_limit) {	/* change limit w/o reset */
+ 		int new_count = (hi & THRESHOLD_MAX) +
+ 		    (tr->old_limit - tr->b->threshold_limit);
