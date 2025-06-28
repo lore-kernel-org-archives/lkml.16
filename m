@@ -1,37 +1,37 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D42325A620;
-	Sat, 28 Jun 2025 16:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D03C246782;
+	Sat, 28 Jun 2025 16:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751129711; cv=none; b=A/qo5UbXu2Jng8opOMtQbRaZ0vKvoh5RNuzTXh0RUZg3e4DuRjq4FfUb2aZTnzT/XngkVvzafIrx/OthOurm8Nu67Q614QxpcM0uMTnuJUgRzvX6iN/8NfPU4Ijv5T69HIdmk3h0Yr2seyFjhX9+G18vCLpNQ7WLNl3zLr3E9JU=
+	t=1751129709; cv=none; b=tqDbryUK5SZHzJMtb3SkMy5B3f0IED4IA5RxVxsXx+CuhvDbB14RcEhwXODNqYPiBAewDev8fFrEdBD615MhYg9x+zsVT2EANsOOL6D1gpWTeecpMUKEFJtBPyviz5NRXk/H/qJ3riLDqD2pdTJA5OUP4I+s6wp+OXvWaFydPBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751129711; c=relaxed/simple;
-	bh=Dgdiq1horuDoHLdNztjJFaG+cA4sLMSMTTMWhbKe7+Q=;
+	s=arc-20240116; t=1751129709; c=relaxed/simple;
+	bh=CXJdMVM7yfnfOWdD19oSNPqLnLxqQfuOKdmhOWln+X4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ee5LYfdTQ7QCnw4cwNnSLslDYKeFNZ/2gyTSZwSbtZ31P51LiEscNqHULpxVv6Uqxbv/AY9UvQX72KUBoMo4GwJp1OfGtmBBXHYYzCZiApigCaJCkwVr5im/I90+nJxek2kKUk5AFNxBrUramlGzX0RqySBuvLAXBcOv4auMkzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=C9NZI/8M; arc=none smtp.client-ip=134.0.28.11
+	 MIME-Version; b=ERysUgNGPHbv4ZxLd4ZDSQeCAYZN8syQKybZxaZUCdEq4nR18opqoXrESW6d90OEWUmYtDwpn3sSKyFm0ONCAQj+dQqXTTYkyXhXnaAYviTtI7y13akofD+c2e1PbVf+Ee7AWP5TAscJ7n3pnC/FxVl0awetxso8+9zpxd1FCpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Kl0nPAKr; arc=none smtp.client-ip=134.0.28.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="C9NZI/8M"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Kl0nPAKr"
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout1.routing.net (Postfix) with ESMTP id 0700340373;
-	Sat, 28 Jun 2025 16:55:06 +0000 (UTC)
+	by mxout2.routing.net (Postfix) with ESMTP id BF0886025C;
+	Sat, 28 Jun 2025 16:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1751129706;
+	s=20200217; t=1751129705;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DIMuNne++IWVgY0azMoYkvyXCjaefI/n17TVM+rpZxc=;
-	b=C9NZI/8MAu8+mhyQdSakPXSwZELFqyLuGRIKMtiKDFgT2XSApJd57ZIfVzGVOiO38ouGzr
-	3ougfS5ifP4LgEgkS64U7g3/Idq2D+4jbBO0Apr4KIKAui3899MRkcMqcvGXGZGmiwL04Z
-	3JLL8bU9QVQVW+daGT4Gls5ZIyCYZMg=
+	bh=SHQ5vPeo13GqSQMpnsgrtHpzp9AC7Cqs5ZLxrZU37Ag=;
+	b=Kl0nPAKreVprPknsFX7/M3ARN4b/TiiQapjcQhzYPWI46RKhD0QBm9zy2TcUpcUZ4dMlsc
+	MaV1QDDNg5LyZUOf7KynTLYmQZx8kC77ivxWNQL97h7PN9nLAQDzwzdjugytQWK78RHHg+
+	eU5qYoSzIafxiXtR6UrxT6/DQk9R+gY=
 Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 9F34D12272D;
-	Sat, 28 Jun 2025 16:55:05 +0000 (UTC)
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 635AF1226EC;
+	Sat, 28 Jun 2025 16:55:04 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -63,9 +63,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v7 09/14] arm64: dts: mediatek: mt7988a-bpi-r4: add proc-supply for cci
-Date: Sat, 28 Jun 2025 18:54:44 +0200
-Message-ID: <20250628165451.85884-10-linux@fw-web.de>
+Subject: [PATCH v7 06/14] arm64: dts: mediatek: mt7988: add cci node
+Date: Sat, 28 Jun 2025 18:54:41 +0200
+Message-ID: <20250628165451.85884-7-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250628165451.85884-1-linux@fw-web.de>
 References: <20250628165451.85884-1-linux@fw-web.de>
@@ -79,29 +79,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-CCI requires proc-supply. Add it on board level.
+Add cci devicetree node for cpu frequency scaling.
 
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+v3:
+- add mt7988-cci compatible as suggested by angelo
+---
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 33 +++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-index 81ba045e0e0e..afa9e3b2b16a 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -40,6 +40,10 @@ reg_3p3v: regulator-3p3v {
- 	};
- };
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+index c46b31f8d653..560ec86dbec0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+@@ -12,6 +12,35 @@ / {
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
-+&cci {
-+	proc-supply = <&rt5190_buck3>;
-+};
++	cci: cci {
++		compatible = "mediatek,mt7988-cci", "mediatek,mt8183-cci";
++		clocks = <&mcusys CLK_MCU_BUS_DIV_SEL>,
++			 <&topckgen CLK_TOP_XTAL>;
++		clock-names = "cci", "intermediate";
++		operating-points-v2 = <&cci_opp>;
++	};
 +
- &cpu0 {
- 	proc-supply = <&rt5190_buck3>;
- };
++	cci_opp: opp-table-cci {
++		compatible = "operating-points-v2";
++		opp-shared;
++		opp-480000000 {
++			opp-hz = /bits/ 64 <480000000>;
++			opp-microvolt = <850000>;
++		};
++		opp-660000000 {
++			opp-hz = /bits/ 64 <660000000>;
++			opp-microvolt = <850000>;
++		};
++		opp-900000000 {
++			opp-hz = /bits/ 64 <900000000>;
++			opp-microvolt = <850000>;
++		};
++		opp-1080000000 {
++			opp-hz = /bits/ 64 <1080000000>;
++			opp-microvolt = <900000>;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -25,6 +54,7 @@ cpu0: cpu@0 {
+ 				 <&topckgen CLK_TOP_XTAL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster0_opp>;
++			mediatek,cci = <&cci>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -36,6 +66,7 @@ cpu1: cpu@1 {
+ 				 <&topckgen CLK_TOP_XTAL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster0_opp>;
++			mediatek,cci = <&cci>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -47,6 +78,7 @@ cpu2: cpu@2 {
+ 				 <&topckgen CLK_TOP_XTAL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster0_opp>;
++			mediatek,cci = <&cci>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -58,6 +90,7 @@ cpu3: cpu@3 {
+ 				 <&topckgen CLK_TOP_XTAL>;
+ 			clock-names = "cpu", "intermediate";
+ 			operating-points-v2 = <&cluster0_opp>;
++			mediatek,cci = <&cci>;
+ 		};
+ 
+ 		cluster0_opp: opp-table-0 {
 -- 
 2.43.0
 
