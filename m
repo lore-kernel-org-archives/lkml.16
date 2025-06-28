@@ -1,64 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C312185AC;
-	Sat, 28 Jun 2025 11:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89970248866;
+	Sat, 28 Jun 2025 11:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751110416; cv=none; b=bh9C4hDo/Yi0bgkktg8dbg8cKEsDlGVfD45aVxtLWmhgZ5mGn0P17E5WAPhUOBRhfcHWAABJaDF7dn13ro17+WRyyLHXwjB1h97YsJhyXyG2c2g+iBfAil2/XUMtpwabzb+Z9I+ztq6hIEfpwCGI+Vp1ovi5pCFmASFa+zFTWZg=
+	t=1751110419; cv=none; b=oriZdMvsB0uM7fdUtGK9w35NR49SG/y/JN/z7hucr0DPEczdnlNsC4AjN88BXWebNXkBEh0JncF2Vx7U87SyeD52JuDTAgVxZFkNqGy6FRq0FUiQNJ+AWkyhBRCtHSrFaIsZciufe5LHtnlFFdlBFJsA3XyjgQ6kWTPQW3+3n50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751110416; c=relaxed/simple;
-	bh=16u7OuaNPXHqJuONnAOhuvO11B/SLK3UyITi5S4M1ZE=;
+	s=arc-20240116; t=1751110419; c=relaxed/simple;
+	bh=Z8sK1M/bb1wRBNMh2M/ISgCal11mKoUBS/jNphTLSt4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ImrpK1flJBVZW0AZ06FpD0ccqgfAdYeELBh8WlOJ+AbRo0qHKrf+j14gygOv099B6NZU+jJ0kE263UXcxBVex0/xkh+pXudihlJhH+PTDDaee+kDdxCwnm3p20mrcwz9JAGxPqlI/gE7RNYji4V5JHIhom7kvMqkSR58Htray1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I8kq+ohB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2UJmiogp; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=O0bc96PjS3XMe3FBShrsiyPOVAQAfuMZYeX1OzE9oVT4FN90m3yzObIug0Jbld87X6z2L3YxdjEdSvmNLwc+Uuegl6E5vR14SUKt4XYcHSzursvtqg0JnX4sUlhfO5GdiIYrb+9S0XJQy4aim46WUK8kxSrF/2jOCm/+6LMbUcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=npwluFr0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uQkarKkd; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I8kq+ohB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2UJmiogp"
-Date: Sat, 28 Jun 2025 11:33:25 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="npwluFr0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uQkarKkd"
+Date: Sat, 28 Jun 2025 11:33:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751110407;
+	s=2020; t=1751110408;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vqh3z7X+ejo3GlM/NkpN6SjfNNFzgO7ETNPHrHWrrsg=;
-	b=I8kq+ohBjrCF3GmobreHoYHMvQUFKb4c8t/wXRd45PobGkabRW7PQ+OOvD9uErL58QYFaa
-	SaAoG9LvQb4slhswwqTIs4LYTqNGggskcK9ztDUpCqJ+qWmpV3fTnSd9Df8CwAUDNYvBcZ
-	b+qJvQf5yj0nD4Zb8VTHKyQ7j4aI28JcTSNCdxa4y25pSxbF1ytLVJwflCSQLXn+Em0+nM
-	qdK5LmaiHGczrVTRZ33PAGfE50dElprCmaiB/4Xvyia10HDi25u4QyxQ1mDezmdFUOe6ew
-	IrLz605JdUNBzRfVpFbYrZUmCIivZMDYH6hNqjsPi7SN0wIj2oxYfTsaqbO8KA==
+	bh=5wb202bpvw2Il4BHrHdWyvUPnpTWWca7OThyZ0nEquo=;
+	b=npwluFr0fB1l760Rhc7h3s2tlk3wh7y7Mh04SsMIRWZugBSBHIUfRRa/plbQCMrd1O2nu0
+	VGgbuv+87KY+plIskOcYUY7m5ITUcElhy55XVhg6MwySg9RJNX/LUZ58wPKvryFeeRTJqa
+	7ktk7dLi+SwxhrjEq6tS5s5lubXr73W1+lC+8+yE+Gi4/olQZeio9YXsO7N5nrZ3gmQD36
+	gixC+GpLQF7ILeAby7CZtfFLRRs9W6QQ3+76C3wU7/F3u8bwSA20m7mbq5OQCO8kMlCkwY
+	yTErn3sPULf/Zdg3hmoSfGnq70f3VsluGtYYmKwsoBIvs5JJSrDjaPHOGEE9Yw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751110407;
+	s=2020e; t=1751110408;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vqh3z7X+ejo3GlM/NkpN6SjfNNFzgO7ETNPHrHWrrsg=;
-	b=2UJmiogpcyo5Y0gHFjID3n9lRL3VN/5RUjg+JtkNzJ0mSCLI9B9w5Sh4iy91CmrCT2uK/q
-	cIMshPBfxXtzIhAw==
+	bh=5wb202bpvw2Il4BHrHdWyvUPnpTWWca7OThyZ0nEquo=;
+	b=uQkarKkdPEimRCNz8bGCI5si5uLrtA2tR0G259/hk0C2+GKpZYCG6VqwjBXUE+gOilpHWJ
+	xATO8CZxdMzmbHDw==
 From: "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: ras/urgent] x86/mce/amd: Add default names for MCA banks and blocks
+Subject: [tip: ras/urgent] x86/mce: Don't remove sysfs if thresholding sysfs
+ init fails
 Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250624-wip-mca-updates-v4-3-236dd74f645f@amd.com>
-References: <20250624-wip-mca-updates-v4-3-236dd74f645f@amd.com>
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+ Tony Luck <tony.luck@intel.com>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250624-wip-mca-updates-v4-1-236dd74f645f@amd.com>
+References: <20250624-wip-mca-updates-v4-1-236dd74f645f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175111040592.406.7571245350529428930.tip-bot2@tip-bot2>
+Message-ID: <175111040774.406.1915924164324676187.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,62 +69,56 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the ras/urgent branch of tip:
 
-Commit-ID:     d66e1e90b16055d2f0ee76e5384e3f119c3c2773
-Gitweb:        https://git.kernel.org/tip/d66e1e90b16055d2f0ee76e5384e3f119c3c2773
+Commit-ID:     4c113a5b28bfd589e2010b5fc8867578b0135ed7
+Gitweb:        https://git.kernel.org/tip/4c113a5b28bfd589e2010b5fc8867578b0135ed7
 Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Tue, 24 Jun 2025 14:15:58 
+AuthorDate:    Tue, 24 Jun 2025 14:15:56 
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 27 Jun 2025 13:13:36 +02:00
+CommitterDate: Thu, 26 Jun 2025 17:28:13 +02:00
 
-x86/mce/amd: Add default names for MCA banks and blocks
+x86/mce: Don't remove sysfs if thresholding sysfs init fails
 
-Ensure that sysfs init doesn't fail for new/unrecognized bank types or if
-a bank has additional blocks available.
+Currently, the MCE subsystem sysfs interface will be removed if the
+thresholding sysfs interface fails to be created. A common failure is due to
+new MCA bank types that are not recognized and don't have a short name set.
 
-Most MCA banks have a single thresholding block, so the block takes the same
-name as the bank.
+The MCA thresholding feature is optional and should not break the common MCE
+sysfs interface. Also, new MCA bank types are occasionally introduced, and
+updates will be needed to recognize them. But likewise, this should not break
+the common sysfs interface.
 
-Unified Memory Controllers (UMCs) are a special case where there are two
-blocks and each has a unique name.
+Keep the MCE sysfs interface regardless of the status of the thresholding
+sysfs interface.
 
-However, the microarchitecture allows for five blocks. Any new MCA bank types
-with more than one block will be missing names for the extra blocks. The MCE
-sysfs will fail to initialize in this case.
-
-Fixes: 87a6d4091bd7 ("x86/mce/AMD: Update sysfs bank names for SMCA systems")
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/20250624-wip-mca-updates-v4-3-236dd74f645f@amd.com
+Link: https://lore.kernel.org/20250624-wip-mca-updates-v4-1-236dd74f645f@amd.com
 ---
- arch/x86/kernel/cpu/mce/amd.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 9d852c3..6820ebc 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -1113,13 +1113,20 @@ static const char *get_name(unsigned int cpu, unsigned int bank, struct threshol
- 	}
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index e9b3c5d..07d6193 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2801,15 +2801,9 @@ static int mce_cpu_dead(unsigned int cpu)
+ static int mce_cpu_online(unsigned int cpu)
+ {
+ 	struct timer_list *t = this_cpu_ptr(&mce_timer);
+-	int ret;
  
- 	bank_type = smca_get_bank_type(cpu, bank);
--	if (bank_type >= N_SMCA_BANK_TYPES)
--		return NULL;
- 
- 	if (b && (bank_type == SMCA_UMC || bank_type == SMCA_UMC_V2)) {
- 		if (b->block < ARRAY_SIZE(smca_umc_block_names))
- 			return smca_umc_block_names[b->block];
--		return NULL;
-+	}
-+
-+	if (b && b->block) {
-+		snprintf(buf_mcatype, MAX_MCATYPE_NAME_LEN, "th_block_%u", b->block);
-+		return buf_mcatype;
-+	}
-+
-+	if (bank_type >= N_SMCA_BANK_TYPES) {
-+		snprintf(buf_mcatype, MAX_MCATYPE_NAME_LEN, "th_bank_%u", bank);
-+		return buf_mcatype;
- 	}
- 
- 	if (per_cpu(smca_bank_counts, cpu)[bank_type] == 1)
+ 	mce_device_create(cpu);
+-
+-	ret = mce_threshold_create_device(cpu);
+-	if (ret) {
+-		mce_device_remove(cpu);
+-		return ret;
+-	}
++	mce_threshold_create_device(cpu);
+ 	mce_reenable_cpu();
+ 	mce_start_timer(t);
+ 	return 0;
