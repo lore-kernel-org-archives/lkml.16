@@ -1,37 +1,37 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0300D25CC64;
-	Sat, 28 Jun 2025 16:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4125A33A;
+	Sat, 28 Jun 2025 16:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751129715; cv=none; b=Z8AN1Pd9HhZ6WxB/CjFo+yKYIlyhHmpZf8PnxpXiOAN8JknAG5IOgR/Ixy4H1PqibgmKkVYPktuv1+CycrD5rRUzE9KAsOzoEYEvC8rKfTM/+0PUdJtBgKsCXI5OGqIKXpWIJVNNjQeV/99pQgAiNoI2Tvva5pT4aIYlWqu33mc=
+	t=1751129711; cv=none; b=pdvJWXZWovBjWWZ5zIEKsk6Dkrasrppjaflq48b5Df8auKZD8WE1NRa7h1f4Pir8RyvYGbYwYjtX7cdfpLgWYQicxhmR+w1Za6VZ/tXiKuSgMLcQEp1W6ZCBTtiKUQsNz8ybCdR1SfKchuqlKYY4TWSAk6n3q9KjO6mms/PsVU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751129715; c=relaxed/simple;
-	bh=6rXB9uhFua0CDavnN2LWnw7HTLqju5HTq/AgWYbkQns=;
+	s=arc-20240116; t=1751129711; c=relaxed/simple;
+	bh=oEHCeCyYmhRvcoDsSzTQBlneOLnSQNdeNvfMRFj69TE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqgGRqnIgH1OYi32bUnK+VJAZ4wJ9ug2+NbFxZJ8TnB7NgEAl0AoljsDdDfanzALQvaYsJKbHLvy93LD4TOZ9hiVwRNCpYb8muvjgoGjiofEjD8MpyCRfUQoXS1DmwH4xpt5Do5sZ1zo47KIsHqYPRACVnLm940GQnGdE5Sx0bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=DUpJPhzM; arc=none smtp.client-ip=134.0.28.11
+	 MIME-Version; b=M+nTwxeyB6Nz3t4+uFxGXIOUPYiOqHzt7FjkfVgSLDVEK09RWWt6IM7EX5OBkGqYhHTMWuzLHbJd0vBFRHgAEVTyeE/xY4IdbHu9mbk9jIEgwsZh/lwUt0N6bGS7VauLmWwRVYLIuR3fjKsCJd2TQ1KPMlL4UOPeabhkEwr9GYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=OLpPkYsS; arc=none smtp.client-ip=134.0.28.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="DUpJPhzM"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="OLpPkYsS"
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout1.routing.net (Postfix) with ESMTP id B4279403EE;
-	Sat, 28 Jun 2025 16:55:07 +0000 (UTC)
+	by mxout2.routing.net (Postfix) with ESMTP id 64A726027C;
+	Sat, 28 Jun 2025 16:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1751129707;
+	s=20200217; t=1751129706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Po3wYPbug5oitTRavuGEWn/QaJpRE4HKrgqN22L2B/4=;
-	b=DUpJPhzMrOSPLgVdf1ACK+cqKOO2lsxeMwkRoM1hiATKw9hAAPs0Sor8b/Kf3Hvbp33K38
-	aBFfBztTF28auBb4xLLL2xibhDT7My7mAIcWNcsqUt/kwwGGQHCTYbCYjoaEMxc146XT0Z
-	EGCkE4DfxFL3e4xBUnEdGkU0EAxS+RU=
+	bh=zCArQQjnZOoBXdfm7YKc01KniAiMbD7wl2wyNkiAMyg=;
+	b=OLpPkYsStm3Cq0k5SlImUp0TQ/zwOQ8urHwmvRVUEBl4pWUCg3u4ufaWMd3alAFUMrJ2nP
+	E0Yn36w9S6syo6mr6aQyQPSKEzFMTAljpPwVSXwaYZI36/mmP1simsIIXuvDu1E/C4xdM2
+	P0I2WjzJx12r7cbKPv/BVF01IabZcdI=
 Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 4AF8F1226DC;
-	Sat, 28 Jun 2025 16:55:07 +0000 (UTC)
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 09F9D1226EC;
+	Sat, 28 Jun 2025 16:55:06 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: MyungJoo Ham <myungjoo.ham@samsung.com>,
 	Kyungmin Park <kyungmin.park@samsung.com>,
@@ -63,9 +63,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH v7 13/14] arm64: dts: mediatek: mt7988a-bpi-r4: add sfp cages and link to gmac
-Date: Sat, 28 Jun 2025 18:54:48 +0200
-Message-ID: <20250628165451.85884-14-linux@fw-web.de>
+Subject: [PATCH v7 10/14] arm64: dts: mediatek: mt7988a-bpi-r4: drop unused pins
+Date: Sat, 28 Jun 2025 18:54:45 +0200
+Message-ID: <20250628165451.85884-11-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250628165451.85884-1-linux@fw-web.de>
 References: <20250628165451.85884-1-linux@fw-web.de>
@@ -79,111 +79,149 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add SFP cages to Bananapi-R4 board. The 2.5g phy variant only contains the
-wan-SFP, so add this to common dtsi and the lan-sfp only to the dual-SFP
-variant.
+Pins were moved from SoC dtsi to Board level dtsi without cleaning up
+to needed ones. Drop the unused pins now.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
-v4:
-- update 2g5-board (reorder and drop phy-connection-type)
-- order sfp properties
-v3:
-- enable mac with 2.5g phy on r4 phy variant because driver is now mainline
----
- .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  | 11 +++++++++++
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 19 +++++++++++++++++++
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 19 +++++++++++++++++++
- 3 files changed, 49 insertions(+)
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 89 -------------------
+ 1 file changed, 89 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-index 53de9c113f60..6f0c81e3fd94 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-@@ -9,3 +9,14 @@ / {
- 	model = "Banana Pi BPI-R4 (1x SFP+, 1x 2.5GbE)";
- 	chassis-type = "embedded";
- };
-+
-+&gmac1 {
-+	phy = <&int_2p5g_phy>;
-+	phy-mode = "internal";
-+	status = "okay";
-+};
-+
-+&int_2p5g_phy {
-+	pinctrl-0 = <&i2p5gbe_led0_pins>;
-+	pinctrl-names = "i2p5gbe-led";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-index 36bd1ef2efab..4b3796ba82e3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-@@ -8,6 +8,25 @@ / {
- 	compatible = "bananapi,bpi-r4", "mediatek,mt7988a";
- 	model = "Banana Pi BPI-R4 (2x SFP+)";
- 	chassis-type = "embedded";
-+
-+	/* SFP2 cage (LAN) */
-+	sfp2: sfp2 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp2>;
-+		maximum-power-milliwatt = <3000>;
-+
-+		los-gpios = <&pio 2 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 83 GPIO_ACTIVE_LOW>;
-+		rate-select0-gpios = <&pio 3 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 0 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 1 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&gmac1 {
-+	managed = "in-band-status";
-+	phy-mode = "usxgmii";
-+	sfp = <&sfp2>;
- };
- 
- &pca9545 {
 diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-index 20073eb4d1bd..4d709ee527df 100644
+index afa9e3b2b16a..30affedf84d4 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -63,6 +63,19 @@ reg_3p3v: regulator-3p3v {
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	/* SFP1 cage (WAN) */
-+	sfp1: sfp1 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c_sfp1>;
-+		maximum-power-milliwatt = <3000>;
-+
-+		los-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpios = <&pio 82 GPIO_ACTIVE_LOW>;
-+		rate-select0-gpios = <&pio 21 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpios = <&pio 70 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
-+	};
+@@ -223,18 +223,6 @@ &pcie3 {
  };
  
- &cci {
-@@ -133,6 +146,12 @@ map-cpu-active-low {
+ &pio {
+-	mdio0_pins: mdio0-pins {
+-		mux {
+-			function = "eth";
+-			groups = "mdc_mdio0";
+-		};
+-
+-		conf {
+-			pins = "SMI_0_MDC", "SMI_0_MDIO";
+-			drive-strength = <8>;
+-		};
+-	};
+-
+ 	i2c0_pins: i2c0-g0-pins {
+ 		mux {
+ 			function = "i2c";
+@@ -249,20 +237,6 @@ mux {
+ 		};
  	};
+ 
+-	i2c1_sfp_pins: i2c1-sfp-g0-pins {
+-		mux {
+-			function = "i2c";
+-			groups = "i2c1_sfp";
+-		};
+-	};
+-
+-	i2c2_0_pins: i2c2-g0-pins {
+-		mux {
+-			function = "i2c";
+-			groups = "i2c2_0";
+-		};
+-	};
+-
+ 	i2c2_1_pins: i2c2-g1-pins {
+ 		mux {
+ 			function = "i2c";
+@@ -298,34 +272,6 @@ mux {
+ 		};
+ 	};
+ 
+-	gbe0_led1_pins: gbe0-led1-pins {
+-		mux {
+-			function = "led";
+-			groups = "gbe0_led1";
+-		};
+-	};
+-
+-	gbe1_led1_pins: gbe1-led1-pins {
+-		mux {
+-			function = "led";
+-			groups = "gbe1_led1";
+-		};
+-	};
+-
+-	gbe2_led1_pins: gbe2-led1-pins {
+-		mux {
+-			function = "led";
+-			groups = "gbe2_led1";
+-		};
+-	};
+-
+-	gbe3_led1_pins: gbe3-led1-pins {
+-		mux {
+-			function = "led";
+-			groups = "gbe3_led1";
+-		};
+-	};
+-
+ 	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
+ 		mux {
+ 			function = "led";
+@@ -333,13 +279,6 @@ mux {
+ 		};
+ 	};
+ 
+-	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
+-		mux {
+-			function = "led";
+-			groups = "2p5gbe_led1";
+-		};
+-	};
+-
+ 	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
+ 		mux {
+ 			function = "flash";
+@@ -361,40 +300,12 @@ mux {
+ 		};
+ 	};
+ 
+-	snfi_pins: snfi-pins {
+-		mux {
+-			function = "flash";
+-			groups = "snfi";
+-		};
+-	};
+-
+-	spi0_pins: spi0-pins {
+-		mux {
+-			function = "spi";
+-			groups = "spi0";
+-		};
+-	};
+-
+ 	spi0_flash_pins: spi0-flash-pins {
+ 		mux {
+ 			function = "spi";
+ 			groups = "spi0", "spi0_wp_hold";
+ 		};
+ 	};
+-
+-	spi2_pins: spi2-pins {
+-		mux {
+-			function = "spi";
+-			groups = "spi2";
+-		};
+-	};
+-
+-	spi2_flash_pins: spi2-flash-pins {
+-		mux {
+-			function = "spi";
+-			groups = "spi2", "spi2_wp_hold";
+-		};
+-	};
  };
  
-+&gmac2 {
-+	managed = "in-band-status";
-+	phy-mode = "usxgmii";
-+	sfp = <&sfp1>;
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
+ &pwm {
 -- 
 2.43.0
 
