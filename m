@@ -1,87 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6A71747;
-	Sat, 28 Jun 2025 14:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1991A215F53
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 14:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751120534; cv=none; b=Sn9De1Pqz7FUA/pRi6Z44yV4wuRqUyUFaLm7MCwHimKL5OsU2njluGRFIMfK9Zht/tJBItYwlCF5n6GpXXOsnubWSpjvRuHMv4R2AhbmdRgSEwxt5UqJOqUEdTamtpOE6Mwd2uhXcdYsixnUlRfM0uXPP6QflXDWCO5WipR8uVQ=
+	t=1751120592; cv=none; b=leKbV2nj6PxqIDfgXzqyhppqDJf8nQvcGXGcwpdOk7LMOvs5+mV6Q8FTEBPdQu9G7JgSIi2X20OM5N1k26R2geg1ADLhmdL7qtO7ldpam0VF030sfxocetucc5yjcZ67oR815/AzzyW6Ui2i0S7SIV39rToaOJZth42OhYOjdKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751120534; c=relaxed/simple;
-	bh=EBTOgKbMa7ugSS3wz5rgebhS88Gdc0XadFDzXKOAAf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lxy/MRr2lemdgAUYZIRpCYZtmhI7G0Zjdy1ksC09glGxXXQgdo+OpyG1Nqi3nz3AuAAA3dWRGUBIicJz18lyOXJyBEinQSjuSj8ufQo6qSOtTayHGnZbBlJrwgAehQhUVbGwZo/RRlwv2lPR6hlTGuBYc7UWwG/Hnj0Z/uj4M4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8edb7ct; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751120592; c=relaxed/simple;
+	bh=pd0DP6kng5GcWSShQyiaIvgUBhaEPLWmfJ4sGXeKgy4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d1gEkEU2dlYZjpYmLccU3Y55qGrhiurPBNh0mgYClS3aP5O9junbpenI6OWasU2iiDcYTzYx5Bco94ZHyukiBZiNpDUN1UagkTogvWIkwSqa5wJhT3y9ejaYgSBQsNkY0YKXt5ODBd/Cwey0+I534F+OGxlPbSNZUeJb/rV2GEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/FEMnV8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8edb7ct"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B0DC4CEEA;
-	Sat, 28 Jun 2025 14:22:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/FEMnV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8313C4CEEA;
+	Sat, 28 Jun 2025 14:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751120533;
-	bh=EBTOgKbMa7ugSS3wz5rgebhS88Gdc0XadFDzXKOAAf0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=M8edb7ct4Ccwo8OtG7mZh6FCrpCzgUB2S4vXyzEmYL/wZ0F9JQJ+aOekarXGsDCvv
-	 uMjrgMYuzDX6aa23j4/8Z7eVJ85GWFX53wqkuc6ceAQHMbY2Zpnzj+8JL5m5Jqlc3C
-	 F3Sv+I8rXwJfz0Es7zipTdChZyauE9jp/RLftu39K2M0ZLUJGCTiJdPoacUiX19kGo
-	 ErJBXdbjkDTAI8BN4I7+Z5BnToQCc9Fntsr/HC8t4TDENy1FpC3QYLgQM4cDDGawJ5
-	 xNv8iWn/JBvu+5uDqV13Kx1cLaUyvnPdOlFGdDpK6FmjiGohI8+NZJpDY1nal+wlif
-	 Ydm+jr3m+1vMg==
-Date: Sat, 28 Jun 2025 16:22:09 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Akira Yokosawa
- <akiyks@gmail.com>
-Subject: Re: [PATCH 0/8] Yet another set of kerneldoc simplifications
-Message-ID: <20250628162209.0ba297b5@foz.lan>
-In-Reply-To: <20250627184000.132291-1-corbet@lwn.net>
-References: <20250627184000.132291-1-corbet@lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1751120591;
+	bh=pd0DP6kng5GcWSShQyiaIvgUBhaEPLWmfJ4sGXeKgy4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j/FEMnV8Mm5qqD3TwTTmuK9Hd2diNS8HWnAtBPW4sj54dV6lf9EnsxZvWt6I2hR6r
+	 I875Lc9jDR+DnJJqgYm1GwJEXWRe9wfLrJT9ynH1iRTmVcOLvGqEao2byS5H5fZ4bW
+	 xevpV3F3xT36n1tT3Uti4uXV38eDQ9dUODGDGjZx5u7uuvn7JOk1Ox5fg5sjGriXvR
+	 /L6uGDCeYQ1+rUIvOk0pxLFqAspbbjQP2Cz+jHj2NDUyHXDvh6YYTeF484gH8kiSA8
+	 f0blT+I/wz0mPB9M1l8d7BIeG5M5iiUhbhBEJi9qP3MZqFAGT3EkZzyoqKRHnwf89y
+	 2WqqrPvQjxBow==
+From: Sasha Levin <sashal@kernel.org>
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de
+Cc: airlied@gmail.com,
+	simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] drm/tests: Initialize framebuffer's filp_head in drm_test_framebuffer_free()
+Date: Sat, 28 Jun 2025 10:23:08 -0400
+Message-Id: <20250628142308.903037-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Fri, 27 Jun 2025 12:39:52 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+The drm_test_framebuffer_free() test creates a framebuffer on the stack
+without properly initializing the filp_head list, causing the following
+warning when drm_framebuffer_free() checks it:
 
-> As I continue to work through our shiny new kerneldoc, I keep finding ways
-> to make it (IMO) shinier.  This set covers these basic areas:
-> 
-> - Remove some unused fields from the KernelEntry class, and encapsulate the
->   handling of the section contentions therein.
-> 
-> - Clean up and optimize the EXPORT_SYMBOL processing slightly.
-> 
-> - Rework the handling of inline comments by getting rid of the substate
->   design and separating out the processing of the states that remain.
-> 
-> The series results in no changes in the generated output.
+[  144.996969] drm-kunit-mock-device drm_test_framebuffer_free.drm-kunit-mock-device: [drm] drm_WARN_ON(\!list_empty(&fb->filp_head))
+[  144.997097] WARNING: CPU: 0 PID: 2546 at drivers/gpu/drm/drm_framebuffer.c:832 drm_framebuffer_free+0x13f/0x1c0
 
-I looked the entire series, although I didn't test. On a visual
-inspection, all changes look good to me.
+The test intentionally creates a partially initialized framebuffer
+to test an edge case in drm_framebuffer_free(), but it needs to
+initialize the filp_head list to avoid triggering the warning on
+uninitialized list data.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Initialize the filp_head list in the test to match the behavior of
+drm_framebuffer_init().
 
-> 
-> Jonathan Corbet (8):
->   docs: kdoc: remove KernelEntry::in_doc_sect
->   docs: kdoc: Move content handling into KernelEntry
->   docs: kdoc: remove a bit of dead code
->   docs: kdoc: remove KernelEntry::function
->   docs: kdoc: rework process_export() slightly
->   docs: kdoc: remove the INLINE_END state
->   docs: kdoc: remove the inline states-within-a-state
->   docs: kdoc: split the processing of the two remaining inline states
-> 
->  scripts/lib/kdoc/kdoc_parser.py | 170 +++++++++++++-------------------
->  1 file changed, 67 insertions(+), 103 deletions(-)
-> 
+Fixes: d21942560499 ("drm/tests: Add test for drm_framebuffer_free()")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/tests/drm_framebuffer_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/gpu/drm/tests/drm_framebuffer_test.c b/drivers/gpu/drm/tests/drm_framebuffer_test.c
+index 6ea04cc8f3241..81a7f2cfb8ed6 100644
+--- a/drivers/gpu/drm/tests/drm_framebuffer_test.c
++++ b/drivers/gpu/drm/tests/drm_framebuffer_test.c
+@@ -677,6 +677,7 @@ static void drm_test_framebuffer_free(struct kunit *test)
+ 	};
+ 	int id, ret;
+ 
++	INIT_LIST_HEAD(&fb.filp_head);
+ 	priv->buffer_freed = false;
+ 
+ 	/*
+-- 
+2.39.5
 
-
-Thanks,
-Mauro
