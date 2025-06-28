@@ -1,177 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF39EEAA;
-	Sat, 28 Jun 2025 14:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B7F1A5B91;
+	Sat, 28 Jun 2025 14:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751121047; cv=none; b=B71bJXd9T6d4L5Fch5CN9LDziP0racZnLWGnnSl7wsu3nPKjfBhrqdeyeMw8c0WNig+BkVXV/yeRAZVtdeTloqfipB1EyFDL/FvIIPJIanXtt8OVrM8BqqO2xEHvW/zfvwjp52TW8q5r3KRDUU27B5RmpIJjilK2n++ZmwFyOzg=
+	t=1751121173; cv=none; b=lh7Xr8/L8SMd8jLcoT73yXPtqka1wsAoDF4SeYCQTt6SPTdTFVfwlQBgG9Cq3HZbEuIiO1an4q8MEnxkECt7yz9V+o6hrFxbLaOjAS2zISxcu7CpyUDapfqDXR67/YPYoLzHCVugtN2BkeCMPYwMmxQvWQICKrxJbeut4XtZr9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751121047; c=relaxed/simple;
-	bh=Zjca297UPm9qRvcIWvdjcDdDUN0GQEN4ZAaapxXydnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m72Ew5ogiohc2znab4wMvevO66wpfeWL2rqBvY9aRH0sped2CW3lNrTsRMeyMQhSjPom6LtnpKiUx2t98v81tpvJxZbKLB07Y/GfyIbZj/jDcqNXqnpltn0xSRum4CweuUH2Nw2QXhmou5/T7Ik3kaaSp3AB5TCGWhT0itaNanI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eVaW43Sl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751121173; c=relaxed/simple;
+	bh=Bl+6dxbFa+BtOUOg/hg24wMMzHPuMHD8D+s702Qlxm4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dsTjQxpQDZkxRCTUHJYfyz5mcyG/elBXCGAKQo2CxUiSrfyr5/EQ4D5deqLU6t6nvPdEkePqIAZSCbsejKAXDUT7o86OCAEwSd9W/d9PynHjfgHc1T/pM5BBexnub11CzWhiHwoIQVpEsG4hE/ssKkpr8K9z8WVbQeAGcjikibA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mWQ7eqhl; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eVaW43Sl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DC1C4CEEA;
-	Sat, 28 Jun 2025 14:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751121046;
-	bh=Zjca297UPm9qRvcIWvdjcDdDUN0GQEN4ZAaapxXydnI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eVaW43Sl/FlOO9tXaYKFjoHnVxXZvH0PCA3tsUNCALkdHjsEmxPo5473himU/xcKe
-	 6cf1OP0Pb2SVEArJeEkRitdgSgNNuVWwnhUcfZO/MdRQORUwRPsS37MbGLRWFO2afg
-	 594BZkclWAGh5TsenxRGZ3XzZKhXYXnmfLvofJTU=
-Date: Sat, 28 Jun 2025 16:30:44 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWQ7eqhl"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70e40e3f316so6585187b3.0;
+        Sat, 28 Jun 2025 07:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751121171; x=1751725971; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=45MS1jGnaUhNCKXawiCX+6El1Te2L6a6DJuqgA3p9nE=;
+        b=mWQ7eqhliapSQleZtXatwxK9TUcMwdtUalmLAjV6iHip+1oVsMcCVP3SstmBjS1SHw
+         Z8Cj/o7o1CYVYCvcpfSlqIZIIvhwvHdvZHI3sBOYYShctLgtolQZoWLMOVYzRUHYYAbT
+         xwyHMAeyOwykKvvKdc5dPFWZo67kvmgmjzItverLtltOWuyfD00+S9mnIB3aqQNAeOm8
+         Sd0RjHBMiNtSVqLTUDxyekcDzPymUvDyAHy0yOVtyG4T2SOgdjAPUDxE9ryDUbh4VcN1
+         nokvU4hCmKV1o5YukvEWm61pjtP8zfYJylG3sZfUbZvIKx3k2J1q4Q0ATsH28z5yFp0u
+         12FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751121171; x=1751725971;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=45MS1jGnaUhNCKXawiCX+6El1Te2L6a6DJuqgA3p9nE=;
+        b=Fu8Xy+8DME1lp3XlUOQq2eGkQ/SBOp1p365GnMCy0babMNh4tXQshMNX9eZSDziXb3
+         z1BhhwHf2eFJmO7CPjQQhYJGUQHumbEaPsuio73RuIKxvMsSxgkM/LGSMp/M0857ImM7
+         ytJi59W6vy5RBP+I8OrXh51ADbbnROpYuzi5OEucPlECY3PMXX1MymlF0eOROyIuYmEL
+         D9XU3aLQuHZzIQPWABEszBfL9CkYtpRt1+A74sApoAqP70fshRe3w2c5yoOSxc6rsa4e
+         reGxp9CQ4id1OcsQqhaFS9dGEqt2Rh8gmUPb2dgUuS7RpPoA3L8pwjs64rUbjCMLFmqJ
+         UGXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzQjowGTKi4XiXpAdXQFGlvbOnp2sXOQ66081uGeeZmUGVWo6Dkj5m/QsNBXjup0YDKKIgQbSk/ZrHM1Cq@vger.kernel.org, AJvYcCXaJsoHYT6LvAHjk83IHE9Pi4KUNS/fMLisPVaf/UyKsbbrFRGNKdjJIpO5q3Pb0UeK/OKcKCu+5UEF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyddOnmblhIksnfox5y8sd2IqK3NisnM2hagg6HihWZycz9sB6z
+	SSecPgms2DCH3+9WklYHFArlOFeTHtbtq/aVa8N74CWyPPh3EWx5YEjh
+X-Gm-Gg: ASbGncvhu6FJZubZarIRx0sl+rJo5PU+UpdEfVLDXDY+sRyTRjmpRa9YmAADjJIKIMk
+	rh8srbM7RnsrS0aSiHJYI7HcZSzxV7BtZmAcfso43SFA7UvPz7hPciyRyk5bT5zMWyZij8BFmgT
+	HX3xIvXzePVxL79jckHkWTiz6yW+B0tJSguA2i0T/AZAgYxGBU5tcFLihQ1OLFRzzXfeWP5XHux
+	zeaE4gQ3r3vbaRFesttOSt6TIiapXE18+t8/KLtKxVnNuU/EE2WumrSWr4hO4B/fR8/bt2IVMPv
+	hpVAa+Wbc1m9qmw9OXEpVEL7sbUAVaL1WpheN3tQj3SOWb2USPnDccQ0K0ug6w5kDbDHSkU=
+X-Google-Smtp-Source: AGHT+IESFyFCWZLYfYcronoGyauhrXiKxJd2nnHn7cFixMqmLQzSw7QDvKjzm7oz76Y/iC13YdLNfA==
+X-Received: by 2002:a05:690c:30b:b0:70d:f15d:b18f with SMTP id 00721157ae682-715171a2efcmr107899067b3.26.1751121170867;
+        Sat, 28 Jun 2025 07:32:50 -0700 (PDT)
+Received: from localhost.localdomain ([192.34.165.40])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515bee257sm8393477b3.23.2025.06.28.07.32.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 07:32:50 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2] usb: misc: qcom_eud: Access EUD_MODE_MANAGER2 through
- secure calls
-Message-ID: <2025062833-sneak-ceremony-a06b@gregkh>
-References: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
+	John Clark <inindev@gmail.com>
+Subject: [PATCH v5 0/2] Add FriendlyElec NanoPi M5 support for Rockchip RK3576
+Date: Sat, 28 Jun 2025 10:32:27 -0400
+Message-Id: <20250628143229.74460-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 06:21:31PM +0530, Komal Bajaj wrote:
-> EUD_MODE_MANAGER2 register is mapped to a memory region that is marked
-> as read-only for HLOS, enforcing access restrictions that prohibit
-> direct memory-mapped writes via writel().
-> 
-> Attempts to write to this region from HLOS can result in silent failures
-> or memory access violations, particularly when toggling EUD (Embedded
-> USB Debugger) state. To ensure secure register access, modify the driver
-> to use qcom_scm_io_writel(), which routes the write operation to Qualcomm
-> Secure Channel Monitor (SCM). SCM has the necessary permissions to access
-> protected memory regions, enabling reliable control over EUD state.
-> 
-> SC7280, the only user of EUD is also affected, indicating that this could
-> never have worked on a properly fused device.
-> 
-> Fixes: 9a1bf58ccd44 ("usb: misc: eud: Add driver support for Embedded USB Debugger(EUD)")
-> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> Signed-off-by: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
-> Changes in v2:
-> * Drop separate compatible to be added for secure eud
-> * Use secure call to access EUD mode manager register
-> * Link to v1: https://lore.kernel.org/all/20240807183205.803847-1-quic_molvera@quicinc.com/
-> 
->  drivers/usb/misc/qcom_eud.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/usb/misc/qcom_eud.c b/drivers/usb/misc/qcom_eud.c
-> index 83079c414b4f..30c999c49eb0 100644
-> --- a/drivers/usb/misc/qcom_eud.c
-> +++ b/drivers/usb/misc/qcom_eud.c
-> @@ -16,6 +16,8 @@
->  #include <linux/sysfs.h>
->  #include <linux/usb/role.h>
->  
-> +#include <linux/firmware/qcom/qcom_scm.h>
-> +
->  #define EUD_REG_INT1_EN_MASK	0x0024
->  #define EUD_REG_INT_STATUS_1	0x0044
->  #define EUD_REG_CTL_OUT_1	0x0074
-> @@ -34,7 +36,7 @@ struct eud_chip {
->  	struct device			*dev;
->  	struct usb_role_switch		*role_sw;
->  	void __iomem			*base;
-> -	void __iomem			*mode_mgr;
-> +	phys_addr_t			mode_mgr;
->  	unsigned int			int_status;
->  	int				irq;
->  	bool				enabled;
-> @@ -43,10 +45,14 @@ struct eud_chip {
->  
->  static int enable_eud(struct eud_chip *priv)
->  {
-> +	int ret;
-> +
->  	writel(EUD_ENABLE, priv->base + EUD_REG_CSR_EUD_EN);
->  	writel(EUD_INT_VBUS | EUD_INT_SAFE_MODE,
->  			priv->base + EUD_REG_INT1_EN_MASK);
-> -	writel(1, priv->mode_mgr + EUD_REG_EUD_EN2);
-> +	ret = qcom_scm_io_writel(priv->mode_mgr + EUD_REG_EUD_EN2, 1);
-> +	if (ret)
-> +		return ret;
->  
->  	return usb_role_switch_set_role(priv->role_sw, USB_ROLE_DEVICE);
->  }
-> @@ -54,7 +60,7 @@ static int enable_eud(struct eud_chip *priv)
->  static void disable_eud(struct eud_chip *priv)
->  {
->  	writel(0, priv->base + EUD_REG_CSR_EUD_EN);
-> -	writel(0, priv->mode_mgr + EUD_REG_EUD_EN2);
-> +	qcom_scm_io_writel(priv->mode_mgr + EUD_REG_EUD_EN2, 0);
->  }
->  
->  static ssize_t enable_show(struct device *dev,
-> @@ -178,6 +184,7 @@ static void eud_role_switch_release(void *data)
->  static int eud_probe(struct platform_device *pdev)
->  {
->  	struct eud_chip *chip;
-> +	struct resource *res;
->  	int ret;
->  
->  	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> @@ -200,9 +207,10 @@ static int eud_probe(struct platform_device *pdev)
->  	if (IS_ERR(chip->base))
->  		return PTR_ERR(chip->base);
->  
-> -	chip->mode_mgr = devm_platform_ioremap_resource(pdev, 1);
-> -	if (IS_ERR(chip->mode_mgr))
-> -		return PTR_ERR(chip->mode_mgr);
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res)
-> +		return -ENODEV;
-> +	chip->mode_mgr = res->start;
->  
->  	chip->irq = platform_get_irq(pdev, 0);
->  	if (chip->irq < 0)
-> -- 
-> 2.48.1
-> 
-> 
+This series adds device tree support for the FriendlyElec NanoPi M5 board,
+powered by the Rockchip RK3576 SoC (4x Cortex-A72, 4x Cortex-A53, Mali-G52
+MC3 GPU, 6 TOPS NPU). The patches enable basic booting and connectivity,
+including dual 1Gbps Ethernet, USB 3.2, microSD, M.2 PCIe NVMe, and HDMI.
 
-Hi,
+Changes in v5:
+ - Addressed Jonas Karlman's feedback:
+   - Added mmc0 alias for SD card
+   - Updated regulator names to match schematic (e.g., vcc12v_dcin,
+       vcc5v0_sys_s5, vcc3v3_m2_keym, vcc3v3_sd_s0, usb3_port2_5v,
+       vcc5v0_usb_otg0, vcc5v_hdmi_tx)
+   - Fixed vcc3v3_sd_s0 voltage to 3.3V
+   - Removed unnecessary regulator-state-mem for fixed regulators
+   - Removed vcc_5v0_device regulator
+   - Added pinctrl for Ethernet PHY reset GPIOs in mdio0 and mdio1
+   - Used correct pinctrl format for sdmmc and sfc1 (<&pin>)
+   - Increased SPI flash frequency to 50 MHz
+   - Updated LED colors (sys: red, led1/led2: green) and functions
+       (LED_FUNCTION_HEARTBEAT, LED_FUNCTION_LAN)
+   - Dropped rng node (enabled by default)
+   - Omitted HDMI mode-switching GPIO (to be added later with driver
+       support)
+   - Updated pinctrl names to match schematic (e.g., pcie0_pwren_h,
+       sdmmc0_pwren_h, usb3_host_pwren_h, usb_otg0_pwren_h, hp_det_l,
+       pcie0_perstn)
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Changes in v4:
+ - Addressed Diederik's feedback:
+   - Renamed pinctrl nodes to align with schematic labels
+ - Moved pinctrl-0 and pinctrl-names into button-user sub-node
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Changes in v3:
+- Improved (even more) fspi1m1_pins comment for clarity, specifying
+  gpio1_d5, gpio1_c4-c7 (clk, d0-d4) for SPI NOR flash.
+- Removed redundant #address-cells and #size-cells from sfc1 node, as they
+  are inherited from rk3576.dtsi.
 
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
+Changes in v2:
+- Fixed DT schema warnings (Rob Herring):
+  - Renamed spi-nor@0 to flash@0
+  - Renamed pmic@23 pinctrl nodes to end with -pins
+  - Renamed hym8563@51 to rtc@51 and removed clock-frequency
+  - Renamed button@1 to button-user
+- Addressed Heiko Stuebner's feedback:
+  - Sorted non-addressed nodes alphabetically
+  - Added blank lines in regulator nodes
+  - Improved fspi1m1_pins comment to clarify SPI NOR flash pinmux
+  - Moved status property in saradc to last
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+Patch 1: Updates DT bindings in rockchip.yaml
+Patch 2: Adds NanoPi M5 device tree and Makefile entry
 
-thanks,
+No MAINTAINERS update needed, as the new file is covered by the existing
+ARM/Rockchip SoC entry.
 
-greg k-h's patch email bot
+Tested on NanoPi M5 with successful boot and feature validation.
+
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+John Clark (2):
+  dt-bindings: arm: rockchip: add FriendlyElec NanoPi M5 board
+  arm64: dts: rockchip: Add FriendlyElec NanoPi M5 support
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   6 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3576-nanopi-m5.dts    | 941 ++++++++++++++++++
+ 3 files changed, 948 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-nanopi-m5.dts
+
+-- 
+2.39.5
+
