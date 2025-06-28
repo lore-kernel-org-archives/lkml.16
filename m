@@ -1,200 +1,106 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94D012EBE7;
-	Sat, 28 Jun 2025 19:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4AF1AA1F4;
+	Sat, 28 Jun 2025 19:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751140601; cv=none; b=uNaMa09vh2ImeR7/kz4ycXzf+eyETW8TsUhsaT0HYUGvWhr0vifuA7ZwfGWnv68tqMxVP0oETR/eQ2Hnw2OpunsDxgN9BVZbef1kXrtFv6q2TbrhrVBBipCZsKpr2H4+77A6H5ZRnhIw6orvqWJKM2SwdKlcByP8bJXLnAg4joQ=
+	t=1751140740; cv=none; b=BtJPOgRET2IqwbDonvc1lvfvfrPHC8gxuMUMXqsgUHONbePMfFR221WNN5pRXs0Gv19s5whpA3T8Z2sgVbcE0bUZ1xe9TApa5Dkme/cPGU+HE3vvL4kp4GN+trrEaLFBjweZY5yecHmUOb3H4hoPXPwH/DFQ++btBmq2xABYmoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751140601; c=relaxed/simple;
-	bh=7EFuR7v62rmp+Nsd6GA8/D69P/09BRwxpEiGB7Qdkw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gqa1EmR9uJ4PbL76rpsiPSEtTJOYEENnQiD5U6AifSNfqH+sHxy6n31zHPQOmo5YOQuJygWQoOiW7K2bDnmS5FGe45N68P71QxtwZo/MyLrc4DnrZGgiTyQRS6OSHjcYdcp3NKcJNEK2MS9Qbk9swxTML/7t/o8L14iTbD0fgMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Xmh1+0NA; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1751140740; c=relaxed/simple;
+	bh=lrbieHtJpWkNUFd5qTNuRm4ydg8f8KmTK4G081V4bzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T1AsDN3NmZCYfP89j52XlwUFphSw6ysHYgoH8Njfufq3/8WfxYJ6DiXXDWMAwFlcnEipZEQ3oZJst2W9O5LluhQY/HgFVk7taI3igcY4e2eC9fDmPV3jdHJq+ALsAQq/L29sK3lMbOS8PeF3WzGjZCbzyO6btAo6SKm1uHCINZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFiwk42W; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Xmh1+0NA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CfoIUO+Ef1k+kJgQ4jHgv30hIZLDnCERC1vBwIInGrE=; b=Xmh1+0NAWBIu8Ir8rvjJXALRus
-	epDhg+o1Weqt8Ih+4e5zJSZmQvOevt6/XYDWhGh2mgbYNFNSEfMlup6QnsfpXp466Rpsis76xYAjJ
-	gg86EpOWYVT1TYTbsRPszwB9jRCAOAZ7B3VkIvJh7KinGjCLAts3vgEiqKLslWNavpb079GVorf7f
-	ftt3JERE6+tTcN6z9voxwJQSbPbsjHWadSbUS2uJMK+oJQPvWZ4Hhr2TA4DkvfPG0YX2a4qfiJrLv
-	X1cm1/w5ToFu2DjTjd0JdrTTrwm7HiicGcIELkzt6BG1vhofPaXVS6aTn9MK/F89ITMj1LephYGUF
-	uOxoAjrQ==;
-Received: from [189.7.87.79] (helo=[192.168.0.7])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uVbeW-009qOr-NM; Sat, 28 Jun 2025 21:55:57 +0200
-Message-ID: <f0ad78da-d4ba-44ec-beda-4f8c616053f8@igalia.com>
-Date: Sat, 28 Jun 2025 16:55:44 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFiwk42W"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acb5ec407b1so149248966b.1;
+        Sat, 28 Jun 2025 12:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751140737; x=1751745537; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCn/x9JPsOm33ynQom2R0U43CTIFPTCUTDASBrS4OXI=;
+        b=aFiwk42WsQoWLNRv5lx2cCeXvcav0V83cwZwyz79T1cV047iYuS5IDLF2q3ja/f5yF
+         oDhzXnH27ggkti+6UUfScrU/dp2vB/moo0I/AHigo0Dl33WfWjkqTIqRFsADeNj9wDWA
+         q8xHFzELD63Iu0ppxcPa2AdGHtwVvV5RF88FvduHeJCL3wE3W51U+4EVaXa+6QRsLZ5q
+         n6RPgAq2mbD07qUn0dy8tqFyTKUU8HnDg59bc8ktZ3wkcVlgsPDrBtJvLvovLrv83INJ
+         tW68gDCqURW25uKcmMlGP2ioRY3cS0nzp9hMxgUZy3CLEp1uRtJTMF99oQyR0KQUVrVC
+         6JXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751140737; x=1751745537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aCn/x9JPsOm33ynQom2R0U43CTIFPTCUTDASBrS4OXI=;
+        b=wiDpKzcy2IL+1gNMdMaWY4chosAsj3zizbLsC0j9K62xEa5CHyk7SW457KWqafH0sc
+         iVs7D175i0lAovKaOgFnI+9VuOGDvboDqkzvdRPoy3wOQW95seDTkr6lw6wpuVVN10FL
+         SHI537bwcWgs10Fhd0Tjhm7ZVsDNqDkD1dR4jr/BuOVz9sttBB1+PKPwpBdUzwx6E5GG
+         fSSbExO88cq8ssXThjuTyEqOrIyscTzhXq+rFwzXQnNfAubEHqM1NMOUqWFwO3uoqw2Z
+         aod8cp6tFO2Nzc8OsjjD7Y+nxsNZREGi4GGSINHNm5Wm0zkUzgi6OzSNwfau5aTQqeNA
+         BoWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvvl/xiEVXqBSokxcfTbkx4HECGD7Q/A7ZWk+Bcwh4l5cHTcNKt8eOKHnxgzAlc0xXyNldkqm13VBikw==@vger.kernel.org, AJvYcCXlCDDOzgwzZ0c5m0WrY0smYqxcBsilRHBgz3R94lPY4bezKiN8raTIPqsgBIayuIVXlkWO0Ua8Ce28KsSY@vger.kernel.org
+X-Gm-Message-State: AOJu0YynAW+3o5eDNUinUZB81ADxUR8QoLwLPihpw74l1/g32QQyAMkP
+	n7n0dTKXw4ygIaglNai6yc15v4kTiZx2HtZNY2nn6uF0K39qNuutDVAtNIGFfVf6LYCgOOUwbDt
+	FPv9t/ttvzUDcgQT/rWkHjvbiwEBUntY=
+X-Gm-Gg: ASbGncvncrRpxbSoGpo44hYkcCjhg5Unl0PntUpMGgrDe+mdlm4hyMcVYnZ1xo+uhpL
+	74O37xlYZDzD7V1JtGQ6RLynrnfE7nBummH0Idh//7ld4cFSG6mdlcokHAoxPIjlHYYvwXS+rKf
+	rhKfShu/bTTUnd+/ipNbCe31Yw9LB6/RtfpZe6pmQrPwA=
+X-Google-Smtp-Source: AGHT+IFZBR8kfJGqRmjGfZ/IXkon+9o2g1PGlOtiW+bEm/EExm5FRtNH3McMm2rCL6PA4ZVg+vgD7F1bxOQqfxd3U4I=
+X-Received: by 2002:a17:907:fdca:b0:ae3:6744:3675 with SMTP id
+ a640c23a62f3a-ae367443a67mr510956766b.48.1751140736917; Sat, 28 Jun 2025
+ 12:58:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Introduce Tyr
-To: Daniel Almeida <daniel.almeida@collabora.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>,
- Rob Herring <robh@kernel.org>, Alice Ryhl <alice.ryhl@google.com>,
- Beata Michalska <beata.michalska@arm.com>,
- Carsten Haitzler <carsten.haitzler@foss.arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Ashley Smith <ashley.smith@collabora.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org, kernel@collabora.com
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1751086324.git.abdun.nihaal@gmail.com> <62320323049c72b6e3fda6fa7a55e080b29491e8.1751086324.git.abdun.nihaal@gmail.com>
+In-Reply-To: <62320323049c72b6e3fda6fa7a55e080b29491e8.1751086324.git.abdun.nihaal@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 28 Jun 2025 22:58:20 +0300
+X-Gm-Features: Ac12FXz962GwXR5F2ZukYapM3EMaS4H-TNlh4C4kBY22Qq3L7dSM227zM9FUxAg
+Message-ID: <CAHp75VeSYesZuJ-NEfEAvaRepEUtdLmxGrYmthD1YkSg-bsK_g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] staging: fbtft: cleanup error handling in fbtft_framebuffer_alloc()
+To: Abdun Nihaal <abdun.nihaal@gmail.com>
+Cc: andy@kernel.org, dan.carpenter@linaro.org, gregkh@linuxfoundation.org, 
+	lorenzo.stoakes@oracle.com, tzimmermann@suse.de, riyandhiman14@gmail.com, 
+	willy@infradead.org, notro@tronnes.org, thomas.petazzoni@free-electrons.com, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
+On Sat, Jun 28, 2025 at 7:59=E2=80=AFAM Abdun Nihaal <abdun.nihaal@gmail.co=
+m> wrote:
+>
+> The error handling in fbtft_framebuffer_alloc() mixes managed allocation
+> and plain allocation, and performs error handling in an order different
+> from the order in fbtft_framebuffer_release().
+>
+> Fix them by moving vmem allocation closer to where it is used, and using
+> plain kzalloc() for txbuf allocation.
 
-On 27/06/25 19:34, Daniel Almeida wrote:
+...
 
-[...]
+> +       struct fbtft_par *par =3D info->par;
+> +
+> +       if (par->txbuf.len > 0)
 
-> diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..2443620e10620585eae3d57978e64d2169a1b2d1
-> --- /dev/null
-> +++ b/drivers/gpu/drm/tyr/driver.rs
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0 or MIT
-> +
-> +use core::pin::Pin;
-> +
-> +use kernel::bits::bit_u32;
-> +use kernel::c_str;
-> +use kernel::clk::Clk;
-> +use kernel::device::Core;
-> +use kernel::devres::Devres;
-> +use kernel::drm;
-> +use kernel::drm::ioctl;
-> +use kernel::io;
-> +use kernel::io::mem::IoMem;
-> +use kernel::new_mutex;
-> +use kernel::of;
-> +use kernel::platform;
-> +use kernel::prelude::*;
-> +use kernel::regulator;
-> +use kernel::regulator::Regulator;
-> +use kernel::sync::Arc;
-> +use kernel::sync::Mutex;
-> +use kernel::time;
-> +use kernel::types::ARef;
-> +
-> +use crate::file::File;
-> +use crate::gem::TyrObject;
-> +use crate::gpu;
-> +use crate::gpu::GpuInfo;
-> +use crate::regs;
-> +
-> +/// Convienence type alias for the DRM device type for this driver
-> +pub(crate) type TyrDevice = drm::device::Device<TyrDriver>;
-> +
-> +#[pin_data(PinnedDrop)]
-> +pub(crate) struct TyrDriver {
-> +    device: ARef<TyrDevice>,
-> +}
-> +
-> +#[pin_data]
-> +pub(crate) struct TyrData {
-> +    pub(crate) pdev: ARef<platform::Device>,
-> +
-> +    #[pin]
-> +    clks: Mutex<Clocks>,
-> +
-> +    #[pin]
-> +    regulators: Mutex<Regulators>,
-> +
-> +    // Some inforation on the GPU. This is mainly queried by userspace (mesa).
+Do we really need this check? If txbuf.buf is kept NULL (please, check
+this), the kfree() is NULL-aware.
 
-s/inforation/information
+> +               kfree(par->txbuf.buf);
+>         fb_deferred_io_cleanup(info);
+>         vfree(info->screen_buffer);
+>         framebuffer_release(info);
 
-> +    pub(crate) gpu_info: GpuInfo,
-> +}
-> +
-> +unsafe impl Send for TyrData {}
-> +unsafe impl Sync for TyrData {}
-> +
-> +fn issue_soft_reset(iomem: &Devres<IoMem<0>>) -> Result<()> {
-> +    let irq_enable_cmd = 1 | bit_u32(8);
 
-To enhance readability, consider using a regmap similar to
-panthor_regs.h. This would help avoid 'magic numbers' and make the
-code's intent much clearer.
-
-> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
-> +
-> +    let op = || regs::GPU_INT_RAWSTAT.read(iomem);
-> +    let cond = |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 == 1 };
-> +    let res = io::poll::read_poll_timeout(
-> +        op,
-> +        cond,
-> +        time::Delta::from_millis(100),
-> +        Some(time::Delta::from_micros(20000)),
-> +    );
-> +
-> +    if let Err(e) = res {
-> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
-> +        pr_err!(
-> +            "GPU_INT_RAWSTAT is {}\n",
-> +            regs::GPU_INT_RAWSTAT.read(iomem)?
-> +        );
-> +    }
-> +
-> +    Ok(())
-> +}
-> +
-> +kernel::of_device_table!(
-> +    OF_TABLE,
-> +    MODULE_OF_TABLE,
-> +    <TyrDriver as platform::Driver>::IdInfo,
-> +    [
-> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
-> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
-> +    ]
-> +);
-> +
-> +impl platform::Driver for TyrDriver {
-> +    type IdInfo = ();
-> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-> +
-> +    fn probe(
-> +        pdev: &platform::Device<Core>,
-> +        _info: Option<&Self::IdInfo>,
-> +    ) -> Result<Pin<KBox<Self>>> {
-> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
-> +
-> +        let core_clk = Clk::get(pdev.as_ref(), Some(c_str!("core")))?;
-> +        let stacks_clk = Clk::get(pdev.as_ref(), Some(c_str!("stacks")))?;
-
-Shouldn't it be OptionalClk::get? From the DT schema for "arm,mali-
-valhall-csf", I see that "stacks" and "coregroups" are optional.
-
-> +        let coregroup_clk = Clk::get(pdev.as_ref(), Some(c_str!("coregroup")))?;
-
-Same.
-
-Best Regards,
-- Maíra
-
+--=20
+With Best Regards,
+Andy Shevchenko
