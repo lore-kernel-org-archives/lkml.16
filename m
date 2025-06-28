@@ -1,59 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F341AA782
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 20:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AD51F2BB8
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 20:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751140822; cv=none; b=OrbQHeog97AI/NzI6/qxZBihAoJvWJ4CPQglWKfKbg6gsD82kp0Br6zFcT2Ie/zeEOfXBuVRk1cfhVVIhmYkHqAC7B78K+90dMwjhrOLYig6nqsmUIkt0YMtos7FI/ACKu2JI1HI96zTAo/G63LpOkNlSJ7BAkfWCRlAEJ6eNCU=
+	t=1751140920; cv=none; b=a9iApeUnUwMcomjKvHomamtX3Nj9JaOTBxYaJ8bKnWiZXbYPMSQpY1NLNoW6fu5bNfecQfcXODe6tb0RLSptWhLSsdVsRMjdhoQQdbqb0QEB/K84TlrarOfQ+FyUq5e5sLFT9B1z9khE6l50WtfnjP9ia0BQBkt7st1K745hSzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751140822; c=relaxed/simple;
-	bh=Fewzt4Fd/252fQPHl/D4J7EfWkwRKK0Pnj4XMlX3kYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oz7WeLOSlJ8+lVfJrUqDJ3pAmLC5oclQK2fvooV+bODvrTa8gtP2wzOHU4LRzDC/dymX4nAZp87nVJcfJDZ0EGysoPnH5gQDPMrvwxN8eFUfiIYxk7sXj10e4lGeiNLuFEwfxr9aBFt8vY9fxGaj0iBNF8NPuZaq+AEQ0BjPQsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLz54KrL; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751140920; c=relaxed/simple;
+	bh=C25dUvtj5jbXCc2sJQq1wwn+HEsXVicpVUN74cxm2Tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Za69kGHEV1YeJ/QgOEtRElCExJbwQIRit6AkH96dj9zUUBFE87Eu4RVJ6P1uM451dPMkTcEavaM+EJmlRW4nbhyoddq8flkrXx3MsLOCVvK6nxWMAcYPzPFMrqWodDeM0N+O1K+wRKaS3zExS7Pu77yiXq4w4e3O5biM+efyfS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=w+vkzI6t; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLz54KrL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751140820; x=1782676820;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Fewzt4Fd/252fQPHl/D4J7EfWkwRKK0Pnj4XMlX3kYo=;
-  b=eLz54KrLwdv2XpSEUFUk/7g3mU6N4alDDe8pRqvRiGC0ANspG0dBJEhS
-   hoPISr17VDl0ComovZVw79guvkItwyfQfptjBalaIlkJI52tE2BZG429W
-   te8C4yDBZhy68mbncn4cZ5AqEk486bnfNB1HrZzsPKtAyxJBu/JWNkU4P
-   cq2QduavZjZQjdBEjd8qFlmq86wWuMdDZSlnEEV3SWv7BQ+o8PjbYTtXS
-   APIxqin1Di0CUPqLfsOW2QslG9BFupAHLseH/Ta3PM0T+BhYMqyelUbSV
-   Wf0TAs3qpTNlRP05SH5YsQFqCVZ62llEuUYQ456ruvY5ee9NzMoAQo/jQ
-   w==;
-X-CSE-ConnectionGUID: 0j8dWhH1TQ2yW/tVm98qYw==
-X-CSE-MsgGUID: Pie5ReK4SgCWhsdfHG6Hiw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="53542038"
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="53542038"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 13:00:19 -0700
-X-CSE-ConnectionGUID: TMJg88XSSCmkrljpNZFSpw==
-X-CSE-MsgGUID: P4b5l5eUSgGG9zKTEllA3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="152819619"
-Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
-  by orviesa009.jf.intel.com with ESMTP; 28 Jun 2025 13:00:18 -0700
-Received: from kbuild by e588e990b675 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVbie-0000oV-0p;
-	Sat, 28 Jun 2025 20:00:12 +0000
-Date: Sat, 28 Jun 2025 21:59:49 +0200
-From: kernel test robot <lkp@intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: kernel/fork.c:3088:2: warning: clone3() entry point is missing,
- please fix
-Message-ID: <202506282120.6vRwodm3-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="w+vkzI6t"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235ea292956so5814885ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 13:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751140917; x=1751745717; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCb37RSYZzDO3GN3ihbvCvxF6ZjiXzcFRXh0BRgUocI=;
+        b=w+vkzI6tnkiqBACLmMkydF3fCy6gh+QLh8x1bo+8qV7oPp8oEXipe7uOWInSiLD3mp
+         TxeWT/C5PJtS+oyZhn/yLw9ogBA5I2dCyuGLtejRbcuUj0rX8B+pBx1CBsZTNFN0pZJy
+         nfZR3p5zt8cZclh6AvprKORcjsNXFjOhVp+qYDPO71bud+Qd9Gpswb9ZAp5NbfRo8MpS
+         9K5BCg3p9VKxgZ/aZk/m5RD7J0djP2H7hkUemuPwsYz8OWsUYCZi6lIA4dez+bFhbNP/
+         lR3lIInAYmoCggTUKPdptLvTnKmyal9dKt73Zt819fc643YmOjokOlhcCuBjHFNCT9RU
+         ipig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751140917; x=1751745717;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rCb37RSYZzDO3GN3ihbvCvxF6ZjiXzcFRXh0BRgUocI=;
+        b=TiaodEsf8/fSrtqzDTCgjOQsY/VlwQKrBzq/LdHwZe8qtTNNMHHkLd2ifpeZQL9ft6
+         7QBJZ4MoGyqWdjPSPI0GogOP/71VCWv2oJGD+dsuint5KqpRML1g8CyXVxQ+kLTGNZil
+         Mp05+S8Sfree0KPiX0ewDgIqwnSHUC6oI2q2IUBl3DqHqcty6H337LCxsNBdMtl9oBq4
+         SSor4b5ANG1Um4kFbsOEoHRxjOUC3Fj2LG8h6wtjvsJOKSEAKv/20Y7km8jx317VW/i3
+         SSJTpbJS2gBKLj92Mmp+CsZUEAL+k1GwgaJqesTxup3gksHP/ozpPgpN3i+FFeArHnA7
+         l+4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJHASihMZtjjXE2Q1/K6PJ+RHXdPCKrkP7iA7gPG2pq74uaYGcmcF6E0TbVuRBJWjttJjWLUSg+5pSC2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjTAccsXrbNjEMMpwZfgPOmImA6NW4Xff7unRwideNIILyp0MB
+	F0p637feCX0KYQjHzE3ywjsof/SP991pLCzLDXBN8aurWA8vG2iGf3Lj2p5KSziatlw=
+X-Gm-Gg: ASbGncv5XwRp63yI4bUzydSx7HPyWMJ8IGOq2+smAm+KPmkwhfEJo8pMo9Pc9g1+hu4
+	V3hOq7eQsRyMTK/hX5yd8jmlqPrGYo6B3gDN/U8UCo2U/A65mc2qYEhQykiY5/cKrT/xlQDQbj+
+	9jExARy3lilIyMlFkrcd5IadO2JcGtH32Hk7W/nLuZMcCFqA8QsKz6wThQWCq6Ddn7txD02/UWZ
+	xdI6xZbHhKINRyTogfansbj9SleZNvJQ9EcDlyakQ/T4/FZaijBRA1UmJO+s+/5xyA8NOc9Y/M0
+	C4shYtG/mUHBKSZAHzwQuCLMnuvwTyDCQ99Bs6jTtFIzJBEkVh3Nfpe8zm1E2lHGJXxRGp+U33Q
+	Ca6VwDy4yvny5P3rL1yTMfw==
+X-Google-Smtp-Source: AGHT+IFJDLrx7ywjg4S4bUF/qUoRM9GFUNFWqz+Q59e4xQXUhehdQBrs0a8xNAd+1AuhXOTd7j4eRg==
+X-Received: by 2002:a17:903:2ecd:b0:236:9d66:ff24 with SMTP id d9443c01a7336-23ac3dec4a2mr106216265ad.8.1751140916690;
+        Sat, 28 Jun 2025 13:01:56 -0700 (PDT)
+Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f17f5sm46210995ad.62.2025.06.28.13.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 13:01:56 -0700 (PDT)
+Date: Sat, 28 Jun 2025 13:01:53 -0700
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] iio: adc: ti-adc128s052: Use shift and realbits
+Message-ID: <aGBKMcZGYOcXmKdB@dev-linux>
+References: <20250614091504.575685-1-sbellary@baylibre.com>
+ <20250614091504.575685-3-sbellary@baylibre.com>
+ <20250614142743.23ee2203@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,125 +82,194 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250614142743.23ee2203@jic23-huawei>
 
-Hi Arnd,
+On Sat, Jun 14, 2025 at 02:27:43PM +0100, Jonathan Cameron wrote:
+> On Sat, 14 Jun 2025 02:15:01 -0700
+> Sukrut Bellary <sbellary@baylibre.com> wrote:
+> 
+> > This adcxx communicates with a host processor via an SPI/Microwire Bus
+> > interface. The device family responds with 12-bit data, of which the LSB bits
+> > are transmitted by the lower resolution devices as 0. The unavailable bits are
+> > 0 in LSB. Shift is calculated per resolution and used in scaling and raw data
+> > read.
+> > 
+> > Create a separate structure for each device type instead of an array.
+> > These changes help to reuse the driver to support the family of devices with
+> > name ADC<bb><c>S<sss>, where
+> > * bb is the resolution in number of bits (8, 10, 12)
+> > * c is the number of channels (1, 2, 4, 8)
+> > * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > and 101 for 1 MSPS)
+> > 
+> > Complete datasheets are available at TI's website here:
+> > https://www.ti.com/lit/ds/symlink/adc<bb><c>s<sss>.pdf
+> > 
+> > Co-developed-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> > ---
+> >  drivers/iio/adc/ti-adc128s052.c | 115 ++++++++++++++++++--------------
+> >  1 file changed, 66 insertions(+), 49 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> > index 1b46a8155803..2b206745e53d 100644
+> > --- a/drivers/iio/adc/ti-adc128s052.c
+> > +++ b/drivers/iio/adc/ti-adc128s052.c
+> > @@ -41,13 +41,14 @@ struct adc128 {
+> >  	} __aligned(IIO_DMA_MINALIGN);
+> >  };
+> >  
+> > -static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> > +static int adc128_adc_conversion(struct adc128 *adc,
+> > +				 struct iio_chan_spec const *channel)
+> >  {
+> >  	int ret;
+> >  
+> >  	guard(mutex)(&adc->lock);
+> >  
+> > -	adc->buffer[0] = channel << 3;
+> > +	adc->buffer[0] = channel->channel << 3;
+> >  	adc->buffer[1] = 0;
+> >  
+> >  	ret = spi_write(adc->spi, &adc->buffer, sizeof(adc->buffer));
+> > @@ -58,7 +59,10 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > -	return be16_to_cpu(adc->buffer16) & 0xFFF;
+> > +	ret = (be16_to_cpu(adc->buffer16) >> channel->scan_type.shift) &
+> > +	       GENMASK(channel->scan_type.realbits - 1, 0);
+> > +
+> Even though it is a bit long I'd go with
+> 
+> 	return (be16_to_cpu(adc->buffer16) >> channel->scan_type.shift) &
+> 		GENMASK();
+>
+Thanks for the review.
+I will fix this in v5.
 
-FYI, the error/warning still remains.
+> > +	return ret;
+> >  }
+> >  
+> >  static int adc128_read_raw(struct iio_dev *indio_dev,
+> > @@ -71,7 +75,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  	switch (mask) {
+> >  	case IIO_CHAN_INFO_RAW:
+> >  
+> > -		ret = adc128_adc_conversion(adc, channel->channel);
+> > +		ret = adc128_adc_conversion(adc, channel);
+> >  		if (ret < 0)
+> >  			return ret;
+> >  
+> > @@ -81,7 +85,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  	case IIO_CHAN_INFO_SCALE:
+> >  
+> >  		*val = adc->vref_mv;
+> > -		*val2 = 12;
+> > +		*val2 = channel->scan_type.realbits;
+> >  		return IIO_VAL_FRACTIONAL_LOG2;
+> >  
+> >  	default:
+> > @@ -90,15 +94,24 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  
+> >  }
+> >  
+> > -#define ADC128_VOLTAGE_CHANNEL(num)	\
+> > -	{ \
+> > -		.type = IIO_VOLTAGE, \
+> > -		.indexed = 1, \
+> > -		.channel = (num), \
+> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> > -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
+> > +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits)				\
+> > +	{								\
+> 
+> I would minimise the churn and stick to existing style of one space then \
+> I don't think we have any specific style guidance around this.
+>
+I will fix this in v5.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   aaf724ed69264719550ec4f194d3ab17b886af9a
-commit: 505d66d1abfb90853e24ab6cbdf83b611473d6fc clone3: drop __ARCH_WANT_SYS_CLONE3 macro
-date:   12 months ago
-config: hexagon-randconfig-2002-20250626 (https://download.01.org/0day-ci/archive/20250628/202506282120.6vRwodm3-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506282120.6vRwodm3-lkp@intel.com/reproduce)
+> > +		.type = IIO_VOLTAGE,					\
+> > +		.indexed = 1,						\
+> > +		.channel = (num),					\
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +		.scan_index = (num),					\
+> > +		.scan_type = {						\
+> > +			.sign = 'u',					\
+> > +			.realbits = (real_bits),			\
+> > +			.storagebits = 16,				\
+> > +			.shift = (12 - real_bits),			\
+> > +		},							\
+> >  	}
+> >  
+> > +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12)
+> 
+> I wonder if it would be clearer to just have the 12 explicit in each entry
+> and skip this two levels of macro thing?
+>
+Do you mean to pass realbits to
+ADC128_VOLTAGE_CHANNEL/_ADC128_VOLTAGE_CHANNEL as e.g.,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506282120.6vRwodm3-lkp@intel.com/
+static const struct iio_chan_spec adc122s021_channels[] = {
+        ADC128_VOLTAGE_CHANNEL(0, 12),
+        ADC128_VOLTAGE_CHANNEL(1, 12),
+};
 
-All warnings (new ones prefixed by >>):
+I think we added 2nd level macros as ADC082_VOLTAGE_CHANNEL,
+ADC102_VOLTAGE_CHANNEL, etc., to have a visual distinction for a different
+part nos.
+But I am ok if you prefer ADC128_VOLTAGE_CHANNEL with a second parameter
+as real_bits.
 
-   In file included from kernel/fork.c:34:
-   In file included from include/linux/mempolicy.h:15:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from kernel/fork.c:34:
-   In file included from include/linux/mempolicy.h:15:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from kernel/fork.c:34:
-   In file included from include/linux/mempolicy.h:15:
-   In file included from include/linux/pagemap.h:11:
-   In file included from include/linux/highmem.h:12:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> kernel/fork.c:3088:2: warning: clone3() entry point is missing, please fix [-W#warnings]
-    3088 | #warning clone3() entry point is missing, please fix
-         |  ^
-   7 warnings generated.
+> > +
+> >  static const struct iio_chan_spec adc128s052_channels[] = {
+> >  	ADC128_VOLTAGE_CHANNEL(0),
+> >  	ADC128_VOLTAGE_CHANNEL(1),
+> > @@ -124,26 +137,30 @@ static const struct iio_chan_spec adc124s021_channels[] = {
+> >  
+> >  static const char * const bd79104_regulators[] = { "iovdd" };
+> >  
+> > -static const struct adc128_configuration adc128_config[] = {
+> > -	{
+> > -		.channels = adc128s052_channels,
+> > -		.num_channels = ARRAY_SIZE(adc128s052_channels),
+> > -		.refname = "vref",
+> > -	}, {
+> > -		.channels = adc122s021_channels,
+> > -		.num_channels = ARRAY_SIZE(adc122s021_channels),
+> > -		.refname = "vref",
+> > -	}, {
+> > -		.channels = adc124s021_channels,
+> > -		.num_channels = ARRAY_SIZE(adc124s021_channels),
+> > -		.refname = "vref",
+> > -	}, {
+> > -		.channels = adc128s052_channels,
+> > -		.num_channels = ARRAY_SIZE(adc128s052_channels),
+> > -		.refname = "vdd",
+> > -		.other_regulators = &bd79104_regulators,
+> > -		.num_other_regulators = 1,
+> > -	},
+> > +static const struct adc128_configuration adc122s021_config = {
+> > +	.channels = adc122s021_channels,
+> > +	.num_channels = ARRAY_SIZE(adc122s021_channels),
+> > +	.refname = "vref",
+> > +};
+> 
+> Ideal would be to have this as a precursor patch rather than adding complexity
+> to this one which is focused on the bits related stuff.
+> 
+> It's a good change to have but does make it harder to spot the main
+> content in here.
+> 
+>
+I will split this in v5.
 
-
-vim +3088 kernel/fork.c
-
-  3068	
-  3069	/**
-  3070	 * sys_clone3 - create a new process with specific properties
-  3071	 * @uargs: argument structure
-  3072	 * @size:  size of @uargs
-  3073	 *
-  3074	 * clone3() is the extensible successor to clone()/clone2().
-  3075	 * It takes a struct as argument that is versioned by its size.
-  3076	 *
-  3077	 * Return: On success, a positive PID for the child process.
-  3078	 *         On error, a negative errno number.
-  3079	 */
-  3080	SYSCALL_DEFINE2(clone3, struct clone_args __user *, uargs, size_t, size)
-  3081	{
-  3082		int err;
-  3083	
-  3084		struct kernel_clone_args kargs;
-  3085		pid_t set_tid[MAX_PID_NS_LEVEL];
-  3086	
-  3087	#ifdef __ARCH_BROKEN_SYS_CLONE3
-> 3088	#warning clone3() entry point is missing, please fix
-  3089		return -ENOSYS;
-  3090	#endif
-  3091	
-  3092		kargs.set_tid = set_tid;
-  3093	
-  3094		err = copy_clone_args_from_user(&kargs, uargs, size);
-  3095		if (err)
-  3096			return err;
-  3097	
-  3098		if (!clone3_args_valid(&kargs))
-  3099			return -EINVAL;
-  3100	
-  3101		return kernel_clone(&kargs);
-  3102	}
-  3103	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > +
+> > +static const struct adc128_configuration adc124s021_config = {
+> > +	.channels = adc124s021_channels,
+> > +	.num_channels = ARRAY_SIZE(adc124s021_channels),
+> > +	.refname = "vref",
+> > +};
+> 
