@@ -1,82 +1,63 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2749A136A;
-	Sat, 28 Jun 2025 03:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F9378F4C
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 03:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751080722; cv=none; b=aTbr6C03yswKqMaWwbfJxraBRBz3W5v4ORhBMRxWlXBz7o4WNusMZJsa8gy+q3a/T7xOdbjlWiIAI7vtE4AStR7NGkuDNgrLojIz904tQLI6bxWsEsoqQ4OBInQ278K7Ir6VHqYAr7UWrw56yP31CjVd+OOT927YSL55eYFufqg=
+	t=1751081270; cv=none; b=L6Pvwf+nwv4swnaKiE4yBxFhrp4YxjmdqlG9EBV3GCvlJynEt80qeAVx7aXVyph3okk0OF9qomhoBt8Ax4BgXIqGgXeufWMqNGQcNwrbI/xl4dJSS1dU/vXd148dJTzIZ/GuYyhnwRsozLVHQdglibvSdIKheL/DIawGIeOKp/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751080722; c=relaxed/simple;
-	bh=LMjdSbGA/e6LNTP0yF+ViIgHEHwfBXX1Z3SHNAIhB1A=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LUJMcyAlweNJTsllQ09ps3rO4pBAeuuE/fjmQJkXHgR5pGuvuaEEnn6CIY32FWjccKB2X00y6GiI3q3DGnING6p0kURZcQVrrjNGd4UaQyqh2pN4UFF/a3PKl/LLe+wvuq0C94SOliHDygjl/APcIvns5ZJ25OX/x1edH8sBzBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bTd1C2yMSzYQtdR;
-	Sat, 28 Jun 2025 11:18:39 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4E1BF1A058E;
-	Sat, 28 Jun 2025 11:18:38 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2ANX19oMHuGQw--.61366S3;
-	Sat, 28 Jun 2025 11:18:38 +0800 (CST)
-Subject: Re: [PATCH v3 2/2] md/raid1: remove struct pool_info and related code
-To: Wang Jinchao <wangjinchao600@gmail.com>, Song Liu <song@kernel.org>
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250624015604.70309-1-wangjinchao600@gmail.com>
- <20250624015604.70309-2-wangjinchao600@gmail.com>
- <20250624015604.70309-3-wangjinchao600@gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <ea599d7b-c992-5e02-6b35-f7b8d9352c0c@huaweicloud.com>
-Date: Sat, 28 Jun 2025 11:18:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1751081270; c=relaxed/simple;
+	bh=eyN09f6agasIjyIGn0PvrLqzYBaVsILorewmF9S/a7k=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rdTXy6ESuwstTAW5qPbsjXYDP/pqcSVdgRr+hcPPFvUHNJ9C6wh0c45eLKqC/sfIpg/yw3jnwM6jYRlgwz1+U42ZEnffkNXFdjG82l7Kr+XYQ29vNIQnbNgiMt49l8hmgALDQMHXlJ/Ler6IOdUCzqzsUXm1L1pFeHekzbxF6UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8syE+jL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8syE+jL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BE7C4CEE3;
+	Sat, 28 Jun 2025 03:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751081270;
+	bh=eyN09f6agasIjyIGn0PvrLqzYBaVsILorewmF9S/a7k=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=g8syE+jL495WtonCyadJy8AkQhXOWQHKDUpSfyhgc6EkcpSU2fE237e8nOlG0Nc9C
+	 Bhdnq+bkQou5LiZozkJCW5CXUUACl3B8fEjETCiZi5pliPelAZRjRmOsxCUWiy0jAC
+	 gfQ/2X6tuWDHFK+n9af0H3oxe+iP22QksnkbvgCp8xDX0Hwzt/YVoOxGw5NyjODwFe
+	 MHWND29fERTJ63idJ7e5FuCphvG8bqLcWKLGvIEoZXLZVX37DIkedGf/IKtSpHBOcw
+	 Qq9E0If4CYTuglAZYVwlItdiPGJ59tFzoHebkawrHAlG/26VDND3zpv//9CkklkEVa
+	 XjfShesU2nZbA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E6338111CE;
+	Sat, 28 Jun 2025 03:28:17 +0000 (UTC)
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.16-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <mhng-BFF0FF2C-E730-45D5-8E5F-48D03E841EB2@palmerdabbelt-mac>
+References: <mhng-BFF0FF2C-E730-45D5-8E5F-48D03E841EB2@palmerdabbelt-mac>
+X-PR-Tracked-List-Id: <linux-riscv.lists.infradead.org>
+X-PR-Tracked-Message-Id: <mhng-BFF0FF2C-E730-45D5-8E5F-48D03E841EB2@palmerdabbelt-mac>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.16-rc4
+X-PR-Tracked-Commit-Id: c5136add3f9b4c23b8bbe5f4d722c95d4cfb936e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 867b9987a30b7f68a6e9e89d3670730692222a4a
+Message-Id: <175108129566.2124567.15448935827502013374.pr-tracker-bot@kernel.org>
+Date: Sat, 28 Jun 2025 03:28:15 +0000
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250624015604.70309-3-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHK2ANX19oMHuGQw--.61366S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw15Zr1fWFy7JF4xtFy3twb_yoWxKrb_AF
-	yrtFyxXr18GF1xGFy7Wr47Zry0y3yFgr4jka1UtF45X3ZxZr98Gr1DJrW3Xr4j9FZrtr45
-	AFyDJw18Ar97ZjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UtR6
-	wUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-ÔÚ 2025/06/24 9:55, Wang Jinchao Ð´µÀ:
-> The struct pool_info was originally introduced mainly to support reshape
-> operations, serving as a parameter for mempool_init() when raid_disks
-> changes. Now that mempool_create_kmalloc_pool() is sufficient for this
-> purpose, struct pool_info and its related code are no longer needed.
-> 
-> Remove struct pool_info and all associated code.
-> 
-> Signed-off-by: Wang Jinchao<wangjinchao600@gmail.com>
-> ---
->   drivers/md/raid1.c | 49 +++++++++++++---------------------------------
->   drivers/md/raid1.h | 20 -------------------
->   2 files changed, 14 insertions(+), 55 deletions(-)
+The pull request you sent on Fri, 27 Jun 2025 12:56:49 -0700 (PDT):
 
-Nice cleanup.
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.16-rc4
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/867b9987a30b7f68a6e9e89d3670730692222a4a
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
