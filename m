@@ -1,35 +1,73 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8598523313E
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9837B1E1E1C;
+	Sat, 28 Jun 2025 10:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751107076; cv=none; b=OyWI68j8XI1M7gDi1+P/lM481jlPFTS0OJi0XxWhdEYOdebObgRW1oMUR6SYX1Wnl4f4moB3/E2WzUEvIqZXrWQJjSmSnlEBSupZBAE6v7BPjVDg4ACbeol9zeH7so3o8OSg/+SHmoSIQIpdj20aahNLa7C2tMt+q6c3qD4xEnI=
+	t=1751108164; cv=none; b=QjpZXln+qBkD7AKRGSRVe0N7HMaUNuRB1krpRL+/6IL1MKoB7M6BEDG2gzDsUyrX/tNgskEfRn0HGNHs+4o1McsgO0Cp+AnuvohQha1g6o0KTOElJd0y6NwJr6mUkfFuikbMbNb27pJjKHWSoM0F14+WKBi12s3bp0a+BUOXs6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751107076; c=relaxed/simple;
-	bh=lcdY5/4igis1D06o50sZUMdu2ySz2CbfqGSKDk9HFPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h7X39TyO+pOYq94NLz4lYruPcFRVJDQ0+ajeMNXZ4XEjtO4jmD2EgVM8l+HQXOflKaTsT97KkQs0K6k/cANfHPIfXXxLdHmG8usHPExNhgLp02JvLw8587qmAW5HXQ6g1GryJHvc0yoNrPTpm0Kyy98wzd7rdllCmdOsJhZCof8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.149])
-	by gateway (Coremail) with SMTP id _____8AxGHH2xV9oJt0eAQ--.5478S3;
-	Sat, 28 Jun 2025 18:37:42 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.149])
-	by front1 (Coremail) with SMTP id qMiowJCxrsPsxV9oHkQBAA--.706S2;
-	Sat, 28 Jun 2025 18:37:41 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.16-rc4
-Date: Sat, 28 Jun 2025 18:37:19 +0800
-Message-ID: <20250628103719.3741195-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1751108164; c=relaxed/simple;
+	bh=KpbTmrsrRfUP5yw0LwxCsmoR/Ojb3WLsTy98XGKAlmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=syP/jn+YtaX8Jr5VcmUuLjvNLCxevyN7UrMuPmGE/5Id7sDmnqm6E2Zw2OJbqEsvCtUwtZJB86CbCmZty7dMctGSR6TY1o6YchPYwrKQPgJ2U0Khu8Dz+IndmRbK41nGAtvwkJqf2VtaQ2tAYsWqF0TDs9co9GjOk1XKIMiB1ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrTk8GBq; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrTk8GBq"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747fba9f962so2994896b3a.0;
+        Sat, 28 Jun 2025 03:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751108162; x=1751712962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A73jB41l9dOIANrWvvSRKqyz67Ti0po3QDM6Q+/r5UI=;
+        b=ZrTk8GBq/fm6OQoo/2Ga0rkkGfjQ62FkDv8Wq4IciUqkZhH4F0LgteWKEY2a4vLsGL
+         HlAaxUwFGo+czisI7uTz5Y1qb1aZ8pnA/Wi0zKgdZ/bbKuU4hZwlJqkGPQmnh4SkdaRd
+         LfoIUtBby/uG3RXJE54O1uP0wOPpUjamehtd0op+V2E+ygvvub5/iGmbJKPrtxkjUf4l
+         tQjb+u7OFDLJKPvl+hunZySoDclM1Oq8ZjPVw3sqpebXDPqP48LAQVme4+zbFCi0IKBC
+         s74ipAF3IEhq7AmaJUoXlCFdXWubu2VkhSM4lpHrSospmvthO9PfLooVpZutLX7H0fyC
+         Idnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751108162; x=1751712962;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A73jB41l9dOIANrWvvSRKqyz67Ti0po3QDM6Q+/r5UI=;
+        b=u0KEhwZJBuGDkAiUF2JIO4x+a/vZb1YpOjsex/fStxz0K+Iaj5gNfjbzH5zE33tt3V
+         BWve6g2X7eTXORfdKoI1nIJECWnfgBjnKqD2Hgl9LANO/aTBia7/+duDMuP4xe5pMGHB
+         kO//WXgnPv9ZswdmY/QOxkLMhemg1iMXpZ3NJwGztAwxsOR8hJq4t1L1ib7vensJxbk9
+         lGxWFW+pjds4R6TNEs/gj4nf324vW3K+AUcwCtNE94tDxMNgScCyyrakWyzAzWhIr3bg
+         WNocOUgU4bRSOV1huPpCEG1BqddeLYQ9FMBu88+OifgCoSzoaSanixSkmZlxpXwRlgcy
+         2cmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvjzYlVhVtAk8ON3ofDjhhtRxa0xBiurBTOcE6/bLqqd2K2TniEl9T0oqRhNBQOfQhJrTk09qoDFQeDx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8I8kmUeVzPVfTOmw4Rqn5SRN+StcaPiZqWHTfS4TQniG3z9R1
+	zn0B0cdt00aUeilheZ73jQz6Lm+nETTgXmq7KP9f/BtS+4zg3xeFl802
+X-Gm-Gg: ASbGncsNsgVPBc9/p6plRFmt4R33hrOl2w3eSTxcSu11QGoqFYQ6BVoheVsU3BsHCZx
+	lbgB/ybCqhnyuSdAri3yajMYpQdqR2KuQ9q01Ug6A8ovvNmPuFREIrJ9GAeT2aDuPSM0fcaOmVv
+	YUtj0QDx/Viy3lrQaU0y9yQc/TTpcy64RVcssYVce4KuXhQ+PI8Jy8sHeR8xuS26MCKe1DuC++1
+	N7yPDcB32d6wJVzt3Th2SLc0DbPYpGmYyn9wUVIO3V7pBqhTuck0RZQOfHOlU8T/XLbgH90NcxG
+	0c06IpDuDlKZj5owVjgatCzCUFkswG0LvibPx3FXCEcAo2LLi3AguLYsvfCNcnNA/PhoSIDK9hN
+	wi1xLTjF84A==
+X-Google-Smtp-Source: AGHT+IFnN/WfwwEwV9w7lf/KFPvTVzOXbSASDAmtcW8rNhS1ZHd2VAdGPmXGVhUDHBgTRY7e8cuuKg==
+X-Received: by 2002:a05:6a00:1805:b0:748:a0b9:f873 with SMTP id d2e1a72fcca58-74af7ac66f3mr9002134b3a.9.1751108161701;
+        Sat, 28 Jun 2025 03:56:01 -0700 (PDT)
+Received: from faisal-ThinkPad-T490.. ([49.207.215.194])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541c471sm4440291b3a.56.2025.06.28.03.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 03:56:00 -0700 (PDT)
+From: Faisal Bukhari <faisalbukhari523@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix typo in af_netlink.c
+Date: Sat, 28 Jun 2025 16:25:42 +0530
+Message-ID: <20250628105542.269192-1-faisalbukhari523@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,108 +75,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxrsPsxV9oHkQBAA--.706S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF48KF4xWr43uFy3Kr4rJFc_yoWrJFWUpF
-	9xCrn7GF4rGr93Arnrt3s8ur1DJr1xCw1aq3Wa9ry8CF4avw1UZr1ktrykXFyUtayrJry0
-	gF1rGws0qF48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
-	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
-	0xZFpf9x07jepB-UUUUU=
 
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+Fix spelling mistake in net/netlink/af_netlink.c
+appened -> appended
 
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
+---
+ net/netlink/af_netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.16-1
-
-for you to fetch changes up to 955853cf83657faa58572ef3f08b44f0f88885c1:
-
-  LoongArch: KVM: Disable updating of "num_cpu" and "feature" (2025-06-27 18:27:44 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.16-rc4
-
-Replace __ASSEMBLY__ with __ASSEMBLER__ in headers like others, fix
-build warnings about export.h, reserve the EFI memory map region for
-kdump, handle __init vs inline mismatches, and fix some bugs about KVM.
-----------------------------------------------------------------
-Bibo Mao (6):
-      LoongArch: KVM: Avoid overflow with array index
-      LoongArch: KVM: Add address alignment check for IOCSR emulation
-      LoongArch: KVM: Fix interrupt route update with EIOINTC
-      LoongArch: KVM: Check interrupt route from physical CPU
-      LoongArch: KVM: Check validity of "num_cpu" from user space
-      LoongArch: KVM: Disable updating of "num_cpu" and "feature"
-
-Huacai Chen (1):
-      LoongArch: Fix build warnings about export.h
-
-Kees Cook (1):
-      LoongArch: Handle KCOV __init vs inline mismatches
-
-Ming Wang (1):
-      LoongArch: Reserve the EFI memory map region
-
-Thomas Huth (1):
-      LoongArch: Replace __ASSEMBLY__ with __ASSEMBLER__ in headers
-
- arch/loongarch/include/asm/addrspace.h         |  8 +--
- arch/loongarch/include/asm/alternative-asm.h   |  4 +-
- arch/loongarch/include/asm/alternative.h       |  4 +-
- arch/loongarch/include/asm/asm-extable.h       |  6 +-
- arch/loongarch/include/asm/asm.h               |  8 +--
- arch/loongarch/include/asm/cpu.h               |  4 +-
- arch/loongarch/include/asm/ftrace.h            |  4 +-
- arch/loongarch/include/asm/gpr-num.h           |  6 +-
- arch/loongarch/include/asm/irqflags.h          |  4 +-
- arch/loongarch/include/asm/jump_label.h        |  4 +-
- arch/loongarch/include/asm/kasan.h             |  2 +-
- arch/loongarch/include/asm/loongarch.h         | 16 ++---
- arch/loongarch/include/asm/orc_types.h         |  4 +-
- arch/loongarch/include/asm/page.h              |  4 +-
- arch/loongarch/include/asm/pgtable-bits.h      |  4 +-
- arch/loongarch/include/asm/pgtable.h           |  4 +-
- arch/loongarch/include/asm/prefetch.h          |  2 +-
- arch/loongarch/include/asm/smp.h               |  2 +-
- arch/loongarch/include/asm/thread_info.h       |  4 +-
- arch/loongarch/include/asm/types.h             |  2 +-
- arch/loongarch/include/asm/unwind_hints.h      |  6 +-
- arch/loongarch/include/asm/vdso/arch_data.h    |  4 +-
- arch/loongarch/include/asm/vdso/getrandom.h    |  4 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h |  4 +-
- arch/loongarch/include/asm/vdso/processor.h    |  4 +-
- arch/loongarch/include/asm/vdso/vdso.h         |  4 +-
- arch/loongarch/include/asm/vdso/vsyscall.h     |  4 +-
- arch/loongarch/kernel/acpi.c                   |  1 +
- arch/loongarch/kernel/alternative.c            |  1 +
- arch/loongarch/kernel/efi.c                    | 12 ++++
- arch/loongarch/kernel/elf.c                    |  1 -
- arch/loongarch/kernel/kfpu.c                   |  1 +
- arch/loongarch/kernel/paravirt.c               |  1 -
- arch/loongarch/kernel/time.c                   |  2 +-
- arch/loongarch/kernel/traps.c                  |  1 +
- arch/loongarch/kernel/unwind_guess.c           |  1 +
- arch/loongarch/kernel/unwind_orc.c             |  3 +-
- arch/loongarch/kernel/unwind_prologue.c        |  1 +
- arch/loongarch/kvm/intc/eiointc.c              | 89 ++++++++++++++++++--------
- arch/loongarch/lib/crc32-loongarch.c           |  1 +
- arch/loongarch/lib/csum.c                      |  1 +
- arch/loongarch/mm/ioremap.c                    |  4 +-
- arch/loongarch/pci/pci.c                       |  1 -
- tools/arch/loongarch/include/asm/orc_types.h   |  4 +-
- 44 files changed, 151 insertions(+), 100 deletions(-)
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index e8972a857e51..f325ad7c1485 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2455,7 +2455,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 	unsigned int flags = 0;
+ 	size_t tlvlen;
+ 
+-	/* Error messages get the original request appened, unless the user
++	/* Error messages get the original request appended, unless the user
+ 	 * requests to cap the error message, and get extra error data if
+ 	 * requested.
+ 	 */
+-- 
+2.43.0
 
