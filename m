@@ -1,167 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A9D1E1E1C
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2ED71747;
+	Sat, 28 Jun 2025 11:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751110538; cv=none; b=n8ORSghP63cel+I1N/IsV2H3PA4Bzl5dTLRlm132eE1hEalrkbEX6s+X9VXWZsnyCyfTMQsHDsH7rh5ljbMVDKLnQxT38FeGAnXp98vWxstKvgTF53gDJenfSUNY0KrX7XfVoN951y2vRic1PhpMYFQ+pP/Hox3XIk88xYUfRA4=
+	t=1751110583; cv=none; b=n6CvCYlo7QUChZBXD2gVCo+cmvKp8+mCXHbbPgpZza4BS1hVqE3/hhQhBum1wmDwi5WswEk9E1cLa6cmvg6UlnU1slvyj1LldaJKxwcryvUa8MvYp51eaI3L9MKVV81FxUTDGfLWtOeKPfnytaxckb4mNm8OG7nwL5+wlIHsq44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751110538; c=relaxed/simple;
-	bh=LShM5SswDrluRPqHh5X+SzOl+BLPvCh7VicYl+BQmiA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qGN9hDjeyhTX2pd404TbmcdAv7t5+J3bDjZebhZDY0uD+0hjXODn8RyUPYiu4MD5J2+hQTXvqGeuLutERYilxrtL2d73W5wyMgP6TiHjpqhjFE+8d0J+UsNKnyi7AT/3T3/rvU5ZUs0GKCWNIxcI6IWEHYZ8dqNcloUQnv9baJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF0401BD0;
-	Sat, 28 Jun 2025 04:35:19 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F31033F762;
-	Sat, 28 Jun 2025 04:35:28 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com,
-	david@redhat.com,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	anshuman.khandual@arm.com,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	ioworker0@gmail.com,
-	baohua@kernel.org,
-	kevin.brodsky@arm.com,
-	quic_zhenhuah@quicinc.com,
-	christophe.leroy@csgroup.eu,
-	yangyicong@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	hughd@google.com,
-	yang@os.amperecomputing.com,
-	ziy@nvidia.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v4 4/4] arm64: Add batched versions of ptep_modify_prot_start/commit
-Date: Sat, 28 Jun 2025 17:04:35 +0530
-Message-Id: <20250628113435.46678-5-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250628113435.46678-1-dev.jain@arm.com>
-References: <20250628113435.46678-1-dev.jain@arm.com>
+	s=arc-20240116; t=1751110583; c=relaxed/simple;
+	bh=KVvJQ6vo+0jqitEC9XZaCIDhRLTchNDRpm0e3ef7WKk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=r9ONWAeLEhLUAsgjA7gZK2b53Kir3QX/s5d5n/YbClIGwrqfeEtc2dPFyEOCMPCemsGqqmNPx1q/ePgzZUdaHTs7rxngEU8EjlgVEmv/z5zx7A0OruREE42ppcBnIZ5GFolDhNu+4TA7WVwTPEuEUFrwphEEaxV4Q1a8AiUxrV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqlZS9r+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqlZS9r+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 09CC8C4CEEA;
+	Sat, 28 Jun 2025 11:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751110583;
+	bh=KVvJQ6vo+0jqitEC9XZaCIDhRLTchNDRpm0e3ef7WKk=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=fqlZS9r+MGGsayQlCDIkarIgn1kBfncqJnx4V7afXZrPP3T4uEQw0kHiXuGkNKBZp
+	 Unfq3hhxTKznio3RBKLbgQ3gMPjVqkPIPPeb8abfCQp1dBGoW+y+1MfcPqRNe31+lb
+	 LnnqyNlvesaJdbzFO8VMwq0hGNZ9GkMR9LWgLY92CWwLnPxUEDIbwWs39dSNCqZpGh
+	 lEnR9lu6yWYFgEHQerHxUD+MHg01rjiJVebdfrw8VLuddcyekRQZY9WSjxgnylkv0Z
+	 iYxSn8oTTWyimXpr87m67rciBRDnu9O6/s6N8mNbVb/zVYT9srsLFHDVYoAjKozfeJ
+	 zoJ2jrYGPsPYg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA202C7EE32;
+	Sat, 28 Jun 2025 11:36:22 +0000 (UTC)
+From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
+Date: Sat, 28 Jun 2025 13:36:00 +0200
+Subject: [PATCH] rust: init: Fix generics in *_init! macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
+X-B4-Tracking: v=1; b=H4sIAJ/TX2gC/x3MQQqDMBBG4avIrBvQYILtVUoJIY76g8YySYsgu
+ bvB5bd476TEAk70ak4S/iNhjxXdo6Gw+DizwlhNutWmtXpQ8kvZISK7LB4r4uzCvm1ecT914Tk
+ Y01tNNf8KTzju9ftTygUsesLIagAAAA==
+X-Change-ID: 20250628-rust_init_trailing_comma-e4f1c9855462
+To: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Janne Grunau <j@jannau.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2610; i=j@jannau.net;
+ s=yk2024; h=from:subject:message-id;
+ bh=7atD46KJRl40fGYVlD5kwQ0vw0wyITw/tnQszJMm3g8=;
+ b=owGbwMvMwCW2UNrmdq9+ahrjabUkhoz4y1sb472uKUWHfsi06d7q9OLYmrlCtWIxXGKFa69ef
+ /zRNEWqo5SFQYyLQVZMkSVJ+2UHw+oaxZjaB2Ewc1iZQIYwcHEKwEROvWJkeDlZyXrKCe55EoXH
+ H7sIVsffV5m61YnZvEUtloHzVlWPEcP/6D4/oYbH7baCz+8fte1YeqBrT6SVSVNS3I4yJdvsDBl
+ GAA==
+X-Developer-Key: i=j@jannau.net; a=openpgp;
+ fpr=8B336A6BE4E5695E89B8532B81E806F586338419
+X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
+X-Original-From: Janne Grunau <j@jannau.net>
+Reply-To: j@jannau.net
 
-Override the generic definition of modify_prot_start_ptes() to use
-get_and_clear_full_ptes(). This helper does a TLBI only for the starting
-and ending contpte block of the range, whereas the current implementation
-will call ptep_get_and_clear() for every contpte block, thus doing a
-TLBI on every contpte block. Therefore, we have a performance win.
+From: Janne Grunau <j@jannau.net>
 
-The arm64 definition of pte_accessible() allows us to batch in the
-errata specific case:
+The match pattern for a optional trailing comma in the list of generics
+is erroneously repeated in the code block resulting in following error:
 
-#define pte_accessible(mm, pte)	\
-	(mm_tlb_flush_pending(mm) ? pte_present(pte) : pte_valid(pte))
+| error: attempted to repeat an expression containing no syntax variables matched as repeating at this depth
+|    --> rust/kernel/init.rs:301:73
+|     |
+| 301 |         ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generics),* $(,)?>)? {
+|     |                                                                         ^^^
 
-All ptes are obviously present in the folio batch, and they are also valid.
+Remove "$(,)?" from all code blocks in the try_init! and try_pin_init!
+definitions.
 
-Override the generic definition of modify_prot_commit_ptes() to simply
-use set_ptes() to map the new ptes into the pagetable.
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Fixes: 578eb8b6db13 ("rust: pin-init: move the default error behavior of `try_[pin_]init`")
+Signed-off-by: Janne Grunau <j@jannau.net>
 ---
- arch/arm64/include/asm/pgtable.h | 10 ++++++++++
- arch/arm64/mm/mmu.c              | 28 +++++++++++++++++++++++-----
- 2 files changed, 33 insertions(+), 5 deletions(-)
+ rust/kernel/init.rs | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index ba63c8736666..abd2dee416b3 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1643,6 +1643,16 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
- 				    unsigned long addr, pte_t *ptep,
- 				    pte_t old_pte, pte_t new_pte);
- 
-+#define modify_prot_start_ptes modify_prot_start_ptes
-+extern pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
-+				    unsigned long addr, pte_t *ptep,
-+				    unsigned int nr);
-+
-+#define modify_prot_commit_ptes modify_prot_commit_ptes
-+extern void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-+				    pte_t *ptep, pte_t old_pte, pte_t pte,
-+				    unsigned int nr);
-+
- #ifdef CONFIG_ARM64_CONTPTE
- 
- /*
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 3d5fb37424ab..38325616f467 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -26,6 +26,7 @@
- #include <linux/set_memory.h>
- #include <linux/kfence.h>
- #include <linux/pkeys.h>
-+#include <linux/mm_inline.h>
- 
- #include <asm/barrier.h>
- #include <asm/cputype.h>
-@@ -1524,24 +1525,41 @@ static int __init prevent_bootmem_remove_init(void)
- early_initcall(prevent_bootmem_remove_init);
- #endif
- 
--pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
-+pte_t modify_prot_start_ptes(struct vm_area_struct *vma, unsigned long addr,
-+			     pte_t *ptep, unsigned int nr)
- {
-+	pte_t pte = get_and_clear_full_ptes(vma->vm_mm, addr, ptep, nr, 0);
-+
- 	if (alternative_has_cap_unlikely(ARM64_WORKAROUND_2645198)) {
- 		/*
- 		 * Break-before-make (BBM) is required for all user space mappings
- 		 * when the permission changes from executable to non-executable
- 		 * in cases where cpu is affected with errata #2645198.
- 		 */
--		if (pte_user_exec(ptep_get(ptep)))
--			return ptep_clear_flush(vma, addr, ptep);
-+		if (pte_accessible(vma->vm_mm, pte) && pte_user_exec(pte))
-+			__flush_tlb_range(vma, addr, nr * PAGE_SIZE,
-+					  PAGE_SIZE, true, 3);
- 	}
--	return ptep_get_and_clear(vma->vm_mm, addr, ptep);
-+
-+	return pte;
-+}
-+
-+pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
-+{
-+	return modify_prot_start_ptes(vma, addr, ptep, 1);
-+}
-+
-+void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-+			     pte_t *ptep, pte_t old_pte, pte_t pte,
-+			     unsigned int nr)
-+{
-+	set_ptes(vma->vm_mm, addr, ptep, pte, nr);
- }
- 
- void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
- 			     pte_t old_pte, pte_t pte)
- {
--	set_pte_at(vma->vm_mm, addr, ptep, pte);
-+	modify_prot_commit_ptes(vma, addr, ptep, old_pte, pte, 1);
- }
- 
- /*
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 8d228c23795445e379b40f662e1c355a934cbd13..21ef202ab0dbfa3cb28cd20d29d9bfdba4f1f97f 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -231,14 +231,14 @@ macro_rules! try_init {
+     ($(&$this:ident in)? $t:ident $(::<$($generics:ty),* $(,)?>)? {
+         $($fields:tt)*
+     }) => {
+-        ::pin_init::try_init!($(&$this in)? $t $(::<$($generics),* $(,)?>)? {
++        ::pin_init::try_init!($(&$this in)? $t $(::<$($generics),*>)? {
+             $($fields)*
+         }? $crate::error::Error)
+     };
+     ($(&$this:ident in)? $t:ident $(::<$($generics:ty),* $(,)?>)? {
+         $($fields:tt)*
+     }? $err:ty) => {
+-        ::pin_init::try_init!($(&$this in)? $t $(::<$($generics),* $(,)?>)? {
++        ::pin_init::try_init!($(&$this in)? $t $(::<$($generics),*>)? {
+             $($fields)*
+         }? $err)
+     };
+@@ -291,14 +291,14 @@ macro_rules! try_pin_init {
+     ($(&$this:ident in)? $t:ident $(::<$($generics:ty),* $(,)?>)? {
+         $($fields:tt)*
+     }) => {
+-        ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generics),* $(,)?>)? {
++        ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generics),*>)? {
+             $($fields)*
+         }? $crate::error::Error)
+     };
+     ($(&$this:ident in)? $t:ident $(::<$($generics:ty),* $(,)?>)? {
+         $($fields:tt)*
+     }? $err:ty) => {
+-        ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generics),* $(,)?>)? {
++        ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generics),*>)? {
+             $($fields)*
+         }? $err)
+     };
+
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250628-rust_init_trailing_comma-e4f1c9855462
+
+Best regards,
 -- 
-2.30.2
+Janne Grunau <j@jannau.net>
+
 
