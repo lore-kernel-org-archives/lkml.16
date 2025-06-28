@@ -1,165 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D6A71747
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 12:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA379220F41;
+	Sat, 28 Jun 2025 12:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751113084; cv=none; b=Mjnad52AuJ0ywpZrJyJu0LQpD2VWloH+tGRZ4qUkCAePBHmsjhmwQorpx1cMws7mah1D9jMRfu9Xu/dgL/Q6ch5aDek3//5MglTH4cslw1JIiH42LKkJG5rtnsHJufJ+fQwZn3LxPynTQOnYMl72hVFKGxo4G7gDA6B1IIaN7e4=
+	t=1751113148; cv=none; b=moEEJ0bSZgbsXeBBo27BUpoiNXBr+wpixeV/XOjBl+jmTD1qNYdO/T0ZMOxNaWkjfMNIVx8FaEKbN8g9z4Zfn8W3HflTDjxHqEb9Ewhz+CPNeofZOE19Pf+QFWuvzTMnA2xS1MgldNkW3Tbw9jhAD1pKKwZgaaF8DsoKK/Pfcv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751113084; c=relaxed/simple;
-	bh=5gNTyyIrr9xdgGlz/I/Vt0rXDxRjosNLvKaatqfFq7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=quUxpP/5aUiqlmekxGb23P1qTIst5IVvhkw/mVVd3PWiDoLImXpQSfr0HzRCpzVJHcUPA7V5kxdINpzg7L7gIjMXHdouC2+pQ/l52asB8pqttCeFhFOsjAStZCF1ZuB6jvU5DWPVWrz6C5wy0WW010ignUWsPJrUFkWjVryxuDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TBlOfUQR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751113148; c=relaxed/simple;
+	bh=SzdKukWgBhdmdV1afJ4LoBiWW5gP6MVZ4xof9rPG9mA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CynyFzdbxjw+lGNZAg183Mvtu0VpDKp6rDUaYCOaTowiUuYQQfy+b5/tCTpKL9LXwFwSlNvRWK5PGUCIjpHQ+sP/MhRoAwi0Ol2+O7sFW5IFMz426ScPXX99h+DFMfEDYExQlbm78D8x2YyMgoAyLCJTlUI9TX88v7FhmcYljl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yprr9nQ6; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TBlOfUQR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52816C4CEEA;
-	Sat, 28 Jun 2025 12:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751113084;
-	bh=5gNTyyIrr9xdgGlz/I/Vt0rXDxRjosNLvKaatqfFq7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TBlOfUQRtZsSL8uPBfO6n6f+WrxX13RpMqIU8NTXfKkiKN3Kqbb9GcawVqs9MgMyQ
-	 lBGKDBEHEiTA+wo6hEifMGdkGDjgBvCDTNn4NUDMOEOj6mtVBD6H6RlsJIONJ+yMKQ
-	 G6vW87B7am9lQlUQxRtaBfPJUv4aSEKVTBqjp0Xk=
-Date: Sat, 28 Jun 2025 14:18:02 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Badal Nilawar <badal.nilawar@intel.com>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com, alexander.usyskin@intel.com,
-	daniele.ceraolospurio@intel.com
-Subject: Re: [PATCH v4 02/10] mei: late_bind: add late binding component
- driver
-Message-ID: <2025062834-scraggly-barracuda-7ea6@gregkh>
-References: <20250625170015.33912-1-badal.nilawar@intel.com>
- <20250625170015.33912-3-badal.nilawar@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yprr9nQ6"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-31306794b30so417585a91.2;
+        Sat, 28 Jun 2025 05:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751113146; x=1751717946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SzdKukWgBhdmdV1afJ4LoBiWW5gP6MVZ4xof9rPG9mA=;
+        b=Yprr9nQ6Dr2Y7QGYzjtUZfwcvZ64VIK3sxVsF7MTD2vCnu9CAcjzyK/YpptOc75HCT
+         ln2ryBEUWMXpJot66DjJly7ahbe3Y0oqzjSm1ewrFJlYd7/cPTLj9Rk+onwRRj71Fqju
+         PF7Y/2MVRMml1WoJy/ssNxu3sE8G91srKSalX2L1dbGfg5T63LwBagb1Y2lN/SDv2muv
+         Lp23uGkr2AdtjYS4OVr4iloJ+8hkUcL1AqaaJa2rE9tw1BNBfVSUTa932d2reE8WdNBF
+         tlwreS+e4D9m245AxCo4Vy/K8GUgpm44AAyTVMDPjITMC2hMphdvmzJ2bUAG/ttpBALl
+         OwHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751113146; x=1751717946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzdKukWgBhdmdV1afJ4LoBiWW5gP6MVZ4xof9rPG9mA=;
+        b=xAQpk093MgACncpEb8rb9Od/3oMEeoTKFysO5bqaY4ksg7KrH1eIAyris5PKLLVmxs
+         AoOm4v9FGVQa/EG89SWc+LtJlBnkqbz/ZOoSZdrFVW5tLk0GRr9sAV/A+HJ5yFpEzrSO
+         awOVbiVgLWMtHxj1F6suCytzY8wzCDb4UrUecckoUFjqm9unsJsPf02EqWk3gI3djbac
+         INNmc35eLMg/hyCL/ZsoslIUrmFJv2ZOWUCnByHabItlL8CQj7ADhDaeaI1c2A8aqCZo
+         CorDAkgM0kHfhB/TgKESEmemYClaLdV09Ao9wJY1+zdS9YPjkJNrZfMaWfYNDAgSL1XV
+         543g==
+X-Forwarded-Encrypted: i=1; AJvYcCV4g46FTntD0NYELu5IkjVB+iXrHyyO5qrP2axQdeC9lDqPAkstj0VAeaQQzrefyYR+5PzF+NOiIlA=@vger.kernel.org, AJvYcCVfxrIme3z0zHAlVvxbX/R10EauMUs6R24v4nQEeR65baal1Hc8W/+8JzyuSqcDJhqjAIoWbxqa0JWuTrM=@vger.kernel.org, AJvYcCWURrTluT//ahWEr+hhkASd4Yqxf4gRgcXOEA0BefXGTCdT0LzIzvuJhW5DAFtWmKblkKrHcLX+QiRmc/O1Dulf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEpP9gAgBls/pa0TLuwFz0uSgpkrakWk5OEcQ+BZkF3XqAXmmd
+	xgZhynmn6sAKU0YJPHo7qEvUTIVBqFyA0HsjrRna/skPaIQ1Gb01cFOFnQT3lfynSwxhMNZzqWA
+	s7qtqjDZDUSsOHMPo6aC8dY422SgWvJukDfEC86k+UA==
+X-Gm-Gg: ASbGnct8/7R0X77DEM6Sz8aaKraybBaSd7aaiMP4r83y6IFiwAzoz1DfMPdKuf1DFn8
+	gcKGxGeja9lVXofTFbTalXlYCtXvnKZDdMXBP2X0+MMAWpueL262x3PBH4JAg6e0lasbRRdjsDI
+	+bFTZohTfH5a+loOY0unz3XahjExK7ZH0mY1419utdMlQ=
+X-Google-Smtp-Source: AGHT+IGgOIPOSWcI4SyHL/P/nImiGOwt6QITJk5YEphAa0NrYbuKsNiPSt631d7/8lZfIvKm4XE3s49XsmhW3bUKW18=
+X-Received: by 2002:a17:90b:390b:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-318edd3da95mr1366705a91.0.1751113145945; Sat, 28 Jun 2025
+ 05:19:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625170015.33912-3-badal.nilawar@intel.com>
+References: <20250628040956.2181-1-work@onurozkan.dev> <20250628040956.2181-4-work@onurozkan.dev>
+ <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com> <20250628133013.703461c8@nimda.home>
+In-Reply-To: <20250628133013.703461c8@nimda.home>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 28 Jun 2025 14:18:53 +0200
+X-Gm-Features: Ac12FXy8IZuX4C_aGR3lTNf1m2yaOzD8uNrtbrbCmNNocjT9FjWir7FB3_SiMBY
+Message-ID: <CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
+To: Onur <work@onurozkan.dev>, viresh.kumar@linaro.org
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
+	rafael@kernel.org, gregkh@linuxfoundation.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	davidgow@google.com, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 10:30:07PM +0530, Badal Nilawar wrote:
-> --- /dev/null
-> +++ b/drivers/misc/mei/late_bind/mei_late_bind.c
-> @@ -0,0 +1,281 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Intel Corporation
-> + */
-> +#include <drm/intel/i915_component.h>
-> +#include <drm/intel/late_bind_mei_interface.h>
-> +#include <linux/component.h>
-> +#include <linux/pci.h>
-> +#include <linux/mei_cl_bus.h>
-> +#include <linux/module.h>
-> +#include <linux/overflow.h>
-> +#include <linux/slab.h>
-> +#include <linux/uuid.h>
-> +
-> +#include "mkhi.h"
-> +
-> +#define GFX_SRV_MKHI_LATE_BINDING_CMD 0x12
-> +#define GFX_SRV_MKHI_LATE_BINDING_RSP (GFX_SRV_MKHI_LATE_BINDING_CMD | 0x80)
-> +
-> +#define LATE_BIND_SEND_TIMEOUT_MSEC 3000
-> +#define LATE_BIND_RECV_TIMEOUT_MSEC 3000
-> +
-> +/**
-> + * struct csc_heci_late_bind_req - late binding request
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @flags: flags to be passed to the firmware
-> + * @reserved: reserved field
+On Sat, Jun 28, 2025 at 12:30=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
+>
+> It doesn't seem to be the same reason. I rebased over
+> c6af9a1191d042839e56abff69e8b0302d117988 (the exact commit where that
+> lint was added) but still Clippy did not complain about it on the
+> MSRV. So it was either a leftover, or there is a version between
+> 1.78 and the current stable where Clippy did complain. I can dig into it
+> more during the week if you would like.
 
-Reserved for what?  All reserved fields need to be set to a default
-value, please document that here.
+Are you sure? The lint is actually disabled, as I mention in 5e7c9b84ad08.
 
-> + * @payload_size: size of the payload data in bytes
-> + * @payload: data to be sent to the firmware
-> + */
-> +struct csc_heci_late_bind_req {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 flags;
+From a quick test, I enabled it in that file, and I get the warning.
 
-What is the endian of these fields?  And as this crosses the
-kernel/hardware boundry, shouldn't these be __u32?
+Thus it seems to me Clippy would still complain about it just fine.
 
-> +/**
-> + * struct csc_heci_late_bind_rsp - late binding response
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @reserved: reserved field
-> + * @status: status of the late binding command execution by firmware
-> + */
-> +struct csc_heci_late_bind_rsp {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 reserved[2];
-> +	u32 status;
+It doesn't mean we shouldn't remove it, though.
 
-Same questions as above.
+> IMO, we should require people to add a comment explaining the reason
+> for adding these lint rules to the codebase. It would make both reading
+> and modifying the code much simpler and clearer.
 
-> +} __packed;
-> +/**
-> + * mei_late_bind_push_config - Sends a config to the firmware.
-> + * @dev: device struct corresponding to the mei device
-> + * @type: payload type
+Do you mean using the lint reasons feature? IIRC we discussed at some
+point doing that when the feature was added (we enabled it for the
+`expect` side of things).
 
-Shouldn't type be an enum?
+For non-obvious cases or uncommon lints, it would be definitely nice
+(a comment is also OK). I am not sure if it is worth enforcing it for
+every single case, though.
 
-> + * @flags: payload flags
-> + * @payload: payload buffer
-> + * @payload_size: payload buffer size
-> + *
-> + * Return: 0 success, negative errno value on transport failure,
-> + *         positive status returned by FW
-> + */
-> +static int mei_late_bind_push_config(struct device *dev, u32 type, u32 flags,
-> +				     const void *payload, size_t payload_size)
+It would be nice if `clippy::allow_attributes_without_reason` could be
+enabled just for `allow`, or ignore it for certain lints.
 
-Why do static functions need kerneldoc formatting?
-
-> +{
-> +	struct mei_cl_device *cldev;
-> +	struct csc_heci_late_bind_req *req = NULL;
-> +	struct csc_heci_late_bind_rsp rsp;
-> +	size_t req_size;
-> +	ssize_t ret;
-> +
-> +	if (!dev || !payload || !payload_size)
-> +		return -EINVAL;
-
-How can any of these ever happen as you control the callers of this
-function?
-
-
-> +
-> +	cldev = to_mei_cl_device(dev);
-> +
-> +	ret = mei_cldev_enable(cldev);
-> +	if (ret < 0) {
-
-You mean:
-	if (ret)
-right?
-
-
-> +		dev_dbg(dev, "mei_cldev_enable failed. %zd\n", ret);
-
-Why display the error again if this failed?  The caller already did
-that.
-
-And the function returns an int, not a ssize_t, didn't the compiler
-complain?
-
-thanks,
-
-greg k-h
+Cheers,
+Miguel
