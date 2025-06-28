@@ -1,36 +1,59 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555D51922DE;
-	Sat, 28 Jun 2025 09:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B9B2236EE;
+	Sat, 28 Jun 2025 09:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751104342; cv=none; b=N69f/2b5lsSoUYLy7l/hvo6E8zBU5Q9Sj8tKgZGbOiVrxhcNHDbi4PoEiuYJRcbV/VpRp4/VczqIO9UPJ6aGWJn0Iqyclp3JKc/N/QXBtZtP0C1aJKgwstp/+8gLm2Em9sAsDda29g2AMgxsRpzEQ3++MOga7HQf83BjfduLaX4=
+	t=1751104390; cv=none; b=tGRW8gJ/Xhon4lNhU68kg2hrKoEgmLu6mQHVLm8iPgif3AfcPGRYXqXRT3RBFKtFRt5XxnuAf7C09b1pFfR6DqR6jxaaHHfTZ/7Om4qaRnwQ7/0Vo/ng3sFd1Zli0qm3STW9fagIL0TvATH/VWo844o8waNBz0KAZTwJ0RcxuoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751104342; c=relaxed/simple;
-	bh=8N1MHhtt2T7DcOn+RZNnPkLDBgNMQLf1rSn5tWEJ00s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZapjEO6GMStL0k36izbVzEBBEqPFlvzfx6JwFH7WSrS/BAVopcJDp86RnehFkMrLRPF+yOZNzkOWhAJ0YZOxSQ6zwmvQI9fxgzbgK9NivWjTwlf3fS1RLgxZGEeOxDUqIqtYA0nxPcTjMnSFoFx7RSZbtoe0HTPx4855q2nq2Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bTnfp5fgWz2CfCJ;
-	Sat, 28 Jun 2025 17:48:18 +0800 (CST)
-Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
-	by mail.maildlp.com (Postfix) with ESMTPS id AA0B5140294;
-	Sat, 28 Jun 2025 17:52:17 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
- (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Jun
- 2025 17:52:17 +0800
-From: zhangjian <zhangjian496@huawei.com>
-To: <lossin@kernel.org>, <aliceryhl@google.com>, <dakr@kernel.org>,
-	<simona.vetter@ffwll.ch>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pci: fix uaf for resource file
-Date: Sun, 29 Jun 2025 11:05:47 +0800
-Message-ID: <20250629030547.1073425-1-zhangjian496@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1751104390; c=relaxed/simple;
+	bh=Qz+vgWNHPP5vF6coYhtws3bEQ6ML7SD4vFoXMIuSgAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hGC8jKq7k+JiT+O4n24XxsWPclcZurZLuQ07tbj3O8H9x0b8VZdOWdaklc3HdNYn0JGP7iyDLwM34PMkO6yAYSJUd7xPWjfVPyhM3CXHbQpGK0J1AuX8DojOD3YJrG4OIfDF9Pb4eGgo9+hHSYF8VXMK7beW/CXcYTNpWgeZZzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cZwka4bp; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cZwka4bp"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55S5f6hg012201;
+	Sat, 28 Jun 2025 09:52:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=Ae72umgiYtiNIqSIpFA7MtGiQ10aN
+	aJ+Z7V+1qQL1rM=; b=cZwka4bpy0oVFlkVdr0I0snQlXojMCEJTqmskNX4np85u
+	EP7uLfVXgCqslQsdWEOMERkZexWMPOO9eDUv0gD9pxkC0NCR16WafurL/bxWs9+Q
+	yp4Y8phbqg5I5c0zTyhzkvZScUw7XJIjBXqhDsxSDzLIBVR6PpW6vNGRuE4usaj/
+	ueaq2L7tV+wNPcGDiA83BwMVqLTz9OqyUZcX1aX08dECFJUt0d4iiflZZ8QVtOpu
+	jozq8C2DHF9pGxtAOB26meYDQ3Zpc5khCjVzpcq2cmSGgZiAuiV7qiZZNHmqH+ww
+	YfwHaHlZVAPhk2v7K8CgLP8lczJViJ/uvvBRNAFJg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j76687kc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 28 Jun 2025 09:52:54 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55S9LeYF014207;
+	Sat, 28 Jun 2025 09:52:53 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u6r8f8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 28 Jun 2025 09:52:53 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55S9qqR2009214;
+	Sat, 28 Jun 2025 09:52:52 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47j6u6r8er-1;
+	Sat, 28 Jun 2025 09:52:52 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: sgoutham@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        horms@kernel.org, netdev@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: thunderx: avoid direct MTU assignment after WRITE_ONCE()
+Date: Sat, 28 Jun 2025 02:52:19 -0700
+Message-ID: <20250628095221.461991-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,69 +61,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemp200004.china.huawei.com (7.202.195.99)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506280080
+X-Proofpoint-GUID: 28NGkk0EG0roxnsCG4rY-kj-ROsDwQTD
+X-Proofpoint-ORIG-GUID: 28NGkk0EG0roxnsCG4rY-kj-ROsDwQTD
+X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=685fbb76 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=6GJOchzy3z8SWhoumhsA:9 cc=ntf awl=host:14723
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDA4MSBTYWx0ZWRfX7T9s0A92THvT DX3/F38hBL3wrkdQj1tm0eOzavSjF4r5NyyJKLZa80w+ITNTA159pJEtgZVOsuT/mBgyXuy5u92 h/Rk+1Z091eBZ8b+SbFdPkleE478Mrs4CxDXLTLxWRhrsFkOr+ceIUaQdlLZPao/UVaSZWwjQd1
+ 2qN9DFLlHJ5L9XoCHUo5xZs2hTuub29ak1kQoUdFAxu4F+R/LUIxtR2S4bNgZNSGH8OHtRJHKKZ f/+QmcEo9E7CrV+ueeQaalmwJa0yUcIDFJH2PU5r4EQ2xnsMFYW1JY+NeUCyilA8NS/umCi+CfT oHTqMUesPWoEFnNt5ZQ6rTLBrXr65yJ4ACkYKw9KDooEkHHiNYDvxPA+ASgmo+gkjDDjVHH0iFf
+ /rwyrLZNb1wYeCNAf9b8j9OG4BiayVy6YI/3vZpJMPmNF1lldcNc9r1kbPz3kBRcM5Num4GT
 
-concurrently creating attr files may cause uaf. We meet this in concurrently
-plug and unplug network card. For example:
+The current logic in nicvf_change_mtu() writes the new MTU to
+netdev->mtu using WRITE_ONCE() before verifying if the hardware
+update succeeds. However on hardware update failure, it attempts
+to revert to the original MTU using a direct assignment
+(netdev->mtu = orig_mtu)
+which violates the intended of WRITE_ONCE protection introduced in
+commit 1eb2cded45b3 ("net: annotate writes on dev->mtu from
+ndo_change_mtu()")
 
-echo 20 > /sys/class/net/eth3/device/sriov_numvfs &
-echo 1 > /sys/bus/pci/rescan
+Additionally, WRITE_ONCE(netdev->mtu, new_mtu) is unnecessarily
+performed even when the device is not running.
 
-crash log snips as following:
+Fix this by:
+  Only writing netdev->mtu after successfully updating the hardware.
+  Skipping hardware update when the device is down, and setting MTU
+directly.
 
-Call Trace:
- <TASK>
- ? _die_body+0x1a/0xe0
- ? page_fault_oops+0x81/0x150
- ? _wake_up_sync_key+0x37/0x50
- ? exc_page_fault+0x525/0x730
- ? asm_exc_page_fault+0x22/0x30
- ? pci_create_attr+0x160/0x180
- ? pfx_strlen+0x10/0x10
- kernfs_name_hash+0x12/0x80
- kernfs_find_ns+0x35/0xc0
- kernfs_remove_by_name_ns+0x46/0xc0
- pci_stop_bus_device+0x7c/0x90
- pci_stop_and_remole_bus_device+0xe/0x20
- pci_iov_remove_virtfn+0xbd/0x120
- sriov_disable+0x34/0xe0
- hinic_pci_sriov_diisable+0x35/0xa0 [hinic]
- hinic_remove+0x22e/0x2a0 [hinic]
- pci_device_remove+0x3b/0xb0
- device_release_driver_internal+0x19b/0x200
- pci_stop_bus_device+0x6c/0x90
- pci_stop_and_remolre_bus_device_locked+0x16/0x30
- remove_store+0xfc/0x130
- kernfs_fop_write_iter+0x11b/0x200
+This ensures that all writes to netdev->mtu are consistent with
+WRITE_ONCE expectations and avoids unintended state corruption
+on failure paths.
 
-set resource pointer to zero to fix this problem.
-
-Signed-off-by: zhangjian <zhangjian496@huawei.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
- drivers/pci/pci-sysfs.c | 2 ++
- 1 file changed, 2 insertions(+)
+Note: This change is not tested due to hardware availability.
+---
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa..12dba9228 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1180,12 +1180,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr[i] = NULL;
- 		}
- 
- 		res_attr = pdev->res_attr_wc[i];
- 		if (res_attr) {
- 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
- 			kfree(res_attr);
-+			pdev->res_attr_wc[i] = NULL;
- 		}
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+index aebb9fef3f6eb..ba26ba31a28bf 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -1589,16 +1589,18 @@ static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
+ 		return -EINVAL;
  	}
+ 
+-	WRITE_ONCE(netdev->mtu, new_mtu);
+ 
+-	if (!netif_running(netdev))
++	if (!netif_running(netdev)) {
++		WRITE_ONCE(netdev->mtu, new_mtu);
+ 		return 0;
++	}
+ 
+ 	if (nicvf_update_hw_max_frs(nic, new_mtu)) {
+-		netdev->mtu = orig_mtu;
+ 		return -EINVAL;
+ 	}
+ 
++	WRITE_ONCE(netdev->mtu, new_mtu);
++
+ 	return 0;
  }
+ 
 -- 
-2.33.0
+2.46.0
 
