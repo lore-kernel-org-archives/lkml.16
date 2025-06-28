@@ -1,203 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292CA1494D9;
-	Sat, 28 Jun 2025 14:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB58721C186;
+	Sat, 28 Jun 2025 14:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751120971; cv=none; b=O08G1vHkPAPJrOkdsv82bv+A/aGQKkUtYSU2z5TbPaq5nf3z2239TIzPLgHCqaG0QQYf/A3c+CcvYLY6Q37zWbpWVC3RtP/7PDaDwr/zDTEGssyGTBD3gaflcljHONDBRYiSHd5zaYxF2K/0MRjZqlfcMqV3bpBoNvKW5dItjMs=
+	t=1751120986; cv=none; b=Hl96ZMMJSBscWb5DcN6q7f7PtS8IRF8qvwWIhkmZMXlVM0mIB7OIrbBs/ODp2lj2gkBB9nDYKjBduuDwsZHiBLKxMAtLZCWpLScpxBZ6KcEyDnDtdjfCZ5ehPBTd7ubgJezbhP/RAwP5hrSNuKfRF38sGI/vryjjpWzQgGUsmek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751120971; c=relaxed/simple;
-	bh=Ypz8IC0WQ6kWJ6ifXzoS95qT1PT+UG1tXVjgJx0z6wA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxXzFZeguYYYDu3rUdc4DQVcsY/wvHWQYrpDs9D53mjYUhDDNi5NMwGebvvOgwJFY2V2NhkLjeFWGb6wfz0QZyUV1gsZpUOt0S+RP5gK63JGUV6pdlY3flYZHYY00GVjioELeggeyRmC3tSO455ay0oaoBnv3+NQOgTEdaRl52U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mIagB7q2; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751120986; c=relaxed/simple;
+	bh=J6PmAR2x3Gaj2uMT0husjz5AQ81kQiQjYOGaLvseu78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YdP8+qtMTBxKoUiHrItOdtiBvhZNoRD2XENVaib9/h8/bU6A1UXg19EKFjiOLVw4RL2vIGZddiey2z5JbjflJZYo+lZnXT8qEVxRmU8ZqOARsYM2RFiV3azVHEg0IUoPOJO8uO8/Btob4yEqqepq3GRLXklNjRr/YKg51m8154U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lKJbYdvM; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mIagB7q2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751120971; x=1782656971;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ypz8IC0WQ6kWJ6ifXzoS95qT1PT+UG1tXVjgJx0z6wA=;
-  b=mIagB7q2vx1GPz/gRZXGlCe333L94vYiJG6U3dHgFcCaumWz1xcfZczu
-   QLFRTw3+h2XHx23wjl/peJo20Wd5FdlEUhu9o3WLRT1OQcVHrElJlP69J
-   QeEtvUaqIAWyAZXUT2THCH+CyS9ANbL3ENqVlibknClioeWMji+Af/zMY
-   fRijqtNPFX0VPcmOoLZuO/UrHiF3S1TmH/zGyJU0UZOMckJIRhyVaUwIx
-   cSaQMT3cu/j1yShM52J0lxQ0psVUVSLvQNeEX3Vv94QvCZcRH6T95uvYo
-   Q8SLzrMAcS25uucp79QfpKbjvxSInjDitKNkSvDDy8/h0LdkUUSmZmi7s
-   A==;
-X-CSE-ConnectionGUID: zlKLzPDbR+WsllHnPH8ILw==
-X-CSE-MsgGUID: HQf0wbI/SO+DUMQIrBDewA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="64466446"
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="64466446"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 07:29:29 -0700
-X-CSE-ConnectionGUID: gMWJbyT6QEO4lAfQvVx2Bw==
-X-CSE-MsgGUID: 8sRXDiwWRweoATfN5/zrNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
-   d="scan'208";a="152433805"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 28 Jun 2025 07:29:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVWYV-000X6s-0K;
-	Sat, 28 Jun 2025 14:29:23 +0000
-Date: Sat, 28 Jun 2025 22:28:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 7/7] firmware: imx: sm-misc: Dump syslog and system info
-Message-ID: <202506282233.n54Z23oc-lkp@intel.com>
-References: <20250627-sm-misc-api-v1-v1-7-2b99481fe825@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKJbYdvM"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2fcd6fe970so523727a12.3;
+        Sat, 28 Jun 2025 07:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751120983; x=1751725783; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M8rK0LNTNZFI5uOITPOK3NWDXLKxWYEPkVY5RC1g95E=;
+        b=lKJbYdvMYJuk17gczWFSHZMH8lcsWWnxtfFBDh+jzbd99FpNreATtHf8VglbEdt9eH
+         2bIWeVibrZqdyybsEYEKTl4E2KYyqNRNSOYGViRpvSJQn8SUNA3v661UyIelxPhM0MwM
+         rmz2GA123solgNw2YhQXEgvw4UqPuqdyx0x+ZZVceJoIyDD2Pdml/ILLbl0ulkJmDpCT
+         H3TOlaEpWmzUBMN4kPslx1u76zA+seTuVr/YLZNWVK0aVmtzMIXn9BntM3A/CiovgdQE
+         3wWMdHayYhc1N6cKslMSM5DZpv7LrdrABFRB9/0K6hnHgCgGaAGn27TznFaDLQOs+zFa
+         1WlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751120983; x=1751725783;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M8rK0LNTNZFI5uOITPOK3NWDXLKxWYEPkVY5RC1g95E=;
+        b=HNHwaa5YDRgOIy+y2E7KpsV5rj0rhWk4BC1xU4IyzbmmLGXL86JHWA8OD1wbeqB8D+
+         KMJnMvtAgsCf8DndQjSHIrYq5vWjUcO5WRa6XsSkfOot0QZiKd1Rb0K5oyafxKscZLzq
+         G+BiyeqzZo8C2/dEhFxdsgVFiIV32MuVMAATgvI/dZxPuQuD4sGNcHaSvlydYTVt40dO
+         k3tcsgo6Gdo8vTjKJQAcKyPtFaJhcEae3iP3Lk9epwikG29MKQvWBFr4fOrsYc/t36vo
+         TTxCE+1/RhYmb75sC1RBRBeof+fBvgUuj7nLPAL2EmrMABBty9Qf07kw2GcKpT9tuAce
+         H1kg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3cXvcCqI9CL4aGphauMnUMfo2JwPgHBiYhIDFGVSObJkroBcNC17Q5sqUxKDtSoN5MLLdttpv030Z7Ik=@vger.kernel.org, AJvYcCWG3iYU+KCOwPPe6SgOGLdJt0er2FXZw/y5qz6ucTI/456mMaPPoPVahsg17HbVtp80MQhO42le12MAgrHbXaw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqZcfFfEiHcJbY9nddyy4UwvweW61233ScRgbrONjktwVGIe32
+	vagjt8i+J4x87u4AhcOneVYYSQQ5Aj4OdQstrmKbqM7+GrDgj+tFwhHQQXUgTTK83gVhHMXFCBg
+	DNcrpKbAP0eIeSvZny8ZtUoislwVaTws=
+X-Gm-Gg: ASbGnctye/F9PQNEDvB3Cx7kBUu/offYHIqzC9WfBInnRoF3MBFc8mJJUfyfkNX2Rui
+	8PRELStwIjMc5bQPHq+OWAKF2M5xLuEJ2p2pPRFJKc6Hmc3+JfEe9haX5FfRP1VJX16K3Lu8WQv
+	SJ7pF1KGqznmskkjqvbsvdwKJGwTnyLCH8csVcBv+P5Tc=
+X-Google-Smtp-Source: AGHT+IEBB8Xqc39C0N994YZDielieKfflkaDCiTAdwXbea0djsWBlJZ8r6j9Gki1hd80aLoznxs3pd6yTbRPtIErX04=
+X-Received: by 2002:a17:90b:1dc2:b0:312:e76f:520f with SMTP id
+ 98e67ed59e1d1-318edfc8f90mr1619475a91.8.1751120983155; Sat, 28 Jun 2025
+ 07:29:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627-sm-misc-api-v1-v1-7-2b99481fe825@nxp.com>
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com> <CANiq72nJcEM09HbQB3_NpKGxr9x8Ah0VE+=XS=xvA26P2qg=_g@mail.gmail.com>
+ <48605183-78B6-461E-9476-C96C8E55A55D@collabora.com>
+In-Reply-To: <48605183-78B6-461E-9476-C96C8E55A55D@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 28 Jun 2025 16:29:31 +0200
+X-Gm-Features: Ac12FXwykK9WpEDj8sy1SYn6UJGGfGhd3PbUMsp81V7dzsqhylvpeGilPLCu43U
+Message-ID: <CANiq72kWGUbpDW+WjKki4JUYX63j_GFBcyQse-rgddwyoFw7cg@mail.gmail.com>
+Subject: Re: [PATCH] Introduce Tyr
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>, Rob Herring <robh@kernel.org>, 
+	Alice Ryhl <alice.ryhl@google.com>, Beata Michalska <beata.michalska@arm.com>, 
+	Carsten Haitzler <carsten.haitzler@foss.arm.com>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Ashley Smith <ashley.smith@collabora.com>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Peng,
+On Sat, Jun 28, 2025 at 3:06=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> The branch I shared is drm-misc-next plus a few dependencies, i.e.: 10 co=
+mmits
+> total if I counted it correctly - all of which have been sent to the list
+> already and most of which have seen a quite a few iterations. I should ha=
+ve
+> explicitly said this, though.
 
-kernel test robot noticed the following build warnings:
+Ah, that helps, thanks. It is completely fine -- I am just pointing it
+out in case it helps you make this easier to land and for others to
+follow.
 
-[auto build test WARNING on ecb259c4f70dd5c83907809f45bf4dc6869961d7]
+> Anyway, I thought that having a branch would be more tidy than listing th=
+em, as
+> the branch shows in what order they're applied and etc. For example, the =
+patch
+> for read_poll_timeout was cherry-picked from Fujita's v12 series, and tha=
+t was
+> subsequently dropped in v13 until the rest of the series was merged on v1=
+5. I
+> thought that referring to v12 of that series would be slightly confusing.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Peng-Fan/firmware-arm_scmi-imx-Add-documentation-for-MISC_BOARD_INFO/20250627-140736
-base:   ecb259c4f70dd5c83907809f45bf4dc6869961d7
-patch link:    https://lore.kernel.org/r/20250627-sm-misc-api-v1-v1-7-2b99481fe825%40nxp.com
-patch subject: [PATCH 7/7] firmware: imx: sm-misc: Dump syslog and system info
-config: x86_64-buildonly-randconfig-005-20250627 (https://download.01.org/0day-ci/archive/20250628/202506282233.n54Z23oc-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506282233.n54Z23oc-lkp@intel.com/reproduce)
+Yeah, the branch is definitely nice to have to see the end state you
+want, but having the Lore links helps a lot clarifying what the
+dependencies (and their version etc.) are. You can use that chance to
+mention anything out of the ordinary for each dependency (e.g. like
+you mentioned here).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506282233.n54Z23oc-lkp@intel.com/
+> Yeah, it's a constant battle between having spelling check enabled (which=
+ on my
+> case flags the code itself, thereby producing a mountain of false positiv=
+es) vs
+> not. In this case, the bad spelling won :)
 
-All warnings (new ones prefixed by >>):
+I would suggest using `checkpatch.pl` with `--codespell` (I don't know
+if it catches this one -- I just saw it in my client -- but their
+dictionary definitely did catch some for us in the past).
 
-   drivers/firmware/imx/sm-misc.c: In function 'syslog_show':
-   drivers/firmware/imx/sm-misc.c:58:18: error: implicit declaration of function 'kmalloc'; did you mean 'mm_alloc'? [-Werror=implicit-function-declaration]
-      58 |         syslog = kmalloc(sizeof(*syslog), GFP_KERNEL);
-         |                  ^~~~~~~
-         |                  mm_alloc
->> drivers/firmware/imx/sm-misc.c:58:16: warning: assignment to 'struct scmi_imx_misc_syslog *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      58 |         syslog = kmalloc(sizeof(*syslog), GFP_KERNEL);
-         |                ^
-   drivers/firmware/imx/sm-misc.c:64:17: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
-      64 |                 kfree(syslog);
-         |                 ^~~~~
-   drivers/firmware/imx/sm-misc.c: In function 'system_info_show':
->> drivers/firmware/imx/sm-misc.c:97:14: warning: assignment to 'struct scmi_imx_misc_system_info *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-      97 |         info = kmalloc(sizeof(*info), GFP_KERNEL);
-         |              ^
-   cc1: some warnings being treated as errors
+> Hmm, I must say I did not know that this was a thing.
+>
+> Why is it better than [#allow] during the development phase?
 
+I have some notes at:
 
-vim +58 drivers/firmware/imx/sm-misc.c
+    https://docs.kernel.org/rust/coding-guidelines.html#lints
 
-    46	
-    47	static ssize_t syslog_show(struct device *device, struct device_attribute *attr,
-    48				   char *buf)
-    49	{
-    50		struct scmi_imx_misc_sys_sleep_rec *rec;
-    51		struct scmi_imx_misc_syslog *syslog;
-    52		int ret;
-    53		size_t len = 0;
-    54	
-    55		if (!ph)
-    56			return 0;
-    57	
-  > 58		syslog = kmalloc(sizeof(*syslog), GFP_KERNEL);
-    59		if (!syslog)
-    60			return -ENOMEM;
-    61	
-    62		ret = imx_misc_ctrl_ops->misc_syslog(ph, sizeof(*syslog), syslog);
-    63		if (ret) {
-    64			kfree(syslog);
-    65			return ret;
-    66		}
-    67	
-    68		rec = &syslog->syssleeprecord;
-    69	
-    70		len += sysfs_emit_at(buf, len, "Wake Vector = %u\n", rec->wakesource);
-    71		len += sysfs_emit_at(buf, len, "Sys sleep mode = %u\n", rec->syssleepmode);
-    72		len += sysfs_emit_at(buf, len, "Sys sleep flags = 0x%08x\n", rec->syssleepflags);
-    73		len += sysfs_emit_at(buf, len, "MIX power status = 0x%08x\n", rec->mixpwrstat);
-    74		len += sysfs_emit_at(buf, len, "MEM power status = 0x%08x\n", rec->mempwrstat);
-    75		len += sysfs_emit_at(buf, len, "PLL power status = 0x%08x\n", rec->pllpwrstat);
-    76		len += sysfs_emit_at(buf, len, "Sleep latency = %u\n", rec->sleepentryusec);
-    77		len += sysfs_emit_at(buf, len, "Wake latency = %u\n", rec->sleepexitusec);
-    78		len += sysfs_emit_at(buf, len, "Sleep count = %u\n", rec->sleepcnt);
-    79	
-    80		kfree(syslog);
-    81	
-    82		return len;
-    83	}
-    84	
-    85	static DEVICE_ATTR_RO(syslog);
-    86	
-    87	static ssize_t system_info_show(struct device *device, struct device_attribute *attr,
-    88					char *buf)
-    89	{
-    90		struct scmi_imx_misc_system_info *info;
-    91		int len = 0;
-    92		int ret;
-    93	
-    94		if (!ph)
-    95			return 0;
-    96	
-  > 97		info = kmalloc(sizeof(*info), GFP_KERNEL);
-    98		if (!info)
-    99			return -ENOMEM;
-   100	
-   101		ret = imx_misc_ctrl_ops->misc_discover_build_info(ph, info);
-   102		if (ret)
-   103			goto err;
-   104	
-   105		ret = imx_misc_ctrl_ops->misc_cfg_info(ph, info);
-   106		if (ret)
-   107			goto err;
-   108	
-   109		ret = imx_misc_ctrl_ops->misc_silicon_info(ph, info);
-   110		if (ret)
-   111			goto err;
-   112	
-   113		ret = imx_misc_ctrl_ops->misc_board_info(ph, info);
-   114		if (ret)
-   115			goto err;
-   116	
-   117		len += sysfs_emit_at(buf, len, "SM Version    = Build %u, Commit 08%x\n",
-   118				     info->buildnum, info->buildcommit);
-   119		len += sysfs_emit_at(buf, len, "SM Config     = %s, mSel=%u\n",
-   120				     info->cfgname, info->msel);
-   121		len += sysfs_emit_at(buf, len, "Silicon       = %s\n", info->siname);
-   122		len += sysfs_emit_at(buf, len, "Board         = %s, attr=0x%08x\n",
-   123				     info->brdname, info->brd_attributes);
-   124	
-   125		ret = len;
-   126	err:
-   127		kfree(info);
-   128		return ret;
-   129	}
-   130	
+Generally speaking, we default to `expect` unless there is a reason
+not to (I list some possible reasons in the link), because `expect`
+forces us to clean it when unneeded.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Not sure what you mean by "development phase" -- even if Tyr is under
+development, it should still try to conform to the usual guidelines.
+Of course, if a particular `expect` would be a pain, then please feel
+free to use `allow`. But is that case here? i.e. you will want to
+remove the `allow` anyway when you add the new code, no?
+
+Thanks!
+
+Cheers,
+Miguel
