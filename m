@@ -1,385 +1,195 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F824A08;
-	Sat, 28 Jun 2025 00:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751069618; cv=pass; b=NS9ajSr8k01zasylSmYfzOgW7eMnT1wExwNSZyiSksGEeuWbJqmI7B2GKXLy7tdGg/PO7NyW4h8umJcybVTgwW9O440CVoauNpa2ady49fiRofgwnJI5j4b2Qqs7RVyeVvJoDzJAzMXEldHTqf7uC0ltuoB+nknSNi3h/5xCLK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751069618; c=relaxed/simple;
-	bh=MR3mgJVR9hWjT8RT1DnLxhQrmjwNcavTbOK6stqADRc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=V/+rEvucamcK8Y++Nh0bpNfOLfMhGd3rqiTIsJPf7AUKv1oISnYPU3iOBoaCVt90RhQfJAJnvTLR50JzCVjAvvYR9KcifFNU+RZdJTiisKd6JhX+1yfnF5HkevArIWOYYv46jtG0UB7/LNgWq69oGdGVyGCc2CvGuXqRQOaDP4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=dTvkq1SD; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC0A1373
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 00:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751069715; cv=none; b=BvWEYCZdH7hG5ux0nvNcNPMkbdkeZy/iXUtpAvJ3yBP4BcOT7k4UP3Mykml5UuRcaG78otjFh3hLC8T2mx7qv1blxqKuA+FNZvEL/JL5NoO2jHmTss9THPoSlvMT3458lY9/hvrBuWHBwh2TmoXXW2Zl3SqPPnicb1J3RhFVzV8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751069715; c=relaxed/simple;
+	bh=1Er7cuUr5mnVo/Gtd87+GOXxmrgUvCckwTeC1IZRNA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=T0mCu7RkYm1xbf6wSKbBJat9pO+DO2o0igW6yhkCAqq5+wW3QGSLGspnBTaOSJzS7Pz9YS1Tpa1z5cujW6CO3RPXQvxKYQTIm05Xnxv7CwyBNnoKqv3s90ZMPiP1eQSjz/9MpfXlcWY3xZqAr2qz4pkI/LO6cL9hNyQBUCZ63IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PR26Freb; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="dTvkq1SD"
-ARC-Seal: i=1; a=rsa-sha256; t=1751069570; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=F2doFgpRNe+kctg93ooMSm+aHwQZtQseEHZOkialN4dewhKyPezKXvpu1vJeuSAl6qNmyLWsWh+a93DNumhKPwIEkHGgsC5P3FQctsIK6q36AhpKPTgIjaUh86ue4xwy6SXILugzu7rSAgPYaKywkUIiCgKWGTbRMqYFXwp08n8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751069570; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=0H5Q14gT58j9sWQ7Mkf1VLBkEerIw45k/88Qa7/Ee54=; 
-	b=C7t9Oni+dH1ywmeQ8PwSkOjWo3URfX1t3zHGdgYSJGC/b32VGSLRKwxYMLqFfJus4CS0n/zlm8KOB+cdbmMUHaqNohr690vtmgvxy7H8MS/xw7R6SsduDvTHoP9uoTqgFXzHlKGkHLwkYmkZhlQ6TUmBn1Y+sGzLGgWrmge+MGQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751069570;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=0H5Q14gT58j9sWQ7Mkf1VLBkEerIw45k/88Qa7/Ee54=;
-	b=dTvkq1SDplJdHuRfEA3aufvDDPQQr57yXv2ZZ00yiWZoeO7fG93KDCx0J0qY0VHk
-	sODw7Ipu5Zq0fa/6G28QInGEA+pFZvYr9SImHLYlUW1gjGPyra6GqABr2tUHZFff33d
-	ln5y9o6EGdeOynvH/L/kVN3Aw/T5FNaKI+c8OWi8=
-Received: by mx.zohomail.com with SMTPS id 1751069566742886.3233886676038;
-	Fri, 27 Jun 2025 17:12:46 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PR26Freb"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so64375ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 17:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751069713; x=1751674513; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RoOQsl5opEdiN6zwsEykKI9j3tEvS2dRZvXIgdSxmx0=;
+        b=PR26FrebUx5B6V+ge0jejRrPtTCejN3LooE5dgpAtSqF0S9E1var49dYRTWXYISuc0
+         rdtRa7CAuyQKRGIlIStKD3BGKHzlQ0swJBSorV1xG/9DmALA2zOu/5GcXbooJ0jfVKFJ
+         8fXlWLRGagu2aqs8q49j8990UkzaHggdYPZJ6b7XKR45SLiioPi4MdlYTUvepV7NaICV
+         fTfSfHo+Y8K+GLmx+nkjRHyywhvQXNOjIKXDBZU1mPbLpabwvxJBjcg1BCS5OOFHqd0S
+         eMVKc9ZOHCkcub22XhZpkdXaE4zkAKj/EAiik/o/15zyvSwD5tehokjKbhUZYIlnPIe6
+         wmzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751069713; x=1751674513;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RoOQsl5opEdiN6zwsEykKI9j3tEvS2dRZvXIgdSxmx0=;
+        b=df75qWnKZUt4SvOn/JrHsudYmmCsCp5yQb1drQ5Lcfj7BL7ZD2W5j8ZOG+aYZL4J+7
+         JzYzA2NkMFQ0rJ22iTxHG2/x/DQFyRtCwaO07h2NtOdYZfaQiJMJjOWVBVoFmibVGPlC
+         kdRpMtqlznbkTdpWAH3MENwKl9V4P9OuD3HjfD0YANM36oa4oOUugF9XsV7cm314R7m5
+         tDn7Etlug0gRwg2z5plLxu5MbG9KeU2dfi/0iJa3Tgj+LtCz7X2S0eFnvVrsQC0mXDfC
+         z1savpiM4/Wtywd76MtvbpmVJcLF5p5lyDHWDU7zuVPzilOx4IOEfQWMg+ujPxg4fRqD
+         ui5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUrLExW3krPqgx005CymcQBPHRL74uCgO2lcRyoWbmY+J5i7Fac1yYYYR3VlmvFhh4fudU/DAeSvbo2O6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2dsbxRhw7UBViXMLpsbDdUIyK7vBartAPbFNMcqSPONUqA9Vz
+	hnDb2pG+nNK4ZrxaP4aKcp2JQ9UpJyBIldIUxV+5wIH+zJG5MK9rkSuyGHXkwIOzmGyume/xRoq
+	xHKn1iweK9O5k/bY8kjHW1rozpl9XmrwGjBCsr/3Q
+X-Gm-Gg: ASbGnctNpAwEzkmxZZ4PJwh4gph4O4qaZus//WncCkR3VHDICixAnitEiZAP1I0XUDj
+	K9WovN9Bn0hw2cxQ4xFW7TWRSdC7uIQJ3LNxRlFvYZMJOmOgnGRV+O6RlDJWM8hKWR/ka7wed8l
+	+zZAQqlo0kjz/tjWFLKIAEqva3Uavnm+SDPEW5CBWP6f4O
+X-Google-Smtp-Source: AGHT+IEDZ42ZgQtsZCztOR56YzCSdOoZYIJObkm30G0nbZwTWOUkPCJaCvlFabCjBamsuV29DLo/6T9l4TUTeRSsA/o=
+X-Received: by 2002:a05:6e02:1aa1:b0:3dc:7edc:5f42 with SMTP id
+ e9e14a558f8ab-3df55711c08mr1475035ab.12.1751069712899; Fri, 27 Jun 2025
+ 17:15:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH] Introduce Tyr
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aF8lYpK_l2I-ts1k@pollux>
-Date: Fri, 27 Jun 2025 21:12:29 -0300
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Daniel Stone <daniels@collabora.com>,
- Rob Herring <robh@kernel.org>,
- Alice Ryhl <alice.ryhl@google.com>,
- Beata Michalska <beata.michalska@arm.com>,
- Carsten Haitzler <carsten.haitzler@foss.arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Ashley Smith <ashley.smith@collabora.com>,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org,
- kernel@collabora.com
+MIME-Version: 1.0
+References: <20250612000224.780337-1-irogers@google.com>
+In-Reply-To: <20250612000224.780337-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 27 Jun 2025 17:15:01 -0700
+X-Gm-Features: Ac12FXwjYznVK1OfJmWgcte1ezsCRI8fePEaqYwmo-Apm0zeE-monUoe1ZLkNnk
+Message-ID: <CAP-5=fVGqnWuQNYM9XULyLuDvx-yAuyCMRh=uS0gybiEsYH9jw@mail.gmail.com>
+Subject: Re: [PATCH v1 00/15] perf vendor events: Update Intel events
+To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com>
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
- <aF8lYpK_l2I-ts1k@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
 
-Hi Danilo, thank you an Boqun for having a look at this,
+On Wed, Jun 11, 2025 at 5:02=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Update:
+>  - ADL/ADLN v1.29 -> 1.31
+>  - ARL 1.08 -> 1.09
+>  - CLX 1.23 -> 1.25
+>  - EMR 1.11 -> 1.14
+>  - GRR 1.07 -> 1.09
+>  - GNR 1.08 -> 1.10
+>  - ICX 1.27 -> 1.28
+>  - LNL 1.11 -> 1.14
+>  - MTL 1.13 -> 1.14
+>  - PTL new v1.00
+>  - SPR 1.25 -> 1.28
+>  - SRF 1.09 -> 1.11
+>  - SKX 1.36 -> 1.37
+>  - TGL 1.17 -> 1.18
+>
+> Updates from:
+> https://github.com/intel/perfmon
+> with:
+> https://github.com/intel/perfmon/pull/312
+> Running the script:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
+Hi, these Intel event updates are still awaiting review.
 
-> On 27 Jun 2025, at 20:12, Danilo Krummrich <dakr@kernel.org> wrote:
->=20
-> On Fri, Jun 27, 2025 at 07:34:04PM -0300, Daniel Almeida wrote:
->> +#[pin_data]
->> +pub(crate) struct TyrData {
->> +    pub(crate) pdev: ARef<platform::Device>,
->> +
->> +    #[pin]
->> +    clks: Mutex<Clocks>,
->> +
->> +    #[pin]
->> +    regulators: Mutex<Regulators>,
->> +
->> +    // Some inforation on the GPU. This is mainly queried by =
-userspace (mesa).
->> +    pub(crate) gpu_info: GpuInfo,
->> +}
->> +
->> +unsafe impl Send for TyrData {}
->> +unsafe impl Sync for TyrData {}
->=20
-> What's the safety justification for those? Why do you need them? The =
-fact that
-> you seem to need to implement those traits within a driver indicates =
-an issue.
+Thanks,
+Ian
 
-This was forgotten when scooped from the downstream code.
-
-Although I think the problematic members are only Clk and Regulator
-as Boqun pointed out.
-
-In any case, my bad.
-
-Also, for some reason the Clippy lint did not save me this time.
-
->=20
->> +fn issue_soft_reset(iomem: &Devres<IoMem<0>>) -> Result<()> {
->> +    let irq_enable_cmd =3D 1 | bit_u32(8);
->> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
->> +
->> +    let op =3D || regs::GPU_INT_RAWSTAT.read(iomem);
->> +    let cond =3D |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 =3D=3D=
- 1 };
->> +    let res =3D io::poll::read_poll_timeout(
->> +        op,
->> +        cond,
->> +        time::Delta::from_millis(100),
->> +        Some(time::Delta::from_micros(20000)),
->> +    );
->> +
->> +    if let Err(e) =3D res {
->> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
->> +        pr_err!(
->> +            "GPU_INT_RAWSTAT is {}\n",
->> +            regs::GPU_INT_RAWSTAT.read(iomem)?
->> +        );
->=20
-> This is a driver, please use dev_err!().
->=20
->> +    }
->> +
->> +    Ok(())
->> +}
->> +
->> +kernel::of_device_table!(
->> +    OF_TABLE,
->> +    MODULE_OF_TABLE,
->> +    <TyrDriver as platform::Driver>::IdInfo,
->> +    [
->> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
->> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
->> +    ]
->> +);
->> +
->> +impl platform::Driver for TyrDriver {
->> +    type IdInfo =3D ();
->> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> =3D =
-Some(&OF_TABLE);
->> +
->> +    fn probe(
->> +        pdev: &platform::Device<Core>,
->> +        _info: Option<&Self::IdInfo>,
->> +    ) -> Result<Pin<KBox<Self>>> {
->> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
->> +
->> +        let core_clk =3D Clk::get(pdev.as_ref(), =
-Some(c_str!("core")))?;
->> +        let stacks_clk =3D Clk::get(pdev.as_ref(), =
-Some(c_str!("stacks")))?;
->> +        let coregroup_clk =3D Clk::get(pdev.as_ref(), =
-Some(c_str!("coregroup")))?;
->> +
->> +        core_clk.prepare_enable()?;
->> +        stacks_clk.prepare_enable()?;
->> +        coregroup_clk.prepare_enable()?;
->> +
->> +        let mali_regulator =3D =
-Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("mali"))?;
->> +        let sram_regulator =3D =
-Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("sram"))?;
->> +
->> +        let resource =3D pdev.resource_by_index(0).ok_or(EINVAL)?;
->> +
->> +        let iomem =3D Arc::new(pdev.iomap_resource(resource)?, =
-GFP_KERNEL)?;
->=20
-> You can do
->=20
-> let io =3D iomem.access(pdev.as_ref())?;
->=20
-> which gives you an &IoMem for the whole scope of probe() without any
-> limitations.
->=20
-> Also, why not use iomap_resource_sized()? Lots of offsets are known at =
-compile
-> time. This allows you to use infallible accesses, e.g. write() instead =
-of
-> try_write().
-
-Right, I did not even consider this. Should be possible indeed.
-
->=20
->> +
->> +        issue_soft_reset(&iomem)?;
->> +        gpu::l2_power_on(&iomem)?;
->> +
->> +        let gpu_info =3D GpuInfo::new(&iomem)?;
->> +        gpu_info.log(pdev);
->> +
->> +        let platform: ARef<platform::Device> =3D pdev.into();
->> +
->> +        let data =3D try_pin_init!(TyrData {
->> +                pdev: platform.clone(),
->> +                clks <- new_mutex!(Clocks {
->> +                    core: core_clk,
->> +                    stacks: stacks_clk,
->> +                    coregroup: coregroup_clk,
->> +                }),
->> +                regulators <- new_mutex!(Regulators {
->> +                    mali: mali_regulator,
->> +                    sram: sram_regulator,
->> +                }),
->> +                gpu_info,
->> +        });
->> +
->> +        let data =3D Arc::pin_init(data, GFP_KERNEL)?;
->> +
->> +        let tdev: ARef<TyrDevice> =3D =
-drm::device::Device::new(pdev.as_ref(), data.clone())?;
->> +        drm::driver::Registration::new_foreign_owned(&tdev, =
-pdev.as_ref(), 0)?;
->> +
->> +        let driver =3D KBox::pin_init(try_pin_init!(TyrDriver { =
-device: tdev }), GFP_KERNEL)?;
->> +
->> +        regs::MCU_CONTROL.write(&iomem, regs::MCU_CONTROL_AUTO)?;
->> +
->> +        dev_info!(pdev.as_ref(), "Tyr initialized correctly.\n");
->=20
-> Consider dev_dbg!() instead.
-
-The problem with dev_dbg() is that it doesn't work, as Alex has also =
-found out
-recently. There was a thread on fixing it and I guess Tamir(?) or =
-Andrew(?)
-came up with a patch, but it hasn't seen any traction. I simply don't =
-think
-there is a way to get these to print for now (at least in upstream code)
-
->=20
->> +    pub(crate) fn log(&self, pdev: &platform::Device) {
->> +        let major =3D (self.gpu_id >> 16) & 0xff;
->> +        let minor =3D (self.gpu_id >> 8) & 0xff;
->> +        let status =3D self.gpu_id & 0xff;
->> +
->> +        let model_name =3D if let Some(model) =3D GPU_MODELS
->> +            .iter()
->> +            .find(|&f| f.major =3D=3D major && f.minor =3D=3D minor)
->> +        {
->> +            model.name
->> +        } else {
->> +            "unknown"
->> +        };
->> +
->> +        dev_info!(
->> +            pdev.as_ref(),
->> +            "mali-{} id 0x{:x} major 0x{:x} minor 0x{:x} status =
-0x{:x}",
->> +            model_name,
->> +            self.gpu_id >> 16,
->> +            major,
->> +            minor,
->> +            status
->> +        );
->> +
->> +        dev_info!(
->> +            pdev.as_ref(),
->> +            "Features: L2:{:#x} Tiler:{:#x} Mem:{:#x} MMU:{:#x} =
-AS:{:#x}",
->> +            self.l2_features,
->> +            self.tiler_features,
->> +            self.mem_features,
->> +            self.mmu_features,
->> +            self.as_present
->> +        );
->> +
->> +        dev_info!(
->> +            pdev.as_ref(),
->> +            "shader_present=3D0x{:016x} l2_present=3D0x{:016x} =
-tiler_present=3D0x{:016x}",
->> +            self.shader_present,
->> +            self.l2_present,
->> +            self.tiler_present
->> +        );
->> +
->> +        dev_info!(
->> +            pdev.as_ref(),
->> +            "PA bits: {}, VA bits: {}",
->> +            self.pa_bits(),
->> +            self.va_bits()
->> +        );
->> +    }
->=20
-> This is called from probe() and seems way too verbose for dev_info!(), =
-please
-> use dev_dbg!() instead.
-
-Same comment as above. Although I don=E2=80=99t care about these =
-printing.
-
-I think that at this point we just need one dev_info!() at the end of =
-probe,
-just to make sure it worked. The rest can be converted to dev_dbg!().
-
-OTOH, IIRC these are indeed printed for Panthor, so maybe Boris can
-explain why this would be relevant.
-
->=20
->> +/// Represents a register in the Register Set
->> +pub(crate) struct Register<const OFFSET: usize>;
->> +
->> +impl<const OFFSET: usize> Register<OFFSET> {
->> +    #[inline]
->> +    pub(crate) fn read(&self, iomem: &Devres<IoMem>) -> Result<u32> =
-{
->> +        (*iomem).try_access().ok_or(ENODEV)?.try_read32(OFFSET)
->> +    }
->> +
->> +    #[inline]
->> +    pub(crate) fn write(&self, iomem: &Devres<IoMem>, value: u32) -> =
-Result<()> {
->> +        (*iomem)
->> +            .try_access()
->> +            .ok_or(ENODEV)?
->> +            .try_write32(value, OFFSET)
->> +    }
->> +}
->=20
-> This seems like a bad idea. You really want to use Devres::access() =
-from each
-> entry point where you have a &Device<Bound> (such as probe()) and use =
-the
-> returned &IoMem instead. Otherwise every read() and write() does an =
-atomic read
-> and RCU read-side critical section, due to try_access().
->=20
-> If you really run in a case where you don't have a &Device<Bound>, you =
-can use
-> Devres::try_access_with(), which takes a closure that will have an =
-&IoMem as
-> argument, such that you can do things like:
->=20
-> io.try_access_with(|io| my_register.write(io, ...))
-
-Right, thanks for pointing that out.
-
->=20
-> Also, you want accessors for read32() and write32() rather than always =
-use
-> try_read32() and try_write32(). The latter you only want to use when =
-the offset
-> isn't known at compile time.
->=20
-> I also recommend looking at what nova-core does for register accesses. =
-Regarding
-> the register!() macro in nova-core, we're working on providing this as =
-generic
-> infrastructure.
-
-Oh we=E2=80=99ll definitely switch to the nova macro. We just didn=E2=80=99=
-t get to
-work on it yet, and IIUC it's not available atm?
-
-In any case, if you guys post a patch to make the macro available to =
-other
-drivers I'll switch to that instead.
-
-=E2=80=94 Daniel
-
+> Ian Rogers (15):
+>   perf vendor events: Update Alderlake events
+>   perf vendor events: Update AlderlakeN events
+>   perf vendor events: Update Arrowlake events
+>   perf vendor events: Update CascadelakeX events
+>   perf vendor events: Update EmeraldRapids events
+>   perf vendor events: Update GrandRidge events
+>   perf vendor events: Update GraniteRapids events
+>   perf vendor events: Update IcelakeX events
+>   perf vendor events: Update LunarLake events
+>   perf vendor events: Update MeteorLake events
+>   perf vendor events: Add PantherLake events
+>   perf vendor events: Update SapphireRapids events
+>   perf vendor events: Update SierraForest events
+>   perf vendor events: Update SkylakeX events
+>   perf vendor events: Update TigerLake events
+>
+>  .../pmu-events/arch/x86/alderlake/cache.json  |  56 ++-
+>  .../arch/x86/alderlake/floating-point.json    |   1 -
+>  .../pmu-events/arch/x86/alderlake/other.json  |   1 -
+>  .../arch/x86/alderlake/pipeline.json          |  44 +--
+>  .../arch/x86/alderlake/virtual-memory.json    |   3 -
+>  .../pmu-events/arch/x86/alderlaken/cache.json |  52 +--
+>  .../arch/x86/alderlaken/floating-point.json   |   1 -
+>  .../pmu-events/arch/x86/alderlaken/other.json |   1 -
+>  .../arch/x86/alderlaken/pipeline.json         |  42 +--
+>  .../arch/x86/alderlaken/virtual-memory.json   |   3 -
+>  .../pmu-events/arch/x86/arrowlake/cache.json  |  13 +-
+>  .../arch/x86/arrowlake/frontend.json          | 135 ++++++++
+>  .../arch/x86/cascadelakex/floating-point.json |   6 +-
+>  .../arch/x86/cascadelakex/pipeline.json       |   2 +-
+>  .../arch/x86/emeraldrapids/pipeline.json      |   2 +-
+>  .../arch/x86/emeraldrapids/uncore-io.json     |  12 +
+>  .../arch/x86/emeraldrapids/uncore-memory.json |  20 ++
+>  .../arch/x86/grandridge/grr-metrics.json      |  30 +-
+>  .../x86/grandridge/uncore-interconnect.json   |  10 +
+>  .../arch/x86/grandridge/uncore-io.json        |  12 +
+>  .../arch/x86/graniterapids/cache.json         |   9 +
+>  .../arch/x86/graniterapids/counter.json       |  10 +-
+>  .../arch/x86/graniterapids/gnr-metrics.json   |  36 ++
+>  .../arch/x86/graniterapids/pipeline.json      |   2 +-
+>  .../graniterapids/uncore-interconnect.json    |  19 -
+>  .../arch/x86/graniterapids/uncore-io.json     |  27 +-
+>  .../arch/x86/icelakex/pipeline.json           |   2 +-
+>  .../arch/x86/icelakex/uncore-cache.json       |   2 -
+>  .../pmu-events/arch/x86/lunarlake/cache.json  |  11 +
+>  .../arch/x86/lunarlake/pipeline.json          |  18 +-
+>  .../arch/x86/lunarlake/virtual-memory.json    |  18 -
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |  29 +-
+>  .../pmu-events/arch/x86/meteorlake/cache.json |   2 +-
+>  .../arch/x86/meteorlake/frontend.json         |  72 ++++
+>  .../arch/x86/meteorlake/pipeline.json         |   2 +-
+>  .../arch/x86/pantherlake/cache.json           | 278 +++++++++++++++
+>  .../arch/x86/pantherlake/counter.json         |  12 +
+>  .../arch/x86/pantherlake/frontend.json        |  30 ++
+>  .../arch/x86/pantherlake/memory.json          | 215 ++++++++++++
+>  .../arch/x86/pantherlake/pipeline.json        | 325 ++++++++++++++++++
+>  .../arch/x86/pantherlake/virtual-memory.json  |  62 ++++
+>  .../arch/x86/sapphirerapids/pipeline.json     |   2 +-
+>  .../arch/x86/sapphirerapids/uncore-io.json    |  12 +
+>  .../x86/sapphirerapids/uncore-memory.json     |  20 ++
+>  .../arch/x86/sierraforest/frontend.json       |  64 ++++
+>  .../arch/x86/sierraforest/pipeline.json       |   8 +
+>  .../arch/x86/sierraforest/srf-metrics.json    |  48 +++
+>  .../arch/x86/sierraforest/uncore-cache.json   |   6 +-
+>  .../x86/sierraforest/uncore-interconnect.json |  53 ++-
+>  .../arch/x86/sierraforest/uncore-io.json      |  27 +-
+>  .../arch/x86/skylakex/pipeline.json           |   2 +-
+>  .../arch/x86/tigerlake/pipeline.json          |   2 +-
+>  52 files changed, 1623 insertions(+), 248 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/counter.js=
+on
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/frontend.j=
+son
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/memory.jso=
+n
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/pipeline.j=
+son
+>  create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/virtual-me=
+mory.json
+>
+> --
+> 2.50.0.rc1.591.g9c95f17f64-goog
+>
