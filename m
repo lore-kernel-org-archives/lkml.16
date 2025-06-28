@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883811A23B0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B563A1B6;
 	Sat, 28 Jun 2025 16:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751127372; cv=none; b=FaJ2t0i1uJPTd2mQ04sqjHRrw0XE7dpMSExiyZIiJqRUD+8eXbUwjs4HaxLwvWchbqst/pSvksQ7uS+HLGRswFWkTlXj2q7DW5Tz7RSDK1DqwHYd7zt9pu0ZYJlYS4GA0BEVFDf5vzQMPoP+k345+oToTud6/z4GI8rKVrP89x4=
+	t=1751127372; cv=none; b=uS+zyPa3U1iRo1oTLIlt5knbjttOPsy4JUwQcYYNPAoGPvT/+sOIPbAId/PRMonUP3RcIgZXgPExKu9j9fxW3pm3ChIFQTkdWMpXw0TyVDYHlFlxzKDdO1qqD3tceYafDHA3rQRW5n9S3csZiGtI/9au2aEfrMRw42pNNe0X0/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751127372; c=relaxed/simple;
-	bh=xwBJtYb4XftTQnUvPPzT8bBayvc42wCvVRgKR/Qg5G0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kbOCHlximZlTUpr+3/rBSp0auGiXMTfXAjjL0Upv9up6Zl0Ja/UpCRCyead5eS5yYOt9Yx1wDETH0cwpV5a8RiNiMPc8cd2NZaVqnbIKZBhBo4kJV2zHjGTSVpCQGLw9DneWVVvwvFw0k2xipxq/RTmoAMtVnMZJ9174S6zQoAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN5ULZp8; arc=none smtp.client-ip=10.30.226.201
+	bh=jrBPbSLIcJ68lougjjnj8b0BgzaQ21Z0SDkMwk7s0Io=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Cd+mnZTkNfAExk21H24ei1JoPv6A2UHXZA+yOsAFNSzP67QJTn3LNySjxniBP7tQXbUnJ/kz5TKYl5jjCKLCpboOiQWW4MrVpNX8N50vOywHNgBg1VCBCuwhicSbCpOITNktK6kWZciRN+kBtCQ1ksQ6okap5nlMlqaM5hAlicE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8a0Xc1u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN5ULZp8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF27CC4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8a0Xc1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA110C4CEEA;
 	Sat, 28 Jun 2025 16:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751127372;
-	bh=xwBJtYb4XftTQnUvPPzT8bBayvc42wCvVRgKR/Qg5G0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BN5ULZp8kAML7kYEpIYJykHXQhUWu6Q8XEiqfn+8HlvpEZKR4uJDUKkKnP07He1GJ
-	 /HlYMXKxXJaD3h2VYQr6lr+qSUlQfru7v4KKVZSD7hRmuhKDLaP6Il03wpebzxi+ra
-	 g16OKnUCUQjAER0olQLqCymhOZUowh/y3jWOOXVf/kbOYjM6P0ikTEGt/V9bCa8qK6
-	 jWbf4/Muqf0shyUe9b4T02BCfJoH2GO9WIY9ESry06apQrhLthY0/zAOVZFGBE6wXf
-	 JGsB0QLDzu6T3qFfg4VU1YsArBWOsIS9BvSl1A4uLcrtIpDmuJZLCRJZ6GbzI2QyKb
-	 OspL4fAsSs9lQ==
+	bh=jrBPbSLIcJ68lougjjnj8b0BgzaQ21Z0SDkMwk7s0Io=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=D8a0Xc1uHZkCDdxI7EOvYTcnUNpVv8fycGtNwRoe07Qh1i64dMZfab1EfBuqHRCeC
+	 mOTaGzHJAvXcUObGpl+s2/hOHNwQ65Gbl9fMVV6KDaYo0x1WEU5txYGutUqeVJMchg
+	 qSS4SjoDHYgPZFrUC/9BhE69hMX8gbM9Pj04npGYF1fVXGookhllk1ojNOcjc81ldU
+	 4YWK3TWvwGPql8OeCYFUbJUBebPqLkM8uaDD3Jj138n1IKlgj/QNSty7+gxsql7m6X
+	 QEIl7Cr0IwwQmF2kC3M8P1YoBKPM2Vo4WEjl08us0yyzPd6fpPQrwVtK2lmfWTCKKC
+	 upzGsEFvZq9lw==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 2504A5FE35; Sun, 29 Jun 2025 00:16:09 +0800 (CST)
+	id 3BB755FA91; Sun, 29 Jun 2025 00:16:09 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -39,10 +40,12 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v3 0/5] arm64: allwinner: t527: Add OrangePi 4A board
-Date: Sun, 29 Jun 2025 00:16:03 +0800
-Message-Id: <20250628161608.3072968-1-wens@kernel.org>
+Subject: [PATCH v3 2/5] arm64: dts: allwinner: a523: Move mmc nodes to correct position
+Date: Sun, 29 Jun 2025 00:16:05 +0800
+Message-Id: <20250628161608.3072968-3-wens@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250628161608.3072968-1-wens@kernel.org>
+References: <20250628161608.3072968-1-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,79 +56,161 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Hi everyone,
+When the mmc nodes were added to the dtsi file, they were inserted in
+the incorrect position.
 
-This is v3 of my OrangePi 4A series.
+Move them to the correct place.
 
-Changes since v2:
-- Actually include cpusldo regulator name change and axp323 aldo1/dldo1
-  comments
-- Fix indentation of comment in usb_otg block
-- Link to v2:
-  https://lore.kernel.org/all/20250625131652.1667345-1-wens@kernel.org/
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 126 +++++++++---------
+ 1 file changed, 63 insertions(+), 63 deletions(-)
 
-Changes since v1:
-- Fixed regulator names for bldo3 and bldo4
-- Dropped labels for aldo1, bldo3, and bldo4, which are not really used
-- Added voltage constraints to aldo2, based on specifications from
-  schematic
-- Appended "-usb-0v9" to cpusldo's regulator name
-- Added comments to explain how axp323 aldo1 and dldo1 are tied together
-- Link to v1:
-  https://lore.kernel.org/all/20250619173007.3367034-1-wens@kernel.org/
-
-This series adds support for the OrangePi 4A board. This is a Raspberry
-Pi model B form factor development board based on the Allwinner T527
-SoC.
-
-The board has the following features:
-- Allwinner T527 SoC
-- AXP717B + AXP323 PMICs
-- Up to 4GB LPDDR4 DRAM
-- micro SD slot
-- optional eMMC module
-- M.2 slot for PCIe 2.0 x1
-- 16 MB SPI-NOR flash
-- 4x USB 2.0 type-A ports (one can be used in gadget mode)
-- 1x Gigabit ethernet w/ Motorcomm PHY (through yet to be supported GMAC200)
-- 3.5mm audio jack via internal audio codec
-- HDMI 2.0 output
-- eDP, MIPI CSI (2-lane and 4-lane) and MIPI DSI (4-lane) connectors
-- USB type-C port purely for power
-- AP6256 (Broadcom BCM4345) WiFi 5.0 + BT 5.0
-- unsoldered headers for ADC and an additional USB 2.0 host port
-- 40-pin GPIO header
-
-Patch 1 adds a new entry to the list of board compatibles.
-
-Patch 2 and 3 are minor cleanups.
-
-Patch 4 adds pins for UART1, which is used for BT on the board.
-
-Patch 5 adds a dts file for the new board.
-
-
-Please take a look. I will take all the patches through the sunxi tree.
-
-
-Thanks
-ChenYu
-
-
-Chen-Yu Tsai (5):
-  dt-bindings: arm: sunxi: Add Xunlong OrangePi 4A board
-  arm64: dts: allwinner: a523: Move mmc nodes to correct position
-  arm64: dts: allwinner: a523: Move rgmii0 pins to correct location
-  arm64: dts: allwinner: a523: Add UART1 pins
-  arm64: dts: allwinner: t527: Add OrangePi 4A board
-
- .../devicetree/bindings/arm/sunxi.yaml        |   5 +
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 160 ++++----
- .../dts/allwinner/sun55i-t527-orangepi-4a.dts | 385 ++++++++++++++++++
- 4 files changed, 478 insertions(+), 73 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+index 51cd148f4227..490f596cad6c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+@@ -181,69 +181,6 @@ ccu: clock-controller@2001000 {
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		mmc0: mmc@4020000 {
+-			compatible = "allwinner,sun55i-a523-mmc",
+-				     "allwinner,sun20i-d1-mmc";
+-			reg = <0x04020000 0x1000>;
+-			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+-			clock-names = "ahb", "mmc";
+-			resets = <&ccu RST_BUS_MMC0>;
+-			reset-names = "ahb";
+-			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&mmc0_pins>;
+-			status = "disabled";
+-
+-			max-frequency = <150000000>;
+-			cap-sd-highspeed;
+-			cap-mmc-highspeed;
+-			cap-sdio-irq;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		mmc1: mmc@4021000 {
+-			compatible = "allwinner,sun55i-a523-mmc",
+-				     "allwinner,sun20i-d1-mmc";
+-			reg = <0x04021000 0x1000>;
+-			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
+-			clock-names = "ahb", "mmc";
+-			resets = <&ccu RST_BUS_MMC1>;
+-			reset-names = "ahb";
+-			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&mmc1_pins>;
+-			status = "disabled";
+-
+-			max-frequency = <150000000>;
+-			cap-sd-highspeed;
+-			cap-mmc-highspeed;
+-			cap-sdio-irq;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+-		mmc2: mmc@4022000 {
+-			compatible = "allwinner,sun55i-a523-mmc",
+-				     "allwinner,sun20i-d1-mmc";
+-			reg = <0x04022000 0x1000>;
+-			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
+-			clock-names = "ahb", "mmc";
+-			resets = <&ccu RST_BUS_MMC2>;
+-			reset-names = "ahb";
+-			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&mmc2_pins>;
+-			status = "disabled";
+-
+-			max-frequency = <150000000>;
+-			cap-sd-highspeed;
+-			cap-mmc-highspeed;
+-			cap-sdio-irq;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-		};
+-
+ 		wdt: watchdog@2050000 {
+ 			compatible = "allwinner,sun55i-a523-wdt";
+ 			reg = <0x2050000 0x20>;
+@@ -449,6 +386,69 @@ its: msi-controller@3440000 {
+ 			};
+ 		};
+ 
++		mmc0: mmc@4020000 {
++			compatible = "allwinner,sun55i-a523-mmc",
++				     "allwinner,sun20i-d1-mmc";
++			reg = <0x04020000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC0>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins>;
++			status = "disabled";
++
++			max-frequency = <150000000>;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
++			cap-sdio-irq;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc1: mmc@4021000 {
++			compatible = "allwinner,sun55i-a523-mmc",
++				     "allwinner,sun20i-d1-mmc";
++			reg = <0x04021000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC1>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc1_pins>;
++			status = "disabled";
++
++			max-frequency = <150000000>;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
++			cap-sdio-irq;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		mmc2: mmc@4022000 {
++			compatible = "allwinner,sun55i-a523-mmc",
++				     "allwinner,sun20i-d1-mmc";
++			reg = <0x04022000 0x1000>;
++			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
++			clock-names = "ahb", "mmc";
++			resets = <&ccu RST_BUS_MMC2>;
++			reset-names = "ahb";
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc2_pins>;
++			status = "disabled";
++
++			max-frequency = <150000000>;
++			cap-sd-highspeed;
++			cap-mmc-highspeed;
++			cap-sdio-irq;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		usb_otg: usb@4100000 {
+ 			compatible = "allwinner,sun55i-a523-musb",
+ 				     "allwinner,sun8i-a33-musb";
 -- 
 2.39.5
 
