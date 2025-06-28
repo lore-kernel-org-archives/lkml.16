@@ -1,258 +1,110 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3B0219302;
-	Sat, 28 Jun 2025 18:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751135246; cv=pass; b=jPDO5o10f3eHgwc5hA0FJcYq+MzDHANGUXk/kfcb+OZfSn3kaFKOqf4u57ptkgSSkmUzmlsW34iY7dhja8svasmuilzUsSHfH/iYyXoVoihsnxyeCrm6zYAyCtUDuL7+KEThk+5TcAcEctK2zNWyIYBrMZe6Tn2IhVQ0lCg0u88=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751135246; c=relaxed/simple;
-	bh=E4wVzdmWrKSdbCHEX3fuS6RQ4A6N3MxxO7f/PNjRrdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nlp9QKKJFFyuhV45fZuYnpkD+rt45ZW3WM0BDixLa35jOX76IIU1pxC8pRCkjRWU/2J3jS9l6xLUdkyOBmCoYVN+K/sSsmegsVBStsvAq/AzFw3R43vlsQU1cy5g3pN0LaXz+v46ojVIyw2QR6Cg0glk8dzvtuLPew+KraE+Tzs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=QLmVyJNM; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD61C8626
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 18:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751135656; cv=none; b=hs9c2MNwpFYrsGPQQzOYICkdltvB2C3szi/CmvlTp9hF2/d9XD1GManilMG+Xv8TNEuzEE9seSVNlyJq9gN/lme8zd2/80qkTdrKWVqV27CnuYckt8/YLFsoKbQWc7D6seyZph64KeYDJ06dSGBgHB6xSD1l1j20gKa3asAPcaQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751135656; c=relaxed/simple;
+	bh=w8jYnIjaUFwlYoBv8vq/TaGytJQbaOCBQSQujAsVOjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ax8PujKvev8J+SAfj41gj6uIwYkSHQ20ygpfDqvrxXaqdMMUPM4gyZ+Fkpx8LQbvl8BwT1fcsqXAP/Ke7cz7vjCKuxjNgf4NA2WnYYRuSJDUHK2s1K0L/rCPBKoVRcb9CNIAk9HNvzG4GyL82cGhyxodyMZRYfMv/bgMOsDkKzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Y6jULMqz; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="QLmVyJNM"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4bV19S63SFzyR7;
-	Sat, 28 Jun 2025 21:27:08 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1751135230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AJ+fyHtmJgkbOU1+JyFtXH3gaU+q/29nr2pOPL97MlE=;
-	b=QLmVyJNMvqxwfO0CArLdeO6wOs1//3c4tn4KDUZMTr5X802pz27ofknwz+YxdcB22rnJlQ
-	zpM+OSPevLjEbVpxqKCjaC9/R8l2HDRV+rTN6O8zz3UY0IdBGaMreahAjQ3oL4EfsNi3nY
-	3YligLK/XR2yj1meIXyygqIOJT6fzWI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1751135230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AJ+fyHtmJgkbOU1+JyFtXH3gaU+q/29nr2pOPL97MlE=;
-	b=AtTGil98qxH/ITrG4U16BCZcrRV+4Q0yfntxEI7XheX4cwPrrH/03deT+a71Z4qUmIxmjN
-	CgrDhYeO26PyhxVDNCCJCxVfYkCNnQ07gci4t6flA2JqMbdchdXistk3tyG0LI89/NOlKe
-	+zlEaMKOoHXuDLpBiLQd8zyiuU1HtyQ=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1751135230; a=rsa-sha256; cv=none;
-	b=EVxqihENwKj6379ITkl30lwgNmbxDaEhEoPu398eDx7f3Oy405bLTjL5HPg15IL+hnJJ44
-	rhDGXmKRwdEQ041aAK9HS66V0ZNxzr3SP0lQf2YKvGzh2pTRRPKDO5H6EaPxdMsaLIW+aY
-	FAigjoot/Y0GkPXR4gwRCq4yG4gvytU=
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 0AF47634C93;
-	Sat, 28 Jun 2025 21:27:05 +0300 (EEST)
-Date: Sat, 28 Jun 2025 18:27:05 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com,
-	hverkuil-cisco@xs4all.nl, laurent.pinchart+renesas@ideasonboard.com,
-	robh@kernel.org, krzk+dt@kernel.org, bryan.odonoghue@linaro.org,
-	laurentiu.palcu@nxp.com, robert.chiras@nxp.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	LnxRevLi@nxp.com, kieran.bingham@ideasonboard.com,
-	hdegoede@redhat.com, dave.stevenson@raspberrypi.com,
-	mike.rudenko@gmail.com, alain.volmat@foss.st.com,
-	devicetree@vger.kernel.org, conor+dt@kernel.org,
-	alexander.stein@ew.tq-group.com, umang.jain@ideasonboard.com,
-	zhi.mao@mediatek.com, festevam@denx.de, julien.vuillaumier@nxp.com
-Subject: Re: [PATCH v4 1/4] dt-bindings: media: i2c: Add OX05B1S sensor
-Message-ID: <aGAz-TA7fjI-m76N@valkosipuli.retiisi.eu>
-References: <20250305094359.299895-1-mirela.rabulea@nxp.com>
- <20250305094359.299895-2-mirela.rabulea@nxp.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y6jULMqz"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55SIMucv028453;
+	Sat, 28 Jun 2025 18:34:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=SwGkhS6oU7gBULo49D78+Thb7S/MP
+	pWv2fV2FOTEQw4=; b=Y6jULMqz7yLkO3VSer/QgePL9a1WlJRM4NqBma112Sq1T
+	KP7DSrT7s/L7pWfP4nJl8zUMo0zpqqP4uzNh3ttFapKE8+r0Orh2TjfK524lEPjv
+	Y+HwvSXyTlOrJd/Hh2Fm2AwUZg/qwb/1dF3Ul9UyPjpVDJOHRaJLHNdnZVibRcpD
+	pkgZ1ViQzD7mNeuae5DZ5YTW4/O1OvyyHSBJ8m2M/TdwVtO08VokOhfVZnufERdj
+	G3+ym/TnoQi4m6b3ohn9bhbNGnZdYDpYUp5e7rAh5OLCByMhPPV+bHAk8k3bVLU0
+	5RquboZN9oc+Poupoarinl+oKMThskagX2YUeCcnQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j80w0ej3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 28 Jun 2025 18:34:10 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55SHMKxc014097;
+	Sat, 28 Jun 2025 18:34:08 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u702ja-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 28 Jun 2025 18:34:08 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55SIY8E1017095;
+	Sat, 28 Jun 2025 18:34:08 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 47j6u702hw-1;
+	Sat, 28 Jun 2025 18:34:08 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
+        pbonzini@redhat.com, stefanha@redhat.com,
+        virtualization@lists.linux.dev
+Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] vhost-scsi: Fix check for inline_sg_cnt exceeding preallocated limit
+Date: Sat, 28 Jun 2025 11:33:53 -0700
+Message-ID: <20250628183405.3979538-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305094359.299895-2-mirela.rabulea@nxp.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506280156
+X-Proofpoint-GUID: 1QAJbHjjGQ0clRYnLvVijptxGqammU92
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDE1NSBTYWx0ZWRfX5dgC6S8BhIpe 0spaA5wkFe3suwBjGQr30+0Qxek3KiEL6ZLIx5w5Z8UlTVS+PR1rhTCslOX4CVutKUADM64qppx e70GPA1UuSSBJhg3BN1LYfpWjj/uUebPzxwD0Cbo9l07RbGbqWJ+zT5XTZbWX01PsqaRsPjJQzV
+ 0ig9DL5L2RQKDhTb+m2XZf0wO1VSG+nOqjmaVva4fCYWiyPPsQKIZlSzUSdlf1XoyXxTlJWMOBz lOUp03bLMuTmHfFhZrMwAyLWOZI1N73G16Pzk/QwzUFApyWC+xPguNrCWOIJNVga8XLT1OtGiiI MeLzIhA31/NHbyEZ0gEFCXOP67OtNDFjAi2t9s6nGyzN1fJxmvnI0jrN6mKtDBZER5UJLqT5DZI
+ E8gzwIu55XuJ21Lsk/BC4Xu24gqdD4wVjU+fy8eI3aM8T7PhjnTjR/f5+ZZXobNnrxNIPkHM
+X-Authority-Analysis: v=2.4 cv=D6hHKuRj c=1 sm=1 tr=0 ts=686035a2 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=n7_sAU11hH57P2nxMxEA:9 cc=ntf awl=host:14723
+X-Proofpoint-ORIG-GUID: 1QAJbHjjGQ0clRYnLvVijptxGqammU92
 
-Hi Mirela,
+The condition comparing ret to VHOST_SCSI_PREALLOC_SGLS was incorrect,
+as ret holds the result of kstrtouint() (typically 0 on success),
+not the parsed value. Update the check to use cnt, which contains the
+actual user-provided value.
 
-On Wed, Mar 05, 2025 at 11:43:56AM +0200, Mirela Rabulea wrote:
-> Add bindings for Omnivision OX05B1S sensor.
-> Also add compatible for Omnivision OS08A20 sensor.
-> 
-> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> 
-> Changes in v4:
-> 	Collect Reviewed-by
-> 
-> Changes in v3:
-> 	Use unevaluatedProperties: false and drop orientation/rotation
-> 	Drop items and keep alphabetical order in compatible property
-> 	Shorten the description for reset_gpio
-> 	Make the supplies required.
-> 	Use generic node name (camera instead of ox05b1s)
-> 
-> Changes in v2:
-> 	Small updates on description
-> 	Update subject, drop "bindings" and "driver"
-> 	Just one binding patch (squash os08a20 bindings)
-> 	Re-flow to 80 columns.
-> 	Drop clock name (not needed in case of single clock)
-> 	Make the clock required property, strictly from sensor module point of view, it is mandatory (will use a fixed clock for nxp board)
-> 	Add regulators: avdd, dvdd, dovdd
-> 	Add $ref: /schemas/media/video-interface-devices.yaml
-> 	Drop assigned-clock* properties (defined in clocks.yaml)
-> 	Keep "additionalProperties : false" and orientation/rotation (unevaluatedProperties: false was suggested, but only orientation/rotation are needed from video-interface-devices.yaml)
-> 	Include assigned-clock* in the example, for completeness sake (although it was also suggested to omit them)
-> 
->  .../bindings/media/i2c/ovti,ox05b1s.yaml      | 119 ++++++++++++++++++
->  1 file changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ox05b1s.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ox05b1s.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ox05b1s.yaml
-> new file mode 100644
-> index 000000000000..9f35b4e67bea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ovti,ox05b1s.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2024 NXP
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/ovti,ox05b1s.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Omnivision OX05B1S Image Sensor
-> +
-> +maintainers:
-> +  - Mirela Rabulea <mirela.rabulea@nxp.com>
-> +
-> +description:
-> +  The Omnivision OX05B1S is a 1/2.5-Inch CMOS image sensor with an active
-> +  array size of 2592 x 1944. It is programmable through I2C interface.
-> +  Image data is available via MIPI CSI-2 serial data output.
-> +
-> +allOf:
-> +  - $ref: /schemas/media/video-interface-devices.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ovti,os08a20
-> +      - ovti,ox05b1s
+prevents silently accepting values exceeding the maximum inline_sg_cnt.
 
-The bindings only describe ox05b1s. How are the two different?
+Fixes: bca939d5bcd0 ("vhost-scsi: Dynamically allocate scatterlists")
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Reviewed-by: Mike Christie <michael.christie@oracle.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+---
+added Reviewed-by Mike Christie and Stefan
+---
+ drivers/vhost/scsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: Input clock (24 MHz)
-> +    maxItems: 1
-
-Is this really a hardware limitation, or what the driver is currently
-limited to? In the former case, I'd include the range.
-
-> +
-> +  reset-gpios:
-> +    description: Active low XSHUTDOWN pin
-> +    maxItems: 1
-> +
-> +  avdd-supply:
-> +    description: Power for analog circuit (2.8V)
-> +
-> +  dovdd-supply:
-> +    description: Power for I/O circuit (1.8V)
-> +
-> +  dvdd-supply:
-> +    description: Power for digital circuit (1.2V)
-> +
-> +  port:
-> +    $ref: /schemas/graph.yaml#/$defs/port-base
-> +    additionalProperties: false
-> +    description: MIPI CSI-2 transmitter port
-> +
-> +    properties:
-> +      endpoint:
-> +        $ref: /schemas/media/video-interfaces.yaml#
-> +        unevaluatedProperties: false
-> +
-> +        properties:
-> +          data-lanes:
-> +            anyOf:
-> +              - items:
-> +                  - const: 1
-> +                  - const: 2
-> +              - items:
-> +                  - const: 1
-> +                  - const: 2
-> +                  - const: 3
-> +                  - const: 4
-> +        required:
-> +          - data-lanes
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - port
-> +  - avdd-supply
-> +  - dovdd-supply
-> +  - dvdd-supply
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera@36 {
-> +            compatible = "ovti,ox05b1s";
-> +            reg = <0x36>;
-> +            clocks = <&ox05b1s_clk>;
-> +
-> +            assigned-clocks = <&ox05b1s_clk>;
-> +            assigned-clock-parents = <&ox05b1s_clk_parent>;
-> +            assigned-clock-rates = <24000000>;
-> +
-> +            reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
-> +
-> +            avdd-supply = <&camera_avdd_2v8>;
-> +            dovdd-supply = <&camera_dovdd_1v8>;
-> +            dvdd-supply = <&camera_dvdd_1v2>;
-> +
-> +            orientation = <2>;
-> +            rotation = <0>;
-> +
-> +            port {
-> +                ox05b1s_mipi_0_ep: endpoint {
-> +                    remote-endpoint = <&mipi_csi0_ep>;
-> +                    data-lanes = <1 2 3 4>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index c12a0d4e6386..8d655b2d15d9 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -71,7 +71,7 @@ static int vhost_scsi_set_inline_sg_cnt(const char *buf,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (ret > VHOST_SCSI_PREALLOC_SGLS) {
++	if (cnt > VHOST_SCSI_PREALLOC_SGLS) {
+ 		pr_err("Max inline_sg_cnt is %u\n", VHOST_SCSI_PREALLOC_SGLS);
+ 		return -EINVAL;
+ 	}
 -- 
-Kind regards,
+2.47.1
 
-Sakari Ailus
