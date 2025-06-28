@@ -1,210 +1,179 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9917083C;
-	Sat, 28 Jun 2025 03:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1D221B8F5;
+	Sat, 28 Jun 2025 03:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751082111; cv=none; b=X+yMYOML6S4LOGdoYiwDinTgQexhYBfo/DOL2GYp0XCZV5lzg3LJ6UOT8Y0vq6mEo8SoRmhWroVacNMNHHqVZ091mzZ+O2ZiYF7lTdAQa1kL/YZ02H61+hObRb2Q2THrqwlQhBIq9ZXljJ71TIO15fy+KwyvyIlKkh7Ofh8Lvuk=
+	t=1751082143; cv=none; b=mH4Arz+Wy2X9hfxPkr7EE1aC7juMSnUbR0zxkG3H4sO1Rg592krurQBuOBiQC1+E5vuepbtXTlPE/GXoipjKz5U+gL6vd/YF56ac0wwK0BY7Jc1Tf6LZ1nKI+bGy87GvMe+K2MsTzTXY8g2oFx7bhkTbSV9Rcej5vXEkDTwHsss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751082111; c=relaxed/simple;
-	bh=GvB7lXPZ3/uD7ikZ3m67zGjjXQSFyq4II/d2dF4Iwp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gh74CZj6+w9EMpKVc5Xbg6Wz2NMzd7cswIZJXbwgpWbs1H+OdSH94Q2Gnyw9+WR8lF6qst4dh3UU8UaKRBQsrjcdETt85KrR6YF9qQ6e71WHyMyf3AaihqOiJAIHBn/llW9WkfvkcL5sfMd25a6x85K+fNtMbeV6AudG+GvRHMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AYPv1tDT; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751082143; c=relaxed/simple;
+	bh=ZuMiblNDBB3gmfKlgVRSbs1ULWOfBMWR7pyd2OHXVaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aemz21msjyl8oCsYTWY7HRY4ewZJSLpe2ur5Qmc/YEnPf0BkYW1XraNDUY+qUOHZNL7YPo9UxrtLjNi3o2lVWJ2ZLQWKrJT+Lof+Nzm7XV+KFGzCJzUGI0I6rzhzmTPeUqfBkR+1XKVpkKNKHBXtiKi+l27xddX+v5KVTH08Fbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDrCaphj; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYPv1tDT"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so153629a91.3;
-        Fri, 27 Jun 2025 20:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751082109; x=1751686909; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ITI46JKoYa9kNACs4xK7L8tapUmB5qutTOhPb1kBu58=;
-        b=AYPv1tDT4L4JnxDvJwOLvXDBJ7prNk/Azq2cKRZx2Cx7jGSV0pqTf88JnEBvKkxRQ6
-         EQJ3lnUxZcTDl4IlAo9lAX1x7+IpEO1BH0kPIzraR0wUZGDExifLuO553UtvbNcZonc/
-         VIWZW8GqugKr2PkRh75fyhuT7wHDHOAmBCPs/XBU1jc8GWP0uAIIInba5UEWbQsvPyMA
-         H/rIiLSD94ecv66qj63ZfXY5RccHLf6eBzdDQMV7iUsK/PFVQ2Wv2FPaNY71pytBw4QC
-         uicOohpWveoAdI/I8f7JsRMwWYR/DDflxgfIJOSZCjZatIjx2GsIao9tsB2e9aHhcsyE
-         Yhew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751082109; x=1751686909;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ITI46JKoYa9kNACs4xK7L8tapUmB5qutTOhPb1kBu58=;
-        b=OleBE4xBioyjfB6Ord7AsrrWIEXD+jZ7Hk6PMlxmha6hr8pp5KSCTAG8j9qvi3rpS8
-         FzcMu9VfUD7XXi8joT3Ig0WDE8ppghC9L33UR4gtk1N9kHZFYVOVpLVaiP8qVN0Gx6WC
-         bIDAmpvZjWhUsxDKxM0h+85xiFT/K1xEE3tG4jGMdgGPGnvddiyQ9aU3h5QGjR6NOXI4
-         1MqFbjZSoRtS0tc2s7AFUUBFZHAUkwBE+omxKxlwyrtpu1mpxuPYR3IGOeNqXk6wqUcv
-         xdWLwLHEURFODc4GlDRns0YdRlO1R5eXP+6/7BvdxJCgsejD1/ey5pUPlKNmEAWDn/U+
-         z3FA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcA03qG+c2KDoN5I+euXVxd4cpw/+Tp9hhYZHsLU663nJtokUM++oarciBufPZNlcT7yV0ZXG2Hiz6FCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo7v02LEc11LB+/OaENz5Ci8b5LmqX6cfkTpYKdeil4F0tnO5x
-	pAuJhW5uhrOyNVEf4146uAWJ2DtoPIadJQCGM9XQWNrYdDgUlgM77w58
-X-Gm-Gg: ASbGnctZf6kmt5BCf3Nid2OMYd6FIFjRJ5reW40wFLwBflKTku+IL/pf4v2YBVEFHcV
-	JCsYom5o+LMxgv/vJgYaI9ZWgeZwMhKK0WAvS5EWzEgfMXUWOTSCn61KpjlcQqAG3ZLQm2vfpaV
-	ISlNgyOygTkuKmNWcENN/eCFjPKyuIWUgB9AhuhT6ttTPpl8VnVsAcmNDCvOh+8ehIqrNKfOgie
-	m2WPUXf0XsgidM+m/bXox6UnmJOBnXwsMjwOTQDz19Nl1GV+zLkpviVebyqylkPuwnRQuNI4tPK
-	tKdZV5WWIqsFz1DOlKNE+CE33r9QlWih6A+rM1HHmCM=
-X-Google-Smtp-Source: AGHT+IHOjIlhy5OfnUvSmB05mm9Jab+FHEn58OQ3IkXlkLmtL0NQNxuMpU4fBkNpTizWNSQ5obwjVg==
-X-Received: by 2002:a17:90b:17c6:b0:311:fc8b:31b5 with SMTP id 98e67ed59e1d1-318c9225e5dmr9255204a91.14.1751082108670;
-        Fri, 27 Jun 2025 20:41:48 -0700 (PDT)
-Received: from fedora ([2601:646:8081:3770::fd7d])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5426be4sm8251150a91.32.2025.06.27.20.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jun 2025 20:41:48 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Collin Funk <collin.funk1@gmail.com>
-Subject: [PATCH v4] perf build: Specify that shellcheck should use the bash dialect.
-Date: Fri, 27 Jun 2025 20:41:25 -0700
-Message-ID: <63491dbc8439edf2e949d80e264b9d22332fea61.1751082075.git.collin.funk1@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <f8415e57c938482668717d918ab566ff5082f281.1750743784.git.collin.funk1@gmail.com>
-References: <f8415e57c938482668717d918ab566ff5082f281.1750743784.git.collin.funk1@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDrCaphj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751082142; x=1782618142;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZuMiblNDBB3gmfKlgVRSbs1ULWOfBMWR7pyd2OHXVaU=;
+  b=QDrCaphjxC9UGBgEUthXMqb0SW0+PSZc2C/xMqEUYs/uXTsB68WqvTuV
+   oXmS1JqDclc321XOvNmeP/Wpaf7maA/qKK90yg4Q9bdOkWnO/KzqEFbEt
+   Cl0Ulju217S3ttp93et1r9mWgoPEXHNFD6QCskLQiU78wlgNHg1+azG5Z
+   d8Zn0ncMRwB4JvEHQ7gNLkcQo2iev42awESFaqxiIPVYYiuxwiCCdKX+D
+   OEsLzzKFtOQtvP3+dN+7BHfi2VApkEEjfk37Y+UJp+DDtjIYmvi+2acCp
+   ll8RBcJ3T3d+XHc8kzDxuwObo2LAPxrmSREfngVDHJtzWH4ji2479oXNQ
+   g==;
+X-CSE-ConnectionGUID: WqehKLAxROK0MHtnuB82Jw==
+X-CSE-MsgGUID: +yLArHpaRJehm8zwJYhd8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="63993603"
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="63993603"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 20:42:21 -0700
+X-CSE-ConnectionGUID: SOLbyImkRwSKKMMTn9L0QA==
+X-CSE-MsgGUID: rpWeOH2QRN2oLZyU1oViXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
+   d="scan'208";a="176644191"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Jun 2025 20:42:16 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVMSD-000Wks-3B;
+	Sat, 28 Jun 2025 03:42:13 +0000
+Date: Sat, 28 Jun 2025 11:42:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
+	andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+	johan+linaro@kernel.org, dianders@chromium.org, agross@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mukesh.savaliya@oss.qualcomm.com,
+	quic_anupkulk@quicinc.com,
+	Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+Subject: Re: [PATCH v5 2/5] soc: qcom: geni-se: Add support to load QUP SE
+ Firmware via Linux subsystem
+Message-ID: <202506281152.eY0YQpxs-lkp@intel.com>
+References: <20250624095102.1587580-3-viken.dadhaniya@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624095102.1587580-3-viken.dadhaniya@oss.qualcomm.com>
 
-When someone has a global shellcheckrc file, for example at
-~/.config/shellcheckrc, with the directive 'shell=sh', building perf
-will fail with many shellcheck errors like:
+Hi Viken,
 
-    In tests/shell/base_probe/test_adding_kernel.sh line 294:
-    (( TEST_RESULT += $? ))
-    ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((..)) is undefined.
+kernel test robot noticed the following build warnings:
 
-    For more information:
-      https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone ((..)) is...
-    make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kernel.sh.shellcheck_log] Error 1
+[auto build test WARNING on andi-shyti/i2c/i2c-host]
+[also build test WARNING on tty/tty-testing tty/tty-next tty/tty-linus broonie-spi/for-next linus/master v6.16-rc3 next-20250627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Passing the '-s bash' option ensures that it runs correctly regardless
-of a developers global configuration.
+url:    https://github.com/intel-lab-lkp/linux/commits/Viken-Dadhaniya/dt-bindings-qcom-se-common-Add-QUP-Peripheral-specific-properties-for-I2C-SPI-and-SERIAL-bus/20250624-175308
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
+patch link:    https://lore.kernel.org/r/20250624095102.1587580-3-viken.dadhaniya%40oss.qualcomm.com
+patch subject: [PATCH v5 2/5] soc: qcom: geni-se: Add support to load QUP SE Firmware via Linux subsystem
+config: alpha-randconfig-r122-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281152.eY0YQpxs-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20250628/202506281152.eY0YQpxs-lkp@intel.com/reproduce)
 
-This patch adds '-s bash' and other options to the SHELLCHECK variable
-in Makefile.perf and makes use of the variable consistently.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506281152.eY0YQpxs-lkp@intel.com/
 
-Signed-off-by: Collin Funk <collin.funk1@gmail.com>
----
- tools/perf/Build                | 2 +-
- tools/perf/Makefile.perf        | 2 ++
- tools/perf/arch/x86/Build       | 2 +-
- tools/perf/arch/x86/tests/Build | 2 +-
- tools/perf/tests/Build          | 2 +-
- tools/perf/trace/beauty/Build   | 2 +-
- tools/perf/util/Build           | 2 +-
- 7 files changed, 8 insertions(+), 6 deletions(-)
+sparse warnings: (new ones prefixed by >>)
+>> drivers/soc/qcom/qcom-geni-se.c:941:21: sparse: sparse: cast from restricted __le32
+>> drivers/soc/qcom/qcom-geni-se.c:941:21: sparse: sparse: restricted __le32 degrades to integer
 
-diff --git a/tools/perf/Build b/tools/perf/Build
-index 06107f1e1d42..b03cc59dabf8 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -73,7 +73,7 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-y += $(SHELL_TEST_LOGS)
- 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d4c7031b01a7..5f76c82e0aec 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -262,6 +262,8 @@ ifneq ($(SHELLCHECK),)
-   ifeq ($(shell expr $(shell $(SHELLCHECK) --version | grep version: | \
-         sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \< 060), 1)
-     SHELLCHECK :=
-+  else
-+    SHELLCHECK := $(SHELLCHECK) -s bash -a -S warning
-   endif
- endif
- 
-diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
-index afae7b8f6bd6..d31a1168757c 100644
---- a/tools/perf/arch/x86/Build
-+++ b/tools/perf/arch/x86/Build
-@@ -10,6 +10,6 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-test-y += $(SHELL_TEST_LOGS)
-diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-index 5e00cbfd2d56..01d5527f38c7 100644
---- a/tools/perf/arch/x86/tests/Build
-+++ b/tools/perf/arch/x86/tests/Build
-@@ -22,6 +22,6 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-test-y += $(SHELL_TEST_LOGS)
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 2181f5a92148..d6c35dd0de3b 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -89,7 +89,7 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-test-y += $(SHELL_TEST_LOGS)
- 
-diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
-index f50ebdc445b8..561590ee8cda 100644
---- a/tools/perf/trace/beauty/Build
-+++ b/tools/perf/trace/beauty/Build
-@@ -31,6 +31,6 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-y += $(SHELL_TEST_LOGS)
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 7910d908c814..2dfa09a6f27d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -421,7 +421,7 @@ endif
- 
- $(OUTPUT)%.shellcheck_log: %
- 	$(call rule_mkdir)
--	$(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (cat $@ && rm $@ && false)
-+	$(Q)$(call echo-cmd,test)$(SHELLCHECK) "$<" > $@ || (cat $@ && rm $@ && false)
- 
- perf-util-y += $(SHELL_TEST_LOGS)
- 
+vim +941 drivers/soc/qcom/qcom-geni-se.c
+
+   891	
+   892	/**
+   893	 * geni_read_elf() - Read an ELF file.
+   894	 * @se: Pointer to the SE resources structure.
+   895	 * @fw: Pointer to the firmware buffer.
+   896	 * @pelfseg: Pointer to the SE-specific ELF header.
+   897	 *
+   898	 * Read the ELF file and output a pointer to the header data, which
+   899	 * contains the firmware data and any other details.
+   900	 *
+   901	 * Return: 0 if successful, otherwise return an error value.
+   902	 */
+   903	static int geni_read_elf(struct geni_se *se, const struct firmware *fw, struct se_fw_hdr **pelfseg)
+   904	{
+   905		const struct elf32_hdr *ehdr;
+   906		struct elf32_phdr *phdrs, *phdr;
+   907		const struct se_fw_hdr *elfseg;
+   908		const u8 *addr;
+   909		int i;
+   910	
+   911		if (!fw || fw->size < sizeof(struct elf32_hdr))
+   912			return -EINVAL;
+   913	
+   914		ehdr = (struct elf32_hdr *)fw->data;
+   915		phdrs = (struct elf32_phdr *)(ehdr + 1);
+   916	
+   917		if (ehdr->e_phnum < 2)
+   918			return -EINVAL;
+   919	
+   920		for (i = 0; i < ehdr->e_phnum; i++) {
+   921			phdr = &phdrs[i];
+   922	
+   923			if (fw->size < phdr->p_offset + phdr->p_filesz)
+   924				return -EINVAL;
+   925	
+   926			if (phdr->p_type != PT_LOAD || !phdr->p_memsz)
+   927				continue;
+   928	
+   929			if (MI_PBT_PAGE_MODE_VALUE(phdr->p_flags) != MI_PBT_NON_PAGED_SEGMENT ||
+   930			    MI_PBT_SEGMENT_TYPE_VALUE(phdr->p_flags) == MI_PBT_HASH_SEGMENT ||
+   931			    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_NOTUSED_SEGMENT ||
+   932			    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_SHARED_SEGMENT)
+   933				continue;
+   934	
+   935			if (phdr->p_filesz < sizeof(struct se_fw_hdr))
+   936				continue;
+   937	
+   938			addr = fw->data + phdr->p_offset;
+   939			elfseg = (const struct se_fw_hdr *)addr;
+   940	
+ > 941			if (cpu_to_le32(elfseg->magic) != MAGIC_NUM_SE || elfseg->version != 1)
+   942				continue;
+   943	
+   944			if (phdr->p_filesz < elfseg->fw_offset +
+   945					     elfseg->fw_size_in_items * sizeof(u32) ||
+   946			    phdr->p_filesz < elfseg->cfg_idx_offset +
+   947					     elfseg->cfg_size_in_items * sizeof(u8) ||
+   948			    phdr->p_filesz < elfseg->cfg_val_offset +
+   949					     elfseg->cfg_size_in_items * sizeof(u32))
+   950				continue;
+   951	
+   952			if (elfseg->serial_protocol != se->protocol)
+   953				continue;
+   954	
+   955			*pelfseg = (struct se_fw_hdr *)addr;
+   956			return 0;
+   957		}
+   958		return -EINVAL;
+   959	}
+   960	
+
 -- 
-2.50.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
