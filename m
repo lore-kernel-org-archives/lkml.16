@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2682312EBE7;
-	Sat, 28 Jun 2025 18:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83461220F48;
+	Sat, 28 Jun 2025 18:57:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751137039; cv=none; b=FYS6RESWg8tDoB9Rt8pK2w5gqry+QQ+ZaZ/NYgebBF7I5vDM31eActw2aojWDtBI8sAwkMdnMuVghL5axrOKFr0l+M4VO+0vxkTtuvCaoH8VSKDCN3WRMfF8MN/06uvIzt8MlGP2Vz/4zhHgYfls2wBUSjhlegRGUSXQyjM6yXM=
+	t=1751137066; cv=none; b=ufoGm2RSi3G78nD8gy2m93zjTU7mdL6bYLEt9NJAFZTxQv2hxVaFqmgY/kV7ChdSNZ/7zBnweKNNvE0mPLDLus6wkkB/hIs10ronFYBk9XstfI7Eb2uEFAVKn0gd94qPnDPvCDWEi4K58XDg3hSpVLsYx/hwPGsAzOFvO9qe0fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751137039; c=relaxed/simple;
-	bh=orw7uYePXqNFzeqTqAHs8lqewbYqpFHGgIIJgS7y4o0=;
+	s=arc-20240116; t=1751137066; c=relaxed/simple;
+	bh=ZAl987RtnqAA6nEP255KwhOX71RKQ7rq7qAN9e/1jHE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h/N9INDrjPVWiZTnmob+o+RpUne07/jgqivbCyNAOsXGl9Fn4IqPiPa0CIS7Gw/d/maKmy+W0knQp6topkOHK2pqvop103NSNJc0KppUleU0aHr6Zm6JZpkZQ6lAuRE3QNupepu1VX6ufOoQurXfFfelE1iR7MGxvJ1+3X0duq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FaXUHel8; arc=none smtp.client-ip=90.155.50.34
+	 In-Reply-To:Content-Type; b=l3sOmzkTYSTfqmmhNr2ivdc8xiTAOuCR5skWHT5Hdb12R+y8rMcXEcU6zVgrOe2z2hMHUK2c8gidiEjIdw/iRLmxCihNHHSy1TwPZYXuwW/Z0k/0WTVFrj68xCBD7VtNb71sOGc9f3TA1RA8KjmYCpDqsaFSA7y6HAlInAGYU/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YBkXNGxJ; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FaXUHel8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YBkXNGxJ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description;
-	bh=zZX0bC2DH2MvwuCPp2V/35NYunLcp9WEdDEtiUrQQ2Q=; b=FaXUHel8LbjMXRL7eKzc1etxNG
-	+333bBg+DS2JjqWZfCbmhQIoqQjxjrxolxlFh8XBalD5h7voTbCBIhrWOYqtEsZjNpbwEFiNqntsA
-	RjjEGgqUpYjYorMYEPXQI0O62PpTQWRnOBwOAMA7P1LJv0muFGqkqShFTAg5xL0hS7o/0nm/hgHoz
-	Iv52D+gWNRhlSG9sT1FF0wdOfZLsWJA3sTTtvHo2b/KsRR8Zg8pa/2EzdPCBDDYjw/SuaNqXhF3sJ
-	nk19C32irF3tqayHSZtpcqBs4L/+YD8V6nuYRCjY3GeYJ/KuKiZBen3ZU7lpkw5FJMLDIFmihMLuQ
-	VBarSLPQ==;
+	bh=WS0+TC72GZxX8qGZhl4eqr21pm5RLZYj9dJ7tqT9W+M=; b=YBkXNGxJjm/YF2TGbCKlg8iric
+	DXQ+QW8+FIM1BEe6GEsM0QSRhlxQ08+vL6DKpKqDlTdTmiiW8P0gWSKOObXEk1rZH2fSrZroIxBYt
+	ofosom1Z3W+0uGjkBAe14OjZE1MKqqi22quwSXZSUJ1MnmWMxOHv8Dxh5ArUve1AOzQC3CgYiemt9
+	QeZmcXfj7Z1rhrG27+j1a2r+dxFeqb83UNS+SCe2bqgxMTFPiCWP1Q/68881p1Vj9GKlZveSlL3+f
+	2C9Y9Qep21P3TVqQkllMF65q7JORSjbnrLvxQuoTHt0FwUZJTK9y9TISEK0F7SitH4peQVHN5TBfK
+	BPYfLrPg==;
 Received: from [50.53.25.54] (helo=[192.168.254.17])
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uVajS-0000000H7cC-1dJJ;
-	Sat, 28 Jun 2025 18:56:58 +0000
-Message-ID: <bac0deae-ce00-4b19-9a34-69ac827f251d@infradead.org>
-Date: Sat, 28 Jun 2025 11:56:54 -0700
+	id 1uVak7-0000000H7ds-2BFC;
+	Sat, 28 Jun 2025 18:57:39 +0000
+Message-ID: <eeaf9f80-7b84-4133-a2c2-be2e9c1e97c9@infradead.org>
+Date: Sat, 28 Jun 2025 11:57:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,8 +39,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] docs: dma-api: use "DMA API" consistently
- throughout the document
+Subject: Re: [PATCH v2 2/8] docs: dma-api: replace consistent with coherent
 To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
  Robin Murphy <robin.murphy@arm.com>,
  Marek Szyprowski <m.szyprowski@samsung.com>
@@ -49,32 +48,34 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Keith Busch
  Bagas Sanjaya <bagasdotme@gmail.com>,
  "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
  open list <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>, iommu@lists.linux.dev
 References: <20250627101015.1600042-1-ptesarik@suse.com>
- <20250627101015.1600042-2-ptesarik@suse.com>
+ <20250627101015.1600042-3-ptesarik@suse.com>
 Content-Language: en-US
 From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250627101015.1600042-2-ptesarik@suse.com>
+In-Reply-To: <20250627101015.1600042-3-ptesarik@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/27/25 3:10 AM, Petr Tesarik wrote:
-> Make sure that all occurrences are spelled "DMA API" (all uppercase, no
-> hyphen, no underscore).
+> For consistency, always use the term "coherent" when talking about memory
+> that is not subject to CPU caching effects. The term "consistent" is a
+> relic of a long-removed PCI DMA API (pci_alloc_consistent() and
+> pci_free_consistent() functions).
 > 
 > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
 Thanks.
 
 > ---
->  Documentation/core-api/dma-api.rst | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-
+>  Documentation/core-api/dma-api-howto.rst | 36 ++++++++++++------------
+>  Documentation/core-api/dma-api.rst       | 14 ++++-----
+>  mm/dmapool.c                             |  6 ++--
+>  3 files changed, 28 insertions(+), 28 deletions(-)
 
 -- 
 ~Randy
