@@ -1,169 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387A7DA9C;
-	Sat, 28 Jun 2025 08:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3132B1DE4FB;
+	Sat, 28 Jun 2025 08:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751099140; cv=none; b=tklz3EeAZky6ZqhzWlMp1tGnGbnTiJnxGklCk0maqGqq3bAB1i7w28+xCeslL6/1RGld7K2dFkxmSLxNz/9rS9+QHXasKOIb+p8t0Qs+zcUhuysDH8A3eIAuMI8+Z0YhKhN6IgANaBx7SIzsEzbeDvCEipdpeFl1r8BRqhFbVXw=
+	t=1751099366; cv=none; b=eadgz1N5yxBN01FPWPXcADRLnxfy4MWsGn/PHa7ZdKQCi8i78YwR6gG5V3s5Y+LkUcDz6yM2/Voxs1f/fatbKtabmacG/7yoi2nv10yhnUqJwwJS+OKL4EsKwB1DMpVTemNbQeB0UGkBf6SOW+0B1NgsxOnxq5HLsMtBCpB2e80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751099140; c=relaxed/simple;
-	bh=JRuHujpJLvDuTGnDYQujAWUeF9qBt6etY3etowHwHMc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NJD/mGqi0SUMd9qVrwsFVyKG2EI1egPUX2+oXIm7FRocjAKEARfMEnX8qZP2eTEFMBTYCJE/bCIqH2lS4PtQnmpNfbl1Y3EI/ychFmUc4WWR05PjVd1yKhC+DmF6fvx1LRnA3Lk1dkro8nezAQMjzVSyih72U49Srj366DaOVos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4YjI3ky; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751099366; c=relaxed/simple;
+	bh=XUVgWuL6+H8JHuXLgLLOh47JwD9EdzSN4VmosdXNanQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ph/3E3S+0ASi0Qyql6kKeKjmFHwAkc7qXHsYYDCyQh2u1hVWtCMNVIJdjpeaQjImEus2l+UAYzJs2sTMPl/KIgsTdDx6/Oy5SJPmM/rZMWoretKigwW6uMB6TX8MdEAFio0U1mSfoF4mC6frfaGlqU8p8COwd7ezsH2BzWXTuzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aR2nD0Uz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4YjI3ky"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8C1C4CEEA;
-	Sat, 28 Jun 2025 08:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751099139;
-	bh=JRuHujpJLvDuTGnDYQujAWUeF9qBt6etY3etowHwHMc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J4YjI3kyUvlGF9kiMiy8R2ZDlQlatNjRbS42jx+86DYS257jOgHRY8G5owUKHxt9U
-	 +PuUO1dBHZFg3lFyYcDmVgQD9xSmf/HDlcPjUmXtEjwUf+dKlJH34jLr31dGt4UQdU
-	 SICiNwyZpDxoqgasAugQuU9d07H61itg8DuAfeAQ51EQCnBs90roYqy8AD1Kv9S31n
-	 rYuI3Qrgv2inRLDWKDnLUdWXIhDMlA2W7hvouy4B/gpTCr/EaxpPkAF9lgthxP1yAb
-	 xrF3h9Yd68bT+oLgTSruyR6aUzZFGB609KKXzKQnHHG9WCjPaVePbiNgWMPb1ORStK
-	 WGm2LXTyutCyw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uVQsS-00AlqC-Iu;
-	Sat, 28 Jun 2025 09:25:36 +0100
-Date: Sat, 28 Jun 2025 09:25:35 +0100
-Message-ID: <871pr4ff28.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org,
-	pbonzini@redhat.com,
-	corbet@lwn.net,
-	linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	oliver.upton@linux.dev,
-	mizhang@google.com,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	mark.rutland@arm.com,
-	shuah@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 10/22] KVM: arm64: Set up FGT for Partitioned PMU
-In-Reply-To: <gsntbjq89am2.fsf@coltonlewis-kvm.c.googlers.com>
-References: <86plepb54f.wl-maz@kernel.org>
-	<gsntbjq89am2.fsf@coltonlewis-kvm.c.googlers.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aR2nD0Uz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C2AC4CEEA;
+	Sat, 28 Jun 2025 08:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751099365;
+	bh=XUVgWuL6+H8JHuXLgLLOh47JwD9EdzSN4VmosdXNanQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aR2nD0UzCyjc9hoxjEZGseN9z4YarsqTxr8HPEZLxYDklv/lWp7wNYLRYeBtT7lm+
+	 hvX6y+HmkgwQbT6MR/VknQ+tWeO+OWZXjpc5yzDcK3DUiX6wKGoJCS/c+/71ul6afS
+	 WwweIWqodgpHwlt5GT6vl76KqnfFt2FNVIV/x654=
+Date: Sat, 28 Jun 2025 10:29:23 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Manish Kumar <manish1588@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: fix all checkpatch warnings in .c and
+ .h files
+Message-ID: <2025062806-fit-harness-3d72@gregkh>
+References: <20250628082305.20847-1-manish1588@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: coltonlewis@google.com, kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, mizhang@google.com, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250628082305.20847-1-manish1588@gmail.com>
 
-On Fri, 27 Jun 2025 21:45:57 +0100,
-Colton Lewis <coltonlewis@google.com> wrote:
+On Sat, Jun 28, 2025 at 01:53:05PM +0530, Manish Kumar wrote:
+> This patch resolves all checkpatch.pl --strict warnings in the
+> sm750fb driver source files, including both C and header files.
 > 
-> Marc Zyngier <maz@kernel.org> writes:
+> Changes include:
+> - Replacing CamelCase identifiers with snake_case
+> - Avoiding chained assignments
+> - Fixing indentation, spacing, and alignment issues
+> - Updating function declarations and comment styles
+> - Making code conform to kernel coding style
 > 
-> > On Thu, 26 Jun 2025 21:04:46 +0100,
-> > Colton Lewis <coltonlewis@google.com> wrote:
+> No functional changes.
 > 
-> >> +static inline void __activate_pmu_fgt(struct kvm_vcpu *vcpu)
-> >> +{
-> >> +	struct kvm_cpu_context *hctxt = host_data_ptr(host_ctxt);
-> >> +	struct kvm *kvm = kern_hyp_va(vcpu->kvm);
-> >> +	u64 set;
-> >> +	u64 clr;
-> >> +
-> >> +	set = HDFGRTR_EL2_PMOVS
-> >> +		| HDFGRTR_EL2_PMCCFILTR_EL0
-> >> +		| HDFGRTR_EL2_PMEVTYPERn_EL0;
-> >> +	clr = HDFGRTR_EL2_PMUSERENR_EL0
-> >> +		| HDFGRTR_EL2_PMSELR_EL0
-> >> +		| HDFGRTR_EL2_PMINTEN
-> >> +		| HDFGRTR_EL2_PMCNTEN
-> >> +		| HDFGRTR_EL2_PMCCNTR_EL0
-> >> +		| HDFGRTR_EL2_PMEVCNTRn_EL0;
-> >> +
-> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR_EL2, clr, set);
-> >> +
-> >> +	set = HDFGWTR_EL2_PMOVS
-> >> +		| HDFGWTR_EL2_PMCCFILTR_EL0
-> >> +		| HDFGWTR_EL2_PMEVTYPERn_EL0;
-> >> +	clr = HDFGWTR_EL2_PMUSERENR_EL0
-> >> +		| HDFGWTR_EL2_PMCR_EL0
-> >> +		| HDFGWTR_EL2_PMSELR_EL0
-> >> +		| HDFGWTR_EL2_PMINTEN
-> >> +		| HDFGWTR_EL2_PMCNTEN
-> >> +		| HDFGWTR_EL2_PMCCNTR_EL0
-> >> +		| HDFGWTR_EL2_PMEVCNTRn_EL0;
-> >> +
-> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR_EL2, clr, set);
-> >> +
-> >> +	if (!cpus_have_final_cap(ARM64_HAS_FGT2))
-> >> +		return;
-> >> +
-> >> +	set = HDFGRTR2_EL2_nPMICFILTR_EL0
-> >> +		| HDFGRTR2_EL2_nPMICNTR_EL0;
-> >> +	clr = 0;
-> >> +
-> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGRTR2_EL2, clr, set);
-> >> +
-> >> +	set = HDFGWTR2_EL2_nPMICFILTR_EL0
-> >> +		| HDFGWTR2_EL2_nPMICNTR_EL0;
-> >> +	clr = 0;
-> >> +
-> >> +	update_fgt_traps_cs(hctxt, vcpu, kvm, HDFGWTR2_EL2, clr, set);
-> 
-> > This feels wrong. There should be one place to populate the FGTs that
-> > apply to a guest as set from the host, not two or more.
-> 
-> > There is such a construct in the SME series, and maybe you could have
-> > a look at it, specially if the trap configuration is this static.
-> 
-> > 	M.
-> 
-> > --
-> > Without deviation from the norm, progress is not possible.
-> 
-> I'm assuming you are referring to Mark Brown's series [1], specifically
-> patches 5 and 18 and I see what you mean.
-> 
-> You are probably thinking configuration should happen from
-> sys_regs.c:kvm_calculate_traps or thereabout and should be setting bits
-> in the existing kvm->arch.fgt array.
-> 
-> Correct me if I'm mistaken.
+> Signed-off-by: Manish Kumar <manish1588@gmail.com>
+> ---
+>  drivers/staging/sm750fb/sm750.c       |  90 ++++++++++---------
+>  drivers/staging/sm750fb/sm750.h       |  32 +++----
+>  drivers/staging/sm750fb/sm750_accel.c | 120 +++++++++++++-------------
+>  drivers/staging/sm750fb/sm750_hw.c    |  24 +++---
+>  4 files changed, 135 insertions(+), 131 deletions(-)
 
-I'm saying there should be exactly one place where we write to the
-individual trap registers, and that the source of these settings
-should be equally unique when they are immutable in the lifetime of
-the guest.
+Hi,
 
-That's the existing pattern for most trap configuration, including
-HCR_EL2, ICH_HCR_EL2, HCRX_EL2, and the FGU configuration that
-trickles into the actual trap registers, and I want to stick with it
-if at all possible.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-The way it is done in the SME series may be reasonable, but I haven't
-reviewed this series at all. I'm merely pointing out that similar
-constructs exist for other features.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-	M.
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
--- 
-Jazz isn't dead. It just smells funny.
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
