@@ -1,107 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858301C6FE1;
-	Sat, 28 Jun 2025 10:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751108397; cv=none; b=dIrOs9ZB0hm8Gp95zujZrWiFlOzuVvFcv+MIdC1iq07QPWdvUIhsTOGAliyqH010nk0Iq/N2AFQajlqwKElsbI+BV0RRkTfmYz197IyohYn4Cw8R0BT+w8NbBbVKeqIi5NjM76qgcyi5rlYO7PKli2Rj0FV50TIaOUIbW8FPjx4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751108397; c=relaxed/simple;
-	bh=PyS8+QY/Xp3+/7gWrQEE7t6DJx4VoFwvrUEY7A9l/GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HJhVWQxXHYo99cmXF8t0M7OKgtXp0sg3kdSRXvFk5vTdLntzn3qlH/rPCwAs8OJrDol/bucY0s1xQk9+9J1pumePUtA3w/10Yi9DAPTC87GNUKhRXVGiUXeArKiS2jYddlkUuC+B6aURslj7i6sxDkwsTdE0cwHDeeCkmoOrUFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZaWk2fyB; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEB7224248;
+	Sat, 28 Jun 2025 11:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751108865; cv=fail; b=t8njEo5rI7CPDqTPwEZ7xGfbba57+vfi/UvvrP0JfR0P76BBrMRXbCgVlkyjmvyR9tgMAOlZUnBiBChH6kxO/LVuZc8bBWA1mT4nbJXksMJBlIlIe/1Sr0N/S5gxcBGo/ndq4LQX11VtWJj8jUHeD91X38cT4wW3iGNyzGEuLPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751108865; c=relaxed/simple;
+	bh=5jXOtUA/DAQrq8rju2Zg8BQ7K/9xBm7kdfFzom72ZIQ=;
+	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
+	 In-Reply-To:MIME-Version; b=fxDPqvqjHrlU5sRO78w0vl+sPcx/6IC0wr5CTnA0laCveyjjsUeXnHNkqQzJtlWq9AKLfPBrXi2H/xOWcykpSoRHSDre7bDZ43h/zP2Cl8H930A8RtJCNgbRluKc+SYcKuO4WcabCNZ3mBcAYt4qwhvWPrhFTiIex/CaRsKAaZ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Xn9hDuYV; arc=fail smtp.client-ip=40.107.244.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZaWk2fyB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751108395; x=1782644395;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PyS8+QY/Xp3+/7gWrQEE7t6DJx4VoFwvrUEY7A9l/GI=;
-  b=ZaWk2fyBkeOAE1nNiiSUVUUqSiHgTg86oK+fsRhxKnHwPDlQwASk9Rms
-   JnXfTpJK6n1Oz5VD4csBoXX7crawzKlJjBedv4W4hWu5cmEtNCp2UzlTt
-   BlsWNw/gXyRnAj8CtPbYE78rT0yNpKDb1c5hfRxgpvaNlqZl7e7v89Qj/
-   58QvL7eg7tZ+c7Zlvw7cEdcvJ4RKn4/veBzWvbIm3aoVw+4peW4n1OD7h
-   oaZNFu8xxAwSitc2ppbp7VqVwV8w1EJg9p9rN55FMpSztNeLW9YHMcnZk
-   0PQ0Cna9z8B/ANIhuQ5W4Bykn4BP/AGZIsPYtfsDd7nt31ivik9zbDHzu
-   A==;
-X-CSE-ConnectionGUID: 43P9aotRSZCQ11IvybAtbw==
-X-CSE-MsgGUID: h+ZrgN41S12QaUp5voNOQA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="57084628"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="57084628"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 03:59:54 -0700
-X-CSE-ConnectionGUID: Xskm3iphRuGr/JSLtxvKCg==
-X-CSE-MsgGUID: FzYXCsYPR720uxl4LGMD/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="152750678"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 28 Jun 2025 03:59:50 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVTHf-000Wzi-1z;
-	Sat, 28 Jun 2025 10:59:47 +0000
-Date: Sat, 28 Jun 2025 18:59:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tiffany Yang <ynaffit@google.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	keescook@google.com, kernel-team@android.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: Re: [PATCH 4/5] binder: Convert binder_alloc selftests to KUnit
-Message-ID: <202506281837.hReNHJjO-lkp@intel.com>
-References: <20250627203748.881022-5-ynaffit@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Xn9hDuYV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RE5SqrHPhpjVu0uM3uIPvDpYaQTnFNhVSuInOgGHxBxsEgghYt41bxeJ1gXADOzRqsH+5JC8/NcbOYKrnVaZDqyx0zA4QfzlMxzfvHv7HcWRyk8+PsMa0vW3RsmtmO4mDUsNjTax6LBt+hsmIAt2GBy7C6q+OFODhWPX9u0vx8yMlOpIOLuZCtHS1l3hvZ4Gb8V/GmqpCwGApGB9ZtkbV9bwQRcXPf6ne44oSOqQpYYuJKRiREdCF7zl+ZKdLhXcthaXg3OBJ8+RRkaKNomtiGPys4zX7qcmuvu+QjxzESEamejgErhcL4nzQxbtCF75n2hT7x9U91TWGm+faBNe1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jkAZivoNTguVqyJDknfdQnDA7pkztmu7/2pJtlFXtcw=;
+ b=LAvYSGYA27Z8WgSXOzNEd4rekb8VQnnlkqHMUoSHDuRDhMd/I+MwQTcb63hkehyTwTny4WwhbHcaKZnYqU714nFRWsCmfMXkFLOzquBoPqJ3xjKG31SOBNA1a0wJHD8uXlCRg3PFMx1+HjbGiZHE9C1/fNQLJDdopzgHf9RoglC7Dg63tA6z6gOnN8NHhpjIGntYzM8ZkUbGtbUSZkXM9FAUhFcb99rYwLq1Wc1ZGtB7rNLUQEhuxJkxwuA89HXWLanzu+gdRxjtCoHnzVvYNrv1wZWQIs/iOXMcyEu4fO2AZGkijS/TOQ+dTqbhZJlmd51hY/Kk/2pHeiZqZvQ14w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jkAZivoNTguVqyJDknfdQnDA7pkztmu7/2pJtlFXtcw=;
+ b=Xn9hDuYVso8jLTXdT0hkTxoT6O6xa1e7vs8KN6fS1LSDKx9eZcEpHDNPyHY6jrgrl4HJYQZkiLxB/nYgxCvZ1tnkODCx4E5B3bSPDGV2DdKoNYzLDJvDUqWgOCmmt8A7QfW5csIHKm5SnHlEz7PnP8stxA8nrjzcyZrYW2p6QW/BOPR4u0jILAt7UBr2b3T0TQrAd3NFifOqPVpqzljMuxHWFeEcBCCW8hd2iveXklwqtywpUJTfgpQDA7hern1g6/TDYX1UQWnlyyteg+P4t+iyguMY4K+enExcgGOxd6kvvSbopx0DvlZYeAoh0IX5TDGlW2vE+q95BcS9ryA62g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by DS0PR12MB9448.namprd12.prod.outlook.com (2603:10b6:8:1bb::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Sat, 28 Jun
+ 2025 11:07:37 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8880.021; Sat, 28 Jun 2025
+ 11:07:37 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 28 Jun 2025 20:07:34 +0900
+Message-Id: <DAY4A657OJJF.3GE3LBCFXU6SI@nvidia.com>
+To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, "Lyude Paul"
+ <lyude@redhat.com>, "Jason Gunthorpe" <jgg@ziepe.ca>
+Cc: <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Valentin Obst"
+ <kernel@valentinobst.de>, "open list" <linux-kernel@vger.kernel.org>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>, "Robin Murphy"
+ <robin.murphy@arm.com>, <airlied@redhat.com>,
+ <rust-for-linux@vger.kernel.org>, "open list:DMA MAPPING HELPERS"
+ <iommu@lists.linux.dev>, "Petr Tesarik" <petr@tesarici.cz>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Randy Dunlap"
+ <rdunlap@infradead.org>, "Michael Kelley" <mhklinux@outlook.com>
+Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
+ <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+ <20250529004550.GB192517@ziepe.ca> <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
+ <95ff963ddabf7c3cd2cfd07d0231a0073ff6847e.camel@redhat.com>
+ <DAED5BUK7TUQ.4JRHFMWZ99W3@nvidia.com>
+ <27e17dbf-df6a-48fc-a652-ad48a776f668@gmail.com>
+ <DAENGORNRVZH.2KIGKFV5C5G3L@nvidia.com>
+ <f787046921fd608c385dc5c559883c5d70839507.camel@redhat.com>
+ <DAP96FEJ0XWT.PWYMIE8IJAVQ@nvidia.com>
+ <e2677c26-1c25-4a34-b666-9dcfa9642fd1@gmail.com>
+In-Reply-To: <e2677c26-1c25-4a34-b666-9dcfa9642fd1@gmail.com>
+X-ClientProxiedBy: TYCP286CA0203.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:385::16) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627203748.881022-5-ynaffit@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|DS0PR12MB9448:EE_
+X-MS-Office365-Filtering-Correlation-Id: 42dd9949-0108-4571-9cac-08ddb633fd84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Nkx0dFl4RHpPUVl3RlpCVnhxQkg1bFNqTHh2djVjcDNGc3NRakhEZ1U2SUx0?=
+ =?utf-8?B?QlVVRnJDWklBbGFYdG1sOVo1bUxjRGFXa0FwOHZCSEhyR3RGYllSWWtGbGhp?=
+ =?utf-8?B?LzU5TXBndG9VMXk4Q3lkMzlUZEk5SndKVmppTUVtVWZrT2lEQkl5NjJHOC82?=
+ =?utf-8?B?bnV0eG9vUVhQK1M3VkFiK2lHR3ViWmxBNmE5b01xbTdrTk5PRFBBbFJ4bG5M?=
+ =?utf-8?B?RmVPVXA1TUFuMjRHNDRaYTh3TXpVRGI5ODBnb3k1TExLaW1YVzlFQXNyQWkz?=
+ =?utf-8?B?NTVrb2FrcXlTNXk4bC9LUGh2enQ2Um95ZDBBYlJsZ205QW04Tk02V3d6TXhu?=
+ =?utf-8?B?eTBJdzFSNnpEU3ZZOVU3amc2K1dEaWZFNnZybGZhMERNTkVaT0pNWmFhMEFy?=
+ =?utf-8?B?VW95K0trS01qK0JQYkRrWG1KYUpmYTByamVpNExubklHd2p3aDVpakdXUWxl?=
+ =?utf-8?B?MVE3VG5ISTloVFhxTS9xa1VTaXRqOTh5QVBaRnNYNkVwMXVYeHpiMEZRSVlu?=
+ =?utf-8?B?cE9jR3RtbUlIUVd1MHhlaFZqbE5ka3hKN1RBKzd0ek0ydjdwMlJEVitQRTB1?=
+ =?utf-8?B?a3lCOFN0N0lKRXBjM2txVnJNd3c2Z0s4dkdLTDR3ZGlNbXB2SmRmeEM4dnQw?=
+ =?utf-8?B?RWptdmNQbWRQci9pZWxicnQ0MnIvTUM3dFk2SkNDTzdRK2IzUmVQL2poYzdw?=
+ =?utf-8?B?c3JDMmJmSlRJNGZRdTZlTnlMUGRNTHZNUlh0RzZaK1l6cWNBTUJHbDVxSTNk?=
+ =?utf-8?B?ZE9IdjYvVit1VzRGU0owMDBNSHJMaWh2N2lLNmRia09uYktSNUZjQjNXOW5F?=
+ =?utf-8?B?eStPZCtZU0h4OFRZVERoY3Q4c3FuL2JPT3lVU0JmM1VjUkdaMzBrTlY4S05Y?=
+ =?utf-8?B?Tkt4UGl1TXFSeVI4UmhuUXZjYnQwbktnK2hVM2NyWkp3OUcrMnh4dmpud3V1?=
+ =?utf-8?B?RDVvZjNOa2xDRlRLWWZ4UDd1WThHN3VqZlV4d1plbmJrQXFPUmF1cStqaUlx?=
+ =?utf-8?B?U3gvOWc3TEcycEhBRFJVZ280eVNLcmcvUG5qYXdpVGlhT1lMblpXZ2kzSlI0?=
+ =?utf-8?B?Y0h3aFFZZXVKSzgrL1V4RzJzd1VmZ3hDd0tvNDRSblk4ZnF3Rk1BV2t6M29G?=
+ =?utf-8?B?d1dtUHNLOUJnNCtkSUpabDd4UlJ4OVdnNUgxM3NramE5UVNhaDhiZ1JqOEND?=
+ =?utf-8?B?M0thR1ZTenNkMVVBbXR2L0NBS3NQcGhuc3p1c013Q3cyMzRPMEh3OUZDa0p2?=
+ =?utf-8?B?Vi9FbEUzLzFSSWw3TTRjYUhnbVJSUXBYRWtYUjhFSGZhQ2E5Qm5TRi9kbkF3?=
+ =?utf-8?B?VExBN2o0NDhmTlpyNnlITjVBMUI2UE9NcGR1WFdYd1Y4dWRITFQ4dmtZNEpY?=
+ =?utf-8?B?Q2Naa0Zza2lXUmZHQWdEOTB4bW9XclBKMk92Q3JrdjVZL1BUcHd2akhSUFA2?=
+ =?utf-8?B?VVdLRmVhU3ZTSTlNZlVCcHRsMG5veUVhbnFrYWFaMWJCT3dHcVdIM043V3cv?=
+ =?utf-8?B?L3BNalR6ajlMUHkvSEZmWW5RT3I1bWpUUFB6cFRaRmIxc05wMVFMMXdzWjlC?=
+ =?utf-8?B?Q1dEbTFNSmVqb0JMR0lsMTJEaTNnV2RNWjdRVUZVYkxTeWU3TWlYM0p0YWJo?=
+ =?utf-8?B?VmhsQlpsWHNzVkNsL2R1SzAwckdBWkVFYmVUSzRveWF2WnlPWU9QWmZueVRB?=
+ =?utf-8?B?YkZUQVRZZzM4ZjRLREFyS1E2Ukl6TW9LRnlZTUdJRzI1NElSeDVyekplYVAz?=
+ =?utf-8?B?TkNiSmRjRzRnQVRuUlpuaVlTZzQrNGY3RFpBYVh6ZUdwSFVDOUlCcGxLaG9j?=
+ =?utf-8?B?Zkd4cGh2T2pZWEo3cjg2bzRORWx6S0szcmdkbkVIU3JaMFJGbWkzdWVwbGlR?=
+ =?utf-8?B?bERKU1FzODg4aXJyd2xyTUE2MldibDNZcG4yVEM0VUh1ZkZTR1Y1ellxQloy?=
+ =?utf-8?Q?dJKoR436DGs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TUQ5QThBeDhJNE80VHloTmowekxEVlM5Q2dlWVM1enRyVkYyWVB4UkxlQUwv?=
+ =?utf-8?B?SkRpTlh5a2tXbVZmNWIwdENUdzF6Ynl5SDJwZ2Q5Y053akE1enpnZXE0enZy?=
+ =?utf-8?B?QjYya2ZuWHJxVUxRZzdydHB0ZG53ZG1Qd21JSG1GT2hhQzRXUEZ5L0lOMTFL?=
+ =?utf-8?B?b0xsSjcxbnAxM1RLUzVORU52RVhya0R5UWlEZk9mOE1kTkFmK1cxMU96TnQz?=
+ =?utf-8?B?UEh3S01qRDRrbVBmUTdxYzgvU1JoV1IzZjcwMjZpSTBoM245YWl6aDlrZ0NZ?=
+ =?utf-8?B?YUxvTFl6eWE4dGIrSHdiSy8yd0toS0xpKzAzeVVhWHVRQjVmVVE1SGt5cTE2?=
+ =?utf-8?B?Zlp6ZFp0QXN3NCs5VmU4MTAxZ2t1THZoK3oxRTJ6b3dVQ3Z5cFVNVFFuSWoy?=
+ =?utf-8?B?UmhpRzVNUG5TcWNlRWtiMmFDb0Q3ME81c29YeU96K0NwQTU3aHFBaEFYRWd3?=
+ =?utf-8?B?ZlV6MU9IalgzelU2cUVwOFBTNGM1bys3cWtQVUdidHdISGliVDAvZ2cvNDJ2?=
+ =?utf-8?B?RHFndnVHZHpQOEVZelNzZGtTbW51NmhrNk5hSWNzNlJSVndtMDVzOHU4akJa?=
+ =?utf-8?B?cElVM3RVVUdIZitGYXF2bXZaS2pDQkt4Z2hQdmh1RldMaExJckdiN1NJOVpw?=
+ =?utf-8?B?bnA1Vng5VDFaVHp4RFlDdmVXYVVYUndNcTRLSVZ1eEFIWENYYmVtTEZnRlVH?=
+ =?utf-8?B?WThRcVhHZnQ5M2llZzhVSzFFYkNud2xYYkRnL3dDMnJHTjUwYXpQTUZXOGow?=
+ =?utf-8?B?ZHQyVmJkV1FSZWxxU3ZKanBMdXBYdEdRME1aU1gyYjU2czNHSmFUNEJ2VFB1?=
+ =?utf-8?B?Ti9VUmpWd09kZjRReHFVS0ZXaEorR3lGOW1TL29qUndsTHkzYjBtdjVwaHdC?=
+ =?utf-8?B?T3kyOWtpTjhBd0VFTVB5RFpRRmdqd2hONHdyNGlFamtaYU1LcU44WWc0VHRW?=
+ =?utf-8?B?WEQyKzBSajRxT1k2QnU0RStjcWUrbDZwdHpEMjhwSW82dVdjYkk2eldxS09h?=
+ =?utf-8?B?SkZTTWIrcUwxSkpacWNHem5RRU9rOFBsRVN3QmR0NXRNQzUySm9tektHNUg5?=
+ =?utf-8?B?UTA1bjBucVZ0SmgySHB1TnNEclBHZjFMMGlOZm0zdmhEY1RWcUo2RDZSQ0pi?=
+ =?utf-8?B?OWUzaUJndDM4cm1MdDF1ZnpSMjZoZEo5OUN4Mmt0MzVoSkp6Y3JkQXBuRXc0?=
+ =?utf-8?B?YnJKejViMmYwSnh1SWlramRZa0hyQ0I5RHhmUWZ6Tk53QjNuQjIyNlJEQlJy?=
+ =?utf-8?B?MEZLRmlwNm1Uam9vRnFKemUzR1BqcFNLZ1dqYWVXQmJVRzNBMmpvcGovMVFQ?=
+ =?utf-8?B?TlFxcDBUeG5ySmFEbGhvRDlISlV5U295ZWZQTVVTK3A2N0RraU53WjRQVjdM?=
+ =?utf-8?B?OVpWb3B1a1d1UlR6ZFhoRnVqSnF3SDU4MXYwR21Id1g4YVlqMFluMzNGZURY?=
+ =?utf-8?B?SGtNZUJ6bnkwVGdGZisrcFNBR29pZEc3cmxreUFQdUYxTEhtNWVmMFNXdTcw?=
+ =?utf-8?B?T3dNMmcvODUxVnNCRnlEb21iTVFFREdaenBISWo1NjNKbWlCMnRQTTNUTEIv?=
+ =?utf-8?B?QVhnSW9xYXY1SlJXQXh0SE9uYlJ2b1hvR2NBS1VjTVVjR3pERGdIRnQ0b0lM?=
+ =?utf-8?B?T3B1UlZSN2MydDFscEtodnE3UU5rVjVCSng5clEyMythQ0tkOXRQZWJhWDFt?=
+ =?utf-8?B?NHcyZnJPU2xuL3ZKQ2pqM3Z4UkE2cUEyVS84bGxoRnlaS1NFR0lFTVQyY1Q1?=
+ =?utf-8?B?QlFrSXB3L3d2ZUFnc0VYNjd6WkVJKzZHYVdUYURvWElWTXFhc0dMQnRObkxZ?=
+ =?utf-8?B?Z25tbGdVcC8zSE1SZG5YclNSL1dtSWtWam5FSG9kVXRBQ0JKTGNMWW9Xd2s0?=
+ =?utf-8?B?azhWNkJhakJGQ2lQQlg1MFdqR3NieDRSMHZqQytrQm9EdGFYTkZRZkdyN0xm?=
+ =?utf-8?B?b1V3clJKTEE2NzByWmtPVTRscEprajArZk9mQ21yaWQ5V2tUVHY0bEpESVkv?=
+ =?utf-8?B?NitRaUxOd2lhVjRER3pteStLeHJsc0xYOFJaL1ZwaFdqNTNRMW9Fa3lSbHNB?=
+ =?utf-8?B?L3g4SHhObWxQaUppdVh6TjZsV2tDaEgrb1BVZ0FYR3BPaFB4bkRiblh3UHhZ?=
+ =?utf-8?B?Z25HMmRseE5jL0ZuaVFESFNpamF2YmZ6alQrcEdTcTcwL1dFakE2dmhGeEFG?=
+ =?utf-8?Q?BLhhQ7b9Xu5UNHGUom+1mhP8LkOdzGBxJc0mV7C0yRgA?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42dd9949-0108-4571-9cac-08ddb633fd84
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2025 11:07:37.2630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sK5wL+6xHd3i4qfulHwXUocHStiwk+nfX3p1CX9us6QFy/wNhZZt7dfATGl8eoHmDPscJnBd0SIEVhOW4s2bZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9448
 
-Hi Tiffany,
+On Fri Jun 27, 2025 at 5:31 AM JST, Abdiel Janulgue wrote:
+>
+>
+> On 18/06/2025 04:03, Alexandre Courbot wrote:
+>> Hi Lyude, sorry for taking so long to come back to this!
+>>=20
+>> On Tue Jun 10, 2025 at 2:44 AM JST, Lyude Paul wrote:
+>>> On Thu, 2025-06-05 at 22:56 +0900, Alexandre Courbot wrote:
+>>>> On Thu Jun 5, 2025 at 10:30 PM JST, Abdiel Janulgue wrote:
+>>>>>
+>>>>>
+>>>>> On 05/06/2025 08:51, Alexandre Courbot wrote:
+>>>>>> Maybe I need more context to understand your problem, but the point =
+of
+>>>>>> this design is precisely that it doesn't make any assumption about t=
+he
+>>>>>> memory layout - all `P` needs to do is provide the pages describing =
+the
+>>>>>> memory backing.
+>>>>>>
+>>>>>> Assuming that `_owner` here is the owner of the memory, couldn't you
+>>>>>> flip your data layout and pass `_owner` (or rather a newtype wrappin=
+g
+>>>>>> it) to `SGTable`, thus removing the need for a custom type?
+>>>>>
+>>>>> I think what Lyude has in mind here (Lyude, correct me if I'm wrong) =
+is
+>>>>> for cases where we need to have a rust SGTable instances for those
+>>>>> struct sg_table that we didn't allocate ourselves for instance in the
+>>>>> gem shmem bindings. So memory layout needs to match for
+>>>>> #[repr(transparent)] to work
+>>>>
+>>>> Thanks, I think I am starting to understand and this is a problem
+>>>> indeed. I should probably take a look at the DRM code to get my answer=
+s,
+>>>> but IIUC in `OwnedSGTable`, `sg_table` is already provided by the C si=
+de
+>>>> and is backed by `_owner`?
+>>>
+>>> Correct. You generally create a gem shmem object, and then you can call=
+ a
+>>> function to ask gem to create an sg_table and hand it back to you. I sh=
+ould
+>>> note my priorities have shifted a bit from trying to get shmem bindings
+>>> upstream, but currently it's still the best example I have of this usec=
+ase.
+>>>
+>>> So, for gem shmem this means we can operate with an SGTable in two ways=
+:
+>>>
+>>>   * gem_shmem_object.sg_table() -> Result<&kernel::scatterlist::SGTable=
+>
+>>>   * gem_shmem_object.owned_sg_table() ->
+>>>     Result<kernel::drm::gem::shmem::OwnedSGTable<T: DriverObject>
+>>>
+>>> I'm going to call the first return type SGTable and the second one
+>>> OwnedSGTable, just so I can type a bit less.
+>>>
+>>> The first, sg_table(), quite literally just calls drm_gem_shmem_get_pag=
+es_sgt
+>>> which attempts to allocate the table and return a pointer to it on succ=
+ess. We
+>>> then cast that to &SGTable and return it to the user. This can be good =
+for
+>>=20
+>> Mmm but if you cast the returned C pointer into a `&SGTable`, then who
+>> owns (and is responsible for freeing) the `SGTable` it refers to? If the
+>> pointer is just turned into a reference then this might leak the `struct
+>> sg_table`.
+>>=20
+>
+> Just commenting on this bit. From what I've seen, we don't actually leak=
+=20
+> anything. The cast only creates a reference to the original C `struct=20
+> sg_table` object which was allocated and owned by whichever kernel=20
+> subsystem called sg_alloc_table(). Rust doesn't even allow us to take=20
+> ownership or to dereference the value, so this one is safe. Destructors=20
+> are not called on those "casted" objects.
 
-kernel test robot noticed the following build warnings:
+Looks like I was confused about how `sg_table()` worked. This
+method is introduced in [1] and calls `drm_gem_shmem_get_pages_sgt`. I
+assumed that it did a `sg_alloc_table*` somewhere and returned the
+result, leaving the caller responsible for releasing it - which would
+indeed introduce a leak if we just converted that pointer into a
+reference.
 
-[auto build test WARNING on staging/staging-testing]
-[also build test WARNING on staging/staging-next staging/staging-linus shuah-kselftest/kunit shuah-kselftest/kunit-fixes linus/master v6.16-rc3 next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+But instead it appears that the SG table is allocated once, mapped and
+stored into `shmem->sgt`, and that's the pointer that is returned. Thus
+`shmem` is the owner of the table and the semantics are indeed safe.
+Thanks for the clarification.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tiffany-Yang/binder-Fix-selftest-page-indexing/20250628-044044
-base:   staging/staging-testing
-patch link:    https://lore.kernel.org/r/20250627203748.881022-5-ynaffit%40google.com
-patch subject: [PATCH 4/5] binder: Convert binder_alloc selftests to KUnit
-config: x86_64-buildonly-randconfig-002-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281837.hReNHJjO-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250628/202506281837.hReNHJjO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506281837.hReNHJjO-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Warning: drivers/android/tests/binder_alloc_kunit.c:326 function parameter 'test' not described in 'binder_alloc_exhaustive_test'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[1] https://lore.kernel.org/rust-for-linux/20250521204654.1610607-8-lyude@r=
+edhat.com/
