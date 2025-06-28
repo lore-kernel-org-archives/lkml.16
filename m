@@ -1,148 +1,177 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB58721C186;
-	Sat, 28 Jun 2025 14:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF39EEAA;
+	Sat, 28 Jun 2025 14:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751120986; cv=none; b=Hl96ZMMJSBscWb5DcN6q7f7PtS8IRF8qvwWIhkmZMXlVM0mIB7OIrbBs/ODp2lj2gkBB9nDYKjBduuDwsZHiBLKxMAtLZCWpLScpxBZ6KcEyDnDtdjfCZ5ehPBTd7ubgJezbhP/RAwP5hrSNuKfRF38sGI/vryjjpWzQgGUsmek=
+	t=1751121047; cv=none; b=B71bJXd9T6d4L5Fch5CN9LDziP0racZnLWGnnSl7wsu3nPKjfBhrqdeyeMw8c0WNig+BkVXV/yeRAZVtdeTloqfipB1EyFDL/FvIIPJIanXtt8OVrM8BqqO2xEHvW/zfvwjp52TW8q5r3KRDUU27B5RmpIJjilK2n++ZmwFyOzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751120986; c=relaxed/simple;
-	bh=J6PmAR2x3Gaj2uMT0husjz5AQ81kQiQjYOGaLvseu78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YdP8+qtMTBxKoUiHrItOdtiBvhZNoRD2XENVaib9/h8/bU6A1UXg19EKFjiOLVw4RL2vIGZddiey2z5JbjflJZYo+lZnXT8qEVxRmU8ZqOARsYM2RFiV3azVHEg0IUoPOJO8uO8/Btob4yEqqepq3GRLXklNjRr/YKg51m8154U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lKJbYdvM; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751121047; c=relaxed/simple;
+	bh=Zjca297UPm9qRvcIWvdjcDdDUN0GQEN4ZAaapxXydnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m72Ew5ogiohc2znab4wMvevO66wpfeWL2rqBvY9aRH0sped2CW3lNrTsRMeyMQhSjPom6LtnpKiUx2t98v81tpvJxZbKLB07Y/GfyIbZj/jDcqNXqnpltn0xSRum4CweuUH2Nw2QXhmou5/T7Ik3kaaSp3AB5TCGWhT0itaNanI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eVaW43Sl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKJbYdvM"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b2fcd6fe970so523727a12.3;
-        Sat, 28 Jun 2025 07:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751120983; x=1751725783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M8rK0LNTNZFI5uOITPOK3NWDXLKxWYEPkVY5RC1g95E=;
-        b=lKJbYdvMYJuk17gczWFSHZMH8lcsWWnxtfFBDh+jzbd99FpNreATtHf8VglbEdt9eH
-         2bIWeVibrZqdyybsEYEKTl4E2KYyqNRNSOYGViRpvSJQn8SUNA3v661UyIelxPhM0MwM
-         rmz2GA123solgNw2YhQXEgvw4UqPuqdyx0x+ZZVceJoIyDD2Pdml/ILLbl0ulkJmDpCT
-         H3TOlaEpWmzUBMN4kPslx1u76zA+seTuVr/YLZNWVK0aVmtzMIXn9BntM3A/CiovgdQE
-         3wWMdHayYhc1N6cKslMSM5DZpv7LrdrABFRB9/0K6hnHgCgGaAGn27TznFaDLQOs+zFa
-         1WlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751120983; x=1751725783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M8rK0LNTNZFI5uOITPOK3NWDXLKxWYEPkVY5RC1g95E=;
-        b=HNHwaa5YDRgOIy+y2E7KpsV5rj0rhWk4BC1xU4IyzbmmLGXL86JHWA8OD1wbeqB8D+
-         KMJnMvtAgsCf8DndQjSHIrYq5vWjUcO5WRa6XsSkfOot0QZiKd1Rb0K5oyafxKscZLzq
-         G+BiyeqzZo8C2/dEhFxdsgVFiIV32MuVMAATgvI/dZxPuQuD4sGNcHaSvlydYTVt40dO
-         k3tcsgo6Gdo8vTjKJQAcKyPtFaJhcEae3iP3Lk9epwikG29MKQvWBFr4fOrsYc/t36vo
-         TTxCE+1/RhYmb75sC1RBRBeof+fBvgUuj7nLPAL2EmrMABBty9Qf07kw2GcKpT9tuAce
-         H1kg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3cXvcCqI9CL4aGphauMnUMfo2JwPgHBiYhIDFGVSObJkroBcNC17Q5sqUxKDtSoN5MLLdttpv030Z7Ik=@vger.kernel.org, AJvYcCWG3iYU+KCOwPPe6SgOGLdJt0er2FXZw/y5qz6ucTI/456mMaPPoPVahsg17HbVtp80MQhO42le12MAgrHbXaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqZcfFfEiHcJbY9nddyy4UwvweW61233ScRgbrONjktwVGIe32
-	vagjt8i+J4x87u4AhcOneVYYSQQ5Aj4OdQstrmKbqM7+GrDgj+tFwhHQQXUgTTK83gVhHMXFCBg
-	DNcrpKbAP0eIeSvZny8ZtUoislwVaTws=
-X-Gm-Gg: ASbGnctye/F9PQNEDvB3Cx7kBUu/offYHIqzC9WfBInnRoF3MBFc8mJJUfyfkNX2Rui
-	8PRELStwIjMc5bQPHq+OWAKF2M5xLuEJ2p2pPRFJKc6Hmc3+JfEe9haX5FfRP1VJX16K3Lu8WQv
-	SJ7pF1KGqznmskkjqvbsvdwKJGwTnyLCH8csVcBv+P5Tc=
-X-Google-Smtp-Source: AGHT+IEBB8Xqc39C0N994YZDielieKfflkaDCiTAdwXbea0djsWBlJZ8r6j9Gki1hd80aLoznxs3pd6yTbRPtIErX04=
-X-Received: by 2002:a17:90b:1dc2:b0:312:e76f:520f with SMTP id
- 98e67ed59e1d1-318edfc8f90mr1619475a91.8.1751120983155; Sat, 28 Jun 2025
- 07:29:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eVaW43Sl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DC1C4CEEA;
+	Sat, 28 Jun 2025 14:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751121046;
+	bh=Zjca297UPm9qRvcIWvdjcDdDUN0GQEN4ZAaapxXydnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eVaW43Sl/FlOO9tXaYKFjoHnVxXZvH0PCA3tsUNCALkdHjsEmxPo5473himU/xcKe
+	 6cf1OP0Pb2SVEArJeEkRitdgSgNNuVWwnhUcfZO/MdRQORUwRPsS37MbGLRWFO2afg
+	 594BZkclWAGh5TsenxRGZ3XzZKhXYXnmfLvofJTU=
+Date: Sat, 28 Jun 2025 16:30:44 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2] usb: misc: qcom_eud: Access EUD_MODE_MANAGER2 through
+ secure calls
+Message-ID: <2025062833-sneak-ceremony-a06b@gregkh>
+References: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com> <CANiq72nJcEM09HbQB3_NpKGxr9x8Ah0VE+=XS=xvA26P2qg=_g@mail.gmail.com>
- <48605183-78B6-461E-9476-C96C8E55A55D@collabora.com>
-In-Reply-To: <48605183-78B6-461E-9476-C96C8E55A55D@collabora.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 28 Jun 2025 16:29:31 +0200
-X-Gm-Features: Ac12FXwykK9WpEDj8sy1SYn6UJGGfGhd3PbUMsp81V7dzsqhylvpeGilPLCu43U
-Message-ID: <CANiq72kWGUbpDW+WjKki4JUYX63j_GFBcyQse-rgddwyoFw7cg@mail.gmail.com>
-Subject: Re: [PATCH] Introduce Tyr
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Alice Ryhl <alice.ryhl@google.com>, Beata Michalska <beata.michalska@arm.com>, 
-	Carsten Haitzler <carsten.haitzler@foss.arm.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Ashley Smith <ashley.smith@collabora.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
 
-On Sat, Jun 28, 2025 at 3:06=E2=80=AFPM Daniel Almeida
-<daniel.almeida@collabora.com> wrote:
->
-> The branch I shared is drm-misc-next plus a few dependencies, i.e.: 10 co=
-mmits
-> total if I counted it correctly - all of which have been sent to the list
-> already and most of which have seen a quite a few iterations. I should ha=
-ve
-> explicitly said this, though.
+On Fri, Jun 27, 2025 at 06:21:31PM +0530, Komal Bajaj wrote:
+> EUD_MODE_MANAGER2 register is mapped to a memory region that is marked
+> as read-only for HLOS, enforcing access restrictions that prohibit
+> direct memory-mapped writes via writel().
+> 
+> Attempts to write to this region from HLOS can result in silent failures
+> or memory access violations, particularly when toggling EUD (Embedded
+> USB Debugger) state. To ensure secure register access, modify the driver
+> to use qcom_scm_io_writel(), which routes the write operation to Qualcomm
+> Secure Channel Monitor (SCM). SCM has the necessary permissions to access
+> protected memory regions, enabling reliable control over EUD state.
+> 
+> SC7280, the only user of EUD is also affected, indicating that this could
+> never have worked on a properly fused device.
+> 
+> Fixes: 9a1bf58ccd44 ("usb: misc: eud: Add driver support for Embedded USB Debugger(EUD)")
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> Signed-off-by: Komal Bajaj <komal.bajaj@oss.qualcomm.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Changes in v2:
+> * Drop separate compatible to be added for secure eud
+> * Use secure call to access EUD mode manager register
+> * Link to v1: https://lore.kernel.org/all/20240807183205.803847-1-quic_molvera@quicinc.com/
+> 
+>  drivers/usb/misc/qcom_eud.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/qcom_eud.c b/drivers/usb/misc/qcom_eud.c
+> index 83079c414b4f..30c999c49eb0 100644
+> --- a/drivers/usb/misc/qcom_eud.c
+> +++ b/drivers/usb/misc/qcom_eud.c
+> @@ -16,6 +16,8 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/usb/role.h>
+>  
+> +#include <linux/firmware/qcom/qcom_scm.h>
+> +
+>  #define EUD_REG_INT1_EN_MASK	0x0024
+>  #define EUD_REG_INT_STATUS_1	0x0044
+>  #define EUD_REG_CTL_OUT_1	0x0074
+> @@ -34,7 +36,7 @@ struct eud_chip {
+>  	struct device			*dev;
+>  	struct usb_role_switch		*role_sw;
+>  	void __iomem			*base;
+> -	void __iomem			*mode_mgr;
+> +	phys_addr_t			mode_mgr;
+>  	unsigned int			int_status;
+>  	int				irq;
+>  	bool				enabled;
+> @@ -43,10 +45,14 @@ struct eud_chip {
+>  
+>  static int enable_eud(struct eud_chip *priv)
+>  {
+> +	int ret;
+> +
+>  	writel(EUD_ENABLE, priv->base + EUD_REG_CSR_EUD_EN);
+>  	writel(EUD_INT_VBUS | EUD_INT_SAFE_MODE,
+>  			priv->base + EUD_REG_INT1_EN_MASK);
+> -	writel(1, priv->mode_mgr + EUD_REG_EUD_EN2);
+> +	ret = qcom_scm_io_writel(priv->mode_mgr + EUD_REG_EUD_EN2, 1);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return usb_role_switch_set_role(priv->role_sw, USB_ROLE_DEVICE);
+>  }
+> @@ -54,7 +60,7 @@ static int enable_eud(struct eud_chip *priv)
+>  static void disable_eud(struct eud_chip *priv)
+>  {
+>  	writel(0, priv->base + EUD_REG_CSR_EUD_EN);
+> -	writel(0, priv->mode_mgr + EUD_REG_EUD_EN2);
+> +	qcom_scm_io_writel(priv->mode_mgr + EUD_REG_EUD_EN2, 0);
+>  }
+>  
+>  static ssize_t enable_show(struct device *dev,
+> @@ -178,6 +184,7 @@ static void eud_role_switch_release(void *data)
+>  static int eud_probe(struct platform_device *pdev)
+>  {
+>  	struct eud_chip *chip;
+> +	struct resource *res;
+>  	int ret;
+>  
+>  	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+> @@ -200,9 +207,10 @@ static int eud_probe(struct platform_device *pdev)
+>  	if (IS_ERR(chip->base))
+>  		return PTR_ERR(chip->base);
+>  
+> -	chip->mode_mgr = devm_platform_ioremap_resource(pdev, 1);
+> -	if (IS_ERR(chip->mode_mgr))
+> -		return PTR_ERR(chip->mode_mgr);
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res)
+> +		return -ENODEV;
+> +	chip->mode_mgr = res->start;
+>  
+>  	chip->irq = platform_get_irq(pdev, 0);
+>  	if (chip->irq < 0)
+> -- 
+> 2.48.1
+> 
+> 
 
-Ah, that helps, thanks. It is completely fine -- I am just pointing it
-out in case it helps you make this easier to land and for others to
-follow.
+Hi,
 
-> Anyway, I thought that having a branch would be more tidy than listing th=
-em, as
-> the branch shows in what order they're applied and etc. For example, the =
-patch
-> for read_poll_timeout was cherry-picked from Fujita's v12 series, and tha=
-t was
-> subsequently dropped in v13 until the rest of the series was merged on v1=
-5. I
-> thought that referring to v12 of that series would be slightly confusing.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Yeah, the branch is definitely nice to have to see the end state you
-want, but having the Lore links helps a lot clarifying what the
-dependencies (and their version etc.) are. You can use that chance to
-mention anything out of the ordinary for each dependency (e.g. like
-you mentioned here).
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-> Yeah, it's a constant battle between having spelling check enabled (which=
- on my
-> case flags the code itself, thereby producing a mountain of false positiv=
-es) vs
-> not. In this case, the bad spelling won :)
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
-I would suggest using `checkpatch.pl` with `--codespell` (I don't know
-if it catches this one -- I just saw it in my client -- but their
-dictionary definitely did catch some for us in the past).
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-> Hmm, I must say I did not know that this was a thing.
->
-> Why is it better than [#allow] during the development phase?
+thanks,
 
-I have some notes at:
-
-    https://docs.kernel.org/rust/coding-guidelines.html#lints
-
-Generally speaking, we default to `expect` unless there is a reason
-not to (I list some possible reasons in the link), because `expect`
-forces us to clean it when unneeded.
-
-Not sure what you mean by "development phase" -- even if Tyr is under
-development, it should still try to conform to the usual guidelines.
-Of course, if a particular `expect` would be a pain, then please feel
-free to use `allow`. But is that case here? i.e. you will want to
-remove the `allow` anyway when you add the new code, no?
-
-Thanks!
-
-Cheers,
-Miguel
+greg k-h's patch email bot
