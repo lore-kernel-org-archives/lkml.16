@@ -1,164 +1,382 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4542E19597F;
-	Sat, 28 Jun 2025 13:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE7A17ADF8;
+	Sat, 28 Jun 2025 13:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751117141; cv=none; b=he7jtuZlpwDcbkVWuTUmTKXD+aTILBjnuX0i3mGUUsUgZfBygzTGV/lHoz8tpJm8Nb4Br26m6Bnr7iEcSmb3FDfSwrLdJ99wXnSfMWf3/JWyPIfNxc29gYGfr3HRw15fK3nFyJa8wtt6VlZ/ZEwlvCjpbzT7rEOc7zBTacadCY4=
+	t=1751117301; cv=none; b=cy44Du+66PpWB0q1K8inlElb/KP7AONTphrBC+2NT9Hi5IMzVzklAQ3LzcA82oQa9/DIY1od3CvHRFSCtn0ZfIf1iXu3Bqvu0uFnwmkp47XiO36gTe0VCr9ucqJsKzhPj7CafqC4HSoL47KF/CKgmflCWyspUuW0Cn53Gj5R2GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751117141; c=relaxed/simple;
-	bh=L9hXJHuBvyYPVmVbLpoMFR4H07JOmA06RF+Wl4Z/7RE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fu31DcXjXkeBCEW80dpHVEGaiyjBQS/9osdH/vV7ePQuYxtdijkGE7H4/nt6uDTmHrFLAz2khjldPhyp7ofQimCWMWATHvUEDk+JEe202K7V4zgskahyrGOr0QjkozpFVf84PuH67aiNY1/AjQnMqNjtQCEjDqts5jUGU6r8ydM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/f7AyjI; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751117301; c=relaxed/simple;
+	bh=ji99GoMmZ+BmHWew9GGKVVTMG5BQGwO4X4vVoTM8jUo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aIAkMpPLP+S8e+8vHPOYU9mM04PpGzlm0SbRbky88xs/M5r7n+2QpLOu3/Zm6kM7yW+LHDR54yemE8gZ1XGyAGkDZcekMYaYdKp01T1KVIy6HZs0zPWi407nFq5v+Hv0+aEBoDsjr6UjfDqpZffOJP5dLU/X83UGbngqrd0dieM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMcL2y48; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/f7AyjI"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5535652f42cso3591522e87.2;
-        Sat, 28 Jun 2025 06:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751117135; x=1751721935; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L9hXJHuBvyYPVmVbLpoMFR4H07JOmA06RF+Wl4Z/7RE=;
-        b=d/f7AyjIMU+oDa7x4RBDKy1GUdVqLktnNHVDdpvD7ad4vQOiGuXJeqWVzkLIC891lR
-         d4MFYemwDx9pC9s4bWleShtQ1tj+IiDM02juYWpyaAPbZfDzRfD1eG+UFtlLdJ9GYzy8
-         wW7XaiIdvfID4YAhIO2nVgiPMwtd+KTsP1MM2N5v/hjRQbKI7UYTPvqoCOBUiETe6sXO
-         tonCDI2b1qgxovmCQvJG2hIyZbOhQiPGQ5zmx3KHTN+ofraSamXAT/WOHgtWxXWWtpSF
-         +D8QLBWmqF3Se1Mecjmo5C6IvCEXQaKMYsbB9A5iS9T6hSLBYBzIqCIiR9YhOy6JOOQ9
-         R77Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751117135; x=1751721935;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L9hXJHuBvyYPVmVbLpoMFR4H07JOmA06RF+Wl4Z/7RE=;
-        b=sEmr6WOBvw1kYYKoR/Gg9utHy6DJ8yviSIzs2PWO+qLsp5E0FWuwTJh9w4sShDUo58
-         txRz2UoFZCJB0Pj2am2Hwi3DWLJV/zB3CHu5Bmqtbfw8CZw22g/IxO0rT8FUrLiunPnH
-         UOf0Y9pRh9VR4LRiSqcekJAf0NdgJYl6fXpSOUBDr1FmeOXqa58Qz0VE4WLuhyyNJclz
-         PJQIrvoRE2hHO46EpZGvGCrDy4xcg84XzUhYQiOiahsHpdigX5n2d2zns/d96sSVinOQ
-         tSRVl9tL4JX/0tCGJEdRlzolBcM6F9mjAx3L+AHxV5H5jGxG2z2Z/obzb4koQ6Tu+X0u
-         G5rw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5HDFevWPT7TEMXps9DdaVCLQpBRsPNxH3JYoV9BtpWd2eN67k+rpVHH47gkctWnt50PPrhyy6kP0QKiM=@vger.kernel.org, AJvYcCWPUgrpzuL9vqlWCLnijJ2rgZeeRo+GkFEP52nKQW5jD9DiCA4uuokoH+97LpWv4HiU3BtF8uZ09gpvVg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyhUCOh2ibiN8YISbxs6Gvobz6c3TlskJXKVOdwBZq2BWYo0+X
-	lHwYKbTQrja3KsAZNnLJ4guTWlJviXD7j5NlWxS7+Ht35xh5J8spGKhWTeGCmYcBBaYrWqPJWlC
-	vXM1lwQosNfJiQQH1fhXRA+uLCPBazl0=
-X-Gm-Gg: ASbGncvaYHnMQ20o9IRwxGlGDN6FA3993QIDKObfAI8ZUjAag4SKsCc/bSVhU/pnljZ
-	FS7WylvwycTObAuDjo0wE3zMft5nbkN2rcF2AEq2MRPPLBkMrHAmmji0UqMJOlCGtNOheencE5U
-	bpqjbe8+WyR2xkGPVaqiD1RnxounPywpDJ/m5zFC2SLrfemKA=
-X-Google-Smtp-Source: AGHT+IGcgqdYgD7HxbDyPqcYV3Heu4fL1zBBGlE2pOeLSvkf48pz8fpRePfbVo/DnCDwvNyc5box4+f/veOvw14SJEw=
-X-Received: by 2002:a05:6512:401e:b0:553:d1b0:1f1f with SMTP id
- 2adb3069b0e04-5550b817bf9mr2031982e87.21.1751117135042; Sat, 28 Jun 2025
- 06:25:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMcL2y48"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751117299; x=1782653299;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ji99GoMmZ+BmHWew9GGKVVTMG5BQGwO4X4vVoTM8jUo=;
+  b=EMcL2y48MMB373FJqh6fkImgU0EqrUKbUmGUPMCONEUqM8NLdATJ3lPx
+   G/+jeI1w1pxzk/NrpEYpZYdoDWnp8CfvsUgTCmPkFkBVKDFXMOJyuzMTY
+   unMsceGKxbLKT4YbgLcQaxh/NxDtF77sugqzWZjG1kWssTwTfF+tOjx8X
+   qHZSfO1g7xRXClXtNEmGNFqRk8eRvAhmQSHxhcm2P/3ZJU2SyhxGrVJNg
+   VlGH0BA+XPyHcOXbvAYOWrRkkUx0QUGEmSWv6svusS9YzU4HxNgxb7LP3
+   1e/ALFBMPeJ9srjq1hGvHWtm+rMKWyptENI86SCVz3POX7MLzygKA0S/g
+   Q==;
+X-CSE-ConnectionGUID: qc0frzKQSOKbRrut9Kr6tA==
+X-CSE-MsgGUID: y3u5RsUoR5W6mCcFWPXoxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="64007910"
+X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
+   d="scan'208";a="64007910"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 06:28:18 -0700
+X-CSE-ConnectionGUID: cBHHD+OYSt65z/yA9QfR9A==
+X-CSE-MsgGUID: I3WJoKQDT661nA0lRsItyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,273,1744095600"; 
+   d="scan'208";a="158533135"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.243.252]) ([10.124.243.252])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 06:28:15 -0700
+Message-ID: <e505c970-e519-44c6-a316-e5d186f216ca@linux.intel.com>
+Date: Sat, 28 Jun 2025 21:28:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626153147.145312-1-snovitoll@gmail.com> <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
-In-Reply-To: <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Sat, 28 Jun 2025 18:25:17 +0500
-X-Gm-Features: Ac12FXz_1yZEfUGAygYOxkSS_g1GpWf3Y2t1PdPyYRlgb0h3dTvUyL8mVDVK8Qk
-Message-ID: <CACzwLxgsVkn98VDPpmm7pKcbvu87UBwPgYJmLfKixu4-x+yjSA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] kasan: unify kasan_arch_is_ready with kasan_enabled
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com, 
-	vincenzo.frascino@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, 
-	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, 
-	richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
-	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	akpm@linux-foundation.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	morbo@google.com, justinstitt@google.com, arnd@arndb.de, rppt@kernel.org, 
-	geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com, 
-	tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com, 
-	kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, patches@lists.linux.dev, pjaroszynski@nvidia.com,
+ vsethi@nvidia.com, helgaas@kernel.org
+Subject: Re: [PATCH RFC v2 3/4] iommu: Introduce iommu_dev_reset_prepare() and
+ iommu_dev_reset_done()
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, joro@8bytes.org,
+ will@kernel.org, robin.murphy@arm.com, rafael@kernel.org, lenb@kernel.org,
+ bhelgaas@google.com
+References: <cover.1751096303.git.nicolinc@nvidia.com>
+ <9042270b6c2d15a53e66d22d29b87c1c59e60669.1751096303.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <9042270b6c2d15a53e66d22d29b87c1c59e60669.1751096303.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 3:57=E2=80=AFPM Andrey Konovalov <andreyknvl@gmail.=
-com> wrote:
->
-> On Thu, Jun 26, 2025 at 5:32=E2=80=AFPM Sabyrzhan Tasbolatov
-> <snovitoll@gmail.com> wrote:
-> >
-> > This patch series unifies the kasan_arch_is_ready() and kasan_enabled()
-> > interfaces by extending the existing kasan_enabled() infrastructure to
-> > work consistently across all KASAN modes (Generic, SW_TAGS, HW_TAGS).
-> >
-> > Currently, kasan_enabled() only works for HW_TAGS mode using a static k=
-ey,
-> > while other modes either return IS_ENABLED(CONFIG_KASAN) (compile-time
-> > constant) or rely on architecture-specific kasan_arch_is_ready()
-> > implementations with custom static keys and global variables.
-> >
-> > This leads to:
-> > - Code duplication across architectures
-> > - Inconsistent runtime behavior between KASAN modes
-> > - Architecture-specific readiness tracking
-> >
-> > After this series:
-> > - All KASAN modes use the same kasan_flag_enabled static key
-> > - Consistent runtime enable/disable behavior across modes
-> > - Simplified architecture code with unified kasan_init_generic() calls
-> > - Elimination of arch specific kasan_arch_is_ready() implementations
-> > - Unified vmalloc integration using kasan_enabled() checks
-> >
-> > This addresses the bugzilla issue [1] about making
-> > kasan_flag_enabled and kasan_enabled() work for Generic mode,
-> > and extends it to provide true unification across all modes.
-> >
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217049
->
-> Hi Sabyrzhan,
->
-> Thank you for working on this!
->
-> One aspect that is missing from the patches is moving the
-> kasan_arch_is_ready() calls into the include/linux/kasan.h (this is
-> not explicitly mentioned in the issue, but this is what the "adding
-> __wrappers" part is about).
->
-> Another thing that needs careful consideration is whether it's
-> possible to combine kasan_arch_is_ready() and kasan_enabled() into the
-> same check logically at all. There's one issue mentioned in [1]:
+On 6/28/2025 3:42 PM, Nicolin Chen wrote:
+> PCIe permits a device to ignore ATS invalidation TLPs, while processing a
+> reset. This creates a problem visible to the OS where an ATS invalidation
+> command will time out: e.g. an SVA domain will have no coordination with a
+> reset event and can racily issue ATS invalidations to a resetting device.
+> 
+> The OS should do something to mitigate this as we do not want production
+> systems to be reporting critical ATS failures, especially in a hypervisor
+> environment. Broadly, OS could arrange to ignore the timeouts, block page
+> table mutations to prevent invalidations, or disable and block ATS.
+> 
+> The PCIe spec in sec 10.3.1 IMPLEMENTATION NOTE recommends to disable and
+> block ATS before initiating a Function Level Reset. It also mentions that
+> other reset methods could have the same vulnerability as well.
+> 
+> Provide a callback from the PCI subsystem that will enclose the reset and
+> have the iommu core temporarily change all the attached domain to BLOCKED.
+> After attaching a BLOCKED domain, IOMMU drivers should fence any incoming
+> ATS queries, synchronously stop issuing new ATS invalidations, and wait
+> for all ATS invalidations to complete. This can avoid any ATS invaliation
+> timeouts.
+> 
+> However, if there is a domain attachment/replacement happening during an
+> ongoing reset, the ATS might be re-enabled between the two function calls.
+> Introduce a new pending_reset flag in group_device to defer an attachment
+> during a reset, allowing iommu core to cache the target domains in the SW
+> level but bypassing the driver. The iommu_dev_reset_done() will re-attach
+> these soft-attached domains via __iommu_attach_device/set_group_pasid().
+> 
+> Notes:
+>   - This only works for IOMMU drivers that implemented ops->blocked_domain
+>     correctly with pci_disable_ats().
 
-Hello,
-I've removed kasan_arch_is_ready() at all in this series:
-[PATCH v2 11/11] kasan: replace kasan_arch_is_ready with kasan_enabled
+Does this mean the IOMMU driver should disable ATS when ops-
+ >blocked_domain is used? This might not be feasible because ops-
+ >blocked_domain might possibly be attached to a PASID of a device, while
+other PASIDs still use ATS for functionality.
 
-Is it not what's expected by unification?
+>   - This only works for IOMMU drivers that will not issue ATS invalidation
+>     requests to the device, after it's docked at ops->blocked_domain.
+> Driver should fix itself to align with the aforementioned notes.
 
->
-> > In kasan_cache_create() we unconditionally allocate a metadata buffer,
-> > but the kasan_init_slab_obj() call to initialise it is guarded by
-> > kasan_enabled(). But later parts of the code only check the presence of
-> > the buffer before using it, so bad things happen if kasan_enabled()
-> > later turns on (I was getting some error about invalid lock state).
->
-> And there might be other callbacks that should be executed even before
-> kasan_init_...() completes. But then for the HW_TAGS mode, if
-> kasan_enabled() is off, then we don't want to execute any callbacks.
->
-> So maybe we do actually need a separate static key for
-> kasan_arch_is_ready(). But even if so, it still makes sense to move
-> kasan_arch_is_ready() into the __wrappers for the affected callbacks.
->
-> Thanks!
->
-> [1] https://lore.kernel.org/linux-mm/CA+fCnZf7JqTH46C7oG2Wk9NnLU7hgiVDEK0=
-EA8RAtyr-KgkHdg@mail.gmail.com/
+My understanding of the requirements for the iommu drivers is: when all
+PASIDs are docked in the blocking DMA state, the IOMMU driver should:
+
+- Flush all outstanding ATS invalidation requests;
+- Stop issuing any further ATS invalidations;
+- Configure the hardware to reject further ATS translation requests.
+
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>   include/linux/iommu.h |  12 ++++
+>   drivers/iommu/iommu.c | 158 ++++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 170 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 156732807994..a17161b8625a 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -1123,6 +1123,9 @@ void dev_iommu_priv_set(struct device *dev, void *priv);
+>   extern struct mutex iommu_probe_device_lock;
+>   int iommu_probe_device(struct device *dev);
+>   
+> +int iommu_dev_reset_prepare(struct device *dev);
+> +void iommu_dev_reset_done(struct device *dev);
+> +
+>   int iommu_device_use_default_domain(struct device *dev);
+>   void iommu_device_unuse_default_domain(struct device *dev);
+>   
+> @@ -1407,6 +1410,15 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
+>   	return -ENODEV;
+>   }
+>   
+> +static inline int iommu_dev_reset_prepare(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void iommu_dev_reset_done(struct device *dev)
+> +{
+> +}
+> +
+>   static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+>   {
+>   	return NULL;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index bd3deedcd2de..14bfeaa9ac29 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -71,12 +71,29 @@ struct group_device {
+>   	struct list_head list;
+>   	struct device *dev;
+>   	char *name;
+> +	bool pending_reset : 1;
+>   };
+>   
+>   /* Iterate over each struct group_device in a struct iommu_group */
+>   #define for_each_group_device(group, pos) \
+>   	list_for_each_entry(pos, &(group)->devices, list)
+>   
+> +/* Callers must hold the dev->iommu_group->mutex */
+> +static struct group_device *device_to_group_device(struct device *dev)
+> +{
+> +	struct iommu_group *group = dev->iommu_group;
+> +	struct group_device *gdev;
+> +
+> +	lockdep_assert_held(&group->mutex);
+> +
+> +	/* gdev must be in the list */
+> +	for_each_group_device(group, gdev) {
+> +		if (gdev->dev == dev)
+> +			break;
+> +	}
+> +	return gdev;
+> +}
+> +
+>   struct iommu_group_attribute {
+>   	struct attribute attr;
+>   	ssize_t (*show)(struct iommu_group *group, char *buf);
+> @@ -2155,8 +2172,17 @@ int iommu_deferred_attach(struct device *dev, struct iommu_domain *domain)
+>   	int ret = 0;
+>   
+>   	mutex_lock(&group->mutex);
+> +
+> +	/*
+> +	 * There is a racy attach while the device is resetting. Defer it until
+> +	 * the iommu_dev_reset_done() that attaches the device to group->domain.
+> +	 */
+> +	if (device_to_group_device(dev)->pending_reset)
+> +		goto unlock;
+> +
+>   	if (dev->iommu && dev->iommu->attach_deferred)
+>   		ret = __iommu_attach_device(domain, dev);
+> +unlock:
+>   	mutex_unlock(&group->mutex);
+>   	return ret;
+>   }
+> @@ -2295,6 +2321,13 @@ static int __iommu_device_set_domain(struct iommu_group *group,
+>   		dev->iommu->attach_deferred = 0;
+>   	}
+>   
+> +	/*
+> +	 * There is a racy attach while the device is resetting. Defer it until
+> +	 * the iommu_dev_reset_done() that attaches the device to group->domain.
+> +	 */
+> +	if (gdev->pending_reset)
+> +		return 0;
+> +
+>   	ret = __iommu_attach_device(new_domain, dev);
+>   	if (ret) {
+>   		/*
+> @@ -3378,6 +3411,13 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
+>   	int ret;
+>   
+>   	for_each_group_device(group, device) {
+> +		/*
+> +		 * There is a racy attach while the device is resetting. Defer
+> +		 * it until the iommu_dev_reset_done() that attaches the device
+> +		 * to group->domain.
+> +		 */
+> +		if (device->pending_reset)
+> +			continue;
+>   		if (device->dev->iommu->max_pasids > 0) {
+>   			ret = domain->ops->set_dev_pasid(domain, device->dev,
+>   							 pasid, old);
+> @@ -3799,6 +3839,124 @@ int iommu_replace_group_handle(struct iommu_group *group,
+>   }
+>   EXPORT_SYMBOL_NS_GPL(iommu_replace_group_handle, "IOMMUFD_INTERNAL");
+>   
+> +/*
+> + * Caller must use iommu_dev_reset_prepare() and iommu_dev_reset_done() together
+> + * before/after the core-level reset routine, to unclear the pending_reset flag
+> + * and to put the iommu_group reference.
+> + *
+> + * These two functions are designed to be used by PCI reset functions that would
+> + * not invoke any racy iommu_release_device() since PCI sysfs node gets removed
+> + * before it notifies with a BUS_NOTIFY_REMOVED_DEVICE. When using them in other
+> + * case, callers must ensure there will be no racy iommu_release_device() call,
+> + * which otherwise would UAF the dev->iommu_group pointer.
+> + */
+
+Use kdoc style comments.
+
+> +int iommu_dev_reset_prepare(struct device *dev)
+> +{
+> +	const struct iommu_ops *ops;
+> +	struct iommu_group *group;
+> +	unsigned long pasid;
+> +	void *entry;
+> +	int ret = 0;
+> +
+> +	if (!dev_has_iommu(dev))
+> +		return 0;
+> +
+> +	if (dev->iommu->require_direct) {
+> +		dev_warn(
+> +			dev,
+> +			"Firmware has requested this device have a 1:1 IOMMU mapping, rejecting configuring the device without a 1:1 mapping. Contact your platform vendor.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* group will be put in iommu_dev_reset_done() */
+> +	group = iommu_group_get(dev);
+> +
+> +	/* Caller ensures no racy iommu_release_device(), so this won't UAF */
+> +	mutex_lock(&group->mutex);
+> +
+> +	ops = dev_iommu_ops(dev);
+> +	if (!ops->blocked_domain) {
+> +		dev_warn(dev,
+> +			 "IOMMU driver doesn't support IOMMU_DOMAIN_BLOCKED\n");
+> +		ret = -EOPNOTSUPP;
+> +		goto unlock;
+> +	}
+> +
+> +	device_to_group_device(dev)->pending_reset = true;
+> +
+> +	/* Device is already attached to the blocked_domain. Nothing to do */
+> +	if (group->domain->type == IOMMU_DOMAIN_BLOCKED)
+> +		goto unlock;
+
+"group->domain->type == IOMMU_DOMAIN_BLOCKED" means that IOMMU_NO_PASID
+is docked in the blocking DMA state, but it doesn't imply that other
+PASIDs are also in the blocking DMA state. Therefore, we might still
+need the following lines to handle other PASIDs.
+
+On the other hand, perhaps we should use "group->domain == ops-
+ >blocked_domain" instead of "group->domain->type ==
+IOMMU_DOMAIN_BLOCKED" to make the code consistent with the commit
+message.
+
+> +
+> +	/* Dock RID domain to blocked_domain while retaining group->domain */
+> +	ret = __iommu_attach_device(ops->blocked_domain, dev);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	/* Dock PASID domains to blocked_domain while retaining pasid_array */
+> +	xa_lock(&group->pasid_array);
+> +	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
+> +		iommu_remove_dev_pasid(dev, pasid,
+> +				       pasid_array_entry_to_domain(entry));
+> +	xa_unlock(&group->pasid_array);
+> +
+> +unlock:
+> +	mutex_unlock(&group->mutex);
+> +	if (ret)
+> +		iommu_group_put(group);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_dev_reset_prepare);
+> +
+> +/*
+> + * Pair with a previous iommu_dev_reset_prepare() that was successfully returned
+> + *
+> + * Note that, although unlikely, there is a risk that re-attaching domains might
+> + * fail due to some unexpected happening like OOM.
+> + */
+> +void iommu_dev_reset_done(struct device *dev)
+> +{
+> +	struct iommu_group *group = dev->iommu_group;
+> +	const struct iommu_ops *ops;
+> +	struct group_device *gdev;
+> +	unsigned long pasid;
+> +	void *entry;
+> +
+> +	if (!dev_has_iommu(dev))
+> +		return;
+> +
+> +	mutex_lock(&group->mutex);
+> +
+> +	gdev = device_to_group_device(dev);
+> +
+> +	ops = dev_iommu_ops(dev);
+> +	/* iommu_dev_reset_prepare() was not successfully called */
+> +	if (WARN_ON(!ops->blocked_domain || !gdev->pending_reset)) {
+> +		mutex_unlock(&group->mutex);
+> +		return;
+> +	}
+> +
+> +	if (group->domain->type == IOMMU_DOMAIN_BLOCKED)
+> +		goto done;
+
+The same here?
+
+> +
+> +	/* Shift RID domain back to group->domain */
+> +	WARN_ON(__iommu_attach_device(group->domain, dev));
+> +
+> +	/* Shift PASID domains back to domains retained in pasid_array */
+> +	xa_lock(&group->pasid_array);
+> +	xa_for_each_start(&group->pasid_array, pasid, entry, 1)
+> +		WARN_ON(__iommu_set_group_pasid(
+> +			pasid_array_entry_to_domain(entry), group, pasid,
+> +			ops->blocked_domain));
+> +	xa_unlock(&group->pasid_array);
+> +
+> +done:
+> +	gdev->pending_reset = false;
+> +	mutex_unlock(&group->mutex);
+> +	iommu_group_put(group);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_dev_reset_done);
+> +
+>   #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
+>   /**
+>    * iommu_dma_prepare_msi() - Map the MSI page in the IOMMU domain
+
+Thanks,
+baolu
