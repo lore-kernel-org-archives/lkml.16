@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D11319597F
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0424C19597F
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 11:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751110522; cv=none; b=Q6RzXbCHNuDBYtZ19qCKjlKi2VIco1qT9uH6FWiOAlpUwxTYPKCFIWhhMGVPC2BNUvgbf92lRPQLq1mxYJdk6gI57Nso8zKBpp5pxgMWulngXF9upfwNlXbZJftqcvDly3h2MU3Bd+nNkg1CXlfwjsq3lWRaLu0coRS56FNq1zQ=
+	t=1751110530; cv=none; b=BCO+W/Jq3LUVCyQVjGkPjMbz4AeJXPmOKc/RUNcsWPRHiPWZoPX0oeEpIUHY28A1h/dQarSyn2ZA/vf3bK+l44zSMCrAmLYNqdCGAkouqFF1hJB+U7pPZsIuoKQocOb6QKUL0R5jgDVVYXSUPJ6bX4LPkUiFjjBpxCHFd2a2EAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751110522; c=relaxed/simple;
-	bh=ah2syinEnPNEnbTUmIyBEW8DvuX0rQDh6MOfHgILfvM=;
+	s=arc-20240116; t=1751110530; c=relaxed/simple;
+	bh=nPYaSwFH+Qd3oI6VaUdovIuW0JAmKGFC6AKJtda1+h4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=any6Dd7iobY2nq22+b3Qc1bMvY+RlVQNjObVOt7MC+XU6IKk93sxa45ShSmEcYixjXYKB4+1aZQ+YBeQ7wUBfUwQAQGrxK5GBkTSCEzHtlhBO8A6cVSD7N7UNBu7pKvX3JKgwxRlwBHfy2MTfbpqNFaeqhL7UXtvo9ZcEMVBaU8=
+	 MIME-Version; b=atUPhBOym3zfaowBieQj1NVLk7QBRjD0EBGD/WAYOosjgHZSaYqqcMoC6NjSEm+uNRM4pGkHvoRKEZ6wKKRSVeou1BdG64inmRa9XT6nztVLA0QuBeUdBQxN5M08AmQLIpsIvgX/W+XbCt8378CcQz1WmeBZHK/5cd+ZRP8bm7U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47E391BD0;
-	Sat, 28 Jun 2025 04:35:03 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 914721BD0;
+	Sat, 28 Jun 2025 04:35:11 -0700 (PDT)
 Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6A4413F762;
-	Sat, 28 Jun 2025 04:35:12 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA6D23F762;
+	Sat, 28 Jun 2025 04:35:20 -0700 (PDT)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org
 Cc: ryan.roberts@arm.com,
@@ -45,9 +45,9 @@ Cc: ryan.roberts@arm.com,
 	yang@os.amperecomputing.com,
 	ziy@nvidia.com,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v4 2/4] mm: Add batched versions of ptep_modify_prot_start/commit
-Date: Sat, 28 Jun 2025 17:04:33 +0530
-Message-Id: <20250628113435.46678-3-dev.jain@arm.com>
+Subject: [PATCH v4 3/4] mm: Optimize mprotect() by PTE-batching
+Date: Sat, 28 Jun 2025 17:04:34 +0530
+Message-Id: <20250628113435.46678-4-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20250628113435.46678-1-dev.jain@arm.com>
 References: <20250628113435.46678-1-dev.jain@arm.com>
@@ -59,139 +59,245 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
-Architecture can override these helpers; in case not, they are implemented
-as a simple loop over the corresponding single pte helpers.
+Use folio_pte_batch to batch process a large folio. Reuse the folio from
+prot_numa case if possible.
+
+For all cases other than the PageAnonExclusive case, if the case holds true
+for one pte in the batch, one can confirm that that case will hold true for
+other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
+FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty
+and access bits across the batch, therefore batching across
+pte_dirty(): this is correct since the dirty bit on the PTE really is
+just an indication that the folio got written to, so even if the PTE is
+not actually dirty (but one of the PTEs in the batch is), the wp-fault
+optimization can be made.
+
+The crux now is how to batch around the PageAnonExclusive case; we must
+check the corresponding condition for every single page. Therefore, from
+the large folio batch, we process sub batches of ptes mapping pages with
+the same PageAnonExclusive condition, and process that sub batch, then
+determine and process the next sub batch, and so on. Note that this does
+not cause any extra overhead; if suppose the size of the folio batch
+is 512, then the sub batch processing in total will take 512 iterations,
+which is the same as what we would have done before.
 
 Signed-off-by: Dev Jain <dev.jain@arm.com>
 ---
- include/linux/pgtable.h | 83 ++++++++++++++++++++++++++++++++++++++++-
- mm/mprotect.c           |  4 +-
- 2 files changed, 84 insertions(+), 3 deletions(-)
+ mm/mprotect.c | 143 +++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 117 insertions(+), 26 deletions(-)
 
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index cf1515c163e2..662f39e7475a 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1331,7 +1331,8 @@ static inline pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
- 
- /*
-  * Commit an update to a pte, leaving any hardware-controlled bits in
-- * the PTE unmodified.
-+ * the PTE unmodified. The pte may have been "upgraded" w.r.t a/d bits compared
-+ * to the old_pte, as in, it may have a/d bits on which were off in old_pte.
-  */
- static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
- 					   unsigned long addr,
-@@ -1340,6 +1341,86 @@ static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
- 	__ptep_modify_prot_commit(vma, addr, ptep, pte);
- }
- #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
-+
-+/**
-+ * modify_prot_start_ptes - Start a pte protection read-modify-write transaction
-+ * over a batch of ptes, which protects against asynchronous hardware
-+ * modifications to the ptes. The intention is not to prevent the hardware from
-+ * making pte updates, but to prevent any updates it may make from being lost.
-+ * Please see the comment above ptep_modify_prot_start() for full description.
-+ *
-+ * @vma: The virtual memory area the pages are mapped into.
-+ * @addr: Address the first page is mapped at.
-+ * @ptep: Page table pointer for the first entry.
-+ * @nr: Number of entries.
-+ *
-+ * May be overridden by the architecture; otherwise, implemented as a simple
-+ * loop over ptep_modify_prot_start(), collecting the a/d bits from each pte
-+ * in the batch.
-+ *
-+ * Note that PTE bits in the PTE batch besides the PFN can differ.
-+ *
-+ * Context: The caller holds the page table lock.  The PTEs map consecutive
-+ * pages that belong to the same folio.  The PTEs are all in the same PMD.
-+ * Since the batch is determined from folio_pte_batch, the PTEs must differ
-+ * only in a/d bits (and the soft dirty bit; see fpb_t flags in
-+ * mprotect_folio_pte_batch()).
-+ */
-+#ifndef modify_prot_start_ptes
-+static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
-+		unsigned long addr, pte_t *ptep, unsigned int nr)
-+{
-+	pte_t pte, tmp_pte;
-+
-+	pte = ptep_modify_prot_start(vma, addr, ptep);
-+	while (--nr) {
-+		ptep++;
-+		addr += PAGE_SIZE;
-+		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
-+		if (pte_dirty(tmp_pte))
-+			pte = pte_mkdirty(pte);
-+		if (pte_young(tmp_pte))
-+			pte = pte_mkyoung(pte);
-+	}
-+	return pte;
-+}
-+#endif
-+
-+/**
-+ * modify_prot_commit_ptes - Commit an update to a batch of ptes, leaving any
-+ * hardware-controlled bits in the PTE unmodified.
-+ *
-+ * @vma: The virtual memory area the pages are mapped into.
-+ * @addr: Address the first page is mapped at.
-+ * @ptep: Page table pointer for the first entry.
-+ * @old_pte: Old page table entry (for the first entry) which is now cleared.
-+ * @pte: New page table entry to be set.
-+ * @nr: Number of entries.
-+ *
-+ * May be overridden by the architecture; otherwise, implemented as a simple
-+ * loop over ptep_modify_prot_commit().
-+ *
-+ * Context: The caller holds the page table lock. The PTEs are all in the same
-+ * PMD. On exit, the set ptes in the batch map the same folio. The pte may have
-+ * been "upgraded" w.r.t a/d bits compared to the old_pte, as in, it may have
-+ * a/d bits on which were off in old_pte.
-+ */
-+#ifndef modify_prot_commit_ptes
-+static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
-+		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr; ++i) {
-+		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-+		ptep++;
-+		addr += PAGE_SIZE;
-+		old_pte = pte_next_pfn(old_pte);
-+		pte = pte_next_pfn(pte);
-+	}
-+}
-+#endif
-+
- #endif /* CONFIG_MMU */
- 
- /*
 diff --git a/mm/mprotect.c b/mm/mprotect.c
-index af10a7fbe6b8..627b0d67cc4a 100644
+index 627b0d67cc4a..28c7ce7728ff 100644
 --- a/mm/mprotect.c
 +++ b/mm/mprotect.c
-@@ -206,7 +206,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+@@ -40,35 +40,47 @@
+ 
+ #include "internal.h"
+ 
+-bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+-			     pte_t pte)
+-{
+-	struct page *page;
++enum tristate {
++	TRI_FALSE = 0,
++	TRI_TRUE = 1,
++	TRI_MAYBE = -1,
++};
+ 
++/*
++ * Returns enum tristate indicating whether the pte can be changed to writable.
++ * If TRI_MAYBE is returned, then the folio is anonymous and the user must
++ * additionally check PageAnonExclusive() for every page in the desired range.
++ */
++static int maybe_change_pte_writable(struct vm_area_struct *vma,
++				     unsigned long addr, pte_t pte,
++				     struct folio *folio)
++{
+ 	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+-		return false;
++		return TRI_FALSE;
+ 
+ 	/* Don't touch entries that are not even readable. */
+ 	if (pte_protnone(pte))
+-		return false;
++		return TRI_FALSE;
+ 
+ 	/* Do we need write faults for softdirty tracking? */
+ 	if (pte_needs_soft_dirty_wp(vma, pte))
+-		return false;
++		return TRI_FALSE;
+ 
+ 	/* Do we need write faults for uffd-wp tracking? */
+ 	if (userfaultfd_pte_wp(vma, pte))
+-		return false;
++		return TRI_FALSE;
+ 
+ 	if (!(vma->vm_flags & VM_SHARED)) {
+ 		/*
+ 		 * Writable MAP_PRIVATE mapping: We can only special-case on
+ 		 * exclusive anonymous pages, because we know that our
+ 		 * write-fault handler similarly would map them writable without
+-		 * any additional checks while holding the PT lock.
++		 * any additional checks while holding the PT lock. So if the
++		 * folio is not anonymous, we know we cannot change pte to
++		 * writable. If it is anonymous then the caller must further
++		 * check that the page is AnonExclusive().
+ 		 */
+-		page = vm_normal_page(vma, addr, pte);
+-		return page && PageAnon(page) && PageAnonExclusive(page);
++		return (!folio || folio_test_anon(folio)) ? TRI_MAYBE : TRI_FALSE;
+ 	}
+ 
+ 	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+@@ -80,15 +92,61 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+ 	 * FS was already notified and we can simply mark the PTE writable
+ 	 * just like the write-fault handler would do.
+ 	 */
+-	return pte_dirty(pte);
++	return pte_dirty(pte) ? TRI_TRUE : TRI_FALSE;
++}
++
++/*
++ * Returns the number of pages within the folio, starting from the page
++ * indicated by pgidx and up to pgidx + max_nr, that have the same value of
++ * PageAnonExclusive(). Must only be called for anonymous folios. Value of
++ * PageAnonExclusive() is returned in *exclusive.
++ */
++static int anon_exclusive_batch(struct folio *folio, int pgidx, int max_nr,
++				bool *exclusive)
++{
++	struct page *page;
++	int nr = 1;
++
++	if (!folio) {
++		*exclusive = false;
++		return nr;
++	}
++
++	page = folio_page(folio, pgidx++);
++	*exclusive = PageAnonExclusive(page);
++	while (nr < max_nr) {
++		page = folio_page(folio, pgidx++);
++		if ((*exclusive) != PageAnonExclusive(page))
++			break;
++		nr++;
++	}
++
++	return nr;
++}
++
++bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
++			     pte_t pte)
++{
++	struct page *page;
++	int ret;
++
++	ret = maybe_change_pte_writable(vma, addr, pte, NULL);
++	if (ret == TRI_MAYBE) {
++		page = vm_normal_page(vma, addr, pte);
++		ret = page && PageAnon(page) && PageAnonExclusive(page);
++	}
++
++	return ret;
+ }
+ 
+ static int mprotect_folio_pte_batch(struct folio *folio, unsigned long addr,
+-		pte_t *ptep, pte_t pte, int max_nr_ptes)
++		pte_t *ptep, pte_t pte, int max_nr_ptes, fpb_t switch_off_flags)
+ {
+-	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++	fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++
++	flags &= ~switch_off_flags;
+ 
+-	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
++	if (!folio || !folio_test_large(folio))
+ 		return 1;
+ 
+ 	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+@@ -154,7 +212,8 @@ static int prot_numa_skip_ptes(struct folio **foliop, struct vm_area_struct *vma
+ 	}
+ 
+ skip_batch:
+-	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte, max_nr_ptes);
++	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
++					   max_nr_ptes, 0);
+ out:
+ 	*foliop = folio;
+ 	return nr_ptes;
+@@ -191,7 +250,10 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 		if (pte_present(oldpte)) {
+ 			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+ 			struct folio *folio = NULL;
+-			pte_t ptent;
++			int sub_nr_ptes, pgidx = 0;
++			pte_t ptent, newpte;
++			bool sub_set_write;
++			int set_write;
+ 
+ 			/*
+ 			 * Avoid trapping faults against the zero or KSM
+@@ -206,6 +268,11 @@ static long change_pte_range(struct mmu_gather *tlb,
  					continue;
  			}
  
--			oldpte = ptep_modify_prot_start(vma, addr, pte);
-+			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
++			if (!folio)
++				folio = vm_normal_folio(vma, addr, oldpte);
++
++			nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
++							   max_nr_ptes, FPB_IGNORE_SOFT_DIRTY);
+ 			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
  			ptent = pte_modify(oldpte, newprot);
  
- 			if (uffd_wp)
-@@ -232,7 +232,7 @@ static long change_pte_range(struct mmu_gather *tlb,
- 			    can_change_pte_writable(vma, addr, ptent))
- 				ptent = pte_mkwrite(ptent, vma);
- 
--			ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
-+			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
- 			if (pte_needs_flush(oldpte, ptent))
- 				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
- 			pages++;
+@@ -227,15 +294,39 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 			 * example, if a PTE is already dirty and no other
+ 			 * COW or special handling is required.
+ 			 */
+-			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+-			    !pte_write(ptent) &&
+-			    can_change_pte_writable(vma, addr, ptent))
+-				ptent = pte_mkwrite(ptent, vma);
+-
+-			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+-			if (pte_needs_flush(oldpte, ptent))
+-				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+-			pages++;
++			set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
++				    !pte_write(ptent);
++			if (set_write)
++				set_write = maybe_change_pte_writable(vma, addr, ptent, folio);
++
++			while (nr_ptes) {
++				if (set_write == TRI_MAYBE) {
++					sub_nr_ptes = anon_exclusive_batch(folio,
++						pgidx, nr_ptes, &sub_set_write);
++				} else {
++					sub_nr_ptes = nr_ptes;
++					sub_set_write = (set_write == TRI_TRUE);
++				}
++
++				if (sub_set_write)
++					newpte = pte_mkwrite(ptent, vma);
++				else
++					newpte = ptent;
++
++				modify_prot_commit_ptes(vma, addr, pte, oldpte,
++							newpte, sub_nr_ptes);
++				if (pte_needs_flush(oldpte, newpte))
++					tlb_flush_pte_range(tlb, addr,
++						sub_nr_ptes * PAGE_SIZE);
++
++				addr += sub_nr_ptes * PAGE_SIZE;
++				pte += sub_nr_ptes;
++				oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
++				ptent = pte_advance_pfn(ptent, sub_nr_ptes);
++				nr_ptes -= sub_nr_ptes;
++				pages += sub_nr_ptes;
++				pgidx += sub_nr_ptes;
++			}
+ 		} else if (is_swap_pte(oldpte)) {
+ 			swp_entry_t entry = pte_to_swp_entry(oldpte);
+ 			pte_t newpte;
 -- 
 2.30.2
 
