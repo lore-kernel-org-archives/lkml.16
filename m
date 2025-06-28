@@ -1,73 +1,60 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EC2220F58;
-	Sat, 28 Jun 2025 22:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3732812E7E
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 22:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751150047; cv=none; b=pJXw+2ZMowZDiTtQByy0+2AYo4GnJcB1WJjX5TSPyMLIBopp3p+JdYiwC5RCyMAj3MYJHocglzDbKyhJ01WL70fTSKCalRYEya8+m0w6NkpV3BA/rBtyNgK5i6D/llF0yqbGaJxdz8PiJskFF2QGlNy/0JoIfbmijR1RldqhOnc=
+	t=1751150331; cv=none; b=ZDS9IWVO9GkaRfgJoO6yfXzZVghFLsDuob3eyH35r55ozl7aT2gGpZoX+j9IA5yBZc9sNZD78RJW0c6ZEYCwNe2yEd6pQQpoNNEytbUKVmObRsxfJQGjJeG+yzfzhh4K8pmXFK/6BlCtsGBMEpvZTLN6odN+OSD2ap4Eaf6tVkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751150047; c=relaxed/simple;
-	bh=5ie1EJ2oP2f+6il2Ki7zMKtu4rX1ah1GBZClm5w825Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bXsXov9XxVsIkEMq1kXSJKJd3Eq9OOVywVAg7F5tcRkX8g5LQ6X+RiO4knnQUI4x9c//lnTH6NUNPUtL2oWcrkyv0vZh0v0KK6dNzFtZrx/vflwqmUNxnpgwVHGBMSrQRiPlfxWJJpGXPEvt0O8jyOEPHEYF6hZC0jxskPhJu3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8zBX6H7; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751150331; c=relaxed/simple;
+	bh=7G0+FpKbZ9GaPLV5BcrFUCj+7GnonYzZAuHe72qYZkI=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=e2cSisehSjuSPcqou3CrMAuLPyt5Rf53vryE2RqDpOBJMJ0YqQUP27Y3/fh5wFNAVWgA/Lvik2hXWrZs0PQMr3y9LYIpi742tuQ72zcCxrAla0mbwT/CRg2U5mfVGRjgd6+9KLsEOMW4taPuBKJTba237Rn5KxCJD2nZS4mVxB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=K/FNRWU7; arc=none smtp.client-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8zBX6H7"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553cf020383so3565458e87.2;
-        Sat, 28 Jun 2025 15:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751150044; x=1751754844; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=atihKq/As7Ya1frZX9RRriCyzwKL57gVfEKZqQSlyvo=;
-        b=c8zBX6H7ldGEovgN74FOxO9iq2bLvSpm9XK5B8sztSPD0kJxkFBp7AozeYa0Dro8iV
-         1Us4Wf/AT/E50PpGc07KwVz6xlQbeBr7YyLqVwGddbuxPhxn4F3i+i6yURzZCVeXxaN1
-         iVGoFKqvEYL0aVnGJSyJFOflOLwEfEFnpNZ+RYlYDeLsf1PevFhzB4abok3BB1WXRBJ3
-         op47rSymKhNmNoqUQtFFf7wmYDIzxfJ0eM8nv2O6253LKrB9yMxj2Hok5XY6QLrNPYGr
-         7GT1FfnJSRLSaB8+dPNAvhx3RbYmHLNs/O6TIzpIjEPx5HNOGJ3Zk4Y7Z6DCN+PCRLCZ
-         risw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751150044; x=1751754844;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=atihKq/As7Ya1frZX9RRriCyzwKL57gVfEKZqQSlyvo=;
-        b=hpequ4M0ONa5i6AUFOUnx3+W9zvKeASYCI+zSHfpBi3rJCP/3d2jyt711WcTJh1/HD
-         QoXHuew007vI0UTlJI1GBM+cM23BMDYn1puvfgoKTY9QoDrmYbzrho1e/UwLUuGptkRv
-         0kK/A+gEdO71BDrqkcJu4H78URqlEecukIRVPXQuhcYKNLgF1/fr9xvDvsb/jG/T7noH
-         qpJzxALrtkEyflLXLzjN16m+h4pmX8Fn1NtwEBqBaIY8/h2PULqkg6JQPHRsI+trpWL3
-         fqacAyeqGOomHVro0bbVr0b1Z6xqXehTMY1a+ef8CSmUMGHHFWHMkt0Md3Pz80n1wH6j
-         QrJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2rOmiA3vW78rrMixpBE6NpIrX/mYies6jsRQ2SOeI5q2/jHYuG7w8qFOfJ2LUsKvNKmdVQosG895JS4w=@vger.kernel.org, AJvYcCVs7dcxNCngzsS+HGPusWM3WjH61k7k2BGJA06jraCWfBGQcy9yzywpmHzw/L2hABrBU032vRCFSix0al3OuIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRJM94E7I+eYFozwU8hpUMQllU/RpIFaaLupehIetWXBG6NE8K
-	FNgMUHmYLmeB2qrm/mSb8RQw6PF+y4cf8c2FUwQILqvEysCSWmYmSMg3
-X-Gm-Gg: ASbGnctYaTbowH4Wox+HzbzbEWRGcTWUIjJis+wj33BYu2+BsG6zF3fMldap8Vq5SYz
-	FU+R+K1ZIn153R4wgzWRhI0DQ9s6Qi3lT1sNgszCw3fnBrUu/uS0PjlYfy/VwI1cUODU/tXD6qL
-	xXypiK1Q/BPE0jKTw797TdQdm4ZdxPRJGHcerUEKoH6te5HLDXr3qRW0PyWwxgC/QyezKUufs5s
-	dlmquc8viiwtcFHsBnIlOX5vBX3BCqf8oSV4QtsvEW81aK+tMyCHohPju+SBxZFFDOTKOzY5RSB
-	Z+ILN3ab1LxbyizvxmR077UX0UEeMvnXKRlvrWqBpTzfCsLSD38grNgEuRhGTe997nO5Coqu7zV
-	ZhBB3nA==
-X-Google-Smtp-Source: AGHT+IHOgWQ+G3h9HShdacrpYNucnC6d79KlhvUQKdRoGhGz41L+0lt6alrVzbGbJJ2XVlLdeu0RUw==
-X-Received: by 2002:a05:6512:4017:b0:554:f74b:78c1 with SMTP id 2adb3069b0e04-5550ba209d8mr2628043e87.43.1751150043301;
-        Sat, 28 Jun 2025 15:34:03 -0700 (PDT)
-Received: from localhost.localdomain ([94.19.228.143])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24d36fsm936915e87.71.2025.06.28.15.34.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 15:34:02 -0700 (PDT)
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To: Ping-Ke Shih <pkshih@realtek.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	linux-wireless@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="K/FNRWU7"
+Received: (wp-smtpd smtp.wp.pl 29690 invoked from network); 29 Jun 2025 00:38:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1751150319; bh=1Kv/5FIXJr4w7f7JBuDHHoZ7UQF55jJFpe21AqRti80=;
+          h=From:To:Subject;
+          b=K/FNRWU7zM9HVqBDxaqZKuZqrcf8NBx4gZQKCR1NaMbM3e8LVAYyZcT8SbFdmVOAF
+           3MfJFhwI2Q6hQRIf43qP2SiZfhebNSe1BVjg8rW8v9NfsBmnnOK8MtoevrRM4Iff3E
+           WJNIPjumyEPJ26UbmwVhk9tjQBUw+OW6vbE3lXxwzWynH9wuygI7DelNq7lmTraXVI
+           HMJ4B0rwju5WHn41jls9oaPfv78qeVbfXokqCs85ufqLZkwcTZ7lxLQbE/2CT5lSa9
+           9OZvSEkdqvI3YMiFDMYn2CN7g9xkTCgOH4Xqw+nR0U6Jb7CYNOeb+sqtwarsWD1yky
+           3C9s35tSRffeg==
+Received: from 83.24.145.121.ipv4.supernova.orange.pl (HELO laptop-olek.lan) (olek2@wp.pl@[83.24.145.121])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <rafael@kernel.org>; 29 Jun 2025 00:38:39 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com,
+	jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	olek2@wp.pl,
+	zhiyong.tao@mediatek.com,
+	linux-pm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Fiona Klute <fiona.klute@gmx.de>
-Cc: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Subject: [PATCH] wifi: rtw88: enable TX reports for the management queue
-Date: Sun, 29 Jun 2025 01:30:48 +0300
-Message-ID: <20250628223048.3597641-1-andrej.skvortzov@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH 0/3] Add thermal sensors support for MT7981
+Date: Sun, 29 Jun 2025 00:38:34 +0200
+Message-Id: <20250628223837.848244-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,46 +62,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-WP-MailID: b810258631e11cb24906138186427c35
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [4TMU]                               
 
-This is needed for AP mode. Otherwise client sees the network, but
-can't connect to it.
+This patch adds support for the temperature sensor in the MT7981 SoC.
+This sensor is exactly the same as the one in the MT7986.
 
-REG_FWHW_TXQ_CTRL+1 is set to WLAN_TXQ_RPT_EN (0x1F) in common mac
-init function (__rtw8723x_mac_init), but the value was overwritten
-from mac table later.
+Aleksander Jan Bajkowski (3):
+  arm64: dts: mediatek: add thermal sensor support on mt7981
+  thermal/drivers/mediatek: Add support for MT7981 SoC
+  dt-bindings: iio: adc: Add support for MT7981
 
-Tested on rtl8723cs, that reuses rtw8703b driver.
+ .../iio/adc/mediatek,mt2701-auxadc.yaml       |  1 +
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi     | 29 ++++++++++++++++++-
+ drivers/thermal/mediatek/auxadc_thermal.c     |  4 +++
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
----
- drivers/net/wireless/realtek/rtw88/rtw8703b_tables.c | 1 -
- drivers/net/wireless/realtek/rtw88/rtw8723d_table.c  | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8703b_tables.c b/drivers/net/wireless/realtek/rtw88/rtw8703b_tables.c
-index 81020fd907aa6..fe4b112f582ba 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8703b_tables.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8703b_tables.c
-@@ -199,7 +199,6 @@ static const u32 rtw8703b_mac[] = {
- 	0x035, 0x00000000,
- 	0x067, 0x00000002,
- 	0x092, 0x00000080,
--	0x421, 0x0000000F,
- 	0x428, 0x0000000A,
- 	0x429, 0x00000010,
- 	0x430, 0x00000000,
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8723d_table.c b/drivers/net/wireless/realtek/rtw88/rtw8723d_table.c
-index 27a22b392df00..bc7c6111782b2 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8723d_table.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8723d_table.c
-@@ -10,7 +10,6 @@ static const u32 rtw8723d_mac[] = {
- 	0x020, 0x00000013,
- 	0x02F, 0x00000010,
- 	0x077, 0x00000007,
--	0x421, 0x0000000F,
- 	0x428, 0x0000000A,
- 	0x429, 0x00000010,
- 	0x430, 0x00000000,
 -- 
-2.47.2
+2.39.5
 
