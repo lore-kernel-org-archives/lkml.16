@@ -1,126 +1,126 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB911EDA3C;
-	Sat, 28 Jun 2025 09:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D1B224AEF;
+	Sat, 28 Jun 2025 09:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751101812; cv=none; b=WOuFTKwx0YWZoDgUapIqXI4qNWlc9hIgiH6yZcCcSl1TKopJkrEpb0yvNQyj35m4kA0fHKXxf0e3AN4bT+jq+UDuh/IBDOQnBduUcimxHU/D4MDkuHGdF3azZ1U8PsDunP3/wMevgf0kAcGHB8qxsxHnGj1EZrqsBgbbecqat1M=
+	t=1751101863; cv=none; b=T+OSDzVDMEB9SqEzps9mzjKLkAw0L3Bar1WlbgeToK2tIEM1Yev1N4RrgqoMDhGjXM2SMo4wsRtt9HimX2/lsFzG1fPYoiL3XMmHV2akFM7i6JofeMtotK7zndz1Cl5lFuRS3SN3fwqquQb6A7XbFZnDP8UNNZT6RU6Dq25WXZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751101812; c=relaxed/simple;
-	bh=LKhb5YM9QO3TGejJNvRHxeALdyLIxKEE/eOariXAOVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VmS1svkKhKDPtFean5uG9JdfOa4bPNq2bE4658uEWPdzgIxjE+jEKrNxgh4tEGesuonmazXcsBj4ysoKXyfOhWWKb7/AXeNac0LHo5jhn0d7vjhj9FCRE+whDAWMwS4jys4YBl15YrbdmsQBQxklCD/iJrFKQxTKaPTMwhYcpdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iyYtXU0D; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751101863; c=relaxed/simple;
+	bh=vasLuAIVGN71piVbyel+Q8mRVI3PJ2R3OaDC4gFrR5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DNm9TvGrF7IPuti4/LupS2+ZKDwMklVd8r9FhRs7R1N70zbdAgfK3RQ90moxkb7UKKIp7uBZMc7csmXbyX9L3U9yWUG261/h2widSAvSGwoqkqE80V5nzLC+eDj8hvTZN7rUGgpp9BCdZaPzTzzS/mJ0F14GGqanncrsSHRrJwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=u9GW4OQz; arc=none smtp.client-ip=134.0.28.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyYtXU0D"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae361e8ec32so211514666b.3;
-        Sat, 28 Jun 2025 02:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751101809; x=1751706609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eEHPoLzs6KMhxMJaJoJ20bFAcQbB2rDrdd+idOQqY/M=;
-        b=iyYtXU0DO9X4bkU9a4YDoDB8d1Fp/FUzKu+syXdhMc/jbqBcLlsstot6SRS8kWBAwL
-         VLQCNKnHtrPLxUhzzozjA7fGCkYhKtiWBeg7f2zu76q0ViP761hrISOPCEm6AiaTktC+
-         sJbCZEpPwysHzl3S7klLrXAOCeE4W9PzMdJIfCei6cg7eH+VUw+2JlOle5yMw13UIvsH
-         3UZUGBIX8i+FFcI37j5jr9NG82DSjJeL1+WBDbj6bee1QFDFK7/pELWEVMtkbvk6mPxK
-         lSjeDkgg5hiE2zTT2awpmUvwoLOf7XFWoJlC5iPHX0Wikyc3PFaV7/tgwrVhKzA01P/5
-         qalQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751101809; x=1751706609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eEHPoLzs6KMhxMJaJoJ20bFAcQbB2rDrdd+idOQqY/M=;
-        b=cIayN/RWFx3r8ENY3daqqJcDscKj/5TKfytrk4NULUQCCbfOsh/xhM3mjYmobfPpxQ
-         KXFEBZDXMjI/PJqVuAZ+S+1V5/ulUU2om6eJEM8gkpUQOX6MOsOJaGtGTRWhoAcRJjnM
-         YNqHyY89+GjqJ2p4TpqQ5WJz6sTbnzyo4sjOKYCzcEuaCsF6EBRKF2ujyGoPSwTLf83j
-         f4jU+rijWoYHGEwgpvWR0iAqJJnE+UMkCdYSnjEaG4nYtDEzfQlcpMNTug8qVbuOwq3J
-         Y8YWSndyReUx7Vm0t3ZluaMfyxfJnioMCYfsvYtUlA7+heOAaKtP7l/8ot5aV5ei+fq6
-         sxrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu/zlGa+FCcVvyb/FoSLYCIt0qazIfUVLR8egVL2SRktLNAZZjao8MXqFPbdZQeMlEVjTnLIVvYFL6GWc=@vger.kernel.org, AJvYcCVKuOa7Gx/a+vbGfoHjcus5FQkuSNcWJY/NBwaQG86OHLUGNQuQiNtidE/XbWnMBEoz+Khoxf1xrHARPnDm1T/6@vger.kernel.org, AJvYcCWCqjZHj9pn5FgWi578NrCBktOFaKrLALoPMVX8CY+RN+F+PTFzAh3Cea4/qh/dWTjmJdI2VBmK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzon1NTEM535Kx2FCVhav8B7qi+jSBlO/gDf67Vs2nOOHWn9dJa
-	k3Dz3LfSb8d125Yh6g+HSOti/1wAobOOp5ypDR/YdMTAJ6DxZUgS9MPpGSU4X0ZDxBb8aD0jTZy
-	XrCu4Jnj9+KvI/7m4+1UaDHtLNAjh4RtMjG3Yqc8=
-X-Gm-Gg: ASbGnctWkpgoimUGeT85BMU4nZRX2F31+OlaCWIndSuubi/WUwnvPBEch5XXCnEYYt6
-	Xq1qmq07XGeJTTnjDJkEI7R4xffSRG3y9UBJ/VbkNtEU3MOEBQDuiEU24YhxjDHKasfaSgcG1pZ
-	8a6Xf0NSuQhJpKmfSQD0wEJOkNX85+YOjfrfOObTWbrU7Cfw==
-X-Google-Smtp-Source: AGHT+IEDK5Fe2UcoKbA9nlA8sV8V339+TMPazLs3l3+Ro56k1U+VATna31dBqLeNouv7HbHfgb8gugQJfcqr7VdMJP4=
-X-Received: by 2002:a17:907:94c4:b0:ae0:a483:7b29 with SMTP id
- a640c23a62f3a-ae350192135mr551229966b.49.1751101809169; Sat, 28 Jun 2025
- 02:10:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="u9GW4OQz"
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout4.routing.net (Postfix) with ESMTP id 23ACA1012D4;
+	Sat, 28 Jun 2025 09:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1751101855;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7sHWoK+S4dor/cCGOhSqusJFB/am18LqdmWaQ7hQvKA=;
+	b=u9GW4OQzOc7exqNlyrupVC5dvGApSPBP01ub9s1y8CHn9MRHiDm8ASmvngNGAUT/hoOzd3
+	aPpr+la+tXw9KAcqYE764SjOCPlvFc8IOecVitfGMurjhvBGkcBcGIORvcDQvX+zs2hvOe
+	4tJAeSCDGvuvN0uef0l8eQg4zVaEecI=
+Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id BF1011226F5;
+	Sat, 28 Jun 2025 09:10:54 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Felix Fietkau <nbd@nbd.name>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v6 12/15] arm64: dts: mediatek: mt7988a-bpi-r4: add gpio leds
+Date: Sat, 28 Jun 2025 11:10:36 +0200
+Message-ID: <20250628091043.57645-13-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250628091043.57645-1-linux@fw-web.de>
+References: <20250628091043.57645-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626083512.GT1562@horms.kernel.org> <20250628081918.523857-1-malayarout91@gmail.com>
- <CANn89iJUz2EXu_h-YbiNswixHo6z1EwcmQrfSk6o-MmBznWfWA@mail.gmail.com>
-In-Reply-To: <CANn89iJUz2EXu_h-YbiNswixHo6z1EwcmQrfSk6o-MmBznWfWA@mail.gmail.com>
-From: malaya kumar rout <malayarout91@gmail.com>
-Date: Sat, 28 Jun 2025 14:39:57 +0530
-X-Gm-Features: Ac12FXwXbpJLEZDHIn737zf3EnCP1LtBDwjYB6L9cIZwam4QZtP2xbJ1HElGugY
-Message-ID: <CAE2+fR_eG=eY+N9nE=Eh6Lip4nwWir2dRQq8Z-adOme3JNe06Q@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: net: fix resource leak in napi_id_helper.c
-To: Eric Dumazet <edumazet@google.com>
-Cc: horms@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 28, 2025 at 2:15=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Sat, Jun 28, 2025 at 1:19=E2=80=AFAM Malaya Kumar Rout
-> <malayarout91@gmail.com> wrote:
-> >
-> > Resolve minor resource leaks reported by cppcheck in napi_id_helper.c
-> >
-> > cppcheck output before this patch:
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:37:3: error: Resou=
-rce leak: server [resourceLeak]
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:46:3: error: Resou=
-rce leak: server [resourceLeak]
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:51:3: error: Resou=
-rce leak: server [resourceLeak]
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:59:3: error: Resou=
-rce leak: server [resourceLeak]
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:67:3: error: Resou=
-rce leak: server [resourceLeak]
-> > tools/testing/selftests/drivers/net/napi_id_helper.c:76:3: error: Resou=
-rce leak: server [resourceLeak]
-> >
-> > cppcheck output after this patch:
-> > No resource leaks found
-> >
-> > Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
-> > ---
-> >  .../selftests/drivers/net/napi_id_helper.c    | 19 +++++++++++++------
-> >  1 file changed, 13 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/drivers/net/napi_id_helper.c b/too=
-ls/testing/selftests/drivers/net/napi_id_helper.c
-> > index eecd610c2109..47dd3291bd55 100644
-> > --- a/tools/testing/selftests/drivers/net/napi_id_helper.c
-> > +++ b/tools/testing/selftests/drivers/net/napi_id_helper.c
-> > @@ -34,7 +34,7 @@ int main(int argc, char *argv[])
-> >
-> >         if (setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(o=
-pt))) {
-> >                 perror("setsockopt");
-> > -               return 1;
-> > +               goto failure;
->
-> client variable is uninitialized at this point.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-I sincerely appreciate your prompt review and for identifying the
-variable initialization issue. If you are agreeable to initializing
-both the server and client to -1, I will proceed to share the updated
-patch.
+Bananapi R4 has a green and a blue led which can be switched by gpio.
+Green led is for running state so default on.
+
+Green led also shares pin with eeprom writeprotect where led off allows
+writing to eeprom.
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+index 30affedf84d4..21eb91c8609f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+@@ -21,6 +21,25 @@ fan: pwm-fan {
+ 		status = "okay";
+ 	};
+ 
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		led_green: led-green {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_GREEN>;
++			gpios = <&pio 79 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		led_blue: led-blue {
++			function = LED_FUNCTION_WPS;
++			color = <LED_COLOR_ID_BLUE>;
++			gpios = <&pio 63 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
++
++
+ 	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "fixed-1.8V";
+-- 
+2.43.0
+
