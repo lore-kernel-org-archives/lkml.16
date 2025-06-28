@@ -1,117 +1,154 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29581EDA3C
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3261372
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 08:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751100303; cv=none; b=AdWP24FuBcP4qgUq+3ECP4MN5mPgds1ZbUTsCia5iOWY/skG7VDgFKkT5ICz29gh5jrQLPFz3VnlmGiZLYX+LXx17hAJwjJvTZ3V/H0cfxxGpwYgwP158ubYpvJrp5Zw3JjT4u5Tvkh0P6o1BfskOFpLz8mTr4wpe7aK7hiwBMQ=
+	t=1751101076; cv=none; b=NpmsWMmExtIzO4E0kxMANIEdhi6AevwrPoB9nl0aai2d3uWQOW669koMNKGp03dOCbNi6qy7pHn+r3mq7716Q8mwWWZpNuEfMr1GLiRSqXbp8ofYB0TX0i70Vj9aVmBREbuKskLvu1IHdiZtdb6jhzRuhiLr+LteQtI7UDJhJjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751100303; c=relaxed/simple;
-	bh=f3o9OoZUEbBDeBbUxOB3GnLGKqZpAG8HFhx3v3nlo/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xhzly47OYXF+LjSY17l09LX/ffdvvJkjiRR2cfpOcahr8RM23Fx+Ssr17d7EEnCPhZMv+vxNWcm2ouWPvlp8PL3FLZlhU+VFRQj+LHIkFDtMSMACUDiR6M+3fJjw/qGAb4xPEDIFCLYRlD/PMysCBBZQbgIGQt2yfB/UGVCKXOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B08+/v2f; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751101076; c=relaxed/simple;
+	bh=pLzUu12WEaIgtCdO2e0vn7AW2eyYnzZNKQi/VqabhiM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=K9jqPQKyzzGeWf/7zmaWB4SNajff6DkCO7OAiX1WVBlzrnYsJaicY3Ov/CagupwVTuy1kN3iCRYlk6IDyUBE7sGYSEuH889H8ot6PnnG+l3H+UjD6ZmysPD0iSNuJRNQM+97zQeEBaHsYNh2Nz0puQ+KdNjtVmOwL9Vn1ZHI7Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ROENJZTI; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B08+/v2f"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a6f6d07bb5so7399811cf.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:45:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751100301; x=1751705101; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/nmnfrusCNXdjpYHJ43O4MY52XtsNNDAe7B32gXZR/A=;
-        b=B08+/v2fGg+9DMi96O5lWHnkIwL9hBfG/wZVW11A3dfylVQAL7PBgRCbPFXewsYolW
-         TBOPcyswj4KZIA3xmvaUE3mScm81a1s1Xg3IkUvcShQSgi10WLhImnOKPbKQP+0c9kN+
-         NA/19wHB6OkvJYnmEH1Olmu3rsHPSbCsOxJ2dYdPWM8IO9p3NLF6phfpO1TjYKiR9qlz
-         Gf6JBgLNnYVnsO1okmSa9xLVtEOOG4yMg/tn7QMq2oixJch0oRuiagCEDZEuvLUW5NbU
-         8Ik5rbUzyAbfojkRH2WYm+HS8X6Zq8+dWOr36Gslq5o8wuN4aPC8wZNS9xW0OVoTo9W+
-         zQxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751100301; x=1751705101;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/nmnfrusCNXdjpYHJ43O4MY52XtsNNDAe7B32gXZR/A=;
-        b=LDZAv5xOUeuSq1JUm6YW0wDWJIZD7Rru7NMoCA9ttDmBFCsuNuOTHCS7+5xIEy2Wyb
-         dCTaAMI4+yWGtwTNQXcHprREOhtJNYEi9mZut7EQGyyEhhwG5bgy5adtVmonpUFXL5FY
-         wi9R0FQjBqjrw6TTZ22VZ9wWWv9b4duD/SrER2BKYz6poxehkZogFOIChmAGjHWpbsOO
-         3rezcMHEXFj2HIlFs/fE7hwXiaYv1ojDZVvuugwfQkh1k3FI29CSSwdkXKQsny4AO5Xi
-         E/zhEv7qB8Ifnjp8WWYVrA1zOa7jqATlsefSrnq1HRAkNEhpNby/J5o1G4KoDX+RsDgq
-         YF+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWYeVXCBAKCJRFWYLqMeLxnSVziHRppAmNPBmg1MtePTK2TpLJDVU4lhw8fMP4drMJAQe1Q4nVACxkq+OU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrVJeyWCk/bGTDlecZmpaL0BCqxzjza/UqetaIO7RqWzKE6SG4
-	wajSo3eWOiLxZAFp245voDC4G6rSDuWtHlVAt8n1/hYBwRgAY5Xnhed7Th9EdJeOIpwQxJlRA4G
-	nrPhDcASdJ/PGIU1dUxwMMZEHe5od+XXl1C82ovP9
-X-Gm-Gg: ASbGncsrMYuPM8MgueHznrOu7mBUj7DV/F1wEG7T7BPYV7T3nbo4OhliouHDi9h4OTS
-	hyitXPfU6WuufmdiuLinOCT2PaGOGvte0JaVXIaPkqe4mK7/W2aoJWuNYnKopOYe9kg6XrW6+gD
-	gWjekM0rvI19z3P747TbnC9WmFOehz1yc2TfbCMPpXxYHx
-X-Google-Smtp-Source: AGHT+IEOmVnyFajIJ8a0GhgPX2/JYD/n70Gv15+Urivpy9ZmnV3HQI05bvkqKXfOyYfw16w5ldtEaRL1UFR0A99MQpw=
-X-Received: by 2002:a05:622a:1a27:b0:494:993d:ec2f with SMTP id
- d75a77b69052e-4a7fcab93bcmr96209851cf.12.1751100300350; Sat, 28 Jun 2025
- 01:45:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ROENJZTI"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250626083512.GT1562@horms.kernel.org> <20250628081918.523857-1-malayarout91@gmail.com>
-In-Reply-To: <20250628081918.523857-1-malayarout91@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Sat, 28 Jun 2025 01:44:49 -0700
-X-Gm-Features: Ac12FXx7HbqsaSi67Ecn8j0W_HA9gHLw_rRrRWO3BQVTSD-WwmLZmje0U1gXKqQ
-Message-ID: <CANn89iJUz2EXu_h-YbiNswixHo6z1EwcmQrfSk6o-MmBznWfWA@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: net: fix resource leak in napi_id_helper.c
-To: Malaya Kumar Rout <malayarout91@gmail.com>
-Cc: horms@kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751101070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybqsyqEQtaTyGQvk+BFdCF7y271RgdQMonWszxYB88c=;
+	b=ROENJZTIjZyoCI9g2NPJUEtCzQMHCjP4pthou6YG3P6yiZ2a1ek19Xv1QSzBHZzkaWgQAm
+	3xmFVpxPyobZosVJygZtNI5iEPcIz/nFt5Mi1Gc0t8WkooJHZ4VZCjxfnlm2XBe0aAKk6J
+	4umnJnAB61UfIauxFGLuU7SsDfGL6YYM6ROHv/9Ge7Gvz1h2GptoLGsLO7TiXmULdPMdsC
+	d9ksbrHAIcJaOT53g1FN6EWXLzMCU+ziHi9IXhoOw7M1fBsJ33315yDrQI5J8nUc+uOQI0
+	2HVtYevIo0/JXHjMDXN9et/v3aON1lm6QZ90GzwsA4oYmvanj77wP183v7Bpkw==
+Content-Type: multipart/signed;
+ boundary=45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sat, 28 Jun 2025 10:57:29 +0200
+Message-Id: <DAY1IKPD6TB6.1JICGYYQTWEDR@cknow.org>
+Cc: "Dragan Simic" <dsimic@manjaro.org>, "Johan Jonker" <jbx6244@gmail.com>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
+ boards
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "Quentin Schulz"
+ <quentin.schulz@cherry.de>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>
+References: <20250627152645.740981-1-didi.debian@cknow.org>
+ <b1c789bf-1369-42ec-8bb3-d7a45c92abf0@cherry.de>
+ <DAXGZG0DEKS2.7RLXKSDO0C9T@cknow.org> <5121698.88bMQJbFj6@diego>
+In-Reply-To: <5121698.88bMQJbFj6@diego>
+X-Migadu-Flow: FLOW_OUT
+
+--45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Sat, Jun 28, 2025 at 1:19=E2=80=AFAM Malaya Kumar Rout
-<malayarout91@gmail.com> wrote:
->
-> Resolve minor resource leaks reported by cppcheck in napi_id_helper.c
->
-> cppcheck output before this patch:
-> tools/testing/selftests/drivers/net/napi_id_helper.c:37:3: error: Resourc=
-e leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:46:3: error: Resourc=
-e leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:51:3: error: Resourc=
-e leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:59:3: error: Resourc=
-e leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:67:3: error: Resourc=
-e leak: server [resourceLeak]
-> tools/testing/selftests/drivers/net/napi_id_helper.c:76:3: error: Resourc=
-e leak: server [resourceLeak]
->
-> cppcheck output after this patch:
-> No resource leaks found
->
-> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
-> ---
->  .../selftests/drivers/net/napi_id_helper.c    | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/testing/selftests/drivers/net/napi_id_helper.c b/tools=
-/testing/selftests/drivers/net/napi_id_helper.c
-> index eecd610c2109..47dd3291bd55 100644
-> --- a/tools/testing/selftests/drivers/net/napi_id_helper.c
-> +++ b/tools/testing/selftests/drivers/net/napi_id_helper.c
-> @@ -34,7 +34,7 @@ int main(int argc, char *argv[])
->
->         if (setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt=
-))) {
->                 perror("setsockopt");
-> -               return 1;
-> +               goto failure;
+Hi Heiko & Quentin,
 
-client variable is uninitialized at this point.
+On Fri Jun 27, 2025 at 8:25 PM CEST, Heiko St=C3=BCbner wrote:
+> Am Freitag, 27. Juni 2025, 18:52:08 Mitteleurop=C3=A4ische Sommerzeit sch=
+rieb Diederik de Haas:
+>> On Fri Jun 27, 2025 at 6:10 PM CEST, Quentin Schulz wrote:
+>> > On 6/27/25 5:16 PM, Diederik de Haas wrote:
+>> >> The #address-cells and #size-cells properties are not useful on the D=
+SI
+>> >> controller nodes; they are only useful/required on ports and panel(s)=
+.
+>> >> So remove them from the controller node and add them where actually
+>> >> needed on the various rk3399 based boards.
+>> >>=20
+>> >> Next to that, there were several (exact) redefinitions of nodes which
+>> >> are already present in rk3399-base.dtsi to add a mipi_out endpoint.
+>> >> Simplify that by referencing the mipi_out phandle and add the endpoin=
+t
+>> >> to that, which allows the removeal of the ports redefinition.
+>> >>=20
+>> >> And fix 1 instance where the mipi_out referenced node was not sorted
+>> >> correctly.
+>> >>=20
+>> >> This fixes the following DTB validation warnings:
+>> >>=20
+>> >>    unnecessary #address-cells/#size-cells without "ranges",
+>> >>    "dma-ranges" or child "reg" property
+>> >>=20
+>> >
+>> > Too many unrelated changes in this commit, please split into multiple=
+=20
+>> > commits.
+>> >
+>> > I could identify:
+>> >
+>> > - moving address-cells/size-cells from SoC.dtsi to board dts(i)s,
+>> > - reordering properties to better match DT coding style=20
+>> > https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-=
+style.html#order-of-properties-in-device-node
+>> > - use phandle to directly access ports,
+>> > - reorder DT node to better match DT coding style=20
+>> > https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-=
+style.html#order-of-nodes
+>>=20
+>> I initially had it as several commits, but that resulted in (f.e.) 1
+>> issue being fixed, but 1 (or more) others would pop up.
+>> Those were then fixed in follow-up commits, but I assumed I'd get Rob's
+>> bot screaming at me for introducing new warnings (first).
+>>=20
+>> And as they all relate(d) to fixing the dsi node, I then choose to
+>> combine them (but still separated by SoC).
+>> IMO there are several ways to organize the commits and each would have
+>> their pros and cons, so I 'settled' for this arrangement.
+>>=20
+>> So I prefer to wait for other people's opinion first before reorganizing
+>> the commits again (if there's a different consensus).
+>
+> personally, I can live with the current setup here, because as you said
+> it's all DSI related, and also not a functional change ;-) .
+>
+> I guess you _could_ move the clock-master + status moves into a separate
+> patch, as that should not trigger any warnings.
+
+After having thought a bit more about it, I actually agree that the
+moving of address/size-cells from SoC to board dts[i] should be separate
+from extracting the ports/endpoints into a node with a phandle
+reference. This patch set is actually from 2 branches:
+- dtb-fixes-dsi
+- dtb-fixes-ports-endpoints (although I now use 'dtb-fixes-fruit')
+
+ports-endpoints is on top of dsi and came forth as it made sense to do
+the ports/endpoints extraction in more places.
+I'll then also put the DT node movement in a separate patch.
+
+I'm not a fan of putting clock-master + status property move into a
+separate patch as then the address/size patch would look weird (to me)
+as you'd see how those properties were inconsistently sorted ... just so
+that can be fixed in a separate patch.
+
+Cheers,
+  Diederik
+
+--45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaF+ufwAKCRDXblvOeH7b
+biZgAQCME6QUUiJaphH6VGnwcT9ww6WdV692xu7Owyds/SRnrQD/dSITCnYbGopt
+SHRh40ahmolnhZl8p4Azfb0upjxs9gs=
+=rbBp
+-----END PGP SIGNATURE-----
+
+--45ff3aaff99b43270ac8aa38352e1e585a3b95bead335ff4d3af9d1accaf--
