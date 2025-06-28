@@ -1,191 +1,114 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A0A1B4121
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6302919C553;
+	Sat, 28 Jun 2025 01:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751073790; cv=none; b=jZUCSAcrzFvINSOQJNRxfaIZN5hNZ7hgSc/VjZNpLYIA0T+nupr8Z6u6BWFoOjs3eIVAcFc3sIY+W+21yfQPTOpnnjYLoU9opog20cbkjGU+/427StNVyDv2VJSU14gwJ0c1NcUkw663WNqnNbGM9dzMIdK+prmH86KjvOWt8cw=
+	t=1751073810; cv=none; b=iOipGgXzQJfugHTS4E6QUFZwFliDUr+MH/A36h3RkkKdT95lAsQj9GPDn3R7KKNgublV7Ju1iV+M4fUWpTPHBGxOXzmM6JNSyZ4uc+vCxyCETmPLZn/8E402azR//NT9nkDGGt3TkPECNFJPTWkZPI0PH35HUtn6Xa626/bcfJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751073790; c=relaxed/simple;
-	bh=lqVZ0ZdwJCNHNb8o/bTviZHUZ7f/m9OEvUrytqvCkrk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=jVfYD34epx+RUDlPpUzjgjRcghdcOFcRZxaMBnjwHrE/Xc8NlkAucmWw1a5KuTz+0zbh41t+zUyEPclyY5liFXBqz1MkOI65ApyRRa9qMfLquGk7Z6A5oSVc9aJu27cZziHlMypJnIi174K4gz7WLaMm03ExMYULrrri6mTmO+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bwkNXDRS; arc=none smtp.client-ip=209.85.160.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bwkNXDRS"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2eb1763cb08so348082fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751073788; x=1751678588; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KimOLBQdrw3JPMQ2eWl+70T9Ddr6hT3KTKPVMBjlLvc=;
-        b=bwkNXDRShcV+PrWFRnDK+Xk5MD8rRkCHsREsZmyhQuG/bYwUrDMEXfVI7RWNlbtWHH
-         lfy7jV/2AjfpGLBUi2cDKhC15+gKYBZdwnvJabZ/JD1Ppyo4R88Loe0i7jZ0cd+jGuXT
-         ynoxkIiFu/aH9CveLQeEZHVn0Yu1biMwVP38719EItOzS8hl/cfpcOEuBdx246Uju0/k
-         mbTH3CioJfqkmwAAOSHSMkyXBjGkOFJQRDiDv8LmmEHGywvYiXx+V+Ecye7IKyfBOsbz
-         VRAlfUWP0p2u+3MPKYB4lYsd+wO3yl71MHzVTw9418SlvD/H3S0rYHMfTlUhPG6rvM3M
-         F0aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751073788; x=1751678588;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KimOLBQdrw3JPMQ2eWl+70T9Ddr6hT3KTKPVMBjlLvc=;
-        b=OieUWnNc2fssN/uJFyHCFgaDgOih2HjLAQZSkEf3ValpkC5IcCIaRQt3lhlIRArIYO
-         m0FoVHmsrq0hZREeXUUkGxe5fE62Xn2gWRKmBF8wt7LNYBVh5lr2Yq6HR4avHGYc07fK
-         /HGod+si1Ujhm9BWXawhuqli8WT5GvVK2PlPylE0XyBiQkZymX9Z2ZVYvbMAOyVkjOZi
-         4yJRJ4CPYEx6sAmQQel8/YsUHePgIcK36lyoTgdUCfKjcJVIKe9xEdbqMjOGMx2OKxnJ
-         7bajIHxJ2ixe6ZUHNO1dK7Xm5M7FuH7hlLnhrOv7jT2NrLmPcGLe1/r6j5roK28ndiEB
-         s1wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuA84sbT/HMgBkO3ezZG7K3g13yBXj4Uw4eZyYL51IXlJRPv+mPw4tvNDOMnZ6QhUjWetSPH+weE+1ctk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxngfgm4S+A4cc9T2Y0pSYZQM7artCJYGP4olWyngTFiwLM4Bm
-	nNXLy3WOYpUgH2/mL1BsWKEDxTK6u7Xjys0Y7h66vsM8KAhAE/lmXJ9BXt8PbmN3cMV6kb5T9fW
-	4XMaq68h50Q==
-X-Google-Smtp-Source: AGHT+IET/LdfVyOGb1bWWHF3jZxWfBFJX/8Bn8I8ZCBykayKs7eINHZphS3XyP9WUBfmF6S/YqNztf/D7Cb2
-X-Received: from oabqz3.prod.google.com ([2002:a05:6871:60c3:b0:2ea:1219:6873])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:2423:b0:296:b568:7901
- with SMTP id 586e51a60fabf-2efed4805d1mr3393489fac.16.1751073788265; Fri, 27
- Jun 2025 18:23:08 -0700 (PDT)
-Date: Fri, 27 Jun 2025 18:23:02 -0700
-In-Reply-To: <20250628012302.1242532-1-irogers@google.com>
+	s=arc-20240116; t=1751073810; c=relaxed/simple;
+	bh=vvDN3ExG/Hj5cCKi4XY4+aSRUw0sMAb+Jk0kBDQH6v8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Rw2vIRDww8S+/I4W+rhpU5fy+0m2g6DBywDO6zJJhkBZLuVsb0wCAeWP8ItBSYG2ljLDH2iU1usw+6S7z0Zp7dJCidQDpwnmnMG4SBeP1+xb2cQDPNmJBRMRZdrAdAjY5UcWerzQg7Ff4fvjzpqRM09nO7LkFlOeXZDys7Ct+00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bTZSG4T8QzKHLwN;
+	Sat, 28 Jun 2025 09:23:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 0474F1A13BB;
+	Sat, 28 Jun 2025 09:23:25 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB3218LRF9oLSh+Qw--.8505S3;
+	Sat, 28 Jun 2025 09:23:24 +0800 (CST)
+Subject: Re: [PATCH] brd: fix leeping function called from invalid context in
+ brd_insert_page()
+To: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, hch@lst.de
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250628011459.832760-1-yukuai1@huaweicloud.com>
+ <20250628011459.832760-2-yukuai1@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <5b62eaba-1075-83ca-85b3-7ec1b291c1c7@huaweicloud.com>
+Date: Sat, 28 Jun 2025 09:23:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250628012302.1242532-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250628012302.1242532-2-irogers@google.com>
-Subject: [PATCH v3 2/2] perf test: Add sched latency and script shell tests
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+In-Reply-To: <20250628011459.832760-2-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB3218LRF9oLSh+Qw--.8505S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4kur13ZFykKFyUJw4ktFb_yoW8XF43pF
+	4j9Fy5CryYkry2k3W7u3WDCF1rGa95W3y0kF1Yqw15urW3ArnI9ry8K345X3Z8GFW7AFs8
+	ZFs0qr95ArWDZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Add shell tests covering the `perf sched latency` and `perf sched
-script` commands. The test creates 2 noploop processes on the same
-forced CPU, it then checks that the process appears in the `perf
-sched` output.
+Sorry that I somehow send this patch twice. Please ignore the redundant
+one.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v3: Avoid running taskset in the background as suggested by James
-    Clark <james.clark@linaro.org>
-v2: Skip the test if not root due to permissions.
----
- tools/perf/tests/shell/sched.sh | 93 +++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100755 tools/perf/tests/shell/sched.sh
+Thanks,
+Kuai
 
-diff --git a/tools/perf/tests/shell/sched.sh b/tools/perf/tests/shell/sched.sh
-new file mode 100755
-index 000000000000..c030126d1a0c
---- /dev/null
-+++ b/tools/perf/tests/shell/sched.sh
-@@ -0,0 +1,93 @@
-+#!/bin/bash
-+# perf sched tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+if [ "$(id -u)" != 0 ]; then
-+  echo "[Skip] No root permission"
-+  exit 2
-+fi
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test_sched.perf.data.XXXXX)
-+PID1=0
-+PID2=0
-+
-+cleanup() {
-+  rm -f "${perfdata}"
-+  rm -f "${perfdata}".old
-+
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  echo "Unexpected signal in ${FUNCNAME[1]}"
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+start_noploops() {
-+  # Start two noploop workloads on CPU0 to trigger scheduling.
-+  perf test -w noploop 10 &
-+  PID1=$!
-+  taskset -pc 0 $PID1
-+  perf test -w noploop 10 &
-+  PID2=$!
-+  taskset -pc 0 $PID2
-+
-+  if ! grep -q 'Cpus_allowed_list:\s*0$' "/proc/$PID1/status"
-+  then
-+    echo "Sched [Error taskset did not work for the 1st noploop ($PID1)]"
-+    grep Cpus_allowed /proc/$PID1/status
-+    err=1
-+  fi
-+
-+  if ! grep -q 'Cpus_allowed_list:\s*0$' "/proc/$PID2/status"
-+  then
-+    echo "Sched [Error taskset did not work for the 2nd noploop ($PID2)]"
-+    grep Cpus_allowed /proc/$PID2/status
-+    err=1
-+  fi
-+}
-+
-+cleanup_noploops() {
-+  kill "$PID1" "$PID2"
-+}
-+
-+test_sched_latency() {
-+  echo "Sched latency"
-+
-+  start_noploops
-+
-+  perf sched record --no-inherit -o "${perfdata}" sleep 1
-+  if ! perf sched latency -i "${perfdata}" | grep -q perf-noploop
-+  then
-+    echo "Sched latency [Failed missing output]"
-+    err=1
-+  fi
-+
-+  cleanup_noploops
-+}
-+
-+test_sched_script() {
-+  echo "Sched script"
-+
-+  start_noploops
-+
-+  perf sched record --no-inherit -o "${perfdata}" sleep 1
-+  if ! perf sched script -i "${perfdata}" | grep -q perf-noploop
-+  then
-+    echo "Sched script [Failed missing output]"
-+    err=1
-+  fi
-+
-+  cleanup_noploops
-+}
-+
-+test_sched_latency
-+test_sched_script
-+
-+cleanup
-+exit $err
--- 
-2.50.0.727.gbf7dc18ff4-goog
+ÔÚ 2025/06/28 9:14, Yu Kuai Ð´µÀ:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> __xa_cmpxchg() is called with rcu_read_lock(), and it will allocated
+> memory if necessary.
+> 
+> Fix the problem by moving rcu_read_lock() after __xa_cmpxchg, meanwhile,
+> it still should be held before xa_unlock(), prevent returned page to be
+> freed by concurrent discard.
+> 
+> Fixes: bbcacab2e8ee ("brd: avoid extra xarray lookups on first write")
+> Reported-by: syzbot+ea4c8fd177a47338881a@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/685ec4c9.a00a0220.129264.000c.GAE@google.com/
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   drivers/block/brd.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+> index b1be6c510372..0c2eabe14af3 100644
+> --- a/drivers/block/brd.c
+> +++ b/drivers/block/brd.c
+> @@ -64,13 +64,15 @@ static struct page *brd_insert_page(struct brd_device *brd, sector_t sector,
+>   
+>   	rcu_read_unlock();
+>   	page = alloc_page(gfp | __GFP_ZERO | __GFP_HIGHMEM);
+> -	rcu_read_lock();
+> -	if (!page)
+> +	if (!page) {
+> +		rcu_read_lock();
+>   		return ERR_PTR(-ENOMEM);
+> +	}
+>   
+>   	xa_lock(&brd->brd_pages);
+>   	ret = __xa_cmpxchg(&brd->brd_pages, sector >> PAGE_SECTORS_SHIFT, NULL,
+>   			page, gfp);
+> +	rcu_read_lock();
+>   	if (ret) {
+>   		xa_unlock(&brd->brd_pages);
+>   		__free_page(page);
+> 
 
