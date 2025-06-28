@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080527FB0D;
-	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707B52882B6;
+	Sat, 28 Jun 2025 17:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751131829; cv=none; b=ivh0E8K3ySrZbVC8iYuP7aerNjw2ZA4LrUc+uBJRtpmtxPKFuwAEHCMDoi4y4Auhc1uop6qgapJL6F4Ij/xC0Y1qW5wmPbbzq2pOcqKbYnMRVHb5+IozKB/vHHKGr68BH2DcgPZ83PM4WLZHK10AareGux8Bb82HkPP3HqQs/O4=
+	t=1751131830; cv=none; b=RHGUb+ssnaeCLL6uClv6F+AqTCm2h+oCbR3GPDE4zOQ4OBWFyW14Ts7mR1Efd3ELoiEEUdrqFnaOvcmtLU24MuT/UqGdPE7Gc8Pq5rrQN8aCgvwhyr7CZXXS9DJBkxJ29wY6+WU8RA9enMc1ImFivGRCjLw5i0ykBtc9RzSYtn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751131829; c=relaxed/simple;
-	bh=XyHVZgTEEU9jeG0R0aHxp6hZU2S5LzzIaxTXL9QhFBI=;
+	s=arc-20240116; t=1751131830; c=relaxed/simple;
+	bh=7TKWmvcmwH8EPAgGzhd5SaoCtxIYJA2s5UD/FxVMb24=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AF1TlwVA8Ya2UhgRWnabskVlsf+JKfo/h8bUUBGO90U98ckOjZrPCr80A99sCbJdhZVG/9arnmEASVeCv5DoaKE62BYXXg/o0iaPwXI8mRFBDr95m7vGEhSh3d0f93YYFFE5NMmMWoYOnL3v1Ow7Ek3Ha82mQsM0vLb5yJdNO0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lo7vjY6h; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=d5tV5J4NxqCcCXX7UqvrqtVVoFKB4ZPcK+6QJhkRLsJ2B6NaAnRs8y1vTvWKCiEm9wEbAmiQ2xnFUkDHhqd3cSPvyzQI8PJamtV0ur3qNL7NtrZeedLWiEnolMZYTKGE/W+oOIVPnJQEhWqUu/p5Ia8JlG3XtMUA5IoOHJXccDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbK2Lldp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lo7vjY6h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E8DDC4CEF2;
-	Sat, 28 Jun 2025 17:30:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbK2Lldp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DF0C4CEF7;
+	Sat, 28 Jun 2025 17:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751131828;
-	bh=XyHVZgTEEU9jeG0R0aHxp6hZU2S5LzzIaxTXL9QhFBI=;
+	s=k20201202; t=1751131830;
+	bh=7TKWmvcmwH8EPAgGzhd5SaoCtxIYJA2s5UD/FxVMb24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lo7vjY6he4xWIMh1pX/S8sSy8sa2VSOPIMc9V5Ayn8nWMgHmsFhuJ7XMXSxjJ52Ri
-	 g1u7MJqMzIS5gAbrvtsirGBRVzU+J+tQDrOtmrWX+FeoveZEOg51x/E2EqwwhX+ToQ
-	 vh8AoAK8zs8raM2LEI0Q7yXxgLkG4qXp9OZ0hhdZZDXz38OgGB0bufrYuR5+3ho5Iu
-	 L0y0IIkVBue7vuZrkOS7kYJps0fNDG04KEvIlnwF3LMQ4eebPbaMdDqhHHcI6xh8tE
-	 1AKc1Qn9Akab5x7+8aEuRWHTRmh7NQxKpFXfFvSPoxMBdeux4CfGwBKaZ6ucUCgH97
-	 I1WYQBAnKIa/g==
+	b=IbK2Lldpk+5feq9A359lTu/tVzT5DORZ+3NRgDVCNNuSAQOXg3by+CADp1by1l1LY
+	 nkb8nIyXxVy8iNAnXXCd95XqIPAsbeUohcI9bKtkNKixH/K+y2QglmjPNI6a8fBvZF
+	 zy15F684XQ75nuWhIQoZdvgFGcBaBIJ/VjLthGvCMWkTBaqJHUKibOrbwAvvehju9S
+	 blmBcaf6TbKYa8HG+tzoyDg3YXi0bHHEjwwzzGAjiUIYIYMQoP0+hUqx6Ef8cTRUrC
+	 R0k1ZUxkMhCEjaQhtvM/qHefylBFIRNmNT+H6c1siqyNY2Onq/VF1Ws56C9nEq6lfb
+	 WLuYJooE9+3Iw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1uVZNi-00AqZC-8D;
-	Sat, 28 Jun 2025 18:30:26 +0100
+	id 1uVZNk-00AqZC-62;
+	Sat, 28 Jun 2025 18:30:28 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -43,9 +43,9 @@ Cc: Toan Le <toan@os.amperecomputing.com>,
 	Rob Herring <robh@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 03/12] PCI: xgene: Drop useless conditional compilation
-Date: Sat, 28 Jun 2025 18:29:56 +0100
-Message-Id: <20250628173005.445013-4-maz@kernel.org>
+Subject: [PATCH 10/12] PCI: xgene-msi: Resend an MSI racing with itself on a different CPU
+Date: Sat, 28 Jun 2025 18:30:03 +0100
+Message-Id: <20250628173005.445013-11-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250628173005.445013-1-maz@kernel.org>
 References: <20250628173005.445013-1-maz@kernel.org>
@@ -61,48 +61,31 @@ X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-pci-xgene.c only gets compiled if CONFIG_PCI_XGENE is selected.
-It is therefore pointless to check for CONFIG_PCI_XGENE inside
-the driver.
+Since changing the affinity of an MSI really is about changing
+the target address and that it isn't possible to mask an individual
+MSI, it is completely possible for an interrupt to race with itself,
+usually resulting in a lost interrupt.
+
+Paper over the design blunder by informing the core code of this
+sad state of affair.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pci-xgene.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/controller/pci-xgene-msi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index f26cb58f814ec..a848f98203ae4 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -58,7 +58,6 @@
- #define XGENE_PCIE_IP_VER_1		1
- #define XGENE_PCIE_IP_VER_2		2
+diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
+index fbfdc80942596..f797ba0524783 100644
+--- a/drivers/pci/controller/pci-xgene-msi.c
++++ b/drivers/pci/controller/pci-xgene-msi.c
+@@ -168,6 +168,7 @@ static int xgene_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	irq_domain_set_info(domain, virq, hwirq,
+ 			    &xgene_msi_bottom_irq_chip, domain->host_data,
+ 			    handle_simple_irq, NULL, NULL);
++	irqd_set_resend_when_in_progress(irq_get_irq_data(virq));
  
--#if defined(CONFIG_PCI_XGENE) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
- struct xgene_pcie {
- 	struct device_node	*node;
- 	struct device		*dev;
-@@ -189,7 +188,6 @@ static int xgene_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
- 
- 	return PCIBIOS_SUCCESSFUL;
+ 	return 0;
  }
--#endif
- 
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- static int xgene_get_csr_resource(struct acpi_device *adev,
-@@ -280,7 +278,6 @@ const struct pci_ecam_ops xgene_v2_pcie_ecam_ops = {
- };
- #endif
- 
--#if defined(CONFIG_PCI_XGENE)
- static u64 xgene_pcie_set_ib_mask(struct xgene_pcie *port, u32 addr,
- 				  u32 flags, u64 size)
- {
-@@ -670,4 +667,3 @@ static struct platform_driver xgene_pcie_driver = {
- 	.probe = xgene_pcie_probe,
- };
- builtin_platform_driver(xgene_pcie_driver);
--#endif
 -- 
 2.39.2
 
