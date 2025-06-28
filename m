@@ -1,142 +1,138 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96981D8E10
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588A01D8E10
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751075760; cv=none; b=PEp1gK5mxDX9NC6F2+kF58e86Kyx72tDHlLaRAM8e3JABwdIUT/ZhX9kU+DJzPs6YoQ2X5hVeP92GVebAbsVwUg1EHQO88TP5SmHQV0Q677ciRZcsRHfh1LXhl14df/uC+rL4JCRkPiEDQ8V8142vrjejVvcaDMopbV6NhIfvOc=
+	t=1751075867; cv=none; b=mrWMRKe9fJCAHKr+qBavQiDye6lI7AM0kR1uctYW3EJn0FgihIQ+phQDRT6phj8ZCfLYy8SssxoCX4Gjwvn8tV9vqCi6w21i24FvSbOQHcj+hkZuH9uNx8fbPt5FkWBAzLL4LpG7M/kZ8k4CRzUtufiOKn4Dz7sI6A+OJnCPQ88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751075760; c=relaxed/simple;
-	bh=xp6QooYSKJIO1Ri906XmGIWsfQAQKsjdb0xfOXssMf0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=VtxaCq6Fh5HA3AWwdpqzg1hsycnyRs7Gr9D2SEF8glozUXfnYGoYHSM7Qche/vJQmA4dfjWSevHlBxjlFU1BxV6+vOu8tK38eJdDbIPGHP8DoXBMnUCMFLz6l1a1rJd3tFLGkHtOPRh318VuLOpco/N3YriZwl1THWao+qEeklc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nm7ykAd6; arc=none smtp.client-ip=209.85.160.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1751075867; c=relaxed/simple;
+	bh=eB2h+WWGUWxTIdXYzQWwwYrg0DgFAVeaboMVJ48OFSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UmFH++LpGoQ5emDaSVIJL7/HG8MJF87DUA4WTRTsTG4lJfN4/gp8P4+hqY+a2aKn8qpdOLbH68w3NwP4q2QNZaViZpSHqFvDEFimnVAt+AfgPaC8P4AtZFTxzEg9BlFlSQT2UrJDA5CyOdG6xsFpy5bR5+7xaeo/ihpusQi4SBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a2HEW8b7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nm7ykAd6"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2d50f167550so154564fac.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751075758; x=1751680558; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=R9h8FoTQNuVI8eMmwBP37Z8kyCmEZSw8NGWBhTujA80=;
-        b=Nm7ykAd6fWeSufTbJVGNudayHXhgSEskE+UOhtZLXEBu1Pi91B2st+RouV6iwp7IuR
-         JONLWqvOqogdHBESpBwHdBEmAurUGrMEL8wuUXNnMsINefn414M0d4tEYDpLOue8LQBM
-         8Jdv7lwYB7NVqy3mz92BB0F/bvxFd/Lg/qTUMYcMcTi+i57F7+fEf6gG83izWh1pe1LY
-         9ScIBIs+ogeT8l/Te6cQh1O7zJqvUJPQZHZr136ZwsiTtJ1EC2yJPTB6VGynlWxBRM7F
-         Qcx2HAYSfSb6M5Pltx3bJXSGRFAQz4p6S56XSDtipaBDmlGYj9Dd0XK7IBK3plgi00GO
-         C/0A==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a2HEW8b7"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55S0DH7g032543
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:57:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=C1cLAjsBclJ0QBWDw60ZW2kU
+	AMy0clXSWHYg54xP/7I=; b=a2HEW8b7NwtvWqvduqwrtvZYP2KmDBQihQJw9qF+
+	t6OrJ5fyQpJpC+49AyB0QMlth9sZoUNjNPz5hDM894auBz0LGAC91rYKbzOOUM3n
+	+zeqEtjULScwi6lMxT4rHy6Y6qFuSfafVD+5j4gydEvOis/VRxO3nPqQ5ExEDsLT
+	heF6ksAC/Iul0c8CjaH/XEI2hidAVHG03MTKIom7Gtc9aoaeYnQG0Z7ohTABPlmM
+	U3OPmV0y5lP1lsfPV1Cukb94IX6NBlhnqKrldPf5aPCqnhxkDgSPiJpUdgFKpTD3
+	nDYmnqjb7TokykvNX3obqz2wS5L9Hl52tlfBvrIWojgn9Q==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fj3eb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 01:57:45 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a582e95cf0so4458981cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 18:57:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751075758; x=1751680558;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R9h8FoTQNuVI8eMmwBP37Z8kyCmEZSw8NGWBhTujA80=;
-        b=OH8fzV1lZ/rqAaH2USpEaLS6jjCF0c+97GF6JhWiKlIYn5wjTSVQ9lQ2TCko8CUEV+
-         SMCDm3u+KnfRtfTSvlxbm0N4uiqp/+NSZ6nvSABxRSrbl/v69eLHCHTf8sLhUFJyNIKO
-         Ryak38hnBS60MSAUwIrHPO40LHcy86Uqq2HdFCHsubUCllGUsXFPTIzEeOiGepKPa0vn
-         hW9sHCK8grAeZNXDO9BYzVgCuTSXqi2zRBFCFizn06MJbnIOOpYQvub9yUhlbIWm9xIi
-         0riBfSyYcNp60ScgCGND1LCY9m4b9TAFOWdYD90aU4c0N9GpPG8NGtZ+zFeSf+CdX4TB
-         ZFIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwaPEYh9UgPnuMFN7WNVb2BpmuS0c7ZUg+yDrXzLS/nuw47XOcrbufzj6eTCbuxSd0AtNjbaw3s0nm+f0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqCCdntuZ6Q9G82mmchIgHWNNk9kuqVPwpK4YIZ8/7Tp1ZUWQj
-	sE6YQe7ZTo2LRUThrQ1jhXe37YkRwjPwDC9M4WBh3yxFNxwyxiBhUHC8XD21ObcTSi+gYIX37sA
-	82ME1rZ4GLw==
-X-Google-Smtp-Source: AGHT+IENTPRHNWGW0h/e1gGYBTAnij1lcBLoq9GKy23IedPH8T1A4YYl98zUsSHXi72+tWcQDyLiUfKt1KD0
-X-Received: from oabgs15.prod.google.com ([2002:a05:6870:ab8f:b0:2d6:1436:180b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:d92:b0:2ea:70ad:4517
- with SMTP id 586e51a60fabf-2efed4f4f3emr3048947fac.15.1751075757707; Fri, 27
- Jun 2025 18:55:57 -0700 (PDT)
-Date: Fri, 27 Jun 2025 18:55:53 -0700
+        d=1e100.net; s=20230601; t=1751075864; x=1751680664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C1cLAjsBclJ0QBWDw60ZW2kUAMy0clXSWHYg54xP/7I=;
+        b=CzNw/x3lXnue068AV/3mt8s4jezB52dpFbO4mFKhdoZpDFteB2+pnbkPCPJjLy8BpA
+         2ZUtivHnqf54v/2ftZN96FPk4CT2WHjQQBI8DPesN+6LBgQaOL+D7CTkocz++ZRqGrtU
+         xrXMK5ypBl2sxFyHZwuJPZm30jDBqN1Yzk89+bOnCT9LHKJRd0JDSiUu5GMO6Kdow3Wx
+         bQJMEJvxSgCVdNePvY3AWFaoP6rQqAuM5RrUSUQsPDg671KnzQNqw4WYlGgZoCm1GiHA
+         W2ofSKec/4f8vwo/EHCmNp7tk81vdupmUWr3cuNoW5oMIJfsLig3MDuu3IsyrJ26UCZP
+         TPyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWqsQcvdSyGjUb57gS3yt2/rJxrQsS7nOVw9UmulUZ19DTlcdjwEzK+1PjX++BTtlZYVwPUy6Oi3zeWaeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVwBHitFGTBuXUQLp5oZphgAAZKrrGydb5f09FQhid8hkJDmeV
+	3QlDPKxPw/pXfFQgTqk9+wFozQoybjlv2uFXRx/QhvD3s4VHEEazEwcZERXMLUgBAk+jTC6bBNQ
+	13IggqE0a3eGfrNPcVM8RI+pmZhmtVcgCRT9J+GiqfeqpeJ2VHnkwVJSIWZyHSahJcg0=
+X-Gm-Gg: ASbGncsEy2RKKMceRzVZB0A97PARmhxh9JwYdATe53LMPICDEtk1lcbk+SRog1238Mv
+	9fYwArDpuWy2qbK8hTJGWKiwDmOZDcKu6PB+JtThwhJYledqpJ2O3ZGHaWsyn1H1JPHc2tNQHX3
+	FKX2In2OflZlWkkFL0BYpzbyKHtPcf6gBD7P0rCw22iX2OIEBKGD5sItfOpdedDV5o6MX18E1+o
+	yG1Xw6mogOKBeLxMoHi8Xq0xWI+F8CF6i2kiMvSEcj2Y3uFOp9scztXNqkK4dzUYuX62uMbCgWn
+	VT/YybPSseL/9nb/ltCyOKVG2fDQJv5OczlEIzBcIg+pvPczWs55rFjQMKeEC9DUGZ+ZrWybHPA
+	9zLYkBlllg3w9KBm4JpmNNAiqw/xkKwwBhHA=
+X-Received: by 2002:a05:620a:aa19:b0:7d4:4b0e:eb1b with SMTP id af79cd13be357-7d44b0eec28mr241536785a.45.1751075863747;
+        Fri, 27 Jun 2025 18:57:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH4Hltdir3SyFuBpeLJoJ4afHk65Pi5pMb3NzWsxG3FHxbeZRywpOH7wvixrcleSdr649yHIQ==
+X-Received: by 2002:a05:620a:aa19:b0:7d4:4b0e:eb1b with SMTP id af79cd13be357-7d44b0eec28mr241535185a.45.1751075863298;
+        Fri, 27 Jun 2025 18:57:43 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2f01ac0sm6638601fa.101.2025.06.27.18.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 18:57:41 -0700 (PDT)
+Date: Sat, 28 Jun 2025 04:57:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+        Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>, linux-clk@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 2/4] interconnect: qcom: qcs615: Drop IP0 interconnects
+Message-ID: <3edj53e2tlwqg265udg7gjk5lfmlwz6higfm6roq6z65qye3o3@wjbjsjq77wjh>
+References: <20250627-topic-qcs615_icc_ipa-v1-0-dc47596cde69@oss.qualcomm.com>
+ <20250627-topic-qcs615_icc_ipa-v1-2-dc47596cde69@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250628015553.1270748-1-irogers@google.com>
-Subject: [PATCH v2] perf test: Add basic callgraph test to record testing
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-topic-qcs615_icc_ipa-v1-2-dc47596cde69@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI4MDAxMyBTYWx0ZWRfXyV6fWH0lWOfz
+ JAG6buc6nDKs0FqN8GarsgB6kF0wdMxrCy3nSpns+tP+vCrht6XZXHEVsoJB02RWLX5bXL/95GF
+ fWTlIay5xzSdiTtx3KnuXkv3xEeMU3PMzwNQd7wsL9cz6oyW4YKMFYRE7oPVy6/o2Xh9tz5CR/r
+ mh3QbAqvTCM1GhqGntajq4EhPiIXNmLceXZb80VixkSpjDwSMKnaa7VHAhoS6nVfaUqHJuJkZ2x
+ bgus1WBBbZx1X91j1306TlKNMulvN+tPeBUMnfkuGTISYKNulXC7fOR0PTHbwTnPG8/avROBiXY
+ BfMtNABaaJMFZaMjHOjjPWzS3Oek0Rz08zcOOkAinwS3Z5yRCTsKsIGJU3xhbireKf+wJwLIVuL
+ fMZa53U8nnRs8CH2rgeRQXRPXUQQrYvf0DpN3GwdvYRO+ihxuU4DyCDqYdB1+BJHSSZjptfn
+X-Proofpoint-ORIG-GUID: BPa9S2hl2Hrgv_D4aZgTGQJZ4ALiZVB4
+X-Proofpoint-GUID: BPa9S2hl2Hrgv_D4aZgTGQJZ4ALiZVB4
+X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685f4c19 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=wxkdqnHnqkY9PcZr0RYA:9 a=CjuIK1q_8ugA:10
+ a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=798
+ impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506280013
 
-Give some basic perf record callgraph coverage.
+On Fri, Jun 27, 2025 at 09:37:56PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> In the same spirit as e.g. Commit b136d257ee0b ("interconnect: qcom:
+> sc8280xp: Drop IP0 interconnects"), drop the resources that should be
+> taken care of through the clk-rpmh driver.
+> 
+> Fixes: 77d79677b04b ("interconnect: qcom: add QCS615 interconnect provider driver")
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/interconnect/qcom/qcs615.c | 42 --------------------------------------
+>  1 file changed, 42 deletions(-)
+> 
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v2: Pick up s390's needed "--call-graph dwarf" as spotted by James
-    Clark <james.clark@linaro.org>.
----
- tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 2022a4f739be..b1ad24fb3b33 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
- . "${shelldir}"/lib/perf_has_symbol.sh
- 
- testsym="test_loop"
-+testsym2="brstack"
- 
- skip_test_missing_symbol ${testsym}
-+skip_test_missing_symbol ${testsym2}
- 
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-@@ -359,6 +361,33 @@ test_precise_max() {
-   fi
- }
- 
-+test_callgraph() {
-+  echo "Callgraph test"
-+
-+  case $(uname -m)
-+  in s390x)
-+       cmd_flags="--call-graph dwarf -e cpu-clock";;
-+     *)
-+       cmd_flags="-g";;
-+  esac
-+
-+  if ! perf record -o "${perfdata}" $cmd_flags perf test -w brstack
-+  then
-+    echo "Callgraph test [Failed missing output]"
-+    err=1
-+    return
-+  fi
-+
-+  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
-+  then
-+    echo "Callgraph test [Failed missing symbol]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "Callgraph test [Success]"
-+}
-+
- # raise the limit of file descriptors to minimum
- if [[ $default_fd_limit -lt $min_fd_limit ]]; then
-        ulimit -Sn $min_fd_limit
-@@ -374,6 +403,7 @@ test_uid
- test_leader_sampling
- test_topdown_leader_sampling
- test_precise_max
-+test_callgraph
- 
- # restore the default value
- ulimit -Sn $default_fd_limit
+
 -- 
-2.50.0.727.gbf7dc18ff4-goog
-
+With best wishes
+Dmitry
