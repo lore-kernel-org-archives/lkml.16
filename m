@@ -1,79 +1,141 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8CC78F2E;
-	Sat, 28 Jun 2025 19:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2221DF75B;
+	Sat, 28 Jun 2025 19:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751137317; cv=none; b=WEGptyi8EwGCdzngi3FuokY+Dwc5L6Lhb8HnyomWhZ4bsANInADQqnbiz5xl5Y7xMYnK+T9FKQfRWHL4VY6kmMO27ZRxgcpm7UfRyLHv+McRjSjfjdu36/0wjmeJtgydOJcrZwWKD3BCxsC0eknkI0LVGcs5apvGUlIAemsIJUY=
+	t=1751137420; cv=none; b=e+u4ihfs72IIrSllM1XfmtgY20NWjjdmCWFT4g3fHyIgLVnHNInd79N7hYswyq999tKU19Ji8T1cJVKSKHkq0tiCAfuw7HTWNkYroN+MJBFzb79ZLg2OX4na2cOyAgXv9lt9mSd9kyYiW3UaG+IH2XY4eNgEaAPj5xY/i7F2Mtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751137317; c=relaxed/simple;
-	bh=+K/D9zxektbPV7/iF/5HCLdwm8I6n+bAErg+a+BOu7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kr2YkGaX0vZhBWyQRUXCXmrmqjyWObQMl8IGqOcU81B2InA1uakh7W6oqKDPY4o73WTfOkENWs+tpHzSADVtzQ27LqWK0g80sV3BR97oxM23EvL6IDoqb23mS4nJ6Av9PLg5ognUtUl1QJettg4UFkGWIBuMaQ8NIhOinKcThkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TRyNkUFS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751137420; c=relaxed/simple;
+	bh=zfgv6PJINC7vZIj0NCJ7W3L3ZAysaSJB5bC+FX0XBcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=fY9m2iXaCp0H3TDOxwo2MNzzAm+n04IBhhhRcDZX1FETYy9+Z4sLmg9I9i3Ld/hPVrHGO4v3Q7OSJllcXidN8N8YnDKmzamSdZvLhQG4vDYxAohi74reWtTiUFxUtnjbOGPNxld7zQ5DOaQPitiC79UE6njA8WApsi9AD38PQWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/rk8GHN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TRyNkUFS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=6ycOmLaVvTvuyWA4nshMB7a3wiAY5zly0uelEAE1xnc=; b=TRyNkUFSdK+igWd4fg2qPgkpmY
-	cBqTg2nCr6zzdveT6GX9wSzii/MGYcSGip/dga+ZVRrJvkORwSaF1fPfED5q7e+BgbnauBQJfd7j1
-	FiCw3Zz3EDndvOw0DCS7oXeTJ7bTShGjtNvVtlFRksrYgu7otLI4Q+egTuEZnB01k8RyTUqIzARyy
-	qr9M9yqnoqb3MsbU7lNIcVfFOoyIVa+lb4nSfvb1r6CVBdiIF1tU3LIldCoVh/6JQsT9bcQZi37Wn
-	jnNitsJNI6ty/A0gGmyuw5Cj13X2K4qhtmkgz4nOkFonUupJ7feBaH1pSiSEk2q5Ga91qFDyvPXCp
-	Ynzg2SCQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uVaoC-0000000H8Au-1cyT;
-	Sat, 28 Jun 2025 19:01:52 +0000
-Message-ID: <9004d94c-b681-45cb-8df2-3281fb722276@infradead.org>
-Date: Sat, 28 Jun 2025 12:01:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/rk8GHN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64BAC4CEEA;
+	Sat, 28 Jun 2025 19:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751137418;
+	bh=zfgv6PJINC7vZIj0NCJ7W3L3ZAysaSJB5bC+FX0XBcU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=T/rk8GHNTroexcOeSUiNHnwzN+p5lQ/QE7NXAmm6GCCi+Mvj0AqHLUvII4rQ20eE7
+	 p7OxjXfHdoEPyDFmZvwKE/P3JxU1PDDb4avoifmdaNh7f5jMQux4k+h8OYkrWA+mMc
+	 +tYz6o4K+Jk+ZUELzVP5Lndw8scuT1UQd/ekhx+Md+c/RbYjT1lOC1d093QJbRoMZf
+	 oSvrmVtDgZ4n8eQYLLJU34XVRDmFFVXqedhnFPBT8fkw13Om7yXz7LlieLZ15oG48Q
+	 7ndqodB3x6F652pHvwQXZYybhzYMC+ppbYDwShwSofyDtSh3nE6wKWx6yXN41QVeVQ
+	 oHGa05UBNB8Gw==
+Date: Sat, 28 Jun 2025 21:03:34 +0200
+From: Wolfram Sang <wsa@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andi Shyti <andi.shyti@kernel.org>
+Subject: [PULL REQUEST] i2c-for-6.16-rc4
+Message-ID: <aGA8hmxiZJcIIqOI@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] docs: dma-api: remove duplicate description of the
- DMA pool API
-To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
- Robin Murphy <robin.murphy@arm.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Keith Busch
- <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-References: <20250627101015.1600042-1-ptesarik@suse.com>
- <20250627101015.1600042-6-ptesarik@suse.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250627101015.1600042-6-ptesarik@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fbZkZoKMazwS44YT"
+Content-Disposition: inline
 
 
+--fbZkZoKMazwS44YT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/27/25 3:10 AM, Petr Tesarik wrote:
-> Move the DMA pool API documentation from Memory Management APIs to
-> dma-api.rst, replacing the outdated duplicate description there.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
 
-Thanks.
+are available in the Git repository at:
 
-> ---
->  Documentation/core-api/dma-api.rst | 62 ++----------------------------
->  Documentation/core-api/mm-api.rst  |  8 ----
->  2 files changed, 3 insertions(+), 67 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc4
 
--- 
-~Randy
+for you to fetch changes up to f40213cd93e608ee78b5e25db042c42ec07139fe:
+
+  i2c: scx200_acb: depends on HAS_IOPORT (2025-06-27 12:28:33 +0200)
+
+----------------------------------------------------------------
+i2c-for-6.16-rc4
+
+- imx: fix SMBus protocol compliance during block read
+- omap: fix error handling path in probe
+- robotfuzz, tiny-usb: prevent zero-length reads
+- x86, designware, amdisp: fix build error when modules are
+  disabled (agreed to go in via i2c)
+- scx200_acb: fix build error because of missing HAS_IOPORT
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      i2c: omap: Fix an error handling path in omap_i2c_probe()
+
+Johannes Berg (1):
+      i2c: scx200_acb: depends on HAS_IOPORT
+
+Lukasz Kucharczyk (1):
+      i2c: imx: fix emulated smbus block read
+
+Pratap Nirujogi (3):
+      i2c: designware: Initialize adapter name only when not set
+      i2c: amd-isp: Initialize unique adapter name
+      platform/x86: Use i2c adapter name to fix build errors
+
+Wolfram Sang (3):
+      i2c: robotfuzz-osif: disable zero-length read messages
+      i2c: tiny-usb: disable zero-length read messages
+      Merge tag 'i2c-host-fixes-6.16-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux into i2c/for-current
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Carlos Song (1):
+      (Rev.) i2c: imx: fix emulated smbus block read
+
+Randy Dunlap (3):
+      (Test) platform/x86: Use i2c adapter name to fix build errors
+      (Test) i2c: amd-isp: Initialize unique adapter name
+      (Test) i2c: designware: Initialize adapter name only when not set
+
+Stefan Eichenberger (1):
+      (Rev.) i2c: imx: fix emulated smbus block read
+
+ MAINTAINERS                                |  1 +
+ drivers/i2c/busses/Kconfig                 |  2 +-
+ drivers/i2c/busses/i2c-designware-amdisp.c |  2 ++
+ drivers/i2c/busses/i2c-designware-master.c |  5 +++--
+ drivers/i2c/busses/i2c-imx.c               |  3 ++-
+ drivers/i2c/busses/i2c-omap.c              |  7 +++++--
+ drivers/i2c/busses/i2c-robotfuzz-osif.c    |  6 ++++++
+ drivers/i2c/busses/i2c-tiny-usb.c          |  6 ++++++
+ drivers/platform/x86/amd/amd_isp4.c        |  3 ++-
+ include/linux/soc/amd/isp4_misc.h          | 12 ++++++++++++
+ 10 files changed, 40 insertions(+), 7 deletions(-)
+ create mode 100644 include/linux/soc/amd/isp4_misc.h
+
+--fbZkZoKMazwS44YT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhgPIUACgkQFA3kzBSg
+KbZnqA/9Fmnl4mcD78dshgNQp1V7nnVB+BMAzaBxK7Zw3Yo+YRoiusKvYJfOwhFy
+M3GaIYHv1144MzE4JzHEGulLAwA82d3DawNtedZy9SPszIdz7X93uSd4/tKpL88q
+VqW9TAFnLzMOhDYnPAJpEaiqgwJ0FnXZSpUelJu/wIT25rwCFZJRyEAYkweaCg4i
+NW924BwXhv+pQ8DkGO2QgFGZ3FZZsL7Oin/nU5wWe522IkJkviKG8zgm5C0iT4XL
+IdfFnIvwbCCFsiuxMYSAwkEhD0jvwVIl9CNN+YySRHorLSU6GBGdfEIwsSzV14G3
+i9vK3RbgfGeeKLSN1v4Txnw2qX1zuOaW5lI91bgFvKNn8TZEGgYn2lbpJyMn8XuE
+VDTySsmKj9SHIKy+JvS5jGNUer9wRlA41pSQKl3STbVY2j/RfmCGSqxqJM4SLm+X
+YPYnYLvXi6Bzc4ZwfIXoIAe5lWGeJkmVFNh2OKCW1szlQqsvbJ7HkmCXYY8MSrmn
+6puE+hXdOMLaiN1wVHT4YF+bzPV7x9gAEfWAhLuG4rYjpQPwW9bKRF1TbstE2y+P
+EOL+WjdTTI0LDAkKXNN7c8Aqs6mlC/Orkf4mgBr5j1XaLvFllFnb2Ynkli8wZl0r
+GCQZddD66acmjakyYLyXxvFl3ef9uO00d7B/xCZ3RIGA51kqBJo=
+=gNlQ
+-----END PGP SIGNATURE-----
+
+--fbZkZoKMazwS44YT--
