@@ -1,78 +1,126 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751E3244665
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 09:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5F618FDA5;
+	Sat, 28 Jun 2025 09:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751102030; cv=none; b=QrfOi7KJniJH4o/bK2Mw5blZZ4F73kW8dUdQC3DPxxVSVB3sEciSqH5ki0xxgN99KFgS2TE/5AYxAz+uvsMLDk0860a4psptaO0ItazH5fYWunyVNU/ayXlKjjHJhOz8Q5Z56eZ8ILXH1p11h3IDskd2KswUGStBxwcpHRiWuL8=
+	t=1751102238; cv=none; b=Pq2mALwmujWlaqdCxbkq2FavqA7TbZ9oBTClswFm4GlhMdPv2K7g5u6p12duo/gEEo9jNQX2zB87yXDYLh5qB/G28wd0jjDLZ72onuNxGLAZzRTAV7P8TUV8CsBw+iwZQfNTusY/8YZgraQhvTsKOryHVG76TknlpE7DE2FmLGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751102030; c=relaxed/simple;
-	bh=juTA01te9FKV5B8PHkCYX955l/JRRH6fuRt+KBGvoyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYELG6ZOvRxjXKlEkAWZfsz82iLPPSS/1mG7OK6Bjq+6UZUAGhQ+378P0I/1h5H14uRorUjV9B3gaVV6tYwwOIZz4VPJZZpd4qA+YkoRVfWa6sLIoVcOO7CIkqE66qS5lBJ8xObWmmvXZDRadhfQ/OizDXBwglgwvAncn8M21R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=mdVgcxp/; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1751102238; c=relaxed/simple;
+	bh=JgZ1cPMKbEPkJlrteoo8n9KC9VeiMg4oo1zrlG+bnQQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J6Cf0hl910MZ7ojN96eaNvfdsfulmLHyqcJTWqDjxypVS/hGuvl13yT3htnJdWkQarxVpACzjte4BRrLKysgEjzAO/BWiiJFG42r+iL52ulAhTmaXxTfJsTXvYSRdxIITpigdrN7grUOovDLQMMlur50VMVPyVPzrm3yKwgoGdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=HhNXOnrx; arc=none smtp.client-ip=134.0.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="mdVgcxp/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751102025;
-	bh=juTA01te9FKV5B8PHkCYX955l/JRRH6fuRt+KBGvoyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mdVgcxp/LfDJ4VZjuRc0z4HXhiBgbGmfOae7xrLX0u7ZxGKbpoiDS9hX1QK6vlrsh
-	 CxrPCVrGd4NXSmeSv8bV8CNjukWJBr5OMINZ+r/qNaFKlhQ7RKjUm5ubLCqHjbNxpb
-	 6Ger+y3Zh9CfMH+veGJj/uivlK9Wq6HOy941GJDA=
-Date: Sat, 28 Jun 2025 11:13:45 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Richard Weinberger <richard@nod.at>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
-Message-ID: <02779f20-f910-4045-8e36-0a60bd9fe7b5@t-8ch.de>
-References: <20250408115823.1358597-1-richard@nod.at>
- <1837899202.21230.1751099700585.JavaMail.zimbra@nod.at>
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="HhNXOnrx"
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout1.routing.net (Postfix) with ESMTP id 039E141B98;
+	Sat, 28 Jun 2025 09:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1751101852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R99PFLgv7EGPI4uV/VSEzfV0kYW/ZQPDNvpGbpm2GOY=;
+	b=HhNXOnrxpy9EHODacj5PdX10JsTlN3CHjWtsocQwoAvlDUlfP8sPBXAoQgtCmo0RHN/g93
+	dNtIm1A5wvnvOaCIynf9mkqUXuCVHeWU+0Sx5VgbJEOR9CvFYYun3lztmV2VlzocyyLu9a
+	hUXB1b971w0HQ67OYToQsHj9zcPxc3Q=
+Received: from frank-u24.. (fttx-pool-217.61.150.139.bambit.de [217.61.150.139])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 958321226F5;
+	Sat, 28 Jun 2025 09:10:51 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Felix Fietkau <nbd@nbd.name>,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v6 04/15] dt-bindings: net: dsa: mediatek,mt7530: add dsa-port definition for mt7988
+Date: Sat, 28 Jun 2025 11:10:28 +0200
+Message-ID: <20250628091043.57645-5-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250628091043.57645-1-linux@fw-web.de>
+References: <20250628091043.57645-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1837899202.21230.1751099700585.JavaMail.zimbra@nod.at>
 
-On 2025-06-28 10:35:00+0200, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
-> > Von: "richard" <richard@nod.at>
-> > An: "linux-kernel" <linux-kernel@vger.kernel.org>
-> > CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, linux@weissschuh.net, "richard" <richard@nod.at>
-> > Gesendet: Dienstag, 8. April 2025 13:58:21
-> > Betreff: [PATCH] Docs/ABI: Fix sysfs-kernel-address_bits path
-> 
-> > It's address_bits, not address_bit.
-> > 
-> > Fixes: 00142bfd5a91 ("kernels/ksysfs.c: export kernel address bits")
-> > Signed-off-by: Richard Weinberger <richard@nod.at>
-> > ---
-> > Documentation/ABI/testing/sysfs-kernel-address_bits | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-kernel-address_bits
-> > b/Documentation/ABI/testing/sysfs-kernel-address_bits
-> > index 5d09ff84d4d6..3b72e48086aa 100644
-> > --- a/Documentation/ABI/testing/sysfs-kernel-address_bits
-> > +++ b/Documentation/ABI/testing/sysfs-kernel-address_bits
-> > @@ -1,4 +1,4 @@
-> > -What:		/sys/kernel/address_bit
-> > +What:		/sys/kernel/address_bits
-> > Date:		May 2023
-> > KernelVersion:	6.3
-> > Contact:	Thomas Weißschuh <linux@weissschuh.net>
-> > --
-> > 2.48.1
-> 
-> *kind ping*
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Acked-by: Thomas Weißschuh <linux@weissschuh.net>
+Add own dsa-port binding for SoC with internal switch where only phy-mode
+'internal' is valid.
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ .../bindings/net/dsa/mediatek,mt7530.yaml          | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+index 51205f9f2985..9b983fdbf3c7 100644
+--- a/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
++++ b/Documentation/devicetree/bindings/net/dsa/mediatek,mt7530.yaml
+@@ -190,6 +190,18 @@ required:
+   - reg
+ 
+ $defs:
++  builtin-dsa-port:
++    patternProperties:
++      "^(ethernet-)?ports$":
++        patternProperties:
++          "^(ethernet-)?port@[0-6]$":
++            if:
++              required: [ ethernet ]
++            then:
++              properties:
++                phy-mode:
++                  const: internal
++
+   mt7530-dsa-port:
+     patternProperties:
+       "^(ethernet-)?ports$":
+@@ -297,7 +309,7 @@ allOf:
+             - airoha,en7581-switch
+             - airoha,an7583-switch
+     then:
+-      $ref: "#/$defs/mt7530-dsa-port"
++      $ref: "#/$defs/builtin-dsa-port"
+       properties:
+         gpio-controller: false
+         mediatek,mcm: false
+-- 
+2.43.0
+
