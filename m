@@ -1,107 +1,63 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB882F1FF1;
-	Sat, 28 Jun 2025 01:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FAE137932;
+	Sat, 28 Jun 2025 01:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751072466; cv=none; b=f8/fZ7rsswuwjNGPkSdWKSFrhC0srDIJDX1Tkwihnza0sFpVmTiifm9W5gWcyiWYnPold7Dt+PFQOI77q00wcNupAFi4uIkc8zOtf/FtUQM8UfpJaSNkjRjwNCNqorGHHRqRnnH9G3nPHT5kfzRyISFWey0fB6UmD8hPGrUNblA=
+	t=1751072504; cv=none; b=F370PvAlpk140Qf0nL8nCdrbuKqlRVR/dhWHovjQBtRz7xN6nZ2tNDbQlmgkR8SaTQsV9UcQsTc5eGX5jRQIqOhNDC5jOJI78ACScgTJKcL5ySccj8cm3sH0OdNo2JXAjJrbBHSOolhl1iuATGJtHVD0zhooTXODU2ZUmioE6bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751072466; c=relaxed/simple;
-	bh=gcBkyhi3zYGXarPBn7yBaq1CjaIcyEkwlZd3FoDqsn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m9iojvsyxIGEiSOAujSdSbcppvV/GTGG3mcyBMvp8OrQfVL4doMz/oAlUxdd1KR8sUvNTtIT/ZjP9vMGi3KtM8PbNVv/L8isAlTuLn7h/RY0+hnU9ZfaifHo7zCJZd96JLdezpJhByJsjCEynBh6Nm0df5oS5+3lRHO9Iqgki68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=lwMs/H8Y; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=lwMs/H8Y; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1751072504; c=relaxed/simple;
+	bh=BVt084Jffd0MsEmn1r/uRb+4WdE7yeSiaCEgJg1Cgd8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=m+3wniKdJZ9fXb+4tztfKL3a1HLRRuRay2zzjpgi8jYkc8E9KIZPYiuaFTNe/kZrKm5nvd3FcEVbeoKnSElj9Xt/GRt2hxMNOWbdzpqnOCoyi0ATT+Moo6pK/TJrrDnMfMV3jDIoWs2qufuXvICOFC8Yoytl03fmQIg1KKiK9hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UApGjuuD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="lwMs/H8Y";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="lwMs/H8Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1751072462; bh=gcBkyhi3zYGXarPBn7yBaq1CjaIcyEkwlZd3FoDqsn4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lwMs/H8YH9a4VltY5rQ/Etn2tDX9d1srdnIGAwoM90Jh6LXhXLgkTchBb8J5xyG86
-	 Tdp8ja1zq6xLNIohp+JO1ZVztnVH8CxYvtnS/6QR6BZXULYmw6V7/cNeRYlxqnZs8p
-	 CdBRsKTUMloY5beHui1ARoRpt2GmeZh4znnIbIupTzGQOYW77XEzqdAFJzq0rN1L3u
-	 BWc4R8a+5RokDjkJRy9Jchtg1pr2TWiA2uDw3rV2wbK6EQCYMLTNZbewBlLEGY4TkV
-	 qrExMdTcLz4C2xVtq8Hc5JCr0lwVtBMuBwB0cLtvuUy5l+7WdTxloo11duOPXigC/N
-	 qo83zI9cXl57g==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id DC09F3C4FE4;
-	Sat, 28 Jun 2025 01:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1751072462; bh=gcBkyhi3zYGXarPBn7yBaq1CjaIcyEkwlZd3FoDqsn4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lwMs/H8YH9a4VltY5rQ/Etn2tDX9d1srdnIGAwoM90Jh6LXhXLgkTchBb8J5xyG86
-	 Tdp8ja1zq6xLNIohp+JO1ZVztnVH8CxYvtnS/6QR6BZXULYmw6V7/cNeRYlxqnZs8p
-	 CdBRsKTUMloY5beHui1ARoRpt2GmeZh4znnIbIupTzGQOYW77XEzqdAFJzq0rN1L3u
-	 BWc4R8a+5RokDjkJRy9Jchtg1pr2TWiA2uDw3rV2wbK6EQCYMLTNZbewBlLEGY4TkV
-	 qrExMdTcLz4C2xVtq8Hc5JCr0lwVtBMuBwB0cLtvuUy5l+7WdTxloo11duOPXigC/N
-	 qo83zI9cXl57g==
-Message-ID: <01f8dcff-c614-4da9-8546-e3bb0e4cef61@mleia.com>
-Date: Sat, 28 Jun 2025 04:01:01 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UApGjuuD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F36C4CEE3;
+	Sat, 28 Jun 2025 01:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751072504;
+	bh=BVt084Jffd0MsEmn1r/uRb+4WdE7yeSiaCEgJg1Cgd8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=UApGjuuDE8cCkFsgR6hJekH28YcYgQgJZq1+sHItnY9VV22xe57BVUdrqTfRDzMHW
+	 f7TB5/4upgDWLpa2EkKyDpqGLCm/eUCa5CDBqwSMChZgPriBb0Lum7uTbLH+3dbo7k
+	 YnNRZ10Lao+2NMK9WpvVN8uOKayJ0wpJ+7HJe4KXSCHLV/ClufYstYgzENBz5I4tZE
+	 mPNqmOHiytCXMo+o1rdTfmWhNVz0ToHfHIJHFnQGoPDyAMJ+VIFcfrVBPcNwPukoI9
+	 2ohNLC35wTXQdGrZItwOaZTvdr9j2caW8sVZ/0xJdabK7u9e9ST3dZ3iUHK9n2AxvW
+	 2hA7st4BzdbPA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E6138111CE;
+	Sat, 28 Jun 2025 01:02:11 +0000 (UTC)
+Subject: Re: [GIT PULL] Crypto library fix for v6.16-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250627181428.GA1234@sol>
+References: <20250627181428.GA1234@sol>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250627181428.GA1234@sol>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-for-linus
+X-PR-Tracked-Commit-Id: 64f7548aad63d2fbca2eeb6eb33361c218ebd5a5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5683cd63a33a5f0bf629a77f704ddd45cdb36cba
+Message-Id: <175107252995.2102963.10280922816552279818.pr-tracker-bot@kernel.org>
+Date: Sat, 28 Jun 2025 01:02:09 +0000
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Arnd Bergmann <arnd@arndb.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: input: touchscreen: convert
- lpc32xx-tsc.txt to yaml format
-To: Frank Li <Frank.Li@nxp.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:ARM/LPC32XX SOC SUPPORT"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev
-References: <20250625163431.2543597-1-Frank.Li@nxp.com>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250625163431.2543597-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250628_010102_919351_A3DD3FC9 
-X-CRM114-Status: UNSURE (   8.51  )
-X-CRM114-Notice: Please train this message. 
 
-On 6/25/25 19:34, Frank Li wrote:
-> Convert lpc32xx-tsc.txt to yaml format.
-> 
-> Additional changes:
-> - add clocks and put it into required list to match existed lpc32xx.dtsi.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+The pull request you sent on Fri, 27 Jun 2025 11:14:28 -0700:
 
-<snip>
+> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-for-linus
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/lpc32xx-clock.h>
-> +
-> +    touchscreen@40048000 {
-> +        compatible = "nxp,lpc3220-tsc";
-> +        reg = <0x40048000 0x1000>;
-> +        interrupt-parent = <&mic>;
-> +        interrupts = <39 0>;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5683cd63a33a5f0bf629a77f704ddd45cdb36cba
 
-interrupt-parent = <&sic1>;
-interrupts = <7 4>;
-
-> +        clocks = <&clk LPC32XX_CLK_ADC>;
-> +    };
-
-With this minor asked correction, feel free to add my
-
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Thank you!
 
 -- 
-Best wishes,
-Vladimir
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
