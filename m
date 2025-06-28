@@ -1,108 +1,101 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD051BE4A;
-	Sat, 28 Jun 2025 12:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B18221FBA;
+	Sat, 28 Jun 2025 12:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751115091; cv=none; b=o56tmEQqXo53/Fg2rx8O0wYjNA6/G/Ql2HfHdRkfIEw+VD73MGZmxaoNOnEXTMatmmT4JkYZ1XqdPBEAdiYI+VoR2ZpR0qFHZzIJl8UFpxwJm/gvvkH0I5brJDdKuHqK7vSUSogEg8fNcJic4e1/xDBp/W4ItRFRf1pN8ztdqhY=
+	t=1751115222; cv=none; b=OP46GItQ8qomtzofTbHhcccN4JzAQ+yMPDh3+paSMzfnjyNuglJ1rRKb4Ues0H+96bIqN/v+d8kms0i79E2+MKMsp2lVp3fW7WokBm6uizkggqYIVoeHGP5pulMpNe8KKhvCOl+OkA+ifGyjJiE8g4bOpZBjNG9dfURkRlu8OxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751115091; c=relaxed/simple;
-	bh=/XhzeQ/qIyiKPzYwoMFNVjh3bHYTLrPXCW9JC1ZUonE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ohmfjwK8RaSEkaOC6tyaXbb/3y8gbZr7zGGSnHgDhBGJHSBSm0fehae8Wz2d3VY5n5gAG319sKjVbBfCmtNdS5PNsoe23w+LzeQy+xB38lstwu9eQJWj73eT8gPxvjf5HsKCdH3HXA1EOL8wHNonEm93w92ZCnLWI4WJQ7b/NCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D11Rj4F4; arc=none smtp.client-ip=209.85.215.181
+	s=arc-20240116; t=1751115222; c=relaxed/simple;
+	bh=Yw6OVMw2XO0OpaFU64wQm0eI9uWLODY5EjoTjMJ2wzk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J+EDRHfjHwt7A1VLsBc9DrpQZJD09n4oNcB98/bCviLj4Sgxwk2kVtCft4cBqcLdZ/Jo1xixEqb+wphA943FH3NP95oRcHBUhNwcShGsQMndLK6YexIFwDamGbjBDQ/ITXFdhZTxPJlbdfCqGBSPtKn/HtdeEbT5eNz+mbdhZcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KF4gu9YU; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D11Rj4F4"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b2fcd6fe970so516202a12.3;
-        Sat, 28 Jun 2025 05:51:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF4gu9YU"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235d6de331fso5677425ad.3;
+        Sat, 28 Jun 2025 05:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751115089; x=1751719889; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=48TlzH+B/dFIOCV6cmGqmz805LBIodgi+NMhMNWoo4o=;
-        b=D11Rj4F4DeIKIthJo7P5b639mGia8D07ZGgjCzE3RTiyaZaDbEm3UfWAy+BNf1HQb3
-         ewQOzBwEt4ymlD4+yhc5/30yG46bOnYuduk/Wq205hyBDV/14NDpD/mZvyvg+fxzyXUx
-         Ud5C49i3P5K3l6BdMlOyBuphglZ32pH3wvNMt5h2ZY/pPS0QkK31gGnROahPhOaEBiEG
-         /EdP+EvPCYKBNFL0eebLeTAfBg5SvI4ahR/DBjWgbIov8qDQwKuJbOBTehlBXcO7YpgA
-         N0Om4uV5VUL0KkeTj2BbIW3vp2Twu5RA0bsfqU5q9x64y8aK8mtXW+Vy0b1jDXrgW86C
-         PgKQ==
+        d=gmail.com; s=20230601; t=1751115221; x=1751720021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LpHE3fLDeCWcDxZzIAkyKvRKmqfdGUGUIj9xFS7Cx1M=;
+        b=KF4gu9YUk0F0BaedLjnGHVg12HU6/NoAyw47b+MZi3bc2URAxBWm/z9srm575t+7xo
+         /ffUE2gzEapG9JjHCavdo7GvJxb28Aa5Vi05SykYkG6B2Dz3k3pvVhOxIDBJxMqDsAED
+         jFSdcVTRsPoknqdGcdRkeSJLR9zBlU8WouMs8YMy49TbTGt0S6O+cwHeumAHMj/mJf3H
+         MQgSgN9y02U22MMkEZl3O6xX6snwlljHXkzAQj7osxrFtKyR7PY328gExfWziZpGP+FJ
+         nR2M+KRRcxO9Se9BvkwhUxMpyks6RM8ImLdHIMHJztWoLxjKntyzR+DJ05q4Ol3jGn6s
+         GPuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751115089; x=1751719889;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=48TlzH+B/dFIOCV6cmGqmz805LBIodgi+NMhMNWoo4o=;
-        b=j+OiVtktOdbp6+ORLf3h1WneuA6/59B4snWKv7ixuikE8w6+M1y9t1UFDabiCDy5RT
-         A8mfggZ9Ax0lhLd3AN3aJ5sGVc1jbOAG+uek6jTHcq6dIbHRm81Oz46UuDWNv+lOt8zf
-         yY/bdFf3Vt9NhoZK48GiMU3062Ho6CHjc0mNn96uk8Dg9RKe+4KpRutttH3o8Kugd83n
-         gcloH4RkdVKbbfze58/FcnbvIORRdX/DW/GluML8a0p9gbt9/g7EoJLsQjU/iYeeP43w
-         UDlyPzYahQBhT2bqIsI6Em8TatAqyPJPbX386LmXmYKqwdipWViytwLAme8p28fBuin1
-         MHkA==
-X-Forwarded-Encrypted: i=1; AJvYcCU24VZOaVVFIK8UfYfWo32qlcMUwJPXAZa4GjAMv2DbcQEImBGuC4Yzs36iT9DANJZVkhK8Z1/RuhlTCA4=@vger.kernel.org, AJvYcCUhrr4wAMRs1uNzYwjV7LpMMUJSa7GBSzI0Dg3u6Yd4Lq7MJpY75m4jBxfjekoY6V1k0KtuBIUChQQU8kPw8NgH@vger.kernel.org, AJvYcCUuJSoelxO0kjWn0w2/vvz8M0LFTk7d684iD1YrzXJbfXj2EpAjA9QjgrW/FwElu3K3HPVWw6IbNc8=@vger.kernel.org, AJvYcCW9llOwyHMBa+4vSTi/IZfrmkQZfG0M/Md6iQVoewpVLdz3rj6HDeORdINWLseYN1Qk+sLBfjNzPHklJO7225o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRGMP6bHOW5OOBPGQch1xMbYYzVAtQMLgUcBe3z2ypi4ZA1Y31
-	Mlu+iJ6KHrghuHN0Ux1HiF0+XKS7odHASbts64dphTNHpr8+iBJy+wArcAwIxcl9fXhJ/cOzzUZ
-	+nPoUYn93w32WPoRVtnfGv9XqD1LR2K8=
-X-Gm-Gg: ASbGncuGEkgfskFRClJAjbgZCS9D3bfxO+lJwDXINA5+fSE4b5cBTIPkR9Yd5CHM97h
-	+JBipZzF4bZJUeoaUZU1ohniha2SeoCvhzJDOMxUv+M6gisJqT6oW6uJsef8b6hBLffGvxmAbTg
-	SYQ+qd31MXCqUPLr3tKoBUOGnDibYUs0hc2drlnlPIL/M=
-X-Google-Smtp-Source: AGHT+IF83NxSga/73IzZHP9ZH+Dk1H5ZVUbTyoqGw/fldWN4ASKVsiyAJbL1eYeoiE4JdtyWY1PN4scS4CZe/X2Kwys=
-X-Received: by 2002:a17:90b:390b:b0:30a:80bc:ad4 with SMTP id
- 98e67ed59e1d1-318edd3da95mr1411969a91.0.1751115089099; Sat, 28 Jun 2025
- 05:51:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751115221; x=1751720021;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LpHE3fLDeCWcDxZzIAkyKvRKmqfdGUGUIj9xFS7Cx1M=;
+        b=GQQpiGdOY0fHa0ZbtrK4IDmcEuTEJJpd+Q64Eq6Krda+nlrubmcsdGvwGUgVPkZOta
+         M4FYBzHl/ooHoNLD+aozFJKxkpuFORJhcNAoCVmzN1x7dZPVNldyC1aAZ/foG38nqsCB
+         jJcjdJ99MNBjpf/DwdGFNObmM2ZsKC9gTmL6vjaVsJtKwLzzVJ1yvUUrjkeMxv277A+z
+         Xo7kHujYhlosTF8F18DzZ5x+uhtubYnOv+7YZVlnddH7RwTqQIs4RzPWDPeyjgq7/+47
+         8tnD9dg+ulWg4kYAZN/0SvSnRrR6zOgCI3cEoqJ2unxefCGqkzxrqeQvmKAV7mir2+n/
+         ubXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO/LNxnxMcID2KEqRAWYIH/tIrWY/SXVvTQVDj+1BAGwjXzAzkxHkgo8WysQSTlqRVD/lQk5bTJMqo0R0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlTNwYbGM27YSLsbJR6S6kq2onItBQUO30t5ZWP5uLppMLw6uZ
+	3rbBLuuuaonoUXh0H9liiGUVpEgzqujfA6gYmcSktLR+rSmzn8dyCm5r
+X-Gm-Gg: ASbGncsn1mtugqwSnyo2w3VprcRDYEXSlwxlM7fyR7CNadxzBWXOvbI68lengslkfZh
+	fDNsloRGYuY64orKlO+g2SrHPhyVftEl2hmvy6thf/fckXckFaURZLUsiA5bkwkNbDjTuQGLBsJ
+	tqeUbb3kRmWFLz3lDlJH/PDii4fRjy2pRbK4BhaBF/pY8xVpNCPH4dd79eHjugr1RS+Pacc2QYq
+	ZcbtPOBmzfwXDXG5i8THwlBsUy+WJAGVwJaZ7Nhd8XZt+R8suWXckiYOTYNbDotQlYfD3Y6lbbj
+	m43DFMJV0eheCW8SV0QL4VQxrRym/bK4OY0SvwWJQc1JmBb3ajMl+/fJC/EfNr/ubi3s1MFiWIs
+	YvrDGaAW1iOZgig==
+X-Google-Smtp-Source: AGHT+IH6mZZojuqK/skauy15yP8Klz04JW818MtpgIcFZG0uBkQGrY+JCQueG4MKPUFB8R5d1wv4/A==
+X-Received: by 2002:a17:902:d603:b0:235:711:f810 with SMTP id d9443c01a7336-23ac43d3283mr106652825ad.23.1751115220657;
+        Sat, 28 Jun 2025 05:53:40 -0700 (PDT)
+Received: from localhost.localdomain ([223.185.39.134])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3ce960sm38188475ad.250.2025.06.28.05.53.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jun 2025 05:53:40 -0700 (PDT)
+From: ankitdange37@gmail.com
+To: martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ankit Dange <ankitdange37@gmail.com>
+Subject: [PATCH] scsi: ibmvscsi_tgt: Fix typo 'transitition' to 'transition' in comment
+Date: Sat, 28 Jun 2025 18:23:20 +0530
+Message-Id: <20250628125320.295824-1-ankitdange37@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628040956.2181-1-work@onurozkan.dev> <20250628040956.2181-4-work@onurozkan.dev>
- <CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
- <20250628133013.703461c8@nimda.home> <CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
- <20250628154237.0f367cee@nimda.home>
-In-Reply-To: <20250628154237.0f367cee@nimda.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 28 Jun 2025 14:51:15 +0200
-X-Gm-Features: Ac12FXwgClP6Yp6fHTMMv5JbyNRAPTPAsfggSLj5a6SGwbkwHWoZ1R_RFA_utb8
-Message-ID: <CANiq72mxJM-7WAP8xVDukmiXq=ntThyFESFLs1+dmZJSS2q60Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
-To: Onur <work@onurozkan.dev>
-Cc: viresh.kumar@linaro.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	airlied@gmail.com, simona@ffwll.ch, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, rafael@kernel.org, gregkh@linuxfoundation.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	davidgow@google.com, nm@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 28, 2025 at 2:42=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
->
-> Yes, I am sure. Just to clarify, I am not testing 5e7c9b84ad08. I am
-> testing c6af9a1191d042839e56abff69e8b0302d117988 where
-> `#[allow(clippy::non_send_fields_in_send_ty)]` was added on
-> `unsafe impl<T: Driver> Send for Registration<T> {}`.
->
-> Switching from `allow` to `expect` produced the following result on my
-> end:
+From: Ankit Dange <ankitdange37@gmail.com>
 
-Yes, of course it does -- what I am telling you (and what 5e7c9b84ad08
-says) is that the lint is disabled.
+Corrected the misspelling of "transitition" to "transition" in a comment
+in ibmvscsi_tgt.c for clarity.
 
-And since it is disabled, if you change the line to `expect`, then it
-will obviously complain.
+Signed-off-by: Ankit Dange <ankitdange37@gmail.com>
+---
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you actually enabled the lint with e.g.
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index 2fca17cf8b51..edc28da794f0 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -425,7 +425,7 @@ static void ibmvscsis_disconnect(struct work_struct *work)
+ 
+ 	/*
+ 	 * check which state we are in and see if we
+-	 * should transitition to the new state
++	 * should transition to the new state
+ 	 */
+ 	switch (vscsi->state) {
+ 	/* Should never be called while in this state. */
+-- 
+2.34.1
 
-    #![warn(clippy::non_send_fields_in_send_ty)]
-
-at the top of the file, and then used `expect`, it will build fine.
-
-Cheers,
-Miguel
