@@ -1,124 +1,87 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856A01C84A8
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 23:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D6D217737;
+	Sat, 28 Jun 2025 23:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751153434; cv=none; b=CR8SdviTIYTCIBymH9VczqfjYGdecKVAJx/5McQNm+JBGasbk2fpElob+BK3LOl56UsDc285viX+o0Coq7VUQiJHPWiHdePu78rmVyVNcPqi4L1mJpl5SibPuUS1G3N3THiLr4ZXAiRM2pSej6RgRepc1DNPtwP1uDBBGEd5WMc=
+	t=1751154042; cv=none; b=WSRWglQN/2irxz6KAN95VgpfPNFJkFtmcSX4A5npFOKbN8O5mggqDnLJj7fN4s04iBNI80QI6nsJ9K3U16Hr7guOaIbdHZzWttSJZMRFZXNmLVVUN3L+74lxiFBx4xM5Iz8LofumqwXJlhL1aaizocBmGTF9UBMQd3rEzVYrDUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751153434; c=relaxed/simple;
-	bh=0L3TcnOnAT37xurn4zHF7Uelnh1A1OIPxvlh7Hv5QGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eg0WNXg+Fu/FipeXk5GvknYsQGRJtrvVihMVVtQFfeVJoxcSOUaIGNAyJ9drXu4CFrfcUFbKsEjrP9P1qPF1BZHzB5vftCFy8K+ad1fF38gasE4/9Ba8pka/U222l6E4GdKF74tr+HPsGA8L6snHJU6enhydTkewQ/+akHFE4ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eJMIj9kG; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751154042; c=relaxed/simple;
+	bh=P/RvNkMSAQeQBPjrlKokt7Nces9xjj4vKLh9m4xqU58=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Vk+c71RrTO6BsEdxKCTLgXSUtQ8hICVJR9j7lRhKwWMOthrRfy5rJBX/B6k0kuGOxaILhybxTPUmAaN/qaaHHvk3g0nhhr4jybtxXojQA7gfNUAl1fbR3wqfGZYAN4axQp7vcttu9LGpZnhmIZZve7M1NXIs7z7+GsiBoMndZ/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZeC64k8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eJMIj9kG"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2e9a38d2a3aso1015972fac.3
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 16:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751153431; x=1751758231; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3LV2whTVcFBv8HGVSk50MOoWwYm/BUMUzIcy7LK/5Gk=;
-        b=eJMIj9kGY+TCzlzUxoZ9vT58J5vLtzhtCwnoVWwn+6IKmnb/QVg08tLzfh9y/rp1/2
-         Kwivh55qtslzt3hnv2QKN7Dx66w89ZV9FKjMQ3EFL0IpVAAzL3qht7hSpuuPZRh7hWco
-         BwUwulm/iZijHB61og4RFmUxP0M3SmJ3OFy24UM2LZS/fLXh3s/JAoojTAoGXZf3SC/X
-         YdfzUdEZa+Nb5bnKW/Ea4NdtjufBok7ESgfYpYel/CNQBDxh0yxKchin48Dk8YWQslTc
-         mROnDP+8iCOBggSrRghyoTr/eSAKebCBLExQWrZCB7VatLAUm8YP8I4aq4k0ckiAsneS
-         iXqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751153431; x=1751758231;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3LV2whTVcFBv8HGVSk50MOoWwYm/BUMUzIcy7LK/5Gk=;
-        b=VQtbC3IaK4bg3tn00IfkjoHU362k9Wy7vAjTRzr5phuUKynt0xkCpbL1lqKQtEgDzh
-         HNJI69EykPTafCMi7ZV40yeEGii36eZ/dlHZ5RRWiXnNRkPwFFJStCEzDHuf8QoEyF9+
-         7tbl3gx9WiW+UaqPhV7+45tDi1CfUELcVwxs1E0BeyFAtmJqldF0GkufxRgZt4WI8BNW
-         HNgeBay2neO0Cb/6DpKSpG9GwBfHKBQHW9sWRWjWA+w5Xh06QlxAbY98HKART4ETwyuJ
-         uEpXdiMWf2gHN49efp7C2U8GfdUdBwMXzoQ+GF8aWIavlIIWAA1WyPBgRqgP03BLhNK8
-         7fPw==
-X-Forwarded-Encrypted: i=1; AJvYcCW54xA7kNleafi3KiksxhRP8qhHO2T8lwKigffzj3tXN3+yH2YuWrqhapFQ/nz6aE3+zfNlbA8BfTHL5Mo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxyI5Kvrx/CfCtFSIajmheXbSfyVevuxgL3Tby4XPrkmx9DjpW
-	os/cvKVePxgEJVzREvBd0ePf3cHfeL755cGXVgEjlXQaBur/WgLVQ56wjbc/ele4jyc=
-X-Gm-Gg: ASbGncs0dAsG9H7eXxVKp7gX1M5rJYbMXUaLe+fgnutpSInsD56bptPkSOO9MuER6ZT
-	bGKxAW2BYzZN5OtWCXOsu6lez23RnyJ4/+1FMre/0GO6BwVHKGVVIcezcUM8WFmK5f62cJxs5Qd
-	GEjpxTgJtdm6zxLHhDW2W1baFJCvGTgw24g2NiXntYMMK9Eu/is+H7uw+tzoE4NtwF42dJONiCt
-	afbzA3sqiCc0eyhza3n+UxtVQsbzv48mSkB9qqLgmK1fXQ5QcB29smmLVnDi7Yn68Qi4DLZH0ti
-	aWUig32yga4vTwpx/k179uaMFvqlSIAApEbLoSGRK0RrHJN7zGpMYTFo0jy292mXHdPhU+XCuUM
-	8rRjtaXJVohZDRR4Tvhk3EilNklSm2MK4xuswFIU=
-X-Google-Smtp-Source: AGHT+IFPRb5c72fGGjzcl2TWNpxe5UqjFvHdpbDERh59UE43Z4EhY5vjoD630Wsnz6iYSlvBePYWyg==
-X-Received: by 2002:a05:6870:cd89:b0:2ea:7101:7dc1 with SMTP id 586e51a60fabf-2efed73119bmr5062597fac.33.1751153431549;
-        Sat, 28 Jun 2025 16:30:31 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4? ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50fa38asm1750229fac.40.2025.06.28.16.30.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Jun 2025 16:30:30 -0700 (PDT)
-Message-ID: <bd72b92e-bf8d-4fc2-84ae-4f9fd8b40c37@baylibre.com>
-Date: Sat, 28 Jun 2025 18:30:28 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZeC64k8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D6AC4CEEA;
+	Sat, 28 Jun 2025 23:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751154040;
+	bh=P/RvNkMSAQeQBPjrlKokt7Nces9xjj4vKLh9m4xqU58=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lZeC64k8S3hd9Xr+qm3sIquoVIDV777wnaYxYAaC+SwIa1rlGpV5WqQFa+12vnPa8
+	 Usmb56cvKYgrxL5V8va1j2+QL1ihntOU3on6AYDbJGkUQKimlmI2YhNqSKMuhBTDx/
+	 0IE0KZTAOcP851cXhJ6D2ZVsYwwFlxxzSkLBIYBYqQmWUzFWgBqHho8JAlgRTv/Lxq
+	 X+VV0erEHeVfGuB2UGRsYi5jdiSIITUR3fxcaiqMWYdyWImI92jcVxBuTZD47cxKA0
+	 hZyvrwkRH03x5xvCmGCASr8ITT1RC8hUt9RieigW438riLtOIzgb4TzFio8QIidTBL
+	 PVkDMHdYdRsJQ==
+From: Kees Cook <kees@kernel.org>
+To: =?UTF-8?q?Jannik=20Gl=C3=BCckert?= <jannik.glueckert@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] kunit/fortify: Add back "volatile" for sizeof() constants
+Date: Sat, 28 Jun 2025 16:40:38 -0700
+Message-Id: <20250628234034.work.800-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] iio: adc: ti-adc128s052: Add lower resolution
- devices support
-To: Sukrut Bellary <sbellary@baylibre.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>, Nishanth Menon
- <nm@ti.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250614091504.575685-1-sbellary@baylibre.com>
- <20250614091504.575685-5-sbellary@baylibre.com>
- <CAHp75Vf=zQ+pdo5V1fAq2qWEpdUfNfWdO+_iW0wETWSniXisyA@mail.gmail.com>
- <aGB2Fnv797Wrenza@dev-linux>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aGB2Fnv797Wrenza@dev-linux>
 Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1367; i=kees@kernel.org; h=from:subject:message-id; bh=P/RvNkMSAQeQBPjrlKokt7Nces9xjj4vKLh9m4xqU58=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkJtaUH7CMUvCsWzt/JcjK+rZ6pZFmnbuDuhw/EVSTji 6dF8c7tKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmMhKa4b/sX0N/uLppVe3zrMI OF8v6nY/8Sxj/fE6zq+u94M7BJfFMDKs5z05ryv39CWN8srzckwXXGe5frrAYqPnUa/A+730720 OAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-On 6/28/25 6:09 PM, Sukrut Bellary wrote:
-> On Sat, Jun 14, 2025 at 09:45:43PM +0300, Andy Shevchenko wrote:
->> On Sat, Jun 14, 2025 at 12:15 PM Sukrut Bellary <sbellary@baylibre.com> wrote:
->>>
->>> The adcxx communicates with a host processor via an SPI/Microwire Bus
->>> interface. The device family responds with 12-bit data, of which the LSB bits
->>> are transmitted by the lower resolution devices as 0.
->>> The unavailable bits are 0 in LSB.
->>> Shift is calculated per resolution and used in scaling and raw data read.
->>>
->>> Lets reuse the driver to support the family of devices with name
->>> ADC<bb><c>S<sss>, where
->>
->> I believe it's incorrect, i.e. it's something like ...S<ss><?>, where
->> <?> is something you need to clarify, and <ss> is definitely a speed
->> in kSPS.
->>
-> Thank you for the review.
-> I am not sure about the last s in <sss>.
-> It could be TI's silicon spins versioning.
-> I couldn't find any information about it in any of the datasheets.
-> I can drop the last s or mark it as <ssx> and specify the first two <ss> as
-> maximum speed.
-> 
-I have a hunch that the last digit has to do with pinout/number of
-power supplies. adc128s052 has two supplies V_A and V_D while the
-others only have V_A.
+It seems the Clang can see through OPTIMIZER_HIDE_VAR when the constant
+is coming from sizeof. Adding "volatile" back to these variables solves
+this false positive without reintroducing the issues that originally led
+to switching to OPTIMIZER_HIDE_VAR in the first place[1].
 
-If this sounds vaguely familiar, it is because it was discussed
-today in this thread [1] that Jonathan CC'ed you in. :-)
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2075 [1]
+Cc: "Jannik Glückert" <jannik.glueckert@gmail.com>
+Suggested-by: Nathan Chancellor <nathan@kernel.org>
+Fixes: 6ee149f61bcc ("kunit/fortify: Replace "volatile" with OPTIMIZER_HIDE_VAR()")
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: <linux-hardening@vger.kernel.org>
+---
+ lib/tests/fortify_kunit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-[1]: https://lore.kernel.org/linux-iio/20250628162910.1256b220@jic23-huawei/
+diff --git a/lib/tests/fortify_kunit.c b/lib/tests/fortify_kunit.c
+index 29ffc62a71e3..fc9c76f026d6 100644
+--- a/lib/tests/fortify_kunit.c
++++ b/lib/tests/fortify_kunit.c
+@@ -1003,8 +1003,8 @@ static void fortify_test_memcmp(struct kunit *test)
+ {
+ 	char one[] = "My mind is going ...";
+ 	char two[] = "My mind is going ... I can feel it.";
+-	size_t one_len = sizeof(one) - 1;
+-	size_t two_len = sizeof(two) - 1;
++	volatile size_t one_len = sizeof(one) - 1;
++	volatile size_t two_len = sizeof(two) - 1;
+ 
+ 	OPTIMIZER_HIDE_VAR(one_len);
+ 	OPTIMIZER_HIDE_VAR(two_len);
+-- 
+2.34.1
 
