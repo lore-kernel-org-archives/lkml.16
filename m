@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC09B199E9D;
-	Sat, 28 Jun 2025 06:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC2020E6;
+	Sat, 28 Jun 2025 06:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751090929; cv=none; b=eHgtjvs7xfjm0h26OfW0tll8cobL5QjczJaWikYqrC9WcWFcBTY4U2d6i78IUuEb0SbzQRdDNEMbpGHl293Bw6XmHtcmK8DvNB2PxH1cb9ZLERuyzBKlm90OE2mBIFz9bw46qOSybNcuRXnylzswZ+gS5mOOSnX5gfIkYNpu4EY=
+	t=1751091122; cv=none; b=kCpk23h5yiXG3taRfIrJ8V/EykzjnxsFtx3Td0BPkrmgeW67vxQLbF/ZIjPdmd2j5VC7feR+iNC9xrLwZX863BxHFygDCc99CarJfDb6sR+2sWTOe+Qc2NnwusZ76InTTEaFZl3jGu7+dd3sPnBFzCPcCFz79JU/AHj4z5YSGVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751090929; c=relaxed/simple;
-	bh=FWKzhYGQM7gdwjjfdFj34tQM7NG2yfbSnWb2WAtbmF8=;
+	s=arc-20240116; t=1751091122; c=relaxed/simple;
+	bh=akOxjAF+jt4G2vDJNyRfh6YemKyOpw+ta5H4u9dRlCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TeXcQuFZhl4yLxFmyCpNOyHX1tFnXUyIO6stePgowmo9sLothlS7NDS0jYDz1ZU62D8p5M0mz2vwjP62ksThSyvtUI6tucoHyGyC6z1zbhphXaiQUF7sHx8Edj/1+ugKeqUTshYmF8m2826vdudernSX+xBkLs22int0WD+A+nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=g57ghAgR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WN6r/vuTjCLiiu2iHVQvGffeffbBMkRQ8iLsfxdsTYuVqpGkmUUV51/h1ks1UyWk0P5HDTHxTpvJnaiC0GBjTaSOt6zxJpDNbFKA8ZT1mgeVXbiPwZOCroXpzeEurxL7Vi9Pw6Ez5EVEYzBpvuCJJzZGkS90HYLSMBdBT8zusAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ySm9L0zC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="g57ghAgR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A61C4CEEA;
-	Sat, 28 Jun 2025 06:08:48 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ySm9L0zC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E170C4CEEA;
+	Sat, 28 Jun 2025 06:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751090929;
-	bh=FWKzhYGQM7gdwjjfdFj34tQM7NG2yfbSnWb2WAtbmF8=;
+	s=korg; t=1751091121;
+	bh=akOxjAF+jt4G2vDJNyRfh6YemKyOpw+ta5H4u9dRlCA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g57ghAgRX2EPrbyBT1aB8DNfKOSLox6DnN6/l44bCwaOVrDXusWNAX6uX2qnd9132
-	 cDpcac3CngPfZH/EVvUHJtAo5R9kzZhJDtNPzvuFmliJR9WCOG43cM59wN5TJWUVVV
-	 qHNmgfmuJYThAWcaB15x8HSUB9phxspMnVvXvNdU=
-Date: Sat, 28 Jun 2025 07:08:46 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Gabriel Shahrouzi <gshahrouzi@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>
-Subject: Re: [PATCH] drivers: staging: iio: frequency: ad9832.h: Fixed TODO
- note.
-Message-ID: <2025062815-resolute-cornflake-48c4@gregkh>
-References: <20250627175114.548076-1-abdalla.ahmad@sesame.org.jo>
+	b=ySm9L0zCzTL4swhRZMhEWu2Hp2+DtuVS1k87jUJQ9mSCFrpA7wLfLXb/A3hFc+Zbb
+	 IgzYgwRBtPHHeUZBaWDyzgSpWs6ekvxW1CvidgXyOMf0MAJyRlIyeozmE/kCko9ia/
+	 yHLyT4MJIb5RyFPq0DvIdpfqqHfRzBR44K93op7A=
+Date: Sat, 28 Jun 2025 07:11:59 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jay Wang <wanjay@amazon.com>
+Cc: stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Herbert Xu <herbert.xu@redhat.com>,
+	Samuel Mendoza-Jonas <samjonas@amazon.com>,
+	Elena Avila <ellavila@amazon.com>
+Subject: Re: [PATCH 1/2] crypto: rng - Override drivers/char/random in FIPS
+ mode
+Message-ID: <2025062832-gleaming-tamer-fe0a@gregkh>
+References: <20250628042918.32253-1-wanjay@amazon.com>
+ <20250628042918.32253-2-wanjay@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,25 +45,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627175114.548076-1-abdalla.ahmad@sesame.org.jo>
+In-Reply-To: <20250628042918.32253-2-wanjay@amazon.com>
 
-On Fri, Jun 27, 2025 at 08:51:14PM +0300, Abdalla Al-Dalleh wrote:
-> - drivers/staging/iio/frequency/ad9832.c: Changed .h file location
-> - drivers/staging/iio/frequency/ad9832.h: Removed struct definition
-> - include/linux/iio/dac/ad9832.h: Added header file according to the
->   TODO note.
+On Sat, Jun 28, 2025 at 04:29:17AM +0000, Jay Wang wrote:
+> From: Herbert Xu <herbert.xu@redhat.com>
 > 
-> Signed-off-by: Abdalla Al-Dalleh <abdalla.ahmad@sesame.org.jo>
-> ---
->  drivers/staging/iio/frequency/ad9832.c |  3 +--
->  drivers/staging/iio/frequency/ad9832.h | 23 ------------------
->  include/linux/iio/dac/ad9832.h         | 33 ++++++++++++++++++++++++++
+> Upstream: RHEL only
+> Bugzilla: 1984784
+> 
+> This patch overrides the drivers/char/random RNGs with the FIPS
+> RNG from Crypto API when FIPS mode is enabled.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herbert Xu <herbert.xu@redhat.com>
+> (cherry picked from commit 37e0042aaf43d4494bcbea2113605366d0fe6187)
 
-Staging drivers need to be "self-contained" for now.
+This id is not in Linus's tree, so why is this here?
 
-Why do you even need a .h file for a single .c file anyway?  Why not
-just remove it?
+Are you sure you ment to send this series out?  Have you read the stable
+kernel rules?
 
-thanks,
+confused,
 
 greg k-h
