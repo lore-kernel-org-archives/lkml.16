@@ -1,98 +1,135 @@
-Received: from forward502a.mail.yandex.net (forward502a.mail.yandex.net [178.154.239.82])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEB255E69;
-	Sat, 28 Jun 2025 13:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158D755E69
+	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 13:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751118173; cv=none; b=Insxp2Z+siqFCr7iODyEmwCd0dJG7knjMjKmb8imsSwVHaZ41tXNWE3nn2wMaEkUmtXGQm5BbEucLPwWdVTlhibHRgX49Hy0m+PTahvrqxDh8hWxSiROgSN6Dg0vSWYDO+gcFecr2dEWZc1GDuFM5UYV6trgmjEfyDyutjQWcBc=
+	t=1751118224; cv=none; b=J1GSsCZg9ZXZi2fLu3zWSaA6EPMmJ8g2u9KG2tQMbVekeq22ppTa7v+NYi15FXkejVm61TqU5zG7P1DHeyg7kp9htfAkYvO7UOa+h7Kkrfy4nlwQzEQJ5mKOiDUTx13XtPfjdEitC6qxqvzulohs0YuwJlf+/ba6fnVgSQZxHNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751118173; c=relaxed/simple;
-	bh=VAee6+av5JH/i3C6FNByMYKYP7UNkqbQVjdUMroatfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MfvCMULerd+9OW/amKOJD0ItFsUdQ2b6vKnjVev9+s18oV9u+Kq87z/P+MxJc7azVf4yodrPmUiknR5rhZCLdoleStBia0RIsUBWons6ni9JtztHl8ycOtiEETFZaLr2kOKPyeSa0XIa5qas4MyXK5O8GrXS1zVsB4xWIcCB0m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=ZXWIbWvL; arc=none smtp.client-ip=178.154.239.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="ZXWIbWvL"
-Received: from mail-nwsmtp-smtp-production-main-92.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-92.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2ea0:0:640:5268:0])
-	by forward502a.mail.yandex.net (Yandex) with ESMTPS id 6CE0461414;
-	Sat, 28 Jun 2025 16:42:42 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-92.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZgXqp0LLu0U0-6beYeotD;
-	Sat, 28 Jun 2025 16:42:41 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1751118161;
-	bh=VAee6+av5JH/i3C6FNByMYKYP7UNkqbQVjdUMroatfU=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=ZXWIbWvLFBkekQbsXfRUhZj3n8Cyds4+TE0bo9VWS7xaQr4qys+rL3XXS12oHbrjD
-	 EL9Fqk9MBTV1RGMStTCZOwvgT1reA7xz6iGtRX3868GtXWgNsFSYHa6TCzL3SkOwxf
-	 aS8phWfzvWrm8WzO2c4WWedFmCW1iX6bV80yqYZA=
-Authentication-Results: mail-nwsmtp-smtp-production-main-92.vla.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Sat, 28 Jun 2025 16:42:35 +0300
-From: Onur <work@onurozkan.dev>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: viresh.kumar@linaro.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- airlied@gmail.com, simona@ffwll.ch, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu, rafael@kernel.org,
- gregkh@linuxfoundation.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, davidgow@google.com, nm@ti.com
-Subject: Re: [PATCH v3 3/3] rust: remove
- `#[allow(clippy::non_send_fields_in_send_ty)]`
-Message-ID: <20250628164235.1376ab5f@nimda.home>
-In-Reply-To: <CANiq72kgB6gQ3+etQOYLLDqWt4EQhiDfN3dcwHBOpZh9USt3iA@mail.gmail.com>
-References: <20250628040956.2181-1-work@onurozkan.dev>
-	<20250628040956.2181-4-work@onurozkan.dev>
-	<CANiq72kjdj4KbDhfnTbm8jZpLC1+WPB3E6M8D8M2NLnphMs5vg@mail.gmail.com>
-	<20250628133013.703461c8@nimda.home>
-	<CANiq72kY9DA_JD_XkF01ZSmXbD8iaFthVZ66X+9N5aa_WObt+A@mail.gmail.com>
-	<20250628154237.0f367cee@nimda.home>
-	<CANiq72mxJM-7WAP8xVDukmiXq=ntThyFESFLs1+dmZJSS2q60Q@mail.gmail.com>
-	<20250628161117.7786b3a4@nimda.home>
-	<CANiq72kgB6gQ3+etQOYLLDqWt4EQhiDfN3dcwHBOpZh9USt3iA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	s=arc-20240116; t=1751118224; c=relaxed/simple;
+	bh=2IVJ2u0/N/KF+rUKA9KPUGiuhrpejuY4G8YWOquji4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aj+cqd9Ou0GlNljObYcEY1Sqq40Y8VM/glDvZ4KgMZq9QcA6r/aJpVkNmrx1wtrty2RaV9ZwOGJl1D4BueMWP+uUdLTXHa+gdgGkxD1/XitMbXeRk1VC7tlHEfhTY/lx4f7UbxclwVtkCc6FcYAGAtCciQc3pMCgV0DtxFi3KvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id E0AD91D7235;
+	Sat, 28 Jun 2025 13:43:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5A91F2002E;
+	Sat, 28 Jun 2025 13:43:33 +0000 (UTC)
+Date: Sat, 28 Jun 2025 09:43:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Edward Adam Davis <eadavis@qq.com>
+Subject: [for-linus][PATCH] tracing: Fix filter logic error
+Message-ID: <20250628094332.170bb906@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: n6ywe5u3chgtbr1ug7ur83to64mqdqj7
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5A91F2002E
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19aHdE/CbvbfQ1zL03gges3xooMphwx3Bw=
+X-HE-Tag: 1751118213-638324
+X-HE-Meta: U2FsdGVkX18S3ibLDsccXPq4kvoiiFhgJxXH245Z1RrDuhNA70pAZorA/gO0bj+Ca7cOtk5VjYYTVSz9DecVM1HZ2dRV8ztROEPEKVS7jBLEPXdthn4Oxur7lXSHbPauom+3GMw9ojTHiKAkzCV3u+0U9R/RFlkYad0I1RcLGOjRuQkzoLUam2QVD0hfOEWs8c62ZrGVkT+rmbEM/TxR8kAsyOq+CXNV6yiirPsuobfgk5L0AIFCfG9lDgOGz4yc8IRqaKEzokb9ffvV2+G8ZwY9VsK7jnGwNX2cyePYchrRc8BBy0BHTUodA3LgEOJvxjIrShm0jwmQVZBbYvYwRoG5uaiaZ7LcUHshkTEzNJfBjxyY7SPjsURbxR9sHYdCpMvnzq0XqN7IfceYX7cOnEsgFcmXgZ4eCXxVeTAHMGAycvMvn0ukYnSsLl4zWcDeXiv/PSrSEE+4TE0AJdKkCsubulvBk+pgqoCU882lKBFitAfa71515lKLCV5vsTVNlOz/sUS25spXUaAa4GkLU/wSPO1+NVmFlp6kzM2plVE=
 
-On Sat, 28 Jun 2025 15:28:29 +0200
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
-> On Sat, Jun 28, 2025 at 3:11=E2=80=AFPM Onur <work@onurozkan.dev> wrote:
-> >
-> > Aha, I see. I missed that. I guess `allow` was added when the author
-> > had this lint enabled on their checkout, but their work was merged
-> > when lint removal was merged before that.
->=20
-> Yeah, some of the code going around was written years ago, so
-> sometimes this sort of thing happens. :)
->=20
-> > Do you want me to update the patch description by including
-> > 5e7c9b84ad08 ref and send v4?
->=20
-> Sure -- maybe wait a few days, to see if anyone says anything else.
-> Then we will need to wait for Acked-bys from other maintainers.
->=20
-> Or, actually, if you are sending a new version and you are willing to
-> do it, then it would be easier to land if you split the first patch
-> also by subsystem -- that way each maintainer can take their patches
-> on their own time instead. Since each patch is independent, you can
-> send them in independent patch series, that makes it even easier for
-> maintainers to track.
+tracing fixes for v6.16:
 
-I don't have enough time to do it right now, but I would be happy
-to do it in ~3 days during the week (assuming it's still not being
-reviewed by the maintainers by then).
+- Fix possible UAF on error path in filter_free_subsystem_filters()
 
-Regards,
-Onur
+  When freeing a subsystem filter, the filter for the subsystem is passed in
+  to be freed and all the events within the subsystem will have their filter
+  freed too. In order to free without waiting for RCU synchronization, list
+  items are allocated to hold what is going to be freed to free it via a
+  call_rcu(). If the allocation of these items fails, it will call the
+  synchronization directly and free after that (causing a bit of delay for
+  the user).
+
+  The subsystem filter is first added to this list and then the filters for
+  all the events under the subsystem. The bug is if one of the allocations
+  of the list items for the event filters fail to allocate, it jumps to the
+  "free_now" label which will free the subsystem filter, then all the items
+  on the allocated list, and then the event filters that were not added to
+  the list yet. But because the subsystem filter was added first, it gets
+  freed twice.
+
+  The solution is to add the subsystem filter after the events, and then if
+  any of the allocations fail it will not try to free any of them twice.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/fixes
+
+Head SHA1: 6921d1e07cb5eddec830801087b419194fde0803
+
+
+Edward Adam Davis (1):
+      tracing: Fix filter logic error
+
+----
+ kernel/trace/trace_events_filter.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+---------------------------
+commit 6921d1e07cb5eddec830801087b419194fde0803
+Author: Edward Adam Davis <eadavis@qq.com>
+Date:   Tue Jun 24 14:38:46 2025 +0800
+
+    tracing: Fix filter logic error
+    
+    If the processing of the tr->events loop fails, the filter that has been
+    added to filter_head will be released twice in free_filter_list(&head->rcu)
+    and __free_filter(filter).
+    
+    After adding the filter of tr->events, add the filter to the filter_head
+    process to avoid triggering uaf.
+    
+    Link: https://lore.kernel.org/tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com
+    Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
+    Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+    Closes: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
+    Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+    Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+    Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 08141f105c95..3885aadc434d 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1436,13 +1436,6 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 
+ 	INIT_LIST_HEAD(&head->list);
+ 
+-	item = kmalloc(sizeof(*item), GFP_KERNEL);
+-	if (!item)
+-		goto free_now;
+-
+-	item->filter = filter;
+-	list_add_tail(&item->list, &head->list);
+-
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir)
+ 			continue;
+@@ -1454,6 +1447,13 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 		event_clear_filter(file);
+ 	}
+ 
++	item = kmalloc(sizeof(*item), GFP_KERNEL);
++	if (!item)
++		goto free_now;
++
++	item->filter = filter;
++	list_add_tail(&item->list, &head->list);
++
+ 	delay_free_filter(head);
+ 	return;
+  free_now:
