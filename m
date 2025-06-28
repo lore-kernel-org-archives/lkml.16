@@ -1,121 +1,99 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91FB2BCFB
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 17:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ED6242938;
+	Sat, 28 Jun 2025 17:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751133288; cv=none; b=O4DcuG1d2j49N6+tpOV9pLeAwJQgtUI1ri3w6kzkU7/9cgm2NT0sv+XjnoVemsrwD6sr8muRzPCpAPGUi244lZ6/BQs+RC/oxFD/ybMtXH2f3Mtx8Mz34FJPzybd6Hbi2SGCk5Y34rCCb3YF0O74lCB0BNe6cBcPDe/ZUGn3wSs=
+	t=1751133302; cv=none; b=QKalZ/a+9prlfO9TN+QOG5/A0POcGpsis0v+T6Lh2FnuUBQ3AzkG+3UAongSeGNHhHnXNkZbweE1lCy3djIPkMINntPB0qHfS6ezvU4SegsedqsVg4WllGL9dvEWabOluIm1u0GRZj38RaYhV6seLb0dIYcXi5KUOQZe/YDgh4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751133288; c=relaxed/simple;
-	bh=0zjpL1V/eJ6Fk7Ky0EnmVtOPa6ROb70muI0oDeGQCVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=h3Ag0gNLF+ZH3pJA6UPl3n+jsFXLMFvGwI/BDFS99CILuEDihJRAogPkbIgsRxBW2RWu8Pd0YbnWUFg/hSrgbdkogNbYv8apYSORuWBKzSlaLYDMlW27Uq3VeXXvdjenLmRx80+NmxIyAbYJ0f3kK2hdc8voCRZN6eBx57Z6OiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UucuOKbR; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751133302; c=relaxed/simple;
+	bh=uVmSuEBFBJrJu1bKVDSNCMVGFTihFKNa5w9hNDGISAI=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Qr1bItJusNh9N2eZWEm/pA5LbEQUezElX4FCTV4ohxJivG3icAJ/k/MYHPCBWMBBAUkbPouBpM1Ogh1LLjNziGyA+Nnpx4YXhYr9iZ76NdZVD3+RKDVrN2AiJnSvXcpF284/dOfFmdj7b2x2Hn+9xH5ra+kDcWLQ1lOedGIKwbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ps//O5MJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UucuOKbR"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-610cbca60cdso700929eaf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 10:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751133286; x=1751738086; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuadP0vU3o+WrGjNBSJmYh89lN4dUuZOSzW5j10vazc=;
-        b=UucuOKbR4In8krSovpmyoFfn/hQYmeyxJwdjdaNa1m3WRh5UcuEX3uupXb3w+okp9/
-         Kd+7X0DK9y28mE8skJsoM/QGPRJx4xASPxQXZQpOdbC/hSx0G4C0fIaBY99e9JU5XlXa
-         QKCpLWwaP0xt5uvypoUfIihjL1rL2A0PYP1JNP9r1TrFszVUXv9xSdwy8fBuvDOv9blN
-         IkZnxa2q/nxE6YjvXYxaMCT7Dgh7KjuW56BviE852RrlTSXKGtQ4Kaoa7cx8bveNdVHu
-         Rs2Qh3aJezHiQuYaOXo2yhjFM625lCmFTKBC0Q3oOQFd3huPc4DBkfDTwL1BM4qye0Ei
-         cSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751133286; x=1751738086;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uuadP0vU3o+WrGjNBSJmYh89lN4dUuZOSzW5j10vazc=;
-        b=CLeYKqABT5nX+jzqcSPQDs5g4OkXKJ6/AarWmnBnljXmZm0EFoyPJw8autnrO+KNUT
-         Mghe77Qx4VROe6iY0VsFgs5syBBJ53MYcnfK8ZDrrdxn7DAnw1LXdQSyRA+4JgW4p408
-         F/ndFAMT8NwwOCDkNFqXzaCyvjC6c/1Cb9VoHBzfkEB6OzAMjAwqKTvsgmvDkAtQF216
-         rnDAGulYnI6BJc2fQ8dZS9lYE7XLbvXt7M5t8XdlrfD1fwcywp3mDbF++WOmAh9C/sa8
-         CXdq4jQdxeSTRVKI7df/ci8L4MBjlDMenlWtCa4eyyCcyWc3Fd9C9FYWuYisZ2DjY1UI
-         GukA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7J2K5Agvzikk9OFBexUf5dDoqY1bQG9szBoHS/+ywOs4wepvbQNFVWPvp/ewAsoaGO56yT71sjFbJfbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNv5S4Jvxr0P1CZDnfeEKqsVMNQRzTOatoCSaFTUPbtvYZ/u5M
-	OFHuDQZfLNP6eL4UIsMWXeORZ4HD7gv3FVISz7gZ2KWaEt70PaOxBxh0ZLw4lHoSSrQ=
-X-Gm-Gg: ASbGncuuEZrR1pLxuLyrLflKZkwjmOc1xtKEcLD8igMj1o4LOhLFHvLOrA598R6mBex
-	ZxxdS0iNPpVjg364zMCr76zBkKspl4sa+ym4YyUa03TtpJEqyG3znvJHT0ewJJjgw2kxdg1v+wK
-	GigHzXW76hpnbCTrIHfpVqsBDAVRyZqmn0LWM8EKH4R0uXPMg4wJeV3fxDEIM4uQP4AiZMkAG6Y
-	tis/dMMWgJKxMURfwr9XHnQVXfeeJxlv9VxWPPnBWxXAQTOAOU+kV4CRfSXTe0xWmHOWvBkD/Oi
-	vVwyGQFLXV3ENE3oxr+TxaeiNAvA2tassxgYJRikiA5oaUsvRjR5uGsfOuu4X4Mx6XJU
-X-Google-Smtp-Source: AGHT+IHrB0pdunMc9fQjAjXZzqXA8yuazcinONbrUvSnwTUgrMdSyYbq9j+vgzfJeJt53j63+ahGAg==
-X-Received: by 2002:a05:6870:1d10:b0:2e9:e9b9:fd7c with SMTP id 586e51a60fabf-2efed6ea82dmr5465090fac.26.1751133285986;
-        Sat, 28 Jun 2025 10:54:45 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:3092:a48c:b0c6:cbf4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd50b1b2fsm1617110fac.32.2025.06.28.10.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 10:54:45 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 28 Jun 2025 12:54:37 -0500
-Subject: [PATCH] iio: light: isl76682: make isl76682_range_table const
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ps//O5MJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38540C4CEEA;
+	Sat, 28 Jun 2025 17:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751133302;
+	bh=uVmSuEBFBJrJu1bKVDSNCMVGFTihFKNa5w9hNDGISAI=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Ps//O5MJ6YNtiYhDVZIqPHWZPGnwKZqGrNN6gS1gdZqdW9uAhAV3bPvuyTcfdCUgm
+	 RPIrL2n4f3+Mxt1hSgFFgrWDtbIJQBk+rKRJg6Xu0/cwpjCxoXL4fcnWkiZmEvgKkR
+	 0aTyjUvv+gCzDhnywTYo5NM1wdyXoC2vM1YJ4IWLYXL9nhbdKxASBFTpycfEGf61hc
+	 6e7c4uHI6Z67Bz45utuzV11NeQ4bor/fRC4zQhZRNZfbjQnsDeaP5+AtRJjsLLFHxT
+	 H2NBx9zog40XXc4w9KxcyB/F61GDRYY1r0W+R0g2jKg7R4YUF+AWUjDNqouqftMlml
+	 8Nvon3qCOuqXg==
+Date: Sat, 28 Jun 2025 12:55:01 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250628-iio-const-data-21-v1-1-2597d8eda30f@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAFwsYGgC/x3MPQqAMAxA4atIZgNt/MWriEOxUbO00hQRxLtbH
- L/hvQeUk7DCVD2Q+BKVGApsXcF6uLAzii8GMtSZnkYUibjGoBm9yw7JIrWN7zduzdgMULoz8Sb
- 3/5yX9/0ASbyA2mMAAAA=
-X-Change-ID: 20250628-iio-const-data-21-243d6fe40837
-To: Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1032; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=0zjpL1V/eJ6Fk7Ky0EnmVtOPa6ROb70muI0oDeGQCVo=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoYCxe8mG1dB3KX8VH9TtlPSbtPY4aaIAvyNl8f
- YfiUtDCWp+JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGAsXgAKCRDCzCAB/wGP
- wJzwB/oCR33fg84rLDsf2jM9C9lzn+AtZ6ipw6ddyGaUe2i3cibB+qZlJ/jv++SQy2FMM9S6UPl
- FKREClsZ1LWQAAI6d5ua1UsAUcky1DwSUaJxRiGgggqM5886SNus3oEh1PUWbNVojIW7ufKM1yR
- 7jfERJ/cJJ6tkwEkXvd6/iTHpN3b07w/dzHODjSi4KMxmCN4uhpQtnCTZL6OX7tOwqfj5ttlGvo
- PmI20NcEs+duJTeUcS/KyMmGaGTABCt9+hhkyU5X70RyeWzOCFchE/t8m6UzEL+FCiF9HmaFtqG
- RwwHd9k7xCD6BbAZ5P3zvojAVKHcmCG7EhMYg2fnT4jVRIXp
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Boris Gjenero <boris.gjenero@gmail.com>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-leds@vger.kernel.org, 
+ Christian Hewitt <christianshewitt@gmail.com>, 
+ =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+ Paolo Sabatino <paolo.sabatino@gmail.com>, devicetree@vger.kernel.org, 
+ Geert Uytterhoeven <geert@linux-m68k.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+To: =?utf-8?q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>
+In-Reply-To: <20250628161850.38865-7-jefflessard3@gmail.com>
+References: <20250628161850.38865-1-jefflessard3@gmail.com>
+ <20250628161850.38865-7-jefflessard3@gmail.com>
+Message-Id: <175113330138.2294536.6016522770274673220.robh@kernel.org>
+Subject: Re: [PATCH 6/8] dt-bindings: auxdisplay: add Titan Micro
+ Electronics TM16XX
 
-Add const qualifier to struct isl76682_range isl76682_range_table[].
-This is read-only data so it can be made const.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/light/isl76682.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, 28 Jun 2025 12:18:43 -0400, Jean-François Lessard wrote:
+> Add documentation for TM16XX and compatible LED display controllers.
+> 
+> This patch is inspired by previous work from Andreas Färber and Heiner Kallweit.
+> 
+> Co-developed-by: Andreas Färber <afaerber@suse.de>
+> Co-developed-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
+> ---
+>  .../bindings/auxdisplay/tm16xx.yaml           | 153 ++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/auxdisplay/tm16xx.yaml
+> 
 
-diff --git a/drivers/iio/light/isl76682.c b/drivers/iio/light/isl76682.c
-index cf6ddee44ffc3f8010de912d36d16d474dbdcc66..b6f2fc9978f620afc69750d21eba7a3aa5032e2d 100644
---- a/drivers/iio/light/isl76682.c
-+++ b/drivers/iio/light/isl76682.c
-@@ -59,7 +59,7 @@ struct isl76682_range {
- 	u32				ir;
- };
- 
--static struct isl76682_range isl76682_range_table[] = {
-+static const struct isl76682_range isl76682_range_table[] = {
- 	{ ISL76682_COMMAND_RANGE_LUX_1K, 15000, 10500 },
- 	{ ISL76682_COMMAND_RANGE_LUX_4K, 60000, 42000 },
- 	{ ISL76682_COMMAND_RANGE_LUX_16K, 240000, 168000 },
+My bot found errors running 'make dt_binding_check' on your patch:
 
----
-base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-change-id: 20250628-iio-const-data-21-243d6fe40837
+yamllint warnings/errors:
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/auxdisplay/tm16xx.example.dts:59.29-83.11: ERROR (duplicate_label): /example-1/spi: Duplicate label 'display_client' on /example-1/spi and /example-0/i2c
+ERROR: Input tree has errors, aborting (use -f to force output)
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/auxdisplay/tm16xx.example.dtb] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250628161850.38865-7-jefflessard3@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
