@@ -1,69 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1D221B8F5;
-	Sat, 28 Jun 2025 03:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75737201004;
+	Sat, 28 Jun 2025 03:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751082143; cv=none; b=mH4Arz+Wy2X9hfxPkr7EE1aC7juMSnUbR0zxkG3H4sO1Rg592krurQBuOBiQC1+E5vuepbtXTlPE/GXoipjKz5U+gL6vd/YF56ac0wwK0BY7Jc1Tf6LZ1nKI+bGy87GvMe+K2MsTzTXY8g2oFx7bhkTbSV9Rcej5vXEkDTwHsss=
+	t=1751082162; cv=none; b=Sl2r2mLCDjn7ZyCE0h7Uz3QWNkKpcYC6VAg1eegJXlT9K8rxcKKxeqUuUOO3DCwsbTa2c6mDCSWiz87UAC0Pn7e4ZtpZ0oUQvf1N9UaA0KS0rKa7l/yga2JVKJurjNvD7CAITl529da7L5URwzj9MhVHwpd2ZYtzoh8ynJMY9UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751082143; c=relaxed/simple;
-	bh=ZuMiblNDBB3gmfKlgVRSbs1ULWOfBMWR7pyd2OHXVaU=;
+	s=arc-20240116; t=1751082162; c=relaxed/simple;
+	bh=nhER8ZfvdtY3YByIjG+YMSgQUrFdl2UkZ/cmvNb3MAY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aemz21msjyl8oCsYTWY7HRY4ewZJSLpe2ur5Qmc/YEnPf0BkYW1XraNDUY+qUOHZNL7YPo9UxrtLjNi3o2lVWJ2ZLQWKrJT+Lof+Nzm7XV+KFGzCJzUGI0I6rzhzmTPeUqfBkR+1XKVpkKNKHBXtiKi+l27xddX+v5KVTH08Fbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDrCaphj; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tVQVE65ylZWSa4RMOEjLIMN8ell1SAGbm7p1nincm6jHSYzftKM/JXU86WgWq5lU5ysFkf9YBviChxy2M1LyyA75kwkESckfDrl2bAlWeKIOHx1LVbtRV4j/mTO8nWQjgJUkeMENHShifWuGlGopBbuh7VTPnN/Tb1xYCnbo1Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yu0x4q8a; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDrCaphj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751082142; x=1782618142;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZuMiblNDBB3gmfKlgVRSbs1ULWOfBMWR7pyd2OHXVaU=;
-  b=QDrCaphjxC9UGBgEUthXMqb0SW0+PSZc2C/xMqEUYs/uXTsB68WqvTuV
-   oXmS1JqDclc321XOvNmeP/Wpaf7maA/qKK90yg4Q9bdOkWnO/KzqEFbEt
-   Cl0Ulju217S3ttp93et1r9mWgoPEXHNFD6QCskLQiU78wlgNHg1+azG5Z
-   d8Zn0ncMRwB4JvEHQ7gNLkcQo2iev42awESFaqxiIPVYYiuxwiCCdKX+D
-   OEsLzzKFtOQtvP3+dN+7BHfi2VApkEEjfk37Y+UJp+DDtjIYmvi+2acCp
-   ll8RBcJ3T3d+XHc8kzDxuwObo2LAPxrmSREfngVDHJtzWH4ji2479oXNQ
-   g==;
-X-CSE-ConnectionGUID: WqehKLAxROK0MHtnuB82Jw==
-X-CSE-MsgGUID: +yLArHpaRJehm8zwJYhd8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11477"; a="63993603"
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="63993603"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2025 20:42:21 -0700
-X-CSE-ConnectionGUID: SOLbyImkRwSKKMMTn9L0QA==
-X-CSE-MsgGUID: rpWeOH2QRN2oLZyU1oViXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,272,1744095600"; 
-   d="scan'208";a="176644191"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Jun 2025 20:42:16 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVMSD-000Wks-3B;
-	Sat, 28 Jun 2025 03:42:13 +0000
-Date: Sat, 28 Jun 2025 11:42:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
-	andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
-	johan+linaro@kernel.org, dianders@chromium.org, agross@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mukesh.savaliya@oss.qualcomm.com,
-	quic_anupkulk@quicinc.com,
-	Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-Subject: Re: [PATCH v5 2/5] soc: qcom: geni-se: Add support to load QUP SE
- Firmware via Linux subsystem
-Message-ID: <202506281152.eY0YQpxs-lkp@intel.com>
-References: <20250624095102.1587580-3-viken.dadhaniya@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yu0x4q8a"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fb0eb0f0fbso30185686d6.1;
+        Fri, 27 Jun 2025 20:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751082159; x=1751686959; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1VEbBp8YdQcFMU69IN4b0pwYAz5X1X8v0Kfm5rjL0u8=;
+        b=Yu0x4q8aBbCkaI4WFHfShsoKOE6GWku1HYtoRZXb6efTOqksD/IH+5pH76Brsw9DRV
+         Phiz+5XB1+aCgS4v9wAdQO9L3RiB36NnLueTIGr/hvFFmLBSfZNHpExl32X4ebapXHLh
+         CA0LIUtD7rr9mtP6wDGLcFy1lNPv0Ij1Zztm9dHfBdwu8Qyu+WQ+Y82BDTbqtE3vUXOl
+         M9Mxwr8fAh2ttfzfJZDua1xcxTctlJSyxV1BkPNBoXKnqY7/7BelJHUMU1AKyKLL40kJ
+         O01XFj+N01LPFXcHy5J1PHpBzqqaE3gubwW/GEJg+ynTfQTWY8Z55bFENxx+xAXsDs0H
+         ZC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751082159; x=1751686959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1VEbBp8YdQcFMU69IN4b0pwYAz5X1X8v0Kfm5rjL0u8=;
+        b=LrOYr5OfFytWEqyfVO/G+ZkJuSdEespcnhsgn5QVCsj11PneC6aymvjWFa08FhERNV
+         6Yz98/08QaoMuU0u6/OCDyp+NwxWKHS2Kjv0Qb6O5D1736nhLffVZU27gy0IUxNU02+o
+         JvnVnl5dS0zASQICJtjD4o/m8K62guRhXegwthXvUCwBe/GpFPGRLvPueSUspICJ2CvU
+         b4A5hGOE7xLF9ossbRXfcXZ0SxXNegPHpN8QziDZ2ic9b2HvGgz2+kqD+mqxCgys0VL0
+         53roIDHCuSMWSmaIUHm44awlVlyxVzMeYB1Zyp578+fd5ZQjc1z2KY086fELWbgFFwIs
+         xXJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVK6B4RCw3LL9Ftt9heyMoEP3yv6shngCagaQuQKuRjq5S7hur/351SvVZqOT/yF+ZubhtERZncQpUY5JoyjLo=@vger.kernel.org, AJvYcCXN+QL2Fif1eY5wxsjv77A9MKtiYMt9ws/h9CcOw1LLHC+2bN9goyLddvRCXT0F8FtcOF6Ox3NBGKum@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc3k4K8Jd6chUU323kbwErIl/MCQskEsZTBhRhagpyzdx6fFfr
+	iJF83SS26u4uvTTXBWmRU3Ao5b2tYvbYLQKnzsDB4FijV9Ysrc50b5Yf
+X-Gm-Gg: ASbGnctoYYG4oi9i8OQaNdKEfuW20ZH2sPwSv87NPD+My5KFpLHThlsy0cXh1Lh7xmU
+	ZYtnuVT1Z23DXraymGlEObXwmvHmRDqYxnm2iYTvyqwBekEGnen9AaqGIYBN7jLwkaGDyP88nPU
+	OVay5/2NsPIlelVqwxRkqK8+qmb4aCfMCxzmXJSVNAUHGGsVlnLY566EvLqTGI2rx3n14gutoM4
+	dUTKq4OJ+edsvBW7/run40j4vS6xeeL5T4WGQ5Iqznu875iYCtNe6OLspU3/71hJTIck7CZ9Ces
+	x10D44t+zDz80FWTpazbW5K3A/HfAbfszGVIs2PNtnXYVRKBi1G6cv+Sbhv4DGC2hrh+WWzAEgE
+	7df61XZSKSMbrdHoUXrQZVPvZalUZ5nc6fCb9y3AtefPaQVu9NjwG
+X-Google-Smtp-Source: AGHT+IGedbmHDaqU9GUha1odWRJbVBRQf8bnjo4m+/kurV/RO3ST+RbsJJXnW2tWoSkKHZdD52LSbA==
+X-Received: by 2002:a05:6214:224a:b0:6fa:ae40:3023 with SMTP id 6a1803df08f44-7009214990cmr83567916d6.7.1751082159322;
+        Fri, 27 Jun 2025 20:42:39 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771b50e1sm31074116d6.34.2025.06.27.20.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 20:42:38 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 22882F40068;
+	Fri, 27 Jun 2025 23:42:38 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Fri, 27 Jun 2025 23:42:38 -0400
+X-ME-Sender: <xms:rmRfaGAnsA9ZcFPvQvGW7kVxBmDIVwhSAWAqJ5pCQacQTWq2iDaR6A>
+    <xme:rmRfaAgg18U4xIY1DXpBc04zVu23doqBBddPj1S_y4FD-20PcSDUk764kysF3KO4e
+    djHi9O0CohrthY9fw>
+X-ME-Received: <xmr:rmRfaJkrIPIm2UoztFGciaxrH7RB0gyxoqpDdWHe1pi4a7p34aRp1tKOQg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueevieduffeivden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhu
+    shhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
+    rghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdr
+    tghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhope
+    gsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:rmRfaExyzSKlE6o4bZZiZnfTo3QpT8W0UBqMrwFQdntBYBO21p76IQ>
+    <xmx:rmRfaLS2fegfgQ9M_iBXC6iNBcDCoC2pEYqPlYWe155j7GZrKFz9zw>
+    <xmx:rmRfaPYeg_auaZ-A-TzBsWTnKeF74UzdFxxkjGWPICI0CsFeY_LV0g>
+    <xmx:rmRfaETEChVCo8tiClrKe5pygw-8sdQRhtMLRMPUjG34dyv8F7NdkA>
+    <xmx:rmRfaNB1S5EfWisrzswXOrsWiG3ZtIGTj6u7398Uz9EOAloXHofjQSEQ>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 27 Jun 2025 23:42:37 -0400 (EDT)
+Date: Fri, 27 Jun 2025 20:42:36 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v5 10/10] rust: sync: Add memory barriers
+Message-ID: <aF9krO0nVjN0yoEC@Mac.home>
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <A-SZkzm2EzwbPsG5Vm5qfT1BIGijzoQ7zQI6ExgXZbSXf8ZfIMw6fe-Z7xWgvKnr0BPylikGRuhEfiKfXx5xTw==@protonmail.internalid>
+ <20250618164934.19817-11-boqun.feng@gmail.com>
+ <874iw2zkti.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,108 +128,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624095102.1587580-3-viken.dadhaniya@oss.qualcomm.com>
+In-Reply-To: <874iw2zkti.fsf@kernel.org>
 
-Hi Viken,
+On Thu, Jun 26, 2025 at 03:36:25PM +0200, Andreas Hindborg wrote:
+> "Boqun Feng" <boqun.feng@gmail.com> writes:
+[...]
+> > +//! [`LKMM`]: srctree/tools/memory-mode/
+> 
+> Typo in link target.
+> 
+> > +
+> > +/// A compiler barrier.
+> > +///
+> > +/// An explicic compiler barrier function that prevents the compiler from moving the memory
+> > +/// accesses either side of it to the other side.
+> 
+> Typo in "explicit".
+> 
 
-kernel test robot noticed the following build warnings:
+Fixed.
 
-[auto build test WARNING on andi-shyti/i2c/i2c-host]
-[also build test WARNING on tty/tty-testing tty/tty-next tty/tty-linus broonie-spi/for-next linus/master v6.16-rc3 next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> How about:
+> 
+>   A compiler barrier. Prevents the compiler from reordering
+>   memory access instructions across the barrier.
+> 
+> 
+> > +pub(crate) fn barrier() {
+> > +    // By default, Rust inline asms are treated as being able to access any memory or flags, hence
+> > +    // it suffices as a compiler barrier.
+> > +    //
+> > +    // SAFETY: An empty asm block should be safe.
+> > +    unsafe {
+> > +        core::arch::asm!("");
+> > +    }
+> > +}
+> > +
+> > +/// A full memory barrier.
+> > +///
+> > +/// A barrier function that prevents both the compiler and the CPU from moving the memory accesses
+> > +/// either side of it to the other side.
+> 
+> 
+>   A barrier that prevents compiler and CPU from reordering memory access
+>   instructions across the barrier.
+> 
+> > +pub fn smp_mb() {
+> > +    if cfg!(CONFIG_SMP) {
+> > +        // SAFETY: `smp_mb()` is safe to call.
+> > +        unsafe {
+> > +            bindings::smp_mb();
+> > +        }
+> > +    } else {
+> > +        barrier();
+> > +    }
+> > +}
+> > +
+> > +/// A write-write memory barrier.
+> > +///
+> > +/// A barrier function that prevents both the compiler and the CPU from moving the memory write
+> > +/// accesses either side of it to the other side.
+> 
+>   A barrier that prevents compiler and CPU from reordering memory write
+>   instructions across the barrier.
+> 
+> > +pub fn smp_wmb() {
+> > +    if cfg!(CONFIG_SMP) {
+> > +        // SAFETY: `smp_wmb()` is safe to call.
+> > +        unsafe {
+> > +            bindings::smp_wmb();
+> > +        }
+> > +    } else {
+> > +        barrier();
+> > +    }
+> > +}
+> > +
+> > +/// A read-read memory barrier.
+> > +///
+> > +/// A barrier function that prevents both the compiler and the CPU from moving the memory read
+> > +/// accesses either side of it to the other side.
+> 
+>   A barrier that prevents compiler and CPU from reordering memory read
+>   instructions across the barrier.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Viken-Dadhaniya/dt-bindings-qcom-se-common-Add-QUP-Peripheral-specific-properties-for-I2C-SPI-and-SERIAL-bus/20250624-175308
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20250624095102.1587580-3-viken.dadhaniya%40oss.qualcomm.com
-patch subject: [PATCH v5 2/5] soc: qcom: geni-se: Add support to load QUP SE Firmware via Linux subsystem
-config: alpha-randconfig-r122-20250628 (https://download.01.org/0day-ci/archive/20250628/202506281152.eY0YQpxs-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20250628/202506281152.eY0YQpxs-lkp@intel.com/reproduce)
+These are good wording, except that I will use "memory (read/write)
+accesses" instead of "memory (read/write) instructions" because:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506281152.eY0YQpxs-lkp@intel.com/
+1) "instructions" are at lower level than the language, and memory
+   barriers function are provided as synchonization primitives, so I
+   feel we should describe memory barrier effects at language level,
+   i.e. mention how it would interact with objects and accesses to them.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/soc/qcom/qcom-geni-se.c:941:21: sparse: sparse: cast from restricted __le32
->> drivers/soc/qcom/qcom-geni-se.c:941:21: sparse: sparse: restricted __le32 degrades to integer
+2) There are instructions can do read and write in one instruction, it
+   might be unclear when we say "prevents reordering an instruction"
+   whether both parts are included, for example:
 
-vim +941 drivers/soc/qcom/qcom-geni-se.c
+   r1 = atomic_add(x, 1); // <- this can be one instruction.
+   smp_rmb();
+   r2 = atomic_read(y);
 
-   891	
-   892	/**
-   893	 * geni_read_elf() - Read an ELF file.
-   894	 * @se: Pointer to the SE resources structure.
-   895	 * @fw: Pointer to the firmware buffer.
-   896	 * @pelfseg: Pointer to the SE-specific ELF header.
-   897	 *
-   898	 * Read the ELF file and output a pointer to the header data, which
-   899	 * contains the firmware data and any other details.
-   900	 *
-   901	 * Return: 0 if successful, otherwise return an error value.
-   902	 */
-   903	static int geni_read_elf(struct geni_se *se, const struct firmware *fw, struct se_fw_hdr **pelfseg)
-   904	{
-   905		const struct elf32_hdr *ehdr;
-   906		struct elf32_phdr *phdrs, *phdr;
-   907		const struct se_fw_hdr *elfseg;
-   908		const u8 *addr;
-   909		int i;
-   910	
-   911		if (!fw || fw->size < sizeof(struct elf32_hdr))
-   912			return -EINVAL;
-   913	
-   914		ehdr = (struct elf32_hdr *)fw->data;
-   915		phdrs = (struct elf32_phdr *)(ehdr + 1);
-   916	
-   917		if (ehdr->e_phnum < 2)
-   918			return -EINVAL;
-   919	
-   920		for (i = 0; i < ehdr->e_phnum; i++) {
-   921			phdr = &phdrs[i];
-   922	
-   923			if (fw->size < phdr->p_offset + phdr->p_filesz)
-   924				return -EINVAL;
-   925	
-   926			if (phdr->p_type != PT_LOAD || !phdr->p_memsz)
-   927				continue;
-   928	
-   929			if (MI_PBT_PAGE_MODE_VALUE(phdr->p_flags) != MI_PBT_NON_PAGED_SEGMENT ||
-   930			    MI_PBT_SEGMENT_TYPE_VALUE(phdr->p_flags) == MI_PBT_HASH_SEGMENT ||
-   931			    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_NOTUSED_SEGMENT ||
-   932			    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_SHARED_SEGMENT)
-   933				continue;
-   934	
-   935			if (phdr->p_filesz < sizeof(struct se_fw_hdr))
-   936				continue;
-   937	
-   938			addr = fw->data + phdr->p_offset;
-   939			elfseg = (const struct se_fw_hdr *)addr;
-   940	
- > 941			if (cpu_to_le32(elfseg->magic) != MAGIC_NUM_SE || elfseg->version != 1)
-   942				continue;
-   943	
-   944			if (phdr->p_filesz < elfseg->fw_offset +
-   945					     elfseg->fw_size_in_items * sizeof(u32) ||
-   946			    phdr->p_filesz < elfseg->cfg_idx_offset +
-   947					     elfseg->cfg_size_in_items * sizeof(u8) ||
-   948			    phdr->p_filesz < elfseg->cfg_val_offset +
-   949					     elfseg->cfg_size_in_items * sizeof(u32))
-   950				continue;
-   951	
-   952			if (elfseg->serial_protocol != se->protocol)
-   953				continue;
-   954	
-   955			*pelfseg = (struct se_fw_hdr *)addr;
-   956			return 0;
-   957		}
-   958		return -EINVAL;
-   959	}
-   960	
+   people may think because the smp_rmb() prevents read instructions
+   reordering, and atomic_add() is one instruction in this case,
+   smp_rmb() can prevents the write part of that instruction from
+   reordering, but that's not the case.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+So I will do:
+
+   A barrier that prevents compiler and CPU from reordering memory read
+   accesses across the barrier.
+
+Regards,
+Boqun
+
+> > +pub fn smp_rmb() {
+> > +    if cfg!(CONFIG_SMP) {
+> > +        // SAFETY: `smp_rmb()` is safe to call.
+> > +        unsafe {
+> > +            bindings::smp_rmb();
+> > +        }
+> > +    } else {
+> > +        barrier();
+> > +    }
+> > +}
+> 
+> 
+> Best regards,
+> Andreas Hindborg
+> 
+> 
