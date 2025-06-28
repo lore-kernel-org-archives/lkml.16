@@ -1,135 +1,95 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158D755E69
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 13:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BD439855;
+	Sat, 28 Jun 2025 13:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751118224; cv=none; b=J1GSsCZg9ZXZi2fLu3zWSaA6EPMmJ8g2u9KG2tQMbVekeq22ppTa7v+NYi15FXkejVm61TqU5zG7P1DHeyg7kp9htfAkYvO7UOa+h7Kkrfy4nlwQzEQJ5mKOiDUTx13XtPfjdEitC6qxqvzulohs0YuwJlf+/ba6fnVgSQZxHNA=
+	t=1751118569; cv=none; b=S6JQO3T7l9l6uGUZqiuYEG0VkQv19ZzUt3Bjtt7Va46CwWqPEnTDIxcg4lCr4iRid0+uzyxW/ph3qPxMjGP+yB2WZbpeEloKM317Gizl0WAdT2wxTq5lDI0ys8zATUu9bRqpXnwM6YNpLphd3XK2dmQ4QKtwzA4h5KPR+Yw7/qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751118224; c=relaxed/simple;
-	bh=2IVJ2u0/N/KF+rUKA9KPUGiuhrpejuY4G8YWOquji4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aj+cqd9Ou0GlNljObYcEY1Sqq40Y8VM/glDvZ4KgMZq9QcA6r/aJpVkNmrx1wtrty2RaV9ZwOGJl1D4BueMWP+uUdLTXHa+gdgGkxD1/XitMbXeRk1VC7tlHEfhTY/lx4f7UbxclwVtkCc6FcYAGAtCciQc3pMCgV0DtxFi3KvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id E0AD91D7235;
-	Sat, 28 Jun 2025 13:43:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5A91F2002E;
-	Sat, 28 Jun 2025 13:43:33 +0000 (UTC)
-Date: Sat, 28 Jun 2025 09:43:32 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Edward Adam Davis <eadavis@qq.com>
-Subject: [for-linus][PATCH] tracing: Fix filter logic error
-Message-ID: <20250628094332.170bb906@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751118569; c=relaxed/simple;
+	bh=16MAsRdlds0FoL36ZBrNX/Oiili/DgKzDu1f6eYudE0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZHfBMtL0G0dz1qQrYvZD7fHtQaKJX+UgThEeuqhY0MOX9kR5KZntDN+oioTrPxvTQfd/Vo/hZKor3pOmLOh0DWoe3GLSStmOazJ16HzvDUKCW+pcabQ0u1eoWztTQen+hcahgHr/UVkQHVqYNhVcWkNH4AA7QZWwLOIeu8rb4qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZcEb9+1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZcEb9+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05DBC4CEEA;
+	Sat, 28 Jun 2025 13:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751118569;
+	bh=16MAsRdlds0FoL36ZBrNX/Oiili/DgKzDu1f6eYudE0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=RZcEb9+1Ge569Z/EwNtDdm31mFO/Fl9L+CWPICJTindmAyUl7Sp/Sdo/36WTZfbvs
+	 UPAcFgjOe07BejmXCfozvG/LZYoAvNLoCz/sQL6/KJXYfSXP1BcNRZRqxEFQuPirK6
+	 4E+VgZskcWMrwb4HX/zmqRyKUu7unw0YGvl7Udx+YAPk9XNlc85++4cvL/qVC9uzlk
+	 Xp+yKQjIG73CZdft7YTdGZ6EWzoxyT1ZVIUOBNyX0yO6uG/i1PJncItKhLXkihSmTd
+	 SeX1mRG+z831FQoPWITzD9yQQOzTwxA89NhOT6WPCgozwMH9KqXapE33oSUGut8nJG
+	 bRGVawk207MjQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: n6ywe5u3chgtbr1ug7ur83to64mqdqj7
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 5A91F2002E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19aHdE/CbvbfQ1zL03gges3xooMphwx3Bw=
-X-HE-Tag: 1751118213-638324
-X-HE-Meta: U2FsdGVkX18S3ibLDsccXPq4kvoiiFhgJxXH245Z1RrDuhNA70pAZorA/gO0bj+Ca7cOtk5VjYYTVSz9DecVM1HZ2dRV8ztROEPEKVS7jBLEPXdthn4Oxur7lXSHbPauom+3GMw9ojTHiKAkzCV3u+0U9R/RFlkYad0I1RcLGOjRuQkzoLUam2QVD0hfOEWs8c62ZrGVkT+rmbEM/TxR8kAsyOq+CXNV6yiirPsuobfgk5L0AIFCfG9lDgOGz4yc8IRqaKEzokb9ffvV2+G8ZwY9VsK7jnGwNX2cyePYchrRc8BBy0BHTUodA3LgEOJvxjIrShm0jwmQVZBbYvYwRoG5uaiaZ7LcUHshkTEzNJfBjxyY7SPjsURbxR9sHYdCpMvnzq0XqN7IfceYX7cOnEsgFcmXgZ4eCXxVeTAHMGAycvMvn0ukYnSsLl4zWcDeXiv/PSrSEE+4TE0AJdKkCsubulvBk+pgqoCU882lKBFitAfa71515lKLCV5vsTVNlOz/sUS25spXUaAa4GkLU/wSPO1+NVmFlp6kzM2plVE=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 28 Jun 2025 15:49:25 +0200
+Message-Id: <DAY7Q38HP1QW.22PF232X1EV25@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Fiona Behrens" <me@kloenk.dev>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust: init: Fix generics in *_init! macros
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Janne Grunau" <j@jannau.net>
+X-Mailer: aerc 0.20.1
+References: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
+ <DAY60NP32ZDA.155XFXZ9AOF70@kernel.org>
+ <20250628132507.GA1546990@robin.jannau.net>
+In-Reply-To: <20250628132507.GA1546990@robin.jannau.net>
 
+On Sat Jun 28, 2025 at 3:25 PM CEST, Janne Grunau wrote:
+> On Sat, Jun 28, 2025 at 02:29:11PM +0200, Benno Lossin wrote:
+>> On Sat Jun 28, 2025 at 1:36 PM CEST, Janne Grunau via B4 Relay wrote:
+>> > From: Janne Grunau <j@jannau.net>
+>> >
+>> > The match pattern for a optional trailing comma in the list of generic=
+s
+>> > is erroneously repeated in the code block resulting in following error=
+:
+>> >
+>> > | error: attempted to repeat an expression containing no syntax variab=
+les matched as repeating at this depth
+>> > |    --> rust/kernel/init.rs:301:73
+>> > |     |
+>> > | 301 |         ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($gen=
+erics),* $(,)?>)? {
+>> > |     |                                                               =
+          ^^^
+>> >
+>> > Remove "$(,)?" from all code blocks in the try_init! and try_pin_init!
+>> > definitions.
+>>=20
+>> Oops, that's a good catch! Seems like nobody used the generics before...
+>
+> Nobody upstream, it's used downstream in the asahi tree.
+>
+>> Do you need this to go in as a fix into v6.16, or is it fine if I pick
+>> it for v6.17, since it's only a build failure?
+>
+> I don't need it since I have to carry it anyway in the downstream tree
+> but I think it would be good idea to fix it in v6.16.
+> Since it's in the kernel crate (the macros in pin-init are fine) I'd
+> propose that Miguel picks it with other rust fixes.
 
-tracing fixes for v6.16:
+Sounds good!
 
-- Fix possible UAF on error path in filter_free_subsystem_filters()
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-  When freeing a subsystem filter, the filter for the subsystem is passed in
-  to be freed and all the events within the subsystem will have their filter
-  freed too. In order to free without waiting for RCU synchronization, list
-  items are allocated to hold what is going to be freed to free it via a
-  call_rcu(). If the allocation of these items fails, it will call the
-  synchronization directly and free after that (causing a bit of delay for
-  the user).
-
-  The subsystem filter is first added to this list and then the filters for
-  all the events under the subsystem. The bug is if one of the allocations
-  of the list items for the event filters fail to allocate, it jumps to the
-  "free_now" label which will free the subsystem filter, then all the items
-  on the allocated list, and then the event filters that were not added to
-  the list yet. But because the subsystem filter was added first, it gets
-  freed twice.
-
-  The solution is to add the subsystem filter after the events, and then if
-  any of the allocations fail it will not try to free any of them twice.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace/fixes
-
-Head SHA1: 6921d1e07cb5eddec830801087b419194fde0803
-
-
-Edward Adam Davis (1):
-      tracing: Fix filter logic error
-
-----
- kernel/trace/trace_events_filter.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
----------------------------
-commit 6921d1e07cb5eddec830801087b419194fde0803
-Author: Edward Adam Davis <eadavis@qq.com>
-Date:   Tue Jun 24 14:38:46 2025 +0800
-
-    tracing: Fix filter logic error
-    
-    If the processing of the tr->events loop fails, the filter that has been
-    added to filter_head will be released twice in free_filter_list(&head->rcu)
-    and __free_filter(filter).
-    
-    After adding the filter of tr->events, add the filter to the filter_head
-    process to avoid triggering uaf.
-    
-    Link: https://lore.kernel.org/tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com
-    Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
-    Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
-    Closes: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
-    Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
-    Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-    Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 08141f105c95..3885aadc434d 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1436,13 +1436,6 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
- 
- 	INIT_LIST_HEAD(&head->list);
- 
--	item = kmalloc(sizeof(*item), GFP_KERNEL);
--	if (!item)
--		goto free_now;
--
--	item->filter = filter;
--	list_add_tail(&item->list, &head->list);
--
- 	list_for_each_entry(file, &tr->events, list) {
- 		if (file->system != dir)
- 			continue;
-@@ -1454,6 +1447,13 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
- 		event_clear_filter(file);
- 	}
- 
-+	item = kmalloc(sizeof(*item), GFP_KERNEL);
-+	if (!item)
-+		goto free_now;
-+
-+	item->filter = filter;
-+	list_add_tail(&item->list, &head->list);
-+
- 	delay_free_filter(head);
- 	return;
-  free_now:
+---
+Cheers,
+Benno
