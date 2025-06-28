@@ -1,80 +1,97 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93E51EE7D5
-	for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 05:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C92A21E096;
+	Sat, 28 Jun 2025 05:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751087644; cv=none; b=qVSR1onYMarFQ+FJa9yKHfJO2V4wU9kVc8CrCVR2qrnDk1uV4UhVcbGpu6im2wXfTMB97qcYaFkhVO1hE9TxvoykVaN7EbLnRyERWMloWcCRoer6v5ok1Z4VP7VVTr5JcA+fGQIj64FX8Xh7tsRMackUkJQn7ZWEO80+chyV18E=
+	t=1751087648; cv=none; b=dX/7uIlHODhC5ka9WUsgxewxbv8Z2JL/heBraYHlwbz5Rt/pH4QEVjE1LV8i1yeEmcjq+HakaMr8wZ+ZclqTz6Z8cahodS0TeIa7gDSLd7vvArgFbHYE5xq4o470hLaOEa5YOfDLwbnHq71yfEWEuP0Uip5Dv24C+I4KKRqHrig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751087644; c=relaxed/simple;
-	bh=ImkOohW0xoy7J25xzFN6PO5huhiGY4VN5yzgFbX+u30=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=flVOGsiKo1QFP8Jo9Cb2qOAePSkG8O+evLPRvLmNKbKOAlNh3QiWoHCKaf64w1PNVStEsG9GU4MpJuMY3WBW/Tc7wbPtRg+4KfrUoEZude7uNcphCYmftwkQKjm+OZQgDuDNNN90MIix3Rb+FPNKKRDs5wASUM+EvT2v+It3l2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3df2d0b7c50so5886695ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Jun 2025 22:14:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751087642; x=1751692442;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nQtYV1Gyi68LVjdcfdU/eNq3IyRRwC3uv1igzI3erFc=;
-        b=ELEJip/CJQQ4AOprE9VbOQG5mwkYyBKVZjSiHKqzW/FLUSftipFOcTL6lTe+DmZYma
-         nQueS1HruyxjANp+13SHR6I6Kf8t8otBrje+g18ZuX1x6ljnR2A1s8dJSxNzlBIOxsHo
-         cPc4DBqKHRzhI8b+QPu3XY1ULVaUTiM3aJPFfQEdgx2CySXQM50e0nQ8AeUFIpM8j4W5
-         nH/NLe8lsnWKVhyD6oJ9Nh2W35o4OLSjXMTkbifye040BS4zm+q3hvlAxf2OZ8ALhGqn
-         emzTtJnbWrjC9nsTqiNcMYez8SOdH2Hr8BwQtUYF2JNUPdJquOKWA8dORwq5dt9K9DRn
-         rbHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgzTW2GoksJ9bF1e2d69RslW1nzSHexW3i4uJJFQnCo9FROxtY00+4vhzQlHaLyg/fL+Hn+Zfl/H8C+GA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyrFAl6vuO3bmL68L6l6Omi6nIJgDQxR3GeVvCnxal/V8y85C1
-	7AgPVn6pLVe9MpngsiRP8QIavwdP4s9WBL3LqeTuP6zutCSrhTy74t76QwMsdvYbLrLUehuOfRv
-	JWEE3vXDXC7dt2ZYMC4tsiSiQJ9IdsFCmayPA7ZfwxAHFwioavETWTfC/dLg=
-X-Google-Smtp-Source: AGHT+IHhgdgQNjS1nBnWLUNfiv7EE/EHoONqacRJkEf60gWH4jWoK7OhxwwDZCx0AkY52S0u7NOzrVPLBmfL6upFVifarVyjRBcy
+	s=arc-20240116; t=1751087648; c=relaxed/simple;
+	bh=7ULAcR7l6YzyP86zeJHo/lnotJWcuRd6OcaoQrCIonQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cQn8M0SdeZrCbrGtQxiGuDZMZC3WNypXSmvYzDFbW/fRnHJzoIESC8bpW+7X0Fq62xPulz7SSWfj7PAk6PcxCMgo7V9Yd7hqRXbH7NjTkj5uqka2Ue7IAN7Hc1ymSsv3NyIv4xJnnWdn/UcJ4FucvdWIX9irnBa7UJGas0bn3uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: Fushuai Wang <wangfushuai@baidu.com>
+To: <ecree.xilinx@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-net-drivers@amd.com>,
+	<linux-kernel@vger.kernel.org>, Fushuai Wang <wangfushuai@baidu.com>
+Subject: [PATCH net-next] sfc: eliminate xdp_rxq_info_valid using XDP base API
+Date: Sat, 28 Jun 2025 13:10:16 +0800
+Message-ID: <20250628051016.51022-1-wangfushuai@baidu.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3189:b0:3dc:7f3b:acb1 with SMTP id
- e9e14a558f8ab-3df4ab85c3dmr77735685ab.13.1751087642190; Fri, 27 Jun 2025
- 22:14:02 -0700 (PDT)
-Date: Fri, 27 Jun 2025 22:14:02 -0700
-In-Reply-To: <685e86b3.a00a0220.129264.0003.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685f7a1a.a70a0220.2f4de1.0007.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING in ip6_mr_output
-From: syzbot <syzbot+0141c834e47059395621@syzkaller.appspotmail.com>
-To: bpoirier@nvidia.com, davem@davemloft.net, dsahern@kernel.org, 
-	edumazet@google.com, eric.dumazet@gmail.com, horms@kernel.org, 
-	idosch@nvidia.com, kuba@kernel.org, kuniyu@google.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	petrm@nvidia.com, razor@blackwall.org, roopa@nvidia.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc8.internal.baidu.com (172.31.3.18) To
+ bjkjy-mail-ex22.internal.baidu.com (172.31.50.16)
+X-FEAS-Client-IP: 172.31.50.16
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-syzbot has bisected this issue to:
+Commit eb9a36be7f3e ("sfc: perform XDP processing on received packets")
+use xdp_rxq_info_valid to track failures of xdp_rxq_info_reg().
+However, this driver-maintained state becomes redundant since the XDP
+framework already provides xdp_rxq_info_is_reg() for checking registration
+status.
 
-commit 96e8f5a9fe2d91b9f9eb8b45cc13ce1ca6a8af82
-Author: Petr Machata <petrm@nvidia.com>
-Date:   Mon Jun 16 22:44:18 2025 +0000
+Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
+---
+ drivers/net/ethernet/sfc/net_driver.h | 2 --
+ drivers/net/ethernet/sfc/rx_common.c  | 6 +-----
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-    net: ipv6: Add ip6_mr_output()
+diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
+index 5c0f306fb019..b98c259f672d 100644
+--- a/drivers/net/ethernet/sfc/net_driver.h
++++ b/drivers/net/ethernet/sfc/net_driver.h
+@@ -404,7 +404,6 @@ struct efx_rx_page_state {
+  * @old_rx_packets: Value of @rx_packets as of last efx_init_rx_queue()
+  * @old_rx_bytes: Value of @rx_bytes as of last efx_init_rx_queue()
+  * @xdp_rxq_info: XDP specific RX queue information.
+- * @xdp_rxq_info_valid: Is xdp_rxq_info valid data?.
+  */
+ struct efx_rx_queue {
+ 	struct efx_nic *efx;
+@@ -443,7 +442,6 @@ struct efx_rx_queue {
+ 	unsigned long old_rx_packets;
+ 	unsigned long old_rx_bytes;
+ 	struct xdp_rxq_info xdp_rxq_info;
+-	bool xdp_rxq_info_valid;
+ };
+ 
+ enum efx_sync_events_state {
+diff --git a/drivers/net/ethernet/sfc/rx_common.c b/drivers/net/ethernet/sfc/rx_common.c
+index f4f75299dfa9..5306f4c44be4 100644
+--- a/drivers/net/ethernet/sfc/rx_common.c
++++ b/drivers/net/ethernet/sfc/rx_common.c
+@@ -269,8 +269,6 @@ void efx_init_rx_queue(struct efx_rx_queue *rx_queue)
+ 			  "Failure to initialise XDP queue information rc=%d\n",
+ 			  rc);
+ 		efx->xdp_rxq_info_failed = true;
+-	} else {
+-		rx_queue->xdp_rxq_info_valid = true;
+ 	}
+ 
+ 	/* Set up RX descriptor ring */
+@@ -302,10 +300,8 @@ void efx_fini_rx_queue(struct efx_rx_queue *rx_queue)
+ 
+ 	efx_fini_rx_recycle_ring(rx_queue);
+ 
+-	if (rx_queue->xdp_rxq_info_valid)
++	if (xdp_rxq_info_is_reg(&rx_queue->xdp_rxq_info))
+ 		xdp_rxq_info_unreg(&rx_queue->xdp_rxq_info);
+-
+-	rx_queue->xdp_rxq_info_valid = false;
+ }
+ 
+ void efx_remove_rx_queue(struct efx_rx_queue *rx_queue)
+-- 
+2.36.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13bcfb70580000
-start commit:   5d4809e25903 Add linux-next specific files for 20250620
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=107cfb70580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17bcfb70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=58afc4b78b52b7e3
-dashboard link: https://syzkaller.appspot.com/bug?extid=0141c834e47059395621
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138a2dd4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171c5b0c580000
-
-Reported-by: syzbot+0141c834e47059395621@syzkaller.appspotmail.com
-Fixes: 96e8f5a9fe2d ("net: ipv6: Add ip6_mr_output()")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
