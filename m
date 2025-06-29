@@ -1,107 +1,83 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FCA238C2F;
-	Sun, 29 Jun 2025 22:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0405D1DFCB
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751237602; cv=none; b=PJt5rvCoqXi+T3wLVMyqUS/h95B+bDDiOLh2xYEn/NlVeODpPOsSynQ/otdvCF5os0tXGLyoJc2NPdOqaAsoBekAErbcuFD9rgJ5E7T4rtBtGVRzCm1ovpBn9XnGTVkgySqprxme8IpeGFA35tYV/imWevSI7ykR2rawijcry+s=
+	t=1751238351; cv=none; b=oFbjSNp2aR6jtJwHiLIAgJLJnFbJgQuNLbYnQ6VF2GbIKu5NGHYgdQZSIv4rUcdhYJvade7h27DafeqOYMQyfO0FKt4+acwPt97PHArOoC5cM2j0rq+9g28RWJQYK8Isu9PwP2b3uKYoTbuQRKPBWyhZwZBs78ipb4pTGypAS7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751237602; c=relaxed/simple;
-	bh=PnaNr/+BLBXmhmvPdAT7unjJcWf4m4Kt3yRZnIHS9ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gA705rwY7KbRbVaeKyxSM6RwjUohBWRiVq9cchAHvSCCeeKdTAcpKN0ECHJ+zqQnExji79srbstmp1kRbVPxCfAPkizPIZ1qRZICpW/V3aSf8BiSbN2pECfzxQadGM58cwmxycgqKRlRJbAOfaUm5A9Ad21YXe3iq6q69IgGKFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jEAo8jPi; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751238351; c=relaxed/simple;
+	bh=W82owXpwGpTGovuRtiMl4ETQSnevrtiA8edoKdquAuc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UBYCui+Duk3AdxS6JXUus0fv+MJvpOHEwrvnnrxWiNQxV8ynymIpQtbAM+VWkryv/rIOFVJbAe4hBqAsNyf5GGLN5fveGfHTmCgp+YuayiASpKuvkstDzorciLVEfL3KbFi26ZElgY2jM8riZdFXtwG2HxkCLArrqWT5nNByVD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=tF6VIh2N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jEAo8jPi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751237588;
-	bh=6KuD9ehIHsajuZsC4FpypZrNrdrJ0xTPZWGLE4Iq0Qw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jEAo8jPiB3bedsUG0lYe7ekkW/eGVy2e8pgpmesGp/KDZjAXU2POULppR5s2jjeTE
-	 WcAHTRxiLozY9qZtSFBG0gJmaeHF89WihUSU7RTGUjU1nh/UFiy92U1aJsZkiKMYZI
-	 q1So9cQB8ZhISAVznqcLHN4WZfLBqz0hU+aw2KsN1SVvBdvFLWqWL0CZHEiVrYes3e
-	 FGekX2RXeRwnpJ9oejXXqdroESyrvqMsqoSYbkt8nkadgV9fZyuQ9rmPe3YF7AQs11
-	 ZuW/+UISfm/iq56GP28Zf9shP16GnmJNGugrFQqrBOi2aEUtJM8KbrrcDnWd5xlycs
-	 ewekj2zToDTfQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bVl1w26wrz4x3q;
-	Mon, 30 Jun 2025 08:53:08 +1000 (AEST)
-Date: Mon, 30 Jun 2025 08:52:53 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the btrfs tree
-Message-ID: <20250630085253.4e8389e6@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="tF6VIh2N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92564C4CEEB;
+	Sun, 29 Jun 2025 23:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1751238350;
+	bh=W82owXpwGpTGovuRtiMl4ETQSnevrtiA8edoKdquAuc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tF6VIh2NGztTz8j/GldWe58g5f5QqvEyYmFNuGIA72367L4gYrgGcHFfR5sGvT1NN
+	 jcOJ7lRGh4r+rmQ5QhfztpZqqdv5uOnaI+jq1hjgCXRmZClbK2H96DHL3hvyD+7g8O
+	 8xcy4nIKS0qqfTGgGd3shk0pT49MogJn4ynP4DOI=
+Date: Sun, 29 Jun 2025 16:05:49 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+Subject: Re: [PATCH v4 0/4] Optimize mprotect() for large folios
+Message-Id: <20250629160549.da922e78d202c510a1ec68f8@linux-foundation.org>
+In-Reply-To: <20250628113435.46678-1-dev.jain@arm.com>
+References: <20250628113435.46678-1-dev.jain@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.BQrXo/E6jf5No.c+ut30cw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/.BQrXo/E6jf5No.c+ut30cw
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Sat, 28 Jun 2025 17:04:31 +0530 Dev Jain <dev.jain@arm.com> wrote:
 
-The following commits are also in the btrfs-fixes tree as different
-commits (but the same patches):
+> This patchset optimizes the mprotect() system call for large folios
+> by PTE-batching. No issues were observed with mm-selftests, build
+> tested on x86_64.
 
-  6607ce31017f ("btrfs: use btrfs_record_snapshot_destroy() during rmdir")
-  255265e977c3 ("btrfs: propagate last_unlink_trans earlier when doing a rm=
-dir")
-  2b6f3e452411 ("btrfs: record new subvolume in parent dir earlier to avoid=
- dir logging races")
-  9fbec8743318 ("btrfs: fix inode lookup error handling during log replay")
-  6437c70ad4e5 ("btrfs: fix iteration of extrefs during log replay")
-  ae82071b0de6 ("btrfs: fix missing error handling when searching for inode=
- refs during log replay")
-  731321790c83 ("btrfs: fix failure to rebuild free space tree using multip=
-le transactions")
+um what.  Seems to claim that "selftests still compiles after I messed
+with stuff", which isn't very impressive ;)  Please clarify?
 
-These are commits
+> We use the following test cases to measure performance, mprotect()'ing
+> the mapped memory to read-only then read-write 40 times:
+> 
+> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
+> pte-mapping those THPs
+> Test case 2: Mapping 1G of memory with 64K mTHPs
+> Test case 3: Mapping 1G of memory with 4K pages
+> 
+> Average execution time on arm64, Apple M3:
+> Before the patchset:
+> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
+> 
+> After the patchset:
+> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.3 seconds
 
-  157501b04699 ("btrfs: use btrfs_record_snapshot_destroy() during rmdir")
-  c466e33e729a ("btrfs: propagate last_unlink_trans earlier when doing a rm=
-dir")
-  bf5bcf9a6fa0 ("btrfs: record new subvolume in parent dir earlier to avoid=
- dir logging races")
-  5f61b961599a ("btrfs: fix inode lookup error handling during log replay")
-  54a7081ed168 ("btrfs: fix iteration of extrefs during log replay")
-  6561a40ceced ("btrfs: fix missing error handling when searching for inode=
- refs during log replay")
-  1e6ed33cabba ("btrfs: fix failure to rebuild free space tree using multip=
-le transactions")
+Well that's tasty.
 
-in the btrfs-fixes tree.
+> Observing T1/T2 and T3 before the patchset, we also remove the regression
+> introduced by ptep_get() on a contpte block. And, for large folios we get
+> an almost 74% performance improvement, albeit the trade-off being a slight
+> degradation in the small folio case.
+> 
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.BQrXo/E6jf5No.c+ut30cw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhhw8UACgkQAVBC80lX
-0GyhYAf/eOAP2yZHCimgIomdOp88LUbHcocEC+uKPFnAosT9dZc1naioJuf3cTRh
-7wB9QJuTqu8xivb9tdrVUWLIlo1AW4Jf7Q7uW65NAbT0oeuXJQig7aArhuDdkfO5
-ztv5rrA88Bd44sKu/iVBeefImAWjI0MIhbWI/zt8yIFHqiIH2+qNuzAiXY9afcc6
-OeRrziSYwBKSyGmwoQwb9UiLzkxGcMjH0T8HwbgTTUtnraKmgJRFb2+ioic0UkXx
-BBf3WdBRwgWCTf6P4vtRQa66kr0kRj6nc0tZXOIQLPiwDzE18Y8S7fnIw09uXGq2
-3kfqVj57KRjBliH/We2NNUjcRdc/YA==
-=jKlQ
------END PGP SIGNATURE-----
-
---Sig_/.BQrXo/E6jf5No.c+ut30cw--
