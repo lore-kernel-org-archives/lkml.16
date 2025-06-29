@@ -1,113 +1,168 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F100239E70
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 17:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C28E23535F
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 17:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751217992; cv=none; b=hnD2YE3sSieHTCNmr6SzriHt6NDwTq9IcBm+AyO+fI2Aspi/Gu12KO3eB7HFT1+5Cw2CG+s5O6VUlNj1hX6CzuRsXYBm/cV+RWsBGRQxFVeEoxmbhhpOXTGxs5/CfIohKTpA/rmbhskzT0rKEqF5VAHSSfCgSDKEb4HG/KcY9Sc=
+	t=1751218099; cv=none; b=L9LSu869tBF5boqDvtz2mAkYTgeKeidxiZqkQ54b1ngo/hyHPGuvHtqHCKbvQJBW8d3fSAzizeHV9r0VEO5Yo6JbHrgCl830bfp3JPIrkx9a/Y1lHaOuR467NaETJhraMW1Lt5Y9PuH/W7NTQwVzu6k56weqX7jPXLPA7AW3Byk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751217992; c=relaxed/simple;
-	bh=UcDLRIK4nSfwsBUkh4/O9ySj32H/fgYNG9bmFhJ1eH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k1rqEqjYyMU7gqKGI5t1e3xEhXyhoiiDKGYtqD3wcpFnLapLCvdbzEy2kR6b/dZTP59eHAt/YWSOm6P/sBCBywRxR+mkjxO7NO/4WbSIjNqf512oy01EGIdbCrifJfHF8pdI8QM3AnFaTy2Q+xLT7SoO50gHOUdYiLbSNAhh+hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=isFwwZLd; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751218099; c=relaxed/simple;
+	bh=J9YDXD4duvC3Wk7QUO6r6W8l64XMHZU2uOpTsU+NisY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gEK6ErK07zh+r5APFpOWQ5W1Ngsx4+C/7BjAS1+CNFm1GT8g3QEStM3Lkqe5tjS1keXcNd2Ir4wIsKvyVpriP0UydTPgVPvJR4x6U7yEh4ZppSB3lJhHs9hep061W5mWxe4mTeQe2OiKZ3ucLipULqnC497x4IbbvFW+sxDSDDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XcPaWi90; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="isFwwZLd"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-408d7e2b040so2442224b6e.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 10:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751217990; x=1751822790; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x0J44e2xJxiOSnYAQHHbyr1iri4R8DxZunjcmJed2aE=;
-        b=isFwwZLdtu5EizqvCa04xQCqe9bvR/q3t8o0rFOFMPooO0XcPlZ+ZCwYZmSvepau63
-         LRZtPklD7PocyJ4F1UJPI7IS3WS9rI8tb8Ca77h+XJtNW8sbciQc997QGH/3D3bzAM97
-         rqI3TeaXiv/Ut4Mh1yKKubQLOmSOT/oYzVya8nkBBsop79IdKFcnlCSPkCebKM9lajjH
-         6NS4sdpEMp0UmtcQyw8xMv9L2uuwv5VO5CdBcY7tWP9Gp4wJPJBe/++VuLOggWsQiFsO
-         JPKc2dPKMbIt0K2Ez9LoD8uzMYIOP2aRn9DnsEEW6g7LnjLjJ9DvONDO8aTLlmoCrpId
-         Xq+Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcPaWi90"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751218096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
+	b=XcPaWi90oJGNwjx6kS2PFVlXoLSz3UEhlfY9E5/g6n86JIK25PImY++CKoKzN96d7H9Hzi
+	S2dwmE/TZ4tGNgMEvnvKrC8uw49t0MhrdgSLLVDDOVRM7PQD2YGxDu1MS+s0FJMkZDfzey
+	75zk1h+QXKG+U/v1aYgRmSyuFbawlG4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-574-GMirq5RfPhedXEsCezeWLg-1; Sun, 29 Jun 2025 13:28:14 -0400
+X-MC-Unique: GMirq5RfPhedXEsCezeWLg-1
+X-Mimecast-MFC-AGG-ID: GMirq5RfPhedXEsCezeWLg_1751218093
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d64026baso18145785e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 10:28:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751217990; x=1751822790;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x0J44e2xJxiOSnYAQHHbyr1iri4R8DxZunjcmJed2aE=;
-        b=SqWPL+4BcWBrv1gtsuZ/Vh+Wmpg1F8e8yVJYGXZGIE++3HXj7zkYuFkmvd8q6yJd0V
-         UWCJ7ooS1ovPXEH0cI4y5rugzXlz36Rn8/8sSMAA/tbG9KTNpXGA1ZFNgjDpVtPYMxXO
-         8ZYSJ4n82ZEkbZI0iZLL9czi6Aflv7QQEOfpQhEMGGEPscHFw84rr9MOs0DboPOSOLu4
-         HjDXLuC0hsKIir+TjAMslgRMtxL7HtPZ7Th6/U/+VN0TB5QzFBbpe+YTKGhbUbUFnEYo
-         1kUFCOLCPAJ+VDBF0vZE8z5cH6aLHiS1wLWjakxxXjSCkTj+rP+y+NJMJlpYHW4iMNaM
-         PV8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVgZ+nNZpM/lwMQOveIwcNLPPxGyRXq+rMVzuA0p0oF7biDch4aTYyzIwr6fg4qobWpeKEsra9Hbq8L7mU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHAiVJDTyreOej8Grele1P3MEdLO4Mk6TTuLDCGBhhtoWhuYr4
-	Os8Hfpe5r46BCnnUzhEd/VTZqAsuCcNJeGVZYXKt7jUvTDg9y0MztHeHiuyZBRrmfPQ=
-X-Gm-Gg: ASbGncsmvy0y3TgXBJvuXqCi5M7JdYHGXh464kbE2n+Z09Gex13fHKGE7gnZseaFKfG
-	8mkNEnzyyowreiq8jrnP03GrYb8qKUfKMhUudlRHCzUgWYvLZ1QcuvzpFVvz/B5T0O1+fmVHl7y
-	CkcCut4oVc3c+VWk22/BpzzkLratsX0dMFCgNlFGztMe9wDgXugbt3iJ3Ag4vqt3/BTFerIK6C9
-	iS+ZT2eu2cQpQ0zfzPk3GSDeVfdGptrfiF8OFyyENjRsvswbhGASNRmq6OQk5tKtuPNR3hndIHG
-	jdabZ661vWKUMWh1ZYhJcdufsej0eALCjopt1CydvZBJw0rUioU0yjUDil+Li8pQ73wTDgIju0s
-	SNfjN1jazRPdf+fgNBVAOQ/iXUdXGmJUqyJ1EjT1KN6Ycmu6Zow==
-X-Google-Smtp-Source: AGHT+IGXPL0lhOwDFehBinrdpXCNAl48Ot/qIiS16yHakjjWRm/8p1TRnd0kC3+2s69JZhSqjEXZhg==
-X-Received: by 2002:a05:6808:f02:b0:409:f8e:726f with SMTP id 5614622812f47-40b33e34ba4mr6866779b6e.25.1751217989649;
-        Sun, 29 Jun 2025 10:26:29 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4876:5a0d:2fea:6208? ([2600:8803:e7e4:1d00:4876:5a0d:2fea:6208])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b487940bbsm940788b6e.3.2025.06.29.10.26.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 10:26:29 -0700 (PDT)
-Message-ID: <97d34412-31ca-41a4-a3fe-30635a79d52c@baylibre.com>
-Date: Sun, 29 Jun 2025 12:26:27 -0500
+        d=1e100.net; s=20230601; t=1751218093; x=1751822893;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uGHkUjNmjIIMPgTkRg7VREABnqYi+wWbJyf4AWH8+h8=;
+        b=bHCjvOHpl7rYxHeJa+MS51QXuLwR6FI8NJY7XPx9epp6i+p61qBfRIU5AsiLtJIk0l
+         g2IRP8pKBi9TCv/qAXNfyl2xqechpiKECaMiqzcP3TneXafMhQ3JJBuMAEc3ZXLUvC0u
+         GKObABS5TILUKXQTHTBKQ1Hx5fp+t53pGH2wvzIG2y74VlnIOEoMtWvsJsJBjGwoyFjS
+         lpvRIjWgLVp6GhcQZhj0KaF5StqnqCJRW0PfbmmYQxpl2yLDfFzvbg0pnyA0HJhb0taD
+         jvUnzP+By2JMHVpXFaVvqapmdlhT+qwJT4cpl6uBiDYAjJhf5odWoAQfHqzZD9FpzJ7c
+         QN/A==
+X-Gm-Message-State: AOJu0YwYNGjHLt4nZn9RdiC/1RY22EeHNXua37KRFKDXcW/7gHfdiDP5
+	n/LneGYNl2wIlfz5LZeNB+8R25m3Kp7KaJc0CF/qf9VLyL9R1e+Qnhhy+NBRKZFYdDA/bbUvlWc
+	KbzhL7LvpgRY5EAN8MAz4WUCrNJqS+rO6XbggWHomxao7Wc5o7bA0ydEmIL6VKlkHbQ==
+X-Gm-Gg: ASbGnctW3TXTMqohFT5rru43nfQjkYuDjVlMPRHvL4hrX9kIJ5BHZqg3XfCM/Iy/7Id
+	xUOKwR9cHf2MzFanbDig5YCysQKvxGpnwaIilPIptiRgQyRuO45cg7ym3l86mgnbF0v0SsB0diV
+	KyaShhynQu/zuVtma6E1dUP35ju07s+cM7TuJXxQrIkPiVo2rIXwNiwOnebE8Ta92RHQL6/ZV3k
+	AGCULoXYMG5EQeORfo8iUdEd4DFrLgTYfISHkqMZw9QHhtlMI1BmUUqKuBCnrcULoBYWjJTUqNE
+	I5gMHPJKmGqLVJWj
+X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969815e9.7.1751218093061;
+        Sun, 29 Jun 2025 10:28:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9HJ2OfndwPMREYIRxXW8JXGourHIYbXzVyfj8L8gZMgZLg5HRsqQ4PckajVtmi25Hd1plTA==
+X-Received: by 2002:a05:600c:6095:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4538ee504demr102969455e9.7.1751218092114;
+        Sun, 29 Jun 2025 10:28:12 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e59736sm8185715f8f.74.2025.06.29.10.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 10:28:11 -0700 (PDT)
+Date: Sun, 29 Jun 2025 13:28:08 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, Parav Pandit <parav@nvidia.com>,
+	virtualization@lists.linux.dev, stefanha@redhat.com,
+	alok.a.tiwari@oracle.com
+Subject: Re: [PATCH RFC] pci: report surprise removal events
+Message-ID: <20250629132113-mutt-send-email-mst@kernel.org>
+References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
+ <aGFBW7wet9V4WENC@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: Add support for MT7981
-To: Aleksander Jan Bajkowski <olek2@wp.pl>, rafael@kernel.org,
- daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
- jic23@kernel.org, nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, zhiyong.tao@mediatek.com,
- linux-pm@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250628223837.848244-1-olek2@wp.pl>
- <20250628223837.848244-4-olek2@wp.pl>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250628223837.848244-4-olek2@wp.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGFBW7wet9V4WENC@wunner.de>
 
-On 6/28/25 5:38 PM, Aleksander Jan Bajkowski wrote:
-> The temperature sensor in the MT7981 is same as in the MT7986.
-> Add compatible string for mt7981.
+On Sun, Jun 29, 2025 at 03:36:27PM +0200, Lukas Wunner wrote:
+> On Sat, Jun 28, 2025 at 02:58:49PM -0400, Michael S. Tsirkin wrote:
+> > At the moment, in case of a surprise removal, the regular
+> > remove callback is invoked, exclusively.
+> > This works well, because mostly, the cleanup would be the same.
+> > 
+> > However, there's a race: imagine device removal was initiated by a user
+> > action, such as driver unbind, and it in turn initiated some cleanup and
+> > is now waiting for an interrupt from the device. If the device is now
+> > surprise-removed, that never arrives and the remove callback hangs
+> > forever.
+> > 
+> > Drivers can artificially add timeouts to handle that, but it can be
+> > flaky.
+> > 
+> > Instead, let's add a way for the driver to be notified about the
+> > disconnect. It can then do any necessary cleanup, knowing that the
+> > device is inactive.
+> [...]
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -549,6 +549,15 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+> >  	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+> >  	pci_doe_disconnected(dev);
+> >  
+> > +	/* Notify driver of surprise removal */
+> > +	device_lock(&dev->dev);
+> > +
+> > +	if (dev->driver && dev->driver->err_handler &&
+> > +	    dev->driver->err_handler->disconnect)
+> > +		dev->driver->err_handler->disconnect(dev);
+> > +
+> > +	device_unlock(&dev->dev);
+> > +
+> >  	return 0;
+> >  }
+
+thanks for the feedback. Would appreciate a couple more hints:
+
+> No, that's not good:
 > 
+> 1/ The device_lock() will reintroduce the issues solved by 74ff8864cc84.
 
-If they are exactly the same, then we would want to include fallback to
-the existing identical compatible string rather than adding a new standalone
-compatible.
+I see. What other way is there to prevent dev->driver from going away,
+though? I guess I can add a new spinlock and take it both here and when
+dev->driver changes? Acceptable?
 
-> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-> ---
->  .../devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml      | 1 +
->  1 file changed, 1 insertion(+)
+> 2/ pci_dev_set_disconnected() needs to be fast so that devices are marked
+>    unplugged as quickly as possible.  We want to minimize the time window
+>    where MMIO and Config Space reads already return "all ones" and writes
+>    go to nirvana, but pci_dev_is_disconnected() still returns false.
+>    Hence invoking some driver callback which may take arbitrarily long or
+>    even sleeps is not an option.
+
+Well, there's no plan to do that there - just to wake up some wq so
+things can be completed. I can add code comments.
+
+> The driver is already notified of removal through invocation of the
+> ->remove() callback.  The use case you're describing is arguably
+> a corner case.  I do think that a timeout is a better approach
+> than the one proposed here.  How long does it take for the interrupt
+> to arrive?
+
+It's a virtual device - kind of unpredictable.
+
+>  If it's not just a few msec, consider polling the device
+> and breaking out of the pool loop as soon as pci_dev_is_disconnected()
+> returns true (or the MMIO read returns PCI_POSSIBLE_ERROR()).
+
+Yes but with no callback, we don't know when to do it.
+The config reads in pci_dev_is_disconnected are also expensive
+on VMs...
+
+> If/when respinning, please explain the use case in more detail,
+> i.e. which driver, which device, pointers to code...
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> index b489c984c1bb..ceb914dde15b 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml
-> @@ -26,6 +26,7 @@ properties:
->            - mediatek,mt2712-auxadc
->            - mediatek,mt6765-auxadc
->            - mediatek,mt7622-auxadc
-> +          - mediatek,mt7981-auxadc
->            - mediatek,mt7986-auxadc
->            - mediatek,mt8173-auxadc
->        - items:
+> Thanks!
+> 
+> Lukas
+
+
+It's virtio-blk. 
 
