@@ -1,88 +1,107 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFF41DED53
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 16:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9FF2BCFB;
+	Sun, 29 Jun 2025 16:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751214452; cv=none; b=XMLynzYkgFUU9QAClkpDruz9ZDN/yfAsmz9zXpUVH3r+WIzwWOnwKOm+DyBY1RwjTo3pVVpNGZbzSjj6fKsWMG0pHQooLXFUH6T1YW5trvcyRpTKadBhUwDA05Cr4jDjvrdZgN9N7lAgH/SYUtHdoY+J86U/aCb5/B6aZRwOmPk=
+	t=1751214505; cv=none; b=cJMbgYe59IvPd1rC4t6AtZnJ8R8nRFDd8AXRsZYf74DKoFeIohrTvBLyCkBdkFYSP9gYEy9Uc3GKbZESB1pgsDjAkT+m1Hp7sDaaNyixiSNxnbMbY2csjdNTWX8TLzv6BWyz2ZWvyF6k6E8qsmbDQOw9JJQCWq2GsDlHRDrzkrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751214452; c=relaxed/simple;
-	bh=qbCfx31CCDAjS2NOwef7V/4aEIRt//36ksST5HF+hO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y87+89iJRKz6bxFNzo37f4jex2vCGFimUVKYWXzlQIBC/PvS5ZDSu2xtD6aXxclsbq/1XT5ZhBmHBWUCzSOtnc6ePnbfSViAFzQwKyGFa1T0eWGXn+ciJ4armroJPIf4H+nBSaSIrnUMf4rzqKj4FBdifhSkcVbHFMyl1E157jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=T/IcS6Y2; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1751214505; c=relaxed/simple;
+	bh=tQZrK0/4WsZIfn0P7HNo9GIvPluqYxbGPtIgHl8N/8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iJGqaR91WbkMz54oERs9qQEc09DLfo64hrbVvAFs1C3ZSvmDn6+gCPWyPDOnezubLzL54sSJqH2JASMFRV4QfhXFtHajbraDGLKizHdwLggGXR3u+4ZvFT03kkGfNyXNmcoA7Ifc0uzme9cdjijz+BxN0NCWzwB+fZqtg7spsg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAGLxLpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="T/IcS6Y2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751214448;
-	bh=qbCfx31CCDAjS2NOwef7V/4aEIRt//36ksST5HF+hO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T/IcS6Y2Ih8Czf+yuApqnPxm6xpsnD9PeON9Qbx3FJt2KKxaf5Ayph7CGl1pNf1RH
-	 5hzdwEoKs8aa5WCQg5yVfv2az/NXPdnpga6ynHz1U8Om0Br56FvhjHP76JzZaqJPbb
-	 omV67QnARUCl0F33fTenWxWtF3MlHunZYfd8xZc8=
-Date: Sun, 29 Jun 2025 18:27:27 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
-Message-ID: <38b487e0-4d72-4a87-8fc4-c13b4fb35feb@t-8ch.de>
-References: <20250629084628.GA7992@1wt.eu>
- <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
- <20250629092552.GA30947@1wt.eu>
- <029f24fa-3512-4736-94a0-e158c158cc8e@t-8ch.de>
- <20250629094048.GA26861@1wt.eu>
- <20250629151006.GA16826@1wt.eu>
- <e2513e72-5949-463d-a950-0778609141d7@t-8ch.de>
- <20250629160823.GA2302@1wt.eu>
- <2322d3a1-a5ff-40ec-ad7e-1580f85d95f4@t-8ch.de>
- <20250629161908.GB2302@1wt.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAGLxLpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E10C4CEEB;
+	Sun, 29 Jun 2025 16:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751214504;
+	bh=tQZrK0/4WsZIfn0P7HNo9GIvPluqYxbGPtIgHl8N/8A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gAGLxLpjfO5gcxbRBIqKKaa3UMIGrHn8g4Thi2NuXj09GZ/CEj04uh/C9dbRJ+rjz
+	 HB+qZyql/tgDdKJmpkpNj1PNum6NMET618tklN0Hs7P5xFA9DuYZzinKa+dXFR02pO
+	 waSyBPnKRi3VaJAToCLgbpcpBOJBNivrTc9vAsUxW5VzjnnZWAw7RnDtGmqaPPXQ4u
+	 1yf27pYFKVDuvwTA2RPJwGgT660AMO9o0BIuGZy3vu8CVnbpcXqfqX7O5AWyZ2QaW+
+	 SkS54rYUlqedWxdlCEQBxEn7PZsDXQt9gdk6OfjqtXVQsExiGw+hoabwD2lcN23jds
+	 mhpLnuDnaG33A==
+Date: Sun, 29 Jun 2025 17:28:15 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Lothar Rubusch <l.rubusch@gmail.com>, Andy Shevchenko
+ <andriy.shevchenko@intel.com>, lars@metafoo.de,
+ Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, corbet@lwn.net, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v10 4/7] iio: accel: adxl345: add inactivity feature
+Message-ID: <20250629172815.47244e5d@jic23-huawei>
+In-Reply-To: <CAHp75VfOKDZRoVWLQoPQPzpN2MceTeN_4OoU0RvxG7_J8OAoMw@mail.gmail.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+	<20250622155010.164451-5-l.rubusch@gmail.com>
+	<aFkh-E1dG__p_G4m@smile.fi.intel.com>
+	<20250628170839.482a3d63@jic23-huawei>
+	<CAFXKEHZ7bNuy+6X4NgPPMOsT3AkSXhacH=3HS33bLTNgYa3PWg@mail.gmail.com>
+	<CAHp75VfOKDZRoVWLQoPQPzpN2MceTeN_4OoU0RvxG7_J8OAoMw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250629161908.GB2302@1wt.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-29 18:19:08+0200, Willy Tarreau wrote:
-> On Sun, Jun 29, 2025 at 06:14:01PM +0200, Thomas Weißschuh wrote:
-> > On 2025-06-29 18:08:23+0200, Willy Tarreau wrote:
-> > > On Sun, Jun 29, 2025 at 05:54:02PM +0200, Thomas Weißschuh wrote:
-> > > > I saw the same issue, but only because of the changes to types.h.
-> > > > And these should not be necessary in the first place.
-> > > 
-> > > You mean fd_set definition ? It's solely a matter of includes ordering
-> > > in fact, since it depends on FD_SETSIZE.
-> > 
-> > No, I mean the '#include "sys/select.h"' in "types.h".
-> 
-> I had already dropped it as well.
+On Sun, 29 Jun 2025 10:30:15 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Hm, then I'm not sure where it commes from.
+> On Sun, Jun 29, 2025 at 12:11=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail.=
+com> wrote:
+> > On Sat, Jun 28, 2025 at 6:08=E2=80=AFPM Jonathan Cameron <jic23@kernel.=
+org> wrote: =20
+>=20
+> ...
+>=20
+> > > > > +           axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN=
+ |
+> > > > > +                           ADXL345_INACT_Z_EN; =20
+> > > >
+> > > > Consider
+> > > >               axis_ctrl =3D
+> > > >                       ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN | ADX=
+L345_INACT_Z_EN;
+> > > >
+> > > > (yes, I see that it's longer than 80, but it might worth doing it f=
+or the sake of
+> > > >  consistency with the previous suggestion). =20
+> > > Hmm. I'd go longer rather than do that just because it looks really u=
+gly.
+> > >
+> > >                 axis_ctrl =3D ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN=
+ | ADXL345_INACT_Z_EN;
+> > >
+> > > I don't care that much as long as long lines are justified by readabi=
+lity. Here
+> > > I think either Andy's suggestion or the all on one line are justified.
+> > >
+> > > Tomorrow I may have a different view :(
+> > > =20
+> >
+> > As I=E2=80=99ve seen quite a bit of discussion around this. In fact, us=
+ing
+> > binary OR here might not even be necessary, since I can define
+> > ADXL345_ACT_XYZ_EN and ADXL345_INACT_XYZ_EN directly and OR the fields
+> > in the header. If you have no objections, I=E2=80=99ll likely prepare t=
+his
+> > change for the next version. =20
+>=20
+> Actually I like your idea. This will be sustainable over style
+> preference changes.
+>=20
+Agreed.
+Jonathan
 
-> > That breaks the dependency order, as it pulls in all kinds of other
-> > stuff into the beginning of "types.h" which themselves depend on
-> > definitions of "types.h".
-> 
-> It was not just this. I'm pretty sure that what unbroke it for you is
-> keeping fd_set in types.h.
+>=20
 
-But I *did* move fd_set to sys/select.h.
-
-> > > > The below works nicely for me:
-> > > 
-> > > OK. Do you prefer that we take that one or just a stub ? I'm personally
-> > > fine with both.
-> > 
-> > I prefer moving the code.
-> 
-> OK. Do you want me to merge your patch or will you take care of it ?
-
-As you'll resubmit your series anyways, please pick up my proposal.
