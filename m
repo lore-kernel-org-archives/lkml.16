@@ -1,78 +1,63 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7648A241114;
-	Sun, 29 Jun 2025 21:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DF71DC988;
+	Sun, 29 Jun 2025 22:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751234048; cv=none; b=tZiOxIvFSDkgKifI1Mefw/JKKhc8unASLcyH236RNJTQsce7BN+sNsvdHK3yYyFua/4ISD9ktFofTGZE4YWSg563SG+p3Z7k5Ajxqv56M2mNPR0V/tGWvGzt+eHqUeBFZ52zUjjEmCdMikZiY1ijHvYOxvQJ0k9mJ7gzUeuGD0U=
+	t=1751234717; cv=none; b=H1AiahEbcPXClpqjQzuj489ecfVrQcuazOuBXEbuE2uJdF9b6hn9CpERUaZHjPKZup+ywmnlJ/e0UT07B11vBhlFcw2ShIm87k3wnP3WPWvJ1v6iYo1wK9EpvueexQgGPsAXtwcgAwTMwjawg2Hx5GMaHlcZ8MWGjAJxBBRh1EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751234048; c=relaxed/simple;
-	bh=yCwguoRkXNC0/cqyRSOcs/kGHQRYviQaus+cpwdd2Ps=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=irinnHwcR6uPhwhGIeSoVGSHxFcAvEvAx/V0lEFFqCiUlxGsoOi9yF+64JnmcMqJwG9It0E4zOrk0jdTn4bgBep7NJ+c981vMfV6YxqYrAHoj1XSeELGqgvmYzdFSyI/Eq6+Gg+9WWITIWqgcptfgypygNxUvXjCfUkASDTpGnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBs4oQol; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751234717; c=relaxed/simple;
+	bh=FI3QegmqdgygByP3S8dUbw/0GVJZXkqD0oaE0+hUZ9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KO9G+PIm7vGitVfNmNHdq3F+YzFzKL3eJ3WagjTPYiLpMPy0mjvjaakhlWbXl99h7z1CxBoPRK5aBApiQE19eCfPthzTnTd+wegbhSXPRdwNAmzcP3Rpbzo2NLk0xdJkxSPTNDVMpgzuSHjspYfl0HjrXICA74clcuBPk9erzww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=dZLcAFrT; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Snk5NeqI; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBs4oQol"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fad4a1dc33so15023296d6.1;
-        Sun, 29 Jun 2025 14:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751234045; x=1751838845; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wSoc6um4fj9fbTNru0L559gFTCmIRL8yZh5n8pLuklM=;
-        b=kBs4oQolLkmz/RK4K18KQTaatSBu/HPKfg0sgLtCYXo3zqj+iW707b2EgOtGljWb+H
-         Dr6AzwjpjCiku1LKi+9EuCNYdDYIWl8pXoBpE50gQ/7cC+5NnREnSpMjKIwoX9hVkt6N
-         61ugffUNKXADigr61yokoUBjnEUGsn2zsIu5NQ7sacs0JLPKF9UzJKB5MnfeJVcCI35u
-         CxXrmN7E/UU1KHp+V24hytKdEGt9FPZnHuzygJIsz+nJ5dvX6hNfzg02jHOBvp72Q5ZG
-         T4rBqcklpa8xMlYpfjxrvvqwCDLPlCa4vTsO3ZYuFmU3dbLUCJNrFxKCJB1fVOKVddM1
-         o7ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751234045; x=1751838845;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wSoc6um4fj9fbTNru0L559gFTCmIRL8yZh5n8pLuklM=;
-        b=fOIMSovlPHpfv1f2tx4xAUePsPA9gkuA+mcl+FXlNLKUuZp7RGkZ+T2URpt10jjpso
-         CW3EsLZL24hVSLvuVgUNUxircvADbBoiXU0SGrKk2nYUgzIm9xpUaeaYSJzuNjTzVwEO
-         OMZh83ey3MIm8PsoL4eNOS6zH7p7XZo7h2EqbSATzkGvtaPwAipUF6LFTWcFQvqCEG+/
-         elT/lXSjHBc367e3LYRIs9FC4DOgyy6o1TDi41dspAQC0nX81tV2MfBXj2Zmyl4PO/iH
-         ifqYJnEb8fO2lX2FZv3liJE67dZkP8GcJsJHQgI1a8dC3gmoTGfPuS0NW8V6LaGk3/0Z
-         Jh4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVaPHHmfDoCxlI5Yxyl9jjq2IxLxbgEk1KRyTYFdvgfeyMra5TDdITbr8wZcX+a4PpQiTgMfuZ3@vger.kernel.org, AJvYcCWFM+7StfYkajjqRPSCGo2xwKU4GGRn0joAC61q+YI3HffkdOxJ98ctOPtE2Rkx3bkJbNnHem5gPKDLFGM=@vger.kernel.org, AJvYcCWlyGlnLKGam1w7ZT6uyhwaEGpYrRftUQORV7tPbVqEQLl+aAdkgR587MvOu8UW+ggNiydVm3SxkKT5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/+MluhWSR6xQQalga8BfuAH2CuHWsRITsUeJuvQPWr+P0ygwc
-	BxSFwZjtVy3++paCjGBbu68isx6Pd5TUmKk/YUKy2A1XYd0DcNgRuVKt
-X-Gm-Gg: ASbGncsWg35gRyMbAKWDAWWaCrTTVM0ccwY4V2SI5iGXlisfzfH1PVT/avYBNCyzB11
-	FDpo1J0Zx5WDfMAcujgWLDwagf09kZHBUmt8fvkowpcmEiq7fO8mFuMkP7eFY9eu08SxlRMU5RQ
-	+VOqZpu9JWhcwTXkakyOZLTCXEgrGLEAZOkUFOkNU2k4OzTrxbuxUJxLAu3zwxLtvbYJjbO/7KW
-	dfQkOSMzYHm7fqy6TbwrQk4tGcOvS4vM2hMwboQudBvzpkwpyTjM3j9nT6WXhjXOWEmwdTYKCmB
-	9P51St/GoNRcAvySbFQ2F9fZidV+U2uqnwsovUkEzgyXxsbyHcEpjKNbpNG2l6ImjbcVTnu+rZf
-	6Jw792VPFlT06NP/CS7AF1Tpss9peSVhmKB5quVJbt/BQSOaUwUuhm7NhWbb48zEtfARq
-X-Google-Smtp-Source: AGHT+IFJpNw6tlpwh806rj7OtEbWSnaeJ82dyANG/riA46oRJRHygpgtGapJTqqgsj6/APi15VmJKQ==
-X-Received: by 2002:a05:6214:540a:b0:6fd:5f35:9c84 with SMTP id 6a1803df08f44-7000174dc41mr206413746d6.9.1751234045446;
-        Sun, 29 Jun 2025 14:54:05 -0700 (PDT)
-Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771b50e1sm56878656d6.34.2025.06.29.14.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 14:54:05 -0700 (PDT)
-From: Seungjin Bae <eeodqql09@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: pip-izony <eeodqql09@gmail.com>,
-	Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>,
-	Jassi Brar <jaswinder.singh@linaro.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	linux-usb@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="dZLcAFrT";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Snk5NeqI"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bVjyd3WvZz9stg;
+	Mon, 30 Jun 2025 00:05:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1751234713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wonIqwqE+gZtcXn2WE6N/pAhGaGx6R/BhYVp+2etRMk=;
+	b=dZLcAFrTgcxfCPDqmmzeXnwWZKnWuxBRJphwxQJzOi5js7oJMhshlVu6cFT0bTbdemDgZy
+	klyRdP9Ogh1lcQ3A9y9LZ9U/t18I98zipzGoW3GC4hUhd+soTt49Arrq6uHZWersaqE4MD
+	nQSPuMu0ElXB9VpWzQ087MQjtBsK7OjilE1uXBT8fNbK8yXGEk06rGiqWmQiCuxEgVtjTu
+	/NSrXxT6LzqYod4aEH+Eo82WejKX28Ij0CMyLfBeAXdQSRGvO1UWfWYkc/ewwnr2/drojz
+	ltk6VhPF0RUA2w3VPT8TITwvmGgAQJTa5QNAXV82yuKvEvl2AsjotkLgme8PDg==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1751234711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wonIqwqE+gZtcXn2WE6N/pAhGaGx6R/BhYVp+2etRMk=;
+	b=Snk5NeqIxlYLkGoTYhqpTkOw+9tVflrQkjGl/vH4BnTRhwH+lxc0lzrqQN/YaT2+PAlmzq
+	15b7ei26HInKT4UZcQY1FPC2w5UpGsNjlFz4R4HJRoYO6RxwGpnFyKYiBkfN6AfUASnZsQ
+	f8eABpFDpgcPIy/THhwQ6fsCpqms6tV/min6CmxLEa8YY7s/26yBYtowQl/RnFsrK961wh
+	R1Ka4nQGzIWxOBMAHw+ZcwRcb2QFxS+rOBj4bPOMsbvLbwzFvOExxvfUnF8DeKa3RHEzeI
+	HGKEGUnDDikNEdFsg16vOZd26UEqq4Hf/FTT8+eIjpNaQ8c7wu+1I/Q5bNcnug==
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] usb: gadget: max3420_udc: Fix out-of-bounds endpoint index access
-Date: Sun, 29 Jun 2025 17:49:47 -0400
-Message-ID: <20250629214943.27893-6-eeodqql09@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250629201324.30726-4-eeodqql09@gmail.com>
-References: <20250629201324.30726-4-eeodqql09@gmail.com>
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] ARM: dts: renesas: Add boot phase tags marking to Renesas RZ/A1
+Date: Mon, 30 Jun 2025 00:04:24 +0200
+Message-ID: <20250629220502.935717-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,47 +65,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: cd501b2cf243314dd24
+X-MBO-RS-META: q69wwtg3rufy5stjqdw1npekmohmqoaf
+X-Rspamd-Queue-Id: 4bVjyd3WvZz9stg
 
-Similar to max3420_set_clear_feature() function, the max3420_getstatus() function also fails to validate the endpoint index
-from wIndex before using it to access the udc->ep array.
+bootph-all as phase tag was added to dt-schema (dtschema/schemas/bootph.yaml)
+to describe various node usage during boot phases with DT. Add bootph-all for
+all nodes that are used in the bootloader on Renesas RZ/A1 SoC.
 
-The udc->ep array is initialized to handle 4 endpoints, but the index derived from the `wIndex & USB_ENDPOINT_NUMBER_MASK`
-can be up to 15. This can lead to an out-of-bounds access, causing memory corruption or a potential kernel crash.
-This bug was found by code inspection and has not been tested on hardware.
+All SoC require BSC bus, PFC pin control and OSTM0 timer access during all
+stages of the boot process, those are marked using bootph-all property, and
+so is the SoC bus node which contains the PFC and OSTM IPs.
 
-Fixes: 48ba02b2e2b1a ("usb: gadget: add udc driver for max3420")
-Cc: stable@vger.kernel.org
-Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
+Each board console UART is also marked as bootph-all to make it available in
+all stages of the boot process.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
- v1 -> v2: Added a second patch to fix an out-of-bounds bug in the max3420_getstatus() function.
- 
- drivers/usb/gadget/udc/max3420_udc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+ arch/arm/boot/dts/renesas/r7s72100-genmai.dts   | 3 ++-
+ arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts | 3 ++-
+ arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts  | 2 ++
+ arch/arm/boot/dts/renesas/r7s72100.dtsi         | 5 +++++
+ 4 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/udc/max3420_udc.c
-index e4ecc7f7f3be..ff6c7f9d71d8 100644
---- a/drivers/usb/gadget/udc/max3420_udc.c
-+++ b/drivers/usb/gadget/udc/max3420_udc.c
-@@ -536,6 +536,7 @@ static void max3420_getstatus(struct max3420_udc *udc)
- {
- 	struct max3420_ep *ep;
- 	u16 status = 0;
-+	int id;
+diff --git a/arch/arm/boot/dts/renesas/r7s72100-genmai.dts b/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
+index c81840dfb7da..13c0324b8def 100644
+--- a/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
+@@ -258,6 +258,7 @@ mmcif_pins: mmcif {
+ 	};
  
- 	switch (udc->setup.bRequestType & USB_RECIP_MASK) {
- 	case USB_RECIP_DEVICE:
-@@ -548,7 +549,10 @@ static void max3420_getstatus(struct max3420_udc *udc)
- 			goto stall;
- 		break;
- 	case USB_RECIP_ENDPOINT:
--		ep = &udc->ep[udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK];
-+		id = udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;
-+		if (id >= MAX3420_MAX_EPS)
-+			goto stall;
-+		ep = &udc->ep[id];
- 		if (udc->setup.wIndex & USB_DIR_IN) {
- 			if (!ep->ep_usb.caps.dir_in)
- 				goto stall;
+ 	scif2_pins: serial2 {
++		bootph-all;
+ 		/* P3_0 as TxD2; P3_2 as RxD2 */
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>, <RZA1_PINMUX(3, 2, 4)>;
+ 	};
+@@ -286,7 +287,7 @@ &rtc {
+ &scif2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&scif2_pins>;
+-
++	bootph-all;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts b/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
+index 9d29861f23f1..e4f489522b2b 100644
+--- a/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
++++ b/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
+@@ -59,6 +59,7 @@ led1 {
+ 
+ &pinctrl {
+ 	scif2_pins: serial2 {
++		bootph-all;
+ 		/* P6_2 as RxD2; P6_3 as TxD2 */
+ 		pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
+ 	};
+@@ -109,7 +110,7 @@ &ostm1 {
+ &scif2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&scif2_pins>;
+-
++	bootph-all;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts b/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
+index 25c6d0c78828..0bf106e9827e 100644
+--- a/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
+@@ -199,6 +199,7 @@ keyboard_pins: keyboard {
+ 
+ 	/* Serial Console */
+ 	scif2_pins: serial2 {
++		bootph-all;
+ 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
+ 			 <RZA1_PINMUX(3, 2, 4)>;	/* RxD2 */
+ 	};
+@@ -278,6 +279,7 @@ &rtc {
+ &scif2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&scif2_pins>;
++	bootph-all;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/renesas/r7s72100.dtsi b/arch/arm/boot/dts/renesas/r7s72100.dtsi
+index 1a866dbaf5e9..c78131e3cd24 100644
+--- a/arch/arm/boot/dts/renesas/r7s72100.dtsi
++++ b/arch/arm/boot/dts/renesas/r7s72100.dtsi
+@@ -41,6 +41,7 @@ bsc: bus {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0 0x18000000>;
++		bootph-all;
+ 	};
+ 
+ 	cpus {
+@@ -108,6 +109,8 @@ soc {
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		bootph-all;
++
+ 		L2: cache-controller@3ffff000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0x3ffff000 0x1000>;
+@@ -557,6 +560,7 @@ R7S72100_CLK_SDHI10 R7S72100_CLK_SDHI11
+ 
+ 		pinctrl: pinctrl@fcfe3000 {
+ 			compatible = "renesas,r7s72100-ports";
++			bootph-all;
+ 
+ 			reg = <0xfcfe3000 0x4230>;
+ 
+@@ -639,6 +643,7 @@ ostm0: timer@fcfec000 {
+ 			interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
+ 			power-domains = <&cpg_clocks>;
++			bootph-all;
+ 			status = "disabled";
+ 		};
+ 
 -- 
-2.43.0
+2.47.2
 
