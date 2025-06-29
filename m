@@ -1,91 +1,75 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8BC24113D
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A401B0F05
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751238899; cv=none; b=pfisD7NXM/JcWLRYWVsT9cnenXOa6Gnj+m3RhFVl2kHO6+lxvGmZe5Z18c3NW2dFPL9uakam5NHd7gNgWk7MCWvCnT1rghu8zVnKHYYAVR2OpU5c/vpS6vMEJyFoBagy0YRBcZGtrdjvkC9+Suo1j+g/ttA9d71Cuqbwq8cIfv0=
+	t=1751239020; cv=none; b=JsxC11Qzv5CLS8UvH2KSraue/nSURMCdfb/Z8ytQzE1F4hUF9lR6RNnjxaLbjJBFkVVCiyu5qDsoGcPi9lRVxYEoJ5LQfhXDEfqI9Vyq9cs24vLYsT1gYxkMF1KkHfLMLQjl/xGCBxCpLR+ngYG2++muyi1WLcR5Oy5EtVF7z08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751238899; c=relaxed/simple;
-	bh=zXm10Gvs++RH5Oc5G0CBrarSvIdE4ZdUzCvPiUGDMg0=;
+	s=arc-20240116; t=1751239020; c=relaxed/simple;
+	bh=7nu8DwT0qYW42Ol7bw8/MXWrf5qidz5nzjLV8WpXgcg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjTLa0jj6b1+d4ttAkpcuLk4TZhD6if+ti3EPPq/zoaVFPFWwnFN3q8dHs5rpU3GcHzvuZUNSQcPkJShx9n/LHEDsx8FnKoSsKm4czVyN7tqEw8OrDLJRgkGgh6Olacd1ZllCwF6CO33GdsbxB4XfablzBnUJUh1q5BnzksC9KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=F8/X7fwj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YlbuSdthSXCznMuEhx61C37INAmDrFx43WlquwFgiHsqRDqjKkuMRY3Q6VxiXjCx58tCS22TEPuamblUMeGcxUJt0X4PGxysXoSNktDCGLhknre0t3lxUJnDT7+9GyEPnF1L2F6bS94ONpIdDp7bwCtVNk/Ic6ewv6v8UDRK4uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdSwa7AE; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="F8/X7fwj"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TM01SB021583
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:14:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=moUTcLn71exp8xhAgwmP4wIU
-	hIDn1m41gmRY4c0fElY=; b=F8/X7fwjKbBozMg/hPMgyz6M89bXtIBh9kgnj3Dg
-	ZQ1AhF+XRJ6yRWs5SSuznGeUCpzI1rcHse+uMAHgAv4S6f47yt4FouBgZ9IcgauI
-	TdTxdt0+jpE823qeCXxzx/Dwzsk9yCGlc2jz6NCjRs6w5cEImBW30hKZ+U485nnh
-	Si7Jn0Z45+7XcdBfLDMyXONumVFTEQC/qkOiV0YqphQ/lhDKwPTbY+nfYScd7Rs8
-	WyeM0N97Ip5WQESJTr/6HvVsbAOPKagEl5OkBwhtBDlnldLs64T0klxGIFRpj9UD
-	G26Vi5BWXHjulUzR8F+pwC2isQTElUFBX6ufJBQWpu9CJA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qm2ty9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:14:56 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5bb68b386so1103149085a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 16:14:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751238895; x=1751843695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdSwa7AE"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ae0d11bb2a7so561527066b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 16:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751239017; x=1751843817; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=moUTcLn71exp8xhAgwmP4wIUhIDn1m41gmRY4c0fElY=;
-        b=ElgkkkkTDKguLAH9xo/XpehSM6gs5Fb4F//eSANCAY0TB1rS1rDShKXfoZNSxcS0SW
-         WYtmoJWg4DV8pil77EvnH/B9EnTee+2Hd7qGSlI+jUkElh99I0C+R38sN3a4nhXX6bew
-         smE5hwuM6pnN/nzxhjr7EfS3UrcnNzezBo66vSO6zmJnICAKa79ORsCaX2ipAyM4idbK
-         HHJFTyMvBuari/DzIT3bb3l5io2xCLJ2gLX8VdGVMyn66vmx6J8TyVnB5jGH8rp+TtYb
-         5J9mjPNQe+fOToo+hJNAVXHKS/clqK1zLKYFObttCWqnrST/+WTEldN8jS6UL3678i9A
-         1jTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcIpy2/gSFGTALJvb3xHYYfttwu7KlvztiwZQXvpS/Vnyft1qqkD1ZqsF29oSU+lbgCcLyGvHDMDQ/oJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4XCfFeKclD2CAgTI83+KEtFm9XM3IxdBECICeJ9Wnm16iudD+
-	SzGlzhjg0zuwKBI/fg6uPSq2HLae8/avfMUIsqeSFYtE9NJMADGJP+mXDTRnuHuFcNDq2i7Kf67
-	RMy5W57YHT0tk0kVAaPPYkKf1DRDWF5KsRPIQqNS3Cb0tCwmUWHy8JEyDoiYNkO3UX80Xm45ZLf
-	Mqtw==
-X-Gm-Gg: ASbGncs8ktdvtW/KodPdFaYxGI47a6G28NTwKog/xv0VMoSO8R/hbjRd9SOeLEErNFy
-	/U4u59BBkx1T+wAYGJdx+RA3ahKZcWXHMm1k8t2n26PqkQdwiirjybFCUJJEiLFNGHiWrjAHUFC
-	LGGlJ6eZDOLn1JRqrtysAFHL8BjPRIxp+U7oiAm9J2n+h0D2WjsyftFHVAgp/tjNwal7dKKa2Ud
-	KjPLRXVBEjjre/JzF1VyFJAlDZUdpJYe6qyivVvuqIehek1OH3x45dHyls1OVc9Md3jiOVRLH3R
-	vBvNRVbwisETCCrCgXihKHjj98zu9abD2tfsF9SQxYITU21dD2HZuqCekIaDN7BtIFjC8Pwh0l6
-	jzTHnWoOm1u7pSNI/ZqnjnX2UnTF0XyVRoXk=
-X-Received: by 2002:a05:620a:4006:b0:7c5:5e05:df33 with SMTP id af79cd13be357-7d4439b8a60mr1660900485a.51.1751238895270;
-        Sun, 29 Jun 2025 16:14:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGtolllQv5PQ1tLpSY3ShpYSmRV9yanIB0jjWowyMAtnFeyB8J0IVdJGAeQDimlLkBi7mA1Q==
-X-Received: by 2002:a05:620a:4006:b0:7c5:5e05:df33 with SMTP id af79cd13be357-7d4439b8a60mr1660897885a.51.1751238894856;
-        Sun, 29 Jun 2025 16:14:54 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24ed7esm1237565e87.81.2025.06.29.16.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 16:14:53 -0700 (PDT)
-Date: Mon, 30 Jun 2025 02:14:52 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Caleb Connolly <caleb.connolly@linaro.org>
-Cc: Casey Connolly <casey.connolly@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 09/11] power: supply: qcom_smbx: add smb5 support
-Message-ID: <ywav3k7tp3uoynpnbxfvevctwwmfcseltfxltiq7slixflitmp@qqrmp5adjytp>
-References: <20250619-smb2-smb5-support-v1-0-ac5dec51b6e1@linaro.org>
- <20250619-smb2-smb5-support-v1-9-ac5dec51b6e1@linaro.org>
- <anawfylnc5afpljxeooruyy3lgxn3wizy57jruvnmro6akfsx7@zdzsnludbl6f>
- <87d8b81a-2ab9-49f2-9319-99d74f84081e@linaro.org>
+        bh=kALrTDBo8YeEwW0KkVu6Bm3OeB7IvDGQQSLJ58v0dDo=;
+        b=BdSwa7AEvT/i3CoQket7hABIZ/951MpBEEmQluBUnSAyDdBuAV1yxTYEfosnG0CG7/
+         iGBKQJXLewmkm5RNflvk1MCga5XvMw0nyBibX7UnJFFfuJ5MfZJ2jaFi2eL30mP0mCn6
+         SN/Nq1Sai2fbrbFhifDfq2xvOTpdd9/QktDTUns4resynEAZN8dtoo/4kMl3Tf8zpMtF
+         +2uxyQ1I222H2296Xc+PZqkRfmt5Bm6ETzKXuIRp0yta9DTDQ+ni8hXwGnBz/iJ0X6CM
+         27arMIJDd3lH1aRXhgsKDRxYW0QTWWHO5OPvaPxSqf+4u4J6CvDW3lXfI8Sb+JR2zWGm
+         eldA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751239017; x=1751843817;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kALrTDBo8YeEwW0KkVu6Bm3OeB7IvDGQQSLJ58v0dDo=;
+        b=UpniWnzLnVe2v0ntgFvq8vt2tlwGsY/FqzOtKKLDssPLPGXG65w8bQNrfJkLyNbaRw
+         zhUsCn5jFZ9q6W6tk8Tg1/MpKzpEFk5SY+uGxzVRvZ8Bc0gny1apFLqz6X6xJn679YjU
+         uO+/hF3D62NRZcwmY4ATZu9a06FkhAWH+uLB4sdv/2heJcFMkw7XjIlnIW2TbF6buZub
+         b5Fe+glhxhAln7G5NG+5Rw/yyQeYl0l70vF0TTKMvsG5VueHG1BeSOBfptFTG7RUFvdn
+         6MakdO/wB7+ycfs716ER1Dch6yd4u5S19qlzQKxeAhO2E+RIJh2Qt1TNJiokY2Pa2N3A
+         HN3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXKTRd2ysMU6XMK2cqHsrHXNzHXnUh/MpPaKBEyWJEfmwrKihTFkoTZTqYX56FTPz20wLHGBeCgYRaVKnY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynHp1wB9MGzY6UH7CCmCvcLz6LUPyGZajZYfQcNX+VJqzu1AeR
+	ZWOkRO7CDWydE6nJs1uPvkuMuJcvlwlP8+x9QJENglAWkOyQy6GOHovi
+X-Gm-Gg: ASbGncshRvpXIi9liJx8K8tXknQ9+U6MigemSuZOR71dNXwsL1YUjuXrVmXkc2UqRkx
+	VB2ncWMXProRJBJPHWlG3m7mPwbhN0nW9fcg1LN2kdeXzYc0ZelrvlBNLii42LWwThd5Jl6NPeY
+	aDn5wPJMLgCIIhJjcuv9cCOSLPf4T61iWRjy0EQp9Lel1JkYtitUvSxE5l4uVLHXa3Ebi7Hr7JM
+	NglS/grxAnyT99wTjopbdEsC13l0nRsV88yMR/9C6vf1HwbSnn3qubKBVk/tB/jTJOuYQQSTt0u
+	oO0rKPi8oLm4aSz4zfuDqgySvOdHJRI+imTOonCNfOmplmFkoH5PcZvB6540LQ==
+X-Google-Smtp-Source: AGHT+IHL0PEhHhgGy3McRpzy+oEsHDxMILZecgX569B7Y0zoYT9MeEa6msfcawxFu+XQXNXUv6qItg==
+X-Received: by 2002:a17:907:6d17:b0:ae0:d73e:eea0 with SMTP id a640c23a62f3a-ae34fd13222mr1030763566b.12.1751239016899;
+        Sun, 29 Jun 2025 16:16:56 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b0f9sm560998366b.5.2025.06.29.16.16.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Jun 2025 16:16:56 -0700 (PDT)
+Date: Sun, 29 Jun 2025 23:16:55 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org,
+	richard.weiyang@gmail.com, maple-tree@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] maple tree: Add and fix some comments
+Message-ID: <20250629231655.4qyiututsi4vutsx@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20250626171918.17261-1-dev.jain@arm.com>
+ <20250626171918.17261-2-dev.jain@arm.com>
+ <bxhfvhmk4iyyz7l3nitsgf4xgsydraskligg56n4ww3fe5zlvr@xqzh44dk3q5b>
+ <2d55c06a-f4a5-4728-b692-60d88a5fe692@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,93 +78,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d8b81a-2ab9-49f2-9319-99d74f84081e@linaro.org>
-X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=6861c8f0 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=YK0pAgHl7by2gtRoomsA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: P1n6qbXXrcf-Ow9XptzErbrHLdDOOJ94
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDE5NiBTYWx0ZWRfX9Cp4KeNZKMxR
- 43AhAuByETSqBR9e0G+4eIJ/BYHodXReC/tC9J9hQdowK8I4c0Cygi1uLHLT4nCaqXsNeMuIWYc
- zDTitN3QYiExxN0EK8yMiuIOD+KxMUiqecyHh0iHQgML3RvK7ksSsip1+dn91yLL5XiwsK+HQ2e
- EmPN9SBRu8nineJ8sL6/5rRUUHuvaFy7vp4hDBEgZ+09u8f5kGz93I+bsBY08oW76y8SVDUojIm
- eHqVdTMhgY+KqX8PE9hyBNxZetj/i4lOCLGfZO7mbqhBNALlK01FbwIGHj0tAc7D9oawhsLiSAG
- 8hDbX13rInACJDrYjP/yB0gUaxKtsng7Z9hiMwJ45UUA7DP7cbj2kXY1ARBNcC4DOG8ZSSbdS12
- IrI0wHRzHXRF5LjuvFVkqwqwD5nKKM2R7VyrTWjvHDLttT97Ygt0wEN7RBLbvY1OMQQEiJ22
-X-Proofpoint-GUID: P1n6qbXXrcf-Ow9XptzErbrHLdDOOJ94
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506290196
+In-Reply-To: <2d55c06a-f4a5-4728-b692-60d88a5fe692@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Mon, Jun 30, 2025 at 01:06:24AM +0200, Caleb Connolly wrote:
-> 
-> 
-> On 24/06/2025 03:06, Dmitry Baryshkov wrote:
-> > On Thu, Jun 19, 2025 at 04:55:17PM +0200, Casey Connolly wrote:
-> >> Introduce support for the SMB5 charger found on pm8150b and other more
-> >> modern Qualcomm SoCs.
-> >>
-> >> SMB5 is largely similar to SMB2, with a few register differences. The
-> >> main difference is the new Type-C hardware block which some registers
-> >> are moved to.
-> >>
-> >> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> >> ---
-> >>  drivers/power/supply/qcom_smbx.c | 367 +++++++++++++++++++++++++++++++++------
-> >>  1 file changed, 314 insertions(+), 53 deletions(-)
-> >>
-> >> diff --git a/drivers/power/supply/qcom_smbx.c b/drivers/power/supply/qcom_smbx.c
-> >> index 10ddd33a09599decb23c0f1ccd02fa9b56602543..d902f3f43548191d3d0310ce90e699918ed0f16f 100644
-> >> --- a/drivers/power/supply/qcom_smbx.c
-> >> +++ b/drivers/power/supply/qcom_smbx.c
+On Sat, Jun 28, 2025 at 05:26:18PM +0530, Dev Jain wrote:
+>
+>On 27/06/25 1:34 am, Liam R. Howlett wrote:
+>> * Dev Jain <dev.jain@arm.com> [250626 13:19]:
+>> > Add comments explaining the fields for maple_metadata, since "end" is
+>> > ambiguous and "gap" can be confused as the largest gap, whereas it
+>> > is actually the offset of the largest gap.
+>> > 
+>> > MAPLE_ROOT_NODE is used for mt_mk_root() and mt_safe_root(), indicating
+>> > that it is used to mark the node as root. So fix the comment.
+>> That's not quite the entire story here.
+>> 
+>> The first pointer in the tree may not be a node at all, and may be an
+>> entry.  So having that bit set tells us the root of the tree is a node,
+>> so the comment is correct but maybe you have a better way of expressing
+>> this information?
+>
+>Hmm. Can you please correct me on my understanding - when we have an
+>empty tree, then we insert a root and can store a value there. Now when
+>we store the second entry, we allocate a node and make the root a node,
+>the root points to that node, and we store the values at offsets 0 and 1.
+>
 
-> >> @@ -580,18 +721,100 @@ static const struct power_supply_desc smb_psy_desc = {
-> >>  	.property_is_writeable = smb_property_is_writable,
-> >>  };
-> >>  
-> >>  /* Init sequence derived from vendor downstream driver */
-> >> -static const struct smb_init_register smb_init_seq[] = {
-> >> -	{ .addr = AICL_RERUN_TIME_CFG, .mask = AICL_RERUN_TIME_MASK, .val = 0 },
-> >> +static const struct smb_init_register smb5_init_seq[] = {
-> >> +	{ .addr = USBIN_CMD_IL, .mask = USBIN_SUSPEND_BIT, .val = 0 },
-> >> +	/*
-> >> +	 * By default configure us as an upstream facing port
-> >> +	 * FIXME: This will be handled by the type-c driver
-> >> +	 */
-> > 
-> > All of this needs to be reworked to cooperate with the type-c driver.
-> > Otherwise it might try to reconfigure the Type-C mode _after_ the TCPM
-> > has negotiated some configuration. So, it can't go in in this way.
-> 
-> Hi Dmitry,
-> 
-> this is the smb2/pmi8998 init sequence, we don't have any type-c support
-> for this yet hence this. When we add role switching/type-c support it
-> will make sense to rework this but until then we need this.
+Per my understanding, generally it is correct.
 
-No, it is not. It is smb5_init_seq, which is then being used for PM8150B
-and PM7250.
+You may take a look at tools/testing/radix-tree/maple.c and use mt_dump() to
+see how the tree changes.
 
-> 
-> Kind regards,
-> 
-> > 
-> >> +	{ .addr = SMB5_TYPE_C_MODE_CFG,
-> >> +	  .mask = SMB5_EN_TRY_SNK_BIT | SMB5_EN_SNK_ONLY_BIT,
-> >> +	  .val = SMB5_EN_TRY_SNK_BIT },
-> >>
-> > 
-> 
-> -- 
-> // Casey (she/her)
-> 
+>I am reading more to answer my own question.
+>
 
 -- 
-With best wishes
-Dmitry
+Wei Yang
+Help you, Help me
