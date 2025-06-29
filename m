@@ -1,45 +1,74 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4F63B7A8;
-	Sun, 29 Jun 2025 18:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6379821D581;
+	Sun, 29 Jun 2025 18:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751221050; cv=none; b=LDitt4Qq3VFj5VvMedlOPHnyMEGXevq8GtOlwfj2NTggjpn+T2kUKvqQo1S0FbMTLtGyvAkoScinoFxxcRABCnZi4dFGvjcWj7MUPHwYeF5Z7BoL32H7sFmeRDw0ZcoyQgobqNEGlhuW2I6lVk9vJBunLGg+uvSXDvvnA48YmHY=
+	t=1751221114; cv=none; b=bGDVem4AegKxCpZcJzpDSRikg6HPs2KId1jJDwtAzzPVwnKXQ4V7OFinX00McEkMgDP72rMfHJFj+HoFA6KIl7r8hDAOlphvg1jyDdGobwE4RnX4ZA9vcajrYWCnqSSTvunFqfygc+lhEDO+pMys7BAh2R46Vu8HzliI5FdL5I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751221050; c=relaxed/simple;
-	bh=airbvcQKAaxaongBL3lXNson0shXCvbkudpYCzoF1Ck=;
+	s=arc-20240116; t=1751221114; c=relaxed/simple;
+	bh=hDNJzFVoCghhGcCobsgEqFF18f/TSt1acJyPgIhd4NI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgqyxPtKS4lfybuY1Kyc/DMwhFFg8bVOHhUDV+WOfcY3WZmGTMFlylGXVCN89hWISJv9OhB3/nVuL1Km01EjEZQ04b/aiDEtm0pT00ErxLM7r8M85wn8V9EqtokVbf3bCTSk+dW++P8YQVBF3YWJkURlvrn5d7eQ8C1N81JHc0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EUutas/J; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fmux9zCJ/x3cd09CZBCS/KDwri2p71gD2ye0wHJ0csvdbsj9ArMzZBmrXgw/fN4agDkS1aHf/4YioSscxJ50uvW44SFRnJI520d7mnSOV46mZovNh9Sazj8XrgYx96jZxL2wS+frsXUtHiRM2EyJ3uy87SrunHdNhDRdOiQTEOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g/jxdmfT; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EUutas/J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=89j1991wXjYfJN8Z1RjyhY9TftJyvBHlmvVx7ZSjkgE=; b=EUutas/JbJdFVrSUe5dG9s5t5p
-	n5k2r/wFRJw0+57Rl+luOsnJQsXw4eJ8uvFPkapaa9bWwo9soKGwdlmuXKLV3Iuk7KlNzIWhCIHEE
-	C9wzKMTX8KoxQu8rAJjIIjFo8hd6s6feSvf9+7RFLmCGBuqeT8K+eKxipi8SpmhuQQrg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uVwae-00HIDF-Vh; Sun, 29 Jun 2025 20:17:20 +0200
-Date: Sun, 29 Jun 2025 20:17:20 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] net: dsa: mv88e6xxx: Use kcalloc()
-Message-ID: <362c9237-237c-4e81-81e6-c15761baacb4@lunn.ch>
-References: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
- <2f4fca4ff84950da71e007c9169f18a0272476f3.1751200453.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/jxdmfT"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6facba680a1so18169356d6.3;
+        Sun, 29 Jun 2025 11:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751221111; x=1751825911; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gigmSkGaUhJ85Fu8r7fwv9o+CpfPEe+hVaAI9Fme9go=;
+        b=g/jxdmfTBNscunY3i25Se5I/H83hHkBu8BMjLUDnT3n7bzhZ3TADGdCPm9AFahXcsM
+         6LPXG5cvshFG9d6uPwvg/UbQsmrehRVx2G+hvY4ULfZSgVTqCnvaMYXDnZ4lIZ95PIDs
+         EIQ0nz5aArKDIxIVoOo+w/+qMq0+0kSI+BAu8ewgEaS1LWKYntlvfnNPI3N+/H9Be94F
+         0XRQg+NGCOBmveJ5Hbt2YIKCF+JdBxxdlVFS4BWHonmxwrZWdlK5Z6ZEsqKFhWIF7hgs
+         LnG/ujNxK5DFy+nTvkMAIISMQGfGbFqn1hL5VDjroz898WJXob/g/4CPZq14+HONqLdn
+         heaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751221111; x=1751825911;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gigmSkGaUhJ85Fu8r7fwv9o+CpfPEe+hVaAI9Fme9go=;
+        b=tIyMjnM1cmfIGn1ERXPowhLAtr48GEXL1RYx5QfobgL8K3ksTyKoKhNzGnvllalylZ
+         ontY9rxJhUSUbTTCojrMFa5am/rtz5n4G6CPt7En7lH+7q4iVQf6bqbJXDkp9vDQhbWV
+         4lbtQ52rT8t/A0JAJ2o/WTTOAf4YajjXPSaZgGuOMpS8/v+tpUDayA6gaC+TgvtvouIn
+         LNmH9ry5I3EIMo8XSVqnKsQY7yUIsoYmEcOCh6ffW30W/fe1yv/l0od6cn0eVXxgb52I
+         cAW5Oo7lLHMUqytVB1FScq2ocHVzFwW+IkPyQi94LWQzz16ln7NvGpra1JJMoRNz0Mgv
+         QrOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjnAZx+j3eSO3mqGUdCotU2fkToYgLazscUzVd9dKvSx42Mpvu8iZSBfa3jEpuqWEKRrCJW2aJwgMQl2PU@vger.kernel.org, AJvYcCXNYGBcUMTdWD+GJdYYTnV2qsxiy1TY9Tn9RcF/oJDTZmJIxiMibWCHhYwSqAXBcQTlYKXJnMCZiJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ/fwu6NqOLQ/s/gMd4Kx5y2hX2A1ylCHyTcsObGP6oU0eS5Yc
+	DZoFVEnnqasZPemt4AKh13LksugZlxiwkCdzc/uiPW3j/6FpaAcnXlpuZXKKKgK3
+X-Gm-Gg: ASbGncsFpUs5ps7sKRhyaAqH9kSLyxp6b+fPSiD/u7ViIIg+6PoX9E67AHkfc8lmSGy
+	PTVGAAzj535c4iGRqw/SlC2/VLdm7AC71xldihU4yIG2ZIaBGVSdwRq0zPi0FtV8Y/nFPPXNsru
+	tZG1RSXeYDdfLj4sBr5YA1xerHZc9ujBC54eLsZ6NvK1MknqfssuLURqZT6JRLcm/x//T5mgr80
+	pyVQX5iGzRiYw/h16mQ+g9bBfmGosACuGC6k8Ys5JMmdoDBmxvw0Tk9c+6DLLSzKFUsHzlPYtW4
+	gPIXH4pKAxb8lj1H3Gb8qh1BGvnjACc60pHnjGWQJX48UnfAXOOnw96tfL68vq14pUHSiA==
+X-Google-Smtp-Source: AGHT+IEYCmP3hmaDpRZdUL30rMm6sXCYzwY9x9v2L6zw1uECE+JMsQisIP4wfqNshmnbLQtsRwqqGg==
+X-Received: by 2002:ad4:5d6b:0:b0:6fa:9f9b:8df0 with SMTP id 6a1803df08f44-7001378c6bemr136641516d6.20.1751221111142;
+        Sun, 29 Jun 2025 11:18:31 -0700 (PDT)
+Received: from localhost ([2804:30c:b15:b200:425a:de22:1d7f:2d4b])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fd772e730csm54529856d6.60.2025.06.29.11.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 11:18:30 -0700 (PDT)
+Date: Sun, 29 Jun 2025 15:20:29 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7091r5: make ad7091r5_init_info const
+Message-ID: <aGGD7a_Jh2Cd_TQq@debian-BULLSEYE-live-builder-AMD64>
+References: <20250628-iio-const-data-3-v1-1-13d3f0af5f3f@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,26 +77,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f4fca4ff84950da71e007c9169f18a0272476f3.1751200453.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250628-iio-const-data-3-v1-1-13d3f0af5f3f@baylibre.com>
 
-On Sun, Jun 29, 2025 at 02:35:50PM +0200, Christophe JAILLET wrote:
-> Use kcalloc() instead of hand writing it. This is less verbose.
+On 06/28, David Lechner wrote:
+> Add const qualifier to struct ad7091r_init_info ad7091r5_init_info. This
+> is read-only data so it can be made const.
 > 
-> Also move the initialization of 'count' to save some LoC.
-> 
-> On a x86_64, with allmodconfig, as an example:
-> Before:
-> ======
->    text	   data	    bss	    dec	    hex	filename
->   18652	   5920	     64	  24636	   603c	drivers/net/dsa/mv88e6xxx/devlink.o
-> 
-> After:
-> =====
->    text	   data	    bss	    dec	    hex	filename
->   18498	   5920	     64	  24482	   5fa2	drivers/net/dsa/mv88e6xxx/devlink.o
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+Acked-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
