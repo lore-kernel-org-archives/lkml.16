@@ -1,161 +1,114 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E8F288D6;
-	Sun, 29 Jun 2025 10:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB261F92A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 10:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751193527; cv=none; b=BQRV0Zc4I/ga/OmCeTlUafiNRgfwDMxFfjeJcGdByQc3DliCDNsKOn5qQQEvXDa5xYGe3gte/KnafkCaWyYeTirwzlHIO7oekj9yoR36ZgzMMsb9dsennp1b/HO5lp62ZMFr3wiPJgdARJNRrde9Qq/YePs1W1+cZ98/HpQnXWQ=
+	t=1751194274; cv=none; b=FjfsM3kdUwEMu89sNQznK+82jRP1TE5/xaKTpZowwoNk931BX6l67MTHGGMJ7TzgUGh0dZaRvLkers9aDBGv8of+pGwGRixu9BayruEu6QEojsHjMEH6Hi2xQiGSmyESp85ieAqKYSpSQJbRyBCrM2t6+M7pOaP3R1D0oWFqwCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751193527; c=relaxed/simple;
-	bh=/kdnT3P6nL3BX71tLYfTuMKQKEYKcVgHqLHrifxIBbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PkgXo/ZC0VGO4/Exuq4wwsK/zeXL9stOj3773WByFJWFsR/OC1DHZOvbq8axSAKWWv9Kq+ZgJ86l1fJhuydC+0ojpaPX+zouT+Zbp2vWJnycBn4LhjKMy0xZuyDvVGbutqpLQMIEFBgQB8dxNJvKG7tknoNfz7VXi7SZWWaDdbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/adjtES; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/adjtES"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a53359dea5so629645f8f.0;
-        Sun, 29 Jun 2025 03:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751193522; x=1751798322; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t1gaJEPn6+FMoWhU8f8CNz5ykYo4nCgXjpfeshekYKU=;
-        b=V/adjtESBPabm3G0Yh4C7gwNfycTj7vxahJbDao/8ml/2rn9CjA9TLGUrSKOfd40Wl
-         op7/GchzTOLvTnDY//WM69dJxeUw9BCG55EvqgSJw+Q5MwZ6cOc3iFHti/29/Y8cpRjr
-         SA/BqIuHTx2E4SSK4BTnrXHAC5dywM+sp0kpUHxM+nrPiDouim7ERqBhk05ctZa6VHIh
-         DPCUJo2btER3NAwaFXzRA1/TdE0xtc/UIUgT3w7zl5yitoyfUynBTG3wX8MhJ0OeWhoE
-         7IZZisD4oQ9Ryzoo4goKKEC4hakmxeFuSSo2edB/uCT31rzBdfqbS3Esv3LRsNYNUxbX
-         V12g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751193522; x=1751798322;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t1gaJEPn6+FMoWhU8f8CNz5ykYo4nCgXjpfeshekYKU=;
-        b=S7Lm0P7HKPVUBFTyjhrySzAXRYAFdjRCyRBQIwfMBpu62j32HPWa1EB/Yf1jxt+rCp
-         m5PZP2pbGLAhCa/+/9ti3DCWjaabc5iWWjKJp5GK9epg+0i+MMWymkmUDidOamZYE3uy
-         i9AEFTExjcwx0PSOO+06G2C/lA7RIqyg22ueD8ggfNWfp+ftLUZxqoNh0TgkA2J3r8vB
-         k/UACcsEY0usGGiPCslGPRvmFbXmEaDfUEH2GuINSduUhgw2GTvMtSB1Fg9wihRjXdRN
-         i0U7/TRymOBwuo1r7l4TWdS5ez0cYrqMpPIqPHYP4lgTpHEv5+G7M3R95JIjG+uLWD5r
-         4Dow==
-X-Forwarded-Encrypted: i=1; AJvYcCWd/03i4sHhWd9oFTEdOIyxXVnsmckka9oPVrz8hJkpgBanxFEvlUspJsTm/BuLJGjPiwFSwAsvDYsl3gXb@vger.kernel.org, AJvYcCXphVM8WdzsOpMXX8yoEepu3fspyzCh+V2HMgZRMqmYEIVImh8DHLMy9VW9vIOcUEORalcIcKAeOENg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9hyl56WqmqlxNTqU+En1YL+fWsJaVn0W0FYneT2pPii5NihP
-	RWdtY9FUruiVyUvJlOYPuPhV83t1Nfu4zLOuHREvBVZwSwIAfCkoFhoo
-X-Gm-Gg: ASbGncsI1QFmbGry+E5O4ebGKjHdGpcInyaxzV5HXk2Lwo0gfQuaDJqy+oV11zS34Et
-	ejHRKUwwhRqOchuNicMGA5tBcU+ob0TDj755PwKD26RgKx58W43JHOU1AVjCOfIER8Zm+tti8CH
-	cuThmgG598ysos4a0zglZk2VGjfjcvlKFY+qe7QmWsGXcarq4dp+RZLj2pnjewFRnYcfiEYB52Z
-	tw2NE4JUSQACaiPw1XkBsVbjRWQwhN2sX4xAJwG6WHqTCO4Z+rQ3w51wzSMaBQvG3ZrhltGqNoa
-	xiWfq9uPutQ9QTKeVm5qKem2UOtn9IXXq5UyhB9wMD9kAmSZNHP61duWOIdsEN9CsFIBhtljMVs
-	8pjZMXsTmPeJtwbwnXg==
-X-Google-Smtp-Source: AGHT+IEdh0HApkzZdnPXw3HFe7Fd77TFNlHLJgOlIBuKyKHExXHiW7W73K/qKPWuNfigD6vS5J8l8g==
-X-Received: by 2002:a05:6000:1786:b0:3a4:dc93:1e87 with SMTP id ffacd0b85a97d-3a8f577fdf7mr8560588f8f.1.1751193522433;
-        Sun, 29 Jun 2025 03:38:42 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fab15sm7550537f8f.33.2025.06.29.03.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 03:38:42 -0700 (PDT)
-Date: Sun, 29 Jun 2025 11:38:40 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: cp0613@linux.alibaba.com
-Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, arnd@arndb.de,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux@rasmusvillemoes.dk,
- palmer@dabbelt.com, paul.walmsley@sifive.com, yury.norov@gmail.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
- extension
-Message-ID: <20250629113840.2f319956@pumpkin>
-In-Reply-To: <20250628120816.1679-1-cp0613@linux.alibaba.com>
-References: <20250625170234.29605eed@pumpkin>
-	<20250628120816.1679-1-cp0613@linux.alibaba.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1751194274; c=relaxed/simple;
+	bh=rUYSYfiO5NWyG6GJ6BqRO9d3+wlDxgQEDdY4uttUl9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=l98QuoL+MLU8fT2k34uCosJugbdP0DrVFXQte6pxC5TZCUP2L8RpPSvemBPbnVC4fkhoRKMw1Se8X1tgFwgf1BPIVvW1A5HAxumfwzyLkrSLR+8SIh+N9lGrmt41AWtpqzzIy9MpFLg6LA3rsvc9GN878ZHARe+DdJhY06tiF74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55TAp25C053061;
+	Sun, 29 Jun 2025 19:51:02 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55TAp1mT053058
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Sun, 29 Jun 2025 19:51:01 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <ed888189-dad4-47e1-bfc8-4f2213eda32d@I-love.SAKURA.ne.jp>
+Date: Sun, 29 Jun 2025 19:51:00 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [perf?] WARNING in perf_pending_task
+To: Baisheng Gao <baisheng.gao@unisoc.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
+Content-Language: en-US
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, irogers@google.com,
+        jolsa@kernel.org, kan.liang@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav201.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Sat, 28 Jun 2025 20:08:16 +0800
-cp0613@linux.alibaba.com wrote:
+Hello.
 
-> On Wed, 25 Jun 2025 17:02:34 +0100, david.laight.linux@gmail.com wrote:
-> 
-> > Is it even a gain in the zbb case?
-> > The "rorw" is only ever going to help full word rotates.
-> > Here you might as well do ((word << 8 | word) >> shift).
-> > 
-> > For "rol8" you'd need ((word << 24 | word) 'rol' shift).
-> > I still bet the generic code is faster (but see below).
-> > 
-> > Same for 16bit rotates.
-> > 
-> > Actually the generic version is (probably) horrid for everything except x86.
-> > See https://www.godbolt.org/z/xTxYj57To  
-> 
-> Thanks for your suggestion, this website is very inspiring. According to the
-> results, the generic version is indeed the most friendly to x86. I think this
-> is also a reason why other architectures should be optimized. Take the riscv64
-> ror32 implementation as an example, compare the number of assembly instructions
-> of the following two functions:
-> ```
-> u32 zbb_opt_ror32(u32 word, unsigned int shift)
-> {
-> 	asm volatile(
-> 		".option push\n"
-> 		".option arch,+zbb\n"
-> 		"rorw %0, %1, %2\n"
-> 		".option pop\n"
-> 		: "=r" (word) : "r" (word), "r" (shift) :);
-> 
-> 	return word;
-> }
-> 
-> u16 generic_ror32(u16 word, unsigned int shift)
-> {
-> 	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-> }
-> ```
-> Their disassembly is:
-> ```
-> zbb_opt_ror32:
-> <+0>:     addi    sp,sp,-16
-> <+2>:     sd      s0,0(sp)
-> <+4>:     sd      ra,8(sp)
-> <+6>:     addi    s0,sp,16
-> <+8>:     .insn   4, 0x60b5553b
-> <+12>:    ld      ra,8(sp)
-> <+14>:    ld      s0,0(sp)
-> <+16>:    sext.w  a0,a0
-> <+18>:    addi    sp,sp,16
-> <+20>:    ret
-> 
-> generic_ror32:
-> <+0>:     addi    sp,sp,-16
-> <+2>:     andi    a1,a1,31
-> <+4>:     sd      s0,0(sp)
-> <+6>:     sd      ra,8(sp)
-> <+8>:     addi    s0,sp,16
-> <+10>:    negw    a5,a1
-> <+14>:    sllw    a5,a0,a5
-> <+18>:    ld      ra,8(sp)
-> <+20>:    ld      s0,0(sp)
-> <+22>:    srlw    a0,a0,a1
-> <+26>:    or      a0,a0,a5
-> <+28>:    slli    a0,a0,0x30
-> <+30>:    srli    a0,a0,0x30
-> <+32>:    addi    sp,sp,16
-> <+34>:    ret
-> ```
-> It can be found that the zbb optimized implementation uses fewer instructions,
-> even for 16-bit and 8-bit data.
+I think that the cause of this problem is commit 4f6fc7821283 ("perf: Fix sample vs do_exit()"), for
+syzbot found this problem in 5.15.186 and 6.1.142 where that was the only commit in kernel/events/ area
+which has been backported between v5.15.185...v5.15.186 and v6.1.141...v6.1.142 .
 
-Far too many register spills to stack.
-I think you've forgotten to specify -O2
+Please have a look on this change. Maybe we need to swap WARN_ON_ONCE() and PF_EXITING checks?
 
-	David
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1f746469fda5..5a3a1331311f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7204,18 +7204,18 @@ void perf_event_wakeup(struct perf_event *event)
+ static void perf_sigtrap(struct perf_event *event)
+ {
+ 	/*
+-	 * We'd expect this to only occur if the irq_work is delayed and either
+-	 * ctx->task or current has changed in the meantime. This can be the
+-	 * case on architectures that do not implement arch_irq_work_raise().
++	 * Both perf_pending_task() and perf_pending_irq() can race with the
++	 * task exiting.
+ 	 */
+-	if (WARN_ON_ONCE(event->ctx->task != current))
++	if (current->flags & PF_EXITING)
+ 		return;
+ 
+ 	/*
+-	 * Both perf_pending_task() and perf_pending_irq() can race with the
+-	 * task exiting.
++	 * We'd expect this to only occur if the irq_work is delayed and either
++	 * ctx->task or current has changed in the meantime. This can be the
++	 * case on architectures that do not implement arch_irq_work_raise().
+ 	 */
+-	if (current->flags & PF_EXITING)
++	if (WARN_ON_ONCE(event->ctx->task != current))
+ 		return;
+ 
+ 	send_sig_perf((void __user *)event->pending_addr,
+
+On 2025/06/25 4:01, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    b67ec639010f Merge tag 'i2c-for-6.16-rc3' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17715b0c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f15b0c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1692ab0c580000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b67ec639.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/3bcb2b262d02/vmlinux-b67ec639.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/f5d4477f1e2e/bzImage-b67ec639.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com
