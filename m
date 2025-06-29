@@ -1,113 +1,123 @@
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DC62AD1C;
-	Sun, 29 Jun 2025 12:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261A22AD1C;
+	Sun, 29 Jun 2025 12:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751201222; cv=none; b=rMd/zwQc0iTZbrCtBANDbOWcY4TN3aBNEZwwZZ6oxRind2mhKOMOrKKFGY3BMdwHWve/uoAVDrHby1NOdivwm2Ws29ERK7eKT4lHySG4jL29iv+rFyqm0/OWsikHMEetb0AOAMPYXq+8WB5S67+2L2gojc3jHOZET8Tg8xRteIM=
+	t=1751201267; cv=none; b=UzA32dal3cnCpHkZQIAWtVIMHzOFbUpBhgaTLFBzn3BJvmVawqfsxw66nmR9D7f5TId8i1r21V9Cm+jjRjN1HY0KY/RQmlu8hNks8U/0DzexcjfYLktPAtw/phKi/8xBONgJ/VBirqLPt4TMutEl3jqT5JTxc0pwTfDrKAzFtxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751201222; c=relaxed/simple;
-	bh=Ip7hnQPOpGF9wXLlvKTRbOv0ZV/zi9h56UqKTQhsm9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XGOQEp4Y3JGzGlQDmrnww+Vdc75+D/CQR0VRvm4L+fyKqpMMsSQZckWJ4/QbI+wAk7HVpGbiInrKa4AZqDI3pG0SpzsgGrTwFZUfNNyHm05IL956Idw3U+Ff3LTdDiaG+oLm/SM+iFK+3dc/st4a2ZzXrY7LyHeo4vT43ksQ1lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fuioOJEB; arc=none smtp.client-ip=80.12.242.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1751201267; c=relaxed/simple;
+	bh=VDLyD7PbMXd2/C5aSn5E0/3gCiOxVunJAWwm6pytKHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LRKezCHf7bEYKfwL0tsAwJMlQFIu3WRy/6s/nmO+q8MnVtJ7n+ysFGycPgfWtFvFNWIsB7GTuxrLsd624436ee/pfS0TECIhLVxIovve20R2p+O1erKjCQAiwSze6Aq5C0VKUlvNthxsb9dYI+AGLxa6B7lSM/4XqSjfpSLlmns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vcr/NMPY; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fuioOJEB"
-Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id VrHvu4ESL84Z8VrI6uRtOD; Sun, 29 Jun 2025 14:37:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751200671;
-	bh=U2KNLOTVqBb7xYxBtu5LEwvC5LnUw+sbt8wZBMJoIcA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=fuioOJEBsQCPcmq+MwQ6AEShAuXOPl3NcGoVlDv4s7ImHWrmTjLrLSPc1ZXF2yDu3
-	 9sajVftQDEdNAik8Y3k0BXIVD82Cnk55/2QaSQ71KtX2ejwFzMd4AB4Sp8LxgA/Uqp
-	 a3IgLUVyTEaYj7kLxo0tUuTv4N8ZazjpqFrjQ1IOIKeGx6Ch5O6UuIYSwXx/0+XLkf
-	 7SJj2MgiYxSqRFXCxYNO7p54KztMJ/S3sJsU9U3tAXvBaYYVJ2Qw8ORrUE83nQRcKS
-	 EGBRLexSqCGsQ58h32S9cxnXbX3I41ovT2gNj9ron0zEhfe44ir5MSLNorKICf58Yv
-	 HU1F7dEs5GXOw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 29 Jun 2025 14:37:51 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next 2/2] net: dsa: mv88e6xxx: Use kcalloc()
-Date: Sun, 29 Jun 2025 14:35:50 +0200
-Message-ID: <2f4fca4ff84950da71e007c9169f18a0272476f3.1751200453.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
-References: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vcr/NMPY"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6facc3b9559so19183596d6.0;
+        Sun, 29 Jun 2025 05:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751201265; x=1751806065; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3qT9O4ctgmI4E+K04BSgVRvvO5rn1N9tEpioEcUF5MA=;
+        b=Vcr/NMPY8Gz1XGIqCigstlOfWPQkEBPZd+Rum++2f6FPKQiEjMLLrMkz+5VJ7K5rdW
+         uVH+ekgCOiEuxB9Dz14MI8P4XjJE8mgIUpuGJAtfXzgKdISlEvhIwoksG5CQrNMB1gr3
+         9ZG10nMe5EQyb7w4SHyDUSxEm90dH1mDEhaXodpSNjFWH/tDNSJ0GjCLcEF2CHXpTpla
+         XhwQ+jWo+Jw9k16tOviPYOxpOZGBj94BvHwGYGXdFPBzz1wk7zNP0l9OaJyWFvTpt5VB
+         IOPgs/uaZtiCJ3w3LhhkyPtcke+mUhieCtu59LHkxJKFvcvBmtRCTrO53C9fbK+CP+W/
+         vuyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751201265; x=1751806065;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3qT9O4ctgmI4E+K04BSgVRvvO5rn1N9tEpioEcUF5MA=;
+        b=Qf99wioaYeTcLz99HcskD1imxUyDB/UIlkZa7RttzG5huDBQuh27bJqgWCDn23IjkH
+         hg1OFL9UU1OKDDbTz8RWhqf9LDZLwUG0blLVZVtl8AUYw+9ak7jxieRtuKMARezg9MoU
+         LSy083DJE7ekJzxPGhuL3WapZccX1zrc8Xgd5+AKYppLcBwxrtESXW55AwztTNtt1wOB
+         xqUYyCyzjRrfBLzIB3Q5pFlkUc1Ut+Uk+d5TJBLXRrN8Qo/RjnOc2sxKtrA6YzsGc8XS
+         Xgo1H9cS66As/2PXXwd2Ax8mx2xaPwqeZncVxhzdEvPMinY+yBiL/jhm8rn6deqUBlx+
+         D1mA==
+X-Forwarded-Encrypted: i=1; AJvYcCVROF5g/HL0cKDeGA4PoQmtYUWsKsfjCCTSmrF9+fI+1Ug5LnW5qYN8WnoBSPzKnJnQyo3OLdohWbSi@vger.kernel.org, AJvYcCXXOM0ovyyLaI/rYYUqP3L/fn2WPNWwtf2bE+FCyuExo3B7OxEQnPTqiPO+CeCENUgJt0XBWWhEvi17bZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjaW4NF2tCZBwYQ3x6OT/rpDzWW80LNSmwHEfv2hhf/saGGuTt
+	OWLJl8xKqfL+iWJTdPpD5G0YzlRUuCjP9jw/p2EvG0QFVbMZYJ/H8GlQ
+X-Gm-Gg: ASbGnctyrR9DNf6aGjZJAR1LxFfhPi3n5D7GwcgzMryFb6hYc+JXImWsQl2YXg+1lCL
+	nA6M1YAcC+U7cLbvThb4wKDJMCOL7zVm2T3oL5gGl80g3wwtnTphXz7YcwbwNMDBDPp6W3yvngg
+	pkrCwAjgFvTqgmx6mEJ2TLEfFNFEMkg6fjZ0YjIl59HtyqxacNOUr0/sQu/BerCMCj1LDKN0dXa
+	93Y9ID6U8HXVbviFLeprN6CrZe5MAytQ/zeKscwSxycvzXDnanXH/OotAv6VIXJbdhCy8bA7UW2
+	n7fRdffmgy/nzMDeNzlz6/LY3rmfZU4U4PzzouWXAE90fr45EswDNjrMpTdJ
+X-Google-Smtp-Source: AGHT+IFcnXAwt3wLBy9B+NJBG4yLeL8rwe64avI9teL+o/I8vjzQhNTT6+gyyIUOBrLOsm/ff7s0DQ==
+X-Received: by 2002:a05:6214:428d:b0:6fa:cd55:3823 with SMTP id 6a1803df08f44-7000214f607mr153311086d6.26.1751201264933;
+        Sun, 29 Jun 2025 05:47:44 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:24f4::dead:c001])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44323bba2sm430549085a.109.2025.06.29.05.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 05:47:44 -0700 (PDT)
+Date: Sun, 29 Jun 2025 09:47:38 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/4] PCI: rockchip: Improve driver quality
+Message-ID: <cover.1751200382.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Use kcalloc() instead of hand writing it. This is less verbose.
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and after feedback from
+community they reached more polished state.
 
-Also move the initialization of 'count' to save some LoC.
+This will ensure maximum chance of retraining to 5.0GT/s, on all four
+lanes and fix async strobe TEST_WRITE disablement. On top of this,
+standard PCIe defines are now used to reference registers from offset
+at Capabilities Register.
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  18652	   5920	     64	  24636	   603c	drivers/net/dsa/mv88e6xxx/devlink.o
+Unfortunately, it seems Rockchip-IP PCIe is unable to handle 16-bit
+register writes and there's risk of corrupting state of RW1C registers,
+an issue raised by Bjorn Helgaas. There's little I could do to fix that,
+so on this issue the situation remains the same.
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  18498	   5920	     64	  24482	   5fa2	drivers/net/dsa/mv88e6xxx/devlink.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-Compile tested only
----
- drivers/net/dsa/mv88e6xxx/devlink.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+V6 -> V7: drop RFC tag as per Heiko Stuebner's reminder, update cover
+letter
+V5 -> V6: reflow to 75 cols, use 5.0GTs instead of Gen2 nomenclature,
+clarify strobe write adjustment and remove PHY_CFG_RD_MASK
+V4 -> V5: fix build failure, reflow commit messages and also convert
+registers for EP operation, all suggested by Ilpo
+V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
+also adjust commit titles
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
 
-diff --git a/drivers/net/dsa/mv88e6xxx/devlink.c b/drivers/net/dsa/mv88e6xxx/devlink.c
-index aec652e33fc1..da69e0b85879 100644
---- a/drivers/net/dsa/mv88e6xxx/devlink.c
-+++ b/drivers/net/dsa/mv88e6xxx/devlink.c
-@@ -376,19 +376,14 @@ static int mv88e6xxx_region_atu_snapshot(struct devlink *dl,
- 	struct dsa_switch *ds = dsa_devlink_to_ds(dl);
- 	struct mv88e6xxx_devlink_atu_entry *table;
- 	struct mv88e6xxx_chip *chip = ds->priv;
--	int fid = -1, err = 0, count;
-+	int fid = -1, err = 0, count = 0;
- 
--	table = kmalloc_array(mv88e6xxx_num_databases(chip),
--			      sizeof(struct mv88e6xxx_devlink_atu_entry),
--			      GFP_KERNEL);
-+	table = kcalloc(mv88e6xxx_num_databases(chip),
-+			sizeof(struct mv88e6xxx_devlink_atu_entry),
-+			GFP_KERNEL);
- 	if (!table)
- 		return -ENOMEM;
- 
--	memset(table, 0, mv88e6xxx_num_databases(chip) *
--	       sizeof(struct mv88e6xxx_devlink_atu_entry));
--
--	count = 0;
--
- 	mv88e6xxx_reg_lock(chip);
- 
- 	while (1) {
+Geraldo Nascimento (4):
+  PCI: rockchip: Use standard PCIe defines
+  PCI: rockchip: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Enable all four lanes if required
+  phy: rockchip-pcie: Properly disable TEST_WRITE strobe signal
+
+ drivers/pci/controller/pcie-rockchip-ep.c   |  4 +-
+ drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip.h      | 12 +-----
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 15 +++----
+ 4 files changed, 36 insertions(+), 43 deletions(-)
+
 -- 
-2.50.0
+2.49.0
 
