@@ -1,116 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C883C1E412A
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C948460
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751209011; cv=none; b=HwR+ANVDboaAnOW6q0Y258kcpYhK9YiWCgarQPBoHv2+H5X04xXRHUWXCSrI63I0byuMQqe2aIDnbYSpXMsNvQ8LDX0w9kMD71RyVGkT4rdYayqAixQBnx5QvI9vmXziEYVspPXSJKUtuUHwCW0+ZywPF1/rIqEIf/3mgU/TlQ0=
+	t=1751209198; cv=none; b=mIrKMxkWFVSyDjbNnmog02k9ZGPm79w485XK2iNjTq0DSCphO6qIuvctMMShSha9G3V1q+eLRn0rkxPFeUmFEQfEAAqOhIcltS/jZMSYNBK5l7Sw8OuURPQ7qmLMI9ZQyPAc7CD2Pxe1IvOuNawTndudCpYwSjAWXTd9j7d1+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751209011; c=relaxed/simple;
-	bh=J316jFgbpq5YXKrNYAt7lgGdY1nIB8PU/oR+sY4DAfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MdC+l+Jc72ZHQI/AmW1OeDcenxH6X/1KYWtEJrmRLrZRzqPwKsdmgnMwu32/Fiw8qGL0wRr2oGD3lRuMHf+z8K3LmQMz9CJsGEEZJuMe3+lM82b5FKA6Pri3XhVCC1hmZBMACG9MekbE/ca+t4K08sPKiTXTewCoJFzjmhEi1DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KQZvLpk3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751209198; c=relaxed/simple;
+	bh=WktKykkWoV7ZuNQX5dd6BTNbB/RnWlKAl/D4+G37SHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a3DaZsVUJoT3mBNuZeWAugMUvMsQJHlhRu70lmY1T72l3FbS8OIXon8RvkqBmI24oIcJd4DpRYfiJkT5FV3AAAnfiGi9yqCD6XtBmFGmizP6OZY1p4FBfDhQisLUj91eQ1HVDCDUV94B4N1zRPON4WpSfAEB2ZVKaujE8f4J8XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g26bBxIT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQZvLpk3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751209008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=23nBsXGE98DROnysLRUCmBBmFEY55o2S0OpjTv0kX+I=;
-	b=KQZvLpk3SY4c7Xy3YHo1Qngtcm+c7NinmPvr9RogHwuDS3Oec+TuyfyGcIXA6O7ZU9p1BD
-	cM89Nh3J9aIyxaD5ynI9LGQx92CLn90RZwavSmdKheacMmo2NK47RE6nMJq32ZXt5VVPNl
-	wgRVPzHc0mXunGBtFaKHHYgdxRc0DsE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-288-sm7jt_R6OgWOc_kXjJ-g6Q-1; Sun, 29 Jun 2025 10:56:47 -0400
-X-MC-Unique: sm7jt_R6OgWOc_kXjJ-g6Q-1
-X-Mimecast-MFC-AGG-ID: sm7jt_R6OgWOc_kXjJ-g6Q_1751209006
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450db029f2aso14976745e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:56:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g26bBxIT"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TEuswT015174
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:59:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=N1juvr8EOI9+BY9a0hzHHhwy
+	NzeM2f/6fhJAfb0S6+Y=; b=g26bBxIT/uydvSAmRIAOlqeS1ZdYN1d7K6Ck7dNU
+	MMcpyIVprMrat5oGu7eMVCJM1zmOSU4aCtAo/qZiWbKeMGtw4FSrxf1gcZspc4ak
+	V74+5GAw8mVEzQsKHysFQsW6QIL3ysN2+Roc0R1IPZayOn0zoMhj0IsbolQOZPa2
+	D/BS+6rxJfDvaMDdRMXoDxF5E6Q2a0nru05j30F/ezYWfliqZsMDvYpvK4Nq3imB
+	5AbOEk3OcMekzkfpz9UHidJBCv2jmkOtvoDWBdYJaEYLHt93iu8qLJpJ/loLOQ5O
+	/Rh2sUC/WCj8RjyiY/fI/vGiEBWX5KM1Us2nvWkF9zkx2Q==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9jpt6tb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:59:56 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d38c5c3130so247010285a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:59:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751209006; x=1751813806;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=23nBsXGE98DROnysLRUCmBBmFEY55o2S0OpjTv0kX+I=;
-        b=nUNfO+qUQRvKDH/q5XouGrr2KLmMHGCflYTplV5z3fziTtPdF1+VW6wAEOkhdY1rXi
-         V2rpvCrLeDXCxVvcoWEIZL/Kg9TLhXvkANKZ7EUlFIEgDeqcZ7paqX0lJJ3KGRxpCOyT
-         o+e4x4J5BfTOXPvOlOdRJv2vrEavnp7ecit9azQROnrE9FiLWYPT2bQQk/2dU0Rvtp+v
-         UeIiVj10E4fWWKltEUPOc8QEocGd7/ouCTLsyVDGlXyuZnh1d+P3QjkEIEsLaDRGUljk
-         NfeCJYA+NJ/oDkPN+ucOi9b9KLcoDQG/rMMpgTynsSggS0MLsnpJMHgbzcEVRJ73UzJt
-         3f4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXMs3HNvJaitBx6wBDfO62VyrQ46Xjrgae2+6mx7OuLf+kM/vfGxgbULfU4eEYWZl3t5W6v9Es0k9By2vA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0w3tNbFrw6GqikLgUP5A1J/js1IIsYsq074Bbbtub6iolF9hw
-	WSjXF3A2sMPDP4kDyWXod9UcdLNM5znuVpg18oBhgfRab1hHyorWStPpTUwBJACS71LTeNmboaK
-	GLHvNX99HTAVuTVSFPC0l/yAhP2i0TDnBdaMHpNpx+fxnP07XANbZcQZ5XJvDV1HbMg==
-X-Gm-Gg: ASbGncsfjfTc3nLtz09hEXZErEl7F35Ttqbpqe/p6kPHTS7TElptWUDYHv4CcXkVdK2
-	uxrbFxGwAiFvXXTz+c3gQCW/TQVty+mPsUFBHnhy2GG2z9UVVXIFnxN659/aoXT/b+4c+sMYH3t
-	mKBSHTyeZQFq+BEEEP5bKGBj17u4cYwd6tYRW3E4y/9OB+yyZV5aIlnB1+qZIAjiFljgWNzqBj4
-	wfmyjmj0V6TRxcKrOMM1Z2+cDvE7x78V9RKCMmc6DYKCr4x9XI1rwHbW1R5MvOPcplHSxZUAEXg
-	7L8fmWb8jsWjP0mgdrfYyHzFsVUrIoPEhcroKAMQ74abEVtxnyJLdXp7jK9oIw==
-X-Received: by 2002:a05:600c:1ca0:b0:440:6a37:be0d with SMTP id 5b1f17b1804b1-45390bfd05fmr100453935e9.15.1751209005844;
-        Sun, 29 Jun 2025 07:56:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzwxSKog3DMgujlctJnFDZzoxRMzCEAFRJd/Z3o45oYA0FJvn/qBy7zWWf7etH266Pm4C3Zw==
-X-Received: by 2002:a05:600c:1ca0:b0:440:6a37:be0d with SMTP id 5b1f17b1804b1-45390bfd05fmr100453805e9.15.1751209005387;
-        Sun, 29 Jun 2025 07:56:45 -0700 (PDT)
-Received: from ?IPV6:2a00:79c0:638:3500:abf:b8ff:feee:998b? ([2a00:79c0:638:3500:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a6716sm107501365e9.11.2025.06.29.07.56.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 07:56:44 -0700 (PDT)
-Message-ID: <da066412-9514-4475-9602-0317efa458e3@redhat.com>
-Date: Sun, 29 Jun 2025 16:56:44 +0200
+        d=1e100.net; s=20230601; t=1751209195; x=1751813995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N1juvr8EOI9+BY9a0hzHHhwyNzeM2f/6fhJAfb0S6+Y=;
+        b=t/e8k+dq88gXNuJZeCDD8HYcUkIZsUDhCOJ9x/6wENMtudD/ndinmQIH21su1mOhwA
+         X12Ks7TxM3xMRLsWHqa9qAMNu+whbCMpDVK++UKGR5IN8Z5t1nSXFRgH1LmXI/xnoSaJ
+         vYnrD2j5aCO7EoSoG550aFu4ObhCMjU/wVBkqAjS0wPBN1LSW6MRCeQYB0ZE32SPwToS
+         r4alaBDIZBCv+nTaiP7Yef8xzcVFwSzISdBOgkhPmLCHqcybW3OqXF3nSGGDhyatM6jT
+         xik+PRTOa2zdmT0LL4XCtRN+HG2Gu03WJ18FDv/LLOlW/RVj8vP/vnPOkqMUz5huq1Fj
+         dFPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeDkNe+BscrJczx0ipEL73iKkJnZWT6E+lKx75kKVltl58JqZAgk1k3b9cT4rVxDi6+dLYzmlN80kMMFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRmCA200gjjrBlfsgsOSq3syA3YjuewzDGkMr55jYEGByDczSZ
+	KJo7KVbWwaG6ZmPYbk9uzOAKJOmI7/9uOIb58OVbYzk0J7ffGhmONiRdoSR09eEh0YXHKknBrfM
+	OP7YgUIW/K+U6bRVVBtl3AAeICc6W1zTq8xoUmAEDLPM4yRmkYcvETJhBgLbtsqA/e+g=
+X-Gm-Gg: ASbGncu2jaYnxqmgcqUSZ3KpSi2O/l5lHvq6UDxKbLw7Y5fgRgXWAt9CzYCaHWgkL5K
+	5+uuHlE0+mNsptrHSVJDq6bkgWPIoeqBXZb2zFH0A/EE3zXdYJ/VXbiVH1VYyf8Sf3fP6QSQjn0
+	CuEMEehHZ9huEc4NWeg8J0VPDBpDJHHSwRou4ANXxY80RG1ZP4ipJzRR/CtkEJLWE7TTzdk840x
+	IsW4XJeCkCYGNIiE7NGl9y0u8StyJSrMnX2yzFQi5WMld7uD6F+ltGj2dQ+puNMKwvKrgjE3Q9B
+	A1yfKpInOt/400hRhD43BzdDbYHfmMtxUCFKpsT3wREPUOk8sC+vcBZyz64sj2+RwzKP/RTYZIf
+	KGvL51pHrBnhTBWN8j3QaE0GBFN4kl+0Mg38=
+X-Received: by 2002:a05:620a:31f7:b0:7d3:c5b7:2511 with SMTP id af79cd13be357-7d443994f1fmr1441531285a.36.1751209194850;
+        Sun, 29 Jun 2025 07:59:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvXkkZ1GazwsYeATtB5CDCpnI+uME8eO1KfqiZ/FLtfPB2cvggTFZ6ZVNgWe/R/E/fTo0QDg==
+X-Received: by 2002:a05:620a:31f7:b0:7d3:c5b7:2511 with SMTP id af79cd13be357-7d443994f1fmr1441528885a.36.1751209194433;
+        Sun, 29 Jun 2025 07:59:54 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2e0ca66sm10946561fa.31.2025.06.29.07.59.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 07:59:53 -0700 (PDT)
+Date: Sun, 29 Jun 2025 17:59:51 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
+ codec
+Message-ID: <buyn3nvjprum4uxtmktci3eho3o24452zseioxq7ykzdfkuwvz@ezqwadopbqps>
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+ <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
+ <wcmalvywoginosy5pp7wskgdzjbwbydividmk4dtwguoltiobf@muw5lzkvgu5c>
+ <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] drm/gpuvm: Add locking helpers
-To: rob.clark@oss.qualcomm.com
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250620154537.89514-1-robin.clark@oss.qualcomm.com>
- <20250620154537.89514-3-robin.clark@oss.qualcomm.com>
- <CACSVV03d-3J2SxSnm3oS2OG9LHEJzLKpmgWF=Cx8_Qgw3PZPVQ@mail.gmail.com>
-From: Danilo Krummrich <dakr@redhat.com>
-Content-Language: en-US
-Organization: RedHat
-In-Reply-To: <CACSVV03d-3J2SxSnm3oS2OG9LHEJzLKpmgWF=Cx8_Qgw3PZPVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDEyNiBTYWx0ZWRfX/4yuKwOFVEg/
+ m/ZvyZGeKSjkbKywWTBPxFr2G4lpokhB9nz3o8Xn/G8Cu/J0j6HyJT/PmSmQ26V/f1eUwgqDEyK
+ 4OSK0oNnGXd3IB3vTRQ7B6uWfx6yiOE5jty2O6c081FG3bSW+eZXQA+9qtjbgNkw4an1YolaL/I
+ +qbacp3gcvF9+Yi+ybC9i/0iWIbd9Ugt9tta2CfL5g/+TNd1C7FHOc6UJmLaxtwsufCre+3Zz3U
+ xpm/QDU55Kf38Q8o45FP/H2+N1yN0oXkhpWcXAsNwvyYpJmEp0gTaqdQIMTC5eugxl8hw+4eiZN
+ ikm7r+S4LXsKsHmf0hNekfpmQKUbbrfrCgNZ5BfWudHRAx4aoObMbWZw8iepZZ5X/DCMOBhy8D3
+ 0u4cvg3TSpgQV9n6QAQ5sU0W/+pK9iAw7pljtDjjmcf3gSl0SN/F0eTXLpsV9sD2MVl8lDzM
+X-Proofpoint-ORIG-GUID: mrU979LLJa1o0msXjpzctKmcdtNXXnTb
+X-Authority-Analysis: v=2.4 cv=Tq7mhCXh c=1 sm=1 tr=0 ts=686154ec cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=5MYOtFo4LUEscCCMUxIA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: mrU979LLJa1o0msXjpzctKmcdtNXXnTb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=936 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506290126
 
-On 6/27/25 3:04 PM, Rob Clark wrote:
-> On Fri, Jun 20, 2025 at 8:45 AM Rob Clark <robin.clark@oss.qualcomm.com> wrote:
->>
->> For UNMAP/REMAP steps we could be needing to lock objects that are not
->> explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
->> VAs.  These helpers handle locking/preparing the needed objects.
->>
->> Note that these functions do not strictly require the VM changes to be
->> applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
->> the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
->> call result in a differing sequence of steps when the VM changes are
->> actually applied, it will be the same set of GEM objects involved, so
->> the locking is still correct.
->>
->> v2: Rename to drm_gpuvm_sm_*_exec_locked() [Danilo]
->> v3: Expand comments to show expected usage, and explain how the usage
->>      is safe in the case of overlapping driver VM_BIND ops.
+On Sat, Jun 28, 2025 at 05:41:31PM +0100, Alexey Klimov wrote:
+> On Thu Jun 26, 2025 at 7:13 AM BST, Krzysztof Kozlowski wrote:
+> > On Thu, Jun 26, 2025 at 12:50:29AM +0100, Alexey Klimov wrote:
+> >> The audio codec IC is found on Qualcomm PM4125/PM2250 PMIC.
+> >> It has TX and RX soundwire slave devices hence two files
+> >> are added.
+> >> 
+> >> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> >> ---
+> >>  .../bindings/sound/qcom,pm4125-codec.yaml          | 147 +++++++++++++++++++++
+> >>  .../devicetree/bindings/sound/qcom,pm4125-sdw.yaml |  86 ++++++++++++
+> >>  2 files changed, 233 insertions(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/sound/qcom,pm4125-codec.yaml b/Documentation/devicetree/bindings/sound/qcom,pm4125-codec.yaml
+> >> new file mode 100644
+> >> index 0000000000000000000000000000000000000000..1b6ce8d4397b4c1c048899bd2cc4d02318cc46c9
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/sound/qcom,pm4125-codec.yaml
+> >> +
+> >> +    /* ... */
+> >> +
+> >> +    soundwire@a610000 {
+> >
+> > Drop this and next one.
 > 
-> Danilo, did you have any remaining comments on this?
+> The audio-codec node supposed to have qcom,{rx,tx}-device properties.
+> If I'll drop it then the example doesn't compile well unless I am missing
+> something?
 
-I replied to this in your MSM VM_BIND series.
+Examples are compiled as plugins, so you can reference non-existing
+handles. Keep the property in the codec and drop the soundwire devices.
 
+
+-- 
+With best wishes
+Dmitry
