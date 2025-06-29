@@ -1,92 +1,131 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F9543151;
-	Sun, 29 Jun 2025 15:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B02713790B
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751211245; cv=none; b=LH60pG1RY9HrWChcdQxPFGkoo6kUWfLq3WLXBwsDwQqhBXiGjPWe6m+u2qerUUsQlIM9Ofxj21vqRgg2rQXMnAnWwuz/dxpi5BmDC/T7sFV7XDNlDM22YvEYH1uyuEklqrqW/OwiJRSaWvW4ZgTdYaCcQGHMCoQt062NYVFyn+o=
+	t=1751212186; cv=none; b=khN34T2Txb5kGZ3G9qSM+TVbvJJ6W8LlSNf2cqUbogOutor9i1eUDjbSwnpM3/3d9hVSVrEgDv/LtmSdMCbGiIgCO+2uxOarppep0zGUX0VHrvi99MXEthd3Y4MlPIqe0umV2NLHHvj6Bo203decdGZwTdukRAcYK57KfWOLMww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751211245; c=relaxed/simple;
-	bh=x/PSazvyH4MrU/zvRTM2YdHsVtdW9G9hnWye/x7q5Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z851CQ8EI8nAe/1XKktFz5ggmCephaGa+JwR2y3WVaeYVSKiSigTwmfLtMscZwV5OKUTnZZpNaWa2GCymlc9iCG+sbw+YTEwhGbfx6X3hLSIj8W+5DrMkBdaHb2ql+Y2KcnPAbmB8kPZSc7QQxYuEwH7/6L+a0r4eWE70pLSFqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Umk0vxa4; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751212186; c=relaxed/simple;
+	bh=GQLr7xchKK1viEfYMHygrCDLhlsEOMPIMYaTzu19GIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qhSn9xROZExIN4KvGhUW8siJkIkYAL85U2LDoiXFYALsFW7qP2FVp1VUEVpFbO0n1JCZGwkmgu539m1hZqUXQNX7DnaKTnIaj3815ki/ULGClUbiHyJschfzAY/6BU/7KdvBb824CHxE6PCpy/QbHayOgSBS7W2HSX2aajxpp+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v+kESv11; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Umk0vxa4"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A881640E00DD;
-	Sun, 29 Jun 2025 15:33:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id vOlxV8vLETgp; Sun, 29 Jun 2025 15:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751211228; bh=AmLQdFum+cJ7WmHgyisd/mH9zOhwi3o3NwpzZjuDWQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Umk0vxa4hCWdhRkfyOILT1hTrZW8bQ7H9/BmmzeEhSjHTnkXJYTYO8yme/jHhNnvu
-	 rhIojLgxEBeKE1x4But70/vYwMkxq9AV2bzSioUx5Sh9iJiimatpL/qg7eA5xXWL/t
-	 SiWZQ8HlEGqQv7NMxF6MGf043jdP1KwTuvK5Oi3INSCAWoBqgAQknUFz/DsjtNognj
-	 XcPbuBdjhVLCx2eNt9zpF7uT46Tixayj9z3Hek8u3Df62CsqOzK4jLwqKZMU+CHVM9
-	 oYV2blqZIVoYJiw3nwcLV/fcueidqAWZIY/obgDb+o9E99HeS1HmSvpHJ6/YNeS91Z
-	 zCwQf0AicaE9M+jPalE4ovgmS6WdNXbeK6ULwBF8NaIXfyNOHJ5xOngjR7Y8qc9Org
-	 dLTVhADbl/EFkTJ26xPUgSTOn45E2rRGte1jeJ2E5eB9sfAmA7exBHlaf/vvvbPKc9
-	 ymbnbN9fT06JwALQxsC3VbbRmFkKt6d+BhPwKCRap1i1ef6VRcWprlkA8EUzw9w199
-	 AQT+HU6SdrjArJvLUfz5hI4jdKjZLRxw2yX0FkaD9IVBBYTF4Y4z47mHHUyK+sCYpm
-	 rvmKWults0oPDuJJ8YK4sXlKivgdWZQxHwuS26VMlwb7It3zUrHY1Xay8/9wkf/5MF
-	 r0Au4JitcWcRY/0Kr/j2HOHA=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6D80240E00DA;
-	Sun, 29 Jun 2025 15:33:45 +0000 (UTC)
-Date: Sun, 29 Jun 2025 17:33:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Dennis Clarke <dclarke@blastwave.org>, stable <stable@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: arch/x86/Makefile REALMODE_CFLAGS needs -std=gnu11 with recent
- GCC versions
-Message-ID: <20250629153337.GAaGFc0eLXFRDhpksX@fat_crate.local>
-References: <e4742cae-9ef5-4d30-8c88-65f69e2178cd@blastwave.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v+kESv11"
+Message-ID: <745fd720-4cf5-42c4-9cb6-a4932c6f68ee@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751212172;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imiGuD/gOJUll+b4BS//Yom8mQki/dKUk35+LdByEn4=;
+	b=v+kESv11z0HGmpL45RAXvRBHnh0k134yrqjPIbNq6jgueBGrKJlRUqj053Ydn7zDBUIx9d
+	9sBG+0wB4Ao6K09Gb2WFe1SXSgLFLMWla+z/bCKfvP9XL6RN9KjVeA/d4ObLuYSLKC/TlJ
+	zA/fIOpGMm7LU8m87fp4tcsrKAo887I=
+Date: Sun, 29 Jun 2025 16:49:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e4742cae-9ef5-4d30-8c88-65f69e2178cd@blastwave.org>
+Subject: Re: [patch 1/3] timekeeping: Provide ktime_get_clock_ts64()
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+ Christopher Hall <christopher.s.hall@intel.com>,
+ John Stultz <jstultz@google.com>, Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Miroslav Lichvar <mlichvar@redhat.com>,
+ Werner Abt <werner.abt@meinberg-usa.com>,
+ David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Kurt Kanzenbach <kurt@linutronix.de>, Nam Cao <namcao@linutronix.de>,
+ Antoine Tenart <atenart@kernel.org>
+References: <20250626124327.667087805@linutronix.de>
+ <20250626131708.419101339@linutronix.de>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250626131708.419101339@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-+ stable folks.
-
-On Sun, Jun 29, 2025 at 11:15:13AM -0400, Dennis Clarke wrote:
+On 26/06/2025 14:27, Thomas Gleixner wrote:
+> PTP implements an inline switch case for taking timestamps from various
+> POSIX clock IDs, which already consumes quite some text space. Expanding it
+> for auxiliary clocks really becomes too big for inlining.
 > 
-> Code fix for due to https://bugzilla.kernel.org/show_bug.cgi?id=220294
+> Provide a out of line version.
 > 
-> The summary is that recent GCC versions ( 15.1.0 today ) will assume C23
-> spec compliance and get upset with ye old A20 address line code bits.
+> The function invalidates the timestamp in case the clock is invalid. The
+> invalidation allows to implement a validation check without the need to
+> propagate a return value through deep existing call chains.
 > 
-> This problem exists previous to the 6.12.35 release tarballs and is
-> fixed with commit b3bee1e7c3f2b1b77182302c7b2131c804175870 applied.
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   include/linux/timekeeping.h |    1 +
+>   kernel/time/timekeeping.c   |   34 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 35 insertions(+)
 > 
-> The newer GCC revisions will be quite popular soon enough and this may
-> bite people when that happens.
+> --- a/include/linux/timekeeping.h
+> +++ b/include/linux/timekeeping.h
+> @@ -44,6 +44,7 @@ extern void ktime_get_ts64(struct timesp
+>   extern void ktime_get_real_ts64(struct timespec64 *tv);
+>   extern void ktime_get_coarse_ts64(struct timespec64 *ts);
+>   extern void ktime_get_coarse_real_ts64(struct timespec64 *ts);
+> +extern void ktime_get_clock_ts64(clockid_t id, struct timespec64 *ts);
+>   
+>   /* Multigrain timestamp interfaces */
+>   extern void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts);
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -1636,6 +1636,40 @@ void ktime_get_raw_ts64(struct timespec6
+>   EXPORT_SYMBOL(ktime_get_raw_ts64);
+>   
+>   /**
+> + * ktime_get_clock_ts64 - Returns time of a clock in a timespec
+> + * @id:		POSIX clock ID of the clock to read
+> + * @ts:		Pointer to the timespec64 to be set
+> + *
+> + * The timestamp is invalidated (@ts->sec is set to -1) if the
+> + * clock @id is not available.
+> + */
+> +void ktime_get_clock_ts64(clockid_t id, struct timespec64 *ts)
+> +{
+> +	/* Invalidate time stamp */
+> +	ts->tv_sec = -1;
+> +	ts->tv_nsec = 0;
+> +
+> +	switch (id) {
+> +	case CLOCK_REALTIME:
+> +		ktime_get_real_ts64(ts);
+> +		return;
+> +	case CLOCK_MONOTONIC:
+> +		ktime_get_ts64(ts);
+> +		return;
+> +	case CLOCK_MONOTONIC_RAW:
+> +		ktime_get_raw_ts64(ts);
+> +		return;
+> +	case CLOCK_AUX ... CLOCK_AUX_LAST:
+> +		if (IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS))
+> +			ktime_get_aux_ts64(id, ts);
+> +		return;
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(ktime_get_clock_ts64);
+> +
+> +/**
+>    * timekeeping_valid_for_hres - Check if timekeeping is suitable for hres
+>    */
+>   int timekeeping_valid_for_hres(void)
+> 
 
-I don't know what the rules are for building 6.1-stable with gcc-15 but if
-they do that, then 6.1 will need to pick up the abovementioned commit:
-
-  b3bee1e7c3f2 ("x86/boot: Compile boot code with -std=gnu11 too")
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
