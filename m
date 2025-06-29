@@ -1,46 +1,33 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD3278F2E;
-	Sun, 29 Jun 2025 12:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1371F874F;
+	Sun, 29 Jun 2025 12:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751199002; cv=none; b=p4Vu7TE8sZLWxJuzOO6prdcCMSw4e7zU/5CtI11aI/aBUO1syN0mSna7+Rr4e+kVScq7mOLR8rMDAfpiovuSLViEEmVmo8NyV2BiYH5CFuFnqx2WnihJ6WT++0C0c3iuKxzbgLcOyQuNYcM2I57nD77IKJKNAbFmOp6BcvEX9XE=
+	t=1751199624; cv=none; b=IM+byBxtP8+XP6NV0R4Rrw98aFMlHg9D0b2Y+5BlrZ5Ulr93uJv9IreHEcyMcwgBNhB28uWq/0V56NUI59630lFkXTYpYRwDvkk80x1kNsBx0D1nr9aKWPxzbz4XBCOolxole9jlrQwVIgQ6jPnx+uaWQBLngYqPHFTvnzZ1lbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751199002; c=relaxed/simple;
-	bh=MUvfW5Xs0DyKobQLkvwyPzBVzw626yGSX3Q+Ebd0bMQ=;
+	s=arc-20240116; t=1751199624; c=relaxed/simple;
+	bh=fTzdlGh9Pcdfm/0RiYus2NYodJ5WZ23FXS7/H5ojTVk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dfhotMz7VojCwSiWn65PjyfKfis85NqKcSVzx83VSw7sRkPw8IoavVB3Xd6ix9Vm9RvSXJZal1FGGT18+1ZOzcMApI/1rrv8ylWGjtVZ2HK8hrWg578I1xV+3qOyE7rtQY8WCzHlqUkl0PoVRNpkyNMGuUJR+5bjswE/5JGrnMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=jvpeetz@web.de header.b=G8m6szAk; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=oG8xuB6cAJ/YLqn/PX4cDQulW0LnmVjR+bMvB06SVrB0JaCoCTOYsATmjV0nMqbMxy1weyVxEcAl/KWtD6bVqzDeHD/lzp1cHrXsNdomlfuRh++j3Exs9/tKmV5sRxQzFiVMmOckPyNbJnhEsTOwukzRZVfzSnk+jxliBTyMzHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4Uc2yrP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=jvpeetz@web.de header.b="G8m6szAk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1751198992; x=1751803792; i=jvpeetz@web.de;
-	bh=MPPN2ZiHbr3G1Q8AdmMbMw7KZutJ68YalC728Q0eInw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=G8m6szAkmA32NeJ063dxGn2+qSiEcb21ayEox0vEGzYgdExHnT2mYCRUUgpPUOKf
-	 KzN2znL8XuKP3lyMSreeAtRcSIGXALL0dYvmogJhfJNujuTWPpD8RoGuHJjy1iA/f
-	 p/2u1DgD6STnJXFzBWsy14XpRScUENTqrbAkq0BsBTRLNXYW1oI0Vbw8AUWuQWtDS
-	 lrb81dKbVPzk7WM3rQwjdfUS3VB2w+XyA9nyMYiZVU/ZgxQVzhoml5s9pb8Y90u76
-	 nEl+U99tXJer4pys+xarJ3cvwHaWZtK/7sFCKxCDhdHxPvhmopq3iYGB3Fa++BCAS
-	 hyU0hiFhw6roG430hw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from uruz.dynato.kyma ([84.132.145.192]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MgRQD-1vDAQJ0FUV-00ouve; Sun, 29
- Jun 2025 14:09:52 +0200
-Received: from [127.0.0.1]
-	by uruz.dynato.kyma with esmtp (Exim 4.98.2)
-	(envelope-from <jvpeetz@web.de>)
-	id 1uVqqz-0000000009F-0gSf;
-	Sun, 29 Jun 2025 14:09:49 +0200
-Message-ID: <c7b240ad-03d0-460f-be05-0a61e1267695@web.de>
-Date: Sun, 29 Jun 2025 14:09:48 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4Uc2yrP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43511C4CEEB;
+	Sun, 29 Jun 2025 12:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751199623;
+	bh=fTzdlGh9Pcdfm/0RiYus2NYodJ5WZ23FXS7/H5ojTVk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=P4Uc2yrPdKey1PujxWvlSsVps5PYz1Jdm64qppsKHmCfD1JVGef2OmFIXInCpAgwp
+	 AicbIRYH8GywokEcFHDOUA6izk96lgg+/V6SK4J+EdeyXIBFHqsWL2kKOfDZPon7jc
+	 dAaTIFGBNtclG/i9+LVDRvVoBDN5qmCs37Z9ehHQiJ6ahQrckeTQM7BQbJ0IiYnd+c
+	 uD+WF2OJdKNxGoMC6Du2BvBQudu/o7VfnkKn+Q4ihvpK/aYIi3amna006fOpyC0BBA
+	 I8LkIEn2zEl8UOYjkGLAYnPQqMyavxbsvOZfHSNVaITsBFwKr+qpQIGM4FxCN7Hl21
+	 pgnz09+7UbGeg==
+Message-ID: <092f5109-ca31-4949-bda8-7e0d946c3aa0@kernel.org>
+Date: Sun, 29 Jun 2025 14:20:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,93 +35,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Linux 6.15.4
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
- torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc: lwn@lwn.net, jslaby@suse.cz, rafael@kernel.org, viresh.kumar@linaro.org,
- linux-pm@vger.kernel.org
-Newsgroups: gmane.linux.kernel.stable,gmane.linux.kernel
-References: <2025062732-negate-landless-3de0@gregkh>
-Content-Language: en-US
-From: =?UTF-8?Q?J=C3=B6rg-Volker_Peetz?= <jvpeetz@web.de>
-In-Reply-To: <2025062732-negate-landless-3de0@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:B02UH/cB8YdGY/8RpbIPbvuF21zzGNT06dg3X6EzxsztWkZf2H8
- iCbUxUBel6JirfruZhiTWGf8UzoF+wA+w+1G6LRzws7vXNKl87+XvSR24nZQvzYO7PwS9O8
- 4rSLRPgwKdPT8YFHua+4oyPtGzHiqx9fojmiv9dUlut3/k+WfhMxvBkbl/kuGTI1OYFbp7T
- 1TYND81l9TtkpEiXXw1rg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Pv0YgODQX6E=;5YRXcR4cs6lbiiknf2Bj1yWJebJ
- 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
+Subject: Re: [PATCH v7] staging: media: atomisp: code style cleanup series
+To: LiangCheng Wang <zaq14760@gmail.com>, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com, andy@kernel.org, gregkh@linuxfoundation.org,
+ nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+ justinstitt@google.com
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-staging@lists.linux.dev, llvm@lists.linux.dev
+References: <20250629113050.58138-1-zaq14760@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250629113050.58138-1-zaq14760@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-J=C3=B6rg-Volker Peetz wrote on 29/06/2025 12:22:
- > Hi,
- >
- > upgrading from linux kernel 6.14.9 to 6.15.2 and still with 6.15.4 I no=
-ticed
- > that on my system  with cpufreq scaling driver amd-pstate the frequenci=
-es
- > scaling_min_freq and scaling_max_freq increased, the min from 400 to 42=
-2.334
- > MHz, the max from 4,673 to 4,673.823 MHz. The CPU is an AMD Ryzen 7 570=
-0G.
+Hi,
 
-I should add that of course cpuinfo_min_freq and  cpuinfo_max_freq increas=
-e in=20
-the same way.
+On 29-Jun-25 1:30 PM, LiangCheng Wang wrote:
+> This series applies clang-format and fixes all checkpatch.pl-reported ERRORs in the AtomISP driver, excluding the i2c directory as advised by maintainers.
+> 
+> The changes include:
+> - Applying clang-format (excluding drivers/staging/media/i2c)
+> - Removing unnecessary parentheses in return statements
+> - Removing unnecessary zero-initialized globals
+> - Fixing space issues after unary minus operators
+> - Wrapping complex macro values in parentheses
+> - These patches focus solely on mechanical style cleanups with no functional changes.
+> - WARNINGs reported by checkpatch.pl were intentionally left for future work to keep each patch clear and manageable.
+> 
+> The full series and corresponding commits are also available in my public Git repository:
+> 
+> https://github.com/lc-wang/linux/tree/b4/atomisp
+> 
+> To: Hans de Goede <hansg@kernel.org>
+> To: Mauro Carvalho Chehab <mchehab@kernel.org>
+> To: Sakari Ailus <sakari.ailus@linux.intel.com>
+> To: Andy Shevchenko <andy@kernel.org>
+> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> To: Nathan Chancellor <nathan@kernel.org>
+> To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+> To: Bill Wendling <morbo@google.com>
+> To: Justin Stitt <justinstitt@google.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-staging@lists.linux.dev
+> Cc: llvm@lists.linux.dev
+> ---
+> Changes in v7:
+> - Split previous monolithic patch into multiple smaller patches
+> - Applied clang-format to entire driver excluding i2c directory
 
- > Has anybody else noticed?
- >
- > Is it intended?
- >
+I took a quick look at just the clang-format patch and looking
+at the bits of the diff which were not collapsed by github because
+the changes are too big, it looks like the changes which clang-format
+makes are useless and often make things worse, e.g. just looking
+at the first diff which github shows for:
+
+https://github.com/lc-wang/linux/commit/8a3bbdba275e42dfcb0af2ddcc2f27463bb316d2
+
+which is for drivers/staging/media/atomisp/include/hmm/hmm.h
+then all of the changes are undesirable and unneeded.
+
+so the running of clang-format just seems to make things worse.
+
+I appreciate coding-style cleanups outside of the i2c dir,
+but it looks like you need to do everything manually since
+clang-format is just making a mess of things.
+
+Also if you do manual code-style cleanups please do one
+type of cleanup per patches, e.g. only fix indentation
+using spaces instead of tabs and do so on groups of say
+10 files at a time to keep things reviewable.
+
 Regards,
-J=C3=B6rg
+
+Hans
+
+
+
+> - Fixed checkpatch.pl-reported ERRORs (parentheses in macros, unnecessary return parentheses, zero-initialized globals, spaces after unary minus)
+> - Left WARNINGS untouched for future cleanup
+> - No functional logic changes
+> - Link to v6: https://lore.kernel.org/r/20250627-bar-v6-1-b22b5ea3ced0@gmail.com
+> 
+> Changes in v6:
+> - Applied clang-format across the entire AtomISP driver
+> - Fixed all checkpatch.pl-reported ERRORs
+> - Added explanation of tooling and scope
+> - No functional logic modified
+> - Moved 'Suggested-by' and 'Link' tags above Signed-off-by
+> - Link to v5: https://lore.kernel.org/r/20250625-bar-v5-1-db960608b607@gmail.com
+> 
+> Changes in v5:
+> - Replaced space-based indentation with tabs in output_1.0 directory
+> - Used checkpatch.pl and grep to identify formatting issues
+> - No functional changes made
+> - This patch is now focused solely on tab/space issues
+> - Link to v4: https://lore.kernel.org/r/20250624-bar-v4-1-9f9f9ae9f868@gmail.com
+> 
+> Changes in v4:
+> - Moved assignment operator '=' to the same line for static struct definitions
+> - Remove unnecessary line breaks in function definitions
+> - Update commit message to reflect all the coding style fixes
+> - Link to v3: https://lore.kernel.org/r/20250622-bar-v3-1-4cc91ef01c3a@gmail.com
+> 
+> Changes in v3:
+> - Removed extra spaces between type and asterisk (e.g., `*to`) in function
+>   declarations, as pointed out by Andy Shevchenko
+> - Update commit message to reflect all the coding style fixes
+> - Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@gmail.com
+> 
+> Changes in v2:
+> - Fix patch subject prefix to "staging: media: atomisp:" to comply with media CI style.
+> - No other functional changes.
+> 
+> Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gmail.com
+> 
+> --- b4-submit-tracking ---
+> # This section is used internally by b4 prep for tracking purposes.
+> {
+>   "series": {
+>     "revision": 7,
+>     "change-id": "20250621-bar-573b8b40fb80",
+>     "prefixes": [],
+>     "history": {
+>       "v1": [
+>         "20250621-bar-v1-1-5a3e7004462c@gmail.com"
+>       ],
+>       "v2": [
+>         "20250621-bar-v2-1-4e6cfc779614@gmail.com"
+>       ],
+>       "v3": [
+>         "20250622-bar-v3-1-4cc91ef01c3a@gmail.com"
+>       ],
+>       "v4": [
+>         "20250624-bar-v4-1-9f9f9ae9f868@gmail.com"
+>       ],
+>       "v5": [
+>         "20250625-bar-v5-1-db960608b607@gmail.com"
+>       ],
+>       "v6": [
+>         "20250627-bar-v6-1-b22b5ea3ced0@gmail.com"
+>       ]
+>     }
+>   }
+> }
 
