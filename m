@@ -1,79 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.uniroma2.it (smtp.uniroma2.it [160.80.4.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C7322FF39;
-	Sun, 29 Jun 2025 17:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B78B1EFF92;
+	Sun, 29 Jun 2025 17:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.80.4.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751217086; cv=none; b=ZUIvar6XaT7j/52IFAMuWfnMkfj9cJIdajnTh3wO6Fe8bRtW3zibTLuN83C+bT8nS5SPFAXNKP0IH3T4JU52S1ClL4AHK/jJd4K5SRTmhGPoNc85zuA/ri8epuAOaLSwE/otkLhOtDF4joo2NR/udLZRw6BoAehR42qJR+xaY1o=
+	t=1751217260; cv=none; b=hu3TR3Bk0hiLatjR6CKOxJYs7fQ8XnOIdTF4jzAS8jrcXjjM/RmG6neT7buBfVV1aY2NLQmhNZI3eRASuzpOSgm1g+ObcarHxwmHXwk6ypv2TnaU1mkua0U9bTyfkyRV0y2wAG+KXpgb4knoYo7BsxTym8cjOLy//mCuqlG4px0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751217086; c=relaxed/simple;
-	bh=NsxFsa31ErL1XisrpXp7338xKEiE/KAOJCfGNqkWzQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J5lIYn+kOcCshy5HpZBK42IRSy5Dol4A2OxswOIT4w4WPDF7pIgQX2+q0h2fwMqTFZ5hLT8rQ/ZO8CCtP9JILnztCGTWhBf5vxJ1CeS6gqDrHp+OecMrRUfFsJ+pJx3IUOh1jv+pqa76CgG/Jy8NiUWKi8XgWWVyCkKNbl6sCvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moWL4GNn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moWL4GNn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42CBC4CEEB;
-	Sun, 29 Jun 2025 17:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751217086;
-	bh=NsxFsa31ErL1XisrpXp7338xKEiE/KAOJCfGNqkWzQs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=moWL4GNnhaXC7AkD7RblJaJ38keQipD8d3KLxtsqI7EIXpfL2u3wGUO937Ig9eDhE
-	 p2XJxaRr9j74NwzrpHIIcVnoM8AbD0UB1L/BfMjlNFnDmLI1DrmqjHuZopaLffUMuN
-	 9NuyMRIBx9+jHzXAgGWGKpPjqkUgsDOEEG7YzZ1QkXWbl4iYZEN3QV01q29VtD0L+m
-	 tpCO2KI9xmLIAQS9XQ1x+8OUbFEVvRhRrQItQQRR7nkVBbLQYbVOsxBF/1/SPUZet4
-	 m/cZ3xZfAVPCyxPPZ7FNNzpsTGtZqG9+3zmRBenGrgKVI7sNfC7TVtUwvSBu9rCVjH
-	 no+f2hIpkMuGg==
-Date: Sun, 29 Jun 2025 18:11:20 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: imu: bmi160: make bmi160_regs const
-Message-ID: <20250629181120.4e325b23@jic23-huawei>
-In-Reply-To: <20250628-iio-const-data-18-v1-1-dad85ac392ae@baylibre.com>
-References: <20250628-iio-const-data-18-v1-1-dad85ac392ae@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751217260; c=relaxed/simple;
+	bh=HnkcJii31P0NALm35gffTRdskIHKxHTT/7RAsoQ2fME=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qHVlS80Y3+Ur5hTZSFWj2hzLhijjaV1sOSrZoqHy6/rl09Q0K49m5z5/7lcBVkeEi3S+OunS4ZKJCd2FVzMIgwJ8pstYtnCpJXmTiZqxCGknrMNawDXtcAQtfyg+Dun7yzQ3v6EASwUIysOiioCDVptFF7oIwcWo1EHqUBlp+Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it; spf=pass smtp.mailfrom=uniroma2.it; arc=none smtp.client-ip=160.80.4.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniroma2.it
+Received: from localhost.localdomain ([160.80.103.126])
+	by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 55THDW5A007121
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sun, 29 Jun 2025 19:14:04 +0200
+From: Andrea Mayer <andrea.mayer@uniroma2.it>
+To: "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>,
+        Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc: Stefano Salsano <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni <paolo.lungaroni@uniroma2.it>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: [PATCH net-next 2/2] selftests: seg6: fix instaces typo in comments
+Date: Sun, 29 Jun 2025 19:12:26 +0200
+Message-Id: <20250629171226.4988-3-andrea.mayer@uniroma2.it>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250629171226.4988-1-andrea.mayer@uniroma2.it>
+References: <20250629171226.4988-1-andrea.mayer@uniroma2.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 
-On Sat, 28 Jun 2025 12:31:43 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+Fix a typo:
+  instaces -> instances
 
-> Add const qualifier to struct bmi160_regs bmi160_regs[]. This is
-> read-only data so it can be made const.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Applied.
-> ---
->  drivers/iio/imu/bmi160/bmi160_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> index 9aa54b95b89f96299e65b9cc00149bffe5f2e56a..5f47708b4c5dc5b2eb139b1c36542aae22a4cf43 100644
-> --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> @@ -161,7 +161,7 @@ struct bmi160_regs {
->  	u8 pmu_cmd_suspend;
->  };
->  
-> -static struct bmi160_regs bmi160_regs[] = {
-> +static const struct bmi160_regs bmi160_regs[] = {
->  	[BMI160_ACCEL] = {
->  		.data	= BMI160_REG_DATA_ACCEL_XOUT_L,
->  		.config	= BMI160_REG_ACCEL_CONFIG,
-> 
-> ---
-> base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-> change-id: 20250628-iio-const-data-18-b83bdb3e4d05
-> 
-> Best regards,
+The typo has been identified using codespell, and the tool does not
+report any additional issues in the selftests considered.
+
+Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+---
+ tools/testing/selftests/net/srv6_end_next_csid_l3vpn_test.sh   | 2 +-
+ tools/testing/selftests/net/srv6_end_x_next_csid_l3vpn_test.sh | 2 +-
+ tools/testing/selftests/net/srv6_hencap_red_l3vpn_test.sh      | 2 +-
+ tools/testing/selftests/net/srv6_hl2encap_red_l2vpn_test.sh    | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/net/srv6_end_next_csid_l3vpn_test.sh b/tools/testing/selftests/net/srv6_end_next_csid_l3vpn_test.sh
+index ba730655a7bf..4bc135e5c22c 100755
+--- a/tools/testing/selftests/net/srv6_end_next_csid_l3vpn_test.sh
++++ b/tools/testing/selftests/net/srv6_end_next_csid_l3vpn_test.sh
+@@ -594,7 +594,7 @@ setup_rt_local_sids()
+ 		dev "${DUMMY_DEVNAME}"
+ 
+ 	# all SIDs for VPNs start with a common locator. Routes and SRv6
+-	# Endpoint behavior instaces are grouped together in the 'localsid'
++	# Endpoint behavior instances are grouped together in the 'localsid'
+ 	# table.
+ 	ip -netns "${nsname}" -6 rule \
+ 		add to "${VPN_LOCATOR_SERVICE}::/16" \
+diff --git a/tools/testing/selftests/net/srv6_end_x_next_csid_l3vpn_test.sh b/tools/testing/selftests/net/srv6_end_x_next_csid_l3vpn_test.sh
+index bedf0ce885c2..34b781a2ae74 100755
+--- a/tools/testing/selftests/net/srv6_end_x_next_csid_l3vpn_test.sh
++++ b/tools/testing/selftests/net/srv6_end_x_next_csid_l3vpn_test.sh
+@@ -681,7 +681,7 @@ setup_rt_local_sids()
+         set_underlay_sids_reachability "${rt}" "${rt_neighs}"
+ 
+ 	# all SIDs for VPNs start with a common locator. Routes and SRv6
+-	# Endpoint behavior instaces are grouped together in the 'localsid'
++	# Endpoint behavior instances are grouped together in the 'localsid'
+ 	# table.
+ 	ip -netns "${nsname}" -6 rule \
+ 		add to "${VPN_LOCATOR_SERVICE}::/16" \
+diff --git a/tools/testing/selftests/net/srv6_hencap_red_l3vpn_test.sh b/tools/testing/selftests/net/srv6_hencap_red_l3vpn_test.sh
+index 3efce1718c5f..6a68c7eff1dc 100755
+--- a/tools/testing/selftests/net/srv6_hencap_red_l3vpn_test.sh
++++ b/tools/testing/selftests/net/srv6_hencap_red_l3vpn_test.sh
+@@ -395,7 +395,7 @@ setup_rt_local_sids()
+ 		dev "${VRF_DEVNAME}"
+ 
+ 	# all SIDs for VPNs start with a common locator. Routes and SRv6
+-	# Endpoint behavior instaces are grouped together in the 'localsid'
++	# Endpoint behavior instances are grouped together in the 'localsid'
+ 	# table.
+ 	ip -netns "${nsname}" -6 rule \
+ 		add to "${VPN_LOCATOR_SERVICE}::/16" \
+diff --git a/tools/testing/selftests/net/srv6_hl2encap_red_l2vpn_test.sh b/tools/testing/selftests/net/srv6_hl2encap_red_l2vpn_test.sh
+index cabc70538ffe..0979b5316fdf 100755
+--- a/tools/testing/selftests/net/srv6_hl2encap_red_l2vpn_test.sh
++++ b/tools/testing/selftests/net/srv6_hl2encap_red_l2vpn_test.sh
+@@ -343,7 +343,7 @@ setup_rt_local_sids()
+ 		encap seg6local action End dev "${DUMMY_DEVNAME}"
+ 
+ 	# all SIDs for VPNs start with a common locator. Routes and SRv6
+-	# Endpoint behaviors instaces are grouped together in the 'localsid'
++	# Endpoint behaviors instances are grouped together in the 'localsid'
+ 	# table.
+ 	ip -netns "${nsname}" -6 rule add \
+ 		to "${VPN_LOCATOR_SERVICE}::/16" \
+-- 
+2.20.1
 
