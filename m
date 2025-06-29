@@ -1,365 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BFA29B0;
-	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BBB1799F
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 04:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751172311; cv=none; b=jPKLdTd33ipBo6x2JV6k4Yqv57u2M/ilI1foXW/vVbrgg5hKC+KsrhQwDkbbytswz8N2sSRIVqSLNaQSKXdBpU2/vrAhHtLKrerp2NWHzdUKs0o+PEEAr/hKN1Zec1kNJh4q4t0dLYpFv3Khowy9x6uQGqJ4QHTqHeSMWZIhS/w=
+	t=1751172566; cv=none; b=spBbAauGIigZ6GF8NRmKmn4zSSgd+7xmzRURut9VEFB1y2tFS5DkmEm37o1tGZ9G6/a4bSitz9VrG3xEf0jJY5HLRy3XW6utwka4h7SDAmv1hiqgzzuLH8zzVEfK2KTAPp9WXPFxYPHEVM+nzkNxlJsoIaDU8nVTz6PULfT0XsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751172311; c=relaxed/simple;
-	bh=z9NgzLPdkixra/QUJxb+x6d8KoigZnVyhXR1Dq4delE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Dql7i6H2TdIqC3QjgMekk3ZxCTDX3+RFFi8mnHfXczUMnc5F+UrzRUy6Kt0Ema3CaPvthEetMVKimb4S2SbF4/N98NRoZcdKJ934nh8mr3znyQQDsijru3KE5CEDE2JCBfBV0sJzSdQgssQLaUsYsaefkPm4emuGw0iV01A9f88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnjC1mHO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnjC1mHO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96982C4CEF2;
-	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751172310;
-	bh=z9NgzLPdkixra/QUJxb+x6d8KoigZnVyhXR1Dq4delE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=MnjC1mHON2KyGqNEvl+u72qTl6QXYqiMBrdnJUkNXXSYKklUETtx91muVvZPyGgDz
-	 pA1iZE2CMEr7WefaYAgXEiruWGIGqsnXytw80vd7TE3VN8JtyrdKSJ0+MK+kTwmirn
-	 /PRhxZ8Lwg/EcBPN/Xc661qIDmRy4eq6anThvGv3+yaNfPipmljQYd4d3daNM38/5I
-	 xZOaGnClIVe9b/lUVWU+si1r8W39xNC9eT12x1G1SCqXG3K7NjQYocF723QcE34RW7
-	 V5BPXmW9RzdRbqudR3yOSbCC9WMrp9IwoAcjg7pCZdIue1eRhioGN4uIWc1xh3cITQ
-	 mnQ4m2l0LTymw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81725C83029;
-	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
-From: Cristian Cozzolino via B4 Relay <devnull+cristian_ci.protonmail.com@kernel.org>
-Date: Sun, 29 Jun 2025 08:44:39 +0200
-Subject: [PATCH v4 3/3] arm64: dts: qcom: msm8953: Add device tree for
- Billion Capture+
+	s=arc-20240116; t=1751172566; c=relaxed/simple;
+	bh=/G+1vAbo4n+EqcDzwn0O2XGd7JR4h2NC/9qwvEBUQaQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=u7h5YK+FSb10K/aX2fQDyQdmIbj5dZSQ1W0c3zs5MulxCtJ84yWZOZPpOntH0keRGwklSNE+Y8asi9iVqtAYvZZZTzgFQtUMaEgrxsN2oWJ7HObHuSxDR0ApxqMI4YoQ04KjnwDbUX6QPM24HjDabR+pPEdx0sVM9RMVvyeRYT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3df393bf5f2so12714605ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Jun 2025 21:49:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751172564; x=1751777364;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P2mY2eamG78sGsn3j8Cd+B3ncgAl4vhBnOUZVJt6TG8=;
+        b=ooqGukhfKy1++BH7J8tU+NPQP9sqKLPWXjxJK7yh7h7mXOHoK/LD1QzHKpFxNjc9rG
+         diGNPNEugvxrn1+fzThaAljecne3149UuCMnSn0WOPcZdyw7LNPQN+VCPnP0rr2U7Iyi
+         vPtp5EG54pah52Gvh3Ap5OiFRtQUd9cgan+GkZ5q+UWklIa6rDE5F4dl0hpdgcvDoT1z
+         Y+XaMvasYQr1QeM9Q/8YZTmh3a3Sd9cW2npPDzTjU6X9+mpgXiscu0V6iMJPExCFfSJr
+         XFoWO/mUnyie21rjP2XJUziNchouBUDyzFiLhOqAER8860Z9JPimX/wHFNr1g1TThOFa
+         zamw==
+X-Forwarded-Encrypted: i=1; AJvYcCV42yQpcIHCwam6arUzhtzcTTzUUNqjiYyxL6MwYF7SZI1GXArJ3ta9lJpkRYlXixiZR9qWr2+ai2iKJvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU/HUhNn03CbrL0PuoKo8N7Rvp7EYOsYrjK7xEDLhJKYZoAshH
+	ZLoKSluyrlJQVmSv7fbGPiBCDzfClYWMuXsOAQJw8Y8IAadVP7/asuiRRG1aw2yJFujo9QuOVJt
+	OaWoM5AWzHIHhBsYptn//iWga14S0O2eXGRwoeHmhlA8JKKe7zBCq7Hu80F4=
+X-Google-Smtp-Source: AGHT+IEDNwpVGLB58tw/xoj7Yro64h0VmQPbfvdd9zILkoAkCF8gPPqTLDcgooR46dJkY6VxiAQMb+CrLdF6evqDG5SuETe3RBNw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250629-rimob-initial-devicetree-v4-3-7cf84fa142af@protonmail.com>
-References: <20250629-rimob-initial-devicetree-v4-0-7cf84fa142af@protonmail.com>
-In-Reply-To: <20250629-rimob-initial-devicetree-v4-0-7cf84fa142af@protonmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- phone-devel@vger.kernel.org, 
- Cristian Cozzolino <cristian_ci@protonmail.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751179514; l=7327;
- i=cristian_ci@protonmail.com; s=20250620; h=from:subject:message-id;
- bh=qtnuNmfCBsjsZNE4PsKOQQMDD+xe/GZt7WSU7ruu8fI=;
- b=5yA7+++w5RU7ETfbg5nyySeTxnfeyV6K5ERETK1ZhYYjI06Gm3K2uY/tQ+aFD/j+PlXzkvwlP
- mTdz4YFCWa+Cs2FXq36vsJQ8vtmh1TBOqBNOsMdnvG8rH3MlVsQ1jRv
-X-Developer-Key: i=cristian_ci@protonmail.com; a=ed25519;
- pk=xH5IvIPUNHV1Q8R0/pq2CfuVFR/wTiAyuyi6IwedjZY=
-X-Endpoint-Received: by B4 Relay for cristian_ci@protonmail.com/20250620
- with auth_id=438
-X-Original-From: Cristian Cozzolino <cristian_ci@protonmail.com>
-Reply-To: cristian_ci@protonmail.com
+X-Received: by 2002:a05:6e02:214a:b0:3df:3926:88b7 with SMTP id
+ e9e14a558f8ab-3df4ab5672cmr88761325ab.5.1751172563896; Sat, 28 Jun 2025
+ 21:49:23 -0700 (PDT)
+Date: Sat, 28 Jun 2025 21:49:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6860c5d3.a00a0220.c1739.0009.GAE@google.com>
+Subject: [syzbot] [crypto?] possible deadlock in padata_do_serial
+From: syzbot <syzbot+bd936ccd4339cea66e6b@syzkaller.appspotmail.com>
+To: daniel.m.jordan@oracle.com, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, steffen.klassert@secunet.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Cristian Cozzolino <cristian_ci@protonmail.com>
+Hello,
 
-Billion Capture+ (flipkart,rimob) is a smartphone released in 2017, based
-on Snapdragon 625 (MSM8953) SoC.
+syzbot found the following issue on:
 
-Add a device tree with initial support for:
+HEAD commit:    2ae2aaafb214 Add linux-next specific files for 20250624
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10deb70c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d85d3c440a754f86
+dashboard link: https://syzkaller.appspot.com/bug?extid=bd936ccd4339cea66e6b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-- GPIO keys
-- SDHCI (internal and external storage)
-- USB Device Mode
-- Regulators
-- Simple framebuffer
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/689f558e5251/disk-2ae2aaaf.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/355aae0f4972/vmlinux-2ae2aaaf.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/94e736ebe604/bzImage-2ae2aaaf.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bd936ccd4339cea66e6b@syzkaller.appspotmail.com
+
+============================================
+WARNING: possible recursive locking detected
+6.16.0-rc3-next-20250624-syzkaller #0 Not tainted
+--------------------------------------------
+kworker/u8:11/20346 is trying to acquire lock:
+ffffe8ffffd55fd8 (&pd_list->lock){+...}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ffffe8ffffd55fd8 (&pd_list->lock){+...}-{3:3}, at: padata_find_next kernel/padata.c:256 [inline]
+ffffe8ffffd55fd8 (&pd_list->lock){+...}-{3:3}, at: padata_reorder kernel/padata.c:309 [inline]
+ffffe8ffffd55fd8 (&pd_list->lock){+...}-{3:3}, at: padata_do_serial+0x73e/0xb80 kernel/padata.c:379
+
+but task is already holding lock:
+ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: padata_reorder kernel/padata.c:300 [inline]
+ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: padata_do_serial+0x5b5/0xb80 kernel/padata.c:379
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&pd_list->lock);
+  lock(&pd_list->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by kworker/u8:11/20346:
+ #0: ffff888146e84948 ((wq_completion)pencrypt_parallel){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+ #0: ffff888146e84948 ((wq_completion)pencrypt_parallel){+.+.}-{0:0}, at: process_scheduled_works+0x9b4/0x17b0 kernel/workqueue.c:3322
+ #1: ffffc9000bf7fbc0 ((work_completion)(&pw->pw_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3215 [inline]
+ #1: ffffc9000bf7fbc0 ((work_completion)(&pw->pw_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ef/0x17b0 kernel/workqueue.c:3322
+ #2: ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ #2: ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: padata_reorder kernel/padata.c:300 [inline]
+ #2: ffffe8ffffd5f4d8 (&pd_list->lock){+...}-{3:3}, at: padata_do_serial+0x5b5/0xb80 kernel/padata.c:379
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 20346 Comm: kworker/u8:11 Not tainted 6.16.0-rc3-next-20250624-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: pencrypt_parallel padata_parallel_worker
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_deadlock_bug+0x28b/0x2a0 kernel/locking/lockdep.c:3044
+ check_deadlock kernel/locking/lockdep.c:3096 [inline]
+ validate_chain+0x1a3f/0x2140 kernel/locking/lockdep.c:3898
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+ __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+ spin_lock include/linux/spinlock.h:351 [inline]
+ padata_find_next kernel/padata.c:256 [inline]
+ padata_reorder kernel/padata.c:309 [inline]
+ padata_do_serial+0x73e/0xb80 kernel/padata.c:379
+ padata_parallel_worker+0x75/0x1d0 kernel/padata.c:157
+ process_one_work kernel/workqueue.c:3239 [inline]
+ process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3322
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3403
+ kthread+0x711/0x8a0 kernel/kthread.c:463
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
 ---
- arch/arm64/boot/dts/qcom/Makefile                  |   1 +
- .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 255 +++++++++++++++++++++
- 2 files changed, 256 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 140b0b2abfb555b8ef61bd9ed0217d8997800809..af3757ca017b6e3d8c579e43f647a71fc64c62b3 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -70,6 +70,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-wingtech-wt82918hd.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-flipkart-rimob.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts b/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..ef4faf7631327ba3f7d954cef57bb1ebfc09a1cc
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts
-@@ -0,0 +1,255 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2025, Cristian Cozzolino
-+ */
-+/dts-v1/;
-+
-+#include "msm8953.dtsi"
-+#include "pm8953.dtsi"
-+#include "pmi8950.dtsi"
-+
-+/delete-node/ &cont_splash_mem;
-+/delete-node/ &qseecom_mem;
-+
-+/ {
-+	model = "Billion Capture+";
-+	compatible = "flipkart,rimob", "qcom,msm8953";
-+	chassis-type = "handset";
-+	qcom,msm-id = <293 0>;
-+	qcom,board-id = <0x340008 0>;
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer@90001000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x90001000 0 (1920 * 1080 * 3)>;
-+
-+			width = <1080>;
-+			height = <1920>;
-+			stride = <(1080 * 3)>;
-+			format = "r8g8b8";
-+
-+			power-domains = <&gcc MDSS_GDSC>;
-+
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>,
-+				 <&gcc GCC_MDSS_MDP_CLK>,
-+				 <&gcc GCC_MDSS_BYTE0_CLK>,
-+				 <&gcc GCC_MDSS_PCLK0_CLK>,
-+				 <&gcc GCC_MDSS_ESC0_CLK>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&gpio_key_default>;
-+		pinctrl-names = "default";
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		qseecom_mem: qseecom@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		cont_splash_mem: cont-splash@90001000 {
-+			reg = <0x0 0x90001000 0x0 (1080 * 1920 * 3)>;
-+			no-map;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+
-+&hsusb_phy {
-+	vdd-supply = <&pm8953_l3>;
-+	vdda-pll-supply = <&pm8953_l7>;
-+	vdda-phy-dpdm-supply = <&pm8953_l13>;
-+
-+	status = "okay";
-+};
-+
-+&pm8953_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators {
-+		compatible = "qcom,rpm-pm8953-regulators";
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_s6-supply = <&vph_pwr>;
-+		vdd_s7-supply = <&vph_pwr>;
-+		vdd_l1-supply = <&pm8953_s3>;
-+		vdd_l2_l3-supply = <&pm8953_s3>;
-+		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
-+		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
-+		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
-+		vdd_l23-supply = <&pm8953_s3>;
-+
-+		pm8953_s1: s1 {
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <1156000>;
-+		};
-+
-+		pm8953_s3: s3 {
-+			regulator-min-microvolt = <1224000>;
-+			regulator-max-microvolt = <1224000>;
-+		};
-+
-+		pm8953_s4: s4 {
-+			regulator-min-microvolt = <1900000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8953_l1: l1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+
-+		pm8953_l2: l2 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8953_l3: l3 {
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <925000>;
-+		};
-+
-+		pm8953_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1900000>;
-+		};
-+
-+		pm8953_l8: l8 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <2900000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8953_l10: l10 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l13: l13 {
-+			regulator-min-microvolt = <3125000>;
-+			regulator-max-microvolt = <3125000>;
-+		};
-+
-+		pm8953_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l17: l17 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l19: l19 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8953_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+
-+		pm8953_l23: l23 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+	};
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8953_l8>;
-+	vqmmc-supply = <&pm8953_l5>;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	vmmc-supply = <&pm8953_l11>;
-+	vqmmc-supply = <&pm8953_l12>;
-+
-+	cd-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
-+
-+	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <135 4>;
-+
-+	gpio_key_default: gpio-key-default-state {
-+		pins = "gpio85";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "peripheral";
-+};
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-2.49.0
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
