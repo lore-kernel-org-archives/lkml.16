@@ -1,162 +1,167 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAF8320B;
-	Sun, 29 Jun 2025 12:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9745419E82A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 12:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751198468; cv=none; b=P/K4UJuK1SlgB5SeHH2vQTTjK6kCc7U5iuq2O3qiLy3u8j1QWTkdfr8yBJXcqxm+3WIP9nvwAJWnRtLzmN9lwFzzaBk+vp4NNs1TkPfFvJbvIYbGNkddswOI0+e5zafd4QESUbHAIB9EoMGBjPCK3igxjaw8/Z1JFsskUxUMWBI=
+	t=1751198887; cv=none; b=ooINryHARcxocZJxyhFLuJqOmS0F81+gjqlkZNqVXoSV9Q+a6JKVXqIq17IMgjGfM2Zqcopajp2cxMzBhpAmN762pmQyiAITiCL45aUfYkVk1XdOxzYO8YStUgK9Aq4ASrPIxMDJ5g7tmAcR6K4aPmJFqym3qCi3kYyu86NYp/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751198468; c=relaxed/simple;
-	bh=xTWnCwiFHUcg+AaeKlm6+y0nP5bwGd0f5b6EaHOiD88=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Va4VwfhCcoNwPuvXRu2mnTOGrdFh26b5bFJ4fDLRaADNHfroOeMwNPszLXWGF8D1GEVp3C625FR8y47tSfx7fSrRNNv3zAWy7I3/llkpXJk1bvw039Fc2CNL1WK4HE9k8GX6Bj6bg+0AUD02cp2jOc+jJ8Xa3dGilQrIVqI/W2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVQU3up1; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751198887; c=relaxed/simple;
+	bh=Bd4ZFb5mI/vt0MlkmiVCP1yVrwm4sXAQYCfiPh8N3BA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RdIJ77y97c5XVTJcBt2zvnn3DmNXUwFTVKJXwkGpNsW9lZ/pn7E4ZDxS1GHJIHoe12+ghuckWPVEIIVnGrru891VbfLCMjRSx29wuMfA91k8fM/1ZTnJmTkRO9FPGtKzp23lH2aMRMIFyQP3CRgX1+Pcu9T991xbFUSX5H+Ilro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AcSwfLw+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVQU3up1"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b34a6d0c9a3so1410475a12.3;
-        Sun, 29 Jun 2025 05:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751198466; x=1751803266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E1sn6VbvjjR/oI2nWRShk8F3QlCxvBjWaHGE0Fp6CMk=;
-        b=HVQU3up1EB30pzAt+Ox5CAHqzbQ/JmKko8GoV/e208f86AaupTiWPnfOp2bOc4TNep
-         ksvKVtwud8NTw5nNc+Nwi5+LOPh929w5AYpeTp+Vt9eF375I2QX56aDjv/Muo9E70l8r
-         d9LsGVN58LlT/nsKPv3+FoWSKTk+Gdt3hZvZ1zNr8eenOKFJW3zhJVaUsoRKEAvumz1l
-         SYT+jNZC0w5xephbA0ia+PXur37VaxZ8/CIqcj1i2RjMlzWy/KqUuXvmWHEtjwTDaolN
-         vfg1kfESG3tJegwsKZi7Ita5SZ6ZIIaZMosr/Fh3gmxez/Mmnx+vw9dKmd34362lnzxn
-         6Mzw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AcSwfLw+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751198884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y61uksNXY3bfxfbmhRvj/wWi6127GwpvTiXCWAuJy7Y=;
+	b=AcSwfLw+eR77dtav8RM5UgkU0RGUt+2bIs7ZQjYUEjgx5mZjp1u36XjAjuwdhhpYiW2JAW
+	xzTVFrRSE2AxHXqIdsPjQS+g1gkB9spo/OrjUaahDOpHBjlIqBfAkioc1IRmqxGOFEl7L8
+	CYklQjDBIiJZ7xh8FEjOTut4cwSKuSg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-4zKEoKWVP-C91VTfcK1EgA-1; Sun, 29 Jun 2025 08:08:02 -0400
+X-MC-Unique: 4zKEoKWVP-C91VTfcK1EgA-1
+X-Mimecast-MFC-AGG-ID: 4zKEoKWVP-C91VTfcK1EgA_1751198881
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ae0d798398bso248903366b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 05:08:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751198466; x=1751803266;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E1sn6VbvjjR/oI2nWRShk8F3QlCxvBjWaHGE0Fp6CMk=;
-        b=WKVvoan+sbagqggMfw3qllKz3vgw6VyE8cYvKBcvozZJhcnEDAzoOA7xfXbnYftvFn
-         ZOyANYBL1UGE0OrEbX3NSAJdIfmX4t7gZENQ4vSmWd6j5/xE6bXBk/ljWFCuHXRkzL6A
-         kqHfjrgZxju/2lmgcTweIP1t+iQoWIKNxbw88AssOkE6k3P/RpfjSncVuae9Ko4hfsNp
-         /OwcxJHdGZuEqo1EwbpIwurybx5krzhUwxpI1hYlso9gorufqKgjFN8llr/8Rp9BpEdQ
-         u5LF3HHvqRywD2t3CyWk4zNT+NlYlTgOmu7AzCy3YtVyNU7ksD6UrThk/DT+HZ5X9Q5G
-         3kaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfDQ1lTJdsEY1RYx1VauekSq6cVXq/Vi3B7CLHRTcTPduAxgqYi6M83xyOL2h+AQaUowuPp33tGGextGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzjOn3PzCZu43PS+SAam8kYXYgftPca6aflLjdj/RuMJMfli9h
-	TEMehggB1TKSiRWAUWkdfd9XGG6Oabk7Q2/XAbJi2gayKPV4p7AB7k9+26cw9w==
-X-Gm-Gg: ASbGnctOLLoXpL1samdsjtT7mlM0E7DW4wZrp23NQ2tmqA58C6qvYI5yPfYCWwzHRZh
-	O1Rh9o7Qj+BTfamjbYRqer+NzXWNB7hN42bmIDEbZ9qF+20YzOupuInuyXJRGvSctzs5m23vr7v
-	j7YJXCgondDpSj3WmHv87fL6vb7KVWix5GHxnplNimIJ8gYwaA6K62PI9ZpKCwCxBMZH0u8p0oW
-	ZTunS9E5gpWvTq2iaPHe7x/Od7bv2+Lc4BcdUY8e/agOY4t8Pz6pbvvRKJkQWrRpQdMvgJ5xxjU
-	s5QrwD4odBbHXOXzZII4YgxQ2/YP42AtvguqxlelXf1Cb21CxWohPVwcwrUh0vQTJq4r0OVDawE
-	TMP8n8ebKyl+csZaTOMLO3Ax12mf7w3uB1VuiO2Az3SiW/QVd6hKA2krF+LI/gwe6sLSk
-X-Google-Smtp-Source: AGHT+IEw1tpy/lJ8vIdU3FBcw0DG+ETQo7xhE8V8Vq1NG03tbbcabRmg6GYPa7lqJzB/1WQTUW6l3A==
-X-Received: by 2002:a05:6a20:729c:b0:1f5:8a1d:3904 with SMTP id adf61e73a8af0-220a113c6d2mr16151574637.7.1751198465840;
-        Sun, 29 Jun 2025 05:01:05 -0700 (PDT)
-Received: from localhost.localdomain (124-218-201-66.cm.dynamic.apol.com.tw. [124.218.201.66])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31d842fsm5666139a12.51.2025.06.29.05.01.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 05:01:05 -0700 (PDT)
-From: "Lucien.Jheng" <lucienzx159@gmail.com>
-To: linux-clk@vger.kernel.org,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	daniel@makrotopia.org,
-	ericwouds@gmail.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	joseph.lin@airoha.com,
-	wenshin.chung@airoha.com,
-	lucien.jheng@airoha.com,
-	albert-al.lee@airoha.com,
-	"Lucien.Jheng" <lucienzx159@gmail.com>
-Subject: [PATCH v1 net-next PATCH 1/1] net: phy: air_en8811h: Introduce resume/suspend and clk_restore_context to ensure correct CKO settings after network interface reinitialization.
-Date: Sun, 29 Jun 2025 19:59:11 +0800
-Message-Id: <20250629115911.51392-1-lucienzx159@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1751198881; x=1751803681;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y61uksNXY3bfxfbmhRvj/wWi6127GwpvTiXCWAuJy7Y=;
+        b=BVIxKJ7/fX8+6cCvqsjc/ysGFMPwUDsxOI8+gPqRxivsE/JYPSVoQMXUxyyZg0ZqEL
+         R0XDMU6KaQ5DpvwTqCX+ZhROrQyhfwV68Klx30Hx0S5d8y8yHcB9VPXdliwubc408rCs
+         rCzq5rCBIgO4RHwCg2DQQv75OJj4+thVgt58jlz58lNXf64mAOxWej1fjSP/fT0SOVLA
+         y5JedyLhHrZlB/MqzaB/dCv96OV31yxJMhc4sBoH9JWJfigN8qOSMq8VHoNZMpJ4WwvD
+         rgYsjarLZXc7qIT0uYFgOxDWFHJTKT1jAGvHOOIf3lJkKkTZcb2rjxrXod2uR93z2gFf
+         nPcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpwv3gN16fs8rkmdHg5POEzXFfPyTc9y6sCGDdr5zy4f9DC+zNhJwTzjVsiRksZe8xp63RT4StCB/c5+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCPpbbwvXVeg5/36GiWRZMH176jWW1H158Ecb9b+wpSNTs3nQc
+	LUwjB6f41h0LatlM44toLZqb8TigaoGUXHOFENi02GnG0DbZYDwG0pMJxMgXpyGdPwaiMzQcmSn
+	J1800O7DOtsIV1Wx+/g6UDvNTKNySxZsM0tmPJ4Mynu6gdtJVPASu2siNICdYkqhNpg==
+X-Gm-Gg: ASbGncuSO/dZvfFHsHm3znoQ/f6Km37GK5SQKQ6hxXFb0pDiKH93sdtl8kQrLRB/mRT
+	VCvGhljYdZkRXThPncd5XJO5NVJ2PIhNbKDnO4tz/U5rNL5aOAjYrTlzzGNvTk6U7xwE+irdtiw
+	knwWWFFs4GHY6geoMnwWdGeAnPxrYtLYB+AFNmzMKl3+kgzFKWDyYBTQpnl641o3TfMQnZSr5ux
+	NQ8j/rBFYGoyzQ+6XRcLhczC59uZ2xpS8lIZJzYNnlNWAox70WplJ5ddm5m27n7lqzhswMVo5kL
+	WCv6Nrb2UDWyECtz0soJDLVevHLD0L1W1JT27L4fr13Y2FLmky2HSrLnCjMsnq7p3YSYpfv2Sbr
+	agLgYpLdwhJlR5ReXRui7XkqVwe6g5LZmhiGGvPbaoT9pJan8aIc+ktPIu+L+IrAa2MTbdQeqwQ
+	==
+X-Received: by 2002:a17:907:7207:b0:ae3:6b52:f7dd with SMTP id a640c23a62f3a-ae36b52f88amr514353866b.46.1751198881152;
+        Sun, 29 Jun 2025 05:08:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IET079+lNS2Zrgoqy9+whMR/tx3pQQ8PudfiWv0ZLtWOTerBzl2nFJIzCBrV1Me9yEUFQUboA==
+X-Received: by 2002:a17:907:7207:b0:ae3:6b52:f7dd with SMTP id a640c23a62f3a-ae36b52f88amr514350466b.46.1751198880619;
+        Sun, 29 Jun 2025 05:08:00 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bc2dsm490353166b.136.2025.06.29.05.07.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 05:07:59 -0700 (PDT)
+Message-ID: <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
+Date: Sun, 29 Jun 2025 14:07:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Luca Weiss <luca.weiss@fairphone.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+ <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+ <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-If the user reinitializes the network interface, the PHY will reinitialize,
-and the CKO settings will revert to their initial configuration(be enabled).
-To prevent CKO from being re-enabled,
-en8811h_clk_restore_context and en8811h_resume were added
-to ensure the CKO settings remain correct.
+Hi Krzysztof,
 
-Signed-off-by: Lucien.Jheng <lucienzx159@gmail.com>
----
- drivers/net/phy/air_en8811h.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
+> On 27/06/2025 11:48, Luca Weiss wrote:
+>> Hi Krzysztof,
+>>
+>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
+>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
+>>>> Document the interconnects property which is a list of interconnect
+>>>> paths that is used by the framebuffer and therefore needs to be kept
+>>>> alive when the framebuffer is being used.
+>>>>
+>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
+>>>>  1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
+>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>> @@ -79,6 +79,9 @@ properties:
+>>>>    power-domains:
+>>>>      description: List of power domains used by the framebuffer.
+>>>>  
+>>>> +  interconnects:
+>>>> +    description: List of interconnect paths used by the framebuffer.
+>>>> +
+>>>
+>>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
+>>> some sort of resources in unknown way is not simple anymore. You need
+>>> device specific bindings.
+>>
+>> The bindings support an arbitrary number of clocks, regulators,
+>> power-domains. Why should I artificially limit the interconnects to only
+>> one?
+> 
+> And IMO they should not. Bindings are not supposed to be generic.
 
-diff --git a/drivers/net/phy/air_en8811h.c b/drivers/net/phy/air_en8811h.c
-index 57fbd8df9438..94cafda1f535 100644
---- a/drivers/net/phy/air_en8811h.c
-+++ b/drivers/net/phy/air_en8811h.c
-@@ -11,6 +11,7 @@
-  * Copyright (C) 2023 Airoha Technology Corp.
-  */
+The simplefb binding is a binding to allow keeping the firmware, e.g.
+uboot setup framebuffer alive to e.g. show a boot splash until
+the native display-engine drive loads. Needing display-engine
+specific bindings totally contradicts the whole goal of 
 
-+#include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/phy.h>
- #include <linux/firmware.h>
-@@ -865,11 +866,20 @@ static int en8811h_clk_is_enabled(struct clk_hw *hw)
- 	return (pbus_value & EN8811H_CLK_CGM_CKO);
- }
+It is generic by nature and I really do not see how clocks and
+regulators are any different then interconnects here.
 
-+static void en8811h_clk_restore_context(struct clk_hw *hw)
-+{
-+	if (!__clk_get_enable_count(hw->clk))
-+		en8811h_clk_disable(hw);
-+	else
-+		en8811h_clk_enable(hw);
-+}
-+
- static const struct clk_ops en8811h_clk_ops = {
--	.recalc_rate	= en8811h_clk_recalc_rate,
--	.enable		= en8811h_clk_enable,
--	.disable	= en8811h_clk_disable,
--	.is_enabled	= en8811h_clk_is_enabled,
-+	.recalc_rate		= en8811h_clk_recalc_rate,
-+	.enable			= en8811h_clk_enable,
-+	.disable		= en8811h_clk_disable,
-+	.is_enabled		= en8811h_clk_is_enabled,
-+	.restore_context	= en8811h_clk_restore_context,
- };
+Note that we had a huge discussion about adding clock
+and regulators to simplefb many years ago with pretty
+much the same arguments against doing so. In the end it was
+decided to add regulator and clocks support to the simplefb
+bindings and non of the feared problems with e.g. ordening
+of turning things on happened.
 
- static int en8811h_clk_provider_setup(struct device *dev, struct clk_hw *hw)
-@@ -1149,6 +1159,13 @@ static irqreturn_t en8811h_handle_interrupt(struct phy_device *phydev)
- 	return IRQ_HANDLED;
- }
+A big part of this is that the claiming of clks / regulators /
+interconnects by the simplefb driver is there to keep things on,
+so it happens before the kernel starts tuning off unused resources
+IOW everything is already up and running and this really is about
+avoiding turning things off.
 
-+static int en8811h_resume(struct phy_device *phydev)
-+{
-+	clk_restore_context();
-+
-+	return genphy_resume(phydev);
-+}
-+
- static struct phy_driver en8811h_driver[] = {
- {
- 	PHY_ID_MATCH_MODEL(EN8811H_PHY_ID),
-@@ -1159,6 +1176,8 @@ static struct phy_driver en8811h_driver[] = {
- 	.get_rate_matching	= en8811h_get_rate_matching,
- 	.config_aneg		= en8811h_config_aneg,
- 	.read_status		= en8811h_read_status,
-+	.resume			= en8811h_resume,
-+	.suspend		= genphy_suspend,
- 	.config_intr		= en8811h_clear_intr,
- 	.handle_interrupt	= en8811h_handle_interrupt,
- 	.led_hw_is_supported	= en8811h_led_hw_is_supported,
---
-2.34.1
+Regards,
+
+Hans
+
+
 
