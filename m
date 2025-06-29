@@ -1,201 +1,140 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AA323183B;
-	Sun, 29 Jun 2025 14:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888951D6AA
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751208087; cv=none; b=bjBBMW9t4eyZGNod3wIjIDV0EQsfpJaykOo/GbNNRfCaZpasXqxm1GUpy3usdvWlTwqOfYcWk6OSObbeGMeQxUqya4vQCZj/XICDwyPEFqJKejb7/iRMb9lB3V7wX6AlTfMQarB0mCQyngmOKo4md8cPSOHZwZ3V+yB2UVT5O0s=
+	t=1751208327; cv=none; b=upIgTI9FAD6c73RDsvDImRZrAaGCSc7vBa1TfqVZ6VhP8aaWvO97tD43OigsYl+uuoHcUja6bIpKXs/ig5WoUMtwQEoWx81axWRoS0VdWic+4HhBMcWFlAgRVTMMNk/CvYeqP5cdDxpbOqOgJfFHFxal0h7aMn8uTEoKf8un8CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751208087; c=relaxed/simple;
-	bh=4iptySoXMXJs2UzWlhwIPyIT0WKR/AuX6Cj72Rs0gYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OXlPI2JHWmNvxMFM49VXF5KxCrIz6Hq7sYyVYvXS77CWFytkUIPAlzOwgDYTxFVWnxI5UhuMXx1mRHlfA2XzLl00mdDUJ9qXrDNPIUHrnQ17bw6CyZxdEiW1vVwn4vf5Q/9ohPMaN1AbJ1hfrBn4GQrARCfk7sP7RoMVhVdr2QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKuEWC4D; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751208327; c=relaxed/simple;
+	bh=50naptVv5s/TjZg67luS1eqO7P3Zc5AAOWnLTHPerZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KprGB9xdHnD0Rzl9BTSDR+ZRSkq0CK/2GcoZSdV9DgzLT/kDYqTK43Hb4qiZ9JNHB8lKonLffWMDVp/IlpP+GJqfvzH6Xmvygejd6Fpu9s2BPeWMld75CBdNIlNBQDTywXVkUfeTQOf9JyPykeoD77uIqwcyLluUEEFLeJZyB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oECh7iqW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKuEWC4D"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3604712b3a.2;
-        Sun, 29 Jun 2025 07:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751208085; x=1751812885; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AkH6WZ47tB33hOq1ktfgw4nXcDuqU5IvVV0uN0/lGcY=;
-        b=cKuEWC4DJxs19wI2H3cULpmVMG8N4950MJRhuXBPFDi1dIGwWdbCJByAcMUq09E7YG
-         REN0tcRsecCGI0wRsme/fxn3TmLrRL3QCPuCuKkFyTnP/FkCHJKxtQbQnqmJzpD7SVi6
-         f/PJ+h6ILauHcaxu0pIdHQbNXPWKdFlrdzNLeBWkbgTvkbQR4S4FoXj/DA8rdzoSzig7
-         AEPve/tm3sw3/SO/wOlc91cgRAQs7tM5o58Edeyz2n2pKcMHC1Oglx8Lg+zROB7b+riU
-         AEDjZXBcGQdJCFWlgNAivcHvvQmv/nvVoLu+Pnf5p+V75JgaipoVlq8xkMBX3obzHhfE
-         6pkw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oECh7iqW"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TDqiak025707
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=U75yw7BMC/S6igk0SQ7PlAp8
+	c+8TFboIWS9Vq7PTNB4=; b=oECh7iqWHwXVcfgXCPhAZwgrgIRSNp1O4g18tRPQ
+	G+cquXTpg7+KbIZ4Bcle76waU/2UcVfVOpAYetxIiGcxg05xJoJptjI1n8+qfQkO
+	crMlx/koLGQ6Nzsym5ASCe4ikNAhAp6YQkjnBAR6rvHGoSGnHqRWrn8jh202q/vK
+	VVF+5OFC1mgxwRNBjQKH0uEeGPRnaQRZRrkhPDkQypXmPSNIFl7A1j6deZbC5Bek
+	ydDRgJ2sYEmcY4gx8V1u57Ea0OKUOJMsM0kiLN2KmtwwXejR81YXUr6f1ayfHRG4
+	Wz/h/Y91x3I/O1pDMB+1+VDZpjeDnanG/84dJY3teCxCog==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j95ht7wk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:20 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d38c5c3130so245816885a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:45:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751208085; x=1751812885;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AkH6WZ47tB33hOq1ktfgw4nXcDuqU5IvVV0uN0/lGcY=;
-        b=dJCIC54nohxQ9ZMmhlvskY5BKUtkozhvN3j6tVDhKrTucIFp6pc/GG6GceE2kpd91e
-         cOCIe430UZ3Zl5n/dAkmnSm0VSJQhyWouhNmmyjOR1MUH4s3eTfgHrZayFeYejCGV90b
-         QBmoyEnBSR8lDofPs8oHY6wnhEB+CgMVqnszWHewTbrCecem/3LrXvs00AcxmFoAbAw6
-         bPN0/ogZV0fOhcTh62PE+4xzdsMeBf48gWJQ/TCyzq32r7WcmAwpg41wY9rCy5Idpy3h
-         JbyPSUxejpUPFdCmiWkeTZt78XUl/Cd07uS0Zm6n7gLwIyAjAg1eGDDsUFHKOJraYnMk
-         kU/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVskIql5ueI9e6M9NHG0tLZhkXYkbhsujVcOlbky4lPT+AdzHFEzvjAmnvl2B0BsAWuT0WA0YmfjGwdFmVC@vger.kernel.org, AJvYcCXeY482NSkrYRyg+CYjwukXNCQ70RPRcIcYSmJ2AbYgWEVfw5ndovj4wB4M/9rgnmzDld/tJiLXnZzfZg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtNs7xNLraRH2tx7Qia0iF4Kh9aqtx4Sn1ZgZPfTV/gr1Q1h/O
-	vXtnldzQlmWaVvg/oK6oloJvds+eT7Al6zvwCKYvtLASOs9gKIvsfIgo
-X-Gm-Gg: ASbGncvxs8oIKd1z/qtsm9rlQ1mOjIP8YO8zPh37Uvdn6y+NL8g86mDNCTnKLWz5iVi
-	DgoBWjDsxGSGmiz1n8dIzISJnyCCtDd/vO2HORSQeBsBMVxmONO1M3j3fnpvp8kqQ676sdfNHtz
-	lOt9uWQOMsQkLU/+qvxRBx5N6KT/U+sX4OI4lUcBU7+F7fXUIuTGK8K2AgqpnilSMIQbsW/PDLV
-	0R6CQLbsNsokH8dbs67HFRlVk7ZqAdQjLg9T9sfsUIBNpB1mqx/ezOMwuhESSxPCUG7OaAlrGqe
-	/fG+z5+FXsTsXbKAxjJgXBlmzFBWlBrvzwq2hB2w8YJjcNmnbNHXpBP6QMGPLEuUZSkCMocI+Ap
-	Skw==
-X-Google-Smtp-Source: AGHT+IFBiKmBx9yH5kYGSYjeMY9rQSEBpTMve8iNeUO9mG9D8vqHt/VBUqvbXcqaLSd2ovKMv+M48A==
-X-Received: by 2002:a05:6a00:2d07:b0:736:8c0f:7758 with SMTP id d2e1a72fcca58-74af6e6659bmr12804699b3a.10.1751208085209;
-        Sun, 29 Jun 2025 07:41:25 -0700 (PDT)
-Received: from localhost.localdomain ([49.37.221.186])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74af55c7e89sm7039127b3a.109.2025.06.29.07.41.19
+        d=1e100.net; s=20230601; t=1751208319; x=1751813119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U75yw7BMC/S6igk0SQ7PlAp8c+8TFboIWS9Vq7PTNB4=;
+        b=Oo6bj+/npbmFttk8w1Rt/84KcDuri7U3/+Ui1iaoObUSb1dixGXSpxq51WWpV9ZW9x
+         JPQhE+LLHWbTvbUZ+tw6+/1WFucN2Kl3JaU6DOpk+vLjNHjijzVEKIGtzjDKzbGn/rgj
+         V0n8GXNZDJ6ul1aeQKFYUis1CEqbkhJUITOJ8NMVdjHVGNxhuWqRHKROUCcWWUZKniXF
+         2KXRCNiHqPd2855Z6J5+4kyL/n9TQADwEJSujLpf8HcxgC7cRc2xB5lYVwDBaxyTncFo
+         /szPSqOMmUIAY1P0xDMNDTWPsMB87aPJs/7u0Mvh1eKAFbjG2HrE6lxSWRV/fJCWXJ4P
+         lEfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhg5QNi4aTtXHKR2qvXeaEuKSi3UG+i+vO+0vVCIfOpzagbieJ46goNRjmnrNzWaVNR7Th3a5GMIeB41I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8263Kd+hGBbdU1Bxlnr0vHjGxMHBaR9HZx1v42gTkPqc6dHua
+	7TmniD8UF1mqkLnj85CNiCRmlYQH9QZlogTCpkFR7k71LqhU8iTLKBHMKzUhzU0EC+1jXTbKNUH
+	fKRd7vrliYfFaIZk1UcgTEHU6vUWhVyUnGV5V4IIo7xf/Go3f1vAkFp103xu2ymA9oJM=
+X-Gm-Gg: ASbGncupycxfxpDzIZsQsoC8mgW0FziG3u3Ym4Q+dK2i0iSX9k/v9Fb3vlWxqn2Four
+	wodT9QAo6OTHOzQtLPKwUd7e0NUt31nRj5JUWCg0VnMHIo6hLlE6b3FWvCV0MVWP79gjPt2MO69
+	s+M1nzP6Er376612P1zGtqApLiEpti6nVRImU+Su4mdJqvNqAw+cWx8qaFSJwkZNc+02GS7sEut
+	euBkn1HwHUujATuUIr+3nqqQLo1KEw9na7ia4d6a2C53xgSnyNONgdbOsG07Gfl0oQgZfcEhZjR
+	DMP/kdjG5tA16yAngOo6WJllsY7OL3OWiAPx1abDLyfJLo7zeZLXrTt1LqmkIpb/P12yNSTeNRe
+	Ir8hkhCcvkhVTlTDR1wV5VPOiqsuhgG5R2pI=
+X-Received: by 2002:a05:620a:400c:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7d4439b9679mr1537818385a.53.1751208318650;
+        Sun, 29 Jun 2025 07:45:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCYpAnwJ1rYQ1S233FYjwYu4oJCVh/e3dqa7Xz6LlKsV9YCedkRP+JE+l1W66OWbNHR1zgWw==
+X-Received: by 2002:a05:620a:400c:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7d4439b9679mr1537812885a.53.1751208318157;
+        Sun, 29 Jun 2025 07:45:18 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2cd99esm1137184e87.158.2025.06.29.07.45.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 07:41:24 -0700 (PDT)
-From: Abdun Nihaal <abdun.nihaal@gmail.com>
-To: andy@kernel.org
-Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
-	dan.carpenter@linaro.org,
-	gregkh@linuxfoundation.org,
-	lorenzo.stoakes@oracle.com,
-	tzimmermann@suse.de,
-	riyandhiman14@gmail.com,
-	willy@infradead.org,
-	notro@tronnes.org,
-	thomas.petazzoni@free-electrons.com,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v3 2/2] staging: fbtft: cleanup error handling in fbtft_framebuffer_alloc()
-Date: Sun, 29 Jun 2025 20:10:11 +0530
-Message-ID: <4e062d040806dc29d6124ac0309e741c63f13ac0.1751207100.git.abdun.nihaal@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1751207100.git.abdun.nihaal@gmail.com>
-References: <cover.1751207100.git.abdun.nihaal@gmail.com>
+        Sun, 29 Jun 2025 07:45:17 -0700 (PDT)
+Date: Sun, 29 Jun 2025 17:45:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Rob Clark <robin.clark@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, Helen Koike <helen.fornazier@gmail.com>,
+        Vignesh Raman <vignesh.raman@collabora.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/ci: Remove sdm845/cheza jobs
+Message-ID: <nij26lzoinzr3cbfmvwzigtxpsjibaudect3i772swbnmyuz5w@2jny5ie3oqw3>
+References: <20250629135843.30097-1-robin.clark@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629135843.30097-1-robin.clark@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDEyNCBTYWx0ZWRfX5sJpb7tCaak0
+ e2EdeQAGichs0JqQO+BHDA6tQdfA0lpa7x3nPC2tGDSggBHZj5DKD6/QbFoLHnBdkyjq/M2osvv
+ SgzZWc7UEwOR2Pdb5H8rVXMAIsIDmiVrAx3x9p91EtQoJmFy7Kk4qif+gfWh+g7k+rmue36hFHT
+ zp2IEIFajRQWgHU63JgNeXP1KkLg1FKCWZC7GyjEgZGXLkthKo0F74GdyaDlTmGH6FZS/HftyCE
+ K4HYrOF0FnoU2gv4KKpMTkJE+6+D4gxx6ioAakRzR/f3UMC2FqVwdwS1m8WFXx6colUJIi1hK1A
+ kUNxlC9snvwi2CzphawUugqU7hmDtbgVO4cwIOI49/7iUlTB1yg5aueNcRz1D74idTQauxktHXn
+ 7KmH0Nb22jlf0TD1rXfayAHW8/Ci7W53k0ibWaZGFuBcZN0GCGCk64dF/RSWO/EcwNd9X78A
+X-Proofpoint-ORIG-GUID: 2_-BYmsZPa-dBhxxyZJWAbmnEgg1B8_q
+X-Authority-Analysis: v=2.4 cv=EuHSrTcA c=1 sm=1 tr=0 ts=68615180 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=zVdBlVQdkfp4bBuhmU0A:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: 2_-BYmsZPa-dBhxxyZJWAbmnEgg1B8_q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxlogscore=825 malwarescore=0 mlxscore=0 phishscore=0
+ spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506290124
 
-The error handling in fbtft_framebuffer_alloc() mixes managed allocation
-and plain allocation, and performs error handling in an order different
-from the order in fbtft_framebuffer_release().
+On Sun, Jun 29, 2025 at 06:58:41AM -0700, Rob Clark wrote:
+> These runners are no more.  So remove the jobs.
+> 
+> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/ci/build.sh                   |  17 -
+>  drivers/gpu/drm/ci/test.yml                   |  14 -
+>  .../gpu/drm/ci/xfails/msm-sdm845-fails.txt    |  29 --
+>  .../gpu/drm/ci/xfails/msm-sdm845-flakes.txt   | 139 -------
+>  .../gpu/drm/ci/xfails/msm-sdm845-skips.txt    | 350 ------------------
+>  5 files changed, 549 deletions(-)
+>  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
+>  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
+>  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
+> 
 
-Fix them by moving vmem allocation closer to where it is used, and using
-plain kzalloc() for txbuf allocation.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
----
-v2->v3: 
-- Remove the if check before kfree of txbuf.buf, because it is zero
-  initialized on allocation, and kfree is NULL aware.
 
-Newly added in v2
-
- drivers/staging/fbtft/fbtft-core.c | 31 +++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 8538b6bab6a5..9e7b84071174 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -568,18 +568,13 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 		height = display->height;
- 	}
- 
--	vmem_size = display->width * display->height * bpp / 8;
--	vmem = vzalloc(vmem_size);
--	if (!vmem)
--		goto alloc_fail;
--
- 	fbdefio = devm_kzalloc(dev, sizeof(struct fb_deferred_io), GFP_KERNEL);
- 	if (!fbdefio)
--		goto alloc_fail;
-+		return NULL;
- 
- 	buf = devm_kzalloc(dev, 128, GFP_KERNEL);
- 	if (!buf)
--		goto alloc_fail;
-+		return NULL;
- 
- 	if (display->gamma_num && display->gamma_len) {
- 		gamma_curves = devm_kcalloc(dev,
-@@ -588,12 +583,17 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 					    sizeof(gamma_curves[0]),
- 					    GFP_KERNEL);
- 		if (!gamma_curves)
--			goto alloc_fail;
-+			return NULL;
- 	}
- 
- 	info = framebuffer_alloc(sizeof(struct fbtft_par), dev);
- 	if (!info)
--		goto alloc_fail;
-+		return NULL;
-+
-+	vmem_size = display->width * display->height * bpp / 8;
-+	vmem = vzalloc(vmem_size);
-+	if (!vmem)
-+		goto release_framebuf;
- 
- 	info->screen_buffer = vmem;
- 	info->fbops = &fbtft_ops;
-@@ -613,7 +613,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	info->fix.accel =          FB_ACCEL_NONE;
- 	info->fix.smem_len =       vmem_size;
- 	if (fb_deferred_io_init(info))
--		goto release_framebuf;
-+		goto release_screen_buffer;
- 
- 	info->var.rotate =         pdata->rotate;
- 	info->var.xres =           width;
-@@ -668,7 +668,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- #endif
- 
- 	if (txbuflen > 0) {
--		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
-+		txbuf = kzalloc(txbuflen, GFP_KERNEL);
- 		if (!txbuf)
- 			goto cleanup_deferred;
- 		par->txbuf.buf = txbuf;
-@@ -694,12 +694,10 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 
- cleanup_deferred:
- 	fb_deferred_io_cleanup(info);
-+release_screen_buffer:
-+	vfree(info->screen_buffer);
- release_framebuf:
- 	framebuffer_release(info);
--
--alloc_fail:
--	vfree(vmem);
--
- 	return NULL;
- }
- EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-@@ -712,6 +710,9 @@ EXPORT_SYMBOL(fbtft_framebuffer_alloc);
-  */
- void fbtft_framebuffer_release(struct fb_info *info)
- {
-+	struct fbtft_par *par = info->par;
-+
-+	kfree(par->txbuf.buf);
- 	fb_deferred_io_cleanup(info);
- 	vfree(info->screen_buffer);
- 	framebuffer_release(info);
 -- 
-2.43.0
-
+With best wishes
+Dmitry
