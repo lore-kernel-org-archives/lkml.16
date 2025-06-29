@@ -1,31 +1,53 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB5F8460
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D12080C8;
+	Mon, 30 Jun 2025 07:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267151; cv=none; b=ZJ92rLYSEn/e+JUiQgAUFtRow+Ry96CVfLQfskTjfNrpxFv9sG3Fo+bQm5XSw6BIA06Lhxvvo5hmfUofFX7bRTq1btI3tkTrkrsLe6vXjAk3ZAbdtLn3lBx2voyvfoyte55OP4WNtOoEKgBUdzVkBmV3307KIriCQEHDf7g2KLU=
+	t=1751267195; cv=none; b=mBnJcJ66UJby6j7MwLuacsLY5zlukdW+h7Bw9Wg1ZwyRYJtLUSAYF0u35mPrSL7TYo3W/MhYd07GyeRNhVCV2LFpGKxvH/px1zrzBu74N8JrzYIxjrX74rJFbCJTsNhsUlKE0CXOg9kswrHLNTFNITNDH7ygot44iOxQCCDrtxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267151; c=relaxed/simple;
-	bh=+P877cxGaLfbPiiI3ZSDXbUsyQp1eDv2BViZtiMKwAI=;
+	s=arc-20240116; t=1751267195; c=relaxed/simple;
+	bh=wllN8t+w1pW4Y3pzRl8hQh6vUCgWQ0nNy9reVORuNqw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XjK7CZNAOQkUgb4Xtw4LrTmUjdQ9dtzoyRdcyUja8TBUy+Gl/GYgV78QRCJGIEEsgZMRqTWyPBc4R64+dvEQq+1E+0zcV/0c/wiBPfvmqeYXTkyPxpwAnh1Dy7yVMMezAwLe+DPApuBVniyTqUEeV8b4yduLMv7IGQbPqv9FmsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kCUFhb/G; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=lrkTmPwAmdeWJk/VniwtXzhUgsQI2oo6Hg6LB+DTGmPdc+HWQjmWPvV36KrbGOpH9iRbktjxf1Vv51RupJMTi1vxofpZvlAAbIh9C7ReM18WI6p+xxuSmXJRk8CHxB4fyK2xZpJfX5AU4lv9IDO3u0hsCVaGHetUDSF9fdOh7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drnoSktv; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kCUFhb/G"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751267141; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=qfF4EXeW44arUrZzInGrjdsKzLu93XNyi+vgFlSYaow=;
-	b=kCUFhb/GD3/cpMyP6gAjMDEDo3qvXJI79XckOOtJtdSlH6I7KKi4PPMbVjfMYTW4X1sR1YRajVGb+MCdzCkCPmRqViPS5Cy6TxeJLcTezhah50dqs4GsYI7/P0hm8b7qTYyRjj3d3TUYTt4qxs3VY6P0OszvkIV44LpQqNtsxmw=
-Received: from 30.74.144.137(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wg5UHDY_1751267139 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 15:05:40 +0800
-Message-ID: <53a3a4e5-6fb1-4a50-89f4-81ecc499dae6@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 15:05:39 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drnoSktv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751267194; x=1782803194;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wllN8t+w1pW4Y3pzRl8hQh6vUCgWQ0nNy9reVORuNqw=;
+  b=drnoSktv/XCPDmrPHYDx3aphf9patgbrhUjbO5Lb58A+safzwcrGn1d2
+   nZdxBefkNADBin4RPtMBVcnDazO8mMkCuWdp+VlwIQ3fO9BqjgdonJYAE
+   fZQRLDiFv5mg6uE9n5QatCLeozNrhMdivKGIhD9/iUxbmO+geOuyEZoOl
+   5mcSZSWuO7wyN/hHgjrG6XaGZVdQ88gpwI/bnsuEHo/cO9ZSow9v/+htn
+   +wjSHClHcfxPkp4EfFdV/EGc7HYCMMPyyF71+k1FZseaLTNoE/63UN12F
+   WHzwaJfCbtaHB+bI/ifUpbgrzeBJAWymHUwjYip+wspsYGZOHtTseHCM0
+   w==;
+X-CSE-ConnectionGUID: ud1M9yaaRDyN3aOWLZVnxw==
+X-CSE-MsgGUID: JrW4u5ClQByxgwhx3Z5zRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="52600137"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="52600137"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:33 -0700
+X-CSE-ConnectionGUID: CX4JkTxEQg2iywO4aH5ZDg==
+X-CSE-MsgGUID: LpgIKwFGQhauP3hS2zFHZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="177046689"
+Received: from agladkov-desk.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.57])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:27 -0700
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 4DDAE4436B;
+	Mon, 30 Jun 2025 10:06:25 +0300 (EEST)
+Message-ID: <7c4379dd-e004-4e0d-85db-139c3f671edc@linux.intel.com>
+Date: Sun, 29 Jun 2025 11:30:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,66 +55,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] mm/shmem, swap: fix major fault counting
-To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
-References: <20250627062020.534-1-ryncsn@gmail.com>
- <20250627062020.534-7-ryncsn@gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250627062020.534-7-ryncsn@gmail.com>
+Subject: Re: [PATCH v4 2/4] media: ox05b1s: Add omnivision OX05B1S raw sensor
+ driver
+Content-Language: en-US
+To: Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
+ hverkuil-cisco@xs4all.nl, laurent.pinchart+renesas@ideasonboard.com,
+ robh@kernel.org, krzk+dt@kernel.org, bryan.odonoghue@linaro.org,
+ laurentiu.palcu@nxp.com, robert.chiras@nxp.com
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ LnxRevLi@nxp.com, kieran.bingham@ideasonboard.com, hdegoede@redhat.com,
+ dave.stevenson@raspberrypi.com, mike.rudenko@gmail.com,
+ alain.volmat@foss.st.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
+ alexander.stein@ew.tq-group.com, umang.jain@ideasonboard.com,
+ zhi.mao@mediatek.com, festevam@denx.de, julien.vuillaumier@nxp.com
+References: <20250305094359.299895-1-mirela.rabulea@nxp.com>
+ <20250305094359.299895-3-mirela.rabulea@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+In-Reply-To: <20250305094359.299895-3-mirela.rabulea@nxp.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Mirela,
 
+On 3/5/25 11:43, Mirela Rabulea wrote:
+> +struct ox05b1s_reg {
+> +	u32 addr;
+> +	u32 data;
+> +};
 
-On 2025/6/27 14:20, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
-> 
-> If the swapin failed, don't update the major fault count. There is a
-> long existing comment for doing it this way, now with previous cleanups,
-> we can finally fix it.
+Could you use struct reg_sequence instead, please?
 
-Sounds reasonable to me. Additionally, swapin failure is a rare event, 
-so I think this patch will have little impact on user statistics.
-
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> ---
->   mm/shmem.c | 11 +++++------
->   1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 5f2641fd1be7..ea9a105ded5d 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2316,12 +2316,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   	/* Look it up and read it in.. */
->   	folio = swap_cache_get_folio(swap, NULL, 0);
->   	if (!folio) {
-> -		/* Or update major stats only when swapin succeeds?? */
-> -		if (fault_type) {
-> -			*fault_type |= VM_FAULT_MAJOR;
-> -			count_vm_event(PGMAJFAULT);
-> -			count_memcg_event_mm(fault_mm, PGMAJFAULT);
-> -		}
->   		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
->   			/* Direct mTHP swapin without swap cache or readahead */
->   			folio = shmem_swapin_direct(inode, vma, index,
-> @@ -2341,6 +2335,11 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   		}
->   		if (!folio)
->   			goto failed;
-> +		if (fault_type) {
-> +			*fault_type |= VM_FAULT_MAJOR;
-> +			count_vm_event(PGMAJFAULT);
-> +			count_memcg_event_mm(fault_mm, PGMAJFAULT);
-> +		}
->   	}
->   	/*
->   	 * We need to split an existing large entry if swapin brought in a
-
+-- 
+Sakari Ailus
