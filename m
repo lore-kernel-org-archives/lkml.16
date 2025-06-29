@@ -1,114 +1,225 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D0A21FF59;
-	Sun, 29 Jun 2025 12:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BCF2A8C1
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 12:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751201313; cv=none; b=kempmrL6uy8oITbjebJMuWusE8Zo/+YCJcpOEwb2wIoQOhji8Fb/0Bj6y0byQu51zOGbMu9KlaqaFJ2o/b9h9JP7Msy+uPMhiU/qtIEicvt5hqAIaO3BvuvWY0Z+OMAJ/kiris7IJA90uBL1XB8CY+RyGcSO5R7Mjnl3W+8ZYQg=
+	t=1751201483; cv=none; b=E89fI4LReGD9qnju0LPjvVTzTC2K5LJobaM2fnF72pqO0k+jZRhVhUHEPTQJ9S/77HDY/mYhTlbJgZ8CoGVpygZzPwCfswjVdRsB2RQPInQ+aYPbB2vpapLdPlwRgUg4Mz+j5U8pHrBDK9tklTPVzWprGgWjTjPB1+2j5YreD2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751201313; c=relaxed/simple;
-	bh=ZHiuNjkysUslUmsJxg+pQGZzasofUlWvOElEMSh7s+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxdrpqgK8HtLwa4IkRm/n9NnwWpZHNcWzAI4z26wdLD+ieDTUKWR5qHNqreCU7ZJNEypNxj2HyzPkA83TA1jdKMDHRGwHkP3uyPf9hWYVmdNx8+7Khcke+SdoqqpJtMk1pOUP7LouC5cAqO1+dpHqY99HjchA/MsdTSDqttw4jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJwvcV4q; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751201483; c=relaxed/simple;
+	bh=f3DfRpajsxmQgEZaY45qg/eKJcM6af3XcopfHWNDkc8=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=p9AakpQmWgDofi8DDJjYOnNQ+hDU+QkXGqpnI2lpWfyiXWnNZ381EZcDRmSwhDsOqGFuGqiGfO7/NNupwoyh5hD155vf9fyUGNAdZF7+P7nrAzyf2VjRLrEKP8zrdOtpHZHemM0oAWBsTqclHNPhPM0r9vyl76SqUz70AO4+E8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=EUmwRiM3; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJwvcV4q"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d3f5796755so346997685a.1;
-        Sun, 29 Jun 2025 05:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751201311; x=1751806111; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OvjviZOYrIKurfYh7ExfJUlmx0DJYashywHEqMq8QKk=;
-        b=OJwvcV4q1yol3NJWPxTgIuLNLBBVTDHbt/u+tSMG03eG6jFIqXpwgpAI4ZciLEd38X
-         A2VaBCrkr5DgnRqYOyKEows36CMqNdk3zvvaZo7+Tjsz4aVKrZvl0oX/K3iTjDNLGvSA
-         iyo1x3qSD+N4WkkcMbAWmik3HF5dLQtJOta1cxHQwBtV0J1LmJcoKUKzKBUafTRxYOK2
-         Pk6Q3OPmuipb3qj/hjYv6gKe+UCSGqh5MA7xd33h4UKEKhziftvAeoPJawnNzOKKybP4
-         0fc7USeb8aCcQCaeoPPKfyU10dgZBhE8ut3txWCC5aH4NNzY3jYwsMG55wbhn6xRI52A
-         hW5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751201311; x=1751806111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OvjviZOYrIKurfYh7ExfJUlmx0DJYashywHEqMq8QKk=;
-        b=M5saFTzLdWEF1JPaPlDKDrGzY63O7qUK63OAtk0+bSq/e+TO0IuCS2MnhySh1Gl+iP
-         9IuobaAPMJDIzPq6HH7weyeRfzZcwUdzjKemo3ZgN3+vlKbMdc+sdqqXAasgo6acPrQD
-         OkPGOVuHGF3pq7m7XCpvw/0d7n+zsCs5IiSTaZrMyNRJ85JmUI0YpeCNv/btW+sO2nOx
-         wRKzHPxBKcRbiYqDlDCPgpc7McxSbT6ZbazkimLaGq4zbKumdlxeHc6N5lgNtOP3zmFJ
-         gb+R+jBLQvTVBJsEBri8hVl/hwa7Eqz37NqULZrCkAXGdrMaGF+23AjWZ/XWAD05AfVG
-         787Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU/WLpvnAAqvZRL78Ty8U6bteCyk9yDwPCLUD4QPwOpfxFLEC5inxXEdAQY0y8VjYveYf73/4ekob1pi0I=@vger.kernel.org, AJvYcCU0wUENljNv54/URpQ2U+n2+maz0O6fka6uceKwljeFfR+X0IkdJnt929HEC3QRN1X5lXJGS6XcvVmS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsNdfgQQKLJ99+B7/xT65reO3M8prIxJatB/F3e+c6iMJShcCp
-	eIOZ8nQOQuGgoFc+cdAIrT9oomtH50bUaAQBVrPWjsh/JFO8ZICZhNXu
-X-Gm-Gg: ASbGncutGePa+hZUYd4evTRKqvDSVNPojDILbx8rlLzJ/Svek3w3uZdXlH5Tqngu5Wq
-	2FEizjJ663u0nA5LwGwk5FiGWO7mSYwuR1sO3CqSTFAQ5z68+VlkPi96hCGUH6vX076aFMWtKER
-	RLos0asTi5zjfKAlSaIOKUoUM16g2gZjIqdaQjD0q858MEOxH6G7rLHZ0pb6dlHn5LqINcFuETx
-	XPEBeSiRViSwbHPuT9xkjXzEPwPnsJ7RPbAxslsH/AiB5fcdgcw7CYL77awxB3lhBwph5OMYwAK
-	TAaA9aCDtNb2r/fVK39jp8+tyb5jYIyvyOAlsdv17srylPlv9A==
-X-Google-Smtp-Source: AGHT+IEL/USEP/o68qM8kpTv7RVt+yvEVYuaMW1bky10qQjPlYApX6JjeupaO/caQhzoh8VdKrp98w==
-X-Received: by 2002:a05:620a:2556:b0:7d4:567e:3df3 with SMTP id af79cd13be357-7d4567e4429mr264478785a.46.1751201311114;
-        Sun, 29 Jun 2025 05:48:31 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:24f4::dead:c001])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443203134sm435231085a.67.2025.06.29.05.48.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 05:48:30 -0700 (PDT)
-Date: Sun, 29 Jun 2025 09:48:24 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 4/4] phy: rockchip-pcie: Properly disable TEST_WRITE
- strobe signal
-Message-ID: <60ad1985a0de0a6b47044ea9c0acefe6ff865aad.1751200382.git.geraldogabriel@gmail.com>
-References: <cover.1751200382.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="EUmwRiM3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1751201473; x=1751460673;
+	bh=f3DfRpajsxmQgEZaY45qg/eKJcM6af3XcopfHWNDkc8=;
+	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=EUmwRiM3MRZ/09/Pg8NzAmZSKxa+z4r2+iqdh146zDizwTShXL+MzvXFqpSUDhSpU
+	 A0+qgQ/7kxYGDv/ycuAh5bQkUjp0WjYdW+A6p6XMT0fPDbKLxTaCjQa9cEVm5cifbF
+	 54X5ilndFWMGO6R1pTyUF+JKKIBe7iZPJQtdp/dgbl/ewPUxgKbSolsvQPfOc8ZGV9
+	 mRZ/p2TXYhUAiVbB9CmELtglWpApA15MZWK0jJuSBvmCRCbbSzMVS5nAHGSDGGWc6B
+	 CYs2IV66uQ+WuaLCfMaCJqE6rH7305R+2RUvOmjCZ8wN+6cyG+MufiYXDxq2UyZ/EF
+	 Da8wsFl0V5ecA==
+Date: Sun, 29 Jun 2025 12:51:11 +0000
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: andreasx0 <andreasx0@protonmail.com>
+Subject: [PATCH] x86/dmi: Fix misaligned dmi_alloc use on dmi_scan.c by using struct alignment  On x86, dmi_alloc() uses extend_brk() with only 4-byte alignment, which can cause UBSAN warnings when accessing struct dmi_device, whose members require 8-byte alignment.  Fix this by aligning allocations to the maximum of sizeof(int) and __alignof__(struct dmi_device).
+Message-ID: <c4L1q6uye90TLiBKe-p6Y7JDbmIdFz5c11Ys5bC8q81J03L-pkXax2Mm43NuMML2WA4eXhOUFeA48YKF7mLg_TfEccxt5hEoKTxmRrg7Zas=@protonmail.com>
+Feedback-ID: 4793980:user:proton
+X-Pm-Message-ID: 6c02c2d58161d1e8a1861508dc8729646f986897
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1751200382.git.geraldogabriel@gmail.com>
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------56b8ea581a7f8fab71fc77fff0529130f98ee500912bd48c7e098d27b2d01904"; charset=utf-8
 
-pcie_conf is used to touch TEST_WRITE strobe signal. This signal should
-be enabled, a little time waited, and then disabled. Current code clearly
-was copy-pasted and never disables the strobe signal. Adjust the define.
-While at it, remove PHY_CFG_RD_MASK which has been unused since
-64cdc0360811 ("phy: rockchip-pcie: remove unused phy_rd_cfg function").
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------56b8ea581a7f8fab71fc77fff0529130f98ee500912bd48c7e098d27b2d01904
+Content-Type: multipart/mixed;boundary=---------------------461f1a34e71016e35790b7dab6389d11
 
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+-----------------------461f1a34e71016e35790b7dab6389d11
+Content-Type: multipart/alternative;boundary=---------------------3abedff8d7a7ed8f977cab41c5abd159
+
+-----------------------3abedff8d7a7ed8f977cab41c5abd159
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
+
+From b31d085855f6ff0db5f465ed936cbce1b69d366c Mon Sep 17 00:00:00 2001From=
+: Andrew <andreasx0@protonmail.com>
+Date: Sun, 29 Jun 2025 15:33:26 +0300
+Subject: [PATCH] x86/dmi: Fix misaligned dmi_alloc use on dmi_scan.c by us=
+ing struct alignment
+
+On x86, dmi_alloc() uses extend_brk() with only 4-byte alignment,
+which can cause UBSAN warnings when accessing struct dmi_device,
+whose members require 8-byte alignment.
+
+Fix this by aligning allocations to the maximum of sizeof(int) and
+__alignof__(struct dmi_device).
+
+Signed-off-by: Andrew <andreasx0@protonmail.com>
 ---
- drivers/phy/rockchip/phy-rockchip-pcie.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+=C2=A0arch/x86/include/asm/dmi.h | 2 +-
+=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index f22ffb41cdc2..4e2dfd01adf2 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -30,9 +30,8 @@
- #define PHY_CFG_ADDR_SHIFT    1
- #define PHY_CFG_DATA_MASK     0xf
- #define PHY_CFG_ADDR_MASK     0x3f
--#define PHY_CFG_RD_MASK       0x3ff
- #define PHY_CFG_WR_ENABLE     1
--#define PHY_CFG_WR_DISABLE    1
-+#define PHY_CFG_WR_DISABLE    0
- #define PHY_CFG_WR_SHIFT      0
- #define PHY_CFG_WR_MASK       1
- #define PHY_CFG_PLL_LOCK      0x10
--- 
-2.49.0
+diff --git a/arch/x86/include/asm/dmi.h b/arch/x86/include/asm/dmi.h
+index b825cb201251..2d6c3bea718c 100644
+--- a/arch/x86/include/asm/dmi.h
++++ b/arch/x86/include/asm/dmi.h
+@@ -10,7 +10,7 @@
+
+=C2=A0static __always_inline __init void *dmi_alloc(unsigned len)
+=C2=A0{
+- return extend_brk(len, sizeof(int));
++ return extend_brk(len, max_t(size_t, sizeof(int), __alignof__(struct dmi=
+_device)));
+=C2=A0}
+
+=C2=A0/* Use early IO mappings for DMI because it's initialized early */
+--
+2.50.0
+
+
+/* SPDX-License-Identifier: GPL-2.0 */#ifndef _ASM_X86_DMI_H
+#define _ASM_X86_DMI_H
+
+#include <linux/compiler.h>
+#include <linux/init.h>
+#include <linux/io.h>
+
+#include <asm/setup.h>
+
+static __always_inline __init void *dmi_alloc(unsigned len)
+{
+return extend_brk(len, max_t(size_t, sizeof(int), __alignof__(struct dmi_d=
+evice)));
+}
+
+/* Use early IO mappings for DMI because it's initialized early */
+#define dmi_early_remap early_memremap
+#define dmi_early_unmap early_memunmap
+#define dmi_remap(_x, _l) memremap(_x, _l, MEMREMAP_WB)
+#define dmi_unmap(_x) memunmap(_x)
+
+#endif /* _ASM_X86_DMI_H */
+-----------------------3abedff8d7a7ed8f977cab41c5abd159
+Content-Type: multipart/related;boundary=---------------------c47e4aafd176f9b481c369c4899a3aec
+
+-----------------------c47e4aafd176f9b481c369c4899a3aec
+Content-Type: text/html;charset=utf-8
+Content-Transfer-Encoding: base64
+
+PHNwYW4+RnJvbSBiMzFkMDg1ODU1ZjZmZjBkYjVmNDY1ZWQ5MzZjYmNlMWI2OWQzNjZjIE1vbiBT
+ZXAgMTcgMDA6MDA6MDAgMjAwMTwvc3Bhbj48ZGl2PjxzcGFuPkZyb206IEFuZHJldyAmbHQ7PGEg
+dGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZlcnJlciBub2ZvbGxvdyBub29wZW5lciIgaHJlZj0i
+bWFpbHRvOmFuZHJlYXN4MEBwcm90b25tYWlsLmNvbSI+YW5kcmVhc3gwQHByb3Rvbm1haWwuY29t
+PC9hPiZndDs8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj5EYXRlOiBTdW4sIDI5IEp1biAyMDI1IDE1
+OjMzOjI2ICswMzAwPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+U3ViamVjdDogW1BBVENIXSB4ODYv
+ZG1pOiBGaXggbWlzYWxpZ25lZCBkbWlfYWxsb2MgdXNlIG9uIGRtaV9zY2FuLmMgYnkgdXNpbmcg
+c3RydWN0IGFsaWdubWVudDwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPk9u
+IHg4NiwgZG1pX2FsbG9jKCkgdXNlcyBleHRlbmRfYnJrKCkgd2l0aCBvbmx5IDQtYnl0ZSBhbGln
+bm1lbnQsPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+d2hpY2ggY2FuIGNhdXNlIFVCU0FOIHdhcm5p
+bmdzIHdoZW4gYWNjZXNzaW5nIHN0cnVjdCBkbWlfZGV2aWNlLDwvc3Bhbj48L2Rpdj48ZGl2Pjxz
+cGFuPndob3NlIG1lbWJlcnMgcmVxdWlyZSA4LWJ5dGUgYWxpZ25tZW50Ljwvc3Bhbj48L2Rpdj48
+ZGl2Pjxicj48L2Rpdj48ZGl2PjxzcGFuPkZpeCB0aGlzIGJ5IGFsaWduaW5nIGFsbG9jYXRpb25z
+IHRvIHRoZSBtYXhpbXVtIG9mIHNpemVvZihpbnQpIGFuZDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFu
+Pl9fYWxpZ25vZl9fKHN0cnVjdCBkbWlfZGV2aWNlKS48L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9k
+aXY+PGRpdj48c3Bhbj5TaWduZWQtb2ZmLWJ5OiBBbmRyZXcgJmx0OzxhIHRhcmdldD0iX2JsYW5r
+IiByZWw9Im5vcmVmZXJyZXIgbm9mb2xsb3cgbm9vcGVuZXIiIGhyZWY9Im1haWx0bzphbmRyZWFz
+eDBAcHJvdG9ubWFpbC5jb20iIHRpdGxlPSJodHRwczovL21haWwucHJvdG9uLm1lbWFpbHRvOmFu
+ZHJlYXN4MEBwcm90b25tYWlsLmNvbSIgbGlua3RpdGxlPSJodHRwczovL21haWwucHJvdG9uLm1l
+bWFpbHRvOmFuZHJlYXN4MEBwcm90b25tYWlsLmNvbSIgbGluay1yZXZlYWxlci1leHRlbnNpb24t
+cGFyc2VkLWZsYWc9IiIgc3RhdGU9InRoaXJkcGFydHkiPmFuZHJlYXN4MEBwcm90b25tYWlsLmNv
+bTwvYT4mZ3Q7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+LS0tPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+Jm5ic3A7YXJjaC94ODYvaW5jbHVkZS9hc20vZG1pLmggfCAyICstPC9zcGFuPjwvZGl2Pjxk
+aXY+PHNwYW4+Jm5ic3A7MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
+KC0pPC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4+ZGlmZiAtLWdpdCBhL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL2RtaS5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vZG1pLmg8L3Nw
+YW4+PC9kaXY+PGRpdj48c3Bhbj5pbmRleCBiODI1Y2IyMDEyNTEuLjJkNmMzYmVhNzE4YyAxMDA2
+NDQ8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4tLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9kbWku
+aDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPisrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2RtaS5o
+PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+QEAgLTEwLDcgKzEwLDcgQEA8L3NwYW4+PC9kaXY+PGRp
+dj48c3Bhbj4mbmJzcDs8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4mbmJzcDtzdGF0aWMgX19hbHdh
+eXNfaW5saW5lIF9faW5pdCB2b2lkICpkbWlfYWxsb2ModW5zaWduZWQgbGVuKTwvc3Bhbj48L2Rp
+dj48ZGl2PjxzcGFuPiZuYnNwO3s8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4tCXJldHVybiBleHRl
+bmRfYnJrKGxlbiwgc2l6ZW9mKGludCkpOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPisJcmV0dXJu
+IGV4dGVuZF9icmsobGVuLCBtYXhfdChzaXplX3QsIHNpemVvZihpbnQpLCBfX2FsaWdub2ZfXyhz
+dHJ1Y3QgZG1pX2RldmljZSkpKTs8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4mbmJzcDt9PC9zcGFu
+PjwvZGl2PjxkaXY+PHNwYW4+Jm5ic3A7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+Jm5ic3A7Lyog
+VXNlIGVhcmx5IElPIG1hcHBpbmdzIGZvciBETUkgYmVjYXVzZSBpdCdzIGluaXRpYWxpemVkIGVh
+cmx5ICovPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+LS0gPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+
+Mi41MC4wPC9zcGFuPjwvZGl2PjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbCwgc2Fucy1z
+ZXJpZjsgZm9udC1zaXplOiAxNHB4OyBjb2xvcjogcmdiKDAsIDAsIDApOyBiYWNrZ3JvdW5kLWNv
+bG9yOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ij48YnI+PC9kaXY+PGRpdiBzdHlsZT0iZm9udC1mYW1p
+bHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXNpemU6IDE0cHg7IGNvbG9yOiByZ2IoMCwgMCwg
+MCk7IGJhY2tncm91bmQtY29sb3I6IHJnYigyNTUsIDI1NSwgMjU1KTsiPjxicj48L2Rpdj48ZGl2
+IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTRweDsg
+Y29sb3I6IHJnYigwLCAwLCAwKTsgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUp
+OyI+PHNwYW4+PHNwYW4+LyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi88L3Nw
+YW4+PGRpdj48c3Bhbj4jaWZuZGVmIF9BU01fWDg2X0RNSV9IPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+I2RlZmluZSBfQVNNX1g4Nl9ETUlfSDwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2
+PjxzcGFuPiNpbmNsdWRlICZsdDtsaW51eC9jb21waWxlci5oJmd0Ozwvc3Bhbj48L2Rpdj48ZGl2
+PjxzcGFuPiNpbmNsdWRlICZsdDtsaW51eC9pbml0LmgmZ3Q7PC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+I2luY2x1ZGUgJmx0O2xpbnV4L2lvLmgmZ3Q7PC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2
+PjxkaXY+PHNwYW4+I2luY2x1ZGUgJmx0O2FzbS9zZXR1cC5oJmd0Ozwvc3Bhbj48L2Rpdj48ZGl2
+Pjxicj48L2Rpdj48ZGl2PjxzcGFuPnN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgX19pbml0IHZvaWQg
+KmRtaV9hbGxvYyh1bnNpZ25lZCBsZW4pPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+ezwvc3Bhbj48
+L2Rpdj48ZGl2PjxzcGFuPglyZXR1cm4gZXh0ZW5kX2JyayhsZW4sIG1heF90KHNpemVfdCwgc2l6
+ZW9mKGludCksIF9fYWxpZ25vZl9fKHN0cnVjdCBkbWlfZGV2aWNlKSkpOzwvc3Bhbj48L2Rpdj48
+ZGl2PjxzcGFuPn08L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48c3Bhbj4vKiBVc2Ug
+ZWFybHkgSU8gbWFwcGluZ3MgZm9yIERNSSBiZWNhdXNlIGl0J3MgaW5pdGlhbGl6ZWQgZWFybHkg
+Ki88L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4jZGVmaW5lIGRtaV9lYXJseV9yZW1hcAkJZWFybHlf
+bWVtcmVtYXA8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4jZGVmaW5lIGRtaV9lYXJseV91bm1hcAkJ
+ZWFybHlfbWVtdW5tYXA8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4jZGVmaW5lIGRtaV9yZW1hcChf
+eCwgX2wpCW1lbXJlbWFwKF94LCBfbCwgTUVNUkVNQVBfV0IpPC9zcGFuPjwvZGl2PjxkaXY+PHNw
+YW4+I2RlZmluZSBkbWlfdW5tYXAoX3gpCQltZW11bm1hcChfeCk8L3NwYW4+PC9kaXY+PGRpdj48
+YnI+PC9kaXY+PHNwYW4+I2VuZGlmIC8qIF9BU01fWDg2X0RNSV9IICovPC9zcGFuPjxicj48L3Nw
+YW4+PC9kaXY+PHNwYW4+PC9zcGFuPg==
+-----------------------c47e4aafd176f9b481c369c4899a3aec--
+-----------------------3abedff8d7a7ed8f977cab41c5abd159--
+-----------------------461f1a34e71016e35790b7dab6389d11
+Content-Type: application/pgp-keys; filename="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"; name="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"; name="publickey - andreasx0@protonmail.com - 0xF61BB148.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWkk3bTN4WUpLd1lCQkFI
+YVJ3OEJBUWRBN1NSTmw4bVlHN2lIZUY5QytpNWdzbXBZdUJpeXQzYjYKM0FlNGN4d1c3cUxOTTJG
+dVpISmxZWE40TUVCd2NtOTBiMjV0WVdsc0xtTnZiU0E4WVc1a2NtVmhjM2d3ClFIQnliM1J2Ym0x
+aGFXd3VZMjl0UHNLTUJCQVdDZ0ErQllKa2p1YmZCQXNKQndnSmtMWm8xSzhrbmExUQpBeFVJQ2dR
+V0FBSUJBaGtCQXBzREFoNEJGaUVFOWh1eFNGUmFIWUNLNWdMOHRtalVyeVNkclZBQUFLOWsKQVFD
+ODlZS20rT3YvdDl3OVo3WS95Z2x1anl2dFBPZkcrenpDVDNtcmpVTU52QUQvYTE0eENQZGVTSXFk
+CnFRM1dhcktycXpnczVlSzBSNHVTU1h0MU42b0dUZy9PT0FSa2p1YmZFZ29yQmdFRUFaZFZBUVVC
+QVFkQQpYUUE5aGdVcjRYazRXemU1TVhOTUIwOEMvcEtBR0lrcWNvd2w2MmpjV1cwREFRZ0h3bmdF
+R0JZSUFDb0YKZ21TTzV0OEprTFpvMUs4a25hMVFBcHNNRmlFRTlodXhTRlJhSFlDSzVnTDh0bWpV
+cnlTZHJWQUFBR2ZICkFRRDZkUmxnZmtKZWFyaHdLWHFtbWlHTVlmU1c0V3hhMVFvSm9JbHdzQXQz
+YndEL1hTWmo4ZUFibStpMQpxaDRhbWh0eTFHYitTMGV3MVNicnRrSjREWmNNdUFRPQo9dGZYVQot
+LS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+-----------------------461f1a34e71016e35790b7dab6389d11--
+
+--------56b8ea581a7f8fab71fc77fff0529130f98ee500912bd48c7e098d27b2d01904
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmhhNrcJkLZo1K8kna1QRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmd+xbgGnNcKtqg+Bac2CmUM5mh2haPpR21XYmw3
+MCyxuxYhBPYbsUhUWh2AiuYC/LZo1K8kna1QAABdvQD+LjwpOm87p/Q8RTaA
+WPbu0MaCvVPTabrWOudPi2d5GEMA/35wgSJOvSwJSQLOgQnrW6ekVRBP9WEq
+arPDNYrfngMP
+=/Bia
+-----END PGP SIGNATURE-----
+
+
+--------56b8ea581a7f8fab71fc77fff0529130f98ee500912bd48c7e098d27b2d01904--
 
