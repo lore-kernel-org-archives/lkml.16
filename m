@@ -1,299 +1,84 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from relay15.mail.gandi.net (relay15.mail.gandi.net [217.70.178.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B1C1C5486;
-	Sun, 29 Jun 2025 22:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E45207A32;
+	Sun, 29 Jun 2025 22:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751235774; cv=none; b=jpk2SaA7SBFtNKLFOqMGzaydyBR7PAegqjANbfd5awEeZxWDnGvm3tIkGGSukU84ozE86FUNtakeMHvMaa6AK++zi2vtYiBbkRRtHnaBtA69ifFJ8ClD/UIKEjrL54rbo4nLlMJNT+mbz0CcdjjrdYyzbSEMy/AurrtMV02AuCY=
+	t=1751236745; cv=none; b=eO6Jd039LVZrzfadSddDfKiVH0jUZHYB29ZxcLP9bMjGvStci+Qr+vzrdtSN7EE3MyyoiqfmCz2EVTghqUXNCWnptHNRRdjvqtJN7Leop7Tkq/fdK+sd2bEh1VkpV75X5cljhg4J+Gz6K/BfhTeRZvgtrwfiVhi+Jtc/3V5J0pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751235774; c=relaxed/simple;
-	bh=IxpmGgkXmFJ0VhOMw4wlvWhBmTD1JsLqSAxfxObBLtY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M95tJDuMlF5BazRhAbWX21qlt6WGp7TXLT1NaZutu0ohbIqQARsUkt93ufhtnknJp1RHLS/btNy5FKD0bhw3fku3xXkFlShGa4gHfCmla3T+/kaRF6p6WIJVGnkEhHLzXrcZpGVY6ZF2t02MEQVMjym2VlF+vd0YSLP63sfpUJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uW0QB-000000002KJ-0eV5;
-	Sun, 29 Jun 2025 22:22:47 +0000
-Date: Sun, 29 Jun 2025 23:22:44 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net-next v2 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
-References: <cover.1751229149.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1751236745; c=relaxed/simple;
+	bh=RV2Ao9LrCXX4C6ZPYabE/JoQFUM+lMGNIBm5R3kM+Pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FLshDJX8Y3SY9TNRq1vH/L3CIU53TG64ju7d+JScMHHHcj4fhV26L/YliWiE3AN7CmxX7dK9wpJ2QZbD1UMcptu5DQ5iznBViKR2H8hrCMoFs36Zdz66dm0WtlyuCBdslDP8FvUXuXGOkgbfSpXWK14ehaeMLXoCl/rYTPvjvy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aCsLkVVa; arc=none smtp.client-ip=217.70.178.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aCsLkVVa"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 175E04317F;
+	Sun, 29 Jun 2025 22:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751236740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RV2Ao9LrCXX4C6ZPYabE/JoQFUM+lMGNIBm5R3kM+Pk=;
+	b=aCsLkVVacrBB0W2vMPwzfHp6ABwHsIWFTAqQ76GXLfApfoCWhqFZQmyRAHvjCmnnVhS2DD
+	m4Q9/g6XtMp8KyaIPhtCqlGFnnC/8M4Hn6QS15BpNbBAyaR3XUH0xIn6+kPwNyTo44aNPR
+	WBWSx4/quo6LIN10cDpRZZnqyBI7sH/X/qD0ymt8TIx8RN8zTpDkQ4xCIEekt1gReP7DHn
+	ukoJLaBOvr5DuVxQziBKzysA484Pvs+wKOhrTKAZBlUuJl5VquFMzcMqs81V1LXtIePEhx
+	nn9qa5hqV3441Vrg3YqE2RDLvHY8Rq0m9bf9n/m+yUyicd2qISF3WRHXbnp6YA==
+Date: Mon, 30 Jun 2025 00:38:54 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas
+ Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, Roger
+ Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Paul
+ Barker <paul.barker@sancloud.com>, Marc Murphy <marc.murphy@sancloud.com>
+Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, Bajjuri
+ Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas
+ Bonnefille <thomas.bonnefille@bootlin.com>, Romain Gantois
+ <romain.gantois@bootlin.com>, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v5 0/5] Add support for BeagleBone Green Eco board
+Message-ID: <20250630003854.79d6d9c4@kmaincent-XPS-13-7390>
+In-Reply-To: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
+References: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1751229149.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutddtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdtrgemledtieefmegtlehfvdemledvvdgrmeeltdelvgemgehfgeelmeehtddutdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggstdgrmeeltdeifeemtgelfhdvmeelvddvrgemledtlegvmeegfhegleemhedtuddtpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvr
+ hhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrghrohdrkhhoshhkihhnvghnsehikhhirdhfihdprhgtphhtthhopegrnhgurhgvrghssehkvghmnhgruggvrdhinhhfohdprhgtphhtthhopehkhhhilhhmrghnsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehrohhgvghrqheskhgvrhhnvghlrdhorhhg
 
-Use a dedicated "mmio-sram" and the genpool allocator instead of
-open-coding SRAM allocation for DMA rings.
-Keep support for legacy device trees but notify the user via a
-warning to update.
+Le Fri, 20 Jun 2025 10:15:51 +0200,
+Kory Maincent <kory.maincent@bootlin.com> a =C3=A9crit :
 
-Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
-v2: fix return type of mtk_dma_ring_alloc() in case of error
+> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
+> (BBG). It has minor differences from the BBG, such as a different PMIC,
+> a different Ethernet PHY, and a larger eMMC.
+>=20
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 120 +++++++++++++-------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |   4 +-
- 2 files changed, 84 insertions(+), 40 deletions(-)
+Hello,
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 8f55069441f4..b6a9574cf565 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -27,6 +27,7 @@
- #include <net/dsa.h>
- #include <net/dst_metadata.h>
- #include <net/page_pool/helpers.h>
-+#include <linux/genalloc.h>
- 
- #include "mtk_eth_soc.h"
- #include "mtk_wed.h"
-@@ -1267,6 +1268,45 @@ static void *mtk_max_lro_buf_alloc(gfp_t gfp_mask)
- 	return (void *)data;
- }
- 
-+static bool mtk_use_legacy_sram(struct mtk_eth *eth)
-+{
-+	return !eth->sram_pool && MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM);
-+}
-+
-+static void *mtk_dma_ring_alloc(struct mtk_eth *eth, size_t size,
-+				dma_addr_t *dma_handle)
-+{
-+	void *dma_ring;
-+
-+	if (WARN_ON(mtk_use_legacy_sram(eth)))
-+		return NULL;
-+
-+	if (eth->sram_pool) {
-+		dma_ring = (void *)gen_pool_alloc(eth->sram_pool, size);
-+		if (!dma_ring)
-+			return dma_ring;
-+		*dma_handle = gen_pool_virt_to_phys(eth->sram_pool,
-+						    (unsigned long)dma_ring);
-+	} else {
-+		dma_ring = dma_alloc_coherent(eth->dma_dev, size, dma_handle,
-+					      GFP_KERNEL);
-+	}
-+
-+	return dma_ring;
-+}
-+
-+static void mtk_dma_ring_free(struct mtk_eth *eth, size_t size, void *dma_ring,
-+			      dma_addr_t dma_handle)
-+{
-+	if (WARN_ON(mtk_use_legacy_sram(eth)))
-+		return;
-+
-+	if (eth->sram_pool)
-+		gen_pool_free(eth->sram_pool, (unsigned long)dma_ring, size);
-+	else
-+		dma_free_coherent(eth->dma_dev, size, dma_ring, dma_handle);
-+}
-+
- /* the qdma core needs scratch memory to be setup */
- static int mtk_init_fq_dma(struct mtk_eth *eth)
- {
-@@ -1276,13 +1316,12 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- 	dma_addr_t dma_addr;
- 	int i, j, len;
- 
--	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM))
-+	if (!mtk_use_legacy_sram(eth)) {
-+		eth->scratch_ring = mtk_dma_ring_alloc(eth, cnt * soc->tx.desc_size,
-+						       &eth->phy_scratch_ring);
-+	} else {
- 		eth->scratch_ring = eth->sram_base;
--	else
--		eth->scratch_ring = dma_alloc_coherent(eth->dma_dev,
--						       cnt * soc->tx.desc_size,
--						       &eth->phy_scratch_ring,
--						       GFP_KERNEL);
-+	}
- 
- 	if (unlikely(!eth->scratch_ring))
- 		return -ENOMEM;
-@@ -2620,12 +2659,11 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 	if (!ring->buf)
- 		goto no_tx_mem;
- 
--	if (MTK_HAS_CAPS(soc->caps, MTK_SRAM)) {
-+	if (!mtk_use_legacy_sram(eth)) {
-+		ring->dma = mtk_dma_ring_alloc(eth, ring_size * sz, &ring->phys);
-+	} else {
- 		ring->dma = eth->sram_base + soc->tx.fq_dma_size * sz;
- 		ring->phys = eth->phy_scratch_ring + soc->tx.fq_dma_size * (dma_addr_t)sz;
--	} else {
--		ring->dma = dma_alloc_coherent(eth->dma_dev, ring_size * sz,
--					       &ring->phys, GFP_KERNEL);
- 	}
- 
- 	if (!ring->dma)
-@@ -2726,9 +2764,9 @@ static void mtk_tx_clean(struct mtk_eth *eth)
- 		kfree(ring->buf);
- 		ring->buf = NULL;
- 	}
--	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && ring->dma) {
--		dma_free_coherent(eth->dma_dev,
--				  ring->dma_size * soc->tx.desc_size,
-+
-+	if (!mtk_use_legacy_sram(eth) && ring->dma) {
-+		mtk_dma_ring_free(eth, ring->dma_size * soc->tx.desc_size,
- 				  ring->dma, ring->phys);
- 		ring->dma = NULL;
- 	}
-@@ -2793,6 +2831,9 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 		ring->dma = dma_alloc_coherent(eth->dma_dev,
- 				rx_dma_size * eth->soc->rx.desc_size,
- 				&ring->phys, GFP_KERNEL);
-+	} else if (eth->sram_pool) {
-+		ring->dma = mtk_dma_ring_alloc(eth, rx_dma_size * eth->soc->rx.desc_size,
-+					       &ring->phys);
- 	} else {
- 		struct mtk_tx_ring *tx_ring = &eth->tx_ring;
- 
-@@ -2921,6 +2962,11 @@ static void mtk_rx_clean(struct mtk_eth *eth, struct mtk_rx_ring *ring, bool in_
- 				  ring->dma_size * eth->soc->rx.desc_size,
- 				  ring->dma, ring->phys);
- 		ring->dma = NULL;
-+	} else if (!mtk_use_legacy_sram(eth) && ring->dma) {
-+		mtk_dma_ring_free(eth,
-+				  ring->dma_size * eth->soc->rx.desc_size,
-+				  ring->dma, ring->phys);
-+		ring->dma = NULL;
- 	}
- 
- 	if (ring->page_pool) {
-@@ -3287,9 +3333,8 @@ static void mtk_dma_free(struct mtk_eth *eth)
- 			netdev_tx_reset_subqueue(eth->netdev[i], j);
- 	}
- 
--	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && eth->scratch_ring) {
--		dma_free_coherent(eth->dma_dev,
--				  MTK_QDMA_RING_SIZE * soc->tx.desc_size,
-+	if (!mtk_use_legacy_sram(eth) && eth->scratch_ring) {
-+		mtk_dma_ring_free(eth, soc->tx.fq_dma_size * soc->tx.desc_size,
- 				  eth->scratch_ring, eth->phy_scratch_ring);
- 		eth->scratch_ring = NULL;
- 		eth->phy_scratch_ring = 0;
-@@ -5009,7 +5054,7 @@ static int mtk_sgmii_init(struct mtk_eth *eth)
- 
- static int mtk_probe(struct platform_device *pdev)
- {
--	struct resource *res = NULL, *res_sram;
-+	struct resource *res = NULL;
- 	struct device_node *mac_np;
- 	struct mtk_eth *eth;
- 	int err, i;
-@@ -5029,20 +5074,6 @@ static int mtk_probe(struct platform_device *pdev)
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
- 		eth->ip_align = NET_IP_ALIGN;
- 
--	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
--		/* SRAM is actual memory and supports transparent access just like DRAM.
--		 * Hence we don't require __iomem being set and don't need to use accessor
--		 * functions to read from or write to SRAM.
--		 */
--		if (mtk_is_netsys_v3_or_greater(eth)) {
--			eth->sram_base = (void __force *)devm_platform_ioremap_resource(pdev, 1);
--			if (IS_ERR(eth->sram_base))
--				return PTR_ERR(eth->sram_base);
--		} else {
--			eth->sram_base = (void __force *)eth->base + MTK_ETH_SRAM_OFFSET;
--		}
--	}
--
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA)) {
- 		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(36));
- 		if (!err)
-@@ -5117,16 +5148,27 @@ static int mtk_probe(struct platform_device *pdev)
- 			err = -EINVAL;
- 			goto err_destroy_sgmii;
- 		}
-+
- 		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
--			if (mtk_is_netsys_v3_or_greater(eth)) {
--				res_sram = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--				if (!res_sram) {
--					err = -EINVAL;
--					goto err_destroy_sgmii;
-+			eth->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-+			if (!eth->sram_pool) {
-+				if (!mtk_is_netsys_v3_or_greater(eth)) {
-+					/*
-+					 * Legacy support for missing 'sram' node in DT.
-+					 * SRAM is actual memory and supports transparent access
-+					 * just like DRAM. Hence we don't require __iomem being
-+					 * set and don't need to use accessor functions to read from
-+					 * or write to SRAM.
-+					 */
-+					eth->sram_base = (void __force *)eth->base +
-+							 MTK_ETH_SRAM_OFFSET;
-+					eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
-+					dev_warn(&pdev->dev,
-+						 "legacy DT: using hard-coded SRAM offset.\n");
-+				} else {
-+					dev_err(&pdev->dev, "Could not get SRAM pool\n");
-+					return -ENODEV;
- 				}
--				eth->phy_scratch_ring = res_sram->start;
--			} else {
--				eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
- 			}
- 		}
- 	}
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 1ad9075a9b69..0104659e37f0 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -1245,7 +1245,8 @@ struct mtk_soc_data {
-  * @dev:		The device pointer
-  * @dma_dev:		The device pointer used for dma mapping/alloc
-  * @base:		The mapped register i/o base
-- * @sram_base:		The mapped SRAM base
-+ * @sram_base:		The mapped SRAM base (deprecated)
-+ * @sram_pool:		Pointer to SRAM pool used for DMA descriptor rings
-  * @page_lock:		Make sure that register operations are atomic
-  * @tx_irq__lock:	Make sure that IRQ register operations are atomic
-  * @rx_irq__lock:	Make sure that IRQ register operations are atomic
-@@ -1292,6 +1293,7 @@ struct mtk_eth {
- 	struct device			*dma_dev;
- 	void __iomem			*base;
- 	void				*sram_base;
-+	struct gen_pool			*sram_pool;
- 	spinlock_t			page_lock;
- 	spinlock_t			tx_irq_lock;
- 	spinlock_t			rx_irq_lock;
--- 
-2.50.0
+Any news on this patch series?
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
