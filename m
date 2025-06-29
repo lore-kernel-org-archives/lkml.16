@@ -1,258 +1,97 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1E4235364
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 16:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D329128819;
+	Sun, 29 Jun 2025 16:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751212806; cv=none; b=OhtLl9fKyxzQ89BUcdHTaLYYfcUCG67nfh78Gbu0dOMMPSg95B014QTOBtbiQGbSkKswimg5E6o0FPiFuZQK9gtM5S0wQksm0ZataezPyCL0M0OgPggf5b1fpwh1wN6JAppKQ79nSy7AgkiBZBzdKVdmAPYxqlOwNAktOoM18yk=
+	t=1751212935; cv=none; b=T8lZzVytUQ8i3FfIGkf1kgjP3U0E7m1lHbBAoNgpycYpo6/mX6f405f7Nc2cEszxzR+XPN7o11wfRI+A0cO51pGyOYt+NScrmUVOKlAh+rXJ/GzRr5EdQrbcAdnEbKV4N+rUYqb7URSE/dnCTx0jhWpEKch02kKpyY6Q2Bn/O2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751212806; c=relaxed/simple;
-	bh=RdX76I8Jtbco4EHRpcErR5wyT9kP9gH35W2Qq58wcRs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=eKFUkzwa0EvesXrRpADp4KczRfHZXD6ag2LeG4pgqC9iSx3R1QqQ736rRF8pdMk1lCnisfTkp9ml6ofyIUaxCQT//Rl6kb6dtoiLvCbkJ+efwf+fwjuD3NWf9OOtIFhx+dCtd9ODqm+qNEZdapVDc/d0AM91UwKlM7TJoZT3AuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3df6030ea2fso17378945ab.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 09:00:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751212803; x=1751817603;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/md0O0bsDN1yE9cV3610rKJ+Q88r7SDmqU6eKa8w6h0=;
-        b=skRWItmT/cWEIuR8qFzBWqrmUEtV/1zYUNDB6NLlK8TGDIFt+7gTV8mokBvTiUjTXh
-         nLSI3Wv7AHAASrnyoygzimlQIFkJ0zumhiRneBVWEWPyLEviJcOVOzaRjA5sGPhIAFf0
-         XWupyNKmWgE7HBGqJDTFRas7KpvlQwGQVCUY/d/7HBEN4xvX2SFQrcpnFJupRvIl7F0r
-         Gaumk2L0qSzLJxglzlm2YAl1gRSVNjXdzBUfQQss4/xwFyR8Sej00Fjjk8je9cnDpLQj
-         exv8BFGp2xYjcM0A9beNWEeYWaRD9wuFFhXIBaYwrNFjhE+2aIxnCt59B3OwHro2Rvd5
-         WsZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbfp+EUFXiDQaEHlaAlthPMmH+JeaOoqAmFfbUzEr6XWAY4Qn3RxmRy0xFgJpqLqsTuIfA9TCII72sPVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTub5CfAjL2gCz58sxi/4LhwbcvIwv05LcdejOXBqhcyrqv/PG
-	jt883YoZqh9bS9fw8Z6Z4a89KV6WIVKvlBsxumWG9QQcZUus4UKCekoQcnv/6WAGhHBBmNJkNwo
-	MRTv6udHfIxv3okHsuHHLHpQzp85CwqWXcjjsA5E8fs0Jaf+zlGt+1AqRqto=
-X-Google-Smtp-Source: AGHT+IHiNHd675Er2iND1VfHmPsBnABv98ZRFXGLT3s92fDhW/rvCd4Emr7bmzsom/Bwq+s2MW5uf2n6H57Rs7k1Oj19cDnkq3oP
+	s=arc-20240116; t=1751212935; c=relaxed/simple;
+	bh=Q3NZ/Hs7IXDXg0EZbN/RJ1y/NoUVJyPO4WAfgzm7ugM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=DnjOr8+ztntjEd3AjNBvpj38WjrwGMFp2uV3+Ly82+l8yjd0XasXuIpVu9VxmbH3DLzZ9UqVyw2mDCdVQCLBqKZ0m759aS0NdrKzxBp1hdfZ7Cse/MsxMfix7ZvGHFPqyNVaTj2uEtbqWHmb6mxs5enEKLmWLX88Uk7tOyRwh54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=AtOxdF1r; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="AtOxdF1r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1751212621;
+	bh=rjiuaExuqilvnnkZXH6U2UQzWHA6Kj+xZY3GhDa4HWo=;
+	h=From:To:Cc:Subject:Date;
+	b=AtOxdF1rMf6IV6PPOX9e9467H+kuLtikVPrPuVWxHq2EE/riab9QlUWIxQPd4Jmax
+	 0VV1xHYLM0xFsSsOmJWDqo/zuk8+b+U7GmEAWQw4GtUVdag2IpDPjjrdbwWo9d3V84
+	 169KnJHH1KtkNyJ2m2QoDVo7A2IODr0Vk0jGbers=
+Received: from KernelDevBox.byted.org ([115.190.40.13])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id E3A3683E; Sun, 29 Jun 2025 23:56:58 +0800
+X-QQ-mid: xmsmtpt1751212618takwe3j1s
+Message-ID: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
+X-QQ-XMAILINFO: Ne9q9v6AFM79dBrz8kR5U6Cz4mmV6e8rVzM5Nas1C5p3krQFksLLqJ7NCq3wzR
+	 SD478DuZr9QUTEpgNk5QYaW310myImXSTEG7iuf0iOpG7ZIRtFTNx2cqR6dTIHIQtiw9zbU0E6Ms
+	 Nhldmz6oEuKIvF0DsWyHwnPjc8vTEbr+VeU76laRaR2pbLf6HhQQafrQUocy+9W9NAqaszFaRqt0
+	 vw+m/fdesEXcX5uVAN62IQZK/8Hep3cxtLjqadJBW6fuCIxs76wYD4mLlvdBLqCvK74dWk6rzoRZ
+	 SN50i32+NYOFTZDZrzvbMUi5Tdlzovq24G0lCRw3K59mmcCt8fLm9hr/vxCPAgy7LBIjhsbyfs/u
+	 DFOg8mJEo+iqzmrAgJBXsrkZeVbVqOxVnWo/z+0gP7XYwM4lisekoBnttLI7Pda6wmxeYONvzdsQ
+	 zqWwmPuYKJUN1hRCcLKE+ah6J8LBsWzvjyQ3ZcSGGSvGb/0Od/7ZOREejtiHk2qRSDbKJ835EMdw
+	 tYhRvTJunw62a4bwhBv5bXlvcArXPyuj9GtvD2Fa8/BSlXWcvIPeZCES86Y5fwtWldQSw7rzUq5S
+	 EFhZMoLnMuZ4Hx791XpqejacNeotd6ncF1fvvDVRb3F+L77WGLKbZgF+y72P6roTJjY9UlUg+3gm
+	 3bYfABds0ySybQdv6Kq4ZcwcqBFO19foz92WAt/FV7y1GMaKCnFoNwBMBgkJj4znwDUZljtSpvqV
+	 lpTFJyZejeddaLIm2fkYYnWSLfjywwlqNIUeaO3HdjY6hXfbkHT2r7nCgaskuaaGMLCTj6l+uJnz
+	 HOEcXPZvvKNajdEga8SF9D1tHGaJoaDZDVuEdZHXqoUK01H6mdq6DAejKLTimTufF4dOSe0MCHxx
+	 U1yccSGBZDQ15g0iDALu5U6hyZP640OEuhYIEAZc9KDfwkwYvGOjNfsszGpFEafPwAoxrpqoUOWp
+	 3AxXsqCwWHG4mxxWmwFfeAJTeNsTOaoSnB6uBDRUMSTS58pHP8GFSGInPCnxLAMqM7GTMXuMNmOc
+	 klBCEnqtHsUkO7jRsN
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Zhang Shurong <zhang_shurong@foxmail.com>
+To: vkoul@kernel.org
+Cc: geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	robin.murphy@arm.com,
+	ulf.hansson@linaro.org,
+	kuninori.morimoto.gx@renesas.com,
+	u.kleine-koenig@baylibre.com,
+	dmaengine@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhang Shurong <zhang_shurong@foxmail.com>
+Subject: [PATCH] dmaengine: rcar-dmac: Fix PM usage counter imbalance
+Date: Sun, 29 Jun 2025 23:56:57 +0800
+X-OQ-MSGID: <20250629155657.2074439-1-zhang_shurong@foxmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3046:b0:3dd:d189:6511 with SMTP id
- e9e14a558f8ab-3df4acca120mr131241825ab.21.1751212803450; Sun, 29 Jun 2025
- 09:00:03 -0700 (PDT)
-Date: Sun, 29 Jun 2025 09:00:03 -0700
-In-Reply-To: <20250629151042.50986-1-contact@arnaud-lcm.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68616303.a00a0220.c1739.000a.GAE@google.com>
-Subject: Re: [syzbot] [smc?] KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
-From: syzbot <syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com>
-To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, contact@arnaud-lcm.com, 
-	davem@davemloft.net, edumazet@google.com, guwen@linux.alibaba.com, 
-	horms@kernel.org, jaka@linux.ibm.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
-	wenjia@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+pm_runtime_get_sync will increment pm usage counter
+even it failed. Forgetting to putting operation will
+result in reference leak here. We fix it by replacing
+it with pm_runtime_resume_and_get to keep usage counter
+balanced.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in inet_child_forget
+Fixes: 87244fe5abdf ("dmaengine: rcar-dmac: Add Renesas R-Car Gen2 DMA Controller (DMAC) driver")
+Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
+---
+ drivers/dma/sh/rcar-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc3-syzkaller-gdfba48a70cb6-dirty #0 Not tainted
-------------------------------------------------------
-syz.2.23/6591 is trying to acquire lock:
-ffff88805b87ac70 (k-clock-AF_INET6){++.-}-{3:3}, at: sock_orphan include/net/sock.h:2075 [inline]
-ffff88805b87ac70 (k-clock-AF_INET6){++.-}-{3:3}, at: inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
-
-but task is already holding lock:
-ffff88805b87aa58 (k-slock-AF_INET6){+.-.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
-ffff88805b87aa58 (k-slock-AF_INET6){+.-.}-{3:3}, at: inet_csk_listen_stop+0x203/0x1090 net/ipv4/inet_connection_sock.c:1495
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (k-slock-AF_INET6){+.-.}-{3:3}:
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       spin_lock include/linux/spinlock.h:351 [inline]
-       sk_clone_lock+0x334/0x1330 net/core/sock.c:2499
-       inet_csk_clone_lock+0x2a/0x750 net/ipv4/inet_connection_sock.c:1232
-       tcp_create_openreq_child+0x34/0x1980 net/ipv4/tcp_minisocks.c:526
-       tcp_v4_syn_recv_sock+0x115/0x1250 net/ipv4/tcp_ipv4.c:1774
-       tcp_v6_syn_recv_sock+0x1353/0x2480 net/ipv6/tcp_ipv6.c:1382
-       smc_tcp_syn_recv_sock+0x24b/0x500 net/smc/af_smc.c:144
-       tcp_check_req+0x69d/0x1f80 net/ipv4/tcp_minisocks.c:874
-       tcp_v4_rcv+0x19b0/0x4650 net/ipv4/tcp_ipv4.c:2283
-       ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
-       ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
-       NF_HOOK include/linux/netfilter.h:317 [inline]
-       NF_HOOK include/linux/netfilter.h:311 [inline]
-       ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
-       dst_input include/net/dst.h:469 [inline]
-       ip_rcv_finish net/ipv4/ip_input.c:447 [inline]
-       NF_HOOK include/linux/netfilter.h:317 [inline]
-       NF_HOOK include/linux/netfilter.h:311 [inline]
-       ip_rcv+0x2c3/0x5d0 net/ipv4/ip_input.c:567
-       __netif_receive_skb_one_core+0x197/0x1e0 net/core/dev.c:5977
-       __netif_receive_skb+0x1d/0x160 net/core/dev.c:6090
-       process_backlog+0x442/0x15e0 net/core/dev.c:6442
-       __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7414
-       napi_poll net/core/dev.c:7478 [inline]
-       net_rx_action+0xa9f/0xfe0 net/core/dev.c:7605
-       handle_softirqs+0x219/0x8e0 kernel/softirq.c:579
-       do_softirq kernel/softirq.c:480 [inline]
-       do_softirq+0xb2/0xf0 kernel/softirq.c:467
-       __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:407
-       local_bh_enable include/linux/bottom_half.h:33 [inline]
-       rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
-       __dev_queue_xmit+0x8ab/0x43e0 net/core/dev.c:4740
-       dev_queue_xmit include/linux/netdevice.h:3355 [inline]
-       neigh_hh_output include/net/neighbour.h:523 [inline]
-       neigh_output include/net/neighbour.h:537 [inline]
-       ip_finish_output2+0xc38/0x21a0 net/ipv4/ip_output.c:235
-       __ip_finish_output net/ipv4/ip_output.c:313 [inline]
-       __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:295
-       ip_finish_output+0x35/0x380 net/ipv4/ip_output.c:323
-       NF_HOOK_COND include/linux/netfilter.h:306 [inline]
-       ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:433
-       dst_output include/net/dst.h:459 [inline]
-       ip_local_out net/ipv4/ip_output.c:129 [inline]
-       __ip_queue_xmit+0x1d7d/0x26c0 net/ipv4/ip_output.c:527
-       __tcp_transmit_skb+0x2686/0x3e90 net/ipv4/tcp_output.c:1479
-       __tcp_send_ack.part.0+0x3de/0x700 net/ipv4/tcp_output.c:4279
-       __tcp_send_ack net/ipv4/tcp_output.c:4285 [inline]
-       tcp_send_ack+0x84/0xa0 net/ipv4/tcp_output.c:4285
-       tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6632 [inline]
-       tcp_rcv_state_process+0x4236/0x4ed0 net/ipv4/tcp_input.c:6826
-       tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1948
-       sk_backlog_rcv include/net/sock.h:1148 [inline]
-       __release_sock+0x31b/0x400 net/core/sock.c:3213
-       release_sock+0x5a/0x220 net/core/sock.c:3767
-       mptcp_connect+0xccd/0xfe0 net/mptcp/protocol.c:3695
-       __inet_stream_connect+0x3c8/0x1020 net/ipv4/af_inet.c:677
-       inet_stream_connect+0x57/0xa0 net/ipv4/af_inet.c:748
-       __sys_connect_file+0x141/0x1a0 net/socket.c:2038
-       __sys_connect+0x13b/0x160 net/socket.c:2057
-       __do_sys_connect net/socket.c:2063 [inline]
-       __se_sys_connect net/socket.c:2060 [inline]
-       __x64_sys_connect+0x72/0xb0 net/socket.c:2060
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (k-clock-AF_INET6){++.-}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain kernel/locking/lockdep.c:3911 [inline]
-       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-       __raw_write_lock_bh include/linux/rwlock_api_smp.h:202 [inline]
-       _raw_write_lock_bh+0x33/0x40 kernel/locking/spinlock.c:334
-       sock_orphan include/net/sock.h:2075 [inline]
-       inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
-       inet_csk_listen_stop+0x323/0x1090 net/ipv4/inet_connection_sock.c:1523
-       tcp_disconnect+0x18a4/0x1ec0 net/ipv4/tcp.c:3340
-       inet_shutdown+0x26f/0x440 net/ipv4/af_inet.c:935
-       smc_close_active+0xc2a/0x1070 net/smc/smc_close.c:223
-       __smc_release+0x634/0x880 net/smc/af_smc.c:282
-       smc_release+0x1fc/0x5f0 net/smc/af_smc.c:349
-       __sock_release+0xb3/0x270 net/socket.c:647
-       sock_close+0x1c/0x30 net/socket.c:1391
-       __fput+0x402/0xb70 fs/file_table.c:465
-       task_work_run+0x150/0x240 kernel/task_work.c:227
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop+0xeb/0x110 kernel/entry/common.c:114
-       exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
-       syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
-       syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
-       do_syscall_64+0x3f6/0x4c0 arch/x86/entry/syscall_64.c:100
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(k-slock-AF_INET6);
-                               lock(k-clock-AF_INET6);
-                               lock(k-slock-AF_INET6);
-  lock(k-clock-AF_INET6);
-
- *** DEADLOCK ***
-
-4 locks held by syz.2.23/6591:
- #0: ffff88805b065608 (&sb->s_type->i_mutex_key#11){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
- #0: ffff88805b065608 (&sb->s_type->i_mutex_key#11){+.+.}-{4:4}, at: __sock_release+0x86/0x270 net/socket.c:646
- #1: ffff888058b0a4d8 (sk_lock-AF_SMC/1){+.+.}-{0:0}, at: smc_release+0x378/0x5f0 net/smc/af_smc.c:341
- #2: ffff88805b878fd8 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1667 [inline]
- #2: ffff88805b878fd8 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at: inet_shutdown+0x67/0x440 net/ipv4/af_inet.c:905
- #3: ffff88805b87aa58 (k-slock-AF_INET6){+.-.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
- #3: ffff88805b87aa58 (k-slock-AF_INET6){+.-.}-{3:3}, at: inet_csk_listen_stop+0x203/0x1090 net/ipv4/inet_connection_sock.c:1495
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6591 Comm: syz.2.23 Not tainted 6.16.0-rc3-syzkaller-gdfba48a70cb6-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain kernel/locking/lockdep.c:3911 [inline]
- __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
- lock_acquire kernel/locking/lockdep.c:5871 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
- __raw_write_lock_bh include/linux/rwlock_api_smp.h:202 [inline]
- _raw_write_lock_bh+0x33/0x40 kernel/locking/spinlock.c:334
- sock_orphan include/net/sock.h:2075 [inline]
- inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
- inet_csk_listen_stop+0x323/0x1090 net/ipv4/inet_connection_sock.c:1523
- tcp_disconnect+0x18a4/0x1ec0 net/ipv4/tcp.c:3340
- inet_shutdown+0x26f/0x440 net/ipv4/af_inet.c:935
- smc_close_active+0xc2a/0x1070 net/smc/smc_close.c:223
- __smc_release+0x634/0x880 net/smc/af_smc.c:282
- smc_release+0x1fc/0x5f0 net/smc/af_smc.c:349
- __sock_release+0xb3/0x270 net/socket.c:647
- sock_close+0x1c/0x30 net/socket.c:1391
- __fput+0x402/0xb70 fs/file_table.c:465
- task_work_run+0x150/0x240 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xeb/0x110 kernel/entry/common.c:114
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x3f6/0x4c0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fec9fd7e719
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fec9effe038 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 00007fec9ff35f80 RCX: 00007fec9fd7e719
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000003
-RBP: 00007fec9fdf132e R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fec9ff35f80 R15: 00007ffd574ead88
- </TASK>
-
-
-Tested on:
-
-commit:         dfba48a7 Merge tag 'i2c-for-6.16-rc4' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11cd688c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d3e0d55231e0c89c
-dashboard link: https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10e2a982580000
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 0c45ce8c74aa..c1ce3b0ae74d 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1068,7 +1068,7 @@ static int rcar_dmac_alloc_chan_resources(struct dma_chan *chan)
+ 	if (ret < 0)
+ 		return -ENOMEM;
+ 
+-	return pm_runtime_get_sync(chan->device->dev);
++	return pm_runtime_resume_and_get(chan->device->dev);
+ }
+ 
+ static void rcar_dmac_free_chan_resources(struct dma_chan *chan)
+-- 
+2.39.5
 
