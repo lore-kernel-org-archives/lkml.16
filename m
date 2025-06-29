@@ -1,332 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A0E230BEC;
-	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D439230D0A;
+	Sun, 29 Jun 2025 14:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751208574; cv=none; b=BKNZ1Oc3tAGDK7kiFucJp1mZ5WGAmkVjzeyF9CsRhgPoaql1OuKq6ZjSBsoNT5cpoHCVhZedTYpZMKjTS6boIlJSjuJA+msZ0GsVt+hKG8W9e6Tq0ySfjkBCwj9UuSyL1unS3UOMLDSgnLIMoIFffg8GJJfzEsX2xHe+2K3aePw=
+	t=1751208604; cv=none; b=P93sEJYNCTNwILuYgU4z6nBFVLfZt7HmBl2JQwbudeFFWoOVJ7tdgl6aiXp8PmEd7Bfcj/i86kCqV8LgYp0Ag8IDZw5O9tYN/mpS7jBSx3FlhK6ntiuT7xfuH7OvNrC59OFNZaeGBOn1fNpCHeYGm6c9CVehgxX8AOqJ+GQUVRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751208574; c=relaxed/simple;
-	bh=HHCFQ4JI/dUulP883wPzwncQHxThZP/jrEtubFf6z3M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jo8iRInbNbIr1+QCSz5CuRiWJj/larZATMz7FV9ODdlp4jvOj3MqlHOwqN+hUK758tVoDadd2gCMyWC7vJ3cc1Pp892v/fpSMCdu04hhW1eIyJoW/m864+uvCIIhOttd8F1WMpejQ4KkBi5YXqRrs2Rya3nYBm3Spe5BrO1uipQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MScF0DyW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751208604; c=relaxed/simple;
+	bh=/4eXOj3Xo31VxxB5DkoSMS0btVgRszIg52mb9y9HycQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=kmrRfcUyaSs3yavWBZhJ6QPVvYWm+MgfzKnZmnBC1kTLJxukFXFUKH+Y8BLfQyIMy6k1OL2QV/TaFJwHtv3ZN70+iV+TyTnVcBujLgnD6hSHsGF1HmtXNw7CTppgQFhb4gP0NE0lQ+5x+6jV6CG+V1hc5Lc0sXDh5DvbTImQ0Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=O1JC/FVo; arc=none smtp.client-ip=43.163.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MScF0DyW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 526C2C4AF0B;
-	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751208574;
-	bh=HHCFQ4JI/dUulP883wPzwncQHxThZP/jrEtubFf6z3M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=MScF0DyW8mwTzrP8DyhEzsgpli+Rxj4alvh1WAblPEfJR6MnkoI+is2SevlyM9Q+t
-	 zeToocYTpeGgXKNup51Qs4BX6TKn+kTA64bIajVOXLH3n2QIZVdui6wFRO54vwUnB4
-	 VdB7wLhQ/dwTkGLsHvUlhpCkHpugeQc054N0IXRjATbZiAzQaUW/Wh3n2Lvk9wVjtD
-	 ioD8uWu/AkWMD/pAis2NeDYHpbGlomsqTMbLzIAXjKSDASrdeLpOhSeQeOvTsxX+L6
-	 3DLB4eVyMUlcwASWhPgI0MzhBE0exp/Q8NtDJQrXvTj8RNWK83wJ5OH3hmIz4dEd31
-	 Ca9sy37U/4qGg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A28C8302A;
-	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Sun, 29 Jun 2025 16:49:23 +0200
-Subject: [PATCH 4/5] media: i2c: imx214: Move imx214_pll_update to
- imx214_ctrls_init
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="O1JC/FVo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1751208587;
+	bh=JLkEkSY4PrPT4Wi5fo8zsPEvuNz7SNGEU7wk/Og0J1E=;
+	h=From:To:Cc:Subject:Date;
+	b=O1JC/FVoiAAM6ewxYtxCF2tOCMcKwABHMYYIuqWQiiYIEw8SJQUMataJy8qgnTGrQ
+	 y97LcFn+dURf6KBchgbfo7tRAmubIGAhIbGxEFzXdTlOFLIyhu2ln7aasH+fenuJaf
+	 raOrOhA9hs+KfreB2sZ60VAnXhP0wnuyHLoyH7LM=
+Received: from KernelDevBox.byted.org ([115.190.40.13])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id C6C276D2; Sun, 29 Jun 2025 22:49:44 +0800
+X-QQ-mid: xmsmtpt1751208584tz6q2oc6o
+Message-ID: <tencent_7745E114F55B42E026AEF67EAB1D6CDBA305@qq.com>
+X-QQ-XMAILINFO: OVFdYp27KdlJ1mlcCyrh9IfZYecebn38y8LeuuRDi3uc4ifONxfmjTeTmtiKTA
+	 qA92LISTj3AuGYmIJfN6Pj2D644fLfde6X8fp2tD2zFSQRifPPYbIvV5bPToldakVek/bLLrpLCs
+	 9YSrN0LWfz9J/9qGRKW5NRl6ZM4dVfx9FNBlwCuFeboluay+KnfiZEdhxgYi4xyEhSxxqk6fDXQ8
+	 AzdirquW9ZXUBnCUVshHuhfz4iXTyCaEL1CIfi8nSf4dxem+ecjumgy0191HkyeVzVwRVmxNYhS0
+	 M+YxbTTMickiibrqboz7dFRIl0IQXzeFGlbpW7K2SMrFg0DiUFu6FJZPmxxJ5LbAavuFZh3KoooR
+	 ZS4/ylG943+YtHMtnWuT4JSNNV5gyqgGX0nJZvVykXLkUvaRUAAnLS2nWNBuT+IS/xH8wdIaCdvi
+	 Zf4cNkF9ovQEBJuBJvSJYNlm75OZlRaQaf+WhP7SflsDOY/p22rreWTbG4LlJrIPNiq1tDNjKZJo
+	 2vfyngVrVevtpjpPsQZp/9DZdUNZ1pYw0iBKPnG/xYomenfb3GovcFEp4e4loEPM2nY/yi5G2kz6
+	 eyEH+kgXT7BrO5g5KpjgOC9T03BPm4+oUxkU2wxawKDZobE1+UUcHlrLgIzF79OHoJC4o/j7eJdx
+	 4AJ3cao5eOFhSnp3vSKYmks33N/AA/az8mIjL85iONSDKu9SnSP6MPXJJ7xilzv7ryN9l4J9wmCg
+	 qCai7HByJSlXuRPSVv5OvAvprkFYuavi+zGugq14MuQd++4nXDs3JMC+BmqZVxoXhk1cpJJwe46R
+	 oGDG8RJDkJXkopsgFjEBaYUyBE6K1SbuqM1SS9PHma5xIkG6U4ECsEtPMuVHLAWMQ87392aWJVkj
+	 OXRbVWONvzV1gvG5eev+uEeumsQTmrywvm0i2BA2KI19KgisRZyeOAHsloBRaptN/gDn1d3feAaV
+	 xtO7wypXaDJdDX+EbKMYmWPOtZfaVPI/WKBY284vTQrCYBeRuDL4iePTM7XtcbGxJiAQP6s4A=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Zhang Shurong <zhang_shurong@foxmail.com>
+To: prabhakar.csengg@gmail.com
+Cc: sakari.ailus@linux.intel.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhang Shurong <zhang_shurong@foxmail.com>
+Subject: [PATCH] media: ov2659: Fix memleak in ov2659_probe()
+Date: Sun, 29 Jun 2025 22:49:39 +0800
+X-OQ-MSGID: <20250629144939.1928824-1-zhang_shurong@foxmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250629-imx214_fixes-v1-4-873eb94ad635@apitzsch.eu>
-References: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
-In-Reply-To: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Ricardo Ribalda <ribalda@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751208572; l=8585;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=cy61DJ492FUgh7r4yJhsLHazreE9rqb3+/kYIW0bfHk=;
- b=GMhccfovyMTdJz7g8QRAmWNd/MnHvPJ0fnoLOiPMcBdqefCjUDcJHEygyxZCZXIWb0AjdnWl4
- +vTs5ZU0QjQBLXtEpHV8bcIoscNy0SY/O5Z468k0iF4hhkv2m94a91V
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
 
-From: André Apitzsch <git@apitzsch.eu>
+ov2659_probe() won't clean all the allocated resources in fail
+path, which may causes the memleaks. Add v4l2_ctrl_handler_free() to
+prevent memleak.
 
-It is more logical to call the PLL update in imx214_ctrls_init(). So
-let's move it there.
-
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
+Fixes: c4c0283ab3cd ("[media] media: i2c: add support for omnivision's ov2659 sensor")
+Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
 ---
- drivers/media/i2c/imx214.c | 219 +++++++++++++++++++++++----------------------
- 1 file changed, 110 insertions(+), 109 deletions(-)
+ drivers/media/i2c/ov2659.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index b84197ee5177d609b1395e14e1404ffa5b9a6dbf..63cf30acdc241de2f9ab3db339590da4af3d5102 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -881,6 +881,109 @@ static const struct v4l2_ctrl_ops imx214_ctrl_ops = {
- 	.s_ctrl = imx214_set_ctrl,
- };
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 06b7896c3eaf..586b31ba076b 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1469,14 +1469,15 @@ static int ov2659_probe(struct i2c_client *client)
+ 				     V4L2_CID_TEST_PATTERN,
+ 				     ARRAY_SIZE(ov2659_test_pattern_menu) - 1,
+ 				     0, 0, ov2659_test_pattern_menu);
+-	ov2659->sd.ctrl_handler = &ov2659->ctrls;
  
-+static int imx214_pll_calculate(struct imx214 *imx214, struct ccs_pll *pll,
-+				unsigned int link_freq)
-+{
-+	struct ccs_pll_limits limits = {
-+		.min_ext_clk_freq_hz = 6000000,
-+		.max_ext_clk_freq_hz = 27000000,
-+
-+		.vt_fr = {
-+			.min_pre_pll_clk_div = 1,
-+			.max_pre_pll_clk_div = 15,
-+			/* Value is educated guess as we don't have a spec */
-+			.min_pll_ip_clk_freq_hz = 6000000,
-+			/* Value is educated guess as we don't have a spec */
-+			.max_pll_ip_clk_freq_hz = 12000000,
-+			.min_pll_multiplier = 12,
-+			.max_pll_multiplier = 1200,
-+			.min_pll_op_clk_freq_hz = 338000000,
-+			.max_pll_op_clk_freq_hz = 1200000000,
-+		},
-+		.vt_bk = {
-+			.min_sys_clk_div = 2,
-+			.max_sys_clk_div = 4,
-+			.min_pix_clk_div = 5,
-+			.max_pix_clk_div = 10,
-+			.min_pix_clk_freq_hz = 30000000,
-+			.max_pix_clk_freq_hz = 120000000,
-+		},
-+		.op_bk = {
-+			.min_sys_clk_div = 1,
-+			.max_sys_clk_div = 2,
-+			.min_pix_clk_div = 6,
-+			.max_pix_clk_div = 10,
-+			.min_pix_clk_freq_hz = 30000000,
-+			.max_pix_clk_freq_hz = 120000000,
-+		},
-+
-+		.min_line_length_pck_bin = IMX214_PPL_DEFAULT,
-+		.min_line_length_pck = IMX214_PPL_DEFAULT,
-+	};
-+	unsigned int num_lanes = imx214->bus_cfg.bus.mipi_csi2.num_data_lanes;
-+
-+	/*
-+	 * There are no documented constraints on the sys clock frequency, for
-+	 * either branch. Recover them based on the PLL output clock frequency
-+	 * and sys_clk_div limits on one hand, and the pix clock frequency and
-+	 * the pix_clk_div limits on the other hand.
-+	 */
-+	limits.vt_bk.min_sys_clk_freq_hz =
-+		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.vt_bk.max_sys_clk_div,
-+		    limits.vt_bk.min_pix_clk_freq_hz * limits.vt_bk.min_pix_clk_div);
-+	limits.vt_bk.max_sys_clk_freq_hz =
-+		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.vt_bk.min_sys_clk_div,
-+		    limits.vt_bk.max_pix_clk_freq_hz * limits.vt_bk.max_pix_clk_div);
-+
-+	limits.op_bk.min_sys_clk_freq_hz =
-+		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.op_bk.max_sys_clk_div,
-+		    limits.op_bk.min_pix_clk_freq_hz * limits.op_bk.min_pix_clk_div);
-+	limits.op_bk.max_sys_clk_freq_hz =
-+		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.op_bk.min_sys_clk_div,
-+		    limits.op_bk.max_pix_clk_freq_hz * limits.op_bk.max_pix_clk_div);
-+
-+	memset(pll, 0, sizeof(*pll));
-+
-+	pll->bus_type = CCS_PLL_BUS_TYPE_CSI2_DPHY;
-+	pll->op_lanes = num_lanes;
-+	pll->vt_lanes = num_lanes;
-+	pll->csi2.lanes = num_lanes;
-+
-+	pll->binning_horizontal = 1;
-+	pll->binning_vertical = 1;
-+	pll->scale_m = 1;
-+	pll->scale_n = 1;
-+	pll->bits_per_pixel =
-+		IMX214_CSI_DATA_FORMAT_RAW10 & IMX214_BITS_PER_PIXEL_MASK;
-+	pll->flags = CCS_PLL_FLAG_LANE_SPEED_MODEL;
-+	pll->link_freq = link_freq;
-+	pll->ext_clk_freq_hz = clk_get_rate(imx214->xclk);
-+
-+	return ccs_pll_calculate(imx214->dev, &limits, pll);
-+}
-+
-+static int imx214_pll_update(struct imx214 *imx214)
-+{
-+	u64 link_freq;
-+	int ret;
-+
-+	link_freq = imx214->bus_cfg.link_frequencies[imx214->link_freq->val];
-+	ret = imx214_pll_calculate(imx214, &imx214->pll, link_freq);
-+	if (ret) {
-+		dev_err(imx214->dev, "PLL calculations failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = v4l2_ctrl_s_ctrl_int64(imx214->pixel_rate,
-+				     imx214->pll.pixel_rate_pixel_array);
-+	if (ret) {
-+		dev_err(imx214->dev, "failed to set pixel rate\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int imx214_ctrls_init(struct imx214 *imx214)
- {
- 	static const struct v4l2_area unit_size = {
-@@ -1003,6 +1106,13 @@ static int imx214_ctrls_init(struct imx214 *imx214)
- 		return ret;
+ 	if (ov2659->ctrls.error) {
+ 		dev_err(&client->dev, "%s: control initialization error %d\n",
+ 			__func__, ov2659->ctrls.error);
++		v4l2_ctrl_handler_free(&ov2659->ctrls);
+ 		return  ov2659->ctrls.error;
  	}
  
-+	ret = imx214_pll_update(imx214);
-+	if (ret < 0) {
-+		v4l2_ctrl_handler_free(ctrl_hdlr);
-+		dev_err(imx214->dev, "failed to update PLL\n");
-+		return ret;
-+	}
-+
- 	imx214->sd.ctrl_handler = ctrl_hdlr;
++	ov2659->sd.ctrl_handler = &ov2659->ctrls;
+ 	sd = &ov2659->sd;
+ 	client->flags |= I2C_CLIENT_SCCB;
  
- 	return 0;
-@@ -1115,109 +1225,6 @@ static int imx214_s_stream(struct v4l2_subdev *subdev, int enable)
- 	return ret;
- }
- 
--static int imx214_pll_calculate(struct imx214 *imx214, struct ccs_pll *pll,
--				unsigned int link_freq)
--{
--	struct ccs_pll_limits limits = {
--		.min_ext_clk_freq_hz = 6000000,
--		.max_ext_clk_freq_hz = 27000000,
--
--		.vt_fr = {
--			.min_pre_pll_clk_div = 1,
--			.max_pre_pll_clk_div = 15,
--			/* Value is educated guess as we don't have a spec */
--			.min_pll_ip_clk_freq_hz = 6000000,
--			/* Value is educated guess as we don't have a spec */
--			.max_pll_ip_clk_freq_hz = 12000000,
--			.min_pll_multiplier = 12,
--			.max_pll_multiplier = 1200,
--			.min_pll_op_clk_freq_hz = 338000000,
--			.max_pll_op_clk_freq_hz = 1200000000,
--		},
--		.vt_bk = {
--			.min_sys_clk_div = 2,
--			.max_sys_clk_div = 4,
--			.min_pix_clk_div = 5,
--			.max_pix_clk_div = 10,
--			.min_pix_clk_freq_hz = 30000000,
--			.max_pix_clk_freq_hz = 120000000,
--		},
--		.op_bk = {
--			.min_sys_clk_div = 1,
--			.max_sys_clk_div = 2,
--			.min_pix_clk_div = 6,
--			.max_pix_clk_div = 10,
--			.min_pix_clk_freq_hz = 30000000,
--			.max_pix_clk_freq_hz = 120000000,
--		},
--
--		.min_line_length_pck_bin = IMX214_PPL_DEFAULT,
--		.min_line_length_pck = IMX214_PPL_DEFAULT,
--	};
--	unsigned int num_lanes = imx214->bus_cfg.bus.mipi_csi2.num_data_lanes;
--
--	/*
--	 * There are no documented constraints on the sys clock frequency, for
--	 * either branch. Recover them based on the PLL output clock frequency
--	 * and sys_clk_div limits on one hand, and the pix clock frequency and
--	 * the pix_clk_div limits on the other hand.
--	 */
--	limits.vt_bk.min_sys_clk_freq_hz =
--		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.vt_bk.max_sys_clk_div,
--		    limits.vt_bk.min_pix_clk_freq_hz * limits.vt_bk.min_pix_clk_div);
--	limits.vt_bk.max_sys_clk_freq_hz =
--		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.vt_bk.min_sys_clk_div,
--		    limits.vt_bk.max_pix_clk_freq_hz * limits.vt_bk.max_pix_clk_div);
--
--	limits.op_bk.min_sys_clk_freq_hz =
--		max(limits.vt_fr.min_pll_op_clk_freq_hz / limits.op_bk.max_sys_clk_div,
--		    limits.op_bk.min_pix_clk_freq_hz * limits.op_bk.min_pix_clk_div);
--	limits.op_bk.max_sys_clk_freq_hz =
--		min(limits.vt_fr.max_pll_op_clk_freq_hz / limits.op_bk.min_sys_clk_div,
--		    limits.op_bk.max_pix_clk_freq_hz * limits.op_bk.max_pix_clk_div);
--
--	memset(pll, 0, sizeof(*pll));
--
--	pll->bus_type = CCS_PLL_BUS_TYPE_CSI2_DPHY;
--	pll->op_lanes = num_lanes;
--	pll->vt_lanes = num_lanes;
--	pll->csi2.lanes = num_lanes;
--
--	pll->binning_horizontal = 1;
--	pll->binning_vertical = 1;
--	pll->scale_m = 1;
--	pll->scale_n = 1;
--	pll->bits_per_pixel =
--		IMX214_CSI_DATA_FORMAT_RAW10 & IMX214_BITS_PER_PIXEL_MASK;
--	pll->flags = CCS_PLL_FLAG_LANE_SPEED_MODEL;
--	pll->link_freq = link_freq;
--	pll->ext_clk_freq_hz = clk_get_rate(imx214->xclk);
--
--	return ccs_pll_calculate(imx214->dev, &limits, pll);
--}
--
--static int imx214_pll_update(struct imx214 *imx214)
--{
--	u64 link_freq;
--	int ret;
--
--	link_freq = imx214->bus_cfg.link_frequencies[imx214->link_freq->val];
--	ret = imx214_pll_calculate(imx214, &imx214->pll, link_freq);
--	if (ret) {
--		dev_err(imx214->dev, "PLL calculations failed: %d\n", ret);
--		return ret;
--	}
--
--	ret = v4l2_ctrl_s_ctrl_int64(imx214->pixel_rate,
--				     imx214->pll.pixel_rate_pixel_array);
--	if (ret) {
--		dev_err(imx214->dev, "failed to set pixel rate\n");
--		return ret;
--	}
--
--	return 0;
--}
--
- static int imx214_get_frame_interval(struct v4l2_subdev *subdev,
- 				     struct v4l2_subdev_state *sd_state,
- 				     struct v4l2_subdev_frame_interval *fival)
-@@ -1457,12 +1464,6 @@ static int imx214_probe(struct i2c_client *client)
- 	pm_runtime_set_active(imx214->dev);
- 	pm_runtime_enable(imx214->dev);
- 
--	ret = imx214_pll_update(imx214);
--	if (ret < 0) {
--		dev_err_probe(dev, ret, "failed to update PLL\n");
--		goto error_subdev_cleanup;
--	}
--
- 	ret = v4l2_async_register_subdev_sensor(&imx214->sd);
- 	if (ret < 0) {
- 		dev_err_probe(dev, ret,
-
 -- 
-2.50.0
-
+2.39.5
 
