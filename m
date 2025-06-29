@@ -1,258 +1,722 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579142AF14
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 13:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496B72F85B
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 13:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751205127; cv=none; b=lJ60XDAS59KtuCRbgJS5WPIHyp9W9kYnjlrUM030swuVRsT/YdWz+1SUgSP4kuRkPrGW1P8fOTH2XesCUfUQsmaRjuk+cXunNApELCyJRsi48cN8frC1CXYNeVf8kRxO8QNEQKAJXcKWQyyoN6CR+1qbPtG+OiYaBJje7JUhMzQ=
+	t=1751205558; cv=none; b=Ts4QUJra97CBy7NYIf6NqGG+GUSr8hCNOf/conpbsbJl3cz5aWiOEIpradOijkaGHc2MJxh95eRifeeSYQiaqGXQmkQjiIRhA8KTuicHKVzTRaIYykRFPdMAHzZZgLlr0wlVXtWtLzs6p5IdSmclLw0V8LE+a5oP2xheAc8iXbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751205127; c=relaxed/simple;
-	bh=wTU93lkVicbIM8Sjk8+dhMmLKxe6XRkyeROuL5ICWNA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=YSC6ToI5G7s/XKH8KFwZw94la9jDi9TNNK+WcDjF0pJGUUr28gZrS352RhQZM0GyauoLzoAzU/q34u21Kjqpxv7DugZTLXQFepiQ1VILqOddVrx/8kg5JofniOG1k+kobSZ/sFHsRLAC7J4D55wwvt6Thvb1zazAb8p0OswI2Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3df309d9842so40863125ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 06:52:05 -0700 (PDT)
+	s=arc-20240116; t=1751205558; c=relaxed/simple;
+	bh=/CpRNbr3GTt2wn3n1LioxE/xXAhW4pend7pTqs9yygE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aInqXTc55KPRSYzwVdPdTk3lCvIvCBI8HDn1BTsF6GMyn9uEDHxdNJnLDOiYp9EWfwThHSC1dpyxILL4+aCs7o7StBxQlRxmgoiPoMyfvEFsyEh+FZ0QtlIUr34BaXtPom9H5+vUg9GjjBjiKJUSYK63rrLXagIa4bCaTqsnR/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IUgzQLzj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IUgzQLzj"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TAqiQK011971
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 13:59:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=IuaM32AG8KYJp1xi9yr1n4YlyCbAuKM2xRY
+	KdqJKGXg=; b=IUgzQLzjrfzzDYHL4vC4QjGBGpHIBWRCcFTrIwdHvTUnzMMXJOO
+	Pw9x3vQW2cbYyud9tCV+UZjHb3dYiS6fky9TolO49U7R3EUts58eFTxzlqIRCwR8
+	VBqg9pjCm+mYIdx4yFc9ucyIKx6i5c5xDhKsAOQNgfvO23bsc8Y7YvbgRps1Zei6
+	W8/OuF9bAd3W2Ng0l4/FQbJb68TJIx2hdGmsQafk9w0AkBffuSj3M84ZMbto3p43
+	RHiyPxf5vnLSpkjzqbJXMAs/WFGJhBNrUCpsotDA8xiPCdMZc6ODJOalHWPlQ6Tp
+	DaUMK1F1sfz79c86P6lz/PgEahjQ8dkE5+w==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qm27nh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 13:59:13 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235e3f93687so18963725ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 06:59:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751205124; x=1751809924;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=30Tbiw0hGkGJ+ZRbb+lh7FwxkPU+mvSzx5Jx6ZtM/Uw=;
-        b=X45oF46s9Hzr+2pRi+/esgd5i6oeyuofo9ws6dPUt37HBS+zJY1fqLos4rOmPP2Wrh
-         EZM6pavaP1gqcjdcNbEd13jaEF22IHq1KKu//8Q7nz0YuQhH7OKSHK2lDpPgR3DB96t7
-         s79Tm/Ek57zp4yF0hYob/gM4Ija/8mAY13HLmQEq+e/Z9e60gPFQF8luWAj8x9+xUBkE
-         CiWPDX7Wll/6pa7tx+PTFdviFQVl/P8sIJDBZCUTI17u7zZKxa50jQNzuYPL0KR0l/0F
-         B3Rw1Nof4lUpxGUoBDVjHhlRx0lUzCZb1oi0HQ4NnjLxUFDBJG+mzPyNXsU/QkkEdXAf
-         a8VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUKxkej0EmlifEn6qBphHBJwPtDHI7XptuDEVKDWozOHBXP7J1usGtcg1KKjZosL8SWWNGSCQaydRg/iM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOgtSL1OpIQOfrTg4+UfNfkt2BF5i4vAl4hEvdOuZ3z77to26d
-	WuRZrn0ZMXCib9jIsyJ9Mxnbs6jKn7ovw8VK2rwDwYZJOT4lP4r0Uf2/VsH/G3alrkmzt3iw15R
-	/EPqehHQENKLm+TV0lgoAX6Gfwpgoajib8IDv6vcztzNC8gYQnzFtyNyRwsU=
-X-Google-Smtp-Source: AGHT+IGgU9qvvZ/14xP0m938EssDUqZjWHnJHHRwbdDlm5WKCY127sBx437m9ZO/NETS+2P0wK52vtxVCW2Wp3rVhFl5h8Ex5MrQ
+        d=1e100.net; s=20230601; t=1751205552; x=1751810352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IuaM32AG8KYJp1xi9yr1n4YlyCbAuKM2xRYKdqJKGXg=;
+        b=LGaDe3OWiyl3fGJvg+a3CEqIQMPmPcZ1gx4C4wIOhnCnT+J4w34sUxOFuYO5iWIxy/
+         +gP/zqZem14oIG2dcMZhKBNy39UHW5v4nGJtOe8GK92HZkeEiPF7ax0tbO8W0R+ZRMpp
+         plDgMBw9MhfzBqJF25ULot3YnVoJONMHp6g4c0NiO7d12x8jvEQeTlLSka0k49Eps7fS
+         HsW4OTM6PZWf/VpCC6eZ5KI5ggy30yueEQUd3Irig5DRr/o/rchWVF0+O5GrQN+/c0+F
+         V8iOsrDD4Ld/Xr09jCSXS5O8ljXUZzl+wTrKbK6HAW1U/oJyjSS+3Pp0aC/POr/kw0Df
+         9Dsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVzP9o1WJj4aKNyF6z5KjvCfh4OSO3ofAFlu0USv1oP+V6hHyB8bHP+m//CiwBWpVU+OaF+IzZEPMdYrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNnwQLlZRc0He/QvkSXO4dAPjYV6IZPWQsFylXKFPBAqUElCdI
+	RtrRzAghUtTbJiLRSKPgOQ3pmmQFnyvfPa021+hF/1UCpWWHfdbIlv9V0CuqbLL6r867El59dbx
+	MzShbmAu4khJZogMeV745NZL0DrTxZjxsUVLhk0snCXJO6zj27ZUh+xk6BDa/tlsxpgg=
+X-Gm-Gg: ASbGncspSujcJj5isU8RSVCoEQC3E9Fv2smfEREW3jwPp3nw8HBNIbnfDAWbC6KVqI3
+	dsw1Pd+Hzz2E6vj55pGIcspxLwM3xXTjHX2hSSXGA7zbhw+T+naz2QiNc5zDmnmPQMG762xFems
+	e1Gj9QDMCsRwDaxmmOZAIxgwE88X8/rsMMGYkA+YL2UfzEKsVzKOGJXEngdN5UgRuufgPQqP+Lv
+	bsXIHIIHtmmWHez+NQfmOC+er6PPNwXObA48SIw5G4NmjDXiUOM3KPmwtv+r3/QXm2+0eVZvnlm
+	DOtBDXNz7+RN+e8x/99pj3axuRd/2zt5
+X-Received: by 2002:a17:902:ce87:b0:235:f18f:2911 with SMTP id d9443c01a7336-23ac381b1c2mr154876645ad.2.1751205551699;
+        Sun, 29 Jun 2025 06:59:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHr4DdWW5EHLckaEWf8ixMESN8wa8SR739G5O95/rXRgsPtcxcQj598zg22KI8apbWkKl8OAw==
+X-Received: by 2002:a17:902:ce87:b0:235:f18f:2911 with SMTP id d9443c01a7336-23ac381b1c2mr154876215ad.2.1751205550970;
+        Sun, 29 Jun 2025 06:59:10 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3d7406sm62577485ad.259.2025.06.29.06.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 06:59:10 -0700 (PDT)
+From: Rob Clark <robin.clark@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Helen Koike <helen.fornazier@gmail.com>,
+        Vignesh Raman <vignesh.raman@collabora.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/ci: Remove sdm845/cheza jobs
+Date: Sun, 29 Jun 2025 06:58:41 -0700
+Message-ID: <20250629135843.30097-1-robin.clark@oss.qualcomm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c23:b0:3df:49b0:9331 with SMTP id
- e9e14a558f8ab-3df4ab56743mr125744645ab.4.1751205124583; Sun, 29 Jun 2025
- 06:52:04 -0700 (PDT)
-Date: Sun, 29 Jun 2025 06:52:04 -0700
-In-Reply-To: <20250629132933.33599-1-contact@arnaud-lcm.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68614504.a70a0220.2f4de1.001d.GAE@google.com>
-Subject: Re: [syzbot] [smc?] KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
-From: syzbot <syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com>
-To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, contact@arnaud-lcm.com, 
-	davem@davemloft.net, edumazet@google.com, guwen@linux.alibaba.com, 
-	horms@kernel.org, jaka@linux.ibm.com, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-s390@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
-	wenjia@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=686146b1 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=VwQbUJbxAAAA:8 a=QX4gbG5DAAAA:8 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8
+ a=PradMPrUKUq9_3gLKtUA:9 a=s5zKW874KtQA:10 a=uG9DUKGECoFWVXl0Dc02:22
+ a=AbAUZ8qAyYyZVLSsDulk:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-ORIG-GUID: c7Fd0H8_Vu24SxqKe_NFv81bDdV8rZiI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDExNyBTYWx0ZWRfXwvJniwjng+Zv
+ 35/e0T25ZZ9kZbEMNI/YSJudCDrmnHVs6a6hO1lFCh4rdCP3J/OQe2h9uNnkZMdp52EK8t8c4h7
+ AhAJEv2fFK400lZPQC+tMHJ8/5jEquorK8m7HjGrTiSn5ubCKaAIxPzjjfAqMyO+LUeIJsEzmm8
+ teEQ3MFOAPkZWUFzf8MGN8/h7MzyFDRSSoV62QWaJ+wp3rKsnUGTGzRJ4Y760vHhAgoD5so1n1t
+ 6q1f4yT/tAn0rRyIRrUpvcin030Juwl8ALno9Rq1o6nMllBdbEHJFY39QaWcEYDGF1TIWyPelL/
+ ZSuvbZIBedUBkWuwovHw5nCqcd0syZAEIS7zvVQ208G3Eju41zali4euN3UTMCMVq8ChReSllip
+ Y55g6BOipiChH3OhSlLbj1ADd2S5XF/sv9ZmW0pZ9G3atfEGTqKIkYpg/cCump3HjH+8YOVi
+X-Proofpoint-GUID: c7Fd0H8_Vu24SxqKe_NFv81bDdV8rZiI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506290117
 
-Hello,
+These runners are no more.  So remove the jobs.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in inet_child_forget
+Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+---
+ drivers/gpu/drm/ci/build.sh                   |  17 -
+ drivers/gpu/drm/ci/test.yml                   |  14 -
+ .../gpu/drm/ci/xfails/msm-sdm845-fails.txt    |  29 --
+ .../gpu/drm/ci/xfails/msm-sdm845-flakes.txt   | 139 -------
+ .../gpu/drm/ci/xfails/msm-sdm845-skips.txt    | 350 ------------------
+ 5 files changed, 549 deletions(-)
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.16.0-rc3-syzkaller-00329-gdfba48a70cb6-dirty #0 Not tainted
-------------------------------------------------------
-syz.3.22/6775 is trying to acquire lock:
-ffff888031981170 (k-clock-AF_INET6){++.-}-{3:3}, at: sock_orphan include/net/sock.h:2075 [inline]
-ffff888031981170 (k-clock-AF_INET6){++.-}-{3:3}, at: inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
-
-but task is already holding lock:
-ffff888031980f58 (k-slock-AF_INET6){+.-.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
-ffff888031980f58 (k-slock-AF_INET6){+.-.}-{3:3}, at: inet_csk_listen_stop+0x203/0x1090 net/ipv4/inet_connection_sock.c:1495
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (k-slock-AF_INET6){+.-.}-{3:3}:
-       __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-       _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-       spin_lock include/linux/spinlock.h:351 [inline]
-       sk_clone_lock+0x334/0x1330 net/core/sock.c:2499
-       inet_csk_clone_lock+0x2a/0x750 net/ipv4/inet_connection_sock.c:1232
-       tcp_create_openreq_child+0x34/0x1980 net/ipv4/tcp_minisocks.c:526
-       tcp_v4_syn_recv_sock+0x115/0x1250 net/ipv4/tcp_ipv4.c:1774
-       tcp_v6_syn_recv_sock+0x1353/0x2480 net/ipv6/tcp_ipv6.c:1382
-       smc_tcp_syn_recv_sock+0x24b/0x500 net/smc/af_smc.c:144
-       tcp_check_req+0x69d/0x1f80 net/ipv4/tcp_minisocks.c:874
-       tcp_v4_rcv+0x19b0/0x4650 net/ipv4/tcp_ipv4.c:2283
-       ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
-       ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
-       NF_HOOK include/linux/netfilter.h:317 [inline]
-       NF_HOOK include/linux/netfilter.h:311 [inline]
-       ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
-       dst_input include/net/dst.h:469 [inline]
-       ip_rcv_finish net/ipv4/ip_input.c:447 [inline]
-       NF_HOOK include/linux/netfilter.h:317 [inline]
-       NF_HOOK include/linux/netfilter.h:311 [inline]
-       ip_rcv+0x2c3/0x5d0 net/ipv4/ip_input.c:567
-       __netif_receive_skb_one_core+0x197/0x1e0 net/core/dev.c:5977
-       __netif_receive_skb+0x1d/0x160 net/core/dev.c:6090
-       process_backlog+0x442/0x15e0 net/core/dev.c:6442
-       __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7414
-       napi_poll net/core/dev.c:7478 [inline]
-       net_rx_action+0xa9f/0xfe0 net/core/dev.c:7605
-       handle_softirqs+0x219/0x8e0 kernel/softirq.c:579
-       do_softirq kernel/softirq.c:480 [inline]
-       do_softirq+0xb2/0xf0 kernel/softirq.c:467
-       __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:407
-       local_bh_enable include/linux/bottom_half.h:33 [inline]
-       rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
-       __dev_queue_xmit+0x8ab/0x43e0 net/core/dev.c:4740
-       dev_queue_xmit include/linux/netdevice.h:3355 [inline]
-       neigh_hh_output include/net/neighbour.h:523 [inline]
-       neigh_output include/net/neighbour.h:537 [inline]
-       ip_finish_output2+0xc38/0x21a0 net/ipv4/ip_output.c:235
-       __ip_finish_output net/ipv4/ip_output.c:313 [inline]
-       __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:295
-       ip_finish_output+0x35/0x380 net/ipv4/ip_output.c:323
-       NF_HOOK_COND include/linux/netfilter.h:306 [inline]
-       ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:433
-       dst_output include/net/dst.h:459 [inline]
-       ip_local_out net/ipv4/ip_output.c:129 [inline]
-       __ip_queue_xmit+0x1d7d/0x26c0 net/ipv4/ip_output.c:527
-       __tcp_transmit_skb+0x2686/0x3e90 net/ipv4/tcp_output.c:1479
-       __tcp_send_ack.part.0+0x3de/0x700 net/ipv4/tcp_output.c:4279
-       __tcp_send_ack net/ipv4/tcp_output.c:4285 [inline]
-       tcp_send_ack+0x84/0xa0 net/ipv4/tcp_output.c:4285
-       tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6632 [inline]
-       tcp_rcv_state_process+0x4236/0x4ed0 net/ipv4/tcp_input.c:6826
-       tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1948
-       sk_backlog_rcv include/net/sock.h:1148 [inline]
-       __release_sock+0x31b/0x400 net/core/sock.c:3213
-       release_sock+0x5a/0x220 net/core/sock.c:3767
-       mptcp_connect+0xccd/0xfe0 net/mptcp/protocol.c:3695
-       __inet_stream_connect+0x3c8/0x1020 net/ipv4/af_inet.c:677
-       inet_stream_connect+0x57/0xa0 net/ipv4/af_inet.c:748
-       __sys_connect_file+0x141/0x1a0 net/socket.c:2038
-       __sys_connect+0x13b/0x160 net/socket.c:2057
-       __do_sys_connect net/socket.c:2063 [inline]
-       __se_sys_connect net/socket.c:2060 [inline]
-       __x64_sys_connect+0x72/0xb0 net/socket.c:2060
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (k-clock-AF_INET6){++.-}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain kernel/locking/lockdep.c:3911 [inline]
-       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
-       lock_acquire kernel/locking/lockdep.c:5871 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-       __raw_write_lock_bh include/linux/rwlock_api_smp.h:202 [inline]
-       _raw_write_lock_bh+0x33/0x40 kernel/locking/spinlock.c:334
-       sock_orphan include/net/sock.h:2075 [inline]
-       inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
-       inet_csk_listen_stop+0x323/0x1090 net/ipv4/inet_connection_sock.c:1523
-       tcp_disconnect+0x18a4/0x1ec0 net/ipv4/tcp.c:3340
-       inet_shutdown+0x26f/0x440 net/ipv4/af_inet.c:935
-       smc_close_active+0xc2a/0x1070 net/smc/smc_close.c:223
-       __smc_release+0x634/0x880 net/smc/af_smc.c:282
-       smc_release+0x1fc/0x5f0 net/smc/af_smc.c:349
-       __sock_release+0xb3/0x270 net/socket.c:647
-       sock_close+0x1c/0x30 net/socket.c:1391
-       __fput+0x402/0xb70 fs/file_table.c:465
-       task_work_run+0x150/0x240 kernel/task_work.c:227
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop+0xeb/0x110 kernel/entry/common.c:114
-       exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
-       syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
-       syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
-       do_syscall_64+0x3f6/0x4c0 arch/x86/entry/syscall_64.c:100
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(k-slock-AF_INET6);
-                               lock(k-clock-AF_INET6);
-                               lock(k-slock-AF_INET6);
-  lock(k-clock-AF_INET6);
-
- *** DEADLOCK ***
-
-4 locks held by syz.3.22/6775:
- #0: ffff888056c4b808 (&sb->s_type->i_mutex_key#11){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
- #0: ffff888056c4b808 (&sb->s_type->i_mutex_key#11){+.+.}-{4:4}, at: __sock_release+0x86/0x270 net/socket.c:646
- #1: ffff8880316dc758 (sk_lock-AF_SMC/1){+.+.}-{0:0}, at: smc_release+0x378/0x5f0 net/smc/af_smc.c:341
- #2: ffff888031983858 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1667 [inline]
- #2: ffff888031983858 (k-sk_lock-AF_INET6){+.+.}-{0:0}, at: inet_shutdown+0x67/0x440 net/ipv4/af_inet.c:905
- #3: ffff888031980f58 (k-slock-AF_INET6){+.-.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
- #3: ffff888031980f58 (k-slock-AF_INET6){+.-.}-{3:3}, at: inet_csk_listen_stop+0x203/0x1090 net/ipv4/inet_connection_sock.c:1495
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6775 Comm: syz.3.22 Not tainted 6.16.0-rc3-syzkaller-00329-gdfba48a70cb6-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain kernel/locking/lockdep.c:3911 [inline]
- __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
- lock_acquire kernel/locking/lockdep.c:5871 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
- __raw_write_lock_bh include/linux/rwlock_api_smp.h:202 [inline]
- _raw_write_lock_bh+0x33/0x40 kernel/locking/spinlock.c:334
- sock_orphan include/net/sock.h:2075 [inline]
- inet_child_forget+0x7e/0x2e0 net/ipv4/inet_connection_sock.c:1383
- inet_csk_listen_stop+0x323/0x1090 net/ipv4/inet_connection_sock.c:1523
- tcp_disconnect+0x18a4/0x1ec0 net/ipv4/tcp.c:3340
- inet_shutdown+0x26f/0x440 net/ipv4/af_inet.c:935
- smc_close_active+0xc2a/0x1070 net/smc/smc_close.c:223
- __smc_release+0x634/0x880 net/smc/af_smc.c:282
- smc_release+0x1fc/0x5f0 net/smc/af_smc.c:349
- __sock_release+0xb3/0x270 net/socket.c:647
- sock_close+0x1c/0x30 net/socket.c:1391
- __fput+0x402/0xb70 fs/file_table.c:465
- task_work_run+0x150/0x240 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xeb/0x110 kernel/entry/common.c:114
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x3f6/0x4c0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe73c37e719
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe73d091038 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 00007fe73c535f80 RCX: 00007fe73c37e719
-RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000000000003
-RBP: 00007fe73c3f132e R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fe73c535f80 R15: 00007fff230025e8
- </TASK>
-
-
-Tested on:
-
-commit:         dfba48a7 Merge tag 'i2c-for-6.16-rc4' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16ce688c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d3e0d55231e0c89c
-dashboard link: https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1124c770580000
+diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
+index 284873e94d8d..7cad40763dce 100644
+--- a/drivers/gpu/drm/ci/build.sh
++++ b/drivers/gpu/drm/ci/build.sh
+@@ -112,23 +112,6 @@ make modules
+ mkdir -p install/modules/
+ INSTALL_MOD_PATH=install/modules/ make modules_install
+ 
+-if [[ ${DEBIAN_ARCH} = "arm64" ]]; then
+-    make Image.lzma
+-    mkimage \
+-        -f auto \
+-        -A arm \
+-        -O linux \
+-        -d arch/arm64/boot/Image.lzma \
+-        -C lzma\
+-        -b arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb \
+-        /kernel/cheza-kernel
+-    KERNEL_IMAGE_NAME+=" cheza-kernel"
+-
+-    # Make a gzipped copy of the Image for db410c.
+-    gzip -k /kernel/Image
+-    KERNEL_IMAGE_NAME+=" Image.gz"
+-fi
+-
+ # Pass needed files to the test stage
+ mkdir -p install
+ cp -rfv .gitlab-ci/* install/.
+diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+index 795a2631833b..ec93b9dc9ebe 100644
+--- a/drivers/gpu/drm/ci/test.yml
++++ b/drivers/gpu/drm/ci/test.yml
+@@ -179,20 +179,6 @@ msm:apq8096:
+   script:
+     - ./install/bare-metal/fastboot.sh || exit $?
+ 
+-msm:sdm845:
+-  extends:
+-    - .baremetal-igt-arm64
+-  stage: msm
+-  parallel: 6
+-  variables:
+-    DEVICE_TYPE: sdm845-cheza-r3
+-    DRIVER_NAME: msm
+-    BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
+-    GPU_VERSION: sdm845
+-    RUNNER_TAG: google-freedreno-cheza
+-  script:
+-    - ./install/bare-metal/cros-servo.sh || exit $?
+-
+ msm:sm8350-hdk:
+   extends:
+     - .lava-igt:arm64
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
+deleted file mode 100644
+index 7a2ab58b706f..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-kms_color@ctm-0-25,Fail
+-kms_color@ctm-0-50,Fail
+-kms_color@ctm-0-75,Fail
+-kms_color@ctm-blue-to-red,Fail
+-kms_color@ctm-green-to-red,Fail
+-kms_color@ctm-negative,Fail
+-kms_color@ctm-red-to-blue,Fail
+-kms_color@ctm-signed,Fail
+-kms_cursor_legacy@basic-flip-before-cursor-atomic,Fail
+-kms_cursor_legacy@basic-flip-before-cursor-legacy,Fail
+-kms_cursor_legacy@cursor-vs-flip-atomic,Fail
+-kms_cursor_legacy@cursor-vs-flip-atomic-transitions,Fail
+-kms_cursor_legacy@cursor-vs-flip-atomic-transitions-varying-size,Fail
+-kms_cursor_legacy@cursor-vs-flip-legacy,Fail
+-kms_cursor_legacy@cursor-vs-flip-toggle,Fail
+-kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
+-kms_cursor_legacy@flip-vs-cursor-atomic,Fail
+-kms_cursor_legacy@flip-vs-cursor-crc-atomic,Fail
+-kms_cursor_legacy@flip-vs-cursor-crc-legacy,Fail
+-kms_cursor_legacy@flip-vs-cursor-legacy,Fail
+-kms_flip@flip-vs-modeset-vs-hang,Fail
+-kms_flip@flip-vs-panning-vs-hang,Fail
+-kms_lease@lease-uevent,Fail
+-kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
+-kms_plane_alpha_blend@alpha-7efc,Fail
+-kms_plane_alpha_blend@coverage-7efc,Fail
+-kms_plane_alpha_blend@coverage-vs-premult-vs-constant,Fail
+-kms_plane_cursor@overlay,Fail
+-kms_plane_cursor@viewport,Fail
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
+deleted file mode 100644
+index e32d73c6c98e..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
++++ /dev/null
+@@ -1,139 +0,0 @@
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@basic-flip-after-cursor-atomic
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@basic-flip-after-cursor-legacy
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@basic-flip-after-cursor-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@basic-flip-before-cursor-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@flip-vs-cursor-atomic-transitions
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@flip-vs-cursor-atomic-transitions-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@flip-vs-cursor-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@short-flip-after-cursor-atomic-transitions
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@short-flip-after-cursor-atomic-transitions-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@short-flip-after-cursor-toggle
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@short-flip-before-cursor-atomic-transitions
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-kms_cursor_legacy@short-flip-before-cursor-atomic-transitions-varying-size
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-msm/msm_shrink@copy-gpu-32
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-g0df7b9b97
+-# Linux Version: 6.9.0-rc7
+-msm/msm_shrink@copy-gpu-oom-32
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-gf13702b8e
+-# Linux Version: 6.10.0-rc5
+-kms_cursor_legacy@short-flip-before-cursor-toggle
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-gf13702b8e
+-# Linux Version: 6.10.0-rc5
+-kms_cursor_legacy@flip-vs-cursor-toggle
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/661483c8-ad82-400d-bcd8-e94986d20d7d@collabora.com/T/#u
+-# Failure Rate: 50
+-# IGT Version: 1.28-gf13702b8e
+-# Linux Version: 6.10.0-rc5
+-msm/msm_shrink@copy-mmap-oom-8
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/64bc4bcf-de51-4e60-a9f7-1295a1e64c65@collabora.com/T/#t
+-# Failure Rate: 50
+-# IGT Version: 1.28-ga73311079
+-# Linux Version: 6.11.0-rc2
+-kms_lease@page-flip-implicit-plane
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://lore.kernel.org/linux-arm-msm/64bc4bcf-de51-4e60-a9f7-1295a1e64c65@collabora.com/T/#t
+-# Failure Rate: 50
+-# IGT Version: 1.28-ga73311079
+-# Linux Version: 6.11.0-rc5
+-kms_flip@flip-vs-expired-vblank
+-
+-# Board Name: sdm845-cheza-r3
+-# Bug Report: https://gitlab.freedesktop.org/drm/msm/-/issues/75
+-# Failure Rate: 20
+-# IGT Version: 1.30-g04bedb923
+-# Linux Version: 6.14.0-rc4
+-kms_flip@plain-flip-ts-check-interruptible
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
+deleted file mode 100644
+index 6c86d1953e11..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
++++ /dev/null
+@@ -1,350 +0,0 @@
+-# Hangs machine
+-kms_bw.*
+-
+-# Failing due to a bootloader/fw issue. The workaround in mesa CI involves these two patches
+-# https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/4b49f902ec6f2bb382cbbf489870573f4b43371e
+-# https://gitlab.freedesktop.org/gfx-ci/linux/-/commit/38cdf4c5559771e2474ae0fecef8469f65147bc1
+-msm/msm_mapping@*
+-
+-# Skip driver specific tests
+-^amdgpu.*
+-nouveau_.*
+-^panfrost.*
+-^v3d.*
+-^vc4.*
+-^vmwgfx*
+-
+-# Skip intel specific tests
+-gem_.*
+-i915_.*
+-tools_test.*
+-kms_dp_link_training.*
+-
+-# Currently fails and causes coverage loss for other tests
+-# since core_getversion also fails.
+-core_hotunplug.*
+-
+-# Whole machine hangs
+-kms_cursor_crc.*
+-
+-# IGT test crash
+-# IGT Version: 1.28-ga73311079
+-# Linux Version: 6.11.0-rc2
+-kms_content_protection@uevent
+-
+-# IGT issue. is_joiner_mode() should return false for non-Intel hardware.
+-# https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/issues/162
+-kms_display_modes@extended-mode-basic
+-kms_display_modes@mst-extended-mode-negative
+-
+-# Kernel panic
+-msm/msm_recovery@hangcheck
+-# DEBUG - Begin test msm/msm_recovery@hangcheck
+-# Console: switching to colour dummy device 80x25
+-# [  489.526286] [IGT] msm_recovery: executing
+-# [  489.531926] [IGT] msm_recovery: starting subtest hangcheck
+-# [  492.808574] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  492.820358] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  492.831154] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  493.832570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  493.844177] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  493.854971] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  494.824633] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  494.836237] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  494.847034] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  495.816570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  495.828170] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  495.838966] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  496.804643] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  496.816246] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  496.827041] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  497.832570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  497.844170] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  497.854963] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  498.820636] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  498.832232] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  498.843024] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  499.816568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  499.828163] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  499.838958] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  500.808570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  500.820165] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  500.830960] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  501.832570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  501.844175] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  501.854965] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  502.824568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  502.836171] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  502.846965] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  503.816570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  503.828176] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  503.838969] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  504.804640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  504.816237] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  504.827033] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  505.828643] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  505.840247] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  505.851043] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  506.820637] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  506.832233] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  506.843026] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  507.816567] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  507.828171] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  507.838965] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  508.808568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  508.820173] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  508.830969] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  509.832568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  509.844173] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  509.854967] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  510.824568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  510.836162] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  510.846954] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  511.816569] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  511.828173] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  511.838968] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  512.804641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  512.816246] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  512.827040] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  513.828641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  513.840239] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  513.851035] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  514.824568] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  514.836164] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  514.846959] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  515.812640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  515.824235] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  515.835030] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  515.912427] rcu: INFO: rcu_preempt self-detected stall on CPU
+-# [  515.918398] rcu: 	0-....: (6452 ticks this GP) idle=6afc/1/0x4000000000000000 softirq=12492/12697 fqs=3179
+-# [  515.929296] rcu: 	(t=6505 jiffies g=36205 q=58 ncpus=8)
+-# [  515.934709] CPU: 0 UID: 0 PID: 126 Comm: sugov:0 Tainted: G        W          6.14.0-rc4-gdddf15cff632 #1
+-# [  515.934727] Tainted: [W]=WARN
+-# [  515.934732] Hardware name: Google Cheza (rev3+) (DT)
+-# [  515.934739] pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+-# [  515.934751] pc : rcu_core+0x59c/0xe68
+-# [  515.934769] lr : rcu_core+0x74/0xe68
+-# [  515.934781] sp : ffff800080003e50
+-# [  515.934785] x29: ffff800080003e50 x28: ffff225d038e9bc0 x27: 0000000000000002
+-# [  515.934805] x26: ffffc171a8ee6108 x25: ffffc171a85bc2c0 x24: ffff60ecd691e000
+-# [  515.934820] x23: ffffc171a85d15c0 x22: ffffc171a8f8d780 x21: ffff225e7eeef5c0
+-# [  515.934835] x20: ffffc171a8ef0e80 x19: ffffc171a85d15d1 x18: ffffc171a9461e70
+-# [  515.934850] x17: ffff60ecd691e000 x16: ffff800080000000 x15: 0000000000000000
+-# [  515.934866] x14: ffffc171a85d0780 x13: 0000000000000400 x12: 0000000000000000
+-# [  515.934880] x11: ffffc171a85ce900 x10: ffffc171a8ef5000 x9 : ffffc171a8ef0000
+-# [  515.934894] x8 : ffff800080003d88 x7 : ffffc171a8ee6100 x6 : ffff800080003de0
+-# [  515.934909] x5 : ffff800080003dc8 x4 : 0000000000000003 x3 : 0000000000000000
+-# [  515.934923] x2 : 0000000000000101 x1 : 0000000000000000 x0 : ffff225d038e9bc0
+-# [  515.934939] Call trace:
+-# [  515.934945]  rcu_core+0x59c/0xe68 (P)
+-# [  515.934962]  rcu_core_si+0x10/0x1c
+-# [  515.934976]  handle_softirqs+0x118/0x4b8
+-# [  515.934994]  __do_softirq+0x14/0x20
+-# [  515.935007]  ____do_softirq+0x10/0x1c
+-# [  515.935021]  call_on_irq_stack+0x24/0x4c
+-# [  515.935034]  do_softirq_own_stack+0x1c/0x28
+-# [  515.935048]  __irq_exit_rcu+0x174/0x1b4
+-# [  515.935063]  irq_exit_rcu+0x10/0x38
+-# [  515.935077]  el1_interrupt+0x38/0x64
+-# [  515.935092]  el1h_64_irq_handler+0x18/0x24
+-# [  515.935104]  el1h_64_irq+0x6c/0x70
+-# [  515.935115]  lock_acquire+0x1e0/0x338 (P)
+-# [  515.935129]  __mutex_lock+0xa8/0x4b8
+-# [  515.935144]  mutex_lock_nested+0x24/0x30
+-# [  515.935159]  _find_opp_table_unlocked+0x40/0xfc
+-# [  515.935174]  _find_key+0x64/0x16c
+-# [  515.935184]  dev_pm_opp_find_freq_exact+0x4c/0x74
+-# [  515.935197]  qcom_cpufreq_hw_target_index+0xe8/0x128
+-# [  515.935211]  __cpufreq_driver_target+0x144/0x29c
+-# [  515.935227]  sugov_work+0x58/0x74
+-# [  515.935239]  kthread_worker_fn+0xf4/0x324
+-# [  515.935254]  kthread+0x12c/0x208
+-# [  515.935266]  ret_from_fork+0x10/0x20
+-# [  516.808569] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  516.820174] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  516.830968] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  517.828641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  517.840236] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  517.851032] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  518.820642] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  518.832237] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  518.843030] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  519.812636] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  519.824231] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  519.835026] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  520.808570] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  520.820165] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  520.830959] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  521.828643] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  521.840238] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  521.851033] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  522.820636] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  522.832232] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  522.843027] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  523.812639] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  523.824239] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  523.835034] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  524.804640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  524.816235] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  524.827026] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  525.828641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  525.840236] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  525.851031] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  526.820641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  526.832244] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  526.843041] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  527.812642] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  527.824242] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  527.835038] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  528.804639] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  528.816234] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  528.827027] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  529.832634] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  529.844231] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  529.855017] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  530.820646] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  530.832270] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  530.843065] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  531.812640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  531.824238] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  531.835030] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  532.804640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  532.816237] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  532.827031] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  533.828640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  533.840243] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  533.851037] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  534.820640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  534.832245] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  534.843038] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  535.812641] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  535.824238] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  535.835033] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  536.804639] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  536.816235] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  536.827030] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  537.828640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  537.840234] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  537.851020] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  538.820640] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  538.832235] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  538.843027] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  539.812644] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2: hangcheck detected gpu lockup rb 0!
+-# [  539.824247] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     completed fence: 45605
+-# [  539.835040] msm_dpu ae01000.display-controller: [drm:hangcheck_handler] *ERROR* 6.3.0.2:     submitted fence: 45611
+-# [  540.124426] watchdog: BUG: soft lockup - CPU#0 stuck for 49s! [sugov:0:126]
+-# [  540.124439] Modules linked in:
+-# [  540.124448] irq event stamp: 9912389
+-# [  540.124453] hardirqs last  enabled at (9912388): [<ffffc171a767a24c>] exit_to_kernel_mode+0x38/0x130
+-# [  540.124473] hardirqs last disabled at (9912389): [<ffffc171a767a368>] el1_interrupt+0x24/0x64
+-# [  540.124486] softirqs last  enabled at (9898068): [<ffffc171a62bc290>] handle_softirqs+0x4a0/0x4b8
+-# [  540.124505] softirqs last disabled at (9898071): [<ffffc171a62105b0>] __do_softirq+0x14/0x20
+-# [  540.124525] CPU: 0 UID: 0 PID: 126 Comm: sugov:0 Tainted: G        W          6.14.0-rc4-gdddf15cff632 #1
+-# [  540.124540] Tainted: [W]=WARN
+-# [  540.124544] Hardware name: Google Cheza (rev3+) (DT)
+-# [  540.124549] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+-# [  540.124560] pc : xhci_urb_enqueue+0xbc/0x32c
+-# [  540.124573] lr : xhci_urb_enqueue+0xb4/0x32c
+-# [  540.124581] sp : ffff800080003c20
+-# [  540.124586] x29: ffff800080003c20 x28: 0000000000000000 x27: ffff225d00b1e6a0
+-# [  540.124602] x26: ffff225d01c3d800 x25: 0000000000000001 x24: 0000000000000006
+-# [  540.124617] x23: ffff225d044dc000 x22: ffff225d044dc000 x21: 0000000000000001
+-# [  540.124632] x20: ffff225d002d7280 x19: ffff225d0573a780 x18: ffff225e7eff0f50
+-# [  540.124647] x17: 000000000000cab0 x16: 0000000000000000 x15: ffff225d0353a000
+-# [  540.124661] x14: 0000000000000000 x13: 0000000000000820 x12: 0000000000000000
+-# [  540.124674] x11: ffff800080003a30 x10: 0000000000000001 x9 : 0000000000000000
+-# [  540.124689] x8 : ffff225d002d7300 x7 : 0000000000000000 x6 : 000000000000003f
+-# [  540.124702] x5 : 00000000ffffffff x4 : 0000000000000920 x3 : 0000000000000080
+-# [  540.124716] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff225d002d7280
+-# [  540.124731] Call trace:
+-# [  540.124736]  xhci_urb_enqueue+0xbc/0x32c (P)
+-# [  540.124751]  usb_hcd_submit_urb+0x98/0x7fc
+-# [  540.124766]  usb_submit_urb+0x294/0x560
+-# [  540.124780]  intr_callback+0x78/0x1fc
+-# [  540.124798]  __usb_hcd_giveback_urb+0x68/0x128
+-# [  540.124812]  usb_giveback_urb_bh+0xa8/0x140
+-# [  540.124825]  process_one_work+0x208/0x5e8
+-# [  540.124840]  bh_worker+0x1a8/0x20c
+-# [  540.124853]  workqueue_softirq_action+0x78/0x88
+-# [  540.124868]  tasklet_hi_action+0x14/0x3c
+-# [  540.124883]  handle_softirqs+0x118/0x4b8
+-# [  540.124897]  __do_softirq+0x14/0x20
+-# [  540.124908]  ____do_softirq+0x10/0x1c
+-# [  540.124922]  call_on_irq_stack+0x24/0x4c
+-# [  540.124934]  do_softirq_own_stack+0x1c/0x28
+-# [  540.124947]  __irq_exit_rcu+0x174/0x1b4
+-# [  540.124961]  irq_exit_rcu+0x10/0x38
+-# [  540.124976]  el1_interrupt+0x38/0x64
+-# [  540.124987]  el1h_64_irq_handler+0x18/0x24
+-# [  540.124998]  el1h_64_irq+0x6c/0x70
+-# [  540.125009]  lock_acquire+0x1e0/0x338 (P)
+-# [  540.125023]  __mutex_lock+0xa8/0x4b8
+-# [  540.125038]  mutex_lock_nested+0x24/0x30
+-# [  540.125052]  _find_opp_table_unlocked+0x40/0xfc
+-# [  540.125067]  _find_key+0x64/0x16c
+-# [  540.125078]  dev_pm_opp_find_freq_exact+0x4c/0x74
+-# [  540.125090]  qcom_cpufreq_hw_target_index+0xe8/0x128
+-# [  540.125105]  __cpufreq_driver_target+0x144/0x29c
+-# [  540.125121]  sugov_work+0x58/0x74
+-# [  540.125133]  kthread_worker_fn+0xf4/0x324
+-# [  540.125148]  kthread+0x12c/0x208
+-# [  540.125160]  ret_from_fork+0x10/0x20
+-# [  540.125176] Kernel panic - not syncing: softlockup: hung tasks
+-# [  540.423567] CPU: 0 UID: 0 PID: 126 Comm: sugov:0 Tainted: G        W    L     6.14.0-rc4-gdddf15cff632 #1
+-# [  540.433411] Tainted: [W]=WARN, [L]=SOFTLOCKUP
+-# [  540.437901] Hardware name: Google Cheza (rev3+) (DT)
+-# [  540.443022] Call trace:
+-# [  540.445559]  show_stack+0x18/0x24 (C)
+-# [  540.449357]  dump_stack_lvl+0x38/0xd0
+-# [  540.453157]  dump_stack+0x18/0x24
+-# [  540.456599]  panic+0x3bc/0x41c
+-# [  540.459767]  watchdog_timer_fn+0x254/0x2e4
+-# [  540.464005]  __hrtimer_run_queues+0x3c4/0x440
+-# [  540.468508]  hrtimer_interrupt+0xe4/0x244
+-# [  540.472662]  arch_timer_handler_phys+0x2c/0x44
+-# [  540.477256]  handle_percpu_devid_irq+0x90/0x1f0
+-# [  540.481943]  handle_irq_desc+0x40/0x58
+-# [  540.485829]  generic_handle_domain_irq+0x1c/0x28
+-# [  540.490604]  gic_handle_irq+0x4c/0x11c
+-# [  540.494483]  do_interrupt_handler+0x50/0x84
+-# [  540.498811]  el1_interrupt+0x34/0x64
+-# [  540.502518]  el1h_64_irq_handler+0x18/0x24
+-# [  540.506758]  el1h_64_irq+0x6c/0x70
+-# [  540.510279]  xhci_urb_enqueue+0xbc/0x32c (P)
+-# [  540.514693]  usb_hcd_submit_urb+0x98/0x7fc
+-# [  540.518932]  usb_submit_urb+0x294/0x560
+-# [  540.522901]  intr_callback+0x78/0x1fc
+-# [  540.526700]  __usb_hcd_giveback_urb+0x68/0x128
+-# [  540.531288]  usb_giveback_urb_bh+0xa8/0x140
+-# [  540.535614]  process_one_work+0x208/0x5e8
+-# [  540.539769]  bh_worker+0x1a8/0x20c
+-# [  540.543293]  workqueue_softirq_action+0x78/0x88
+-# [  540.547980]  tasklet_hi_action+0x14/0x3c
+-# [  540.552038]  handle_softirqs+0x118/0x4b8
+-# [  540.556096]  __do_softirq+0x14/0x20
+-# [  540.559705]  ____do_softirq+0x10/0x1c
+-# [  540.563500]  call_on_irq_stack+0x24/0x4c
+-# [  540.567554]  do_softirq_own_stack+0x1c/0x28
+-# [  540.571878]  __irq_exit_rcu+0x174/0x1b4
+-# [  540.575849]  irq_exit_rcu+0x10/0x38
+-# [  540.579462]  el1_interrupt+0x38/0x64
+-# [  540.583158]  el1h_64_irq_handler+0x18/0x24
+-# [  540.587397]  el1h_64_irq+0x6c/0x70
+-# [  540.590918]  lock_acquire+0x1e0/0x338 (P)
+-# [  540.595060]  __mutex_lock+0xa8/0x4b8
+-# [  540.598760]  mutex_lock_nested+0x24/0x30
+-# [  540.602818]  _find_opp_table_unlocked+0x40/0xfc
+-# [  540.607503]  _find_key+0x64/0x16c
+-# [  540.610940]  dev_pm_opp_find_freq_exact+0x4c/0x74
+-# [  540.615798]  qcom_cpufreq_hw_target_index+0xe8/0x128
+-# [  540.620924]  __cpufreq_driver_target+0x144/0x29c
+-# [  540.625698]  sugov_work+0x58/0x74
+-# [  540.629134]  kthread_worker_fn+0xf4/0x324
+-# [  540.633278]  kthread+0x12c/0x208
+-# [  540.636619]  ret_from_fork+0x10/0x20
+-# [  540.640321] SMP: stopping secondary CPUs
+-# [  540.644518] Kernel Offset: 0x417126200000 from 0xffff800080000000
+-# [  540.650848] PHYS_OFFSET: 0xfff0dda400000000
+-# [  540.655170] CPU features: 0x000,00000100,00901250,8200721b
+-# [  540.660829] Memory Limit: none
+-# [  540.663999] ---[ end Kernel panic - not syncing: softlockup: hung tasks ]---
+-- 
+2.50.0
 
