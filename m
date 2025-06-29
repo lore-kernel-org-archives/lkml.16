@@ -1,40 +1,36 @@
 Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4608B1EF39F;
-	Sat, 28 Jun 2025 09:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555D51922DE;
+	Sat, 28 Jun 2025 09:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751104173; cv=none; b=b3RJNmN5cvXIGgIuvKC657i9F1V8oKxpEqIjq/Qhv6AGZPY1UALMB2ZXhfMMiUIcpkfPKCaowJAYZaaVkajB/OewDTNZ5C+kMHJwanUprgXCVd4exYOLpNAFjtJH3yfcliYJLIZuFQ07qLY4ori/lql4+qKK3WWZShRh2NYdX/k=
+	t=1751104342; cv=none; b=N69f/2b5lsSoUYLy7l/hvo6E8zBU5Q9Sj8tKgZGbOiVrxhcNHDbi4PoEiuYJRcbV/VpRp4/VczqIO9UPJ6aGWJn0Iqyclp3JKc/N/QXBtZtP0C1aJKgwstp/+8gLm2Em9sAsDda29g2AMgxsRpzEQ3++MOga7HQf83BjfduLaX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751104173; c=relaxed/simple;
-	bh=nOOWoV01N7bOxZty/tGuJqK+VI+KOzlbuwhA9piXDJA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GHhypi90XsenRqHfdS5JXlILgXZT4NvD5xnjSMmipV5P2koAX8ppYEzFRrDdPD3t7Jccb55+jofgzAzPAAANNPfvx+gsyL5YcZIhIRnYu5kuO6kYLDE9FoCQmSfrucTnFWmlKrlTBDqeetlu2EqHW4rxIzMGz6BwMTjjE+biIeg=
+	s=arc-20240116; t=1751104342; c=relaxed/simple;
+	bh=8N1MHhtt2T7DcOn+RZNnPkLDBgNMQLf1rSn5tWEJ00s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZapjEO6GMStL0k36izbVzEBBEqPFlvzfx6JwFH7WSrS/BAVopcJDp86RnehFkMrLRPF+yOZNzkOWhAJ0YZOxSQ6zwmvQI9fxgzbgK9NivWjTwlf3fS1RLgxZGEeOxDUqIqtYA0nxPcTjMnSFoFx7RSZbtoe0HTPx4855q2nq2Js=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bTnbQ4HqCz2CfCX;
-	Sat, 28 Jun 2025 17:45:22 +0800 (CST)
-Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id 777F01402C4;
-	Sat, 28 Jun 2025 17:49:21 +0800 (CST)
-Received: from workspace-z00536909-5022804397323726849.huawei.com
- (7.151.123.135) by kwepemk100010.china.huawei.com (7.202.194.58) with
- Microsoft SMTP Server (version=TLS1_2,
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bTnfp5fgWz2CfCJ;
+	Sat, 28 Jun 2025 17:48:18 +0800 (CST)
+Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
+	by mail.maildlp.com (Postfix) with ESMTPS id AA0B5140294;
+	Sat, 28 Jun 2025 17:52:17 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
+ (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Jun
- 2025 17:49:20 +0800
-From: zhangjianrong <zhangjianrong5@huawei.com>
-To: <michael.jamet@intel.com>, <mika.westerberg@linux.intel.com>,
-	<YehezkelShB@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <guhengsheng@hisilicon.com>, <caiyadong@huawei.com>,
-	<xuetao09@huawei.com>, <lixinghang1@huawei.com>
-Subject: [PATCH v2] net: thunderbolt: Fix the parameter passing of tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
-Date: Sat, 28 Jun 2025 17:49:20 +0800
-Message-ID: <20250628094920.656658-1-zhangjianrong5@huawei.com>
-X-Mailer: git-send-email 2.34.1
+ 2025 17:52:17 +0800
+From: zhangjian <zhangjian496@huawei.com>
+To: <lossin@kernel.org>, <aliceryhl@google.com>, <dakr@kernel.org>,
+	<simona.vetter@ffwll.ch>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] pci: fix uaf for resource file
+Date: Sun, 29 Jun 2025 11:05:47 +0800
+Message-ID: <20250629030547.1073425-1-zhangjian496@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,50 +39,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk100010.china.huawei.com (7.202.194.58)
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemp200004.china.huawei.com (7.202.195.99)
 
-According to the description of tb_xdomain_enable_paths(), the third
-parameter represents the transmit ring and the fifth parameter represents
-the receive ring. tb_xdomain_disable_paths() is the same case.
+concurrently creating attr files may cause uaf. We meet this in concurrently
+plug and unplug network card. For example:
 
-Fixes: ff7cd07f3064 ("net: thunderbolt: Enable DMA paths only after rings are enabled")
-Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
+echo 20 > /sys/class/net/eth3/device/sriov_numvfs &
+echo 1 > /sys/bus/pci/rescan
+
+crash log snips as following:
+
+Call Trace:
+ <TASK>
+ ? _die_body+0x1a/0xe0
+ ? page_fault_oops+0x81/0x150
+ ? _wake_up_sync_key+0x37/0x50
+ ? exc_page_fault+0x525/0x730
+ ? asm_exc_page_fault+0x22/0x30
+ ? pci_create_attr+0x160/0x180
+ ? pfx_strlen+0x10/0x10
+ kernfs_name_hash+0x12/0x80
+ kernfs_find_ns+0x35/0xc0
+ kernfs_remove_by_name_ns+0x46/0xc0
+ pci_stop_bus_device+0x7c/0x90
+ pci_stop_and_remole_bus_device+0xe/0x20
+ pci_iov_remove_virtfn+0xbd/0x120
+ sriov_disable+0x34/0xe0
+ hinic_pci_sriov_diisable+0x35/0xa0 [hinic]
+ hinic_remove+0x22e/0x2a0 [hinic]
+ pci_device_remove+0x3b/0xb0
+ device_release_driver_internal+0x19b/0x200
+ pci_stop_bus_device+0x6c/0x90
+ pci_stop_and_remolre_bus_device_locked+0x16/0x30
+ remove_store+0xfc/0x130
+ kernfs_fop_write_iter+0x11b/0x200
+
+set resource pointer to zero to fix this problem.
+
+Signed-off-by: zhangjian <zhangjian496@huawei.com>
 ---
-v2: add fixes tag
-v1: initial submission
+ drivers/pci/pci-sysfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/net/thunderbolt/main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/thunderbolt/main.c b/drivers/net/thunderbolt/main.c
-index 0a53ec293d04..f4c782759566 100644
---- a/drivers/net/thunderbolt/main.c
-+++ b/drivers/net/thunderbolt/main.c
-@@ -396,9 +396,9 @@ static void tbnet_tear_down(struct tbnet *net, bool send_logout)
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 268c69daa..12dba9228 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1180,12 +1180,14 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+ 		if (res_attr) {
+ 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
+ 			kfree(res_attr);
++			pdev->res_attr[i] = NULL;
+ 		}
  
- 		ret = tb_xdomain_disable_paths(net->xd,
- 					       net->local_transmit_path,
--					       net->rx_ring.ring->hop,
-+					       net->tx_ring.ring->hop,
- 					       net->remote_transmit_path,
--					       net->tx_ring.ring->hop);
-+					       net->rx_ring.ring->hop);
- 		if (ret)
- 			netdev_warn(net->dev, "failed to disable DMA paths\n");
- 
-@@ -662,9 +662,9 @@ static void tbnet_connected_work(struct work_struct *work)
- 		goto err_free_rx_buffers;
- 
- 	ret = tb_xdomain_enable_paths(net->xd, net->local_transmit_path,
--				      net->rx_ring.ring->hop,
-+				      net->tx_ring.ring->hop,
- 				      net->remote_transmit_path,
--				      net->tx_ring.ring->hop);
-+				      net->rx_ring.ring->hop);
- 	if (ret) {
- 		netdev_err(net->dev, "failed to enable DMA paths\n");
- 		goto err_free_tx_buffers;
+ 		res_attr = pdev->res_attr_wc[i];
+ 		if (res_attr) {
+ 			sysfs_remove_bin_file(&pdev->dev.kobj, res_attr);
+ 			kfree(res_attr);
++			pdev->res_attr_wc[i] = NULL;
+ 		}
+ 	}
+ }
 -- 
-2.34.1
+2.33.0
 
