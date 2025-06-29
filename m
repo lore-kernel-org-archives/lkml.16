@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E593F23B63D;
-	Sun, 29 Jun 2025 18:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F9D23C513;
+	Sun, 29 Jun 2025 18:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751222765; cv=none; b=RPZqj1G4oYIhG+XX60LBHItkrkyeZvSqmKM3InjfbQWPCtFzRMI0gUedlpizS9IiEklPoQajajJygUowd49GeFQ4nFBEH+z8zqDZu8sfGhXhju9/xw/979qMRqGGSDoIxrjJxSDVm6DC5p8jVoTkWrDEi4+JiU14gEaQP2dAVNo=
+	t=1751222767; cv=none; b=Vf71RolgrGMl/t8P2xN160V3fsHapZ7Pg3BQbiX9P70Ykz38wztBOQvyYHJ9a2DNX8+KGYCt+E3Z3fLV8MNPQM30etCBOQFypt1/1mLrd2hpH4IYrOw+WIOdBRU8HLJXW8H/6UugURhEYiy9MUm1FxQ0JihDV4m+EVKIXtnFCpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751222765; c=relaxed/simple;
-	bh=6qmI+Su7XzuajmCFhroeUQcivTIBTD9Q5REVTanqpXw=;
+	s=arc-20240116; t=1751222767; c=relaxed/simple;
+	bh=WRwJMae1CgHGHcw4S5uertPs20kNlqueT5mDIQq5Ics=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vjkf2nZE7IL1JFTcViHW5VUH6RI2qXbuSGqT4kMDkK2fVvyTV4EI1amrNERDzasX/EsFsoKNfU8dGjRtxnVIIrwwidbHN37yfSpvpgBtEgL8io1Buac+yB+kzoYJcMNY8WqJYVSLpyWkQ7gJW/cVa7RQaLR1zDRNwBB2ZWOi/Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcvFFW57; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lKVctiwoOCTCxnA9jsR05re7xxgtPNEE7R2rIxSDIFJ8DoO+VD/nbP7q0/xNGRhOoDTQZwBFc4NtGLj8kwp+Z2t0CPbCWEp8ZD/n5G7C0fq3iIhtVzNxwHbK+KNmIRS/jlG7BSKb2JX3YrSSJImk03CeOJGjrv2+S3sdqE9up9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0P0tE9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcvFFW57"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60947C4CEFC;
-	Sun, 29 Jun 2025 18:46:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0P0tE9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D88C4CEF0;
+	Sun, 29 Jun 2025 18:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751222764;
-	bh=6qmI+Su7XzuajmCFhroeUQcivTIBTD9Q5REVTanqpXw=;
+	s=k20201202; t=1751222767;
+	bh=WRwJMae1CgHGHcw4S5uertPs20kNlqueT5mDIQq5Ics=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tcvFFW57QuRqg7Gi33lGRu/JtXXym49iSKLF4VMjriFGYeQSWB0i2pF88AJkSBNWj
-	 EJ9lA3UTYpMIDpZfWXbp7LE34aPFj1skYQnwAmAJOyJ23nocGrxzoTPz1G76D5JHxQ
-	 rjCOY1VCD0SGQtFaXI+kUhmeAj6OJe5xv4ubPbu368QFH1A3nGhOXKYpbupPLrdKgG
-	 mbxaFrIJsp4O7f+a/VBRY3Qg6XeQohILJRnna7Ci7x9uaqw/00uFCrIbdABASHtXA5
-	 ZP+36vqNCgTxS0m6ytW7LSsUZASESa8RQ9YLu3TzrnB8/yQABISVAsHQjYeOQm5EKP
-	 lFeEZeRL8mbZg==
+	b=B0P0tE9lL6ruBTjHj75e8bYVJxkG0gRUZ0lXkXgL+jl9LGXqR9nr7Byl8lBothrPv
+	 VrHCxq6jsb/l4NhjNFO01ma26YDj8czc+7GLyEVwRAHFu9G5Bz9oeLUZSnlWKzGCpf
+	 7E1PFdc0z2rD/68tnsTOkl577RnRHfRCcekXEAhuSAtT5N9ecfVhzfA4Uo/9EJ3fp4
+	 zyZnmYv68TmuJJcHdYOgbBJKd09BGlZFJGlmOXpA87jR6Yb+SEsu7lTVQbeD8J6NSS
+	 EwOQDo3xmpI7rLRtexnSlQAT1ga5OIoP/8onsHSebQTdlS/aA5RI4SO3FlDT3MmNbl
+	 G+jMF7VoGIJWQ==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/9] kconfig: gconf: rename gconf.glade to gconf.ui
-Date: Mon, 30 Jun 2025 03:43:30 +0900
-Message-ID: <20250629184554.407497-5-masahiroy@kernel.org>
+Subject: [PATCH v2 6/9] kconfig: gconf: replace GtkVbox with GtkBox
+Date: Mon, 30 Jun 2025 03:43:32 +0900
+Message-ID: <20250629184554.407497-7-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250629184554.407497-1-masahiroy@kernel.org>
 References: <20250629184554.407497-1-masahiroy@kernel.org>
@@ -44,42 +44,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The next commit will convert this file to GtkBuilder format. Rename
-it in advance to reflect the intended format.
+GtkVBox is deprecated with GTK 3.2. [1]
+
+Use GtkBox instead.
+
+[1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/3.2.0/gtk/gtkvbox.c#L47
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 (no changes since v1)
 
- scripts/kconfig/gconf.c                   | 6 +++---
- scripts/kconfig/{gconf.glade => gconf.ui} | 0
- 2 files changed, 3 insertions(+), 3 deletions(-)
- rename scripts/kconfig/{gconf.glade => gconf.ui} (100%)
+ scripts/kconfig/gconf.ui | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index bc25924a1adf..6cf58fe5bcfe 100644
---- a/scripts/kconfig/gconf.c
-+++ b/scripts/kconfig/gconf.c
-@@ -1325,11 +1325,11 @@ int main(int ac, char *av[])
- 	/* Determine GUI path */
- 	env = getenv(SRCTREE);
- 	if (env)
--		glade_file = g_strconcat(env, "/scripts/kconfig/gconf.glade", NULL);
-+		glade_file = g_strconcat(env, "/scripts/kconfig/gconf.ui", NULL);
- 	else if (av[0][0] == '/')
--		glade_file = g_strconcat(av[0], ".glade", NULL);
-+		glade_file = g_strconcat(av[0], ".ui", NULL);
- 	else
--		glade_file = g_strconcat(g_get_current_dir(), "/", av[0], ".glade", NULL);
-+		glade_file = g_strconcat(g_get_current_dir(), "/", av[0], ".ui", NULL);
+diff --git a/scripts/kconfig/gconf.ui b/scripts/kconfig/gconf.ui
+index e5dad2b06502..378a3eadf9f8 100644
+--- a/scripts/kconfig/gconf.ui
++++ b/scripts/kconfig/gconf.ui
+@@ -19,7 +19,8 @@
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
  
- 	/* Conf stuffs */
- 	if (ac > 1 && av[1][0] == '-') {
-diff --git a/scripts/kconfig/gconf.glade b/scripts/kconfig/gconf.ui
-similarity index 100%
-rename from scripts/kconfig/gconf.glade
-rename to scripts/kconfig/gconf.ui
+   <child>
+-    <object class="GtkVBox" id="vbox1">
++    <object class="GtkBox" id="vbox1">
++      <property name="orientation">vertical</property>
+       <property name="visible">True</property>
+       <property name="homogeneous">False</property>
+       <property name="spacing">0</property>
 -- 
 2.43.0
 
