@@ -1,105 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ECB23C4FB;
-	Sun, 29 Jun 2025 20:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115120ADEE
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230311; cv=none; b=E26dAC4wlc5hNcnX6Gu94XNEGCH2xDARLaiueF8LiuQ/O6OFS+nXZuA3x4WnH5f38lrINa5qqCwsKspmFj7JPB6ecA09mdLqVkFPU0ato7HI/V3IrvQhyZy65dJvbfVMiOiA81gRcuiJL/5cWEOzCFCC3CbA9OZx2GXQXYaWPsQ=
+	t=1751230416; cv=none; b=V84QkHcuNwxJF347ohDJd1E2KXq74/eBsp0T61FLrTKZf/LXPVPiAlSny9BUogUQTEcQVJJCSBmS+mm57rFOC6fR4KZrcgIZK44sdmuVEruOL6c7TN18RGSAGB18ogryBS1FlXZ82O75KB3hpcIs3psCU05fGEcCrfTSze4x3WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230311; c=relaxed/simple;
-	bh=vZx8lnd78OyAsE8ViQurrPrYJlyjslv3QwebfJkZ604=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y17KwoC1nxzKE0ZEtpfrCCVpTXdX2AmuBbK9qCT2xgNV6suAyD+JC85hPd9b1F4xlT4L4/J9W2kbSNy9tN10ACxunY//eoEtPg88jfnoeHEaIU7RNoW0QVIqbpjQDFzqMB8m6x9fRXrF41Eq8c+JBUmN3GfMHA3j6ZATUSfBu+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVyTrzRn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751230416; c=relaxed/simple;
+	bh=1jbCcrkrf728Wzl0z11tqyhSv0w2v5uYaJXCHXe1s4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WBTAMP0gEb9lR4fWH5frNQESGDIgRoPjYo4D2+X/1X4owfIo+fvawvOkm5idDUMR0cVDOI4KZceVAA3js2k+J+r+bdUACcEgQ8M9eLU/5wby+llXrf4dcnVBm9sOQmDWfAPUJWBvg+6ZclzzhiyS+yiiSWL/6lrxI9oOlsn4ciw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dp9SWbSw; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVyTrzRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095C6C4CEEF;
-	Sun, 29 Jun 2025 20:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751230311;
-	bh=vZx8lnd78OyAsE8ViQurrPrYJlyjslv3QwebfJkZ604=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WVyTrzRnwKLGtXvLfB2oq/DBgHLZzRG42mZUKsYkO8M9qfgDmZTTEOS8wbo68J8Fd
-	 iC4lvXsVcgL+tU++5SQLlprnSZtSYY7aRJMYskCsPlIsGKDv9omb1ic1MnpzkGsIs3
-	 +FhBeVuWTArOj/ZXhB1vaPpoRCi8k/a/QjoGfICREsPu8lnj9W74y3fnYG8zWlvdTE
-	 Vz/GNNEfiQlbHftPL848Lbqfj/h4CgQTNcvF52aY9vb5k70RooWTP6QkNKbZ5es2o/
-	 ffquEEYzLOFzZIGaBJleqMhMDbAdNJUJtk34LlfIkj4SPFRCFALL6c32vk4IE8e2ba
-	 AUtIefAZwcPyQ==
-Received: by pali.im (Postfix)
-	id CAA10BEF; Sun, 29 Jun 2025 22:51:48 +0200 (CEST)
-Date: Sun, 29 Jun 2025 22:51:48 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Vishnu Sankar <vishnuocv@gmail.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com,
-	jay_lee@pixart.com, zhoubinbin@loongson.cn,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	Vishnu Sankar <vsankar@lenovo.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint
- Doubletap handling
-Message-ID: <20250629205148.l2etpceayuzmhzph@pali>
-References: <20250620004209.28250-1-vishnuocv@gmail.com>
- <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
- <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dp9SWbSw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=Aphzyhcn3XWdWxH1/MpQm+V5sC7N2o/eSwc7n6ZwBhQ=; b=dp9SWbSw/I7P/DSx
+	Xm8r8PD+KoB0Zyrytjr49novVKZHWD5SN8uzHY5UkPGzkogUnh+qRoomnYX19/11bj5odWwj6Jxld
+	i1/FytRwVQS7K+X/WKttSAXmuiAfaTNUi/aSf/f73hD8RLYQ04TvpFgQHyT9L57tyB2z+wSyFV1MN
+	M6DYaWhL1lZxmW0ktlb/tQQ+gkg9MKsQ4npMpHWMmS5WZH8v+/1T2lKxwNVNcTxZdwD08rKZsCrvP
+	ju/gqtN1KCQz493jB61rJxzIyLWmZ/+XbLL40HwjriABselpBwZ//gJJ66dwr4+qNrTY+qWyx6OJT
+	cSQNeYiUtBkujcDg0Q==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uVz1L-00CqTf-1z;
+	Sun, 29 Jun 2025 20:53:03 +0000
+From: linux@treblig.org
+To: peterz@infradead.org,
+	jpoimboe@kernel.org,
+	jbaron@akamai.com,
+	rostedt@goodmis.org,
+	ardb@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] jump_label: Remove unused jump_label_rate_limit
+Date: Sun, 29 Jun 2025 21:53:02 +0100
+Message-ID: <20250629205302.296544-1-linux@treblig.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 
-On Monday 30 June 2025 05:42:45 Mark Pearson wrote:
-> Hi Dmitry,
-> 
-> On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
-> > Hi Vishnu,
-> >
-> > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
-> >> Newer ThinkPads have a doubletap feature that needs to be turned
-> >> ON/OFF via the trackpoint registers.
-> >> Systems released from 2023 have doubletap disabled by default and
-> >> need the feature enabling to be useful.
-> >> 
-> >> This patch introduces support for exposing and controlling the
-> >> trackpoint doubletap feature via a sysfs attribute.
-> >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> >> This can be toggled by an "enable" or a "disable".
-> >> 
-> >> With this implemented we can remove the masking of events, and rely on
-> >> HW control instead, when the feature is disabled.
-> >> 
-> >> Note - Early Thinkpads (pre 2015) used the same register for hysteris
-> >> control, Check the FW IDs to make sure these are not affected.
-> >> 
-> >> trackpoint.h is moved to linux/input/.
-> >
-> > No, please keep everything private to trackpoint.c and do not involve
-> > thinkpad_acpi driver. By doing so you are introducing unwanted
-> > dependencies (for both module loading, driver initialization, and
-> > operation) and unsafe use of non-owned pointers/dangling pointers, etc.
-> >
-> 
-> Do you have recommendations on how to handle this case then?
-> 
-> This is a Thinkpad specific feature and hence the logic for involving thinkpad_acpi. There are Thinkpad hotkeys that will enable/disable the trackpoint doubletap feature - so there is some linkage. I'm not sure how to avoid that.
-> 
-> Is there a cleaner way to do this that you'd recommend we look at using? It's a feature (albeit a minor one) on the laptops that we'd like to make available to Linux users.
-> 
-> Mark
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Hello, I do not know what is doubletap and patch description does not
-explain it. But for laptop / mouse interface, I'm just giving example
-that dell-laptop.c for some particular laptop can enable/disable
-touchpad led and uses PS/2 interface for it. See touchpad_led_init().
-I do not know if it is ideal or preferred solution, just writing to let
-you know, maybe it can be useful.
+The last use of jump_label_rate_limit() was removed in 2021 by
+commit 6e4e3b4df4e3 ("KVM: Stop using deprecated jump label APIs")
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/linux/jump_label_ratelimit.h | 8 --------
+ kernel/jump_label.c                  | 9 ---------
+ 2 files changed, 17 deletions(-)
+
+diff --git a/include/linux/jump_label_ratelimit.h b/include/linux/jump_label_ratelimit.h
+index 8c3ee291b2d8..ae6c049ea6fd 100644
+--- a/include/linux/jump_label_ratelimit.h
++++ b/include/linux/jump_label_ratelimit.h
+@@ -37,8 +37,6 @@ __static_key_slow_dec_deferred(struct static_key *key,
+ 			       struct delayed_work *work,
+ 			       unsigned long timeout);
+ extern void __static_key_deferred_flush(void *key, struct delayed_work *work);
+-extern void
+-jump_label_rate_limit(struct static_key_deferred *key, unsigned long rl);
+ 
+ extern void jump_label_update_timeout(struct work_struct *work);
+ 
+@@ -86,12 +84,6 @@ static inline void static_key_deferred_flush(void *key)
+ {
+ 	STATIC_KEY_CHECK_USE(key);
+ }
+-static inline void
+-jump_label_rate_limit(struct static_key_deferred *key,
+-		unsigned long rl)
+-{
+-	STATIC_KEY_CHECK_USE(key);
+-}
+ #endif	/* CONFIG_JUMP_LABEL */
+ 
+ #define static_branch_deferred_inc(x)	static_branch_inc(&(x)->key)
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index 7cb19e601426..caceeb94824e 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -363,15 +363,6 @@ void __static_key_deferred_flush(void *key, struct delayed_work *work)
+ }
+ EXPORT_SYMBOL_GPL(__static_key_deferred_flush);
+ 
+-void jump_label_rate_limit(struct static_key_deferred *key,
+-		unsigned long rl)
+-{
+-	STATIC_KEY_CHECK_USE(key);
+-	key->timeout = rl;
+-	INIT_DELAYED_WORK(&key->work, jump_label_update_timeout);
+-}
+-EXPORT_SYMBOL_GPL(jump_label_rate_limit);
+-
+ static int addr_conflict(struct jump_entry *entry, void *start, void *end)
+ {
+ 	if (jump_entry_code(entry) <= (unsigned long)end &&
+-- 
+2.50.0
+
