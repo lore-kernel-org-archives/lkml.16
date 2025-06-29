@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7DB215F72;
-	Mon, 30 Jun 2025 07:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07120226CFF;
+	Mon, 30 Jun 2025 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267197; cv=none; b=mmQ5QQ8XNPsxWhFFDOxchakGAvo5g5O01n8bIbQ6JMGlKoebR5pw1Sw0vdEjWELiV7enLx20sETgzqim9KVc65HJE4XetcIl6jGIvdwQs8JioYncmFmbNSV9c2TN0fXcmpuQkNE0330zYOma29aK6EM5LifKEyoHhcEdLsgYX48=
+	t=1751267202; cv=none; b=oa25dyX7UUPguylDQI8hAR4NT19MFh1EhaQA6U7XH9hFN+sVex3LhKa1CZN5lKz/ULHrdNz3N8cxr+UzHfKEshFE1Uysx1BwBhe7mL/jzpWDYwwoAQ3P35GJkZOyX06tEUmzU38Yc6SGRpINnzoKgWeDZgyxljpXtuqjsCabN9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267197; c=relaxed/simple;
-	bh=j733+QscBMRNMa4l7CcujmPxTXt/r1eIsNkfLH7J9wY=;
+	s=arc-20240116; t=1751267202; c=relaxed/simple;
+	bh=2lce8mSrNrekb88IdCzkJIG6HQNp6B1zAzKDYe1G7M4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QKoS58C4dXi9vszyFAsslYabMj8zHp1lEVgKPfJG/d2Cj3qAfIW4m1DkJ/3cV3FHL+nv3dBCgh6axHghfeSj6c4iOvHYPNuc4GEbMcnwA9REAcPgdOv2xi82mI0a2bLKdoYU5aFRNYJ2JJemyrEh801diCawaECGyHH/682Qa/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzuYIRxc; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=qfGNsBV9QNZojk4DLq/pvNQH5oQQPG4ojBpaGW1E0CZyGXb5T+2fzbZ8wSZX7fQShUu32Wvr4ALa/omdiZMwHQ0kc7FnnC8n7vsLPGB2MLVCPYFQmRiXn+SdQ1bC9y66hCfyoq0mVJm++qjLb6+mHSm37a5UQXVWpuvMxBEq0P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZkBLXqnL; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzuYIRxc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZkBLXqnL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751267196; x=1782803196;
+  t=1751267201; x=1782803201;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=j733+QscBMRNMa4l7CcujmPxTXt/r1eIsNkfLH7J9wY=;
-  b=DzuYIRxc2bxkbRA1zs4SeS/DRTHgYEaHVz/OsiSD4vttU4Kp99HunYMB
-   h2ml8pALX4bOdB8j66tPQq1wOmC8yzstqfGHfLZrfmiVq2WbMm3EDsuTV
-   joUzEJmL3x1RYbn9K5i6aDgreNZaYDCkPFu74Z7IsOc43FwpKO19itV2M
-   9m5ADuejTrGQSJL7Os2Yq1I1Rv0i+esqQ1V6QgLVlNuElICgCkfDqbRUp
-   4ORwKnDB1C3xcst+KGXBOJHJYLGxsnzomqoHyFnNO6WnseO5V6xn4izll
-   5ZdkEbLP0h0HkExmUqDx5olUBh1N4VMcqmUq3w61ZUarIVzrCVdhBQZxU
-   Q==;
-X-CSE-ConnectionGUID: awzTm6xTTsWNfMgH1NUnlA==
-X-CSE-MsgGUID: CvTMaO/JTG+xrmQdfWddfg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="52600156"
+  bh=2lce8mSrNrekb88IdCzkJIG6HQNp6B1zAzKDYe1G7M4=;
+  b=ZkBLXqnLOZf2y6TwTSe+B06GNUsBcyx40XG/XX6VJ5+CDuIWmYyggPa7
+   qoTdWuQ/vIxWTd0ydClYUL0ba7J1aKrCp6TXoIAeFz9olTNZTAnQ/yVYa
+   7RzjEPA35gD3ALp/rJ24BKzORfpXyptUzxEFamlR0oCbXeZIwTzd2ozmk
+   93rhX4HINEi3ACVzkhyCla2rp7FcAUDl66/wreQ160z90ZnkG9HtPG2iI
+   b5dUJAAOH5yJRF1b3ZpmdC2z7b4BME0QX6C3TjQIFhBnsmENj+D3jOKSX
+   Puu77JzxNYheuGLEnLe4GIfAdL97uCEegWmFIpCy58RpgL14+0fGe+Y6e
+   A==;
+X-CSE-ConnectionGUID: wj6rNWf1RjW06dnd/jh3eQ==
+X-CSE-MsgGUID: fsvTdaaUSr6cMSHc1cKAgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53589130"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="52600156"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:35 -0700
-X-CSE-ConnectionGUID: MiAxahvASw2z6GR28Ii+7w==
-X-CSE-MsgGUID: acMQ7alxRX+NSTRPsuEwxQ==
+   d="scan'208";a="53589130"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:30 -0700
+X-CSE-ConnectionGUID: W0s88ZrpQ7WGmEpYI5kNxw==
+X-CSE-MsgGUID: HBjUdj/kQkKof9wkzEBQCA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="177046704"
+   d="scan'208";a="152865860"
 Received: from agladkov-desk.ger.corp.intel.com (HELO svinhufvud.fi.intel.com) ([10.245.244.57])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:30 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:06:24 -0700
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by svinhufvud.fi.intel.com (Postfix) with ESMTP id C72BE44366;
-	Mon, 30 Jun 2025 10:06:28 +0300 (EEST)
-Message-ID: <1ac49bd3-1b65-4611-8c90-92fb2c2ffd4a@linux.intel.com>
-Date: Sun, 29 Jun 2025 12:21:47 +0300
+	by svinhufvud.fi.intel.com (Postfix) with ESMTP id 27F41427EA;
+	Mon, 30 Jun 2025 10:06:21 +0300 (EEST)
+Message-ID: <ec790d0e-4bdb-49b9-80ad-f44e1b700a5e@linux.intel.com>
+Date: Sun, 29 Jun 2025 10:40:52 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,196 +55,181 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/12] media: v4l: fwnode: Support ACPI's _PLD for
- v4l2_fwnode_device_parse
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
 Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-2-5710f9d030aa@chromium.org>
+To: "Nirujogi, Pratap" <pnirujog@amd.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hao Yao <hao.yao@intel.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ mchehab@kernel.org, hverkuil@xs4all.nl, bryan.odonoghue@linaro.org,
+ krzk@kernel.org, dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+ jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, vengutta@amd.com, dongcheng.yan@intel.com,
+ jason.z.chen@intel.com, jimmy.su@intel.com
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <6a49eb11-d434-4315-8ee9-0f8aa7347de2@intel.com>
+ <aEygCdk-zEqRwfoF@kekkonen.localdomain>
+ <20250614225257.GO10542@pendragon.ideasonboard.com>
+ <f6d1d8f7-d953-4f86-a196-f713726bd5f8@amd.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-In-Reply-To: <20250605-uvc-orientation-v2-2-5710f9d030aa@chromium.org>
+In-Reply-To: <f6d1d8f7-d953-4f86-a196-f713726bd5f8@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Ricardo,
+Hi Pratap,
 
-Thanks for the update.
+On 6/17/25 01:33, Nirujogi, Pratap wrote:
+...
+>>>>> +static const struct cci_reg_sequence ov05c10_2888x1808_regs[] = {
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0x20),  0x00 },
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0x20),  0x0b },
+>>>>> + { CCI_REG8(0xc1),  0x09 },
+>>>>> + { CCI_REG8(0x21),  0x06 },
+>>>>> + { CCI_REG8(0x14),  0x78 },
+>>>>> + { CCI_REG8(0xe7),  0x03 },
+>>>>> + { CCI_REG8(0xe7),  0x00 },
+>>>>> + { CCI_REG8(0x21),  0x00 },
+>>>>> + { CCI_REG8(0xfd),  0x01 },
+>>>>> + { CCI_REG8(0x03),  0x00 },
+>>>>> + { CCI_REG8(0x04),  0x06 },
+>>>>> + { CCI_REG8(0x05),  0x07 },
+>>>>> + { CCI_REG8(0x06),  0x44 },
+>>>>> + { CCI_REG8(0x07),  0x08 },
+>>>>> + { CCI_REG8(0x1b),  0x01 },
+>>>>> + { CCI_REG8(0x24),  0xff },
+>>>>> + { CCI_REG8(0x32),  0x03 },
+>>>>> + { CCI_REG8(0x42),  0x5d },
+>>>>> + { CCI_REG8(0x43),  0x08 },
+>>>>> + { CCI_REG8(0x44),  0x81 },
+>>>>> + { CCI_REG8(0x46),  0x5f },
+>>>>> + { CCI_REG8(0x48),  0x18 },
+>>>>> + { CCI_REG8(0x49),  0x04 },
+>>>>> + { CCI_REG8(0x5c),  0x18 },
+>>>>> + { CCI_REG8(0x5e),  0x13 },
+>>>>> + { CCI_REG8(0x70),  0x15 },
+>>>>> + { CCI_REG8(0x77),  0x35 },
+>>>>> + { CCI_REG8(0x79),  0x00 },
+>>>>> + { CCI_REG8(0x7b),  0x08 },
+>>>>> + { CCI_REG8(0x7d),  0x08 },
+>>>>> + { CCI_REG8(0x7e),  0x08 },
+>>>>> + { CCI_REG8(0x7f),  0x08 },
+>>>>> + { CCI_REG8(0x90),  0x37 },
+>>>>> + { CCI_REG8(0x91),  0x05 },
+>>>>> + { CCI_REG8(0x92),  0x18 },
+>>>>> + { CCI_REG8(0x93),  0x27 },
+>>>>> + { CCI_REG8(0x94),  0x05 },
+>>>>> + { CCI_REG8(0x95),  0x38 },
+>>>>> + { CCI_REG8(0x9b),  0x00 },
+>>>>> + { CCI_REG8(0x9c),  0x06 },
+>>>>> + { CCI_REG8(0x9d),  0x28 },
+>>>>> + { CCI_REG8(0x9e),  0x06 },
+>>>>> + { CCI_REG8(0xb2),  0x0f },
+>>>>> + { CCI_REG8(0xb3),  0x29 },
+>>>>> + { CCI_REG8(0xbf),  0x3c },
+>>>>> + { CCI_REG8(0xc2),  0x04 },
+>>>>> + { CCI_REG8(0xc4),  0x00 },
+>>>>> + { CCI_REG8(0xca),  0x20 },
+>>>>> + { CCI_REG8(0xcb),  0x20 },
+>>>>> + { CCI_REG8(0xcc),  0x28 },
+>>>>> + { CCI_REG8(0xcd),  0x28 },
+>>>>> + { CCI_REG8(0xce),  0x20 },
+>>>>> + { CCI_REG8(0xcf),  0x20 },
+>>>>> + { CCI_REG8(0xd0),  0x2a },
+>>>>> + { CCI_REG8(0xd1),  0x2a },
+>>>>> + { CCI_REG8(0xfd),  0x0f },
+>>>>> + { CCI_REG8(0x00),  0x00 },
+>>>>> + { CCI_REG8(0x01),  0xa0 },
+>>>>> + { CCI_REG8(0x02),  0x48 },
+>>>>> + { CCI_REG8(0x07),  0x8f },
+>>>>> + { CCI_REG8(0x08),  0x70 },
+>>>>> + { CCI_REG8(0x09),  0x01 },
+>>>>> + { CCI_REG8(0x0b),  0x40 },
+>>>>> + { CCI_REG8(0x0d),  0x07 },
+>>>>> + { CCI_REG8(0x11),  0x33 },
+>>>>> + { CCI_REG8(0x12),  0x77 },
+>>>>> + { CCI_REG8(0x13),  0x66 },
+>>>>> + { CCI_REG8(0x14),  0x65 },
+>>>>> + { CCI_REG8(0x15),  0x37 },
+>>>>> + { CCI_REG8(0x16),  0xbf },
+>>>>> + { CCI_REG8(0x17),  0xff },
+>>>>> + { CCI_REG8(0x18),  0xff },
+>>>>> + { CCI_REG8(0x19),  0x12 },
+>>>>> + { CCI_REG8(0x1a),  0x10 },
+>>>>> + { CCI_REG8(0x1c),  0x77 },
+>>>>> + { CCI_REG8(0x1d),  0x77 },
+>>>>> + { CCI_REG8(0x20),  0x0f },
+>>>>> + { CCI_REG8(0x21),  0x0f },
+>>>>> + { CCI_REG8(0x22),  0x0f },
+>>>>> + { CCI_REG8(0x23),  0x0f },
+>>>>> + { CCI_REG8(0x2b),  0x20 },
+>>>>> + { CCI_REG8(0x2c),  0x20 },
+>>>>> + { CCI_REG8(0x2d),  0x04 },
+>>>>> + { CCI_REG8(0xfd),  0x03 },
+>>>>> + { CCI_REG8(0x9d),  0x0f },
+>>>>> + { CCI_REG8(0x9f),  0x40 },
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0x20),  0x1b },
+>>>>> + { CCI_REG8(0xfd),  0x04 },
+>>>>> + { CCI_REG8(0x19),  0x60 },
+>>>>> + { CCI_REG8(0xfd),  0x02 },
+>>>>> + { CCI_REG8(0x75),  0x05 },
+>>>>> + { CCI_REG8(0x7f),  0x06 },
+>>>>> + { CCI_REG8(0x9a),  0x03 },
+>>>>> + { CCI_REG8(0xa2),  0x07 },
+>>>>> + { CCI_REG8(0xa3),  0x10 },
+>>>>> + { CCI_REG8(0xa5),  0x02 },
+>>>>> + { CCI_REG8(0xa6),  0x0b },
+>>>>> + { CCI_REG8(0xa7),  0x48 },
+>>>>> + { CCI_REG8(0xfd),  0x07 },
+>>>>> + { CCI_REG8(0x42),  0x00 },
+>>>>> + { CCI_REG8(0x43),  0x80 },
+>>>>> + { CCI_REG8(0x44),  0x00 },
+>>>>> + { CCI_REG8(0x45),  0x80 },
+>>>>> + { CCI_REG8(0x46),  0x00 },
+>>>>> + { CCI_REG8(0x47),  0x80 },
+>>>>> + { CCI_REG8(0x48),  0x00 },
+>>>>> + { CCI_REG8(0x49),  0x80 },
+>>>>> + { CCI_REG8(0x00),  0xf7 },
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0xe7),  0x03 },
+>>>>> + { CCI_REG8(0xe7),  0x00 },
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0x93),  0x18 },
+>>>>> + { CCI_REG8(0x94),  0xff },
+>>>>> + { CCI_REG8(0x95),  0xbd },
+>>>>> + { CCI_REG8(0x96),  0x1a },
+>>>>> + { CCI_REG8(0x98),  0x04 },
+>>>>> + { CCI_REG8(0x99),  0x08 },
+>>>>> + { CCI_REG8(0x9b),  0x10 },
+>>>>> + { CCI_REG8(0x9c),  0x3f },
+>>>>> + { CCI_REG8(0xa1),  0x05 },
+>>>>> + { CCI_REG8(0xa4),  0x2f },
+>>>>> + { CCI_REG8(0xc0),  0x0c },
+>>>>> + { CCI_REG8(0xc1),  0x08 },
+>>>>> + { CCI_REG8(0xc2),  0x00 },
+>>>>> + { CCI_REG8(0xb6),  0x20 },
+>>>>> + { CCI_REG8(0xbb),  0x80 },
+>>>>> + { CCI_REG8(0xfd),  0x00 },
+>>>>> + { CCI_REG8(0xa0),  0x01 },
+>>>>> + { CCI_REG8(0xfd),  0x01 },
+>>
+>> Please replace these with names macros where possible. I'm sure quite a
+>> few of the registers configured here are documented in the datasheet.
+>> The registers that configure the mode (analog crop, digital crop,
+>> binning, skipping, ...) should be computed dynamically from the subdev
+>> pad format and selection rectangles, not hardcoded.
+>>
+> I agree, but we get the sensor settings based on our requirements from 
+> the vendor, i will check if we can get some more info regarding the 
+> crop, binning, skipping etc...
 
-On 6/5/25 20:52, Ricardo Ribalda wrote:
-> Currently v4l2_fwnode_device_parse() obtains the orientation and
-> rotation via fwnode properties.
-> 
-> Extend the function to support as well ACPI devices with _PLD info.
-> 
-> We give a higher priority to fwnode, because it might contain quirks
-> injected via swnodes.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->   drivers/media/v4l2-core/v4l2-fwnode.c | 85 ++++++++++++++++++++++++++++++++---
->   1 file changed, 79 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..379290ab3cfde74c8f663d61837a9a95011b5ae0 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -15,6 +15,7 @@
->    * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->    */
->   #include <linux/acpi.h>
-> +#include <acpi/acpi_bus.h>
->   #include <linux/kernel.h>
->   #include <linux/mm.h>
->   #include <linux/module.h>
-> @@ -807,16 +808,65 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
->   }
->   EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
->   
-> -int v4l2_fwnode_device_parse(struct device *dev,
-> -			     struct v4l2_fwnode_device_properties *props)
-> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> +					 struct v4l2_fwnode_device_properties *props)
-> +{
-> +	struct acpi_pld_info *pld;
-> +	int ret = 0;
-> +
-> +	if (!is_acpi_device_node(dev_fwnode(dev)))
-> +		return 0;
-> +
-> +	if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
-> +		dev_dbg(dev, "acpi _PLD call failed\n");
-
-I'd do:
-
-acpi_handle_debug(ACPI_HANDLE(dev), "cannot obtain _PLD\n");
-
-> +		return 0;
-> +	}
-> +
-> +	if (props->orientation != V4L2_FWNODE_PROPERTY_UNSET) {
-> +		switch (pld->panel) {
-> +		case ACPI_PLD_PANEL_FRONT:
-> +			props->orientation = V4L2_FWNODE_ORIENTATION_FRONT;
-> +			break;
-> +		case ACPI_PLD_PANEL_BACK:
-> +			props->orientation = V4L2_FWNODE_ORIENTATION_BACK;
-> +			break;
-> +		case ACPI_PLD_PANEL_TOP:
-> +		case ACPI_PLD_PANEL_LEFT:
-> +		case ACPI_PLD_PANEL_RIGHT:
-> +		case ACPI_PLD_PANEL_UNKNOWN:
-> +			props->orientation = V4L2_FWNODE_ORIENTATION_EXTERNAL;
-> +			break;
-> +		default:
-> +			dev_dbg(dev, "Unknown _PLD panel val %d\n", pld->panel);
-
-Similarly:
-
-acpi_handle_debug(ACPI_HANDLE(dev), "invalid panel %u in _PLD\n",
-		  pld->panel);
-
-> +			ret = -EINVAL;
-
-Should this be an error or should we simply ignore it here (and maybe 
-use acpi_handle_warn())?
-
-> +			goto done;
-> +		}
-> +	}
-> +
-> +	if (props->rotation != V4L2_FWNODE_PROPERTY_UNSET) {
-> +		switch (pld->rotation) {
-> +		case 0 ... 7:
-> +			props->rotation = pld->rotation * 45;
-> +			break;
-> +		default:
-> +			dev_dbg(dev, "Unknown _PLD rotation val %d\n", pld->panel);
-
-acpi_handle_debug(ACPI_HANDLE(dev), "invalid rotation %u in _PLD\n",
-		  pld->rotation);
-
-> +			ret = -EINVAL;
-> +			goto done;
-> +		}
-> +	}
-> +
-> +done:
-> +	ACPI_FREE(pld);
-> +	return ret;
-> +}
-> +
-> +static int v4l2_fwnode_device_parse_dt(struct device *dev,
-
-I'd call this v4l2_fwnode_device_parse_of() as we're parsing OF nodes 
-and properties here.
-
-> +				       struct v4l2_fwnode_device_properties *props)
->   {
->   	struct fwnode_handle *fwnode = dev_fwnode(dev);
->   	u32 val;
->   	int ret;
->   
-> -	memset(props, 0, sizeof(*props));
-> -
-> -	props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
->   	ret = fwnode_property_read_u32(fwnode, "orientation", &val);
->   	if (!ret) {
->   		switch (val) {
-> @@ -833,7 +883,6 @@ int v4l2_fwnode_device_parse(struct device *dev,
->   		dev_dbg(dev, "device orientation: %u\n", val);
->   	}
->   
-> -	props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
->   	ret = fwnode_property_read_u32(fwnode, "rotation", &val);
->   	if (!ret) {
->   		if (val >= 360) {
-> @@ -847,6 +896,30 @@ int v4l2_fwnode_device_parse(struct device *dev,
->   
->   	return 0;
->   }
-> +
-> +int v4l2_fwnode_device_parse(struct device *dev,
-> +			     struct v4l2_fwnode_device_properties *props)
-> +{
-> +	int ret;
-> +
-> +	memset(props, 0, sizeof(*props));
-> +
-> +	props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
-> +	props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
-> +
-> +	/* Start by looking into swnodes and dt. */
-> +	ret =  v4l2_fwnode_device_parse_dt(dev, props);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Orientation and rotation found!, we are ready. */
-> +	if (props->orientation != V4L2_FWNODE_PROPERTY_UNSET &&
-> +	    props->rotation != V4L2_FWNODE_PROPERTY_UNSET)
-> +		return 0;
-
-I think you can remove this check without affecting the functionality.
-
-> +
-> +	/* Let's check the acpi table. */
-> +	return v4l2_fwnode_device_parse_acpi(dev, props);
-> +}
->   EXPORT_SYMBOL_GPL(v4l2_fwnode_device_parse);
->   
->   /*
-> 
+Some of this infomation should be available in the datasheet. Use at 
+least the register names that can be found, for those that can't there's 
+not much that could be done.
 
 -- 
 Regards,
