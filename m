@@ -1,103 +1,81 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5051FBE8A;
-	Sun, 29 Jun 2025 09:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF21CA84;
+	Sun, 29 Jun 2025 09:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751190710; cv=none; b=habb2mb05YeK3x+W7/NETdDf/Vb+/dziG4MML3hdr3071H2zKEnH7ORVNK6FSDuPFJxMuHDw+inodLooZlVfgHVY4QYYzv0nG+oKtDoR9CvKGFQfvwDXjNLdBnm1QhRTOSTM1A0vwWJSXxVgukJddLQjyasmRTN2DLNjAw/FgCE=
+	t=1751191138; cv=none; b=Jn6bbqnVREi6P4MmXR7vBvmb/jyTDXFoY+yPk9kdZEHg5njQ9RJG3LZIB7IsCC5oBlI2ym0VbcpoT/MkbMC9upC3TagoEotGlxtG0UKcu6kTzCsLBciG0i9quFJ05+TIeRoOX14btvY60tMajlNqKFNWiADHck55Uec1DDidDsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751190710; c=relaxed/simple;
-	bh=k8RPXE4zYKCqoyIqctDMrCRF2OjLbCuVKkOR4TUcHPE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l6FrDHzPU79VXStHw0q93EbB9+M4UHwD6bjYOb/lsjVOGB7hvWSSGmk0i01DjK8NUVQmFUkGKiFjtB6Wt/Jx2RcoxzqiBV6xTs67hONvHQrWT1V9woa7h67aAcqP6Ho1Du+pVOYokFIjmlsC1HtzvUbYhkPNO3uIWqDPJLh7tyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3DaGGZl; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751191138; c=relaxed/simple;
+	bh=Hrliv2JoxVWlcymdZiOGwuH3Ex9wLHlVPK+l3T68CRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TrGmngYeN3FC410l333sRC9+0Qzhehjde8VxsH0naZVAJinyP13M/RkCve+voRg6Qmi0i6QqeVyz7JQU4gH6mnhlaX8Gtdul5GHMWk0SEy/SKFyS74koGvLcSyQqSOjoQQexeKQQf9PTE+H6jxPeN/91KaHGD0+UEp3LN0FaivQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Jxd7fEU8; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3DaGGZl"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70e7ebc21d2so2820767b3.0;
-        Sun, 29 Jun 2025 02:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751190708; x=1751795508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k8RPXE4zYKCqoyIqctDMrCRF2OjLbCuVKkOR4TUcHPE=;
-        b=V3DaGGZlIYRVje/IMf+uFkgTHikSnJs7bLwoZjBwpKjH9sR38se0q9kjz7786RQGeF
-         Y9t30rwOy/OmFeK4UFAy61cgUuR28L0yoL7iiEJc64Pl8SK1f8Vsm0+kW/YVDLwZEzk3
-         osK4emVVJ1xk+XQ5cVptoMV873r3JLKDOF0tRnqXK04kFhO5+0O7u9AvYGoDAD9DVsOu
-         /I8rW9wEy3JqaK+s+UwRbv4bQlpnN1AZfvkaPhex2mhElszGgudd7Hgff2PeP+87111C
-         DTjhzK5fIQYXIXCzQw5dwdr+L3Sx6/N+iaBITl2crrU16SQ8NX7tn7dg7Wyr2VeY22NB
-         mjZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751190708; x=1751795508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k8RPXE4zYKCqoyIqctDMrCRF2OjLbCuVKkOR4TUcHPE=;
-        b=QHDon4uX/S9d1vZRjeLuX7rqZhTg2AqvNqpsO+6X4X2ce38YyPuOSUpwCjgKfVLBEa
-         vfbmU+EtJPQ+PJGAedltYnF9xAu+Hqx+s1Zh0omR/WISXnLPBK0N2iyD6hHhlwsefmdd
-         9NrbFDnaVDbkEwM+HsKGGhFT2nStc+ASUV9PXHyRQtBvNFAzJVP6PtwqIZW9pCNqQOQx
-         2VpI2xNjcbgnNKDDFM9aK1bMyUjQWAq67YFAHe8W8SIHr2uGyZUyWjpaZ/pjYd3uMxP/
-         INuMTwogrh77Q3wNBTFATfvT3PFxvusbqAGPsBXcMKptivQDFEzBktzP1uCapA0/KaGn
-         1cHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXVNak80sy0bBTVHtagFg/R7xRLYt71k4R2IbeZcBZm9ZUCTKRv60i1cqWEhjckMvXEDcCW1och8IuaO0=@vger.kernel.org, AJvYcCWbBxkTfA4U2g8ndI+bK4PPaAZPLn1JJUoUBaidAK5BDK/T9Tx7BG/9ujfucZNYe52BYGICDDDhgVF/pes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLgpiXas5sx1uoSOusauvr6ynPSKA+n+8Nju3i8XUAQ+3+itGN
-	TE7LuuCaHLfAogAU/7gYgpeki/UR31eOhBUKKI+d6odRnfzGNxESOBnPM/Ul/Dastp//mTaF7M9
-	753KAoQlsg1SYbTs8w3HL6V4Mf556Bus=
-X-Gm-Gg: ASbGncvwkWGqynv7FySzE9Mo6M4UFABf1s9fi/sgAin2SIJIqhFOS9wspwzuIYnwXjx
-	rlWK+evBDS+RCIBx9c72vBCPatAAlWdTuNOdHXamdkE/Kci3Nr7iGD3TAa9pgPTEJXrW3WHs4eS
-	8IM929vLsjhZb7YOE03VJwAxPom4FeHFMg8k2Uo456A4Zn99XTZa73XA==
-X-Google-Smtp-Source: AGHT+IE1zCQGDrVAgfIsk+i6BRDZoB+gNhbxwwsjvBlz713nxeVKOW/UIDMxAwvWu/w30oxW2qIZHjo1E27CyJ/LJ34=
-X-Received: by 2002:a05:690c:6611:b0:712:b566:bf7c with SMTP id
- 00721157ae682-71522e96c9amr32474327b3.1.1751190707806; Sun, 29 Jun 2025
- 02:51:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Jxd7fEU8"
+Received: from localhost.localdomain (unknown [178.69.224.101])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 29345552F52C;
+	Sun, 29 Jun 2025 09:58:45 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 29345552F52C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1751191125;
+	bh=4Wj/utsZiTg4gXT3s/0BCZb3A7rSjIgTPBKJ1fLaEF8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Jxd7fEU8OMgfM24/d92RvB8OT/rmUP/Ah9DbQf8/2s8GkoPOs+UIEM8QSkxnMXcsb
+	 P689vNzP1lVaI55hYu4LjjljiThBLc08+C31zE/Aig1KcIRF4t7cayezBq0XQtXcGP
+	 JYNIWNzEMib0TfLcrKmAKtZIfeHd21jEGeVA6wmY=
+From: Artem Sadovnikov <a.sadovnikov@ispras.ru>
+To: kvm@vger.kernel.org
+Cc: Artem Sadovnikov <a.sadovnikov@ispras.ru>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] vfio/mlx5: fix possible overflow in tracking max
+Date: Sun, 29 Jun 2025 09:58:43 +0000
+Message-ID: <20250629095843.13349-1-a.sadovnikov@ispras.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com> <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
-In-Reply-To: <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Date: Sun, 29 Jun 2025 12:51:36 +0300
-X-Gm-Features: Ac12FXwklc5VGuRrRt-QHyYEj08pYOpE8P7ygtuAwSEBQrfXn-83tECCPbBZaBw
-Message-ID: <CAGn2d8P-uYEULKs+90cr1AZcJW+mtaaZv8oixpePD6ttYR-0dQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
- HMM_BO_DEVICE_INITED flag
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
-	skhan@linuxfoundation.com, dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 28, 2025 at 10:52=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sat, Jun 28, 2025 at 8:26=E2=80=AFAM Abdelrahman Fekry
-> <abdelrahmanfekry375@gmail.com> wrote:
-> >
-> > The HMM_BO_DEVICE_INITED flag was being set in hmm_bo_device_init()
-> > before key initialization steps like kmem_cache_create(),
-> > kmem_cache_alloc(), and __bo_init().
-> >
-> > This means that if any of these steps fail, the flag remains set,
-> > misleading other parts of the driver (e.g. hmm_bo_alloc())
-> > into thinking the device is initialized. This could lead
-> > to undefined behavior or invalid memory use.
->
-> Nice. Can you make some fault injection (temporary by modifying the
-> code to always fail, for example) and actually prove this in practice?
-> If so, the few (important) lines from the given Oops would be nice to
-> have here.
+MLX cap pg_track_log_max_msg_size consists of 5 bits, value of which is
+used as power of 2 for max_msg_size. This can lead to multiplication
+overflow between max_msg_size (u32) and integer constant, and afterwards
+incorrect value is being written to rq_size.
 
-I will look out how this can be done. Thanks for the feedback
+Fix this issue by extending max_msg_size up to u64 so multiplication will
+be extended to u64.
 
-> --
-> With Best Regards,
-> Andy Shevchenko
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Artem Sadovnikov <a.sadovnikov@ispras.ru>
+---
+ drivers/vfio/pci/mlx5/cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
+index 5b919a0b2524..0bdaf1d23a78 100644
+--- a/drivers/vfio/pci/mlx5/cmd.c
++++ b/drivers/vfio/pci/mlx5/cmd.c
+@@ -1503,7 +1503,7 @@ int mlx5vf_start_page_tracker(struct vfio_device *vdev,
+ 	struct mlx5_vhca_qp *fw_qp;
+ 	struct mlx5_core_dev *mdev;
+ 	u32 log_max_msg_size;
+-	u32 max_msg_size;
++	u64 max_msg_size;
+ 	u64 rq_size = SZ_2M;
+ 	u32 max_recv_wr;
+ 	int err;
+-- 
+2.43.0
+
