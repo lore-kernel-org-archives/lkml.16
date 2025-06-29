@@ -1,172 +1,151 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062181D5CDE;
-	Sun, 29 Jun 2025 11:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A488D1D5CDE;
+	Sun, 29 Jun 2025 11:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751197247; cv=none; b=r1AxLmraC9sDFDui6I6D57CvUEPSwtQ+wMxIFtyehcWI4Jm54S6yue9qFKyXxA5snjLointQZ0Iuv+TJag7msWWkVenEzp0udzXHTe5o0FhVwk6r8ANtKjprPyGByB2hArHNhTgKIwUdwoQNFSLUusuWXyjiZLo3WY0EwmorZD8=
+	t=1751197300; cv=none; b=WNKQ2lZvpA2mnETI+hAg9gEfndgkuhrRe1nCnof5eZh5yjFe/m95g/u31jwXoD3C2620IroCAz0k285Td537gasVCAY94MPGXZIacNOjvel3kQqqd7cQnB9CZHLwdB6P329JghOooffNbdI7Y4rWL+TbwctnPQQ+PGLg5pnzqpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751197247; c=relaxed/simple;
-	bh=SuGAcFPJ8fDZpq64lXMcRG2awU6YZOcrXavdp36eUsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CtOC0wXmq3HTQXpRwvwf0E7mktFF/WWnjZy6+T9RayW7GDWqQZhPB1YrSZ/C6ZHrVdUpjDCcIYEwZ80532QW72+gBt2eR/rhzeJR0obQPm7240tPVNBQVB7jgFIJ9eFdf59ViLiLQYqbzLjPelkOcMcnn/7KVWH6Tc7Mpt9VglE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mdxw6OG1; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1751197300; c=relaxed/simple;
+	bh=xo+cE6dhnfLcIh4Q/q6l5x/0ikukQ6FU0Brm4xgXsNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aks1ZTnVE9rJWgc1J3CjqOih6dzudXgTWxuVb9IFhhrzOwJgvw8EdaS/oZRW3QRvoo3yoJ+uTFDN7MvebsNdM67+Ls3Qsfym5XAXMYitjcRIq6QCWo8gc10B/To0KnnalKAx0nUW0KgdrtzbT92mcgO/aXUIK7gtMGXeGLOnuOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FAQHjXXt; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mdxw6OG1"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-453647147c6so38539315e9.2;
-        Sun, 29 Jun 2025 04:40:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAQHjXXt"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747fba9f962so3363560b3a.0;
+        Sun, 29 Jun 2025 04:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751197244; x=1751802044; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/WM9wI+ftSuqEkYEs3zU3TH9PeO5T6PPzLJahZfyDzY=;
-        b=Mdxw6OG1p0/SMH0GN6nfsaJc1BABKDOrkozrRWcCdZne6Xw9vTRwzQ+Y2Gj4KWzTb6
-         8iRnci/g12EEvdtw2KTGncHNp8y37i4ypNkXX9SO5Q1VyABdiNWKVquMTPHiz/A5xjaU
-         CW8c593SSNnTVngexUQQU0dnB1LhF8mbUiVk0dkodj7y4Gb8mAfvkatfi1ZzEe1IL6wH
-         BECYlM/+OHus84UvHtyLqiL3KNfCLtnOf2t+LK/SH4Tc6Nf65f1GW0L4/UIDUfWlTHLf
-         X6uG5w0/8Qrp1LXyj/zQL6IgxcS3cnCoTvUI1cEypTw9H73PXI1K1BjN/Yz47vTD8pgI
-         DTrg==
+        d=gmail.com; s=20230601; t=1751197295; x=1751802095; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2KT37wcC3DUtcQacKWLIK0DWCImai66iv9l2EUEALl0=;
+        b=FAQHjXXtKtCPVZKDspqLrukg7lh5KtbeOrAuhiH8IPV/XsAROxdUS8+4RRahaeVdNQ
+         t+TXURXUNmF1ZjHRUvcS0MuEImZk2cMSdI+B5AOmCS/JKHWkvjOC1Zsk2zCm0iWcTSnE
+         vjq+7hWe2pnxoaoGzBhHqgM547RGP4OcdazYMubVnb9vMKgrMIEH8jd1q++0/nAdAigm
+         9b7h2Hr88HNuEwPU9rueH09R8OdWJINhlwZhpMr0qrWF8z8avcBIt4C9ajfvSqPQc3Lm
+         XM6RnVaSO1AQ9wfjaPpi1aqRmG8cuknk0OoqcMLoGEDtAIO+smLQH7XKmOZBcC6tSPnn
+         mU3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751197244; x=1751802044;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/WM9wI+ftSuqEkYEs3zU3TH9PeO5T6PPzLJahZfyDzY=;
-        b=jqHcCHpLo7uiuUFZgCkYBtEwpjy9BIqm8XP1Cu31OchreUlHhYGDV3hRT7Odj7kVk0
-         1EuY+LV8HYzt6xmsMZ0iD2MeQHf6yCsHnK0dWyIp90nyQPK41zRs0EcJNQiJ9CjG0Anx
-         qVgBiZ3em2ptpYRIVffCFKb14wttYBhR9JENjkzq9TqLC5OxpK8M98NIe9vvH2MtV4u8
-         NEvDsJFhcVWe/ko/P9XmLYTsWRFxiPO9ADvHr9xqfwTyafOr3zpdkBl/1QC/9yTf8Sl/
-         rSdUkj0qCgXKGqSKXsSXmCsU2nohemO2GgWyqwH5yZAhJuKqjBCIK9pJa9Uy1cRblGDQ
-         Y+wA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Bz3s5v7KgsscbpAnwBHITmGo3QLsgvs/GuG8E5Fdgn8OfFObjj22pCPW3drqvJk3rPzDNgSA09Y=@vger.kernel.org, AJvYcCWvd4TsM+KfMUkJ3o7HOC7zoCSW2KcvohrBU2ssmCCadg5q6kgUrmbxBoOiH5QN/xFPecCifjpN5BY3UMS+@vger.kernel.org, AJvYcCXEaDXDE9mE8XQC6uNUpWPBXrf0G7JcxAcRrfDP1PoCkfqGavLswvDOxgQ/HWjSX/TFc4qo0EsaU3yb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhyxz3nv+w7h8ntFEd8VJDlDrS6QI8zyVwaXuKxpMLqwGZksfj
-	N7qOofn6vmwKTZO6LfbVgiApnji7U+//j4Q4mhCl9kVGeog4D9ck/2Zf
-X-Gm-Gg: ASbGnctkXNwF6wmoGjQh8cPJH9zJG0tmzQ801G3IBZ72muC1Nw+S6OGDXhEYvlOCGgp
-	Ah0g95A58PLhaEgDrGdZXa7eI/yY8gsxeWERbnKBRqJS2yDXUYSgzrKc/L6ESzZuf4PG+tnNlIV
-	AR04/mFTGetqyg2Y3vMKeWVu4gPzxR6Bq+KG9dbCu7W0gMi4GTg2Lw0FuhknS5XFCo8QHe6GDiB
-	v/jLUYWcnyPVpVD5mkkdeKTnE0RROThaVcUbPMmyyoxWni5oy+R34gePdyqi5DjCLGP/X4I5kDC
-	Ioc1dY2W6BMqOelEDX0vxCpWqsCLogRnVtqlbWpw3jH0M9T2+ezoug+iUJ071lGCSxf3lPR0R6J
-	2XjUTPbVzhKNzpTBeOssnA8diXalj
-X-Google-Smtp-Source: AGHT+IGG36v57mIHx9b8wattPhP5PhbXduaoeVXbueE5hKYc+gE5hVGbh4KVH7GNd0aydHy8k2cc9w==
-X-Received: by 2002:a05:600c:a48:b0:453:58e8:a445 with SMTP id 5b1f17b1804b1-45396a94e32mr40584365e9.11.1751197244036;
-        Sun, 29 Jun 2025 04:40:44 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a390d05sm105209375e9.2.2025.06.29.04.40.42
+        d=1e100.net; s=20230601; t=1751197295; x=1751802095;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2KT37wcC3DUtcQacKWLIK0DWCImai66iv9l2EUEALl0=;
+        b=fgyD/HOSFjFLPUwjJjPTQlOehD2Ioy0jbaB0ede9rk0NpziQ8Ile30PRTxNNPAyj7K
+         vtC0IkMCwV+95eSFVfb4GXWHRfuzGyAv6prqdz2MigRMKfO0SF3k0/xXQ+FkzxqcYsQ2
+         M2SDk+SrBJ9VLyWzsW1of/Kq3OOtLeSg/TTe05BmCYWl5E3SWCBhsM+De8gUTYOFbA+H
+         xbqcoJvuvTBcxyLhmkV65urCM1KIIueYdJDFADkHC4FWMfn+h+2Gd9s2ZoKy3N6/tViO
+         bPWt8lZUWX8tqlcV2mEzIbmzhD4+cieIPsPjBxukKLqpI25TAuoW4mxRo5zBGO4/12uy
+         pLMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ssidN7/nhB/GdEv0udFEtvCLA02Q2stAv6Q+RmtbMAJRtjUVrfzS0hBiUdhufYsNXmLhj8n5IRGNwkw=@vger.kernel.org, AJvYcCW5eOWNgBeXjJcp7suoyFnlFEZSaAPOKug5xhqUvXf++PKf0jH6HBSHAZDgBP7y2r4vdCIJeTIo@vger.kernel.org
+X-Gm-Message-State: AOJu0YywZ35ahdLpm2qJb4/tcmZh2+XfEBgsAEJ5IZvkM3epmxheO+6V
+	WG0t/nel92LGn5Oh+TdkFQ6pA5Z2uLCEaowk95EEBnqxvgZIgSp46SXoHcU1/g==
+X-Gm-Gg: ASbGncuEJwPV+ynfhC+T/facRHPnOnrmFjjyhEl7L1cCXb1NpJbw23MTGgDIV4JRvor
+	wpvZzZABcKCWVf4J8gohtVa9faozsWFULsCZjHYQ4MpsZP5G+cMk9As4hpJoegpZIrrAnYqLjWk
+	+f5E0l6YIJGUcm6o0mIeTk8eqfORasTENgvX6sEnqi3U+L4Stx1aXdSyPM8xfQ2TUI9nyjBZr6c
+	HqoOcQpPM4UGx/Vkv+hbbe3NggJV4lLZEk39RlwwS/dwHHj2iUjdIMRcEFmv72R3o9tIMNXxMQE
+	d2u+txp7Dfi1ROPjdxt+F0WEqw5iuAzXdAG+g6NPfxqNfGLSRzCSJM/0R1dzgWhRT1wkdfyzDoO
+	Sf02I5Puz42ngl3HViGpRfWjQM3ZSIlQ=
+X-Google-Smtp-Source: AGHT+IF4SrNgBPN3p9v+l9IK0AEucqKpF30tPhgsH6XgBwd7QBtloy4FOTv8y8Cfl9PYT9njUD8rQw==
+X-Received: by 2002:a05:6a20:7344:b0:21f:4ecc:119d with SMTP id adf61e73a8af0-220a08dc772mr15266870637.7.1751197294620;
+        Sun, 29 Jun 2025 04:41:34 -0700 (PDT)
+Received: from fedora.. (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5573e71sm6907760b3a.98.2025.06.29.04.41.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 04:40:43 -0700 (PDT)
-Date: Sun, 29 Jun 2025 12:40:41 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Vegard Nossum <vegard.nossum@oracle.com>, Andy Lutomirski
- <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel
- <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, Xin Li
- <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh
- <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, Tony Luck
- <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jonathan Corbet
- <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar
- <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel
- Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
- Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, Rick
- Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov
- <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross
- <jgross@suse.com>, Kees Cook <kees@kernel.org>, Eric Biggers
- <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu
- (Google)" <mhiramat@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du
- <changbin.du@huawei.com>, Huang Shijie <shijie@os.amperecomputing.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Namhyung Kim
- <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv7 00/16] x86: Enable Linear Address Space Separation
- support
-Message-ID: <20250629124041.04a30869@pumpkin>
-In-Reply-To: <ky4an2a4ks55phzuzdvb5py4psvgintt4u2rmthhx44zsx3gqn@uxw3sebzpbch>
-References: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
-	<9b1c5e43-ff48-4af8-9ec8-1c1dc2b902ae@oracle.com>
-	<1b96b0ca-5c14-4271-86c1-c305bf052b16@oracle.com>
-	<ky4an2a4ks55phzuzdvb5py4psvgintt4u2rmthhx44zsx3gqn@uxw3sebzpbch>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Sun, 29 Jun 2025 04:41:34 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: opendmb@gmail.com,
+	florian.fainelli@broadcom.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	zakkemble@gmail.com
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH] net: bcmgenet: Initialize u64 stats seq counter
+Date: Sun, 29 Jun 2025 11:41:09 +0000
+Message-ID: <20250629114109.214057-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Jun 2025 15:47:36 +0300
-"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
+Initialize u64 stats as it uses seq counter on 32bit machines
+as suggested by lockdep below.
 
-> On Thu, Jun 26, 2025 at 11:35:21AM +0200, Vegard Nossum wrote:
-> >=20
-> > On 26/06/2025 11:22, Vegard Nossum wrote: =20
-> > >=20
-> > > On 25/06/2025 14:50, Kirill A. Shutemov wrote: =20
-> > > > Linear Address Space Separation (LASS) is a security feature that
-> > > > intends to
-> > > > prevent malicious virtual address space accesses across user/kernel=
- mode. =20
-> > >=20
-> > > I applied these patches on top of tip/master and when I try to boot it
-> > > fails with errno 12 (ENOMEM - Cannot allocate memory):
-> > >=20
-> > > [=C2=A0=C2=A0=C2=A0 1.517526] Kernel panic - not syncing: Requested i=
-nit /bin/bash
-> > > failed (error -12). =20
->=20
-> For some reason, I failed to reproduce it. What is your toolchain?
->=20
-> > > Just using standard defconfig and booting in qemu/KVM with 2G RAM.
-> > >=20
-> > > Bisect lands on "x86/asm: Introduce inline memcpy and memset". =20
-> >=20
-> > I think the newly added mulq to rep_stos_alternative clobbers %rdx, =20
->=20
-> Yes, it makes sense.
->=20
-> > at
-> > least this patch fixed it for me:
-> >=20
-> > diff --git a/arch/x86/include/asm/string.h b/arch/x86/include/asm/strin=
-g.h
-> > index 5cd0f18a431fe..bc096526432a1 100644
-> > --- a/arch/x86/include/asm/string.h
-> > +++ b/arch/x86/include/asm/string.h
-> > @@ -28,7 +28,7 @@ static __always_inline void *__inline_memcpy(void *to,
-> > const void *from, size_t
-> >                      "2:\n\t"
-> >                      _ASM_EXTABLE_UA(1b, 2b)
-> >                      :"+c" (len), "+D" (to), "+S" (from),
-> > ASM_CALL_CONSTRAINT
-> > -                    : : "memory", _ASM_AX);
-> > +                    : : "memory", _ASM_AX, _ASM_DX);
-> >=20
-> >         return ret + len;
-> >  } =20
->=20
-> This part is not needed. rep_movs_alternative() doesn't touch RDX.
->=20
-> I will fold the patch below.
->=20
-> Or maybe some asm guru can suggest a better way to fix it without
-> clobbering RDX?
+[    1.830953][    T1] INFO: trying to register non-static key.
+[    1.830993][    T1] The code is fine but needs lockdep annotation, or maybe
+[    1.831027][    T1] you didn't initialize this object before use?
+[    1.831057][    T1] turning off the locking correctness validator.
+[    1.831090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.16.0-rc2-v7l+ #1 PREEMPT
+[    1.831097][    T1] Tainted: [W]=WARN
+[    1.831099][    T1] Hardware name: BCM2711
+[    1.831101][    T1] Call trace:
+[    1.831104][    T1]  unwind_backtrace from show_stack+0x18/0x1c
+[    1.831120][    T1]  show_stack from dump_stack_lvl+0x8c/0xcc
+[    1.831129][    T1]  dump_stack_lvl from register_lock_class+0x9e8/0x9fc
+[    1.831141][    T1]  register_lock_class from __lock_acquire+0x420/0x22c0
+[    1.831154][    T1]  __lock_acquire from lock_acquire+0x130/0x3f8
+[    1.831166][    T1]  lock_acquire from bcmgenet_get_stats64+0x4a4/0x4c8
+[    1.831176][    T1]  bcmgenet_get_stats64 from dev_get_stats+0x4c/0x408
+[    1.831184][    T1]  dev_get_stats from rtnl_fill_stats+0x38/0x120
+[    1.831193][    T1]  rtnl_fill_stats from rtnl_fill_ifinfo+0x7f8/0x1890
+[    1.831203][    T1]  rtnl_fill_ifinfo from rtmsg_ifinfo_build_skb+0xd0/0x138
+[    1.831214][    T1]  rtmsg_ifinfo_build_skb from rtmsg_ifinfo+0x48/0x8c
+[    1.831225][    T1]  rtmsg_ifinfo from register_netdevice+0x8c0/0x95c
+[    1.831237][    T1]  register_netdevice from register_netdev+0x28/0x40
+[    1.831247][    T1]  register_netdev from bcmgenet_probe+0x690/0x6bc
+[    1.831255][    T1]  bcmgenet_probe from platform_probe+0x64/0xbc
+[    1.831263][    T1]  platform_probe from really_probe+0xd0/0x2d4
+[    1.831269][    T1]  really_probe from __driver_probe_device+0x90/0x1a4
+[    1.831273][    T1]  __driver_probe_device from driver_probe_device+0x38/0x11c
+[    1.831278][    T1]  driver_probe_device from __driver_attach+0x9c/0x18c
+[    1.831282][    T1]  __driver_attach from bus_for_each_dev+0x84/0xd4
+[    1.831291][    T1]  bus_for_each_dev from bus_add_driver+0xd4/0x1f4
+[    1.831303][    T1]  bus_add_driver from driver_register+0x88/0x120
+[    1.831312][    T1]  driver_register from do_one_initcall+0x78/0x360
+[    1.831320][    T1]  do_one_initcall from kernel_init_freeable+0x2bc/0x314
+[    1.831331][    T1]  kernel_init_freeable from kernel_init+0x1c/0x144
+[    1.831339][    T1]  kernel_init from ret_from_fork+0x14/0x20
+[    1.831344][    T1] Exception stack(0xf082dfb0 to 0xf082dff8)
+[    1.831349][    T1] dfa0:                                     00000000 00000000 00000000 00000000
+[    1.831353][    T1] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    1.831356][    T1] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-Or separate out the code where the value is a compile-time zero.
-That is pretty much 99% of the calls.
+Fixes: 59aa6e3072aa ("net: bcmgenet: switch to use 64bit statistics")
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-	David
-
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index 2444305dd..dc1d42c25 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -4116,6 +4116,12 @@ static int bcmgenet_probe(struct platform_device *pdev)
+ 		priv->rx_rings[i].rx_coalesce_usecs = 50;
+ 	}
+ 
++	/* Initialize u64 stats seq counter for 32bit machines */
++	for (i = 0; i <= priv->hw_params->rx_queues; i++)
++		u64_stats_init(&priv->rx_rings[i].stats64.syncp);
++	for (i = 0; i <= priv->hw_params->tx_queues; i++)
++		u64_stats_init(&priv->tx_rings[i].stats64.syncp);
++
+ 	/* libphy will determine the link state */
+ 	netif_carrier_off(dev);
+ 
+-- 
+2.47.1
 
