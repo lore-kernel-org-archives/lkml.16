@@ -1,161 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF252576;
-	Sun, 29 Jun 2025 17:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08D9231856
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 17:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751219520; cv=none; b=Yc2cYrh2vF/oTF7Fx/+7CvAPVx3KMqpQ5jm0GiyCj7MvEvZlQyBNhsQq8pLuVtjpGdx43mx73wS/cBoLB+BgywrQt93BAHlcPkGTyt9Xdj3uQWxv7vXR2mBBLfpYAiiTcTyPs1b+Ui1fz5y7TyFrpY12ovU+nA7CEE4IfuO8JJk=
+	t=1751219810; cv=none; b=ibgna5/FEU5UAcAbym4KR01PEPnD6pD9TeXOb6aQofGO3LAl0rKsnUp2exAmyYFWpYjrAIuULLz3BRrb20bTff5XhWq1bWusDvdwBfx6pU5QtZ2avAWGo7vNlzJPOmYa7OczbvMfBRyoCbZiE/5WpcfTDVfutREzqPwSc633lig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751219520; c=relaxed/simple;
-	bh=Prf/TUB7pIIY1tQutcBvAREu0B7HpCJ8U7iuapmx4w0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o9p01icim/LPl0ELVUd3oMwP/aEBHoDxmUsVruXc3QxcIRElQtGNeX8s7pm1NCg1WgHAECXxxz4rxtBS4e2hqafPqHLyE0Ur/vaqZNi0iInyFdvO1174XhCCVXCHNKs6SEbtmO6DV+vBHtckIQuGTh+jT5dh+HORbjvvnl+L/tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lE/Xk1B9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lE/Xk1B9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CEAC4CEEF;
-	Sun, 29 Jun 2025 17:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751219518;
-	bh=Prf/TUB7pIIY1tQutcBvAREu0B7HpCJ8U7iuapmx4w0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lE/Xk1B9i566SJ5DYEVfz6jNuQt9HaVR4A1SZuEeECe9oSer7QMfL3UOduNmDuo7l
-	 ebW7pXkjH16Uorm4T7m+jyrrIHlNr4Kmw+we40MHU8wjQnd/t0rKKx2sx2g4aPwYHS
-	 fZDxIvTEs1J1WFl/4fBdm4gPYnifBdKnBNYg2EP3TRyzEvQlFHOrIVrJdYdXbnGU/6
-	 1fRzJDk2jhmDPQ3myoztBR8WmTZAb1MJAfvqkvZduEInHNdD3PCR8MuTEBxG9r/Z7S
-	 9/T2yRZun0CR9z5QBoXzxSvQ3DUx+kPnmggLm7ct1KLVnmVRaLm73p0epk9InsJD6Z
-	 hryEuvsQ26RIw==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b584ac96so3461994e87.1;
-        Sun, 29 Jun 2025 10:51:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJX7LSHrT02ta0xbjs0g3DpnAUu6MhU3bgB9OVdZRzJmQLru96H1mO2uFzfsWVh3OR5jY7/XjTXeS2PWfsNg==@vger.kernel.org, AJvYcCVxNQshELe7MzdypV0aPfH8eQUUBLGUDR5yztf4ofyGd7NIUt7JmmJuNtTY64BEuADmtUcywkMQWjW9+po=@vger.kernel.org, AJvYcCXwootx34zFL3uVMaUCvrvkITtrHrrKkz9wiO8mOKJW7dYAYHsbuX69FK21jzvM0Wo4ux5a7UO7yazBIRbq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/ca29MC1HG8kuNfObvZhpnSLURpfoV4lJFDT0P8cyrSyMore3
-	mZT0TvqgC3ZiMJa9p5raLoHVWCBzIdldGzjiPKFUG+gbCpuFVXCosJvMNjHpV+wWo7D1co0eUgu
-	xbRKJ+U3La+Lv2yPTCy0/48raLvUM0Dw=
-X-Google-Smtp-Source: AGHT+IHGzcfNbyV3nTioSzVq3CZ7iDMNUw8mckzCx1zMvJTjhKiI3PSf9s53U4g409i7ky4TD5Dn4mE0do6B0F84IgA=
-X-Received: by 2002:a05:6512:1193:b0:553:2e4a:bb58 with SMTP id
- 2adb3069b0e04-5550b869efdmr3015172e87.9.1751219517077; Sun, 29 Jun 2025
- 10:51:57 -0700 (PDT)
+	s=arc-20240116; t=1751219810; c=relaxed/simple;
+	bh=tXM8AJhl8bpSvAiAZTCg9Ecbjt17dQ93+7ODnd8JEUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZeEEppXOJcUfiLkt1xYWM/rswF0pPL0H0S06fg9PSM/9fug2Kg4tkpbxzOvw0YgLKvWsCjOHp1i+nebiceXRBONjkOH3O2GEyWD/+Gpx1Nv65OY7plXf7NhiROUvxPB2HhlYu8Jh8DsH03a3X64TL1N4KAzgW4IDtnsX4g+98Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55THuetg021737;
+	Sun, 29 Jun 2025 19:56:40 +0200
+Date: Sun, 29 Jun 2025 19:56:40 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
+Message-ID: <20250629175640.GA21675@1wt.eu>
+References: <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
+ <20250629092552.GA30947@1wt.eu>
+ <029f24fa-3512-4736-94a0-e158c158cc8e@t-8ch.de>
+ <20250629094048.GA26861@1wt.eu>
+ <20250629151006.GA16826@1wt.eu>
+ <e2513e72-5949-463d-a950-0778609141d7@t-8ch.de>
+ <20250629160823.GA2302@1wt.eu>
+ <2322d3a1-a5ff-40ec-ad7e-1580f85d95f4@t-8ch.de>
+ <20250629161908.GB2302@1wt.eu>
+ <38b487e0-4d72-4a87-8fc4-c13b4fb35feb@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
-In-Reply-To: <20250625095215.4027938-1-gprocida@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 30 Jun 2025 02:51:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzvLpu_LygASIkWAtnx_s-9k2Pilxeog1cyF0ArojQilgT-M0HHJZzQe1w
-Message-ID: <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
-To: Giuliano Procida <gprocida@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38b487e0-4d72-4a87-8fc4-c13b4fb35feb@t-8ch.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@google.c=
-om> wrote:
->
-> When writing symtypes information, we iterate through the entire hash
-> table containing type expansions. The key order varies unpredictably
-> as new entries are added, making it harder to compare symtypes between
-> builds.
->
-> Resolve this by sorting the type expansions by name before output.
->
-> Signed-off-by: Giuliano Procida <gprocida@google.com>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
->
-> [Adjusted the first line of the description. Added reviewer tags.
->  Added missing CC to linux-modules.]
->
-> diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.=
-c
-> index 7bd459ea6c59..51c1471e8684 100644
-> --- a/scripts/gendwarfksyms/types.c
-> +++ b/scripts/gendwarfksyms/types.c
-> @@ -6,6 +6,8 @@
->  #define _GNU_SOURCE
->  #include <inttypes.h>
->  #include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
->  #include <zlib.h>
->
->  #include "gendwarfksyms.h"
-> @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct ty=
-pe_expansion **res)
->         return -1;
->  }
->
-> +static int cmp_expansion_name(const void *p1, const void *p2)
-> +{
-> +       struct type_expansion *const *e1 =3D p1;
-> +       struct type_expansion *const *e2 =3D p2;
-> +
-> +       return strcmp((*e1)->name, (*e2)->name);
-> +}
-> +
->  static void type_map_write(FILE *file)
->  {
->         struct type_expansion *e;
->         struct hlist_node *tmp;
-> +       struct type_expansion **es;
-> +       size_t count =3D 0;
-> +       size_t i =3D 0;
->
->         if (!file)
->                 return;
->
-> -       hash_for_each_safe(type_map, e, tmp, hash) {
-> -               checkp(fputs(e->name, file));
-> +       hash_for_each_safe(type_map, e, tmp, hash)
-> +               ++count;
-> +       es =3D xmalloc(count * sizeof(struct type_expansion *));
+On Sun, Jun 29, 2025 at 06:27:27PM +0200, Thomas Weißschuh wrote:
+> On 2025-06-29 18:19:08+0200, Willy Tarreau wrote:
+> > On Sun, Jun 29, 2025 at 06:14:01PM +0200, Thomas Weißschuh wrote:
+> > > On 2025-06-29 18:08:23+0200, Willy Tarreau wrote:
+> > > > On Sun, Jun 29, 2025 at 05:54:02PM +0200, Thomas Weißschuh wrote:
+> > > > > I saw the same issue, but only because of the changes to types.h.
+> > > > > And these should not be necessary in the first place.
+> > > > 
+> > > > You mean fd_set definition ? It's solely a matter of includes ordering
+> > > > in fact, since it depends on FD_SETSIZE.
+> > > 
+> > > No, I mean the '#include "sys/select.h"' in "types.h".
+> > 
+> > I had already dropped it as well.
+> 
+> Hm, then I'm not sure where it commes from.
 
-Just a nit:
+I noticed that you included linux/unistd.h from sys/select.h, which I
+didn't have, maybe it plays a role as well.
 
-           es =3D xmalloc(count * sizeof(*es));
+> > > That breaks the dependency order, as it pulls in all kinds of other
+> > > stuff into the beginning of "types.h" which themselves depend on
+> > > definitions of "types.h".
+> > 
+> > It was not just this. I'm pretty sure that what unbroke it for you is
+> > keeping fd_set in types.h.
+> 
+> But I *did* move fd_set to sys/select.h.
 
-is better?
+Sorry then, I just didn't notice it while trying to comapre the
+differences.
 
-> +       hash_for_each_safe(type_map, e, tmp, hash)
-> +               es[i++] =3D e;
-> +
-> +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_n=
-ame);
+> > > > > The below works nicely for me:
+> > > > 
+> > > > OK. Do you prefer that we take that one or just a stub ? I'm personally
+> > > > fine with both.
+> > > 
+> > > I prefer moving the code.
+> > 
+> > OK. Do you want me to merge your patch or will you take care of it ?
+> 
+> As you'll resubmit your series anyways, please pick up my proposal.
 
-qsort(es, count, sizeof(*es), cmp_expansion_name);
-
-
-
-> +
-> +       for (i =3D 0; i < count; ++i) {
-> +               checkp(fputs(es[i]->name, file));
->                 checkp(fputs(" ", file));
-> -               type_list_write(&e->expanded, file);
-> +               type_list_write(&es[i]->expanded, file);
->                 checkp(fputs("\n", file));
->         }
-> +
-> +       free(es);
->  }
->
->  static void type_map_free(void)
-> --
-> 2.50.0.714.g196bf9f422-goog
->
->
-
-
---
-Best Regards
-Masahiro Yamada
+OK will do that. Thanks.
+willy
