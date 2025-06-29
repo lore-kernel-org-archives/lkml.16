@@ -1,132 +1,112 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0827F22FDE6
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B7E221557;
+	Sun, 29 Jun 2025 15:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751210525; cv=none; b=addnr8uOsZCHHB2mRmioBWXAshx5cjTj8g0zsBSqBRax3HUUFKBLH5mC8hYGXx4h48etKdmQBYVGBZ3+8ILDLgfjdlRFXTWZLBVI1mzSaoX+94UnIkV89evFI/1LZwv04YYU3RUAcOInI2xRnx+C4z5Fl9ie+oeBj+9DnbGS9HE=
+	t=1751210765; cv=none; b=FtgUGnfwdHSHV+poD53JXU2y8u3dEHKr4xlfL6/417R5MI0KpYukFQPivVLSnIepRYIdJA/TUJp/EWWN2E8dr5mYVyaD0ZK+2kltpqWTB20rnprgjuKCR3a4wstGpbJjQtH/CibK1M18ukMh+/pMggih0wfejncJ9mhL9DEKA+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751210525; c=relaxed/simple;
-	bh=2oYswlF9AhHrpgfKj4RUAztQaAUMBpUTsfST+k5C06Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:Cc:To:
-	 References:In-Reply-To; b=uzU3QfCqi+OjNSl1pjmk+Z8zg/cBEln4xhH1zTkPzfNDoURAZHdzmOyhIhgc37Elg43Cm2YHkc1GaYroTjjhgoMgjDE9dMWlxbbYqIBkn2PnOfv2HVW+l4H+lj+oDz0e4bJN8deMZttHADh4Q13h/AFmOP5wB+q7fMAoCl4O0AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=lwQ6TVbB; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1751210765; c=relaxed/simple;
+	bh=jYa4yy1eUTCEHK+GRIuumkOOMyvuL1Ia6Fuqs5Z6JDY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vxn+by7TLOTn6Hp6TCkclRFmXXbpCKT2nyPAoxnKNb6UR2NIJd0sDecq9h1dfNTNxi+f/IOqAv0+DsZpG2vLDXDqayLwfTQ8neOdV2tlsDn+KZN3RJRZE/kK+btrMsJ+HugaUoqdk7eD/c24L/aPdoFR/gLbJV4lRWyMjxAVae4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pf7rvEyw; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="lwQ6TVbB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pf7rvEyw"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so1164817a12.1;
+        Sun, 29 Jun 2025 08:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751210763; x=1751815563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JwVeA+WOAMtyYWZDoZNMNb7IdTNR0sVbUz49bS6Ix/c=;
+        b=Pf7rvEywicqMC3/tO+mBiYhoY/rD7W+cessP3exG2PLlarcgb6szSXgbG0drlM4hls
+         60goTq3r4AqX7PBVG2DcZgMZVBdK49e9qKgppcJwQF9fsGg9c2s41I5GIZ2dINlsoRkS
+         RHRkcauhxQKg0apa//PfTDOFf4WZwo9QH1gW9ZyDSZOgvsbPIeAsI/hBlAmeNTfO6ifz
+         O+g55BTQLMpuqnHeHmc0U4Wf/q7EcopU0VSF9WgzIRzhrz9M2xeKj3cwfZUFW26VyL8M
+         z1cg/plImiHUa8kjaKc/3mpCRz+5Ke0yUfOrQfRIhA29Htj7Z8CzI93hqWEVuWtt27Jn
+         T2fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751210763; x=1751815563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JwVeA+WOAMtyYWZDoZNMNb7IdTNR0sVbUz49bS6Ix/c=;
+        b=mt4MwImesAYS2lPRzAOFX/Y6HUIe8NNja95mftysoGEU52zNhvWlbmu/g57zzyvlMO
+         42ufyt8yGBMGMtY8hho8M6ZvaLqAhBeM/wsz+q108WYNIDvaLrGqauodAlL1CnJYtLbk
+         VMUc5HkfhzLVGFtvf37G7PVJ1vLsB2jxb20ZZzvn8drEmlogDZ9qouW/fBFxTDparEUW
+         gzXn0c1s6mnBS+oT1rchqsazTZttQqR219f22a+c37SOnKSSoXSFGI0/Fclky7yEuzpQ
+         CIn9dsD5tn/wiEmeJy3TCJftMBRMJNNdYeV2ayaAOXQPuXQic+FOBDHlVhmxYDDhDqkE
+         UI7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVNMxS7WDzFyS51dnOZdSlfxZ8TQ+DC2izIfyt4iOxDGWAizdjrsK2egJJDBuuBG+A73A/EAm0lGbhQjjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvrbxSerZzDJ9v6XY9hoPavx9NGHQS/3KBm4lUxdsne1FulrOm
+	IdlooPLOvAECqeUzDCJdBTn6OHseKNOXs9i8DE2vYpsFARrBxRO674RBB83Agu5vLsk=
+X-Gm-Gg: ASbGncvY3hoLrJJ+0gIRtx/nekJ9Qx5soL7soz+bAOhFodLc8OvKgm4/+wQkC3945nm
+	kfEq/W5uwkpwIqmK3uEbSYp6dVWDvzrNX6H/mB5JB8NJcoPGr1LMP7gcqM0KM5buyDgC9egesDc
+	wxtqPfYmK25Go61HX4gYI005BHpjy2m1nw6fVD/ejIQOssT4r8fmOYerDJ9ehE2kUrOMMmiOeMb
+	jvZ2nInrkTF550P6UGmu2jFmzvrbLh3R65Ni06Y+bDImmCf4kOPrNUWDTCFT9zP8KX/atILWcux
+	6IgZwY556rspJc6y44mGu2uCTX+7V4jojC4teT6N9OyYqcp3S977nqqz59ePhMz2Yv4PzBRtNFl
+	vslDyRYuBFXTT
+X-Google-Smtp-Source: AGHT+IFzILUQACTSX0RbTW9sMaapyjWR95QdQwhCbdI7QXSq7EpHHxoEpA42J2Bqs/ZeZVLVk+jqgA==
+X-Received: by 2002:a17:90a:d2ce:b0:312:1ae9:1533 with SMTP id 98e67ed59e1d1-318c911beaamr12417476a91.1.1751210762595;
+        Sun, 29 Jun 2025 08:26:02 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40d0:13a3:7a93:1d81:fc79:cbf8:87bb])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c1392233sm6877293a91.6.2025.06.29.08.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 08:26:02 -0700 (PDT)
+From: Krishna Ketan Rai <prafulrai522@gmail.com>
+To: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	Krishna Ketan Rai <prafulrai522@gmail.com>
+Subject: [PATCH] rust: helpers: sort includes alphabetically
+Date: Sun, 29 Jun 2025 20:55:32 +0530
+Message-ID: <20250629152533.889-1-prafulrai522@gmail.com>
+X-Mailer: git-send-email 2.41.0.windows.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751210519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CQig8DqKUDgYQc5TUxBurAmCLuuco1HaVKaFPcbDts0=;
-	b=lwQ6TVbB9kA4v8c+9fEI1MCHKrvlSlCdL2QanaMY1bJs5vKvNM8vHwVXFQJZKZMn+Q7+J+
-	VIja3RCvQjYFkgEGgGCVjMM4NNe23F70ba/iR/jZFItleEuPbDcGSGy7G1RiWR4DrLNs7Y
-	CXaeF0jiHkvfKHAGfmr3mGD1STZESGdWRQVSl3g++jhZf1ugQQYvlw+Tnqg1WvgBig7ub+
-	gqndaa8s/b+xxXCLRyrr80NYCl7ox8/g2Dwf79Rhb4t4UR8WRF8Ik6dQr66l8ogqD9P2Uy
-	cJbLEGG/k+VoDqBz0dUaQCfxHAeOhxY60In3k7di9kfQpgLH4JV3n/E9TW9TXA==
-Content-Type: multipart/signed;
- boundary=8b0b4523779c4da51aebb377aae00a4fbb05642b98251df13617b5a6d748;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Sun, 29 Jun 2025 17:21:42 +0200
-Message-Id: <DAZ4BALHEJ9M.10FO1U9IYP4WA@cknow.org>
-Subject: Re: [PATCH] rockchip/drm: vop2: make vp registers nonvolatile
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-Cc: <hjc@rock-chips.com>, <heiko@sntech.de>, <andy.yan@rock-chips.com>,
- <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
- <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
- <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-To: "Piotr Zalewski" <pZ010001011111@proton.me>
-References: <20250628180914.1177177-2-pZ010001011111@proton.me>
-In-Reply-To: <20250628180914.1177177-2-pZ010001011111@proton.me>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---8b0b4523779c4da51aebb377aae00a4fbb05642b98251df13617b5a6d748
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+The helper includes should be sorted alphabetically as indicated by the
+comment at the top of the file, but they were not. Sort them properly.
 
-Hi Piotr,
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
+Link: https://github.com/Rust-for-Linux/linux/issues/1174
+Signed-off-by: Krishna Ketan Rai <prafulrai522@gmail.com>
+---
+ rust/helpers/helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sat Jun 28, 2025 at 8:11 PM CEST, Piotr Zalewski wrote:
-> Make video port registers nonvolatile. As DSP_CTRL register is written
-> to twice due to gamma LUT enable bit which is set outside of the main
-> DSP_CTRL initialization within atomic_enable (for rk356x case it is also
-> necesarry to always disable gamma LUT before writing a new LUT) there is
-> a chance that DSP_CTRL value read-out in gamma LUT init/update code is
-> not the one which was written by the preceding DSP_CTRL initialization
-> code within atomic_enable. This might result in misconfigured DSP_CTRL
-> which leads to no visual output[1]. Since DSP_CTRL write takes effect
-> after VSYNC[1] the issue is not always present. When tested on Pinetab2
-> with kernel 6.14 it happenes only when DRM is compiled as a module[1].
-> In order to confirm that it is because of timing I inserted 18ms udelay
-> before vop2_crtc_atomic_try_set_gamma in atomic enable and compiled DRM
-> as module - this has also fixed the issue on Pinetab2.
->
-> [1] https://lore.kernel.org/linux-rockchip/562b38e5.a496.1975f09f983.Core=
-mail.andyshrk@163.com/
->
-> Reported-by: Diederik de Haas <didi.debian@cknow.org>
-> Closes: https://lore.kernel.org/linux-rockchip/DAEVDSTMWI1E.J454VZN0R9MA@=
-cknow.org/
-> Suggested-by: Andy Yan <andy.yan@rock-chips.com>
-> Signed-off-by: Piotr Zalewski <pZ010001011111@proton.me>
-> ---
->  drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/d=
-rm/rockchip/rockchip_drm_vop2.c
-> index d0f5fea15e21..241060cc24cb 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-> @@ -2589,12 +2589,13 @@ static int vop2_win_init(struct vop2 *vop2)
->  }
-> =20
->  /*
-> - * The window registers are only updated when config done is written.
-> - * Until that they read back the old value. As we read-modify-write
-> - * these registers mark them as non-volatile. This makes sure we read
-> - * the new values from the regmap register cache.
-> + * The window and video port registers are only updated when config
-> + * done is written. Until that they read back the old value. As we
-> + * read-modify-write these registers mark them as non-volatile. This
-> + * makes sure we read the new values from the regmap register cache.
->   */
->  static const struct regmap_range vop2_nonvolatile_range[] =3D {
-> +	regmap_reg_range(RK3568_VP0_CTRL_BASE, RK3588_VP3_CTRL_BASE+255),
->  	regmap_reg_range(0x1000, 0x23ff),
->  };
-> =20
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index b15b3cddad4e..d3867d09e356 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -29,9 +29,9 @@
+ #include "mm.c"
+ #include "mutex.c"
+ #include "page.c"
+-#include "platform.c"
+ #include "pci.c"
+ #include "pid_namespace.c"
++#include "platform.c"
+ #include "rbtree.c"
+ #include "rcu.c"
+ #include "refcount.c"
+-- 
+2.41.0.windows.3
 
-I built a 6.16-rc3 kernel with this patch and booted into it ... and it
-fixed the issue I reported \o/ Thus:
-
-Tested-by: Diederik de Haas <didi.debian@cknow.org>
-
-Thanks!
-
-Cheers,
-  Diederik
-
---8b0b4523779c4da51aebb377aae00a4fbb05642b98251df13617b5a6d748
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGFaCQAKCRDXblvOeH7b
-blnvAQDRa0zYQCz0TbHhkzDu2IbxQRVxIb6zmpUFwWz5jPwfLwD/T5yIvj+Cmn20
-1n04TWUawcOG/GyocXAfoaWpF07LOA0=
-=GYzV
------END PGP SIGNATURE-----
-
---8b0b4523779c4da51aebb377aae00a4fbb05642b98251df13617b5a6d748--
