@@ -1,114 +1,126 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB261F92A
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 10:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08B710A1F;
+	Sun, 29 Jun 2025 11:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751194274; cv=none; b=FjfsM3kdUwEMu89sNQznK+82jRP1TE5/xaKTpZowwoNk931BX6l67MTHGGMJ7TzgUGh0dZaRvLkers9aDBGv8of+pGwGRixu9BayruEu6QEojsHjMEH6Hi2xQiGSmyESp85ieAqKYSpSQJbRyBCrM2t6+M7pOaP3R1D0oWFqwCc=
+	t=1751196564; cv=none; b=CEIscjRPYA7glpfHGxHOuemXNXMZTKVxX4mKkwJkVPPkjZJvY3zunCGAfJaH3qZ751C4LmIIv+Qnl7ezrYIbuf6nfjK8j3c0vgF1GxTanR5sbJABYxGcqJwpeIeVGLv30jfHktbI243awvY1yM7qUPn5wTxd74o505mbtoWQU04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751194274; c=relaxed/simple;
-	bh=rUYSYfiO5NWyG6GJ6BqRO9d3+wlDxgQEDdY4uttUl9o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=l98QuoL+MLU8fT2k34uCosJugbdP0DrVFXQte6pxC5TZCUP2L8RpPSvemBPbnVC4fkhoRKMw1Se8X1tgFwgf1BPIVvW1A5HAxumfwzyLkrSLR+8SIh+N9lGrmt41AWtpqzzIy9MpFLg6LA3rsvc9GN878ZHARe+DdJhY06tiF74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55TAp25C053061;
-	Sun, 29 Jun 2025 19:51:02 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55TAp1mT053058
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 29 Jun 2025 19:51:01 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <ed888189-dad4-47e1-bfc8-4f2213eda32d@I-love.SAKURA.ne.jp>
-Date: Sun, 29 Jun 2025 19:51:00 +0900
+	s=arc-20240116; t=1751196564; c=relaxed/simple;
+	bh=Mp0ZQrvSfkXHIaP5jgz7YayUIfi2aH+uu2FQFAw4D1I=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JK/fsBZx+BOkwawRIm9s2L21TShJtUzSigeRgj+hGvZN9jIkrSBFzvLD9s2YwpoZL/PL30fWbsM7SENMMWCd4H3OE3n7jmdpxsGpWIq6cmEVWW/waDn2vwPGUNrnScmlkgeIQy83tk7CMsKtncjkweU0VSLc6lLMbRNDqv4iaVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FFkV0alo; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FFkV0alo"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751196550; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=Td91IaRHPLMg0S4S34rjLSxSTe+KTe00bq2/ozJgwkc=;
+	b=FFkV0aloih2gxDgBc+OBf/Fp49oPe6mgV9Pth16liNXVindwkrzBZMcE0duoQNJQC+e9nzycIfqvtl17WXkQsWyR6CZHd5RMqSN8WQXNgyJ/Ppn5k1driigB59e/WyASTGXWlMG0UR+qzD9PJ0uUSKIY0hszhM116B6ROqyz7P4=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WfwyPTY_1751196530 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 29 Jun 2025 19:29:05 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-doc@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org,  virtualization@lists.linux.dev,
+  linux-fsdevel@vger.kernel.org,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jonathan Corbet <corbet@lwn.net>,  Madhavan
+ Srinivasan <maddy@linux.ibm.com>,  Michael Ellerman <mpe@ellerman.id.au>,
+  Nicholas Piggin <npiggin@gmail.com>,  Christophe Leroy
+ <christophe.leroy@csgroup.eu>,  Jerrin Shaji George
+ <jerrin.shaji-george@broadcom.com>,  Arnd Bergmann <arnd@arndb.de>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  "Michael S. Tsirkin"
+ <mst@redhat.com>,  Jason Wang <jasowang@redhat.com>,  Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>,  Eugenio =?utf-8?Q?P=C3=A9rez?=
+ <eperezma@redhat.com>,
+  Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
+ <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,  Matthew Brost
+ <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,  Rakie
+ Kim <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,  Gregory Price
+ <gourry@gourry.net>,  Alistair Popple <apopple@nvidia.com>,  Lorenzo
+ Stoakes <lorenzo.stoakes@oracle.com>,  "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@suse.cz>,  Mike
+ Rapoport <rppt@kernel.org>,  Suren Baghdasaryan <surenb@google.com>,
+  Michal Hocko <mhocko@suse.com>,  Minchan Kim <minchan@kernel.org>,
+  Sergey Senozhatsky <senozhatsky@chromium.org>,  Brendan Jackman
+ <jackmanb@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Jason
+ Gunthorpe <jgg@ziepe.ca>,  John Hubbard <jhubbard@nvidia.com>,  Peter Xu
+ <peterx@redhat.com>,  Xu Xin <xu.xin16@zte.com.cn>,  Chengming Zhou
+ <chengming.zhou@linux.dev>,  Miaohe Lin <linmiaohe@huawei.com>,  Naoya
+ Horiguchi <nao.horiguchi@gmail.com>,  Oscar Salvador <osalvador@suse.de>,
+  Rik van Riel <riel@surriel.com>,  Harry Yoo <harry.yoo@oracle.com>,  Qi
+ Zheng <zhengqi.arch@bytedance.com>,  Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
+ isolate_movable_ops_page()
+In-Reply-To: <bef13481-5218-4732-831d-fe22d95184c1@redhat.com> (David
+	Hildenbrand's message of "Mon, 23 Jun 2025 17:33:15 +0200")
+References: <20250618174014.1168640-1-david@redhat.com>
+	<20250618174014.1168640-8-david@redhat.com>
+	<9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
+	<aFMH0TmoPylhkSjZ@casper.infradead.org>
+	<4D6D7321-CAEC-4D82-9354-4B9786C4D05E@nvidia.com>
+	<bef13481-5218-4732-831d-fe22d95184c1@redhat.com>
+Date: Sun, 29 Jun 2025 19:28:50 +0800
+Message-ID: <87h5zyrdl9.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [perf?] WARNING in perf_pending_task
-To: Baisheng Gao <baisheng.gao@unisoc.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
-Content-Language: en-US
-Cc: acme@kernel.org, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, irogers@google.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <685af60a.a00a0220.2e5631.0092.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav201.rs.sakura.ne.jp
-X-Virus-Status: clean
+Content-Type: text/plain; charset=ascii
 
-Hello.
+David Hildenbrand <david@redhat.com> writes:
 
-I think that the cause of this problem is commit 4f6fc7821283 ("perf: Fix sample vs do_exit()"), for
-syzbot found this problem in 5.15.186 and 6.1.142 where that was the only commit in kernel/events/ area
-which has been backported between v5.15.185...v5.15.186 and v6.1.141...v6.1.142 .
+> On 18.06.25 20:48, Zi Yan wrote:
+>> On 18 Jun 2025, at 14:39, Matthew Wilcox wrote:
+>> 
+>>> On Wed, Jun 18, 2025 at 02:14:15PM -0400, Zi Yan wrote:
+>>>> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+>>>>
+>>>>> ... and start moving back to per-page things that will absolutely not be
+>>>>> folio things in the future. Add documentation and a comment that the
+>>>>> remaining folio stuff (lock, refcount) will have to be reworked as well.
+>>>>>
+>>>>> While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and handle
+>>>>> it gracefully (relevant with further changes), and convert a
+>>>>> WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
+>>>>
+>>>> The reason is that there is no upstream code, which use movable_ops for
+>>>> folios? Is there any fundamental reason preventing movable_ops from
+>>>> being used on folios?
+>>>
+>>> folios either belong to a filesystem or they are anonymous memory, and
+>>> so either the filesystem knows how to migrate them (through its a_ops)
+>>> or the migration code knows how to handle anon folios directly.
+>
+> Right, migration of folios will be handled by migration core.
+>
+>> for device private pages, to support migrating >0 order anon or fs
+>> folios
+>> to device, how should we represent them for devices? if you think folio is
+>> only for anon and fs.
+>
+> I assume they are proper folios, so yes. Just like they are handled
+> today (-> folios)
+>
+> I was asking a related question at LSF/MM in Alistair's session: are
+> we sure these things will be folios even before they are assigned to a
+> filesystem? I recall the answer was "yes".
+>
+> So we don't (and will not) support movable_ops for folios.
 
-Please have a look on this change. Maybe we need to swap WARN_ON_ONCE() and PF_EXITING checks?
+Is it possible to use some device specific callbacks (DMA?) to copy
+from/to the device private folios (or pages) to/from the normal
+file/anon folios in the future?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1f746469fda5..5a3a1331311f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7204,18 +7204,18 @@ void perf_event_wakeup(struct perf_event *event)
- static void perf_sigtrap(struct perf_event *event)
- {
- 	/*
--	 * We'd expect this to only occur if the irq_work is delayed and either
--	 * ctx->task or current has changed in the meantime. This can be the
--	 * case on architectures that do not implement arch_irq_work_raise().
-+	 * Both perf_pending_task() and perf_pending_irq() can race with the
-+	 * task exiting.
- 	 */
--	if (WARN_ON_ONCE(event->ctx->task != current))
-+	if (current->flags & PF_EXITING)
- 		return;
- 
- 	/*
--	 * Both perf_pending_task() and perf_pending_irq() can race with the
--	 * task exiting.
-+	 * We'd expect this to only occur if the irq_work is delayed and either
-+	 * ctx->task or current has changed in the meantime. This can be the
-+	 * case on architectures that do not implement arch_irq_work_raise().
- 	 */
--	if (current->flags & PF_EXITING)
-+	if (WARN_ON_ONCE(event->ctx->task != current))
- 		return;
- 
- 	send_sig_perf((void __user *)event->pending_addr,
-
-On 2025/06/25 4:01, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    b67ec639010f Merge tag 'i2c-for-6.16-rc3' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17715b0c580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f15b0c580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1692ab0c580000
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b67ec639.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/3bcb2b262d02/vmlinux-b67ec639.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/f5d4477f1e2e/bzImage-b67ec639.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com
+---
+Best Regards,
+Huang, Ying
