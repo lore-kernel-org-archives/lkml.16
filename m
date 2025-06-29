@@ -1,108 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailgate01.uberspace.is (mailgate01.uberspace.is [95.143.172.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E5625;
-	Sun, 29 Jun 2025 00:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFD34A32
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 00:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.172.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751157210; cv=none; b=FmjoU6cemjXbbVIwBmIHDQdAlUC5nb6xN+4SwHFDISCJxXUN14iUX7I+yuEYOYy+rmZthAMOBJZlKqPQ1b/0krVUt2nFhZ8U62A/qM/yKNleGD34KkKRrzmqcXoxf653xD++Qw4Mq7jOYVFzMcryZfTKIvAHwhQOOqUJyC3GcXs=
+	t=1751157605; cv=none; b=NK0KbwsSNgQZlQLLVvcrtjq5mKTN+me0Qd6+TTjekXh6jvioE7s4Q38cKyRuh6SR4lc95fKIEmXPZvxeALsoqDTLtjhgkLjl6awJnTEXmNxX3exLQqj9N3q7v2v1tqr3o6+XWjFMytRt8zxkeshCsNRX4JEHrAbGvDJ786303g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751157210; c=relaxed/simple;
-	bh=AolaRGjJTaifs7f9V7/iIwPTII8Eu6lCuQv6L5dV754=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoML1cUfm72ni7qO09WQ8ghDg6gWs5a4v4qg65UOPbOKxycfNOkv245/SMo0UgelnTqKGh0X68xNpjg868vXDy8qnNjPc1sorcOl4QGcYl+iMyO6IWnCrljGDltyrtSwobr1dSEa0VnnGpiSJPG+hLnanQ/MMJP29/LZazbk6Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nM06v3hO; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751157605; c=relaxed/simple;
+	bh=QnHTevfYAc1Ghk0Aknd/fmYNxq8NR8a6sznBdkS3OKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ljTqxqauo1ORng7kBy5OovFux+C87mhHySkfPPIYKzzZybHKrLdVeKq86bAcbxcbFDUIiIPzaZPnKyMvw2YZ3tqRdNjpCu+zaB7NDRtZ0fcT0D8aIEkkFvUvGIqvbAqP5N8+MTiEEovqGeysGTx2pr0Ku8GvOV0HU0s/MpCy5C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=UnXSVCY7; arc=none smtp.client-ip=95.143.172.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nM06v3hO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751157209; x=1782693209;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AolaRGjJTaifs7f9V7/iIwPTII8Eu6lCuQv6L5dV754=;
-  b=nM06v3hOqnJFk2/N2cSyPH1bA+dAGAZNA+yOXsyvRKDjiFIBS4XBhhZq
-   R9GNGlREilgpBiV9E17lOXmjUBJULD6ft9G7WAJSupS45GCoduBuKEmqp
-   PNCgwPHIgu1zJXVx9vqq4UIuLY8eKeaasTh2RySxplBFmhGf+YOeF/j4r
-   CO16dwz+jKzWxm9xhP1NrN1Pu/yI+U1lUl5EOpBgNaDaN69mpNlvD/tvC
-   zcffnzGypT9iHFh+BgK7whhm7eiXAkAj4D7oX7ixvNUs6lkbEJY83ZbeE
-   ghZMPm8XDqqn0romCiXDK1tEaFc7T0QUkw41/DbK//cjGei3ZTn4PoX1g
-   Q==;
-X-CSE-ConnectionGUID: C8WyjYqVSqaobJlASn6VxQ==
-X-CSE-MsgGUID: LAU1jmPJSKmuCNsUkqx0wA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="53286975"
-X-IronPort-AV: E=Sophos;i="6.16,274,1744095600"; 
-   d="scan'208";a="53286975"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 17:33:28 -0700
-X-CSE-ConnectionGUID: XZi4Py13R+Ok+7qSxSkg8Q==
-X-CSE-MsgGUID: SiYl6Y9lSYOAL5Mz/TgZkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,274,1744095600"; 
-   d="scan'208";a="153598075"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 28 Jun 2025 17:33:25 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVfz0-000XXK-2l;
-	Sun, 29 Jun 2025 00:33:22 +0000
-Date: Sun, 29 Jun 2025 08:32:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Dragan Simic <dsimic@manjaro.org>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Johan Jonker <jbx6244@gmail.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>
-Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
- boards
-Message-ID: <202506290852.bWro2lBe-lkp@intel.com>
-References: <20250627152645.740981-3-didi.debian@cknow.org>
+	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="UnXSVCY7"
+Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
+	by mailgate01.uberspace.is (Postfix) with ESMTPS id EF6C360A07
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 02:39:53 +0200 (CEST)
+Received: (qmail 20283 invoked by uid 988); 29 Jun 2025 00:39:53 -0000
+Authentication-Results: phoenix.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sun, 29 Jun 2025 02:39:53 +0200
+From: Illia Ostapyshyn <illia@yshyn.com>
+To: linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Illia Ostapyshyn <illia@yshyn.com>
+Subject: [PATCH] scripts: gdb: vfs: Support external dentry names
+Date: Sun, 29 Jun 2025 02:38:11 +0200
+Message-ID: <20250629003811.2420418-1-illia@yshyn.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627152645.740981-3-didi.debian@cknow.org>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: -
+X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-2.99877) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -1.59877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=yshyn.com; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=QnHTevfYAc1Ghk0Aknd/fmYNxq8NR8a6sznBdkS3OKA=;
+	b=UnXSVCY7X0Rj+ELxqWIr5yBTGR0L/kbqcFusrllVLknh2UcQlCvfyZTrMuQq26zYn1/PFLV+a4
+	pjoUcTGSDmI43/MwR1fty5zBaU4nQnFzNV1XWFXlvD2KBU7DWPFDBioG7uo4cJmKOTJBKyLkW+x4
+	XJjmfrDuevDsJBwYUI/9sxc8tfarJDkKTWH6wczeeooNy+OH0usFMVlL8EZ4NezqM2gCp5cyjagP
+	qPfet5v9OZkJxTiSaa8YYjgSpHHZ9h9NDniXyqC3XQCz758abx8lE3V2+mbBWF/iCLBDw8VFVCPu
+	4+MmV69A3a63Kf/Xcd/DZYFmfEvfoJy+Ugqe5Ksg==
 
-Hi Diederik,
+d_shortname of struct dentry only reserves D_NAME_INLINE_LEN characters
+and contains garbage for longer names.  Use d_name instead, which always
+references the valid name.
 
-kernel test robot noticed the following build errors:
+Link: https://lore.kernel.org/all/20250525213709.878287-2-illia@yshyn.com/
+Fixes: 79300ac805b672a84b64 ("scripts/gdb: fix dentry_name() lookup")
+Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
+---
+ scripts/gdb/linux/vfs.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on next-20250627]
-[cannot apply to robh/for-next krzk/for-next krzk-dt/for-next linus/master v6.16-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/scripts/gdb/linux/vfs.py b/scripts/gdb/linux/vfs.py
+index b5fbb18ccb77..9e921b645a68 100644
+--- a/scripts/gdb/linux/vfs.py
++++ b/scripts/gdb/linux/vfs.py
+@@ -22,7 +22,7 @@ def dentry_name(d):
+     if parent == d or parent == 0:
+         return ""
+     p = dentry_name(d['d_parent']) + "/"
+-    return p + d['d_shortname']['string'].string()
++    return p + d['d_name']['name'].string()
+ 
+ class DentryName(gdb.Function):
+     """Return string of the full path of a dentry.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Diederik-de-Haas/arm64-dts-rockchip-Refactor-DSI-nodes-on-px30-boards/20250627-233300
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-patch link:    https://lore.kernel.org/r/20250627152645.740981-3-didi.debian%40cknow.org
-patch subject: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399 boards
-config: arm64-randconfig-002-20250629 (https://download.01.org/0day-ci/archive/20250629/202506290852.bWro2lBe-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250629/202506290852.bWro2lBe-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506290852.bWro2lBe-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso:75.1-6 syntax error
-   FATAL ERROR: Unable to parse input tree
-
+base-commit: dfba48a70cb68888efb494c9642502efe73614ed
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
