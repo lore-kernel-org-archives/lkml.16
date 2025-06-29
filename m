@@ -1,98 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9392823370A;
-	Sun, 29 Jun 2025 20:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ECB23C4FB;
+	Sun, 29 Jun 2025 20:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230158; cv=none; b=bqilxHi78R2olBRBOO5AHXuhCBcSRz6AudPWif+svMT97umnlv4Yjus5Q2cm4yAUIjyw7qLoUb4+mYRx4GeXYA9+FkeYMEZ27FiWLEAPpLYVhsugVt+BFG7+wfGIhYs19RnTpDQs5wKujoM3t70Z1DKWx8hri7ddriBf7EPnavA=
+	t=1751230311; cv=none; b=E26dAC4wlc5hNcnX6Gu94XNEGCH2xDARLaiueF8LiuQ/O6OFS+nXZuA3x4WnH5f38lrINa5qqCwsKspmFj7JPB6ecA09mdLqVkFPU0ato7HI/V3IrvQhyZy65dJvbfVMiOiA81gRcuiJL/5cWEOzCFCC3CbA9OZx2GXQXYaWPsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230158; c=relaxed/simple;
-	bh=XUP8lKIddKhAygDomeQIMUIjsYMoEKXPeWmno3HafKE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b4HG9m3pEpQQ9iia1eiY3Jy6RmdaAnRMtGxyGQpCFxkkLNFG+AqZbrFPvGxzUTXtf0pbJYkpwnPYYn9P7Y8zk3D3RCORX88Dsf5vdX8MjQmHNMEdpjrYL+0VMT5qhyt0xbTIODbphDJTaIA139k1/IrbHLEDiLzpHBTrpU8xEPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcizsm76; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751230311; c=relaxed/simple;
+	bh=vZx8lnd78OyAsE8ViQurrPrYJlyjslv3QwebfJkZ604=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y17KwoC1nxzKE0ZEtpfrCCVpTXdX2AmuBbK9qCT2xgNV6suAyD+JC85hPd9b1F4xlT4L4/J9W2kbSNy9tN10ACxunY//eoEtPg88jfnoeHEaIU7RNoW0QVIqbpjQDFzqMB8m6x9fRXrF41Eq8c+JBUmN3GfMHA3j6ZATUSfBu+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVyTrzRn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcizsm76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01386C4CEEB;
-	Sun, 29 Jun 2025 20:49:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVyTrzRn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095C6C4CEEF;
+	Sun, 29 Jun 2025 20:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751230157;
-	bh=XUP8lKIddKhAygDomeQIMUIjsYMoEKXPeWmno3HafKE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bcizsm76+XFW+2WXfnx4wgPXGwPvmvZRg0HKUj/aIbI6oh2PYfuRoZiWdBR0temqu
-	 Ll51Lw7VzehYKidIL19nhQVMwY0Py66m+6TQ0HpdXOnOiUegArrdTn/Z2DY5UVHe7Q
-	 wYjCn0eKQWvy9uM/pyukXLANGuTvwZuMKDlP57o1GE5T0s/5cHGfQ3qAi+MKnsszLS
-	 5AlKfBHriydEIsRnH5czP52qqg1VBMxzdE9sQ7m2NFZg9yK2fKiGcUFhAL1nfE4F84
-	 iZHzPK37hob/Pjnn6EUz6rSYcASW5S7ymn+gNHaLz3geOt6YFlUmdj0eXTGX9Wy6mI
-	 ZWu6jznJ8kYeg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	stable@vger.kernel.org,
-	#,
-	6.14.x
-Subject: [PATCH] mm/damon/core: handle damon_call_control as normal under kdmond deactivation
-Date: Sun, 29 Jun 2025 13:49:14 -0700
-Message-Id: <20250629204914.54114-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1751230311;
+	bh=vZx8lnd78OyAsE8ViQurrPrYJlyjslv3QwebfJkZ604=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WVyTrzRnwKLGtXvLfB2oq/DBgHLZzRG42mZUKsYkO8M9qfgDmZTTEOS8wbo68J8Fd
+	 iC4lvXsVcgL+tU++5SQLlprnSZtSYY7aRJMYskCsPlIsGKDv9omb1ic1MnpzkGsIs3
+	 +FhBeVuWTArOj/ZXhB1vaPpoRCi8k/a/QjoGfICREsPu8lnj9W74y3fnYG8zWlvdTE
+	 Vz/GNNEfiQlbHftPL848Lbqfj/h4CgQTNcvF52aY9vb5k70RooWTP6QkNKbZ5es2o/
+	 ffquEEYzLOFzZIGaBJleqMhMDbAdNJUJtk34LlfIkj4SPFRCFALL6c32vk4IE8e2ba
+	 AUtIefAZwcPyQ==
+Received: by pali.im (Postfix)
+	id CAA10BEF; Sun, 29 Jun 2025 22:51:48 +0200 (CEST)
+Date: Sun, 29 Jun 2025 22:51:48 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com,
+	jay_lee@pixart.com, zhoubinbin@loongson.cn,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	Vishnu Sankar <vsankar@lenovo.com>
+Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint
+ Doubletap handling
+Message-ID: <20250629205148.l2etpceayuzmhzph@pali>
+References: <20250620004209.28250-1-vishnuocv@gmail.com>
+ <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
+ <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
+User-Agent: NeoMutt/20180716
 
-DAMON sysfs interface internally uses damon_call() to update DAMON
-parameters as users requested, online.  However, DAMON core cancels any
-damon_call() requests when it is deactivated by DAMOS watermarks.
+On Monday 30 June 2025 05:42:45 Mark Pearson wrote:
+> Hi Dmitry,
+> 
+> On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
+> > Hi Vishnu,
+> >
+> > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
+> >> Newer ThinkPads have a doubletap feature that needs to be turned
+> >> ON/OFF via the trackpoint registers.
+> >> Systems released from 2023 have doubletap disabled by default and
+> >> need the feature enabling to be useful.
+> >> 
+> >> This patch introduces support for exposing and controlling the
+> >> trackpoint doubletap feature via a sysfs attribute.
+> >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
+> >> This can be toggled by an "enable" or a "disable".
+> >> 
+> >> With this implemented we can remove the masking of events, and rely on
+> >> HW control instead, when the feature is disabled.
+> >> 
+> >> Note - Early Thinkpads (pre 2015) used the same register for hysteris
+> >> control, Check the FW IDs to make sure these are not affected.
+> >> 
+> >> trackpoint.h is moved to linux/input/.
+> >
+> > No, please keep everything private to trackpoint.c and do not involve
+> > thinkpad_acpi driver. By doing so you are introducing unwanted
+> > dependencies (for both module loading, driver initialization, and
+> > operation) and unsafe use of non-owned pointers/dangling pointers, etc.
+> >
+> 
+> Do you have recommendations on how to handle this case then?
+> 
+> This is a Thinkpad specific feature and hence the logic for involving thinkpad_acpi. There are Thinkpad hotkeys that will enable/disable the trackpoint doubletap feature - so there is some linkage. I'm not sure how to avoid that.
+> 
+> Is there a cleaner way to do this that you'd recommend we look at using? It's a feature (albeit a minor one) on the laptops that we'd like to make available to Linux users.
+> 
+> Mark
 
-As a result, users cannot change DAMON parameters online while DAMON is
-deactivated.  Note that users can turn DAMON off and on with different
-watermarks to work around.  Since deactivated DAMON is nearly same to
-stopped DAMON, the work around should have no big problem.  Anyway, a
-bug is a bug.
-
-There is no real good reason to cancel the damon_call() request under
-DAMOS deactivation.  Fix it by simply handling the request as normal,
-rather than cancelling under the situation.
-
-Fixes: 42b7491af14c ("mm/damon/core: introduce damon_call()")
-Cc: stable@vger.kernel.org	# 6.14.x
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- mm/damon/core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index b217e0120e09..bc2e58c1222d 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -2355,9 +2355,8 @@ static void kdamond_usleep(unsigned long usecs)
-  *
-  * If there is a &struct damon_call_control request that registered via
-  * &damon_call() on @ctx, do or cancel the invocation of the function depending
-- * on @cancel.  @cancel is set when the kdamond is deactivated by DAMOS
-- * watermarks, or the kdamond is already out of the main loop and therefore
-- * will be terminated.
-+ * on @cancel.  @cancel is set when the kdamond is already out of the main loop
-+ * and therefore will be terminated.
-  */
- static void kdamond_call(struct damon_ctx *ctx, bool cancel)
- {
-@@ -2405,7 +2404,7 @@ static int kdamond_wait_activation(struct damon_ctx *ctx)
- 		if (ctx->callback.after_wmarks_check &&
- 				ctx->callback.after_wmarks_check(ctx))
- 			break;
--		kdamond_call(ctx, true);
-+		kdamond_call(ctx, false);
- 		damos_walk_cancel(ctx);
- 	}
- 	return -EBUSY;
-
-base-commit: 8f6082b6e60e05f9bcd5c39b19ede995a8975283
--- 
-2.39.5
+Hello, I do not know what is doubletap and patch description does not
+explain it. But for laptop / mouse interface, I'm just giving example
+that dell-laptop.c for some particular laptop can enable/disable
+touchpad led and uses PS/2 interface for it. See touchpad_led_init().
+I do not know if it is ideal or preferred solution, just writing to let
+you know, maybe it can be useful.
