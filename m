@@ -1,135 +1,121 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0538728FD
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 01:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693C179C4
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 01:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751161347; cv=none; b=MZt0apkIqqISgyLLW/gtMHIW2x1pnp8bF9kNJB5dZlMYQY9P8DLha2pEXv1FLbb8aQwgFmkot/ErSWaC8ASCWExh+CMP4FNokMu0DxX44jCjpPoh3G2dPgCZrM+7pAwFKu4sWq6jyG0uWbaLDveE0ojs/aoqX01FY7jSWxzfnX4=
+	t=1751161678; cv=none; b=TMWOU/2txOhEdjpr1YPsL2yRICK0lun0lBYgPg4mgufRUxddgHy2krK+JA45vyI9WQqyc9EDtCCj32yvo8tldCCVRDF89/TVMKHQLfh9X418/i9RgS65ri+zpWEOK8eoICgrU9vDYUR2aAu6TtqsTg//LMELmpIjgEsTXRd3GFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751161347; c=relaxed/simple;
-	bh=oguTD5d+SzfqkERduYUonzJQRVRzFufZIUOp/nVUstE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J2MyjkfxyZJOjIumRMHXg89EWap5MBJcqFagx8wVYkO/u4TOvUwHAalORrpbAYiwP1tGU83nVwYIzVzHBECDiXBnGBkrgwpxa9kdUrpFz5NsebPW6NC7J18drAvO0JiY2PfLdIDrjzpVo95vNHXFg2SQTO4M3B+VXdgKDcttkK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=Ko+asv+J; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	s=arc-20240116; t=1751161678; c=relaxed/simple;
+	bh=Z1dW7783ckCRwHFGZBVJ38YKD/g6xhZ4LUD6nmffePo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEK0eQ88ovUfz0ZUB/ytzXe57s/ax29vFPtTcGNY8dvX/h1/Day55bniFKLH5R9MstDtK+Myn9kedKvixwoeACS5KPwXu1DP3Hhm7wvP2AcfFYjoEXfi7nYoW4Blq10/zoDmY72qOFWH494PP6v5aSUxwHYyBeBHoutHWtwXwxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=HpODEQVQ; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="Ko+asv+J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=HwwWF9GbS2mUvKE0sfHwsiiGHB7p0vJM2njHQCOlwQo=; b=Ko+asv+JGufMfVbRy6LM5tIvHD
-	9INHe4ikytGO7h57p/mXYrUbh+tNnc6l8MPCWbQ8KeDPGdRFHajMo3Wpt21ZvdM/QZI8XNNlMUp1R
-	PQ0c6SiH147my56+7Aa+M3+LQeSGzOARDiJGkQ2/Xboioi0RyJA8a3KKK6mrg4ymoJ9AU4AdPF6Ie
-	raWkUxIyVxBBen4N+ixxnj6zttqc7HarHON2aovuh+ncivHnL/nqcS57+KQCZ7RCG3MhGivcbkCn6
-	Pk/z86cgxHIrzJ37LAYekU9xbhv9CdprvbNbw1RK7w+VhYdRwWHHMOb8+jeyViRMdDG1+6cwLPMBx
-	uezreCjw==;
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1uVgsB-000000006dB-0ZRd;
-	Sat, 28 Jun 2025 21:30:23 -0400
-Message-ID: <7997802c151577c5e681813e121ded3e0d84d3ec.camel@surriel.com>
-Subject: Re: [RFC PATCH v4 6/8] x86/mm: use RAR for kernel TLB flushes
-From: Rik van Riel <riel@surriel.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- bp@alien8.de, 	x86@kernel.org, nadav.amit@gmail.com, seanjc@google.com,
- tglx@linutronix.de, 	mingo@kernel.org, Rik van Riel <riel@fb.com>
-Date: Sat, 28 Jun 2025 21:30:23 -0400
-In-Reply-To: <um6emftj5lmto2ivddovvxl7lz4uvwduuwq725a3n7qykepmtc@cq6y4yez2hcv>
-References: <20250619200442.1694583-1-riel@surriel.com>
-	 <20250619200442.1694583-7-riel@surriel.com>
-	 <um6emftj5lmto2ivddovvxl7lz4uvwduuwq725a3n7qykepmtc@cq6y4yez2hcv>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="HpODEQVQ"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 95452240104
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 03:47:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.net;
+	s=1984.ea087b; t=1751161669;
+	bh=wdTPHBtu+qNmk5C2Bn0zJ90/8NEFjhlUIq+Nt2kOfDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=HpODEQVQ0LmdwqtslxkJoEOlGy0tEDdruH9DTSixJXJHAD7pJJe2j2BA7g/k7gBdg
+	 5sS15ZPnQW/bE8w6G6iejwMKHlgE6VIvgZyNnWvq3pH9ysgJubR9vjyJse8UbnEB6D
+	 IZRyhtc7IaH/LOhLUbwKvXEHYEKpdsyP7Q2YMglImdJLpEeI3O/YonQ9V24Z+qc4DN
+	 lr3VNmHEZvQDhJPvjkunnP1h7FaCkaEOHza3o60faH6UKMqhynBhKTPqyisyb/gysc
+	 tQxdyCbTyctdfb5cyvqFt9g8DB18Ek8+AENS6Rzn+VcjX5FuVft+BQuyD4hgijkTLo
+	 qjHp+wmocx9NR1/yHtyR1CD/tkhfEBZNalj+Mekaw/6r+fftnn5NVUUImbworlC51O
+	 XNwmEnrFFfsf9L0Yn++JBsSEKLU7x+iBqHr0ydERCTfrSOumg5nxVkTv3SdnI3GzTu
+	 eTziKcIP6MyTK2gkLOyvr7C9bP4oqhsmSY8K/OFrT9SM8v7u2rN
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4bVBxv5VVNz6tsf;
+	Sun, 29 Jun 2025 03:47:47 +0200 (CEST)
+Date: Sun, 29 Jun 2025 01:47:47 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Crystal Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert
+ fsl,mpic-msi to YAML
+Message-ID: <aGCbQ100CFJz6BjK@probook>
+References: <20250611-msipic-yaml-v2-1-f2e174c48802@posteo.net>
+ <20250625201232.GA2128052-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250625201232.GA2128052-robh@kernel.org>
 
-On Fri, 2025-06-27 at 16:27 +0300, Kirill A. Shutemov wrote:
-> On Thu, Jun 19, 2025 at 04:03:58PM -0400, Rik van Riel wrote:
-> > From: Rik van Riel <riel@fb.com>
-> >=20
-> > Use Intel RAR for kernel TLB flushes, when enabled.
-> >=20
-> > Pass in PCID 0 to smp_call_rar_many() to flush the specified
-> > addresses,
-> > regardless of which PCID they might be cached under in any
-> > destination CPU.
-> >=20
-> > Signed-off-by: Rik van Riel <riel@surriel.com>
+On Wed, Jun 25, 2025 at 03:12:32PM -0500, Rob Herring wrote:
+> On Wed, Jun 11, 2025 at 11:42:09AM +0200, J. Neuschäfer wrote:
+> > As part of a larger effort to bring various PowerPC-related bindings
+> > into the YAML world, this patch converts msi-pic.txt to YAML and moves
+> > it into the bindings/interrupt-controller/ directory. The conversion may
+> > necessarily be a bit hard to read because the binding is quite verbose.
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > > ---
-> > =C2=A0arch/x86/mm/tlb.c | 38 ++++++++++++++++++++++++++++++++++++++
-> > =C2=A01 file changed, 38 insertions(+)
-> >=20
-> > diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> > index 39f80111e6f1..8931f7029d6c 100644
-> > --- a/arch/x86/mm/tlb.c
-> > +++ b/arch/x86/mm/tlb.c
-> > @@ -21,6 +21,7 @@
-> > =C2=A0#include <asm/apic.h>
-> > =C2=A0#include <asm/msr.h>
-> > =C2=A0#include <asm/perf_event.h>
-> > +#include <asm/rar.h>
-> > =C2=A0#include <asm/tlb.h>
-> > =C2=A0
-> > =C2=A0#include "mm_internal.h"
-> > @@ -1468,6 +1469,18 @@ static void do_flush_tlb_all(void *info)
-> > =C2=A0	__flush_tlb_all();
-> > =C2=A0}
-> > =C2=A0
-> > +static void rar_full_flush(const cpumask_t *cpumask)
-> > +{
-> > +	guard(preempt)();
-> > +	smp_call_rar_many(cpumask, 0, 0, TLB_FLUSH_ALL);
-> > +	invpcid_flush_all();
->=20
-> I don't follow why do we need to call invpcid_flush_all() here in
-> addition
-> to smp_call_rar_many(). Hm?
->=20
-We shouldn't have to.
+[...]
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 16
+[...]
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +anyOf:
+> 
+> allOf
 
-Once we figure out why the RAR flush isn't
-working right (despite the RAR transitioning
-from RAR_PENDING to RAR_SUCCESS) we should be
-able to get rid of this call.
+AFAIUI, at the current moment it doesn't make a difference because there
+is only one item under the anyOf/allOf, but for robustness allOf looks
+better.
 
+> 
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,mpic-msi-v4.3
+> > +              - fsl,vmpic-msi-v4.3
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          maxItems: 16
+> 
+> Don't you mean 'minItems: 16'? Otherwise, this schema has no effect.
 
---=20
-All Rights Reversed.
+Indeed.
+
+> 
+> I can fix these up when applying.
+
+Please do. Thank you!
+
+J. Neuschäfer
+
+> 
+> > +          description:
+> > +            Version 4.3 implies that there are 16 shared interrupts, and they
+> > +            are configured through MSIIR1.
