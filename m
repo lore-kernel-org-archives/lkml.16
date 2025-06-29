@@ -1,44 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1180117A30F;
-	Sun, 29 Jun 2025 10:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F13290F;
+	Sun, 29 Jun 2025 10:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751191279; cv=none; b=l801pOpUhnl0hfzeu0oVugejZf12CBdo6JTZ8VwKx6i/ugcUHkbQFw2Osc6tGUvqmqC37I8vm8LdAhFG0fX0ntMxYej3HKP4qG0Nic+GCeHK27XZZUiGP3j+efCEElnOX+fOoH2AO+AttopIzWfqDbinoDGcbT+m6wBlznYuGls=
+	t=1751191428; cv=none; b=t7sEbUmoTmXQHxXm9TaiXYxRkEYH6ZhuqZLi87xb6ZPNcA6lEU5gi20gNa0TR39y5zQQ37qaPgWFWRCieoVyhLIxDvc8uSmgT6USJS0VhhEUVoVG6r6XCgkBGJ4dHkzIqZfgOvQNBk6Q70Qeqjthqhkx/9tze2nyIF2xp9EBTtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751191279; c=relaxed/simple;
-	bh=K7nid7pX0MchgdtwTmBOugLK+wyPztiQQ+cOV64xZJM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mVNFM5bucYDoMot9NZwVCArA0ihcTTU4hbhoWP4+BG7n2PgKz2gNLHwgIfgBOJerXELXtWi5cIRMKmq6ncYlpuUVENKAybEaPur1L+rBdNT/iMT+AdguKUXMbALmV9GAsLNA396c7Z11szG77If+Yv5RnIyO7ic4byS+PmhmLEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQjUOkTK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751191428; c=relaxed/simple;
+	bh=Kufurcy3kv6d6lbIKqCuZZPoftTwGTTowyf/MgdKHbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TnZ7mIsn1WzSTF9w6oZ16aL4Zhe4H33QYMZBd+Ce2jLVBSSSCEKbgyZ5AWCja0sHnWqgTwJ0oSOOL7pjQX5xsqjzehM2hZmirNrgZQ4DPXhuhJsrzBrSKyraC4MHjMk1wrEMXPCMyAeT+xeOvt00QLGGY1cgkI0LQB3BF3Wo8yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOC3vpun; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQjUOkTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E7CC4CEEB;
-	Sun, 29 Jun 2025 10:01:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOC3vpun"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE1CFC4CEEF;
+	Sun, 29 Jun 2025 10:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751191278;
-	bh=K7nid7pX0MchgdtwTmBOugLK+wyPztiQQ+cOV64xZJM=;
+	s=k20201202; t=1751191427;
+	bh=Kufurcy3kv6d6lbIKqCuZZPoftTwGTTowyf/MgdKHbI=;
 	h=From:To:Cc:Subject:Date:From;
-	b=cQjUOkTKt80zjHWs/9616cRbQVAIzS0CSZtyKxtV2ed2MiCMnY8mqzfyLyiiNx8SA
-	 FJg1U5CqoLxiMgjlBerRWaJD4k3MgJz1npTzly9NU0l4J7ixbwB9/cMlH8q8YIqTAu
-	 F2WR3CFGWdjdJBIGxBwID9ZiExMEr+yY2h7DuoOQwIsQ7s4RhWmeLwfgNP8fp91mzk
-	 Xb0bmoxiqTY9kT7ttefcxVjntZ1Z7C9QXyoMrXOe/0e0Bum9xD0mVyr+KM93UDp2OT
-	 CVArBQArCJLElbqFYBQgqBDYnJ01Cm67c49q6Tw+i+kp62GIlPUIXFJs3Z8yXa7lX0
-	 uCLO/3Re25jIQ==
+	b=OOC3vpunncVsCJldtj9dVlq4A/8iGzkZuVtu/S/Fy1hoo8VGwq9Jaa4nYGmt+oXbS
+	 r5lfD5tJdMpNb+cwTiXbdz88lquH1ExYl4q2d1iO5AkCeJpY8rPIywRm4/+PwYort7
+	 tQFAfUWYAnMiN5dIlpe3F6EF6F5lq8ZPzARXTtjl8V/WpjOWmHZx9LxLdmBAa/JpZ8
+	 XzPFloCf2ulul6jwzDsOtmd+w6lLl6+yJOyowG55qI5JsGZNTds5crHc2C7MYKmmjq
+	 2ozEjoT7062AX68scgfXXWsvbrRInNJipbIbLxkjDDm8SPdf6M8K7XSAF+iD1gyly+
+	 OVvQ6hx76b8Zw==
 From: Jisheng Zhang <jszhang@kernel.org>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+To: Minas Harutyunyan <hminas@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: add support for dwmac 5.20
-Date: Sun, 29 Jun 2025 17:44:25 +0800
-Message-ID: <20250629094425.718-1-jszhang@kernel.org>
+Subject: [PATCH] usb: dwc2: disable platform lowlevel hw resources during shutdown
+Date: Sun, 29 Jun 2025 17:46:55 +0800
+Message-ID: <20250629094655.747-1-jszhang@kernel.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,27 +42,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The dwmac 5.20 IP can be found on some synaptics SoCs. Add a
-compatibility flag, and extend coverage of the dwmac-generic driver
-for the 5.20 IP.
+On some SoC platforms, in shutdown stage, most components' power is cut
+off, but there's still power supply to the so called always-on
+domain, so if the dwc2's regulator is from the always-on domain, we
+need to explicitly disable it to save power.
+
+Disable platform lowlevel hw resources such as phy, clock and
+regulators etc. in device shutdown hook to reduce non-necessary power
+consumption when the platform enters shutdown stage.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc2/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
-index b9218c07eb6b..cecce6ed9aa6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
-@@ -59,6 +59,7 @@ static const struct of_device_id dwmac_generic_match[] = {
- 	{ .compatible = "snps,dwmac-3.72a"},
- 	{ .compatible = "snps,dwmac-4.00"},
- 	{ .compatible = "snps,dwmac-4.10a"},
-+	{ .compatible = "snps,dwmac-5.20"},
- 	{ .compatible = "snps,dwmac"},
- 	{ .compatible = "snps,dwxgmac-2.10"},
- 	{ .compatible = "snps,dwxgmac"},
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 12b4dc07d08a..3f83ecc9fc23 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -371,6 +371,9 @@ static void dwc2_driver_shutdown(struct platform_device *dev)
+ 
+ 	dwc2_disable_global_interrupts(hsotg);
+ 	synchronize_irq(hsotg->irq);
++
++	if (hsotg->ll_hw_enabled)
++		dwc2_lowlevel_hw_disable(hsotg);
+ }
+ 
+ /**
 -- 
 2.49.0
 
