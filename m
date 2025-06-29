@@ -1,168 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA1023AB8F
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F163123FC49;
+	Sun, 29 Jun 2025 19:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751224304; cv=none; b=DdKavOF72RKdjZR1IA5VAvMhJvURR4a2/5/CJG0K7hD1YqjJBXD6SAOH9ALx/g3oeZCx3iAozu2+v7Dl+lBP1NcehI3uyz6Q9f995u6eKhGdCTPPc3kMCRLFLqeAFpz2IAbJcxTHyMXunlMopgGWACFn4xxV5BpwXT1or4MRLf4=
+	t=1751224307; cv=none; b=qYUHbk91f7wy1EFu75iGV9/Etw9cgUuRpQVCSanHsQ7n1Wt0lfHEiXGu6945WuPKGzLHmpIKx/vUXz1iA+rmVlgvGDvTUDbU1WcT1qCreHZH457AC3uZCiSAjB1bjtgYRk4FHp8DSYw7y2xCAmHto0IgyKKvGMEP85igGky6JFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751224304; c=relaxed/simple;
-	bh=cxhVL88UYY9eoBHveJkCfu3MWg2iQWKfvF46acfiZNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R+SY+zOYUEIOG+rrNm7k4OucNOPp00GBHvyR2DFY/+IoyCvO/En/LPYDX9DhRd6SyDLZSnKcKOjx8mpISUJoQuoyr8mljTTNA7qU8XfuuPBb1Ugr0JHzb9kVp6FrPt/WEpz/5cm8QYI3lsLfHS95p+FrscuXXrntKCd0tHXH1rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chABcNuK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751224307; c=relaxed/simple;
+	bh=KIuW9sjx4dcbvHL9RVmzBjBUM3fm9MxRJEUqHt3Why8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NLN0i/OYS9ab/5K14UpiVcuhRSOtu7G1vgUf4s5ai2bYIZIv92WSahbtetyTBGe0DiJ3QJNUo3QIIpC3uCoo3p2OHp03pgtx44vt+Drc9qxjz+dbK9kYYhIl92iYGN0MaLi5O/eM9XPtazSuST8kF0Hv0NPt3wU3dzu6lZrqJ8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5w2yU9V; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chABcNuK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751224301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rdlIinED39sNlV/HWbaiu4ODPYwGfLDzvxXi23N92/0=;
-	b=chABcNuK24n5EVJDjnGuxkadDVj7bPyX1e19T8eEkL556VA/6rJwxjBG2sVDqwa5s21nX4
-	K+noGjA8b7LlLRQEn3gYzCoE/ylFAgYTh1J2qVIdEk8w4hn0e3mIlBwTzSyZ/zh2rzynlZ
-	lsVulidDgNC8sFxsisu+54BPfbVMIqY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-355-BfzeVA0GN-Kq__uJd-R0RA-1; Sun,
- 29 Jun 2025 15:11:38 -0400
-X-MC-Unique: BfzeVA0GN-Kq__uJd-R0RA-1
-X-Mimecast-MFC-AGG-ID: BfzeVA0GN-Kq__uJd-R0RA_1751224295
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B058A18011DF;
-	Sun, 29 Jun 2025 19:11:35 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.45.224.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 202D9180045B;
-	Sun, 29 Jun 2025 19:11:28 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v12 05/14] dpll: zl3073x: Protect operations requiring multiple register accesses
-Date: Sun, 29 Jun 2025 21:10:40 +0200
-Message-ID: <20250629191049.64398-6-ivecera@redhat.com>
-In-Reply-To: <20250629191049.64398-1-ivecera@redhat.com>
-References: <20250629191049.64398-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5w2yU9V"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae36dc91dc7so233998466b.2;
+        Sun, 29 Jun 2025 12:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751224304; x=1751829104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KIuW9sjx4dcbvHL9RVmzBjBUM3fm9MxRJEUqHt3Why8=;
+        b=D5w2yU9VZJ1ZAooiVmtUHJ50gSCS2/wmDEVB8xkfWqPddcev9cyb/8ydYr6pz6Fl3S
+         ph+CpFWsDZzNKQDPdx57QRlgMYEL3QO8d7dcp8sRoXONVzTVvI3ZHJf0pqsKRHzzxPQj
+         3SLwJTJB9pI/xEKtNMp+bGCgeUMzzpp7SQV1tHK8Bm8ir+kaFr7gKeqIHy3bFeChW7GL
+         /Qqt0kNE82muR14qPfB8qJymg33ik/KoVo2O7iznj/CrkpTj83vo3VL8kVQ/DczpvfGN
+         U7mjMqnbScG9nZD+fgh0gNToTHAO1qeAfU5znYhqjIA0V167oD8BVUJ2vcOu94dUbpWl
+         /m3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751224304; x=1751829104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KIuW9sjx4dcbvHL9RVmzBjBUM3fm9MxRJEUqHt3Why8=;
+        b=PvwUceTFc9T+t2PjOUw7X770OBrZ0JlbV7FCyZ7MqjkZCfS42UblLKKxfm1pAwLD0A
+         qUmkCCRfhtySqeOqeWIMZ7MCRwthrNuyeVoRqaPjYGcxt0m9PG1EAOiv9c+QbIRCeLzC
+         siUFSfuIJ/2wla7c7OdrKIo61z2bAQHO+e+7k/62fb4BflE/Z6JFDzSHTkNc7GIcxXWu
+         pgYKmrQcNgFDHsrAZeExqOqcnwSdmLvwhQZvG6v3YsKOv17sMojtg59IqjhjISSAk2I3
+         57xY1MhDJugNDraV26SucFsTSSVxYxaWt+QusVf5+VM17F4dUuiLiNM57KZeM753umEf
+         66/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV571ZgLdo0YSfEpGh5PPXmH6Ryrv9wgKDHawUKe9/JfqUS5vAVJnMfgCQoQJrUeVqwT2og/m29LOkBYg4=@vger.kernel.org, AJvYcCWwCAWkGeaUltse4dmGb6EXozQEGWtuzvSBnvTT0aCreGh/BNVnAsJvB8NP/VXCLb1HFlJqOVf83/d+HtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQIGm8IRww/m63pSsxt1r7mf6S/ndGembkGyPqbFoCJvdm9/Sk
+	EJJBGpaQdYIRe9uNFXFvILB+Tunj5D3smaEaHjV8Fzk2RQVNWnducObacAt00Je9OlTHFDhUmqL
+	KcA5aPThYGxnEmVln2zuX9KTRIFLBj6c=
+X-Gm-Gg: ASbGncuaiTKBBTj32MwndlGaJjK1G3BMGnRZzpxaxg44fXI3qSpqBn4wUnMPg1BWiaf
+	mZeWIwlDRUdfEI2Kxx4va3igyCPe1YPHtDM/71z7v+2FcMyjVz5TFK5W9iBnWzc8cPyWeuFHO5e
+	zt4kmijl90n4nB8Qu852Thvcz00cHE5EVNDfu5qc1FkI8=
+X-Google-Smtp-Source: AGHT+IGe/ajxK31MAPrFTYR3q3cl77r0rWbJzrwAwVbOdmeARB/jCZaAJCpV0Yy/6WYPlbf+AudWc2QhY3x7eVnHktI=
+X-Received: by 2002:a17:907:1b22:b0:ae3:6744:3661 with SMTP id
+ a640c23a62f3a-ae36744387dmr617057066b.44.1751224303820; Sun, 29 Jun 2025
+ 12:11:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250629113050.58138-1-zaq14760@gmail.com> <092f5109-ca31-4949-bda8-7e0d946c3aa0@kernel.org>
+In-Reply-To: <092f5109-ca31-4949-bda8-7e0d946c3aa0@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 29 Jun 2025 22:11:07 +0300
+X-Gm-Features: Ac12FXyOA0o2IpCk1vTrAEEanA2XeDyWAwBQtiRP0ln3yoGv0i-yIsp9xk2rAb0
+Message-ID: <CAHp75VfoJ17a=3P3fXHa2mN00S+hdz-vRtLfjmsT7-+i2NfWEw@mail.gmail.com>
+Subject: Re: [PATCH v7] staging: media: atomisp: code style cleanup series
+To: Hans de Goede <hansg@kernel.org>
+Cc: LiangCheng Wang <zaq14760@gmail.com>, mchehab@kernel.org, sakari.ailus@linux.intel.com, 
+	andy@kernel.org, gregkh@linuxfoundation.org, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Registers located on page 10 and above are called mailbox-type
-registers. Each page represents a mailbox and is used to read from
-and write to configuration of a specific object (DPLL, output,
-reference or synth).
+On Sun, Jun 29, 2025 at 3:20=E2=80=AFPM Hans de Goede <hansg@kernel.org> wr=
+ote:
+> On 29-Jun-25 1:30 PM, LiangCheng Wang wrote:
 
-Each mailbox page contains a mask register, which selects an index of
-the target object to interact with and a semaphore register, which
-indicates the requested operation.
+...
 
-The remaining registers within the page are latch registers, which are
-populated by the firmware during read operations or by the driver prior
-to write operations.
+> > Changes in v7:
+> > - Split previous monolithic patch into multiple smaller patches
+> > - Applied clang-format to entire driver excluding i2c directory
+>
+> I took a quick look at just the clang-format patch and looking
+> at the bits of the diff which were not collapsed by github because
+> the changes are too big, it looks like the changes which clang-format
+> makes are useless and often make things worse, e.g. just looking
+> at the first diff which github shows for:
+>
+> https://github.com/lc-wang/linux/commit/8a3bbdba275e42dfcb0af2ddcc2f27463=
+bb316d2
+>
+> which is for drivers/staging/media/atomisp/include/hmm/hmm.h
+> then all of the changes are undesirable and unneeded.
+>
+> so the running of clang-format just seems to make things worse.
+>
+> I appreciate coding-style cleanups outside of the i2c dir,
+> but it looks like you need to do everything manually since
+> clang-format is just making a mess of things.
 
-Operations with these registers requires multiple register reads, writes
-and polls and all of them need to be done atomically.
+Yeah, that what I was afraid of. I don't know clang-format well
+enough, but it might be that tweaking existing .clang-format in the
+kernel can give something better.
 
-So add multiop_lock mutex to protect such operations and check the mutex
-is held by the caller when it's accessing registers from page 10 and
-above.
+> Also if you do manual code-style cleanups please do one
+> type of cleanup per patches, e.g. only fix indentation
+> using spaces instead of tabs and do so on groups of say
+> 10 files at a time to keep things reviewable.
 
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/dpll/zl3073x/core.c | 14 ++++++++++++++
- drivers/dpll/zl3073x/core.h |  3 +++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/dpll/zl3073x/core.c b/drivers/dpll/zl3073x/core.c
-index f43e463142435..7499934cf3116 100644
---- a/drivers/dpll/zl3073x/core.c
-+++ b/drivers/dpll/zl3073x/core.c
-@@ -128,6 +128,12 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_regmap_config, "ZL3073X");
- static bool
- zl3073x_check_reg(struct zl3073x_dev *zldev, unsigned int reg, size_t size)
- {
-+	/* Check that multiop lock is held when accessing registers
-+	 * from page 10 and above.
-+	 */
-+	if (ZL_REG_PAGE(reg) >= 10)
-+		lockdep_assert_held(&zldev->multiop_lock);
-+
- 	/* Check the index is in valid range for indexed register */
- 	if (ZL_REG_OFFSET(reg) > ZL_REG_MAX_OFFSET(reg)) {
- 		dev_err(zldev->dev, "Index out of range for reg 0x%04lx\n",
-@@ -543,6 +549,14 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
- 		FIELD_GET(GENMASK(15, 8), cfg_ver),
- 		FIELD_GET(GENMASK(7, 0), cfg_ver));
- 
-+	/* Initialize mutex for operations where multiple reads, writes
-+	 * and/or polls are required to be done atomically.
-+	 */
-+	rc = devm_mutex_init(zldev->dev, &zldev->multiop_lock);
-+	if (rc)
-+		return dev_err_probe(zldev->dev, rc,
-+				     "Failed to initialize mutex\n");
-+
- 	/* Register the device as devlink device */
- 	devlink = priv_to_devlink(zldev);
- 	devlink_register(devlink);
-diff --git a/drivers/dpll/zl3073x/core.h b/drivers/dpll/zl3073x/core.h
-index 9093d13d7fd52..88bcdd803614d 100644
---- a/drivers/dpll/zl3073x/core.h
-+++ b/drivers/dpll/zl3073x/core.h
-@@ -3,6 +3,7 @@
- #ifndef _ZL3073X_H
- #define _ZL3073X_H
- 
-+#include <linux/mutex.h>
- #include <linux/types.h>
- 
- struct device;
-@@ -12,10 +13,12 @@ struct regmap;
-  * struct zl3073x_dev - zl3073x device
-  * @dev: pointer to device
-  * @regmap: regmap to access device registers
-+ * @multiop_lock: to serialize multiple register operations
-  */
- struct zl3073x_dev {
- 	struct device		*dev;
- 	struct regmap		*regmap;
-+	struct mutex		multiop_lock;
- };
- 
- struct zl3073x_chip_info {
--- 
-2.49.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
