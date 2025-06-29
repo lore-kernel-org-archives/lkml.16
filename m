@@ -1,117 +1,65 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C256D288A8;
-	Sun, 29 Jun 2025 18:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB464A3C;
+	Sun, 29 Jun 2025 18:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751220361; cv=none; b=A7ZySk+Id606Q1RekTRG2DAGr3VJofTKs0sbBJdCWSydtLB+d4kpWcUF6mM/Am7zljtXiCajIZxzl3BA5Glhuq38smZWbw0KFaqdzYZxm5aY8GKK1HaiyE3SreTKQTl4Ev1Kysa6gISOyxAlfFKkvHDtrRo6bVhiavg6e/HjYZ0=
+	t=1751220650; cv=none; b=QaI2wD2NoMwWWtsMczy7NmBK35IkrZGmFGArkumz7hhLIyrhAIL3JE3bMtBLAgEjZfx4Qg8A4Cnc/HKuGgSLOrk94cLcDRHcstl+8buOLk0cvPC9A2oT1r0cH6C8MKoy5JiwczzXRT51Dg2hFW4R5EDqqU2tfRhXVX7Z/NLbzVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751220361; c=relaxed/simple;
-	bh=NFO9fezxtmyRyOB05VEoArPZF9fdeB6VZM7M3FD/zbY=;
+	s=arc-20240116; t=1751220650; c=relaxed/simple;
+	bh=rQ13VObp17dm8Lf0rGOz6vSrG3BrY0W2QeZG0NRfLTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XR/iK2t4aS3H9g0NIc//Z614lpqfukWKml8gQpYfn4iecoPdPlefMBtc6nIWi0jZlZk9ZZorXa5mpZRDE+C87QZq9JT53PWMLBHiFxfvydGU+RA+FNGr9k4BSxLr90M7fZNulMSoj+J6kdiznM0N5qcTR9Ww8erwyWVikjZ9n8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YuTicQfr; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=K4WEFl6+w0bIT4V8DEW579s4DTM3ia2zR1E1CE7eAX97smiPiCuCzg770U8teFnA7wjWchg12BJ9bMPEp/BnPdwBoaI3A0a0MvXpIY/geOKwyzaSN1Y6NcNJUb6mqe7e/J4Kb80R4jBs+FFX2W/Lglhmg09+CjD/e1nHoCcbTOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XCslqu7v; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YuTicQfr"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id C0D34C67;
-	Sun, 29 Jun 2025 20:05:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751220337;
-	bh=NFO9fezxtmyRyOB05VEoArPZF9fdeB6VZM7M3FD/zbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YuTicQfr+WvuK+9COShPhV95lq22rBf6xhjtiln3DYbqXcqh0jO4G7RVoccu2tRgZ
-	 dcvJ3QAzn69uo9LEa+e6CApWuQceGH3YMmEhdiTAxsmJHHOjhGBWcvU4YtJzynvF5S
-	 2694307pKqRlotKdVfVMvL+aImENKdcGrdOvxkgU=
-Date: Sun, 29 Jun 2025 21:05:34 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 12/12] media: uvcvideo: Do not create MC entities for
- virtual entities
-Message-ID: <20250629180534.GN24912@pendragon.ideasonboard.com>
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-12-5710f9d030aa@chromium.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XCslqu7v"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=0SXtSx80cAdCDtcPv9j072wXjbBXpZrMW0XySoNhCpM=; b=XCslqu7v0e4xvy6nG6epE1EPIJ
+	2sMobVmbQNK5E5AeZNuOc5TPB/L6Q2pQdXLxEDIyJxii0LeUsjmEfeqS6NtgiwKkNDHBXrArzEHyQ
+	u+cywzWRihMoNasndy/IlJrhmXDdrSWZly0QGf3SUSDDZFRDTBYKkg5/l5+F2X0sJ46s=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uVwTt-00HIBB-EX; Sun, 29 Jun 2025 20:10:21 +0200
+Date: Sun, 29 Jun 2025 20:10:21 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Lucien.Jheng" <lucienzx159@gmail.com>
+Cc: linux-clk@vger.kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
+	kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, daniel@makrotopia.org, ericwouds@gmail.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	joseph.lin@airoha.com, wenshin.chung@airoha.com,
+	lucien.jheng@airoha.com, albert-al.lee@airoha.com
+Subject: Re: [PATCH v1 net-next PATCH 1/1] net: phy: air_en8811h: Introduce
+ resume/suspend and clk_restore_context to ensure correct CKO settings after
+ network interface reinitialization.
+Message-ID: <fe9a6e67-2790-489b-a5fa-a03ec041f48e@lunn.ch>
+References: <20250629115911.51392-1-lucienzx159@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-uvc-orientation-v2-12-5710f9d030aa@chromium.org>
+In-Reply-To: <20250629115911.51392-1-lucienzx159@gmail.com>
 
-Hi Ricardo,
+> +static void en8811h_clk_restore_context(struct clk_hw *hw)
+> +{
+> +	if (!__clk_get_enable_count(hw->clk))
 
-Thank you for the patch.
+Using a __ functions seems wrong, they are supposed to be internal.
 
-I would use "software entities" and not "virtual entities" in the
-subject line and everywhere else, as those entities are not virtual.
+How about clk_ops save_context() and restore_context()?
 
-On Thu, Jun 05, 2025 at 05:53:05PM +0000, Ricardo Ribalda wrote:
-> Neither the GPIO nor the SWENTITY entities form part of the device
-> pipeline. We just create them to hold emulated uvc controls.
-> 
-> When the device initializes, a warning is thrown by the v4l2 core:
-> uvcvideo 1-1:1.0: Entity type for entity SWENTITY was not initialized!
-> 
-> There are no entity function that matches what we are doing here, and
-> it does not make to much sense to create a function for entities that
-> do not really exist.
+    Andrew
 
-I don't agree with this. The purpose of reporting entities to userspace
-through the MC API is to let application enumerate what entities a
-device contains. Being able to enumerate software entities seems as
-useful as being able to enumerate hardware entities.
-
-> Do not create MC entities for them and pretend nothing happened here.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_entity.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
-> index d1a652ef35ec34801bd39a5124b834edf838a79e..2dbeb4ab0c4c8cc763ff2dcd2d836a50f3c6a040 100644
-> --- a/drivers/media/usb/uvc/uvc_entity.c
-> +++ b/drivers/media/usb/uvc/uvc_entity.c
-> @@ -72,6 +72,16 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
->  {
->  	int ret;
->  
-> +	/*
-> +	 * Do not initialize virtual entities, they do not really exist
-> +	 * and are not connected to any other entities.
-> +	 */
-> +	switch (UVC_ENTITY_TYPE(entity)) {
-> +	case UVC_EXT_GPIO_UNIT:
-> +	case UVC_SWENTITY_UNIT:
-> +		return 0;
-> +	}
-> +
->  	if (UVC_ENTITY_TYPE(entity) != UVC_TT_STREAMING) {
->  		u32 function;
->  
-
--- 
-Regards,
-
-Laurent Pinchart
+---
+pw-bot: cr
