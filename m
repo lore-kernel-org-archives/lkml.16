@@ -1,116 +1,74 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4208A93D;
-	Sun, 29 Jun 2025 09:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56E91C862C
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 09:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751189785; cv=none; b=oMGzAeSvB3jXQxWCdSDjFxbRZzfC57D/hcUugGtT2iZ/So2yH8cb3XtjwUgIlIUoCGWKW9I7mHzFax4WDBlFHNVnbFRGwno+erBuiKfUKdeztw4sVWOWDZTEA94oW5Y7rYLhl9BDCUT1lRZhwdeF3qTZuqbO9IlkebF4sNj/gKM=
+	t=1751189830; cv=none; b=Ee8aXBJWxBgXtosgIu8OPo4A1uq0AzW98iV3749/okAh48TK0SlkwNSpD9k60PGgfpQGJPnAHfu8rgv0esP6x0bE8f8o0ygvt9GUsNT49U0DIyz+JRXL8HxOZWcvd+xpq3bLzW/VsVW+7OxP0ejgTMekPJuPHsZMwvWlMQ+kB6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751189785; c=relaxed/simple;
-	bh=Ry1uJCu62CkLW9LcbZeSR7YaJJlm1KONhJOR6UVwkuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MiXXFOsuO67faHZk5VADx+Ie682bQoQbUUPjDEuTVwqgByuRr8QJHM8HRD3vc6PA2XoM0pyyU4k0ZXTzweyFIFaXaEmTRWgmNqN6dmCaPFsK6DSTNxG3M8ppyo6qI7/Wv7q6yjVXkPMQDtyhCfPlWBYMA/dcS0Tz6ynlpZfm20M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+N2729e; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751189830; c=relaxed/simple;
+	bh=/Dj4K9dXzMHgU0EuTLBsT7aN6PMJ+tvKYG6ZSBuxETg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhllE34KXgfzxF+3OGZLrIAiyob2GTJW/iWOiMX5jfX5J2g5mkhXQsLvwa3QNESlSmOj+opCrG9gpwAWvLWHAgJpLrOLCY/PtNtlQSJSlpYD8adLLfiplKwu44m8YfnrrDCivf8IsItZqC6cT+hAhDCWyJkoztPWN0iiUXJznYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=fuwLxIvX; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+N2729e"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4f379662cso944790f8f.0;
-        Sun, 29 Jun 2025 02:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751189782; x=1751794582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r7IZF6P2H3Qklyp7Y946TAOUCcx7EHumDWuBAo4Oo5Q=;
-        b=k+N2729eVRxUJFZfa1zUb7W3N6HGbhmiSKTCREGTcV1cWeilQPCN0LOZJPNXunRbwO
-         Ze9DAClgh5c+2ATmaXbHariVmHkTuS3rABPywQ3DwBCov5gPIYRDexMDB8HgJ23navFc
-         AaoJ/AxYSVAvP99QjmXkjBf5hZdpSDkbbUf0qpHjyIkqlfaq3mDesRFb3/J/NqwFIlE2
-         ZzSFIlme0VwrO8GZo3yISDMasTXF65chjDI/z72+fxuyT9vuFOw70m4V69Oje9WFjcPR
-         4YX4Kyr2QKUtOnfTEaoilE5CE39DtTPzcD3YJtgV/1jOyK47nohKE7vmr0HhD3Ceo6uq
-         ijIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751189782; x=1751794582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r7IZF6P2H3Qklyp7Y946TAOUCcx7EHumDWuBAo4Oo5Q=;
-        b=QTJ4qpzHA/R7TGc0eZ8XRhtIfpvuYjW1aZ7lbQr0tkrmViTe776b3azayfgPslMh4e
-         B6ZvlpJIav3R/cWf0fAsTJ78+nOZRmGgYK8f0+eppmTF091mBjx/LK2iXc5Y/p6/4zdC
-         rqSJuxEEcOPmWeZds4Qi9se8qlcIZGJay8X9DaCo1QEDfCir7gjrRk9NSbNdfOaEdkJF
-         TNbeisC+zaIKihJOunV43FS+6aw1WrLjjgXf2DdoaQbLEe1tgaq5YP6MYlq/nQpX+k0W
-         fmL8E4lcw0k1CGIDKHw7JRk/fRFkGWnH6JrBxoYQbwAkKFlIyKb0S6JpIC5325dlOTbM
-         eICg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+krIUHpGCpJ+pRZAqY1LaG7CCwbVTcI4rBRvjDCZ2ZPcezDrcRW2D/wFaeaNShDCCF/tJiYEv@vger.kernel.org, AJvYcCV2a9d2j+5hey+IndTNfsBM0rbOIQMfdxoEfI/whWejo6XhBGhG4azJziijaHLWMWpX4ilsJ48oNju5tWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMgfh+5ikbS2K/Y2gEatSynstrecC6tEm1+KRHatrzUyKd+k2Z
-	QYXc2U5GArclwsKNPT+GlviYdFurfU1zQCgjswSStFs6iejAvVVQmcgD
-X-Gm-Gg: ASbGncvvL1Za9gT8ifLhQVvDgLFOCaIjlvhcA3sDE/8uEK+8bE2gt/5j+M9lHq9W3rB
-	ODFMS5KYJwyJv/jiP29uksymaWWzasu4VB7wL1nBzTA1tvthfl/e+39ARC95jZ79g6OQNuLMOku
-	4e0nfhWkyOnqvko8ukdwey0dS51Soa40W7AsB6HDHRG0oMCSzBGiCuOq7ap1OGz7+631EjCCsFd
-	MA+SFAq2FWGlAnzTrFidcstb2qhGQjJ1uqHFXT5dO+Nw5yPTd0SNfzji+DlCGOPHD7mYYvk0ZL3
-	8abBrf0RdTdixCJTVhf9XILHAaXHtZDIFB3pDS2A+HP23Esja2xHy/LlKvPoCf9HyWMtI5qZg0x
-	+qlAq+ZKCl/3tI5JQzA==
-X-Google-Smtp-Source: AGHT+IEOnc57iTWUFaDPB8HVttZZBXkGceicoCUz2ChQ8zSFsL0MhttY/Cd1T4mxAOtbASHj5+U7yA==
-X-Received: by 2002:a05:6000:2893:b0:3a9:dc5:df15 with SMTP id ffacd0b85a97d-3a90dc5df54mr8669775f8f.13.1751189781866;
-        Sun, 29 Jun 2025 02:36:21 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7396sm7208499f8f.9.2025.06.29.02.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 02:36:21 -0700 (PDT)
-Date: Sun, 29 Jun 2025 10:36:20 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jacek Kowalski <jacek@jacekk.info>
-Cc: Simon Horman <horms@kernel.org>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vlad URSU <vlad@ursu.me>
-Subject: Re: [PATCH v3 2/2] e1000e: ignore factory-default checksum value on
- TGP platform
-Message-ID: <20250629103620.186ea33d@pumpkin>
-In-Reply-To: <613026c7-319c-480f-83da-ffc85faaf42b@jacekk.info>
-References: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
-	<5c75ef9b-12f5-4923-aef8-01d6c998f0af@jacekk.info>
-	<20250624194237.GI1562@horms.kernel.org>
-	<0407b67d-e63f-4a85-b3b4-1563335607dc@jacekk.info>
-	<20250625094411.GM1562@horms.kernel.org>
-	<613026c7-319c-480f-83da-ffc85faaf42b@jacekk.info>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fuwLxIvX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1751189827;
+	bh=/Dj4K9dXzMHgU0EuTLBsT7aN6PMJ+tvKYG6ZSBuxETg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fuwLxIvXeICUZILRqqBvQbITVfhS+8MlqdAWRlt+im2HQIS5pK9KmiUXnucdokV58
+	 8AcTamiL61KNjAaup85Q6alm9nLPR3Sjaqm9Ag2XX/tvVje1JMFR5pU2IEC/evJ8cZ
+	 NrdiRTSBiOFlV4Emnr98Uy2XEfLxEk4omcECUVfs=
+Date: Sun, 29 Jun 2025 11:37:06 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
+Message-ID: <029f24fa-3512-4736-94a0-e158c158cc8e@t-8ch.de>
+References: <20250620100251.9877-1-w@1wt.eu>
+ <20250620100251.9877-4-w@1wt.eu>
+ <25eb3144-d19e-43d2-af4f-b0251d28808c@t-8ch.de>
+ <20250622071958.GA3384@1wt.eu>
+ <07f5fdb4-2c5c-4723-b12a-abdb0c9f33b7@t-8ch.de>
+ <20250623025618.GA29015@1wt.eu>
+ <20250629084628.GA7992@1wt.eu>
+ <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
+ <20250629092552.GA30947@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250629092552.GA30947@1wt.eu>
 
-On Wed, 25 Jun 2025 15:05:01 +0200
-Jacek Kowalski <jacek@jacekk.info> wrote:
+On 2025-06-29 11:25:52+0200, Willy Tarreau wrote:
+> On Sun, Jun 29, 2025 at 10:53:34AM +0200, Thomas Weißschuh wrote:
+> > On 2025-06-29 10:46:28+0200, Willy Tarreau wrote:
+> > > On Mon, Jun 23, 2025 at 04:56:18AM +0200, Willy Tarreau wrote:
 
-> >>>> +#define NVM_CHECKSUM_FACTORY_DEFAULT 0xFFFF  
-> >>>
-> >>> Perhaps it is too long, but I liked Vlad's suggestion of naming this
-> >>> NVM_CHECKSUM_WORD_FACTORY_DEFAULT.  
+<snip>
+
+> > > Trying it has reopened the circular dependencies can of worms :-(
+> > > It's the same problem as usual that we've worked around till now
+> > > by placing some types in types.h, except that this time fd_set is
+> > > defined based on the macros FD_* that I moved to sys/select.h.
+> > 
+> > Can't fd_set also move to sys/select.h? This is how I read fd_set(3).
 > 
-> So the proposals are:
-> 
-> 1. NVM_CHECKSUM_WORD_FACTORY_DEFAULT
-> 2. NVM_CHECKSUM_FACTORY_DEFAULT
-> 3. NVM_CHECKSUM_INVALID
-> 4. NVM_CHECKSUM_MISSING
-> 5. NVM_CHECKSUM_EMPTY
-> 6. NVM_NO_CHECKSUM
-> 
-> Any other contenders?
-> 
+> That was what I did and precisely what was causing the problem. We
+> have sys.h defining select() with fd_set in it with sys/select not yet
+> being included. I moved sys.h after all sys/* and it broke something
+> else instead.
 
-0xffff
+Ah. Then move select() also into sys/select.h; where it belongs. :-)
 
-With a comment saying some manufacturers don't calculate the checksum.
-Then you don't needs to search the definition to find out what is going on.
-
-	David
+<snip>
