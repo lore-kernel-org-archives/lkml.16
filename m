@@ -1,180 +1,147 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690D81D618A;
-	Sun, 29 Jun 2025 20:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203E81CBEAA;
+	Sun, 29 Jun 2025 20:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751227537; cv=none; b=Mt76adHMYew0riQ+q+SDtfRw8fzk24VfkEYQ0MM979QudXXsnmgSmDLmwW7wIv/FUeVLIZW+4ht8WEBX+lymeVajr2L32fpBjA3F4rP+/T0wYaBoKIOprz/lZsPn06x+H/3AsvU6gPnROEhPxNQytQzoSmhAsMK9cSMNNyDmbTM=
+	t=1751227641; cv=none; b=ZqDlPD6GAbiWcu+W6ieuPVDykdFKXY4F1Rh4Nx92IY8I+95uW0PBIF/img0XVXE3x4Y0Lpar4DjkeZEnbZ1qaNpzM3WhU91JpgLPiOs0LTUKpdB2Pmr4EpHM8S+LYVNegw13hgAoSLuen1N475mQ4h8Igkfyw8/00RPpzc2cD0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751227537; c=relaxed/simple;
-	bh=qpjVZvBcIo5G28UGMNZaBkJZF6ITVDpFyOxvjBVjrQo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QpT3wigx9p+uMVsFPlzB7ZdlMUkl5s1KF+ZYZiXb/t8Fx7b9AZUlT/zt4GZBT5oR0sSotnl5MUA0+efzRd5QVhBHSuUIbwPr83Qbv9EJNOMPA4Oi0vowZzAI6+geT35Yw7mJHY2HkMeMwQOF+xiIfIP8wzKNzJhuoo1zLHnmhAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcBnlgmw; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcBnlgmw"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52874d593so1198323f8f.0;
-        Sun, 29 Jun 2025 13:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751227534; x=1751832334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpjVZvBcIo5G28UGMNZaBkJZF6ITVDpFyOxvjBVjrQo=;
-        b=NcBnlgmwXFJ/lb1m/J2cG12Ykp6Z7L/WhvfFcF8NjSPcbsHZ+rY0MMlLKhGc8mlO6m
-         MyARVdjcoTQPDkA/hjsIziI945yO4cyoJc+eUfd2WCDpLqo+Xf20LPiKkCg0+RgJfv1G
-         dI0mqrR+4ga3hFcxgc2xI7+b9YoAjqegeDZmB/lfEZa41I9eS5pvB4iRd6Cj2AkAKgVV
-         oDg9x7EH4UiJAcuGeDhfNSzLf0PzcqqdCahj9JfBRrsV3Ud4+rli0CAyuP7VSxIUOaao
-         EfsmV4VmBKG+IdbqDKaML1eP0Z13Ho2kYDmj3krPeXbNGcIuREz+TR2OoA7LW10eUjwf
-         JWrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751227534; x=1751832334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpjVZvBcIo5G28UGMNZaBkJZF6ITVDpFyOxvjBVjrQo=;
-        b=dE6RGHe9C/dFRw1vdz/sE4HfcEc0nccHcahmmbRI2vBAHko6RMwnrbp45z8/wa3dZt
-         aqwZixnUwa/qwxAN1y+CzGqCf5Am2QZKF8mSXtW82269vEcD6ARKyqJB71TQyj5D3zwt
-         /uHnf7/QG8kQxtzf1hK48kLSk2BPv2Rst5mM/bWrPuRSF11FyIgZJmWsGjbN5ydl6a9r
-         1pXwUr9zvxAZqLri3LZwBneAlLTeCZzDDFZk4zofznxApqzymg1Ma+CgxpOYrvg8+jLh
-         XVpUhDNuBMdAkGIxR99nXhwXOE7Rgws5sWyHx7WC3EAa5g6JwIozVEOlM2C3DpsIw46p
-         6vTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWE/vwLT7JqpAIe/OKEHz9lHg7S7ACiF03267Xxhx2OLIw4Cf49t89We3606ygAV6WhH+imOLx/AsuB6ho=@vger.kernel.org, AJvYcCWEmgNSjQmK9kSA2XrpOgREmx2aW6GU9fX/La6DCm1y/7mj1BhQ92ZS43VgUdiHorYRVqiYjr4nmXVlyw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGiKQqFie6BmmUjyqjH+OBztb9d/oKTwWjkPcXGDkRo9CI97BK
-	Yq60UUhOSpB6otsniAf36DefbUmB412CN8oN2ebFfIZNP333pU/mmkPheAf0g018jyEx9LRaG3x
-	r/i2VA5jjk2zDWZjkYbubJi5LzuIdHw8=
-X-Gm-Gg: ASbGnctikwQ5A/ggzMYCXVFF2phFuVLVTEhlRUfNPF7/mOHaKvxjGaEbWLQQHblP9p/
-	rdU3qwHE3559BJPK4GFKDkaevbneUuPTH5gq3PJxsvW3pjVP1hPQc5TX8CpJ3IDj1oJVtV2J+c8
-	2HX8H86kTXK0P+f0G1fyZ36r+PNGznYufK79UGuVItxauOsWgMoUM9VjM=
-X-Google-Smtp-Source: AGHT+IG9Jnr7utU7Trd4lqTg8GWi9uRNVbru2WXxMPFleBJfH4kInx+LP9kDmy2SL/eaM5dKaQqnO/o2Ok4MjECqA8k=
-X-Received: by 2002:a5d:59c7:0:b0:3a4:fc3f:ed28 with SMTP id
- ffacd0b85a97d-3a8fee64fafmr10710844f8f.29.1751227533501; Sun, 29 Jun 2025
- 13:05:33 -0700 (PDT)
+	s=arc-20240116; t=1751227641; c=relaxed/simple;
+	bh=UIJ3X4D0ffKfruWJPoE5+zvCmo9HErX2i9Wp9Oi7R5M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ls2hK+LUknz73jx9HB+6z8J76GWSfMhfcH4TcJg1ol8ubc7bMLPNiPdaCWF2lssNWVRIs1KbfUVM8JegCpnkcEWOkko9mLqotFy2yvg/k2WbvJTADAzbwQG2/uMinsPTu5ghh4yipedZyXQrhuzkE9Lp4Pnta2PtexxY+N2avZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.2.196] (p5b13a6da.dip0.t-ipconnect.de [91.19.166.218])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3810B61E64787;
+	Sun, 29 Jun 2025 22:06:42 +0200 (CEST)
+Message-ID: <4585b0e7-7172-476d-8cd9-012ca65daa9b@molgen.mpg.de>
+Date: Sun, 29 Jun 2025 22:06:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626153147.145312-1-snovitoll@gmail.com> <CA+fCnZfAtKWx=+to=XQBREhou=Snb0Yms4D8GNGaxE+BQUYm4A@mail.gmail.com>
- <CACzwLxgsVkn98VDPpmm7pKcbvu87UBwPgYJmLfKixu4-x+yjSA@mail.gmail.com>
-In-Reply-To: <CACzwLxgsVkn98VDPpmm7pKcbvu87UBwPgYJmLfKixu4-x+yjSA@mail.gmail.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Sun, 29 Jun 2025 22:05:22 +0200
-X-Gm-Features: Ac12FXwSsH6fvJE1vEp59zDWu481tFenq-ukDXNa3gyvAGzFlMqgNHF8VfcuM6Y
-Message-ID: <CA+fCnZcGyTECP15VMSPh+duLmxNe=ApHfOnbAY3NqtFHZvceZw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] kasan: unify kasan_arch_is_ready with kasan_enabled
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com, 
-	vincenzo.frascino@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com, 
-	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, 
-	richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, 
-	hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	akpm@linux-foundation.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	morbo@google.com, justinstitt@google.com, arnd@arndb.de, rppt@kernel.org, 
-	geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com, 
-	tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com, 
-	kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: kdf108_init() takes over 250 ms
+To: Stephan Mueller <smueller@chronox.de>,
+ Tim Chen <tim.c.chen@linux.intel.com>, Robert Elliott <elliott@hpe.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <6d6b6bcf-cab8-695b-568a-c1372ac531ee@molgen.mpg.de>
+ <MW5PR84MB1842811C4EECC0F4B35B5FB3AB709@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
+ <2658706.V0ylg0ELTe@tauon.chronox.de>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <2658706.V0ylg0ELTe@tauon.chronox.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 28, 2025 at 3:25=E2=80=AFPM Sabyrzhan Tasbolatov
-<snovitoll@gmail.com> wrote:
->
-> On Sat, Jun 28, 2025 at 3:57=E2=80=AFPM Andrey Konovalov <andreyknvl@gmai=
-l.com> wrote:
-> >
-> > On Thu, Jun 26, 2025 at 5:32=E2=80=AFPM Sabyrzhan Tasbolatov
-> > <snovitoll@gmail.com> wrote:
-> > >
-> > > This patch series unifies the kasan_arch_is_ready() and kasan_enabled=
-()
-> > > interfaces by extending the existing kasan_enabled() infrastructure t=
-o
-> > > work consistently across all KASAN modes (Generic, SW_TAGS, HW_TAGS).
-> > >
-> > > Currently, kasan_enabled() only works for HW_TAGS mode using a static=
- key,
-> > > while other modes either return IS_ENABLED(CONFIG_KASAN) (compile-tim=
-e
-> > > constant) or rely on architecture-specific kasan_arch_is_ready()
-> > > implementations with custom static keys and global variables.
-> > >
-> > > This leads to:
-> > > - Code duplication across architectures
-> > > - Inconsistent runtime behavior between KASAN modes
-> > > - Architecture-specific readiness tracking
-> > >
-> > > After this series:
-> > > - All KASAN modes use the same kasan_flag_enabled static key
-> > > - Consistent runtime enable/disable behavior across modes
-> > > - Simplified architecture code with unified kasan_init_generic() call=
-s
-> > > - Elimination of arch specific kasan_arch_is_ready() implementations
-> > > - Unified vmalloc integration using kasan_enabled() checks
-> > >
-> > > This addresses the bugzilla issue [1] about making
-> > > kasan_flag_enabled and kasan_enabled() work for Generic mode,
-> > > and extends it to provide true unification across all modes.
-> > >
-> > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D217049
-> >
-> > Hi Sabyrzhan,
-> >
-> > Thank you for working on this!
-> >
-> > One aspect that is missing from the patches is moving the
-> > kasan_arch_is_ready() calls into the include/linux/kasan.h (this is
-> > not explicitly mentioned in the issue, but this is what the "adding
-> > __wrappers" part is about).
-> >
-> > Another thing that needs careful consideration is whether it's
-> > possible to combine kasan_arch_is_ready() and kasan_enabled() into the
-> > same check logically at all. There's one issue mentioned in [1]:
->
-> Hello,
-> I've removed kasan_arch_is_ready() at all in this series:
-> [PATCH v2 11/11] kasan: replace kasan_arch_is_ready with kasan_enabled
->
-> Is it not what's expected by unification?
+Dear Stephan, dear Robert,
 
-I guess the issue description diverged a bit from what needs to be
-done, sorry about that.
 
-The core 2 things I wanted to address with the unification are:
+Am 26.08.22 um 09:47 schrieb Stephan Mueller:
+> Am Dienstag, 23. August 2022, 22:10:01 CEST schrieb Elliott, Robert (Servers):
 
-1. Avoid spraying kasan_arch_is_ready() throughout the KASAN
-implementation and move these checks into include/linux/kasan.h (and
-add __wrappers when required).
+>>> -----Original Message-----
+>>> From: Paul Menzel <pmenzel@molgen.mpg.de>
+>>> Sent: Tuesday, August 23, 2022 9:52 AM
 
-2. Avoid architectures redefining the same kasan_enabled global
-variable/static key.
+[…]
 
-Initially, I thought that s/kasan_arch_is_ready/kasan_enabled + simply
-moving the calls into affected include/linux/kasan.h functions would
-be enough. But then, based on [1], turns out it's not that simple.
+>>> On the Dell XPS 13 9370 with Debian sid/unstable, I noticed with Linux
+>>> 5.18.16, that  `crypto_kdf108_init()` takes 263 ms to run even with
+>>> disabled self-tests:
+>>>
+>>
+>> ...
+>>
+>>> [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-5.18.0-4-amd64
+>>> root=UUID=56f398e0-1e25-4fda-aa9f-611dece4b333 ro quiet
+>>> module_blacklist=psmouse initcall_debug log_buf_len=4M cryptomgr.notests
+>>
+>> ...
+>>
+>>> [    0.272127] calling  crypto_kdf108_init+0x0/0x149 @ 1
+>>> [    0.530787] Freeing initrd memory: 39332K
+>>> [    0.534667] alg: self-tests disabled
+>>> [    0.534701] alg: self-tests for CTR-KDF (hmac(sha256)) passed
+>>> [    0.534703] initcall crypto_kdf108_init+0x0/0x149 returned 0 after 262573 usecs
+>>
+>> ...
+>>
+>>>
+>>> With self-tests enabled it’s only less than a millisecond longer.
+>>>
+>>> ```
+>>> [    0.282389] calling  crypto_kdf108_init+0x0/0x149 @ 1
+>>> [    0.541096] Freeing initrd memory: 39332K
+>>> [    0.545674] alg: self-tests for CTR-KDF (hmac(sha256)) passed
+>>> [    0.545676] initcall crypto_kdf108_init+0x0/0x149 returned 0 after 263284 usecs
+>>> ```
+>>
+>>
+>> crypto_kdf108_init() call its self-test function directly rather
+>> that alg_test(), which implements that notests flag. Maybe it
+>> should go through alg_test().
+> 
+> You are right that it does not uses the alg_test. This is because the KDF is
+> just a helper and not implemented as a template. I initially wanted and
+> provided a patch that turns the KDFs into templates which then would be able
+> to go though alg_test. It was not accepted, but instead only service functions
+> where accepted.
+> 
+> The reason for not accepting the template approach was that a complete new API
+> is needed to accommodate the KDFs. Initially I called the API "rng" because a
+> KDF and a PRNG are very very similar in nature: they take an arbitrary string
+> as input (the seed/key/personalization/additional info/label string) and
+> provide an arbitrary output (mathematically you can even use both
+> interchangeably for the same purposes - although cryptographically speaking
+> you do not want that). As this concept cannot be covered with the existing
+> APIs, a KDF cannot be rolled into those existing APIs as template. Side note:
+> the same question around such new API will appear as soon as somebody asks for
+> SHAKE to be added.
+> 
+> A low hanging fruit would be to also deactivate the KDF test when the notest
+> option is selected.
+> 
+>> Outside of that, check that Tim's x86-optimized SHA-256 module
+>> is loaded, so it is used rather than the generic implementation.
+>> One my system, that improves the kdf108 initialization time
+>> from 1.4 s to 0.38 s:
+>>
+>> With sha256_generic:
+>>    initcall sha256_generic_mod_init+0x0/0x16 returned 0 after 0 usecs
+>>    ...
+>>    initcall crypto_kdf108_init+0x0/0x18d returned 0 after 1425640 usecs
+>>
+>> With sha256_ssse3 (using its AVX2 implementation):
+>>    initcall sha256_ssse3_mod_init+0x0/0x1bf returned 0 after 12148 usecs
+>>    ...
+>>    initcall crypto_kdf108_init+0x0/0x153 returned 0 after 382799 usecs
+>>
+>> That's controlled by CONFIG_CRYPTO_SHA256_SSSE3.
+> 
+> The test is performed during kernel boot time with the available
+> implementation - the self test uses "hmac(sha256)". If the AVX2 is not
+> registered at that time with the kernel crypto API, it will not be available
+> for use. But it is not possible to hard-code the use of the AVX implementation
+> or any other implementation as it is not guaranteed to be present.
+> 
+> The issue would be alleviated it would go through alg_test though.
+As I didn’t notice this, or forgot it, for the record, this was 
+addressed by Eric Biggers in commit 0bf365c0efdd ("crypto: kdf - skip 
+self-test when tests disabled"), that first shows up in Linux v6.2-rc1.
 
-So now, I think we likely still need two separate checks/flags:
-kasan_enabled() that controls whether KASAN is enabled at all and
-kasan_arch_is_ready() that gets turned on by kasan_init() when shadow
-is initialized (should we rename it to kasan_shadow_initialized()?).
-But then we can still move kasan_arch_is_ready() into
-include/linux/kasan.h and use the proper combination of checks for
-each affected function before calling __wrappers. And we can still
-remove the duplicated flags/keys code from the arch code.
 
-[1] https://lore.kernel.org/linux-mm/CA+fCnZf7JqTH46C7oG2Wk9NnLU7hgiVDEK0EA=
-8RAtyr-KgkHdg@mail.gmail.com/
+Kind regards,
+
+Paul
