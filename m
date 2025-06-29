@@ -1,86 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C976249641;
-	Sun, 29 Jun 2025 17:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F19222F765
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 17:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751216847; cv=none; b=IK1mHwpNlBOuRcm2ID0yMmqkxNw7zHWXUbnxDu6iasdGPWarEVCp6np6blOmqiB/eiwcH/v8Nt1n4xefTItqRXpBwBUm/FJjtT5wE13ayHf2wNXD2S+jJZwlNFOJLI1vv0AwumL9lo0bce55k7uzIWA/o3mzD8+MtBTcOqFQ3kQ=
+	t=1751216865; cv=none; b=eprsrVXXeiKO5lsBbTuBbPxSf8PSYLLf7TO3Kt6RKoQOI9KeOsnhJAAQCjdH5JoPyMCdbMWz0FQnCTXBYNTJ/dlrS5N+aBolzrsM9DRuQ61tzUsVaLFTBRio8DIFuoZaTEjljUsZ6VLPqAybepjcGsnh9jrUuHTPhVSFXVjTP2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751216847; c=relaxed/simple;
-	bh=VaT2VO9nDKPP2JS4Dp+XvX6jBNPRAYSmNGQGia/lTFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6noMHU3SktGRi0H27+UZpPvKPL4t770cpby8jKotK0QdP8SxiY38oolYFKEY/GiR3zvaZ8Z18PdCWDncojLDux6vc7Jqo1MfW52XCjluHaea5yUj8bNSEv9+aQknvBxATJUYpFP1dDkeXQdqmH9ZY3NeZMrhJffW8X0BNWTNgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7g6yf4j; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7g6yf4j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF48EC4CEEB;
-	Sun, 29 Jun 2025 17:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751216847;
-	bh=VaT2VO9nDKPP2JS4Dp+XvX6jBNPRAYSmNGQGia/lTFo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F7g6yf4j0B9oCSYtgXNcAeawSrJC5a/2vGRorb8TGMwlkCHgRU1KTMs4z8RsB9qJ5
-	 I6fhxuA1/vTIMISOgEt7cmrXljfzP0y3sPoCzY5T6nwdpNiEtzNahNHtuqNyOJ06kT
-	 3PtLY6czZtXgF7QGTS+cUa2LCm82VTqsbt+frqXhovjTm7WIE6Xgg8HtYzRwadbT3f
-	 42uALZUeOO3bds4tq/oTneMcde4CcKdmXNovZBGfMxo2yK7yV85ifIMrI2BB4i7VZ4
-	 DX7At6XPBM9z+QvrrpgpG5WWeTNMUQIg17cbgX2mYcnb19u5nPZQ5L43aeHGSfz8Jl
-	 4h3m3lee0Jnnw==
-Date: Sun, 29 Jun 2025 18:07:21 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jiri Kosina <jikos@kernel.org>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH] iio: common: hid-sensor-attributes: make
- unit_conversion const
-Message-ID: <20250629180721.32eb61b7@jic23-huawei>
-In-Reply-To: <20250628-iio-const-data-14-v1-1-4faa8015e122@baylibre.com>
-References: <20250628-iio-const-data-14-v1-1-4faa8015e122@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751216865; c=relaxed/simple;
+	bh=Des8q0UDHaege6zmti1sR3Qz/HJBmgilCuYce6UhV1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=KuCRD7cmju1euZU5bqhUt1zmQKiJ/0EceLL/zg9kgHEH6ftuI/05qOJ/IbCOXdZldhBCi0UmZl6Cr92NXdSeUPlNn50XuQRB64JsNlC+f5F6+zjIB2mAP7QXZnq6TmNBNTK68EDDfoqJiDV2XW2YEnk8Tm/VZ9IfPNlVLORngzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55TH7dkj016862;
+	Sun, 29 Jun 2025 19:07:39 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [RFC PATCH v2 1/2] tools/nolibc: make the "headers" target install all supported archs
+Date: Sun, 29 Jun 2025 19:07:31 +0200
+Message-Id: <20250629170732.16817-2-w@1wt.eu>
+X-Mailer: git-send-email 2.17.5
+In-Reply-To: <20250629170732.16817-1-w@1wt.eu>
+References: <20250629170732.16817-1-w@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sat, 28 Jun 2025 12:09:26 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+The efforts we go through by installing a single arch are counter
+productive when the base directory already supports them all, and
+the arch-specific files are really small. Let's make the "headers"
+target simply install headers for all supported archs and stop
+trying to build a hybrid "arch.h" file on the fly, to instead keep
+the generic one.
 
-> Add const qualifier to struct unit_conversion[]. This is read-only data
-> so it can be made const.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Applied as seems to be 'obviously correct'.
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+---
+ tools/include/nolibc/Makefile | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-+CC rest of the hid-sensors maintainers. 
-
-
-> ---
->  drivers/iio/common/hid-sensors/hid-sensor-attributes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-> index 2055a03cbeb187743e687c2ce3f8a339a2bd4cfc..a61428bfdce372ea0511fb7c3e80f4c43f427eb4 100644
-> --- a/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-> +++ b/drivers/iio/common/hid-sensors/hid-sensor-attributes.c
-> @@ -11,7 +11,7 @@
->  #include <linux/hid-sensor-hub.h>
->  #include <linux/iio/iio.h>
->  
-> -static struct {
-> +static const struct {
->  	u32 usage_id;
->  	int unit; /* 0 for default others from HID sensor spec */
->  	int scale_val0; /* scale, whole number */
-> 
-> ---
-> base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-> change-id: 20250628-iio-const-data-14-b3250e000af7
-> 
-> Best regards,
+diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+index c69d7bf60c71e..d5be3d213c885 100644
+--- a/tools/include/nolibc/Makefile
++++ b/tools/include/nolibc/Makefile
+@@ -24,6 +24,8 @@ Q=@
+ endif
+ 
+ arch_file := arch-$(ARCH).h
++nolibc_supported_archs := arm64 arm loongarch m68k mips powerpc riscv s390 sparc x86
++
+ all_files := \
+ 		compiler.h \
+ 		crt.h \
+@@ -81,7 +83,7 @@ help:
+ 	@echo "Supported targets under nolibc:"
+ 	@echo "  all                 call \"headers\""
+ 	@echo "  clean               clean the sysroot"
+-	@echo "  headers             prepare a sysroot in \$${OUTPUT}sysroot"
++	@echo "  headers             prepare a multi-arch sysroot in \$${OUTPUT}sysroot"
+ 	@echo "  headers_standalone  like \"headers\", and also install kernel headers"
+ 	@echo "  help                this help"
+ 	@echo ""
+@@ -92,18 +94,12 @@ help:
+ 	@echo "  OUTPUT  = $(OUTPUT)"
+ 	@echo ""
+ 
++# installs headers for all archs at once.
+ headers:
+-	$(Q)mkdir -p $(OUTPUT)sysroot
+-	$(Q)mkdir -p $(OUTPUT)sysroot/include
+-	$(Q)cp --parents $(all_files) $(OUTPUT)sysroot/include/
+-	$(Q)if [ "$(ARCH)" = "i386" -o "$(ARCH)" = "x86_64" ]; then \
+-		cat arch-x86.h;                 \
+-	elif [ -e "$(arch_file)" ]; then        \
+-		cat $(arch_file);               \
+-	else                                    \
+-		echo "Fatal: architecture $(ARCH) not yet supported by nolibc." >&2; \
+-		exit 1;                         \
+-	fi > $(OUTPUT)sysroot/include/arch.h
++	$(Q)mkdir -p "$(OUTPUT)sysroot"
++	$(Q)mkdir -p "$(OUTPUT)sysroot/include"
++	$(Q)cp --parents $(all_files) arch.h "$(OUTPUT)sysroot/include/"
++	$(Q)cp $(addsuffix .h,$(addprefix arch-,$(nolibc_supported_archs))) "$(OUTPUT)sysroot/include/"
+ 
+ headers_standalone: headers
+ 	$(Q)$(MAKE) -C $(srctree) headers
+-- 
+2.17.5
 
