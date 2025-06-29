@@ -1,116 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986352A1CA
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845EB230264;
+	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751208572; cv=none; b=YCUPuDHAU69ynDfV8aXsRsdAWejOPbnJSQdXixpXdISPbx/IY8IerK9ILHFffL08MXk4y1JJLXwKlTTCpG2+dWjMecODGLWdlyXuSnR6H8ozLlvqaxbXMRV6KcivnRnqw+IqYzuCU5EMVZ5KSPSCU2Cd1//W6PuWIaNT9+VLY6Y=
+	t=1751208574; cv=none; b=drpxs0JVg+UykNSrYHQ+2oeMfzMX5k+Nz8YwjQquy2UApRg6dBkhkb3HmogMgMvinDVGhX3pwoE3U0fDJ7A108fkBU7vwdtIdgEMWKVZWoLeZUwaQbNYzUz/r71EiDDcPQ2JdaXIJ5lvMsf/tI2LH0Ek8C54AZv3i9/GZzkxfGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751208572; c=relaxed/simple;
-	bh=cvh/eRSTCF7UEu5QBsgWoqMSWqnvc+vpBtIM/odhqtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cxL5hhm3LdhvetNuDnXkqggB88JRvcWxZtvhjDc+u3lpA5ARLBCaqVOJuX0ygDsvaJBIj4SKzR4jo4z68rDhm+XEf4Th/RHeVVehmMvDQVhH+YPWy8ZpBMW1cNZtHOmocbLNC7HS8u8ipA4wtNMFLZNF1c5iCImiX98H4899kXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EmEHIpU+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751208574; c=relaxed/simple;
+	bh=pFGS2kiEc/N0G3vaIydPvptmrnOaCRrBrGwuipdCU68=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MmnJ7wcLCfrUgqOkJvuOrpUZYD9BwprVuSp8MEyEisZ5xfJ4Whr2MwOFFpdF6nDmYLJmCAu6dhsaSz6/Neoo4OERYjjFWYZUKeYE7aARvLdzJbHQylRiBzllGUcFFQoH61pNs7ZWiL36qatvJ9P9/agoaUhfe+U7fRwZ+74IPrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxYPLt2E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EmEHIpU+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751208569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FMo4hXlw+x8qKQedb4fDzGU6UZAlnq0HY+9C+6mhqr4=;
-	b=EmEHIpU+b/UG1ll/DGsawZK4uSHSUmGdZNpFKdiH8+PbnETEIQFhLQwcYCaRazIHEpZuus
-	ZxoznlT0/epNGMhSwOpfqjnYVruQmmMd1nxlL9Ubv+UbzXN8oWMd4g7HatuEJ3Cw28yodQ
-	LYb57IGmQwo0hT618D6ecINDqwZAnoE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-Ih9fTcfoM8eTyGBqk183Jw-1; Sun, 29 Jun 2025 10:49:25 -0400
-X-MC-Unique: Ih9fTcfoM8eTyGBqk183Jw-1
-X-Mimecast-MFC-AGG-ID: Ih9fTcfoM8eTyGBqk183Jw_1751208561
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so2300417f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:49:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751208561; x=1751813361;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FMo4hXlw+x8qKQedb4fDzGU6UZAlnq0HY+9C+6mhqr4=;
-        b=AmA7k2KSoBWh0rCDuumjy4+cc7X6gRgonHqXeGSlAV9DQ+dC0ImBj/r3ombfGeLUnB
-         ysuxRcyh1JY/FYAtMQkjCETdGJllnLZO51Ow4okg4thfNCw2xLROsrvN0qVd/B7B46qC
-         AH0Veai1CUBjXv3p5zdYyWNIdy950uQFLO8nvLJ3bqk88as6Jb4fopL9CzDr5yliUIG1
-         cTQnvkYOvzIFz0g4Y93SxwL+IZov7cNmKbUJsNkYMUxWSfMUVp4UacJ7hhU2Ta7zzvEb
-         a6iBcHzEFdhL5LXFwSXBODhGLRD2fw6RvL4ergtkbJrT0xoLg4ZCdGgiYS71M8eHoxOy
-         uuHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjtqO8WwkpO4frf3ipGeOqVC1+0TPbhVNiYhe+f1nWV0V1K2leNSR2ngKBsq5nJZW9uuka0xWR6ZFC9j4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCfMQvT9TIXqepuPdslZyQy+Evl+UgNidaE/E7WV9wUNikor79
-	1CDHt3H4l7nG9RJYsBS1JnJ13Y+4T7as4LWIWMfSpYBmfEtE+FEjVworQ/J+F/z1C9w8SPNTWPQ
-	fGMCaD5YPUFZBS+0X/eh8feVzDxomCcSDylsJfHC2ETcsywQJG690PdBQKldAHoXGnA==
-X-Gm-Gg: ASbGnctCin6vabcmALuNx7rNLNhtD3Bnp42NPFX29ADgcHCgC0vewDP54Uz0o/to7b1
-	j9xpDqPVencwDf0Rdu/bJ33RFlQVCxSiYOVp9aHspyoy16175bsCaeyckb3tt/KyH11mMyWqdM/
-	nYIUI/wIckZg5Hcu3FqiVa/A/ZNARm75cHqTtUhIKcwGtKlkfITNb7mgU3K+yXMN28wPQLkbPGe
-	8RDgvTSvE9o4no5xcH0ZBdOXNMFrYtfFDKyjED8M9PL5ZniUU8BjfuL4ui7Ne4e5GROUU6As6RH
-	Wu4bCS8ECOE/hFpJJvHQASQkXgN5X7QPDF2lY7ls3i4flshKJnUdERDJgyXwQA==
-X-Received: by 2002:a05:6000:40c6:b0:3a5:527b:64c6 with SMTP id ffacd0b85a97d-3a90d0d6ce1mr10106124f8f.1.1751208560864;
-        Sun, 29 Jun 2025 07:49:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEglecXEkF/z7cvyPDkLXht+rIkJ5l7TX//baZlvQGm4Pvn+sfnI3+HYTKX4a47o/g4mXZXLQ==
-X-Received: by 2002:a05:6000:40c6:b0:3a5:527b:64c6 with SMTP id ffacd0b85a97d-3a90d0d6ce1mr10106102f8f.1.1751208560423;
-        Sun, 29 Jun 2025 07:49:20 -0700 (PDT)
-Received: from ?IPV6:2a00:79c0:638:3500:abf:b8ff:feee:998b? ([2a00:79c0:638:3500:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa8aasm7826048f8f.27.2025.06.29.07.49.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 07:49:19 -0700 (PDT)
-Message-ID: <b7fafea0-2a0d-43fd-a3a9-847d61273cee@redhat.com>
-Date: Sun, 29 Jun 2025 16:49:18 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxYPLt2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 30D7AC4CEEB;
+	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751208574;
+	bh=pFGS2kiEc/N0G3vaIydPvptmrnOaCRrBrGwuipdCU68=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=mxYPLt2Ei6Xp0B8D1W89W9dLbWYGJ9JKyAxF70hCTQwyTAEM1dSO8lj4P64W3yM9k
+	 ffG2XorkbF3h+cT/tcmhyk9es8y3uMp7jZq+D9teNpQjCkdqfJhpvG1bT9wVeD4h/0
+	 l1UhJIPzcrY2S9K+1CsXmmmvtpKeRIR6YPLAKLfmGoHBBM8CwtX2frNsN8zK2Qkxil
+	 IGiU4gMrtk1pHX6WYOxz+U4EaX80lG4TnvzovOk5NnKE0v2gP9rFbXnYpkcAmhNojR
+	 e9oWF5oFwOr251ChIKq6nuOVb9XZZKSHdXe4rcuLX0YIVRhGj506v0cQTfCWGe2tWj
+	 ZdEWS8MMNUJ2g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A91C7EE39;
+	Sun, 29 Jun 2025 14:49:34 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Date: Sun, 29 Jun 2025 16:49:20 +0200
+Subject: [PATCH 1/5] media: i2c: imx214: Remove unneeded parentheses
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 02/42] drm/gpuvm: Add locking helpers
-To: Rob Clark <robin.clark@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
- Antonino Maniscalco <antomani103@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250629140537.30850-1-robin.clark@oss.qualcomm.com>
- <20250629140537.30850-3-robin.clark@oss.qualcomm.com>
-From: Danilo Krummrich <dakr@redhat.com>
-Content-Language: en-US
-Organization: RedHat
-In-Reply-To: <20250629140537.30850-3-robin.clark@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250629-imx214_fixes-v1-1-873eb94ad635@apitzsch.eu>
+References: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
+In-Reply-To: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Ricardo Ribalda <ribalda@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751208572; l=883;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=lT+DL8ngWL++0j9CuZq6CgjoGYM1N1PDlleDMdMd4Pc=;
+ b=8FsSWEOjW0QZXaHxqk3NFXC0TyS1cniMckAY0BLTT6n8VUecCDGbcxHw3iEbokEdiH9KWpwiQ
+ tplRy/aaouFCET/U0mWcJRmsARGqlkmzXEZEojzSOQ1nT1h1P0KCRfo
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
 
-On 6/29/25 4:03 PM, Rob Clark wrote:
-> For UNMAP/REMAP steps we could be needing to lock objects that are not
-> explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
-> VAs.  These helpers handle locking/preparing the needed objects.
-> 
-> Note that these functions do not strictly require the VM changes to be
-> applied before the next drm_gpuvm_sm_map_lock()/_unmap_lock() call.  In
-> the case that VM changes from an earlier drm_gpuvm_sm_map()/_unmap()
-> call result in a differing sequence of steps when the VM changes are
-> actually applied, it will be the same set of GEM objects involved, so
-> the locking is still correct.
-> 
-> v2: Rename to drm_gpuvm_sm_*_exec_locked() [Danilo]
-> v3: Expand comments to show expected usage, and explain how the usage
->      is safe in the case of overlapping driver VM_BIND ops.
-> 
-> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
-> Tested-by: Antonino Maniscalco <antomani103@gmail.com>
-> Reviewed-by: Antonino Maniscalco <antomani103@gmail.com>
+From: André Apitzsch <git@apitzsch.eu>
 
-Acked-by: Danilo Krummrich <dakr@kernel.org>
+The parentheses are not needed to calculate bit_rate_mbps.
+
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+ drivers/media/i2c/imx214.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+index a0cef9e61b41be8ea76a6d6e4b8c9fc4060cfa0f..8e9b5c9c93b0888f3d6be857168711edaf050db3 100644
+--- a/drivers/media/i2c/imx214.c
++++ b/drivers/media/i2c/imx214.c
+@@ -1029,8 +1029,8 @@ static int imx214_start_streaming(struct imx214 *imx214)
+ 		return ret;
+ 	}
+ 
+-	bit_rate_mbps = (imx214->pll.pixel_rate_csi / 1000000)
+-			* imx214->pll.bits_per_pixel;
++	bit_rate_mbps = imx214->pll.pixel_rate_csi / 1000000
++		      * imx214->pll.bits_per_pixel;
+ 	ret = cci_write(imx214->regmap, IMX214_REG_REQ_LINK_BIT_RATE,
+ 			IMX214_LINK_BIT_RATE_MBPS(bit_rate_mbps), NULL);
+ 	if (ret) {
+
+-- 
+2.50.0
+
 
