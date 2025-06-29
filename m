@@ -1,359 +1,161 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908C2576;
-	Sun, 29 Jun 2025 17:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF252576;
+	Sun, 29 Jun 2025 17:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751219473; cv=none; b=rRfkirOxFQ8ih8SdbM3tJyQdKA+np3RkSWXfeptMHGWeU5e9ONbfpBAvemGCyWbOou3FidcWU+AAGuhMB31srZHVGMFH9cnAUEh/knLS5n9xCIieFkLlqKUOY6KCJgFdRT39rghsMhW8JhpjM5e9xrnuWZGKQqjsbN9riubrV1M=
+	t=1751219520; cv=none; b=Yc2cYrh2vF/oTF7Fx/+7CvAPVx3KMqpQ5jm0GiyCj7MvEvZlQyBNhsQq8pLuVtjpGdx43mx73wS/cBoLB+BgywrQt93BAHlcPkGTyt9Xdj3uQWxv7vXR2mBBLfpYAiiTcTyPs1b+Ui1fz5y7TyFrpY12ovU+nA7CEE4IfuO8JJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751219473; c=relaxed/simple;
-	bh=2zTrY0TOKhOB0p6IOz/CNCGwyOObgFpK0NbXlzS4VVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EKWhZopwkvZZKSvMH/qe46kUqt/e24CjrYPKqiLra1ilx2ksORHq2mkuqeRxwN+GWccMu9yhMfsxHbFcvhOvgIVFAl8W955jagclTW5hnZZm+WuOVN7B0Mr9YNFSNr1qopC5CpwjNSa4kdIusMbo3abchi4++76c/FOZghEWfDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iIQ1cyqn; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751219520; c=relaxed/simple;
+	bh=Prf/TUB7pIIY1tQutcBvAREu0B7HpCJ8U7iuapmx4w0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o9p01icim/LPl0ELVUd3oMwP/aEBHoDxmUsVruXc3QxcIRElQtGNeX8s7pm1NCg1WgHAECXxxz4rxtBS4e2hqafPqHLyE0Ur/vaqZNi0iInyFdvO1174XhCCVXCHNKs6SEbtmO6DV+vBHtckIQuGTh+jT5dh+HORbjvvnl+L/tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lE/Xk1B9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iIQ1cyqn"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id A232616D7;
-	Sun, 29 Jun 2025 19:50:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751219448;
-	bh=2zTrY0TOKhOB0p6IOz/CNCGwyOObgFpK0NbXlzS4VVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iIQ1cyqnBtxYMgCxNg+Rzz1a6DNB43ASSP52RHveqItQMMe9cKTjmjcGfcyh5IixQ
-	 QHwZfw2jK3+WoUbP1tKv6Ha+ibrZ54fUv8k03rphS/tju1B+tFeZk/Zf9GhWEd+u1O
-	 /b6+kNvsFfuIYP+qT3bAsvSCrOJQfcG28h3wsRYI=
-Date: Sun, 29 Jun 2025 20:50:45 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 08/12] media: uvcvideo: Add support for
- V4L2_CID_CAMERA_ORIENTATION
-Message-ID: <20250629175045.GC6260@pendragon.ideasonboard.com>
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-8-5710f9d030aa@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lE/Xk1B9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CEAC4CEEF;
+	Sun, 29 Jun 2025 17:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751219518;
+	bh=Prf/TUB7pIIY1tQutcBvAREu0B7HpCJ8U7iuapmx4w0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lE/Xk1B9i566SJ5DYEVfz6jNuQt9HaVR4A1SZuEeECe9oSer7QMfL3UOduNmDuo7l
+	 ebW7pXkjH16Uorm4T7m+jyrrIHlNr4Kmw+we40MHU8wjQnd/t0rKKx2sx2g4aPwYHS
+	 fZDxIvTEs1J1WFl/4fBdm4gPYnifBdKnBNYg2EP3TRyzEvQlFHOrIVrJdYdXbnGU/6
+	 1fRzJDk2jhmDPQ3myoztBR8WmTZAb1MJAfvqkvZduEInHNdD3PCR8MuTEBxG9r/Z7S
+	 9/T2yRZun0CR9z5QBoXzxSvQ3DUx+kPnmggLm7ct1KLVnmVRaLm73p0epk9InsJD6Z
+	 hryEuvsQ26RIw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b584ac96so3461994e87.1;
+        Sun, 29 Jun 2025 10:51:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJX7LSHrT02ta0xbjs0g3DpnAUu6MhU3bgB9OVdZRzJmQLru96H1mO2uFzfsWVh3OR5jY7/XjTXeS2PWfsNg==@vger.kernel.org, AJvYcCVxNQshELe7MzdypV0aPfH8eQUUBLGUDR5yztf4ofyGd7NIUt7JmmJuNtTY64BEuADmtUcywkMQWjW9+po=@vger.kernel.org, AJvYcCXwootx34zFL3uVMaUCvrvkITtrHrrKkz9wiO8mOKJW7dYAYHsbuX69FK21jzvM0Wo4ux5a7UO7yazBIRbq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/ca29MC1HG8kuNfObvZhpnSLURpfoV4lJFDT0P8cyrSyMore3
+	mZT0TvqgC3ZiMJa9p5raLoHVWCBzIdldGzjiPKFUG+gbCpuFVXCosJvMNjHpV+wWo7D1co0eUgu
+	xbRKJ+U3La+Lv2yPTCy0/48raLvUM0Dw=
+X-Google-Smtp-Source: AGHT+IHGzcfNbyV3nTioSzVq3CZ7iDMNUw8mckzCx1zMvJTjhKiI3PSf9s53U4g409i7ky4TD5Dn4mE0do6B0F84IgA=
+X-Received: by 2002:a05:6512:1193:b0:553:2e4a:bb58 with SMTP id
+ 2adb3069b0e04-5550b869efdmr3015172e87.9.1751219517077; Sun, 29 Jun 2025
+ 10:51:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250605-uvc-orientation-v2-8-5710f9d030aa@chromium.org>
+References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
+In-Reply-To: <20250625095215.4027938-1-gprocida@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 30 Jun 2025 02:51:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzvLpu_LygASIkWAtnx_s-9k2Pilxeog1cyF0ArojQilgT-M0HHJZzQe1w
+Message-ID: <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
+Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
+To: Giuliano Procida <gprocida@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ricardo,
-
-On Thu, Jun 05, 2025 at 05:53:01PM +0000, Ricardo Ribalda wrote:
-> Fetch the orientation from the fwnode and map it into a control.
-> 
-> The uvc driver does not use the media controller, so we need to create a
-> virtual entity, like we previously did with the external gpio.
-> 
-> We do not re-purpose the external gpio entity because its is planned to
-> remove it.
-
-Comparing the GUIDs for the EXT_GPIO_CONTROLLER and SWENTITY, we have
-
-#define UVC_GUID_EXT_GPIO_CONTROLLER \
-	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
-	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
-#define UVC_GUID_SWENTITY \
-	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
-	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04}
-
-The GUIDs don't carry any special meaning in their values. I agree with
-the plan to drop the existing features of the GPIO entity, but wouldn't
-it be easier to rename UVC_GUID_EXT_GPIO_CONTROLLER to UVC_GUID_SWENTITY
-and UVC_EXT_GPIO_UNIT* to UVC_SWENTITY_UNIT* (the macros are not exposed
-to userspace), and later drop the existing GPIO controls from the entity
-?
-
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@google.c=
+om> wrote:
+>
+> When writing symtypes information, we iterate through the entire hash
+> table containing type expansions. The key order varies unpredictably
+> as new entries are added, making it harder to compare symtypes between
+> builds.
+>
+> Resolve this by sorting the type expansions by name before output.
+>
+> Signed-off-by: Giuliano Procida <gprocida@google.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
 > ---
->  drivers/media/usb/uvc/Makefile       |  3 +-
->  drivers/media/usb/uvc/uvc_ctrl.c     | 21 +++++++++++
->  drivers/media/usb/uvc/uvc_driver.c   | 14 +++++--
->  drivers/media/usb/uvc/uvc_entity.c   |  1 +
->  drivers/media/usb/uvc/uvc_swentity.c | 73 ++++++++++++++++++++++++++++++++++++
->  drivers/media/usb/uvc/uvcvideo.h     | 14 +++++++
->  include/linux/usb/uvc.h              |  3 ++
->  7 files changed, 125 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/Makefile b/drivers/media/usb/uvc/Makefile
-> index 4f9eee4f81ab6436a8b90324a688a149b2c3bcd1..b4398177c4bb0a9bd49dfd4ca7f2e933b4a1d7df 100644
-> --- a/drivers/media/usb/uvc/Makefile
-> +++ b/drivers/media/usb/uvc/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  uvcvideo-objs  := uvc_driver.o uvc_queue.o uvc_v4l2.o uvc_video.o uvc_ctrl.o \
-> -		  uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o
-> +		  uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o \
-> +		  uvc_swentity.o
->  ifeq ($(CONFIG_MEDIA_CONTROLLER),y)
->  uvcvideo-objs  += uvc_entity.o
->  endif
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index 47e8ccc39234d1769384b55539a21df07f3d57c7..b2768080c08aafa85acb9b7f318672c043d84e55 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -376,6 +376,13 @@ static const struct uvc_control_info uvc_ctrls[] = {
->  				| UVC_CTRL_FLAG_GET_DEF
->  				| UVC_CTRL_FLAG_AUTO_UPDATE,
->  	},
-> +	{
-> +		.entity		= UVC_GUID_SWENTITY,
-> +		.selector	= 0,
-> +		.index		= 0,
-> +		.size		= 1,
-> +		.flags		= UVC_CTRL_FLAG_GET_CUR,
-> +	},
->  };
->  
->  static const u32 uvc_control_classes[] = {
-> @@ -975,6 +982,17 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
->  		.data_type	= UVC_CTRL_DATA_TYPE_BITMASK,
->  		.name		= "Region of Interest Auto Ctrls",
->  	},
-> +	{
-> +		.id		= V4L2_CID_CAMERA_ORIENTATION,
-> +		.entity		= UVC_GUID_SWENTITY,
-> +		.selector	= 0,
-> +		.size		= 8,
-> +		.offset		= 0,
-> +		.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> +		.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> +		.menu_mask	= GENMASK(V4L2_CAMERA_ORIENTATION_EXTERNAL,
-> +					  V4L2_CAMERA_ORIENTATION_FRONT),
-> +	},
->  };
->  
->  /* ------------------------------------------------------------------------
-> @@ -3210,6 +3228,9 @@ static int uvc_ctrl_init_chain(struct uvc_video_chain *chain)
->  		} else if (UVC_ENTITY_TYPE(entity) == UVC_EXT_GPIO_UNIT) {
->  			bmControls = entity->gpio.bmControls;
->  			bControlSize = entity->gpio.bControlSize;
-> +		} else if (UVC_ENTITY_TYPE(entity) == UVC_SWENTITY_UNIT) {
-> +			bmControls = entity->swentity.bmControls;
-> +			bControlSize = entity->swentity.bControlSize;
->  		}
->  
->  		/* Remove bogus/blacklisted controls */
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index bcc97f71fa1703aea1119469fb32659c17d9409a..96eeb3aee546487d15f3c30dfe1775189ddf7e47 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -1869,11 +1869,15 @@ static int uvc_scan_device(struct uvc_device *dev)
->  		return -1;
->  	}
->  
-> -	/* Add GPIO entity to the first chain. */
-> -	if (dev->gpio_unit) {
-> +	/* Add virtual entities to the first chain. */
-> +	if (dev->gpio_unit || dev->swentity_unit) {
->  		chain = list_first_entry(&dev->chains,
->  					 struct uvc_video_chain, list);
-> -		list_add_tail(&dev->gpio_unit->chain, &chain->entities);
-> +		if (dev->gpio_unit)
-> +			list_add_tail(&dev->gpio_unit->chain, &chain->entities);
-> +		if (dev->swentity_unit)
-> +			list_add_tail(&dev->swentity_unit->chain,
-> +				      &chain->entities);
->  	}
->  
->  	return 0;
-> @@ -2249,6 +2253,10 @@ static int uvc_probe(struct usb_interface *intf,
->  	if (ret < 0)
->  		goto error;
->  
-> +	ret = uvc_swentity_init(dev);
-> +	if (ret < 0)
-> +		goto error;
-> +
->  	dev_info(&dev->udev->dev, "Found UVC %u.%02x device %s (%04x:%04x)\n",
->  		 dev->uvc_version >> 8, dev->uvc_version & 0xff,
->  		 udev->product ? udev->product : "<unnamed>",
-> diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
-> index cc68dd24eb42dce5b2846ca52a8dfa499c8aed96..d1a652ef35ec34801bd39a5124b834edf838a79e 100644
-> --- a/drivers/media/usb/uvc/uvc_entity.c
-> +++ b/drivers/media/usb/uvc/uvc_entity.c
-> @@ -106,6 +106,7 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
->  		case UVC_OTT_MEDIA_TRANSPORT_OUTPUT:
->  		case UVC_EXTERNAL_VENDOR_SPECIFIC:
->  		case UVC_EXT_GPIO_UNIT:
-> +		case UVC_SWENTITY_UNIT:
->  		default:
->  			function = MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN;
->  			break;
-> diff --git a/drivers/media/usb/uvc/uvc_swentity.c b/drivers/media/usb/uvc/uvc_swentity.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..702a2c26e029a0655dade177ed2a9b88d7a4136d
-> --- /dev/null
-> +++ b/drivers/media/usb/uvc/uvc_swentity.c
-> @@ -0,0 +1,73 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *      uvc_swentity.c  --  USB Video Class driver
-> + *
-> + *      Copyright 2025 Google LLC
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/usb/uvc.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include "uvcvideo.h"
-
-Blank lines between header groups would be nice.
-
-> +
-> +static int uvc_swentity_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
-> +				u8 cs, void *data, u16 size)
+>  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
+>  1 file changed, 26 insertions(+), 3 deletions(-)
+>
+> [Adjusted the first line of the description. Added reviewer tags.
+>  Added missing CC to linux-modules.]
+>
+> diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.=
+c
+> index 7bd459ea6c59..51c1471e8684 100644
+> --- a/scripts/gendwarfksyms/types.c
+> +++ b/scripts/gendwarfksyms/types.c
+> @@ -6,6 +6,8 @@
+>  #define _GNU_SOURCE
+>  #include <inttypes.h>
+>  #include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+>  #include <zlib.h>
+>
+>  #include "gendwarfksyms.h"
+> @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct ty=
+pe_expansion **res)
+>         return -1;
+>  }
+>
+> +static int cmp_expansion_name(const void *p1, const void *p2)
 > +{
-> +	if (size < 1)
-> +		return -EINVAL;
+> +       struct type_expansion *const *e1 =3D p1;
+> +       struct type_expansion *const *e2 =3D p2;
 > +
-> +	switch (entity->swentity.props.orientation) {
-> +	case V4L2_FWNODE_ORIENTATION_FRONT:
-> +		*(u8 *)data = V4L2_CAMERA_ORIENTATION_FRONT;
-> +		break;
-> +	case V4L2_FWNODE_ORIENTATION_BACK:
-> +		*(u8 *)data = V4L2_CAMERA_ORIENTATION_BACK;
-> +		break;
-> +	default:
-> +		*(u8 *)data = V4L2_CAMERA_ORIENTATION_EXTERNAL;
-> +	}
-> +
-> +	return 0;
+> +       return strcmp((*e1)->name, (*e2)->name);
 > +}
 > +
-> +static int uvc_swentity_get_info(struct uvc_device *dev,
-> +				 struct uvc_entity *entity, u8 cs, u8 *caps)
-> +{
-> +	*caps = UVC_CONTROL_CAP_GET;
-> +	return 0;
-> +}
-> +
-> +int uvc_swentity_init(struct uvc_device *dev)
-> +{
-> +	static const u8 uvc_swentity_guid[] = UVC_GUID_SWENTITY;
-> +	struct v4l2_fwnode_device_properties props;
-> +	struct uvc_entity *unit;
-> +	int ret;
-> +
-> +	ret = v4l2_fwnode_device_parse(&dev->udev->dev, &props);
-> +	if (ret)
-> +		return dev_err_probe(&dev->intf->dev, ret,
-> +				     "Can't parse fwnode\n");
-> +
-> +	if (props.orientation == V4L2_FWNODE_PROPERTY_UNSET)
-> +		return 0;
-> +
-> +	unit = uvc_alloc_entity(UVC_SWENTITY_UNIT, UVC_SWENTITY_UNIT_ID, 0, 1);
-> +	if (!unit)
-> +		return -ENOMEM;
-> +
-> +	memcpy(unit->guid, uvc_swentity_guid, sizeof(unit->guid));
-> +	unit->swentity.props = props;
-> +	unit->swentity.bControlSize = 1;
-> +	unit->swentity.bmControls = (u8 *)unit + sizeof(*unit);
-> +	unit->swentity.bmControls[0] = 1;
-> +	unit->get_cur = uvc_swentity_get_cur;
-> +	unit->get_info = uvc_swentity_get_info;
-> +	strscpy(unit->name, "SWENTITY", sizeof(unit->name));
-> +
-> +	list_add_tail(&unit->list, &dev->entities);
-> +
-> +	dev->swentity_unit = unit;
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index dc23d8a97340dc4615d4182232d395106e6d9ed5..a931750bdea25b9062dcc7644bf5f2ed89c1cb4c 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -19,6 +19,7 @@
->  #include <media/v4l2-event.h>
->  #include <media/v4l2-fh.h>
->  #include <media/videobuf2-v4l2.h>
-> +#include <media/v4l2-fwnode.h>
+>  static void type_map_write(FILE *file)
+>  {
+>         struct type_expansion *e;
+>         struct hlist_node *tmp;
+> +       struct type_expansion **es;
+> +       size_t count =3D 0;
+> +       size_t i =3D 0;
+>
+>         if (!file)
+>                 return;
+>
+> -       hash_for_each_safe(type_map, e, tmp, hash) {
+> -               checkp(fputs(e->name, file));
+> +       hash_for_each_safe(type_map, e, tmp, hash)
+> +               ++count;
+> +       es =3D xmalloc(count * sizeof(struct type_expansion *));
 
-Alphabetical order.
+Just a nit:
 
->  
->  /* --------------------------------------------------------------------------
->   * UVC constants
-> @@ -41,6 +42,9 @@
->  #define UVC_EXT_GPIO_UNIT		0x7ffe
->  #define UVC_EXT_GPIO_UNIT_ID		0x100
->  
-> +#define UVC_SWENTITY_UNIT		0x7ffd
-> +#define UVC_SWENTITY_UNIT_ID		0x101
-> +
->  /* ------------------------------------------------------------------------
->   * Driver specific constants.
->   */
-> @@ -242,6 +246,12 @@ struct uvc_entity {
->  			int irq;
->  			bool initialized;
->  		} gpio;
-> +
-> +		struct {
-> +			u8  bControlSize;
-> +			u8  *bmControls;
-> +			struct v4l2_fwnode_device_properties props;
-> +		} swentity;
->  	};
->  
->  	u8 bNrInPins;
-> @@ -617,6 +627,7 @@ struct uvc_device {
->  	} async_ctrl;
->  
->  	struct uvc_entity *gpio_unit;
-> +	struct uvc_entity *swentity_unit;
->  };
->  
->  enum uvc_handle_state {
-> @@ -836,4 +847,7 @@ void uvc_debugfs_cleanup_stream(struct uvc_streaming *stream);
->  size_t uvc_video_stats_dump(struct uvc_streaming *stream, char *buf,
->  			    size_t size);
->  
-> +/* swentity */
-> +int uvc_swentity_init(struct uvc_device *dev);
-> +
->  #endif
-> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
-> index bce95153e5a65613a710d7316fc17cf5462b5bce..88a23e8919d1294da4308e0e3ca0eccdc66a318f 100644
-> --- a/include/linux/usb/uvc.h
-> +++ b/include/linux/usb/uvc.h
-> @@ -29,6 +29,9 @@
->  #define UVC_GUID_EXT_GPIO_CONTROLLER \
->  	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
->  	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
-> +#define UVC_GUID_SWENTITY \
-> +	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
-> +	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x04}
->  
->  #define UVC_GUID_FORMAT_MJPEG \
->  	{ 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+           es =3D xmalloc(count * sizeof(*es));
 
--- 
-Regards,
+is better?
 
-Laurent Pinchart
+> +       hash_for_each_safe(type_map, e, tmp, hash)
+> +               es[i++] =3D e;
+> +
+> +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_n=
+ame);
+
+qsort(es, count, sizeof(*es), cmp_expansion_name);
+
+
+
+> +
+> +       for (i =3D 0; i < count; ++i) {
+> +               checkp(fputs(es[i]->name, file));
+>                 checkp(fputs(" ", file));
+> -               type_list_write(&e->expanded, file);
+> +               type_list_write(&es[i]->expanded, file);
+>                 checkp(fputs("\n", file));
+>         }
+> +
+> +       free(es);
+>  }
+>
+>  static void type_map_free(void)
+> --
+> 2.50.0.714.g196bf9f422-goog
+>
+>
+
+
+--
+Best Regards
+Masahiro Yamada
