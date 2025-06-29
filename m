@@ -1,123 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9D01386C9
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B491E1E521D
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751187146; cv=none; b=oWTR5+Kz+FR33OEA8C0zAbNt9f1e4OoUmgUlAyUMkXTUeLWkEFxQeygCC0xX4eb/MYyWYrIH+RNzBaJlbWC2oUKuM0u7ZSN60489QhK48T7j22ulXaD/0rNs9lI6NHusLambdP3R88xLCshyiQ9/4PPxmZ3tv/+s9thNw2qkkuY=
+	t=1751187224; cv=none; b=KECXR1p7onjiPsr7o8a9sLqbRE9VaTjFd0QNJt8e/zs7ARX/gEk1Z+sZsIl/Lo2/97oqdnq677wRjKRlypu36BlBOTmPNykgmw5coqeRfPfvZ15SB7oNHGL5YDMorA4Ac2WStt3qrQs+cXgufO5DT0K+djdB2j2jsLNsuR6dcp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751187146; c=relaxed/simple;
-	bh=W6r+MYefkq7f4aFLyxBTV46CCq99CNb9I7ZXsoZsOnQ=;
+	s=arc-20240116; t=1751187224; c=relaxed/simple;
+	bh=ww3g+Oxw+MaFQjQEv4EwL+pZtVT3lNMUJGi7DPhSD/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOFbQ64PBJf5cjAchgufo/gYUd/XToVhK53PnEWHjU0v/MDu4g6TGDgM2xzBtWlxRU0+pr2l8Sj1EQSryXTlcCJwcKRcy9WnIbmX5mj8hG5gE3owvgOhbonTtomcjLRqUvIZoSYrvLiPOjTmcUKIL+Oo+ijMUtglIxZDQpPnLSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy1ZP1Yj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAsllw5ckSkqMewCmO3p0HK+IkGB7/MvNBReZA2YFbbJFO3rMum3YYgE2v7t2w5/y9+sFXm4oMwInk5wjmIa0jepiCarBqCzRUxszYaRn40hWavifA36jILiKbuUsnr+FDC9t6vh2QdlDT0g8Gj5IPNZXm9FhdjKc4tWLtWFP9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=TI7SpB7c; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy1ZP1Yj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 280EFC4CEEB;
-	Sun, 29 Jun 2025 08:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751187145;
-	bh=W6r+MYefkq7f4aFLyxBTV46CCq99CNb9I7ZXsoZsOnQ=;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="TI7SpB7c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1751187215;
+	bh=ww3g+Oxw+MaFQjQEv4EwL+pZtVT3lNMUJGi7DPhSD/c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cy1ZP1YjjvFvewoqwi9xAF3zyy1GEk0IKE2twlCA+Vrncabr8EwvYs+6nDkjf7naI
-	 MT854oDsIGTCniar6Wz6TeKMfdzLI1XxpJiLrSIavfN9rb6F6zg4um3drf4z0LjDTH
-	 qIbnwLse1qmycJenHrXOO5GKfW3qovQek8JN5vHBhWCiWyV3RReMzGZGwNCMo0PLG6
-	 PjZf+MclRpSL5oBLswRmTbXXcjtD3uYKn8d4/5kskcLArwAmqHxYO5QlILj14Dftig
-	 7xzn/yxDrSYPunbdtw6Y/N2va/nBb3xVXfX0rLmbqXOHgOE7HcfXgnyQkOZeII7h7o
-	 1/kmLImQbx+0Q==
-Date: Sun, 29 Jun 2025 11:52:17 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	James Houghton <jthoughton@google.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nikita Kalyazin <kalyazin@amazon.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Ujwal Kundur <ujwal.kundur@gmail.com>
-Subject: Re: [PATCH v2 3/4] mm/hugetlb: Support vm_uffd_ops API
-Message-ID: <aGD-wUFX9oSIFm3e@kernel.org>
-References: <20250627154655.2085903-1-peterx@redhat.com>
- <20250627154655.2085903-4-peterx@redhat.com>
+	b=TI7SpB7ckZQdPSF1tWKq0DaNoduGJNTMJG28b1Uu9ZbPcn9gyn0H2C0A7SXA14B6S
+	 3gBSLeXwWeDFqcBDlwIRPKtKIPYcsBkR1ENqclvPiq6lCHAmMbrtWEo5WSL/1ysBnf
+	 YZs1M0lH+DKn9riARundoU5HZF9YR2r067+AMe0g=
+Date: Sun, 29 Jun 2025 10:53:34 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Willy Tarreau <w@1wt.eu>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
+Message-ID: <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
+References: <20250620100251.9877-1-w@1wt.eu>
+ <20250620100251.9877-4-w@1wt.eu>
+ <25eb3144-d19e-43d2-af4f-b0251d28808c@t-8ch.de>
+ <20250622071958.GA3384@1wt.eu>
+ <07f5fdb4-2c5c-4723-b12a-abdb0c9f33b7@t-8ch.de>
+ <20250623025618.GA29015@1wt.eu>
+ <20250629084628.GA7992@1wt.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250627154655.2085903-4-peterx@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250629084628.GA7992@1wt.eu>
 
-On Fri, Jun 27, 2025 at 11:46:54AM -0400, Peter Xu wrote:
-> Add support for the new vm_uffd_ops API for hugetlb.  Note that this only
-> introduces the support, the API is not yet used by core mm.
+On 2025-06-29 10:46:28+0200, Willy Tarreau wrote:
+> On Mon, Jun 23, 2025 at 04:56:18AM +0200, Willy Tarreau wrote:
+> > On Sun, Jun 22, 2025 at 09:58:52PM +0200, Thomas Weißschuh wrote:
+> > > On 2025-06-22 09:19:58+0200, Willy Tarreau wrote:
+> > > > Hi Thomas,
+> > > > 
+> > > > On Sat, Jun 21, 2025 at 10:21:47AM +0200, Thomas Weißschuh wrote:
+> > > > > On 2025-06-20 12:02:50+0200, Willy Tarreau wrote:
+> > > > > > Modern programs tend to include sys/select.h to get FD_SET() and
+> > > > > > FD_CLR() definitions as well as struct fd_set, but in our case it
+> > > > > > didn't exist. Let's move these definitions from types.h to sys/select.h
+> > > > > > to help port existing programs.
+> > > > > > 
+> > > > > > Signed-off-by: Willy Tarreau <w@1wt.eu>
+> > > > > 
+> > > > > <snip>
+> > > > > 
+> > > > > > diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+> > > > > > index 16c6e9ec9451f..0b51ede4e0a9c 100644
+> > > > > > --- a/tools/include/nolibc/types.h
+> > > > > > +++ b/tools/include/nolibc/types.h
+> > > > > > @@ -10,6 +10,7 @@
+> > > > > >  #ifndef _NOLIBC_TYPES_H
+> > > > > >  #define _NOLIBC_TYPES_H
+> > > > > >  
+> > > > > > +#include "sys/select.h"
+> > > > > 
+> > > > > Is this really necessary?
+> > > > 
+> > > > Not sure what you mean. Do you mean that you would have preferred it
+> > > > to be included from nolibc.h instead (which I'm equally fine with) or
+> > > > that you'd prefer to have an empty sys/select.h ?
+> > > 
+> > > The former.
+> > 
+> > OK thanks, you're right, that's more consistent with the rest,
+> > I'll do that and push it.
 > 
-> Due to legacy reasons, it's still not trivial to move hugetlb completely to
-> the API (like shmem).  But it will still use uffd_features and uffd_ioctls
-> properly on the API because that's pretty general.
-> 
-> Cc: Muchun Song <muchun.song@linux.dev>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+> Trying it has reopened the circular dependencies can of worms :-(
+> It's the same problem as usual that we've worked around till now
+> by placing some types in types.h, except that this time fd_set is
+> defined based on the macros FD_* that I moved to sys/select.h.
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Can't fd_set also move to sys/select.h? This is how I read fd_set(3).
+Even if it is not standards compliant, for nolibc it won't matter as in
+the end everything is available anyaways.
 
-> ---
->  mm/hugetlb.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 11d5668ff6e7..ccd2be152d36 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -5457,6 +5457,22 @@ static vm_fault_t hugetlb_vm_op_fault(struct vm_fault *vmf)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_USERFAULTFD
-> +static const vm_uffd_ops hugetlb_uffd_ops = {
-> +	.uffd_features	= 	__VM_UFFD_FLAGS,
-> +	/* _UFFDIO_ZEROPAGE not supported */
-> +	.uffd_ioctls	= 	BIT(_UFFDIO_COPY) |
-> +				BIT(_UFFDIO_WRITEPROTECT) |
-> +				BIT(_UFFDIO_CONTINUE) |
-> +				BIT(_UFFDIO_POISON),
-> +	/*
-> +	 * Hugetlbfs still has its own hard-coded handler in userfaultfd,
-> +	 * due to limitations similar to vm_operations_struct.fault().
-> +	 * TODO: generalize it to use the API functions.
-> +	 */
-> +};
-> +#endif
-> +
->  /*
->   * When a new function is introduced to vm_operations_struct and added
->   * to hugetlb_vm_ops, please consider adding the function to shm_vm_ops.
-> @@ -5470,6 +5486,9 @@ const struct vm_operations_struct hugetlb_vm_ops = {
->  	.close = hugetlb_vm_op_close,
->  	.may_split = hugetlb_vm_op_split,
->  	.pagesize = hugetlb_vm_op_pagesize,
-> +#ifdef CONFIG_USERFAULTFD
-> +	.userfaultfd_ops = &hugetlb_uffd_ops,
-> +#endif
->  };
->  
->  static pte_t make_huge_pte(struct vm_area_struct *vma, struct folio *folio,
-> -- 
-> 2.49.0
-> 
+> I'm giving up on this one for now as I don't want us to revisit
+> that painful dependencies sequence. In theory it should be as simple
+> as guarding types and function definitions independently, but in
+> reality it's never as rocket science as it can also pop up in macros
+> and rare typedefs.
 
--- 
-Sincerely yours,
-Mike.
+Also the headers are always included in the order written down in
+nolibc.h, so sys/select could be above types.h there.
+
+> Instead I'll just provide a stub for sys/select.h just like for
+> inttypes so that user code compiles without changing existing files.
+
+That works for me, too.
