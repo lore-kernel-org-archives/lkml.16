@@ -1,124 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6F31F0E55;
-	Sun, 29 Jun 2025 20:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985053D6F;
+	Sun, 29 Jun 2025 20:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230568; cv=none; b=tBmyy6kZn2MlKFGXnEpFb/ZmBz3nSl2ZQMHKOkxxhvdFOFZ8OMzn7G7LUFKPHhsf3NMG5OZ400Ed9GGnsjFdnyAyEHtCLHOLBPABKDsYjrtZE/qqHQEgZfYxiiuCXAALxw2tmi/jC8NCADjC40kNuF+tqCMSuOwFC+YDdCW9N4A=
+	t=1751230657; cv=none; b=V/Wq7Fn4GaxHD95iJXzc/hYIjul5TGNPbUmx1nDuMGwHo0R+Hh/zU+SOCr4BYQ7zLQ2DHoo0Lzts1t4oX9XgwvJAgIPPv4MSGsUrWyEVwllr3lYcY/ufHgPjPGcGGtuty1K4jUN3phBuvlTRbADTL9sdPkw5I61Khfi5I+qfbHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230568; c=relaxed/simple;
-	bh=wxPOxZ/UV/k3nkqU8M9ommX7Jy3RtmifN1Lsn4mr+AY=;
+	s=arc-20240116; t=1751230657; c=relaxed/simple;
+	bh=4sGclJ7JPmOXEyw1qCkUxmj9+SxiJpgXHWGQ3kI7L8E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2aWwJIzshFQN4wNr6Wcw/WJVej6cV3YckeBcMj5OAlRSc8i5o/9GlRYx0adI32rUGh1XPIc2gzhSN8g9P7+ubtRrHWQkkVc100kZkfyjxkPHgO5UWFLaSslhdAVMf2XOf52elU1K0wyQsJWfyGDv2IJ3kphgoZcMoOZ41qQOws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JafR0q7V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpLUhIkM7DgVcFhW8EL/C/OUIy6WUZ+IfRght3y11y2WarwWwPCgjnR8fSqHXW4rA0GjPVlUXlWgww2U0tPU02BDS+YJMXsotctbEgv+DX3I92jTFhrrJuIwoq+IsMpG33cb/ztNBhrZuADGWOT2yqeh7lDqCdDdDOTEOP6BXSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKlRP+3f; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JafR0q7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE970C4CEEB;
-	Sun, 29 Jun 2025 20:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751230567;
-	bh=wxPOxZ/UV/k3nkqU8M9ommX7Jy3RtmifN1Lsn4mr+AY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JafR0q7VK1QSCjrMj0r8VwcsPzjNxnYBbF9x1UCwj5ay0PIUprwQRy73UGFxP+YLa
-	 UVVE7jHIrLp1JoHbGJ8cV7v+azD+e0iXxky27zPnOq4SyYtkJMfpdLqqYxUhX5qJH2
-	 jhFdMkuEVIJbWh72I8+w86MjFHk4LiS75EBgrUDUu8aZIa84KYAuEWKkMIcCNHeNi/
-	 BlV9jSJCnbFWWcFUh9eipj/iNexN3a9ANdxefeYo9OVRxW1gSNxOML3DzlOe5I2Ocr
-	 pkaU+54zZPxoifiAGbwKntn6WjiA0mKwDTKQYYCjDTvfbYWkgQJGrNT24Wa8MGuxzU
-	 aTaTbLFN0VfJw==
-Date: Sun, 29 Jun 2025 22:56:01 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: register_syctl_init error in linux-next-20250612
-Message-ID: <4s3egeo2fhq6hk7pcsxplsqomiiw6vbnnswhimlekfrl6tsixt@wzf5x63pdvp6>
-References: <20250612175515.3251-1-spasswolf@web.de>
- <vvorpevngfle6budlgqhmj3f25lb77czzyvd5aa6jil7zkaqgp@weanygri324r>
- <11898dd756020687c2016a37af3c948b350bdbbc.camel@web.de>
- <szadjbcldmcirdtgiv6wowqumlk4cbthb37f3e42lzcbt4tnla@ilp4m6quqk4b>
- <6eb19bee-c553-4a28-9342-b2b218deabe7@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKlRP+3f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751230654; x=1782766654;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4sGclJ7JPmOXEyw1qCkUxmj9+SxiJpgXHWGQ3kI7L8E=;
+  b=TKlRP+3f/6xa/BsqWWJ1rOHbxPuKQxI4UoAPkOLKgX/24YK4S0W6CBr2
+   mLPR1nT5/bW4GCFEzV87wIlEZZTVo2cHsL/Io2xUX33AXqMUItAvvUk8W
+   9WqWBlXmOIbT0zR7n5FNnqx5iO2Scc+dXCQRUtGTtL6hkAm6bT4XA5ZN5
+   dv7KBef4kk2nC0XhV2699kGEOcy0HG1jHzZ4AeMlm9WPBTj9IG+663CZ1
+   Pj+fUkEP3t5l940/2+jDusWx7FcnGku0Boqu/5jn9IB7k/6oV7h8hdY17
+   eK08987vV6w5dwdnS9y6gzs9fEJWqsrutlm0s/XcNOy2f0Jem8BdKuO3R
+   Q==;
+X-CSE-ConnectionGUID: MHTvA/O7RTqGdnq6qHH77Q==
+X-CSE-MsgGUID: +TVy+MTFTkm36HzPfcv4yw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="76006842"
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="76006842"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 13:57:34 -0700
+X-CSE-ConnectionGUID: yqedKzWcThKyEa84V8mKAQ==
+X-CSE-MsgGUID: 2xMj3oDGTH6CIdlGLr8kEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="152780971"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 29 Jun 2025 13:57:29 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVz5b-000YE2-1w;
+	Sun, 29 Jun 2025 20:57:27 +0000
+Date: Mon, 30 Jun 2025 04:56:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com,
+	sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com, p.zabel@pengutronix.de,
+	richardcochran@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, guangjie.song@mediatek.com,
+	wenst@chromium.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	kernel@collabora.com, Laura Nao <laura.nao@collabora.com>
+Subject: Re: [PATCH v2 22/29] clk: mediatek: Add MT8196 mfg clock support
+Message-ID: <202506300416.dbAiyBcI-lkp@intel.com>
+References: <20250624143220.244549-23-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3a3woiyuowbqzbpf"
-Content-Disposition: inline
-In-Reply-To: <6eb19bee-c553-4a28-9342-b2b218deabe7@nvidia.com>
-
-
---3a3woiyuowbqzbpf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250624143220.244549-23-laura.nao@collabora.com>
 
-On Fri, Jun 27, 2025 at 12:02:48PM +0100, Jon Hunter wrote:
-> Hi Joel,
->=20
-> On 20/06/2025 10:42, Joel Granados wrote:
-=2E..
-> > +		.data		=3D &max_lock_depth,
-> > +		.maxlen		=3D sizeof(int),
-> > +		.mode		=3D 0644,
-> > +		.proc_handler	=3D proc_dointvec,
-> > +	},
-> > +};
-> > +
-> > +static int __init init_rtmutex_sysctl(void)
-> > +{
-> > +	printk("registering rtmutex");
-Well that just slipped in there undetected :).
+Hi Laura,
 
-> > +	register_sysctl_init("kernel", rtmutex_sysctl_table);
-> > +	return 0;
-> > +}
->=20
->=20
-> With recent -next trees I am seeing the following kernel warning when
-> booting -next on our Tegra boards ...
->=20
->  boot: logs: [       0.231226] WARNING KERN registering rtmutex
->=20
-> This warning triggers a test failure for us because this is a new/unexpec=
-ted
-> warning. Looking at the above it seems that making this a pr_debug() or
-> pr_info() would be more appropriate. Let me know if it is OK to update th=
-is.
-this is just a debug print statement that made its way to next. I'll
-remove it. Thx for the report.
+kernel test robot noticed the following build warnings:
 
-Best
->=20
-> Thanks!
-> Jon
->=20
-> --=20
-> nvpublic
->=20
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on linus/master v6.16-rc3 next-20250627]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
---=20
+url:    https://github.com/intel-lab-lkp/linux/commits/Laura-Nao/clk-mediatek-clk-pll-Add-set-clr-regs-for-shared-PLL-enable-control/20250624-225217
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20250624143220.244549-23-laura.nao%40collabora.com
+patch subject: [PATCH v2 22/29] clk: mediatek: Add MT8196 mfg clock support
+config: arm64-randconfig-r053-20250629 (https://download.01.org/0day-ci/archive/20250630/202506300416.dbAiyBcI-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
 
-Joel Granados
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506300416.dbAiyBcI-lkp@intel.com/
 
---3a3woiyuowbqzbpf
-Content-Type: application/pgp-signature; name="signature.asc"
+cocci warnings: (new ones prefixed by >>)
+>> drivers/clk/mediatek/clk-mt8196-mfg.c:143:3-8: No need to set .owner here. The core will do it.
 
------BEGIN PGP SIGNATURE-----
+vim +143 drivers/clk/mediatek/clk-mt8196-mfg.c
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmhhqFIACgkQupfNUreW
-QU/4Twv/YnX5yNyWtYD3GHMdqa+5hv6IQk3y+7xhOJTQqTRWU5fhowWTXIYq56uh
-5ftswx9HQVOYMf3jbp0o1xTwC4f1AQk8nQzbacmVfj2ZX3XwB0N9xVAumeWCXQc4
-mP36k+ixQSE3YqSDAmuBOMdyIpk0GaqepxXDdgEYHQ9OFLJFsqIrcUrQX41sA3Gd
-xMpjzkgHCg4+KIE7ow5e3u3SuwS0aaPDylNWXDp8fQI5K03FIwvDOgImR0dHk9hK
-LjODXVr6ZN2b4/sYVveAGOKMmwBpON2gHQzpJmf9QRSz0kjp8odYmiUvSoE3D2fP
-rtN0Xh2FVIeLA/jPU9iozuWzHQSZl5EuHc81k3kRlKVbvuR9cdCN4zNsfK2Bh0Sg
-U3u9zZz9GdUO7CywZqSdPft+KsMZsOOM6cbpIb2WL1EkcjQN58eXGLTk904wMymw
-R53xfWZtroYO4+5xANOXAZglx2bEzOa8Q1Q7MmC9ps9s/m9kGydP5oI1pYAlqnlJ
-Z1+0F/TC
-=ZAFG
------END PGP SIGNATURE-----
+   137	
+   138	static struct platform_driver clk_mt8196_mfg_drv = {
+   139		.probe = clk_mt8196_mfg_probe,
+   140		.remove = clk_mt8196_mfg_remove,
+   141		.driver = {
+   142			.name = "clk-mt8196-mfg",
+ > 143			.owner = THIS_MODULE,
+   144			.of_match_table = of_match_clk_mt8196_mfg,
+   145		},
+   146	};
+   147	module_platform_driver(clk_mt8196_mfg_drv);
+   148	
 
---3a3woiyuowbqzbpf--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
