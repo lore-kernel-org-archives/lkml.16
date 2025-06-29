@@ -1,201 +1,84 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DF71DC988;
-	Sun, 29 Jun 2025 22:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721032BAF9;
+	Sun, 29 Jun 2025 22:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751234717; cv=none; b=H1AiahEbcPXClpqjQzuj489ecfVrQcuazOuBXEbuE2uJdF9b6hn9CpERUaZHjPKZup+ywmnlJ/e0UT07B11vBhlFcw2ShIm87k3wnP3WPWvJ1v6iYo1wK9EpvueexQgGPsAXtwcgAwTMwjawg2Hx5GMaHlcZ8MWGjAJxBBRh1EQ=
+	t=1751235711; cv=none; b=kfNzF0BT6FKy/W4eP7La1CDx/nc5NiWtB1mpc72sSupKU23hOAMgVqSPC7JdJ2CHlvRloZwDvFf2i1hNRl6LcjxJ5noVayx4JJXIqdpZzE4v4f11txv9U15h0cFAehnj04wT5RiVDYgxSwDI2H6YKQzJaOf6Se3CpGQx6d1CEd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751234717; c=relaxed/simple;
-	bh=FI3QegmqdgygByP3S8dUbw/0GVJZXkqD0oaE0+hUZ9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KO9G+PIm7vGitVfNmNHdq3F+YzFzKL3eJ3WagjTPYiLpMPy0mjvjaakhlWbXl99h7z1CxBoPRK5aBApiQE19eCfPthzTnTd+wegbhSXPRdwNAmzcP3Rpbzo2NLk0xdJkxSPTNDVMpgzuSHjspYfl0HjrXICA74clcuBPk9erzww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=dZLcAFrT; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Snk5NeqI; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="dZLcAFrT";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Snk5NeqI"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bVjyd3WvZz9stg;
-	Mon, 30 Jun 2025 00:05:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751234713;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wonIqwqE+gZtcXn2WE6N/pAhGaGx6R/BhYVp+2etRMk=;
-	b=dZLcAFrTgcxfCPDqmmzeXnwWZKnWuxBRJphwxQJzOi5js7oJMhshlVu6cFT0bTbdemDgZy
-	klyRdP9Ogh1lcQ3A9y9LZ9U/t18I98zipzGoW3GC4hUhd+soTt49Arrq6uHZWersaqE4MD
-	nQSPuMu0ElXB9VpWzQ087MQjtBsK7OjilE1uXBT8fNbK8yXGEk06rGiqWmQiCuxEgVtjTu
-	/NSrXxT6LzqYod4aEH+Eo82WejKX28Ij0CMyLfBeAXdQSRGvO1UWfWYkc/ewwnr2/drojz
-	ltk6VhPF0RUA2w3VPT8TITwvmGgAQJTa5QNAXV82yuKvEvl2AsjotkLgme8PDg==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1751234711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wonIqwqE+gZtcXn2WE6N/pAhGaGx6R/BhYVp+2etRMk=;
-	b=Snk5NeqIxlYLkGoTYhqpTkOw+9tVflrQkjGl/vH4BnTRhwH+lxc0lzrqQN/YaT2+PAlmzq
-	15b7ei26HInKT4UZcQY1FPC2w5UpGsNjlFz4R4HJRoYO6RxwGpnFyKYiBkfN6AfUASnZsQ
-	f8eABpFDpgcPIy/THhwQ6fsCpqms6tV/min6CmxLEa8YY7s/26yBYtowQl/RnFsrK961wh
-	R1Ka4nQGzIWxOBMAHw+ZcwRcb2QFxS+rOBj4bPOMsbvLbwzFvOExxvfUnF8DeKa3RHEzeI
-	HGKEGUnDDikNEdFsg16vOZd26UEqq4Hf/FTT8+eIjpNaQ8c7wu+1I/Q5bNcnug==
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] ARM: dts: renesas: Add boot phase tags marking to Renesas RZ/A1
-Date: Mon, 30 Jun 2025 00:04:24 +0200
-Message-ID: <20250629220502.935717-1-marek.vasut+renesas@mailbox.org>
+	s=arc-20240116; t=1751235711; c=relaxed/simple;
+	bh=EZRuKPARgIYLB6wIpfxuIXfAZZXKfyPzftYWLR92HpM=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=a5TMgrpaHw9m+LoXmGHUBbXw/HHxYQLsRahSul8RR2kEPvicw0+VIfGKTT8jCw1iR1oA1s8svO4IsPjfBt1W3TwcTOz+G3LiaT/ufVb0/VZrfWlUPzQuKYDJal24dS5potXIfWLACI1GeiuI69WU0bsaB0M9NJfdO6qguhXmBLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1uW0Oz-000000002Iz-2I42;
+	Sun, 29 Jun 2025 22:21:33 +0000
+Date: Sun, 29 Jun 2025 23:21:28 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Felix Fietkau <nbd@nbd.name>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
+	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
+	Sky Huang <skylake.huang@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net-next v2 0/3] net: ethernet: mtk_eth_soc: improve device
+ tree handling
+Message-ID: <cover.1751229149.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: cd501b2cf243314dd24
-X-MBO-RS-META: q69wwtg3rufy5stjqdw1npekmohmqoaf
-X-Rspamd-Queue-Id: 4bVjyd3WvZz9stg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-bootph-all as phase tag was added to dt-schema (dtschema/schemas/bootph.yaml)
-to describe various node usage during boot phases with DT. Add bootph-all for
-all nodes that are used in the bootloader on Renesas RZ/A1 SoC.
+This series further improves the mtk_eth_soc driver in preparation to
+complete upstream support for the MediaTek MT7988 SoC family.
 
-All SoC require BSC bus, PFC pin control and OSTM0 timer access during all
-stages of the boot process, those are marked using bootph-all property, and
-so is the SoC bus node which contains the PFC and OSTM IPs.
+Frank Wunderlich's previous attempt to have the ethernet node included
+in mt7988a.dtsi and cover support for MT7988 in the device tree bindings
+was criticized for the way mtk_eth_soc references SRAM in device tree[1].
 
-Each board console UART is also marked as bootph-all to make it available in
-all stages of the boot process.
+Having a 2nd 'reg' property, like introduced by commit ebb1e4f9cf38
+("net: ethernet: mtk_eth_soc: add support for in-SoC SRAM") isn't acceptable
+and a dedicated "mmio-sram" node should be used instead.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
- arch/arm/boot/dts/renesas/r7s72100-genmai.dts   | 3 ++-
- arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts | 3 ++-
- arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts  | 2 ++
- arch/arm/boot/dts/renesas/r7s72100.dtsi         | 5 +++++
- 4 files changed, 11 insertions(+), 2 deletions(-)
+Support for the hard-coded offset and including the SRAM region as part of
+the Ethernet's "reg" MMIO space will still be required in order to support
+existing legacy device trees of the MT7981 and MT7986 SoC families.
 
-diff --git a/arch/arm/boot/dts/renesas/r7s72100-genmai.dts b/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
-index c81840dfb7da..13c0324b8def 100644
---- a/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/renesas/r7s72100-genmai.dts
-@@ -258,6 +258,7 @@ mmcif_pins: mmcif {
- 	};
- 
- 	scif2_pins: serial2 {
-+		bootph-all;
- 		/* P3_0 as TxD2; P3_2 as RxD2 */
- 		pinmux = <RZA1_PINMUX(3, 0, 6)>, <RZA1_PINMUX(3, 2, 4)>;
- 	};
-@@ -286,7 +287,7 @@ &rtc {
- &scif2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&scif2_pins>;
--
-+	bootph-all;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts b/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
-index 9d29861f23f1..e4f489522b2b 100644
---- a/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
-+++ b/arch/arm/boot/dts/renesas/r7s72100-gr-peach.dts
-@@ -59,6 +59,7 @@ led1 {
- 
- &pinctrl {
- 	scif2_pins: serial2 {
-+		bootph-all;
- 		/* P6_2 as RxD2; P6_3 as TxD2 */
- 		pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
- 	};
-@@ -109,7 +110,7 @@ &ostm1 {
- &scif2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&scif2_pins>;
--
-+	bootph-all;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts b/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
-index 25c6d0c78828..0bf106e9827e 100644
---- a/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/renesas/r7s72100-rskrza1.dts
-@@ -199,6 +199,7 @@ keyboard_pins: keyboard {
- 
- 	/* Serial Console */
- 	scif2_pins: serial2 {
-+		bootph-all;
- 		pinmux = <RZA1_PINMUX(3, 0, 6)>,	/* TxD2 */
- 			 <RZA1_PINMUX(3, 2, 4)>;	/* RxD2 */
- 	};
-@@ -278,6 +279,7 @@ &rtc {
- &scif2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&scif2_pins>;
-+	bootph-all;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/renesas/r7s72100.dtsi b/arch/arm/boot/dts/renesas/r7s72100.dtsi
-index 1a866dbaf5e9..c78131e3cd24 100644
---- a/arch/arm/boot/dts/renesas/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/renesas/r7s72100.dtsi
-@@ -41,6 +41,7 @@ bsc: bus {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0 0 0x18000000>;
-+		bootph-all;
- 	};
- 
- 	cpus {
-@@ -108,6 +109,8 @@ soc {
- 		#size-cells = <1>;
- 		ranges;
- 
-+		bootph-all;
-+
- 		L2: cache-controller@3ffff000 {
- 			compatible = "arm,pl310-cache";
- 			reg = <0x3ffff000 0x1000>;
-@@ -557,6 +560,7 @@ R7S72100_CLK_SDHI10 R7S72100_CLK_SDHI11
- 
- 		pinctrl: pinctrl@fcfe3000 {
- 			compatible = "renesas,r7s72100-ports";
-+			bootph-all;
- 
- 			reg = <0xfcfe3000 0x4230>;
- 
-@@ -639,6 +643,7 @@ ostm0: timer@fcfec000 {
- 			interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
- 			power-domains = <&cpg_clocks>;
-+			bootph-all;
- 			status = "disabled";
- 		};
- 
+While at it also replace confusing error messages when using legacy device
+trees without "interrupt-names" with a warning informing users that they
+are using a legacy device tree.
+
+[1]: https://patchwork.ozlabs.org/comment/3533543/
+
+Daniel Golle (3):
+  net: ethernet: mtk_eth_soc: improve support for named interrupts
+  net: ethernet: mtk_eth_soc: fix kernel-doc comment
+  net: ethernet: mtk_eth_soc: use genpool allocator for SRAM
+
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 135 +++++++++++++-------
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |   5 +-
+ 2 files changed, 95 insertions(+), 45 deletions(-)
+
 -- 
-2.47.2
-
+2.50.0
