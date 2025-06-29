@@ -1,99 +1,217 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9460478F4A
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D82C1F866A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751187004; cv=none; b=ABGXl+zpPxG1UO/MsBb8bCKInodjXwbIIB8NzlonaAcOX2ZjnqVdgJXlgqNtJBGmsHfuDDayRalPdhjmihq18eQlMkQkWlygL2oeNvNKoBAnWob+IWY7yNHDEY/O7DOroly4F0MKZP+gCHQvYrg7fZoxdtYBXhsrbqsO+oLrqg8=
+	t=1751187021; cv=none; b=XZxJokOnWHHH9LfhMvK1/hWoe38yz+WXQF6YSrN6aZ87nQBoEBkI8472rHOiVxmHgBvl/3JJB5hERRxxJbxteJwEcCRWTfyaXe0EAV4Yt9KwVZSKBWB6tmjpy5ItYcuPlz0HBL60pr8FSi1S35wQ9HP3C2A0qVQAzpIHeHKRlgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751187004; c=relaxed/simple;
-	bh=p7ryK8qS1laqTOOKrVA8iL/QWVYbfWZmky6TsrRQslQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mihkMaOX14rf6h29e21yHtUwOo9o4p4AvLbR8ZBvoSPxXmyJo9d+rnxpzi86qTbHWkkQW0wnJun9HpZzBxD2Dca5XFfAq5JDMzn1JfdNkt6EIehiPE4xV/EPDv5Faju3Z7zobZjRGtfsW7sS6IaHGpz0oRi67GldDfpYpa+7Eio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aoBQxmd3; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751187021; c=relaxed/simple;
+	bh=+uN/BMeSqdG97kTuJhCePNMiCzZqMgbQ1KWNK8YN0F0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Om5AnClqnpy6bbaOPR/xbzLobd3l1OPXv3MZLdoCMOGqjrHzD8TYFlUXDjUiBULOU36//JT2TkrojnwULEpnNiKhFYIPk4mZB7eFxaGFq5xsfbhf47WLQ1aboIShH1+UAQZXbiLM8m9m8pNKEMvZwRILRy3TcX52BlIYP2Ph0TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHk1klkk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aoBQxmd3"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9858640E0198;
-	Sun, 29 Jun 2025 08:50:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lmND_zg0tCam; Sun, 29 Jun 2025 08:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751186997; bh=F7rm92ZWerKdhUL4+Hg/qw+uorETxgmeEov2q7V5k50=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aoBQxmd3SQwLV0Uk0SYph3M2tvOafDlWXk3imnIEtqM3gOgckL4E0/gAaP4/wTbVF
-	 nwoXej/3UsjRvopCizsUuSmeXwQFQocdigycE/DXAgNcqeh18foPOC0k726EksynnP
-	 re4z8CWtd1mxyssg1zwXjKfIavfXegSUIA7pDrStLiCAwwdhMdYBGr/RLXwHKNbPhu
-	 uRYePY6zdLtXUxj8Jp+pPunTDQDhfBJQycdRCdAHc/hVadQPcWyYlpXG79tvxLvlTS
-	 7X99KFZxBci/IrPSdLYa26Tno8G8u6UpdGQzmlaC7QBoNUWwq+gafSwSyikiYcs5nm
-	 uD8IcT2r6aja+D9AILCw4v0PBcmkLNb1u3uqoGH3xhz2LaprlNM89hUM4t/Jh1r1lf
-	 zNniDAV8/GIE4qo5NhwxtUbMe765v2yUGJpCseaDWcYSt/zgeYkRYJmNV9ECs5/l/o
-	 yBN59MKQF05Qxwu8jT9eEomExFvIUDL25YUk4npTvzi5SP02mwnhh1dqy5SUSUeG0s
-	 3JiUHxZ1gb56aRb+NIxnNPvhZo8pdh5cl56q07BryT+Aa70G9U/YsIFPhbre9cl5eJ
-	 mwx9SD4jBHRpG2XGxdvuFlycAPInmVmSHEl28/QE3vuCDJvp3uM3uY+pz2LPDOMSZ+
-	 okhcFgoZLJaJXbRNEmQn0K7c=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4197B40E00DA;
-	Sun, 29 Jun 2025 08:49:54 +0000 (UTC)
-Date: Sun, 29 Jun 2025 10:49:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] perf/urgent for v6.16-rc4
-Message-ID: <20250629084953.GAaGD-MUAKHnWlFNiW@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHk1klkk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165D3C4CEEB;
+	Sun, 29 Jun 2025 08:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751187021;
+	bh=+uN/BMeSqdG97kTuJhCePNMiCzZqMgbQ1KWNK8YN0F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SHk1klkk1P2LS246jBVLwKnTBxe3PjnO/ZrI7VHTtDCTMQ+tIOnmGhxiTW7jIVNJK
+	 ZhBnF/5EhWWopCsSki9Ndgoj2nJ2LNHMjL1ZtTOlxPn2jp6U3qslV25gtARnpSYRGu
+	 VuKMCjEfAbKjxUWl7CKFktaqrsvVE1WF4iaClmYITpPahUdoAsAlTOQImOGzSH28+R
+	 mdLNMqejNiuaMTUw2G5u/eZDDpxp/rDzOe8pG/KQImc0ZiDHqIZbffWUGFnNpSNq9J
+	 jwKFtjpxGiWtl6l+DvFtam1ShnT7B4yLox5IRdRu1xo40fS0Oxm8yMzPJgkYiN3uV1
+	 sOpFY23mRHeKA==
+Date: Sun, 29 Jun 2025 11:50:11 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	James Houghton <jthoughton@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Hildenbrand <david@redhat.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Ujwal Kundur <ujwal.kundur@gmail.com>
+Subject: Re: [PATCH v2 1/4] mm: Introduce vm_uffd_ops API
+Message-ID: <aGD-QxroTEDUh1eX@kernel.org>
+References: <20250627154655.2085903-1-peterx@redhat.com>
+ <20250627154655.2085903-2-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250627154655.2085903-2-peterx@redhat.com>
 
-Hi Linus,
+Hi Peter,
 
-please pull a perf/urgent fix for v6.16-rc4.
+On Fri, Jun 27, 2025 at 11:46:52AM -0400, Peter Xu wrote:
+> Introduce a generic userfaultfd API for vm_operations_struct, so that one
+> vma, especially when as a module, can support userfaults without modifying
+> the core files.  More importantly, when the module can be compiled out of
+> the kernel.
+> 
+> So, instead of having core mm referencing modules that may not ever exist,
+> we need to have modules opt-in on core mm hooks instead.
+> 
+> After this API applied, if a module wants to support userfaultfd, the
+> module should only need to touch its own file and properly define
+> vm_uffd_ops, instead of changing anything in core mm.
 
-Thx.
+I liked the changelog update you proposed in v1 thread. I took liberty to
+slightly update it and here's what I've got:
 
----
+  Currently, most of the userfaultfd features are implemented directly in the
+  core mm.  It will invoke VMA specific functions whenever necessary.  So far
+  it is fine because it almost only interacts with shmem and hugetlbfs.
 
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+  Introduce a generic userfaultfd API extension for vm_operations_struct,
+  so that any code that implements vm_operations_struct (including kernel
+  modules that can be compiled separately from the kernel core) can support
+  userfaults without modifying the core files.
 
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+  With this API applied, if a module wants to support userfaultfd, the
+  module should only need to properly define vm_uffd_ops and hook it to
+  vm_operations_struct, instead of changing anything in core mm.
 
-are available in the Git repository at:
+> Note that such API will not work for anonymous. Core mm will process
+> anonymous memory separately for userfault operations like before.
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/perf_urgent_for_v6.16_rc4
+Maybe:
 
-for you to fetch changes up to 1476b218327b89bbb64c14619a2d34f0c320f2c3:
+  This API will not work for anonymous memory. Handling of userfault
+  operations for anonymous memory remains unchanged in core mm.
+ 
+> This patch only introduces the API alone so that we can start to move
+> existing users over but without breaking them.
 
-  perf/aux: Fix pending disable flow when the AUX ring buffer overruns (2025-06-26 10:50:37 +0200)
+Please use imperative mood, e.g.
+ 
+  Only introduce the new API so that ...
+ 
+> Currently the uffd_copy() API is almost designed to be the simplistic with
+> minimum mm changes to move over to the API.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  include/linux/mm.h            |  9 ++++++
+>  include/linux/userfaultfd_k.h | 52 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index ef40f68c1183..6a5447bd43fd 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -576,6 +576,8 @@ struct vm_fault {
+>  					 */
+>  };
+>  
+> +struct vm_uffd_ops;
+> +
+>  /*
+>   * These are the virtual MM functions - opening of an area, closing and
+>   * unmapping it (needed to keep files on disk up-to-date etc), pointer
+> @@ -653,6 +655,13 @@ struct vm_operations_struct {
+>  	 */
+>  	struct page *(*find_special_page)(struct vm_area_struct *vma,
+>  					  unsigned long addr);
+> +#ifdef CONFIG_USERFAULTFD
+> +	/*
+> +	 * Userfaultfd related ops.  Modules need to define this to support
+> +	 * userfaultfd.
+> +	 */
+> +	const struct vm_uffd_ops *userfaultfd_ops;
+> +#endif
+>  };
+>  
+>  #ifdef CONFIG_NUMA_BALANCING
+> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
+> index df85330bcfa6..c9a093c4502b 100644
+> --- a/include/linux/userfaultfd_k.h
+> +++ b/include/linux/userfaultfd_k.h
+> @@ -92,6 +92,58 @@ enum mfill_atomic_mode {
+>  	NR_MFILL_ATOMIC_MODES,
+>  };
+>  
+> +/* VMA userfaultfd operations */
+> +struct vm_uffd_ops {
+> +	/**
+> +	 * @uffd_features: features supported in bitmask.
+> +	 *
+> +	 * When the ops is defined, the driver must set non-zero features
+> +	 * to be a subset (or all) of: VM_UFFD_MISSING|WP|MINOR.
+> +	 */
+> +	unsigned long uffd_features;
+> +	/**
+> +	 * @uffd_ioctls: ioctls supported in bitmask.
+> +	 *
+> +	 * Userfaultfd ioctls supported by the module.  Below will always
+> +	 * be supported by default whenever a module provides vm_uffd_ops:
+> +	 *
+> +	 *   _UFFDIO_API, _UFFDIO_REGISTER, _UFFDIO_UNREGISTER, _UFFDIO_WAKE
+> +	 *
+> +	 * The module needs to provide all the rest optionally supported
+> +	 * ioctls.  For example, when VM_UFFD_MISSING was supported,
+> +	 * _UFFDIO_COPY must be supported as ioctl, while _UFFDIO_ZEROPAGE
+> +	 * is optional.
+> +	 */
+> +	unsigned long uffd_ioctls;
+> +	/**
+> +	 * uffd_get_folio: Handler to resolve UFFDIO_CONTINUE request.
+> +	 *
+> +	 * @inode: the inode for folio lookup
+> +	 * @pgoff: the pgoff of the folio
+> +	 * @folio: returned folio pointer
+> +	 *
+> +	 * Return: zero if succeeded, negative for errors.
+> +	 */
+> +	int (*uffd_get_folio)(struct inode *inode, pgoff_t pgoff,
+> +			      struct folio **folio);
+> +	/**
+> +	 * uffd_copy: Handler to resolve UFFDIO_COPY|ZEROPAGE request.
+> +	 *
+> +	 * @dst_pmd: target pmd to resolve page fault
+> +	 * @dst_vma: target vma
+> +	 * @dst_addr: target virtual address
+> +	 * @src_addr: source address to copy from
+> +	 * @flags: userfaultfd request flags
+> +	 * @foliop: previously allocated folio
+> +	 *
+> +	 * Return: zero if succeeded, negative for errors.
+> +	 */
+> +	int (*uffd_copy)(pmd_t *dst_pmd, struct vm_area_struct *dst_vma,
+> +			 unsigned long dst_addr, unsigned long src_addr,
+> +			 uffd_flags_t flags, struct folio **foliop);
+> +};
+> +typedef struct vm_uffd_ops vm_uffd_ops;
 
-----------------------------------------------------------------
-- Make sure an AUX perf event is really disabled when it overruns
+Either use vm_uffd_ops_t for the typedef or drop the typedef entirely. My
+preference is for the second option.
 
-----------------------------------------------------------------
-Leo Yan (1):
-      perf/aux: Fix pending disable flow when the AUX ring buffer overruns
-
- kernel/events/core.c        | 6 +++---
- kernel/events/ring_buffer.c | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
+> +
+>  #define MFILL_ATOMIC_MODE_BITS (const_ilog2(NR_MFILL_ATOMIC_MODES - 1) + 1)
+>  #define MFILL_ATOMIC_BIT(nr) BIT(MFILL_ATOMIC_MODE_BITS + (nr))
+>  #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(nr))
+> -- 
+> 2.49.0
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Sincerely yours,
+Mike.
