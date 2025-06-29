@@ -1,86 +1,86 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD978225408
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AEE226556
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751206047; cv=none; b=dZbKrcRGG1Bh9cJvs+u8/IhEB2O7dr2bVEPqbL6MudLoDIp3Wxm/qrcBTdpMg38TEMj3Yv2vGqgfU6bFw0Hh45ddxW3F1rO7T64NlyeLMtGPvHqwtdensVzw1eupgNjNQXYo91+vpNfM1rNekMRfyZSj9+Lz/g8P25oTZtfIXQs=
+	t=1751206056; cv=none; b=BXcZZeACHB1iTMRAG9Tyte4XRK6DgaIqtLppc779HPs6tReISTNK5ryVIT7Ud5VkBAYiobZq50km4/RDF3oFu7LemSwQOa/G01HXJNXGsJ0O8gvLteqRPvro/tq28abUVWYOT/UuhUE2Wvkwe0mFyUSwQ058UgumBJh9cWW+WO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751206047; c=relaxed/simple;
-	bh=b5tuGWPYE6QnDeDqiAEIvFXMk2X3Ub5gGngeK/IcH8c=;
+	s=arc-20240116; t=1751206056; c=relaxed/simple;
+	bh=LF3WmOXEduF0Yox49Tqnc+p3MIWedMqeUKG9yrG7bm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IoJWUA1SxctN78LRi6ESJK9E25LYkCBMJgbt367S+8RpLkc4lneGbdAKX7P11cPz0ndzhlfUAseEzJfHUhKpUySd8lYEh7Pin9BP0LAti2qFeFLma06Wo3bky+04uTNqcZPmt+dSjwA6GVMIDzIlB6tk7vOOGEiB3SMTvAxe1VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pEV022w+; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=id7npSiF4jBMBHcMEQNaLw5p9INucvS9AVes00BuXyRfcddOBX2BjgXAy8cq+Rpd9P1pL5AxgnHr71xoUKsg7EuftmW18BfZPveQmCwQKcQG2UoOZu/hWgKIOHQbuX2J1R6tY+fH1iOS7ISXYIG5LkSB5vUDb5y1jVvbVD9mHxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EJLTgvGv; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pEV022w+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TB0JlB010328
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:23 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EJLTgvGv"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TBfOX2026498
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=jQkMQAyUbCC
-	WgV1hQTgPBMjaOTBgABotCahc1KmlBHk=; b=pEV022w+AtC2VhYydCh5wY5biDp
-	TIlkQzMZr7TmtIprWr5dBmL+z1WcTemWwOzZW9B1r1qDXzJZlLcWRObg5rv3qjGf
-	O0U/BozhMwR5d0RIarc//TeabB//87PpRe8EsSt8/O4S+bNdqJPq+gKt7SaLDpae
-	QCn/3u+cJysNnDf2WsvZzMi6lrxJ58B1SnrRDjCYXpeoqk9y8vMCNIiuXoDpClAB
-	hOefEaMJG1vGcSOmXAEEknbPPb8OuSTJ8zSW5oTdogxV2BEwbxCailO5VbGTqcpw
-	RHrBPDU+zG3PjG2Bvh1AqH3DFxHh9klq4t82UxNc/NxPBRwcU8mAaw+dWjA==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j8s9a5w7-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=gBDfAmEkonF
+	ZxrTQANE1o507a0jHlpQ+o9S1Q9lveGU=; b=EJLTgvGv7cM4pboAKIJUs/p0bC4
+	u2ueRvFtICLimKNsS1h/VIeJUofb1d6od40yXmuGaEkw9HhzltPfGUbz6+qrncCv
+	MiszvmyK/rZ5XIGyEU0XXxqNRXbUvyd+s9SjSV8MC7QQUipnzfLrBHm0rNZ6tfOO
+	xT5z9oH2sFLbvpauyBPLWnvOSigzOT9YwA385m1jRebwmExy7S0NT/giJ0ZdF5JE
+	DWctCccqYpzUNB2LK5fXsClVcbFNzuWlSiKqEQDqSpINBxTDB1k5pkFR4UiFytIL
+	PXP9rCvvabH8QKuyaqoyei5woBqhITCbonti3xvNHvbJF2fny29dW2RwqvQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9jpt4gp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:23 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b3184712fd8so959371a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:07:23 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:07:34 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2fdba7f818so1868584a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:07:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751206042; x=1751810842;
+        d=1e100.net; s=20230601; t=1751206054; x=1751810854;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jQkMQAyUbCCWgV1hQTgPBMjaOTBgABotCahc1KmlBHk=;
-        b=rACxZdcqjDzDIpCrc8Nq1CushDBaYeJbGldTtOqU+ux7pSuNnCnieGA5qQy2MNsxrk
-         QT/wcaU28petulIBz0zyeDY5dQHyKQO1f6MHs3qjCiau/pXRBT0na8pJt5uPgzuXsMcF
-         5FjIoiJQFLwpovl0NwuDe3rHhWQZyEoiDfc0CZSQhrY7PSDKC1bZkmf+aUIcSoGEB+01
-         pGN6KxwOAeZPVE5/tpR6Z1taQ+5kkZ7FWwf0kElfBJUV8OopMCbJsA3F2nSgRwP+EHeS
-         VDQ3DMkKbCzbxXgMChS+UiuFX3+GkKIujjqepK6A9qjAkYdlVorhhPbPqHXG/NGQYAxb
-         lOXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdjoO8Bdu2lvHtC8rCC3z0q5+VOq0gAU+HJaYuZRrbKaoFbdsMKd6jCujHgFswVJSRl8lT/fpYmb7SUi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/13SIIKPoI32KSofTi5cWqSAZ9PfYHPEfRzrht98JNjbH4K6V
-	v6W1FhcSfa9qnuWMo3XBcs/512dt05fRb6CF6hJzjuuMYA+yH65urjfdB+S/oSwZ0RMmGPYblCp
-	s6pEgx5aPSv/C4HiAOHSs4hJzHk71e0OP9HoUUbNn4gUz2NTPgVFBYviGo3Yf0JmjKtU=
-X-Gm-Gg: ASbGncu5z2ocJDWJt6V/zl5gEOb4MVeqzCJWS6CV0wvv+mRu+ffADi76dGx2a8a9EKz
-	FNhNdC8hMjONpLWyQchkQSdndPC2e3g8+8TK4TDetZC0eBsTTBu/BLi2Blc5A9Yi/gD2vNzIk/P
-	LKoeoAnWoQAtEzZWEF5DtQJho9gYEWbePH6CxX8Sci0KNxsARfevIGs9hvmQWRnT92CZYQo64KY
-	9Xg4rErxxngWMKF/CDWRvMJpFv55vUwq8BtBRzqHIwntZ5aYDEuFJRl+botU++NEw50ZDeLMywr
-	Q4yLdLzG1CoenHSclwK/Tqs15xBaKuiD
-X-Received: by 2002:a17:902:ebc4:b0:234:a139:1203 with SMTP id d9443c01a7336-23ac460552emr142074925ad.32.1751206042012;
-        Sun, 29 Jun 2025 07:07:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaYFFgqBYd8pF8b310jIcBaKWvtkU/YjbVaAQpe6J3fwTKA3mPBl+nUDpKd/7vTkTHAtk0dw==
-X-Received: by 2002:a17:902:ebc4:b0:234:a139:1203 with SMTP id d9443c01a7336-23ac460552emr142074345ad.32.1751206041442;
-        Sun, 29 Jun 2025 07:07:21 -0700 (PDT)
+        bh=gBDfAmEkonFZxrTQANE1o507a0jHlpQ+o9S1Q9lveGU=;
+        b=ujW0+6KxCdINiQrMqNTrSkBnwu+EVlXWxkqJen0gNJdFMkWs3CceSr7ZyuX5PbdCqC
+         Oq48jiarH1kjVsdkiVNut0jUveEU4TTCPFhO7/9sqZ6Ig6EElsSW/QrsyFno1anFfQJu
+         JCPBFnYaFBf9YpRurB7zBK4moZfv1WPcqDVFkvf0xr8uhjdXqWLI5XU98NEcQSN6fSgE
+         MOhjcTa7mxWw3VSTf685GVgCQIyMOYdETFlO1hM9KLn2ZSrprrp39E8oyYaWhiBUXhmu
+         fR3q8pySY8Wcuajw/ms5W527k9EbqdAZIK+T+qIUssYbRVXAIIFV1FxA4oQ1uAakUyO1
+         OpfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhOMjWxWTaP0OxZjJY0Grwwl/iLvrNQ7WNzo2d44Wmee6ct4P3nucMJRB7Klpfxb4AmQCDxCB6q4w63uI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkKPMwh9wT7sLCxdWXagisMLOnzYqMDoDdHCvwgnuzUyOUjzEz
+	z4o7yIIvXsN0uKLWmxGStpCd+nKq0/VQ6pMp772+RBrgjeC/wELO6zz39ppXYg12PUfsYHtuLal
+	XlNkxIaB6o3o75tUkJSDFTSqfR6IrAUWu5tReATKJ9Tj2G8ncAVQTyWlNqLpISknUqCY=
+X-Gm-Gg: ASbGnctZLw7pHtB0OBj0VgpNk4kT9+LekOx2cBz0AWqqJWtIdGSkIOVoB6uXBhLN9Q1
+	+qjYCMZtEeUYLZXKpAJbuYhiFSNuI+XgsVDsAgALD6asoU3SVX/tDuL5jLj7B/QmTVizNMaCBBy
+	QFuRAjcoA6S/NEaoHEKpGvkeiL8dBjqtd9wOwOuCjCw0ft3+06sqLRqrWdPTncVRz7NUEXtt+3x
+	reZ78CdOBPmVIXHz1vV6gozrZiJxUWVvh7iPvPU+PPYMbCv6JRdV6AblomgprOMkPOr6ckkp9Mx
+	8QzIhYy/onL72v2R3I7XfXmuIJjWIhzs
+X-Received: by 2002:a05:6a20:a11c:b0:218:59b:b2f4 with SMTP id adf61e73a8af0-220a17f7369mr13582071637.42.1751206053804;
+        Sun, 29 Jun 2025 07:07:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHU+uDb51M4Be0+7RJfEMhzdKWdXH2VX5GhX5PZfc1zJAcJo7bdy/zfcmW3N5NdF26UuMWOGw==
+X-Received: by 2002:a05:6a20:a11c:b0:218:59b:b2f4 with SMTP id adf61e73a8af0-220a17f7369mr13582043637.42.1751206053451;
+        Sun, 29 Jun 2025 07:07:33 -0700 (PDT)
 Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3bbf9esm59451245ad.191.2025.06.29.07.07.20
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af54098b9sm6581953b3a.33.2025.06.29.07.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 07:07:21 -0700 (PDT)
+        Sun, 29 Jun 2025 07:07:33 -0700 (PDT)
 From: Rob Clark <robin.clark@oss.qualcomm.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         Connor Abbott <cwabbott0@gmail.com>,
         Antonino Maniscalco <antomani103@gmail.com>,
-        Danilo Krummrich <dakr@redhat.com>, Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
+        Danilo Krummrich <dakr@redhat.com>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
         Dmitry Baryshkov <lumag@kernel.org>,
         Abhinav Kumar <abhinav.kumar@linux.dev>,
         Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
         David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 07/42] drm/msm: Remove vram carveout support
-Date: Sun, 29 Jun 2025 07:03:10 -0700
-Message-ID: <20250629140537.30850-8-robin.clark@oss.qualcomm.com>
+Subject: [PATCH v8 12/42] drm/msm: Refcount framebuffer pins
+Date: Sun, 29 Jun 2025 07:03:15 -0700
+Message-ID: <20250629140537.30850-13-robin.clark@oss.qualcomm.com>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250629140537.30850-1-robin.clark@oss.qualcomm.com>
 References: <20250629140537.30850-1-robin.clark@oss.qualcomm.com>
@@ -91,629 +91,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=H/Pbw/Yi c=1 sm=1 tr=0 ts=6861489b cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
- a=cm27Pg_UAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=2B-FfE5MDWLa5Dp4eRYA:9
- a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-ORIG-GUID: mJkV1YvNXBRlW5PfR7uppgsiDtTThjZk
-X-Proofpoint-GUID: mJkV1YvNXBRlW5PfR7uppgsiDtTThjZk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDExOCBTYWx0ZWRfX+PB1vaNO4H9m
- DYmo9cMR+N7XLUm/2JeQqYrJM2vZZipmZi6jGbxw29Ukascp+NRLAxBpi5rC9J+RYikuPC4GXt0
- actXHgEY6ON+T5RvVzZUU20uHZtcQA+inlMlZk+D1QTBuSGwtsTcoo6OJMU8KQZecaCgrEPf/St
- OPmsPzMAqEBU59vrvBqkp1dkCnhD+82EqQYqtpJn97z2aI+DmFD755NU4xr2i9J8bPOHi366lR2
- FRVzErSDWV9nDxDs8rwooatH8EwHeBS3kVkPTTrgR6x+VllcMMhBgZYp0MQOe2M+1sgcjH1TBIm
- f6oURw5b1HRWzBUMlOJRKus89QVXK6bbgNxeOOTKikYrGX90QZv1C9lubUwV461fV5r/WCCsUrn
- NIUlE9IIM3us7fyJobvHthUhfqhL9Bbqr4NZHEBexqIdD5ix/oH98ca4f0lXjbetcwCgA/oI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDExOSBTYWx0ZWRfX9SW1c6iPET5w
+ e+NWFNtIH9sX7OTtZDT/3L0pGMrehp3vLaaFkdT41tnvQ9SUMiXwp0EEPjHWK1CbJoOCwXvQzog
+ Eodjc+kMngobjDAoLJV5Ac4SMkxnIu1fSWRBEPFVKUtBV8OmoNHPCpa8FA+T/GxPkkQfTIDSW3H
+ BJIf11mCZ00jAgUTg5D3F4t1SmOjPX7v7VzV360+nA+Y+matEr8p5kI7dhne7ZbUqarzZmH5xDH
+ 2BWevHsPpOKfawkdavGBtYxk2KoTjvYBgUZ0NxS255aFTlpnlMHxgTQD0h4toqGfYs6bwe2EAFA
+ fPtosEenGyBqHtwW44wDnQa3pkS+mlmmOvPoeverawgWkexSM+xEXFvN4cMu0zER93OCWLFXS5m
+ 7bZjiVIQJkOy9j/uTrYropTUwVFJr+5JFn9HOSUmdw/oeYGNaNfHpAuh9lCjj8DF8ing2C5I
+X-Proofpoint-ORIG-GUID: 8y904g9WnJ_3yb8_mij30HjP-FxWJqIk
+X-Authority-Analysis: v=2.4 cv=Tq7mhCXh c=1 sm=1 tr=0 ts=686148a6 cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=MhmIxDhvR8qEtQvFyXAA:9
+ a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-GUID: 8y904g9WnJ_3yb8_mij30HjP-FxWJqIk
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 spamscore=0
- adultscore=0 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506290118
+ clxscore=1015 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506290119
 
-From: Rob Clark <robdclark@chromium.org>
+We were already keeping a refcount of # of prepares (pins), to clear the
+iova array.  Use that to avoid unpinning the iova until the last cleanup
+(unpin).  This way, when msm_gem_unpin_iova() actually tears down the
+mapping, we won't have problems if the fb is being scanned out on
+another display (for example).
 
-It is standing in the way of drm_gpuvm / VM_BIND support.  Not to
-mention frequently broken and rarely tested.  And I think only needed
-for a 10yr old not quite upstream SoC (msm8974).
-
-Maybe we can add support back in later, but I'm doubtful.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 Tested-by: Antonino Maniscalco <antomani103@gmail.com>
 Reviewed-by: Antonino Maniscalco <antomani103@gmail.com>
 ---
- drivers/gpu/drm/msm/adreno/a2xx_gpu.c      |   8 --
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c      |  15 ---
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c      |  15 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c      |   3 +-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c      |   3 +-
- drivers/gpu/drm/msm/adreno/adreno_device.c |   4 -
- drivers/gpu/drm/msm/adreno/adreno_gpu.c    |   4 +-
- drivers/gpu/drm/msm/adreno/adreno_gpu.h    |   1 -
- drivers/gpu/drm/msm/msm_drv.c              | 117 +-----------------
- drivers/gpu/drm/msm/msm_drv.h              |  11 --
- drivers/gpu/drm/msm/msm_gem.c              | 131 ++-------------------
- drivers/gpu/drm/msm/msm_gem.h              |   5 -
- drivers/gpu/drm/msm/msm_gem_submit.c       |   5 -
- drivers/gpu/drm/msm/msm_gpu.c              |   6 +-
- 14 files changed, 19 insertions(+), 309 deletions(-)
+ drivers/gpu/drm/msm/msm_fb.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-index 5eb063ed0b46..095bae92e3e8 100644
---- a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-@@ -551,14 +551,6 @@ struct msm_gpu *a2xx_gpu_init(struct drm_device *dev)
- 	else
- 		adreno_gpu->registers = a220_registers;
+diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
+index 8a3b88130f4d..3b17d83f6673 100644
+--- a/drivers/gpu/drm/msm/msm_fb.c
++++ b/drivers/gpu/drm/msm/msm_fb.c
+@@ -85,7 +85,8 @@ int msm_framebuffer_prepare(struct drm_framebuffer *fb, bool needs_dirtyfb)
+ 	if (needs_dirtyfb)
+ 		refcount_inc(&msm_fb->dirtyfb);
  
--	if (!gpu->vm) {
--		dev_err(dev->dev, "No memory protection without MMU\n");
--		if (!allow_vram_carveout) {
--			ret = -ENXIO;
--			goto fail;
--		}
--	}
+-	atomic_inc(&msm_fb->prepare_count);
++	if (atomic_inc_return(&msm_fb->prepare_count) > 1)
++		return 0;
+ 
+ 	for (i = 0; i < n; i++) {
+ 		ret = msm_gem_get_and_pin_iova(fb->obj[i], vm, &msm_fb->iova[i]);
+@@ -108,11 +109,13 @@ void msm_framebuffer_cleanup(struct drm_framebuffer *fb, bool needed_dirtyfb)
+ 	if (needed_dirtyfb)
+ 		refcount_dec(&msm_fb->dirtyfb);
+ 
++	if (atomic_dec_return(&msm_fb->prepare_count))
++		return;
++
++	memset(msm_fb->iova, 0, sizeof(msm_fb->iova));
++
+ 	for (i = 0; i < n; i++)
+ 		msm_gem_unpin_iova(fb->obj[i], vm);
 -
- 	return gpu;
- 
- fail:
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index 434e6ededf83..a956cd79195e 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -581,21 +581,6 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
- 			goto fail;
- 	}
- 
--	if (!gpu->vm) {
--		/* TODO we think it is possible to configure the GPU to
--		 * restrict access to VRAM carveout.  But the required
--		 * registers are unknown.  For now just bail out and
--		 * limp along with just modesetting.  If it turns out
--		 * to not be possible to restrict access, then we must
--		 * implement a cmdstream validator.
--		 */
--		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
--		if (!allow_vram_carveout) {
--			ret = -ENXIO;
--			goto fail;
--		}
--	}
--
- 	icc_path = devm_of_icc_get(&pdev->dev, "gfx-mem");
- 	if (IS_ERR(icc_path)) {
- 		ret = PTR_ERR(icc_path);
-diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-index 2c75debcfd84..83f6329accba 100644
---- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-@@ -695,21 +695,6 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
- 
- 	adreno_gpu->uche_trap_base = 0xffff0000ffff0000ull;
- 
--	if (!gpu->vm) {
--		/* TODO we think it is possible to configure the GPU to
--		 * restrict access to VRAM carveout.  But the required
--		 * registers are unknown.  For now just bail out and
--		 * limp along with just modesetting.  If it turns out
--		 * to not be possible to restrict access, then we must
--		 * implement a cmdstream validator.
--		 */
--		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
--		if (!allow_vram_carveout) {
--			ret = -ENXIO;
--			goto fail;
--		}
--	}
--
- 	icc_path = devm_of_icc_get(&pdev->dev, "gfx-mem");
- 	if (IS_ERR(icc_path)) {
- 		ret = PTR_ERR(icc_path);
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index dc31bc0afca4..04138a06724b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1786,8 +1786,7 @@ struct msm_gpu *a5xx_gpu_init(struct drm_device *dev)
- 		return ERR_PTR(ret);
- 	}
- 
--	if (gpu->vm)
--		msm_mmu_set_fault_handler(gpu->vm->mmu, gpu, a5xx_fault_handler);
-+	msm_mmu_set_fault_handler(gpu->vm->mmu, gpu, a5xx_fault_handler);
- 
- 	/* Set up the preemption specific bits and pieces for each ringbuffer */
- 	a5xx_preempt_init(gpu);
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 5078152eb8d3..7b3be2b46cc4 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -2560,8 +2560,7 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
- 
- 	adreno_gpu->uche_trap_base = 0x1fffffffff000ull;
- 
--	if (gpu->vm)
--		msm_mmu_set_fault_handler(gpu->vm->mmu, gpu, a6xx_fault_handler);
-+	msm_mmu_set_fault_handler(gpu->vm->mmu, gpu, a6xx_fault_handler);
- 
- 	a6xx_calc_ubwc_config(adreno_gpu);
- 	/* Set up the preemption specific bits and pieces for each ringbuffer */
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 16e7ac444efd..27dbbb302081 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -16,10 +16,6 @@ bool snapshot_debugbus = false;
- MODULE_PARM_DESC(snapshot_debugbus, "Include debugbus sections in GPU devcoredump (if not fused off)");
- module_param_named(snapshot_debugbus, snapshot_debugbus, bool, 0600);
- 
--bool allow_vram_carveout = false;
--MODULE_PARM_DESC(allow_vram_carveout, "Allow using VRAM Carveout, in place of IOMMU");
--module_param_named(allow_vram_carveout, allow_vram_carveout, bool, 0600);
--
- int enable_preemption = -1;
- MODULE_PARM_DESC(enable_preemption, "Enable preemption (A7xx only) (1=on , 0=disable, -1=auto (default))");
- module_param(enable_preemption, int, 0600);
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index be723fe4de2b..0f71c39696a5 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -209,7 +209,9 @@ adreno_iommu_create_vm(struct msm_gpu *gpu,
- 	u64 start, size;
- 
- 	mmu = msm_iommu_gpu_new(&pdev->dev, gpu, quirks);
--	if (IS_ERR_OR_NULL(mmu))
-+	if (!mmu)
-+		return ERR_PTR(-ENODEV);
-+	else if (IS_ERR_OR_NULL(mmu))
- 		return ERR_CAST(mmu);
- 
- 	geometry = msm_iommu_get_geometry(mmu);
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index 4fa4b11442ba..b1761f990aa1 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -18,7 +18,6 @@
- #include "adreno_pm4.xml.h"
- 
- extern bool snapshot_debugbus;
--extern bool allow_vram_carveout;
- 
- enum {
- 	ADRENO_FW_PM4 = 0,
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 49c868e33d70..c314fd470d69 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -46,12 +46,6 @@
- #define MSM_VERSION_MINOR	12
- #define MSM_VERSION_PATCHLEVEL	0
- 
--static void msm_deinit_vram(struct drm_device *ddev);
--
--static char *vram = "16m";
--MODULE_PARM_DESC(vram, "Configure VRAM size (for devices without IOMMU/GPUMMU)");
--module_param(vram, charp, 0);
--
- bool dumpstate;
- MODULE_PARM_DESC(dumpstate, "Dump KMS state on errors");
- module_param(dumpstate, bool, 0600);
-@@ -97,8 +91,6 @@ static int msm_drm_uninit(struct device *dev)
- 	if (priv->kms)
- 		msm_drm_kms_uninit(dev);
- 
--	msm_deinit_vram(ddev);
--
- 	component_unbind_all(dev, ddev);
- 
- 	ddev->dev_private = NULL;
-@@ -109,107 +101,6 @@ static int msm_drm_uninit(struct device *dev)
- 	return 0;
+-	if (!atomic_dec_return(&msm_fb->prepare_count))
+-		memset(msm_fb->iova, 0, sizeof(msm_fb->iova));
  }
  
--bool msm_use_mmu(struct drm_device *dev)
--{
--	struct msm_drm_private *priv = dev->dev_private;
--
--	/*
--	 * a2xx comes with its own MMU
--	 * On other platforms IOMMU can be declared specified either for the
--	 * MDP/DPU device or for its parent, MDSS device.
--	 */
--	return priv->is_a2xx ||
--		device_iommu_mapped(dev->dev) ||
--		device_iommu_mapped(dev->dev->parent);
--}
--
--static int msm_init_vram(struct drm_device *dev)
--{
--	struct msm_drm_private *priv = dev->dev_private;
--	struct device_node *node;
--	unsigned long size = 0;
--	int ret = 0;
--
--	/* In the device-tree world, we could have a 'memory-region'
--	 * phandle, which gives us a link to our "vram".  Allocating
--	 * is all nicely abstracted behind the dma api, but we need
--	 * to know the entire size to allocate it all in one go. There
--	 * are two cases:
--	 *  1) device with no IOMMU, in which case we need exclusive
--	 *     access to a VRAM carveout big enough for all gpu
--	 *     buffers
--	 *  2) device with IOMMU, but where the bootloader puts up
--	 *     a splash screen.  In this case, the VRAM carveout
--	 *     need only be large enough for fbdev fb.  But we need
--	 *     exclusive access to the buffer to avoid the kernel
--	 *     using those pages for other purposes (which appears
--	 *     as corruption on screen before we have a chance to
--	 *     load and do initial modeset)
--	 */
--
--	node = of_parse_phandle(dev->dev->of_node, "memory-region", 0);
--	if (node) {
--		struct resource r;
--		ret = of_address_to_resource(node, 0, &r);
--		of_node_put(node);
--		if (ret)
--			return ret;
--		size = r.end - r.start + 1;
--		DRM_INFO("using VRAM carveout: %lx@%pa\n", size, &r.start);
--
--		/* if we have no IOMMU, then we need to use carveout allocator.
--		 * Grab the entire DMA chunk carved out in early startup in
--		 * mach-msm:
--		 */
--	} else if (!msm_use_mmu(dev)) {
--		DRM_INFO("using %s VRAM carveout\n", vram);
--		size = memparse(vram, NULL);
--	}
--
--	if (size) {
--		unsigned long attrs = 0;
--		void *p;
--
--		priv->vram.size = size;
--
--		drm_mm_init(&priv->vram.mm, 0, (size >> PAGE_SHIFT) - 1);
--		spin_lock_init(&priv->vram.lock);
--
--		attrs |= DMA_ATTR_NO_KERNEL_MAPPING;
--		attrs |= DMA_ATTR_WRITE_COMBINE;
--
--		/* note that for no-kernel-mapping, the vaddr returned
--		 * is bogus, but non-null if allocation succeeded:
--		 */
--		p = dma_alloc_attrs(dev->dev, size,
--				&priv->vram.paddr, GFP_KERNEL, attrs);
--		if (!p) {
--			DRM_DEV_ERROR(dev->dev, "failed to allocate VRAM\n");
--			priv->vram.paddr = 0;
--			return -ENOMEM;
--		}
--
--		DRM_DEV_INFO(dev->dev, "VRAM: %08x->%08x\n",
--				(uint32_t)priv->vram.paddr,
--				(uint32_t)(priv->vram.paddr + size));
--	}
--
--	return ret;
--}
--
--static void msm_deinit_vram(struct drm_device *ddev)
--{
--	struct msm_drm_private *priv = ddev->dev_private;
--	unsigned long attrs = DMA_ATTR_NO_KERNEL_MAPPING;
--
--	if (!priv->vram.paddr)
--		return;
--
--	drm_mm_takedown(&priv->vram.mm);
--	dma_free_attrs(ddev->dev, priv->vram.size, NULL, priv->vram.paddr,
--			attrs);
--}
--
- static int msm_drm_init(struct device *dev, const struct drm_driver *drv)
- {
- 	struct msm_drm_private *priv = dev_get_drvdata(dev);
-@@ -260,16 +151,12 @@ static int msm_drm_init(struct device *dev, const struct drm_driver *drv)
- 			goto err_destroy_wq;
- 	}
- 
--	ret = msm_init_vram(ddev);
--	if (ret)
--		goto err_destroy_wq;
--
- 	dma_set_max_seg_size(dev, UINT_MAX);
- 
- 	/* Bind all our sub-components: */
- 	ret = component_bind_all(dev, ddev);
- 	if (ret)
--		goto err_deinit_vram;
-+		goto err_destroy_wq;
- 
- 	ret = msm_gem_shrinker_init(ddev);
- 	if (ret)
-@@ -306,8 +193,6 @@ static int msm_drm_init(struct device *dev, const struct drm_driver *drv)
- 
- 	return ret;
- 
--err_deinit_vram:
--	msm_deinit_vram(ddev);
- err_destroy_wq:
- 	destroy_workqueue(priv->wq);
- err_put_dev:
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 8aa3412c6e36..761e7e221ad9 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -183,17 +183,6 @@ struct msm_drm_private {
- 
- 	struct msm_drm_thread event_thread[MAX_CRTCS];
- 
--	/* VRAM carveout, used when no IOMMU: */
--	struct {
--		unsigned long size;
--		dma_addr_t paddr;
--		/* NOTE: mm managed at the page level, size is in # of pages
--		 * and position mm_node->start is in # of pages:
--		 */
--		struct drm_mm mm;
--		spinlock_t lock; /* Protects drm_mm node allocation/removal */
--	} vram;
--
- 	struct notifier_block vmap_notifier;
- 	struct shrinker *shrinker;
- 
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 5e6c88b85fd3..b83790cc08df 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -17,24 +17,8 @@
- #include <trace/events/gpu_mem.h>
- 
- #include "msm_drv.h"
--#include "msm_fence.h"
- #include "msm_gem.h"
- #include "msm_gpu.h"
--#include "msm_mmu.h"
--
--static dma_addr_t physaddr(struct drm_gem_object *obj)
--{
--	struct msm_gem_object *msm_obj = to_msm_bo(obj);
--	struct msm_drm_private *priv = obj->dev->dev_private;
--	return (((dma_addr_t)msm_obj->vram_node->start) << PAGE_SHIFT) +
--			priv->vram.paddr;
--}
--
--static bool use_pages(struct drm_gem_object *obj)
--{
--	struct msm_gem_object *msm_obj = to_msm_bo(obj);
--	return !msm_obj->vram_node;
--}
- 
- static void update_device_mem(struct msm_drm_private *priv, ssize_t size)
- {
-@@ -135,36 +119,6 @@ static void update_lru(struct drm_gem_object *obj)
- 	mutex_unlock(&priv->lru.lock);
- }
- 
--/* allocate pages from VRAM carveout, used when no IOMMU: */
--static struct page **get_pages_vram(struct drm_gem_object *obj, int npages)
--{
--	struct msm_gem_object *msm_obj = to_msm_bo(obj);
--	struct msm_drm_private *priv = obj->dev->dev_private;
--	dma_addr_t paddr;
--	struct page **p;
--	int ret, i;
--
--	p = kvmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
--	if (!p)
--		return ERR_PTR(-ENOMEM);
--
--	spin_lock(&priv->vram.lock);
--	ret = drm_mm_insert_node(&priv->vram.mm, msm_obj->vram_node, npages);
--	spin_unlock(&priv->vram.lock);
--	if (ret) {
--		kvfree(p);
--		return ERR_PTR(ret);
--	}
--
--	paddr = physaddr(obj);
--	for (i = 0; i < npages; i++) {
--		p[i] = pfn_to_page(__phys_to_pfn(paddr));
--		paddr += PAGE_SIZE;
--	}
--
--	return p;
--}
--
- static struct page **get_pages(struct drm_gem_object *obj)
- {
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
-@@ -176,10 +130,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 		struct page **p;
- 		int npages = obj->size >> PAGE_SHIFT;
- 
--		if (use_pages(obj))
--			p = drm_gem_get_pages(obj);
--		else
--			p = get_pages_vram(obj, npages);
-+		p = drm_gem_get_pages(obj);
- 
- 		if (IS_ERR(p)) {
- 			DRM_DEV_ERROR(dev->dev, "could not get pages: %ld\n",
-@@ -212,18 +163,6 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 	return msm_obj->pages;
- }
- 
--static void put_pages_vram(struct drm_gem_object *obj)
--{
--	struct msm_gem_object *msm_obj = to_msm_bo(obj);
--	struct msm_drm_private *priv = obj->dev->dev_private;
--
--	spin_lock(&priv->vram.lock);
--	drm_mm_remove_node(msm_obj->vram_node);
--	spin_unlock(&priv->vram.lock);
--
--	kvfree(msm_obj->pages);
--}
--
- static void put_pages(struct drm_gem_object *obj)
- {
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
-@@ -244,10 +183,7 @@ static void put_pages(struct drm_gem_object *obj)
- 
- 		update_device_mem(obj->dev->dev_private, -obj->size);
- 
--		if (use_pages(obj))
--			drm_gem_put_pages(obj, msm_obj->pages, true, false);
--		else
--			put_pages_vram(obj);
-+		drm_gem_put_pages(obj, msm_obj->pages, true, false);
- 
- 		msm_obj->pages = NULL;
- 		update_lru(obj);
-@@ -1207,19 +1143,10 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev, uint32_t size, uint32
- 	struct msm_drm_private *priv = dev->dev_private;
- 	struct msm_gem_object *msm_obj;
- 	struct drm_gem_object *obj = NULL;
--	bool use_vram = false;
- 	int ret;
- 
- 	size = PAGE_ALIGN(size);
- 
--	if (!msm_use_mmu(dev))
--		use_vram = true;
--	else if ((flags & (MSM_BO_STOLEN | MSM_BO_SCANOUT)) && priv->vram.size)
--		use_vram = true;
--
--	if (GEM_WARN_ON(use_vram && !priv->vram.size))
--		return ERR_PTR(-EINVAL);
--
- 	/* Disallow zero sized objects as they make the underlying
- 	 * infrastructure grumpy
- 	 */
-@@ -1232,44 +1159,16 @@ struct drm_gem_object *msm_gem_new(struct drm_device *dev, uint32_t size, uint32
- 
- 	msm_obj = to_msm_bo(obj);
- 
--	if (use_vram) {
--		struct msm_gem_vma *vma;
--		struct page **pages;
--
--		drm_gem_private_object_init(dev, obj, size);
--
--		msm_gem_lock(obj);
--
--		vma = add_vma(obj, NULL);
--		msm_gem_unlock(obj);
--		if (IS_ERR(vma)) {
--			ret = PTR_ERR(vma);
--			goto fail;
--		}
--
--		to_msm_bo(obj)->vram_node = &vma->node;
--
--		msm_gem_lock(obj);
--		pages = get_pages(obj);
--		msm_gem_unlock(obj);
--		if (IS_ERR(pages)) {
--			ret = PTR_ERR(pages);
--			goto fail;
--		}
--
--		vma->iova = physaddr(obj);
--	} else {
--		ret = drm_gem_object_init(dev, obj, size);
--		if (ret)
--			goto fail;
--		/*
--		 * Our buffers are kept pinned, so allocating them from the
--		 * MOVABLE zone is a really bad idea, and conflicts with CMA.
--		 * See comments above new_inode() why this is required _and_
--		 * expected if you're going to pin these pages.
--		 */
--		mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
--	}
-+	ret = drm_gem_object_init(dev, obj, size);
-+	if (ret)
-+		goto fail;
-+	/*
-+	 * Our buffers are kept pinned, so allocating them from the
-+	 * MOVABLE zone is a really bad idea, and conflicts with CMA.
-+	 * See comments above new_inode() why this is required _and_
-+	 * expected if you're going to pin these pages.
-+	 */
-+	mapping_set_gfp_mask(obj->filp->f_mapping, GFP_HIGHUSER);
- 
- 	drm_gem_lru_move_tail(&priv->lru.unbacked, obj);
- 
-@@ -1297,12 +1196,6 @@ struct drm_gem_object *msm_gem_import(struct drm_device *dev,
- 	uint32_t size;
- 	int ret, npages;
- 
--	/* if we don't have IOMMU, don't bother pretending we can import: */
--	if (!msm_use_mmu(dev)) {
--		DRM_DEV_ERROR(dev->dev, "cannot import without IOMMU\n");
--		return ERR_PTR(-EINVAL);
--	}
--
- 	size = PAGE_ALIGN(dmabuf->size);
- 
- 	ret = msm_gem_new_impl(dev, size, MSM_BO_WC, &obj);
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 64ea3ed213c1..e47e187ecd00 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -102,11 +102,6 @@ struct msm_gem_object {
- 
- 	struct list_head vmas;    /* list of msm_gem_vma */
- 
--	/* For physically contiguous buffers.  Used when we don't have
--	 * an IOMMU.  Also used for stolen/splashscreen buffer.
--	 */
--	struct drm_mm_node *vram_node;
--
- 	char name[32]; /* Identifier to print for the debugfs files */
- 
- 	/* userspace metadata backchannel */
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index a59816b6b6de..c184b1a1f522 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -669,11 +669,6 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 	if (args->pad)
- 		return -EINVAL;
- 
--	if (unlikely(!ctx->vm) && !capable(CAP_SYS_RAWIO)) {
--		DRM_ERROR_RATELIMITED("IOMMU support or CAP_SYS_RAWIO required!\n");
--		return -EPERM;
--	}
--
- 	/* for now, we just have 3d pipe.. eventually this would need to
- 	 * be more clever to dispatch to appropriate gpu module:
- 	 */
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index 3400a6ca8fd8..47268aae7d54 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -942,12 +942,8 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 
- 	msm_devfreq_init(gpu);
- 
--
- 	gpu->vm = gpu->funcs->create_vm(gpu, pdev);
--
--	if (gpu->vm == NULL)
--		DRM_DEV_INFO(drm->dev, "%s: no IOMMU, fallback to VRAM carveout!\n", name);
--	else if (IS_ERR(gpu->vm)) {
-+	if (IS_ERR(gpu->vm)) {
- 		ret = PTR_ERR(gpu->vm);
- 		goto fail;
- 	}
+ uint32_t msm_framebuffer_iova(struct drm_framebuffer *fb, int plane)
 -- 
 2.50.0
 
