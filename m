@@ -1,74 +1,61 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC1EEEAA;
-	Sun, 29 Jun 2025 03:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1256EEAA;
+	Sun, 29 Jun 2025 03:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751166271; cv=none; b=g1DIqLtXebDJnFIP5k0pm3QuYOHVssqYNhOIzA5YgeAsakG7Nr0Tq191O+zwZgBX8Ta68gWbiKXdi4dDfoMo3YFhOLRXFw+6VCgz+lilt/rLxMgQ5L25V82VSRyUbc3IoD90+krRIslq5ytxsYA7lfQwznLfDFzSasPccktuSec=
+	t=1751166540; cv=none; b=UQmJ/7Aq/XowLRF1GRKEPvsukOQsh6i+4UwL74akX9VXEqXJiKN05aUTmAzudQMxuyvVHN+VpFmU95Y+lRpy5fp5ZrKiEEhTkKjVxHH+PXuc8YPJDHqMCD5pW8PdVOnXQAgSRqyaqNSPynkzTOcL8bQVJhSHUY6s3FvYOeteJj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751166271; c=relaxed/simple;
-	bh=9537XgEaYRn9c6dm6kDkJQI5HfbS9vPngpB7KIR2YDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=heO/t4SCB9whQnGouQjDbcaAlMfanVWRjiCLM9xD5m+OM+ahlQc59gwxO+7EHlDvU8/sb/fZa/WmNwtHRxKme73nrwuFbh5S2W8QbTW30NsviMsme9xFMqyUbB81pTZX8XFdQsG6H87vBdvzY0lpMtdVDBeR//TtJcpH/W6eTpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TLHCpZ0M; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751166540; c=relaxed/simple;
+	bh=RK5Z/8V0Cvn5MyQ2lvLJ5kvvK7okLP7oTJeIK/QJzCY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uIqU6tL5bN6cUarMTZUEfMgeCO5mErstlPbXKCizmHSFkjOxmJKZ7o/s0xjl/3qg7iMLP3WdXGJHrtdbtOTYTXeSfKnRZ2UgH3xdOotA0BKK2h9qC5S4k1w5TOGLtEifUHJs7usBkBo2EEIP8x/eRayO7KTEi5WnPykPSSAQK7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=iUIUOTk+; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLHCpZ0M"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a58d95ea53so37274581cf.0;
-        Sat, 28 Jun 2025 20:04:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="iUIUOTk+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751166269; x=1751771069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFyMRoWy2zR4mV1W2LVo7H6II6FCwnGnRdzH4Ck0U3w=;
-        b=TLHCpZ0MvLPzeQT1F9PaNsOKMPHcDa4PkpEwyJdIKOBc+ZQO2msEOzd07cV63KY0NK
-         +whB0GQoBTzhvqIOQWWIufRrcsILe/pfHq8e+svxpB5/hbcZEKF/13KYZvL/a7wFCwTq
-         3Lx4wWWNz4i3BQXJf0sfCvtzbLwBATbvPMDVTpuBnxQ5pt5/fXBgAv3iv1tD+5udXKQl
-         Yyqb/QpSsk4koQH2POoEdCf0NDKOsbmowEBVNbW20jirFB3qfWtz9tTSWgCjOOPoj9XQ
-         aLQq/3Oz9t3vPz1OsCtQ+hj2V/MddotRm7q90H86bNgkgL01uO0szxT2c+jwgyymS22J
-         /zsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751166269; x=1751771069;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wFyMRoWy2zR4mV1W2LVo7H6II6FCwnGnRdzH4Ck0U3w=;
-        b=WjfbbftwMzQSlTIfSI86Gv5X4PkiPGR3jU0DY53rS9vcfPCHNPiwnyxYyGUUtIU3ox
-         QPIi5yudy/hcAjdacq7ulXRwshv4bhvw98Ov+yzL6XhAQaR7HehTesSdN4HqENLPjv4T
-         biVjUoQf7ru2SNGu3E42McTL79H6JWb8/r1QkIwL7actel+AkuKckvGfzzpu2hzAZMsg
-         w3wiJ+C62MlMTWooFeYjVenjp95O+k1JiBf0NlHsSBBhdiHIF+gzYxAAZRfitpMnROGi
-         TmlF1nDHmK3/ZZqsdlo7MoBm47Zz8IUVSiM5e+m+BXCAKzuJkIR6klkvjuKmT/Ij/EeK
-         ubXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxr/jAfjWixkUqbRrEDVI6vYcbto4LlaHhyOEyRc5oi6lWaO76Uja2xrPy7ewWAF2SPabCZofchHFF@vger.kernel.org, AJvYcCVlus1ZQKU5Dfp6mjGWfm4l4IqZ6JykOCtlyHQw77R4byucv6W1QYVFDJ4xnXIHsTGlE1vNk3hGYDTRfg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWq6rew6kIz0CoIy4BVy+8jq1/FWg23ZtkgR9eHyL95vhY8W/5
-	l73YMWAbGrd06V2CPkW4uhC7XLJi6tX8PXQseEDrvmdx5pIuDMx8BeAF
-X-Gm-Gg: ASbGncvsLlz5r8tNn87ab2C4odwoDT2zNOW/QoYQjS7cNFkDtgoESAiNUYECRHIP3qZ
-	OpyiiSWy//ByUx4LXW4x3s94N5MZM6i9F42SOggliBZJiE+X8kqirVC8L7lW4d7fTyXWic0AjJ1
-	pQL3Htb6LSnBlSzUGcod1lp/SEkiaxbGc/eLPfD/kaOc/NgjGkPdfZsnT3Z1TufAqIbZXAa4rTt
-	w9MshTy6sdgC229AEIcWj10g0/dxyGP3Y24W3RoA+m5MPghGCO0seYrEoBa+GKcst2cf80Ej578
-	y1VPY7YZl+TigWQhVcVpma0CothBt/HLHU2ON+fOLIpWhI5BuW0zu2jRcuPlb8vmg+QT5fchvVE
-	ofy5X5XJOBYk/GhhNp06vD8EENPdNMIP3hKoPFOQcTtCSrOKrfJZFOZp55g==
-X-Google-Smtp-Source: AGHT+IGF+L4BuRAK0Z7reCA1gOZsE0T/8BqrntZq/k+l3HbnZLE3bWFbe9e3tpGEDcpwxcUaHSoveQ==
-X-Received: by 2002:a05:622a:58a:b0:4a7:f698:9e6f with SMTP id d75a77b69052e-4a7fdbd52c9mr146953611cf.11.1751166269062;
-        Sat, 28 Jun 2025 20:04:29 -0700 (PDT)
-Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc10620dsm37158431cf.7.2025.06.28.20.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 20:04:28 -0700 (PDT)
-From: Seungjin Bae <eeodqql09@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: pip-izony <eeodqql09@gmail.com>,
-	Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: m66592-udc: Ignore feature requests for EP0
-Date: Sat, 28 Jun 2025 22:59:53 -0400
-Message-ID: <20250629025951.17581-3-eeodqql09@gmail.com>
-X-Mailer: git-send-email 2.43.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1751166538; x=1782702538;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/1wU96fFlsrJiBIUTivDC2RYxvB3smo0WTj2uzdXEmY=;
+  b=iUIUOTk+t112J/eMsveGxNR4emEA8LKNy8JKatb/O3scM08YuW3jXknc
+   yfasVGhTsHGtXhsdk4qZQOVKYT7ohY8xW9/IVBnV7j5QK8exHHT7OUu+V
+   X1FonQPqpeVAgGKzZVMdef7B1WVcUJCzvppdS6vr31X/2p4t/YlXdBUaG
+   06Jcl/IgCrqLeHnDDuJ9bfQfSEoQHuOlYAScUMrALGWWkVhvZ/rvdJ3f6
+   STzVncbcTmO46s73RC+gf9USjUxeEm4+Q0r2LPz84cuGZWbBNDzFpYWnf
+   MQVcLPw+40c6tsoVrDP+e0+CbvLOLh4UAULXTSMPtXJJnotddvIWopXKN
+   g==;
+X-IronPort-AV: E=Sophos;i="6.16,274,1744070400"; 
+   d="scan'208";a="215563240"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 03:08:58 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:61997]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.55.172:2525] with esmtp (Farcaster)
+ id db2f4156-a369-4273-8671-a3bddd2ec5a6; Sun, 29 Jun 2025 03:08:57 +0000 (UTC)
+X-Farcaster-Flow-ID: db2f4156-a369-4273-8671-a3bddd2ec5a6
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 29 Jun 2025 03:08:57 +0000
+Received: from b0be8375a521.amazon.com (10.37.244.14) by
+ EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Sun, 29 Jun 2025 03:08:55 +0000
+From: Kohei Enju <enjuk@amazon.com>
+To: <linux-hams@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, <kohei.enju@gmail.com>,
+	Kohei Enju <enjuk@amazon.com>,
+	<syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
+Subject: [PATCH net v2] rose: fix dangling neighbour pointers in rose_rt_device_down()
+Date: Sun, 29 Jun 2025 12:06:31 +0900
+Message-ID: <20250629030833.6680-1-enjuk@amazon.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,54 +63,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-The `set_feature() and clear_feature() functions handle requests to set or clear the ENDPOINT_HALT feature.
-Currently, these requests are processed for any endpoint, including the control endpoint (EP0).
+There are two bugs in rose_rt_device_down() that can cause
+use-after-free:
 
-The ENDPOINT_HALT feature is not defined for control endpoints according to the USB specification 9.4.5.
+1. The loop bound `t->count` is modified within the loop, which can
+   cause the loop to terminate early and miss some entries.
 
-Fixes: 4cf2503c6801a ("USB: m66592-udc: peripheral controller driver for M66592")
-Co-developed-by: Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>
-Signed-off-by: Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>
-Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
+2. When removing an entry from the neighbour array, the subsequent entries
+   are moved up to fill the gap, but the loop index `i` is still
+   incremented, causing the next entry to be skipped.
+
+For example, if a node has three neighbours (A, A, B) with count=3 and A
+is being removed, the second A is not checked.
+
+    i=0: (A, A, B) -> (A, B) with count=2
+          ^ checked
+    i=1: (A, B)    -> (A, B) with count=2
+             ^ checked (B, not A!)
+    i=2: (doesn't occur because i < count is false)
+
+This leaves the second A in the array with count=2, but the rose_neigh
+structure has been freed. Code that accesses these entries assumes that
+the first `count` entries are valid pointers, causing a use-after-free
+when it accesses the dangling pointer.
+
+Fix both issues by iterating over the array in reverse order with a fixed
+loop bound. This ensures that all entries are examined and that the removal
+of an entry doesn't affect subsequent iterations.
+
+Reported-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
+Tested-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Kohei Enju <enjuk@amazon.com>
 ---
- drivers/usb/gadget/udc/m66592-udc.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Changes:
+  v2:
+    - Change commit message to describe the UAF scenario correctly
+    - Replace for loop with memmove() for array shifting
+  v1: https://lore.kernel.org/all/20250625095005.66148-2-enjuk@amazon.com/
+---
+ net/rose/rose_route.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index 715791737499..38cc11ae80b6 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -1010,8 +1010,13 @@ static void clear_feature(struct m66592 *m66592, struct usb_ctrlrequest *ctrl)
- 		struct m66592_ep *ep;
- 		struct m66592_request *req;
- 		u16 w_index = le16_to_cpu(ctrl->wIndex);
-+		u16 ep_num = w_index & USB_ENDPOINT_NUMBER_MASK;
+diff --git a/net/rose/rose_route.c b/net/rose/rose_route.c
+index 2dd6bd3a3011..b72bf8a08d48 100644
+--- a/net/rose/rose_route.c
++++ b/net/rose/rose_route.c
+@@ -497,22 +497,15 @@ void rose_rt_device_down(struct net_device *dev)
+ 			t         = rose_node;
+ 			rose_node = rose_node->next;
  
--		ep = m66592->epaddr2ep[w_index & USB_ENDPOINT_NUMBER_MASK];
-+		if (ep_num == 0) {
-+			control_end(m66592, 1);
-+			break;
-+		}
-+		ep = m66592->epaddr2ep[ep_num];
- 		pipe_stop(m66592, ep->pipenum);
- 		control_reg_sqclr(m66592, ep->pipenum);
+-			for (i = 0; i < t->count; i++) {
++			for (i = t->count - 1; i >= 0; i--) {
+ 				if (t->neighbour[i] != s)
+ 					continue;
  
-@@ -1067,8 +1072,13 @@ static void set_feature(struct m66592 *m66592, struct usb_ctrlrequest *ctrl)
- 	case USB_RECIP_ENDPOINT: {
- 		struct m66592_ep *ep;
- 		u16 w_index = le16_to_cpu(ctrl->wIndex);
-+		u16 ep_num = w_index & USB_ENDPOINT_NUMBER_MASK;
+ 				t->count--;
  
--		ep = m66592->epaddr2ep[w_index & USB_ENDPOINT_NUMBER_MASK];
-+		if (ep_num == 0) {
-+			control_end(m66592, 1);
-+			break;
-+		}
-+		ep = m66592->epaddr2ep[ep_num];
- 		pipe_stall(m66592, ep->pipenum);
+-				switch (i) {
+-				case 0:
+-					t->neighbour[0] = t->neighbour[1];
+-					fallthrough;
+-				case 1:
+-					t->neighbour[1] = t->neighbour[2];
+-					break;
+-				case 2:
+-					break;
+-				}
++				memmove(&t->neighbour[i], &t->neighbour[i + 1],
++					sizeof(t->neighbour[0]) *
++						(t->count - i));
+ 			}
  
- 		control_end(m66592, 1);
+ 			if (t->count <= 0)
 -- 
-2.43.0
+2.49.0
 
