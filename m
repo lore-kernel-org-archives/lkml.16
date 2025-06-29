@@ -1,139 +1,163 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BFF21CC56
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028EC20A5DD
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751209225; cv=none; b=UUInPUTKKa5anL4ZVKLK+SgECm9gvat2a3N67vs8l7Tf3Q0u/m+Q8nZNaQH7/jkWiSAcK3dEqCpgFlxd3+Lpo2QcQyWoWh0Lx5ZOLzYrxLALbsrvAmGNk8xXvlJdjJctokVn0U/FSCHWt70vMEkd1J3ZmaZYI9L1qQeM/e5CVcY=
+	t=1751209626; cv=none; b=pYsmdpEkbwed/9ZAQTXwOJ9gUlHzBEBFfqkxEHwWQ8rbOa8+HzQg90IeGeULJC1O9wUBvP+bQqeEbYjeg9SzpIdPU/gZ2D77PUd0P58DUhgURZYEDMhgickWZOg4OiLD+IO+GxEmDaS1ki7svfnzqu9g19B5wOMlJTabkFnXWXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751209225; c=relaxed/simple;
-	bh=8ThBrHYseNWTgVIENZvM3X7g4bVp9jFWwMWyTq5gbZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0bqPPhwv8WmEpRh99/Fvtmm6tCV2LfhtVxxOI3dGOqE7+dn2SfE3JgNOnAUp2QZNnp73nf7txAiyHLictbV6HTkODvkaWRqk8zdQ0Kb+cr4fEVdUDO/VHB4HUZjL6nkRu3r/6MTb81XwkRSZoXz0m8UMPEB8dkA1QxM8+1ahC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=F0srTDVV; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="F0srTDVV"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TAVmAJ030350
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:00:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=b/pYUHRY/Pf2sWjUsiTjX3SG
-	fPJK5GCx6P2lJBvN2kA=; b=F0srTDVVl/a1cs1pvhgj6hW+AtRw+g8Ez0dCBcCZ
-	V++pobwYDVwoxjtbI3tEd6XmEsinw7cWZXgfYKwsyfTGJx+le5DcL9pYzXfezhKZ
-	G6KUC9smC17fnW9S2l0P823jYX27SD5RtuPFQEhruyqMSxTWvtYvjXOjKvTEiO/g
-	Fv33hRGNJooCPPSnHLwO/pLXSCW7kr/DdlMamZcRh1ihLQeHKO4jOTnFSd9mJjPG
-	CHMJH7j/qeP4RrNwtIuMfEzcalUWPerwUjoxss+uFUljoyKKhPFWC++cE1T5019a
-	5sYJ+wfvULmDMTCgmsr7zlcs0L2NSt0Z9EqBuCuTOShFfg==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j95ht8dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:00:23 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb1f84a448so13367006d6.0
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:00:23 -0700 (PDT)
+	s=arc-20240116; t=1751209626; c=relaxed/simple;
+	bh=9p5j+1mqqo5eGutd7ZZOQQP7oR71COV1J6XL55ODfMM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=KK0IV14nRUObvUbM3sE0pI40E/LS9//Y6zcluNOH3adE7H1eGq8UJ+RSEZlN02grAGLBCOvzSBLRTtUlVt6ZzaUPLI+j0Mi/AJfgNFrHX4j9bbndRojQLXr26P84EqFLAxvkqamI3G7uUTQ1OCMtb4nCYJpH8MS6IMZBifcnsac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cf89ff625so122903539f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:07:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751209222; x=1751814022;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b/pYUHRY/Pf2sWjUsiTjX3SGfPJK5GCx6P2lJBvN2kA=;
-        b=iwQHA4E13Z327cWSkU57Vm0piMzk9Lfj1BJ2BLaZOjH9B9EI2c/kNvEfvi4j7QcSdC
-         bwhYyuQi5eQQ5R/vftD6S5rM4M7aMw7PqbTPMcpOuIkqdTbbXg5860a5FpdmjXFJIlYY
-         zOitBhcbMeza5+hZ1CRZLcY/aPiww94/KAMCX4p/SzcsWXgTZpQ0a5PyJpFtw6+jeeM2
-         8zuvktpYEuRnY3baJgfQ4PM2ZAkufPjrRordZNbrhKfFcCE4VldB4K/Pjh7nqGtISgJ9
-         CNhdZprvBKBllD7hg9J3clEHUFHBvEsDgB+d97Qgn8xmFfSew1Jzjlr8l7Q3yZcIMZRf
-         PrKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXST/6K1FtNaqQ7TF0HVtW5JXO01QemborTSDPd+hvUik5SiDnXASoxlm73d/if+ceSzytZIUQFMxU/W3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMNGhFU8ANTKiiiOtOryKd/9wl8xaiXanEUg7f5onRlGANMTsJ
-	KYjF9X+ZpellMkPf3SkFlMPl31r6bLJsJnPFeW7XhyCx6HAk5COkwgK8zun6Z5xk3/nTDD5bcgL
-	PkQBJtlugwwiuyfqyTHSCw8nw7Tp9/yyu168C1q9MAkBcnRT8UI7A6qySDAs4grhvljs=
-X-Gm-Gg: ASbGncvRkBBnJkKefIIi1C25zK9q8ZE7rGXqdEFENyV37udC1w/Sb6WzM1xcNUAKsji
-	E+xpe9CcGxDtApQ3PMhPSNdm35C/QoqO9Q/exj/dd1noa6XCD+LL69fHBjDJJoWxj5780fADtzj
-	Al1cZLZIekR0CVRGFwCWaZbjDvuqm/SK8nArUnq6xeutgoZQKfNTag/0OI3TAftTauTa3jeXmcx
-	B5L5LvvwI6qgm03cNVviYJig+CDZEwOx2Iky6LQYD4YYXqQ/0752rl0w8Dy2RyVX+amGZ1Frmlx
-	vBTAFjuIGYj5KqYFZ25HHV5Yb4VHzMtd8LW3JRHrJvWcVE5LsS2DZ10Gjyd04MwcHw/XhVG9VQW
-	2kiGaPRy+YMIJukUizH/rCZ08z51B1UC5Kns=
-X-Received: by 2002:a05:6214:cac:b0:6fa:cc39:9f with SMTP id 6a1803df08f44-7000233d01cmr161995666d6.32.1751209221835;
-        Sun, 29 Jun 2025 08:00:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHA5FIdyh/Au6WeKGTSUip3heR3p8gw5t0Q5mmyuMzcIuDDNsAdJQNEGpW6Ol5VHhlRtmZq8g==
-X-Received: by 2002:a05:6214:cac:b0:6fa:cc39:9f with SMTP id 6a1803df08f44-7000233d01cmr161994646d6.32.1751209221184;
-        Sun, 29 Jun 2025 08:00:21 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32cd2e30e3fsm11049641fa.49.2025.06.29.08.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 08:00:20 -0700 (PDT)
-Date: Sun, 29 Jun 2025 18:00:18 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: qcom,spmi-pmic: add pm4125 audio
- codec
-Message-ID: <mj3jhm6yr3bv5vbyyxxdo4x5niw5quxcal34wdg4vtplipycl6@kjhxtrqvqejo>
-References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
- <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
- <eb5cdcb6-7e40-4ed2-9cc6-6eff43da353d@kernel.org>
- <DAYBEWESVDJY.1ZDYI58M9OEWX@linaro.org>
+        d=1e100.net; s=20230601; t=1751209624; x=1751814424;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DWCEYgKLzJgMoXu54KGP51OMmYjuso0+KqTEW+OYlfo=;
+        b=AvG6ZMhQVQPHSTfuqY99MNztbyxAJXmgMkjR+M8s6HIxbp4WbJWAwjt+nZu7V6hWAU
+         5iyDyaABXMzmuTj5U8cEm1XowEjotgZXAfDhNDnfJH9QGkbwI+z3bewLBdhyzgPHFBMk
+         9yzQBaVYLGGQhe/fA/j63SrLLVcU3lN22zAV1GEZ2kMuQnUp0dcrXFVW30fakQJgH2VM
+         YIPr6kNoFJd6jfu+knkSg6D6EEIVzMGY0gXmTEzXGGLD0JmZuUUnaLOjS8e6vaSSfBRY
+         tGu8qLZ+Whe6z73ZzYnR9/W0YKXHkQ+5sc5drezXgP7KdOgKDnrFItc4gHUnEzGyUd9A
+         zUdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIZ4r3Jq3OTeK7QkXgOXqnlLyAET+o4J0T8vBvxlSJNajxGEmKaK2uRKzp1YVR3sjYp4zZ1gmSsepMX/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtRCk0xO6BMrSa/VlA1CEcsIvSc/SoaBjpK0i5PYIBcT3xQJG8
+	uIhNNKpjLlk0Z7vwrteuVpRlop4+iDG0H9+fa/8YLh3Jpl321Ld8jOzW/9tlcxzDLHZtzSXDId9
+	yhnlS7ZfBKW0XNyJN/aqDkxSuwPZr1CI+xT1QpC/oBaPoAdUQVCe4wpXn+bk=
+X-Google-Smtp-Source: AGHT+IGWB1npyb29iI1ZO3MCGbLX3x+ye5sX50XhZiUh3LBadwlVb8sgFlBy1w3tabtXlXnJjewVuth6lsR7dHcOuouFd7eqPPvx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DAYBEWESVDJY.1ZDYI58M9OEWX@linaro.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDEyNiBTYWx0ZWRfXxvji2uGYyqyG
- AAbg7ThIahi/EmslwZYiOM8JdDkydYgwjH9I3RSrnZkC8WUrtloS2G5XB1lTnIEUAoIlF+SdwwK
- 1zviaZuOt6Bxy8vbvaf2i1sLPCMbkDLMY6kdYC0jCt4Odu02VesVW33+1KYmo61+TJ6T2iEFVAk
- 2FqfRE3SjbTyo3no/laEUQeljjHygd0L7/OWemrolPOQmCZiUCzPkS33GXOSHLWz91C30gzZlMa
- Zc/YcKc10Qk87dbAe0GzAqcBXbEV+pZJEpxV4fNj64ThMwfCqTaDm7bjkMyPoPRrbOli0iSMFuD
- hBmQpxbSGAIhbmDaVkiX2cBHPwUEafuDs111O8KMyn0jWKvcsoHKR/L9DjPcxUoJCse4Y1C7xxa
- OqUb8aTWiSWUIAqnTlw93+uAEJCpaIlW6RSBn34R+hGBzPnX4NfMsqEzVk6tw/qqhBFG5Fzv
-X-Proofpoint-ORIG-GUID: tjxsdZAAQfI7olbGY_fuwm_lt-xrNXqn
-X-Authority-Analysis: v=2.4 cv=EuHSrTcA c=1 sm=1 tr=0 ts=68615507 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=PcvD3jq4JvdaTR1-S7QA:9 a=CjuIK1q_8ugA:10
- a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: tjxsdZAAQfI7olbGY_fuwm_lt-xrNXqn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=521 malwarescore=0 mlxscore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506290126
+X-Received: by 2002:a05:6e02:3308:b0:3df:49b4:8cd6 with SMTP id
+ e9e14a558f8ab-3df4ab7811bmr116149255ab.7.1751209624226; Sun, 29 Jun 2025
+ 08:07:04 -0700 (PDT)
+Date: Sun, 29 Jun 2025 08:07:04 -0700
+In-Reply-To: <20250629144748.45117-1-contact@arnaud-lcm.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68615698.a00a0220.274b5f.0013.GAE@google.com>
+Subject: Re: [syzbot] [smc?] KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
+From: syzbot <syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com>
+To: agordeev@linux.ibm.com, alibuda@linux.alibaba.com, contact@arnaud-lcm.com, 
+	davem@davemloft.net, edumazet@google.com, guwen@linux.alibaba.com, 
+	horms@kernel.org, jaka@linux.ibm.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tonylu@linux.alibaba.com, 
+	wenjia@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jun 28, 2025 at 05:42:52PM +0100, Alexey Klimov wrote:
-> On Thu Jun 26, 2025 at 9:48 AM BST, Krzysztof Kozlowski wrote:
-> > On 26/06/2025 01:50, Alexey Klimov wrote:
-> >> PM4125 has audio codec hardware block. Add pattern for respecive node
-> >> so the devicetree for those blocks can be validated properly.
-> >> 
-> >> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-> >
-> > Remember to ALWAYS explain the dependencies between patches (merging
-> > strategy), because this now creates impression is independent patch. It
-> > is not and should be squashed into previous.
-> 
-> What's the proper way to describe such dependency?
+Hello,
 
-Text in the cover letter.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING in smc_tcp_syn_recv_sock
 
--- 
-With best wishes
-Dmitry
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 6792 at net/smc/af_smc.c:129 smc_tcp_syn_recv_sock+0x3f8/0x570 net/smc/af_smc.c:129
+Modules linked in:
+CPU: 1 UID: 0 PID: 6792 Comm: syz.1.16 Not tainted 6.16.0-rc3-syzkaller-gdfba48a70cb6-dirty #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:smc_tcp_syn_recv_sock+0x3f8/0x570 net/smc/af_smc.c:129
+Code: 48 8d bb f0 03 00 00 be 01 00 00 00 e8 21 c0 57 00 31 ff 89 c5 89 c6 e8 96 88 a2 f6 85 ed 0f 85 81 fc ff ff e8 49 8d a2 f6 90 <0f> 0b 90 e9 73 fc ff ff e8 3b 8d a2 f6 4c 89 fa 48 b8 00 00 00 00
+RSP: 0018:ffffc90000a08780 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff888034d95e80 RCX: ffffffff8b198ffa
+RDX: ffff88802825da00 RSI: ffffffff8b199007 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+R13: ffff8880352e89e0 R14: ffffc90000a08850 R15: ffff888034d95e80
+FS:  00007fba98e0c6c0(0000) GS:ffff888124ab5000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000040 CR3: 0000000032bf6000 CR4: 0000000000350ef0
+Call Trace:
+ <IRQ>
+ tcp_check_req+0x69d/0x1f80 net/ipv4/tcp_minisocks.c:874
+ tcp_v4_rcv+0x19b0/0x4650 net/ipv4/tcp_ipv4.c:2283
+ ip_protocol_deliver_rcu+0xba/0x4c0 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
+ NF_HOOK include/linux/netfilter.h:317 [inline]
+ NF_HOOK include/linux/netfilter.h:311 [inline]
+ ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
+ dst_input include/net/dst.h:469 [inline]
+ ip_rcv_finish net/ipv4/ip_input.c:447 [inline]
+ NF_HOOK include/linux/netfilter.h:317 [inline]
+ NF_HOOK include/linux/netfilter.h:311 [inline]
+ ip_rcv+0x2c3/0x5d0 net/ipv4/ip_input.c:567
+ __netif_receive_skb_one_core+0x197/0x1e0 net/core/dev.c:5977
+ __netif_receive_skb+0x1d/0x160 net/core/dev.c:6090
+ process_backlog+0x442/0x15e0 net/core/dev.c:6442
+ __napi_poll.constprop.0+0xba/0x550 net/core/dev.c:7414
+ napi_poll net/core/dev.c:7478 [inline]
+ net_rx_action+0xa9f/0xfe0 net/core/dev.c:7605
+ handle_softirqs+0x219/0x8e0 kernel/softirq.c:579
+ do_softirq kernel/softirq.c:480 [inline]
+ do_softirq+0xb2/0xf0 kernel/softirq.c:467
+ </IRQ>
+ <TASK>
+ __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:407
+ local_bh_enable include/linux/bottom_half.h:33 [inline]
+ rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
+ __dev_queue_xmit+0x8ab/0x43e0 net/core/dev.c:4740
+ dev_queue_xmit include/linux/netdevice.h:3355 [inline]
+ neigh_hh_output include/net/neighbour.h:523 [inline]
+ neigh_output include/net/neighbour.h:537 [inline]
+ ip_finish_output2+0xc38/0x21a0 net/ipv4/ip_output.c:235
+ __ip_finish_output net/ipv4/ip_output.c:313 [inline]
+ __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:295
+ ip_finish_output+0x35/0x380 net/ipv4/ip_output.c:323
+ NF_HOOK_COND include/linux/netfilter.h:306 [inline]
+ ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:433
+ dst_output include/net/dst.h:459 [inline]
+ ip_local_out net/ipv4/ip_output.c:129 [inline]
+ __ip_queue_xmit+0x1d7d/0x26c0 net/ipv4/ip_output.c:527
+ __tcp_transmit_skb+0x2686/0x3e90 net/ipv4/tcp_output.c:1479
+ __tcp_send_ack.part.0+0x3de/0x700 net/ipv4/tcp_output.c:4279
+ __tcp_send_ack net/ipv4/tcp_output.c:4285 [inline]
+ tcp_send_ack+0x84/0xa0 net/ipv4/tcp_output.c:4285
+ tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6632 [inline]
+ tcp_rcv_state_process+0x4236/0x4ed0 net/ipv4/tcp_input.c:6826
+ tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1948
+ sk_backlog_rcv include/net/sock.h:1148 [inline]
+ __release_sock+0x31b/0x400 net/core/sock.c:3213
+ release_sock+0x5a/0x220 net/core/sock.c:3767
+ mptcp_connect+0xccd/0xfe0 net/mptcp/protocol.c:3695
+ __inet_stream_connect+0x3c8/0x1020 net/ipv4/af_inet.c:677
+ inet_stream_connect+0x57/0xa0 net/ipv4/af_inet.c:748
+ __sys_connect_file+0x141/0x1a0 net/socket.c:2038
+ __sys_connect+0x13b/0x160 net/socket.c:2057
+ __do_sys_connect net/socket.c:2063 [inline]
+ __se_sys_connect net/socket.c:2060 [inline]
+ __x64_sys_connect+0x72/0xb0 net/socket.c:2060
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fba97f7e719
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fba98e0c038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 00007fba98135f80 RCX: 00007fba97f7e719
+RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 00007fba97ff132e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fba98135f80 R15: 00007ffdbf9fe0b8
+ </TASK>
+
+
+Tested on:
+
+commit:         dfba48a7 Merge tag 'i2c-for-6.16-rc4' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1622a982580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d3e0d55231e0c89c
+dashboard link: https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1097888c580000
+
