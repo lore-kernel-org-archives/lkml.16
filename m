@@ -1,37 +1,49 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBE51799F;
-	Sun, 29 Jun 2025 19:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FEF1494D9
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751223775; cv=none; b=c9pfMVvOCxRsiJ1ETqB59mT6AvvQ4I/d4T5t5NfRzOrCAdgODgy4DRR0Jj4eyPQ+qlWWySKnDt9LJ7Fzy4gR7K89Zb1aNQz3JoEC6a9IKzt6FFlpTm8kqrSqaQTokiFtQ93ujPT0UH982TyPWPPU33cSQTDxefYYjpZuF/OZAN8=
+	t=1751223872; cv=none; b=RVSpD/yyTgOGuytVAutm8jucNefyNSHLLcvn2VE8KoZOpsB0NpmGQVEpZusASPoRmkjGlVaXKDHk5RezLqkpsm3ydiMi+KPc+v/OJr8vbSWuhmtG+Y+oq5IqhSSV8OY/dr13PwcWWhORPfFb9C87s/bI11Hj1K5Sce15x4Fyjoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751223775; c=relaxed/simple;
-	bh=UwAtAuUNurGbVARCW4Sx+eI0xiWAbL99/KqmC6wtqUk=;
+	s=arc-20240116; t=1751223872; c=relaxed/simple;
+	bh=M10Ctqs7hcuFcS2TexQxfgsXUncjchaWsO0PwT9D8GU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hlkeWLmdwzjECHuWt9aZ0TMqM6mjoLJIk50Uf48IYTSsVeylzUCHylUK0JPkegY/FeNFMpTYIjd85uGQOxuNW4FqchhEPThAiMgwRnXE/tXBQ5WQcEqGm/KZYvBaObz4fiMcKp8i+YHwcpZFOcwlMIhGz6JI/WlZJkR4oEFsN+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e18Kdu1w; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=K8Pq4sPOkhW3hwWlmsYO6Bnuya/ozj6A/3UqTU2xSguWHN/ACxXccvzSSQ+O3m172qq0YhuBQ7yLy0UhSnEBNPOdImNHej+lv6N6/c4PJbb6pgGHx/DyfAzCNtgPM1HTYK/G4jqXZexnNHp58MgJsYb3BYctYuhQMRKE6ElhQ0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aAdmeVGg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e18Kdu1w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=uEDM3HRk9n9VR8fiWw/HrLjw5m6tjk6078UGqgBCTuE=; b=e18Kdu1wYRVFQ5sGrgTVFIIkRE
-	KKblHQW7cuEwl9eLjqMkrpR0iQ8ai2ABmbzvT81bx6CTsSItsvehLx7GnqBI6dcacPdKhK8vdYx24
-	MMVtiUF02M9lECVRMTjc434z4hKCAJLd7AQ7lscctW611VZuw8SoiQwBBaedixlmR6qCJItlZ6kJ8
-	nSupKXTxWpuDRAPZvuSWvAziEbbBlPG3Ing/NcY8pGK0z5zwXBjN+fu1IP9cgvwayAFWkOBWOmrf5
-	UbSvbqjD3liz4GcSGTF2mmAsveTpon0LDJnEAHgOED0GgyObdbfXYAdHnMZk+i6/TVuP0pZcs8veW
-	XuD0v0LQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uVxIg-00000006eNJ-2Em9;
-	Sun, 29 Jun 2025 19:02:51 +0000
-Message-ID: <e23fc081-8a74-45cd-9250-977c6e59d69f@infradead.org>
-Date: Sun, 29 Jun 2025 12:02:47 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aAdmeVGg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751223869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s49YQGftGKpHPbBrk+2AAdXS1ZVznQ5MfA7qQvDwtec=;
+	b=aAdmeVGgaN6Uyixj/WUdo/MVkGD+37+FGnDx+TXA0CwAbGz1SHlqtWoOOH0aYzxQBSjP4r
+	Qf7h430eP9QIOP7IUBBs+d8fT+O4eyivksCXw/fgnUPaLpltxiusMGM1nPmZq0jdHw8xQL
+	GHTfa4lI6Os6cSUp31gAOsX8ofqR+28=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-131-hLuN9LUrNUaJhEg8GSdwOQ-1; Sun,
+ 29 Jun 2025 15:04:25 -0400
+X-MC-Unique: hLuN9LUrNUaJhEg8GSdwOQ-1
+X-Mimecast-MFC-AGG-ID: hLuN9LUrNUaJhEg8GSdwOQ_1751223863
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BC31118001D1;
+	Sun, 29 Jun 2025 19:04:22 +0000 (UTC)
+Received: from [10.45.224.33] (unknown [10.45.224.33])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 53DC618003FC;
+	Sun, 29 Jun 2025 19:04:16 +0000 (UTC)
+Message-ID: <1e2997cd-6932-46bd-8d5b-35a98b52abae@redhat.com>
+Date: Sun, 29 Jun 2025 21:04:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,50 +51,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/9] kconfig: improve gconfig
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250629184554.407497-1-masahiroy@kernel.org>
+Subject: Re: [PATCH net-next v11 14/14] dpll: zl3073x: Add support to get/set
+ frequency on output pins
+To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250616201404.1412341-1-ivecera@redhat.com>
+ <20250616201404.1412341-15-ivecera@redhat.com>
+ <7fce273d-06f4-498c-a36a-d6828b4d4f30@redhat.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250629184554.407497-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <7fce273d-06f4-498c-a36a-d6828b4d4f30@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
 
 
-On 6/29/25 11:43 AM, Masahiro Yamada wrote:
-> - Code refactoring
-> - Migrate GTK 2 to GTK3
-> - Fix all compile warnings
+On 19. 06. 25 1:40 odp., Paolo Abeni wrote:
+> On 6/16/25 10:14 PM, Ivan Vecera wrote:
+>> +static int
+>> +zl3073x_dpll_output_pin_frequency_set(const struct dpll_pin *dpll_pin,
+>> +				      void *pin_priv,
+>> +				      const struct dpll_device *dpll,
+>> +				      void *dpll_priv, u64 frequency,
+>> +				      struct netlink_ext_ack *extack)
+>> +{
+>> +	struct zl3073x_dpll *zldpll = dpll_priv;
+>> +	struct zl3073x_dev *zldev = zldpll->dev;
+>> +	struct zl3073x_dpll_pin *pin = pin_priv;
+>> +	struct device *dev = zldev->dev;
+>> +	u32 output_n_freq, output_p_freq;
+>> +	u8 out, signal_format, synth;
+>> +	u32 cur_div, new_div, ndiv;
+>> +	u32 synth_freq;
+>> +	int rc;
+>> +
+>> +	out = zl3073x_output_pin_out_get(pin->id);
+>> +	synth = zl3073x_out_synth_get(zldev, out);
+>> +	synth_freq = zl3073x_synth_freq_get(zldev, synth);
+>> +
+>> +	/* Check the requested frequency divides synth frequency without
+>> +	 * remainder.
+>> +	 */
+>> +	if (synth_freq % (u32)frequency) {
 > 
-> 
+> As the frequency comes from user-space and is validated only the DT
+> info, which in turn is AFAICS imported verbatim into the kernel, I
+> *think* it would be safer to check for 0 here or at DT info load time.
 
-Hi,
+This check is superfluous, the frequency from user-space is validated
+in DPLL core against frequency list provided for particular pin by the
+driver. And frequencies from DT are filtered/checked during load.
+So no check is needed here.
 
-If I am testing your recent *config patches, should I replace all gconf
-patches from the patch 00/66 series with these patches?
+Will fix.
 
-Thanks.
-
-> Masahiro Yamada (9):
->   kconfig: gconf: fix behavior of a menu under a symbol in split view
->   kconfig: gconf: use configure-event handler to adjust pane separator
->   kconfig: gconf: rename display_tree_part()
->   kconfig: gconf: rename gconf.glade to gconf.ui
->   kconfig: gconf: migrate to GTK 3
->   kconfig: gconf: replace GtkVbox with GtkBox
->   kconfig: gconf: replace GdkColor with GdkRGBA
->   kconfig: gconf: replace GtkHPaned and GtkVPaned with GtkPaned
->   kconfig: gconf: show GTK version in About dialog
-> 
->  scripts/kconfig/gconf-cfg.sh              |  11 +-
->  scripts/kconfig/gconf.c                   | 146 ++++++++--------
->  scripts/kconfig/{gconf.glade => gconf.ui} | 202 +++++++++++-----------
->  3 files changed, 171 insertions(+), 188 deletions(-)
->  rename scripts/kconfig/{gconf.glade => gconf.ui} (83%)
-> 
-
--- 
-~Randy
+Ivan
 
