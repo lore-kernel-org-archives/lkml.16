@@ -1,166 +1,140 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA041E47B7;
-	Sun, 29 Jun 2025 08:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751185326; cv=pass; b=cLT+0fjM+BbQtzXXh/+54y+NsVD/T39+SrsAlGUfpXZEUzwTd3JWnuh29iL3J23xls2YW8P7SHsgMU9ipdSsQTf1jCpvmhfVSPgJDMMT+yUsDeUt1Pe+SPGqShYAKX/8OxMKFmNEDtix7m82oK5XBoxdyVlHUjnjgxyX4ocbdRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751185326; c=relaxed/simple;
-	bh=+RM+r3ays+K16RV/hadA4OkB30NF1QxjnfGKLIdd8og=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PNr1LQ19JuvnnnHThjwST+uaUC1Z5Xz5e2y6g3lOKdyAVrcMLVzI2AOtdWKizxCMor8UyeT5kh0JLuvOgzw5T+itALuy2FrvhbJUDxQ2uIhqjzfQj5a433TAFgwgRhe5zjQKenwaBFqNhCVZH0IkhVuQJAx1uF/qdyXdKEJTGEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=ObZ+6Pg2; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379F31E2602;
+	Sun, 29 Jun 2025 08:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751185421; cv=none; b=gTRtUWcbWtt+EDiSo8e7Uo1lhFBv/BCWDAicPb9Tw+1jbsuVna3NPhUB8xzEBSl8ia1Pxp7JUaPHN0Wg3FnyukG+RAcFMp7MC0IDgOeYXtRUKAsm+3pNZ+Pm/IfgGCoe+L3m7wcb7r71dkSQl6yef2/8bXMRcGoMq1k1W0R2Oi8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751185421; c=relaxed/simple;
+	bh=LKtaI0pAOsDCmEDvjcAJQIr31hlkW2ymLC+5XkspvJk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EoYWl7pQGcZpO424Cg+Si6ws96VFozYsxkXAUOggCqSzmnSLxYViqyT2lKaxRCDySvNYM7xettYT6XTXE7nmDTEOpGB+kLpawHhl2aQKl8bJQtKLjzUubikIoBWr+C8HmatVD+64a2iVdpXo8Pn1/bFs7g+OMQT7co4kDhrOE8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Im/5Mksq; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="ObZ+6Pg2"
-ARC-Seal: i=1; a=rsa-sha256; t=1751185305; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=D4mphBy9zkDFx9KhpX7o9osPcCq/MXmJMrfcfmU61yHuFegBhv1DAZQkVacMDFHX+TS51ghJu2Q1h+2vNj7UjMmNHSSURuhAt5M/HfwaxZ3Mlt6UuG3xVXDuHrhsA5XQw/WyQnDzOOLOrYGvXypkXmTwW0YuxAIiAI+V8ve5j/4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751185305; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=j9HhW+KKeBFIAXptGOgjq9833pJH9mLDVqO2MWM7fI8=; 
-	b=Xa1VuigMEqBhf53wU+nO7a4aYakNVQdly/nle9CPNKLBc5ntpwf8JXBD9hzgO6g9R0IRYjTSNT2t59T20L4mx5ROMvozpR1klTREEQPpsRLPgdks/LjLXKJwjdfiSsNHh0PrKCR445+MJZxKx9oV1MubXoxe7ZwKTcjOwm8zgEk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751185304;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=j9HhW+KKeBFIAXptGOgjq9833pJH9mLDVqO2MWM7fI8=;
-	b=ObZ+6Pg20T6xpB12cf/yIMshQEKo0Fr0Du/GN8nX9Vp5iAkJytnUMs+HfYSR6RTV
-	qs0J4IWc/j6CL9ccmhIZsxj/lXDqKqktXrA/qrzx9fXS0IEn4PDKvtvIaK7cYRH3reU
-	AvXTxjgWlP+c+twwBVhIiJuGjbx4r/fv+HY2e5I4=
-Received: by mx.zohomail.com with SMTPS id 1751185302512722.333465929968;
-	Sun, 29 Jun 2025 01:21:42 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 2/2] cxl/core: Add a helper function to check dpa availability
-Date: Sun, 29 Jun 2025 16:20:42 +0800
-Message-Id: <20250629082042.256123-2-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250629082042.256123-1-ming.li@zohomail.com>
-References: <20250629082042.256123-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Im/5Mksq"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so701503a91.1;
+        Sun, 29 Jun 2025 01:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751185419; x=1751790219; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iT8CFBVHA2PHKdhe+MXDUNE+DyeuqyUpTK4o2FEoGw4=;
+        b=Im/5Mksqd1rZRivEtf8zsb82T6fN68Fi4YT0eQAPm7/6HpJyA5dQlSMLDyTyehBqr3
+         vX6+g4tmP8Rc6tmyljibpaZYHSQWX1bDHvg3dRRQ/QQJS9wmam6FWaTMtjdQL2J96GXY
+         VgB5UjeVOwrv9u5v9FSzMwLyCAWr/vrTwALgDRVZRbE5h96PceZGdqnN9e1JnSdnE+E/
+         QPrnhVH0KFX5+7/BVelongtBxhZBugB3x2KPGJqpd6h7jcZ3UyFTwr5GXe4cfq81VSET
+         c+t5JkTaJxSpuWbaAED8uxxRzp8XWj6REpLrYNb2+VeHOSOxqJtVc2v+QIl+eTQAM2fh
+         rF7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751185419; x=1751790219;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iT8CFBVHA2PHKdhe+MXDUNE+DyeuqyUpTK4o2FEoGw4=;
+        b=WSxc8kA6VIZ2+DBhYwf8bqYB/oA08W6hQLw0HPGeV2RmraJ3M/QQVrvp8/kY81dX22
+         qLLmGj4+nhULwZoVAXk9kTVGxcr3iLwATruRPTor0EoNPkyEvem81wP5kkr/h2+vrwOO
+         BenVlCsBKkE+vRt1RJyBtCegmA2oEpa9cOnPz6qHrygBKb1pFaXKDFE41csjrufofbs3
+         m9qkr0IK0pvXl6bV5J0cj4K5p1yC3qz6aMef/9Iud0dJmk3+kVDx42hwmm+Pxr6YKWJF
+         s7dWUNdg1xJAJsJ50bGBCMbiysihlP0RbuqS8n8EgjY2EOJxcnn5w9YHqSIsMUl+l4o7
+         9jOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHn5992c6xmooy17JlSAVaEJEJnCUFS4odkojL6vQICPAInKnG/Yqu4iAMxLu9hKDbLQLb8MUS8wn0@vger.kernel.org, AJvYcCVb0zJzsJV3nOWppfnDcmGhwBNoh8dWBdCaOrrZrMEZl6ydtZjlge2JVLBmtW/VtMKQhWrQUmZ85beXtWcv@vger.kernel.org, AJvYcCWA32jC4zSVkLx0iiW26NgdoPCoqK5r1T2h1zO+Z7ZOVGadJB2cEbWLkSxAyGQUkjoBOj+XGRQ0EqvU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHDxRLbJpcVgsDhop0wR3Lxq5HWLeQYlnYyircHHY+YV2wWNZP
+	R9G4Fc8jxTRyBkXfkl0CxJPq4BZjg4IRpioWzVdotc8c9UWR8Ue1kBVHFEwdSg4gGVM=
+X-Gm-Gg: ASbGncvHOY7SQj4J1/EkfYNqRPr7xqmfswLPovd2Wq/4mR6lWXOW1fDEYAE2OizUY2j
+	+ONOwXVBwARe2Q/fZ7436RyiJZbKBF3e6hFTF6KQeu/JdO76MzEbF9poJKA4+2PzVVeT5t+LuqR
+	zSa+0KCx8wU5GiABMYkI/LlczG3LFbl9+C3QHUvvD+dvEYU3RZLuX+Gyt6mB2xl2sKZNGIbvLiB
+	swWpHzogsQAIHmKR5fCDN9+SqUvwJcNKtUJ1JJY7PTdDmPyVKHqsQBvUhxNpKbfiKunB0pNwd9k
+	b1i2Q+PHVTOhCVpyWGqtzfY1PN9NqfrlcKnj428yUbcIrkNYWBZXiA==
+X-Google-Smtp-Source: AGHT+IGkogtkfd4RaBa+53mBJuGMKYemWXLFm3Z+9Nh+DPGDIY7c7kUnrfh43VEBbsF0oQoW8UIuQQ==
+X-Received: by 2002:a17:90b:2e04:b0:311:abba:53c9 with SMTP id 98e67ed59e1d1-318c911cbddmr13750481a91.7.1751185418667;
+        Sun, 29 Jun 2025 01:23:38 -0700 (PDT)
+Received: from [127.0.0.1] ([2001:250:5800:1000::168a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f542661asm10495839a91.26.2025.06.29.01.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 01:23:38 -0700 (PDT)
+From: Zixian Zeng <sycamoremoon376@gmail.com>
+Subject: [PATCH v3 0/4] spi: sophgo: Add SPI NOR controller for SG2042
+Date: Sun, 29 Jun 2025 16:23:09 +0800
+Message-Id: <20250629-sfg-spifmc-v3-0-28db1f27e999@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122743e41694e6889180c5513bec00008b1cb390e7967cd46cda0770971d899b33aeee273c290e3b85:zu0801122772fef8b0f278b9d83d795e6a000067bd10dc682d51b6180b66505c8a0b6ff0d685bfe8d0929b88:rf0801122dc06b9a69fe1a7127764a16170000f72a1e2710b35db733d265f378a6b2847c075557903a993cc3021081b01cd3:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO33YGgC/23MQQqDMBCF4avIrJuSTIxiV71H6SLGjA7UKkkJL
+ eLdG11Z6PI9+P4Fog/sI1yKBYJPHHl65qFPBbjBPnsvuMsbUKKRBrWI1Is4M41O1LZREhvpm6q
+ EDObgid977HbPe+D4msJnbye1vX8zSQkpSkeqcqSpQ3vtR8uPs5tG2DIJj9T8UMzU6lpjW5Gxb
+ Xmk67p+ARyza/HfAAAA
+X-Change-ID: 20250523-sfg-spifmc-7a910290e964
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Longbin Li <looong.bin@gmail.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ sophgo@lists.linux.dev, linux-spi@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Zixian Zeng <sycamoremoon376@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751185413; l=1859;
+ i=sycamoremoon376@gmail.com; s=20250113; h=from:subject:message-id;
+ bh=LKtaI0pAOsDCmEDvjcAJQIr31hlkW2ymLC+5XkspvJk=;
+ b=YLmRX9bJFi28MdqzwGvr0+LQxNtd9EVILDTfJCzRxnX7jC+jYtagrVP82dyF/rrrwfKmhn4WW
+ zofIBYJV37jB52dYeAh9hPAMXx8r9Hhfl+kW72Hms+Der4N9sGbaCD1
+X-Developer-Key: i=sycamoremoon376@gmail.com; a=ed25519;
+ pk=OYfH6Z2Nx3aU1r0UZdvhskmddV6KC6V1nyFjsQQt4J8=
 
-In CXL subsystem, many pieces of code that need to check dpa
-availability in case using wrong dpa. Add a helper function called
-is_valid_dpa() for dpa availability checking.
+Add support SPI NOR flash memory controller for SG2042, using upstreamed
+SG2044 SPI NOR driver.
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
+Tested on SG2042 Pioneer Box, read, write operations.
+Thanks Chen Wang who provided machine and guidance.
+
+Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
 ---
- drivers/cxl/core/core.h   | 1 +
- drivers/cxl/core/edac.c   | 7 +++----
- drivers/cxl/core/hdm.c    | 5 +++++
- drivers/cxl/core/memdev.c | 2 +-
- drivers/cxl/core/region.c | 2 +-
- 5 files changed, 11 insertions(+), 6 deletions(-)
+Changes in v3:
+- Drop the patch which adds additional flash_info into gigadevice.c
+- patch1: Because of the incompatibility, separate the SG2042 from the previous fallback mechanism to independent one.
+- patch2: Newly add configurable options to spi-sg2044-nor driver.
+- patch3: Fix reading bytes issue that causes the spi_nor_check_sfdp_signature() failure on SG2042.
+- Link to v2: https://lore.kernel.org/r/20250525-sfg-spifmc-v2-0-a3732b6f5ab4@gmail.com
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 29b61828a847..38d619df4772 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -136,4 +136,5 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		    u16 *return_code);
- #endif
- 
-+bool is_valid_dpa(struct resource *res, u64 dpa);
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 11eaa2eea642..469be1ecb703 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1523,7 +1523,7 @@ static int cxl_mem_sparing_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	ctx->dpa = dpa;
-@@ -1892,7 +1892,7 @@ static int cxl_ppr_set_dpa(struct device *dev, void *drv_data, u64 dpa)
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end)
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa))
- 		return -EINVAL;
- 
- 	cxl_ppr_ctx->dpa = dpa;
-@@ -1926,8 +1926,7 @@ static int cxl_do_ppr(struct device *dev, void *drv_data, u32 val)
- 	struct cxl_memdev *cxlmd = cxl_ppr_ctx->cxlmd;
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	if (cxl_ppr_ctx->dpa < cxlds->dpa_res.start ||
--	    cxl_ppr_ctx->dpa > cxlds->dpa_res.end ||
-+	if (!is_valid_dpa(&cxlds->dpa_res, cxl_ppr_ctx->dpa) ||
- 	    val != EDAC_DO_MEM_REPAIR)
- 		return -EINVAL;
- 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index ab1007495f6b..3dc9215ea94d 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -547,6 +547,11 @@ resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled)
- 	return base;
- }
- 
-+bool is_valid_dpa(struct resource *res, u64 dpa)
-+{
-+	return (dpa >= res->start && dpa <= res->end);
-+}
-+
- int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- {
- 	struct cxl_port *port = cxled_to_port(cxled);
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index f88a13adf7fa..46ea0536221c 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -267,7 +267,7 @@ static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
- 		dev_dbg(cxlds->dev, "device has no dpa resource\n");
- 		return -EINVAL;
- 	}
--	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
-+	if (!is_valid_dpa(&cxlds->dpa_res, dpa)) {
- 		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
- 			dpa, &cxlds->dpa_res);
- 		return -EINVAL;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6e5e1460068d..994ca02b2b48 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2847,7 +2847,7 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
- 	if (!cxled || !cxled->dpa_res || !resource_size(cxled->dpa_res))
- 		return 0;
- 
--	if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
-+	if (!is_valid_dpa(cxled->dpa_res, dpa))
- 		return 0;
- 
- 	/*
+Changes in v2:
+- patch1: Accept devicetree nodes whose compatible contains only
+  "sophgo,sg2044-spifmc-nor" to avoid breaking existing devicetrees.
+- patch1: Improve the commit subject message.
+- patch2: Dump the SFDP information to commit message.
+- Link to v1: https://lore.kernel.org/r/20250523-sfg-spifmc-v1-0-4cf16cf3fd2a@gmail.com
+
+---
+Zixian Zeng (4):
+      spi: dt-bindings: spi-sg2044-nor: Change SOPHGO SG2042
+      spi: spi-sg2044-nor: Add configurable chip info
+      spi: spi-sg2044-nor: Fix reading bytes issue on SG2042
+      riscv: dts: sophgo: Add SPI NOR node for SG2042
+
+ .../devicetree/bindings/spi/spi-sg2044-nor.yaml    |  5 +---
+ .../riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts | 24 ++++++++++++++++++
+ arch/riscv/boot/dts/sophgo/sg2042.dtsi             | 24 ++++++++++++++++++
+ drivers/spi/spi-sg2044-nor.c                       | 29 +++++++++++++++++++---
+ 4 files changed, 75 insertions(+), 7 deletions(-)
+---
+base-commit: 880f18ee6772d4add69519cb7de2fcf9f4769cd6
+change-id: 20250523-sfg-spifmc-7a910290e964
+
+Best regards,
 -- 
-2.34.1
+Zixian Zeng <sycamoremoon376@gmail.com>
 
