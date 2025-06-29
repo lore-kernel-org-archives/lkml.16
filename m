@@ -1,89 +1,56 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888951D6AA
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206694437A;
+	Sun, 29 Jun 2025 14:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751208327; cv=none; b=upIgTI9FAD6c73RDsvDImRZrAaGCSc7vBa1TfqVZ6VhP8aaWvO97tD43OigsYl+uuoHcUja6bIpKXs/ig5WoUMtwQEoWx81axWRoS0VdWic+4HhBMcWFlAgRVTMMNk/CvYeqP5cdDxpbOqOgJfFHFxal0h7aMn8uTEoKf8un8CA=
+	t=1751208434; cv=none; b=RFeH/9IlAJA0Ccgu07xZxWVxUogjo2XLM/pvgX04U1wSMaM7jr1nKQfUFtAIV5WltM3WdIGll9j6BnF6Gifjcp88OH4lmKmMgcuq88dc5XdDfqsoWAZmIV4CKjCCn2SvD/LksZ8QpY+lRz+4x1G2CxQ2DB4NDn2KDwKMXyj89V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751208327; c=relaxed/simple;
-	bh=50naptVv5s/TjZg67luS1eqO7P3Zc5AAOWnLTHPerZA=;
+	s=arc-20240116; t=1751208434; c=relaxed/simple;
+	bh=KClsNYwfxeyKw0Nv6uUMfVDKlblzETmDZmLERrHHVgE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KprGB9xdHnD0Rzl9BTSDR+ZRSkq0CK/2GcoZSdV9DgzLT/kDYqTK43Hb4qiZ9JNHB8lKonLffWMDVp/IlpP+GJqfvzH6Xmvygejd6Fpu9s2BPeWMld75CBdNIlNBQDTywXVkUfeTQOf9JyPykeoD77uIqwcyLluUEEFLeJZyB3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oECh7iqW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oECh7iqW"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TDqiak025707
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=U75yw7BMC/S6igk0SQ7PlAp8
-	c+8TFboIWS9Vq7PTNB4=; b=oECh7iqWHwXVcfgXCPhAZwgrgIRSNp1O4g18tRPQ
-	G+cquXTpg7+KbIZ4Bcle76waU/2UcVfVOpAYetxIiGcxg05xJoJptjI1n8+qfQkO
-	crMlx/koLGQ6Nzsym5ASCe4ikNAhAp6YQkjnBAR6rvHGoSGnHqRWrn8jh202q/vK
-	VVF+5OFC1mgxwRNBjQKH0uEeGPRnaQRZRrkhPDkQypXmPSNIFl7A1j6deZbC5Bek
-	ydDRgJ2sYEmcY4gx8V1u57Ea0OKUOJMsM0kiLN2KmtwwXejR81YXUr6f1ayfHRG4
-	Wz/h/Y91x3I/O1pDMB+1+VDZpjeDnanG/84dJY3teCxCog==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j95ht7wk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:45:20 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d38c5c3130so245816885a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 07:45:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751208319; x=1751813119;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U75yw7BMC/S6igk0SQ7PlAp8c+8TFboIWS9Vq7PTNB4=;
-        b=Oo6bj+/npbmFttk8w1Rt/84KcDuri7U3/+Ui1iaoObUSb1dixGXSpxq51WWpV9ZW9x
-         JPQhE+LLHWbTvbUZ+tw6+/1WFucN2Kl3JaU6DOpk+vLjNHjijzVEKIGtzjDKzbGn/rgj
-         V0n8GXNZDJ6ul1aeQKFYUis1CEqbkhJUITOJ8NMVdjHVGNxhuWqRHKROUCcWWUZKniXF
-         2KXRCNiHqPd2855Z6J5+4kyL/n9TQADwEJSujLpf8HcxgC7cRc2xB5lYVwDBaxyTncFo
-         /szPSqOMmUIAY1P0xDMNDTWPsMB87aPJs/7u0Mvh1eKAFbjG2HrE6lxSWRV/fJCWXJ4P
-         lEfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhg5QNi4aTtXHKR2qvXeaEuKSi3UG+i+vO+0vVCIfOpzagbieJ46goNRjmnrNzWaVNR7Th3a5GMIeB41I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8263Kd+hGBbdU1Bxlnr0vHjGxMHBaR9HZx1v42gTkPqc6dHua
-	7TmniD8UF1mqkLnj85CNiCRmlYQH9QZlogTCpkFR7k71LqhU8iTLKBHMKzUhzU0EC+1jXTbKNUH
-	fKRd7vrliYfFaIZk1UcgTEHU6vUWhVyUnGV5V4IIo7xf/Go3f1vAkFp103xu2ymA9oJM=
-X-Gm-Gg: ASbGncupycxfxpDzIZsQsoC8mgW0FziG3u3Ym4Q+dK2i0iSX9k/v9Fb3vlWxqn2Four
-	wodT9QAo6OTHOzQtLPKwUd7e0NUt31nRj5JUWCg0VnMHIo6hLlE6b3FWvCV0MVWP79gjPt2MO69
-	s+M1nzP6Er376612P1zGtqApLiEpti6nVRImU+Su4mdJqvNqAw+cWx8qaFSJwkZNc+02GS7sEut
-	euBkn1HwHUujATuUIr+3nqqQLo1KEw9na7ia4d6a2C53xgSnyNONgdbOsG07Gfl0oQgZfcEhZjR
-	DMP/kdjG5tA16yAngOo6WJllsY7OL3OWiAPx1abDLyfJLo7zeZLXrTt1LqmkIpb/P12yNSTeNRe
-	Ir8hkhCcvkhVTlTDR1wV5VPOiqsuhgG5R2pI=
-X-Received: by 2002:a05:620a:400c:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7d4439b9679mr1537818385a.53.1751208318650;
-        Sun, 29 Jun 2025 07:45:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCYpAnwJ1rYQ1S233FYjwYu4oJCVh/e3dqa7Xz6LlKsV9YCedkRP+JE+l1W66OWbNHR1zgWw==
-X-Received: by 2002:a05:620a:400c:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7d4439b9679mr1537812885a.53.1751208318157;
-        Sun, 29 Jun 2025 07:45:18 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2cd99esm1137184e87.158.2025.06.29.07.45.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 07:45:17 -0700 (PDT)
-Date: Sun, 29 Jun 2025 17:45:15 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Rob Clark <robin.clark@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, Helen Koike <helen.fornazier@gmail.com>,
-        Vignesh Raman <vignesh.raman@collabora.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/ci: Remove sdm845/cheza jobs
-Message-ID: <nij26lzoinzr3cbfmvwzigtxpsjibaudect3i772swbnmyuz5w@2jny5ie3oqw3>
-References: <20250629135843.30097-1-robin.clark@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OB2ioMZBvbXpuOBi+zzWKXs+P4MZc/LTjYKyl8b6oueQJSMrdzpCaU5/mkLql/2mrPUggDeRK9EqcemtS2fGEi3xCgu35xkgQTcR2LJ82LHPS0hQK5j0Aes/ftWsUFJiBiQqlNOjk7hgzX06o7LcIJRj6GgmiQO8/xy7iy4w8jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1uVtJ6-000000001Bw-12Mh;
+	Sun, 29 Jun 2025 14:47:00 +0000
+Date: Sun, 29 Jun 2025 15:46:56 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v7 07/14] arm64: dts: mediatek: mt7988: add basic
+ ethernet-nodes
+Message-ID: <aGFR4PJv0pdKdD94@makrotopia.org>
+References: <20250628165451.85884-1-linux@fw-web.de>
+ <20250628165451.85884-8-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,49 +59,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250629135843.30097-1-robin.clark@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDEyNCBTYWx0ZWRfX5sJpb7tCaak0
- e2EdeQAGichs0JqQO+BHDA6tQdfA0lpa7x3nPC2tGDSggBHZj5DKD6/QbFoLHnBdkyjq/M2osvv
- SgzZWc7UEwOR2Pdb5H8rVXMAIsIDmiVrAx3x9p91EtQoJmFy7Kk4qif+gfWh+g7k+rmue36hFHT
- zp2IEIFajRQWgHU63JgNeXP1KkLg1FKCWZC7GyjEgZGXLkthKo0F74GdyaDlTmGH6FZS/HftyCE
- K4HYrOF0FnoU2gv4KKpMTkJE+6+D4gxx6ioAakRzR/f3UMC2FqVwdwS1m8WFXx6colUJIi1hK1A
- kUNxlC9snvwi2CzphawUugqU7hmDtbgVO4cwIOI49/7iUlTB1yg5aueNcRz1D74idTQauxktHXn
- 7KmH0Nb22jlf0TD1rXfayAHW8/Ci7W53k0ibWaZGFuBcZN0GCGCk64dF/RSWO/EcwNd9X78A
-X-Proofpoint-ORIG-GUID: 2_-BYmsZPa-dBhxxyZJWAbmnEgg1B8_q
-X-Authority-Analysis: v=2.4 cv=EuHSrTcA c=1 sm=1 tr=0 ts=68615180 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=zVdBlVQdkfp4bBuhmU0A:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: 2_-BYmsZPa-dBhxxyZJWAbmnEgg1B8_q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=825 malwarescore=0 mlxscore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506290124
+In-Reply-To: <20250628165451.85884-8-linux@fw-web.de>
 
-On Sun, Jun 29, 2025 at 06:58:41AM -0700, Rob Clark wrote:
-> These runners are no more.  So remove the jobs.
+On Sat, Jun 28, 2025 at 06:54:42PM +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+> Add basic ethernet related nodes.
+> 
+> Mac1+2 needs pcs (sgmii+usxgmii) to work correctly which will be linked
+> later when driver is merged.
+> 
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  drivers/gpu/drm/ci/build.sh                   |  17 -
->  drivers/gpu/drm/ci/test.yml                   |  14 -
->  .../gpu/drm/ci/xfails/msm-sdm845-fails.txt    |  29 --
->  .../gpu/drm/ci/xfails/msm-sdm845-flakes.txt   | 139 -------
->  .../gpu/drm/ci/xfails/msm-sdm845-skips.txt    | 350 ------------------
->  5 files changed, 549 deletions(-)
->  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-fails.txt
->  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-flakes.txt
->  delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sdm845-skips.txt
+> v6:
+> - fix whitespace-errors for pdma irqs (spaces vs. tabs)
+> - move sram from eth reg to own sram node (needs CONFIG_SRAM)
 > 
+> v5:
+> - add reserved irqs and change names to fe0..fe3
+> - change rx-ringX to pdmaX to be closer to documentation
+> 
+> v4:
+> - comment for fixed-link on gmac0
+> - update 2g5 phy node
+>   - unit-name dec instead of hex to match reg property
+>   - move compatible before reg
+>   - drop phy-mode
+> - add interrupts for RSS
+> - add interrupt-names and drop reserved irqs for ethernet
+> - some reordering
+> - eth-reg and clock whitespace-fix based on angelos review
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 137 +++++++++++++++++++++-
+>  1 file changed, 134 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> index 560ec86dbec0..cf765a6b1fa8 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> @@ -680,7 +680,28 @@ xphyu3port0: usb-phy@11e13000 {
+>  			};
+>  		};
+>  
+> -		clock-controller@11f40000 {
+> +		xfi_tphy0: phy@11f20000 {
+> +			compatible = "mediatek,mt7988-xfi-tphy";
+> +			reg = <0 0x11f20000 0 0x10000>;
+> +			clocks = <&xfi_pll CLK_XFIPLL_PLL_EN>,
+> +				 <&topckgen CLK_TOP_XFI_PHY_0_XTAL_SEL>;
+> +			clock-names = "xfipll", "topxtal";
+> +			resets = <&watchdog 14>;
+> +			mediatek,usxgmii-performance-errata;
+> +			#phy-cells = <0>;
+> +		};
+> +
+> +		xfi_tphy1: phy@11f30000 {
+> +			compatible = "mediatek,mt7988-xfi-tphy";
+> +			reg = <0 0x11f30000 0 0x10000>;
+> +			clocks = <&xfi_pll CLK_XFIPLL_PLL_EN>,
+> +				 <&topckgen CLK_TOP_XFI_PHY_1_XTAL_SEL>;
+> +			clock-names = "xfipll", "topxtal";
+> +			resets = <&watchdog 15>;
+> +			#phy-cells = <0>;
+> +		};
+> +
+> +		xfi_pll: clock-controller@11f40000 {
+>  			compatible = "mediatek,mt7988-xfi-pll";
+>  			reg = <0 0x11f40000 0 0x1000>;
+>  			resets = <&watchdog 16>;
+> @@ -714,19 +735,129 @@ phy_calibration_p3: calib@97c {
+>  			};
+>  		};
+>  
+> -		clock-controller@15000000 {
+> +		ethsys: clock-controller@15000000 {
+>  			compatible = "mediatek,mt7988-ethsys", "syscon";
+>  			reg = <0 0x15000000 0 0x1000>;
+>  			#clock-cells = <1>;
+>  			#reset-cells = <1>;
+>  		};
+>  
+> -		clock-controller@15031000 {
+> +		ethwarp: clock-controller@15031000 {
+>  			compatible = "mediatek,mt7988-ethwarp";
+>  			reg = <0 0x15031000 0 0x1000>;
+>  			#clock-cells = <1>;
+>  			#reset-cells = <1>;
+>  		};
+> +
+> +		eth: ethernet@15100000 {
+> +			compatible = "mediatek,mt7988-eth";
+> +			reg = <0 0x15100000 0 0x80000>;
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+I think this should be
 
+reg = <0 0x15100000 0 0x40000>;
 
--- 
-With best wishes
-Dmitry
+as the range from 15140000 ~ 1517ffff is used as SRAM on MT7981/MT7986 and
+doesn't seem to be used at all on MT7988.
+
+root@OpenWrt:~# devmem 0x15140000 32
+0xDEADBEEF
+...
+root@OpenWrt:~# devmem 0x1517fffc 32
+0xDEADBEEF
+(with 0xDEADBEEF all that range)
