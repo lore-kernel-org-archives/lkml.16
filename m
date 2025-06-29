@@ -1,78 +1,48 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-108-mta248.mxroute.com (mail-108-mta248.mxroute.com [136.175.108.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB773A1B6;
-	Sun, 29 Jun 2025 21:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AD329A1
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751234005; cv=none; b=aVVqzjkt9Ym+6Add4gx6kY6fukxPPJble+V7ZttwdFKDDK2vnuEx53jNu+dBKWsy0hGX+MkgrRuWRcuT2b+Crey3G0nEPfGquPEg4ZbPPkka0KXRsNmewt52KhjeI13FvfwolJ8rIUr4W7hYNc0bIGeFXPWAwWK7m7QXaCljyYQ=
+	t=1751234042; cv=none; b=d2DeFYDWlwoUCVkfU4OWOSmOkOLcP7CMIXiAzivT1cGiwFz+pjhahc92OuCuTZtdSD8K6SWdmq8OlCI0zwMYs9mvxn4IPpr7bXvnZ5saHs1p9ZUerUWI101Xy8/ogCrnI1FuD2MWdOLzbR8dJp395sdWREN5zVh2uCb5y2TDSZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751234005; c=relaxed/simple;
-	bh=qa9GQUt1jtT2Gt7nQkWLc42amX+Sz/Pcd/7zyPeEoe4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JpW3OMOFb8XpxPZEKiuNvXegp/Kv+JmJMPUm7VzdnGcR8rRqlrrS2i+YBmaKkcqWabQ6K2CTRMqubSAwPw0bJpG6E3ROc76q2XtW2L4ewxVCLkecBBShSU1ZU+r05wQWSYuM2OhGu+L0onlkfuJsp+WEeUSrXfyQWfiZyKTHWRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrRwYIiU; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751234042; c=relaxed/simple;
+	bh=csx2nFLsTuv9cXPbKcrSJ/S9zFSXq8N9su7jnd6UD3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hCAjRTfw1YbQiSc9dfU+ns9Cu6dnnzdYEXsbTtOFFCf/7sSFfWYMqALq+OFi1juPc9nAIoAvitKgMHM67yA4imHh8OTh00MWjRdAAmip6+XO+AjsgEgqeR4K4mNNZth8XDgLAOiQQ2ORkG6u8KNQiuP+FMihrb8W6bs1aBccYrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=snekbyte.com; spf=pass smtp.mailfrom=snekbyte.com; dkim=pass (2048-bit key) header.d=snekbyte.com header.i=@snekbyte.com header.b=lPEdf6fh; arc=none smtp.client-ip=136.175.108.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=snekbyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=snekbyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrRwYIiU"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fabb948e5aso19549196d6.1;
-        Sun, 29 Jun 2025 14:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751234002; x=1751838802; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nyJcwNUn/7xBpKX8aXFhMH4lWqh2HK/mefvuweOGq6k=;
-        b=PrRwYIiUIm/Bc3SYiA1yFn7ea4Oa20mGUomdn5OOhG5GBAnjv4QniYRVf3XLTVuNOf
-         kqWUCOkNP4Bl5fGYJqZxSA5K3pf3Xu/j+TYSaZvBc8/lsM2NiROzy/IwJWbpS3Kfi9C8
-         PRoBYbDijSooOLkE3C9yLUwSyWK/7k5djjupCXYDUVOxVeGF9xMntTmOwVZ1u6uq5iKn
-         0qb5WwzDPur/50AroQkbNVkDi/y5h3loPdgnIwKi70QXoB2XoSaIi916VtDuwZFvG4rA
-         s8vJK2nF/1pZsjOxvGvZD1zpvDM2rGlmMU/RtX3GplP4XlA4SU3j5P8tbipaqySDNGQD
-         uBlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751234002; x=1751838802;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nyJcwNUn/7xBpKX8aXFhMH4lWqh2HK/mefvuweOGq6k=;
-        b=I2TxPBilHyyNJe3N3kTUng3QabAAM5x+6M7/5ZRFmDFRkE1K6Hwu1NBQ/1bEn9V0+M
-         QT8HrSQZdhdAo71f6kiTXPzvfwRHVNzPiOwj8c6W8b3vIARZ4qCYftU+F9gPmskIZ9Gv
-         nePMwJyrXN57E+bQ9DEnotHtCKWib4SGPjbzWuV59Lammh1IVgL3Ztswul4rG0KqxuqU
-         WRKJfmRWtoxA0uQpYwH7HryulEMnf3CZZMJhQHwBZgi9BiYfucU7ZxGkrMYt1nZgeQ3C
-         6cBo0pqAcuCi5sEbfAYFsAwqohy7llNL0Pcrjg1dvu4tYKzKi9vhJhExhyrGW+T0qUA9
-         QHow==
-X-Forwarded-Encrypted: i=1; AJvYcCVBCvt/nWtHc/sH4YyqGpfar37YjHxTls6gryy4vYrkUtxZ0koIhAc4uc/06IyR8ce49fyYAtU1xUbf@vger.kernel.org, AJvYcCVKPCj8SMWiAxAb4utt60AeeKm/tV3VMuxo14SUjeO/P+CYdpjK0VALY4eCyAkJQd3H4l6KOhd1@vger.kernel.org, AJvYcCVwyUGaSFki1411LAOmIbThik3YA8jqRugMJCSQLKCIws71uaytCNs1vSRbCBi8NqOhBFQ6MKMNNpK2xBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywie5uKWHoG3gDhpub7wMdvnREgAXC5RHZjb5Ph2hvqGWYIAVhv
-	Zz2FHJwCOV4KEKL1Rap15ohg2p5KzY2hF7g1Z0/0/oGHZUG7kxVbkb/F
-X-Gm-Gg: ASbGncv/jAuMnIhTI2JW0rjxZdipwG3flLDxjDPoGop9HURzAZOG+ZNfE0srr5Q6YC4
-	coCvamYOD/5dUXu9b5/3yxusXaqwa7kVC7AQHBRENhokUGsaQcDflEX7R6Ef6BxfGtIdDtM7Xy1
-	+RHOHaQeeyhkfj8oTCMRcVMQDpIN9XXyfRRRGQDwcw3Sp+Kujq+e2QZ0DWbd8+rcwtsabKEewwM
-	zL83gx5BnUVYZMzAOgHh3slarmVgClMec9smwUtSQa80axV9UG1Wd+zo/DgoirScaNa2ghlvovC
-	uKqJoiAwC9vFgwlMiescOFC13ppMGu0ISA6pl623a9H/pI2SKj2sjiB6d/1zp4kjVSys48xSdlw
-	a7JQm7ppA/SuGuiNMPVkZ/c1Hzc0rt/07AdlcuaaWNhfdK1fDtSkPmQVERw==
-X-Google-Smtp-Source: AGHT+IH8omZJ5/mhFuoc1KdSVYF9KBYbkdeLjH5Qt7Z7UicftP1H2NZyc3zQNgwkZSoMayqlZgYIJA==
-X-Received: by 2002:a05:6214:4308:b0:6fd:76c2:a2fd with SMTP id 6a1803df08f44-700024399acmr211363176d6.4.1751234002499;
-        Sun, 29 Jun 2025 14:53:22 -0700 (PDT)
-Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771b50e1sm56878656d6.34.2025.06.29.14.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 14:53:22 -0700 (PDT)
-From: Seungjin Bae <eeodqql09@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: pip-izony <eeodqql09@gmail.com>,
-	Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>,
-	Jassi Brar <jaswinder.singh@linaro.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	linux-usb@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=snekbyte.com header.i=@snekbyte.com header.b="lPEdf6fh"
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta248.mxroute.com (ZoneMTA) with ESMTPSA id 197bdaa04110008631.004
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Sun, 29 Jun 2025 21:48:45 +0000
+X-Zone-Loop: 8f4eb850fee12a3a1be4f8745d2a80c97a2c50b5f5ac
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=snekbyte.com; s=x; h=Content-Transfer-Encoding:MIME-Version:Date:Subject:Cc
+	:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=e3yCd8QB9L4sn/uY1ZILguL8ZWYji4UNd3j9gxk018Q=; b=lPEdf6fhXeyDSkb1L9Fa3YnYCM
+	6yHxORL08Mf84XGgzDajvw48mkZHFtfyCXmm3p9nZm+wtl1RrRoD2oUyQCgPvnBmGXUmbmoC29Yla
+	2wKCWoc/dzygmZdZnCPdaOkiqFLk4Upe7rftz082jItns9w6TZ/oPhkj3iPOK+VjpTJgnGaheu24X
+	DAH0OXUUkFY08d27qNqaMOofxyNVJbrjDqt9kk0it3KT2VjZCYxOeu/1XJTX7kjB7R8M/cCDQvGd4
+	YvqDuQlr0GB9TDUJB0De+Ws2IxnFAhBK3u95uwC/+w096QlXTJkDUAHrbYhg1ggjO3+Z2zJea6CFw
+	1XUlqmqQ==;
+From: Leonard Dizon <leonard@snekbyte.com>
+To: jikos@kernel.org
+Cc: bentiss@kernel.org,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/2] usb: gadget: max3420_udc: Fix out-of-bounds endpoint index access
-Date: Sun, 29 Jun 2025 17:49:45 -0400
-Message-ID: <20250629214943.27893-4-eeodqql09@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250629201324.30726-4-eeodqql09@gmail.com>
-References: <20250629201324.30726-4-eeodqql09@gmail.com>
+	Leonard Dizon <leonard@snekbyte.com>
+Subject: [PATCH] HID: elecom: add support for ELECOM HUGE 019B variant
+Date: Mon, 30 Jun 2025 05:48:30 +0800
+Message-ID: <20250629214830.30220-1-leonard@snekbyte.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,35 +50,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: leonard@snekbyte.com
 
-In the max3420_set_clear_feature() function, the endpoint index `id` can have a value from 0 to 15.
-However, the udc->ep array is initialized with a maximum of 4 endpoints in max3420_eps_init().
-If host sends a request with a wIndex greater than 3, the access to `udc->ep[id]` will go out-of-bounds,
-leading to memory corruption or a potential kernel crash.
-This bug was found by code inspection and has not been tested on hardware.
+The ELECOM M-HT1DRBK trackball has an additional device ID (056E:019B)
+not yet recognized by the driver, despite using the same report
+descriptor as earlier variants. This patch adds the new ID and applies
+the same fixups, enabling all 8 buttons to function properly.
 
-Fixes: 48ba02b2e2b1a ("usb: gadget: add udc driver for max3420")
-Cc: stable@vger.kernel.org
-Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
+Signed-off-by: Leonard Dizon <leonard@snekbyte.com>
 ---
- v1 -> v2: Added a second patch to fix an out-of-bounds bug in the max3420_getstatus() function.
- 
- drivers/usb/gadget/udc/max3420_udc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/hid-elecom.c | 6 ++++--
+ drivers/hid/hid-ids.h    | 3 ++-
+ drivers/hid/hid-quirks.c | 3 ++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/max3420_udc.c b/drivers/usb/gadget/udc/max3420_udc.c
-index 7349ea774adf..e4ecc7f7f3be 100644
---- a/drivers/usb/gadget/udc/max3420_udc.c
-+++ b/drivers/usb/gadget/udc/max3420_udc.c
-@@ -596,6 +596,8 @@ static void max3420_set_clear_feature(struct max3420_udc *udc)
- 			break;
+diff --git a/drivers/hid/hid-elecom.c b/drivers/hid/hid-elecom.c
+index defcf91fdd14..0ad7d25d9864 100644
+--- a/drivers/hid/hid-elecom.c
++++ b/drivers/hid/hid-elecom.c
+@@ -89,7 +89,8 @@ static const __u8 *elecom_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 		break;
+ 	case USB_DEVICE_ID_ELECOM_M_DT1URBK:
+ 	case USB_DEVICE_ID_ELECOM_M_DT1DRBK:
+-	case USB_DEVICE_ID_ELECOM_M_HT1URBK:
++	case USB_DEVICE_ID_ELECOM_M_HT1URBK_010C:
++	case USB_DEVICE_ID_ELECOM_M_HT1URBK_019B:
+ 	case USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D:
+ 		/*
+ 		 * Report descriptor format:
+@@ -122,7 +123,8 @@ static const struct hid_device_id elecom_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_XT4DRBK) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1URBK) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1DRBK) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK_010C) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK_019B) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_011C) },
+ 	{ }
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index c6468568aea1..33cc5820f2be 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -448,7 +448,8 @@
+ #define USB_DEVICE_ID_ELECOM_M_XT4DRBK	0x00fd
+ #define USB_DEVICE_ID_ELECOM_M_DT1URBK	0x00fe
+ #define USB_DEVICE_ID_ELECOM_M_DT1DRBK	0x00ff
+-#define USB_DEVICE_ID_ELECOM_M_HT1URBK	0x010c
++#define USB_DEVICE_ID_ELECOM_M_HT1URBK_010C	0x010c
++#define USB_DEVICE_ID_ELECOM_M_HT1URBK_019B	0x019b
+ #define USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D	0x010d
+ #define USB_DEVICE_ID_ELECOM_M_HT1DRBK_011C	0x011c
  
- 		id = udc->setup.wIndex & USB_ENDPOINT_NUMBER_MASK;
-+		if (id >= MAX3420_MAX_EPS)
-+			break;
- 		ep = &udc->ep[id];
- 
- 		spin_lock_irqsave(&ep->lock, flags);
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 31508da93ba2..9bf9ce8dc803 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -410,7 +410,8 @@ static const struct hid_device_id hid_have_special_driver[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_XT4DRBK) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1URBK) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_DT1DRBK) },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK_010C) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1URBK_019B) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_010D) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ELECOM, USB_DEVICE_ID_ELECOM_M_HT1DRBK_011C) },
+ #endif
 -- 
-2.43.0
+2.50.0
 
