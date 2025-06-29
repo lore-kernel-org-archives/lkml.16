@@ -1,128 +1,116 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55990186A;
-	Sun, 29 Jun 2025 19:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F85BE4A;
+	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751223714; cv=none; b=sXlrj8DGDci5BUNZUXDa9yarYAlrqk8xM3mdMpMWiGEnJ82C6miDNBh6CLg3LT9UFrxxb0X4gZTGahW1lthhueNG7Ayk/j9brtPs541XSSi9W9DpSLV7296vukQvAtJchs4DMHAxLNMZyjAkeQ4JKAvnf3EJjdiZqqIgYDDGwfg=
+	t=1751223741; cv=none; b=mn8rXH9n14V0WIA9EN6xAFSjdXYKE/7e/y59+zg/BJjByITspQtEL4SbJa7tJqTq0QCqtx+CapFYsEqOPNum8K4HKYPVip0IdN74YlY25C5cRXTk+5xZpSLNVqIUmrTWP3o3rdVwvApeZzzfmQXM7FWVAC20qJbjcrlkdc0IZdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751223714; c=relaxed/simple;
-	bh=9M6CFZ/2R5nno9yztXxect8YV4KqNZ1T1L9nBrZW8kM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qVhUgCokpl6Cl4lYW6pyNYjwVICzX0cDzTslZOijVEb24gOeSJ1EipuHBfANKKx7fBiWpWKlX10WimNLx8P+8a51In05/aP7wVvCd3B9b8YB1b5E+lTSK2wgKcqLAtX8L47sBdTbDtxpN0E3L9Lugkxvbzfdn7iWU9olttYAkT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLg3dKYh; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751223741; c=relaxed/simple;
+	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=TShCy8kpJyveXclnA2kXwWoszqogvX8nPj1aJr6YuN1PRhiwY5njmAyYy5tQbxBDnw5FZ3b4J3r/LkdU8lebUGb+cmoKGk/oN+bUWxh8fxUNIZCkqloxaWQb0emoIglDF2VoD0PfrwuGT/Zz9Id3e+ErYkT428tZ9aOvcZPWO88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNOhTrRs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLg3dKYh"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32aabfd3813so14292091fa.3;
-        Sun, 29 Jun 2025 12:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751223710; x=1751828510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JgarB99rx/jpIsjX1rTBgNR+GmtLMJURI6x2FhaKEGw=;
-        b=NLg3dKYhdrxk38tIQ8Z5WU8Vb1T4um5WNJ9sjViW/VVv8pNlss3PSddIL8k33l2g6l
-         kejCz6FKvZQYqNNEm+d8fsqbBGEs73HJj+/OhxfxNqdzQt86RmOMru0Ov5iGvHCjeI2r
-         vgB2rP1k+XFfCdSq1h+x4UtxSWIEKcUel2SyeS00Zghckl5/yM4fuM/1YNkZ+fsc5yR5
-         mAN5ut7l1kJtu5xcjzS2qGPkAlJn+tkz28AOlOTRCaWyVhdbUSOlDDBKTwLbXulqw51F
-         RTJCgo5kYPq53YwHZ+qbWv3I+IropNcjWFjj0/R2iduWYRmalVL6qTZoDd1kJoZQ0AjY
-         WKFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751223710; x=1751828510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JgarB99rx/jpIsjX1rTBgNR+GmtLMJURI6x2FhaKEGw=;
-        b=ueMvj34BmRjECerh56h4QDInvirggwI31ss8nmLHYTTsnPOXNHyDhp0pdcx7cPU7oT
-         23v4ttUW66SBs4z8ZvuLPLHjVIdxq6aaCulCuXpQkuqENs/2yGI1PN+ddI+GPwtjmDvU
-         OMK4Ph9VmNOCORUYcyt2bdNPvE6OpFxCOciYe2y0C/J4TccLmI1Rb8NxEE852gVEv+YM
-         5IZZh9ILHmH9WgE3XVJQLRUw9r9K0BCQlnMp6n9zosEE3dkfeQTfyfUbxJvQklSD0IoL
-         VnNNE3Ag62uO4uFlDLPCfQghVzrK/L3Zgx4zWMEZEZWw5yEhr/9mqG5lY3rhyDSOl3dF
-         YB9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVAG5fXQCJ7koiirOk9kbBi3M1YhTvfue2yXUpiMdRhxqmB31XhJZicRSHAsa6HtZeIkGVziItWW0nSumCNa0I=@vger.kernel.org, AJvYcCWD8hOeUBI7UUC4ODtzV7vVhq/I2DDHtjHBktAO62SjdgddTM8t3YXAHiOK0lzc8FF7RHbu2N8ftEcsiPQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIhB0Bo2XSxpeD27br3+4Z+b2zBOek3HDjSsEJJCYz2le27a3x
-	I+HRO3axDMeWSmvnFAiAr4S909aCxl95Brdu9lukujsg40Buyes/tXmScnqkez8RmJotDYL9W88
-	ZOdvLVCt+W7TlQOT+NgMyIPBUM2aO3VN+ooE5Hxk=
-X-Gm-Gg: ASbGncs+yreR3iFp8LF+gfKj+oDXAzjLUuZpQG0ExkDQMjUmXEFniRv8sQUCL2njWcn
-	kZzKnzZ3PsBwLnxs02GmcEwA/eoxKkxuTm9FvMAPbSe+wPtdNQeMKCSOb+k2co7x/dapHbNx4pb
-	JLGP8V7FJ/DcYAQalgGFL02mZFk72S/cefFXdVRa7QGstprneeCKmNah4oAHXbwwpT6FZdtF/VG
-	o9iBQ==
-X-Google-Smtp-Source: AGHT+IEXY/rEK5ytjcjtDmD4qw/HpGpvu/ii+x+V7wipTEbrdiU64Dxa3NwO84ORTH6vfihSMW1s210D+UboPocucjk=
-X-Received: by 2002:a05:651c:20db:10b0:32b:73a8:9f75 with SMTP id
- 38308e7fff4ca-32cdc4516demr19547661fa.9.1751223710092; Sun, 29 Jun 2025
- 12:01:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNOhTrRs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5B3C4CEEB;
+	Sun, 29 Jun 2025 19:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751223741;
+	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fNOhTrRszSYEfCM0gNBzEz+pQ+d9+vQcr/fB16JtjXSEi2gkZGfivSpw9UcVAcj8B
+	 1UwL0h3Ig7KBUdiT7BnVMId+4VstNLIBeKouIPcx2f7Jpoy9o4GH6LbL9WvrqBQueO
+	 v3SXr/LIeZQQX7oGm8AggSqyQxzhMfz9z9EVugwouj06PTYdFUZs74UKkvRSstyqOF
+	 Z9Y57r05LnVJ3gaA7l2CI4SkDK4fY9bTrh7B0HGXAFrc1z6xZyEeo8Z53ArwN410Yf
+	 LxLpRzOoiHvrPcWHzfC2Ls5HvqdtpuunmsuElP6aWLTaK7p4Mgrb7adVX97hnVYlzv
+	 +87R1YjFXD0Tg==
+Date: Sun, 29 Jun 2025 14:02:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	Jim Quinlan <james.quinlan@broadcom.com>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+Message-ID: <20250629190219.GA1717534@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250629024310.97937-1-contact@antoniohickey.com> <20250629024310.97937-3-contact@antoniohickey.com>
-In-Reply-To: <20250629024310.97937-3-contact@antoniohickey.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 29 Jun 2025 15:01:14 -0400
-X-Gm-Features: Ac12FXxOQ2n5YVGqubbZIzcSmExfcD9pFxmRcZj5Cb2Ch_FGcPb7V_qS-qeTMk0
-Message-ID: <CAJ-ks9mhc3CqDnZz3BMXFDxNPW0KgYZrXHvKwTGYKhSF_rDDMA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] rust: uaccess: refactor to use `overflow_assert!`
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Cote <danielstonecote@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <qy2nfwiu2g7pbzbk37wseapvsen7mx4fgqdkdwjbclsj5dltu5@7o2xtj3qhedm>
 
-On Sat, Jun 28, 2025 at 10:44=E2=80=AFPM Antonio Hickey
-<contact@antoniohickey.com> wrote:
->
-> Using the `overflow_assert!` macro here adds documentation to
-> the intent of the assertion, and avoids local `#ifdefs`s by
-> encapsulating the conditional behavior to the macro itself.
->
-> Co-developed-by: Daniel Cote <danielstonecote@gmail.com>
-> Signed-off-by: Daniel Cote <danielstonecote@gmail.com>
-> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
-> Link: https://github.com/Rust-for-Linux/linux/issues/1159
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
+On Sat, Jun 28, 2025 at 04:57:26AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jun 27, 2025 at 05:45:02PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jun 16, 2025 at 11:02:09AM +0530, Manivannan Sadhasivam wrote:
+> > > pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
+> > > built only when CONFIG_PWRCTRL is enabled. Currently, it is built
+> > > independently of CONFIG_PWRCTRL. This creates enumeration failure on
+> > > platforms like brcmstb using out-of-tree devicetree that describes the
+> > > power supplies for endpoints in the PCIe child node, but doesn't use
+> > > PWRCTRL framework to manage the supplies. The controller driver itself
+> > > manages the supplies.
+> > > 
+> > > But in any case, the API should be built only when CONFIG_PWRCTRL is
+> > > enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
+> > > a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
+> > > fixes the enumeration issues on the affected platforms.
+> > 
+> > Finally circling back to this since I think brcmstb is broken since
+> > v6.15 and we should fix it for v6.16 final.
+> 
+> Yes! Sorry for the delay. The fact that I switched the job and had
+> to attend OSS NA prevented me from reworking this patch.
+> 
+> > IIUC, v3 is the current patch and needs at least a fix for the build
+> > issue [1], and I guess the options are:
+> > 
+> >   1) Make CONFIG_PCI_PWRCTRL bool.  On my x86-64 system
+> >      pci-pwrctrl-core.o is 8880 bytes, which seems like kind of a lot
+> >      when only a few systems need it.
+> > 
+> >   2) Leave pci_pwrctrl_create_device() in probe.c.  It gets optimized
+> >      away if CONFIG_OF=n because of_pci_find_child_device() returns
+> >      NULL, but still a little ugly for readers.
+> > 
+> >   3) Put pci_pwrctrl_create_device() in a separate
+> >      drivers/pci/pwrctrl/ file that is always compiled even if PWRCTRL
+> >      itself is a module.  Ugly because then we sort of have two "core"
+> >      files (core.c and whatever new file is always compiled).
+> 
+> I guess, we could go with option 3 if you prefer. We could rename
+> the existing pwrctrl/core.c to pwrctrl/pwrctrl.c and move the
+> definition of pci_pwrctrl_create_device() to new pwrctrl/core.c. The
+> new file will depend on HAVE_PWRCTRL, which is bool.
 
-Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+I think I forgot to mention that option 2 still requires a patch to
+wrap pci_pwrctrl_create_device() with some sort of #ifdef for
+CONFIG_PCI_PWRCTRL, right?  Seems like we need that regardless of the
+brcmstb situation so that we don't create pwrctrl devices when
+CONFIG_OF=y and CONFIG_PCI_PWRCTRL=n.
 
->  rust/kernel/uaccess.rs | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index 635a03e0989f..452a5e0d76d2 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -9,6 +9,7 @@
->      bindings,
->      error::Result,
->      ffi::{c_char, c_void},
-> +    overflow_assert,
->      prelude::*,
->      transmute::{AsBytes, FromBytes},
->  };
-> @@ -394,8 +395,7 @@ fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>],=
- src: UserPtr) -> Result<us
->          return Err(Error::from_errno(res as i32));
->      }
->
-> -    #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
-> -    assert!(res <=3D len);
-> +    overflow_assert!(res <=3D len);
->
->      // GUARANTEES: `strncpy_from_user` was successful, so `dst` has cont=
-ents in accordance with the
->      // guarantees of this function.
-> --
-> 2.50.0
->
->
->
+That seems like a straightforward solution and the #ifdef would
+address my readability concern even though the code stays in probe.c.
+
+> > And I guess all of these options still depend on CONFIG_PCI_PWRCTRL
+> > not being enabled in a kernel that has brcmstb enabled?  If so, that
+> > seems ugly to me.  We should be able to enable both PWRCTRL and
+> > brcmstb at the same time, e.g., for a single kernel image that works
+> > both on a brcmstb system and a system that needs pwrctrl.
+> 
+> Right, that would be the end goal. As I explained in the reply to
+> the bug report [1], this patch will serve as an interim workaround.
+> Once my pwrctrl rework (which I didn't submit yet) is merged, I will
+> move this driver to use the pwrctrl framework.
+
+OK, so for now, Jim would still need to ensure CONFIG_PCI_PWRCTRL=n
+when brcmstb is enabled, but we do have a plan to adapt brcmstb work
+with pwrctrl.
+
+> [1]
+> https://lore.kernel.org/all/vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne/
