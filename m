@@ -1,146 +1,114 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7951A23CE
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A3D23771C
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751225582; cv=none; b=G7cLgexm4uXqIQ2LGZaWI6gMP2jJu5pcWj6NJm+w+Wsuikh78TWvCDHdqD7mipuAXVpI8G0nTCzOAbHj7YKCLzXSLbjiGXANt2LXNTnWZX+NkzmuM9CSkEVEHg7j+gksKmozQUFMsIeFcfGowHSidUjXfSvuQOuPZ+EWFSUha1o=
+	t=1751226750; cv=none; b=MImC/2aLdzeDrS3Qlx0qELLpo8Y8/l+KJrtJWfh5vqHVFQJRtmTyO1r4BaGEq8sT2sc5HBJConufSu6gTVrgbK7Mf1dwNr2I7rtPeg5LEnu67u0ydOkguAUHeOqUe81hgArMUaHpic3DToJP7sevDs40jza9dBaXUC2OyqZZT/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751225582; c=relaxed/simple;
-	bh=AJLTGfqS/5tOlPMV5XW2523KDBahtNLYAuFkybM609E=;
+	s=arc-20240116; t=1751226750; c=relaxed/simple;
+	bh=WVUAn15qn8pZfFMR72mBNe+d59ohwbj/sreGBPUsMDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBVmn0jR7Qk6545C2Px0K5T49Er0lfWjj9w960CNpYwbek5uxR9upAGKUizwgU1CB8mzc2VoL7BRuU9Ka0We0EglcVTIJ9LQS4qIp7koRE69DwRwPp+b5+C68oOhDUC6Xze3HOmfHTCuuL7gun8AUOSK9UwOd9njOMxdgDxK5dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gN74XoHQ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8o0nYJ5T9ECiJRIw14vrR++YdxYrIzRgLn45usJLIg4Fu0+wewnnzARlf+l71MGwnVYHPL7IGTFPhqNJz6vkt27+2PHMjwqAb0fQltv2qNT4crz1g5vkKno10cCXC1wpaattcHRNiHYAVJkh/eer3v0ZzFxTkJ45d+MfyngAuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eV8nivV8; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gN74XoHQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23636167afeso9641105ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 12:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751225580; x=1751830380; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bgLzcaCH/vEPMnZRhHHq+CXVUi9PA+EScD24rqexGK4=;
-        b=gN74XoHQmuy2ZZCnEBR4NQRIUvsTmU1ihYKJAOOwwSuAeqE7lkL9bsDLxtYjGgxeAI
-         hGR2hL36cCvsHzKKEH9CRbldmXxP11PD3ssxSu1SGRRPIc7A8AFnjTZ3yKB7HOsaLCMZ
-         3Ntjp4SemuLFqygzX3yZPTUbSlrsw7M0vvLoQLo4wp5JOU7EhevxVWp0CbYAKwwHdlS7
-         7MBc+yzjEiNx5plBnlGESvQclhkfxWj6W/zIAA+KVmUQMPWboH/bRJ8Rt0+oNb0yoCrr
-         QfM2/Vw5UTrXMvHCGkB551Mmd4em44ylMY/qngzs5x4DONUGyVeobNGVDL/kQ0xivUvq
-         6A6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751225580; x=1751830380;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgLzcaCH/vEPMnZRhHHq+CXVUi9PA+EScD24rqexGK4=;
-        b=kYJjpUJ9z7nRqnAIav5/8gt7/i1v4mesvabV+fFLgeNAD8G40AmYFT+aIrUKafM9U+
-         YJHrRV/AQPjWMHEa5SNv1CqBwmEDr2Vkat526re3D6t0T9/EgH7xzFIDsGZKHItAbH8z
-         Xw+/mZFd/9+HwBYOPOLLCLbJrfEiN3MVhKs/TthSy/x7qC8nO7ckwwbCDFpZPCcD6kUd
-         oGFQxXTSD8rGSbnVOv1XlbBx672ezDlXh23rzbywVIQYvNqTav1tDmr9b5okduyGYEmy
-         eHDISKZBHN0WWkBiwYtkSNFBx91wIn7amfGOzwmr+Lv+iC/b7zylJ+4mYZ3+DHAcAAV4
-         9gag==
-X-Forwarded-Encrypted: i=1; AJvYcCXBxJCtjK+pN3GovFB7GnTg41V2H4gWB1kdsOs/CJnEwkStgBNVyJIHzwxGn8cRWflE8NJDX2vYQz6ha9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXHv5k30i5zO4nsGDZ6Eq71tEwnu8wsyuQoZ1clunBiGd6hI+8
-	D6xO7bX3PfS5eDoiy3/oxtDh19WjLKNhU9/E+D3li1W+PqJpceYISglE0LWgsUNjq9s=
-X-Gm-Gg: ASbGncukj82PMZ2uQJQb6ne4CiuBQO3ts3OHP/EyqROyw1HCjZVqJ6bV6sd6e82IqYr
-	RN7fsdM5w0QHtl3wl+TsY2RajFLAUUAvVuMZrC7515H9SPub54TTkx/gzmTOzzvxntAkuvW/MIf
-	3eykepDpGGCouqIJqnUd5dA4VMWaTm3g8KSbzgxdDmxRZUWa1Vq7Xkkcp7+gHANI7pDNmvQr0AS
-	RyOX0u8ijlPp4ORFcvvRhYB18KJVBawAlAICFylrvyAQao7igvi3zFHDK76WBHY3pKLxTfvS15x
-	9ufXEUmROj9HpeDKL+b4fmbIBb6hjThxnAxN5sg0axI6/jvFVrNZn0k4dlhbblrLMMgsGBUv0yW
-	2WVBUeaWuOD0thUAPWu83CQ==
-X-Google-Smtp-Source: AGHT+IFR5OwbLIe+zzlcoErz34GP7sC9TYblSfNZdc+JTsF9CYaAFybDf1lF35GHnh0xkSJRdozeng==
-X-Received: by 2002:a17:902:e551:b0:234:9375:e081 with SMTP id d9443c01a7336-23ac460719bmr160637285ad.42.1751225579780;
-        Sun, 29 Jun 2025 12:32:59 -0700 (PDT)
-Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bcd2sm66533055ad.131.2025.06.29.12.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 12:32:59 -0700 (PDT)
-Date: Sun, 29 Jun 2025 12:32:47 -0700
-From: Sukrut Bellary <sbellary@baylibre.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] iio: adc: ti-adc128s052: add support for
- adc121s021
-Message-ID: <aGGU3+EPIIRkOF8z@dev-linux>
-References: <20250625170218.545654-1-l.rubusch@gmail.com>
- <20250625170218.545654-2-l.rubusch@gmail.com>
- <8eb80697-e76e-412d-82a9-5a95d4ca4f2a@gmail.com>
- <20250626192802.0079d579@jic23-huawei>
- <aGCCIwknL25yAyHL@dev-linux>
- <CAFXKEHZcUpEpKPQP0CuJmiw20igrDUUEkB19RyQ=FHRqy+JiUg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eV8nivV8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751226749; x=1782762749;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WVUAn15qn8pZfFMR72mBNe+d59ohwbj/sreGBPUsMDA=;
+  b=eV8nivV86Bytax7lGDCirR5TXggngGaJk+yMFI8EPJqhcMBeJh95CCra
+   VHOR/7LbmOurC0MIq/an5/zGxbUVHn6SeFHXE6CQeen83pEtFdl/4B+zI
+   lDCpg6fl8v1p4uV/B/RMKWmvD9Zaq4HDaoLGf6ghuJlp2xH0q1QDqVVUt
+   8fPICVwabQUI6AdKEDiVIfVn0aHLu+Uk2XiuOOTmKj9RL/iaBWz2aHl7G
+   3NNZirFXR2XjdR8/J0AUnKcUvzvHJK4kxUVDJzUCt0Cct3W/cA7lkYeso
+   pBw1avUuoV7wT1N83QSWiV0q7r5v0bq9POW+fi2/eXTx4jmm1NKXA7jT6
+   Q==;
+X-CSE-ConnectionGUID: aMBAFxWKRK2x/QAiEgDLgw==
+X-CSE-MsgGUID: 62Gu7ymDR4KgS4B3wyeQDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="63707414"
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="63707414"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 12:52:29 -0700
+X-CSE-ConnectionGUID: IWkpNjgoTeW6ympUjaLX1A==
+X-CSE-MsgGUID: fGdJyy9dQdmPsFuboUhk1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="153367254"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 29 Jun 2025 12:52:24 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uVy4c-000YBW-0t;
+	Sun, 29 Jun 2025 19:52:22 +0000
+Date: Mon, 30 Jun 2025 03:52:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rodrigo Siqueira <siqueira@igalia.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, nicolejadeyee@google.com,
+	Louis Chauvet <louis.chauvet@bootlin.com>
+Subject: Re: [PATCH v6 1/8] drm/vkms: Create helpers macro to avoid code
+ duplication in format callbacks
+Message-ID: <202506300323.LXmrpHFL-lkp@intel.com>
+References: <20250628-b4-new-color-formats-v6-1-2125b193f91a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFXKEHZcUpEpKPQP0CuJmiw20igrDUUEkB19RyQ=FHRqy+JiUg@mail.gmail.com>
+In-Reply-To: <20250628-b4-new-color-formats-v6-1-2125b193f91a@bootlin.com>
 
-On Sun, Jun 29, 2025 at 06:13:54PM +0200, Lothar Rubusch wrote:
-> On Sun, Jun 29, 2025 at 2:00 AM Sukrut Bellary <sbellary@baylibre.com> wrote:
-> >
-> > On Thu, Jun 26, 2025 at 07:28:02PM +0100, Jonathan Cameron wrote:
-> > > On Thu, 26 Jun 2025 08:24:41 +0300
-> > > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > >
-> > > > Hi Lothar,
-> > > >
-> > > > On 25/06/2025 20:02, Lothar Rubusch wrote:
-> > > > > Add support for the single channel variant(s) of this ADC.
-> > > > >
-> > > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > > >
-> > > > Thanks for this addition. In principle, this looks good to me but I am
-> > > > afraid there is another colliding series being worked on:
-> > > >
-> > > > https://lore.kernel.org/all/20250614091504.575685-3-sbellary@baylibre.com/
-> > > >
-> > > > Maybe you can align the effort with Sukrut?
-> > > +CC Sukrut.
-> > >
-> > > >
-> > > > What I specifically like (and think is the right thing to do) in
-> > > > Sukrut's series is replacing the 'adc122s021_channels' -array with
-> > > > individual structures. In my opinion the array is just unnecessary
-> > > > complexity and individual structures are simpler.
-> > > >
-> > > > Other than that, this looks good to me.
-> > >
-> > >
-> > > Sukrut, perhaps you could add this to the end of your series, rebased
-> > > to those changes?  Would save a synchronization step for your v5 (and
-> > > later if needed)
-> > >
-> > > No problem if not, but I agree with Matti that we should take your
-> > > series first.
-> > >
-> > > Jonathan
-> > >
-> > Sure, I will add these adc121s0xx to the end of my v5.
-> > Thanks.
-> >
-> 
-> Hi Sukrut,
-> 
-> Since David Lechner still asked for ordering the TI ADC vs Rohm
-> entries a bit, and complained about the missing binding entry: Shall I
-> fix this rapidly and send in another version?
-> 
-The ordering of TI and Rohm has been addressed in my series v4 [1].
-I will arrange ti,adc121xx in order in v5.
+Hi Louis,
 
-[1]. https://lore.kernel.org/all/20250614091504.575685-4-sbellary@baylibre.com/
+kernel test robot noticed the following build warnings:
 
-> Best,
-> L
-> 
-> ...
+[auto build test WARNING on bb8aa27eff6f3376242da37c2d02b9dcc66934b1]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Louis-Chauvet/drm-vkms-Create-helpers-macro-to-avoid-code-duplication-in-format-callbacks/20250628-065148
+base:   bb8aa27eff6f3376242da37c2d02b9dcc66934b1
+patch link:    https://lore.kernel.org/r/20250628-b4-new-color-formats-v6-1-2125b193f91a%40bootlin.com
+patch subject: [PATCH v6 1/8] drm/vkms: Create helpers macro to avoid code duplication in format callbacks
+config: x86_64-randconfig-073-20250630 (https://download.01.org/0day-ci/archive/20250630/202506300323.LXmrpHFL-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250630/202506300323.LXmrpHFL-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506300323.LXmrpHFL-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:306 Excess function parameter '__VA_ARGS__' description in 'READ_LINE'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:333 function parameter 'a' not described in 'READ_LINE_ARGB8888'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:333 function parameter 'r' not described in 'READ_LINE_ARGB8888'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:333 function parameter 'g' not described in 'READ_LINE_ARGB8888'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:333 function parameter 'b' not described in 'READ_LINE_ARGB8888'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:343 function parameter 'a' not described in 'READ_LINE_le16161616'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:343 function parameter 'r' not described in 'READ_LINE_le16161616'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:343 function parameter 'g' not described in 'READ_LINE_le16161616'
+>> Warning: drivers/gpu/drm/vkms/vkms_formats.c:343 function parameter 'b' not described in 'READ_LINE_le16161616'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
