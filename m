@@ -1,87 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED165233136;
-	Sun, 29 Jun 2025 16:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C747F22068D;
+	Sun, 29 Jun 2025 16:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751216141; cv=none; b=ZfzF3+kwyL8tHzoQYMnpO0/2J8w55HAu7Biki45AxgsogRUDzFawL35W+eZ29EyL69lSR2V7QxDEB/8jmJoFNg1e8+0PI8sz5IrC5xEqUI5QU8gaBS3Ftgf6zEgFkbqGTSeDxXZNrb1/UizPouR9Wnhf/AkaczhKlDac6GnjJ/0=
+	t=1751216240; cv=none; b=Os1QHt7izvlpuUQ1+13kLFd66MuikTRnveG1TbJKz7zl1B3U962mJbrXfE5jJOMQ2bPO2pt0qxxI+BeVVhQiXxiiGIWKcmLQI8/q+K1ACjNEhSBCAz6Y0EdRmPbeQhfmNXI5rTB/XoAO+Gict98X4MAIrHRb0m1V8qYPC78yI7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751216141; c=relaxed/simple;
-	bh=E02PQCgMPHp3LS4Jkkx2tMZWvw0aLwfW9kpSvDEJLGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZI9Nr5GknpGA/6U5dOdmMjBkb0S+l/ba7K75vgoaj9D0V8B7ibPIqC0Ar1jXs8mZJ/HDuvzKmdy1J0RF1iul6ZE1Wfu/For/tTNnJQ7bvcwmcGlyMICxDuI6AEDexi/c7LdyLTl7ELT9w2S0EK4ygMHBeKBPtSMvkIVJ/9WDBJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO7rDjNG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751216240; c=relaxed/simple;
+	bh=O2WUhZQwagXbY2UihWVnNmJrE/h0bilixFhKXaD22Mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpeSc4rCui3vRqj4w5laeMBJISCRlLcF+y2IhV+KC54lJAHh/2PE/pHRulNu3LfB7x/Cgv7kl7gN+0+3iSdJo/khE+TiKtDdrBB9rlOmUyPhRb5uaPVo3pnPMOWGT3bBsu31uK2eUqXpLN38wm2dSvOaqIuV7pTcyCEQ6X8c1Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uwd3ty0p; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO7rDjNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C541C4CEEB;
-	Sun, 29 Jun 2025 16:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751216140;
-	bh=E02PQCgMPHp3LS4Jkkx2tMZWvw0aLwfW9kpSvDEJLGg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VO7rDjNG56N+mDZqL/Twhx1+PabXntKAEf1xxFJ+pjvqYL1Grtzrw44yYs6sbEq18
-	 4Tft60mWMdV28Bxb5dFbRkhBPxfbZ0dJQeHGrDz68WN9G8gfjC5iAMD0Oevpc3pcKn
-	 isjTGBsK4cI8xnJVpJC12hBbVDJd/RPkIC/CWmGsJY3x6Obz81L8fNLUF7Z7O3Qi8E
-	 QtrSsIpltIWDVJBpzLyHADQrvA4ML9VIDT2QfkVOeAfFwkj/eAjXDI+upwNizmPcKo
-	 wMYHTCpEeHNrX7KfSvNF196rJ89691ASe7RVEoDcduNc27BeaG/ciAXrGeEmVP6p1i
-	 gA43cmdpHFCtQ==
-Date: Sun, 29 Jun 2025 17:55:33 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Saravanan Sekar <sravanhome@gmail.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: mp2629_adc: make mp2629_channels const
-Message-ID: <20250629175533.784fa929@jic23-huawei>
-In-Reply-To: <20250628-iio-const-data-8-v1-1-32ce79494d4a@baylibre.com>
-References: <20250628-iio-const-data-8-v1-1-32ce79494d4a@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uwd3ty0p"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 26AC3C67;
+	Sun, 29 Jun 2025 18:56:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751216210;
+	bh=O2WUhZQwagXbY2UihWVnNmJrE/h0bilixFhKXaD22Mg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uwd3ty0pK1DRICvGUwNj5a95qXcg3Y3UwaPGIFsrSjwrJ/rR4ia0X7y31KrJwWBzm
+	 j6hEhJHx6puTd2PkG21SIfeQUkIE4Uug/9TdIHERSiZUOxWn3bxfy7VKrUGc8cxSxj
+	 QUiND6iz26zByDj55KJWEVhfgw227EIjygZjVd3k=
+Date: Sun, 29 Jun 2025 19:56:44 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: git@apitzsch.eu
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Ricardo Ribalda <ribalda@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] media: i2c: imx214: Remove unneeded parentheses
+Message-ID: <20250629165644.GI24912@pendragon.ideasonboard.com>
+References: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
+ <20250629-imx214_fixes-v1-1-873eb94ad635@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250629-imx214_fixes-v1-1-873eb94ad635@apitzsch.eu>
 
-On Sat, 28 Jun 2025 11:31:02 -0500
-David Lechner <dlechner@baylibre.com> wrote:
-
-> Add const qualifier to struct iio_chan_spec mp2629_channels[]. This
-> is read-only data so it can be made const.
+On Sun, Jun 29, 2025 at 04:49:20PM +0200, André Apitzsch via B4 Relay wrote:
+> From: André Apitzsch <git@apitzsch.eu>
 > 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-Applied to the testing branch of iio.git.  If anyone has comments
-there is still time before I push this out as the non rebasing togreg
-branch.
+> The parentheses are not needed to calculate bit_rate_mbps.
+> 
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
 
-Mostly I assume that if David and I miss somethiing on these the
-compiler will scream either in my local tests of when 0-day hits the
-testing tree tomorrow.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  drivers/iio/adc/mp2629_adc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/media/i2c/imx214.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
-> index 1cb043b17437780970ce355f9d93fd36cbd26826..5a1d516f8dad8e2cf46a43e1a40d1cc7adaecc13 100644
-> --- a/drivers/iio/adc/mp2629_adc.c
-> +++ b/drivers/iio/adc/mp2629_adc.c
-> @@ -44,7 +44,7 @@ struct mp2629_adc {
->  	struct device *dev;
->  };
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index a0cef9e61b41be8ea76a6d6e4b8c9fc4060cfa0f..8e9b5c9c93b0888f3d6be857168711edaf050db3 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -1029,8 +1029,8 @@ static int imx214_start_streaming(struct imx214 *imx214)
+>  		return ret;
+>  	}
 >  
-> -static struct iio_chan_spec mp2629_channels[] = {
-> +static const struct iio_chan_spec mp2629_channels[] = {
->  	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
->  	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
->  	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
-> 
-> ---
-> base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
-> change-id: 20250628-iio-const-data-8-8c8921ee3b3f
-> 
-> Best regards,
+> -	bit_rate_mbps = (imx214->pll.pixel_rate_csi / 1000000)
+> -			* imx214->pll.bits_per_pixel;
+> +	bit_rate_mbps = imx214->pll.pixel_rate_csi / 1000000
+> +		      * imx214->pll.bits_per_pixel;
+>  	ret = cci_write(imx214->regmap, IMX214_REG_REQ_LINK_BIT_RATE,
+>  			IMX214_LINK_BIT_RATE_MBPS(bit_rate_mbps), NULL);
+>  	if (ret) {
 
+-- 
+Regards,
+
+Laurent Pinchart
