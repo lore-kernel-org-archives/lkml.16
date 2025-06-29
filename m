@@ -1,94 +1,99 @@
-Received: from out.smtpout.orange.fr (out-73.smtpout.orange.fr [193.252.22.73])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4338320B;
-	Sun, 29 Jun 2025 08:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0681FFC55
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751186562; cv=none; b=gmfmu22gnXt+OC5huai1oZp93b8SnPfU7lvRp0c655bM84NUSKRWuP2yTbTZXizdNahm+HpT6hDgiFyXcAtqSzgdgl6F6ou89p8p+vTfVuOSH8FHH7GSazDX+zTLgK7VX9CaVAVRkCREg/HPilDiml4v4JtopJ+ROayinpPrD9o=
+	t=1751186705; cv=none; b=Kpeq0d4TNJgzefmEzJlXLWZwiHw8Vxu7gt+YvGWIlc7R7gJK2aVyrgFTKhkVfKrZHq9/dqfrUIxlXi1ao/q1HG9eyIMv04/NCpAybKEpTMWWZKY6H75wTgBdui23a7ITsy/aTyAC3XxOFhT9tb8XbdZJTPh4Sr5nboHTJZKcL+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751186562; c=relaxed/simple;
-	bh=1vR0hCj7PS77chk+ubL9x0VnkldCCkTPBOGJDFRwQsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pEzG6GvL0ruiJEXhlAow9LC1hgx22B+QU1+vu2fpc0MptIrDYRDLbq5c3jHMz6h9iTmWzHmcoYPAdG2CfAezPHqJ5gQZYyNG2ena6DgAx3DvK6ivP7yIg21zfJbtDjkv5JnIuEF6CyxBpHw14VAm0b3o/nKTMg9eEzpPwJmMtAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Np8YppsQ; arc=none smtp.client-ip=193.252.22.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1751186705; c=relaxed/simple;
+	bh=kdy0oYsOSXpUOy7uZtl0zRPtQ0HLxgC681wwzh+ybWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PkAwsNhzhEkp3YVk6eRB/qQn5mdDLMi0hUfvhXud9j768PrM4P2oG6N/Asp7qkDoP8vNBCMnbFRvSuibo+D4YymqpKH8hyk23bVOFpaxwZUiwLFWT+G5SGjmS8UlLkCLRoEWnzAgmOm4WYGK0nPHJsxL7AXb8ac70slhjZ5w55I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=I3Q2bvP8; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Np8YppsQ"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id VnTiu8Wnbr9nZVnTjuiCjq; Sun, 29 Jun 2025 10:33:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1751186020;
-	bh=Ic120Tw4SXqu1SW29ua5MOX2cM3lmV7dZjeyQ5spDak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Np8YppsQTYN22Ynh59ZE6ov4rKNxBYq9+TFojWCFxTgeF0rODQpJyrm/palUs00Dp
-	 F5611DEn2R+07oUZ97NnFkzxjsIVDXazUAsUMJg9q6JxCZKIwG5oIotEmNT+OZW8G7
-	 qn+8yyYxlrPjlb08cCr3fFQ/k06lOwOd8dj40NtMqTsc1Zo++USfFMgk1VfKzNPzmL
-	 alWvROTp749Hdk38JYz11ziGEQZCGMKsXLoHG+K4pgel40QG9RGEOZk0mh/QdVRsHN
-	 G+nkOETaKGWz7S4siZkTDh0qF1+OSghiYDrnYOJ18oceT10ndI4AmtoFkGLirNPxzx
-	 L2s3eQgBXSxxw==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 29 Jun 2025 10:33:40 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <a545127e-ee1d-44a5-bf43-149f81bda6a5@wanadoo.fr>
-Date: Sun, 29 Jun 2025 17:33:34 +0900
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="I3Q2bvP8"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AC54F40E0198;
+	Sun, 29 Jun 2025 08:45:00 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id T5Pupkrhnynq; Sun, 29 Jun 2025 08:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751186697; bh=Z/NuCyTyHhDG6uk+ZPFCD/53h3aH+PR0vEJvVL8KOfs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=I3Q2bvP83TUZs81uTxkAZpHC6UIGFG9IjirPFH+RZY/tDuAU6l79SqhEfi82zS3Z5
+	 HbSftI9Nu6+C5O3BWS2RK0C8TKZ9eEHGLEngahwb1d2ndQu9DKn7c0QIg/VXjQokgZ
+	 h2L3UBW9ed7eeRvCAHREll2zoFBQMXIcQ3DIg0fI/T29+44cYomRzxW1vCBn1GYiNf
+	 AIygaXTmXT/cWmfKBi34kGNUBZ31L+vJ9im8F4GNfMLNdYEmkh/ex7fBbW9NSGZfqP
+	 B5W0vYibmLqfNtgi6T3glkz/L5qlYD7z/BL+Hl/TzP3K77s+T0W65fyYyuJHB7YVJ3
+	 MH1f+dFV3U4kKwIcxCoxy6JOwMZrM0csHy2KQfhJA/tnC5ZvaLukDfUd+BHzmUyHsx
+	 gfKVlO/q34zrN8gEqBGusMWD8Y+HkB3QuDBnJ6BWuCnMUSha+frFYEsuyXof1XzUZ9
+	 UbZ7JtTvyIzKlUrLrhZf9TXySSb7SM/hy1o9LCBPgugpplXGdt26r6WIM49Qv2EqGR
+	 SeFe1LFd7fBkIR8EtCZmAO/EP5NfLvE98Q0UT06ZCO2jq0GQ82peWGE1ule9gyJqjJ
+	 noXx5A1vXVb5JpTdDOi94N8MEhsxpw/v4zA7i9rUlYonrwp6GKO/d6/zf2Hdxvr6q/
+	 ylHELTusJ+Au4ovZvhrVrPNM=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47AF340E00DC;
+	Sun, 29 Jun 2025 08:44:54 +0000 (UTC)
+Date: Sun, 29 Jun 2025 10:44:53 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] locking/urgent for v6.16-rc4
+Message-ID: <20250629084453.GAaGD9BXtjCpASAyfJ@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3] can: ucan: Use two USB endpoint API functions rather than
- duplicating their implementations
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
- linux-can@vger.kernel.org
-References: <0a675827-33af-4ec4-97dc-2e4523e41194@web.de>
- <c44cf0e9-9510-4fe9-aa67-edeaa1be6253@wanadoo.fr>
- <1d773886-1657-4a90-87e1-aaaa169f5783@web.de>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <1d773886-1657-4a90-87e1-aaaa169f5783@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On 29/06/2025 at 16:51, Markus Elfring wrote:
->> Please use the same email address:
-> 
-> You may omit the header specification “From:” (if you would find other presented
-> information acceptable), don't you?
+Hi Linus,
 
-You are sending a patch which has some checkpatch warnings and you think it is
-our duty to fix your mistakes? This is not how it works.
+please pull a locking/urgent fix for v6.16-rc4.
 
-> What does hinder you to support additional email addresses better?
+Thx.
 
-It is your behaviour and your unwillingness to follow the guidance from the
-maintainers which hinders me. Use whatever e-mail address you want, but if you
-fancy mixing different e-mail addresses, then just stop posting.
+---
 
-I do not want to waste any more time arguing with you.
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
 
-Nacked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
 
-(no need to reply to this thread, I will not read your post anymore).
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/locking_urgent_for_v6.16_rc4
+
+for you to fetch changes up to a24cc6ce1933eade12aa2b9859de0fcd2dac2c06:
+
+  futex: Initialize futex_phash_new during fork(). (2025-06-23 14:50:37 +0200)
+
+----------------------------------------------------------------
+- Make sure the new futex phash is not copied during fork in order to
+  avoid a double-free
+
+----------------------------------------------------------------
+Sebastian Andrzej Siewior (1):
+      futex: Initialize futex_phash_new during fork().
+
+ include/linux/futex.h | 1 +
+ 1 file changed, 1 insertion(+)
 
 
-Yours sincerely,
-Vincent Mailhol
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
