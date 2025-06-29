@@ -1,97 +1,164 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D329128819;
-	Sun, 29 Jun 2025 16:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386D21BC41;
+	Sun, 29 Jun 2025 16:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751212935; cv=none; b=T8lZzVytUQ8i3FfIGkf1kgjP3U0E7m1lHbBAoNgpycYpo6/mX6f405f7Nc2cEszxzR+XPN7o11wfRI+A0cO51pGyOYt+NScrmUVOKlAh+rXJ/GzRr5EdQrbcAdnEbKV4N+rUYqb7URSE/dnCTx0jhWpEKch02kKpyY6Q2Bn/O2A=
+	t=1751213092; cv=none; b=VbUCMRyDbnd6JCS3SaxIoPFZAJ1gbog9bmszvA0egxyHWKTkLWJojQMWs0g748j0Vo6ddoKyR35BFvQRsDg7FY9VZim4h+xN49PW0w6SsYab1vr4V4SXhDztbufq+FAktCdl2Td/GkiHga4jGXGmpCITaOouIX4uGsyFVlLnmJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751212935; c=relaxed/simple;
-	bh=Q3NZ/Hs7IXDXg0EZbN/RJ1y/NoUVJyPO4WAfgzm7ugM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=DnjOr8+ztntjEd3AjNBvpj38WjrwGMFp2uV3+Ly82+l8yjd0XasXuIpVu9VxmbH3DLzZ9UqVyw2mDCdVQCLBqKZ0m759aS0NdrKzxBp1hdfZ7Cse/MsxMfix7ZvGHFPqyNVaTj2uEtbqWHmb6mxs5enEKLmWLX88Uk7tOyRwh54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=AtOxdF1r; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1751213092; c=relaxed/simple;
+	bh=KeqSZuSRh0NAtyUnqNnvxYbaDF1XAz5BRybJ4E13bvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lgj4ExXygHwPwQ6CJ6Aa0SyzIWcrKPLHTlEvRYbsWyVxBH15CWkSx8mfDdXq24cidnMLgdUkP61oTfcWs4Fi1Hxlg4MJY/HA6D+TvD0xvRKC9C7Nw0UOH6lyuA75hQ6vdlS9QmyKhA8l99btf5wbTbMgyJbEb1vSzPoqL1NhO1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsTLAnGo; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="AtOxdF1r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1751212621;
-	bh=rjiuaExuqilvnnkZXH6U2UQzWHA6Kj+xZY3GhDa4HWo=;
-	h=From:To:Cc:Subject:Date;
-	b=AtOxdF1rMf6IV6PPOX9e9467H+kuLtikVPrPuVWxHq2EE/riab9QlUWIxQPd4Jmax
-	 0VV1xHYLM0xFsSsOmJWDqo/zuk8+b+U7GmEAWQw4GtUVdag2IpDPjjrdbwWo9d3V84
-	 169KnJHH1KtkNyJ2m2QoDVo7A2IODr0Vk0jGbers=
-Received: from KernelDevBox.byted.org ([115.190.40.13])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id E3A3683E; Sun, 29 Jun 2025 23:56:58 +0800
-X-QQ-mid: xmsmtpt1751212618takwe3j1s
-Message-ID: <tencent_71CC9630D88A8792C2396A8844DCCD5C6D06@qq.com>
-X-QQ-XMAILINFO: Ne9q9v6AFM79dBrz8kR5U6Cz4mmV6e8rVzM5Nas1C5p3krQFksLLqJ7NCq3wzR
-	 SD478DuZr9QUTEpgNk5QYaW310myImXSTEG7iuf0iOpG7ZIRtFTNx2cqR6dTIHIQtiw9zbU0E6Ms
-	 Nhldmz6oEuKIvF0DsWyHwnPjc8vTEbr+VeU76laRaR2pbLf6HhQQafrQUocy+9W9NAqaszFaRqt0
-	 vw+m/fdesEXcX5uVAN62IQZK/8Hep3cxtLjqadJBW6fuCIxs76wYD4mLlvdBLqCvK74dWk6rzoRZ
-	 SN50i32+NYOFTZDZrzvbMUi5Tdlzovq24G0lCRw3K59mmcCt8fLm9hr/vxCPAgy7LBIjhsbyfs/u
-	 DFOg8mJEo+iqzmrAgJBXsrkZeVbVqOxVnWo/z+0gP7XYwM4lisekoBnttLI7Pda6wmxeYONvzdsQ
-	 zqWwmPuYKJUN1hRCcLKE+ah6J8LBsWzvjyQ3ZcSGGSvGb/0Od/7ZOREejtiHk2qRSDbKJ835EMdw
-	 tYhRvTJunw62a4bwhBv5bXlvcArXPyuj9GtvD2Fa8/BSlXWcvIPeZCES86Y5fwtWldQSw7rzUq5S
-	 EFhZMoLnMuZ4Hx791XpqejacNeotd6ncF1fvvDVRb3F+L77WGLKbZgF+y72P6roTJjY9UlUg+3gm
-	 3bYfABds0ySybQdv6Kq4ZcwcqBFO19foz92WAt/FV7y1GMaKCnFoNwBMBgkJj4znwDUZljtSpvqV
-	 lpTFJyZejeddaLIm2fkYYnWSLfjywwlqNIUeaO3HdjY6hXfbkHT2r7nCgaskuaaGMLCTj6l+uJnz
-	 HOEcXPZvvKNajdEga8SF9D1tHGaJoaDZDVuEdZHXqoUK01H6mdq6DAejKLTimTufF4dOSe0MCHxx
-	 U1yccSGBZDQ15g0iDALu5U6hyZP640OEuhYIEAZc9KDfwkwYvGOjNfsszGpFEafPwAoxrpqoUOWp
-	 3AxXsqCwWHG4mxxWmwFfeAJTeNsTOaoSnB6uBDRUMSTS58pHP8GFSGInPCnxLAMqM7GTMXuMNmOc
-	 klBCEnqtHsUkO7jRsN
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Zhang Shurong <zhang_shurong@foxmail.com>
-To: vkoul@kernel.org
-Cc: geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	robin.murphy@arm.com,
-	ulf.hansson@linaro.org,
-	kuninori.morimoto.gx@renesas.com,
-	u.kleine-koenig@baylibre.com,
-	dmaengine@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhang Shurong <zhang_shurong@foxmail.com>
-Subject: [PATCH] dmaengine: rcar-dmac: Fix PM usage counter imbalance
-Date: Sun, 29 Jun 2025 23:56:57 +0800
-X-OQ-MSGID: <20250629155657.2074439-1-zhang_shurong@foxmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsTLAnGo"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32b7fd20f99so37747131fa.0;
+        Sun, 29 Jun 2025 09:04:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751213088; x=1751817888; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1lHX67cPsmHX1OdOx39kmuL8Gc8iNbyn/5TzDDO0Fik=;
+        b=XsTLAnGojlrXusBv2bF0tlVIq57IlwG8QPBsxgBOdkMDfz8HPfcZdtsXU7wQfEP4F5
+         PUMnVFenwhWsP+jNUQTTF3CXFbdSOUQHYIQvyI+dTvVM2+zrcU+vInmEpc6IhXqzub/6
+         NzFfwLtgDVVV/EZ1JwJL3JZNgl/5GxCne/KYVp68EwREKqkeOvM0GkJupmT3vL/0bLMC
+         yx3Ls8Ekas/ppwon6DJA1NE6J+264krIck4g5NTWA9RScgx+X5c1fHwEHuCKtqFR4rjA
+         vW5ZMXR+Th6BCC4MJvGlG/Ia2lwWq/csYD+h7FqbRdu9LRRtEQ0evulfKpLnZJO3fLhw
+         qI1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751213088; x=1751817888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1lHX67cPsmHX1OdOx39kmuL8Gc8iNbyn/5TzDDO0Fik=;
+        b=XSNXA8KfPuI/jWGnk4B7P+NLCaxS03wK9nSc6srBb19HR2umupMqzE41k08qa8ARx5
+         gnUE61EZ7Y2SAQyOmoWhhhH9Owlz7JPoGIlc4IHJOBp3x1vaa/v92pqW+BL7QqfwtYCL
+         2992OSLcbrqjVqG1hX3ICSriM5QIzwA4mbG2B9/VqIxzlZTgaVvs7k30bY9k/ZDducnf
+         COdkgQWQ9XUhyeKN2f57K6i/2/ZgR4MeV5VPpuKFaZGtyvqiVT2PB5C9QU2dWI6o41CV
+         9twjYJMA9glbUJM/7IlRePfg2jZ0QKXXjC+jEmPc5FOdexFumP8dx/fYdqUHv7lG6TIB
+         HPQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeQbnzZCjtpS9jNf1R96JkBIx7lGCRUk+VVmpdSupFa9eU6N/c4n/2MDp5eVNdmnujdtmWKLBYLvrp6qrK2ls=@vger.kernel.org, AJvYcCXt4SuHENd5fd4L8T/2REcN4U71hsY49xtLA5kwR062YZh4U0cpBYUx89VAsY5YKJgxYLaKSyaht1FSsQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvrTpSwvNn+IR0aLHKD42LAlvw9mV5ARPxPMv7gawXEqTTNykS
+	Iwg6JplCnuIwZtfIQdBHaZ1Wo4GBsQO3ZmD2c/S1nMFrd93SW5D2b00i9k8UQrOmefMsYSBUD6o
+	88wzCgJoi3RdHu32UzDGjKCG+Gxny0ck=
+X-Gm-Gg: ASbGncsicGFTMLC/rGZMVAoEOId0Nlx35sLxC3cEXp0yrFZB4mwalM9/7oz4KUyWuv/
+	jFjwD0xo/s78ngrKbyFJ2tvd1xyU1F5CpE5tZrQ+FNtkp21cNl+HehAEgOmJniZbAf/ADY6yRFk
+	MRh/prHBEgmLiVj+ZiwBp+DrAqdFSpftGULRDBW8pY8ST25jxMgJLie9r8xnU077ocAQ8UaCdTX
+	Ev03c8vxDJr1/+J
+X-Google-Smtp-Source: AGHT+IFxNystqzJxYIsxvp5/n0W1NLOjcjbum40RbJECd0wGBfQOZV/fsv3ML/Z3iPLIVrlQVcCtA4b5cAAmdQ4xv/g=
+X-Received: by 2002:a05:651c:1688:b0:32b:4521:73d1 with SMTP id
+ 38308e7fff4ca-32cdc822c18mr25239941fa.20.1751213087969; Sun, 29 Jun 2025
+ 09:04:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250629024310.97937-1-contact@antoniohickey.com> <20250629024310.97937-2-contact@antoniohickey.com>
+In-Reply-To: <20250629024310.97937-2-contact@antoniohickey.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 29 Jun 2025 12:04:11 -0400
+X-Gm-Features: Ac12FXyx2LNlbthRTHQQwGX1BvYTw18Ieui2d2Z0NZ14li-H6n1GFxrOr1V6kkU
+Message-ID: <CAJ-ks9m45p9FHCvbuOS0zJvZfHMcXOLvN+rfjQfyNTHzDovspA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: kernel: create `overflow_assert!` macro
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Cote <danielstonecote@gmail.com>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pm_runtime_get_sync will increment pm usage counter
-even it failed. Forgetting to putting operation will
-result in reference leak here. We fix it by replacing
-it with pm_runtime_resume_and_get to keep usage counter
-balanced.
+On Sat, Jun 28, 2025 at 10:43=E2=80=AFPM Antonio Hickey
+<contact@antoniohickey.com> wrote:
+>
+> This commit creates a macro for overflow assertions, the use of this
+> macro will avoid local `#ifdef`s by encapsulating the conditional
+> behavior (like `#[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]`) to the macro.
+>
+> In addition this macro allows us to document the intent of the assertion
+> more clearly.
+>
+> Co-developed-by: Daniel Cote <danielstonecote@gmail.com>
+> Signed-off-by: Daniel Cote <danielstonecote@gmail.com>
+> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1159
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> ---
+>  rust/kernel/lib.rs             |  1 +
+>  rust/kernel/overflow_assert.rs | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 rust/kernel/overflow_assert.rs
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 6b4774b2b1c3..e395adb6b293 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -92,6 +92,7 @@
+>  pub mod of;
+>  #[cfg(CONFIG_PM_OPP)]
+>  pub mod opp;
+> +pub mod overflow_assert;
+>  pub mod page;
+>  #[cfg(CONFIG_PCI)]
+>  pub mod pci;
+> diff --git a/rust/kernel/overflow_assert.rs b/rust/kernel/overflow_assert=
+.rs
+> new file mode 100644
+> index 000000000000..5164339813cb
+> --- /dev/null
+> +++ b/rust/kernel/overflow_assert.rs
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Overflow assertion.
+> +
+> +/// Verifies at runtime that an expression is within an expected bound.
 
-Fixes: 87244fe5abdf ("dmaengine: rcar-dmac: Add Renesas R-Car Gen2 DMA Controller (DMAC) driver")
-Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
----
- drivers/dma/sh/rcar-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is a strange comment, imo. The only thing special about this
+macro relative to a plain `assert` is that it disabled when
+CONFIG_RUST_OVERFLOW_CHECKS=3Dn.
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 0c45ce8c74aa..c1ce3b0ae74d 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1068,7 +1068,7 @@ static int rcar_dmac_alloc_chan_resources(struct dma_chan *chan)
- 	if (ret < 0)
- 		return -ENOMEM;
- 
--	return pm_runtime_get_sync(chan->device->dev);
-+	return pm_runtime_resume_and_get(chan->device->dev);
- }
- 
- static void rcar_dmac_free_chan_resources(struct dma_chan *chan)
--- 
-2.39.5
-
+> +///
+> +/// This macro is only active when `CONFIG_RUST_OVERFLOW_CHECKS` is enab=
+led.
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// overflow_assert!(3 <=3D 10);
+> +/// overflow_assert!(5 <=3D 5);
+> +///
+> +/// const X: u8 =3D 5;
+> +/// overflow_assert!(X + 3 < 10);
+> +///
+> +/// const MAX: i32 =3D 42;
+> +/// const fn f(x: i32) -> i32 {
+> +///     x + 1
+> +/// }
+> +/// overflow_assert!(f(40) < MAX);
+> +/// overflow_assert!(f(40) < MAX, "f(x) must not overflow the max value.=
+");
+> +/// ```
+> +#[macro_export]
+> +macro_rules! overflow_assert {
+> +    ($cond:expr $(,$arg:literal)?) =3D> {
+> +        if cfg!(CONFIG_RUST_OVERFLOW_CHECKS) {
+> +            ::core::assert!($cond $(,$arg)?);
+> +        }
+> +    };
+> +}
+> --
+> 2.50.0
+>
+>
+>
