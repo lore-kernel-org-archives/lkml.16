@@ -1,152 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4106F288D6;
-	Sun, 29 Jun 2025 09:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E46288D6
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 09:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751189012; cv=none; b=PDxson98+W92qvfHOYKnGNQ7toeBJk7NCPPYcfi0ZqkRShCd0JiE+oqj0XzbK4c+Y9qcYlIiBjs2C+qJfRzysw8UR1h5y1OyJXYNDUgzUqaIePQ1+3o8sFISI5IdgZ6/BpmLsPc0PmMP/ZKqFosPM8UjOHaG2eEeh/0uThwIwHg=
+	t=1751189157; cv=none; b=goPSSbKIRdN792hoWIF83yebBBEN7aTr8WIjbNvS+2FbGHTPIuQC47nBVnLQJ7rksPNx5cnb249XGU53SOQO7WZ4Xq7UU0v6VhrBs4BTmL9F1VMMaVBbqH5crw1RaOo/3Il1J/GD8/N8CvZYRTTVb7DHQ6LUFcmbCrzn1dDqQTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751189012; c=relaxed/simple;
-	bh=/8XcI162B0sYbFUdY2r+KNvY47NDLVAYfZ9Vy6AeueY=;
+	s=arc-20240116; t=1751189157; c=relaxed/simple;
+	bh=1kNCLJZ/ciaTGIgINK/ugaISwGJxLPu20X1bipBxqck=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YTy5soXcu78qplnHcN5M834y/3w6WCfNsjke56hOYywrWQFoJTS2SxcIjONLx2Rh8FB6BQ21UWdnVR3JmGOp9tyO7EcQbZ7YS7Lgk+noNncEcMoTXgpQwQA99+kYFpLFPFB+zobUxDEQsKxHBfdW9WYFBC2RwFeXTQtn34k9Aes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APVy3NzI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APVy3NzI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A278C4CEEB;
-	Sun, 29 Jun 2025 09:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751189011;
-	bh=/8XcI162B0sYbFUdY2r+KNvY47NDLVAYfZ9Vy6AeueY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=APVy3NzIX5p4apY8KRVg1ZmIvEwQEDTq6UZR/FZ9m+LtIz8/ayYGDJjMlPtPdii4L
-	 egRiF6s1TG9cfHyaH10reV2s9y3JPQCugUSaXMtB9tXHwTfs89bYVWmJMNq42CjaaL
-	 tRy2V2+FGgLAYiKSjzECHgOLDQS1Z5feangq6Xyt/pS8cFPpWLlE4fIJ70ox80OKWB
-	 po7oweOvG21Inw7nUiV1Z8k9LipbK7CMiXC27kj1ZoDNqGvsyKWFiQiJAUf6eTScES
-	 Kpd79FAj4HVzeLW98x0f1r3L3Zk9Yb6dYLguS6ctv/1iiscq1jWqgLXBQJPR3w3Wtg
-	 TDnMZIzalfe8g==
-Date: Sun, 29 Jun 2025 11:23:28 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
-Message-ID: <ayp32pdwvpko3zuatgt2jgtfxgcmrmc5aujkx6twjchmyazpz7@yeo3kxgxnpda>
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
- <CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
- <20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
- <q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
- <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSq30I+Yq4PXiPEpaYU8q3nyfkdfoS6Fve5xlz/Wu+1kew9G+dqfJ7rNiQWtXkd8Xz/5ND0PCloCwfDMpyRxj28LevbGjkKD0r9x+M9pO2hPpvwom+aENshYrsyD2nHob5JMDuWPkwAJl4F9VAUwOCfbc3BCleBqpAmDwNQI3Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 55T9Pq8p019295;
+	Sun, 29 Jun 2025 11:25:52 +0200
+Date: Sun, 29 Jun 2025 11:25:52 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
+Message-ID: <20250629092552.GA30947@1wt.eu>
+References: <20250620100251.9877-1-w@1wt.eu>
+ <20250620100251.9877-4-w@1wt.eu>
+ <25eb3144-d19e-43d2-af4f-b0251d28808c@t-8ch.de>
+ <20250622071958.GA3384@1wt.eu>
+ <07f5fdb4-2c5c-4723-b12a-abdb0c9f33b7@t-8ch.de>
+ <20250623025618.GA29015@1wt.eu>
+ <20250629084628.GA7992@1wt.eu>
+ <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="f2wvje3fvzd4cjo2"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+On Sun, Jun 29, 2025 at 10:53:34AM +0200, Thomas Weißschuh wrote:
+> On 2025-06-29 10:46:28+0200, Willy Tarreau wrote:
+> > On Mon, Jun 23, 2025 at 04:56:18AM +0200, Willy Tarreau wrote:
+> > > On Sun, Jun 22, 2025 at 09:58:52PM +0200, Thomas Weißschuh wrote:
+> > > > On 2025-06-22 09:19:58+0200, Willy Tarreau wrote:
+> > > > > Hi Thomas,
+> > > > > 
+> > > > > On Sat, Jun 21, 2025 at 10:21:47AM +0200, Thomas Weißschuh wrote:
+> > > > > > On 2025-06-20 12:02:50+0200, Willy Tarreau wrote:
+> > > > > > > Modern programs tend to include sys/select.h to get FD_SET() and
+> > > > > > > FD_CLR() definitions as well as struct fd_set, but in our case it
+> > > > > > > didn't exist. Let's move these definitions from types.h to sys/select.h
+> > > > > > > to help port existing programs.
+> > > > > > > 
+> > > > > > > Signed-off-by: Willy Tarreau <w@1wt.eu>
+> > > > > > 
+> > > > > > <snip>
+> > > > > > 
+> > > > > > > diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+> > > > > > > index 16c6e9ec9451f..0b51ede4e0a9c 100644
+> > > > > > > --- a/tools/include/nolibc/types.h
+> > > > > > > +++ b/tools/include/nolibc/types.h
+> > > > > > > @@ -10,6 +10,7 @@
+> > > > > > >  #ifndef _NOLIBC_TYPES_H
+> > > > > > >  #define _NOLIBC_TYPES_H
+> > > > > > >  
+> > > > > > > +#include "sys/select.h"
+> > > > > > 
+> > > > > > Is this really necessary?
+> > > > > 
+> > > > > Not sure what you mean. Do you mean that you would have preferred it
+> > > > > to be included from nolibc.h instead (which I'm equally fine with) or
+> > > > > that you'd prefer to have an empty sys/select.h ?
+> > > > 
+> > > > The former.
+> > > 
+> > > OK thanks, you're right, that's more consistent with the rest,
+> > > I'll do that and push it.
+> > 
+> > Trying it has reopened the circular dependencies can of worms :-(
+> > It's the same problem as usual that we've worked around till now
+> > by placing some types in types.h, except that this time fd_set is
+> > defined based on the macros FD_* that I moved to sys/select.h.
+> 
+> Can't fd_set also move to sys/select.h? This is how I read fd_set(3).
 
---f2wvje3fvzd4cjo2
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
-MIME-Version: 1.0
+That was what I did and precisely what was causing the problem. We
+have sys.h defining select() with fd_set in it with sys/select not yet
+being included. I moved sys.h after all sys/* and it broke something
+else instead.
 
-Hello Michal,
+> Even if it is not standards compliant, for nolibc it won't matter as in
+> the end everything is available anyaways.
 
-On Sat, Jun 28, 2025 at 04:38:15PM +0200, Michal Wilczynski wrote:
-> On 6/27/25 17:10, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jun 23, 2025 at 08:08:49PM +0200, Michal Wilczynski wrote:
-> >> +/// From C: `#define WFHWSIZE 20`
-> >> +pub const WFHW_MAX_SIZE: usize =3D 20;
-> >=20
-> > Can we somehow enforce that this doesn't diverge if the C define is
-> > increased?
->=20
-> You are absolutely right. The hardcoded value is a maintenance risk. The
-> #define is in core.c, so bindgen cannot see it.
->=20
-> I can address this by submitting a patch to move the #define WFHWSIZE to
-> include/linux/pwm.h. This will make it part of the public API, allow
-> bindgen to generate a binding for it, and ensure the Rust code can never
-> diverge. Is this fine ?
+Yeah I totally agree with you on that!
 
-I wonder if that is the opportunity to create a file
-include/linux/pwm-provider.h. In that file we could collect all the bits
-that are only relevant for drivers (pwm_ops, pwm_chip, pwmchip_parent,
-pwmchip_alloc ...). (Some inline functions depend on some of these, so
-some might have to stay in pwm.h)
+> > I'm giving up on this one for now as I don't want us to revisit
+> > that painful dependencies sequence. In theory it should be as simple
+> > as guarding types and function definitions independently, but in
+> > reality it's never as rocket science as it can also pop up in macros
+> > and rare typedefs.
+> 
+> Also the headers are always included in the order written down in
+> nolibc.h, so sys/select could be above types.h there.
 
-I can address that in parallel, don't add this quest to your series. So
-yes, move WFHWSIZE to include/linux/pwm.h (and rename it to PWM_WFHWSIZE
-to not pollute the global namespace).
-=20
-> > Please don't expose these non-atomic callbacks. pwm_disable() would be
-> > fine.
-> >=20
-> > Otherwise I'd prefer if pwm_set_waveform_might_sleep() is the API
-> > exposed to/by Rust.
->=20
->=20
-> OK, I'll remove all the setters from the State, while will keep the
-> getters, as they would be useful in apply callbacks.
+In an ideal world we'd have all sys/* *before* anything else. But I
+do remember that we faced a few issues doing this. This can be refined
+though. I'm just careful because we have not been annoyed in a while,
+so I suspect we're close to something good and it's easy to cause more
+breakage than fixes by touching all of this.
 
-How so? They might be useful for consumers, but my preferred idiom for
-them is that they know at each point in time what they want completely
-and don't make that dependant on the previous setting.
+> > Instead I'll just provide a stub for sys/select.h just like for
+> > inttypes so that user code compiles without changing existing files.
+> 
+> That works for me, too.
 
-> Will implement additional functions for Device i.e set_waveform,
-> round_waveform and get_waveform, and the new enum to expose the result
-> of the round_waveform more idiomatically.
->=20
-> /// Describes the outcome of a `round_waveform` operation.
-> #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-> pub enum RoundingOutcome {
->     /// The requested waveform was achievable exactly or by rounding valu=
-es down.
->     ExactOrRoundedDown,
->=20
->     /// The requested waveform could only be achieved by rounding up.
->     RoundedUp,
-> }
+That's what I did in the end. We're just addressing annoying build
+issues and not providing new stuff that deserves a full reorganization!
 
-Sounds good. Hoever I have some doubts about the C semantic here, too.
-Is it really helpful to provide that info? A user of that return value
-has to check anyhow which parameter got rounded up. If you have an
-opinion here, please share.
-=20
-Best regards
-Uwe
-
---f2wvje3fvzd4cjo2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhhBgsACgkQj4D7WH0S
-/k4sxAf8C8i/gRngTHVBR6MQlOBH/NsBUPpJbWQypLdM2xSscvdCFQtAnbKJP5Hg
-Fk/8joL6WEKb7BN0t1Rpx3P+C1P+H9VjHACvOz5hYp6QTgdMHr7Z7zYnyB+ZsmDs
-f1IWj6JAgc5MO0OdhVCzS0jCCWRPkJU6yW1zSnnmPFHETHykahwz7KUHp7uqolNG
-/PT8WLOAVCVQBdr9eo/QEzjQgdw9+p2Lhx7P7ereaDHKZR4eZrOpwUsTw6/1uORP
-E1CyN5JrfLo6hmM0A6dbfanJJm1Nb/wyoLk5aJq77K8wXFUFjZ2TcLrC2+98udwH
-IOjOEMaf5kponiXidNjXdH/Mdk6oQA==
-=3eXa
------END PGP SIGNATURE-----
-
---f2wvje3fvzd4cjo2--
+Cheers,
+Willy
