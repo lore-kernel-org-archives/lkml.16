@@ -1,71 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1051DA3D;
-	Sun, 29 Jun 2025 12:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2981D5147;
+	Sun, 29 Jun 2025 12:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751200292; cv=none; b=MGkM/OiGPRKJ2ErcsHf/FAAU7gZ3GpTUlJkkaiKzLG/pUOuk9wKBVYNTFtYLjyVfR8OekvGAn4K/tvjX+DGz+X72+y9mlORbC4GkZXkhGRUmiMh65bvf2iTSWO9DbGKVEyxEKX7Ibmi0973yBuQjyNP5mflOgaQYBC8uViN1bL8=
+	t=1751200735; cv=none; b=BHIE057CZbJpSx5c77bA+FWYekJJzI0UrBSvngMj59VQbYlVaqUq9l6xgnMkLIB+lJ5NrO+VgWFGRv+Y0mFG9qtjog+y1uBdu2ElVTDBBqdH15AfPJTRdT8WutIX2zsCP+F+bIAMPyD5XzN19VtoSlevHEgJkJgL1h1YQlAe+P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751200292; c=relaxed/simple;
-	bh=XlhrgfORIvI68VYsBh2LOmcMIyYYt53rKKxWtwHssh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s6Fkw4igf6vAIE+L3Sdgc34nEu8PLS1MPOIvWfROkHciq4eqGk+u7GXedkN/7OAH3/TbPxogRs1VMGSk1GtM5KnnjQpENUsMKeVWubXhmrRxRmHcH92BJWeuhAVbHQ9fDjIhDcCh4rkIF/je7c+r0gCtVXlDAPzRy/21Yc9jhLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vl5Wi67p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751200735; c=relaxed/simple;
+	bh=1DdA58ZvfVyvyJne9xRI6nI4Y07XDp6bvgXl/BpBMvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CYLkxZiJce7ByD8ou1KNBSW8ByIOAug3VhB0XCKUgkhVHTRJpAgSAlK7x1xMHeSTR33EGGNrR9jWoQMwyRhQdh6jPm0b4IUdYBFp/H1+jGitmJSM8ig3oqObfg65kVamhWHuGr49jQ6lAaku9GM+9eNWnq8em7LixoksjxnRFro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=CZnPodQB; arc=none smtp.client-ip=80.12.242.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vl5Wi67p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359E0C4CEEB;
-	Sun, 29 Jun 2025 12:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751200291;
-	bh=XlhrgfORIvI68VYsBh2LOmcMIyYYt53rKKxWtwHssh4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=vl5Wi67pHame1t1PoL/P8ZW7Hx3n+UYqqYcYGLtEDyWsf+gDagraVzAScOdl9h4Ek
-	 oyyTQLO3FSKDWKr9buao7mtlRef+0lwN4RQVChrXt2q9WJ2pPnX5F2GlxOAy9NVAi8
-	 W7usILlW2ZdlHVXEGG5ecs6leOHPmpdDTcLJfRSA=
-Date: Sun, 29 Jun 2025 14:30:01 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: [GIT PULL] Staging driver fix for 6.16-rc4
-Message-ID: <aGExya6dgB0JMLYb@kroah.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="CZnPodQB"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id VrHvu4ESL84Z8VrHvuRtCb; Sun, 29 Jun 2025 14:37:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751200661;
+	bh=44hnpk8QrNSS6VHiUDSP4T2PPRW+akObYkldAFkniy8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=CZnPodQBdNXT9Mr/sMliR8L8M3B2O9YmcmRwUvSGvGfZhKQqGwsx/W949L8HaBRzF
+	 5lI+xSU5Oh1MExu7B4mhsUwlgERFYbpQszo5XMUdvFE4zF87rQTBHicnEtJsAXeP+v
+	 Drq5OSP9unjeMaDBskJFujZSlwngw+25j0eIrlJZprFPSw5+cNOoOwhRs1BxgiM1Fq
+	 miqpmitAljqyn95n98RIjIJmw8VWM4qN0ahuTE7LCxSv8QteRWCSL/9PbpEa/ZIHdh
+	 mtybCwbmOxJDOIHtx/ZRJWPN/K4FUNjPqJvxp79+Q8/gsWAwyOPcLNsWqRwiSSJuid
+	 awnSn1PHQL2tQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 29 Jun 2025 14:37:41 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next 1/2] net: dsa: mv88e6xxx: Constify struct devlink_region_ops and struct mv88e6xxx_region
+Date: Sun, 29 Jun 2025 14:35:49 +0200
+Message-ID: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
+'struct devlink_region_ops' and 'struct mv88e6xxx_region' are not modified
+in this driver.
 
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
+Constifying these structures moves some data to a read-only section, so
+increases overall security, especially when the structure holds some
+function pointers.
 
-are available in the Git repository at:
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  18076	   6496	     64	  24636	   603c	drivers/net/dsa/mv88e6xxx/devlink.o
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-6.16-rc4
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  18652	   5920	     64	  24636	   603c	drivers/net/dsa/mv88e6xxx/devlink.o
 
-for you to fetch changes up to a55bc4ffc06d8c965a7d6f0a01ed0ed41380df28:
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only
+---
+ drivers/net/dsa/mv88e6xxx/devlink.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-  staging: rtl8723bs: Avoid memset() in aes_cipher() and aes_decipher() (2025-06-19 17:33:43 +0200)
+diff --git a/drivers/net/dsa/mv88e6xxx/devlink.c b/drivers/net/dsa/mv88e6xxx/devlink.c
+index 195460a0a0d4..aec652e33fc1 100644
+--- a/drivers/net/dsa/mv88e6xxx/devlink.c
++++ b/drivers/net/dsa/mv88e6xxx/devlink.c
+@@ -647,7 +647,7 @@ static struct mv88e6xxx_region_priv mv88e6xxx_region_global1_priv = {
+ 	.id = MV88E6XXX_REGION_GLOBAL1,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_global1_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_global1_ops = {
+ 	.name = "global1",
+ 	.snapshot = mv88e6xxx_region_global_snapshot,
+ 	.destructor = kfree,
+@@ -658,32 +658,32 @@ static struct mv88e6xxx_region_priv mv88e6xxx_region_global2_priv = {
+ 	.id = MV88E6XXX_REGION_GLOBAL2,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_global2_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_global2_ops = {
+ 	.name = "global2",
+ 	.snapshot = mv88e6xxx_region_global_snapshot,
+ 	.destructor = kfree,
+ 	.priv = &mv88e6xxx_region_global2_priv,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_atu_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_atu_ops = {
+ 	.name = "atu",
+ 	.snapshot = mv88e6xxx_region_atu_snapshot,
+ 	.destructor = kfree,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_vtu_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_vtu_ops = {
+ 	.name = "vtu",
+ 	.snapshot = mv88e6xxx_region_vtu_snapshot,
+ 	.destructor = kfree,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_stu_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_stu_ops = {
+ 	.name = "stu",
+ 	.snapshot = mv88e6xxx_region_stu_snapshot,
+ 	.destructor = kfree,
+ };
+ 
+-static struct devlink_region_ops mv88e6xxx_region_pvt_ops = {
++static const struct devlink_region_ops mv88e6xxx_region_pvt_ops = {
+ 	.name = "pvt",
+ 	.snapshot = mv88e6xxx_region_pvt_snapshot,
+ 	.destructor = kfree,
+@@ -696,13 +696,13 @@ static const struct devlink_port_region_ops mv88e6xxx_region_port_ops = {
+ };
+ 
+ struct mv88e6xxx_region {
+-	struct devlink_region_ops *ops;
++	const struct devlink_region_ops *ops;
+ 	u64 size;
+ 
+ 	bool (*cond)(struct mv88e6xxx_chip *chip);
+ };
+ 
+-static struct mv88e6xxx_region mv88e6xxx_regions[] = {
++static const struct mv88e6xxx_region mv88e6xxx_regions[] = {
+ 	[MV88E6XXX_REGION_GLOBAL1] = {
+ 		.ops = &mv88e6xxx_region_global1_ops,
+ 		.size = 32 * sizeof(u16)
+@@ -768,7 +768,7 @@ int mv88e6xxx_setup_devlink_regions_global(struct dsa_switch *ds)
+ {
+ 	bool (*cond)(struct mv88e6xxx_chip *chip);
+ 	struct mv88e6xxx_chip *chip = ds->priv;
+-	struct devlink_region_ops *ops;
++	const struct devlink_region_ops *ops;
+ 	struct devlink_region *region;
+ 	u64 size;
+ 	int i, j;
+-- 
+2.50.0
 
-----------------------------------------------------------------
-Staging driver fix for 6.16-rc4
-
-Here is a single staging driver fix for 6.16-rc4.  It resolves a build
-error in the rtl8723bs driver for some versions of clang on arm64 when
-checking the frame size with -Wframe-larger-than.
-
-It has been in linux-next for a while now with no reported issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Nathan Chancellor (1):
-      staging: rtl8723bs: Avoid memset() in aes_cipher() and aes_decipher()
-
- drivers/staging/rtl8723bs/core/rtw_security.c | 44 +++++++++------------------
- 1 file changed, 14 insertions(+), 30 deletions(-)
