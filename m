@@ -1,95 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BA117A30F;
-	Sun, 29 Jun 2025 09:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6317E1CA84;
+	Sun, 29 Jun 2025 09:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751189364; cv=none; b=TFTi+ampD1+fGRcGy3OuOWLBAQT2u8JPbK/Hi8bbAaVZe99uJB25Xeh/bfZgQF8WCsvVBkZO/Crgfy5322e8s8kTJm9XWXcc86Z18c29MaWPCXQRTcZueysKxqHGCyywZsUAIQx4l291EiPzC8xPYJ9par8RYLW9rl8daPVt1hc=
+	t=1751189546; cv=none; b=lqsmFGHppFJeGjs4KW7AMEs6588m8JXDfnNDrPlfcZ/hw7Y4QenhoKL1o4EBgZDdjZxhAPZdcO20w+IiJepi78cM0VdG9e63tJh98ssvK+Ne2rGV/Z38QZQN9ZF+H/uqHczawU1Ho3l99ZjOUkgDBwmvpbDRbE1tkWTAVlrmR/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751189364; c=relaxed/simple;
-	bh=hW2QT0dkXHNl3tJf1s4Ivv7cRC7FzorVHdUtVP/XD58=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=FgzN1irwTn2rNTP0OCO6fQCS9A1tea4wK0S2pIKzztlDrazf94crPubsGRsSVZ3TnF7ptF3CELv4XIp3xXedjvFU3+TRpYzIYqbaRz5c4r2unsxg46aqsSZ6UjYRZk6oK0CmQFPDPGHEajMqF3GCRT3iJZYsSdS6mePmZtZYedo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwTv7Wua; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751189546; c=relaxed/simple;
+	bh=yNCv9zbwFgntqHfSMp5v8KPVRVjWxvT/Aql76n6YouY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rPTEgwpiQ3Jejb8HzlHl/Tspq9/zNjyglmcOhtFWTQGEVWkR7dQNAPkrp9yAZEbSif1FG4f7568YcvK3QD9OB4tV3CldRKIfwh4Yam33qscgVeInHEclZIRPzD9gL9KDVmxxZq7vvRcVRSymp/wRL6o/I8TFMryHA5sCEavyRck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vc0iiiu2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwTv7Wua"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBA4C4CEEB;
-	Sun, 29 Jun 2025 09:29:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vc0iiiu2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1580C4CEEB;
+	Sun, 29 Jun 2025 09:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751189364;
-	bh=hW2QT0dkXHNl3tJf1s4Ivv7cRC7FzorVHdUtVP/XD58=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=YwTv7WuafqwCkunNtrXOesosznuhC5eF/imeYJpm3lQKQAQCm4JkUwc8hwxLOwqFJ
-	 71sGELzn7Rc4cdspQS1ORwB7xmXWw8P7uc9Wje+2MT5w7xmZ3u4aYVleNEruEhrCmL
-	 Myzf0Nn2NRjtZw8U2Z8SJ42AZpJab8ruxFtHeI1l4QPeYApGu6bd/EwKFoG+xP0Vgn
-	 6cvcmRIJBJKS8arBIBlxpun1+nrcewqr1AMjGGdy1NDMPL6+8lfMFzzJPlnPG+lE5i
-	 9GaLf/WEXftPRNO9l31RBM0tu9L0JQWWPgGeW4zpDSIhIF/C5FWXYYldlt0N50cudA
-	 aUXXIufEacNsw==
-Date: Sun, 29 Jun 2025 04:29:23 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1751189545;
+	bh=yNCv9zbwFgntqHfSMp5v8KPVRVjWxvT/Aql76n6YouY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Vc0iiiu2h2TjlcBxYYznq8GU4Lf0uabMlQwcjb8ML7Va38x4dP8IfFB71L1mFSmyY
+	 DylAJPSoUOMe6TqVNxbfZ1neiEd2tZ1gQ+EYZcjBvGvD8fvcR85Hm8bFFee+Vz10MW
+	 ZQ6I+XKUHZKj7WlEzEJ0TXy5gr1VdlyiPHFZHY6UhyBgdE78bwezedsnF3huoE6Ata
+	 qCUO3UoMt0lkynr5VVMnG6EnIPk2C83LeWIteuElyYYIZVuABEMc/sH2budXIO5Kh9
+	 hC7HMXOiNTQAminzCBRWknUInQEJgeKp7IKNEoswv3DoSz/FfIt+N3SNXuuEuWatrv
+	 EeKapCAaqIigA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uVoOd-00Avhg-Dw;
+	Sun, 29 Jun 2025 10:32:23 +0100
+Date: Sun, 29 Jun 2025 10:32:23 +0100
+Message-ID: <86o6u6c2qg.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 18/28] KVM: arm64: Support SME priority registers
+In-Reply-To: <20250625-kvm-arm64-sme-v6-18-114cff4ffe04@kernel.org>
+References: <20250625-kvm-arm64-sme-v6-0-114cff4ffe04@kernel.org>
+	<20250625-kvm-arm64-sme-v6-18-114cff4ffe04@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, sophgo@lists.linux.dev, 
- Palmer Dabbelt <palmer@dabbelt.com>, Mark Brown <broonie@kernel.org>, 
- Chen Wang <unicorn_wang@outlook.com>, linux-mtd@lists.infradead.org, 
- Miquel Raynal <miquel.raynal@bootlin.com>, linux-riscv@lists.infradead.org, 
- Conor Dooley <conor+dt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
- Michael Walle <mwalle@kernel.org>, Richard Weinberger <richard@nod.at>, 
- Albert Ou <aou@eecs.berkeley.edu>, Inochi Amaoto <inochiama@gmail.com>, 
- Alexandre Ghiti <alex@ghiti.fr>, Longbin Li <looong.bin@gmail.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org
-To: Zixian Zeng <sycamoremoon376@gmail.com>
-In-Reply-To: <20250629-sfg-spifmc-v3-1-28db1f27e999@gmail.com>
-References: <20250629-sfg-spifmc-v3-0-28db1f27e999@gmail.com>
- <20250629-sfg-spifmc-v3-1-28db1f27e999@gmail.com>
-Message-Id: <175118936320.3838715.11903647701453583408.robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] spi: dt-bindings: spi-sg2044-nor: Change SOPHGO
- SG2042
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: broonie@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, catalin.marinas@arm.com, suzuki.poulose@arm.com, will@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, Dave.Martin@arm.com, tabba@google.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-On Sun, 29 Jun 2025 16:23:10 +0800, Zixian Zeng wrote:
-> SG2042 is not fully compatiable with SG2044,
-> So it is necessary to become independent const
+On Wed, 25 Jun 2025 11:48:09 +0100,
+Mark Brown <broonie@kernel.org> wrote:
 > 
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+> SME has optional support for configuring the relative priorities of PEs
+> in systems where they share a single SME hardware block, known as a
+> SMCU. Currently we do not have any support for this in Linux and will
+> also hide it from KVM guests, pending experience with practical
+> implementations. The interface for configuring priority support is via
+> two new system registers, these registers are always defined when SME is
+> available.
+> 
+> The register SMPRI_EL1 allows control of SME execution priorities. Since
+> we disable SME priority support for guests this register is RES0, define
+> it as such and enable fine grained traps for SMPRI_EL1 to ensure that
+> guests can't write to it even if the hardware supports priorites.  Since
+> the register should be readable with fixed contents we only trap writes,
+> not reads.
+> 
+> There is also an EL2 register SMPRIMAP_EL2 for virtualisation of
+> priorities, this is RES0 when priority configuration is not supported
+> but has no specific traps available.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
->  Documentation/devicetree/bindings/spi/spi-sg2044-nor.yaml | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  arch/arm64/include/asm/kvm_host.h     |  2 ++
+>  arch/arm64/include/asm/vncr_mapping.h |  1 +
+>  arch/arm64/kvm/sys_regs.c             | 23 ++++++++++++++++++++++-
+>  3 files changed, 25 insertions(+), 1 deletion(-)
 > 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 29b8697c8144..5ce9e06324b5 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -495,6 +495,7 @@ enum vcpu_sysreg {
+>  	SVCR,
+>  	FPMR,
+>  	SMIDR_EL1,	/* Streaming Mode Identification Register */
+> +	SMPRI_EL1,	/* Streaming Mode Priority Register */
+>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+What is the point of making the sysreg file larger for the sole
+purpose of returning a value that is firmly always 0? Can't that be
+synthesised on the fly whenever needed?
 
-yamllint warnings/errors:
+>  	/* 32bit specific registers. */
+>  	DACR32_EL2,	/* Domain Access Control Register */
+> @@ -547,6 +548,7 @@ enum vcpu_sysreg {
+>  	VNCR(CPACR_EL1),/* Coprocessor Access Control */
+>  	VNCR(ZCR_EL1),	/* SVE Control */
+>  	VNCR(SMCR_EL1),	/* SME Control */
+> +	VNCR(SMPRIMAP_EL2),	/* Streaming Mode Priority Mapping Register */
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/spi/spi-sg2044-nor.yaml: properties:compatible:oneOf: [{'const': 'sophgo,sg2044-spifmc-nor'}, {'const': 'sophgo,sg2042-spifmc-nor'}] should not be valid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['const']}}
-	hint: Use 'enum' rather than 'oneOf' + 'const' entries
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+This is slightly different, as there is no trap for this, and we rely
+on sanitisation.
 
-doc reference errors (make refcheckdocs):
+>  	VNCR(TTBR0_EL1),/* Translation Table Base Register 0 */
+>  	VNCR(TTBR1_EL1),/* Translation Table Base Register 1 */
+>  	VNCR(TCR_EL1),	/* Translation Control Register */
+> diff --git a/arch/arm64/include/asm/vncr_mapping.h b/arch/arm64/include/asm/vncr_mapping.h
+> index aede5d6efad3..454e076b77cb 100644
+> --- a/arch/arm64/include/asm/vncr_mapping.h
+> +++ b/arch/arm64/include/asm/vncr_mapping.h
+> @@ -45,6 +45,7 @@
+>  #define VNCR_ZCR_EL1            0x1E0
+>  #define VNCR_HAFGRTR_EL2	0x1E8
+>  #define VNCR_SMCR_EL1		0x1F0
+> +#define VNCR_SMPRIMAP_EL2	0x1F0
+>  #define VNCR_TTBR0_EL1          0x200
+>  #define VNCR_TTBR1_EL1          0x210
+>  #define VNCR_FAR_EL1            0x220
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index b11bb95e9e35..1fee8e534615 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1828,6 +1828,15 @@ static unsigned int fp8_visibility(const struct kvm_vcpu *vcpu,
+>  	return REG_HIDDEN;
+>  }
+>  
+> +static unsigned int sme_raz_visibility(const struct kvm_vcpu *vcpu,
+> +				       const struct sys_reg_desc *rd)
+> +{
+> +	if (vcpu_has_sme(vcpu))
+> +		return REG_RAZ;
+> +
+> +	return REG_HIDDEN;
+> +}
+> +
+>  static u64 sanitise_id_aa64pfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
+>  {
+>  	if (!vcpu_has_sve(vcpu))
+> @@ -3030,7 +3039,14 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  
+>  	{ SYS_DESC(SYS_ZCR_EL1), NULL, reset_val, ZCR_EL1, 0, .visibility = sve_visibility },
+>  	{ SYS_DESC(SYS_TRFCR_EL1), undef_access },
+> -	{ SYS_DESC(SYS_SMPRI_EL1), undef_access },
+> +
+> +	/*
+> +	 * SMPRI_EL1 is UNDEF when SME is disabled, the UNDEF is
+> +	 * handled via FGU which is handled without consulting this
+> +	 * table.
+> +	 */
+> +	{ SYS_DESC(SYS_SMPRI_EL1), trap_raz_wi, .visibility = sme_raz_visibility },
+> +
+>  	{ SYS_DESC(SYS_SMCR_EL1), NULL, reset_val, SMCR_EL1, 0, .visibility = sme_visibility },
+>  	{ SYS_DESC(SYS_TTBR0_EL1), access_vm_reg, reset_unknown, TTBR0_EL1 },
+>  	{ SYS_DESC(SYS_TTBR1_EL1), access_vm_reg, reset_unknown, TTBR1_EL1 },
+> @@ -3387,6 +3403,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  
+>  	EL2_REG_VNCR(HCRX_EL2, reset_val, 0),
+>  
+> +	EL2_REG_FILTERED(SMPRIMAP_EL2, trap_raz_wi, reset_val, 0,
+> +			 sme_el2_visibility),
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250629-sfg-spifmc-v3-1-28db1f27e999@gmail.com
+Wut??? You clearly said it yourself: this register "has no specific
+traps available". If you end-up here from a guest access, this is a
+bug. So this "trap_raz_wi" makes no sense.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+I also cannot see where this register is properly configured to be
+fully RES0, as it should.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+	M.
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+Without deviation from the norm, progress is not possible.
