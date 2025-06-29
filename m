@@ -1,101 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4797178F2E;
-	Sun, 29 Jun 2025 18:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB795235046
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751223047; cv=none; b=MW4HnwtuUqwPLcjumapVHx39P/Kcs30JX9u42JQnfTqH2pNsQlPcTZh8jWngUlK63bEjcpJ/Rt0MwMeia3ozUPP75VhMEGn269oaUhKL10/V+3Tgo2VucAGIJbcUwWOANo79eLIGNL/dakCDCJV+ztuAEhb1SNk/xkuGKqwfDnQ=
+	t=1751223614; cv=none; b=lO1gcctn/DAM1sA+PQMhcPt7DQVvKJWwjFxbTnowsBPemgWZgeJbdMi6QhrvJMCu3oxOdSILRp9nJBxiC1ZiiaioC4ICII3myQ4BaOskPCzN+55oYo71F+WLsR5ZDYEf1whFA3taEvp8uw1X6+GLveeH5wydK9WFoAVsTpMKYnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751223047; c=relaxed/simple;
-	bh=bubDHRWawKjR6c9Q8IIm6ZhV6Ref0DL5Up3nnlCjc9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nQKt0VqpbBvrtjQ44slysTPKTRayRkm9q+qFcXe6jC2qEWwxXl5P+cN6wK+nNZE9oGS/2CW0aM1gCc2Vi6ZVSpM4v3DLS07a8JiR6bzUwPsrn3TZq7/Zz/m/u7Z1OjrjMgy4QKyPFqfu1IY/vgLgd4c52ZMYlif9k50/OUy/iGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8JprqHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751223614; c=relaxed/simple;
+	bh=UoNTc52qX02+DxAnewqTZUhjup5tIf+FN3oS2Td4aRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G1M88FqNYu6zGDrCqQ4G+K37b+uPd4us1eArAJEtRI8ov+9byKbBsppeLR7kT5w2WsDg/Qv8Z0IOZXKnvX1vDgyOsj4Jj4K8wD/G4i6Jzyq8em7wMZ5DVbiptCP61/N7gIk6AWHCn7aL1GH8m5Hddf07muziI2b3iYPoRbbs2SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cj2UWam9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8JprqHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CBAC4CEEB;
-	Sun, 29 Jun 2025 18:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751223045;
-	bh=bubDHRWawKjR6c9Q8IIm6ZhV6Ref0DL5Up3nnlCjc9c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=n8JprqHtBR5qs03Zld2PdnA6FaCslvl8Mc+fVc5CYAlwQ9+auRvgFVo+DEbbaacTe
-	 ln3hjgVGJOt6ujtY7VNr1fHf6MZlfuPhW0J8mm41l40dPN5CTtwmGHGcAZ/K7ScwZs
-	 CiEHEpJUpHWGBIGcWlZq/6YByFSnc3FLDzl7shIxdtLyjGZvHeXLYzU+T2YQYpECIT
-	 9elBhFEIM4WSue96SZrJ2n7wNVgtcgl1YSYLZreTsKjg4dChvGCRcBVT+nm/KyId3V
-	 oBcwn4T5idBKs6qqM/cNziB3t2+rgUDXbOuUgzrISD1BPQn3Qryv2yZidwQvoTlI2r
-	 9swhR0EWemJ/g==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kconfig: qconf: confine {begin,end}Group to constructor and destructor
-Date: Mon, 30 Jun 2025 03:50:35 +0900
-Message-ID: <20250629185041.412407-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cj2UWam9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751223610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M6dd0BdxPQckL0K4ug6lCXCJOc94fLHhkrXB/JxBoxQ=;
+	b=cj2UWam9J24v25oGOGqaVkO0xxWxtJLHhcVXvSwkd/NUa58bgUipCjlweq55GIcWhnjyM5
+	GLf43h7/+MrGe5iCai7RGw+KpOEGQfGf9S1wkHfAK3P3Zj9FjEU7CIqol0hNcq+jkAmjBr
+	mtyUiy3wod56t9+y63ZtMb9jY8VZuiI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-BffGb6S9MYiiFFt3Q90fSQ-1; Sun,
+ 29 Jun 2025 15:00:07 -0400
+X-MC-Unique: BffGb6S9MYiiFFt3Q90fSQ-1
+X-Mimecast-MFC-AGG-ID: BffGb6S9MYiiFFt3Q90fSQ_1751223604
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AB8FB18089B4;
+	Sun, 29 Jun 2025 19:00:03 +0000 (UTC)
+Received: from [10.45.224.33] (unknown [10.45.224.33])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73ADC1956095;
+	Sun, 29 Jun 2025 18:59:56 +0000 (UTC)
+Message-ID: <1f1e5566-a9a0-4d72-80be-81eddfe95fa3@redhat.com>
+Date: Sun, 29 Jun 2025 20:59:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v11 03/14] dpll: Add basic Microchip ZL3073x
+ support
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Shannon Nelson <shannon.nelson@amd.com>,
+ Dave Jiang <dave.jiang@intel.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Michal Schmidt <mschmidt@redhat.com>, Petr Oros <poros@redhat.com>
+References: <20250616201404.1412341-1-ivecera@redhat.com>
+ <20250616201404.1412341-4-ivecera@redhat.com>
+ <20250618095646.00004595@huawei.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250618095646.00004595@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Call beginGroup() in the the constructor and endGroup() in the
-destructor. This looks cleaner.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
 
- scripts/kconfig/qconf.cc | 8 ++++++--
- scripts/kconfig/qconf.h  | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+On 18. 06. 25 10:56 dop., Jonathan Cameron wrote:
+> On Mon, 16 Jun 2025 22:13:53 +0200
+> Ivan Vecera <ivecera@redhat.com> wrote:
+> 
+>> Microchip Azurite ZL3073x represents chip family providing DPLL
+>> and optionally PHC (PTP) functionality. The chips can be connected
+>> be connected over I2C or SPI bus.
+>>
+>> They have the following characteristics:
+>> * up to 5 separate DPLL units (channels)
+>> * 5 synthesizers
+>> * 10 input pins (references)
+>> * 10 outputs
+>> * 20 output pins (output pin pair shares one output)
+>> * Each reference and output can operate in either differential or
+>>    single-ended mode (differential mode uses 2 pins)
+>> * Each output is connected to one of the synthesizers
+>> * Each synthesizer is driven by one of the DPLL unit
+>>
+>> The device uses 7-bit addresses and 8-bits values. It exposes 8-, 16-,
+>> 32- and 48-bits registers in address range <0x000,0x77F>. Due to 7bit
+>> addressing, the range is organized into pages of 128 bytes, with each
+>> page containing a page selector register at address 0x7F.
+>> For reading/writing multi-byte registers, the device supports bulk
+>> transfers.
+>>
+>> Add basic functionality to access device registers and probe
+>> functionality for both I2C and SPI cases.
+>>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> A few trivial drive by comments.
+> 
+>> diff --git a/drivers/dpll/zl3073x/i2c.c b/drivers/dpll/zl3073x/i2c.c
+>> new file mode 100644
+>> index 0000000000000..bca1cd729895c
+>> --- /dev/null
+>> +++ b/drivers/dpll/zl3073x/i2c.c
+>> @@ -0,0 +1,93 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <linux/dev_printk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include "core.h"
+>> +
+>> +static int zl3073x_i2c_probe(struct i2c_client *client)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct zl3073x_dev *zldev;
+>> +
+>> +	zldev = zl3073x_devm_alloc(dev);
+>> +	if (IS_ERR(zldev))
+>> +		return PTR_ERR(zldev);
+>> +
+>> +	zldev->regmap = devm_regmap_init_i2c(client, &zl3073x_regmap_config);
+>> +	if (IS_ERR(zldev->regmap)) {
+>> +		dev_err_probe(dev, PTR_ERR(zldev->regmap),
+>> +			      "Failed to initialize regmap\n");
+>> +		return PTR_ERR(zldev->regmap);
+> As below.
+> 
+>> +	}
+> 
+>> diff --git a/drivers/dpll/zl3073x/spi.c b/drivers/dpll/zl3073x/spi.c
+>> new file mode 100644
+>> index 0000000000000..219676da71b78
+>> --- /dev/null
+>> +++ b/drivers/dpll/zl3073x/spi.c
+>> @@ -0,0 +1,93 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <linux/dev_printk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/spi/spi.h>
+>> +
+>> +#include "core.h"
+>> +
+>> +static int zl3073x_spi_probe(struct spi_device *spi)
+>> +{
+>> +	struct device *dev = &spi->dev;
+>> +	struct zl3073x_dev *zldev;
+>> +
+>> +	zldev = zl3073x_devm_alloc(dev);
+>> +	if (IS_ERR(zldev))
+>> +		return PTR_ERR(zldev);
+>> +
+>> +	zldev->regmap = devm_regmap_init_spi(spi, &zl3073x_regmap_config);
+>> +	if (IS_ERR(zldev->regmap)) {
+>> +		dev_err_probe(dev, PTR_ERR(zldev->regmap),
+>> +			      "Failed to initialize regmap\n");
+>> +		return PTR_ERR(zldev->regmap);
+> 
+> return dev_err_probe();
+> One of it's biggest advantages is that dev_err_probe() returns the
+> ret value passed in avoiding duplication like this and saving
+> a few lines of code each time.
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index a7c98bbbd8ac..f8992db1870a 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -37,6 +37,12 @@ QAction *ConfigMainWindow::saveAction;
- ConfigSettings::ConfigSettings()
- 	: QSettings("kernel.org", "qconf")
- {
-+	beginGroup("/kconfig/qconf");
-+}
-+
-+ConfigSettings::~ConfigSettings()
-+{
-+	endGroup();
- }
- 
- /**
-@@ -1829,7 +1835,6 @@ int main(int ac, char** av)
- 	configApp = new QApplication(ac, av);
- 
- 	configSettings = new ConfigSettings();
--	configSettings->beginGroup("/kconfig/qconf");
- 	v = new ConfigMainWindow();
- 
- 	//zconfdump(stdout);
-@@ -1837,7 +1842,6 @@ int main(int ac, char** av)
- 	v->show();
- 	configApp->exec();
- 
--	configSettings->endGroup();
- 	delete configSettings;
- 	delete v;
- 	delete configApp;
-diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 62ab3286d04f..ab4e51f12914 100644
---- a/scripts/kconfig/qconf.h
-+++ b/scripts/kconfig/qconf.h
-@@ -24,6 +24,7 @@ class ConfigMainWindow;
- class ConfigSettings : public QSettings {
- public:
- 	ConfigSettings();
-+	~ConfigSettings(void);
- 	QList<int> readSizes(const QString& key, bool *ok);
- 	bool writeSizes(const QString& key, const QList<int>& value);
- };
--- 
-2.43.0
+Will fix.
+
+>> +	}
+>> +
+>> +	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
+>> +}
+>> +
+>> +static const struct spi_device_id zl3073x_spi_id[] = {
+>> +	{
+>> +		.name = "zl30731",
+>> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30731],
+> 
+> Not my subsystem so up to you, but in general over time we've found that
+> an enum + array tends to bring few benefits over appropriately named
+> zl30731_chip_info separate structures.
+
+Will update according this.
+
+>> +	},
+>> +	{
+>> +		.name = "zl30732",
+>> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30732],
+>> +	},
+>> +	{
+>> +		.name = "zl30733",
+>> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30733],
+>> +	},
+>> +	{
+>> +		.name = "zl30734",
+>> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30734],
+>> +	},
+>> +	{
+>> +		.name = "zl30735",
+>> +		.driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30735]
+>> +	},
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
+>> +
+>> +static const struct of_device_id zl3073x_spi_of_match[] = {
+>> +	{
+>> +		.compatible = "microchip,zl30731",
+>> +		.data = &zl3073x_chip_info[ZL30731]
+>> +	},
+>> +	{
+>> +		.compatible = "microchip,zl30732",
+>> +		.data = &zl3073x_chip_info[ZL30732]
+>> +	},
+>> +	{
+>> +		.compatible = "microchip,zl30733",
+>> +		.data = &zl3073x_chip_info[ZL30733]
+>> +	},
+>> +	{
+>> +		.compatible = "microchip,zl30734",
+>> +		.data = &zl3073x_chip_info[ZL30734]
+>> +	},
+>> +	{
+>> +		.compatible = "microchip,zl30735",
+>> +		.data = &zl3073x_chip_info[ZL30735]
+>> +	},
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, zl3073x_spi_of_match);
+>> +
+>> +static struct spi_driver zl3073x_spi_driver = {
+>> +	.driver = {
+>> +		.name = "zl3073x-spi",
+>> +		.of_match_table = zl3073x_spi_of_match,
+>> +	},
+>> +	.probe = zl3073x_spi_probe,
+>> +	.id_table = zl3073x_spi_id,
+>> +};
+>> +module_spi_driver(zl3073x_spi_driver);
+>> +
+>> +MODULE_AUTHOR("Ivan Vecera <ivecera@redhat.com>");
+>> +MODULE_DESCRIPTION("Microchip ZL3073x SPI driver");
+>> +MODULE_IMPORT_NS("ZL3073X");
+>> +MODULE_LICENSE("GPL");
+> 
+
+Thanks for advice.
+
+Ivan
 
