@@ -1,320 +1,240 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF71224AE8;
-	Sun, 29 Jun 2025 13:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3525B1A073F;
+	Sun, 29 Jun 2025 13:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751202023; cv=none; b=gnboqkIsD+u9wcfxycv+oWvXYzuNzkzBjIC66pM6EOgkGqEGoaobjRBidFVeao5AlLWRtvfKf+3ubxhwJciSO2Lvpn9oix28AtEYxVXuJt9yOm7wn0F+bsyfiyGrMlSUe20Bd34iKpewvCFkeHih8Hpyughd/qgzwYQ4lVbUWyg=
+	t=1751202177; cv=none; b=KtRSuuysft3B6fBs3N7WT25sxPnHMA9a9IZvdoXI2X2WIvqvcb2B4BgW1SKhUi8q4CK/DVJbed0NgECd3dM982G3RnScQq/0GAe02TCafBp27n6jiphi3o0NRYulZLV3bs9FSre1dHZ8cjOjvMecRvWBaNK+MxAiTfqQCTkUXHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751202023; c=relaxed/simple;
-	bh=KJmvjQvZV971OvrJvad69FUPesLIbn0qgoJQFSw74RM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ElEiDciBfdhgqtTvT91wcqUmG9eYFiALMZ41aBRBrrsy+boFDclL738WFV5sejAGM0Oa+oXeT7SbSr7UmpxlgB89xwWyiUW6FpkeWyaRiH/g+tVJgsfdwoUTq6UtEkm2pOTCN+MQL9ONQGAct5LNKSj3Z0LRQto60o+4tc1/uyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q55mSuaa; arc=none smtp.client-ip=209.85.160.170
+	s=arc-20240116; t=1751202177; c=relaxed/simple;
+	bh=EN2oU54wCuY6GsIt+QUyhoBSYS3VXx7KiRPLz6ra8WY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jwDWEeb1/88xYnlZDtUzYosDLMkTwcaZLTQaRvpjAuQn5Py1ktfn5ZWhkZG+LyE+GUr/6Ih8890qaJZDehhWpa6VBGva8yfRrz8LR8nIvQkK0NobCXLjlPRYItdHvo6O7YDwXSCqvXxRDCi9EVJgTLjXzqKuA/YaFy47upDTxPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJSSuGD/; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q55mSuaa"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a58f79d6e9so51250851cf.2;
-        Sun, 29 Jun 2025 06:00:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJSSuGD/"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so496750266b.2;
+        Sun, 29 Jun 2025 06:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751202020; x=1751806820; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751202175; x=1751806975; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w1Izup0JaWpdi0e4PI76ei57r2qvjo9BOKzw0djY64A=;
-        b=Q55mSuaavTX3BPA7s3L0+U3uFapLrvqU6WrKkUHELN/qeKCRkxOO5f8aVXhzfE2wAz
-         ZfR+eoGbz6pMCtNDmiMG3tjsnTMtEff8d15Dys0Ze15bwAsJpetp51rflYc95pUwTQrU
-         ++QNKABCIX2i/jk90Ht1LXMhNknLVLBJIwEMiE8Rm+vZmmcEp9RxAvUys/8Vr8sL8mRu
-         ICsXuw1WRKuswe9YeMkfF1ZL5+mrR1tHzFBDCjhcCvqedYhuukyXy0rEdSk/xocY10/z
-         bRdnIYUF/p4XamdpxalJX7a8cmYe60ifggXMcb8BXdiofTszxvKD10VEFkZN/8L+r48Q
-         2XGg==
+        bh=l+hIABstLuKTp9oXVilxpuDSR3H6aMNlaV7ZQqsdujA=;
+        b=cJSSuGD/WxC4Dfq2AW2+nFOAXM4owrblKA/yDwRS/UeFGSZh3PIURYWS1M98Uv2p+v
+         RcleLedynme4r+IFFFM2S0bhUEhVneMdPawS2It6ffLHZDkRvMNBkGDIoQ98B8eJyeen
+         P2izikK5THlwuB1uER/K0m7/0hfSJcf6Uaw8C6pfJPhkvvj8fvsRUKoHt7BBl7acOCzf
+         hfodqMxfH+WJ+KBWyht0x+5ogxs0rVMtO1WC+oKMUAFLi4FDHeMyJ6toyWiWhZSkp60V
+         uUCx1Ua1/HhfGd5AlkDtbpnBL6zt4OEeYBBT+WKnlyWvatZS0dT/k9/EeXYHQJk1yHOv
+         ZGEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751202020; x=1751806820;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751202175; x=1751806975;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w1Izup0JaWpdi0e4PI76ei57r2qvjo9BOKzw0djY64A=;
-        b=LczFRnFHFoWEq3jwBn066FVd4j/4Ta52TnsFpAeODhJPDOlPqh0hqmnAJHIMMBkKgs
-         JjhF2uMiZc0HeVztlj+n2wZFMHepzAx4avJnRQCQgDiuSWops+GrtRHJ41h9LtVRaGzC
-         wTEnV2emS7tNet4gvcdZ66Lqw39OuFrTcqFzrW/j0r5bokeiU/8zxgjCxwryXFdvtY3Y
-         HkQRDs89YIEUWO8MY3VLRVEUph7Ygnp9zGRnNLpkBijy0+KobfsSlA2uZox3rJeF+dE9
-         M6mp6Dk+9X4+UGV0Gmmo7ESrRStgIyLs3mNUq6TBxyCqntcVzqwO8VQlMNj0XTLiLA3D
-         zABA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCaOin0M1khDiPys3ufvjJyQxsFI73WGHkGW2e5wIqKYAggVrHtNy3CubwtyiL26ARPXV7dw9lG9+XyglF@vger.kernel.org, AJvYcCVddVlqOpathKf77tIYyGr61LBAyNZtHwkBxvI3mvoRpc+0hNv8/wzduFOGptoUbPAB3yLkl8NBCBfw@vger.kernel.org, AJvYcCXmjJ88IPDcKo3iyxfRZFiOUZnkp+Dd9HjzOvgpBiTywnxa3s+58qCJzQEgCWBPvxMasyUK+GuP2litZw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YznDmQh3Yk/Gh8mwP6XsNvABlCCmTbdK0iS8EkHX/V+mfQyuXYA
-	qt1JB/YsS6SCdCFOKjG/rW2MLNchLUj+JKI9kHF1HwfCTILwAe2vPsCa
-X-Gm-Gg: ASbGnct8bo+z9cTPj1V8Jy4NCXz4GXllFL8hXYAdRdiZGOrWXTBDUp9ecZtSXoZSvVf
-	btOVBiLjsLOJfte0yLMhwFvK1ZpFA9OOFWG/zppwOoBH8AVgibkb4Z+Q3Y+IL2cQZKY2eNfqX0N
-	6piUrsIKn9jv59+DUQ5eKwdFR3++1kY2xAZMgLshNg6L50Wj6+9UVsHqA2ZjnrEdn/LrMJvI2vG
-	kpFoBsz1fY2dVx8StAQ6do/KPKnmAzm2pmbBFwBxlWWSmV9nGlQeq51p79b1R1Ed0JCJ0FeE4bs
-	VqHBiQGMwPJ97w7X72CYNeNuBmBD92716ajH7SDcNDsLG/fBfJ437+qD6FQggumanQ0hueI6kby
-	DWrVb5WNvck63iXrne5YU7ayQbn62vN/I
-X-Google-Smtp-Source: AGHT+IHGjlvCXcLJHpu+jzfqPwMarWBqMqpmX9TyRepQREZm0vJoiVHNv50WAz4SfpEMgfqdsWwuYw==
-X-Received: by 2002:a05:622a:4012:b0:4a7:a8a:eed with SMTP id d75a77b69052e-4a7fcae72c0mr182080261cf.39.1751202020174;
-        Sun, 29 Jun 2025 06:00:20 -0700 (PDT)
-Received: from localhost (modemcable197.17-162-184.mc.videotron.ca. [184.162.17.197])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc57d905sm42442451cf.64.2025.06.29.06.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 06:00:19 -0700 (PDT)
-From: =?UTF-8?q?Jean-Fran=C3=A7ois=20Lessard?= <jefflessard3@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Boris Gjenero <boris.gjenero@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: [PATCH v2 6/8] dt-bindings: auxdisplay: add Titan Micro Electronics TM16XX
-Date: Sun, 29 Jun 2025 08:59:56 -0400
-Message-ID: <20250629130002.49842-8-jefflessard3@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250629130002.49842-1-jefflessard3@gmail.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
+        bh=l+hIABstLuKTp9oXVilxpuDSR3H6aMNlaV7ZQqsdujA=;
+        b=u0K6s49VStdPnCTDHuE1qyffxWZaACAEqn+zI1JLExaFIqz6KQqzpIvJSOKOtgHkO9
+         CM0GI0YVkejkN8RedRYrxXRv/YWceAKQxz6Op0NUsR7S+GZinykBuaiZCsZEHSLeoU9u
+         pUBCKniGa7/4ti5olJkvaoFUA93sJB9PJYr9h9d5KdJU367VjGOJ2vVqomcYW1OY40Od
+         I9AU76yFZio50vFpgfnolWu32njcwi0XIjprEYz7DQW6JBt7ZBbpav3VUkvf6vs9H4j4
+         X24jpTl9AeipTOmkdfU1RagihFxxUna6imirSJaEJyt138NVL2Npurmjg6meRt+O4lrB
+         qN/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUJusoat70H09sk/0JazNR0zyNt5mn05sMa6uDZX6ShIc0krZsv9xCdETiJKKWh1v20jNu2BaJ5IM5ddeY=@vger.kernel.org, AJvYcCVfMn0s+1FfVQyjaEAYWnkAYNaZRZeWfszx6MJ35zfXyF8VLpLFnAX01CRRVUcbs/6aUGIybGge/8GVNV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKiek2k5ysrj5ag9shv/Pa3oW3+GBdkaJ/fdWhFtWzcirRJ5nP
+	MBYwqSyAEe8PnRuFpNhYyy7EIEBOi0/1oJFZt3zG2qYV57OyuTr437kfGEwgfcsdvybq1pZTZ/9
+	sBuQe3RxKgILEPoqUPHsxoamtPgdWKLo=
+X-Gm-Gg: ASbGncuuYd5el8JrlGNPRJQ8BbODtgoHYGQp86Z3KkMJaWyMv2FLLA2QFY/O2EocGDt
+	0iHyIB/5jR7LGJVFt7ASkQuRldmSO90O/YDFuM3tpVpEUWnAdhjsWI//9TBqyMnylOADTxrqUiU
+	x8G7ZhMW9H+YTJ5bIowcBMTTb+Gc4ga9/ppNo06GL79TKZHA==
+X-Google-Smtp-Source: AGHT+IGzZG4m5nJ3cy5A11fgQDvb/6qdsnq3/N/EpJ7AuV9uPHGOL2LH30aCHfszUuoqP2ekNSLpiYymPI3meDmevVM=
+X-Received: by 2002:a17:907:1c18:b0:ae0:4410:47e3 with SMTP id
+ a640c23a62f3a-ae3501a58a6mr976502466b.51.1751202174144; Sun, 29 Jun 2025
+ 06:02:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250629113050.58138-1-zaq14760@gmail.com> <092f5109-ca31-4949-bda8-7e0d946c3aa0@kernel.org>
+In-Reply-To: <092f5109-ca31-4949-bda8-7e0d946c3aa0@kernel.org>
+From: =?UTF-8?B?546L6Imv5Lie?= <zaq14760@gmail.com>
+Date: Sun, 29 Jun 2025 21:02:42 +0800
+X-Gm-Features: Ac12FXy0BPQrTL73ahcA03QPM2uG87FF952R6L-TNLWLb0-NWWIF7eGtGwehXio
+Message-ID: <CAKEtaPAr6g5bGFwPJZXRHN6p9u5SrUo3kQi6Zcpp7hbFCp-J2A@mail.gmail.com>
+Subject: Re: [PATCH v7] staging: media: atomisp: code style cleanup series
+To: Hans de Goede <hansg@kernel.org>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, andy@kernel.org, 
+	gregkh@linuxfoundation.org, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add documentation for Titanmec TM16XX and compatible LED display controllers.
+Dear Hans and Andy,
 
-This patch is inspired by previous work from Andreas Färber and Heiner Kallweit.
+Thanks for the feedback. I'll wait for Andy's opinion on this before
+taking further actions.
 
-Co-developed-by: Andreas Färber <afaerber@suse.de>
-Co-developed-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
----
- .../bindings/auxdisplay/titanmec,tm16xx.yaml  | 210 ++++++++++++++++++
- 1 file changed, 210 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/titanmec,tm16xx.yaml
+Meanwhile, I understand Hans' concerns about clang-format changes and
+I can prepare manual cleanup patches as suggested if needed.
 
-diff --git a/Documentation/devicetree/bindings/auxdisplay/titanmec,tm16xx.yaml b/Documentation/devicetree/bindings/auxdisplay/titanmec,tm16xx.yaml
-new file mode 100644
-index 0000000000..65c43e3ba4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/auxdisplay/titanmec,tm16xx.yaml
-@@ -0,0 +1,210 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/auxdisplay/titanmec,tm16xx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Auxiliary displays based on TM16xx and compatible LED controllers
-+
-+maintainers:
-+  - Jean-François Lessard <jefflessard3@gmail.com>
-+
-+description: |
-+  TM16xx controllers manage a matrix of LEDs organized in grids (rows) and segments (columns).
-+  Each grid or segment can be wired to drive either a digit or individual icons, depending on the
-+  board design.
-+
-+  Typical display example:
-+
-+           ---    ---       ---    ---
-+    WIFI  |   |  |   |  -  |   |  |   |  USB  PLAY
-+           ---    ---       ---    ---
-+    LAN   |   |  |   |  -  |   |  |   |  BT   PAUSE
-+           ---    ---       ---    ---
-+
-+  The controller itself is agnostic of the display layout. The specific arrangement
-+  (which grids and segments drive which digits or icons) is determined by the board-level
-+  wiring. Therefore, these bindings describe hardware configuration at the PCB level
-+  to enable support of multiple display implementations using these LED controllers.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - titanmec,tm1618
-+      - titanmec,tm1620
-+      - titanmec,tm1628
-+      - titanmec,tm1650
-+      - fdhisi,fd620
-+      - fdhisi,fd628
-+      - fdhisi,fd650
-+      - fdhisi,fd6551
-+      - fdhisi,fd655
-+      - icore,aip650
-+      - icore,aip1618
-+      - icore,aip1628
-+      - princeton,pt6964
-+      - winrise,hbs658
-+
-+  reg:
-+    maxItems: 1
-+
-+  titanmec,digits:
-+    description: |
-+      Array of grid (row) indexes corresponding to specific wiring of digits in the display matrix.
-+      Defines which grid lines are connected to digit elements.
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    items:
-+      minimum: 0
-+      maximum: 7
-+    minItems: 1
-+    maxItems: 8
-+
-+  titanmec,segment-mapping:
-+    description: |
-+      Array of segment (column) indexes specifying the hardware layout mapping used for digit display.
-+      Each entry gives the segment index corresponding to a standard 7-segment element (a-g).
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    items:
-+      minimum: 0
-+      maximum: 7
-+    minItems: 7
-+    maxItems: 7
-+
-+  titanmec,transposed:
-+    description: |
-+      Optional flag indicating if grids and segments are swapped compared to standard matrix orientation.
-+      This accommodates devices where segments are wired to rows and grids to columns.
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[0-7],[0-7]$":
-+    $ref: /schemas/leds/common.yaml#
-+    properties:
-+      reg:
-+        description: Grid (row) and segment (column) index in the matrix of this individual LED icon
-+    required:
-+      - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - titanmec,digits
-+  - titanmec,segment-mapping
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      display-controller@24 {
-+        reg = <0x24>;
-+        compatible = "fdhisi,fd655";
-+        titanmec,digits = [01 02 03 04];
-+        titanmec,segment-mapping = [03 04 05 00 01 02 06];
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+
-+        led@0,0 {
-+          reg = <0 0>;
-+          function = LED_FUNCTION_ALARM;
-+        };
-+
-+        led@0,1 {
-+          reg = <0 1>;
-+          function = LED_FUNCTION_USB;
-+        };
-+
-+        led@0,2 {
-+          reg = <0 2>;
-+          function = "play";
-+        };
-+
-+        led@0,3 {
-+          reg = <0 3>;
-+          function = "pause";
-+        };
-+
-+        led@0,4 {
-+          reg = <0 4>;
-+          function = "colon";
-+        };
-+
-+        led@0,5 {
-+          reg = <0 5>;
-+          function = LED_FUNCTION_LAN;
-+        };
-+
-+        led@0,6 {
-+          reg = <0 6>;
-+          function = LED_FUNCTION_WLAN;
-+        };
-+      };
-+    };
-+
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      display-controller@0 {
-+        reg = <0x0>;
-+        compatible = "fdhisi,fd628";
-+        titanmec,transposed;
-+        titanmec,digits = [00 01 02 03];
-+        titanmec,segment-mapping = [00 01 02 03 04 05 06];
-+        spi-3wire;
-+        spi-lsb-first;
-+        spi-rx-delay-us = <1>;
-+        spi-max-frequency = <500000>;
-+        #address-cells = <2>;
-+        #size-cells = <0>;
-+
-+        led@4,0 {
-+          reg = <4 0>;
-+          function = "apps";
-+        };
-+
-+        led@4,1 {
-+          reg = <4 1>;
-+          function = "setup";
-+        };
-+
-+        led@4,2 {
-+          reg = <4 2>;
-+          function = LED_FUNCTION_USB;
-+        };
-+
-+        led@4,3 {
-+          reg = <4 3>;
-+          function = LED_FUNCTION_SD;
-+        };
-+
-+        led@4,4 {
-+          reg = <4 4>;
-+          function = "colon";
-+        };
-+
-+        led@4,5 {
-+          reg = <4 5>;
-+          function = "hdmi";
-+        };
-+
-+        led@4,6 {
-+          reg = <4 6>;
-+          function = "video";
-+        };
-+      };
-+    };
--- 
-2.43.0
+Best regards,
 
+LiangCheng Wang
+
+Hans de Goede <hansg@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=888:20=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On 29-Jun-25 1:30 PM, LiangCheng Wang wrote:
+> > This series applies clang-format and fixes all checkpatch.pl-reported E=
+RRORs in the AtomISP driver, excluding the i2c directory as advised by main=
+tainers.
+> >
+> > The changes include:
+> > - Applying clang-format (excluding drivers/staging/media/i2c)
+> > - Removing unnecessary parentheses in return statements
+> > - Removing unnecessary zero-initialized globals
+> > - Fixing space issues after unary minus operators
+> > - Wrapping complex macro values in parentheses
+> > - These patches focus solely on mechanical style cleanups with no funct=
+ional changes.
+> > - WARNINGs reported by checkpatch.pl were intentionally left for future=
+ work to keep each patch clear and manageable.
+> >
+> > The full series and corresponding commits are also available in my publ=
+ic Git repository:
+> >
+> > https://github.com/lc-wang/linux/tree/b4/atomisp
+> >
+> > To: Hans de Goede <hansg@kernel.org>
+> > To: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > To: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > To: Andy Shevchenko <andy@kernel.org>
+> > To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > To: Nathan Chancellor <nathan@kernel.org>
+> > To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+> > To: Bill Wendling <morbo@google.com>
+> > To: Justin Stitt <justinstitt@google.com>
+> > Cc: linux-media@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-staging@lists.linux.dev
+> > Cc: llvm@lists.linux.dev
+> > ---
+> > Changes in v7:
+> > - Split previous monolithic patch into multiple smaller patches
+> > - Applied clang-format to entire driver excluding i2c directory
+>
+> I took a quick look at just the clang-format patch and looking
+> at the bits of the diff which were not collapsed by github because
+> the changes are too big, it looks like the changes which clang-format
+> makes are useless and often make things worse, e.g. just looking
+> at the first diff which github shows for:
+>
+> https://github.com/lc-wang/linux/commit/8a3bbdba275e42dfcb0af2ddcc2f27463=
+bb316d2
+>
+> which is for drivers/staging/media/atomisp/include/hmm/hmm.h
+> then all of the changes are undesirable and unneeded.
+>
+> so the running of clang-format just seems to make things worse.
+>
+> I appreciate coding-style cleanups outside of the i2c dir,
+> but it looks like you need to do everything manually since
+> clang-format is just making a mess of things.
+>
+> Also if you do manual code-style cleanups please do one
+> type of cleanup per patches, e.g. only fix indentation
+> using spaces instead of tabs and do so on groups of say
+> 10 files at a time to keep things reviewable.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > - Fixed checkpatch.pl-reported ERRORs (parentheses in macros, unnecessa=
+ry return parentheses, zero-initialized globals, spaces after unary minus)
+> > - Left WARNINGS untouched for future cleanup
+> > - No functional logic changes
+> > - Link to v6: https://lore.kernel.org/r/20250627-bar-v6-1-b22b5ea3ced0@=
+gmail.com
+> >
+> > Changes in v6:
+> > - Applied clang-format across the entire AtomISP driver
+> > - Fixed all checkpatch.pl-reported ERRORs
+> > - Added explanation of tooling and scope
+> > - No functional logic modified
+> > - Moved 'Suggested-by' and 'Link' tags above Signed-off-by
+> > - Link to v5: https://lore.kernel.org/r/20250625-bar-v5-1-db960608b607@=
+gmail.com
+> >
+> > Changes in v5:
+> > - Replaced space-based indentation with tabs in output_1.0 directory
+> > - Used checkpatch.pl and grep to identify formatting issues
+> > - No functional changes made
+> > - This patch is now focused solely on tab/space issues
+> > - Link to v4: https://lore.kernel.org/r/20250624-bar-v4-1-9f9f9ae9f868@=
+gmail.com
+> >
+> > Changes in v4:
+> > - Moved assignment operator '=3D' to the same line for static struct de=
+finitions
+> > - Remove unnecessary line breaks in function definitions
+> > - Update commit message to reflect all the coding style fixes
+> > - Link to v3: https://lore.kernel.org/r/20250622-bar-v3-1-4cc91ef01c3a@=
+gmail.com
+> >
+> > Changes in v3:
+> > - Removed extra spaces between type and asterisk (e.g., `*to`) in funct=
+ion
+> >   declarations, as pointed out by Andy Shevchenko
+> > - Update commit message to reflect all the coding style fixes
+> > - Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@=
+gmail.com
+> >
+> > Changes in v2:
+> > - Fix patch subject prefix to "staging: media: atomisp:" to comply with=
+ media CI style.
+> > - No other functional changes.
+> >
+> > Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gm=
+ail.com
+> >
+> > --- b4-submit-tracking ---
+> > # This section is used internally by b4 prep for tracking purposes.
+> > {
+> >   "series": {
+> >     "revision": 7,
+> >     "change-id": "20250621-bar-573b8b40fb80",
+> >     "prefixes": [],
+> >     "history": {
+> >       "v1": [
+> >         "20250621-bar-v1-1-5a3e7004462c@gmail.com"
+> >       ],
+> >       "v2": [
+> >         "20250621-bar-v2-1-4e6cfc779614@gmail.com"
+> >       ],
+> >       "v3": [
+> >         "20250622-bar-v3-1-4cc91ef01c3a@gmail.com"
+> >       ],
+> >       "v4": [
+> >         "20250624-bar-v4-1-9f9f9ae9f868@gmail.com"
+> >       ],
+> >       "v5": [
+> >         "20250625-bar-v5-1-db960608b607@gmail.com"
+> >       ],
+> >       "v6": [
+> >         "20250627-bar-v6-1-b22b5ea3ced0@gmail.com"
+> >       ]
+> >     }
+> >   }
+> > }
+>
