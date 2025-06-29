@@ -1,112 +1,124 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115120ADEE
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6F31F0E55;
+	Sun, 29 Jun 2025 20:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230416; cv=none; b=V84QkHcuNwxJF347ohDJd1E2KXq74/eBsp0T61FLrTKZf/LXPVPiAlSny9BUogUQTEcQVJJCSBmS+mm57rFOC6fR4KZrcgIZK44sdmuVEruOL6c7TN18RGSAGB18ogryBS1FlXZ82O75KB3hpcIs3psCU05fGEcCrfTSze4x3WY=
+	t=1751230568; cv=none; b=tBmyy6kZn2MlKFGXnEpFb/ZmBz3nSl2ZQMHKOkxxhvdFOFZ8OMzn7G7LUFKPHhsf3NMG5OZ400Ed9GGnsjFdnyAyEHtCLHOLBPABKDsYjrtZE/qqHQEgZfYxiiuCXAALxw2tmi/jC8NCADjC40kNuF+tqCMSuOwFC+YDdCW9N4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230416; c=relaxed/simple;
-	bh=1jbCcrkrf728Wzl0z11tqyhSv0w2v5uYaJXCHXe1s4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WBTAMP0gEb9lR4fWH5frNQESGDIgRoPjYo4D2+X/1X4owfIo+fvawvOkm5idDUMR0cVDOI4KZceVAA3js2k+J+r+bdUACcEgQ8M9eLU/5wby+llXrf4dcnVBm9sOQmDWfAPUJWBvg+6ZclzzhiyS+yiiSWL/6lrxI9oOlsn4ciw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dp9SWbSw; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1751230568; c=relaxed/simple;
+	bh=wxPOxZ/UV/k3nkqU8M9ommX7Jy3RtmifN1Lsn4mr+AY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2aWwJIzshFQN4wNr6Wcw/WJVej6cV3YckeBcMj5OAlRSc8i5o/9GlRYx0adI32rUGh1XPIc2gzhSN8g9P7+ubtRrHWQkkVc100kZkfyjxkPHgO5UWFLaSslhdAVMf2XOf52elU1K0wyQsJWfyGDv2IJ3kphgoZcMoOZ41qQOws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JafR0q7V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dp9SWbSw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=Aphzyhcn3XWdWxH1/MpQm+V5sC7N2o/eSwc7n6ZwBhQ=; b=dp9SWbSw/I7P/DSx
-	Xm8r8PD+KoB0Zyrytjr49novVKZHWD5SN8uzHY5UkPGzkogUnh+qRoomnYX19/11bj5odWwj6Jxld
-	i1/FytRwVQS7K+X/WKttSAXmuiAfaTNUi/aSf/f73hD8RLYQ04TvpFgQHyT9L57tyB2z+wSyFV1MN
-	M6DYaWhL1lZxmW0ktlb/tQQ+gkg9MKsQ4npMpHWMmS5WZH8v+/1T2lKxwNVNcTxZdwD08rKZsCrvP
-	ju/gqtN1KCQz493jB61rJxzIyLWmZ/+XbLL40HwjriABselpBwZ//gJJ66dwr4+qNrTY+qWyx6OJT
-	cSQNeYiUtBkujcDg0Q==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uVz1L-00CqTf-1z;
-	Sun, 29 Jun 2025 20:53:03 +0000
-From: linux@treblig.org
-To: peterz@infradead.org,
-	jpoimboe@kernel.org,
-	jbaron@akamai.com,
-	rostedt@goodmis.org,
-	ardb@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] jump_label: Remove unused jump_label_rate_limit
-Date: Sun, 29 Jun 2025 21:53:02 +0100
-Message-ID: <20250629205302.296544-1-linux@treblig.org>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JafR0q7V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE970C4CEEB;
+	Sun, 29 Jun 2025 20:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751230567;
+	bh=wxPOxZ/UV/k3nkqU8M9ommX7Jy3RtmifN1Lsn4mr+AY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JafR0q7VK1QSCjrMj0r8VwcsPzjNxnYBbF9x1UCwj5ay0PIUprwQRy73UGFxP+YLa
+	 UVVE7jHIrLp1JoHbGJ8cV7v+azD+e0iXxky27zPnOq4SyYtkJMfpdLqqYxUhX5qJH2
+	 jhFdMkuEVIJbWh72I8+w86MjFHk4LiS75EBgrUDUu8aZIa84KYAuEWKkMIcCNHeNi/
+	 BlV9jSJCnbFWWcFUh9eipj/iNexN3a9ANdxefeYo9OVRxW1gSNxOML3DzlOe5I2Ocr
+	 pkaU+54zZPxoifiAGbwKntn6WjiA0mKwDTKQYYCjDTvfbYWkgQJGrNT24Wa8MGuxzU
+	 aTaTbLFN0VfJw==
+Date: Sun, 29 Jun 2025 22:56:01 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: register_syctl_init error in linux-next-20250612
+Message-ID: <4s3egeo2fhq6hk7pcsxplsqomiiw6vbnnswhimlekfrl6tsixt@wzf5x63pdvp6>
+References: <20250612175515.3251-1-spasswolf@web.de>
+ <vvorpevngfle6budlgqhmj3f25lb77czzyvd5aa6jil7zkaqgp@weanygri324r>
+ <11898dd756020687c2016a37af3c948b350bdbbc.camel@web.de>
+ <szadjbcldmcirdtgiv6wowqumlk4cbthb37f3e42lzcbt4tnla@ilp4m6quqk4b>
+ <6eb19bee-c553-4a28-9342-b2b218deabe7@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3a3woiyuowbqzbpf"
+Content-Disposition: inline
+In-Reply-To: <6eb19bee-c553-4a28-9342-b2b218deabe7@nvidia.com>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-The last use of jump_label_rate_limit() was removed in 2021 by
-commit 6e4e3b4df4e3 ("KVM: Stop using deprecated jump label APIs")
+--3a3woiyuowbqzbpf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remove it.
+On Fri, Jun 27, 2025 at 12:02:48PM +0100, Jon Hunter wrote:
+> Hi Joel,
+>=20
+> On 20/06/2025 10:42, Joel Granados wrote:
+=2E..
+> > +		.data		=3D &max_lock_depth,
+> > +		.maxlen		=3D sizeof(int),
+> > +		.mode		=3D 0644,
+> > +		.proc_handler	=3D proc_dointvec,
+> > +	},
+> > +};
+> > +
+> > +static int __init init_rtmutex_sysctl(void)
+> > +{
+> > +	printk("registering rtmutex");
+Well that just slipped in there undetected :).
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- include/linux/jump_label_ratelimit.h | 8 --------
- kernel/jump_label.c                  | 9 ---------
- 2 files changed, 17 deletions(-)
+> > +	register_sysctl_init("kernel", rtmutex_sysctl_table);
+> > +	return 0;
+> > +}
+>=20
+>=20
+> With recent -next trees I am seeing the following kernel warning when
+> booting -next on our Tegra boards ...
+>=20
+>  boot: logs: [       0.231226] WARNING KERN registering rtmutex
+>=20
+> This warning triggers a test failure for us because this is a new/unexpec=
+ted
+> warning. Looking at the above it seems that making this a pr_debug() or
+> pr_info() would be more appropriate. Let me know if it is OK to update th=
+is.
+this is just a debug print statement that made its way to next. I'll
+remove it. Thx for the report.
 
-diff --git a/include/linux/jump_label_ratelimit.h b/include/linux/jump_label_ratelimit.h
-index 8c3ee291b2d8..ae6c049ea6fd 100644
---- a/include/linux/jump_label_ratelimit.h
-+++ b/include/linux/jump_label_ratelimit.h
-@@ -37,8 +37,6 @@ __static_key_slow_dec_deferred(struct static_key *key,
- 			       struct delayed_work *work,
- 			       unsigned long timeout);
- extern void __static_key_deferred_flush(void *key, struct delayed_work *work);
--extern void
--jump_label_rate_limit(struct static_key_deferred *key, unsigned long rl);
- 
- extern void jump_label_update_timeout(struct work_struct *work);
- 
-@@ -86,12 +84,6 @@ static inline void static_key_deferred_flush(void *key)
- {
- 	STATIC_KEY_CHECK_USE(key);
- }
--static inline void
--jump_label_rate_limit(struct static_key_deferred *key,
--		unsigned long rl)
--{
--	STATIC_KEY_CHECK_USE(key);
--}
- #endif	/* CONFIG_JUMP_LABEL */
- 
- #define static_branch_deferred_inc(x)	static_branch_inc(&(x)->key)
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 7cb19e601426..caceeb94824e 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -363,15 +363,6 @@ void __static_key_deferred_flush(void *key, struct delayed_work *work)
- }
- EXPORT_SYMBOL_GPL(__static_key_deferred_flush);
- 
--void jump_label_rate_limit(struct static_key_deferred *key,
--		unsigned long rl)
--{
--	STATIC_KEY_CHECK_USE(key);
--	key->timeout = rl;
--	INIT_DELAYED_WORK(&key->work, jump_label_update_timeout);
--}
--EXPORT_SYMBOL_GPL(jump_label_rate_limit);
--
- static int addr_conflict(struct jump_entry *entry, void *start, void *end)
- {
- 	if (jump_entry_code(entry) <= (unsigned long)end &&
--- 
-2.50.0
+Best
+>=20
+> Thanks!
+> Jon
+>=20
+> --=20
+> nvpublic
+>=20
 
+--=20
+
+Joel Granados
+
+--3a3woiyuowbqzbpf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmhhqFIACgkQupfNUreW
+QU/4Twv/YnX5yNyWtYD3GHMdqa+5hv6IQk3y+7xhOJTQqTRWU5fhowWTXIYq56uh
+5ftswx9HQVOYMf3jbp0o1xTwC4f1AQk8nQzbacmVfj2ZX3XwB0N9xVAumeWCXQc4
+mP36k+ixQSE3YqSDAmuBOMdyIpk0GaqepxXDdgEYHQ9OFLJFsqIrcUrQX41sA3Gd
+xMpjzkgHCg4+KIE7ow5e3u3SuwS0aaPDylNWXDp8fQI5K03FIwvDOgImR0dHk9hK
+LjODXVr6ZN2b4/sYVveAGOKMmwBpON2gHQzpJmf9QRSz0kjp8odYmiUvSoE3D2fP
+rtN0Xh2FVIeLA/jPU9iozuWzHQSZl5EuHc81k3kRlKVbvuR9cdCN4zNsfK2Bh0Sg
+U3u9zZz9GdUO7CywZqSdPft+KsMZsOOM6cbpIb2WL1EkcjQN58eXGLTk904wMymw
+R53xfWZtroYO4+5xANOXAZglx2bEzOa8Q1Q7MmC9ps9s/m9kGydP5oI1pYAlqnlJ
+Z1+0F/TC
+=ZAFG
+-----END PGP SIGNATURE-----
+
+--3a3woiyuowbqzbpf--
