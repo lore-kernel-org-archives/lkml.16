@@ -1,355 +1,166 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1676D22422B
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7687B1BC41
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 15:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751212447; cv=none; b=fYQBFB2FahFjJxNb9A+63qgSROLxIzKSFPq0vQ/30sn3Da5SSPGvgbe9XkJZYsK94UJowKUR9UR9xUnKEWfw6e39dH12eteix3y8yqoA8MhXM6vCuWRNZfclMnt4YfJLSweQBgwDkIOeh6JBIuRTercoVrgSkGrij8ErV+8yIhY=
+	t=1751212502; cv=none; b=X6c9iR9c9KBKlFTG/q2/kBuBP96UkNnxKn4fGJlhyN4XYiLOfaI80gSwTZKSazn3usyDDLxmZmZNTm9o1mw02c4VXIO4Sn44RvfF0sbyRe/X/f6UgWhql2Rog9FgUocsEDZeKqy7Axa92b7ExBj+flWPrnWMee7+43J/e8q83Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751212447; c=relaxed/simple;
-	bh=IDkB6//PjgG9k1gpJmrgm08BzSKVfd0DDTlRG2mxkGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmdagD84BfDVPn1p7aeObSdrRtkQgH6JLphyrN1OZnaJdMpOaDis2nKSjzALQJbD1d1KUl2cpIaX4NBC22ckVmwVe+MWOgw+YnRTURVpYniLJLn3W/tEegvYCHxkU1PqH3UlM/8ir6PUnT0VpoMJTZX/iVHHjnXfWask8V3vhIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=aM7FTKNI; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1751212502; c=relaxed/simple;
+	bh=7hqeM+s8qGiVK22Wqt9KuDJXdJ0loKcbmmyCBjn9RUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sYMzEwFjD6UTnMxSIHPnSNzxpV6A/U5TraVo5D//QlULNFaDmMXwShIlGoGQzC7h5pkKZfw1DRKyzZ4AI5HFVsUA7lYfFzVe1MjA5hIpvKMB3ed9j6KO4Vdw25DPyB4OASrYQLFZonq58Ccc5f15CVZbmh3eg4jUoSOeKGyd3Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GVTHQ6K6; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="aM7FTKNI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1751212443;
-	bh=IDkB6//PjgG9k1gpJmrgm08BzSKVfd0DDTlRG2mxkGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aM7FTKNIqUwK3lBIFnNxPDVY3Xz6E15G5pBXecyLsM5wFt2dPxgy/RnsOIDy9iI84
-	 3KcPZsiC/MHdffdo57Dw/uAizqhbRo4vyrsz2YT4Xyx88I8gObWg2jxs2vLeODGJpw
-	 t1eKP1Keve1xRWY7JyX7PvNlxlhJfCB0xJ4jsjlM=
-Date: Sun, 29 Jun 2025 17:54:02 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
-Message-ID: <e2513e72-5949-463d-a950-0778609141d7@t-8ch.de>
-References: <25eb3144-d19e-43d2-af4f-b0251d28808c@t-8ch.de>
- <20250622071958.GA3384@1wt.eu>
- <07f5fdb4-2c5c-4723-b12a-abdb0c9f33b7@t-8ch.de>
- <20250623025618.GA29015@1wt.eu>
- <20250629084628.GA7992@1wt.eu>
- <d8d9ab91-0617-468e-a82d-9f271c5e6a7f@t-8ch.de>
- <20250629092552.GA30947@1wt.eu>
- <029f24fa-3512-4736-94a0-e158c158cc8e@t-8ch.de>
- <20250629094048.GA26861@1wt.eu>
- <20250629151006.GA16826@1wt.eu>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GVTHQ6K6"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-747fba9f962so3435603b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751212501; x=1751817301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=yeqm6Oj1B3MxM+2GGrExdoU2J2pYPcyYcjdp7qgYkEY=;
+        b=GVTHQ6K66Bf/krD1q+aPJTvXkrh5PrujoBwDLR9bX5hOI57/g3rPuWVo0NoRWPU56X
+         uYl84rukuNXx/BIa2abJhN8YHN6WNOaU3F5u6WZozerZJySisocMXU5u/pLXGEdyOopw
+         AWxET2+X83tdGLMPoDRYBZfQ38Q6pwF+0Bb4s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751212501; x=1751817301;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yeqm6Oj1B3MxM+2GGrExdoU2J2pYPcyYcjdp7qgYkEY=;
+        b=kyDd8J3pJphoyKHjyQnCFHQfuDSsfoI3vBpdzvM8t9fB56ns8tB7svdhtplMOPPxVL
+         phyBWx/SWeEYdQcOoyiRYNtxPQFAvMXVVniPgHYDXzbXy61eCBLbrgjJU/EQbPj7v2lN
+         /2exwMVfXg6M3yLlQwjJQnhXhpfACGfTZMbNhP+euay64krJ4ufbw5xsxbi1Y+etnfHo
+         DMF3B49nGXx7Z0NH4dB2ANwH+kN/P8QmIxCNLbVORbQBySCOyoa3I49DAKYvfU0qKuz/
+         ewGrutjJtQg3bBKjYSiCCjx82UfSC7NQ7pqQCbLINzp2F0lKcLzxkYEK8myercIdHqlN
+         AiCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYWxUwcfe9TbzykRWHPanomxSzJV5Q3PwHsIRCGksRuuJYCbkL0EGBOjr3obVayX2LNJ79WQ0jmheuYuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwyY93UPTPjNt+N6gt75slxunvyUfrgBKQxAq0s8ozeEdpTVed
+	UWjToKfEjEdBQEHLi5iRVTbm+S73C7BXTr4c0yMukLqyjn80iz1LKD+hj5KwZ/fI5A==
+X-Gm-Gg: ASbGncvE6FXidfR1NjlIcYZCXsD6N/xBsAOP7TvXFF48JPa1uBafUZoAj+bYY9ql8KG
+	trgFDJk99QEXsK8rbzRisTQd7anWw89cuaNZVG/yWh83i0+G8ObagXuhhtGzH3+yNUiwFnjqjIy
+	jQ+FMF7zaj5xQiBLAC5V7TUjTEPX8BfaepCibqW1HSiKhGxVODlBxBZc8uXAGcE2EgAY1ryCxon
+	3dlH5KGCscC3Fpo7ohmNxjygHkv7OOBhNkiV7O0Tp4ScELbtyiOwDC92z+TCpQMAyx7drEJmql4
+	JBkYfRc/oB8WF/z1LmLQjfouWP9TQP6OPpYdfBy3lyGYWkCr0S/6p27PsljgEnZ66Evpt9BDSZT
+	2KuN3Q/79HkLQxJ6rkA==
+X-Google-Smtp-Source: AGHT+IHvJHjgsPCwgL95BsSO9a9GmLWta/fUIYmxVFQv02LYZIB0gv8b1BqC2du/VWpmBrPa9QD0lg==
+X-Received: by 2002:a05:6a21:339b:b0:220:51ef:5d23 with SMTP id adf61e73a8af0-220a112e9bdmr17275999637.20.1751212500750;
+        Sun, 29 Jun 2025 08:55:00 -0700 (PDT)
+Received: from [10.230.3.249] ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c7e89sm7147150b3a.109.2025.06.29.08.54.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 08:54:59 -0700 (PDT)
+Message-ID: <fc47c52a-b22b-44f0-805a-dc4d5e9fec46@broadcom.com>
+Date: Sun, 29 Jun 2025 08:54:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250629151006.GA16826@1wt.eu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: bcmgenet: Initialize u64 stats seq counter
+To: Ryo Takakura <ryotkkr98@gmail.com>, opendmb@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, zakkemble@gmail.com
+Cc: bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250629114109.214057-1-ryotkkr98@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250629114109.214057-1-ryotkkr98@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-06-29 17:10:06+0200, Willy Tarreau wrote:
-> On Sun, Jun 29, 2025 at 11:40:48AM +0200, Willy Tarreau wrote:
-> > On Sun, Jun 29, 2025 at 11:37:06AM +0200, Thomas Weißschuh wrote:
-> > > On 2025-06-29 11:25:52+0200, Willy Tarreau wrote:
-> > > > On Sun, Jun 29, 2025 at 10:53:34AM +0200, Thomas Weißschuh wrote:
-> > > > > On 2025-06-29 10:46:28+0200, Willy Tarreau wrote:
-> > > > > > On Mon, Jun 23, 2025 at 04:56:18AM +0200, Willy Tarreau wrote:
-> > > 
-> > > <snip>
-> > > 
-> > > > > > Trying it has reopened the circular dependencies can of worms :-(
-> > > > > > It's the same problem as usual that we've worked around till now
-> > > > > > by placing some types in types.h, except that this time fd_set is
-> > > > > > defined based on the macros FD_* that I moved to sys/select.h.
-> > > > > 
-> > > > > Can't fd_set also move to sys/select.h? This is how I read fd_set(3).
-> > > > 
-> > > > That was what I did and precisely what was causing the problem. We
-> > > > have sys.h defining select() with fd_set in it with sys/select not yet
-> > > > being included. I moved sys.h after all sys/* and it broke something
-> > > > else instead.
-> > > 
-> > > Ah. Then move select() also into sys/select.h; where it belongs. :-)
-> > 
-> > For an unknown reason I thought we avoided to move the syscall definitions
-> > there and only used sys/*, but I was apparently confused as we have exactly
-> > that in prctl or wait. I can give that one a try again.
+
+
+On 6/29/2025 4:41 AM, Ryo Takakura wrote:
+> Initialize u64 stats as it uses seq counter on 32bit machines
+> as suggested by lockdep below.
 > 
-> So after one more hour on it, I'm admitting abandonning the battle.
-> Adding the necessary includes there is causing "declared inside parameter"
-> failures in random other totally unrelated stuff (e.g. in sys_getdents64()
-> or msleep()). We'll have to really clear that circular includes mess again
-> in a near future. For now I'll stay on the stub which works fine without
-> affecting the rest.
+> [    1.830953][    T1] INFO: trying to register non-static key.
+> [    1.830993][    T1] The code is fine but needs lockdep annotation, or maybe
+> [    1.831027][    T1] you didn't initialize this object before use?
+> [    1.831057][    T1] turning off the locking correctness validator.
+> [    1.831090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.16.0-rc2-v7l+ #1 PREEMPT
+> [    1.831097][    T1] Tainted: [W]=WARN
+> [    1.831099][    T1] Hardware name: BCM2711
+> [    1.831101][    T1] Call trace:
+> [    1.831104][    T1]  unwind_backtrace from show_stack+0x18/0x1c
+> [    1.831120][    T1]  show_stack from dump_stack_lvl+0x8c/0xcc
+> [    1.831129][    T1]  dump_stack_lvl from register_lock_class+0x9e8/0x9fc
+> [    1.831141][    T1]  register_lock_class from __lock_acquire+0x420/0x22c0
+> [    1.831154][    T1]  __lock_acquire from lock_acquire+0x130/0x3f8
+> [    1.831166][    T1]  lock_acquire from bcmgenet_get_stats64+0x4a4/0x4c8
+> [    1.831176][    T1]  bcmgenet_get_stats64 from dev_get_stats+0x4c/0x408
+> [    1.831184][    T1]  dev_get_stats from rtnl_fill_stats+0x38/0x120
+> [    1.831193][    T1]  rtnl_fill_stats from rtnl_fill_ifinfo+0x7f8/0x1890
+> [    1.831203][    T1]  rtnl_fill_ifinfo from rtmsg_ifinfo_build_skb+0xd0/0x138
+> [    1.831214][    T1]  rtmsg_ifinfo_build_skb from rtmsg_ifinfo+0x48/0x8c
+> [    1.831225][    T1]  rtmsg_ifinfo from register_netdevice+0x8c0/0x95c
+> [    1.831237][    T1]  register_netdevice from register_netdev+0x28/0x40
+> [    1.831247][    T1]  register_netdev from bcmgenet_probe+0x690/0x6bc
+> [    1.831255][    T1]  bcmgenet_probe from platform_probe+0x64/0xbc
+> [    1.831263][    T1]  platform_probe from really_probe+0xd0/0x2d4
+> [    1.831269][    T1]  really_probe from __driver_probe_device+0x90/0x1a4
+> [    1.831273][    T1]  __driver_probe_device from driver_probe_device+0x38/0x11c
+> [    1.831278][    T1]  driver_probe_device from __driver_attach+0x9c/0x18c
+> [    1.831282][    T1]  __driver_attach from bus_for_each_dev+0x84/0xd4
+> [    1.831291][    T1]  bus_for_each_dev from bus_add_driver+0xd4/0x1f4
+> [    1.831303][    T1]  bus_add_driver from driver_register+0x88/0x120
+> [    1.831312][    T1]  driver_register from do_one_initcall+0x78/0x360
+> [    1.831320][    T1]  do_one_initcall from kernel_init_freeable+0x2bc/0x314
+> [    1.831331][    T1]  kernel_init_freeable from kernel_init+0x1c/0x144
+> [    1.831339][    T1]  kernel_init from ret_from_fork+0x14/0x20
+> [    1.831344][    T1] Exception stack(0xf082dfb0 to 0xf082dff8)
+> [    1.831349][    T1] dfa0:                                     00000000 00000000 00000000 00000000
+> [    1.831353][    T1] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    1.831356][    T1] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> 
+> Fixes: 59aa6e3072aa ("net: bcmgenet: switch to use 64bit statistics")
+> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
 
-I saw the same issue, but only because of the changes to types.h.
-And these should not be necessary in the first place.
+Good catch, thank you Ryo!
 
-The below works nicely for me:
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index 3fcee9fe4ece..125dbb2f1388 100644
---- a/tools/include/nolibc/Makefile
-+++ b/tools/include/nolibc/Makefile
-@@ -56,6 +56,7 @@ all_files := \
- 		sys/random.h \
- 		sys/reboot.h \
- 		sys/resource.h \
-+		sys/select.h \
- 		sys/stat.h \
- 		sys/syscall.h \
- 		sys/sysmacros.h \
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index c199ade200c2..6dc2f2a6cbde 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -104,6 +104,7 @@
- #include "sys/random.h"
- #include "sys/reboot.h"
- #include "sys/resource.h"
-+#include "sys/select.h"
- #include "sys/stat.h"
- #include "sys/syscall.h"
- #include "sys/sysmacros.h"
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index 9556c69a6ae1..ae4b0970b570 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -745,53 +745,6 @@ int sched_yield(void)
- }
- 
- 
--/*
-- * int select(int nfds, fd_set *read_fds, fd_set *write_fds,
-- *            fd_set *except_fds, struct timeval *timeout);
-- */
--
--static __attribute__((unused))
--int sys_select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeout)
--{
--#if defined(__ARCH_WANT_SYS_OLD_SELECT) && !defined(__NR__newselect)
--	struct sel_arg_struct {
--		unsigned long n;
--		fd_set *r, *w, *e;
--		struct timeval *t;
--	} arg = { .n = nfds, .r = rfds, .w = wfds, .e = efds, .t = timeout };
--	return my_syscall1(__NR_select, &arg);
--#elif defined(__NR__newselect)
--	return my_syscall5(__NR__newselect, nfds, rfds, wfds, efds, timeout);
--#elif defined(__NR_select)
--	return my_syscall5(__NR_select, nfds, rfds, wfds, efds, timeout);
--#elif defined(__NR_pselect6)
--	struct timespec t;
--
--	if (timeout) {
--		t.tv_sec  = timeout->tv_sec;
--		t.tv_nsec = timeout->tv_usec * 1000;
--	}
--	return my_syscall6(__NR_pselect6, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
--#elif defined(__NR_pselect6_time64)
--	struct __kernel_timespec t;
--
--	if (timeout) {
--		t.tv_sec  = timeout->tv_sec;
--		t.tv_nsec = timeout->tv_usec * 1000;
--	}
--	return my_syscall6(__NR_pselect6_time64, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
--#else
--	return __nolibc_enosys(__func__, nfds, rfds, wfds, efds, timeout);
--#endif
--}
--
--static __attribute__((unused))
--int select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeout)
--{
--	return __sysret(sys_select(nfds, rfds, wfds, efds, timeout));
--}
--
--
- /*
-  * int setpgid(pid_t pid, pid_t pgid);
-  */
-diff --git a/tools/include/nolibc/sys/select.h b/tools/include/nolibc/sys/select.h
-new file mode 100644
-index 000000000000..74d0e55e3157
---- /dev/null
-+++ b/tools/include/nolibc/sys/select.h
-@@ -0,0 +1,109 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+
-+/* make sure to include all global symbols */
-+#include "../nolibc.h"
-+
-+#ifndef _NOLIBC_SYS_SELECT_H
-+#define _NOLIBC_SYS_SELECT_H
-+
-+#include <linux/time.h>
-+#include <linux/unistd.h>
-+
-+#include "../sys.h"
-+
-+/* commonly an fd_set represents 256 FDs */
-+#ifndef FD_SETSIZE
-+#define FD_SETSIZE     256
-+#endif
-+
-+#define FD_SETIDXMASK (8 * sizeof(unsigned long))
-+#define FD_SETBITMASK (8 * sizeof(unsigned long)-1)
-+
-+/* for select() */
-+typedef struct {
-+	unsigned long fds[(FD_SETSIZE + FD_SETBITMASK) / FD_SETIDXMASK];
-+} fd_set;
-+
-+#define FD_CLR(fd, set) do {						\
-+		fd_set *__set = (set);					\
-+		int __fd = (fd);					\
-+		if (__fd >= 0)						\
-+			__set->fds[__fd / FD_SETIDXMASK] &=		\
-+				~(1U << (__fd & FD_SETBITMASK));	\
-+	} while (0)
-+
-+#define FD_SET(fd, set) do {						\
-+		fd_set *__set = (set);					\
-+		int __fd = (fd);					\
-+		if (__fd >= 0)						\
-+			__set->fds[__fd / FD_SETIDXMASK] |=		\
-+				1 << (__fd & FD_SETBITMASK);		\
-+	} while (0)
-+
-+#define FD_ISSET(fd, set) ({						\
-+			fd_set *__set = (set);				\
-+			int __fd = (fd);				\
-+		int __r = 0;						\
-+		if (__fd >= 0)						\
-+			__r = !!(__set->fds[__fd / FD_SETIDXMASK] &	\
-+1U << (__fd & FD_SETBITMASK));						\
-+		__r;							\
-+	})
-+
-+#define FD_ZERO(set) do {						\
-+		fd_set *__set = (set);					\
-+		int __idx;						\
-+		int __size = (FD_SETSIZE+FD_SETBITMASK) / FD_SETIDXMASK;\
-+		for (__idx = 0; __idx < __size; __idx++)		\
-+			__set->fds[__idx] = 0;				\
-+	} while (0)
-+
-+
-+/*
-+ * int select(int nfds, fd_set *read_fds, fd_set *write_fds,
-+ *            fd_set *except_fds, struct timeval *timeout);
-+ */
-+
-+static __attribute__((unused))
-+int sys_select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeout)
-+{
-+#if defined(__ARCH_WANT_SYS_OLD_SELECT) && !defined(__NR__newselect)
-+	struct sel_arg_struct {
-+		unsigned long n;
-+		fd_set *r, *w, *e;
-+		struct timeval *t;
-+	} arg = { .n = nfds, .r = rfds, .w = wfds, .e = efds, .t = timeout };
-+	return my_syscall1(__NR_select, &arg);
-+#elif defined(__NR__newselect)
-+	return my_syscall5(__NR__newselect, nfds, rfds, wfds, efds, timeout);
-+#elif defined(__NR_select)
-+	return my_syscall5(__NR_select, nfds, rfds, wfds, efds, timeout);
-+#elif defined(__NR_pselect6)
-+	struct timespec t;
-+
-+	if (timeout) {
-+		t.tv_sec  = timeout->tv_sec;
-+		t.tv_nsec = timeout->tv_usec * 1000;
-+	}
-+	return my_syscall6(__NR_pselect6, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
-+#elif defined(__NR_pselect6_time64)
-+	struct __kernel_timespec t;
-+
-+	if (timeout) {
-+		t.tv_sec  = timeout->tv_sec;
-+		t.tv_nsec = timeout->tv_usec * 1000;
-+	}
-+	return my_syscall6(__NR_pselect6_time64, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
-+#else
-+	return __nolibc_enosys(__func__, nfds, rfds, wfds, efds, timeout);
-+#endif
-+}
-+
-+static __attribute__((unused))
-+int select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeout)
-+{
-+	return __sysret(sys_select(nfds, rfds, wfds, efds, timeout));
-+}
-+
-+
-+#endif /* _NOLIBC_SYS_SELECT_H */
-diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-index 16c6e9ec9451..470a5f77bc0f 100644
---- a/tools/include/nolibc/types.h
-+++ b/tools/include/nolibc/types.h
-@@ -70,11 +70,6 @@
- #define DT_LNK         0xa
- #define DT_SOCK        0xc
- 
--/* commonly an fd_set represents 256 FDs */
--#ifndef FD_SETSIZE
--#define FD_SETSIZE     256
--#endif
--
- /* PATH_MAX and MAXPATHLEN are often used and found with plenty of different
-  * values.
-  */
-@@ -115,48 +110,6 @@
- #define EXIT_SUCCESS 0
- #define EXIT_FAILURE 1
- 
--#define FD_SETIDXMASK (8 * sizeof(unsigned long))
--#define FD_SETBITMASK (8 * sizeof(unsigned long)-1)
--
--/* for select() */
--typedef struct {
--	unsigned long fds[(FD_SETSIZE + FD_SETBITMASK) / FD_SETIDXMASK];
--} fd_set;
--
--#define FD_CLR(fd, set) do {						\
--		fd_set *__set = (set);					\
--		int __fd = (fd);					\
--		if (__fd >= 0)						\
--			__set->fds[__fd / FD_SETIDXMASK] &=		\
--				~(1U << (__fd & FD_SETBITMASK));	\
--	} while (0)
--
--#define FD_SET(fd, set) do {						\
--		fd_set *__set = (set);					\
--		int __fd = (fd);					\
--		if (__fd >= 0)						\
--			__set->fds[__fd / FD_SETIDXMASK] |=		\
--				1 << (__fd & FD_SETBITMASK);		\
--	} while (0)
--
--#define FD_ISSET(fd, set) ({						\
--			fd_set *__set = (set);				\
--			int __fd = (fd);				\
--		int __r = 0;						\
--		if (__fd >= 0)						\
--			__r = !!(__set->fds[__fd / FD_SETIDXMASK] &	\
--1U << (__fd & FD_SETBITMASK));						\
--		__r;							\
--	})
--
--#define FD_ZERO(set) do {						\
--		fd_set *__set = (set);					\
--		int __idx;						\
--		int __size = (FD_SETSIZE+FD_SETBITMASK) / FD_SETIDXMASK;\
--		for (__idx = 0; __idx < __size; __idx++)		\
--			__set->fds[__idx] = 0;				\
--	} while (0)
--
- /* for getdents64() */
- struct linux_dirent64 {
- 	uint64_t       d_ino;
