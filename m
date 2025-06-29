@@ -1,99 +1,142 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37CB19ADBF;
-	Sun, 29 Jun 2025 18:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F99943151;
+	Sun, 29 Jun 2025 18:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751221422; cv=none; b=DEYdi2Tgsyp7VV+MDHjG6Ou+uKfy5y6w/8i9arl2KmsCIexu0JCMp/+ZlhEoAxeHCkzo6xuVApOUXKtAMMX2zhnl3KidyeHaXPfCQVaj9c05w/0UxlVP4Cx6Drw09IzNa3nszVr2fANBPbooxd/vQfmpaxKBiuBbcc3CWKpRKa8=
+	t=1751221501; cv=none; b=cq4jljGOwoPW+Q7N+rcFcZuxSZJ6w39LoNiX55CDG6Q0y9fulwhlYh6Nwxar7spcpd8GRMopHuWrBtdo/i0dfRjCeGPVrUVAhl9eQCA0Ltdxd7pzYCrxFztqi0rn4JR45p4hEulf2n9aiO3Q5clhI740woeM/28R8bOXcr7vy18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751221422; c=relaxed/simple;
-	bh=/rz2FI8H+POPGjv2Q6JSUisZ54jqo+pekP+5RDuodFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUKzGfg+8mRBWKfvBUrZ1+ROi6VRh99Pi3dx9LlKw8E6sD4TrpGMpLCdJn1twop26KPobxdXdBBUTRxpEVaFNtS8AUuKzc0A1nShM8hqybHrZkFCiHtJPcQIwTZlSW7YrNhstvF5ShdxdvvPvHX77e7xPgagsLORQIgsvXIbkAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=2BExNKnz; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1751221501; c=relaxed/simple;
+	bh=DhBKlmjLOiyFfEEsVCIlTdKsD++1KdN8yi/Q0MbSXQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CKDFkQYrLrRqOFTFzXEC57cnRedW3ibkBCdVZP0dY4xc57X3g+yPwsuEYI1mLszAAfqygSuN9hrTmdvGf1D+tBSYOhL35Y7SbB1kj52GzddEqZq+wKr6FP2WDEcHCe/30BgTxijn9hVU3JjSN+ZH6J+rB5w20Q0JDVBmIrL4EJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0c/WHGZ; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2BExNKnz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Myxtx+Y7/VaI8ABGRupGWXUe5PVGaahjgE4X+AhP3TM=; b=2BExNKnzg/xdwxUfR70MEs+omD
-	rWHPQp6QwjrGMrAaY5LVF0Yq8UVGDbvUgH7dP/sK9feaCAJs8J+aY4XPYsaMRVQBMHNxAcqKrrvSA
-	p4Tq1D+srrUj+fQc/tZ1J6T7lq8RjAAXTAHbHI11eNajevRsOL3fbUkQP8gNsiHoIdzo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uVwgi-00HIEC-Uz; Sun, 29 Jun 2025 20:23:36 +0200
-Date: Sun, 29 Jun 2025 20:23:36 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Sky Huang <skylake.huang@mediatek.com>, netdev@vger.kernel.org,
-	Sean Wang <sean.wang@mediatek.com>,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Felix Fietkau <nbd@nbd.name>
-Subject: Re: [PATCH net/next 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <ea30ed46-b0b5-4ade-8267-f6f4a45fdd5d@lunn.ch>
-References: <cover.1751072868.git.daniel@makrotopia.org>
- <566ca90fc59ad0d3aff8bc8dc22ebaf0544bce47.1751072868.git.daniel@makrotopia.org>
- <f9bec387-1858-4c79-bb4b-60e744457c9f@lunn.ch>
- <aGFM1UQ1P3IQjoex@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0c/WHGZ"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fad79433bbso13591026d6.0;
+        Sun, 29 Jun 2025 11:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751221499; x=1751826299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PCn0+ucEkRvS1MPOQbl5PoaWNKu1L1cu8L9SbyabJaI=;
+        b=g0c/WHGZj+5vR7QB21/5L03uWdjiZXwZyPMplorffBBn4Uyi9JvUkQCQI2LVctsMVA
+         w3lJUXlxv3bWxFG6W9SvOSGgLuDgCt/29KiH6ZltB79GRP6/XjwNROZL3WZc3+dH7pDX
+         UC1hdHVGImnyxD4F0aIYAjhub2+E/914K9Oxm3dx/T6EW6fcPkMKGVTPEroXkwYqBlP4
+         R9+hSvcWIGDcCwyicDQHOKTMbgFR18ivVNyxY1pE5dwJPHnRQ/gbpAO2R2gZndcDFkC1
+         1egqlVBl90dTeh/SG65c77H1vy6eVcfrVbbDEkw+x3BjR/H3QHgvlTgFCKX29BJGQAqr
+         RJag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751221499; x=1751826299;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PCn0+ucEkRvS1MPOQbl5PoaWNKu1L1cu8L9SbyabJaI=;
+        b=j4z9V1Gbkd6qve7EZDx+2vITGicYWzbayWAPxc+ciorfmIC3hBahBulULSJBQYfEOg
+         QGgWvlsrgNwIe5N2RagcpetHWgBS9jt8zXkHhZdt7x6zI/ddB+dpz2ACFDn+VzOzoucq
+         frB0bLNGI89kqOFjBZgswNpmh0mmJ+SJCtPPONIHMZ2r/1l0uBLC/fMmwXarkl/kAIdY
+         eV9uCpepiWmi3aUaEDQKPkkmcwaS/SbyxweCqCS81EpL6hzwKI0ubzliwBnYZWZH9jjG
+         moym9swG4N4TzEw4SqAg583pOI7NEh2K8hAnVRXovTBwSCuF6NhGqL1d2Wqek3cG8N3U
+         u1bg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/X3Z6D4Q49bexs9DmGJqDaxsEmGX+WYhCDw7Lcl3QAXl61Ii/DjpmDi1VHACqeNFqPFOv1nGzuI1t@vger.kernel.org, AJvYcCX6P9IfuAvIfpocZJPuDgB37P/BIqp92w3kK+QXzkki6ntdXkjlCfrk4DWOSJtZ5IOm4Pr/VPJ5gFjyPh2l@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIGOCHBH3FhqzALKEcSrI8H2vKXNX5jQy0WMPP1kegLfl4RBZf
+	+kyCBPu7rDmkaGA1zgYr0M9R8aAKQ9nLzYCfadjHffJEGh6KvM2w4IJ6
+X-Gm-Gg: ASbGncvSB4807UPaKxSonCkfsOHw+4Gq5Zv8Zwj+SQje4VyicerihGukkaPgZA/yjfN
+	4vMgjQpuOwDeGJGhDzCQhJu7g8ayY+ZJWEErpkXXwXW80ynGCZxemcpC9ZER3hR+IAAjC3NLHtj
+	mZprLBocZZGJDXTx15cN7QOfuzjthqbnZOF16UjRn5RAadpN/KS8qmCa34/+/OEk8c+Re6VHY3K
+	rtJYL2+XsLFgkND42K0sS9ABgUf7Yy/I4YS00eu5oS//nn2YDITG/W0hpChdmcl0NuHDgjg9t6c
+	GjFjqHkU3+O0vzvoEThkNT2mSyP6sj9vy2uzbyPAA7c0CC+/
+X-Google-Smtp-Source: AGHT+IE8ZFa0LSuu03SsIfsP4BI06sEZwP6Jddmvw7w8JwUeW05PDyCVNTa79hGOPUDZS+0Hpq8xJQ==
+X-Received: by 2002:a05:6214:2466:b0:6f8:8fdf:f460 with SMTP id 6a1803df08f44-6fffdcfc04bmr176240576d6.9.1751221499271;
+        Sun, 29 Jun 2025 11:24:59 -0700 (PDT)
+Received: from fedora ([2804:14c:64:af90::1001])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771ab9d6sm55220746d6.28.2025.06.29.11.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 11:24:58 -0700 (PDT)
+From: Marcelo Moreira <marcelomoreira1905@gmail.com>
+To: Yazen Ghannam <yazen.ghannam@amd.com>,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	~lkcamp/patches@lists.sr.ht
+Cc: Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC/amd64: replace sprintf with sysfs_emit in show functions
+Date: Sun, 29 Jun 2025 15:24:48 -0300
+Message-ID: <20250629182448.265407-1-marcelomoreira1905@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGFM1UQ1P3IQjoex@makrotopia.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 29, 2025 at 03:25:25PM +0100, Daniel Golle wrote:
-> On Sat, Jun 28, 2025 at 10:13:51AM +0200, Andrew Lunn wrote:
-> > > +static void *mtk_dma_ring_alloc(struct mtk_eth *eth, size_t size,
-> > > +				dma_addr_t *dma_handle)
-> > > +{
-> > > +	void *dma_ring;
-> > > +
-> > > +	if (WARN_ON(mtk_use_legacy_sram(eth)))
-> > > +		return -ENOMEM;
-> > > +
-> > > +	if (eth->sram_pool) {
-> > > +		dma_ring = (void *)gen_pool_alloc(eth->sram_pool, size);
-> > > +		if (!dma_ring)
-> > > +			return dma_ring;
-> > > +		*dma_handle = gen_pool_virt_to_phys(eth->sram_pool, (unsigned long)dma_ring);
-> > 
-> > I don't particularly like all the casting backwards and forwards
-> > between unsigned long and void *. These two APIs are not really
-> > compatible with each other. So any sort of wrapping is going to be
-> > messy.
-> > 
-> > Maybe define a cookie union:
-> > 
-> > struct mtk_dma_cookie {
-> > 	union {
-> > 		unsigned long gen_pool;
-> > 		void *coherent;
-> > 	}
-> > }
-> 
-> I've implemented that idea and the diffstat grew quite a lot. Also,
-> it didn't really make the code more readable (see below why).
+Update all device attribute 'show' callbacks in the EDAC AMD64 driver to
+utilize sysfs_emit(). This change adheres to the recommendation outlined
+in Documentation/filesystems/sysfs.rst.
 
-O.K, thanks for trying. Please keep with the casts back and forth.
+This modification aligns with current sysfs subsystem guidelines.
 
-	Andrew
+Signed-off-by: Marcelo Moreira <marcelomoreira1905@gmail.com>
+---
+ drivers/edac/amd64_edac.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index b681c0663203..b6d211255ef0 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -552,7 +552,7 @@ static ssize_t reg##_show(struct device *dev,				\
+ 	struct mem_ctl_info *mci = to_mci(dev);				\
+ 	struct amd64_pvt *pvt = mci->pvt_info;				\
+ 									\
+-	return sprintf(data, "0x%016llx\n", (u64)pvt->reg);		\
++	return  sysfs_emit(data, "0x%016llx\n", (u64)pvt->reg);		\
+ }
+ 
+ EDAC_DCT_ATTR_SHOW(dhar);
+@@ -571,7 +571,7 @@ static ssize_t dram_hole_show(struct device *dev, struct device_attribute *mattr
+ 
+ 	get_dram_hole_info(mci, &hole_base, &hole_offset, &hole_size);
+ 
+-	return sprintf(data, "%llx %llx %llx\n", hole_base, hole_offset,
++	return sysfs_emit(data, "%llx %llx %llx\n", hole_base, hole_offset,
+ 						 hole_size);
+ }
+ 
+@@ -602,7 +602,7 @@ static ssize_t inject_section_show(struct device *dev,
+ {
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct amd64_pvt *pvt = mci->pvt_info;
+-	return sprintf(buf, "0x%x\n", pvt->injection.section);
++	return sysfs_emit(buf, "0x%x\n", pvt->injection.section);
+ }
+ 
+ /*
+@@ -638,7 +638,7 @@ static ssize_t inject_word_show(struct device *dev,
+ {
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct amd64_pvt *pvt = mci->pvt_info;
+-	return sprintf(buf, "0x%x\n", pvt->injection.word);
++	return sysfs_emit(buf, "0x%x\n", pvt->injection.word);
+ }
+ 
+ /*
+@@ -675,7 +675,7 @@ static ssize_t inject_ecc_vector_show(struct device *dev,
+ {
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct amd64_pvt *pvt = mci->pvt_info;
+-	return sprintf(buf, "0x%x\n", pvt->injection.bit_map);
++	return sysfs_emit(buf, "0x%x\n", pvt->injection.bit_map);
+ }
+ 
+ /*
+-- 
+2.50.0
+
