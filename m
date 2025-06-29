@@ -1,90 +1,100 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2116A23CE;
-	Sun, 29 Jun 2025 19:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE0723CE;
+	Sun, 29 Jun 2025 19:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751225501; cv=none; b=mHqD2hjx+iYJsB1UmmJyO2SWKOKrySljMck2LUQ6wrrnpg3EXdWuU5eN4DkcsvKLDTQ7TRPmElA6a+KX/7X9p2w4u0n/ERL5lCdiON7LXAPOo2i4nqv6/xCnjRFHVAmbiwMzuYTd9MYnzMe5686KKrrQPKmcseH/T0zQyHh+yRk=
+	t=1751225510; cv=none; b=EjNKrGWCrLKMox9wYuTDp5RJh2r5o5vT8JSvbMmTE1TVUnPUyZsV/c8rLDmDRJZwbdyJHX8329ElCzg4nNhBtcewNSRyWuoX+eNaP2hYMTuKWg6tFem3ZHYfYn7pJGQszVXuDZXGFy0y7LdJFu377QUSJm1HngFSSQjatYQO0IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751225501; c=relaxed/simple;
-	bh=puCx3m3ijJhv2xY8UD7sxNgYdB4S0Z5zGmnfB9JdlU4=;
+	s=arc-20240116; t=1751225510; c=relaxed/simple;
+	bh=m31e7le107W8Y9vAbduFcxlW1zFtIFM1aCvWlvd0/ng=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yq0ovoA1lCcV1QFmyQIG/6PlAjem3p8+ZBzOtMnZ3UjsfQE224VblislrsvhrDtexzqD3qBTt4nf7TU3BTEWhzhV95NTsByQC58bXjY10mtbZST8ulPxastN3npYpKq76TfjHwb6awCxv5WVXFgnUoHzoaitfRR8yxY2BEioB9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWalgRHc; arc=none smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=gG9p1nuZ+7RZTPqND5zBjauHlk0Q2eAR/H3yD2Z3R3FKJrw3gd4C2/mhLbAPhe0Z2Wraille0hgDsoYIn1zy4LnDg8SBbC1JDOXr0fspTG6UteAEBXLf4JEVlIGi+8I3iikaog0ECJk/yp2ZLYQNINEYl5cmcFtvYe4MMLVusfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IXjiA9b3; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWalgRHc"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so896198a91.1;
-        Sun, 29 Jun 2025 12:31:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXjiA9b3"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b34b770868dso459311a12.2;
+        Sun, 29 Jun 2025 12:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751225499; x=1751830299; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751225508; x=1751830308; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9fmT08YCirP/kmmox56H3YoamB4syz6uTiliCsGLSQo=;
-        b=OWalgRHcvN6FTAzROxfEsrPkCLv9IxCb2bZfT/bLyWvG0Og4Oqt6ZNtJEQRLXw7ERs
-         /bvTLPgxAuvWEWNdL0INQ+1oCrMZSVEgKuEeRiYyOFPEOzttLqjGzk0EmjQQYkAJdrTr
-         YxuPO2bEtmdUp7qOt4FR4NJc7m8gihvoBitkIKLzcafX9awTb6cHnJfcKNW8DlTVePE4
-         G8U771aJ1xKPJdrvq02egi+rAESx7RRklXA1lp4WefXTX8W/VJIz8uOtZyTKFeShvlK8
-         5FWvno9YMjJ9D00E9umqmMcNQ+tWNIwGPseKI9VGLtdh8p0UkVC1l3XZqfEgOuV2hlmr
-         xrLA==
+        bh=I7qWmqyWyOEY5UGuDfpAlZX6C/JGyAbsG083wFDbdQA=;
+        b=IXjiA9b3t7YoWAmwiNoBY9Xt9a74NQ+S/GHsk+K/T8pKhO4irkHvdvkzDONVuPBWmv
+         iKYQ6ksM/vi56lk2n7vijGJfLK4Jx7sV0FZU4K7QJK9A4LCs9bDnpwYHYCYz/UkQBydn
+         8X2FgKg1Vrludl/z0lYg6W9EQ9HPiC9IOJ2q2PDGpyS4uzky67Jz9OZZk+jls2/cb770
+         u3DGFaNILNq0VycL+7IZ1aRtrTprelOMAjax5sbGjJdT6up/xNxzyyF1ro8TPgwizLaX
+         1MbYOEvnBNdLFWFjBZD0E0ivJaZbvm8Wz4jYWjByYNjobPgErWGuL2fkNWOeykEnY6rb
+         bS+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751225499; x=1751830299;
+        d=1e100.net; s=20230601; t=1751225508; x=1751830308;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9fmT08YCirP/kmmox56H3YoamB4syz6uTiliCsGLSQo=;
-        b=uj6bYm6+wwOoT2NGZvKreSqaScb4LSNttIOf751vMGs+sWHUOuh4ps1E2Ir3pIVLQt
-         N9pZTF1Z3BK1CfME1L1KafxsDqLsGLCGowjRVt7KT9Aj4rNjz/hlU2uUUj0fyLi4a7JA
-         ica0Qi8me3ByyOO9VtfPKxeVLgWeG4uqeYJSmRuHBHqobZA+aO+yDPdj8gKEsk9lQMnk
-         KNHoE04AQAeI7f72FCCI7wR5TRUMOf6m+BgF28pRTvAIREPXdT8lG3mCbPiN6Vyz3iNn
-         kOjlZRINniAkvcurE9vOYG9w8IeHrU3tI8Pd30qUTE8Q73WsfWZsGj6/ZKu4gJKih/ez
-         OaIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUN2NkBbz+Sphrwu/7b2VKFFs1z+VOyI5oVPC97INuryTVWeQX945W7cgGpXegZmjNeZ/z8cRCeqTwY91U=@vger.kernel.org, AJvYcCXdWI1VBfzhjH+G5Sjo+tBow9QUGKt7MNeklqNsgemsWobRodXoblejoIO2ed2unVC9jrVZre8ALnGROrPgq9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZP8Z+AJ98dsyPo5lOc4da35TjUR8MpUNiRDuvWrRkzc28E6i5
-	7DnZKTBy7IAwtmjLebo3mdOIhfU0Z4xb+fOr/x6KT32aLOvToM1SPHySeS9UWwMaZtbLcnglk8X
-	FB7si7DjAfxS2lk9N//9feBgpwb79XpbdkA==
-X-Gm-Gg: ASbGncsD+8+8JsfC06Z0nWVVXm0WPbMTDsCFCdOfEFSF7hJqv1MIxYFBmat2i3WJS8i
-	FRbfnn2xPo8JqkQfcsUtOOWdskQ01SJmAtPuiFQFDfmSdDZEPGH/PfCcbgtyjiQzlzKwpjQaRKz
-	R/r0rs9s3PG6u1hk63z0XPl9sffBObTa82N9mgCmJMwaM=
-X-Google-Smtp-Source: AGHT+IGZYieEqw2ODJl+hKmg36Rl5gmEpYYPtY6vZPl8MK+pU74wXw+EenxLwyMwZIaULnIcEV1W8vEKAKDvimvBXyY=
-X-Received: by 2002:a17:90b:2e4d:b0:311:e8cc:4250 with SMTP id
- 98e67ed59e1d1-318ec4117d4mr3562570a91.3.1751225499417; Sun, 29 Jun 2025
- 12:31:39 -0700 (PDT)
+        bh=I7qWmqyWyOEY5UGuDfpAlZX6C/JGyAbsG083wFDbdQA=;
+        b=Kitwg7v9vENoEvm4KlcPfBw+UkG+3fCBfh9A6Vfz0mOBLUsh+jEfDbzdYscIa9DWk8
+         F8IiFtNojSn64fAtg7edWNPQaku+yRp/3+mwQFjRQN7C5wEaFsJj0nJR+hs0r/dmeKWU
+         MpktHR8m6/nP3dr+ZVDYe/lN+3Brpjwy2vQ7hmCnnlWxP2nvm7xwemJvhiV4FVfxaVVQ
+         3C0qmNtCqELUTQhScgVcgDwuw2Ym1PogYsCitlystBAzWtp82CQzZ+TeiaxhO950JafM
+         asfzQRbIsy+yzZPCf1oxuX1vj/N6D6/DpCgCYRkbQ56wGtyBkAnwWrZDIKQt+iqYO9No
+         8PaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrg9KCNinrzPC5xe/bGSphsmRVb4FSe1sGCutFLQpgQhPNfJVdCRFVGW+KeUPdiiN5BFGhvCiKvefbOIiVzxU=@vger.kernel.org, AJvYcCVueYvVY/ApKGomCQEsRzId+SUKT7Wu8eeDvGD+n4UVxeHuvhlwGK3H+de4u5WqgVLgHkNvc2SoEwdXO6A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmOjZhIg6oCNfw6eCY8mm5V4OAnrn0bnh0x1zyRSam5B7byrLK
+	S2YzkZYUHU5Yryy4233gHEjwKbm/7PJtNlTg3lX5frm/3s4tQAUc3BB7FL1SvfY93TOBuFrzVjd
+	J7iZ35LH2L5XADyNW2galXKxTwrDML6Y=
+X-Gm-Gg: ASbGnctlTvjsyDXZmvxDcMNnEyx3sw17JDVtZknqqhOFkpSO0mouk+0lIdSg49OXCAw
+	zxUkiUktFFo584YP4kbxRPD6H9rCSOTASsRpqXo1PA9Vmm77cKASKDwXzo0+WISqbksdQ82DmU9
+	yeiRgZSGC0toLjQoXcbRP2P49RbTfPyhZIEGC91PWGTHM=
+X-Google-Smtp-Source: AGHT+IGNCxyRbF0QqG0f5Z9eveg0zZ0lxUF1DL03B7iTaRcDwpx1uSxscv8sr2Xh1NKPLlsZyhC6+EGBuHHdrPEa4ts=
+X-Received: by 2002:a17:90b:268e:b0:311:e9a6:332e with SMTP id
+ 98e67ed59e1d1-318ec268e01mr4234292a91.0.1751225508036; Sun, 29 Jun 2025
+ 12:31:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
-In-Reply-To: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
+References: <20250612-revocable-ptr-comment-v1-1-db36785877f6@google.com>
+In-Reply-To: <20250612-revocable-ptr-comment-v1-1-db36785877f6@google.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 29 Jun 2025 21:31:25 +0200
-X-Gm-Features: Ac12FXy_D0bZVu53droi3lbTffW__2BqoowFoMIqkIbtxn1YlU9-dOm9gLt0uco
-Message-ID: <CANiq72mHAJvjKkJmOu3EPi7Xy7NiHFPawz32-yxWHKGeaFtjHg@mail.gmail.com>
-Subject: Re: [PATCH] rbtree: rust: add RBTree::is_empty
+Date: Sun, 29 Jun 2025 21:31:34 +0200
+X-Gm-Features: Ac12FXyETq_kcAgr6mG_NJrcahXlhIlgmzz9c_yRbri1Q4Cl4-lIaRLnmORXWc8
+Message-ID: <CANiq72mstzYHbQa-M1Z_zWoLsBOPsA8kPstsuRO2G0NDnnTxCQ@mail.gmail.com>
+Subject: Re: [PATCH] revocable: rust: document why &T is not used in RevocableGuard
 To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, rust-for-linux@vger.kernel.org, 
+Cc: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Marcelo Moreira <marcelomoreira1905@gmail.com>, rust-for-linux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 12:36=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
-wrote:
+On Thu, Jun 12, 2025 at 1:17=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
 >
-> In Rust Binder I need to be able to determine whether a red/black tree
-> is empty. Thus, add a method for that operation to replace
+> When a reference appears in a function argument, the reference is
+> assumed to be valid for the entire duration of that function call; this
+> is called a stack protector [1]. Because of that, custom pointer types
+> whose destructor may invalidate the pointee (i.e. they are more similar
+> to Box<T> than &T) cannot internally use a reference, and must instead
+> use a raw pointer.
 >
->         rbtree.iter().next().is_none()
+> This issue is something that is often missed during unsafe review. For
+> examples, see [2] and [3]. To ensure that people don't try to simplify
+> RevocableGuard by changing the raw pointer to a reference, add a comment
+> to that effect.
 >
-> This is terrible, so add a method for this purpose. We do not add a
-> RBTree::len method because computing the number of elements requires
-> iterating the entire tree, but checking whether it is empty can be done
-> cheaply.
->
+> Link: https://perso.crans.org/vanille/treebor/protectors.html [1]
+> Link: https://users.rust-lang.org/t/unsafe-code-review-semi-owning-weak-r=
+wlock-t-guard/95706 [2]
+> Link: https://lore.kernel.org/all/aEqdur4JTFa1V20U@google.com/ [3]
 > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
 Applied to `rust-next` -- thanks everyone!
