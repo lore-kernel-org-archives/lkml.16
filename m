@@ -1,52 +1,55 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80464226CE4
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 12:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DC62AD1C;
+	Sun, 29 Jun 2025 12:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751200744; cv=none; b=Ehna1l+h7daWq7P7mYlywqH6BB8ALSa/MBpd7+XWSXiTxW9oek0DKDno04xOYJOlfk0bOd/0/6TR5NJ5wvMFSZRQB8txIJ2kpBwr20l3ZzC3vK3a53FVWgqwUiG+lNY4LA5IrkKWg/pmHyeTM8eiuIIffSlgcPuMOO0oVdcXjHU=
+	t=1751201222; cv=none; b=rMd/zwQc0iTZbrCtBANDbOWcY4TN3aBNEZwwZZ6oxRind2mhKOMOrKKFGY3BMdwHWve/uoAVDrHby1NOdivwm2Ws29ERK7eKT4lHySG4jL29iv+rFyqm0/OWsikHMEetb0AOAMPYXq+8WB5S67+2L2gojc3jHOZET8Tg8xRteIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751200744; c=relaxed/simple;
-	bh=nsAfoD3v/HBr6ID5bxFuUM7z5sm2UrulP0r+6b9gb7Q=;
+	s=arc-20240116; t=1751201222; c=relaxed/simple;
+	bh=Ip7hnQPOpGF9wXLlvKTRbOv0ZV/zi9h56UqKTQhsm9c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pW7S6gLmCLIodZaYQ8FsNOZqi15RTFFeBoLUYt3kZSfdGRJbickdw2vxQiuzkMMXnVB9HTgNfoSOtwFs5HLQtZp30JUQWQJLT0TzYgmstjqBE2nZdUA9vh5JyxFd5O2hFcjQjKomsqUhOtWGTaoPQtwpebg15gnjoFgr6Cj2YnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=GQ4CNfk0; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	 MIME-Version; b=XGOQEp4Y3JGzGlQDmrnww+Vdc75+D/CQR0VRvm4L+fyKqpMMsSQZckWJ4/QbI+wAk7HVpGbiInrKa4AZqDI3pG0SpzsgGrTwFZUfNNyHm05IL956Idw3U+Ff3LTdDiaG+oLm/SM+iFK+3dc/st4a2ZzXrY7LyHeo4vT43ksQ1lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fuioOJEB; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="GQ4CNfk0"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751200740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nOCOpdzyJGYo0WmyPHPzo5U4cOQf2vkC3N8qsd5gyAo=;
-	b=GQ4CNfk0xYcLdg3QU3SXwDgtJBjFrtjYOnP60c4J65IbFhmbgdnKCiH808hU9zytHkA6cT
-	tF1pijGHtg+ob3gSyJ5Ehr8trcQT//uH1wtvJ7VtSBtwp+5l4muHaDGZwlF2waUSLay3um
-	ERbafNgcMmplUtgHVNXeOcieTH6IS26Hi0yI8aU82SqTvR3CUyvKAgLw+33Fu1pMxuJ8SM
-	sad/A6QKkgijKK3sYl+ymD479c+DSvBr2qgu/G1d8kJhIncalUZ6quNT9DLKVN7RoS5ZHV
-	L2ijJLuopUDuvnDtsAjPcasKPa4O4Sidnvhc6Nl3a34aMdG3miwguqRFRVEWKg==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Dragan Simic <dsimic@manjaro.org>,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	Johan Jonker <jbx6244@gmail.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>
-Subject: [PATCH v3 10/10] arm64: dts: rockchip: Drop regulator-compatible property on rk3399
-Date: Sun, 29 Jun 2025 14:34:51 +0200
-Message-ID: <20250629123840.34948-11-didi.debian@cknow.org>
-In-Reply-To: <20250629123840.34948-1-didi.debian@cknow.org>
-References: <20250629123840.34948-1-didi.debian@cknow.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fuioOJEB"
+Received: from fedora.home ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id VrHvu4ESL84Z8VrI6uRtOD; Sun, 29 Jun 2025 14:37:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751200671;
+	bh=U2KNLOTVqBb7xYxBtu5LEwvC5LnUw+sbt8wZBMJoIcA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=fuioOJEBsQCPcmq+MwQ6AEShAuXOPl3NcGoVlDv4s7ImHWrmTjLrLSPc1ZXF2yDu3
+	 9sajVftQDEdNAik8Y3k0BXIVD82Cnk55/2QaSQ71KtX2ejwFzMd4AB4Sp8LxgA/Uqp
+	 a3IgLUVyTEaYj7kLxo0tUuTv4N8ZazjpqFrjQ1IOIKeGx6Ch5O6UuIYSwXx/0+XLkf
+	 7SJj2MgiYxSqRFXCxYNO7p54KztMJ/S3sJsU9U3tAXvBaYYVJ2Qw8ORrUE83nQRcKS
+	 EGBRLexSqCGsQ58h32S9cxnXbX3I41ovT2gNj9ron0zEhfe44ir5MSLNorKICf58Yv
+	 HU1F7dEs5GXOw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 29 Jun 2025 14:37:51 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next 2/2] net: dsa: mv88e6xxx: Use kcalloc()
+Date: Sun, 29 Jun 2025 14:35:50 +0200
+Message-ID: <2f4fca4ff84950da71e007c9169f18a0272476f3.1751200453.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
+References: <46040062161dda211580002f950a6d60433243dc.1751200453.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,62 +57,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-The regulator-compatible property has never existed in the
-regulator/fcs,fan53555.yaml binding, so drop it.
+Use kcalloc() instead of hand writing it. This is less verbose.
 
-This fixes the following DTB validation warnings:
+Also move the initialization of 'count' to save some LoC.
 
-  Unevaluated properties are not allowed
-  ('regulator-compatible' was unexpected)
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  18652	   5920	     64	  24636	   603c	drivers/net/dsa/mv88e6xxx/devlink.o
 
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  18498	   5920	     64	  24482	   5fa2	drivers/net/dsa/mv88e6xxx/devlink.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts   | 2 --
- arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts | 2 --
- 2 files changed, 4 deletions(-)
+Compile tested only
+---
+ drivers/net/dsa/mv88e6xxx/devlink.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-index 81c4fcb30f39..352c8efb37e0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-@@ -211,7 +211,6 @@ &i2c0 {
- 	vdd_cpu_b: syr827@40 {
- 		compatible = "silergy,syr827";
- 		reg = <0x40>;
--		regulator-compatible = "fan53555-reg";
- 		pinctrl-0 = <&vsel1_pin>;
- 		regulator-name = "vdd_cpu_b";
- 		regulator-min-microvolt = <712500>;
-@@ -229,7 +228,6 @@ regulator-state-mem {
- 	vdd_gpu: syr828@41 {
- 		compatible = "silergy,syr828";
- 		reg = <0x41>;
--		regulator-compatible = "fan53555-reg";
- 		pinctrl-0 = <&vsel2_pin>;
- 		regulator-name = "vdd_gpu";
- 		regulator-min-microvolt = <712500>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-index 15da5c80d25d..962b8b231c96 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-4c-plus.dts
-@@ -421,7 +421,6 @@ vdd_cpu_b: regulator@40 {
- 		compatible = "silergy,syr827";
- 		reg = <0x40>;
- 		fcs,suspend-voltage-selector = <1>;
--		regulator-compatible = "fan53555-reg";
- 		pinctrl-0 = <&vsel1_gpio>;
- 		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
- 		regulator-name = "vdd_cpu_b";
-@@ -440,7 +439,6 @@ vdd_gpu: regulator@41 {
- 		compatible = "silergy,syr828";
- 		reg = <0x41>;
- 		fcs,suspend-voltage-selector = <1>;
--		regulator-compatible = "fan53555-reg";
- 		pinctrl-0 = <&vsel2_gpio>;
- 		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
- 		regulator-name = "vdd_gpu";
+diff --git a/drivers/net/dsa/mv88e6xxx/devlink.c b/drivers/net/dsa/mv88e6xxx/devlink.c
+index aec652e33fc1..da69e0b85879 100644
+--- a/drivers/net/dsa/mv88e6xxx/devlink.c
++++ b/drivers/net/dsa/mv88e6xxx/devlink.c
+@@ -376,19 +376,14 @@ static int mv88e6xxx_region_atu_snapshot(struct devlink *dl,
+ 	struct dsa_switch *ds = dsa_devlink_to_ds(dl);
+ 	struct mv88e6xxx_devlink_atu_entry *table;
+ 	struct mv88e6xxx_chip *chip = ds->priv;
+-	int fid = -1, err = 0, count;
++	int fid = -1, err = 0, count = 0;
+ 
+-	table = kmalloc_array(mv88e6xxx_num_databases(chip),
+-			      sizeof(struct mv88e6xxx_devlink_atu_entry),
+-			      GFP_KERNEL);
++	table = kcalloc(mv88e6xxx_num_databases(chip),
++			sizeof(struct mv88e6xxx_devlink_atu_entry),
++			GFP_KERNEL);
+ 	if (!table)
+ 		return -ENOMEM;
+ 
+-	memset(table, 0, mv88e6xxx_num_databases(chip) *
+-	       sizeof(struct mv88e6xxx_devlink_atu_entry));
+-
+-	count = 0;
+-
+ 	mv88e6xxx_reg_lock(chip);
+ 
+ 	while (1) {
 -- 
 2.50.0
 
