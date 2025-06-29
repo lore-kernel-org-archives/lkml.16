@@ -1,201 +1,145 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE5A8828;
-	Sun, 29 Jun 2025 05:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6654CEC4;
+	Sun, 29 Jun 2025 05:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751173939; cv=none; b=LFw95y+EYcBQcjU0E4/iGbo05EWOx1fBKp+noYVODmelBM3An1/YtvuGx19TAHVaqCUyTxIrPNn0r0g0/DJF1stT2s9uPE8l08oZZ3sd+0z4CeaFQagHjuG++pnkiOVE9CV03xga+sFHhAoh+1Ueeh654OvZWDZdUlqNsuLolSg=
+	t=1751174201; cv=none; b=Op4ZB+4QFHJRXJ7YpQE6lAPaYulcK1SsqpladRF9pd2Fu+YB/Uy4r+igU7rUhPvjY/cRAglWTrWef9ON8x1jIh9l4Qw+whmUMy+YuaPJPj/A3n8Eltzqzdapjpi3vmeliPX50B7RuxwQwGwJDfiH2dZ+v39zRYI3iZAOoyo1iHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751173939; c=relaxed/simple;
-	bh=XtKm9MzaMMKCQCHVB6NS44kaGUuKeXWYQRj/kIGuCtM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzkUtABzpcN7492Xrl1TZopoq1E0fyH75WG1HbN5V7xjchAPI38Wq9RFIw0/nC+8h/ReeWjnlCovXcWW0AhUdwU2UtN1E5xdcMORGe+sXLIEACBqs2eUPiIEu1taImNkln8k0cOIB5f8+ZzVoRDXUHvnBfv3rkL12o34XzHF8KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i54As7BC; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751174201; c=relaxed/simple;
+	bh=5YCtt4xWoE2sFZbqLhmFUZNY5xZBfrLF3umVblZJwhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GPuZ1qEjmHSOOLSiRu3nv5UYoOX6prmBW4ZneUgxEHvTiYIKGG8T5nR1dNEkM2Mc/jmitDPUS7/dGHNMjwe01rbHV7RWvEw/aCBmgRy0vuPLsqcy8RR8+JuZeMnhmAInKXlgcI3rl/N60qZ3Y7uvL1xu8EW/27o21WeX1Jvl6F0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=maTAq/EX; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i54As7BC"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23602481460so33255855ad.0;
-        Sat, 28 Jun 2025 22:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751173936; x=1751778736; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7F3Pv2rCP7Rpo2SyClKZWeBeyiOZmEIiG65XSCku3Co=;
-        b=i54As7BCCEHDL7bpW5YaB+HBRBJyTHbjnOb7J4/2nH3qQz5dQViKEs+yFHdlt2HZrU
-         8T4IsLrxB8QrWomUipLPkfjx+AFP3b/g5veZ67Xc6JJai3PYeBG91vcWLBkJJUtPhrVh
-         yqmP1bbNoo/crCaSoSl616l03DGX9ZJHhkFQF/SQNCOaGKe7t4ZIIeWeNcbeL2PDlWrf
-         adCXGWkT17+nHMqDX/8fADAChG7329Y+c+BpWTymVLMqFCJVSlAx+Mha/ijtGWo9q4gG
-         jWWO9QdRLDKFwgMEyAkdN44Gw5D8gWGWL0LiTbHmz/TA2qeyJ2johot9R51iQ75Z4lbO
-         Mx+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751173936; x=1751778736;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7F3Pv2rCP7Rpo2SyClKZWeBeyiOZmEIiG65XSCku3Co=;
-        b=NSv10PGDuDDaf/fF9mWqvu5Cz393OJ34RZ8pigCSgSAVDFoLjM/ZFoPQ/DNycRFr9m
-         gSTRlAKmf94lkc752gM8rucUh457XPehvT8DeRQr5u13jgbw5UROGOCkR9Hy+AUEOcAz
-         0+xGJGrvqUmA/KRrii8CyFZ8hMyMfy3KptgU1fOp7UaZ2nsZty2JNCjrLeh7lKyKqeWU
-         z/bgA6DaHedi8uSw54juIsM1g2h17hqv1nTbFbrtleroPYiQWqw3hgwQDh5Dr/cEPzhB
-         BdTbqZ5EjT3s2qffu9XVoeXixFqteb6xeJitVwnv/iC1Sr9Of37pT6XfepJVepBAEq12
-         8C8A==
-X-Forwarded-Encrypted: i=1; AJvYcCW5i7cvADtrPPoHsZ2NWl7papDV6/OcxRI3St7i/OkocQdaMHCZDpEeDnzJ0jXNVD2KoA/5m/NwJzR4QyE=@vger.kernel.org, AJvYcCWhR+Lw3OQe8gM5jYJKN8BYOM/chQmaGJbVB/11iFXsR5jBavCfwUaBSwEgDK5Tdi4DLUAZHWsMgKYa@vger.kernel.org, AJvYcCXNWHVjuTnWlcqQdbcSLn0FIi1sphGDOiJcrc7wQH+Bfa+HwrmZg1+bvvZSM29DNI+kRlSuYrdTkrfYp+Mh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7yxRB0g5V/NAFI6F4vOnlYR8JFkIz8EY0PxdJFwW5QinTA2bi
-	LAU3LH6mpyxBdixnCpd0Nb8nKyOhC9khRek1+4c9cPjcVJ9W0hyQ0mrF4HoocA==
-X-Gm-Gg: ASbGncvpYT40DQ+kN7eQn3i5NsF1dhtc951x9JK+vRNQK/W2kf7+sjNqni8e27CVpFQ
-	8dtjZXAwYto1qa3+iQpQrey9DcYG7pelbj+7qYCb8tXacR+dSbKV++IH43uaVU0may5EgDglgOJ
-	oR0QLw0dF6JPnhIXatliKGasFGRsl+MpJfEPaheC1BqOd0xcxiztN1jSAPDs8pxVMDyOaD43ILE
-	IodCNizgJmYrdX1fazuzjV50xgHMpLU8ZUqIIBweAQXThedBB90gmvEvDmGPYz0SfDc/pBFTxL2
-	5a/58iVpFpZl+9s1G2iyVs7l49mFcUUi+6bzcR2lRThm8Dx9OeQ095K1Q9TiSIg=
-X-Google-Smtp-Source: AGHT+IHn4CsXslZ+uLe2cnLYWIMYSvRYpTKVs33Xm+02bohD0toNcwhmjnrHFANTn6fks+FtiuvhkA==
-X-Received: by 2002:a17:903:3c50:b0:234:914b:3841 with SMTP id d9443c01a7336-23ac460837dmr123310865ad.39.1751173935915;
-        Sat, 28 Jun 2025 22:12:15 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:d8da:e3e0:2b93:2315])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3bc406sm50031315ad.195.2025.06.28.22.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jun 2025 22:12:15 -0700 (PDT)
-Date: Sat, 28 Jun 2025 22:12:12 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Sangwon Jee <jeesw@melfas.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 3/5] Input: melfas-mip4 - add support for touchkey
- input events
-Message-ID: <ugwy3adqmxodsyhohpdv337lvbxpdzhgtojpbtrykkuyf2eivl@sl36qsvcju6v>
-References: <20250613-mip4-touchkey-v2-0-9bbbe14c016d@disroot.org>
- <20250613-mip4-touchkey-v2-3-9bbbe14c016d@disroot.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="maTAq/EX"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55T01Ivl011733;
+	Sun, 29 Jun 2025 05:16:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=PF3DZSZbA4tBUtEFvdIVO9kArXETg
+	OS8vUkIBIamiuY=; b=maTAq/EX1k5GlkKyZO1ehQsgN3jQR6Nv7VD9+jJer3dyL
+	KMJzWSfGNnjVkd0FMYct8WckbAdjjoqOzitmqTKDWKQQ4NLtzGDZxkq5b8rHlZB0
+	auvO/Pvgqa2QzYiOdJg0+mH7QUoY1+C3QX9f+y/6y2kfrNqbFkzwvyDOjQ9YV9lC
+	/rViAfbMq+NWfngAxp5UZ75eVPhWd0xwmehkXVj6ieRbRrN3zmQT2nHdnbCV5ly4
+	D+0UotUYLjoh9hk5zq48bY0udJ7vQZEy9VHNxfXX+J8JiE9ZoKh1i3ZE2IN1kcml
+	SZwrEPmLSBQtIEnkW2+Uttoth4pDcb1tW5L4H20Og==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j7af0u4x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 29 Jun 2025 05:16:19 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55T57ZGT038552;
+	Sun, 29 Jun 2025 05:16:10 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u78t87-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 29 Jun 2025 05:16:10 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55T5BM8A020395;
+	Sun, 29 Jun 2025 05:16:09 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u78t82-1;
+	Sun, 29 Jun 2025 05:16:09 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: sgoutham@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        horms@kernel.org, netdev@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] net: thunderx: avoid direct MTU assignment after WRITE_ONCE()
+Date: Sat, 28 Jun 2025 22:15:37 -0700
+Message-ID: <20250629051540.518216-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613-mip4-touchkey-v2-3-9bbbe14c016d@disroot.org>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506290041
+X-Proofpoint-ORIG-GUID: E4FMocrkEVo34wSxTFAcXpK3dmRZfjCk
+X-Proofpoint-GUID: E4FMocrkEVo34wSxTFAcXpK3dmRZfjCk
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDA0MiBTYWx0ZWRfX1XzUF28HmOio 3Rmpgb3lys6DDXLsPaDs2C8BdToQupenPxVwilEZUjN6j1z+mgE3cV+C17Gs/h/KsHwZwlzlQk3 Dz0sbvmmGSeLKzlFlN7i3+jBAedgCI5s/9Dn7BvnQgjAwmRY7Ao5AmNydKibehN+tnwr+1zhWX1
+ kWNcaOY0pO8H1nbC0VOYgnqrszm/vi0ryUWmGbXeoFdVn42Te73mcy6CyaWHbKBK/+VHCjvsKmF mKR0uEhZMq+Bazpseg6BOue+YtJevqe2DjOscAlg4PCJh3FLfsvupHT17mJj4hNP5ns/l9r0TEd C7fXIudW81WXFZGrI1ZBPaRgE0tDAbP055bofUCtw4kBj9Rcq3ZDGocNL/3NYGbQbtr3dsdl38j
+ Tflqtq0xuuZjKuDJ0ARtF5I0GEOmdBPvYFV+wEEJwgHWsuKGu+lj0p/rNNyOkYDa9IftfG6H
+X-Authority-Analysis: v=2.4 cv=b5Cy4sGx c=1 sm=1 tr=0 ts=6860cc23 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=Heg8zcIur3sJgoQ754cA:9
 
-Hi Kaustabh,
+The current logic in nicvf_change_mtu() writes the new MTU to
+netdev->mtu using WRITE_ONCE() before verifying if the hardware
+update succeeds. However on hardware update failure, it attempts
+to revert to the original MTU using a direct assignment
+(netdev->mtu = orig_mtu)
+which violates the intended of WRITE_ONCE protection introduced in
+commit 1eb2cded45b3 ("net: annotate writes on dev->mtu from
+ndo_change_mtu()")
 
-On Fri, Jun 13, 2025 at 01:11:35AM +0530, Kaustabh Chakraborty wrote:
-> The MIP4 protocol are supposed to support touchscreens, touchkeys, and
-> combo-devices. The driver handles touchscreen events, but touchkey
-> events are unimplemented.
+Additionally, WRITE_ONCE(netdev->mtu, new_mtu) is unnecessarily
+performed even when the device is not running.
 
-I am confused, because I clearly see the driver parsing and forwarding
-key events. It appears that this patch adds the ability to set the
-keymap via device tree instead of relying on userspace to load it.
+Fix this by:
+  Only writing netdev->mtu after successfully updating the hardware.
+  Skipping hardware update when the device is down, and setting MTU
+  directly.
+  Remove unused variable orig_mtu.
 
-Please adjust the patch description.
+This ensures that all writes to netdev->mtu are consistent with
+WRITE_ONCE expectations and avoids unintended state corruption
+on failure paths.
 
-> 
-> Implement them. If compiled with devicetree support, the driver attempts
-> to retrieve keycodes from a property named "linux,keycodes".
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  drivers/input/touchscreen/melfas_mip4.c | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
-> index a6946e3d8376d7e9b4c26f4194409e0ba78bb075..061ac353bc7a2e28f17581411af81f35c89733a1 100644
-> --- a/drivers/input/touchscreen/melfas_mip4.c
-> +++ b/drivers/input/touchscreen/melfas_mip4.c
-> @@ -169,7 +169,7 @@ struct mip4_ts {
->  	unsigned int event_format;
->  
->  	unsigned int key_num;
-> -	unsigned short key_code[MIP4_MAX_KEYS];
-> +	unsigned int key_code[MIP4_MAX_KEYS];
->  
->  	bool wake_irq_enabled;
->  
-> @@ -337,8 +337,13 @@ static int mip4_query_device(struct mip4_ts *ts)
->  			ts->ppm_x, ts->ppm_y);
->  
->  		/* Key ts */
-> -		if (ts->node_key > 0)
-> +		if (ts->node_key > MIP4_MAX_KEYS) {
-> +			dev_warn(&ts->client->dev,
-> +				"Too many keys (%u) found\n", ts->node_key);
-> +			ts->key_num = MIP4_MAX_KEYS;
-> +		} else {
->  			ts->key_num = ts->node_key;
-> +		}
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+Note: This change is not tested due to hardware availability.
+v1 -> v2
+remove unused variable orig_mtu.
+---
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-I believe this is a bugfix. Please extract it into a separate patch.
-
->  	}
->  
->  	/* Protocol */
-> @@ -1080,6 +1085,7 @@ static int mip4_flash_fw(struct mip4_ts *ts,
->  			 const u8 *fw_data, u32 fw_size, u32 fw_offset)
->  {
->  	struct i2c_client *client = ts->client;
-> +	unsigned int i;
->  	int offset;
->  	u16 buf_addr;
->  	int error, error2;
-> @@ -1149,6 +1155,11 @@ static int mip4_flash_fw(struct mip4_ts *ts,
->  	input_abs_set_res(ts->input, ABS_X, ts->ppm_x);
->  	input_abs_set_res(ts->input, ABS_Y, ts->ppm_y);
->  
-> +	for (i = 0; i < ts->key_num; i++) {
-> +		if (ts->key_code[i])
-> +			input_set_capability(ts->input, EV_KEY, ts->key_code[i]);
-> +	}
-> +
->  	return error ? error : 0;
->  }
->  
-> @@ -1425,6 +1436,7 @@ static int mip4_probe(struct i2c_client *client)
->  {
->  	struct mip4_ts *ts;
->  	struct input_dev *input;
-> +	unsigned int i;
->  	int error;
->  
->  	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-> @@ -1471,6 +1483,17 @@ static int mip4_probe(struct i2c_client *client)
->  
->  	input_set_drvdata(input, ts);
->  
-> +#ifdef CONFIG_OF
-> +	error = of_property_read_u32_array(client->dev.of_node, "linux,keycodes",
-> +					   ts->key_code, ts->key_num);
-> +	if (error && ts->key_num) {
-> +		dev_warn(&client->dev,
-> +			 "Failed to get codes for %u supported keys", ts->key_num);
-> +		/* Disable touchkey support */
-> +		ts->key_num = 0;
-> +	}
-
-Please use generic device properties (device_property_read_u32_array())
-and drop the dependency on OF.
-
-> +#endif
-> +
->  	input->keycode = ts->key_code;
->  	input->keycodesize = sizeof(*ts->key_code);
->  	input->keycodemax = ts->key_num;
-> @@ -1491,6 +1514,11 @@ static int mip4_probe(struct i2c_client *client)
->  	if (error)
->  		return error;
->  
-> +	for (i = 0; i < ts->key_num; i++) {
-> +		if (ts->key_code[i])
-> +			input_set_capability(input, EV_KEY, ts->key_code[i]);
-> +	}
-> +
->  	i2c_set_clientdata(client, ts);
->  
->  	error = devm_request_threaded_irq(&client->dev, client->irq,
-> 
-
-Thanks.
-
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+index aebb9fef3f6eb..633244bc00f35 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -1578,7 +1578,6 @@ int nicvf_open(struct net_device *netdev)
+ static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
+ {
+ 	struct nicvf *nic = netdev_priv(netdev);
+-	int orig_mtu = netdev->mtu;
+ 
+ 	/* For now just support only the usual MTU sized frames,
+ 	 * plus some headroom for VLAN, QinQ.
+@@ -1589,16 +1588,18 @@ static int nicvf_change_mtu(struct net_device *netdev, int new_mtu)
+ 		return -EINVAL;
+ 	}
+ 
+-	WRITE_ONCE(netdev->mtu, new_mtu);
+ 
+-	if (!netif_running(netdev))
++	if (!netif_running(netdev)) {
++		WRITE_ONCE(netdev->mtu, new_mtu);
+ 		return 0;
++	}
+ 
+ 	if (nicvf_update_hw_max_frs(nic, new_mtu)) {
+-		netdev->mtu = orig_mtu;
+ 		return -EINVAL;
+ 	}
+ 
++	WRITE_ONCE(netdev->mtu, new_mtu);
++
+ 	return 0;
+ }
+ 
 -- 
-Dmitry
+2.46.0
+
