@@ -1,96 +1,85 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B9D22068D;
-	Sun, 29 Jun 2025 16:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252D41FE45D;
+	Sun, 29 Jun 2025 16:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751216259; cv=none; b=jPTgdlpS9qgVrEj9aSPe7N4T+QiBW3Fu2QlZuGdfFaNgtILrV4Bw0+9HvFlZrUXGAftsQmGWsGazT5+PRYoYMUap891kXxNwE4xPduHD66R6LntbyT60wJtgaqS39kRLXi459Lq3lo2bAdC7rmpu1crUn3YZUPCD5Awv6T3AfR0=
+	t=1751216324; cv=none; b=nvqs1DtarhHdLqe41Iz24MvtMXRRXWWBUkWOipYgIMoSERIMJTqfPXnpLmK+240in+gWHwr1WeVvk6SakotQk2PfbVkoBFJTCPk6/yARB3pF7ZRiwVl7QgQxgOuDOuAT2DmU/Kbb1j5r8pkzSY4JR/h/A7Jc0tSJw2Cz5u+AvWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751216259; c=relaxed/simple;
-	bh=I+m7xtfhA0bWz2NTBp6lDxrrtJNJmzFJVavRI/w18WM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJBMwyQqN+i9o0J7McoOz0+nsMAoshbUD6eAOWaZmiDDIXWR6VdZuv6/NWTBR0G3l4a5NDKb+CGp5bdvCw07SIsEk30ouBHiXEqhmiNaPiDM91BeANRJqM5tRZVpexu2qXgZsky6P884LdTqcwwemkTSBjndl6BnBF7v6eLF/WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=McEQ+5tG; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751216324; c=relaxed/simple;
+	bh=AZL07K9yhl1TMeuWuZEjnE6P0P1K6QtCGjf46WWEoC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pZz0m5hF+9ScHXIHLo5SveJYwClTFOKdG4Hg83T+CYNmLEaKxSvmDli/gAY9ahz/b5NfSpVFnV/GAg0r+79SO0k1XYdbJJaMCYPF4JaODr8zjmfcRffXa67oUuqClG+lQQQxyY0aE8fPizkwIZaIbyqOFkVzkD2J83jWKUeKt3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaH86OP5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="McEQ+5tG"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 12124C67;
-	Sun, 29 Jun 2025 18:57:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751216235;
-	bh=I+m7xtfhA0bWz2NTBp6lDxrrtJNJmzFJVavRI/w18WM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=McEQ+5tGnCvWD80eOM6m3saeo4I1DcjbTZDIVuugQa6cpuD6pZB/NYD84on9ZMG8N
-	 6OQwP3BBOb+Ui3jxagsUOzrg1sMZCQdpqIL39lZT6sDjqdy2oKnOqCHkZi07e0Lu13
-	 NfmWJEuM+vlf9nhOzmZGQiD/Zskk7ckjjy42vQc0=
-Date: Sun, 29 Jun 2025 19:57:12 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: git@apitzsch.eu
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Ricardo Ribalda <ribalda@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] media: i2c: imx214: Drop dev argument from
- imx214_parse_fwnode()
-Message-ID: <20250629165712.GJ24912@pendragon.ideasonboard.com>
-References: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
- <20250629-imx214_fixes-v1-2-873eb94ad635@apitzsch.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaH86OP5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E1FC4CEEB;
+	Sun, 29 Jun 2025 16:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751216324;
+	bh=AZL07K9yhl1TMeuWuZEjnE6P0P1K6QtCGjf46WWEoC8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NaH86OP5kqYk12JmPlqTGeuB12jVCDChXp6Xcc3hJta5KXear6On9pgzPg842rH8Q
+	 jK+3+FQur9MV4FMQ5bS/dYZjV1yAyfb5gkG+jRySjY9DALSTvQk6StpdgyirhjZBuH
+	 Nc9MXk+eGZpXnhC2lQw51jAOOMQvCGiyoFeH77I6ZY5fi6ag1I5/IPCQu8xuTIy2Vn
+	 ek+iEqGDOyfhnNWI5vPmCxf7XIFSm5B6TK4/hZZwhQGSmx0t6ZKRk6gJuT4OM0F/l4
+	 cm5QqrjH88YnLZkZD7gZzE4Na46jktxLVs/FwqFXQiS5nSTOwrgjhb+7EB4turC4LF
+	 UQebrOjqaYyRw==
+Date: Sun, 29 Jun 2025 17:58:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: qcom-vadc: make scale_adc5_fn const
+Message-ID: <20250629175837.694d3aeb@jic23-huawei>
+In-Reply-To: <20250628-iio-const-data-9-v1-1-188ca6e904ee@baylibre.com>
+References: <20250628-iio-const-data-9-v1-1-188ca6e904ee@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250629-imx214_fixes-v1-2-873eb94ad635@apitzsch.eu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 29, 2025 at 04:49:21PM +0200, André Apitzsch via B4 Relay wrote:
-> From: André Apitzsch <git@apitzsch.eu>
+On Sat, 28 Jun 2025 11:36:01 -0500
+David Lechner <dlechner@baylibre.com> wrote:
+
+> Add const qualifier to struct qcom_adc5_scale_type scale_adc5_fn[]. This
+> is read-only data so it can be made const.
 > 
-> The device can be accessed from struct imx214.
-> 
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+Applied to the testing branch of iio.git. I'll let 0-day poke at it for a
+while so there is time for additional review if I've missed something.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Thanks,
 
+J
 > ---
->  drivers/media/i2c/imx214.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/iio/adc/qcom-vadc-common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 8e9b5c9c93b0888f3d6be857168711edaf050db3..d9193bafa3cbb8fec2679200c38d30077d1b11bd 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -1324,10 +1324,11 @@ static int imx214_identify_module(struct imx214 *imx214)
->  	return 0;
->  }
+> diff --git a/drivers/iio/adc/qcom-vadc-common.c b/drivers/iio/adc/qcom-vadc-common.c
+> index d5209f32adb3e265acd51d56dda32e6d0be42e21..b03cf584b1657ed39a325fcdbdd9dea96f171f8b 100644
+> --- a/drivers/iio/adc/qcom-vadc-common.c
+> +++ b/drivers/iio/adc/qcom-vadc-common.c
+> @@ -330,7 +330,7 @@ static int qcom_vadc7_scale_hw_calib_die_temp(
+>  				const struct adc5_data *data,
+>  				u16 adc_code, int *result_mdec);
 >  
-> -static int imx214_parse_fwnode(struct device *dev, struct imx214 *imx214)
-> +static int imx214_parse_fwnode(struct imx214 *imx214)
->  {
->  	struct v4l2_fwnode_endpoint *bus_cfg = &imx214->bus_cfg;
->  	struct fwnode_handle *endpoint;
-> +	struct device *dev = imx214->dev;
->  	unsigned int i;
->  	int ret;
->  
-> @@ -1415,7 +1416,7 @@ static int imx214_probe(struct i2c_client *client)
->  		return dev_err_probe(dev, PTR_ERR(imx214->regmap),
->  				     "failed to initialize CCI\n");
->  
-> -	ret = imx214_parse_fwnode(dev, imx214);
-> +	ret = imx214_parse_fwnode(imx214);
->  	if (ret)
->  		return ret;
->  
+> -static struct qcom_adc5_scale_type scale_adc5_fn[] = {
+> +static const struct qcom_adc5_scale_type scale_adc5_fn[] = {
+>  	[SCALE_HW_CALIB_DEFAULT] = {qcom_vadc_scale_hw_calib_volt},
+>  	[SCALE_HW_CALIB_THERM_100K_PULLUP] = {qcom_vadc_scale_hw_calib_therm},
+>  	[SCALE_HW_CALIB_XOTHERM] = {qcom_vadc_scale_hw_calib_therm},
+> 
+> ---
+> base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
+> change-id: 20250628-iio-const-data-9-688cc6e2c7a0
+> 
+> Best regards,
 
--- 
-Regards,
-
-Laurent Pinchart
