@@ -1,214 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1B61BC58
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 04:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C981993A3;
+	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751171388; cv=none; b=NBDnmpb3K+J4hWycW+yC1nS/YIBsRolZg/qQQlq1Pzkj5y6cP3On6HN6YmJZgPKKhTfiLWvj+C7oBEvFHTEqf1GyqnGsCWaZNCMX/Q09f9oj9DNuU/NQKb2gAUiXErJeLOSI1U+ZaXKxPjOtmy/sDEjORSmaxPeqMaWT1S4BRts=
+	t=1751172311; cv=none; b=RFOZWDm8nuWqdhsvj2xYbidunwxHE4z/tLwULHqriftlgrFQhl1wJ0CqGL0qFxFBKxTSWI1IM0KqRdRCa5K4lm6KiyOyE8TC3Mu+uI3ICOPj25DBQ5Xu7LwAVmjeJalWkiCGTtf7LRc+pBJnMOs73scAWFXQWfUGl/iT75p7XLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751171388; c=relaxed/simple;
-	bh=LURnPW+ypsPJkPb48VBC6R/QGOcD1K8RaK8gmyVkhXY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IL5jhBlAXx0AorE+9phoG7MlWUrcgfP6Jhaa3Xg35l4fM/08MFZ2XGTqzLkWLuS7nM6flAkgv3GbDBwOjv/IK8ubga3FyOPf0bJksHxoHK/PFdR1qzFIVv87TaVtEyn+xfD9tcZr53bjBR4eGGBfvAIvsb5CzlSngbvUGMBLRIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NyaoQD5b; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751172311; c=relaxed/simple;
+	bh=zSHtudQhspfSSyLk8tdd0fX3l7uamn9t+KhKu8UZiCY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WBQCtCSBmozQTxPf7liqLSsAMmOKL+qZ1R2GRrxFPREz78LQ7Y3mceWc0RV3r8tgmGmK//xpFwkv0PULZvcWg8RvYxX5LchwHMh5IeXmmSy9QZfdXxU16/vAr0I4R2ETSFzvsVakcDVc/Qy97AsPOys4lz91y5ftHlaynti7CKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUakTEYO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NyaoQD5b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751171386; x=1782707386;
-  h=date:from:to:cc:subject:message-id;
-  bh=LURnPW+ypsPJkPb48VBC6R/QGOcD1K8RaK8gmyVkhXY=;
-  b=NyaoQD5bRvLExmOaQhAOtHmNbk/nmxiqpQsat6l9BL85Kvha22Q5iZud
-   79xJC16FkFBKgNISG55rnC8TD3n42mNaKnz7Zreapulwv3nYfYcUcF4xy
-   0FJmClczPOq2T4x9X4Dal+LfVc1RWwyP73zpDnlL5CZehT82CsfVnrBGt
-   BrOGwy29oOK9WrG1pEc176hZpaTdwbTA4WDkubeimrvYaVunskk5xlCpf
-   oTNTNc8ufqbCePNdW9qeqdoAZ9/1ul6qZtEltXmHv+mXPJB7pTumI41Pi
-   bONYCqnS47nFXo6eqchm8Nvews1BHuZWMeNbeLOL1WGMZKhP87+/c/On2
-   Q==;
-X-CSE-ConnectionGUID: iCiqisGnT+qm3jucBP9XBw==
-X-CSE-MsgGUID: LYZtuealTeSodELO0lNCjQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11478"; a="78866638"
-X-IronPort-AV: E=Sophos;i="6.16,274,1744095600"; 
-   d="scan'208";a="78866638"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2025 21:29:45 -0700
-X-CSE-ConnectionGUID: BRec4vmFRaubBO7r59ESiw==
-X-CSE-MsgGUID: mea/31pjSj2QOMrYzxKvBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,274,1744095600"; 
-   d="scan'208";a="157675660"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 28 Jun 2025 21:29:44 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVjfh-000Xf5-1z;
-	Sun, 29 Jun 2025 04:29:41 +0000
-Date: Sun, 29 Jun 2025 12:28:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 4da71e9f8939987cd2063e0b2ab5bb5eafc80a87
-Message-ID: <202506291240.N75YsYEW-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUakTEYO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A3B2C4CEEB;
+	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751172310;
+	bh=zSHtudQhspfSSyLk8tdd0fX3l7uamn9t+KhKu8UZiCY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=AUakTEYOrNRL3YRUTzdJ8rMB6j5/WkxQhNFEPQ4g49jgbBZY3rZZFyU4EpCrIuSHv
+	 aE0PB4jugiwoBjDkrYpCGR/enVus4FwLuamJYcWuN/b8JoI3rJOk1kmmHI8g2GR6Hb
+	 7JqKgBHRapwAsJTHG9nQ/3KJfTH9WWngTlL6zGmNpGXqH5Sq7dY7JCfvZBxKxU4dLo
+	 sP93xyjaffny7WnQjvduzWDYiRhsn3gvmCmLSTBR30yM7V+U2QAHHiPd70uYXi77rD
+	 C0xjYSFwOm+NtSKA/oCbkMZbkg0Y47wvuEwz7gNutH59EdFMVGqmQW4vKZJyEpLY+3
+	 OX+wkQT3r8Ptg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3ACC83026;
+	Sun, 29 Jun 2025 04:45:10 +0000 (UTC)
+From: Cristian Cozzolino via B4 Relay <devnull+cristian_ci.protonmail.com@kernel.org>
+Subject: [PATCH v4 0/3] Add initial device tree for Billion Capture+
+Date: Sun, 29 Jun 2025 08:44:36 +0200
+Message-Id: <20250629-rimob-initial-devicetree-v4-0-7cf84fa142af@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANTgYGgC/43NQQqDMBCF4atI1k2JSYy2q96jdBGTSR1QI4lIi
+ 3j3RldCi3T5D7xvZhIhIERyzWYSYMKIvk8hTxkxje6fQNGmJpzxginOaMDO1xR7HFG31KaJgTE
+ AUKsrpYvaOVPVJM2HAA5fG31/pG4wjj68t09Tvl7/QKecMlqBUiVonruK34bgR993Gtuz8R1Z5
+ YnvNXmg8aQJ6RSTBdRGsJ+a2GvqQBNJkywvtbk4exH2S1uW5QP44IVpYQEAAA==
+X-Change-ID: 20250620-rimob-initial-devicetree-da86a5bffc8b
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, 
+ Cristian Cozzolino <cristian_ci@protonmail.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751179514; l=1750;
+ i=cristian_ci@protonmail.com; s=20250620; h=from:subject:message-id;
+ bh=zSHtudQhspfSSyLk8tdd0fX3l7uamn9t+KhKu8UZiCY=;
+ b=rhvxuydmL5s0TYucKsFuKoDAlvODOBD28ksHeqhEra0+S99uWxSS14Nd9I66CJ80e30IjdeJq
+ nxAhVzNGdp5C/W/iMeacQD994ZJE+ffXsAScpapDKT7TawejYIEFNp3
+X-Developer-Key: i=cristian_ci@protonmail.com; a=ed25519;
+ pk=xH5IvIPUNHV1Q8R0/pq2CfuVFR/wTiAyuyi6IwedjZY=
+X-Endpoint-Received: by B4 Relay for cristian_ci@protonmail.com/20250620
+ with auth_id=438
+X-Original-From: Cristian Cozzolino <cristian_ci@protonmail.com>
+Reply-To: cristian_ci@protonmail.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: 4da71e9f8939987cd2063e0b2ab5bb5eafc80a87  Merge x86/sev into tip/master
+Billion Capture+ is a handset using the MSM8953 SoC released in 2017
+and sold by Flipkart.
 
-elapsed time: 976m
+Add a device tree with initial support for:
 
-configs tested: 137
-configs skipped: 7
+- GPIO keys
+- SDHCI (internal and external storage)
+- USB Device Mode
+- Regulators
+- Simple framebuffer
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
+---
+Changes in v4:
+- pick up tags (Rob);
+- Link to v3: https://lore.kernel.org/r/20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                         haps_hs_defconfig    gcc-15.1.0
-arc                        nsim_700_defconfig    gcc-15.1.0
-arc                   randconfig-001-20250628    gcc-8.5.0
-arc                   randconfig-002-20250628    gcc-15.1.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-21
-arm                          pxa3xx_defconfig    clang-21
-arm                   randconfig-001-20250628    gcc-12.4.0
-arm                   randconfig-002-20250628    clang-21
-arm                   randconfig-003-20250628    clang-17
-arm                   randconfig-004-20250628    clang-17
-arm                         s5pv210_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250628    gcc-14.3.0
-arm64                 randconfig-002-20250628    clang-21
-arm64                 randconfig-003-20250628    clang-21
-arm64                 randconfig-004-20250628    clang-17
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250628    gcc-14.3.0
-csky                  randconfig-002-20250628    gcc-14.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250628    clang-21
-hexagon               randconfig-002-20250628    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250628    clang-20
-i386        buildonly-randconfig-002-20250628    clang-20
-i386        buildonly-randconfig-003-20250628    gcc-12
-i386        buildonly-randconfig-004-20250628    clang-20
-i386        buildonly-randconfig-005-20250628    clang-20
-i386        buildonly-randconfig-006-20250628    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-15.1.0
-loongarch                         allnoconfig    gcc-15.1.0
-loongarch             randconfig-001-20250628    gcc-12.4.0
-loongarch             randconfig-002-20250628    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                        bcm63xx_defconfig    clang-21
-mips                         bigsur_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250628    gcc-8.5.0
-nios2                 randconfig-002-20250628    gcc-9.3.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250628    gcc-8.5.0
-parisc                randconfig-002-20250628    gcc-12.4.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                     akebono_defconfig    clang-21
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-21
-powerpc                     ep8248e_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250628    gcc-8.5.0
-powerpc               randconfig-002-20250628    clang-19
-powerpc               randconfig-003-20250628    clang-21
-powerpc                     redwood_defconfig    clang-21
-powerpc64             randconfig-001-20250628    clang-20
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250628    clang-21
-riscv                 randconfig-002-20250628    clang-16
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250628    clang-21
-s390                  randconfig-002-20250628    gcc-11.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250628    gcc-15.1.0
-sh                    randconfig-002-20250628    gcc-9.3.0
-sh                          rsk7269_defconfig    gcc-15.1.0
-sh                      rts7751r2d1_defconfig    gcc-15.1.0
-sh                        sh7757lcr_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20250628    gcc-8.5.0
-sparc                 randconfig-002-20250628    gcc-12.4.0
-sparc64                             defconfig    gcc-15.1.0
-sparc64               randconfig-001-20250628    gcc-8.5.0
-sparc64               randconfig-002-20250628    gcc-8.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250628    gcc-12
-um                    randconfig-002-20250628    clang-20
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250628    gcc-12
-x86_64      buildonly-randconfig-002-20250628    clang-20
-x86_64      buildonly-randconfig-003-20250628    gcc-12
-x86_64      buildonly-randconfig-004-20250628    clang-20
-x86_64      buildonly-randconfig-005-20250628    clang-20
-x86_64      buildonly-randconfig-006-20250628    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  audio_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20250628    gcc-11.5.0
-xtensa                randconfig-002-20250628    gcc-10.5.0
+Changes in v3:
+- (patch 3/3): pick up tag (Konrad);
+- Link to v2: https://lore.kernel.org/r/20250624-rimob-initial-devicetree-v2-0-34f6045ebc30@protonmail.com
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Changes in v2:
+- (patch 3/3):
+  - add unit address and label to qseecom (Luca);
+  - reorder properties alphabetically in gpio-keys node (Konrad);
+  - fix hex values in reg address and size cells: from 0x00 to 0x0 (Konrad);
+  - add regulator-allow-set-load property to regulators supplying sdhc1/sdhc2. 
+- Link to v1: https://lore.kernel.org/r/20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com
+
+---
+Cristian Cozzolino (3):
+      dt-bindings: vendor-prefixes: Add Flipkart
+      dt-bindings: arm: qcom: Add Billion Capture+
+      arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 255 +++++++++++++++++++++
+ 4 files changed, 259 insertions(+)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250620-rimob-initial-devicetree-da86a5bffc8b
+
+Best regards,
+-- 
+Cristian Cozzolino <cristian_ci@protonmail.com>
+
+
