@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BD9128819;
-	Sun, 29 Jun 2025 16:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24857128819;
+	Sun, 29 Jun 2025 16:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751215188; cv=none; b=XaYeg0Es7LKiKJmxau0NySzzetbqXSCofwAlL/zk8c+ofHbPCfORVI5ckFz6Xx1BgP7qJ5jtgSDhuAbX1btO8dJgHce/+1FXMOsesyww8AQpqVMjR65+bwiY5+DGwSrIpe9L+4IkTaaFX/WHJ3J4GMN0YqXux+a87y+gOOzAIII=
+	t=1751215194; cv=none; b=gastfXIhP0dUEROYrt7Hq/aJgGkvxlhv8HMwlo/4LqxIaw8pJvtZ6iZ1aO4ou60D9PEtyh0dXZ9dgzHlsExVTteBYUcCcl2+X4O2rbNtpnBZ+NKIbrJIQTcZyDzvKtcEC9eKDqg984O2lP4U16lGhPf3vwFsc+p+BXZeWj2D060=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751215188; c=relaxed/simple;
-	bh=vnsHTn2uZ7mVOwXpqf438laxLK2ajheZY0YLjxs9e90=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ua90WhX4ENDq/Z04vDuwkImM/3lDChBANN/IfxpCDXWUmJqkdHL/ZpgsOjv5pnotORbJQEXzrbczpqMng/wxdK/hcjAufO8GO32fkp9XE2K2XSZdE52UjRbiBPp0Mf8oQhF7ts9TKE898BZ/hduk2lb1KQY3Zx7ufkcfogdTHZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCF4gioM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751215194; c=relaxed/simple;
+	bh=na+f677Q93r9B/vGlL7JQDCW2VUeqEdRW0DvEgwiEnc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=b17NMfEO3+cCLs+TSr48fpvUC6baqe0S/tMZRZ5xzlcb3+zKEvG9HZHnQekZgvsB6zWNRbON23TcYuoShFe9ljicxpxibeujoN/HpJrVIQ5iYls82JCVb6ODBcytCX/JNHLVX8y5frdaz+Y1h0zXXRorRXz9bzmW6DShTFrFnlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh3yHB2Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCF4gioM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B681CC4CEEB;
-	Sun, 29 Jun 2025 16:39:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh3yHB2Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0528BC4CEEB;
+	Sun, 29 Jun 2025 16:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751215187;
-	bh=vnsHTn2uZ7mVOwXpqf438laxLK2ajheZY0YLjxs9e90=;
+	s=k20201202; t=1751215194;
+	bh=na+f677Q93r9B/vGlL7JQDCW2VUeqEdRW0DvEgwiEnc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bCF4gioMq6VtakP6tLEjH6w+oAaoPvUSZXLqaimFE/fTbg+9SRKol0P8JQ5Bt70Jz
-	 ax0g4+kuh+eEPAZELRkyAJiD64CRKdP9Kb5yAspwcJbTlKyYnM1/nfXzX6QAO+AZds
-	 u/Yjkae0vRcm3ulVPKHClkpEcTSWKvdNts9EDmOVcMrFH5VevCzEQXJxWtWqmaQM52
-	 bqS9bpc/PZFy9g1kNjb6MbBze1wzhVvImJGkM50KcRfZ8oTwgji+zQC8brTDRuF7MH
-	 dbhaJXpOrjN8D0GIO1vCagUOGYQ8CPEnTHmimt9kM9/15dYqkUS2MdASYTRI4ZmhEG
-	 pJEx+l4tDOO+Q==
+	b=Gh3yHB2Qtxml/AHYpKCPaIOGdcSuAM1v04peky/nPTdrU8sZzZ5TgID7d7Aml4AnV
+	 wuB/F/R26YpdoRYNvN0ZGPS+4j/6OCt7l95MO9e+NFybsveYDf5RLiGRhQtcRwCJdl
+	 kysAUWtck3+ai9MLm2qW9fuLQnF4uVI+kxT5NZ+NyNRdTDgw3JjG7/JFnubHbtQuN4
+	 rFWmRu0EZjhJimbfpggq/ozGrBiktlGJvS+8Vz8Qsu7rHaM8wRxU9qnuIlkeGJEde2
+	 A60ekSFccyWzF/57yn+tZqzslSvO7M1rBUOAhK4wg9yM0qif2vIBEYt9TzmN0sSJJn
+	 5plKQ2RXG9oJA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BA838111CE;
-	Sun, 29 Jun 2025 16:40:14 +0000 (UTC)
-Subject: Re: [GIT PULL] TTY / Serial driver fixes for 6.16-rc4
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF6438111CE;
+	Sun, 29 Jun 2025 16:40:20 +0000 (UTC)
+Subject: Re: [GIT PULL] EDAC urgent for v6.16-rc4
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aGExtgnENnLLFsET@kroah.com>
-References: <aGExtgnENnLLFsET@kroah.com>
-X-PR-Tracked-List-Id: <linux-serial.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aGExtgnENnLLFsET@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-6.16-rc4
-X-PR-Tracked-Commit-Id: 09812134071b3941fb81def30b61ed36d3a5dfb5
+In-Reply-To: <20250629083502.GAaGD6tqBFp2YhK3Dr@fat_crate.local>
+References: <20250629083502.GAaGD6tqBFp2YhK3Dr@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250629083502.GAaGD6tqBFp2YhK3Dr@fat_crate.local>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.16_rc4
+X-PR-Tracked-Commit-Id: a3f3040657417aeadb9622c629d4a0c2693a0f93
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 798804b69fb6c5b5a4a5d38cd6054e42fc4a174e
-Message-Id: <175121521297.2431506.9754252872980648111.pr-tracker-bot@kernel.org>
-Date: Sun, 29 Jun 2025 16:40:12 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jiri Slaby <jslaby@suse.cz>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+X-PR-Merge-Commit-Id: 3b1890e4b250c95cf93a0a772433c3a2300e7c8f
+Message-Id: <175121521936.2432237.8001285522719133143.pr-tracker-bot@kernel.org>
+Date: Sun, 29 Jun 2025 16:40:19 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-edac <linux-edac@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 29 Jun 2025 14:29:42 +0200:
+The pull request you sent on Sun, 29 Jun 2025 10:35:02 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-6.16-rc4
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.16_rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/798804b69fb6c5b5a4a5d38cd6054e42fc4a174e
+https://git.kernel.org/torvalds/c/3b1890e4b250c95cf93a0a772433c3a2300e7c8f
 
 Thank you!
 
