@@ -1,114 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EDA1F0E55
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A871522FE08
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751232520; cv=none; b=aj7uyylgTQtwumacr/jwBPHH/0JRyEE5nXhuwqKmlfVWeOerYF5iN/E9trJY3lR4mcaHmZhtkRV4oMwS63n+Jg/t/QcEJYBUBUYXquf/kZYLdM0Hw1tfUJ0oPy51U/KwqDK5QCo4dkpOHyZGOztgOmvRG6kk7EM3WkIkv2lX1s8=
+	t=1751233234; cv=none; b=A+2ksBGQqDLE9zciOHMO/JQK2N9mSHPYnXhAROvuAZ8uUTsf+V5rHiLG/mGcOwbYBHnf0gS/nrjnGg2Veanvj4fCEqPp6HFxXShweDxKjGz5VgCtiTgE24xkw5nmAFo17zSiJ6nNYYmJgP0G/PFpfwuondN0nVrGxtsHexQD2sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751232520; c=relaxed/simple;
-	bh=slX9fChmUoL5l9nvF+ZMylk+SnKP5UtGpkfN0xJ+NZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDDyxnhHCcfIc+FY9t2WMMkXXxMrNFe2mvHHlFpCGbmeTbyYiTTHrevIKxojgBCVbddzVoK7+mwfLhSncZ96kTPE8Mrh2AZqPyI9cD3UHDYFOwpJdZZ+zuPbHEr+R3FZ4zJIOyd4JVdopKA16v9bvvY8zr0nzDXBfp+0deW6/T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BONlcnQl; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751233234; c=relaxed/simple;
+	bh=IUz+Ldn5aWRzyc5QAomsSRWnSg4dFY9j+XF+d/bNKi8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XysJYljkoklg+751kdAvQNKPbvVEejMGy/PtgcZRumY4gf+QDwIde6z3O8uWY4t43kFGSpzs3eqdQPhLcLRyE13+w2RoRXKM8zmId6Kl1CmtihdY7woKAVZ1+C9B9iZo0JG0Je0LPAf7T8JPiiqpeZjMhX+82sEA+T2eoEsva3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=c3NpKrLw; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BONlcnQl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751232519; x=1782768519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=slX9fChmUoL5l9nvF+ZMylk+SnKP5UtGpkfN0xJ+NZs=;
-  b=BONlcnQlEZtZcQtreh9eJWTSVYCNA6Jb4RneZyU00qr3+DmVtoMf3XNt
-   MWvl6Ol6gAEeyrkbK8RT3bOc0qoK+3smgDyNWO4DeyX4VmKvxN0uM2TCk
-   lS3RwKc2btRZaJjCwZFTYwFwfSm2zyTLXR3HCleJsCHlP1lJy6ED87sZM
-   ldzd9wYaSOF0w5x5NT+m2gMOZjAeYQoKneQQUqUGFuL+K3lY2SaWWhF4I
-   5stzCpoytkFytip/5wBWxKUqyahiMP0LOkTGl49mI49ES32KqQxRI3wtS
-   INH2pbFHCELmraHT0ls/A7fONf9wASMtv9xpcNq9/05uUl81p8qUhGtdo
-   g==;
-X-CSE-ConnectionGUID: FXciCS5nRyW5m+tRb2iMEA==
-X-CSE-MsgGUID: wZ+Ks2gVRl2lIgnfsHLXcg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57261636"
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="57261636"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 14:28:36 -0700
-X-CSE-ConnectionGUID: 6WMCJYmKRu+jB6KsrlCtww==
-X-CSE-MsgGUID: qdWMCtPQQsmFYRdXgAHS5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="153026179"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 29 Jun 2025 14:28:32 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVzZd-000YFC-2f;
-	Sun, 29 Jun 2025 21:28:29 +0000
-Date: Mon, 30 Jun 2025 05:27:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rodrigo Siqueira <siqueira@igalia.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, nicolejadeyee@google.com,
-	Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [PATCH v6 7/8] drm/vkms: Create helper macro for YUV formats
-Message-ID: <202506300528.vxGyGV82-lkp@intel.com>
-References: <20250628-b4-new-color-formats-v6-7-2125b193f91a@bootlin.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="c3NpKrLw"
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7CEB83F52A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:40:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751233222;
+	bh=ULrFLuqX3/N7L6TuZDZeaHi7Yu9t10Q32tC/ZUt/0lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=c3NpKrLwY7ktu2oHsD7TtnL1/O56gs5PE+pzvY0jUVRnagoxDHDy56NqbcuNV0mHx
+	 CcJHxdRl1tPVvTAN2mWGMRztZsz3PlYsmdLlkrgqDr+7jBBVf5DLYZ+QgPVU1CFVGf
+	 QyVWkQ4B2rxSi4hNmqj6FMsQcjLqyt83VIxVl/H7QzwxpY96lcHBI93kzkaFmQ79Kb
+	 0eaxHTovC7VssEzKyxodkufPTEnGKJZRXTw65WDQgAaezMg0Lg8pj1s0auoopOv0ou
+	 nDTHnpxw4UjikGRyrjH7FXj3nSFl4dPMntjKQN12RFas8W42Eul8tVK0bsbnqRWhFM
+	 gudPWWuhTuX8A==
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae0aec611beso101173666b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 14:40:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751233221; x=1751838021;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ULrFLuqX3/N7L6TuZDZeaHi7Yu9t10Q32tC/ZUt/0lw=;
+        b=jnwd0//C4xZDD0v7n7UT6+38JbNdhCbyVHwsQEoaxQ78NOi+ixOJLMsUs21XxXsbXH
+         wuQEHUrJx6wcwSpuh9NY9bA+04pkv2hEDBQpruCcOK4nRNvdudCfAnUoDZy7Vrrplwoc
+         eWe/Ps3au4bYw84wreM51shGfP7xWR9bY8/vSV+PVkMTVrqJrntitbNc6cP4VKGeD4+V
+         FdQQRYTU9tyc4op+ZZoSO56P9t+fg5P/zPmh9EQVlr7doE5CuA8Z9lhkfF3wgCEjE+lZ
+         v5cNMbgUF3NJMasGW+eC9vdtceDttUAi/ssQTJlRDdycq1sKHvvjRq5pZpdwWWGqzdCx
+         PemQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfcJ5Aobjw+VmmJZuzTHLQ012tqIXICT7mnVhdjVwpEq1STgg60LEpZ2ItEpq6zi5EB0m1gJFHM2mezgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHB3zUqAADcON5UL684Ahw4H3aMF6HxgRYL917lNimy5XdGQI5
+	oolY0t2GF74jgkrlAUgr6WSuRXNIqyJn343tBprUM60b/2/KjIW1HsZqU2QxGHbvjSmb4eBrfFP
+	XRW3aADSzLlaP2sKjXSQIfTuJDGbQ0kG65sGtT8tg/xygQaKsJM8nbZdz8x9DfVvxgwPTHOZdkD
+	kvAbz9s4Xo15SGFcnt
+X-Gm-Gg: ASbGncsLs9Ts+1olBU1Gj8nWthvocc49swG1kePCnnwGB7W3BOT+xTlPHcvGEr+O3MV
+	1ZTf/c9wf1IKQqqwRSFRf7OlBcw6Igzf04Zoe7brwWLxWqdbM7sf4xh9M2WZVrrbhSEWx+H9M2o
+	G71ZwRHng/Y6CzhH0zdnJzcTsj5JfZXd6UFGPsyrOGH05vLFAEad1JQXyUBPwAF4uWYv61KU4TB
+	+OfiQUn8l5j/Vj0jhdmTaq+vNSP/zxvtVE6sERBbUTnEQMODEcHAW+tnRCN+aBuHhCmlSXcSMse
+	U03bSsAu3r8MNlibDk3dLB0MdEyU4bnZW3MZ7jJh08jix5bA0A==
+X-Received: by 2002:a17:907:3c8f:b0:ae0:bee7:ad7c with SMTP id a640c23a62f3a-ae3500ffb84mr1000793266b.46.1751233221383;
+        Sun, 29 Jun 2025 14:40:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRrsRwdjgiUbLf7LNbT+BKrfksSJYA7P4zBzKzhpPcr7lZkTOV6E3XJ3B/VDKZULjlvomnXA==
+X-Received: by 2002:a17:907:3c8f:b0:ae0:bee7:ad7c with SMTP id a640c23a62f3a-ae3500ffb84mr1000791266b.46.1751233220952;
+        Sun, 29 Jun 2025 14:40:20 -0700 (PDT)
+Received: from amikhalitsyn.lan ([178.24.219.243])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a754sm557263366b.62.2025.06.29.14.40.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 14:40:20 -0700 (PDT)
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: kuniyu@amazon.com
+Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Lennart Poettering <mzxreary@0pointer.de>,
+	Luca Boccassi <bluca@debian.org>,
+	David Rheinsberg <david@readahead.eu>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next 0/6] allow reaped pidfds receive in SCM_PIDFD
+Date: Sun, 29 Jun 2025 23:39:52 +0200
+Message-ID: <20250629214004.13100-1-aleksandr.mikhalitsyn@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250628-b4-new-color-formats-v6-7-2125b193f91a@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Louis,
+This is a logical continuation of a story from [1], where Christian
+extented SO_PEERPIDFD to allow getting pidfds for a reaped tasks.
 
-kernel test robot noticed the following build warnings:
+Git tree:
+https://github.com/mihalicyn/linux/commits/scm_pidfd_stale
 
-[auto build test WARNING on bb8aa27eff6f3376242da37c2d02b9dcc66934b1]
+Series based on https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs-6.17.pidfs
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Louis-Chauvet/drm-vkms-Create-helpers-macro-to-avoid-code-duplication-in-format-callbacks/20250628-065148
-base:   bb8aa27eff6f3376242da37c2d02b9dcc66934b1
-patch link:    https://lore.kernel.org/r/20250628-b4-new-color-formats-v6-7-2125b193f91a%40bootlin.com
-patch subject: [PATCH v6 7/8] drm/vkms: Create helper macro for YUV formats
-config: x86_64-randconfig-073-20250630 (https://download.01.org/0day-ci/archive/20250630/202506300528.vxGyGV82-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250630/202506300528.vxGyGV82-lkp@intel.com/reproduce)
+It does not use pidfs_get_pid()/pidfs_put_pid() API as these were removed in a scope of [2].
+I've checked that net-next branch currently (still) has these obsolete functions, but it
+will eventually include changes from [2], so it's not a big problem.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506300528.vxGyGV82-lkp@intel.com/
+Link: https://lore.kernel.org/all/20250425-work-pidfs-net-v2-0-450a19461e75@kernel.org/ [1]
+Link: https://lore.kernel.org/all/20250618-work-pidfs-persistent-v2-0-98f3456fd552@kernel.org/ [2]
 
-All warnings (new ones prefixed by >>):
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Luca Boccassi <bluca@debian.org>
+Cc: David Rheinsberg <david@readahead.eu>
 
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:317 Excess function parameter '__VA_ARGS__' description in 'READ_LINE'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:344 function parameter 'a' not described in 'READ_LINE_ARGB8888'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:344 function parameter 'r' not described in 'READ_LINE_ARGB8888'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:344 function parameter 'g' not described in 'READ_LINE_ARGB8888'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:344 function parameter 'b' not described in 'READ_LINE_ARGB8888'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:354 function parameter 'a' not described in 'READ_LINE_le16161616'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:354 function parameter 'r' not described in 'READ_LINE_le16161616'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:354 function parameter 'g' not described in 'READ_LINE_le16161616'
-   Warning: drivers/gpu/drm/vkms/vkms_formats.c:354 function parameter 'b' not described in 'READ_LINE_le16161616'
->> Warning: drivers/gpu/drm/vkms/vkms_formats.c:490 Excess function parameter '__VA_ARGS__' description in 'READ_LINE_YUV_SEMIPLANAR'
+Alexander Mikhalitsyn (6):
+  af_unix: rework unix_maybe_add_creds() to allow sleep
+  af_unix: introduce unix_skb_to_scm helper
+  af_unix: introduce and use __scm_replace_pid() helper
+  af_unix: stash pidfs dentry when needed
+  af_unix: enable handing out pidfds for reaped tasks in SCM_PIDFD
+  selftests: net: extend SCM_PIDFD test to cover stale pidfds
+
+ include/net/scm.h                             |  46 +++-
+ net/core/scm.c                                |  13 +-
+ net/unix/af_unix.c                            |  76 ++++--
+ .../testing/selftests/net/af_unix/scm_pidfd.c | 217 ++++++++++++++----
+ 4 files changed, 285 insertions(+), 67 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
