@@ -1,108 +1,95 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CDA33985;
-	Sun, 29 Jun 2025 19:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2116A23CE;
+	Sun, 29 Jun 2025 19:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751225475; cv=none; b=SjYT+zBYLokqsBnkXvj9+IAuc6z3wiSClBU1ZTklU0rmh9C3pRxUdxAB/Lv0BXFeFZe6iwW8XOD3dOq61emECGeWL+3mk2OuKd4OUQDjxbnNrjD+bCsjR71FYRHD4INDX6pRvYdDGnFEEUSH525DaXLyDHpb2QzpSUoCDf1IvVk=
+	t=1751225501; cv=none; b=mHqD2hjx+iYJsB1UmmJyO2SWKOKrySljMck2LUQ6wrrnpg3EXdWuU5eN4DkcsvKLDTQ7TRPmElA6a+KX/7X9p2w4u0n/ERL5lCdiON7LXAPOo2i4nqv6/xCnjRFHVAmbiwMzuYTd9MYnzMe5686KKrrQPKmcseH/T0zQyHh+yRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751225475; c=relaxed/simple;
-	bh=OGp6vfw1QHdMT5fM9uLZJr8DQqgKSrwVaEvu6EHg9HM=;
+	s=arc-20240116; t=1751225501; c=relaxed/simple;
+	bh=puCx3m3ijJhv2xY8UD7sxNgYdB4S0Z5zGmnfB9JdlU4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EUU6cxZAtzNdeKcX9qGVchOS868xq4+aGFbHZU8/vgi7QxfGg5OyNWvyL8XGtqE3e8LFEWoi3eSCHu42liD8QN/Hu5fVjOwSVMgm6BQrlAp5jdkh4xRolef6S89LLtkMbJc/ILkdRKs1hkcKC6g9sxFknTId6ZzIfrXwmqXJ8co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cbw/2y+0; arc=none smtp.client-ip=209.85.215.181
+	 To:Cc:Content-Type; b=Yq0ovoA1lCcV1QFmyQIG/6PlAjem3p8+ZBzOtMnZ3UjsfQE224VblislrsvhrDtexzqD3qBTt4nf7TU3BTEWhzhV95NTsByQC58bXjY10mtbZST8ulPxastN3npYpKq76TfjHwb6awCxv5WVXFgnUoHzoaitfRR8yxY2BEioB9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWalgRHc; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cbw/2y+0"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34b770868dso459215a12.2;
-        Sun, 29 Jun 2025 12:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWalgRHc"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so896198a91.1;
+        Sun, 29 Jun 2025 12:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751225473; x=1751830273; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751225499; x=1751830299; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BVp+c54/046unhQwFhUIeSno00Lzx8KKU3AbwMxIluc=;
-        b=Cbw/2y+0EkE8w5y5OferT5gU3OwstCZw2UATydcinnTW/Ae/lsMZLIsX/LuBmuTalT
-         Qqot4dGHenK2Xlz6+UYhOWi2YeTNh52PO5LH7d/Q+vrVsFTiqGDF2mkJwRjLgj8eCSdY
-         yQNWo9PU80S2v2nMdIGjuKXdt75SUYmfEFPAFGB6mGOJoUL2KGcpJ3onBXfF1W3Ds68D
-         r+Of62vZh+ABsJUBrNaeU9C1lXnD1fV/q8tYZa3lci4/DJVZBPevkIZnHim2QmUyXRSZ
-         giKkCOYjIFznR03HFwe2Q2f3E3veQK8FLIQDR3xgZurtBS+hyZXWL/sIvnvvGQ7no/al
-         Al8A==
+        bh=9fmT08YCirP/kmmox56H3YoamB4syz6uTiliCsGLSQo=;
+        b=OWalgRHcvN6FTAzROxfEsrPkCLv9IxCb2bZfT/bLyWvG0Og4Oqt6ZNtJEQRLXw7ERs
+         /bvTLPgxAuvWEWNdL0INQ+1oCrMZSVEgKuEeRiYyOFPEOzttLqjGzk0EmjQQYkAJdrTr
+         YxuPO2bEtmdUp7qOt4FR4NJc7m8gihvoBitkIKLzcafX9awTb6cHnJfcKNW8DlTVePE4
+         G8U771aJ1xKPJdrvq02egi+rAESx7RRklXA1lp4WefXTX8W/VJIz8uOtZyTKFeShvlK8
+         5FWvno9YMjJ9D00E9umqmMcNQ+tWNIwGPseKI9VGLtdh8p0UkVC1l3XZqfEgOuV2hlmr
+         xrLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751225473; x=1751830273;
+        d=1e100.net; s=20230601; t=1751225499; x=1751830299;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BVp+c54/046unhQwFhUIeSno00Lzx8KKU3AbwMxIluc=;
-        b=J8A3gJw+VXN1Uaf4JkGsHgcV29SbF33BOaFX7HKbBQ1FxbYrCUeOsPHG68u4ERc9L+
-         Nw6dMmg67S37U6UMWe/Oz+3Ta4n81nq16rBwnbitjrUsZar+f7jdoFNZ0LVEhkd/f8ZE
-         I8d7hdTk/U9uX6FdzWxzCvpNrEH55eRAwaMdJgr0KXCvDiA+bScENiXpvkjbb2yS3eGL
-         ybyrxOiU1nMZ2XqWmiE8jmWrFoSRJv3gzl0ngpvx/1OVfe2mgXACICqF3dy1D+IgJNO/
-         pPMTOACfdov/7dzF6WWeBRuJmQqyKL4s9I+vVWwnoYuj2CUCrgkGy0YfQMH/lYHOy+yU
-         YoEg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6BLOD5eeD0YSxFKgkLRGFcIF9DnHa0DkkPwGlLKitxMyoJwFotfEDNf1QoKwH2LWC8/yMQZ7245qmJVE=@vger.kernel.org, AJvYcCWUeJTAnfhJKcK86ip2LMWxCuM7GFihS/MF4SXiklcDRt2DmMHokjQBs72EqwvC1wBHoK4Qx/RLujwh/6qfj/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyocPnpwTBuXjNBBLF/5rzPtQ166Ec/e6isrfPYyyZdjjpqXA8+
-	EUglsFp9jMcmkySN9qL5sCRIkqPl+vLNrHdjqdDB8X4YKIh/rUzZywFNRiXlx4d8m58KEgX+w+x
-	LwTyERhDKQDwUwNKMeTB6JFYriQmjPlk=
-X-Gm-Gg: ASbGncvR4RK6T5ef8JWKwNruKq3OXff5SKcdQLSE/du624VqaSCXdEFukgeQ6zzBD+N
-	FBgNWR7Z0+hcjledJdB493nguFJ9QK93SdKKDuVlrXzNIAmxpjMH+lYDQhVl3D+/8n91lFRDK7q
-	h+hK+FKY7QFVgfzuhm52rNHEDrYloik5enoAJChrOB0vQ=
-X-Google-Smtp-Source: AGHT+IF9JltI282c3eQ3Q6Ae654ur+PoVB7wqYGQoylGYD35rwz70CBn5ZCWuQiWV33PV5fvoksZukiBOds1jW6cfgg=
-X-Received: by 2002:a17:90b:3846:b0:312:e987:11b0 with SMTP id
- 98e67ed59e1d1-318ec43d8bamr4107728a91.6.1751225472974; Sun, 29 Jun 2025
- 12:31:12 -0700 (PDT)
+        bh=9fmT08YCirP/kmmox56H3YoamB4syz6uTiliCsGLSQo=;
+        b=uj6bYm6+wwOoT2NGZvKreSqaScb4LSNttIOf751vMGs+sWHUOuh4ps1E2Ir3pIVLQt
+         N9pZTF1Z3BK1CfME1L1KafxsDqLsGLCGowjRVt7KT9Aj4rNjz/hlU2uUUj0fyLi4a7JA
+         ica0Qi8me3ByyOO9VtfPKxeVLgWeG4uqeYJSmRuHBHqobZA+aO+yDPdj8gKEsk9lQMnk
+         KNHoE04AQAeI7f72FCCI7wR5TRUMOf6m+BgF28pRTvAIREPXdT8lG3mCbPiN6Vyz3iNn
+         kOjlZRINniAkvcurE9vOYG9w8IeHrU3tI8Pd30qUTE8Q73WsfWZsGj6/ZKu4gJKih/ez
+         OaIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN2NkBbz+Sphrwu/7b2VKFFs1z+VOyI5oVPC97INuryTVWeQX945W7cgGpXegZmjNeZ/z8cRCeqTwY91U=@vger.kernel.org, AJvYcCXdWI1VBfzhjH+G5Sjo+tBow9QUGKt7MNeklqNsgemsWobRodXoblejoIO2ed2unVC9jrVZre8ALnGROrPgq9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZP8Z+AJ98dsyPo5lOc4da35TjUR8MpUNiRDuvWrRkzc28E6i5
+	7DnZKTBy7IAwtmjLebo3mdOIhfU0Z4xb+fOr/x6KT32aLOvToM1SPHySeS9UWwMaZtbLcnglk8X
+	FB7si7DjAfxS2lk9N//9feBgpwb79XpbdkA==
+X-Gm-Gg: ASbGncsD+8+8JsfC06Z0nWVVXm0WPbMTDsCFCdOfEFSF7hJqv1MIxYFBmat2i3WJS8i
+	FRbfnn2xPo8JqkQfcsUtOOWdskQ01SJmAtPuiFQFDfmSdDZEPGH/PfCcbgtyjiQzlzKwpjQaRKz
+	R/r0rs9s3PG6u1hk63z0XPl9sffBObTa82N9mgCmJMwaM=
+X-Google-Smtp-Source: AGHT+IGZYieEqw2ODJl+hKmg36Rl5gmEpYYPtY6vZPl8MK+pU74wXw+EenxLwyMwZIaULnIcEV1W8vEKAKDvimvBXyY=
+X-Received: by 2002:a17:90b:2e4d:b0:311:e8cc:4250 with SMTP id
+ 98e67ed59e1d1-318ec4117d4mr3562570a91.3.1751225499417; Sun, 29 Jun 2025
+ 12:31:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
-In-Reply-To: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
+References: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
+In-Reply-To: <20250616-rbtree-is-empty-v1-1-61f7cfb012e3@google.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 29 Jun 2025 21:31:00 +0200
-X-Gm-Features: Ac12FXyoGPPSOX_-6d0h3tX4tg3i5B41E9--4iewRQDOetQW8kV_ZCJuzQO0KHI
-Message-ID: <CANiq72=o-5Gtw26X84=k0KK0sn+EyijxgYq=E2+Mw2+U+SOgaw@mail.gmail.com>
-Subject: Re: [PATCH] rust: init: Fix generics in *_init! macros
-To: j@jannau.net
-Cc: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sun, 29 Jun 2025 21:31:25 +0200
+X-Gm-Features: Ac12FXy_D0bZVu53droi3lbTffW__2BqoowFoMIqkIbtxn1YlU9-dOm9gLt0uco
+Message-ID: <CANiq72mHAJvjKkJmOu3EPi7Xy7NiHFPawz32-yxWHKGeaFtjHg@mail.gmail.com>
+Subject: Re: [PATCH] rbtree: rust: add RBTree::is_empty
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 28, 2025 at 1:36=E2=80=AFPM Janne Grunau via B4 Relay
-<devnull+j.jannau.net@kernel.org> wrote:
+On Mon, Jun 16, 2025 at 12:36=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> =
+wrote:
 >
-> From: Janne Grunau <j@jannau.net>
+> In Rust Binder I need to be able to determine whether a red/black tree
+> is empty. Thus, add a method for that operation to replace
 >
-> The match pattern for a optional trailing comma in the list of generics
-> is erroneously repeated in the code block resulting in following error:
+>         rbtree.iter().next().is_none()
 >
-> | error: attempted to repeat an expression containing no syntax variables=
- matched as repeating at this depth
-> |    --> rust/kernel/init.rs:301:73
-> |     |
-> | 301 |         ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generi=
-cs),* $(,)?>)? {
-> |     |                                                                  =
-       ^^^
+> This is terrible, so add a method for this purpose. We do not add a
+> RBTree::len method because computing the number of elements requires
+> iterating the entire tree, but checking whether it is empty can be done
+> cheaply.
 >
-> Remove "$(,)?" from all code blocks in the try_init! and try_pin_init!
-> definitions.
->
-> Fixes: 578eb8b6db13 ("rust: pin-init: move the default error behavior of =
-`try_[pin_]init`")
-> Signed-off-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Applied to `rust-fixes` -- thanks everyone!
+Applied to `rust-next` -- thanks everyone!
 
-    Cc: stable@vger.kernel.org
+    [ Adjusted title. - Miguel ]
 
 Cheers,
 Miguel
