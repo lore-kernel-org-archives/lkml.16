@@ -1,355 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE6323817C
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 18:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598D22BB04;
+	Sun, 29 Jun 2025 18:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751221740; cv=none; b=uBP0qGWPZQso49u6WnPRYVkOwG30I5+QNGssmXYW+DpzmWAVFdtD+GOeix3hUPcwlM0PhRmqgR6Bq5IYs6x6Nikih3xA0GxNQkZQbZMwlX4J86UqdbI3RZ2qHAAqZejugPIxpGdLXu50c4LfkHfRWBzBJmeVlrJUtXv1gax5IfU=
+	t=1751222051; cv=none; b=HGTTyrTCZOVm8A2mr3XNMTPWOvrHBYQHRKtUU5+q2FVHs3EatEOiO1lhuw/dNfyFUoVlWHv9Q7DYOo9UVVEeNCl7csv7+XKEdZSYTgou6SjLRixFstp7hQic6Znli9a19LKn6MGJtc1fgVcjoQleGYaVzGQ4uQ6KR6takqxNI0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751221740; c=relaxed/simple;
-	bh=wpS78HRz7l25Tz4t8SWQjzu0ZLohyOXxGvkvgxZ10TM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=L8wtXzho9ATcX8YNys5qlmoXVw6vsdwg0TpQDdlR/8GzS77NuImuxz4HCbcb1bHoy6ZdyLjt6L/UKvCctj81rGff4Lb9AfruNCye04Z8jKQp/7IGUv4gpMVAndEKB9W7Q4AE3MJOGorkMOsplDAjyfxdaLvc7WaLG6KGJBXXqhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gRj3AmB6; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751222051; c=relaxed/simple;
+	bh=jrVu989F/TnS7OrvrDa2n6Iw2dhmPQwnlx/AVue9EDk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Wx6qGzR5mCXG8UFhoFKm58DEex/X8Z0akriqo4yIVoBsSGA1AMytWMol0tjuqx73cGfgqDPDX8ZEkNMCdl8aiV1WbgZ80xgjO9biAm7q0Wzx14rVuQNz5iXWe26sIuvfcQ+yuW2u7EkAP8u7mTN5phzBX2v4vG4wJ2V7R8fIUlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R/Dx0YNP; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gRj3AmB6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751221737; x=1782757737;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wpS78HRz7l25Tz4t8SWQjzu0ZLohyOXxGvkvgxZ10TM=;
-  b=gRj3AmB64RGZExv3P3Zc/z8lwiPFeNJSvviJNaDYLUxHwsUWeXQbZaR/
-   DnjXw+2wtKku1gvYXLMA2lrVfKvdcVsOUe9xLrWHB+XqDfp32quTqNdxa
-   x+GUAejDQhTUDgHr0xszjZDe3H8yFFhCQmbtDjuJXwhQ1XVsQB19Kfysc
-   yLoo/LsAyCqefWk4sfdEPEuP6EPNtFghyFkmSb9q1fYvx785hzT9qaTXb
-   PRGueQFIQfsx0dTTK/LtYAp0kzQ8gTg9Dnpdf02HM3R3x5syLxtMQqkpb
-   zRfbysexRqV0g3OVgibq5KrhpN+2SoOyrhnpAq7m7/B4vsZJm4qh8UyrQ
-   Q==;
-X-CSE-ConnectionGUID: LwSSFOAHQwiCk2ABXOJ9EA==
-X-CSE-MsgGUID: 0cfGjmFCQ4eiJvstno1EBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53326891"
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="53326891"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 11:28:56 -0700
-X-CSE-ConnectionGUID: 4DmysAFqQTKqb+MZmF/90w==
-X-CSE-MsgGUID: W+qOPTymS5WK8flOFEAA6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,275,1744095600"; 
-   d="scan'208";a="153356235"
-Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
-  by fmviesa006.fm.intel.com with ESMTP; 29 Jun 2025 11:28:54 -0700
-Received: from kbuild by e588e990b675 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVwll-0000xL-22;
-	Sun, 29 Jun 2025 18:28:49 +0000
-Date: Sun, 29 Jun 2025 20:28:19 +0200
-From: kernel test robot <lkp@intel.com>
-To: Julien Massot <julien.massot@collabora.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: pmic (mediatek,mt6359):
- '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[0-9]+$'
-Message-ID: <202506292003.6jC8cSjI-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/Dx0YNP"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7d098f7bd77so434767385a.0;
+        Sun, 29 Jun 2025 11:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751222048; x=1751826848; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M/cjhqCcLmVGUCnBK893/yp/jMoU9tIeu5L0LyrcK/Y=;
+        b=R/Dx0YNPouZNfhDDmQgu0sLdkr9zAaPSAQhQE0k4Vd+3eyshwNhzg3LoQYTDsPNh9i
+         N9yfZ5O+n2VGuDewsh2H7RZU3LXk8q7HWulRp2MKUOx4Px5Hw2l63bUZl5KXXRLBXwku
+         zxvUknydw4qfF+NRNwxCn9vKrUFB0oxNq8+n/ENyRFyQXXw5oaw0Sid78HmMBBvNcVgx
+         PzL1gz4cd3NJqnO5YGbeF5pxdb4+6/GoeD1dXDkeiEONvC9qj3aNjcCSul35pH6kXh6Q
+         jUvxAsWno1BNaZ5g8gESZVcx1atwbvvRzfRRCDJEsj9AjnlcX07pVFvnuUAQcoK+Xh4G
+         OMWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751222048; x=1751826848;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M/cjhqCcLmVGUCnBK893/yp/jMoU9tIeu5L0LyrcK/Y=;
+        b=aJbTzPllVYjJreoJb357B/aHfSyqBE6pVgW7j1uGPZCX8hmpcgX6IOv/dFui5B+ldb
+         Ai06vUpoGZVknLdGpGOyrzhRSFAPntxk5oo3yxB9SwKZMT29go5ZxHRUgzjt6wh2gKxz
+         AEY28D/yERlQptHdCYoLSeiM5zfrImGKy1kjG+Iqp09iXN46Sk/MZx+1QA1XN3W4EOMn
+         zfKxP7YhoSSfSOmOXiMBW44QW7BAfiLkxAiTttnRU7N+BBohE7Jr4Cpzh0KYvLxsN7qT
+         YHisex69PsHOTcpYe3k83iYpaI4rof1TsS4PmUoRNx1EqNmJ/JeJqh9XhXQkZjjYmSt3
+         PUxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpgvhrb+rhGlTN43houb95GnyRo5gprO6IdM2eB81bGHYrkwThKK39VLA80CzUyTHSXLx1o/zTPrizfHM=@vger.kernel.org, AJvYcCW3ZXVlr+HRspTHkd+OH0SjHpHCYltEHrCkO9eoJXtuU7dgCnJUYDM3rxFgrfp+p8TafrcrMlcFelePVxV/y8MJihCAPw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDTZCmbE52WSFJTo4G+MApdnbOq7po5ZMhw4HFOk2Vdg2OAMqm
+	OsJqLDuYDLbT1zoI9i0nvhRq6Xw5edqO8zWGZXnKFD12SIrzW38XqSSV
+X-Gm-Gg: ASbGncu2DDUd5ftaIforCc+pvBdU3lLccc6676MTSn0DJyaTpwffhFlgavNo4ry8wKI
+	vn28nS4Neah1dDOv9GWN3P7Xl2hs31emcZBAT6OAkPDEQhkZoj1Bn3kXUmn9d2vPk0a7A1d9QhJ
+	y8MsC0vu9kKGR4AYAdRAB/EtpzR76riLmGiTHLmHbCGX11Yepym7YqU6X9Om7m7I6YZEh13aNga
+	KnfE4jX2bU70qk5O7Ll3jInF2Vq5Q7Z/EJf9jHrhXxCR8vBWQhVQs6r3BWc6igsTSX16MILa9u+
+	1eAa/C+UhiFYziNKbHOvrEZekOYVZ0i4jmzrTxUFYhBql/HFuR+lzPZ9ZQ3rxA==
+X-Google-Smtp-Source: AGHT+IFBfZq6IZw9PCCTfeTzHkfLxpaDY1FwR4g7fewr0TAosZVqbGHcnXQpg6iurWSq3PxHo6uEuw==
+X-Received: by 2002:a05:620a:4149:b0:7c0:af6d:a52a with SMTP id af79cd13be357-7d4441a75a0mr1307645585a.26.1751222048100;
+        Sun, 29 Jun 2025 11:34:08 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d4594acf00sm95196385a.31.2025.06.29.11.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 11:34:07 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Date: Sun, 29 Jun 2025 15:33:04 -0300
+Subject: [PATCH] platform/x86: dell-wmi-sysman: Fix WMI data block
+ retrieval in sysfs callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAN+GYWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyNL3eLK4tzEPN20zApdy2RTI/NEI4s0w5QUJaCGgqJUoDDYsOjY2lo
+ AiiKClVwAAAA=
+X-Change-ID: 20250629-sysman-fix-9c527a28f1dd
+To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Divya Bharathi <divya.bharathi@dell.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>, 
+ Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6574; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=jrVu989F/TnS7OrvrDa2n6Iw2dhmPQwnlx/AVue9EDk=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmJ7TJZXx8+n/bLWzLd2mBqnUlr6fMbjz/N15bv+7ti5
+ UmXy1puHaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCRxiKGv1K5B5q2zUnSnVc/
+ qf/19y9/DhowTV/w9MSHLg7euB1n57xj+F+tuJw77zZP8uvilNMGcx68No15fHm1XM4F0yn9Vz9
+ 6c/ACAA==
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git =
-master
-head:   dfba48a70cb68888efb494c9642502efe73614ed
-commit: cfe035d8662cfbd6edff9bd89c4b516bbb34c350 arm64: dts: mt6359: Rename=
- RTC node to match binding expectations
-date:   6 weeks ago
-config: arm64-randconfig-2051-20250625 (https://download.01.org/0day-ci/arc=
-hive/20250629/202506292003.6jC8cSjI-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f81=
-9f46284f2a79790038e1f6649172789734ae8)
-dtschema version: 2025.6.1
-reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archive=
-/20250629/202506292003.6jC8cSjI-lkp@intel.com/reproduce)
+After retrieving WMI data blocks in sysfs callbacks, check for the
+validity of them before dereferencing their content.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new versio=
-n of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506292003.6jC8cSjI-lkp@i=
-ntel.com/
+Reported-by: Jan Graczyk <jangraczyk@yahoo.ca>
+Closes: https://lore.kernel.org/r/CAHk-=wgMiSKXf7SvQrfEnxVtmT=QVQPjJdNjfm3aXS7wc=rzTw@mail.gmail.com/
+Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 7 +++++++
+ drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c    | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c     | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c  | 5 +++--
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c             | 8 ++++----
+ 6 files changed, 23 insertions(+), 12 deletions(-)
 
-dtcheck warnings: (new ones prefixed by >>)
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: pmic (mediatek,mt6359): '#s=
-ound-dai-cells' does not match any of the regexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10320000 (mediatek,=
-mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10330000 (mediatek,=
-mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: scp@10720000 (mediatek,mt81=
-88-scp-dual): reg-names: ['cfg'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: scp@10720000 (mediatek,mt81=
-88-scp-dual): reg: [[0, 275906560, 0, 917504]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: scp@10720000 (mediatek,mt81=
-88-scp-dual): reg-names: ['cfg'] is too short
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi:1256.7-1264.4: Warning (=
-graph_child_address): /soc/syscon@1c01d000/port: graph node has single chil=
-d node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: pmic (mediatek=
-,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[=
-0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: mailbox@103200=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: mailbox@103300=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg: [[0, 275906560, 0, 917504]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi:1256.7-1264.4: Warning (=
-graph_child_address): /soc/syscon@1c01d000/port: graph node has single chil=
-d node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: pmic (mediatek=
-,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[=
-0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: mailbox@103200=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: mailbox@103300=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg: [[0, 275906560, 0, 917504]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi:1256.7-1264.4: Warning (=
-graph_child_address): /soc/syscon@1c01d000/port: graph node has single chil=
-d node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: pmic (mediatek=
-,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[=
-0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: mailbox@103200=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: mailbox@103300=
-00 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg: [[0, 275906560, 0, 917504]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: scp@10720000 (=
-mediatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
---
->> arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: pmic (media=
-tek,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinctr=
-l-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: syscon@1121=
-0000 (mediatek,mt8192-audsys): 'mt8192-afe-pcm' does not match any of the r=
-egexes: '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,au=
-dsys.yaml#
-   arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: mt8192-afe-=
-pcm (mediatek,mt8192-audio): clock-names:3: 'aud_infra_clk' was expected
-   	from schema $id: http://devicetree.org/schemas/sound/mt8192-afe-pcm.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: mt8192-afe-=
-pcm (mediatek,mt8192-audio): clock-names:4: 'aud_infra_26m_clk' was expected
-   	from schema $id: http://devicetree.org/schemas/sound/mt8192-afe-pcm.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: mt8192-afe-=
-pcm (mediatek,mt8192-audio): clock-names: ['aud_afe_clk', 'aud_dac_clk', 'a=
-ud_dac_predis_clk', 'aud_adc_clk', 'aud_adda6_adc_clk', 'aud_apll22m_clk', =
-'aud_apll24m_clk', 'aud_apll1_tuner_clk', 'aud_apll2_tuner_clk', 'aud_tdm_c=
-lk', 'aud_tml_clk', 'aud_nle', 'aud_dac_hires_clk', 'aud_adc_hires_clk', 'a=
-ud_adc_hires_tml', 'aud_adda6_adc_hires_clk', 'aud_3rd_dac_clk', 'aud_3rd_d=
-ac_predis_clk', 'aud_3rd_dac_tml', 'aud_3rd_dac_hires_clk', 'aud_infra_clk'=
-, 'aud_infra_26m_clk', 'top_mux_audio', 'top_mux_audio_int', 'top_mainpll_d=
-4_d4', 'top_mux_aud_1', 'top_apll1_ck', 'top_mux_aud_2', 'top_apll2_ck', 't=
-op_mux_aud_eng1', 'top_apll1_d4', 'top_mux_aud_eng2', 'top_apll2_d4', 'top_=
-i2s0_m_sel', 'top_i2s1_m_sel', 'top_i2s2_m_sel', 'top_i2s3_m_sel', 'top_i2s=
-4_m_sel', 'top_i2s5_m_sel', 'top_i2s6_m_sel', 'top_i2s7_m_sel', 'top_i2s8_m=
-_sel', 'top_i2s9_m_sel', 'top_apll12_div0', 'top_apll12_div1', 'top_apll12_=
-div2', 'top_apll12_div3', 'top_apll12_div4', 'top_apll12_divb', 'top_apll12=
-_div5', 'top_apll12_div6', 'top_apll12_div7', 'top_apll12_div8', 'top_apll1=
-2_div9', 'top_mux_audio_h', 'top_clk26m_clk'] is too long
-   	from schema $id: http://devicetree.org/schemas/sound/mt8192-afe-pcm.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb: mt8192-afe-=
-pcm (mediatek,mt8192-audio): clocks: [[56, 0], [56, 7], [56, 8], [56, 6], [=
-56, 21], [56, 1], [56, 2], [56, 4], [56, 3], [56, 5], [56, 9], [56, 10], [5=
-6, 18], [56, 19], [56, 20], [56, 22], [56, 23], [56, 24], [56, 25], [56, 26=
-], [23, 47], [23, 58], [22, 27], [22, 28], [22, 72], [22, 47], [22, 101], [=
-22, 48], [22, 105], [22, 43], [22, 103], [22, 44], [22, 107], [22, 59], [22=
-, 60], [22, 61], [22, 62], [22, 63], [22, 64], [22, 65], [22, 66], [22, 67]=
-, [22, 68], [22, 142], [22, 143], [22, 144], [22, 145], [22, 146], [22, 147=
-], [22, 148], [22, 149], [22, 150], [22, 151], [22, 152], [22, 55], [2]] is=
- too long
---
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3017.17-3074.5: Warning (simple=
-_bus_reg): /soc/jpgdec-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3091.17-3127.5: Warning (simple=
-_bus_reg): /soc/jpgenc-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi:1513.7-1521.4: Warning (=
-graph_child_address): /soc/syscon@1c01a000/port: graph node has single chil=
-d node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: pmic (mediatek,m=
-t6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[0-=
-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: infra-iommu@1031=
-5000 (mediatek,mt8195-iommu-infra): interrupts: [[0, 795, 4, 0], [0, 796, 4=
-, 0], [0, 797, 4, 0], [0, 798, 4, 0], [0, 799, 4, 0]] is too long
-   	from schema $id: http://devicetree.org/schemas/iommu/mediatek,iommu.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: pmic@34 (mediate=
-k,mt6360): #interrupt-cells: 1 was expected
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6360.yaml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: codec@1a (realte=
-k,rt5682s): 'DBVDD-supply' is a required property
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5682s.ya=
-ml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: codec@1a (realte=
-k,rt5682s): 'LDO1-IN-supply' is a required property
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5682s.ya=
-ml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-dojo-r1.dtb: codec@1a (realte=
-k,rt5682s): Unevaluated properties are not allowed ('VBAT-supply' was unexp=
-ected)
---
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3017.17-3074.5: Warning (simple=
-_bus_reg): /soc/jpgdec-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3091.17-3127.5: Warning (simple=
-_bus_reg): /soc/jpgenc-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi:1513.7-1521.4: Warning (=
-graph_child_address): /soc/syscon@1c01a000/port: graph node has single chil=
-d node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: pmic (mediatek=
-,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[=
-0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: infra-iommu@10=
-315000 (mediatek,mt8195-iommu-infra): interrupts: [[0, 795, 4, 0], [0, 796,=
- 4, 0], [0, 797, 4, 0], [0, 798, 4, 0], [0, 799, 4, 0]] is too long
-   	from schema $id: http://devicetree.org/schemas/iommu/mediatek,iommu.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: pmic@34 (media=
-tek,mt6360): #interrupt-cells: 1 was expected
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6360.yaml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: codec@1a (real=
-tek,rt5682s): 'DBVDD-supply' is a required property
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5682s.ya=
-ml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: codec@1a (real=
-tek,rt5682s): 'LDO1-IN-supply' is a required property
-   	from schema $id: http://devicetree.org/schemas/sound/realtek,rt5682s.ya=
-ml#
-   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dtb: codec@1a (real=
-tek,rt5682s): Unevaluated properties are not allowed ('VBAT-supply' was une=
-xpected)
---
-   arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi:1245.7-1253.4: War=
-ning (graph_child_address): /soc/syscon@1c01d000/port: graph node has singl=
-e child node 'endpoint@0', #address-cells/#size-cells are not necessary
->> arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: pmic (mediatek,mt=
-6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[0-9=
-]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: mailbox@10320000 =
-(mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: mailbox@10330000 =
-(mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mai=
-lbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: scp@10720000 (med=
-iatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: scp@10720000 (med=
-iatek,mt8188-scp-dual): reg: [[0, 275906560, 0, 917504]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/mtk,scp.yaml#
-   arch/arm64/boot/dts/mediatek/mt8370-genio-510-evk.dtb: scp@10720000 (med=
-iatek,mt8188-scp-dual): reg-names: ['cfg'] is too short
---
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3017.17-3074.5: Warning (simple=
-_bus_reg): /soc/jpgdec-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3091.17-3127.5: Warning (simple=
-_bus_reg): /soc/jpgenc-master: missing or empty reg/ranges property
->> arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dtb: pmic (med=
-iatek,mt6359): '#sound-dai-cells' does not match any of the regexes: '^pinc=
-trl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dtb: infra-iom=
-mu@10315000 (mediatek,mt8195-iommu-infra): interrupts: [[0, 795, 4, 0], [0,=
- 796, 4, 0], [0, 797, 4, 0], [0, 798, 4, 0], [0, 799, 4, 0]] is too long
-   	from schema $id: http://devicetree.org/schemas/iommu/mediatek,iommu.yam=
-l#
-   arch/arm64/boot/dts/mediatek/mt8395-kontron-3-5-sbc-i1200.dtb: regulator=
- (mediatek,mt6360-regulator): 'BUCK1', 'BUCK2', 'LDO1', 'LDO2', 'LDO3', 'LD=
-O5', 'LDO6', 'LDO7' do not match any of the regexes: '^buck[12]$', '^ldo[12=
-3567]$', '^pinctrl-[0-9]+$'
-   	from schema $id: http://devicetree.org/schemas/regulator/mt6360-regulat=
-or.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3017.17-3074.5: Warning (simple=
-_bus_reg): /soc/jpgdec-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3091.17-3127.5: Warning (simple=
-_bus_reg): /soc/jpgenc-master: missing or empty reg/ranges property
-   arch/arm64/boot/dts/mediatek/mt8195.dtsi:3335.22-3347.5: Warning (avoid_=
-unnecessary_addr_size): /soc/dsi@1c008000: unnecessary #address-cells/#size=
--cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: /mt8195-sound: fa=
-iled to match any schema with compatible: ['mediatek,mt8195_mt6359']
->> arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: pmic (mediatek,mt=
-6359): '#sound-dai-cells' does not match any of the regexes: '^pinctrl-[0-9=
-]+$'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: infra-iommu@10315=
-000 (mediatek,mt8195-iommu-infra): interrupts: [[0, 795, 4, 0], [0, 796, 4,=
- 0], [0, 797, 4, 0], [0, 798, 4, 0], [0, 799, 4, 0]] is too long
-   	from schema $id: http://devicetree.org/schemas/iommu/mediatek,iommu.yam=
-l#
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+index 3ad33a094588c6a258786a02f952eaa6bf953234..792e7d865bfb1cfc13b59c90ddf7de47feff408f 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+@@ -89,6 +89,13 @@ extern struct wmi_sysman_priv wmi_priv;
+ 
+ enum { ENUM, INT, STR, PO };
+ 
++enum {
++	ENUM_MIN_ELEMENTS	= 8,
++	INT_MIN_ELEMENTS	= 9,
++	STR_MIN_ELEMENTS	= 8,
++	PO_MIN_ELEMENTS		= 4,
++};
++
+ enum {
+ 	ATTR_NAME,
+ 	DISPL_NAME_LANG_CODE,
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+index 8cc212c852668312096f756bc1fb1e3054a1f5c0..fc2f58b4cbc6eff863f2c3293cb4322d28048bb8 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+@@ -23,9 +23,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < ENUM_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+index 951e75b538fad42509614c2ebf2ef77aa05b614f..73524806423914bf210b9b5f78c0b5b4f6a7984c 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+@@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_INTEGER) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < INT_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_INTEGER) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[CURRENT_VAL].integer.value);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+index d8f1bf5e58a0f441cfd6c21f299c5426b2e28ce9..3167e06d416ede61cda5ad4c860dcb41b05cd5fa 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+@@ -26,9 +26,10 @@ static ssize_t is_enabled_show(struct kobject *kobj, struct kobj_attribute *attr
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_PASSOBJ_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[IS_PASS_SET].type != ACPI_TYPE_INTEGER) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < PO_MIN_ELEMENTS ||
++	    obj->package.elements[IS_PASS_SET].type != ACPI_TYPE_INTEGER) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[IS_PASS_SET].integer.value);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+index c392f0ecf8b55ba722246d67ba0073772a4f0094..0d2c74f8d1aad7843effcd7b600dd42e6947dc15 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+@@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID);
+ 	if (!obj)
+ 		return -EIO;
+-	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
++	if (obj->type != ACPI_TYPE_PACKAGE || obj->package.count < STR_MIN_ELEMENTS ||
++	    obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
+ 		kfree(obj);
+-		return -EINVAL;
++		return -EIO;
+ 	}
+ 	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
+ 	kfree(obj);
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index d00389b860e4ea0655c740c78bc3751f323b6370..3c74d5e8350a413a55739ca5e9647be30bac50d4 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -407,10 +407,10 @@ static int init_bios_attributes(int attr_type, const char *guid)
+ 		return retval;
+ 
+ 	switch (attr_type) {
+-	case ENUM:	min_elements = 8;	break;
+-	case INT:	min_elements = 9;	break;
+-	case STR:	min_elements = 8;	break;
+-	case PO:	min_elements = 4;	break;
++	case ENUM:	min_elements = ENUM_MIN_ELEMENTS;	break;
++	case INT:	min_elements = INT_MIN_ELEMENTS;	break;
++	case STR:	min_elements = STR_MIN_ELEMENTS;	break;
++	case PO:	min_elements = PO_MIN_ELEMENTS;		break;
+ 	default:
+ 		pr_err("Error: Unknown attr_type: %d\n", attr_type);
+ 		return -EINVAL;
 
---=20
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+base-commit: 173bbec6693f3f3f00dac144f3aa0cd62fb60d33
+change-id: 20250629-sysman-fix-9c527a28f1dd
+-- 
+ ~ Kurt
+
