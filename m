@@ -1,102 +1,74 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D934E2DF68;
-	Sun, 29 Jun 2025 17:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D942DF68;
+	Sun, 29 Jun 2025 17:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751217657; cv=none; b=kWkdZarNKIIp/h63ilOJxfut8zi4EqVVbbmcQR8vI/rXtoGjmW1ZUniY4Ny9H1mGcUVXevEpDCfCozt9YTLuL5Oswt3y0COkpHTQRzBRikD8fcHjG5U/YxoHqFyzED1H+GqWiHxjkBlgXuDN8idy3XJEmCWnTCebuJhsq2/SHtU=
+	t=1751217732; cv=none; b=oDN1Y/7FDuByvWML4iC/P45I0svQZUC5LaPPzDQeY4iU6PhpcmMz+UjZU+yTe/AaMaDsrZ/cRmGTWvu2bt5XQfa5HHXBfCqI2SQctXJ4ssi6NmmLjQ1TeT6qHRemya0DadpdDUv2kAjS4xBRbroSuHGr6GUwFEnsuI88YNCIM6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751217657; c=relaxed/simple;
-	bh=N0f5afAkzf1fqW3XQTQYnjI+xdJY4qlclUwKHzWbAXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jK/J9uIqjLWnpeMx9ofc0BK4q4bWFiPXc37sDIQ3XSr4xZpxC7sN5uZwAmA/EuS16svXpwcD0OgOZ8u+IMpzy/MQGxoCTihu/3I3bgwoaLQeAXGg2aU7j97SIVuj+GTLmeAZgwDzX9fWdRqKqc90jx3aNsuDHch31kW0BPLiLrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=W35AEyGg; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751217732; c=relaxed/simple;
+	bh=XrP11innq+Dfv3pmX0f1K76FsEZ7sFl8ynAspjcEEds=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BRKO+7ovXypnYVmWnjiV+IrhYChLp4KyWvq7K3dnzPA6YJ7C7FQZiZ9cX/hEDAOndZdHBBtBSx33DOyrmGcCvr5u+1bwFTpt5XLxd+ozOZSX8KCivvSh/5p2EbldKsjKruPwHNWfdCirnUHVP2Ei1lCqQWsIqpCmzGTBh5qmDPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHax899I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="W35AEyGg"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id A02F61128;
-	Sun, 29 Jun 2025 19:20:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751217631;
-	bh=N0f5afAkzf1fqW3XQTQYnjI+xdJY4qlclUwKHzWbAXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W35AEyGgIUcqCHL/7PyNxv8RHww0sSvQ8RVq9urPRCSIUAjGyRZcO8Lauww0Q084C
-	 2G8IOm70og486fHs7C1VXhEhnqMZDRyfeUruqeSjU2ee2z18orNyqRBRts2hTU7gB0
-	 h7M+qN6DEXm3bpUrIrXB/PO9x71MSEYwyCeIy3lU=
-Date: Sun, 29 Jun 2025 20:20:28 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: git@apitzsch.eu
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Ricardo Ribalda <ribalda@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] media: i2c: imx214: Separat legacy link frequency
- check from PLL calculation
-Message-ID: <20250629172028.GM24912@pendragon.ideasonboard.com>
-References: <20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu>
- <20250629-imx214_fixes-v1-5-873eb94ad635@apitzsch.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHax899I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7E2C4CEEB;
+	Sun, 29 Jun 2025 17:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751217731;
+	bh=XrP11innq+Dfv3pmX0f1K76FsEZ7sFl8ynAspjcEEds=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uHax899IZC2/o1p/VmP0JWkemwtaJPDaCj30Ev+i+Rd5qLP6QVfMkP7tzZp58Xdc9
+	 LLR4H+0CIBsSJWUAvxY3X7NdtFiWewjmtP2Zi7c4hoVNCDar8baAG9zoU9FMtv+kqh
+	 Bb3yrbqbkVqW40JcPrtpWH+vosSh4o8bDWN1u+GbW7K6WyhdyuhlxBwg21hWGKRBxu
+	 MDl1zxHhZNpP7MspPjR4HF6B9erwBgOb7NysWdUyAXWAZtxPqHMUY6YEZPi5iAxod7
+	 jpTi2DLbhZx9rQY0/Bq46efISQAVTlXsZFrGBpL3zja3QU6YQPPf+Fb5xI6DIpzNyy
+	 0LrFZgtUfIocQ==
+Date: Sun, 29 Jun 2025 18:22:04 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] iio: proximity: vcnl3020: make vcnl3020_property
+ const
+Message-ID: <20250629182204.68dfa4ec@jic23-huawei>
+In-Reply-To: <20250628-iio-const-data-25-v1-0-5d99cf17790e@baylibre.com>
+References: <20250628-iio-const-data-25-v1-0-5d99cf17790e@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250629-imx214_fixes-v1-5-873eb94ad635@apitzsch.eu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi André,
+On Sat, 28 Jun 2025 13:23:47 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Thank you for the patch.
-
-s/Separat/Separate/ in the subject line.
-
-On Sun, Jun 29, 2025 at 04:49:24PM +0200, André Apitzsch via B4 Relay wrote:
-> From: André Apitzsch <git@apitzsch.eu>
+> We can make const struct vcnl3020_property vcnl3020_led_current_property
+> const since it is read-only data. For this to really be useful, we also
+> have another change to pass this struct by pointer instead of by value.
 > 
-> This makes it easier to drop this legacy support from the driver later.
-> 
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
+Applied to the testing branch of iio.git.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Thanks,
+
+Jonathan
 
 > ---
->  drivers/media/i2c/imx214.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> David Lechner (2):
+>       iio: proximity: vcnl3020: pass struct vcnl3020_property by pointer
+>       iio: proximity: vcnl3020: make vcnl3020_property const
 > 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 63cf30acdc241de2f9ab3db339590da4af3d5102..52433775e9baddd8ab988e866a83387d53c1fd5c 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -1362,18 +1362,16 @@ static int imx214_parse_fwnode(struct imx214 *imx214)
->  		u64 freq = bus_cfg->link_frequencies[i];
->  		struct ccs_pll pll;
->  
-> -		if (!imx214_pll_calculate(imx214, &pll, freq))
-> -			break;
->  		if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
->  			dev_warn(dev,
->  				 "link-frequencies %d not supported, please review your DT. Continuing anyway\n",
->  				 IMX214_DEFAULT_LINK_FREQ);
->  			freq = IMX214_DEFAULT_LINK_FREQ;
-> -			if (imx214_pll_calculate(imx214, &pll, freq))
-> -				continue;
->  			bus_cfg->link_frequencies[i] = freq;
-> -			break;
->  		}
-> +
-> +		if (!imx214_pll_calculate(imx214, &pll, freq))
-> +			break;
->  	}
->  
->  	if (i == bus_cfg->nr_of_link_frequencies)
+>  drivers/iio/proximity/vcnl3020.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> ---
+> base-commit: 14071b9cf2d751ff9bc8b5e43fa94fbf08aceea1
+> change-id: 20250628-iio-const-data-25-452e9458133b
+> 
+> Best regards,
 
--- 
-Regards,
-
-Laurent Pinchart
