@@ -1,392 +1,108 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D3E1A2544;
-	Sun, 29 Jun 2025 19:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CDA33985;
+	Sun, 29 Jun 2025 19:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751225383; cv=none; b=T9gPfFkrKfuxmj614nTCchfQImUOLIrBMaEuCpDSDlxn6PmO5sb0I8Rt/owigKXYfo8iy+nWA/OELKmAK4BJkEHjIKCITyZP2RhclVAL+koU7mogp6RtKm34Y6pcioNeZnIyjOZ7W0n6Dvcn0qZvJ+AEdiC+Jry/W1glt451gbM=
+	t=1751225475; cv=none; b=SjYT+zBYLokqsBnkXvj9+IAuc6z3wiSClBU1ZTklU0rmh9C3pRxUdxAB/Lv0BXFeFZe6iwW8XOD3dOq61emECGeWL+3mk2OuKd4OUQDjxbnNrjD+bCsjR71FYRHD4INDX6pRvYdDGnFEEUSH525DaXLyDHpb2QzpSUoCDf1IvVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751225383; c=relaxed/simple;
-	bh=+xsEkzUwDcfayN+tWApwd9FJtqjKUX5/CQOeW6maCuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElcufiyULgZWuv2aZTI/oJyw8Ljv5YXBKeTDrs+qfqni6O2RRlu3nUqgQ40rXS3yX2cHuaDkouP2IwXCM7oBNFwFcIXyiCtKHzQ+FbcULvf+gc/2aB5qTw1AchLdAjqRjPXQz3Tn5tJ/q4XUm6leRZr9FzNWroRawhJnROtL8Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.2.196] (p5b13a6da.dip0.t-ipconnect.de [91.19.166.218])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id DAD0F61E64787;
-	Sun, 29 Jun 2025 21:29:03 +0200 (CEST)
-Message-ID: <d948929e-fd33-4527-8dc6-15e5c766cfdf@molgen.mpg.de>
-Date: Sun, 29 Jun 2025 21:29:02 +0200
+	s=arc-20240116; t=1751225475; c=relaxed/simple;
+	bh=OGp6vfw1QHdMT5fM9uLZJr8DQqgKSrwVaEvu6EHg9HM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EUU6cxZAtzNdeKcX9qGVchOS868xq4+aGFbHZU8/vgi7QxfGg5OyNWvyL8XGtqE3e8LFEWoi3eSCHu42liD8QN/Hu5fVjOwSVMgm6BQrlAp5jdkh4xRolef6S89LLtkMbJc/ILkdRKs1hkcKC6g9sxFknTId6ZzIfrXwmqXJ8co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cbw/2y+0; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cbw/2y+0"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34b770868dso459215a12.2;
+        Sun, 29 Jun 2025 12:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751225473; x=1751830273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BVp+c54/046unhQwFhUIeSno00Lzx8KKU3AbwMxIluc=;
+        b=Cbw/2y+0EkE8w5y5OferT5gU3OwstCZw2UATydcinnTW/Ae/lsMZLIsX/LuBmuTalT
+         Qqot4dGHenK2Xlz6+UYhOWi2YeTNh52PO5LH7d/Q+vrVsFTiqGDF2mkJwRjLgj8eCSdY
+         yQNWo9PU80S2v2nMdIGjuKXdt75SUYmfEFPAFGB6mGOJoUL2KGcpJ3onBXfF1W3Ds68D
+         r+Of62vZh+ABsJUBrNaeU9C1lXnD1fV/q8tYZa3lci4/DJVZBPevkIZnHim2QmUyXRSZ
+         giKkCOYjIFznR03HFwe2Q2f3E3veQK8FLIQDR3xgZurtBS+hyZXWL/sIvnvvGQ7no/al
+         Al8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751225473; x=1751830273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BVp+c54/046unhQwFhUIeSno00Lzx8KKU3AbwMxIluc=;
+        b=J8A3gJw+VXN1Uaf4JkGsHgcV29SbF33BOaFX7HKbBQ1FxbYrCUeOsPHG68u4ERc9L+
+         Nw6dMmg67S37U6UMWe/Oz+3Ta4n81nq16rBwnbitjrUsZar+f7jdoFNZ0LVEhkd/f8ZE
+         I8d7hdTk/U9uX6FdzWxzCvpNrEH55eRAwaMdJgr0KXCvDiA+bScENiXpvkjbb2yS3eGL
+         ybyrxOiU1nMZ2XqWmiE8jmWrFoSRJv3gzl0ngpvx/1OVfe2mgXACICqF3dy1D+IgJNO/
+         pPMTOACfdov/7dzF6WWeBRuJmQqyKL4s9I+vVWwnoYuj2CUCrgkGy0YfQMH/lYHOy+yU
+         YoEg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6BLOD5eeD0YSxFKgkLRGFcIF9DnHa0DkkPwGlLKitxMyoJwFotfEDNf1QoKwH2LWC8/yMQZ7245qmJVE=@vger.kernel.org, AJvYcCWUeJTAnfhJKcK86ip2LMWxCuM7GFihS/MF4SXiklcDRt2DmMHokjQBs72EqwvC1wBHoK4Qx/RLujwh/6qfj/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyocPnpwTBuXjNBBLF/5rzPtQ166Ec/e6isrfPYyyZdjjpqXA8+
+	EUglsFp9jMcmkySN9qL5sCRIkqPl+vLNrHdjqdDB8X4YKIh/rUzZywFNRiXlx4d8m58KEgX+w+x
+	LwTyERhDKQDwUwNKMeTB6JFYriQmjPlk=
+X-Gm-Gg: ASbGncvR4RK6T5ef8JWKwNruKq3OXff5SKcdQLSE/du624VqaSCXdEFukgeQ6zzBD+N
+	FBgNWR7Z0+hcjledJdB493nguFJ9QK93SdKKDuVlrXzNIAmxpjMH+lYDQhVl3D+/8n91lFRDK7q
+	h+hK+FKY7QFVgfzuhm52rNHEDrYloik5enoAJChrOB0vQ=
+X-Google-Smtp-Source: AGHT+IF9JltI282c3eQ3Q6Ae654ur+PoVB7wqYGQoylGYD35rwz70CBn5ZCWuQiWV33PV5fvoksZukiBOds1jW6cfgg=
+X-Received: by 2002:a17:90b:3846:b0:312:e987:11b0 with SMTP id
+ 98e67ed59e1d1-318ec43d8bamr4107728a91.6.1751225472974; Sun, 29 Jun 2025
+ 12:31:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ata: ahci: Add ALPM power state accounting to the AHCI
- driver
-To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
-Cc: Arjan van de Ven <arjan@linux.intel.com>,
- David Woodhouse <dwmw2@infradead.org>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250629192456.3761-2-pmenzel@molgen.mpg.de>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250629192456.3761-2-pmenzel@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
+In-Reply-To: <20250628-rust_init_trailing_comma-v1-1-2d162ae1a757@jannau.net>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 29 Jun 2025 21:31:00 +0200
+X-Gm-Features: Ac12FXyoGPPSOX_-6d0h3tX4tg3i5B41E9--4iewRQDOetQW8kV_ZCJuzQO0KHI
+Message-ID: <CANiq72=o-5Gtw26X84=k0KK0sn+EyijxgYq=E2+Mw2+U+SOgaw@mail.gmail.com>
+Subject: Re: [PATCH] rust: init: Fix generics in *_init! macros
+To: j@jannau.net
+Cc: Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[Cc: Really use David’s current address]
+On Sat, Jun 28, 2025 at 1:36=E2=80=AFPM Janne Grunau via B4 Relay
+<devnull+j.jannau.net@kernel.org> wrote:
+>
+> From: Janne Grunau <j@jannau.net>
+>
+> The match pattern for a optional trailing comma in the list of generics
+> is erroneously repeated in the code block resulting in following error:
+>
+> | error: attempted to repeat an expression containing no syntax variables=
+ matched as repeating at this depth
+> |    --> rust/kernel/init.rs:301:73
+> |     |
+> | 301 |         ::pin_init::try_pin_init!($(&$this in)? $t $(::<$($generi=
+cs),* $(,)?>)? {
+> |     |                                                                  =
+       ^^^
+>
+> Remove "$(,)?" from all code blocks in the try_init! and try_pin_init!
+> definitions.
+>
+> Fixes: 578eb8b6db13 ("rust: pin-init: move the default error behavior of =
+`try_[pin_]init`")
+> Signed-off-by: Janne Grunau <j@jannau.net>
 
-Am 29.06.25 um 21:24 schrieb Paul Menzel:
-> From: Arjan van de Ven <arjan@linux.intel.com>
-> 
-> PowerTOP wants to be able to show the user how effective the ALPM link
-> power management is for the user. ALPM is worth around 0.5W on a quiet
-> link; PowerTOP wants to be able to find cases where the "quiet link" isn't
-> actually quiet.
-> 
-> This patch adds state accounting functionality to the AHCI driver for
-> PowerTOP to use.
-> 
-> The parts of the patch are
-> 
-> 1)  the sysfs logic of exposing the stats for each state in sysfs
-> 2)  the basic accounting logic that gets update on link change interrupts
->      (or when the user accesses the info from sysfs)
-> 3)  an "accounting enable" flag; in order to get the accounting to work,
->      the driver needs to get phyrdy interrupts on link status changes.
->      Normally and currently this is disabled by the driver when ALPM is
->      on (to reduce overhead); when PowerTOP is running this will need
->      to be on to get usable statistics... hence the sysfs tunable.
-> 
-> The PowerTOP output currently looks like this:
-> 
->      Recent SATA AHCI link activity statistics
->      Active	Partial	Slumber	Device name
->        0.5%	 99.5%	  0.0%	host0
-> 
-> (work to resolve "host0" to a more human readable name is in progress)
-> 
->      [root@dyn-252 host1]# grep ^ ahci_alpm_*
->      ahci_alpm_accounting:1
->      ahci_alpm_active:1334912
->      ahci_alpm_devslp:251547
->      ahci_alpm_partial:0
->      ahci_alpm_slumber:1020283
-> 
-> Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
-> [rebased from https://raw.github.com/fenrus75/powertop/master/patches/linux-3.3.0-ahci-alpm-accounting.patch]
-> Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
-> [rebased from https://lore.kernel.org/all/1364473277.14860.33.camel@i7.infradead.org/
-> and slightly modify commit message and update David’s email address]
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> ---
-> See https://lore.kernel.org/all/20091113192429.4dfc9c39@infradead.org/
-> for the original discussion
-> 
->   drivers/ata/ahci.h    |  17 ++++
->   drivers/ata/libahci.c | 212 +++++++++++++++++++++++++++++++++++++++++-
->   2 files changed, 227 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 2c10c8f440d1..d02dd726adfd 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -304,6 +304,14 @@ struct ahci_em_priv {
->   	struct ata_link *link;
->   };
->   
-> +enum ahci_port_states {
-> +	AHCI_PORT_NOLINK = 0,
-> +	AHCI_PORT_ACTIVE = 1,
-> +	AHCI_PORT_PARTIAL = 2,
-> +	AHCI_PORT_SLUMBER = 3,
-> +	AHCI_PORT_DEVSLP = 4
-> +};
-> +
->   struct ahci_port_priv {
->   	struct ata_link		*active_link;
->   	struct ahci_cmd_hdr	*cmd_slot;
-> @@ -324,6 +332,15 @@ struct ahci_port_priv {
->   	/* enclosure management info per PM slot */
->   	struct ahci_em_priv	em_priv[EM_MAX_SLOTS];
->   	char			*irq_desc;	/* desc in /proc/interrupts */
-> +
-> +	/* ALPM accounting state and stats */
-> +	unsigned int 		accounting_active:1;
-> +	u64			active_jiffies;
-> +	u64			partial_jiffies;
-> +	u64			slumber_jiffies;
-> +	u64			devslp_jiffies;
-> +	int			previous_state;
-> +	int			previous_jiffies;
->   };
->   
->   struct ahci_host_priv {
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index 4e9c82f36df1..4b787eb246bd 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-> @@ -85,6 +85,19 @@ static ssize_t ahci_activity_store(struct ata_device *dev,
->   				   enum sw_activity val);
->   static void ahci_init_sw_activity(struct ata_link *link);
->   
-> +static ssize_t ahci_alpm_show_active(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_slumber(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_devslp(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_partial(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_accounting(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_set_accounting(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count);
->   static ssize_t ahci_show_host_caps(struct device *dev,
->   				   struct device_attribute *attr, char *buf);
->   static ssize_t ahci_show_host_cap2(struct device *dev,
-> @@ -106,6 +119,13 @@ static DEVICE_ATTR(ahci_host_caps, S_IRUGO, ahci_show_host_caps, NULL);
->   static DEVICE_ATTR(ahci_host_cap2, S_IRUGO, ahci_show_host_cap2, NULL);
->   static DEVICE_ATTR(ahci_host_version, S_IRUGO, ahci_show_host_version, NULL);
->   static DEVICE_ATTR(ahci_port_cmd, S_IRUGO, ahci_show_port_cmd, NULL);
-> +static DEVICE_ATTR(ahci_alpm_active, S_IRUGO, ahci_alpm_show_active, NULL);
-> +static DEVICE_ATTR(ahci_alpm_partial, S_IRUGO, ahci_alpm_show_partial, NULL);
-> +static DEVICE_ATTR(ahci_alpm_slumber, S_IRUGO, ahci_alpm_show_slumber, NULL);
-> +static DEVICE_ATTR(ahci_alpm_devslp, S_IRUGO, ahci_alpm_show_devslp, NULL);
-> +static DEVICE_ATTR(ahci_alpm_accounting, S_IRUGO | S_IWUSR,
-> +		ahci_alpm_show_accounting, ahci_alpm_set_accounting);
-> +
->   static DEVICE_ATTR(em_buffer, S_IWUSR | S_IRUGO,
->   		   ahci_read_em_buffer, ahci_store_em_buffer);
->   static DEVICE_ATTR(em_message_supported, S_IRUGO, ahci_show_em_supported, NULL);
-> @@ -118,6 +138,11 @@ static struct attribute *ahci_shost_attrs[] = {
->   	&dev_attr_ahci_host_cap2.attr,
->   	&dev_attr_ahci_host_version.attr,
->   	&dev_attr_ahci_port_cmd.attr,
-> +	&dev_attr_ahci_alpm_active.attr,
-> +	&dev_attr_ahci_alpm_partial.attr,
-> +	&dev_attr_ahci_alpm_slumber.attr,
-> +	&dev_attr_ahci_alpm_devslp.attr,
-> +	&dev_attr_ahci_alpm_accounting.attr,
->   	&dev_attr_em_buffer.attr,
->   	&dev_attr_em_message_supported.attr,
->   	NULL
-> @@ -257,6 +282,183 @@ static void ahci_rpm_put_port(struct ata_port *ap)
->   	pm_runtime_put(ap->dev);
->   }
->   
-> +static int get_current_alpm_state(struct ata_port *ap)
-> +{
-> +	u32 status = 0;
-> +
-> +	ahci_scr_read(&ap->link, SCR_STATUS, &status);
-> +
-> +	/* link status is in bits 11-8 */
-> +	status = status >> 8;
-> +	status = status & 0xf;
-> +
-> +	if (status == 8)
-> +		return AHCI_PORT_DEVSLP;
-> +	if (status == 6)
-> +		return AHCI_PORT_SLUMBER;
-> +	if (status == 2)
-> +		return AHCI_PORT_PARTIAL;
-> +	if (status == 1)
-> +		return AHCI_PORT_ACTIVE;
-> +	return AHCI_PORT_NOLINK;
-> +}
-> +
-> +static void account_alpm_stats(struct ata_port *ap)
-> +{
-> +	struct ahci_port_priv *pp;
-> +
-> +	int new_state;
-> +	u64 new_jiffies, jiffies_delta;
-> +
-> +	if (ap == NULL)
-> +		return;
-> +	pp = ap->private_data;
-> +
-> +	if (!pp) return;
-> +
-> +	new_state = get_current_alpm_state(ap);
-> +	new_jiffies = jiffies;
-> +
-> +	jiffies_delta = new_jiffies - pp->previous_jiffies;
-> +
-> +	switch (pp->previous_state) {
-> +	case AHCI_PORT_NOLINK:
-> +		pp->active_jiffies = 0;
-> +		pp->partial_jiffies = 0;
-> +		pp->slumber_jiffies = 0;
-> +		break;
-> +	case AHCI_PORT_ACTIVE:
-> +		pp->active_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_PARTIAL:
-> +		pp->partial_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_SLUMBER:
-> +		pp->slumber_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_DEVSLP:
-> +		pp->devslp_jiffies += jiffies_delta;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	pp->previous_state = new_state;
-> +	pp->previous_jiffies = new_jiffies;
-> +}
-> +
-> +static ssize_t ahci_alpm_show_active(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->active_jiffies));
-> +}
-> +
-> +static ssize_t ahci_alpm_show_partial(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->partial_jiffies));
-> +}
-> +
-> +static ssize_t ahci_alpm_show_slumber(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->slumber_jiffies));
-> +}
-> +
-> +static ssize_t ahci_alpm_show_devslp(struct device *dev,David Woodhouse <
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->devslp_jiffies));
-> +}
-> +
-> +static ssize_t ahci_alpm_show_accounting(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-> +
-> +	pp = ap->private_data;
-> +
-> +	return sprintf(buf, "%u\n", pp->accounting_active);
-> +}
-> +
-> +static ssize_t ahci_alpm_set_accounting(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	unsigned long flags;
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +	void __iomem *port_mmio;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return 1;
-> +
-> +	pp = ap->private_data;
-> +	port_mmio = ahci_port_base(ap);
-> +
-> +	if (!pp)
-> +		return 1;
-> +	if (buf[0] == '0')
-> +		pp->accounting_active = 0;
-> +	if (buf[0] == '1')
-> +		pp->accounting_active = 1;
-> +
-> +	/* we need to enable the PHYRDY interrupt when we want accounting */
-> +	if (pp->accounting_active) {
-> +		spin_lock_irqsave(ap->lock, flags);
-> +		pp->intr_mask |= PORT_IRQ_PHYRDY;
-> +		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		spin_unlock_irqrestore(ap->lock, flags);
-> +	}
-> +
-> +	return count;
-> +}
-> +
->   static ssize_t ahci_show_host_caps(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -821,9 +1023,14 @@ static int ahci_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
->   		 * Disable interrupts on Phy Ready. This keeps us from
->   		 * getting woken up due to spurious phy ready
->   		 * interrupts.
-> +		 *
-> +		 * However, when accounting_active is set, we do want
-> +		 * the interrupts for accounting purposes.
->   		 */
-> -		pp->intr_mask &= ~PORT_IRQ_PHYRDY;
-> -		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		if (!pp->accounting_active) {
-> +			pp->intr_mask &= ~PORT_IRQ_PHYRDY;
-> +			writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		}
->   
->   		sata_link_scr_lpm(link, policy, false);
->   	}
-> @@ -1903,6 +2110,7 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
->   
->   	if (sata_lpm_ignore_phy_events(&ap->link)) {
->   		status &= ~PORT_IRQ_PHYRDY;
-> +		account_alpm_stats(ap);
->   		ahci_scr_write(&ap->link, SCR_ERROR, SERR_PHYRDY_CHG);
->   	}
->   
+Applied to `rust-fixes` -- thanks everyone!
+
+    Cc: stable@vger.kernel.org
+
+Cheers,
+Miguel
