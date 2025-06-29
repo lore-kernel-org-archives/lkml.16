@@ -1,68 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985053D6F;
-	Sun, 29 Jun 2025 20:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6088E33985;
+	Sun, 29 Jun 2025 20:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751230657; cv=none; b=V/Wq7Fn4GaxHD95iJXzc/hYIjul5TGNPbUmx1nDuMGwHo0R+Hh/zU+SOCr4BYQ7zLQ2DHoo0Lzts1t4oX9XgwvJAgIPPv4MSGsUrWyEVwllr3lYcY/ufHgPjPGcGGtuty1K4jUN3phBuvlTRbADTL9sdPkw5I61Khfi5I+qfbHc=
+	t=1751230726; cv=none; b=LFLouDcmKk/q1V3P8yxdUvou66ESt89Vk4UxzhSicrzRqZI8f+KZWifYPz2gCwo07xpCrARMUxMc1k6YRLlykAfsdgtJenN1vyhZAPK3PgQ3uvrrXh7NSLYeV2Xm3QT1YOKdgJ3+kluc0m+7yiu2vMae25KBW0VVMyL38MqD/AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751230657; c=relaxed/simple;
-	bh=4sGclJ7JPmOXEyw1qCkUxmj9+SxiJpgXHWGQ3kI7L8E=;
+	s=arc-20240116; t=1751230726; c=relaxed/simple;
+	bh=ICTpLVM2M7G18zzAFC+A0bTSgAg31tSJVTdM/HqBFLc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpLUhIkM7DgVcFhW8EL/C/OUIy6WUZ+IfRght3y11y2WarwWwPCgjnR8fSqHXW4rA0GjPVlUXlWgww2U0tPU02BDS+YJMXsotctbEgv+DX3I92jTFhrrJuIwoq+IsMpG33cb/ztNBhrZuADGWOT2yqeh7lDqCdDdDOTEOP6BXSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKlRP+3f; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZLAfuVN0ubBjysYotqRsizrJMZyosRp2aDHFlpBg7v7kNIw5HhTP+34TY6dsFbvfg62G9RKz3FI9ju7SOneBDJH4XDWwzmRbnio0u92qMaXT6qU3prV2VmyXqIrr+Wm3+tz18P+rzIdnbc6/yl+NY/l5DMhYOSr1bXkoED83oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4u9sp6b; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKlRP+3f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751230654; x=1782766654;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4sGclJ7JPmOXEyw1qCkUxmj9+SxiJpgXHWGQ3kI7L8E=;
-  b=TKlRP+3f/6xa/BsqWWJ1rOHbxPuKQxI4UoAPkOLKgX/24YK4S0W6CBr2
-   mLPR1nT5/bW4GCFEzV87wIlEZZTVo2cHsL/Io2xUX33AXqMUItAvvUk8W
-   9WqWBlXmOIbT0zR7n5FNnqx5iO2Scc+dXCQRUtGTtL6hkAm6bT4XA5ZN5
-   dv7KBef4kk2nC0XhV2699kGEOcy0HG1jHzZ4AeMlm9WPBTj9IG+663CZ1
-   Pj+fUkEP3t5l940/2+jDusWx7FcnGku0Boqu/5jn9IB7k/6oV7h8hdY17
-   eK08987vV6w5dwdnS9y6gzs9fEJWqsrutlm0s/XcNOy2f0Jem8BdKuO3R
-   Q==;
-X-CSE-ConnectionGUID: MHTvA/O7RTqGdnq6qHH77Q==
-X-CSE-MsgGUID: +TVy+MTFTkm36HzPfcv4yw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="76006842"
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="76006842"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 13:57:34 -0700
-X-CSE-ConnectionGUID: yqedKzWcThKyEa84V8mKAQ==
-X-CSE-MsgGUID: 2xMj3oDGTH6CIdlGLr8kEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
-   d="scan'208";a="152780971"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 29 Jun 2025 13:57:29 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uVz5b-000YE2-1w;
-	Sun, 29 Jun 2025 20:57:27 +0000
-Date: Mon, 30 Jun 2025 04:56:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com,
-	sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, p.zabel@pengutronix.de,
-	richardcochran@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, guangjie.song@mediatek.com,
-	wenst@chromium.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-	kernel@collabora.com, Laura Nao <laura.nao@collabora.com>
-Subject: Re: [PATCH v2 22/29] clk: mediatek: Add MT8196 mfg clock support
-Message-ID: <202506300416.dbAiyBcI-lkp@intel.com>
-References: <20250624143220.244549-23-laura.nao@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4u9sp6b"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fd0a91ae98so8988856d6.1;
+        Sun, 29 Jun 2025 13:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751230724; x=1751835524; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
+        b=P4u9sp6bZKHA60nOlmRck8CjvWeIHe8SsPVt49NuhnvrM8KouMam8u49vLs1SKfshx
+         PXQcYtJSl5VKJ4tci9vmxWbCMbecq2R/ZSt5ApsD2HChYwiuqQiKFdu8gX0MpuphvUZe
+         BuTh6Kysyk14Bdib74lGqQiwYNKF/zV2fudVaQhHRXEEcqaGALptzAQkYcL1+Q47HjIU
+         beyv+Pz9KdZwYxv4yWyz+Xc0PB1FqxuFDyUmPRASQ9HHqfND/tymjFiEFnIrVoObcI6Y
+         0PMt9+uNL/YmJNfY2h3kFL7iH3fbthq2ZqcBxfXZjru2vRP8SdQQ5VyTDD8ngyIvZnYN
+         RexQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751230724; x=1751835524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yie4J6/XsAs1Q8lv5qOjqiXHg7FYWZHizYmDgi4UuNs=;
+        b=dltEHn0Zi2oCaZZo0/OwfutDS02c3i3kgyZLkAcqHCwgRIR+k6GhSHc5USPs1imRM+
+         QNDHA4Sx/3sYQkgdTDpoEShOxpM4y3PMgSknvBnJqTsFryQcTLdfCU5wS+YuGHsn0siZ
+         ORVQPpS/KmNy5MASCXLOIIdIwriBKvr2GucSlgRgcLkZijWLLwL3BNODDhvmzpDRioNZ
+         5sPb4/8ySWxN59r1hHquwNeoMvjxlz+jdR2xHHwi2J/4LjPVtRo7LZ+aubGC/5cn2Gzc
+         DOkbpZzHOox+Nqb0fCDkQyXCtqfVoKpshiD5qxGByay3NcT2TA5CfI8pP3CtdE4IlNKY
+         8MYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2oDVQzMASG4YfOAK95Rg6QQYa3v807KuNzpaDhHZY3iA91uVCKHXRVC6hGiAMUKxWwjz0XSuvqoDW@vger.kernel.org, AJvYcCXi7AvYbJglKUvGSAzbUsVZvRg05YQ7zN0ILxJWtjHDJMgqSM5L5+ANYEHs4pGEzzwaOAVHTHAq2+JLXxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvDjE8fYvFU7w+53J1pF/i7KK5FLlAMnD/hOx2UVfrPS8MAEWE
+	qvn/9astsLd0opfi0D69TgiUFC8GonhGdIZ3+pY17qHbPk2Nfe/uXDTYfv6i7Z3q1BCUZQ==
+X-Gm-Gg: ASbGnctrXUnN4GRnvDzLVyDXpkz81IpLj94t4yrwv6Lt6lJuq++OFi7BabLZ1wb3zOC
+	uDM4rVV3W4UHyfgrfbMFij7B2uy06jiGeN/z0SyvvPoK8Y9StzPKpLPBULzstArsLLq8B723WFh
+	z2/1aDESiUmJd3adUWtimmPnt6ntMbNxjnDzNbaOhiM8vUHuJDoFgTjwjFp+aUqmly4nL8+uv6L
+	C1Blif0QHytmQn546zdQaxLgchZFiKmFZP0/ifGEO3rn0gt7PKoaiZjnRl66c9lG43R587MftXL
+	bkQIkqQCRGf1mhgV12ZYiiPjCFeWegJ7ku5g15J27unZBKy71g==
+X-Google-Smtp-Source: AGHT+IHV9zmUEfgqMrmNKPmx2kRTuxTdY/cY3aGuTYatCyaiuxMqaEx69QeCSt7OKPnppAGC83yv0w==
+X-Received: by 2002:a05:6214:6201:b0:700:c7ef:ad26 with SMTP id 6a1803df08f44-700c7efaf90mr50674366d6.29.1751230724134;
+        Sun, 29 Jun 2025 13:58:44 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:24f4::dead:c001])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443231da6sm484599585a.101.2025.06.29.13.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 13:58:43 -0700 (PDT)
+Date: Sun, 29 Jun 2025 17:58:30 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 3/4] phy: rockchip-pcie: Enable all four lanes if required
+Message-ID: <b203b067e369411b029039f96cfeae300874b4c7.1751200382.git.geraldogabriel@gmail.com>
+References: <cover.1751200382.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,49 +80,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624143220.244549-23-laura.nao@collabora.com>
+In-Reply-To: <cover.1751200382.git.geraldogabriel@gmail.com>
 
-Hi Laura,
+Current code enables only Lane 0 because pwr_cnt will be incremented on
+first call to the function. Let's reorder the enablement code to enable
+all 4 lanes through GRF.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+---
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on linus/master v6.16-rc3 next-20250627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Laura-Nao/clk-mediatek-clk-pll-Add-set-clr-regs-for-shared-PLL-enable-control/20250624-225217
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-patch link:    https://lore.kernel.org/r/20250624143220.244549-23-laura.nao%40collabora.com
-patch subject: [PATCH v2 22/29] clk: mediatek: Add MT8196 mfg clock support
-config: arm64-randconfig-r053-20250629 (https://download.01.org/0day-ci/archive/20250630/202506300416.dbAiyBcI-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506300416.dbAiyBcI-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> drivers/clk/mediatek/clk-mt8196-mfg.c:143:3-8: No need to set .owner here. The core will do it.
-
-vim +143 drivers/clk/mediatek/clk-mt8196-mfg.c
-
-   137	
-   138	static struct platform_driver clk_mt8196_mfg_drv = {
-   139		.probe = clk_mt8196_mfg_probe,
-   140		.remove = clk_mt8196_mfg_remove,
-   141		.driver = {
-   142			.name = "clk-mt8196-mfg",
- > 143			.owner = THIS_MODULE,
-   144			.of_match_table = of_match_clk_mt8196_mfg,
-   145		},
-   146	};
-   147	module_platform_driver(clk_mt8196_mfg_drv);
-   148	
-
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index bd44af36c67a..f22ffb41cdc2 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -160,6 +160,12 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 
+ 	guard(mutex)(&rk_phy->pcie_mutex);
+ 
++	regmap_write(rk_phy->reg_base,
++		     rk_phy->phy_data->pcie_laneoff,
++		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
++				   PHY_LANE_IDLE_MASK,
++				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++
+ 	if (rk_phy->pwr_cnt++) {
+ 		return 0;
+ 	}
+@@ -176,12 +182,6 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 				   PHY_CFG_ADDR_MASK,
+ 				   PHY_CFG_ADDR_SHIFT));
+ 
+-	regmap_write(rk_phy->reg_base,
+-		     rk_phy->phy_data->pcie_laneoff,
+-		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+-				   PHY_LANE_IDLE_MASK,
+-				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+-
+ 	/*
+ 	 * No documented timeout value for phy operation below,
+ 	 * so we make it large enough here. And we use loop-break
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
