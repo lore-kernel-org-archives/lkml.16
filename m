@@ -1,116 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F85BE4A;
-	Sun, 29 Jun 2025 19:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBE51799F;
+	Sun, 29 Jun 2025 19:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751223741; cv=none; b=mn8rXH9n14V0WIA9EN6xAFSjdXYKE/7e/y59+zg/BJjByITspQtEL4SbJa7tJqTq0QCqtx+CapFYsEqOPNum8K4HKYPVip0IdN74YlY25C5cRXTk+5xZpSLNVqIUmrTWP3o3rdVwvApeZzzfmQXM7FWVAC20qJbjcrlkdc0IZdc=
+	t=1751223775; cv=none; b=c9pfMVvOCxRsiJ1ETqB59mT6AvvQ4I/d4T5t5NfRzOrCAdgODgy4DRR0Jj4eyPQ+qlWWySKnDt9LJ7Fzy4gR7K89Zb1aNQz3JoEC6a9IKzt6FFlpTm8kqrSqaQTokiFtQ93ujPT0UH982TyPWPPU33cSQTDxefYYjpZuF/OZAN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751223741; c=relaxed/simple;
-	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TShCy8kpJyveXclnA2kXwWoszqogvX8nPj1aJr6YuN1PRhiwY5njmAyYy5tQbxBDnw5FZ3b4J3r/LkdU8lebUGb+cmoKGk/oN+bUWxh8fxUNIZCkqloxaWQb0emoIglDF2VoD0PfrwuGT/Zz9Id3e+ErYkT428tZ9aOvcZPWO88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNOhTrRs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751223775; c=relaxed/simple;
+	bh=UwAtAuUNurGbVARCW4Sx+eI0xiWAbL99/KqmC6wtqUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hlkeWLmdwzjECHuWt9aZ0TMqM6mjoLJIk50Uf48IYTSsVeylzUCHylUK0JPkegY/FeNFMpTYIjd85uGQOxuNW4FqchhEPThAiMgwRnXE/tXBQ5WQcEqGm/KZYvBaObz4fiMcKp8i+YHwcpZFOcwlMIhGz6JI/WlZJkR4oEFsN+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e18Kdu1w; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNOhTrRs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5B3C4CEEB;
-	Sun, 29 Jun 2025 19:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751223741;
-	bh=BKcKihhtowYCzyyiIXSJEIIzyxAqJMQrIKiBu6x3eXE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fNOhTrRszSYEfCM0gNBzEz+pQ+d9+vQcr/fB16JtjXSEi2gkZGfivSpw9UcVAcj8B
-	 1UwL0h3Ig7KBUdiT7BnVMId+4VstNLIBeKouIPcx2f7Jpoy9o4GH6LbL9WvrqBQueO
-	 v3SXr/LIeZQQX7oGm8AggSqyQxzhMfz9z9EVugwouj06PTYdFUZs74UKkvRSstyqOF
-	 Z9Y57r05LnVJ3gaA7l2CI4SkDK4fY9bTrh7B0HGXAFrc1z6xZyEeo8Z53ArwN410Yf
-	 LxLpRzOoiHvrPcWHzfC2Ls5HvqdtpuunmsuElP6aWLTaK7p4Mgrb7adVX97hnVYlzv
-	 +87R1YjFXD0Tg==
-Date: Sun, 29 Jun 2025 14:02:19 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lukas@wunner.de,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <20250629190219.GA1717534@bhelgaas>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e18Kdu1w"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=uEDM3HRk9n9VR8fiWw/HrLjw5m6tjk6078UGqgBCTuE=; b=e18Kdu1wYRVFQ5sGrgTVFIIkRE
+	KKblHQW7cuEwl9eLjqMkrpR0iQ8ai2ABmbzvT81bx6CTsSItsvehLx7GnqBI6dcacPdKhK8vdYx24
+	MMVtiUF02M9lECVRMTjc434z4hKCAJLd7AQ7lscctW611VZuw8SoiQwBBaedixlmR6qCJItlZ6kJ8
+	nSupKXTxWpuDRAPZvuSWvAziEbbBlPG3Ing/NcY8pGK0z5zwXBjN+fu1IP9cgvwayAFWkOBWOmrf5
+	UbSvbqjD3liz4GcSGTF2mmAsveTpon0LDJnEAHgOED0GgyObdbfXYAdHnMZk+i6/TVuP0pZcs8veW
+	XuD0v0LQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uVxIg-00000006eNJ-2Em9;
+	Sun, 29 Jun 2025 19:02:51 +0000
+Message-ID: <e23fc081-8a74-45cd-9250-977c6e59d69f@infradead.org>
+Date: Sun, 29 Jun 2025 12:02:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <qy2nfwiu2g7pbzbk37wseapvsen7mx4fgqdkdwjbclsj5dltu5@7o2xtj3qhedm>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/9] kconfig: improve gconfig
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250629184554.407497-1-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250629184554.407497-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 04:57:26AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jun 27, 2025 at 05:45:02PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Jun 16, 2025 at 11:02:09AM +0530, Manivannan Sadhasivam wrote:
-> > > pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-> > > built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-> > > independently of CONFIG_PWRCTRL. This creates enumeration failure on
-> > > platforms like brcmstb using out-of-tree devicetree that describes the
-> > > power supplies for endpoints in the PCIe child node, but doesn't use
-> > > PWRCTRL framework to manage the supplies. The controller driver itself
-> > > manages the supplies.
-> > > 
-> > > But in any case, the API should be built only when CONFIG_PWRCTRL is
-> > > enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-> > > a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-> > > fixes the enumeration issues on the affected platforms.
-> > 
-> > Finally circling back to this since I think brcmstb is broken since
-> > v6.15 and we should fix it for v6.16 final.
+
+
+On 6/29/25 11:43 AM, Masahiro Yamada wrote:
+> - Code refactoring
+> - Migrate GTK 2 to GTK3
+> - Fix all compile warnings
 > 
-> Yes! Sorry for the delay. The fact that I switched the job and had
-> to attend OSS NA prevented me from reworking this patch.
 > 
-> > IIUC, v3 is the current patch and needs at least a fix for the build
-> > issue [1], and I guess the options are:
-> > 
-> >   1) Make CONFIG_PCI_PWRCTRL bool.  On my x86-64 system
-> >      pci-pwrctrl-core.o is 8880 bytes, which seems like kind of a lot
-> >      when only a few systems need it.
-> > 
-> >   2) Leave pci_pwrctrl_create_device() in probe.c.  It gets optimized
-> >      away if CONFIG_OF=n because of_pci_find_child_device() returns
-> >      NULL, but still a little ugly for readers.
-> > 
-> >   3) Put pci_pwrctrl_create_device() in a separate
-> >      drivers/pci/pwrctrl/ file that is always compiled even if PWRCTRL
-> >      itself is a module.  Ugly because then we sort of have two "core"
-> >      files (core.c and whatever new file is always compiled).
+
+Hi,
+
+If I am testing your recent *config patches, should I replace all gconf
+patches from the patch 00/66 series with these patches?
+
+Thanks.
+
+> Masahiro Yamada (9):
+>   kconfig: gconf: fix behavior of a menu under a symbol in split view
+>   kconfig: gconf: use configure-event handler to adjust pane separator
+>   kconfig: gconf: rename display_tree_part()
+>   kconfig: gconf: rename gconf.glade to gconf.ui
+>   kconfig: gconf: migrate to GTK 3
+>   kconfig: gconf: replace GtkVbox with GtkBox
+>   kconfig: gconf: replace GdkColor with GdkRGBA
+>   kconfig: gconf: replace GtkHPaned and GtkVPaned with GtkPaned
+>   kconfig: gconf: show GTK version in About dialog
 > 
-> I guess, we could go with option 3 if you prefer. We could rename
-> the existing pwrctrl/core.c to pwrctrl/pwrctrl.c and move the
-> definition of pci_pwrctrl_create_device() to new pwrctrl/core.c. The
-> new file will depend on HAVE_PWRCTRL, which is bool.
-
-I think I forgot to mention that option 2 still requires a patch to
-wrap pci_pwrctrl_create_device() with some sort of #ifdef for
-CONFIG_PCI_PWRCTRL, right?  Seems like we need that regardless of the
-brcmstb situation so that we don't create pwrctrl devices when
-CONFIG_OF=y and CONFIG_PCI_PWRCTRL=n.
-
-That seems like a straightforward solution and the #ifdef would
-address my readability concern even though the code stays in probe.c.
-
-> > And I guess all of these options still depend on CONFIG_PCI_PWRCTRL
-> > not being enabled in a kernel that has brcmstb enabled?  If so, that
-> > seems ugly to me.  We should be able to enable both PWRCTRL and
-> > brcmstb at the same time, e.g., for a single kernel image that works
-> > both on a brcmstb system and a system that needs pwrctrl.
+>  scripts/kconfig/gconf-cfg.sh              |  11 +-
+>  scripts/kconfig/gconf.c                   | 146 ++++++++--------
+>  scripts/kconfig/{gconf.glade => gconf.ui} | 202 +++++++++++-----------
+>  3 files changed, 171 insertions(+), 188 deletions(-)
+>  rename scripts/kconfig/{gconf.glade => gconf.ui} (83%)
 > 
-> Right, that would be the end goal. As I explained in the reply to
-> the bug report [1], this patch will serve as an interim workaround.
-> Once my pwrctrl rework (which I didn't submit yet) is merged, I will
-> move this driver to use the pwrctrl framework.
 
-OK, so for now, Jim would still need to ensure CONFIG_PCI_PWRCTRL=n
-when brcmstb is enabled, but we do have a plan to adapt brcmstb work
-with pwrctrl.
+-- 
+~Randy
 
-> [1]
-> https://lore.kernel.org/all/vazxuov2hdk5sezrk7a5qfuclv2s3wo5sxhfwuo3o4uedsdlqv@po55ny24ctne/
