@@ -1,94 +1,99 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C631AAC9
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9460478F4A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 08:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751186818; cv=none; b=XH8m2QZX1xVrxoQisQeXkrKbj1dZDPLED0idOARm14FW6P7yuSS+TZC3TM8uaRU3qeusKY6FzDGp2tCjaEtClyvIoaoqD83VfsaVWO8CImhWvfBIKka/SMNdSuAiAEMMaSYkQEnU3I9QjadhA78Gikld2bygMg8fkUe4noHMXZY=
+	t=1751187004; cv=none; b=ABGXl+zpPxG1UO/MsBb8bCKInodjXwbIIB8NzlonaAcOX2ZjnqVdgJXlgqNtJBGmsHfuDDayRalPdhjmihq18eQlMkQkWlygL2oeNvNKoBAnWob+IWY7yNHDEY/O7DOroly4F0MKZP+gCHQvYrg7fZoxdtYBXhsrbqsO+oLrqg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751186818; c=relaxed/simple;
-	bh=wWBLc2bBm4ZKg0/yOBmkJjbXLh5ZefqH4bHuyH0pSuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYuhWHPtv6SAypEYqATjr8F715YunxmYGR3KWMXAqIwpyvg0DfHxq7e4zEnudon2cQI2KKI04Po1uYDajxoEaaAi2Ff/JdM8nlwX7FgeAcZ93K2VL7vG+aNBeLLyVTs/T51QtbmuENPSDU85ulGVolG9nBAQLTTvYkSYQNFthCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 55T8kSaq018240;
-	Sun, 29 Jun 2025 10:46:28 +0200
-Date: Sun, 29 Jun 2025 10:46:28 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] tools/nolibc: move FD_* definitions to sys/select.h
-Message-ID: <20250629084628.GA7992@1wt.eu>
-References: <20250620100251.9877-1-w@1wt.eu>
- <20250620100251.9877-4-w@1wt.eu>
- <25eb3144-d19e-43d2-af4f-b0251d28808c@t-8ch.de>
- <20250622071958.GA3384@1wt.eu>
- <07f5fdb4-2c5c-4723-b12a-abdb0c9f33b7@t-8ch.de>
- <20250623025618.GA29015@1wt.eu>
+	s=arc-20240116; t=1751187004; c=relaxed/simple;
+	bh=p7ryK8qS1laqTOOKrVA8iL/QWVYbfWZmky6TsrRQslQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mihkMaOX14rf6h29e21yHtUwOo9o4p4AvLbR8ZBvoSPxXmyJo9d+rnxpzi86qTbHWkkQW0wnJun9HpZzBxD2Dca5XFfAq5JDMzn1JfdNkt6EIehiPE4xV/EPDv5Faju3Z7zobZjRGtfsW7sS6IaHGpz0oRi67GldDfpYpa+7Eio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aoBQxmd3; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aoBQxmd3"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9858640E0198;
+	Sun, 29 Jun 2025 08:50:00 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id lmND_zg0tCam; Sun, 29 Jun 2025 08:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1751186997; bh=F7rm92ZWerKdhUL4+Hg/qw+uorETxgmeEov2q7V5k50=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aoBQxmd3SQwLV0Uk0SYph3M2tvOafDlWXk3imnIEtqM3gOgckL4E0/gAaP4/wTbVF
+	 nwoXej/3UsjRvopCizsUuSmeXwQFQocdigycE/DXAgNcqeh18foPOC0k726EksynnP
+	 re4z8CWtd1mxyssg1zwXjKfIavfXegSUIA7pDrStLiCAwwdhMdYBGr/RLXwHKNbPhu
+	 uRYePY6zdLtXUxj8Jp+pPunTDQDhfBJQycdRCdAHc/hVadQPcWyYlpXG79tvxLvlTS
+	 7X99KFZxBci/IrPSdLYa26Tno8G8u6UpdGQzmlaC7QBoNUWwq+gafSwSyikiYcs5nm
+	 uD8IcT2r6aja+D9AILCw4v0PBcmkLNb1u3uqoGH3xhz2LaprlNM89hUM4t/Jh1r1lf
+	 zNniDAV8/GIE4qo5NhwxtUbMe765v2yUGJpCseaDWcYSt/zgeYkRYJmNV9ECs5/l/o
+	 yBN59MKQF05Qxwu8jT9eEomExFvIUDL25YUk4npTvzi5SP02mwnhh1dqy5SUSUeG0s
+	 3JiUHxZ1gb56aRb+NIxnNPvhZo8pdh5cl56q07BryT+Aa70G9U/YsIFPhbre9cl5eJ
+	 mwx9SD4jBHRpG2XGxdvuFlycAPInmVmSHEl28/QE3vuCDJvp3uM3uY+pz2LPDOMSZ+
+	 okhcFgoZLJaJXbRNEmQn0K7c=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4197B40E00DA;
+	Sun, 29 Jun 2025 08:49:54 +0000 (UTC)
+Date: Sun, 29 Jun 2025 10:49:53 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] perf/urgent for v6.16-rc4
+Message-ID: <20250629084953.GAaGD-MUAKHnWlFNiW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623025618.GA29015@1wt.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jun 23, 2025 at 04:56:18AM +0200, Willy Tarreau wrote:
-> On Sun, Jun 22, 2025 at 09:58:52PM +0200, Thomas Weißschuh wrote:
-> > On 2025-06-22 09:19:58+0200, Willy Tarreau wrote:
-> > > Hi Thomas,
-> > > 
-> > > On Sat, Jun 21, 2025 at 10:21:47AM +0200, Thomas Weißschuh wrote:
-> > > > On 2025-06-20 12:02:50+0200, Willy Tarreau wrote:
-> > > > > Modern programs tend to include sys/select.h to get FD_SET() and
-> > > > > FD_CLR() definitions as well as struct fd_set, but in our case it
-> > > > > didn't exist. Let's move these definitions from types.h to sys/select.h
-> > > > > to help port existing programs.
-> > > > > 
-> > > > > Signed-off-by: Willy Tarreau <w@1wt.eu>
-> > > > 
-> > > > <snip>
-> > > > 
-> > > > > diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-> > > > > index 16c6e9ec9451f..0b51ede4e0a9c 100644
-> > > > > --- a/tools/include/nolibc/types.h
-> > > > > +++ b/tools/include/nolibc/types.h
-> > > > > @@ -10,6 +10,7 @@
-> > > > >  #ifndef _NOLIBC_TYPES_H
-> > > > >  #define _NOLIBC_TYPES_H
-> > > > >  
-> > > > > +#include "sys/select.h"
-> > > > 
-> > > > Is this really necessary?
-> > > 
-> > > Not sure what you mean. Do you mean that you would have preferred it
-> > > to be included from nolibc.h instead (which I'm equally fine with) or
-> > > that you'd prefer to have an empty sys/select.h ?
-> > 
-> > The former.
-> 
-> OK thanks, you're right, that's more consistent with the rest,
-> I'll do that and push it.
+Hi Linus,
 
-Trying it has reopened the circular dependencies can of worms :-(
-It's the same problem as usual that we've worked around till now
-by placing some types in types.h, except that this time fd_set is
-defined based on the macros FD_* that I moved to sys/select.h.
+please pull a perf/urgent fix for v6.16-rc4.
 
-I'm giving up on this one for now as I don't want us to revisit
-that painful dependencies sequence. In theory it should be as simple
-as guarding types and function definitions independently, but in
-reality it's never as rocket science as it can also pop up in macros
-and rare typedefs.
+Thx.
 
-Instead I'll just provide a stub for sys/select.h just like for
-inttypes so that user code compiles without changing existing files.
+---
 
-Willy
+The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+
+  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/perf_urgent_for_v6.16_rc4
+
+for you to fetch changes up to 1476b218327b89bbb64c14619a2d34f0c320f2c3:
+
+  perf/aux: Fix pending disable flow when the AUX ring buffer overruns (2025-06-26 10:50:37 +0200)
+
+----------------------------------------------------------------
+- Make sure an AUX perf event is really disabled when it overruns
+
+----------------------------------------------------------------
+Leo Yan (1):
+      perf/aux: Fix pending disable flow when the AUX ring buffer overruns
+
+ kernel/events/core.c        | 6 +++---
+ kernel/events/ring_buffer.c | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
