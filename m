@@ -1,307 +1,294 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB73512B71;
-	Sun, 29 Jun 2025 23:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751240166; cv=fail; b=H0L2docz+N1B/Zs/zF2jA3Bxs8ZyMfN3B+pNbKhgQ8zkt8+FQRrYWLgWveLV9WkJYvFvG0riiO8Pdi5wLoPKQkfof6ipnNeFclY8FjDguGtqgLzH0H0qzgmlK26zumdylZFdkNDPxnvPKk11cIVSzX/pJhzwFulg9DI07HPezNQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751240166; c=relaxed/simple;
-	bh=0NVc/cgGeF0AwnHSW7atE22o5VP6wPE50SkX/dJnfSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XkFKjw5Gciql3O5JDOrRLK+ohT6z+0ySI8YnE9DwmOftYduxQOvZxG3Rjgu8nSs07ynfWx0B7eoOjS160O9QkO8dKbT2WnHg0gbhrt8dojpQHbsZE8zAQdOfqwtAj+SXrqDS+zW5aI6m1zLjPAyorUCGu2CA0trjugs2/X4cM2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VKUruxET; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Pw7S1ZbC; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B4D1CA84;
+	Sun, 29 Jun 2025 23:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751240283; cv=none; b=UZzlMjv9e7i15CfCUpsMg2v3SfjdGqoE2lDiW3e44PXG+ochYXq0qHCDuo5C1Qv1cGqy4e+pEJwVnQGFld2pQJEahXaACimAAI9a0KOeKpTrklY99finmbhHoLTU9UbHctWY2XzWOJ+Bd65L7PwbQArngUUJd6nD02e3WXdzgNY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751240283; c=relaxed/simple;
+	bh=8RS+dxkZbuGdmC+7DeTpw3+PJ0tyipXZW3amGzEHgHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jW2vHilOS4XqNDD3u774Oh4JYTHiIoqc8/Cr1L6Hji/q1WhyBQSgEPKbOXdHjK1o7LFfGioguPWEzc0oa0HekwqGH5w8pCF7mKS5aVCycknpYMd2mBa6wWvSCQSAmBo2wd+b6GDUad44NZqMinENBDXyHlur9cE5ykCw5Kq8qgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=np3sJKKi; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VKUruxET";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Pw7S1ZbC"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TMiiLo006765;
-	Sun, 29 Jun 2025 23:35:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=LHf2ceRp0t76cQbe1x
-	COEXRC8D6nzX2j74ztEKL/zJw=; b=VKUruxETALWg6KBDwEoHhJzg8/V8fts6QF
-	ODyF3GXKsg3S7/kD2cKFMKlwMFzM/Gkx+S4hdCHyRDo4edQTtpFCuga6NoFM2A0z
-	gIF8DfDqA30HGLwb0XnWaWZUTXTTYpflpiAB9Bqs6gsH76ilqhYFsvQ2Q9Tb+Xzo
-	x0BCMrFLtV65fgXCd/q5S4Y93NmMc/vYO77/FZLwU0Y0mYbWYj+SYgrZSL+k09Xq
-	DFljSTipkjCHtiFh5bc2dwE4jdEwUFdiqfe7F9fvognmL+yIXBweZffXWxpmXo8R
-	9ZreqiIeMeAu7BSPA7ffyF1vT7hKVnd4LZj9NFVq/nwEFSV4ZrAw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j8xx1cx2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 29 Jun 2025 23:35:10 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55TKeuFl013656;
-	Sun, 29 Jun 2025 23:35:09 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2089.outbound.protection.outlook.com [40.107.243.89])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u7q0s1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 29 Jun 2025 23:35:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HsccylyQUpgiAHKlmsa9FyGEZHrKsK4XzKObHBgHcg0HuHws63eUwBoqv6hcflaIqw/RTQ9tPVqMg9DeyLi1YjSljecn0+zgZ+zG/TNh2/BVOFObckDxEo+myeg0PCXvlRqWmd7kFSlmgQDaY4EGdbKuTpap7b/qveWc2ekEYNAwnAOe7K4i9SCshoTsHjk1oO3j/rRZjzLdksyYK0a6y5VssL5uD3Mr0r73mGWv1jgrw9Y3gKjE7q3+RmcPUDSQvc8jmj5OzehUiSsLYdMbLo78o4ULFE14dd2Zzdj10TQbGxPhzqy8TQl208u6N4ykQ0e3FbDJYYJvcE3TZQDB6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LHf2ceRp0t76cQbe1xCOEXRC8D6nzX2j74ztEKL/zJw=;
- b=j9Tr5a+dYVFGeznVedOgy9g/MEruwL9xgm3MuipmLvzNdBqVjbrhBu4chd4taElopUml2BxMbCQ+/GKAuSyp67Siar6dVicy8wn8cVsre4fElUxtn6Y0Hm6Mo7lJhABvfj53Jb6Z3pZzzXPfk0RKicoJTTBJEuj63MMsRchXEivQyYC58u1TFJQ/wOM4JCp5KWe8PiNQAoIKQEWNTFnZXCzRGvtQVa98sczvOSRqzb+6fJiUDuDZmyhIGKid3L5NcE7Bkfbt/IN6c3Un8GvGOJLOmdciTXbxQ5PqNqREJDa7Rq2jlLI+/I2NKQaVfc1jg+ZNmlSJwXRCVI2uP+58yQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHf2ceRp0t76cQbe1xCOEXRC8D6nzX2j74ztEKL/zJw=;
- b=Pw7S1ZbCS1MftJNx+iz8hCpvUaSxXuXnQ53xByq7iYw7HHtIhYRtIoSdTxel+wiDqkTvmseo/8aaTFyhrl6TFu94927ulq0UZlHuWObZLXbvNFCcA//Uy44SOm3bDGoZaj2kItZdyfFaIiig+akfovp6dG/HXIHxuCdeMjeyTNg=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by MN2PR10MB4205.namprd10.prod.outlook.com (2603:10b6:208:1d3::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Sun, 29 Jun
- 2025 23:35:05 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71%6]) with mapi id 15.20.8880.021; Sun, 29 Jun 2025
- 23:35:05 +0000
-Date: Mon, 30 Jun 2025 08:34:48 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel_team@skhynix.com, almasrymina@google.com,
-        ilias.apalodimas@linaro.org, hawk@kernel.org,
-        akpm@linux-foundation.org, davem@davemloft.net,
-        john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-        asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-        edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-        leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-        vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-        horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-        vishal.moola@gmail.com, hannes@cmpxchg.org, ziy@nvidia.com,
-        jackmanb@google.com
-Subject: Re: [PATCH net-next v7 1/7] netmem: introduce struct netmem_desc
- mirroring struct page
-Message-ID: <aGHNmKRng9H6kTqz@hyeyoo>
-References: <20250625043350.7939-1-byungchul@sk.com>
- <20250625043350.7939-2-byungchul@sk.com>
- <20250626174904.4a6125c9@kernel.org>
- <20250627035405.GA4276@system.software.com>
- <20250627173730.15b25a8c@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627173730.15b25a8c@kernel.org>
-X-ClientProxiedBy: SL2P216CA0173.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:1b::13) To CH3PR10MB7329.namprd10.prod.outlook.com
- (2603:10b6:610:12c::16)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="np3sJKKi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1751240266; x=1751845066; i=w_armin@gmx.de;
+	bh=UfseTpRy2Xh/PCATDYWRgj3JQpfki2UklzAhSsCWRoY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=np3sJKKiiXWbnDbVijZxPTqMiMK+A37LI7gnDSOIw10dy2C4A8dtbdGSejdgH+Cx
+	 BGBgbjtU5pNcKklUFwS4F7n02u09tatzWzgNWxnGwn6bKyyjvzsFlCQhGG9l3YaCW
+	 EScuBNgeZyjOPYp+cE9Qs1+MeKdJJQX0Z79mKbi8EW2Rq7j9Cro4HK7L9ORBkcfuI
+	 PZJodaAwUHDWkce3WjK6jU3Oby+RWVipUBUNBOlY+vN0YQO/ny5e6QOhCFe+Ol8Fw
+	 QqoR2wcRYIh9kVA3kBRvDwogr4a+PlmMOIyq93Qh4nWu2ftmNBqr6iR1uxGdg0pmj
+	 GfY5cCKxt+dgSP99wA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3W0-1uIBvw1C8s-00IkoK; Mon, 30
+ Jun 2025 01:37:46 +0200
+Message-ID: <6a9b6660-acd2-44b4-a57e-2245043471ab@gmx.de>
+Date: Mon, 30 Jun 2025 01:37:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|MN2PR10MB4205:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2744631f-5272-4dc6-c508-08ddb765937f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cuwff+7b8pd1mMBQBZzpaxZdDJMYcU6ZjyqypuaQh1wx/E0CgQNWFkAcBp0G?=
- =?us-ascii?Q?jZ2Ya426NuizubhOdDUqps/jto/h/WrVuEDzOxJCE9mIvlnNTJ4HUFptQk+O?=
- =?us-ascii?Q?SSycA6UTLYW6frPi8fx2PZKyjIu23StyE1jphI8z1GPJtuBqc8vykMavuSjI?=
- =?us-ascii?Q?GM3u23xmRmhS3cMGm+cPFd94vLolKbfoYhB65sNxQnRGiQJXTzDehw6uEcyw?=
- =?us-ascii?Q?+gPwUvxfml+WORgDD56t9yZJ1D96EGcy5+IhSkc0Lk2HMc42JM60uDe6ZSFf?=
- =?us-ascii?Q?yQUpXJoVCn8zauqfqLc7tMqkFrlJgp5Ag6vwrkUNLvw4TOWeAFUQiM5s4qct?=
- =?us-ascii?Q?vS7HGdADFaIv12UVhwzSqLyNNj/QgKAxYwyIsXRKdmZooIbICRZfHVKRgsir?=
- =?us-ascii?Q?HOw5pooOyjy+UlrOB4KJRvmGYz/s81FFvKE6w/ihY2bpnZOZpK61soaXeQhK?=
- =?us-ascii?Q?o9AH8TwfmgtN9nnzsBnuSdcKpJVXziulkBrNP/RYW+qqm7c0/dOywUxNPUWD?=
- =?us-ascii?Q?T+g21NE1clw/RCCfAzJZzp+e3g8UxC/V5b0EKojNu92VbYwFhfcLo1jiPCaD?=
- =?us-ascii?Q?OTeLOguw3xEkQqZgILrL3szGSTCXCm3TzWwsKDHMNtAueEVMOvd3xhxvK4q+?=
- =?us-ascii?Q?E5jPEan7bF18sGqPQzkpo8Z1NEvUe3XO9v7sSoxwhNHpXsYmi9Y2/X2X/0wJ?=
- =?us-ascii?Q?sRI90K0XEL9jkCXy44WvZDY/CV8hltqfwnr+WkqOHVzuHgpV7fu53jjdQVtW?=
- =?us-ascii?Q?LjBfS7IMwK7SHZ6oswY036+Njel1yfBmAQ61PNuimbCbZNpOV4Nxys1sSKKt?=
- =?us-ascii?Q?si85Ty2AVMc3VJKPAsRq9rCmoVGv9l3oKF6BZiXg7VI8TwBmJYim/1RtykJs?=
- =?us-ascii?Q?GWwX2hDEFfkQ4RHZOHsO6aRr3xq1NSBgJwN/3mZJNRLZCcCMnN11RtceVgAb?=
- =?us-ascii?Q?gfoFy/+Zo+JEVbiGPTwHxRhml0halkqoELTsCAeGOiSgwbiUbeMi3AFCa+SC?=
- =?us-ascii?Q?Yx82wKxB4gF6BQOK/GC/dM3gxRtHB4lzZ165O+cxK368RvbF0o792bWxhQ0V?=
- =?us-ascii?Q?K3+t7+0wkFlN/LoyLEkRgpxZTFB3oGYrgi4olTEWh1smU62kUDc4ZhG/nhAV?=
- =?us-ascii?Q?noadd37UD4A+a8pEitQHEVzvnnLi54i9IdNJF/MOU+TERHDjCxZxmtZ0Kqlt?=
- =?us-ascii?Q?akGq4VlhthdXaXNOqcfYuUa6d2FPHtTZS3jKS0TuznyWnfO81UTeNKRNobe3?=
- =?us-ascii?Q?/qCNJeX26cb1u8jO0W36/ajoLG9s2vE3HBqmJGsDla87DEqunFnT+CNjxWtO?=
- =?us-ascii?Q?pNGm6zE2uvEW+AN5awMwbg00tt4xjbW9+pDKnBf7o6f4ZO5dxEGgA623xUz5?=
- =?us-ascii?Q?IS2+2gWZQhcW1459YNYMOUkYPvOe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EZgImIeDyukTCEQRpfJLs8fQqfBgab0BYoZvlNcoSm2V9o0VBW+0S6SfkBac?=
- =?us-ascii?Q?0m0B8a/GtN7vKh1RJ5RAxlAKcR7zw8FEHR1qsgOrADaj2tRlepyuZ04aeyJD?=
- =?us-ascii?Q?cZlErAuFIl2LM1qt72q7AY+N6TSG1VxNZYpFBnU33b2YPNDzFWrYUHjr01dR?=
- =?us-ascii?Q?BB/x+wYgyu67DmQ4Mo6lb4o/O2iOobU4qLv6gQxomjoHN5pOaZ44bUwTeltC?=
- =?us-ascii?Q?RCnHJ/QxSdXAp6pkRJGtZjzFPwGw9EAsQVL0L4XCKI1IcCTHAJTKdxqVDbG0?=
- =?us-ascii?Q?55L4HZ+CsQqd/zTgIcLucY1g5k/vq0rrDMt5l/GmOpvfd9o+HeqFBCTABYNP?=
- =?us-ascii?Q?j9eky6bxQSlb/vGylksdio+p9RYLuEb73u6UKLiYf+7abull3mtYaDGfz+wl?=
- =?us-ascii?Q?cLAw2DzYs7nG6t+XEAwSmzmhMOpXyHeNLMFJDpsPMIo71aai4B/QOVlvqaYX?=
- =?us-ascii?Q?xbPQ20AtAMdtNg/dJ8xY4ge1Zk7FtjnZClcg1ZiqlHFr+IAcC6goqYOYuGjE?=
- =?us-ascii?Q?MCpyBy42IviRdFGW8r8V4PGK6v9kubsGu5/ko/xzJ9v/Q8oKcvUp1Fp2KZRn?=
- =?us-ascii?Q?7W52d6TdTSTW55UI8cr+XCjAAN/0pKCPemGoMELCQPaT9usyGC+qA49SmsSm?=
- =?us-ascii?Q?mJnLb0QwfgDCgAqWacXnUtUgEFbmU7b/3ZWckKAD1S8Fsr4jlfQAsuXNMIoR?=
- =?us-ascii?Q?rdUve769M9EPJlL6ox+5k+R7e8hrmBU+Iftv8PMl6dbU/q8gcqFl4IYsDaBQ?=
- =?us-ascii?Q?xhJPsdz2ZxeV8bc4qKfJ1+hCLf9Np4tP8rE3wrbGpMhuRXCUg4zVpWOx62sM?=
- =?us-ascii?Q?e9oeUK3DAJNibkncBpv/k8jd3nMz7XDBIUBh/KCHi4ZWFsstctAlMmSLJAji?=
- =?us-ascii?Q?Zfd5MjH17ieyFw2OfiEUq/bco+YlYhddvj9IY26EGD7ECvs9vof6hl4Uwsbi?=
- =?us-ascii?Q?8IfNkxRzbslmoRCgBkJfEFHPumiClUmVjzQNO5U9AvjgQU4IyqQgEu3OVZX3?=
- =?us-ascii?Q?s3rnXoWWPEx8nrOS/5GXs0Pfm1dRlx7FC1eglaJHg+9fNehPluWmab8RZ4LV?=
- =?us-ascii?Q?OXCD5QjkaBmTU9Q26m/6SoMIJiyFM+joPtpELV1ZlLLcflSHzCmciUfjBJUF?=
- =?us-ascii?Q?4ni1LDdgSmTfidaaKMjS/JEfKfrcJ2bj+wnTwK9SpEg+e1aGhzYUFWsjIb5O?=
- =?us-ascii?Q?JFrPiJgolvzhWnB1i2ft7B6TUjV+LWc1hI1kWk7rr+wMnI1d/c+5BEoteAge?=
- =?us-ascii?Q?j8EHvQyEbN6fn9DlvLpCC3raCL6BJbcWS9zG+xZyzVI0VYM1PI5cywDm37hz?=
- =?us-ascii?Q?ZQjxdR41N548pY/6KwqlKmwXpQboZkZiU2O/RU0hc9L7OLRqeppNpV0brYbo?=
- =?us-ascii?Q?dSsgx0/zlxtM5MqFJxbr13mUpwAd1jP+l8iK80d+dItQgHi+pffe3CIRpqQH?=
- =?us-ascii?Q?3IrdHA7DtnvYOOdwnaT8MYwZNht+13B5Tj29JFlla2zz56ub2aO2fjkPABRK?=
- =?us-ascii?Q?a1Hl2WcmUxLoND97gzbGUyukNLc00Kw3COneGRYwRZJ8lFa2jYA80Y41205P?=
- =?us-ascii?Q?n0nOA7iQpcFeLfZ2qndI9kskIMaRHWULZYJQpmt8?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	fqv+jBCwtJ6tZdwYl3AzIiyo+PlXgis4XaiwR4BJxelMRv121HlOs2E/dM2+zuoLUinAZkh36Hbuy1DG34OUgeSp93ILt6qHoaRxja5HLezTKTI6gLR85+4KUrDkxep486kbe85nH5buL3iKf0sqNA+nE7LEFHyQVJki5EIsrJeciqwG6z4tUQXgxP3yvqi7VyxahOd67jclAp7yUTbYs1QLxzlZB3fQISi5mxeFBT5k5NC2vWzIdoJMKqGGxvkNpXGo5pltgUPNfWi6aKI+wcXRcwsx854g5rYGlpwcMDi8FQf2CNkgfYzrPzKftzXspsOENBsamURlDeEjvK6TjFy2FrokaGqC6K01znG6jIQ2aaTAJtyfiN1IXCfGhLR/qwFDorshLo07J7g+Zuu0DOresF5DSlcfeR/oNIDAdehJKQkvno1N8GrpLGZWqRqYqAonyE5rp4TvuDQUTjfdrczvvrrqmJbNtHIUJ77vxJDVFQBNgRg/X1BIpSMyNPAKsXSOffCnggwB9mUs3Cxb4DY0O+xjl/hIwO6ZgpKH2PEUGRodkRINX2QuaWGrqtQtaOcNv042KU2rkXsVpb5owSF7MmBGOS6JpTskY8jtaNg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2744631f-5272-4dc6-c508-08ddb765937f
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2025 23:35:05.4533
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pvyZoks0tnbM9vAVCKp86GsO1YWJtEy0i1VbLo/D7Gz8bxOQgIEue/YY/J+dRi8Hu9lKbHHD4WKgfy7gPvc7Iw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4205
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506290199
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI5MDE5OSBTYWx0ZWRfX3MkdtfMXATQD fzhNsHVw3q+HqWUmlNLYSLEhRaDKGX0EktLgi/V2LHtxM8pmEPDPvZTcsCvr4Hg68l68r5ZMSSw 1wvFvL2k5D1iJKQ/pafORnQ3DHSMGpk1mehIE+CaN3v3PbK6cU7ogjt2TKLN5I9jUs1/tynG9yI
- 6eJEOgHHfMBkoxQeb2bVQR86o2FD91PvMYiftSM8PMe6oMVSLIo+TyAhP1kCSqJI7N4akrhYkp/ UKuujhBa7s+S/dohoSTJ7sn07BAlDD+AqXTYRAAYDIduFl7Vg91liUjgJyG+HEbeYXYtoOGs/Jo h4LBCV7Dx3RogPvEzHznciXp3gxDm9+jBAYnjpgnPy6TP813Mjw+rAbZtAFHK0yYEjiVU0RJjdv
- 1JSbnBV8XbD1RygZda3fQGKdIpkbR8crH5cNvOkVLSj0sY4EJKTiF6SnZmIaUJK74qJXlBHY
-X-Proofpoint-ORIG-GUID: orPneQqbtHZEY04qyLGIP-EARWwI8qLx
-X-Proofpoint-GUID: orPneQqbtHZEY04qyLGIP-EARWwI8qLx
-X-Authority-Analysis: v=2.4 cv=QfRmvtbv c=1 sm=1 tr=0 ts=6861cdae b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=SiqW3_QkAAAA:8 a=rWtaEfNI2Jeq87HWh3wA:9 a=CjuIK1q_8ugA:10 a=0-oVHmElw7bdUHZZ8WX8:22 cc=ntf awl=host:14723
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Fix WMI data block
+ retrieval in sysfs callbacks
+To: Kurt Borja <kuurtb@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Divya Bharathi <divya.bharathi@dell.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>
+References: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pTzSc8d0QINnOn/L5iAuo4OEE6uYbo7TGPt8mceQDhlqhWgbT94
+ uHnESaxHPN3Q9uQiAb8HfCUttcj7YKZsszYxtLj5V6rsnjUtizzT3YUqu5MQo0a0PHrnXOk
+ FL4kuOgFaGQhTXANgkqlsylsFfIFnrt86MLL94bC85Ma4x2k5xk7J6vlOi6a5fQjAvpY3GA
+ 5MebFsXYSeI8ByW+mT1PA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mcU180uSLjA=;jJ5sc7CUy05btWsuKEJX/BVDa9T
+ 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
 
-On Fri, Jun 27, 2025 at 05:37:30PM -0700, Jakub Kicinski wrote:
-> On Fri, 27 Jun 2025 12:54:05 +0900 Byungchul Park wrote:
-> > On Thu, Jun 26, 2025 at 05:49:04PM -0700, Jakub Kicinski wrote:
-> > > On Wed, 25 Jun 2025 13:33:44 +0900 Byungchul Park wrote:  
-> > > > +/* A memory descriptor representing abstract networking I/O vectors,
-> > > > + * generally for non-pages memory that doesn't have its corresponding
-> > > > + * struct page and needs to be explicitly allocated through slab.  
-> > > 
-> > > I still don't get what your final object set is going to be.  
-> > 
-> > The ultimate goal is:
-> > 
-> >    Remove the pp fields from struct page
-> > 
-> > The second important goal is:
-> > 
-> >    Introduce a network pp descriptor, netmem_desc
-> > 
-> > While working on these two goals, I added some extra patches too, to
-> > clean up related code if it's obvious e.g. patches for renaming and so
-> > on.
-> 
-> Object set. Not objective.
-> 
-> > > We have
-> > >  - CPU-readable buffers (struct page)
-> > >  - un-readable buffers (struct net_iov)
-> > >  - abstract reference which can be a pointer to either of the
-> > >    above two (bitwise netmem_ref)
-> > > 
-> > > You say you want to evacuate page pool state from struct page
-> > > so I'd expect you to add a type which can always be fed into
-> > > some form of $type_to_virt(). A type which can always be cast
-> > > to net_iov, but not vice versa. So why are you putting things
-> > > inside net_iov, not outside.  
-> > 
-> > The type, struct netmem_desc, is declared outside.  Even though it's
-> > used overlaying on struct page *for now*, it will be dynamically
-> > allocated through slab shortly - it's also one of mm's plan.
-> > 
-> > As you know, net_iov is working with the assumption that it overlays on
-> > struct page *for now* indeed, when it comes to netmem_ref.  See the
-> > following APIs as example:
-> > 
-> > static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> > {
-> > 	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
-> > }
-> > 
-> > static inline void netmem_set_pp(netmem_ref netmem, struct page_pool *pool)
-> > {
-> > 	__netmem_clear_lsb(netmem)->pp = pool;
-> > }
-> > 
-> > I'd say, I replaced the overlaying (on struct page) part with a
-> > well-defined struct, netmem_desc that will play the role of struct page
-> > for pp usage, instead of a set of the current overlaying fields of
-> > net_iov.
-> > 
-> > This 'introduction of netmem_desc' patch can be the base for network
-> > code to use netmem_desc as pp descriptor instead of struct page.  That's
-> > what I meant.
-> > 
-> > Am I missing something or got you wrong?  If yes, please explain in more
-> > detail then I will get back with the answer.
-> 
-> Ugh, you keep explaining the mechanics to me. Our goal here is not
-> just to move fields around and make it still compile :/
-> 
-> Let me ask you this way: you said "netmem_desc" will be allocated
-> thru slab "shortly". How will calling the equivalent of page_address()
-> on netmem_desc work at that stage? Feel free to refer me to the existing
-> docs if its covered..
+Am 29.06.25 um 20:33 schrieb Kurt Borja:
 
-https://kernelnewbies.org/MatthewWilcox/Memdescs/Path
-https://kernelnewbies.org/MatthewWilcox/Memdescs
+> After retrieving WMI data blocks in sysfs callbacks, check for the
+> validity of them before dereferencing their content.
+>
+> Reported-by: Jan Graczyk <jangraczyk@yahoo.ca>
+> Closes: https://lore.kernel.org/r/CAHk-=3DwgMiSKXf7SvQrfEnxVtmT=3DQVQPjJ=
+dNjfm3aXS7wc=3DrzTw@mail.gmail.com/
+> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Manage=
+ment Driver over WMI for Dell Systems")
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>   drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 7 +++=
+++++
+>   drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c    | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c     | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c  | 5 +++=
+=2D-
+>   drivers/platform/x86/dell/dell-wmi-sysman/sysman.c             | 8 +++=
++----
+>   6 files changed, 23 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> index 3ad33a094588c6a258786a02f952eaa6bf953234..792e7d865bfb1cfc13b59c90=
+ddf7de47feff408f 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+> @@ -89,6 +89,13 @@ extern struct wmi_sysman_priv wmi_priv;
+>  =20
+>   enum { ENUM, INT, STR, PO };
+>  =20
+> +enum {
+> +	ENUM_MIN_ELEMENTS	=3D 8,
+> +	INT_MIN_ELEMENTS	=3D 9,
+> +	STR_MIN_ELEMENTS	=3D 8,
+> +	PO_MIN_ELEMENTS		=3D 4,
+> +};
 
-May not be the exact document you're looking for,
-but with this article I can imagine:
+Hi,
 
-- The ultimate goal is to shrink struct page to eventually from 64 bytes
-  to 8 bytes, by allocating only the minimum required metadata per 4k page
-  statically and moving the rest of metadata to dynamically-allocated
-  descriptors (netmem_desc, anon, file, ptdesc, zpdesc, etc.) using slab
-  at page allocation time.
+are you sure that this works? I suggest we use defines instead as ENUM_MIN=
+_ELEMENTS has the same value as STR_MIN_ELEMENTS.
 
-- We can't achieve that goal just yet, because several subsystems
-  still use struct page fields for their own purposes.
+For the rest:
 
-  To achieve that, each of these subsystems needs to define
-  its own descriptor, which, for now, overlays struct page, and should be
-  converted to use the new descriptor.
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-  Eventually, these descriptors will be allocated using slab.
-
-- For CPU-readable buffers, page->memdesc will point to a netmem_desc,
-  with a lower bit set indicating that it's a netmem_desc rather than
-  other type. Networking code will need to cast it to (netmem_desc *)
-  and dereference it to access networking specific fields.
-
-- The struct page array (vmemmap) will still be statically allocated
-  at boot time (or during memory hotplug time).
-  So no change in how page_address() works.
-
-net_iovs will continue to be not associated with struct pages,
-as the buffers don't have corresponding struct pages.
-net_iovs are already allocated using slab.
-
-HTH
-
--- 
-Cheers,
-Harry / Hyeonggon
+> +
+>   enum {
+>   	ATTR_NAME,
+>   	DISPL_NAME_LANG_CODE,
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c=
+ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> index 8cc212c852668312096f756bc1fb1e3054a1f5c0..fc2f58b4cbc6eff863f2c329=
+3cb4322d28048bb8 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+> @@ -23,9 +23,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATT=
+RIBUTE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < ENUM_MIN_=
+ELEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURREN=
+T_VAL].string.pointer);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c =
+b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> index 951e75b538fad42509614c2ebf2ef77aa05b614f..73524806423914bf210b9b5f=
+78c0b5b4f6a7984c 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+> @@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBU=
+TE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_INTEGER) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < INT_MIN_E=
+LEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_INTEGER) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[CURR=
+ENT_VAL].integer.value);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attribute=
+s.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> index d8f1bf5e58a0f441cfd6c21f299c5426b2e28ce9..3167e06d416ede61cda5ad4c=
+860dcb41b05cd5fa 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+> @@ -26,9 +26,10 @@ static ssize_t is_enabled_show(struct kobject *kobj, =
+struct kobj_attribute *attr
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_PASSOBJ_ATTRIBU=
+TE_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[IS_PASS_SET].type !=3D ACPI_TYPE_INTEGER) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < PO_MIN_EL=
+EMENTS ||
+> +	    obj->package.elements[IS_PASS_SET].type !=3D ACPI_TYPE_INTEGER) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[IS_P=
+ASS_SET].integer.value);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes=
+.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> index c392f0ecf8b55ba722246d67ba0073772a4f0094..0d2c74f8d1aad7843effcd7b=
+600dd42e6947dc15 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+> @@ -25,9 +25,10 @@ static ssize_t current_value_show(struct kobject *kob=
+j, struct kobj_attribute *a
+>   	obj =3D get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_STRING_ATTRIBUT=
+E_GUID);
+>   	if (!obj)
+>   		return -EIO;
+> -	if (obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+> +	if (obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count < STR_MIN_E=
+LEMENTS ||
+> +	    obj->package.elements[CURRENT_VAL].type !=3D ACPI_TYPE_STRING) {
+>   		kfree(obj);
+> -		return -EINVAL;
+> +		return -EIO;
+>   	}
+>   	ret =3D snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURREN=
+T_VAL].string.pointer);
+>   	kfree(obj);
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/driver=
+s/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index d00389b860e4ea0655c740c78bc3751f323b6370..3c74d5e8350a413a55739ca5=
+e9647be30bac50d4 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -407,10 +407,10 @@ static int init_bios_attributes(int attr_type, con=
+st char *guid)
+>   		return retval;
+>  =20
+>   	switch (attr_type) {
+> -	case ENUM:	min_elements =3D 8;	break;
+> -	case INT:	min_elements =3D 9;	break;
+> -	case STR:	min_elements =3D 8;	break;
+> -	case PO:	min_elements =3D 4;	break;
+> +	case ENUM:	min_elements =3D ENUM_MIN_ELEMENTS;	break;
+> +	case INT:	min_elements =3D INT_MIN_ELEMENTS;	break;
+> +	case STR:	min_elements =3D STR_MIN_ELEMENTS;	break;
+> +	case PO:	min_elements =3D PO_MIN_ELEMENTS;		break;
+>   	default:
+>   		pr_err("Error: Unknown attr_type: %d\n", attr_type);
+>   		return -EINVAL;
+>
+> ---
+> base-commit: 173bbec6693f3f3f00dac144f3aa0cd62fb60d33
+> change-id: 20250629-sysman-fix-9c527a28f1dd
