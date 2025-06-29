@@ -1,114 +1,101 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE7735950;
-	Sun, 29 Jun 2025 13:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629FA1F92A
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 13:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751203164; cv=none; b=aPsc2JRcCzBxI00y6n/sowGSdAWvL/OFGh9PZcgGGr6meBTrxpo4BVHI0sNVf4y9KuAOSDyJUD5gjfFxj6MQjrjeec0Ky7Ryw99gP9LIn7DWLXyrXydv+hw+pkW5FjVx7e/xn4NEd513ZV9TsLN0BHD5nTTBAnMpOGCgzg+bwqo=
+	t=1751204017; cv=none; b=OehTKFueWiZafP9cDYKhVMmpQFk2TXxiaemBi8IiCG4BnQJOx3I3S3h19B4TamRDFUleRrmtJdamcTa4FHUunMws7VIh2TxmFxq8Lx13mho81wfwH0ruBltrs8dgSFdoX0NF9hcJqimdrbFhSTzdIIDae57kJztNYReLVLEaJ9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751203164; c=relaxed/simple;
-	bh=hh028ZJpDG0V+KiWTD6rfqoYckc2AWugA9hr8Ise5mo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mhcsh7FZioAVERKUOTaLWxR884FnaLXrH8Q65ATQv+27rAX3JrHYkxdNCPvRb9A/N0/W9l7ZIbRxujKSY+Z9wd48jNstyHDbOfTCbR/YQNOhtxU7fBJH+uSQUwGknxtuctk5E4ts62AOwXeuGeo3qr6D4GN3c/eZSkqgsb/UsT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+oULH5T; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751204017; c=relaxed/simple;
+	bh=Im7fHsFArK/1tFdJMR16F4bXojfNIYbHDtzJEM1VqZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOuuofDloX6f5VWfvLe3+RBU9PPvrqE8vOv+qLldNc77ifBikN3XdnM7JckN4cMH1kD1h8PmW7ELFy5to58whLIy0SsY32Lb82TQSE6XujFM/gsMFF0d/i9R1kdUO0nWaecsBN8S415MAkx7hGZstmmuoqYkfcBzOslEKkOOTZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=CZDfRdZN; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+oULH5T"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d43d220c07so319807685a.2;
-        Sun, 29 Jun 2025 06:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="CZDfRdZN"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a44b0ed780so16850591cf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 06:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751203162; x=1751807962; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F6QhJOPYC4Oel4k7RUi/DYQufPPKB57jic+eqoSasGA=;
-        b=P+oULH5T2wvykAmZiRca32wOmzlSmNOLNC2hfgAb36WJqF4WR/4mKDQuNs+7rtsfbQ
-         TOmvhSV+WLSXp5/FfbVeGX3onGUVY9LTKeN46H7htubaZjdi+g5P7b52C/J8yolxnKaG
-         d/8v0IH4FLL1ls0vC4m76js09UVlaI7zni5l/TAQF1OmYOgG0BHpXxVPh418+HnhzUXL
-         FYZlmQn7M7pHMgfQ5d1strtl/qNNqjg+0D4eFs6iWX8H+NDpfYZCAZXXYoemrRw/P1Nd
-         gN8j4XJ09IHVTQbHrZIpArn3j3aR46sWJaJJAMkPpScOHmG+oX0R7zQUA3L1FIZxfRHn
-         ihhA==
+        d=rowland.harvard.edu; s=google; t=1751204015; x=1751808815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Embj1Fy2DJouvQ91VRCrgqeiZxMI64cyuUrY1sXvYvw=;
+        b=CZDfRdZN2A95SQSZVsuAWImwF9/7gR81ahHop1sadT9ha3dUnRuwtpmrnJan4lPVTC
+         IhtNNYjK33ERpEIQPzMmBivYpRQKR/BTz/oPWrwgY7OBdFSYHCqv8TItTUpFa0GbeqSN
+         2WyAX7suNJYmo6adFrrjDw1VZtC/QDsrTtRV1Q3SU1e539hKMOvqz8PAqOZjUz1gtiXA
+         ALhhyhzi7J56IMwFh2mLqxXc/UP3QGTFskj3vk6vvIIaeVRGZ638y47AUzHtSY971eAA
+         weIWs6HFf6Z8qddhn4YgYzrxt5Vj3pdil/AxJJhCRPciAHx+53k72tdAA8DSAqPpCERM
+         wdUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751203162; x=1751807962;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F6QhJOPYC4Oel4k7RUi/DYQufPPKB57jic+eqoSasGA=;
-        b=KcoM1ngpNVsHZensFue/xf0PW5815fNX7KKjvLkVnnScmjg43IxPYYIJsH7q6jolqI
-         sESqcKft1Kms2CDnUtgY9uW9T2zL5+0Z5Uzh31GkDIHR3NPKvxlv6pouTzRxapJC6Hy8
-         qCneqEcOo7QQDpsfsYpFXih7v26C7/mvOd+8OEjAYx5jJe75C6pird6eBD3gm0dU0N7r
-         y+whTthmf7NlWJVaF0XpQFABDtLCu+ATSZ//Qq8gM0maX1qu0PpUPQTqvIZqOHuTr5ZS
-         KDZIYOS6i8v/BFxi2aUU3sTH+lzUyN8Ukf254G4U9gUkbDFlqskW6fWkK0q1inM9IsV+
-         ppGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUktZDqKpocMoqL6LfqunZk/2FAvPjnsgKRhWz6EFQmzd1DvbGKUAjmji26E0w5GynymPETDK7E0sTh2w==@vger.kernel.org, AJvYcCV0IJORCwUeT3asnz8N8akhD1ZeigoV1YQO9qlCL0ZhWUCOS3aei3Z5qBoWT9uVunNPaUb/NXrt4xOu@vger.kernel.org, AJvYcCV7OqM4KSeyd3Pqjww6a9aGV5fNZlA94qBVBVBlK3te4Q1UzOoMs3kzjZn1IF41Ns/PeHo/wzFDblavaxBp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4vGgb8FdM3/icQrzY0sgd1gp6MgYEAlg5YwBHLMa21ncsCPcc
-	a+8HBl6REYaNAzrC4ZckSbbt0RWiRHlNmUKwTx8qeNKjleOH+26pgE/aNTk95qdclkw=
-X-Gm-Gg: ASbGncsAxRCSIQQw3YxMIUb2hzh4x5c610VYO567S7vt6cW9Nhir8rA2c4Du8L+Pv+3
-	9RCQ92AFSs/SG7FiXL86p0L6UTm6EXpT0VpVyslCB6PzciXV7nMJHqPQMVoQqSpHh/vkPNMjjEd
-	pnCRWKdTo1Zy/u9aPh2FYDKS7ptR/A2AWiEFgGGmoMpS5RKPh666qUtW6FmJ1tAMlqoSm+yEQQv
-	frkQl9Txz24UGP9oSEbfjVtmHPR0n/wLLpfgDbKWUSdBsabAWqUZGGO4mXiwSVL3aE8GjX/51Wp
-	x+8LJX0Z21xVjC2rJ/feFLVKEz5KkcubPCH0aLNx1pSX9YdmXQ+ElvxcuegFc+FZT/Lty8ZcCeg
-	Q42BhXGSZ97O3+N9TDWrBmZXahbNSAS4m
-X-Google-Smtp-Source: AGHT+IHlqhpPi4qCpPb3OezCRiBkt77pz4rWNJBBnoBQo6SxTT9koFz4hFUCTn2WQZjlOqbPGYmsxA==
-X-Received: by 2002:a05:620a:170a:b0:7cd:1f0f:f61d with SMTP id af79cd13be357-7d443994edfmr1823812485a.54.1751203162103;
-        Sun, 29 Jun 2025 06:19:22 -0700 (PDT)
-Received: from localhost (modemcable197.17-162-184.mc.videotron.ca. [184.162.17.197])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d44e27ed25sm241166385a.97.2025.06.29.06.19.21
+        d=1e100.net; s=20230601; t=1751204015; x=1751808815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Embj1Fy2DJouvQ91VRCrgqeiZxMI64cyuUrY1sXvYvw=;
+        b=m+rwe+tNSyo3n7os3qJQEXnBT8Wa/9w9wqgaX4joMm2HB/wmJb8GEvf11xhCGrkfsx
+         69Qj5A8QmAecuIZeFyYG3SPE+Tg/ACKrUcK2799NnOZn9F0Qj5xeFj9DML9rNxVf55NX
+         /lWkdigFBxWOUN1OGECXo9mjrlqpY4OEt9onRN+SQJnyogGCFYks8eSDthuHmgeCxpYl
+         QQYfUnx7KCHawKC7dIS9glAz9n9w2w5fXK50QMQ6T66PegpyaGkc/+g1CN75CCDfVg5s
+         XzlTfJv3U+08vUM/HkSAZd7ufQyR/0RszBkRFhqrpNu9k09Na4wHM7w8isVkP/F/neUm
+         XLIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMHyZLW+nb9Dtnudh3Q6nhUEKjLLEvEnEmEFXGYDKyv2N2B+/OtrDTtm0D5vwmK3x7OuxauerOvWBvYyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOFo6a7s0JifE5o1DfBqaPH4/pdKGQZdV6Sn6jETPe61bfVMPa
+	0Pab+PwarkHSMZBUU5Ii/2wdWwS1LNradEN2ULt+mdXJsck8wDImiqG89AhEUZY35g==
+X-Gm-Gg: ASbGncsb0btrs5XXIwrCVi4lcB5O5TB+msVcG7NMTpj+8jWRl+6M226tqjrdyDJHI1s
+	0izgqeSZnR5FnHabL794O/eQKD/H0Tfrodj9G3w6akNc0pSoitrqW18wKAtqMXeYzfTKnSzPKnH
+	Z2FtS2+fBZL7bXMNVQlA2/U4whFLKqblqhuVdiT7OiD7ACnDF9OqdOev/hiVSd/RXPtLVhpQI+L
+	cjW+eAziqFr8PeFHWgOIiU4SvDR8dlDCWgVqWcmAKt++MC3NleauQE0NIoVQApzioooHzy+451f
+	roKC/L22l93TszWRQEi+UEtQdnhAjZyZbuInXyEaAQVkZj1+eC9MIA2SDp6/dKk=
+X-Google-Smtp-Source: AGHT+IFkWV3qQJluABPlEDQqfcYO9N9MbOOl5fdQgXXCIVkXvMlt7C0IXV6g9l8Mna1o+i4IA+YrEg==
+X-Received: by 2002:a05:622a:2c9:b0:4a4:2d64:a7e4 with SMTP id d75a77b69052e-4a7fcaeecc0mr172064861cf.35.1751204015252;
+        Sun, 29 Jun 2025 06:33:35 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::76d8])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc5a3b92sm42853481cf.76.2025.06.29.06.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 06:19:21 -0700 (PDT)
-From: =?UTF-8?q?Jean-Fran=C3=A7ois=20Lessard?= <jefflessard3@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Boris Gjenero <boris.gjenero@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: [PATCH v2 8/8] MAINTAINERS: Add entry for TM16xx driver
-Date: Sun, 29 Jun 2025 09:19:20 -0400
-Message-ID: <20250629131920.50060-1-jefflessard3@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250629130002.49842-1-jefflessard3@gmail.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
+        Sun, 29 Jun 2025 06:33:34 -0700 (PDT)
+Date: Sun, 29 Jun 2025 09:33:32 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Seungjin Bae <eeodqql09@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: m66592-udc: Ignore feature requests for EP0
+Message-ID: <cca54de8-db74-4df0-abfa-7275f8f2a8ac@rowland.harvard.edu>
+References: <20250629025951.17581-3-eeodqql09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629025951.17581-3-eeodqql09@gmail.com>
 
-Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Sat, Jun 28, 2025 at 10:59:53PM -0400, Seungjin Bae wrote:
+> The `set_feature() and clear_feature() functions handle requests to set or clear the ENDPOINT_HALT feature.
+> Currently, these requests are processed for any endpoint, including the control endpoint (EP0).
+> 
+> The ENDPOINT_HALT feature is not defined for control endpoints according to the USB specification 9.4.5.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efb51ee926..bb88b007c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25047,6 +25047,12 @@ F:	mm/memfd.c
- F:	mm/shmem.c
- F:	mm/shmem_quota.c
- 
-+TM16XX-COMPATIBLE LED CONTROLLERS DISPLAY DRIVER
-+M:	Jean-François Lessard <jefflessard3@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/auxdisplay/titanmec,tm16xx.yaml
-+F:	drivers/auxdisplay/tm16xx.c
-+
- TOMOYO SECURITY MODULE
- M:	Kentaro Takeda <takedakn@nttdata.co.jp>
- M:	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
--- 
-2.43.0
+Actually that's not correct.  What the spec says is:
 
+	It is neither required nor recommended that the Halt feature be 
+	implemented for the Default Control Pipe. However, devices may 
+	set the Halt feature of the Default Control Pipe in order to 
+	reflect a functional error condition. If the feature is set to 
+	one, the device will return STALL in the Data and Status stages 
+	of each standard request to the pipe except GetStatus(), 
+	SetFeature(), and ClearFeature() requests. The device need not 
+	return STALL for class-specific and vendor-specific requests.
+
+Thus, it is valid for devices to support the ENDPOINT_HALT feature for 
+control endpoints.
+
+Alan Stern
