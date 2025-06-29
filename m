@@ -1,113 +1,91 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98CC218E96;
-	Sun, 29 Jun 2025 12:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69B51D6AA;
+	Sun, 29 Jun 2025 12:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751200133; cv=none; b=g9tPMHGKFtMGd2tLD+fjxLQT/LfzvCR/9qNONLJyCl64uzAgWvvOTk/Q0hnHvlPAKGxUsArmGTOYnnhJSvxLBHWcmLChiPJNUgeuVJ+1xUbkRDdnth9JSCnNk8yQ/WumX4hyx9ZK6T1NRccE5JAQhMa13YcxYxqatek4EIgXzEY=
+	t=1751200220; cv=none; b=NdfOGbs/JRPkRnc8fkoMRmsF3ZCEqCM6BZZ/B+8D/hwu82b1GcEBblB4dSsZofrm/cU1Qe7xsPJkspHV/kk3/7jlaaOY0F/WE+f+NGq2lBYnRtpKebRf7DI0mcIFHWo2DQ0R/ACBOB9IPLJ18GG2doLNuT3ucnN0V9Y/CIme0RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751200133; c=relaxed/simple;
-	bh=FRu2A26eu4KBFJ6l+JTWln5JaWJl7JJQ3Hdp4WXn+Lg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ChaE/aJ2ATsvfQVcsHSa/Ldo3VMumEog4KESVRrSsXoJnL4SODhp6QInQk6yfNVSkZ0gI4RErnA8tjnb2mb7/Uq+7y211r2mE6ngAJSBqjBhIa8Em6gaPsITRpbhNF466sytGz8wKZKHPMr6MqKofHXmaTde8N/X00CMylCFgFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WM9TF5if; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751200220; c=relaxed/simple;
+	bh=UM+OvlejUrRI0VfiNesQkThGz3t5ZeebEYKwPufLmto=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Suk7Q2I/QeT4KiLL2NyKX25MwgoewbO/2cmVGwq/ThVCDQRFHIoaSmdv4zIkxZVvP+ftE2p2yflryF/LTZhSJV+d/ldBoa0oCDPC4MyUiMOyADjdc/Wxoo2aHvjm9q/Fq69iQJq0oZkUgfcp3Sj51pvqkFinFKBpE7nXDOUiWZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X2SltdUb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WM9TF5if"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3570228b3a.2;
-        Sun, 29 Jun 2025 05:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751200131; x=1751804931; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hof9vhiYbQJiRNGLbC7upWUJmQgprv3f9wttuJdIcXM=;
-        b=WM9TF5ifq+xILYZF/Fo2VLyDNcBaoIwPRjzADUJHEt7CH6lr/VkhMXNGzHi0BsU03d
-         oLXdKd8x8puF6ibUUlua45aehjTRKqlsbjVClB9ILWiG8xh/VgGQsIsqTLE8iqyIhIXR
-         QkuKwleHEpGXORO1YukzkcW9KFIYQKhgBZnDe8vT6T86Z6SG3zLPKfbxiJ4KputDeTsn
-         YwU7Oof7OS8gx0NIw7S+lRwSHMyGs9XqFDq0VUcerkv4s3PgpTLxGJnOupLKsVvwem3/
-         z6hMt4ySRTT4IK2eq8WwQQP1ZpFi797wFAZzulGDIHCX0NFBMfZl3YA3dSdXi5d0gobw
-         Rk6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751200131; x=1751804931;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hof9vhiYbQJiRNGLbC7upWUJmQgprv3f9wttuJdIcXM=;
-        b=iRFHtlxyiu7jBr9cMgHaX/sRFw6Gqt9F8yz/xif/Fcp6dBD/x5rUm05iVirUFaMTzW
-         DhGw26GOzJ2kEnnY58FZzVonHCk2StYU9ngU8tx6OO04rM9VKZBHndIxWBC1eiTvB1IK
-         70f923C79UJbcj57k37PgJfAu2rAGHDBOzyQswfIY70OIv1+uRt1hoTZWId2LyLQwQXu
-         QOPFQj6nTPdiC+hysUE1n1lNm0jYsue9BZfDH2ybXXZGtc2kGeMRvQ1XcAZPraO+CKoe
-         KSb64Q3sRvzO++f9uje0n9d/l3otexewgdrkT3Vx+SyHFQsuFHDWpRQZnClt/K1F803N
-         Kg8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKvS1oJwqxtzSfOcecXYzv647F7tyKTAM3Y4PCyrNCILPRGO7iQHFSELNFoll3xrzXhUpQeD6UOw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysyx3PKeFfWo1JW8zAzudFIbGOhq0JGZdGJDq87N7Vu8zuoyi5
-	kkJcX+POTzG3xcx0rlsiqqFx2J+TD6o/fSwKi5wFGC4MrliHKo8X3/VD
-X-Gm-Gg: ASbGncs3T9/tT6R6cpxclyJfrXHzYp9VdK2il6aE0FAA/G9tL71FYv8yuP9DkbZCqRJ
-	s4oWOlJJkOogmZirKC6mbUF2c5RDL23V7c+YSR5Fb9yAjpAYxiPVihRcAfIvM+CcdabQU954H61
-	eJIj8Bbl7m9Jhp50SC+/H12XU2r0/+GRSRiRVNWCwWahz88e73mTbjIHynhfWpPbOydOBQ1apFm
-	UV/cQON1Bh+fenEZ1T7mjGsrAUj1ymKl0e0ZyVV5NOTKgfeUS1l8U9DBtv1ijj2fjTPzxvFzPzB
-	OV7ZQ2Mup7RaQHpAGCGMidxfRhQ1V00syR3//bH6RnCpS8xjY7ENgkCWxjBigIImNiCsyDkbxAe
-	t
-X-Google-Smtp-Source: AGHT+IHddfP/qfIqQ/Pq52wae/6r2Lx0bNCOsgAf+8+GNhKSX/5lqk384njvGbup7RDGk3HumHixQQ==
-X-Received: by 2002:a05:6a00:3e17:b0:748:33f3:8da3 with SMTP id d2e1a72fcca58-74af6f2f9d7mr14770731b3a.19.1751200130818;
-        Sun, 29 Jun 2025 05:28:50 -0700 (PDT)
-Received: from [192.168.1.168] ([106.215.181.119])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b25dsm6369758b3a.25.2025.06.29.05.28.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 05:28:50 -0700 (PDT)
-Message-ID: <a27c8ef8-9b80-4749-a64a-0389c266fd0e@gmail.com>
-Date: Sun, 29 Jun 2025 17:58:44 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X2SltdUb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3514C4CEEB;
+	Sun, 29 Jun 2025 12:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751200219;
+	bh=UM+OvlejUrRI0VfiNesQkThGz3t5ZeebEYKwPufLmto=;
+	h=Date:From:To:Cc:Subject:From;
+	b=X2SltdUbSa1cvkI1Lbwj8e7o8f0iCVVHrRgNYIozA7sr0w7KsMonMHguA3ylKFRgw
+	 +XJILdN7iByaF/vepGi8/vKdiqWoNOGHl1bWWI4eQ/PYErzB0cQNlke2xjT8pOg06O
+	 bn0CWZVJrwyzN9q5h0i6NsiQKf0UOKd7dmH6MKDY=
+Date: Sun, 29 Jun 2025 14:29:42 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Slaby <jslaby@suse.cz>, Stephen Rothwell <sfr@canb.auug.org.au>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY / Serial driver fixes for 6.16-rc4
+Message-ID: <aGExtgnENnLLFsET@kroah.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] cpufreq: intel_pstate: Enable EAS on hybrid
- platforms without SMT
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Morten Rasmussen <morten.rasmussen@arm.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- Pierre Gondois <pierre.gondois@arm.com>,
- Christian Loehle <christian.loehle@arm.com>,
- "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <2999205.e9J7NaK4W3@rjwysocki.net>
- <CAJZ5v0jLpKEgAodWx8G0k127vMUe-J1rGkCEreRP7a1dQXT2vA@mail.gmail.com>
- <CAJZ5v0gcgMJ-qihgc3_OF4djxAy8K0i-cmnjRe4AQrc_YEu4DQ@mail.gmail.com>
-Content-Language: en-US
-From: Ibrahim Ansari <ansari.ibrahim1@gmail.com>
-In-Reply-To: <CAJZ5v0gcgMJ-qihgc3_OF4djxAy8K0i-cmnjRe4AQrc_YEu4DQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
 
-On 5/13/25 19:31, Rafael J. Wysocki wrote:
+  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
 
-> Finally, schedutil needs to be the cpufreq governor which requires
-> intel_pstate to operate in the passive mode (schedutil is the default
-> governor in that case).  The most straightforward way to switch it
-> into the passive mode is to write "passive" to
-> /sys/devices/system/cpu/intel_pstate/status (it may also be started in
-> the passive mode as described in
-> https://www.kernel.org/doc/html/latest/admin-guide/pm/intel_pstate.html).
+are available in the Git repository at:
 
-I'm curious if you intend to bring back support for EAS with 
-intel_pstate in active mode down the line?
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-6.16-rc4
 
-That would get this working out of the box across distros, since 
-`intel_pstate=active` is the default setup everywhere (and typically 
-what users should prefer? as I understand from the documentation.)
+for you to fetch changes up to 09812134071b3941fb81def30b61ed36d3a5dfb5:
 
-Thanks for your work!
+  dt-bindings: serial: 8250: Make clocks and clock-frequency exclusive (2025-06-24 15:34:37 +0100)
 
+----------------------------------------------------------------
+TTY/Serial driver fixes for 6.16-rc4
+
+Here are 5 small serial and tty and vt fixes for 6.16-rc4.  Included in
+here are:
+  - kerneldoc fixes for vt recent changes
+  - imx serial driver fix
+  - of_node sysfs fix for a regression
+  - vt missing notification fix
+  - 8250 dt bindings fix
+
+All of these have been in linux-next for a while with no reported issues
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Aidan Stewart (1):
+      serial: core: restore of_node information in sysfs
+
+Fabio Estevam (1):
+      serial: imx: Restore original RXTL for console to fix data loss
+
+Nicolas Pitre (1):
+      vt: add missing notification when switching back to text mode
+
+Randy Dunlap (1):
+      vt: fix kernel-doc warnings in ucs_get_fallback()
+
+Yao Zi (1):
+      dt-bindings: serial: 8250: Make clocks and clock-frequency exclusive
+
+ Documentation/devicetree/bindings/serial/8250.yaml |  2 +-
+ drivers/tty/serial/imx.c                           | 17 ++++++++++++-----
+ drivers/tty/serial/serial_base_bus.c               |  1 +
+ drivers/tty/vt/ucs.c                               |  2 +-
+ drivers/tty/vt/vt.c                                |  1 +
+ 5 files changed, 16 insertions(+), 7 deletions(-)
