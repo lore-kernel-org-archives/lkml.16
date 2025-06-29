@@ -1,146 +1,201 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1256EEAA;
-	Sun, 29 Jun 2025 03:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751166540; cv=none; b=UQmJ/7Aq/XowLRF1GRKEPvsukOQsh6i+4UwL74akX9VXEqXJiKN05aUTmAzudQMxuyvVHN+VpFmU95Y+lRpy5fp5ZrKiEEhTkKjVxHH+PXuc8YPJDHqMCD5pW8PdVOnXQAgSRqyaqNSPynkzTOcL8bQVJhSHUY6s3FvYOeteJj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751166540; c=relaxed/simple;
-	bh=RK5Z/8V0Cvn5MyQ2lvLJ5kvvK7okLP7oTJeIK/QJzCY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uIqU6tL5bN6cUarMTZUEfMgeCO5mErstlPbXKCizmHSFkjOxmJKZ7o/s0xjl/3qg7iMLP3WdXGJHrtdbtOTYTXeSfKnRZ2UgH3xdOotA0BKK2h9qC5S4k1w5TOGLtEifUHJs7usBkBo2EEIP8x/eRayO7KTEi5WnPykPSSAQK7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=iUIUOTk+; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FFC1F92A;
+	Sun, 29 Jun 2025 03:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751167190; cv=pass; b=sHOERtssWghjAO/F3UUeU3epe6vX5nUn/t++zIAHxw70Tjdsrxm32PqnVuaQAkmH6BeolZyBypBmoo0uHrqWrK+PYjzT+8zfJXRMjQ2Im+8rZNqk8pP52NU7rMX0Rz5lg5+25DEA/VFJidDMZHEaA27PSJbNlsl7ihZvA4BBhPM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751167190; c=relaxed/simple;
+	bh=IXzCyj1WhE1qAkg+a+KMkiT95cDVLugJv1Bi8PBIbXc=;
+	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
+	 Content-Type; b=aKR6ZXyVVzt7ZCYkrjdJruySXC3o8VM6cB9eTZEZh9tMf8sgWrrstgNGGdSD5Mfi7/3rkr79NDzwU4TT+xsQCVFlNWG0MU/exkZ7UAuBDRh4fdotZcR7aY1mlUP4pv3CRIqMwBmdHZiF/VspVdbffpHE4KppGgt8r+ul4HXzOuo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=TdOoCWJv; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="iUIUOTk+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1751166538; x=1782702538;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/1wU96fFlsrJiBIUTivDC2RYxvB3smo0WTj2uzdXEmY=;
-  b=iUIUOTk+t112J/eMsveGxNR4emEA8LKNy8JKatb/O3scM08YuW3jXknc
-   yfasVGhTsHGtXhsdk4qZQOVKYT7ohY8xW9/IVBnV7j5QK8exHHT7OUu+V
-   X1FonQPqpeVAgGKzZVMdef7B1WVcUJCzvppdS6vr31X/2p4t/YlXdBUaG
-   06Jcl/IgCrqLeHnDDuJ9bfQfSEoQHuOlYAScUMrALGWWkVhvZ/rvdJ3f6
-   STzVncbcTmO46s73RC+gf9USjUxeEm4+Q0r2LPz84cuGZWbBNDzFpYWnf
-   MQVcLPw+40c6tsoVrDP+e0+CbvLOLh4UAULXTSMPtXJJnotddvIWopXKN
-   g==;
-X-IronPort-AV: E=Sophos;i="6.16,274,1744070400"; 
-   d="scan'208";a="215563240"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 03:08:58 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:61997]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.55.172:2525] with esmtp (Farcaster)
- id db2f4156-a369-4273-8671-a3bddd2ec5a6; Sun, 29 Jun 2025 03:08:57 +0000 (UTC)
-X-Farcaster-Flow-ID: db2f4156-a369-4273-8671-a3bddd2ec5a6
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 29 Jun 2025 03:08:57 +0000
-Received: from b0be8375a521.amazon.com (10.37.244.14) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Sun, 29 Jun 2025 03:08:55 +0000
-From: Kohei Enju <enjuk@amazon.com>
-To: <linux-hams@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, <kohei.enju@gmail.com>,
-	Kohei Enju <enjuk@amazon.com>,
-	<syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
-Subject: [PATCH net v2] rose: fix dangling neighbour pointers in rose_rt_device_down()
-Date: Sun, 29 Jun 2025 12:06:31 +0900
-Message-ID: <20250629030833.6680-1-enjuk@amazon.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="TdOoCWJv"
+ARC-Seal: i=1; a=rsa-sha256; t=1751167152; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=c4yg0VkzAxe6/1DNdK0m7HWg28vbCWKpN7647AxuXUIs4+J+5rDNErGq8UbeMNljwV/xVuI/0sxAnPN7hOYsdsuGCr9ok4v3rFqsU8ut8THmnixP2qtIcYIwownOETkyZK21I659cvXMH0P54yFoVCjV/2+3vPt16j8omvc7sOc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751167152; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5sZgel47h61IZI/xBdVfE3mfXZ87n6o+GU/uHbeZ/ug=; 
+	b=bRmxTnwIvSybezz3VhAoC9vuoZms4A9yUx0TMg/I9rDiESy6Skst7f1kaMkuWY7N/rlEgzYr7J2QRJ1IxoMXE9URKuFbd+/Wt/knayGd18AwcGmKjo/wbYnUSNz2rmC13BLp5aQKdxVUph3g5lY3l5q3hvmkV0dK86OvfFhI8so=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=pigmoral.tech;
+	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
+	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751167152;
+	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
+	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=5sZgel47h61IZI/xBdVfE3mfXZ87n6o+GU/uHbeZ/ug=;
+	b=TdOoCWJvcKB2dULI/kgdt/2VVSmAs1dfEHjGWJVNfGP+9cviyJ7RvFhpNbPy2bHl
+	eooGQ/vp9QZr9rK1RAdOJczhfeWcZLyO27ADykvZBtpUGvZnZr68wbWu1HxriJwwTUR
+	W1OtdfKk4iwVBA3zNf1u8vybSyaNxCmsHGTOA3SM=
+Received: by mx.zohomail.com with SMTPS id 1751167149312644.3787975589289;
+	Sat, 28 Jun 2025 20:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+From: "Junhui Liu" <junhui.liu@pigmoral.tech>
+To: "Rob Herring" <robh@kernel.org>
+In-Reply-To: <20250625191613.GA2059062-robh@kernel.org>
+Cc: "Bjorn Andersson" <andersson@kernel.org>, 
+	"Mathieu Poirier" <mathieu.poirier@linaro.org>, 
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
+	"Conor Dooley" <conor+dt@kernel.org>, 
+	"Chen Wang" <unicorn_wang@outlook.com>, 
+	"Inochi Amaoto" <inochiama@gmail.com>, 
+	"Philipp Zabel" <p.zabel@pengutronix.de>, 
+	"Paul Walmsley" <paul.walmsley@sifive.com>, 
+	"Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, 
+	"Alexandre Ghiti" <alex@ghiti.fr>, <linux-remoteproc@vger.kernel.org>, 
+	<devicetree@vger.kernel.org>, <sophgo@lists.linux.dev>, 
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: Add C906L rproc for Sophgo
+	 CV1800B SoC
+Message-ID: <184d653d449ed7b0.6a3574329a6ead7.ebc417e4db758a3b@Mac>
+Date: Sun, 29 Jun 2025 03:19:03 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 
-There are two bugs in rose_rt_device_down() that can cause
-use-after-free:
+Hi Rob,
+Thanks for your review.
 
-1. The loop bound `t->count` is modified within the loop, which can
-   cause the loop to terminate early and miss some entries.
+On 25/06/2025 14:16, Rob Herring wrote:
+> On Sun, Jun 08, 2025 at 10:37:39AM +0800, Junhui Liu wrote:
+>> Add C906L remote processor for CV1800B SoC, which is an asymmetric
+>> processor typically running RTOS.
+>>=20
+>> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
+>> ---
+>>  .../bindings/remoteproc/sophgo,cv1800b-c906l.yaml  | 68 ++++++++++++++++=
+++++++
+>>  1 file changed, 68 insertions(+)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-=
+c906l.yaml b/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-c90=
+6l.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..455e957dec01c16424c49ebe5=
+ef451883b0c3d4a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-c906l.y=
+aml
+>> @@ -0,0 +1,68 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/sophgo,cv1800b-c906l.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Sophgo C906L remote processor controller for CV1800B SoC
+>> +
+>> +maintainers:
+>> +  - Junhui Liu <junhui.liu@pigmoral.tech>
+>> +
+>> +description:
+>> +  Document the bindings for the C906L remoteproc component that loads an=
+d boots
+>> +  firmwares on the CV1800B SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sophgo,cv1800b-c906l
+>> +
+>> +  firmware-name:
+>> +    $ref: /schemas/types.yaml#/definitions/string
+>=20
+> Already has a type. You just need 'maxItems: 1'.
 
-2. When removing an entry from the neighbour array, the subsequent entries
-   are moved up to fill the gap, but the loop index `i` is still
-   incremented, causing the next entry to be skipped.
+Will do.
 
-For example, if a node has three neighbours (A, A, B) with count=3 and A
-is being removed, the second A is not checked.
+>=20
+>> +    description:
+>> +      The name of the firmware file to load for this remote processor, r=
+elative
+>> +      to the firmware search path (typically /lib/firmware/).
+>=20
+> That's the same for every 'firmware-name' instance. So drop.
+>=20
+> Is there a default name?
 
-    i=0: (A, A, B) -> (A, B) with count=2
-          ^ checked
-    i=1: (A, B)    -> (A, B) with count=2
-             ^ checked (B, not A!)
-    i=2: (doesn't occur because i < count is false)
+The firmware name would be specified in the board device tree, and
+there is no default value. For reference, an example value is provided
+in the example DT.
 
-This leaves the second A in the array with count=2, but the rose_neigh
-structure has been freed. Code that accesses these entries assumes that
-the first `count` entries are valid pointers, causing a use-after-free
-when it accesses the dangling pointer.
+>=20
+>> +
+>> +  memory-region:
+>=20
+>        maxItems: 1
 
-Fix both issues by iterating over the array in reverse order with a fixed
-loop bound. This ensures that all entries are examined and that the removal
-of an entry doesn't affect subsequent iterations.
+I plan to add a description for the rpmsg-related regions in the next
+version. Since the number of these regions may be flexible, I think I
+will only add a minItems property to ensure the execution memory
+region is specified.
 
-Reported-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
-Tested-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Kohei Enju <enjuk@amazon.com>
----
-Changes:
-  v2:
-    - Change commit message to describe the UAF scenario correctly
-    - Replace for loop with memmove() for array shifting
-  v1: https://lore.kernel.org/all/20250625095005.66148-2-enjuk@amazon.com/
----
- net/rose/rose_route.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+>=20
+>> +    description:
+>> +      Phandle to a reserved memory region that is used to load the firmw=
+are for
+>> +      this remote processor. The remote processor will use this memory r=
+egion
+>> +      as its execution memory.
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  sophgo,syscon:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      A phandle to the SEC_SYS region, used for configuration of the rem=
+ote processor.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - firmware-name
+>> +  - memory-region
+>> +  - resets
+>> +  - sophgo,syscon
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    reserved-memory {
+>> +        #address-cells =3D <1>;
+>> +        #size-cells =3D <1>;
+>> +        ranges;
+>> +
+>> +        c906l_mem: region@83f40000 {
+>> +            reg =3D <0x83f40000 0xc0000>;
+>> +            no-map;
+>> +        };
+>> +    };
+>=20
+> Drop. No need to show how /reserved-memory works here.
 
-diff --git a/net/rose/rose_route.c b/net/rose/rose_route.c
-index 2dd6bd3a3011..b72bf8a08d48 100644
---- a/net/rose/rose_route.c
-+++ b/net/rose/rose_route.c
-@@ -497,22 +497,15 @@ void rose_rt_device_down(struct net_device *dev)
- 			t         = rose_node;
- 			rose_node = rose_node->next;
- 
--			for (i = 0; i < t->count; i++) {
-+			for (i = t->count - 1; i >= 0; i--) {
- 				if (t->neighbour[i] != s)
- 					continue;
- 
- 				t->count--;
- 
--				switch (i) {
--				case 0:
--					t->neighbour[0] = t->neighbour[1];
--					fallthrough;
--				case 1:
--					t->neighbour[1] = t->neighbour[2];
--					break;
--				case 2:
--					break;
--				}
-+				memmove(&t->neighbour[i], &t->neighbour[i + 1],
-+					sizeof(t->neighbour[0]) *
-+						(t->count - i));
- 			}
- 
- 			if (t->count <= 0)
--- 
-2.49.0
+Will do.
 
+>=20
+>> +
+>> +    c906l-rproc {
+>> +        compatible =3D "sophgo,cv1800b-c906l";
+>> +        firmware-name =3D "c906l-firmware.elf";
+>> +        memory-region =3D <&c906l_mem>;
+>> +        resets =3D <&rst 294>;
+>> +        sophgo,syscon =3D <&sec_sys>;
+>> +    };
+>>=20
+>>
+
+--=20
+Best regards,
+Junhui Liu
