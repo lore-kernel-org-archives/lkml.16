@@ -1,56 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B1324468E
-	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF16623B63C
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751224347; cv=none; b=fWfuw4mb2SEyF1GFI3SBHLyI7fivAk7Yh1ri54J4EbTKYheksynslmJ97jYfNBhy+23TQ8X5IPgU5iMkrtdX5uE+dt1npAzFy7RyLhNcVvidt87fVjzR7afXbpGjeqMDEVZN6jfIAbHzagLp5PcgCIEhjYVp7CvgLEKTRzEnN7Q=
+	t=1751224352; cv=none; b=sW7LLQUupi7TsENPLzE2r/8gWWmg9fI2BfV3XnW4A0SWXyyEQb7fU9dm1OLZTYoWIIwECecdDWO4Z+J2QOk6FMWvioxtFa7Uu9gOEeZ0q3nPBprdzE7ItM+UGIpBEwfJTvYK9iuN05PObWBGX+ohuJjXxy5/9hQWSHoPdJfoFZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751224347; c=relaxed/simple;
-	bh=gvFlxcFtzyBUDDOMREWUtXBfCFunJy5FTlfD6HzbhQM=;
+	s=arc-20240116; t=1751224352; c=relaxed/simple;
+	bh=DmT4Bise/vCChRzplVSqDd2BI/p2bI1iSO9roexnDw0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=flYbGqmc+K+JNAYki/cWXB67S0crchod2H1GuU7wV+ijRB39gLm7+XLNJBKk3JqAwHQxuqTMvej81uCsSufeCMlR8b873lsxE6W9mQvFSCZxJbA5/Ugo39IDzPIv24s3M2F9cLQTYUTfNwbLF9y844krcThNnWhDYDrtKTFFBX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FsEKugW9; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=JMDMMabfT+wPWMCPVrMXOU4o3ZsPGU9Y0kujAvDR/+1kf0oJ6hxDNGVEZ98xDvTlbeKs1CO2bLF1kYSdCA70LXMin/KRGyliqMIAgxCP7Zgkx+F4C9fjd53jhZBuL8iDCD9CpepiCK/0tbzs50gt66TFlZlFWbIaLmTLmPKKh8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZgoXPVA0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FsEKugW9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZgoXPVA0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751224345;
+	s=mimecast20190719; t=1751224350;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QKv0PnDhV0wNFfVbM7vA/OmMJ7dFD+u1OrtyTP7l5fA=;
-	b=FsEKugW98JUvP5vrQxl8H7XnTc0yhOjaAFxP8hw9YbKPQ5cwyNJgWc6WuzDZqedhp2+hA7
-	RKJVVC2JDebxaw2LH8IAyd+FPpqojj5POeX95jCVuS5geraT/dUDgofHW6gNwnuuE5ENJM
-	eTr98eug4WCY9QpVMbX5m19rK1eGizI=
+	bh=4XK1DvpuFfEECjOWlQarzmEVhfydKQ9Mv1sIMUipbGI=;
+	b=ZgoXPVA0T7L9Trz6zawGZKTv5kgaEpZPlWQf8vXwdE4mDL67mfVlGr1Si/BblGqu0HPVL7
+	e7OWr/Jn5xTjykczch/EYYL1pI7yfppgydiUPxW45r7U00YbiuzSvMHM3bu1A2vOf+Jl5s
+	jtA75DJxoHmSuH0abBYTVKIQs4qrVlc=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-McBv4Z9wMiS0SD9-mwW6dA-1; Sun,
- 29 Jun 2025 15:12:19 -0400
-X-MC-Unique: McBv4Z9wMiS0SD9-mwW6dA-1
-X-Mimecast-MFC-AGG-ID: McBv4Z9wMiS0SD9-mwW6dA_1751224337
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-q2Xtx-tPOZuVAqnRsgfBzw-1; Sun,
+ 29 Jun 2025 15:12:26 -0400
+X-MC-Unique: q2Xtx-tPOZuVAqnRsgfBzw-1
+X-Mimecast-MFC-AGG-ID: q2Xtx-tPOZuVAqnRsgfBzw_1751224344
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D2A11978F63;
-	Sun, 29 Jun 2025 19:12:17 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A10919560AE;
+	Sun, 29 Jun 2025 19:12:24 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.45.224.33])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D33F6180045B;
-	Sun, 29 Jun 2025 19:12:10 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF7E0180035C;
+	Sun, 29 Jun 2025 19:12:17 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
-Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
 	Jiri Pirko <jiri@resnulli.us>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -66,9 +66,9 @@ Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
 	linux-doc@vger.kernel.org,
 	Michal Schmidt <mschmidt@redhat.com>,
 	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v12 11/14] dpll: zl3073x: Add support to get/set priority on input pins
-Date: Sun, 29 Jun 2025 21:10:46 +0200
-Message-ID: <20250629191049.64398-12-ivecera@redhat.com>
+Subject: [PATCH net-next v12 12/14] dpll: zl3073x: Implement input pin state setting in automatic mode
+Date: Sun, 29 Jun 2025 21:10:47 +0200
+Message-ID: <20250629191049.64398-13-ivecera@redhat.com>
 In-Reply-To: <20250629191049.64398-1-ivecera@redhat.com>
 References: <20250629191049.64398-1-ivecera@redhat.com>
 Precedence: bulk
@@ -80,146 +80,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add support for getting and setting input pin priority. Implement
-required callbacks and set appropriate capability for input pins.
-Although the pin priority make sense only if the DPLL is running in
-automatic mode we have to expose this capability unconditionally because
-input pins (references) are shared between all DPLLs where one of them
-can run in automatic mode while the other one not.
+Implement input pin state setting when the DPLL is running in automatic
+mode. Unlike manual mode, the DPLL mode switching is not used here and
+the implementation uses special priority value (15) to make the given
+pin non-selectable.
 
-Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
-Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+When the user sets state of the pin as disconnected the driver
+internally sets its priority in HW to 15 that prevents the DPLL to
+choose this input pin. Conversely, if the pin status is set to
+selectable, the driver sets the pin priority in HW to the original saved
+value.
+
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/dpll/zl3073x/dpll.c | 88 +++++++++++++++++++++++++++++++++++++
- drivers/dpll/zl3073x/prop.c |  1 +
- 2 files changed, 89 insertions(+)
+ drivers/dpll/zl3073x/dpll.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
-index 89da2c34609eb..e67ef37479910 100644
+index e67ef37479910..f78a5b209fce7 100644
 --- a/drivers/dpll/zl3073x/dpll.c
 +++ b/drivers/dpll/zl3073x/dpll.c
-@@ -287,6 +287,56 @@ zl3073x_dpll_ref_prio_get(struct zl3073x_dpll_pin *pin, u8 *prio)
- 	return rc;
- }
+@@ -439,6 +439,38 @@ zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
  
-+/**
-+ * zl3073x_dpll_ref_prio_set - set priority for given input pin
-+ * @pin: pointer to pin
-+ * @prio: place to store priority
-+ *
-+ * Sets priority for the given input pin.
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+static int
-+zl3073x_dpll_ref_prio_set(struct zl3073x_dpll_pin *pin, u8 prio)
-+{
-+	struct zl3073x_dpll *zldpll = pin->dpll;
-+	struct zl3073x_dev *zldev = zldpll->dev;
-+	u8 ref, ref_prio;
-+	int rc;
+ 		rc = zl3073x_dpll_selected_ref_set(zldpll, new_ref);
+ 		break;
 +
-+	guard(mutex)(&zldev->multiop_lock);
++	case ZL_DPLL_MODE_REFSEL_MODE_AUTO:
++		if (state == DPLL_PIN_STATE_SELECTABLE) {
++			if (pin->selectable)
++				return 0; /* Pin is already selectable */
 +
-+	/* Read DPLL configuration into mailbox */
-+	rc = zl3073x_mb_op(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_RD,
-+			   ZL_REG_DPLL_MB_MASK, BIT(zldpll->id));
-+	if (rc)
-+		return rc;
++			/* Restore pin priority in HW */
++			rc = zl3073x_dpll_ref_prio_set(pin, pin->prio);
++			if (rc)
++				return rc;
 +
-+	/* Read reference priority - one value shared between P&N pins */
-+	ref = zl3073x_input_pin_ref_get(pin->id);
-+	rc = zl3073x_read_u8(zldev, ZL_REG_DPLL_REF_PRIO(ref / 2), &ref_prio);
-+	if (rc)
-+		return rc;
++			/* Mark pin as selectable */
++			pin->selectable = true;
++		} else if (state == DPLL_PIN_STATE_DISCONNECTED) {
++			if (!pin->selectable)
++				return 0; /* Pin is already disconnected */
 +
-+	/* Update nibble according pin type */
-+	if (zl3073x_dpll_is_p_pin(pin)) {
-+		ref_prio &= ~ZL_DPLL_REF_PRIO_REF_P;
-+		ref_prio |= FIELD_PREP(ZL_DPLL_REF_PRIO_REF_P, prio);
-+	} else {
-+		ref_prio &= ~ZL_DPLL_REF_PRIO_REF_N;
-+		ref_prio |= FIELD_PREP(ZL_DPLL_REF_PRIO_REF_N, prio);
-+	}
++			/* Set pin priority to none in HW */
++			rc = zl3073x_dpll_ref_prio_set(pin,
++						       ZL_DPLL_REF_PRIO_NONE);
++			if (rc)
++				return rc;
 +
-+	/* Update reference priority */
-+	rc = zl3073x_write_u8(zldev, ZL_REG_DPLL_REF_PRIO(ref / 2), ref_prio);
-+	if (rc)
-+		return rc;
++			/* Mark pin as non-selectable */
++			pin->selectable = false;
++		} else {
++			NL_SET_ERR_MSG(extack,
++				       "Invalid pin state for automatic mode");
++			return -EINVAL;
++		}
++		break;
 +
-+	/* Commit configuration */
-+	return zl3073x_mb_op(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_WR,
-+			     ZL_REG_DPLL_MB_MASK, BIT(zldpll->id));
-+}
-+
- /**
-  * zl3073x_dpll_ref_state_get - get status for given input pin
-  * @pin: pointer to pin
-@@ -400,6 +450,42 @@ zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
- 	return rc;
- }
- 
-+static int
-+zl3073x_dpll_input_pin_prio_get(const struct dpll_pin *dpll_pin, void *pin_priv,
-+				const struct dpll_device *dpll, void *dpll_priv,
-+				u32 *prio, struct netlink_ext_ack *extack)
-+{
-+	struct zl3073x_dpll_pin *pin = pin_priv;
-+
-+	*prio = pin->prio;
-+
-+	return 0;
-+}
-+
-+static int
-+zl3073x_dpll_input_pin_prio_set(const struct dpll_pin *dpll_pin, void *pin_priv,
-+				const struct dpll_device *dpll, void *dpll_priv,
-+				u32 prio, struct netlink_ext_ack *extack)
-+{
-+	struct zl3073x_dpll_pin *pin = pin_priv;
-+	int rc;
-+
-+	if (prio > ZL_DPLL_REF_PRIO_MAX)
-+		return -EINVAL;
-+
-+	/* If the pin is selectable then update HW registers */
-+	if (pin->selectable) {
-+		rc = zl3073x_dpll_ref_prio_set(pin, prio);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	/* Save priority */
-+	pin->prio = prio;
-+
-+	return 0;
-+}
-+
- static int
- zl3073x_dpll_output_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
- 					  void *pin_priv,
-@@ -474,6 +560,8 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
- 
- static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
- 	.direction_get = zl3073x_dpll_pin_direction_get,
-+	.prio_get = zl3073x_dpll_input_pin_prio_get,
-+	.prio_set = zl3073x_dpll_input_pin_prio_set,
- 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
- 	.state_on_dpll_set = zl3073x_dpll_input_pin_state_on_dpll_set,
- };
-diff --git a/drivers/dpll/zl3073x/prop.c b/drivers/dpll/zl3073x/prop.c
-index c3224e78cbf01..4cf7e8aefcb37 100644
---- a/drivers/dpll/zl3073x/prop.c
-+++ b/drivers/dpll/zl3073x/prop.c
-@@ -205,6 +205,7 @@ struct zl3073x_pin_props *zl3073x_pin_props_get(struct zl3073x_dev *zldev,
- 	if (dir == DPLL_PIN_DIRECTION_INPUT) {
- 		props->dpll_props.type = DPLL_PIN_TYPE_EXT;
- 		props->dpll_props.capabilities =
-+			DPLL_PIN_CAPABILITIES_PRIORITY_CAN_CHANGE |
- 			DPLL_PIN_CAPABILITIES_STATE_CAN_CHANGE;
- 	} else {
- 		props->dpll_props.type = DPLL_PIN_TYPE_GNSS;
+ 	default:
+ 		/* In other modes we cannot change input reference */
+ 		NL_SET_ERR_MSG(extack,
 -- 
 2.49.0
 
