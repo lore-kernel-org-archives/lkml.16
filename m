@@ -1,184 +1,94 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-73.smtpout.orange.fr [193.252.22.73])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ADC1E47C5;
-	Sun, 29 Jun 2025 08:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4338320B;
+	Sun, 29 Jun 2025 08:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751186244; cv=none; b=YWFXCdwcMuC3a0JbjMDc/3cRFwiodI230No+EJVD/FONQeMROg759SgW/kxjAEFzUCdrU0X/Edf/ci4eRdJ1GFNEbD576LUp9NTB5rD3X7CixHGdKj1WkYH38RF9OCcl9KjiKCzbBxUY77rMALnz1WqNOQh9KvoQp01Y9OBwsok=
+	t=1751186562; cv=none; b=gmfmu22gnXt+OC5huai1oZp93b8SnPfU7lvRp0c655bM84NUSKRWuP2yTbTZXizdNahm+HpT6hDgiFyXcAtqSzgdgl6F6ou89p8p+vTfVuOSH8FHH7GSazDX+zTLgK7VX9CaVAVRkCREg/HPilDiml4v4JtopJ+ROayinpPrD9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751186244; c=relaxed/simple;
-	bh=QjtaeULOocQ639xsWhZDYI4GEBGiiOhnaPbbA/yGWrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hATZoYRAJumvVbDFiPqdi3AolnnOgU94+cP/CojKnyrV+opPuS1fxcYhMXmFKtmLh+cHSQE2S+hp6MtLgXN1vnIuzrs/IZ+Gd7Ur8xArcJCgyOTcV9PYSLWiyDzx5ERWYe17y96zxSzHgMnHwKBRWLnT8e2zLGLPfT2CJAqgMqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IY+uqySs; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751186562; c=relaxed/simple;
+	bh=1vR0hCj7PS77chk+ubL9x0VnkldCCkTPBOGJDFRwQsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pEzG6GvL0ruiJEXhlAow9LC1hgx22B+QU1+vu2fpc0MptIrDYRDLbq5c3jHMz6h9iTmWzHmcoYPAdG2CfAezPHqJ5gQZYyNG2ena6DgAx3DvK6ivP7yIg21zfJbtDjkv5JnIuEF6CyxBpHw14VAm0b3o/nKTMg9eEzpPwJmMtAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Np8YppsQ; arc=none smtp.client-ip=193.252.22.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY+uqySs"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7490702fc7cso2693452b3a.1;
-        Sun, 29 Jun 2025 01:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751186242; x=1751791042; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d+BcgPGnRt3iJg519EPQI5YMO+fb+KS53JEcTm8aE2s=;
-        b=IY+uqySsvl9tY0olrzooy7l1xZI6ZukxzDz0aW0BD6KIAAGNXYZe8o4rN7Js8BaLMD
-         pZifZA4hUa1WpLVZRkQY534aNXZgPvKMvnSbevOYim6rzPe2bmuJGkcmLfb3Jrb5uCK1
-         3d9GGfOENUyLr5fQ/Aapcp7Iy4QFd0wAU3bikzrs+qpTvKVavxSTjSiyK/LC/CDxA9nN
-         +OMAYcBTHPT6X0BCkiZuRU6EVnlIZnk5OGMZL8zeaBHJVMpFPmw0tlNfU88sAjua+GBm
-         v5DWPYNj7IF9Mg4Qtsg/W/Ow14CWPcQzxmrOcm6YIv4d6zu/8no5lhHJiJx6YKQWpN+V
-         2XyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751186242; x=1751791042;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d+BcgPGnRt3iJg519EPQI5YMO+fb+KS53JEcTm8aE2s=;
-        b=GNnxomIRvRplt+LaesTPaCD7iJDa1UZM+S5Uc2tAP41mY/LlXZTk8Jj32R+u0ZC66o
-         aZRhGZ9vuufcNIVMrnCEfO70/YpYsplSe9kxyfcP3AiQIonmyFos3BXeWVNgD4EU8wk5
-         fJujydfVkhslzKtysCh3lOco9vXLMK5Is3xNL7BfgQi+5h9Y6ll173AfW5f9XcmWSvNd
-         tVelVP34UpHiM9YIzdmnUD2yFY5mqHFRNcZAXzi8kEzpxuSO3Fdy8zRUheN/UGhrRBL3
-         1qsw5C5XUaN4Cs5gcWmHa2551NWM61vLzmQ71Q7xy1oG9g5LVntMMK6Eixoucij50XDL
-         BUyA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/idFdwebbTGXnPzwUMQDcL6RPcKojq3Cmtrxt3jslz/9RTjdfzQ9hKEzaZnpT43DQH6dtRqMwxtAJ@vger.kernel.org, AJvYcCUFVmFkLEZBfaaFWTmDp+y7SBDMOC2RDOQWWcbVnLB4Fz2aNI9BM4+v5Na4frdVihFOVxHAlqRFohwbE53n@vger.kernel.org, AJvYcCWgWVfheZqCb5DBN0zXqwNoUjnNs7GRnNHe3iHML04h6t9T3ZvZEfWe6CpaQ5N4dc7T0M+l0tC1kG1b@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx10Szt3jRCHUElcewpKO0++tavvc1L2YMJ4fNo20fMCv51vnVW
-	TU96qwHRiCI9hlPyaLlPdvawCFJV6KX+tgmy1T7ifEBcIri9YDYEs3Sg
-X-Gm-Gg: ASbGncvx6J0xyTvBUvXz2e9HCxbrS9X1OZc8k+tnSE1Ov4so3NBhB0PtJ0VKIpyhcp6
-	/XT3pQFvwFDD627z4ZOB0EpEp6NWIeUGo93TytOFPxHcC+k3bWN5u62oXs0FPn+2WDwjc1ieCLO
-	cTcEag76T+qkoYXnJxWKpai7gJIF1FqeAtkalBocgKSIAXS3wZxtxSqG8OeOpmTupR3FUqvp69h
-	V1+GI8tMK2+MRdwV94/mpCItyF+iE7+fijX6YBbfYE7jtX4FqWoHYx8qgIufKxIyOwrBzAJIf+N
-	qAdiSbACtOq5+WwaXfPVOpX7GXyb+m0GMDJOCPO4HTVhGNBc5Qk4gi1pI4KkfMJm0EU=
-X-Google-Smtp-Source: AGHT+IF5QdK7zE4cTr0041AFjTqMIeuBxsDXV4WV5f+rw5vGOtEvUzEIvjAK9unWEGYVymasc3U0vA==
-X-Received: by 2002:a05:6a00:4b11:b0:748:f1ba:9af8 with SMTP id d2e1a72fcca58-74af6fcd15cmr10632012b3a.21.1751186241526;
-        Sun, 29 Jun 2025 01:37:21 -0700 (PDT)
-Received: from localhost ([101.76.241.248])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74af557b3a2sm6117064b3a.104.2025.06.29.01.37.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 01:37:21 -0700 (PDT)
-Date: Sun, 29 Jun 2025 16:37:18 +0800
-From: Zixian Zeng <sycamoremoon376@gmail.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Longbin Li <looong.bin@gmail.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] riscv: dts: sophgo: Add SPI NOR node for SG2042
-Message-ID: <aGD7Pvua1OCdqfb3@calculate>
-References: <20250629-sfg-spifmc-v3-0-28db1f27e999@gmail.com>
- <20250629-sfg-spifmc-v3-4-28db1f27e999@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Np8YppsQ"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id VnTiu8Wnbr9nZVnTjuiCjq; Sun, 29 Jun 2025 10:33:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1751186020;
+	bh=Ic120Tw4SXqu1SW29ua5MOX2cM3lmV7dZjeyQ5spDak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Np8YppsQTYN22Ynh59ZE6ov4rKNxBYq9+TFojWCFxTgeF0rODQpJyrm/palUs00Dp
+	 F5611DEn2R+07oUZ97NnFkzxjsIVDXazUAsUMJg9q6JxCZKIwG5oIotEmNT+OZW8G7
+	 qn+8yyYxlrPjlb08cCr3fFQ/k06lOwOd8dj40NtMqTsc1Zo++USfFMgk1VfKzNPzmL
+	 alWvROTp749Hdk38JYz11ziGEQZCGMKsXLoHG+K4pgel40QG9RGEOZk0mh/QdVRsHN
+	 G+nkOETaKGWz7S4siZkTDh0qF1+OSghiYDrnYOJ18oceT10ndI4AmtoFkGLirNPxzx
+	 L2s3eQgBXSxxw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 29 Jun 2025 10:33:40 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <a545127e-ee1d-44a5-bf43-149f81bda6a5@wanadoo.fr>
+Date: Sun, 29 Jun 2025 17:33:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250629-sfg-spifmc-v3-4-28db1f27e999@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] can: ucan: Use two USB endpoint API functions rather than
+ duplicating their implementations
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Chen Ni <nichen@iscas.ac.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
+ linux-can@vger.kernel.org
+References: <0a675827-33af-4ec4-97dc-2e4523e41194@web.de>
+ <c44cf0e9-9510-4fe9-aa67-edeaa1be6253@wanadoo.fr>
+ <1d773886-1657-4a90-87e1-aaaa169f5783@web.de>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <1d773886-1657-4a90-87e1-aaaa169f5783@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 29, 2025 at 04:23:13PM +0800, Zixian Zeng wrote:
-> Add SPI-NOR controller and flash nodes to device tree for SG2042.
+On 29/06/2025 at 16:51, Markus Elfring wrote:
+>> Please use the same email address:
 > 
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
-> ---
->  .../riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts | 24 ++++++++++++++++++++++
->  arch/riscv/boot/dts/sophgo/sg2042.dtsi             | 24 ++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> index ef3a602172b1e5bf3dcf54a8cacdad5172b7f50e..554ec14d58453a44a02a82da40a7aedb80d61dc9 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> @@ -138,6 +138,30 @@ &sd {
->  	status = "okay";
->  };
->  
-> +&spifmc0 {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +		spi-max-frequency = <100000000>;
-> +		spi-tx-bus-width = <4>;
-> +		spi-rx-bus-width = <4>;
-> +	};
-> +};
-> +
-> +&spifmc1 {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +		spi-max-frequency = <100000000>;
-> +		spi-tx-bus-width = <4>;
-> +		spi-rx-bus-width = <4>;
-> +	};
-> +};
-> +
->  &uart0 {
->  	pinctrl-0 = <&uart0_cfg>;
->  	pinctrl-names = "default";
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> index 85636d1798f11804546ed8606595ace1b4cb2a2f..0e1fcb54480af71147d0e71178a8eb08a31b75c3 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> @@ -48,6 +48,30 @@ soc: soc {
->  		interrupt-parent = <&intc>;
->  		ranges;
->  
-> +		spifmc0: spi@7000180000 {
-> +			compatible = "sophgo,sg2042-spifmc-nor", "sophgo,sg2044-spifmc-nor";
+> You may omit the header specification “From:” (if you would find other presented
+> information acceptable), don't you?
 
-Sorry, This should be compatible = "sophgo,sg2042-spifmc-nor", binding
-is changed in this patch series. My git branches are a bit messy, sorry
-for taking your time for this issue.
-> +			reg = <0x70 0x00180000 0x0 0x1000000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			clocks = <&clkgen GATE_CLK_AHB_SF>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <108 IRQ_TYPE_LEVEL_HIGH>;
-> +			resets = <&rstgen RST_SF0>;
-> +			status = "disabled";
-> +		};
-> +
-> +		spifmc1: spi@7002180000 {
-> +			compatible = "sophgo,sg2042-spifmc-nor", "sophgo,sg2044-spifmc-nor";
+You are sending a patch which has some checkpatch warnings and you think it is
+our duty to fix your mistakes? This is not how it works.
 
-Same as above, sincerely
+> What does hinder you to support additional email addresses better?
 
-Best regards,
-Zixian
-> +			reg = <0x70 0x02180000 0x0 0x1000000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			clocks = <&clkgen GATE_CLK_AHB_SF>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <109 IRQ_TYPE_LEVEL_HIGH>;
-> +			resets = <&rstgen RST_SF1>;
-> +			status = "disabled";
-> +		};
-> +
->  		i2c0: i2c@7030005000 {
->  			compatible = "snps,designware-i2c";
->  			reg = <0x70 0x30005000 0x0 0x1000>;
-> 
-> -- 
-> 2.49.0
-> 
+It is your behaviour and your unwillingness to follow the guidance from the
+maintainers which hinders me. Use whatever e-mail address you want, but if you
+fancy mixing different e-mail addresses, then just stop posting.
+
+I do not want to waste any more time arguing with you.
+
+Nacked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+(no need to reply to this thread, I will not read your post anymore).
+
+
+Yours sincerely,
+Vincent Mailhol
+
