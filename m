@@ -1,127 +1,172 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F36F4C6C;
-	Sun, 29 Jun 2025 11:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062181D5CDE;
+	Sun, 29 Jun 2025 11:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751197098; cv=none; b=EiUgnIobl+ERwo0Us8lV3XlTQogp2jXhSTlk4fug74IOIZEpLBIvR+JzgkKX+l1+OT8PoADysxo9vxGKOJz7eveGBPTcXkpJjQlFfTsFKZkH8+nUWS9pVtUOEnA0GCyF8zfycVwUqRqeTlNCRMZGMwQWPg373GQbRnjpYiFLnwY=
+	t=1751197247; cv=none; b=r1AxLmraC9sDFDui6I6D57CvUEPSwtQ+wMxIFtyehcWI4Jm54S6yue9qFKyXxA5snjLointQZ0Iuv+TJag7msWWkVenEzp0udzXHTe5o0FhVwk6r8ANtKjprPyGByB2hArHNhTgKIwUdwoQNFSLUusuWXyjiZLo3WY0EwmorZD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751197098; c=relaxed/simple;
-	bh=u/A3a+FxwtZJZRomlvdxwkXUOI6BE+9PxTS8f5GnDWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XO93dt8V/0fHCH4t+YOA8JD1QdkJIHMf70c1BWGNNQ2MkNeBWEP1n27Txlte1wbfLjLuK5U8E4iFYr06baU1iEnwcyiB9n6keb3JxTIN9AatMxnFVJW4/sitQQBRsnlHII3cCQeHhzL7hsU2V3Y6/E9ME19vjyt7y95MxwoX0pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hmeYEzDa; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1751197247; c=relaxed/simple;
+	bh=SuGAcFPJ8fDZpq64lXMcRG2awU6YZOcrXavdp36eUsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CtOC0wXmq3HTQXpRwvwf0E7mktFF/WWnjZy6+T9RayW7GDWqQZhPB1YrSZ/C6ZHrVdUpjDCcIYEwZ80532QW72+gBt2eR/rhzeJR0obQPm7240tPVNBQVB7jgFIJ9eFdf59ViLiLQYqbzLjPelkOcMcnn/7KVWH6Tc7Mpt9VglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mdxw6OG1; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hmeYEzDa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1751197088; x=1751801888; i=markus.elfring@web.de;
-	bh=wr92fPaRHolQpd7Yxs20PiNNfFloPYh+Bmy+ZgP9juo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=hmeYEzDaahYfvpRMcyxZV4o93JwXZrxlolI6e7XMVT6lgAcP7zEMaH4UC+owughz
-	 JtHtRfHr7cH6yyCcwUcv5vt8x/O40LX1vPdxIgxTOWw4ngredS9F3hUByYFXdxjVQ
-	 iplINhjOYWLHTYLZIJBi9SoocOhUzX4uJlzqmxAogMJVuBwryqUZORilYE8j+ws8+
-	 cqDCaruKmdlb9lhibyMqg3CVH14IphSUzfILmr4aGM+GIcud1io3IsEoi0TDb5F68
-	 pokz7EGhBbuQzIbC+hBzEwoR0EfagqFGmEZp+F/0nE3hFwb8KHZn49W9TjqEUEGEY
-	 zfKvDZZacvROcfizVQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.227]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M7ux4-1uaoRW1fAA-009I4e; Sun, 29
- Jun 2025 13:38:08 +0200
-Message-ID: <dfc5f8b6-c433-491d-9538-af8dca42670c@web.de>
-Date: Sun, 29 Jun 2025 13:38:06 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mdxw6OG1"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-453647147c6so38539315e9.2;
+        Sun, 29 Jun 2025 04:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751197244; x=1751802044; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/WM9wI+ftSuqEkYEs3zU3TH9PeO5T6PPzLJahZfyDzY=;
+        b=Mdxw6OG1p0/SMH0GN6nfsaJc1BABKDOrkozrRWcCdZne6Xw9vTRwzQ+Y2Gj4KWzTb6
+         8iRnci/g12EEvdtw2KTGncHNp8y37i4ypNkXX9SO5Q1VyABdiNWKVquMTPHiz/A5xjaU
+         CW8c593SSNnTVngexUQQU0dnB1LhF8mbUiVk0dkodj7y4Gb8mAfvkatfi1ZzEe1IL6wH
+         BECYlM/+OHus84UvHtyLqiL3KNfCLtnOf2t+LK/SH4Tc6Nf65f1GW0L4/UIDUfWlTHLf
+         X6uG5w0/8Qrp1LXyj/zQL6IgxcS3cnCoTvUI1cEypTw9H73PXI1K1BjN/Yz47vTD8pgI
+         DTrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751197244; x=1751802044;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/WM9wI+ftSuqEkYEs3zU3TH9PeO5T6PPzLJahZfyDzY=;
+        b=jqHcCHpLo7uiuUFZgCkYBtEwpjy9BIqm8XP1Cu31OchreUlHhYGDV3hRT7Odj7kVk0
+         1EuY+LV8HYzt6xmsMZ0iD2MeQHf6yCsHnK0dWyIp90nyQPK41zRs0EcJNQiJ9CjG0Anx
+         qVgBiZ3em2ptpYRIVffCFKb14wttYBhR9JENjkzq9TqLC5OxpK8M98NIe9vvH2MtV4u8
+         NEvDsJFhcVWe/ko/P9XmLYTsWRFxiPO9ADvHr9xqfwTyafOr3zpdkBl/1QC/9yTf8Sl/
+         rSdUkj0qCgXKGqSKXsSXmCsU2nohemO2GgWyqwH5yZAhJuKqjBCIK9pJa9Uy1cRblGDQ
+         Y+wA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Bz3s5v7KgsscbpAnwBHITmGo3QLsgvs/GuG8E5Fdgn8OfFObjj22pCPW3drqvJk3rPzDNgSA09Y=@vger.kernel.org, AJvYcCWvd4TsM+KfMUkJ3o7HOC7zoCSW2KcvohrBU2ssmCCadg5q6kgUrmbxBoOiH5QN/xFPecCifjpN5BY3UMS+@vger.kernel.org, AJvYcCXEaDXDE9mE8XQC6uNUpWPBXrf0G7JcxAcRrfDP1PoCkfqGavLswvDOxgQ/HWjSX/TFc4qo0EsaU3yb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhyxz3nv+w7h8ntFEd8VJDlDrS6QI8zyVwaXuKxpMLqwGZksfj
+	N7qOofn6vmwKTZO6LfbVgiApnji7U+//j4Q4mhCl9kVGeog4D9ck/2Zf
+X-Gm-Gg: ASbGnctkXNwF6wmoGjQh8cPJH9zJG0tmzQ801G3IBZ72muC1Nw+S6OGDXhEYvlOCGgp
+	Ah0g95A58PLhaEgDrGdZXa7eI/yY8gsxeWERbnKBRqJS2yDXUYSgzrKc/L6ESzZuf4PG+tnNlIV
+	AR04/mFTGetqyg2Y3vMKeWVu4gPzxR6Bq+KG9dbCu7W0gMi4GTg2Lw0FuhknS5XFCo8QHe6GDiB
+	v/jLUYWcnyPVpVD5mkkdeKTnE0RROThaVcUbPMmyyoxWni5oy+R34gePdyqi5DjCLGP/X4I5kDC
+	Ioc1dY2W6BMqOelEDX0vxCpWqsCLogRnVtqlbWpw3jH0M9T2+ezoug+iUJ071lGCSxf3lPR0R6J
+	2XjUTPbVzhKNzpTBeOssnA8diXalj
+X-Google-Smtp-Source: AGHT+IGG36v57mIHx9b8wattPhP5PhbXduaoeVXbueE5hKYc+gE5hVGbh4KVH7GNd0aydHy8k2cc9w==
+X-Received: by 2002:a05:600c:a48:b0:453:58e8:a445 with SMTP id 5b1f17b1804b1-45396a94e32mr40584365e9.11.1751197244036;
+        Sun, 29 Jun 2025 04:40:44 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a390d05sm105209375e9.2.2025.06.29.04.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 04:40:43 -0700 (PDT)
+Date: Sun, 29 Jun 2025 12:40:41 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>, Andy Lutomirski
+ <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel
+ <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Xiongwei Song <xiongwei.song@windriver.com>, Xin Li
+ <xin3.li@intel.com>, "Mike Rapoport (IBM)" <rppt@kernel.org>, Brijesh Singh
+ <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>, Tony Luck
+ <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jonathan Corbet
+ <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar
+ <mingo@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Daniel
+ Sneddon <daniel.sneddon@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>, Breno Leitao <leitao@debian.org>, Rick
+ Edgecombe <rick.p.edgecombe@intel.com>, Alexei Starovoitov
+ <ast@kernel.org>, Hou Tao <houtao1@huawei.com>, Juergen Gross
+ <jgross@suse.com>, Kees Cook <kees@kernel.org>, Eric Biggers
+ <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Masami Hiramatsu
+ (Google)" <mhiramat@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>, Changbin Du
+ <changbin.du@huawei.com>, Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Namhyung Kim
+ <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv7 00/16] x86: Enable Linear Address Space Separation
+ support
+Message-ID: <20250629124041.04a30869@pumpkin>
+In-Reply-To: <ky4an2a4ks55phzuzdvb5py4psvgintt4u2rmthhx44zsx3gqn@uxw3sebzpbch>
+References: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
+	<9b1c5e43-ff48-4af8-9ec8-1c1dc2b902ae@oracle.com>
+	<1b96b0ca-5c14-4271-86c1-c305bf052b16@oracle.com>
+	<ky4an2a4ks55phzuzdvb5py4psvgintt4u2rmthhx44zsx3gqn@uxw3sebzpbch>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3] can: ucan: Use two USB endpoint API functions rather than
- duplicating their implementations
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, linux-can@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>, Marc Kleine-Budde <mkl@pengutronix.de>
-References: <0a675827-33af-4ec4-97dc-2e4523e41194@web.de>
- <c44cf0e9-9510-4fe9-aa67-edeaa1be6253@wanadoo.fr>
- <1d773886-1657-4a90-87e1-aaaa169f5783@web.de>
- <a545127e-ee1d-44a5-bf43-149f81bda6a5@wanadoo.fr>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <a545127e-ee1d-44a5-bf43-149f81bda6a5@wanadoo.fr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fWlvJPs+SM1iAy1zOadtfByEhAEDkdROqywa3BhuAbRIII6bzZm
- m1GMufjBHQgjLxciOu6lOet1kJdbpjswGuW6cspvEZRSC2jiLH6xK9txwqslh52EIEHjVx3
- YhlTXzcjGBhXMkHrpyRqIrb4OmY/YqV4GfhVw4srBaqPbJOKKetxSWLV5XG7zPt73Exu9JT
- M6tJXUFHUsAtuo468iWHA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:U/Ih+SdI3Hk=;0jzat1ePlZNcxWP/+Q9M3DiGE4Z
- dSkFMDDqobgAd6ZEz/lfGNwv9ibiiO/Tld1h6d3/VwUsWMbLj+ltnu9ReKyTi8YJtlXHmqn3Z
- eQA/MabuERrUz9R1aoLuAVELueb6H2c661hgzTTAZJWs8WBqrMRoggDTc+42E4VTc9YYSIFIx
- B5TSI5JWV2oKB2VsF7zsZhBM2piruymX7B8eea201nnBiSu1yMcrCzo8/3BhWX+DfXPxPyFSX
- P/ILbA3VBfPvc5fYVRLCuazcGVY2TxL3g9y7DSokq1AHzIoq5T/iSR3xzn5x6TVSWapnET8S9
- L2P4NyJDttBBSNfXyB7wsAshd/H4mh8HrgdqBDwmn5IrqlZxG6nQt+FRuJ2iZHIFwIuPMeVrl
- eTLPBUNdNrMSrUBF2ogw0qH7sNaGD4uP6jWKpPaI1sjtxxCTp8sw0PoYZFTjAfCb5yzgfXZur
- CJW9hFbM4TFZaTSzfAoDmD5If1Kvwxg3PUhRoLOPGE0KV63zOWwPsSs+eVp1S/3iNDhyNooDk
- hI+SaNctnatKo2kMMyhTmdHkyKBpuhDj4ZsO9uE9nopgOM4xfhcp9ZYFATIlwl7hvThNyl+3f
- u9E1Pr7xJHWHSvQO0yWq4VWrr6oonRG9xp7xWxMk0astLZ+vaN62r29G8Mr/GVWb3oDadnpIa
- B0RnSVl0yG/i8VkrMZg63elkTpIL2sWj6JbXj2zmLQM3JWJGpZKNvjUptWUpZi3RsUPpFkS1u
- K+K56Pbzsv/SQFJPisgx3Czr9QhR9lMyjmx8wxg40bW/DP8paZpz8X3YyUuuTx0WeN6+XWQru
- IGRXC1vEYnb10I1qZPLewHq7nuh90GQyqc5LWPyFqOxa8IT7g48zh1c1Jujwx7abFIZydT8yY
- XHrlT+WUxEXbEtAgOh2QvWoTooa/N7TObP3kx0dTmJL1GQ2jaky93kDroFpxihQ8mMwXnQxhg
- 5ZLjzcNpjNq5VJieIS+2vbc80eAC/3rSZ6Y+m1pIjKc2AetTk9ebA8DvmwFIN/QbvIAtl8Y73
- BIG05h1JcOtwhl8fsKkWpIZu9Ow6f+qS0Gu3Zz2BWfeSdvtw0WI1m6KqKItawCO5jWeregDhL
- z54O0AMahTnvY9YAI50oRoWrOgVI+c11Nr3dBf8YNU+C/JHNR8vQC+phhZuuUXnEX1F7fJwcM
- lG2YrqmlILTXpcoLoOqdEhS8gIx4pBHArqEwgSLw0KZOX24IhPp2mg8uzAa9bFXOwohAqb6yb
- rF1vP8tI2LkGHUeJtuXs7VYOPojnBp7jELO/JdIlFb4FWEsgydwUvOB38BX0FMDQ01ZlSV0v4
- 1091chxUZwUFakc4lhKNH8NkSvKyAHR3FNd6KZ9MBYswKJ3jnuKflRSN8I/xfKA+SUQkB++FO
- REM8mujtOE7RBPC+yKN0NZd6U8aQ/FTLDj+TOfhI8lzpfXPAxGr7XhceMC99lV8N8+ymgZugB
- I/q230NGFtZLoUw4aaBI4Op27QnzzlJ/ektCtT6A71UtbboIuoYToD+xgyzrcjhryq3yWNdY5
- cR4y+TYvEIFXfQywbfw51qRWIwqfhwx7aV+tT/g2PxtPJCeGi9cvjrQ3TUx8HL11d/USjFgSu
- qhSvZWx7O5on2nnc9EdoG4m11Vb9ronvqgFCRD341y2u2ggxtsAYEeZLIuYXZPUkcBmtGoqWD
- Vw6ZQV1vspEJBvN8JZRIySKMJ2oX6mz2pPxSdDpc3gMzLtlGkUcvCmJ4/xYBPG/91Oew3vqfs
- R+NHmwOymBLkp7CP2rCIIeBA5BzVnXbxQgDaRXEPQViAwTxba/3mtEuOxveXJEOHFJJwtaieW
- 50YJOqtW143k4SMSruXpSS0AayB2PQl2LRFFV6ZuEjDZSe9sNTr8aJ/PXHQA4h32+7F6uGiS5
- 2jwwRGQvtl/vd0EqpQdkOitIXQOYTVkG79B14NiL/rd+mfVASRXkwXbSIUu3hQJLk3dbMMEOE
- qrraMrl9z6+xUlaLzCKqSp91STNCp+AJ4uyt7zWH0ep1RkstJjiqQOMVme1n7+aCmFyJB6lHt
- ARQMdLuUkLO/Hstr0buK/b5OtovQT8yAnh+IbR9mdnmLY1vRWcrHrjRiKjZKKq7a5/1xO1HMj
- yAOLR9i2Fd/6oRwC2QBG6cWYJL8BVLkNwDUw5bEHyZjl6H6WyZwUX6dom1mSfsaHB1vtxA8HR
- u3zLf8gmoy0dNiuU3EuhUXuoVLBoOgB6fqXSBtJ6Xfg2Knsba4mmxxn8gv6NYZWs4cR+l6coG
- gNHa+ymnjtxUzIlqed+8t0m/6Xy4LdIvfBrnUxWovtRes7tDQwiKZS1cFc3QOYU5d5XscknlM
- wwDSIvnwH5KsAQNhKjj9m0MzuwlkjkXkvhxrwtr7X1u95ZcPYzL5Gfk3bx7VMWd5tlZkY8829
- O67ajW4veumKYxB8CFAe9/SAoFlUYtJ/99lcNhFT2N9rkO8mE8Q5RWWAqyPQAPZXTcDOoafL3
- hrdiyNv6qecplagFrkpo93ESeRyOYJvsTGn91b1WlWVh3v4Pg4bC03qk6oUKkS3KE9fPeUna1
- qI9/s7VQd62mVZh9ykH4yy2+EFiqMnEp6/WQfdeHkUvZGyosg8MD5XbvFB6s8ukmRkyOX8hEp
- dWeD7f7KzPaY24JucmXAzn2OhlKJ1aC0kDTQ6UyaeSdTf8385yMskmB9rIRFYHf5M+DBDbydM
- tMnWUaqQHpmS+2QMJFxxNR1iQ11b768k08CERtwYgVovaFwJ1CPz3X134BOakq9mQg0KEuSUZ
- aQOZh+Fnj6twtrkRILe9IbVgA8cwF3XvU+i5DcOPtVRzmohLeYToN5wduozb1zdC44sQfgIzs
- 4ePTHq3wE74xfuKzilOHM65kujza6+ZcZflOCDCOL2zFa+VzNKLMnpEuYCI3it4F74aUxFAVc
- ZMd1IM8quaStzN1hs4/50149ePYDZ9/8qCA4c+3LBxZSK3OvNXAFiA2WU48UdtQV5qmzjo2BM
- bYN3loi0hLfaqp29udNyLaDmwXTHVUY7i35nO98PWiIuDn5YkNl1e0OSBlDBze8Yur7XKYpI6
- Yv7bJtu0F1uYrHDbLG9ohadS+V1ATO9nxyOvwgbAqMt1U536891ZoU1k/r3rOT2J7L90VRChG
- nC8+7FsQXvoM3KGygOlx8mWSCUfxtvFsnVGr/wiQclGiO3y0e20kxo683kTleozn1d9PuGLjT
- jmnBj3rWdiJLdfeJrQFe4Z/q2A+uMZwaK9d5nsPwURycGxK9+EpDbXR2tE0XRZXqVftyZYdO4
- csi7JWC9Res0/SKbZSQIPUootAkbitE2qTHyhbv8OiLY1doeSSTd2crQITd/Tsu8mLjRfjokz
- IeINle0HlTbURPptnfTNMiUFktt9w6IZvfEwODBlW28uwX9TDG2GdiEosDw8WOBIBlIoG0K64
- FOlqIwaPQcBmXYaE0oGPd+uMUAj5C+ZbqyA683pxeYYondlS+KjzRJTpbWv9oOmmO1Nast0JV
- /hRzIXhaYta58V8wHB1lLb0tivTbwm7E=
 
->                             =E2=80=A6 Use whatever e-mail address you wa=
-nt, but if you
-> fancy mixing different e-mail addresses, then just stop posting.
+On Thu, 26 Jun 2025 15:47:36 +0300
+"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 
-See also:
-Markus_Elfring@Sonne:=E2=80=A6/Projekte/Linux/next-analyses> git log --one=
-line --author=3Delfring@users.sourceforge.net | wc -l
-1263
+> On Thu, Jun 26, 2025 at 11:35:21AM +0200, Vegard Nossum wrote:
+> >=20
+> > On 26/06/2025 11:22, Vegard Nossum wrote: =20
+> > >=20
+> > > On 25/06/2025 14:50, Kirill A. Shutemov wrote: =20
+> > > > Linear Address Space Separation (LASS) is a security feature that
+> > > > intends to
+> > > > prevent malicious virtual address space accesses across user/kernel=
+ mode. =20
+> > >=20
+> > > I applied these patches on top of tip/master and when I try to boot it
+> > > fails with errno 12 (ENOMEM - Cannot allocate memory):
+> > >=20
+> > > [=C2=A0=C2=A0=C2=A0 1.517526] Kernel panic - not syncing: Requested i=
+nit /bin/bash
+> > > failed (error -12). =20
+>=20
+> For some reason, I failed to reproduce it. What is your toolchain?
+>=20
+> > > Just using standard defconfig and booting in qemu/KVM with 2G RAM.
+> > >=20
+> > > Bisect lands on "x86/asm: Introduce inline memcpy and memset". =20
+> >=20
+> > I think the newly added mulq to rep_stos_alternative clobbers %rdx, =20
+>=20
+> Yes, it makes sense.
+>=20
+> > at
+> > least this patch fixed it for me:
+> >=20
+> > diff --git a/arch/x86/include/asm/string.h b/arch/x86/include/asm/strin=
+g.h
+> > index 5cd0f18a431fe..bc096526432a1 100644
+> > --- a/arch/x86/include/asm/string.h
+> > +++ b/arch/x86/include/asm/string.h
+> > @@ -28,7 +28,7 @@ static __always_inline void *__inline_memcpy(void *to,
+> > const void *from, size_t
+> >                      "2:\n\t"
+> >                      _ASM_EXTABLE_UA(1b, 2b)
+> >                      :"+c" (len), "+D" (to), "+S" (from),
+> > ASM_CALL_CONSTRAINT
+> > -                    : : "memory", _ASM_AX);
+> > +                    : : "memory", _ASM_AX, _ASM_DX);
+> >=20
+> >         return ret + len;
+> >  } =20
+>=20
+> This part is not needed. rep_movs_alternative() doesn't touch RDX.
+>=20
+> I will fold the patch below.
+>=20
+> Or maybe some asm guru can suggest a better way to fix it without
+> clobbering RDX?
+
+Or separate out the code where the value is a compile-time zero.
+That is pretty much 99% of the calls.
+
+	David
 
 
-Regards,
-Markus
