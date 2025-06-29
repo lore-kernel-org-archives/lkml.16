@@ -1,239 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF15A93D;
-	Sun, 29 Jun 2025 10:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582A021770D
+	for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 10:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751191736; cv=none; b=jmZEiW2+ZIE3gRlClPUyx8yE2TcCqOSnxOL8EeSx9AzsRgOgBeeqi6GzkkMIjDqHkdworWij1wpAeedokFsXVy7Kem6B7TmptKg/wc0SozELMaU4uuexvQreqYYqRS61PXr9Iag58FwBibSmF+xgB16kCDEGj/nGAeL7uYw/8Ls=
+	t=1751191812; cv=none; b=Z4aC3DfThtfquWaUH26f9340DSLqKjduBOjmlfMOm8yHkFGN826f0LtazTxyibiGZTV6ZV7i97GaPV0zvs4zp2/YdIhvysX5fasV3r8c0S+kA6xd95oWn/oq0g/kaUVuoRM4j1GxCviIij+uv1pSYBLetPPyXcKU/4N3zFXimjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751191736; c=relaxed/simple;
-	bh=vm4qV0M7H2voC4CWdcN984fSwF6guPsCtLrP/3QyGI8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rHbIWGQsbGsFlTFplmswS4uwxbXOSHoailKm6jOrVJD4o1x+374CCq+GmxNm+NWmUn+3MS8wbulUBLS4ZUeS+AbMmC5p8JJqWiXoeszjuMc216dti4WjKGLB91P6s0iDi9gTtqqPViPf0k1JeWM2S+ebE/lXcAJ3XwjcWfQLncw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ligpxu/h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751191812; c=relaxed/simple;
+	bh=R6uSRM1xEjbR8Uh/ppwy7XPm0tCcOs8UMbZXeqNBPkY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=HJbkFOabvJ49QqAtFW7bx5U+g2kyR5/UO4xaxWu57TcRlDmPTYa6mfCiE30t8LE4VNAB1pcRc3EXaQBCUW5Y2iZXGyeyZCyH4aAZte1SVI0t3yuJVja51FlJtqP9KeTeqIbW7xkw191m3n1kpE0rj9awCfuEZ6r2vza8XlnUEv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=jbLTkcMk; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ligpxu/h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA25C4CEEB;
-	Sun, 29 Jun 2025 10:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751191734;
-	bh=vm4qV0M7H2voC4CWdcN984fSwF6guPsCtLrP/3QyGI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ligpxu/hSWPh6oMlawsQ/UdhUxEzYO7Axx5CWrt5vFRYGwCz+DRmobVslogGFjyXa
-	 eOYKwzJHsCxmF5e6XM6V3x4nAvFIFCH6HY9HusCqVY3EQaYhh84l6K485zZGSWO2hy
-	 2RTq94SqjQs9pOPRWOmJA1MUQd0zTGHcJD33Q3ToMCix3DipFtUEo3wyx3mGgwvdfZ
-	 kCcQY1Ff0l+e/EgoAO/KhoOXSrmk/8sdF4yKKpWiwGcU/d92vPpq7/HA4s27Ex/jPH
-	 K3PbBGO08muJTARgwNEhSN86yFPrjqtQm6bUVk33Glg/ErQaQns3sKmLx7TiUrVDcV
-	 wrGoNJhN5berA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uVoxv-00AvwK-Ju;
-	Sun, 29 Jun 2025 11:08:51 +0100
-Date: Sun, 29 Jun 2025 11:08:51 +0100
-Message-ID: <86ms9qc11o.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>,
-	Dave Martin <Dave.Martin@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 17/28] KVM: arm64: Support SME identification registers for guests
-In-Reply-To: <20250625-kvm-arm64-sme-v6-17-114cff4ffe04@kernel.org>
-References: <20250625-kvm-arm64-sme-v6-0-114cff4ffe04@kernel.org>
-	<20250625-kvm-arm64-sme-v6-17-114cff4ffe04@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="jbLTkcMk"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, catalin.marinas@arm.com, suzuki.poulose@arm.com, will@kernel.org, pbonzini@redhat.com, corbet@lwn.net, shuah@kernel.org, Dave.Martin@arm.com, tabba@google.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751191803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H6Wlp3JgvEp0ycS0t6Z7WKduaZTKhf5gEm0eW6oKUXk=;
+	b=jbLTkcMkzlOS4+CCECrHk6uIoEiUlZ8gi1AojI4kxi/eKj82hZVBUd0JkXPnB663LhL/Ek
+	gVqtKR4nI0DDAfDOLpK/pQysjigMfgN3b1oiUOlRymhs+BHhUm9Z2CIhjA6/dxDofMziof
+	bnZIC1eACNKyzLAaEjVmvFIWqNG5ubaMMU3Bswi2HkrK89/j4dBSJJ+/1Zwh7tZHRPMd7F
+	h8lCIjiqZr5zNjUESE1775Fn9QF8oEovSIHTMpvWLnkHDCJkdQKwj0qhGDK74YgzHqetQ1
+	lUR6lfFU1Fa45OZRahJUi6V6lS9ljIdgWs2JFN09YMxLkfMYs6Tf+IRgJb//Zg==
+Content-Type: multipart/signed;
+ boundary=43508436bcd3ad84eb98e0bb756b39ac53921fae364149a231ac9f8d2b94;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sun, 29 Jun 2025 12:09:49 +0200
+Message-Id: <DAYXOI4WITJW.1G5DBWEQDDY1Z@cknow.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "kernel test robot" <lkp@intel.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+Cc: <llvm@lists.linux.dev>, <oe-kbuild-all@lists.linux.dev>, "Dragan Simic"
+ <dsimic@manjaro.org>, "Quentin Schulz" <quentin.schulz@cherry.de>, "Johan
+ Jonker" <jbx6244@gmail.com>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
+ boards
+References: <20250627152645.740981-3-didi.debian@cknow.org>
+ <202506290852.bWro2lBe-lkp@intel.com>
+In-Reply-To: <202506290852.bWro2lBe-lkp@intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 25 Jun 2025 11:48:08 +0100,
-Mark Brown <broonie@kernel.org> wrote:
-> 
-> The primary register for identifying SME is ID_AA64PFR1_EL1.SME.  This
-> is hidden from guests unless SME is enabled by the VMM.
-> When it is visible it is writable and can be used to control the
-> availability of SME2.
-> 
-> There is also a new register ID_AA64SMFR0_EL1 which we make writable,
-> forcing it to all bits 0 if SME is disabled.  This includes the field
-> SMEver giving the SME version, userspace is responsible for ensuring
-> the value is consistent with ID_AA64PFR1_EL1.SME.  It also includes
-> FA64, a separately enableable extension which provides the full FPSIMD
-> and SVE instruction set including FFR in streaming mode.  Userspace can
-> control the availability of FA64 by writing to this field.  The other
-> features enumerated there only add new instructions, there are no
-> architectural controls for these.
-> 
-> There is a further identification register SMIDR_EL1 which provides a
-> basic description of the SME microarchitecture, in a manner similar to
-> MIDR_EL1 for the PE.  It also describes support for priority management
-> and a basic affinity description for shared SME units, plus some RES0
-> space.  We do not support priority management and affinity is not
-> meaningful for guests so we mask out everything except for the
-> microarchitecture description.
+--43508436bcd3ad84eb98e0bb756b39ac53921fae364149a231ac9f8d2b94
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Both are extremely useful and meaningful to guests. You just have made
-the choice not to expose this.
+Hi,
 
-> 
-> As for MIDR_EL1 and REVIDR_EL1 we expose the implementer and revision
-> information to guests with the raw value from the CPU we are running on,
-> this may present issues for asymmetric systems or for migration as it
-> does for the existing registers.
+On Sun Jun 29, 2025 at 2:32 AM CEST, kernel test robot wrote:
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on rockchip/for-next]
+> [also build test ERROR on next-20250627]
+> [cannot apply to robh/for-next krzk/for-next krzk-dt/for-next linus/maste=
+r v6.16-rc3]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Diederik-de-Haas/a=
+rm64-dts-rockchip-Refactor-DSI-nodes-on-px30-boards/20250627-233300
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockc=
+hip.git for-next
+> patch link:    https://lore.kernel.org/r/20250627152645.740981-3-didi.deb=
+ian%40cknow.org
+> patch subject: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk=
+3399 boards
+> config: arm64-randconfig-002-20250629 (https://download.01.org/0day-ci/ar=
+chive/20250629/202506290852.bWro2lBe-lkp@intel.com/config)
+> compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd70=
+8029e0b2869e80abe31ddb175f7c35361f90)
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250629/202506290852.bWro2lBe-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506290852.bWro2lBe-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>>> Error: arch/arm64/boot/dts/rockchip/rk3399-rockpro64-screen.dtso:75.1-6=
+ syntax error
+>    FATAL ERROR: Unable to parse input tree
 
-MIDR/REVIDR are writable from userspace in order to alleviate this
-problem. So should be SMIDR.
+The kernel test robot is right as the ``&mipi_out`` node is missing a
+closing ``;``, so thanks for that :-)
+The problem is also present in v2, so I'll send a v3 shortly.
 
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  arch/arm64/include/asm/kvm_host.h |  1 +
->  arch/arm64/kvm/sys_regs.c         | 46 +++++++++++++++++++++++++++++++++++----
->  2 files changed, 43 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index c26099f74648..29b8697c8144 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -494,6 +494,7 @@ enum vcpu_sysreg {
->  	/* FP/SIMD/SVE */
->  	SVCR,
->  	FPMR,
-> +	SMIDR_EL1,	/* Streaming Mode Identification Register */
+Luckily I've now found why my build script didn't catch it.
+```sh
+export PATH=3D~/dev/kernel.org/dt-schema-venv/bin/:$PATH CROSS_COMPILE=3Daa=
+rch64-linux-gnu- ARCH=3Darm64
+make distclean
+make debarm64_defconfig
+make CHECK_DTBS=3Dy W=3D1 rockchip/px30-cobra-ltk050h3146w-a2.dtb
+<quite-a-long-list-of-all-boards-at-least-I-thought-so>
+```
 
-No. We have long made ID registers to be per-VM, not per-vcpu.
-SMIDR_EL1 must have the same behaviour.
+(debarm64_defconfig is my own defconfig based on Debian's kernel config)
 
->  
->  	/* 32bit specific registers. */
->  	DACR32_EL2,	/* Domain Access Control Register */
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index caa90dae8184..b11bb95e9e35 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -774,6 +774,38 @@ static u64 reset_mpidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
->  	return mpidr;
->  }
->  
-> +static u64 reset_smidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
-> +{
-> +	u64 smidr = 0;
-> +
-> +	if (!system_supports_sme())
-> +		return smidr;
-> +
-> +	smidr = read_sysreg_s(SYS_SMIDR_EL1);
-> +
-> +	/*
-> +	 * Mask out everything except for the implementer and revison,
-> +	 * in particular priority management is not implemented.
-> +	 */
-> +	smidr &= SMIDR_EL1_IMPLEMENTER_MASK | SMIDR_EL1_REVISION_MASK;
-> +
-> +	vcpu_write_sys_reg(vcpu, smidr, SMIDR_EL1);
-> +
-> +	return smidr;
-> +}
-> +
-> +static bool access_smidr(struct kvm_vcpu *vcpu,
-> +			 struct sys_reg_params *p,
-> +			 const struct sys_reg_desc *r)
-> +{
-> +	if (p->is_write)
-> +		return write_to_read_only(vcpu, p, r);
-> +
-> +	p->regval = vcpu_read_sys_reg(vcpu, r->reg);
-> +
-> +	return true;
-> +}
+That long list didn't have ``rockchip/rk3399-rockpro64-screen.dtbo``.
+Is there a better/simpler way to validate all rockchip boards without
+having to explicitly list each and every one of them?
 
-We already have 2 similar copies of this function. We're not adding a
-third one.
+Cheers,
+  Diederik
 
-> +
->  static unsigned int pmu_visibility(const struct kvm_vcpu *vcpu,
->  				   const struct sys_reg_desc *r)
->  {
-> @@ -1607,7 +1639,9 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
->  			val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_MTE_frac);
->  		}
->  
-> -		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_SME);
-> +		if (!vcpu_has_sme(vcpu))
-> +			val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_SME);
-> +
->  		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_RNDR_trap);
->  		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_NMI);
->  		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_GCS);
-> @@ -1723,6 +1757,10 @@ static unsigned int id_visibility(const struct kvm_vcpu *vcpu,
->  		if (!vcpu_has_sve(vcpu))
->  			return REG_RAZ;
->  		break;
-> +	case SYS_ID_AA64SMFR0_EL1:
-> +		if (!vcpu_has_sme(vcpu))
-> +			return REG_RAZ;
-> +		break;
->  	}
->  
->  	return 0;
-> @@ -2905,7 +2943,6 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  				       ID_AA64PFR1_EL1_MTE_frac |
->  				       ID_AA64PFR1_EL1_NMI |
->  				       ID_AA64PFR1_EL1_RNDR_trap |
-> -				       ID_AA64PFR1_EL1_SME |
->  				       ID_AA64PFR1_EL1_RES0 |
->  				       ID_AA64PFR1_EL1_MPAM_frac |
->  				       ID_AA64PFR1_EL1_RAS_frac |
-> @@ -2913,7 +2950,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	ID_WRITABLE(ID_AA64PFR2_EL1, ID_AA64PFR2_EL1_FPMR),
->  	ID_UNALLOCATED(4,3),
->  	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
-> -	ID_HIDDEN(ID_AA64SMFR0_EL1),
-> +	ID_WRITABLE(ID_AA64SMFR0_EL1, ~ID_AA64SMFR0_EL1_RES0),
->  	ID_UNALLOCATED(4,6),
->  	ID_WRITABLE(ID_AA64FPFR0_EL1, ~ID_AA64FPFR0_EL1_RES0),
->  
-> @@ -3112,7 +3149,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->  	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
->  	  .set_user = set_clidr, .val = ~CLIDR_EL1_RES0 },
->  	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
-> -	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
-> +	{ SYS_DESC(SYS_SMIDR_EL1), .access = access_smidr, .reset = reset_smidr,
-> +	  .reg = SMIDR_EL1, .visibility = sme_visibility },
->  	IMPLEMENTATION_ID(AIDR_EL1, GENMASK_ULL(63, 0)),
->  	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
->  	ID_FILTERED(CTR_EL0, ctr_el0,
-> 
+--43508436bcd3ad84eb98e0bb756b39ac53921fae364149a231ac9f8d2b94
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please also handle the comment about FEAT_SME_SMPS in config.c.
+-----BEGIN PGP SIGNATURE-----
 
-	M.
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGEQ8wAKCRDXblvOeH7b
+bkmOAP9oM6RsgNp49/g+vN6x7caM8SHQCK0m03vWy5v9AUMPCAD9Gu0vIsw3p1fn
+Jw3UxbRGaW+2LtlZ/raAKpP6oBKDRA4=
+=vkok
+-----END PGP SIGNATURE-----
 
--- 
-Without deviation from the norm, progress is not possible.
+--43508436bcd3ad84eb98e0bb756b39ac53921fae364149a231ac9f8d2b94--
