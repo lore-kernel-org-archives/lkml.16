@@ -1,63 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD55A49625;
-	Sun, 29 Jun 2025 18:38:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D9619B5B1;
+	Sun, 29 Jun 2025 18:45:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751222326; cv=none; b=fb3VP2CC2KWwhrGZ6o8+KgkAg1z1jZPiBl3+q2XOoF4lDQwowvsW/utO7HLt3te8UWUc9y7HzYARv6d0ueDPP0+yPAbUL6ZMBDXMz0Q5iNTye9sbMQK2X0X+FOvtucB7Pi2uyFN5/1Q+An8BMD1hPRf13erFxCllupyLUGSL4pE=
+	t=1751222759; cv=none; b=ZQw72EI0PdMtx+oaAt7Pi7WNP0lFfi7CFJZh02XTsZTZM8+oYbkS493Zs/O9UaQI3CFRGm5IOs4CyCxKrfaaR7z0SVuFpMEo9F+2e2Zcu8U0ZbupG7+UkAD73OGtuEwBFjL/ZVltP2k0aw0gikA7vJOCFMiAUOod8pDiirefrJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751222326; c=relaxed/simple;
-	bh=91ntLfJPx4kOJYYPQGyGGQwYIjtSF5XzrErW6rcx1RI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dfE8rLIzBI3eJEAHMSUrZRTjC7VmPgIJ3Fwi9UBpTJIXEwXdQB11l/D4pnkfdBsLnuRplauswmhRx8WY/i7dExcuoWW53E0MOc8PQ0JpW1FuRodoqZgxRQhfHimImUA8i3V2wDZfGtpkuOvRMv6BLWwjjVWZovG3otGkAj8XFlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLpHLvUo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751222759; c=relaxed/simple;
+	bh=cfQXpd35MpSvNvNbg1atgyvG6iYU0T5oU/tfIHmnZeo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ff6TRh6WB5pGPfAvy29oAYeIcuKfCXlYJbI6YCdbRpmOD9fURdeZkPyRhpyTPy6vlGbeafCr1egjrpTfJds4lFyFGiqbLbOo29IweNvAMCeCmIAWk6oB9rRqkYdeYh7PK65y+ICnKs0jYNsZDSKfGsdQTnpVwJxCmKW4flkvi3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOsOPJA/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLpHLvUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A12C4CEEB;
-	Sun, 29 Jun 2025 18:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOsOPJA/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79615C4CEEB;
+	Sun, 29 Jun 2025 18:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751222326;
-	bh=91ntLfJPx4kOJYYPQGyGGQwYIjtSF5XzrErW6rcx1RI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sLpHLvUouq5Q2t3eTDp4CLadoJkvG/5CNKxlGgrjTVYPHNalzY+fGpVYbaVBJB8n6
-	 ZLq6nnl2vWLTp4258D8TYyntOaPKyhvMaKqOxD5NbQDokmNVJCmSuTboHkz5z2wGMb
-	 54SmMRzvb3L8e33wFPwdR7Kv+7o1YWXzr/C8yE/fF/JrL9JRIpTuLqvHy+IEWVjUdy
-	 L8SJ9QiWZe71GIr4gKKgLhzNf36YbhiV5ZcRIZA503r6BEe99d3QI4uEJLDKN0Mgm9
-	 lxBsQR5ELn++eSpJAiw+ErRyu9v1qOKknffQ4C/HdYFw5u0jJd1qLW49Z+3pcioyBm
-	 imsFV/F0sePVw==
-Date: Sun, 29 Jun 2025 19:38:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7091r8: make ad7091r_init_info const
-Message-ID: <20250629193840.7be2e033@jic23-huawei>
-In-Reply-To: <aGGDNR0b0TTjSRNN@debian-BULLSEYE-live-builder-AMD64>
-References: <20250628-iio-const-data-4-v1-1-4e0f93c9cf83@baylibre.com>
-	<aGGDNR0b0TTjSRNN@debian-BULLSEYE-live-builder-AMD64>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=k20201202; t=1751222758;
+	bh=cfQXpd35MpSvNvNbg1atgyvG6iYU0T5oU/tfIHmnZeo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MOsOPJA/sNONYLOZpgm6fOqxkP/kteXu89h3o1vGPZvp/g//mpxq5+wyz9WhTvccv
+	 ssIu6sckfeqIOD7cHKyls+AxGdmz/GdJf1Acln8nkwwIE1yNt++yg1vrIR4Evm1dLy
+	 dDIiD+pSA4kYZzfOr8YpjM3PnBT6QyHmoKYl0juyDq09aXdi7kRwRsqo6RhvOY5ztj
+	 b7TjLyJGmcLUo56ApJtNv1ZY3vdI/xtc01vqsPQSuYNccUkhJrpO5gEWyLjRSP74k9
+	 WEJZFfY5J+YgiAc8fSWD5cMKpcMaziFgFXMrpG6MJAMveWiNeuIPkQf8QOAcekLD3r
+	 nsfW04FCwWSlQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] kconfig: improve gconfig
+Date: Mon, 30 Jun 2025 03:43:26 +0900
+Message-ID: <20250629184554.407497-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, 29 Jun 2025 15:17:25 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+- Code refactoring
+- Migrate GTK 2 to GTK3
+- Fix all compile warnings
 
-> On 06/28, David Lechner wrote:
-> > Add const qualifier to struct ad7091r_init_info ad7091r*_init_info. This
-> > is read-only data so it can be made const.
-> > 
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > ---  
-> Acked-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
 
-Tags added. Thanks!
+Masahiro Yamada (9):
+  kconfig: gconf: fix behavior of a menu under a symbol in split view
+  kconfig: gconf: use configure-event handler to adjust pane separator
+  kconfig: gconf: rename display_tree_part()
+  kconfig: gconf: rename gconf.glade to gconf.ui
+  kconfig: gconf: migrate to GTK 3
+  kconfig: gconf: replace GtkVbox with GtkBox
+  kconfig: gconf: replace GdkColor with GdkRGBA
+  kconfig: gconf: replace GtkHPaned and GtkVPaned with GtkPaned
+  kconfig: gconf: show GTK version in About dialog
+
+ scripts/kconfig/gconf-cfg.sh              |  11 +-
+ scripts/kconfig/gconf.c                   | 146 ++++++++--------
+ scripts/kconfig/{gconf.glade => gconf.ui} | 202 +++++++++++-----------
+ 3 files changed, 171 insertions(+), 188 deletions(-)
+ rename scripts/kconfig/{gconf.glade => gconf.ui} (83%)
+
+-- 
+2.43.0
+
