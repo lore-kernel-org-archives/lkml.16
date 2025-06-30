@@ -1,102 +1,193 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CA12459F3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E40824466E;
 	Mon, 30 Jun 2025 10:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278616; cv=none; b=lsWV2FYLVo8alLmhhHjqBi+xqzb2l5dYo+qlXOCO4pNcnyjkj6qZQDSloCX7XUwjv3B2TJY0tBU2P6KxfM3XD6QWK9iGZ1hd/3cdKcMHluRFFVyEJMgugIAuN8o8lL6tEEawCyaPPBEyJzqZYX7LExkdxvYLBf5+pT8xrC+pdq4=
+	t=1751278616; cv=none; b=gKygM2+pGDNqVtBR2lUtw48PawZ/i9fkNfhW6ETQpo0157RsqU0bGqFHPpLRSN3CNfRL9JMJkJBP+0zOVqFmA55mPRlFmJrqzaPuKqWtbFr5eY/gfrEncuiGuAK/kyeg0xfLj8nBjcvXhPivEInOCKiOdcsFdxCzRID1ilGy12E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751278616; c=relaxed/simple;
-	bh=FBUnxXNfef0l/y0E9J7++Bgq6onPTRelPZX05aNzVBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H+kLyel8IWppQAKfjjwYzRWlHg1F7h1OT9PWPNz1C+XKn1QS4e7+EO/2S9QyVirYOlFA5TjzepBzXouar2026ybkamlUwUBS0VPQpnSEaluW12aO07wCgjBjiEKRVF1JclN4+hJmmfYHz3lqBL7MOvzHLC34lRtVpaBCH6Th/SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7ei5a/F; arc=none smtp.client-ip=10.30.226.201
+	bh=jyY7VefVj/pRCib4aQ/EAxfV4IOvZHmPLQGlbEVLfrA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fE12EDwfR9btKMuGhIXwrvkgmoIa6bq4qBorYFlX0mQJN3IkrxVCx5IwAXkRs6/RwMIrvySF8qEOc6E8veCBLMRdx++pzRS8deqiKEvdUtLxmJZ5JBak4BX3GPPikvucbme0vA6sOXbzMPqKAuD/4ZGH6wymDsoYS95biHY/clU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lK+Qs1me; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7ei5a/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6863FC4CEEB;
-	Mon, 30 Jun 2025 10:16:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lK+Qs1me"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B8FC4CEEF;
+	Mon, 30 Jun 2025 10:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751278616;
-	bh=FBUnxXNfef0l/y0E9J7++Bgq6onPTRelPZX05aNzVBA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=K7ei5a/FBZLDJdZJVRyCxoduoAVBUCsU5LF7qk/2BODAIMW4pf1T04v84LISdNW0P
-	 3WQVRe0nWRT5bIDwCKgYjbcwIG82aHWnZFLJbaJyW4NAdqGyMleRXgUAnAEPYafNE2
-	 aFN8sPT267/ae0MuvV/5V7M4FkYepeBX3Q7sNBUWrUxB4Esx2MbHNTqRj/9yUlZJu4
-	 X/PPvUsfrav7wt5C9bIBneh7ZF22sv+9jA1Yxd7t2HGX1E0XQpT1fMYh+QbtiGLCqM
-	 F+H0cGxaawqOabas+68mvqOXiNbvbPdEUGXgRAVWdhNpj6LfTChmBW5k0B4IAOHI8i
-	 stPlYkjqeX6sg==
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Maher Sanalla <msanalla@nvidia.com>,
-	Or Har-Toov <ohartoov@nvidia.com>,
-	Sean Hefty <shefty@nvidia.com>,
-	Vlad Dumitrescu <vdumitrescu@nvidia.com>
-Subject: [PATCH rdma-next v2 0/3] IB/mad: Add Flow Control for Solicited MADs
-Date: Mon, 30 Jun 2025 13:16:41 +0300
-Message-ID: <cover.1751278420.git.leon@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	bh=jyY7VefVj/pRCib4aQ/EAxfV4IOvZHmPLQGlbEVLfrA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lK+Qs1meId433F4nC7m2zLarI/XsKLyZs/NfXqSW08FevT7XSPlMrHPvkMzFEU5ej
+	 IvT3UDjLnfVoSZvhzu0eM6dvMa/FoFOAlrrF7fEdu9o2SbHuaSWfPYm4iTy0Jyg9aD
+	 kNrflsFLt+mvouLIkVjJC+naTdwm3VHchi/gBnA1RYic2R5CotM73QSCLyWi2FVxoe
+	 bn0BMrrfefesjQ6M29xvJfOTvoWm9LinFL8DjMKems0c5OgqtCn6XgDqvUkzlZSmoF
+	 eJ3AI5Pj/RokTFGvBmOAoSN7T5q8gN8uPKsV2On28I21lzlyfwsM1qFDRln/r7+KTZ
+	 OOjVIlzPoI+tg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
+ Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
+ Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
+  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Linus Torvalds"
+ <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
+ operations
+In-Reply-To: <aF9bmpX-i6HVMlaj@Mac.home> (Boqun Feng's message of "Fri, 27 Jun
+	2025 20:03:54 -0700")
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+	<jBAtISwM9LKkR7KuCHEnym75NfGOM4z408pMuDfk4U8VzN8PQuk9JJfBc33Usre3YSjbgtFRj8c0ZNeeQMpZsA==@protonmail.internalid>
+	<20250618164934.19817-6-boqun.feng@gmail.com> <87a55uzlxv.fsf@kernel.org>
+	<_pLa3zqu-AHBOnxkEz7l13l9W-OsKBtuXIkjRsIJJy6EnYTrM99E8Yr24pzjqwCAj1_qs_PI-cVxRsBsbgiFdA==@protonmail.internalid>
+	<aF9bmpX-i6HVMlaj@Mac.home>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 30 Jun 2025 12:16:27 +0200
+Message-ID: <878ql9zg90.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Changelog:
-v2:
- * Add separate send-only agent for REPs to prevent starvation
-   of REPs when runnning both service and client on the same node.
- * Instead of immediately resending a timed-out MAD, it will now   be
- * placed in backlog queue if the queue is not empty.
-v1: https://lore.kernel.org/all/cover.1736258116.git.leonro@nvidia.com
- * Add a cancel state to the state machine which allows removing the
- * status field in MAD's struct.
- * Add change_mad_state function which handles all the state transition.
- * Add WARN_ONs to check MAD states
- * Reorganize patches to have only two patches in this series instead of
- * three.
-v0: https://lore.kernel.org/all/cover.1733233636.git.leonro@nvidia.com
+"Boqun Feng" <boqun.feng@gmail.com> writes:
 
---------------------------------------------------------------------------
-From Or and Vlad
+> On Thu, Jun 26, 2025 at 03:12:12PM +0200, Andreas Hindborg wrote:
+>> "Boqun Feng" <boqun.feng@gmail.com> writes:
+>>
+>> > xchg() and cmpxchg() are basic operations on atomic. Provide these based
+>> > on C APIs.
+>> >
+>> > Note that cmpxchg() use the similar function signature as
+>> > compare_exchange() in Rust std: returning a `Result`, `Ok(old)` means
+>> > the operation succeeds and `Err(old)` means the operation fails.
+>> >
+>> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+>> > ---
+>> >  rust/kernel/sync/atomic/generic.rs | 154 +++++++++++++++++++++++++++++
+>> >  1 file changed, 154 insertions(+)
+>> >
+>> > diff --git a/rust/kernel/sync/atomic/generic.rs b/rust/kernel/sync/atomic/generic.rs
+>> > index 73c26f9cf6b8..bcdbeea45dd8 100644
+>> > --- a/rust/kernel/sync/atomic/generic.rs
+>> > +++ b/rust/kernel/sync/atomic/generic.rs
+>> > @@ -256,3 +256,157 @@ pub fn store<Ordering: ReleaseOrRelaxed>(&self, v: T, _: Ordering) {
+>> >          };
+>> >      }
+>> >  }
+>> > +
+>> > +impl<T: AllowAtomic> Atomic<T>
+>> > +where
+>> > +    T::Repr: AtomicHasXchgOps,
+>> > +{
+>> > +    /// Atomic exchange.
+>> > +    ///
+>> > +    /// # Examples
+>> > +    ///
+>> > +    /// ```rust
+>> > +    /// use kernel::sync::atomic::{Atomic, Acquire, Relaxed};
+>> > +    ///
+>> > +    /// let x = Atomic::new(42);
+>> > +    ///
+>> > +    /// assert_eq!(42, x.xchg(52, Acquire));
+>> > +    /// assert_eq!(52, x.load(Relaxed));
+>> > +    /// ```
+>> > +    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
+>> > +    #[inline(always)]
+>> > +    pub fn xchg<Ordering: All>(&self, v: T, _: Ordering) -> T {
+>> > +        let v = T::into_repr(v);
+>> > +        let a = self.as_ptr().cast::<T::Repr>();
+>> > +
+>> > +        // SAFETY:
+>> > +        // - For calling the atomic_xchg*() function:
+>> > +        //   - `self.as_ptr()` is a valid pointer, and per the safety requirement of `AllocAtomic`,
+>>
+>> Typo: `AllowAtomic`.
+>>
+>
+> Fixed.
+>
+>> > +        //      a `*mut T` is a valid `*mut T::Repr`. Therefore `a` is a valid pointer,
+>> > +        //   - per the type invariants, the following atomic operation won't cause data races.
+>> > +        // - For extra safety requirement of usage on pointers returned by `self.as_ptr():
+>> > +        //   - atomic operations are used here.
+>> > +        let ret = unsafe {
+>> > +            match Ordering::TYPE {
+>> > +                OrderingType::Full => T::Repr::atomic_xchg(a, v),
+>> > +                OrderingType::Acquire => T::Repr::atomic_xchg_acquire(a, v),
+>> > +                OrderingType::Release => T::Repr::atomic_xchg_release(a, v),
+>> > +                OrderingType::Relaxed => T::Repr::atomic_xchg_relaxed(a, v),
+>> > +            }
+>> > +        };
+>> > +
+>> > +        T::from_repr(ret)
+>> > +    }
+>> > +
+>> > +    /// Atomic compare and exchange.
+>> > +    ///
+>> > +    /// Compare: The comparison is done via the byte level comparison between the atomic variables
+>> > +    /// with the `old` value.
+>> > +    ///
+>> > +    /// Ordering: When succeeds, provides the corresponding ordering as the `Ordering` type
+>> > +    /// parameter indicates, and a failed one doesn't provide any ordering, the read part of a
+>> > +    /// failed cmpxchg should be treated as a relaxed read.
+>>
+>> Rust `core::ptr` functions have this sentence on success ordering for
+>> compare_exchange:
+>>
+>>   Using Acquire as success ordering makes the store part of this
+>>   operation Relaxed, and using Release makes the successful load
+>>   Relaxed.
+>>
+>> Does this translate to LKMM cmpxchg operations? If so, I think we should
+>> include this sentence. This also applies to `Atomic::xchg`.
+>>
+>
+> I see this as a different style of documenting, so in my next version,
+> I have the following:
+>
+> //! - [`Acquire`] provides ordering between the load part of the annotated operation and all the
+> //!   following memory accesses.
+> //! - [`Release`] provides ordering between all the preceding memory accesses and the store part of
+> //!   the annotated operation.
+>
+> in atomic/ordering.rs, I think I can extend it to:
+>
+> //! - [`Acquire`] provides ordering between the load part of the annotated operation and all the
+> //!   following memory accesses, and if there is a store part, it has Relaxed ordering.
+> //! - [`Release`] provides ordering between all the preceding memory accesses and the store part of
+> //!   the annotated operation, and if there is load part, it has Relaxed ordering
+>
+> This aligns with what we usually describe things in tool/memory-model/.
 
-This patch series introduces flow control for solicited MADs in
-the MAD layer, addressing the need to avoid loss caused by insufficient
-resources at the receiver side.
+Cool. When you start to go into details of ordering concepts, I feel
+like something is missing though. For example for this sentence:
 
-Both the client and the server act as receivers - the latter receives
-requests, while the former receives responses.
-To facilitate this flow control, the series also refactors the MAD code,
-improving readability and enabling more straightforward implementation.
+  [`Release`] provides ordering between all the preceding memory
+  accesses and the store part of the annotated operation.
 
-Patch #1: Add state machine to MAD layer
-Patch #2: Add flow control for solicited MADs
-Patch #3: Use separate send-only agent for REPs
+I guess this provided ordering is only guaranteed to be observable for
+threads that read the same location with `Acquire` or stronger ordering?
 
-The primary goal of this series is to add a flow control mechanism
-to the MAD layer, reducing the number of timeouts.
-The accompanying refactoring simplifies state management, making
-the code more maintainable and supporting the new flow control
-logic effectively.
+If we start expanding on the orderings, rather than deferring to LKMM,
+we should include this info.
 
-Thanks
 
-Or Har-Toov (2):
-  IB/mad: Add state machine to MAD layer
-  IB/mad: Add flow control for solicited MADs
+Best regards,
+Andreas Hindborg
 
-Vlad Dumitrescu (1):
-  IB/cm: Use separate agent w/o flow control for REP
 
- drivers/infiniband/core/cm.c       |  47 ++-
- drivers/infiniband/core/mad.c      | 468 ++++++++++++++++++++++-------
- drivers/infiniband/core/mad_priv.h |  76 ++++-
- drivers/infiniband/core/mad_rmpp.c |  41 +--
- 4 files changed, 500 insertions(+), 132 deletions(-)
-
--- 
-2.50.0
 
