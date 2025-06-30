@@ -1,448 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3C928D8DD;
-	Mon, 30 Jun 2025 14:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1FF28B7F8;
+	Mon, 30 Jun 2025 14:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294338; cv=none; b=dwmJDiKtsC7M74c9dlWdNjU/PHYrAhF+ekhy8c4AFGWocEY0p6RvvzbP9sPvslOV3V5ESDv4K0C1psWezS8/6+hJJCHIrfPVgb8BLtam9jlfMbKcQjdCEA49X+OrCHtlhDOSVFopyBv+l2dscieTwKMBsLUFFOcqN4sq6d7+d0M=
+	t=1751294476; cv=none; b=V9/GzgZr1RvLVD60aiVbSyIYRktG9TBIueLa+ddFiAnov2rttpmRxblVcN6IlUYa8rMmNZx4Du0CHCZISTuIMP+o1Ss/fxYrbr/RM42MUAX/teB0TIbBhZd1dbycVpK5Vhu0xo/JSbq/oR2wLbscpBvqowDWfZfMmixoz4rtUHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294338; c=relaxed/simple;
-	bh=3Dm2EvQRIR0T4Sf86i6v57leLVzU/HsxdjhmcBIpZdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lU7txGhlo3gyoJfkyAoc02XIk7ufYT8+iNwdkQdnICzlNBLqjvUjcZKiOD2UNooS5I1RZ/5g78/aBzFW8o/fiHbOEfeK5XEf9PpHu+kzBNTJuRCfiPrvV1KXFZS7ox93ZNq9yPMwhiq8UNYSrJKy9JrGIr0BcCHCD9Wk/KQwouM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LCvqCzMK; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1751294476; c=relaxed/simple;
+	bh=9Pl6ASQYra+bXw5RCJUcseMj5W++x/xTGoHLnCk/qu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ojfmD3QKi8nDJTFUekqQwPRTJjrE+HldAGXX3UFFC4LUxr7H6pLB7zCL2cwh25l79Pm/SMKvkZ4zklQHiTbOANof7dhWsPZZyzWc4qJpMdjiQeWN5sHby33BWF7KAcnwDZJUtCZiqrcD9TadxAwnW+nBvX1w5Pt+Chiw3h/WLA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LvjN75Dc; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LCvqCzMK"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7n3YK020638;
-	Mon, 30 Jun 2025 14:38:47 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LvjN75Dc"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8xoVD015498;
+	Mon, 30 Jun 2025 14:39:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=VoTC4pOceLA2aFQDf
-	FQXuB1pZ4YrvQB3uRkqqzXmIpk=; b=LCvqCzMKQjwIozdhoPHGKwa3A9QqYQhcJ
-	BstAgCKe0Y2I5z/+zKIkHjjDP8dglch6Brk/fCJh10x6csh8CBEJimHtfjYGs9Ky
-	cmbhfN4p+/XVL3WDpZKY9zr991eWq2NvGAtDpeMSB5XZi/CkzRtVnewQME1OufPM
-	MKQw6pHXpgrdpiF8SKNjxixnX7uxobu05zfK2vCWJvkobwvKkMlcci9heHTRX+ky
-	TrgtHfCMCda12pKlx0z9aL+gbXCDP8nFqNCBHSPUq5+PSihLFvdpmfhqhn2ixSWa
-	wEPSnNF1EYS1I9TJZHKkVWkIeW5qd+1sCLXqI7jeN1pOiu7jyk06g==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82fhr67-1
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=dZVMGl4ViErQo4fFQ8VUnT+LNcHK9F
+	WrYiT4XPKoVoU=; b=LvjN75Dcyo3Mg6vi1nvhrVHjbLsaMQ+4ridZrQWrM5H+m4
+	T8k7nKbVNZ4P7K7v/YGFuTeD2t7rOEw9IaJObFYMGeSqzJW7/zUSRGhEe0/hx5KT
+	b8vcmp1YHBa9oTnPU4DF8grkhIf/VLHFHTcE08pIbZzxWZUGXKBIDZwvbNF9G5nz
+	UcjjbUZ0QbBD7OtNYaaavGW0IqlsOhQZVwtNTtYOQn3JEOk5FOBKJ7yZEoSATva+
+	VqslOGK+1/R7RzXo65jlAXvy/+RPaXenkxiJffflbZSg9xEnWzdPg4gZSgEZKbtZ
+	n6Cby79kZ59Mh8Ypp+uc1phO9exlUyIpDaSLPKsA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wra0bv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 14:38:46 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UB7KeH021398;
-	Mon, 30 Jun 2025 14:38:46 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jwe35yb2-1
+	Mon, 30 Jun 2025 14:39:45 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55UEX7fk002972;
+	Mon, 30 Jun 2025 14:39:44 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wra0br-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 14:38:46 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UEcjni8258232
+	Mon, 30 Jun 2025 14:39:44 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UE1gX6021934;
+	Mon, 30 Jun 2025 14:39:43 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpe8ck-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 14:39:42 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UEdc3544761382
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 14:38:45 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6449D5805E;
-	Mon, 30 Jun 2025 14:38:45 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A157158058;
-	Mon, 30 Jun 2025 14:38:44 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Jun 2025 14:38:44 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
-        dhowells@redhat.com, simo@redhat.com,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v2 3/4] crypto: Add tests cases for shake128 & shake256 to testmgr
-Date: Mon, 30 Jun 2025 10:38:33 -0400
-Message-ID: <20250630143834.2748285-4-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250630143834.2748285-1-stefanb@linux.ibm.com>
-References: <20250630143834.2748285-1-stefanb@linux.ibm.com>
+	Mon, 30 Jun 2025 14:39:38 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7DE0A20043;
+	Mon, 30 Jun 2025 14:39:38 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8161D20040;
+	Mon, 30 Jun 2025 14:39:35 +0000 (GMT)
+Received: from osiris (unknown [9.111.82.77])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 30 Jun 2025 14:39:35 +0000 (GMT)
+Date: Mon, 30 Jun 2025 16:39:34 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
+        glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com, linux@armlinux.org.uk,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        alex@ghiti.fr, gor@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        johannes@sipsolutions.net, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        chris@zankel.net, jcmvbkbc@gmail.com, akpm@linux-foundation.org,
+        nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+        justinstitt@google.com, arnd@arndb.de, rppt@kernel.org,
+        geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com,
+        tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com,
+        kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-mm@kvack.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 01/11] kasan: unify static kasan_flag_enabled across
+ modes
+Message-ID: <20250630143934.15284Caf-hca@linux.ibm.com>
+References: <20250626153147.145312-1-snovitoll@gmail.com>
+ <20250626153147.145312-2-snovitoll@gmail.com>
+ <aGKDhPBgDv2JjJZr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGKDhPBgDv2JjJZr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rQRTN4I-h6-35ng5qOCC9LUW1TaTMDPH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDExNyBTYWx0ZWRfX4kvF1UuSVcul K48F2YmxK6qG/qfhsLV7r+vxgsiBHVt6melcTP09qsFQnAJtQirX4EuAywKE5Aw/j2PTJCcpbOM EnC0MjUiIao7PzlBAAjk3JVa53xnfY1sdQeJUFYmZGpYnVTg+aUPFrJzxzb5npF1EdIIZIR5Sde
- vEa+oDdLv6TA7n1oYN8ql4DVQPT50/Cb4bsCFlCF76T42XS914ayeXUuaeJjpNsRf8WguBunuNK 3KqPHVszIV5X5xLyCItGwyebVODgNMTX4NfpmSNBSpQr1yNoAy4oPo/DDQj7J03xXGKM1EUy+q1 FDYiwQon2A1kTV7Q1oCdPqelfC7RhelBqBaRMguZ035SOgsHckk3IWsLUGUoMe2blrwo+D4XVEw
- iRIogbpiyW6fQEU5Te1ir3ndHmTogIiev+zFn+qy8jMS8Vuch46i8DMpsVPmlLhbIvH8pWzH
-X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=6862a177 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=xF6bd4FRdrIRRYsjWBcA:9
-X-Proofpoint-GUID: rQRTN4I-h6-35ng5qOCC9LUW1TaTMDPH
+X-Authority-Analysis: v=2.4 cv=E/PNpbdl c=1 sm=1 tr=0 ts=6862a1b1 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=AeL96baZ9YmIqE4yH0MA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 2hwphgPZI837FabFeudLVjFicIoSmhXG
+X-Proofpoint-ORIG-GUID: FiHtpeYVQCPMFgF1X9Rek_sDm6f0w0qN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDExNyBTYWx0ZWRfXydsoblXBR0ze E9HvMeQ14kc+Woe5xd/SFPBcu0vlwEb2rfyIotIQPVlF4ubkEgP5011gPNTSWqTF2yHh0XA+4Ys YtUR6UrKRuqNmHUZHfVrDRMN52XXJ8jmaoDUHFwngVMl/S0kuPwOX0KnQ08i7W5uZum6/pQlsxH
+ PSRM68qtAJ+io/RlKpS8hVyp8JhMgoeN7tOOZYNJa4YzA3PSVAQzl1PZ5jjF5v+hYU4evHZAXNO 9IYq4VHNT7cT81dC5A7Z/s9IYQVPzNtDhaXj0Dc9jHPz9/phE/B/idozZZjcYiqY6iFL3AYGZq0 UJK05i7AMCYmP5WJn4xDjjygHxdSbNqoEBEmoYZebnEX4uBv0r9o5LI1Se2/L8pc7bQ8CW0e8qY
+ COnK5bFnlwiVLGEKcvd+kJLxqLtFo59nsnoiQfRh0QLr6h7E4OxTno1X7/1yF98bvPZMX5sU
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 mlxlogscore=723 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 clxscore=1011 adultscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
  definitions=main-2506300117
 
-Add test cases for shake128 & shake256 to the testmgr to test their hash
-creation.
+On Mon, Jun 30, 2025 at 02:31:00PM +0200, Alexander Gordeev wrote:
+> On Thu, Jun 26, 2025 at 08:31:37PM +0500, Sabyrzhan Tasbolatov wrote:
+> 
+> Hi Sabyrzhan,
+> 
+> > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > index d54e89f8c3e..32c432df24a 100644
+> > --- a/mm/kasan/generic.c
+> > +++ b/mm/kasan/generic.c
+> > @@ -36,6 +36,17 @@
+> >  #include "kasan.h"
+> >  #include "../slab.h"
+> >  
+> > +/*
+> > + * Initialize Generic KASAN and enable runtime checks.
+> > + * This should be called from arch kasan_init() once shadow memory is ready.
+> > + */
+> > +void __init kasan_init_generic(void)
+> > +{
+> > +	static_branch_enable(&kasan_flag_enabled);
+> 
+> s390 crashes at this line, when the whole series is applied.
+> 
+> FWIW, it looks like kasan is called while its state is not yet finalized.
+> E.g. whether calling __asan_report_store4_noabort() before kasan_init_generic()
+> is expected?
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
----
- crypto/testmgr.c |  14 +++
- crypto/testmgr.h | 310 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 324 insertions(+)
+It crashes because with this conversion a call to static_branch_enable() is
+introduced. This one get's called way before jump_label_init() init has been
+called. Therefore the STATIC_KEY_CHECK_USE() in static_key_enable_cpuslocked()
+triggers.
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 97190d9dcc0e..6bd67ca23bb1 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5525,6 +5525,20 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.hash = __VECS(sha512_tv_template)
- 		}
-+	}, {
-+		.alg = "shake128",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(shake128_tv_template)
-+		}
-+	}, {
-+		.alg = "shake256",
-+		.test = alg_test_hash,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.hash = __VECS(shake256_tv_template)
-+		}
- 	}, {
- 		.alg = "sm3",
- 		.test = alg_test_hash,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index 32d099ac9e73..31e5918b761c 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -5914,6 +5914,316 @@ static const struct hash_testvec sha3_512_tv_template[] = {
- 	},
- };
- 
-+static const struct hash_testvec shake128_tv_template[] = {
-+	{
-+		.plaintext = "",
-+		.digest	= "\x7f\x9c\x2b\xa4\xe8\x8f\x82\x7d"
-+				"\x61\x60\x45\x50\x76\x05\x85\x3e",
-+	}, {
-+		.plaintext = "a",
-+		.psize	= 1,
-+		.digest	= "\x85\xc8\xde\x88\xd2\x88\x66\xbf"
-+				"\x08\x68\x09\x0b\x39\x61\x16\x2b",
-+	}, {
-+		.plaintext = "abcdbcdecdefdefgefghfghighijhijkijkl"
-+			     "jklmklmnlmnomnopnopq",
-+		.psize	= 56,
-+		.digest = "\x1a\x96\x18\x2b\x50\xfb\x8c\x7e"
-+				"\x74\xe0\xa7\x07\x78\x8f\x55\xe9",
-+	}, {
-+		.plaintext = "\x08\x9f\x13\xaa\x41\xd8\x4c\xe3"
-+			     "\x7a\x11\x85\x1c\xb3\x27\xbe\x55"
-+			     "\xec\x60\xf7\x8e\x02\x99\x30\xc7"
-+			     "\x3b\xd2\x69\x00\x74\x0b\xa2\x16"
-+			     "\xad\x44\xdb\x4f\xe6\x7d\x14\x88"
-+			     "\x1f\xb6\x2a\xc1\x58\xef\x63\xfa"
-+			     "\x91\x05\x9c\x33\xca\x3e\xd5\x6c"
-+			     "\x03\x77\x0e\xa5\x19\xb0\x47\xde"
-+			     "\x52\xe9\x80\x17\x8b\x22\xb9\x2d"
-+			     "\xc4\x5b\xf2\x66\xfd\x94\x08\x9f"
-+			     "\x36\xcd\x41\xd8\x6f\x06\x7a\x11"
-+			     "\xa8\x1c\xb3\x4a\xe1\x55\xec\x83"
-+			     "\x1a\x8e\x25\xbc\x30\xc7\x5e\xf5"
-+			     "\x69\x00\x97\x0b\xa2\x39\xd0\x44"
-+			     "\xdb\x72\x09\x7d\x14\xab\x1f\xb6"
-+			     "\x4d\xe4\x58\xef\x86\x1d\x91\x28"
-+			     "\xbf\x33\xca\x61\xf8\x6c\x03\x9a"
-+			     "\x0e\xa5\x3c\xd3\x47\xde\x75\x0c"
-+			     "\x80\x17\xae\x22\xb9\x50\xe7\x5b"
-+			     "\xf2\x89\x20\x94\x2b\xc2\x36\xcd"
-+			     "\x64\xfb\x6f\x06\x9d\x11\xa8\x3f"
-+			     "\xd6\x4a\xe1\x78\x0f\x83\x1a\xb1"
-+			     "\x25\xbc\x53\xea\x5e\xf5\x8c\x00"
-+			     "\x97\x2e\xc5\x39\xd0\x67\xfe\x72"
-+			     "\x09\xa0\x14\xab\x42\xd9\x4d\xe4"
-+			     "\x7b\x12\x86\x1d\xb4\x28\xbf\x56"
-+			     "\xed\x61\xf8\x8f\x03\x9a\x31\xc8"
-+			     "\x3c\xd3\x6a\x01\x75\x0c\xa3\x17"
-+			     "\xae\x45\xdc\x50\xe7\x7e\x15\x89"
-+			     "\x20\xb7\x2b\xc2\x59\xf0\x64\xfb"
-+			     "\x92\x06\x9d\x34\xcb\x3f\xd6\x6d"
-+			     "\x04\x78\x0f\xa6\x1a\xb1\x48\xdf"
-+			     "\x53\xea\x81\x18\x8c\x23\xba\x2e"
-+			     "\xc5\x5c\xf3\x67\xfe\x95\x09\xa0"
-+			     "\x37\xce\x42\xd9\x70\x07\x7b\x12"
-+			     "\xa9\x1d\xb4\x4b\xe2\x56\xed\x84"
-+			     "\x1b\x8f\x26\xbd\x31\xc8\x5f\xf6"
-+			     "\x6a\x01\x98\x0c\xa3\x3a\xd1\x45"
-+			     "\xdc\x73\x0a\x7e\x15\xac\x20\xb7"
-+			     "\x4e\xe5\x59\xf0\x87\x1e\x92\x29"
-+			     "\xc0\x34\xcb\x62\xf9\x6d\x04\x9b"
-+			     "\x0f\xa6\x3d\xd4\x48\xdf\x76\x0d"
-+			     "\x81\x18\xaf\x23\xba\x51\xe8\x5c"
-+			     "\xf3\x8a\x21\x95\x2c\xc3\x37\xce"
-+			     "\x65\xfc\x70\x07\x9e\x12\xa9\x40"
-+			     "\xd7\x4b\xe2\x79\x10\x84\x1b\xb2"
-+			     "\x26\xbd\x54\xeb\x5f\xf6\x8d\x01"
-+			     "\x98\x2f\xc6\x3a\xd1\x68\xff\x73"
-+			     "\x0a\xa1\x15\xac\x43\xda\x4e\xe5"
-+			     "\x7c\x13\x87\x1e\xb5\x29\xc0\x57"
-+			     "\xee\x62\xf9\x90\x04\x9b\x32\xc9"
-+			     "\x3d\xd4\x6b\x02\x76\x0d\xa4\x18"
-+			     "\xaf\x46\xdd\x51\xe8\x7f\x16\x8a"
-+			     "\x21\xb8\x2c\xc3\x5a\xf1\x65\xfc"
-+			     "\x93\x07\x9e\x35\xcc\x40\xd7\x6e"
-+			     "\x05\x79\x10\xa7\x1b\xb2\x49\xe0"
-+			     "\x54\xeb\x82\x19\x8d\x24\xbb\x2f"
-+			     "\xc6\x5d\xf4\x68\xff\x96\x0a\xa1"
-+			     "\x38\xcf\x43\xda\x71\x08\x7c\x13"
-+			     "\xaa\x1e\xb5\x4c\xe3\x57\xee\x85"
-+			     "\x1c\x90\x27\xbe\x32\xc9\x60\xf7"
-+			     "\x6b\x02\x99\x0d\xa4\x3b\xd2\x46"
-+			     "\xdd\x74\x0b\x7f\x16\xad\x21\xb8"
-+			     "\x4f\xe6\x5a\xf1\x88\x1f\x93\x2a"
-+			     "\xc1\x35\xcc\x63\xfa\x6e\x05\x9c"
-+			     "\x10\xa7\x3e\xd5\x49\xe0\x77\x0e"
-+			     "\x82\x19\xb0\x24\xbb\x52\xe9\x5d"
-+			     "\xf4\x8b\x22\x96\x2d\xc4\x38\xcf"
-+			     "\x66\xfd\x71\x08\x9f\x13\xaa\x41"
-+			     "\xd8\x4c\xe3\x7a\x11\x85\x1c\xb3"
-+			     "\x27\xbe\x55\xec\x60\xf7\x8e\x02"
-+			     "\x99\x30\xc7\x3b\xd2\x69\x00\x74"
-+			     "\x0b\xa2\x16\xad\x44\xdb\x4f\xe6"
-+			     "\x7d\x14\x88\x1f\xb6\x2a\xc1\x58"
-+			     "\xef\x63\xfa\x91\x05\x9c\x33\xca"
-+			     "\x3e\xd5\x6c\x03\x77\x0e\xa5\x19"
-+			     "\xb0\x47\xde\x52\xe9\x80\x17\x8b"
-+			     "\x22\xb9\x2d\xc4\x5b\xf2\x66\xfd"
-+			     "\x94\x08\x9f\x36\xcd\x41\xd8\x6f"
-+			     "\x06\x7a\x11\xa8\x1c\xb3\x4a\xe1"
-+			     "\x55\xec\x83\x1a\x8e\x25\xbc\x30"
-+			     "\xc7\x5e\xf5\x69\x00\x97\x0b\xa2"
-+			     "\x39\xd0\x44\xdb\x72\x09\x7d\x14"
-+			     "\xab\x1f\xb6\x4d\xe4\x58\xef\x86"
-+			     "\x1d\x91\x28\xbf\x33\xca\x61\xf8"
-+			     "\x6c\x03\x9a\x0e\xa5\x3c\xd3\x47"
-+			     "\xde\x75\x0c\x80\x17\xae\x22\xb9"
-+			     "\x50\xe7\x5b\xf2\x89\x20\x94\x2b"
-+			     "\xc2\x36\xcd\x64\xfb\x6f\x06\x9d"
-+			     "\x11\xa8\x3f\xd6\x4a\xe1\x78\x0f"
-+			     "\x83\x1a\xb1\x25\xbc\x53\xea\x5e"
-+			     "\xf5\x8c\x00\x97\x2e\xc5\x39\xd0"
-+			     "\x67\xfe\x72\x09\xa0\x14\xab\x42"
-+			     "\xd9\x4d\xe4\x7b\x12\x86\x1d\xb4"
-+			     "\x28\xbf\x56\xed\x61\xf8\x8f\x03"
-+			     "\x9a\x31\xc8\x3c\xd3\x6a\x01\x75"
-+			     "\x0c\xa3\x17\xae\x45\xdc\x50\xe7"
-+			     "\x7e\x15\x89\x20\xb7\x2b\xc2\x59"
-+			     "\xf0\x64\xfb\x92\x06\x9d\x34\xcb"
-+			     "\x3f\xd6\x6d\x04\x78\x0f\xa6\x1a"
-+			     "\xb1\x48\xdf\x53\xea\x81\x18\x8c"
-+			     "\x23\xba\x2e\xc5\x5c\xf3\x67\xfe"
-+			     "\x95\x09\xa0\x37\xce\x42\xd9\x70"
-+			     "\x07\x7b\x12\xa9\x1d\xb4\x4b\xe2"
-+			     "\x56\xed\x84\x1b\x8f\x26\xbd\x31"
-+			     "\xc8\x5f\xf6\x6a\x01\x98\x0c\xa3"
-+			     "\x3a\xd1\x45\xdc\x73\x0a\x7e\x15"
-+			     "\xac\x20\xb7\x4e\xe5\x59\xf0\x87"
-+			     "\x1e\x92\x29\xc0\x34\xcb\x62\xf9"
-+			     "\x6d\x04\x9b\x0f\xa6\x3d\xd4\x48"
-+			     "\xdf\x76\x0d\x81\x18\xaf\x23\xba"
-+			     "\x51\xe8\x5c\xf3\x8a\x21\x95\x2c"
-+			     "\xc3\x37\xce\x65\xfc\x70\x07\x9e"
-+			     "\x12\xa9\x40\xd7\x4b\xe2\x79\x10"
-+			     "\x84\x1b\xb2\x26\xbd\x54\xeb\x5f"
-+			     "\xf6\x8d\x01\x98\x2f\xc6\x3a\xd1"
-+			     "\x68\xff\x73\x0a\xa1\x15\xac\x43"
-+			     "\xda\x4e\xe5\x7c\x13\x87\x1e\xb5"
-+			     "\x29\xc0\x57\xee\x62\xf9\x90\x04"
-+			     "\x9b\x32\xc9\x3d\xd4\x6b\x02\x76"
-+			     "\x0d\xa4\x18\xaf\x46\xdd\x51\xe8"
-+			     "\x7f\x16\x8a\x21\xb8\x2c\xc3\x5a"
-+			     "\xf1\x65\xfc\x93\x07\x9e\x35\xcc"
-+			     "\x40\xd7\x6e\x05\x79\x10\xa7\x1b"
-+			     "\xb2\x49\xe0\x54\xeb\x82\x19\x8d"
-+			     "\x24\xbb\x2f\xc6\x5d\xf4\x68\xff"
-+			     "\x96\x0a\xa1\x38\xcf\x43\xda\x71"
-+			     "\x08\x7c\x13\xaa\x1e\xb5\x4c",
-+		.psize     = 1023,
-+		.digest    = "\x13\x0a\x5b\xcb\x83\x9f\x10\x89"
-+			     "\xbb\x62\xda\xe4\xf4\xd3\x21\xf8",
-+	},
-+};
-+
-+static const struct hash_testvec shake256_tv_template[] = {
-+	{
-+		.plaintext = "",
-+		.digest	= "\x46\xb9\xdd\x2b\x0b\xa8\x8d\x13"
-+				"\x23\x3b\x3f\xeb\x74\x3e\xeb\x24"
-+				"\x3f\xcd\x52\xea\x62\xb8\x1b\x82"
-+				"\xb5\x0c\x27\x64\x6e\xd5\x76\x2f",
-+	}, {
-+		.plaintext = "a",
-+		.psize	= 1,
-+		.digest	= "\x86\x7e\x2c\xb0\x4f\x5a\x04\xdc"
-+				"\xbd\x59\x25\x01\xa5\xe8\xfe\x9c"
-+				"\xea\xaf\xca\x50\x25\x56\x26\xca"
-+				"\x73\x6c\x13\x80\x42\x53\x0b\xa4",
-+	}, {
-+		.plaintext = "abcdbcdecdefdefgefghfghighijhijkijkl"
-+			     "jklmklmnlmnomnopnopq",
-+		.psize	= 56,
-+		.digest = "\x4d\x8c\x2d\xd2\x43\x5a\x01\x28"
-+				"\xee\xfb\xb8\xc3\x6f\x6f\x87\x13"
-+				"\x3a\x79\x11\xe1\x8d\x97\x9e\xe1"
-+				"\xae\x6b\xe5\xd4\xfd\x2e\x33\x29",
-+	}, {
-+		.plaintext = "\x08\x9f\x13\xaa\x41\xd8\x4c\xe3"
-+			     "\x7a\x11\x85\x1c\xb3\x27\xbe\x55"
-+			     "\xec\x60\xf7\x8e\x02\x99\x30\xc7"
-+			     "\x3b\xd2\x69\x00\x74\x0b\xa2\x16"
-+			     "\xad\x44\xdb\x4f\xe6\x7d\x14\x88"
-+			     "\x1f\xb6\x2a\xc1\x58\xef\x63\xfa"
-+			     "\x91\x05\x9c\x33\xca\x3e\xd5\x6c"
-+			     "\x03\x77\x0e\xa5\x19\xb0\x47\xde"
-+			     "\x52\xe9\x80\x17\x8b\x22\xb9\x2d"
-+			     "\xc4\x5b\xf2\x66\xfd\x94\x08\x9f"
-+			     "\x36\xcd\x41\xd8\x6f\x06\x7a\x11"
-+			     "\xa8\x1c\xb3\x4a\xe1\x55\xec\x83"
-+			     "\x1a\x8e\x25\xbc\x30\xc7\x5e\xf5"
-+			     "\x69\x00\x97\x0b\xa2\x39\xd0\x44"
-+			     "\xdb\x72\x09\x7d\x14\xab\x1f\xb6"
-+			     "\x4d\xe4\x58\xef\x86\x1d\x91\x28"
-+			     "\xbf\x33\xca\x61\xf8\x6c\x03\x9a"
-+			     "\x0e\xa5\x3c\xd3\x47\xde\x75\x0c"
-+			     "\x80\x17\xae\x22\xb9\x50\xe7\x5b"
-+			     "\xf2\x89\x20\x94\x2b\xc2\x36\xcd"
-+			     "\x64\xfb\x6f\x06\x9d\x11\xa8\x3f"
-+			     "\xd6\x4a\xe1\x78\x0f\x83\x1a\xb1"
-+			     "\x25\xbc\x53\xea\x5e\xf5\x8c\x00"
-+			     "\x97\x2e\xc5\x39\xd0\x67\xfe\x72"
-+			     "\x09\xa0\x14\xab\x42\xd9\x4d\xe4"
-+			     "\x7b\x12\x86\x1d\xb4\x28\xbf\x56"
-+			     "\xed\x61\xf8\x8f\x03\x9a\x31\xc8"
-+			     "\x3c\xd3\x6a\x01\x75\x0c\xa3\x17"
-+			     "\xae\x45\xdc\x50\xe7\x7e\x15\x89"
-+			     "\x20\xb7\x2b\xc2\x59\xf0\x64\xfb"
-+			     "\x92\x06\x9d\x34\xcb\x3f\xd6\x6d"
-+			     "\x04\x78\x0f\xa6\x1a\xb1\x48\xdf"
-+			     "\x53\xea\x81\x18\x8c\x23\xba\x2e"
-+			     "\xc5\x5c\xf3\x67\xfe\x95\x09\xa0"
-+			     "\x37\xce\x42\xd9\x70\x07\x7b\x12"
-+			     "\xa9\x1d\xb4\x4b\xe2\x56\xed\x84"
-+			     "\x1b\x8f\x26\xbd\x31\xc8\x5f\xf6"
-+			     "\x6a\x01\x98\x0c\xa3\x3a\xd1\x45"
-+			     "\xdc\x73\x0a\x7e\x15\xac\x20\xb7"
-+			     "\x4e\xe5\x59\xf0\x87\x1e\x92\x29"
-+			     "\xc0\x34\xcb\x62\xf9\x6d\x04\x9b"
-+			     "\x0f\xa6\x3d\xd4\x48\xdf\x76\x0d"
-+			     "\x81\x18\xaf\x23\xba\x51\xe8\x5c"
-+			     "\xf3\x8a\x21\x95\x2c\xc3\x37\xce"
-+			     "\x65\xfc\x70\x07\x9e\x12\xa9\x40"
-+			     "\xd7\x4b\xe2\x79\x10\x84\x1b\xb2"
-+			     "\x26\xbd\x54\xeb\x5f\xf6\x8d\x01"
-+			     "\x98\x2f\xc6\x3a\xd1\x68\xff\x73"
-+			     "\x0a\xa1\x15\xac\x43\xda\x4e\xe5"
-+			     "\x7c\x13\x87\x1e\xb5\x29\xc0\x57"
-+			     "\xee\x62\xf9\x90\x04\x9b\x32\xc9"
-+			     "\x3d\xd4\x6b\x02\x76\x0d\xa4\x18"
-+			     "\xaf\x46\xdd\x51\xe8\x7f\x16\x8a"
-+			     "\x21\xb8\x2c\xc3\x5a\xf1\x65\xfc"
-+			     "\x93\x07\x9e\x35\xcc\x40\xd7\x6e"
-+			     "\x05\x79\x10\xa7\x1b\xb2\x49\xe0"
-+			     "\x54\xeb\x82\x19\x8d\x24\xbb\x2f"
-+			     "\xc6\x5d\xf4\x68\xff\x96\x0a\xa1"
-+			     "\x38\xcf\x43\xda\x71\x08\x7c\x13"
-+			     "\xaa\x1e\xb5\x4c\xe3\x57\xee\x85"
-+			     "\x1c\x90\x27\xbe\x32\xc9\x60\xf7"
-+			     "\x6b\x02\x99\x0d\xa4\x3b\xd2\x46"
-+			     "\xdd\x74\x0b\x7f\x16\xad\x21\xb8"
-+			     "\x4f\xe6\x5a\xf1\x88\x1f\x93\x2a"
-+			     "\xc1\x35\xcc\x63\xfa\x6e\x05\x9c"
-+			     "\x10\xa7\x3e\xd5\x49\xe0\x77\x0e"
-+			     "\x82\x19\xb0\x24\xbb\x52\xe9\x5d"
-+			     "\xf4\x8b\x22\x96\x2d\xc4\x38\xcf"
-+			     "\x66\xfd\x71\x08\x9f\x13\xaa\x41"
-+			     "\xd8\x4c\xe3\x7a\x11\x85\x1c\xb3"
-+			     "\x27\xbe\x55\xec\x60\xf7\x8e\x02"
-+			     "\x99\x30\xc7\x3b\xd2\x69\x00\x74"
-+			     "\x0b\xa2\x16\xad\x44\xdb\x4f\xe6"
-+			     "\x7d\x14\x88\x1f\xb6\x2a\xc1\x58"
-+			     "\xef\x63\xfa\x91\x05\x9c\x33\xca"
-+			     "\x3e\xd5\x6c\x03\x77\x0e\xa5\x19"
-+			     "\xb0\x47\xde\x52\xe9\x80\x17\x8b"
-+			     "\x22\xb9\x2d\xc4\x5b\xf2\x66\xfd"
-+			     "\x94\x08\x9f\x36\xcd\x41\xd8\x6f"
-+			     "\x06\x7a\x11\xa8\x1c\xb3\x4a\xe1"
-+			     "\x55\xec\x83\x1a\x8e\x25\xbc\x30"
-+			     "\xc7\x5e\xf5\x69\x00\x97\x0b\xa2"
-+			     "\x39\xd0\x44\xdb\x72\x09\x7d\x14"
-+			     "\xab\x1f\xb6\x4d\xe4\x58\xef\x86"
-+			     "\x1d\x91\x28\xbf\x33\xca\x61\xf8"
-+			     "\x6c\x03\x9a\x0e\xa5\x3c\xd3\x47"
-+			     "\xde\x75\x0c\x80\x17\xae\x22\xb9"
-+			     "\x50\xe7\x5b\xf2\x89\x20\x94\x2b"
-+			     "\xc2\x36\xcd\x64\xfb\x6f\x06\x9d"
-+			     "\x11\xa8\x3f\xd6\x4a\xe1\x78\x0f"
-+			     "\x83\x1a\xb1\x25\xbc\x53\xea\x5e"
-+			     "\xf5\x8c\x00\x97\x2e\xc5\x39\xd0"
-+			     "\x67\xfe\x72\x09\xa0\x14\xab\x42"
-+			     "\xd9\x4d\xe4\x7b\x12\x86\x1d\xb4"
-+			     "\x28\xbf\x56\xed\x61\xf8\x8f\x03"
-+			     "\x9a\x31\xc8\x3c\xd3\x6a\x01\x75"
-+			     "\x0c\xa3\x17\xae\x45\xdc\x50\xe7"
-+			     "\x7e\x15\x89\x20\xb7\x2b\xc2\x59"
-+			     "\xf0\x64\xfb\x92\x06\x9d\x34\xcb"
-+			     "\x3f\xd6\x6d\x04\x78\x0f\xa6\x1a"
-+			     "\xb1\x48\xdf\x53\xea\x81\x18\x8c"
-+			     "\x23\xba\x2e\xc5\x5c\xf3\x67\xfe"
-+			     "\x95\x09\xa0\x37\xce\x42\xd9\x70"
-+			     "\x07\x7b\x12\xa9\x1d\xb4\x4b\xe2"
-+			     "\x56\xed\x84\x1b\x8f\x26\xbd\x31"
-+			     "\xc8\x5f\xf6\x6a\x01\x98\x0c\xa3"
-+			     "\x3a\xd1\x45\xdc\x73\x0a\x7e\x15"
-+			     "\xac\x20\xb7\x4e\xe5\x59\xf0\x87"
-+			     "\x1e\x92\x29\xc0\x34\xcb\x62\xf9"
-+			     "\x6d\x04\x9b\x0f\xa6\x3d\xd4\x48"
-+			     "\xdf\x76\x0d\x81\x18\xaf\x23\xba"
-+			     "\x51\xe8\x5c\xf3\x8a\x21\x95\x2c"
-+			     "\xc3\x37\xce\x65\xfc\x70\x07\x9e"
-+			     "\x12\xa9\x40\xd7\x4b\xe2\x79\x10"
-+			     "\x84\x1b\xb2\x26\xbd\x54\xeb\x5f"
-+			     "\xf6\x8d\x01\x98\x2f\xc6\x3a\xd1"
-+			     "\x68\xff\x73\x0a\xa1\x15\xac\x43"
-+			     "\xda\x4e\xe5\x7c\x13\x87\x1e\xb5"
-+			     "\x29\xc0\x57\xee\x62\xf9\x90\x04"
-+			     "\x9b\x32\xc9\x3d\xd4\x6b\x02\x76"
-+			     "\x0d\xa4\x18\xaf\x46\xdd\x51\xe8"
-+			     "\x7f\x16\x8a\x21\xb8\x2c\xc3\x5a"
-+			     "\xf1\x65\xfc\x93\x07\x9e\x35\xcc"
-+			     "\x40\xd7\x6e\x05\x79\x10\xa7\x1b"
-+			     "\xb2\x49\xe0\x54\xeb\x82\x19\x8d"
-+			     "\x24\xbb\x2f\xc6\x5d\xf4\x68\xff"
-+			     "\x96\x0a\xa1\x38\xcf\x43\xda\x71"
-+			     "\x08\x7c\x13\xaa\x1e\xb5\x4c",
-+		.psize     = 1023,
-+		.digest    = "\x24\xab\xec\xa1\x22\x05\x1c\xf3"
-+			     "\xce\xdc\xc1\x02\x31\x6c\x0f\x19"
-+			     "\x0a\xb2\x77\x24\xe7\x68\x71\x3b"
-+			     "\x9b\x6d\x5f\xbc\xcf\x60\x28\x4c",
-+	},
-+};
-+
- 
- /*
-  * MD5 test vectors from RFC1321
--- 
-2.49.0
+This again tries to emit a warning. Due to lack of console support that early
+the kernel crashes.
 
+One possible solution would be to move the kasan init function to
+arch/s390/kernel/setup.c, after jump_label_init() has been called.
+If we want this, is a different question.
+
+It seems to work, so I see no reason for not doing that.
+
+Vasily, since you did nearly all of the KASAN work for s390, do you have any
+opinion about this?
