@@ -1,202 +1,114 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AEF23FC5F;
-	Mon, 30 Jun 2025 17:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6A728DB5E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304949; cv=none; b=kKPSB9IBHEA75CQSyW5Y/qlLO0Qpg0anMeaLQ3kvTBJzAxKp8yyUNlnl+yitTejyno3+MAexeGAHMM8UK9aU+81MfUpZj1jRwT+XXffcgvzugcYHaNVm/EDp1188tMkCgbgewh1OGoBXqFackne0qbzVG7/gtL6g2SOt+Sk1aas=
+	t=1751305013; cv=none; b=J6X8Iatz/nt6tGC2MvWXTdM6E297Gw6P9GJc+mFBP8wymcIMUi0pztt2GhFxqVxdKllBfNr7NIhvdIR6SE6O3o63G5dX3nhSTjyB/YNFVRkD6wyRyl3aG87biIL/49ZXxR+3rrad0mmZBjP9hsuGlRhXGvHpg1k6j7lgxl8KWLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304949; c=relaxed/simple;
-	bh=t53v+u2fEaz+sIb0/gvxcqSPbkHO+HPQHJu+AFckw1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cnr8T6DIB80rnNFdk1Em/1opqBGyoHUzYxz07w0hm9iaMoGYDsv7Huo99OTYo3wiMcJiIaZajxLORx1Xd6/hdiAZvEHcw07iDjzX8l+IaXuEa8PSrDbIHj0LK5fnS9Q5FQbSrAN/cLpGMPR49+qvrKNIgDf+G9OaF6/A9gEhH7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgxoUnpK; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751305013; c=relaxed/simple;
+	bh=ysWa+Ky04RffJJZjxshaFRSc0YdWTGs0OEuot4LZ9Lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UTeNUBg4qZV4zrjVMrzhcQ4YDhL+ofKswfin1/8kbl9ym6+/RJbeHD+dZPaWLP49oU6mbtooq2lxyoDg+K3g4xjfmdJN9RAVldiuDR0sjQvF5nb9T4K70XGcEBv8NyoVJzRRNt3tk32BAZgFbktE4m/rztWtb2Dq6f0O4TkD658=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4W3wY2zJ; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgxoUnpK"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so17801225e9.3;
-        Mon, 30 Jun 2025 10:35:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4W3wY2zJ"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so723a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751304946; x=1751909746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751305010; x=1751909810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o8UzOjuYiP+6COT/0DGz1uZwVPKOOEYuoLLIXwCIIFs=;
-        b=jgxoUnpKGczUGM6KHYxIHElfFHPtDh0s1SP/WKY0v/cc5U+m/wa46D2CIlHQVch212
-         RZGjvMzKFPq4/DSZ139TATsUggLxufl0tVm9JdkKSvfljCcakmLPxp/jRgwyW5b/O/5U
-         imrl91HpsB73KBds+6CHc4U22gWlqoef7+H0tu25mTKTwANTnIAxHZEWGHPSmDdbdKCf
-         0qM9OiAOxVbskJ45ANKvGk8lmKNJCEt0wgIb+bWqUnRDb5nn46288GOT1BYMnLWZHeUp
-         B4Kdk2ng2mp+DCEPz46K3ERxXtq+rzY7TgLp/T8R36BWEH7CYBDjJfx8/79Tb5pKTBb4
-         m2jQ==
+        bh=Z6N30jp2KR8xyjaqR21FRKv38F3EhVGr4FCaN1WtZO4=;
+        b=4W3wY2zJt16698lPmp6gvZNo02XzzY3C/0289feZLHwjFVf3MPux4NPva63GGXrqrq
+         ZYWVV3UoLmmljyJFG6QNf3rA7mlcQefJz8xVp5eNEr19BYMao3lK0mFO04GGp1tJY6M4
+         biIG7mlxZ+qwsae6lT2tVWQnUGcZoJ3yRj508rAX67k8l7OGVYapC4iHb3mz8m7wzB1E
+         YJGcc9oMs4te00iQ/1d015+cG5BXmQ8J1EFm/ivzl3qgG1/J72tJOOI7Xq3bYJkJVA2G
+         K/3tQLOuU/m3+82p5jt/jAjq9XJaAcfAR5c2ScK8nt4ixR1bDhfcRBCXMyy7g9nh8lY+
+         gGig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751304946; x=1751909746;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751305010; x=1751909810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o8UzOjuYiP+6COT/0DGz1uZwVPKOOEYuoLLIXwCIIFs=;
-        b=maLiraEI3Yzkt1okcMMP4X9tm1OdriT9jHO+loV6A8sC0eSbuElwnvyunNj2nOL7fV
-         re1hK2f9xKFck+CGcnEt7+Rouri9CgjYRl6DmYxIckineiXnyQocW2uVjlsQUtWbsSVj
-         7KPyh4r/6cpb1lYIaq4AB5qEhGp3AHO1hVc/zn81fFFZ/OQbefNw8P0Up2Y6fjq/Nd8I
-         QS6NMADoFwJhWxEz5wQEzjEUC71Gut0AusnPzZ/eC3wMA+xCtUJaAsiQLuAH43pihCU7
-         afcx1BNTi1G8VXXwxxcP0ptWYKgE1MrkDAJwwhK8655YirNJyul0l7L6/EGXI7YHY1hP
-         y+jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTsBiXU8F8iSwxpkUQPPbCBxPjTLKxLkTuNuFVDPNEeAB+ycruE7qV34wSHft/YVkHJkXnKb2AuqVh@vger.kernel.org, AJvYcCVuZNh6R+9T/b6y/jGxHd9jvZmRDKg14M5U+aQ/ePNhdw6tlCL6k/MqZvdSVu5OE1vR9hScLql7opmRVwuE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoAuqiZ9Iayc7sCIZ0o255KF4nOK4zzoOafcvGKyx6AtJdMzZA
-	ntO9Q6fVYs0KSnmYzCZAw9Yudwl7d3Uljd6GmLRUaFz7sLp2Hq1g2+Sv
-X-Gm-Gg: ASbGnctOVlc1tH+Yy6XHvaVFmKft2w287eQl+sksHldjtOhv1EITYilB+ReUNWsDLNb
-	781wHYrodOS9CWnVWqcu2sVit+tUonJUM8iyiq8iPx0FYw2vsmii7x/jTgoNvgEt3/EoCMZ2yD0
-	xWy7CIXf1o0tfAA1ULmc9ah1NoFD5w9Ry3764fekEDoYmwXHlG+zWAGm4CFnLvviBaxE9y5ylN8
-	6Uu2cRfVR5U+elYiL8HuY4CBPfOOFmPDkp2WCJx48H1QNDoabmbjjqEd6WzMyMs06axCkGKmnJk
-	1zT39XpNKcj2djzUmDAcfz7VYvZPbcIUelJfY4UEOwaUicWifqbgVkyR+ngZcCWsRwqSzU9Sc0N
-	44owiTIrvpsu8F3htVQ==
-X-Google-Smtp-Source: AGHT+IFUgJpGHTHreJd2V4YxIs3BSqWmS5u8aylaBhtbUqxygRzxU7eVkC51ET0af1KjL/WOFJ+ycw==
-X-Received: by 2002:a05:600c:1552:b0:450:d61f:dd45 with SMTP id 5b1f17b1804b1-453a7fa138dmr1464735e9.4.1751304946001;
-        Mon, 30 Jun 2025 10:35:46 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5972bsm11052648f8f.68.2025.06.30.10.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:35:45 -0700 (PDT)
-Date: Mon, 30 Jun 2025 18:35:34 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: cp0613@linux.alibaba.com
-Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, arnd@arndb.de,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux@rasmusvillemoes.dk,
- palmer@dabbelt.com, paul.walmsley@sifive.com, yury.norov@gmail.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
- extension
-Message-ID: <20250630183534.160b9823@pumpkin>
-In-Reply-To: <20250630121430.1989-1-cp0613@linux.alibaba.com>
-References: <20250629113840.2f319956@pumpkin>
-	<20250630121430.1989-1-cp0613@linux.alibaba.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=Z6N30jp2KR8xyjaqR21FRKv38F3EhVGr4FCaN1WtZO4=;
+        b=f6jKgwmqFD3CWM+ProWo1ZNxSSzJd40skCoKUM7/pkkoro2Q3HU+bhXr6rfBGRPFNu
+         8NMn8tDkW73d+EiGEi8GDbr3CuPoijKJLFHU9GaVZxqZGZzGJU2XMRmwrZxUNqz9MxuS
+         3qcL32B/yw6vKgZgqezTe3389CQQiquZIohLKbZGBrjyEJvXAZ0B58tryBipMH4SJOkE
+         dleoSdzqNYOUNWwYDf0yT2hp+mV0tBTEmpqDKWXeptYyLU+0IYAJhljYa4Ozb4SSvmO4
+         l9I/kkaFkBntZk2bWXY3bg1kmR3ezV+FkRlxvVAg0MJWnvweORXVInUosVLLbU2Ruius
+         RytA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRWNvFNPxpsaaK2NqMUpWg9dbKnRKeafHxuvCTOGbTTnXobKP0toX9FZ4DDPw7sI7UCqotngmtALzu9R0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiIf6RzxWVSpJFfdGaAymZlm/8cgFUPzu03S8ilmRfbeLeqyeu
+	2CrFW+oZV9ZcuHd6fFx1mF8VFsAmSB1serOlrYbPR4sKXp5JdDneRzi5/gn+rvKxOGgmixin60F
+	XKXdgEvrs8Bmh6jqZwLIWLtCqaYeqx0yTO8Le3EnX
+X-Gm-Gg: ASbGncsJL+oYp0f+dr2Pj57+Qk6GUTyjhUuMlzSNZqyEtjH47YOx2NPTg3XR+gJeqGM
+	bFfUeYxyf+B3KGx1901PTdOYpkIQsWQLs7sReXc0U80xpd7B2QgyxiMRDLGrltnd7VV2nbDVO69
+	YoibsxIQtmCENhTR8kg2PEuPkxGhJ9x5JYBhTK9UEwOoBaSV0TcNmkCI8z5CvJzrTg1wJdtRUn+
+	AAvtUBeb5kk
+X-Google-Smtp-Source: AGHT+IHLwdETfJPpcz6klOFedU/0eZYPQGYvn15iUEUJ5Hr5dw/y+HG16aZ455cWeOWOTT3ZmKOEq+E1KpnnKk9H0O8=
+X-Received: by 2002:a05:6402:3708:b0:60e:2e88:13b4 with SMTP id
+ 4fb4d7f45d1cf-60e2e977131mr18350a12.3.1751305009920; Mon, 30 Jun 2025
+ 10:36:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+ <20250627-debugfs-rust-v8-4-c6526e413d40@google.com> <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
+ <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
+In-Reply-To: <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Mon, 30 Jun 2025 10:36:34 -0700
+X-Gm-Features: Ac12FXysUe_aqbgFykO0Xo_MEDAeUsAt64aZiMhFI0dNH1_QJXaE_LG3DONX2wk
+Message-ID: <CAGSQo00C9b0KA7QLEeR6EYWhn288LWTm5h3O_ko3GO=naMQsiw@mail.gmail.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing for File
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 30 Jun 2025 20:14:30 +0800
-cp0613@linux.alibaba.com wrote:
+On Mon, Jun 30, 2025 at 10:34=E2=80=AFAM Matthew Maurer <mmaurer@google.com=
+> wrote:
+>
+> On Mon, Jun 30, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.or=
+g> wrote:
+> >
+> > On 6/28/25 1:18 AM, Matthew Maurer wrote:
+> > > +    fn create_file<D: ForeignOwnable>(&self, _name: &CStr, data: D) =
+-> File
+> > > +    where
+> > > +        for<'a> D::Borrowed<'a>: Display,
+> > > +    {
+> > > +        File {
+> > > +            _foreign: ForeignHolder::new(data),
+> > > +        }
+> > >       }
+> >
+> > What's the motivation for the ForeignHolder abstraction? Why not just m=
+ake it
+> > File<D> and store data directly?
+>
+> 1. A `File<D>` can't be held in collection data structures as easily
+> unless all your files contain the *same* backing type.
+> 2. None of the APIs or potential APIs for `File` care about which type
+> it's wrapping, nor are they supposed to. If nothing you can do with a
+> `File` is different depending on the backing type, making it
+> polymorphic is just needlessly confusing.
 
-> On Sun, 29 Jun 2025 11:38:40 +0100, david.laight.linux@gmail.com wrote:
-> 
-> > > It can be found that the zbb optimized implementation uses fewer instructions,
-> > > even for 16-bit and 8-bit data.  
-> > 
-> > Far too many register spills to stack.
-> > I think you've forgotten to specify -O2  
-> 
-> Yes, I extracted it from the vmlinux disassembly, without compiling with -O2, and
-> I used the web tool you provided as follows:
-> ```
-> unsigned int generic_ror32(unsigned int word, unsigned int shift)
-> {
-> 	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-> }
-> 
-> unsigned int zbb_opt_ror32(unsigned int word, unsigned int shift)
-> {
-> #ifdef __riscv
-> 	__asm__ volatile("nop"); // ALTERNATIVE(nop)
-> 
-> 	__asm__ volatile(
-> 		".option push\n"
-> 		".option arch,+zbb\n"
-> 		"rorw %0, %1, %2\n"
-> 		".option pop\n"
-> 		: "=r" (word) : "r" (word), "r" (shift) :);
-> #endif
-> 	return word;
-> }
-> 
-> unsigned short generic_ror16(unsigned short word, unsigned int shift)
-> {
-> 	return (word >> (shift & 15)) | (word << ((-shift) & 15));
-> }
-> 
-> unsigned short zbb_opt_ror16(unsigned short word, unsigned int shift)
-> {
-> 	unsigned int word32 = ((unsigned int)word << 16) | word;
-> #ifdef __riscv
-> 	__asm__ volatile("nop"); // ALTERNATIVE(nop)
-> 
-> 	__asm__ volatile(
-> 		".option push\n"
-> 		".option arch,+zbb\n"
-> 		"rorw %0, %1, %2\n"
-> 		".option pop\n"
-> 		: "=r" (word32) : "r" (word32), "r" (shift) :);
-> #endif
-> 	return (unsigned short)word;
-> }
-> ```
-> The disassembly obtained is:
-> ```
-> generic_ror32:
->     andi    a1,a1,31
-
-The compiler shouldn't be generating that mask.
-After all it knows the negated value doesn't need the same mask.
-(I'd guess the cpu just ignores the high bits of the shift - most do.)
-
->     negw    a5,a1
->     sllw    a5,a0,a5
->     srlw    a0,a0,a1
->     or      a0,a5,a0
->     ret
-> 
-> zbb_opt_ror32:
->     nop
->     rorw a0, a0, a1
->     sext.w  a0,a0
-
-Is that a sign extend?
-Why is it there?
-If it is related to the (broken) 'feature' of riscv-64 that 32bit results
-are sign extended, why isn't there one in the example above.
-
-You also need to consider the code for non-zbb cpu.
-
->     ret
-> 
-> generic_ror16:
->     andi    a1,a1,15
->     negw    a5,a1
->     andi    a5,a5,15
->     sllw    a5,a0,a5
->     srlw    a0,a0,a1
->     or      a0,a0,a5
->     slli    a0,a0,48
->     srli    a0,a0,48
-
-The last two instructions mask the result with 0xffff.
-If that is necessary it is missing from the zbb version below.
-
->     ret
-> 
-> zbb_opt_ror16:
->     slliw   a5,a0,16
->     addw    a5,a5,a0
-
-At this point you can just do a 'shift right' on all cpu.
-For rol16 you can do a variable shift left and a 16 bit
-shift right on all cpu.
-If the zbb version ends up with a nop (as below) then it is
-likely to be much the same speed.
-
-	David
-
->     nop
->     rorw a5, a5, a1
->     ret
-> ```
-> 
-> Thanks,
-> Pei
-
+If it helps, effectively what I'm doing is adding a `dyn*
+ForeignOwnable`, but `dyn*` isn't available, so writing this without
+`ForeignHolder` would involve an unnecessary `Box` to hide the `dyn`.
