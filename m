@@ -1,182 +1,258 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536C538DD8;
-	Mon, 30 Jun 2025 11:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281245; cv=fail; b=h6xUi/Hp3wbht0AQ2SVlJaCzA5dP2llgcepagMeVycRRknuQhGKxqUmeYuhV8SYkE6MWuB/29DMHtQLl82E9YSUUXAWN2ZC7qNf+xVy8LAdLVm6d7q0FlphU8a5m87QUZASEZshesM78ZcCJYBA4P3mG//hLj5ZqWPdL3DtKLxo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281245; c=relaxed/simple;
-	bh=ogZtEVrSjvmF/dvzNf4qhrPmDLXz9X7sLBPmRlRE+1g=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mizzbMBb6pTz07UOPmJsDKeiwPAlAfUgLzJr8fPn0qQYc2MEJ2kvvLlz3tYLs+i/TGyvIVmSCjA7gG9eiN1KnTZcENBMtsKuInSiDZYoRAWJwVQ+9Te0n7ojrWjwLpVYKgcs3Ot9nCIhUYyTvVt+XjNdSJ9DViFBHfO3SGqgBZo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=wEJjBpeN; arc=fail smtp.client-ip=40.107.223.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9913A238151
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751281313; cv=none; b=Z1/jiNn8PkJWz+IGk0sK+H1MCSLTpvxDKOuslIBTe4V39WXYpBnBfBef2FUDi1GRL02FBu5bDWA+ar7a4d1Xm6TmtN5gAWhndWIVbwFB1C0Wsapya7DwJ5Jti3kgkTFwFhYhBbvi1jzVBtJ0T3OCeOdB+2pvA6bbZieQqMi1kNw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751281313; c=relaxed/simple;
+	bh=l7ErLLyaOAZpjV7P3IeLKZsOkVWT3Vy9j/nkLxGLW4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QyXPiukKu5DlRNHOcCuVGvynyaK7RpvNvXsEJFKC/kczGkHe1h1b+djCfVG4xYvDdiqRO1XxVluuNlsjYShK5P709UKziw4P1Mg+46Q9kvlqp5PFgcng5ASsKskBqb4r5I7//4TsmT47Kf3j5yRuHC6CSvzfcuKB6fDcaKEypCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IFe/3fQK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="wEJjBpeN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QRteHDJ3FfBpXpCNbOmFz1/FJzSFhKiUQzQ203lDQtfnTS+rjFQRZcL0r7eM+6Rrsxr/GZRq6PrXFToWqbcoEirVxN6oM0+hfhPKb2H7eCgeqvXA0RgCkcIDZ53c7tuWfTGNHVj2G2RLp1HJpVJWoKae9ib8+6s5HBoGUX0hM9/Tq9qUkEbjGQJvcBMvvRZN8yxI/6NKMFm9IbaejnpR8EsOTxCn27GZH0k4uw9Zpvy1GS+CLN2natx+Fq5053z6eez9q4NHoOsZXSQANZl0xv9UC9I4GUIbqIp1mmyDQ/cOYfbE70WNCDhPei1T5/xXxsibrsq1S2AYX/NAO7pO5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sSBIdXxpVUj9IzADDEoORrARinMD/dptnSl6iywuM/k=;
- b=NHMzbsrMxvi4wqNkI07mYtRy/bTlpbx0y+lUKtCCDzvG9WTEtCcUALoy2/DcL8Vmyy71v9KOdQ28RpIm8uT6WYZRPpjjUKz5dBTtGdWDETfOx3fISTzm//HLKkKOfaxyS11VYkosOwKFIKoOzgAfbcVyxZdc1wAv8B1G4jZLkB3Qrcc7fPT9YyXuW9BHAlo8uhLSo2ZJGMZJuPr5shZX3nx6XFvpVMd4AD7yCo3JOZ2xKLUlK+8SMKTGImLB1P4J29JAh+nbaOcW71DsyxBXk4duLvcKFPUhszpyaF/znVkl2QUwvE//fmI1FejrN/iIMyHuulCqcoOmQX71+XWOJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sSBIdXxpVUj9IzADDEoORrARinMD/dptnSl6iywuM/k=;
- b=wEJjBpeNwO5OyFjCSlYmA7CryL1u19F1j38VAJsEx8mYCft8/Ywgy5j0lnPnZSg5fzVsGuj7M1TXoz6XOd5plTGonjZWxcqcI8dz3rTE97o4zcQR1AnBkgNmf/gpk8XTXd3txiQB5LStvIkKoDQpDr3tZ8Df9gcwW+F78TGiFM46c83Y8ARl8KxxwNr6AOpHqk2N6iOH0+Aq9h31iGJNEdhsez9RL5AXy6DuXHwwCA85bmQyPYNwf81Nr/A2qGywzCb6HtVWsWJXBud+7eH5XdHAOFEkYNRhUVLuyg5JA7T0Da+eXLiB0F7NoPaONPXvwbm1Pjw0y0l9pZrrn5lprA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from DM6PR03MB5017.namprd03.prod.outlook.com (2603:10b6:5:1ee::21)
- by SA1PR03MB7100.namprd03.prod.outlook.com (2603:10b6:806:339::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 11:00:40 +0000
-Received: from DM6PR03MB5017.namprd03.prod.outlook.com
- ([fe80::2898:accd:c6dc:2168]) by DM6PR03MB5017.namprd03.prod.outlook.com
- ([fe80::2898:accd:c6dc:2168%6]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 11:00:40 +0000
-From: khairul.anuar.romli@altera.com
-To: Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list),
-	Matthew Gerlach <matthew.gerlach@altera.com>,
-	Khairul Anuar Romli <khairul.anuar.romli@altera.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Santhosh Kumar K <s-k6@ti.com>
-Subject: [PATCH v2 1/1] spi: cadence-quadspi: fix cleanup of rx_chan on failure paths
-Date: Mon, 30 Jun 2025 19:00:35 +0800
-Message-Id: <55fd5496924ef8a9046bd2758d0111be6bc8ff8a.1751280932.git.khairul.anuar.romli@altera.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <cover.1751280932.git.khairul.anuar.romli@altera.com>
-References: <cover.1751280932.git.khairul.anuar.romli@altera.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR03CA0007.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::17) To DM6PR03MB5017.namprd03.prod.outlook.com
- (2603:10b6:5:1ee::21)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFe/3fQK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751281310;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MSwQnQoo9uo4uEMIruoLPlHEq/9wo6aDbD/OB18GecE=;
+	b=IFe/3fQKB5lvXRYGPKfh8JJE1Pe5PrjVnrx1LyC+7dFBg9wtS0/jS+kzQaBhF/4HK31BEi
+	2mgUF5WRERYxSiz+mJpSlMtOO2lPW+Bcdn3F7WwY+FbuydSkM2CsO1e7eVHZ/eJjEPlmTo
+	iYvSArjSw95dOrprdNIvYRJN7XwtD4c=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-NIwiVr13MT6XhY_a64ZTaw-1; Mon, 30 Jun 2025 07:01:48 -0400
+X-MC-Unique: NIwiVr13MT6XhY_a64ZTaw-1
+X-Mimecast-MFC-AGG-ID: NIwiVr13MT6XhY_a64ZTaw_1751281308
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso811099f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:01:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751281307; x=1751886107;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MSwQnQoo9uo4uEMIruoLPlHEq/9wo6aDbD/OB18GecE=;
+        b=BmQV1rYO/t92NySu/VUiJVwn+EXNAV6hRAZ4Cb07LEf7vZUOJ0nOhO6oD2m+ivbt+s
+         ne+biMHbX/tFs63FBIO9KoOZg5G51uauRywnjIn5SzWVyM8iUyw8v/mrMHiFADoFZspy
+         Yth1HiSPzSZto3xby3/saFInYBicQJqqc9Ml0Kof0ymjDWX+C7+BcOJPEhe1VyF+J9ur
+         syn/uKyW8kLqLxk8qAmv8yEhvlYu5XGr/Y9Hwyhbe5aprWoIA0MMboI1cfn1XtWocDg7
+         CmDdAsc0ghME5pSQIGVMb++3qwIAvNNSbbRwbEQsiOBb4TqVCR66dzZfnd6d+Jj+JBuv
+         JxcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSWBBMBCuaNXmOBvXB6Sd0veg2wesQyy8lSjtTjkVihqhaHhAnf+t/zcntAfPpobbBSsPlTGc9MjWVOyk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdH8yqASCrdGnJdhzs5fjJoUeWR/0yhXwSRuHOeQdFAfCsQTzx
+	Ncy+Edf47GAFNc2/C6cLJf3SbQcS++ZiRYFwMTpPLg+w1vRn8H8h5Tx1pK1UvWcxO720cGq//GS
+	ocaitUzLwYcJVNZldMqAetGno8k1aAFiR/1/HjH5mmNA43o1HM7jFYBnwH4uQCyC4ug==
+X-Gm-Gg: ASbGncsGvhvfJSdZNhPuzrAHvksZskOVkqgvIFMKO7GWTYStBNVYqLljWF+dndALpiZ
+	8DZZt9Pe0p7XPxsNvZcUAJN819aiNaA6uGpTAn9mZMefS1ILjSb/9H2hqwlUYD6cAH2bjn2Z5Y9
+	MhKH5vOSd5ZQxy0sUOBQYhksyWYbvr8a6uQ0agMmdg+3g72RvwoWORHyar/vRMqhV/HqVBG977M
+	FFptSelycggDzCYCgC0a79cSoYd/mwa3KgBd7a1nN1SrIJyZdJ6ucwbD8GF53aMxa3r26SYjgVM
+	JtuFiJ+GUWCnpL6IevGkO08qjOfQNY724FABkXUj9IQIbHI1B/XGBR0esRkx4qVWSG7X8czufR1
+	kYsex6GGdFdDCXEqzJLkZVjHU7UG4hZA76fxMzzINR57F5ZX4JQ==
+X-Received: by 2002:adf:b356:0:b0:3a4:fbaf:749e with SMTP id ffacd0b85a97d-3a8ff61608amr7420583f8f.49.1751281307286;
+        Mon, 30 Jun 2025 04:01:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpeYuc3XyyeQgRvI3gADIX7s6OIvoHF1mK/ACsolsz2dC66QQ9rzo+Z7+5d9KFwP9gHrSrbA==
+X-Received: by 2002:adf:b356:0:b0:3a4:fbaf:749e with SMTP id ffacd0b85a97d-3a8ff61608amr7420529f8f.49.1751281306602;
+        Mon, 30 Jun 2025 04:01:46 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f40:b300:53f7:d260:aff4:7256? (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e61f48sm10217418f8f.93.2025.06.30.04.01.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 04:01:46 -0700 (PDT)
+Message-ID: <42794499-64d0-44a1-ad70-a361e849b890@redhat.com>
+Date: Mon, 30 Jun 2025 13:01:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR03MB5017:EE_|SA1PR03MB7100:EE_
-X-MS-Office365-Filtering-Correlation-Id: a601f618-1f0e-47e8-b25b-08ddb7c5599e
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Y496LF3v0QlPeLKPtSw7jiMm5Tc37n+WoTkkTcQmS24/IZAN0cbeg167Ocd0?=
- =?us-ascii?Q?/sCF2QHDEpeXa1ieDbKSwRAJpNgxxX33QxIMiV+thsQfj30fX0uL7kBk0wKI?=
- =?us-ascii?Q?vOH+JwVcPRs0IkWKZgY3q7Q9c3Cm4xWVexTyYqic1qSJsieSOJOGxgmn2CVQ?=
- =?us-ascii?Q?bfwDPMfXao4+3Hvz8cW0tMGZ8Ll4hC1GfEbYxurraoXFGj1bYISryZ2lWeyc?=
- =?us-ascii?Q?aWKrno2MW/mkZl7zd503iNslGppxyygj/qhiXjoLhU0QbEVvof6VEtlex7gK?=
- =?us-ascii?Q?TI0TwAp2qDi8xC8VgEXNbuFdp7pEyxQFT7j4CoDJrfr73/A3Wc7llAF2eVlq?=
- =?us-ascii?Q?fINsbB56umbKDZ7Q0no9v6o0kF0TNmNKAz32yhG8yjP2WGmgDFtdTSNiKFn4?=
- =?us-ascii?Q?FWhAp/DnN8w4BTZyekZJY5SnR1A6MmV439vh+AZDIDgNZOLWqWBcbC5SWKLU?=
- =?us-ascii?Q?svKdTEgZtWByEFGSvoPAYLIIwSwZcZw1rMorQJgoH6Rr65f0l7lorMZTPgFO?=
- =?us-ascii?Q?SCSnmGPm9lL3Kp4bQ/YzBjS172ZMGtW1dXR0rWpxGKBaQR9PE763tOyFph/C?=
- =?us-ascii?Q?mvs+ES+HJ5VOO5dLKmWGy8UxKUusAf+FoBSA+qLPEFuQjHCKmtPX7ZLPPPXc?=
- =?us-ascii?Q?z2VhgUihbgwKPEijSpihYI1q7u7c30B188fVdxgVDD3Krs42xzeqAvasiJ5p?=
- =?us-ascii?Q?bRPwh/q8BEEg7Mriz152qdwEdDAUfRO8G24CbtprL4bYkgkYCxPuDUvmU4x1?=
- =?us-ascii?Q?EUWh8fFfETwcFKYha/I0h6KWhhH8sH46j3NJEce18gHjtRm2jOqm1Oq7Nixn?=
- =?us-ascii?Q?uGw7Sf4jBTbSToyojiaOkhT1HLhGeVHpgYCGYx7rJxA9EkuMbumnz+XhFztg?=
- =?us-ascii?Q?SFpFGoUwuFHwc88FVjvdGwZyg4mQmmElJWIHa1oqJwj2yQ8+JwZnUTDrSNyQ?=
- =?us-ascii?Q?WkN3Dc0RZl3cI4AH34PuL6KVnqRe3wfQCBccXFspKwMjyle79uo+466lJMeM?=
- =?us-ascii?Q?Bu7N79NGeQQoa1iNqsVSzsmOLEpFamJOrOJ/7d1MERh4E27NmgEaC+kUyv4w?=
- =?us-ascii?Q?CnqhCI7+ctrbUlOBVmnsldPA9N9PvdN+CI+aFbo40vVXkAPdMynK0Zj/wM97?=
- =?us-ascii?Q?P4M32hkxD0RdVxV4d/YMX4GViQ+yoYC0hnzxUyOqtpsNvxq173Gd/sCV9s4i?=
- =?us-ascii?Q?0CqVrvFhygEE5LToPw/vKmMx4Ga/tgQ/RGVz5vJRs1fOxM8LiaD+9S8Tk6J8?=
- =?us-ascii?Q?QiJ7ZKdrxDN4iLrskG/VsX0BL70h0kOui6tv84g2SUYX93bSPBUw0k/3J+bs?=
- =?us-ascii?Q?Shxv0fLylbSk9+Zj5wI0IF2R5OWufiLfp2hAC3K/BrYD1mheeQHBp8pA4Lsz?=
- =?us-ascii?Q?TmZaWiJREvXBAxCbQPImUN8O4KMlOTZ81rVQx9CiBkkFglkI7w1FZYESWyrr?=
- =?us-ascii?Q?TAdjQeDoy0g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB5017.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/R3pPj8VLWzcWa0c6qk05/djwTsjZSEbrk3/FJ0JodDtW+2Zchx7/0xYoOdr?=
- =?us-ascii?Q?tkn6loRzGeZd/EaRwh8U4gku9jzhDRJGNTZZcsSL1kqBIMYC8sfSJtlG5GvD?=
- =?us-ascii?Q?xVzfjMx/hHOS3fZDrGmN9yy9eY0fCCq5/ID1l3/yDtSK8ei1nC6lk0DSI5sv?=
- =?us-ascii?Q?JbMuvrAdtbFji4N0Homo794R8SWZot6VwEasqNXF53WFDTznp6JGLi0Sf6R/?=
- =?us-ascii?Q?0UHJRHEFDiZmosD7L6TMoF3dRTpC5rlKmzutLsltQGsnhE+pb+XXENXjluq3?=
- =?us-ascii?Q?s4vyeTvNfFLqb0HrI2IQAaZyPGJ/mANxSr1RuEm3otKJzOrSjMKIrIqGAzS7?=
- =?us-ascii?Q?x2i2k1Ff8q+bXfQf5HpcUMWCVpPnztItJL3MWeaJPwu2IT1tmhtrWe/IFMy1?=
- =?us-ascii?Q?STMiwzpfiQa6tXjhCcmxSBrVr9bVEIFuDwW410AeWgDkBB4sqXKFA3sgu/8I?=
- =?us-ascii?Q?zV5+FuatsUps7jmOCnF09awrua5WiQG1ij+qAhZnMsKxP+VRy8M8b8z+0buN?=
- =?us-ascii?Q?iDgEoRkjeZM9HgWdZR9w9cpj3q4jW1xagBSbMr44Mpn15X/zr5BUOFDjdFa2?=
- =?us-ascii?Q?4+7n8y+DQ9Ge3LUOeEWjEfYBkby50w/jVyw5vjIvG29PfRuOpyO5GG/eisNO?=
- =?us-ascii?Q?vqIBBhKVQDvl0oBegoKs05LZ6MVranFb0yIa0cWSNIQQei0D0S9QbUdZhtiC?=
- =?us-ascii?Q?hiBhhMj+UCtTKhj36gA2UCDeUzi4JiLPpLLePVTNyuHqNCVLIRjTHQ7vWGXR?=
- =?us-ascii?Q?ZfSrDtN1O5pf25C+zPDUkibMCemeFGr48LDjq6fUZ2aU1Ny+Z00sm9JDAuhQ?=
- =?us-ascii?Q?Ynr9uj1Ns+rdDlWCgcrEOrfM9EeZ4hpd4WjND/aORXS50wORRX9VF/Z6uwK2?=
- =?us-ascii?Q?6MT6OMH2CuIixCpDcngAIYlTLyiwiZneAIhQ6YnlCPFMu+nCkuiMJlzg6MJr?=
- =?us-ascii?Q?88txyaNnTC2zRXyygy9DYK82UBJLuWfqR8oWEHyNZ2OJII+vHzW16r3hFg5o?=
- =?us-ascii?Q?pM58X518v9VgsRmScTpgJtMH9/jO4uSLs+dUFdAyDCOtdZujHOp5Auq5oW0G?=
- =?us-ascii?Q?pDKQJFZ3OCxMFOfu032CL8riPYMEabnn8yOhplVrKXnahSrzWBu2UcBuDfHf?=
- =?us-ascii?Q?mfDI6y52HBJcIVY0tN2RPNOhUpim/gkQ8B0FHAxEDoIG5DHo2AaKtI19UEW4?=
- =?us-ascii?Q?sPNsJzqPoN2cB+tV2QjXLYuVIur4PrGHCuEl6/7Fs19QbaWek04e2/RGLq1W?=
- =?us-ascii?Q?nCQm5d7FTqibUtoNFM+ExuNtKt3Uijt2+8QKcD4Ic3mDSzCZDNNWA7UD2ejr?=
- =?us-ascii?Q?kKPuL9hnwCekYJss/ow0LsSOoWz7lygnlefRYRLS9eVU69QmGgQiNdf/a5f6?=
- =?us-ascii?Q?T1PsrjS0Tc53tNJOUGPjPm+WnVV2ezBj9If2d609Sx0aek/HtR2j3D9WJipf?=
- =?us-ascii?Q?BbO/5bgnyfAmtuIynkfNxvymwJe84VxaBwXrBmPU1b8Erm7y0PIB5JYtsQZ0?=
- =?us-ascii?Q?hdL9Ps8Jq3yK9wChACqxruS6WAY0Kh4KYdyToLLrxw6TlRL2csrdyqlt1A+f?=
- =?us-ascii?Q?BRlg0840tSt6zuh4XdVEQqEbnhv97aM48a12hWQwop3KW46oS/6HhYEr2k9z?=
- =?us-ascii?Q?7A=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a601f618-1f0e-47e8-b25b-08ddb7c5599e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB5017.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 11:00:39.9646
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s+qUTAiuy+J93JEaLgdkt6250luZSziiMiIqZyoncpUquuMPrCq0nSj/557cFTaP7+YflObQ4L1SwOjZMPMMFQfpNhizTDwiWInz7RKW5eY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR03MB7100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/4] mm: convert FPB_IGNORE_* into FPB_HONOR_*
+To: Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
+References: <20250627115510.3273675-1-david@redhat.com>
+ <20250627115510.3273675-2-david@redhat.com>
+ <5c3428c6-25be-4a94-811a-6bb6718f6c58@arm.com>
+ <cc846c55-0505-4ad6-9664-ac799d9c0226@redhat.com>
+ <5375208d-2c11-4579-a303-e8416ab07159@arm.com>
+ <aa9c4bd5-f36e-4820-9ca2-1154b44b8908@arm.com>
+ <f0ccb18b-4297-4741-9dd9-d020b171c28d@redhat.com>
+ <79525362-2377-441b-8575-d2307bd77f26@arm.com>
+ <8993dbc9-6c9a-4ac7-8c04-813851eba938@redhat.com>
+ <2ca5cbb3-9795-49ef-ae53-11c3143edee1@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <2ca5cbb3-9795-49ef-ae53-11c3143edee1@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+On 30.06.25 12:57, Ryan Roberts wrote:
+> On 30/06/2025 10:24, David Hildenbrand wrote:
+>> On 30.06.25 11:18, Ryan Roberts wrote:
+>>> On 30/06/2025 10:08, David Hildenbrand wrote:
+>>>> On 30.06.25 11:04, Ryan Roberts wrote:
+>>>>> On 30/06/2025 04:34, Dev Jain wrote:
+>>>>>>
+>>>>>> On 29/06/25 2:30 am, David Hildenbrand wrote:
+>>>>>>> On 28.06.25 05:37, Dev Jain wrote:
+>>>>>>>>
+>>>>>>>> On 27/06/25 5:25 pm, David Hildenbrand wrote:
+>>>>>>>>> Honoring these PTE bits is the exception, so let's invert the meaning.
+>>>>>>>>>
+>>>>>>>>> With this change, most callers don't have to pass any flags.
+>>>>>>>>>
+>>>>>>>>> No functional change intended.
+>>>>>>>>
+>>>>>>>> FWIW I had proposed this kind of change earlier to Ryan (CCed) and
+>>>>>>>> he pointed out: "Doesn't that argument apply in reverse if you want
+>>>>>>>> to ignore something new in future?
+>>>>>>>>
+>>>>>>>> By default we are comparing all the bits in the pte when determining the
+>>>>>>>> batch.
+>>>>>>>> The flags request to ignore certain bits.
+>>>>>>>
+>>>>>>> That statement is not true: as default we ignore the write and young bit. And
+>>>>>>> we don't have flags for that ;)
+>>>>>>>
+>>>>>>> Now we also ignore the dirty and soft-dity bit as default, unless told not to
+>>>>>>> do that by one very specific caller.
+>>>>>>>
+>>>>>>>> If we want to ignore extra bits in
+>>>>>>>> future, we add new flags and the existing callers don't need to be updated.
+>>>>>>>
+>>>>>>> What stops you from using FPB_IGNORE_* for something else in the future?
+>>>>>>>
+>>>>>>> As a side note, there are not that many relevant PTE bits to worry about in
+>>>>>>> the near future ;)
+>>>>>>>
+>>>>>>> I mean, uffd-wp, sure, ... and before we add a FPB_HONOR_UFFD_WP to all users
+>>>>>>> to be safe (and changing the default to ignore), you could add a
+>>>>>>> FPB_IGNORE_UFFD_WP first, to then check who really can tolerate just ignoring
+>>>>>>> it (most of them, I assume).
+>>>>>> I agree.
+>>>>>
+>>>>> Meh. Personally I think if you start mixing HONOR and IGNORE flags, it becomes
+>>>>> very confusing to work out what is being checked for and what is not. I
+>>>>> stand by
+>>>>> my original view. But yeah, writable and young confuse it a bit... How about
+>>>>> generalizing by explicitly requiring IGNORE flags for write and young, then
+>>>>> also
+>>>>> create a flags macro for the common case?
+>>>>>
+>>>>> #define FPB_IGNORE_COMMON (FPB_IGNORE_WRITE | FPB_IGNORE_YOUNG |    \
+>>>>>                  FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY)
+>>>>>
+>>>>> It's not a hill I'm going to die on though...
+>>>>
+>>>> How about we make this function simpler, not more complicated? ;)
+>>>
+>>> I think here we both have different views of what is simpler... You are trying
+>>> to optimize for the callers writing less code. I'm trying to optimize for the
+>>> reader to be able to easily determine what the function will do for a given
+>>> caller.
+>>
+>> See patch number #3: I want the default function -- folio_pte_batch() -- to not
+>> have any flags at all.
+>>
+>> And I don't want to achieve that by internally using flags when calling
+>> folio_pte_batch_ext().
+>>
+>> If you don't specify flags (folio_pte_batch()), behave just as if calling
+>> folio_pte_batch_ext() without flags. Anything else would be more confusing IMHO.
+> 
+> OK, sorry I don't have the context of your actual series... I was just trying to
+> defend what my quote that Dev sent. I'll go take a look at your series.
 
-Remove incorrect checks on cqspi->rx_chan that cause driver breakage
-during failure cleanup. Ensure proper resource freeing on the success
-path when operating in cqspi->use_direct_mode, preventing leaks and
-improving stability.
+If we'd not do the split and always provide flags + non-inlined variant, 
+then I'd agree.
 
-Fixes: b07f349d1864 ("spi: spi-cadence-quadspi: Fix pm runtime unbalance")
-cc: stable@vger.kernel.org # 6.6+
-Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
----
-Changes in v2:
-    - Add Fixes tag and stable in cc.
----
- drivers/spi/spi-cadence-quadspi.c | 5 -----
- 1 file changed, 5 deletions(-)
+> 
+>>
+>> I agree that mixing HONOR and IGNORE is not a good idea. But then, it's really
+>> only uffd-wp that still could be batched, and likely we want it to be the
+>> default, and respect/honor/whatever instead in the cases where we really have to.
+>>
+>> (If we really want to go down that path and batch it :) )
+> 
+> FWIW, I think we will need to honor the write bit for Dev's mprotect series (I
+> just sent review comments against his v4). So if you want most callers to just
+> call folio_pte_batch() and that will ignore the write bit, then I guess
+> folio_pte_batch_ext() will have to accept a FPB_HONOR_WRITE bit? Which I guess
+> aligns with what you are doing here to make all the flags HONOR.
 
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-index aa1932ba17cb..d3c78f59b22c 100644
---- a/drivers/spi/spi-cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1960,11 +1960,6 @@ static int cqspi_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(dev);
- 
--	if (cqspi->rx_chan) {
--		dma_release_channel(cqspi->rx_chan);
--		goto probe_setup_failed;
--	}
--
- 	pm_runtime_set_autosuspend_delay(dev, CQSPI_AUTOSUSPEND_TIMEOUT);
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_get_noresume(dev);
+I have to take a look at that one. Maybe it's sufficient to know if any 
+PTE was writable, just like we did with fork().
+
+But yes, anybody who requires more advanced handling (flags) shall use 
+the extended variant -- however that one will be called.
+
 -- 
-2.35.3
+Cheers,
+
+David / dhildenb
 
