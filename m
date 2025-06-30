@@ -1,160 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA722745C;
-	Mon, 30 Jun 2025 18:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C064C1A3178
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307422; cv=none; b=l3MjLZPkzQrXgaCjZ7pyaVjF9MsdthUgB9Y5HtfJP3c53CZqK9PX7LsmaXu/krdNJCJqnH92QSbUpv4g4HIDHeSSyoOz0BImOhHu2hsGlloZVlb5t7Soo92cvtugiQhgflO4OUP6G99wt70oXcVczVyaylWHFJbcqRhsGZIdyCA=
+	t=1751307436; cv=none; b=Tw1ML43syRynXMDkFatKb/x42dtjwRHO27gM/HsO/CeYicTGfQi7Axi49Dv2LzdUXxHoA3QQgXEfxCAFK/3XXY1OFn2wCI5c2AP6DKhnEso1uaYaSFuHh4eCOItjOdLzn6aHNtb/ILcGD3kp8IVkERhX2v5Q1I8gqP0uFOymuto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307422; c=relaxed/simple;
-	bh=aCYppRcN644WL/nycmbSiYLX4a8QaSQ8CcpHHOQHOGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXLe1hKSzTY+VX6UtzGm0JRGifkPSd3vkxdCEgfqvJETY3EAKozZA38VFE9BWPfsDR5QMthjkQxJoxRXe7MVL4ywthNneRdxsShvvAeglJmD8ltvi1FZu1pLuvh4KRHO5j9J6bQsbdEOGKht1vUWR7XEAcp6ZDSosqC9EsN6FAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA6SesH2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751307436; c=relaxed/simple;
+	bh=XzYE0ggpzi/xWgQAv+8GzWJs6sZVm5N0XHvtxn3e7g8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=h+tjpEp6iYnxFirvIEs+dnpXxg9WXEaSkgV/auIAR84b7JgY62ZSoLk4wyfp4lOCPLOLYSOIgSZZDWx6sDhh8uYX9SEgFSbw4dKUUP6Jb4UFvT07sBf62PrfgYU0tSh/G/4TxZ9B7wgkag4S5vLyWYtP7AkBKCs53zrQcdJRJDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k9siFlH6; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA6SesH2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161BFC4CEE3;
-	Mon, 30 Jun 2025 18:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751307421;
-	bh=aCYppRcN644WL/nycmbSiYLX4a8QaSQ8CcpHHOQHOGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FA6SesH2YGGfotBs8sSlYCGB+oCfdL4RtdxqNKrzI7ej3ouYhx07yeYlKfTM0hOZh
-	 XNxay5hzRW6GJEEbLlsVyYc09k5D3fjprdMyQOOJ8ybUTRxb3HoWIbl6C9bQDU3Kji
-	 M02wpimO5CH/n3j5hyzthfNFZ50KVySkS/6qSAvCdCaBAjPTxSqGEpgq6RuH4+N7TB
-	 s6SwYmMK3hTfZF/7YBbY9/eicIyIw3AEbdckxoOX9PDMRtygAk2uHOWwG+F9XvhPAV
-	 4MNrIZqQlTtxVNCmtlicw8hv1Tn6DWNA9NEqy+RHTibwm7mZFHQp3MvBoMjjNPwpvc
-	 qRospOBbaZE9Q==
-Date: Mon, 30 Jun 2025 20:16:55 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
- for File
-Message-ID: <aGLUl7ZtuQBPoCuv@pollux>
-References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
- <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
- <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
- <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
- <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org>
- <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k9siFlH6"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747fba9f962so4500583b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751307434; x=1751912234; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yBjVRv/LWhtEYGg3uh+SYefd6WbGxbfazNc3AwALFSQ=;
+        b=k9siFlH6wyfr9RLxXvJHUnczNqaw+Kd5aILCUq3H3ZXypPZU0A/GZ0dVlJ5kj8IVnw
+         DfMxBy2OUV4RrSnP9z3zEeYERanHVn2WVDLltw3LauUDA7glCi8x2FS8D8WSoTQI1g5t
+         D09iE/fUN4v6d28dKQ+nP4doQdUDvnqLrukp1FD8AFVsAAJO5emaETgv+2yidruhOZRM
+         AtZl0qrd9h+/Sy6xs8G1gI9KCdZLsCIZtO4tTY9XrinkCT3yLcQNF1YmGhzeKns0ajUR
+         6zG9KaxgLopsgwi4TxSJPxyTNkP99kM6PClzGcRQwwYb4sp8l6+38WDrsSd9e937ihcY
+         /YMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751307434; x=1751912234;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yBjVRv/LWhtEYGg3uh+SYefd6WbGxbfazNc3AwALFSQ=;
+        b=wBNX435U2v2kboODxWrW9MDT01/lqn8T1gL4UzX2PvA8dzpalxfNjyhryQ1YWHNmL0
+         /hWen3mtwSMaXRVdB+mzYv84jOYRtfP/CuYLWj3OromIJd+uIJXjZ1JYN8jNMBjjSL7C
+         Cdja3z8pjMvdesguzhqEeonW1DYJ2eWT6X+RutZW+Mr/fVbmlt9gP8MIzGiPLKCJjwYk
+         O97v5gWc4hN9ttcYiTtv8LJS7k1DrdOBM5tNtWbepcRjewPZHJ6DhPfZfBsElAldm1YF
+         E4doISB/0DiGPtLdpwESECxyGCh5Qd27zwh8ettC4xjR3wqN7cl4HDbssAnrUmv72HON
+         5lPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwhirFywCLTxQiGXj6EjYmg4nZIC+dA+MXQRR/AqMFf19pYc/9fflSRPoj46nLSpEoU9QS6TXtMHbxhy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZDy74zczu5uQOlIGgD0jr8qt9+cjc2mr1UpCco+sJWDcNujPz
+	l8JJAKUcjH5Bm3P4Ilxw+qsVx6i2/Srwq+w/UMKu3MLL0+vyw3vc91R9U3xRyKWqr1Y=
+X-Gm-Gg: ASbGnct91iFlGUpmdBs6RSa/KhxdfLbDfyMSPwioi5Gmw32GcD9cwLxeXjG46P9/FUH
+	WMlSF9DEtn6QQfIhOG+skhIXiGWN55zG4NgVJqVCsBqo0qKiI13WwSMfl4tMRfOQ8ZAuP2RAsO8
+	C+ceVbQHsOQSoprS3tlAZZiJjtyGEDLnnjfeloMi/E0OaUXYuk2x/lqOxTjcUvcFw/E/DfeGNtM
+	cgNNRGqmSWrkthsC6dYB5P90ok4gnPNJ6QfmC56dNzL7A3TyGba7qCArVf2CppR39SRNlB0I392
+	RpYDrYHYSNyuT9rRgmL3QUb72HwuMEgd+oEpxrYPMfXAGQRQlHkBfL3Nf1kxmSycTZ0bVl4=
+X-Google-Smtp-Source: AGHT+IGQOXcusfsnRzzu9tTsp4bqdnB978cAzt96coGY3e06638Az0cSdJ5vM52cbySItmU05CF2DQ==
+X-Received: by 2002:a05:6a00:4b11:b0:748:a0b9:f873 with SMTP id d2e1a72fcca58-74b3bc8da15mr742566b3a.9.1751307433908;
+        Mon, 30 Jun 2025 11:17:13 -0700 (PDT)
+Received: from localhost ([97.126.182.119])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540ae4csm9398150b3a.34.2025.06.30.11.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 11:17:13 -0700 (PDT)
+From: Kevin Hilman <khilman@baylibre.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v3 2/2] pmdomain: core: add support for subdomains
+ using power-domain-map
+In-Reply-To: <CAPDyKFpTgAmLBq2ZExPoxWM0wL756zH96vW7M6wHSA1MTTG1wA@mail.gmail.com>
+References: <20250613-pmdomain-hierarchy-onecell-v3-0-5c770676fce7@baylibre.com>
+ <20250613-pmdomain-hierarchy-onecell-v3-2-5c770676fce7@baylibre.com>
+ <CAPDyKFrO9rb0eDb2qO+EGaVjOFG=7emgca8511XACDhWY=dt5g@mail.gmail.com>
+ <7hsejzp4xg.fsf@baylibre.com>
+ <CAPDyKFo-iPBPgkM43q+5cGR2sptkLk4E6TAERCQbCu24o1RfFQ@mail.gmail.com>
+ <7hcyb1os9y.fsf@baylibre.com>
+ <CAPDyKFpTgAmLBq2ZExPoxWM0wL756zH96vW7M6wHSA1MTTG1wA@mail.gmail.com>
+Date: Mon, 30 Jun 2025 11:17:13 -0700
+Message-ID: <7hjz4tnlg6.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
+Content-Type: text/plain
 
-On Mon, Jun 30, 2025 at 10:49:51AM -0700, Matthew Maurer wrote:
-> On Mon, Jun 30, 2025 at 10:39 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On 6/30/25 7:34 PM, Matthew Maurer wrote:
-> > > On Mon, Jun 30, 2025 at 10:30 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > >>
-> > >> On 6/28/25 1:18 AM, Matthew Maurer wrote:
-> > >>> +    fn create_file<D: ForeignOwnable>(&self, _name: &CStr, data: D) -> File
-> > >>> +    where
-> > >>> +        for<'a> D::Borrowed<'a>: Display,
-> > >>> +    {
-> > >>> +        File {
-> > >>> +            _foreign: ForeignHolder::new(data),
-> > >>> +        }
-> > >>>        }
-> > >>
-> > >> What's the motivation for the ForeignHolder abstraction? Why not just make it
-> > >> File<D> and store data directly?
-> > >
-> > > 1. A `File<D>` can't be held in collection data structures as easily
-> > > unless all your files contain the *same* backing type.
-> >
-> > That sounds reasonable.
-> >
-> > > 2. None of the APIs or potential APIs for `File` care about which type
-> > > it's wrapping, nor are they supposed to. If nothing you can do with a
-> > > `File` is different depending on the backing type, making it
-> > > polymorphic is just needlessly confusing.
-> >
-> > What if I want to access file.data() and do something with the data? Then I'd
-> > necessarily need to put my data in an Arc and reference count it to still be
-> > able to access it.
-> >
-> > That doesn't seem like a reasonable requirement to be able to access data
-> > exposed via debugfs.
-> 
-> `pub fn data(&self) -> D` would go against my understanding of Greg's
-> request for DebugFS files to not really support anything other than
-> delete. I was even considering making `D` not be retained in the
-> disabled debugfs case, but left it in for now for so that the
-> lifecycles wouldn't change.
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-Well, that's because the C side does not have anything else. But the C side has
-no type system that deals with ownership:
+> [...]
+>
+>> I've done an implementation with struct device_node *.  This works
+>> better (IMO) than struct of_phandle_args * because the caller (in my
+>> case scmi_pm_domain.c) already has device nodes, but not phandle args.
+>>
+>> The result will be that the pmdomain helper will call
+>> pm_genpd_add_subdomain() instead of of_genpd_add_subdomain().
+>>
+>> Below[1] is the current working version, which includes adding the
+>> helper to the PM domain core and showing the usage by the SCMI provider.
+>>
+>> How does this look?
+>
+> It's a lot better in my opinion. Although, I have a few comments below.
+>
+>>
+>> Note that doing this at provider creation time instead of
+>> <genpd>->attach_dev() time will require some changes to
+>> of_parse_phandle_with_args_map() because that function expects to be
+>> called for a device that has a `power-domains = <provider>` property,
+>> not for the provider itself.  But I have it working with some local
+>> changes to make that helper work if called for the provider directly.
+>> If you're OK with the PM domains approach, I'll post another rev of this
+>> series which includes the OF changes for review by DT maintainers.
+>>
+>> Kevin
+>>
+>> [1]
+>> ---
+>>  drivers/pmdomain/arm/scmi_pm_domain.c | 12 ++++++++--
+>>  drivers/pmdomain/core.c               | 34 +++++++++++++++++++++++++++
+>>  include/linux/pm_domain.h             | 11 ++++++++-
+>>  3 files changed, 54 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pmdomain/arm/scmi_pm_domain.c b/drivers/pmdomain/arm/scmi_pm_domain.c
+>> index a7784a8bb5db..8197447e9d17 100644
+>> --- a/drivers/pmdomain/arm/scmi_pm_domain.c
+>> +++ b/drivers/pmdomain/arm/scmi_pm_domain.c
+>> @@ -54,7 +54,7 @@ static int scmi_pd_power_off(struct generic_pm_domain *domain)
+>>
+>>  static int scmi_pm_domain_probe(struct scmi_device *sdev)
+>>  {
+>> -       int num_domains, i;
+>> +       int num_domains, i, ret;
+>>         struct device *dev = &sdev->dev;
+>>         struct device_node *np = dev->of_node;
+>>         struct scmi_pm_domain *scmi_pd;
+>> @@ -115,7 +115,15 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+>>
+>>         dev_set_drvdata(dev, scmi_pd_data);
+>>
+>> -       return of_genpd_add_provider_onecell(np, scmi_pd_data);
+>> +       ret = of_genpd_add_provider_onecell(np, scmi_pd_data);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* check for (optional) subdomain mapping with power-domain-map */
+>> +       for (i = 0; i < num_domains; i++, scmi_pd++)
+>> +               of_genpd_add_subdomain_map(np, domains[i], i);
+>> +
+>> +       return ret;
+>>  }
+>>
+>>  static void scmi_pm_domain_remove(struct scmi_device *sdev)
+>> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+>> index 88819659df83..3ede4baa4bee 100644
+>> --- a/drivers/pmdomain/core.c
+>> +++ b/drivers/pmdomain/core.c
+>> @@ -3220,6 +3220,40 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_genpd_parse_idle_states);
+>>
+>> +int of_genpd_add_subdomain_map(struct device_node *np,
+>> +                              struct generic_pm_domain *domain,
+>> +                              int index)
+>
+> Providing the struct generic_pm_domain *domain as an in-parameter for
+> the child-domain seems unnecessary and limiting to me.
+>
+> Instead I think we should parse the power-domain-map DT property at
+> 'index', to find the corresponding child-domain's specifier/index and
+> its corresponding parent-domain.
+>
+> In other words, we don't need the struct generic_pm_domain *domain as
+> an in-parameter, right?
 
-In C you just stuff a pointer of your private data into debugfs_create_file()
-without any implication of ownership. debugfs has a pointer, the driver has a
-pointer. The question of the ownership semantics is not answered by the API, but
-by the implementation of the driver.
+I'm not sure I follow.  The `struct generic pm_domain *domain` is the
+SCMI child domain.  From the map, we use the index to find the parent
+domain.  And then we add the child as a subdomain of the parent.
 
-The Rust API is different, and it's even implied by the name of the trait you
-expect the data to implement: ForeignOwnable.
+Are you suggesting that I (re)parse the DT for to find the child domain
+also? 
 
-The File *owns* the data, either entirely or a reference count of the data.
+Thanks for the review & guidance,
 
-If the *only* way to access the data the File now owns is by making it reference
-counted, it:
-
-  1) Is additional overhead imposed on users.
-
-  2) It has implications on the ownership design of your driver. Once something
-     is reference counted, you loose the guarantee the something can't out-live
-     some event.
-
-I don't want that people have to stuff their data structures into Arc (i.e.
-reference count them), even though that's not necessary. It makes it easy to
-make mistakes. Things like:
-
-	let foo = bar.clone();
-
-can easily be missed in reviews, whereas some contributor falsely changing a
-KBox to an Arc is much harder to miss.
-
-> If you want a `.data()` function, I can add it in,
-
-I think it could even be an implementation of Deref.
-
-> but I don't think
-> it'll improve flexibility in most cases. If you want to do something
-> with the data and it's not in an `Arc` / behind a handle of some kind,
-> you'll need something providing threadsafe interior mutability in the
-> data structure. If that's a lock, then I have a hard time believing
-> that `Arc<Mutex<T>>`(or if it's a global, a `&'static Mutex<T>`, which
-> is why I added that in the stack) is so much more expensive than
-> `Box<Mutex<T>>` that it's worth a more complex API. If it's an atomic,
-> e.g. `Arc<AtomicU8>`, then I can see the benefit to having
-> `Box<AtomicU8>` over that, but it still seems so slim that I think the
-> simpler "`File` is just a handle to how long the file stays alive, it
-> doesn't let you do anything else" API makes sense.
-
-I don't really see what is complicated about File<T> -- it's a File and it owns
-data of type T that is exposed via debugfs. Seems pretty straight forward to me.
-
-Maybe the performance cost is not a huge argument here, but maintainability in
-terms of clarity about ownership and lifetime of an object as explained above
-clearly is.
-
-- Danilo
+Kevin
