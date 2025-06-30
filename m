@@ -1,91 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4451D25B31E;
-	Mon, 30 Jun 2025 11:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE3AC1A3154
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281667; cv=none; b=jzyL5+vviJ7SxZSX3PHltkaiq7YUf45zf6XNFRQwftV2o89J7POhsxZrnoFCnvFxP7HszdCi1WeJwpnTl6hu4xa0H+W5UWd/sGP7K9vs3bKSDgTvu9WmxJPj0ocl1JCFYJiOem11qFXOLU+nKM+FAprsLPu+hSoUhvm01oDbWS4=
+	t=1751281722; cv=none; b=OjU0vbF6tl0KsIUzIYUdy8Pmm2xtHZ+PFjlYe0EjEX+ZXmN7pvRDca5Bj82bYT6WBxHRB4ZqfAfwem3Z0ejpo5lV5KoWd5ojMwxgosqru7CHEbO8UYBX7l8qNtc7PUMui9DafSqXt/c/HN9Jz6FBm27woS1S0BQ+oueqkjniymk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281667; c=relaxed/simple;
-	bh=Jw3goajdMsMvrZTpeRxGmnLH20qRFlwTNMqKiaeCF64=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jIEX1mQnbGuL4iODVfHtsC9ptbO1hhfqs1ajmjWELStwttkpFI/kICVmffJMsFPxeWI3n0126/Bz8MvLbuBOMh34PZf//JrkKz9jTrBDPk4WAny3StHKZevrHlXctxyBeNwGqpQUI1gd2GrtdGvk54s3Cotu038XxpfO+W+rwoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CjYcCcFx; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CjYcCcFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751281666; x=1782817666;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Jw3goajdMsMvrZTpeRxGmnLH20qRFlwTNMqKiaeCF64=;
-  b=CjYcCcFxOonzFQqRnxiXCaKh1O5VcJ2OVT0PBPIzC/RGLiccULSSmmdb
-   MNnlXHHgXOaoXhMEMaCog0BcZlCPeBnyVJpX05lVVnuEJ1vK/Ox87vx73
-   vrhxC7R1xXlcyDPnmUi8u1GIiqZYdY29+gkNYBQhxf/vJz8/HapWCvPdn
-   2fqNXn/z7qAyhSsgnVPM3lp4caVzUQLP59iLtV+I01oBIPhhGdwnWGlO4
-   NrEEAh4C+MCZkdmHzeWoHQh9nudYU9ap6MIZFr2pSk4ZduJjXsUe571T7
-   Knm6wr3/OyciZGfKf13PH1RjAB7dpVOPBN5NpH48N1CsSjqzNXynEoRcY
-   g==;
-X-CSE-ConnectionGUID: 9zcsAdkaQPSxRMiJ14huEQ==
-X-CSE-MsgGUID: UXqf8RN1Sgaf5j2Ttqcp2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53627080"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53627080"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:07:45 -0700
-X-CSE-ConnectionGUID: p0yK+f8oQ7uVlOTVeGUfLg==
-X-CSE-MsgGUID: u7S+pl0ASgCz4QerspO3PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="190595410"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:07:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, vadimp@nvidia.com, 
- platform-driver-x86@vger.kernel.org, Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: darren.kenny@oracle.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20250630105812.601014-1-alok.a.tiwari@oracle.com>
-References: <20250630105812.601014-1-alok.a.tiwari@oracle.com>
-Subject: Re: [PATCH v2] platform/mellanox: mlxreg-lc: Fix logic error in
- power state check
-Message-Id: <175128165916.8413.10898065665792776275.b4-ty@linux.intel.com>
-Date: Mon, 30 Jun 2025 14:07:39 +0300
+	s=arc-20240116; t=1751281722; c=relaxed/simple;
+	bh=usIxoY+eKjTyTsGhK6YSE+DyYx4F9ZFB4YxEJuBttco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXvP65yV7ogQB+vDhC8jOXZxMUTg+viWnJ0FYMsjZzdkjYVbmU0z6J0E1pmaDvXcnU7iGxt3Z05bk9h+cq1oPrJmSP6TW2xy9nEYP8JyQroQE/kW2gEo1x0TfboIXtz0eMnkh6cs2gn1J32QFRaw/fLltJ6uln0b/a2wp5qXEpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7C461FCD;
+	Mon, 30 Jun 2025 04:08:23 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25F263F6A8;
+	Mon, 30 Jun 2025 04:08:39 -0700 (PDT)
+Date: Mon, 30 Jun 2025 12:08:36 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, kernel@oss.qualcomm.com,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH] coresight-tmc: Add configurable timeout for flush and
+ tmcready
+Message-ID: <20250630110836.GT794930@e132581.arm.com>
+References: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
+ <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
+ <20250627141745.GS794930@e132581.arm.com>
+ <5f2527d2-be55-411b-a79b-f628e9fe7f06@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f2527d2-be55-411b-a79b-f628e9fe7f06@quicinc.com>
 
-On Mon, 30 Jun 2025 03:58:08 -0700, Alok Tiwari wrote:
+On Mon, Jun 30, 2025 at 06:40:53PM +0800, Yuanfang Zhang wrote:
 
-> Fixes a logic issue in mlxreg_lc_completion_notify() where the
-> intention was to check if MLXREG_LC_POWERED flag is not set before
-> powering on the device.
-> 
-> The original code used "state & ~MLXREG_LC_POWERED" to check for the
-> absence of the POWERED bit. However this condition evaluates to true
-> even when other bits are set, leading to potentially incorrect
-> behavior.
-> 
-> [...]
+[...]
 
+> >>> The current implementation uses a fixed timeout via
+> >>> coresight_timeout(), which may be insufficient when multiple
+> >>> sources are enabled or under heavy load, leading to TMC
+> >>> readiness or flush completion timeout.
+> >
+> > I would suggest that we first make clear if this is a hardware quirk or
+> > a common issue in Arm CoreSight.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+> sure, now this issue has been found that not only CPU ETM, but also subsystem ETM.
 
-The list of commits applied:
-[1/1] platform/mellanox: mlxreg-lc: Fix logic error in power state check
-      commit: 644bec18e705ca41d444053407419a21832fcb2f
+As the commit log states, "sources are enabled or under heavy load,
+leading to TMC readiness or flush completion timeout." I would like to
+confirm how this situation can happen.
 
---
- i.
+When disabling a CoreSight path, the driver follows a sequential
+order: the source device is disabled first, followed by flushing and
+disabling the TMC. We expect that there should be no contention
+between source devices and the sink when disabling the path. For a
+subsystem ETM, I expect we should also follow this sequence.
 
+Leo
