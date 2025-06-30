@@ -1,267 +1,327 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854AF8460;
-	Mon, 30 Jun 2025 16:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1EF8460
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302076; cv=none; b=g8aPd1d0O1IY1hq4UwTBTRXGJr5EhrSfD+SL4nEHG5O+bNAXPN9Mw3IF5YyIZgLXKAGpCC8tireVmpSht7JNCr+WgDueOovcqBztXvh2BHu5eFc767pzciA0EZvnGl7vUyeWMZtPeKkEnnLOZhem8ywZY14+dGcG6+FY2UQK4zA=
+	t=1751302168; cv=none; b=qKZ9PStZsJlJifSvkDuN63vC0qM3vciJAj8EHHEWeExUbflfrAxqvvqC8AwyNBlanvNZXVwXB9XgWEZPMKspBhJu5R5wJiuGRGef/uCgorNRGVDLj3whGyCTGWCLfqO1LJ2KECs2BxYKLuBfLGG/BK0t8jSke2jktUCpKNUWzbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302076; c=relaxed/simple;
-	bh=rsfOEOJugX34XA+jCFmt6YE10O4CFvj6rkIm5zunCpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JacmMgIgZQisktcrzl3yUDzUOVURPHzH03rLPaCKix8M1Z0gt2ikdzHAGsLIZRT5aR2aQzMTcDDglUXdHiBi7DxQxPzVwBo30f7Qrh9d6gn12QgihDvp4zI/9trvRhXPIqGmB+Zd+Qedf67U+yPob8Ze5JeJxJi1Gq9CsVRetPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FIyFedhA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751302168; c=relaxed/simple;
+	bh=CB8W9YdDXoMRpYtBPXwS8mBv1EkgZUyaw6oUVqj1T0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=olojEtcmr+b/3g+9V4EVBPyqaeOtROnokdHPoewncyCEfeZ8L3PUftG+FxejKVEB/S20ejnEOEhB5XTu67Sw3Z/W3o1uLE/OPH7TEACQtdj7owkEPGW9WvpBoOp68RY29ZY8xf6oXbT2ASNnR7+Ia+N3DJjdLbkENtqSOvo3fac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pMsNlk7y; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FIyFedhA"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UBD7Hb023854;
-	Mon, 30 Jun 2025 16:47:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=AufIWocE5AuvJtPV1wlgowl9nYF3OzzI2gj6BnaMb
-	ts=; b=FIyFedhA/dGopM8gjgfb77ELLHTz2d+5DUgWSOfJIb3tEQIaAuXjH9w0r
-	wQIJBZgDc1JjfTOo6mDTLaJzfVoLPWnVIDg0HdM2PrBPvEmRyC7Kx/WqX70GJuCD
-	48dc1bHa8cihoN3DcaCKSFm5Wru+yGC78IDA7G4F9SmUYz+NGqDN3nOumoTXN2eq
-	EJ5PDw3FuZYOT3/z6v1WCQEA4YHZxEVpM6EEbbDyuCGRwhybT7RHC+49nY4Buog+
-	3iTLlEMNoMryGaZiJVYBL04Uz8sBZvqJxF0/SMG67Ir0tJ0I6xjK4A8ScUZPyJI2
-	lIJ53RHhxYlAqz2M2Q7vpCs91/0xw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1jmpk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 16:47:37 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UE6N6f021945;
-	Mon, 30 Jun 2025 16:47:36 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpepwg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 16:47:36 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UGlYeJ51053014
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 16:47:34 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8009420040;
-	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55BFA2004B;
-	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: [PATCH] mm/debug_vm_pgtable: Use a swp_entry_t input value for swap tests
-Date: Mon, 30 Jun 2025 18:47:25 +0200
-Message-ID: <20250630164726.930405-1-gerald.schaefer@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMsNlk7y"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b3182c6d03bso5660820a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751302166; x=1751906966; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CklcrQeUs8WwKNH+qJpTOD4f2jR74kNkuDiWXQCcBT0=;
+        b=pMsNlk7ySDp2J76a0Q5diM1wr2oYbq0LPpWoV/NT/SfTgZyZp5+Ol3JeoOiL0ki/ra
+         p2ICpDA6JHF0uMumTDS4vEY2iXtKqqt4C5W58UPNbYq+0VACH7TKLqiG0yHUnr9J8C0i
+         aBg8drTo6a9Qn8FcaRiSbNSh7BAqq9kMMQHpJF6HTmoCsOv/uQCy/AU5QXPRdwpQPWT4
+         CgT33PweyO6/clwYlYYXzVRQN9aRPx86aI2V5jjVQ/ormofbJjBfbzEMtpng5JJt8Dg7
+         stgb/drn18CTBAkCWFr2AnIfWZKXwBWKeEkkbZkNP6qA4WdjirFPz02+hbBtGHAEyrC7
+         E8kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751302166; x=1751906966;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CklcrQeUs8WwKNH+qJpTOD4f2jR74kNkuDiWXQCcBT0=;
+        b=VdYhBWJm5/XCUeU6L4G/jnVoH3/0AFQEVhW2DQjV0LoM5L1iZZK22X0Px/ib0WbiCs
+         yxlrOOPv8NNqZi3ihKGMCmQwQp6izsJ2DkwFRVjkphCi+QZ4pf6x1ANZ9iSv8qF/wiic
+         7iNMlowZNWXSWrkAKtJG8GtyHIbWZfrFSGoy7TysNBICUHabLaf+lTFmZFMn5G8KOiyT
+         T5zdUbA5mEW4kB5lOAxnjKGbIuaaZqzf0Tf4z0lfXet6kKXzLFykmY7CDhvabsicy/SS
+         K0KMgr9b6eps8phV1IHmvV+odLJZAxGSDPWAg124+SyP1pOwo8pK7KnVvb2WB0I+zuNH
+         vH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWr/cUAjnyXgpEhzKoo3lu3NFkAXQZofNtPu4Vq5CB8Vj3YB7az0U14Apz20lZ/95RMPuep6eTKtEJf6kc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyISBqmizBwzREqk+HMUs3ZUBoAr2ukOrjyb5LbATMTseD3o47O
+	P4X0lgTTJn3hREElxIdqF0Melpz0xPzRPw9yvnNRauw1ZPWf9FU0mz+7+QBmnOtOpak=
+X-Gm-Gg: ASbGncuh+Zsux5PaUcTf39iffujB3PA13tqUuvmC5GNmbSm7zLIuLvAkce719XS4922
+	d8+qWTkMhjYJRV1hHS18gmiKATGOJFHVH/FviDPB/AIBc8XN6k1ytKpkirx6aAu573I7M15MU6B
+	oy+/dslMsFMIG/CB6Vg5vp31riv3ZRCsR4AJXIU6xNi+rWrITh+S0YLIz7UXTJO2XJ5fCJDAWU4
+	Y8p6pBLCQ3PB3NPTEwV7SGmbR5PIrmIyblaO0wyYqfHiwheApO7CAhERqTB0bhfZa8zph8tfppc
+	nIY5kKxgdKZ/dpOomeWHYNNgaNLN417hWE2DDG+bffuHHeuNkI9iR5CrhS22xbbYmw==
+X-Google-Smtp-Source: AGHT+IFTE6nShnM90rUftHRk85Rnoc7393tM7h/AUEngoFniWlj5vPOii5Zn19qJP3R1A91L7OL2+g==
+X-Received: by 2002:a05:6a21:33a4:b0:21f:7430:148a with SMTP id adf61e73a8af0-220a18343d9mr21381518637.28.1751302165795;
+        Mon, 30 Jun 2025 09:49:25 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:3274:25ba:45cc:d85d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ef0f3sm9752245b3a.154.2025.06.30.09.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 09:49:25 -0700 (PDT)
+Date: Mon, 30 Jun 2025 10:49:22 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] remoteproc: imx_dsp_rproc: Add support of recovery
+ process
+Message-ID: <aGLAEvhyjrCbZoIf@p14s>
+References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
+ <20250618062644.3895785-2-shengjiu.wang@nxp.com>
+ <aFltBpXuEXVZ5gKn@p14s>
+ <CAA+D8AP47xyftzPZki8MXEeWEfbocug6e134uaJgFH+tx7mH2Q@mail.gmail.com>
+ <CANLsYkz2JMMMhBAXjt9YSzU4n-0Ld6EvJHC=7Ospsefoxc6BGA@mail.gmail.com>
+ <CAA+D8AM47P7xw2Ppgcr9d=DB2eSkQg6uQ_F22Te_=HFuMCNXxw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ry2V18RJOMmtSxE0l4oahA2WZlmSjeeJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEzOCBTYWx0ZWRfX0kvpwDntTdUg 0+0ZeQMZlFBp3uT7tL5Qx9+tPHwjJD05c1iCfNbFF1YIeLEepNS3COO91oyyuYKsX/SvbOElP4r LycnGSTdSapD/Rw+KRYXz/Ye04S2eiggr+xuQlABM8sin22fUiRUajjlZGmfbmWAZlYWzdwg3h8
- y3Hz6sCImfOlz66E/6nabSYgEp2Dg5amWOcDogZiQi/IeGJzq8jX8AIZ0GZ2OyAfgYJejMB9tG2 KF/hBedYQWBH3ChJe9Yvs9qEGXxDEVt9IT1GwjP4eQj/eMgWEMby3nD5BYFCizEQcQRJ+KA4cW8 S5ysEgCknJnY39XQzMJf4j2fi3V6Wg2TlvWPPk7aX3cThwrlLSm4e2+d6dREUi38Y2TCcN0OK3+
- YAYen7p/bTPTyFPV7ovOFQphAbGzESj9/lt9bn65yKLGLPrJUudKDzZNwJ1CFYWXJOP3A2lv
-X-Proofpoint-GUID: ry2V18RJOMmtSxE0l4oahA2WZlmSjeeJ
-X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6862bfa9 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=ZTx8QE4AkKJnx8U2w1UA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_04,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300138
+In-Reply-To: <CAA+D8AM47P7xw2Ppgcr9d=DB2eSkQg6uQ_F22Te_=HFuMCNXxw@mail.gmail.com>
 
-The various __pte/pmd_to_swp_entry and __swp_entry_to_pte/pmd helper
-functions are expected to operate on swap PTE/PMD entries, not on
-present and mapped entries.
+On Thu, Jun 26, 2025 at 09:32:06AM +0800, Shengjiu Wang wrote:
+> On Wed, Jun 25, 2025 at 10:39 PM Mathieu Poirier
+> <mathieu.poirier@linaro.org> wrote:
+> >
+> > On Tue, 24 Jun 2025 at 21:25, Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+> > >
+> > > On Mon, Jun 23, 2025 at 11:11 PM Mathieu Poirier
+> > > <mathieu.poirier@linaro.org> wrote:
+> > > >
+> > > > Good day,
+> > > >
+> > > > On Wed, Jun 18, 2025 at 02:26:43PM +0800, Shengjiu Wang wrote:
+> > > > > when recovery is triggered, rproc_stop() is called first then
+> > > > > rproc_start(), but there is no rproc_unprepare_device() and
+> > > > > rproc_prepare_device() in the flow.
+> > > > >
+> > > > > So power enablement needs to be moved from prepare callback to start
+> > > > > callback, power disablement needs to be moved from unprepare callback
+> > > > > to stop callback, loading elf function also needs to be moved to start
+> > > > > callback, the load callback only store the firmware handler.
+> > > > >
+> > > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > > ---
+> > > > >  drivers/remoteproc/imx_dsp_rproc.c | 58 ++++++++++++++++++------------
+> > > > >  1 file changed, 36 insertions(+), 22 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > index 5ee622bf5352..9b9cddb224b0 100644
+> > > > > --- a/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
+> > > > > @@ -122,6 +122,7 @@ enum imx_dsp_rp_mbox_messages {
+> > > > >   * @ipc_handle: System Control Unit ipc handle
+> > > > >   * @rproc_work: work for processing virtio interrupts
+> > > > >   * @pm_comp: completion primitive to sync for suspend response
+> > > > > + * @firmware: firmware handler
+> > > > >   * @flags: control flags
+> > > > >   */
+> > > > >  struct imx_dsp_rproc {
+> > > > > @@ -139,6 +140,7 @@ struct imx_dsp_rproc {
+> > > > >       struct imx_sc_ipc                       *ipc_handle;
+> > > > >       struct work_struct                      rproc_work;
+> > > > >       struct completion                       pm_comp;
+> > > > > +     const struct firmware                   *firmware;
+> > > > >       u32                                     flags;
+> > > > >  };
+> > > > >
+> > > > > @@ -211,6 +213,7 @@ static const struct imx_rproc_att imx_dsp_rproc_att_imx8ulp[] = {
+> > > > >
+> > > > >  /* Initialize the mailboxes between cores, if exists */
+> > > > >  static int (*imx_dsp_rproc_mbox_init)(struct imx_dsp_rproc *priv);
+> > > > > +static int imx_dsp_rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
+> > > > >
+> > > > >  /* Reset function for DSP on i.MX8MP */
+> > > > >  static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
+> > > > > @@ -402,8 +405,24 @@ static int imx_dsp_rproc_start(struct rproc *rproc)
+> > > > >       const struct imx_dsp_rproc_dcfg *dsp_dcfg = priv->dsp_dcfg;
+> > > > >       const struct imx_rproc_dcfg *dcfg = dsp_dcfg->dcfg;
+> > > > >       struct device *dev = rproc->dev.parent;
+> > > > > +     struct rproc_mem_entry *carveout;
+> > > > >       int ret;
+> > > > >
+> > > > > +     pm_runtime_get_sync(dev);
+> > > > > +
+> > > > > +     /*
+> > > > > +      * Clear buffers after pm rumtime for internal ocram is not
+> > > > > +      * accessible if power and clock are not enabled.
+> > > > > +      */
+> > > > > +     list_for_each_entry(carveout, &rproc->carveouts, node) {
+> > > > > +             if (carveout->va)
+> > > > > +                     memset(carveout->va, 0, carveout->len);
+> > > > > +     }
+> > > > > +
+> > > > > +     ret = imx_dsp_rproc_elf_load_segments(rproc, priv->firmware);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > >       switch (dcfg->method) {
+> > > > >       case IMX_RPROC_MMIO:
+> > > > >               ret = regmap_update_bits(priv->regmap,
+> > > > > @@ -446,6 +465,7 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
+> > > > >
+> > > > >       if (rproc->state == RPROC_CRASHED) {
+> > > > >               priv->flags &= ~REMOTE_IS_READY;
+> > > > > +             pm_runtime_put_sync(dev);
+> > > >
+> > > > From this patch I understand that for a recovery to be successful, the
+> > > > remote processor _has_ to go through a hard reset.  But here the PM runtime API
+> > > > is used, meaning the remote processor won't be switched off if another device in
+> > > > the same power domain still neeeds power.  If that is the case, the solution in
+> > > > tihs patch won't work.
+> > >
+> > > Thanks for reviewing.
+> > > With the case you mentioned, there is software reset to make the
+> > > recovery process work.
+> >
+> >
+> > Are you talking about a manual software reset of some other mechanism?
+> >
+> > If manual software reset, the recovery may or may not work and we
+> > simply don't know when that might be.  If it's another mechanism, then
+> > that mechanism should be used in all cases.  Either way, I don't see
+> > how we can move forward with this patch.
+> 
+> Not manual software reset,  in this driver we registered .reset() function.
+> it has been called at imx_dsp_runtime_resume(),  I paste the function below.
+> 
+> And I have tested the case you mentioned, the recovery works.
+> 
+> /* pm runtime functions */
+> static int imx_dsp_runtime_resume(struct device *dev)
+> {
+>         struct rproc *rproc = dev_get_drvdata(dev);
+>         struct imx_dsp_rproc *priv = rproc->priv;
+>         const struct imx_dsp_rproc_dcfg *dsp_dcfg = priv->dsp_dcfg;
+>         int ret;
+> 
+>         /*
+>          * There is power domain attached with mailbox, if setup mailbox
+>          * in probe(), then the power of mailbox is always enabled,
+>          * the power can't be saved.
+>          * So move setup of mailbox to runtime resume.
+>          */
+>         ret = imx_dsp_rproc_mbox_init(priv);
+>         if (ret) {
+>                 dev_err(dev, "failed on imx_dsp_rproc_mbox_init\n");
+>                 return ret;
+>         }
+> 
+>         ret = clk_bulk_prepare_enable(DSP_RPROC_CLK_MAX, priv->clks);
+>         if (ret) {
+>                 dev_err(dev, "failed on clk_bulk_prepare_enable\n");
+>                 return ret;
+>         }
+> 
+>         /* Reset DSP if needed */
+>         if (dsp_dcfg->reset)
+>                 dsp_dcfg->reset(priv);
+> 
+>         return 0;
+> }
+>
 
-Reflect this in the swap tests by using a swp_entry_t as input value,
-and convert it to a swap PTE/PMD for testing, similar to how it is already
-done in pte_swap_exclusive_tests(). Move the swap entry creation from
-there to init_args() and store it in args, so it can also be used in other
-functions.
+Thanks for the clarification.  I would have been nice to have that kind of
+explanation (not the copy paste of the imx_dsp_runtime_resume() function) in the
+changelog.
 
-The pte/pmd_swap_tests() are also changed to compare entries instead of
-pfn values, again similar to pte_swap_exclusive_tests(). pte/pmd_pfn()
-helpers are also not expected to operate on swap PTE/PMD entries at all.
+That said, that is just one aspect of the things I find bizarre with this
+patchset - see below.
+ 
+> >
+> > >
+> > >
+> > > best regards
+> > > Shengjiu Wang
+> > >
+> > > >
+> > > > Thanks,
+> > > > Mathieu
+> > > >
+> > > > >               return 0;
+> > > > >       }
+> > > > >
+> > > > > @@ -472,6 +492,8 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
+> > > > >       else
+> > > > >               priv->flags &= ~REMOTE_IS_READY;
+> > > > >
+> > > > > +     pm_runtime_put_sync(dev);
+> > > > > +
+> > > > >       return ret;
+> > > > >  }
+> > > > >
+> > > > > @@ -774,7 +796,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rproc)
+> > > > >  {
+> > > > >       struct imx_dsp_rproc *priv = rproc->priv;
+> > > > >       struct device *dev = rproc->dev.parent;
+> > > > > -     struct rproc_mem_entry *carveout;
+> > > > >       int ret;
+> > > > >
+> > > > >       ret = imx_dsp_rproc_add_carveout(priv);
+> > > > > @@ -783,25 +804,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rproc)
+> > > > >               return ret;
+> > > > >       }
+> > > > >
+> > > > > -     pm_runtime_get_sync(dev);
+> > > > > -
+> > > > > -     /*
+> > > > > -      * Clear buffers after pm rumtime for internal ocram is not
+> > > > > -      * accessible if power and clock are not enabled.
+> > > > > -      */
+> > > > > -     list_for_each_entry(carveout, &rproc->carveouts, node) {
+> > > > > -             if (carveout->va)
+> > > > > -                     memset(carveout->va, 0, carveout->len);
+> > > > > -     }
+> > > > > -
+> > > > > -     return  0;
+> > > > > -}
+> > > > > -
+> > > > > -/* Unprepare function for rproc_ops */
+> > > > > -static int imx_dsp_rproc_unprepare(struct rproc *rproc)
+> > > > > -{
+> > > > > -     pm_runtime_put_sync(rproc->dev.parent);
+> > > > > -
+> > > > >       return  0;
+> > > > >  }
+> > > > >
+> > > > > @@ -1022,13 +1024,25 @@ static int imx_dsp_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw
+> > > > >       return 0;
+> > > > >  }
+> > > > >
+> > > > > +static int imx_dsp_rproc_load(struct rproc *rproc, const struct firmware *fw)
+> > > > > +{
+> > > > > +     struct imx_dsp_rproc *priv = rproc->priv;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * Just save the fw handler, the firmware loading will be after
+> > > > > +      * power enabled
+> > > > > +      */
+> > > > > +     priv->firmware = fw;
+> > > > > +
 
-Also update documentation, to reflect that the helpers operate on swap
-PTE/PMD entries and not present and mapped entries, and use correct names,
-i.e. __swp_to_pte/pmd_entry -> __swp_entry_to_pte/pmd.
+Why is a new firwmare variable needed?  Why can't you just use rproc->firmware?
 
-For consistency, also change pte/pmd_swap_soft_dirty_tests() to use
-args->swp_entry instead of a present and mapped PTE/PMD.
-
-Link: https://lore.kernel.org/all/20250623184321.927418-1-gerald.schaefer@linux.ibm.com
-Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
----
- Documentation/mm/arch_pgtable_helpers.rst |  8 ++--
- mm/debug_vm_pgtable.c                     | 53 ++++++++++++++---------
- 2 files changed, 36 insertions(+), 25 deletions(-)
-
-diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-index c88c7fa665d6..ba2f658bc241 100644
---- a/Documentation/mm/arch_pgtable_helpers.rst
-+++ b/Documentation/mm/arch_pgtable_helpers.rst
-@@ -236,13 +236,13 @@ SWAP Page Table Helpers
- ========================
- 
- +---------------------------+--------------------------------------------------+
--| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
-+| __pte_to_swp_entry        | Creates a swp_entry_t (arch) from a swap PTE     |
- +---------------------------+--------------------------------------------------+
--| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
-+| __swp_entry_to_pte        | Creates a swap PTE from a swp_entry_t (arch)     |
- +---------------------------+--------------------------------------------------+
--| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
-+| __pmd_to_swp_entry        | Creates a swp_entry_t (arch) from a swap PMD     |
- +---------------------------+--------------------------------------------------+
--| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
-+| __swp_entry_to_pmd        | Creates a swap PMD from a swp_entry_t (arch)     |
- +---------------------------+--------------------------------------------------+
- | is_migration_entry        | Tests a migration (read or write) swapped entry  |
- +-------------------------------+----------------------------------------------+
-diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-index bd8f9317b025..d19031f275a3 100644
---- a/mm/debug_vm_pgtable.c
-+++ b/mm/debug_vm_pgtable.c
-@@ -72,6 +72,8 @@ struct pgtable_debug_args {
- 	unsigned long		fixed_pud_pfn;
- 	unsigned long		fixed_pmd_pfn;
- 	unsigned long		fixed_pte_pfn;
-+
-+	swp_entry_t		swp_entry;
- };
- 
- static void __init pte_basic_tests(struct pgtable_debug_args *args, int idx)
-@@ -698,12 +700,15 @@ static void __init pte_soft_dirty_tests(struct pgtable_debug_args *args)
- 
- static void __init pte_swap_soft_dirty_tests(struct pgtable_debug_args *args)
- {
--	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
-+	pte_t pte;
- 
- 	if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
- 		return;
- 
- 	pr_debug("Validating PTE swap soft dirty\n");
-+	pte = swp_entry_to_pte(args->swp_entry);
-+	WARN_ON(!is_swap_pte(pte));
-+
- 	WARN_ON(!pte_swp_soft_dirty(pte_swp_mksoft_dirty(pte)));
- 	WARN_ON(pte_swp_soft_dirty(pte_swp_clear_soft_dirty(pte)));
- }
-@@ -737,7 +742,9 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args)
- 		return;
- 
- 	pr_debug("Validating PMD swap soft dirty\n");
--	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
-+	pmd = swp_entry_to_pmd(args->swp_entry);
-+	WARN_ON(!is_swap_pmd(pmd));
-+
- 	WARN_ON(!pmd_swp_soft_dirty(pmd_swp_mksoft_dirty(pmd)));
- 	WARN_ON(pmd_swp_soft_dirty(pmd_swp_clear_soft_dirty(pmd)));
- }
-@@ -748,17 +755,11 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
- 
- static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
- {
--	unsigned long max_swap_offset;
- 	swp_entry_t entry, entry2;
- 	pte_t pte;
- 
- 	pr_debug("Validating PTE swap exclusive\n");
--
--	/* See generic_max_swapfile_size(): probe the maximum offset */
--	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
--
--	/* Create a swp entry with all possible bits set */
--	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-+	entry = args->swp_entry;
- 
- 	pte = swp_entry_to_pte(entry);
- 	WARN_ON(pte_swp_exclusive(pte));
-@@ -782,30 +783,34 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
- 
- static void __init pte_swap_tests(struct pgtable_debug_args *args)
- {
--	swp_entry_t swp;
--	pte_t pte;
-+	swp_entry_t arch_entry;
-+	pte_t pte1, pte2;
- 
- 	pr_debug("Validating PTE swap\n");
--	pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
--	swp = __pte_to_swp_entry(pte);
--	pte = __swp_entry_to_pte(swp);
--	WARN_ON(args->fixed_pte_pfn != pte_pfn(pte));
-+	pte1 = swp_entry_to_pte(args->swp_entry);
-+	WARN_ON(!is_swap_pte(pte1));
-+
-+	arch_entry = __pte_to_swp_entry(pte1);
-+	pte2 = __swp_entry_to_pte(arch_entry);
-+	WARN_ON(memcmp(&pte1, &pte2, sizeof(pte1)));
- }
- 
- #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
- static void __init pmd_swap_tests(struct pgtable_debug_args *args)
- {
--	swp_entry_t swp;
--	pmd_t pmd;
-+	swp_entry_t arch_entry;
-+	pmd_t pmd1, pmd2;
- 
- 	if (!has_transparent_hugepage())
- 		return;
- 
- 	pr_debug("Validating PMD swap\n");
--	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
--	swp = __pmd_to_swp_entry(pmd);
--	pmd = __swp_entry_to_pmd(swp);
--	WARN_ON(args->fixed_pmd_pfn != pmd_pfn(pmd));
-+	pmd1 = swp_entry_to_pmd(args->swp_entry);
-+	WARN_ON(!is_swap_pmd(pmd1));
-+
-+	arch_entry = __pmd_to_swp_entry(pmd1);
-+	pmd2 = __swp_entry_to_pmd(arch_entry);
-+	WARN_ON(memcmp(&pmd1, &pmd2, sizeof(pmd1)));
- }
- #else  /* !CONFIG_ARCH_ENABLE_THP_MIGRATION */
- static void __init pmd_swap_tests(struct pgtable_debug_args *args) { }
-@@ -1110,6 +1115,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
- 
- static int __init init_args(struct pgtable_debug_args *args)
- {
-+	unsigned long max_swap_offset;
- 	struct page *page = NULL;
- 	int ret = 0;
- 
-@@ -1192,6 +1198,11 @@ static int __init init_args(struct pgtable_debug_args *args)
- 
- 	init_fixed_pfns(args);
- 
-+	/* See generic_max_swapfile_size(): probe the maximum offset */
-+	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
-+	/* Create a swp entry with all possible bits set */
-+	args->swp_entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-+
- 	/*
- 	 * Allocate (huge) pages because some of the tests need to access
- 	 * the data in the pages. The corresponding tests will be skipped
--- 
-2.48.1
-
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > >  static const struct rproc_ops imx_dsp_rproc_ops = {
+> > > > >       .prepare        = imx_dsp_rproc_prepare,
+> > > > > -     .unprepare      = imx_dsp_rproc_unprepare,
+> > > > >       .start          = imx_dsp_rproc_start,
+> > > > >       .stop           = imx_dsp_rproc_stop,
+> > > > >       .kick           = imx_dsp_rproc_kick,
+> > > > > -     .load           = imx_dsp_rproc_elf_load_segments,
+> > > > > +     .load           = imx_dsp_rproc_load,
+> > > > >       .parse_fw       = imx_dsp_rproc_parse_fw,
+> > > > >       .handle_rsc     = imx_dsp_rproc_handle_rsc,
+> > > > >       .find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+> > > > > --
+> > > > > 2.34.1
+> > > > >
+> > > >
