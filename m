@@ -1,175 +1,264 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2111CA84;
-	Mon, 30 Jun 2025 13:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288452; cv=fail; b=JIu4qsvnx1cwK1hex3T/H/e/G1Bzy8OS36ZXnkG6DGAJH5ggimatK+m8cZRZg91DQ8p48na0mW3Zq2dIqG2Z2DeCOP/K2pYk1MNjruOLMpaKZmqbkYEzz5cxT+5bBuf2qdF6ZVmtZK9IgvRDjjcUORWs4uaa7qQe7G92uJNNu5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D20919CCFC
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751288452; cv=none; b=pnVlDPVbjPLmWd/kU35ayUiVZMxIkFfhktn2qjhMPoA5hgFk9ZjsRJEROjx6CfwfafQ5V3AOv17MeC3/Jm7uOtE3F+YRRcbAJoEUcBHBzWVIHUkdwLNDKxN7Y6e62PtiLvrqpFkA71VxrMrBUKHeKVnSBAEEYalcgI/cEBSPWWA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751288452; c=relaxed/simple;
-	bh=WDELvhGA/fSBkEHpDe9dTBPeEBCJ8XqrWTYsbFqUT9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kU7I4NYzrqBaF4o81Iduz8DC+P3pl3/mY2Z5eFeO7tKy1t4euks/YtEQO4vlqzpC6OVEMD8se5N3Qxb0YLjb/uqSJ4CrwzFG/fiXirfAB3GpsJTSCoLnxXdqSvjKUOSitfXTtY5nilaBEQQ3iBT4j99pJtnelIE2HXIjPfUE4HQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iZP8/DZV; arc=fail smtp.client-ip=40.107.243.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	bh=eiWjuQAK343S0iGCo5U1CeA1xAD7ABzULSg4BICmapk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jh/i+VgRNJn7cF5mAOzrJSGq2njtpVRGi8nsJ8tAeOnl0/QkfgMhf0YEWhv7rdf7CcifdBTEj61xLQIYdce3GhzFYhqQ67cGB9uDG/Hf1Z2VUgCatTp0FL1THKnOV93Dq1DIctQGludn0NRALoEov0cecEMP3BiDIPzorQ7MiDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=STO7u0ip; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iZP8/DZV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wVS66JtPhTYx4BSBxawGFnZHnM+xkbU8lzWG2j4KIE8IAG/TmTRRQtQDJEGnIo3/8ZKwdUXZPzoj8H59Y6ov9K0GHcdcvvX4Zw3xvHPQW0Uuk3z5X4rrB1C90i1XFd09TJU9s0SNwk6T8Un81Y8v+e/2r+1h/NO6X7bt3oqyp6m5guXWQonLT6G4u65y6/0G1qfCdjS+jHU0fZQw57tvBIO4KAbJZTFwz9geju0oC3EzV7wtWHtVKVn8Zmnf7UrJSjnHsG0nUtFN1CkPqKmpkZPrh4yuP5010DfonRV3nASf5Kg97wI/gTAzi6tGRY02SkN4oI3TWAhpCkhTTSjoGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6vEPGrnDFk/gbWpO5G3ihh0VWHq2mySaPbOHKekZg08=;
- b=u/TOQnA5/IRWvulLykj9lSVg3hOXo8+pwwquuzZaxBT93YV0GrNqMeH2v5kRixhiLVWoFDEy6I6D6QEY1VC2OqwLRs9dinvV+t834WtKHT3/g9mJIcJa1KxWpbdsl7Apvw0gVqD99shA4ICpxzjRZIProqlsy4i0xMPazDYiBm4ZYoJq21RL7MIX5fHQZUqKSS9rKgrqBLJr/sijjONsKuVdb1V0HBGmXGogfUqskevvmoBRWsldnDsfTn5T0/0T2xtIb1Jlh9wmnpO1xtajc3CoSoB+8KkmQR/FBvVwNT4IVhLCgOUSZ2kUMjfu0YYK/ZcLa5AVVFpineB+WrTM2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6vEPGrnDFk/gbWpO5G3ihh0VWHq2mySaPbOHKekZg08=;
- b=iZP8/DZV1Je68SGY9OYjSs0+xM/GkEs1Vjso9WGnxVYRHcr99TvyQ3lQJ3ZQoyP6lL0vlQfsvfdSQyU6iI1aGAdwpRzDFQ6VU9tHp30f3oujtQYqMfdhSZqtE/n5suYfJcrMlWSmi+rQqB1JVVWIEQIWwrjZn6UkISPqSHf3Jtg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- BL1PR12MB5730.namprd12.prod.outlook.com (2603:10b6:208:385::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.23; Mon, 30 Jun 2025 13:00:47 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8880.023; Mon, 30 Jun 2025
- 13:00:47 +0000
-Date: Mon, 30 Jun 2025 09:00:41 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org, Smita.KoralahalliChannabasappa@amd.com,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 14/22] x86/mce: Separate global and per-CPU quirks
-Message-ID: <20250630130041.GC5995@yaz-khff2.amd.com>
-References: <20250624-wip-mca-updates-v4-0-236dd74f645f@amd.com>
- <20250624-wip-mca-updates-v4-14-236dd74f645f@amd.com>
- <c161e5b3-0719-4bf9-b7db-e5dd0fa8902b@suse.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c161e5b3-0719-4bf9-b7db-e5dd0fa8902b@suse.com>
-X-ClientProxiedBy: BN8PR15CA0011.namprd15.prod.outlook.com
- (2603:10b6:408:c0::24) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STO7u0ip"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751288447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZjlP0D3eY9tZf8Nb4qLq/i9Tdq3zqU6lo6GiM8rDh3E=;
+	b=STO7u0ip5IVwggMYRutFBva7vjUZlVpf8g54xD9inUEG8YAzCOVP2emxWRcRhSCc/LyADY
+	mmCPme0ZySC2wyfq4qWD9bzW0UUS8exKsvmn/v1T01LwQU9CZXqfEJbSXM0VFQGd/xqfaH
+	CLgbIudg4rsclmN62ZtNjj1vF//Cglw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-25-MRD4eXtFMimEYyyLls0jQg-1; Mon, 30 Jun 2025 09:00:42 -0400
+X-MC-Unique: MRD4eXtFMimEYyyLls0jQg-1
+X-Mimecast-MFC-AGG-ID: MRD4eXtFMimEYyyLls0jQg_1751288441
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a56b3dee17so2651998f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:00:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751288441; x=1751893241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZjlP0D3eY9tZf8Nb4qLq/i9Tdq3zqU6lo6GiM8rDh3E=;
+        b=VcIH6N5WLzeHyQBhlJkqiXqeZDMECJTVbXMgmlVpD7u5fN1it3CQLeeatA3X1E19Tw
+         fJBYUpYYYHorEdvpZ5WbNIjR7dPJOOhgIDpB3eQ6SsM8+Hfzt1uZ2CedDrMJRBV5Z3Eh
+         l0/niFE4HzYlb1ux7VS4eN69Pi5a8/DkMymXOOgIU3JTtrBx7mnRVQQ7uP5sRuWh/5Tc
+         P9Ib6zRwHHzX5JSNqXbxHRb/osNNrJaJMgwaXYFPj9rp05bVtHZFiwTcNdZEM4T74cLa
+         1ba7qYrefGuxtc8VquQafSPEaklCBME7aTwETDEqmmeU3fMuMgQzyByHz0MxTQDD7nzl
+         pWdQ==
+X-Gm-Message-State: AOJu0Yzazae3EO0SXAJsM/faM0nd/2RiJBnd5SvtdHbZlXfLlllFggLD
+	HCG0ta4nkYCkNNsOWiWxoQycEu2soW6NK8C5S4HLL3J/qQYc1fTBbL3KfcgKgQQu+echPNhuJvP
+	0Z0Qg7mVQzg6p88LWur5hHVrQls5di6hmXzFe7xA0V98YYA0C6rEMO5b580g/f/pKMsgolHUT/c
+	HFook1dmVDwqGbK4UXW3ZzSHtJfPTAHp+bDkmtLL8bR7KFYl/Y
+X-Gm-Gg: ASbGncvi+awUpNmoX4MzplaCmH77mX2VvcOXJ2a/P+QojhkffmQ49cNCeEAs8B/cOEz
+	dAFuZAPa3bMjc+xjGGOOWMBkxnVN4dCDMCDZyoJPpHboxn59DGb1vkbtNZYit9/Yt4UevwGsppp
+	tRJ06NSaETFdpLp2WFh2t7PbBCImAgqKIlW90e2Kl5eoN0QYyMAArEW5OrfLHb1Ah8Nizw1ZxXD
+	46dNmfeX+b8FenDy0tjTXqGxjwVwX/3dC9v4WhjXi/VhImUrkJvkyBF55Km2ZXjy+pTmFhwUBh9
+	n2WfRcpv/R7cdko3dqbKP/BWAbTQNgxFT9lCp8pz5xvDLF+bIVz8WqCMzo9+mAYpJls3fKksGiw
+	gMuAp1Qc=
+X-Received: by 2002:a05:6000:200e:b0:3a6:daff:9e5 with SMTP id ffacd0b85a97d-3a6f31023bdmr13743630f8f.7.1751288440773;
+        Mon, 30 Jun 2025 06:00:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaNYb3ONKvqKvr320nfpncqFiQLJi8PiPIyho0Wzz9N7dVDIemJ3QiyBdfpFdZCgx38anKxQ==
+X-Received: by 2002:a05:6000:200e:b0:3a6:daff:9e5 with SMTP id ffacd0b85a97d-3a6f31023bdmr13743499f8f.7.1751288439567;
+        Mon, 30 Jun 2025 06:00:39 -0700 (PDT)
+Received: from localhost (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e52ca4sm10445235f8f.58.2025.06.30.06.00.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 06:00:39 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	virtualization@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: [PATCH v1 09/29] mm/migrate: factor out movable_ops page handling into migrate_movable_ops_page()
+Date: Mon, 30 Jun 2025 14:59:50 +0200
+Message-ID: <20250630130011.330477-10-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250630130011.330477-1-david@redhat.com>
+References: <20250630130011.330477-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|BL1PR12MB5730:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3f56bd1-5cd8-4df1-37e9-08ddb7d621c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?E9MpjkV2/meu0dSmQZBFHaLS3NSI56PTsENkbCkeAEirifGIgNU4cduiqwyi?=
- =?us-ascii?Q?rvWvc9oVUZuQnb6SlU/AJIFByNKI1WQ+dLeEx8zIHpcfUiit6YrCormgY1FM?=
- =?us-ascii?Q?HpyRYp/Q6stvdor3WRYnGnQipFOY4ybkHsW9ULmOrSQSYVgl9NADWBabmrO3?=
- =?us-ascii?Q?lc4RWYoXWpwltCTrDG8MOtxnEquy+U0HGHahpkW+tUyUv/Mo/xjagTBz78+j?=
- =?us-ascii?Q?23+lb3N37qTVh4zrlRfT6b4bqXPejTp5MqsEbSf8sRyPDfGOixTACmXIdDm0?=
- =?us-ascii?Q?Z7qc0lzs7ve0aOCd1pLVC4CPGjR3vc6mB7H9TqX/YdbtE6i68KupnObgOQm4?=
- =?us-ascii?Q?+aWxtEy8RKQngq2afhIRikyKUhenw/BEPPyG0lQedFtWMg7BdndUBbBxjUEe?=
- =?us-ascii?Q?a7QnvGaB7+hCJzsvDmfowl6+38LKQNoRapyeqsZH6vxp36gnFoZJIsBdAClA?=
- =?us-ascii?Q?eZ7iz4gipK1g0GWaLA3I6Vkz/QluYUu+hN7MNWoHGQkKAKXDRuYAYaYEnOWD?=
- =?us-ascii?Q?nyBFpcNX5/2BAQPeos3tnUrpzdA/FRNqyof3bNY1FbhqudNmkrMLK6AmlBhZ?=
- =?us-ascii?Q?VMHTBVbpCMb7sPhqrUisjUCdq3Dz9ldHJkrSKGlBmP/3GhsBI4U3y2hUUv6h?=
- =?us-ascii?Q?KSvtXoZudS+/ML/0w06jlIifW4gbWrSjG8pKRK8Mu8/Y6ltrtURBYY7RhavK?=
- =?us-ascii?Q?GNFv8ri+csREwJKohXR+qA0W5pGgNJqj1PjeYI5pYHkDthYeBL7Z3JtVW2kl?=
- =?us-ascii?Q?gNvJfh7zcqyqiNf1l8uny42/W4Lz3OzOyjE0spjRDAiELClCqpPk9qM7q2sA?=
- =?us-ascii?Q?kIRBS5jbTaC0saJKLKANFynS4h5b/SfG+P/DmDaVtgNs0fV8icrd5UK7Ucz4?=
- =?us-ascii?Q?AvCto1mduKCmr37mYKU5tUuobkU+Yg6BM4mJf0wqcgyYKsGvFuDq5Zc5aInT?=
- =?us-ascii?Q?ibcL0ybtAvW1IWrhybn2OUx9hpylkzzxr6Tz8Wb4ChSBmJkViBYHZxfnLbjZ?=
- =?us-ascii?Q?27k4h5Lgl8l5Pgx9KlviH4IIjbcosj5E6iA/brRRPqceNNW2wx94KszSpRZt?=
- =?us-ascii?Q?kONFAY+4vqrzCnTrhfFZUqAMGbqoRfMAEMK1rI3yev+OMIUo3eg7A5wccOP7?=
- =?us-ascii?Q?y2PDuzQyaDHgACHKfC/eDEKhA92Ma/Y3VCD7cMOKJU/YMFrZpbZMg3Bq5q4u?=
- =?us-ascii?Q?ti7Wcfdg1MEg8EMUdEHg9uPixFixYmxsxcSLaXPEwICYCzqnt8yZuGf3G2Pt?=
- =?us-ascii?Q?s2VaSd6XvPzCyAHL6tO/uv36KKCI5C58YxMRZWpbxEtwe/DV7FbXkzczjZ58?=
- =?us-ascii?Q?9saVfCmuoUl5lOa/QsEMHi1xOdoJDH5rFEBCGuNYxPj46lfzzRQGlRXGP7qe?=
- =?us-ascii?Q?XOW1BO6S09b19hDKjUHuUt7y5wN/+4ynQVbZOxWpCAUDZ+VGqo+ZwcY31wWH?=
- =?us-ascii?Q?EJoh81H6IIc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kd+UVS6+AfMm6wP6X/ncqaXG9YnULvLpfmj1ghpQjufs1G5SNBsf85Rr4Anm?=
- =?us-ascii?Q?kV+vRQvcobF7WnZ4zMLPBtYthonOVXXL+H0OyzGimGUusrf3hdILGZ0qh0cg?=
- =?us-ascii?Q?6TZpsYPhCtdwF1EVKPhnpFukS6etIniguXgyIM5d8MxP0n46DlkTHQ+pVnx7?=
- =?us-ascii?Q?ehGYGEYg9N0gfM6zfgpdJ9D08SdqMgmwCiaKptRaZL73kRe4OCuGcQfoj+KP?=
- =?us-ascii?Q?2N7n73t9sSusJugwImZ3Y7Mc29hrEPBIPhgOL8fjAZoXnjBjgZllS0HsUnOT?=
- =?us-ascii?Q?3n6L9mCN7J7ifNixJlQgMR2cvxCPT9ESoZ4f0e61TYiFsZAVItFDa7aJOV6j?=
- =?us-ascii?Q?Jcac8sj2q1T4ABVYv1MaG1y5bTTG9nH1BizC8gQAwYCtOo0nx/UVlvxx8q4K?=
- =?us-ascii?Q?rqmWcNNXxcB5Ksl1fWpaL0KDG94Dlk77eBjJC8JQ62zoCsj4ks3MG2M+XPR6?=
- =?us-ascii?Q?3yCGYkla7SuT74nt5ybz/69C3SAVqPkN4/z+YTdy2oYU6GVxRbOg0Nm5Qjq0?=
- =?us-ascii?Q?6dHYc5zXaGT4eimUrGA+xiSvqz3oGxoDzv+WLphefkFWPpOiOPOvY/xEyRyZ?=
- =?us-ascii?Q?IkRbLs0VfT0mAKWXKxXFbjJx+5YQBWGv36eR4jl5kwNeVXP8g+forui4+UB8?=
- =?us-ascii?Q?pHEiXA5eWOj96YxPdVv/pi9/Xi8gAFalnl0sVkJamr6oKpJFY4gRNFXINHU/?=
- =?us-ascii?Q?wIVKhoE7ArvaiR/hHc8eDPvOAj0EJ3+CbBgrAlwfZiWP9QbWneikNdtDw9t5?=
- =?us-ascii?Q?jhv4gtyOWstdUZBfY+54U0Zco+M0axvNemsQZdHJcAJRZT5o2VB4LsEnp5pC?=
- =?us-ascii?Q?sFN+o3odenxkiPGmeZiXPBqoJfgqFCM8E7bsWglX+LEj0EzZpPxdCqHqYqr3?=
- =?us-ascii?Q?GwyD4QpubDDzYEL+yJf4IT1pZc7LMTdSD9xVWqbeF3mmL8fEqgKMSoMhrMsC?=
- =?us-ascii?Q?N+sGuHnz4LtuTdyrRcda6zgl6sYwxgakPZ6qqt2eYiO0GNdGQtbF9jlSvgmF?=
- =?us-ascii?Q?8SrMONnDEnzOPvo3KmeE/MNJ3Jily+xCet/DuMiGC1wDXji9C05vI/VM9678?=
- =?us-ascii?Q?onifXAcwld7QsGcGshWQlrYF9/ULsSCO0oLsB2P9Vrdt3bsSq0xNgoRoZl/Q?=
- =?us-ascii?Q?gtgls2fYDtIvsYvRmGb10P3Nkc/5GT5Nn2w/mxc26i+OfJGJ48IxHeg1a/g6?=
- =?us-ascii?Q?D/n2P+B373VYCpIxr88blX07TPsLPn6Eqj94HYFckmliOVpFOk2NvSTpOHaP?=
- =?us-ascii?Q?+Bmb6LkgufNv27dqsGETHiu0uhkV0VGfAgrQYir+hUOFvTHxbs2cEZy7FJbj?=
- =?us-ascii?Q?Lc4EcnUxE6pNYCI6NwbCxXIaWBcVGueoNCYqDcWvnhCPZapod6h3w3m5aS1J?=
- =?us-ascii?Q?+uokDdm/zHscT9dR7nvNQCcNv91jeNyR+AvkuXf6Jg3MLOGxg4K3IABJHqEh?=
- =?us-ascii?Q?390sc+8c8mt/aG/PXnMoVa8nDjghgFvKRHKC9D6pRb9kUUP58La5no9JQEu5?=
- =?us-ascii?Q?cHdYFuRHUcfV34MLvh5wZAD2ToqESTyCn+T3YjWCIP/t6eauP35PAVgz30uo?=
- =?us-ascii?Q?Oxs7eyYO6aEH993pjvYY/VKPyM8Tfd1TLAyHLXtL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3f56bd1-5cd8-4df1-37e9-08ddb7d621c2
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 13:00:47.5735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dsj7MMGLM2z565Byr9b40YLqzPQCxK27HIYoa5WO312DCjP2irvkfR8qawig94taxy9S/uUQWd7lwwJeP2UoNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5730
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 02:02:22PM +0300, Nikolay Borisov wrote:
-> 
-> 
-> On 6/24/25 17:16, Yazen Ghannam wrote:
-> > Many quirks are global configuration settings and a handful apply to
-> > each CPU.
-> > 
-> > Move the per-CPU quirks to vendor init to execute them on each online
-> > CPU. Set the global quirks during BSP-only init so they're only executed
-> > once and early.
-> > 
-> > Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > Tested-by: Tony Luck <tony.luck@intel.com>
-> > Reviewed-by: Tony Luck <tony.luck@intel.com>
-> > Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> 
-> 
-> After this patch the code ends up with 2 sets of quirk functions with very
-> confusing names:
-> 
-> amd_apply_quirks/apply_quirks_amd
-> intel_apply_quirks/apply_quirks_intel
-> 
-> 
-> Better naming convention would be something along the lines of:
-> 
-> amd_apply_global_quirks/amd_apply_cpu_quirks and the same for intel.
-> 
+Let's factor it out, simplifying the calling code.
 
-Yes, good point. I'll make this change.
+The assumption is that flush_dcache_page() is not required for
+movable_ops pages: as documented for flush_dcache_folio(), it really
+only applies when the kernel wrote to pagecache pages / pages in
+highmem. movable_ops callbacks should be handling flushing
+caches if ever required.
 
-Thanks,
-Yazen
+Note that we can now change folio_mapping_flags() to folio_test_anon()
+to make it clearer, because movable_ops pages will never take that path.
+
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/migrate.c | 82 ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 45 insertions(+), 37 deletions(-)
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index d97f7cd137e63..0898ddd2f661f 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -159,6 +159,45 @@ static void putback_movable_ops_page(struct page *page)
+ 	folio_put(folio);
+ }
+ 
++/**
++ * migrate_movable_ops_page - migrate an isolated movable_ops page
++ * @page: The isolated page.
++ *
++ * Migrate an isolated movable_ops page.
++ *
++ * If the src page was already released by its owner, the src page is
++ * un-isolated (putback) and migration succeeds; the migration core will be the
++ * owner of both pages.
++ *
++ * If the src page was not released by its owner and the migration was
++ * successful, the owner of the src page and the dst page are swapped and
++ * the src page is un-isolated.
++ *
++ * If migration fails, the ownership stays unmodified and the src page
++ * remains isolated: migration may be retried later or the page can be putback.
++ *
++ * TODO: migration core will treat both pages as folios and lock them before
++ * this call to unlock them after this call. Further, the folio refcounts on
++ * src and dst are also released by migration core. These pages will not be
++ * folios in the future, so that must be reworked.
++ *
++ * Returns MIGRATEPAGE_SUCCESS on success, otherwise a negative error
++ * code.
++ */
++static int migrate_movable_ops_page(struct page *dst, struct page *src,
++		enum migrate_mode mode)
++{
++	int rc = MIGRATEPAGE_SUCCESS;
++
++	VM_WARN_ON_ONCE_PAGE(!PageIsolated(src), src);
++	/* If the page was released by it's owner, there is nothing to do. */
++	if (PageMovable(src))
++		rc = page_movable_ops(src)->migrate_page(dst, src, mode);
++	if (rc == MIGRATEPAGE_SUCCESS)
++		ClearPageIsolated(src);
++	return rc;
++}
++
+ /*
+  * Put previously isolated pages back onto the appropriate lists
+  * from where they were once taken off for compaction/migration.
+@@ -1023,51 +1062,20 @@ static int move_to_new_folio(struct folio *dst, struct folio *src,
+ 								mode);
+ 		else
+ 			rc = fallback_migrate_folio(mapping, dst, src, mode);
+-	} else {
+-		const struct movable_operations *mops;
+ 
+-		/*
+-		 * In case of non-lru page, it could be released after
+-		 * isolation step. In that case, we shouldn't try migration.
+-		 */
+-		VM_BUG_ON_FOLIO(!folio_test_isolated(src), src);
+-		if (!folio_test_movable(src)) {
+-			rc = MIGRATEPAGE_SUCCESS;
+-			folio_clear_isolated(src);
++		if (rc != MIGRATEPAGE_SUCCESS)
+ 			goto out;
+-		}
+-
+-		mops = folio_movable_ops(src);
+-		rc = mops->migrate_page(&dst->page, &src->page, mode);
+-		WARN_ON_ONCE(rc == MIGRATEPAGE_SUCCESS &&
+-				!folio_test_isolated(src));
+-	}
+-
+-	/*
+-	 * When successful, old pagecache src->mapping must be cleared before
+-	 * src is freed; but stats require that PageAnon be left as PageAnon.
+-	 */
+-	if (rc == MIGRATEPAGE_SUCCESS) {
+-		if (__folio_test_movable(src)) {
+-			VM_BUG_ON_FOLIO(!folio_test_isolated(src), src);
+-
+-			/*
+-			 * We clear PG_movable under page_lock so any compactor
+-			 * cannot try to migrate this page.
+-			 */
+-			folio_clear_isolated(src);
+-		}
+-
+ 		/*
+-		 * Anonymous and movable src->mapping will be cleared by
+-		 * free_pages_prepare so don't reset it here for keeping
+-		 * the type to work PageAnon, for example.
++		 * For pagecache folios, src->mapping must be cleared before src
++		 * is freed. Anonymous folios must stay anonymous until freed.
+ 		 */
+-		if (!folio_mapping_flags(src))
++		if (!folio_test_anon(src))
+ 			src->mapping = NULL;
+ 
+ 		if (likely(!folio_is_zone_device(dst)))
+ 			flush_dcache_folio(dst);
++	} else {
++		rc = migrate_movable_ops_page(&dst->page, &src->page, mode);
+ 	}
+ out:
+ 	return rc;
+-- 
+2.49.0
+
