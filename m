@@ -1,232 +1,141 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732FB25C833
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28FA25B30D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293204; cv=none; b=QXsV1kamRAAu4URttnjdnd1YfRJU7V9dK0i4rLoagIxqHK4KtGwlrh+IdtR2EbrRkLVpmPF7LiqNyNRqRnGHZR/0o2Uq+70kErM0gWug+6xCMWWd/qFZJOw0jsGhHKMftN8vVvt1AgydI1zWerF4ZHTuCat+tSrdyBwltheRIG0=
+	t=1751293231; cv=none; b=oNt/JDsphB1hVKIZGr2BgBjYxZlZPXj/sU0Nrx2NJdzibGTXJoRuDYXUeqxtTstYb3NI5eeKuFwgVnD+EK6kFAim0rl1fvQrAk512ymH7qwWdcAK0J88ZcUKjzjuaLIF7N6VBO3OnZs8I/zK0pXw94vzSLDNss7RflR29v8D+2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293204; c=relaxed/simple;
-	bh=8p9Lu6GJRcIKPYRKLe8E7It0z/v4O/1xWIO8N0WUytM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pUeLQvhUa4Y3ZSsZgyp/6zfh1+6n6yd0Wx3BuL9aPCT7b5Kwf4stHt8W+9o4ODW13o4WVVGOIq99NkLGK3PxWXLIHhbWSA4RPQ4q1lVmZlQBK8apDjeaKlpKE7q+lVu7k7v1So3WwPdX/8jCmuldRnKBSXS/Qf0tXyYdW62mJ/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=laGj0GqR; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751293231; c=relaxed/simple;
+	bh=OafmBIcOTF47LRhSiURHmAtXcB8tK+H+W9mG9qIszg4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r7vL/TzCB5vO+Mhge3wpdaIXGHLzA2BjjLm5hPWHApWqp1rFRfKADnnkbyvsTghd3SNjPPmDSBcLv/EHDoL6XkPCCnCsspvjgOD1XyyIbZGX6fxgRNWYsz1yf5Jk3Gr09U7/OVO6H+ihSFiskhsraf0giBGKA9G4Ok19iI+YwwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YWJlR7E1; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="laGj0GqR"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2357c61cda7so245485ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:20:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YWJlR7E1"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b3316160so2452360e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751293202; x=1751898002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U6BgpGI+izTDP23PbygNDraRvPegCbPWLha3s13/sL8=;
-        b=laGj0GqR5yi8pDj2PiwhV6OGIhfhvr+n3Q/OHK8mSkZ++IfOHg/SK1DCU7KpMUGfuE
-         DackhF0DrxvFZPXGmZUXkgXEhTlPzRksBbkMGxemAqFZug37/TrnsPRQ+xyonhoP829a
-         0zgcMQ3aGG/VGqMp8X69rGIysSFjWiGf0aNDDsmXRRWo22W/ixvc+fp7+nHKSeOYyJZr
-         netbfx4YwcqzTq9GZfRNNsT5FR6nNqVEa82q5mOpuYPA6J+tu2dqGcQoTkv2D4SzdgVK
-         +a9mqgQQiL5grqkAIdrh7aaHA34fwxf7jd98Gs/jwbamsEc2iOKXNhCp0kIFG/ec8mJZ
-         IJhg==
+        d=chromium.org; s=google; t=1751293228; x=1751898028; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C7qo43JiUv9pfOvnEmucu4vwD92N40JPzjyRBFKlC38=;
+        b=YWJlR7E1JyQip78iNTgadjgmC1u0Vr2nP8MhCL339s4Ht25wytDe7K69vI/jNFsE9F
+         yRvWaTU/rmP9AUtRc9/JsxoC/+rmOiDL/bzW8kRalZ/qv2zSsdwLVd3Ou7yYcK1IXNYq
+         TpOGN96MQTNeEm09D+rlmx51dMjBeoF/xMUn8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293202; x=1751898002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U6BgpGI+izTDP23PbygNDraRvPegCbPWLha3s13/sL8=;
-        b=UDsaSJiZUE++XX8fr8tiriGORNt4x4AfEifxL8RMD/686kEZN7nrEjUqHHTbnnBO2I
-         83go/eySdHdZPhqM1NhSUACKPKC/g52E7f378DjpuSu/g4TSMfyF9B018jQzegRa6xYT
-         GeBWKd6P/TNuD7GlXXuBIa19gyovpTGariJ9kb+UJM3NTw6/89Umc5fDtORqqK32D3s+
-         IqGfhL/K+99zUqu/g2r9YfLcxQiZMlfDQxVph0exgZDQcsLRtDoVKfua1xLv/FgYDiiO
-         o/5Lk4XMmYTuAkt2CsMxlC0Bvrw+HXOP7zlQiKX8GC/IpTIGDimR81mj9hBuyx8gISXO
-         7maA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6f9wAJzZ0qOUK8i0JXAohpYg6vySja8/Pih4TzDF1ZoYYBIlB56CbMIOlrfP8CEQPVjtzzUzXxSgxGRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqlIWT8+EWaaT+FXElaSenLns0pT+pooYkFUYQlTrqGsyqUAi1
-	RN8pPoCzG6yYu1Mhc7oRl2KSkawvdWaIAwnMXxOHaHZtFK2fIflUIlHDTKAtg3LPXHoaDZIeNAR
-	8VaYgQOXdi+neuuNzyHRjpATZiMD4tiR3ml+rU4iU
-X-Gm-Gg: ASbGncvn/v+WX9CnJS5B2ZCfvFpSWDQHU2+xzcD6AJEIbVpG+O1TpE3yDwaaDH3yDWk
-	5S7j+vgtyooZmUEoFiAtil1sCocoEPoP7mpevkTc2TqVEVLnw5ABQGh78nIP18pz/6Wc4buDewI
-	NWX8kd3VdfiDtUDB8f6gLlTk0JTptsrNY5ghby9LeuDNMlB269cPx/knInslv3JtXLvpVlvznpM
-	10p
-X-Google-Smtp-Source: AGHT+IE5AgZOIXEN2kYR+pPHATg3kKWBvA9NG7t3TRCU6UJnhNGR4z3nEopD8cR2TPGhUdKYcMbUvEi2+5nz92PWy1A=
-X-Received: by 2002:a17:902:ecc1:b0:234:9f02:e937 with SMTP id
- d9443c01a7336-23ae9f7531dmr3497505ad.25.1751293200306; Mon, 30 Jun 2025
- 07:20:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751293228; x=1751898028;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C7qo43JiUv9pfOvnEmucu4vwD92N40JPzjyRBFKlC38=;
+        b=rHJZdxYIe8WlZk7JnkXGx2qz8y6O+A2YsBPWOUMYZ/6w/K60o9eRheCWSFgqhLDLaf
+         07AbDJzIVB1lrjzDqPs0SfKuA42Qzow3EV+LZS7g2mDjQVgaX/iWf5xy1uB+FoxPvjPX
+         9FH+l/sIi1qEFn8H5Nsz7Lr94Qv5fFbozLs2fcvcFWp5Ub7QXCFGjO99lzs1fThOpmZE
+         IjwmWkOUZ4U6liKkPY6ioVdWJJLdTYSV3kxUHxfvl6rBfrcKTGFnnPJ2CzwDzNSd2PQW
+         7nUd2/cmQ4RocvB1HsSQvDjbU9T1MDtoAHZXiXLw+BYB0ah5NOH3nPAncbuxnvAKMM5H
+         4Zhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDViZDO61e6u3tMGhrqO6cjNbX+csWuakZLL9saVmg4Xpcx2UJImg0ouGhBquhl+kLBIZTQFbRC8KSMo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt6uHm3/hLeg/CoyTh/2MghTu1w1AU0qk1w2rCEK6ZOxL6odfO
+	u8Y6dspm5L97SiK61zqEm7QtHrB0IQgB/1rYg88CE7E20S0Bt8/0GeuPTTJwgeMZ79r9zyWF/m5
+	CBQgiEw==
+X-Gm-Gg: ASbGncsegOXN0T2g7q72S2tyxpRuUHKjimzQ/mQfD69jbr7qrgI8I62d1Mg/NH3uqES
+	nawV4R01xLh8p1GaXtdEKL0uD/V4LAFba9NMWl4Ff1BOd7uwsHJFbSyN0iRyXUmNodsr2dCGLPS
+	Qyp63WUpPQc9tTC1H8GdJf5qhjvuCVFJvb3BnKV6EPjHJehrfpKG7cNS8CR5ubTpojdI6MOhlAr
+	6bBjyadeIDVv/H0+T/9CZR46Ne8X6wpvJuKPnXb1xM/zqHvXmvJGmoQmItNy8elB55A7eo3JZH9
+	tK8hRvCdYtKRRXUDMCNZ5t/9KegOovpzCvxYeMh+cVw1XO4jx9mrXXvK0nHpvpXQHdLkLR876L9
+	6uHaJxQBwXsH9/Boz/4h3e9sWwtSvzuFT/hGO5Dm3qg==
+X-Google-Smtp-Source: AGHT+IFjUPnnIKIepFsVN49yk2JqozD2vxKepCaQ0GoGH+mEklLWPTsXJ5Iglvrd61PZzLFUVGZmVQ==
+X-Received: by 2002:a05:6512:3d2a:b0:553:2ef3:f73d with SMTP id 2adb3069b0e04-5550b82effcmr4220413e87.14.1751293227739;
+        Mon, 30 Jun 2025 07:20:27 -0700 (PDT)
+Received: from ribalda.c.googlers.com (166.141.88.34.bc.googleusercontent.com. [34.88.141.166])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d8ea8sm1432363e87.210.2025.06.30.07.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 07:20:27 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v3 0/8] media: uvcvideo: Invert granular PM logic + PM fix
+Date: Mon, 30 Jun 2025 14:20:25 +0000
+Message-Id: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com> <20250624130811.GB72557@ziepe.ca>
- <CAGtprH_qh8sEY3s-JucW3n1Wvoq7jdVZDDokvG5HzPf0HV2=pg@mail.gmail.com>
- <31beeed3-b1be-439b-8a5b-db8c06dadc30@amd.com> <CAGtprH9gojp6hit2SZ0jJBJnzuRvpfRhSa334UhAMFYPZzp4PA@mail.gmail.com>
- <8f04f1df-d68d-4ef8-b176-595bbf00a9d1@amd.com>
-In-Reply-To: <8f04f1df-d68d-4ef8-b176-595bbf00a9d1@amd.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Mon, 30 Jun 2025 07:19:47 -0700
-X-Gm-Features: Ac12FXwcrbDkWWpGm6EqP7Q9KESbZoaZfTZr5E9iZdm0C78qOvk6uq87JKmXh1E
-Message-ID: <CAGtprH-KhEM6=zegq-36yomZ8PX22EmaZpMPkLnkyzn51EF25w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Fuad Tabba <tabba@google.com>, 
-	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACqdYmgC/4XNTQrCMBCG4atI1kby02jiynuIi5Ck7YBNZNIGp
+ fTupt0Igrh8P5hnZpIDQsjkvJsJhgIZUqwh9zviehu7QMHXJoIJxZTQdCqOdmhjnO4WKcQScKT
+ cWC8bp4w0nNTTB4YWnht7vdXuIY8JX9uXwtf1D1g4ZdQzrjRvjXNCXVyPaYBpOCTsyGoW8XGOT
+ PxwRHWcPnEjG+u1Zl/OsixvMkNWRQMBAAA=
+X-Change-ID: 20250528-uvc-grannular-invert-19ad34c59391
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>, Hans Verkuil <hans@jjverkuil.nl>
+X-Mailer: b4 0.14.2
 
-On Sun, Jun 29, 2025 at 5:19=E2=80=AFPM Alexey Kardashevskiy <aik@amd.com> =
-wrote:
-> ...
-> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >>>
-> >>> For IOMMU, could something like below work?
-> >>>
-> >>> * A new UAPI to bind IOMMU FDs with guest_memfd ranges
-> >>
-> >> Done that.
-> >>
-> >>> * VFIO_DMA_MAP/UNMAP operations modified to directly fetch pfns from
-> >>> guest_memfd ranges using kvm_gmem_get_pfn()
-> >>
-> >> This API imho should drop the confusing kvm_ prefix.
-> >>
-> >>>       -> kvm invokes kvm_gmem_is_private() to check for the range
-> >>> shareability, IOMMU could use the same or we could add an API in gmem
-> >>> that takes in access type and checks the shareability before returnin=
-g
-> >>> the pfn.
-> >>
-> >> Right now I cutnpasted kvm_gmem_get_folio() (which essentially is file=
-map_lock_folio()/filemap_alloc_folio()/__filemap_add_folio()) to avoid new =
-links between iommufd.ko and kvm.ko. It is probably unavoidable though.
-> >
-> > I don't think that's the way to avoid links between iommufd.ko and
-> > kvm.ko. Cleaner way probably is to have gmem logic built-in and allow
-> > runtime registration of invalidation callbacks from KVM/IOMMU
-> > backends. Need to think about this more.
->
-> Yeah, otherwise iommufd.ko will have to install a hook in guest_memfd (=
-=3D=3Dkvm.ko) in run time so more beloved symbol_get() :)
->
-> >
-> >>
-> >>
-> >>> * IOMMU stack exposes an invalidation callback that can be invoked by
-> >>> guest_memfd.
-> >>>
-> >>> Private to Shared conversion via kvm_gmem_convert_range() -
-> >>>       1) guest_memfd invokes kvm_gmem_invalidate_begin() for the rang=
-es
-> >>> on each bound memslot overlapping with the range
-> >>>        2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
-> >>> actually unmaps the KVM SEPT/NPT entries.
-> >>>              -> guest_memfd invokes IOMMU invalidation callback to za=
-p
-> >>> the secure IOMMU entries.
-> >>>        3) guest_memfd invokes kvm_gmem_execute_work() which updates t=
-he
-> >>> shareability and then splits the folios if needed
-> >>>        4) Userspace invokes IOMMU map operation to map the ranges in
-> >>> non-secure IOMMU.
-> >>>
-> >>> Shared to private conversion via kvm_gmem_convert_range() -
-> >>>       1) guest_memfd invokes kvm_gmem_invalidate_begin() for the rang=
-es
-> >>> on each bound memslot overlapping with the range
-> >>>        2) guest_memfd invokes kvm_gmem_convert_should_proceed() which
-> >>> actually unmaps the host mappings which will unmap the KVM non-seucur=
-e
-> >>> EPT/NPT entries.
-> >>>            -> guest_memfd invokes IOMMU invalidation callback to zap =
-the
-> >>> non-secure IOMMU entries.
-> >>>        3) guest_memfd invokes kvm_gmem_execute_work() which updates t=
-he
-> >>> shareability and then merges the folios if needed.
-> >>>        4) Userspace invokes IOMMU map operation to map the ranges in =
-secure IOMMU.
-> >>
-> >>
-> >> Alright (although this zap+map is not necessary on the AMD hw).
-> >
-> > IMO guest_memfd ideally should not directly interact or cater to arch
-> > specific needs, it should implement a mechanism that works for all
-> > archs. KVM/IOMMU implement invalidation callbacks and have all the
-> > architecture specific knowledge to take the right decisions.
->
->
-> Every page conversion will go through:
->
-> kvm-amd.ko -1-> guest_memfd (kvm.ko) -2-> iommufd.ko -3-> amd-iommu (buil=
-d-in).
->
-> Which one decides on IOMMU not needing (un)mapping? Got to be (1) but the=
-n it need to propagate the decision to amd-iommu (and we do not have (3) at=
- the moment in that path).
+It makes more sense to have a list of the ioctls that need power than
+the other way around. This patchset takes care of this.
 
-If there is a need, guest_memfd can support two different callbacks:
-1) Conversion notifier/callback invoked by guest_memfd during
-conversion handling.
-2) Invalidation notifier/callback invoked by guest_memfd during truncation.
+It also fixes one error in the PM logic introduced in a recent patchset.
 
-Iommufd/kvm can handle conversion callback/notifier as per the needs
-of underlying architecture. e.g. for TDX connect do the unmapping vs
-for SEV Trusted IO skip the unmapping.
+To support CI I have included patches that are in uvc/for-next but not
+in media-committer:
+media: uvcvideo: Remove stream->is_streaming field
+media: uvcvideo: Split uvc_stop_streaming()
+media: uvcvideo: Handle locks in uvc_queue_return_buffers
+media: uvcvideo: Use vb2 ioctl and fop helpers
+Do not review them again.
 
-Invalidation callback/notifier will need to be handled by unmapping page ta=
-bles.
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v3:
+- Rebase
+- Merge Invert PM patch with add support for compat ioctls
+- Export different core function
+- Inline the pm_ioctl patch
+- Fix typo in comment
+- Link to v2: https://lore.kernel.org/r/20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org
 
->
-> Or we just always do unmap+map (and trigger unwanted page huge page smash=
-ing)? All is doable and neither particularly horrible, I'm trying to see wh=
-ere the consensus is now. Thanks,
->
+Changes in v2. Thanks HdG:
+- Rebase fop
+- CodeStyle
+- Refactor SEND_INITIAL to avoid lis_del()
+- Squash "invert PM logic" and "unless is needed"
+- Link to v1: https://lore.kernel.org/r/20250528-uvc-grannular-invert-v1-0-d01581f9cc25@chromium.org
 
-I assume when you say huge page smashing, it means huge page NPT
-mapping getting split.
+---
+Hans Verkuil (1):
+      media: uvcvideo: Use vb2 ioctl and fop helpers
 
-AFAIR, based on discussion with Michael during guest_memfd calls,
-stage2 NPT entries need to be of the same granularity as RMP tables
-for AMD SNP guests. i.e. huge page NPT mappings need to be smashed on
-the KVM side during conversion. So today guest_memfd sends
-invalidation notification to KVM for both conversion and truncation.
-Doesn't the same constraint for keeping IOMMU page tables at the same
-granularity as RMP tables hold for trusted IO?
+Ricardo Ribalda (7):
+      media: uvcvideo: Handle locks in uvc_queue_return_buffers
+      media: uvcvideo: Split uvc_stop_streaming()
+      media: uvcvideo: Remove stream->is_streaming field
+      media: uvcvideo: Turn on the camera if V4L2_EVENT_SUB_FL_SEND_INITIAL
+      media: uvcvideo: Do not enable camera during UVCIOC_CTRL_MAP*
+      media: core: export v4l2_translate_cmd
+      media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert PM logic
+
+ drivers/media/usb/uvc/uvc_ctrl.c     |   8 +-
+ drivers/media/usb/uvc/uvc_driver.c   |  37 +---
+ drivers/media/usb/uvc/uvc_metadata.c |   8 +-
+ drivers/media/usb/uvc/uvc_queue.c    | 199 +++++---------------
+ drivers/media/usb/uvc/uvc_v4l2.c     | 356 +++++------------------------------
+ drivers/media/usb/uvc/uvcvideo.h     |  37 +---
+ drivers/media/v4l2-core/v4l2-ioctl.c |   5 +-
+ include/media/v4l2-ioctl.h           |   1 +
+ 8 files changed, 115 insertions(+), 536 deletions(-)
+---
+base-commit: 35392e855abf7d02ad3b061cbc75c7c7c37f0577
+change-id: 20250528-uvc-grannular-invert-19ad34c59391
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
+
