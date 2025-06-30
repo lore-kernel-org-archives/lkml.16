@@ -1,128 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A9D23535A;
-	Mon, 30 Jun 2025 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE4F248F71;
+	Mon, 30 Jun 2025 09:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277284; cv=none; b=fZibityel0VAI848NPL+g3Ys20S8NTIm59CxtxZN2DWhdYYpUn/UUz2Tw95HxgBEle9ycvY4Gk0ZbbfHUpPiHaKCqacfOsGXNmKIzTVDYRNErNEUPFBlQQqPdsqw89u7HAtOnxX8jQ68tEXoAbHpd/7eXVdoqDeaFEK+VUZdZmY=
+	t=1751277286; cv=none; b=rphym/U65CbAx7JlqgzVJBbT4M9Gcrw20lArjBNmz7gUinTpl+lE2FMJOBwqER2k28aIm3mFJ/xYNlaU8LPHH3tIuN3ZxuX9bTDa+v8EqgXJEBkpLuhXkWBubo0vZnF7XboOSGug0XzVjNUJ1Xt98siX0DQK2eI1DOlAQbelHYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277284; c=relaxed/simple;
-	bh=c+EfMIdWLTOY9ANfDs+rcgi+w/4MGJzxoOO4qqOmm0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/XkMs9OFIF/6hCfxejsXvQ5wn+QgnvcMb+bthXBnIBO8WaKdJ2BXG+sNeDDhrLzKi3WGmQCnwQe8xaAEROsfANRd6mbu58SYZJrU1emVL1I3UOhgmqP9b1y7pdqz6+DpgqJt4mrRb+/wu1peojh3pIT8uu6VX3cbASEYpvN6jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJPKWUeF; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751277286; c=relaxed/simple;
+	bh=WIDUvS7JkY3GNFQTSjGce34RpeCHS2xzEDHzrQxx0nY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Xc7Obp6ELLs4/y6cpCmdh7wts57jvNnXnB2t5Y5GGCYhCy8Hz8uuMFgmu1aeyBK2vSH9uMNM9K9BVhFnR5xIy22bzw7+/JHFPDTNjTh716Bl2AQ/5emNXN2oTqNIQKl/0vGBBrygUKC6ae49undoza8DViwSh2wNNc2V9+l1dYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hE7GnNve; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJPKWUeF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751277282; x=1782813282;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=c+EfMIdWLTOY9ANfDs+rcgi+w/4MGJzxoOO4qqOmm0s=;
-  b=XJPKWUeFIaMB2ylTBXcjLBBuLPoYQLrixOBbsVjSp6t/8c1mMObfH0mA
-   jg07pot9kp9/8BgzKcsLbQYzyt83TNQ1ZEGyHDXJ8EEDE9kzWhSeu0l4O
-   rt5E9xuIQHG8tF3T16lexcTunHDnHhD5h0afnNkvH9X9r9WF54dO1UT3X
-   Yx9AhHGX11YWLDD/qmvWeapMHCPY9ekVSan+jTUKvjH71JyC2R3kM1W9P
-   HotovrwYj9Zfxfsq8UTdZ01eJkZdcE1ICkCIyquoxkT0pyoptnqeOpSII
-   PfhelZ0J6Fxpi/W65eiQA2kx4nRg5UzK5f+yrftrUQ++hKkEyK2uJUc0K
-   g==;
-X-CSE-ConnectionGUID: QNGjqqlFRsuPQ3R3IrJUxA==
-X-CSE-MsgGUID: 7TS4aa0JSpGO/99dAYotPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53358921"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53358921"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:54:42 -0700
-X-CSE-ConnectionGUID: GeEOfUQ3RtCuf1SNrvd0OQ==
-X-CSE-MsgGUID: gBUQqF1kR4Se5EKo3+YMGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="159144017"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:54:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWBDe-0000000BGfS-3TPm;
-	Mon, 30 Jun 2025 12:54:34 +0300
-Date: Mon, 30 Jun 2025 12:54:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, ojeda@kernel.org
-Cc: =?iso-8859-1?Q?Jean-Fran=E7ois?= Lessard <jefflessard3@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Boris Gjenero <boris.gjenero@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
- controllers driver
-Message-ID: <aGJe2krBnrPXQiU6@smile.fi.intel.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
- <20250629131830.50034-1-jefflessard3@gmail.com>
- <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
- <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
- <57f0289a-7d82-4294-a1dc-c6986da0c5ce@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hE7GnNve"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D2FC4CEEB;
+	Mon, 30 Jun 2025 09:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751277286;
+	bh=WIDUvS7JkY3GNFQTSjGce34RpeCHS2xzEDHzrQxx0nY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=hE7GnNveBwjT+D7CEFtAVW3o91xUIPk56n2r99qz7K+QtQ21aLpMTVDvrbAp0wW/o
+	 xW8dXbKz8cNkuz9ncs7Y1t3TpcNkh/mYGKjbEvXfgWP9sXZl0Wt0xXZSKodesR0IyI
+	 AXYQz54vQ2mAAd18ZrCGx1Z0pLgIMZ00Hr3yx/z/R+UFJ62pMZ9HQ8fZD3wPKlE3zR
+	 3V7DLNPxsUs76lI/1UA67LE5wK4Gmirr0SW0trcIcdEUqohzpro7FhfXD83c2S4MEZ
+	 TT9O3JTjCYADcpICUsYbGrCXVwq/x/MrHLTy2b0Fn7GcZY+Mov9j9MP8LwzMWWBAeT
+	 X4yVDygFcNgQQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <lkmm@lists.linux.dev>,  <linux-arch@vger.kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Mark Rutland" <mark.rutland@arm.com>,  "Wedson
+ Almeida Filho" <wedsonaf@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  "Lyude Paul" <lyude@redhat.com>,  "Ingo
+ Molnar" <mingo@kernel.org>,  "Mitchell Levy" <levymitchell0@gmail.com>,
+  "Paul E. McKenney" <paulmck@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Linus Torvalds"
+ <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 10/10] rust: sync: Add memory barriers
+In-Reply-To: <aF9krO0nVjN0yoEC@Mac.home> (Boqun Feng's message of "Fri, 27 Jun
+	2025 20:42:36 -0700")
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+	<A-SZkzm2EzwbPsG5Vm5qfT1BIGijzoQ7zQI6ExgXZbSXf8ZfIMw6fe-Z7xWgvKnr0BPylikGRuhEfiKfXx5xTw==@protonmail.internalid>
+	<20250618164934.19817-11-boqun.feng@gmail.com> <874iw2zkti.fsf@kernel.org>
+	<epLSBAaTAfRuG5Eb6xqY9vkhnj_hJxwcYvQZw9WGNvxU3Z861O5w58L0rz3s4fq1u5FEYdFkXywUmLVmkp4gvg==@protonmail.internalid>
+	<aF9krO0nVjN0yoEC@Mac.home>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 30 Jun 2025 11:54:37 +0200
+Message-ID: <87ecv1zh9e.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57f0289a-7d82-4294-a1dc-c6986da0c5ce@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 11:27:21AM +0200, Krzysztof Kozlowski wrote:
-> On 30/06/2025 09:27, Andy Shevchenko wrote:
-> > On Mon, Jun 30, 2025 at 08:12:16AM +0200, Krzysztof Kozlowski wrote:
-> >> On 29/06/2025 15:18, Jean-François Lessard wrote:
+"Boqun Feng" <boqun.feng@gmail.com> writes:
 
-...
+> On Thu, Jun 26, 2025 at 03:36:25PM +0200, Andreas Hindborg wrote:
+>> "Boqun Feng" <boqun.feng@gmail.com> writes:
+> [...]
+>> > +//! [`LKMM`]: srctree/tools/memory-mode/
+>>
+>> Typo in link target.
+>>
+>> > +
+>> > +/// A compiler barrier.
+>> > +///
+>> > +/// An explicic compiler barrier function that prevents the compiler =
+from moving the memory
+>> > +/// accesses either side of it to the other side.
+>>
+>> Typo in "explicit".
+>>
+>
+> Fixed.
+>
+>> How about:
+>>
+>>   A compiler barrier. Prevents the compiler from reordering
+>>   memory access instructions across the barrier.
+>>
+>>
+>> > +pub(crate) fn barrier() {
+>> > +    // By default, Rust inline asms are treated as being able to acce=
+ss any memory or flags, hence
+>> > +    // it suffices as a compiler barrier.
+>> > +    //
+>> > +    // SAFETY: An empty asm block should be safe.
+>> > +    unsafe {
+>> > +        core::arch::asm!("");
+>> > +    }
+>> > +}
+>> > +
+>> > +/// A full memory barrier.
+>> > +///
+>> > +/// A barrier function that prevents both the compiler and the CPU fr=
+om moving the memory accesses
+>> > +/// either side of it to the other side.
+>>
+>>
+>>   A barrier that prevents compiler and CPU from reordering memory access
+>>   instructions across the barrier.
+>>
+>> > +pub fn smp_mb() {
+>> > +    if cfg!(CONFIG_SMP) {
+>> > +        // SAFETY: `smp_mb()` is safe to call.
+>> > +        unsafe {
+>> > +            bindings::smp_mb();
+>> > +        }
+>> > +    } else {
+>> > +        barrier();
+>> > +    }
+>> > +}
+>> > +
+>> > +/// A write-write memory barrier.
+>> > +///
+>> > +/// A barrier function that prevents both the compiler and the CPU fr=
+om moving the memory write
+>> > +/// accesses either side of it to the other side.
+>>
+>>   A barrier that prevents compiler and CPU from reordering memory write
+>>   instructions across the barrier.
+>>
+>> > +pub fn smp_wmb() {
+>> > +    if cfg!(CONFIG_SMP) {
+>> > +        // SAFETY: `smp_wmb()` is safe to call.
+>> > +        unsafe {
+>> > +            bindings::smp_wmb();
+>> > +        }
+>> > +    } else {
+>> > +        barrier();
+>> > +    }
+>> > +}
+>> > +
+>> > +/// A read-read memory barrier.
+>> > +///
+>> > +/// A barrier function that prevents both the compiler and the CPU fr=
+om moving the memory read
+>> > +/// accesses either side of it to the other side.
+>>
+>>   A barrier that prevents compiler and CPU from reordering memory read
+>>   instructions across the barrier.
+>>
+>
+> These are good wording, except that I will use "memory (read/write)
+> accesses" instead of "memory (read/write) instructions" because:
+>
+> 1) "instructions" are at lower level than the language, and memory
+>    barriers function are provided as synchonization primitives, so I
+>    feel we should describe memory barrier effects at language level,
+>    i.e. mention how it would interact with objects and accesses to them.
+>
+> 2) There are instructions can do read and write in one instruction, it
+>    might be unclear when we say "prevents reordering an instruction"
+>    whether both parts are included, for example:
+>
+>    r1 =3D atomic_add(x, 1); // <- this can be one instruction.
+>    smp_rmb();
+>    r2 =3D atomic_read(y);
+>
+>    people may think because the smp_rmb() prevents read instructions
+>    reordering, and atomic_add() is one instruction in this case,
+>    smp_rmb() can prevents the write part of that instruction from
+>    reordering, but that's not the case.
+>
+>
+> So I will do:
+>
+>    A barrier that prevents compiler and CPU from reordering memory read
+>    accesses across the barrier.
 
-> >>> +	display->leds =
-> >>> +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KERNEL);
-> >>
-> >> Wrong wrapping. Use kernel style, not clang style.
-> >>
-> >>
-> >>> +	if (!display->leds)
-> >>> +		return -ENOMEM;
-> > 
-> > Just wondering how .clang-format is official? Note some of the maintainers even
-> 
-> First time I hear above clang style is preferred. Where is it expected?
+Right, that makes sense =F0=9F=91=8D
 
-Documented here:
-https://www.kernel.org/doc/html/latest/process/coding-style.html#you-ve-made-a-mess-of-it
 
-For example, discussed here
-https://lore.kernel.org/lkml/CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com/
-or here
-https://lore.kernel.org/lkml/64dbeffcf243a_47b5729487@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-or
-...
+Best regards,
+Andreas Hindborg
 
-> I assume clang-format is half-working and should not be used blindly,
-> but fixed to match actual kernel coding style.
-
-That sounds like the case, at least in accordance with Miguel.
-
-> > prefer (ugly in some cases in my opinion) style because it's generated by the
-> > clang-format.
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
