@@ -1,60 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B140123ABB4;
-	Mon, 30 Jun 2025 12:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C58243374
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285819; cv=none; b=JmIqGL1RBz4mjQZb+IGwoeIASAPHPYGGx1tiL+DXJRHM46wA56byOb4S1Q/Xpkb76tGOc1m7wcy+5JNTZHCpGGhMKak6UbUXDEFW/ckn871tHWjrOzR41sx6SCZqrxFGvAJwNhfnhIrHTdC0q8+B7JXOomjrYcvCjUS138+hmk4=
+	t=1751285864; cv=none; b=GukYGHna2QQTxJbpgYWazqzNvcVo7HdP9lhInD7TwzsBUvlwPcjGjTg7Y5+ksJjFdVieEx0C9811lZxg9bMXgzLMQjUjjHmFw7OTCD7ned5ThcDKm8/BcTpu2cEBQKXSgyiGBqU+JpKPeGIwLsnaAyxF9U/w5f/DgJAo6RYQnfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285819; c=relaxed/simple;
-	bh=uQZcfFAB5Bb7SjYLcY68iLqgdgJyMWcOHBypnwxmhyw=;
+	s=arc-20240116; t=1751285864; c=relaxed/simple;
+	bh=5dhNh3sdSUsVirKXK90ehWyFI9ZhRpVh6xrGa+wtpeI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDnXnUI9BUpep3PJ7L0K7HhuVwJ4qg+lhbF7MURUfgQaTxdXW4RZzcGMmUbZfPvWTkukO5lkrm2QAJfnmQDYwBq2fDY1r6RuKEeMxurSZe5BsXejBqIxmOzpu710cBXOQB2lMCb3oH7Q6Qk3HsTUzCTgSZaz8g/upnRGqb4HbSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJwRz5aA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJwRz5aA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F761C4CEEF;
-	Mon, 30 Jun 2025 12:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751285819;
-	bh=uQZcfFAB5Bb7SjYLcY68iLqgdgJyMWcOHBypnwxmhyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lJwRz5aAx7jcJWw3lPuS9bGqoAON5GghHR6EAD4CeEveFyp8xg0HqbF6gz55DJmMU
-	 ZEIBv21SrhR4w0wsY9/HByBgu6JyHJZK+nOp5XSYS4J8kX07n6MuEUjT9O40vSbonu
-	 9hLrH273cP1ATUIrlmOZADP5+mlE9UpJIqELHVhfasHhyxNbPdQ0RNknHlNZn5SuNm
-	 FHnFDRlv7jRC5oBpfDNY3xJe+ojUlVqmwYU1U6SQ/pAAP1sP5LHKNuM/whPLftD6GY
-	 i0P8ysPMnqdN1jehMy8i6PedO2J/jEl+VGounXt06p0ttnPKMWeZM4sVPXKaM5x/Wa
-	 e5PO5kbeqCkZw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uWDRS-000000007l6-0dNF;
-	Mon, 30 Jun 2025 14:16:58 +0200
-Date: Mon, 30 Jun 2025 14:16:58 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=KtLc5yGHhHJmCliFOadxUsKK+MO2szzVvSjGdmWIXsitH88WN+Wu6rbAVSgrIRk+z7gwOcG4OBmO57SxIY+9+HPSsFgJ44uBkrVKh2qF4Yx2CavztJ+KDjI1S47GoKFX7aDZysHHU3dRaDrkF7q6h+qhX3wfR4Fy4OCftkYHe8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uWDRr-0004km-3r; Mon, 30 Jun 2025 14:17:23 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uWDRq-0066DT-2U;
+	Mon, 30 Jun 2025 14:17:22 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uWDRq-009ggO-1c;
+	Mon, 30 Jun 2025 14:17:22 +0200
+Date: Mon, 30 Jun 2025 14:17:22 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: Pankaj Gupta <pankaj.gupta@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 5/8] firmware; qcom: scm: enable QSEECOM on SC8280XP
- CRD
-Message-ID: <aGKAOtgJtTozo-ac@hovoldconsulting.com>
-References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
- <20250625-more-qseecom-v4-5-aacca9306cee@oss.qualcomm.com>
- <e5e3e8f1-4328-4929-825a-3d8e836cf072@oss.qualcomm.com>
- <95c46d39-5b4a-46dd-aa73-1b3b9bf81019@oss.qualcomm.com>
- <aF6NUeNLPrR5vqEf@hovoldconsulting.com>
- <f55a057d-2cdd-411e-97b9-5ede1300a4e9@oss.qualcomm.com>
- <aF6Tkh75LRym8MQY@hovoldconsulting.com>
- <hf66fa3pvm5jrw3qv57xoofmkoz74ds4g3nwzsdz7pip6e7nej@w3h7qn7qu457>
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Frank Li <frank.li@nxp.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH v18 3/7] firmware: imx: add driver for NXP
+ EdgeLock Enclave
+Message-ID: <20250630121722.wviidlggt7hguyt7@pengutronix.de>
+References: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
+ <20250619-imx-se-if-v18-3-c98391ba446d@nxp.com>
+ <20250625105546.pxuatcnfpe7mssgs@pengutronix.de>
+ <AM9PR04MB8604611B8D91B5526C9704E69545A@AM9PR04MB8604.eurprd04.prod.outlook.com>
+ <20250627084653.6vgwnm3llf3zknlp@pengutronix.de>
+ <b02055bb-0995-4fd8-99f3-4ca5146eedd4@kontron.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +62,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <hf66fa3pvm5jrw3qv57xoofmkoz74ds4g3nwzsdz7pip6e7nej@w3h7qn7qu457>
+In-Reply-To: <b02055bb-0995-4fd8-99f3-4ca5146eedd4@kontron.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sat, Jun 28, 2025 at 05:50:49PM +0300, Dmitry Baryshkov wrote:
-> On Fri, Jun 27, 2025 at 02:50:26PM +0200, Johan Hovold wrote:
-> > On Fri, Jun 27, 2025 at 02:26:41PM +0200, Konrad Dybcio wrote:
-> > > On 6/27/25 2:23 PM, Johan Hovold wrote:
-> > > > On Fri, Jun 27, 2025 at 01:54:37AM +0200, Konrad Dybcio wrote:
-> > > >> On 6/27/25 1:34 AM, Konrad Dybcio wrote:
-> > > >>> On 6/25/25 12:53 AM, Dmitry Baryshkov wrote:
-> > 
-> > > >>>> As reported by Johan, this platform also doesn't currently support
-> > > >>>> updating of the UEFI variables. In preparation to reworking match list
-> > > >>>> for QSEECOM mark this platform as supporting QSEECOM with R/O UEFI
-> > > >>>> variables.
-> > 
-> > > >>>> +	{ .compatible = "qcom,sc8280xp-crd", .data = &qcom_qseecom_ro_uefi, },
-> > > >>>
-> > > >>> R/W works for me (tm).. the META version may be (inconclusive) 2605
-> > > >>
-> > > >> Looked at the wrong SoC META table.. the build date is 05/25/2023
-> > > > 
-> > > > Could be that my machine was not provisioned properly. Do you boot from
-> > > > UFS or NVMe?
-> > > > 
-> > > > My fw is also older: 01/10/2022.
-> > > 
-> > > The machine has UFS, NVME and SPINOR, however the boot log definitely says:
-> > > 
-> > > S - Boot Interface: SPI
-> > 
-> > Mine says:
-> > 
-> > S - Boot Interface: UFS
+Hi Frieder,
+
+On 25-06-30, Frieder Schrempf wrote:
+> Hi Marco,
 > 
-> Is this META even supported? I think it's recommended to update
-> firmware to the latest releases.
+> Am 27.06.25 um 10:46 schrieb Marco Felsch:
+> > Hi,
+> > 
+> > your e-mail configuration mixed my e-mail with your answer, which makes
+> > it hard to read. Can you please check the quoting next time :)
+> > 
+> > On 25-06-27, Pankaj Gupta wrote:
+> >>>> Add driver for enabling MU based communication interface to
+> >> secure-enclave.
+> >>>>
+> >>>> NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are 
+> >>>> embedded in the SoC to support the features like HSM, SHE & V2X, using 
+> >>>> message based communication interface.
+> >>>>
+> >>>> The secure enclave FW communicates with Linux over single or multiple 
+> >>>> dedicated messaging unit(MU) based interface(s).
+> >>>> Exists on i.MX SoC(s) like i.MX8ULP, i.MX93, i.MX95 etc.
+> >>
+> >>> You write single or multiple MUs are possible. I'm aware that the i.MX93
+> >>> has two MUs one for the secure and one for the non-secure world. But I'm
+> >>> really concerned about the fact that both MUs can't be used at the same time
+> >>> from both world:
+> >>
+> >> Yes, you are correct.
+> >>
+> >> Fix is still work in progress.
+> > 
+> > So after ~6 months no fix is available :(
+> > 
+> >>> Also how is the secure and non-secure world talking to the ELE if there is
+> >>> only one MU as you have written?
+> >>
+> >> Till the fix is WIP, either Linux or OPTEE can use the ELE, at one point in
+> >> time.
+> > 
+> > That has nothing to do with the fix. The fix is for platforms/SoCs which
+> > do have 2-MUs, but you also have written that there are platforms with
+> > only 1-MU.
+> > 
+> > This MU can't be shared between secure and non-secure world.
+> > 
+> >>> IMHO it makes much more sense to put the complete ELE communication into
+> >>> (OP-)TEE and let the secure OS taking care of it. All non-secure world
+> >>> requests are passed via (OP-)TEE to the ELE. This involves:
+> >>> - eFuse access (done via OP-TEE i.MX specific PTA)
+> >>> - ELE 23h59m ping (kernel SMC WDG driver, requires OP-TEE watchdog driver)
+> >>> - HW-RNG (kernel OP-TEE HWRNG driver + OP-TEE HWRNG PTA)
+> >>
+> >> There is a dedicated MU "trusted-MU" for OPTEE-OS. The idea to converge to a
+> > 
+> > Yes for systems with 2-MUs there is a "trusted-MU" and a
+> > "non-trusted-MU". As of now, there is no fix available for using both
+> > MUs at the same time. Furhtermore there are platforms/SoCs with only
+> > 1-MU, as you have written in your commit message. This 1-MU system can
+> > have the MU either trusted or non-trusted.
+> > 
+> >> single path via OPTEE-OS, is good. But it will impact the performance of the
+> >> features at Linux side.
+> > 
+> > Performance? We are talking about a ping every 23h59m (I still don't
+> > know if this is a feature or bug), eFuse write/read, and the HW-RNG
+> > which can seed the Linux PRNG.
+> > 
+> >> Since the fix is still WIP. Let's wait till then.
+> > 
+> > The fix is for the 2-MUs SoCs but not the 1-MU case.
+> > 
+> > I would like to have a system design which doesn't differ too much
+> > between SoCs which are equipped with the ELE engine.
+> 
+> Do we really want to depend on OP-TEE to be available for having things
+> like OTP fuse access and HWRNG? Personally I'd like to be able to build
+> systems with OTP access and HWRNG but without OP-TEE. Requiring OP-TEE
+> only to make the ELE available to the kernel in cases where the secure
+> world isn't used for anything else seems to be unnecessarily complex.
 
-It most likely has nothing to do with the meta version, but whether you
-boot from SPI-NOR or UFS.
+I understand your point. I don't like pulling in more FW neither but we
+need to the face the following facts:
 
-Johan
+ - OTP eFuse R/W access after doing the LOCK_DOWN fuse is no longer
+   possible without OP-TEE. This involves general purpose (GP) eFuses
+   too. We faced this limitation in a current project.
+
+ - With new regulations like the EU CRA I think we need some sort of
+   secure-enclave anyway.
+
+ - Making it optional cause more paths of potential errors e.g. by not
+   including the correct "secure.dtsi". Multiple paths also require more
+   maintain- and testing effort. IMHO I do think that one of the paths
+   get unmaintened at some point but we would need to keep it for
+   backward compatibility.
+
+   Having one implementation eliminates this since.
+
+ - All above points assume that the ELE-FW and -HW is capable of talking
+   to both world, which is not the case. As we learned NXP doesn't have
+   a fix for the 2-MUs ELE yet and even more important there are 1-MU
+   ELE-IPs.
+
+I do see the (minimal) drawback of having +1 FW but I think this is more
+an integration problem.
+Speaking of FW files, for the new i.MX9* you already have plenty fo
+them: bootloader, TF-A, ele-fw, scu-fw (i.MX95). So your integation
+needs to handle multiple firmware files already.
+
+> Anyway, I see your point of having a single implementation for the ELE
+> API in the "right" place. But as far as I know other platforms like
+> STM32MP1 also implement both ways for the HWRNG, secure access via OPTEE
+> and non-secure access via kernel directly.
+
+I'm not a STM32MP1 expert but here you have this setup with the
+*-scmi.dtsi. So you have two code paths which needs to be maintained and
+tested. Also if one customer of yours want to use OP-TEE you need the
+integration anyway, so you (Kontron) needs to maintain multiple
+configuration as well. I don't see the added value.
+
+I think for STM32MP1 the *-scmi.dtsi support was added later because it
+required a lot effort to support it. This is not the case for the i.MX9*
+series.
+
+Regards,
+  Marco
+
+> Thanks
+> Frieder
+> 
