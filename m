@@ -1,91 +1,139 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7FC286439
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F96B282FA;
+	Mon, 30 Jun 2025 15:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298622; cv=none; b=iAeyJcoxTK4zw7mNUf212wJz1MBtcX9cEvthtgjxAl9l6sgF1Pwvwl2mVryDXZRZHarxc3YKhanXYh1CFYfpfgikqGUvpRZlBg670B/WuKrBDQpxT/jePHCE6PGaBhVGhVMt1rDWgEEM/nwKH3+jrHfjYLH1TQcMCdDh4pjH15E=
+	t=1751298632; cv=none; b=tAZZj2fOqXOP5965E1rHOEl41IDbvN8P6+8n8gbixtq6qyGMNjVt6QiHt7z3g+gN61XqV2HJVwLeD8t2q4zKqDAeJoFFGSDj6gXAM2Ng9ZU7RJTbw119ELFs8shu6SY1R/hGmBRm9733YJ58Ym0Qsu7Eupe2P0yLHgttoWO0DTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298622; c=relaxed/simple;
-	bh=OFNpuSwskHZ5cDNYtd7s1ZDhkEVY62Cgbtcf8oU9wd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ho/8p9ZSPEr0vJpuwm8swAYcuxE+PV4fDEKiPFDaiDEZTZPAWLQqw0teget3TzlQ44tFvCbX+q9TNaPWIu9ysqIoi94NtliIjwbiEVcXXotKix5bNkpqumwob2Tky9AHOUoGkliu7OE7nj2aAzNqYzq3En9M8GWoDgnZApP72L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Jum/g7KB; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751298632; c=relaxed/simple;
+	bh=CSJUGiOUWxP2VkzX3WWdpnoHSgKS/uHYmWqXozPe0A0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=mvWJEY9f8mjCRm4VZQfZ5Zt1yej4AgaJjCZLeeWSqYwJKR55oHLeocLhmU6VUxh2bD2IIS5TAiUnuFzpVIBiUIMZiJbsCCpQxI1m6q6N9I2O1CZsiFr21C9GpJUIsiOMGDHWiSR8kt0PPtEoUWZPyf+zWPC1ToPPnatlqfWFQ2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5WXWCDO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Jum/g7KB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751298615;
-	bh=OFNpuSwskHZ5cDNYtd7s1ZDhkEVY62Cgbtcf8oU9wd4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jum/g7KBXEDCMUrkBm/2+AX51VoD6/ln8Z1HUMzW1l/hkzHaZapoMESM2O9Nl8tLB
-	 u/p33kBj+OlYZzd8jCjZqim83y0XMvV05OYvqu2WyHI/N57hwyN5ZNVn6CQnZk8az5
-	 bUTeIfGU3Hwn/dhD05aSK+z3iRzE2dD7v8suodOpcCiJIQY9XBwku7iNWpBJMBmyIi
-	 QpDIxrpSNL9NNQ3P8h941zKNheiYu7xHcmmi+N8xkH4qhjBiTju+ZLhBXJW5WL+ja7
-	 xdBxszdlcvjRzZqj0rMtRYIwOXRc82IesxwoXyr+w6sJM0+5KmiO5HrLXCaP7FZoZ5
-	 KIluQjx8xTsvA==
-Received: from fedora (unknown [IPv6:2a01:e0a:2c:6930:16f1:973:959b:9b0c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 512C317E0391;
-	Mon, 30 Jun 2025 17:50:15 +0200 (CEST)
-Date: Mon, 30 Jun 2025 17:50:11 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Steven Price <steven.price@arm.com>
-Cc: Liviu Dudau <liviu.dudau@arm.com>, Karunika Choo
- <karunika.choo@arm.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panthor: Wait for _READY register when powering on
-Message-ID: <20250630175011.7bd395d9@fedora>
-In-Reply-To: <20250630140704.432409-1-steven.price@arm.com>
-References: <20250630140704.432409-1-steven.price@arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5WXWCDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249C5C4CEEF;
+	Mon, 30 Jun 2025 15:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751298631;
+	bh=CSJUGiOUWxP2VkzX3WWdpnoHSgKS/uHYmWqXozPe0A0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=O5WXWCDOFT9xSP7EWEdwiqrP7Z9E9l7zGxZxfrkYT5GuEWMZPY0D7Ldowf8OJqyIb
+	 pee1VEGR+F7Yl8GfOU5CLvIK+oyEz1snVp2S7fYvF8jcGwWh+8Hsh5ESbwzvyTjJr6
+	 6pw91zZp2zLnTb+y46ZGqVFt5zyKefQIFBSAkkmE/bLwgse+N83rMhCFGmfWsYXVL+
+	 QOqRftCDjuhmLkSDpEHipp32Qez57uoD1gw5m4DJMagYFWrrMqaUrzkqHYoKfcbmpb
+	 YNyPglDh9s1heE/I37Z3h3k4d2gghSx9mKKb+JDiVJSpGueo33Z/JgCOfZJt70ZNxx
+	 dfvIogoTSVm5Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 30 Jun 2025 17:50:25 +0200
+Message-Id: <DAZZJTOR5N3G.1ZC2DWWPP2YM5@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <lkmm@lists.linux.dev>, <linux-arch@vger.kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Will Deacon" <will@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Mark Rutland"
+ <mark.rutland@arm.com>, "Wedson Almeida Filho" <wedsonaf@gmail.com>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude Paul" <lyude@redhat.com>,
+ "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
+ <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
+ operations
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+ <20250618164934.19817-6-boqun.feng@gmail.com>
+ <DAX6WZ87S99G.1CMIN6IQXJYPL@kernel.org> <aF6iXB6wiHcpAKIU@Mac.home>
+ <DAXY0EJHHDWM.1KRSSJLOTCZ8F@kernel.org> <aF-aS5FLX7QIiiPa@Mac.home>
+ <DAY0AZXDTCD3.OAWZ91IQJT2Q@kernel.org> <aGKsHZ0saC-XkQlA@tardis-2.local>
+In-Reply-To: <aGKsHZ0saC-XkQlA@tardis-2.local>
 
-On Mon, 30 Jun 2025 15:07:02 +0100
-Steven Price <steven.price@arm.com> wrote:
+On Mon Jun 30, 2025 at 5:24 PM CEST, Boqun Feng wrote:
+> On Sat, Jun 28, 2025 at 10:00:34AM +0200, Benno Lossin wrote:
+>> On Sat Jun 28, 2025 at 9:31 AM CEST, Boqun Feng wrote:
+>> > On Sat, Jun 28, 2025 at 08:12:42AM +0200, Benno Lossin wrote:
+>> >> On Fri Jun 27, 2025 at 3:53 PM CEST, Boqun Feng wrote:
+>> >> > As for naming, the reason I choose xchg() and cmpxchg() is because =
+they
+>> >> > are the name LKMM uses for a long time, to use another name, we hav=
+e to
+>> >> > have a very good reason to do so and I don't see a good reason
+>> >> > that the other names are better, especially, in our memory model, w=
+e use
+>> >> > xchg() and cmpxchg() a lot, and they are different than Rust versio=
+n
+>> >> > where you can specify orderings separately. Naming LKMM xchg()/cmpx=
+chg()
+>> >> > would cause more confusion I believe.
+>> >>=20
+>> >> I'm just not used to the name shortening from the kernel... I think i=
+t's
+>> >
+>> > I guess it's a bit curse of knowledge from my side...
+>> >
+>> >> fine to use them especially since the ordering parameters differ from
+>> >> std's atomics.
+>> >>=20
+>> >> Can you add aliases for the Rust names?
+>> >>=20
+>> >
+>> > I can, but I also want to see a real user request ;-) As a bi-model us=
+er
+>> > myself, I generally don't mind the name, as you can see C++ and Rust u=
+se
+>> > different names as well, what I usually do is just "tell me what's the
+>> > name of the function if I need to do this" ;-)
+>>=20
+>> I think learning Rust in the kernel is different from learning a new
+>> language. Yes you're learning a specific dialect of Rust, but that's
+>> what every project does.
+>>=20
+>> You also added aliases for the C versions, so let's also add the Rust
+>> ones :)
+>>=20
+>
+> Make senses, so added:
+>
+> --- a/rust/kernel/sync/atomic/generic.rs
+> +++ b/rust/kernel/sync/atomic/generic.rs
+> @@ -310,7 +310,7 @@ impl<T: AllowAtomic> Atomic<T>
+>      /// assert_eq!(42, x.xchg(52, Acquire));
+>      /// assert_eq!(52, x.load(Relaxed));
+>      /// ```
+> -    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
+> +    #[doc(alias("atomic_xchg", "atomic64_xchg", "swap"))]
+>      #[inline(always)]
+>      pub fn xchg<Ordering: Any>(&self, v: T, _: Ordering) -> T {
+>          let v =3D T::into_repr(v);
+> @@ -382,6 +382,7 @@ pub fn xchg<Ordering: Any>(&self, v: T, _: Ordering) =
+-> T {
+>          "atomic64_cmpxchg",
+>          "atomic_try_cmpxchg",
+>          "atomic64_try_cmpxchg"
+> +        "compare_exchange"
+>      ))]
+>      #[inline(always)]
+>      pub fn cmpxchg<Ordering: Any>(&self, mut old: T, new: T, o: Ordering=
+) -> Result<T, T> {
+>
+> Seems good?
 
-> panthor_gpu_block_power_on() takes a register offset (rdy_reg) for the
-> purpose of waiting for the power transition to complete. However, a
-> copy/paste error converting to use the new 64 register functions
-> switched it to using the pwrtrans_reg register instead. Fix the function
-> to use the correct register.
-> 
-> Fixes: 4d230aa209ed ("drm/panthor: Add 64-bit and poll register accessors")
-> Signed-off-by: Steven Price <steven.price@arm.com>
+Yeah, thanks!
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-> ---
->  drivers/gpu/drm/panthor/panthor_gpu.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
-> index 534735518824..cb7a335e07d7 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gpu.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gpu.c
-> @@ -297,8 +297,9 @@ int panthor_gpu_block_power_on(struct panthor_device *ptdev,
->  
->  	gpu_write64(ptdev, pwron_reg, mask);
->  
-> -	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val,
-> -					      !(mask & val), 100, timeout_us);
-> +	ret = gpu_read64_relaxed_poll_timeout(ptdev, rdy_reg, val,
-> +					      (mask & val) == val,
-> +					      100, timeout_us);
->  	if (ret) {
->  		drm_err(&ptdev->base, "timeout waiting on %s:%llx readiness",
->  			blk_name, mask);
-
+---
+Cheers,
+Benno
