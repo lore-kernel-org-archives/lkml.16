@@ -1,191 +1,121 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F61024889B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6739D6BFC0;
+	Mon, 30 Jun 2025 10:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277957; cv=none; b=qHHJx2qNz6vv+Uhmj9HIt6aG4ycF8F5aWpaHnIYfrfebzCGhRW4bBSeSB7u1j6wd5hH5l7WNN3BWXmphFpl8irycdTxM5M3h3T3KzmPKj8+1u/A8cQ0Hu6SqK2t8Hg7ejc4Chpno0VOkhldpGp9mfE0k6qbcT9RrPXPX3YaJuSA=
+	t=1751277970; cv=none; b=uZ66a8pEtl9YcdeKrFm9ZP+xATyFr6yUusT6XF7h1707mc3qjGONeR6HeUH+axutCsfb55sMJwWqgYWYwCah6DI5koQJWVzkAJsRkMmoc2X6JJAstd3/VAublTAJIwhIDOovF9ZfRtRoCSqNXCC5jOZcm60aCllqZrVZvA/1+Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277957; c=relaxed/simple;
-	bh=cND8KnHFqjASahdvxji0sLcbPl2XO4nal1045B0qiPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cFZ9hxX52A9qOouKIGIlCDCy+QlbPyW5XUnjGB7Qs0GqwZ/mK3zqsgUmkiNJ3U4dPyqikE2L4mBNtxsL9Fo0QuisutcLRX8Dq6Uhhk2QYT7YWX9QvRCkd813/yMIOUR4KxHj/FsduGDeP7jLa5mMuwAY3nmpTz6ZPkZ0Eg+v2NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lkaUtHQ7; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751277970; c=relaxed/simple;
+	bh=idmzxaWZUEccbmv3UFhsjZX2rlSRens+xjcxcEIn1F8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdyV+cqw3Jc1S6Tms3hQOHA+pb+1o3fpBOf3UeKy7Rro09E9wZFvdGq/bc4D7I4cnr9D7hcsaIRQf++s4WKSn+pjs0UF22QSI1wpKs+2ol2mKtA2gpThrQiiHjUQSPUnkRCxpefCjtYxoMInraJjIMIqpb/tfOTv2EOpZp3yqZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=zuotKfvT; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lkaUtHQ7"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553a66c3567so7395e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751277953; x=1751882753; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y5W/aCkH5j3ZLhBzUnk4+o0iMGbCFsEB9QPytpHfm7c=;
-        b=lkaUtHQ7s6Qovu0Bu7CWOB4E6beA1euHJmtgrce8hLSQ8LiIkRu76mRVQdyVokoohk
-         TJ6MSZ+ER+ZmRptxNls6FS5wGJTvYSIpEIB+AELMjNucYJLcNUQ++9Y0q94mXYxg0FPe
-         Eivf961N6XtYs9YQf2HRf45c4HJMOr/pNtNrzmjESmgR76SMjibSrllt7mk/WBPWuF32
-         nZKoSJOmx1+Y8gQl0TDDhQbH0a61+ypj/H6p21KLpngImdoGPUSMBDwFvCN6wtFixt1j
-         4zT4fiUExe2S+fDp6FQc+Wsc/LCR2GkwrXmoeTCFQRqc3NEEZDa5q2SAkA5orQtAFK2K
-         iqxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751277953; x=1751882753;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y5W/aCkH5j3ZLhBzUnk4+o0iMGbCFsEB9QPytpHfm7c=;
-        b=CcftQQZU85FwFY41GsVSsKqyEsIyLYgGk7KrNQKac+KLa0VDiHdfzaXTt5KtIcunim
-         QnUEeFm9hKdCHCIzbfRNUdMROHGftW6tKMZvQqgNTwy3XSx1dDpa/+PCKlU4i3DV/14h
-         tw/0Nq+oEOIkgTdH6rJdgSJCs4vey0ROYDlgjpDPouCMJ8Ys0qTDdM6rKTGgmmbG4dPW
-         vVD5GpxvbxOAHzma1/mu/Ve29GtoNMs7oUP9t2TPhzIJ1JHF72nrhmTgXb4e2tCf+CKm
-         L1WuK5bx9S1uabqqhO//9S5MUdxEBr+6sezby/elwu+gwFOegqpohfD+IuG+29wOmkEU
-         q0QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVirzkmGTGVx2kPk9yOrswSKoZQ7YgUssXE9aCjYS9BTjkda5ATBTpaIRS/hP+Y2zC0fkC3HasmNDeIv2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc87ypaXBR99P3RJAz9QqKHUx46ftFAlfvyLJTqF6EznD52pVm
-	/xkls4NMrkMY1NFqGC8I2mIgK8m5eEgkDWpPtMwteOkYRfPE8JcABx6WsUW02TymbbC1nj5Q3c1
-	LFP6CK87f8WXFN/IGTYjVMEmy+rn6XqqNgN1a84X7
-X-Gm-Gg: ASbGncuvuVtHndPt8xTfIjIhp7Yq1voOwaLTcDpnJ8+ShICh4dYh9MH7Z+sw0dBm3Im
-	9di4cPcwDRIXbjZxpw0sXRAF8122Zo8D31OFh16lirPRqoK9B2IS0F75qi/NSAGUylsXPqSlFv9
-	tzX+QzmFGd4gdppdmyv/CIxd5/MCCPZMkQ9jYVPzPr419e7L3LIJvMEi4YqVAkeb6cj/hiPyg=
-X-Google-Smtp-Source: AGHT+IEehaw/D/wnspUhLXMrazPF9xkSjn2yt6Mt9vV9dtn4BkBRGAGPcuzi4KGS7PFJfVQUk50Qzwro6et5OzesapA=
-X-Received: by 2002:a05:6512:228b:b0:555:4de:c172 with SMTP id
- 2adb3069b0e04-55513fc99eemr271882e87.3.1751277953101; Mon, 30 Jun 2025
- 03:05:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="zuotKfvT"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bW1yN51X8z9sqc;
+	Mon, 30 Jun 2025 12:06:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1751277964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FUqY6p8xHWIMOVC9OJie7vZ2SH/5zciF2FM6fFp1tPg=;
+	b=zuotKfvTKbBNr1XDp7EnliGK08aysOe25VVCo+8rUypcZBOouhwTjkRdSF35Twqw4juFE5
+	sY2zRtelnAw5GmqnoOLvQsFrD5gSZpTMKHiJpa49mPEfXw1u/Z/8zD4StVtPE6xWbGGUs7
+	vNTBG7xssauguqtbD57PTLNe3gH7nnAL6X6scmuEr9XikUWT5xnUSshyAmW96XIrWEZ5tQ
+	Es+JiAqk714dlnGaoZdpjcvpo/D18+FAy3NPw9dTeKhh9RMN1Tf0aFtiBnHU4LlunZQolZ
+	7yPmB0iFqwjNIKSr6L/7t4D6gFS2Iv9s34M9UFCAYKQqNnThqyCxF+M3Zeh8dw==
+Date: Mon, 30 Jun 2025 12:05:54 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Baokun Li <libaokun1@huawei.com>, Pankaj Raghav <p.raghav@samsung.com>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, mcgrof@kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	gost.dev@samsung.com, Matthew Wilcox <willy@infradead.org>, 
+	Zhang Yi <yi.zhang@huawei.com>, Yang Erkun <yangerkun@huawei.com>
+Subject: Re: [PATCH v4] fs/buffer: remove the min and max limit checks in
+ __getblk_slow()
+Message-ID: <4qln6l2oc4y3yvfm36tbsgkxxaq4i7yvxbzlnz36yrvajdwmfs@lkk7ujwbulq2>
+References: <20250626113223.181399-1-p.raghav@samsung.com>
+ <3398cb62-3666-4a79-84c1-3b967059cd77@huawei.com>
+ <20250629111506.7c58ccd7@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
- <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
-In-Reply-To: <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
-From: Giuliano Procida <gprocida@google.com>
-Date: Mon, 30 Jun 2025 11:05:16 +0100
-X-Gm-Features: Ac12FXxmNoP6PvMu6OOoOXG12Jh_6-R_MmbOZXUFBdsR8S9d8WpM8vXppST1XSk
-Message-ID: <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629111506.7c58ccd7@pumpkin>
+X-Rspamd-Queue-Id: 4bW1yN51X8z9sqc
 
-Hi.
+On Sun, Jun 29, 2025 at 11:15:06AM +0100, David Laight wrote:
+> On Fri, 27 Jun 2025 10:02:30 +0800
+> Baokun Li <libaokun1@huawei.com> wrote:
+> 
+> > On 2025/6/26 19:32, Pankaj Raghav wrote:
+> > > All filesystems will already check the max and min value of their block
+> > > size during their initialization. __getblk_slow() is a very low-level
+> > > function to have these checks. Remove them and only check for logical
+> > > block size alignment.
+> > >
+> > > As this check with logical block size alignment might never trigger, add
+> > > WARN_ON_ONCE() to the check. As WARN_ON_ONCE() will already print the
+> > > stack, remove the call to dump_stack().
+> > >
+> > > Suggested-by: Matthew Wilcox <willy@infradead.org>
+> > > Reviewed-by: Jan Kara <jack@suse.cz>
+> > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>  
+> > 
+> > Makes sense. Feel free to add:
+> > 
+> > Reviewed-by: Baokun Li <libaokun1@huawei.com>
+> > 
+> > > ---
+> > > Changes since v3:
+> > > - Use WARN_ON_ONCE on the logical block size check and remove the call
+> > >    to dump_stack.
+> > > - Use IS_ALIGNED() to check for aligned instead of open coding the
+> > >    check.
+> > >
+> > >   fs/buffer.c | 11 +++--------
+> > >   1 file changed, 3 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/fs/buffer.c b/fs/buffer.c
+> > > index d61073143127..565fe88773c2 100644
+> > > --- a/fs/buffer.c
+> > > +++ b/fs/buffer.c
+> > > @@ -1122,14 +1122,9 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+> > >   {
+> > >   	bool blocking = gfpflags_allow_blocking(gfp);
+> > >   
+> > > -	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
+> > > -		     (size < 512 || size > PAGE_SIZE))) {
+> > > -		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
+> > > -					size);
+> > > -		printk(KERN_ERR "logical block size: %d\n",
+> > > -					bdev_logical_block_size(bdev));
+> > > -
+> > > -		dump_stack();
+> > > +	if (WARN_ON_ONCE(!IS_ALIGNED(size, bdev_logical_block_size(bdev)))) {
+> > > +		printk(KERN_ERR "getblk(): block size %d not aligned to logical block size %d\n",
+> > > +		       size, bdev_logical_block_size(bdev));
+> > >   		return NULL;
+> 
+> Shouldn't that use WARN_ONCE(condition, fmt, ...)
 
-On Sun, 29 Jun 2025 at 18:51, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@google=
-.com> wrote:
-> >
-> > When writing symtypes information, we iterate through the entire hash
-> > table containing type expansions. The key order varies unpredictably
-> > as new entries are added, making it harder to compare symtypes between
-> > builds.
-> >
-> > Resolve this by sorting the type expansions by name before output.
-> >
-> > Signed-off-by: Giuliano Procida <gprocida@google.com>
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-> > ---
-> >  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
-> >  1 file changed, 26 insertions(+), 3 deletions(-)
-> >
-> > [Adjusted the first line of the description. Added reviewer tags.
-> >  Added missing CC to linux-modules.]
-> >
-> > diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/type=
-s.c
-> > index 7bd459ea6c59..51c1471e8684 100644
-> > --- a/scripts/gendwarfksyms/types.c
-> > +++ b/scripts/gendwarfksyms/types.c
-> > @@ -6,6 +6,8 @@
-> >  #define _GNU_SOURCE
-> >  #include <inttypes.h>
-> >  #include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> >  #include <zlib.h>
-> >
-> >  #include "gendwarfksyms.h"
-> > @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct =
-type_expansion **res)
-> >         return -1;
-> >  }
-> >
-> > +static int cmp_expansion_name(const void *p1, const void *p2)
-> > +{
-> > +       struct type_expansion *const *e1 =3D p1;
-> > +       struct type_expansion *const *e2 =3D p2;
-> > +
-> > +       return strcmp((*e1)->name, (*e2)->name);
-> > +}
-> > +
-> >  static void type_map_write(FILE *file)
-> >  {
-> >         struct type_expansion *e;
-> >         struct hlist_node *tmp;
-> > +       struct type_expansion **es;
-> > +       size_t count =3D 0;
-> > +       size_t i =3D 0;
-> >
-> >         if (!file)
-> >                 return;
-> >
-> > -       hash_for_each_safe(type_map, e, tmp, hash) {
-> > -               checkp(fputs(e->name, file));
-> > +       hash_for_each_safe(type_map, e, tmp, hash)
-> > +               ++count;
-> > +       es =3D xmalloc(count * sizeof(struct type_expansion *));
->
-> Just a nit:
->
->            es =3D xmalloc(count * sizeof(*es));
->
-> is better?
->
-> > +       hash_for_each_safe(type_map, e, tmp, hash)
-> > +               es[i++] =3D e;
-> > +
-> > +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansion=
-_name);
->
-> qsort(es, count, sizeof(*es), cmp_expansion_name);
->
+We need to return NULL if the check fails. So having the condition and
+the format as an `if` condition does not look nice. Plus the formatting
+will look weird.
 
-That's a fair point.
-
-However, in the gendwarfksyms code, all but one of the sizeofs uses an
-explicit type name. The exception is sizeof(stats) where stats is an array.
-
-I'll leave Sami's code as it is.
-
-Giuliano.
-
->
-> > +
-> > +       for (i =3D 0; i < count; ++i) {
-> > +               checkp(fputs(es[i]->name, file));
-> >                 checkp(fputs(" ", file));
-> > -               type_list_write(&e->expanded, file);
-> > +               type_list_write(&es[i]->expanded, file);
-> >                 checkp(fputs("\n", file));
-> >         }
-> > +
-> > +       free(es);
-> >  }
-> >
-> >  static void type_map_free(void)
-> > --
-> > 2.50.0.714.g196bf9f422-goog
-> >
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+--
+Pankaj
