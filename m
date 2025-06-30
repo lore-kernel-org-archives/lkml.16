@@ -1,119 +1,125 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC641990D8
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6C8460
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301910; cv=none; b=ZHAFVfLpDA2JZEu5/7w+ohIF4c98Ud/KIT0xaHkAWBnJiAUAYLWvuctx/85wRJd7oW+vNpCJgTxM0adEox8UBT2hl/VxFrnP6QSGmrFMe+mfHgu0kzcxzqMxPp6lBwBfh3wwR2/5Nda+lst/Ms+sITMoUd7KPasezw/rmZ2AzCo=
+	t=1751302034; cv=none; b=uc5PHJD6xmwUCdRJNCIHsIfzVI7bC1lf19FEmaDoa1i3hPlxEW3ZGJBfsYogZ4HDEOc4lim5G9MiDhIudmjGsJ6Tg5N3F4xFPaRv0sXuZ2c4mFr5gvxwgYtCVTYPqUArlbfDlFTMMIZonuMwVvZg5XbyjYJGhPsW/+Jg77obwYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301910; c=relaxed/simple;
-	bh=iimtPmkJqIHY8+CdbyQ4Ml4IiC7bXO6UI6DKoOfU2ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D4yl5dYJbRNBc7eVfcD3ZvVJr+TX0jOwZ7IMBZQaRjli88S2mzN5C98iPGH17WpKx7k9vHTRhtvR61TrdV5ulDtEffHS/DJYALI8Bh0Ra1078kTa9ebXhtFDPq8+1WqSa/9mELLZjYkbqsThicsuVqd5MOSHHWu5XLCav8VdN6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DIMOWIph; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751302034; c=relaxed/simple;
+	bh=3r3PGnaL912Nk+uO8fMqW8TAYiDVtxNs1x3CwGxtPoY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LwExeLXxovliEwkzgzCN3FpXHp8FB1a7o9hkMu7aSizWGITzR3Sr4D22DK7ORnaMLrw35xxnqiHvjes1ImlisC8WczaAN11V1IgZMJ3WRThoSlG7o130w5w/dk/J9bk+jRAUyqAkVtFBTHRHd62v2O75CzirE7KF6ZXKTZFzkg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Cf7GHJ07; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIMOWIph"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so39232395e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:45:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Cf7GHJ07"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22c33677183so38844665ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751301907; x=1751906707; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F28rxWH3aEX1Ni166QzFcf8v6CigBxTZA5+HuNofQDQ=;
-        b=DIMOWIphlDH5kELQr76EnVBOEfFBOS5l576eIqaK2/hXF3BRocSNASRNHt/jgfyFXY
-         0vbTLOKxCUILMy4k1Cw5FD+TaviIxXcTbIYNW5hShctukUBdcevUA8qxD6dtvMa9cINM
-         fNBEshSvhNP4VBKtFO0UNg8wZDwKTJeXYgVBysL8pKfhs7EQ+2FBr3Fdb18p/UZioGAx
-         RAxkFCnM/vKaSasrnBrooRx9xgIe6jwyjLmS5axk9Wvu5euYCKE8/6k+Ma9ps7NYVJWF
-         8smucVsBH11wC+R+AAqjGlypmFiATKNy92DkCk7Qh4+R8OkyuUkRtnECuGjb0PoVWp6T
-         6zxA==
+        d=broadcom.com; s=google; t=1751302032; x=1751906832; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=JcgYKXtTJMODWWKRmOEbNPdVlu0A72bZmiOgTq10E0U=;
+        b=Cf7GHJ077Gxe9+t6G/KXAkD9ui6rVzMfUdzZ0c4THLzF7C+kKsQUwVm22wss44xSNR
+         D2Nk+zCT+v51vr6XlEmmcAyM/Zc9HlRjI7Wegv8Cw3W99jw9jSuEVBTAAGI9eG7Qhxpd
+         GcKNeKxdjC57YX3A9O1ZmxwerIy6Hhf27oFF8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301907; x=1751906707;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751302032; x=1751906832;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=F28rxWH3aEX1Ni166QzFcf8v6CigBxTZA5+HuNofQDQ=;
-        b=l3EM5K3k3mCNImnouCjRz/GkHdcR2gvahywUkGTgWM44s4oIpxr2qfzIiG32vl2ii3
-         Fnh8kpEgi8ZQ5D3h22PGoJ+9GI/4b1X9MWhHq85Ixq1Fg0l+5BZ7PYZgZFt0Jr+2sYGs
-         t4vWJgjuqJyNN3WfFfqjOzGKK9WgEMjLi01wpJ0uIn1tDHG8sYHQpWND0jR6Asvq7wZN
-         U6qyfrbg4KYrSRmUxnpS+2OUzBW4xUdJEzmkXRQbmhqR4SrwLVqeinWozPmHiVkMKBiz
-         j+qJ3Vo822IFzMaTsSvuNavy3bcEju0hDEAcXQ/jBfa9QOUk+wKAhJF3Sw1oMIx8j6H/
-         BVEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtHJdbKqZxUlF6YrF16nz/QVfaEO7OsAngA9xNsg9+ZRGxI44TUAQv7iP7knH8Sp4O9it8XqNfJeZRcdY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLD1aSd/gIwChpTk5RZongS8vxOibuQaJyWkaZNwkQ/Gikj+cf
-	2MHh2Bw+BTEOczPgk8CMaY4TOROwyCOphs88X/UE0UOgAL2EHnPI4/dc
-X-Gm-Gg: ASbGncsV56160uf589YrNQEb6xzlAqS8U5l7k7D4okfnA4EArueiQjeqrX8v46n4/yp
-	z+wcGxxMMFZgWm5s+pg2A4ZXG+dSL1wTOnqiOxh/5nXr0nrRvuPKNO0CV0Jj7Gg4irROYQlNEmK
-	lv9WVPvZJVUU+frtExx7oiEamR3yKLnEIqlNPLKRxVCshTGNtTKuan07fpXyVB/SIRoH3gILYEW
-	lrv8MTBCkpr5+5MobxMEUrDFWdwjyaTD2UoZkMY93BFGyH59P2yG48wqW65MaDO63kjXu7xMr8r
-	NVs64pg/bLqTr1dhTuZm3WS5bd5vlwpqcDw375iTMxr2yeoLKmI39ZQpO+SY9ES1ottuezA0mi7
-	3WBOWn7Xazp3Gf35dO1s1eyY9rckBe+vPVXZJi2LW9ZcmtCk/Q2QFPJaWGDllC8sNnEy8O7O031
-	3v2SdiYkAehJp5kOvq7wzVRjDRJacG78c=
-X-Google-Smtp-Source: AGHT+IGtyZLJV5JuzoD1aAP4pupePO809LEum7y1pGUADJm5kY6rXHP/OKEUPGNjWu1MRkJBKyKxYA==
-X-Received: by 2002:a05:6000:4b1a:b0:3a4:f6d6:2d68 with SMTP id ffacd0b85a97d-3a9186574femr13158325f8f.56.1751301906524;
-        Mon, 30 Jun 2025 09:45:06 -0700 (PDT)
-Received: from cypher.home.roving-it.com (2.c.4.1.7.3.6.4.2.a.a.3.0.f.c.2.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:2cf0:3aa2:4637:14c2])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a892e52ad2sm10731959f8f.48.2025.06.30.09.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 09:45:05 -0700 (PDT)
-From: Peter Robinson <pbrobinson@gmail.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	linux-kernel@vger.kernel.org
-Cc: Peter Robinson <pbrobinson@gmail.com>
-Subject: [PATCH] reset: brcmstb: Enable reset drivers for ARCH_BCM2835
-Date: Mon, 30 Jun 2025 17:45:00 +0100
-Message-ID: <20250630164503.399835-1-pbrobinson@gmail.com>
-X-Mailer: git-send-email 2.50.0
+        bh=JcgYKXtTJMODWWKRmOEbNPdVlu0A72bZmiOgTq10E0U=;
+        b=TR19AwdTDMQTHWb55h6RfV9kTBLvT/Qp0zKJGtfEag9tg1ts+GlJ+29pnfF7guUiTN
+         +Fr/+xNXRIjUpVaEm+PuBVn/tfcqRpMBjk7AodXQcUUWsPApE5H89QupFTIV1C9MZ1zh
+         X/SFsSu3hHvpy7r+vGqyqa7YIr6jr4FLqK/W1rpS6PZdD4iZJiWFM6hDmXq5Y7QQwLcb
+         TLYVwcEx/VGoABEOGUvt+r/ULjxlckAwCe41Ui/l6iPcUYzVUBs10wfQKEjt/vdJk2Dc
+         7PiuyUuhiL15WHUPH0i9q5ctdCBdCap5Z97gUADPEXFBZzvovhgY9ZKNycps8KI9lVc7
+         oHtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUWkmmU8XS0z8Aao/v7cOLJL+nRzbG1CIWtcAnXqdp5lEGmKnriq7Il5m6JISRkP3f0CdCEuUiCCvk1Mw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsehZtq3oo1fj4uMmSMzbcbAJ8/IQdTkV265G3h2+8Zk0/utMi
+	JH1GTBYaprcDSAewTDTFB9wlTe2bCId9udMt/e3ax0dDSHQ3P1k/YHvk1ieU7J6NBQ==
+X-Gm-Gg: ASbGnctvsAC9QMmWVatQiXNm4/4Fi5ByV2/eGP++tjKiLpJFa6Esf3O6FNiQT/6KErq
+	eoarObKiFeG57Z6fNkpHLVdwTeon0Tki9lgEXNUpqnXCtpUgrBkIT2W09zQ9urYNRj/pE1zpL2B
+	0zI2RvWTFtW77+3I4PnYUuY7vWpVtDCYR6AHLxUiFOcAg47PoTkRAXUcoJ6lnPV/bWXZXAObXex
+	hsgqFw+2dhzR9Oy4qPeeiB6DzxY3rfKPayB8CXFf1PPV4qW6xbRaae0mOIbSFClxCZGN4uZEi7o
+	736Uu/M04nJfYiVrueC8CDE+z9IzxFZLbyAfkj0TijGmM79BEu5O8jZPHUBFJBI73ZlKn3jTFQR
+	I4A/fg6/F3zUyv55JSQUX8cMdNQ==
+X-Google-Smtp-Source: AGHT+IGiuNQvKhXtdt6Ok5Fr1YoMyXqYXB7NB4fc/w62CH9AcVgfoYg4At+1zRX7yiy5rot9P4MTZA==
+X-Received: by 2002:a17:902:d2c4:b0:234:c22:c612 with SMTP id d9443c01a7336-23ac48b49acmr234387375ad.43.1751302031953;
+        Mon, 30 Jun 2025 09:47:11 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bfdcsm87682315ad.105.2025.06.30.09.47.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 09:47:10 -0700 (PDT)
+Message-ID: <8ddc17b1-fd20-4cf7-b9c3-d002dd1aac8f@broadcom.com>
+Date: Mon, 30 Jun 2025 09:47:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] reset: brcmstb: Enable reset drivers for ARCH_BCM2835
+To: Peter Robinson <pbrobinson@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org
+References: <20250630164503.399835-1-pbrobinson@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250630164503.399835-1-pbrobinson@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The BRCMSTB and BRCMSTB_RESCAL reset drivers are also
-used in the BCM2712, AKA the RPi5. The RPi platforms
-have typically used the ARCH_BCM2835, and the PCIe
-support for this SoC can use this config which depends
-on these drivers so enable building them when just that
-arch option is enabled to ensure the platform works as
-expected.
+On 6/30/25 09:45, Peter Robinson wrote:
+> The BRCMSTB and BRCMSTB_RESCAL reset drivers are also
+> used in the BCM2712, AKA the RPi5. The RPi platforms
+> have typically used the ARCH_BCM2835, and the PCIe
+> support for this SoC can use this config which depends
+> on these drivers so enable building them when just that
+> arch option is enabled to ensure the platform works as
+> expected.
+> 
+> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
 
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
----
- drivers/reset/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d85be5899da6a..43151d12f88c3 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -51,7 +51,7 @@ config RESET_BERLIN
- 
- config RESET_BRCMSTB
- 	tristate "Broadcom STB reset controller"
--	depends on ARCH_BRCMSTB || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
- 	default ARCH_BRCMSTB
- 	help
- 	  This enables the reset controller driver for Broadcom STB SoCs using
-@@ -60,11 +60,11 @@ config RESET_BRCMSTB
- config RESET_BRCMSTB_RESCAL
- 	tristate "Broadcom STB RESCAL reset controller"
- 	depends on HAS_IOMEM
--	depends on ARCH_BRCMSTB || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
- 	default ARCH_BRCMSTB
- 	help
- 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
--	  BCM7216.
-+	  BCM7216 or the BCM2712.
- 
- config RESET_EYEQ
- 	bool "Mobileye EyeQ reset controller"
+That makes sense, I would also update the default to expand to 
+ARCH_BRCMSTB || ARCH_BCM2835
 -- 
-2.50.0
+Florian
 
