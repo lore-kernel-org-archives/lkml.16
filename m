@@ -1,145 +1,210 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FE920103A;
-	Mon, 30 Jun 2025 22:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A3D20103A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324092; cv=none; b=OyL4NXBE+Tiys9rt/uPOa2npeckSopYC1suc0fmHOr2QYSfiD+2XSSyBblVMo4OzWyeYu0PQo2PYZWBRIpDWtNtm70wEQ3f1N2YO99mwzuwhAnyp3C+gilubZzMODZ/6dfwAYf1W78npq09qErjiHjaqniYSAmgOgmJwj9mjPA8=
+	t=1751324202; cv=none; b=ryYe5+lDzk7g07CUWyTbgyoqkQ/r9BNQ/WjG/yF2jw8g3W+N4reB6qMbdsSjtd08CNNBG9LKYGH9jtygwjmBQLXaBgvXR9zqb10CuFf8SaOSVpFFgSxGycwlFbPE1zGEyoHP66auReDcA3CuVYKWDnxs3/gFCOkZ5OtljhyEJbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324092; c=relaxed/simple;
-	bh=Bx6G+GZnSuW/ym92BMhIICdOgvLhidW0IsEhM7+t/lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NCvQj27OE6b3T7w3PM1lEAUooe/9oMZjt2Gk0hdhwy7uLsXuBFDCRgBdOXIOIiqB/xagCSKXyIe14s4N2jH4uo1KI94SIB8lK7kjSi5Z2lyQg0cgqL/WuFX23Qc8N/u5mpbZuqTO2lTIq+I55Ri5VBoAjz4R0LtoczJZ0CmRj9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com; spf=pass smtp.mailfrom=tyhicks.com; dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b=XdkZAKgu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BOkeg6+Z; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tyhicks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tyhicks.com
+	s=arc-20240116; t=1751324202; c=relaxed/simple;
+	bh=/4SjED/6P5QMWfmvfhHEAO9Iq2kipcz5xfs91SBDivM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jxDigKz9QMw3fy7cBs96RAJ24G879y6/3uww6ATNrknx5FwFloSJFdELM1ZmJ4G8vn0HUazbVCbtyFbKNOgFCCJIgZ4ntdFF5NPa3HB9x9/hcEEYvhE7MwWg+z3xlqagMCptEAGSlwLLT2VLP+XpskYaJHsG6NxJQKghMVjcGFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EvGRD57w; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tyhicks.com header.i=@tyhicks.com header.b="XdkZAKgu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BOkeg6+Z"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id C7EA8EC04A6;
-	Mon, 30 Jun 2025 18:54:48 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Mon, 30 Jun 2025 18:54:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1751324088; x=1751410488; bh=aDxAWQha8L
-	UIuv4vcmXxHDWbyTtKBRFdq7D4Fzb0AD4=; b=XdkZAKgu/9u5x98IsBuvUlN9bt
-	SUeLGBzmev7FPnd1udripRYgRykLn2SXGA5wxUo0T7ZNU1oHxkyEu2JdA2Ax6p9O
-	iH/KJqeXp1aRiBFAkHuJlzwpA4GQJyEPxYDgMKKLfpcB5RCVUjtYjBrFjxAYdu55
-	zu0kibAQbJ6m1WAcZimB1CiDl2faeZxS6LInr+nhrCfV1mghEQOf3oWA9egkG9Qt
-	CRmh/HYbi058wsVuMTkVdnrP44TaMr1IZ1CCCaUJiLqIA1/W8RUqNnn1uCErAQnm
-	zRwu3vUrEy4OSIGhwnkNfWkKWPEvw0bQ6KE4FbpgWwNm7evfhwj22NdOeZZg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751324088; x=1751410488; bh=aDxAWQha8LUIuv4vcmXxHDWbyTtKBRFdq7D
-	4Fzb0AD4=; b=BOkeg6+ZOCSO74Jud5GKAXmrIPqwyxbUM63oHkMfYAoyS7eEfGB
-	dcctu5/C3Qa+DYmee/jj+F0GidtSasgJSJsrs8aRtqJzjNGV09aG5fwaDRYesXtd
-	Iwua439Io8/m7D7zdzdyYUUi+GNdmiziaMHn1AXd/dhgJDcCLND+Sx3Fy9VelXMP
-	vevTK5pW4gBbuKMhAY9M8AXug2SaJvoQ3Q+HDTllMOZToBvRIMqQrzoH646lhPgS
-	47QqIOtN5MyvujLCHnYZDGsEWQaLXeeOUuebHIAAyUfFbudGKnPNMjGVdbB9Un8F
-	Vfb+x72vYb94eT7N/Y+12gLxpIZ2klStFkQ==
-X-ME-Sender: <xms:uBVjaOI-rFUMDBXE2FbOf-9X_QOAteUDf1LZybeIFejKC_kb5abkZQ>
-    <xme:uBVjaGLuI3fle84rc88mdfvMqRTdcUQhNz1S3khcrypYQWL0t82J8EhImoiIdgb3Z
-    3rpGTTyTcvg2fjn9ro>
-X-ME-Received: <xmr:uBVjaOvjMLhV8i1EQIeiJAH5kRerkccLjfJqVgEcVzQkI4h_4LJfjHhBDg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvdelhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhihlvghrucfj
-    ihgtkhhsuceotghouggvsehthihhihgtkhhsrdgtohhmqeenucggtffrrghtthgvrhhnpe
-    dvhedvtddthfefhfdtgfelheefgefgudejueevkeduveekvdegjedttdefgfelieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtohguvgesth
-    ihhhhitghkshdrtghomhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepmhgvrghgrghnlhhlohihugeslhhinhhugidrmhhitghrohhsohhfth
-    drtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhl
-    ihhnrdgtohhmpdhrtghpthhtohepghhiohhmvghtthhisegvnhhnvggvnhhnvgdrtghomh
-    dprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:uBVjaDaZHYUUeGsyC75tk440mlmwDjjzhD0rY3nXkcDEYBUgdBHdPQ>
-    <xmx:uBVjaFaETJP_8PbAMmLIsAwpI3OCwNVbGROHKWl5L6I2yeN_nNBQUg>
-    <xmx:uBVjaPA4qIonjnFryUREDw6L3VlyDvvhDzRYkG_NrJIaG1mT65BYCg>
-    <xmx:uBVjaLZvpTyWmkwpqFIhBH4O_g2i6tcJ5iUiKsiiWfr7gi9dXGAXLQ>
-    <xmx:uBVjaBYRBTt2t8ReVcBQCCOcA53P_jEP0rigiBJ1boeEr6T0x3sBYV-l>
-Feedback-ID: i78e14604:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Jun 2025 18:54:47 -0400 (EDT)
-Date: Mon, 30 Jun 2025 17:54:45 -0500
-From: Tyler Hicks <code@tyhicks.com>
-To: Meagan Lloyd <meaganlloyd@linux.microsoft.com>,
-	alexandre.belloni@bootlin.com,
-	Rodolfo Giometti <giometti@enneenne.com>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Expand oscillator stop flag (OSF) validity check to
- ds1341
-Message-ID: <aGMVtfwB5gmBuW4T@redbud>
-References: <1749665656-30108-1-git-send-email-meaganlloyd@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EvGRD57w"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6098ef283f0so4592a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751324199; x=1751928999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M7R5ktcV401kDH/d+qwKCQlLBLAeHgEGNUeVhuIZukw=;
+        b=EvGRD57w/ey53kIOFLWDBM0umU9fx04FdbKgmVsX9eCMBRLPdJMnfrwLI+lhGch9mF
+         GIk3D5tVYg+Stt10azH50NhyseP1U7EwQeM/OjnZjEt0hx8+4FGUnNOrwhhCSibbHCZo
+         ICLz/10eTMu2yE16AKC2KPMO9Ul33+zNNHUmpbU6bGfZpTnCbAV52vpXksOlxBoT4+zh
+         St6DlYxRuBTTTjKAFvPKn4JPj5K85/rAfXqoLV99T//deR8CAxDJKklmbBvEd1OhE5EQ
+         5EEkqF3N2Obf3Q4830JGn178f532/QisLmBrSQWKQ7F3Z6y+jP3e3FUgiNp0vXrxqkR/
+         ejnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751324199; x=1751928999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M7R5ktcV401kDH/d+qwKCQlLBLAeHgEGNUeVhuIZukw=;
+        b=d0mvwjebqeR8O0+2nP0VmU/deh/dHol3OWjFCjsZRF9jj9VQIoJy6hSuwuDbq/aJhN
+         PPFiur5eq1gKk7MsqwuJCIVBRVhEjdG9WuwAsL+MuajrckIiUgOkEB15pVfineWZ6M5I
+         7kzUDsS22ROAt2MhciQpto203goHnmmLRIyHp58X+MmGBBdJFZnfzeRRofERVZdR7mDq
+         uphP3dIQlYeQhJOh3JilOU5QJQyxhBnpKV7F8k3zpPVNT1TCoJT6LenvFsFsy36tIWhn
+         IAM+H0w9D5lUQfZ5XbNcoS7+j+V8gwFNHkwUVlp64bEEUIaErDNb+rDJCnNpQq8ikIxl
+         M8GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWB/DTEyjrMnYdTanYDO9tNMGuBY4GA/NjLhchIUlGAic5r6qAyWkJVaWkGZALKjGdfMhL7toAjOX8pNEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmVlQRU62yjmpTtvlgAaBm7MgEvpc9npdX0c70FTor0oLIga6C
+	4CKSGCeKc+RfuA2kG3Pqhfy75yMjxqKLhqHAMKFwFcw6URRb+LwbC00SSkOGVsxkvYfu0NSDyMf
+	KfX0lYR5mgnln6Fml1A1w07j2eUtf5+JIymy6k2YTh5wbT6KVQpGkhkjlvMg=
+X-Gm-Gg: ASbGncukbiC9I7DaB+3ydwMGnn37sVjFSSeRjXfMifbSWndDvNsWU6NK7q9kxCPKauP
+	bPMq8sqmuIdG+b4mSHgX9ZeeZWkgfj3Exq4vCyXviOE04K76DIMoxafavQ/DpzwuIEm2eRrk5FF
+	AmkOErfT2V5jzHPuIzGoH/nxX7YeFLbf+MVqqrBdXfB/M6fpSVRoFGzJSBkKmvKOpNbqxAAwL2F
+	g==
+X-Google-Smtp-Source: AGHT+IHN4Q5qVv7STN2zkQigTwd6ckNtyug0GjwCzMak6D3eFupekwm7Mzvsg61LwR7bzp8dNQGph0F51sdiQBVIGzM=
+X-Received: by 2002:aa7:d887:0:b0:60b:9d04:2cec with SMTP id
+ 4fb4d7f45d1cf-60e38a923f8mr2580a12.5.1751324199107; Mon, 30 Jun 2025 15:56:39
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1749665656-30108-1-git-send-email-meaganlloyd@linux.microsoft.com>
+References: <20250615144235.1836469-1-chullee@google.com> <20250615144235.1836469-3-chullee@google.com>
+ <c8389c1a-16d2-4de4-bc3f-7a5e4ccdbc34@kernel.org>
+In-Reply-To: <c8389c1a-16d2-4de4-bc3f-7a5e4ccdbc34@kernel.org>
+From: Daniel Lee <chullee@google.com>
+Date: Mon, 30 Jun 2025 15:56:28 -0700
+X-Gm-Features: Ac12FXxzXkzy0qePDKtuBAjgWeWGzgYc_s5Wj4IDCSbA2BAhcYaaMIv-ITP6RRU
+Message-ID: <CALBjLoB6+FgWJMqKPN1o1bpeYWB-d-7BWtGbYPo18fcFWZqEkw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] f2fs: use ioprio hint for hot and pinned files
+To: Chao Yu <chao@kernel.org>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[Adding Rodolfo Giometti]
+On Mon, Jun 16, 2025 at 5:50=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
+>
+> On 6/15/25 22:42, Daniel Lee wrote:
+> > Apply the `ioprio_hint` to set `F2FS_IOPRIO_WRITE` priority
+> > on files identified as "hot" at creation and on files that are
+> > pinned via ioctl.
+> >
+> > Signed-off-by: Daniel Lee <chullee@google.com>
+> > ---
+> >  fs/f2fs/f2fs.h  | 19 +++++++++++++++++++
+> >  fs/f2fs/file.c  |  3 +++
+> >  fs/f2fs/namei.c | 11 +++++++----
+> >  3 files changed, 29 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 3e02687c1b58..0c4f52892ff7 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -3440,6 +3440,25 @@ static inline void set_file(struct inode *inode,=
+ int type)
+> >       f2fs_mark_inode_dirty_sync(inode, true);
+> >  }
+> >
+> > +static inline int get_ioprio(struct inode *inode)
+> > +{
+> > +     return F2FS_I(inode)->ioprio_hint;
+> > +}
+> > +
+> > +static inline void set_ioprio(struct inode *inode, int level)
+> > +{
+> > +     if (get_ioprio(inode) =3D=3D level)
+> > +             return;
+> > +     F2FS_I(inode)->ioprio_hint =3D level;
+> > +}
+> > +
+> > +static inline void clear_ioprio(struct inode *inode)
+> > +{
+> > +     if (get_ioprio(inode) =3D=3D 0)
+> > +             return;
+> > +     F2FS_I(inode)->ioprio_hint =3D 0;
+> > +}
+> > +
+> >  static inline void clear_file(struct inode *inode, int type)
+> >  {
+> >       if (!is_file(inode, type))
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 3eb40d7bf602..a18fb7f3d019 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -3496,6 +3496,7 @@ static int f2fs_ioc_set_pin_file(struct file *fil=
+p, unsigned long arg)
+> >
+> >       if (!pin) {
+> >               clear_inode_flag(inode, FI_PIN_FILE);
+> > +             clear_ioprio(inode);
+>
+> I guess there are more places clearing FI_PIN_FILE? we need to cover
+> them all?
 
-On 2025-06-11 11:14:14, Meagan Lloyd wrote:
-> We would like to use CONFIG_RTC_HCTOSYS to sync a supercapacitor-backed
-> DS1342 RTC to the kernel time early in boot. An obstacle is that the
-> sync in rtc_hctosys() is unconditional as long as rtc_read_time()
-> succeeds and in some power loss situations, our RTC comes up with either
-> an unpredictable future time or the default 01/01/00 from the datasheet.
-> Syncing a future time, followed by an NTP sync would not be desired as
-> it would result in a backwards time jump. The sync feature is useful in
-> boot scenarios where power is maintained so syncing only when the RTC
-> data is valid would allow us to make use of the feature.
-> 
-> The DS1342 has the oscillator stop flag (OSF) which is a status flag
-> indicating that the oscillator stopped for a period of time. It can be
-> set due to power loss. Some chip types in the ds1307 driver already use
-> the OSF to determine whether .read_time should provide valid data or
-> return -EINVAL. This patch series expands that handling to the ds1341
-> chip type (DS1341 and DS1342 share a datasheet).
-> 
-> These changes enable us to make use of CONFIG_RTC_HCTOSYS as they
-> prevent the invalid time from getting synced to the kernel time. It will
-> also prevent userspace programs from getting the invalid time as the fix
-> cuts it off at the source - the .read_time function.
+Yes, you're right. FI_PIN_FILE is toggled in several places. However,
+this change is intended to set the HOT and IOPRIO on the files that
+users explicitly pin through IOCTL. The other kernel internal
+mechanisms (e.g., swap or gc_failures) remain the same. Are there any
+potential issues that I should consider?
 
-These two patches look good to me, although I'm not an expert in RTC drivers.
-I've reviewed the DS1341/DS1342 datasheet and the approach that Meagan has
-taken makes sense to me given our (Meagan and I work together) desire to use
-CONFIG_RTC_HCTOSYS and the need to avoid syncing from an invalid RTC state.
+ >
+> >               f2fs_i_gc_failures_write(inode, 0);
+> >               goto done;
+> >       } else if (f2fs_is_pinned_file(inode)) {
+> > @@ -3529,6 +3530,8 @@ static int f2fs_ioc_set_pin_file(struct file *fil=
+p, unsigned long arg)
+> >       }
+> >
+> >       set_inode_flag(inode, FI_PIN_FILE);
+> > +     file_set_hot(inode);
+>
+> Unnecessary file_set_hot() invoking? Or am I missing anything?
+>
+> Thanks,
 
-I've added Rodolfo because he first added the logic to clear the Oscillator
-Stop Flag, during driver initialization, way back in 2007 with v2.6.23 commit
-be5f59f4b67f ("rtc-ds1307: oscillator restart for ds13{37,38,39,40}") and may
-have additional context to provide.
+Setting HOT and IOPRIO by default is also intentional. We set both
+flags by default because the main use case for pinned files involves
+frequently updated or short-lived data that needs fast write speeds.
 
-Alexandre and Rodolfo, does this approach make sense to you? If not, do you
-have any other suggestions on how to make CONFIG_RTC_HCTOSYS work with this
-driver? Thanks!
-
-Tyler
-
-> 
-> Meagan Lloyd (2):
->   rtc: ds1307: remove clear of oscillator stop flag (OSF) in probe
->   rtc: ds1307: handle oscillator stop flag (OSF) for ds1341
-> 
->  drivers/rtc/rtc-ds1307.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> -- 
-> 2.49.0
-> 
+>
+> > +     set_ioprio(inode, F2FS_IOPRIO_WRITE);
+> >       ret =3D F2FS_I(inode)->i_gc_failures;
+> >  done:
+> >       f2fs_update_time(sbi, REQ_TIME);
+> > diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+> > index 07e333ee21b7..0f96a0b86c40 100644
+> > --- a/fs/f2fs/namei.c
+> > +++ b/fs/f2fs/namei.c
+> > @@ -191,9 +191,10 @@ static void set_compress_new_inode(struct f2fs_sb_=
+info *sbi, struct inode *dir,
+> >  }
+> >
+> >  /*
+> > - * Set file's temperature for hot/cold data separation
+> > + * Set file's temperature (for hot/cold data separation) and
+> > + * I/O priority, based on filename extension
+> >   */
+> > -static void set_file_temperature(struct f2fs_sb_info *sbi, struct inod=
+e *inode,
+> > +static void set_file_temp_prio(struct f2fs_sb_info *sbi, struct inode =
+*inode,
+> >               const unsigned char *name)
+> >  {
+> >       __u8 (*extlist)[F2FS_EXTENSION_LEN] =3D sbi->raw_super->extension=
+_list;
+> > @@ -212,8 +213,10 @@ static void set_file_temperature(struct f2fs_sb_in=
+fo *sbi, struct inode *inode,
+> >
+> >       if (i < cold_count)
+> >               file_set_cold(inode);
+> > -     else
+> > +     else {
+> >               file_set_hot(inode);
+> > +             set_ioprio(inode, F2FS_IOPRIO_WRITE);
+> > +     }
+> >  }
+> >
+> >  static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
+> > @@ -317,7 +320,7 @@ static struct inode *f2fs_new_inode(struct mnt_idma=
+p *idmap,
+> >               set_inode_flag(inode, FI_INLINE_DATA);
+> >
+> >       if (name && !test_opt(sbi, DISABLE_EXT_IDENTIFY))
+> > -             set_file_temperature(sbi, inode, name);
+> > +             set_file_temp_prio(sbi, inode, name);
+> >
+> >       stat_inc_inline_xattr(inode);
+> >       stat_inc_inline_inode(inode);
+>
