@@ -1,65 +1,66 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C70B2367CB;
-	Mon, 30 Jun 2025 07:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B5518E20
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269694; cv=none; b=U21yeSGBEh9N8+bbwN6Wc8dhX9jLJznrXGI4ZO7TnRrZfDeQ91SDMIhlAtXb+UVi/P9udCmi4X8jda02richNKiHyVD3Yl87cU8n21WlDnZmV7IqaAx0HPKWA8kNZajp8LShS5cfeRhkbiLZZB00AHccZzA+l/y4a70oMqjNd0c=
+	t=1751269730; cv=none; b=IxTfl9MplDXORCgC4/g+WQYFFSJS3bxL4aXkeoPWHVKl+wnAvIOR/CKaJECdjRThP5Gh+5+OmbqfRdzXfw5kA2pSl2GYyUnmUzfXrbZE4dzfE6NhO8SrsJiIFsXcECased0jISNTFg+BXx6Jjh93/o8zANHUkuwjp9lEUhKNJMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269694; c=relaxed/simple;
-	bh=VmVkc4NDqlE1eCTqylwVONlN47uave8nHFmJ3UNaPUQ=;
+	s=arc-20240116; t=1751269730; c=relaxed/simple;
+	bh=qf8NaywLRmWMHaEJuLsltQXouTMmM7A/UAbuopsgvUI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mLGdO+Zb3Z5yw2Z/kSWiV8ZqjWgfZELw0It6GNNf+TU8QaBTD6SOG0GMI3Qi5o9YXA8UXS2hLxME9bL/qxtNKi9xdrYjNNM/Ki4fAYkaxcrYBeWVj4c/OAVd79SFnxVR0LSBzSpmAV5RfqW8hW0b4RNzmzqDaF3D5IqCg8NKGVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYbRsJfK; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=HeCX0o8FkfotnextPcBpdrMPKjsBGgVaYPNGd0nJoq5NotdjtQd7aYA1YLxaPhuxfUMYUPC8WfbmF0qdRfmUfMLGnkt6lzxuLIP2/Tkdc9RMH00nh5kZmIos0eDrBlJqd0a+HIFMnWiR+T9HMn90n39gPwPy/DIEsQbwWRY7pgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=G68ILadV; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYbRsJfK"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b544e7b4so1789942e87.3;
-        Mon, 30 Jun 2025 00:48:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="G68ILadV"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so8289845a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751269690; x=1751874490; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bXFSBFS/Fsc3zonUF83Eqw+cmF6YkWtHb9J7Fk7Gc80=;
-        b=LYbRsJfK2t9ZCQbcPNYPqb8isK6HXU5PwMbcK6q0z0YHpTGVUZFguJn/6eXcPq6nt+
-         h1aPA8OJzZJPkJGrQZJOF2qaD/GtVdgvqj4bglSdA1olfLVhMqN/VW0asmIx2QF4v/0l
-         trUjPvObYREVj1aTir0W7QRA+IWOQ+R9y9PD8RU9Lte0sFuYuqNMb9jW2vhQJc2IV+rR
-         aBVjFlR6SMOWLtddZsZ2Lgnpz0PNj/+0Au68RQFsgtxZchsQgAHoWSh6Fjg6x1+5X/ag
-         4yiuh133nVP+QC456ZLFBsxCkoUBDVcwAlyKyOBPa0OD9vA46xe33oAvDkJnIPN4kN/J
-         zXiw==
+        d=mandelbit.com; s=google; t=1751269727; x=1751874527; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=tZ+BSaUYjMYZPFRc5ahI5f+VB6TZxnMY7+aM/BHB0gk=;
+        b=G68ILadVVZwyr8ugTC0v7wFBWa/DeA6lLn6W1yFZvySa5nJebBnTJnMtGqUCqytDtJ
+         y0nO5dNZ6CFAzLmez2Thsh6Xx6VvUEE0MUdwDwrYkUQYCv5b0gximxXfnCsI28U/6+g1
+         gnp0sml0albInrW9cB0UvHSHJT3YhXkSp0rEX3thEYTFNk0XEOeS/DeUgVLmx4jJi12h
+         pRQrkPfwb5xpMl3iVdDeFKeA+qbOQaAG2RM6Fm7SfhORZuc9NE4pe/h42LD9rcVsy5Jw
+         jWxPFiVun5aRzOs6iGdYPGx++f17kmtZNB3b6d3EmClXjvHImydMUmda4QzpoOtkVXtD
+         71JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751269690; x=1751874490;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bXFSBFS/Fsc3zonUF83Eqw+cmF6YkWtHb9J7Fk7Gc80=;
-        b=YfGll3WXFgeMd8y3F5c+eew6E2QHr3tN8m2h5S+lmVajO4H1ir8n2Xqk6DGjW/oSmN
-         lcI+IpmgFTLnmnXFxu26yk3v7DwLyvKzPJN0b+aojbSLVWAl0zDLG90/tRADMa+lEs1A
-         J/osiEGisDbsEUnl5Oxe2QuSL3EBa1b3vySmxeBTO+Dl30KsCqD/a5mSFOJnlXsJaX2N
-         OGKiGtaWp4POskNfvSsbGbQETmgjJziYzAQz7X+JKi95qfN9M+bjOqyo0uXrF9KnDA+5
-         mkSY+SvQFquTZ48A3kOIjBVM/K52agPXanm6cdPWk5tbrS9L40E0yWJIT//wuRksjA9R
-         CeNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnL6HuwpPYBehDMI3RkIcqajxMrcS2Y5XhUI6SAbtmLh2ST6pjrleq5yY5B8Ijx/b06DWq6VzoH64qCz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLswrPhL1C2pM7nNgEr+sRdxRt6bILBgdDAjUkXpEEs8UcKbi/
-	Gk878q7tirSwwLR0jXcYnBgHmHeFWQ37+1zhSpj2gt1YEdaSUMsbHHKw
-X-Gm-Gg: ASbGnctSsDUkr2YxvmaZdutJJnYOAwbRzT2wH4i/tKjb1gNPbgCBxeN0v8t7EgFcrO0
-	IxJmNk6rCDN9wJwgbp1S5m+cJ7cm+Cy/6J+yYT1xrpDPmzpjx/hKpoxxQKQRqb3jCWvv76yNTYu
-	jrYdTG9Iv7LgwMunPCBJSvzgUAiOJBac5btQwVUuHqeDbOF5o4lCu5YqIE32bbpTnxDHKKw2da5
-	3UPI+AgB/yjeHRW9LC/PFpzhoXjNjT65cqAUa9ILEb7vp4BCOCuWjE6YNE5MBdKkHTThWlq/k5Z
-	KgXSkmfw83xJkktyWPgviTQFZH44+Z1f9uTSlqgVuc9frl9w3Bf8Gl29N8NudW1Pc+utBX4O/0I
-	/auOk3c95m0DYJAshvh74DJeTb6WIzWz9igCH97A=
-X-Google-Smtp-Source: AGHT+IEjGFbT+2UJY4kKWiRGgpwWa5SKukWH4D3VbO4nfmfAhxfFEnGkspsGJRSmRO+9iY3LZVTzCA==
-X-Received: by 2002:a05:6512:130c:b0:553:2438:8d02 with SMTP id 2adb3069b0e04-5550b8e9404mr3472093e87.47.1751269690098;
-        Mon, 30 Jun 2025 00:48:10 -0700 (PDT)
-Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b240103sm1329013e87.52.2025.06.30.00.48.09
+        d=1e100.net; s=20230601; t=1751269727; x=1751874527;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tZ+BSaUYjMYZPFRc5ahI5f+VB6TZxnMY7+aM/BHB0gk=;
+        b=VC3rbnhl3V/Yxa379DcuJ9IbyD++XN3IWnLoUPQBhtJcmZ67kf9nNqHa5jUbzdymp6
+         yHI9g+O25XtRnsRFlSEJCJER+P9pAuu3niboweRoYKy2eNMz0yZ35552qYxUSvzxqZUA
+         ll6FtAwVAcOf8QT+VV+BeE2nsjEBGv0tWxXFz8q+FprDm0WzyhV9Yx6Q1SxD96gBVT1D
+         tkVKJc8nY1wmJIV1wc38PmIaSnj7zj0D6BZZ97hM2dS2pBf+qHiZiS3YuolvoAd6nUVY
+         XEqTBMmJTVcVS9r+RQmXBByFddmVoHQBBksgXWOXjv5DBjvyZwfLP8bxxkOTtSWaUTHq
+         bi4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVZF8uLnoT2jD0MO98RzNsQPquUlnBLUn5b3MPKCeoCYYdlc8oDteZsTET5JILTpsr9+pYsWp23iNk2KSA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCWtv1FrbgNQHMg5IsdZsZ3DkaWCKGt5jlvyJpuEd7EeeEFnMo
+	PtHhnztBbEppBue7QC33ezzwYJJixDa3ggHJGRwvsjw643fswesKcsGVEUaJNU2k0o8=
+X-Gm-Gg: ASbGncsDKRiMpaDv3fiDXMymx22fuvXD5wUYvIzdH3Sf2Am6K4AmUmztuHv9VtB79VL
+	FbtEwrZJbuffCeycN0EYh/OSYNgRIBLlyGZmuRiXPG2rjS8v96dbTTkuBwiamsn3v0BqVTn+a8V
+	D2jl/eKleKgK0q8ETuEFDS6Q5EUSWDLD5MDvXvQfXLiWJZB3hMw9aBogb7onvz1qSm8s5ZCAVsd
+	rogbQF6BmJ90OhyMdesPLlGx6TicpIOQpJdFmoVKoNl/mAtple5Nj9NOu+H8zbxMs4lxXLARXUi
+	CWfd5tbk7wHpm+YW4Lzn0sJ2XjWIIvos9EGpU3icU12Ydj8UF7wCGJY1K2rCnCNbiQVykbcw9v1
+	sL9DVZ2R7cPAmDo6Cu1ZNd4Cy
+X-Google-Smtp-Source: AGHT+IFG8mxwherCyB+H+Ce/MDetYKrbqKrvuEJkbWn3WcmopojqghsC9D4gNWRWL3XhXfmKmOCezQ==
+X-Received: by 2002:a17:907:8691:b0:ae0:ade2:606b with SMTP id a640c23a62f3a-ae34fd8ecebmr1192187566b.19.1751269726337;
+        Mon, 30 Jun 2025 00:48:46 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:f5fc:eb97:a20:8b31? ([2001:67c:2fbc:1:f5fc:eb97:a20:8b31])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b1c4sm623062966b.31.2025.06.30.00.48.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 00:48:09 -0700 (PDT)
-Message-ID: <a5679ca1-aa22-4a05-92fb-f1e95805c864@gmail.com>
-Date: Mon, 30 Jun 2025 10:48:08 +0300
+        Mon, 30 Jun 2025 00:48:45 -0700 (PDT)
+Message-ID: <1c6f4024-be8a-4734-a724-f12b85a52ed7@mandelbit.com>
+Date: Mon, 30 Jun 2025 09:48:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,68 +68,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rust: dma: require mutable reference for as_slice_mut()
- and write()
-To: Danilo Krummrich <dakr@kernel.org>, daniel.almeida@collabora.com,
- robin.murphy@arm.com, a.hindborg@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, acourbot@nvidia.com
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250628165120.90149-1-dakr@kernel.org>
+Subject: Re: [PATCH] spi: stm32: fix NULL check on pointer-to-pointer variable
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ linux-spi@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Alain Volmat <alain.volmat@foss.st.com>
+References: <20250628000227.22895-1-antonio@mandelbit.com>
+ <1f49b8f3-44c9-43f3-a3bf-b931fb0726f4@foss.st.com>
 Content-Language: en-US
-From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <20250628165120.90149-1-dakr@kernel.org>
+From: Antonio Quartulli <antonio@mandelbit.com>
+Autocrypt: addr=antonio@mandelbit.com; keydata=
+ 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
+Organization: Mandelbit SRL
+In-Reply-To: <1f49b8f3-44c9-43f3-a3bf-b931fb0726f4@foss.st.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+Hi Clement,
+
+On 30/06/2025 09:34, Clement LE GOFFIC wrote:
+> Hi Antonio,
+> 
+> On 6/28/25 02:02, Antonio Quartulli wrote:
+>> In stm32_spi_prepare_rx_dma_mdma_chaining() both rx_dma_desc
+>> and rx_mdma_desc are passed as pointer-to-pointer arguments.
+>>
+>> The goal is to pass back to the caller the value returned
+>> by dmaengine_prep_slave_sg(), when it is not NULL.
+>>
+>> However, the NULL check on the result is erroneously
+>> performed without dereferencing the pointer.
+>>
+>> Add the proper dereference operator to both checks.
+>>
+>> Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to 
+>> enhance DDR use")
+>> Addresses-Coverity-ID: 1644715 ("Null pointer dereferences 
+>> (REVERSE_INULL)")
+>> Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+>> ---
+>>   drivers/spi/spi-stm32.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+>> index 3d20f09f1ae7..e9fa17e52fb0 100644
+>> --- a/drivers/spi/spi-stm32.c
+>> +++ b/drivers/spi/spi-stm32.c
+>> @@ -1529,7 +1529,7 @@ static int 
+>> stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>>                              DMA_PREP_INTERRUPT);
+>>       sg_free_table(&dma_sgt);
+>> -    if (!rx_dma_desc)
+>> +    if (!*rx_dma_desc)
+>>           return -EINVAL;
+>>       /* Prepare MDMA slave_sg transfer MEM_TO_MEM (SRAM>DDR) */
+>> @@ -1563,8 +1563,8 @@ static int 
+>> stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>>                           DMA_PREP_INTERRUPT);
+>>       sg_free_table(&mdma_sgt);
+>> -    if (!rx_mdma_desc) {
+>> -        rx_dma_desc = NULL;
+>> +    if (!*rx_mdma_desc) {
+>> +        *rx_dma_desc = NULL;
+>>           return -EINVAL;
+>>       }
+> 
+> Good catch for both pointers !
+> 
+> For readability, I would suggest to define two dma_async_tx_descriptor 
+> ptr at the beginning of the function such as :
+>      struct dma_async_tx_descriptor *_mdma_desc = *rx_mdma_desc;
+>      struct dma_async_tx_descriptor *_dma_desc = *rx_dma_desc;
+> 
+> And then use them all along the function even in the assignation.
+> 
+
+Thanks for the comment.
+Will send v2!
+
+Regards,
 
 
+-- 
+Antonio Quartulli
 
-On 28/06/2025 19:49, Danilo Krummrich wrote:
-> Given the safety requirements of as_slice_mut() and write() taking an
-> immutable reference is technically not incorrect.
-> 
-> However, let's leverage the compiler's capabilities and require a
-> mutable reference to ensure exclusive access.
-> 
-> This also fixes a clippy warning introduced with 1.88:
-> 
->    warning: mutable borrow from immutable input(s)
->       --> rust/kernel/dma.rs:297:78
->        |
->    297 |     pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
->        |                                                                              ^^^^^^^^
-> 
-> Fixes: d37a39f607c4 ("rust: dma: add as_slice/write functions for CoherentAllocation")
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->   rust/kernel/dma.rs | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-> index 25dfa0e6cc3c..2ac4c47aeed3 100644
-> --- a/rust/kernel/dma.rs
-> +++ b/rust/kernel/dma.rs
-> @@ -294,7 +294,7 @@ pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result<&[T]> {
->       ///   slice is live.
->       /// * Callers must ensure that this call does not race with a read or write to the same region
->       ///   while the returned slice is live.
-> -    pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T]> {
-> +    pub unsafe fn as_slice_mut(&mut self, offset: usize, count: usize) -> Result<&mut [T]> {
->           self.validate_range(offset, count)?;
->           // SAFETY:
->           // - The pointer is valid due to type invariant on `CoherentAllocation`,
-> @@ -326,7 +326,7 @@ pub unsafe fn as_slice_mut(&self, offset: usize, count: usize) -> Result<&mut [T
->       /// unsafe { alloc.write(buf, 0)?; }
->       /// # Ok::<(), Error>(()) }
->       /// ```
-> -    pub unsafe fn write(&self, src: &[T], offset: usize) -> Result {
-> +    pub unsafe fn write(&mut self, src: &[T], offset: usize) -> Result {
->           self.validate_range(offset, src.len())?;
->           // SAFETY:
->           // - The pointer is valid due to type invariant on `CoherentAllocation`
-> 
-> base-commit: c7e03c5cf06a90ff234ae3c628c6b74e5cba7426
-
-Reviewed-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+CEO and Co-Founder
+Mandelbit Srl
+https://www.mandelbit.com
 
