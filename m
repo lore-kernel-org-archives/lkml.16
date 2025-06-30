@@ -1,63 +1,63 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B5F221540
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA4320FAB2
 	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272267; cv=none; b=AgjK2pVRnp+6e1ut6+hbdmcNbBjKuUiY1m0b92aqzZ/MKYk053qdjf7xVzW9R0LmvF9gH71gYMkmY1+l4uMBU5R3EB5zZf7APiQd/1qVQ+XYk43gfsHf1b66BbkiwGxjT94h49RyuW+IDYLr7CK2t7tozs9erqRp8ZJg5AFoAH4=
+	t=1751272267; cv=none; b=FymesjzpStB3jaT3e0od6ktaV4AEVGanMzcaAengbIDHZdrnoW7v1C7JWX+osTxUCCaFOug3H5sdW5/n6vFAR15HGZeZx2U8OthdEz8SdNkFvhWShUpKQ+FXm8w+VdN1OEZrOiqFRQBCCtNV6x804nqeLjBmdclCaOYBjmQzowc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751272267; c=relaxed/simple;
-	bh=jfK1JCLXX0AQ/C2AaSK8OfLO9I78+U+gJ/g5BtnDLp8=;
+	bh=BacTpYDKsivXlWevsTrw36x80ITH6Ritocv0vbDFpNg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K5zDdXmCKmCkiWW8n+uj9FTIJ82ab2TG1HQxfsVuB2b6oohxVZ1rUF1Lau56GjBhbItyTMav/QNiCmNtDMuHoBl4CqkHUqUlVRzYsK+fttO7WKpHCRAS4mO3R7fva+B8M4TKmvv7by6ier0fQ3sL9J/f81nh9Sy/YQ7dOzvpY1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aySfQ6im; arc=none smtp.client-ip=209.85.208.54
+	 MIME-Version; b=rlCqNIxI7bEIvEg5r2zHO2LpoKtpTdUgXwLW5OY/O0bCuy38y6uYGF7n3A7G4YF5uzPh44g8UblBfFuDfFLY5/V3Oge2soTJqDeKoCSuwjQOuOHOPWxWIK+2ezu+ZKTsWD1TyPl6IJdUqhNyL54D6G2Tp3luoRK9Uw5e8JvjiQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tmt7UdTb; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aySfQ6im"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so8027414a12.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tmt7UdTb"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae35c447234so554510666b.1
         for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:31:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1751272264; x=1751877064; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l8JjQ+1mhu7w6AzCypUJiqd/c0GGf08rutzFlOhZeNc=;
-        b=aySfQ6imY82FygRFpgj0juGlIaG5RsqoQ5KUScV1+nMxUfE/jMSASgGgEE4401PuGL
-         Gpwn8LHkuCVwn09kY6JSuIEes5UiEXecHVUiO8E7oWlu90dAa++p5AW76495tSR/pFXf
-         CeDdhOiihjtl0T3FAGTO7Y6oCEHUpzkBE1rc9Y0Km/2TnPK8qZYcUBm1o8Nm0DmWaa7C
-         r3x5JGvAUR3Tm/BinaUrHcbM9tPCSnTvLeR8vqF8m30gD2UQjsoCrR7vKfhEfBBi1TQS
-         4usukfuhvQ8oQUKA5MNI5o54Xa2XK4jHgIYqydtySzJxkMioM4LmNmWQQk9JTGUala+F
-         GwiA==
+        bh=jfEtgbNt/rYCf8xNxthB2n/XL2JqGnY+ug8Bfy+XFfE=;
+        b=Tmt7UdTbUUtgfIJ3kFCtL6IYi9vJH8dh6Em0uxjO7TAU/MkEl92vgbdd2vVVZrBsRw
+         ilwzncwom8fZL+qHV2oiAoRipVG3CWTagasuIFsyhRJgxyJl4qoNFD6Js5fko1E5TNMb
+         OJHjnsbeCORql8x08R71P5aHeR3K3U2sPB0MQFjJ1cjJbB+xt9LOOAUfGyECv8ubFbol
+         UXX2+wLu7y5ssB71nXNLXZex+/QBcbz5q+5di2UqwlQS0hsCcdzcnXHYPfDwCxsCi0Fz
+         edKYfk/XmvmwyAz0kOnmGMVczuIXfUIa1zWZLepOAba/J17u+aeNAnKHRDnkA7dPzYfZ
+         JBIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1751272264; x=1751877064;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l8JjQ+1mhu7w6AzCypUJiqd/c0GGf08rutzFlOhZeNc=;
-        b=ISg7xdaWlfFa1dM87Y0CQ+OKny0+s20MsbKx8e2eGZSJaqCmBL/z2OzD4GZW7xg8R0
-         fXG7YrZu+GNfN8vaQADO0YyodcBq2WWAsPZdiajNe77HI6Aopray/Ek8ZBTWkUTUjtCN
-         FYH1Z3JB5wMCnzZmic5LUjJgST4SOxoj09JbhudLekKiMzvuduDKzLpHSXWm3Ou8e5Ak
-         GEGhzWHGZ50Phj28k3iltiuWL4WetjkMmpKYFLYvoMdK1CNRGOPjsyoYhEIjuSI3GwrP
-         Ao2kd8ufthCSieKpl5/+n+S8pz9InIOvvMyX1gJjVW9QIJER5e02HRmplblHMKJG7ds6
-         h13w==
-X-Forwarded-Encrypted: i=1; AJvYcCW7rjJ1BkU2euRtC+v/f5GVtbyxwcPGUT/eZNTc0hrSE+s+P+ZB9e6OYDI6vVen0Rkq3dsHjk6MaCOWvU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9jRZlcksROc11bOLI6X44OZ/iG4el7VyXlWOpKRYXzBpALCeI
-	LDKgIvV3dPd3GX5BZxZW4LhQzB6CRoO5oKzwpYnnZBEYaTEjb3jVbLRW
-X-Gm-Gg: ASbGncvX/UcEGMsb5fVKPzjR3GlpwW6ctmqq3Ywdi6qISzdFlqjuySdUKztkshavNAb
-	H0WWoprrumlJNsaC0HAQRK1Uhny/+5/1yOtsUonPgrLd2FDyxuPkMPXerOlOwHFGjLBAJPSVgYR
-	/rl3LOL7qX5W2ylETZFRmhWYvLqDBX/5w3jz7Jv2bqbhpsEEzpvr7hgiNfX218gGP0gRSen431o
-	9bDnQljdetLF6GKdzPBANRDu/CZhMgNPSfwxHxUKkP6Rbs/3+iz8fFpnQixFAu+6YKG+0Z+rBn1
-	Yt1MCdKgNhKU8OB3Ct5Hmla3mTIccVrHpInJ5GoSiCG9xMkCNl3NYLCqLY0MjfCbR6PoUnXwyBL
-	rIec=
-X-Google-Smtp-Source: AGHT+IF3kNEHTgHmk6z+DnoXffq1NyoVg6tYWzSNwERgNq0HjPGnqOvaj4L2dW7mN0yNlOJYAJh8wA==
-X-Received: by 2002:a17:906:eecb:b0:ad8:93a3:29ba with SMTP id a640c23a62f3a-ae34fd985femr1030293566b.17.1751272263321;
-        Mon, 30 Jun 2025 01:31:03 -0700 (PDT)
+        bh=jfEtgbNt/rYCf8xNxthB2n/XL2JqGnY+ug8Bfy+XFfE=;
+        b=Tjh2F+X7UoIEjNP8JYziR70033D6H/G0Bse6DBj4suxqhDzP+w+TllIB20OsTEw37C
+         Q36OGaSFdJtF8TWz22oXUcU5ou9dVM8TCsLJnZlRPlAC5HyeNAQyn2objqsemTzu/DEY
+         SlBv72GGay2LtQG9L1g8l4CRJjQRx0uIUQyB0QEnUv9aAcRAguQxXcEkX8YlW6Bsh5KH
+         kSIyPsye9dp3Nxt+ZDK/OKU7tUkUUkQstqNX61D75vp/TMA9qO9MHz3ckr5H/iEBV1lU
+         v9CSgyQ2XlxQu5ERsMrTqOKGe9OHTI70mwUQYxCouTjlhvhPamuUNn7f/Un2ZEf1GRzv
+         CkFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9RdSWUl8XuZX9i2ZlgTiln76Q/5EwG8raKMBGpsDD7z5IwBlkJrcSgMI/GU/7oQPNpbVDDyHrML+FnNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuYAg0bDs/OrGGqpy8nn9cFY/QX6eZ8WOjnxyker5N7kyzbPMu
+	+jwCXENJJN4P1FhNPnSEfT6t0B6SqVRfF/FbYyPQGP0u9ZmVwW6XdvYU
+X-Gm-Gg: ASbGncv1q0jO9HmourNRqRMwqZTfT3InDfMjEosRDH3lxb5E5BI95qx9Mmdb2M070PR
+	0iJrUKyic8vaOqp9limTLNz6zNgD4d27YVtAmiuQVPsSKI5j4f5Mt9LJcM6c1D287lDNtfUSoH+
+	fSs8GwsArLUk65i718BT+kogWdDv0XHs/ltDzUrRKqt+2NW0mb7H5yRwhSRjSsqDe8R22PHekS3
+	suLg6UgXoUDjNoaXCXDUrLd76gTHsfd4Nd2/T5srru+uH7jZajwJ0Yo6/490lzDwwhOKD2GSBmS
+	/sREug6KvMpzTO8OirUizdpJ1VGCg29zxHYKBHGyjafzLbd1cUwdxzE/hfvrNd7TWe13YX1Sq8T
+	22Gk6sKSpbFW5lg==
+X-Google-Smtp-Source: AGHT+IEcnypyBxGiTttasTy/2glWFDimEHzRoaELnx7Jb+RtdgUUjyMZ7adE3YhZsT+gvEipekO/WQ==
+X-Received: by 2002:a17:907:8686:b0:ad8:e448:6c64 with SMTP id a640c23a62f3a-ae0d28c7408mr1552178366b.24.1751272264033;
+        Mon, 30 Jun 2025 01:31:04 -0700 (PDT)
 Received: from localhost.localdomain ([95.90.184.252])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae360e6ce54sm577568766b.37.2025.06.30.01.31.02
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae360e6ce54sm577568766b.37.2025.06.30.01.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 01:31:02 -0700 (PDT)
+        Mon, 30 Jun 2025 01:31:03 -0700 (PDT)
 From: Michael Straube <straube.linux@gmail.com>
 To: gregkh@linuxfoundation.org
 Cc: hdegoede@redhat.com,
@@ -65,9 +65,9 @@ Cc: hdegoede@redhat.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 1/3] staging: rtl8723bs: remove unused function parameter
-Date: Mon, 30 Jun 2025 10:30:47 +0200
-Message-ID: <20250630083049.103734-2-straube.linux@gmail.com>
+Subject: [PATCH 2/3] staging: rtl8723bs: remove unnesessary function parameter
+Date: Mon, 30 Jun 2025 10:30:48 +0200
+Message-ID: <20250630083049.103734-3-straube.linux@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250630083049.103734-1-straube.linux@gmail.com>
 References: <20250630083049.103734-1-straube.linux@gmail.com>
@@ -79,39 +79,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The parameter 'band' of rtw_ieee80211_channel_to_frequency() in
-wifi_regd.c is unused, remove it.
+The function rtw_ieee80211_channel_to_frequency() in ioctl_cfg80211.c
+is always called with band = NL80211_BAND_2GHZ. Remove the unnecessary
+band parameter from the function and adjust its code and calls.
 
 Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- drivers/staging/rtl8723bs/os_dep/wifi_regd.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ .../staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-index dbd4bf531339..ac0b58a8b5d3 100644
---- a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-+++ b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-@@ -41,7 +41,7 @@ static const struct ieee80211_regdomain rtw_regdom_rd = {
- 	}
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index 7fcc46a0bb48..7cc1e036d2c4 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -192,14 +192,14 @@ rtw_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] = {
+ 	},
  };
  
 -static int rtw_ieee80211_channel_to_frequency(int chan, int band)
 +static int rtw_ieee80211_channel_to_frequency(int chan)
  {
- 	/* NL80211_BAND_2GHZ */
- 	if (chan == 14)
-@@ -82,10 +82,7 @@ static void _rtw_reg_apply_flags(struct wiphy *wiphy)
- 	/* channels apply by channel plans. */
- 	for (i = 0; i < max_chan_nums; i++) {
- 		channel = channel_set[i].ChannelNum;
--		freq =
--		    rtw_ieee80211_channel_to_frequency(channel,
--						       NL80211_BAND_2GHZ);
--
+-	if (band == NL80211_BAND_2GHZ) {
+-		if (chan == 14)
+-			return 2484;
+-		else if (chan < 14)
+-			return 2407 + chan * 5;
+-	}
++	/* NL80211_BAND_2GHZ */
++	if (chan == 14)
++		return 2484;
++
++	if (chan < 14)
++		return 2407 + chan * 5;
+ 
+ 	return 0; /* not supported */
+ }
+@@ -266,7 +266,7 @@ struct cfg80211_bss *rtw_cfg80211_inform_bss(struct adapter *padapter, struct wl
+ 	/* spin_unlock_bh(&pwdev_priv->scan_req_lock); */
+ 
+ 	channel = pnetwork->network.configuration.ds_config;
+-	freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(channel);
+ 
+ 	notify_channel = ieee80211_get_channel(wiphy, freq);
+ 
+@@ -340,7 +340,7 @@ int rtw_cfg80211_check_bss(struct adapter *padapter)
+ 	if (!(pnetwork) || !(padapter->rtw_wdev))
+ 		return false;
+ 
+-	freq = rtw_ieee80211_channel_to_frequency(pnetwork->configuration.ds_config, NL80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(pnetwork->configuration.ds_config);
+ 
+ 	notify_channel = ieee80211_get_channel(padapter->rtw_wdev->wiphy, freq);
+ 	bss = cfg80211_get_bss(padapter->rtw_wdev->wiphy, notify_channel,
+@@ -440,7 +440,7 @@ void rtw_cfg80211_indicate_connect(struct adapter *padapter)
+ 		u16 channel = cur_network->network.configuration.ds_config;
+ 		struct cfg80211_roam_info roam_info = {};
+ 
+-		freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
 +		freq = rtw_ieee80211_channel_to_frequency(channel);
- 		ch = ieee80211_get_channel(wiphy, freq);
- 		if (ch) {
- 			if (channel_set[i].ScanType == SCAN_PASSIVE)
+ 
+ 		notify_channel = ieee80211_get_channel(wiphy, freq);
+ 
+@@ -1976,7 +1976,7 @@ static int cfg80211_rtw_get_channel(struct wiphy *wiphy, struct wireless_dev *wd
+ 	if (!channel)
+ 		return -ENODATA;
+ 
+-	freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(channel);
+ 
+ 	chan = ieee80211_get_channel(adapter->rtw_wdev->wiphy, freq);
+ 
+@@ -2456,7 +2456,7 @@ void rtw_cfg80211_rx_action(struct adapter *adapter, u8 *frame, uint frame_len,
+ 
+ 	rtw_action_frame_parse(frame, frame_len, &category, &action);
+ 
+-	freq = rtw_ieee80211_channel_to_frequency(channel, NL80211_BAND_2GHZ);
++	freq = rtw_ieee80211_channel_to_frequency(channel);
+ 
+ 	rtw_cfg80211_rx_mgmt(adapter, freq, 0, frame, frame_len, GFP_ATOMIC);
+ }
 -- 
 2.49.0
 
