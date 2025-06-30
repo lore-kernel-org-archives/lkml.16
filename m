@@ -1,302 +1,272 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013018.outbound.protection.outlook.com [40.107.159.18])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461F8285411
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287660; cv=fail; b=BMFSMSZWsduodLJgxHGcm8EDduuu5I3KRvTkBTcWmPJbt+1cVLWyO8BgC2XztTcxeAHMvRt9Lt1gWYNDtadcQCkmM0D6Y2eDCcG//dT8x0bPyCG0EqCtj6g6sOuyEfIXFrgpfsWElSj41QoNk49+YZ/HMKL30FCyH0Ups4aNWzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287660; c=relaxed/simple;
-	bh=EeoPpw59z63mmCCJZCHy8lWdb9gHjIcaMpHjqcbDEfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nWC4nPMe+GA38uBg7Fzk2dolKEOfXU4GwH8VmW/9yYDSCPgFoq7R30jCSCyRrLiukxEJ9SmS2oy6R9Mb25GkvNxqwLSokbned8rXqnUxUdsScFK/Uuy36BUmJ+H/yQGajHK14C2rOnRmakBLaT14NOYDDlE6RJylDcRWMEZtHBU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=UOBIa6YX; arc=fail smtp.client-ip=40.107.159.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="UOBIa6YX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pqvKvwPNaUFEwBRhjhd0EHq99YhbHQdKJkVA54YFhXRjJ4Y3KDdroFe5hUytmQ3itX0PEbt0pEYcJMp8Dl1/HLDaJ/dCY/NjRTcqsF0N9zoFiOUrjjIthVW8rW7mNcquRLUHxJ1oAHsTRGwdGW7W99OZG6hTyudO0mTeIcCx3a4W8iPhSSqs4b5P0uaPfQrjmgzomsW5rf+T1pvPxSHOOjNMcmGq1JN9EHPFd9bOchg7mlvst7+HwYnP8Rcp/7nvv2kYEzrFpeA67rlZIAzvQBwTUYNSceaKg8UGvZINSNMKMoZshzGtuy8sKx6ylZgLP8XuW47qmUP8x3QwRifg/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TxpcUkj23bnYV/8piSvo9ttcKA20Gc1qOIZiOr7hBEo=;
- b=eTmkD+WhQ5BYQYWn6vKpcraJZGIdvzgEsG46AvrAFSEAq9OCTpnFh0s8Zni/s4xWVmVjdUM4+WG3qyGHwBFecKhpOZLZnuxDTnf9ewmTmeQY4Drz2RTK3wCjsiqUTgZhuX1WIErfjXi3WGZeG6SGeXddxXNGuGZi+qoN9w1xamb+fiwH3+k+NBsOyMlfekQf1pdoK6dgsJWKCN/JM+c/VZekVfVE5GyOrUZ/32t1YYP7HLKgqyidc1JyU3xK0DJpwG1Yi/IO/BOTewCwKxy+sAul+xODrYHUCYuE369krTlQSHsmXfnFeVf+OZKiTI831hySUVCoL76Q3AD1yM/mCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TxpcUkj23bnYV/8piSvo9ttcKA20Gc1qOIZiOr7hBEo=;
- b=UOBIa6YXQteVrUr/ElVv1iRwjPfPcG8HSMX9pRMjvwn4d0aohydS/+bt65wLT++6SNhHlsOnOKvzes+e1BlYxFIcg/nw0var7w6KDikDSeFJZ8YJjztrypj39z5fxTA+gQZcDyWAfy3jl7RDDFzD1i+pgmpMEBv1JDqMWISEPf3Es/+NpM5Y8MIlOejmgMtZQILjO+FfkXXhrFTHTOZGYrk9/DKeSX2ZsXaDcj2jrD6yMxy4dI4tJMahdk0eYRe4stYT4EThsZSA2RP5G94a31jDhtkSPgxlabTbBhHAtPkypCr+gyFHZSTjl9XHZlc0nhLGvWxjFpjVEo1WQHAScw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia.com;
-Received: from PAXPR07MB8771.eurprd07.prod.outlook.com (2603:10a6:102:246::20)
- by PR3PR07MB8132.eurprd07.prod.outlook.com (2603:10a6:102:173::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.28; Mon, 30 Jun
- 2025 12:47:33 +0000
-Received: from PAXPR07MB8771.eurprd07.prod.outlook.com
- ([fe80::e125:c4ef:b872:5c60]) by PAXPR07MB8771.eurprd07.prod.outlook.com
- ([fe80::e125:c4ef:b872:5c60%3]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 12:47:33 +0000
-From: Wladislav Wiebe <wladislav.wiebe@nokia.com>
-To: anna-maria@linutronix.de,
-	frederic@kernel.org,
-	mingo@kernel.org,
-	tglx@linutronix.de
-Cc: akpm@linux-foundation.org,
-	bigeasy@linutronix.de,
-	peterz@infradead.org,
-	linux-kernel@vger.kernel.org,
-	wladislav.wiebe@nokia.com
-Subject: [PATCH] irq: add support for warning on long-running IRQ handlers
-Date: Mon, 30 Jun 2025 14:46:44 +0200
-Message-ID: <20250630124721.18232-1-wladislav.wiebe@nokia.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR2P281CA0146.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:98::7) To PAXPR07MB8771.eurprd07.prod.outlook.com
- (2603:10a6:102:246::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC61F28A3E0;
+	Mon, 30 Jun 2025 12:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751287664; cv=none; b=e8h32XkXr0Pc0/hifF/Qp01yLYi9IhF5KVKNdzgSpGBtY2NCHuw5GyvEHUns2W6hfC+VvoVgrfuzess7k1whmK70iFQCGAFDNvzVMHIxg8Lhv7wxOpUC0Z5Ex9TsY8PGqtTFazVSXVxAQihg7tacd7E9O+aICt0ZU7rE8ojzh4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751287664; c=relaxed/simple;
+	bh=ngCFuKMbAEbWcXu/NVfD5NO+et+4GZUuEmEASqwacz8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=igNTvACt8yAxv/RsC1nsFEX+bi0VSQZ9+HYUXSsGp86VgeRPu+C4lwUK21QvnSrNrxmtIvHU2j8YzwxgzPhyWfa8I8FXSM+B94ay4jfPohhA4vU6NkuPXYm03O1QRpzdbFeYfQ/aGvxQbE8aIpnitjz8mX0X7D40QflC6TziFTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bW5Yp2KvMz16TJW;
+	Mon, 30 Jun 2025 20:48:30 +0800 (CST)
+Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 388B61A016C;
+	Mon, 30 Jun 2025 20:47:34 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
+ (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
+ 2025 20:47:33 +0800
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+	<roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+CC: Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore
+	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E . Hallyn"
+	<serge@hallyn.com>, <linux-kernel@vger.kernel.org>,
+	<linux-integrity@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	Lu Jialin <lujialin4@huawei.com>, <gongruiqi1@huawei.com>
+Subject: [PATCH -next RFC 1/4] ima: rot: Introduce basic framework
+Date: Mon, 30 Jun 2025 20:59:25 +0800
+Message-ID: <20250630125928.765285-2-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250630125928.765285-1-gongruiqi1@huawei.com>
+References: <20250630125928.765285-1-gongruiqi1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR07MB8771:EE_|PR3PR07MB8132:EE_
-X-MS-Office365-Filtering-Correlation-Id: c82ab7b7-f9e8-4141-fea3-08ddb7d448b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7M3C/ehUKwUoCscx0atbDfFGbFIs2TJfxoN4+sY8OQwCTrwPosjVcBHdwspz?=
- =?us-ascii?Q?PMhzEByTzviDVhDEvBuc/0YO8g5j2hmMQB5+R52ohB9xci+QEA2MB8nJ9Iax?=
- =?us-ascii?Q?73AJBkDkfX6pLTsvFASlUzytQ5tbDZDZJ0ilcZqcowqbeEEE9SwkAOvoV5KC?=
- =?us-ascii?Q?4NpnjuaG7PG/eewNSGqOY8/Ojb5K73gbV+sZKg3kNvc2Es6To9eGgJyxS4tC?=
- =?us-ascii?Q?pcXlLjjMs7Wc3xOHPcwOLeoZ64QSWM2woqi7+/ViL4lxxAEiJ3aJ0JNsbnBR?=
- =?us-ascii?Q?gYf3d8d9m8FCaqlGPwGi83s/4U2daZoyCVUyXbZyQ3rYhfgm8pkf19fp8Jy6?=
- =?us-ascii?Q?M2q0WxAYWvw1CjFwXNk9IoqSD7Xuc+FFfi8tmRUvFjMaU+44sB7sClwLeB16?=
- =?us-ascii?Q?s/esOGZrJ5apqfptAjB7561BJOPWyhnrP1vJgbGYGqtBnoameXtyeY9ZsDCb?=
- =?us-ascii?Q?+Gi8xxRvUqKLTrJsWGY+3LyEHJG+cANgugyB62y82lgl1GdYVkFXFqO/qs9F?=
- =?us-ascii?Q?26gyvyq7M+fVilW5qFsJ6MvoyKrzoKrGoP8GakL0sZktEqYE1pAvL6t86TCl?=
- =?us-ascii?Q?amkeItoaD/gBzgw1fCi6DrdrHOfJxsAwGTp5Ikfy5THVw01jyHd5TGlNQskl?=
- =?us-ascii?Q?v/14p1sXaN+5zRi31jLOZ37RGK60fUzrYKA6b0t3GcJ86A9K6Y9B9Yozoe6Q?=
- =?us-ascii?Q?TLicQ24NXnYOlTyPT5BS5ckU2TJybla5tgc5bcwS6luMB93lPi5NDPAaX3Vp?=
- =?us-ascii?Q?KrdkWOu2yDzJNGz44gVPoDzb3bBRbAETXjAe/JKyEfmytJUHqrYllYswVdTE?=
- =?us-ascii?Q?XEbCk7naN+WmKOfI5w2fsD4OZNBZAB0eApjQNZI1UxazpoCFj7rN+pfLhYwe?=
- =?us-ascii?Q?tkh8NpTQI7w5++Wzyzq5MFQEFpvFFzKdW40ukOVWPqygHt5foYBz2L3bvocZ?=
- =?us-ascii?Q?+ak48hkRU1f5plSDp84uvPEIeYS6LXINr9tF2CAqaVOP9bAknJfzq0zXgnDX?=
- =?us-ascii?Q?pNHY/T4AF8OJgjFLqdRaXYk5a+5TyFap4P6VOP5gtjma5Z4uTQ59vqKs20dJ?=
- =?us-ascii?Q?DzoyGHRu0CrEU+YDqoIA4GbYacrw+0gBHwr2JMLkI8D+f3df9sG5A9OCPO2b?=
- =?us-ascii?Q?2dmTskMOoKgiIvC0PzOfXK4RFK0Jal5uPH5XpW6HVxNkZ0Keccym75gk8+Gp?=
- =?us-ascii?Q?HwLuGgYq/C9+RGveIQxoVZ7tv+Eftr8iNaJZwXn3zy+GeLfpGIzujX8yqhHp?=
- =?us-ascii?Q?8RnyYiZaqM0UCkfC/AXSIs1iH1XswsQc9VXqmDLYbHorbXXZR1qL9isdc2xS?=
- =?us-ascii?Q?G9ZNhvbQnQNT+lHGSuX/NEaOwDXa9ow+yIAslPoW5uahcdnn7ZWK/Prz1cmL?=
- =?us-ascii?Q?GmCmF10YFcxMoXOb60Ef2vDw9JbuI+81BXz5Qr3rLnuk4mcEPj1aghSjYxW2?=
- =?us-ascii?Q?Wgg4lA8MX+4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR07MB8771.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oEEwbJYLR/0OCRfoXC7R3kfjD6pJkao5lG9A9if0FvIcNkXaQfqJsnuAi7gU?=
- =?us-ascii?Q?LPOGEDpCitab1xr5N+o1Rk0uzRoR/z3R9V3eIQQHkZLZ32xbcU0pNVhPledu?=
- =?us-ascii?Q?swfEZpvnV8Psxalaq0pWfZzkDAA6l/R/ndtsC0n7Ufv+dLEiI7GoYrRqD/gI?=
- =?us-ascii?Q?JQuNA84+Iw8f1Sah37/Nf9xDuoHYYIm5JzMlLBsNd3bhDRcegyaBXAWJQXV0?=
- =?us-ascii?Q?Lowh6k32Xq0PVFBpOFPLkKSnx2u9RCIZj5os8qGzJNwPb0CEYic1Xz621Xu6?=
- =?us-ascii?Q?7eJCT7h3w6oQWw8yJTyyCXmprI7XDk0PBcJcSaUHtH9Jt02yskIUDhZCsXyj?=
- =?us-ascii?Q?HWR/mIUFHpf3SzahD4WtFD1z99JJ4tecLDQI/wy8sa8MVboHfPuMJhfcmxEF?=
- =?us-ascii?Q?8oaWXPVs6q6LTD01IqKqQqzifsnRk2EN4vDJyWfaHu8ZowtIyOyLA5K8Y+x3?=
- =?us-ascii?Q?GPGbtwCQvJ4cRZHuS6qLfFi0+LrnJmKasShkG2pKEAlLIUfkqod++vFBKU5o?=
- =?us-ascii?Q?ClfA92FqykQxWKtfRGa95ytZXmKyba2pkF9HsMEkVwI7gdjJ2gYTyWPi0WKU?=
- =?us-ascii?Q?kPNjQ1SfjgSSfq8MtpRRXUfnlbdJZ182nMubS4qMp7uDGRkMcf69B90fXv90?=
- =?us-ascii?Q?lyZD224oATJwSitQbqcm9x6r9ueYaXJgcXxR+UpYYtHx/27KtOHG4Gelaozq?=
- =?us-ascii?Q?oFR/LkPk03QyuapItt2xvqUgVW/xZe9E/7WI0kqG0c2MYLvP/KwCQR2AQq6k?=
- =?us-ascii?Q?j6dOy82jxiRvKAbHtDSvr49MEOMj7PjDs1Q87cPHRZ8hFgVKsJHdXogLo55s?=
- =?us-ascii?Q?IX+ZK13y7mRsfkzYGw72gftq8lDdXcs2l5OWbX1BwoL67pDup7/1qapFJbC/?=
- =?us-ascii?Q?YJwskNlBvUwR/SXdW0c5VakTBeXREQTW/7cKNkt7QiYw/2nysNsPvNIT5g0n?=
- =?us-ascii?Q?NtBeAmO6X7PwgaCjTmYzDL7Sw/apzdy/NdxqMCXF4SM4O4mMaHIUp9i+C8/G?=
- =?us-ascii?Q?GgAP+wlVBC1O3uZScXSTrlY9/Qj77x6bdNJXyY3M+mCXgeBPwAtuqG12t5aN?=
- =?us-ascii?Q?J5ORb7VHxXJAtHwrzu4JS8UK2wGgURZ+H/sGkjVgiyknjbh4WFxuCIqZXBqL?=
- =?us-ascii?Q?loONbgKHF1T2dgPARX9ZGE5fbNPVd8YuGJ2sljpv2ag+e/G8vSDNcXEtPmtm?=
- =?us-ascii?Q?xBab6r2CPEXmWSSK8QizzUM4Qd1ioyhrZR9qfnJbJafOsv+GEck9vXTejhYE?=
- =?us-ascii?Q?eraBftOYfIooRgb0N8KXoR9blPMdmymX0qlXKw8azCMImYvRGkiCm7MgcOMU?=
- =?us-ascii?Q?IdwyFxKiKw9cMDuFgRGg3yrFmlgjzu3bu+9a6iu09Uf1yVJ8QPey2r9Haq0q?=
- =?us-ascii?Q?S/N6lPNbUvVC4X/fKeO6aKaCbyeUTucqto1OPpiebtMhlDwgg5arP1sxXxRv?=
- =?us-ascii?Q?0jqhjfyV/sCAJcIOuBsGak4p+EXRlDBsQ11mQi95t0QEcjvTutkbFuDL/hbw?=
- =?us-ascii?Q?PSmoUvly9V/yzyxYGe8QM9rHOv2f1DPdgHsd7h67A7ThCodWRwwwP+fhlzxP?=
- =?us-ascii?Q?injDDXP6WE6tu2Bep99MoY1EzhyGNfhIHa6AK1y5mmvkMkssBHBddXYN1FKE?=
- =?us-ascii?Q?Lg=3D=3D?=
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c82ab7b7-f9e8-4141-fea3-08ddb7d448b0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR07MB8771.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 12:47:33.8516
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HBHlCBQ14lYuTiiNKsozzmVh+J0SNRwfmaf3jB8dmf8C95YC7nhLHFflECQZMQR84Lf087Zy4m8MigCqRSMjwMpe6zIVRgq6tuyHVXiPRc4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR07MB8132
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemg100016.china.huawei.com (7.202.181.57)
 
-Introduce a new option CONFIG_IRQ_LATENCY_WARN that enables warnings when
-IRQ handlers take an unusually long time to execute.
+Each type of RoT devices should have a corresponding entry in ima_rots,
+a static array that represents entries' priority via their order. In
+case that `ima_rot=` is absent, the first device (which means with
+highest priority) that gets successfully initialized will be the RoT.
+Otherwise, the framework will only try to initialize the one specified
+by `ima_rot=`, and there will be no RoT if the initialization fails.
 
-When triggered, the warning includes the CPU, IRQ number, handler address,
-name, and execution duration, for example:
+All necessary hooks and variables of the RoT entry should be set at
+least when .init() is finished.
 
-  [CPU0] latency on IRQ[787:bad_irq_handler+0x1/0x34 [bad_irq]], took: 5 jiffies (~50 ms)
-
-To keep runtime overhead minimal, this implementation uses a jiffies-based
-timing mechanism. While coarse, it is sufficient to detect problematic IRQs.
-
-A warning is triggered only when IRQs are disabled on one CPU long enough to
-stall jiffies updates and exceed MAX_STALLED_JIFFIES.
-Optionally, the reporting threshold can be adjusted by adding
-extra jiffies via CONFIG_IRQ_LATENCY_WARN_THRESHOLD.
-
-This approach avoids relying on high-resolution timers and aims for negligible
-impact during normal operation.
-
-Signed-off-by: Wladislav Wiebe <wladislav.wiebe@nokia.com>
+Signed-off-by: GONG Ruiqi <gongruiqi1@huawei.com>
 ---
- include/linux/interrupt.h | 25 +++++++++++++++++++++++++
- include/linux/tick.h      |  2 ++
- kernel/irq/handle.c       |  2 ++
- kernel/time/tick-sched.c  |  2 --
- lib/Kconfig.debug         | 29 +++++++++++++++++++++++++++++
- 5 files changed, 58 insertions(+), 2 deletions(-)
+ security/integrity/ima/Makefile   |  2 +-
+ security/integrity/ima/ima.h      |  2 +
+ security/integrity/ima/ima_init.c |  1 +
+ security/integrity/ima/ima_rot.c  | 98 +++++++++++++++++++++++++++++++
+ security/integrity/ima/ima_rot.h  | 42 +++++++++++++
+ 5 files changed, 144 insertions(+), 1 deletion(-)
+ create mode 100644 security/integrity/ima/ima_rot.c
+ create mode 100644 security/integrity/ima/ima_rot.h
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 51b6484c0493..d3c5f920c4ea 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -15,6 +15,7 @@
- #include <linux/cpumask_types.h>
- #include <linux/workqueue.h>
- #include <linux/jump_label.h>
-+#include <linux/tick.h>
+diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+index b376d38b4ee6..b3c8436d941c 100644
+--- a/security/integrity/ima/Makefile
++++ b/security/integrity/ima/Makefile
+@@ -7,7 +7,7 @@
+ obj-$(CONFIG_IMA) += ima.o ima_iint.o
  
- #include <linux/atomic.h>
- #include <asm/ptrace.h>
-@@ -881,4 +882,28 @@ extern int arch_early_irq_init(void);
+ ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
+-	 ima_policy.o ima_template.o ima_template_lib.o
++	 ima_policy.o ima_template.o ima_template_lib.o ima_rot.o
+ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
+ ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
+ ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index e3d71d8d56e3..d3375427dc24 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -23,6 +23,7 @@
+ #include <crypto/hash_info.h>
  
- #define __softirq_entry  __section(".softirqentry.text")
+ #include "../integrity.h"
++#include "ima_rot.h"
  
-+#ifdef CONFIG_IRQ_LATENCY_WARN
-+static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
-+				       unsigned long jiffies_start)
+ enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+ 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+@@ -64,6 +65,7 @@ extern struct ima_algo_desc *ima_algo_array __ro_after_init;
+ 
+ extern int ima_appraise;
+ extern struct tpm_chip *ima_tpm_chip;
++extern struct ima_rot *ima_rot_inst;
+ extern const char boot_aggregate_name[];
+ 
+ /* IMA event related data */
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index a2f34f2d8ad7..15c51e1b369c 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -23,6 +23,7 @@
+ /* name for boot aggregate entry */
+ const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
++struct ima_rot *ima_rot_inst;
+ 
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+diff --git a/security/integrity/ima/ima_rot.c b/security/integrity/ima/ima_rot.c
+new file mode 100644
+index 000000000000..7a1ae056ea5d
+--- /dev/null
++++ b/security/integrity/ima/ima_rot.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2025 Huawei Technologies Co., Ltd.
++ *
++ * Authors:
++ * GONG Ruiqi <gongruiqi1@huawei.com>
++ *
++ * File: ima_rot.c
++ *	IMA rot layer
++ */
++
++#include <linux/types.h>
++#include <linux/list.h>
++#include <linux/gfp_types.h>
++
++#include "ima.h"
++
++/*
++ * Meaning of preferred_rot_name's value:
++ *
++ * - NULL: User doesn't specify one.
++ * - NAME_UNKNOWN: User specifies an unknown RoT name.
++ * - (Valid RoT name): User specifies a valid name.
++ *
++ * Which corresponds to cases of `ima_rot=`.
++ */
++static const char *preferred_rot_name;
++#define NAME_UNKNOWN "UNKNOWN"
++
++/*
++ * The list containing all possible RoT devices.
++ *
++ * The order of RoTs inside the list implies priority.
++ * IOW, RoT device that owns higher priority should be placed at the front.
++ */
++static struct ima_rot ima_rots[] = {
++};
++
++/**
++ * ima_rot_name() - Process RoT device name that user provides.
++ * @str: Name of RoT device.
++ *
++ * The back-end handler of `ima_rot=` kernel cmdline, by which users can specify
++ * the Root of Trust (RoT) device for IMA. How system will react to each case of
++ * this cmdline's value is explained as follows:
++ *
++ * - Absent: Choose an RoT device based on priority, try to initialize it and
++ *   give up if it fails.
++ *
++ * - Invalid/Unknown RoT name: Give up RoT initialization. IMA will run without
++ *   an RoT device.
++ *
++ * - Valid RoT name: Try to initialize this RoT device and give up if it fails.
++ *
++ * Return: Always return 1.
++ */
++static int __init ima_rot_name(char *str)
 +{
-+	unsigned long delta = jiffies - jiffies_start;
++	int i;
 +
-+	/*
-+	 * Warn about long IRQ handler latency only if jiffies are reliable.
-+	 * The reporting condition hits only when there are at least two CPUs
-+	 * with active ticks.
-+	 * Jiffies updates are stalled on this CPU until MAX_STALLED_JIFFIES
-+	 * reaches and a force update happens on another CPU with active ticks.
-+	 */
-+	if (unlikely(delta >= (MAX_STALLED_JIFFIES + CONFIG_IRQ_LATENCY_WARN_THRESHOLD))) {
-+		pr_warn_ratelimited("[CPU%d] latency on IRQ[%u:%pS], took: %lu jiffies (~%u ms)\n",
-+				    smp_processor_id(), irq, action->handler,
-+				    delta, jiffies_to_msecs(delta));
++	for (i = 0; i < ARRAY_SIZE(ima_rots); i++) {
++		if (!strcmp(str, ima_rots[i].name)) {
++			preferred_rot_name = str;
++			break;
++		}
 +	}
++
++	if (!preferred_rot_name) {
++		pr_info("%s is NOT implemented as an IMA RoT\n", str);
++		preferred_rot_name = NAME_UNKNOWN;
++	}
++
++	return 1;
 +}
-+#else
-+static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
-+				       unsigned long jiffies_start) { }
-+#endif
++__setup("ima_rot=", ima_rot_name);
 +
- #endif
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index ac76ae9fa36d..543bd96b0653 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -14,6 +14,8 @@
- #include <linux/rcupdate.h>
- #include <linux/static_key.h>
- 
-+#define MAX_STALLED_JIFFIES 5
++/*
++ * Pick the most prioritized RoT that can be initialized successfully.
++ */
++struct ima_rot * __init ima_rot_init(void)
++{
++	int rc, i;
 +
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- extern void __init tick_init(void);
- /* Should be core only, but ARM BL switcher requires it */
-diff --git a/kernel/irq/handle.c b/kernel/irq/handle.c
-index 9489f93b3db3..273aebd71d8d 100644
---- a/kernel/irq/handle.c
-+++ b/kernel/irq/handle.c
-@@ -145,6 +145,7 @@ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc)
- 	record_irq_time(desc);
- 
- 	for_each_action_of_desc(desc, action) {
-+		unsigned long __maybe_unused jiffies_start = jiffies;
- 		irqreturn_t res;
- 
- 		/*
-@@ -156,6 +157,7 @@ irqreturn_t __handle_irq_event_percpu(struct irq_desc *desc)
- 
- 		trace_irq_handler_entry(irq, action);
- 		res = action->handler(irq, action->dev_id);
-+		warn_on_irq_latency(action, irq, jiffies_start);
- 		trace_irq_handler_exit(irq, action, res);
- 
- 		if (WARN_ONCE(!irqs_disabled(),"irq %u handler %pS enabled interrupts\n",
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index c527b421c865..5daee2bb3a18 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -201,8 +201,6 @@ static inline void tick_sched_flag_clear(struct tick_sched *ts,
- 	ts->flags &= ~flag;
- }
- 
--#define MAX_STALLED_JIFFIES 5
--
- static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
- {
- 	int tick_cpu, cpu = smp_processor_id();
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index ebe33181b6e6..88566adf4381 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1856,6 +1856,35 @@ config LATENCYTOP
- 	  Enable this option if you want to use the LatencyTOP tool
- 	  to find out which userspace is blocking on what kernel operations.
- 
-+config IRQ_LATENCY_WARN
-+	bool "Warn on IRQ latency"
-+	depends on NR_CPUS >= 2
-+	default n
-+	help
-+	  Enable this option to receive warnings when IRQ handlers take too long.
++	for (i = 0; i < ARRAY_SIZE(ima_rots); i++) {
++		if (preferred_rot_name && strcmp(preferred_rot_name, ima_rots[i].name))
++			continue;
 +
-+	  To keep overhead very low, this implementation uses jiffies-based
-+	  timing - which is coarse, but sufficient to detect problematic IRQs.
++		pr_info("IMA RoT initializing %s\n", ima_rots[i].name);
++		rc = ima_rots[i].init(&ima_rots[i]);
++		if (!rc) {
++			pr_info("%s initialized and taken as IMA RoT\n", ima_rots[i].name);
++			return &ima_rots[i];
++		}
++		pr_debug("%s failed to self-initialize (%d)\n", ima_rots[i].name, rc);
++	}
 +
-+	  The minimal possible threshold is hardcoded by MAX_STALLED_JIFFIES
-+	  as the reporting condition hits only when there are at least two CPUs
-+	  with active ticks. The reporting threshold can be extended by adding
-+	  additional jiffies to CONFIG_IRQ_LATENCY_WARN_THRESHOLD.
++	return NULL;
++}
+diff --git a/security/integrity/ima/ima_rot.h b/security/integrity/ima/ima_rot.h
+new file mode 100644
+index 000000000000..f88f8162d6c8
+--- /dev/null
++++ b/security/integrity/ima/ima_rot.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2025 Huawei Technologies Co., Ltd.
++ *
++ * Authors:
++ * GONG Ruiqi <gongruiqi1@huawei.com>
++ *
++ * File: ima_rot.h
++ *	IMA rot layer
++ */
 +
-+	  The warning includes the affected CPU, IRQ number, handler address,
-+	  name, and the duration it took to execute.
++#ifndef __LINUX_IMA_ROT_H
++#define __LINUX_IMA_ROT_H
 +
-+	  Say Y if you want to identify problematic IRQs in the system.
++#include <linux/tpm.h>
 +
-+config IRQ_LATENCY_WARN_THRESHOLD
-+	int "IRQ latency warning threshold in jiffies"
-+	depends on IRQ_LATENCY_WARN
-+	range 0 10000
-+	default 0
-+	help
-+	  Set the latency threshold (in jiffies) for the IRQ warning messages.
-+	  Consider it will be added to MAX_STALLED_JIFFIES.
++/**
++ * struct ima_rot - Root of Trust (RoT) device instance.
++ * @name: Name of the device.
++ * @default_pcr: Index of default (virtual) PCR.
++ * @nr_allocated_banks: Number of (virtual) TPM banks.
++ * @allocated_banks: Info of (virtual) TPM bank.
++ * @init: Initializes this device to be an IMA RoT.
++ * @extend: Performs a hash extend operation to the device's (virtual) PCR.
++ * @calc_boot_aggregate: Generate the initial value of IMA measurement list
++ *                       (i.e. boot aggregate).
++ *
++ * Attributes and methods necessary for a device working as an RoT for IMA.
++ */
++struct ima_rot {
++	const char *name;
++	int default_pcr;
++	int nr_allocated_banks;
++	struct tpm_bank_info *allocated_banks;
 +
- config DEBUG_CGROUP_REF
- 	bool "Disable inlining of cgroup css reference count functions"
- 	depends on DEBUG_KERNEL
++	int (*init)(struct ima_rot *rot);
++	int (*extend)(struct tpm_digest *digests_arg, const void *args);
++	int (*calc_boot_aggregate)(struct ima_digest_data *hash);
++};
++
++struct ima_rot *ima_rot_init(void);
++#endif /* __LINUX_IMA_ROT_H */
 -- 
-2.39.3.dirty
+2.25.1
 
