@@ -1,212 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D1419A2A3;
-	Mon, 30 Jun 2025 07:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638E81E8837
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268367; cv=none; b=eTzu8XBWCnIOEI80qF6Z0eehYwbZJH0uvbagqba2eYOt2oize6GKRXMakLrjV0c2SRgMSAx8EUvpG5lZq+oa1j1eAm9IHgjHVfPQvI0F/w0uUJbuIu6hynIy7QC4c1Nrp4psFMwdQFk8hkVUzH8szDu9iU0NmpUx6ab8v1EEN+I=
+	t=1751268381; cv=none; b=sGKKDQTLj3Jruzw9KdiywfhkrODEXv2HFzwHjEJQdCZqGD1c2L2JOAdjsmFWgsVEKsO+sX6pVX8G4ppAG9m3epf0ehf4So/edfr9UaTwpHDmC+YeQympRZTur7n9T0EeBZDqUXjWlVlCdB1Gjn2S4tVJdYjtdRcKtRNlsgnjrK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268367; c=relaxed/simple;
-	bh=N63MVrwXeESZ4gdhfhs/nJSmcaNTprtwSWNzBFpzojA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvCaX61/FDMMQLH/XacWbDyBOQDmRuDxusD2drWaEb1Ch78ALmRQjQp7rm8Vm6CnonHwzVOYutpsgFTWYPA//91rEF7zWVUgojZ1MRsesyPXcZxcoFuU248Fy/pYDmdTNFAbrwANWSjXneGCHeQEOW7z47Nwv6F4qoeLvMI//OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK0xHS5y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751268381; c=relaxed/simple;
+	bh=I5aXpogNojpmKmR+yCXkyrMsR8ui+2Tod3Gs6ibm7u4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kyVLMchvT4+xkq5I24Elc3AT0z/bX2g9IF6pLwQAzRL0sOiIeMhNdY0mhRjwSbQ7yqyay+a/0DOGEP2yswjszuGPLauCSet2vH9xBJ/ncfvlluiQBE2dXJI5yWhDNeRUbhc8PCjNIi+qCVHo96ulVp2zbNLkhLysEwuxoDOFqkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JonI0cEi; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK0xHS5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD54C4CEE3;
-	Mon, 30 Jun 2025 07:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751268367;
-	bh=N63MVrwXeESZ4gdhfhs/nJSmcaNTprtwSWNzBFpzojA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FK0xHS5yiaHjPn3OXM/rCBwtkD+DqBQnjE4kT8a6iBeeF6lqM2QSKIO6skrDcFT09
-	 aH7pbIzR1Y7JsJpgg+HibtZkWAE/2KF2VbJl+S8wu5/i2IsT0XZAIUWBMU3wGKdj10
-	 FQrNaw3PO28qjPXD2xiI7dbj1ZqWvRq0IZP9L3rigEnsKzJnMZJnl7uZOXLxgMFIvy
-	 QMMBVii0vN/m9BdYl0ZlquM65WGZ0m+jH8VGfN+EfJFpnhlQUdr9hcsGm1iU9apScw
-	 GJo3yKvO4pmPLyuB7MHsEqkbXpZ4GAu+kColxE2tbosgUhGiVCdJ7AW9i8A5ULJpND
-	 xBNd/ieJGpcdw==
-Date: Mon, 30 Jun 2025 09:26:03 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: hans.zhang@cixtech.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
-	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root
- Complex bindings
-Message-ID: <20250630-graceful-horse-of-science-eecc53@krzk-bin>
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JonI0cEi"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2350fc2591dso36259115ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751268379; x=1751873179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vjIw3BQMQkuEtqIZpSqBzYxhDfFJxgtZiU6HzDMOlNc=;
+        b=JonI0cEiL4FS4PzWFn99SaYHAhkkMUUvSJ2SPEOmsbE3HOM2m+9cKQAo0qDgSVtu1E
+         MEJPXJoTG7YJWAy8h1cMRopka5UL0yZHzP1SLzod605ED/BayFcGXd5HytVZ46kGin3c
+         sSTRRYCblEMJgakoptWlKw6LdsD03XCFBCztjEWF1IAcNd4DwujUAtE7fejbYkapHVCv
+         YszkkaKjd3TL+45vCAP3MAF8wQi7uAeNXti/0dOHynIF79Dbu8JO1zOJrmZVU+zarrLp
+         ES3prVkRGwWkgiuO56e1c8t93Svp5DnynqHJR7VA20Nh26zpkPlfW1ZEaSQbW5M8Pg7j
+         +VAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751268379; x=1751873179;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vjIw3BQMQkuEtqIZpSqBzYxhDfFJxgtZiU6HzDMOlNc=;
+        b=qXrryOuy3AJkNkj3ZWwL3THHaVch7O55KZLh4AuZ7vE8kFgv/aJNlaLh41Nl4cGuRD
+         ePpK1ZCj2ua2bRyX4QM5yNHI071ZDYIOjlIKx1dSP4yV9KReMdsIhPwIfCgyelp8T8uC
+         vk+CE2HqimLUrrGPRc4XUGIOuiw+/iS2tJ/CQhDMerYxrv7bsoWQYJLDmay8leynMEoo
+         R1mxwqfQTnsH4bvmz2gkn6jfayX6PsC7cwtu+q6dOHISRu+Eq+LMGeNAdNUNlEDMVepV
+         JPRKuR10BzEm0C/wT5lqwWpwnF4EQ9Ccm3L101dw1vxOPF6yZp2X6lMkwmrKSkZJpeDT
+         3O1g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2nOz5JOyinuk7XPnmk2nRxYtCJ3wD7ZI14xM6XS7mxpDR0BavchbRcqRZZw7p2hjqPZVPY5CoBMqW5R8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaUuOGDj40zYKjQevyt3y5KAyHtV6Hwn5Tk1ZG4IffuhB+F3HV
+	AExsB0PSrIfHQiQu9q5/7TInhO0ZDDaSs+cZx8BWrGIfOZ+8TUAw4sYwEuV1ncvnAbO21Ll3p/n
+	FN94a
+X-Gm-Gg: ASbGncsW3aIcSmhtC7tDUeSfvlU+rnllyKCnisrgPe/FKpqpWphs80J+mk6qFxX7d3P
+	t7KLzssWC1JieoxW+0fgNBsQL62lOcleNQj3a4g4tvRF5DvIqFUAR7R3eWUJXQbzl9rienjLb4D
+	xHIwCvwnCyHi3SFw2THktBRdBtLXeyZBbfxhCQOSbHS+qK8ny3pKi7o/J2dYnRM4toz9jP+lnBD
+	Zq1fEMu0GhLesUOce2IkeJ6qHqmXe8sgNTHTWvKhh/M7cmevi9n/v2monRF/WCA0NgFSwletG27
+	n9cI+rxDXTen8E1/sXUEPoJJ1xgjNj3sMYbtFn0oonBoM5jrgOKzagWWJeeTvIsJAi9j8TV+86q
+	RxTF91kHwDhUPHQ==
+X-Google-Smtp-Source: AGHT+IGafeZ2azc3t18RXEN8peJr6PmRhM9ZfzpHzNFPkcgsDxEqmtV9RKi7UPzP5ti8qyp0RUJeug==
+X-Received: by 2002:a17:902:f815:b0:235:f091:11e5 with SMTP id d9443c01a7336-23ac4ed5479mr113205755ad.10.1751268378623;
+        Mon, 30 Jun 2025 00:26:18 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f17f5sm77237555ad.62.2025.06.30.00.26.15
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 30 Jun 2025 00:26:18 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: alex.williamson@redhat.com,
+	jgg@ziepe.ca,
+	david@redhat.com,
+	peterx@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com
+Subject: [PATCH 0/4] vfio/type1: optimize vfio_pin_pages_remote() and vfio_unpin_pages_remote() for large folio
+Date: Mon, 30 Jun 2025 15:25:14 +0800
+Message-ID: <20250630072518.31846-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250630041601.399921-11-hans.zhang@cixtech.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 12:15:57PM +0800, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
-> 
-> Document the bindings for CIX Sky1 PCIe Controller configured in
-> root complex mode with five root port.
-> 
-> Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
-> 
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
-> ---
->  .../bindings/pci/cix,sky1-pcie-host.yaml      | 133 ++++++++++++++++++
->  1 file changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..b4395bc06f2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/cix,sky1-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: CIX Sky1 PCIe Root Complex
-> +
-> +maintainers:
-> +  - Hans Zhang <hans.zhang@cixtech.com>
-> +
-> +description:
-> +  PCIe root complex controller based on the Cadence PCIe core.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
-> +  - $ref: /schemas/pci/cdns-pcie.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: cix,sky1-pcie-host
-> +
-> +  reg:
-> +    items:
-> +      - description: PCIe controller registers.
-> +      - description: Remote CIX System Unit registers.
-> +      - description: ECAM registers.
-> +      - description: Region for sending messages registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg
-> +      - const: rcsu
-> +      - const: cfg
+From: Li Zhe <lizhe.67@bytedance.com>
 
-cfg is the second, look at cdns bindings.
+This patchset is an consolidation of the two previous patchsets[1][2].
 
-> +      - const: msg
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 7
-> +
-> +  interrupt-map:
-> +    maxItems: 4
-> +
-> +  max-link-speed:
-> +    maximum: 4
+When vfio_pin_pages_remote() is called with a range of addresses that
+includes large folios, the function currently performs individual
+statistics counting operations for each page. This can lead to significant
+performance overheads, especially when dealing with large ranges of pages.
 
-Why are you redefining core properties?
+The function vfio_unpin_pages_remote() has a similar issue, where executing
+put_pfn() for each pfn brings considerable consumption.
 
-> +
-> +  num-lanes:
-> +    maximum: 8
-> +
-> +  ranges:
-> +    maxItems: 3
-> +
-> +  msi-map:
-> +    maxItems: 1
-> +
-> +  vendor-id:
-> +    const: 0x1f6c
+This patchset optimizes the performance of the relevant functions by
+batching the less efficient operations mentioned before.
 
-Why? This is implied by compatible.
+The first patch optimizes the performance of the function
+vfio_pin_pages_remote(), while the remaining patches optimize the
+performance of the function vfio_unpin_pages_remote().
 
-> +
-> +  device-id:
-> +    enum:
-> +      - 0x0001
+The performance test results, based on v6.16-rc4, for completing the 16G
+VFIO MAP/UNMAP DMA, obtained through unit test[3] with slight
+modifications[4], are as follows.
 
-Why? This is implied by compatible.
+Base(6.16-rc4):
+./vfio-pci-mem-dma-map 0000:03:00.0 16
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.047 s (340.2 GB/s)
+VFIO UNMAP DMA in 0.135 s (118.6 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.280 s (57.2 GB/s)
+VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.052 s (310.5 GB/s)
+VFIO UNMAP DMA in 0.136 s (117.3 GB/s)
 
-> +
-> +  cdns,no-inbound-bar:
+With this patchset:
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.027 s (596.4 GB/s)
+VFIO UNMAP DMA in 0.045 s (357.6 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.288 s (55.5 GB/s)
+VFIO UNMAP DMA in 0.288 s (55.6 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.031 s (508.3 GB/s)
+VFIO UNMAP DMA in 0.045 s (352.9 GB/s)
 
-That's not a cdns binding, so wrong prefix.
+For large folio, we achieve an over 40% performance improvement for VFIO
+MAP DMA and an over 66% performance improvement for VFIO DMA UNMAP. For
+small folios, the performance test results show little difference compared
+with the performance before optimization.
 
-> +    description: |
+[1]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+[2]: https://lore.kernel.org/all/20250620032344.13382-1-lizhe.67@bytedance.com/
+[3]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+[4]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
 
-Do not need '|' unless you need to preserve formatting.
+Li Zhe (4):
+  vfio/type1: optimize vfio_pin_pages_remote() for large folios
+  vfio/type1: batch vfio_find_vpfn() in function
+    vfio_unpin_pages_remote()
+  vfio/type1: introduce a new member has_rsvd for struct vfio_dma
+  vfio/type1: optimize vfio_unpin_pages_remote() for large folio
 
-> +      Indicates the PCIe controller does not require an inbound BAR region.
+ drivers/vfio/vfio_iommu_type1.c | 121 ++++++++++++++++++++++++++------
+ 1 file changed, 100 insertions(+), 21 deletions(-)
 
-And anyway this is implied by compatible, drop.
-
-> +    type: boolean
-> +
-> +  sky1,pcie-ctrl-id:
-> +    description: |
-> +      Specifies the PCIe controller instance identifier (0-4).
-
-No, you don't get an instance ID. Drop the property and look how other
-bindings encoded it (not sure about the purpose and you did not explain
-it, so cannot advise).
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 4
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - max-link-speed
-> +  - num-lanes
-> +  - bus-range
-> +  - device_type
-> +  - ranges
-> +  - msi-map
-> +  - vendor-id
-> +  - device-id
-> +  - cdns,no-inbound-bar
-> +  - sky1,pcie-ctrl-id
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    pcie_x8_rc: pcie@a010000 {
-
-Drop unused label.
-
-
-Best regards,
-Krzysztof
+-- 
+2.20.1
 
