@@ -1,213 +1,1141 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36616254AFE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D1524EA8E;
+	Mon, 30 Jun 2025 10:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278293; cv=none; b=LgZmQZeXuqZ24NJnD/qgz4zAyRpFFIe2f1MaqCpV1F/O1lI21IA/XY7SWsE5Rk0I1cRLvFkFiO4voZq1V/QuQx/mRkiFX8gnKz8oHTMbX8PsW/8Adh0eWi6nv/dtma53RgCb8cSGgAw1V9HKZeGN5zqcQHy0UdFGgOYgRDra/z8=
+	t=1751278323; cv=none; b=b/zaqD3tP15KmQNb0wqnqpmK5yLX01xtTJ2kiQFkoT+jouQcJv4Xm3DxUiydjeqhJoojHbvDChAsI9jwivL1xYkEbSt4eFGwQyEdkotjWNHGkYRZREOL6go+xg7HO30SfO3FHyy54GJ30wpM0xdsJhVWT09fx1SQfozAef0aFyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278293; c=relaxed/simple;
-	bh=DXIsdFz0khiePemQabaCvf5rwUnePHro0xb3kO6m5I0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MCKNNY6Y59zzkWGdAY1qo8YSJmF9N27A2+Zc2vc922vmr8IewftzXkVp0yebk7rIw2na7e88TG6NqG66uUO+NUAgS+AkXXZEa3YytfLhnqh76aPI34ymJ5k6J9kv2b3kqHCYGfu4C1z1Fxd591JKjc6yJKth9AYfm3ZkoaVc35s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3de3b5b7703so13390635ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:11:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751278291; x=1751883091;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fir1Mx3oc/hw50qWcisj52CkcOoqSXSUW6bCpRc9mjo=;
-        b=H59JjOsW0lqjmkd5OEilQ2iLkFeqvH1WcBpsLFAox/3cy7+M+xosbQjTRA1j0a/Zif
-         67jACyDY3N1bPj2GgNrJXlXW03j5/qH8wvt4FJgbaX1u7TkFtq2Y6dLKWPfQppi0fZNO
-         MPuEetnTf1OHltyo0Fmet1jqHErhYdPA93inCff7CCchoNaM1KQlXbX0/r7Kgv28WBAE
-         pSF1VAem0HkGjAHkSDHWf1x05drAWggw4ciXjjD4wM+OvIm1fpd6dftVpnrkW14Oz3vr
-         al6Tw+qNLkBVihJJd3VEzM8Kuq6i7s9Ctn+zvvrlzvnFeKl0iWpQrlmeAGt6i3+OfN9I
-         WaYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxEf/xLAx4aYdOrjy2wf+GFCE9Avmn2My1s2UXtsoje9tnig+NtOehTd5A3HWTqZDFaKobXoC86xLXV9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5D18EGxxkRTcq5LxqT/8qP/l+TURnBfRD146bPV+2GqbENUei
-	l7EI2kp+zXN3KV1dD6AhHQ9vBGLrELiCFOzSjFvNvRYsslOc3ZNt8L5jESB0r9ghMOhnuWFAj+5
-	qUe8/l82n5uNQRRRYxoFIUGBHKZTviP7yYegvRIdqtW828xGqzGUY4iUHlJ4=
-X-Google-Smtp-Source: AGHT+IEnD2oKWqQpO4u3jON1MVhQdfPievbLzAnNT45I7RyDzc4nUzweQuFblO4kKNtuVEYZhlp8WXvirtivf6s2crxC1JaB8bfS
+	s=arc-20240116; t=1751278323; c=relaxed/simple;
+	bh=RAKA+KUA1d8xFZtLQ8y4reNrnE3Sqfl99WXzrTT6Ve8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOBKDd5Gp29sTAkYxejLnTqYpVTRjyh2zq/rpoEj/dF95UrfDMiLaPfVljZOU5Nw/+QXVMkbHlFp/d3WnFERGcRKldpUgBnjAxhqFsKqOKwCpgrYb9IKgqLwPCvS3EB5xw3sWit878icQ5vXRdnbxrTVtCY0vNXipzyeoUosMQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CFEC1D34;
+	Mon, 30 Jun 2025 03:11:44 -0700 (PDT)
+Received: from [10.57.28.116] (unknown [10.57.28.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67C0E3F58B;
+	Mon, 30 Jun 2025 03:11:54 -0700 (PDT)
+Message-ID: <6bb2344c-de0f-4bf9-b9ff-b7c7338ea1d7@arm.com>
+Date: Mon, 30 Jun 2025 11:11:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c08:b0:3df:3598:7688 with SMTP id
- e9e14a558f8ab-3df4acf494emr161155415ab.21.1751278291394; Mon, 30 Jun 2025
- 03:11:31 -0700 (PDT)
-Date: Mon, 30 Jun 2025 03:11:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686262d3.a70a0220.d08a1.0002.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel panic: in transaction restart:
- transaction_restart_mem_realloced, last restarted by
-From: syzbot <syzbot+cc7567f096079cb4146f@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Introduce Tyr
+To: Daniel Almeida <daniel.almeida@collabora.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>,
+ Rob Herring <robh@kernel.org>, Alice Ryhl <alice.ryhl@google.com>,
+ Beata Michalska <beata.michalska@arm.com>,
+ Carsten Haitzler <carsten.haitzler@foss.arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Ashley Smith <ashley.smith@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ rust-for-linux@vger.kernel.org, kernel@collabora.com
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Daniel,
 
-syzbot found the following issue on:
+My Rust is still quite weak, so I'll just review the GPU-specific parts.
+Please CC me on future posts.
 
-HEAD commit:    f02769e7f272 Merge tag 'devicetree-fixes-for-6.16-1' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=133b83d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=cc7567f096079cb4146f
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+On 27/06/2025 23:34, Daniel Almeida wrote:
+> Add a Rust driver for ARM Mali CSF-based GPUs. It is a port of Panthor
+> and therefore exposes Panthor's uAPI and name to userspace, and the
+> product of a joint effort between Collabora, ARM and Google engineers.
+> 
+> The aim is to incrementally develop Tyr with the abstractions that are
+> currently available until it is consider to be in parity with Panthor
+> feature-wise.
+> 
+> This first version only implements a subset of the current features
+> available downstream, as the rest is not implementable without pulling
+> in even more abstractions. In particular, a lot of things depend on
+> properly mapping memory on a given VA range, which itself depends on the
+> GPUVM abstraction that is currently work-in-progress. For this reason,
+> we still cannot boot the MCU and thus, cannot do much in the current
+> version.
+> 
+> Still, this version is intended as a way to validate some of the
+> abstractions that are still being developed, in particular the platform
+> iomem code. A subsequent patch will introduce VM_BIND support once the
+> discussions on the GPUVM abstraction advance.
+> 
+> Despite its limited feature-set, we offer an IGT branch to test this
+> patch with. It is only tested on the rk3588, so any other SoC is
+> probably not going to work at all for now.
+> 
+> The skeleton is basically taken from Nova and also
+> rust_platform_driver.rs.
+> 
+> The name "Tyr" is inspired by Norse mythology, reflecting ARM's
+> tradition of naming their GPUs after Nordic mythological figures and
+> places.
+> 
+> Co-developed-by: Alice Ryhl <alice.ryhl@google.com>
+> Signed-off-by: Alice Ryhl <alice.ryhl@google.com>
+> Co-developed-by: Beata Michalska  <beata.michalska@arm.com>
+> Signed-off-by: Beata Michalska  <beata.michalska@arm.com>
+> Co-developed-by: Carsten Haitzler <carsten.haitzler@foss.arm.com>
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@foss.arm.com>
+> Co-developed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> 
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> ---
+> The development of Tyr itself started in January, after a few failed
+> attempts of converting Panthor piecewise through a mix of Rust and C
+> code. We have a branch (tyr-next [0]) downstream that's much further
+> ahead than this submission.
+> 
+> Briefly speaking, our downstream code is capable of booting the MCU,
+> doing sync VM_BINDS through the work-in-progress GPUVM abstraction
+> I've been submitting to the list - and also of doing (trivial) submits
+> through Lina's drm_scheduler and dma_fence abstractions. So basically,
+> most of what we expect a modern GPU driver to do, except for power
+> management and some other very important adjacent pieces.
+> 
+> We are not at the point where submits can correctly deal with
+> dependencies, or at the point where we can rotate access to the GPU
+> hardware fairly through our own software scheduler, but that is simply a
+> matter of writing more code. Unfortunately, other things have taken
+> precedence lately.
+> 
+> At the current pace, I am fairly certain that we can achieve a working
+> driver downstream in a couple of months, for a given definition of
+> "working". In any case, reconciling this with upstream has been somewhat
+> challenging recently, so this patch constitutes a change in the overall
+> strategy that we have been using to develop Tyr so far.
+> 
+> By submitting small parts of the driver upstream iteratively, we aim to:
+> 
+> a) evolve together with Nova and rvkms, hopefully reducing regressions
+> due to upstream changes (that may break us because we were not there, in
+> the first place)
+> 
+> b) prove any work-in-progress abstractions by having them run on a real
+> driver and hardware and,
+> 
+> c) provide a reason to work on and review said abstractions by providing
+> a user, which would be tyr itself.
+> 
+> Unfortunately, without GPUVM support, there is not much that we can do
+> on this first patch. This is because the firmware expect things to be
+> mapped at precise VA ranges, so we simply cannot get it to boot with the
+> current upstream code. This will be achieved by a subsequent patch.
+> 
+> The current one can power on the GPU and get the driver to probe,
+> though. It uses a few in-flight abstractions like Fujita's
+> read_poll_timeout() and friends, alongside some of the abstractions I've
+> been working on (like regulators, platform iomem, genmask, and etc) to
+> extract some diagnostic data from the device and print it to the
+> terminal. 
+> 
+> This functionality can be attested by running our IGT suite at [1].
+> Again, note that the tests are meant for the downstream version of the
+> driver, so anything other than the "query" tests will fail here.
+> 
+> As the abstractions above are in-flight, I provide a branch where they
+> have been collected into [2]. Anyone is encouraged to test this if they
+> feel like it, but be aware that it was only tested on the rk3588.
+> 
+> Lastly, I'd like to mention that this driver is a joint initiative
+> between Collabora, Arm and Google. Everyone that has directly touched
+> the source code so far has been acknowledged as an author through their
+> respective co-developed-by tag. In particular, Alice Ryhl has been
+> steadily helping out with all the necessary abstractions for a long time
+> now, apart from the code that she has directly contributed to the driver
+> itself.
+> 
+> I'd also like to give a special thanks to my colleague Boris Brezillon -
+> who has been steering me through this new territory, and without whom
+> this project would not have been possible at all.
+> 
+> [0]: https://gitlab.freedesktop.org/panfrost/linux/-/tree/tyr-next?ref_type=heads
+> [1]: https://gitlab.freedesktop.org/dwlsalmeida/igt-gpu-tools/-/tree/panthor?ref_type=heads
+> [2]: https://gitlab.freedesktop.org/panfrost/linux/-/tree/tyr?ref_type=heads
+> ---
+>  MAINTAINERS                   |   9 ++
+>  drivers/gpu/drm/Kconfig       |   2 +
+>  drivers/gpu/drm/Makefile      |   1 +
+>  drivers/gpu/drm/tyr/Kconfig   |  18 +++
+>  drivers/gpu/drm/tyr/Makefile  |   3 +
+>  drivers/gpu/drm/tyr/driver.rs | 188 +++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/tyr/file.rs   |  57 ++++++++++
+>  drivers/gpu/drm/tyr/gem.rs    |  20 ++++
+>  drivers/gpu/drm/tyr/gpu.rs    | 217 ++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/tyr/regs.rs   | 252 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/tyr/tyr.rs    |  22 ++++
+>  rust/uapi/uapi_helper.h       |   1 +
+>  12 files changed, 790 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a475b07519c34be316f0b71ad953de384d7c748d..4b157710c064fdd33c603e52f07c28d15853f64f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2039,6 +2039,15 @@ F:	Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+>  F:	drivers/gpu/drm/panthor/
+>  F:	include/uapi/drm/panthor_drm.h
+>  
+> +ARM MALI TYR DRM DRIVER
+> +M:	Daniel Almeida <daniel.almeida@collabora.com>
+> +L:	dri-devel@lists.freedesktop.org
+> +S:	Supported
+> +T:	git https://gitlab.freedesktop.org/panfrost/linux.git
+> +F:	Documentation/devicetree/bindings/gpu/arm,mali-valhall-csf.yaml
+> +F:	drivers/gpu/drm/tyr/
+> +F:	include/uapi/drm/panthor_drm.h
+> +
+>  ARM MALI-DP DRM DRIVER
+>  M:	Liviu Dudau <liviu.dudau@arm.com>
+>  S:	Supported
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index f7ea8e895c0c0e17ee39364e0e832cd17571358f..fda1707304683dc4c22f44fd2e8bc774636729bd 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -396,6 +396,8 @@ source "drivers/gpu/drm/sprd/Kconfig"
+>  
+>  source "drivers/gpu/drm/imagination/Kconfig"
+>  
+> +source "drivers/gpu/drm/tyr/Kconfig"
+> +
+>  config DRM_HYPERV
+>  	tristate "DRM Support for Hyper-V synthetic video device"
+>  	depends on DRM && PCI && HYPERV
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 5050ac32bba26a6f90af83a67748ee7677dc3332..889ba62e62acc50ffe9342b905e28a1261fc76dc 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -216,6 +216,7 @@ obj-$(CONFIG_DRM_VBOXVIDEO) += vboxvideo/
+>  obj-$(CONFIG_DRM_LIMA)  += lima/
+>  obj-$(CONFIG_DRM_PANFROST) += panfrost/
+>  obj-$(CONFIG_DRM_PANTHOR) += panthor/
+> +obj-$(CONFIG_DRM_TYR) += tyr/
+>  obj-$(CONFIG_DRM_ASPEED_GFX) += aspeed/
+>  obj-$(CONFIG_DRM_MCDE) += mcde/
+>  obj-$(CONFIG_DRM_TIDSS) += tidss/
+> diff --git a/drivers/gpu/drm/tyr/Kconfig b/drivers/gpu/drm/tyr/Kconfig
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..91db81e3857a028600db4b2b8bc024a53f5e295b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/Kconfig
+> @@ -0,0 +1,18 @@
+> +# SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +
+> +config DRM_TYR
+> +	tristate "Tyr (Rust DRM support for ARM Mali CSF-based GPUs)"
+> +	depends on DRM=y
+> +	depends on RUST
+> +	depends on ARM || ARM64 || COMPILE_TEST
+> +	depends on !GENERIC_ATOMIC64  # for IOMMU_IO_PGTABLE_LPAE
+> +	help
+> +	  Rust DRM driver for ARM Mali CSF-based GPUs.
+> +
+> +	  This driver is for Mali (or Immortalis) Valhall Gxxx GPUs.
+> +
+> +	  Note that the Mali-G68 and Mali-G78, while Valhall architecture, will
+> +	  be supported with the panfrost driver as they are not CSF GPUs.
+> +
+> +	  if M is selected, the module will be called tyr.
+> diff --git a/drivers/gpu/drm/tyr/Makefile b/drivers/gpu/drm/tyr/Makefile
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ba545f65f2c0823b9a4a5a54e39b867e4f9bf812
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +obj-$(CONFIG_DRM_TYR) += tyr.o
+> diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..2443620e10620585eae3d57978e64d2169a1b2d1
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/driver.rs
+> @@ -0,0 +1,188 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +use core::pin::Pin;
+> +
+> +use kernel::bits::bit_u32;
+> +use kernel::c_str;
+> +use kernel::clk::Clk;
+> +use kernel::device::Core;
+> +use kernel::devres::Devres;
+> +use kernel::drm;
+> +use kernel::drm::ioctl;
+> +use kernel::io;
+> +use kernel::io::mem::IoMem;
+> +use kernel::new_mutex;
+> +use kernel::of;
+> +use kernel::platform;
+> +use kernel::prelude::*;
+> +use kernel::regulator;
+> +use kernel::regulator::Regulator;
+> +use kernel::sync::Arc;
+> +use kernel::sync::Mutex;
+> +use kernel::time;
+> +use kernel::types::ARef;
+> +
+> +use crate::file::File;
+> +use crate::gem::TyrObject;
+> +use crate::gpu;
+> +use crate::gpu::GpuInfo;
+> +use crate::regs;
+> +
+> +/// Convienence type alias for the DRM device type for this driver
+> +pub(crate) type TyrDevice = drm::device::Device<TyrDriver>;
+> +
+> +#[pin_data(PinnedDrop)]
+> +pub(crate) struct TyrDriver {
+> +    device: ARef<TyrDevice>,
+> +}
+> +
+> +#[pin_data]
+> +pub(crate) struct TyrData {
+> +    pub(crate) pdev: ARef<platform::Device>,
+> +
+> +    #[pin]
+> +    clks: Mutex<Clocks>,
+> +
+> +    #[pin]
+> +    regulators: Mutex<Regulators>,
+> +
+> +    // Some inforation on the GPU. This is mainly queried by userspace (mesa).
+> +    pub(crate) gpu_info: GpuInfo,
+> +}
+> +
+> +unsafe impl Send for TyrData {}
+> +unsafe impl Sync for TyrData {}
+> +
+> +fn issue_soft_reset(iomem: &Devres<IoMem<0>>) -> Result<()> {
+> +    let irq_enable_cmd = 1 | bit_u32(8);
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Badly named variable? This appears to be the encoding for a soft_reset
+command.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-f02769e7.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a454895505b7/vmlinux-f02769e7.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b5db986999e9/bzImage-f02769e7.xz
+> +    regs::GPU_CMD.write(iomem, irq_enable_cmd)?;
+> +
+> +    let op = || regs::GPU_INT_RAWSTAT.read(iomem);
+> +    let cond = |raw_stat: &u32| -> bool { (*raw_stat >> 8) & 1 == 1 };
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cc7567f096079cb4146f@syzkaller.appspotmail.com
+You appear to have a define (GPU_INT_RAWSTAT_RESET_COMPLETED) but are
+not using it?
 
-bcachefs (loop0): root directory missing, fixing
- done
-bcachefs (loop0): check_unreachable_inodes...
-bcachefs (loop0): unreachable inode:
-  inum: 4100:4294967295 
-    mode=40755
-    flags=(4300000)
-    journal_seq=23
-    hash_seed=f497c5e8402f7aa5
-    hash_type=siphash
-    bi_size=0
-    bi_sectors=0
-    bi_version=0
-    bi_atime=36304197331961109
-    bi_ctime=36304197331961109
-    bi_mtime=36304197331961109
-    bi_otime=36304197331961109
-    bi_uid=0
-    bi_gid=0
-    bi_nlink=0
-    bi_generation=0
-    bi_dev=0
-    bi_data_checksum=0
-    bi_compression=0
-    bi_project=0
-    bi_background_compression=0
-    bi_data_replicas=0
-    bi_promote_target=0
-    bi_foreground_target=0
-    bi_background_target=0
-    bi_erasure_code=0
-    bi_fields_set=0
-    bi_dir=0
-    bi_dir_offset=0
-    bi_subvol=0
-    bi_parent_subvol=0
-    bi_nocow=0
-    bi_depth=0
-    bi_inodes_32bit=0
-    bi_casefold=0, fixing
-bcachefs (loop0): creating (disconnected)/lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop0): creating (disconnected)/lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop0): creating (disconnected)/lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop0): creating (disconnected)/lost+found in subvol 1 snapshot 4294967295
-bcachefs (loop0): creating (disconnected)/lost+found in subvol 1 snapshot 4294967295
- done
-bcachefs (loop0): check_subvolume_structure... done
-bcachefs (loop0): check_directory_structure...
-bcachefs (loop0): directory structure loop:
-  4100:4294967295 4096:4294967295 4096:4294967295, fixing
-Kernel panic - not syncing: in transaction restart: transaction_restart_mem_realloced, last restarted by
-[<0>] btree_trans_restart_ip fs/bcachefs/btree_iter.h:364 [inline]
-[<0>] __bch2_trans_kmalloc+0x5d7/0xc80 fs/bcachefs/btree_iter.c:3216
-[<0>] bch2_trans_kmalloc_ip fs/bcachefs/btree_iter.h:604 [inline]
-[<0>] bch2_trans_kmalloc fs/bcachefs/btree_iter.h:616 [inline]
-[<0>] bch2_hash_delete_at fs/bcachefs/str_hash.h:364 [inline]
-[<0>] bch2_fsck_remove_dirent+0x1032/0x12a0 fs/bcachefs/dirent.c:756
-[<0>] remove_backpointer+0x1fe/0x280 fs/bcachefs/fsck.c:502
-[<0>] check_path_loop fs/bcachefs/fsck.c:2700 [inline]
-[<0>] bch2_check_directory_structure+0x1a7f/0x1f00 fs/bcachefs/fsck.c:2733
-[<0>] bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:485 [inline]
-[<0>] __bch2_run_recovery_passes+0x392/0x1010 fs/bcachefs/recovery_passes.c:540
-[<0>] bch2_run_recovery_passes+0x184/0x210 fs/bcachefs/recovery_passes.c:611
-[<0>] bch2_fs_recovery+0x25fd/0x3950 fs/bcachefs/recovery.c:989
-[<0>] bch2_fs_start+0xa99/0xd90 fs/bcachefs/super.c:1203
-[<0>] bch2_fs_get_tree+0xb02/0x14f0 fs/bcachefs/fs.c:2489
-[<0>] vfs_get_tree+0x92/0x2b0 fs/super.c:1804
-[<0>] do_new_mount+0x24a/0xa40 fs/namespace.c:3902
-[<0>] do_mount fs/namespace.c:4239 [inline]
-[<0>] __do_sys_mount fs/namespace.c:4450 [inline]
-[<0>] __se_sys_mount+0x317/0x410 fs/namespace.c:4427
-[<0>] do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-[<0>] do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-[<0>] entry_SYSCALL_64_after_hwframe+0x77/0x7f
-CPU: 0 UID: 0 PID: 5318 Comm: syz.0.0 Not tainted 6.16.0-rc3-syzkaller-00121-gf02769e7f272 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
- panic+0x2db/0x790 kernel/panic.c:382
- bch2_trans_in_restart_error+0xdb/0x110 fs/bcachefs/btree_iter.c:1455
- bch2_trans_unlocked_or_in_restart_error+0xc2/0x110 fs/bcachefs/btree_iter.c:1468
- bch2_trans_verify_not_unlocked_or_in_restart fs/bcachefs/btree_iter.h:344 [inline]
- bch2_path_get+0x108c/0x1540 fs/bcachefs/btree_iter.c:1747
- bch2_trans_iter_init_common fs/bcachefs/btree_iter.h:529 [inline]
- bch2_trans_iter_init fs/bcachefs/btree_iter.h:543 [inline]
- __bch2_bkey_get_iter fs/bcachefs/btree_iter.h:631 [inline]
- bch2_bkey_get_iter fs/bcachefs/btree_iter.h:646 [inline]
- bch2_bi_depth_renumber_one fs/bcachefs/fsck.c:2573 [inline]
- bch2_bi_depth_renumber fs/bcachefs/fsck.c:2599 [inline]
- check_path_loop fs/bcachefs/fsck.c:2717 [inline]
- bch2_check_directory_structure+0x1376/0x1f00 fs/bcachefs/fsck.c:2733
- bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:485 [inline]
- __bch2_run_recovery_passes+0x392/0x1010 fs/bcachefs/recovery_passes.c:540
- bch2_run_recovery_passes+0x184/0x210 fs/bcachefs/recovery_passes.c:611
- bch2_fs_recovery+0x25fd/0x3950 fs/bcachefs/recovery.c:989
- bch2_fs_start+0xa99/0xd90 fs/bcachefs/super.c:1203
- bch2_fs_get_tree+0xb02/0x14f0 fs/bcachefs/fs.c:2489
- vfs_get_tree+0x92/0x2b0 fs/super.c:1804
- do_new_mount+0x24a/0xa40 fs/namespace.c:3902
- do_mount fs/namespace.c:4239 [inline]
- __do_sys_mount fs/namespace.c:4450 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4427
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f338f9900ca
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f339072ee68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f339072eef0 RCX: 00007f338f9900ca
-RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007f339072eeb0
-RBP: 0000200000000040 R08: 00007f339072eef0 R09: 0000000000204000
-R10: 0000000000204000 R11: 0000000000000246 R12: 0000200000000000
-R13: 00007f339072eeb0 R14: 000000000000598c R15: 0000200000000100
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Also I know panthor also gets this wrong. But the names here don't match
+the architecture (this is GPU_IRQ_RAWSTAT). Panthor is actually somewhat
+confused as some defines are GPU_IRQ_xxx, but cross-referencing with the
+architecture specs is so much easier when the names match up.
 
+> +    let res = io::poll::read_poll_timeout(
+> +        op,
+> +        cond,
+> +        time::Delta::from_millis(100),
+> +        Some(time::Delta::from_micros(20000)),
+> +    );
+> +
+> +    if let Err(e) = res {
+> +        pr_err!("GPU reset failed with errno {}\n", e.to_errno());
+> +        pr_err!(
+> +            "GPU_INT_RAWSTAT is {}\n",
+> +            regs::GPU_INT_RAWSTAT.read(iomem)?
+> +        );
+> +    }
+> +
+> +    Ok(())
+> +}
+> +
+> +kernel::of_device_table!(
+> +    OF_TABLE,
+> +    MODULE_OF_TABLE,
+> +    <TyrDriver as platform::Driver>::IdInfo,
+> +    [
+> +        (of::DeviceId::new(c_str!("rockchip,rk3588-mali")), ()),
+> +        (of::DeviceId::new(c_str!("arm,mali-valhall-csf")), ())
+> +    ]
+> +);
+> +
+> +impl platform::Driver for TyrDriver {
+> +    type IdInfo = ();
+> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+> +
+> +    fn probe(
+> +        pdev: &platform::Device<Core>,
+> +        _info: Option<&Self::IdInfo>,
+> +    ) -> Result<Pin<KBox<Self>>> {
+> +        dev_dbg!(pdev.as_ref(), "Probed Tyr\n");
+> +
+> +        let core_clk = Clk::get(pdev.as_ref(), Some(c_str!("core")))?;
+> +        let stacks_clk = Clk::get(pdev.as_ref(), Some(c_str!("stacks")))?;
+> +        let coregroup_clk = Clk::get(pdev.as_ref(), Some(c_str!("coregroup")))?;
+> +
+> +        core_clk.prepare_enable()?;
+> +        stacks_clk.prepare_enable()?;
+> +        coregroup_clk.prepare_enable()?;
+> +
+> +        let mali_regulator = Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("mali"))?;
+> +        let sram_regulator = Regulator::<regulator::Enabled>::get(pdev.as_ref(), c_str!("sram"))?;
+> +
+> +        let resource = pdev.resource_by_index(0).ok_or(EINVAL)?;
+> +
+> +        let iomem = Arc::new(pdev.iomap_resource(resource)?, GFP_KERNEL)?;
+> +
+> +        issue_soft_reset(&iomem)?;
+> +        gpu::l2_power_on(&iomem)?;
+> +
+> +        let gpu_info = GpuInfo::new(&iomem)?;
+> +        gpu_info.log(pdev);
+> +
+> +        let platform: ARef<platform::Device> = pdev.into();
+> +
+> +        let data = try_pin_init!(TyrData {
+> +                pdev: platform.clone(),
+> +                clks <- new_mutex!(Clocks {
+> +                    core: core_clk,
+> +                    stacks: stacks_clk,
+> +                    coregroup: coregroup_clk,
+> +                }),
+> +                regulators <- new_mutex!(Regulators {
+> +                    mali: mali_regulator,
+> +                    sram: sram_regulator,
+> +                }),
+> +                gpu_info,
+> +        });
+> +
+> +        let data = Arc::pin_init(data, GFP_KERNEL)?;
+> +
+> +        let tdev: ARef<TyrDevice> = drm::device::Device::new(pdev.as_ref(), data.clone())?;
+> +        drm::driver::Registration::new_foreign_owned(&tdev, pdev.as_ref(), 0)?;
+> +
+> +        let driver = KBox::pin_init(try_pin_init!(TyrDriver { device: tdev }), GFP_KERNEL)?;
+> +
+> +        regs::MCU_CONTROL.write(&iomem, regs::MCU_CONTROL_AUTO)?;
+> +
+> +        dev_info!(pdev.as_ref(), "Tyr initialized correctly.\n");
+> +        Ok(driver)
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl PinnedDrop for TyrDriver {
+> +    fn drop(self: Pin<&mut Self>) {}
+> +}
+> +
+> +const INFO: drm::driver::DriverInfo = drm::driver::DriverInfo {
+> +    major: 0,
+> +    minor: 0,
+> +    patchlevel: 0,
+> +    name: c_str!("panthor"),
+> +    desc: c_str!("ARM Mali CSF-based Rust GPU driver"),
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I'm not sure what your long-term plan here is. I can see the benefit of
+keeping the major/minor and name matching panthor. I would have thought
+including "Tyr" in the description might be handy to make it obvious
+which driver is being used (panthor already has "Panthor"). There are
+also other marketing nitpicks over the description, but I don't know if
+anyone actually cares ;)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +};
+> +
+> +#[vtable]
+> +impl drm::driver::Driver for TyrDriver {
+> +    type Data = Arc<TyrData>;
+> +    type File = File;
+> +    type Object = drm::gem::Object<TyrObject>;
+> +
+> +    const INFO: drm::driver::DriverInfo = INFO;
+> +
+> +    kernel::declare_drm_ioctls! {
+> +        (PANTHOR_DEV_QUERY, drm_panthor_dev_query, ioctl::RENDER_ALLOW, File::dev_query),
+> +    }
+> +}
+> +
+> +#[pin_data]
+> +struct Clocks {
+> +    core: Clk,
+> +    stacks: Clk,
+> +    coregroup: Clk,
+> +}
+> +
+> +#[pin_data]
+> +struct Regulators {
+> +    mali: Regulator<regulator::Enabled>,
+> +    sram: Regulator<regulator::Enabled>,
+> +}
+> diff --git a/drivers/gpu/drm/tyr/file.rs b/drivers/gpu/drm/tyr/file.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..19049b289ff5f8d87f2e954d25ab92320c9ffbef
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/file.rs
+> @@ -0,0 +1,57 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +use kernel::alloc::flags::*;
+> +use kernel::drm;
+> +use kernel::drm::device::Device as DrmDevice;
+> +use kernel::prelude::*;
+> +use kernel::uaccess::UserSlice;
+> +use kernel::uapi;
+> +
+> +use crate::driver::TyrDevice;
+> +use crate::TyrDriver;
+> +
+> +#[pin_data]
+> +pub(crate) struct File {}
+> +
+> +/// Convenience type alias for our DRM `File` type
+> +pub(crate) type DrmFile = drm::file::File<File>;
+> +
+> +impl drm::file::DriverFile for File {
+> +    type Driver = TyrDriver;
+> +
+> +    fn open(dev: &DrmDevice<Self::Driver>) -> Result<Pin<KBox<Self>>> {
+> +        dev_dbg!(dev.as_ref(), "drm::device::Device::open\n");
+> +
+> +        KBox::try_pin_init(try_pin_init!(Self {}), GFP_KERNEL)
+> +    }
+> +}
+> +
+> +impl File {
+> +    pub(crate) fn dev_query(
+> +        tdev: &TyrDevice,
+> +        devquery: &mut uapi::drm_panthor_dev_query,
+> +        _file: &DrmFile,
+> +    ) -> Result<u32> {
+> +        if devquery.pointer == 0 {
+> +            match devquery.type_ {
+> +                uapi::drm_panthor_dev_query_type_DRM_PANTHOR_DEV_QUERY_GPU_INFO => {
+> +                    devquery.size = core::mem::size_of_val(&tdev.gpu_info) as u32;
+> +                    Ok(0)
+> +                }
+> +                _ => Err(EINVAL),
+> +            }
+> +        } else {
+> +            match devquery.type_ {
+> +                uapi::drm_panthor_dev_query_type_DRM_PANTHOR_DEV_QUERY_GPU_INFO => {
+> +                    let mut writer =
+> +                        UserSlice::new(devquery.pointer as usize, devquery.size as usize).writer();
+> +
+> +                    writer.write(&tdev.gpu_info)?;
+> +
+> +                    Ok(0)
+> +                }
+> +                _ => Err(EINVAL),
+> +            }
+> +        }
+> +    }
+> +}
+> diff --git a/drivers/gpu/drm/tyr/gem.rs b/drivers/gpu/drm/tyr/gem.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..7fd01473a9a6922406e7177c264ca771fa7af8ee
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/gem.rs
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +use crate::driver::TyrDevice;
+> +use crate::driver::TyrDriver;
+> +use kernel::drm::gem::{self};
+> +use kernel::prelude::*;
+> +
+> +/// GEM Object inner driver data
+> +#[pin_data]
+> +pub(crate) struct TyrObject {}
+> +
+> +impl gem::DriverObject for TyrObject {
+> +    type Driver = TyrDriver;
+> +}
+> +
+> +impl gem::BaseDriverObject<gem::Object<TyrObject>> for TyrObject {
+> +    fn new(_dev: &TyrDevice, _size: usize) -> impl PinInit<Self, Error> {
+> +        try_pin_init!(TyrObject {})
+> +    }
+> +}
+> diff --git a/drivers/gpu/drm/tyr/gpu.rs b/drivers/gpu/drm/tyr/gpu.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a33caa7b2968e62da136f245422023ba6e3ad5c3
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/gpu.rs
+> @@ -0,0 +1,217 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +use crate::regs::*;
+> +use kernel::bits;
+> +use kernel::bits::genmask_u32;
+> +use kernel::devres::Devres;
+> +use kernel::io;
+> +use kernel::io::mem::IoMem;
+> +use kernel::platform;
+> +use kernel::prelude::*;
+> +use kernel::time;
+> +use kernel::transmute::AsBytes;
+> +
+> +// This can be queried by userspace to get information about the GPU.
+> +#[repr(C)]
+> +pub(crate) struct GpuInfo {
+> +    pub(crate) gpu_id: u32,
+> +    pub(crate) csf_id: u32,
+> +    pub(crate) gpu_rev: u32,
+> +    pub(crate) core_features: u32,
+> +    pub(crate) l2_features: u32,
+> +    pub(crate) tiler_features: u32,
+> +    pub(crate) mem_features: u32,
+> +    pub(crate) mmu_features: u32,
+> +    pub(crate) thread_features: u32,
+> +    pub(crate) max_threads: u32,
+> +    pub(crate) thread_max_workgroup_size: u32,
+> +    pub(crate) thread_max_barrier_size: u32,
+> +    pub(crate) coherency_features: u32,
+> +    pub(crate) texture_features: [u32; 4],
+> +    pub(crate) as_present: u32,
+> +    pub(crate) shader_present: u64,
+> +    pub(crate) tiler_present: u64,
+> +    pub(crate) l2_present: u64,
+> +}
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+This may be me not understanding Rust. But this doesn't match struct
+drm_panthor_gpu_info - the ordering is different and you haven't
+included the padding. Does this actually work?
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> +
+> +impl GpuInfo {
+> +    pub(crate) fn new(iomem: &Devres<IoMem>) -> Result<Self> {
+> +        let gpu_id = GPU_ID.read(iomem)?;
+> +        let csf_id = GPU_CSF_ID.read(iomem)?;
+> +        let gpu_rev = GPU_REVID.read(iomem)?;
+> +        let core_features = GPU_CORE_FEATURES.read(iomem)?;
+> +        let l2_features = GPU_L2_FEATURES.read(iomem)?;
+> +        let tiler_features = GPU_TILER_FEATURES.read(iomem)?;
+> +        let mem_features = GPU_MEM_FEATURES.read(iomem)?;
+> +        let mmu_features = GPU_MMU_FEATURES.read(iomem)?;
+> +        let thread_features = GPU_THREAD_FEATURES.read(iomem)?;
+> +        let max_threads = GPU_THREAD_MAX_THREADS.read(iomem)?;
+> +        let thread_max_workgroup_size = GPU_THREAD_MAX_WORKGROUP_SIZE.read(iomem)?;
+> +        let thread_max_barrier_size = GPU_THREAD_MAX_BARRIER_SIZE.read(iomem)?;
+> +        let coherency_features = GPU_COHERENCY_FEATURES.read(iomem)?;
+> +
+> +        let texture_features = GPU_TEXTURE_FEATURES0.read(iomem)?;
+> +
+> +        let as_present = GPU_AS_PRESENT.read(iomem)?;
+> +
+> +        let shader_present = GPU_SHADER_PRESENT_LO.read(iomem)? as u64;
+> +        let shader_present = shader_present | (GPU_SHADER_PRESENT_HI.read(iomem)? as u64) << 32;
+> +
+> +        let tiler_present = GPU_TILER_PRESENT_LO.read(iomem)? as u64;
+> +        let tiler_present = tiler_present | (GPU_TILER_PRESENT_HI.read(iomem)? as u64) << 32;
+> +
+> +        let l2_present = GPU_L2_PRESENT_LO.read(iomem)? as u64;
+> +        let l2_present = l2_present | (GPU_L2_PRESENT_HI.read(iomem)? as u64) << 32;
+> +
+> +        Ok(Self {
+> +            gpu_id,
+> +            csf_id,
+> +            gpu_rev,
+> +            core_features,
+> +            l2_features,
+> +            tiler_features,
+> +            mem_features,
+> +            mmu_features,
+> +            thread_features,
+> +            max_threads,
+> +            thread_max_workgroup_size,
+> +            thread_max_barrier_size,
+> +            coherency_features,
+> +            texture_features: [texture_features, 0, 0, 0],
+> +            as_present,
+> +            shader_present,
+> +            tiler_present,
+> +            l2_present,
+> +        })
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+TODO: Add texture_featues_{1,2,3}.
 
-If you want to undo deduplication, reply with:
-#syz undup
+> +    }
+> +
+> +    pub(crate) fn log(&self, pdev: &platform::Device) {
+> +        let major = (self.gpu_id >> 16) & 0xff;
+> +        let minor = (self.gpu_id >> 8) & 0xff;
+> +        let status = self.gpu_id & 0xff;
+> +
+> +        let model_name = if let Some(model) = GPU_MODELS
+> +            .iter()
+> +            .find(|&f| f.major == major && f.minor == minor)
+> +        {
+> +            model.name
+> +        } else {
+> +            "unknown"
+> +        };
+
+Just a heads up, we have some horrible naming rules for later GPUs (see
+Karunika's patch[1] adding panthor support). E.g. for major 11, minor 2:
+
+* If shaders > 10 && ray tracing then Mali-G715-Immortalis
+* else if shaders >= 7 then Mali-G715
+* else Mali-G615 (also for major 11, minor 3).
+
+Although you may want to ignore this craziness for now ;)
+
+[1]
+https://lore.kernel.org/all/20250602143216.2621881-6-karunika.choo@arm.com/
+
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "mali-{} id 0x{:x} major 0x{:x} minor 0x{:x} status 0x{:x}",
+> +            model_name,
+> +            self.gpu_id >> 16,
+> +            major,
+> +            minor,
+> +            status
+> +        );
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "Features: L2:{:#x} Tiler:{:#x} Mem:{:#x} MMU:{:#x} AS:{:#x}",
+> +            self.l2_features,
+> +            self.tiler_features,
+> +            self.mem_features,
+> +            self.mmu_features,
+> +            self.as_present
+> +        );
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "shader_present=0x{:016x} l2_present=0x{:016x} tiler_present=0x{:016x}",
+> +            self.shader_present,
+> +            self.l2_present,
+> +            self.tiler_present
+> +        );
+> +
+> +        dev_info!(
+> +            pdev.as_ref(),
+> +            "PA bits: {}, VA bits: {}",
+> +            self.pa_bits(),
+> +            self.va_bits()
+> +        );
+> +    }
+> +
+> +    pub(crate) fn va_bits(&self) -> u32 {
+> +        self.mmu_features & bits::genmask_u32(0..=7)
+> +    }
+> +
+> +    pub(crate) fn pa_bits(&self) -> u32 {
+> +        (self.mmu_features >> 8) & bits::genmask_u32(0..=7)
+> +    }
+> +}
+> +
+> +// SAFETY:
+> +//
+> +// This type is the same type exposed by Panthor's uAPI. As it's declared as
+> +// #repr(C), we can be sure that the layout is the same. Therefore, it is safe
+> +// to expose this to userspace.
+> +unsafe impl AsBytes for GpuInfo {}
+> +
+> +struct GpuModels {
+> +    name: &'static str,
+> +    major: u32,
+> +    minor: u32,
+> +}
+> +
+> +const GPU_MODELS: [GpuModels; 1] = [GpuModels {
+> +    name: "g610",
+> +    major: 10,
+> +    minor: 7,
+> +}];
+> +
+> +#[allow(dead_code)]
+> +pub(crate) struct GpuId {
+> +    pub(crate) arch_major: u32,
+> +    pub(crate) arch_minor: u32,
+> +    pub(crate) arch_rev: u32,
+> +    pub(crate) prod_major: u32,
+> +    pub(crate) ver_major: u32,
+> +    pub(crate) ver_minor: u32,
+> +    pub(crate) ver_status: u32,
+> +}
+> +
+> +impl From<u32> for GpuId {
+> +    fn from(value: u32) -> Self {
+> +        GpuId {
+> +            arch_major: (value & genmask_u32(28..=31)) >> 28,
+> +            arch_minor: (value & genmask_u32(24..=27)) >> 24,
+> +            arch_rev: (value & genmask_u32(20..=23)) >> 20,
+> +            prod_major: (value & genmask_u32(16..=19)) >> 16,
+> +            ver_major: (value & genmask_u32(12..=15)) >> 12,
+> +            ver_minor: (value & genmask_u32(4..=11)) >> 4,
+> +            ver_status: value & genmask_u32(0..=3),
+> +        }
+> +    }
+> +}
+> +
+> +/// Powers on the l2 block.
+> +pub(crate) fn l2_power_on(iomem: &Devres<IoMem>) -> Result<()> {
+> +    let op = || L2_PWRTRANS_LO.read(iomem);
+> +
+> +    let cond = |pwr_trans: &u32| *pwr_trans == 0;
+> +
+> +    let _ = io::poll::read_poll_timeout(
+> +        op,
+> +        cond,
+> +        time::Delta::from_millis(100),
+> +        Some(time::Delta::from_millis(200)),
+> +    )?;
+> +
+> +    L2_PWRON_LO.write(iomem, 1)?;
+> +
+> +    let op = || L2_READY_LO.read(iomem);
+> +    let cond = |l2_ready: &u32| *l2_ready == 1;
+> +
+> +    let _ = io::poll::read_poll_timeout(
+> +        op,
+> +        cond,
+> +        time::Delta::from_millis(100),
+> +        Some(time::Delta::from_millis(200)),
+> +    )?;
+> +
+> +    Ok(())
+> +}
+> diff --git a/drivers/gpu/drm/tyr/regs.rs b/drivers/gpu/drm/tyr/regs.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..db36cfd030d202e47619cb744cae5597d47f6029
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/regs.rs
+> @@ -0,0 +1,252 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +#![allow(dead_code)]
+> +
+> +use kernel::bits::bit_u64;
+> +use kernel::devres::Devres;
+> +use kernel::io::mem::IoMem;
+> +use kernel::{bits::bit_u32, prelude::*};
+> +
+> +/// Represents a register in the Register Set
+> +pub(crate) struct Register<const OFFSET: usize>;
+> +
+> +impl<const OFFSET: usize> Register<OFFSET> {
+> +    #[inline]
+> +    pub(crate) fn read(&self, iomem: &Devres<IoMem>) -> Result<u32> {
+> +        (*iomem).try_access().ok_or(ENODEV)?.try_read32(OFFSET)
+> +    }
+> +
+> +    #[inline]
+> +    pub(crate) fn write(&self, iomem: &Devres<IoMem>, value: u32) -> Result<()> {
+> +        (*iomem)
+> +            .try_access()
+> +            .ok_or(ENODEV)?
+> +            .try_write32(value, OFFSET)
+> +    }
+> +}
+
+You might want to consider a 64 bit register abstraction as well.
+Panthor recently switched over to avoid the whole _HI/_LO dance.
+
+> +
+> +pub(crate) const GPU_ID: Register<0x0> = Register;
+> +pub(crate) const GPU_L2_FEATURES: Register<0x4> = Register;
+> +pub(crate) const GPU_CORE_FEATURES: Register<0x8> = Register;
+> +pub(crate) const GPU_CSF_ID: Register<0x1c> = Register;
+> +pub(crate) const GPU_REVID: Register<0x280> = Register;
+> +pub(crate) const GPU_TILER_FEATURES: Register<0xc> = Register;
+> +pub(crate) const GPU_MEM_FEATURES: Register<0x10> = Register;
+> +pub(crate) const GPU_MMU_FEATURES: Register<0x14> = Register;
+> +pub(crate) const GPU_AS_PRESENT: Register<0x18> = Register;
+> +pub(crate) const GPU_INT_RAWSTAT: Register<0x20> = Register;
+> +
+> +pub(crate) const GPU_INT_RAWSTAT_FAULT: u32 = bit_u32(0);
+> +pub(crate) const GPU_INT_RAWSTAT_PROTECTED_FAULT: u32 = bit_u32(1);
+> +pub(crate) const GPU_INT_RAWSTAT_RESET_COMPLETED: u32 = bit_u32(8);
+> +pub(crate) const GPU_INT_RAWSTAT_POWER_CHANGED_SINGLE: u32 = bit_u32(9);
+> +pub(crate) const GPU_INT_RAWSTAT_POWER_CHANGED_ALL: u32 = bit_u32(10);
+> +pub(crate) const GPU_INT_RAWSTAT_CLEAN_CACHES_COMPLETED: u32 = bit_u32(17);
+> +pub(crate) const GPU_INT_RAWSTAT_DOORBELL_STATUS: u32 = bit_u32(18);
+> +pub(crate) const GPU_INT_RAWSTAT_MCU_STATUS: u32 = bit_u32(19);
+> +
+> +pub(crate) const GPU_INT_CLEAR: Register<0x24> = Register;
+> +pub(crate) const GPU_INT_MASK: Register<0x28> = Register;
+> +pub(crate) const GPU_INT_STAT: Register<0x2c> = Register;
+> +pub(crate) const GPU_CMD: Register<0x30> = Register;
+> +pub(crate) const GPU_THREAD_FEATURES: Register<0xac> = Register;
+> +pub(crate) const GPU_THREAD_MAX_THREADS: Register<0xa0> = Register;
+> +pub(crate) const GPU_THREAD_MAX_WORKGROUP_SIZE: Register<0xa4> = Register;
+> +pub(crate) const GPU_THREAD_MAX_BARRIER_SIZE: Register<0xa8> = Register;
+> +pub(crate) const GPU_TEXTURE_FEATURES0: Register<0xb0> = Register;
+> +pub(crate) const GPU_SHADER_PRESENT_LO: Register<0x100> = Register;
+> +pub(crate) const GPU_SHADER_PRESENT_HI: Register<0x104> = Register;
+> +pub(crate) const GPU_TILER_PRESENT_LO: Register<0x110> = Register;
+> +pub(crate) const GPU_TILER_PRESENT_HI: Register<0x114> = Register;
+> +pub(crate) const GPU_L2_PRESENT_LO: Register<0x120> = Register;
+> +pub(crate) const GPU_L2_PRESENT_HI: Register<0x124> = Register;
+> +pub(crate) const L2_READY_LO: Register<0x160> = Register;
+> +pub(crate) const L2_READY_HI: Register<0x164> = Register;
+> +pub(crate) const L2_PWRON_LO: Register<0x1a0> = Register;
+> +pub(crate) const L2_PWRON_HI: Register<0x1a4> = Register;
+> +pub(crate) const L2_PWRTRANS_LO: Register<0x220> = Register;
+> +pub(crate) const L2_PWRTRANS_HI: Register<0x204> = Register;
+> +pub(crate) const L2_PWRACTIVE_LO: Register<0x260> = Register;
+> +pub(crate) const L2_PWRACTIVE_HI: Register<0x264> = Register;
+> +
+> +pub(crate) const MCU_CONTROL: Register<0x700> = Register;
+> +pub(crate) const MCU_CONTROL_ENABLE: u32 = 1;
+> +pub(crate) const MCU_CONTROL_AUTO: u32 = 2;
+> +pub(crate) const MCU_CONTROL_DISABLE: u32 = 0;
+> +
+> +pub(crate) const MCU_STATUS: Register<0x704> = Register;
+> +pub(crate) const MCU_STATUS_DISABLED: u32 = 0;
+> +pub(crate) const MCU_STATUS_ENABLED: u32 = 1;
+> +pub(crate) const MCU_STATUS_HALT: u32 = 2;
+> +pub(crate) const MCU_STATUS_FATAL: u32 = 3;
+> +
+> +pub(crate) const GPU_COHERENCY_FEATURES: Register<0x300> = Register;
+> +
+> +pub(crate) const JOB_INT_RAWSTAT: Register<0x1000> = Register;
+> +pub(crate) const JOB_INT_CLEAR: Register<0x1004> = Register;
+> +pub(crate) const JOB_INT_MASK: Register<0x1008> = Register;
+> +pub(crate) const JOB_INT_STAT: Register<0x100c> = Register;
+> +
+> +pub(crate) const JOB_INT_GLOBAL_IF: u32 = bit_u32(31);
+> +
+> +pub(crate) const MMU_INT_RAWSTAT: Register<0x2000> = Register;
+> +pub(crate) const MMU_INT_CLEAR: Register<0x2004> = Register;
+> +pub(crate) const MMU_INT_MASK: Register<0x2008> = Register;
+> +pub(crate) const MMU_INT_STAT: Register<0x200c> = Register;
+> +
+> +pub(crate) const AS_TRANSCFG_ADRMODE_UNMAPPED: u64 = bit_u64(0);
+> +pub(crate) const AS_TRANSCFG_ADRMODE_IDENTITY: u64 = bit_u64(1);
+> +pub(crate) const AS_TRANSCFG_ADRMODE_AARCH64_4K: u64 = bit_u64(2) | bit_u64(1);
+> +pub(crate) const AS_TRANSCFG_ADRMODE_AARCH64_64K: u64 = bit_u64(3);
+> +pub(crate) const fn as_transcfg_ina_bits(x: u64) -> u64 {
+> +    x << 6
+> +}
+> +pub(crate) const fn as_transcfg_outa_bits(x: u64) -> u64 {
+> +    x << 14
+> +}
+> +pub(crate) const AS_TRANSCFG_SL_CONCAT: u64 = bit_u64(22);
+> +pub(crate) const AS_TRANSCFG_PTW_MEMATTR_NC: u64 = bit_u64(24);
+> +pub(crate) const AS_TRANSCFG_PTW_MEMATTR_WB: u64 = bit_u64(25);
+> +pub(crate) const AS_TRANSCFG_PTW_SH_NS: u64 = 0 << 28;
+> +pub(crate) const AS_TRANSCFG_PTW_SH_OS: u64 = bit_u64(29);
+> +pub(crate) const AS_TRANSCFG_PTW_SH_IS: u64 = bit_u64(29) | bit_u64(28);
+> +pub(crate) const AS_TRANSCFG_PTW_RA: u64 = bit_u64(30);
+> +pub(crate) const AS_TRANSCFG_DISABLE_HIER_AP: u64 = bit_u64(33);
+> +pub(crate) const AS_TRANSCFG_DISABLE_AF_FAULT: u64 = bit_u64(34);
+> +pub(crate) const AS_TRANSCFG_WXN: u64 = bit_u64(35);
+> +
+> +pub(crate) const MMU_BASE: usize = 0x2400;
+> +pub(crate) const MMU_AS_SHIFT: usize = 6;
+> +
+> +const fn mmu_as(as_nr: usize) -> usize {
+> +    MMU_BASE + (as_nr << MMU_AS_SHIFT)
+> +}
+> +
+> +pub(crate) struct AsRegister(usize);
+> +
+> +impl AsRegister {
+> +    fn new(as_nr: usize, offset: usize) -> Result<Self> {
+> +        if as_nr >= 32 {
+
+Should be 16 really. This is a bit of an architectural quirk. There are
+only ever 16 sets of address space registers, but the AS_PRESENT
+register is defined as 32 bit.
+
+> +            Err(EINVAL)
+> +        } else {
+> +            Ok(AsRegister(mmu_as(as_nr) + offset))
+> +        }
+> +    }
+> +
+> +    #[inline]
+> +    pub(crate) fn read(&self, iomem: &Devres<IoMem>) -> Result<u32> {
+> +        (*iomem).try_access().ok_or(ENODEV)?.try_read32(self.0)
+> +    }
+> +
+> +    #[inline]
+> +    pub(crate) fn write(&self, iomem: &Devres<IoMem>, value: u32) -> Result<()> {
+> +        (*iomem)
+> +            .try_access()
+> +            .ok_or(ENODEV)?
+> +            .try_write32(value, self.0)
+> +    }
+> +}
+> +
+> +pub(crate) fn as_transtab_lo(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x0)
+> +}
+> +
+> +pub(crate) fn as_transtab_hi(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x4)
+> +}
+> +
+> +pub(crate) fn as_memattr_lo(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x8)
+> +}
+> +
+> +pub(crate) fn as_memattr_hi(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0xc)
+> +}
+> +
+> +pub(crate) fn as_lockaddr_lo(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x10)
+> +}
+> +
+> +pub(crate) fn as_lockaddr_hi(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x14)
+> +}
+> +
+> +pub(crate) fn as_command(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x18)
+> +}
+> +
+> +pub(crate) fn as_faultstatus(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x1c)
+> +}
+> +
+> +pub(crate) const AS_FAULTSTATUS_ACCESS_TYPE_MASK: u32 = 0x3 << 8;
+> +pub(crate) const AS_FAULTSTATUS_ACCESS_TYPE_ATOMIC: u32 = 0x0 << 8;
+> +pub(crate) const AS_FAULTSTATUS_ACCESS_TYPE_EX: u32 = 0x1 << 8;
+> +pub(crate) const AS_FAULTSTATUS_ACCESS_TYPE_READ: u32 = 0x2 << 8;
+> +pub(crate) const AS_FAULTSTATUS_ACCESS_TYPE_WRITE: u32 = 0x3 << 8;
+> +
+> +pub(crate) fn as_faultaddress_lo(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x20)
+> +}
+> +
+> +pub(crate) fn as_faultaddress_hi(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x24)
+> +}
+> +
+> +pub(crate) const AS_COMMAND_NOP: u32 = 0;
+> +pub(crate) const AS_COMMAND_UPDATE: u32 = 1;
+> +pub(crate) const AS_COMMAND_LOCK: u32 = 2;
+> +pub(crate) const AS_COMMAND_UNLOCK: u32 = 3;
+> +pub(crate) const AS_COMMAND_FLUSH_PT: u32 = 4;
+> +pub(crate) const AS_COMMAND_FLUSH_MEM: u32 = 5;
+
+These should be moved up next to as_command().
+
+> +
+> +pub(crate) fn as_status(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x28)
+> +}
+> +
+> +pub(crate) const AS_STATUS_ACTIVE: u32 = bit_u32(0);
+> +
+> +pub(crate) fn as_transcfg_lo(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x30)
+> +}
+> +pub(crate) fn as_transcfg_hi(as_nr: usize) -> Result<AsRegister> {
+> +    AsRegister::new(as_nr, 0x34)
+> +}
+> +
+> +pub(crate) const AS_LOCK_REGION_MIN_SIZE: u32 = bit_u32(15);
+> +
+> +pub(crate) const AS_MEMATTR_AARCH64_INNER_ALLOC_IMPL: u32 = 2 << 2;
+> +
+> +pub(crate) fn as_memattr_aarch64_inner_alloc_expl(w: bool, r: bool) -> u32 {
+> +    (3 << 2) | ((w as u32) << 0) | ((r as u32) << 1)
+> +}
+> +pub(crate) const AS_MEMATTR_AARCH64_SH_MIDGARD_INNER: u32 = 0 << 4;
+> +pub(crate) const AS_MEMATTR_AARCH64_SH_CPU_INNER: u32 = 1 << 4;
+> +pub(crate) const AS_MEMATTR_AARCH64_SH_CPU_INNER_SHADER_COH: u32 = 2 << 4;
+> +pub(crate) const AS_MEMATTR_AARCH64_SHARED: u32 = 0 << 6;
+> +pub(crate) const AS_MEMATTR_AARCH64_INNER_OUTER_NC: u32 = 1 << 6;
+> +pub(crate) const AS_MEMATTR_AARCH64_INNER_OUTER_WB: u32 = 2 << 6;
+> +pub(crate) const AS_MEMATTR_AARCH64_FAULT: u32 = 3 << 6;
+
+These also should be moved.
+
+> +
+> +pub(crate) struct Doorbell(usize);
+> +
+> +impl Doorbell {
+> +    pub(crate) fn new(doorbell_id: usize) -> Self {
+> +        Doorbell(0x80000 + (doorbell_id * 0x10000))
+> +    }
+> +
+> +    #[inline]
+> +    pub(crate) fn read(&self, iomem: &Devres<IoMem>) -> Result<u32> {
+> +        (*iomem).try_access().ok_or(ENODEV)?.try_read32(self.0)
+> +    }
+> +
+> +    #[inline]
+> +    pub(crate) fn write(&self, iomem: &Devres<IoMem>, value: u32) -> Result<()> {
+> +        (*iomem)
+> +            .try_access()
+> +            .ok_or(ENODEV)?
+> +            .try_write32(value, self.0)
+> +    }
+> +}
+> +
+> +pub(crate) const CSF_GLB_DOORBELL_ID: usize = 0;
+> diff --git a/drivers/gpu/drm/tyr/tyr.rs b/drivers/gpu/drm/tyr/tyr.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..455100aafcffb58af955d3796f2621f2947ad7b9
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tyr/tyr.rs
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+> +
+> +//! Rust driver for ARM Mali CSF-based GPUs
+> +//!
+> +//! The name "Tyr" is inspired by Norse mythology, reflecting ARM's tradition of
+> +//! naming their GPUs after Nordic mythological figures and places.
+> +
+> +use crate::driver::TyrDriver;
+> +
+> +mod driver;
+> +mod file;
+> +mod gem;
+> +mod gpu;
+> +mod regs;
+> +
+> +kernel::module_platform_driver! {
+> +    type: TyrDriver,
+> +    name: "tyr",
+> +    author: "The Tyr driver authors",
+> +    description: "Rust driver for ARM Mali CSF-based GPUs",
+> +    license: "Dual MIT/GPL",
+> +}
+> diff --git a/rust/uapi/uapi_helper.h b/rust/uapi/uapi_helper.h
+> index 1409441359f510236256bc17851f9aac65c45c4e..f9959c1d889170ebe6ad5f98a431225fb08625b5 100644
+> --- a/rust/uapi/uapi_helper.h
+> +++ b/rust/uapi/uapi_helper.h
+> @@ -9,6 +9,7 @@
+>  #include <uapi/asm-generic/ioctl.h>
+>  #include <uapi/drm/drm.h>
+>  #include <uapi/drm/nova_drm.h>
+> +#include<uapi/drm/panthor_drm.h>
+
+Missing space, I can review C for style :)
+
+Thanks,
+Steve
+
+>  #include <uapi/linux/mdio.h>
+>  #include <uapi/linux/mii.h>
+>  #include <uapi/linux/ethtool.h>
+> 
+> ---
+> base-commit: 1b1d6cbeba24e4c9ff39580101472efeb3bd9b6f
+> change-id: 20250627-tyr-683ec49113ba
+> 
+> Best regards,
+
