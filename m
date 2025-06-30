@@ -1,50 +1,39 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40EE28A73D;
-	Mon, 30 Jun 2025 13:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5740F28B4F0;
+	Mon, 30 Jun 2025 13:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290726; cv=none; b=dtBpYqOJlpRFx5PR4xCHWeVJN5/np+vQQc2XxwjstExsgsGeQ5Hv314/wyMASDu82CTgpJtTOnpARtzvY9TDvGxd43OFG+YuZTdoQjYGQlbi3C2uMz0I0yJVf+kT9NQw9ABDaK3XocGK4uoRtryBskJFq2iBnzYlh7TknkW6MwU=
+	t=1751290751; cv=none; b=D9QCtJx9j7bUy/zIR6Xs4mP/lziCDzGd8/2bjIWOQjzqsFWwfTd6aBmuVxDkpY733UJ+JJqvasrkWqRWBfsGaHg/fl2Kvhax8KsMzp3n0+ZOJx0i7hSNSUfp5G0/6ky/DAfeHg/izCnqbQHKr2WXoQQBznMdRdYfxBh8OVKwJKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290726; c=relaxed/simple;
-	bh=LZiG3HgLUNmpOImgoNORgqbqT6uE7HpQAw31fKnOkVE=;
+	s=arc-20240116; t=1751290751; c=relaxed/simple;
+	bh=7izEr5Kx9Sy8CCJItblbtYpeYZEw6T/gngaq7I5hwsc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXDcJ+sP0+vx0O8PGhWfen0TUSYPKbQE0dMAamp4SmBX1qjW/vYa/n+qsB5dgL5SG3Gmu72PmVkCPHvE67YePyVptg1+WBFe0/S/wrbe4qn2YMlZFsDKzEdVr+wPextp7NR9izwXquJuno/8ZaGKRPCWyVWIHqqMp99skPOukH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id BF34B227A88; Mon, 30 Jun 2025 15:38:39 +0200 (CEST)
-Date: Mon, 30 Jun 2025 15:38:39 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <20250630133839.GA26981@lst.de>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com> <cover.1750854543.git.leon@kernel.org> <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com> <20250627170213.GL17401@unreal>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bGSvgUC5XoaTdZoa8K5p5a0qfQebIy9iKHtVilxEcT1SWx8OmeadmcS/qiR0TcMUzVnjVvSVLPuDwGAEiaXY1h28Uzv172aO9cAMYK8rsp727nw0UlBK5mZM76PMXGjgnIN0yvihr7QJMtWZd7uWTOYHtH82iWfdgCDE7KAowu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xNxTpcC3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xNxTpcC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6951BC4CEF0;
+	Mon, 30 Jun 2025 13:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751290750;
+	bh=7izEr5Kx9Sy8CCJItblbtYpeYZEw6T/gngaq7I5hwsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xNxTpcC3wjqHFzrSjbOQ9WLKOnl+9oJQGIEr+JLGvuWXYwpIZ3syePvfxvIN7sNDf
+	 A/TwsQ2fbgdWYJIrIyLismPdq/93Px3RIEQJQ8AP0zaSkm5VW2vhAf0fttdkl+a3ZL
+	 1/s9L5wLi46Ay0MFxv+B7V+r5d9JEMeUF3UnE3Uc=
+Date: Mon, 30 Jun 2025 15:39:07 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Drew Hamilton <drew.hamilton@zetier.com>
+Cc: Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+Subject: Re: [PATCH] usb: musb: fix gadget state on disconnect
+Message-ID: <2025063046-parchment-unstopped-4cf7@gregkh>
+References: <20250624140930.25887-1-drew.hamilton@zetier.com>
+ <2025062456-cameo-directly-fc66@gregkh>
+ <f8988d47-d84b-4cff-ba20-9b3341879354@zetier.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,19 +42,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250627170213.GL17401@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <f8988d47-d84b-4cff-ba20-9b3341879354@zetier.com>
 
-On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
-> > Thanks for this rework! I assume that the next step is to add map_phys 
-> > callback also to the dma_map_ops and teach various dma-mapping providers 
-> > to use it to avoid more phys-to-page-to-phys conversions.
+On Thu, Jun 26, 2025 at 01:35:39PM -0400, Drew Hamilton wrote:
+> On Tue, Jun 24, 2025 at 10:16:30AM -0400, Greg Kroah-Hartman wrote:
+> > What it does show is you missed the many thousands of changes that have
+> > gone into the tree since -rc6, is this still an issue in 6.16-rc3?
 > 
-> Probably Christoph will say yes, however I personally don't see any
-> benefit in this. Maybe I wrong here, but all existing .map_page()
-> implementation platforms don't support p2p anyway. They won't benefit
-> from this such conversion.
+> Retested against v6.16-rc3 and confirmed both that without the patch the
+> issue is still present, as well as that the patch still resolves the issue.
+> 
+> > What commit id does this fix?
+> 
+> It seems like this issue has existed for the MUSB driver since the UDC
+> 'state' sysfs attribute was defined in v3.1.
 
-I think that conversion should eventually happen, and rather sooner than
-later.
+Great, can you please fix up the changelog and add the needed Fixes: and
+cc: stable line to the patch and send a v2?
 
+thanks,
+
+greg k-h
