@@ -1,121 +1,66 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A185E194A44;
-	Mon, 30 Jun 2025 04:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6222D4A11;
+	Mon, 30 Jun 2025 04:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751259251; cv=none; b=LENQiwp8YkLTBNVuYlHZOprkcBgjdWoIhV/7SC+YGYZFWwWKZK9gKTFIM9mmLlu5zMHHyIDOe/PzibwJ1ZPZgK2x/3wJdTlVjxxdpFr7MGSns9iGsLHSdcY9e7947bfrMXtws+yahYQxFgBN/ASookQLBPf/A626S4CTy22OCZs=
+	t=1751259373; cv=none; b=IY9gFDONlyu7GJCP4ZngVx1Xe6hny/0eItsamrVMa/MGWUz9D/3c5NGhPGO68btr3PzFrPFNDiMls2HlJJi64PrFTfAwvLF4AnBerEmgt/lzvcqMF/3tv3ONMeFgi9B6kB1vzZHFdHQ13MVm/oi/nLIZGVN7Tg67SpDk7Ah3Rwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751259251; c=relaxed/simple;
-	bh=q4cChbdvhDL1OSZn8A56fKuAJVHQOXAwQbXbtQgi6LI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hUDtsisxlUC7fLzVMzA8raPCOZVP03sI3HfJTI84aqj5JOEi03xLIfudUDpfNleDm4DBzk9yacg6iCSSjF8U3aLRl8ZKklDNgHyCQ2h0FfJ2z9sejB7MMnI/rISETE7V6Ip+LOB0/hhssEEFBMxfpQKQdgxaQge8xtmpgOWjMos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5535652f42cso4737256e87.2;
-        Sun, 29 Jun 2025 21:54:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751259244; x=1751864044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+et2JbQsekjoDqNx2V23zrGG58Up1Zz2cWU2HWIxxkw=;
-        b=J7l+GeIPwAG9EqZ4O3gPdEEHLnDeSXM+pDI6ul1GI1yHvzlEPA3Eo5bVF40fP51+qP
-         T++bNfYYFvsCCNr8iGy5JCy7omXALrfXHYe1UGPF36Z/V3aqX+8VJ+52wJKp0ancCbfy
-         K4DY2FYAX+7kqX+y/Mo+achwRLj5tTHedHwe6w5VImNY60vuQ4nYwXMoExQsFRDwLMzS
-         JX+m8Wv00v/DRR7kFceoVLSXaH/513S1mIlUY+W2rR+Q/GiUSwRTg+qUfblLYXjA2hW1
-         c4qQntPB2Usc8m378GcQB4nfkN1/TI6YMpQ8UnSO4a5xRiYkF7GZpY2VAn7FFhdEEEie
-         mH8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV38otyxYvCYbLavSFnz7nLFFK8ZKLhTGw7+KcAatJVoBw7izQQKjuFwg2WBAKYFTarcHJWeNx9Rbq9@vger.kernel.org, AJvYcCVkJOr0NFVr3zNyqgqnXgEc4Bj75S8+6i/MPpz0RRoipoG3YlnYCQo0GYZCbbGVD7rF16ad5q7OGW1TtSK6@vger.kernel.org, AJvYcCWb6qrOfjUHmQT3D5sx9BagGtE1BlbFe7vMqGaFlxgUaDuF/SmjfU+5tPjNguYAO7agPFXMeFADzYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsP+nfC4WNDRrpSoiEiLtCkYVHOSDg5pv+GEtn3am3OWB2jy/p
-	sdflreBZAJWUEL2N1vHyK1q0oYkXv4tsihOxNPO111xp++KphkcFT5tYdFrIz6nE
-X-Gm-Gg: ASbGncutoOpZpuwyhkC271wBZaqG3YRmHnVRCS/1V4LHKmg9frryHbKzoKXfS0ooZIH
-	pwzUiJdMBA1ucCVBbaqoJoD8fax+2UaEIwPsXGeIro+ni4ZU2j0scy3heKq27YnEqAlPnCq2KJQ
-	vfBg+T3GeTJ99Pi7gNoKFhvWM2UKGBz6e/uK/0AnXCPTvWIPTbjhoLZVDQSrILoGmYuUM2gU/wJ
-	qGJrYpcwdU4wDQ5UhOO/luC0zvZSkV6wgjkbWLUm3olaJJqlBfXR2pX1gYGzKqBwxTrG392m3tM
-	7BqS8lsy3WBUcGOl2tNtaQgMB7tMhrcme1pJ4KgzZOyU72DaEftU4jWURMGTFyd9nW5zf8KUObv
-	RTvwvmsNw3lctYvNSEjo=
-X-Google-Smtp-Source: AGHT+IEPXdE08Sp3Oy4NMTRIgRjshR5wQvGlfnBAMYKeAZ2ac9PBCar5nquYG8ey///R0QWkpPyf4A==
-X-Received: by 2002:a05:6512:e95:b0:553:33b9:bd3a with SMTP id 2adb3069b0e04-5550b8e6179mr3083357e87.53.1751259244355;
-        Sun, 29 Jun 2025 21:54:04 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24ed7esm1296440e87.81.2025.06.29.21.54.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 21:54:03 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32b910593edso33078961fa.1;
-        Sun, 29 Jun 2025 21:54:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXoFPwTajZmdNDJv5gpY9As3jzy/9jE6EcXYRcezcAjLTOcDXmPhXDFN0iyQKOZ72UNtVTruGD29c=@vger.kernel.org, AJvYcCW/NGMFdB5zI+MzFBwYQ83N71XVP3byyvygbxqyQKVbFypbccL1FrttKIisdhYZDAcHefbXxWkMywpVrOhr@vger.kernel.org, AJvYcCXPUirFIg43WaEVRDHW5bgx9p8oMDkZFXU7zYjjrrJtZyxkAC/9PdXqoImfkPxL8TRe3E/6CJdD5aNA@vger.kernel.org
-X-Received: by 2002:a05:651c:31ca:10b0:32c:a851:e4e with SMTP id
- 38308e7fff4ca-32cdc575ebcmr24256581fa.40.1751259243150; Sun, 29 Jun 2025
- 21:54:03 -0700 (PDT)
+	s=arc-20240116; t=1751259373; c=relaxed/simple;
+	bh=wi6F43pcceDDPdVweAPMy1WeWjcYnUFiN1QJWIMhT2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RGOxOYtyRXlGrtpf9M9/PrdOu4Jvi3o5dqzoxC5VvhzyMaAckZOWzFeTximYsygZhtNwaq0kjxzkvg/9Xp9ugtcIZrfJrcM6qV5fIrjE57HPW0cGs4OBcgTGhkQzg+W1mFHMs8w6fRXwNOf0tCY6FFdnIPYiG+I/31cBJbX7vWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fue8I5h0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fue8I5h0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DC1C4CEE3;
+	Mon, 30 Jun 2025 04:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751259372;
+	bh=wi6F43pcceDDPdVweAPMy1WeWjcYnUFiN1QJWIMhT2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fue8I5h0lsMALOQFl6B6mw9NhGqJunT8/9AQwRoh6sEZ3HSa2QXFTZsvCRlCKCaCa
+	 b0HRdQQM45ywBt+hgwQ9ETwsnLBtCuaP5KJr0LY9OarHY1afjU++cssR0hR05JATDp
+	 MufwaPrjDza4oK+g1/bvCsN9hgcq5+M+HkjVjsvo=
+Date: Mon, 30 Jun 2025 06:56:09 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Seungjin Bae <eeodqql09@gmail.com>
+Cc: Kyungtae Kim <Kyungtae.Kim@dartmouth.edu>,
+	Jassi Brar <jaswinder.singh@linaro.org>,
+	Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] usb: gadget: max3420_udc: Fix out-of-bounds
+ endpoint index access
+Message-ID: <2025063044-uninvited-simplify-0420@gregkh>
+References: <20250629201324.30726-4-eeodqql09@gmail.com>
+ <20250629214943.27893-4-eeodqql09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411003827.782544-1-iuncuim@gmail.com> <20250411003827.782544-3-iuncuim@gmail.com>
-In-Reply-To: <20250411003827.782544-3-iuncuim@gmail.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 30 Jun 2025 12:53:51 +0800
-X-Gmail-Original-Message-ID: <CAGb2v670s_r4NG8hWHQ_exc6TM5JnvAEYw-vp5ndMn39X-B4Yw@mail.gmail.com>
-X-Gm-Features: Ac12FXylrAnNPmh-5tW8elyoVrQtjqLfo-AL1Tmi56dNnknRJjo1EfbWOyGYXgQ
-Message-ID: <CAGb2v670s_r4NG8hWHQ_exc6TM5JnvAEYw-vp5ndMn39X-B4Yw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] thermal/drivers/sun8i: replace devm_reset_control_get
- to shared
-To: iuncuim <iuncuim@gmail.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Andre Przywara <andre.przywara@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629214943.27893-4-eeodqql09@gmail.com>
 
-On Fri, Apr 11, 2025 at 8:39=E2=80=AFAM iuncuim <iuncuim@gmail.com> wrote:
->
-> From: Mikhail Kalashnikov <iuncuim@gmail.com>
->
-> The A523 processor has two temperature controllers, but they share a comm=
-on
-> reset line. We need to use devm_reset_control_get_shared() instead of
-> devm_reset_control_get()
->
-> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
-> ---
->  drivers/thermal/sun8i_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_ther=
-mal.c
-> index 1f3908a60..dc4055c9c 100644
-> --- a/drivers/thermal/sun8i_thermal.c
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -391,7 +391,7 @@ static int sun8i_ths_resource_init(struct ths_device =
-*tmdev)
->                 return PTR_ERR(tmdev->regmap);
->
->         if (tmdev->chip->has_bus_clk_reset) {
-> -               tmdev->reset =3D devm_reset_control_get(dev, NULL);
-> +               tmdev->reset =3D devm_reset_control_get_shared(dev, NULL)=
-;
+On Sun, Jun 29, 2025 at 05:49:45PM -0400, Seungjin Bae wrote:
+> In the max3420_set_clear_feature() function, the endpoint index `id` can have a value from 0 to 15.
+> However, the udc->ep array is initialized with a maximum of 4 endpoints in max3420_eps_init().
+> If host sends a request with a wIndex greater than 3, the access to `udc->ep[id]` will go out-of-bounds,
+> leading to memory corruption or a potential kernel crash.
+> This bug was found by code inspection and has not been tested on hardware.
 
-You could just use devm_reset_control_get_shared_deasserted() and then
-drop the reset_control_deassert() and devm_add_action_or_reset() stuff belo=
-w
-this hunk. This simplifies the driver a bit.
+Please wrap your lines at 72 columns.
 
->                 if (IS_ERR(tmdev->reset))
->                         return PTR_ERR(tmdev->reset);
->
-> --
-> 2.49.0
->
+Also, you sent 2 patches, with identical subject lines, but they did
+different things.  That's not ok as you know.
+
+And I think you really need to test this on hardware.  How could that
+request ever have a windex set to greater than 3?  Is that a hardware
+value or a user-controlled value?
+
+thanks,
+
+greg k-h
