@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D6226158B;
-	Mon, 30 Jun 2025 11:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C38261378;
+	Mon, 30 Jun 2025 11:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283624; cv=none; b=A+MInq6DaKWIYr3TyP47gZL/x1LAowMuoLpmCMCb8lKr5PmpJBFg7LtYlCqhIYcX2e4pgl2Q0hUhSoLNKjBjDK/ZI9ylyz/leD0Qv0xT3Csycmi4nQV2aT+Fdg7qrnAhdO9pk66WhhQWq556eZKgu9SvlclPnNtfFtvloTf5m2U=
+	t=1751283625; cv=none; b=mxW0WWkZBInWQzkh+IkE3F8JFDi8c5BpffvVq+aTiHmB6u23nlG4T2n1SQysvAD8phSrN+xZJHCMAx897250XDNIZG+SmU29Vz0+TOVV9uOG6QPrUmAXUDudgQPCWI40cuhO6BbSNwZ6xcJUGX8agj9tRNc89M6h9kDdokMBdTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283624; c=relaxed/simple;
-	bh=s17SDTQKRXJ7jzA2U3d45oSAp+1+EHBfx49CHVYe/nM=;
+	s=arc-20240116; t=1751283625; c=relaxed/simple;
+	bh=N5nwle+Z07WArrrqBSVZE6m6izNoLkuvtuWlM2WawF4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KoaKEW1rTNpAaQ+J2X0H6jUOhE2fqrAJs8sLeBGq6svkb6KU3ALYseOq2CgwgD9Yh/4APbRAtuTeUGG8R0DRYdrMQZwRRIdqYxzKSmIS/a2CHfd5APzt5NUuORgvojLdyBRhE2qZbiQZB0rv6W9kE9TR9g5ZsoJWS9F6vU1d/60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaTIlZNb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UrgqYtugDt66RTQ1N/Uuc3S7iiXEA2P/nLtgL90AxHmlunECWB+Q6zxmUVpny0CWTo297g2ve1rZ4/6q2zEL2U/Zh31A+42DCrwRIAmkR07AynavmEYNfgKaNnhaziKX/mSzBPx1qPGOpIh8hrJiWkWduyWW+7NRosqEvzpXv8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOzOwMkA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaTIlZNb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08819C4CEE3;
-	Mon, 30 Jun 2025 11:40:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOzOwMkA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A41AC4CEEF;
+	Mon, 30 Jun 2025 11:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283623;
-	bh=s17SDTQKRXJ7jzA2U3d45oSAp+1+EHBfx49CHVYe/nM=;
+	s=k20201202; t=1751283625;
+	bh=N5nwle+Z07WArrrqBSVZE6m6izNoLkuvtuWlM2WawF4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=TaTIlZNbBqUre1LsoHxBTrG+D/645wI4PM4WyHW4l0Zru8OoRMBlfRgKj/fWYh7jv
-	 boerEYkeo4gqWQX7J+NC1sVUtEBTzELcdUvUsoe+VWtKiJksq9MSMmrRbNNDCkcVoN
-	 RLDKDjJxVe9mZAGQvRZ0vfzqwY7Dh1GwMiX7SKgAeU5SGKZZLRj5yti+PQMC9yc226
-	 P5QDSKf448J1TWtRQ2CZ75hUKbvbKEBjxzIA8DDWXrMkKcOIMjg/uJjL70lPzrzP7R
-	 Tn6UtI6gfNvoebYUAasu2Z5bFFRgmj/yt9d/aaJ1vznmcXC6X/TwfnyGibaYGqejoT
-	 oqfoKOrmX4Drg==
+	b=DOzOwMkAYVqljFUoAhKYKE31wda+DkQV+t/t4nt8MvAgdl5l/1S9YqzV7kZDTIgSE
+	 S+BQVlIt5gssWHt80/6PkJBoUZ2RwjRIY/6o4B3576WgkW6fpvXFKYrcfxCfUQbS1E
+	 JZJiXvvSgpx1MfhnPwNfMQ3of9aTFAJr9vxqP0la8tfb0B1hAI6GloKXbyy1n9eMFb
+	 0yGJRlqSl7sQ7ip+wuwZzjrYM6n+QiX8ttXgPismb2qL6QE2tD0BljqurH2dxMeF7q
+	 3Ym5UXnt83Sw5Yi3hq15w4xKUl0OlQE0CEIVbkhC77Wg676qUxcCGUlbtJxnuiXNdg
+	 cqcMVqDhHDPNw==
 From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- zhujun2@cmss.chinamobile.com, thorsten.blum@linux.dev, 
- colin.i.king@gmail.com, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, wangweidong.a@awinic.com
-Cc: yijiangtao@awinic.com
-In-Reply-To: <20250627110306.23488-1-wangweidong.a@awinic.com>
-References: <20250627110306.23488-1-wangweidong.a@awinic.com>
-Subject: Re: [PATCH V3] ASoC: codecs: Add calibration function to aw88399
- chip
-Message-Id: <175128362177.28563.15699568323913750801.b4-ty@kernel.org>
-Date: Mon, 30 Jun 2025 12:40:21 +0100
+To: srinivas.kandagatla@oss.qualcomm.com
+Cc: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org
+In-Reply-To: <20250627160329.442795-1-srinivas.kandagatla@oss.qualcomm.com>
+References: <20250627160329.442795-1-srinivas.kandagatla@oss.qualcomm.com>
+Subject: Re: [PATCH] MAINTAINERS: update Qualcomm audio codec drivers list
+Message-Id: <175128362404.28563.7607369612683502987.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 12:40:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,11 +45,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-cff91
 
-On Fri, 27 Jun 2025 19:03:06 +0800, wangweidong.a@awinic.com wrote:
-> Add calibration functionality to the aw88399 chip.
-> When the chip is in calibration condition, calibration
-> can be achieved by configuring the chip's internal DSP
-> and save the calibration values in cali_re.
+On Fri, 27 Jun 2025 17:03:29 +0100, srinivas.kandagatla@oss.qualcomm.com wrote:
+> Some of the codec drivers like wcd939x are missing in the MAINTAINERS
+> which is resulting in incorrect list from get_maintainers script.
+> Fix this by using wildcard matching on both wcd93* and wsa88* codec and
+> bindings.
 > 
 > 
 
@@ -62,8 +59,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: codecs: Add calibration function to aw88399 chip
-      commit: 29ddce17e909779633f856ad1c2f111fbf71c0df
+[1/1] MAINTAINERS: update Qualcomm audio codec drivers list
+      commit: be2e1a63448b35bd6736b5934f7720534649b51e
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
