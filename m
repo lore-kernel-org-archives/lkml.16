@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAAA2E8DF0;
-	Mon, 30 Jun 2025 23:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281762E9749;
+	Mon, 30 Jun 2025 23:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751326009; cv=none; b=Q+wbFX/XMfyltjAvPdmNZUyt5tjnDyapvQpftR3eYaYIXdpF048Nbi1V1i1JhNcLUJCtBS4fM1KI1HcAO7sra5lT4sGn8tfK/blgaTRwQ11rbdtnz7YUg5RzbwUtfWRo8uA1dtcJlOXTW+M7bYOT+AIdfACJVvkrd5TziBXioTA=
+	t=1751326015; cv=none; b=ESnDKlpuPQeLAKof4kBEM9dRDejVgeD/KXGr60YXlpMYgtAlqm3TZtnKo2bdDi9MzUHbhTzREMBbWyActvtR5gUd59ucICK2NWswEvWW/uWsLXLzlqU3a7l7l+nTz3u/oI23a2ADc6Z5TOhu6CaM3h09lL7eAV+2M7lH8OOnBuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751326009; c=relaxed/simple;
-	bh=VTv7opCZXxZ4GXzYPfNqPS1L7/gEKWDzBH62J409Juc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LiHO4lvKjB4ftfh8m5p40bsS7mWFd9H5Nu1jZITNuwL600TxuqAae/JZyPwPAP/vR6HCqPK2YGvmF2n+t9e8Pe8hnXkno47Jnr2vlmEzEVkeKhNoE27+mEmOD/0yj/2B3sXgYBTiCqlGUlOfVzFuEU2/Zy77Yu/cACjTbGyfSHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3XFDYs7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751326015; c=relaxed/simple;
+	bh=WR89lVovHqF0TgIThGYwD0D56m3jLDdx1wIgwZQ9cKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TfmboaqtPcwVxax36BO38E7OuokFIzJOx1yOxs+jzLNqrjhQ8r7ymmWdlfuPel1UJTad+fo5iBsyszp7lAe4tUmsT2OCHTumSkJwr/4VLYUY/sC0W7ZnQ7Rw2FdDX1eEgYQOQwHVFALHwMt9WJbrjLCt8ERYQBpOz/jF+MPvkSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8qtIgUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3XFDYs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00EDEC4CEE3;
-	Mon, 30 Jun 2025 23:26:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8qtIgUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04D5C4CEE3;
+	Mon, 30 Jun 2025 23:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751326009;
-	bh=VTv7opCZXxZ4GXzYPfNqPS1L7/gEKWDzBH62J409Juc=;
+	s=k20201202; t=1751326014;
+	bh=WR89lVovHqF0TgIThGYwD0D56m3jLDdx1wIgwZQ9cKw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=f3XFDYs7sgcJnbJo1jUQFAKDo6NG28AED9efX0YCBQLSMfkOEQIBJdPfO84ueAFq7
-	 GvDQ1xlJW0Oqnne9EbcLqU9mDwhlB0vlZAbs9fTr6YGtt8b2qmYbQIAW2EivwMv3VU
-	 //N1FLqQsGHY87gxsWNuxhextTvFpCdakbJ7jwpqw14mONaCeaPj/32+SBdbM6UEjm
-	 pbxdQR/nQNoVzExnijzh/14orklJyRdd/8KFZvIWVeoZKFQt7mN/8YfndnVrS99JLq
-	 DGXQOntOI5dSjO4lFpDjfK7Sq+ae6oe2rTHqMydA032hdV1qaudbDC5d78Y3wzfYyp
-	 Sr8mKJpU6HLhw==
+	b=h8qtIgUFWfZYePkmCwXS/Q5SBcFxgb4eWxecewshLjgRio7ZPdDcV7MbPz+LzI1+d
+	 riu/rQpAkdqa2zT4I5eRVzRgxFvjU1ab7fIOHs3F158pro4zx5Hv644d+3p1AKpfol
+	 Wgchv11YuBZSie9eAnlcG1c5bkZdbEqbhD5D1s4wAeWwHiwix+4mQWFQzNpiDNC+ll
+	 Engo1o1l9xeOtElYTPC6ebkocG5QEYmC85tzo9DXD5j7dZW/MWcwwVSAES5u8zIbv0
+	 RbbGQMKdVObnb7jQaCCq/haHrTbfIIWLkZ1SfbO1Pcyw1sWpYbi3SFJvqWz354/KWN
+	 cuCIxRI223Kqg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-clk@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chandra Mandal <purna.mandal@microchip.com>
+Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: clock: Convert moxa,moxart-clock to DT schema
-Date: Mon, 30 Jun 2025 18:26:43 -0500
-Message-ID: <20250630232644.3700781-1-robh@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: clock: Convert microchip,pic32mzda-clk to DT schema
+Date: Mon, 30 Jun 2025 18:26:51 -0500
+Message-ID: <20250630232652.3701007-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,124 +48,108 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/clock/moxa,moxart-clock.txt      | 48 -------------------
- .../bindings/clock/moxa,moxart-clock.yaml     | 38 +++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 39 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/moxa,moxart-clock.yaml
+ .../bindings/clock/microchip,pic32.txt        | 39 ----------------
+ .../clock/microchip,pic32mzda-clk.yaml        | 45 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
+diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
 deleted file mode 100644
-index fedea84314a1..000000000000
---- a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
+index c93d88fdd858..000000000000
+--- a/Documentation/devicetree/bindings/clock/microchip,pic32.txt
 +++ /dev/null
-@@ -1,48 +0,0 @@
--Device Tree Clock bindings for arch-moxart
+@@ -1,39 +0,0 @@
+-Microchip PIC32 Clock Controller Binding
+-----------------------------------------
+-Microchip clock controller is consists of few oscillators, PLL, multiplexer
+-and few divider modules.
 -
--This binding uses the common clock binding[1].
--
+-This binding uses common clock bindings.
 -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 -
--MOXA ART SoCs allow to determine PLL output and APB frequencies
--by reading registers holding multiplier and divisor information.
--
--
--PLL:
--
 -Required properties:
--- compatible : Must be "moxa,moxart-pll-clock"
--- #clock-cells : Should be 0
--- reg : Should contain registers location and length
--- clocks : Should contain phandle + clock-specifier for the parent clock
+-- compatible: shall be "microchip,pic32mzda-clk".
+-- reg: shall contain base address and length of clock registers.
+-- #clock-cells: shall be 1.
 -
 -Optional properties:
--- clock-output-names : Should contain clock name
+-- microchip,pic32mzda-sosc: shall be added only if platform has
+-  secondary oscillator connected.
 -
--
--APB:
--
--Required properties:
--- compatible : Must be "moxa,moxart-apb-clock"
--- #clock-cells : Should be 0
--- reg : Should contain registers location and length
--- clocks : Should contain phandle + clock-specifier for the parent clock
--
--Optional properties:
--- clock-output-names : Should contain clock name
--
--
--For example:
--
--	clk_pll: clk_pll@98100000 {
--		compatible = "moxa,moxart-pll-clock";
--		#clock-cells = <0>;
--		reg = <0x98100000 0x34>;
+-Example:
+-	rootclk: clock-controller@1f801200 {
+-		compatible = "microchip,pic32mzda-clk";
+-		reg = <0x1f801200 0x200>;
+-		#clock-cells = <1>;
+-		/* optional */
+-		microchip,pic32mzda-sosc;
 -	};
 -
--	clk_apb: clk_apb@98100000 {
--		compatible = "moxa,moxart-apb-clock";
--		#clock-cells = <0>;
--		reg = <0x98100000 0x34>;
--		clocks = <&clk_pll>;
--	};
-diff --git a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.yaml b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.yaml
+-
+-The clock consumer shall specify the desired clock-output of the clock
+-controller (as defined in [2]) by specifying output-id in its "clock"
+-phandle cell.
+-[2] include/dt-bindings/clock/microchip,pic32-clock.h
+-
+-For example for UART2:
+-uart2: serial@2 {
+-	compatible = "microchip,pic32mzda-uart";
+-	reg = <>;
+-	interrupts = <>;
+-	clocks = <&rootclk PB2CLK>;
+-};
+diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml b/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
 new file mode 100644
-index 000000000000..bcf7cc240eba
+index 000000000000..a14a838140f1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.yaml
-@@ -0,0 +1,38 @@
++++ b/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
+@@ -0,0 +1,45 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/moxa,moxart-clock.yaml#
++$id: http://devicetree.org/schemas/clock/microchip,pic32mzda-clk.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: MOXA ART Clock Controllers
++title: Microchip PIC32MZDA Clock Controller
 +
 +maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Purna Chandra Mandal <purna.mandal@microchip.com>
 +
 +description:
-+  MOXA ART SoCs allow to determine PLL output and APB frequencies by reading
-+  registers holding multiplier and divisor information.
++  Microchip clock controller consists of a few oscillators, PLL, multiplexer
++  and divider modules.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - moxa,moxart-apb-clock
-+      - moxa,moxart-pll-clock
-+
-+  "#clock-cells":
-+    const: 0
++    const: microchip,pic32mzda-clk
 +
 +  reg:
 +    maxItems: 1
 +
-+  clocks:
-+    maxItems: 1
++  '#clock-cells':
++    const: 1
 +
-+  clock-output-names: true
-+
-+additionalProperties: false
++  microchip,pic32mzda-sosc:
++    description: Presence of secondary oscillator.
++    type: boolean
 +
 +required:
 +  - compatible
-+  - "#clock-cells"
 +  - reg
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a928ae141de..1dcc1b70224f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2893,7 +2893,7 @@ M:	Krzysztof Kozlowski <krzk@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Odd Fixes
- F:	Documentation/devicetree/bindings/arm/moxart.yaml
--F:	Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
-+F:	Documentation/devicetree/bindings/clock/moxa,moxart-clock.yaml
- F:	arch/arm/boot/dts/moxa/
- F:	drivers/clk/clk-moxart.c
- 
++  - "#clock-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller@1f801200 {
++        compatible = "microchip,pic32mzda-clk";
++        reg = <0x1f801200 0x200>;
++        #clock-cells = <1>;
++        /* optional */
++        microchip,pic32mzda-sosc;
++    };
 -- 
 2.47.2
 
