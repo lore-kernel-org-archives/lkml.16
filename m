@@ -1,114 +1,163 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402071E5B7E
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E683E28B7EF;
+	Mon, 30 Jun 2025 13:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289161; cv=none; b=etGRLveK2i3ZHu1l55LEVpvjrcFd31lgD/QnZhWt3SN/CV2QscNTRKjOBsp/ROCc+aOkl6X/b5qDDK4mQqOuyGP2BpFL+n337ecvkq0VB0j3x9tXnlXQMaCPNOResSGGxLasysxW+mkfI3cm+BznPOcPltx56nw11L45hNkfmv0=
+	t=1751289162; cv=none; b=nLwkbq7mSyNTrgsansVPwpA0adFSiYYbSjypY0mG7hCd9ZY7AU0YHvTqGQtILY3zQtOuDimznSHUr42gFlxc1yyK5zZN8KKsT21YLZ4furrWuahcr+XjELXcLjE+up7K4EyGjLVgV5E72nhhRSuiexv/yCzH67Kw0GgvwyyEEjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289161; c=relaxed/simple;
-	bh=Meg9l3ayF5IvOv4pDuSbD3RBC3/cwLs++Z+iuXJ5Boo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mdx3yIukq1Si424cnsPLzAzMN5jUyiQr/85IQCEpo3hejqqlEas/WWD2naQ4WGzlRD0Oh1AC4/+Q+6DZYXfFqXnBg0GWWtZ2IhBYNQ+8zZ1dzYrj68Lm49kbdZVHWWKoVeLZ7KgqxQsd9REp+SJJ9/GpiCb8XKP68W58sRq7AsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=drTedeE8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751289162; c=relaxed/simple;
+	bh=3vlsjbDTvmQj/WsIY9zNqu7qPR25a3VdjKTxsAo4JcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YahRCPSiP1cHj+q9+A247xlOirPRQq0vwoz9yIfQFWV/69XaLDoU+ocXScFBig8SWoxICBVlQGW4p/PSBIBAs65cEQ8WXq3CLw8n0YX7OQ5xhZAF8XSUCz3EdZA84moe7D3dimo9pbz8lP//ZF7JQwSgGFiUIHsx+Xzvy9iCcRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h33Sp5Qx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="drTedeE8"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UCgd8j029725;
-	Mon, 30 Jun 2025 13:12:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=cpN50fbiZkztKbrct/ZR+xxj0zr8FKIfX/kjYvOgH
-	78=; b=drTedeE8kJDHZZR5lspSXyUVG0RFgrNCp31RPKh/5QNXGCEhoozyOR86u
-	45cIHNRinvmyaTzrO7TAVnj5ECb5CBxhrT5/BR11wDutCPBkQDjsHg3TyXvOLVGv
-	hdW+dvIekdql59HHwPyIIIWR7kfG0NUsilzWT+Nn9pHfBspk2jDXdoi7ovHegH73
-	+0NjeKFv/hOgPiabnc+vOP9y1T7XcI6kWutECQnPK5/eY+KiRWhxbsTWhJhBwc9+
-	6EqVzsy2Wb1KWbI1g/WDxBOzEoM+Kn6zjD0b0om46gnXkX/Thv4K8GLGtBmJ72uJ
-	cvR9W75Sgqnpd9FPHoB4d8R2LOMbw==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j7wr9h7s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 13:12:33 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UAZRF9006830;
-	Mon, 30 Jun 2025 13:12:32 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jvxm5sb3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 13:12:32 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UDCVd132572016
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 13:12:31 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 097B62004D;
-	Mon, 30 Jun 2025 13:12:31 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DCFAF20040;
-	Mon, 30 Jun 2025 13:12:30 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Jun 2025 13:12:30 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] objtool: Add missing endian conversion to read_annotate()
-Date: Mon, 30 Jun 2025 15:12:30 +0200
-Message-ID: <20250630131230.4130185-1-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h33Sp5Qx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173A7C4CEEF;
+	Mon, 30 Jun 2025 13:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751289161;
+	bh=3vlsjbDTvmQj/WsIY9zNqu7qPR25a3VdjKTxsAo4JcA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h33Sp5QxfDssCYKqP6zwmKoDczTMqZw7E4KoMEuTvjhT95l3JXcHXs0RyFXIKUeJB
+	 vmTwGkIvJt2v/lOS6/kKJLYBcBgzkv+2LfufW/7Yh5QWrskzBqIQ0+rJT6cZN4XcD5
+	 3BmBkmRR4XM/+qno3oo53feJJnSm4NiqESIQiPlwTQIEOAy5brUlXe2asj11mEf1aJ
+	 LkzfgJNMbg9y0VU+RMctXjI0aujILfrjeRPPkmgYoYIPIgqCpw/fXdnM9ubrsbaFta
+	 69lJdGf3cUOqFFn5BTLkfOVlSebzwr8An6qTu7mFQgOGDAIvhBwMgCY6JVUQDxKhwm
+	 Isbf8CY1aMG/A==
+Message-ID: <d449ae59-11a2-436e-a51c-cf2fa3657ba2@kernel.org>
+Date: Mon, 30 Jun 2025 15:12:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=E/PNpbdl c=1 sm=1 tr=0 ts=68628d41 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=iPpOYdr31iFlP0GwivAA:9
-X-Proofpoint-GUID: mgw67tHKMUzaH_38VrjxED0dqjBSNiVg
-X-Proofpoint-ORIG-GUID: mgw67tHKMUzaH_38VrjxED0dqjBSNiVg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEwNSBTYWx0ZWRfXxI7m4gB/d2vu LtJxrQWP+U6E/0gP1Vae1NQSNKJtob0fSwykpuo7mfWJDpkIK/aDxinFEgy/RGFAD7cgrKJbu6P C8vWlSj68jmUg6RcVRbWTeIb43b8xY8baJBMVC2/6D4SgDr30Rsd59O5bN6X/S6m281OtAphX8e
- NeA0wJmQVbV27L9D7d+BoHgmwImwksyMFiGe4opBnuhBpUAIzZ5Xr90Ri+o1pEAWd7uBxlTEvyW eNT2PXnlGGAO5OPWheQ5OpU49BWLqH9vsxUfNypC2dyI6hVNsuMPlFgx7Odzmy0oSq6p0QM6w2b B4V098Q8bV2Bii3kAkxNt2GA9EVstoplJIbTIqllyhvoRSv+CbFSu2xZwG5L40h6I6dcFfLp3f6
- qzFunlFQAgfpAtT8Hh3+AGlHw1kRAPrV9W0NhZMfPyxwfS+Fi2+t3cWpvW0pQrKu/3oy9q9C
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 clxscore=1015 adultscore=0 impostorscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300105
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Ricardo Ribalda
+ <ribalda@chromium.org>, Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
+ <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
+ <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
+ <c97af8e7-5c11-45f4-838c-d934b0a379c1@kernel.org>
+ <20250630131004.GF20333@pendragon.ideasonboard.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250630131004.GF20333@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Trying to compile an x86 kernel on big endian results in this error:
+Hi,
 
-net/ipv4/netfilter/iptable_nat.o: warning: objtool: iptable_nat_table_init+0x150: Unknown annotation type: 50331648
-make[5]: *** [scripts/Makefile.build:287: net/ipv4/netfilter/iptable_nat.o] Error 255
+On 30-Jun-25 3:10 PM, Laurent Pinchart wrote:
+> On Mon, Jun 30, 2025 at 02:59:05PM +0200, Hans de Goede wrote:
+>> On 17-Jun-25 11:27 AM, Hans Verkuil wrote:
+>>> On 16/06/2025 17:24, Ricardo Ribalda wrote:
+>>>> uvc_stop_streaming() is used for meta and video nodes. Split the function
+>>>> in two to avoid confusion.
+>>>>
+>>>> Use this opportunity to rename uvc_start_streaming() to
+>>>> uvc_start_streaming_video(), as it is only called by the video nodes.
+>>>>
+>>>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>>>> ---
+>>>>  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
+>>>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+>>>> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
+>>>> --- a/drivers/media/usb/uvc/uvc_queue.c
+>>>> +++ b/drivers/media/usb/uvc/uvc_queue.c
+>>>> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
+>>>>  		uvc_video_clock_update(stream, vbuf, buf);
+>>>>  }
+>>>>  
+>>>> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>>> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
+>>>>  {
+>>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>>>>  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
+>>>> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> -static void uvc_stop_streaming(struct vb2_queue *vq)
+>>>> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
+>>>>  {
+>>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>>>>  
+>>>>  	lockdep_assert_irqs_enabled();
+>>>>  
+>>>> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
+>>>> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+>>>> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+>>>> +
+>>>> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+>>>> +}
+>>>> +
+>>>> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
+>>>> +{
+>>>> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>>>> +
+>>>> +	lockdep_assert_irqs_enabled();
+>>>>  
+>>>>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+>>>>  }
+>>>> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
+>>>>  	.buf_prepare = uvc_buffer_prepare,
+>>>>  	.buf_queue = uvc_buffer_queue,
+>>>>  	.buf_finish = uvc_buffer_finish,
+>>>> -	.start_streaming = uvc_start_streaming,
+>>>> -	.stop_streaming = uvc_stop_streaming,
+>>>> +	.start_streaming = uvc_start_streaming_video,
+>>>> +	.stop_streaming = uvc_stop_streaming_video,
+>>>>  };
+>>>>  
+>>>>  static const struct vb2_ops uvc_meta_queue_qops = {
+>>>>  	.queue_setup = uvc_queue_setup,
+>>>>  	.buf_prepare = uvc_buffer_prepare,
+>>>>  	.buf_queue = uvc_buffer_queue,
+>>>> -	.stop_streaming = uvc_stop_streaming,
+>>>> +	.stop_streaming = uvc_stop_streaming_meta,
+>>>>  };
+>>>
+>>> I think there should be a comment stating that the metadata stream
+>>> expects that video is streaming, it does not start streaming by itself.
+>>>
+>>> Something like:
+>>>
+>>> 	/*
+>>> 	 * .start_streaming is not provided here. Metadata relies on
+>>> 	 * video streaming being active. If video isn't streaming, then
+>>> 	 * no metadata will arrive either.
+>>> 	 */
+>>>
+>>> It's unexpected that there is no start_streaming for metadata, so a
+>>> comment wouldn't hurt.
+>>
+>> I've added this comment while merging this series and I've now pushed
+>> the entire series to uvc.git/for-next .
+>>
+>> BTW it seems that both uvc.git/next and uvc.git/for-next are in
+>> use now?  With uvc.git/next seemingly following media-commiters/next ?
+> 
+> As far as I understand, some jobs in the media CI use the next branch,
+> for instance the bisect job that tries to compile every commit uses the
+> next branch as a base. We therefore need to keep the next branch
+> up-to-date, mirroring upstream.
 
-Reason is a missing endian conversion in read_annotate().
-Add the missing conversion to fix this.
+Ok, so we have the next branch mirroring upstream and then we
+use for-next to merge new patches as I've just done ?
 
-Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f23bdda737aa..d967ac001498 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2318,6 +2318,7 @@ static int read_annotate(struct objtool_file *file,
- 
- 	for_each_reloc(sec->rsec, reloc) {
- 		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
-+		type = bswap_if_needed(file->elf, type);
- 
- 		offset = reloc->sym->offset + reloc_addend(reloc);
- 		insn = find_insn(file, reloc->sym->sec, offset);
--- 
-2.48.1
+Hans
+
+
 
