@@ -1,183 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx4.sberdevices.ru (mx4.sberdevices.ru [176.109.96.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617D25B305;
-	Mon, 30 Jun 2025 11:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34292243374;
+	Mon, 30 Jun 2025 11:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.109.96.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282081; cv=none; b=t6tPn/PrPKioGjL7ShOJD8lTrqXNjk9Ek4sNViaSIyP3cbsomF3KxtlaJ9dhyTGfs7TvEPMvlr1XLbz7c79+nqfK4BOFilcFmG08c1btL7o9BCnHw0vFEHDfZDjPvE2kdCRpKs0DC9G9EHz8KpSTfJtZmb5O6dNiiajt0RbMV88=
+	t=1751282105; cv=none; b=Us3kyBqz8ND9DWK9wBZb/wUbhNGVOF3DbVQnIkcG7aQajNceBZVKY3MInW/MstusbxzTDObw/iAcul7sSDETmgMbDiplGaf5wBuCi7mO2a356NT8RLAUJyBgjetGlbipvzUUNQHyt0ct1u0YiHC5E5JK8zlZqOIMNqqzQd0JeN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282081; c=relaxed/simple;
-	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b330WxNDvbwuTPxgMiPm853CR3JWhVFPme1sevWeDyMUOv5Lmn4Z0AbOIWJYfKTlgCyx04cr/zXNJSxzbhceMLqPaofL5PIL45gT210M9i/fpPxWYuROYPEZT4KFfiCW+VsrGlo8UNzPPFW4EJkn5I6ItlNabBgLB/oxJNnTMzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzDivf+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751282105; c=relaxed/simple;
+	bh=Q0l7pRFn/Hpil+GNatpzNs27sw0JQemNi0WKnp3ZKcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bTozF/deiJuU8WGNzsvrDRTZVG9DpTMfjEVJ/DP3PLJOqLZA8ehK78lKhk+gN2dZQUUA7jpGMmvhLIvDuqiWObr+Fwn4pvNLrfhKJkr7AnWE+orGqmQviWP7AUZLB2XpSWCiANPEQ3XMm51SJURk98Wl75X8nCV/IX1Prh5tgxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=dhTNKC3k; arc=none smtp.client-ip=176.109.96.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzDivf+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDFBC4CEEB;
-	Mon, 30 Jun 2025 11:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751282081;
-	bh=d8d+PHnXNs9aUA37p1cQ/7Z1umzh2vITcAo3PMP077s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YzDivf+lbYw5SY5Z/giScv3Nlf1PDdfIkGkK/DTmfKG3/BpJa9YjuFTP2IbJBMkbD
-	 kyoQ1aMxqKb1jFOvFByYz05ymPmE3LOQsSy+QLLg9NQiP0qgztA3DifXs182cnbcqM
-	 tuor9j/lrLxdU0n8zOb1Z3DBv6wyvoDrb4+FEnutJxo4dtVMzQGD3EsuYg/WJRgV3T
-	 E964Jp5dY5V+cNATRr7UKg167mOJDI3kPYDkCZZKUO3T2EIs7Vhp6SXeiJUnjW4r0x
-	 hAP86VApZNAPKZTfaoUiSUoSVQsib/KjMD8ZBYEePJS5ARrEcGB+oixfBOAzNeWo3s
-	 MtU9wwlxwtBuQ==
-Message-ID: <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
-Date: Mon, 30 Jun 2025 13:14:27 +0200
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="dhTNKC3k"
+Received: from p-antispam-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx4.sberdevices.ru (Postfix) with ESMTP id 8A8BC4000D;
+	Mon, 30 Jun 2025 14:08:33 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx4.sberdevices.ru 8A8BC4000D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=post; t=1751281713;
+	bh=coMh+HPpf6Z2LXQPp9a5SvOkL0aEzi478gES793Dsn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=dhTNKC3ky06vVQ1aWoX5mZaYY1OhtQ3ZGG6nSRDnWz7YqHp4WOxZVnwZIycpyY7sR
+	 FJ1ESuZ0hA4DkY8uDD1B40TwKk9KLkDn6j0lEI0En/gGM8+A1vJiKBrzMGKKduxZjd
+	 fkqg/aU2UxIfSTIf6ogkulhtksggaC6vQ6MQTmPuHwfLG9FwMqcmLI4B7Tab8o/IJw
+	 zvvx13e4y7B7JBqlBXVhQdQXFdsU65BmBNf1Q4dDwTK9fZULKKRlP9Q6e/aGLQf5i/
+	 OiqS3B4j/Ku+Wd3pILe2BrNLsBQhjiDA4FbSW7SQ5oCmcJaX89mCkWs0G+9UlD1IhD
+	 xgbDncSa1uuCQ==
+Received: from smtp.sberdevices.ru (p-exch-cas-a-m1.sberdevices.ru [172.24.201.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "sberdevices.ru", Issuer "R11" (verified OK))
+	by mx4.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 30 Jun 2025 14:08:33 +0300 (MSK)
+Message-ID: <a408927c-3743-71de-b806-87fd404bb9a2@salutedevices.com>
+Date: Mon, 30 Jun 2025 14:08:02 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Hans Zhang <hans.zhang@cixtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
- <20250630-graceful-horse-of-science-eecc53@krzk-bin>
- <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3] Bluetooth: hci_sync: fix double free in
+ 'hci_discovery_filter_clear()'
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
+To: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz
+	<luiz.dentz@gmail.com>
+CC: <oxffffaa@gmail.com>, <linux-bluetooth@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>
+References: <257a13b8-6d60-21b3-c714-c6cb74b7b091@salutedevices.com>
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+In-Reply-To: <257a13b8-6d60-21b3-c714-c6cb74b7b091@salutedevices.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-exch-cas-a-m1.sberdevices.ru (172.24.201.216) To
+ p-exch-cas-a-m1.sberdevices.ru (172.24.201.216)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Info: LuaCore: 62 0.3.62 e2af3448995f5f8a7fe71abf21bb23519d0f38c3, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 194428 [Jun 30 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/30 10:00:00 #27605487
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 5
 
-On 30/06/2025 10:29, Hans Zhang wrote:
->>> +
->>> +  num-lanes:
->>> +    maximum: 8
->>> +
->>> +  ranges:
->>> +    maxItems: 3
->>> +
->>> +  msi-map:
->>> +    maxItems: 1
->>> +
->>> +  vendor-id:
->>> +    const: 0x1f6c
->>
->> Why? This is implied by compatible.
+Hi, sorry, 2 weeks, pls ping
+
+Thanks
+
+On 15.06.2025 20:17, Arseniy Krasnov wrote:
+> Function 'hci_discovery_filter_clear()' frees 'uuids' array and then
+> sets it to NULL. There is a tiny chance of the following race:
 > 
-> Because when we designed the SOC RTL, it was not set to the vendor id 
-> and device id of our company. We are members of PCI-SIG. So we need to 
-> set the vendor id and device id in the Root Port driver. Otherwise, the 
-> output of lspci will be displayed incorrectly.
-
-Please read carefully. Previous discussions were also pointlessly
-ping-ponging on irrelevant arguments. Did I suggest you do not have to
-set it in root port driver? No. If this is const here, this is implied
-by compatible and completely redundant, because your driver knows this
-value already. It already has all the information to deduce this value
-from the compatible.
-
-
-
-
+> 'hci_cmd_sync_work()'
 > 
->>
->>> +
->>> +  device-id:
->>> +    enum:
->>> +      - 0x0001
->>
->> Why? This is implied by compatible.
+>  'update_passive_scan_sync()'
 > 
-> The reason is the same as above.
+>    'hci_update_passive_scan_sync()'
 > 
->>
->>> +
->>> +  cdns,no-inbound-bar:
->>
->> That's not a cdns binding, so wrong prefix.
+>      'hci_discovery_filter_clear()'
+>        kfree(uuids);
 > 
-> It will be added to Cadence's Doc. I will add a separate patch. What do 
-> you think?
+>        <-------------------------preempted-------------------------------->
+>                                            'start_service_discovery()'
 > 
->>
->>> +    description: |
->>
->> Do not need '|' unless you need to preserve formatting.
+>                                              'hci_discovery_filter_clear()'
+>                                                kfree(uuids); // DOUBLE FREE
 > 
-> Will delete '|'.
+>        <-------------------------preempted-------------------------------->
 > 
->>
->>> +      Indicates the PCIe controller does not require an inbound BAR region.
->>
->> And anyway this is implied by compatible, drop.
->>
+>       uuids = NULL;
 > 
-> Because Cadence core driver has this judgment, the latest code of the 
-> current linux master all has this process. As follows:
-> int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
->      cdns_pcie_host_init_address_translation(rc);
-> 	cdns_pcie_host_map_dma_ranges(rc);
-> 	   cdns_pcie_host_bar_ib_config
-
-And you cannot fix or change drivers? How does it matter for discussion
-here?
-
+> To fix it let's add locking around 'kfree()' call and NULL pointer
+> assignment. Otherwise the following backtrace fires:
 > 
-> So this attribute has been added here, or is there a better way?
-
-Of course, like every other driver in Linux kernel. This is FIXED for
-your platform, so set it in your CIX driver.
-
-
-
-Best regards,
-Krzysztof
+> [ ] ------------[ cut here ]------------
+> [ ] kernel BUG at mm/slub.c:547!
+> [ ] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+> [ ] CPU: 3 UID: 0 PID: 246 Comm: bluetoothd Tainted: G O 6.12.19-kernel #1
+> [ ] Tainted: [O]=OOT_MODULE
+> [ ] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [ ] pc : __slab_free+0xf8/0x348
+> [ ] lr : __slab_free+0x48/0x348
+> ...
+> [ ] Call trace:
+> [ ]  __slab_free+0xf8/0x348
+> [ ]  kfree+0x164/0x27c
+> [ ]  start_service_discovery+0x1d0/0x2c0
+> [ ]  hci_sock_sendmsg+0x518/0x924
+> [ ]  __sock_sendmsg+0x54/0x60
+> [ ]  sock_write_iter+0x98/0xf8
+> [ ]  do_iter_readv_writev+0xe4/0x1c8
+> [ ]  vfs_writev+0x128/0x2b0
+> [ ]  do_writev+0xfc/0x118
+> [ ]  __arm64_sys_writev+0x20/0x2c
+> [ ]  invoke_syscall+0x68/0xf0
+> [ ]  el0_svc_common.constprop.0+0x40/0xe0
+> [ ]  do_el0_svc+0x1c/0x28
+> [ ]  el0_svc+0x30/0xd0
+> [ ]  el0t_64_sync_handler+0x100/0x12c
+> [ ]  el0t_64_sync+0x194/0x198
+> [ ] Code: 8b0002e6 eb17031f 54fffbe1 d503201f (d4210000) 
+> [ ] ---[ end trace 0000000000000000 ]---
+> 
+> Fixes: ad383c2c65a5 ("Bluetooth: hci_sync: Enable advertising when LL privacy is enabled")
+> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+> ---
+>  Changelog v1->v2:
+>  * Don't call 'hci_dev_lock()' in 'update_passive_scan_sync()' as it
+>    triggers deadlock. Instead of that - add spinlock which protects
+>    freeing code.
+>  Changelog v2->v3:
+>  * Rebase on current 'bluetooth' repo due to fuzz.
+> 
+>  include/net/bluetooth/hci_core.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index 54bfeeaa09959..f8eeb15acdcfa 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -29,6 +29,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/leds.h>
+>  #include <linux/rculist.h>
+> +#include <linux/spinlock.h>
+>  
+>  #include <net/bluetooth/hci.h>
+>  #include <net/bluetooth/hci_drv.h>
+> @@ -92,6 +93,7 @@ struct discovery_state {
+>  	u16			uuid_count;
+>  	u8			(*uuids)[16];
+>  	unsigned long		name_resolve_timeout;
+> +	spinlock_t		lock;
+>  };
+>  
+>  #define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
+> @@ -878,6 +880,7 @@ static inline void iso_recv(struct hci_conn *hcon, struct sk_buff *skb,
+>  
+>  static inline void discovery_init(struct hci_dev *hdev)
+>  {
+> +	spin_lock_init(&hdev->discovery.lock);
+>  	hdev->discovery.state = DISCOVERY_STOPPED;
+>  	INIT_LIST_HEAD(&hdev->discovery.all);
+>  	INIT_LIST_HEAD(&hdev->discovery.unknown);
+> @@ -892,8 +895,11 @@ static inline void hci_discovery_filter_clear(struct hci_dev *hdev)
+>  	hdev->discovery.report_invalid_rssi = true;
+>  	hdev->discovery.rssi = HCI_RSSI_INVALID;
+>  	hdev->discovery.uuid_count = 0;
+> +
+> +	spin_lock(&hdev->discovery.lock);
+>  	kfree(hdev->discovery.uuids);
+>  	hdev->discovery.uuids = NULL;
+> +	spin_unlock(&hdev->discovery.lock);
+>  }
+>  
+>  bool hci_discovery_active(struct hci_dev *hdev);
