@@ -1,167 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5486D242D8A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A153223D28D;
+	Mon, 30 Jun 2025 10:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279150; cv=none; b=Vc5t2d+QQOcRo3hVDbYggHT9gBmdCqIAEFHUomaif4bEJCx018brF6LKOuKh79i7csC6MhtQR1nfqKkEfd8bcvA0v1aJz1Urk+XKwMaYkglpiaQI6aeSRqa4aQmuAS2twHH42Rv3OWij3ingvDUyK1a9374PLUD/14Z09kriPhY=
+	t=1751279187; cv=none; b=Ge06PVq6Ze6JAKrxRofE+rs6ELbAm0eCvjGyQxiLDQr1gsODc7mkomC3WQQ2UTERSacw/6Q/9GzBu/stOcmetNTxwgMCzTwVlZrzyfafkJGBOU3pYtlHXsMs9IeLBDISkRyEEIJ2BD0j4ATbsQvnd45vpSdN6TB4U3SfQayAYbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279150; c=relaxed/simple;
-	bh=7Bk8KYz+4mlTNgeg030g4WguYTJYVRalANAqyvBe4Is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JjDyrbBrorocYZ+CBz4i6xyUdS2F8Kp4QyxCPfw1zwli9Bf9eDAlX4Y1EgM4xjBnNBoYZT8/XijSW9zEydQRl8RLjjkJm9dTiEgbJvpF5pMMb0U0qqE6z9LWP1BvPVUE6sdKUZitaDy6ld5vvF8OLBE8UpEynAQ6LOqArdtIvA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lpGgUkvn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vdN64Uls; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lpGgUkvn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vdN64Uls; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1751279187; c=relaxed/simple;
+	bh=xdRxBbEFjritY+4aPuvldelsfwaJhw+C1HQnNHvVlww=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g4tg6u/2GKIHh+yP6FNYsctF1qUP2QmgyjOocp+QKiClMn+2Ae2UU/Nq7uta4tVQ39sMJQRdCUAhB2tH7Gf9IPmWE3jAUKCAbPZ6IDMfHgJb3UjscAlS6+jC6thlpEm95Osc1HAaMQvX50OaZyVYWIhWc2GtTSX+bq1ilM5+lw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y8agWFaS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=we3zyYYV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lpGgUkvn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vdN64Uls";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lpGgUkvn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vdN64Uls"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 54EC621161;
-	Mon, 30 Jun 2025 10:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751279146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKAzHcA0Oh6qymDSIW81tbTOgvwE9rhf9erEuzP/cwY=;
-	b=lpGgUkvncKLtZocSFLNlIBJu0yj4GaPPIaqKdYYQYC+olYGDLwrpNkssXJNaU8Hk6d7OH/
-	DiNwr1kHp79BOx+oYi+nYBbGONFoN0exEPHbqMDwNiQgtwjTVJu6hkq7omBdmRoyAPWggx
-	ZNQWiDLLNQQbMC4NZaL62wcExOeCps0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751279146;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKAzHcA0Oh6qymDSIW81tbTOgvwE9rhf9erEuzP/cwY=;
-	b=vdN64UlsP1Dcl+WbEvACZncooGcqvR0Huz7Y1n4/rBzpqPMiMgfSTZ50giMn2TDJYnCcxT
-	zg57tf+mvHHQwYAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751279146; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKAzHcA0Oh6qymDSIW81tbTOgvwE9rhf9erEuzP/cwY=;
-	b=lpGgUkvncKLtZocSFLNlIBJu0yj4GaPPIaqKdYYQYC+olYGDLwrpNkssXJNaU8Hk6d7OH/
-	DiNwr1kHp79BOx+oYi+nYBbGONFoN0exEPHbqMDwNiQgtwjTVJu6hkq7omBdmRoyAPWggx
-	ZNQWiDLLNQQbMC4NZaL62wcExOeCps0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751279146;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKAzHcA0Oh6qymDSIW81tbTOgvwE9rhf9erEuzP/cwY=;
-	b=vdN64UlsP1Dcl+WbEvACZncooGcqvR0Huz7Y1n4/rBzpqPMiMgfSTZ50giMn2TDJYnCcxT
-	zg57tf+mvHHQwYAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 471A61399F;
-	Mon, 30 Jun 2025 10:25:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ofdTESpmYmh5IgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 30 Jun 2025 10:25:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id F0758A0A31; Mon, 30 Jun 2025 12:25:45 +0200 (CEST)
-Date: Mon, 30 Jun 2025 12:25:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Pankaj Raghav <p.raghav@samsung.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	mcgrof@kernel.org, Christian Brauner <brauner@kernel.org>, 
-	Baokun Li <libaokun1@huawei.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	gost.dev@samsung.com, kernel@pankajraghav.com, Zhang Yi <yi.zhang@huawei.com>
-Subject: Re: [PATCH] fs/libfs: don't assume blocksize <= PAGE_SIZE in
- generic_check_addressable
-Message-ID: <t5ijc2nwhq67s5hp6rtpzs3rgdtnunacoj3vnr7pjcwynw7ue3@jlv4abixb2wx>
-References: <20250630101509.212291-1-p.raghav@samsung.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y8agWFaS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="we3zyYYV"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751279183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=09apZFjkItCff4pERuA6vKzkiicp/3GYycpUthFHj/Q=;
+	b=y8agWFaSkjJn5/ZFz6/cfXKDYKa0k669VIENl7oLpKH3wilNC3oT0slQzHt0n8kUTXtXC2
+	v+QO+yuv/GxFtUYbh6QCAdE8M5Tl3zDlBHUJYDBLu87M/ty+hqxLZCtJGbnsjLTt9L3l/F
+	SDcHgH9tkx6kw23S8+bzik1TwEAb2Q/DiJlKLQYai8gxyxT/LhwKqDAZPr6oVQhilJg4PG
+	iRndDe3eh5jLM7BuguTicK53yi1J20zaUhpUFTEsjdfRvfq93r97Ojc/wQDc9uXOLFfqos
+	YhfwD87zInKNpb6NEvYKAwnMKMPaAikMBzq2NjuToELy6UoLZytsB2dbOlUjDg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751279183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=09apZFjkItCff4pERuA6vKzkiicp/3GYycpUthFHj/Q=;
+	b=we3zyYYVmoNnNCQCtpjCXCHlo9UWsgPXgsGuuYXv5Qyh8PiphWRFnReoApafQJxiaSb2r3
+	HnjOPU8TMzjW8CAA==
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v2 0/2] x86/hyperv: MSI parent domain conversion
+Date: Mon, 30 Jun 2025 12:26:13 +0200
+Message-Id: <cover.1751277765.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630101509.212291-1-p.raghav@samsung.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,suse.com:email,samsung.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+Content-Transfer-Encoding: quoted-printable
 
-On Mon 30-06-25 12:15:09, Pankaj Raghav wrote:
-> Since [1], it is possible for filesystems to have blocksize > PAGE_SIZE
-> of the system.
-> 
-> Remove the assumption and make the check generic for all blocksizes in
-> generic_check_addressable().
-> 
-> [1] https://lore.kernel.org/linux-xfs/20240822135018.1931258-1-kernel@pankajraghav.com/
-> 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+The initial implementation of PCI/MSI interrupt domains in the hierarchical
+interrupt domain model used a shortcut by providing a global PCI/MSI
+domain.
 
-Looks good. Feel free to add:
+This works because the PCI/MSI[X] hardware is standardized and uniform, but
+it violates the basic design principle of hierarchical interrupt domains:
+Each hardware block involved in the interrupt delivery chain should have a
+separate interrupt domain.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+For PCI/MSI[X], the interrupt controller is per PCI device and not a global
+made-up entity.
 
-One style nit below:
+Unsurprisingly, the shortcut turned out to have downsides as it does not
+allow dynamic allocation of interrupt vectors after initialization and it
+prevents supporting IMS on PCI. For further details, see:
 
-> diff --git a/fs/libfs.c b/fs/libfs.c
-> index 4d1862f589e8..81756dc0be6d 100644
-> --- a/fs/libfs.c
-> +++ b/fs/libfs.c
-> @@ -1584,13 +1584,17 @@ EXPORT_SYMBOL(generic_file_fsync);
->  int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
->  {
->  	u64 last_fs_block = num_blocks - 1;
-> -	u64 last_fs_page =
-> -		last_fs_block >> (PAGE_SHIFT - blocksize_bits);
-> +	u64 last_fs_page, max_bytes;
-> +
-> +	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
-> +		return -EFBIG;
-> +
-> +	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
->  
->  	if (unlikely(num_blocks == 0))
->  		return 0;
->  
-> -	if ((blocksize_bits < 9) || (blocksize_bits > PAGE_SHIFT))
-> +	if ((blocksize_bits < 9))
-            ^ extra parentheses here
+https://lore.kernel.org/lkml/20221111120501.026511281@linutronix.de/
 
->  		return -EINVAL;
->  
->  	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
-> 
+The solution is implementing per device MSI domains, this means the
+entities which provide global PCI/MSI domain so far have to implement MSI
+parent domain functionality instead.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+This series:
+
+  - Fixup a dependency problem with CONFIG_GENERIC_MSI_IRQ
+
+  - converts the x86 hyperv driver to implement MSI parent domain.
+
+Changes in v2:
+
+  - Add the first fixup patch to resolve a build failure
+
+  - Add clarification to the TODO note.
+
+ arch/x86/hyperv/irqdomain.c | 111 ++++++++++++++++++++++++------------
+ drivers/hv/Kconfig          |   1 +
+ drivers/irqchip/Kconfig     |   1 +
+ 3 files changed, 78 insertions(+), 35 deletions(-)
+
+--=20
+2.39.5
+
