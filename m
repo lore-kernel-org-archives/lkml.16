@@ -1,106 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF81DA55;
-	Mon, 30 Jun 2025 03:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C7E4C6C;
+	Mon, 30 Jun 2025 03:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253602; cv=none; b=SYCMZKPT8Az/n17+WUcjZkmlv6WpKg98wRHinNRqc6FYAKi46hQy/xh2qo29FP2MtHkxN9NlXc48MpLG6FmQheCobT9LDzsMjIdj11VGjAYMsGMBx2cyPDdSB0vGL+Ij/Rdh4rSo6mF3VLx7tsg+yzWw/iWZef6G0AjbZZXErc0=
+	t=1751253667; cv=none; b=p9dJFPqAcGB+XpLVEs+IcsLRdeNAVBYZtCQIPpGEkHLgO0pyCy0hdqhv1QW109dDirD/08fNvyPYVVk+OBWMTZvwv6SKTqfGFLqWHLysSlOQAg8av1YY4DQeZfhoSKBLO5dDC8FGvGH19vnSkM8vH/JhjHXsrKEgt96dSv2hP2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253602; c=relaxed/simple;
-	bh=I+E03Pih6Nc8R/ntsygbzVXB+VC/CQ5HinZSLniQbM0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VBetRoR4XfWH97Z/L1vprH4ofAOJSuBALEAE9v35uEU3E9IZHe57wbvY10zy5dlnAl6HnLkjyMbO9PmpdvgOb8scM4z91AKazbOqioi75KcjFu5vSJqEUpvYrrk7MVl3j41YK4HOs6guWrylQcel2qwAHEwNtdW4YuYHuZ9dOIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KX9WY1hR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751253667; c=relaxed/simple;
+	bh=V6mII1O5U1NOnOu3wx07q4tyfusravzO5rb8bdyvvMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F0INgaCeWsvDo0Sm9CmbKsZkwiWCNhlNG7pfQdjns27XTN1OPSXTLPvoablEDoNRykzyj45OdSCcF2UKk05fpp335r2LjhhID7LwUJiPzw/Y7Ndx3GVvQ46gbN5wpT1YjvPPh2lYRtjwT7jqnzTzH+w9onzXSwZ/6xzY8tQFNDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b2o8DoPl; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KX9WY1hR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04368C4CEEB;
-	Mon, 30 Jun 2025 03:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751253602;
-	bh=I+E03Pih6Nc8R/ntsygbzVXB+VC/CQ5HinZSLniQbM0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KX9WY1hRAbcunK11JaGE9UFymH5CUhaFBBbpAQTkvvBP+HAPGNz/+9Byw6Sl1tcDg
-	 72Js+EaI382Ylk9jtThNh0JCi7/sQzn6YAu3U2mehSspH6WwrYsE7Le42wy5jCXBny
-	 aSVNvXXrsLUGm2eL0MngEhD8WUzxvf0El9qeKoNPp8HX6B+n24zM3EO0cW7+qWcevy
-	 zJSxxT54eEPe96wHEVspKO5lW6DEMjOHyM1OjIfZXniNY4g4KDesTBy6pcaonAOOwE
-	 GYyZ0MfiZupg4Yj0i7QL+pds5x6obGOPMHfyCTTfQSdm4jXMkeCdZaT5w693AhJFaD
-	 JUCSbcTohKVtA==
-From: Sasha Levin <sashal@kernel.org>
-To: akpm@linux-foundation.org,
-	peterx@redhat.com
-Cc: aarcange@redhat.com,
-	surenb@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] mm/userfaultfd: fix missing PTE unmap for non-migration entries
-Date: Sun, 29 Jun 2025 23:19:58 -0400
-Message-Id: <20250630031958.1225651-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b2o8DoPl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=h9VCl1vFa5kMUPqcOo628ZE9FCQuczciRfdsxio9sAo=; b=b2o8DoPlKqE8hOlSOdBuZgM9jp
+	o+8kKUxzkzFnKwwNp0n3jzKgE0LJAA9EAZGaQwpsZmRegE83ADmCo3mXVu8D3BQ+7J5jj8jXCmEmv
+	agHlz+yo4XA+42Xu7lWmWRaXqyOejFFSGpguMOZrZ6hEeetU0ywbO2CfcSj0I8Fa9mkStX3nBEW+7
+	2LV2HCPFvNtn0rX+jr0jAb07mV0wpO0o/RJ2jHPRxJ8xZWFFbFhvEHs3rB+3dk4O1La2PKM/wCcWa
+	mBXsGM0ap+3dGwf6AdD67mfPNX96DP+imRdZ/q25u+0zmfYw6bwkC00WCMDPlUCec17BIAp0kaxlc
+	ZAyovQSA==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW54l-00000006iZ0-1bvi;
+	Mon, 30 Jun 2025 03:21:03 +0000
+Message-ID: <524e8ee4-52cd-47aa-80ea-7d09ebca05ea@infradead.org>
+Date: Sun, 29 Jun 2025 20:20:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 37/66] kconfig: gconf: use GtkFileChooser in
+ on_save_as1_activate()
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <20250624150645.1107002-38-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-38-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When handling non-swap entries in move_pages_pte(), the error handling
-for entries that are NOT migration entries fails to unmap the page table
-entries before jumping to the error handling label.
 
-This results in a kmap/kunmap imbalance which on CONFIG_HIGHPTE systems
-triggers a WARNING in kunmap_local_indexed() because the kmap stack is
-corrupted.
 
-Example call trace on ARM32 (CONFIG_HIGHPTE enabled):
-  WARNING: CPU: 1 PID: 633 at mm/highmem.c:622 kunmap_local_indexed+0x178/0x17c
-  Call trace:
-    kunmap_local_indexed from move_pages+0x964/0x19f4
-    move_pages from userfaultfd_ioctl+0x129c/0x2144
-    userfaultfd_ioctl from sys_ioctl+0x558/0xd24
+On 6/24/25 8:05 AM, Masahiro Yamada wrote:
+> gtk_file_selection_new() is deprecated, and gtk_file_chooser_dialog_new()
+> should be used instead. [1]
+> 
+> [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/docs/reference/gtk/tmpl/gtkfilesel.sgml?ref_type=tags#L156
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-The issue was introduced with the UFFDIO_MOVE feature but became more
-frequent with the addition of guard pages (commit 7c53dfbdb024 ("mm: add
-PTE_MARKER_GUARD PTE marker")) which made the non-migration entry code
-path more commonly executed during userfaultfd operations.
 
-Fix this by ensuring PTEs are properly unmapped in all non-swap entry
-paths before jumping to the error handling label, not just for migration
-entries.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/userfaultfd.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 8253978ee0fb1..7c298e9cbc18f 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1384,14 +1384,15 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 
- 		entry = pte_to_swp_entry(orig_src_pte);
- 		if (non_swap_entry(entry)) {
-+			pte_unmap(src_pte);
-+			pte_unmap(dst_pte);
-+			src_pte = dst_pte = NULL;
- 			if (is_migration_entry(entry)) {
--				pte_unmap(src_pte);
--				pte_unmap(dst_pte);
--				src_pte = dst_pte = NULL;
- 				migration_entry_wait(mm, src_pmd, src_addr);
- 				err = -EAGAIN;
--			} else
-+			} else {
- 				err = -EFAULT;
-+			}
- 			goto out;
- 		}
- 
+
+> ---
+> 
+>  scripts/kconfig/gconf.c | 56 ++++++++++++++++++++---------------------
+>  1 file changed, 27 insertions(+), 29 deletions(-)
+> 
+> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+> index f33f39d50f3d..b019711142c3 100644
+> --- a/scripts/kconfig/gconf.c
+> +++ b/scripts/kconfig/gconf.c
+> @@ -198,38 +198,36 @@ static void on_save_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  	conf_write_autoconf(0);
+>  }
+>  
+> -
+> -static void
+> -store_filename(GtkFileSelection * file_selector, gpointer user_data)
+> -{
+> -	const gchar *fn;
+> -
+> -	fn = gtk_file_selection_get_filename(GTK_FILE_SELECTION
+> -					     (user_data));
+> -
+> -	if (conf_write(fn))
+> -		text_insert_msg("Error", "Unable to save configuration !");
+> -
+> -	gtk_widget_destroy(GTK_WIDGET(user_data));
+> -}
+> -
+>  static void on_save_as1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+> -	GtkWidget *fs;
+> +	GtkWidget *dialog;
+> +	GtkFileChooser *chooser;
+> +	gint res;
+>  
+> -	fs = gtk_file_selection_new("Save file as...");
+> -	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(fs)->ok_button),
+> -			 "clicked",
+> -			 G_CALLBACK(store_filename), (gpointer) fs);
+> -	g_signal_connect_swapped(GTK_OBJECT
+> -				 (GTK_FILE_SELECTION(fs)->ok_button),
+> -				 "clicked", G_CALLBACK(gtk_widget_destroy),
+> -				 (gpointer) fs);
+> -	g_signal_connect_swapped(GTK_OBJECT
+> -				 (GTK_FILE_SELECTION(fs)->cancel_button),
+> -				 "clicked", G_CALLBACK(gtk_widget_destroy),
+> -				 (gpointer) fs);
+> -	gtk_widget_show(fs);
+> +	dialog = gtk_file_chooser_dialog_new("Save file as...",
+> +					     GTK_WINDOW(user_data),
+> +					     GTK_FILE_CHOOSER_ACTION_SAVE,
+> +					     "_Cancel", GTK_RESPONSE_CANCEL,
+> +					     "_Save", GTK_RESPONSE_ACCEPT,
+> +					     NULL);
+> +
+> +	chooser = GTK_FILE_CHOOSER(dialog);
+> +	gtk_file_chooser_set_filename(chooser, conf_get_configname());
+> +
+> +	res = gtk_dialog_run(GTK_DIALOG(dialog));
+> +	if (res == GTK_RESPONSE_ACCEPT) {
+> +		char *filename;
+> +
+> +		filename = gtk_file_chooser_get_filename(chooser);
+> +
+> +		if (conf_write(filename))
+> +			text_insert_msg("Error",
+> +					"Unable to save configuration !");
+> +
+> +		g_free(filename);
+> +	}
+> +
+> +	gtk_widget_destroy(dialog);
+>  }
+>  
+>  static void on_show_name1_activate(GtkMenuItem *menuitem, gpointer user_data)
+
 -- 
-2.39.5
-
+~Randy
