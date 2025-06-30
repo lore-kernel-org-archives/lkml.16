@@ -1,213 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5009E25F965;
-	Mon, 30 Jun 2025 11:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283346; cv=fail; b=D4atpD8+YYHMbWUm4QoM79PIiSc7eQIILKBSqLI7CeGZBTkz3+e8HIsRG4IR2exTM4R98XVRz/MYSvViAdBYfpFOVSQM6izLFaBJIb3hjAI+gUVTmErjM6/cqM2O/SusvTwvpmJH1KMV3C26waLmIw8oJ+OXx9/FWPCYff9nE/k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283346; c=relaxed/simple;
-	bh=NschVKi9RIxAo2lLWIawS02FVRxeCxm5HlK2TwqX+DU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ePLxlsgIBeUIWNTCsUXKmoQVFQKu9IEE6HcIvTBW7Xd/MwZDSyA/zS96hexEEo6dKdHs5MmnkLFzgvN0ys3cFldWo5t7vhmXi127g6/YvwTTRKwlLCR+AJqncT6oGnbT45+KXjmAsloaDHl+AumjRqVvbhkkhTu8/GACkfKRIDQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4u6Wfd0; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B78E25EF89;
+	Mon, 30 Jun 2025 11:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751283402; cv=none; b=jSLXpZqKtmi+CAdVtztAGMpOS2IWiNaiLI1L1jciYMjWXhqfNH0lFSQRXX4Opmr1+/tCiKhCDUWvAvNpu2uJq4NfyEviPresDTpB3FaY9hiUA55bTeWx/FBkN2MPX/kxf9z2pX7SFp+QgD0g9zNy/kbKtPPpoc81S6AN1q+tFQk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751283402; c=relaxed/simple;
+	bh=KGsAVlR6AlgnaseWmvAzZf7z3728oii+uockZUpwZiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J2zT9eKv2IP2lyjhR1XjQUBYKH2TBzBoh9bBKwYxiSIjhQcIUqqvWMVr6amsHahzR49J7GNgLmhESidrQLYPCPITRsUxSuP6VVBZkG6vtbSqzYxK2pAzFsk1BlzgDJEW9DrCzb60iyz5MqoUQQTNXo/hT7xss56WRgeMbQDhY9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzkwFL8w; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4u6Wfd0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751283345; x=1782819345;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=NschVKi9RIxAo2lLWIawS02FVRxeCxm5HlK2TwqX+DU=;
-  b=P4u6Wfd0UHM3njQDi9Q8X0JMQRsoUZl9hlhL5MPnB6nH8Yem/tmmrHyS
-   AV2vzhCkJvfF69VHktfsifNMFHUWi9isbtlR0l/TRR/VnKS2ERwx4lmsP
-   U55TVvvxlGHlBX2X4X8VB20KbuR+CRMGSiCuchFHSfm4KZGcXsE2q0Znd
-   SioXbzBIFP8XkSJkdpg9ByUqEwhfm5pqSffRh/gNfmE97Ob7H9wt2Eqaq
-   W/RX40QOjoDCBoLjAvFqR3LZ00Rn4ZiDDtlU40VBI2d9N2Hx9wvKbJfCy
-   pU+IxLo8uM08OxvSOGm25FFBstrsO7DAPn1r/igzfvMlDaFWbSM4W6W2a
-   Q==;
-X-CSE-ConnectionGUID: /g1iDVe8REi+XqyFiElcFQ==
-X-CSE-MsgGUID: arCZau7AQKGvY0NYcxReYw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53654408"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53654408"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:35:44 -0700
-X-CSE-ConnectionGUID: OEMS+63iQi+7ma98g+WJ5A==
-X-CSE-MsgGUID: XOup3wuyRNi0x83ERCAzXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153906734"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:35:43 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 04:35:43 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 04:35:43 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.75) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 04:35:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vr4YoUv6OK5EFm5rGtBDgZy2VWxwDpkcyRmFPXXqnSQL+Ul1KSfhynIgEsi0PjRjk4SPnUalORudtIQwNBsED/ptKsEnEjhHOg+Y688eEVMXfnN38SBq2ffn7vGpcFyZFyg3hbpxJTiQEbTJK109mi9VyOqsrPLJvnjnoGdL6O+oIM44dQ8Gc4PQtUIPnKfOKxBecBlzdqBwhUtbeuPdWlzgZeVUtJQg66jXz1spWUfOG5j7+Ir4aYFntuO3kTAJSS5htYqTh8rjFwWAiXleuGkKNBF4YnFGWOAOmAziZyDLuExBCUInZ+/88zrqjN4+VMm+9ejuynsijmiNsvbTUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NschVKi9RIxAo2lLWIawS02FVRxeCxm5HlK2TwqX+DU=;
- b=sxCyVsZ/H5jMmk5JNRHiJn5qoz0xRqeHgNnCcP4eUMln1bGaNtOrmsUZOt4tItau/RS/J6uOvIYuwLw3UvuzS97iYAkCBGWH7f5pf0jvArgqm9UKpG8w2vCDGMcJhRXQJUIcR+lPZTYjFxErfR+Y4aMwPiM4gN8L9wIu5E7/IcSooCGfyvwAlncnr7eGYUvHWR0ApLeuhDJSF0tz3u2XGjhLw7KxXA6uTZp2f6deMWsfBuz/VTCHRh6DcCSw646LeHOgA60oJPKVDDXfkVvdEuC1zkPWkJ5J6+CwawqzzzUyBmNsiGSe9bDtsFE+AaPvOUWBvIa7m0DhwScYnc/6Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CH0PR11MB5521.namprd11.prod.outlook.com (2603:10b6:610:d4::21)
- by DS4PPF382351574.namprd11.prod.outlook.com (2603:10b6:f:fc02::1d) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 11:35:26 +0000
-Received: from CH0PR11MB5521.namprd11.prod.outlook.com
- ([fe80::df20:b825:ae72:5814]) by CH0PR11MB5521.namprd11.prod.outlook.com
- ([fe80::df20:b825:ae72:5814%5]) with mapi id 15.20.8880.015; Mon, 30 Jun 2025
- 11:35:26 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "peterz@infradead.org" <peterz@infradead.org>, "Hansen,
- Dave" <dave.hansen@intel.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "seanjc@google.com"
-	<seanjc@google.com>, "x86@kernel.org" <x86@kernel.org>, "sagis@google.com"
-	<sagis@google.com>, "Chatre, Reinette" <reinette.chatre@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "ashish.kalra@amd.com"
-	<ashish.kalra@amd.com>, "nik.borisov@suse.com" <nik.borisov@suse.com>
-Subject: Re: [PATCH v3 1/6] x86/sme: Use percpu boolean to control wbinvd
- during kexec
-Thread-Topic: [PATCH v3 1/6] x86/sme: Use percpu boolean to control wbinvd
- during kexec
-Thread-Index: AQHb5ob1Aej6jhsWsE288GxQicmcLLQXHYEAgAR7koA=
-Date: Mon, 30 Jun 2025 11:35:26 +0000
-Message-ID: <c7560c2ed08fdc67968f8e03075ff4bac037e1f1.camel@intel.com>
-References: <cover.1750934177.git.kai.huang@intel.com>
-	 <b963fcd60abe26c7ec5dc20b42f1a2ebbcc72397.1750934177.git.kai.huang@intel.com>
-	 <c0b8e728-f775-1023-055c-4f879bbd784a@amd.com>
-In-Reply-To: <c0b8e728-f775-1023-055c-4f879bbd784a@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.2 (3.56.2-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR11MB5521:EE_|DS4PPF382351574:EE_
-x-ms-office365-filtering-correlation-id: 69182e6d-d901-4952-c603-08ddb7ca3571
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?VWx4ZWthRDZYdzNxMUhOdW9QQUNVV3ZEMUEvdzZabDlGSnlsc3B2MnRnUTZ2?=
- =?utf-8?B?STY4d092dUgvSWVQRU03dExHTEdYcW9RQTRmY1pyWVgySGtTL29IczNsdUNK?=
- =?utf-8?B?cXJvQUZiNTBXVU5IeFZDQUh4UU1lcnpaVWNNeEFGTkcxZlRZUS9JcWd5cUQ1?=
- =?utf-8?B?U1Y4WFJKOXN3N1JFOGtpaStkaXh5a0NsN0k0NGV5VUZaZnhaNlU5MldMUXhO?=
- =?utf-8?B?OTVoTkhHQW10bG5SRzQzbC9HV3RHNy80Zm53WDEyUUZ4T3dLcUNMODZNQzcr?=
- =?utf-8?B?VUxUSUVILzlJbXllZ3BzbjI1dmlKNDlMcnhiSmFOaVhIeTdnUExldmVUbTVE?=
- =?utf-8?B?d285SFhvRzVzR3VnVUpBNS9ibE1jNmEwcU8xRlNLcTZKR05iNVF0MGo4Skwz?=
- =?utf-8?B?Rit2RlB0Y2ZCUE5tcHB1eGZ0VmEwUjl2cnpKNE4rdWR3SkRSeU1xNW43QTV6?=
- =?utf-8?B?T294Zm5ueW5xMXlkdVZFSjVaS0Q5dHJOWUhpUHJEYy9pbEM0d2ROdFVLV0VJ?=
- =?utf-8?B?aEE4ZDVlMENXbXNPc2ErVU1mWE1oeUtaZGlYMEJjZ2Fmd2pmYXBpT1ZsRTl2?=
- =?utf-8?B?OU5CRk5MYUxDQllTWkp4TGlPdVhmRGZRSlZPV0J4L01mOHBtMFhxSHhQR1ZD?=
- =?utf-8?B?VUJoem56aG5VcmFVNzRmbUFEUlluWWE0RTJkOXRGcmRYcGM4cG9aUjF0WmFP?=
- =?utf-8?B?N2RFbFVWUzZRMXR6aUFlWEdYdzkyUzdTNFdSNHNHVGNCblgxcFVMNlgxcGky?=
- =?utf-8?B?OStMWUVwTXgvaElwRFZ6SkhjdDJoeDNkLzdxaGhLVkNScnpERE5wMklGUWEv?=
- =?utf-8?B?R2JSa1dWRlk5cnJzSkhaTnVadXFDTW40M0JLQjdwS3VLckRieE8vQXFJWllQ?=
- =?utf-8?B?UHo3bEZ4US9LVkFFajVJV1BJTUtBVXRWZjc5cHBjU3A5RnFDU1hVd2I0WkxR?=
- =?utf-8?B?ZXhSVVVOa3lsMEZ6azR5OGl4eFp1Q2RpMzRPa2xJZktTQXZXU3B6UWZWQzMx?=
- =?utf-8?B?TXFXV2t5NUNwOTk3a3AxVmNYamtLNm0xZnh4cUpoNm9meEVmQXp2bm9QdlM2?=
- =?utf-8?B?T1BmUG1OOG9sK0JYWEYxUEVlVTltdUJINDJkSlliQ21DellieFRuY2pJRUVn?=
- =?utf-8?B?cWtpVnN1bEthU3ZGcUJiN1R4dkFMbUVhcEgza2JHM1RyNXJCWWthUm5LR08w?=
- =?utf-8?B?enRTZjhlSVVlU1ltUFNZK0JkcnVjNGRPQ0poYTl4SnhBVGw4WmdmUll2UXJE?=
- =?utf-8?B?VmM3WG1yVktqTVE4L1ZtdkUrQ08vZHVTTXRXYTN3V3llM3dGTGdER2RUQmVR?=
- =?utf-8?B?TEU3bk5aTEpFaXIzRnkwRDFFbzQ3SkZ1N0Y3TVRId1VoVHJpQXRZemQrSTFa?=
- =?utf-8?B?K05NRlhhZXBvS2NLL0ZMYmtnNzB3dUR6OHQxZEUvamJLczF5TlExYjFvcTNM?=
- =?utf-8?B?VFFLVm1tSDk2NzVsajhNZjBFQ2EwWmVuYWpIbzZ1ckFnMXY1UnhJN0JnSTd2?=
- =?utf-8?B?bFJpckVycWROMUtuSXhTK1I1UzY1NE1lRE9nQmQ5V2F0REY5b3AyWWp6RWll?=
- =?utf-8?B?N0ltNTNaKzhGdXB3NzlPWWt0UUxBdG9Ra29VUElPN2pVemJ5SVQyTzNDUWc3?=
- =?utf-8?B?dkIzZXV5Q0llbVpOTUZkT3NPb0trUXUvajJjUWxVK01tbnI1NlB0dFhxWlM5?=
- =?utf-8?B?bXQ1bC9VcXFVbnNNRzZVb2RUL1pHazJEYklrRG40T2QvWlQ0bGtWMVhVY3ln?=
- =?utf-8?B?bWxxVjVhTHVmOEQwTy9FWWtUejRwaHVGdE5UWmhCaVk5bU03akZLUXZlY3J6?=
- =?utf-8?B?ZEs4SWlPYVczanh4dmp2WE5HWXR0MExnUHpvZkNSWk84QmFqWmFhanNaV1Ir?=
- =?utf-8?B?V0s4c0JSUVdyazlTblFxWTRXVlkzV2FFZFdySnU3d1JMUnVxVDVPblpNeDU3?=
- =?utf-8?B?dFc4aU5XWEl1M3NOWUMxVnlnYi9Eckp4Rmp0b01XK3loZmZLWHdURE1hTks1?=
- =?utf-8?Q?xJdMv87pNcuYKQlncudcLZUfco58dc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR11MB5521.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cXR4cTJEWUtXY2p1ZTF2dXdDeGVPUFFrWnhZNkFFWjBWOXRxTEVUWlR3eWpO?=
- =?utf-8?B?MDZGZ2k2bmlQZTEyMHAydkFTMkJiRW9ENW5PTFYzUXN2S3BBQnhwcytCRVcz?=
- =?utf-8?B?VFZheUdCSk9tSG1qK0Nrd0NqUXpnRWxqUVpiZGZrN0YrazRmRnVGWXJQK2xp?=
- =?utf-8?B?TjZVM2gyWmFhd0pSdTBLVncrclJaRFB6L3diTGFLQnluVW9xZG8yREVGWTA5?=
- =?utf-8?B?SlNGRGVlWUdqcU9DaUZ1eDVVb1ZmOUQ1OWFWVlVmOGQxMzYrUS9vZmJQbUp2?=
- =?utf-8?B?elhXZGFqMGkxNUdjQ1dLeDkzcFUxSzhOS1ZtT0ZheTk1Y0NDcE5RQUdZWkNp?=
- =?utf-8?B?bG9aSk5aL1FQN2NVNlo3dnhDQ2VLazBUQ2I1bmtLNEVIeUFqL3RtVDJpMUto?=
- =?utf-8?B?YmVLTWhabTh6bGViVEl3UjMwcldiQjRRM1VwK3luTnZUTGFOR3JodkVWb1Zu?=
- =?utf-8?B?ek1aR1VNV3JxcnVCQjNHQ3BwWjc2M2JoL2xWbkJicmwvUDVOWlp0dFo2UXE5?=
- =?utf-8?B?V2x1dTF3N3dIVjZmd0VYZkY5Z1hteDc3emhOcTVYWXQ1UTVwZ09vZU5oWWtE?=
- =?utf-8?B?NWRCQ3h6NENFSHI0NGRjSzFrUFNMQitVL2wzL0p4OTh4eWhyMW5xTnQ3NXE5?=
- =?utf-8?B?L2w3cmpZcjcxV1QzS0VnZHlzaVl2MXl0dWRlWWVEbkRXOWpHb3IwMjBoVkJM?=
- =?utf-8?B?NExPcWduNUtqZDVQZ2p4WjJ5SjZOalRzRWx2UkR4bTJhOVRNdkRVWGhqRFcr?=
- =?utf-8?B?N3VRc1JCMmZzaUMzTUJkYXBoZ2hMbDB4UU5HblAwYm8rQ2V4anIwaFFKdGRl?=
- =?utf-8?B?VUxjNTlhRkhEa2tLVm1sWWZQTDBVOUR3dG9DRFd5N2NYekJRTXhOc0hZMm9P?=
- =?utf-8?B?UmQ1UW9PR1ZDejltako1WGl6TjlJdEkwMWlVdzRhTlhPcXJCTEhlS0hVZS9S?=
- =?utf-8?B?OE9nZWY0ekoyRXpQOTd2RElKbHpiQ20vczRKdkhoMDI3cGZHSldLMUJFNUFm?=
- =?utf-8?B?SjhQV2ZPcEp5N2M0NERCTHVldzRMdER4VENGN1hiZHVObWZBVVI2QUZPbUg4?=
- =?utf-8?B?ZHRsTCthYTkrTWxlWGZvYmpuWDNhNjBGcmxFK3JiU3NuNGZtT0UyemJxZmow?=
- =?utf-8?B?ZDVONEhSQkNTOHE4NkgxM1RQWVhsUmZ5VjNjUDNGa2Y4dFR5YnBJVDFOcmI0?=
- =?utf-8?B?OFprQzRPQnRQbUgwd0RNQUFCVGNnS3BGaWlHaEFuSFVJRGFEZEpTa2VEUmVD?=
- =?utf-8?B?UWI4WWFBTmwrQkEyUmtPNVQ4LzRNVWpZUmNUOHZNc25nOUlFRW9HQjN6U3dp?=
- =?utf-8?B?QUczTnA4eEpPSzhTZlFhVmFoMnRtcUJPenA5S1psUVova0wvNGwyTGMwMkU1?=
- =?utf-8?B?ZW54UnM0MzZlaHR2eG1VQjJhY0RVaTdyazlMaDBLUkZyQkM4enA3RmFrSXVP?=
- =?utf-8?B?NTc3b3VjbHJDV1RNZ0UxK1IvUmtScWQ5aDN1N3BEb2lBdzFSSVNXK1NXZm5T?=
- =?utf-8?B?cE92clVuQ2hmQ1VVYmo3S0NPM1Z0anVuelFaVTNuMnplQUxDblkrVW5wODQv?=
- =?utf-8?B?UkxzNFdmeWVlcDRDa0Z1N3ZQZExoTlF6K1o1aEFIZytrMU9oVjhCMUh2TUFt?=
- =?utf-8?B?WlZRQk4xc2ZaREt1TDdvbzZIUHV4ZEhVemQ3QmN6ZmlmVFpYVC8ydWRmcERQ?=
- =?utf-8?B?WFpCd2xUcDNyVEtWZTU3SlFPQ1NtVnNRa295OWJ0eUt2WGcyWkc3eGw2Yndm?=
- =?utf-8?B?d1ZpWmxZRmhzQzRWSHloUUl6OXRhTkJ2Y01qcGJvbGF0ZHRuTjlqMDQyVlhk?=
- =?utf-8?B?Vk5oTXlPejFSVWhGWEt1bDBUZFBCM2dxRWFOM3h2RGRZWXdSWFRwUDQwMlhl?=
- =?utf-8?B?YVptUEhLRVFjWXNzRlVHbGd1UnhxbXV5MWE1eWtYUzdNVlpyVlk1SjhPSUxC?=
- =?utf-8?B?VDNoS1dwTEtwYWtCL0RYeStVcUZTOEk0eElzTmZIc0gvbEVMNlV1RGZvZ0No?=
- =?utf-8?B?SXlQd05oZ3YxWW1TT3c3YVNabGpYV1N0OWZXN2pOR0d3VkJOVmpqK3Q2SWpY?=
- =?utf-8?B?L1FDeTFZa1g3eFcxc0pFTjQxb0ZkUHRCV1VXMVlXQjN4OXQ3KytYUTVHU1Y0?=
- =?utf-8?Q?YrudFsVhANWvFjL6nlsB2x4eV?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <573A9AC0D9978443A2989BDEC492DD16@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzkwFL8w"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b31befde0a0so1478093a12.0;
+        Mon, 30 Jun 2025 04:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751283399; x=1751888199; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
+        b=OzkwFL8wNFXYXl7FxT9s4Ace6370i4N8iDBf0nHcnACaxf1mI0dx12XhVoguuttA82
+         W0+tBNE16vhSjAD2EF9LZMxVO/eUG47vTJyPlbnIb4RRfH+9rAIU2N0e7pWyGxEql5q9
+         uTKIZEVh+vBIl4WSuZHmP7cYiA9tSmwVRMKmyjEan19WavNHgzQnyFBZazjacaOYFiPW
+         dRWqfmgFHSA276Z+GDueeVo5FRuzAgZlo8X+TgP4Ta1gJIJHzPfW0yBAx02iQdWdoa/u
+         yd4VpxDormiwpPiVBy9JCUeTTH+YnVFVIbQsFXoysRHFDs63VuibwDJqhDDj/rQW9wOz
+         ghBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751283399; x=1751888199;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
+        b=fbvaohZFrsVaer4Prr1+e8Qb8z8nQ04uPmxEiLobVCFDsiKZOoo7k2/+LbNqgCKprr
+         DDrwweJyRz6g+Vj4fEhmnplQaYY5bBBEGuXfih0P1hf+Vlm0lp07nkNEi9bQGrqAatfs
+         ToPhdcoQVdEX0xBq/b+MQlIBCKrwiYbtNw+yVKGECRpnksvKDPqF8U2KBfGz00dfVOan
+         mPM4NiTVrtQECW8IABpuO0pysmOtkEMQJPT/bSbcZ2HJBsUXcj9+dQPki3cJN9LYyxds
+         6vrbT9o9nNWl3CSy8N55E65zWH7GalWePqZ2gCcKhcxXPVta7EX5DC0vCm3geguZ9H/9
+         9ckg==
+X-Forwarded-Encrypted: i=1; AJvYcCUk/K12HT71L56yjILQquwxS28+p8cfaE8fJ/3plu5gCPCJDzE+tG0No8Wldjpqy7bzt7rnHuJZB8oNgI5xH0/+5OrWSw==@vger.kernel.org, AJvYcCWyFlQG7HjZSp1t/15EfAmsf07XIYsa5dEwfpPDtIDLofphZ+/1xR91u3OGFC7eH+kvS/oNBF6EfLTZT00w@vger.kernel.org, AJvYcCXQ/q/B6QyHqL4n8v65KwBHOFpIwwgZc+BHCkXL9Sv4jJUq0XGYwIW/z/hUlPqHzCzcgIeXIEnvSIjUvw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyueYV6kQGmndln47tUztX+D6041UsTQsL5n2hwkDSPEkucFTKA
+	a9eUgXgECS5h4lnCh4YQ84VkOHWnPgunw5zAR8hHn5+GbgztohXx1NhZfeqFwoTUvscxaZ1NX/n
+	8cK6DOKu9xHQ37XYyVX/0xbPQsZRC/PU=
+X-Gm-Gg: ASbGnctC5mjIK73n+L4xRWYdFjTOtUkIV6ZV5hkO056EcRws0ke9N4jcksyLgoCbI/p
+	OF40slIOScFZx2x/AYalL/3RbtgTYNANfH+L4RnFN9sFxSmp8+oOcCLBjRXGVWFRS+3x3wlLm9i
+	t02OLOjY68TXxWBdx/VDyHzZcIxoNqg3aWURnqcQh1jVKnD8ADHU4XbaS5Yx4pDkKbX5oSFGxtW
+	/BHVw==
+X-Google-Smtp-Source: AGHT+IHT1QanRw0SG2T4GyW6c2j8HJpX9VMAOEb92ivAi9s1+4lDE8SiqMYwhejw16+krR4CNzHVDv9J7eln53v0wLo=
+X-Received: by 2002:a17:90b:2c83:b0:315:cc22:68d9 with SMTP id
+ 98e67ed59e1d1-318c927f2e4mr17945627a91.31.1751283399365; Mon, 30 Jun 2025
+ 04:36:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR11MB5521.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69182e6d-d901-4952-c603-08ddb7ca3571
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 11:35:26.3863
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OiQJCy199rYkBDACKsOaPc68K2oAXqZCHfjtgOBs85fj0mVUP34+eO0SOwHQduk2txv6eACer6vpIpz7OMsZdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF382351574
-X-OriginatorOrg: intel.com
+References: <20250620004209.28250-1-vishnuocv@gmail.com> <c7eb2d82-a487-1baa-dd89-4276551974ec@linux.intel.com>
+ <CABxCQKvt+vreQN1+BWr-XBu+pF81n5fh9Fa59UBsV_hLgpvh3A@mail.gmail.com>
+ <4e846cf1-e7c7-3bb9-d8b3-d266b9dfbc4e@linux.intel.com> <CABxCQKt7SjMhX33WGOTk8hdZf1Hvkp8YYFWJK5v1xcbQQm14nQ@mail.gmail.com>
+ <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
+In-Reply-To: <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Mon, 30 Jun 2025 20:36:01 +0900
+X-Gm-Features: Ac12FXwTJ95mw7IU-AIogK8VMM4mq0SPmRExNfsuMUoY2Xn_PjPeYHZ7J1JgkH8
+Message-ID: <CABxCQKvsv3K_gviYMNS2gUQMdd+Q1w_hzJ5irTk5m9pphdSm9g@mail.gmail.com>
+Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: pali@kernel.org, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
+	hansg@kernel.org, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
+	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
+	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gRnJpLCAyMDI1LTA2LTI3IGF0IDEwOjA4IC0wNTAwLCBUb20gTGVuZGFja3kgd3JvdGU6DQo+
-ID4gU2lnbmVkLW9mZi1ieTogS2FpIEh1YW5nIDxrYWkuaHVhbmdAaW50ZWwuY29tPg0KPiANCj4g
-UmV2aWV3ZWQtYnk6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+DQo+IFRl
-c3RlZC1ieTogVG9tIExlbmRhY2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4NCg0KVGhhbmtz
-IFRvbSEhDQo=
+Hi Ilpo,
+
+Sorry for the late reply.
+
+On Fri, Jun 27, 2025 at 4:28=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Fri, 27 Jun 2025, Vishnu Sankar wrote:
+>
+> > Hi Ilpo,
+> >
+> > Thanks a lot for the review.
+> >
+> > On Fri, Jun 27, 2025 at 12:09=E2=80=AFAM Ilpo J=C3=A4rvinen <ilpo.jarvi=
+nen@linux.intel.com> wrote:
+> >       On Thu, 26 Jun 2025, Vishnu Sankar wrote:
+> >
+> >       > Hi Ilpo,
+> >       >
+> >       > Thanks a lot for the comments and guidance.
+> >       > Please find my comments inline below.
+> >       >
+> >       > On Wed, Jun 25, 2025 at 9:07 PM Ilpo J=C3=A4rvinen <
+> >       ilpo.jarvinen@linux.intel.com >
+> >       > wrote:
+> >       >       On Fri, 20 Jun 2025, Vishnu Sankar wrote:
+> >       >
+> >       >       I don't like the shortlog prefixes (in the subject), plea=
+se don't
+> >       make
+> >       >       confusing prefixes up like that.
+> >       >
+> >       > Got it.
+> >       > I will correct this in V2 (as a patch series).
+> >       >
+> >       >       > Newer ThinkPads have a doubletap feature that needs to =
+be
+> >       turned
+> >       >       > ON/OFF via the trackpoint registers.
+> >       >
+> >       >       Don't leave lines short mid-paragraph. Either reflow the
+> >       paragraph or add
+> >       >       an empty line in between paragraphs.
+> >       >
+> >       > Acked.
+> >       > Will correct this in V2.
+> >       >
+> >       >       > Systems released from 2023 have doubletap disabled by d=
+efault
+> >       and
+> >       >       > need the feature enabling to be useful.
+> >       >       >
+> >       >       > This patch introduces support for exposing and controll=
+ing the
+> >       >       > trackpoint doubletap feature via a sysfs attribute.
+> >       >       > /sys/devices/platform/thinkpad_acpi/tp_doubletap
+> >       >       > This can be toggled by an "enable" or a "disable".
+> >       >
+> >       >       This too has too short lines.
+> >       >
+> >       > Sorry!
+> >       > Will do the needful in v2.
+> >       >
+> >       >       >
+> >       >       > With this implemented we can remove the masking of even=
+ts, and
+> >       rely on
+> >       >
+> >       >       "With this implemented" is way too vague wording.
+> >       >
+> >       > Sorry for this!
+> >       > I will make this better.
+> >       >
+> >       >       > HW control instead, when the feature is disabled.
+> >       >       >
+> >       >       > Note - Early Thinkpads (pre 2015) used the same registe=
+r for
+> >       hysteris
+> >       >
+> >       >       hysteresis ?
+> >       >
+> >       > Sorry for not being clear.
+> >       > It's the trackpoint drag hysteris functionality. Pre-2015 Think=
+Pads
+> >       used to have a
+> >       > user-configurable drag hysterisis register (0x58).
+> >       > Drag hysterisis is not user configurable now.
+> >       >
+> >       >       > control, Check the FW IDs to make sure these are not af=
+fected.
+> >       >
+> >       >       This Note feels very much disconnected from the rest. Sho=
+uld be
+> >       properly
+> >       >       described and perhaps in own patch (I don't know)?
+> >       >
+> >       > my bad, it's not FW ID, but PnP ID.
+> >       > The older ThinkPad's trackpoint controllers use the same regist=
+er
+> >       (0x58) to control
+> >       > the drag hysteresis, which is obsolete now.
+> >       > Now (on newer systems from 2023) the same register (0x58) is re=
+mapped
+> >       as
+> >       > doubletap register.
+> >       > Just to exclude those older systems (with drag hysterisis contr=
+ol), we
+> >       check the PnP
+> >       > ID's.
+> >       >
+> >       > I will give a better commit message in V2.
+> >       >
+> >       >       > trackpoint.h is moved to linux/input/.
+> >       >
+> >       >       This patch doesn't look minimal and seems to be combining=
+ many
+> >       changes
+> >       >       into one. Please make a patch series out of changes that =
+can be
+> >       separated
+> >       >       instead of putting all together.
+> >       >
+> >       > Understood.
+> >       > Will make a patch series on V2
+> >       > 0001: Move trackpoint.h to include/linux/input
+> >       > 0002: Add new doubletap set/status/capable logics to trackpoint=
+.c
+> >       > 0003: Add new trackpoint api's and trackpoint sysfs in thinkpad=
+_acpi.c
+> >
+> >       Okay, sounds better.
+> >
+> >       >       > +/* List of known incapable device PNP IDs */
+> >       >       > +static const char * const dt_incompatible_devices[] =
+=3D {
+> >       >       > +     "LEN0304",
+> >       >       > +     "LEN0306",
+> >       >       > +     "LEN0317",
+> >       >       > +     "LEN031A",
+> >       >       > +     "LEN031B",
+> >       >       > +     "LEN031C",
+> >       >       > +     "LEN031D",
+> >       >       > +};
+> >       >       > +
+> >       >       > +/*
+> >       >       > + * checks if it=E2=80=99s a doubletap capable device
+> >       >       > + * The PNP ID format eg: is "PNP: LEN030d PNP0f13".
+>
+> There's case difference between this comment and the list.
+Thank you for pointing this out.
+Will correct this.
+>
+> >       >       > + */
+> >       >       > +bool is_trackpoint_dt_capable(const char *pnp_id)
+> >       >       > +{
+> >       >       > +     char id[16];
+> >       >       > +
+> >       >       > +     /* Make sure string starts with "PNP: " */
+> >       >       > +     if (strncmp(pnp_id, "PNP: LEN03", 10) !=3D 0)
+> >       >
+> >       >       We seem to have strstarts().
+> >       >
+> >       > Thanks a lot for the suggestion.
+> >       > Will make use of this.
+> >       >
+> >       >       > +             return false;
+> >       >       > +
+> >       >       > +     /* Extract the first word after "PNP: " */
+> >       >       > +     if (sscanf(pnp_id + 5, "%15s", id) !=3D 1)
+> >       >       > +             return false;
+> >       >       > +
+> >       >       > +     /* Check if it's blacklisted */
+> >       >       > +     for (size_t i =3D 0; i <
+> >       ARRAY_SIZE(dt_incompatible_devices); ++i)
+> >       >       {
+> >       >       > +             if (strcmp(pnp_id, dt_incompatible_device=
+s[i]) =3D=3D
+> >       0)
+> >       >
+> >       >       Isn't this buggy wrt. the PNP: prefix??
+> >       >
+> >       >       Perhaps it would have been better to just do pnp_id +=3D =
+5 before
+> >       sscanf()
+> >       >       as you don't care about the prefix after that.
+> >       >
+> >       >
+> >       > Understood.
+> >       > Shall we have something like the following:
+> >       >         if (!strstarts(pnp_id, "PNP: LEN03"))
+> >       >               return false;
+> >       >
+> >       >         id =3D pnp_id + 5;
+> >       >
+> >       >         for (size_t i =3D 0; i < ARRAY_SIZE(dt_incompatible_dev=
+ices);
+> >       ++i) {
+> >       >                        if (strncmp(id, dt_incompatible_devices[=
+i],
+> >       > strlen(dt_incompatible_devices[i])) =3D=3D 0)
+> >
+> >       Why did you change to strncmp()?
+> >
+> > I switched to strncmp() to allow matching just the known prefix part in
+> > dt_incompatible_devices, rather than requiring an exact full string mat=
+ch.
+> > Will keep the original "if (strcmp(id, dt_incompatible_devices[i]) =3D=
+=3D 0) " logic as
+> > it serves the purpose.
+>
+> I didn't mean to say the change is necessarily incorrect, I was just
+> asking for reasonale as it was different from the original.
+Understood.
+>
+> If you think you it needs to be broader to the match to a prefix only,
+> I've no problem with that.
+Understood. Will keep the original as it is, without changes.
+>
+> --
+>  i.
+
+
+
+--=20
+
+Regards,
+
+      Vishnu Sankar
+     +817015150407 (Japan)
