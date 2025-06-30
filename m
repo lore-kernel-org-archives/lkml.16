@@ -1,185 +1,248 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011001.outbound.protection.outlook.com [52.101.65.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A927828B7F9;
-	Mon, 30 Jun 2025 13:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291943; cv=none; b=LIbIL33UnsqVxAyq+EId+JQpnsjux4TWG+wuteP+PwWr9htpDNq1S07vsujBYE5JFK9F+jKzd1Y78O/IbE8iLpit6K3ZdQ8Kw7EI8TTU83LJi5EfRlVBJ37qD3REX/zDW68GUIkdXd9FMyO3UOE+QKeBABUV0gwRaAE6MuWXStA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291943; c=relaxed/simple;
-	bh=lnuCtoZ25M8XX5pqOcDT82hZ0f7dTMbUDFp1u5jiT1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJF21ic0iSN8Ca8JYuHRosHUM2ddHvbZQNh7LHUWsvREKwi5ST5UTy1+rNzcJbqZ43/3mJNpSRKPg+BZYRZKXQdDqU1XoAyNHEIvCPVjoJfxXd8618WXXfcHvMnBfIzZPkRy5oPeTELXFIuesE0Ii5o16mVoX76M907pP7tFrAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bW7755qtczYQvGC;
-	Mon, 30 Jun 2025 21:58:57 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id A9B9D1A1447;
-	Mon, 30 Jun 2025 21:58:56 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP3 (Coremail) with SMTP id _Ch0CgAXeCUdmGJooO7dAA--.62190S3;
-	Mon, 30 Jun 2025 21:58:54 +0800 (CST)
-Message-ID: <0d7b0731-88c3-4114-a401-e6aa8a085c5f@huaweicloud.com>
-Date: Mon, 30 Jun 2025 21:58:52 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86EB28B7E9;
+	Mon, 30 Jun 2025 13:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751291942; cv=fail; b=Bc7rpZIhFzsLlcB5VkpBRYHrrVwMzXI8osZzl7P/7bZx+WqYE8KJAtszvoq4Jwx3/8r5TIymEm4csnhb6gd09rl4BSCJb9WjA5E+0GO1E/qXj3+UlCK5Fh1vZgAzpIagXbSSDV2yZBIeF8Y4D2zDD3Pznf3XKKSwGLtt3hyvyYQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751291942; c=relaxed/simple;
+	bh=gbMQZ0mGA9fFk6+UKivMqyZZbJm4Ub1mc1CMbI+4f78=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s29m+VM11EKDvAk/F0H2MZi+5y21vtkGTzCnQX7wJinStCWlm1EHkJNI2rePaD2Mg5BwE4eDeqjxtSQC52wJ6PaypcRrTyfSt0XZHiSTmVmj/RXh9kMHvnomzrJ/hNqlIjgoALLz9UbT4xKd0Fki8avezlX1gyNUAIdTrPVX7+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=OnIy8f4H; arc=fail smtp.client-ip=52.101.65.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="OnIy8f4H"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B2n/Ti+WyzBiyi7OUbjj8hvvmX1Fn1MkIh/chnpAIqUtzjuDZvVRYw1gsf0YXD3Bwk+CeOZOUd0cQKPNveeNv8hnsHTEvLBivMqTp7Sl27bulofYtlKjSFhxplLJgjfsS4JcOhokQJxzmWrca9j5xiLJ/vC37VyqH/1GY/mIQLsafqhN9XHNByDTVyRdWcY7l8G6c2kGi74Pszdtq3urq17GsQqaz4fe9su3If2KQ1c/Jje+KoWlKlgFizvHhbAMZu34QWSAGNqlp9pbl/fPJYQ63NzNniVe6Z7jMqlQnRYG+e1dtAtFFy9ALQNawzZI91jaCGF2yM9OG4ue9/DC8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H2tCBOIPou1iZQMxyp9NcFrcKLzx/7rxuwZH1IKVSsk=;
+ b=NHDkDbWf+k0v7qObSarLzbEtWgXi40S9NMp9j6FKyOF1/6q/wJaSV8O+sIBe+MKMTuNr7xc5yxcrkN5iuCirgh/vJPaelDz1Y5iC34YxkDYluR8x8zAk7olZQkRma+VQIBwT/nOwha87nRIbdeCAIEYdh8b2updw+4eZxKUTQhT8FNHfvnas9FC8sNV/iz4IIujUX4agOnY2JqG3xP8I91hv+c7MhClNVEc9SU7D05CVdPJjxNYN1uTvzVh0fJ+nYYbt9SxrBUHSVLWm7azKHd/4nzjruZvE03mI/QLH2VTHrquENJpzVn38ATVetXiKZ9zTdKvJzKZZnVuK/bstiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H2tCBOIPou1iZQMxyp9NcFrcKLzx/7rxuwZH1IKVSsk=;
+ b=OnIy8f4HypqrXJCeI6hsFk3bVTYJhLhYgM2LKCufIvriqu40OFRBMY8cq8BbGyZAYZr71I0uE5rHR0zeGjy0/sVZml7f70X5WJECGkZIRCQ88vlDZC+04EB8vGP+j36SU317cM4YZaygFpvxBtOMkEwLPed42r18X5RKAilm3JE=
+Received: from DU6P191CA0028.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53f::14)
+ by GV2PPF59A8AC75E.eurprd02.prod.outlook.com (2603:10a6:158:401::5d3) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Mon, 30 Jun
+ 2025 13:58:55 +0000
+Received: from DB1PEPF000509F8.eurprd02.prod.outlook.com
+ (2603:10a6:10:53f:cafe::41) by DU6P191CA0028.outlook.office365.com
+ (2603:10a6:10:53f::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.30 via Frontend Transport; Mon,
+ 30 Jun 2025 13:58:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
+ action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF000509F8.mail.protection.outlook.com (10.167.242.154) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 13:58:54 +0000
+Received: from pcczc3457tyd.2n.cz.axis.com (10.4.0.13) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 30 Jun
+ 2025 15:58:53 +0200
+From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
+To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <f.fainelli@gmail.com>, <robh@kernel.org>,
+	<andrew+netdev@lunn.ch>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: [PATCH net v4 1/4] net: phy: MII-Lite PHY interface mode
+Date: Mon, 30 Jun 2025 15:58:34 +0200
+Message-ID: <20250630135837.1173063-2-kamilh@axis.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250630135837.1173063-1-kamilh@axis.com>
+References: <20250630135837.1173063-1-kamilh@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ext4: fix JBD2 credit overflow with large folios
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, tytso@mit.edu
-References: <20250630131324.1253313-1-sashal@kernel.org>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250630131324.1253313-1-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgAXeCUdmGJooO7dAA--.62190S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JF1DArWUGFyDGF47CF15Jwb_yoW7GryfpF
-	W7CFsxCr98Za4fu3WSkw4UZF1Fg348CF4UGF1fKrn2va98Wr1xKFn8tw15KFyjkr4xGwnY
-	qF15ur9rW3Z0yrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509F8:EE_|GV2PPF59A8AC75E:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8988fafe-463a-4639-f538-08ddb7de4064
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|19092799006|82310400026|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q1lHaTA0Q29aMlN4VjdJbVYwWnhLNnAwWEdaN25oSUFseDUyVDV3eEkydTVQ?=
+ =?utf-8?B?TWRmY2ExTFM3MmM5Mlc3NjlSTmt4bkkxVzFvMmRybnZDWHhZZmV2TmY3TWps?=
+ =?utf-8?B?M3l6UXVhNW94VHEyeDg0YU5mSmQzR2twRC9yL0Y0Mm52Rmp0dkRSUGNvZHg3?=
+ =?utf-8?B?MGFuNkRWUFo4bHJIQ2VZaGRXYVNpNmc0dnUwWDN1ai9yWXN3dUdNVW1YNVFI?=
+ =?utf-8?B?SmxCL1htMmRiU1BadnlaMUxMZFpCeHc0Ylh4RFJSc1hoTHFqd2hFTmNXb1B6?=
+ =?utf-8?B?UkRrRkhvLzhTTnd0RWxxMU1xcDNNRzM4bG9YdEdFTkV2WGIrTGVreGFISHB5?=
+ =?utf-8?B?eGRtdDZFYTVoNzlyWDl4QkErWU5nU1hodTB0dTE1dDJEeEpFeDZWQk51SFJ4?=
+ =?utf-8?B?ZmdwMys4OUY2UlRHRVZZbE9qblU3d3YzQ0ZRajdXNHNFMkdGalFaSHJhdzdy?=
+ =?utf-8?B?aHNoczg5SC92NFBVeU96NWZsS01ZUVI0ZG53RFQvV3RiOXZwaVVheStpcXdT?=
+ =?utf-8?B?Z2kvSnMvQUZsWjcwcmduYnNnRWk5WVZmZHVOV0MrdUpGb3BLNGxEUHZMWWNR?=
+ =?utf-8?B?TUVvUGtNcG1WZUYwbHZ1ZjM4L3NJTnVDTEdoOGIwWENKRzhMMDRIazRVdXFV?=
+ =?utf-8?B?eUZlSS84SHVPT0dSbUx1NDE4dk9Icm5TQzE3eVZkd0hJNVhUV1l5Yzl1aTZB?=
+ =?utf-8?B?NDd1RXBSTGxkOUs0azhYS3o5RmJTRW9IMkhMZWpOVXJPempqQjBOYXRyQm13?=
+ =?utf-8?B?TUpySElFZHdtUmFEL3hia0tZZkhBY21RNDhaeEd0TnR4Y21tZHRrQmxQRHBZ?=
+ =?utf-8?B?QVpPeXhKUDNOcGdtWmhhMWZOS2N2SkhVNUx2aVJqYUYrazlKME5DRVpOQkh1?=
+ =?utf-8?B?bC83cEJOa3FwbzlLRnJhQnUza1hLTzNkRFZ4OG5ZbG85Q2JTNVVFbitoWlB0?=
+ =?utf-8?B?UUkvWkdwYXdrajRBaHhKdXNTOThQdGJpL1hhMkJkUzBtdHlVYXFFMURTekJT?=
+ =?utf-8?B?bU1GUmlyVXhha3ZYOWhpaGFsdklCSDNxY3JCOGNlRXk0MU5IdXlmcEgwSnk0?=
+ =?utf-8?B?RWQ0SEdsMjM1R1EyWmJXbjF4U2Y0NDZKNk5DUk9ZTC9Id1hyR1pPK05GNnpy?=
+ =?utf-8?B?dEdjMVNHcnAzUUsvSmVGd1ZqenhUNUh4VTV4SU5FYUlzZGxmYUVNTzNUVUlx?=
+ =?utf-8?B?azhWY3FGdzI3M0lpc0NXOHpENzBUWVVrMXJxNXM2eWN0Mmh2aEhUa2Z2Ynp3?=
+ =?utf-8?B?ZHQ3cXVlRG1LNlpMeG5la2EzVjVQN2doZXdlRm4xQVZYbTFmWmpEUmM3TmdQ?=
+ =?utf-8?B?S1ZqSTdrSjc1THBRUGlzd2JKS0lodlpHZzdIWGZXUDhMMklwUUFhMDZieURU?=
+ =?utf-8?B?MXRadnhMUC8xR0NJdWlCWXhRRnZ4a3hHbXRZR2JqOTB1SWVUK1RsT1pIbzBo?=
+ =?utf-8?B?QTRIRktQS3ZGWEN4STFhenUrWjFZa2JyZUQwSzNWUmQvZVZxWWtMdndUVFRQ?=
+ =?utf-8?B?K1F4MXVFanN0Z3A1czBYMmVwRXVORGZUV0ljRTBOanBKNG5nOHQ2TkRrY2tj?=
+ =?utf-8?B?aTl6ekVONHZlUko4NmRuZkZqVGcwUkRFZURVSmtHQi9WWWg3VTNxdk8wUDlj?=
+ =?utf-8?B?L0VoOHdYN0t0c0VMSE1nZm9ZS0lzVXBQaFIwV3JuYnYyN21LaEJ1VG5oWHJL?=
+ =?utf-8?B?dFFCaE9Qdy95UzB1SEsrTk1kSmxiU3FtKzFvd3hMc2R6aDBZTllzTTRad3hp?=
+ =?utf-8?B?SHgxanliN3JDOGRvaWNrYUJSVTdRN3JZcEVkR1E1dUo0K0hYL3R3bjdPWTA1?=
+ =?utf-8?B?RkFIdU84ZWd2R2ZSNzNtZ3RaN1N6SFBWMGNIQWJFc2h2eVc5MlErUTBqTnE1?=
+ =?utf-8?B?YTRzM0hERFREL1h3UFJLZEdLYjZ6SG9iU2l6TmxCQUxrSEZ0ZUlONzBSaU5H?=
+ =?utf-8?B?S0xrb3hhZkR5ZUl5czk0T1BSUmJkZTB6NU01RVR5WjBIZ2lCZXRPYUJpVlZi?=
+ =?utf-8?B?ampTbHduY2tsRzRCQkxDMmhhT09YZ29mOTl6ZDM0cEtiN0Y1endPUFFOVUFr?=
+ =?utf-8?B?OHJZR25hNmpMSDUrcUk0YTh3U3g0K3orRU9Ddz09?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(19092799006)(82310400026)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 13:58:54.6894
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8988fafe-463a-4639-f538-08ddb7de4064
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509F8.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PPF59A8AC75E
 
-On 2025/6/30 21:13, Sasha Levin wrote:
-> When large folios are enabled, the blocks-per-folio calculation in
-> ext4_da_writepages_trans_blocks() can overflow the journal transaction
-> limits, causing the writeback path to fail with errors like:
-> 
->   JBD2: kworker/u8:0 wants too many credits credits:416 rsv_credits:21 max:334
-> 
-> This occurs with small block sizes (1KB) and large folios (32MB), where
-> the calculation results in 32768 blocks per folio. The transaction credit
-> calculation then requests more credits than the journal can handle, leading
-> to the following warning and writeback failure:
-> 
->   WARNING: CPU: 1 PID: 43 at fs/jbd2/transaction.c:334 start_this_handle+0x4c0/0x4e0
->   EXT4-fs (loop0): ext4_do_writepages: jbd2_start: 9223372036854775807 pages, ino 14; err -28
-> 
-> Call trace leading to the issue:
->   ext4_do_writepages()
->     ext4_da_writepages_trans_blocks()
->       bpp = ext4_journal_blocks_per_folio() // Returns 32768 for 32MB folio with 1KB blocks
->       ext4_meta_trans_blocks(inode, MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp)
->         // With bpp=32768, lblocks=34815, pextents=32768
->         // Returns credits=415, but with overhead becomes 416 > max 334
->     ext4_journal_start_with_reserve()
->       jbd2_journal_start_reserved()
->         start_this_handle()
->           // Fails with warning when credits:416 > max:334
-> 
-> The issue was introduced by commit d6bf294773a47 ("ext4/jbd2: convert
-> jbd2_journal_blocks_per_page() to support large folio"), which added
-> support for large folios but didn't account for the journal credit limits.
-> 
-> Fix this by capping the blocks-per-folio value at 8192 in the writeback
-> path. This is the value we'd get with 32MB folios and 4KB blocks, or 8MB
-> folios with 1KB blocks, which is reasonable and safe for typical journal
-> configurations.
-> 
-> Fixes: d6bf294773a4 ("ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Some Broadcom PHYs are capable to operate in simplified MII mode,
+without TXER, RXER, CRS and COL signals as defined for the MII.
+The MII-Lite mode can be used on most Ethernet controllers with full
+MII interface by just leaving the input signals (RXER, CRS, COL)
+inactive. The absence of COL signal makes half-duplex link modes
+impossible but does not interfere with BroadR-Reach link modes on
+Broadcom PHYs, because they are all full-duplex only.
 
-Hi, Sasha!
+Add MII-Lite interface mode, especially for Broadcom two-wire PHYs.
 
-Thank you for the fix. However, simply limiting the credits is not enough,
-as this may result in a scenario where there are not enough credits
-available to map a large, non-contiguous folio. I've been working on this
-issue[1] and I'll release v3 tomorrow if my tests looks fine.
+Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ Documentation/networking/phy.rst | 7 +++++++
+ drivers/net/phy/phy-core.c       | 1 +
+ drivers/net/phy/phy_caps.c       | 4 ++++
+ drivers/net/phy/phylink.c        | 1 +
+ include/linux/phy.h              | 4 ++++
+ 5 files changed, 17 insertions(+)
 
-[1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
-
-Thanks,
-Yi.
-
-> ---
->  fs/ext4/inode.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index be9a4cba35fd5..860e59a176c97 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -2070,6 +2070,14 @@ static int mpage_submit_folio(struct mpage_da_data *mpd, struct folio *folio)
->   */
->  #define MAX_WRITEPAGES_EXTENT_LEN 2048
->  
-> +/*
-> + * Maximum blocks per folio to avoid JBD2 credit overflow.
-> + * This is the value we'd get with 32MB folios and 4KB blocks,
-> + * or 8MB folios with 1KB blocks, which is reasonable and safe
-> + * for typical journal configurations.
-> + */
-> +#define MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK 8192
-> +
->  /*
->   * mpage_add_bh_to_extent - try to add bh to extent of blocks to map
->   *
-> @@ -2481,6 +2489,18 @@ static int ext4_da_writepages_trans_blocks(struct inode *inode)
->  {
->  	int bpp = ext4_journal_blocks_per_folio(inode);
->  
-> +	/*
-> +	 * With large folios, blocks per folio can get excessively large,
-> +	 * especially with small block sizes. For example, with 32MB folios
-> +	 * (order 11) and 1KB blocks, we get 32768 blocks per folio. This
-> +	 * leads to credit requests that overflow the journal's transaction
-> +	 * limit.
-> +	 *
-> +	 * Limit the value to avoid excessive credit requests.
-> +	 */
-> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
-> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
-> +
->  	return ext4_meta_trans_blocks(inode,
->  				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
->  }
-> @@ -2559,6 +2579,13 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
->  	handle_t *handle = NULL;
->  	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
->  
-> +	/*
-> +	 * With large folios, blocks per folio can get excessively large,
-> +	 * especially with small block sizes. Cap it to avoid credit overflow.
-> +	 */
-> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
-> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
-> +
->  	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
->  		tag = PAGECACHE_TAG_TOWRITE;
->  	else
-> @@ -6179,6 +6206,13 @@ int ext4_writepage_trans_blocks(struct inode *inode)
->  	int bpp = ext4_journal_blocks_per_folio(inode);
->  	int ret;
->  
-> +	/*
-> +	 * With large folios, blocks per folio can get excessively large,
-> +	 * especially with small block sizes. Cap it to avoid credit overflow.
-> +	 */
-> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
-> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
-> +
->  	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
->  
->  	/* Account for data blocks for journalled mode */
+diff --git a/Documentation/networking/phy.rst b/Documentation/networking/phy.rst
+index f64641417c54..7f159043ad5a 100644
+--- a/Documentation/networking/phy.rst
++++ b/Documentation/networking/phy.rst
+@@ -333,6 +333,13 @@ Some of the interface modes are described below:
+     SerDes lane, each port having speeds of 2.5G / 1G / 100M / 10M achieved
+     through symbol replication. The PCS expects the standard USXGMII code word.
+ 
++``PHY_INTERFACE_MODE_MIILITE``
++    Non-standard, simplified MII mode, without TXER, RXER, CRS and COL signals
++    as defined for the MII. The absence of COL signal makes half-duplex link
++    modes impossible but does not interfere with BroadR-Reach link modes on
++    Broadcom (and other two-wire Ethernet) PHYs, because they are full-duplex
++    only.
++
+ Pause frames / flow control
+ ===========================
+ 
+diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+index e177037f9110..b2df06343b7e 100644
+--- a/drivers/net/phy/phy-core.c
++++ b/drivers/net/phy/phy-core.c
+@@ -115,6 +115,7 @@ int phy_interface_num_ports(phy_interface_t interface)
+ 		return 0;
+ 	case PHY_INTERFACE_MODE_INTERNAL:
+ 	case PHY_INTERFACE_MODE_MII:
++	case PHY_INTERFACE_MODE_MIILITE:
+ 	case PHY_INTERFACE_MODE_GMII:
+ 	case PHY_INTERFACE_MODE_TBI:
+ 	case PHY_INTERFACE_MODE_REVMII:
+diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+index 38417e288611..b4a4dea3e756 100644
+--- a/drivers/net/phy/phy_caps.c
++++ b/drivers/net/phy/phy_caps.c
+@@ -316,6 +316,10 @@ unsigned long phy_caps_from_interface(phy_interface_t interface)
+ 		link_caps |= BIT(LINK_CAPA_100HD) | BIT(LINK_CAPA_100FD);
+ 		break;
+ 
++	case PHY_INTERFACE_MODE_MIILITE:
++		link_caps |= BIT(LINK_CAPA_10FD) | BIT(LINK_CAPA_100FD);
++		break;
++
+ 	case PHY_INTERFACE_MODE_TBI:
+ 	case PHY_INTERFACE_MODE_MOCA:
+ 	case PHY_INTERFACE_MODE_RTBI:
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 0faa3d97e06b..766cad40f1b8 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -234,6 +234,7 @@ static int phylink_interface_max_speed(phy_interface_t interface)
+ 	case PHY_INTERFACE_MODE_SMII:
+ 	case PHY_INTERFACE_MODE_REVMII:
+ 	case PHY_INTERFACE_MODE_MII:
++	case PHY_INTERFACE_MODE_MIILITE:
+ 		return SPEED_100;
+ 
+ 	case PHY_INTERFACE_MODE_TBI:
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index e194dad1623d..6aad4b741c01 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -103,6 +103,7 @@ extern const int phy_basic_ports_array[3];
+  * @PHY_INTERFACE_MODE_QUSGMII: Quad Universal SGMII
+  * @PHY_INTERFACE_MODE_1000BASEKX: 1000Base-KX - with Clause 73 AN
+  * @PHY_INTERFACE_MODE_10G_QXGMII: 10G-QXGMII - 4 ports over 10G USXGMII
++ * @PHY_INTERFACE_MODE_MIILITE: MII-Lite - MII without RXER TXER CRS COL
+  * @PHY_INTERFACE_MODE_MAX: Book keeping
+  *
+  * Describes the interface between the MAC and PHY.
+@@ -144,6 +145,7 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_QUSGMII,
+ 	PHY_INTERFACE_MODE_1000BASEKX,
+ 	PHY_INTERFACE_MODE_10G_QXGMII,
++	PHY_INTERFACE_MODE_MIILITE,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
+ 
+@@ -260,6 +262,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "qusgmii";
+ 	case PHY_INTERFACE_MODE_10G_QXGMII:
+ 		return "10g-qxgmii";
++	case PHY_INTERFACE_MODE_MIILITE:
++		return "mii-lite";
+ 	default:
+ 		return "unknown";
+ 	}
+-- 
+2.39.5
 
