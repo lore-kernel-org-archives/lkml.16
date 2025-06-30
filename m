@@ -1,50 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC8F19C553;
-	Mon, 30 Jun 2025 16:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D303042AA4;
+	Mon, 30 Jun 2025 16:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302659; cv=none; b=mUsB37WKGIvP+WAaS8R5MB2Mr8TpZhsWNXTiqfikiucXLdQ7GIGcTjOep6ZM7kAEezNfrGEDzn/+8epgtJrOAXMEhn68jjk8MFWrKC16MQVpaL+GYodED2i5NB/JyL1GpKi7ERKobAsoPbfDBOdZZYfY9B7dzeckPjg4oOZdV2I=
+	t=1751302667; cv=none; b=TdsJa6goczehr/IowKvZDLMyHQ5FL5tn2EYYPDgyV5PC4fw0nDyfqLTDsDe5fL8ALYTzxQldixTImBWj3PcLQzpJylDiPL3pKC9sfa+VbKg4cgztdziB2lM5Lrs2ddPxwMWQhVHto2QneIdyI+51WuqOTfr5LJEbIwHaJ7dAepk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302659; c=relaxed/simple;
-	bh=BYzwfNeMyLadDmlkGi40pAN2Kw8jUSgmaBSLc8Pmba0=;
+	s=arc-20240116; t=1751302667; c=relaxed/simple;
+	bh=6Z2Qj+uEHv7Zft5dg+lOnwNTPLU8cLEsi3/Alylcj/o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ta8c6U8h2oP39Uz7iaC5W8Q9SJKUqsFqUAg51PucTtS9SHEa0PxLxjC4eoWadL4IjCg5iDsA1XyUqaWt/Xz5Y4iQ+ohGay35q6A8cZNsCGtqsBJAeFeWA2zHdRC3RC3qDrAlEpDUbqjbXOR7wXmxIEwQWfbnx8tZHFl/eO7aEFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/nwG1sS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ig5VeCpm0hNYKP5JjwIEbVY8WoG2roqRgn2VeJBLdlZMI++91GkYETh08HkodX/WVL1fOZuIg8DtQZUIQI2jjCZ6E1GD5jx/pUitltmhRHax09fydaetNqeg/gqVJCD4oSDQQx0RFWZ28IucNSRNYFK0NQih6Cqk+R8bYJtAE9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3usc9UY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/nwG1sS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DEFC4CEE3;
-	Mon, 30 Jun 2025 16:57:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3usc9UY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF35DC4CEE3;
+	Mon, 30 Jun 2025 16:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751302657;
-	bh=BYzwfNeMyLadDmlkGi40pAN2Kw8jUSgmaBSLc8Pmba0=;
+	s=k20201202; t=1751302666;
+	bh=6Z2Qj+uEHv7Zft5dg+lOnwNTPLU8cLEsi3/Alylcj/o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H/nwG1sSq5cwFP2aQ8tj8/fjmiyaJ815gZAtX3QhrLL/vQ4zRHDBv1JIjDGw0JO1v
-	 dc5A+/QkHIHbOQlQXvSrGuuWb535D7HTMg2TAUASr/X72KOK/jkLCNh/EGT0Hr+x7Q
-	 JKLHyP41eWrAAXp+OzIKs2ngnseETZAYw8DzftTBUsN5fI4MELpz+xDRTrQfngQZRu
-	 +0UzLEaW8nbIMpXFNC++A2u3LnCE9uEP4kNt2PoRYifU7o9PAJweqIXd3g+uDLaB19
-	 X+0GzakVLcf8jCY/xAZ3UdYOIrG4QBgbE6K4+P4VneMtalak03pSOnMwzNPHbxbg35
-	 G8ZrPK5r4v0Ag==
-Date: Mon, 30 Jun 2025 10:57:35 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Parav Pandit <parav@nvidia.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"stefanha@redhat.com" <stefanha@redhat.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>
-Subject: Re: [PATCH RFC] pci: report surprise removal events
-Message-ID: <aGLB_8SFF1Cw95MZ@kbusch-mbp>
-References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
- <aGFBW7wet9V4WENC@wunner.de>
- <20250629132113-mutt-send-email-mst@kernel.org>
- <aGHOzj3_MQ3x7hAD@kbusch-mbp>
- <CY8PR12MB7195F2F2900BAEA69F5431E9DC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
- <aGKUqsudjfk8wCHI@kbusch-mbp>
- <CY8PR12MB7195583E429203129577B51ADC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
+	b=c3usc9UYaPthaADE9IHDYr2Jh60ChSexp7vPz8BtVSmvbecE5iTmlgRpJcziBG6Vx
+	 2azEEG5wkDwT4tsyvbr3Etgu9+nGzjW5OqC6OWIldwNSb3j3I8kwA63MwRBd8Lner7
+	 oy5wJAeXFx/2gNDbMPlkg36eSdiENgAMThwMcp7qZI66FjRNiDr4Yo4nNJ3dvpGw7q
+	 59vvTOd1OAEYVKnnS/DGeJUoXiBgUSkpmnxLVQTTLynBjIxwFTYqxz6c6BoPYZqwSe
+	 iSUNQ5y4yGrxtglwtQ+6y97SdbRRs3HEh15iE+orze9B60qgF3RvEKn6k8MakAJtDY
+	 XXH4F5Bz34sTA==
+Date: Mon, 30 Jun 2025 09:57:07 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ingo Franzki <ifranzki@linux.ibm.com>
+Cc: linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Joerg Schmidbauer <jschmidb@de.ibm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: s390/sha - Fix uninitialized variable in SHA-1
+ and SHA-2
+Message-ID: <20250630165707.GB1220@sol>
+References: <20250627185649.35321-1-ebiggers@kernel.org>
+ <73477fe9-a1dc-4e38-98a6-eba9921e8afa@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,17 +55,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CY8PR12MB7195583E429203129577B51ADC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
+In-Reply-To: <73477fe9-a1dc-4e38-98a6-eba9921e8afa@linux.ibm.com>
 
-On Mon, Jun 30, 2025 at 01:52:26PM +0000, Parav Pandit wrote:
+On Mon, Jun 30, 2025 at 08:26:34AM +0200, Ingo Franzki wrote:
+> On 27.06.2025 20:56, Eric Biggers wrote:
+> > Commit 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
+> > added the field s390_sha_ctx::first_message_part and made it be used by
+> > s390_sha_update_blocks().  At the time, s390_sha_update_blocks() was
+> > used by all the s390 SHA-1, SHA-2, and SHA-3 algorithms.  However, only
+> > the initialization functions for SHA-3 were updated, leaving SHA-1 and
+> > SHA-2 using first_message_part uninitialized.
 > > 
-> > But I didn't suggest calling error_detected from report_error_detected.
-> > Just call it directly without device_lock. It's not very feasible to enforce a non-
-> > blocking callback, though, if speed is really a concern here.
-> Yeah, it would better to either always call a callback with or without the lock.
-> In some flows with lock and in some flows without lock would likely be
-> very bad as one cannot establish a sane locking order.
+> > This could cause e.g. CPACF_KIMD_SHA_512 | CPACF_KIMD_NIP to be used
+> > instead of just CPACF_KIMD_NIP.  It's unclear why this didn't cause a
+> > problem earlier; 
+> 
+> The NIP flag is only recognized by the SHA3 function codes if the KIMD instruction, for the others (SHA1 and SHA2) it is ignored.
+> 
 
-On closer look, my suggestion without the device_lock may be racy, but
-using the device_lock prevents the notification that needs to happen.
-Hm, not as easy as I thought. :(
+Ah, that explains it then.
+
+> > uninitialized boolean.  Perhaps the CPU ignores CPACF_KIMD_NIP for SHA-1
+> > and SHA-2.  Regardless, let's fix this.  For now just initialize to
+> > false, i.e. don't try to "optimize" the SHA state initialization.
+> > 
+> > Note: in 6.16, we need to patch SHA-1, SHA-384, and SHA-512.  In 6.15
+> > and earlier, we'll also need to patch SHA-224 and SHA-256, as they
+> > hadn't yet been librarified (which incidentally fixed this bug).
+> > 
+> > Fixes: 88c02b3f79a6 ("s390/sha3: Support sha3 performance enhancements")
+> 
+> If this patch is applied on 88c02b3f79a6 then the first_message_part field should
+> probably set to 0 instead of false, since only since commit 
+> 7b83638f962c30cb6271b5698dc52cdf9b638b48 "crypto: s390/sha1 - Use API partial block handling"
+> first_message_part is a bool, before it was an int. 
+
+Yes, when backporting this patch to 6.15 and 6.12 there will be 2 things that
+I'll change:
+
+1. Extend it to cover SHA-224 and SHA-256 (which had been reworked in 6.16)
+2. Change false to 0
+
+- Eric
