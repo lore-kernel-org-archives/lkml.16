@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5707084A2B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F664199E9D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280358; cv=none; b=UwVsITFZItx5aeIIe8KNYJMnQLKq21VxBx7F04pxcpJlrbTF1Vf42aEPE+2PlJ98/2QhQalLIgk65WJzvf1mrNP2MYkGR6pvlyIkT1DZRlmEAkJkoCasKohydPbbAntRbt0cfIN8NuSjJ2Os+F1DoDBf3DjDAaQkWMMNkG+NhuM=
+	t=1751280405; cv=none; b=IwJhru8dHavTqOINQ8QvsqHoADC0EuHx6mTNtng0bEFNrpOg9sCZf+vC/ScFic23Q9hYMiVy4buuds1zFHLcikUR5QdcvA3Bor4wpVgVuo0Z/ItcW0cPrx8MOT2MfuYpDbXzSPMiamNhzfR01/rCQ1Ib+8s7TWAI+J2WjSlH/Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280358; c=relaxed/simple;
-	bh=ckfqOjrElKSUbuKeCm9a1f9djSvgw3q0SgTJaaFcTAE=;
+	s=arc-20240116; t=1751280405; c=relaxed/simple;
+	bh=gvyprsey8lBq/cwWETIidXRcGflIGW0KiZP0ucqQnYU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A5NuZFkiCES/xnc77rFjn9BlQlJnbMr4N81AeLUzcsJtsk+MTY4HRGJgDSSa4Pl3h8s7E6QgflW7ex1EONWeKQ4zEb+Hv1V/qJhiC7i5T+9+yStLdM7xivwRMTWnHYa1bIE9qIkJAArIXQ/z+RPzgkNubRo6Iw8YYgn+4xv8Bo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8E0B1F60;
-	Mon, 30 Jun 2025 03:45:40 -0700 (PDT)
-Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A96E03F58B;
-	Mon, 30 Jun 2025 03:45:52 -0700 (PDT)
-Message-ID: <7eaee53b-d538-4991-addd-379a380b8ee2@arm.com>
-Date: Mon, 30 Jun 2025 11:45:50 +0100
+	 In-Reply-To:Content-Type; b=aOzXPTWQRCN26fPsVcXhJ6rDkW2VglfzsDjOTbovIrLYiGHTuLIB9fiYW9+0fQs7eOgdC+R9UaNhfd3wskTGt+ye39hvmMZhhq8pUDIgRXV83kw4Tt++4G7ytm9KaxNP7/NmIL1KLdxKrrRVX7CH1v8YYXo7MZ2fSDPWkodQqic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QS2cHGEF; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QS2cHGEF"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453634d8609so29497685e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751280401; x=1751885201; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HFNukEVeOuH7fRtCazTP0zdNBYQLRBbJSaq5WQ9/jSE=;
+        b=QS2cHGEF0LCLKtTg56W65PZeV1MqSaN02Tm+mgecpDqNuc5cIe35Kih5HZjpMTYC5N
+         GkfIam99sy2VzrR8JlhMvB2VqlTLJoNmd8b+8U4Ec1kYnRYcBek/TGw1jEHxUPmww03M
+         dhICwFjJU3J5sLY4MpSCWuTpdJqjhtlctrQ0OoLmWZ3dwN8o2jXWnuJRwN6JP5p1f4zE
+         bBQFhSgO1WbHWqCTajzN1jiS4llT7SIrVOYVv3Lv1K5k7nJo3LhBRtuaumeZGfBzz9tk
+         2j8bIOY7iLGblJDSgk9IziJXg4soNEhkCb673xARi3emBk0USPAbHjuOcB3KbafIFiLh
+         +1Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751280401; x=1751885201;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HFNukEVeOuH7fRtCazTP0zdNBYQLRBbJSaq5WQ9/jSE=;
+        b=GRgmeuNmwM3c1H1gKnX8BFyH0DwUvi/4sJrUX0E662Ck1rSz0qHgUtepJ0SxecUsN2
+         qiBnnl7lgdjUCzYvuD5MXxgo+lwYQdiyBaHWIIjrUuXRS+a+AxXZ2nBydbwE5pUePZxG
+         iSULxMeWtEtz3hVcZgfQuKQ9ZBzCq+VrHkGlz1eBPn9mByEivIIIJ7IADur+Q84/PVZe
+         hENwDsher/gfooMBP8vkcOCM2OiUF/bLLhJkWcexI3O0/b1e/J5PrNx+umvHbz1BdaWM
+         SjBlKoONlGTjjFhCv+3w5Y730K67kHROnrjNMA7fvMAVfHFhGhCTAow+P2hYfhvsKYXc
+         vo9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX2d0pBrM+u5ZJGKy1/cbTBspmE8j9zuHSS0QRmGIJC6vxiGel/S3mpTBa2oW9Uh9YAz+OqcBeQwEA1URk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFYhHMUYfJlYAcCDvocnXb8unG6/4Rgw9k6wYeNUozKNsdVwXg
+	NgxghdZSvRihINYwu2IlJsxXPdNKV9VNNeE9p/YAlhMA1qOlHavJb7PNglsOoUTevLo=
+X-Gm-Gg: ASbGncuHSLnKLg+q597venzDZ0lkdm0BKC4BwlhPVs4g488q77Yp0PoypUByQrA23e7
+	IIw/ETf95NOfZfgE5CcmvB6SEfEDPthprCbFNU0Tm8AgUm2bsbQkasbyQyuRhCpJBgTBDnbCsH5
+	IGy5an/R052IeVMMLEh8/Ye4SfRNQfkxr0XAxjFL2WlzFQc0L1Vj4+lrL4AIirFIuc8f6RJqIyB
+	hke1PIx0SIDU9YJW8Vbwa/6m2ntOgJVMk3NG6KsMngs6bZ3vghj1VIiTMKuU7XUSJRVsapaxBRH
+	4on9SkHRODiHeM76R5yfdviegcTCEuqDDgaLdz1w4oF7/7cvS5dNz/yH7RHUwqDOrEc=
+X-Google-Smtp-Source: AGHT+IELSI+nHvc6/8x9c+zD3eFzVE2pjiOsqeuYSJZ1xJs78DtrT3WanbqFwCoHNk3vMxHy8BC9hg==
+X-Received: by 2002:a05:6000:2013:b0:3a4:f7dc:8a62 with SMTP id ffacd0b85a97d-3a8f2f34f7cmr10696844f8f.0.1751280401373;
+        Mon, 30 Jun 2025 03:46:41 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453814ae64fsm106803355e9.1.2025.06.30.03.46.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 03:46:41 -0700 (PDT)
+Message-ID: <f4616741-9763-4221-b385-74c6d332b092@linaro.org>
+Date: Mon, 30 Jun 2025 11:46:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,64 +66,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] Optimize mprotect() for large folios
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250628113435.46678-1-dev.jain@arm.com>
- <20250629160549.da922e78d202c510a1ec68f8@linux-foundation.org>
- <29f418be-31c4-47b0-bcac-3375f57d00e7@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <29f418be-31c4-47b0-bcac-3375f57d00e7@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
+To: Mark Brown <broonie@kernel.org>, Frank Li <Frank.li@nxp.com>
+Cc: Vladimir Oltean <olteanv@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
+ <20250627-james-nxp-spi-dma-v4-6-178dba20c120@linaro.org>
+ <aF73e/ggeycsYiaD@lizhi-Precision-Tower-5810>
+ <22d69113-fec0-4405-872d-af76bd038c09@sirena.org.uk>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <22d69113-fec0-4405-872d-af76bd038c09@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 30/06/2025 04:33, Dev Jain wrote:
+
+
+On 27/06/2025 10:41 pm, Mark Brown wrote:
+> On Fri, Jun 27, 2025 at 03:56:43PM -0400, Frank Li wrote:
+>> On Fri, Jun 27, 2025 at 11:21:42AM +0100, James Clark wrote:
 > 
-> On 30/06/25 4:35 am, Andrew Morton wrote:
->> On Sat, 28 Jun 2025 17:04:31 +0530 Dev Jain <dev.jain@arm.com> wrote:
->>
->>> This patchset optimizes the mprotect() system call for large folios
->>> by PTE-batching. No issues were observed with mm-selftests, build
->>> tested on x86_64.
->> um what.  Seems to claim that "selftests still compiles after I messed
->> with stuff", which isn't very impressive ;)  Please clarify?
+>>> In target mode, the host sending more data than can be consumed would be
+>>> a common problem for any message exceeding the FIFO or DMA buffer size.
+>>> Cancel the whole message as soon as this condition is hit as the message
+>>> will be corrupted.
 > 
-> Sorry I mean to say that the mm-selftests pass.
-
-I think you're saying you both compiled and ran the mm selftests for arm64. And
-additionally you compiled for x86_64? (Just trying to help clarify).
-
-
+>>> Only do this for target mode in a DMA transfer, it's not likely these
+>>> flags will be set in host mode
 > 
+>> "not likely", I think SPI controller should stop CLK if FIFO empty and full.
+>> It should be "never" happen.
+> 
+>> Only check FIFO error flags at target mode because it never happen at host mode.
+> 
+>> You can remove below whole paragram.
+> 
+> I agree it *should* never happen in host mode but it can be good
+> practice to look in case something gets messed up.  That said extra
+> device accesses in the hot path are probably going to be noticable so
+> likely not worth it, but in the dspi_poll() case:
+> 
+
+Yeah the point was to be defensive. Even though it shouldn't happen I 
+don't see an issue with checking error flags.
+
+We could add a condition to only do it in target mode, but it doesn't 
+make the code more readable, and it wouldn't be any faster than just 
+checking the flags. So I'm not sure what problem we're trying to solve 
+by removing it.
+
+>> @@ -1067,6 +1080,9 @@ static void dspi_poll(struct fsl_dspi *dspi)
+>>                          regmap_read(dspi->regmap, SPI_SR, &spi_sr);
+>>                          regmap_write(dspi->regmap, SPI_SR, spi_sr);
 >>
->>> We use the following test cases to measure performance, mprotect()'ing
->>> the mapped memory to read-only then read-write 40 times:
->>>
->>> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
->>> pte-mapping those THPs
->>> Test case 2: Mapping 1G of memory with 64K mTHPs
->>> Test case 3: Mapping 1G of memory with 4K pages
->>>
->>> Average execution time on arm64, Apple M3:
->>> Before the patchset:
->>> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
->>>
->>> After the patchset:
->>> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.3 seconds
->> Well that's tasty.
->>
->>> Observing T1/T2 and T3 before the patchset, we also remove the regression
->>> introduced by ptep_get() on a contpte block. And, for large folios we get
->>> an almost 74% performance improvement, albeit the trade-off being a slight
->>> degradation in the small folio case.
->>>
+>> +                       dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
+>> +                       if (dspi->cur_msg->status)
+>> +                               return;
+> 
+> we're reading the register anyway so the overhead is much lower.
+
+In both poll and interrupt mode we're already reading it. Only DMA mode 
+didn't have a read and I didn't add a check for error flags there anyway.
 
