@@ -1,85 +1,112 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F4228B7D7;
-	Mon, 30 Jun 2025 13:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3728B7C7
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289089; cv=none; b=PnGAISDBlarEtlx5/PYj+CKyiOylquFu6c+Bq51UaMsPlwefYJW9EW+A64r3t0IerjE6TrSEwLr8zgaOsdWUO/Jmkt/KitNRKHFblfZ0R9kksTs7iMQHO+NoNliEc0lf0AcIKyiJM2dbi93PLBUCO0h7E/OrsOudS/GugYoH/iA=
+	t=1751289130; cv=none; b=B2TyGk96pxq70TQJP1Zroe6tGLawlS32SbwqdDH9iN7yl96WpbM11WiILwUZNyOfuSj5s6nPMhTua/3yijHZlsTKOpfj8ijYLncNguIR62T4r1sMJ1Zwc4svhdGXXXk3Yfcvg1oZk+9qocH7D9qTq2TPvRWBQN+MI6XLzEp7zNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289089; c=relaxed/simple;
-	bh=vqa0KiwTFMzuHZ6USf9y0bqTn9C9j3I5YF/Sjk/rxHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QAKfX17m5gCwJZDY3RnV/vE9gVNNPv2Xf22T5D12K8ubpv0+pUX4zZ+p+h+w4pwqT/nY4dypXAEwPerRDgPeYPE5NKppV7npbdRkKwZw3kpV27ZylqsjuPOri/KGAV0v79xq3A15nWyx1ELpB6qhFc2GXeuJC5XI3Dfnvepjw6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mQa/LtBc; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751289130; c=relaxed/simple;
+	bh=kICfyUf7g+VjQXZDoFlxctXqW06H9TiroVcWuKRBfPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RbdTiWUG1XWDiClcJ+5s8S64eQQusL+EOkeXG27ZVx/OcOb1Briwfh8MQ33UF00nHXb4+iJ3NBOVSZr20ARqvzDuSBhznr5MnWzAPT5kWku6wy0Hhm3zZmCaGWemKdlXcPJ5LkLGOQTyEI6x3nDTfGVA8ZxtWBIQbZb+LQ2TQGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXBEnYBd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mQa/LtBc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 92B3D44329;
-	Mon, 30 Jun 2025 13:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751289085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vqa0KiwTFMzuHZ6USf9y0bqTn9C9j3I5YF/Sjk/rxHQ=;
-	b=mQa/LtBczRN2GdSEyB5C/bZSaYvHqw6rDo48SDXrMe4IJAm+XwtnDZRtPW1BJ1XOlp3piW
-	reGcVLuCOaF1qHEflPDjM10EM8fA1uxkFEX/K4W8URS7ldMvOa7ggDdqX6iYPj3IswHB6W
-	qgnH+dn+y5LyKauVeRbyPaXiW0IhSMsNraCnYM1W2wNi8wffI2N4G25QhOXPj+4/MRlw3h
-	Hl4wKanJp8v0LkJlGxk+uDDdsBZgV4GA2ptM16gFbycB/0iM5JsnOitAsKYQRSQBjK8JOe
-	n2EtaBEyQpH6Fu1Jk5sgJCrzlNItJ1eQ95ecKMazCh3CAfCFYBPcDNAYA70gew==
-Date: Mon, 30 Jun 2025 15:11:22 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Kamil =?UTF-8?B?SG9yw6Fr?= - 2N <kamilh@axis.com>
-Cc: <florian.fainelli@broadcom.com>,
- <bcm-kernel-feedback-list@broadcom.com>, <andrew@lunn.ch>,
- <hkallweit1@gmail.com>, <linux@armlinux.org.uk>, <davem@davemloft.net>,
- <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
- <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <f.fainelli@gmail.com>, <robh@kernel.org>, <andrew+netdev@lunn.ch>
-Subject: Re: [PATCH net v3 1/4] net: phy: MII-Lite PHY interface mode
-Message-ID: <20250630151122.4bbe2725@fedora.home>
-In-Reply-To: <20250630113033.978455-2-kamilh@axis.com>
-References: <20250630113033.978455-1-kamilh@axis.com>
-	<20250630113033.978455-2-kamilh@axis.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXBEnYBd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF77C4CEF0
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751289130;
+	bh=kICfyUf7g+VjQXZDoFlxctXqW06H9TiroVcWuKRBfPg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UXBEnYBdTZXKq7U08kKvtCiA5A54jIkw2Q9K8AAurwP8AtLYSnNvbxNt9gfxb1ZB0
+	 G7u5CrJOF1Ap9GBkJ8C+OFJ5iDq5aoXMd1SYYFsBfWPtR9WEWGOlGxYs5tJzH0fs0e
+	 6Zyi1kY7+LQjmgeE275r403bQXQtCu34JMFMUQGVbOHjS4ngw30acWeiv8WbO8jmdr
+	 zq/i5BjsFcR8DRW1RvP/q6BdeuqvFrEyDxlIgQIiFcJCGhHrkt4D5zEBVSiOZU7RDy
+	 kK+eEGqSdwpnd/9F1jJaJeS6yMD6p2oEvJDcTJOrGgLa314lJctVPuk4vNkBV3L9+D
+	 eISw1auLwyAxw==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5561c20e2d5so457220e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:12:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWXYFgathLcz2/CHYDeY2s00WDaO9kfd+2MGieeKwT2+pVG8E0qZHULu1DtI4Liq283F1MX2mxWDnvH+DM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkMyWmNwGgWq8QYGkpu3SB7h7HzlDIgEHf8FzoKrR8PimXTRgz
+	4UgRNJt337JUsoUcqDGh2/EqiWb+8QS9VCdLoWIM3oNAvn8Tosm5Z+74zcumWTl/+IuTM9IoklB
+	gaYGorKRV9Q0uc30x8V8lRL9TcYEbjNc=
+X-Google-Smtp-Source: AGHT+IGEVjATyQBWpC6GwiYUUrqRupGRjaXWr7DTk83gMsPal8sZisQ1vmQiz9ik8hYYNN/rbU475sLfMmLuJm/vqjs=
+X-Received: by 2002:a05:6512:350b:b0:553:202e:a405 with SMTP id
+ 2adb3069b0e04-5550b74c278mr3970295e87.0.1751289129369; Mon, 30 Jun 2025
+ 06:12:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250513160056.7576-1-wen.yang@linux.dev> <20250515-magpie-of-ideal-pluck-c6e323@bergen>
+ <3b09f8b7-579b-441b-8c0e-2dbab7ac1740@linux.dev>
+In-Reply-To: <3b09f8b7-579b-441b-8c0e-2dbab7ac1740@linux.dev>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 30 Jun 2025 22:11:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARzAW8xQ_AV_a3J0fKDcvSCTDc7noeTXHrxuRZNJq88cA@mail.gmail.com>
+X-Gm-Features: Ac12FXwUS6QAP3gSQmETWwEYdo--AzT7mGGAuXSlD4xV3FbrxLGDOj1TLILKiH0
+Message-ID: <CAK7LNARzAW8xQ_AV_a3J0fKDcvSCTDc7noeTXHrxuRZNJq88cA@mail.gmail.com>
+Subject: Re: [PATCH] scripts: headers_install: fix a false positive
+To: Wen Yang <wen.yang@linux.dev>
+Cc: Nicolas Schier <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudejlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehkrghmihhlhhesrgigihhsrdgtohhmpdhrtghpthhtohepfhhlohhrihgrnhdrfhgrihhnvghllhhisegsrhhorggutghomhdrtghomhdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggus
- ggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomh
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Kamil,
+On Sat, May 17, 2025 at 12:45=E2=80=AFAM Wen Yang <wen.yang@linux.dev> wrot=
+e:
+>
+>
+>
+> On 5/15/25 19:32, Nicolas Schier wrote:
+> > On Wed, May 14, 2025 at 12:00:56AM +0800, Wen Yang wrote:
+> >> The current implementation only handles C89 style comments (/*... */) =
+in
+> >> the code, and there are false positives for C99 style comments (//...)=
+.
+> >>
+> >> This patch fixes this issue.
+> >>
+> >> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> >> ---
+> >>   scripts/headers_install.sh | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+> >> index 6bbccb43f7e7..41722bcc8668 100755
+> >> --- a/scripts/headers_install.sh
+> >> +++ b/scripts/headers_install.sh
+> >> @@ -44,6 +44,7 @@ scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ =
+$TMPFILE > $OUTFILE
+> >>   # Remove /* ... */ style comments, and find CONFIG_ references in co=
+de
+> >>   configs=3D$(sed -e '
+> >>   :comment
+> >> +    s://.*::
+> >>      s:/\*[^*][^*]*:/*:
+> >>      s:/\*\*\**\([^/]\):/*\1:
+> >>      t comment
+> >> --
+> >> 2.25.1
+> >
+> > thanks.  The patch looks good to me, but I cannot find any false
+> > positives.  Have you found any concrete?
+> >
+>
+> Thanks. We have enhanced dmabuf on our SoC platform and modified the
+> include/uapi/linux/dma-buf.h file, and then found this issue.
 
-On Mon, 30 Jun 2025 13:30:30 +0200
-Kamil Hor=C3=A1k - 2N <kamilh@axis.com> wrote:
+The SPDX License Identifier in UAPI headers use
+/* ... */, and never C++ style comments.
 
-> Some Broadcom PHYs are capable to operate in simplified MII mode,
-> without TXER, RXER, CRS and COL signals as defined for the MII.
-> The MII-Lite mode can be used on most Ethernet controllers with full
-> MII interface by just leaving the input signals (RXER, CRS, COL)
-> inactive. The absence of COL signal makes half-duplex link modes
-> impossible but does not interfere with BroadR-Reach link modes on
-> Broadcom PHYs, because they are all full-duplex only.
->=20
-> Add MII-Lite interface mode, especially for Broadcom two-wire PHYs.
->=20
-> Signed-off-by: Kamil Hor=C3=A1k - 2N <kamilh@axis.com>
+In my understanding, the idea behind this is
+UAPI headers follow more strict C.
 
-I'm OK with that :)
 
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-
-Maxime
+--=20
+Best Regards
+Masahiro Yamada
