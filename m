@@ -1,109 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4864624501B;
-	Mon, 30 Jun 2025 13:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6909724501B;
+	Mon, 30 Jun 2025 13:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291574; cv=none; b=QHKq/c6ZtN4lBYmrmG1ESIKA19ZppZ+csptqyXPHf6Oqa/tB51v+2ZZj2OsFg8RyiS/dTpERChmnzazDB7Mz99rI8laLFApW6WlDx1nBdILpdQ4qP/eGaC1WD6Qp9xQS19esUsSv7BZXqYHm8RxU5mAZidyA76VPK+GsTBsXBbs=
+	t=1751291658; cv=none; b=OGbQtxWAFFT+yqsbXkY5+s6Jk99ubBKG528UnqQT7rE5BC3eHhtajBdqIZFjckl6QKVvQqi7brIM++0mZYmoYr9h+0P+wiCGbDNBQxLfOfgrn1Rthy3A4cyT/S6bYug65GYF7nGgBe+DoteUhiSaC8rYwghjmPgntdghgPQzPRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291574; c=relaxed/simple;
-	bh=BLeTzHiVYrcH1QMezUXpiaCbYaNy9iuQfkkE2j1kvvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qca26Wo/1J2i9D23p2r4sW6bRtKFs+m0/JhEWuKGjJ4bEnhAGGx0FCWv/w359ooBLAcRWwunhPfI8j+y6H7Zuq5Heg/JjtZsK8T1uTSxzIPf4DaqeRqHnXT25NY6IeA1MkThKMEBBL0fXu/EklEBm3VdCyMvFqoZqlp078dpDJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUeRuwJP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751291658; c=relaxed/simple;
+	bh=dxI/ZkRM43EsL7xoK+Mw5w89VIq3Ip60hsYWHHvxh7Y=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=lAkCI8VQkUotyVGsldldhtSIatdOd7PFDRL8dzYvk2X6gCrtizw5NnukgixMemGkMW2wuz/2peDu7sRgtv4nKGnr7eCCdByGjud5FXNkil9JG0nBzlnd3XsHzP3wy+AkCr1obJ8OvVPQl3341br7wbQg2ojy4grpZit677OfXYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LBpBtzjt; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUeRuwJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDA7C4CEE3;
-	Mon, 30 Jun 2025 13:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751291573;
-	bh=BLeTzHiVYrcH1QMezUXpiaCbYaNy9iuQfkkE2j1kvvE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QUeRuwJP7seoHvP5pT7ExodC3YkDQfgxpX9UsCECDZSrA854UnDVVmpbr4ADiskqH
-	 pJzriguNTvsMpj2ZApq6LhIwD+o+nL8kH1OXkUyJo8CIxlYuTVqnIRwYzVrFw9vbE5
-	 aMoQIUaCucRlHugGoeOeO+aUkIpRhV5i6/OiJZuEC3I7UlkZio76ZWeVyhQV0x2hvH
-	 /bm4yfVoRnb5ztKlrAAmOulG0YKHLXuzUktq3MpzEtv49eX6ct4ppQOctB7T5IrA6/
-	 4HN/5ksr3XzgIP4JahmoVoYZRj07aC4WuEH+WicgD7CXm9cUiDh7Ob/mAKClpSHohd
-	 a5Ms7kwslVxOA==
-Received: by wens.tw (Postfix, from userid 1000)
-	id BCF125FE2C; Mon, 30 Jun 2025 21:52:50 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	linux-sunxi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andre Przywara <andre.przywara@arm.com>,
-	Chris Morgan <macroalpha82@gmail.com>,
-	Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH] mfd: axp20x: Skip PEK on AXP313A/AXP323 if no interrupt line is available
-Date: Mon, 30 Jun 2025 21:52:49 +0800
-Message-Id: <20250630135249.3961621-1-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBpBtzjt"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5561ab55c4dso709556e87.2;
+        Mon, 30 Jun 2025 06:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751291655; x=1751896455; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SfxKlKhqqc3sn6oQJ91bWsKwO4RMrtLJYTGaBDYAwXs=;
+        b=LBpBtzjtwWQLQAoL4dJ0fcn4z2cCl5FEuI94bDxP++UsKbrTaXHjlFMbi7D4/3qV3P
+         2XklGQgBMfdczWAqKY9FwUaFKwcwLsBvp/vtTpzpLiUCfFeCf6Vv1enYgp6TtLbHHOl8
+         VV8CEsZ8fIj1M/aDPq7KsYvGrhpVeYxJmLojUXesgD6hogpvRzRt9Bb9v9SBxiN9acPW
+         ly3Nw2ZKbNkXVKSE2kcDPFj6pd99H5X4dXWk/zD+smIxEf8S7UoctUIKIgN4m/AO7iKb
+         2YnT2gv37eD3phwReh1eU2YoGGHA2Msluj1VinEoIG6YopvAtDUKvoFHPosaS9J/IsGs
+         vo2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751291655; x=1751896455;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SfxKlKhqqc3sn6oQJ91bWsKwO4RMrtLJYTGaBDYAwXs=;
+        b=fDtRm7zUspit7swImLwQYHa+S86+DpH5w1ukDF2196kahCELiNbYoZHzDPjyqeJVfG
+         U69RiYtJ9dciUapwut+uoNEePapdJBcETJP4TSGlLqvY1CA+WGttmVbAwTSzZTrTOZEj
+         BaBEXz5PMvsFRbZP8Z5rmHlBG7sqFpQCGd3yG4m1CK3jdl43RySv7K8v5BYm2P6bvLZm
+         Td4Ea67Us8jQ9AYMYp3pcRmCU6BXY7c5eZHi90OiwtOjkQfAsIPNoy1W8K08DLUhM4L8
+         jnGG0Jr0hwv1FogjN8Av3aKyGcUEsM21QfGo8Ccl7DNW58lEIhH3wI8Feg8n+5crpfty
+         lBrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeXVs12rZm+1Fl5MBP8QmR9ZrhsYoNr/GVYCy1f3wi/StftIpo5zERzFn7HEkF3bs0JQElWRMjfW/c@vger.kernel.org, AJvYcCWjksT5M2b1lJsll4FRLRWARLavHLVFkFwzB5+OqF6JJX5XXK9T2rsz2hBhH39mE4+/32SOO6AzJZLjC5DB@vger.kernel.org, AJvYcCXRz6EqWQ4X1PGyMSuMLowt2p0ltvDGeWvltrzOP/aO10u+gl9grF22vDaszc4IXpMr2Zu3jJQvYQblxA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbMfUWRP8pdiSJgi3GR3f5Vgby2Ajmb1l+yJZ8ZCZk8AbeoRRP
+	KDFVaVxR0gC97OVCpX3elPSnd0w7YcipnaktU9EuE0kYX+DGNPDCDW0TEmmzVLO+
+X-Gm-Gg: ASbGncv4sz/gANiKOW9M1eGx5aq81AmSfcGIWn1qqbC2EDn/vo2NP0cGF+8KPhhMeL4
+	BS7tY1ETv50ZffJZGtf8UgDV3/tlJWzKBnt+tpe2Uf9a+TewH2OQVLco8fW+d+mh0QZm2TRYpgX
+	qz5/tetnkmDEmRrYZ9+WDU1wIOwDtJPhketemUQnKmWNpUiy2odJycR2ifnQnwx/wET4A7mRFai
+	Ar82ShgC9/kG6hVqsk0tDw8jxSN2AwRZ2653BJvaRy3Z1L0XA09OvCvf1sLFb0z9Ek7IUurGCSj
+	e1iKH7AaDTWP5L2XstkuAx5S26GJjF4APya6Z6dMu919E5vXzdwvg8EZVo6scLWWp66QeaI7XUz
+	O3xy1ek+ezI8=
+X-Google-Smtp-Source: AGHT+IEFfbreu10LLCTj7YTb4EDfAbv0b02bWlYyqbRfnaepG6UskV4t7Qf+MfrhQMwTBc9VIQUpEA==
+X-Received: by 2002:ac2:4e0a:0:b0:553:30fc:cee4 with SMTP id 2adb3069b0e04-5550b9e8f15mr3752361e87.49.1751291654151;
+        Mon, 30 Jun 2025 06:54:14 -0700 (PDT)
+Received: from smtpclient.apple ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2cdf62sm1440212e87.163.2025.06.30.06.54.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Jun 2025 06:54:13 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core
+ Electronics
+From: Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <779ee1b0-d624-4189-8452-6e27dfcf2684@kernel.org>
+Date: Mon, 30 Jun 2025 17:53:59 +0400
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ =?utf-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <64C9BD77-1AFB-4B7B-BBD1-CE06F0F4642A@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-7-jefflessard3@gmail.com>
+ <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
+ <779ee1b0-d624-4189-8452-6e27dfcf2684@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-From: Chen-Yu Tsai <wens@csie.org>
+> On 30 Jun 2025, at 4:24=E2=80=AFpm, Krzysztof Kozlowski =
+<krzk@kernel.org> wrote:
+>=20
+> On 30/06/2025 10:19, Geert Uytterhoeven wrote:
+>> Hi Jean-Fran=C3=A7ois,
+>>=20
+>> On Sun, 29 Jun 2025 at 15:00, Jean-Fran=C3=A7ois Lessard
+>> <jefflessard3@gmail.com> wrote:
+>>> Assign vendor prefix "icore", based on their domain name.
+>>>=20
+>>> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
+>>=20
+>> Thanks for your patch!
+>>=20
+>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>>> @@ -694,6 +694,8 @@ patternProperties:
+>>>     description: International Business Machines (IBM)
+>>>   "^ibm,.*":
+>>>     description: International Business Machines (IBM)
+>>> +  "^icore,.*":
+>>> +    description: Wuxi i-Core Electronics Co., Ltd.
+>>=20
+>> This sounds a bit too generic to me.  What is the domain name?
+>=20
+> Good point. icore.com should be but obviously it points somewhere =
+else,
+> so this does not follow ticker / domain name style.
 
-Originally an explicit ID for the AXP313/AXP323 regulator was set to
-avoid a conflict with the primary AXP717 PMIC on Allwinner A523 family
-boards.
+As per the response to Geert earlier, the domain is i-core.cn (not .com)
 
-This didn't entirely work since on some or all of these boards, the
-interrupt line on this secondary PMIC was left unconnected, and thus
-the driver would fall back to the generic "no interrupt; only regulators"
-case, which didn't have the explicit ID set, thus undoing the intended
-fix.
+See: http://www.i-core.cn/en/
 
-Explicitly exclude the PEK cell in the no IRQ case for the
-AXP313/AXP323, instead of using the generic fallback.
-
-Fixes: 249abf9b1e25 ("mfd: axp20x: Set explicit ID for AXP313 regulator")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-The other option would be to move the explicit ID to the generic
-fallback case instead. This is really only visible in sysfs and the
-kernel logs, so probably not that important.
----
- drivers/mfd/axp20x.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 25c639b348cd..8877482a95a1 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -1055,6 +1055,7 @@ static const struct mfd_cell axp152_cells[] = {
- static struct mfd_cell axp313a_cells[] = {
- 	/* AXP323 is sometimes paired with AXP717 as sub-PMIC */
- 	MFD_CELL_BASIC("axp20x-regulator", NULL, NULL, 0, 1),
-+	/* Keep PEK as last entry for exclusion in no-irq cases */
- 	MFD_CELL_RES("axp313a-pek", axp313a_pek_resources),
- };
- 
-@@ -1306,12 +1307,18 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
- 		axp20x->irq_flags = IRQF_TRIGGER_LOW;
- 		break;
- 	case AXP313A_ID:
-+		/* Exclude PEK if no IRQ is available */
-+		nr_cells_no_irq = ARRAY_SIZE(axp313a_cells) - 1;
-+		cells_no_irq = axp313a_cells;
- 		axp20x->nr_cells = ARRAY_SIZE(axp313a_cells);
- 		axp20x->cells = axp313a_cells;
- 		axp20x->regmap_cfg = &axp313a_regmap_config;
- 		axp20x->regmap_irq_chip = &axp313a_regmap_irq_chip;
- 		break;
- 	case AXP323_ID:
-+		/* Exclude PEK if no IRQ is available */
-+		nr_cells_no_irq = ARRAY_SIZE(axp313a_cells) - 1;
-+		cells_no_irq = axp313a_cells;
- 		axp20x->nr_cells = ARRAY_SIZE(axp313a_cells);
- 		axp20x->cells = axp313a_cells;
- 		axp20x->regmap_cfg = &axp323_regmap_config;
--- 
-2.39.5
-
+CH.=
