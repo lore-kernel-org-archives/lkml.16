@@ -1,131 +1,161 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA10528BA85;
-	Mon, 30 Jun 2025 14:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751292175; cv=pass; b=WOTcKb8GL2I0Gm7EFh6SfT2nRr6gHuHmZdgeasrOnYxwtF1nCPRxICNF28eE/5PT6lGEcrlPIvAMhc8EcPR6BupalcWjsYVMIYV0yDT7ZfN2UwcGJcI9fVSNNMHye93mw8vowiURicNoSmgLNOirvTlVnCls46K6PH7JRP4Qqgg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751292175; c=relaxed/simple;
-	bh=hs77ckMRFA12uk/J7QzlOb3L4+rw3p6OOdGUfcOw5vY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=lJzk85fXEbNNcv5wpI+KWfsAxzFt0YZcKAzs4xYH0ekFI6CHCd+1FyHroD1Px5muEm8ThUR7kMQO71kqgHquk8m79Kn3VYNDvx1Lkzi0uQ//fwSQJwXJCJ4D0Vej9pUXYPhcyGLlTX7mKesr6IqtDoBvbLsI56FysBX+pos84kM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Ypadki5X; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC7927F001;
+	Mon, 30 Jun 2025 14:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751292286; cv=none; b=m51fWBqrGRcxV4+hd8NkaMA9O6AZs8THTKVPP14xMZtukQ+hFmyOYhvv2SbuS3aMS+AnfM2ARRVAR4aJ/6o53eqxhW4qJTgEg96kVSFSUn3A7dFxrfZAsCKKuBE2qs7Hi984c5mma4xHAiqZ/HTnbXNUVkjRkN+nBA7CjkMOyd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751292286; c=relaxed/simple;
+	bh=lJo4k2xVeiDebpwc+lYdH4ZwZHtPsq3pOUWr892pgog=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uo8TCJ2ekZPVmry29oVjzlCysqC76BJXN9z6BzULQ7pTzBP4a996J8G0Fq6RsSh+zdOBRchQvBPWi0lxDQwHPpvuATwBT2+Uns+0JTgWtZp0Yiuyx7MD7SLH1ernNFycg4jT8lhqeGTZabAuLxrkbqV4oEfzDIYIfx/v/CAZ1yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y5fPjOco; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Ypadki5X"
-ARC-Seal: i=1; a=rsa-sha256; t=1751292132; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hForjdBUnS7VFOskc8XTGF4ZuD49bqkWIkoHNtO31t++xH37GrpYQZ0Os/VH+53AQvFHkJRKjX1iPe9OAvXW+UdvK/1fIGmjSb/E4hNWZUEmOp56e7u6CvM1cHxYzZyiaRPf7i4MwQNuAzqanmoaFujaQN3VAibBvBqH5c17wXk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751292132; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hs77ckMRFA12uk/J7QzlOb3L4+rw3p6OOdGUfcOw5vY=; 
-	b=O5nOi0VT3fesTXzwzlvCgNDRD46jUYOBu1HYj4ZDYcJ4Q6tq2EgucsBJxHzGvQnh+NkkPAQ/ByOPnAX0F4uH85uSkN5j9QN//wmcqZRSs5neqVv5UGNIKiabx/6X8d9YRimHUMOrbFZDF+7kJSbfpchfDjUDjPklIfAceRx8w3E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751292132;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=hs77ckMRFA12uk/J7QzlOb3L4+rw3p6OOdGUfcOw5vY=;
-	b=Ypadki5X0lEDmOWiz687xIyTAGF87BWUW92Z8ZmBKuiUPB4G2zqgWP0RQpAwsItz
-	bTpM9NNqjhYv5lMzmu8BvBcw6tE9YgqCb+ng++wBIXB+Di/jGPsdKf2LWE1qikS5Kmp
-	M6HV4+U0PlTYVuwvCWbHQjP0du+qAerJSiJheWaM=
-Received: by mx.zohomail.com with SMTPS id 1751292130667973.1662508363917;
-	Mon, 30 Jun 2025 07:02:10 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y5fPjOco"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751292282;
+	bh=lJo4k2xVeiDebpwc+lYdH4ZwZHtPsq3pOUWr892pgog=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Y5fPjOcofU4G1ItuixmiIZQ7ZR3mTg9aTWlF2wqf9c25xRK4agkwggxNZ+s3uqH2Q
+	 Ee+0qRSB1BSSP1dH/gZWfNEzDfc35PKIN5UnBJCIlCvHR0VsPKOXrMbAT9J2g5auXL
+	 K+PRPbF9CzNQ03ZgDfmPHsleV6/tZlT8Xy1LCWG4Y/hcQqBGV9bUXsf8Rt0wLRspMN
+	 r+aEJi37BW8SNko2suUgtG6jliHSzqFMqnfdfsEzHXEjbT+EhVrLhIUMKduQoH81oe
+	 eenEeyGGs3R99mZXgL7cwGDOarDA1OVad4yKD+eL83vt2WkIzKY+J3d/PpSOgiLEpc
+	 JzaTTg3OhiA5Q==
+Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laeyraud)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AA1B417E07F2;
+	Mon, 30 Jun 2025 16:04:41 +0200 (CEST)
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Date: Mon, 30 Jun 2025 16:03:44 +0200
+Subject: [PATCH] Input: mtk-pmic-keys: Fix null pointer dereference when no
+ compatible data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH] Introduce Tyr
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CAL_JsqJktA2F4y8YFfZ5FzrwrJbtxkbiqts1LWT2KvXLSSDLjg@mail.gmail.com>
-Date: Mon, 30 Jun 2025 11:01:52 -0300
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Daniel Stone <daniels@collabora.com>,
- Alice Ryhl <alice.ryhl@google.com>,
- Beata Michalska <beata.michalska@arm.com>,
- Carsten Haitzler <carsten.haitzler@foss.arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Ashley Smith <ashley.smith@collabora.com>,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org,
- kernel@collabora.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3D83A328-9F34-420C-966F-94DFB26C8451@collabora.com>
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
- <aF8lYpK_l2I-ts1k@pollux>
- <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com>
- <CANiq72mgt4ZD43Tm2bFr-gpicXMhFbC2DLqA6F0rN_J4rAe_CQ@mail.gmail.com>
- <CAL_JsqJktA2F4y8YFfZ5FzrwrJbtxkbiqts1LWT2KvXLSSDLjg@mail.gmail.com>
-To: Rob Herring <robh@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-mtk-pmic-keys-fix-crash-v1-1-e47351fa9d1f@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAD+ZYmgC/zWNwQrCMBBEfyXs2YUYjUh/RXpI48YuJWnNRqmU/
+ ntDi8c3w8xbQCgzCTRqgUxfFh5ThfNJge9dehHyszIYbay+XTTGMuAU2eNAP8HAM/rspMer6ax
+ 1wdw1BajrKVMt9+dHe3Cm96cKyhFC54TQjzFyaVSiueBfAu26bnCUhzmaAAAA
+X-Change-ID: 20250630-mtk-pmic-keys-fix-crash-42b55af280ef
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, linux-input@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751292281; l=3806;
+ i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
+ bh=lJo4k2xVeiDebpwc+lYdH4ZwZHtPsq3pOUWr892pgog=;
+ b=4hOq21N8D5aFlEKW2DcSULezu6veN9g5798DGmTfklmb5u7sWpNRKE7KpYYGunYkHmoo6aZQW
+ qz9saAYUu5mCtAHnUIH7z8d/6nfLeardHGP1xhvfpOSAjUxiCQIHQbz
+X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
+ pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-Hi Rob,
+In mtk_pmic_keys_probe function, the of_match_device function is
+called to retrieve the compatible platform device info but its return
+data pointer is not checked. It can lead to a null pointer deference
+later when accessing the data field, if of_match_device returned a null
+pointer. So, add a pointer check after calling of_match_device function
+and return an EINVAL error in null case.
 
-> On 30 Jun 2025, at 10:52, Rob Herring <robh@kernel.org> wrote:
->=20
-> On Sat, Jun 28, 2025 at 4:31=E2=80=AFAM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
->>=20
->> On Sat, Jun 28, 2025 at 2:13=E2=80=AFAM Daniel Almeida
->> <daniel.almeida@collabora.com> wrote:
->>>=20
->>> Also, for some reason the Clippy lint did not save me this time.
->>=20
->> Hmm... it should -- I tried to build it and Clippy reports it. There
->> is also another warning too [1].
->>=20
->> I see the compiler reporting [2] too.
->>=20
->> By the way, do you need to depend on `CONFIG_REGULATOR`?
->=20
-> No. Drivers rely on empty stubs for all the providers they need. It
-> would be pretty unmaintainable to depend on all of them. You want
-> enabling drivers for compile testing as easy as possible.
->=20
-> Rob
+Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+---
+This patch fixes a NULL pointer dereference that occurs during the
+mtk_pmic_keys driver probe and observed at least on Mediatek Genio
+1200-EVK board with a kernel based on linux-next (tag: 20250630),
+when it is configured to have mtk_pmic_keys driver as builtin
+(CONFIG_KEYBOARD_MTK_PMIC=y):
+```
+Unable to handle kernel NULL pointer dereference at virtual address
+  00000000000000c0
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[00000000000000c0] user address but active_mm is swapper
+Internal error: Oops: 0000000096000004 [#1]  SMP
+Modules linked in:
+CPU: 4 UID: 0 PID: 1 Comm: swapper/0 Not tainted 
+  6.16.0-rc4-next-20250630-00001-gea99c662a089 #145 PREEMPT 
+Hardware name: MediaTek Genio 1200 EVK-P1V2-EMMC (DT)
+pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : mtk_pmic_keys_probe+0x94/0x500
+lr : mtk_pmic_keys_probe+0x78/0x500
+sp : ffff80008275bb30
+x29: ffff80008275bb70 x28: ffff80008202bbb0 x27: ffff800081df00b0
+x26: ffff800081ef9060 x25: ffff0000c6fcf400 x24: 0000000000000000
+x23: 0000000000000000 x22: ffff0000c6fcf410 x21: ffff0000c09f8480
+x20: ffff0000c09f4b80 x19: 0000000000000000 x18: 00000000ffffffff
+x17: ffff8000824cb228 x16: 00000000d7fcbc9e x15: ffff0000c0a2b274
+x14: ffff80008275bad0 x13: ffff0000c0a2ba1c x12: 786d692d696d6373
+x11: 0000000000000040 x10: 0000000000000001 x9 : 0000000000000000
+x8 : ffff0000c09f8500 x7 : 0000000000000000 x6 : 000000000000003f
+x5 : 0000000000000040 x4 : ffff0000c6fcf410 x3 : ffff0000c6fcf6c0
+x2 : ffff0000c09f8400 x1 : ffff0000c36da000 x0 : ffff0000c6fcf410
+Call trace:
+ mtk_pmic_keys_probe+0x94/0x500 (P)
+ platform_probe+0x68/0xdc
+ really_probe+0xbc/0x2c0
+ __driver_probe_device+0x78/0x120
+ driver_probe_device+0x3c/0x154
+ __driver_attach+0x90/0x1a0
+ bus_for_each_dev+0x7c/0xdc
+ driver_attach+0x24/0x30
+ bus_add_driver+0xe4/0x208
+ driver_register+0x68/0x130
+ __platform_driver_register+0x24/0x30
+ pmic_keys_pdrv_init+0x1c/0x28
+ do_one_initcall+0x60/0x1d4
+ kernel_init_freeable+0x24c/0x2b4
+ kernel_init+0x20/0x140
+ ret_from_fork+0x10/0x20
+Code: aa1603e0 f90006b6 f9400681 f9000aa1 (f9406261) 
+---[ end trace 0000000000000000 ]---
+```
+---
+ drivers/input/keyboard/mtk-pmic-keys.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/input/keyboard/mtk-pmic-keys.c b/drivers/input/keyboard/mtk-pmic-keys.c
+index 061d48350df661dd26832b307e1460ee8b8fd535..42fb93086db308ad87a276be4b53e9725a3a701b 100644
+--- a/drivers/input/keyboard/mtk-pmic-keys.c
++++ b/drivers/input/keyboard/mtk-pmic-keys.c
+@@ -316,6 +316,9 @@ static int mtk_pmic_keys_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id =
+ 		of_match_device(of_mtk_pmic_keys_match_tbl, &pdev->dev);
+ 
++	if (!of_id)
++		return -EINVAL;
++
+ 	keys = devm_kzalloc(&pdev->dev, sizeof(*keys), GFP_KERNEL);
+ 	if (!keys)
+ 		return -ENOMEM;
 
-Without CONFIG_REGULATOR, the regulator abstraction doesn't build, which =
-in
-turns makes Tyr not build. So Miguel has a point, at least until the
-abstraction itself is changed.
+---
+base-commit: c6a68d8f7b81a6ce8962885408cc2d0c1f8b9470
+change-id: 20250630-mtk-pmic-keys-fix-crash-42b55af280ef
 
-If that is not the right behavior, as you seem to be pointing out, could =
-you
-please comment on the patch[0] itself? I can then send a new version =
-addressing
-this.
-
-
-=E2=80=94 Daniel
-
-[0]: =
-https://lore.kernel.org/rust-for-linux/20250627-topics-tyr-regulator-v6-0-=
-1d015219b454@collabora.com/
+Best regards,
+-- 
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
