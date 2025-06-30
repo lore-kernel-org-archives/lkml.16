@@ -1,147 +1,73 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C7E4C6C;
-	Mon, 30 Jun 2025 03:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A464C6C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253667; cv=none; b=p9dJFPqAcGB+XpLVEs+IcsLRdeNAVBYZtCQIPpGEkHLgO0pyCy0hdqhv1QW109dDirD/08fNvyPYVVk+OBWMTZvwv6SKTqfGFLqWHLysSlOQAg8av1YY4DQeZfhoSKBLO5dDC8FGvGH19vnSkM8vH/JhjHXsrKEgt96dSv2hP2I=
+	t=1751253724; cv=none; b=BxJK5p+9WEkvBixx86clfaQ0wwG2zrIMyQljkBPGCFazYnrVHt+cYmws6YUb6ylFGW9Re+G2c3EiFJmIiTGPWyvHNCrJoIZczU67gQ+2vGVFPyKB5/LCzhiwkIR9kdlxZ0OhjKIBwgxFkT0OUgvobrruHy5mjKfY2NBAUVguvvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253667; c=relaxed/simple;
-	bh=V6mII1O5U1NOnOu3wx07q4tyfusravzO5rb8bdyvvMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F0INgaCeWsvDo0Sm9CmbKsZkwiWCNhlNG7pfQdjns27XTN1OPSXTLPvoablEDoNRykzyj45OdSCcF2UKk05fpp335r2LjhhID7LwUJiPzw/Y7Ndx3GVvQ46gbN5wpT1YjvPPh2lYRtjwT7jqnzTzH+w9onzXSwZ/6xzY8tQFNDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b2o8DoPl; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b2o8DoPl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=h9VCl1vFa5kMUPqcOo628ZE9FCQuczciRfdsxio9sAo=; b=b2o8DoPlKqE8hOlSOdBuZgM9jp
-	o+8kKUxzkzFnKwwNp0n3jzKgE0LJAA9EAZGaQwpsZmRegE83ADmCo3mXVu8D3BQ+7J5jj8jXCmEmv
-	agHlz+yo4XA+42Xu7lWmWRaXqyOejFFSGpguMOZrZ6hEeetU0ywbO2CfcSj0I8Fa9mkStX3nBEW+7
-	2LV2HCPFvNtn0rX+jr0jAb07mV0wpO0o/RJ2jHPRxJ8xZWFFbFhvEHs3rB+3dk4O1La2PKM/wCcWa
-	mBXsGM0ap+3dGwf6AdD67mfPNX96DP+imRdZ/q25u+0zmfYw6bwkC00WCMDPlUCec17BIAp0kaxlc
-	ZAyovQSA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW54l-00000006iZ0-1bvi;
-	Mon, 30 Jun 2025 03:21:03 +0000
-Message-ID: <524e8ee4-52cd-47aa-80ea-7d09ebca05ea@infradead.org>
-Date: Sun, 29 Jun 2025 20:20:57 -0700
+	s=arc-20240116; t=1751253724; c=relaxed/simple;
+	bh=uOWornTBWs9EqgNeYwRkEdGkZnM3Mpbh9ZeSQ6JqXoo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=oHDziPmH6lmk0xlhCZQEjCKronPw1Gkd8Lm+XYy94qHz0/hQTB7natbc1VPxNJ9bX7t80Sm8Qu0I8DUDatxTnXDg0MiAa5QyExew/QHq1yUVJMOJuU+NS/bmb6PNNIR4IFVeRXl4onXDXcYyBknydOH9GuhWQ65EXuF6e1LDKnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-87326a81ceaso420222739f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:22:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751253722; x=1751858522;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6dmo/Ho6Oqai/Lc1ieZWg3sVagbOK58/VG1TB3rW0V4=;
+        b=R6p7RCM2fnjRW8YFMqYwXMDL5SsC30DiPRcAB3YBy1PUR6GkEI3hGxbMhHi/h6DrGw
+         KOKb/1KaL4aUdD7tVFKb3Q1ZbSSJ7Iv16/0DI+turxBmQbDatLXX39WXn4BDA65H7im8
+         GZWN0uQe+3qyVkvA3B6t2iJsOygxvEW2vfSuaQ+6cSNeytLUHdyW8qQvfUmSiiFKH54m
+         nQfFDxUKbtQoYNKjpo1mGgAPNZ/tNUiNYZ8cJvs2oOG6f1yvS+huUR8pZEjZhexdePMY
+         xNbABMiHw4AjXY7WJGCTOTY3K3NmoubjQKkYYxfIMVGR78k2FaU0ac3+6nGNe7hfPnz7
+         2dMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOqJt/8N3piaP3+oN2G3oMvAfdVTcBbg0q4ki+iXhTRBpwOIZtgrJxZa6Agwa/fr8uMWBG8O61fUgSQVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRpuUAhE8+/v4s+18Dhhblofh2paJjcFUlooVaCzSQkSiNQtKm
+	7eGputAGIpyzIZzmITHHmnjHigHcJNUwKv+UM6l+s/wXe8W6847Vy1RWZnZk3AK+MOHvGf5Giv7
+	wkdz2UV0+OrDBWr9nxbcPhYfIaTIJ2yh/xmNYT9wriTdj1XlBYTbHOhOcQN8=
+X-Google-Smtp-Source: AGHT+IGrL7X3/EGYETKEO0sTcgpieyZGSNrjfqM4MB96FbEh2uMbQNVyTli4nk3iVgF9Yh1Bs0Ae9vaxGywPbwrg07eGjN6qczO6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 37/66] kconfig: gconf: use GtkFileChooser in
- on_save_as1_activate()
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-38-masahiroy@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-38-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1a82:b0:3dd:f1bb:c75a with SMTP id
+ e9e14a558f8ab-3df4b48d29amr116176685ab.8.1751253722338; Sun, 29 Jun 2025
+ 20:22:02 -0700 (PDT)
+Date: Sun, 29 Jun 2025 20:22:02 -0700
+In-Reply-To: <pxrxtntcuuqt5opsno55wx62yqafwhfqkqhylpbwwkqt4iabdv@2nmky356ufdo>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686202da.a70a0220.3b7e22.0b8d.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in bcsp_recv
+From: syzbot <syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com>
+To: ipravdin.official@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot tried to test the proposed patch but the build/boot failed:
+
+failed to apply patch:
+checking file drivers/bluetooth/hci_bcsp.c
+patch: **** unexpected end of file in patch
 
 
 
-On 6/24/25 8:05 AM, Masahiro Yamada wrote:
-> gtk_file_selection_new() is deprecated, and gtk_file_chooser_dialog_new()
-> should be used instead. [1]
-> 
-> [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/docs/reference/gtk/tmpl/gtkfilesel.sgml?ref_type=tags#L156
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Tested on:
 
+commit:         d0b3b7b2 Linux 6.16-rc4
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=efa83f9a6dd67d67
+dashboard link: https://syzkaller.appspot.com/bug?extid=4ed6852d4da4606c93da
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13eb2770580000
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-
-> ---
-> 
->  scripts/kconfig/gconf.c | 56 ++++++++++++++++++++---------------------
->  1 file changed, 27 insertions(+), 29 deletions(-)
-> 
-> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-> index f33f39d50f3d..b019711142c3 100644
-> --- a/scripts/kconfig/gconf.c
-> +++ b/scripts/kconfig/gconf.c
-> @@ -198,38 +198,36 @@ static void on_save_activate(GtkMenuItem *menuitem, gpointer user_data)
->  	conf_write_autoconf(0);
->  }
->  
-> -
-> -static void
-> -store_filename(GtkFileSelection * file_selector, gpointer user_data)
-> -{
-> -	const gchar *fn;
-> -
-> -	fn = gtk_file_selection_get_filename(GTK_FILE_SELECTION
-> -					     (user_data));
-> -
-> -	if (conf_write(fn))
-> -		text_insert_msg("Error", "Unable to save configuration !");
-> -
-> -	gtk_widget_destroy(GTK_WIDGET(user_data));
-> -}
-> -
->  static void on_save_as1_activate(GtkMenuItem *menuitem, gpointer user_data)
->  {
-> -	GtkWidget *fs;
-> +	GtkWidget *dialog;
-> +	GtkFileChooser *chooser;
-> +	gint res;
->  
-> -	fs = gtk_file_selection_new("Save file as...");
-> -	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(fs)->ok_button),
-> -			 "clicked",
-> -			 G_CALLBACK(store_filename), (gpointer) fs);
-> -	g_signal_connect_swapped(GTK_OBJECT
-> -				 (GTK_FILE_SELECTION(fs)->ok_button),
-> -				 "clicked", G_CALLBACK(gtk_widget_destroy),
-> -				 (gpointer) fs);
-> -	g_signal_connect_swapped(GTK_OBJECT
-> -				 (GTK_FILE_SELECTION(fs)->cancel_button),
-> -				 "clicked", G_CALLBACK(gtk_widget_destroy),
-> -				 (gpointer) fs);
-> -	gtk_widget_show(fs);
-> +	dialog = gtk_file_chooser_dialog_new("Save file as...",
-> +					     GTK_WINDOW(user_data),
-> +					     GTK_FILE_CHOOSER_ACTION_SAVE,
-> +					     "_Cancel", GTK_RESPONSE_CANCEL,
-> +					     "_Save", GTK_RESPONSE_ACCEPT,
-> +					     NULL);
-> +
-> +	chooser = GTK_FILE_CHOOSER(dialog);
-> +	gtk_file_chooser_set_filename(chooser, conf_get_configname());
-> +
-> +	res = gtk_dialog_run(GTK_DIALOG(dialog));
-> +	if (res == GTK_RESPONSE_ACCEPT) {
-> +		char *filename;
-> +
-> +		filename = gtk_file_chooser_get_filename(chooser);
-> +
-> +		if (conf_write(filename))
-> +			text_insert_msg("Error",
-> +					"Unable to save configuration !");
-> +
-> +		g_free(filename);
-> +	}
-> +
-> +	gtk_widget_destroy(dialog);
->  }
->  
->  static void on_show_name1_activate(GtkMenuItem *menuitem, gpointer user_data)
-
--- 
-~Randy
