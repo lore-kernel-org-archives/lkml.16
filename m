@@ -1,161 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67B228EBFE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC9828FA9E;
+	Mon, 30 Jun 2025 13:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288472; cv=none; b=MHd13sBIftt6bL5N2BhvV75DTUoUGbZXaJeG0Hsfc0BRl1bNW321h09pJI1y/knXi08c0lPoy1EXRRCxCQvvfwZuujX7brdfpLsYeZIqCb5p5s1yYvc7Tw06dImNYBkqQ3b6zcO0zASDtptJQdd4U+3DgT9s6ET5k4b4wcyHp2I=
+	t=1751288474; cv=none; b=tMH5biR/eedL/PBWLoWIU/afpbEwMHm/Wo27uQBN87uP8kG6A53/4zbwQrzSp69/xCOLWHxqPVZYaBBCHWHvlOBG5Frth8/m+tCfoofkRoLDeSPA+ryPV/fVsIko19A8O5RcptYEvUJz0nFVtO23VlfFJKLXPgAMQs2gXcsTRNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288472; c=relaxed/simple;
-	bh=iVcKD9ZKy+q0IZPfhKWFJvDMMmEVnhfUGzTuz3ApUIU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d6qeDOauclvpSjju+ea+pk55i97nqKR4/aDWWtFgq+6dNRHroZ6Q5++ndWQJP1P0sz4Hcb5ydbtqfAjUgYnhowexB9h4Kxfo6S/lLENvFT/0TKZpCx7zp8I9epbKN2+2KRVpWR90/sQ/y5FkxGChlPfKqNDsdyR5So6Btfpwlx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VDZzmIWS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751288474; c=relaxed/simple;
+	bh=xqG95de3HvfX3kUQMy4NI6tShOXZRGGVRVlzbTD4Mo4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=d4jcVRap+Aj/YIuWWpMoqXU1xNEdg8Jes9rMN6afryeYtus2fDgo0HmQkkLN84DzuMokBME+iK2Zh4lxK5TNkhk24Kx8VejrTxYTv4GlXFXkco+fJ58HWyJjH9zULPXCmv55kTFm+7n7Eoutbrog5yXG5EeEQW86EfhIAQNxb2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ktFywgu0; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VDZzmIWS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751288467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IIzDkBhnyPsIOakhHuAsjx3fJM8m9J+HURfbhEZ1A0M=;
-	b=VDZzmIWSbX3G9KlJMwOl3DbTqoYlps5DlVtS8ERMD/xpoZVArHNhIrhrEorgmYCSSIY9PJ
-	ZgNJ/j8u2qCBzVICw/kRkQeBE4//2RzgUy5ClKkW2PVXQEIg7rYg6u4ipddUj72mPPuGIp
-	hJjlZ/HdpRU1sS0QgeEt7Aqy54x4GvU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-567-l9odpnwaPeG4_JeKvLs3_A-1; Mon, 30 Jun 2025 09:01:05 -0400
-X-MC-Unique: l9odpnwaPeG4_JeKvLs3_A-1
-X-Mimecast-MFC-AGG-ID: l9odpnwaPeG4_JeKvLs3_A_1751288465
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45320bfc18dso22229305e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:01:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751288464; x=1751893264;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IIzDkBhnyPsIOakhHuAsjx3fJM8m9J+HURfbhEZ1A0M=;
-        b=s5molGRVZbXEAPscojCiOnRkZGMXwZXflPraZrzm+pakUT3mNycDyMeNAKncT8mMfS
-         WxbshI27DzZJJ42z3Vmv6uTyayKUMGtrPleScrxIYDW92o3JuPYGWimlFFMMvbiEj54b
-         TK6j/L3FS4WUJHYHTkyrAsEjXZWmQ2N/HHoPQDSZZ5wmoOBZFLmV43daAQdpdqXiSBIK
-         qrKFp5mNRDE44H0y1EwLKoxvt7r7kTVhJ1SGEO3XzJwpbIINv7fG4qsdCPFa3OrNDtOf
-         b9ixJ2yg4JUvAEJPoGLXI0IlZXWa9ojplRU16yDYDQJB/gFehGY7WBYtyVsA5dYE9Alv
-         V+gg==
-X-Gm-Message-State: AOJu0YzuPFfp+MC7aCqDxF+IM088C1B3Qdow07BxBo5pz1ncvQgz4wPL
-	ehBuyCa7z2KilZejRCg+bgN6RwZ9QXX0qWpgCMRzejP1u8QCQFCkbnFo+y8UDcREdUkKZiq2jIx
-	qbESpyAoexBk5/MNWrURG879RVnKWVGSr1bKWBsMcRazIDmyFnNjxqF3ql3jvKBcgvE9DuvWgUS
-	M9q2qvuAGoZAIvwNKbT0+4p1aPXfKg54hK+5NAKjtEGfUXStlq
-X-Gm-Gg: ASbGnct05HhdJK8tdtC10bs1iYpxcOXW7B/3yC2lx8+zMrfidUSumRXU6TXjQxk+ygU
-	/mapX4KSBm6XLuhqw8S69HtqAjNBHPmS7N+rn/R+cGfvM1cUdiTFCLhuE5XViUu6WVWNewbdlG/
-	QCvB//Cy6Icc+OTbn/Ij90ez6m8lgkldasuaLCkTCsTz9nOAk0kaR0xc3E8lyuJGNS76ZasaMSA
-	7d+9SJ6nyyi66ONZbQ8Z7tKtLOXLhR25D7I6fh3fej4C8GlHMfTsUS9q6RnYyI1oSdys4ra7gZX
-	CEEWgnXuTBjpOJLKg2azMiXubf3OEznPGtFSgFTFZCfYc4mLXb4LR1KSBI0ki8u755FE0XKA0tD
-	YTP5hUW4=
-X-Received: by 2002:a05:600c:1994:b0:450:d79d:3b16 with SMTP id 5b1f17b1804b1-4538f309394mr135241285e9.14.1751288463798;
-        Mon, 30 Jun 2025 06:01:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7zExQWNaFUjIE00JTRK6K+i5BO8qjO8BpI1TRkHw1kVlVhDi4cL0K0LNLq7UFrw8vD2WvGA==
-X-Received: by 2002:a05:600c:1994:b0:450:d79d:3b16 with SMTP id 5b1f17b1804b1-4538f309394mr135239205e9.14.1751288462959;
-        Mon, 30 Jun 2025 06:01:02 -0700 (PDT)
-Received: from localhost (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453823ad247sm170241515e9.26.2025.06.30.06.01.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 06:01:02 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	virtualization@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: [PATCH v1 17/29] mm/page_isolation: drop __folio_test_movable() check for large folios
-Date: Mon, 30 Jun 2025 14:59:58 +0200
-Message-ID: <20250630130011.330477-18-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250630130011.330477-1-david@redhat.com>
-References: <20250630130011.330477-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ktFywgu0"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UAhJQk015201;
+	Mon, 30 Jun 2025 15:00:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=fUjxTU75ZD40DdIr6Z8X8u
+	fn/8WVlq3YFcObITGk6Pg=; b=ktFywgu01LSZVISgRlLmmzgVOepR5cNYEzOpn2
+	zVWxXroIb6x+nogDQQJYqkMi69rDnI3XcnNo8tUAGKw35i4a2EjUO6yfrQKnL++J
+	g9mBsNr6bkw3odTJZNAU8gViEKDpJ22NjwPRT5JlnAU6CPn7MTtaa9o3MBlRsCTh
+	DaPn57w+QSCmN+fDiu9rRXTHb5vgvGiBa8v0eX+JHAYSvaj3JadwozxtUoj0ytef
+	jLpyt0/I9nZ/9n4AR0VT43psrBcpO3lpL2ya97fANVEJHKtCg+4Kpz3zq9pbwbfv
+	WIwtQlIWXagJSIHExqRLuVIHxZhyi45rnCdf3hTnU3AELskw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4na14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 15:00:56 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F1FCF40045;
+	Mon, 30 Jun 2025 14:59:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 40FBAB46C86;
+	Mon, 30 Jun 2025 14:59:27 +0200 (CEST)
+Received: from localhost (10.252.20.7) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 14:59:26 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Date: Mon, 30 Jun 2025 14:59:23 +0200
+Subject: [PATCH v2] spi: stm32: fix sram pool free in probe error path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-ID: <20250630-spi-fix-v2-1-4680939e2a3e@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIACqKYmgC/2WMQQ6CMBAAv0L2bMm2yqqc/IfhIGUre5CSLmk0h
+ L9buXqcyWRWUE7CCm21QuIsKnEq4A4V+PExPdnIUBgcugbpiEZnMUHe5kJ4stSH/koDlHpOXPR
+ +uneFR9Elps8+zvZn/x/ZGmsc09l6RGLb3EJUrXWpfXxBt23bF1B6QmCgAAAA
+X-Change-ID: 20250630-spi-fix-860416bfb96d
+To: Alain Volmat <alain.volmat@foss.st.com>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-spi@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Dan
+ Carpenter <dan.carpenter@linaro.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
 
-Currently, we only support migration of individual movable_ops pages, so
-we can not run into that.
+Add a test to check whether the sram_pool is NULL before freeing it.
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to enhance DDR use")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Acked-by: Alain Volmat <alain.volmat@foss.st.com>
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- mm/page_isolation.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- Add Alain Volmat's Acked-by.
+- Link to v1: https://lore.kernel.org/r/20250630-spi-fix-v1-1-2e671c006e15@foss.st.com
+---
+ drivers/spi/spi-stm32.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index b97b965b3ed01..f72b6cd38b958 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -92,7 +92,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
- 				h = size_to_hstate(folio_size(folio));
- 				if (h && !hugepage_migration_supported(h))
- 					return page;
--			} else if (!folio_test_lru(folio) && !__folio_test_movable(folio)) {
-+			} else if (!folio_test_lru(folio)) {
- 				return page;
- 			}
- 
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 3d20f09f1ae7..858470a2cab5 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -2486,7 +2486,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
+ 	if (spi->mdma_rx)
+ 		dma_release_channel(spi->mdma_rx);
+ err_pool_free:
+-	gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf, spi->sram_rx_buf_size);
++	if (spi->sram_pool)
++		gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf,
++			      spi->sram_rx_buf_size);
+ err_dma_release:
+ 	if (spi->dma_tx)
+ 		dma_release_channel(spi->dma_tx);
+
+---
+base-commit: 045719b1d0aab98e6abdd7715e8587b997d1cefa
+change-id: 20250630-spi-fix-860416bfb96d
+
+Best regards,
 -- 
-2.49.0
+Clément Le Goffic <clement.legoffic@foss.st.com>
 
