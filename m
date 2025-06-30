@@ -1,62 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0AA528D8E7
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0F228DB77
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294178; cv=none; b=ZspN45El9/FIStttIJ+MXLdiaY+j3jfMSSoPgX9xInKBJkSE0YY7XuB++BoeAzI2dUjrVVNQ1OgjpA1zeatuabSstiJSX1tdsYuPp67CfnboHY4sLoRCJMXsTTXBAggiQhHasTY5BOGgnXchOxtPcX+JS7OXKG2TehYIqLDe+Ik=
+	t=1751294178; cv=none; b=pWILIy94UgpuLmvuMHspQBpQUp4tsLVe2xs+3dtl994vVhplfO//mjENkd8w/DXeI02h2JJ2EvEDJG0dMMNlFqqDMbJJlR0r1c1vh+RDiSUkY8rlcZcHwUSYsL57W/RBvfJZadg5Foyj4s1pcTI7WQYD2uoPl/vZEoQOPIYKDxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751294178; c=relaxed/simple;
-	bh=WGV704Eo/1OZH4+nrAQdrHsDuKUNEEzinf+2Kc0d6hc=;
+	bh=pwspzJd4AZigPvmdBQBc5YI54moVabhP2BKPyRa45tY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ndZPv+xwiBZYftDmAbm385HHAFhSt1QCwpsYLosbPRVkKDz5FK6tJmQJy/zk5SqFClKM7kdw1qcOaU5QtK0X8rDeu6pNO6Hri1tcw/V3FbZ9pOjCyS0sONWujkAhPRBp34FikB57g7jrt63b168eIN3AXDKsKmBOu9+V8+2mLYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UEf1HAsj; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=RZcThFpDlDVK/S8ZwU8mzE256IToBiVk7d/AEJLfPD2S5zgBub/zcKPc60eOD5n5tBLCCTIq5vJr3z3GMQl5pt9bYYA7UFwyTMHe22O/S277q4p8XtDLqCCopeGa6Nq599dqRFCKZmeE1D++egr54GsIiLRGBfJhM2u8Dfewptc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DpZRHAAG; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UEf1HAsj"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so12899995e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:36:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DpZRHAAG"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a582e09144so1678469f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:36:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751294173; x=1751898973; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1751294174; x=1751898974; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CYGr+w4GfcUkgYiVXycPX4UxZzSKxs2cIGs5isKRNhY=;
-        b=UEf1HAsjZsitoMXcpw7QOe+2Fw5eHKJeBoA2QBD5Euxn9+YmBOeRDhzmOHJhl/ide5
-         qWiXiB/eOJFXDCJWwxL/+GjmVqvL/RNQoF+PQTdwmnbwkC+MFWp/fzAHid+WIwVCRH7R
-         1/2h+BZ2NbCtsL8yrGNWbpn8kUlaA9roZ4z9PWwL3tgnWZM7nopXwh2twC4B+yT/idgP
-         ntP6zKwp9wV5D+mFFS3lcmfuiFvNFsNAwafC6hQjSpQDu4xri4jRT6cJrT2Rtr0y9ZWb
-         Vvg0Kc/iM/EduRv5UvAC/OLdM2rlNEKzZMUgUHRHB/Sc0F0GELoIv/S2bcWGODPrSMTx
-         8AZg==
+        bh=hxXlGnhc5HV9WUqIY4yXx7sDZm8dL+Zm0TPRhpOl1ew=;
+        b=DpZRHAAGnfQredqN11vxaA/4PuNGbgVITubbNYjwThNiu3FG470qMNrpgoZQF4IXp8
+         OE9INoBnLGduDaszKG/o44CX8G6XM/chP/KfMPclx8R0r2Hh7DP6P9t/LgW8kU09Xsqk
+         Nmqiebf6JfmYPuxK7iwR1ODDdmLKIoxwskkKlE7Ithjy0HJTXRmREMCEK4IYDoarGS/u
+         G7Ufk91XwI+b0U2ZH/AomXXFK4a4XAV4NWej+MkJ/i2rv/n3c7Zc1WK/zg9ciLHqTm4E
+         O9YjYTGX7LGUYCaotqGl6XsoK2Q+OoZBfUH7tp0Bye4k0sdroyoGFhcRw01D3/lUotOj
+         CyMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751294173; x=1751898973;
+        d=1e100.net; s=20230601; t=1751294174; x=1751898974;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CYGr+w4GfcUkgYiVXycPX4UxZzSKxs2cIGs5isKRNhY=;
-        b=IMrsN+v5oVGO1LRpxTUhfl4Nn67dqDwyinlRLQsmd4IKKbPoIJ0fZSThgik9yQBi1m
-         o/GWPBKZn24Lm7DpfoQTnhgfiwkCtLQVXwIzPgPOGrWmqaP9CpsC+0L8FYFF2pzDtZvG
-         ZkX/z/yJb4YIxc01Cm83WerogrVlTbk3sGF4DtL+oUas3JQRDPFACx9VVHhk35zV/sS4
-         MQ3z7JRIIcXr5mlogmZep6E5/LBFB2vkq3oMLuyj9s3rFTrhxoW9xSnkvUdshHsf2R6n
-         V/9OnAB+9BlDyi/GnCmPUS2DAul1wWxqLUGfzxiUsAxQx2gLmPaEB7592JT8QMCZRclT
-         Fsgw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9vYCFjqZEULf7uqJXtP0QgMdhRQ/lQm9aWLT96nemKInq9LPyTg0k2g5/kyk7LKIyljgTiTNasZqmcCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfhw8wSWsWSyfxiFkLWmjX5kAJxzz4TvDfGOTcFHcBImY0FlWL
-	YeBUVPN+aGvkpkjiTLRmA8GTsy8OLddzvmNdmBzzyHG0DiAek0YbesaS/m99leVM+i4=
-X-Gm-Gg: ASbGncsq7Pi63tkYF/RWLVXGdLR4VARxXQZR1gW4R3pcJiaTOgdjpxrsE95CpABKcen
-	dQw3is5ZQkW3s7qVMsupcdUHOepwrS9BM0p+iWwar2i4MCPQnnMa6D8SQbikxxMi48yG1Ej7rtX
-	hPN4nqQnF40nvd/dQSdBWhY87cSbWxNf3TtIKDzOXhv2kQpfVU28Y0W2Yz2bCAuE5ImtyW+qO1Z
-	3t5l4ZKXuUBw7qDZ78chab55FnS/qyHfsSFp0oYb5u/A8plvYn9X7nfF+RABLKS5iKVNf1GBME6
-	vN5SzPS3zkiSBxnVDZJ6kDv95waL4xifqo6/R7i+rauk1CcwxB7omJ5iXqKT6g==
-X-Google-Smtp-Source: AGHT+IFKdSX/7On1Q0wj0XjtBIz1cLSj6YHaIR75PLNUipp/xh/X/AUZR64SxbA4mNUTIjWDWDxDXg==
-X-Received: by 2002:a05:600c:3112:b0:43d:26e3:f2f6 with SMTP id 5b1f17b1804b1-4539ebf5521mr48135765e9.5.1751294172898;
-        Mon, 30 Jun 2025 07:36:12 -0700 (PDT)
+        bh=hxXlGnhc5HV9WUqIY4yXx7sDZm8dL+Zm0TPRhpOl1ew=;
+        b=D4MT+XK/P3JFR1+EOd3lSvHnAbvRZicAhwjeJopNwGgORKkwu0wNWEG4H/Z/wKVnjZ
+         74q043nKo/g6p3ZWsZ9YL8s5kCV9COJ/ecA9bPNNHk3qa6VEbiIEUnGbewjdw8nDYJLg
+         XAbY9v4JehkZZslGrR98vmVpQ/4h4iJbjQR2smIhffHaTBhAIdooxKGArTFAlvTvnDRe
+         n6mPwhwLkjwr/GYOb7THqd5SRjgXOzncOQiUAz6CDLK5nngKALMTbFz5sZ/gncEEXylb
+         3QpGeE8BvZVYAcftCbDGIKpM7deXxstMfJIrAblkntCjTMnsMfIWhbGuz+9McEXpSxNp
+         7w2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsl8fB6qNVZJo1lmaSygN9ZpU5GODGgcjZ6BMxH+mrSl65J3hKMAO8o2i8ZGPqEIDYYfFsq5d44pDZQ18=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWM9/Z6iruCcT47PkduW1xo4eOAH7pcHFv8k5X6GVrWMdO2XyI
+	4uS7Wn72s6rMWoaBS3y+rQJSxgdlPuUlv+V6jeswQDBwckN0uP26yN48Q2FBgGw16tk=
+X-Gm-Gg: ASbGncsCuTDCc9dZfmmdFoPHwZ9n9T6VOwOAUkpHlOQnh7Kj/OIKeHS8TdUHvnI54aU
+	ryIYgOTRE5aOUIaJvbW9snprvTL0U4NyxWOzb/8DRdmyv+Y65sSkDBU43JzllCU+I7pK2FSYGP5
+	kK9mZJrEuiTii4G5OeP9HnA84Nd7he/obD9KQWhM+6dmq7Z/SbzRPC08lOkjyGnRWqATuKYZ5n4
+	339UNhMg02iC47Tg57L3W+rwvv9AdIfQQcdbuWmJZloTTKPNyz/p8sNS4iDhk7bV+GYGFFgKVEv
+	n8/bsibI0ZbP1v6p4MnGjgaveYNUiSK3+gstOJ6iHfYR7YH9LqL7+bBCsMYNCg==
+X-Google-Smtp-Source: AGHT+IHN5CLUSWO1xiRD+qqKfFwkQtfevB21L0QtujyoJrVD0RIup44F3ZYXGZ/DDsSpOXdt+Yp6ew==
+X-Received: by 2002:a05:6000:410f:b0:3a5:3a3b:6a3a with SMTP id ffacd0b85a97d-3a90075f95cmr8351749f8f.54.1751294174091;
+        Mon, 30 Jun 2025 07:36:14 -0700 (PDT)
 Received: from zovi.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4064b1sm139691695e9.29.2025.06.30.07.36.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4064b1sm139691695e9.29.2025.06.30.07.36.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 07:36:12 -0700 (PDT)
+        Mon, 30 Jun 2025 07:36:13 -0700 (PDT)
 From: Petr Pavlu <petr.pavlu@suse.com>
 To: Luis Chamberlain <mcgrof@kernel.org>,
 	Petr Pavlu <petr.pavlu@suse.com>,
@@ -64,9 +64,9 @@ To: Luis Chamberlain <mcgrof@kernel.org>,
 	Daniel Gomez <da.gomez@samsung.com>
 Cc: linux-modules@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] module: Restore the moduleparam prefix length check
-Date: Mon, 30 Jun 2025 16:32:34 +0200
-Message-ID: <20250630143535.267745-4-petr.pavlu@suse.com>
+Subject: [PATCH 5/5] module: Rename MAX_PARAM_PREFIX_LEN to __MODULE_NAME_LEN
+Date: Mon, 30 Jun 2025 16:32:36 +0200
+Message-ID: <20250630143535.267745-6-petr.pavlu@suse.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250630143535.267745-1-petr.pavlu@suse.com>
 References: <20250630143535.267745-1-petr.pavlu@suse.com>
@@ -78,48 +78,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The moduleparam code allows modules to provide their own definition of
-MODULE_PARAM_PREFIX, instead of using the default KBUILD_MODNAME ".".
+The maximum module name length (MODULE_NAME_LEN) is somewhat confusingly
+defined in terms of the maximum parameter prefix length
+(MAX_PARAM_PREFIX_LEN), when in fact the dependency is in the opposite
+direction.
 
-Commit 730b69d22525 ("module: check kernel param length at compile time,
-not runtime") added a check to ensure the prefix doesn't exceed
-MODULE_NAME_LEN, as this is what param_sysfs_builtin() expects.
+This split originates from commit 730b69d22525 ("module: check kernel param
+length at compile time, not runtime"). The code needed to use
+MODULE_NAME_LEN in moduleparam.h, but because module.h requires
+moduleparam.h, this created a circular dependency. It was resolved by
+introducing MAX_PARAM_PREFIX_LEN in moduleparam.h and defining
+MODULE_NAME_LEN in module.h in terms of MAX_PARAM_PREFIX_LEN.
 
-Later, commit 58f86cc89c33 ("VERIFY_OCTAL_PERMISSIONS: stricter checking
-for sysfs perms.") removed this check, but there is no indication this was
-intentional.
+Rename MAX_PARAM_PREFIX_LEN to __MODULE_NAME_LEN for clarity. This matches
+the similar approach of defining MODULE_INFO in module.h and __MODULE_INFO
+in moduleparam.h.
 
-Since the check is still useful for param_sysfs_builtin() to function
-properly, reintroduce it in __module_param_call(), but in a modernized form
-using static_assert().
-
-While here, clean up the __module_param_call() comments. In particular,
-remove the comment "Default value instead of permissions?", which comes
-from commit 9774a1f54f17 ("[PATCH] Compile-time check re world-writeable
-module params"). This comment was related to the test variable
-__param_perm_check_##name, which was removed in the previously mentioned
-commit 58f86cc89c33.
-
-Fixes: 58f86cc89c33 ("VERIFY_OCTAL_PERMISSIONS: stricter checking for sysfs perms.")
 Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
- include/linux/moduleparam.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ include/linux/module.h      |  2 +-
+ include/linux/moduleparam.h | 12 ++++++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 5faa1fb1f4b4..0f1dde3996d9 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -32,7 +32,7 @@
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+ 
+-#define MODULE_NAME_LEN MAX_PARAM_PREFIX_LEN
++#define MODULE_NAME_LEN __MODULE_NAME_LEN
+ 
+ struct modversion_info {
+ 	unsigned long crc;
 diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index bfb85fd13e1f..110e9d09de24 100644
+index 110e9d09de24..a04a2bc4f51e 100644
 --- a/include/linux/moduleparam.h
 +++ b/include/linux/moduleparam.h
-@@ -282,10 +282,9 @@ struct kparam_array
- #define __moduleparam_const const
+@@ -6,6 +6,13 @@
+ #include <linux/stringify.h>
+ #include <linux/kernel.h>
+ 
++/*
++ * The maximum module name length, including the NUL byte.
++ * Chosen so that structs with an unsigned long line up, specifically
++ * modversion_info.
++ */
++#define __MODULE_NAME_LEN (64 - sizeof(unsigned long))
++
+ /* You can override this manually, but generally this should match the
+    module name. */
+ #ifdef MODULE
+@@ -17,9 +24,6 @@
+ #define __MODULE_INFO_PREFIX KBUILD_MODNAME "."
  #endif
  
--/* This is the fundamental function for registering boot/module
--   parameters. */
-+/* This is the fundamental function for registering boot/module parameters. */
+-/* Chosen so that structs with an unsigned long line up. */
+-#define MAX_PARAM_PREFIX_LEN (64 - sizeof(unsigned long))
+-
+ #define __MODULE_INFO(tag, name, info)					  \
+ 	static const char __UNIQUE_ID(name)[]				  \
+ 		__used __section(".modinfo") __aligned(1)		  \
+@@ -284,7 +288,7 @@ struct kparam_array
+ 
+ /* This is the fundamental function for registering boot/module parameters. */
  #define __module_param_call(prefix, name, ops, arg, perm, level, flags)	\
--	/* Default value instead of permissions? */			\
-+	static_assert(sizeof(""prefix) - 1 <= MAX_PARAM_PREFIX_LEN);	\
+-	static_assert(sizeof(""prefix) - 1 <= MAX_PARAM_PREFIX_LEN);	\
++	static_assert(sizeof(""prefix) - 1 <= __MODULE_NAME_LEN);	\
  	static const char __param_str_##name[] = prefix #name;		\
  	static struct kernel_param __moduleparam_const __param_##name	\
  	__used __section("__param")					\
