@@ -1,159 +1,277 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2085.outbound.protection.outlook.com [40.107.244.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9944628C5BF;
-	Mon, 30 Jun 2025 17:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751306361; cv=none; b=PMiYpbWf4/OMhEuuVdIT+I5AqsnMxfKIwfFj5y9O9uT70A+mnt6OtPcH8/x33A4IAO3bU5hUSOe7hZfjHfhOblHxBVopjzQjDO7TPoQOQkN/gfl0muGdV0SklFNRTl0qf37NDNPE7APw3vzWNjthifmYQMz1Xsao4Oog90OmCkY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751306361; c=relaxed/simple;
-	bh=E3MRjSUpTkCDblzO7R25ovzwgQNFm4lYSqmPFM5Y2y0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c5XHDGnccKJErhpnSOFU9PQ9ISxUuKQ7P6H8+yqfGHgCA7YZ1IWHi8f30dW4VW3QRhmJoU/BGQttqoIopXc86GEwkNqwz7U9yXpON2JzOCCoPnuqT130TniW7u/YOUZ/6fKIrXkqlSVAZYvKZl/z+8DqrXTouVlWlfMRAnJ2EOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dujheQIU; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECB929827B
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751306400; cv=fail; b=Rwijm6sWjGrgMh38v5PCQDeVyN38quubNm06+b1/RVb+u+Dx3sc9N35ANEK4lPAHrqqs7wkQEADUwiL+DyH/2gBkZTpbE7Shja1MwjM4pdW/HsX3MxsjUzFKjdaXxVVxg1FR+3N4zA7tc/VUvrcRFkxvwmn4tnAmi7JBkMVvprI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751306400; c=relaxed/simple;
+	bh=ZRV/s4XLlT3/qIXBJrxrahZ053jgobhhqUl9XWnufwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TObckk5FmKWpjrloBaGU1cx1ovVhNq6E3vFPNNPDdogExxvQryJ9LPNr+4f+227pPbnMbrmh4zPufdeRTKw/0w5E7Ey9znolR+slnoT/VkelZJEZ7cQisTsYtljJnmeFWJZXxcS5iB2dmpRyiBAHcxJzXGkiybyZlOeeqYRWoI4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MMaeZxOQ; arc=fail smtp.client-ip=40.107.244.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dujheQIU"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3139027b825so1538868a91.0;
-        Mon, 30 Jun 2025 10:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751306358; x=1751911158; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2J25bGVpgh8pIy8pe8vQjyoRwObkYDh4mB+hDfyBtpw=;
-        b=dujheQIUx/tn43poXLEUgp2qStk7KHfiwczE8cP2aUe+2bOqXFV3fKfiQQw4VJIvSk
-         hezwLO4S7ohc8AlXd7FZBYhNZdtZH41U3t1Piy68yUqbm+zHHJKgaOl5K+SY/TlQbnax
-         VIZgEtmGX3tHMkBV6yJX2OlgVaY6lMjLYuvO51g7vSOAB4tCIz7pryRlk3QnERdlxEuR
-         enCUOxPqRjMQjzq0h82QgJ2VhAuGEJmmQbaLh/WS7F9rm+5JmUK+OZ3eaGobP14qGLfq
-         GXquzdB5aVtwe5ZGKHEWdOaiKP747Yqt9T7YH0f+Li4tyiOKhnvkZFGj5DrwMcNO9W6S
-         q1CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751306358; x=1751911158;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2J25bGVpgh8pIy8pe8vQjyoRwObkYDh4mB+hDfyBtpw=;
-        b=iz2/nVRyu/tH/rVmm1y2GtTLnnDhqrVgIhBb/Rz6IkX46BTNWkimB1J8x32m/RlKlT
-         YavOGMGqgUcAbzffItOQgjT5A0iMlpaqP4aS4Y4bKqhF9j5HdAwtE6fp7oNBLac1/7Vo
-         qNp0yPDLN0md0QZop1kfsi3tx5xpyVD23cDZVzdFgfff1oa3SXyoxd7E05zpJPpLECc9
-         F+/+oE/S5DwJbtNQlwE8TmP1eQpC0BGHx88cWHXcwnAm7ivRj2zEjquIIvErtVZDioTF
-         CExxkGmv7yMVM/OmoRvX9mYYz9XeP6o6pkQn7spIUOQJ1xblahuYUx3q1QFLsQ6lBn4W
-         9sXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiZZARQXQLg8zGyD0NkXy207LUnxIHFn1udewimcgAb7QYkTUjgxkblbp1m1XS15zlfkpQytTO@vger.kernel.org, AJvYcCVFpRKfQbQ5vm5kOmAl0usQIEBSTvp0YRU7lV2dzbKn8BzLH5TDQ8LFbYqQl+DioDvqlxtePG2QbcSlcKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9Y98QiOHFKxM1cPQfZh8LAE4azYhxAalKo8XXc8QU9z+NVCc8
-	1hz77cviDfvz/6ZCBPBp0J6hPknWkelKey+mYPyBdZk+JqJGGttxG7Jz
-X-Gm-Gg: ASbGncsdoq1MNWS51D9MBX8/iVnEcPKLJhz7T6qJ69tBkmhtzlzu/MB0Xn/ZaE69XdC
-	hqq+8n/8bDKK6hfL2/0Qv2Cq4Ld0C3wyAefZ9wIyTgR9vJWIyNVQgf5h74VNHsFQE8cJ/mb9FRD
-	dS5DPfLv2HDhhBajBW6jXgDa8UHD3N4MONQtpVMKSrP4ZyLieOVv+/sk77C3uE2LWR5uuxBdH+e
-	jGT52lBOVTH4E8+SGrJeaft8ztN9d3U51/pKHBx7C0gv8rjI/E9++kxvx6KviKDcZETrJtPGSJF
-	bTyIn/uc50sESJ51/yaAqteMs1enUZDvOtQcxS/bdcPlkZfCHfKc98OP2WcRBQ==
-X-Google-Smtp-Source: AGHT+IHX83Rt64kyzEC0NV7DLNV4TZApXaBUaUDQJdOBRv6/Vil7f6N2l0bfOYrH1+W4YetdGwHEAQ==
-X-Received: by 2002:a17:90b:1dc4:b0:311:e8cc:4264 with SMTP id 98e67ed59e1d1-318c922ef55mr26316071a91.12.1751306357856;
-        Mon, 30 Jun 2025 10:59:17 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1be4sm86304915ad.24.2025.06.30.10.59.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:59:17 -0700 (PDT)
-Date: Mon, 30 Jun 2025 13:59:15 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] wireguard: queueing: simplify wg_cpumask_next_online()
-Message-ID: <aGLQc5JGGpMdfbln@yury>
-References: <20250619145501.351951-1-yury.norov@gmail.com>
- <aGLIUZXHyBTG4zjm@zx2c4.com>
- <aGLKcbR6QmrQ7HE8@yury>
- <aGLLepPzC0kp9Ou1@zx2c4.com>
- <aGLPOWUQeCxTPDix@yury>
- <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MMaeZxOQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DxsupEZCx5YGorR5C/rn8EckfCFHYJ55N9bb0WxiM2GYYCEbwy4RQ18FyliHpGGROKD0p+NtXihDO26aLv64YQi9CJz+MdRx4n4OTi+h4PacJ0fAhJoCyVpYnlkqYmrPOPQ9+16uZdJBSvGKzg3gcg6ty2oVmEA3bPhkeBEwCiq+yrDagpEkXdFJG30VzNmuh26GEKgEvVouy7mIbZOcaqR/X07vuRLSvoQgcyE854bSVXW3uc4BDGOhXEIgPGrVW11BsjN3cghxXRqexAgS2NHqTWnIqlAMeiWumZL1hGAFQvWMmKRyIqO3POTyYC5e18GXSPjsLy6jmw0iGXMLiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CIj8pukLw/FxI8cgVpIWPoo66DAS0QfDHPoeub54dSw=;
+ b=Pl67ezi72g2OJIrQQ9dX3kNRh/MkjW2ke3MQyrn/VuJlRciXqH++2Nyeyjv3zx9/GoWvWLeUYtTDHytSlkPjwg+Uju9oJcmLvabuh5j74noXWknTzIZIHA7IFxHAsdjsw6Pl0G+hhwwpuMuY/OqYXFVdRuzmM3a/ydBeUzk9lhdqdhnZaojOtqzxow04vvHtsYHLQkcSm+/8xv8Xee0epYlh653mMa+FyqPSr/NN0Uu/CChyomURThH92qISf15czdrzXggnQPbTZXlYLUb2Lnl50TcNmTp3GUisH/e8llMV5GDYMvSMlhmn4fOE5u10IARF464ywk4kGkEirBiVyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CIj8pukLw/FxI8cgVpIWPoo66DAS0QfDHPoeub54dSw=;
+ b=MMaeZxOQ/Zmql/D/Jix/uNC/9n1LxX3eSJqJtyymnSq2Qb0cS/DuPEMR/wv+I+EU+RFMARlrZKdQ7a8aboTA8pAt5dUco0dd5BM49A9EJP6Fo6gFa4Y6tHuSYoNybt6A6yJrIEyp3Fc9Er7v9gKFk5yz5cxZCYM4T6NK1dk5M+QqygM1rmj0LBJMrhfc4Ly80C3TCJPY1L8HO+hwpFPukN/HMpRchXo8MvbelVAgKSCGO/6vvXcnBxAf/vRi4hkFqmZl0qSwJWnn46/Di44f9YgRNYANBshcKJqGN5dQjnrsaZzVDf3o39YWGTxS/j1FRSMPO+2OA54gLdTJfoWhfg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MN0PR12MB5761.namprd12.prod.outlook.com (2603:10b6:208:374::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.17; Mon, 30 Jun 2025 17:59:55 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
+ 17:59:55 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
+Subject: Re: [PATCH v1 4/4] mm: remove boolean output parameters from
+ folio_pte_batch_ext()
+Date: Mon, 30 Jun 2025 13:59:52 -0400
+X-Mailer: MailMate (2.0r6265)
+Message-ID: <EB391EDC-4CDC-4B18-BE95-7DEFE43109DF@nvidia.com>
+In-Reply-To: <20250627115510.3273675-5-david@redhat.com>
+References: <20250627115510.3273675-1-david@redhat.com>
+ <20250627115510.3273675-5-david@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BL1PR13CA0342.namprd13.prod.outlook.com
+ (2603:10b6:208:2c6::17) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MN0PR12MB5761:EE_
+X-MS-Office365-Filtering-Correlation-Id: 477d5b9c-4812-4ab2-7e9f-08ddb7ffeb7d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?J6DX5tBxhNHX/iQjvmU4T9djzBW5F3iFlX1AaB/mdXCDOR6X6TXMbESf9NdZ?=
+ =?us-ascii?Q?NQUzIFJcHW8PT+swQZH9jzhfydC97hKWJO28teyGQfcoJso/bt9kXZa67l1C?=
+ =?us-ascii?Q?5NIk5Ud9m/7xzzbU4QKULSit5bonNrgE+4i92tiUFRT1SN5ACrNMUHUygh6p?=
+ =?us-ascii?Q?qMvfHIlKd8JKIz1HcyFfTqZLccbHA3yGUDeGVhZDxrL3orEf6fY+2tM6niW2?=
+ =?us-ascii?Q?LPjO54mf+RmYj0DuRokjAtd+DnCPCrdLxlYnwxNP3Iq8anxpDaHQ4xV/7iD9?=
+ =?us-ascii?Q?6mhqqXjfIH1tDeDjKs2Sfk/S/woCxf1vwB47BZIrFAaeC2MN0ayb4f3X6TWC?=
+ =?us-ascii?Q?1FoiE2ksy5GIIY5oOhkmV2bTAHdtMY1d5EbGfZzmxHwCsMelVWabIGty4YGY?=
+ =?us-ascii?Q?82BUHe41sqOMlsKwmv/CAgVYvZoaSBTs28c+9I34UAfmcoyTz94IsoA4vCVp?=
+ =?us-ascii?Q?rA6P8k/etfvXWYG1DglXwKdIYGjTF3rOR58Z3ignGWPWzrxkiFOxdGArv3kF?=
+ =?us-ascii?Q?lsstUnse+4Q5BWmFA7Uwdly1v+zymw1TpZbkUaW5f8FXYud1WMOtynu9/2r/?=
+ =?us-ascii?Q?L06N9BlmWJOjNuNkkWaiwiGVWLgQxNZJJSstQj6J2z2Tm/SS3kQbXYcaK8oc?=
+ =?us-ascii?Q?TLgo5Pj3+aqtkq6FobR3TFOca+e1MatQVaJGn7JRpizmZ6gvUBXsh4dPnCuF?=
+ =?us-ascii?Q?2BLTr5ZvSyAWidnDBQTMgt+PXf/g5mmuvayveofslwjWD9ZN5hpPHg9/UcJQ?=
+ =?us-ascii?Q?+HiPXn+xK4UqZkKFSj4AZTeUpMiUbC7xEnMY0XE4PsJ85jCUfnT0CVqIoTFS?=
+ =?us-ascii?Q?uf6WiXWGeN8o3q3GuBYsDRTMsHefZIM063k2eDD4m2t1A/oX8tTiIFlmcelk?=
+ =?us-ascii?Q?LH+SavL5URpaFRwGMiQ61E4pJLvlhXlpHTvSgDYc+wSWiLgo+XQC0iNarqfW?=
+ =?us-ascii?Q?aUZlhhOfL4JOk7AMnSXxtVkq5wE2bZGNBAIEdjpHlWqSEbvpxtyn9GsU7gO3?=
+ =?us-ascii?Q?Xc4OSvj8fLfA34bY65eYGrReb0sxqZi4G+C6bmJzAyy/LBWF+mMhTJ//5FF4?=
+ =?us-ascii?Q?lc+M8bJbb5FRNHQpxHGkbweWXstOvasuuPi50DZFHLfeLNtRa/vosTcpAh0K?=
+ =?us-ascii?Q?pBLh/PaKlYoacOtz+PBUeiCNGQJdGBzWIW7k1VV7iWLuNs3pOdR7tKi5tHLh?=
+ =?us-ascii?Q?ar/2i9Pr0PvfI0deProESjpUNWY+vZSo3OGp8jh7ULmwbi2+7f+75S6D5f/0?=
+ =?us-ascii?Q?KnTWOjIKoM8c6jpWS3eg/Uq7/G8Jf34eJE87RVrLRv2m62PklLkLakSAWCOj?=
+ =?us-ascii?Q?5HAFac8+yoa5b7Z9EZBAMq0UX95ghU1FkDDp/1yHuWS+6QL4l/0TCxQeLx2C?=
+ =?us-ascii?Q?wTg9hBSF0MhnbwSyshxS8aH3vDXWjxgmD0v/hHQhzOGsPCMEOMaW4vf7fGQC?=
+ =?us-ascii?Q?07fJXUy6PKk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?iwMcftwDfHtAuLmw8PAbiZ6cUCGy0HLBCyXlE3UUwYXEuPEetJmt+TTf7Ov0?=
+ =?us-ascii?Q?QnV/JILh+0XdX65FtRpmSYxKklpUAlg5z+8R+UIb05Jw21QTRDbueKffOQi1?=
+ =?us-ascii?Q?i19oiWF37mk2PLm0PNHNAxZ0jqgfqjeZBTiiAbgx4/Duv5ON4k4eHs8/6MG/?=
+ =?us-ascii?Q?t4ba35vqYkimusbd6LeONmFW3Ak1pr2NiaI5akhXCiZTGDdItIpVTn5wyLkf?=
+ =?us-ascii?Q?qayu38X8jA+2h6MuDZ4yEY9x3eU6EbOXTj7gJB60vr8rjfIGKYh/8fYZ8gxt?=
+ =?us-ascii?Q?W+BE4SC0W7tLuJpzSlWE3fbunNR2A1WnxmafZXv2ovWqjs64Jqb8dydggn/C?=
+ =?us-ascii?Q?KVTYmU5+ew0ybZahXc4AMVc5MZT3TCNAIMOyB++lvZDdaCzohSM1e8Y7SQyh?=
+ =?us-ascii?Q?52MSV8YdGc+uMXYgR2YTqM9YodCDM5FmxZrH+vqVXkAYNLsf9TxE1dTkx4F+?=
+ =?us-ascii?Q?FZNHKPrhhPfwzSY9BDIGkge/6pyNOXS0NucDmupXKv6Eglq8SHp8BYS2Gt2M?=
+ =?us-ascii?Q?1VhMZkat4/MUVrWMxBy4+iopm4izFN4jB7iWPpox6L1MN2eGuqcDIkcydqYV?=
+ =?us-ascii?Q?dqPSA4yFSoZunJLhJAp2tvwCYzFYURxotB3PtnGJq1CYdJ1Jb3EeGPsJNrMf?=
+ =?us-ascii?Q?wZ/agXPlGW7hOo6bxjjU9aJ9Bw09C+x19YFwjpe+IvFIEa9NXb68y02Ke5VH?=
+ =?us-ascii?Q?vvn2F9hnBNAGkB9fnfCY/zAzV/AgNp6m2zwydGQYPskyYwvXPNv2PVgIXs+W?=
+ =?us-ascii?Q?/fa5GL8ev0+Ju2Pn0DIyzALWg5DAHbjHPEsaFkWVqmzVJ+8jp7Um8sYmZqhm?=
+ =?us-ascii?Q?oOfGIMlkyx0xroXaISfj3CJd32hRs5THvjk/arCClIkfKyGoy73yiPvOHu6a?=
+ =?us-ascii?Q?JpTej+SPGIMI0ZZjtKlrUHHJ4cA21W3EMPZSmtK351S68ML4ukCEVmXkPZ6q?=
+ =?us-ascii?Q?lV2bmrQ1tEA4a7uc/mlH47F0rcHWSUtaUC3ckzlAH8lI7XMy/m3RLGw5fVAS?=
+ =?us-ascii?Q?i+F2fEWSECA80/KsHnhEpCfioyqdu6/ZA8uxcapDUQv71p2xw2nh09IHhF3e?=
+ =?us-ascii?Q?NXBlF5yUInPtNIF94J1CQb8WjAoNh6Qh36T3Vu3CwkfM36I65+rqIVzxrFe+?=
+ =?us-ascii?Q?hCqTafOGvj84hIeuNrOeBAm0IxEbE8KJEpv9x8nRswZqQhaTqCYxC28qSwWE?=
+ =?us-ascii?Q?M22jO+8rXeZWQULyHQkmUXMYddZy85fKO8xJx6zSyPqv0y+DfMDaYkzCUk29?=
+ =?us-ascii?Q?R6U44bcQB8gwh9utacWJQQTlluZseVY0T/1Zh/jYWOH2nxDPBcG0eJnXjaK3?=
+ =?us-ascii?Q?AfBc3t0qMy5zqT4W1pf469Jejl6xlrsSc1QhIH9fRy90JR9gknEV1OS0FZbm?=
+ =?us-ascii?Q?BvctZtuxy6kj9hcn7YePuUc85ksVC5keWHF3gk9pu1bZkjb1prBMAIg8z7kt?=
+ =?us-ascii?Q?iwv5cQi0Mx0DTJEFx1+U4AkO8Hqruqrz0beP9RwbXZl+1veO5MY46olaFOgK?=
+ =?us-ascii?Q?brb4+TwES6Bsoel06tYhuSGrFt68JyNafrOlbAvM6QA/G8rBu75Ipa6uimNB?=
+ =?us-ascii?Q?2bMeAUv/FEy5ZFaiN6+8j8pS0I3IFVg4toOzGPOH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 477d5b9c-4812-4ab2-7e9f-08ddb7ffeb7d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 17:59:55.4155
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HCr5tgsAn28atT8oyacOw0tstwJc2bkAsLYaQtUlpnZyPMjinMAf/hvr4GXwQ2te
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5761
 
-On Mon, Jun 30, 2025 at 07:55:49PM +0200, Jason A. Donenfeld wrote:
-> Hi Yury,
-> 
-> > > > > > diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-> > > > > > index 7eb76724b3ed..56314f98b6ba 100644
-> > > > > > --- a/drivers/net/wireguard/queueing.h
-> > > > > > +++ b/drivers/net/wireguard/queueing.h
-> > > > > > @@ -104,16 +104,11 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
-> > > > > >
-> > > > > >  static inline int wg_cpumask_choose_online(int *stored_cpu, unsigned int id)
-> > > > > >  {
-> > > > > > -       unsigned int cpu = *stored_cpu, cpu_index, i;
-> > > > > > +       unsigned int cpu = *stored_cpu;
-> > > > > > +
-> > > > > > +       if (unlikely(cpu >= nr_cpu_ids || !cpu_online(cpu)))
-> > > > > > +               cpu = *stored_cpu = cpumask_nth(id % num_online_cpus(), cpu_online_mask);
-> > > > >
-> > > > > I was about to apply this but then it occurred to me: what happens if
-> > > > > cpu_online_mask changes (shrinks) after num_online_cpus() is evaluated?
-> > > > > cpumask_nth() will then return nr_cpu_ids?
-> > > >
-> > > > It will return >= nd_cpu_ids. The original version based a for-loop
-> > > > does the same, so I decided that the caller is safe against it.
-> > >
-> > > Good point. I just checked... This goes into queue_work_on() which
-> > > eventually hits:
-> > >
-> > >         /* pwq which will be used unless @work is executing elsewhere */
-> > >         if (req_cpu == WORK_CPU_UNBOUND) {
-> > >
-> > > And it turns out WORK_CPU_UNBOUND is the same as nr_cpu_ids. So I guess
-> > > that's a fine failure mode.
-> >
-> > Actually, cpumask_nth_cpu may return >= nr_cpu_ids because of
-> > small_cpumask_nbits optimization. So it's safer to relax the
-> > condition.
-> >
-> > Can you consider applying the following patch for that?
-> >
-> > Thanks,
-> > Yury
-> >
-> >
-> > From fbdce972342437fb12703cae0c3a4f8f9e218a1b Mon Sep 17 00:00:00 2001
-> > From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> > Date: Mon, 30 Jun 2025 13:47:49 -0400
-> > Subject: [PATCH] workqueue: relax condition in __queue_work()
-> >
-> > Some cpumask search functions may return a number greater than
-> > nr_cpu_ids when nothing is found. Adjust __queue_work() to it.
-> >
-> > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> > ---
-> >  kernel/workqueue.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> > index 9f9148075828..abacfe157fe6 100644
-> > --- a/kernel/workqueue.c
-> > +++ b/kernel/workqueue.c
-> > @@ -2261,7 +2261,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
-> >         rcu_read_lock();
-> >  retry:
-> >         /* pwq which will be used unless @work is executing elsewhere */
-> > -       if (req_cpu == WORK_CPU_UNBOUND) {
-> > +       if (req_cpu >= WORK_CPU_UNBOUND) {
-> >                 if (wq->flags & WQ_UNBOUND)
-> >                         cpu = wq_select_unbound_cpu(raw_smp_processor_id());
-> >                 else
-> >
-> 
-> Seems reasonable to me... Maybe submit this to Tejun and CC me?
+On 27 Jun 2025, at 7:55, David Hildenbrand wrote:
 
-Sure, no problem.
+> Instead, let's just allow for specifying through flags whether we want
+> to have bits merged into the original PTE.
+>
+> For the madvise() case, simplify by having only a single parameter for
+> merging young+dirty. For madvise_cold_or_pageout_pte_range() merging th=
+e
+> dirty bit is not required, but also not harmful. This code is not that
+> performance critical after all to really force all micro-optimizations.=
+
+>
+> As we now have two pte_t * parameters, use PageTable() to make sure we
+> are actually given a pointer at a copy of the PTE, not a pointer into
+> an actual page table.
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/internal.h | 58 +++++++++++++++++++++++++++++++--------------------=
+
+>  mm/madvise.c  | 26 +++++------------------
+>  mm/memory.c   |  8 ++-----
+>  mm/util.c     |  2 +-
+>  4 files changed, 43 insertions(+), 51 deletions(-)
+>
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 6000b683f68ee..fe69e21b34a24 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -208,6 +208,18 @@ typedef int __bitwise fpb_t;
+>  /* Compare PTEs honoring the soft-dirty bit. */
+>  #define FPB_HONOR_SOFT_DIRTY		((__force fpb_t)BIT(1))
+>
+> +/*
+> + * Merge PTE write bits: if any PTE in the batch is writable, modify t=
+he
+> + * PTE at @ptentp to be writable.
+> + */
+> +#define FPB_MERGE_WRITE			((__force fpb_t)BIT(2))
+> +
+> +/*
+> + * Merge PTE young and dirty bits: if any PTE in the batch is young or=
+ dirty,
+> + * modify the PTE at @ptentp to be young or dirty, respectively.
+> + */
+> +#define FPB_MERGE_YOUNG_DIRTY		((__force fpb_t)BIT(3))
+> +
+>  static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>  {
+>  	if (!(flags & FPB_HONOR_DIRTY))
+> @@ -220,16 +232,11 @@ static inline pte_t __pte_batch_clear_ignored(pte=
+_t pte, fpb_t flags)
+>  /**
+>   * folio_pte_batch_ext - detect a PTE batch for a large folio
+>   * @folio: The large folio to detect a PTE batch for.
+> + * @vma: The VMA. Only relevant with FPB_MERGE_WRITE, otherwise can be=
+ NULL.
+>   * @ptep: Page table pointer for the first entry.
+> - * @pte: Page table entry for the first page.
+> + * @ptentp: Pointer at a copy of the first page table entry.
+>   * @max_nr: The maximum number of table entries to consider.
+>   * @flags: Flags to modify the PTE batch semantics.
+> - * @any_writable: Optional pointer to indicate whether any entry excep=
+t the
+> - *		  first one is writable.
+> - * @any_young: Optional pointer to indicate whether any entry except t=
+he
+> - *		  first one is young.
+> - * @any_dirty: Optional pointer to indicate whether any entry except t=
+he
+> - *		  first one is dirty.
+>   *
+>   * Detect a PTE batch: consecutive (present) PTEs that map consecutive=
+
+>   * pages of the same large folio in a single VMA and a single page tab=
+le.
+> @@ -242,28 +249,26 @@ static inline pte_t __pte_batch_clear_ignored(pte=
+_t pte, fpb_t flags)
+>   * must be limited by the caller so scanning cannot exceed a single VM=
+A and
+>   * a single page table.
+>   *
+> + * Depending on the FPB_MERGE_* flags, the pte stored at @ptentp will
+> + * be modified.
+> + *
+>   * This function will be inlined to optimize based on the input parame=
+ters;
+>   * consider using folio_pte_batch() instead if applicable.
+>   *
+>   * Return: the number of table entries in the batch.
+>   */
+>  static inline unsigned int folio_pte_batch_ext(struct folio *folio,
+> -		pte_t *ptep, pte_t pte, unsigned int max_nr, fpb_t flags,
+> -		bool *any_writable, bool *any_young, bool *any_dirty)
+> +		struct vm_area_struct *vma, pte_t *ptep, pte_t *ptentp,
+> +		unsigned int max_nr, fpb_t flags)
+>  {
+> +	bool any_writable =3D false, any_young =3D false, any_dirty =3D false=
+;
+> +	pte_t expected_pte, pte =3D *ptentp;
+>  	unsigned int nr, cur_nr;
+> -	pte_t expected_pte;
+> -
+> -	if (any_writable)
+> -		*any_writable =3D false;
+> -	if (any_young)
+> -		*any_young =3D false;
+> -	if (any_dirty)
+> -		*any_dirty =3D false;
+>
+>  	VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+>  	VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
+>  	VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) !=3D folio, fo=
+lio);
+> +	VM_WARN_ON(virt_addr_valid(ptentp) && PageTable(virt_to_page(ptentp))=
+);
+
+Why not just VM_WARN_ON(!pte_same(*ptep, *ptentp)) ?
+
+ptep points to the first page table entry and ptentp points to the copy o=
+f it.
+I assume ptep should point to a valid page table entry to begin with.
+
+Best Regards,
+Yan, Zi
