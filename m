@@ -1,259 +1,161 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2051.outbound.protection.outlook.com [40.107.237.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC7317A300
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751251359; cv=none; b=DGH05ZD0PW27MxMdx+9PUDUEp1r9Opj3gRlq1+ZQvlmUOvxOtqNESXHcBgSuivhpJSrq8JC1r6JBgJ+0qO2lpTYsHY+wHrllYawRTPnGLO4KvYLLwq0SmA6MR1cw0puKq378ywiOdKoIAZeaDSdwn4tkYWd44auHMCInv3OnZBA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751251359; c=relaxed/simple;
-	bh=5Z9KyRUVm84surKnziWOlPcfo5hvLqWFepD2MD5F2uA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iAfL6vgB4TM7RAE3PgPqTqISMskcRFrt5uyzKjFntV/u+rMkZJuDcqOavvlsoqo73qCPoTDkb2Xv023+5Q420oO5jCKfbYRlKzbHRAOFKH5y3fZoBb4WzLaHh4aVMFFG2kKvvPZ0SGc+GunGdd7UWMDY3dc6y37rrUxUSA2+djM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PNaAf94L; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB982905;
+	Mon, 30 Jun 2025 02:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751251494; cv=fail; b=bQYKveyIPRcGXDQIhrvK28EpYUpQoBqMlYZ6GzFxpJTY2P0Qijr1MS67MRNAA4Ax6NxkakVjQppFUX7aKnfI6dyLXgdIe5u0kfew5y8xIjRHu9/Lyix4glTPyQZF2vK2KCRQP1MjHV3LoyzyhJlSp+KDKmjOLVbC7hZtJXqhsRM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751251494; c=relaxed/simple;
+	bh=bUaFjoEmaBjYcPbcKqaLUNP8GaM6CrGYfZ9DTLwZ6vs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JvlpLUBedtZ8BmRIrN9YsMB7SKD/1fvUxSq9qJq+mIbLlV1ucrjd99ww4umZutpvx9XraS10Ic6we4GzVtAw+bJuTt0MtZJhqtf/8UkRbEjP5jIi4v+iulCDBKJx7bT7FoWcb/bygyDZh1HXt3c75kbN3vIxvaggDtLvxwf7/BY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=Papv4VM2; arc=fail smtp.client-ip=40.107.237.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PNaAf94L"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso4742805e9.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:42:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751251355; x=1751856155; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Alw9qrycqIrCL8CKseCQMJxxf18iqOrQKvaGUMvOZFc=;
-        b=PNaAf94LgjB5SbRecaP0HBjW8ZKLPbUFGgvzgabv0rq10XK5qxb0rVLHhA3URgyfHr
-         /lox6+7NSzXyDIT3r34aan2QYu9/W0p9FbEtNM5G9KI5vMTC6cZNXk+xvEX0fNgxjrw9
-         XdBA4YrdxNLOqtRkxwt8KOBuv/jnaBDXdhoop1luJPx5DOLo38glnG30+p7LUmUHfgzh
-         WmazoKdPh/JRXLrqsGaEzpN0bvov9NK7pRsCQvktEAyLfSTcu0JQ9MrQmnW7M/LnAiyS
-         KaWAmDmPJiDZCQ7GD+qPw8Hav9Iaxkjz851c40HIZgTxQCTKWRvt5/Lc0h5GIM2NCUuB
-         14Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751251355; x=1751856155;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Alw9qrycqIrCL8CKseCQMJxxf18iqOrQKvaGUMvOZFc=;
-        b=hle8aotsE81arOAKW3XrKb4UEWAvnLSF6yKcU9TYXJ/dpMseVz9nXcMT110Bwwa/es
-         SoYDkDK16XQ8BTzN0PBydb8wvHFmK7gd4mWSYfZ9lxc2msLH+qeOJ9Q2MqyH05dEzFoJ
-         LMnzCN2UPsoM7pHhi9aeSusbo6JA8oL+xQEY4vvIyMh1OjpwrVc7e+408VsFcazWwwHV
-         X0b6RHEZJkSFNRxApZoSIKYfRZO1ZcmzVPb8uCv75l7xvxdS/fizIes4KKwi06Hrb8xG
-         ONlXsL1+sdLFEZtX60DoGll72AWzSj094R4fuFjQrv9fHHZZtwQIrNPtZVy0UcGIQzZn
-         U0tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURIHWSgYxZ8dzk4v8/Hi+QjnzYJA/DYZuYw6V0nMmPrOIARij/C1sXBGLHLJa5jFyt02p/Kfi3nxP+934=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSDao4OZRYjROCtE5kcuT3nQLq/arL1xZ6PU1995Tj9LmdIW1j
-	w09/VjkAleZ72fZptslzPgpEJcePLtAT9FC18Za7Dl6wkh534pyJVsMApgi3orG+SRFqbAls+/p
-	2jdi2
-X-Gm-Gg: ASbGnctPNYOCjO5vaSfNZYesmRm6NmV2JYN32N+lP4Y/63Dy3xnBUgBY5tUsqoJv5HA
-	DQaBDv0OhRHhATNtPlP/vFJdEvk09mu+wpEOhu2EWIheUvbchsFuwXDZNCdGOrXZFgxUHRlL2f5
-	cjQ1WlnSbprtSliTYvQ8S9bwRIZJGYJEsG+sD9XMoVDxJqkGuqMsRIE7s2whDC084QLr7fiWgNm
-	dMfS3Gop7tGHacnrLoxryaT2OfqbXo7mLVr8OtDv5K3RevDFx6VIxQIafr5xlcfZ5A1W2fX9L4O
-	Psu5INw515WToGddQqJvFSgFiuqKSSw6RVdKYjyXPXg4CbCaZf5So4K85qWUeD4vdROw
-X-Google-Smtp-Source: AGHT+IHY8ujAk+fL2MXP/Rs3N1Xth55HJlztHL+lk12CWLUGIau3enA3BMSlMhI+5kI8/QF0mOPMLw==
-X-Received: by 2002:a5d:5f48:0:b0:3a5:7991:fee with SMTP id ffacd0b85a97d-3aaf503a36dmr2262476f8f.14.1751251355112;
-        Sun, 29 Jun 2025 19:42:35 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39b8ddsm71032555ad.140.2025.06.29.19.42.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 19:42:34 -0700 (PDT)
-Message-ID: <d76672e5-0d69-42b1-a9d3-b70439c194b5@suse.com>
-Date: Mon, 30 Jun 2025 10:42:31 +0800
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="Papv4VM2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pIdqG88Gdo4xrsHnowb4eTtQM21c/5P5h0pYvcg1FZuMgiioQ8KXToTdTCaJONDs0+lplkZc7GRqaMYOat7OQaGFBmlyicMYCILp1UT1mnnalERc5cPICoqH/hPZQhcUfnPKZrTHgIsCvZmJhG5f5dWqxEjIN1+cxIeN+zam8ZKnbGPPuiSZUO2pdF+hEWI030WCakik0H0JLAPJBAVSKs0CVc4NcQDZ9WTtHfqus2cdK0MO1QaZ5AR8y15tj+UPTmPnFFElYePoimFPeulKrIJg13m0sCKhE0lKU5dIoOJW3ISkVulfR7msjy7ngLpd8bNiG0QO5r2VDUjQiL8V0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PRH3q/37hdrtk5Uj4bT67uEKkcrRhjWtGsPMJCjNmrw=;
+ b=HA5mzVK2CoUf5TD1DCULy4UYJXsyNe3dOv1Z59HyrOzIjSYYE1Ryvde15ZLFBaSCmnRmb5uGGIJB8vJkAoB/VwtVtkTsu8W2GkeWetNZAaK0IwHhwlbJ93bif/oUrzkkoS73F/nnTZyocd3Ftx9J4EGSEhVcfzXR82+Xj15hIJ+eSsyGjamZfStz3KRxdqgV78MzXgpcbrd+r0lTXRgXxcjPDySbWeFeJbHVfDF8y5JGUD6tE68mHGN2sITatBgL2Roi0TEPsC3AR2l/wwSofvPNMquhSDRcb2Dqm9NPtvMel2WHjPmrDWX7vMbwGrRxOS5C2WHSYXNMa5uqBQP/Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PRH3q/37hdrtk5Uj4bT67uEKkcrRhjWtGsPMJCjNmrw=;
+ b=Papv4VM2evstKgo+MVPtxN3saWpl6AJB6ruP0h14IDRyzBRpF6wqOOb6VcC/PAlMOKOIh1DoXUPAKmmWvQANsIIzZyTgmIN/rMVfN+TAc+PwjV7cpI9uFB37xwF/2qBTQSOGHXcMSF20n7VGkWRg+pEkQ3f4hiRGmfQhtjDN0ao6KTjRRvIifdrwEabxrvQLXUlNITrqR94SEWXrZTKbFlqkw7FP7r5NX0aMHb3Bzrc47JLfuisKX5FTP0b60XzAVJ722YzkJORVAsQqyR0NLI2EIUIREnLhMgVXL7L0CP/dhq0hiux3Tp8POf9gjB8iW2R+PYq/G5mBi5QWRjxFuw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BL1PR03MB6088.namprd03.prod.outlook.com (2603:10b6:208:311::22)
+ by SJ2PR03MB7476.namprd03.prod.outlook.com (2603:10b6:a03:55d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Mon, 30 Jun
+ 2025 02:44:50 +0000
+Received: from BL1PR03MB6088.namprd03.prod.outlook.com
+ ([fe80::21c8:ce4a:b199:fc9d]) by BL1PR03MB6088.namprd03.prod.outlook.com
+ ([fe80::21c8:ce4a:b199:fc9d%4]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
+ 02:44:50 +0000
+From: yankei.fong@altera.com
+To: dinguyen@kernel.org
+Cc: conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	krzk+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	matthew.gerlach@altera.com,
+	robh@kernel.org,
+	yankei.fong@altera.com
+Subject: [PATCH 0/4] Add 4-bit SPI bus width on target devices
+Date: Mon, 30 Jun 2025 10:44:44 +0800
+Message-Id: <20250630024444.3071-1-yankei.fong@altera.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <70e3a367-8d9d-477b-9858-9f2a7b97bbca@kernel.org>
+References: <70e3a367-8d9d-477b-9858-9f2a7b97bbca@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0232.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::27) To BL1PR03MB6088.namprd03.prod.outlook.com
+ (2603:10b6:208:311::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: embed actual values into ocfs2_sysfile_lock_key
- names
-To: Joseph Qi <joseph.qi@linux.alibaba.com>,
- Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
- ocfs2-devel@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <29348724-639c-443d-bbce-65c3a0a13a38@I-love.SAKURA.ne.jp>
- <d490a3ad-6309-42f3-9774-91871fbf7330@linux.alibaba.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <d490a3ad-6309-42f3-9774-91871fbf7330@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR03MB6088:EE_|SJ2PR03MB7476:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05469dc2-3ed6-47bb-401b-08ddb780158e
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?JLRYz2nzBI3TojsLd2QXkM/FdiELIfor4Sr+LKYRJ7miIZkf7ZtRRHwwLAod?=
+ =?us-ascii?Q?S9IQQw6yiANPjlrKmAixvExa+KIpLJKoO2Je01jMdaNuISllSNtVATmIxOrR?=
+ =?us-ascii?Q?tp78AHksNDysF/Q19eoCaCtVeRRz0xHunYTYbWnyK9nvpglTNP51G98UswiJ?=
+ =?us-ascii?Q?Z0zGeLDFWgjWBeTmKt+mY0kKDAGPpr5wuYLQv3Wmi944uaITYmJBJB4pHE6N?=
+ =?us-ascii?Q?CNvZPT8N1pDIFlTfWC4NGZ6qu4OXhochDUGIegn/YU/xOjeMSTn7IuZ06i0O?=
+ =?us-ascii?Q?XK5oqKQvlA7u25nJUidPHF/6ly7tsnPW0mXfCs9pQDh1vvCCZA4JbXQO+ZJD?=
+ =?us-ascii?Q?oMlVjI8mudxkKW2f1UtTkIhsW4LanPcmFe4jTuHCXoN1Sx06SAkUzfOU8obY?=
+ =?us-ascii?Q?pbf4rtC4TKn5DBZVU1ZFRzhfRPE8+f8tGL0XeyDLOQtXLM2QSO+d9R7yQdV6?=
+ =?us-ascii?Q?ymGAxQZh8oHUXEI3sehiwjQk67HURWl2oxiRlNN7ZFOcdMShDvfVExQNso3v?=
+ =?us-ascii?Q?XRY6m8G1+RbeO0DLuguLItmBdooayZbWtgQ4JRzDr+AutCHcSm45KFoHGUEc?=
+ =?us-ascii?Q?eQDSq5Avt8AziX1rCGblAaMwp4GbyGxJdD5h4Ejlaogs1zLiLsTOBIEAQPu3?=
+ =?us-ascii?Q?ud8k+VzWw730bdTDxlZbq4K+lslhECuS0P0Q6Z3ognTWLT6dWFsObV/ZQTyB?=
+ =?us-ascii?Q?pvkLc2xNea++XqaF8Q0usxxG1hbMpV4GrwjRJ2wEsTj/69GE6MH0ipqg4r7g?=
+ =?us-ascii?Q?kw7SwZ3bwiKn0CykaDZynMxL3iUiYl1f6j7ZYd0MIAkO/6CpKFB6uUL56TAm?=
+ =?us-ascii?Q?coGB9P187WUIahDZeEX3kVtnUrNptqZWWPJvw8mFx0tX62krt7HmpRg6Z7g2?=
+ =?us-ascii?Q?YS+BmNxKs8z5GYsJnUm0NdgQg8041JPhreWqgKbs0y+TgCYF5qr7gpXGKNLo?=
+ =?us-ascii?Q?pGJ4nBS55Qil5fhoQhsdIZUBue6Atg3hpRlsTKzNAlI7LnWkSGgmAhxl/mRG?=
+ =?us-ascii?Q?84eJqwwFjnr29CalT7VUVcA31tk9xs2rahxq/ZyxW3smbd6vamktaMS00FPP?=
+ =?us-ascii?Q?dXq9+6goA63WOJCHd3iBozeRLoChlkGvGSU5rGNJFor3B9Jh5en3/wigvFY2?=
+ =?us-ascii?Q?Ml1SqNDHhe1/PE4EIb4HSdWuoYSV9MCu4rNiBZ5Bu7wcQ33qakxAlZ5V2Usv?=
+ =?us-ascii?Q?DruNhEC8+TwdbnywjJVHnxB4MzDcFFRZS8D3KgCZ1/I9m7FNrkHf1ChUq/9G?=
+ =?us-ascii?Q?sH5URcHkElKy4gaUMRpYX5fGj6/n2rVFxH5FnuzHWOrK0iTslXFLzUyj868d?=
+ =?us-ascii?Q?G9jmxY5UGzu4HuYcWqiKOAwPcYtEjwqtMH2+L6z6mpvGCARLgXD7FWWXXowN?=
+ =?us-ascii?Q?4ALiG6SxH3K/19+GE4oEOX2OjyRTxH+c+DvLHMx5TcNiEqVzYeP9E4Np165h?=
+ =?us-ascii?Q?/y/tWiiRAto=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR03MB6088.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MXbTXAZLRehF1CkmJPUHABWnvy6DHIXrSsiSUy5A+7yQiA36F6I01PnxuN1T?=
+ =?us-ascii?Q?UKlR+xGCPmTTabOr/m7NtsRItzF52SYgq4jSAJ4PzKRJINUIRd7tgdJgXmhH?=
+ =?us-ascii?Q?ukHI/2JeSlIJNvJi3E/sjGj5sk23vm1uYr37MRFpq1aOIKRel/VChmvKLRKr?=
+ =?us-ascii?Q?NclEtSPiatT6fsOhx767+mRkMjtMRxop0ue0Ocunj49wqM/Oc4Y6C20lxZ61?=
+ =?us-ascii?Q?Si8/OAoE5arAQKphadftNfIEgTdQjUcZ0O4MYMAsCs7wFArsYCMO4c8+B/Ke?=
+ =?us-ascii?Q?GcvbyQ8VBoZgX0VSQz2BP180lRrvAwXC4hkyo8slQnOb6gnTSxIugTZSFpWz?=
+ =?us-ascii?Q?AWiBvHNb2BBcaTSx+lxtfQ4PozibAwCS9i/T6yui0FF+cYEpD2A7OCLUGOc3?=
+ =?us-ascii?Q?Kq6wHX3rydzNZAla6P4iq6BE//Tsnmnl2ft40av8lK+Bmm7oN0Cs4E3ncW3f?=
+ =?us-ascii?Q?UQbkNXoBcl1o3kFLAIhTt/sP6sDl9W/Il7BCswj1D76NLOdtFIzY2WmwlpQl?=
+ =?us-ascii?Q?0f3lFyeb+sZPEhCSCmv2W8OR4qJqDfGFpB5i07Kyv1wWBVjtE1GOF4mJoVTt?=
+ =?us-ascii?Q?koq1utyOLz097abFDrFEY2zuR7k1cJ3KqJLzqnzTQPbDubHMD4KbJmupaS64?=
+ =?us-ascii?Q?RgX+VGRHZEI3xmL/DNevR/uHHazda+p04eIKoj+6ohipl+ig37MN2cVCrjRE?=
+ =?us-ascii?Q?FqjUFStf6XjLrYm8DiwB5XVDtKu7TSxV4b6jNJ7Gibbt8p8NlIhTEqXsA9SH?=
+ =?us-ascii?Q?AttZNtzovj5mwiknAPBsZRF0NIv4Tk2yBUu1Fr+MWPbdKDYFQ47E2W5pDoTS?=
+ =?us-ascii?Q?akzY/I/fJRb1BpHb7CmBoAlHbJzzQ5AOZ3paL2mf3GnIUCspEoyTmnJvXOJ8?=
+ =?us-ascii?Q?kyS4fT8hxLuYiBUqdSQPi2nxK/twyObPD9rdSUwgfJoe/F0ZRpx6qd/ltBLp?=
+ =?us-ascii?Q?PYv7rd5kq5lCo1WuNitcdvBoXf7lnGWSSI0KAr1KWmFn+P7P0hEHnT4zfaHZ?=
+ =?us-ascii?Q?JTghefV6T1e2/A+Kaf9EgEgm5ACteHfg7agXDw516oRBakYcyez3nkhHQJJl?=
+ =?us-ascii?Q?idHMEMnUbuMZXD73Cs1auxiyK7ast2o6ZkRujKgSj37oj/iPWDOgK5IPHvLa?=
+ =?us-ascii?Q?ScsD3VhNN0pibRhXLPeZNMXo3/Lmwq44J4uuEnM422FVHI0XrFQhk8KpPpUS?=
+ =?us-ascii?Q?3x3Nh3UOSxDgRtChprEhSHh2oqjXGDSWUd+Ut6AO6K67isEhnZPYMlo6U8ZW?=
+ =?us-ascii?Q?a0JTyU83jIMV4OxFxDb1MJfLLAxmUnwC/2K2el4e1c0d98hcIZPstIV3EinL?=
+ =?us-ascii?Q?IMD9LongiZULAG+nG5/YF8Os0Uwu/+L5fHW0SF4mEgVikzF5fI5MBrzrPEgq?=
+ =?us-ascii?Q?qgo5PD3f4pGJDaqK2rolW+iZt4M7PZaLskM+lGfR0K+3h5UV7dy3fjKFk09h?=
+ =?us-ascii?Q?dJwf8B073eyQX9BBl2AWkNQEDOL+EO0D2Fc2pE57cH/ICRYFlUWOnFJ98obh?=
+ =?us-ascii?Q?+6o92VlrYb6B1oF+TKkAMAU/wM5AMyCKZwH/Xq6aXDM/bjxs1UzeqaRESWSr?=
+ =?us-ascii?Q?flMALboyjLrEVtAWZQh0h/bPyo+FqYHvgQ4z0DF3?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05469dc2-3ed6-47bb-401b-08ddb780158e
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR03MB6088.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 02:44:50.5013
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tSyj7tXj8VxCiEpr77gQlvpVtryDOqQKY0VusQTdbx7EmTGDyFS4ZlRPSkzUGVeanSskrZWujQx6XVbolnlvzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR03MB7476
 
-I am not familiar with lockdep, and just have two questions regarding
-the lockdep in ocfs2.
+From: Fong, Yan Kei <yan.kei.fong@altera.com>
 
-1>
-there are three global "static struct lock_class_key" definitions:
-- fs/ocfs2/inode.c  : ocfs2_sysfile_lock_key[NUM_SYSTEM_INODES]
-- fs/ocfs2/dlmglue.c: lockdep_keys[OCFS2_NUM_LOCK_TYPES]
-- fs/ocfs2/sysfile.c: ocfs2_sysfile_cluster_lock_key[NUM_SYSTEM_INODES]
+The changes required for the QSPI subsystem. With this implementation, the
+read performance will be greater compare to single bus width when trying
+to read the QSPI flash chips. Below is the test results:
 
-why did you env only trigger the ocfs2_sysfile_lock_key[] warning?
-
-2>
-It seems the existing CONFIG_DEBUG_LOCK_ALLOC is incorrect, it should be
-replaced with CONFIG_LOCKDEP.
-
-- Heming
-
-On 6/30/25 10:21, Joseph Qi wrote:
-> 
-> 
-> On 2025/6/23 22:54, Tetsuo Handa wrote:
->> Since lockdep_set_class() uses stringified key name via macro, calling
->> lockdep_set_class() with an array causes lockdep warning messages to
->> report variable name than actual index number.
->>
->> Change ocfs2_init_locked_inode() to pass actual index number for better
->> readability of lockdep reports. This patch does not change behavior.
->>
->>
->> Before:
->>
->>    Chain exists of:
->>      &ocfs2_sysfile_lock_key[args->fi_sysfile_type] --> jbd2_handle --> &oi->ip_xattr_sem
->>
->>     Possible unsafe locking scenario:
->>
->>           CPU0                    CPU1
->>           ----                    ----
->>      lock(&oi->ip_xattr_sem);
->>                                   lock(jbd2_handle);
->>                                   lock(&oi->ip_xattr_sem);
->>      lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]);
->>
->>     *** DEADLOCK ***
->>
->> After:
->>
->>    Chain exists of:
->>      &ocfs2_sysfile_lock_key[EXTENT_ALLOC_SYSTEM_INODE] --> jbd2_handle --> &oi->ip_xattr_sem
->>
->>     Possible unsafe locking scenario:
->>
->>           CPU0                    CPU1
->>           ----                    ----
->>      lock(&oi->ip_xattr_sem);
->>                                   lock(jbd2_handle);
->>                                   lock(&oi->ip_xattr_sem);
->>      lock(&ocfs2_sysfile_lock_key[EXTENT_ALLOC_SYSTEM_INODE]);
->>
->>     *** DEADLOCK ***
->>
->>
->> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> 
-> Looks fine.
-> 
-> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
->> ---
->>   fs/ocfs2/inode.c | 70 +++++++++++++++++++++++++++++++++++++++++++++---
->>   1 file changed, 66 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/ocfs2/inode.c b/fs/ocfs2/inode.c
->> index 12e5d1f73325..14bf440ea4df 100644
->> --- a/fs/ocfs2/inode.c
->> +++ b/fs/ocfs2/inode.c
->> @@ -50,8 +50,6 @@ struct ocfs2_find_inode_args
->>   	unsigned int	fi_sysfile_type;
->>   };
->>   
->> -static struct lock_class_key ocfs2_sysfile_lock_key[NUM_SYSTEM_INODES];
->> -
->>   static int ocfs2_read_locked_inode(struct inode *inode,
->>   				   struct ocfs2_find_inode_args *args);
->>   static int ocfs2_init_locked_inode(struct inode *inode, void *opaque);
->> @@ -250,14 +248,77 @@ static int ocfs2_find_actor(struct inode *inode, void *opaque)
->>   static int ocfs2_init_locked_inode(struct inode *inode, void *opaque)
->>   {
->>   	struct ocfs2_find_inode_args *args = opaque;
->> +#ifdef CONFIG_LOCKDEP
->> +	static struct lock_class_key ocfs2_sysfile_lock_key[NUM_SYSTEM_INODES];
->>   	static struct lock_class_key ocfs2_quota_ip_alloc_sem_key,
->>   				     ocfs2_file_ip_alloc_sem_key;
->> +#endif
->>   
->>   	inode->i_ino = args->fi_ino;
->>   	OCFS2_I(inode)->ip_blkno = args->fi_blkno;
->> -	if (args->fi_sysfile_type != 0)
->> +#ifdef CONFIG_LOCKDEP
->> +	switch (args->fi_sysfile_type) {
->> +	case BAD_BLOCK_SYSTEM_INODE:
->> +		break;
->> +	case GLOBAL_INODE_ALLOC_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[GLOBAL_INODE_ALLOC_SYSTEM_INODE]);
->> +		break;
->> +	case SLOT_MAP_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[SLOT_MAP_SYSTEM_INODE]);
->> +		break;
->> +	case HEARTBEAT_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[HEARTBEAT_SYSTEM_INODE]);
->> +		break;
->> +	case GLOBAL_BITMAP_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[GLOBAL_BITMAP_SYSTEM_INODE]);
->> +		break;
->> +	case USER_QUOTA_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[USER_QUOTA_SYSTEM_INODE]);
->> +		break;
->> +	case GROUP_QUOTA_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[GROUP_QUOTA_SYSTEM_INODE]);
->> +		break;
->> +	case ORPHAN_DIR_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[ORPHAN_DIR_SYSTEM_INODE]);
->> +		break;
->> +	case EXTENT_ALLOC_SYSTEM_INODE:
->>   		lockdep_set_class(&inode->i_rwsem,
->> -			&ocfs2_sysfile_lock_key[args->fi_sysfile_type]);
->> +				  &ocfs2_sysfile_lock_key[EXTENT_ALLOC_SYSTEM_INODE]);
->> +		break;
->> +	case INODE_ALLOC_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[INODE_ALLOC_SYSTEM_INODE]);
->> +		break;
->> +	case JOURNAL_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[JOURNAL_SYSTEM_INODE]);
->> +		break;
->> +	case LOCAL_ALLOC_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[LOCAL_ALLOC_SYSTEM_INODE]);
->> +		break;
->> +	case TRUNCATE_LOG_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[TRUNCATE_LOG_SYSTEM_INODE]);
->> +		break;
->> +	case LOCAL_USER_QUOTA_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[LOCAL_USER_QUOTA_SYSTEM_INODE]);
->> +		break;
->> +	case LOCAL_GROUP_QUOTA_SYSTEM_INODE:
->> +		lockdep_set_class(&inode->i_rwsem,
->> +				  &ocfs2_sysfile_lock_key[LOCAL_GROUP_QUOTA_SYSTEM_INODE]);
->> +		break;
->> +	default:
->> +		WARN_ONCE(1, "Unknown sysfile type %d\n", args->fi_sysfile_type);
->> +	}
->>   	if (args->fi_sysfile_type == USER_QUOTA_SYSTEM_INODE ||
->>   	    args->fi_sysfile_type == GROUP_QUOTA_SYSTEM_INODE ||
->>   	    args->fi_sysfile_type == LOCAL_USER_QUOTA_SYSTEM_INODE ||
->> @@ -267,6 +328,7 @@ static int ocfs2_init_locked_inode(struct inode *inode, void *opaque)
->>   	else
->>   		lockdep_set_class(&OCFS2_I(inode)->ip_alloc_sem,
->>   				  &ocfs2_file_ip_alloc_sem_key);
->> +#endif
->>   
->>   	return 0;
->>   }
-> 
-> 
-
+$cat /sys/kernel/debug/spi-nor/spi0.0/params
+...
+...
+opcodes
+read 0x6c  -> from micron QSPI spec, 6c indicates quad output fast read
+...
+...
+protocols
+read 1S-1S-4S
