@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281762E9749;
-	Mon, 30 Jun 2025 23:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2C42E9EA3;
+	Mon, 30 Jun 2025 23:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751326015; cv=none; b=ESnDKlpuPQeLAKof4kBEM9dRDejVgeD/KXGr60YXlpMYgtAlqm3TZtnKo2bdDi9MzUHbhTzREMBbWyActvtR5gUd59ucICK2NWswEvWW/uWsLXLzlqU3a7l7l+nTz3u/oI23a2ADc6Z5TOhu6CaM3h09lL7eAV+2M7lH8OOnBuk=
+	t=1751326027; cv=none; b=kt6LUQAeWArkIixexQdnKLAN5X4aERRQqdU/aFnY8i6LhXlEgD8KPqeb+0emC0OB/wmWMJSaF7PHC/s4nL8jOmbdAxx5aixYUV2AzkcxbfM9B/xla4IA7XVUpSp2oAD9haca4edUuzK3hJETbjb02Ft1R2LezfXwk3xpdhZEwVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751326015; c=relaxed/simple;
-	bh=WR89lVovHqF0TgIThGYwD0D56m3jLDdx1wIgwZQ9cKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TfmboaqtPcwVxax36BO38E7OuokFIzJOx1yOxs+jzLNqrjhQ8r7ymmWdlfuPel1UJTad+fo5iBsyszp7lAe4tUmsT2OCHTumSkJwr/4VLYUY/sC0W7ZnQ7Rw2FdDX1eEgYQOQwHVFALHwMt9WJbrjLCt8ERYQBpOz/jF+MPvkSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8qtIgUF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751326027; c=relaxed/simple;
+	bh=KZZob1ziys11up+TERSy8DmK6bVQ82VouoWjvFI+MaM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tyuVfOwqj39wqN+H3FZqKwp5B69QKKNMloqb3AfYreWEoduGlv0gp5khUbAjHgIht/Aq62N4amHjl1ofmI0YNblpm8Z2oHCeQ9P0BJMd6rEfUOIvo07s8R5HFgxCJFoOgONA/OWlhqbIxbw+26CsjIZJkD+13prHCcT5OWAmDyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5/JIP5E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8qtIgUF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04D5C4CEE3;
-	Mon, 30 Jun 2025 23:26:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5/JIP5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34086C4CEE3;
+	Mon, 30 Jun 2025 23:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751326014;
-	bh=WR89lVovHqF0TgIThGYwD0D56m3jLDdx1wIgwZQ9cKw=;
+	s=k20201202; t=1751326026;
+	bh=KZZob1ziys11up+TERSy8DmK6bVQ82VouoWjvFI+MaM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=h8qtIgUFWfZYePkmCwXS/Q5SBcFxgb4eWxecewshLjgRio7ZPdDcV7MbPz+LzI1+d
-	 riu/rQpAkdqa2zT4I5eRVzRgxFvjU1ab7fIOHs3F158pro4zx5Hv644d+3p1AKpfol
-	 Wgchv11YuBZSie9eAnlcG1c5bkZdbEqbhD5D1s4wAeWwHiwix+4mQWFQzNpiDNC+ll
-	 Engo1o1l9xeOtElYTPC6ebkocG5QEYmC85tzo9DXD5j7dZW/MWcwwVSAES5u8zIbv0
-	 RbbGQMKdVObnb7jQaCCq/haHrTbfIIWLkZ1SfbO1Pcyw1sWpYbi3SFJvqWz354/KWN
-	 cuCIxRI223Kqg==
+	b=D5/JIP5Eu0VhLKUHmDKQH+7FCS5H5+YTKoysCJqTYc4/ZDq3TkytfKLpB91PTi0hg
+	 KPmvJGztTTjs0YOehFRQMXDK59ULEUT0iH0EnkLNMAu6q1x7cQDDOQQwUsi4FdcmNN
+	 ILmSz3KMqnYsN4Thr5a/DVc6/+a7vVwZaJdA3JHCB2SJQrqB6ibGgN3ijC3WGf8uoY
+	 rgvRYm2cqFLAJ94LzfekRcnEcVs92SSaZFl1FocuJT9ohwYC24z8IdzJhwFOxAzEDS
+	 1Yyaxj5FjN0v+Kbs49tefL56CepqKt4wNG8pCQI6TCs/k8rZWdy17UEwuGVIWQ/VXl
+	 F/IYf5XxUaZKA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Chandra Mandal <purna.mandal@microchip.com>
+	Daniel Mack <daniel@zonque.org>
 Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert microchip,pic32mzda-clk to DT schema
-Date: Mon, 30 Jun 2025 18:26:51 -0500
-Message-ID: <20250630232652.3701007-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: clock: Convert maxim,max9485 to DT schema
+Date: Mon, 30 Jun 2025 18:26:57 -0500
+Message-ID: <20250630232658.3701225-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,107 +48,164 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/clock/microchip,pic32.txt        | 39 ----------------
- .../clock/microchip,pic32mzda-clk.yaml        | 45 +++++++++++++++++++
- 2 files changed, 45 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
- create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
+ .../bindings/clock/maxim,max9485.txt          | 59 -------------
+ .../bindings/clock/maxim,max9485.yaml         | 82 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/maxim,max9485.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/maxim,max9485.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+diff --git a/Documentation/devicetree/bindings/clock/maxim,max9485.txt b/Documentation/devicetree/bindings/clock/maxim,max9485.txt
 deleted file mode 100644
-index c93d88fdd858..000000000000
---- a/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+index b8f5c3bbf12b..000000000000
+--- a/Documentation/devicetree/bindings/clock/maxim,max9485.txt
 +++ /dev/null
-@@ -1,39 +0,0 @@
--Microchip PIC32 Clock Controller Binding
------------------------------------------
--Microchip clock controller is consists of few oscillators, PLL, multiplexer
--and few divider modules.
+@@ -1,59 +0,0 @@
+-Devicetree bindings for Maxim MAX9485 Programmable Audio Clock Generator
 -
--This binding uses common clock bindings.
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-This device exposes 4 clocks in total:
+-
+-- MAX9485_MCLKOUT: 	A gated, buffered output of the input clock of 27 MHz
+-- MAX9485_CLKOUT:	A PLL that can be configured to 16 different discrete
+-			frequencies
+-- MAX9485_CLKOUT[1,2]:	Two gated outputs for MAX9485_CLKOUT
+-
+-MAX9485_CLKOUT[1,2] are children of MAX9485_CLKOUT which upchain all rate set
+-requests.
 -
 -Required properties:
--- compatible: shall be "microchip,pic32mzda-clk".
--- reg: shall contain base address and length of clock registers.
--- #clock-cells: shall be 1.
+-- compatible:	"maxim,max9485"
+-- clocks:	Input clock, must provide 27.000 MHz
+-- clock-names:	Must be set to "xclk"
+-- #clock-cells: From common clock binding; shall be set to 1
 -
 -Optional properties:
--- microchip,pic32mzda-sosc: shall be added only if platform has
--  secondary oscillator connected.
+-- reset-gpios:		GPIO descriptor connected to the #RESET input pin
+-- vdd-supply:		A regulator node for Vdd
+-- clock-output-names:	Name of output clocks, as defined in common clock
+-			bindings
+-
+-If not explicitly set, the output names are "mclkout", "clkout", "clkout1"
+-and "clkout2".
+-
+-Clocks are defined as preprocessor macros in the dt-binding header.
 -
 -Example:
--	rootclk: clock-controller@1f801200 {
--		compatible = "microchip,pic32mzda-clk";
--		reg = <0x1f801200 0x200>;
--		#clock-cells = <1>;
--		/* optional */
--		microchip,pic32mzda-sosc;
+-
+-	#include <dt-bindings/clock/maxim,max9485.h>
+-
+-	xo-27mhz: xo-27mhz {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <27000000>;
 -	};
 -
+-	&i2c0 {
+-		max9485: audio-clock@63 {
+-			reg = <0x63>;
+-			compatible = "maxim,max9485";
+-			clock-names = "xclk";
+-			clocks = <&xo-27mhz>;
+-			reset-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+-			vdd-supply = <&3v3-reg>;
+-			#clock-cells = <1>;
+-		};
+-	};
 -
--The clock consumer shall specify the desired clock-output of the clock
--controller (as defined in [2]) by specifying output-id in its "clock"
--phandle cell.
--[2] include/dt-bindings/clock/microchip,pic32-clock.h
+-	// Clock consumer node
 -
--For example for UART2:
--uart2: serial@2 {
--	compatible = "microchip,pic32mzda-uart";
--	reg = <>;
--	interrupts = <>;
--	clocks = <&rootclk PB2CLK>;
--};
-diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml b/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
+-	foo@0 {
+-		compatible = "bar,foo";
+-		/* ... */
+-		clock-names = "foo-input-clk";
+-		clocks = <&max9485 MAX9485_CLKOUT1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/clock/maxim,max9485.yaml b/Documentation/devicetree/bindings/clock/maxim,max9485.yaml
 new file mode 100644
-index 000000000000..a14a838140f1
+index 000000000000..f9d8941c7235
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/microchip,pic32mzda-clk.yaml
-@@ -0,0 +1,45 @@
++++ b/Documentation/devicetree/bindings/clock/maxim,max9485.yaml
+@@ -0,0 +1,82 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/microchip,pic32mzda-clk.yaml#
++$id: http://devicetree.org/schemas/clock/maxim,max9485.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Microchip PIC32MZDA Clock Controller
++title: Maxim MAX9485 Programmable Audio Clock Generator
 +
 +maintainers:
-+  - Purna Chandra Mandal <purna.mandal@microchip.com>
++  - Daniel Mack <daniel@zonque.org>
 +
-+description:
-+  Microchip clock controller consists of a few oscillators, PLL, multiplexer
-+  and divider modules.
++description: >
++  Maxim MAX9485 Programmable Audio Clock Generator exposes 4 clocks in total:
++
++    - MAX9485_MCLKOUT:  A gated, buffered output of the input clock of 27 MHz
++    - MAX9485_CLKOUT:   A PLL that can be configured to 16 different discrete
++                        frequencies
++    - MAX9485_CLKOUT[1,2]:  Two gated outputs for MAX9485_CLKOUT
++
++  MAX9485_CLKOUT[1,2] are children of MAX9485_CLKOUT which upchain all rate set
++  requests.
 +
 +properties:
 +  compatible:
-+    const: microchip,pic32mzda-clk
++    const: maxim,max9485
 +
 +  reg:
 +    maxItems: 1
 +
++  clocks:
++    description: Input clock. Must provide 27 MHz
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: xclk
++
 +  '#clock-cells':
 +    const: 1
 +
-+  microchip,pic32mzda-sosc:
-+    description: Presence of secondary oscillator.
-+    type: boolean
++  reset-gpios:
++    description: >
++      GPIO descriptor connected to the #RESET input pin
++
++  vdd-supply:
++    description: A regulator node for Vdd
++
++  clock-output-names:
++    description: Name of output clocks, as defined in common clock bindings
++    items:
++      - const: mclkout
++      - const: clkout
++      - const: clkout1
++      - const: clkout2
 +
 +required:
 +  - compatible
 +  - reg
-+  - "#clock-cells"
++  - clocks
++  - clock-names
++  - '#clock-cells'
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    clock-controller@1f801200 {
-+        compatible = "microchip,pic32mzda-clk";
-+        reg = <0x1f801200 0x200>;
-+        #clock-cells = <1>;
-+        /* optional */
-+        microchip,pic32mzda-sosc;
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        clock-controller@63 {
++            compatible = "maxim,max9485";
++            reg = <0x63>;
++            #clock-cells = <1>;
++            clock-names = "xclk";
++            clocks = <&xo_27mhz>;
++            reset-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
++            vdd-supply = <&reg_3v3>;
++        };
 +    };
 -- 
 2.47.2
