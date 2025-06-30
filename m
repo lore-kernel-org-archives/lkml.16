@@ -1,186 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B13619F130;
-	Mon, 30 Jun 2025 20:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9761E1DF75C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751314032; cv=none; b=ajWp9ExhrMhQMPZSZ2DRfOwUpSsQWl7IQoIgeIUCAGIoznAcNb21xLX0T+85GJJ/ENt5L53KpRe7GNsvS7Wj6gbcdUEeT4Mhj3HyDE+Fu+JZjrLghpNuvLi+qriTkHpu1AVZjoKzQREo/oG6qjZeYPPV/YTge75/nCk5JYP79Vo=
+	t=1751314127; cv=none; b=XgN/f21+RAFREBfmpixtpPUDB12+Kk5RT+c7aXI0FtfDgDTp0ZA5FNo+m0cSwpHdNIEsPaC9wGMGt6QXF6+/IXxKnbX6V9K0j2WNxlxagBFttvniznoupVEzGjHhQsoxa7Pp/oroagff81ZDj69DJ5MkvAfrPJhPhTkSJglP/70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751314032; c=relaxed/simple;
-	bh=r1AWKj41a1sd0zceKrDNzhF2CygHLZVhZnJgrhIxi14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hbhDKzurCVUzR/HYd35RQuuQgJCJsi2QeCu5nwtDPGO8PQPwFxLHVRtIvJlTczVHgeic/3nkBZPrErx4MrFSQX3Qz0d8wBB8j/WqNcGog/xMzPTkTy7jgAjXzsdfT7rteAmBf//gbrancsiz9Jo0fVp0EH4f5IsQCb5Ec56zCro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enJ4rWDg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751314127; c=relaxed/simple;
+	bh=KmUjQyKG1EKv1z0YlFN7C1fRfVuFoQo62eoX9d60CMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=irj3tn/dwXhwicPTSUHGdyCsQ6Yj28X9R0FEg34CJDpN2xexgjYm2fAmOY5ty5lYj33OmFHontQPEIpdsqbIFq+tK+TE4Qs80GRB1KVofHvoRdOFnFiuKWEzgrJhAJmY/PutYFdseEOQPTIjMhEgQSaXzEb775hYnaNlVYUiL+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NaSH5KIJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enJ4rWDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C404BC4CEF1;
-	Mon, 30 Jun 2025 20:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751314029;
-	bh=r1AWKj41a1sd0zceKrDNzhF2CygHLZVhZnJgrhIxi14=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=enJ4rWDgtU7O+aKA9rrgUJQjs5FBFVvwrqjGxU8Jd83sLw4yR00YvpCksbMpspRi8
-	 HsCjRTIG7/aZCdZ7HkYwkJhYR7M6kc7FQpS+GXJv5oafT+058zxFlWc3pMCKDx1ytA
-	 V8d/lLuDJzy1e3S/4pwUL3JbF1a2amyqc6LYSKsTr8JYsdTOx+BUwh6fqNLrg+VRER
-	 hojNCbxaeJqcjGGXYdAUNF/JD+cgqDKC535WwDlk7efnVBElJRSoORUrAwu/T5rsd6
-	 2Y7z9TQInQsfOXtyCGx3X9+JtD/6HNK/l/L15UNE4JAc0bN+Y79IvpojrAqZbDYhlt
-	 CwvGuNMAJxNYw==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-6118b000506so1168749eaf.0;
-        Mon, 30 Jun 2025 13:07:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGhzkWvJFEQV0IgONVAOWR7SKfrftRMujO4js/eX4I39AoMFBF+VIRaO3Ib09hN97EF33MZy4F2fpAGErQ@vger.kernel.org, AJvYcCX6CvOwLDXf5BUWdDplqgGhmyQPRBl5gOxGJCFoUJPuzKpneF4PvaTxyCOoy7NfAIv2FTd0N8Vl6tAF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzrBIKJSRHTE1fYPebggOSmysfegLHG2RC2zUjfN2rm/l5eYrN
-	UR3De8nu1J3QhcX8wDj0EKjEgE7uuaM5qLAaxjB42Yp4D0+xRwU1wRJmWt4gYq3Ccrh309agz5w
-	G+Nb2VnG2DFhjwqqHcXmKbJqZCo+cKYo=
-X-Google-Smtp-Source: AGHT+IFslIZMTl4pJP0AqDhio6+67azk3qrKNhvD+UFrMTCrHmUWjBxpcaD/bHzG6Cp+7GjfV5H+KgUY19UtXhoQwRI=
-X-Received: by 2002:a4a:e90b:0:b0:611:80f3:eb44 with SMTP id
- 006d021491bc7-611b90eca36mr9646540eaf.3.1751314028969; Mon, 30 Jun 2025
- 13:07:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NaSH5KIJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751314123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZI7qwlP52j77UJ8Ch3hjHDow/WyRUqAXdMz4s4OH3C4=;
+	b=NaSH5KIJ94IN0vDoH7l3IcNCABJ/pXRI11A1JVs3GeUm6hR9j88m91b6m0I8Uxxbkuwsbk
+	aESm3xnNYrVdDjYTshvvdenB8i6vmeLDIsRUQQahwdNcSdGOwYTaTLP0L7tVIU+UVSF89Z
+	QYhxaIiZExeRdeGAODNylZi3zfcmf10=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-119-LfVik0_JPke4x5BbrZeCiQ-1; Mon, 30 Jun 2025 16:08:42 -0400
+X-MC-Unique: LfVik0_JPke4x5BbrZeCiQ-1
+X-Mimecast-MFC-AGG-ID: LfVik0_JPke4x5BbrZeCiQ_1751314121
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3af3c860ed7so26123f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:08:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751314121; x=1751918921;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZI7qwlP52j77UJ8Ch3hjHDow/WyRUqAXdMz4s4OH3C4=;
+        b=aPgAHMCIo6V51vsto2eAsRuhHSzMSJqDkGsrYo3UncDpPHfXYFg3zj0/rWqdlew2wT
+         Q/kAXo7i2W8InvzXWrnr2oKN+jyXH7WGPKr+G6gtIWT8/al5pp4EDqq+jZ9RMS/C9qCa
+         I2SKJQNI0ltZIY7EamNW5EjoZscMvDmufBAmboknvShrMNRwH9m6/kFUYZckQ3gv96+I
+         W7jLog0IGfFxXWNqTr4o/y6MJNjSbtSYqI56OPbmENbzNz6BT0Vn8khB3Pnw5rSSKBSJ
+         /kxRdsngm2FHqLgeaN2fRaLdC8c2fopXA2HUkeTw3q6ZFyFlyioYoO1IDh5e0Mcgn1AM
+         LaXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIyos+W141VMFnfW47KIlewd3TZrIUpLdT2fRFifI8sXhy/lGZTfkYPpVEvhVLBKOQDelxMSyYow9E3SA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLAkiCZqFlkn0RAIClQi6nbBsB0n2kh0oaxu91OkqLXMGPAQRC
+	bS8do+Z3LQBvcyKoKvqA0YsNOUhiB14jqPNQMokgzq2pjTSaPb5poU9FjSSg2xkaOWA6hJzJI0P
+	JLxVlI4XhwB0eJewOmd+bEVeaUoVoYFk70IzqU/4/Dh0iOS8tJk7zTOf5FRc3cTJ53Q==
+X-Gm-Gg: ASbGncv9W96rWlVqqIR8eRywqjwCT6Elm0ZdXMSfr1WZjJpzDXMTiNxC46IMPjNFSsR
+	B+saay+MSbZ3J5L2QF/wSIx2HHU2PBQECrSy0tDGlPT1mtuXXpO2TBwGb3pc1r0ldYXXz7YpP3A
+	IWbxvWajHJBcFzdMO0E1M4rtb29N1ohJwP39QcDKM+/UI1DMUepua+WlV0Q7tJsseAP0JXxTwyO
+	Ub6dGxbyrzPli78oKdQwtLN7JxTHB5IYmsPFcOJsinDZNxfSaHDgtJL2MMk/vGBN+1ai9Yxy1LM
+	EmsY6Wz2dUZA6rXvIhHw3rCiuRUC1dyHjTdhrgsh5bZBK7Ha/gA4HsC3fJYznT0247jwkEOlZCV
+	UP0q4pMHkTH+vDzlhR4mCa3HyBVE15DZoRkjxaRtGQuID6eDGtA==
+X-Received: by 2002:adf:9d91:0:b0:3a5:25e0:ab53 with SMTP id ffacd0b85a97d-3a8ff51fd35mr9949852f8f.32.1751314120547;
+        Mon, 30 Jun 2025 13:08:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5KXP0+Vv3MytidPKTNF7GuYRxxT9Lal7R9MTzKs2v32UXFEIwEQLd+FN892K113soBsSyxg==
+X-Received: by 2002:adf:9d91:0:b0:3a5:25e0:ab53 with SMTP id ffacd0b85a97d-3a8ff51fd35mr9949841f8f.32.1751314120097;
+        Mon, 30 Jun 2025 13:08:40 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f40:b300:53f7:d260:aff4:7256? (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7098sm11043720f8f.4.2025.06.30.13.08.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 13:08:39 -0700 (PDT)
+Message-ID: <a3b24ee4-b2bc-4245-a560-afe4813843ff@redhat.com>
+Date: Mon, 30 Jun 2025 22:08:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527024259.56996-1-qiyuzhu2@amd.com>
-In-Reply-To: <20250527024259.56996-1-qiyuzhu2@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 30 Jun 2025 22:06:57 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j9J-4-dv=0QxEPxYDS_epnjT9dGCNoZA0LpiDZa7sy8Q@mail.gmail.com>
-X-Gm-Features: Ac12FXzX06c4v2qxz4_NKajLb2NNnxBQRWYVOI3co3NqsscTI3xGPLK7ifhsdEg
-Message-ID: <CAJZ5v0j9J-4-dv=0QxEPxYDS_epnjT9dGCNoZA0LpiDZa7sy8Q@mail.gmail.com>
-Subject: Re: [PATCH v5] ACPI:PRM: Reduce unnecessary printing to avoid the
- worries of regular users
-To: Zhu Qiyu <qiyuzhu2@amd.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [kernel?] WARNING in get_pat_info
+To: syzbot <syzbot+16b1da89309a06cd0e3a@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, bhelgaas@google.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, guohui.study@gmail.com, hpa@zytor.com,
+ jannh@google.com, kirill.shutemov@linux.intel.com, liam.howlett@oracle.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, luto@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, seanjc@google.com, syzkaller-bugs@googlegroups.com,
+ tglx@linutronix.de, torvalds@linux-foundation.org, x86@kernel.org
+References: <6862ee2e.a70a0220.2f4de1.002d.GAE@google.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <6862ee2e.a70a0220.2f4de1.002d.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 4:43=E2=80=AFAM Zhu Qiyu <qiyuzhu2@amd.com> wrote:
->
-> Commit 088984c8d54c ("ACPI: PRM: Find EFI_MEMORY_RUNTIME block for PRM
-> handler and context") introduces non-essential printing "Failed to find
-> VA for GUID: xxxx, PA: 0x0" which causes unnecessary worry for regular
-> users.
->
-> Refer to PRM Spec Section 4.1.2[1], both static data buffer address
+On 30.06.25 22:06, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit f8e97613fed25758ddf52159b87e1c66e619a23a
+> Author: David Hildenbrand <david@redhat.com>
+> Date:   Mon May 12 12:34:17 2025 +0000
+> 
+>      mm: convert VM_PFNMAP tracking to pfnmap_track() + pfnmap_untrack()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12f1448c580000
+> start commit:   fac04efc5c79 Linux 6.13-rc2
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fee25f93665c89ac
+> dashboard link: https://syzkaller.appspot.com/bug?extid=16b1da89309a06cd0e3a
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13e2ab30580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d113e8580000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+> 
+> #syz fix: mm: convert VM_PFNMAP tracking to pfnmap_track() + pfnmap_untrack()
 
-s/Refer/According to/
+Yes, that should be correct. I didnt't remember that we had a syzbot complaint
+about that one, otherwise I would have tagged it.
 
-> and ACPI parameter buffer address may be NULL if they are not needed.
-> So there is no need to print out "Failed to find VA ... " to intimidate
-> regular users.
+#syz fix: mm: convert VM_PFNMAP tracking to pfnmap_track() + pfnmap_untrack()
 
-s/intimidate regular users/confuse users/
+-- 
+Cheers,
 
->
-> Link: https://uefi.org/sites/default/files/resources/Platform%20Runtime%2=
-0Mechanism%20-%20with%20legal%20notice.pdf # [1]
->
-> Signed-off-by: Zhu Qiyu <qiyuzhu2@amd.com>
-> ---
-> Previous versions can be found at:
-> v1: https://lore.kernel.org/linux-acpi/20250427075317.42687-1-qiyuzhu2@am=
-d.com/
-> v2: https://lore.kernel.org/linux-acpi/20250512010620.142155-1-qiyuzhu2@a=
-md.com/#r
-> v3: https://lore.kernel.org/linux-acpi/20250512011833.142204-1-qiyuzhu2@a=
-md.com/t/#u
-> v4: https://lore.kernel.org/linux-acpi/20250518062507.218855-1-qiyuzhu2@a=
-md.com/
->
-> Changes in v2:
->  - Reduce the code changes.
-> Changes in v3:
->  - Fixed title letters not showing.
-> Changes in v4:
->  - Only print the necessary warnings.
-> Changes in v5:
->  - Add more cases of print warnings.
->
->  drivers/acpi/prmt.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/prmt.c b/drivers/acpi/prmt.c
-> index e549914a636c..ed39502ed86f 100644
-> --- a/drivers/acpi/prmt.c
-> +++ b/drivers/acpi/prmt.c
-> @@ -85,8 +85,6 @@ static u64 efi_pa_va_lookup(efi_guid_t *guid, u64 pa)
->                 }
->         }
->
-> -       pr_warn("Failed to find VA for GUID: %pUL, PA: 0x%llx", guid, pa)=
-;
-> -
->         return 0;
->  }
->
-> @@ -154,13 +152,33 @@ acpi_parse_prmt(union acpi_subtable_headers *header=
-, const unsigned long end)
->                 guid_copy(&th->guid, (guid_t *)handler_info->handler_guid=
-);
->                 th->handler_addr =3D
->                         (void *)efi_pa_va_lookup(&th->guid, handler_info-=
->handler_address);
-> +               /*
-> +                * Refer to PRM Spec, both static data buffer address and
-> +                * ACPI parameter buffer address may be NULL if they are =
-not
-> +                * needed, so there print out warning if handler_addr is =
-zero.
-> +                */
+David / dhildenb
 
-Change the comment above to something like "Print a warning message if
-handler_addr is zero which is not expected to ever happen."
-
-> +               if (unlikely(!th->handler_addr))
-> +                       pr_warn("Failed to find VA of handler for GUID: %=
-pUL, PA: 0x%llx",
-> +                               &th->guid, handler_info->handler_address)=
-;
->
->                 th->static_data_buffer_addr =3D
->                         efi_pa_va_lookup(&th->guid, handler_info->static_=
-data_buffer_address);
-> +               /*
-> +                * As for the static_data_buffer_addr/acpi_param_buffer_a=
-ddr,
-> +                * if the physical address passed to efi_pa_va_lookup() i=
-s nonzero
-> +                * and the return value is zero, there should print out t=
-he warnings.
-> +                */
-
-Change the comment above to something like "According to the PRM
-specification, static_data_buffer_address can be zero, so avoid
-printing a warning message in that case."
-
-> +               if (unlikely(!th->static_data_buffer_addr && handler_info=
-->static_data_buffer_address))
-> +                       pr_warn("Failed to find VA of static data buffer =
-for GUID: %pUL, PA: 0x%llx",
-> +                               &th->guid, handler_info->static_data_buff=
-er_address);
->
->                 th->acpi_param_buffer_addr =3D
->                         efi_pa_va_lookup(&th->guid, handler_info->acpi_pa=
-ram_buffer_address);
->
-> +               if (unlikely(!th->acpi_param_buffer_addr && handler_info-=
->acpi_param_buffer_address))
-> +                       pr_warn("Failed to find VA of acpi param buffer f=
-or GUID: %pUL, PA: 0x%llx",
-> +                               &th->guid, handler_info->acpi_param_buffe=
-r_address);
-
-And analogously here.
-
-> +
->         } while (++cur_handler < tm->handler_count && (handler_info =3D g=
-et_next_handler(handler_info)));
->
->         return 0;
->
-
-Thanks!
