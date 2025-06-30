@@ -1,111 +1,122 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B296F243378
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40D128B4FE
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290848; cv=none; b=g1slIFhJCeII/X7j65JGqHp8cAdKUQvOkt2UyYQMIxf7dyQEpqlPamxbPJJB4RmOvVLQt9q4b87vzROvo55iw561+lG5qPJqJs+HwrpZsjYl9GuEWCmGQNYQkffcvzv0QSTixMrpXFk0aw7kDeU43+InxTWZQQnCuZV/aGOiqZM=
+	t=1751290856; cv=none; b=QwJzekQ+c41QqeHwrveM85Xoc316djz+btl1S+EOsrA4IY879p8Pm/6gIGkofR+rSvvEm7GGoqboII6MAugJ3906JQP7vnf7vEVLmPqOckWGOC+FofEwYGqNwYf3nqdgDYEFxz6JaOSn/2VwI/uC5orlgddnMxJg5RRyXFmYotE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290848; c=relaxed/simple;
-	bh=Bdfby/u6bdjw0RZMd+EKW8id3ZusrWIUx6zentQhWOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eyhu1SqBhn9uAUTh7PtP7If+to7NBnOMwqin4k/slzs2Sg3QeKGG5oKmoTfsW5gCP/PS9+w8Su+QGsD6BZ5D2P6XOR65EVYF7/2f5KFLYskbbR9FOjTJ+dOqS9+Lqsl0bHcHrXuscH0y7zyb9GYX3BukuZUCNMsniJQW8iCJZTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pGpHUUDz; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751290856; c=relaxed/simple;
+	bh=vSa4jRfkd5Fa1HqN56wto+cRhg9EBqreeTK3FR+cxdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VO+XNmZ5RlmaBHPbHxSn/06MLZ4e/K6/qryDhB4GNGe1jl4B1uvmtuq3TvxE45h5BlaIHFeQmv+BgAnBdCnFXXuvSGDLddQ0YQZbEP3W5FmnKKh0DeaAC5JTBIu9Crrh1xpoxsI/Ep+hJzq+e1xnnzs/fCpwg1OqgciY2L8AuHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YbHLXzf+; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pGpHUUDz"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32b5931037eso35129861fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751290845; x=1751895645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DGQ8OBPWWUH7qxoscwJADjTSfSsFBxaQr+m3BPxVcZw=;
-        b=pGpHUUDzD7LnT9XgEpBZZ26XxK563dQwXS7+vka4cKxGQXj8tOiBwHL8jfKD6Whgh1
-         bSENxq7JphDA6vQtg4X+yOApJmDyVXp/SvJX/bqJ3G9OPwWHtAry+il2AyvsqaqKe2f9
-         oIecynWAHgU25Hc4xmJsv0KyGVSTMW+qb9qG4VjrKR6UPWPbvtwg7IlNDadG0k4cDgoB
-         ZVF5N5GP3Nhg8HU+mDX2GX482zzEPPViCZ8Pm1U4G9stmg/HovOgfVyqRW5Q7mR78PM4
-         t1PTp6DEv6hTGmp/lnKsCP6Jyx0KiyxfhLrPmKFDGAqy2a71r2seXs7MzW0mgb9tLVSS
-         LOKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751290845; x=1751895645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DGQ8OBPWWUH7qxoscwJADjTSfSsFBxaQr+m3BPxVcZw=;
-        b=pcoR0fPAarF8aZ7Xos1cUGntB65fYT+7CqHuAdinFU+s9sS6PwJw+CURd09QQcrwPh
-         Fd7pItj2J2po/FC2Ny5Ybz+avlUbwW9J+Om7xCiepEq0cjFfMXKOxQwkq9qiBt6gzkB+
-         yHNd/hPlqErI4Lp6njr4I7tr2j+826/zU7MGmVfPdQ01+iuHTGk3N0bf0gh9n46PIB+N
-         rvFzSomjuF+gyW05WRlG10OFHXdgSnDHTDzUMetv1LJBswk90X3LQE/rVS+qNQ99J7uZ
-         dly3UD01AOedLmoPozco006qQK8JlGu+DiQ2/GX1wXVupN/hXglTxESN7Rr0fQ9VCgQl
-         axUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmwahsBJYAxO/8mhE4KqvAvhLSOTtoAYHjr0dEX+E7qn1RPqlU6wITm4FFJx72stx4of9uK46TpOpn4cM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxxjwdh0iZ3lJmPxU+W6ub3UcGGQySrgxoXXfhEPs3ZsbGjhEzS
-	Hi0K/UA6U/EJfJ4KjdYIUeoHZjBm8+bSDvU32VwRO3QBuxjqjGqaFHsYN4L8sJMdvQGN4AtLOXr
-	ckxg5WgcVJAKmO2QwEF4YPGdpqc+grpDEdmAUdgtU3w==
-X-Gm-Gg: ASbGnct7iSchLlmbL5FoZef54TNB/rAQsI970yEBs7UGEAWBWaZ9NzcoAZZ1eywdnkI
-	E+5CacLY35/SitdPRcCRB70WxrlPaUPwt4jAGIoX/ne3IZfmPPJit+jkYNUr+cIxD68DTDZj+/M
-	mUJB48GFWrJWjofOaNDYVzevSjaB2q8X196IYRfriR7gjJed6+58Dt8CRT08LoWZ4a8LqplR/Rs
-	SI=
-X-Google-Smtp-Source: AGHT+IFEKA2SLJQpysUlJu4jsICuTZHFEG1exDwjVz3c70l0NRetqL6g79HhvHWrXy3zPDak/MnPe1KGqiN5+Hwazo0=
-X-Received: by 2002:a05:6512:3f1d:b0:553:2ca4:39e6 with SMTP id
- 2adb3069b0e04-5550ba4a95amr4553312e87.50.1751290844699; Mon, 30 Jun 2025
- 06:40:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YbHLXzf+"
+Message-ID: <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751290841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rNJsyXEVGNn49x3NYJKu0xplp8QGZnCZzJiyec2M590=;
+	b=YbHLXzf+LJ3P74xrV/Dljtoc+77NUBVCapf1zwEUG2fx9Me3m/EiJjSvoxowdDaHbTiTV+
+	aKTTyMeNLFJ+nN8H3rYw7x51Nzwgq7L0BdsOE/ULQST6rvQhS46i7RVlHHSiQsJORqTWb/
+	5EzosU2iG/VrNqTkReP/gVAl7fxpx0E=
+Date: Mon, 30 Jun 2025 21:40:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250629095716.841-1-jszhang@kernel.org>
-In-Reply-To: <20250629095716.841-1-jszhang@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 15:40:32 +0200
-X-Gm-Features: Ac12FXzqcQQBva4ynxgyaDsPaC44ZITNmwXtVHMx7t4B-6L8ulDkLpq6h6Gehdo
-Message-ID: <CAMRc=McPmYLhPrRnkZAQWHX+wF2PvYhDE5rD_Ws5ExSB2sGPXw@mail.gmail.com>
-Subject: Re: [PATCH] regulator: sy8827n: make enable gpio NONEXCLUSIVE
-To: Jisheng Zhang <jszhang@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00/11=5D_dm-pcache_=E2=80=93_persistent?=
+ =?UTF-8?Q?-memory_cache_for_block_devices?=
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+ <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Jun 29, 2025 at 12:14=E2=80=AFPM Jisheng Zhang <jszhang@kernel.org>=
- wrote:
->
-> On some platforms, the sy8827n enable gpio may also be used for other
-> purpose, so make it NONEXCLUSIVE to support this case.
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  drivers/regulator/sy8827n.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/regulator/sy8827n.c b/drivers/regulator/sy8827n.c
-> index f11ff38b36c9..0b811514782f 100644
-> --- a/drivers/regulator/sy8827n.c
-> +++ b/drivers/regulator/sy8827n.c
-> @@ -140,7 +140,8 @@ static int sy8827n_i2c_probe(struct i2c_client *clien=
-t)
->                 return -EINVAL;
->         }
->
-> -       di->en_gpio =3D devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_=
-HIGH);
-> +       di->en_gpio =3D devm_gpiod_get_optional(dev, "enable",
-> +                       GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
->         if (IS_ERR(di->en_gpio))
->                 return PTR_ERR(di->en_gpio);
->
-> --
-> 2.49.0
->
 
-As explained in the discussion about this flag: I hate this but I
-haven't yet gotten around to proposing an alternative, so reluctantly:
+在 6/30/2025 9:30 PM, Mikulas Patocka 写道:
+>
+> On Tue, 24 Jun 2025, Dongsheng Yang wrote:
+>
+>> Hi Mikulas,
+>> 	This is V1 for dm-pcache, please take a look.
+>>
+>> Code:
+>>      https://github.com/DataTravelGuide/linux tags/pcache_v1
+>>
+>> Changelogs from RFC-V2:
+>> 	- use crc32c to replace crc32
+>> 	- only retry pcache_req when cache full, add pcache_req into defer_list,
+>> 	  and wait cache invalidation happen.
+>> 	- new format for pcache table, it is more easily extended with
+>> 	  new parameters later.
+>> 	- remove __packed.
+>> 	- use spin_lock_irq in req_complete_fn to replace
+>> 	  spin_lock_irqsave.
+>> 	- fix bug in backing_dev_bio_end with spin_lock_irqsave.
+>> 	- queue_work() inside spinlock.
+>> 	- introduce inline_bvecs in backing_dev_req.
+>> 	- use kmalloc_array for bvecs allocation.
+>> 	- calculate ->off with dm_target_offset() before use it.
+> Hi
+>
+> The out-of-memory handling still doesn't seem right.
+>
+> If the GFP_NOWAIT allocation doesn't succeed (which may happen anytime,
+> for example it happens when the machine is receiving network packets
+> faster than the swapper is able to swap out data), create_cache_miss_req
+> returns NULL, the caller changes it to -ENOMEM, cache_read returns
+> -ENOMEM, -ENOMEM is propagated up to end_req and end_req will set the
+> status to BLK_STS_RESOURCE. So, it may randomly fail I/Os with an error.
+>
+> Properly, you should use mempools. The mempool allocation will wait until
+> some other process frees data into the mempool.
+>
+> If you need to allocate memory inside a spinlock, you can't do it reliably
+> (because you can't sleep inside a spinlock and non-sleepng memory
+> allocation may fail anytime). So, in this case, you should drop the
+> spinlock, allocate the memory from a mempool with GFP_NOIO and jump back
+> to grab the spinlock - and now you holding the allocated object, so you
+> can use it while you hold the spinlock.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Hi Mikulas,
+
+     Thanx for your suggestion, I will cook a GFP_NOIO version for the 
+memory allocation for pcache data path.
+
+>
+>
+> Another comment:
+> set_bit/clear_bit use atomic instructions which are slow. As you already
+> hold a spinlock when calling them, you don't need the atomicity, so you
+> can replace them with __set_bit and __clear_bit.
+
+
+Good idea.
+
+
+Thanx
+
+Dongsheng
+
+>
+> Mikulas
+>
