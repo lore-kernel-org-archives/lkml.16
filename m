@@ -1,108 +1,233 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8BF277C85
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD182417D9;
+	Mon, 30 Jun 2025 13:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290444; cv=none; b=dKCKXLH1NwfvSD8a7HzOASqN1jh6EjXSS1tRqSqIeirp+kdhxdoYavGDj20LMiXMavgKtk9FClco5UJLz4QebBrySlK9rzgBPpZKy6QDdKulVxm7eqghu/oI6LWjFafUMuRsrfrZiOIAkdEQMVkIv4CDLT2ci/ve2/43I/rgZKU=
+	t=1751290528; cv=none; b=V6qTqh7mUPWSOatkQ1I4+1B+q8Xa0D2O9pf9Z3JwA0I1PuV+8objxSgzD6oFkiH8Kr7mmkmx1acYi6h12hQexqGMtXoamtKg7NWGpurYuLg+5WuwoTGeeKxeoVMI3s/ojigdLB8blR0yUpl6BPcHWAyN0S7HwygKubzXr2TXQAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290444; c=relaxed/simple;
-	bh=+OYEUNuuqfT76DUEXC9cb8th/BNnZVNtFEhDcL9FgBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bpM/zy0cI7qLPBDSVAR6mJr2804YRFcuNgYwXOnbu/03lArw6HPIFsYtuG2vhd3M3txyYLYssufcXijPpDvTZGG9zUuuZhqQ0DBuM1HB3YV+ryaVrK1gvkAeRji2aqGpUmCOszgqWViGQG+P3FUQ9rUoyHQ0jOLlfENjLlns8js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v8diNR3H; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751290528; c=relaxed/simple;
+	bh=/P7Bb+GBCsmkTGvOU3/poAoYvv8Pc3kcHUkQcSsenkc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YJh3PtwBZ/KWvC8AKGUzw+YU7xbo+w0Wx1g3qXdCrLPwoPOB55sqcM8nm1vHjMKVbpRJraIowecJRI3Pf5+r6B9LYzzWVvBeokPLQnks/2b68PeJL93ZvJIBhfepxhpbcGwsjyCSg4/oMNwMADwUD6pb1sFIaaq3TDOSexRTb/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=n6h0365B; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v8diNR3H"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-400fa6eafa9so3082012b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751290442; x=1751895242; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0BiiBnavNW6W4WxDDv13yLMK/TA99VJbY73iccUOu8o=;
-        b=v8diNR3HsU3PDvWM/sNs4zmM8sIO1GHPl+Ku3+XOFYDi8aWK/kcRyCACuKux2Splt/
-         bm0uq4yaKt5qeSApXvNk/KJgsZxS+pfLZ7lE1TGp6tE9h54VYaM9x1tbPfi++3X5u5Xk
-         kml4V/8LJG1vWB01KONJQkbluOkF7X7IlwI/w9Z5zey+QgdDnxNwLxeesGecs32FVOZ1
-         WAzI0BZPJlSQStnAbYoSduibF1GWOQhUh7qPOKfdydr2Y3unto86xIXRvas7P+y0aOKu
-         zvAQmlNwNKBYEuXHtmR5b5NdVTldXG+Fl7T9/5B1s/GYvulieNz+IGpR6BDbHi4M05WC
-         y8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751290442; x=1751895242;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0BiiBnavNW6W4WxDDv13yLMK/TA99VJbY73iccUOu8o=;
-        b=tr69n2H1aftbxPdImEZZaIkfO1ocxH+swY5Wg+Ws516JPb02bo5AcvfVklaLmXPxRl
-         emCPTGz5T23iESwc5mnCn0WzcDYA9983AB5nZnQW7xCjpi6e2ENc1l2OHV560hzW86A5
-         HAntOHuCd39O9naHBZ/ndbSs2mZ6O/tDJXdimEZpDw4P8vzC0EumtVGde5MYN7s/eToR
-         o0HZVTNZzbrG0ihXdOjyc69EJS6mNTHEfYYfyYhlFE2VBLCC+os3/URjm808IISSwqTL
-         FqhrEHaz7vY0Tqb9sF+E67dCL+jkylfgfmEjatBG5tvcgKMExE8DW7Q954aATXC9R4Ch
-         nwFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBaKKE7FD/gpMV/iYZNRb2pT/qxUc5hWuuiyctdl8XZFtL+8xlDKxz8ChBi5BOuO4J2ZlJyZ7cz2fza5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySCIQG/5AN5TPki/8ofEExqxrssl45mXQqRXKV3zQDY+/abPYk
-	zsYu91nSeHTD6RyxXlBqyx9Mq7DQds//0SHvlsoSzlBtMJ/Stu0SDneA4vMXgzBM57Q=
-X-Gm-Gg: ASbGncvyEYLkyoebUO5uhR2xaaiTJ5hcCyujZ5Xg3PtvQyBZTAdjYaRa3XNfQx6wqZL
-	lq9y75fhwE+wfLyYoJCHwBAX/7bi9vi7bh7PLkf+nJ9o/HK/zwtJsN4S8a9PjGdrAsuyGa1e7d8
-	3vNfZakAjfdJTsatfKuz+qWOFtPRONm6IdutfoY8JNKlt0uMQPAj/sZFLHqtp+23+ardt8GzTUg
-	VmKQfieILKxonP7TvyENaMTAFBuzrC/4zfjlqxbepZ7rwktxzQE/dwEnax5FbDY8m7J4lhVfaiW
-	HNfgrZ/ajS4e/08rEkgzbgFu667dHJRjtGemfK4Ys8MmMsDwuBsSaTSqq6iGanVgzvYS7i5rey5
-	KhCXQTYRHJqDsCGiavITiMpGMf2eUMdcxGe7MQT4=
-X-Google-Smtp-Source: AGHT+IHwwHp/hPBSXiWOFPICfvksDPCGUtg2Iq6Zl8mO+cjrCNlALoXBQc3229XEU/HYM2O/8w7obg==
-X-Received: by 2002:a05:6808:80c9:b0:3fe:af08:65b5 with SMTP id 5614622812f47-40b33ea62f0mr11211317b6e.37.1751290441614;
-        Mon, 30 Jun 2025 06:34:01 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4876:5a0d:2fea:6208? ([2600:8803:e7e4:1d00:4876:5a0d:2fea:6208])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b8474dadsm1077151eaf.5.2025.06.30.06.33.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 06:34:01 -0700 (PDT)
-Message-ID: <e4c7296d-6afe-4edb-b26f-44218e660a80@baylibre.com>
-Date: Mon, 30 Jun 2025 08:33:59 -0500
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="n6h0365B"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4bW6bq41dtz176Q;
+	Mon, 30 Jun 2025 13:35:19 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bW6bp12Cjz2xWq;
+	Mon, 30 Jun 2025 13:35:18 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=n6h0365B;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1751290519;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IJJ0grH+oA2m0rVJnHlQgIHDE18CS9HCDq8kRv7TDlk=;
+	b=n6h0365B3pRTq4w/xIbmJszGc6lp+4nCAEq3mJpYLtIo9g9RcER4LhI/s5W5/eQW2XEQ+h
+	uwBlqq++nlHjnVBcKx42yRA767lZLqzN4/On3fmQBSGWsdKhKTzp0HJ7oPp9qYylAyKVD8
+	seTZ+BGbdCloqW6pmoBP4aMwH+OK/W/+PRoE7ujr3D6Dqrl17cKykmJTdaYm/Bs6ixrPIt
+	dJpfUcUHF1NxoqLBcnCWhBBd4Z+l9EKfume8P9ogERQcNumG8dKLdPMMRw6dZlC+6Y2gGY
+	rhFOsQ2gWjZkgM9EMLOr2sRXEJMuVrwYVw2X8/MLkWSqdt8u9Cu4g5GFy9ddKQ==
+X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=68629296 a=IkcTkHD0fZMA:10 a=WN6_cwnCAAAA:8 a=cm27Pg_UAAAA:8 a=Af4PZqHWQyhPqpcfzgoA:9 a=QEXdDO2ut3YA:10 a=ndfOWLLM0rR49n6Yv1rF:22
+Message-ID: <c10e3dbf-c0c0-44f3-8699-48ac6fedb157@jjverkuil.nl>
+Date: Mon, 30 Jun 2025 15:35:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/11] iio: adc: ad_sigma_delta: use BITS_TO_BYTES()
- macro
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Jonathan Cameron <jic23@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
- <20250627-iio-adc-ad7173-add-spi-offload-support-v2-4-f49c55599113@baylibre.com>
- <20250628155643.7c18e023@jic23-huawei> <aGJR_YyW5tCMjxUD@smile.fi.intel.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aGJR_YyW5tCMjxUD@smile.fi.intel.com>
+From: Hans Verkuil <hans@jjverkuil.nl>
+Subject: Re: [PATCH v2 7/9] media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert
+ PM logic
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
+ <20250602-uvc-grannular-invert-v2-7-c871934ad880@chromium.org>
+Content-Language: en-US, nl
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <20250602-uvc-grannular-invert-v2-7-c871934ad880@chromium.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-On 6/30/25 3:59 AM, Andy Shevchenko wrote:
-> On Sat, Jun 28, 2025 at 03:56:43PM +0100, Jonathan Cameron wrote:
->> On Fri, 27 Jun 2025 18:40:00 -0500
->> David Lechner <dlechner@baylibre.com> wrote:
+Hi Ricardo,
+
+These last three patches are a bit messy.
+
+It is much better to combine patch 7 and 9, and move patch 7 as the first
+one (but see my upcoming comment for that one, you should export a different
+function).
+
+More comments below:
+
+On 02/06/2025 15:06, Ricardo Ribalda wrote:
+> Instead of listing the IOCTLs that do not need to turn on the camera,
+> list the IOCTLs that need to turn it on. This makes the code more
+> maintainable.
 > 
-> ...
+> This patch changes the behaviour for unsupported IOCTLs. Those IOCTLs
+> will not turn on the camera.
 > 
->>> -	samples_buf_size = ALIGN(slot * indio_dev->channels[0].scan_type.storagebits / 8, 8);
->>> +	samples_buf_size = ALIGN(slot * BITS_TO_BYTES(scan_type->storagebits), 8);
->>
->> Ah. You do it here. Fair enough and no problem wrt to patch 1 then.
+> Suggested-by: Hans Verkuil <hans@jjverkuil.nl>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 61 ++++++++++++++++++++++++----------------
+>  1 file changed, 36 insertions(+), 25 deletions(-)
 > 
-> Hmm... Should the second 8 be something like sizeof(unsigned long lone) for
-> semantic distinguishing with 8-bit bytes?
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 020def11b60e00ca2875dd96f23ef9591fed11d9..13388879091c46ff74582226146521b5b5eb3d10 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -1219,43 +1219,54 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+>  }
+>  #endif
+>  
+> -static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> -				    unsigned int cmd, unsigned long arg)
+> +static long uvc_v4l2_pm_ioctl(struct file *file,
+> +			      unsigned int cmd, unsigned long arg)
+
+You don't need this function...
+
+>  {
+>  	struct uvc_fh *handle = file->private_data;
+>  	int ret;
+>  
+> -	/* The following IOCTLs do not need to turn on the camera. */
+> -	switch (cmd) {
+> -	case UVCIOC_CTRL_MAP:
+> -	case VIDIOC_CREATE_BUFS:
+> -	case VIDIOC_DQBUF:
+> -	case VIDIOC_ENUM_FMT:
+> -	case VIDIOC_ENUM_FRAMEINTERVALS:
+> -	case VIDIOC_ENUM_FRAMESIZES:
+> -	case VIDIOC_ENUMINPUT:
+> -	case VIDIOC_EXPBUF:
+> -	case VIDIOC_G_FMT:
+> -	case VIDIOC_G_PARM:
+> -	case VIDIOC_G_SELECTION:
+> -	case VIDIOC_QBUF:
+> -	case VIDIOC_QUERYCAP:
+> -	case VIDIOC_REQBUFS:
+> -	case VIDIOC_SUBSCRIBE_EVENT:
+> -	case VIDIOC_UNSUBSCRIBE_EVENT:
+> -		return video_ioctl2(file, cmd, arg);
+> -	}
+> -
+>  	ret = uvc_pm_get(handle->stream->dev);
+>  	if (ret)
+>  		return ret;
+> -
+>  	ret = video_ioctl2(file, cmd, arg);
+> -
+>  	uvc_pm_put(handle->stream->dev);
+> +
+>  	return ret;
+>  }
+>  
+> +static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> +				    unsigned int cmd, unsigned long arg)
+> +{
+> +	/*
+> +	 * For now, we do not support granular power saving for compat
+> +	 * syscalls.
+> +	 */
+> +	if (in_compat_syscall())
+> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
+
+...you can drop this and just obtain the translated cmd (no need to
+check in_compat_syscall for that)...
+
+> +
+> +	/* The following IOCTLs do need to turn on the camera. */
+> +	switch (cmd) {
+> +	case UVCIOC_CTRL_QUERY:
+> +	case VIDIOC_G_CTRL:
+> +	case VIDIOC_G_EXT_CTRLS:
+> +	case VIDIOC_G_INPUT:
+> +	case VIDIOC_QUERYCTRL:
+> +	case VIDIOC_QUERYMENU:
+> +	case VIDIOC_QUERY_EXT_CTRL:
+> +	case VIDIOC_S_CTRL:
+> +	case VIDIOC_S_EXT_CTRLS:
+> +	case VIDIOC_S_FMT:
+> +	case VIDIOC_S_INPUT:
+> +	case VIDIOC_S_PARM:
+> +	case VIDIOC_TRY_EXT_CTRLS:
+> +	case VIDIOC_TRY_FMT:
+> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
+
+...and here you call uvc_pm_get/video_ioctl2/uvc_pm_put. It keeps everything nicely
+localized, no need to look up what happens in a different function.
+
+> +	}
+> +
+> +	/* The other IOCTLs can run with the camera off. */
+> +	return video_ioctl2(file, cmd, arg);
+> +}
+> +
+>  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
+>  	.vidioc_g_fmt_vid_cap = uvc_ioctl_g_fmt,
+>  	.vidioc_g_fmt_vid_out = uvc_ioctl_g_fmt,
 > 
 
-Yeah, I considered to use sizeof(s64) to match the next line, but it
-it seems like a separate change, so in the end I decided against doing
-it in this patch and it seems too small of a thing for a separate patch.
+Regards,
+
+	Hans
