@@ -1,99 +1,106 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2521CA14;
-	Mon, 30 Jun 2025 09:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E23219A7D;
+	Mon, 30 Jun 2025 09:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274313; cv=none; b=KA5aPJmNzQQPYAjkny6YnFr/tZleeSu+Uuwjxd+xXFGc6kz55whUG4BjBH8LuMGa42F7wTcXsdC4++PunSAUtriSMv+lT5dJYcTvhJLN90jwRk3N5t8ZLNcaVyApFivY+9QURFRdNvy24VL7jBHmusxTEJZQhisXp8cmxqsimd0=
+	t=1751274349; cv=none; b=offim8auFAZ/aG1r2fFl4LbvJvXwhZry2U1tJGy/HSfHfd9apSnDrRDPu6VVSa/mEkL3BgKqV+fMBA46qALroN/PmA/caNGST01NY1G5CG/oBD+PezZYgn2jsOqT69GI7lclHoZ6P1nEVAEb2Zkeym9p7v8vEyERTeAeHMpft74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274313; c=relaxed/simple;
-	bh=kuDYJ+7zM+E1cUZnWYhYVHSofZYP9lEztYtHByRSNwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCwiXIkgsCnJ0FcxuoxbG5Zv8kuByCDEfZSA+uU+/8SvWr7Fp58a1osoX1ko7V5x3eK8lECqKMxS5StFIxz9HiOBr5EmVRlv/EPaufLKtL8ogRRWnRsg1KahsSVMD0iJmdxB/GBUD9nEO/tivWi6vs3lXRYesI7pMqeYcjswtGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XTghWyek; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751274349; c=relaxed/simple;
+	bh=mYC1xCNYBu74yU4BwfJYqv32o55MMiW/+sqA7P6XlFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kAzBUMQny/Ay4uU1mMjYvCCkfRVk4rrR/n354iKxiwRF1fg4pgQFUU3GefzvkOkCKJaZJu9iIdC4ymwOff0q3BAP7eULWY8EwRHVW+QJ5agaoVUtGJpIA3X6By2QzWMxqYj53Cb753MV6wUw+bvUnLrua6/nC79mrEQwIjdxaSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZaFHb001; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XTghWyek"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751274301; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Nbwiry03JbnKB/0fULaxAWQeikqp1at9hxA4fcZ4hps=;
-	b=XTghWyek3KxdIy1vKt1PLI3kzE6Dp6Zy851Lkdzi9hoCcFGyZQzp5d87EFkhXiSwY50JCStaPQ1kEucOvrBE9Hg+PoTXk07zTX7Cpg/WMoSjC0wLV0TrAPayBH/5T0ukDvSbNQT1nQx+vEa9UvYgAiBNsjsfymEaIINsud22PMM=
-Received: from 30.221.128.140(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0Wg9W1DS_1751274290 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 17:05:01 +0800
-Message-ID: <cf70f203-bb0e-4942-8f48-c34e269ce637@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 17:04:49 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZaFHb001"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751274348; x=1782810348;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mYC1xCNYBu74yU4BwfJYqv32o55MMiW/+sqA7P6XlFg=;
+  b=ZaFHb001r0KrxU9jH/MSquiah756Z5AYmBN7uwvZpPecV3QwYJRYU041
+   /kyArYCSjdjQ4nS9sn8HChMnFB8LH0RO38wcQV3f502eqMfPh4WCcFZlW
+   ufCN5GtP5cweuDpCoiYTUgyB41lSz8xohhox6kqAM+TWmcN0L2KqeCewb
+   dybNuPTP3uOhg34xorZrZ7otpgjEsxP/dBz8HzWUIb1sjb0m1c/Z/HsA3
+   Jmw2+V3AnjWBqL1Ak1SsiqXj000ysKGwiORUFt1IJwswlINQ3g8qos+9J
+   wU3nFNm/4E68nHA7SesAPBvcRIhZdLwMHG917WSF7sPdgA+q/dLb0xIBQ
+   Q==;
+X-CSE-ConnectionGUID: gcu+lR18TgiGJ/GA0leWsw==
+X-CSE-MsgGUID: yspC2+uCTt2qEB394KGD1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="41120887"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="41120887"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:05:48 -0700
+X-CSE-ConnectionGUID: glyxd75iQj6aOTNwbxIJIQ==
+X-CSE-MsgGUID: L9bxpayLTsK3lWku09M2Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153035679"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:05:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWASM-0000000BFuY-0c74;
+	Mon, 30 Jun 2025 12:05:42 +0300
+Date: Mon, 30 Jun 2025 12:05:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] spi: offload trigger: add ADI Util Sigma-Delta
+ SPI driver
+Message-ID: <aGJTZeYYHLgIMmcb@smile.fi.intel.com>
+References: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
+ <20250627-iio-adc-ad7173-add-spi-offload-support-v2-9-f49c55599113@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627072921.52754-1-guwen@linux.alibaba.com>
- <69ee8a60-3134-4b7a-8217-be9bbc79a8fa@lunn.ch>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <69ee8a60-3134-4b7a-8217-be9bbc79a8fa@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-9-f49c55599113@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 2025/6/27 15:46, Andrew Lunn wrote:
->> +#define DRV_VER_MAJOR		1
->> +#define DRV_VER_MINOR		3
->> +#define DRV_VER_SUBMINOR	0
+On Fri, Jun 27, 2025 at 06:40:05PM -0500, David Lechner wrote:
+> Add a new driver for the ADI Util Sigma-Delta SPI FPGA IP core.
 > 
->> +#define LINUX_UPSTREAM		0x1F
-> 
->> +static int ptp_cipu_set_drv_version(struct ptp_cipu_ctx *ptp_ctx)
->> +{
->> +	struct ptp_cipu_regs *regs = &ptp_ctx->regs;
->> +	int version, patchlevel, sublevel;
->> +	u32 env_ver, drv_ver;
->> +	int rc;
->> +
->> +	if (sscanf(utsname()->release, "%u.%u.%u",
->> +		   &version, &patchlevel, &sublevel) != 3)
->> +		return -EINVAL;
->> +	sublevel = sublevel < 0xFF ? sublevel : 0xFF;
->> +
->> +	env_ver = (LINUX_UPSTREAM << 27) | (version << 16) |
->> +		  (patchlevel << 8) | sublevel;
->> +
->> +	rc = cipu_iowrite32_and_check(ptp_ctx->reg_addr +
->> +				      PTP_CIPU_REG(env_ver),
->> +				      env_ver, &regs->env_ver);
->> +	if (rc)
->> +		return rc;
->> +
->> +	drv_ver = (DRV_TYPE << 24) | (DRV_VER_MAJOR << 16) |
->> +		  (DRV_VER_MINOR << 8) | DRV_VER_SUBMINOR;
->> +
->> +	return cipu_iowrite32_and_check(ptp_ctx->reg_addr +
->> +					PTP_CIPU_REG(drv_ver), drv_ver,
->> +					&regs->drv_ver);
->> +}
-> 
-> Please could you explain what this is doing.
-> 
-> 	Andrew
+> This is used to trigger a SPI offload based on a RDY signal from an ADC
+> while masking out other signals on the same line.
 
-Sure.
+...
 
-This provides informations to cloud ptp device, so that device
-can decide whether to allow the initialization to continue.
+> +#include <linux/clk.h>
 
-It is expected to avoid loading a version that is found to have
-serious defects after it is released.
+> +#include <linux/device.h>
 
-Thanks,
+Really? I though about dev_printk.h...
+
++ err.h
+
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/offload/provider.h>
+
++ types.h
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
