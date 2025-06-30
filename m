@@ -1,106 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FEF244676;
-	Mon, 30 Jun 2025 18:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0612E54D2
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307139; cv=none; b=aP19ALzXWp8Iisr0HBN+x3zCej5sNDKUCDP9B4UdREpyXEOPYhZRnfqWUmysN51oXJs+QTlS0bgrJ9RrnQ3copxNRMn1ac5/+Yxe9K8NDdO1c79ZIidYOOdGWVFx9XtWIvOW5TVwSZhDTIwwYNlD8IeZ3Oer4aNC9vxc4Djz5Ac=
+	t=1751307178; cv=none; b=JpSUbglItLl/SvKcbsJRv1ulGuEPi34jLBbn2X80JFR6CY/owAb6bC+W9BksRa/b5MrW0VsMOBB+WKYJaNs9imAgCSCwCjogq9Yw0boq18VWm+OWs8UxJCwGxDaaeC7MWzAh6pRyVaKTSLt5636Q8O/RS+AkPk2QsRkhnGuzJqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307139; c=relaxed/simple;
-	bh=I+kVS3NjR7w6E4QkvIa2eJytYERbIRQvZk5z3WhX438=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GXsl0FVfycPIVH6cvSs5+gRo2hbKijrdC1YxtXxcXkvwYfdXPWk/VBbx5IeWdASiw/SR5SOnJ592jWqjlbAbtAc/JqWs2qaV0CfL78fQp0wh8qMhU8oZMXRP+LDTuGuPADBAtIAFyqy6lBptmq/snDfChgEftpxj/FqDUYjTSvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXsKwFih; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751307178; c=relaxed/simple;
+	bh=t/qvwnnz9XhUx5/I4IdgKadNokB3nNqhUH5EX0pJTLE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=X1r9UOhaJUVLGheJvC4uieomQNuaiheRMul5gq5M/G+Oa/sM3FWpftqafXaXWEFjoMVJ+gB60SBs4qs/6M/bwNHClYt0VVwpW2XqhIbwDEE1ohkYa8H1CUcS1gEDwhyCkkasvr62EsDjR6OTPJOP1e+LLt5gMK7WI5buUlfswoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=ZtKTsCfQ; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXsKwFih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751307137; x=1782843137;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I+kVS3NjR7w6E4QkvIa2eJytYERbIRQvZk5z3WhX438=;
-  b=PXsKwFihe7MCEQfrWix+I5nxV4DPKxlBf6zlV2kk6MR3Rco2WB8l6u9c
-   OKv/X6q5DsvPFnmzwVQ+INsKzz4fVgve2YRz0KaaunUmPX/32DkephdZt
-   q51jCWZeGhqrZWIzDi4LGyrgEKUXx0H8rI10Ytc+wAjgqequSi+qDN0dn
-   KBNceO2Y2TcSrJqnzzADla8cGShZoHpKFH8v641cWfbNxSUxAzAqbmFH3
-   N5Kbcga6q25hNKdNQXP+56JQ6u/dal4acVBRZDsAC6la5TJ5XF46yNcK3
-   mjjn4nWD7F1qgySsIOKHYYd1sIlt2yjgw7zTqxe3htLgl0j7lsv/goC2e
-   g==;
-X-CSE-ConnectionGUID: Ms3cCLHSS5O2hkhhfYB5eQ==
-X-CSE-MsgGUID: XwnhJEWITguil5mRgo3lag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="78982269"
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="78982269"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 11:12:16 -0700
-X-CSE-ConnectionGUID: AF3thvOhQIG68tifoh0cIw==
-X-CSE-MsgGUID: DnISahm6RA62K58gYs0Uhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="153622082"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 30 Jun 2025 11:12:14 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWIzE-000ZFy-0T;
-	Mon, 30 Jun 2025 18:12:12 +0000
-Date: Tue, 1 Jul 2025 02:11:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Komal Bajaj <komal.bajaj@oss.qualcomm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2] usb: misc: qcom_eud: Access EUD_MODE_MANAGER2 through
- secure calls
-Message-ID: <202507010127.xjmnq7A8-lkp@intel.com>
-References: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="ZtKTsCfQ"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627125131.27606-1-komal.bajaj@oss.qualcomm.com>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751307163;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1IjTfiI6YOU4Q4l0EImUrTasIaT8l6VP8YEW14aV+kQ=;
+	b=ZtKTsCfQFJLmOjxOwr/ja+NklV6ewZ7jV+roC/0MrZDNbu2wLBa05nl3CFFZncVXTSxGcq
+	bRMm47JkB8u8BPwcTx0ypTfRpSu71rCC1kOs5NnFMGi/rvenX0P27Md80CxJSASApC9mTP
+	QE0/1IWlGVfiXOXwi9NL8cYKH4p24lgjiGndKCJYXCM6oKgx2shIOcEILuRaM2zwnFE3O2
+	1hWE9ekxB6gMkeiHXe2RO+5gDV27Is/BjQ9wSaPQZQzgdihVIFzkm6qVerfl0oZq5LhGt8
+	vZuGJmFBu+16mxNt+rWtkZdsKZlWk6KMdq4RRDylbN8RPikqSKGINsh4tVJ6Cg==
+Content-Type: multipart/signed;
+ boundary=15e5725fc5b5f4c0c9d367992ee8abf67013301df5a41c1f57230398550e;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 30 Jun 2025 20:12:27 +0200
+Message-Id: <DB02KKR1VK9H.1Q1Y5A98FKGLK@cknow.org>
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-rockchip@lists.infradead.org>, <kernel@collabora.com>,
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: adjust dcin regulator on ROCK
+ 4D
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Nicolas Frattaroli" <nicolas.frattaroli@collabora.com>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+References: <20250630-rock4d-reg-usb-wifi-v1-0-1057f412d98c@collabora.com>
+ <20250630-rock4d-reg-usb-wifi-v1-1-1057f412d98c@collabora.com>
+In-Reply-To: <20250630-rock4d-reg-usb-wifi-v1-1-1057f412d98c@collabora.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Komal,
+--15e5725fc5b5f4c0c9d367992ee8abf67013301df5a41c1f57230398550e
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-kernel test robot noticed the following build errors:
+Hi Nicolas,
 
-[auto build test ERROR on usb/usb-testing]
-[also build test ERROR on usb/usb-next usb/usb-linus linus/master v6.16-rc4 next-20250630]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Mon Jun 30, 2025 at 5:36 PM CEST, Nicolas Frattaroli wrote:
+> The ROCK 4D's actual DC input is 5V, and the schematic names it as being
+> 5V as well.
+>
+> Rename the regulator, and change the voltage it claims to be at.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Komal-Bajaj/usb-misc-qcom_eud-Access-EUD_MODE_MANAGER2-through-secure-calls/20250627-205244
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20250627125131.27606-1-komal.bajaj%40oss.qualcomm.com
-patch subject: [PATCH v2] usb: misc: qcom_eud: Access EUD_MODE_MANAGER2 through secure calls
-config: um-randconfig-r131-20250629 (https://download.01.org/0day-ci/archive/20250701/202507010127.xjmnq7A8-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14+deb12u1) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010127.xjmnq7A8-lkp@intel.com/reproduce)
+Shouldn't it have a fixes tag then? Providing 12V where 5V is expected
+sounds problematic ;-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507010127.xjmnq7A8-lkp@intel.com/
+> Furthermore, fix vcc_1v1_nldo_s3's vin-supply as coming from
+> vcc_5v0_sys, and not the DCIN, as per the schematic. This makes no
+> functional change; both regulators are always on, and one feeds into the
+> other.
+>
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts b/arch/arm64=
+/boot/dts/rockchip/rk3576-rock-4d.dts
+> index 6756403111e704cad42f6674d5ab55eb0306f1e3..352e3df165688219bfedc1973=
+4d9eb32c547ec44 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> @@ -57,13 +57,13 @@ user-led {
+>  		};
+>  	};
+> =20
+> -	vcc_12v0_dcin: regulator-vcc-12v0-dcin {
+> +	vcc_5v0_dcin: regulator-vcc-5v0-dcin {
+>  		compatible =3D "regulator-fixed";
+>  		regulator-always-on;
+>  		regulator-boot-on;
+> -		regulator-min-microvolt =3D <12000000>;
+> -		regulator-max-microvolt =3D <12000000>;
+> -		regulator-name =3D "vcc_12v0_dcin";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		regulator-name =3D "vcc_5v0_dcin";
+>  	};
 
-All errors (new ones prefixed by >>):
+With the name change, this block needs to be moved down.
 
-   /usr/bin/ld: drivers/usb/misc/qcom_eud.o: in function `eud_remove':
->> qcom_eud.c:(.text+0x6da): undefined reference to `qcom_scm_io_writel'
-   /usr/bin/ld: drivers/usb/misc/qcom_eud.o: in function `enable_store':
-   qcom_eud.c:(.text+0x7c7): undefined reference to `qcom_scm_io_writel'
->> /usr/bin/ld: qcom_eud.c:(.text+0x848): undefined reference to `qcom_scm_io_writel'
-   collect2: error: ld returned 1 exit status
+Cheers,
+  Diederik
+> =20
+>  	vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
+> @@ -166,7 +166,7 @@ vcc_5v0_device: regulator-vcc-5v0-device {
+>  		regulator-min-microvolt =3D <5000000>;
+>  		regulator-max-microvolt =3D <5000000>;
+>  		regulator-name =3D "vcc_5v0_device";
+> -		vin-supply =3D <&vcc_12v0_dcin>;
+> +		vin-supply =3D <&vcc_5v0_sys>;
+>  	};
+> =20
+>  	vcc_5v0_host: regulator-vcc-5v0-host {
+> @@ -190,7 +190,7 @@ vcc_5v0_sys: regulator-vcc-5v0-sys {
+>  		regulator-min-microvolt =3D <5000000>;
+>  		regulator-max-microvolt =3D <5000000>;
+>  		regulator-name =3D "vcc_5v0_sys";
+> -		vin-supply =3D <&vcc_12v0_dcin>;
+> +		vin-supply =3D <&vcc_5v0_dcin>;
+>  	};
+>  };
+> =20
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+--15e5725fc5b5f4c0c9d367992ee8abf67013301df5a41c1f57230398550e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGLTjgAKCRDXblvOeH7b
+bpjeAQCzYAOFotMkkx+55BY9EWiLa3hdCx0OlYAGWZPUrLcXoQEAzb20FcRS6uLg
+HcRGqO8KyFJR5wJ4qKDf06imkRHUpgM=
+=TFga
+-----END PGP SIGNATURE-----
+
+--15e5725fc5b5f4c0c9d367992ee8abf67013301df5a41c1f57230398550e--
