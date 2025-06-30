@@ -1,298 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AEF24167B;
-	Mon, 30 Jun 2025 08:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554FE23F40A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273929; cv=none; b=fm5PbMo5BN5xs7scLKHeOpHg4mldJtqkOmCtzelkpqZ//J7W/dNYxqVSmwh0YJBcZAYh3P1L8OIEvzOBGwzbTTGl5E9XMaW/g0X5AcSUsONI4Rg7kAZ6TZ2IHCsTEG+UXa486kGYVMfyXI0Y3zeo/h5HkAdv2fCpNOO6d5sYsHA=
+	t=1751273974; cv=none; b=rwwjktYSaOSs0DkB56YrHa4d+LfmJfQuINbgXTp8YekvVKQ/qqKjiinLLvuDLM0+OdYUi0Flw7fJ0K7g76FJEgHTStQEXqizEns5I6I79M4c1LtsbkpU5CQNJacWwledHY6+g2X0QOfLhaeaODPHgjIgzltKJB2IFfCcggL81Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273929; c=relaxed/simple;
-	bh=9nNqEeOcQnMdBtSCPx5y7oe5Ki0CaDoub2u4nwRRO/w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Yr9C+IfLNE7Te+DHdNzTu8BIXR2yMydNeUJmyJZQJ4TLQEmN7xMoenRMq4RHv1bJ4jHVXhLm0Q13ftlV9TtvmAzVYyL7UhEqguypXXZjw5KfPma6GsQ/wQSlwdf9vFB9+XrpCKnms16qNOy7R5dPWCpCH+rhNpEgWjJSzV7YQHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6FRYybJ; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751273974; c=relaxed/simple;
+	bh=Skthqz2mGmaVU/SfI6yZ1FxB5gCAJZQrc6MHuNMoGsE=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=rcWw9Smutb3ahho2Ccn1gvURRxtl3fOMK4JW497jv04ePAVuPGqy6U4SOtmQh1HDYSH0JppmuGpbjwPyyjNjefnRx2HbS8W5h5HfZ7pY1A7L0Ft90RVmpngmLXJKsS8j1tW7BheAuo4m0qU2+fV8c7V4d/TNzvQX538SCGVgAZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U6mqQVC8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IFZ8/U9Q; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6FRYybJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751273927; x=1782809927;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9nNqEeOcQnMdBtSCPx5y7oe5Ki0CaDoub2u4nwRRO/w=;
-  b=a6FRYybJZVsLyrQDssgEDxMwh4AwTYXozbijqeTGW1QH4cpxkrOCmTtT
-   hKaDtOznRu1coUklj6BTPd6KuiDa7Lv5/XWn2DzcnQ75FgkJuTcxKaXhe
-   PN41swlz+1DZWH5jOku40zuPJNVscPEUMEzMZNzDpFjFXqBMDEOIngg/u
-   rcclLa8EdlaVjsZMQLx8e4z9GRcoGeyJx0QFr9Jq3PcVyPY/34A1KRtGI
-   nf6R2ByOQHV33CrEsxol+N4qZvTLHII6uT+WTsXr92SPJvgEXQMRuU/mt
-   FyX++URnRntQflr3T+nOnXXC4FIaU2JToKHh6yPpBcbiyBaohAtserzCc
-   w==;
-X-CSE-ConnectionGUID: 2XeMF4Z4TDOhS1bMVdtbbA==
-X-CSE-MsgGUID: N0eqKIX4S9GgjIlHlO5vZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64187445"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="64187445"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 01:58:46 -0700
-X-CSE-ConnectionGUID: 5bTswX5cSj2araqCDkCVJw==
-X-CSE-MsgGUID: FdUxFW9GR5KL+QjjsRM8bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153873451"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 01:58:43 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 11:58:39 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>, sre@kernel.org
-cc: Hans de Goede <hansg@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] power: supply: core: Add
- power_supply_get/set_property_direct()
-In-Reply-To: <4e28458b-baba-456a-bae6-08c2818aedf8@gmx.de>
-Message-ID: <66dbff89-131b-4bc5-1059-c97342b2efca@linux.intel.com>
-References: <20250627205124.250433-1-W_Armin@gmx.de> <b4e077d9-a5f5-47ec-abc7-9e957c32cd5b@kernel.org> <4e28458b-baba-456a-bae6-08c2818aedf8@gmx.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U6mqQVC8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IFZ8/U9Q"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751273970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=tLe7TOXoCAoj8LxI3gDkgpaKkUGcA1IXZjIu7n3dQ8E=;
+	b=U6mqQVC8AqElmiW3izk43DYsf8ppZf3bdcjAliMTAw14YQJ+yHJ3YNEsC0D7qiYJBLnKtT
+	Bd9I/HNAdZLG/o9bS0KtBOvaD2JoNx4jhPEXvqYJ74GFjIPS2wyx29QjAzSLgo/YFb6zae
+	j9iCO9EexEgbBXlZSoWYzuZID6zZY2ET/iNwue0sc8VEQy6YBbDwmK4I0ft85hKLlDzSPY
+	RcbiAn8Gf2KDjqPIotFVlDDQkpg3AMv6VmFE/EMLgQcJnWkdx3K/LgoRWazu6j3+Y7Nsaj
+	mDnTF1ku4prHRLRvgpDsO3hCX4rA/xPJLENAyoWK1UWQRch2UXA1FVLVLw94fA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751273970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to; bh=tLe7TOXoCAoj8LxI3gDkgpaKkUGcA1IXZjIu7n3dQ8E=;
+	b=IFZ8/U9QdKHV90tmMrhoqOyp+wCtvZ3NQqRoPgyEFHesJokQaq5wvLU58qJDL9MKCtTS46
+	YkTqYymLUgoPSrCA==
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] irqchip/msi-lib: Honor the MSI_FLAG_PCI_MSI_MASK_PARENT
+ flag
+In-Reply-To: <86o6vjelw2.wl-maz@kernel.org>
+Date: Mon, 30 Jun 2025 10:59:29 +0200
+Message-ID: <87ecv1ob9q.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 
-On Sat, 28 Jun 2025, Armin Wolf wrote:
+On Fri, May 23 2025 at 10:06, Marc Zyngier wrote:
+> On Sat, 17 May 2025 20:59:10 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>> 
+>> On Sat, May 17 2025 at 11:30, Marc Zyngier wrote:
+>> > +	/*
+>> > +	 * If the parent domain insists on being in charge of masking, obey
+>> > +	 * blindly. The default mask/unmask become the shutdown/enable
+>> > +	 * callbacks, ensuring that we correctly start/stop the interrupt.
+>> > + 	 * We make a point in not using the irq_disable() in order to
+>> > +	 * preserve the "lazy disable" behaviour.
+>> > +	 */
+>> > +	if (info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT) {
+>> > +		chip->irq_shutdown	= chip->irq_mask;
+>> > +		chip->irq_enable	= chip->irq_unmask;
+>> 
+>> This is only correct, when the chip does not have dedicated
+>> irq_shutdown/enable callbacks.
+>
+> The chip structure provided by the PCI MSI code doesn't provide such
+> callback, meaning that they are unused for the whole hierarchy.
 
-> Am 28.06.25 um 11:25 schrieb Hans de Goede:
-> 
-> > Hi Armin,
-> > 
-> > On 27-Jun-25 10:51 PM, Armin Wolf wrote:
-> > > Power supply extensions might want to interact with the underlying
-> > > power supply to retrieve data like serial numbers, charging status
-> > > and more. However doing so causes psy->extensions_sem to be locked
-> > > twice, possibly causing a deadlock.
-> > > 
-> > > Provide special variants of power_supply_get/set_property() that
-> > > ignore any power supply extensions and thus do not touch the
-> > > associated psy->extensions_sem lock.
-> > > 
-> > > Suggested-by: Hans de Goede <hansg@kernel.org>
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > Thank you for your work on this.
-> > 
-> > The entire series looks good to me:
-> > 
-> > Reviewed-by: Hans de Goede <hansg@kernel.org>
-> > 
-> > for the series.
-> > 
-> > There is the question of how to merge this. I think it might
-> > be best for the entire series to go through the power-supply
-> > tree.
-> > 
-> > Ilpo would that work for you and if yes can we have your ack ?
-> > 
-> > Sebastian, IMHO this should be merged as fixed not as for-next
-> > material.
-> > 
-> > Regards,
-> > 
-> > Hans
-> 
-> Personally i would prefer to merge this through the pdx86 tree as the
-> uniwill-laptop driver currently under review will also require this
-> functionality.
+Fair enough, but it still stinks.
 
-Sebastian, are you okay if I take this through pdx86 fixes branch as 
-requested by Armin? If yes, can I have your ack please.
+>> And I really hate the asymmetry of this.
+>
+> So do I, but that's how the lazy disable thing currently works. Drop
+> the bizarre asymmetry on irq_disable, and we can make this nicely
+> symmetric as well.
+
+Well, it's not that bizarre and it has a massive performance win if the
+thing does not need to go out to the hardware in some scenarios. Don't
+ask about the main use case. Mentioning it is probably considered a
+violation of the United Nations Convention Against Torture (UNCAT).
+
+>> > +		chip->irq_mask		= irq_chip_mask_parent;
+>> > +		chip->irq_unmask	= irq_chip_unmask_parent;
+>> > +	}
+>> 
+>> I'm still trying to understand, what's the actual problem is you are
+>> trying to solve.
+>
+> I'm trying to remove some overhead from machines that don't need to
+> suffer from this nonsense double masking. Specially in VMs when
+> masking/unmasking requires *two* extremely costly exits (write +
+> synchronising read-back). This change reduces the overhead
+> significantly by only masking where it actually matters.
+>
+>> MSIs are edge type interrupts, so the interrupt handling hotpath usually
+>> does not mask at all. The only time masking happens is when it's lazy
+>> disabled or during affinity changes, which is not the end of the world.
+>
+> And that's part of the problem. The lazy disable ends up being way
+> more costly than it should when the interrupt fires during the
+> "disabled but not quite" phase, and in turn makes the critical section
+> delineated by disable_irq()/enable_irq() more expensive.
+>
+> So while, as you put it, it's "not the end of the world", this seems
+> to me like a valuable optimisation.
+
+I understand, but this needs more thoughts. Doing this wholesale for all
+potential PCI/MSI parent domains which require MASK_PARTN makes me more
+than nervous.
+
+> Another possible improvement would be to teach the PCI code it can
+> still rely on masking even when the endpoint is not capable of masking
+> individual MSIs.
+
+Well, it relies on that today already if the underlying parent domain is
+capable of masking. If not, it hopes that nothing bad happens, which is
+the only option we have :(
+
+It get's worse when the device does not support masking _and_ the parent
+domain does not provide immutable MSI messages because then the MSI
+message write becomes a horrorshow. For illustration see the mess in
+arch/x86/kernel/apic/msi.c::msi_set_affinity(), which is a violation of
+above mentioned convention as well. Despite the fact that this has been
+known for decades, RISC-V went ahead and replicated that trainwreck in
+the IMSIC IP block. Oh well....
+
+I sat down and stared at it in the few moments where the heat wave did
+not completely shutdown my brain. As usual this ended in a larger
+cleanup and overhaul... At the end I went and created a new pair of chip
+callbacks and the corresponding logic around it. A preview of the whole
+pile is at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/msi
+
+Thanks,
+
+        tglx
 
 
--- 
- i.
 
-> > > ---
-> > >   drivers/power/supply/power_supply_core.c | 82 ++++++++++++++++++++----
-> > >   include/linux/power_supply.h             |  8 +++
-> > >   2 files changed, 78 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/drivers/power/supply/power_supply_core.c
-> > > b/drivers/power/supply/power_supply_core.c
-> > > index aedb20c1d276..e70ffedf1a80 100644
-> > > --- a/drivers/power/supply/power_supply_core.c
-> > > +++ b/drivers/power/supply/power_supply_core.c
-> > > @@ -1241,9 +1241,8 @@ bool power_supply_has_property(struct power_supply
-> > > *psy,
-> > >   	return false;
-> > >   }
-> > >   -int power_supply_get_property(struct power_supply *psy,
-> > > -			    enum power_supply_property psp,
-> > > -			    union power_supply_propval *val)
-> > > +static int __power_supply_get_property(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				       union power_supply_propval *val, bool
-> > > use_extensions)
-> > >   {
-> > >   	struct power_supply_ext_registration *reg;
-> > >   @@ -1253,10 +1252,14 @@ int power_supply_get_property(struct
-> > > power_supply *psy,
-> > >   		return -ENODEV;
-> > >   	}
-> > >   -	scoped_guard(rwsem_read, &psy->extensions_sem) {
-> > > -		power_supply_for_each_extension(reg, psy) {
-> > > -			if (power_supply_ext_has_property(reg->ext, psp))
-> > > +	if (use_extensions) {
-> > > +		scoped_guard(rwsem_read, &psy->extensions_sem) {
-> > > +			power_supply_for_each_extension(reg, psy) {
-> > > +				if (!power_supply_ext_has_property(reg->ext,
-> > > psp))
-> > > +					continue;
-> > > +
-> > >   				return reg->ext->get_property(psy, reg->ext,
-> > > reg->data, psp, val);
-> > > +			}
-> > >   		}
-> > >   	}
-> > >   @@ -1267,20 +1270,49 @@ int power_supply_get_property(struct
-> > > power_supply *psy,
-> > >   	else
-> > >   		return -EINVAL;
-> > >   }
-> > > +
-> > > +int power_supply_get_property(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +			      union power_supply_propval *val)
-> > > +{
-> > > +	return __power_supply_get_property(psy, psp, val, true);
-> > > +}
-> > >   EXPORT_SYMBOL_GPL(power_supply_get_property);
-> > >   -int power_supply_set_property(struct power_supply *psy,
-> > > -			    enum power_supply_property psp,
-> > > -			    const union power_supply_propval *val)
-> > > +/**
-> > > + * power_supply_get_property_direct - Read a power supply property
-> > > without checking for extensions
-> > > + * @psy: The power supply
-> > > + * @psp: The power supply property to read
-> > > + * @val: The resulting value of the power supply property
-> > > + *
-> > > + * Read a power supply property without taking into account any power
-> > > supply extensions registered
-> > > + * on the given power supply. This is mostly useful for power supply
-> > > extensions that want to access
-> > > + * their own power supply as using power_supply_get_property() directly
-> > > will result in a potential
-> > > + * deadlock.
-> > > + *
-> > > + * Return: 0 on success or negative error code on failure.
-> > > + */
-> > > +int power_supply_get_property_direct(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				     union power_supply_propval *val)
-> > > +{
-> > > +        return __power_supply_get_property(psy, psp, val, false);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(power_supply_get_property_direct);
-> > > +
-> > > +
-> > > +static int __power_supply_set_property(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				       const union power_supply_propval *val,
-> > > bool use_extensions)
-> > >   {
-> > >   	struct power_supply_ext_registration *reg;
-> > >     	if (atomic_read(&psy->use_cnt) <= 0)
-> > >   		return -ENODEV;
-> > >   -	scoped_guard(rwsem_read, &psy->extensions_sem) {
-> > > -		power_supply_for_each_extension(reg, psy) {
-> > > -			if (power_supply_ext_has_property(reg->ext, psp)) {
-> > > +	if (use_extensions) {
-> > > +		scoped_guard(rwsem_read, &psy->extensions_sem) {
-> > > +			power_supply_for_each_extension(reg, psy) {
-> > > +				if (!power_supply_ext_has_property(reg->ext,
-> > > psp))
-> > > +					continue;
-> > > +
-> > >   				if (reg->ext->set_property)
-> > >   					return reg->ext->set_property(psy,
-> > > reg->ext, reg->data,
-> > >   								      psp,
-> > > val);
-> > > @@ -1295,8 +1327,34 @@ int power_supply_set_property(struct power_supply
-> > > *psy,
-> > >     	return psy->desc->set_property(psy, psp, val);
-> > >   }
-> > > +
-> > > +int power_supply_set_property(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +			      const union power_supply_propval *val)
-> > > +{
-> > > +	return __power_supply_set_property(psy, psp, val, true);
-> > > +}
-> > >   EXPORT_SYMBOL_GPL(power_supply_set_property);
-> > >   +/**
-> > > + * power_supply_set_property_direct - Write a power supply property
-> > > without checking for extensions
-> > > + * @psy: The power supply
-> > > + * @psp: The power supply property to write
-> > > + * @val: The value to write to the power supply property
-> > > + *
-> > > + * Write a power supply property without taking into account any power
-> > > supply extensions registered
-> > > + * on the given power supply. This is mostly useful for power supply
-> > > extensions that want to access
-> > > + * their own power supply as using power_supply_set_property() directly
-> > > will result in a potential
-> > > + * deadlock.
-> > > + *
-> > > + * Return: 0 on success or negative error code on failure.
-> > > + */
-> > > +int power_supply_set_property_direct(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				     const union power_supply_propval *val)
-> > > +{
-> > > +	return __power_supply_set_property(psy, psp, val, false);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(power_supply_set_property_direct);
-> > > +
-> > >   int power_supply_property_is_writeable(struct power_supply *psy,
-> > >   					enum power_supply_property psp)
-> > >   {
-> > > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > > index 45468959dd98..f21f806bfb38 100644
-> > > --- a/include/linux/power_supply.h
-> > > +++ b/include/linux/power_supply.h
-> > > @@ -878,15 +878,23 @@ static inline int
-> > > power_supply_is_system_supplied(void) { return -ENOSYS; }
-> > >   extern int power_supply_get_property(struct power_supply *psy,
-> > >   			    enum power_supply_property psp,
-> > >   			    union power_supply_propval *val);
-> > > +int power_supply_get_property_direct(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				     union power_supply_propval *val);
-> > >   #if IS_ENABLED(CONFIG_POWER_SUPPLY)
-> > >   extern int power_supply_set_property(struct power_supply *psy,
-> > >   			    enum power_supply_property psp,
-> > >   			    const union power_supply_propval *val);
-> > > +int power_supply_set_property_direct(struct power_supply *psy, enum
-> > > power_supply_property psp,
-> > > +				     const union power_supply_propval *val);
-> > >   #else
-> > >   static inline int power_supply_set_property(struct power_supply *psy,
-> > >   			    enum power_supply_property psp,
-> > >   			    const union power_supply_propval *val)
-> > >   { return 0; }
-> > > +static inline int power_supply_set_property_direct(struct power_supply
-> > > *psy,
-> > > +						   enum power_supply_property
-> > > psp,
-> > > +						   const union
-> > > power_supply_propval *val)
-> > > +{ return 0; }
-> > >   #endif
-> > >   extern void power_supply_external_power_changed(struct power_supply
-> > > *psy);
-> > >   
-> > 
-> 
+
+
+
+
+
+
