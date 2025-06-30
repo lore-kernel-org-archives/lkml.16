@@ -1,145 +1,134 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140C341760
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E098E41760
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751255413; cv=none; b=j0QLPH17u79otDVe4WS1FePlqhlpMFkkL/LawjXhwqOWL1kln6OoCIbaStCtjKogdcBa5TBytTL7LhN/qkrdNu292VmYYs/lIsqC/1uOEUELU795tApSSYpRl8/koS7+AEJusImwGgSTtsnNi/IOln26Z9xFHMZbnHpRgdkymXA=
+	t=1751255496; cv=none; b=PRV/2kFEDL81ycvmQHGnbLAVwDNrIR5lJFlWBu6m4Eycsypy+xvi3r4eUmeSXNRLsUOd070Us3NVKE2LG6eyDgPB4SfrRoTzsfkPvD9uC9CPl1N4afT31KggyIdxkWhICuepH9iYmFXwx/gEfptfAXf+iEDJKeQCzlwl5SVucHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751255413; c=relaxed/simple;
-	bh=hP6Zj3x6ZxHTchOTvbcRoLgDuAgETcfBOEsMi4tGJCE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RJIm+NEW/02lBzXhcy0pNhbTBCft8TamXaj+aJVZAnNHssNZ5k+0OmHz+V/wtO09R4dFEJWGZa2ejkmMwC8UhONEi8chLL+gzQqIrHJWg4GtbYEkjqRmbEfIXPepsLGXixyTDLyb3oM7PGZqhzADUXzmsAv0z5h/h9fF/FXKBls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h5XqPo5z; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751255496; c=relaxed/simple;
+	bh=QTzyOXu5qu2K9jHAadeJSq39OHr964W9UaOXOneTV9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OgV51NLuqoCw06rJM+8k5xnRBzSomEozOirYKYcEb09wQYTvswouMcfYyjMTdym9XMAXoUGkOdUS4PiKPTR1nd4o+HchKvgBfUdq9yChGg+aPUkUMRpvMxc07qh3l83k818k3zukRo9ifMHxz2/xCpZexotmcHek5AZFjTHoy3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=d7vqhopj; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5XqPo5z"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3876650b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:50:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="d7vqhopj"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747c2cc3419so3877146b3a.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:51:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751255411; x=1751860211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XS3uMD6coTyQ6ld95dZSw/chmAO1ya8AiyTyXgg1NkA=;
-        b=h5XqPo5zRAUAZuOS9I8buyn3xWjo6TkCIkfB3Z1qQYITDikoWgVZoK05768RsWU6fO
-         4Z4n2gl9CMekfh0VHs651VlYs8ZeGPxZPCx6GkY8Zqy8AhCD/DvWDId2sMRQSmgp0qzS
-         COjbNmd861IsQfUGHVXJ6MFZhYRfS3qrIuBJePLC+MeeWlpG+IzaqU+wW3pHKcAdBJqV
-         xnNfML7booC0kHbjSHvNllKPnTHREwFec/uWhcdIqMfV6YwXPfKzz1bC1QgFMGp3XeN6
-         m+liJkoOAGkS6Ol9n2J+My1GUmkl70+AxL4fcTbYxfqO3WbYMxs5kvMnywPAqnE2++CQ
-         7Jdg==
+        d=ventanamicro.com; s=google; t=1751255494; x=1751860294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UED82EXPvvwcKwvtCpX0i6qazNmJqZIAw5hRVMYvLpc=;
+        b=d7vqhopjBWRLP56ynLjf+xzDu/AGoISYQAJ7xUlErLkXrgV2fyTJHINB/GfwtvrRyn
+         rMOQYVHDMqPhAjk93A8BLw1UyjUQGhhprzVF/zw7POdEckkmFgB8Ms+i+RfuV7rZpP4h
+         QGj0uruJNqBxKxZLToxToNe+mJ7na981Na216hYcXh5ewrtp7xeEVbmjZN4bvJn/i/7e
+         W0IElfYG93jkWPqCNaB46OIu1xB7EZi9l7/9Ygn2ucQ/qJ5LUqOdhlUCcwK5Sp13gEPh
+         iMpkah3dK1nIIqNUxXhktueWYWy2G0I7kvGuUlZ7mGNCEsQ4aG86bU79HqBULxT2kGWp
+         S5Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751255411; x=1751860211;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XS3uMD6coTyQ6ld95dZSw/chmAO1ya8AiyTyXgg1NkA=;
-        b=Yl52KF4HWGYiFY8I+XUH6Rc/PkHEb+Y9TvB4yOLvL9FyycMWEneIL3b9A8SdF2xhEu
-         p/3Tk68tICuNWm6IaBtJz50xQ2sXVWp6WkCpf3MdPxoTW+jQHKxm8LqVBnpnCgmCHlIm
-         AJLlM8883xO0XbrwzYjOy585Vd3mdlJbxIgtFrojax+6y9OsCRTD2321Su0WWMLGs0us
-         apN6qigEb6cRIoXQY9dXtkLYJzE1jxfo+iWR7MLetAXicr7hiza/zu7McCSNgxBFxWVp
-         cBZCF9D4/nCf4Zpn/cjUaAQowv9JJqiHiMjiPkbJpUuy+n6AvRHA6ao6iyeK3PnX3MYu
-         otaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFgwPsTjG0iH8X0jhpDc4bzxwP/BzCpbKhm+1PozgMWN/xG4t9R+DOYM0yFc+DUU01Nzfrhy16jhORG2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX8OOx3Au4k+wXgenxP+f/opFiZOw+b1ROupcwL5NLcUUNtehY
-	GkwHux0m9Xy9zReJP5XLv/4essWsgLyC1gt/7TboJRahq9OIm4aw0ehs3SC6kX5xAug=
-X-Gm-Gg: ASbGncuFEBZaeR1p8XrX5/Z/DCxA4GAknlj+kb8xI2ShJENIhfkAKcQQ7JmP155Vxpk
-	Fiqxc/AnCEBw0Mmr1q+Du3WE7mbfWr3gvTElXvgN/FmXMcq6Ni0n7lIAJpD4nAjwtmk+BkZk2EQ
-	6+LVX2ye/QWZLTNCwCXfvIeVBP6gmMKbz0RMtedRLi1ARlwla4OPam73yk/AiRgQIEe7VTTeMEM
-	Y+APnQtri0TCTRxAOeCe0GkWh4qA9mTVjpiK2yVPX8Aybmt3i1YRSUuqgVq7CxFwKqi2LO3DS4V
-	cSRd0cM3yP7YZtYtfYssr2dXwYS+ymT/4eq8M0j3sqEBWW0WAHR8lr+5pNo0DgYkmSlHNKepb9f
-	3wj0TClpZq+yZRK+u9XC2/KxuazVzRTkogJc6Z7kxzHc=
-X-Google-Smtp-Source: AGHT+IGm+3mueaY7vn0ufRWgnmJ1q3u/xndByjPzeluFETrUS5APHTdn4iIBDyvRfiCgViEMNUWXRw==
-X-Received: by 2002:a05:6a20:d486:b0:201:2834:6c62 with SMTP id adf61e73a8af0-220a16b359bmr17862154637.25.1751255411268;
-        Sun, 29 Jun 2025 20:50:11 -0700 (PDT)
-Received: from wuteng-VMware-Virtual-Platform.localdomain ([113.84.10.134])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31bea17sm6912262a12.46.2025.06.29.20.50.08
+        d=1e100.net; s=20230601; t=1751255494; x=1751860294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UED82EXPvvwcKwvtCpX0i6qazNmJqZIAw5hRVMYvLpc=;
+        b=RMy4kt1D7N+mir91K/UK+4JaUiZkhrOevq1GptFryLeOroIzCXxVcCCZnxdcLpaIUa
+         tW4FruYYD8HJDjrYg6vyvtJb1LzQFSQQb/Gs3lG5BbEJcTgAf1V4Szr8xfUyUjZC7LW0
+         T2iXgLsLoA1q0EKkEb9Sl85YcOPPAcxiejDjajxavcewObjcrVe181LwFfD94uCQUiBX
+         BrfGmq+mv1EZABmuiyOMzslrcd7w0rWS8444T9tUqEazasjV3UBZbv9thzMLgYHV8R5/
+         2WfTgcouRVUTbfDpKqZxK5CV4kVkFLLiTl/3PGCtGaOMTMbeyacAsS7SPYeFkuRgjAtu
+         WcXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4iyk0ztlVGchw/y69WpWNj82GZCKBrEiEKogeewEgXsuyuhfHLR7tYOzWKT6zFOXujru1GHLT92OXZag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywfwt+fHY76XcQVYYZ0LvwbQv+PFKswYe7rELDChbLOZcjgYOR0
+	QesFd6pOKf4DJ6kSp+S4B7Nu7iTaNcpmOwTRlNNar2hRz6VvA+pk1jY58qvHMRtxPEY=
+X-Gm-Gg: ASbGnctmw0cEpYtjk/EP3vkXneFjxNYV9UxnhpGoaf1kDKqUrY7xoubrmaSGxpd0zgC
+	yGnzH/Qg0J+X347Wvbk0Cpe+JfAJEAg4WQgVbZ+GTQKRwc6WjNbx8Xudzm79L/chE0WMiOhimer
+	GS0lZ0BTAq8suMNzUXXmh1wE4UHCj5BxbQA1J3VYzDxwRNixj7O/nI261QB7dOnCBlpf1E9bGU8
+	ZH5AXPg4jOBpo36waj3sA7+Ey5ZBUfNgpZlPJmMhXfU6wn0gVvVnV5xayglJnCLkb70gRPsP3g6
+	6liunX8/7yG+iDkhcUs4yL1CH4M1oMfRjA2Hex3aZHTZ9R6bz5/qy/wfj0Ngky5xm8mn1A==
+X-Google-Smtp-Source: AGHT+IH50RyHuOnxZl2ccwGVqZn5SetEZq+s0+V/7t4N3nC29VesI3/CLLW5Bs7mTAzZWQEnHHyh/A==
+X-Received: by 2002:a05:6a00:1704:b0:749:bc7:1577 with SMTP id d2e1a72fcca58-74af6e6618emr15035867b3a.9.1751255494141;
+        Sun, 29 Jun 2025 20:51:34 -0700 (PDT)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557b5c8sm7808043b3a.83.2025.06.29.20.51.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 20:50:10 -0700 (PDT)
-From: gigadevice2025@gmail.com
-To: miquel.raynal@bootlin.com,
-	richard@nod.at
-Cc: linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Teng Wu <gigadevice2025@gmail.com>
-Subject: [PATCH] mtd:spinand:gigadevice:Add support for GD5F1GM9 chips
-Date: Mon, 30 Jun 2025 11:49:31 +0800
-Message-ID: <20250630034931.7962-1-gigadevice2025@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        Sun, 29 Jun 2025 20:51:33 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:21:22 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Atish Patra <atishp@rivosinc.com>, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	iommu@lists.linux.dev, Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [PATCH v3 0/3] RISC-V: Add ACPI support for IOMMU
+Message-ID: <aGIJuiSuZs17DSiM@sunil-laptop>
+References: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
 
-From: Teng Wu <gigadevice2025@gmail.com>
+Hi Tomasz,
 
-- GD5F1GM9UExxG (ID:c89101 3.3V)
-- GD5F1GM9RExxG (ID:c88101 1.8V)
+Could you please help reviewing this series?
 
-Both device feature:
-  - 1Gb density (1024 blocks)
-  - 2048-byte page size with 128-byte OOB
-  - 8-bit ECC requirement per 512 bytes
-  - Quad I/O Read support (opcode EBH)
-  - tPROG ≤ 300us typical page program time
-
-Testing environment:
-  - Platform: Raspberry PI-5 (Linux raspberry 6.15.0-rc6-v8)
-  - Operations verified:
-    * Full device read/write/erase cycles on all blocks
-    * Nandspeed:
-      ~ GD5F1GM9UE: 2.75MB/s read, 1.99MB/s write, 41.26MB/s erase
-      ~ GD5F1GM9RE: 1.84MB/s read, 1.45MB/s write, 41.04MS/s erase
-    * Nandbiterrs: Both corredted 8-bit errors per 512 bytes
-    * Stresstest: Both 144k cycles 0 bad block growth
-
-Full test log:
- -U: https://gist.github.com/WT-886/b0f41fb50ddac3adc0020222c1f89b61
- -R: https://gist.github.com/WT-886/8784e72f4632d519814928ff49225963
-
-Datasheet:
- -https://github.com/WT-886/DATASHEET/blob/main/GD5F1GM9-v1.0.pdf
-
-Signed-off-by: Teng Wu <gigadevice2025@gmail.com>
----
- drivers/mtd/nand/spi/gigadevice.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/gigadevice.c b/drivers/mtd/nand/spi/gigadevice.c
-index d620bb02a..f781d0368 100644
---- a/drivers/mtd/nand/spi/gigadevice.c
-+++ b/drivers/mtd/nand/spi/gigadevice.c
-@@ -533,6 +533,26 @@ static const struct spinand_info gigadevice_spinand_table[] = {
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&gd5fxgqx_variant2_ooblayout,
- 				     gd5fxgq4uexxg_ecc_get_status)),
-+	SPINAND_INFO("GD5F1GM9UExxG",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x91, 0x01),
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_1gq5,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&gd5fxgqx_variant2_ooblayout,
-+				     gd5fxgq4uexxg_ecc_get_status)),
-+	SPINAND_INFO("GD5F1GM9RExxG",
-+		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x81, 0x01),
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_1gq5,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&gd5fxgqx_variant2_ooblayout,
-+				     gd5fxgq4uexxg_ecc_get_status)),
- };
- 
- static const struct spinand_manufacturer_ops gigadevice_spinand_manuf_ops = {
--- 
-2.48.1
-
+Thanks!
+Sunil
+On Mon, Jun 30, 2025 at 09:18:00AM +0530, Sunil V L wrote:
+> This series adds support for RISC-V IOMMU on ACPI based platforms.
+> RISC-V IO Mapping Table (RIMT) is a new static ACPI table [1] introduced
+> to communicate IOMMU information to the OS.
+> 
+> [1] - https://github.com/riscv-non-isa/riscv-acpi-rimt/releases/download/v1.0/rimt-spec.pdf
+> 
+> Changes since v2:
+> 	1) Rebased to 6.16-rc4
+> 	2) Removed Anup's SOB and link tags added by mistake in v2.
+> 
+> Changes since v1:
+> 	1) Rebased to v6.16-rc1.
+> 	2) Dropped ACPICA patch since it is already available in 6.16-rc1.
+> 	3) Added Rafael's ACK.
+> 	4) Fixed few issues found by bots.
+> 
+> 
+> Sunil V L (3):
+>   ACPI: RISC-V: Add support for RIMT
+>   ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
+>   iommu/riscv: Add ACPI support
+> 
+>  MAINTAINERS                          |   1 +
+>  arch/riscv/Kconfig                   |   1 +
+>  drivers/acpi/Kconfig                 |   4 +
+>  drivers/acpi/riscv/Kconfig           |   7 +
+>  drivers/acpi/riscv/Makefile          |   1 +
+>  drivers/acpi/riscv/init.c            |   2 +
+>  drivers/acpi/riscv/init.h            |   1 +
+>  drivers/acpi/riscv/rimt.c            | 523 +++++++++++++++++++++++++++
+>  drivers/acpi/scan.c                  |   9 +-
+>  drivers/iommu/riscv/iommu-platform.c |  17 +-
+>  drivers/iommu/riscv/iommu.c          |  10 +
+>  include/linux/acpi_rimt.h            |  26 ++
+>  12 files changed, 599 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/acpi/riscv/Kconfig
+>  create mode 100644 drivers/acpi/riscv/rimt.c
+>  create mode 100644 include/linux/acpi_rimt.h
+> 
+> -- 
+> 2.43.0
+> 
