@@ -1,117 +1,124 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230828A718
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB2828C2AF;
+	Mon, 30 Jun 2025 14:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294326; cv=none; b=mLLHgCPYa9rNf91BX7evYrywVsEDv/JN95PO7Q80MIQnjiVQYP/aRGIjJKuc2tkasIxjcxxrrFyDutJFERfm6UBwMNEMDKQFHDmF6+PS8jtuRKUQlijgUteCwJSAtWvu2PUt4Scv+OYBGfRgkc3Y31s0sVgADP+9HxZb+y++N+E=
+	t=1751294335; cv=none; b=h7UvjQ568wScomzNrrXnsN6r4qK0caA2tyuwH7PLXc+vuqIc2mD+dCyLWLtldA2sm+m+JiF0E/EdzP3zrXtAXIUTqNllTolSUJY6HFhI1V4jUbr4WITLGSS7uD0m+N811hB0Pem7LA/3tT6FLN6RB2o7mF+6amO4vBnmhOglQ80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294326; c=relaxed/simple;
-	bh=q41UMOkYp6U8rXBQmxcMnX0PDl9yne69OVTJZiPDNQg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Sf4XrwUL05DlWnyBjVvzN9Ycvd9/RNwxVnaXhKXk618iuEhMpQn0FwRYH4nzSDlJFe2H/O3XZDyrDZUD0c5HbIGIwtxdkms9ZH1pA/i5OeRnuPgViS3UIXA+K6lct2jdgQ6pbZd/uv8RUfznu7hPs6BIkjS85pW+zgDqnGlq9rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com; spf=none smtp.mailfrom=hifiphile.com; dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b=PyTzx8bt; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hifiphile.com
+	s=arc-20240116; t=1751294335; c=relaxed/simple;
+	bh=/iAxXW6FbvxTp0QaulS0wqiv/9rrGOG34RWaXC4nkP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lNAoABBG7KDFsVwr3yOYDzoqE4ydD67nJmKCEABXx9oZeqvCWnzB6qmCIXngI51rgIMWewfFnlkW7woLvN61V0iKx+96r+4vt67Ut/dsVTjMH4XPeMDGqmR5sF8gKebQ1txFDdiTtZgtBxjjsvWGYHoF0LCPq+0lZuxLIcMjFxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lALjW5e6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b="PyTzx8bt"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5550dca1241so2161981e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hifiphile-com.20230601.gappssmtp.com; s=20230601; t=1751294322; x=1751899122; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5aROwHTVbyl9D9zeojKZoCOh6LjGW5da//8YHEuJ/oI=;
-        b=PyTzx8btQ5qzpnwOOtYbHAOP8nuTpRUf+bwKaq7/dvF1+KGquUbFUCJMhb72Uin6Bv
-         M3yh44T0NyL0kH+9QCeUvYZg8bO5MAo+j/E/6nA6OH7aHDhBV2y9WyNp+kHGc4zRbJM/
-         jApjz7benoWiMnDobWa1KgKKhStvv7er3OhfKfTigyJUUAjIINETmpznkO9z7xv/Z1Mc
-         4cgFBkFWPcmuxch6wAG5jg8GBIYTKHEnguOgkZ1kbL1zCsW8jIbXxgFVNf5ubRJLvEsQ
-         9eh8rqm6sHR9ZrSZrJBl2z+vSX2P7QPLvvNcWDnwfXBa3fvd0pKgJBakQkO4NtqAOvqo
-         J7cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751294322; x=1751899122;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5aROwHTVbyl9D9zeojKZoCOh6LjGW5da//8YHEuJ/oI=;
-        b=bd47BiGl/US1VX/e2VDWJvFaIkU9B0Kxqpma1OaByi/F1ESKExpKy+r4c9hSCyMqL5
-         zK4zGdkRGPwY/flSkbs0Z9YuchUNkF/QmyJadyeo/RGCSShyrDUBtbsKZMseeaRi9bm3
-         Wc67N4Cv2W+dt1MwiuQadfUHxVtaKQjv334ycVhdvS5w5jfvqZ1hG2XOY+QD1QEVKHHG
-         ca3rFDBvzOqckIY5tE3fOUu2Bz7bmTmPmigA97JzAJE2dGN/xelBv71p2+MzcuSYRTP1
-         YeyzGQr3pUD5OHqr8ZWDkVzcLMW6u32jj58GPPakfGmdIhyFIUAx603yGR1yanvwC2xt
-         uF9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWKMN1P1Y1lR2KLh5hJIUn+x7VMag+OZJJT5XXonD2/qf9Dsee1RifwsCZdF3J6HRZlWQn9UyxbWbV6jzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOIAMyp4CZyvoROKgHohF8tyqSVNEl2nWnUITWcvjTIzxAOKyh
-	pd2g5UMXNjH0lWB3xmjPpBl9Laagfp600d4/DytW9kvd4/5zOAWWffkJEsq4IQHxbJ5dGjhLiXQ
-	nFdPgyyGIW5Iy4zCZNe/CSSZbnAUE7C68moB/zFgxnQ==
-X-Gm-Gg: ASbGnctSzZcomoUs9o3+AybRsYWsVgKoasAeBgFFXYGsYga52EFRHepiHZ+qSR2YHfG
-	+/rn0v/SIczSd910Pz0KNqnPMZXv2F6ZozhCPSReaOMkosn6kxV1lfskQrnEH3+T5ii9nm7Nnvc
-	yyiU7WeUPTUmWOt2/JE3CVPGdsAcQLE7euBPMCw0bCtNU=
-X-Google-Smtp-Source: AGHT+IFnqcLpgxNaCsk7PoNMYONyRs0hnLK3ll4UkAxFSTpn8mAkmMX5sbsExFDwtXdwFg+jhcuCDPedsHKii9UuAHs=
-X-Received: by 2002:a05:651c:1116:20b0:32c:bc69:e91a with SMTP id
- 38308e7fff4ca-32cdc525e8amr30785301fa.36.1751294322210; Mon, 30 Jun 2025
- 07:38:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lALjW5e6"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8pP9h023538;
+	Mon, 30 Jun 2025 14:38:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=eVXnPYrdhwrNl0WhAGMkGzMVySJUnLyM9PGWL+RRa
+	dA=; b=lALjW5e6NI6Xk7sjgPxC6ly/BVQwr7Wc9NJVC2NuXdqf5+djNI79kIgaC
+	egmCapqJ/CTCdal8mWfZEXuAmBCWRqh324oQig5Cqad1ks1PeJ5dW/bo0C8P6i/F
+	AQWt4bsAAjjacs0g9OO9mXL7TKLNHkIullYZLXyTWdkyPfI+JckTTLvHlPvp0oj1
+	cJBeoUDfmDc5MLlyw14G4JblzXopH3bR54B1DZmNn7SMBCg5q7ZMdnlaEWr1VBky
+	xTMmEAtrqPjjT59cMEIhsbYpjZXLKPsOJj1hnxFOALvxsmQYBvhUOnAsmGSphKwA
+	fgRvn/ahO1nbY3oUGlxFcq/FUc0lQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5tt2a57-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 14:38:47 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UECltw021909;
+	Mon, 30 Jun 2025 14:38:43 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpe88t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 14:38:43 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UEcgB66947526
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 14:38:42 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AD7445805C;
+	Mon, 30 Jun 2025 14:38:42 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFF7A58059;
+	Mon, 30 Jun 2025 14:38:41 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Jun 2025 14:38:41 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
+        dhowells@redhat.com, simo@redhat.com,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v2 0/4] crypto: Add support for shake128/256 XOFs
+Date: Mon, 30 Jun 2025 10:38:30 -0400
+Message-ID: <20250630143834.2748285-1-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Zixun LI <admin@hifiphile.com>
-Date: Mon, 30 Jun 2025 16:38:31 +0200
-X-Gm-Features: Ac12FXyz1YASyU_kIOho436uejsR4G8SmZtLl7LY6YsKeZfU1QFCNlm6WQE6lL0
-Message-ID: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
-Subject: mtd: rawnand: atmel: ECC error after update to kernel 6.6
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	linux-mtd@lists.infradead.org, 
-	"SoC support'" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: vmYM851hNMGF9Gf-Kko21cvYlKK9X463
+X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6862a177 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=JFUMmdeob1UW1lXIWCQA:9
+X-Proofpoint-ORIG-GUID: vmYM851hNMGF9Gf-Kko21cvYlKK9X463
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDExNyBTYWx0ZWRfX9kxb8Sq3J0JA knzNPpCfCXC2PXhJ/XB7jaCERKUgh2dpumkSbNSbhGh9w50Pbb6ExB9V4NKpFekoYv+5+5AUS5f TpvTw0p7ccpCoqPXN3qkh5lnRSyNe7IeZWVrxr/86g3CN2+CN19n1jNaf2m++rBJWH7AJ0gTXRo
+ lHoOa5jjD7vQ+84e+y/ZFFLh6G2P74PO3xy82JwZ6kXuF3A4jWmBiD3ezSpbYJwEX1i2TaOOGzT 334pK5yiHtTg6e/ntmH/CTBIHeJP+1+u4ygyRhRHtxX6R5PMJCnW03wp5MVGPEU8gR7zO0K6vl6 czrftvfWxWSF9AoKpmiCMWEAWVWekDBNV/QLBez6AhOqgsKcOoJxIJ2ukkBrjeG7FQTvq475m/5
+ r4xow01EJR4tJOrlLKnpTMlz/Cx8qMz+rhfiY8YUbk32xBqsgmz7PBbCxvYMSUFynf063YjP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=896
+ adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300117
 
-Hi,
+This series adds support for shake128/256 extended output functions (XOFs)
+along with test cases to verify the produced digest and XOF output. A new
+squeeze method is added to the shash_alg structure to get an arbitrary
+number of bytes from these XOFs.
 
-After updating our SAM9G25 device from kernel 3.16 to 6.6, we have
-encountered UBIFS failures with ECC errors:
+Regards,
+   Stefan
 
-  ubi0 warning: ubi_io_read: error -74 (ECC error) while reading
-126976 bytes from PEB 8:4096, read only 126976 bytes, retry
 
-On the old system (kernel 3.16), nandtest passed successfully:
+v2:
+ - Refactored crypto_shake_squeeze_bytes to be called for arbitrary number
+   of bytes to return
+ - Adjusted XOF test case parameters to better test modfied squeeze
+   function
 
-  nandtest -p 1 -l 0x40000 /dev/mtd2
-  ECC corrections: 1
-  ECC failures : 0
-  Bad blocks : 0
-  BBT blocks : 0
-  00020000: checking...
-  Finished pass 1 successfully
+Stefan Berger (4):
+  crypto: Add squeeze function to shash_alg for support of XOFs
+  crypto: Add shake128/256 to generic sha3 module
+  crypto: Add tests cases for shake128 & shake256 to testmgr
+  crypto: Extend testmgr with tests for shake128/256 XOFs
 
-But on the new system (kernel 6.6), nandtest reports many errors:
+ crypto/hash_info.c             |   4 +
+ crypto/sha3_generic.c          | 238 +++++++++++++++
+ crypto/shash.c                 |   9 +
+ crypto/testmgr.c               |  70 +++++
+ crypto/testmgr.h               | 522 +++++++++++++++++++++++++++++++++
+ include/crypto/algapi.h        |   2 +-
+ include/crypto/hash.h          |  28 +-
+ include/crypto/sha3.h          |  19 ++
+ include/uapi/linux/hash_info.h |   2 +
+ 9 files changed, 888 insertions(+), 6 deletions(-)
 
-  nandtest -p 1 -l 0x40000 /dev/mtd2
-  ECC corrections: 1667
-  ECC failures : 1205
-  Bad blocks : 1
-  BBT blocks : 0
-  00000000: reading (1 of 4)...
-  218 bit(s) ECC corrected at 00000000
 
-After some diagnostics, I used devmem2 to compare SMC and PMECC
-registers between the two kernels. All values match except for the
-PMECC_CLK register, which is 2 in kernel 3.16 [1] and 0 in kernel 6.6
-[2]. It appears the clock setting is missing since the kernel 4.14
-refactor.
+base-commit: a71d3e1beb7a9637eb75929b995f01d20981f013
+-- 
+2.49.0
 
-According to the SAM9G25 datasheet this field must be programmed with 2.
-
-Manually setting PMECC_CLK to 2 (devmem2 0xffffe010 w 2) resolves the
-nandtest issue.
-
-Is the clock setting moved to elsewhere after the refactor ?
-
-Best regards,
-Zixun LI
-
-[1] https://github.com/torvalds/linux/blob/19583ca584d6f574384e17fe7613dfaeadcdc4a6/drivers/mtd/nand/atmel_nand.c#L1058
-[2] https://github.com/torvalds/linux/blob/ffc253263a1375a65fa6c9f62a893e9767fbebfa/drivers/mtd/nand/raw/atmel/pmecc.c#L772
