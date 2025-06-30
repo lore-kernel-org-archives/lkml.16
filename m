@@ -1,81 +1,117 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A851CEEA9
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D867222E3FA;
+	Mon, 30 Jun 2025 20:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751315243; cv=none; b=lp8+IeSJHj/IP/oQizFZx7YGnkmFYYUG2MGZvf7cdLaKBrsVJKmHchyf5KlIO8m9YUGBjRjAjlxh515SWLYFTfw23JNACErJaqj9kG/l1/JKw0TmLPl9mPJ+nWb47YjyoVDCHyKNvjotemivfRw8ZMXHunzUAXWJ+qPPhoLnSpA=
+	t=1751315246; cv=none; b=QD9k/tou/pHcR1TMBa/C/WD5M9fjscCBikQjsmo7wl1ip8jRq6pAHbwWDRX5ne0YN+THyDqPS90h8ufdqO3GHgL1PN+fJiZTOaOhxLiiX3/12gIa8afQOUhi0soihWa+GsUTddOyhJo8FIW6pX3JI3CdmB9brXgEb7R4SYuAyE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751315243; c=relaxed/simple;
-	bh=ME+P8r2niyrerF3qtAkywlQCA21DrP2PFf6RzkdryIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xgs3Bv+5+KsjRMFWbHjt+4JQOHslLmaHZkeKZkCQBr1cY0a/nVIw9OX96tUxgBq2IZaWtUjyFzZsjlmwKUIvFVinax103Q9zDL+JL98gmR7XYOpV6UVAIMA4m/4SSPIxtAguv3u1roFNd9IoA6kBSntGKgtFUAnD3sI0TjqTY8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=g5vZVkP3; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1751315246; c=relaxed/simple;
+	bh=mm6D6rN9YCLi05ZkS4Yr8AiNEs/PMDAf3hD+0ETdEvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WgO9T5H3j6dY1X/W+Y+jHKz82BJ8HlulOAax6hxaiHSkyJWwo2tv6rYRsyj/nMjQM8AgLURCnrB7vnLJN0MQ06woWy+kvf6CBVJGggGsk9Ruj6QUiaIOwSsl8MBeP3V3NqpmeWBA7W4h8WB0Y81NgpQ9e0FDaiFoebX24H3vpO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9/a6/Nx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="g5vZVkP3"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.24])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 149D94076195;
-	Mon, 30 Jun 2025 20:27:16 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 149D94076195
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1751315236;
-	bh=8/w97TsGErtMuAVzt/xfSxnTo0YaKKnyUWealjkgpms=;
-	h=From:To:Cc:Subject:Date:From;
-	b=g5vZVkP3QGXxVFY9GsScNZBUBHNhUn8gXek47RRjj/ajOg8KTNiUe7GyGrp5jChEt
-	 xw20gE7DebnPMYbCXzl2iscruypEzs+ACKz9hRoGb0dyYuK4VKWZJ/oG0ixJbBWtc5
-	 G3ggtRACy1o/q1jqDKWWvRklhlMzFs1HEVrgUsBY=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Kenneth Feng <kenneth.feng@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Rex Zhu <Rex.Zhu@amd.com>,
-	Jammy Zhou <Jammy.Zhou@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] drm/amd/pm/powerplay/hwmgr/smu_helper: fix order of mask and value
-Date: Mon, 30 Jun 2025 23:26:17 +0300
-Message-ID: <20250630202618.1537569-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9/a6/Nx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FFEC4CEE3;
+	Mon, 30 Jun 2025 20:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751315245;
+	bh=mm6D6rN9YCLi05ZkS4Yr8AiNEs/PMDAf3hD+0ETdEvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V9/a6/NxFgycREwnlDhrZgtvp8pAFZImQNec5/c/twV2DgQ0znTyfrop3lQKZeZ7h
+	 fgQ39nnpkRhWhAyw5J5AKzgtDzpQvA8Z6tMKD+u2aCTt3+GoDm8ccE4Xg5Q9i1qZUL
+	 +AD2WCWeY8ARVpccuvjwuKYMzBHzXkqT3laSqVLK03++8wYeeec8cBrN+EjhvUvlLZ
+	 T9RKDw2/uEOdkpuEHNebR6fa64ajz0bL7erRyjy6bsF3BlvXYHo+XO1du383Eg2Cjc
+	 pjDM2rlbVJL/SPYAj2u0PIRbIwo4D6mqHolSxIp6xoG2RrlsNvRZAJD3WF1ySGItIF
+	 otdth+1F2/mOQ==
+Date: Mon, 30 Jun 2025 13:27:23 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>,
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 8/9] riscv: dts: thead: Add PVT node
+Message-ID: <aGLzK8wTFcWuR4Zv@x1>
+References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
+ <CGME20250623180907eucas1p10c0ca6b667debcc8139402d97e4ef800@eucas1p1.samsung.com>
+ <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
 
-There is a small typo in phm_wait_on_indirect_register().
+On Mon, Jun 23, 2025 at 08:08:56PM +0200, Michal Wilczynski wrote:
+> Add PVT DT node for thermal sensor.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+> index 26996422e1efe5d2dde68819c2cec1c3fa782a23..bef30780034e06b07aa29b27b0225ea891a4b531 100644
+> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> @@ -669,6 +669,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
+>  			thead,pad-group = <1>;
+>  		};
+>  
+> +		pvt: pvt@fffff4e000 {
+> +			compatible = "moortec,mr75203";
+> +			reg = <0xff 0xfff4e000 0x0 0x80>,
+> +			      <0xff 0xfff4e080 0x0 0x100>,
+> +			      <0xff 0xfff4e180 0x0 0x680>,
+> +			      <0xff 0xfff4e800 0x0 0x600>;
+> +			reg-names = "common", "ts", "pd", "vm";
+> +			clocks = <&aonsys_clk>;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+>  		gpio@fffff52000 {
+>  			compatible = "snps,dw-apb-gpio";
+>  			reg = <0xff 0xfff52000 0x0 0x1000>;
+> 
+> -- 
+> 2.34.1
+> 
 
-Swap mask and value arguments provided to phm_wait_on_register() so that
-they satisfy the function signature and actual usage scheme.
+The PVT sensor is useful for more than just the fan so I'm okay with
+taking this even though the PWM driver has yet to be accepted. I have
+applied this patch to thead-dt-for-next [1] as commit c31f289 [2].
 
-Found by Linux Verification Center (linuxtesting.org) with Svace static
-analysis tool.
+The required clk driver fix has been applied to thead-clk-for-next [3]
+as commit 0370395 [4], so PVT sensor will be able to be tested in next.
 
-Fixes: 3bace3591493 ("drm/amd/powerplay: add hardware manager sub-component")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Drew
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu_helper.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu_helper.c
-index 79a566f3564a..c305ea4ec17d 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu_helper.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu_helper.c
-@@ -149,7 +149,7 @@ int phm_wait_on_indirect_register(struct pp_hwmgr *hwmgr,
- 	}
- 
- 	cgs_write_register(hwmgr->device, indirect_port, index);
--	return phm_wait_on_register(hwmgr, indirect_port + 1, mask, value);
-+	return phm_wait_on_register(hwmgr, indirect_port + 1, value, mask);
- }
- 
- int phm_wait_for_register_unequal(struct pp_hwmgr *hwmgr,
--- 
-2.50.0
-
+[1] https://github.com/pdp7/linux/commits/thead-dt-for-next/
+[2] https://github.com/pdp7/linux/commit/c31f2899eab084b3557e9f9e10fc7898113ef18d
+[3] https://github.com/pdp7/linux/commits/thead-clk-for-next/
+[4] https://github.com/pdp7/linux/commit/0370395d45ca6dd53bb931978f0e91ac8dd6f1c5
