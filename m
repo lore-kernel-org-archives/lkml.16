@@ -1,28 +1,28 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2107.outbound.protection.outlook.com [40.107.243.107])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2096.outbound.protection.outlook.com [40.107.96.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509F828F1;
-	Mon, 30 Jun 2025 03:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB2154BF5;
+	Mon, 30 Jun 2025 03:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.96
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751252630; cv=fail; b=NKsX1hnDh9EG4GfHpwCD+o445VsTN1B9O2HbNmkVFqrz4eQB1HuWsagDQCD6VUJ4MKYgju1gRyf1BjbqjV8PYBggtqYe7mPjDhphlkW6YFqgMh/WM82WGjlrq6eOSjlWXw5JtqRpIjK1dw8+oCVpNf+5KTasLtdLws5ZsJv6dYg=
+	t=1751252641; cv=fail; b=kn68rwuhgUrzGazl7cJ7e6MMjY/4eAPbP7FbZuB8Cs53O+vemQOjkXBtqRBAS/4p1206/9nUFNxXSnW1bTtmZzacq1iHgFNVXAX1mCqa93iF5/S4K2djPQAdIjNm42vrFEDps4/xfxE7Q2oRkrrMhLKGiHaReF+9TYllyRgydyo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751252630; c=relaxed/simple;
-	bh=ZTGZ0jfzv7VUbdMo0MsDs1aSWJxNugo2EaSFTpBMsZA=;
+	s=arc-20240116; t=1751252641; c=relaxed/simple;
+	bh=emUjKEDON07Mr+3LwzHuH4snutPcp7YmPK8bcZXc6hk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IWQxHRDAjgi4mEcYBmTZ8Y0SbpbRuEueNiyDT2DExXPvuu8QTy/7Z4CNA4XcyheTkXM8i7IQ33EyGHfdOHCmaAetbFpEmHKYPgl6/5H9naBUtP0PKAMw0k3t/ejl3Or6/WwNI/gybqPo6Ewoe3BYWWBHtJW6OQJ90e2HfpktIAQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=WAOKgty0; arc=fail smtp.client-ip=40.107.243.107
+	 Content-Type:MIME-Version; b=m3iYj6Vp0iYAPfhYHsJu+uQmU6Z8KcV3kdYebbFeFmPXt3bmhaR2NicbxqdGsyegbTbyPESJY/mTBs0YAUYz9YGgRk2yfJ6InC3K9V0G2Ce4+VgYDLudkwM18OPMfPEFAu4aHjRXmHv4cIctw1JM4H0hk/bikZZ7brK8/wddrbo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=jIOqUqKp; arc=fail smtp.client-ip=40.107.96.96
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="WAOKgty0"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="jIOqUqKp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uDxHif3GqP6JImLh38aOvB8PUqfYGLzqsXOURVgq9rSZa/l4HomN8gDYIZWV7Qkqj8wjMWK0OnWZup7eeC7YwVgCfujdx4Yq0VyV59UT3ZrMGbYlCldTthRPz25yYPeqvaGksNBXD/DQJmXtO1Qquiyci8FZYxn8aN8u/aj4kI6wsRSLvRPbpaynA5lI7Bf3nuM9/7dbuboTAMiYg6A+nZ8HL2tsSGuaAFYWvNgDF8cFRMl0mkq33EztnKaR/5z3iCCJURvjk8AbDVYZYMknrxPPutK//BmYmW1DdwbQvHiDdM7AQKlWMSAK+Dq6aJTZaTH1gnuFks+Lg3R1D95Maw==
+ b=bbuZBY9ckehwi0IJcblM6tMxPMqrw5KcKgO+n8Aa80WtKPsu3Yrbw2UzTmJ3LgJYqRvjvUPu8CqbZFEEOMMW3ILSlh83o9BZ1fPdqupq6OeeGn1BMmkxuuqB9Y3Q7zIXyqq582x+5GEmFjN05vOEXNpc/C95OvsmLUyVi+hI48cJgOlOuaT0wmD+PR0DQPjMBEveEdO3ujLw3Jzt3akx7DQWw1kMrFp2gAbtX2+2bPFK/Wrebwu/pGgwPqnE6nNU4aeto2nvrbRn8Fm5zCNCa3HwrjjIlaEMw7z0ghGBEB6ZwiCxmzeO5RlT9Rw5ycF2vfcblG9vUosgjI2gYPzGcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rl8rUhHmRFSg5ocU//+Q9pQPMUl7/usDwSblRogsAYA=;
- b=Ugwin32gAEi7U0MYt0B5wggGKbkBmqWcCQ6Boa4C50LD3n03Ga5qh03r+LHb395phdHkvWJHyZ9jtEx6yLcnZp/ORgj79YDiVY11LcrmclBp6LWBGJb+VyjE9WGya69BDwldKjLJbiRIY3+fTwvNloycY5G/d9cIzwK2zKB6t/akpMk00SGOsFxikEu2tqJIECDk8LvTF5Qk2c7UIc5bxGPpMzAiD/AhejRQJfX6LM57h7ci2mW0SUAbjCUqWlf+QyIYNhh972eGWwMChdJ+hGYfbv4q5VDYZaKNjWSd2DGh7ejt6M+Kpo1hVPeSr1t+VWwY4u7Eo1oWOQLeX9NzOg==
+ bh=TcTpVtIwq2dft3Py30i32PHxXWt4zy7IH+o3jjwVysg=;
+ b=LOAe3EvihFt0MdeGHZNq7oFSqkNW98stuOM+8Fqjqk6kmvZPl2vxKvGYcHpgQ60XWrailfIsbdkKJWAtAkOjpkN9anM8IbrumCyNS08O0aZqliP13EG4W0bdzL4NN063+TJDzmWVxyCXYpFBHpp49grfo3J7fnrdSlLT9IRSIcAFi+Mmbvn3hLqbONH1Z4ba/WFdN78fSbSzV/xCyr3q7hm2/Q8POXS+acBGRDYLLzEtU5krc6ryWTZWyFD6G089F5DS4We4iNV2gIAJpzhUNuvK7c0+BadMrfDsBsdP7LtJbiR9m1pPmrQFZKBfrps5rGizIV6plopwkaodDveEtQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rl8rUhHmRFSg5ocU//+Q9pQPMUl7/usDwSblRogsAYA=;
- b=WAOKgty0MEGT/uDRgXN96XqJak4Tr6uCKyvxcuNzi/1+dRKU5jGkGaWQUJI/PK9eWEwSNBRiV3v5SPRmRswcb4sE5IwKbDnZHz/O8PvdOhMY5zEAQ7719kFYrmhLCUnCNPFUAvz+YsioHc+barv1Zn/YIh1fW4esWpd9ZcLqNHQ=
+ bh=TcTpVtIwq2dft3Py30i32PHxXWt4zy7IH+o3jjwVysg=;
+ b=jIOqUqKpI1Gla19ztjJlVd4qfS0cVXsmxRm4eqaQdzqiNfPZhleS7SBY77Mp6Ef7RLU2hdiWLJupPdOLhbldjBHLWG6aH08eiqcnu1Con+DrvwMLsmN4mwy26+uPMzDuX09v74wgisrWry9sBj9XmVylXLrOx6+yOY1/RjFbrWg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
  LV3PR01MB8511.prod.exchangelabs.com (2603:10b6:408:1a0::6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.28; Mon, 30 Jun 2025 03:03:45 +0000
+ 15.20.8880.28; Mon, 30 Jun 2025 03:03:57 +0000
 Received: from PH0PR01MB7975.prod.exchangelabs.com
  ([fe80::6926:a627:118e:8050]) by PH0PR01MB7975.prod.exchangelabs.com
  ([fe80::6926:a627:118e:8050%6]) with mapi id 15.20.8857.026; Mon, 30 Jun 2025
- 03:03:45 +0000
+ 03:03:57 +0000
 From: Huang Shijie <shijie@os.amperecomputing.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -62,9 +62,9 @@ Cc: patches@amperecomputing.com,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	Huang Shijie <shijie@os.amperecomputing.com>
-Subject: [PATCH V5 1/2] arm64: refactor the rodata=xxx
-Date: Mon, 30 Jun 2025 11:02:27 +0800
-Message-Id: <20250630030228.4221-2-shijie@os.amperecomputing.com>
+Subject: [PATCH V5 2/2] arm64/Kconfig: Remove CONFIG_RODATA_FULL_DEFAULT_ENABLED
+Date: Mon, 30 Jun 2025 11:02:28 +0800
+Message-Id: <20250630030228.4221-3-shijie@os.amperecomputing.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250630030228.4221-1-shijie@os.amperecomputing.com>
 References: <20250630030228.4221-1-shijie@os.amperecomputing.com>
@@ -80,175 +80,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|LV3PR01MB8511:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba751848-b050-483d-8850-08ddb782ba54
+X-MS-Office365-Filtering-Correlation-Id: c4f41711-2854-457f-132e-08ddb782c10c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lUAu/97FZxDX+2CvLZJKiGoZ0KQFErGzAvDvHKOW6WeNp+NqxNwYBg27+iu+?=
- =?us-ascii?Q?0S0G4FiloEx0v1QlGmHxM3nTaDdjm1BzQT6u+a9+IHJdvuMi1B83rgvVR0eI?=
- =?us-ascii?Q?yjf9uiBA0xiNZKAhoCAIvaAj+ncU9gBtGFinWkLD4HdrubDalbM5di9fJX3t?=
- =?us-ascii?Q?VA15rKuGA2ohKnjgHgL1zofP1wdtSiJVnNLIYUojzgBkD634pa/1bSczQyX5?=
- =?us-ascii?Q?tYO65aMFsBn3Jk3NQdQ74Vp9Z5XbUpGayJb5FNX74urMizCX0+lUvjCxDdxM?=
- =?us-ascii?Q?PZZ+2RFL0nmzctMC4HtdLPseBcTsp/s8Y3DQsQH/ybRsZxtd4cwVzCUxy2VE?=
- =?us-ascii?Q?7thCxyOPksekki9OUasvlxGiOelj+2707V/QBQvq3p7edP4v4S0ktFwZYbSU?=
- =?us-ascii?Q?tSOTaf3b9O3gLGZqSSp0JIvtIK9NeUQfabXPau1p8Oj7632dRoZTFrxu5uzS?=
- =?us-ascii?Q?uqm9OspNGpaAUbht7KO86uSk5/dChwl9BJOhAAeGM0kILXWpQoHWpgmkdTGN?=
- =?us-ascii?Q?Wt/BmaLGieHE8nzJfM99np7qfY38IfzgEtqmWMV4+m2TcCzq/ezg/SiT97fk?=
- =?us-ascii?Q?0FrdGKIxTdC2/XI81ghyxTGqDvMIlY21iJEJR1vAuuztVATJ6CrU/ir+QlN8?=
- =?us-ascii?Q?WHEjO25P9YWKU0kcggv5pHsVDjKt3R+w+XtAEseNfBrIQGSmt5y65F7B5k/e?=
- =?us-ascii?Q?5jPz2mUHewwaAgYTksF/WAvvhLA5m5yCt4c4qxlWZZD7rmhJvCIGbPFKA9/b?=
- =?us-ascii?Q?UAkQvMowMT6Sx2ZUg3+eokgdP1rYwK+BA22gEEOzRk7Ut5t8rFrJ1PHyFBBM?=
- =?us-ascii?Q?hQNToOSc2xxkisnU1qmn9OK/lD8n0SQh9iCWUnTrtlssOCZK3CEKmmMTOdc7?=
- =?us-ascii?Q?rgBAc+kmWKd32jvnvk3P6r1mSfmxQzmsQKDgBpjE5ZdYMSJSkcnM1SaYUV2S?=
- =?us-ascii?Q?Nt9Ns8QQPun5HUH399GLjWtlAaUOAe8qTxKlPuJskN3fGiqFRSn8kAxmKXZ1?=
- =?us-ascii?Q?EqBTI/GIaLWJtdEEIMKoBlS6lbWIXOoA10FrQ1srElkMwNAY1k91xY7eISrW?=
- =?us-ascii?Q?0tgiBwdfX7N/UlCrH70X0c+kK/5j7+/+55twGZY13C0YX5d6hroxLkVQJKBm?=
- =?us-ascii?Q?4e+91MEYnD/KtUsYz8UdmlUytM5w8rvnIpBAlbfOxgLsa4bu/CtQ6j08+6h/?=
- =?us-ascii?Q?iHR4FlH/WHCgSuAFgW3dOrdcTAL7IMSxYvgM/Jfz7z+9Z0i5uNLn64noI4cf?=
- =?us-ascii?Q?5+REDv310irq+/sC/GjpG8W8aovEZzhwnP/PogNlBuJe84j6n34+fdGNh5oD?=
- =?us-ascii?Q?GAb49+KckX92ThAyW4LQrrJvfFsTopZAxhTfZPdBVL0/FE6CvUDmIYKVzacd?=
- =?us-ascii?Q?Y4cNm1A3QzwJTFKqIublwTN3B1CZ2AR6ExvHBB+/Ipmm82/jOVEC04clcc+i?=
- =?us-ascii?Q?sIjMqQq2NJIClkewdB5uAMfoEb0mdYmVe+uSklDdUUM6MFcsBzqoJg=3D=3D?=
+	=?us-ascii?Q?p9JHQZLJhZBpv9d8xY6RSMS02Z46Vt1fusQ7dxqUVyuHcSJtM9mvjCXUmtbh?=
+ =?us-ascii?Q?k38foF2cIPeiFBkVXH690t9rdIivxlBCHqhCIriS0grz2I4NEnESA9bZ7JKS?=
+ =?us-ascii?Q?e9Smw/UXutO3N5+n0SNmBRfoBd2Q1XmrQvWjX3dyYQ1NK1qW3l+adws59Bin?=
+ =?us-ascii?Q?mV4wMHESQwBN9dCxfIiY4f19DG5HfcxNmF4sQ0RvZ53pHh2l8p2fSACqJQaG?=
+ =?us-ascii?Q?1nmt4BNO+8LA1PmnZXr3yQmxflGD2zrvmOT1qfqxbl/XlmPyifPCHvPOxbZy?=
+ =?us-ascii?Q?Zw/ZpRSy99xJNIhfrfHSnMPbK7gZ6XYcqSBGBhplEeBqPCXpCUrbWzyb+0uG?=
+ =?us-ascii?Q?zngnt//7iQl5Ja12/yJ+kr2wavY1XCz0DHSIqBX01Zg6572rxRb72pdol2W1?=
+ =?us-ascii?Q?TQu1d96BxvGOtfRR6UR3guR/dTk703Egw2L1PcKVkBpDMiG41ruPJhYwd1EV?=
+ =?us-ascii?Q?5vOQH9tPv/TWpsTTHYre39cR6L5JJsAYdL3U18sNak6gSSCT8+jd3pl0LJJT?=
+ =?us-ascii?Q?/o3wtP6hoE0giW4sve6z54B/qqYCVOcdWROvNrn1r0tyCv8oD0cOqzQVsUC5?=
+ =?us-ascii?Q?EWau2QU7SZgy692omc8w4Wu9FUApVqZFQapzq3p7eld+Q0zVRjSb5wpM1sn4?=
+ =?us-ascii?Q?DqOTHaqWoYS8obdGqPL+bzmdPL1mSROm2b2CMv1cj7XEelMqk0jScUQeF+xr?=
+ =?us-ascii?Q?+XakWC9scsmfnTB4g37knMduKKDu6C1+avlG0RY1ihFeCVnhvDL9lYXg2MON?=
+ =?us-ascii?Q?NDHAc1pMQ4Dlmj7mEMJYkGs15oC0V92Ip/SgYD+jgqAJIRvu7pJvOI3tqiwX?=
+ =?us-ascii?Q?rmR336pcHSpOOP+314q7ss/ZTr/+6Ps0oc1yhBAiKQTZWUkUik0LCbv08XGd?=
+ =?us-ascii?Q?8ud+cLHE+2+tcHS7YxH6a7juYkb8ol97NjAGTHWT0X1TeA+mK0uUfDbntKzi?=
+ =?us-ascii?Q?wKoGAXK2UiCzch7vRGcYw6RTRCvIAdL2+I9kr4A1PDentqKPRs8RB54ZFcUz?=
+ =?us-ascii?Q?T3riotPYCw2GJbPVAWy+i3D8lLxFZF5XXVCLLSuDHtc3pEZlVe0McXOCf/67?=
+ =?us-ascii?Q?RqAFjRRENBnHuNrSDHu3bgasaXXG4MupdL3ofnUc7YjJBqSER9FjFCcD2RRf?=
+ =?us-ascii?Q?AkzEbYICOJ0zOYTVmopvHAszMMWNFxOP6zi0MIgRgvwF+Og6TNqBezJ5423w?=
+ =?us-ascii?Q?N/Viak2ibIWzjLjoqjK44O8UkKuiwPLt30zZmCpuu/Q7e0MEnGNQKI7wyzUo?=
+ =?us-ascii?Q?z5RLl5IKSA5st3lRH+v1pjksgRorN15dgIPU46G3kNF0wf59EFJm0Cyvr1LB?=
+ =?us-ascii?Q?/8hzKTYHNYNRvSD0F+HJwX/t7fwm3EXGgYNON2h9P+HSXi04opTyDP8A+oUA?=
+ =?us-ascii?Q?+Al9qIO295Ob2AsT67tV1l6xB1UUR/fLLo/IhZWlRiaOJDhz+u0oA0sJ84NW?=
+ =?us-ascii?Q?kJ22ODXXwRNhIzHwcuIdB/HPx3rgK4UJdBqV8sB/8ntVCqEtprJ8sg=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RXg3DVTfk2UPrViEXCuczHee4PhRFeiEvdY4QG7csL3yy6aDnd2sX/T9qC0a?=
- =?us-ascii?Q?VZe3+sh2Bc5MC4fFdtxJqkauJ3b0ubInH8LATbpM0lQ3shccyGAdaARYE5kx?=
- =?us-ascii?Q?7DcdaVE0lBTB6Upt74pd///G/fr6ddel4+cPxQnLTn3FLPmDF7hJNE75zlVA?=
- =?us-ascii?Q?T+y5u2BMDekV4ykL0NYZmkI1xz+1Dg51MBTeoyzDDHQezR3rsQ1Spc5KC6Gg?=
- =?us-ascii?Q?iloFA9j56qf9DKTQCd0EFzG5BOIBY/h+x5OUyjd/9+8JSnCw7ToDqmodw/EQ?=
- =?us-ascii?Q?RIQH1xZigDNVGXdPgA9HwBkV3+mHzCKnkASLH1pLMeBREnOZSPodzUaQ+MdR?=
- =?us-ascii?Q?aflq3ygnfhP2M1BmIKbKOUdIoGxDbU6UO8vF0RMJCMeKIsCR+bh/BNWhIGdH?=
- =?us-ascii?Q?iHWAZgCUZMf8Gc2BL4u3s2l90WJebE3s2amWtj0R6ek+zLxxFJ+bygtCemIF?=
- =?us-ascii?Q?28cmgghapnfXkA1lL/rymIh9fhZApWNnrglCQrlgbJYe7n38bWQIUdZSupsu?=
- =?us-ascii?Q?H7Bs6SyH6S/52pNcyLzooWR36CDsuiiaGmQiV6LCYLMwHOjCrtWxZ3+b+a8j?=
- =?us-ascii?Q?taZVThEJ7WM9OBcmhTLhcPI/2Wh5h21E9Nelf/XJ9S85Nl4G3WOiyvqNjE7h?=
- =?us-ascii?Q?ttc2rAsViEIfb9yhOXml+NELS4vKgCwkiXmR7SI+n25mZN8AukDBXkIj3OIw?=
- =?us-ascii?Q?slXWc+PDdlwlhtBtPjJqKuOWI4XUs9P07Qww3N/gb0VafVqt8nEe6Oulg2w4?=
- =?us-ascii?Q?hsWwz09sugWhlVNrSePrG072zwr1u2RfP0uGDrkFxaStE5wNNfvroGDGWXmz?=
- =?us-ascii?Q?LFyu0Q6fEG1iz0ROuCUkpLCoxQCOM+qEilTdyFAGgV9nJWzMbLmpONHFN2m7?=
- =?us-ascii?Q?agEYkX2h7G4paT925UhP0bI3Z7KqEXc1NSvIr34Vp1s+mrPn9EyrlvQf4X46?=
- =?us-ascii?Q?UAMyganqUtzcfZEPEIJhZgVew+5ApGc/HyqzTOY5QZMgyvyfDDlfyZhQ1hy4?=
- =?us-ascii?Q?vziJGTGpNVEOw08T4dofe6JDCAle0rriTErowscX3yyIIpfAYjjnsXRX8w9g?=
- =?us-ascii?Q?pVdUs01kLSpkHaHJbH5p+R9exEJWdr/eSbuohJB8gVPINFYdtKj1LOC3Xlr9?=
- =?us-ascii?Q?kOWFBYxtdQyeKkmgtjgfB7ZxBZcme7611pCLPizAzNRl8Db627aoczG7ahJT?=
- =?us-ascii?Q?/DDS9feJU1WDlXl/mI2y2or5x0mE/tBL/FXRMucODcTLRjyXHTTmGwga5+Mt?=
- =?us-ascii?Q?DEblpplkjSCV2aayDkmhoXrdNUcx+acr0VLhWM0Ym3D10fPaX25a8TrzEsLL?=
- =?us-ascii?Q?EYOZUF5Xs04b/R8RSUOktVCj8yNPYP3qJAimQX3UydJjCfll7emtfC0tPIGd?=
- =?us-ascii?Q?66Aa/NutOHat2qPLCMMDrNysdbDPfH5/886KnHN2QPHkM0pv3J/EAtEPVt64?=
- =?us-ascii?Q?RzCld0M1n4LSNBmwLaQrqf/DhEXxMSUtEBXX9foZjGI5yZss8qTwiBI/ErpF?=
- =?us-ascii?Q?GuGkJUwarbfhBJLS/NWFrysvWFpcISiMXHxFzo0s+OFVAwdMP2aZcZ0gI0kR?=
- =?us-ascii?Q?VwdRqCrv1e3YScMnBK3V76aY7FTCBAMjGsxxVb1g8TmoneyEw3aCF8LmKPOH?=
- =?us-ascii?Q?sGaXBpwFm30GSHHwCh9sd4E=3D?=
+	=?us-ascii?Q?mtvRv+ne5Nt7B+02JU/8dI160t6bFy+URRK9iJ8Ue3FTdXPELjz9uioaRlO/?=
+ =?us-ascii?Q?E/AAXEiJJ3ZVN9DkY+rLjDhn1gPmOgjY8II4ZQqRV7V+SuplLH4iH4n0FtE3?=
+ =?us-ascii?Q?olSBV8p8gYqd6vQN0jVus3lOy+WxVZQg3MKsbWhDuOjlM9SB9lIBJN8v5wyg?=
+ =?us-ascii?Q?4J516FHdNitpDLKo5MHniFPtl+hdfc/JkM/QAAOdGzKVKvlvj3X6hKdetRC4?=
+ =?us-ascii?Q?t4NYTFCyEyS8nlkTQeeGpd9+Kd8V01qW1dPx3UwYJMiDY2evB41q2ZnBGevi?=
+ =?us-ascii?Q?A2w1CUDDW992YT15Kt6PwiLVBsIxne3w0OGexZIG8pd6HTUYlLwIVK2v4WlO?=
+ =?us-ascii?Q?tbu6NsLpf8qnVBd3J6KsYjNWp5HwHRAoSFHt9ietAT9CVHMSIz5gb+Z8yUf6?=
+ =?us-ascii?Q?wcziXGo3DqubirfcJpei9hFB8GG1uc3aCaf123Att8O7u0cqUlMCQgJ/htqY?=
+ =?us-ascii?Q?ASCZ4TXllS4Ye+o3obTK96JuBhd0ls+b3fRybBRXHbsGmWSXr1a7G0YnDnrn?=
+ =?us-ascii?Q?ZqSZKJ69sZ86xG6mttHL214fa7XXFCEBARrucKzf+Qj3dIpl1uqHhrUTFUYh?=
+ =?us-ascii?Q?Tpu/0uQ4+x9SdTn5pW244NHhc3+fV0lWTi4Q2sEaecRy8r0+sdg9PRwKpSTV?=
+ =?us-ascii?Q?3v8Va40IZqAJD9GUKeBFNzFyIM10TgXDXdwnBYtFt1qw0+jazxEBnZ1/DqL4?=
+ =?us-ascii?Q?K6T4Vn5AlnlaKuZTMqYLSFe2BN9h27o94UiC+koxVqHrmae2Urgv6pNsXoUH?=
+ =?us-ascii?Q?2tm/5dPjVjFlWxzbuqHxalxb1c1Z5Ry4IWF502onw7bfxMKTWznW0rvrzIbP?=
+ =?us-ascii?Q?PzKa5zyE97oxUVWdkqCrPOPzzeO/Wlo1Hu8+LHsIqBgMJsMlmkcsCvv+0hRN?=
+ =?us-ascii?Q?+FpHe5SHizav0YVzrrAzXR3FYoL5fLdMhwspZe/Hj/z3nS8cJaiwJMI2UCci?=
+ =?us-ascii?Q?7kSaiEbYosciOYsv12aJc0Bn6U/moev49xxIOQrNLkRf4zleb81HV73bWTrN?=
+ =?us-ascii?Q?jMlD8dSHtnBPcFv0N50z1MIDIjSB0UjBSZUMIMw6NUBSXVsTBRO6k4eSpBu5?=
+ =?us-ascii?Q?F2Gdn6bq9+Ajl2C9a9tWZyeWI91jmcxcUNtAtn/oi2sim88eP3AGvplSE3el?=
+ =?us-ascii?Q?NJAIgeOuhTF3lbdY0Uwk0WYtafmVwZNPMpp9wONiuD+wKY6XaaCMp+8Q4rHR?=
+ =?us-ascii?Q?XB92npHlJ4shdk8E9NeEYJcKwijaNMLL5ihJtMv9A6/FOYtBameW2FscKBJV?=
+ =?us-ascii?Q?xZ528hGZe0Y6olxeIjcYwHXv497cwMZh85XGBIe9zCvjW2ALpskS81fgzmq2?=
+ =?us-ascii?Q?Lp4wr60HvDeW4X/BRIEdtd072aRieKNTnTBtEmdDo2Q/lbNBrTW1coH7JDvA?=
+ =?us-ascii?Q?3Y3S91jkFFzILhzrERQ8Q/AVkk1xe5xpQYNK7gL3q5qtyYumPZmlRCSoyrUM?=
+ =?us-ascii?Q?Vs138+apAg97Hd11F666uT0BAt9QQa21bXzHJi0LkCPd3zCnRq7fTD2B95vm?=
+ =?us-ascii?Q?a8N3SgyIaYsk9q3izSX1XNzBsMTpF8xD6hVCpMUys5TrqkGajkJqSHP/5RIl?=
+ =?us-ascii?Q?hLLFefA3T2coptcQCtajRQUAUzGxEH5d0jrEglq3NeKsoniqheul6B2g9FLP?=
+ =?us-ascii?Q?cHVqa86VLsla9PITRH2CqKg=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba751848-b050-483d-8850-08ddb782ba54
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4f41711-2854-457f-132e-08ddb782c10c
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 03:03:45.8028
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 03:03:57.1917
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dHAnohTUMPM9o84Juo4DNtTWdME4BTtErV+LTS1Cngk2n+I7Pu027hhM5546LpZkSTz70Ypgie9G5gyZDhPsPPqdYkTDb2PwrI74aC7S2/T+HxExKexnjD9wz+xcSByJ
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3HOiC4/M9qwywUY1nkmytXPKXxgML5T1CQRmRy4AmrWmwm5Qc551+QFiYDFLoMWMv3a3TJFIB/0J3x20nXsRL+C4O5oHfpbmLV1FqE7GdAsWGFaIyHYNADo7SThQ04ux
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR01MB8511
 
-As per admin guide documentation, "rodata=on" should be the default on
-platforms. Documentation/admin-guide/kernel-parameters.txt describes
-these options as
+After patch "arm64: refacotr the rodata=xxx",
+the "rodata=on" becomes the default.
 
-   rodata=         [KNL,EARLY]
-           on      Mark read-only kernel memory as read-only (default).
-           off     Leave read-only kernel memory writable for debugging.
-           full    Mark read-only kernel memory and aliases as read-only
-                   [arm64]
+     ......................................
+	if (!strcmp(arg, "on")) {
+		rodata_enabled = rodata_full = true;
+		return true;
+	}
+     ......................................
 
-But on arm64 platform, "rodata=full" is the default instead. This patch
-implements the following changes.
+The rodata_full is always "true" via "rodata=on" and does not
+depend on the config RODATA_FULL_DEFAULT_ENABLED anymore,
+so it can be dropped.
 
- - Make "rodata=on" behaviour same as the original "rodata=full"
- - Make "rodata=noalias" (new) behaviour same as the original "rodata=on"
- - Drop the original "rodata=full"
- - Add comment for arch_parse_debug_rodata()
- - Update kernel-parameters.txt as required
-
-After this patch, the "rodata=on" will be the default on arm64 platform
-as well.
-
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  2 +-
- arch/arm64/include/asm/setup.h                | 28 +++++++++++++++++--
- 2 files changed, 27 insertions(+), 3 deletions(-)
+ arch/arm64/Kconfig       | 14 --------------
+ arch/arm64/mm/pageattr.c |  2 +-
+ 2 files changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ee0735c6b8e2..e0cd6dac26d3 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6354,7 +6354,7 @@
- 	rodata=		[KNL,EARLY]
- 		on	Mark read-only kernel memory as read-only (default).
- 		off	Leave read-only kernel memory writable for debugging.
--		full	Mark read-only kernel memory and aliases as read-only
-+		noalias	Use more block mappings,may have better performance.
- 		        [arm64]
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index f9f988c2cab7..12a70f10f7bb 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1694,20 +1694,6 @@ config MITIGATE_SPECTRE_BRANCH_HISTORY
+ 	  When taking an exception from user-space, a sequence of branches
+ 	  or a firmware call overwrites the branch history.
  
- 	rockchip.usb_uart
-diff --git a/arch/arm64/include/asm/setup.h b/arch/arm64/include/asm/setup.h
-index ba269a7a3201..6b994d0881d1 100644
---- a/arch/arm64/include/asm/setup.h
-+++ b/arch/arm64/include/asm/setup.h
-@@ -13,6 +13,30 @@
- extern phys_addr_t __fdt_pointer __initdata;
- extern u64 __cacheline_aligned boot_args[4];
+-config RODATA_FULL_DEFAULT_ENABLED
+-	bool "Apply r/o permissions of VM areas also to their linear aliases"
+-	default y
+-	help
+-	  Apply read-only attributes of VM areas to the linear alias of
+-	  the backing pages as well. This prevents code or read-only data
+-	  from being modified (inadvertently or intentionally) via another
+-	  mapping of the same memory page. This additional enhancement can
+-	  be turned off at runtime by passing rodata=[off|on] (and turned on
+-	  with rodata=full if this option is set to 'n')
+-
+-	  This requires the linear region to be mapped down to pages,
+-	  which may adversely affect performance in some cases.
+-
+ config ARM64_SW_TTBR0_PAN
+ 	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
+ 	depends on !KCSAN
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 04d4a8f676db..667aff1efe49 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -20,7 +20,7 @@ struct page_change_data {
+ 	pgprot_t clear_mask;
+ };
  
-+/*
-+ * rodata=on (default)
-+ *
-+ *    This applies read-only attributes to VM areas and to the linear
-+ *    alias of the backing pages as well. This prevents code or read-
-+ *    only data from being modified (inadvertently or intentionally),
-+ *    via another mapping for the same memory page.
-+ *
-+ *    But this might cause linear map region to be mapped down to base
-+ *    pages, which may adversely affect performance in some cases.
-+ *
-+ * rodata=off
-+ *
-+ *    This provides more block mappings and contiguous hints for linear
-+ *    map region which would minimize TLB footprint. This also leaves
-+ *    read-only kernel memory writable for debugging.
-+ *
-+ * rodata=noalias
-+ *
-+ *    This provides more block mappings and contiguous hints for linear
-+ *    map region which would minimize TLB footprint. This leaves the linear
-+ *    alias of read-only mappings in the vmalloc space writeable, making
-+ *    them susceptible to inadvertent modification by software.
-+ */
- static inline bool arch_parse_debug_rodata(char *arg)
+-bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
++bool rodata_full __ro_after_init = true;
+ 
+ bool can_set_direct_map(void)
  {
- 	extern bool rodata_enabled;
-@@ -21,7 +45,7 @@ static inline bool arch_parse_debug_rodata(char *arg)
- 	if (!arg)
- 		return false;
- 
--	if (!strcmp(arg, "full")) {
-+	if (!strcmp(arg, "on")) {
- 		rodata_enabled = rodata_full = true;
- 		return true;
- 	}
-@@ -31,7 +55,7 @@ static inline bool arch_parse_debug_rodata(char *arg)
- 		return true;
- 	}
- 
--	if (!strcmp(arg, "on")) {
-+	if (!strcmp(arg, "noalias")) {
- 		rodata_enabled = true;
- 		rodata_full = false;
- 		return true;
 -- 
 2.40.1
 
