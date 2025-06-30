@@ -1,95 +1,133 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C43C1FF7D7;
-	Mon, 30 Jun 2025 07:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B202221DB1;
+	Mon, 30 Jun 2025 07:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268933; cv=none; b=QFzNlciIFjx6sErenlRlI9BbcHFCibGAL4yttsKqwHSVqEbpxJpKAU/AmL84ISiE3qm0awxEdHWqt2bsR8oEmZo+eQav9cdi3s5vXXKU05kKPUd9/vyEwAjaO+Nj3FZm5RABL+hL3Hj9C8L2fE/eOXIhee3nBj4fOS6W/RdNYi4=
+	t=1751268966; cv=none; b=gzTAfPcKeElm6/sed6X/uoOPW3cZ3bFlXC+G5r/TAoM+Rtigmp2s5ONQrqTtmDGXGOqoNA3ZptQpULr/I+c4KvhwNHXOjzWJWjPL4YseHkVpjuVtKrpxJYxyyVgunKurJ8FV8Q3wIJFCdhVWn2fj8ixxZi2styGL33uXDPEnla0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268933; c=relaxed/simple;
-	bh=pBH6f9Yut4Y+IOdKkB8kToAtqO5eOMUX8Oytj6ItvVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IDF/kGOjk7YS8Z456zRISU+TQCKmB6qnP6PqHUjLw87Wz/hqM+BrJA4giAZtuJjEUU9nY4E6VLGh/lPh179jnnAg2zGFuOyNv+Q5m14mf9wbMZchfppKgeV35ASsBacAiEpDb0f42Wo/xs4KfjkOzPHF9XKRLlA+6aRhJEwApyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F0nPajaB; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751268966; c=relaxed/simple;
+	bh=iNDrjh0tpRqFMUceSM9T2AlLoJiEFqU5pz2vsAYwVxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=X0h/W4TdyZg7aLjX10dw/Lu9iyiD0Iu6zUmkXS6ncqv4NhYbAKy7jIrGV2a6jsjQ3qJynXAY/B/kg3ZPJCkpsn1NSqY6ZJdCvwgCsgjKoYPc0tXpDGNLYV0zcqoZltYpVtimZpMopQiHCMsbX0NRuCTgEfnaaFguI9Jau7Hghvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=QA9ziUH7; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F0nPajaB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9BGsYPOhKDHjSJL4ToFtlXBhQtz+EUS/bpoAUkX9Rbs=; b=F0nPajaBTPRrvPW4EHktXO9riX
-	7hVl0GK/Uvq9X8MOQA/WPMQYtZevNQ0zzjAyn91ElX8i2zi2zFqRRm2n7fFJ1XA2o48jaOADXmWgG
-	L7CkqpRtHj+OLoM14kjYYShIixYJ9u89pHr1+fFtRsfb/f0BYi+LtW7ZYdBZto5ZlGWyHdP/rcSYq
-	nwJOsfFEgRy3BYtW3ZlmY3XOlcMzY2XOOAGDJ+z/UZ8lpuYjGT+i/i3GoMvq+H9ntVpw445L5OcFH
-	78Yd3dSDWQrJv4mn3Ky4EhUW+1UnKbYNKP4xqUIOqdB6xpwPJmhxYqFZPh2xF3dcPlkYCkqALUzYP
-	YRRviNkw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW92x-00000003BlX-1XeU;
-	Mon, 30 Jun 2025 07:35:23 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E5B3B300125; Mon, 30 Jun 2025 09:35:22 +0200 (CEST)
-Date: Mon, 30 Jun 2025 09:35:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>
-Subject: Re: [PATCH v3 44/64] x86/jump_label: Define ELF section entry size
- for jump labels
-Message-ID: <20250630073522.GF1613200@noisy.programming.kicks-ass.net>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <7217634a8158e56703dfe22199f1b9c08c501ae3.1750980517.git.jpoimboe@kernel.org>
- <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
- <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="QA9ziUH7"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7AniW028032;
+	Mon, 30 Jun 2025 09:35:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	3TeFS+uiHYd7t7KK/aAu0N/KEC1YUemvKeluUuOfecA=; b=QA9ziUH74nPr8B5h
+	tSCcx7WJc5TajZUH1r7XpOAseYVJXtyyrECAhoHZ1w7H621FQsd/wZuiOntoOLux
+	xVb1f3Sq4tnnJX0KF9NbhrT7jrH06muly99q0vw2j8PJgb6cw7X3NQ9vQ6mYIzS7
+	FBVzTYysav1JdMt27wULU2nz24Dd7lfN8oNojqaj8xy/D1X7A3XL2xPzl1Tmm8T4
+	BhKW6UfEbWYU+dQrmaO10MTQwPFFPtS+ruX6uTVqgBZadAunJcSSjXzMMAfwlpiA
+	ANXefcNTmfzo4SoFirZNEOK8fZZWvUkGHf+r+v7WVek7sRmgn+VWHIAHWBqTlFPX
+	+f5lqA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47j79h5udb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:35:43 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id ACD4540047;
+	Mon, 30 Jun 2025 09:34:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D342946AD15;
+	Mon, 30 Jun 2025 09:34:15 +0200 (CEST)
+Received: from [10.252.20.7] (10.252.20.7) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 09:34:15 +0200
+Message-ID: <1f49b8f3-44c9-43f3-a3bf-b931fb0726f4@foss.st.com>
+Date: Mon, 30 Jun 2025 09:34:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: stm32: fix NULL check on pointer-to-pointer variable
+To: Antonio Quartulli <antonio@mandelbit.com>, <linux-spi@vger.kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>
+References: <20250628000227.22895-1-antonio@mandelbit.com>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20250628000227.22895-1-antonio@mandelbit.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
 
-On Fri, Jun 27, 2025 at 09:55:30AM -0700, Josh Poimboeuf wrote:
-> On Fri, Jun 27, 2025 at 12:48:18PM +0200, Peter Zijlstra wrote:
-> > > +#define JUMP_TABLE_ENTRY(key, label)				\
-> > > +	".pushsection __jump_table,  \"aM\", @progbits, "	\
-> > > +	__stringify(JUMP_ENTRY_SIZE) "\n\t"			\
-> > 
-> > Argh, can you please not do this line-break. Yes it'll be long, but this
-> > is most confusing.
-> 
-> Yeah, I'll go indent that like the extable one.
-> 
-> > > @@ -29,6 +30,9 @@ int main(void)
-> > >  #else
-> > >  	DEFINE(LRU_GEN_WIDTH, 0);
-> > >  	DEFINE(__LRU_REFS_WIDTH, 0);
-> > > +#endif
-> > > +#if defined(CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE) && defined(CONFIG_JUMP_LABEL)
-> > 
-> > How is HAVE_ARCH_JUMP_LABEL_RELATIVE relevant here?
-> 
-> #ifdef CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE
-> 
-> struct jump_entry {
-> 	s32 code;
-> 	s32 target;
-> 	long key;	// key may be far away from the core kernel under KASLR
-> };
+Hi Antonio,
 
-Well,... that's odd. I was sure there was a
-!HAVE_ARCH_JUMP_LABEL_RELATIVE version somewhere... Oh well.
+On 6/28/25 02:02, Antonio Quartulli wrote:
+> In stm32_spi_prepare_rx_dma_mdma_chaining() both rx_dma_desc
+> and rx_mdma_desc are passed as pointer-to-pointer arguments.
+> 
+> The goal is to pass back to the caller the value returned
+> by dmaengine_prep_slave_sg(), when it is not NULL.
+> 
+> However, the NULL check on the result is erroneously
+> performed without dereferencing the pointer.
+> 
+> Add the proper dereference operator to both checks.
+> 
+> Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to enhance DDR use")
+> Addresses-Coverity-ID: 1644715 ("Null pointer dereferences (REVERSE_INULL)")
+> Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+> ---
+>   drivers/spi/spi-stm32.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+> index 3d20f09f1ae7..e9fa17e52fb0 100644
+> --- a/drivers/spi/spi-stm32.c
+> +++ b/drivers/spi/spi-stm32.c
+> @@ -1529,7 +1529,7 @@ static int stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>   					       DMA_PREP_INTERRUPT);
+>   	sg_free_table(&dma_sgt);
+>   
+> -	if (!rx_dma_desc)
+> +	if (!*rx_dma_desc)
+>   		return -EINVAL;
+>   
+>   	/* Prepare MDMA slave_sg transfer MEM_TO_MEM (SRAM>DDR) */
+> @@ -1563,8 +1563,8 @@ static int stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>   						DMA_PREP_INTERRUPT);
+>   	sg_free_table(&mdma_sgt);
+>   
+> -	if (!rx_mdma_desc) {
+> -		rx_dma_desc = NULL;
+> +	if (!*rx_mdma_desc) {
+> +		*rx_dma_desc = NULL;
+>   		return -EINVAL;
+>   	}
+>   
+
+Good catch for both pointers !
+
+For readability, I would suggest to define two dma_async_tx_descriptor 
+ptr at the beginning of the function such as :
+	struct dma_async_tx_descriptor *_mdma_desc = *rx_mdma_desc;
+	struct dma_async_tx_descriptor *_dma_desc = *rx_dma_desc;
+
+And then use them all along the function even in the assignation.
+
+Best regards,
+Clément
