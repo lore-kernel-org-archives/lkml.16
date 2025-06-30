@@ -1,137 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E9828B3F6;
-	Mon, 30 Jun 2025 17:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038E028B3F6
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751306167; cv=none; b=GJQRD8294oFcpLcHWvLifKzparnHvsnBR/NWZI7IxdF355m3iRDM6LrXIbUZ29TlysFlpDfwuCv1xEsW0WZp4GiPg0IUrLSGw5qj52p55P/hdlwYmeKVlWJQDzm/y6Y9S7Xp2CB7l4zJPhUPSliGeRhykSaKZjBlE19n4GSMpJ4=
+	t=1751306188; cv=none; b=AeWiHFQpEHU/03ueboZ1JaxkK8KJ0BaNXqS14qmwZLCOTD0MYy6wHkyMHY8j5kY13HccrVHPDsGkJQCA2muDxFT0LYTMX0qg0zcMLZq9Z+M+xQElLyi1X/X4k2skADGwzoJyMJUxVx5Isv6um+HCthIJR5jvwp9AN7nmNR0xk0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751306167; c=relaxed/simple;
-	bh=ie4ODGm9T74TTLculoNDIjxc3R6qrePHOIslzioVMik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rZy56fMmpN26C+Emwil7SPFdVllRCHWDVD37MdOEHdtG6s1JKOycmC9EYDmV3TmL8T71mnnREi+KtU7Rtn8d3LWB9W+HqXkchlrqn46JXQHi8XRBXZ/oKGxs1TyO3T+Up3D74KnYiTWV88bndTVYbXN5lG+txDLEXlzG6owKTso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=QLe+Ttp2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751306188; c=relaxed/simple;
+	bh=cgG7uLHHbOnDVBE2PmtK6xVtUJvrcsaCz4fzVd5fghA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DglsvMUfLz2XHFa6I0hiI4eWZ22m2nDMbquhLxng6Om59hQYJ/1TUpdhKAsGWKporsuIsrzVzpp6bmEGKpLIcJjQzgXrqG38DJW7lJRw6SiSsyBa61ztEg3TYwrcQJL1lPHm3Xovndlpk3ARbt5nrz+Th0A3EclfYme4KCjfZFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z9JRpnc+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d6cQRLP3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QLe+Ttp2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832DFC4CEF1;
-	Mon, 30 Jun 2025 17:56:06 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QLe+Ttp2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1751306162;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z9JRpnc+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d6cQRLP3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751306183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nwBUr6/hpjZ7K54vyq+VqyEV+VTbqjGaJcB8+K3Oon0=;
-	b=QLe+Ttp2izYGPIop41P9HLJC96x4jbVF7p+H3QNnuPl0RErXc82/f+aoujfEqmqcEb6JiM
-	x6Mc2FmP4AuSNm2qd/K9rs8nRhzCHKiY2snUBxLyd77ZDnSGoz9vB4SLIxb8E9sPFlKMyD
-	mLRqZI8x1LUC5chM2vnzJga72Dm+dM0=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e28cb4a7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 30 Jun 2025 17:56:02 +0000 (UTC)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so3659820fac.0;
-        Mon, 30 Jun 2025 10:56:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWG3afz7MNkYmOUj8hFPDlK4dp8HPXy7rFlSQN9gn+8oS5Rw8JflY/RDGaEBHH9DQb3IhXskuYs@vger.kernel.org, AJvYcCWVbCQBJwAAQ2fc4WkM4Y4SytXLPx1Wh23rAYnhF6fTRTcKQ64/fDtLfODfLkCedLenfESEGNN8SbwpsY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+hELpzqbMnw8VeZ2sC+dYTEhOmnVbx7WMtHSfs+cm/PiVYvrS
-	nRhHR9hIteHU5z3NwPXtwjBCjpthRDQglrhVHXsievFtj9i+11bytwMfP0dk1eDawp9ZB3SJgvN
-	HgMINCz2Pl8z/dxCKIn+9x7j2P/D+EDc=
-X-Google-Smtp-Source: AGHT+IGiA1IfGGfk4FTQn2OadT4RW9yIppC2dL9wgwaw7/VzE2aIJQGH/if2wIOKxTuMAROzb8FWKLG0B0eL49aIrKo=
-X-Received: by 2002:a05:6870:2d6:b0:2e9:925b:206f with SMTP id
- 586e51a60fabf-2f3c0702e55mr348398fac.17.1751306160741; Mon, 30 Jun 2025
- 10:56:00 -0700 (PDT)
+	bh=xKYEePQOglAasiElEt+WwagEJvu9qTCNrhANfUr/7v8=;
+	b=Z9JRpnc+7gZwi2/KILkrtq3TpSHgO+/1B4vHHUtux+6z1fWGjnwU7Fv565fidcyDZFZ1O1
+	PhNnDPlH4nbFzpI4h6lWmV+ZR2eRpa4N06ZP8QYXenXcNmv2d660n4qw5xRJhmZgxeJiVC
+	vRUa56OZtr4qiZwfZEXZWnOMkQ9MfOekzc75KufvE6sHPfzwuXX5nAbUKumjHSKQNl/bo2
+	YQ/FTVq4a60VBMBbRkGQYmUQFryGwGQyTVl2rapQqOBFFXWKwEv0z+w/Nw/fru9luJQcF+
+	Qbs9eTto7kI0nh8R8PulPE2zVXeJbQGYM7liYda0FWrqKihmnmMtFZguZ6BWxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751306183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xKYEePQOglAasiElEt+WwagEJvu9qTCNrhANfUr/7v8=;
+	b=d6cQRLP3mmrFdaGFTOtoDHTnJvoPyagLEelMKpAuLjGMxDbsnYzVs5cVv0vQyeYa4vCArw
+	87mRFtMnnGpDZqCg==
+To: Linus Walleij <linus.walleij@linaro.org>, Peter Zijlstra
+ <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Jinjie
+ Ruan <ruanjinjie@huawei.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linus
+ Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] entry: Split generic entry into generic exception and
+ syscall entry
+In-Reply-To: <20250624-generic-entry-split-v1-1-53d5ef4f94df@linaro.org>
+References: <20250624-generic-entry-split-v1-1-53d5ef4f94df@linaro.org>
+Date: Mon, 30 Jun 2025 19:56:22 +0200
+Message-ID: <87o6u5m7uh.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619145501.351951-1-yury.norov@gmail.com> <aGLIUZXHyBTG4zjm@zx2c4.com>
- <aGLKcbR6QmrQ7HE8@yury> <aGLLepPzC0kp9Ou1@zx2c4.com> <aGLPOWUQeCxTPDix@yury>
-In-Reply-To: <aGLPOWUQeCxTPDix@yury>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Mon, 30 Jun 2025 19:55:49 +0200
-X-Gmail-Original-Message-ID: <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzU2VLvpZ9jgxLg0CzEQ4mxKHHNJMLyBdppuOVHcoF7JR3J2R_EPxQKMIw
-Message-ID: <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
-Subject: Re: [PATCH v2] wireguard: queueing: simplify wg_cpumask_next_online()
-To: Yury Norov <yury.norov@gmail.com>, Tejun Heo <tj@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hi Yury,
+On Tue, Jun 24 2025 at 20:35, Linus Walleij wrote:
+> From: Jinjie Ruan <ruanjinjie@huawei.com>
+>
+> Currently CONFIG_GENERIC_ENTRY enables both the generic exception
+> entry logic and the generic syscall entry logic, which are otherwise
+> loosely coupled.
+>
+> Introduce separate config options for these so that architectures can
+> select the two independently. This will make it easier for
+> architectures to migrate to generic entry code.
+>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Link: https://lore.kernel.org/20250213130007.1418890-2-ruanjinjie@huawei.com
+> [Linus Walleij: rebase onto v6.16-rc1]
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > > > > diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-> > > > > index 7eb76724b3ed..56314f98b6ba 100644
-> > > > > --- a/drivers/net/wireguard/queueing.h
-> > > > > +++ b/drivers/net/wireguard/queueing.h
-> > > > > @@ -104,16 +104,11 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
-> > > > >
-> > > > >  static inline int wg_cpumask_choose_online(int *stored_cpu, unsigned int id)
-> > > > >  {
-> > > > > -       unsigned int cpu = *stored_cpu, cpu_index, i;
-> > > > > +       unsigned int cpu = *stored_cpu;
-> > > > > +
-> > > > > +       if (unlikely(cpu >= nr_cpu_ids || !cpu_online(cpu)))
-> > > > > +               cpu = *stored_cpu = cpumask_nth(id % num_online_cpus(), cpu_online_mask);
-> > > >
-> > > > I was about to apply this but then it occurred to me: what happens if
-> > > > cpu_online_mask changes (shrinks) after num_online_cpus() is evaluated?
-> > > > cpumask_nth() will then return nr_cpu_ids?
-> > >
-> > > It will return >= nd_cpu_ids. The original version based a for-loop
-> > > does the same, so I decided that the caller is safe against it.
-> >
-> > Good point. I just checked... This goes into queue_work_on() which
-> > eventually hits:
-> >
-> >         /* pwq which will be used unless @work is executing elsewhere */
-> >         if (req_cpu == WORK_CPU_UNBOUND) {
-> >
-> > And it turns out WORK_CPU_UNBOUND is the same as nr_cpu_ids. So I guess
-> > that's a fine failure mode.
->
-> Actually, cpumask_nth_cpu may return >= nr_cpu_ids because of
-> small_cpumask_nbits optimization. So it's safer to relax the
-> condition.
->
-> Can you consider applying the following patch for that?
->
-> Thanks,
-> Yury
->
->
-> From fbdce972342437fb12703cae0c3a4f8f9e218a1b Mon Sep 17 00:00:00 2001
-> From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> Date: Mon, 30 Jun 2025 13:47:49 -0400
-> Subject: [PATCH] workqueue: relax condition in __queue_work()
->
-> Some cpumask search functions may return a number greater than
-> nr_cpu_ids when nothing is found. Adjust __queue_work() to it.
->
-> Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> ---
->  kernel/workqueue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index 9f9148075828..abacfe157fe6 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -2261,7 +2261,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
->         rcu_read_lock();
->  retry:
->         /* pwq which will be used unless @work is executing elsewhere */
-> -       if (req_cpu == WORK_CPU_UNBOUND) {
-> +       if (req_cpu >= WORK_CPU_UNBOUND) {
->                 if (wq->flags & WQ_UNBOUND)
->                         cpu = wq_select_unbound_cpu(raw_smp_processor_id());
->                 else
->
+I merged this into tip based of v6.16-rc1 and tagged it so the commit
+can be pulled into arm[64] trees if needed.
 
-Seems reasonable to me... Maybe submit this to Tejun and CC me?
+ git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git entry-split-for-arm
 
-Jason
+Thanks,
+
+        tglx
