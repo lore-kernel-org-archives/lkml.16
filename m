@@ -1,131 +1,157 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FD0257AFE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA32248F42;
+	Mon, 30 Jun 2025 10:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279362; cv=none; b=sBZ8Rh+sSOczJ4yMoz6cjwjSgvxPfwM0g6c+QsLvBiKa0uETETE4RwPOPwJ+8nnhHAZlru48LLvf2vNQ4RGgSpO019IspXlKl+Zn3IDnXbrgqbdkxHHdgEZfdIhG0PbdKhkivLyv2zHyOMQqK+NQGK9yWlLg0dCewKgTvPH6zas=
+	t=1751279402; cv=none; b=BVKsHPuoqTWrTFoU36rPNXmNcQZap5jhbPv0lpFHoY3V0Pp/sE7DTECofYF22pUEh5ZrfDyZGILocI3i4CZgXgSFSyAtVKBIuzquW/rPWYjHjLuAERPB7jnBEOmBfbjaTprmrBiyNvvULp+fnd0mE2O22hRx1/BVbmlDOIfyzsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279362; c=relaxed/simple;
-	bh=Qfeus0fi75FXlK5dsvHPm1RM9rlMOVJ4gaAPUwGB0oY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lRgxyOGw6snFoCsyiDG45UI8V1Rv+nrYDWeROofTaqk1AnhcOfLUckPloKU5FIcIhXK23OFFuBUS7sOYoyS5pGsvmyapJ1hQIHmp0iEj75hWKVJVhPC+HPQnaTvxDdFEfO9u8nKg2yTpXeAicDobPW3mBpjIl2BU6ntEDsUiT0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pO8dkdIq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1751279402; c=relaxed/simple;
+	bh=jAN144/a/Vxcpv+1HYhL0sUxs0gT2akYTGdKswj8FMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QagoypkZlL8uzVA4JhaCIxT4XSC86+po1IinnZLl80pUO+pzDbClC8AU9nIjVKhz/3C6bsle0eNyzOA3NqY6wqWYa8B1Wbtjd+z3dHLxMwtPgqJOmG3zVXrpn+nltdY6NIf+/tdFLrV+xXkPSK3NNSrD5EIADUZWlOpa+W8cTgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dvyzNDwT; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pO8dkdIq"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8DGP4029335
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:29:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IxRkhXbBD2jXozBBx8BaBKLc4O0rV/qo+XOBpnpdB7g=; b=pO8dkdIqCs5mR6H2
-	8d1kW08EEifkh7AoWffDfS9pzsrLwDbXMzQ2MSuJDEIenQLdH/G47ieou+KhwjI9
-	JORYzC7OB+pLBEEji+zx/7JsA0eL4cVtSZz35OG9qz3uuKLfwK7qeJpaDSAZJbHH
-	Glf9MTCv9mY+5zks0K0lBnn10fg3xSnUiqeOjO3DGnfLYJ/xJWbujNaqEZ1e6hD+
-	vSJmpzqu0RYQ8KhuD1vy3S53HqfdOusGEYcffdFWoKjkUpelpnZRN1yIMBYp7xcr
-	uUBSizyHGm5LiEYGZ5bKvbrYNM6HkyXhvdizrV1Vg/3/OE7zbJ+5kzG0w/anN97G
-	dB2fbw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j95hv8f6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:29:19 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d094e04aa4so135874485a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:29:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751279358; x=1751884158;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IxRkhXbBD2jXozBBx8BaBKLc4O0rV/qo+XOBpnpdB7g=;
-        b=oIRcVaC//yUWhRA/ZC5myPi+cdLYpLXPgWy4VX0cwJELnC7UI4AqNglcn6LFwHwIRU
-         LjH8LdAvhg6jApxJcG8yoNK1i/W1jIfFFIxYks6wes7+Ynd1VTHisDa2w+gS3epelG9W
-         zm6stbz0U/DfXjlSIbVJt5g1+fRErgIn/8ZInV3uc3FATKyjQWpYbWDXgzdZf1hSk8P9
-         xZiTHv8xLuo3CJ/S+jnzWZkKc++4fdY/fnB5UiJC8pKYv4aNJPIC47DtEOYDSZ0+oK1h
-         q9L/tAyyXTC7JbNuy5dCaAoXcHEfN8z2oRGFINSsRfRIcCCTgnUs6Szcv1eHt563wHNG
-         eiXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbOgfswELvA7nuG0xP6E2Dp5QocSy3CA9nFACAqSRn5Qp3tfK2fk6GNqT6A1DiPg3vkjUMOP/pdsOuI84=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwthkVCVnsY597LbAEqxpTGxJRvJIKw2gypDzCH5SzxL7N90jle
-	hMXYCtCy6HN6Z7CByVjjVqsdbamsEdZyJy2zHXosYg0XHkZG0DhIyx2DFo7A71rjlXWW2FtbzeJ
-	lrsGfe5MAT+ciIxSTXoyPcJSHGscREfkZEXADOzRircl2LA5dvZdYZZe02BZHOxpp0cs=
-X-Gm-Gg: ASbGncuYz9RkpoOgPmCQ5L3QqAsFztkwUhknfJIt11AiOXbXydkNHa9WX4d61HNa3+j
-	zCwJJVIicWXEB+qfc7UrpLoTdjSFoqIfzxai9RfEeV7ffmay0Rzm6xzqdMLcyqw4qu6/sinBLiK
-	aKsbAodYwYyGss+Goro7lFeqABzvFBALXKQPBsMYebUGl3NLRJgAdJnoOqZVZQ5PXH7CNAZQq9g
-	xHRKjc7vivr7jaPbXVUkHIbOfQRjHtmFwoxDj3eEsj8ZJd4WCqO6DXGwdB7GscW1vzEDFc8RifC
-	oI/TE/vpwf5GiW5v46DowJ/QkL03ER/QfM1BqTZsGrQ2qxfBpd10hoooPPQHsnlSFu5EYz/FKu4
-	Y5jKfgcVn
-X-Received: by 2002:a05:622a:22a9:b0:4a4:3b38:cfe6 with SMTP id d75a77b69052e-4a80739305cmr48946431cf.4.1751279358042;
-        Mon, 30 Jun 2025 03:29:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEq3TUuq9QQu4q+5eVhyu3awFeRhvpmt64uHtXnfazNC8wlrVyLUUqKAbg7zRjdnEtGDAV3YQ==
-X-Received: by 2002:a05:622a:22a9:b0:4a4:3b38:cfe6 with SMTP id d75a77b69052e-4a80739305cmr48946321cf.4.1751279357583;
-        Mon, 30 Jun 2025 03:29:17 -0700 (PDT)
-Received: from [192.168.1.114] (83.9.29.190.neoplus.adsl.tpnet.pl. [83.9.29.190])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6beb8sm649121966b.132.2025.06.30.03.29.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 03:29:17 -0700 (PDT)
-Message-ID: <2ac4f10d-c9d4-42a5-afff-54153f8531e1@oss.qualcomm.com>
-Date: Mon, 30 Jun 2025 12:29:13 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dvyzNDwT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751279401; x=1782815401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jAN144/a/Vxcpv+1HYhL0sUxs0gT2akYTGdKswj8FMM=;
+  b=dvyzNDwTxLwjVQY8WlDnuqSVz2FFWrAmYrIEkEQsLlTnZNfukBsTsAR0
+   y1U6VPbgHmU9jvFQ4h1rvWG0Kr1+I1CgQ0QTnzCo8LgxzJ7IadFL57JBa
+   p2HwcN1ActhBOi6ABhISwP09j7hP6Wg7Wfu/gK1NJvbWLxNI2VR6W9/Ji
+   plHAvjbzIYJgT9DPCSBLKahJh5z7nDKiP5/9Fcy3so8tGnLVt5E4Fjtgv
+   OHYM5tPXpZLT53QvPujwqiMFaLoyrdCb/5l2MzOOix472yVKqJMwc/wac
+   DadOFT2pYO+ZIa5618BkGzAR4CzkFeWDoAOei3l2YbttHU07ehqX/B4JR
+   w==;
+X-CSE-ConnectionGUID: WOnwVUtERD+MC/XGUNySDg==
+X-CSE-MsgGUID: gEx9KJO2SeCRZIG+F+yZrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="78940253"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="78940253"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:30:00 -0700
+X-CSE-ConnectionGUID: QedmlS3nQyiLOtoXpr4K4g==
+X-CSE-MsgGUID: SKryV/GeRbSGlARSMjG5AA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153050524"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:29:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWBlr-0000000BHCn-0Ruu;
+	Mon, 30 Jun 2025 13:29:55 +0300
+Date: Mon, 30 Jun 2025 13:29:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aGJnItQ3hjQ80rlz@smile.fi.intel.com>
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+ <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+ <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
+ <685e73cf.df0a0220.214b10.9998@mx.google.com>
+ <aF544lt-9YJq8r0y@smile.fi.intel.com>
+ <686264ac.df0a0220.feace.3044@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] phy: qcom: phy-qcom-m31: Update IPQ5332 M31 USB phy
- initialization sequence
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-References: <20250630-ipq5332_hsphy_complaince-v2-1-63621439ebdb@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250630-ipq5332_hsphy_complaince-v2-1-63621439ebdb@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA4NiBTYWx0ZWRfX1KCLzeZ3gA1m
- YzUSnzO+327c205g5spUHGHvN/KRNMm1cLIbt6INecTBHdSzK5LlXucRqq4aFwN/VQ++ilWb19v
- 8UOh91y+GSIeEmyLlrtQs2vDFe8SAlA51iIUdIrtMQMjrpI1i+jwJPJ/q2nQmtHeTvHQ5KywfxR
- 9j6D9Pt/oBvV1UR1rJYhTqIDx4wE0HxVPoU73twcJwFZKwnvijqJjMCAiLCrOJZmnzpnSERf36m
- RFafdoz8aGhTTYn5GXl5yyXpQWl0vRH8VaVty/OjitJXn4ND4wfqLfv2EOHB1ul4wd500J9PsA0
- +V39OMXNvRu1jj5DW8GqvYaVZdaPLBbf7R4O8BEYUCrrdvAGnEgCTEzb20wRa5VWpmKuWzCUGCZ
- JmVFuY0zi+eg0N/a2HFL8VikWfWK+WDEl9jDU4ltK87CcyjfatntP21sMCfOrl8F3FmVG8A4
-X-Proofpoint-ORIG-GUID: ckme3A_BiEo1GM05TJbxGqPRLq7lejNO
-X-Authority-Analysis: v=2.4 cv=EuHSrTcA c=1 sm=1 tr=0 ts=686266ff cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=fKQzr7EGRj+VoE0XNsDNvQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=xc97Rp9ifvSRjCmUYYIA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: ckme3A_BiEo1GM05TJbxGqPRLq7lejNO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxlogscore=746 malwarescore=0 mlxscore=0 phishscore=0
- spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <686264ac.df0a0220.feace.3044@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Mon, Jun 30, 2025 at 12:19:22PM +0200, Christian Marangi wrote:
+> On Fri, Jun 27, 2025 at 01:56:34PM +0300, Andy Shevchenko wrote:
+> > On Fri, Jun 27, 2025 at 12:34:49PM +0200, Christian Marangi wrote:
+> > > On Fri, Jun 27, 2025 at 01:25:48PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
+> > > > > On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> > > > > > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
 
+...
 
-On 30-Jun-25 10:18, Kathiravan Thirumoorthy wrote:
-> The current configuration used for the IPQ5332 M31 USB PHY fails the
-> Near End High Speed Signal Quality compliance test. To resolve this,
-> update the initialization sequence as specified in the Hardware Design
-> Document.
+> > > > > > > +	/* Global mutex to protect bucket used refcount_t */
+> > > > > > > +	struct mutex mutex;
+> > > > > > 
+> > > > > > This makes a little sense. Either you use refcount_t (which is atomic) or
+> > > > > > use mutex + regular variable.
+> > > > > 
+> > > > > Using a regular variable I lose all the benefits of refcount_t with
+> > > > > underflow and other checks.
+> > > > 
+> > > > Then drop the mutex, atomic operations do not need an additional
+> > > > synchronisation. Btw, have you looked at kref APIs? Maybe that
+> > > > would make the intention clearer?
+> > > 
+> > > It's needed for
+> > > 
+> > > +       mutex_lock(&pc->mutex);
+> > > +       if (refcount_read(&pc->buckets[bucket].used) == 0) {
+> > > +               config_bucket = true;
+> > > +               refcount_set(&pc->buckets[bucket].used, 1);
+> > > +       } else {
+> > > +               refcount_inc(&pc->buckets[bucket].used);
+> > > +       }
+> > > +       mutex_unlock(&pc->mutex);
+> > > 
+> > > the refcount_read + refcount_set.
+> > 
+> > Which is simply wrong. Nobody should use atomics in such a way.
+> > Imagine if somebody wants to copy something like this in their
+> > code (in case of no mutex is there), they most likely won't notice
+> > this subtle bug.
+> >
 > 
-> Fixes: 08e49af50701 ("phy: qcom: Introduce M31 USB PHY driver")
-> Cc: stable@kernel.org
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
+> Yes I understand that someone might think the additional mutex can be
+> ""optional""
+> 
+> > > As you explained there might be case where refcount_read is zero but nother
+> > > PWM channel is setting the value so one refcount gets lost.
+> > 
+> > Right, because you should use refcount_inc_and_test() and initialise it
+> > to -MAX instead of 0. Or something like this.
+> 
+> Mhhh I think API for _inc_and_test doesn't currently exist and I don't
+> feel too confident implementing them currently.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Ther is refcount_inc_not_zero(), but the main point here that refcount_t seems
+not fit the case. It doesn't work with negative values, and 0 is special.
 
-Konrad
+> > > kref I checked but not useful for the task.
+> > 
+> > Okay.
+> > 
+> > > The logic here is
+> > > 
+> > > - refcount init as 0 (bucket unused)
+> > > - refcount set to 1 on first bucket use (bucket get configured)
+> > > - refcount increased if already used
+> > > - refcount decreased when PWM channel released
+> > > - bucket gets flagged as unused when refcount goes to 0 again
+> 
+> Do you think I should bite the bullet and just drop using refcount and
+> implement a simple int variable protected by a mutex?
+
+Yes.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
