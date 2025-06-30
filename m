@@ -1,77 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AC428C01E;
-	Mon, 30 Jun 2025 15:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94EA10A3E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298232; cv=none; b=DPyLn1m5iUca3rVT3nXVT3lPfRudeLmYVLjMLRzgefCpj1DVKeZQzsbVfzgSZkws+Zo707dKhPYXtvxsKZuNCfbdFbk+nJWwDaZ9mlfxs29Q4OFZs7ipidvj7JV9RWlV6o1cI1TFiesh79Qj7QNyz/LuUcKUoplAiplgIy3b8Y0=
+	t=1751298296; cv=none; b=LiG9AjQCeKQXjWaOQdbGjBgF8ecG87VpQ5qp/uZee90VOsmHjjxrYE+KZAtC7RFrA2sUopGfXqKIvQ0faD380RInX0leSC/M1OsFiVMcK6BaBZZrOPxE+Vhp7kiCTeCHySxGHdLvqdjsDW4b25hYxFIEC/n7XhiQrlrWEchJQhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298232; c=relaxed/simple;
-	bh=FOffP837AZnxr3Cf3oXVoWZpuKRjIGbq0zA+f2kxS84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h16wa+MdAxaQeN+0AAaLZOH1rRqslm3/FzxaZJqkp1K1zPmHEgPittCff3e9mjuDCDUuasEW/IRBG6pKuFaErPAU10jjk90X+w+qdhktCukp7gTPIfnGdm2BjoQBGk9nU6+R0okG0b1F97p3OSmypx8qqKStVZWHVQGPOkmCYDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4ylB0Au; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751298296; c=relaxed/simple;
+	bh=OUW1ZM9FKOaaNB/P/M/fRQ01/7K5YEOzkpH8veAv1Fw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=aGIDJzrsOUmhbc8RvcSfMIUPSO1P9V2Rrq4pTWkzMSbJbhR9BMp2VGJXRMTn46j8On5zUSwls1vlxMVeu+wwh0OYKeUF+6qEV1G8QA0qfCLx7SG1Wn3g2k5YDDYnlL7T+UjkVRn33moH8aKRrEaWrcxc5QBADOpTLOkSYYeL/TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YnvQEqnl; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4ylB0Au"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BBBC4CEE3;
-	Mon, 30 Jun 2025 15:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751298231;
-	bh=FOffP837AZnxr3Cf3oXVoWZpuKRjIGbq0zA+f2kxS84=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a4ylB0AuIbou16df+1m7yjyLB8eVWeIJO2yvajmw6JYBRiP1WMMPflnAsna06GNjA
-	 Sqw+n0UBzQRjF1LwWjkPC1mHh1AyHbvjHw7UGsn0NxwfzU5rSkHXVZEhIll3q8uNQe
-	 Ingvk07sB2oU3zV+yaJkVw7+j54y+SeSdpyVNz+04U7SJ9TnYxYnJs5z22zlz4YQHp
-	 MyJ1MqpGzTdpIfBaLWNx/6AN8yUrwpYjs6JpPWtDC3IDW64Yvl3n8qMa5nEmyOOtro
-	 FvO/EEOH7d8lqu7ljW1GaI7cQzSE/LdkWoEHPTxkwFSs4bpRTvGCcM/784SgyjPOrK
-	 RKr+yRjFie5Lw==
-Message-ID: <324c842b-e110-4e15-b058-9238a9ee598a@kernel.org>
-Date: Mon, 30 Jun 2025 17:43:44 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YnvQEqnl"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a51481a598so1281171f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751298293; x=1751903093; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KVCH2kt0v6xCHof8XjdoacFaxm9PvIMlt/I0pFMFj34=;
+        b=YnvQEqnlugRuSMY7QgSB0j/OT2tmU4uWW0wRdkIqoax3lbPNlzhkis0hHL1Vc04zBy
+         Xx/IBpNVfsIWoq0iN5YhN+sBkvbU7gB9wdcfM2a5a63w5zBVxFouMXkhAarZeGcYLrU/
+         CEJDpDbNOQCoNtsjGEKPbUIULXL4lPPLSLN/9VRMYh2WZRZ/lXzOh1lMbPNFSPG9TXzk
+         2Wud+kwdCgMbMNWgso/uNQO0Rrm/Q/76MJwFDLbeDFrMMKUHqiB+ryApfnHOeBy5/uOd
+         65nHBt1aibMRcIgmeVYQz/GIpav0VLyHd+BSI0cXRzjbcHOwSOXb/VAr6fB61gcwhQ+j
+         gT2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751298293; x=1751903093;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KVCH2kt0v6xCHof8XjdoacFaxm9PvIMlt/I0pFMFj34=;
+        b=qOacNWWRCTBIfgYBdiLEX9ikUjh3gq6xoMKCsAedTAWpxWo88vC+Jet4FzgLfspNtM
+         6S6F3Uo3TcCuq9LRdeWFFhPo/GSWB9pw58q4wDE0ZUSbhbRqZsvZ4WIiiCi9eCguj41o
+         8fXILIu2yBGa2BW5MoxvMuGuohm4L5GMXsaqkKO+cjeF3xqEqZXHYNRmRmwMknGjQq1K
+         NmwXxonfa/cC5FOZu/A/L3q+UA+KxUZ4JAqsjhmRT5bun/bzV8PzQT50WypaTyP2TRGz
+         MaJmX6jrOfsGcq8UJ23958t26twcxe3FUqp8dKgbtG8l0kYRTrgFfaFRHE0hEkE1qnZ1
+         DRBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpRB9vuepiNLx377bnSZHuNwmkzRY5ecBUdGoxTPg+Pke/u5EhcPuxSg5K67gvdZV8fIxnYNczyWvh+xQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyumw/BNiaHPx0G2Qjw2GBzyoPRFXPxkob4XTblC+gazDL/e29G
+	oWNXdwfcdOORtiGQblymhXmhoLLctPsfT6Rh+aNE7qDBkn6UaN0IvSnV+ddvQT3B8JA=
+X-Gm-Gg: ASbGnctBuoqInOZNdwm90fOIniFIymlf/yuxvJVzT93xyS9+FbjpO8/Rzp9JE3KZxDS
+	6/1hO91kynjKs3fKByEeiJJrG/NNOa53Dt+XTo2SDjXw07+SIa6mVDYMcJqoZoLi5njFniKwUKe
+	IaSNI2ApbVU3WSy0/Pgzwi+6yeMFfZgQrU0Sflyx40ATKi6SWbM7I5xijDNeksMpBzJ+7wCcai+
+	TZ5/7TIr6ghaAU4COHKt2UrNuBWeU1P4Z2y4tbdF+6tlpe1cotGsvdYwVsggYU94VTgQlGUxOdi
+	1CIE7uldFuT/xYREzpjZeV6Du4wMYs6yCyiGtz9Hj0mHWTqzr3q0Z5MOgDZnniYIG3/UVuD4IQz
+	RKcmogOo=
+X-Google-Smtp-Source: AGHT+IEA+TkFS/ZHvVhFMPYel2yYQlHnVZL0fDsZXO6GvDRs+ebjwQjd6yPvqRN0VHQci/TgccoeYA==
+X-Received: by 2002:a05:6000:2103:b0:3a4:f70d:8673 with SMTP id ffacd0b85a97d-3a8fdff4360mr8919019f8f.25.1751298293085;
+        Mon, 30 Jun 2025 08:44:53 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7524sm10834062f8f.12.2025.06.30.08.44.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 08:44:52 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Svyatoslav Ryhel <clamor95@gmail.com>
+In-Reply-To: <20250220-panel_prev_first-v1-1-b9e787825a1a@linaro.org>
+References: <20250220-panel_prev_first-v1-1-b9e787825a1a@linaro.org>
+Subject: Re: [PATCH] drm/bridge: panel: move prepare_prev_first handling to
+ drm_panel_bridge_add_typed
+Message-Id: <175129829220.2307732.2489809206567748662.b4-ty@linaro.org>
+Date: Mon, 30 Jun 2025 17:44:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/24] nova-core: run FWSEC-FRTS to perform first stage
- of GSP initialization
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Benno Lossin <lossin@kernel.org>, John Hubbard <jhubbard@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
- Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- Lyude Paul <lyude@redhat.com>, Shirish Baskaran <sbaskaran@nvidia.com>
-References: <20250619-nova-frts-v6-0-ecf41ef99252@nvidia.com>
- <aFnArVIFkHCUzNqe@pollux> <DAUFC932W5MR.Q13BFD3CYEKJ@nvidia.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <DAUFC932W5MR.Q13BFD3CYEKJ@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 6/24/25 4:56 AM, Alexandre Courbot wrote:
-> On Tue Jun 24, 2025 at 6:01 AM JST, Danilo Krummrich wrote:
->> There's one thing that would be nice to fix subsequently, which is properly
->> resetting the GPU. Currently, it needs a power cycle to be able to probe
->> successfully after unbinding the driver.
-> 
-> Yes, what I usually do is the following after unloading Nova:
-> 
->      echo 1 | sudo tee /sys/bus/pci/devices/0000:01:00.0/reset
-> 
-> and this allows it to probe again. Maybe we want to add some equivalent
-> programmatically in the driver probe function?
+Hi,
 
-Probably -- how are things implemented on the GPU side of things? Is the GPU
-firmware surviving a FLR?
+On Thu, 20 Feb 2025 17:07:26 +0200, Dmitry Baryshkov wrote:
+> The commit 5ea6b1702781 ("drm/panel: Add prepare_prev_first flag to
+> drm_panel") and commit 0974687a19c3 ("drm/bridge: panel: Set
+> pre_enable_prev_first from drmm_panel_bridge_add") added handling of
+> panel's prepare_prev_first to devm_panel_bridge_add() and
+> drmm_panel_bridge_add(). However if the driver calls
+> drm_panel_bridge_add_typed() directly, then the flag won't be handled
+> and thus the drm_bridge.pre_enable_prev_first will not be set.
+> 
+> [...]
+
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
+
+[1/1] drm/bridge: panel: move prepare_prev_first handling to drm_panel_bridge_add_typed
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/eb028cd884e1b0976ff8c5944ee6650fe3ed0a6c
+
+-- 
+Neil
+
