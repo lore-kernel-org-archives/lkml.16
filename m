@@ -1,60 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E38221726;
-	Mon, 30 Jun 2025 10:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACB924DD14;
+	Mon, 30 Jun 2025 10:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277924; cv=none; b=PM0pBbnMlS+QNEzQzDlbLZMTGbY/D9PHz31qd50cOBOXUc7Fr8Ux3SI7ibzwTNU1ANaL7jsb2ZOv8re5fQHlLPWJSd3qOOwF+RiVlb9ZnjdMN4EJoC+6XtCUlStpzGGwTCFvwf1W0tpMNSIzxslmNBDMm5Fr2YlTtjjR7s9mI9A=
+	t=1751277927; cv=none; b=LmPVo0tIS0lALk2ncJWa+Zu/lHkGiSNA5kEmzG8E2brATbVc/0QMZM+6fq8PV8JT2ur7TlcdEm749cf2ZHcisX+65lRMUkPPKkjNRQ5ZjKV4qR1mxQxIghibfs9/g/C3H7SUhTDPkTYkHgAmPGyzT0Cr44mWX9FPUitvLt6/xVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277924; c=relaxed/simple;
-	bh=QQGT174PX3/LjslGR9uakewdT3W7VpHe5+lxPz565X8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mA52p1yLmBL66fawq7c0KWpEd2ywiqNfhfiLHonWCXR6pKP/10W2pgD3Nz4oNR5nAjFQe04lph4yeDQQ2Qb7GAmDjB1R5iKhP2u6maS0klSOMIAN2QkAFp54RWmEkGyUG7ilyqPYSMTD3cU/J1QugO30FZ2s58Oz1vov8/EkwSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CA581D34;
-	Mon, 30 Jun 2025 03:05:06 -0700 (PDT)
-Received: from [10.1.196.46] (e134344.arm.com [10.1.196.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14EF53F58B;
-	Mon, 30 Jun 2025 03:05:19 -0700 (PDT)
-Message-ID: <77dd46da-85ea-442a-a05e-d54c56b51786@arm.com>
-Date: Mon, 30 Jun 2025 11:05:18 +0100
+	s=arc-20240116; t=1751277927; c=relaxed/simple;
+	bh=ZkxpKL7HyuHwZc3WHtxTqeW1UtBpp9vPfi99JxpA4x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HUQMFXIlNIWDYY0mHfQfUJLGgE0NRbzUqzptFnSHcuDG2gBXpM3vHT/sw4Lr5PKAxSWYPRVjmcVK5j8zHxoDFWrD+RE9m2IuFlniz6D+NKh1XM21Rzt8miu1LMPdaXvkwnhiv7RLFy3l+RxRCDwloHOfX7LZfyfinGDuQeLE9y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+sC/Taw; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+sC/Taw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751277926; x=1782813926;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ZkxpKL7HyuHwZc3WHtxTqeW1UtBpp9vPfi99JxpA4x0=;
+  b=L+sC/TawAgQeNPkPK8y7kFW34JEVuxri6mWomA6oUq68M63BjbcKl1Hx
+   7CHCgA/LyFALobNqfbqVtHJjir4ElMO9XMOErj6zybCpPxO9wt193yLNA
+   +KjehdyJ73enhYeB6fh2FCqI4Qv9v4VkS8s9hctdIeqibP6jhhihBqw6h
+   nV+o8Gc7oxj/9CC7X4ruUGrsl/qLA/sTYioYV2UQgkfVVdsZ8p4m0KmAG
+   faGTCOQAdcWBJauvfQnaznXLerubQahQ3ae5nH1cfcjmxAJ8Ip5iA+7mO
+   tmePRRq42G9LbmYVBU9u+WiT/35j2BzEykkYKhx2KQxsMmKdiT2JzvvVa
+   A==;
+X-CSE-ConnectionGUID: +T8jNg4cQ3iYTn9SCZfdLA==
+X-CSE-MsgGUID: rBIyA9HNQNGFFHgtynfa5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57277759"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="57277759"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:05:25 -0700
+X-CSE-ConnectionGUID: 1fuKA7zuRaCBuxOw1I0PTQ==
+X-CSE-MsgGUID: gduxAuPNSU6vx8Op17+ALA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="190588077"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:05:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWBO3-0000000BGrq-1AeU;
+	Mon, 30 Jun 2025 13:05:19 +0300
+Date: Mon, 30 Jun 2025 13:05:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Kent Gibson <warthog618@gmail.com>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 4/9] gpio: sysfs: don't use driver data in sysfs
+ callbacks for line attributes
+Message-ID: <aGJhX9MhFAIopdwy@smile.fi.intel.com>
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
+ <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org>
+ <aF67oAqLmRJzy4Zt@black.fi.intel.com>
+ <CAMRc=MfXVTqncPsJ3QKqsGDi36gK4weWX1iygpqg1C-XinCEGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] arm64/hwcap: Add hwcap for FEAT_LSFE
-To: Mark Brown <broonie@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-kselftest@vger.kernel.org
-References: <20250627-arm64-lsfe-v1-0-68351c4bf741@kernel.org>
- <20250627-arm64-lsfe-v1-1-68351c4bf741@kernel.org>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20250627-arm64-lsfe-v1-1-68351c4bf741@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfXVTqncPsJ3QKqsGDi36gK4weWX1iygpqg1C-XinCEGg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+
+On Mon, Jun 30, 2025 at 10:57:06AM +0200, Bartosz Golaszewski wrote:
+> On Fri, Jun 27, 2025 at 5:41 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Mon, Jun 23, 2025 at 10:59:52AM +0200, Bartosz Golaszewski wrote:
+
+...
+
+> > Defining once something like
+> >
+> > #define to_gpiod_data() ...
+> >
+> > we may leave this and others as one-liners.
+> 
+> We'd need one per every attribute. Look closer, we do get a different
+> attr address in every pair of callbacks.
+
+I see, thanks for pointing that out.
+
+...
+
+> > > +     attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =
+> > > +                                             &data->active_low_attr.attr;
+> >
+> > What's the point of two lines here?
+> >
+> 
+> I tend to stick with the 80 chars limit even though it was lifted.
+
+The above looks just ugly. Saving one character on the line here doesn't
+justify readability loss.
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-On 6/27/25 18:20, Mark Brown wrote:
-> FEAT_LSFE (Large System Float Extension), providing atomic floating point
-> memory operations, is optional from v9.5. This feature adds no new
-> architectural stare and we have no immediate use for it in the kernel so
-> simply provide a hwcap for it to support discovery by userspace.
-
-nit: s/stare/state/
-
-Thanks,
-
-Ben
 
