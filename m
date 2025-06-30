@@ -1,166 +1,77 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0601E2858
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9231DF974
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274658; cv=none; b=U0tZsV+v8jsMYEyZsOZC0ToQKj03eH8ZYE4s+VHALOHzuZ+4fTDW736nEPJh1rp2aLyD/wQ14cVYLu/MTksJS3k5JcdTUH53ZStbT93d6FCadx3dSK1vECibaNHC4Vbef+zgAADzI2JDu9vmKGDG3rIgpJ/haIgIqAjELeldXyI=
+	t=1751274712; cv=none; b=o2ZIGn5e3tMr+cvJHD9tb+IRSzfHfj65Rtdxl6xlK+9Y45fpt+5vTEcq8nZ2wu+OuLwzgfjYVfLtHOsfiaQLZoxuE8SIHtdVu5x7zMevJPUCrSC0RHeiA72946TCVnhDwP6T6dTKxidmF9SXLPo/M0jhhPDDDHV0rl592vMHnv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274658; c=relaxed/simple;
-	bh=wtv+LFHxuM9AWX0L6ikf56UwuRoDnrS0tJ6y5ORCVkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9piqDwnXtAsro8RsTlQf2oaIgmGutr23qLrhaEMmcZV+ntb9d134FsYSulAj1eSwbtlIOL445jJGIbVhENKO59KxJ2Clv+GDNVLqTzw7l8tMFIyDFY5aZDGErMOMON/vdey6oNpqj10WRPXk03c8Fs9bvbyHtsX1zzN9QPHVsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XUzJg0co; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751274712; c=relaxed/simple;
+	bh=mndaaFPNNnPPSOC1sqHnrGFivdorGU6L8Ai+AxQ0wgg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LKbl7J+IZFfUaH6sefAo5gYap727pEkOR/Ro1SpWDWnGyBVFpaXanmDRKRoJcUXaDnyAjK1PQrXr5z0Vo+LjW4+1P2ahFIn+BEFewJ9tHkYQaTJcTp5DMSgReiDsG0LNTjAbpGaPJr03jqP1/0CnW80odcICKId/M4GAxwWmN/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=oyEKrvAb; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XUzJg0co"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ae361e8ec32so467949566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751274655; x=1751879455; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1c7UVB+HsIrwMhQKzoKR+ElhzYVbyK56CpcLANHfHcs=;
-        b=XUzJg0cojs/dxd+UBiRjXtZwrbSlJGH9jluzmCVpyoH2taWOlsFi575EFNHyrXYwtq
-         aSfOhtvslDhj8Xy0TywNl+PGrRiuQKIYG4eXJOnLirBKiNCvepBBeyBF2ny0GOh/MJ+J
-         abXLDkBBMv2mStLY+QemkOsTBwTeNLNeugABv25HCB/gnEwNQDHT3++ZK+fenyIOPkrB
-         DojJKHlSn3TGDgVkrnFmox/KYfsunXTYZ/jpgtqFOujdE7LTESpDvESz0xtHOo5usBXE
-         dp1MkgOU0z5XP6dMRnn7N+51d421NXPhW5cwQ/yv5fwQm1KsM0VMW6tlPaQCgzbwf/13
-         NsKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751274655; x=1751879455;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1c7UVB+HsIrwMhQKzoKR+ElhzYVbyK56CpcLANHfHcs=;
-        b=NM/IAYsZNsfTe0tBGNrMFBBuyXyAAOmnRZ+742q3XqYeG+eoQNwRVpn4ZL0gPaO6Sd
-         TIFXdO4KrNQ+kcO58tOjMz7lrjytIRmMcDL1sek25dQtwGEjeQMpiRf5tZKEOUN2CI3V
-         jV1r0en6o+ZPBoKiTGF+9dfm7PQrvs6eGBcAtb4b/BHcE3ZmCaGeWIuZT2q1uPaDrfNk
-         c66XYNsiX+z01/m+kXPbdHanFurrKLrXSJ5KOKZTGMtWBxR0XsojLk1/9ulVpcXRBRaI
-         3NeRMbnlsL8CzJHQk3iLnIUnvoEEMPPsc02+OR4KlsMWYCEOmvOqsuySSwn+a7cBVH3d
-         Q5RA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnE1EQ2EZjwnlLb1y7sM5DxO+dkUC/DcP9JHBCEGoOOBfPZN1HvvJaDw8H0ggKjT0IyGCqRpEjyVEznRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybCr+73OmAYEYLn3zmPGNgGZz5qWjEYrqMs6nBjC0SHy1L97Lk
-	ThVYGodaez4UDdu7+8tIn7cQtEcord7p3eJmgjXOpLUkaDptQoGI3FSVGGYf4DvL6oA=
-X-Gm-Gg: ASbGnctNQCBD/q0kX78/v92XyPjgTdOg8vGzY2OZ1ha6R9bpNEkN3OlDpGIG3XYl1Q1
-	RFVZqSXMT9I3E8NeyQ56kT6kfEjMPJ4Cuh1Yb7RHJ+kyLoQ4bkT0y9QFvwj9yjbU4ZFkiyyFmp9
-	vaVG6y2tfc5Q7tUUiCejnH8PUg9HwOcUqiUqR8J6ANUHpl9lH2NavLBrVUwOynbCkeZoBkUXAR9
-	Y+oE5emLfuw9J/cWpdSlXC/3VdjtVPu6fmqFORJX+LBXGsPKgjJdQm7SB04FDtLv2eGysxiJymQ
-	d8GhNxAVFqUfYC9fxiyPBNox2t9tNFDNLa4OeVlv/BjjwjCslHel8Mhk6ePb2cDRZTOL8hY/XcI
-	cCxh07i4pafazLaMhZZX6UVn3lp2pMC7gHMtL
-X-Google-Smtp-Source: AGHT+IEkCjklJgOVn9m2h0ZYB9RYj1O2BKk8vmPV0JoHQsw1aXV4Ln/c1FHctMmon20dE6hzBNg4oA==
-X-Received: by 2002:a17:907:7e95:b0:adb:469d:2246 with SMTP id a640c23a62f3a-ae34fd89929mr1069995666b.17.1751274654602;
-        Mon, 30 Jun 2025 02:10:54 -0700 (PDT)
-Received: from archlinux (host-87-14-238-240.retail.telecomitalia.it. [87.14.238.240])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363a9a8sm635407166b.33.2025.06.30.02.10.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:10:53 -0700 (PDT)
-Date: Mon, 30 Jun 2025 11:09:02 +0200
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: adi,ad7606: fix dt_schema
- validation warning
-Message-ID: <epswbthrftxecrgm2rjkag6yxkpegr7boodzpjqfx675gghziy@p7dy7cns2ot6>
-References: <20250526-wip-bl-ad7606-dtschema-fixes-v2-1-9bd56d039489@baylibre.com>
- <20250531170448.2be25330@jic23-huawei>
- <20250629171908.122a5163@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="oyEKrvAb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=q7EVViU5ruLGH5y+Ku78Ia3QlHNz6cQZo821Bht4t8k=; b=oyEKrvAbL4XsxleMXXHgIEiAuo
+	sGyr2iOv/ml1ZRiPg1o638aSG+wdmbWmVf0JSy/0ESpbbgGzUj88ACT9q2iC6+4wKsUP/FQrWY/mC
+	xq/JXDC15aA5i1hH3oCpXTZqn0efgKIW2lzNAvA1sX0ymOiUYGLdBAzJ3Zm8rnMWWRwwCYPJI9Xhg
+	UFBqbRlJBozGPakQAovaBD13l/hhE2Thx0ww5fjuZnrMb3GxPIT4wlxzHFBk0PGEZFuwmADVg3etp
+	2BWRg7Ies5BsDMlh7ArgxgIRjZpeuJvmH1orZ9WbDTIz52skuwlVpCQDvJ1LG8xuxjj3lpEI2359u
+	vIw7uudQ==;
+Received: from i53875bfd.versanet.de ([83.135.91.253] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uWAY6-00065C-4U; Mon, 30 Jun 2025 11:11:38 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	kernel@collabora.com,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
+Subject: Re: [PATCH v2] arm64: defconfig: enable further Rockchip platform drivers
+Date: Mon, 30 Jun 2025 11:11:26 +0200
+Message-ID: <175127468080.130313.8060207058865143134.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250626-rk3588-defconfig-v2-1-ae6720964b01@collabora.com>
+References: <20250626-rk3588-defconfig-v2-1-ae6720964b01@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250629171908.122a5163@jic23-huawei>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Jonathan,
 
-sorry, could you merge this, or do you need the hash fix ? 
+On Thu, 26 Jun 2025 22:41:18 +0200, Nicolas Frattaroli wrote:
+> Enable the rockchip-dfi driver as a module, which is used on RK3588 as
+> well as RK3568 and RK3399 to measure memory bandwidth. For this, we also
+> enable PM_DEVFREQ_EVENT, which is a requirement for this driver.
+> 
+> Also enable the rockchip-rga driver as a module, which is used on
+> various Rockchip SoCs, including RK3588 and RK3399, to provide 2d
+> accelerated image transformations through a V4L2 interface.
+> 
+> [...]
 
-Regards,
-angelo
+Applied, thanks!
 
-On 29.06.2025 17:19, Jonathan Cameron wrote:
-> On Sat, 31 May 2025 17:04:48 +0100
-> Jonathan Cameron <jic23@kernel.org> wrote:
-> 
-> > On Mon, 26 May 2025 15:19:08 +0200
-> > Angelo Dureghello <adureghello@baylibre.com> wrote:
-> > 
-> > > From: Angelo Dureghello <adureghello@baylibre.com>
-> > > 
-> > > Fix following dt_schema warning when offload is used:
-> > > 
-> > >   DTC [C] arch/arm/boot/dts/xilinx/zynq-zed-adv7511-ad7606.dtb
-> > > /home/angelo/dev-baylibre/linux-iio/arch/arm/boot/dts/xilinx/zynq-zed-adv7511-ad7606.dtb: adc@0: 'oneOf' conditional failed, one must be fixed:
-> > > 	'interrupts' is a required property
-> > > 	'io-backends' is a required property
-> > > 	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
-> > > 
-> > > There isn't any reason that we couldn't have interrupts wired up at the
-> > > same time we are using io-backends or SPI offload, so dropping off the
-> > > related "oneOf" block entirely.
-> > > 
-> > > Fixes: ccf8c3f106a2 ("dt-bindings: iio: adc: adi,ad7606: add SPI offload properties")  
-> > That ID seems to be wrong.   Probably down to the messy rebase I had to do pre pull
-> > request.  Fixed up to be 81fe5529e812
-> > 
-> > Applied to the fixes-togreg-for-6.16 branch that will become fixes-togreg after rc1
-> > is available to rebase on.
-> I guess something related to the rebase I had to do just before the last
-> merge window caused it, but that Fixes sha is wrong.
-> 
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> > 
-> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > > ---
-> > > Fix dt_schema validation warning.
-> > > 
-> > > Link: https://lore.kernel.org/linux-iio/20250408-wip-bl-ad3552r-fixes-v4-0-b33c0264bd78@baylibre.com
-> > > ---
-> > > Changes in v2:
-> > > - Change removing the related oneOf block. 
-> > > - Link to v1: https://lore.kernel.org/r/20250523-wip-bl-ad7606-dtschema-fixes-v1-1-d9147fb2a199@baylibre.com
-> > > ---
-> > >  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 6 ------
-> > >  1 file changed, 6 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> > > index 29f12d650442b8ff2eb455306ce59a0e87867ddd..1a5209139e1338f803c66ad2b4d63ad53cc11d96 100644
-> > > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> > > @@ -223,12 +223,6 @@ allOf:
-> > >        - required:
-> > >            - pwms
-> > >  
-> > > -  - oneOf:
-> > > -      - required:
-> > > -          - interrupts
-> > > -      - required:
-> > > -          - io-backends
-> > > -
-> > >    - if:
-> > >        properties:
-> > >          compatible:
-> > > 
-> > > ---
-> > > base-commit: 3964c6e5877f054497ffccc7d00f8f7add307d0d
-> > > change-id: 20250523-wip-bl-ad7606-dtschema-fixes-5e6ab342e043
-> > > 
-> > > Best regards,  
-> > 
-> > 
-> 
+[1/1] arm64: defconfig: enable further Rockchip platform drivers
+      commit: edc4a9d1dc1669e42a35b2bd1b711a5da0e83699
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
