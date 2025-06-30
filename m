@@ -1,232 +1,420 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023093.outbound.protection.outlook.com [52.101.127.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D4D2E403;
-	Mon, 30 Jun 2025 08:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.93
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273074; cv=fail; b=DYc5OX6ZuOqdmo0g2CWkZBNecZIUBF3K0tYkfJ9o6T+LGMCz02d8jE2C2Wy1ExACdaUdlpVn7U4L5Fq3C9WhbKBY1uuGRNyh0RgNvAzKzvmo3d/b9b1WA5gLacLjAUmY8y1lxb4cdT0xCosHjIaLwhmM4qk7O1+n5027D2KnCqQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273074; c=relaxed/simple;
-	bh=CyXFZSTb/kHiN4vRt/nLWnfdKIqhGJVTtp/o/1t3CJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n28TKWVw9H06cA1Pvg9BzurabiJ8P3RCplCBT9Oh7zM7WXOKHIMElb+X3r+T2N6Rqm7OgU+1ZL4v2T2oHczwHqi1rYdnRRRiTQnPeAxL7P+Xj31y9SF/FzupOpVzZLr4fV7VD3MCDNVrTu1pa/c7LaI5XwlH4J8InJ0bVI3hnM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aGqVnckmjxVo1img5Gml5CYWEsn2auyIUHZXqBpvN4R/5DdRqY2D+Z2dO4OXAbeO3mLh56ynBO6q2IBh0otkq7bwMU3+DTquIHPRjbEv8fRu7D+reGwtYCc2gkhihZhCysS7iiZaCqT4KLACTi2S1qXfkRYzVuIhYgTkS23jOSOWW9GM8VkSHDf4TENva+EG+29sNCgeNQd9TqjL3xB9m6uJDtmRulgt6OtqhLwGcmBc9n7qzhxWuY6pKpqO/FFNz10cbCaify+xk/HZk8yQCIovOLvmF0HoG+SqVOUuZRNiXtyyeqX5l2RHEnBd6uOMAv9/P3AP8P3v3l5D/zlXbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=10ExwA+moTgxRZ8eMK4E2oidRAIgxHLrf75H1IM52s4=;
- b=ghmvBR5X3/AYRiX+p+LGC9R/+Q8Umuqrmyw6D6jDh/trzKfY+EAZnhZKIDrD8TOJP3qwqlyEHTYCvtDonhevHBCkefLA1N3teSt6AVSt6qBhn5I/4frwYrgk64DWODrbXTrQu1WmbvDpp3u7JuOMMhWhz01rLvbgh5aXgbUs3axKy4ZX68Jq4OZeS7XFJMsWWVklYU6kE15tY5rpI8Pz5HyNHkpl8fWkQyLeOYofuJx47pPnWLwxC/GRn6ZcAGOMcy6UNDCECMTt42m25R2PXpWhnv2qMHKELMY6kqF8pzLieCHLJxPut9g4/oY5N2+ROqzjEZEDJOR+kqeG8RLERw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYCP286CA0359.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:7c::13)
- by SI2PR06MB5162.apcprd06.prod.outlook.com (2603:1096:4:1ad::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Mon, 30 Jun
- 2025 08:44:25 +0000
-Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
- (2603:1096:405:7c:cafe::74) by TYCP286CA0359.outlook.office365.com
- (2603:1096:405:7c::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.26 via Frontend Transport; Mon,
- 30 Jun 2025 08:44:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 08:44:24 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 0FFB644C3CB6;
-	Mon, 30 Jun 2025 16:44:23 +0800 (CST)
-Message-ID: <2402cd6a-c24b-4ad7-91ee-0fe369392131@cixtech.com>
-Date: Mon, 30 Jun 2025 16:44:21 +0800
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6E9241CA8;
+	Mon, 30 Jun 2025 08:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751273093; cv=none; b=YlPCX1WO1xgdNQlmznM3TRtjCTNoOcPMKTcwTtfpC6KQRhnIPP5uL3bQZ+Cn8HYQWgKjMROW1E/FnNx0ZzNQ9O0ejJ/dKs7w9eIBjj/DwoSexd4Iu4h0/aECdxBWx1gqOq8a0pEqueE/p2P1UYyimYoJmqNTyvzaiKpC62WckI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751273093; c=relaxed/simple;
+	bh=7608lpMXZKtsKFRxQLpzRL0sJYQzfeCKXe4TkDuRULE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=i61tCVnMvZV91fvKtqMS0jqicSlf/ohGhqe8+UPqeojfJKp8o//9PDwPxiiFsdolARbLdDMyPcx5Lz6e91bUUjzlkMVpdfBmk+UJJgH0OqH3WUGU0KzpAjCa4IlfR1aZqTCWktZd43bfAYS4C8RYSoV4MBFOx1ZQ3AO9AmEV1l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx_eJ4TmJot8UfAQ--.29119S3;
+	Mon, 30 Jun 2025 16:44:40 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxpeR1TmJobGsDAA--.21531S3;
+	Mon, 30 Jun 2025 16:44:39 +0800 (CST)
+Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register
+ emulation
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250619071449.1714869-1-maobibo@loongson.cn>
+ <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <31541826-2802-32e0-f8f0-f717e1c02d74@loongson.cn>
+Date: Mon, 30 Jun 2025 16:43:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/14] arm64: dts: cix: Add PCIe Root Complex on sky1
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-14-hans.zhang@cixtech.com>
- <20250630-proficient-fearless-rottweiler-efde37@krzk-bin>
+In-Reply-To: <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <20250630-proficient-fearless-rottweiler-efde37@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|SI2PR06MB5162:EE_
-X-MS-Office365-Filtering-Correlation-Id: 192c99e5-4e31-4a0c-aa5a-08ddb7b250d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YlFqMHBXT3lRY3J0UWpFdTllTnBTQWtvY0taVWRKUVorMUxxWEZCNCtHbjN2?=
- =?utf-8?B?VjhSaG1XeUtXV1NDa1hCelE3aTF5SFMxTDlyZEJ1WGhGK0s2dUd6dzJSK3hu?=
- =?utf-8?B?R2M4L0NCK3h2cnJSai9HbklraE9yTWUzMzlPNE9KZGdLZ05rVnNCc0hBV1Jp?=
- =?utf-8?B?QXh6alJkSGYwZEFrSVNBRE1xVWRFNlRmTWlHRi9nZnhQaFZLYzc1OHhFejc0?=
- =?utf-8?B?dTFqZUhUSUxrYW5ZVUxHLzNqTklqK09CcFAyQXpEN2xGTElPVC9lbUU1Z2Zs?=
- =?utf-8?B?RllrY2hIU3Y3azQ0V2haUndxSkR0bUdHTTB6anRGNEw4dXJycTg1QVVVSjRX?=
- =?utf-8?B?QTR1UmJUMFh5bVRxT2xFbnZtY3Q3MnozZFVVYmZsNE9kU01EdTl2NlBPNXlR?=
- =?utf-8?B?cWFOa3JQQjZLTWc3OHhFaSt2RHJHY05veGtqUW5LdGhOVW5NNEh6aG5Wc1kr?=
- =?utf-8?B?VzVjcUZPdzgxZWdFUzI5cTBJRGNxTkhJRnR2R3FzN2tSRVY0TnIrb1BXYkJJ?=
- =?utf-8?B?VjVxZ1lYQThMRnVMN3R4YWhtdW1oRkhVS1B3aVBGaURaZDdjaG5XMzBnTE8z?=
- =?utf-8?B?SlVjcnJMcXg4NWlpV0R5ZUVyKzkwV1FxbFdGdGZoUXUySG5Rakpkek9jYWFl?=
- =?utf-8?B?N0F2RDUyT1N0VC9mN01BeHZxUVF0VkxmeDRvNDFSRWczNERWaFIwdnIyNmVy?=
- =?utf-8?B?U3Nlc3o1N3dqQU1ZcnVmOTJUczMrZkllenNkUGo0NlErOGxDRWpZUytMZ2U5?=
- =?utf-8?B?dy9aNnh6V1hVZjlvTFZPbFB5RmtXa0lHek1MK1dNMTZQL2RGb2dEcHFpVkx2?=
- =?utf-8?B?ckRhVUdKYVA1TmZ2citNL1VuRmFJZ1pBZ052eXFyNExYNUQycVQrZzVMbUIz?=
- =?utf-8?B?R3VtYW9MOXh4MExXR1NEMFhHeGoyZG1MT01OdTVHZEs4cUthZFpKZkxVclBK?=
- =?utf-8?B?VmxZWkxEMEU5V2dHWHZrcGJwRVJScnBXdC9KelF1VHFhRVFMRW1mbFhLamtV?=
- =?utf-8?B?VDVvc21zazlXWFJoVVFUWC9QcnFPYXhmS3ZkbWZaM1c1dWdMVHdjbnN1VUZl?=
- =?utf-8?B?bFFTRTlZSVBlTmFaVUE3OEduWjRGeEI0YjJHbUI4WTZuZ1BIa095YXErR1Nz?=
- =?utf-8?B?K2M0bXBsY0hHNFpkdk9RSFhoMVZkMjRvb2FyMjZJd2lmeGRHVnBYYis5eWw3?=
- =?utf-8?B?YWF1bHZ2WHprMFN0NTR2Z2JxdmNJQmtGSUc1djB4UGg5VW1Db2JLZ0RWYW5l?=
- =?utf-8?B?NEt0TWltQUxvSElyaXh4TEsxcGM4K3cwQzVBSkgxZ2V5YTFBZWQzTnU1QmpO?=
- =?utf-8?B?VTdEOXR2QWxBNURCU015ZU9kMFhFV25SMURKazdyTW9WcGFCOFAxcHlNaVUy?=
- =?utf-8?B?dithVzJuOUhRRmFqNHJTRTVIQks4S0VyQjlwdGNaYngrejArQ1U1WG9BeXNN?=
- =?utf-8?B?TFRWTzJkeUh0MG1GeHIxNGYrRW9mMlBuTGlONWtxNmxlUGlvWW1RRXAyVmNy?=
- =?utf-8?B?M01QbzRqQkUwZllwSktpM2Vubm1VbDhIUXNBaXNmeXpvSWhTSnpwSEtob21h?=
- =?utf-8?B?RG5OYzg4OXExcGtvMUhkMkpPazFlMTFab2RQcGZRZm9ZVWlnbnUzQlFqRVdV?=
- =?utf-8?B?MzZjcENTT3VERWhQRElTTVdxTkJvK1hMekFaL3h1UVBuUWdvc2Yvb3FOQm5G?=
- =?utf-8?B?NVhRRURFcVEwclFtZjB0bUJZeGJPRlBGYkdZbWMway9CQlNrTGF3dkRMTmtR?=
- =?utf-8?B?R0JnZERFeUoxNE95QjNJMWpXSE5LUkx2eFdmSVE2WXBiLzZGQ0t3dTNrQjZq?=
- =?utf-8?B?ZzlybmxTclhyMXVjWWdGNDU2MGtKbHN1b1ZDNktSTUFHc3NxcWNRc3RQSDkx?=
- =?utf-8?B?M0hUTThEQUdpTlhvRUMrSCtNRlRqWGZ3WFcxamo1Y0E0SVNBK3pqTmpBTEs3?=
- =?utf-8?B?NmdZUThBT3hEUlVDWDJVdm0wUHR4SHYwVG5tSVR5SnhYc0dYNlgvQkdoZXZ6?=
- =?utf-8?B?cjhWL0tyWUpVaWl3dHdCbGp6WFRQNGVYeG1KVGlFSGlESDVNVW56alduT2l0?=
- =?utf-8?B?Y3JTQTU4NTFoOHdyRzREN2JtOGNPUlBwTWpidz09?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:44:24.0474
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 192c99e5-4e31-4a0c-aa5a-08ddb7b250d5
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	TY2PEPF0000AB84.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5162
+X-CM-TRANSID:qMiowJBxpeR1TmJobGsDAA--.21531S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3ZF47GF4kJrykKFWftw4DJrc_yoWkXw18pF
+	ykCFZ8CF4rJry5Jryqqrn8WrnrtrZ5Wr129a47Kay0kF9Fvr1rAr18KrWUGFyvka95G3W0
+	vFy5X3ZxuF45t3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+	wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
+	xhVjvjDU0xZFpf9x07j0FALUUUUU=
 
 
 
-On 2025/6/30 15:33, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
+On 2025/6/30 下午4:04, Huacai Chen wrote:
+> Hi, Bibo,
 > 
-> On Mon, Jun 30, 2025 at 12:16:00PM +0800, hans.zhang@cixtech.com wrote:
->> From: Hans Zhang <hans.zhang@cixtech.com>
+> On Thu, Jun 19, 2025 at 3:15 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
->> Add pcie_x*_rc node to support Sky1 PCIe driver based on the
->> Cadence PCIe core.
+>> IOCSR MISC register 0x420 controlls some features of eiointc, such as
+>> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
 >>
->> Supports Gen1/Gen2/Gen3/Gen4, 1/2/4/8 lane, MSI/MSI-x interrupts
->> using the ARM GICv3.
+>> When kernel irqchip is set, IOCSR MISC register should be emulated in
+>> kernel also. Here add IOCSR MISC register emulation in kernel side.
 >>
->> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
->> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
->> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
-> 
-> Where?
-Dear Krzysztof,
-
-Thank you very much for your reply. Will delete.
-
-> 
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 >> ---
->>   arch/arm64/boot/dts/cix/sky1.dtsi | 150 ++++++++++++++++++++++++++++++
->>   1 file changed, 150 insertions(+)
+>> v1 ... v2:
+>>    1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+>>       register 0x420 emulation, since it controls feature about AVEC
+>>       irqchip also.
+> I found we can decouple the misc register and EIOINTC in addition:
+> 1, Move misc.c out of intc directory;
+> 2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
+> 3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
+> 4, Then maybe misc_created can be removed.
+Now irqchip in kernel is optional, the same with misc register. Misc 
+register will be emulated in user VMM if kernel-irqchip option is off.
+
+There is no way to detect kernel-irqchip option when function 
+kvm_arch_init_vm() is called, and kvm_loongarch_create_misc() needs be 
+dynamically called from ioctl command.
+
+Regards
+Bibo Mao
+> 
+> At last you can make this patch and others from another series to be a
+> new series.
+> 
+> 
+> Huacai
+> 
 >>
->> diff --git a/arch/arm64/boot/dts/cix/sky1.dtsi b/arch/arm64/boot/dts/cix/sky1.dtsi
->> index 9c723917d8ca..1dac0e8d5fc1 100644
->> --- a/arch/arm64/boot/dts/cix/sky1.dtsi
->> +++ b/arch/arm64/boot/dts/cix/sky1.dtsi
->> @@ -289,6 +289,156 @@ mbox_ap2sfh: mailbox@80a0000 {
->>                        cix,mbox-dir = "tx";
->>                };
+>>    2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+>>       hard coded 0x420
+>> ---
+>>   arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+>>   arch/loongarch/include/asm/kvm_host.h    |   2 +
+>>   arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+>>   arch/loongarch/include/asm/loongarch.h   |   1 +
+>>   arch/loongarch/kvm/Makefile              |   1 +
+>>   arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+>>   arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
+>>   7 files changed, 209 insertions(+)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+>>   create mode 100644 arch/loongarch/kvm/intc/misc.c
 >>
->> +             pcie_x8_rc: pcie@a010000 { /* X8 */
->> +                     compatible = "cix,sky1-pcie-host";
->> +                     reg = <0x00 0x0a010000 0x00 0x10000>,
->> +                           <0x00 0x0a000000 0x00 0x10000>,
->> +                           <0x00 0x2c000000 0x00 0x4000000>,
->> +                           <0x00 0x60000000 0x00 0x00100000>;
->> +                     reg-names = "reg", "rcsu", "cfg", "msg";
->> +                     #interrupt-cells = <1>;
->> +                     interrupt-map-mask = <0 0 0 0x7>;
->> +                     interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH 0>,
->> +                                     <0 0 0 2 &gic 0 0 GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH 0>,
->> +                                     <0 0 0 3 &gic 0 0 GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH 0>,
->> +                                     <0 0 0 4 &gic 0 0 GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH 0>;
->> +                     max-link-speed = <4>;
->> +                     num-lanes = <8>;
->> +                     #address-cells = <3>;
->> +                     #size-cells = <2>;
->> +                     bus-range = <0xc0 0xff>;
->> +                     device_type = "pci";
->> +                     ranges = <0x01000000 0x0 0x60100000 0x0 0x60100000 0x0 0x00100000>,
->> +                              <0x02000000 0x0 0x60200000 0x0 0x60200000 0x0 0x1fe00000>,
->> +                              <0x43000000 0x18 0x00000000 0x18 0x00000000 0x04 0x00000000>;
-> 
-> And none of the two reviewers asked you to follow DTS coding style? If
-> reviewer knows not much about DTS, don't review. Add an ack or
-> something, dunno, or actually perform proper review.
-> 
+>> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
+>> index a3a40aba8acf..2d1c183f2b1b 100644
+>> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+>> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+>> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
+>>
+>>   int kvm_loongarch_register_eiointc_device(void);
+>>   void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
+>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
+>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask);
+>>
+>>   #endif /* __ASM_KVM_EIOINTC_H */
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> index a3c4cc46c892..f463ec52d86c 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -132,6 +132,8 @@ struct kvm_arch {
+>>          struct loongarch_ipi *ipi;
+>>          struct loongarch_eiointc *eiointc;
+>>          struct loongarch_pch_pic *pch_pic;
+>> +       struct kvm_io_device misc;
+>> +       bool   misc_created;
+>>   };
+>>
+>>   #define CSR_MAX_NUMS           0x800
+>> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/include/asm/kvm_misc.h
+>> new file mode 100644
+>> index 000000000000..621e4228dea2
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/asm/kvm_misc.h
+>> @@ -0,0 +1,17 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef __ASM_KVM_MISC_H
+>> +#define __ASM_KVM_MISC_H
+>> +
+>> +#include <asm/loongarch.h>
+>> +
+>> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
+>> +#define MISC_SIZE              0x8
+>> +
+>> +int kvm_loongarch_create_misc(struct kvm *kvm);
+>> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
+>> +
+>> +#endif /* __ASM_KVM_MISC_H */
+>> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+>> index d84dac88a584..e30d330d497e 100644
+>> --- a/arch/loongarch/include/asm/loongarch.h
+>> +++ b/arch/loongarch/include/asm/loongarch.h
+>> @@ -1141,6 +1141,7 @@
+>>   #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
+>>   #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+>>   #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+>> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
+>>   #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+>>
+>>   #define LOONGARCH_IOCSR_CPUTEMP                0x428
+>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+>> index cb41d9265662..25fa3866613d 100644
+>> --- a/arch/loongarch/kvm/Makefile
+>> +++ b/arch/loongarch/kvm/Makefile
+>> @@ -18,6 +18,7 @@ kvm-y += vcpu.o
+>>   kvm-y += vm.o
+>>   kvm-y += intc/ipi.o
+>>   kvm-y += intc/eiointc.o
+>> +kvm-y += intc/misc.o
+>>   kvm-y += intc/pch_pic.o
+>>   kvm-y += irqfd.o
+>>
+>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>> index f39929d7bf8a..87d01521e92f 100644
+>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>> @@ -4,6 +4,7 @@
+>>    */
+>>
+>>   #include <asm/kvm_eiointc.h>
+>> +#include <asm/kvm_misc.h>
+>>   #include <asm/kvm_vcpu.h>
+>>   #include <linux/count_zeros.h>
+>>
+>> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_ops = {
+>>          .write  = kvm_eiointc_write,
+>>   };
+>>
+>> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
+>> +{
+>> +       unsigned long data, flags;
+>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+>> +
+>> +       if (!eiointc) {
+>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       data = 0;
+>> +       spin_lock_irqsave(&eiointc->lock, flags);
+>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+>> +               data |= IOCSR_MISC_FUNC_EXT_IOI_EN;
+>> +
+>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+>> +               data |= IOCSR_MISC_FUNC_INT_ENCODE;
+>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+>> +
+>> +       *value = data;
+>> +       return 0;
+>> +}
+>> +
+>> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value, unsigned long mask)
+>> +{
+>> +       struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+>> +       unsigned long old, flags;
+>> +
+>> +       if (!eiointc) {
+>> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       old = 0;
+>> +       spin_lock_irqsave(&eiointc->lock, flags);
+>> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+>> +               old |= IOCSR_MISC_FUNC_EXT_IOI_EN;
+>> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+>> +               old |= IOCSR_MISC_FUNC_INT_ENCODE;
+>> +
+>> +       value |= (old & ~mask);
+>> +       eiointc->status &= ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOINTC_ENABLE));
+>> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
+>> +               eiointc->status |= BIT(EIOINTC_ENABLE_INT_ENCODE);
+>> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
+>> +               eiointc->status |= BIT(EIOINTC_ENABLE);
+>> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+>> +       return 0;
+>> +}
+>> +
+>>   static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+>>                                  struct kvm_io_device *dev,
+>>                                  gpa_t addr, int len, void *val)
+>> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
+>>                  kfree(s);
+>>                  return ret;
+>>          }
+>> +
+>> +       ret = kvm_loongarch_create_misc(kvm);
+>> +       if (ret < 0) {
+>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
+>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_vext);
+>> +               kfree(s);
+>> +               return ret;
+>> +       }
+>> +
+>>          kvm->arch.eiointc = s;
+>>
+>>          return 0;
+>> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+>>          eiointc = kvm->arch.eiointc;
+>>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>>          kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
+>> +       kvm_loongarch_destroy_misc(kvm);
+>>          kfree(eiointc);
+>>   }
+>>
+>> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/misc.c
+>> new file mode 100644
+>> index 000000000000..edee66afa36e
+>> --- /dev/null
+>> +++ b/arch/loongarch/kvm/intc/misc.c
+>> @@ -0,0 +1,125 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +#include <asm/kvm_vcpu.h>
+>> +#include <asm/kvm_eiointc.h>
+>> +#include <asm/kvm_misc.h>
+>> +
+>> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
+>> +                       gpa_t addr, int len, void *val)
+>> +{
+>> +       unsigned long data;
+>> +       unsigned int ret;
+>> +
+>> +       addr -= MISC_BASE;
+>> +       if (addr & (len - 1)) {
+>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       ret = kvm_eiointc_get_status(vcpu, &data);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       data = data >> ((addr & 7) * 8);
+>> +       switch (len) {
+>> +       case 1:
+>> +               *(unsigned char *)val = (unsigned char)data;
+>> +               break;
+>> +
+>> +       case 2:
+>> +               *(unsigned short *)val = (unsigned short)data;
+>> +               break;
+>> +
+>> +       case 4:
+>> +               *(unsigned int *)val = (unsigned int)data;
+>> +               break;
+>> +
+>> +       default:
+>> +               *(unsigned long *)val = data;
+>> +               break;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *dev,
+>> +               gpa_t addr, int len, const void *val)
+>> +{
+>> +       unsigned long data, mask;
+>> +       unsigned int shift;
+>> +
+>> +       addr -= MISC_BASE;
+>> +       if (addr & (len - 1)) {
+>> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       shift = (addr & 7) * 8;
+>> +       switch (len) {
+>> +       case 1:
+>> +               data = *(unsigned char *)val;
+>> +               mask = 0xFF;
+>> +               mask = mask << shift;
+>> +               data = data << shift;
+>> +               break;
+>> +
+>> +       case 2:
+>> +               data = *(unsigned short *)val;
+>> +               mask = 0xFFFF;
+>> +               mask = mask << shift;
+>> +               data = data << shift;
+>> +               break;
+>> +
+>> +       case 4:
+>> +               data = *(unsigned int *)val;
+>> +               mask = UINT_MAX;
+>> +               mask = mask << shift;
+>> +               data = data << shift;
+>> +               break;
+>> +
+>> +       default:
+>> +               data = *(unsigned long *)val;
+>> +               mask = ULONG_MAX;
+>> +               mask = mask << shift;
+>> +               data = data << shift;
+>> +               break;
+>> +       }
+>> +
+>> +       return kvm_eiointc_update_status(vcpu, data, mask);
+>> +}
+>> +
+>> +static const struct kvm_io_device_ops kvm_misc_ops = {
+>> +       .read   = kvm_misc_read,
+>> +       .write  = kvm_misc_write,
+>> +};
+>> +
+>> +int kvm_loongarch_create_misc(struct kvm *kvm)
+>> +{
+>> +       struct kvm_io_device *device;
+>> +       int ret;
+>> +
+>> +       if (kvm->arch.misc_created)
+>> +               return 0;
+>> +
+>> +       device = &kvm->arch.misc;
+>> +       kvm_iodevice_init(device, &kvm_misc_ops);
+>> +       ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MISC_SIZE, device);
+>> +       if (ret < 0)
+>> +               return ret;
+>> +
+>> +       kvm->arch.misc_created = true;
+>> +       return 0;
+>> +}
+>> +
+>> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
+>> +{
+>> +       struct kvm_io_device *device;
+>> +
+>> +       if (kvm->arch.misc_created) {
+>> +               device = &kvm->arch.misc;
+>> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
+>> +               kvm->arch.misc_created = false;
+>> +       }
+>> +}
+>>
+>> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+>> --
+>> 2.39.3
+>>
 
-Understood.
-
-For the arrangement of attributes this time, I referred to the following 
-submission:
-
-linux master branch：
-arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-pcie2x1l2: pcie@fe190000
-
-Submissions under review:
-https://patchwork.kernel.org/project/linux-pci/patch/20250610090714.3321129-8-christian.bruel@foss.st.com/
-
-
-Then should I follow the following documents exactly?
-
-Documentation/devicetree/bindings/dts-coding-style.rst
-The following order of properties in device nodes is preferred:
-
-1. "compatible"
-2. "reg"
-3. "ranges"
-4. Standard/common properties (defined by common bindings, e.g. without
-    vendor-prefixes)
-5. Vendor-specific properties
-6. "status" (if applicable)
-7. Child nodes, where each node is preceded with a blank line
-
-
-
-Best regards,
-Hans
-
-> Best regards,
-> Krzysztof
-> 
