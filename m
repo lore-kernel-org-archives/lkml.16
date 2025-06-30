@@ -1,89 +1,59 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7BF220F37
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E2122127B;
+	Mon, 30 Jun 2025 07:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268716; cv=none; b=IRTRLRbvMnN1OgPzHVz2LzYlMZckCXkeJk/OTzZmkaZhrSvVkbhX2a+lCt30BNv7ilb+SL8W705wrHh1jOC4DUXrBG8K3ZZgxlTvCayCRwsXWkAoitGZozqhYfEe8CI2DRI9b2JDShOaPxWp575mnWVBz6mAJFPkjSGeS847Xms=
+	t=1751268720; cv=none; b=aClKQmAl5MXg0mSAtmkgsGhm49YbJQLY5L8sUQi2HuLhTW7dH9zgXvYE4zc+bonjQKU9GtsiuxyejmoCxnFpsorGe4j74uiUbdXQeTvG7u0/e49T7VsyHZTw+Knuxg4DPW9RAKeqbHu7g5q4ovFUfwbYTDewhcZ7mtOGCuPcPkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268716; c=relaxed/simple;
-	bh=4NL8UsYtV8Nr0DA0sTxLX6ZzfeHF3QNep/tyEDeAGDk=;
+	s=arc-20240116; t=1751268720; c=relaxed/simple;
+	bh=3rYAjCRTrh6l66mjY4sYxk4vwQkRMIvjC4jv++QEL9k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaL0Yj0OF1ex1u2N6pMGKWNlJA7nxTUNblmIBSvoGDgcf9H+mbndiMJPhiIDoDTIg9uxHsIj7TsWdUpLmJC7KKuopOwjPlkbr9okffAlHWm0Q74sdq0MFqxNSl3F4Ibs+zX+J3ERy4aCLP9EOSUba8I4rAvXATRIsTF86efOrmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZVA2tAbc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uRnkOO20; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=17AulgZ+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AyQ5exhj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=SlNMV8NI4fFu57vMJ+OxZ5XnhpvOaqUSw2XKjW1z/y041euA2fmAj1K/mxHJMI2zIcoqZdUIiugSq+KV2p9bQ+bvF2qPYWiezPNFd216Qg5rYuhHYib+b5f8NpE7M8Mx4KOK/LMEJbb+S1a158R6wkQXObHnE26xAE2NfwQvpBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WCYzZIq+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZVA2tAbc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uRnkOO20";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="17AulgZ+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AyQ5exhj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E42271F38C;
-	Mon, 30 Jun 2025 07:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751268712; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJrT3PqZewzWhJ6K1x8yJe75/062yU6iPGJzkoQxjSo=;
-	b=ZVA2tAbc4fi289S+t/YnLPbz0tqJXYFDqZQidZo2EurO0jikDYan4JGYD5hW3tN20aHutH
-	ZsU2HUjatvpA+/ZBTBixID7UuEdJ+Cwe1XUjoevWUuCH/hZDub1SERi7t1nJqOBepYGjyr
-	+ecHYJLuj9IOFMBWnJl4he46xchTfBg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751268712;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJrT3PqZewzWhJ6K1x8yJe75/062yU6iPGJzkoQxjSo=;
-	b=uRnkOO20hhyqaz+vwKPdAT0Ka+t0ZKfIGMcFYtQSABKTfNWury5oBprfsWe4u67BzToS0b
-	B1XsalGXQUj256Dg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=17AulgZ+;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AyQ5exhj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751268711; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJrT3PqZewzWhJ6K1x8yJe75/062yU6iPGJzkoQxjSo=;
-	b=17AulgZ+whlfWoV0e/NPGTv5BoXsAEVxKKhmhFeGIYEf7tPBH/k9E0TimzJtOI+lEra/gN
-	JazfzYwjWl1YkZpf8DmwT6DKvBDV+vJKr0s80ZV5T8SN2B6P9SqXHr19mZBSH6c55yD8zT
-	v9ViWnmnyNCLCXgoc/WQcgNkNGKRKBw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751268711;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eJrT3PqZewzWhJ6K1x8yJe75/062yU6iPGJzkoQxjSo=;
-	b=AyQ5exhj2z7yrXLBGUWRXF9Cu+7ntNqsJTlcwsx1QAaoR+xYbbwlSt8IioD7FUAjO7tnCD
-	dzou5swcjnN/jZAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D834E13983;
-	Mon, 30 Jun 2025 07:31:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gl7BNGc9YmjgaAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 30 Jun 2025 07:31:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 8389AA08D2; Mon, 30 Jun 2025 09:31:51 +0200 (CEST)
-Date: Mon, 30 Jun 2025 09:31:51 +0200
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 02/16] ext4: remove unnecessary s_mb_last_start
-Message-ID: <mztj3kc4slq3j6gxfk77omt4tdphg55jophea2j2dw5vj5hixq@ppj5lfxz2svk>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-3-libaokun1@huawei.com>
- <3p5udvc7fgd73kruz563pi4dmc6vjxvszmnegyym2xhuuauw5j@sjudcmk7idht>
- <0bcfc7c6-003f-4b4d-ac65-e01308a74f3b@huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WCYzZIq+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=u0Dp7Gg4+QNsvSZ8/+JO1eFeH7KonMvVlVzeM0Jd988=; b=WCYzZIq+XmGkes3+ajxt/4QOrV
+	hBpXUXcZew36OiTuUcZ77xVR8rvAyRNpBIZoUsbZJuz9Eyi90b91hp2uL7Yzi7hP2dO9b3TByd4KS
+	C8ZgMOOKCtA2Ni2r3Rn0iVJS8FJ5wE2vqFKwXi1vnow2TyvQApwHdK2rbwHsTZH3VGGgZjxaCqb9S
+	yjY3VguspqAOaYqSewKkB8yYVwYjJEwEUvMMOXLgrb6Zvx1Iq5/jWRGhv/Li6YwZj+i2DHYIPJjnM
+	bewIpkW4YTSvTR039oA1EM+g1ybpCLHPldLTE73VEK0kWhVOvEY74esAW5Ousa2xskyc/kfc7xz/J
+	taOkjPOQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW8zR-00000006k02-2pFN;
+	Mon, 30 Jun 2025 07:31:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B8930300125; Mon, 30 Jun 2025 09:31:44 +0200 (CEST)
+Date: Mon, 30 Jun 2025 09:31:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Dylan Hatch <dylanbhatch@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v3 42/64] kbuild,x86: Fix special section module
+ permissions
+Message-ID: <20250630073144.GE1613200@noisy.programming.kicks-ass.net>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <cf1cfb9042005be7bf0a1c3f2bdbeebc769e3ee4.1750980517.git.jpoimboe@kernel.org>
+ <20250627105328.GZ1613200@noisy.programming.kicks-ass.net>
+ <4ezl3egjv36fjkxkkswcianc5cg7ui6jpqw56e4ohlwipmuxai@kvgemh72rmga>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,84 +62,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0bcfc7c6-003f-4b4d-ac65-e01308a74f3b@huawei.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: E42271F38C
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+In-Reply-To: <4ezl3egjv36fjkxkkswcianc5cg7ui6jpqw56e4ohlwipmuxai@kvgemh72rmga>
 
-On Mon 30-06-25 11:32:16, Baokun Li wrote:
-> On 2025/6/28 2:15, Jan Kara wrote:
-> > On Mon 23-06-25 15:32:50, Baokun Li wrote:
-> > > ac->ac_g_ex.fe_start is only used in ext4_mb_find_by_goal(), but STREAM
-> > > ALLOC is activated after ext4_mb_find_by_goal() fails, so there's no need
-> > > to update ac->ac_g_ex.fe_start, remove the unnecessary s_mb_last_start.
+On Fri, Jun 27, 2025 at 10:34:15AM -0700, Josh Poimboeuf wrote:
+> On Fri, Jun 27, 2025 at 12:53:28PM +0200, Peter Zijlstra wrote:
+> > On Thu, Jun 26, 2025 at 04:55:29PM -0700, Josh Poimboeuf wrote:
+> > > An upcoming patch will add the SHF_MERGE flag to x86 __jump_table and
+> > > __bug_table so their entry sizes can be defined in inline asm.
 > > > 
-> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> > I'd just note that ac->ac_g_ex.fe_start is also used in
-> > ext4_mb_collect_stats() so this change may impact the statistics gathered
-> > there. OTOH it is questionable whether we even want to account streaming
-> > allocation as a goal hit... Anyway, I'm fine with this, I'd just mention it
-> > in the changelog.
-> Yes, I missed ext4_mb_collect_stats(). However, instead of explaining
-> it in the changelog, I think it would be better to move the current
-> s_bal_goals update to inside or after ext4_mb_find_by_goal().
-> 
-> Then, we could add another variable, such as s_bal_stream_goals, to
-> represent the hit count for global goals. This kind of statistic would
-> help us fine-tune the logic for optimizing inode goals and global goals.
-> 
-> What are your thoughts on this?
-
-Sure that sounds good to me.
-
-> > > @@ -2849,7 +2848,6 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
-> > >   		/* TBD: may be hot point */
-> > >   		spin_lock(&sbi->s_md_lock);
-> > >   		ac->ac_g_ex.fe_group = sbi->s_mb_last_group;
-> > > -		ac->ac_g_ex.fe_start = sbi->s_mb_last_start;
-> > Maybe reset ac->ac_g_ex.fe_start to 0 instead of leaving it at some random
-> > value? Just for the sake of defensive programming...
+> > > However, those sections have SHF_WRITE, which the Clang linker (lld)
+> > > explicitly forbids combining with SHF_MERGE.
+> > > 
+> > > Those sections are modified at runtime and must remain writable.  While
+> > > SHF_WRITE is ignored by vmlinux, it's still needed for modules.
+> > > 
+> > > To work around the linker interference, remove SHF_WRITE during
+> > > compilation and restore it after linking the module.
 > > 
-> ac->ac_g_ex.fe_start holds the inode goal's start position, not a random
-> value. It's unused after ext4_mb_find_by_goal() (if s_bal_stream_goals is
-> added). Thus, I see no need for further modification. We can always re-add
-> it if future requirements change.
+> > This is vile... but I'm not sure I have a better solution.
+> > 
+> > Eventually we should get the toolchains fixed, but we can't very well
+> > mandate clang-21+ to build x86 just yet.
+> 
+> Yeah, I really hate this too.  I really tried to find something better,
+> including mucking with the linker script, but this was unfortunately the
+> only thing that worked.
+> 
+> Though, looking at it again, I realize we can localize the pain to Clang
+> (and the makefile) by leaving the code untouched and instead strip
+> SHF_WRITE before the link and re-add it afterwards.  Then we can tie
+> this horrible hack to specific Clang versions when it gets fixed.
 
-Yeah, I was imprecise. It is not a random value. But it is not an offset in
-the group we are now setting. Therefore I'd still prefer to reset fe_start
-to 0 (or some invalid value like -1 to catch unexpected use).
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Oh yeah, that might be nicer indeed!
