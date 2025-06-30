@@ -1,57 +1,57 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CBF2D3212
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F2C2D4B52
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301094; cv=none; b=adJ93AAdpHONy9UoVaAnYzvHfK6rztxSF1dyANzrq8b9W6nKBjcxM2hkCPqiiogV5uPK/zQTx6tc0mZveUPyvAkeCeMpLTTRmP5TMkEb+Wxn66IEguwsSjh2aQ4VWCcNF28SGvbmixjAg73p/ezeGuIYs54Go+4liQXUqmaFf0E=
+	t=1751301095; cv=none; b=Ju3BWnaP9oyhgsAGli1DiKDZuGk2qEBjfl/0d7K0Jps1NDeoxZNZx/vexqgTTh7fpJ6eSLOuSyEEpAAzorsikQ0/497QulOD9tIpJyOZ/JKCYt3/72M3Q9JtXrLmX8MW9M+bXIj3F1EHsjQtvfMJu6198vARscaptSH89+2vELw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301094; c=relaxed/simple;
-	bh=UB3LC+DAsMPcMj2tI3JyN+CwaCI4DfXgOfh3KKQ9Vis=;
+	s=arc-20240116; t=1751301095; c=relaxed/simple;
+	bh=EAr6RrtFQl3yGnUqGwOlrUzkpXUWc+2Qk+FF83cNPFA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=HjLAOd5JKxdgOXJN/Pbj9/lkY27ZWDAeurdi5o1xMReuL/jf7PypdVHYwbQDJNJJKnTOulcurtPaUV/DUXPGlcHVRnpylpvOM8okMbADPdRw/oupFGm1y+9ozVotghhspt8YjuynrKEzWUOzoYG1vzeUTSJl4YjfRapULPV299c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DwnQ/NWb; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=X6ngYTVEJFWgebjWj5tKbCzQY0Ns3lkkNz3t363yuxnHZ16mcS8G/iBqV5AOpKnPr/vcClEMlixzq6GtCAFwJiHJOKPIo3L8X9ZBBYU1VAcZvIsE2ZurzCTUpeTjBWioETm5qZRpZO3elzFot9CdQKp3XHUmi18McqcHQ0t8OEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mI5EFfBX; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DwnQ/NWb"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2356ce66d7cso30457025ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mI5EFfBX"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so4402225a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301091; x=1751905891; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751301093; x=1751905893; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9VNpGqNb2MHhnrI7sffrX6seyL0+K2TdL07Y5kBKeGQ=;
-        b=DwnQ/NWbzWh1FJ1omtPNr6W4Bpi+H/+I/5ISwNLWzpCJ5WpWr7TwIK6H33wTlXypx/
-         gUCClurXIwOlaeLe0xlnBn3UIWGcNJQUJLaCMzZGryXhsKyJFW1LCnB31Ni0vV+SJhCO
-         HxYBRlKQqRbgZEMq+feWVnA+bb7zpPWGrmpQgL6kIuF+FCGcklxu0uT5j8wTCF3rD+Xz
-         h+O0MWYd60fmBthpMkN6opNe332AAHV5DSkWAB+QqRfouKeXTzTPz0cOIhLQ0b2QZxS1
-         DUum/bTW/6Dw3nbOfpw6wJuEYxq+BHGuGNBnrqaPHlUUcy5c3XJhzy5UDL1TtyjaFwpQ
-         Ou8Q==
+        bh=O93yuuBrN5j1m23sGtIa8teySV5SU0bQ4t+orEdV4gk=;
+        b=mI5EFfBXnVxSlgT1/GQxICjkHc4wvCxXPj7thZod4IMZlaBBjcSSOu8PD2LQpA2rNn
+         9kgzWK59G5KdsKZ3Fk/IhZNuIeK7/b0/NNaPQ2yQt3aKMkxV4rIXXzSvpfAcWSFJBh0G
+         Dd+b9IXAO+mybnb2gLVdBDFLBqC9MivmbuuQUeLr3a24WPuvh5ujD8YLupv2Wkt88kV9
+         SEv3jdPzzry4AH3CdDnC3nyQq1xLg4T8ssmGlISxWk/rQtaymvEDQ6TfsG8P1IwCwuNC
+         NpN5MIv5uk4JT6TsDyimy/Yyi5k8dBzNFHSDMwuGMY+3JTmDY/ZPgOgxfFxAWg4LMxZt
+         KpkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301091; x=1751905891;
+        d=1e100.net; s=20230601; t=1751301093; x=1751905893;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=9VNpGqNb2MHhnrI7sffrX6seyL0+K2TdL07Y5kBKeGQ=;
-        b=PP3KirE0HNgRT6wkgn0TkoYqcHi5WNtjfLR87IGjaDr7m4YBUCQRV9Ll40rvWjeUxL
-         4WPwIV78M2K2Y72Fbpo1FmraGGDBAfTbaC+i3s/QQ2Lkry5MxyUi2yRv5DVKw6VnVJEG
-         i/tndpAQZGzNO68GHxIxiKuWTH8f2yJH/lVx7gQeRQXHY4nlm0QL5IIqeMxJWYuQ49Rm
-         crzIeDI8BEEG4c7SgDETmustDktaT7DJFfa+kYkIbmNk6fPqBxws033DN7EELTVePKFS
-         iRzeI8YespB0lkHqaUsr4SWkTRphGSG76GYcWM9r6SFjg63/ukZ/RkKSYOOo2/VXhAR5
-         b1/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWvhDu/CfU+z4Y2QOyDzcikZu0UDs7V90u2phE4M8Y5g0Q0dwXGoxqYNr314kttDY3I3A+gY+3N76bP8oM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLWNgRsjg1O4/eFZY8Hw/jImc9vVsgjtgTGvVdfmGso/J3VD+o
-	9GKRGyvblp/YrzhdkD3rrlaIdS39/yktVYz1JzTWH7HXYS06OG9FBvTSxLZvMotJ038Y8vLMwWU
-	Zfsu/zpjp7Q==
-X-Google-Smtp-Source: AGHT+IFBDK6gJXuL74p8rOzSw7isbI3y77om1IjixdaHY38msI+2J2/4El5suMFOdxy2nN+pHGs+DlWYu8Lf
-X-Received: from plil12.prod.google.com ([2002:a17:903:17cc:b0:231:def0:d268])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b2c:b0:235:15f5:cc30
- with SMTP id d9443c01a7336-23ac40debc6mr203270255ad.16.1751301091022; Mon, 30
- Jun 2025 09:31:31 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:30:59 -0700
+        bh=O93yuuBrN5j1m23sGtIa8teySV5SU0bQ4t+orEdV4gk=;
+        b=pRI2HC6GXF6z30NDf+0gKOjSBtXB9M76ijXJLrZMtmucz4aKtMLHkQ/yMDpkBvLtb4
+         gWoccn/XDktPLaXI2ERVHGMTaYABy+ThXx4QqrBzuD1MbtDCpbgVNaIC6I95lJD4k4eL
+         5xgwX91hCDs7UlhFHEdFHO3mk916UnC/7XBZEepncTCTM2Gd9y/ADUaBPlxG08kbFAoa
+         DPcUynqbshmWoRD+4lnNCiYNHiwV92CMIKwxHhuRF/ANCDnORE9yWRgBCxpUzZigRu9+
+         Hk50QPqk/mMYbAGfNCj0Bkt7/AUNSheM/lFDkgD9idudl3xtBW8lgC/qqr0K2kY1bKH8
+         +FAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEd1vn1KfH71irqK3ljpy3lDhrShTdj4inp/E4QKg3HD8fIecT8R4jrL9kAZZtCm7R31/k64imyjzr19g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykHeYd+JiOKDSl9w6vzg74O6haeDretDoCO76A0sgExXt1MwT/
+	/NMZd/eQA59OuVm9xGu1Mhhgme6d1BiEogZ+b+fdInFlv5mdLIE5UrgAADIJSaF51AladM6iO3v
+	GqS/wjyudqw==
+X-Google-Smtp-Source: AGHT+IGlhAXRVd62WJs68wzgkQHNAHMb/DvZ6Hqv2uFVhQEXhs2r5yuuU5AxSx87NvrIdcBsgwrIq9qoSKnZ
+X-Received: from pjj14.prod.google.com ([2002:a17:90b:554e:b0:312:eaf7:aa0d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2247:b0:311:c93b:3ca2
+ with SMTP id 98e67ed59e1d1-318c8eb9988mr19643825a91.6.1751301092806; Mon, 30
+ Jun 2025 09:31:32 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:31:00 -0700
 In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250630163101.1920170-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-15-irogers@google.com>
-Subject: [PATCH v2 14/15] perf vendor events: Update SkylakeX events
+Message-ID: <20250630163101.1920170-16-irogers@google.com>
+Subject: [PATCH v2 15/15] perf vendor events: Update TigerLake events
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,41 +76,41 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.36 to v1.37.
+Update events from v1.17 to v1.18.
 
-Bring in the event updates v1.37:
-https://github.com/intel/perfmon/commit/6ee8e4cadda8b6954bd84236e20fab95e34=
-5578f
+Bring in the event updates v1.18:
+https://github.com/intel/perfmon/commit/943fea37d0d54232605f12abf72a812ac31=
+4cd1d
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv            | 2 +-
- tools/perf/pmu-events/arch/x86/skylakex/pipeline.json | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv             | 2 +-
+ tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 54c2cfb0af9c..2d9699efff58 100644
+index 2d9699efff58..354ce241500b 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -33,7 +33,7 @@ GenuineIntel-6-8F,v1.28,sapphirerapids,core
- GenuineIntel-6-AF,v1.11,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+@@ -35,7 +35,7 @@ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
  GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
--GenuineIntel-6-55-[01234],v1.36,skylakex,core
-+GenuineIntel-6-55-[01234],v1.37,skylakex,core
+ GenuineIntel-6-55-[01234],v1.37,skylakex,core
  GenuineIntel-6-86,v1.23,snowridgex,core
- GenuineIntel-6-8[CD],v1.17,tigerlake,core
+-GenuineIntel-6-8[CD],v1.17,tigerlake,core
++GenuineIntel-6-8[CD],v1.18,tigerlake,core
  GenuineIntel-6-2C,v5,westmereep-dp,core
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json b/tools/=
-perf/pmu-events/arch/x86/skylakex/pipeline.json
-index 3dd296ab4d78..9a1349527b66 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json
-@@ -542,7 +542,7 @@
+ GenuineIntel-6-25,v4,westmereep-sp,core
+ GenuineIntel-6-2F,v4,westmereex,core
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+index 7ef1bac08463..b417e1db9e07 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/pipeline.json
+@@ -497,7 +497,7 @@
          "Counter": "0,1,2,3",
-         "EventCode": "0x4C",
-         "EventName": "LOAD_HIT_PRE.SW_PF",
+         "EventCode": "0x4c",
+         "EventName": "LOAD_HIT_PREFETCH.SWPF",
 -        "PublicDescription": "Counts all not software-prefetch load dispat=
 ches that hit the fill buffer (FB) allocated for the software prefetch. It =
 can also be incremented by some lock instructions. So it should only be use=
