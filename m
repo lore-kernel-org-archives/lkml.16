@@ -1,67 +1,55 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023087.outbound.protection.outlook.com [52.101.127.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFACB28E574
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297426; cv=none; b=buj6ZyPncMBWn3Tl4y4mGqYgMVDaSpiWPGzLRt08e8Gyq9uPyParmR0phNjMGnmKNrpjL7zlLunZScMvYtL6X1fFrtyN4wQNiCWdYxt9I5pTCTnyJx01ZrzYcpkJfLVweUiedu9IwVQWP/AUscJYoBiMRXVEcbHKOX/yrmeGDhM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297426; c=relaxed/simple;
-	bh=Sk0ES6QldLhnV+2Q56diEi6Wx1bcMvqcXhU34iyYGiQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jUKpUv9l6rNzEaTwFiXjdpx5z++UF0aKjG/cK62C1GPDFjgf1YTYfYVPoFRco5Mrk78kLPn/hmgDr+qUuhyDnX9hbBGxG9TWEhwir+KzG08ccI/4zKtPQbilr5RvPLCsg4z0w1Jqu7DvECqSjXictKAwZza06PbRZv2wmLnn840=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TFFDQDpa; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TFFDQDpa"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45377776935so26415745e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751297420; x=1751902220; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DGTv9DA8OgIotosx9NMXq1/HPJSXLQDEwwR6pknrsRA=;
-        b=TFFDQDpamB0Xq7cvcUMP6Fb3SAim/1MBkX1oqBGnIYKJ+CVBXOyxhJJFDO2Uli6yYn
-         24I0OikFVj7BeaUwyUnY2sBF3tJxsNWmiiOPFhgqWephzSNlZhtcn+ICuEmhwJpi+ctB
-         TaUUB+Nm2+scs8f+cNB+Fsh3iVdMpC+UPaqHeAVy64CP8m297aY2KgFyvWrP5glvNgP9
-         wdaRI2OVJKc7pBM2hy2aqyBrq7kbHNHgBQxUIH/5nEh8ib6vqNHKojGfBR4wu9zkDhgh
-         LD19Yw1oLmPc6X/2W9+gc0n4ebKT+7RkNHAr/FykAjc5/s3At4N9XRbvvynrdChDBEgx
-         knSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297420; x=1751902220;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DGTv9DA8OgIotosx9NMXq1/HPJSXLQDEwwR6pknrsRA=;
-        b=dmt6oWFL++lmfu+PfiYjSHosRrutZkn27AeHHO//r0JNNjm7tpFUMLVgZ6SjW0UY46
-         v7xti28XEpRQxa6musE4FZ7RKQT7bshJdeN3BvnXYyJuvsLiFPfiEyLn20rN36z9RbAp
-         4JSsZaXVliQfIo5OIMGiauJYrxlXwHu0EN2qCVUJAz2ZhVLPjtSUtFU5NaP/yBTVZ3iC
-         c4gIYpMZRIM5qmQRBeG2xMxsCtBK0ciRthZBvg7m5RIuZ5Nf/djdiCJQx7QXAs09HAtS
-         sd4dKb6hcRY4pBj8wUxaVezQ3gaCeOgM28+QRSQhNTN9qcjDTi6hzAquqGwscIfUcXXV
-         TQ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXkjvlhaRWqFAMtFWWSoSi2vC9pE2MmL7u9+jIGalBvp4FbautCYdht3fMak4Ay2zv+/KrOUPiYMdwOfks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeWV8HHoRvQpZOtFphINKoGeGDjKd8NZmcdoUuoZ62W8GwgeIf
-	AvOhp8jDHQEFt3TZXBUb+9MyPPklaUTT97ojbyE1FBZ3CK1R65aXj2l0swGfPaTSi0I=
-X-Gm-Gg: ASbGncsV1VLxss3NneV81TJNiOYQDW1yE+a2wKXeFAst5NKnbdOh6fCJN1mDdhQzh4I
-	WB5BfxEUwMuirTFSvSSOiwKv23CwACh2SWfmf8kpxYW74VnKRk7SsGuC8h5ZxMHGLW4sRrm0R4S
-	4eXxAGb/XL4364EmfJfwbc7fsx2zff0lPrcAVcYMD7/Wq4ojTnjYO3ajPjLnDvEAdguCJLC+Rhl
-	xZExIoqOwA3y1Z22O4edCOyU79N0RnS/a8dUhSVcB9vynmizY21zgQJb3I2HR0KC+gHVYQEU38S
-	n7nvcxpfK41qSd+mTFDZ1SYH3V4GeofestMSFGPieqWU2kcKrgDI2iuaR71r/zUOKwUyuAJRjiA
-	jLyZ9HnNFZ+VNaDWmMSZOI+4B3PgSIDTGTUZLF9UCseKFw4WN3g==
-X-Google-Smtp-Source: AGHT+IFvWnNK7c9pHnmc3UC7tkpuMWNHknPoJAqzT3g2x6NczxE8AVBDLRq94Fo6HOwUJ2h9CR4RBQ==
-X-Received: by 2002:a05:600c:c4ac:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-4538ee7dcb1mr159818555e9.17.1751297419686;
-        Mon, 30 Jun 2025 08:30:19 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb? ([2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52a26sm10845160f8f.51.2025.06.30.08.30.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 08:30:19 -0700 (PDT)
-Message-ID: <0e5356db-f10b-4beb-8427-f3ffcd6a2d69@linaro.org>
-Date: Mon, 30 Jun 2025 17:30:18 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0E6289833;
+	Mon, 30 Jun 2025 15:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751297471; cv=fail; b=TG/CIHimhx/bzy1qY2Tsh5yveZk4SYZYKAmuxOOJ4tEhioGq7LFOceGRMWSpuepxdxC2Ut43QdNSryG4DZr/Q7encKHAo+iVe4kXzYs2wWr726V/mlk0J+W5eLlvwE96GfXD5sVnWDGFTQxx+m5arAfVfVhYayQ2ab9er1d2piU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751297471; c=relaxed/simple;
+	bh=yX8x003vyIsNbCO6RlCObrlKI+RcF4FV0ym9gI/o1PU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ScPPRLVQeBtsQpau3dBM9wc7eRVmCx9yYnXylMX3D+nvo4x6Fz9F/kg6vMhvfHdSFkUkV385Sgk65CxhVmtmVqwX2DARPzggplxgRhfy/MbXyffby1mj+4FNyLxMPTyNWtmtSfSJCL+UAIKfFYNci2YivmYzHp+3y/oIfsYR17s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hL+s2OohcJ/u8TUMfh3vVTf5+gS3ucHH4xHOkoutZuvjc/2Zq+MRyTgNuqXGN/tjds0FRLkWYnSkbvMWVWa6z6Hn4R6Tq71+56z9MBKW+yAi46vYBIKxUH8YFN1IftmumobXQG0GX56XXXzQ8XJAx5zMdzCH/ANmnnJom+pu7LnT11PH0iabwYa9r+is5umbqeL3ZdJ2xkBtGA9mgB3HJc4DXDaiDdcUy7ArHKOG4mHc1iwE58O4MzH034uNX14WiD06Zs7FsH+PqAJ6DdVqGtsEQHJoZ80Xk/zj7odDnlUfhzvzKaJTwsD5rf/bp1RUxHlwjqElEEUA2hKIxmA3nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=poJ7pVu9ML5fjnDj9uQOulq3KTWzwJ1V/gML+eu9qM4=;
+ b=tBz1CIY14GRIJVUS8fEes6L0+35n1FcA40dZM+Z6Q8k0QYmtGyPJ1Cj6DSQdLpwsnhMbeCLl53+s+BNa9983yzxIgo1m4gEE/3dNKJrHhH0dTtVodHw3vUbvawRmdFNueX8IKWUZOT81+4Le1JPHMiOyPtMAl9/evCfAe5maG1Nqk6vBxv9byGPTwIEAGuWg9MQSUT1t6hD9DaAwyd40GmT+G/hvVAD+PXPPzG8K+8BrOEfy0MnDRju53wMnjvPM9eG0cd0H7+UpZglpE8Rc1JyJqZwCmSN001pjtqIy5UOHVOxZneeIJJjl4aLrKMPkSCetKyiXKMjI41YOGbSD4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PS2PR03CA0024.apcprd03.prod.outlook.com (2603:1096:300:5b::36)
+ by KL1PR06MB7009.apcprd06.prod.outlook.com (2603:1096:820:11a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.27; Mon, 30 Jun
+ 2025 15:31:02 +0000
+Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
+ (2603:1096:300:5b:cafe::8d) by PS2PR03CA0024.outlook.office365.com
+ (2603:1096:300:5b::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.17 via Frontend Transport; Mon,
+ 30 Jun 2025 15:31:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 15:31:00 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 92DD144C3CAA;
+	Mon, 30 Jun 2025 23:30:59 +0800 (CST)
+Message-ID: <2b608302-c4a6-404d-9cc5-d1ab9a6712bd@cixtech.com>
+Date: Mon, 30 Jun 2025 23:30:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,1097 +57,193 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 2/2] drm: panel: add support for Samsung S6E8AA5X01
- panel controller
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org>
- <20250625-panel-samsung-s6e8aa5x01-v3-2-9a1494fe6c50@disroot.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250625-panel-samsung-s6e8aa5x01-v3-2-9a1494fe6c50@disroot.org>
+Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
+ bindings
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-11-hans.zhang@cixtech.com>
+ <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+ <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
+ <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <5b182268-d64c-424c-9ada-0c3f120d2817@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|KL1PR06MB7009:EE_
+X-MS-Office365-Filtering-Correlation-Id: d46002c7-f4fb-4e64-8979-08ddb7eb1e32
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VlFQbzlQTGwrYms0OHAzOXgxcU95L2dvcmUvb3J0QnNHbC90Z1J6VTA5M0Js?=
+ =?utf-8?B?RDFFQ3Z0SkJyZ1hxZ3hua3ZydFIwOFgzcjQxZi9iQTBIODVlbTVra3NINmZZ?=
+ =?utf-8?B?cXNJY1l1KzdncENkR2dOalZ3T1BrSEpPZmxvd0RvbHQ1YWJaeFZTT2w5ZFRw?=
+ =?utf-8?B?QVE2K29haUFhaCsvL2EvV2tWNW9LVUl2Yk5JbnRyd3IwZk1NZFYzNWorUFlW?=
+ =?utf-8?B?WkRXMnNyVjZOUUlPU3dSYnhTdGc0WHRlK2ZFdUdMY2JOVDRibnpGNlYvZE5l?=
+ =?utf-8?B?amY1Rko4MDgwS3gwRnhkVHZtUHMxY29adWR3UVphT1gvYyswSDgwT1FlVFFL?=
+ =?utf-8?B?MzMzSkVHYzBiZHBVUTFXOUhVOFJ6T3VIVFhYaG5qSktkbk1TbG9Hb2xCUjI2?=
+ =?utf-8?B?YlF6dmpVZ1ZvTmI1WGYyck5HdkJCVDBKQ1duZ3UxR25mcHZnYlBOTGM4VExM?=
+ =?utf-8?B?TFZQak5QWGxtQW80aEoyc1k1QkN3NUJHaTNhR0ZmMUI3WjhHTXN2TFQ4azRL?=
+ =?utf-8?B?TzVWdHZ1dHNCWWxuSTFHQ1I4eGxDdjhoU1FGZEd3aVlmTC9yWDZGVGxhTWc3?=
+ =?utf-8?B?SHQwbGVVRENGTGVUYW54YnFRUkdSdW1EVGFBU0Fsem04c1NEVzdSWmExdDM4?=
+ =?utf-8?B?OHdjVzRVZEQrdTNMVGVQcFdMZUp2QTYzd2lvbGl5ZmhXUmtBK3pBcEdBOTNh?=
+ =?utf-8?B?bko4TTlQS2xSL0FkcG9XNmV2VExEL3FieXhtbkFmWndVRHdmcy9FNmg0SlhR?=
+ =?utf-8?B?NlRUQ2doaTB2MmpvUDVhZXRYdS9lSm1Paml3bkdDaWdFblpQY2FkN3d4WStI?=
+ =?utf-8?B?Y09Lb2h2U1YybnJWZ0loTCtnT2N2YnR5Vy8xcFlMRzRMYVFwMnhhTW1tK1M2?=
+ =?utf-8?B?NEtqTml3N29jcVBPbnNLZTEvcU5Td0JFUTV6MDEyUGVXdHV6dmUxK01zd3l1?=
+ =?utf-8?B?ekN3dzBYTUFUUHhEa3gzL3JBeUhsRnRGYUVZL2ttYlhQQ3VvR1JId21pTDRZ?=
+ =?utf-8?B?VDA5R21MbFg1cEtLVkdBczdJcEdxMElPelJYMEEzYk5pOGdQUlh4Q0xQcXdo?=
+ =?utf-8?B?d2lPL3hVdEF4bDNKUWxKRkhhUUhzODZJY1N3bVNvalBVdS9pTi9DSGI5ay8y?=
+ =?utf-8?B?ZEE3SC9HVE5nYmtnY2krZ0tZS0l6UGdVMXgreEpGRW41K1V6ZFNyOTJLN0RL?=
+ =?utf-8?B?NFQ2dy9VUFNUckl6NEVOMS9VVXFZczJwdVp1SVh4VHg2WEJ5NDRtZzJWYmRj?=
+ =?utf-8?B?S2pVeHpDeDhhclorNksyQzZRcW1QNlRqa2Q0cjBGV2Z6alBXbHY0cWFFVjcy?=
+ =?utf-8?B?UmdYTlhtWUlwVkdhZ29yNW1aLzdkNDY3UlVOb056WDlkcUM0aDFBczBiaGp1?=
+ =?utf-8?B?aE1XbXVtcjYrOW5HbVZmSXVOMTZVdmJDbjVwRi9PL0dKQ2JGUm9na0FyQzdv?=
+ =?utf-8?B?TVlVdlk1cWE1UmtXZnlSQ3VFeDZ3YmVmQ1dVTEZ6MytoLytzTzVTeGsxendY?=
+ =?utf-8?B?cGtTM01oR2NnS3EyUTJyakxtNTZvMzV0VDcxUDc0cUIvSGlkVU80QTg3S2pT?=
+ =?utf-8?B?VEN3NjVNaFZ5dml5TEVjL2tpaDZXdnBVQUVoNGlUeHFTaWJoSVZGRUdMemtL?=
+ =?utf-8?B?T3VjeFZOTW93dWw5aStSWnhGOEtjVVd2OVh4ckQ1Wi8zaTVhVW1QV1VTS051?=
+ =?utf-8?B?U0VKWFBKdnZjZzMrTDJCSldDYnV4U0xsKytQS2QwNWljQ1h6d21QdnJXWStN?=
+ =?utf-8?B?S3paMUNlZzAzU242OXNaRnJ0Ym42bkphVTBWZWJGTndwRVI0NVc2bm93LzVI?=
+ =?utf-8?B?bDNDczNSSlEvUnc4dFZlRi96eFdqdFdSaksycUY1SG1Xc1JUWlNjQW91S000?=
+ =?utf-8?B?a2JDWjcxbVVnRys1YTVkcmpyNzhZZWdKK0ZTWnoyV2hnUUplRjdGT1JKdE83?=
+ =?utf-8?B?RDVuWFNiSGVidWJlWnlGSUJrS3VMTDFaRGlJSDhOOUFqZTMySnJyaW1ZT204?=
+ =?utf-8?B?RWw3TC9iUjBYeERtUkFUQldlTlBSUDNKYWFrMk14Y2lPOUNqS3NhVVNneUpa?=
+ =?utf-8?Q?FXSMLc?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 15:31:00.5865
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d46002c7-f4fb-4e64-8979-08ddb7eb1e32
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	OSA0EPF000000C7.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7009
 
-Him
 
-On 25/06/2025 14:41, Kaustabh Chakraborty wrote:
-> Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Implement
-> a basic panel driver for such panels.
+
+On 2025/6/30 19:14, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
 > 
-> The driver also initializes a backlight device, which works by changing
-> the panel's gamma values and aid brightness levels appropriately, with
-> the help of look-up tables acquired from downstream kernel sources.
+> On 30/06/2025 10:29, Hans Zhang wrote:
+>>>> +
+>>>> +  num-lanes:
+>>>> +    maximum: 8
+>>>> +
+>>>> +  ranges:
+>>>> +    maxItems: 3
+>>>> +
+>>>> +  msi-map:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  vendor-id:
+>>>> +    const: 0x1f6c
+>>>
+>>> Why? This is implied by compatible.
+>>
+>> Because when we designed the SOC RTL, it was not set to the vendor id
+>> and device id of our company. We are members of PCI-SIG. So we need to
+>> set the vendor id and device id in the Root Port driver. Otherwise, the
+>> output of lspci will be displayed incorrectly.
 > 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->   drivers/gpu/drm/panel/Kconfig                    |  11 +
->   drivers/gpu/drm/panel/Makefile                   |   1 +
->   drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c | 980 +++++++++++++++++++++++
->   3 files changed, 992 insertions(+)
+> Please read carefully. Previous discussions were also pointlessly
+> ping-ponging on irrelevant arguments. Did I suggest you do not have to
+> set it in root port driver? No. If this is const here, this is implied
+> by compatible and completely redundant, because your driver knows this
+> value already. It already has all the information to deduce this value
+> from the compatible.
 > 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index d5aa1c95c6a45b2fea9b1d7a9e8a39fe617b860c..3d92ec3d7a1e85bf099e50e78b666fa38267d05c 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -833,6 +833,17 @@ config DRM_PANEL_SAMSUNG_S6E8AA0
->   	select DRM_MIPI_DSI
->   	select VIDEOMODE_HELPERS
->   
-> +config DRM_PANEL_SAMSUNG_S6E8AA5X01
-> +	tristate "Samsung S6E8AA5X01 panel"
-> +	depends on GPIOLIB && OF && REGULATOR
-> +	depends on DRM_MIPI_DSI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  Say Y here if you want to enable support for Samsung S6E8AA5X01 panel
-> +	  controller. The controller is driven by the MIPI DSI protocol with 4
-> +	  lanes. Panels are available in multiple sizes by vendors, such as in
-> +	  720x1280@60Hz or 720x1480@60Hz.
-> +
->   config DRM_PANEL_SAMSUNG_SOFEF00
->   	tristate "Samsung sofef00/s6e3fc2x01 OnePlus 6/6T DSI cmd mode panels"
->   	depends on OF
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 73a39bc726045f3ce52fdeef8c0ec762a4a378c7..995cf2b22427897313f806280b0bc9a67a7b4879 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -86,6 +86,7 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63M0_DSI) += panel-samsung-s6e63m0-dsi.o
->   obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS427AP24) += panel-samsung-s6e88a0-ams427ap24.o
->   obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01) += panel-samsung-s6e88a0-ams452ef01.o
->   obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) += panel-samsung-s6e8aa0.o
-> +obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA5X01) += panel-samsung-s6e8aa5x01.o
->   obj-$(CONFIG_DRM_PANEL_SAMSUNG_SOFEF00) += panel-samsung-sofef00.o
->   obj-$(CONFIG_DRM_PANEL_SEIKO_43WVF1G) += panel-seiko-43wvf1g.o
->   obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
-> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c b/drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..da3365d4ec76b1ede891d5690766b2cf67b9930e
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c
-> @@ -0,0 +1,980 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Samsung S6E8AA5X01 display panel driver.
-> + *
-> + * Copyright (C) 2025 Kaustabh Chakraborty <kauschluss@disroot.org>
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_probe_helper.h>
-> +
-> +/* Manufacturer Command Set */
-> +#define MCS_AIDCTL		0xb2
-> +#define MCS_ADAPTIVECTL		0xb5
-> +#define MCS_ELVSS		0xb6
-> +#define MCS_TEMPERCTL		0xb8
-> +#define MCS_PENTILE		0xc0
-> +#define MCS_GAMMACTL		0xca
-> +#define MCS_LTPSCTL		0xcb
-> +#define MCS_PCD			0xcc
-> +#define MCS_ERRFLAG		0xe7
-> +#define MCS_ACCESSPROT		0xf0
-> +#define MCS_DISPCTL		0xf2
-> +#define MCS_GAMMAUPD		0xf7
-> +
-> +#define GAMMA_CMD_LEN	34
-> +#define AID_CMD_LEN	3
-> +
-> +static const struct {
-> +	u8 gamma[GAMMA_CMD_LEN];
-> +	u8 aid[AID_CMD_LEN];
-> +} s6e8aa5x01_cmds[] = {
-> +	{
-> +		/* 5 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x94,
-> +		  0x88, 0x89, 0x8a, 0x87, 0x87, 0x89,
-> +		  0x8d, 0x8c, 0x8d, 0x89, 0x8c, 0x8e,
-> +		  0x8e, 0x8f, 0x90, 0xa3, 0xa2, 0x9a,
-> +		  0xcf, 0xca, 0x9f, 0xe6, 0xff, 0xb4,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0xa5 },
-> +	}, {
-> +		/* 6 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x95,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x8c, 0x8a, 0x8c, 0x85, 0x88, 0x8c,
-> +		  0x8b, 0x8c, 0x8e, 0xa2, 0xa2, 0x9a,
-> +		  0xd0, 0xcc, 0xa2, 0xed, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x95 },
-> +	}, {
-> +		/* 7 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x95,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x8c, 0x8a, 0x8c, 0x85, 0x88, 0x8c,
-> +		  0x8b, 0x8c, 0x8e, 0xa2, 0xa2, 0x99,
-> +		  0xc8, 0xc4, 0x9d, 0xed, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x89 },
-> +	}, {
-> +		/* 8 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8a, 0x87, 0x87, 0x89,
-> +		  0x8a, 0x88, 0x8b, 0x83, 0x86, 0x8b,
-> +		  0x8c, 0x8b, 0x8d, 0x9d, 0x9f, 0x97,
-> +		  0xc7, 0xc3, 0x9c, 0xf5, 0xff, 0xbb,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x7e },
-> +	}, {
-> +		/* 9 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8a, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x8a, 0x82, 0x84, 0x88,
-> +		  0x90, 0x8f, 0x91, 0x95, 0x97, 0x94,
-> +		  0xc6, 0xc2, 0x9d, 0xf5, 0xff, 0xbb,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x73 },
-> +	}, {
-> +		/* 10 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8a, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x8a, 0x82, 0x84, 0x88,
-> +		  0x90, 0x8f, 0x91, 0x94, 0x97, 0x93,
-> +		  0xc6, 0xc2, 0x9e, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x67 },
-> +	}, {
-> +		/* 11 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8a, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x8a, 0x82, 0x84, 0x88,
-> +		  0x8b, 0x8b, 0x8d, 0x90, 0x93, 0x92,
-> +		  0xc5, 0xc1, 0x9c, 0xf5, 0xff, 0xbb,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x56 },
-> +	}, {
-> +		/* 12 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x82, 0x84, 0x88,
-> +		  0x87, 0x86, 0x8a, 0x8c, 0x90, 0x8f,
-> +		  0xcd, 0xc9, 0xa1, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x4a },
-> +	}, {
-> +		/* 13 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x82, 0x84, 0x88,
-> +		  0x87, 0x86, 0x8a, 0x8c, 0x90, 0x8e,
-> +		  0xc4, 0xbf, 0x9c, 0xf5, 0xff, 0xbb,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x3b },
-> +	}, {
-> +		/* 14 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x82, 0x84, 0x88,
-> +		  0x87, 0x86, 0x89, 0x8c, 0x90, 0x8f,
-> +		  0xc2, 0xbf, 0x9c, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x35 },
-> +	}, {
-> +		/* 15 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x82, 0x84, 0x88,
-> +		  0x87, 0x86, 0x89, 0x8c, 0x90, 0x8f,
-> +		  0xb7, 0xb6, 0x96, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x25 },
-> +	}, {
-> +		/* 16 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x82, 0x84, 0x88,
-> +		  0x88, 0x86, 0x89, 0x8c, 0x90, 0x8f,
-> +		  0xb7, 0xb6, 0x96, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x20 },
-> +	}, {
-> +		/* 17 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x7f, 0x80, 0x86,
-> +		  0x86, 0x85, 0x89, 0x88, 0x8c, 0x8e,
-> +		  0xbf, 0xbe, 0x9c, 0xec, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x05, 0x11 },
-> +	}, {
-> +		/* 19 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x7f, 0x80, 0x86,
-> +		  0x87, 0x85, 0x89, 0x88, 0x8c, 0x8e,
-> +		  0xb3, 0xb4, 0x97, 0xeb, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0xf2 },
-> +	}, {
-> +		/* 20 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x95,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x89, 0x86, 0x89, 0x7f, 0x80, 0x86,
-> +		  0x87, 0x85, 0x89, 0x89, 0x8c, 0x8e,
-> +		  0xb3, 0xb4, 0x97, 0xeb, 0xff, 0xb7,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0xe4 },
-> +	}, {
-> +		/* 21 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x96,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x8a, 0x88, 0x8b, 0x7d, 0x7e, 0x84,
-> +		  0x8c, 0x8a, 0x8c, 0x8e, 0x90, 0x8f,
-> +		  0xb6, 0xb6, 0x97, 0xe3, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0xd5 },
-> +	}, {
-> +		/* 22 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x97,
-> +		  0x88, 0x89, 0x8b, 0x87, 0x87, 0x89,
-> +		  0x8a, 0x88, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x87, 0x86, 0x88, 0x8e, 0x90, 0x8f,
-> +		  0xb6, 0xb6, 0x95, 0xe3, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0xc5 },
-> +	}, {
-> +		/* 24 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x97,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x81, 0x82, 0x86,
-> +		  0x87, 0x86, 0x88, 0x8e, 0x90, 0x8f,
-> +		  0xb6, 0xb6, 0x94, 0xe3, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0xa7 },
-> +	}, {
-> +		/* 25 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x98,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x81, 0x82, 0x86,
-> +		  0x87, 0x86, 0x87, 0x8e, 0x90, 0x8f,
-> +		  0xbf, 0xbf, 0x9a, 0xda, 0xfa, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0x95 },
-> +	}, {
-> +		/* 27 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x99,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x83, 0x86, 0x8a,
-> +		  0x88, 0x87, 0x87, 0x88, 0x8b, 0x8c,
-> +		  0xbf, 0xbf, 0x9a, 0xda, 0xfa, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0x76 },
-> +	}, {
-> +		/* 29 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x99,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x83, 0x86, 0x89,
-> +		  0x88, 0x87, 0x88, 0x88, 0x8b, 0x8b,
-> +		  0xbf, 0xbf, 0x9a, 0xda, 0xfa, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0x54 },
-> +	}, {
-> +		/* 30 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9a,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x84, 0x86, 0x8a,
-> +		  0x87, 0x87, 0x87, 0x88, 0x8b, 0x8b,
-> +		  0xbf, 0xbf, 0x99, 0xda, 0xfa, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0x44 },
-> +	}, {
-> +		/* 32 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9a,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x89, 0x87, 0x8a, 0x84, 0x86, 0x8a,
-> +		  0x87, 0x87, 0x87, 0x89, 0x8b, 0x8b,
-> +		  0xbf, 0xbf, 0x98, 0xd2, 0xf2, 0xac,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x04, 0x1f },
-> +	}, {
-> +		/* 34 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x88, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8b, 0x87, 0x8b, 0x83, 0x86, 0x89,
-> +		  0x87, 0x87, 0x88, 0x88, 0x8b, 0x8a,
-> +		  0xbf, 0xbf, 0x98, 0xd2, 0xf2, 0xac,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0xff },
-> +	}, {
-> +		/* 37 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x81, 0x82, 0x86,
-> +		  0x86, 0x86, 0x86, 0x8d, 0x90, 0x8d,
-> +		  0xc0, 0xbf, 0x9a, 0xd2, 0xf2, 0xac,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0xd3 },
-> +	}, {
-> +		/* 39 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8a, 0x81, 0x82, 0x86,
-> +		  0x87, 0x86, 0x87, 0x8d, 0x90, 0x8d,
-> +		  0xb6, 0xb6, 0x93, 0xda, 0xf9, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0xb3 },
-> +	}, {
-> +		/* 41 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x85,
-> +		  0x87, 0x86, 0x87, 0x8d, 0x90, 0x8d,
-> +		  0xb6, 0xb6, 0x94, 0xda, 0xf9, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0x93 },
-> +	}, {
-> +		/* 44 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x87, 0x86, 0x86, 0x85, 0x87, 0x8a,
-> +		  0xbe, 0xbe, 0x99, 0xda, 0xf9, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0x66 },
-> +	}, {
-> +		/* 47 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9b,
-> +		  0x89, 0x89, 0x8c, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x88, 0x86, 0x87, 0x84, 0x87, 0x89,
-> +		  0xb4, 0xb4, 0x94, 0xe2, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0x40 },
-> +	}, {
-> +		/* 50 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9c,
-> +		  0x89, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x88, 0x86, 0x87, 0x84, 0x87, 0x89,
-> +		  0xb4, 0xb4, 0x95, 0xe2, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x03, 0x0e },
-> +	}, {
-> +		/* 53 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9c,
-> +		  0x89, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x88, 0x86, 0x87, 0x85, 0x87, 0x8a,
-> +		  0xb4, 0xb4, 0x96, 0xe2, 0xff, 0xb3,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0xe2 },
-> +	}, {
-> +		/* 56 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9c,
-> +		  0x89, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x81, 0x82, 0x86,
-> +		  0x88, 0x86, 0x87, 0x85, 0x87, 0x8a,
-> +		  0xab, 0xab, 0x90, 0xdd, 0xf7, 0xaf,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0xb5 },
-> +	}, {
-> +		/* 60 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9c,
-> +		  0x89, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x82, 0x82, 0x87,
-> +		  0x83, 0x81, 0x84, 0x81, 0x84, 0x88,
-> +		  0xb3, 0xb3, 0x96, 0xcf, 0xe5, 0xa8,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x77 },
-> +	}, {
-> +		/* 64 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x98, 0x00, 0xa4, 0x00, 0x9c,
-> +		  0x89, 0x89, 0x8b, 0x88, 0x88, 0x8a,
-> +		  0x8a, 0x87, 0x8b, 0x82, 0x82, 0x87,
-> +		  0x83, 0x81, 0x84, 0x82, 0x84, 0x88,
-> +		  0xb2, 0xb3, 0x97, 0xcf, 0xe5, 0xa8,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x36 },
-> +	}, {
-> +		/* 68 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x9b, 0x00, 0xa6, 0x00, 0x9d,
-> +		  0x88, 0x88, 0x89, 0x89, 0x89, 0x8b,
-> +		  0x8a, 0x88, 0x8b, 0x7f, 0x80, 0x86,
-> +		  0x88, 0x86, 0x87, 0x7d, 0x7f, 0x85,
-> +		  0xb2, 0xb3, 0x97, 0xcf, 0xe5, 0xa8,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 72 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0x9c, 0x00, 0xa9, 0x00, 0xa0,
-> +		  0x88, 0x88, 0x89, 0x88, 0x88, 0x8a,
-> +		  0x8c, 0x8a, 0x8d, 0x7f, 0x81, 0x85,
-> +		  0x84, 0x82, 0x84, 0x85, 0x87, 0x8a,
-> +		  0xaa, 0xab, 0x93, 0xcf, 0xe5, 0xa8,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 77 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xa1, 0x00, 0xad, 0x00, 0xa5,
-> +		  0x89, 0x89, 0x8a, 0x88, 0x87, 0x89,
-> +		  0x8c, 0x89, 0x8d, 0x7f, 0x81, 0x85,
-> +		  0x84, 0x83, 0x84, 0x81, 0x83, 0x86,
-> +		  0xaa, 0xab, 0x93, 0xc0, 0xd3, 0xa1,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 82 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xa5, 0x00, 0xb0, 0x00, 0xa9,
-> +		  0x88, 0x89, 0x89, 0x85, 0x86, 0x89,
-> +		  0x8a, 0x88, 0x8b, 0x82, 0x82, 0x87,
-> +		  0x81, 0x80, 0x82, 0x89, 0x8b, 0x8b,
-> +		  0xa2, 0xa3, 0x8e, 0xc0, 0xd3, 0xa1,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 87 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xab, 0x00, 0xb4, 0x00, 0xad,
-> +		  0x88, 0x89, 0x8a, 0x84, 0x86, 0x88,
-> +		  0x8a, 0x88, 0x8b, 0x7f, 0x7f, 0x84,
-> +		  0x86, 0x84, 0x85, 0x85, 0x86, 0x88,
-> +		  0xa2, 0xa3, 0x8f, 0xc0, 0xd3, 0xa1,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 93 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xaf, 0x00, 0xb9, 0x00, 0xb1,
-> +		  0x88, 0x89, 0x8a, 0x84, 0x85, 0x87,
-> +		  0x8a, 0x89, 0x8b, 0x7e, 0x7e, 0x83,
-> +		  0x87, 0x86, 0x86, 0x88, 0x8a, 0x89,
-> +		  0x9c, 0x9c, 0x8b, 0xc0, 0xd3, 0xa1,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 98 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xb3, 0x00, 0xbc, 0x00, 0xb5,
-> +		  0x88, 0x88, 0x88, 0x84, 0x84, 0x86,
-> +		  0x8a, 0x88, 0x8a, 0x7f, 0x7f, 0x84,
-> +		  0x84, 0x83, 0x84, 0x88, 0x8a, 0x89,
-> +		  0x9c, 0x9c, 0x8b, 0xc0, 0xd3, 0xa1,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 105 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xb7, 0x00, 0xc0, 0x00, 0xba,
-> +		  0x87, 0x87, 0x88, 0x85, 0x85, 0x87,
-> +		  0x89, 0x88, 0x89, 0x7f, 0x7f, 0x83,
-> +		  0x81, 0x80, 0x82, 0x88, 0x8a, 0x89,
-> +		  0x9c, 0x9c, 0x8c, 0xb2, 0xc2, 0x9a,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 111 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xbb, 0x00, 0xc3, 0x00, 0xbe,
-> +		  0x87, 0x87, 0x88, 0x85, 0x85, 0x88,
-> +		  0x88, 0x87, 0x89, 0x80, 0x80, 0x84,
-> +		  0x81, 0x81, 0x82, 0x85, 0x86, 0x87,
-> +		  0x9c, 0x9c, 0x8b, 0xb2, 0xc2, 0x9a,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x15 },
-> +	}, {
-> +		/* 119 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc4,
-> +		  0x87, 0x87, 0x88, 0x82, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x82, 0x81, 0x84,
-> +		  0x83, 0x82, 0x83, 0x80, 0x81, 0x84,
-> +		  0x9c, 0x9c, 0x8c, 0xb2, 0xc2, 0x9a,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x02, 0x14 },
-> +	}, {
-> +		/* 126 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc4,
-> +		  0x87, 0x87, 0x88, 0x82, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x82, 0x81, 0x84,
-> +		  0x83, 0x82, 0x83, 0x80, 0x81, 0x84,
-> +		  0x9c, 0x9c, 0x8d, 0xb2, 0xc2, 0x9a,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x01, 0xde },
-> +	}, {
-> +		/* 134 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc4,
-> +		  0x87, 0x87, 0x88, 0x82, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x82, 0x81, 0x84,
-> +		  0x83, 0x82, 0x83, 0x80, 0x81, 0x84,
-> +		  0x9c, 0x9c, 0x8d, 0xa4, 0xb0, 0x92,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x01, 0x94 },
-> +	}, {
-> +		/* 143 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc3,
-> +		  0x87, 0x87, 0x88, 0x82, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x82, 0x81, 0x85,
-> +		  0x83, 0x82, 0x83, 0x80, 0x81, 0x84,
-> +		  0x92, 0x92, 0x89, 0xab, 0xb6, 0x96,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x01, 0x46 },
-> +	}, {
-> +		/* 152 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc3,
-> +		  0x87, 0x87, 0x88, 0x83, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x81, 0x81, 0x85,
-> +		  0x84, 0x82, 0x83, 0x80, 0x81, 0x83,
-> +		  0x92, 0x92, 0x8b, 0xab, 0xb6, 0x96,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0xfa },
-> +	}, {
-> +		/* 162 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc3,
-> +		  0x87, 0x87, 0x88, 0x83, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x81, 0x81, 0x84,
-> +		  0x84, 0x82, 0x84, 0x80, 0x81, 0x83,
-> +		  0x92, 0x92, 0x8b, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0xac },
-> +	}, {
-> +		/* 172 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc0, 0x00, 0xc8, 0x00, 0xc3,
-> +		  0x87, 0x87, 0x88, 0x83, 0x84, 0x86,
-> +		  0x87, 0x85, 0x87, 0x81, 0x81, 0x84,
-> +		  0x84, 0x82, 0x83, 0x80, 0x81, 0x84,
-> +		  0x93, 0x92, 0x8c, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x57 },
-> +	}, {
-> +		/* 183 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc2, 0x00, 0xca, 0x00, 0xc5,
-> +		  0x86, 0x86, 0x87, 0x85, 0x84, 0x87,
-> +		  0x87, 0x86, 0x88, 0x7e, 0x80, 0x83,
-> +		  0x84, 0x82, 0x83, 0x80, 0x81, 0x83,
-> +		  0x93, 0x92, 0x8c, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 195 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xc7, 0x00, 0xce, 0x00, 0xc9,
-> +		  0x86, 0x87, 0x86, 0x83, 0x83, 0x85,
-> +		  0x85, 0x84, 0x86, 0x82, 0x82, 0x85,
-> +		  0x80, 0x80, 0x81, 0x81, 0x81, 0x84,
-> +		  0x93, 0x92, 0x8c, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 207 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xcc, 0x00, 0xd2, 0x00, 0xce,
-> +		  0x86, 0x86, 0x87, 0x81, 0x83, 0x84,
-> +		  0x84, 0x82, 0x84, 0x83, 0x83, 0x85,
-> +		  0x81, 0x81, 0x82, 0x7c, 0x7d, 0x81,
-> +		  0x93, 0x92, 0x8c, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 220 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xd1, 0x00, 0xd6, 0x00, 0xd3,
-> +		  0x86, 0x86, 0x86, 0x81, 0x83, 0x84,
-> +		  0x84, 0x82, 0x84, 0x80, 0x80, 0x83,
-> +		  0x81, 0x81, 0x82, 0x7c, 0x7d, 0x81,
-> +		  0x93, 0x92, 0x8c, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 234 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xd6, 0x00, 0xdb, 0x00, 0xd8,
-> +		  0x85, 0x85, 0x85, 0x81, 0x83, 0x84,
-> +		  0x83, 0x82, 0x83, 0x80, 0x80, 0x82,
-> +		  0x84, 0x82, 0x83, 0x79, 0x79, 0x7e,
-> +		  0x93, 0x92, 0x8d, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 249 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xdc, 0x00, 0xe0, 0x00, 0xdd,
-> +		  0x84, 0x84, 0x84, 0x81, 0x82, 0x83,
-> +		  0x84, 0x82, 0x84, 0x7f, 0x7f, 0x82,
-> +		  0x81, 0x80, 0x81, 0x80, 0x81, 0x82,
-> +		  0x8c, 0x8c, 0x86, 0x9d, 0xa4, 0x8e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 265 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xe2, 0x00, 0xe5, 0x00, 0xe3,
-> +		  0x83, 0x83, 0x83, 0x81, 0x82, 0x83,
-> +		  0x82, 0x82, 0x83, 0x82, 0x81, 0x83,
-> +		  0x7f, 0x7e, 0x80, 0x7c, 0x7d, 0x80,
-> +		  0x8c, 0x8c, 0x86, 0x8e, 0x92, 0x87,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 282 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xe8, 0x00, 0xea, 0x00, 0xe9,
-> +		  0x83, 0x83, 0x83, 0x80, 0x82, 0x82,
-> +		  0x81, 0x82, 0x82, 0x82, 0x81, 0x82,
-> +		  0x81, 0x80, 0x81, 0x80, 0x80, 0x81,
-> +		  0x85, 0x85, 0x83, 0x8e, 0x92, 0x87,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 300 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xed, 0x00, 0xef, 0x00, 0xed,
-> +		  0x81, 0x82, 0x81, 0x81, 0x81, 0x82,
-> +		  0x82, 0x82, 0x83, 0x80, 0x80, 0x81,
-> +		  0x81, 0x81, 0x82, 0x83, 0x83, 0x83,
-> +		  0x80, 0x80, 0x7f, 0x8e, 0x92, 0x87,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 316 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xf3, 0x00, 0xf4, 0x00, 0xf3,
-> +		  0x80, 0x81, 0x80, 0x81, 0x81, 0x81,
-> +		  0x82, 0x82, 0x82, 0x81, 0x80, 0x81,
-> +		  0x82, 0x82, 0x83, 0x80, 0x80, 0x80,
-> +		  0x80, 0x80, 0x7f, 0x80, 0x80, 0x80,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 333 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x00, 0xf8, 0x00, 0xf8, 0x00, 0xf8,
-> +		  0x80, 0x81, 0x80, 0x81, 0x80, 0x81,
-> +		  0x81, 0x82, 0x82, 0x81, 0x80, 0x81,
-> +		  0x83, 0x83, 0x83, 0x7e, 0x7d, 0x7e,
-> +		  0x80, 0x80, 0x7f, 0x80, 0x80, 0x80,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 360 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x00, 0x01, 0x00, 0x01, 0x00,
-> +		  0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-> +		  0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-> +		  0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-> +		  0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 378 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x04, 0x01, 0x03, 0x01, 0x04,
-> +		  0x7f, 0x7f, 0x80, 0x7f, 0x7f, 0x7f,
-> +		  0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f,
-> +		  0x80, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f,
-> +		  0x80, 0x80, 0x7f, 0x7f, 0x7f, 0x7f,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 395 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x09, 0x01, 0x07, 0x01, 0x08,
-> +		  0x7e, 0x7f, 0x80, 0x7f, 0x7f, 0x7f,
-> +		  0x7f, 0x7f, 0x7f, 0x7f, 0x7f, 0x7f,
-> +		  0x80, 0x7f, 0x7f, 0x7e, 0x7e, 0x7e,
-> +		  0x80, 0x80, 0x7f, 0x7e, 0x7e, 0x7f,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 413 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x0e, 0x01, 0x0b, 0x01, 0x0c,
-> +		  0x7e, 0x7f, 0x80, 0x7e, 0x7e, 0x7e,
-> +		  0x7e, 0x7e, 0x7e, 0x7f, 0x7f, 0x7f,
-> +		  0x80, 0x7f, 0x7f, 0x7d, 0x7d, 0x7d,
-> +		  0x80, 0x80, 0x7f, 0x7d, 0x7e, 0x7e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 430 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x13, 0x01, 0x0f, 0x01, 0x10,
-> +		  0x7d, 0x7f, 0x80, 0x7e, 0x7e, 0x7e,
-> +		  0x7e, 0x7e, 0x7e, 0x7f, 0x7f, 0x7f,
-> +		  0x80, 0x7f, 0x7f, 0x7d, 0x7d, 0x7d,
-> +		  0x80, 0x80, 0x7f, 0x7c, 0x7d, 0x7e,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 448 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x18, 0x01, 0x13, 0x01, 0x14,
-> +		  0x7c, 0x7e, 0x80, 0x7e, 0x7e, 0x7e,
-> +		  0x7e, 0x7e, 0x7d, 0x7e, 0x7f, 0x7e,
-> +		  0x80, 0x7f, 0x7f, 0x7c, 0x7c, 0x7c,
-> +		  0x80, 0x80, 0x7e, 0x7b, 0x7c, 0x7d,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 465 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x1d, 0x01, 0x17, 0x01, 0x18,
-> +		  0x7c, 0x7e, 0x80, 0x7d, 0x7d, 0x7d,
-> +		  0x7d, 0x7d, 0x7d, 0x7e, 0x7f, 0x7e,
-> +		  0x80, 0x7f, 0x7f, 0x7b, 0x7b, 0x7b,
-> +		  0x80, 0x80, 0x7e, 0x7a, 0x7c, 0x7d,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 483 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x22, 0x01, 0x1b, 0x01, 0x1c,
-> +		  0x7b, 0x7e, 0x80, 0x7d, 0x7d, 0x7d,
-> +		  0x7d, 0x7d, 0x7c, 0x7e, 0x7f, 0x7e,
-> +		  0x80, 0x7f, 0x7f, 0x7a, 0x7a, 0x7a,
-> +		  0x80, 0x80, 0x7e, 0x79, 0x7b, 0x7c,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	}, {
-> +		/* 500 nits */
-> +		{ MCS_GAMMACTL,
-> +		  0x01, 0x27, 0x01, 0x1f, 0x01, 0x20,
-> +		  0x7b, 0x7e, 0x80, 0x7d, 0x7d, 0x7d,
-> +		  0x7d, 0x7d, 0x7c, 0x7e, 0x7f, 0x7e,
-> +		  0x80, 0x7f, 0x7f, 0x7a, 0x7a, 0x7a,
-> +		  0x81, 0x80, 0x7e, 0x79, 0x7b, 0x7c,
-> +		  0x00, 0x00, 0x00, },
-> +		{ MCS_AIDCTL, 0x00, 0x10 },
-> +	},
-> +};
-> +
-> +struct s6e8aa5x01_ctx {
-> +	struct drm_panel panel;
-> +	struct mipi_dsi_device *dsi;
-> +	struct drm_display_mode mode;
-> +	struct backlight_device *backlight;
-> +	struct regulator_bulk_data supplies[2];
-> +	struct gpio_desc *reset_gpio;
-> +	u32 bus_flags;
-> +	u32 width;
-> +	u32 height;
-> +};
-> +
-> +static inline struct s6e8aa5x01_ctx *to_s6e8aa5x01_ctx(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct s6e8aa5x01_ctx, panel);
-> +}
-> +
-> +static int s6e8aa5x01_update_status(struct backlight_device *backlight)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = bl_get_data(backlight);
-> +	struct mipi_dsi_multi_context dsi = { .dsi = ctx->dsi };
-> +	u16 lvl = backlight_get_brightness(backlight);
-> +
-> +	if (!ctx->panel.enabled)
-> +		return 0;
-> +
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_ACCESSPROT, 0x5a, 0x5a);
-> +
-> +	mipi_dsi_dcs_write_buffer_multi(&dsi, s6e8aa5x01_cmds[lvl].gamma, GAMMA_CMD_LEN);
-> +	mipi_dsi_dcs_write_buffer_multi(&dsi, s6e8aa5x01_cmds[lvl].aid, AID_CMD_LEN);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_GAMMAUPD, 0x03);
-> +
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_ACCESSPROT, 0xa5, 0xa5);
-> +
-> +	return dsi.accum_err;
-> +}
-> +
-> +static int s6e8aa5x01_prepare(struct drm_panel *panel)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = to_s6e8aa5x01_ctx(panel);
-> +	struct device *dev = &ctx->dsi->dev;
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> +	usleep_range(5000, 6000);
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> +	usleep_range(5000, 6000);
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> +	usleep_range(10000, 11000);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e8aa5x01_unprepare(struct drm_panel *panel)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = to_s6e8aa5x01_ctx(panel);
-> +
-> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> +	usleep_range(5000, 6000);
-> +
-> +	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e8aa5x01_enable(struct drm_panel *panel)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = to_s6e8aa5x01_ctx(panel);
-> +	struct mipi_dsi_multi_context dsi = { .dsi = ctx->dsi };
-> +
-> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi);
-> +	mipi_dsi_msleep(&dsi, 100);
-> +
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_ACCESSPROT, 0x5a, 0x5a);
-> +
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_PENTILE, 0xd8, 0xd8, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_PCD, 0x5c);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_ERRFLAG, 0xed, 0xc7, 0x23, 0x67);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_DISPCTL, 0x0c, 0x0c, 0xb9, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_LTPSCTL,
-> +				0x00, 0x45, 0x10, 0x10, 0x08, 0x32, 0x54, 0x00,
-> +				0x00, 0x00, 0x00, 0x07, 0x06, 0x00, 0x00, 0x00,
-> +				0x00, 0x00, 0x48, 0x5e, 0x00, 0x00, 0x00, 0x00,
-> +				0x00, 0x03, 0x00, 0x00, 0x00, 0xad, 0x00, 0x00,
-> +				0x08, 0x05, 0x2a, 0x54, 0x03, 0xcc, 0x00, 0xff,
-> +				0xfb, 0x03, 0x0d, 0x00, 0x11, 0x0f, 0x02, 0x03,
-> +				0x0b, 0x0c, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13,
-> +				0x13, 0x13, 0x13, 0x13, 0x00, 0x02, 0x03, 0x0b,
-> +				0x0c, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13,
-> +				0x13, 0x13);
-> +
-> +	mipi_dsi_dcs_write_seq_multi(&dsi, MCS_ACCESSPROT, 0xa5, 0xa5);
-> +
-> +	mipi_dsi_dcs_set_display_on_multi(&dsi);
-> +
-> +	return dsi.accum_err;
-> +}
-> +
-> +static int s6e8aa5x01_disable(struct drm_panel *panel)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = to_s6e8aa5x01_ctx(panel);
-> +	struct mipi_dsi_multi_context dsi = { .dsi = ctx->dsi };
-> +
-> +	mipi_dsi_dcs_set_display_off_multi(&dsi);
-> +	mipi_dsi_msleep(&dsi, 100);
-> +
-> +	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi);
-> +	mipi_dsi_msleep(&dsi, 150);
-> +
-> +	return dsi.accum_err;
-> +}
-> +
-> +static int s6e8aa5x01_get_modes(struct drm_panel *panel,
-> +				struct drm_connector *connector)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = to_s6e8aa5x01_ctx(panel);
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(connector->dev, &ctx->mode);
-> +	if (!mode)
-> +		return -ENOMEM;
-> +
-> +	mode->type |= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-> +	drm_mode_probed_add(connector, mode);
-> +	drm_mode_set_name(mode);
-> +
-> +	connector->display_info.width_mm = mode->width_mm;
-> +	connector->display_info.height_mm = mode->height_mm;
-> +	connector->display_info.bus_flags = ctx->bus_flags;
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct backlight_ops s6e8aa5x01_bl_ops = {
-> +	.update_status = s6e8aa5x01_update_status,
-> +};
-> +
-> +static const struct drm_panel_funcs s6e8aa5x01_panel_funcs = {
-> +	.prepare = s6e8aa5x01_prepare,
-> +	.unprepare = s6e8aa5x01_unprepare,
-> +	.enable = s6e8aa5x01_enable,
-> +	.disable = s6e8aa5x01_disable,
-> +	.get_modes = s6e8aa5x01_get_modes,
-> +};
-> +
-> +static int s6e8aa5x01_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct device *dev = &dsi->dev;
-> +	struct s6e8aa5x01_ctx *ctx;
-> +	int ret;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-
-PLease switch to devm_drm_panel_alloc()
-
-> +
-> +	ctx->dsi = dsi;
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +	ctx->supplies[0].supply = "vdd";
-> +	ctx->supplies[1].supply = "vci";
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-> +				      ctx->supplies);
-
-And devm_regulator_bulk_get_const()
-
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-> +
-> +	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-> +	if (IS_ERR(ctx->reset_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-> +				     "Failed to get reset-gpios\n");
-> +
-> +	ret = of_get_drm_panel_display_mode(dev->of_node, &ctx->mode,
-> +					    &ctx->bus_flags);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to get panel timings\n");
-> +
-> +	ctx->backlight = devm_backlight_device_register(dev, dev_name(dev), dev,
-> +							ctx, &s6e8aa5x01_bl_ops,
-> +							NULL);
-> +	if (IS_ERR(ctx->backlight))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->backlight),
-> +				     "Failed to register backlight device\n");
-> +
-> +	ctx->backlight->props.type = BACKLIGHT_PLATFORM;
-> +	ctx->backlight->props.brightness = ARRAY_SIZE(s6e8aa5x01_cmds) - 1;
-> +	ctx->backlight->props.max_brightness = ARRAY_SIZE(s6e8aa5x01_cmds) - 1;
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-> +			  MIPI_DSI_MODE_VIDEO_NO_HFP;
-> +
-> +	drm_panel_init(&ctx->panel, dev, &s6e8aa5x01_panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +	ctx->panel.prepare_prev_first = true;
-> +
-> +	drm_panel_add(&ctx->panel);
-> +
-> +	ret = devm_mipi_dsi_attach(dev, dsi);
-> +	if (ret < 0) {
-> +		drm_panel_remove(&ctx->panel);
-> +		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void s6e8aa5x01_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct s6e8aa5x01_ctx *ctx = mipi_dsi_get_drvdata(dsi);
-> +
-> +	drm_panel_remove(&ctx->panel);
-> +}
-> +
-> +static const struct of_device_id s6e8aa5x01_of_device_id[] = {
-> +	{ .compatible = "samsung,s6e8aa5x01" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, s6e8aa5x01_of_device_id);
-> +
-> +static struct mipi_dsi_driver s6e8aa5x01_dsi_driver = {
-> +	.probe = s6e8aa5x01_probe,
-> +	.remove = s6e8aa5x01_remove,
-> +	.driver = {
-> +		.name = "panel-samsung-s6e8aa5x01",
-> +		.of_match_table = s6e8aa5x01_of_device_id,
-> +	},
-> +};
-> +module_mipi_dsi_driver(s6e8aa5x01_dsi_driver);
-> +
-> +MODULE_AUTHOR("Kaustabh Chakraborty <kauschluss@disroot.org>");
-> +MODULE_DESCRIPTION("Samsung S6E8AA5X01 Display Panel Driver");
-> +MODULE_LICENSE("GPL");
 > 
+Dear Krzysztof,
 
-Thanks,
-Neil
+Thank you very much for your reply.
 
+These two attributes are also in the following document. Is this place 
+out of date?
+Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+
+
+We initially used the logic of Cadence common driver as follows:
+drivers/pci/controller/cadence/pcie-cadence-host.c
+of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+
+of_property_read_u32(np, "device-id", &rc->device_id);
+
+So, can the code in Cadence be deleted?
+
+
+I see. It will be removed in the next version. The vendor id and device 
+id are directly assigned by the Root Port driver based on compatible.
+
+Best regards,
+Hans
+
+> 
+> 
+>>
+>>>
+>>>> +
+>>>> +  device-id:
+>>>> +    enum:
+>>>> +      - 0x0001
+>>>
+>>> Why? This is implied by compatible.
+>>
+>> The reason is the same as above.
+>>
+>>>
+>>>> +
+>>>> +  cdns,no-inbound-bar:
+>>>
+>>> That's not a cdns binding, so wrong prefix.
+>>
+>> It will be added to Cadence's Doc. I will add a separate patch. What do
+>> you think?
+>>
+>>>
+>>>> +    description: |
+>>>
+>>> Do not need '|' unless you need to preserve formatting.
+>>
+>> Will delete '|'.
+>>
+>>>
+>>>> +      Indicates the PCIe controller does not require an inbound BAR region.
+>>>
+>>> And anyway this is implied by compatible, drop.
+>>>
+>>
+>> Because Cadence core driver has this judgment, the latest code of the
+>> current linux master all has this process. As follows:
+>> int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>>       cdns_pcie_host_init_address_translation(rc);
+>>        cdns_pcie_host_map_dma_ranges(rc);
+>>           cdns_pcie_host_bar_ib_config
+> 
+> And you cannot fix or change drivers? How does it matter for discussion
+> here?
+> 
+>>
+>> So this attribute has been added here, or is there a better way?
+> 
+> Of course, like every other driver in Linux kernel. This is FIXED for
+> your platform, so set it in your CIX driver.
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
