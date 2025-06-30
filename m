@@ -1,55 +1,57 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89203292B36
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406F0292B4A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301073; cv=none; b=JSNAKOvxKsU1+Ef7JeAVzVqu+wWR7LBbv24EfR8Tx4Zpu7YCCKMw1ggaVZj+5JY0WGGonAA+3Uuh7fraVe0aJFbCUud/EO0PMpUzFOpsWaIPnkoIBy01Q4YsX4muL+uZICNP14N4O+g/u4WF5kqNlZqf5gSWwanOMTqBt26cXCA=
+	t=1751301075; cv=none; b=YxIQjwJqq8V4knDNf5H3lbaUXIq+zKfadVYgdJ/UTzrMxMF7JczyjIYpwT91+Gb1IjDHnDjBewnmtBubPZvFuw2YHJQThaGXnYY+aU40rY65Ajf5NyFvTqC/Izn0/m+rJ0Slvuqz4qIGIE5vAZHWd1m8srBVUIm4G2Pci0fpg9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301073; c=relaxed/simple;
-	bh=d02+h7dwr2fRxGSVwaYyl58QhH/x4HHoW8TmRm4oLys=;
+	s=arc-20240116; t=1751301075; c=relaxed/simple;
+	bh=Doa9cB8eDyI5Z1xrxS2AczpQfc902XifIn+r2jsrcp4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=OIdSznOljScw6nVjOwFrg8HuQMCuWkQIo4w8od2duDk2BiQ/YPBChINRAeFq5yuEyi2PKs4c9kl1qZp1yUKg1r+P71dMKDfTinn6WEioUdFjVscWD7Ioyabuho10R+MDmVFOZSA4pKtnkDVa0dJ8b6tXGt/fCWA0dNDEVPDlSgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RESHSrED; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=tsyzvqxOwHpnFx3ZSO5NvCa6LL9kn8SlPJeJMNtYXN4J8UdRCFsd9kh6pDcnlcirVjT0v9xc7Q4RhmUWlZgPY/cyqhqj7sLuEq4LFdtrGJWn5gInG/W5oDlMpTpMlIoNuX7Rz+JtSrDCSGsuaRwib/bBgRor+wVn2acHCChJPEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CH13z90B; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RESHSrED"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31814efd1cso3537798a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CH13z90B"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74ae13e99d6so4041553b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301071; x=1751905871; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X9THeGpXgsnPK80CZZzlbu7vC+HX+RRfJb+T3RAZV4o=;
-        b=RESHSrEDPOCy+ogqDW7aZs5GazdoAVIMm3+Y+gMyMLSpo07nD72RHZLlVgRP3gQAQf
-         xNqt2MadajC+7hmqsgd92fo8ZJVOqre60+YdQsjJ/UdXQwTxpnCZs0MFYosK1JOrFRiV
-         DaGkVoJ2dQYgTo1Z4IaRvXheLCHFfv6AswrbL0wpOdjYdo3JmR5tcIPtgqRbZkHcjltx
-         zG+7V7hjuVnkz5K2YtafKEoNDiyMzF4UmwP68/W9KriAM3GDINNjgT5iZ+Et5mSLYDO4
-         CnU4B6yPRzbBrYTUwB5N8fApQ8PW+h1bWctzrXHSVqNRw8ZZrLzidPNWve6IGiXpLR3S
-         aL2g==
+        d=google.com; s=20230601; t=1751301072; x=1751905872; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=snyXUejcURnc08xpT6+/Ar5yIZrrqidtJh57u5G4u0E=;
+        b=CH13z90BMNYUr+EoJzdwGphzvtXnZ1NBuAZscNfALxE1Mmq+WwkdT0odUpaOI6arEJ
+         pgQENJP7ocjSBzgoxOHbUfarpxpyakIrfmQ//nXcNOfivaCuClrONhrH+TLgzeHmMxQW
+         Yd0sNqdwwHWa30W6wMKJI1Q7uARXEuYKBwQaMQf+bdORCkv1FCLnJxVnQC8QzEw45GA5
+         VIHsY8xjgIVBSzqOboqY3LakgU2IERzLRlsEBw/zO1zJX2+AtvGwYi2qvum5+xZ3IGas
+         c6ku5xpCxDFtBQ7Qa+4SjY2Rt8KJwCfh4zM3fV4VrpubvrNBhM6lEHMfn4oaduI5axJX
+         fcZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301071; x=1751905871;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X9THeGpXgsnPK80CZZzlbu7vC+HX+RRfJb+T3RAZV4o=;
-        b=TmAtJWPwOP9xj5xQDoH0vMLV6yEsfy6GawOXNVrEFssBEdizd+HavY/fCXjphEt4zy
-         2uIeGgAhBZdvvx9Sd53nHDJwRn+LVI10rfVjKkpZLR7nVQ3aX8xpMNYHuTBkZz1edCfD
-         tLQSlVqxCP9ETVG9l7+eNNgrzmQ8LKREXAciX4gVCHzqAnMTqkDjZ/+Y5DdhskJKvWCw
-         sSe7SVXElmXoa9R6qmFXxbvOUAUPfgta6NOZUoexCJHzFD6sP3+LzKRJwagOWuBIoU78
-         SxpgpWdzsudyiRnP9xjQZbS7lCspC6g1FyzpqJZbRJFOyF0iPWYmfoYRJpZ8kf6l+ARp
-         3BTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYGcnKZnOlRM/NVE/7HUCghQNQZj21nDsNNknJqn99MlogH1FspPqF6VsR++pfbj39XxrA6JZ7j82+cyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIWDLpV71rwRGehqn0oTuo1X19VL8fKl3kyB6sgGRoPIfa5OZW
-	Z8JmSdNmcodZM2nZuKOK+xnarx1cxOOUzjO+XUnRJWc27PW563BQ0Nb1rDM2IXcKZvSAzAUURc6
-	u+z76YFA0HQ==
-X-Google-Smtp-Source: AGHT+IHQ5LypR5RbbfZHdQpjGV/2jqk9WKiulJxid6YB9fhPZ5/JJSTI7yLpcY5Bsm49ZrxR/UlJ1hgZUVpL
-X-Received: from pgac18.prod.google.com ([2002:a05:6a02:2952:b0:b2e:b370:6975])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d92:b0:1ee:dcd3:80d7
- with SMTP id adf61e73a8af0-220a0936f22mr21384395637.0.1751301070726; Mon, 30
- Jun 2025 09:31:10 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:30:48 -0700
+        d=1e100.net; s=20230601; t=1751301072; x=1751905872;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=snyXUejcURnc08xpT6+/Ar5yIZrrqidtJh57u5G4u0E=;
+        b=IK8/ssIU4aseAGPpbx2Fhyh5NMBhALW0luNfEZRH+9OhY2FuOeU7n/aMUrdUCIav1O
+         6LmTVVxIk5JFvDWr3t/aSSzCZCIBN9ewfU9E36YsoQIe6Jpo+SuRkZ8Srrdv1BK6xRbE
+         jYrNciTfpTm7iIYl2nYklE0JK9NSdIbD8jpQU/AwlfkRsiwRduZFDEpCjzxvtUsRFeCs
+         R5TyR1yuv61rBqX6kHFxQNJdzD/ez4Uy9qs+E7zVlxVzfBJFFGaMM5hyfaut6M4Z3b45
+         K0JTgFDfv66jYpXl8PauiSJUrkKSrMfqE0iuSmvIce47o5kJ52JrtU4ZFl/PYTseLAwh
+         SF9g==
+X-Forwarded-Encrypted: i=1; AJvYcCW0ajpE6refU5OWa1r6ynaB1Z/Zi+T9H7pWgFVqU5vc5/BMgSRnNjq/6nzOD2fMzRgHDN0xybVu86AHHSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytWLoiJA8ftnh4C/niyUsKXhwYuCoCxUkct7cTQU+X9RP3/cD0
+	/l9A0FEu1WQ2UsBSS5sJOoj1dlknL6MbiaPlblW6P3JKPRSoDkD3HgDreogNhSjVtTSCpiKk14d
+	3a+SVayUR3A==
+X-Google-Smtp-Source: AGHT+IFQNxKXrJQzVCW9oR3JUAP0kidJ+nKwqeIrS71VvovYT9ZZT1i5Bsg2RSFE1Ay121YKDuKZgXb6fpRo
+X-Received: from pgww9-n2.prod.google.com ([2002:a05:6a02:2c89:20b0:b31:c7e5:6665])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3942:b0:21f:4027:b9ed
+ with SMTP id adf61e73a8af0-222c9916bfcmr324459637.1.1751301072535; Mon, 30
+ Jun 2025 09:31:12 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:30:49 -0700
 In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250630163101.1920170-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-4-irogers@google.com>
-Subject: [PATCH v2 03/15] perf vendor events: Update Arrowlake events
+Message-ID: <20250630163101.1920170-5-irogers@google.com>
+Subject: [PATCH v2 04/15] perf vendor events: Update CascadelakeX events
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,230 +74,115 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.08 to v1.09.
+Update events from v1.23 to v1.25.
 
-Bring in the event updates v1.09:
-https://github.com/intel/perfmon/commit/cf3be6daf0a751ad270b67890dfdb2261dfc75da
+Bring in the event updates v1.25:
+https://github.com/intel/perfmon/commit/86f146e15626b0fd3b032cab4538cafaaf2=
+d0635
+https://github.com/intel/perfmon/commit/fef03ffc333ae44d1e9d695b4e67e5bbb44=
+29729
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/arrowlake/cache.json  |  13 +-
- .../arch/x86/arrowlake/frontend.json          | 135 ++++++++++++++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- 3 files changed, 148 insertions(+), 2 deletions(-)
+ .../pmu-events/arch/x86/cascadelakex/floating-point.json    | 6 +++---
+ tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json   | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv                  | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/cache.json b/tools/perf/pmu-events/arch/x86/arrowlake/cache.json
-index 70175404540d..91929d8bcf47 100644
---- a/tools/perf/pmu-events/arch/x86/arrowlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/arrowlake/cache.json
-@@ -237,7 +237,7 @@
-         "Unit": "cpu_lowpower"
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.jso=
+n b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
+index 1c709983b65f..3ef6f00f1135 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/floating-point.json
+@@ -111,7 +111,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.128BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the XMM based VDPBF16PS instruction. Each count represents 16 computation =
+operations. This event is only supported on products formerly named Cooper =
+Lake and is not supported on products formerly named Cascade Lake.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x20"
      },
-     {
--        "BriefDescription": "Counts the number of L2 Cache Accesses that miss the L2 and get BBL reject  short and long rejects (includes those counted in L2_reject_XQ.any), per core event",
-+        "BriefDescription": "Counts the number of L2 Cache Accesses that miss the L2 and get BBL reject  short and long rejects, per core event",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0x24",
-         "EventName": "L2_REQUEST.REJECTS",
-@@ -728,6 +728,17 @@
-         "EventName": "MEM_LOAD_RETIRED.L1_HIT",
-         "PublicDescription": "Counts retired load instructions with at least one uop that hit in the L1 data cache. This event includes all SW prefetches and lock instructions regardless of the data source. Available PDIST counters: 0",
-         "SampleAfterValue": "1000003",
-+        "UMask": "0x101",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts retired load instructions with at least one uop that hit in the Level 0 of the L1 data cache. This event includes all SW prefetches and lock instructions regardless of the data source.",
-+        "Counter": "0,1,2,3",
-+        "Data_LA": "1",
-+        "EventCode": "0xd1",
-+        "EventName": "MEM_LOAD_RETIRED.L1_HIT_L0",
-+        "PublicDescription": "Counts retired load instructions with at least one uop that hit in the Level 0 of the L1 data cache. This event includes all SW prefetches and lock instructions regardless of the data source. Available PDIST counters: 0",
-+        "SampleAfterValue": "1000003",
-         "UMask": "0x1",
-         "Unit": "cpu_core"
+@@ -120,7 +120,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.256BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 128-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the XMM based VDPBF16PS instruction. Each count represents 16 computation =
+operations. This event is only supported on products formerly named Cooper =
+Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x40"
      },
-diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json b/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
-index 67cc83de18d3..56cf1ec63200 100644
---- a/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/arrowlake/frontend.json
-@@ -58,6 +58,22 @@
-         "UMask": "0x2",
-         "Unit": "cpu_core"
+@@ -129,7 +129,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0xCF",
+         "EventName": "FP_ARITH_INST_RETIRED2.512BIT_PACKED_BF16",
+-        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 256-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the YMM based VDPBF16PS instruction.  Each count represents 32 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
++        "PublicDescription": "Counts once for each Intel AVX-512 computati=
+onal 512-bit packed BFloat16 floating-point instruction retired. Applies to=
+ the ZMM based VDPBF16PS instruction.  Each count represents 64 computation=
+ operations. This event is only supported on products formerly named Cooper=
+ Lake and is not supported on products formerly named Cascade Lake.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x80"
      },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged with having preceded with frontend bound behavior",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ALL",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged with having preceded with frontend bound behavior",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ALL",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_lowpower"
-+    },
-     {
-         "BriefDescription": "Retired ANT branches",
-         "Counter": "0,1,2,3,4,5,6,7,8,9",
-@@ -82,6 +98,80 @@
-         "UMask": "0x3",
-         "Unit": "cpu_core"
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json b/to=
+ols/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+index 3dd296ab4d78..9a1349527b66 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/pipeline.json
+@@ -542,7 +542,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4C",
+         "EventName": "LOAD_HIT_PRE.SW_PF",
+-        "PublicDescription": "Counts all not software-prefetch load dispat=
+ches that hit the fill buffer (FB) allocated for the software prefetch. It =
+can also be incremented by some lock instructions. So it should only be use=
+d with profiling so that the locks can be excluded by ASM (Assembly File) i=
+nspection of the nearby instructions.",
++        "PublicDescription": "Counts all software-prefetch load dispatches=
+ that hit the fill buffer (FB) allocated for the software prefetch. It can =
+also be incremented by some lock instructions. So it should only be used wi=
+th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
+ction of the nearby instructions.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x1"
      },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles/empty issue slots due to a baclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_DETECT",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles/empty issue slots due to a baclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_DETECT",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_lowpower"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles /empty issue slots due to a btclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_RESTEER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x40",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles /empty issue slots due to a btclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_RESTEER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x40",
-+        "Unit": "cpu_lowpower"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged following an ms flow due to the bubble/wasted issue slot from exiting long ms flow",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.CISC",
-+        "PublicDescription": "Counts the number of  instructions retired that were tagged following an ms flow due to the bubble/wasted issue slot from exiting long ms flow",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged following an ms flow due to the bubble/wasted issue slot from exiting long ms flow",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.CISC",
-+        "PublicDescription": "Counts the number of  instructions retired that were tagged following an ms flow due to the bubble/wasted issue slot from exiting long ms flow",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_lowpower"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged every cycle the decoder is unable to send 4 uops",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.DECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x8",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged every cycle the decoder is unable to send 3 uops per cycle.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.DECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x8",
-+        "Unit": "cpu_lowpower"
-+    },
-     {
-         "BriefDescription": "Retired Instructions who experienced a critical DSB miss.",
-         "Counter": "0,1,2,3,4,5,6,7,8,9",
-@@ -103,6 +193,15 @@
-         "UMask": "0x20",
-         "Unit": "cpu_atom"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired that were tagged because empty issue slots were seen before the uop due to icache miss",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ICACHE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x20",
-+        "Unit": "cpu_lowpower"
-+    },
-     {
-         "BriefDescription": "Counts the number of instructions retired that were tagged because empty issue slots were seen before the uop due to ITLB miss",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -301,6 +400,42 @@
-         "UMask": "0x3",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired tagged after a wasted issue slot if none of the previous events occurred",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.OTHER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x80",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired tagged after a wasted issue slot if none of the previous events occurred",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.OTHER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x80",
-+        "Unit": "cpu_lowpower"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles/empty issue slots due to a predecode wrong",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.PREDECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x4",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that are tagged after a branch instruction causes bubbles/empty issue slots due to a predecode wrong.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.PREDECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x4",
-+        "Unit": "cpu_lowpower"
-+    },
-     {
-         "BriefDescription": "Retired Instructions who experienced STLB (2nd level TLB) true miss.",
-         "Counter": "0,1,2,3,4,5,6,7,8,9",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 8a2ee64cad7e..b2db2bb658ce 100644
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index b2db2bb658ce..9a60e95a2e15 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,7 +1,7 @@
- Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.31,alderlake,core
- GenuineIntel-6-BE,v1.31,alderlaken,core
--GenuineIntel-6-C[56],v1.08,arrowlake,core
-+GenuineIntel-6-C[56],v1.09,arrowlake,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
+@@ -6,7 +6,7 @@ GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
  GenuineIntel-6-(3D|47),v30,broadwell,core
  GenuineIntel-6-56,v12,broadwellde,core
--- 
+ GenuineIntel-6-4F,v23,broadwellx,core
+-GenuineIntel-6-55-[56789ABCDEF],v1.23,cascadelakex,core
++GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
+ GenuineIntel-6-DD,v1.00,clearwaterforest,core
+ GenuineIntel-6-9[6C],v1.05,elkhartlake,core
+ GenuineIntel-6-CF,v1.11,emeraldrapids,core
+--=20
 2.50.0.727.gbf7dc18ff4-goog
 
