@@ -1,130 +1,160 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE001CDFCA;
-	Mon, 30 Jun 2025 18:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA722745C;
+	Mon, 30 Jun 2025 18:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307312; cv=none; b=MSrPAmO8V4V8bINVDwVOO39lwggwmcuLuuiT+CpAmpKfqeHAukTEGEqkrXPLhaPAByfTOsi32gYJUS74aA6Ahtr7FeAIlTzCBmRG/VzcKRTgHz7pb1+3U8dTptj9LTJi2t+OTAAWHoUmGKP1JIxKTVsi8Y26BuBt8NbsrsnAFL0=
+	t=1751307422; cv=none; b=l3MjLZPkzQrXgaCjZ7pyaVjF9MsdthUgB9Y5HtfJP3c53CZqK9PX7LsmaXu/krdNJCJqnH92QSbUpv4g4HIDHeSSyoOz0BImOhHu2hsGlloZVlb5t7Soo92cvtugiQhgflO4OUP6G99wt70oXcVczVyaylWHFJbcqRhsGZIdyCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307312; c=relaxed/simple;
-	bh=LDrdIDPKEff84B12ukoJJ5LXoAz2VrNgfonQmGr/YIQ=;
+	s=arc-20240116; t=1751307422; c=relaxed/simple;
+	bh=aCYppRcN644WL/nycmbSiYLX4a8QaSQ8CcpHHOQHOGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZleiNYngceQID/V6E50bc8V2DT3NjZT8KtWisV7rZUyul7wS+h5gnfe3WtscuQFCZaTr/Okb4BZrdwy6tIcZI9jTgme9yujASxtLgZ2VCe1l6yyjVOpFWaRoPaLBBMnSsm26U5rvZYSpCL90hjZSieOf6/0GraxNc3Ggoj+gs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFDKDUk5; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=qXLe1hKSzTY+VX6UtzGm0JRGifkPSd3vkxdCEgfqvJETY3EAKozZA38VFE9BWPfsDR5QMthjkQxJoxRXe7MVL4ywthNneRdxsShvvAeglJmD8ltvi1FZu1pLuvh4KRHO5j9J6bQsbdEOGKht1vUWR7XEAcp6ZDSosqC9EsN6FAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FA6SesH2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFDKDUk5"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4940748b3a.3;
-        Mon, 30 Jun 2025 11:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751307310; x=1751912110; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H37e64s3170mpDSPHrCrQe6P7F5mto+begqdDnm3dHc=;
-        b=jFDKDUk5DGKmpSS8n6/lDvGe55f7DHW8KoB0iIQKjAtniZZLekGEFBA2ugguNctPfN
-         oAdKzbfCevpFfTzHL0qRIWsM1ZFTLrtInCU86SDOu/xzOQi+lS94QQf6nCxhZdBQvXLC
-         FA7wZrXz822taUEBsL8KwSe3Aj4E2Ln2PgQN/8g+01cbrku97/L/2OWZ8eEKbDeOTorg
-         EkUjzEhzcJKQC7iZWfcBl69v3hupJ5LrG7TZJ981CPJvsbB9jGZaoP2pT2ad+TRk9sIK
-         +v7syq10DdWYBvS4XRr2BVAjXI/szphFYOGMVOuNpw7CqmnomXCP9iyA8ZPJuwVp2Jnm
-         qP8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751307310; x=1751912110;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H37e64s3170mpDSPHrCrQe6P7F5mto+begqdDnm3dHc=;
-        b=Y69Rka1A+QLPHfdxXRSg++9Jvf+a5pPtsdvyUAzRZdQKt/hQloK/nXfq7UHIr/zuEw
-         4r9fIiELorxjCKuZvqeQeqJmLkEzAOhP2HbP50thy647xEHPLtnLcHNT8a8ZvdT217CJ
-         38WfBzFK9hbH0JMyJP2R1XILhFxLfGYPLF3RFsRSxfwVmOYvDglXBWqPyzR54jXWdtvy
-         zYE5xLlG+IdYS2wcU/Qi32Ew5nEbQxTeX3n6TX2MmqCatnY5mhWydfWHoaqWNcHcFqGL
-         6JRy7Y6bojWvJVOKAeBv+ZTeRNwlQI1t5s3K3Uwx+mSZsGyHTi1GeB99q32kxLdzrDRe
-         9plQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU46X9XIycdTyhLgg/HgflvIiWAnlbiktXcugxLFNMz0h8293nFNVpnwOtverVDZ48Fy5vhgSMy@vger.kernel.org, AJvYcCXYDDSla78c8yMTO6PdjI7RAj91WFOFpxjY4fOVcMdwlNtW3i4ycz4Cf75Hm4IKFxDjjNoGum12eKlANZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRoWsBiqo0RAN4ua7Ex8m3TfBcBKmcgxjv1o0M/eBFlyeXttKu
-	FtICHkT8xVb2nk45s0oWeXkz+mnqcZdjOgMDP/v2A70SOn8WCj409tjD
-X-Gm-Gg: ASbGncs8YN89V9tGhuNm3ggMOkIorzY3E/k3MnH8EFH9kLIKhTAJYU/4yTENQXES7+j
-	CD4uarfAajzo2QA6S/9GMPhbzTuZIMj2WR6gXu7GTQ0yUu13i79YNjL66VIzjz2gPtZUowkZCyY
-	u9C7LrHn+sKfupDLwImxjwoUtDw270YWDkFHSCnFpB1wjfTL7vkN43rSrdrnWtJwtR3orGLVPVx
-	k1VSPVRXcCWvYL+iZyrm2vImNW2Ta3qeqJUIeZkWUtKFHVZBUEbEgcCyMqzJwGva4KGpKlQmgj3
-	yKTH9bWeW4zEH4l4PVEDTXZSFKXCsFZbgWSihn0ztcwHXCQnCeh9YX7evFVDdA==
-X-Google-Smtp-Source: AGHT+IGihescccQMP7vCe8xp0GzvZMGE5zbzUaAE5sBZpMnQ9pL1PuoCEq7KCoGc6qCy0cXZODYCfA==
-X-Received: by 2002:a05:6a20:d486:b0:201:2834:6c62 with SMTP id adf61e73a8af0-220a16b359bmr21990420637.25.1751307310226;
-        Mon, 30 Jun 2025 11:15:10 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c5837sm9756966b3a.116.2025.06.30.11.15.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 11:15:08 -0700 (PDT)
-Date: Mon, 30 Jun 2025 14:15:06 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] wireguard: queueing: simplify wg_cpumask_next_online()
-Message-ID: <aGLUKg8uNvNtimW0@yury>
-References: <20250619145501.351951-1-yury.norov@gmail.com>
- <aGLIUZXHyBTG4zjm@zx2c4.com>
- <aGLKcbR6QmrQ7HE8@yury>
- <aGLLepPzC0kp9Ou1@zx2c4.com>
- <aGLPOWUQeCxTPDix@yury>
- <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
- <aGLQc5JGGpMdfbln@yury>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FA6SesH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161BFC4CEE3;
+	Mon, 30 Jun 2025 18:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751307421;
+	bh=aCYppRcN644WL/nycmbSiYLX4a8QaSQ8CcpHHOQHOGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FA6SesH2YGGfotBs8sSlYCGB+oCfdL4RtdxqNKrzI7ej3ouYhx07yeYlKfTM0hOZh
+	 XNxay5hzRW6GJEEbLlsVyYc09k5D3fjprdMyQOOJ8ybUTRxb3HoWIbl6C9bQDU3Kji
+	 M02wpimO5CH/n3j5hyzthfNFZ50KVySkS/6qSAvCdCaBAjPTxSqGEpgq6RuH4+N7TB
+	 s6SwYmMK3hTfZF/7YBbY9/eicIyIw3AEbdckxoOX9PDMRtygAk2uHOWwG+F9XvhPAV
+	 4MNrIZqQlTtxVNCmtlicw8hv1Tn6DWNA9NEqy+RHTibwm7mZFHQp3MvBoMjjNPwpvc
+	 qRospOBbaZE9Q==
+Date: Mon, 30 Jun 2025 20:16:55 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
+ for File
+Message-ID: <aGLUl7ZtuQBPoCuv@pollux>
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+ <20250627-debugfs-rust-v8-4-c6526e413d40@google.com>
+ <5c3a2289-01c5-413e-9d7c-88a41c3f54e2@kernel.org>
+ <CAGSQo038u_so+_pMRYj0K546zNfO5-eqoXFivXsEF6ACK=Y5cw@mail.gmail.com>
+ <ce8f428b-fcb0-48dc-b13e-6717c9a851b4@kernel.org>
+ <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aGLQc5JGGpMdfbln@yury>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo02hyJncD1oTpUMgiSZeX5UYYY2p-WZTyroQJJ6fMnOrCQ@mail.gmail.com>
 
-> > > From fbdce972342437fb12703cae0c3a4f8f9e218a1b Mon Sep 17 00:00:00 2001
-> > > From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> > > Date: Mon, 30 Jun 2025 13:47:49 -0400
-> > > Subject: [PATCH] workqueue: relax condition in __queue_work()
+On Mon, Jun 30, 2025 at 10:49:51AM -0700, Matthew Maurer wrote:
+> On Mon, Jun 30, 2025 at 10:39 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On 6/30/25 7:34 PM, Matthew Maurer wrote:
+> > > On Mon, Jun 30, 2025 at 10:30 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > >>
+> > >> On 6/28/25 1:18 AM, Matthew Maurer wrote:
+> > >>> +    fn create_file<D: ForeignOwnable>(&self, _name: &CStr, data: D) -> File
+> > >>> +    where
+> > >>> +        for<'a> D::Borrowed<'a>: Display,
+> > >>> +    {
+> > >>> +        File {
+> > >>> +            _foreign: ForeignHolder::new(data),
+> > >>> +        }
+> > >>>        }
+> > >>
+> > >> What's the motivation for the ForeignHolder abstraction? Why not just make it
+> > >> File<D> and store data directly?
 > > >
-> > > Some cpumask search functions may return a number greater than
-> > > nr_cpu_ids when nothing is found. Adjust __queue_work() to it.
-> > >
-> > > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-> > > ---
-> > >  kernel/workqueue.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> > > index 9f9148075828..abacfe157fe6 100644
-> > > --- a/kernel/workqueue.c
-> > > +++ b/kernel/workqueue.c
-> > > @@ -2261,7 +2261,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
-> > >         rcu_read_lock();
-> > >  retry:
-> > >         /* pwq which will be used unless @work is executing elsewhere */
-> > > -       if (req_cpu == WORK_CPU_UNBOUND) {
-> > > +       if (req_cpu >= WORK_CPU_UNBOUND) {
-> > >                 if (wq->flags & WQ_UNBOUND)
-> > >                         cpu = wq_select_unbound_cpu(raw_smp_processor_id());
-> > >                 else
-> > >
-> > 
-> > Seems reasonable to me... Maybe submit this to Tejun and CC me?
+> > > 1. A `File<D>` can't be held in collection data structures as easily
+> > > unless all your files contain the *same* backing type.
+> >
+> > That sounds reasonable.
+> >
+> > > 2. None of the APIs or potential APIs for `File` care about which type
+> > > it's wrapping, nor are they supposed to. If nothing you can do with a
+> > > `File` is different depending on the backing type, making it
+> > > polymorphic is just needlessly confusing.
+> >
+> > What if I want to access file.data() and do something with the data? Then I'd
+> > necessarily need to put my data in an Arc and reference count it to still be
+> > able to access it.
+> >
+> > That doesn't seem like a reasonable requirement to be able to access data
+> > exposed via debugfs.
 > 
-> Sure, no problem.
+> `pub fn data(&self) -> D` would go against my understanding of Greg's
+> request for DebugFS files to not really support anything other than
+> delete. I was even considering making `D` not be retained in the
+> disabled debugfs case, but left it in for now for so that the
+> lifecycles wouldn't change.
 
-Hmm... So, actually WORK_CPU_UNBOUND is NR_CPUS, which is not the same
-as nr_cpu_ids. For example, on my Ubuntu machine, the CONFIG_NR_CPUS
-is 8192, and nr_cpu_ids is 8.
+Well, that's because the C side does not have anything else. But the C side has
+no type system that deals with ownership:
 
-So, for the wg_cpumask_next_online() to work properly, we need to
-return the WORK_CPU_UNBOUND in case of nothing is found.
+In C you just stuff a pointer of your private data into debugfs_create_file()
+without any implication of ownership. debugfs has a pointer, the driver has a
+pointer. The question of the ownership semantics is not answered by the API, but
+by the implementation of the driver.
 
-I think I need to send a v3...
+The Rust API is different, and it's even implied by the name of the trait you
+expect the data to implement: ForeignOwnable.
 
-Thanks,
-Yury
+The File *owns* the data, either entirely or a reference count of the data.
 
+If the *only* way to access the data the File now owns is by making it reference
+counted, it:
+
+  1) Is additional overhead imposed on users.
+
+  2) It has implications on the ownership design of your driver. Once something
+     is reference counted, you loose the guarantee the something can't out-live
+     some event.
+
+I don't want that people have to stuff their data structures into Arc (i.e.
+reference count them), even though that's not necessary. It makes it easy to
+make mistakes. Things like:
+
+	let foo = bar.clone();
+
+can easily be missed in reviews, whereas some contributor falsely changing a
+KBox to an Arc is much harder to miss.
+
+> If you want a `.data()` function, I can add it in,
+
+I think it could even be an implementation of Deref.
+
+> but I don't think
+> it'll improve flexibility in most cases. If you want to do something
+> with the data and it's not in an `Arc` / behind a handle of some kind,
+> you'll need something providing threadsafe interior mutability in the
+> data structure. If that's a lock, then I have a hard time believing
+> that `Arc<Mutex<T>>`(or if it's a global, a `&'static Mutex<T>`, which
+> is why I added that in the stack) is so much more expensive than
+> `Box<Mutex<T>>` that it's worth a more complex API. If it's an atomic,
+> e.g. `Arc<AtomicU8>`, then I can see the benefit to having
+> `Box<AtomicU8>` over that, but it still seems so slim that I think the
+> simpler "`File` is just a handle to how long the file stays alive, it
+> doesn't let you do anything else" API makes sense.
+
+I don't really see what is complicated about File<T> -- it's a File and it owns
+data of type T that is exposed via debugfs. Seems pretty straight forward to me.
+
+Maybe the performance cost is not a huge argument here, but maintainability in
+terms of clarity about ownership and lifetime of an object as explained above
+clearly is.
+
+- Danilo
