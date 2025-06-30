@@ -1,69 +1,138 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FFA186E2D;
-	Mon, 30 Jun 2025 06:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16681F4E57
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751264985; cv=none; b=NRfqVcwrc6CpHORZsDbm5BR6g3zsiaS0KWSb00WnWhRjWGvjyjZdVXQEqXv6vUVT/6ALlvAc1bwT3SvVv416YGYgkIHJBprrA4uNgsvZlRrX7g/ON/U0MhtEe7GFWxC5d29Lyjzddbm06EcArebFqZ240SS9OG9LeCimOw6dt1E=
+	t=1751264999; cv=none; b=eKR6Ei73ZpWEpiRbMihTEauz91kv/96HMhcHZ9um4yoEYQkuaflyTjXX+f+t2WLiVjtIk3dDM3A4M5sgoXE4nCnoNkVDoHkpBFXPu9HMzFuJVwUzhLxvmWNPNXvVwh/HxWxfFx4B5O/otjwYC3U5cghtGZckD1PYvePU2AgDtbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751264985; c=relaxed/simple;
-	bh=w8oVhDBXl5+xapHd7y5CpbNAb8HTx/GmZwhpXT/RwjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ila211hCo+dkDikpzYI2Uo3f92aVoczC9O2NSMOSlWXOJiDPsThg4zYXjefGN2G0vzbLWuedjZUyZUjcrxSBEPMr6PM/fViWswp/gE+N7u/k/HCG1/3RQP0F9PpVHMJIWQPVd+zMA6Sx67uwAJC5GHSui6PNZBwSpaw8WYQTbb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=vJV8G9Tu; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1751264999; c=relaxed/simple;
+	bh=Ne94kVTsvLLZTJtik7jY1bcgtT6q57FsE7blIMe63gE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P3dfJRupSQ5yTfBzFR2TCzH1STGy7Y6Kz6hdcWaA76HXHOdP3Gbhu4PvFXBz7jOdoBLvH+Bu87456Ak7kKph02UaxAi83yGEZPIxCYDBc8emyDVf+I2ghW5wW9uuXr0dEeV5B+jyGUH+bIIbLi4Vc2zOVN/5F+ukn/0HMNozg88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gnlWZzxR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=luRU9Bn8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gnlWZzxR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=luRU9Bn8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="vJV8G9Tu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=XrNosHeJWdXsV+nu34dlZfulTCotBTrcAUvtUHsZWpg=; b=vJV8G9TuBT5ty7y8epGASfG6fD
-	yOj3bxw8xBc+vnmuEUQffA2IZJrHZ46Ic61tXvQXFSCDqKdvGMvvyb0r5954tcNlq0NwylwEWovyb
-	6KnGsW8349pYBPdEAESEvN0MzG1YkOSi+4zXjEtDaJhVUEgEEUn45Qwj3nFnXwzG937xGuq+Mcj14
-	MUlASuAsCqv3GxepjncV8B4SgtPCIwIkFzRCZr0eH4WoDdafEuIuE8rTkY0QUAzrWjM3wjqbEkvrv
-	cL3HNcSura6wcowpEUkbkHUc3oyEgFvPlfZB/XefW4RUwYkzyIzID931cpsg2QMjD46yiVp7mbSVG
-	SmXrHyRA==;
-Date: Mon, 30 Jun 2025 08:29:09 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin Hilman
- <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Paul Barker <paul.barker@sancloud.com>, Marc
- Murphy <marc.murphy@sancloud.com>, Jason Kridner <jkridner@gmail.com>,
- Andrew Davis <afd@ti.com>, Bajjuri Praneeth <praneeth@ti.com>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Thomas Bonnefille
- <thomas.bonnefille@bootlin.com>, Romain Gantois
- <romain.gantois@bootlin.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v5 0/5] Add support for BeagleBone Green Eco board
-Message-ID: <20250630082909.74dd386f@akair>
-In-Reply-To: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
-References: <20250620-bbg-v5-0-84f9b9a2e3a8@bootlin.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gnlWZzxR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="luRU9Bn8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gnlWZzxR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="luRU9Bn8"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2386E2115F;
+	Mon, 30 Jun 2025 06:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751264996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O4a8monR3tF8KOIGOp3AbckiUTMIFvbQ7an8p9i9+Zs=;
+	b=gnlWZzxRYsR9snuPxctWbr4YxmPgmEHuiFM7oI2VvnZYQ2NDI8leSkqPR+O/VNhaC43iTL
+	uZLbXaHvhxJOAaAK/Hvo8zTSrNypTJq53WbOPN6EOiLmYnkuAZJTGNjNBZftvZByYKHUG4
+	W7v28N0T2tx/5YqdNoqSDIBovRo9xSg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751264996;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O4a8monR3tF8KOIGOp3AbckiUTMIFvbQ7an8p9i9+Zs=;
+	b=luRU9Bn8IXGPA2rgPefjUqeEkRRlTkBo8DkYqMIVOXJbPMKyFkCvE/t2ZvUHKguJiZUWG0
+	lIpUEZ9B4M3BEZDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751264996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O4a8monR3tF8KOIGOp3AbckiUTMIFvbQ7an8p9i9+Zs=;
+	b=gnlWZzxRYsR9snuPxctWbr4YxmPgmEHuiFM7oI2VvnZYQ2NDI8leSkqPR+O/VNhaC43iTL
+	uZLbXaHvhxJOAaAK/Hvo8zTSrNypTJq53WbOPN6EOiLmYnkuAZJTGNjNBZftvZByYKHUG4
+	W7v28N0T2tx/5YqdNoqSDIBovRo9xSg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751264996;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O4a8monR3tF8KOIGOp3AbckiUTMIFvbQ7an8p9i9+Zs=;
+	b=luRU9Bn8IXGPA2rgPefjUqeEkRRlTkBo8DkYqMIVOXJbPMKyFkCvE/t2ZvUHKguJiZUWG0
+	lIpUEZ9B4M3BEZDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F14F213A6E;
+	Mon, 30 Jun 2025 06:29:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id FeVQOOMuYmj4VwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Mon, 30 Jun 2025 06:29:55 +0000
+Date: Mon, 30 Jun 2025 08:29:55 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, 
+	Sagi Grimberg <sagi@grimberg.me>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>, Ming Lei <ming.lei@redhat.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, 
+	linux-scsi@vger.kernel.org, storagedev@microchip.com, virtualization@lists.linux.dev, 
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH 0/5] blk: introduce block layer helpers to calculate num
+ of queues
+Message-ID: <38e19482-e07d-4130-88d2-fc0a4aa5ddc8@flourine.local>
+References: <20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-Am Fri, 20 Jun 2025 10:15:51 +0200
-schrieb Kory Maincent <kory.maincent@bootlin.com>:
+Hi Jens,
 
-> SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
-> (BBG). It has minor differences from the BBG, such as a different PMIC,
-> a different Ethernet PHY, and a larger eMMC.
+On Tue, Jun 17, 2025 at 03:43:22PM +0200, Daniel Wagner wrote:
+> I am still working on the change request for the "blk: honor isolcpus
+> configuration" series [1]. Teaching group_cpus_evenly to use the
+> housekeeping mask depending on the context is not a trivial change.
 > 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> The first part of the series has already been reviewed and doesn't
+> contain any controversial changes, so let's get them processed
+> independely.
+> 
+> [1] https://patch.msgid.link/20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org
 
-Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
+Would you mind to route this series via your tree? There are changes in
+several different trees though all the patches have been acked/reviewed
+by the corresponding maintainers. Would be great to get some weeks in
+'next' so that this series gets some more testing.
 
+Thanks a lot,
+Daniel
