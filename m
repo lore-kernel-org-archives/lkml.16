@@ -1,92 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831312905;
-	Mon, 30 Jun 2025 04:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81B979D2;
+	Mon, 30 Jun 2025 04:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751257376; cv=none; b=eFfO+uKEjtoopd4roqPAGKakPp2AfxOfbrQpO1WI9jmsg28suHa7yNQyGXYw9qaWF8qN1S89k7HZ+KFAByKhQgtzw2H/jwGI6WvhIWN4I9usgAMgER+tFhp9bLqsqOmDiZ1hiL98znfexE8ox+MWkJY9SHRi1hoSx2IyoFu9Cnw=
+	t=1751257974; cv=none; b=cmdGzJXfxT3xrLEjmKNl1oPB0zRd5Vb9RUTMIMD9im0Q7pkcQI3fu7UIBZE4T/ExMMxkttOq6dnsaRnX6kEx1Y3MVcbJ/qniFu4sf51s5Qiqhp3B/xJ/hzITVz9ePCiM67h6YUIVn2hFgC3V5YoOxKYRxRZKQt4UDcW44TCGPRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751257376; c=relaxed/simple;
-	bh=pBbjL2ivpNmks85bmCMXD3MucnB/Nep2MGJ8Ex1SyQw=;
+	s=arc-20240116; t=1751257974; c=relaxed/simple;
+	bh=R7zcCovUjtiZyN7Xl7zbfCp3HhGk37QNCfMdhJI4qQs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pfcT7k9EC6HFsj7PzFb8A5bYcn9wSpaMb3x8zpt+Wcyo+gcAfR/MWJLdhQfh+60AgwY+gbromY/89sbbCRLTvsYTwR5TjGtzaF191zuAmf7HdUUvfBqJ2y2UP8deGpOr0gxzxqWqibRpgqWODg2tkvgNQX3CGr7xWzp+701FfQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gg/RMdvt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gg/RMdvt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 025B0C4CEE3;
-	Mon, 30 Jun 2025 04:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751257376;
-	bh=pBbjL2ivpNmks85bmCMXD3MucnB/Nep2MGJ8Ex1SyQw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gg/RMdvt5DtGzY3oDQCv36+uyRwfhT+hiLyVgJkt4eM4ouZt37FCkZy0r7ayBL2fE
-	 PEjCqG+7e7VmutYm4aUINUlRBXBs/SiIy/bw8IOuBSB3CtUUW7BJddddLViNZWpNQl
-	 kiUSzDvXihmvPR1ldMB5YuH6SKaPHtozMmtd9nmY0GRcvQiXY4DD2NxExtH/akwefC
-	 SY/24/duk/6DqP4EdWMSrXwNYzvkMx07VvrMUS9JwOd+ThSrHYN91RfCdMdlQ73pDd
-	 pPWZc2yHAt/uYfqEJ4hYmTEQGDZTWr8MInQmmthO+MAEEligjkxfJvy9qVKb3PXo6c
-	 Xf6qWK4ZnM7sQ==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553bcf41440so4024490e87.3;
-        Sun, 29 Jun 2025 21:22:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVt7GjUugR58eETllJCZMyNmPxhEKcM/+oTo5YYTJgQkoFLTLMBoQmHSraZGf5r/QexWx+BKBwAIbKEYm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgvHpqqm5DhwuUz0Z0jSVriK7bT4sbql7k81Z9tXBmQghFOHEq
-	cPlwLyhMdqyLGnx8Fg6Z7M9tJNwEMKQ897ta+0yPpK+YHxPyW/bGAXIc9mRC38vHRao2/2yXJAR
-	nbwdlEc+GK+yza0RqoqXU9BDl7m0V4fI=
-X-Google-Smtp-Source: AGHT+IGykNiyqvrrIohADJ21s9mi33itGcWG1t6lA1z3PGVzV0fG6Y3UwHHPnhWOAHkMXPtujhB3qRsVnZIB+hBVTs8=
-X-Received: by 2002:a05:6512:e95:b0:553:2dce:3ab2 with SMTP id
- 2adb3069b0e04-5550b85b2fdmr3824809e87.6.1751257374679; Sun, 29 Jun 2025
- 21:22:54 -0700 (PDT)
+	 To:Cc:Content-Type; b=OV+mY8GedZfAKrwTjFMRBeOPqRHLEsGOaTH1A6WqRNDwn/6O827lX07sFLffQAodm2M+FYXEL1yWgHtOPqzSqSy5yHyadKVcoppU7nsjd22W6Olai425HvtokStPTu3t17G8Lec8sUooXXfbbkmM0OqsPHo0zDbVOWLj7U49XkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b3a3a8201so14738541fa.0;
+        Sun, 29 Jun 2025 21:32:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751257967; x=1751862767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JbVuaR12V0J6Xt+/G9MNTrnfxERz+sAIcOpg6dKC95Y=;
+        b=g7lYg6hEQlzmpjzLwyTFmK5b3Ept/6Shb6y8yNBvP/qoYV4LFkIr+9KfQN7OobyZUG
+         /ipj2sy2fyOhajpoASKi5v59K/xXXaqNcm5tBEBqAURBue1cu3vwp6fQgTLueMQoT2ho
+         /vqlycc2zMlbxdSXnqqhabivTNKyFH9BP7RHglXx4lCHiOSUunMMdUhcZ1zAhcrbosqO
+         H7gqZvHqLh94MvTd/kj1ry7fpcgtVHhI+5f0/XvM8X6/Sdxsh8SiM6HyISeUIYBlfTAT
+         2o/gNugfDQFBhLZDEq8s5MqtrZhoZD7hgkdvPyTLl4F/tIQFrfRXXiGDwa5hwuVzZR0a
+         F07w==
+X-Forwarded-Encrypted: i=1; AJvYcCVLBtio+K2tWGARYXFzZokIlGVDVdDbA59lIQGavccU+F0eTrOhLDMG1eDLLq9yzROzoOl6uHnzBUHj@vger.kernel.org, AJvYcCVTAJ/EJTTPBMvoWpHjuxxzghNbGUVmRNIRAxrYtM4YkB/X5X6i1GSyvhhZZc2wxxLw94F7JuuO3to=@vger.kernel.org, AJvYcCVec/tIvmXz8paN+1fIX8CPNp4REjtZdb7SA17p9cp0IWqdlBQQ3BbNwsbN8b7DP1Vd9hcFCf2IcJQPQhI5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpsRyEp3BiR/Spou8vel96MnvCXdIiitiX85dYBAdm96w7Cx/u
+	q1D9sWtQtAlH7zuPBRVlpEnou1etWsDQCdYSHNC7/JxdJBwPTAxQYEaymn+ZDiDs
+X-Gm-Gg: ASbGncuYaGAkaYfwu6YhYWYfyEA76hepsFHJfmeFt8VJXXIC83iagH5wgerd+XOqNqh
+	PJmRDUj6/4TD/Wc79Ib9lNGtkL+1bCs4a6J2SmM0/R48QGmqLqZaGzoGMVpc9Z8V4vPwzsrbuiw
+	OyrNddJTviOipdGJtpUqqnzT5lIAONLr6RtBlDidcfRt1ZYxiqZo5IjaEGFZQeiXr9t7ue6bTYa
+	4dOQapcGb1vWoUuz0lz83pi0Rjq0cC+r+3/e3t0KxdbF9k4kKT7MRKb4SN2NapjzM0z05XZsGsE
+	ALIoXa40UWjjFwAvdO5a3n+0Feg3Vtc23mDkQ0PbmGAfleUTzDKkyIwaLpUsMZ/i8SG2pC5eBdj
+	8h+SniLoNzCrJ7YORLQ4=
+X-Google-Smtp-Source: AGHT+IHka60/fjRwCxsDIPnM9RNanmC9+SlPaHmhUHvYwouRWRyMWrT5ocMruSmQjcoM6MLq0ZhSUg==
+X-Received: by 2002:a05:6512:b87:b0:553:30fc:ceda with SMTP id 2adb3069b0e04-5550b7e6e32mr3341855e87.7.1751257967114;
+        Sun, 29 Jun 2025 21:32:47 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f327dsm1284388e87.257.2025.06.29.21.32.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 21:32:45 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32add56e9ddso15704801fa.2;
+        Sun, 29 Jun 2025 21:32:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHYVQseElP3rXd7AySTgeFqHcdbukMhKhyZx3wGgBZi4AjtGgh2A7HbllxIjJjjNEiOzLcZASy9lc=@vger.kernel.org, AJvYcCUbOmA9R+rcBYTALi9JJYTB1yIMrPdTZ4TRSFKAYQI/LP+Jp+lwczjU2GYwE4W2wFwcEJrEDWcLM9oo@vger.kernel.org, AJvYcCVbMxTbsWQORJUESXUicEwA4MsmUoXnm4vQG9fn9HIK+4feolGRnOIZhNhlv+elhFQBCtYMkcAlvqZLbAo6@vger.kernel.org
+X-Received: by 2002:a05:651c:20c5:b0:30b:edfc:5d8a with SMTP id
+ 38308e7fff4ca-32cdc329543mr23944531fa.0.1751257965460; Sun, 29 Jun 2025
+ 21:32:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-22-masahiroy@kernel.org> <85b71c14-485e-4c85-9801-c61f7419abe3@infradead.org>
-In-Reply-To: <85b71c14-485e-4c85-9801-c61f7419abe3@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 30 Jun 2025 13:22:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARNFgiLvNpWEywDBBHwi1bq-PZL8O5MdVn7V7NjM_WYJQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwOMR8vOwhs270mH7UCkrZ0M_SOrJ8QsUcUfhBJ8EAzORNyJufFc-3Z3zE
-Message-ID: <CAK7LNARNFgiLvNpWEywDBBHwi1bq-PZL8O5MdVn7V7NjM_WYJQ@mail.gmail.com>
-Subject: Re: [PATCH 21/66] kconfig: gconf: remove unneeded variables in on_treeview*_button_press_event()
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250411003827.782544-1-iuncuim@gmail.com> <20250411003827.782544-5-iuncuim@gmail.com>
+In-Reply-To: <20250411003827.782544-5-iuncuim@gmail.com>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 30 Jun 2025 12:32:33 +0800
+X-Gmail-Original-Message-ID: <CAGb2v659nQit-cOsr6q+ACO2MJ+c6RyfBWVg7iP_u1DO4fXBHQ@mail.gmail.com>
+X-Gm-Features: Ac12FXycZ4eBZnw1-9h5Z5_HZw9HoRSOqmeNCAZOYMw7KeNLsUjQ12gZN6IqRgQ
+Message-ID: <CAGb2v659nQit-cOsr6q+ACO2MJ+c6RyfBWVg7iP_u1DO4fXBHQ@mail.gmail.com>
+Subject: Re: [PATCH 4/6] arm64: dts: allwinner: A523: Add SID controller node
+To: iuncuim <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Andre Przywara <andre.przywara@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 11:40=E2=80=AFAM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
+On Fri, Apr 11, 2025 at 8:40=E2=80=AFAM iuncuim <iuncuim@gmail.com> wrote:
 >
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
 >
+> The SID controller should be compatible with A64 and others SoC with 0x20=
+0
+> offset.
 >
-> On 6/24/25 8:05 AM, Masahiro Yamada wrote:
-> > No all position parameters are used here. Passing NULL to
->
->   Not all
->
-> > gtk_tree_view_get_cursor() or gtk_tree_view_get_path_at_pos() is
-> > allowed. [1] [2]
-> >
-> > [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/gtk/gtktreeview.=
-c#L12638
-> > [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/gtk/gtktreeview.=
-c#L12795
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
 
-Thanks. I will locally fix it.
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 
+But this also needs a matching update to the binding.
 
-> >
-> >  scripts/kconfig/gconf.c | 14 +++-----------
-> >  1 file changed, 3 insertions(+), 11 deletions(-)
+> ---
+>  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
+> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun55i-a523.dtsi
+> index ee485899b..d626612bb 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> @@ -171,6 +171,13 @@ ccu: clock-controller@2001000 {
+>                         #reset-cells =3D <1>;
+>                 };
+>
+> +               sid: efuse@3006000 {
+> +                       compatible =3D "allwinner,sun50i-a523-sid", "allw=
+inner,sun50i-a64-sid";
+> +                       reg =3D <0x03006000 0x1000>;
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <1>;
+> +               };
+> +
+>                 mmc0: mmc@4020000 {
+>                         compatible =3D "allwinner,sun55i-a523-mmc",
+>                                      "allwinner,sun20i-d1-mmc";
 > --
-> ~Randy
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+> 2.49.0
+>
