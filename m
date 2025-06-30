@@ -1,138 +1,116 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072D7242D92;
-	Mon, 30 Jun 2025 08:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D47623ABBD;
+	Mon, 30 Jun 2025 08:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273691; cv=none; b=PQPTSFLuCsliU5Z2DEqaI3eZyocYJ5NsT21l/YtFG69vEoiOFs1Jde6//n0PbN+fA0fQ42yaxRYouXXfHOd8qah+8y8ZDPfPReO5d1ASoxy1CINid82meYc4IALB98uor9OJLigO51Y1YJBHU8Z3WUIO6Zg6VNYnR6YRc7yRkh0=
+	t=1751273704; cv=none; b=QWF5sITgJYEjBd2+RS8V+q41e5BWXHEDkfvVhQwINEzaO46YgA6U98cNEQIWgyTYWFLcn19nZXaS2ONz8DxdCsteGdw6h2gKWSXwx2hvTV+prSgn8gjq8gqiOKJwiS1Z/rl6Xws+PqHrI30MMXZNzYFGu19VVxxfrx2iU07VW78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273691; c=relaxed/simple;
-	bh=shwr8MPQTjO7BLjZ2FwD1uQjcpJIj0DsyP9MRMjw2RU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BrkqcmXLNkTzeMGxA+DRaxHtB/7Ro1MsqB2WBkJjD1h+Z26KlgARd+THNLkZ5mBCZR8s9iYqtqEKSkXvR/38fpE0cTkfMbDjClFYi7TFNAniKz16i2AyuPsCgbULRWuGOet5RxPsjLUOvyTU5hrIik2PfCvp/2SnCxlrqYwrXtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bW0Lp10jZztSk9;
-	Mon, 30 Jun 2025 16:53:38 +0800 (CST)
-Received: from dggpemf500015.china.huawei.com (unknown [7.185.36.143])
-	by mail.maildlp.com (Postfix) with ESMTPS id 552181402C8;
-	Mon, 30 Jun 2025 16:54:46 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by dggpemf500015.china.huawei.com
- (7.185.36.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
- 2025 16:54:46 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v5 1/3] migration: update BAR space size
-Date: Mon, 30 Jun 2025 16:54:00 +0800
-Message-ID: <20250630085402.7491-2-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20250630085402.7491-1-liulongfang@huawei.com>
-References: <20250630085402.7491-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1751273704; c=relaxed/simple;
+	bh=ZoeV7hTvZ7zyNoBAbk7ZU3OwDw7OdAz1SLsJTafGCD4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=d9AZ4lc0jVVVnpYpITS7ZZs3jKcxeuDHoCu1nC5iXhb9FMsNgRGMjpLecDw2UrTr3tGzlKJkk8cKGHSmbg1in4ZsRRqhYtrOrQPxOWUqqa6wN8549iNORlLVK22BQrPoRaFO9wAIPROI+uPlC+agekUL0Tjj7layhCzQjNm3tHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tyox2WDd; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tyox2WDd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751273703; x=1782809703;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZoeV7hTvZ7zyNoBAbk7ZU3OwDw7OdAz1SLsJTafGCD4=;
+  b=Tyox2WDd1A3JOTZ9wy6s6D3m9QLCfb4A/3MPJbQ63VgzsNVE3FCVBq1m
+   UuNs2ilRBkE4qHXIjpoz6sKFrjZ/B9pc3VNY/B2c6RTl5FtqN3BcPKmsx
+   phxRJhG1iDbDwyYp7aaZTOJbt+hrZ/HkSWAtsnUrOiTYaoIjskg87U5nC
+   vcBDKuIH95yQmPTCrA2+xszmxw4yMzSBYpXmed0smXQQJHUQstpJaT3w2
+   UPXYaK5JFwD4hYDlTe1RxiqSNihmtHoS33TdlbFknQo4D1pXa1wp/H3Wn
+   1akWeYyVxu19RQZBD3trDls1S3UpzqpduKTdWzNWD7XH2MOodzbH6P/M3
+   g==;
+X-CSE-ConnectionGUID: OEtSLuXcQTCVxK2tVI5Sbw==
+X-CSE-MsgGUID: ++m/29glTaiOvIrTkro3lA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64187078"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="64187078"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 01:55:02 -0700
+X-CSE-ConnectionGUID: aMxdty3SS/uZdck4/t10kQ==
+X-CSE-MsgGUID: +BPBSCjGTuStozTxft5gCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153872392"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 01:54:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 11:54:55 +0300 (EEST)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] platform/x86: think-lmi: Fix resource cleanup
+ flaws
+In-Reply-To: <20250628-lmi-fix-v2-0-c530e1c959d7@gmail.com>
+Message-ID: <5ee91db8-8ed1-6860-7736-9fb723371bc1@linux.intel.com>
+References: <20250628-lmi-fix-v2-0-c530e1c959d7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf500015.china.huawei.com (7.185.36.143)
+Content-Type: multipart/mixed; boundary="8323328-406320142-1751273695=:7079"
 
-On new platforms greater than QM_HW_V3, the live migration configuration
-region is moved from VF to PF. The VF's own configuration space is
-restored to the complete 64KB, and there is no need to divide the
-size of the BAR configuration space equally.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 36 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 9 deletions(-)
+--8323328-406320142-1751273695=:7079
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index 2149f49aeec7..1ddc9dbadb70 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -1250,6 +1250,28 @@ static struct hisi_qm *hisi_acc_get_pf_qm(struct pci_dev *pdev)
- 	return !IS_ERR(pf_qm) ? pf_qm : NULL;
- }
- 
-+static size_t hisi_acc_get_resource_len(struct vfio_pci_core_device *vdev,
-+					unsigned int index)
-+{
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev =
-+			hisi_acc_drvdata(vdev->pdev);
-+
-+	/*
-+	 * On the old QM_HW_V3 device, the ACC VF device BAR2
-+	 * region encompasses both functional register space
-+	 * and migration control register space.
-+	 * only the functional region should be report to Guest.
-+	 *
-+	 * On the new HW device, the migration control register
-+	 * has been moved to the PF device BAR2 region.
-+	 * The VF device BAR2 is entirely functional register space.
-+	 */
-+	if (hisi_acc_vdev->pf_qm->ver == QM_HW_V3)
-+		return (pci_resource_len(vdev->pdev, index) >> 1);
-+
-+	return pci_resource_len(vdev->pdev, index);
-+}
-+
- static int hisi_acc_pci_rw_access_check(struct vfio_device *core_vdev,
- 					size_t count, loff_t *ppos,
- 					size_t *new_count)
-@@ -1260,8 +1282,9 @@ static int hisi_acc_pci_rw_access_check(struct vfio_device *core_vdev,
- 
- 	if (index == VFIO_PCI_BAR2_REGION_INDEX) {
- 		loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
--		resource_size_t end = pci_resource_len(vdev->pdev, index) / 2;
-+		resource_size_t end;
- 
-+		end = hisi_acc_get_resource_len(vdev, index);
- 		/* Check if access is for migration control region */
- 		if (pos >= end)
- 			return -EINVAL;
-@@ -1282,8 +1305,9 @@ static int hisi_acc_vfio_pci_mmap(struct vfio_device *core_vdev,
- 	index = vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
- 	if (index == VFIO_PCI_BAR2_REGION_INDEX) {
- 		u64 req_len, pgoff, req_start;
--		resource_size_t end = pci_resource_len(vdev->pdev, index) / 2;
-+		resource_size_t end;
- 
-+		end = hisi_acc_get_resource_len(vdev, index);
- 		req_len = vma->vm_end - vma->vm_start;
- 		pgoff = vma->vm_pgoff &
- 			((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
-@@ -1330,7 +1354,6 @@ static long hisi_acc_vfio_pci_ioctl(struct vfio_device *core_vdev, unsigned int
- 	if (cmd == VFIO_DEVICE_GET_REGION_INFO) {
- 		struct vfio_pci_core_device *vdev =
- 			container_of(core_vdev, struct vfio_pci_core_device, vdev);
--		struct pci_dev *pdev = vdev->pdev;
- 		struct vfio_region_info info;
- 		unsigned long minsz;
- 
-@@ -1345,12 +1368,7 @@ static long hisi_acc_vfio_pci_ioctl(struct vfio_device *core_vdev, unsigned int
- 		if (info.index == VFIO_PCI_BAR2_REGION_INDEX) {
- 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
- 
--			/*
--			 * ACC VF dev BAR2 region consists of both functional
--			 * register space and migration control register space.
--			 * Report only the functional region to Guest.
--			 */
--			info.size = pci_resource_len(pdev, info.index) / 2;
-+			info.size = hisi_acc_get_resource_len(vdev, info.index);
- 
- 			info.flags = VFIO_REGION_INFO_FLAG_READ |
- 					VFIO_REGION_INFO_FLAG_WRITE |
--- 
-2.24.0
+On Sat, 28 Jun 2025, Kurt Borja wrote:
 
+> Hi all,
+>=20
+> First patch is a prerequisite in order to avoid NULL pointer
+> dereferences in error paths. Then two fixes follow.
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+Please send v3 with stable Cc tags in all these so that this dependency=20
+gets automatically handled (as per documentation).
+
+I'll apply this through the fixes branch but I can deal with the removal=20
+of the lenovo/ folder from the file names myself while applying.
+
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> Changes in v2:
+>=20
+> [PATCH 02]
+>   - Remove kobject_del() and commit message remark. It turns out it's
+>     optional to call this (my bad)
+>   - Leave only one fixes tag. The other two are not necessary.
+>=20
+> - Link to v1: https://lore.kernel.org/r/20250628-lmi-fix-v1-0-c6eec9aa3ca=
+7@gmail.com
+>=20
+> ---
+> Kurt Borja (3):
+>       platform/x86: think-lmi: Create ksets consecutively
+>       platform/x86: think-lmi: Fix kobject cleanup
+>       platform/x86: think-lmi: Fix sysfs group cleanup
+>=20
+>  drivers/platform/x86/lenovo/think-lmi.c | 90 +++++++++++----------------=
+------
+>  1 file changed, 30 insertions(+), 60 deletions(-)
+> ---
+> base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+> change-id: 20250628-lmi-fix-98143b10d9fd
+>=20
+
+--=20
+ i.
+
+--8323328-406320142-1751273695=:7079--
