@@ -1,478 +1,249 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D584A23;
-	Mon, 30 Jun 2025 05:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751262771; cv=none; b=AILWGYcC5iNfyp+a1OdLRP5iglod8nsR4j0gId+M9+RYAHv0mPojlLOq6aKEfbaeVDoFMzDtZ9EdnBpK5UT3TiHiWHWv1b4OcdouXs8xW6wMCmsHslWa3RWY5St/TNcvLIh+NSxWQ3vX8wWT2AvvqOKyPnUBHYkSri+ibtf0pKU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751262771; c=relaxed/simple;
-	bh=0jzQ7l9bGASILY1ADhstzflAMRlcmeHwWKwSOHUKhYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=vD3OrMXY3MkyH0FWogvQBpi19pjF+qqdM9NCzx9KPFoPx37zXgYg2VhbUi2hIwETRWFsbMtAd3lpFZ7TPrbRy8vis770v8JGPh9sf8PiGjv6HJ+rjpvZXbysP57Xt/A17HhZJb1SKCachNUnxnUQ/bVTR5Tr/sOJiwu4vOz76TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2Nm+uei; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BD317C21C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751262877; cv=fail; b=qE1Lo0eIs1+sqyQiC9N7hQrYYOL7pkesj5cGAjs+bA/TqZu9dwm8MdqQZpGG+FB50Eg5r9kgRc8a7cNa1JH/ysDg0OeFz/fR3RemIBG5UJZHEFfjUVsMmehxYv0eF8OtQzofIh1ftrNs44sZ7CHticLmuCo5AyxCu72jt5ldA0U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751262877; c=relaxed/simple;
+	bh=pIlDQEmHVpe9NbYnhyxKkj13RdIWrA5bSuOA9SVrUQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uNTy3dW6qQJOgyjESIpZoJEoMctTqn+3o0vF+17Fl7w0CKLyZCx+hqqqXLcN5+rg3CNonpWXVNZtON5ADeqbI6ZzXz27h0SP1WtuwiHHsU19MyGInI3cA9MeIc7FupKjPP2KVWSTWtmVT9IGrq+9TDJocNp6PVzuu0DlB0PiFqg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=We1fpioc; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2Nm+uei"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74ad4533ac5so4239465b3a.0;
-        Sun, 29 Jun 2025 22:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751262768; x=1751867568; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pd8FEljx8I7jBuFPplv2jr5V9bIHjiPAM5MEEyq0iyU=;
-        b=X2Nm+ueie+u8afn3gm2tAvYbpKJ20F2Fxj7BbQaVYQ5VxFcMqIhGrTp+9nlLQ2PRl8
-         O8Y2bM39DfAZ+lpnPy8Loa+ZViagtDdYmzIfAXVtj7bqIojUka6a/tDRsWUoZcdnh7/j
-         83VFKGyNq10B1gHzwgM6uNjUHt8wY3p8/UvFBaLHK4qyjyMSThNqBQUNxoxK54QKLEjj
-         e/S1ST+Fx+15CxknY29rkY9kFN++HTytqqtUoSmA8+POQ+Ih55Qk8fTD3e4z+UuKmmFv
-         HZyJenFFPlzeqhTmAm1FJKWAL5vSNuq8aBaiuTpzBfywWK78Sf1NCTjVHzbzWKQREoos
-         wVSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751262768; x=1751867568;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pd8FEljx8I7jBuFPplv2jr5V9bIHjiPAM5MEEyq0iyU=;
-        b=Dh9ei/yYZbvzwu+i4RK/RUrX0hd63WHZ84ECEvXMahk5m16u76GkiNsaqs1fpfHI3S
-         JR60s2n/nZRkFo+1UcRz3SAc/QYIhHC59mdBZY3k639lUCYxBIIgaMc8QVzL6d6Uusyh
-         RCun2Ujz9mN85t5oyCEEXSBiZ0hxp72eqiyo7JA7ouHKLg8JYQRX/LsjeUKmZAJnmpfg
-         O5iOkEN9FNEOKiRRfGykJTvYtbPkbu1g2CJJ0aMwE0XjVjZJk4LbgkizU1lTyxQ0cLik
-         5XXhrs+sZhPwKTRCev2+cOKzyIEf2H3lNd9DHIZN+fauiplSG2UHaAE364dRWPIw+Y/f
-         jbdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvz5Csw4d+9rdJSMvGKgDT7PCtIQ4FbuqMLDjhK/afYRhcfMiqtIabXTB4ZXRSLAppB46FTycpqRF6gA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ4Cq8BPthiYyg881dNLDd/W4il5KUvSLuaSFOy7TUluIYYXRN
-	odpB2JyI3vlC0gUbCSwtSJUeLaTTEZEeglkhPl7sMWBqdZBK6wpI6i8IWpKTOA==
-X-Gm-Gg: ASbGncsnr45VEK+PvLyTzBMLp6LXuGfpNn+WBbPVcsDXWb0T39Ba+zj/s8M1gYzDivc
-	wWrFPkMd/goQLydqg/u9KZg12a2ckbKkI+bAhoy1OXVXjWylauD/rk8abWmkdmL8WR+98z6bNbs
-	vjYTKBCAsI3M3bzRLd9uJ2MjPQ00Eu9ms2JeQkgNHYGdZxGgfDAhy+1Ba3bkA96rDw/ep0k8EuI
-	q0wwg/S1qatC739/H3IYQ74H2qhB9YgCgYYqllUdv4qxa1L09TvZOl0Ct4Mn6SRdI73P/v5qOzp
-	5pfYP6sN39lvj+lmbKbzQToel8KOIdiyohX+F2aZgZO9R+0RqLfGh8hb33tpJyOyoJh6czP9
-X-Google-Smtp-Source: AGHT+IFjl5R7oqL6A9zWhjE1ScdqLSjQF082qrxlmVGkv0Ayqcipx54YPCqGWP5LuY5zXB+koF7Uig==
-X-Received: by 2002:a05:6a20:7344:b0:21f:4ecc:119d with SMTP id adf61e73a8af0-220a08dc772mr19268249637.7.1751262768123;
-        Sun, 29 Jun 2025 22:52:48 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31da845sm7086101a12.53.2025.06.29.22.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 22:52:47 -0700 (PDT)
-Date: Sun, 29 Jun 2025 22:52:45 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	=?utf-8?B?VG9tw6HFoSBKdcWZZW5h?= <jurenatomas@gmail.com>, linux-input@vger.kernel.org
-Subject: [PATCH] Input: tca6416-keypad - remove the driver
-Message-ID: <ajfsei3keh4jjasd4lshjicgqixew7bak3cmty3suoliskzgz4@vj3ijycfxy4i>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="We1fpioc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751262875; x=1782798875;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=pIlDQEmHVpe9NbYnhyxKkj13RdIWrA5bSuOA9SVrUQ8=;
+  b=We1fpiocq32NfvPSm0bv+eviNexB1Q1Wt+zohw9bZuv4dBbWWoCNjWEb
+   oDjWwYb+bqPqwU4555A4wtbs90ixbeSuMF4kbJETJRaQMzOi/wRV6Dot6
+   1sWnXlIqtbDXieKWdKNfSnzBLo3bsrU4Acho3vqelbBTCSHqegtGLRR3y
+   UM143uf/IjRWvk8v0lGxeBeDgbbrht7Nzukt1mFyIvrypBPZXi9Nm2a+v
+   8QcDDfjLoUtup4NI9l3w7LRTosgqxoI7BCx8Ee4KBhWXZtgv6A3oIQ+NB
+   nmzcsNjU5Vi1+bGagRvJIuQ4Wo/iY2Oj5TXUmgkxjKvc6BVBszodq/Onw
+   g==;
+X-CSE-ConnectionGUID: 6xnABGFXTkqFW1PsOm4jsQ==
+X-CSE-MsgGUID: bF4HNAKURFSyl/eZy4JQdQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="52593428"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="52593428"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:52:30 -0700
+X-CSE-ConnectionGUID: yGJdLM0iRCWpoqscjlnSlA==
+X-CSE-MsgGUID: sPI+HZoVShiiOog2dx6pFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="152747079"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:52:31 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 29 Jun 2025 22:52:30 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Sun, 29 Jun 2025 22:52:30 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.82)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 29 Jun 2025 22:52:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OBqAetIg+O+eftc0M37VyizWJ58JF5kONeb1TPVZvbUV6jSauRC/2Z9nx9oSezRUgopKybwhMyiaHr9ppLoHyqyLv9vCZNhtMZXtaLCsYbAVxE4lXa63KSevmYDTzfgqD2v7T3F3D/RTr29/PF+tVv+yFlnVMmT0zRtz/l4oj7h2LGRnBAmRlX+dzHhhv8/1amh+mRt9zRFPVpkLVh+DD/QcB2mncZ3A9i088CYZHfDhaS5ERvsc/BVXGQr4aCKQH4YV5kRUU6kc7dqT64sYvVpWiNaTW7lFgu7Jt1WFGWfviAhXrblg4/GypV/FfN5C6dXPO0e1OQr9uJd2IJPlpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pPyQXoPKqNZMvOZe7pjQqMP6FzRcoY9OuTGSxKSvr4c=;
+ b=Izn9KAqw+wMBikE58B8GgkuMMO2U9/hDfPxUUGCweytuuF79wFObuWl5BD9Qt02IC+wass/IYwfw/S5j0tSkABPn0aR63d85NFmZskS6Lg/pHUi92KcmaceTFfOsMah2sUZx33LFV2Qa89sLLHgynHkHB9GbeIMm0DxWjqlx6Mp7jyrDOlhXinudezwwE19ZPrernZjIEgBcPYfojdtwJZYWD1X+airpqHjqjz7Bx8W+7Ef6TpZoisIH8XW48BHkOUUU5KHQMSMOq9MpGXzQGiVpflNbPgBVaGjTWoTwoAafCeLIqMAJo5b94Em3vux8TMS8nh1ShO73RqEeB4ZeIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com (2603:10b6:208:31a::21)
+ by SJ2PR11MB8585.namprd11.prod.outlook.com (2603:10b6:a03:56b::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Mon, 30 Jun
+ 2025 05:52:26 +0000
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::5616:a124:479a:5f2a]) by BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::5616:a124:479a:5f2a%7]) with mapi id 15.20.8880.030; Mon, 30 Jun 2025
+ 05:52:26 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>, "will@kernel.org" <will@kernel.org>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "shuah@kernel.org" <shuah@kernel.org>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>, "aik@amd.com" <aik@amd.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "Xu, Yilun" <yilun.xu@intel.com>
+Subject: RE: [PATCH v3 1/5] iommufd: Add iommufd_object_tombstone_user()
+ helper
+Thread-Topic: [PATCH v3 1/5] iommufd: Add iommufd_object_tombstone_user()
+ helper
+Thread-Index: AQHb5xYCtHs96qDSmE6Vr3JwXh7ZorQbNauA
+Date: Mon, 30 Jun 2025 05:52:26 +0000
+Message-ID: <BL1PR11MB5271410ADB704F459C77BC248C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-2-yilun.xu@linux.intel.com>
+In-Reply-To: <20250627033809.1730752-2-yilun.xu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5271:EE_|SJ2PR11MB8585:EE_
+x-ms-office365-filtering-correlation-id: e265b5b6-cbba-4d3b-b45c-08ddb79a4ae8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?x24neYZf25px0FN3aihorpgP1+zGN2lALih/3WLANluhQPNdeImk98D293d+?=
+ =?us-ascii?Q?0RwA81jR2eBku5DBylZlkdzSNPB3ocZHrgj0tm3rA+7RIcBcSABpBMlExeB+?=
+ =?us-ascii?Q?KVXaDdRliEgticoOghqBP16qyXE+HrckiU/6zxzVNRpskecqMTuT/+qSOeqk?=
+ =?us-ascii?Q?k653lJw7FUtqabazS6QnBiFVxn+yNhPWfQQA67zIjQdO4PDNPs/Wqo//jcKM?=
+ =?us-ascii?Q?8d6L2KX5WvpbnYrjZoXwW/2yCPezgjwh7cB8bH+ZjMAY9qoLu5g62UqPgOlR?=
+ =?us-ascii?Q?Y/daSFNNASOTa7fzWyDHtF1bbuFHpT0/dPppfem3UmhQHcHTUkCsdidvdpl5?=
+ =?us-ascii?Q?qq8dXEioII0kdhAiaLn4GOzBvks2pKU5M4/JvvLRPDykMDVGrNUJOzUGM8bK?=
+ =?us-ascii?Q?UMn5EYouPA3miOVshuCcaxVKdqSlQ2dc+RKdc68ocO6e6qkZLY18fEtvQsda?=
+ =?us-ascii?Q?d1nKSR0lWG7xbqmLMf52JqxKoQscBmDH5K3YUA7RFppxT4MHrVeH4EYJB/Bx?=
+ =?us-ascii?Q?PRK+PdvmUq7BMmag/kcezFfBIblSP6SifYFUgFuTN5QWjbz2JLdLVUWabmAT?=
+ =?us-ascii?Q?zPzIIwZj12hd77QOw7IcVAtjp3t5rK6rQM/o5RQnRNrkdVa351BMZMkTKP5e?=
+ =?us-ascii?Q?xQtbAncVIcPkowr9Sg1K9ugFkKho0dHa/KD228weGjUWXEsRumlAAUDDpmqT?=
+ =?us-ascii?Q?Sj+0+EBgZc+t7VYttdDDEoVIdSfFVK+XQ+M5fGod4vu3kdcX0eSVhOa9TwAx?=
+ =?us-ascii?Q?U5UtQa1+VUw4FPurgKVndIh5/qy+QVnhKYuvnzHNI/6CyweFtk4jf8eH2YOK?=
+ =?us-ascii?Q?08xS0/4u2c7KWipI2NjM4qfi9kbfSywmr4bCetfaM2LqAGKt7QgsSh1KC6x1?=
+ =?us-ascii?Q?ZbpXjnA+/rmvMEUOJxL5rcLkZ6oOFfkUlANwrcIUQHOJVRRpO73AebvJTR0T?=
+ =?us-ascii?Q?9RqAlxqE5TZcN8U1LK6/JH4zOaRag21Y+r5BkzaxFC1t0dIhUr1YQSrmqJkC?=
+ =?us-ascii?Q?SR72g/0JUlCUcphDp96A4lATRG940Q1oecG2ykSTysML77XcMbj5WuJwiatz?=
+ =?us-ascii?Q?bLPAl8BSkjQyIA7WxWW+c843C//jJxqamVJvT2LRhdZFNyHuN+OXoaddGLPT?=
+ =?us-ascii?Q?NfLvzdlRgK+cEZL2tpsZPPGCtmjNtN5AyxspafUcr1bfqSlHxe7+vm5KqsbK?=
+ =?us-ascii?Q?8IlE3ZECRpHPqRfgiQ+Y/9F+ybhb00qZgA02aMBm5XdYWqb8cD4BOdekF+aA?=
+ =?us-ascii?Q?O54OMdDa6usDGCOatIpV/bMMke4WKP/y2z3wAU/PwmiqP/1xwwjGhgP/1Mbp?=
+ =?us-ascii?Q?gIBbKlZdoC6DGTd+ubHMDvM2PbGKGblUIhkijA50SSh8O/rTaX2HfZitsTcs?=
+ =?us-ascii?Q?i9jFMGoEGgA4jdP8psR+9zhw9HDjCOLrIQI6TvCCrFsHnU7wU75FYqRsSsDW?=
+ =?us-ascii?Q?Z/W/MVTDW3yxmR4TECmtYI7AsiHZ3+gH1p/ICY4NVvzL9+9p1ThBxVfPyt9V?=
+ =?us-ascii?Q?XyknQ2kNURBpb90=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5271.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?fCAp0kzzJ9x4e3Z9S7idfM9qUE4avNJH7KxHcVEaKKeuHBL2tu/kIJcEkQPL?=
+ =?us-ascii?Q?0Joc6xhlHc1zgSeaJhGZHpK5dEpJkw0jZGxaZJ5f5YICYWmupdFLRSBhGVqu?=
+ =?us-ascii?Q?ekJflHBMe7mRIwWPGGVjGu2L1+pQu6BuLmsE5J6nON6WNCj2GSmN+oZWArBY?=
+ =?us-ascii?Q?Pga1rRppiquhFaOeyQj2rodBlOdSPcruTDq2yVNUBJTU103xeT9r+LGch/vV?=
+ =?us-ascii?Q?Z1Ee5EVnsMjmmYark1FW3zHNwKbSWOwuq8+xYhJmFdDomt1ir8d+lLzTRZ0I?=
+ =?us-ascii?Q?YIzl+c86I/22CwYEXpKCbtsdvDA2WFgsusoeT0QayMpOaxgN3oRI8Jza5L7V?=
+ =?us-ascii?Q?7yC1uAL1UDABk+GUS3nC3p5+aIlFAfEv2qb+fJm9jQCK7f4hv5ClgYOdOcdj?=
+ =?us-ascii?Q?krYLO23jypOHLxtn4HHgkxIkPxiHysTwG5T3g0ALikqsfAa7KIP9FSn2H0Df?=
+ =?us-ascii?Q?VJL2wCo/iPICuZFiWpszai+7nOFCIxr76hmzR81Pf57DKi7D0GxMLMiKL0le?=
+ =?us-ascii?Q?8v+PWBE6avdrqxtl7GfATQvK8pPWXfG2ChI49ZQqv0ocebgvk2EeY6RIEIKr?=
+ =?us-ascii?Q?FauAifKSx4bODjg0b9AFarZAiTw6U3WR1mnaSOte2+LSOwm0ZcErjYPST2lx?=
+ =?us-ascii?Q?XkDBgg9E7gS8/gobVrjTsHvmthYG7tVH+exCxOK18WP99tranfYtnxSIeW4D?=
+ =?us-ascii?Q?PfJonGyMqhqGmWVLoo6gmpKwYS2SGuvTvuEb0EeLlw3+cz9qM8UlwZoTUmaY?=
+ =?us-ascii?Q?JPE4B8OGvM+tt4pFT+USedR5YsdcxPBVM0ZB6Spr5Nu0jq5ptphnfeYgJye8?=
+ =?us-ascii?Q?FxMiKgFURCregJViVOg0jkKwzM9XUdvoFLANI/QAEca1iv+cOakTFBm8b5iO?=
+ =?us-ascii?Q?iiYJJfBRQ4/oLJEx+lDYuNSyBB4TYwoeDJk+sntwbsJiRpIyxVShIVnIrZbS?=
+ =?us-ascii?Q?EIFMf8XkvTeEUUz3SbGxHCAJPVqVw/gHYrY8hu7s6ZlV6Qv6GBnwnxR1anuM?=
+ =?us-ascii?Q?TMD71ZJrW9DoeAuAgKoU3b0A/zMa5EynVxAzSuTQy/Dzd3rRHxXNEl/eUdJ4?=
+ =?us-ascii?Q?NcfFNqiW1fOza3qKJ/oeyw8f6P54hx6FTaPTZ6wxnCNqZVSkyO9RsSve9C4s?=
+ =?us-ascii?Q?eK5Pp5Tmpo9e6iiwcjjvFiaB+D1IG33pVn4ABujgf5JJ8OEj9fagdkJusMjs?=
+ =?us-ascii?Q?iF8XCVTiP2Ss6jmg3iSBcL2TDJ6fvMUsknt4qevlaNJcISyFrT/z3lFa6Cf6?=
+ =?us-ascii?Q?Dhx85pSYLOyR06j3rOdGf7DhvGs1teba7Q3IQLij+VXIq9ALGZlXfwdmri5a?=
+ =?us-ascii?Q?K3CjZkTa9RisljP09qN7uhsfDn5bsGDV1UE9Bdx72BsEIhMDkjznJAyodNAx?=
+ =?us-ascii?Q?U8dBbGgOkIkkoKALSguNPEC2/mp9bVphUFlNIfoQ9ku/t5e0UKf7isOvVYkq?=
+ =?us-ascii?Q?LpzfYBsXDeHMhdEre+0w3xJE2D/MW+d6XR4SxifSJqo6pJVAhSb0FZPpSN+y?=
+ =?us-ascii?Q?A2SPj2B2fEu/w1FVC67ajZvnkROzVm2Uq0XvzS80NJJXqqWZP6xCdB2qaLyb?=
+ =?us-ascii?Q?+1qO1dSf3/XeNYPfL9rkwg4MXxgn9g30FhxQFhLa?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5271.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e265b5b6-cbba-4d3b-b45c-08ddb79a4ae8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 05:52:26.5544
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1r/kTSNtIbnR/MEwG/mC6rFMwfqFBUtroTI31p8FNZHame1p381tewS6y3HAfzGiYR+0rvW8Y2gbYr156UdXMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8585
+X-OriginatorOrg: intel.com
 
-This input driver predates proper GPIO driver for the chip and now can
-be replaced with the generic gpio-keys. Remove the driver.
+> From: Xu Yilun <yilun.xu@linux.intel.com>
+> Sent: Friday, June 27, 2025 11:38 AM
+>
+> @@ -239,6 +239,7 @@ static int iommufd_fops_release(struct inode *inode,
+> struct file *filp)
+>  	struct iommufd_sw_msi_map *next;
+>  	struct iommufd_sw_msi_map *cur;
+>  	struct iommufd_object *obj;
+> +	bool empty;
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/keyboard/Kconfig          |  18 --
- drivers/input/keyboard/Makefile         |   1 -
- drivers/input/keyboard/tca6416-keypad.c | 305 ------------------------
- include/linux/tca6416_keypad.h          |  30 ---
- 4 files changed, 354 deletions(-)
+move into for(;;) loop
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 721ab69e84ac..84185f080b77 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -261,24 +261,6 @@ config KEYBOARD_GPIO_POLLED
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called gpio_keys_polled.
- 
--config KEYBOARD_TCA6416
--	tristate "TCA6416/TCA6408A Keypad Support"
--	depends on I2C
--	help
--	  This driver implements basic keypad functionality
--	  for keys connected through TCA6416/TCA6408A IO expanders.
--
--	  Say Y here if your device has keys connected to
--	  TCA6416/TCA6408A IO expander. Your board-specific setup logic
--	  must also provide pin-mask details(of which TCA6416 pins
--	  are used for keypad).
--
--	  If enabled the entire TCA6416 device will be managed through
--	  this driver.
--
--	  To compile this driver as a module, choose M here: the
--	  module will be called tca6416_keypad.
--
- config KEYBOARD_TCA8418
- 	tristate "TCA8418 Keypad Support"
- 	depends on I2C
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 1e0721c30709..bc387aaa9151 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -23,7 +23,6 @@ obj-$(CONFIG_KEYBOARD_EP93XX)		+= ep93xx_keypad.o
- obj-$(CONFIG_KEYBOARD_GOLDFISH_EVENTS)	+= goldfish_events.o
- obj-$(CONFIG_KEYBOARD_GPIO)		+= gpio_keys.o
- obj-$(CONFIG_KEYBOARD_GPIO_POLLED)	+= gpio_keys_polled.o
--obj-$(CONFIG_KEYBOARD_TCA6416)		+= tca6416-keypad.o
- obj-$(CONFIG_KEYBOARD_TCA8418)		+= tca8418_keypad.o
- obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
- obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
-diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
-deleted file mode 100644
-index fbc674d7b9f0..000000000000
---- a/drivers/input/keyboard/tca6416-keypad.c
-+++ /dev/null
-@@ -1,305 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Driver for keys on TCA6416 I2C IO expander
-- *
-- * Copyright (C) 2010 Texas Instruments
-- *
-- * Author : Sriramakrishnan.A.G. <srk@ti.com>
-- */
--
--#include <linux/types.h>
--#include <linux/module.h>
--#include <linux/init.h>
--#include <linux/delay.h>
--#include <linux/slab.h>
--#include <linux/interrupt.h>
--#include <linux/workqueue.h>
--#include <linux/i2c.h>
--#include <linux/input.h>
--#include <linux/tca6416_keypad.h>
--
--#define TCA6416_INPUT          0
--#define TCA6416_OUTPUT         1
--#define TCA6416_INVERT         2
--#define TCA6416_DIRECTION      3
--
--#define TCA6416_POLL_INTERVAL	100 /* msec */
--
--static const struct i2c_device_id tca6416_id[] = {
--	{ "tca6416-keys", 16, },
--	{ "tca6408-keys", 8, },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, tca6416_id);
--
--struct tca6416_keypad_chip {
--	uint16_t reg_output;
--	uint16_t reg_direction;
--	uint16_t reg_input;
--
--	struct i2c_client *client;
--	struct input_dev *input;
--	int io_size;
--	u16 pinmask;
--	bool use_polling;
--	struct tca6416_button buttons[];
--};
--
--static int tca6416_write_reg(struct tca6416_keypad_chip *chip, int reg, u16 val)
--{
--	int error;
--
--	error = chip->io_size > 8 ?
--		i2c_smbus_write_word_data(chip->client, reg << 1, val) :
--		i2c_smbus_write_byte_data(chip->client, reg, val);
--	if (error < 0) {
--		dev_err(&chip->client->dev,
--			"%s failed, reg: %d, val: %d, error: %d\n",
--			__func__, reg, val, error);
--		return error;
--	}
--
--	return 0;
--}
--
--static int tca6416_read_reg(struct tca6416_keypad_chip *chip, int reg, u16 *val)
--{
--	int retval;
--
--	retval = chip->io_size > 8 ?
--		 i2c_smbus_read_word_data(chip->client, reg << 1) :
--		 i2c_smbus_read_byte_data(chip->client, reg);
--	if (retval < 0) {
--		dev_err(&chip->client->dev, "%s failed, reg: %d, error: %d\n",
--			__func__, reg, retval);
--		return retval;
--	}
--
--	*val = (u16)retval;
--	return 0;
--}
--
--static void tca6416_keys_scan(struct input_dev *input)
--{
--	struct tca6416_keypad_chip *chip = input_get_drvdata(input);
--	u16 reg_val, val;
--	int error, i, pin_index;
--
--	error = tca6416_read_reg(chip, TCA6416_INPUT, &reg_val);
--	if (error)
--		return;
--
--	reg_val &= chip->pinmask;
--
--	/* Figure out which lines have changed */
--	val = reg_val ^ chip->reg_input;
--	chip->reg_input = reg_val;
--
--	for (i = 0, pin_index = 0; i < 16; i++) {
--		if (val & (1 << i)) {
--			struct tca6416_button *button = &chip->buttons[pin_index];
--			unsigned int type = button->type ?: EV_KEY;
--			int state = ((reg_val & (1 << i)) ? 1 : 0)
--						^ button->active_low;
--
--			input_event(input, type, button->code, !!state);
--			input_sync(input);
--		}
--
--		if (chip->pinmask & (1 << i))
--			pin_index++;
--	}
--}
--
--/*
-- * This is threaded IRQ handler and this can (and will) sleep.
-- */
--static irqreturn_t tca6416_keys_isr(int irq, void *dev_id)
--{
--	tca6416_keys_scan(dev_id);
--
--	return IRQ_HANDLED;
--}
--
--static int tca6416_keys_open(struct input_dev *dev)
--{
--	struct tca6416_keypad_chip *chip = input_get_drvdata(dev);
--
--	if (!chip->use_polling) {
--		/* Get initial device state in case it has switches */
--		tca6416_keys_scan(dev);
--		enable_irq(chip->client->irq);
--	}
--
--	return 0;
--}
--
--static void tca6416_keys_close(struct input_dev *dev)
--{
--	struct tca6416_keypad_chip *chip = input_get_drvdata(dev);
--
--	if (!chip->use_polling)
--		disable_irq(chip->client->irq);
--}
--
--static int tca6416_setup_registers(struct tca6416_keypad_chip *chip)
--{
--	int error;
--
--	error = tca6416_read_reg(chip, TCA6416_OUTPUT, &chip->reg_output);
--	if (error)
--		return error;
--
--	error = tca6416_read_reg(chip, TCA6416_DIRECTION, &chip->reg_direction);
--	if (error)
--		return error;
--
--	/* ensure that keypad pins are set to input */
--	error = tca6416_write_reg(chip, TCA6416_DIRECTION,
--				  chip->reg_direction | chip->pinmask);
--	if (error)
--		return error;
--
--	error = tca6416_read_reg(chip, TCA6416_DIRECTION, &chip->reg_direction);
--	if (error)
--		return error;
--
--	error = tca6416_read_reg(chip, TCA6416_INPUT, &chip->reg_input);
--	if (error)
--		return error;
--
--	chip->reg_input &= chip->pinmask;
--
--	return 0;
--}
--
--static int tca6416_keypad_probe(struct i2c_client *client)
--{
--	const struct i2c_device_id *id = i2c_client_get_device_id(client);
--	struct tca6416_keys_platform_data *pdata;
--	struct tca6416_keypad_chip *chip;
--	struct input_dev *input;
--	int error;
--	int i;
--
--	/* Check functionality */
--	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE)) {
--		dev_err(&client->dev, "%s adapter not supported\n",
--			dev_driver_string(&client->adapter->dev));
--		return -ENODEV;
--	}
--
--	pdata = dev_get_platdata(&client->dev);
--	if (!pdata) {
--		dev_dbg(&client->dev, "no platform data\n");
--		return -EINVAL;
--	}
--
--	chip = devm_kzalloc(&client->dev,
--			    struct_size(chip, buttons, pdata->nbuttons),
--			    GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
--	input = devm_input_allocate_device(&client->dev);
--	if (!input)
--		return -ENOMEM;
--
--	chip->client = client;
--	chip->input = input;
--	chip->io_size = id->driver_data;
--	chip->pinmask = pdata->pinmask;
--	chip->use_polling = pdata->use_polling;
--
--	input->phys = "tca6416-keys/input0";
--	input->name = client->name;
--
--	input->open = tca6416_keys_open;
--	input->close = tca6416_keys_close;
--
--	input->id.bustype = BUS_HOST;
--	input->id.vendor = 0x0001;
--	input->id.product = 0x0001;
--	input->id.version = 0x0100;
--
--	/* Enable auto repeat feature of Linux input subsystem */
--	if (pdata->rep)
--		__set_bit(EV_REP, input->evbit);
--
--	for (i = 0; i < pdata->nbuttons; i++) {
--		unsigned int type;
--
--		chip->buttons[i] = pdata->buttons[i];
--		type = (pdata->buttons[i].type) ?: EV_KEY;
--		input_set_capability(input, type, pdata->buttons[i].code);
--	}
--
--	input_set_drvdata(input, chip);
--
--	/*
--	 * Initialize cached registers from their original values.
--	 * we can't share this chip with another i2c master.
--	 */
--	error = tca6416_setup_registers(chip);
--	if (error)
--		return error;
--
--	if (chip->use_polling) {
--		error = input_setup_polling(input, tca6416_keys_scan);
--		if (error) {
--			dev_err(&client->dev, "Failed to setup polling\n");
--			return error;
--		}
--
--		input_set_poll_interval(input, TCA6416_POLL_INTERVAL);
--	} else {
--		error = devm_request_threaded_irq(&client->dev, client->irq,
--						  NULL, tca6416_keys_isr,
--						  IRQF_TRIGGER_FALLING |
--							IRQF_ONESHOT |
--							IRQF_NO_AUTOEN,
--						  "tca6416-keypad", input);
--		if (error) {
--			dev_dbg(&client->dev,
--				"Unable to claim irq %d; error %d\n",
--				client->irq, error);
--			return error;
--		}
--	}
--
--	error = input_register_device(input);
--	if (error) {
--		dev_dbg(&client->dev,
--			"Unable to register input device, error: %d\n", error);
--		return error;
--	}
--
--	i2c_set_clientdata(client, chip);
--
--	return 0;
--}
--
--static struct i2c_driver tca6416_keypad_driver = {
--	.driver = {
--		.name	= "tca6416-keypad",
--	},
--	.probe		= tca6416_keypad_probe,
--	.id_table	= tca6416_id,
--};
--
--static int __init tca6416_keypad_init(void)
--{
--	return i2c_add_driver(&tca6416_keypad_driver);
--}
--
--subsys_initcall(tca6416_keypad_init);
--
--static void __exit tca6416_keypad_exit(void)
--{
--	i2c_del_driver(&tca6416_keypad_driver);
--}
--module_exit(tca6416_keypad_exit);
--
--MODULE_AUTHOR("Sriramakrishnan <srk@ti.com>");
--MODULE_DESCRIPTION("Keypad driver over tca6416 IO expander");
--MODULE_LICENSE("GPL");
-diff --git a/include/linux/tca6416_keypad.h b/include/linux/tca6416_keypad.h
-deleted file mode 100644
-index 5cf6f6f82aa7..000000000000
---- a/include/linux/tca6416_keypad.h
-+++ /dev/null
-@@ -1,30 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * tca6416 keypad platform support
-- *
-- * Copyright (C) 2010 Texas Instruments
-- *
-- * Author: Sriramakrishnan <srk@ti.com>
-- */
--
--#ifndef _TCA6416_KEYS_H
--#define _TCA6416_KEYS_H
--
--#include <linux/types.h>
--
--struct tca6416_button {
--	/* Configuration parameters */
--	int code;		/* input event code (KEY_*, SW_*) */
--	int active_low;
--	int type;		/* input event type (EV_KEY, EV_SW) */
--};
--
--struct tca6416_keys_platform_data {
--	struct tca6416_button *buttons;
--	int nbuttons;
--	unsigned int rep:1;	/* enable input subsystem auto repeat */
--	uint16_t pinmask;
--	uint16_t invert;
--	int use_polling;	/* use polling if Interrupt is not connected*/
--};
--#endif
--- 
-2.50.0.727.gbf7dc18ff4-goog
+>=20
+>  	/*
+>  	 * The objects in the xarray form a graph of "users" counts, and we
+> have
+> @@ -249,23 +250,35 @@ static int iommufd_fops_release(struct inode
+> *inode, struct file *filp)
+>  	 * until the entire list is destroyed. If this can't progress then ther=
+e
+>  	 * is some bug related to object refcounting.
+>  	 */
+> -	while (!xa_empty(&ictx->objects)) {
+> +	for (;;) {
+>  		unsigned int destroyed =3D 0;
+>  		unsigned long index;
+>=20
+> +		empty =3D true;
+>  		xa_for_each(&ictx->objects, index, obj) {
+> +			empty =3D false;
+>  			if (!refcount_dec_if_one(&obj->users))
+>  				continue;
+> +
+>  			destroyed++;
+>  			xa_erase(&ictx->objects, index);
+>  			iommufd_object_ops[obj->type].destroy(obj);
+>  			kfree(obj);
+>  		}
+> +
+> +		if (empty)
+> +			break;
+> +
+>  		/* Bug related to users refcount */
+>  		if (WARN_ON(!destroyed))
+>  			break;
+>  	}
+> -	WARN_ON(!xa_empty(&ictx->groups));
 
+I didn't get the rationale of this change. tombstone only means the
+object ID reserved, but all the destroy work for the object has been
+done, e.g. after all idevice objects are destroyed there should be no
+valid igroup entries in ictx->groups (and there is no tombstone
+state for igroup).
 
--- 
-Dmitry
+Is it a wrong change by misreading ictx->groups as ictx->objects?
+
+> +
+> +	/*
+> +	 * There may be some tombstones left over from
+> +	 * iommufd_object_tombstone_user()
+> +	 */
+> +	xa_destroy(&ictx->groups);
+>=20
+
+And here should be ictx->objects?
