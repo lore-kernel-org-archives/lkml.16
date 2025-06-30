@@ -1,102 +1,96 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF9723C4FA;
-	Mon, 30 Jun 2025 18:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900C5292B24
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751309035; cv=none; b=qwTz/A1GXr/BWwmwaigal/CRITi7Rufpg8fiTzR9ketcMhcHSFpa0GofDLOwJmlvf6TX5EHSmCMQVEk+ARqqX0BzRWY27jwyMEL0mqROYIGyAWaAh6a8a0Hql5sp8DbrCk71Cw5omjSI7X+BXVm3q+hzPu4RdMHjzJsl3g17f3w=
+	t=1751309063; cv=none; b=pi8d58tLc4NHXPEHzCDKooV8gg5GDkAVeP5bBs4PiIpWqL2Gxx3PJUyIt4kndBsomydBIAckvGGdwM94au7s2pbTuZI71pm112DAvhTpRhlAEayEkdxgh68LZVlv25EQkO1ffUab+H6YDeXzrw2tjI9a267Eu4hTNot4Ied9AXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751309035; c=relaxed/simple;
-	bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jWihqo4mujlv1Yyd0sGWKaaZ8KmbcMDz0gq9kywHoy4/xX5qUzDyH3RAxmT2e8FBmZst3eIX7PNS3076WntXem/r1ca5s2mthOHIn915KFDyT9zD7PVvzm9WpgMMlfHL7jxy7Jm8tEODFmUY/J2TB2LdkGsd2jlocH1Cayvsv5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bkOeEFum; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751309063; c=relaxed/simple;
+	bh=pq/ZW+I7hMd3v5+Szli/mXCBn1EiT0wClMfSvoilDe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Y26yH/Ikw/rOhOHpXoyX4y+csIwtcTjjpLUw3dF7Jo9VxlcFZFtbJam9hb72kt6hM6HDxXBEAacuZL3Fl6iToni8/uXx8BVZHdbx+jyjHJGTFgnSci7U1yussvOhBbWWQO94S2PCRCzh8SzhgmmOAyo3qFdB/3u8b5mGavf3Qys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UGAE5eJ7; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkOeEFum"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553cf020383so5410321e87.2;
-        Mon, 30 Jun 2025 11:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751309032; x=1751913832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
-        b=bkOeEFumHtVdi0K3Ku8qM8LG8DUpLsPmDbhg/0hEEwSWjYBnZatRSG1NUOrj3ZuM2V
-         Z06R83W0L6Orly4J2oNfRYufyGuedlvSIcRJPiaqSx0i9BHP3J/Y6OXfOEaCliiCwnZI
-         ZDyncefWcwyg/kUqNQ9KnsvwHEhZuOTWcJp2hoOC/DkBA2Y2RA5HPzyWSXa4SYdT0YZN
-         nQAZ5U2w3rtmxIwbRi0+ZYU4sjIUnUuH/Bh/KEH9S+vf0bSmKWPnrEPahYRK9GZOTz0L
-         mZlm5WMW1e3d16EwgaIzSwna+cN6Hp6cbWQYyWEV556nkKeP2AI3RRCjJ5RH9vyOhU9G
-         GveA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751309032; x=1751913832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
-        b=fNzPMCkYTpf5TFRQzquAPQ6I0BEnBEntMjCx1IS9AANE6QZ5BS35fATsFa7YDvFwbE
-         UErwNHrKaoqz9dCTXh9zO0KGz1S/2YhanBNMXJitWJwEGHAxGrHbtBeXP1PWMj/XfSKg
-         QAAfH1wIsabljJLjT6VNMehfGKPqhPmazjym6IDyK8VRlYKqrTMtpvnAsBlxAfpXE3uz
-         TsKd6Yf5AX4rO2UjP3j+o1NOAiisYMNYN638ByL0v+4Gbr27ho65Fok4yv2dhenobTk7
-         xNmWrXWhQwW6eoQntk3LiaJ2ZzeBK6RQB+C8Tr8ZJeluPmpcbbHPwejxLxstKjEddaqJ
-         D1UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgFB4yv3tPYryKh0r/1bLieNcxPeXfieHBCMtcIZ5K5uATd3kkZBPlytPVkvRvKbXgJpMlfwuQz1vts0o=@vger.kernel.org, AJvYcCWYYynIM7xA4muNxpvcORyDFChFOPkKvOkDZx4eKUICh8uZ1X0q2Oc43IinKYccPAEaDBHoH41QRYw=@vger.kernel.org, AJvYcCX0oxWBD6iJHP8wAMMS36DounI8i9aWLikNrrKaAmxx44jajLkBq52+W8B4sD8y7qwMv67wjSkhBd6ypqw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZSjrvxE4rAlrH32fxVbANiccmY3UF9wQzGVkQPgRfXB8tDzh5
-	fSF0HdGBWod1TIVa4GyQSxVzBlZ505/STBB1Is13W0+bVR7+TuXiRXKhc8gxGKPcPUPEGGnwLrJ
-	DVBbBO5DmPV7fKHxg/O9APBglYUIaQtw=
-X-Gm-Gg: ASbGncuxxnVCFbzzknIf6B4/+xBru09rNYvViFWlc2FnhTjHo17rEMEs/OLG8c2i3ZL
-	snrjjXWBH39oCblPKtzjLp6/EfddePu3mkzGk1sAXgnWZkqZKYhI5kEixPBodTG8fjcPQ9FgH7v
-	p1pr1s8VSUXNTW/ZP/amgB85d7KzK1Zf5yI5AW1mD6Jr4=
-X-Google-Smtp-Source: AGHT+IFts7B2G94g1BsJej0yK8agM1bwVzu0mWbSXDl/5ZEwOcpHgL67IjAqouLat6jwnKktyvp8cEJm7vvx5kQIH00=
-X-Received: by 2002:a05:6512:b12:b0:554:f79d:ce59 with SMTP id
- 2adb3069b0e04-5550b9ee228mr4566554e87.27.1751309031764; Mon, 30 Jun 2025
- 11:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UGAE5eJ7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751309062; x=1782845062;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=pq/ZW+I7hMd3v5+Szli/mXCBn1EiT0wClMfSvoilDe8=;
+  b=UGAE5eJ7G58DlypOJ9MZjT6005A1YPTPAQbUqu7jIlfPVGQCCzfexcS/
+   H5INODK6/j9R11u7XFA3MqVjN08PKmWwbPzmtGN/OEd9wJpH7QORnKqF0
+   tgJDVcsbFlFQeUURrBffa9OCXD6KPkInp6u3/AjI99QryNtRJyyTrOe5F
+   i0NWfzHr4E23lsxOyVWJUfbPvZwBzaT5jcW10l0Er4C+nX4Zc4Q0ErKrK
+   1cXQUkkreLl6cSIAD9wvggFbQqLcB3EoMPIpL0usY0dvKJPC4IbjpdbeU
+   zW9ZUk7g5+uZI/hkVUYSggjOuuAGIw+Pgjsan3+UfnyyksPesJZHsNZHr
+   w==;
+X-CSE-ConnectionGUID: EdiTPPDuQh2ka8Ci2/QRXg==
+X-CSE-MsgGUID: 06/cuKU/TayUJ6QhmZjIaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="52661199"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="52661199"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 11:44:21 -0700
+X-CSE-ConnectionGUID: VD025VZnRnG/DW0NFqvo5A==
+X-CSE-MsgGUID: 6+r+ffOMRxuOJRz1YKbUIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="153167280"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 30 Jun 2025 11:44:19 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWJUH-000ZGs-0c;
+	Mon, 30 Jun 2025 18:44:17 +0000
+Date: Tue, 1 Jul 2025 02:43:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nikunj A Dadhania <nikunj@amd.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [tip:x86/urgent 1/1] arch/x86/coco/sev/core.c:2170:30: warning:
+ variable 'dummy' set but not used
+Message-ID: <202507010218.3O5Ge0Xt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-1-d142bcbd0234@gmail.com> <040b0d8b-e862-48dd-9b77-9266a5194f99@nvidia.com>
- <20250519101725.k644wzizjwygtwa7@vireshk-i7> <49e7d006-e9cb-49da-a4cb-b73a08f6b792@nvidia.com>
- <20250520100218.te5i5ltrx43zjsq6@vireshk-i7> <9826e66a-3474-4a00-967d-b7784ff60be4@nvidia.com>
- <20250605105151.5s6eblr472mbhunt@vireshk-i7>
-In-Reply-To: <20250605105151.5s6eblr472mbhunt@vireshk-i7>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 30 Jun 2025 13:43:40 -0500
-X-Gm-Features: Ac12FXxHvk8KZYtykBjWMf5LNIhZa8_RViROFbSfDc-CY2-mP9QdqIlLFIs5w1U
-Message-ID: <CALHNRZ-uA6vHYbb5UdDvhRrNy5j2jyds4iTsiOxc6O=2nnedbg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] cpufreq: tegra124: Remove use of disable_cpufreq
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Jun 5, 2025 at 5:51=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
-g> wrote:
->
-> On 05-06-25, 11:34, Jon Hunter wrote:
-> > I think that would be fine. Given that the tegra124-cpufreq driver is t=
-he
-> > parent, if it fails to resume, then I assume that cpufreq-dt driver wou=
-ld
-> > not resume either?
->
-> There is no resume interface in the cpufreq-dt driver, it is the cpufreq =
-core
-> which resumes to doing DVFS and I think it will try to do DVFS even if te=
-gra's
-> driver failed.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+head:   4a35d2b5254af89595fd90dae9ee0c8f990a148d
+commit: 4a35d2b5254af89595fd90dae9ee0c8f990a148d [1/1] x86/sev: Use TSC_FACTOR for Secure TSC frequency calculation
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250701/202507010218.3O5Ge0Xt-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010218.3O5Ge0Xt-lkp@intel.com/reproduce)
 
-In my opinion, I'm thinking the original flow makes more sense. If
-resume fails, disable cpufreq. Then the subsystem doesn't keep trying
-and failing and causing who knows what kind of havoc. But if that's
-still not desired, what should I do to get this moving again? Just
-drop the error handling entirely, as suggested?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507010218.3O5Ge0Xt-lkp@intel.com/
 
-Aaron
+All warnings (new ones prefixed by >>):
+
+>> arch/x86/coco/sev/core.c:2170:30: warning: variable 'dummy' set but not used [-Wunused-but-set-variable]
+    2170 |         unsigned long tsc_freq_mhz, dummy;
+         |                                     ^
+   1 warning generated.
+
+
+vim +/dummy +2170 arch/x86/coco/sev/core.c
+
+  2167	
+  2168	void __init snp_secure_tsc_init(void)
+  2169	{
+> 2170		unsigned long tsc_freq_mhz, dummy;
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
