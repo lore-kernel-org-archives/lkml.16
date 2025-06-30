@@ -1,102 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E468285C9C
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE812701DF;
+	Mon, 30 Jun 2025 12:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287874; cv=none; b=DLkJNeGbX7T7PbziX9em2FmuJtdbpDNitEIJko9CMdIQMhswfP5KCQx/XcLi8LAoEeSJat/fKxjoOg9CgGvBTnmOl0wSEWO00JzjqZLBztMcBbmrR0+6QjAcAZ8L7sqREyFyc1cnE+je9iaMp2yjTLnKsbH52Vm0jUzoAJ2nelM=
+	t=1751287916; cv=none; b=BkJueE9LG/XQLeWicpJtczXUNUPzcesKAV2s183ngxstmmU4GQVWgIcmdpi917ir9d3Sc8u6q5WHl43Mg837uRBUy02XJvlcGKiVN7fafWAQIfLxRvkY7wv9C28TAHD0B78DUucHcibALx80g3dcE+oYmwPg3JAYqKu05y+V0Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287874; c=relaxed/simple;
-	bh=8ujMhUl7i4M3zObpjxjLUh1ZT+VHzlsAgD+fcoPERC8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=obTXrWrUfdk0b2NAiCegdVfezC0OiiDxzwRBLC7jAIl9YfeiEW5XAjOwkfaPoTpREgAPIrlBI3vk9lodq92qr4JWU/4wUSL/jiax6TDeCQRKdTQi2lMCPbwfjXG19eyLcCdHFEoVzwI0Ns8JOtc090yg5LCnjkD7xSF8s4ayhuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TSyDPUrP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751287916; c=relaxed/simple;
+	bh=1GZnzJ9gT2t7alHrMVtRMKxx2nwrgqs6HEQbRg1qdF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfDQYFznC5jvBmzw+2XmSXfT1Dr1pHjj/uJucxmonuqXMaav0nTwNbeeC4wmHtM3Lkk3VIGaRWMzW5TfJkCH4hANtZh2d9ZYnZAZ13wyB3z7C/pCXC7kAL3I3YOUuldnb+c6NV5XC/t3yr7BADT8xp2DdZ0usnYsDghXJvYGB44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0AxlP8t; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSyDPUrP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751287872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=84LuPZ9pN40vZZj6LotxaTZH2u/8fUAdfMA409beGHI=;
-	b=TSyDPUrP4Vj5OtqEA7MLBoNqkFaMa3sKRKU4Msq3IUaxJy2sW7xudL1j7AhEDYu/FPT4U+
-	YnkUl2zMZFhVSBgoUlETigXfFoCVjqSzMYoCoEHIX8ibod39okdS8shQy1lOPCNDumfYNT
-	q7WnnJvjdNQEx3TGBxLkgOhY/rl9344=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-CKIX6GAvPeiF6kLzFqpz0Q-1; Mon,
- 30 Jun 2025 08:51:08 -0400
-X-MC-Unique: CKIX6GAvPeiF6kLzFqpz0Q-1
-X-Mimecast-MFC-AGG-ID: CKIX6GAvPeiF6kLzFqpz0Q_1751287866
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D6061800287;
-	Mon, 30 Jun 2025 12:51:05 +0000 (UTC)
-Received: from oldenburg3.str.redhat.com (unknown [10.44.33.80])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57A451956095;
-	Mon, 30 Jun 2025 12:50:56 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
-  bpf@vger.kernel.org,  x86@kernel.org,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Josh Poimboeuf <jpoimboe@kernel.org>,
-  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@kernel.org>,
-  Jiri Olsa <jolsa@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,
-  Thomas Gleixner <tglx@linutronix.de>,  Andrii Nakryiko
- <andrii@kernel.org>,  Indu Bhagat <indu.bhagat@oracle.com>,  "Jose E.
- Marchesi" <jemarch@gnu.org>,  Beau Belgrave <beaub@linux.microsoft.com>,
-  Jens Remus <jremus@linux.ibm.com>,  Linus Torvalds
- <torvalds@linux-foundation.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-In-Reply-To: <20250625225600.555017347@goodmis.org> (Steven Rostedt's message
-	of "Wed, 25 Jun 2025 18:56:00 -0400")
-References: <20250625225600.555017347@goodmis.org>
-Date: Mon, 30 Jun 2025 14:50:52 +0200
-Message-ID: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0AxlP8t"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d7b50815so14538385e9.2;
+        Mon, 30 Jun 2025 05:51:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751287913; x=1751892713; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
+        b=f0AxlP8t7yn8JXZ7OZn3dsnq+CjcjBqSS1PENuXtaQXnElQRV25Zog2TAfqguqsVYl
+         0CV62KpRciG/Fkq4JNFnPz3uFqjwXmnIJ2w+qffRUkbp4ICGYbmWoAgT7HjDaimyySXh
+         0WBftJ5leow+rap06kBvPQ7kn8Vss+jPYYZxnNgXtCfCFze9Q0xaqpJcRlbAKA2o77h9
+         c5u0qX6mhl5BBWBw+2TUs/a2InEUhbpA8Vrg51wLoZ1OjEvkkT8c+wZXdw9etbSSJof5
+         Gljmtiou6L3YBGUmZUO66pbE9Y2yyDP2svonKMD31hlW0VpNWBmHyz5ISu/WVcCvjso3
+         Z1iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751287913; x=1751892713;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bGmFeyDMoBpTbQ19lKlxDLGZE93GOj2clGGn+vOYYyQ=;
+        b=LDy/w+B4QLH9eGk80wzOH8Vk2N8NHp610brRdz5mPq2GK/lI+66mWwPBMAgKEm5IB+
+         H0qrWwI81RzMnuP/EAHGX2+zWsJGo88SHdO7NKsmvKOlcKyaYpCHBpzVOI9W5IHvu6iz
+         Pi/wtt/I3UGigG4D4nC/2BFv8CJLN++w9z3vSADI6ZTy+wjDqco8njLRpESKv3uoac5r
+         F4LObysBAotHq6HXJpqQq6sknX7PpjtiExe5elNhwq7lKhbNpg1m/VqbYgSfyBQymfzV
+         acOyeit1JrkB6G95A7/jtz4OdqjQaU/P+wp9OoF0ttq+luVZdqRfe84QlONJr1DmWqrP
+         xlIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUc8kUc7++jPGIL/jv1FVhN2+hFof2p2zkHxPHRqxmQqv3jkaaNPFYWZF/TL0/KVJWo81aMO/eYqkUV0vZiXaA/kw==@vger.kernel.org, AJvYcCXpqwgk0WyS3Gd5eJkMEqD6AN7quaXCC7zTJSLfuKoDAKmKDPVV7G+UDy3H2zmRG5wlDth3+8bn0wgPCos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMIbsLrMtBXAPWwyjMywzIosI9acLaqRXbEUWs8DPINgxOjquU
+	xDItGFz0B8EdCg6q/PSedj3xUNhJFSBim8e6AIuUDGBZYKpIG1LkRUF8
+X-Gm-Gg: ASbGnctFwgqxl2S+GtggX8GCEdhw4SRcxO1Tu5fNlbedHJi4CjpDYGljJpIFjjzrqI+
+	GzQSEl3RAUzbWESQWguPBKxlcPcdKXQUnAENilqoPrWGRWoQBQ0kWd0ZwXj4XEL9o/ZhLNZ39+G
+	Lqb2m66eOHphSqJBk/pvwObWnKt3YmrUDZ4jbUO9nMKZvbkRHzYBbt15lfrnKStSvbxUMAtYvsw
+	srkAvNHlQVotFDz/fCPHk9cIXsW9hyxVcdNKDvzGkAP4TFAqmgtSjt5tXF7qz9EvPyZhIvGqxYu
+	3sJQCmaGjWaMgq6jDl/j7q/MWcQkFEX1lS8Rt5ekhyDdVppaHOaSPlZ8W6+Y
+X-Google-Smtp-Source: AGHT+IEyE7HdVRfyChdQyAIYEvU7j+qS4oD7GW9tgHyuCTGXIQ3vI+csy6l0qNSfKih8u1T4PBULbg==
+X-Received: by 2002:a05:600c:1e12:b0:43b:ce36:7574 with SMTP id 5b1f17b1804b1-4538ee39aabmr119794565e9.11.1751287913250;
+        Mon, 30 Jun 2025 05:51:53 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a3a5599sm137326365e9.13.2025.06.30.05.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 05:51:52 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" -> "buffers"
+Date: Mon, 30 Jun 2025 13:51:28 +0100
+Message-ID: <20250630125128.562895-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-* Steven Rostedt:
+There are spelling mistakes in some literal strings. Fix these.
 
-> SFrames is now supported in gcc binutils and soon will also be supported
-> by LLVM.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/util/drm_pmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Is the LLVM support discussed here?
-
-  [RFC] Adding SFrame support to llvm
-  <https://discourse.llvm.org/t/rfc-adding-sframe-support-to-llvm/86900>
-
-Or is there a secone effort?
-
-> I have more patches on top of this series that add perf support, ftrace
-> support, sframe support and the x86 fix ups (for VDSO). But each of those
-> patch series can be worked on independently, but they all depend on this
-> series (although the x86 specific patches at the end isn't necessarily
-> needed, at least for other architectures).
-
-Related to perf support: I'm writing up the SFrame change proposal for
-Fedora, and I want to include testing instructions.  Any idea yet what a
-typical =E2=80=9Cperf top=E2=80=9D or =E2=80=9Cperf report=E2=80=9D command=
- line would look like?
-
-Thanks,
-Florian
+diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
+index 17385a10005b..988890f37ba7 100644
+--- a/tools/perf/util/drm_pmu.c
++++ b/tools/perf/util/drm_pmu.c
+@@ -210,17 +210,17 @@ static int read_drm_pmus_cb(void *args, int fdinfo_dir_fd, const char *fd_name)
+ 		}
+ 		if (starts_with(line, "drm-purgeable-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of resident and purgeable memory bufers");
++				  "Size of resident and purgeable memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-resident-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of resident memory bufers");
++				  "Size of resident memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-shared-")) {
+ 			add_event(&events, &num_events, line, DRM_PMU_UNIT_BYTES,
+-				  "Size of shared memory bufers");
++				  "Size of shared memory buffers");
+ 			continue;
+ 		}
+ 		if (starts_with(line, "drm-total-cycles-")) {
+-- 
+2.50.0
 
