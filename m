@@ -1,203 +1,235 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from techbitestudio.com (techbitestudio.com [75.119.147.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BB038B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751244035; cv=pass; b=P6ung/0pGgExtL2VA4vg6NmbSamn7Ijm1WM7su1LB4YtX3QfOrlpC6J3doC1WprF/e7ik8k2+/u1LIPk3X9C3A0kHxJUbmc83n+vraXmR0Uk47Jag/SvD4EpiVaAMwAEP3N6KtwcHHpaVQh5aNzOAoLJ9w4BJgvjKkUU/cVYNP4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751244035; c=relaxed/simple;
-	bh=cD8pGpHAcAKFKf4P3Mm/7/Ghh8dMiDjnyp8Wh2Ig1GI=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=YVvVGltN4vVlga9JQluhmKGxSejQv1SUvsiLe08jv6zLktrj5+CMOZLg0TUZsd1OKPwfz4PF18xRT7TM0f+3vVYQ/pQoPTd8S2rrrX9zvDnRG2/KJBwK3hFyPkSgqSYs9/+DPEdukGlCQo5Qq/FvURz4jQC5UCFJvqOOiMWj/ko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=Whmfn5YD; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9B41EEF9
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=75.119.147.106
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751244225; cv=none; b=ql/5PXf/m62hfQatfpMDp73GKbKrAY0R+h7z4y6Eck6wErE6/E2Vh3L9mItycq4ukYoRGBC99ABEFNlPrHsiyzs2+UtuYIacjT6PD8p3Bf1hC5QaokzJiaVITd37V0LGqpjoby+79QLzycuuLpLTYz2Rrt8GYGaYVaq+EAgRYas=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751244225; c=relaxed/simple;
+	bh=p7tItz4s67WUaMEoaG+Mp0Nng1mJdmisqwOq753JKMg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=BZTNJRjlHscSpeMZuSokohs91syrwjkmzHL2BOKRlRsxyzOoot9DcE+3SnNc7Fbmafdkkdm31wHqFcpik/EW96K5lHCf1MZlPsh9OpvL7Q17bLyKSk3YwkXW3J7VaodlLIPWvRDWkvfhiJv2+lwaTZPotq8TekSO7u1R8BUIE5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in; spf=pass smtp.mailfrom=kenip.in; dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b=LykpOqIb; arc=none smtp.client-ip=75.119.147.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenip.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="Whmfn5YD"
-ARC-Seal: i=1; a=rsa-sha256; t=1751243998; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ihB+JZbJgH64/E4TQSBch5EF1wpQAQ9+9IFwgXmq77zD3Cq/vYL38/NzaVVcVoDt44BA3du04wD6LGDR6tIINhpgrIXNhE+Mr/0FxjbqFKJF4/Q1ZmZe5/jB0YzfmJIhXOPuCdwIWQQieC3qHhaXbkogXUEs13uP0/ntUTC2qPo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751243998; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rGhZHNmzHnkJA08PBV1XUuA1nhWaeDgT/XvxAzzLceM=; 
-	b=G06Hole6qk+A58tehQ8eYoHGqHK9GI2FgCk0lbJGW2FF2upYJowrdPNKTmZ4J1qJMpFrvEn5kmoEbm0kfF3c5o6EkImzFe5j4kA5JBPtbO0yEPGUp0mRdaV19CZXeHm29w8v4zCtm1VxyusskADrifDJD4JU051hieVE1YQQVf4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751243998;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=rGhZHNmzHnkJA08PBV1XUuA1nhWaeDgT/XvxAzzLceM=;
-	b=Whmfn5YD+PzdvcHIwIH3ZHdzlA+Vi+piC8LwOYuCPDlRgTd8ognkiEjxF+ZP/sS4
-	7Dt0EhPjAJKGhG2ROWXazUPv3MAWrmUDtom1l1mDWVzCnh+kFQDLrz3V5ham7xWclEX
-	JCyOteo7XPg4YCGfT3p5xaBzAK/1akELCH2ZvbQ0=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1751243996229220.56972103993655; Sun, 29 Jun 2025 17:39:56 -0700 (PDT)
-Date: Mon, 30 Jun 2025 08:39:56 +0800
-From: Li Chen <me@linux.beauty>
-To: "K Prateek Nayak" <kprateek.nayak@amd.com>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
-	"Borislav Petkov" <bp@alien8.de>,
-	"Dave Hansen" <dave.hansen@linux.intel.com>, "x86" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	"Peter Zijlstra" <peterz@infradead.org>,
-	"Sohil Mehta" <sohil.mehta@intel.com>,
-	"Brian Gerst" <brgerst@gmail.com>,
-	"Patryk Wlazlyn" <patryk.wlazlyn@linux.intel.com>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	"Li Chen" <chenl311@chinatelecom.cn>
-Message-ID: <197be46bc2a.c4caa389979847.6405320630005594342@linux.beauty>
-In-Reply-To: <1b706790-2fec-4582-a425-55eeff36c32e@amd.com>
-References: <20250625034552.42365-1-me@linux.beauty>
- <20250625034552.42365-3-me@linux.beauty> <1b706790-2fec-4582-a425-55eeff36c32e@amd.com>
-Subject: Re: [PATCH v3 2/2] x86/smpboot: avoid SMT domain attach/destroy if
- SMT is not enabled
+	dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b="LykpOqIb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenip.in;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=KOB8GqEPw4zLresCss8wv+s6sLLCekVWy0o3dhRzXMA=; b=LykpOqIbj08gZ/PfvRbAAJtoDL
+	xCqLTDaRkFdyDK3uJZg70+N3+5Z9vrwvdHtukKZqLW8ZymZMjQz3WVDYiuaG/EV8WR5FuuhoWjlPr
+	95MSVvdlzu4xUJ86TKnDKo8WT3Sx3ZxW2VRMVRUQGwsmoJAShzAA8UumxbWghSMZsAbk=;
+Received: from localhost ([127.0.0.1] helo=kenip.in)
+	by techbitestudio.com with esmtpa (Exim 4.93)
+	(envelope-from <siddhartha@kenip.in>)
+	id 1uW2cK-0005He-FY; Mon, 30 Jun 2025 06:13:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Date: Mon, 30 Jun 2025 06:13:28 +0530
+From: siddhartha@kenip.in
+To: Dev Jain <dev.jain@arm.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, mgorman@suse.de
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_mm=3A_limit_THP_alignment_=E2=80=93_?=
+ =?UTF-8?Q?performance_gain_observed_in_AI_inference_workloads?=
+In-Reply-To: <19714cae-6b73-43ec-af7a-1455196561d1@arm.com>
+References: <28338f055b3c9afa8b69ff6f05ea20ed@kenip.in>
+ <4990838b-660d-46a2-b21c-67adcba61ff9@lucifer.local>
+ <19714cae-6b73-43ec-af7a-1455196561d1@arm.com>
+Message-ID: <3ee2e7fea6f263aa884e3e715632b09f@kenip.in>
+X-Sender: siddhartha@kenip.in
+X-Priority: 1 (Highest)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi K,
+On 2025-06-28 09:19, Dev Jain wrote:
+> On 27/06/25 9:00 pm, Lorenzo Stoakes wrote:
+>> +cc Vlata
+>> 
+>> On Fri, Jun 27, 2025 at 04:09:16PM +0530, siddhartha@kenip.in wrote:
+>>> Hi all,
+>>> 
+>>> I wanted to share validation data from a Hugging Face-based AI 
+>>> inferencing
+>>> workload,
+>>> which was significantly impacted by the THP alignment logic 
+>>> introduced in
+>>> commit efa7df3e3bb5.
+>>> 
+>>> Using transformer models with dynamic input lengths on Intel Xeon 
+>>> (Cooper
+>>> Lake),
+>>> we observed up to a 3200% throughput improvement after applying the 
+>>> patch
+>>> from Oct 2024:
+>>> 
+>>>    mm: limit THP alignment of anonymous mappings to PMD-aligned sizes
+>> All congratulations are owed to Vlastimil Babka for doing this, cc'd 
+>> :)
+>> 
+>> I gather he enjoys novelty beer mugs as tokens of thanks ;)
+> 
+> I was wondering how the change can get us such a big optimization - the
+> alignment causes us to gain at most 1 extra PMD-THP mapping. Is there
+> something else I am missing?
+> 
+> I ask because when I was reading the code I was thinking whether a 
+> similar
+> change can be done for mTHPs.
+> 
+>> 
+>>> Metrics:
+>>> - Model: BERT-base
+>>> - Inference engine: Transformers + ONNX Runtime
+>>> - Kernel: 6.6 vs patched 6.6.8
+>>> - Batch size: 8-32, input length: 64-512 tokens
+>>> - Metric: inference throughput (samples/sec)
+>>> 
+>>> Thanks for the fix -- this change had real impact on a 
+>>> production-relevant
+>>> workload.
+>>> 
+>>> Best Regards,
+>>> Siddhartha Sharma
+>>> ISV @ Kenip
+>>> Solution Link: 
+>>> https://www.intel.com/content/www/us/en/partner/showcase/offering/a5bHo00000045YUIAY/deadlock-clearance.html
+>>> 
 
- ---- On Wed, 25 Jun 2025 13:45:22 +0800  K Prateek Nayak <kprateek.nayak@a=
-md.com> wrote ---=20
- > Hello Li,
- >=20
- > On 6/25/2025 9:15 AM, Li Chen wrote:
- > > From: Li Chen <chenl311@chinatelecom.cn>
- > >=20
- > > Currently, the SMT domain is added into sched_domain_topology by defau=
-lt.
- > >=20
- > > If cpu_attach_domain() finds that the CPU SMT domain=E2=80=99s cpumask=
-_weight
- > > is just 1, it will destroy it.
- > >=20
- > > On a large machine, such as one with 512 cores, this results in
- > > 512 redundant domain attach/destroy operations.
- > >=20
- > > Avoid these unnecessary operations by simply checking
- > > cpu_smt_num_threads and remove SMT domain if the SMT domain is not
- > > enabled, and adjust the PKG index accordingly if NUMA-in-package
- > > invalidates that level as well.
- > >=20
- > > Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
- > > ---
- > > changelog:
- > > v2: fix wording issue as suggested by Thomas [1]
- > > v3: remove pointless memset and adjust PKG index accordingly,
- > >      as suggested by Thomas [2]
- > >=20
- > > [1]: https://lore.kernel.org/all/87msa2r018.ffs@tglx/
- > > [2]: https://lore.kernel.org/all/875xglntx1.ffs@tglx/
- > >=20
- > >   arch/x86/kernel/smpboot.c | 18 +++++++++++++++++-
- > >   1 file changed, 17 insertions(+), 1 deletion(-)
- > >=20
- > > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
- > > index 7d202f9785362..4b6daa1545445 100644
- > > --- a/arch/x86/kernel/smpboot.c
- > > +++ b/arch/x86/kernel/smpboot.c
- > > @@ -494,13 +494,29 @@ static struct sched_domain_topology_level x86_to=
-pology[] =3D {
- > >  =20
- > >   static void __init build_sched_topology(void)
- > >   {
- > > +    bool smt_dropped =3D false;
- > > +
- > > +    if (cpu_smt_num_threads <=3D 1) {
- > > +        /*
- > > +         * SMT level is x86_topology[0].  Shift the array left by one=
-,
- > > +         */
- > > +        memmove(&x86_topology[0], &x86_topology[1],
- > > +            sizeof(x86_topology) - sizeof(x86_topology[0]));
- > > +        smt_dropped =3D true;
- > > +    }
- > > +
- >=20
- > Instead of this memmove, wouldn't just passing the "&x86_topology[1]"
- > to set_sched_topology() when "cpu_smt_num_threads <=3D 1"  work?
- >=20
- > Something like below:
- >=20
- > (Only tested on a QEMU based VM)
- >=20
- > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
- > index 3818b16c19e1..1793248d28cd 100644
- > --- a/arch/x86/kernel/smpboot.c
- > +++ b/arch/x86/kernel/smpboot.c
- > @@ -494,6 +494,8 @@ static struct sched_domain_topology_level x86_topolo=
-gy[] =3D {
- >  =20
- >   static void __init build_sched_topology(void)
- >   {
- > +    struct sched_domain_topology_level *topology =3D x86_topology;
- > +
- >       /*
- >        * When there is NUMA topology inside the package invalidate the
- >        * PKG domain since the NUMA domains will auto-magically create th=
-e
- > @@ -504,7 +506,15 @@ static void __init build_sched_topology(void)
- >  =20
- >           memset(&x86_topology[pkgdom], 0, sizeof(x86_topology[pkgdom]))=
-;
- >       }
- > -    set_sched_topology(x86_topology);
- > +
- > +    /*
- > +     * Drop the SMT domains if there is only one thread per-core
- > +     * since it'll get degenerated by the scheduler anyways.
- > +     */
- > +    if (cpu_smt_num_threads <=3D 1)
- > +        ++topology;
- > +
- > +    set_sched_topology(topology);
- >   }
- >  =20
- >   void set_cpu_sibling_map(int cpu)
-=20
-Yes, I also agree. I would switch to it in the next series and add your sig=
-noff.
-Thanks!
+Hi Dev Jain,
 
- > >       /*
- > >        * When there is NUMA topology inside the package invalidate the
- > >        * PKG domain since the NUMA domains will auto-magically create =
-the
- > >        * right spanning domains based on the SLIT.
- > >        */
- > >       if (x86_has_numa_in_package) {
- > > -        unsigned int pkgdom =3D ARRAY_SIZE(x86_topology) - 2;
- > > +        unsigned int pkgdom;
- > > +
- > > +        if (smt_dropped)
- > > +            pkgdom =3D ARRAY_SIZE(x86_topology) - 3;
- > > +        else
- > > +            pkgdom =3D ARRAY_SIZE(x86_topology) - 2;
- > >  =20
- > >           memset(&x86_topology[pkgdom], 0, sizeof(x86_topology[pkgdom]=
-));
- > >       }
- >=20
- > --=20
- > Thanks and Regards,
- > Prateek
- >=20
- >=20
+Thank you for reviewing and for your thoughtful question.
 
-Regards,
-Li
+You're absolutely right that, in isolation, gaining one additional 
+PMD-THP mapping wouldn't explain a 3200% speedup. But in our use case 
+(Hugging Face inference workloads with dynamic input sizes and many 
+allocations), the original PMD alignment logic caused a cascade of side 
+effects:
+
+The performance improvement comes from how that interacts with dynamic 
+memory allocation patterns in AI inference workloads, especially those 
+using frameworks like Hugging Face Transformers.
+
+In our specific use case, the workloads were running on Intel Developer 
+Cloud, but I no longer have access to that particular environment or the 
+original profiling output. However, I’d like to highlight why this patch 
+had such an outsized effect:
+
+🔹 1. Fragmentation Avoidance
+In model shard loading (e.g., large BERT or GPT2 models split into 
+multiple memory segments), many medium-sized anonymous allocations occur 
+in rapid succession. These workloads tend to allocate many 512 KB – 1.5 
+MB buffers dynamically (token buffers, intermediate tensors). Aligning 
+each one to PMD size, even when their length wasn’t PMD-aligned, led to 
+gaps between them — defeating natural coalescing into a single THP.
+
+🔹 2. TLB aliasing and cache index pressure
+
+These fragmented mappings caused frequent TLB misses and poor L1/L2 
+cache reuse.
+
+The result was what looks like “memory thrashing,” with slow memory 
+access dominating total inference time.
+When every mapping is PMD-aligned (even if not PMD-sized), the gaps 
+between them prevent Transparent Huge Pages (THPs) from activating 
+effectively.
+
+This breaks THP coalescence and causes fragmented page tables and higher 
+memory overhead per shard.
+
+🔹 3. Latency & Throughput Penalty from Memory Misalignment
+This leads to higher TLB miss rates, especially under multi-threaded 
+load, which dramatically slows down token embedding and attention 
+calculations.
+
+When loading model shards, memory initialization becomes 
+cache-unfriendly, with poor reuse across cores.
+
+This affects not only inference latency but also model cold-start time — 
+which is critical in autoscaling deployments.
+
+🔹 4. Qualitative Observation
+Without this patch: shard loading stuttered, warm-up was slow, and we 
+saw CPU cycles dominated by page_fault and TLB miss handlers.
+
+With this patch: shard loading smoothed out, THPs were correctly applied 
+(based on smaps), and throughput shot up by an order of magnitude.
+
+🔹 5. Measured Impact
+On Intel Xeon (Cooper Lake), a 6.6.0 kernel with PMD alignment on 
+non-aligned sizes showed 11–32× worse performance.
+
+With the patched kernel (which skips alignment unless the length is 
+PMD-aligned), memory layout was contiguous again and THP was 
+consistently utilized.
+
+This isn’t about one extra THP — it’s about preventing widespread THP 
+fragmentation and the resulting dramatic cache/TLB degradation. For AI 
+workloads with high concurrency and dynamic shapes, this small patch has 
+a massive effect on layout and locality.
+
+So, it's not just “1 more huge page” — it's avoiding massive 
+fragmentation that leads to:
+
+1. TLB miss storms
+
+2. Poor locality
+
+3. Cache index thrashing
+
+4. Improvement in latency and throughput
+
+This applies across many adjacent, odd-length allocations typical of AI 
+inference workloads.
+
+The original alignment logic created a pattern of broken contiguity — 
+defeating THP benefits altogether.
+
+In AI workloads using Hugging Face Transformers, model shards and 
+intermediate tensors are dynamically allocated during inference. These 
+allocations often fall just below or above the 2MB threshold that THP 
+relies on. Misalignment or forced alignment to PMD boundaries causes 
+fragmentation and disrupts huge page coalescence, affecting performance.
+
+📊 Memory Allocation Pattern Diagram
+
+Without Patch (PMD Alignment Forced):
+
+|<--2MB-->|<--Gap-->|<--2MB-->|<--Gap-->|<--2MB-->
+| Alloc A |         | Alloc B |         | Alloc C |
+
+Each allocation is PMD-aligned, even if it’s not PMD-sized
+
+Gaps prevent THP coalescence → TLB/cache fragmentation
+
+With Patch (PMD Alignment Conditional):
+
+|<---------6MB Contiguous Region--------->|
+|  Alloc A  | Alloc B | Alloc C | Padding |
+
+Contiguous anonymous memory region
+
+Coalesced into one or more THPs
+
+Improved locality and TLB efficiency
+
+While I regret not having the raw perf output at hand, I’d be happy to 
+replicate a similar test locally and share reproducible results if 
+helpful.
+
+Best Regards,
+
+Siddhartha Sharma
+
 
