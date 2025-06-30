@@ -1,67 +1,87 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AC3199BC
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1170B199BC;
+	Mon, 30 Jun 2025 02:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751252250; cv=none; b=FTbKVe2D8JeMQWd6PhNR2VLiLeo+Wl60rgMKXOtCa0TD81VOqQ86MaLotaPyGWCR6DolDReMvndZNuW6D+LO7SCgDJg+q2CsZEqFZMBVmWiso46Jh/kWmnMoKkI/aOFodPi8BQzanzMY6JKxSKajEwqHdaPPcwTxzHkWHkldVu8=
+	t=1751252323; cv=none; b=curax0wDRUJs2oSK1ib3S1dnIRCVXfpVCmS+YmQknye1spPy7oT+swE7R8qpxjuO1IN8yxAMUcgosb/MqzSftGljrzxIT0jLrJ24oyY9zHRr8qzlVdvuzvkfLE6EOviEwnsMb3ZJZdwROIFvHVK7I9fza49HYYqq5bPJLltV9gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751252250; c=relaxed/simple;
-	bh=gavhzufaX7qZ5o/K4UzozwBlVKLcjlAwzbzwC8jqkP4=;
+	s=arc-20240116; t=1751252323; c=relaxed/simple;
+	bh=nSsAWJoUAxdJVdFYpT+KG8DsC7I6ERGRN8NrBEv/B6A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E36F79ApWisgQmalMwtn/0gjYD2HYhvY6ayEl3m3F8xmAmUaRC0JD31wy3w639d6/Og6co4ADbJCiIetUzloxfVJ4cvOZanZLzEgJUJWQhOR3Ah3IeU+RfFPxJZaJXBp/RS7DP3q6Vl//gewSEZuKng2PuWypSrYYdZc1b4SASU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rAnmjJkh; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=KwVVL7xBvN57AHNwpQ42WWo7scoC1oODx6rZTWLRjJA8yWnk0A8/H0KdewxlnROyHjiRMn96TMt1/Spvi1po2LnFjIxQbkLPv07Djy/jRJ4cQwQ6kHzRDrMHP0D2v2AfqL9HGPFLkag0X+1BY3ljdWviXzLDOw5pjwTOOUJ25L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XssOOATy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rAnmjJkh"
-Message-ID: <2949fb39-7e94-40a6-ad75-636a194f0b2f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751252245;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gavhzufaX7qZ5o/K4UzozwBlVKLcjlAwzbzwC8jqkP4=;
-	b=rAnmjJkhdBA7NtAxus/OFYJUF6BLGaQWqxTLkg4F3vXBTphK2FnoBwgwRjIrtv2BLeMYPN
-	0dS7o53RL1TCHB/2h8azmkX1syuGuZdjnP5sYJET8ECgSWM2lDwmCjqB0Tli3O/Wa2ifOy
-	W2sWzJV2SUAyp5ueXm0YQm9u+xmnS6s=
-Date: Mon, 30 Jun 2025 10:57:18 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XssOOATy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Ja9ktEuFa6H8pogNrZFGr6PVl2YGfhxqscV+kYYXpLY=; b=XssOOATykHc1PCTN+iuYGJmtHv
+	d0nR7m++QkG9GWMehHF85q4MAzHSCp6cSYlvWX8QErf95oaCaIQlXR4ENVbGxw8Q+CFIwzy1sIrCw
+	IB7cVebSCWamPey5XG2BT2SUga8jQefvw/q99AfaypNrvueUJb4eidGewY8yBeMmGbFOMKwdP3vDW
+	ZDG1hAcakgJMxzRoOJk5CvmXHC+5wEZ2zZLOuamJ3QeJwHMlL0+Dy8sfHV9+qaSpUytpSXKNRFuAG
+	H44sdGLns9q4OGSGD03C00wtrs2m1X3MptX4YloI2HMCd1a/WQNpoC03lxntV0W0zJYPjg08PoxOk
+	zBX9uXVw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW4j9-00000006iP1-2e7Q;
+	Mon, 30 Jun 2025 02:58:40 +0000
+Message-ID: <c6033a11-82ae-49a9-aec1-ac820b9ce6ee@infradead.org>
+Date: Sun, 29 Jun 2025 19:58:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/3 linux next] Docs/zh_CN: Translate networking docs
- to Simplified Chinese
-To: jiang.kun2@zte.com.cn
-Cc: alexs@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn, yang.yang29@zte.com.cn,
- wang.yaxin@zte.com.cn, fan.yu9@zte.com.cn, he.peilin@zte.com.cn,
- tu.qiang35@zte.com.cn, qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn,
- ye.xingchen@zte.com.cn
-References: <20250630104028091JYqwlWt_OOKp3u4LK6A_1@zte.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 30/66] kconfig: gconf: remove
+ glade_xml_signal_autoconnect() call
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <20250624150645.1107002-31-masahiroy@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250630104028091JYqwlWt_OOKp3u4LK6A_1@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-31-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-在 6/30/25 10:40 AM, jiang.kun2@zte.com.cn 写道:
-> Ping
 
-You sent out this patch set last Friday and then pushed for a response
+On 6/24/25 8:05 AM, Masahiro Yamada wrote:
+> Now that all signals are connected manually, this is no longer
+> unnecessary.
 
-on the mailing list on Monday (when the usual timeframe is two weeks),
+Double negative. Or is that what you meant?
 
-which is not a friendly way to collaborate.
+is no longer necessary.
+is now unnecessary.
 
-Not everyone works on weekends—at least I need time to rest.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  scripts/kconfig/gconf.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+> index 02bbb7ce4c4a..09537245213a 100644
+> --- a/scripts/kconfig/gconf.c
+> +++ b/scripts/kconfig/gconf.c
+> @@ -1120,7 +1120,6 @@ static void init_main_window(const gchar *glade_file)
+>  	xml = glade_xml_new(glade_file, "window1", NULL);
+>  	if (!xml)
+>  		g_error("GUI loading failed !\n");
+> -	glade_xml_signal_autoconnect(xml);
+>  
+>  	main_wnd = glade_xml_get_widget(xml, "window1");
+>  	g_signal_connect(main_wnd, "destroy",
 
-Yanteng
+-- 
+~Randy
 
