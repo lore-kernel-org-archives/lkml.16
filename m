@@ -1,146 +1,217 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9281DEADC;
-	Mon, 30 Jun 2025 14:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DF128A718;
+	Mon, 30 Jun 2025 14:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293986; cv=none; b=K9YRLJBdgpRpYmD1zRQdS+8x8QpqeHgjslzFADNhGga5QKgz79hDM8+vk4G9K4t8NVW7asHH2Z9ijFUmn+ZJunANWon0yb2mIACtktb702Kp1QPO4nIhbDNp88kSu2PELiWgjU9RE0mp98wL2SW95F2IDUaN8UJSW94GhyG897I=
+	t=1751294013; cv=none; b=pY+gIhOWBl0OUwPuyrwxf3xpja+IyptdAadPOVAiDtpOMXgi5G/ZB/AsNJQbStzqKRXBV17abCSGU7lz/Gzkpa/hlJk0sl31fKVfVpmxPCCK3xVzxTlMoixaQf2RQ/lSluG0WvtAlcE4H9UEYdDs1g6EUm0sWcyaZ+yxjs+mVUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293986; c=relaxed/simple;
-	bh=qjTt84KBfEtBg95rqhCzltj23WXxyrqGZt9ItTvbZTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uu6CyhK3TwteqFhkduqjuT8hEGiEAih7YNt+XpdrHpd8016oK4VdlJi29jFLLHYcIA6cRncB4fv5EABnMedZMZJL3szhYb5wsSAfVzaN0txGfYNAvh0no7zAkC+TeRJWz6/49jbGgpRShkcyCg1ftIMemfB7swNuReTxGtWqaIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so3781940a12.2;
-        Mon, 30 Jun 2025 07:33:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293983; x=1751898783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dSg20GDoGMGjYNXdLie7adRbEtdaFM3ql2cFF4814Fk=;
-        b=PoConTs4oyShUdUdbsiuExVpX6EHqS94CLUT4itzIFDIX+sM6+ze7Exbp3KJZonagn
-         3/Y7MaJ2ezILtfj6+sI6P4+txQwW6OeFR9s3LgcF6m7sspzdY3P5HUI6A1m49spakcJE
-         mDOiL4vNT9J2NT5eTyXTzDddkAAVRQvKhYxjMDTfDPVm6N/DyB1G3yEIc8T9mm2Shweh
-         WrggjV5coheRvC9GsZoEkPnVKA3V+j8txjeWBt6ixZCE56XbeZkwG7JdgFnlg84EJc6s
-         3tpAhRKPhqTWEIuUbmvC2bxG2RfwDBBtQ3L3MIBySOZWiBpgN0AHXTzxwFY6uU9Nk+fX
-         pjwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUd/UA35kFZG2QTPKgh0oZmkE/FkxBiwxRw2qLFPLxY7cqwc3sdUSCahkJSG9Kye6vp7WWg/rqO@vger.kernel.org, AJvYcCV3ZYcvwSJ5ScoIL9mHPROK+tEK4xyvh5RAmJG9xkSNGl8xL93czLlQEuXJOhD64/t3UgpRqUd4SyFe/W4y@vger.kernel.org, AJvYcCVmCipOcm9Hwl9F8uPGFZ1vSPU/Vpj0SrcSZUaxFxXHZlIDY1oHMy4J79cXMYtifwhXo3bdiEbTtRFr3AS5zoke@vger.kernel.org, AJvYcCXkLq56VEi9VLlaFFtlCx00HrPTLTQ4aDR1x5qsEoxonkZPAIs2hPyMYvd7lNHdmteDS7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKLsnVFs08Y0hK0s1IEejBbTNto1p8wDxMOjpsgO4rG/X8U8r6
-	k/YhPVCHl1iv7Ymw8ykyd+1f5yvhyFaxVN7dRhLZrSC4SJDgr3ixqHAt
-X-Gm-Gg: ASbGnctF/W3YgBHmJNaZu3IXDPmk8fz3cyolO9OkdvTsVWmGJjg0DdMIIAiqCfVJ4zC
-	djmD9hb3ddJrrp2WCwJj9ixHno40s9K5JFpOV+QCpejfthlAO6viIzEfzf1esTQDRI3mZ1EtBzQ
-	+A6rEpaCmB9HurSGiFvMMfJOEsDilKqxo2naD1kdCZhVVvLY4lk1le2Su7zXJJreKmNWhQisROT
-	lXKd6ayjW1/jeAGBAnwZe9dZ+NCydL/r+6eWiaWlmJQP+QirvhIwVvxUYNlHvkVNSevyG4sIZ2S
-	92qcSalOrbikWCUpSMak+Og2U4Nn9Pn6/hWkap+rN3Bk4++uedP3
-X-Google-Smtp-Source: AGHT+IG5SjwBNYpgtsZ2GrAPYTJ3w1Wwt/wPQJnP1CIFTpzXnOVWiVVkg3kGL9lQcuyRxx5C/zHEOg==
-X-Received: by 2002:a17:906:1446:b0:ad8:9997:aa76 with SMTP id a640c23a62f3a-ae3500e3d11mr1083912566b.37.1751293982547;
-        Mon, 30 Jun 2025 07:33:02 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35aad8275sm651946666b.23.2025.06.30.07.33.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 07:33:02 -0700 (PDT)
-Date: Mon, 30 Jun 2025 07:32:59 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
+	s=arc-20240116; t=1751294013; c=relaxed/simple;
+	bh=xBoW3rlPHrpNRePgWUiwvLDWKyKrpPXX4V3Wanki5Lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i4mntPxHoti4yvF5aTFu8hUZMd7/tHltf2n4rg8+AnMS++FvWRFjKLpu9guo3TUUVR7xs4PipRdtDWzo5fs4QHGnVzk2lADTv5w2SE+QCeZWxnopXMwC97kbmljkB+5ctszRInu1hK4OJq5+5XR3ow9UDm/aU/lf74fxH7CmCYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RHihNfI/; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RHihNfI/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8DB4044318;
+	Mon, 30 Jun 2025 14:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1751294003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gUpJKGfdtQyY3l5D3cNVRaiEpFXmBX14OR/1FDHlqxU=;
+	b=RHihNfI/HOZhIOvaorkpp5LDrp/oba2wFTpQN7X7MnDJEq2JKlr6957n1WF+L6BoBg5WnF
+	K4nZktwrYK/YMeZABf7TUlXflbTmtm7s83QtWjPKa9rbWDnZ6bPnnVVsXpxG2Pkrgg+NRa
+	QFAf5slmCGmqKGLM351HJbHR+Dd01wFSvCe/xDEPMaLu42WME/QKjpYyzGzdZ+4E+7hnk+
+	oYVSFhhDODFnl0p11rw/HIgjASVp1APkHAJsDGhfc14EqzpbETaMWalEg0NTGY/1y7tWsX
+	pWYJIyxcxTNGlyZYOUaAGMtC/qRmmgeDisrPZfptq9dzdO/mV8jfupQAf2fj2g==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	ast@kernel.org
-Subject: Re: [PATCH net-next v3 3/3] selftests: net: add netpoll basic
- functionality test
-Message-ID: <aGKgG+uE+UXEIIbf@gmail.com>
-References: <20250627-netpoll_test-v3-0-575bd200c8a9@debian.org>
- <20250627-netpoll_test-v3-3-575bd200c8a9@debian.org>
- <686002d028f_a131d29458@willemb.c.googlers.com.notmuch>
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Antoine Tenart <atenart@kernel.org>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject: [PATCH net-next v7 01/15] dt-bindings: net: Introduce the ethernet-connector description
+Date: Mon, 30 Jun 2025 16:33:00 +0200
+Message-ID: <20250630143315.250879-2-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250630143315.250879-1-maxime.chevallier@bootlin.com>
+References: <20250630143315.250879-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <686002d028f_a131d29458@willemb.c.googlers.com.notmuch>
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudelhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeulefgvddthfekkedugeeikeeuudekhfekgfehgfelkeekkeekhfejkefgvefhieenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgto
+ hhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hello Willem,
+The ability to describe the physical ports of Ethernet devices is useful
+to describe multi-port devices, as well as to remove any ambiguity with
+regard to the nature of the port.
 
-On Sat, Jun 28, 2025 at 10:57:20AM -0400, Willem de Bruijn wrote:
-> Breno Leitao wrote:
-> > +NETCONSOLE_CONFIGFS_PATH: str = "/sys/kernel/config/netconsole"
-> > +NETCONS_REMOTE_PORT: int = 6666
-> > +NETCONS_LOCAL_PORT: int = 1514
-> > +# Max number of netcons messages to send. Each iteration will setup
-> > +# netconsole and send 10 messages
-> > +ITERATIONS: int = 20
-> > +# MAPS contains the information coming from bpftrace
-> > +# it will have only one key: @hits, which tells the number of times
-> > +# netpoll_poll_dev() was called
-> 
-> nit: no longer has ampersand prefix
+Moreover, describing ports allows for a better description of features
+that are tied to connectors, such as PoE through the PSE-PD devices.
 
-Good catch. I will update.
+Introduce a binding to allow describing the ports, for now with 2
+attributes :
 
-> > +def ethtool_read_rx_tx_queue(interface_name: str) -> tuple[int, int]:
-> > +    """
-> > +    Read the number of RX and TX queues using ethtool. This will be used
-> > +    to restore it after the test
-> > +    """
-> > +    rx_queue = 0
-> > +    tx_queue = 0
-> > +
-> > +    try:
-> > +        ethtool_result = ethtool(f"-g {interface_name}").stdout
-> > +        for line in ethtool_result.splitlines():
-> > +            if line.startswith("RX:"):
-> > +                rx_queue = int(line.split()[1])
-> > +            if line.startswith("TX:"):
-> > +                tx_queue = int(line.split()[1])
-> 
-> Does this work on devices that use combined?
+ - The number of lanes, which is a quite generic property that allows
+   differentating between multiple similar technologies such as BaseT1
+   and "regular" BaseT (which usually means BaseT4).
 
-Not sure. This is suppossed to work mostly on netdevsim (for now).
+ - The media that can be used on that port, such as BaseT for Twisted
+   Copper, BaseC for coax copper, BaseS/L for Fiber, BaseK for backplane
+   ethernet, etc. This allows defining the nature of the port, and
+   therefore avoids the need for vendor-specific properties such as
+   "micrel,fiber-mode" or "ti,fiber-mode".
 
-Since I am not familiar with combined TX/RX, I've looked at ethtool
-code, and it seems RX and TX wil always be printed?
+The port description lives in its own file, as it is intended in the
+future to allow describing the ports for phy-less devices.
 
-This is what I found when `-g` is passed to ethtool.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ .../bindings/net/ethernet-connector.yaml      | 47 +++++++++++++++++++
+ .../devicetree/bindings/net/ethernet-phy.yaml | 18 +++++++
+ MAINTAINERS                                   |  1 +
+ 3 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ethernet-connector.yaml
 
-	static int dump_ring(const struct ethtool_ringparam *ering)
-	{
-		fprintf(stdout,
-			"Pre-set maximums:\n"
-			"RX:            %u\n"
-			"RX Mini:       %u\n"
-			"RX Jumbo:      %u\n"
-			"TX:            %u\n",
-			ering->rx_max_pending,
-			ering->rx_mini_max_pending,
-			ering->rx_jumbo_max_pending,
-			ering->tx_max_pending);
+diff --git a/Documentation/devicetree/bindings/net/ethernet-connector.yaml b/Documentation/devicetree/bindings/net/ethernet-connector.yaml
+new file mode 100644
+index 000000000000..2aa28e6c1523
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ethernet-connector.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ethernet-connector.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic Ethernet Connector
++
++maintainers:
++  - Maxime Chevallier <maxime.chevallier@bootlin.com>
++
++description:
++  An Ethernet Connectr represents the output of a network component such as
++  a PHY, an Ethernet controller with no PHY, or an SFP module.
++
++properties:
++
++  lanes:
++    description:
++      Defines the number of lanes on the port, that is the number of physical
++      channels used to convey the data with the link partner.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  media:
++    description:
++      The mediums, as defined in 802.3, that can be used on the port.
++    items:
++      enum:
++        - BaseT
++        - BaseK
++        - BaseS
++        - BaseC
++        - BaseL
++        - BaseD
++        - BaseE
++        - BaseF
++        - BaseV
++        - BaseMLD
++        - BaseX
++
++required:
++  - lanes
++  - media
++
++additionalProperties: true
++
++...
+diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+index 71e2cd32580f..6bf670beb66f 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+@@ -277,6 +277,17 @@ properties:
+ 
+     additionalProperties: false
+ 
++  mdi:
++    type: object
++
++    patternProperties:
++      '^connector-[a-f0-9]+$':
++        $ref: /schemas/net/ethernet-connector.yaml#
++
++        unevaluatedProperties: false
++
++    additionalProperties: false
++
+ required:
+   - reg
+ 
+@@ -313,5 +324,12 @@ examples:
+                     default-state = "keep";
+                 };
+             };
++
++            mdi {
++              connector-0 {
++                lanes = <2>;
++                media = "BaseT";
++              };
++            };
+         };
+     };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bb9df569a3ff..20806cfc1003 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8946,6 +8946,7 @@ R:	Russell King <linux@armlinux.org.uk>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-net-phydev
++F:	Documentation/devicetree/bindings/net/ethernet-connector.yaml
+ F:	Documentation/devicetree/bindings/net/ethernet-phy.yaml
+ F:	Documentation/devicetree/bindings/net/mdio*
+ F:	Documentation/devicetree/bindings/net/qca,ar803x.yaml
+-- 
+2.49.0
 
-		fprintf(stdout,
-			"Current hardware settings:\n"
-			"RX:            %u\n"
-			"RX Mini:       %u\n"
-			"RX Jumbo:      %u\n"
-			"TX:            %u\n",
-			ering->rx_pending,
-			ering->rx_mini_pending,
-			ering->rx_jumbo_pending,
-			ering->tx_pending);
-
-		fprintf(stdout, "\n");
-		return 0;
-	}
-
-
-Thanks for the review,
---breno
