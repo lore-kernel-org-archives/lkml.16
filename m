@@ -1,274 +1,423 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11022141.outbound.protection.outlook.com [52.101.66.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D544923ED63
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.141
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270612; cv=fail; b=uBcqiGE+EGUlfozIwedoei7WARDLLZ2bY2rFCL2PnRkajQ+junjhpe6XGn9Enp+MBCxIaSPprGacWSM6Ol+wA+UxKTm3twAA8yICRIBrPtvQzUwxpafRfqp7pD8/8lJTU0a3gGS2SLXEqSwWGMCCONtDjBl2GLvE2OP5WWRjV5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270612; c=relaxed/simple;
-	bh=clAM9186e4B9PKbWb75Lnc3e9+ToTH6BJPFvOPcfBgs=;
-	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LCIsBDhCyTak7qaIlu3vmM3yhed9Nx5Sc1mcGdNE3jfpYCnkyGa0BjSwjrkpoTM9JHRKDBnhXT6TkVHg2vYk/S7gyRoW+spkiMcI2xwaWo88QXIJuFWmkqAS3vVnP9RsaJFxkclV8Z1Abcy/xHmF+e4wUC1PqIKOxhmElopGGRE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=b5XCSkMT; arc=fail smtp.client-ip=52.101.66.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D1E21FF55;
+	Mon, 30 Jun 2025 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751270668; cv=none; b=bGERMZLZvH7fO2naprwK023+QBKajFggELjkZlG26SnbMzK05CmEpGJcp3aIyqj9a40A+JYERIBdRhhJTKBq5C9Un6RcvdsOBCQLR0IaZJ5+OHwwOX4RDH13cjWT/Lai8y0W7xqSTcE4MDSe9tH9UvHKC2tPPE43NdtxwnHzm8s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751270668; c=relaxed/simple;
+	bh=bwchRmcLVbZYLZGHfdDl6K19HLcH2bDZCDHH2eaUt34=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X8KtZiwtwmDGbBc84iugIX6fe5uliEJeU0wCYh9A2AeLkYS9CAuObMPuaZcHkAiLWL1i7CTp6kFw4XmCxXU7ZCTTJXK5k+Ddj+04sCyN8BMZW4u0slm4xyrwQXGxGw9wlNDI648mHIDIdpRH3MQYsBkj7KCLZQZoXb6nlcGX2Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjFyH3wW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="b5XCSkMT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ALYpJZ8RCdj4u6jkVcj79R8WJCLg15seAQzpgv4Tm6veair1HdFQt3uh4NLly7ROIOfO2nWfCF6VDFg3vm4jiuyKws5b6szgHHgmdz09Yv9IP0Q4ou+59/xiKcnX72brfBq0ppChY68/gHFNuWrZ+mkUBDliNvjN4oSydXAgmvDxuAxnsNMngDvdCM13DM9NIxpCU84jTP0W9qsIohsRnyJtIohmSUsdfIhqIpptBTD2Okp1Y/jHEgFEaFLL5EwnRA4ay6+U2GbHD88arl8QRtsN3y35XSYiDbMBLngkQNFfkjZG1y3fC11DaefGMe+fmUriNV+HthaYNYZZTfTCsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S4UNtM0hdMm/eZRryBz1Esly2XiZTYmoCKWNeVbABZw=;
- b=Pn+XYheYsxQ1A6dZlpP/a0IQNNUCvWmqfWp6nTIyH4g8LvLc/VYQ8yg2bmCtprx6EeRvyalkRWereDZ7abYLnvRuusI9yUMyJJrXExDCkfw9ViOJR7DwxpC0I+12kWKdajM+iL+7PRjjdDIyfuSQsTGLFZnP9L54rK2OJULWMfRf9wG8l/9dmY8Gyd7B70e4M+JJnzVdw6hcKae0fAH5l1UPfvQn4QSht+96TlXRXjKJwaRQMvIS7MFfyIpzfTs3hNtte+u8F7E8lSh2B8fP493FFUeySO78vsUh2UA6uxKYtoB0BW/jINzc0tFzVXjODLKYgJ/5iGrY3anXHG+0dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 13.93.42.39) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=topic.nl;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=topic.nl; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S4UNtM0hdMm/eZRryBz1Esly2XiZTYmoCKWNeVbABZw=;
- b=b5XCSkMT4NhOFihfNKHu7NxkH8ykd4s0Vv5703lMYrp+873XP/7R0SWlQevle2SAobb+tzZvFSK0lJB1pfmh/QLHwh3n0UGOiqOlK+1rjE7atPkppDu6+fRdhec9Ym+cGJQZYylqBS4yUKk0DUgKpWlnf+fcF9AQrTFfJTOrWTf4iEMKgu+OrBPWdpEhxFY4otUmQeFk/aanTTU4edc5c66xNyMBm7Z+wyRuiY+S8Vjyq0q0mNM461Fjm6FFTur1+bfFBTWgJXUcu3NtvuaYpqBtYPPuZCh200JAFzLWVa+IYKfMquc5dsFSkyOWiJU+/bv3tmGeiU2YlSK9qQ6D0g==
-Received: from DB6PR0301CA0095.eurprd03.prod.outlook.com (2603:10a6:6:30::42)
- by VI0PR04MB10832.eurprd04.prod.outlook.com (2603:10a6:800:267::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 08:03:22 +0000
-Received: from DB1PEPF000509F3.eurprd02.prod.outlook.com
- (2603:10a6:6:30:cafe::60) by DB6PR0301CA0095.outlook.office365.com
- (2603:10a6:6:30::42) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.28 via Frontend Transport; Mon,
- 30 Jun 2025 08:03:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
- smtp.mailfrom=topic.nl; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=topic.nl;
-Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
- 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
- client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
-Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
- DB1PEPF000509F3.mail.protection.outlook.com (10.167.242.149) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 08:03:20 +0000
-Received: from AS8PR03CU001.outbound.protection.outlook.com (40.93.65.69) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Mon, 30 Jun 2025 08:03:19 +0000
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=topic.nl;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by AM7PR04MB7127.eurprd04.prod.outlook.com (2603:10a6:20b:113::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 08:03:17 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%7]) with mapi id 15.20.8880.030; Mon, 30 Jun 2025
- 08:03:17 +0000
-Message-ID: <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
-Date: Mon, 30 Jun 2025 10:03:16 +0200
-User-Agent: Mozilla Thunderbird
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC: dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Michal Simek <michal.simek@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
- <20250627145058.6880-1-mike.looijmans@topic.nl>
- <20250627181911.GF24912@pendragon.ideasonboard.com>
-Content-Language: en-US, nl
-Organization: Topic
-In-Reply-To: <20250627181911.GF24912@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: AS4P190CA0019.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d0::18) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjFyH3wW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB41C4CEEB;
+	Mon, 30 Jun 2025 08:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751270667;
+	bh=bwchRmcLVbZYLZGHfdDl6K19HLcH2bDZCDHH2eaUt34=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AjFyH3wWyGhc00UmXWf/Baghr444XwrDHmaZNwUt2B5oJAD9XJ9p6rWTP9Uf+mXUy
+	 XT6HYoLBjhuDCMyf5JQkvkzyIZzRMdEn33rpS8bVI/3XQjZ/gujtmDsuImDsku1gtk
+	 8M9KBZH/xeBFtbaSPoCvVI8+QsiLNIen9FuflgdrgYMMRXsgITLgO7Zzg3ulEUg62M
+	 6zAkkvbNFNxQP8M90e/Sk7/XqChjbT0sAfUl2bbfDBD3GrBnq4eUA4d8uG8b4tmTRQ
+	 in9EX2JtthhCdNUxGdTST6chzGxTX3LmCjkrgxSd4ZdcGtb4rBMs3/o3gROTNxDJJd
+	 P7tfxJM7tTlTA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so8779568a12.1;
+        Mon, 30 Jun 2025 01:04:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVLOhmXhbSujYsZeZaiDg8PgX4gXHvEuVt/rZDuSgiG7N8cOiEDQyZ6Uxyi40sZGgVy5J8=@vger.kernel.org, AJvYcCWr6YqPSevI4aNzuc4dcYKZVaUAziIfsk1ipmE8+FI/ikPEW47nnroMNmJesu7fYDGWF+lR2/OVwCiSgtHv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0AKtjnvvEi1BK7ksHmNlvEpsm+8XSIJSr1/d/Do55cYN2w+vh
+	eArVWh3DSzLwW1vJztkkSuLrYenYVOkemub7cr/SfI8kk8ZzcjbKMlh7i2bOrjcGrwA50+Ry1zY
+	gwfLR/wMk7sansNH2O8ZnzPZa1SWHwmI=
+X-Google-Smtp-Source: AGHT+IHvs0BPl27zV28ojmMXtogxYdBLQpI0Nb2lzudY4Dal6psVvwXmOrDtSymaTj8NC9aMyua2eiATokD9CrBpBhw=
+X-Received: by 2002:a05:6402:34cd:b0:60c:6a8d:8511 with SMTP id
+ 4fb4d7f45d1cf-60c6a8d89c8mr13781147a12.12.1751270666189; Mon, 30 Jun 2025
+ 01:04:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM8PR04MB7779:EE_|AM7PR04MB7127:EE_|DB1PEPF000509F3:EE_|VI0PR04MB10832:EE_
-X-MS-Office365-Filtering-Correlation-Id: a361cb25-ebbf-48a9-6ae7-08ddb7ac941e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?S1lDWkJkTWFhUkFEeWFKUGluNXpmR09hbXI0WVpzUGljSFRaK2VEYzdnNFBR?=
- =?utf-8?B?U0V6K05VN1I0M2lQcUtDSmhiRitLbXBMd0J0b050dFMxcVlEVDY4bUhpNHRp?=
- =?utf-8?B?TkphRDEwRlhQbnF1emlZdjMzYVVtN3ZHdWUyT3ZMRE56V21tcHlRdE1YdUov?=
- =?utf-8?B?c3FJYm1wN2xZamVhNDhkaWRQWHhSbXZWank5WVdiUWxBWGJ5ZXRoUCs4MVZC?=
- =?utf-8?B?TnJlTmpPRnA3RzFzY3pHemZuUDlNTUo4TjdJNmJQRldPY2U3QmtFcTFLbzNE?=
- =?utf-8?B?c0x3Rzh4NU9BaW85YmVmcVpIbFJycVdEb1dWUWNYWndRZEl2elg4YWx1cGx2?=
- =?utf-8?B?SjVLWXdkTE1ZUjVHYWQ5SUo3aXJQT0VIakxISWI4M1p5ZnBPMk9VKzUyWUlo?=
- =?utf-8?B?cDVFcTFXUHFzcWhCejdCZmM0NmNqUFptVnVtU2VxVXljL0tPdTFzdE1ZSHht?=
- =?utf-8?B?MFBINVUrcVRBYXZlKytQdGI0N3BrV2dKcDJBbGFuZDRpbFBEU0dxNlM2L20x?=
- =?utf-8?B?RmFjNkRnZG9sa2ZjTXQ2WmErelVqVGh0bzM2cXRSZ2ZQUUg4aTdCOGp3RnNu?=
- =?utf-8?B?OXhlNm1NS21yMzNkZXprcE9rOWdTTWp6c0RsMk5tS1pPK29CRVgvcmVGNHlJ?=
- =?utf-8?B?KytpRCtFd09tdkUyckhhVWpZZVRtR2phOTMvWVFsbWc3bnlJWDhhVUdBZkxa?=
- =?utf-8?B?K1grTVQ4RjZuMDQwWVVENis5RGxDYzhPd3cwdUhPcVhHeitVUHZuU3RYcUor?=
- =?utf-8?B?UkZpMHFDbXRHYlEvN2RPOGtVYTM5OXBvWjkraEhXc2ttZmgvRTl5WEs4TUkz?=
- =?utf-8?B?VDcxdWNkZnJKR1pKRUFvQ0Y1RGhWcHk1NUtKTVNsbmt1TWE5UTZZbkpTZHBT?=
- =?utf-8?B?OTNrTXFWcWZTaDVLQTMyWHlzUnBFSlZQRk1XaUoxbzhwQUhiVnNPUW5IQ3hD?=
- =?utf-8?B?QzJKZ004Ti9ZLzRCRWk4WktxQm5NMC9tdGREZFhMRmRrUjBMMXVYZjRqVUtj?=
- =?utf-8?B?UTZCRE9hZlpZbm1iQXBpTWJ2a3VSUk16QUhOVmhtT3Vtd1RKOUs4d2JtM2NI?=
- =?utf-8?B?emJGR1AwczFnclJwc1hmK1ZPRTZTY3lkSVFuZTFGOUR4WFZJdEpmajB5RUQ0?=
- =?utf-8?B?b0lTSW9FeUMzWnN3V0hEQk15TDRPZlNvME1pZjJDUjlabzlXQmlhaWhJU29v?=
- =?utf-8?B?MlNwaktpMFA3L0F0Z0xKdWxuK0U1OFJmSWFEbFNEWGVRcGR3YU1vSXFxQW5s?=
- =?utf-8?B?WUEyQ3BITFBPMlhWK2Q5ajJvc2k1K1FKS1JENFB3YmZudEplanFMRitsam02?=
- =?utf-8?B?WXNPenR1VEZFRHpDeTR6algwQmVidndUT0N2enFWV3p5OHNHd0tVRkpMQzdM?=
- =?utf-8?B?dDVETlJJZTFwaDJNT3l4aTZQTTQ0b2YxQWkvQkFFRVJqVFE5NmhyVU01Y2g4?=
- =?utf-8?B?aU9DZE1HcENlTFhXNFlBQ21XY1c2S0orM093NHBNZTZSZDNPM3NwL0k5WDZl?=
- =?utf-8?B?U3lFK0V2eEtQQWNUaDFEWlJWRG83N3A0SjZzWkF4UE9JRUUzWFlUNThQMERh?=
- =?utf-8?B?Ukt2QmFXRERJQ2dOaFJWRUIrdGo5WUZXWEI5MUdLT0pQOEM1Z2dldjgrMWVS?=
- =?utf-8?B?UU81YzBSUGFKZjN6NkFLRnNZS0Z5QkJKL0ViMmJtMnJ3U2kzbk9ZUkcxdkJv?=
- =?utf-8?B?TDdYa1hGM0VOVUJYa2VPazgvRG5KMU4rZGZoTlRsNFh0VE8zTXRTWHhmYkhh?=
- =?utf-8?B?cHBxc21OMUgzN3lYY2hLS1pBT3VTeFMxc1RSTGZZV05WQjQ4dE4relN4Z2Vn?=
- =?utf-8?B?WGpDN0laSHpIRXFkbFdxSVg1WEhyU3pVa21aSlM2U3FZa3pERGxlNlR3Zk1I?=
- =?utf-8?B?S0ZxTXMzWHFsSXpQaURYckxuS1hXc2lyYU14eVpRNEJRSHhPQ3pRc3hybFVm?=
- =?utf-8?Q?YLIqVrzIrq4=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7127
-X-CodeTwo-MessageID: df178efc-8337-427c-9bc4-d690ee2cac6c.20250630080319@westeu12-emailsignatures-cloud.codetwo.com
-X-CodeTwoProcessed: true
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF000509F3.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	30bfe7e1-5412-4560-5e9a-08ddb7ac924f
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|1800799024|36860700013|82310400026|7416014|376014|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aUlYeDFIOHJzSkVlei9OUk9Kc0huc2E0djdwOFF6dW96aUNJWEp1ZXZXbUFo?=
- =?utf-8?B?ZUhRdGFDOXFlZDZxVUxrTWs3VEZIdVcxRUVSek5oRVZxdlpFQk9rbnNuSGZT?=
- =?utf-8?B?bHBLbzBiVW1zYlJaM1h2SVIrODdZb2JjUXB5YStyV3lDMFI0TkhDMnd2M2Z4?=
- =?utf-8?B?V2tjYTlRRWlFUnpYWlB2K3lzNUt1WklqbHNEeXRkbzU3QVFVbnVrWXVTcmNV?=
- =?utf-8?B?ZmJKa0t2bGxWQytsY2FEc3dHTmFEWUtRZVFjek51cGNBZGtSZFdJeklUeWFD?=
- =?utf-8?B?STF6NGpHQjN4QjlCZDRTSUY3R2gwNS9qUjBPT0R3KzZEdmxTMytzMDNSVzRM?=
- =?utf-8?B?ME50ejhKNXl5bkUreGhXWjFSK2xmTzZ0SzE0bnVaaHZPWXc5bk9sK0hsYTcz?=
- =?utf-8?B?ZjFXMmlpV1d4blRtZ2x6ZFZGZTMrQ1FVQWR0d1p3R25UaytJeHJyQkk5d05h?=
- =?utf-8?B?Z0dUZmlpN3VoN2l3Z1I5NkVsR1M4clNkS2lEeWIwM1FmTFZjd1dpMWRsY3dY?=
- =?utf-8?B?M3pSbVZYUThtNXBCeC9MYzNNajBjWWI2WjBwcVJiTlNLYVlWQjVRdXFSRzdO?=
- =?utf-8?B?MmtXa0FCRHorQjI5eGRqa3BDVDJEYXdraWVEZ0sxTSttVXNLZmUrNEhTVnZN?=
- =?utf-8?B?WjlGQURyTWY1Qk1jdDcrbGRtTHlvWm1kNTR0djJHQ3J4b3FQczB2WVZscDhn?=
- =?utf-8?B?S0RjNTZXeTN2Z0E5WlllQnFqQy8wT3pNNGVMTTRib0w2L1NkRmN1L3dnL29w?=
- =?utf-8?B?S2ZWS1diSnprS0libHFERUc4NDd0dlZoWG0zcDVaVGdlUGFrMmFIWEtteFNL?=
- =?utf-8?B?ek5JcGhJMGNEU3k0Q3lpU1Q4NlBjeWh3SWpvRktyelRZRFhHdmVXN3hGaEJ2?=
- =?utf-8?B?TTI4czl6VW5WL3E3OCtiRWR6KzNyeG5BcGtEYmFvV0RnS2hoa3FYQUZWbkJk?=
- =?utf-8?B?Zk84R0ZreXBkeTFXNnJhV24wSTZUVU9ydzcrVXVsbXpoY1d3RzR2aVczeER2?=
- =?utf-8?B?TzB6OGtYK20wcUNaMlE2MXlqYlE1clpjdEZWdEIwRjNwRk16MGJtbUI3K0N4?=
- =?utf-8?B?bkYySm1QbUVrVHdrVUp0SEhpbDRiazJFNnJjZk91ZG1uOVRYZVdSRVluT1BQ?=
- =?utf-8?B?VHVhQklJS3JIWk9oOFpSVytkNE5PYjFld0grYUtWR1Z5cUozdlpXQUpkZVVH?=
- =?utf-8?B?RVBjU1Z6UWsxbnFpNi9jZXdaZ2RGV2J2TGRLZGtXNUQyS0krZlA5K3I5c0xv?=
- =?utf-8?B?Rmx6UVpmZGlpNCtjNmY4c0hIUElXVmt6dUd3SW9yaUMvK01BaUtGR2JEK1Zk?=
- =?utf-8?B?S0FZMnJLQnNjdVJaM3dWLzRjeVJzYllmem0xSXpBYWFnSnJyZDMwRGszclpD?=
- =?utf-8?B?QnRsWDBlMU9EK1pCa3VvODRSMVhwNGswU1RZL2VEODhUalJoa1lLWk9yZW1D?=
- =?utf-8?B?azA1MTZ6OTl3L09PS1pqSnVPR0NMVE0yTTFJaVpYU1Foc3FVUXNad1NuR2tD?=
- =?utf-8?B?NWNwOTU3b1BuTVhvczYwR1FOT2NEM3krTlZCRXY4aGxjd29KRnhqL1BaR0pU?=
- =?utf-8?B?OEdzOExGeGtHdjNMRlorT2FMWDhqM2tFUnMvb2s1ZlVEdC8zWmN2OGVkNEI4?=
- =?utf-8?B?VWJSOXp1V1p4aS9hdzdSQSsxRnV4Sk1TQTJFSkJVbGlYNWtCVHlUTVVmOENl?=
- =?utf-8?B?L0Ixdy85RVV6V1NGL0RVZ3ZDRGlBVFgxenNQaEpTWWJDYmFMOUtXZE96RFlz?=
- =?utf-8?B?SEgveElWTUVyK0pvQW5lYS9zbU5ROG5GT3gwNE9RT2dUNmEvQnVCSndGVDlV?=
- =?utf-8?B?aExPUlgxbzhnUkRpSncrcFVlWGNaQStpb05wNW93d29CT0FRUnFpWjhFbUF1?=
- =?utf-8?B?TWpXRS9KYWdySzlLWTBQU1drbEUxcC9XR09PS1dhRUdIK1dzbzdtNGp2K0hm?=
- =?utf-8?B?UlB5d2xHckxmZHdxV2lsTjJsMmNGTnRvSUQ5MGxnL3p5bjN5T0dYTEo4ajRX?=
- =?utf-8?B?czlaU092NFNnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(14060799003)(1800799024)(36860700013)(82310400026)(7416014)(376014)(35042699022);DIR:OUT;SFP:1102;
-X-OriginatorOrg: topic.nl
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:03:20.1249
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a361cb25-ebbf-48a9-6ae7-08ddb7ac941e
-X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509F3.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10832
+References: <20250619071449.1714869-1-maobibo@loongson.cn>
+In-Reply-To: <20250619071449.1714869-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 30 Jun 2025 16:04:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+X-Gm-Features: Ac12FXzXFS8OKvbl7bkuwM5E_l_CPBg3TGydOuvuMTVVQgYvoLr_GH3pLufkJ4o
+Message-ID: <CAAhV-H42wPsxNCSp-4wy1+f-2yAJ1fuWbsC57bvQkHL0E3n=-g@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: INTC: Add IOCSR MISC register emulation
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Xianglai Li <lixianglai@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27-06-2025 20:19, Laurent Pinchart wrote:
-> Hi Mike,
+Hi, Bibo,
+
+On Thu, Jun 19, 2025 at 3:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
-> Thank you for the patch.
+> IOCSR MISC register 0x420 controlls some features of eiointc, such as
+> BIT 48 enables eiointc and BIT 49 set interrupt encoding mode.
 >
-> On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wrote:
->> XRGB8888 is the default mode that Xorg will want to use. Add support
->> for this to the Zynqmp DisplayPort driver, so that applications can use
->> 32-bit framebuffers. This solves that the X server would fail to start
->> unless one provided an xorg.conf that sets DefaultDepth to 16.
->>
->> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
->> ---
->>
->>   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/z=
-ynqmp_disp.c
->> index 80d1e499a18d..501428437000 100644
->> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
->> @@ -312,6 +312,11 @@ static const struct zynqmp_disp_format avbuf_gfx_fm=
-ts[] =3D {
->>   		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
->>   		.swap		=3D true,
->>   		.sf		=3D scaling_factors_888,
->> +	}, {
->> +		.drm_fmt	=3D DRM_FORMAT_XRGB8888,
->> +		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
->> +		.swap		=3D true,
->> +		.sf		=3D scaling_factors_888,
-> I'm afraid that's not enough. There's a crucial difference between
-> DRM_FORMAT_ARGB8888 (already supported by this driver) and
-> DRM_FORMAT_XRGB8888: for the latter, the 'X' component must be ignored.
-> The graphics layer is blended on top of the video layer, and the blender
-> uses both a global alpha parameter and the alpha channel of the graphics
-> layer for 32-bit RGB formats. This will lead to incorrect operation when
-> the 'X' component is not set to full opacity.
+> When kernel irqchip is set, IOCSR MISC register should be emulated in
+> kernel also. Here add IOCSR MISC register emulation in kernel side.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>   1. Add separate file arch/loongarch/kvm/intc/misc.c for IOCSR MISC
+>      register 0x420 emulation, since it controls feature about AVEC
+>      irqchip also.
+I found we can decouple the misc register and EIOINTC in addition:
+1, Move misc.c out of intc directory;
+2, Call kvm_loongarch_create_misc() in kvm_arch_init_vm();
+3, Call kvm_loongarch_destroy_misc() in kvm_arch_destroy_vm();
+4, Then maybe misc_created can be removed.
 
-I spent a few hours digging in the source code and what I could find in=20
-the TRM and register maps, but there's not enough information in there=20
-to explain how the blender works. The obvious "XRGB" implementation=20
-would be to just disable the blender.
+At last you can make this patch and others from another series to be a
+new series.
 
-What I got from experimenting so far is that the alpha component is=20
-ignored anyway while the video path isn't active. So as long as one=20
-isn't using the video blending path, the ARGB and XRGB modes are identical.
 
-Guess I'll need assistance from AMD/Xilinx to completely implement the=20
-XRGB modes.
-
-(For our application, this patch is sufficient as it solves the issues=20
-like X11 not starting up, OpenGL not working and horrendously slow=20
-scaling performance)
-
+Huacai
 
 >
->>   	}, {
->>   		.drm_fmt	=3D DRM_FORMAT_RGBA8888,
->>   		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_ABGR8888,
-
-
---=20
-Mike Looijmans
-System Expert
-
-TOPIC Embedded Products B.V.
-Materiaalweg 4, 5681 RJ Best
-The Netherlands
-
-T: +31 (0) 499 33 69 69
-E: mike.looijmans@topic.nl
-W: www.topic.nl
-
-
-
+>   2. Define macro MISC_BASE as LOONGARCH_IOCSR_MISC_FUNC rather than
+>      hard coded 0x420
+> ---
+>  arch/loongarch/include/asm/kvm_eiointc.h |   2 +
+>  arch/loongarch/include/asm/kvm_host.h    |   2 +
+>  arch/loongarch/include/asm/kvm_misc.h    |  17 +++
+>  arch/loongarch/include/asm/loongarch.h   |   1 +
+>  arch/loongarch/kvm/Makefile              |   1 +
+>  arch/loongarch/kvm/intc/eiointc.c        |  61 +++++++++++
+>  arch/loongarch/kvm/intc/misc.c           | 125 +++++++++++++++++++++++
+>  7 files changed, 209 insertions(+)
+>  create mode 100644 arch/loongarch/include/asm/kvm_misc.h
+>  create mode 100644 arch/loongarch/kvm/intc/misc.c
+>
+> diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/in=
+clude/asm/kvm_eiointc.h
+> index a3a40aba8acf..2d1c183f2b1b 100644
+> --- a/arch/loongarch/include/asm/kvm_eiointc.h
+> +++ b/arch/loongarch/include/asm/kvm_eiointc.h
+> @@ -119,5 +119,7 @@ struct loongarch_eiointc {
+>
+>  int kvm_loongarch_register_eiointc_device(void);
+>  void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level);
+> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value);
+> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value=
+, unsigned long mask);
+>
+>  #endif /* __ASM_KVM_EIOINTC_H */
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index a3c4cc46c892..f463ec52d86c 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -132,6 +132,8 @@ struct kvm_arch {
+>         struct loongarch_ipi *ipi;
+>         struct loongarch_eiointc *eiointc;
+>         struct loongarch_pch_pic *pch_pic;
+> +       struct kvm_io_device misc;
+> +       bool   misc_created;
+>  };
+>
+>  #define CSR_MAX_NUMS           0x800
+> diff --git a/arch/loongarch/include/asm/kvm_misc.h b/arch/loongarch/inclu=
+de/asm/kvm_misc.h
+> new file mode 100644
+> index 000000000000..621e4228dea2
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/kvm_misc.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> + */
+> +
+> +#ifndef __ASM_KVM_MISC_H
+> +#define __ASM_KVM_MISC_H
+> +
+> +#include <asm/loongarch.h>
+> +
+> +#define MISC_BASE              LOONGARCH_IOCSR_MISC_FUNC
+> +#define MISC_SIZE              0x8
+> +
+> +int kvm_loongarch_create_misc(struct kvm *kvm);
+> +void kvm_loongarch_destroy_misc(struct kvm *kvm);
+> +
+> +#endif /* __ASM_KVM_MISC_H */
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index d84dac88a584..e30d330d497e 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -1141,6 +1141,7 @@
+>  #define  IOCSR_MISC_FUNC_SOFT_INT      BIT_ULL(10)
+>  #define  IOCSR_MISC_FUNC_TIMER_RESET   BIT_ULL(21)
+>  #define  IOCSR_MISC_FUNC_EXT_IOI_EN    BIT_ULL(48)
+> +#define  IOCSR_MISC_FUNC_INT_ENCODE    BIT_ULL(49)
+>  #define  IOCSR_MISC_FUNC_AVEC_EN       BIT_ULL(51)
+>
+>  #define LOONGARCH_IOCSR_CPUTEMP                0x428
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index cb41d9265662..25fa3866613d 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -18,6 +18,7 @@ kvm-y +=3D vcpu.o
+>  kvm-y +=3D vm.o
+>  kvm-y +=3D intc/ipi.o
+>  kvm-y +=3D intc/eiointc.o
+> +kvm-y +=3D intc/misc.o
+>  kvm-y +=3D intc/pch_pic.o
+>  kvm-y +=3D irqfd.o
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index f39929d7bf8a..87d01521e92f 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -4,6 +4,7 @@
+>   */
+>
+>  #include <asm/kvm_eiointc.h>
+> +#include <asm/kvm_misc.h>
+>  #include <asm/kvm_vcpu.h>
+>  #include <linux/count_zeros.h>
+>
+> @@ -708,6 +709,56 @@ static const struct kvm_io_device_ops kvm_eiointc_op=
+s =3D {
+>         .write  =3D kvm_eiointc_write,
+>  };
+>
+> +int kvm_eiointc_get_status(struct kvm_vcpu *vcpu, unsigned long *value)
+> +{
+> +       unsigned long data, flags;
+> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> +
+> +       if (!eiointc) {
+> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       data =3D 0;
+> +       spin_lock_irqsave(&eiointc->lock, flags);
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> +               data |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> +
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> +               data |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> +
+> +       *value =3D data;
+> +       return 0;
+> +}
+> +
+> +int kvm_eiointc_update_status(struct kvm_vcpu *vcpu, unsigned long value=
+, unsigned long mask)
+> +{
+> +       struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+> +       unsigned long old, flags;
+> +
+> +       if (!eiointc) {
+> +               kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       old =3D 0;
+> +       spin_lock_irqsave(&eiointc->lock, flags);
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE))
+> +               old |=3D IOCSR_MISC_FUNC_EXT_IOI_EN;
+> +       if (eiointc->status & BIT(EIOINTC_ENABLE_INT_ENCODE))
+> +               old |=3D IOCSR_MISC_FUNC_INT_ENCODE;
+> +
+> +       value |=3D (old & ~mask);
+> +       eiointc->status &=3D ~(BIT(EIOINTC_ENABLE_INT_ENCODE) | BIT(EIOIN=
+TC_ENABLE));
+> +       if (value & IOCSR_MISC_FUNC_INT_ENCODE)
+> +               eiointc->status |=3D BIT(EIOINTC_ENABLE_INT_ENCODE);
+> +       if (value & IOCSR_MISC_FUNC_EXT_IOI_EN)
+> +               eiointc->status |=3D BIT(EIOINTC_ENABLE);
+> +       spin_unlock_irqrestore(&eiointc->lock, flags);
+> +       return 0;
+> +}
+> +
+>  static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+>                                 struct kvm_io_device *dev,
+>                                 gpa_t addr, int len, void *val)
+> @@ -993,6 +1044,15 @@ static int kvm_eiointc_create(struct kvm_device *de=
+v, u32 type)
+>                 kfree(s);
+>                 return ret;
+>         }
+> +
+> +       ret =3D kvm_loongarch_create_misc(kvm);
+> +       if (ret < 0) {
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device)=
+;
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device_=
+vext);
+> +               kfree(s);
+> +               return ret;
+> +       }
+> +
+>         kvm->arch.eiointc =3D s;
+>
+>         return 0;
+> @@ -1010,6 +1070,7 @@ static void kvm_eiointc_destroy(struct kvm_device *=
+dev)
+>         eiointc =3D kvm->arch.eiointc;
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_ve=
+xt);
+> +       kvm_loongarch_destroy_misc(kvm);
+>         kfree(eiointc);
+>  }
+>
+> diff --git a/arch/loongarch/kvm/intc/misc.c b/arch/loongarch/kvm/intc/mis=
+c.c
+> new file mode 100644
+> index 000000000000..edee66afa36e
+> --- /dev/null
+> +++ b/arch/loongarch/kvm/intc/misc.c
+> @@ -0,0 +1,125 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+> + */
+> +#include <asm/kvm_vcpu.h>
+> +#include <asm/kvm_eiointc.h>
+> +#include <asm/kvm_misc.h>
+> +
+> +static int kvm_misc_read(struct kvm_vcpu *vcpu, struct kvm_io_device *de=
+v,
+> +                       gpa_t addr, int len, void *val)
+> +{
+> +       unsigned long data;
+> +       unsigned int ret;
+> +
+> +       addr -=3D MISC_BASE;
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+> +       ret =3D kvm_eiointc_get_status(vcpu, &data);
+> +       if (ret)
+> +               return ret;
+> +
+> +       data =3D data >> ((addr & 7) * 8);
+> +       switch (len) {
+> +       case 1:
+> +               *(unsigned char *)val =3D (unsigned char)data;
+> +               break;
+> +
+> +       case 2:
+> +               *(unsigned short *)val =3D (unsigned short)data;
+> +               break;
+> +
+> +       case 4:
+> +               *(unsigned int *)val =3D (unsigned int)data;
+> +               break;
+> +
+> +       default:
+> +               *(unsigned long *)val =3D data;
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int kvm_misc_write(struct kvm_vcpu *vcpu, struct kvm_io_device *d=
+ev,
+> +               gpa_t addr, int len, const void *val)
+> +{
+> +       unsigned long data, mask;
+> +       unsigned int shift;
+> +
+> +       addr -=3D MISC_BASE;
+> +       if (addr & (len - 1)) {
+> +               kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> +               return -EINVAL;
+> +       }
+> +
+> +       shift =3D (addr & 7) * 8;
+> +       switch (len) {
+> +       case 1:
+> +               data =3D *(unsigned char *)val;
+> +               mask =3D 0xFF;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       case 2:
+> +               data =3D *(unsigned short *)val;
+> +               mask =3D 0xFFFF;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       case 4:
+> +               data =3D *(unsigned int *)val;
+> +               mask =3D UINT_MAX;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +
+> +       default:
+> +               data =3D *(unsigned long *)val;
+> +               mask =3D ULONG_MAX;
+> +               mask =3D mask << shift;
+> +               data =3D data << shift;
+> +               break;
+> +       }
+> +
+> +       return kvm_eiointc_update_status(vcpu, data, mask);
+> +}
+> +
+> +static const struct kvm_io_device_ops kvm_misc_ops =3D {
+> +       .read   =3D kvm_misc_read,
+> +       .write  =3D kvm_misc_write,
+> +};
+> +
+> +int kvm_loongarch_create_misc(struct kvm *kvm)
+> +{
+> +       struct kvm_io_device *device;
+> +       int ret;
+> +
+> +       if (kvm->arch.misc_created)
+> +               return 0;
+> +
+> +       device =3D &kvm->arch.misc;
+> +       kvm_iodevice_init(device, &kvm_misc_ops);
+> +       ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS, MISC_BASE, MI=
+SC_SIZE, device);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       kvm->arch.misc_created =3D true;
+> +       return 0;
+> +}
+> +
+> +void kvm_loongarch_destroy_misc(struct kvm *kvm)
+> +{
+> +       struct kvm_io_device *device;
+> +
+> +       if (kvm->arch.misc_created) {
+> +               device =3D &kvm->arch.misc;
+> +               kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, device);
+> +               kvm->arch.misc_created =3D false;
+> +       }
+> +}
+>
+> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+> --
+> 2.39.3
+>
