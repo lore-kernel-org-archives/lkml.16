@@ -1,93 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F863F9FB
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3C3243387
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751318049; cv=none; b=m1IBH+E8UnmbMhGwl+uBHBMQ8laGH73FZZA2TC1zYoIRHrkn0THteZz2qRzhudJVGdOg72rlZM84aCuhNsivl4woNttGP4C4aeW2btWxoJuP59rgeYe4K71XqtYTppggKhb+zy+I2QW022by7fMyHkXAwDQASb7nuK4emUrdwX4=
+	t=1751318108; cv=none; b=jM46Jy/rFjuI7Cok143PGvtknNtgZTXVCgertTgsV6ohu+epbxXZmFpw3W92Njfh7P2We3KM9Y8sPKxH9MrLKuC1OH9z9o5uocv4hxuXfbDgpz/lT7lOhvHPgv2tCjNm9XwYwlrOgDGDJK8tEJwDKoCF/tqYTPWCqs7hkVZ93lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751318049; c=relaxed/simple;
-	bh=Oem9gVaCMugCQKw5c3QDMFahemyBDeKiILu5oDJgMfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=u//6Ji39fr31tCwkwZZgKNvrddURDZXgzMM+g/dy0qmRLb5tfHx68wgSUFbBwIUW0ZPYinr5u/rcIXivgRMWvVurf1HrpNl+QnRlBnwQ9xUMSPYuF9IMB/q+TCGdVI+LYpXGmSM/w409dRiZwoN63hdBRJ3O7ayZ+UsZtalaFwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JlVbsGjb; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751318108; c=relaxed/simple;
+	bh=R/16zujFisC9NdOslvjk65nWTatAJwCxTgv8elrO20o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOa2X2J8tHKPN2kDE2Fdns7SAeM0/FKKxcbi/9cUh1QDOX+eaJWGTKhHhIDHgFlBMQjg+JJBGzPR5T4SW69853VtDZxju2kzaOg54u9EsyqmfhH2MqUs4Hl6G0NIaumaraILfK3Dn0LlaHobMd+NoCSV82bM6W4rTzIEzy1Zq3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=KDDuBhtW; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JlVbsGjb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751318047; x=1782854047;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Oem9gVaCMugCQKw5c3QDMFahemyBDeKiILu5oDJgMfY=;
-  b=JlVbsGjb8z2PRQoyUv9Z2iSCTlGM8dwNgbiN6by4VCJtS3JPCctjvG25
-   FP4MgtjG6b8V68ie5WIFMFYE6uIYpUSKJmR9p/qwUUvgKTsk08+LFLsFi
-   ruLbhj0KLJKRFRTjEqtipccYbaxm0yZNCy8CsW5SuQuh2d53uZkbPnbge
-   HKNU+TqNjEkpbStupx94rsR0k/GJDye2KOAGNH9nAzf1uaWk8YYIRpKO5
-   u0vuoJrbzhx14nEYL6Yj7cnVLS8QuckpU3gFTwxhyaOa2LDu6VeeSlVKa
-   dOZM5vzYT5q3xtOfovDsvO4lfLWtGMhH22uJiQAjM2/w12jn1WMyKDcxy
-   g==;
-X-CSE-ConnectionGUID: ZyVrEg9lS0KsyE59WXJxVg==
-X-CSE-MsgGUID: +4sV2OV7S4iLxK3sYFMlIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="56178301"
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="56178301"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 14:14:06 -0700
-X-CSE-ConnectionGUID: HNRVKyphSqym/21dQ/hOTg==
-X-CSE-MsgGUID: bxf7WQ6WQ3WemoV6BjhQaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="157842977"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 30 Jun 2025 14:14:05 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWLpC-000ZN4-1n;
-	Mon, 30 Jun 2025 21:14:02 +0000
-Date: Tue, 1 Jul 2025 05:13:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: atags_to_fdt.c:undefined reference to `stackleak_track_stack'
-Message-ID: <202507010513.Wna5VLE6-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="KDDuBhtW"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c7a52e97so5068114b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1751318105; x=1751922905; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JUEvETXHTlKyXBMoL8O2NrqSNnjuNlXBT6Mz8VcsTmQ=;
+        b=KDDuBhtWp9lB3rcXLkSVciLkDafO6Knaz1li4YQ+YqGO0R3aluie7MDyUrIAM+AqQ9
+         k894xzvfpKhZpAQIq3EbWXZmjzZ2GCykd2ZfDMUOclTcGra1kVbPlZIsz/eAT9gzwVG9
+         LRSNjy90DCB6LauChnfB56NsCxdnaeHFKuyKfZA2mvjvlG49mvZN+ubyicPt8LtelAv9
+         qJSzXPr+6Z7c126BeGtKL2xsSyJzFSmNnqT3KjjKdZYCQoFY07yv1V5GjxgWQu4TDwY3
+         7+qvgp8QoJQrM/MLWUpBbs9aTxLDZHOAZvzYyiKXdixFaRVKvhs/QFpLiAYQ6IkFjQp6
+         bsew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751318105; x=1751922905;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JUEvETXHTlKyXBMoL8O2NrqSNnjuNlXBT6Mz8VcsTmQ=;
+        b=fAqbSC4nhQ/jHVu6qhu7UTkrE5dVb0tV2t58Snlpf5vA2eroupZaEXsqftZnTgpNgz
+         njJkqQJgsKG7GSPyHHDGhNHeT+McjwIgrKaJxX73bITAvEOcWkM7YLl1MS11CXMVesHa
+         0626voJMOTXw/+F+hTkZ/EGmWQeA01N8fzvrLKF0p/KILOVWMcsj0ixuj+BtdeLOF9RT
+         2jI3DFyfSn3td2AivRUeNIp4GXGzE6TISkbMf3HY/KqauA2Ru9Gq3uDqGo+z06WV72pK
+         xFBGubEEH2MXBUtV2C1kFNFH2onrmVEBPzRb4SYxh/2WwZJpg5eGoC6JX5AyPCI1pAtH
+         80zQ==
+X-Gm-Message-State: AOJu0YzGLHTLgXqwuaknaWlVuqHqb3MV0smAo8DvvT0naAYAzAqYTHYN
+	W6FjZOTlXrajIzBqI04etRkiAo/NbZeAc957BzYbu2oGNTFWasQ+ezXey7MgzUUmip8=
+X-Gm-Gg: ASbGncuw/tOUD0QNUr+0aB3P1clUqx69Z9LmPZOJdJwHuWJOYkO7eMIgZOjSYfwo5Al
+	lw1nvFpHBsezBQtH8XuZgBW1HxVSS4NSCGFIdNxDtL/sARG7GsiwPAFnosdFJ7SCKE0he47aL57
+	vq0S0J+PIJEJz7gjRo4OesOrNnL5z/vS9/9Fl+hPIubgEdc3+pDgYjokB2fyn0xyT+z/agnfMkZ
+	4OXqmz2Wob65C8N12dUy/0ovATEyXwuo298fhR6hTeRsJ1Riot4SvXJo/ei9xz1sMhplZfIs9bc
+	sSIzn7swzr/qi7aWvP42B2eWL0t/zXEqMdCRNIO8zvTzQTAsR/H4BJUsOY1SBPjzLaQRBzFUlg=
+	=
+X-Google-Smtp-Source: AGHT+IGL/SZf2y6jdZAAifdYJBwKcWDsEsUve+zOQkExo66Ml61nMbqpN6EBJpdG9Zp/Zyiqdnqxaw==
+X-Received: by 2002:a05:6a00:3d11:b0:747:accb:773c with SMTP id d2e1a72fcca58-74af6f08200mr20130964b3a.13.1751318105082;
+        Mon, 30 Jun 2025 14:15:05 -0700 (PDT)
+Received: from x1 (97-120-252-192.ptld.qwest.net. [97.120.252.192])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5574604sm10227155b3a.86.2025.06.30.14.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 14:15:04 -0700 (PDT)
+Date: Mon, 30 Jun 2025 14:15:02 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the thead-clk
+ tree
+Message-ID: <aGL+VmixzZNpfVpC@x1>
+References: <20250630072422.4d30412f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2hqjDcDDA25rk6M3"
+Content-Disposition: inline
+In-Reply-To: <20250630072422.4d30412f@canb.auug.org.au>
+
+
+--2hqjDcDDA25rk6M3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jinjie,
+On Mon, Jun 30, 2025 at 07:24:22AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Commit
+>=20
+>   7bb23e0bdb6c ("clk: thead: Mark essential bus clocks as CLK_IGNORE_UNUS=
+ED")
+>=20
+> is missing a Signed-off-by from its committer.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
 
-FYI, the error/warning still remains.
+Sorry about that and thanks for letting me know. I've now added my
+Signed-off-by tag and updated thead-clk-for-next.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
-commit: 2335c9cb831faba1a4efcc612886073b6f175fe4 ARM: 9407/1: Add support for STACKLEAK gcc plugin
-date:   12 months ago
-config: arm-randconfig-002-20250701 (https://download.01.org/0day-ci/archive/20250701/202507010513.Wna5VLE6-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010513.Wna5VLE6-lkp@intel.com/reproduce)
+Thanks,
+Drew
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507010513.Wna5VLE6-lkp@intel.com/
+--2hqjDcDDA25rk6M3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-All errors (new ones prefixed by >>):
+-----BEGIN PGP SIGNATURE-----
 
-   arm-linux-gnueabi-ld: arm-linux-gnueabi-ld: DWARF error: could not find abbrev number 13
-   arch/arm/boot/compressed/atags_to_fdt.o: in function `merge_fdt_bootargs':
->> atags_to_fdt.c:(.text+0x9c): undefined reference to `stackleak_track_stack'
-   arm-linux-gnueabi-ld: arch/arm/boot/compressed/atags_to_fdt.o: in function `atags_to_fdt':
-   atags_to_fdt.c:(.text+0x158): undefined reference to `stackleak_track_stack'
+iHUEABYIAB0WIQSy8G7QpEpV9aCf6Lbb7CzD2SixDAUCaGL+TwAKCRDb7CzD2Six
+DBv5AP9P/Mdni+PdO6gznrDG1cEkcSAPsjgWcBMdF4kOgsItaQEA4iMDSqzoJGRo
+XofsFui8fMJz2ZNK9k3oZaDUciw/XwQ=
+=8bt0
+-----END PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--2hqjDcDDA25rk6M3--
