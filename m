@@ -1,342 +1,347 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010040.outbound.protection.outlook.com [52.101.69.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBAD13AD26;
-	Mon, 30 Jun 2025 01:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751248749; cv=fail; b=Gr+EvPZ8FascApnR52dTkvCesi6jfhjIjwS4ag89EoXT/YbJ1ZAcOzVoly1R+Xxzkgmtx77hnseyNVARsCdBuLrbZKXEpberagYWpugb61Am6YK0C5dU0WZ6EO4rN256Tf5t4m2HxOFcnPeDXhRe05XWIoZ8RZ4WD1y1+dcQYSc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751248749; c=relaxed/simple;
-	bh=UUPz68zdDAkN9MMME7rybFJt/eMUzQqgLj0MvkSlovw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VXsZTJvMIoVNWmXhbg9iyrlPp7dVxcE8X7FC3oZluMxpPQT0w2QTnmYVE1/WoLNNGYpKssAVJUbgXwknu7ZsXH39B5MhVOF1A7bV64vjnTSFVH8K0TK06tEMd0WMq1HUWlwAUEBxC7t22/oR21nFgFFGz9tuSQTt2SnUmwgIEsY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=NAJrWg7N; arc=fail smtp.client-ip=52.101.69.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E003618C011
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751248808; cv=none; b=VA/9UWnSyaqG7Si05S0hPfncUc+ApT57E/YpdqxR+EazVmUFFmdcJvQ+FBmZoP0neamPPDmnkF+LsxDnHW73nobxeYI/h6W2wK0VafL7L09i/dF09ugAZXw3lI7xozXYNHnyDPBuGZlnCk/U5ILilb1Oueh+geNJXUIZojm98lw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751248808; c=relaxed/simple;
+	bh=UNHE+6OmTUAdY1GAYnIm/XNBA/bkwsSKiT4aVe8Y0iY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KUmMqCUns2hn0CihZ/ccPv37YEM0mHFPRDjl4QpifOeTES33MD0Zf1QYytPjRxGVejjLY3nE2TJ4Hk+XUymQEnOEvcVHzXhMB0ekdl1D6RxpxAQ3BayNBsQPA2xdMRwJXBQ6HokODRt6/35F6/OWJZh1M8Req9+pvr+l200INYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hMnmKKzE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="NAJrWg7N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qxmfH3WooE+5VgP1VOckUnnQNSDHeJOf40IzsdTG6/2zXfc8s6Dp1pMczLC9wQDb7h/wZ2KtUdBPiDzN/fpxTSdzNzeKMUkBVKr3eHUw+lpLD2Cf1eQLjvu7trYTzf6ZkPc059jGHeo9ylk4Yd9h2XrxrT+7KVOt/BrPbGU6iLMcRVJvw2YLiFlB2SYDbW1wrVRSs3Ato3r+b8OGLXbd3QZOFhBQJ/fIoxjuL9FRFOVpU/31m5hhOO6lv6SXsORDMJJOcr1yIFQheb5Xx/Xxa7scIMc90FT6z5IM6HcUaEvesBFJZ/mdufKbEfukzgoNjAjM+E6RODkiWULzeiq5oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HWu0EIDG5sRFbMDxn7Mz3EFhKOFSm+wjK3fGnU3J1MY=;
- b=tCSb36y5tE98HN1eYowxUpxuYftnc+8MU8/l8M3JCiLqSmAm8eR0afXW6y2pSVlrhRRUUnrhup4FKEACMMOLpO+p68DVQiES7tICEcTzpTxLdv8ebJTNQisEQVarDsndb1LMWN8JEj7YeL6ROc5wrp6u9XKd1ydG4Wu5YMpwS5BMMlUbp8LKPDaSDU+gEQVgb9lC16HdcDhkvUNwTfdryABDkZLzLlb8UvHUTGE9ecA2k81tMgvrUidAh1QZowLwHUDmK7xbUJ1zFSQ+878Z2NBvdfaaYfuPXovf2IWHYxwhLjWG0vl5xjaAeOM+AlJr5iLzdbUw7yIuhUCXEgCx6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HWu0EIDG5sRFbMDxn7Mz3EFhKOFSm+wjK3fGnU3J1MY=;
- b=NAJrWg7Ny9+Hy2NkdydlkFn6GdSGxSO0UxO5AEEMoKPNSP0d6+7Rd05TPpjov3JtRU1YCGxBqypetM/7C9/mywzVpeE+lqHCSZN8pN2/nT6PjA5+/9WJbWgztcvmEtYbhyWg7EzmhwCUGR8LaIRal6nKLMSxJkdE6AaFxTWfh/DIduqadjRhki2Kj5GkWBv/gHpVH0oV5Te8mqwkzs5PA6U/kNpf8VWg+DdKwrFawdtwd8uKrVItFiAViRZLV4JT3emWqCBPAmNCeyFutQyhFrSFS73lWSfBwjYMFA7xE9Lmz7H7JJ3ylN85/P+9peGzFGDvJuacmS//YhL1si8cWw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by PA1PR04MB10171.eurprd04.prod.outlook.com (2603:10a6:102:460::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Mon, 30 Jun
- 2025 01:59:03 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%6]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 01:59:03 +0000
-Date: Mon, 30 Jun 2025 11:09:40 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, arm-scmi@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] firmware: arm_scmi: imx: Support getting syslog of
- MISC protocol
-Message-ID: <20250630030940.GD13878@nxa18884-linux>
-References: <20250627-sm-misc-api-v1-v1-0-2b99481fe825@nxp.com>
- <20250627-sm-misc-api-v1-v1-5-2b99481fe825@nxp.com>
- <aF6gIOrY5ODBumkf@pluto>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aF6gIOrY5ODBumkf@pluto>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: MA0PR01CA0028.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMnmKKzE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751248804;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7qx5v0KdW7INh0Q41668KL1wEYoR/92sOlCIFjPaGro=;
+	b=hMnmKKzEfg4HcVX+MfzpDhaUDrGnwgRNe1KRpZxu6ImVQK+ZJTD53RVDroHfKEVMvC89kO
+	jEffYyxefAa4zh/s6APHkd+kxAPwb+awTTsZrB2ti3a9PQS+swS7dc9YiatbhSb8wKiIaE
+	t7aF8q1G+U4aXkzcKpgLu882aYXPZWA=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-LNeLK6ScPim0HyjIZN3Dhw-1; Sun, 29 Jun 2025 22:00:03 -0400
+X-MC-Unique: LNeLK6ScPim0HyjIZN3Dhw-1
+X-Mimecast-MFC-AGG-ID: LNeLK6ScPim0HyjIZN3Dhw_1751248802
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-236725af87fso46547785ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:00:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751248802; x=1751853602;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7qx5v0KdW7INh0Q41668KL1wEYoR/92sOlCIFjPaGro=;
+        b=povEuqOB4577G/iOAKWGIbc0reYaw89UNxKzqdDC0ZZSdIi1gbYnfVycYeNBkkRfWZ
+         FbkNxUTRvJtawvADEzkz+yFGmbtXczTQmhxM6wniJQbOheA3BplHXKi6CAlupD2hkeCj
+         ouLySvvUIuCBYcfNjmMcukUfWgt5VP3V906K5Q6XtMuPpwmoR4ldNzRhGdzKaCnPdFzs
+         tMjvFIo+jGJBegCvp5phQJC5957K7KWA/6NmGlguZhXW8pNVtUUH3HvCZsFq49kcl/UF
+         zGhJxNNIZM2gk6kn3a3vXcnk4EzXfyTWJk0AcYkkrmwhW3IUrjx4WK5JQcyhbwSL/W9R
+         YmVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIZq3x94r8UVWEwGoWsQIt6MLV3f16eQE/Fy3/7CqRomZJd36m9aNux1yvsUoh5bZWyAVlUBB6V3R6wNc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK8SPccybY1Gr+TQ+vHLfFE0BU4rXBfTi+04G7NxckAxJddr5Z
+	plReLvcscK3jM4WHMyNmIqlk9i/35OTCZSC0NKBpjzX6PwKhDrS8rKxNoo5pYlttDypunDXgt9L
+	rcP9nHlUHAcCMdysGAy+rxVR0g3lrIpIJRrSMmvZt5CtkZrAvTFhsGttInGAW4JTnaQ==
+X-Gm-Gg: ASbGncu4les8x4QiBR+l6TV1lt+5zXxssV2onyYNyZG0NA89hph6iRqx2VmS77iYdqk
+	A9dD7udA/pHHCfCEXOJ7xkn7TQz7ZsVC1KnaFrD0hvGfdMIxP8SFf5X965N9Ub615pjOKmvfFjn
+	cKFGrAZHqZwIYBw2P57au62BAzjfkTFsdWItWVfor1VQVhIXuvqXl5ui7e0APxIyxuu5GUXvWny
+	53vZvWCmOG4IWLfpGBBgSxi0DqkOFjEFUNlI60s88H2AGmlxt5/U1uJodfHBqLgEuxn2vzrkAt3
+	fxFS6YhM0lnsCUYJLrALXBIYbrISag==
+X-Received: by 2002:a17:902:e746:b0:234:d292:be7a with SMTP id d9443c01a7336-23ac3bffdbdmr173363065ad.1.1751248802033;
+        Sun, 29 Jun 2025 19:00:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVZrn7fj6vlaQGWQVjXpJslGdR1oXvka4Z0dq0YNVxgM6nQviBBBE+oFzuva0u5BXG1Z6PqA==
+X-Received: by 2002:a17:902:e746:b0:234:d292:be7a with SMTP id d9443c01a7336-23ac3bffdbdmr173362695ad.1.1751248801520;
+        Sun, 29 Jun 2025 19:00:01 -0700 (PDT)
+Received: from [10.72.120.15] ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39f4c0sm67788415ad.103.2025.06.29.18.59.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 19:00:00 -0700 (PDT)
+Message-ID: <808d3fb3-92a9-4a25-a70c-7408f20fb554@redhat.com>
+Date: Mon, 30 Jun 2025 09:59:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10171:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8c0e688-8f9e-438d-8489-08ddb779b009
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|19092799006|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7jJsuNeDSG9vXQ46aewaZD2Qa8uKRvssp8mb5taVdZT4MwEQoDRjUhZhAiIC?=
- =?us-ascii?Q?UliA8fJ2mSkn+u7raKrQxy++WF8V0dGXaxLIqMyyV/rcf+vxw42VmacMsFgy?=
- =?us-ascii?Q?QNE9arCqdK0yjbMNEVTUCxyEBXfK3BFTFQpW5A2BJc4ZqpS0y7qqiXzEkMtU?=
- =?us-ascii?Q?5D09dUqLmMtMyYO3IyWbpUVOyXANd4EdsSGTVCVfOJ9k7SuYjrQ4xgE+xaOb?=
- =?us-ascii?Q?UP42gBxP/53zT1V5CLOpyoO78MsirSNuMxBa3cwg7HFHoF4ofmS/K4vyme60?=
- =?us-ascii?Q?025GQJ2ZYdDMz960ahZ4oJzK7WlbkOYIHW25/2rHUjVEP3xskdwVgtrhuIdN?=
- =?us-ascii?Q?rIGjllIe9DKuVGtdz7eVoEjSzoB/FpXmul2Zn1xf0+dmAmAthIdL+5Dtv+45?=
- =?us-ascii?Q?BS1OMM6h+nr7DOe9M+Amtq6MJZ1Zk6KWbJ5hdLSaw6nnalpjwOWLefB7XDWO?=
- =?us-ascii?Q?wlfVO2abFoWl2vnRpVLKEryzB+DMzxfkXqK5aiOUFBY/T9TpJ1g0kyl/Hoap?=
- =?us-ascii?Q?1a9BS2rfmr0j5wRf6hhq8gGJKwzds2CJ7O39kmfvYBPehJkS8KR2Dq2dP/Nq?=
- =?us-ascii?Q?WUJsQx6iBpJ9fCINhavaAnUhHxpIRTX2idhX8pVEjE5AilV1KnBoEFG2oqNM?=
- =?us-ascii?Q?8LG/XBWCafO3Wwe5BhUEYum4UammPdUUYaE+bDX/MfYJWTp70VZ7OCgW/jYk?=
- =?us-ascii?Q?ZjNcOXQD/cP9yP1vR7+HjrtsR4G/1q2flugyup5rM6KdiAjZIIVi9hc2GU0T?=
- =?us-ascii?Q?b1cG/iIa2NnJkMrPvcyBxOiFoLDkh2IhnA2df+RdRGHEj+fT3zTivlCvcyEO?=
- =?us-ascii?Q?uF1I80SiVVpuqNUSAUnO/oh/jupDaSqcagOlAbguCeJZLc2O2uLqAMcN7rdo?=
- =?us-ascii?Q?0NIGvaBw0/jBAGtEAIbqTRn9LIm29l/mlnYWvfLUjF8NXEGuBL+lxnZWPSGV?=
- =?us-ascii?Q?s5bfJ9mLJnSxrf/klLS4wpOSOxJ8AhVzkr//SK3FhnPzuVd2Uvl+PkkbjhzR?=
- =?us-ascii?Q?X98YwQgQlakFsnZsSZiGii8gA7oNXAH5WSnXeNi0Xa366rjIjGrw8OhizvGQ?=
- =?us-ascii?Q?coT7sA0c20DJs6WGJ2v9PDhWH+qhaMANA8GF7/7KmHadjdmCgVbvmrIBJNIE?=
- =?us-ascii?Q?6r3ziD9m0MDLUTv+pQrDo7QCj45uAcBVsAm1ywkyWO99ubbkKUujnK51VhFM?=
- =?us-ascii?Q?eTQVky5tTa4ut3y/6i+Lfk18Eq5cN+Gv0qAJ7kSznW3vCBGlYXUQ26z8VK4S?=
- =?us-ascii?Q?T5iHu1WjJVtwES0NWeLbCuimKVk0/glr9ytBOg6DinbbmA24bmKmnRmFoD4U?=
- =?us-ascii?Q?LOOUazLBLF7UMUhLDLQltOecF+drIunhVDdDdbKfMKLMfrQGirR/TR3MtO+/?=
- =?us-ascii?Q?0Bx3ySPD27xd0Ue14/9PcIVs25N9lgytmvSU/LADICvbScn8onZYBCItc4QX?=
- =?us-ascii?Q?khASuIqAQahUwogTOnPYi1ulxK7vVzPYFMllo5EQjuKxGcxxNcbttw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(19092799006)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0MaofTgVomiEgWxNOkxyLTiXxjnlh8OOaWiy2rzCW07G7waL8JTXjsRF8H8f?=
- =?us-ascii?Q?S/fMBb4NBky7KImdoP7iVC1ljvWv1G/ysFEq7jf72syFoKn/iR029E8IPy2f?=
- =?us-ascii?Q?58EcOLKTJnD4cKTjMjAkU99dxr2hgYejsNxVv7yl9pcdXOAOXE2CEIw7AkJE?=
- =?us-ascii?Q?qZ06dO0aXQ1s0BS5wKHosJUP1R7P2/rOYl45n3xcOpFre4fkqkKmXOToX5bL?=
- =?us-ascii?Q?kaF+9MPVlyMb4b4+MxgWcoaPX/G44BmQxIIYyMOmoo4sm6AcuMBtmUKwV+qg?=
- =?us-ascii?Q?T3HUf2GnwM+0VRsxaw7RCjJMrYO9ZpL+Ksdv5TVrdGwreTWNODMHBF09HeKc?=
- =?us-ascii?Q?VoiSrz+5TjNBU49POR8MJcmNaPpVb0a3716OgPTl5FPBTkEpa6lKb8mySFQA?=
- =?us-ascii?Q?mw8KrpNnILdDuRSak7FPblMO1jA/FsPmSA+RH78Scc8aMC+mt+Yib3QBw9tV?=
- =?us-ascii?Q?N9ysB6My2NdwMd9eqtv8OBbq1rwP3iMH6ZNeqGOQ+T8wZoWMD1qAJU6vRjFk?=
- =?us-ascii?Q?G47Kc3ZrZ9U7gcFNQw8bM8b07tWQgnGJycwkvPF4R4hlCkDBGLT+1toyqvbo?=
- =?us-ascii?Q?4+V8cO6WKTYxWM30ty3WOqF1TeMpFvx3r4mbu1lkgFfIexrdZjCnKIYU/ZE9?=
- =?us-ascii?Q?3dP7Ge1JyNUZi/3w/VtY8FN3coG7OgC4Z600wnFEx2LGt4aatq/BpDK+Lwmo?=
- =?us-ascii?Q?aVNQXzAKDyVbTftgUnPZt3qMY7VG3GeQvg1ApWRoO+nteoRo7odH1TJZ6Dde?=
- =?us-ascii?Q?F06l24b34wAKs2/viDYub+XuCILN45tG1njfkvzH3ixGRd62Ivt2Z4wLCcUN?=
- =?us-ascii?Q?dgZHeauCD4xWxNP2eB9GtVAcMqfqxuyPTkfjpu6qupas78dOFZ59Ar8UrfOi?=
- =?us-ascii?Q?sCJYjTH883b7hbMJhE2Mu56EYAsxMXAAwpbfv2zuCTfH5Sk/AgKiHwLyLBOK?=
- =?us-ascii?Q?jdxlYWcHNRdCXE2vd20yzl+lb5nCPyUmcGMdLf1zOjlDYQX30ubcXVBZjRRt?=
- =?us-ascii?Q?z32u5ui49m+xXzXjuVnAf/8pFy/8XWuXy60aQEd1XgzH4ypAOhtKt7gYjNwW?=
- =?us-ascii?Q?AhUiYd4/2uSz3UHy6o/enRwH8PMNz6n8uk7NQRJmaWH2R/aGYIqtXaqRU+Zq?=
- =?us-ascii?Q?3F4wOB5DzkyZSSL7//s+2vQ2oz1jCNxrSSlqmRBgQFASHuT/P444VXJGcDsI?=
- =?us-ascii?Q?llvdnleb0uySKKsk2uBcCD7kNfYdmmS+RXtrHOLRUr53ZJ78mGdHJMmjl13r?=
- =?us-ascii?Q?2blzWQYKBimt9/MAyVlGh+MipaOvo6D0ZRmwFSL6CdMlhJTC0j+W4cgPRzKd?=
- =?us-ascii?Q?gz4v3mFqoWMlgQoQORA/ZqWQxO7nNvlumAJ23RpbqoSN5OTLPpnzMIlYu3n1?=
- =?us-ascii?Q?Fg3D9LB3hAT0SreKlV6iFSGJIBLfIIDeZW46UzaaHLXdDz8QBQl0gheySebe?=
- =?us-ascii?Q?PMKc+cn8GhxQw5oQE+Bacgn4V5cHh4pv1r6gShla7hpJF+aRqx9L1mz/Rm8D?=
- =?us-ascii?Q?4HnbEPPqPbYg5zU7Ben/bHDi7b9TVaARoQU21Cp9j7U4BR39vkLkSlzrE2kx?=
- =?us-ascii?Q?+Vrm6zSFtffgzo6JH+QgbG0JnGdjedabG5BpVO9y?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8c0e688-8f9e-438d-8489-08ddb779b009
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 01:59:03.0702
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: foYEo8qy7gXL6KZ5JPgPyv9NK2+LN7k2Fl5pLCgQuAaNIapnHK+L9nXXb6+qi0VJGwU0hQmZUgw4qdGiRyr/IQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10171
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/23] md/llbitmap: md/md-llbitmap: introduce a new
+ lockless bitmap
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, colyli@kernel.org,
+ song@kernel.org, yukuai3@huawei.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+In-Reply-To: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Cristian,
 
-On Fri, Jun 27, 2025 at 02:44:00PM +0100, Cristian Marussi wrote:
->On Fri, Jun 27, 2025 at 02:03:48PM +0800, Peng Fan wrote:
->> MISC protocol supports getting system log regarding system sleep latency
->> ,wakeup interrupt and etc. Add the API for user to retrieve the
->> information from SM.
->> 
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  .../firmware/arm_scmi/vendors/imx/imx-sm-misc.c    | 78 ++++++++++++++++++++++
->>  include/linux/scmi_imx_protocol.h                  | 19 ++++++
->>  2 files changed, 97 insertions(+)
->> 
->> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> index d5b24bc4d4ca6c19f4cddfaea6e9d9b32a4c92f7..1a6d75357b76ce6bb7d06461999b368c27f1fa43 100644
->> --- a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-misc.c
->> @@ -28,6 +28,7 @@ enum scmi_imx_misc_protocol_cmd {
->>  	SCMI_IMX_MISC_DISCOVER_BUILDINFO = 0x6,
->>  	SCMI_IMX_MISC_SI_INFO = 0xB,
->>  	SCMI_IMX_MISC_CFG_INFO = 0xC,
->> +	SCMI_IMX_MISC_SYSLOG = 0xD,
->>  	SCMI_IMX_MISC_CTRL_NOTIFY = 0x8,
->>  };
->>  
->> @@ -87,6 +88,19 @@ struct scmi_imx_misc_si_info_out {
->>  	u8 siname[MISC_MAX_SINAME];
->>  };
->>  
->> +struct scmi_imx_misc_syslog_in {
->> +	__le32 flags;
->> +	__le32 index;
->> +};
->> +
->> +#define REMAINING(x)	le32_get_bits((x), GENMASK(31, 20))
->> +#define RETURNED(x)	le32_get_bits((x), GENMASK(11, 0))
->> +
->> +struct scmi_imx_misc_syslog_out {
->> +	__le32 numlogflags;
->> +	__le32 syslog[];
->> +};
->> +
->>  static int scmi_imx_misc_attributes_get(const struct scmi_protocol_handle *ph,
->>  					struct scmi_imx_misc_info *mi)
->>  {
->> @@ -368,6 +382,69 @@ static int scmi_imx_misc_silicon_info(const struct scmi_protocol_handle *ph,
->>  	return ret;
->>  }
->>  
->> +struct scmi_imx_misc_syslog_ipriv {
->> +	u32 *array;
->> +};
->> +
->> +static void iter_misc_syslog_prepare_message(void *message, u32 desc_index,
->> +					     const void *priv)
->> +{
->> +	struct scmi_imx_misc_syslog_in *msg = message;
->> +
->> +	msg->flags = cpu_to_le32(0);
->> +	msg->index = cpu_to_le32(desc_index);
->> +}
->> +
->> +static int iter_misc_syslog_update_state(struct scmi_iterator_state *st,
->> +					 const void *response, void *priv)
->> +{
->> +	const struct scmi_imx_misc_syslog_out *r = response;
->> +
->> +	st->num_returned = RETURNED(r->numlogflags);
->> +	st->num_remaining = REMAINING(r->numlogflags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int
->> +iter_misc_syslog_process_response(const struct scmi_protocol_handle *ph,
->> +				  const void *response,
->> +				  struct scmi_iterator_state *st, void *priv)
->> +{
->> +	const struct scmi_imx_misc_syslog_out *r = response;
->> +	struct scmi_imx_misc_syslog_ipriv *p = priv;
->> +
->> +	p->array[st->desc_index + st->loop_idx] =
->> +		le32_to_cpu(r->syslog[st->loop_idx]);
->> +
->> +	return 0;
->> +}
->> +
->> +static int scmi_imx_misc_syslog(const struct scmi_protocol_handle *ph, u16 size,
->> +				void *array)
->> +{
+在 2025/5/24 下午2:12, Yu Kuai 写道:
+> From: Yu Kuai <yukuai3@huawei.com>
 >
->...so this size...
+> This is the formal version after previous RFC version:
 >
->> +	struct scmi_iterator_ops ops = {
->> +		.prepare_message = iter_misc_syslog_prepare_message,
->> +		.update_state = iter_misc_syslog_update_state,
->> +		.process_response = iter_misc_syslog_process_response,
->> +	};
->> +	struct scmi_imx_misc_syslog_ipriv ipriv = {
->> +		.array = array,
->> +	};
->> +	void *iter;
->> +
->> +	if (!array || !size)
->> +		return -EINVAL;
->> +
+> https://lore.kernel.org/all/20250512011927.2809400-1-yukuai1@huaweicloud.com/
 >
->...which cannot be zero and is passed down to the iterator as max_resources
->is meant to repreent also the length of tthe array passed here as an
->argument and filled-in by the iterators ?
+> #### Background
 >
->...and so basically array bounds-checking is enforced by the iterators
->core code, because no matter what, it is always enforced that
+> Redundant data is used to enhance data fault tolerance, and the storage
+> method for redundant data vary depending on the RAID levels. And it's
+> important to maintain the consistency of redundant data.
 >
->	(returned + remaining <= max_resources (size)
+> Bitmap is used to record which data blocks have been synchronized and which
+> ones need to be resynchronized or recovered. Each bit in the bitmap
+> represents a segment of data in the array. When a bit is set, it indicates
+> that the multiple redundant copies of that data segment may not be
+> consistent. Data synchronization can be performed based on the bitmap after
+> power failure or readding a disk. If there is no bitmap, a full disk
+> synchronization is required.
 
-Right. I think set size to 0 does not make sense, so add a '(!size)' check
+
+Hi Kuai
 
 >
->...I am fine with this, I am just trying to understand and see if I can
->find a mishap :D
+> #### Key Features
 >
->> +	iter = ph->hops->iter_response_init(ph, &ops, size, SCMI_IMX_MISC_SYSLOG,
->> +					    sizeof(struct scmi_imx_misc_syslog_in),
->> +					    &ipriv);
->> +	if (IS_ERR(iter))
->> +		return PTR_ERR(iter);
->> +
->> +	return ph->hops->iter_response_run(iter);
->> +}
->> +
->>  static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
->>  	.misc_cfg_info = scmi_imx_misc_cfg_info,
->>  	.misc_ctrl_set = scmi_imx_misc_ctrl_set,
->> @@ -375,6 +452,7 @@ static const struct scmi_imx_misc_proto_ops scmi_imx_misc_proto_ops = {
->>  	.misc_ctrl_req_notify = scmi_imx_misc_ctrl_notify,
->>  	.misc_discover_build_info = scmi_imx_discover_build_info,
->>  	.misc_silicon_info = scmi_imx_misc_silicon_info,
->> +	.misc_syslog = scmi_imx_misc_syslog,
->>  };
->>  
->>  static int scmi_imx_misc_protocol_init(const struct scmi_protocol_handle *ph)
->> diff --git a/include/linux/scmi_imx_protocol.h b/include/linux/scmi_imx_protocol.h
->> index 0e639dfb5d16e281e2ccf006a63694b316c431f4..ff34d974046aa982fa9f5d46fc673412e01a532d 100644
->> --- a/include/linux/scmi_imx_protocol.h
->> +++ b/include/linux/scmi_imx_protocol.h
->> @@ -71,6 +71,23 @@ struct scmi_imx_misc_system_info {
->>  	u8 siname[MISC_MAX_SINAME];
->>  };
->>  
->> +struct scmi_imx_misc_sys_sleep_rec {
->> +	u32 sleepentryusec;
->> +	u32 sleepexitusec;
->> +	u32 sleepcnt;
->> +	u32 wakesource;
->> +	u32 mixpwrstat;
->> +	u32 mempwrstat;
->> +	u32 pllpwrstat;
->> +	u32 syssleepmode;
->> +	u32 syssleepflags;
->> +};
+>   - IO fastpath is lockless, if user issues lots of write IO to the same
+>   bitmap bit in a short time, only the first write have additional overhead
+>   to update bitmap bit, no additional overhead for the following writes;
+
+After reading other patches, I want to check if I understand right.
+
+The first write sets the bitmap bit. The second write which hits the 
+same block (one sector, 512 bits) will call llbitmap_infect_dirty_bits 
+to set all other bits. Then the third write doesn't need to set bitmap 
+bits. If I'm right, the comments above should say only the first two 
+writes have additional overhead?
+
+
+>   - support only resync or recover written data, means in the case creating
+>   new array or replacing with a new disk, there is no need to do a full disk
+>   resync/recovery;
 >
->So where is this used ? later in the series ?
->> +
->> +struct scmi_imx_misc_syslog {
->> +	struct scmi_imx_misc_sys_sleep_rec syssleeprecord;
+> #### Key Concept
+>
+> ##### State Machine
+>
+> Each bit is one byte, contain 6 difference state, see llbitmap_state. And
+> there are total 8 differenct actions, see llbitmap_action, can change state:
+>
+> llbitmap state machine: transitions between states
+>
+> |           | Startwrite | Startsync | Endsync | Abortsync|
+> | --------- | ---------- | --------- | ------- | -------  |
+> | Unwritten | Dirty      | x         | x       | x        |
+> | Clean     | Dirty      | x         | x       | x        |
+> | Dirty     | x          | x         | x       | x        |
+> | NeedSync  | x          | Syncing   | x       | x        |
+> | Syncing   | x          | Syncing   | Dirty   | NeedSync |
+>
+> |           | Reload   | Daemon | Discard   | Stale     |
+> | --------- | -------- | ------ | --------- | --------- |
+> | Unwritten | x        | x      | x         | x         |
+> | Clean     | x        | x      | Unwritten | NeedSync  |
+> | Dirty     | NeedSync | Clean  | Unwritten | NeedSync  |
+> | NeedSync  | x        | x      | Unwritten | x         |
+> | Syncing   | NeedSync | x      | Unwritten | NeedSync  |
 
-Included here, but used in last patch in the patchset.
 
->> +	uint32_t deverrlog;
->> +};
->> +
->>  struct scmi_imx_misc_proto_ops {
->>  	int (*misc_cfg_info)(const struct scmi_protocol_handle *ph,
->>  			     struct scmi_imx_misc_system_info *info);
->> @@ -84,6 +101,8 @@ struct scmi_imx_misc_proto_ops {
->>  					struct scmi_imx_misc_system_info *info);
->>  	int (*misc_silicon_info)(const struct scmi_protocol_handle *ph,
->>  				 struct scmi_imx_misc_system_info *info);
->> +	int (*misc_syslog)(const struct scmi_protocol_handle *ph, u16 size,
->> +			  void *array);
->>  };
->> 
+For Reload action, if the bitmap bit is NeedSync, the changed status 
+will be x. It can't trigger resync/recovery.
 
-Thanks,
-Peng
+For example:
+
+cat /sys/block/md127/md/llbitmap/bits
+unwritten 3480
+clean 2
+dirty 0
+need sync 510
+
+It doesn't do resync after aseembling the array. Does it need to modify 
+the changed status from x to NeedSync?
+
+
+Best Regards
+
+Xiao
 
 >
->Thanks,
->Cristian
+> Typical scenarios:
+>
+> 1) Create new array
+> All bits will be set to Unwritten by default, if --assume-clean is set,
+> all bits will be set to Clean instead.
+>
+> 2) write data, raid1/raid10 have full copy of data, while raid456 doesn't and
+> rely on xor data
+>
+> 2.1) write new data to raid1/raid10:
+> Unwritten --StartWrite--> Dirty
+>
+> 2.2) write new data to raid456:
+> Unwritten --StartWrite--> NeedSync
+>
+> Because the initial recover for raid456 is skipped, the xor data is not build
+> yet, the bit must set to NeedSync first and after lazy initial recover is
+> finished, the bit will finially set to Dirty(see 5.1 and 5.4);
+>
+> 2.3) cover write
+> Clean --StartWrite--> Dirty
+>
+> 3) daemon, if the array is not degraded:
+> Dirty --Daemon--> Clean
+>
+> For degraded array, the Dirty bit will never be cleared, prevent full disk
+> recovery while readding a removed disk.
+>
+> 4) discard
+> {Clean, Dirty, NeedSync, Syncing} --Discard--> Unwritten
+>
+> 5) resync and recover
+>
+> 5.1) common process
+> NeedSync --Startsync--> Syncing --Endsync--> Dirty --Daemon--> Clean
+>
+> 5.2) resync after power failure
+> Dirty --Reload--> NeedSync
+>
+> 5.3) recover while replacing with a new disk
+> By default, the old bitmap framework will recover all data, and llbitmap
+> implement this by a new helper, see llbitmap_skip_sync_blocks:
+>
+> skip recover for bits other than dirty or clean;
+>
+> 5.4) lazy initial recover for raid5:
+> By default, the old bitmap framework will only allow new recover when there
+> are spares(new disk), a new recovery flag MD_RECOVERY_LAZY_RECOVER is add
+> to perform raid456 lazy recover for set bits(from 2.2).
+>
+> ##### Bitmap IO
+>
+> ##### Chunksize
+>
+> The default bitmap size is 128k, incluing 1k bitmap super block, and
+> the default size of segment of data in the array each bit(chunksize) is 64k,
+> and chunksize will adjust to twice the old size each time if the total number
+> bits is not less than 127k.(see llbitmap_init)
+>
+> ##### READ
+>
+> While creating bitmap, all pages will be allocated and read for llbitmap,
+> there won't be read afterwards
+>
+> ##### WRITE
+>
+> WRITE IO is divided into logical_block_size of the array, the dirty state
+> of each block is tracked independently, for example:
+>
+> each page is 4k, contain 8 blocks; each block is 512 bytes contain 512 bit;
+>
+> | page0 | page1 | ... | page 31 |
+> |       |
+> |        \-----------------------\
+> |                                |
+> | block0 | block1 | ... | block 8|
+> |        |
+> |         \-----------------\
+> |                            |
+> | bit0 | bit1 | ... | bit511 |
+>
+>  From IO path, if one bit is changed to Dirty or NeedSync, the corresponding
+> subpage will be marked dirty, such block must write first before the IO is
+> issued. This behaviour will affect IO performance, to reduce the impact, if
+> multiple bits are changed in the same block in a short time, all bits in this
+> block will be changed to Dirty/NeedSync, so that there won't be any overhead
+> until daemon clears dirty bits.
+>
+> ##### Dirty Bits syncronization
+>
+> IO fast path will set bits to dirty, and those dirty bits will be cleared
+> by daemon after IO is done. llbitmap_page_ctl is used to synchronize between
+> IO path and daemon;
+>
+> IO path:
+>   1) try to grab a reference, if succeed, set expire time after 5s and return;
+>   2) if failed to grab a reference, wait for daemon to finish clearing dirty
+>   bits;
+>
+> Daemon(Daemon will be waken up every daemon_sleep seconds):
+> For each page:
+>   1) check if page expired, if not skip this page; for expired page:
+>   2) suspend the page and wait for inflight write IO to be done;
+>   3) change dirty page to clean;
+>   4) resume the page;
+>
+> Performance Test:
+> Simple fio randwrite test to build array with 20GB ramdisk in my VM:
+>
+> |                      | none      | bitmap    | llbitmap  |
+> | -------------------- | --------- | --------- | --------- |
+> | raid1                | 13.7MiB/s | 9696KiB/s | 19.5MiB/s |
+> | raid1(assume clean)  | 19.5MiB/s | 11.9MiB/s | 19.5MiB/s |
+> | raid10               | 21.9MiB/s | 11.6MiB/s | 27.8MiB/s |
+> | raid10(assume clean) | 27.8MiB/s | 15.4MiB/s | 27.8MiB/s |
+> | raid5                | 14.0MiB/s | 11.6MiB/s | 12.9MiB/s |
+> | raid5(assume clean)  | 17.8MiB/s | 13.4MiB/s | 13.9MiB/s |
+>
+> For raid1/raid10 llbitmap can be better than none bitmap with background
+> initial resync, and it's the same as none bitmap without it.
+>
+> Noted that llbitmap performance improvement for raid5 is not obvious,
+> this is due to raid5 has many other performance bottleneck, perf
+> results still shows that bitmap overhead will be much less.
+>
+> following branch for review or test:
+> https://git.kernel.org/pub/scm/linux/kernel/git/yukuai/linux.git/log/?h=yukuai/md-llbitmap
+>
+> Yu Kuai (23):
+>    md: add a new parameter 'offset' to md_super_write()
+>    md: factor out a helper raid_is_456()
+>    md/md-bitmap: cleanup bitmap_ops->startwrite()
+>    md/md-bitmap: support discard for bitmap ops
+>    md/md-bitmap: remove parameter slot from bitmap_create()
+>    md/md-bitmap: add a new sysfs api bitmap_type
+>    md/md-bitmap: delay registration of bitmap_ops until creating bitmap
+>    md/md-bitmap: add a new method skip_sync_blocks() in bitmap_operations
+>    md/md-bitmap: add a new method blocks_synced() in bitmap_operations
+>    md: add a new recovery_flag MD_RECOVERY_LAZY_RECOVER
+>    md/md-bitmap: make method bitmap_ops->daemon_work optional
+>    md/md-bitmap: add macros for lockless bitmap
+>    md/md-bitmap: fix dm-raid max_write_behind setting
+>    md/dm-raid: remove max_write_behind setting limit
+>    md/md-llbitmap: implement llbitmap IO
+>    md/md-llbitmap: implement bit state machine
+>    md/md-llbitmap: implement APIs for page level dirty bits
+>      synchronization
+>    md/md-llbitmap: implement APIs to mange bitmap lifetime
+>    md/md-llbitmap: implement APIs to dirty bits and clear bits
+>    md/md-llbitmap: implement APIs for sync_thread
+>    md/md-llbitmap: implement all bitmap operations
+>    md/md-llbitmap: implement sysfs APIs
+>    md/md-llbitmap: add Kconfig
+>
+>   Documentation/admin-guide/md.rst |   80 +-
+>   drivers/md/Kconfig               |   11 +
+>   drivers/md/Makefile              |    2 +-
+>   drivers/md/dm-raid.c             |    6 +-
+>   drivers/md/md-bitmap.c           |   50 +-
+>   drivers/md/md-bitmap.h           |   55 +-
+>   drivers/md/md-llbitmap.c         | 1556 ++++++++++++++++++++++++++++++
+>   drivers/md/md.c                  |  247 +++--
+>   drivers/md/md.h                  |   20 +-
+>   drivers/md/raid5.c               |    6 +
+>   10 files changed, 1901 insertions(+), 132 deletions(-)
+>   create mode 100644 drivers/md/md-llbitmap.c
+>
+
