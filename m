@@ -1,107 +1,117 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A387F1DFE26
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FFE1BC099;
+	Mon, 30 Jun 2025 19:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751312129; cv=none; b=EVagZ4PsLlQSlzC7LUbk42qoQ4xWVWV5+QcQlhDR81K4aMnLT7EIlxyAnVM6MTjbqeF7WK3VTpYAhoN2qtgdNvSVc/GZwqTukJTHosy05hv84J/8N3IuD/BtTUqTcMnrc4Oq1+nRE5TNgIvuy+H4TclFeUb6rvZCpw834qHQrAI=
+	t=1751312164; cv=none; b=HIRMVUJlY/3xPA7nEHn1b0nEdYdOjSoBijq0BJXGa6Dtuh0UJ2AHStMWvRXDau/YSM75AFQsqc432A3UI1B25Bcd4FGa72sAMRnrc5+eHc0THorptPlU8i7HIFEPPafvINt1t3JBUMXkcXm3LildGz20k9tHFPMvqE0M5u5Q5Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751312129; c=relaxed/simple;
-	bh=QNwceMSVmMF1Nwg0Ks3Dq86yFnaGmtYCWAfbiAZhQVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ZTh+agYH2PrCt+aNE2Kae0HmN8W2bMrWESJyGavG/lrUSn+hgAkSR585KMgxJ0w7dkIixe6Lehghf29WDZnIm+4t9BmcdAcnSaLGIgYK/CSIDin3lV7Z8/FWD3HgKIT5k0/JgEKAARAisjPQaQ7b8WKgcMoDdN8I5i905Z21R2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BZm5War7; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751312164; c=relaxed/simple;
+	bh=FOT+04yKygWQRm31Jgx4y+/kgvIodzq5eY815kDs0qE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJFPb60YrpEmsCPyDhyCv+Bcbzig15yXHri+KC5lJn/vZfUrcDtapxWK/Ek3QoQP3lEF5x69KDpR4o+gD2gjgGG7O8nFxAd4v7mnH1iCY+5F4hgM1roSTTxrnKgdFejoD/qG3szXlf4WPmC+deTHtkqhdkK9lUQJDb5z94s7MDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IL1Uvf6G; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BZm5War7"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2ea080f900cso751889fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:35:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL1Uvf6G"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553b51f5218so5033351e87.0;
+        Mon, 30 Jun 2025 12:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751312127; x=1751916927; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uSnBBrW7DyQ9uDD3D8W9h8fjOrHlTZaIJ8+vrX+84dc=;
-        b=BZm5War71MaHdwNXfnbyn8EWVV08/8zVwr2fc7uDPEXEvJyFM8n2ZZMljxyQGsXEN2
-         JHBArk5vN0mUzyFWVOaWhmvfbapBB7kZA3vextrK82N1vG71vnFY0XReqeN+gZxOE1uQ
-         GEqIt0zE0IAoEvgaQQclbW2clY+hRVKbXPpD0+J6Pd7Tuo+ySzJqg+MBu0n60rZnctfA
-         FWDiwbFViBOrBc1D8rUgwX/8EFpsuUjBO9+xbGJmIlqzMN6dNmsDjqyw2GTsWEtdFXaO
-         YDOKtiepkGIH34Yom+lR8J4EG0NRfAsEwyvdKDt4cv7eN1A+6TaVUUpP0PM9YMbxW9XJ
-         0ckA==
+        d=gmail.com; s=20230601; t=1751312161; x=1751916961; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DTGe2122a4VtuzxAXlw8XXnbiXHTS1iBBm6tnzGbwBw=;
+        b=IL1Uvf6GI/rWL+iDga8MwxJgbHzSfGTXV0ucAmarhkPCMzQ1Wlr8GJJuJEZJX8jF8M
+         sR/I93GFsWrtlSwdxQDq+FeopA3cC8HH9v9/ts5Wi8zZa4xpW7brWBJ26hzxWfMI95q7
+         mxds9odtNJLOxgg0O6HG+8ZyV2LJf+1oRgemU+Ji24IXjcACpuwF2fyTHTIy/dAmClQS
+         ltuJgsG7yXpbOos3KlB/NDyA+EUqcNqzVYdODjd1S3ANoSZ9JWU3sAYJfaQ7byboxHCT
+         iem+WwFm+DRYhy1/Ho+GdSprFEVXW6OtiHRQRyqpS4SlXVXdDCx/vW9eJfXZtF94rY/8
+         vsaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751312127; x=1751916927;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uSnBBrW7DyQ9uDD3D8W9h8fjOrHlTZaIJ8+vrX+84dc=;
-        b=sVgWQ+NR2K14wJ1+j9It1HJST145rYofXiHda3xTTvG1Cg+yvQkTlQ/Fx9jYTio/Sm
-         5SlZvpoZTer8jGNpwRZXeOV8Ah8ftBPmj/HWsGb6LF5D6FaMuPpgs1q29RfTSApQpic2
-         oeXrL00BKgFn/yDrKHc6Fr76XaVzOGMMr2SmetEptnXgXdQtVSssgqpx/HSkCGpMP4u+
-         BbKkrkaLQpPbm2dYdj3NnT4rx/C5fOD+NKTaS2KSTlFYyB/vH5QgpXXTknF8x/VUB6gf
-         FfD/wro02IbzHctw4y1SWrLVplg2LUs0xpR9KMZijkcRNhp1HwV6kAVxGzHpBdcnmLWn
-         i1HA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeIRpXISHLlUdDBTE/TN2xf1UmP2z8EQfnMAJ5TtfqGEiU6KHo0l27GSZC2TRb/armWqLnJqeqSbIuTMM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgviY1mq+b4UKdsuYWFepLpoFJ3ojgdxyPTW2bLHuCRUC8pn2J
-	M0m6ItiwHrx0XPxUAQyXP+Z9hHJuPBVY/wx63j5cljH0DPEvgIE/yQisM+yOnmW2/yoLQ6QKgZp
-	EYTdXv70=
-X-Gm-Gg: ASbGncsCotuR20ejP54FvloxNQ5DkN2++V/MqCnSI35VJmCW09GlAyhTIAbutBFe1Sv
-	rZ2ADxivt/vk2uHj0No1S6QMb7dMgV/cbGKHEgKC/qpO72X3DDoG0tb8ZsvA5KTT/Wx3AEjn8oC
-	KE9voGC2kwFOJrJw8ZsoEKmU4SjABlVDlCtoxPy5dJw9VoHxAQYtvFCMPCRNCRSEmv5xWqW8zMm
-	tHsRcAkVMnTAwjVY2CH6y7lopBMqmyIuXhvg7jseh0/WH6bYKGtframR5eascLXMKIOEN56ems1
-	taart1+XsKVJzsp9LiNFkqM/iBkHhqhYGxWPN8YVxjeJhgAtaUBO/s67fXleBduDm1XOyW8wTTJ
-	DMGw=
-X-Google-Smtp-Source: AGHT+IFjeReXBA3k7+eClk/ifIE93Uzbc7oaZBkcYmdYTh/N0ppG05eqByPpmkkuYUzt5s/KtcZ0Xw==
-X-Received: by 2002:a05:6870:783:b0:2eb:adf2:eb2 with SMTP id 586e51a60fabf-2efed7a2a73mr9014336fac.36.1751312126689;
-        Mon, 30 Jun 2025 12:35:26 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:49cc:1768:3819:b67])
-        by smtp.gmail.com with UTF8SMTPSA id 586e51a60fabf-2efd50f7f6asm2908403fac.36.2025.06.30.12.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 12:35:26 -0700 (PDT)
-Date: Mon, 30 Jun 2025 14:35:25 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Cc: Alain Volmat <alain.volmat@foss.st.com>,
-	Mark Brown <broonie@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] spi: stm32: delete stray tabs in stm32h7_spi_data_idleness()
-Message-ID: <2033b9fa-7b0f-4617-b94e-7b0a51c5c4b1@sabinyo.mountain>
+        d=1e100.net; s=20230601; t=1751312161; x=1751916961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DTGe2122a4VtuzxAXlw8XXnbiXHTS1iBBm6tnzGbwBw=;
+        b=KvoBPeSNH1U2RJ0Xo8i6/VBcvL3Hp0rO6AeHssxmHhCMU/6VU+T6gGWkLI2j+eoxyl
+         RPlnz+H9PEH4H4RTvhUJUdkLrFZuu0VTZ9YZezM7X0jMyz2+/y1IH8xETFncP3yFb4aG
+         MsM6QqS7lZsl4f7eJ/926LD0SDXxawhJzVDlqGpbNglOAkGNsZxpO01bDqcBTu0dbvqq
+         iZopPAp5ZhrmliaqKekHWCPtrubDbeX1kzsRYJ2u0ekfc8tNBKJRzvtQgaQgGPDFbvPO
+         s69eVwvN3V8H48VV6XUUGh7Yn3rsnIVKMbpnnRzuLZK7L6eDO//oBEAw3bBNZOMqOhS+
+         ML1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVayEwNfR5j22+Xm5Mb4yNnN7hUdRmzOWXig3/epCHsRyFGiw+UpuAVeZfLM0PsfhpGIoIkRhV9hF7L@vger.kernel.org, AJvYcCW33Gti9WYW6DkC4jk2nxRp+B0g+iSI7e+Iek4wAO668Y2ap5zvmNz1lGc8yUo5VInekKJEAEEIsH2WA/A=@vger.kernel.org, AJvYcCWUITBtY9wZctokp/wScW2uNSr0eUgIdjIYhAuErD3TgInA9fSOW5sec5hD+1vmwcRgU/ksQXOtq5ZmfHRS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbHlawn23YJKYUumR5izlm3tdfM6YDRIXRTzIB+ND0sQjYraEc
+	wVz7m7hef3A6QfhqfwHGiNX28w0CVqZt0M2xwnmbtKgmDDbcEJgXzfzksu8Avfbg/r6grwn9ice
+	/XC3GH7uHpmQWEHRVeLZ5XUA7ae+231M=
+X-Gm-Gg: ASbGnct7lav+70lK2syjj3lt7w1TiXz650pIveAFxvnb5AU1SpqqGGBEUlnmOdPBfri
+	lrJyNsJPT/00yCdZ+iiYGuFdm0hrgIf9TPXwEqsVnW6jVqtFxS31DxcqOh39N3DqWUGPmr/yIwZ
+	X62szraML6I4eoW5H5A2BGnUxHcEbrH6c0yF6mmjgNfB0=
+X-Google-Smtp-Source: AGHT+IGvP6k++MV3STAMJzrC53fLNAqEskJs0/ySC86DyhBjE63P2oqMfs8p5nHBw2b85dLQ1SSt8zZDSUdzDqMF3Ys=
+X-Received: by 2002:a05:6512:1105:b0:553:cfa8:dd31 with SMTP id
+ 2adb3069b0e04-5550b88f427mr4548643e87.24.1751312161081; Mon, 30 Jun 2025
+ 12:36:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+References: <20250526-p3450-otg-v1-1-acb80ca2dc63@gmail.com>
+In-Reply-To: <20250526-p3450-otg-v1-1-acb80ca2dc63@gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 30 Jun 2025 14:35:50 -0500
+X-Gm-Features: Ac12FXwUmul_Xg0oPGI0aVakSWdS1wT-Na22FrZKLw9t2QGcYkhkQzDUsGoG4NQ
+Message-ID: <CALHNRZ-pE4EA=x-7LuJev60=aOwGt2eDf9mGVHWJ8SPGisBchg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Set usb micro-b port to otg mode on P3450
+To: webgeek1234@gmail.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These lines were indented one tab more than they should be.  Delete
-the stray tabs.
+On Mon, May 26, 2025 at 8:22=E2=80=AFPM Aaron Kling via B4 Relay
+<devnull+webgeek1234.gmail.com@kernel.org> wrote:
+>
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> The usb micro-b port on p3450 is capable of otg and doesn't need
+> hardcoded to peripheral. No other supported tegra device is set up like
+> this, so align for consistency.
+>
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/ar=
+m64/boot/dts/nvidia/tegra210-p3450-0000.dts
+> index 0ecdd7243b2eb1abba9adbe9a404b226c29b85ef..019484a271c396edc30200e85=
+92c713455a8e1a4 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+> @@ -514,7 +514,7 @@ pcie-6 {
+>                 ports {
+>                         usb2-0 {
+>                                 status =3D "okay";
+> -                               mode =3D "peripheral";
+> +                               mode =3D "otg";
+>                                 usb-role-switch;
+>
+>                                 vbus-supply =3D <&vdd_5v0_usb>;
+>
+> ---
+> base-commit: 405e6c37c89ef0df2bfc7a988820a3df22dacb1b
+> change-id: 20250513-p3450-otg-b947f31843d8
+>
+> Best regards,
+> --
+> Aaron Kling <webgeek1234@gmail.com>
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/spi/spi-stm32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Friendly reminder about this patch.
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 3d20f09f1ae7..afb54198bde7 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -1895,8 +1895,8 @@ static void stm32h7_spi_data_idleness(struct stm32_spi *spi, struct spi_transfer
- 		if (spi_delay_ns) {
- 			dev_warn(spi->dev, "Overriding st,spi-midi-ns with word_delay_ns %d\n",
- 				 spi_delay_ns);
--				spi->cur_midi = spi_delay_ns;
--			}
-+			spi->cur_midi = spi_delay_ns;
-+		}
- 	} else {
- 		spi->cur_midi = spi_delay_ns;
- 	}
--- 
-2.47.2
-
+Aaron
