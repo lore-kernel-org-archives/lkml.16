@@ -1,161 +1,173 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276ED2F4A;
-	Mon, 30 Jun 2025 06:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C551C19994F
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263315; cv=none; b=hVCdn6uFwbvAZGr22Gy2JN9yEvNy1TSMaMLNHZeiMs47riJQHdpXB/3opcpC/uLfBgJYTztUHPgi66fTW49BLgSgOF5+sybeaymYIQZc4zmiFmHcZg9qccueFJAci4FZbX0OdayRxd0hq+ADwUOJPRdxuZAwOhoUlcb8wmTXmf8=
+	t=1751263328; cv=none; b=Fkl0fC5mhGF6jI65bXG6M/e6+4R2TITFrzwa6rAZhepKEL2keMFr72sYxVgfHyZv3C7uV8D9aZtgbWMCxBlA+LN5IOPPM1zp0l/WN5/JRmTM0pYDES2jHxpfTDYboBwHkmfLNoG3RKOyb68JSDtmM0l197vCcLogqE58shMc9c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263315; c=relaxed/simple;
-	bh=qczW777iQz4wArWTbhCw2qu9kAv37gI8/e/m4EuvhO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FAOituwp+omG0dlxwKsOeQ0l40LEr3fT5ftXOnszRb4UeD1C+GnIYc9v/hPgqWuSg7qyhfg8JIr9EoaXOGSZTCwNZ2w8kwniXF6/S5VgJDWjBfi0nGGTw43tmkg5p1XHZIy+p+OPFXBj4y9FAa92ms7MDChxIFiskcKd/QjgfQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cWbi1juI; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1751263328; c=relaxed/simple;
+	bh=ScDCbKztzH2ieoL0iYBisn4tcvXqoUj0at/V2ZcR/hs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F4VlKC8tQ2cjMCut1V3xk6CzAFzoCB2UF6eOMIyssJu9VaBwMGvarO4Mi6UKjsCzpUaQFIEhD/utYMLulYGty0d+eq0WIlr/+lWpWhWW837sdX2TDOx2sc6rRTizs389bvPChRh8konMY7um06lPqY5tCIw6kVT0pPsN2jfOoMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=s/oYlGrY; arc=none smtp.client-ip=188.40.203.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cWbi1juI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751263306;
-	bh=WKmaHGLzGfShKi7ENX78CD/CWzNHiFx2IRicO5n19OM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cWbi1juI0XXRhjCnD3Syz53GuSqrUKV4daRd3c6FEJ3vtNWtW5+FYf1sgAQR3Aalt
-	 GD2nlXjPQBpwGRxvjpEEFNW8qpjkdwSDVTlQG42SER+6BZq+AYNVo1be/OFUD392MK
-	 2JjzB5L9fE2MK9q8L67iW51QCaYdu2We8+ORo1t4LmhQHFxSNTD9b2tHQOnfW0v0/y
-	 vWADyzCifilp4sH6rMROCV6NDGTfLAUqvJ6bJU82sQFnMg+/VzwJIdyyS7+wlsIWaZ
-	 xkaG/60z7WA+QJKLNR0rjq5E+WXwBHN4vFqFlHtN5ZKL4zy4a4JDxH9tG6G8tCxTrz
-	 o43KUVgJTMGKg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bVwXT4jf4z4x21;
-	Mon, 30 Jun 2025 16:01:45 +1000 (AEST)
-Date: Mon, 30 Jun 2025 16:00:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joerg.roedel@amd.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Nicolin Chen
- <nicolinc@nvidia.com>
-Subject: linux-next: manual merge of the iommufd tree with the iommu tree
-Message-ID: <20250630160059.49544dde@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="s/oYlGrY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ScDCbKztzH2ieoL0iYBisn4tcvXqoUj0at/V2ZcR/hs=; b=s/oYlGrYtA50WXtmY+kFnu5Nar
+	adXXK0i8EmAqwVST3UnUSn5F42euQlOzRHLqNe2/PRTxYtnCVQsl4LZihCt7oI0Ie2dlw68zs01eh
+	rXG+QFkGZCrEhuXe05YiqyjjEmHwyq5u2TNN8ZcpVKNQ9bsiA2C5QumhyuChyp6NFIaA4cjsEEQZB
+	v6S1OYPbofD0al4q+DipoAxhS8jgM9iIkTu0gDz04eO61K9p3YFWQQYDksdAALsw9gJfhgzgctLhv
+	wetPehFqBphC9PvSJzvc/Jm2QQt10SCepgzIig5XKKli2B43UAE6CsBYqzVwPrDQuE34X4YXuy7lo
+	wDs1nhoA==;
+Received: from [178.38.100.64] (helo=[10.10.1.179])
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1uW7aH-005wxd-3u; Mon, 30 Jun 2025 07:01:42 +0100
+Message-ID: <df7cb41da58dc80e2b293ab93fbaca6a9eab9a26.camel@codethink.co.uk>
+Subject: Re: [PATCH 0/5] sched/deadline: Fix GRUB accounting
+From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+To: Juri Lelli <juri.lelli@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann	 <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall	 <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider	 <vschneid@redhat.com>, Waiman
+ Long <llong@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Luca Abeni <luca.abeni@santannapisa.it>
+Date: Mon, 30 Jun 2025 08:01:41 +0200
+In-Reply-To: <20250627115118.438797-1-juri.lelli@redhat.com>
+References: <20250627115118.438797-1-juri.lelli@redhat.com>
+Organization: Codethink
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r.WIf1iNV/vkDrJ6SAirccM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Sender: marcel.ziswiler@codethink.co.uk
 
---Sig_/r.WIf1iNV/vkDrJ6SAirccM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Juri
 
-Hi all,
+On Fri, 2025-06-27 at 13:51 +0200, Juri Lelli wrote:
+> Hi All,
+>=20
+> This patch series addresses a significant regression observed in
+> `SCHED_DEADLINE` performance, specifically when `SCHED_FLAG_RECLAIM`
+> (Greedy Reclamation of Unused Bandwidth - GRUB) is enabled alongside
+> overrunning jobs. This issue was reported by Marcel [1].
+>=20
+> Marcel's team extensive real-time scheduler (`SCHED_DEADLINE`) tests on
+> mainline Linux kernels (amd64-based Intel NUCs and aarch64-based RADXA
+> ROCK5Bs) typically show zero deadline misses for 5ms granularity tasks.
+> However, with reclaim mode enabled and the same two overrunning jobs in
+> the mix, they observed a dramatic increase in deadline misses: 43
+> million on NUC and 600 thousand on ROCK55B. This highlights a critical
+> accounting issue within `SCHED_DEADLINE` when reclaim is active.
+>=20
+> This series fixes the issue by doing the following.
+>=20
+> - 1/5: sched/deadline: Initialize dl_servers after SMP
+> =C2=A0 Currently, `dl-servers` are initialized too early during boot, bef=
+ore
+> =C2=A0 all CPUs are online. This results in an incorrect calculation of
+> =C2=A0 per-runqueue `DEADLINE` variables, such as `extra_bw`, which rely =
+on a
+> =C2=A0 stable CPU count. This patch moves the `dl-server` initialization =
+to a
+> =C2=A0 later stage, after SMP initialization, ensuring all CPUs are onlin=
+e and
+> =C2=A0 correct `extra_bw` values can be computed from the start.
+>=20
+> - 2/5: sched/deadline: Reset extra_bw to max_bw when clearing root domain=
+s
+> =C2=A0 The `dl_clear_root_domain()` function was found to not properly ac=
+count
+> =C2=A0 for the fact that per-runqueue `extra_bw` variables retained stale
+> =C2=A0 values computed before root domain changes. This led to broken
+> =C2=A0 accounting. This patch fixes the issue by resetting `extra_bw` to
+> =C2=A0 `max_bw` before restoring `dl-server` contributions, ensuring a cl=
+ean
+> =C2=A0 state.
+>=20
+> - 3/5: sched/deadline: Fix accounting after global limits change
+> =C2=A0 Changes to global `SCHED_DEADLINE` limits (handled by
+> =C2=A0 `sched_rt_handler()` logic) were found to leave stale or incorrect
+> =C2=A0 values in various accounting-related variables, including `extra_b=
+w`.
+> =C2=A0 This patch properly cleans up per-runqueue variables before implem=
+enting
+> =C2=A0 the global limit change and then rebuilds the scheduling domains. =
+This
+> =C2=A0 ensures that the accounting is correctly restored and maintained a=
+fter
+> =C2=A0 such global limit adjustments.
+>=20
+> - 4/5 and 5/5 are simple drgn scripts I put together to help debugging
+> =C2=A0 this issue. I have the impression that they might be useful to hav=
+e
+> =C2=A0 around for the future.
+>=20
+> Please review and test.
 
-Today's linux-next merge of the iommufd tree got a conflict in:
+Over the weekend I run 312 mio. test runs on NUC and 231 mio. on ROCK55B wi=
+thout any single deadline misses.
+Therefore,
 
-  include/linux/iommu.h
+for the whole series:
 
-between commit:
+Tested-by: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk> # nuc & rock5b
 
-  792ea7b6cafa ("iommu: Remove ops->pgsize_bitmap")
+Thanks!
 
-from the iommu tree and commits:
+> The set is also availabe at
+>=20
+> git@github.com:jlelli/linux.git upstream/fix-grub-tip
+>=20
+> 1 - https://lore.kernel.org/lkml/ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab=
+.camel@codethink.co.uk/
+>=20
+> Thanks,
+> Juri
+>=20
+> Juri Lelli (5):
+> =C2=A0 sched/deadline: Initialize dl_servers after SMP
+> =C2=A0 sched/deadline: Reset extra_bw to max_bw when clearing root domain=
+s
+> =C2=A0 sched/deadline: Fix accounting after global limits change
+> =C2=A0 tools/sched: Add root_domains_dump.py which dumps root domains inf=
+o
+> =C2=A0 tools/sched: Add dl_bw_dump.py for printing bandwidth accounting i=
+nfo
+>=20
+> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 1 +
+> =C2=A0kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
+> =C2=A0kernel/sched/deadline.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 61 +++++++++++++++++++---------
+> =C2=A0kernel/sched/rt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 +++
+> =C2=A0kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0tools/sched/dl_bw_dump.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 57 ++++++++++++++++++++++++++
+> =C2=A0tools/sched/root_domains_dump.py | 68 +++++++++++++++++++++++++++++=
++++
+> =C2=A07 files changed, 177 insertions(+), 19 deletions(-)
+> =C2=A0create mode 100755 tools/sched/dl_bw_dump.py
+> =C2=A0create mode 100755 tools/sched/root_domains_dump.py
 
-  187f146d5de6 ("iommu: Introduce get_viommu_size and viommu_init ops")
-  f842ea208e43 ("iommu: Deprecate viommu_alloc op")
+Cheers
 
-from the iommufd tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/iommu.h
-index 7073be1d8841,04548b18df28..000000000000
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@@ -596,14 -597,17 +597,16 @@@ iommu_copy_struct_from_full_user_array(
-   *		- IOMMU_DOMAIN_DMA: must use a dma domain
-   *		- 0: use the default setting
-   * @default_domain_ops: the default ops for domains
--  * @viommu_alloc: Allocate an iommufd_viommu on a physical IOMMU instance=
- behind
--  *                the @dev, as the set of virtualization resources shared=
-/passed
--  *                to user space IOMMU instance. And associate it with a n=
-esting
--  *                @parent_domain. The @viommu_type must be defined in the=
- header
--  *                include/uapi/linux/iommufd.h
--  *                It is required to call iommufd_viommu_alloc() helper for
--  *                a bundled allocation of the core and the driver structu=
-res,
--  *                using the given @ictx pointer.
-+  * @get_viommu_size: Get the size of a driver-level vIOMMU structure for =
-a given
-+  *                   @dev corresponding to @viommu_type. Driver should re=
-turn 0
-+  *                   if vIOMMU isn't supported accordingly. It is require=
-d for
-+  *                   driver to use the VIOMMU_STRUCT_SIZE macro to saniti=
-ze the
-+  *                   driver-level vIOMMU structure related to the core one
-+  * @viommu_init: Init the driver-level struct of an iommufd_viommu on a p=
-hysical
-+  *               IOMMU instance @viommu->iommu_dev, as the set of virtual=
-ization
-+  *               resources shared/passed to user space IOMMU instance. As=
-sociate
-+  *               it with a nesting @parent_domain. It is required for dri=
-ver to
-+  *               set @viommu->ops pointing to its own viommu_ops
- - * @pgsize_bitmap: bitmap of all possible supported page sizes
-   * @owner: Driver module providing these ops
-   * @identity_domain: An always available, always attachable identity
-   *                   translation.
-@@@ -653,11 -657,13 +656,12 @@@ struct iommu_ops=20
- =20
-  	int (*def_domain_type)(struct device *dev);
- =20
-- 	struct iommufd_viommu *(*viommu_alloc)(
-- 		struct device *dev, struct iommu_domain *parent_domain,
-- 		struct iommufd_ctx *ictx, unsigned int viommu_type);
-+ 	size_t (*get_viommu_size)(struct device *dev,
-+ 				  enum iommu_viommu_type viommu_type);
-+ 	int (*viommu_init)(struct iommufd_viommu *viommu,
-+ 			   struct iommu_domain *parent_domain);
- =20
-  	const struct iommu_domain_ops *default_domain_ops;
- -	unsigned long pgsize_bitmap;
-  	struct module *owner;
-  	struct iommu_domain *identity_domain;
-  	struct iommu_domain *blocked_domain;
-
---Sig_/r.WIf1iNV/vkDrJ6SAirccM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhiKBsACgkQAVBC80lX
-0GyyVAgAmIDuZZk3cu5esXQq1UJjFEIUBO3GnJdmGbwh+ZzW63K1TyEZZNbJq8dO
-nWfh+O9+GCqp4HHCpYH8gWKrUlA4DNqxg9QHqXvof1+Uo7i72FBJlXpWKOuvCyya
-RiMya+2qkxMwNoWSeLaoar1xbgh9jD4unwiHutOCxgmv/GFyc4oU4zKS3XzA81ah
-rF124S24l+yG9W/WpVN1ZqNNTUUt7L5XxzO2WX9wFjFlMBBAIhF2Gk2U/BuYGDrh
-WzZzYFnjdpH35hj8McUNjOz65l5eceO3517bwV81aRBMuTiqg0lLq7dDvEomUyUn
-IUgQuGsZCt49U1UW7G6Nz51gsR53vA==
-=hdTA
------END PGP SIGNATURE-----
-
---Sig_/r.WIf1iNV/vkDrJ6SAirccM--
+Marcel
