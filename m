@@ -1,70 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F906299957;
-	Mon, 30 Jun 2025 18:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905331D63DD
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751309953; cv=none; b=k7fU581h4bFDLye9RrOqQbV3Otk+6BncQqseoROgowxixMpzTDXbVUBQRs2apJFJw1t/y/rO7gh+nD0h+FwdrqpB+Pe5Sw8eAXggia9EFbxRnCn5RdP9yPwPoim4QZBhPY0WkjmehuzBA4be3ZU2u9GqkgUCxYkI6zr5qgGqGDg=
+	t=1751309961; cv=none; b=qq5taep2R6MtlXYMlxv4BTuQqpH34+iFnIQugXa2IGMpqb4oZjt/DBW+RE/nXZ6xGp+IRSWb58Ins01JuSgSKNUcm6paUaKQ5Ngip6hGSRcpC4TtFCeELENL5csj2ATp3HIz49fsgH7U8eqxjmzaUxoHDnn/WPfUpIoR6k7t7sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751309953; c=relaxed/simple;
-	bh=apVsCLGXuvk8MiW3/veGMsk3v3m01GoVUsdwZYIYpd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AzqzEqEwET3aAQJe91+vsyttfcCIzb+fgADQy/4ZOWkTDlv3aJIN3h+i0rm+vvbPSE9EMvVvnPWauuYDPyRYY4h5kYfrTOQC/zmu6Ul6nr5t1d6nGfXda+5RXLuEpUHoxQLuD/vV826RZ7xp4mww3rO4owSL8Ods0iTAq01UXQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvEnm43Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751309961; c=relaxed/simple;
+	bh=jiu0+hMEGOVBbPvfArelw7aUGG6y6JNsAsa0sxGu4qE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uj9AGpQVW5VoaQDejvaYX5f38bNIlz8NDCMVqG44PZ0HapurYB6d9SXVucfFIaFr8xvSjC5lgpdmDT8H307S1m22wm5WV6OXRvXBWLe187DcQRtDwvmvchnJvhoSZfKQQjSY53J2v3G9Y8R0jvTdBhwsueoqWdrxMxyUx+Uap1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vNcGMPnf; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvEnm43Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45454C4CEE3;
-	Mon, 30 Jun 2025 18:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751309953;
-	bh=apVsCLGXuvk8MiW3/veGMsk3v3m01GoVUsdwZYIYpd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MvEnm43Y2QyAq9MMcwuHyQRaHojJAwpOjjB2DoTepb/JsZfXp/2sipjrzsHxbdQC+
-	 BmJdFiyRMXC6NF3oH7GoLOmm1BdXOoXtjF4RfJC6SG7XiduBhkLPdVxI6hCfJe1Csq
-	 5+YBNdpZU3KvqniKeWatQFmhTX4GU+d55uM300sdJjHd+EUKapyuOOCudsOyeWZhQy
-	 MRep2XYOpDfEs1Pa7mRtG+V1/Bumv4wS55/nhvr28vzEQlPFvL7iGH+IA/duG6hSlm
-	 +E6A/sQ1F/xSe+1XfYfG72C5jtBvPVUi+tk+9FG7jqmhKPjkHr8+CMt80kZe5awJqk
-	 nuAsedv9USXWQ==
-Date: Mon, 30 Jun 2025 20:59:08 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Raag Jadav <raag.jadav@intel.com>, 
-	"Tauro, Riana" <riana.tauro@intel.com>, "Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>, 
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>, intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Karthik Poosa <karthik.poosa@intel.com>
-Subject: Re: [PATCH v5 3/4] drm/xe/pm: Wire up suspend/resume for I2C
- controller
-Message-ID: <ey7uujbwrgp2qxt4mnz75uf3kldcgr7nbctbz56j7ni2huchte@2xisn3m4bbvm>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-4-heikki.krogerus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNcGMPnf"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-31329098ae8so4055245a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751309959; x=1751914759; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jiu0+hMEGOVBbPvfArelw7aUGG6y6JNsAsa0sxGu4qE=;
+        b=vNcGMPnffJnhjm3fRDaHSDYxYoAWrEo4yKxYmFJZcAf5fUELU2C7u1j19aCQwAVSV4
+         BNKQ5zkh9mKdJshesoPr4cCJLL+IB4E8Vo/Qx+PfHDa7zChlA6VZ/0rjGboggA/J9uwT
+         IvwkUA2cj4gNcjFjYHCLNx6v9W4QUfE5AqUJj1BT2eZERyoP+5oKV7wyIGTYDpOkiAq7
+         f6ogmf35XFKqiSDESLbsOJ4jI/sWAYcZ9la8ycxdQnOckFJVeGFJ3k4A5tAOipYsXAV/
+         jhwvo/GfFDqNn2bOGzEYFFj16nIDWW21rdIAYBdx7HtPLuhUjWiW4sryUU9dWf7RwZLU
+         V+Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751309959; x=1751914759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jiu0+hMEGOVBbPvfArelw7aUGG6y6JNsAsa0sxGu4qE=;
+        b=dw6n3oi+hqlLLK4fA1PN1AowfVdnafu6mFXz5/kZtwiFolodYPChNzO3cOl5A7jyuP
+         dAE9mvlU1RvqYNAdDdQpg97P1EEi2kYlT8wS/QlrA4wm7sYvmGnC7QOCKKYWGO5b9qkf
+         s045cz1azOrtslA/So814RK71B3LZ2vcmWCxl7Rh/9yIUD4bNoteUAP1pKz1zicteh39
+         7o8IqlHp8+WwCH5o9C1e8soGKtZIMk1m+Mrb8vLIjBQMki0mTWEATKGo6zBZqG/3zemS
+         eZT7eLwl/DXbnjzM7DEaThuLwCYy6/lLxwuB3PkdmxgeFx5c7qNlLydso7OGnE6LJgBH
+         PyGg==
+X-Gm-Message-State: AOJu0Yz4hNrMygf2eafFUJlU3USClhUxviPy5qqE+Bhxy7LxN7dnomg6
+	MRei5XF2DO0EXihXqc7vKXrAFBZJdfaOBQmvDFFMKBRd29rZ5VtM192L5/joxw7THFr9SQkYt/h
+	8fMqPsuj6E81b4y9LaybNrhuzr0Ne9R4caWH/KPzACFOnkydzLp3nbHz0lGKeMw==
+X-Gm-Gg: ASbGncvebYlnLjXPtqgtatr+RayTRV89nFa/ggjmbXaZcnB1Y4l7HdBrCQ0QDoPf7u0
+	eiiwCxBT+AKjDN1BuvxQZ8/Z05TfNTyuoSl/2ivjvPc6m8eziVI3gdAYEt0VkYbyHbJsTkkMK88
+	Ze2BH1bQxuZ9PyzJkOpp0/zR+Lr2htbkfRU42neEcnFNh3daCKpXeC+pVdQKkEjqIt3yslNNmKr
+	w==
+X-Google-Smtp-Source: AGHT+IEHeRuWilp8GcPNmBTSkqpOEL9X9afdNRP8SzPgcgvaVfsEoIRowf7+dqoEoXi5E8+rYSgYulvRYGYg8UIREt4=
+X-Received: by 2002:a17:90b:2e4a:b0:2fa:2133:bc87 with SMTP id
+ 98e67ed59e1d1-31939ad7d19mr832328a91.6.1751309958529; Mon, 30 Jun 2025
+ 11:59:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250627135314.873972-4-heikki.krogerus@linux.intel.com>
+References: <20250629214449.14462-1-aleksandr.mikhalitsyn@canonical.com> <20250629214449.14462-3-aleksandr.mikhalitsyn@canonical.com>
+In-Reply-To: <20250629214449.14462-3-aleksandr.mikhalitsyn@canonical.com>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Mon, 30 Jun 2025 11:59:06 -0700
+X-Gm-Features: Ac12FXx8h6qFKS4tZCgWPmiRsjQA12jiJH52womORS_f6_CKqpkkAAOXlUIFp3c
+Message-ID: <CAAVpQUAOwF5a63hZ6hK9ffLixpYN18PzaGjquNgNnG5++iNhqA@mail.gmail.com>
+Subject: Re: [RESEND PATCH net-next 2/6] af_unix: introduce unix_skb_to_scm helper
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Luca Boccassi <bluca@debian.org>, 
+	David Rheinsberg <david@readahead.eu>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Heikki and Raag,
+On Sun, Jun 29, 2025 at 2:45=E2=80=AFPM Alexander Mikhalitsyn
+<aleksandr.mikhalitsyn@canonical.com> wrote:
+>
+> Instead of open-coding let's consolidate this logic in a separate
+> helper. This will simplify further changes.
+>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Kuniyuki Iwashima <kuniyu@google.com>
+> Cc: Lennart Poettering <mzxreary@0pointer.de>
+> Cc: Luca Boccassi <bluca@debian.org>
+> Cc: David Rheinsberg <david@readahead.eu>
+> Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com=
+>
 
-On Fri, Jun 27, 2025 at 04:53:13PM +0300, Heikki Krogerus wrote:
-> From: Raag Jadav <raag.jadav@intel.com>
-> 
-> Wire up suspend/resume handles for I2C controller to match its power
-> state with SGUnit.
-> 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> Reviewed-by: Karthik Poosa <karthik.poosa@intel.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
-
-Thanks,
-Andi
+Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
