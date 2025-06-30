@@ -1,305 +1,190 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6C928F514;
-	Mon, 30 Jun 2025 19:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6FA1EBA0D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751311462; cv=none; b=FWGnZ7MdaF0goGW+6WRpU8uF9EWaHaAYtWjjeigH+hiogfwjAZrqf82t5ruu8ulnE37OTReGRua2wJg+IkSVSGy7FfAmPu2tto0CVs2gnMcqm8cDuJ8Hh5JVaqkWX5P5/i0lvKjtXsOE9MMyUTHt3UlmdanDZ++6wc6qqGoGWjM=
+	t=1751311552; cv=none; b=FU7oxTk8y849soXloYuTH8c/IXlp/HFlEUtU5woiZGjKi9i3WLvWOzBINVQApkXkM+PpPtx0AtCu/AkxgLGtG5eHxDgEngTYrZ6jMdU2btn/wqvEJ6VDxSdt59paXsEjMDBDWKKELmTDmeZDHh0wNvQnBgajUM5NaV/dBZ+y0jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751311462; c=relaxed/simple;
-	bh=hgJGruXRln0HIU1QewagyaTXUW8ytMVv5FSc58v3gk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g6mp1giIkWS99WLpnh2jl0vOG+YfeuITmfrWshBso1xAC9qtks4wnhN+s/cceODbXauCIK+71EOPOARQLfa3eK6xm5aTdSNUE/eq3l8ismJM+sDrVFPUko12SSgNGo4AT2jB2fBNWF30CiB2oMNNw1oIwt1RsHeQqgojdGBElLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hp4dGBuS; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751311552; c=relaxed/simple;
+	bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DNuYtvhUkpIY0A6eWPm9aprnBEWfbaXkxK1fFUKca/MT6mvkqCj4wHppQXgVcVM4iwPP75Lk2pEWZbbZ7jty2vSqQ93qkPtWwddCzVGvE4YJPZS1rRQ8i4jDzEyYhWMbZyHDmI6enAJXxuWYWfOtQKmg6VfLTWi7WzK4qr59VLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=utt1sk+B; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hp4dGBuS"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32ac42bb4e4so21993031fa.0;
-        Mon, 30 Jun 2025 12:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="utt1sk+B"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7492da755a1so2031760b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751311458; x=1751916258; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I3iXjTxlr7wRgS/7gvePRNwHH5SCq/n2+EMHRv3w9tw=;
-        b=hp4dGBuSiruoppNF9DuyDEjwLFdD6twEA3HY6A6xQL0wS8gAe20otl+ncKXdJr87Pr
-         NSUWagUj11Y7xkjM626wteWwnb7vUzqYEF/4slhwHHm5hb1COs9khx8NXtoEEuhkRApj
-         IjXAdxJVTrKWQNhzEG1iBZY2icYw4Eeeewnen8kR/XY4icJEHh5Bo/Y/drvjGHjC1aNe
-         nZw7s9yskMD2JnVMYQixXuY50ie7rGLsvRqO+aWvVMXBOGlLFzATAZMrZWxXGglR6QIK
-         OEmlog8iVqG6OMSQr3xzbF5M0aam2QIsuFiSVQPgCw7vqITpllvoi5PDksWhwAkO1mP5
-         sGCg==
+        d=google.com; s=20230601; t=1751311550; x=1751916350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
+        b=utt1sk+BvBn7fFAd+o9Sf4o+1lPYZjocSrrLT+dNxb0A5lfuUG9z5dQfIIB44kaPlP
+         Tfk7C+CFP01FRTxFjLYq0q8I7oQDL1cXRVFruJblymT6ctxtf6Smyt3565cQguwWyc4+
+         cIT3DOxr5MZ5v+fA1WoggQfX7o/C3G7dyyXYNcSEM1++i34ARoIoxgS+jeS3hgjS9Twg
+         zCbdoMT2ecNn/sRLyXCaWK9KSwYHDulIPbB90pdQP/vHHEhWoe5v8YQmVOtVAgGSP3na
+         9LEi6VqI0Uu0dwX7jxlJJF9c2hpRnKJF7tD/P4ldvdkxD6/BVOuVs0uA9ESVfcQR1olQ
+         K8Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751311458; x=1751916258;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I3iXjTxlr7wRgS/7gvePRNwHH5SCq/n2+EMHRv3w9tw=;
-        b=XdJDD99Y38fO3mbRcLAUQegqBESXGTrcV4mY0XUo7V53fFgRaYl1VOsTUgFeDuxl3E
-         0ppiyqx2ZHsp1iWSePuSGL8AC8wLvmSqzQqoeG7zr+ka52EIx3pjjnvJiIPVW1ocu6W3
-         ZOs6+LmEqQ/rApWHlut6Duu6IWYmuVHCMNME/YDhFzRz7nBvwOuzxzhE268QRNpnzJRD
-         DVMBmEMOD1YMV8SgqI0aKpj4iUMPhKwQiC0HhrSg7Cgtzxa5OSFstHcMW6p3+VmMafvZ
-         nFMfQaFtiz4iCCuokeiyUbLNlKRpW+Wp/RYwWBR8BfbeoxrBc363Fv+WjL2rwCG1nypy
-         k3ig==
-X-Forwarded-Encrypted: i=1; AJvYcCVBOMGeqWvoddi1UNwhrin8VyHE0/8bY623tXh1c8HcFapXNr62s6VkJ71gGTsU/YhkH/KIceCk@vger.kernel.org, AJvYcCWIQbhU69iCg8FAiv4EGd+xIjvYVg45mVw6BGrTPUheOanyKVwVhQ/KKV7MKhWKWFKajTCNnLXLMbUMfajf@vger.kernel.org, AJvYcCXzOTcFrYhoYU8BpL5el/ac+LxEX9uZydB9OxZWiw/Yaes3xh1f9sdFiyfIBZuZ2AK8kRjquan9zWqeZki9EW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6xIpulYb19Rpz4nuW7JvpH06+RIOZuM3Pj/X8fE0U1yidEKeb
-	GLPS9YPeDlWZPW8w02rJwi9zYw8C9Wi2Ug7UqZUIkkTLbNwbn54BvmeCJlF4c5H/y5nkTrVpsrj
-	E1Sb/X1V6jyiDJDjvlS7NMcJFmUUmQu4=
-X-Gm-Gg: ASbGnctu5BtdkaIS6aQUUrbR0gQQkPiOPoLjL+srW4s/hp9eCHLT9h8W0OGDLOGMv2Q
-	aZz8FVkSb00R6zG/VmpIlflozx3R5x47upJNwQERUho+2snKbv6AICracMFGbkhjjkt+YhZnmB7
-	jaZhDKmbxA8UMdbSBGQNVOnkY1ssloM92Au1OlXTT/AFQ7
-X-Google-Smtp-Source: AGHT+IHnGmU+g8CW1VpOTSmBwexfp7kaHHdSDT+IQ7WxVBjgwQJF+0cMNvBk+wdrYs9n5iInkcIXpftXxRQioXwer7E=
-X-Received: by 2002:a05:651c:4190:b0:32a:88a3:a98 with SMTP id
- 38308e7fff4ca-32cdc50f025mr35560791fa.38.1751311457822; Mon, 30 Jun 2025
- 12:24:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751311550; x=1751916350;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
+        b=Rc9IHQYazNnj4N63/lhv61J5TLXqFK0+K+8nCQR+NzL/W8Xjz40Dy2/Gg3qejzV3lF
+         WDxIl+PH/bWKi2BRj2NJCD7jEIMYRa30NH5Z/rWacIcf8fitnQYySOFADqMZESB0yqUU
+         qAnuVquIPvhu+aZn4qC7MHZNeEAGGGg+0L8Us0VtrG122hxoQioqzeczd7Sa2TCMeMMr
+         3KGsII79GHIdVAHtyLe4BwEUqyf2g/P6jTaMF8X/CmYfKGY7NOM6a29OSCyHgWwYf54P
+         7yX+lSmrCkZtXCxtkBiqOwuRZ+dOIm22srSz3Un3UgUf2AQFjkzcX50OZkn0zDPKcarA
+         H8LA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXVHCDBf9kCscdDSh7sY5rmyfgk4IMMygwZhbKKTAn1jwebrbtjh/oM4d1Nbdx2VtdPOX/P7Cvf1Zxhvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKdDxNlqhXL0w5GppipHZiPeChx6BxAF9duuBclLA7+ikTB/+S
+	+g7SUAKGkN/bRxPbXUC+6fkPo2xNqTXVGCWRs5PiYX+uD9YNYGc2wQVK5gOT6Trclw6fOwEuKBT
+	NhLY2qfgOcVHorH0Cf7kGHJlCDw==
+X-Google-Smtp-Source: AGHT+IEM3NAm2OsnhE6rbsmiMe42AuE8aEPB3EVgzuajXVv2Zs+VmfSL7ZNVcO9oi89tDaSplPmcERQJBM1Ly5wFIQ==
+X-Received: from pfbbw20.prod.google.com ([2002:a05:6a00:4094:b0:746:247f:7384])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:91e9:b0:748:68dd:eb8c with SMTP id d2e1a72fcca58-74af7049b1bmr22091856b3a.23.1751311550592;
+ Mon, 30 Jun 2025 12:25:50 -0700 (PDT)
+Date: Mon, 30 Jun 2025 12:25:49 -0700
+In-Reply-To: <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250630-handle_big_sync_lost_event-v3-1-a4cf5bf6ec82@amlogic.com>
-In-Reply-To: <20250630-handle_big_sync_lost_event-v3-1-a4cf5bf6ec82@amlogic.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 30 Jun 2025 15:24:03 -0400
-X-Gm-Features: Ac12FXyO2klQJe7tvwu1OmJf8ds4Pvpt3K3aJ0Cbaw2wuxlMkDYORr-4wEq5hhA
-Message-ID: <CABBYNZ+eVbYr4+08-qCccV+2BpUibV7jA55jJti9+PFS_4L1yg@mail.gmail.com>
-Subject: Re: [PATCH v3] Bluetooth: hci_event: Add support for handling LE BIG
- Sync Lost event
-To: yang.li@amlogic.com
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
+ <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
+ <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+Message-ID: <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
+Cc: "Shutemov, Kirill" <kirill.shutemov@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Annapurve, Vishal" <vannapurve@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
 
-On Mon, Jun 30, 2025 at 2:45=E2=80=AFAM Yang Li via B4 Relay
-<devnull+yang.li.amlogic.com@kernel.org> wrote:
->
-> From: Yang Li <yang.li@amlogic.com>
->
-> When the BIS source stops, the controller sends an LE BIG Sync Lost
-> event (subevent 0x1E). Currently, this event is not handled, causing
-> the BIS stream to remain active in BlueZ and preventing recovery.
->
-> Signed-off-by: Yang Li <yang.li@amlogic.com>
-> ---
-> Changes in v3:
-> - Delete the PA sync connection separately.
-> - Add state and role check when lookup BIS connections
-> - Link to v2: https://lore.kernel.org/r/20250625-handle_big_sync_lost_eve=
-nt-v2-1-81f163057a21@amlogic.com
->
-> Changes in v2:
-> - Matching the BIG handle is required when looking up a BIG connection.
-> - Use ev->reason to determine the cause of disconnection.
-> - Call hci_conn_del after hci_disconnect_cfm to remove the connection ent=
-ry
-> - Delete the big connection
-> - Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_eve=
-nt-v1-1-c32ce37dd6a5@amlogic.com
-> ---
->  include/net/bluetooth/hci.h      |  6 ++++++
->  include/net/bluetooth/hci_core.h | 16 ++++++++++++----
->  net/bluetooth/hci_conn.c         |  3 ++-
->  net/bluetooth/hci_event.c        | 39 ++++++++++++++++++++++++++++++++++=
-++++-
->  4 files changed, 58 insertions(+), 6 deletions(-)
->
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 82cbd54443ac..48389a64accb 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
->         __le16  bis[];
->  } __packed;
->
-> +#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
-> +struct hci_evt_le_big_sync_lost {
-> +       __u8    handle;
-> +       __u8    reason;
-> +} __packed;
-> +
->  #define HCI_EVT_LE_BIG_INFO_ADV_REPORT 0x22
->  struct hci_evt_le_big_info_adv_report {
->         __le16  sync_handle;
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci=
-_core.h
-> index a760f05fa3fb..5ab19d4fef93 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -1340,7 +1340,8 @@ hci_conn_hash_lookup_big_sync_pend(struct hci_dev *=
-hdev,
->  }
->
->  static inline struct hci_conn *
-> -hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16=
- state)
-> +hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,
-> +                              __u16 state, __u8 role)
->  {
->         struct hci_conn_hash *h =3D &hdev->conn_hash;
->         struct hci_conn  *c;
-> @@ -1348,9 +1349,16 @@ hci_conn_hash_lookup_big_state(struct hci_dev *hde=
-v, __u8 handle,  __u16 state)
->         rcu_read_lock();
->
->         list_for_each_entry_rcu(c, &h->list, list) {
-> -               if (c->type !=3D BIS_LINK || bacmp(&c->dst, BDADDR_ANY) |=
-|
-> -                   c->state !=3D state)
-> -                       continue;
-> +               if (role =3D=3D HCI_ROLE_MASTER) {
-> +                       if (c->type !=3D BIS_LINK || bacmp(&c->dst, BDADD=
-R_ANY) ||
-> +                               c->state !=3D state || c->role !=3D role)
-> +                               continue;
+> On Mon, 2025-06-30 at 19:13 +0800, Yan Zhao wrote:
+>> > > ok! Lets go f/g. Unless Yan objects.
+>> I'm ok with f/g. But I have two implementation specific questions:
+>>=20
+>> 1. How to set the HWPoison bit in TDX?
 
-We don't really need to compare the address anymore since we now have
-dedicated types for CIS and BIS, Id probably fix that in a leading
-patch since that should have been added as a Fixes to the commit that
-introduced the separate types, I will send a fix for it just make sure
-you rebase your tree on top of bluetooth-next.
+I was thinking to set the HWpoison flag based on page type. If regular
+4K page, set the flag. If THP page (not (yet) supported by guest_memfd),
+set the has_hwpoison flag, and if HugeTLB page, call
+folio_set_hugetlb_hwpoison().
 
-> +               } else {
-> +                       if (c->type !=3D BIS_LINK ||
-> +                               c->state !=3D state ||
-> +                               c->role !=3D role)
-> +                               continue;
-> +               }
+But if we go with Rick's suggestion below, then we don't have to figure
+this out.
 
-Then all we need to do is add the role check.
-
+>> 2. Should we set this bit for non-guest-memfd pages (e.g. for S-EPT page=
+s) ?
 >
->                 if (handle =3D=3D c->iso_qos.bcast.big) {
->                         rcu_read_unlock();
-> diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-> index 4f379184df5b..6bb1ab42db39 100644
-> --- a/net/bluetooth/hci_conn.c
-> +++ b/net/bluetooth/hci_conn.c
-> @@ -2146,7 +2146,8 @@ struct hci_conn *hci_bind_bis(struct hci_dev *hdev,=
- bdaddr_t *dst, __u8 sid,
->         struct hci_link *link;
->
->         /* Look for any BIS that is open for rebinding */
-> -       conn =3D hci_conn_hash_lookup_big_state(hdev, qos->bcast.big, BT_=
-OPEN);
-> +       conn =3D hci_conn_hash_lookup_big_state(hdev, qos->bcast.big,
-> +                                            BT_OPEN, HCI_ROLE_MASTER);
->         if (conn) {
->                 memcpy(qos, &conn->iso_qos, sizeof(*qos));
->                 conn->state =3D BT_CONNECTED;
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 66052d6aaa1d..f3e3e4964677 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -3903,6 +3903,8 @@ static u8 hci_cc_le_setup_iso_path(struct hci_dev *=
-hdev, void *data,
->                 goto unlock;
->         }
->
-> +       conn->state =3D BT_CONNECTED;
-> +
->         switch (cp->direction) {
->         /* Input (Host to Controller) */
->         case 0x00:
-> @@ -6913,7 +6915,7 @@ static void hci_le_create_big_complete_evt(struct h=
-ci_dev *hdev, void *data,
->
->         /* Connect all BISes that are bound to the BIG */
->         while ((conn =3D hci_conn_hash_lookup_big_state(hdev, ev->handle,
-> -                                                     BT_BOUND))) {
-> +                                       BT_BOUND, HCI_ROLE_MASTER))) {
->                 if (ev->status) {
->                         hci_connect_cfm(conn, ev->status);
->                         hci_conn_del(conn);
-> @@ -6968,6 +6970,7 @@ static void hci_le_big_sync_established_evt(struct =
-hci_dev *hdev, void *data,
->         }
->
->         clear_bit(HCI_CONN_CREATE_BIG_SYNC, &conn->flags);
-> +       conn->state =3D BT_CONNECTED;
-
-Wrong line, anyway I have fixed this upstream already so you need to rebase=
-.
-
->         conn->num_bis =3D 0;
->         memset(conn->bis, 0, sizeof(conn->num_bis));
-> @@ -7026,6 +7029,35 @@ static void hci_le_big_sync_established_evt(struct=
- hci_dev *hdev, void *data,
->         hci_dev_unlock(hdev);
->  }
->
-> +static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
-> +                                    struct sk_buff *skb)
-> +{
-> +       struct hci_evt_le_big_sync_lost *ev =3D data;
-> +       struct hci_conn *bis, *conn;
-> +
-> +       bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
-> +
-> +       hci_dev_lock(hdev);
-> +
-> +       /* Delete the pa sync connection */
-> +       bis =3D hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle)=
-;
-> +       if (bis) {
-> +               conn =3D hci_conn_hash_lookup_pa_sync_handle(hdev, bis->s=
-ync_handle);
-> +               if (conn)
-> +                       hci_conn_del(conn);
-> +       }
-> +
-> +       /* Delete each bis connection */
-> +       while ((bis =3D hci_conn_hash_lookup_big_state(hdev, ev->handle,
-> +                                               BT_CONNECTED, HCI_ROLE_SL=
-AVE))) {
-> +               clear_bit(HCI_CONN_BIG_SYNC, &bis->flags);
-> +               hci_disconn_cfm(bis, ev->reason);
-> +               hci_conn_del(bis);
-> +       }
-> +
-> +       hci_dev_unlock(hdev);
-> +}
-> +
->  static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *d=
-ata,
->                                            struct sk_buff *skb)
->  {
-> @@ -7149,6 +7181,11 @@ static const struct hci_le_ev {
->                      hci_le_big_sync_established_evt,
->                      sizeof(struct hci_evt_le_big_sync_estabilished),
->                      HCI_MAX_EVENT_SIZE),
-> +       /* [0x1e =3D HCI_EVT_LE_BIG_SYNC_LOST] */
-> +       HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
-> +                    hci_le_big_sync_lost_evt,
-> +                    sizeof(struct hci_evt_le_big_sync_lost),
-> +                    HCI_MAX_EVENT_SIZE),
-
-After you fix the comments I do expect some code to introduce support
-into our emulator and then add some test to iso-tester that causes the
-test to generate HCI_EVT_LE_BIG_SYNC_LOST so we can confirm this is
-working as intended.
-
->         /* [0x22 =3D HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
->         HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
->                      hci_le_big_info_adv_report_evt,
->
-> ---
-> base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
-> change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
->
-> Best regards,
-> --
-> Yang Li <yang.li@amlogic.com>
->
+> Argh, I guess we can keep the existing ref count based approach for the o=
+ther
+> types of TDX owned pages?
 >
 
+Wait TDX can only use guest_memfd pages, right? Even if TDX can use
+non-guest_memfd pages, why not also set HWpoison for non-guest_memfd
+pages?
 
---=20
-Luiz Augusto von Dentz
+Either way I guess if we go with Rick's suggestion below, then we don't
+have to figure the above out.
+
+>>=20
+>> TDX can't invoke memory_failure() on error of removing guest private pag=
+es or
+>> S-EPT pages, because holding write mmu_lock is regarded as in atomic con=
+text.
+>> As there's a mutex in memory_failure(),
+>> "BUG: sleeping function called from invalid context at kernel/locking/mu=
+tex.c"
+>> will be printed.
+>>=20
+>> If TDX invokes memory_failure_queue() instead, looks guest_memfd can inv=
+oke
+>> memory_failure_queue_kick() to ensure HWPoison bit is set timely.
+>> But which component could invoke memory_failure_queue_kick() for S-EPT p=
+ages?
+>> KVM?
+>
+> Hmm, it only has queue of 10 pages per-cpu. If something goes wrong in th=
+e TDX
+> module, I could see exceeding this during a zap operation. At which point=
+, how
+> much have we really handled it?
+>
+>
+> But, at the risk of derailing the solution when we are close, some reflec=
+tion
+> has made me question whether this is all misprioritized. We are trying to=
+ handle
+> a case where a TDX module bug may return an error when we try to release =
+gmem
+> pages. For that, this solution is feeling way too complex.
+>
+> If there is a TDX module bug, a simpler way to handle it would be to fix =
+the
+> bug. In the meantime the kernel can take simpler, more drastic efforts to
+> reclaim the memory and ensure system stability.
+>
+> In the host kexec patches we need to handle a kexec while the TDX module =
+is
+> running. The solution is to simply wbinvd on each pCPU that might have en=
+tered
+> the TDX module. After that, barring no new SEAMCALLs that could dirty
+> memory,=C2=A0the pages are free to use by the next kernel. (at least on s=
+ystems
+> without the partial write errata)
+>
+> So for this we can do something similar. Have the arch/x86 side of TDX gr=
+ow a
+> new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out of
+> SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCALLs =
+after
+> that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in the s=
+ystem
+> die. Zap/cleanup paths return success in the buggy shutdown case.
+>
+
+Do you mean that on unmap/split failure: there is a way to make 100%
+sure all memory becomes re-usable by the rest of the host, using
+tdx_buggy_shutdown(), wbinvd, etc?
+
+If yes, then I'm onboard with this, and if we are 100% sure all memory
+becomes re-usable by the host after all the extensive cleanup, then we
+don't need to HWpoison anything.
+
+> Does it fit? Or, can you guys argue that the failures here are actually n=
+on-
+> special cases that are worth more complex recovery? I remember we talked =
+about
+> IOMMU patterns that are similar, but it seems like the remaining cases un=
+der
+> discussion are about TDX bugs.
