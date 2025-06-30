@@ -1,39 +1,42 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9721A76DE;
-	Mon, 30 Jun 2025 10:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CA12459F3;
+	Mon, 30 Jun 2025 10:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278521; cv=none; b=AHOxwNQdOaYgAH9ZKNGywN2nRWhpkIWi30bNCI2QGPY+TIdOxapn3go+fT2FuRGg1CY1QW6U1dWc00Ue+VO7IeHmRPv0ClEDPJyzg1iwFItmB+NKI1OR4siJjg6oIL91LLNMPFQO7M7J/hIe3VQ3UF7SATdbf1+nY6jsVG/y/uY=
+	t=1751278616; cv=none; b=lsWV2FYLVo8alLmhhHjqBi+xqzb2l5dYo+qlXOCO4pNcnyjkj6qZQDSloCX7XUwjv3B2TJY0tBU2P6KxfM3XD6QWK9iGZ1hd/3cdKcMHluRFFVyEJMgugIAuN8o8lL6tEEawCyaPPBEyJzqZYX7LExkdxvYLBf5+pT8xrC+pdq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278521; c=relaxed/simple;
-	bh=y/4YjTLWuIy0IC8lYRZeKfAEdR7HI1gNocKw3PUC0G4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQY791xGa1q8vYfRYl7t+vlrxxPEweusCgbwgakkbXXBij6CNi6QwX+6F+FI8z1UTavOdvWs+To2ecAJDlvhOUujsxOyZVDT6ff6pVlM7fIojS4e1h86qwXUPy8o1rzuUyAjsv/WNFB9aXnbi8c2vvJ/6/OcC2vEsLdkHgHYEJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bW28z4SQ0z9syT;
-	Mon, 30 Jun 2025 12:15:15 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	mcgrof@kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Cc: Baokun Li <libaokun1@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH] fs/libfs: don't assume blocksize <= PAGE_SIZE in generic_check_addressable
-Date: Mon, 30 Jun 2025 12:15:09 +0200
-Message-ID: <20250630101509.212291-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1751278616; c=relaxed/simple;
+	bh=FBUnxXNfef0l/y0E9J7++Bgq6onPTRelPZX05aNzVBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H+kLyel8IWppQAKfjjwYzRWlHg1F7h1OT9PWPNz1C+XKn1QS4e7+EO/2S9QyVirYOlFA5TjzepBzXouar2026ybkamlUwUBS0VPQpnSEaluW12aO07wCgjBjiEKRVF1JclN4+hJmmfYHz3lqBL7MOvzHLC34lRtVpaBCH6Th/SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7ei5a/F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7ei5a/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6863FC4CEEB;
+	Mon, 30 Jun 2025 10:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751278616;
+	bh=FBUnxXNfef0l/y0E9J7++Bgq6onPTRelPZX05aNzVBA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K7ei5a/FBZLDJdZJVRyCxoduoAVBUCsU5LF7qk/2BODAIMW4pf1T04v84LISdNW0P
+	 3WQVRe0nWRT5bIDwCKgYjbcwIG82aHWnZFLJbaJyW4NAdqGyMleRXgUAnAEPYafNE2
+	 aFN8sPT267/ae0MuvV/5V7M4FkYepeBX3Q7sNBUWrUxB4Esx2MbHNTqRj/9yUlZJu4
+	 X/PPvUsfrav7wt5C9bIBneh7ZF22sv+9jA1Yxd7t2HGX1E0XQpT1fMYh+QbtiGLCqM
+	 F+H0cGxaawqOabas+68mvqOXiNbvbPdEUGXgRAVWdhNpj6LfTChmBW5k0B4IAOHI8i
+	 stPlYkjqeX6sg==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Maher Sanalla <msanalla@nvidia.com>,
+	Or Har-Toov <ohartoov@nvidia.com>,
+	Sean Hefty <shefty@nvidia.com>,
+	Vlad Dumitrescu <vdumitrescu@nvidia.com>
+Subject: [PATCH rdma-next v2 0/3] IB/mad: Add Flow Control for Solicited MADs
+Date: Mon, 30 Jun 2025 13:16:41 +0300
+Message-ID: <cover.1751278420.git.leon@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,46 +45,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since [1], it is possible for filesystems to have blocksize > PAGE_SIZE
-of the system.
+Changelog:
+v2:
+ * Add separate send-only agent for REPs to prevent starvation
+   of REPs when runnning both service and client on the same node.
+ * Instead of immediately resending a timed-out MAD, it will now   be
+ * placed in backlog queue if the queue is not empty.
+v1: https://lore.kernel.org/all/cover.1736258116.git.leonro@nvidia.com
+ * Add a cancel state to the state machine which allows removing the
+ * status field in MAD's struct.
+ * Add change_mad_state function which handles all the state transition.
+ * Add WARN_ONs to check MAD states
+ * Reorganize patches to have only two patches in this series instead of
+ * three.
+v0: https://lore.kernel.org/all/cover.1733233636.git.leonro@nvidia.com
 
-Remove the assumption and make the check generic for all blocksizes in
-generic_check_addressable().
+--------------------------------------------------------------------------
+From Or and Vlad
 
-[1] https://lore.kernel.org/linux-xfs/20240822135018.1931258-1-kernel@pankajraghav.com/
+This patch series introduces flow control for solicited MADs in
+the MAD layer, addressing the need to avoid loss caused by insufficient
+resources at the receiver side.
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- fs/libfs.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Both the client and the server act as receivers - the latter receives
+requests, while the former receives responses.
+To facilitate this flow control, the series also refactors the MAD code,
+improving readability and enabling more straightforward implementation.
 
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 4d1862f589e8..81756dc0be6d 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -1584,13 +1584,17 @@ EXPORT_SYMBOL(generic_file_fsync);
- int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
- {
- 	u64 last_fs_block = num_blocks - 1;
--	u64 last_fs_page =
--		last_fs_block >> (PAGE_SHIFT - blocksize_bits);
-+	u64 last_fs_page, max_bytes;
-+
-+	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
-+		return -EFBIG;
-+
-+	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
- 
- 	if (unlikely(num_blocks == 0))
- 		return 0;
- 
--	if ((blocksize_bits < 9) || (blocksize_bits > PAGE_SHIFT))
-+	if ((blocksize_bits < 9))
- 		return -EINVAL;
- 
- 	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
+Patch #1: Add state machine to MAD layer
+Patch #2: Add flow control for solicited MADs
+Patch #3: Use separate send-only agent for REPs
 
-base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
+The primary goal of this series is to add a flow control mechanism
+to the MAD layer, reducing the number of timeouts.
+The accompanying refactoring simplifies state management, making
+the code more maintainable and supporting the new flow control
+logic effectively.
+
+Thanks
+
+Or Har-Toov (2):
+  IB/mad: Add state machine to MAD layer
+  IB/mad: Add flow control for solicited MADs
+
+Vlad Dumitrescu (1):
+  IB/cm: Use separate agent w/o flow control for REP
+
+ drivers/infiniband/core/cm.c       |  47 ++-
+ drivers/infiniband/core/mad.c      | 468 ++++++++++++++++++++++-------
+ drivers/infiniband/core/mad_priv.h |  76 ++++-
+ drivers/infiniband/core/mad_rmpp.c |  41 +--
+ 4 files changed, 500 insertions(+), 132 deletions(-)
+
 -- 
-2.49.0
+2.50.0
 
