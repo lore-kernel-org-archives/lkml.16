@@ -1,221 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AF41C861E
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307820; cv=fail; b=Kei2yXc/aKp3K0Q2VgDp0Kyi8BGtxpX/ln04sq6qN1RcITwbDpLDWAyfbv1ry+nMK5e5ekl96nzFEpyb+om6G6vHOrV4r1jZj2QBHJoliw2Le7Z80i3mtz36oUeE+ZbrS9Ub9zkjy7E2lpPXOkQEOdclcsU3BIo35VgVtDBWcHE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307820; c=relaxed/simple;
-	bh=KVF7JL78vZXif3N4Exa7i9fYhGCWKqtzV3iZLywCbb8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gEyk25d05xmQI1VAV/UvTLRSdQp6XnD+sV5NslcLJHGLuyluhMJwFJ/lj0xlTREG7U3zmQIo0bBHjb12hXfkVklSchtUcRYJDo870wuT+iFUHyYUfOkPD/hPh0pqzGXyaki1fPXf7OsavjGp7RIg9W2a/wFRbF4Ij1XMQh/62zE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUbMMh4Y; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBDC72613;
+	Mon, 30 Jun 2025 18:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751308100; cv=none; b=q9kkHke4rcC4aN/5aIr3yRcI+af6cDkAxmDk/w0bCCq0fN5nQfhWxPkogLJg+jZOW4k2ZA+Iqu+ncJFqwYU0KbqeHxzHRd7kLY4b5S0uIvEL/sxva3Al3rKBB1Zp+aRw3PScd/7qVQTk/IH23ucrSGAzHIUkWeJBxmrF6/hbxtQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751308100; c=relaxed/simple;
+	bh=GxFRzmBGBJNDKvWM2J16xINJw3wVBq57APedjAYERKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pPd5x+WW9Ch9zh+mFPYSQsX6lfYfztaunM+R1mKPARdbdP80I/XnihTlIcWPj4OCzmBzQe/mfZI+D4eL+L0y//H+hkH/ypkGBaOUhJdNQw4ZX8tO6C5eCDZX/UFaAB2cgjxuwIa3IjTaOhuPeYOQEBOpk5/2MpHtZoymIQpZNBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrOZbBta; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUbMMh4Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751307818; x=1782843818;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KVF7JL78vZXif3N4Exa7i9fYhGCWKqtzV3iZLywCbb8=;
-  b=dUbMMh4Y9oVlKmzg5zAEhbm/xxTHr3J2xGmxUdgqt5NQdSAJgiIlp1wm
-   oA2l5nyOACtbzQzdE6yhJhcsJPTirdozAhplEA8VGDxHi+BqDXJGbE96k
-   JKKhizzBzpvoOlC+aTvWQU0bvF3OufaRYriq3JOQTeTnb7UhdwBqNL7TF
-   pCqXgda/Iy/3u52uiM6U8dxCC/ber8zKFeeX37keH3L8+hboovs+MA9rp
-   0o6X+EQG5n2J9VWVojXZ6GpNLVsXv8RIwjctHtwTJXexAZpJSFn7X265f
-   5jMFr4Ppwpllckgoz0ugqhJ1nr4zbyrY7vCWXgPBbC2zXgZCx1e//0FyX
-   w==;
-X-CSE-ConnectionGUID: iUDxjdNCS6uTHSu3w0Wsdw==
-X-CSE-MsgGUID: FrO29UiAQeKnLuHAmNpzIA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="63800567"
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="63800567"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 11:23:37 -0700
-X-CSE-ConnectionGUID: J+05gNtUTCi2sCAeRBQllg==
-X-CSE-MsgGUID: rwDbNTxNRCifinL0QolrUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="154000587"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 11:23:38 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 11:23:35 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 11:23:35 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (40.107.100.74)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 30 Jun 2025 11:23:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GRKo8OsRwTwKQHtKE6g+49rgSANQfg1Wg1WU/Rk52wRNVR7vdvcI9FAe4vAvjxYlbewHdAK7NRWDMzxIZNrb1SuI7xJguWpcRnwbj8/9D/6zrm6yylfhoS38H53QxXN3GD0jbr2SpFupz2KYaK+0N8goJXr+0AFiqlq8d5G3KHnS1ppH6m/FhPJCRiUsMOEwFVP15V3y+nvbd6mU3M8wzFOIq9yISPMHnWI9pg270oeHHNVKUt9mB0fTlN39pdew1/HoNjBDrH041pQRm0ZspSYsIoVIiT2FxldHdfHJrRQDHdQ37CZdWtgTQTnlMPyVu3JzCStPevZq+T22QGO4xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hfSJ3E2dGdguEmkLv+7ubQpGGSG0FFIj07z1WJEBTUU=;
- b=vvCZo9wb+7Pba9EBxR68s4gdP2F1NvFf0ImvsswjN9VsSeUHanUlt/bYYCvubseZmuedjGNEp2oKu2Z73uxvOB9mZtlsNFC7wNPeQVycEL0Ozecc39MTSFenp48dT3wGUFW4LJM8Lx7v051dq7DvdCt4gLb3gUpTM100aGrIKqMvCErx0IzEG/bpOMOnKzyUDHiyD7cc/gGDA6TJAFEoDBl+lbBZnXqaqXWionfqmFZKFfLtnOs6JAuzMBVx5lXXjRVQulTRKDIAwGANBF1oPWRdPQbkWgDpGa1jWVF3N2L5b0fwyRm0QTSFdY17mEEroxeo0mnfBz14TRQmkrUtBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by SJ0PR11MB4781.namprd11.prod.outlook.com (2603:10b6:a03:2d8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
- 2025 18:22:51 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Mon, 30 Jun 2025
- 18:22:51 +0000
-Date: Mon, 30 Jun 2025 14:22:45 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Junxiao Chang <junxiao.chang@intel.com>
-CC: <tomas.winkler@intel.com>, Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "Clark
- Williams" <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>, Vitaly Lubart
-	<vitaly.lubart@intel.com>, Alexander Usyskin <alexander.usyskin@intel.com>,
-	<intel-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <linux-rt-devel@lists.linux.dev>,
-	<furong.zhou@intel.com>
-Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
- disabled context
-Message-ID: <aGLV9YL3EWXuf_Kk@intel.com>
-References: <20250424065609.624457-1-junxiao.chang@intel.com>
- <20250425151108.643649-1-junxiao.chang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250425151108.643649-1-junxiao.chang@intel.com>
-X-ClientProxiedBy: BY3PR04CA0012.namprd04.prod.outlook.com
- (2603:10b6:a03:217::17) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrOZbBta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EC0C4CEE3;
+	Mon, 30 Jun 2025 18:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751308096;
+	bh=GxFRzmBGBJNDKvWM2J16xINJw3wVBq57APedjAYERKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OrOZbBtaR5et9OF5MMll1PiXsSoC/iWUBWENE8TDF+RRDj8fWvByQsGR8BY43IBit
+	 t65TYX/GHdnAJJsWu5vSVlnPcUBy+wMiCDac3gnJGGbX9UKSHbETSh+F5kLyFF3tuR
+	 bb2ws+vm26QYpYAZ4P0meeaezswCL5NxOo3+/qy1kBIfuco4WVzDN7FsxgM7fXffEe
+	 kCZt3AqfovytODIL4ATDg1FxTOErXTgH/40D8/cpreMO+rpPtLRHeIIQfqvctPoaUt
+	 CePQxpSG7FkiTO1KEP44gJASGi5nJMO42sDhYgr/Q7amLEoDfuOe7vyHhoMj1TL1eI
+	 odbLtJzLnBsSw==
+Date: Mon, 30 Jun 2025 20:28:12 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>, 
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Jan Dabros <jsd@semihalf.com>, Raag Jadav <raag.jadav@intel.com>, 
+	"Tauro, Riana" <riana.tauro@intel.com>, "Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>, 
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>, intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
+Message-ID: <gljpd4foldjwairaca7ip2qqpdl7ipto77wsqwhbfamv6kdd3v@2doqwso7ccx3>
+References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
+ <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|SJ0PR11MB4781:EE_
-X-MS-Office365-Filtering-Correlation-Id: d06cba6f-cc2f-429b-c389-08ddb8031f7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?FRmgjxM+52aPczpV2lM8PsXRkGTyRWMS7YQ8OtzSuJJuBk7VA0izw0AFj04Q?=
- =?us-ascii?Q?Jj6SJbb9dSVqqPwBZawK1yUYYMydwaIxylHhi6F8EeoZM47Sr/hoYvNLleQ9?=
- =?us-ascii?Q?1y09rRUQr3QsnPfQN4+SCsLTwhD59ItL6h3KwHjlGD4OmraFAHvZZRrbI8nd?=
- =?us-ascii?Q?jxV4FqCm52rFfj30IY+CXEuXwU19eabaJctVOuzIlwp1vfXDxXUf1JmC62pb?=
- =?us-ascii?Q?PUlXeWTZ6f3bcxW28osiwHDW9VNcsLYrkSqG4MjKx94sVjyj3PUtY5oAs/hm?=
- =?us-ascii?Q?elSAok00zv/7c5Q8XjdqrJQMNt4qQw3JADLhVGlABBz5sQFozrA5qcZZXyDc?=
- =?us-ascii?Q?RIKeN2WAsk2h9nekQwb+BsKS98fyxziyFm0erkxwVk52KdxfLQECcv4Ezy1M?=
- =?us-ascii?Q?4Oiql9GzYAUu8CwpKGpeXsP9wy4ip+U94CsC5WMAj3HcnXYpBHcb2ZlfU4QM?=
- =?us-ascii?Q?uP8K7Ds/vVaKKAQECIZXsVrzwNExUI43owYPRtc+dIZdif5CvSPDbjmCW37O?=
- =?us-ascii?Q?QhSc2g4MszC2coGwWYhwxJL8aC6S3MtBt/XDwrrRRYSkB1e/0zIS0Rwkiq88?=
- =?us-ascii?Q?XlAuOyhOzrg5MtKIkiP6CwMwMZWS2V2ZIMEOJbzKnKEkBUl4qd5S5uch0DsC?=
- =?us-ascii?Q?1GjrenHOWZMMuDLNT/uR/057l5qkUubtlWih2nU0R5LnyW6nfGdNfP0m7m+x?=
- =?us-ascii?Q?FFBS1iJeU6HGY9QaHF/sgStoP+DN+GqaRoFMU9EWHR6esV6m9WvsjecS1ckK?=
- =?us-ascii?Q?WP8sb/AnUTp27LLY61kzLz4jv6SimDot0TBJXfMxwR3lbNY2wChOdwNZVwdI?=
- =?us-ascii?Q?vxcZhrL4YRkcw/HtWfv3PT0xUPUZuNnkyNQsCUc8I4mfr76PZlU8LmtD7WRb?=
- =?us-ascii?Q?niDEMvoV8d/wHIgtfj5SblJk+oagQk9iH2kJDvmCMs0rSEqqpN7M6ZMpO8OB?=
- =?us-ascii?Q?FGS4goTLY7JrKava2HUTRZTs8Rv65XbwOxl8ktZNWIeY7BqdojzISlAotZ7E?=
- =?us-ascii?Q?LQNaAQ12F9B5i9PMOZXSs/E4OGBclyPksQNHnZZieRg/5HR9ftNGCFjBPnf4?=
- =?us-ascii?Q?xtbdFmZBpbW+V+TRubP+YvZIErLhDCd5TMsuo8j6FGy8fPKC8mNLeLQv0NPk?=
- =?us-ascii?Q?FCLn8HVDAew5f68vA4Jl9cXiZMXIGWExDF8cS2Xg7pECF/Rdbp9opEdBV9Yk?=
- =?us-ascii?Q?TZiJm3oZoIRemHw0JANurl4N3Gr95lV2IY6FQPXXORqZgBDqyeMxNidvE6Mq?=
- =?us-ascii?Q?fPZWYEFTf1nNYC3POhoL9d7NIQIMLh7JgDyqqDHtnE6W2zuncYT/i/9xMu3Z?=
- =?us-ascii?Q?e8vVhWdXswELG0pCbhYXUACcyQogLReIQGXM9ZXr03w7sgFhZXP/l0vs4C2h?=
- =?us-ascii?Q?EQ8hHAZ0cUix2xihp5LAKpDmoPS8G1cyWynmAzwGvzx9L/MkYcL85LhgAeWg?=
- =?us-ascii?Q?FV+bYLFzvi0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aYTipS/BxUbxDxB4hM8jBxszmgecicDs22MillzWfaM7OmUFT3aEAdNBJbrn?=
- =?us-ascii?Q?hAT02hhKUmDj7N1RMfDMFiizCJ2WEt6i594PdJBXxnekvW2WNhjbXCGP+KFX?=
- =?us-ascii?Q?lHyC6N6kWSm4J7lwG9wezxxIQF7IFILDTeH/0nG4pQrSWppv7r8iTJzwZDW5?=
- =?us-ascii?Q?kIrEVsb8Di+pSzR8mVuqX7Bln5/u2m5c7CFbSFc2pQAyKUESXM6S1UWMKfkX?=
- =?us-ascii?Q?a5HfAHmsmeMBR6X4uE8XBBu3uSd8Lytk0ZP6MXJigosNcYCqpkGYTfacLpcb?=
- =?us-ascii?Q?8gthtkuO4VIXAGxy1i7Q64lmxs0VMFyxzw7pb0C16i+HSJbyHC91xY0yXOMg?=
- =?us-ascii?Q?OBZJcQchgLTNtmEyUTEZ6BEuVUTh+167OmlTiUfY/SyUAAE82QiENpCNMS9z?=
- =?us-ascii?Q?G5THfC4Dv3Et8ga5dtos7akFa0DZdenup7+av2OhAF1AqpDG2dB1RFx9cmht?=
- =?us-ascii?Q?mPOeTrxue34v8l7chW31R8J9y2Vz/WUr2RxH0S7XK8RC3GSEP5eGpMHKNBv5?=
- =?us-ascii?Q?Q4ASyVS2HUWfrvgodJoNurEdW/HQc/W7QvFqku73mYgDSPzt5LjvHMRbkAFT?=
- =?us-ascii?Q?qqWPX4r6ZB4SX30+nECy4L7Z8XOJI7DrUTO1ql2pzh10zog5nhry0TLyQF9a?=
- =?us-ascii?Q?jTRjWbZfMDeAsoCCGgP2mOnRmp0yqmwY7/HEPTIVAfOWJdwFqv1AxcUx8jrj?=
- =?us-ascii?Q?stkN5pp4cmxHBNx+iakyOn1dWKsaMtRJsdH1KqxTXYW2ewI2XHE7J9cKbMga?=
- =?us-ascii?Q?WPLyU8gmzdIyBRErfeYiI6hIkPwxM6vJsgnP/cw2ViBpCFQpbt5mhGV7mTul?=
- =?us-ascii?Q?BbpCyktl6ZXB+PXxwaHZR5qtAOV+BlTKqY+wer4pjbR3Zz3PyAMnKy0u5Abf?=
- =?us-ascii?Q?XdJesKUWx1zK2pHmkmqO2xPUXWCWiGzlZlTkwBVqcwwmOnXpRBHDGQ2EPL0o?=
- =?us-ascii?Q?/Nbm9vGITlOzf11BlixIq0QUCqgniGE0/9NWEunkfFwnE/Lb3+ckLO7Xi57b?=
- =?us-ascii?Q?yJf4y9gxYRqZagZlIi7tA8LpXiznaZgRsTBPWmLvt2STg1yJcwMqI3tBMW2V?=
- =?us-ascii?Q?wIRWPQi8SBZ8bdJabHgTD6mNzDUiVtthZO1JMxjzDBOJtLmLCyBbsvueCwM1?=
- =?us-ascii?Q?G4lURjCsDElI8SEfnEFxdDA5wnjGTXLOvMVnmD/Yp2so1c2FrazDinxWM6+/?=
- =?us-ascii?Q?6H1+OffA6JhcV9SP/QYdCq7ro7nm3dhLWxuukKy9wq6HpfugDPMNd5pZVGwA?=
- =?us-ascii?Q?qYHeRu2sj6GMbdtpHxKdqtnGpueVaRi9CGOORkdlUwXbusXRCthyoNwHA0eH?=
- =?us-ascii?Q?YtNVX4B6msMvMauUepMOFIgmMFS/tfDoCJKUCntzmCpXc/Q9YPuCmkU+9zbi?=
- =?us-ascii?Q?7u7cMJjIKNjgHFI+Y20x24jI4D71WtjNBkmBR7CMsl3vPLe+1UZl7Z0EZ48p?=
- =?us-ascii?Q?PzFqgG+EIhuEGWe0V9PJiRANAY4cbhXZyMwQqtJYPq9ylOiCj7H+KCFd6FBr?=
- =?us-ascii?Q?sjgtTanoH+a1e0laUGVZWiS191Gj+BXwH9tRNsd4qf8nwkQGBgBtuuGpiVnj?=
- =?us-ascii?Q?1yxEBt4g3RrlMeaivVFP4isPmDbXy6dfooFNLpM1?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d06cba6f-cc2f-429b-c389-08ddb8031f7d
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 18:22:51.2151
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yOk2MZojQwCQGQ7yHpZtbacIp1GdDu4g8tsc5IGcvpS1YfT3JMRfGzO2GqxuAp+EXbsD0F0YKRdSAqHVy1+UHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4781
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
 
-On Fri, Apr 25, 2025 at 11:11:07PM +0800, Junxiao Chang wrote:
-> MEI GSC interrupt comes from i915. It has top half and bottom half.
-> Top half is called from i915 interrupt handler. It should be in
-> irq disabled context.
-> 
-> With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
-> top half might be in threaded IRQ context. generic_handle_irq_safe API
-> could be called from either IRQ or process context, it disables local
-> IRQ then calls MEI GSC interrupt top half.
-> 
-> This change fixes A380/A770 GPU boot hang issue with RT kernel.
-> 
-> Fixes: 1e3dc1d8622b ("drm/i915/gsc: add gsc as a mei auxiliary device")
-> Tested-by: Furong Zhou <furong.zhou@intel.com>
-> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
-> ---
->  drivers/gpu/drm/i915/gt/intel_gsc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
-> index 1e925c75fb080..c43febc862dc3 100644
-> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
-> @@ -284,7 +284,7 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
->  	if (gt->gsc.intf[intf_id].irq < 0)
->  		return;
->  
-> -	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
-> +	ret = generic_handle_irq_safe(gt->gsc.intf[intf_id].irq);
+Hi Heikki,
 
+On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
+> The regmap is coming from the parent also in case of Xe
+> GPUs. Reusing the Wangxun quirk for that.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-and pushed to drm-intel-gt-next
+What I don't like, though, is that there is no mention of the
+change in the probe in the commit log.
 
->  	if (ret)
->  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
->  }
-> -- 
-> 2.34.1
-> 
+Besides, are these changes related? Can we have them split in two
+different patches? I guess this would also make Andy's point
+about the extra churn.
+
+Andi
+
+> Originally-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
