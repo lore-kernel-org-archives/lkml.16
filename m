@@ -1,177 +1,121 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A093D69;
-	Mon, 30 Jun 2025 01:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A65E3D69
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751247146; cv=none; b=Y6dWhGeCYP7LcYvjGvaXV6TjTvFCnQvsP3spBrgd7yD2JuWibz1oCtJ0sdCH95k88juxJGN9HR21Wf36ytI/1Uz5Q03BbBdKQBhOme3NFOCXC9Ak5V0sSMmlkOriinosNf6yAIRpDKOSASZRS2gCqj+Q8LM6LdYl5zOB2+kmUcI=
+	t=1751247243; cv=none; b=mYPVrOc8343L/EX2bWJ4QP+NwtFDOjQKWNvCP1O2egxjWWuUz+XckkTUukyjCOBI8+x/OpXhGhMM1tHn+PSs9BT8n3xpwEc7efmbGG3+XnhjgXibxqb/v+lYYm421444+crBjKpCSuhHGx9foKEpONXAuFIyKvgO7nYdBQno7eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751247146; c=relaxed/simple;
-	bh=PdbmSrnBaljKSjVuz2OmgriJvaxALYThsxW+O8GzZqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HMw0p+B3fc5hf80w1W27BMsFrcUEOiE/T7bP49A+2u23qwJf8SzrcatzoEqhm4Sz4BtHbOierwC6HNq7vahIXCphqPQJhI0cAYg4SietWFtfiabmaYnSoOTfik7kIVsa9zoTV0QE7Dl4llQMbkblAkPBY6bNc4XbS2QE1Uyjiyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnozMG6E; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751247243; c=relaxed/simple;
+	bh=6nAfLZx13Q1mwv8CbiWJljUl+G20BHIgCgzHvQKt4MA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t+gfcB5/AApwYEk57vvXlq7MoIYzFbrx2w6BSVbM6tfu8agomYxpuvQsTb3KmijPGMrHUmYSQiXJXzzB019HXiJZZNFTSbyIrM2K13ARms2OzV/bP3J/pyOi+tikcE0TIx+YVb6pZtmuQTcGpqRuEM8GtdC3Rp0EqvpC9oHnBsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oah/tWjH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnozMG6E"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3139027b825so892696a91.0;
-        Sun, 29 Jun 2025 18:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751247145; x=1751851945; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gwxo+Mz3IvrzaosTpE+nrtogxa++aPCEgx5JYVoi1DE=;
-        b=KnozMG6Egt8WY3dIL0wXRy/MwwpoKYAwBMYqhs8N9iyGKee8JXHOZjJbrgO5+ataf9
-         nhSGF1oMSKxdTrpKNxOG0PCgqtOmx/r2wurLg2jFwMz22Ds03J34rToaTJVYhvpWjrOQ
-         h69akDLK6bgCEAfj5Hx4ESzsHSMMMEH82fFwiozOKLyx8c/oRzgQZkVwqgnPy+wyesIE
-         dZOL0fmGB2Azsh1zDUNBp8Ay4OZruvZxtf8Qcl3yfIoGrfjGcKfIixiXxgvrtGW2nY8L
-         o7YpkpTpT5R9gyyrktXfFtL98fZQ+0cm+LRdlWViS0Rs32cyYOlDs641cEb1szvcT3k7
-         AC0w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oah/tWjH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751247239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iNWNGWaV1C7Rc5It4RVCgRxPXuXUM3HIwMrohqVBiKw=;
+	b=Oah/tWjHgg8+uOJsRMcsYAgTQZAFXw3GwZqHm+0ITxttoRfUxMk4SQI8FHEZq2gExIAZPU
+	v7M2CTeCWEH+0cMJWohUOpvQUrUydYoe3lCtrhwYa/lYxXbDGvChwvXxlu3659IwcSVOnM
+	ljYjyx3Tnsr6s6ROGCXOcMi0wp7rb5M=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-317-wvDZwGCdPgGKzOOo0IRQ6g-1; Sun, 29 Jun 2025 21:33:58 -0400
+X-MC-Unique: wvDZwGCdPgGKzOOo0IRQ6g-1
+X-Mimecast-MFC-AGG-ID: wvDZwGCdPgGKzOOo0IRQ6g_1751247237
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235196dfc50so33102025ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 18:33:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751247145; x=1751851945;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gwxo+Mz3IvrzaosTpE+nrtogxa++aPCEgx5JYVoi1DE=;
-        b=OhQv9442suVhdn/YS+dLCdKufPo/4rfj5sgDWhgcBQuYBZfnGtbdSlgLwPYP80BwjQ
-         GQHGkaSgyHZk3PaKrLpCHenEZabEJU90E7XRH4xWmNJPDdfmLU8k8mViO9v0LrwarRVD
-         ONfdkWVpKAdG01AsRjqLsHIFwvZ98YJl25N1l2BOaeGmt3QGnfmnZHsT9dGe4g/EukZe
-         M5WjoOwcqPQZYK0YF0T25j8n0hjeZElDJ8E9F3EnxEYFscG8P9z8khI5lgqwarRYqQK0
-         cryGOehj3WxjVXm2cMk2fNKtA1taTem5VVbQfAFPasX4JhQLwkw1A5adESIbCN65koSY
-         fFNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGtncTGdRjeT2Pow3eJjAlYsJ3w7aITng2P8476b8pFmZ0W/58pbbFXMOb2ZnKmJ7LAfo6N4Pk4rmzPcUc@vger.kernel.org, AJvYcCVmUpI1E2Bnz0kF2Ol2i9jXk5AWTUTLFU2uVPBCeVB6XpbLNMDGm8/Cwf4Mmxygu4H//uNajfmLmtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz44YJ+OxdTGgPLuNhvbrD/I9OKkK+w75WRRjWuntnxibrDUExB
-	Q8+u2URPWkvGj506Jim0011OnrHrZT0yEDfW6yAGr77SQb+6JC0nSWY9
-X-Gm-Gg: ASbGnctjXWcfmsEOoeqlun0zvIEVa27ID9Rxp9cQ64dg3A8ALuhQvbKy1nRWt/HpBxQ
-	zVefv3T7ElVdNiiY/7lg83UnoHwkC8u75/10aNsfmIr4Mh+RXzz/DlG//uN6yyk7GroqGMPOpp7
-	i1MAsS1D+u2J1WCjPRZABcK22kx3CRUCDdPj9qkmjk2nYYGLavDwvmvxus+WAxQkZNLm9Ze6rTG
-	pVjyZGeHYrFkdu5BaNRyhEJzXh4uZcI7LhP0I2idXuKH0CmpzPLIH+qf5lo7KtL2rVM+EjrhaN4
-	+K4PuJtjiMoq3F7bXxnwNvgjCDy5ojUF8PnRKMj1aptmM8fprWFDLEdkk7GsF9fYw7pycg6O
-X-Google-Smtp-Source: AGHT+IFZCO9JUwt3uc3yB0stvOczNjE1Z46dM+SWxPKuf+S1ol8ZiAtkuzHavPc/X4mafB35eylK+Q==
-X-Received: by 2002:a17:90b:1dd2:b0:311:b0ec:1360 with SMTP id 98e67ed59e1d1-318c92f26abmr15843348a91.29.1751247144552;
-        Sun, 29 Jun 2025 18:32:24 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315edcfd75dsm3332769a91.1.2025.06.29.18.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 18:32:23 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 951B5420A813; Mon, 30 Jun 2025 08:32:18 +0700 (WIB)
-Date: Mon, 30 Jun 2025 08:32:18 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-	iommu@lists.linux.dev
-Subject: Re: [PATCH v2 7/8] docs: dma-api: update streaming DMA physical
- address constraints
-Message-ID: <aGHpIiKWDr0T-FLN@archie.me>
-References: <20250627101015.1600042-1-ptesarik@suse.com>
- <20250627101015.1600042-8-ptesarik@suse.com>
+        d=1e100.net; s=20230601; t=1751247237; x=1751852037;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iNWNGWaV1C7Rc5It4RVCgRxPXuXUM3HIwMrohqVBiKw=;
+        b=lPHcNi/GFdeQ1SanB00jdKWfhTmAD5VKRGyUFfNt5s3xuF1QXH0iN3v36qIbpJMene
+         lxXaGCJgIVzuIEr98KKK9w++N5zbGJN5BZBqJBuW9ZWhYuCg4Aoz1dDQVjVldFRXxhw1
+         BK3xS6PE8PKkyfxwtAkiF9+DgG99CnAmOAZQ6KPOGErG0uf1pS8T0kbnoQ1ciEPEzeI9
+         /rdxfOQCDlll99YzYbtJQDBjBuaGdf5VlRM79DtRafphXCaGcrDuNbtMgN7taO6ae4Ul
+         C3Kh+toftTzeSWYrJxm8iIHMkU+50jHVxoxQlf8PPcZEEqmjBP9IARdndh3UPTPmXh3e
+         qaWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX39FUyZoDCPt0LV0n0H3/Lup7AkZIkWbA21Ox6i/r1ZygS3FvWSppRr6bnVkmGuDgBfragUSvzXkym25E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCGjOeTvGNp6+X9amsLQcBOVK36C2rXLbQfk/w5G1QW+2kWRHs
+	Odo972zwjif5orcXyfxki1mK5ljxNzUKQn6nl3iTBx1izqOmSaad2cyztd/BwXge2yzh+WsuqJM
+	73OxfHHwF486ehPyjWsy460WiMKn8ZGnytuyp+ghwIToCwUOMCWiXMrnWajbBfhOWqg==
+X-Gm-Gg: ASbGnctx1QlSBSVNWyaCixTzED7zwlHNz/bh+2POo1vLUo4KcIyiKzkFkzqxDC0bp4T
+	U9Eo9PAlQngkY2j4EpRTJZcwkutFJ2+mfd1WlbzTbglhqBRHs+NgVHq20sRl9ouOy7zYosfDO/c
+	tFN+yly76oxfp+By2wprcUgI6s5q46dUrG/TvWEW8WRXpKo0F0exg18xwL0dT6sSZLk+jXhIZng
+	fAcc0xdcvF3OW8QDfn+vI23cuHR9BF3XO7js4IWehmx6uVcUkcJQABr5hxY4KF0ZtTRu6ZhzYJ0
+	mOizrZ9nRoz2NnVAunNTDKdbhO+YJoLUDIOnD+MKHzQnkwdWXKW8Llucf/u0pA==
+X-Received: by 2002:a17:902:b786:b0:215:b1e3:c051 with SMTP id d9443c01a7336-23ac4ed658dmr113110225ad.11.1751247236943;
+        Sun, 29 Jun 2025 18:33:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0UzeTes1Wws6mWimwk3D6DY1DWDUcvAN9WVyT3V3qmR+5QMOP2u9XGuIdy+7b5HGR6wUmhA==
+X-Received: by 2002:a17:902:b786:b0:215:b1e3:c051 with SMTP id d9443c01a7336-23ac4ed658dmr113110035ad.11.1751247236581;
+        Sun, 29 Jun 2025 18:33:56 -0700 (PDT)
+Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c4b23sm67946215ad.214.2025.06.29.18.33.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 18:33:55 -0700 (PDT)
+Message-ID: <20f82d80-58a8-432e-8a9e-40196bbb6cda@redhat.com>
+Date: Mon, 30 Jun 2025 11:33:50 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HrIK/LW9hGVtLpKi"
-Content-Disposition: inline
-In-Reply-To: <20250627101015.1600042-8-ptesarik@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] arm64: realm: ioremap: Allow mapping memory as
+ encrypted
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, catalin.marinas@arm.com, sami.mujawar@arm.com,
+ aneesh.kumar@kernel.org, steven.price@arm.com, linux-kernel@vger.kernel.org,
+ sudeep.holla@arm.com
+References: <20250613111153.1548928-1-suzuki.poulose@arm.com>
+ <20250613111153.1548928-2-suzuki.poulose@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250613111153.1548928-2-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 6/13/25 9:11 PM, Suzuki K Poulose wrote:
+> For ioremap(), so far we only checked if it was a device (RIPAS_DEV) to choose
+> an encrypted vs decrypted mapping. However, we may have firmware reserved memory
+> regions exposed to the OS (e.g., EFI Coco Secret Securityfs, ACPI CCEL).
+> We need to make sure that anything that is RIPAS_RAM (i.e., Guest
+> protected memory with RMM guarantees) are also mapped as encrypted.
+> 
+> Rephrasing the above, anything that is not RIPAS_EMPTY is guaranteed to be
+> protected by the RMM. Thus we choose encrypted mapping for anything that is not
+> RIPAS_EMPTY. While at it, rename the helper function
+> 
+>    __arm64_is_protected_mmio => arm64_rsi_is_protected
+> 
+> to clearly indicate that this not an arm64 generic helper, but something to do
+> with Realms.
+> 
+> Cc: Sami Mujawar <sami.mujawar@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+> Cc: Steven Price <steven.price@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   arch/arm64/include/asm/io.h  |  2 +-
+>   arch/arm64/include/asm/rsi.h |  2 +-
+>   arch/arm64/kernel/rsi.c      | 26 ++++++++++++++++++++++----
+>   3 files changed, 24 insertions(+), 6 deletions(-)
+> 
 
---HrIK/LW9hGVtLpKi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-On Fri, Jun 27, 2025 at 12:10:14PM +0200, Petr Tesarik wrote:
-> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/=
-dma-api.rst
-> index 9fcdb160638e0..a075550ebbb54 100644
-> --- a/Documentation/core-api/dma-api.rst
-> +++ b/Documentation/core-api/dma-api.rst
-> @@ -184,6 +184,26 @@ segments, the function returns 0.
->  Part Id - Streaming DMA mappings
->  --------------------------------
-> =20
-> +Streaming DMA allows to map an existing buffer for DMA transfers and then
-> +unmap it when finished.  Map functions are not guaranteed to succeed, so=
- the
-> +return value must be checked.
-> +
-> +.. note::
-> +
-> +	In particular, mapping may fail for memory not addressable by the
-> +	device, e.g. if it is not within the DMA mask of the device and/or a
-> +	connecting bus bridge.  Streaming DMA functions try to overcome such
-> +	addressing constraints, either by using an IOMMU (a device which maps
-> +	I/O DMA addresses to physical memory addresses), or by copying the
-> +	data to/from a bounce buffer if the kernel is configured with a
-> +	:doc:`SWIOTLB <swiotlb>`.  However, these methods are not always
-> +	available, and even if they are, they may still fail for a number of
-> +	reasons.
-> +
-> +	In short, a device driver may need to be wary of where buffers are
-> +	located in physical memory, especially if the DMA mask is less than 32
-> +	bits.
-> +
->  ::
-> =20
->  	dma_addr_t
-> @@ -204,27 +224,13 @@ DMA_BIDIRECTIONAL	direction isn't known
-> =20
->  .. note::
-> =20
-> -	Not all memory regions in a machine can be mapped by this API.
-> -	Further, contiguous kernel virtual space may not be contiguous as
-> +	Contiguous kernel virtual space may not be contiguous as
->  	physical memory.  Since this API does not provide any scatter/gather
->  	capability, it will fail if the user tries to map a non-physically
->  	contiguous piece of memory.  For this reason, memory to be mapped by
->  	this API should be obtained from sources which guarantee it to be
->  	physically contiguous (like kmalloc).
-> =20
-> -	Further, the DMA address of the memory must be within the dma_mask of
-> -	the device.  To ensure that the memory allocated by kmalloc is within
-> -	the dma_mask, the driver may specify various platform-dependent flags
-> -	to restrict the DMA address range of the allocation (e.g., on x86,
-> -	GFP_DMA guarantees to be within the first 16MB of available DMA
-> -	addresses, as required by ISA devices).
-> -
-> -	Note also that the above constraints on physical contiguity and
-> -	dma_mask may not apply if the platform has an IOMMU (a device which
-> -	maps an I/O DMA address to a physical memory address).  However, to be
-> -	portable, device driver writers may *not* assume that such an IOMMU
-> -	exists.
-> -
->  .. warning::
-> =20
->  	Memory coherency operates at a granularity called the cache
-
-The wording looks good, thanks!
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---HrIK/LW9hGVtLpKi
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaGHpHQAKCRD2uYlJVVFO
-o7BTAQD2guhFoVk0F3IFsbTS/6Ol/17jQ8zJ8Y1DrFSsn2CrUgD8ChTz5+jY2xNj
-g3nM93NHjiM4P2S06XM2BOx7i7nPXgc=
-=aOWE
------END PGP SIGNATURE-----
-
---HrIK/LW9hGVtLpKi--
