@@ -1,145 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8060289833
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A6179D2
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751312331; cv=none; b=cg9ZckrzRQqfg5MdlPc8xJdrmM0AHIIWRLzUxinWZOBInenSM516MbyOxUXz3tOByJON1I1QUzQ8xXqWOkTxtzFpLKRG9ce8VLzWk+MtLWAtnX03Ms4eQEaJ21u+x5VSCcWvPgNqq/Nd1isewn1G2qkqbMLPyn2aVqkUWDDGvxA=
+	t=1751312435; cv=none; b=I40upNfFMdBocL7c/gdr7lwxYb2GU6FTjw/W0BccNs6sX0paLTMYMX/DpjGFX42cIl+sHIhwX6H7LN8dLjCRuYiC5du+g9bMChd1KRgrklMDIs3DNeqFMI7dqIuEuC4JxvSIsy+M+fia8j9QRou/CQRxhcMLLOuSOCCvMD86pf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751312331; c=relaxed/simple;
-	bh=zqOedF4W1acrWB83NCr7yyAwoGHaZafCuVP1mY07zac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EZEwl0vNbEE86qbMr1PsY8kRHvEA1vzBTILRrgM15+bHzGOUIzll8Cb6xomXMmBbbbIM1PQnwBX1NY3kpZdi1rukxtHd7MTam3vqcETZXzxb4hf5OwMrNRhcR5iz6idsjcwRp1dOFvTh2dhVISyahI5XFpmeiJ1MxKIYB3FCjOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z1cpISws; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751312435; c=relaxed/simple;
+	bh=pHWbAsMkiissQol33kasQB9R5YP+XhPouHV1dv5aHmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GuT8iyh7/DH5d2F04qmI3Gj4PVWVvUjc2Y1vh8xUP2dWnC1OqtWqKRN3lZZKzmAfzfxn6eHNTBQP0nYHQx7HlaPfqPvHljMhV45XEheVC9hEYGiVYhankSeI/+V0xS1fv3Xp8p6VDRR0esnsOsriwGJ5j5y6t+dphwU/X2OJs54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NIHefduY; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z1cpISws"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751312327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oD0tbuaxponDHy3qN8C0494OXCQwyjvpmdeqroxPwDw=;
-	b=Z1cpISws0bTVZvtwdts+ADir7f524GkwuBdd62hSAySTKdOUWDAy8WRsYvy8jrRRAhAFsi
-	sLM2pCNlnfETiF3n+9rYTocWi5CYOE0VDK2j6YGB5TP0q8kwiCoAU61P0TDJD9Vjlxkn9P
-	Kr+QDq9oQ82NHBm14/zmuDd0p8e5+PE=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-491-Y42qkeVIPS6zIxIN0hm3BQ-1; Mon, 30 Jun 2025 15:38:46 -0400
-X-MC-Unique: Y42qkeVIPS6zIxIN0hm3BQ-1
-X-Mimecast-MFC-AGG-ID: Y42qkeVIPS6zIxIN0hm3BQ_1751312326
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3df4d2a8b5eso27161355ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:38:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NIHefduY"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so3827896a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751312431; x=1751917231; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dR+iJ3QhujZDf9uIL5BF8Crqd+xW0xxgvhgkDwkmlVM=;
+        b=NIHefduYguH+MmVZH0xIOU3Z6hxL54g3KXR1qGLeg29QWT0UMxDEiw3s5lnEgwyiwd
+         SLpm/5EiH4OV5T1Eu7+3AKIeyqE5VsfuFBJkUKaAZMD+ZlJtNTafqRVCMpFDgdQs4Ck1
+         LOy12QgMF6G0x3QOdANGVuOXmrzIvXnXMxkv4zy8VFaz2zUnU6ZNs/bAaW1hCq+FLd2S
+         zX2bAc8RtFkgRqojyPpA5sjcdxVl+5htvCfB72951v53Kq4PFePtnQpqxbAx/Xcs3LZP
+         3MvKRjIGLxbk4nRhs88V5x9mMS2Xv/jarGcR7/DVFKmz+A/X+8Ei4aSJYC5scmj39v67
+         /M3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751312326; x=1751917126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oD0tbuaxponDHy3qN8C0494OXCQwyjvpmdeqroxPwDw=;
-        b=hLqi6/Mrrzm6Fyrk7M4GXytaJPLhL+m51iVD5uy7qbJXiL6TlrHH6/tg35CxzdxHKh
-         8SV/fuorNGFu6JkKjzXzU/jMtz6kLFaF7v5naslFFtRKGjpCiAQ5hw2AacD6iCvibHWS
-         g9RztU6BKOPe2fRuyhWqZjff9upvQ0qI1z7SEt5z3w/7B0yT///aHqCTs9K+oz8xqGX8
-         ezAbi1/3S8YFiZUJDGPRf+mnHayU54XqfHEv5BxA0r5y/yqojoalgtsiMDzPe5nreRIF
-         dQGaebd1wimLzbsE4gKYZS6+Z5phuJyte+QL37NRdLbYDtd0ZBHHD+QzOKMkutWl0faR
-         YXvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDt/RCPGvKKUug3y5WZTkF84uBXDNAeuJtKN2BzTWVlib6ep5j6twwVtdbUE5Hey+xt74knRYuh/kJCCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbDSrtMzU//7IG5N/sbf5AMsvkdGl0ws8IIza72o+LaCd5XkcB
-	Mk4VXmUJk2t3DSpwuXA9wxPQs1wVwGmTcjMlML6AdqkKMFpBjd9QnYqgP2TSXx2PWc5MmKuPiJp
-	RXYTZeLwVx5XgJXbOpi+eL7GfNh8+YIICxUZ2grq75l2mbdRy9pBE9Ca+SD96zCZAibZL1hITJ5
-	vd5cW5dKBaDvL63ohAOtoWP2E4pqQ8s2sW8NCJKy0r
-X-Gm-Gg: ASbGncu0cUtes+uDy8NiYULy6sl41a1M+NHXTisv6Fixz2qIJteswf/HrXP7kZoUbBf
-	owv5ldaIELMIAaMACJqD1fAH9OUyRQ4gHeVKdMx1a+JwNhBmQJ53AIFafpyrE62WlrFst+p2weH
-	JILCfXrFzQNz0ZMRdgACYXicHn8P9NrOJ09A==
-X-Received: by 2002:a05:6e02:1527:b0:3df:4024:9402 with SMTP id e9e14a558f8ab-3df4ab78488mr158020555ab.8.1751312325685;
-        Mon, 30 Jun 2025 12:38:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEj63Zu4chAlO3nwkmxFrLIHzXRdPp9LE0n5nOyaxxe57ddbJANgCo/i9LGvy3628nLn9G8EqMjdjEnVj3VXIg=
-X-Received: by 2002:a05:6e02:1527:b0:3df:4024:9402 with SMTP id
- e9e14a558f8ab-3df4ab78488mr158020135ab.8.1751312325311; Mon, 30 Jun 2025
- 12:38:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751312431; x=1751917231;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dR+iJ3QhujZDf9uIL5BF8Crqd+xW0xxgvhgkDwkmlVM=;
+        b=ANHJy8+u9LIpPmoQkfZY/gKDS2sNnHA1ooBkEDRXh4as/4WR3tVD8bE6UhgRnPSBrb
+         m2EzDZRZZgPkcGs68G24S901tXnaj/dSWuODSZgz8vdLcWNX/JCbfUzBllxQFuNziiIc
+         vjaSzear63D+GRAS1PWCb8ey5iPyv3iweA4aZ1bZ5aUzWoXy5LKZRGOBh/ZaVdC4DlN9
+         DARl5i9GKyfNHVQTF2Cut/8h2Cnv5clbkjTYS2tXnyQHsuk8zSMVdBjxVZVnq8qV37MH
+         o0nkvXQq3vXKpPgaQpqMnRyT1bjpE/yeInvMZvWT4sYv3Krdj9Sm7o23qUs5/KWIdAo3
+         0BzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpFS5LKaAtAua41CeRHtf+IN1Hca//FsqX9rfAhx5fFkjQ5Kd7aU3iGAX1+ca96rJ8YhvN6AHQtK27qjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQO8t2dm3NnL7VWlXdEEw24VQRwRXj1Hz6JFsqbHACbHPS1k0r
+	88iKsiAkXsvm5VvkNYhDo80hnV4Taai+3TyqQAy4huKCeAD5tHpprOWPQg97TAd+qFo=
+X-Gm-Gg: ASbGncstJhrU1QXB/iXyfmikywYN2Jgaz9VlY9r3ZsLZaXFNV3unWfccBgDtGOzzrA7
+	/LETAD4TFzcbd/wfn+ZtSmXT7HUarg6TQzaykP3WoeOJzUMFoJ3hqLf8elnjNcMh2uJbjCqDADJ
+	xyi3sgkxI3EGA09dQ2Zu6grFZZ7WI/buUWHg4kldnGXXUPOIq9Aym68NQSOI9q1w2EInQVWiFJs
+	7mprwGRTMrf+oMcGmhkzDKgM1rnzzopFM5jQopzCuMFDLan2K1uMsCkJ4+52/Yp98HRc+U2IgIo
+	WjPjzR31EwftQ96EmHm99Kgb5Q3oCSpwAFYS+BiW/UsswjBQO+h0TIZ+fVOWnOUyOmw=
+X-Google-Smtp-Source: AGHT+IFIK2J9cXl/IPVjclluGd+dCHIOY4XSHNTiiXWjiYenvLUpWycOI0CzQur+qLe9BeZY0Ev9Xw==
+X-Received: by 2002:a05:6402:34c6:b0:5ff:ef06:1c52 with SMTP id 4fb4d7f45d1cf-60c88d65540mr13395717a12.3.1751312431328;
+        Mon, 30 Jun 2025 12:40:31 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-60c8f794b62sm5566982a12.68.2025.06.30.12.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 12:40:30 -0700 (PDT)
+Date: Mon, 30 Jun 2025 21:40:28 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Agustin Vega-Frias <agustinv@codeaurora.org>, 
+	Marc Zyngier <maz@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Markus Schneider-Pargmann <msp@baylibre.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end
+ in _driver
+Message-ID: <gbjim7wxszmwfvm523bgyfxf5mk5773pafdxnf2wf4mgaebsmz@qfeejv4ilwxv>
+References: <20250630172333.73614-2-u.kleine-koenig@baylibre.com>
+ <87ldp9m7la.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630150107.23421-1-desnesn@redhat.com> <2025063041-concur-unrefined-9dba@gregkh>
-In-Reply-To: <2025063041-concur-unrefined-9dba@gregkh>
-From: Desnes Nunes <desnesn@redhat.com>
-Date: Mon, 30 Jun 2025 16:38:34 -0300
-X-Gm-Features: Ac12FXyAkCe4-5qlTdVi7CFbvyYmzCuJiAW0H_xcfUV1Klx2no50cvU9ATC726Y
-Message-ID: <CACaw+ezWFLhE8=Uc4bHYWu9yF8-ncADZ3oRMMe1t2HaQ+UhNyQ@mail.gmail.com>
-Subject: Re: [PATCH] media: uvcvideo: fix build error in uvc_ctrl_cleanup_fh
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: laurent.pinchart@ideasonboard.com, hansg@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wb3haxxcye6hb47p"
+Content-Disposition: inline
+In-Reply-To: <87ldp9m7la.ffs@tglx>
+
+
+--wb3haxxcye6hb47p
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end
+ in _driver
+MIME-Version: 1.0
 
-Hello Greg,
+Hello,
 
-The compiler is sane, but I ran into this while backporting fixes to
-an old codebase that still uses C89 due to legacy support reasons.
-Furthermore, you're right; there is no guard() in my code base, thus I
-had to backport guard() with the old mutex lock/unlock calls used
-prior to guard().
-Indeed - will focus on all of what has been said on the v2.
+[adding the people involved with scripts/mod to Cc:]
 
-Thanks for the review Greg,
+On Mon, Jun 30, 2025 at 08:01:53PM +0200, Thomas Gleixner wrote:
+> On Mon, Jun 30 2025 at 19:23, Uwe Kleine-K=F6nig wrote:
+> > The modpost section mismatch checks are more lax for objects that have a
+> > name that ends in "_probe". This is not justified here though, so rename
+>=20
+> That's a truly bad design or lack of such.
+>=20
+> Why can't this muck use foo_driver(name) foo_probe(name) annotations to
+> make it entirely clear what is tested for instead of oracling it out of
+> the name itself. That would make it too easy to understand and analyse.
 
-On Mon, Jun 30, 2025 at 12:42=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> On Mon, Jun 30, 2025 at 12:01:06PM -0300, Desnes Nunes wrote:
-> > This fixes the following compilation failure: "error: =E2=80=98for=E2=
-=80=99 loop
-> > initial declarations are only allowed in C99 or C11 mode"
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 221cd51efe45 ("media: uvcvideo: Remove dangling pointers")
-> > Signed-off-by: Desnes Nunes <desnesn@redhat.com>
-> > ---
-> >  drivers/media/usb/uvc/uvc_ctrl.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/u=
-vc_ctrl.c
-> > index 44b6513c5264..532615d8484b 100644
-> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > @@ -3260,7 +3260,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
-> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> >  {
-> >       struct uvc_entity *entity;
-> > -     int i;
-> > +     unsigned int i;
-> >
-> >       guard(mutex)(&handle->chain->ctrl_mutex);
->
-> If your compiler can handle this guard(mutex) line, then:
->
-> >
-> > @@ -3268,7 +3268,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> >               return;
-> >
-> >       list_for_each_entry(entity, &handle->chain->dev->entities, list) =
-{
-> > -             for (unsigned int i =3D 0; i < entity->ncontrols; ++i) {
->
-> It can also handle that line.
->
-> Are you sure you are using a sane compiler?
->
-> confused,
->
-> greg k-h
->
+I don't understand what you're suggesting here. Either I got it wrong or
+it is insufficient because every object is checked, not only the driver
+structs. That would result in more exceptions/special cases than we have
+now.
 
+Anyhow, I agree that depending on the name is unfortunate, maybe we can
+come up with something more clever?
 
---=20
-Desnes Nunes
+There are a few more candidates:
 
+$ git grep -E '_driver\>\s*[a-z_0-9]*_(ops|probe|console)\>' next/master
+next/master:Documentation/driver-api/usb/typec_bus.rst:   :functions: typec=
+_altmode_driver typec_altmode_ops
+next/master:drivers/char/virtio_console.c:static struct virtio_driver virti=
+o_console =3D {
+next/master:drivers/clocksource/timer-nxp-stm.c:static struct platform_driv=
+er nxp_stm_probe =3D {
+next/master:drivers/irqchip/qcom-irq-combiner.c:static struct platform_driv=
+er qcom_irq_combiner_probe =3D {
+next/master:drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c:static str=
+uct pci_driver aq_pci_ops =3D {
+next/master:drivers/net/ethernet/dec/tulip/xircom_cb.c:static struct pci_dr=
+iver xircom_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-dpi.c:static st=
+ruct omap_dss_driver panel_dpi_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-dsi-cm.c:static=
+ struct omap_dss_driver dsicm_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-lgphilips-lb035=
+q02.c:static struct omap_dss_driver lb035q02_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-nec-nl8048hl11.=
+c:static struct omap_dss_driver nec_8048_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-sharp-ls037v7dw=
+01.c:static struct omap_dss_driver sharp_ls_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-sony-acx565akm.=
+c:static struct omap_dss_driver acx565akm_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.=
+c:static struct omap_dss_driver td028ttec1_ops =3D {
+next/master:drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td043mtea1.=
+c:static struct omap_dss_driver tpo_td043_ops =3D {
+
+I already sent patches for the two networking drivers, we're discussing
+the irqchip driver here and the omap2 framebuffer drivers are IMHO false
+positives. I didn't look into the virtio_console driver, but I guess
+that one is ok, too.
+
+The clocksource driver is a bit more difficult, .probe() must be in
+__init because it calls sched_clock_register() but using
+platform_driver_probe() might not be easy. Markus currently fights with
+a similar clocksource driver where the clocksource depends on an mbox
+driver that is only probed later. In his case probing the schedclock
+returns -EPROBE_DEFER but when the mbox driver is ready the device
+cannot be reprobed again as the schedclock driver is already gone. Of
+course the error message for -EPROBE_DEFER is suppressed, because that's
+what you do for this type of message. So the machine dies with no
+explaining output. We seem to have a yak to shave.
+
+Best regards
+Uwe
+
+--wb3haxxcye6hb47p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhi6B8ACgkQj4D7WH0S
+/k5JQQf+MvfGRxE8gLl5eR7R5qNYN5sF9MHnr+wSGkuroR1rSMVihuU155D+orSd
+t4Ud10nk+nB4UFQYc5i2e85IC/OyC/m/R1CMpki7bPc2FKvqNPI4bm6mGgJVr3IF
+vj/DAarV6NWnRMEP6ABxG+RoXSCf5Uyja+YTn3n1UBq6MhBtSyVcPrEOaFGgUACN
+OkrR85nn5RBFh2iFaD588BGegm7dfYB0R60KSrHi0+IBki/eWEAA8DNBIunTFA4/
+OfL1UJBsF6XY+KE1CBBkI/cJsq5TImh4Mz4tJX0/j1FzgA18xYnFGgXqjKhTVS/a
+TmzUAtvre8NBZm6HJPFUQRJk6ZHbZA==
+=tUHI
+-----END PGP SIGNATURE-----
+
+--wb3haxxcye6hb47p--
