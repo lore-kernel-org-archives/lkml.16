@@ -1,252 +1,358 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6C926ADD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8D926ADD
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288665; cv=none; b=nyc9VGLHe+r3iaY5zJm3RjojcsO75rjXQ7l3GUWaLhN+PyuUvgmDUBLHI0f8CqNSIQc0ZA6M7K1z7D+WWHGPpc4yD60ifu1XTe+QzZ9eRLRUU3r0vVV1MxzG5CQeF29JkQ4qei4VFnxtU5s+yZRfVyTOPKg6VYy9SkwChizoK+c=
+	t=1751288680; cv=none; b=dIFv8rnID9oVg2QccDKeyUThFtC8LhN8lKR+7TYaqOUHn3sSuCdiOKCRzioLAZNzSk7SNGFmAygJRrFhI2WF1CXhk4rUP4HgH+2xO5B5bo7tQun879AbI4xyISXpWqBnOTQRIfR8DrO2XV7Jki81xVr8k1ROfH3RDSDkH/gfgPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288665; c=relaxed/simple;
-	bh=8ma29XIVyrlocB2TwxvieiVhXjMJz8cDSr2I0wEXjA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W0Ht0r7rwS2fBW7Cz4xl5OwpECPoy19UH02s9fWWxolRLpDliIU6YQ9fZbv3XibV2p8dvbZFOIf8oBQE2HYOwJeHi0tLIrsQuovQzQD8HPuiyy9Ma4gSaike8oidxgmpWcZtoKam5Vedbq/RIJ/zrmWQ/FwqGWYgTA8XfcVmu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OvP4la4T; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751288680; c=relaxed/simple;
+	bh=eLaHHZE65Wb8JkFwWT2Xbck6LlHWFomrc4pFQpVUTYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KWoHiCpKJcXsfFWLYR8YXsrtMKp27vlS5BDkNERM9XJj2heXOTbMoxE0MZG4svw8XYbidTO+q0FU+2pwtjGWhHyjVhnNR/Lvdnb/uhJ7yPArIVOUkKp3KdRHtS8z7q6B7FNAb47UMBsV72gjF/7U4O5s7rPmGPqykLZsJzKMaMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qE5umnSW; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OvP4la4T"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso2383563f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751288662; x=1751893462; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jtRCoaZRuy3SHZyDIOBlh8AQRBZoYHsrOyl5I3M3Usg=;
-        b=OvP4la4Ts2imD7kHl11x6TSySGOLVGHb5zDHKhB69o7ZV22ItVIVbriWPX0MKk8L8F
-         lwcfw2hItq9Ju0XCvwx4rxVh2EjMybs4C0L3WeIN6fcgpMAsr9qrvVIF7mX6tgg1p6FR
-         /mDNMM7k81px30WZPQoA9ds986DYq4ON6hRoJK9EoN6ZqrkXRngBpiQ64MKmdzRFVul2
-         F/smPVSrHgWQwroWqHWv8sfOZ9lzNQB87EL8w8OMH00oCuf7vcANK0mMKUhDAR+L9hte
-         wUqzaYGOc34hOBfOd67ZJA+vPodAG1eAGSz4OwIrR+rhOhS5TuHBn/7TaCoknExSl523
-         zuNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751288662; x=1751893462;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jtRCoaZRuy3SHZyDIOBlh8AQRBZoYHsrOyl5I3M3Usg=;
-        b=uE1dJIyxK2CmoBCkFJCBQDvSnhbYVkS4yYR1sbP21Vq/1CfYol9uhCFd2KcSJ0amC6
-         EvN9mVg74xiT1A1hN2g6/mJGzbcNt4nZSZL/rAiXFSJ8xHs60iT+Amzeuem1p3uQHCjB
-         wTwYAG2eOwuY91cDHGNh7BDwjAeyzNXSbWzko9EVuenIjMtqZh7tx6iGnX4ghPHPTAfA
-         3S3LwmoiudBgNo5/owbNvcTMdsOl7lDwBurzuvvWzjW3Au1qkSwnm9VqTyCTsQTmswbD
-         ArcfweKZjX5ddzKUDf5F2M7Tu6HRR2r3X7jyObOfhNnS0uqYbZlvu5mXICTt2mC6WAJ6
-         tfNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVzSAXG942qJjhLli2+SO8S2zzBsiTnNrEr3AgdsFuhtuictJx7ZoMESWkHV5ZGSFvUFy57aMeLru9PNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmk4LeiVeKobjnZO5BZYozIpQV4ch2b5cvfEtbpVygK4rFZ7yx
-	wloUEIMKcbwyo9wcsujfZ3dKP72LFq5ICxKhpKc8GN6qm2DWiKGiufkVZDonulbHTAM=
-X-Gm-Gg: ASbGnctiTmW2HxQqlHFQvGcGpwo/eFYUVZyIvsPSDA+kDc4wU0R6pI22bO1zYBTEAyr
-	J3KCy/tCbk5WrYzsXkCfkwL6M+S9f356jkQo/pwRwtQwSlFjziLOu35JUO6BG5MkRKbbHvtK40G
-	m242/3fu9+cjr+XOSljydo+UpdmuGJWnoK3JbxIewvE4RA8WNzbCXEmwXWiX+oyXPZXR3BOcW8p
-	xyYMj97QnUgig1cwhi1uZB71N2ZeDs7vncNQe/SIg5vX8uNoP14XTxAU9ezVEjgLqgJUUjkA4JD
-	J1eS34U1rC4hxCXoooOi5ubpLbWgoF8kyj9gIw2HVWmCwCjzfH4Mv4mgHUh9FXE=
-X-Google-Smtp-Source: AGHT+IG+KISEPRT59mnSmUbFYKshwUKdJDSOtcgpmTFgZsp3fC/pg+et65cMv5g4qUkmZujHStqtzA==
-X-Received: by 2002:adf:b649:0:b0:3a0:7d27:f076 with SMTP id ffacd0b85a97d-3a8fdb29f1emr11225299f8f.2.1751288660266;
-        Mon, 30 Jun 2025 06:04:20 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7facb3sm10447413f8f.30.2025.06.30.06.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 06:04:17 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: allow to mark simulated lines as invalid
-Date: Mon, 30 Jun 2025 15:03:57 +0200
-Message-ID: <20250630130358.40352-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qE5umnSW"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55UD49L32626771;
+	Mon, 30 Jun 2025 08:04:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751288649;
+	bh=CSjmg654iKbhp0vIomNxU29sKDgmLT4I7lK4aG+jWS0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=qE5umnSW9Nkibm57cg2SQeGfiCyLrv9jLcQOPqTM9H8GEKG2Q3LNuClWHHtL20m47
+	 PGY6ll4YWNh2MSQYzHhHf77mK/nUmu0G3BS4ryCCds8qgIIPjOBYukeA8nDNHS/q4U
+	 M0W3vI7PjDpuqhJ6/M73hfmqSxXOhD1nq40W93SY=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55UD49HL1908816
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 30 Jun 2025 08:04:09 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 30
+ Jun 2025 08:04:08 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 30 Jun 2025 08:04:08 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55UD45Sw3932686;
+	Mon, 30 Jun 2025 08:04:05 -0500
+Message-ID: <a90d2db8-0c38-45b1-b295-9c7b38215a38@ti.com>
+Date: Mon, 30 Jun 2025 18:34:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/tidss: Decouple max_pclk from tidss feats to
+ remove clock dependency
+To: Jayesh Choudhary <j-choudhary@ti.com>, <jyri.sarha@iki.fi>,
+        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ideasonboard.com>
+CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>
+References: <20250618100509.20386-1-j-choudhary@ti.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <20250618100509.20386-1-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Jayesh,
 
-Add a new line-level, boolean property to the gpio-sim configfs
-interface called 'valid'. It's set by default and the user can unset it
-to make the line be included in the standard `gpio-reserved-ranges`
-property when the chip is registered with GPIO core. This allows users
-to specify which lines should not be available for requesting as GPIOs.
+Thanks for the patch.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- Documentation/admin-guide/gpio/gpio-sim.rst |  7 +-
- drivers/gpio/gpio-sim.c                     | 83 ++++++++++++++++++++-
- 2 files changed, 86 insertions(+), 4 deletions(-)
+On 18/06/25 15:35, Jayesh Choudhary wrote:
+> TIDSS hardware by itself does not have variable max_pclk for each VP.
+> Each VP supports a fixed maximum pixel clock. 
 
-diff --git a/Documentation/admin-guide/gpio/gpio-sim.rst b/Documentation/admin-guide/gpio/gpio-sim.rst
-index 35d49ccd49e0..f5135a14ef2e 100644
---- a/Documentation/admin-guide/gpio/gpio-sim.rst
-+++ b/Documentation/admin-guide/gpio/gpio-sim.rst
-@@ -50,8 +50,11 @@ the number of lines exposed by this bank.
- 
- **Attribute:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/name``
- 
--This group represents a single line at the offset Y. The 'name' attribute
--allows to set the line name as represented by the 'gpio-line-names' property.
-+**Attribute:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/valid``
-+
-+This group represents a single line at the offset Y. The ``valid`` attribute
-+indicates whether the line can be used as GPIO. The ``name`` attribute allows
-+to set the line name as represented by the 'gpio-line-names' property.
- 
- **Item:** ``/config/gpio-sim/gpio-device/gpio-bankX/lineY/hog``
- 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index f638219a7c4f..9503296422fd 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -39,7 +39,7 @@
- #include "dev-sync-probe.h"
- 
- #define GPIO_SIM_NGPIO_MAX	1024
--#define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
-+#define GPIO_SIM_PROP_MAX	5 /* Max 4 properties + sentinel. */
- #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
- 
- static DEFINE_IDA(gpio_sim_ida);
-@@ -629,6 +629,7 @@ struct gpio_sim_line {
- 
- 	unsigned int offset;
- 	char *name;
-+	bool valid;
- 
- 	/* There can only be one hog per line. */
- 	struct gpio_sim_hog *hog;
-@@ -744,6 +745,36 @@ gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
- 	}
- }
- 
-+static unsigned int gpio_sim_get_reserved_ranges_size(struct gpio_sim_bank *bank)
-+{
-+	struct gpio_sim_line *line;
-+	unsigned int size = 0;
-+
-+	list_for_each_entry(line, &bank->line_list, siblings) {
-+		if (line->valid)
-+			continue;
-+
-+		size += 2;
-+	}
-+
-+	return size;
-+}
-+
-+static void gpio_sim_set_reserved_ranges(struct gpio_sim_bank *bank,
-+					 u32 *ranges)
-+{
-+	struct gpio_sim_line *line;
-+	int i = 0;
-+
-+	list_for_each_entry(line, &bank->line_list, siblings) {
-+		if (line->valid)
-+			continue;
-+
-+		ranges[i++] = line->offset;
-+		ranges[i++] = 1;
-+	}
-+}
-+
- static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
- {
- 	struct gpiod_hog *hog;
-@@ -844,9 +875,10 @@ static struct fwnode_handle *
- gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 			  struct fwnode_handle *parent)
- {
-+	unsigned int prop_idx = 0, line_names_size, ranges_size;
- 	struct property_entry properties[GPIO_SIM_PROP_MAX];
--	unsigned int prop_idx = 0, line_names_size;
- 	char **line_names __free(kfree) = NULL;
-+	u32 *ranges __free(kfree) = NULL;
- 
- 	memset(properties, 0, sizeof(properties));
- 
-@@ -870,6 +902,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 						line_names, line_names_size);
- 	}
- 
-+	ranges_size = gpio_sim_get_reserved_ranges_size(bank);
-+	if (ranges_size) {
-+		ranges = kcalloc(ranges_size, sizeof(u32), GFP_KERNEL);
-+		if (!ranges)
-+			return ERR_PTR(-ENOMEM);
-+
-+		gpio_sim_set_reserved_ranges(bank, ranges);
-+
-+		properties[prop_idx++] = PROPERTY_ENTRY_U32_ARRAY_LEN(
-+						"gpio-reserved-ranges",
-+						ranges, ranges_size);
-+	}
-+
- 	return fwnode_create_software_node(properties, parent);
- }
- 
-@@ -1189,8 +1234,41 @@ static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
- 
- CONFIGFS_ATTR(gpio_sim_line_config_, name);
- 
-+static ssize_t
-+gpio_sim_line_config_valid_show(struct config_item *item, char *page)
-+{
-+	struct gpio_sim_line *line = to_gpio_sim_line(item);
-+	struct gpio_sim_device *dev = gpio_sim_line_get_device(line);
-+
-+	guard(mutex)(&dev->lock);
-+
-+	return sprintf(page, "%c\n", line->valid ? '1' : '0');
-+}
-+
-+static ssize_t gpio_sim_line_config_valid_store(struct config_item *item,
-+						const char *page, size_t count)
-+{
-+	struct gpio_sim_line *line = to_gpio_sim_line(item);
-+	struct gpio_sim_device *dev = gpio_sim_line_get_device(line);
-+	bool valid;
-+	int ret;
-+
-+	ret = kstrtobool(page, &valid);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	line->valid = valid;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_sim_line_config_, valid);
-+
- static struct configfs_attribute *gpio_sim_line_config_attrs[] = {
- 	&gpio_sim_line_config_attr_name,
-+	&gpio_sim_line_config_attr_valid,
- 	NULL
- };
- 
-@@ -1399,6 +1477,7 @@ gpio_sim_bank_config_make_line_group(struct config_group *group,
- 
- 	line->parent = bank;
- 	line->offset = offset;
-+	line->valid = true;
- 	list_add_tail(&line->siblings, &bank->line_list);
- 
- 	return &line->group;
--- 
-2.48.1
+As discussed offline, I think VP max pixel clock is more dependent on 
+SoC than DSS itself as SoC provides the pixel clock to the DSS.
 
+K2 devices and AM62*
+> devices uses "ultra-light" version where each VP supports a max of
+> 300MHz
+
+Again it depends on SoC, AM62 and AM62A have around 165Mhz, AM62P has 
+300 Mhz for some VPs.
+
+  whereas J7* devices uses TIDSS where all VP can support a
+> max pclk of 600MHz.
+> The limitation that has been modeled till now comes from the clock
+> (PLL can only be programmed to a particular max value). Due to this
+> we end up using different compatible for each SoC when the clocking
+> architecture changes for VPs, even when the hardware is essentially
+> the same.
+> max_pclk cannot be entirely removed since the display controller
+> should tell if a particular mode clock can be supported or not in crtc's
+> "mode_valid()" call. So remove "max_pclk_khz" from the static display
+> feat and add it to "tidss_device" structure which would be modified in
+> runtime.
+
+
+I think we can totally go away with max_pixel_clk then since it is 
+anyway not dependent on DSS version but SoC and for checking a 
+particular mode can be supported or not, you are anyway making a call to 
+DM via clk_round_rate API to determine whether a pixel clock is possible 
+to set or not.
+
+  In mode_valid() call, check if a best frequency match for mode
+> clock can be found or not using "clk_round_rate()". Based on that,
+> propagate "max_pclk" and check max_clk again only if the requested mode
+> clock is greater than saved value. (As the preferred display mode is
+> usually the max resolution, driver ends up checking the maximum clock
+
+Yes usually preferred is the highest but not compulsory and when it is 
+not max_pixel_clk for the first mode encountered won't be actually the 
+max, hence the name might be misleading.
+
+> the first time itself which is used in subsequent checks)
+
+Ok, so you basically want to buffer the highest pixel clock encountered 
+while checking mode_valid for each new mode getting set. However the 
+name max_pixel_clk is little misleading as it tends to signify that this 
+is actually the max vp clock at all the times, so someone else might 
+misuse this field. Say for e.g. you cannect a 1280x720 monitor and it 
+would give very less pixel clock value in this field even though VP can 
+support much higher.
+
+So maybe, rename it as cur_max_pclk and add a comment to mention what it 
+signifies.
+
+
+> Since TIDSS display controller provides clock tolerance of 5%, we use
+> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
+> before it is called.
+> 
+> This will make the existing compatibles reusable.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+> 
+> Changelog v1->v2:
+> - Rebase it on linux-next after OLDI support series[0] as all of its
+>    patches are reviewed and tested and it touches one of the functions
+>    used.
+>    
+> v1 patch link:
+> <https://lore.kernel.org/all/20250618075804.139844-1-j-choudhary@ti.com/>
+> 
+> Test log on TI's J784S4 SoC with a couple of downstream patches
+> to integrate DSI support on one of the video ports:
+> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
+> 
+>  From the logs, we can see that for CLK ID 218 (DSS), we do not have to
+> call sci_clk_determine_rate() multiple times. So there is very little
+> overhead of this call even with multiple mode_valid() called during
+> display run.
+>  From weston-simple-egl application, I have seen that there is no frame
+> drop or performance impact.
+> 
+> Once this patch gets in, I will send patches for AM62P and J722S DSS
+> support.
+> 
+> [0]: https://lore.kernel.org/all/20250528122544.817829-1-aradhya.bhatia@linux.dev/
+> 
+>   drivers/gpu/drm/tidss/tidss_dispc.c | 74 ++++++++++++-----------------
+>   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
+>   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
+>   3 files changed, 33 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+> index c0277fa36425..ad9ffc3685b4 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+> @@ -58,10 +58,6 @@ static const u16 tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>   const struct dispc_features dispc_k2g_feats = {
+>   	.min_pclk_khz = 4375,
+>   
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_DPI] = 150000,
+> -	},
+> -
+>   	/*
+>   	 * XXX According TRM the RGB input buffer width up to 2560 should
+>   	 *     work on 3 taps, but in practice it only works up to 1280.
+> @@ -144,11 +140,6 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>   };
+>   
+>   const struct dispc_features dispc_am65x_feats = {
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_DPI] = 165000,
+> -		[DISPC_VP_OLDI_AM65X] = 165000,
+> -	},
+> -
+>   	.scaling = {
+>   		.in_width_max_5tap_rgb = 1280,
+>   		.in_width_max_3tap_rgb = 2560,
+> @@ -244,11 +235,6 @@ static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+>   };
+>   
+>   const struct dispc_features dispc_j721e_feats = {
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_DPI] = 170000,
+> -		[DISPC_VP_INTERNAL] = 600000,
+> -	},
+> -
+>   	.scaling = {
+>   		.in_width_max_5tap_rgb = 2048,
+>   		.in_width_max_3tap_rgb = 4096,
+> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
+>   };
+>   
+>   const struct dispc_features dispc_am625_feats = {
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_DPI] = 165000,
+> -		[DISPC_VP_INTERNAL] = 170000,
+> -	},
+> -
+>   	.scaling = {
+>   		.in_width_max_5tap_rgb = 1280,
+>   		.in_width_max_3tap_rgb = 2560,
+> @@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
+>   	 * if the code reaches dispc_mode_valid with VP1,
+>   	 * it should return MODE_BAD.
+>   	 */
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_TIED_OFF] = 0,
+> -		[DISPC_VP_DPI] = 165000,
+> -	},
+>   
+>   	.scaling = {
+>   		.in_width_max_5tap_rgb = 1280,
+> @@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
+>   };
+>   
+>   const struct dispc_features dispc_am62l_feats = {
+> -	.max_pclk_khz = {
+> -		[DISPC_VP_DPI] = 165000,
+> -	},
+> -
+>   	.subrev = DISPC_AM62L,
+>   
+>   	.common = "common",
+> @@ -1347,25 +1320,48 @@ static void dispc_vp_set_default_color(struct dispc_device *dispc,
+>   			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
+>   }
+>   
+> +/*
+> + * Calculate the percentage difference between the requested pixel clock rate
+> + * and the effective rate resulting from calculating the clock divider value.
+> + */
+> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
+> +{
+> +	int r = rate / 100, rr = real_rate / 100;
+> +
+> +	return (unsigned int)(abs(((rr - r) * 100) / r));
+> +}
+> +
+> +static int check_max_pixel_clock(struct dispc_device *dispc,
+> +				 u32 hw_videoport, unsigned long clock)
+> +{
+> +	if (clock > dispc->tidss->max_pclk[hw_videoport]) {
+> +		unsigned long round_clock = clk_round_rate(dispc->vp_clk[hw_videoport], clock);
+> +
+> +		if (dispc_pclk_diff(clock, round_clock) > 5)
+> +			return -EINVAL;
+> +
+> +		dispc->tidss->max_pclk[hw_videoport] = round_clock;
+> +	}
+> +
+
+s/max_pclk/curr_max_pclk
+
+> +	return 0;
+> +}
+> +
+>   enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
+>   					 u32 hw_videoport,
+>   					 const struct drm_display_mode *mode)
+>   {
+>   	u32 hsw, hfp, hbp, vsw, vfp, vbp;
+>   	enum dispc_vp_bus_type bus_type;
+> -	int max_pclk;
+>   
+>   	bus_type = dispc->feat->vp_bus_type[hw_videoport];
+>   
+> -	max_pclk = dispc->feat->max_pclk_khz[bus_type];
+> -
+> -	if (WARN_ON(max_pclk == 0))
+> +	if (bus_type == DISPC_VP_TIED_OFF)
+>   		return MODE_BAD;
+>   
+>   	if (mode->clock < dispc->feat->min_pclk_khz)
+>   		return MODE_CLOCK_LOW;
+>   
+> -	if (mode->clock > max_pclk)
+> +	if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
+>   		return MODE_CLOCK_HIGH;
+>   
+>   	if (mode->hdisplay > 4096)
+> @@ -1437,17 +1433,6 @@ void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
+>   	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
+>   }
+>   
+> -/*
+> - * Calculate the percentage difference between the requested pixel clock rate
+> - * and the effective rate resulting from calculating the clock divider value.
+> - */
+> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
+> -{
+> -	int r = rate / 100, rr = real_rate / 100;
+> -
+> -	return (unsigned int)(abs(((rr - r) * 100) / r));
+> -}
+> -
+>   int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>   			  unsigned long rate)
+>   {
+> @@ -3087,6 +3072,9 @@ int dispc_init(struct tidss_device *tidss)
+>   	}
+>   	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
+>   
+> +	for (i = 0; i < dispc->feat->num_vps; i++)
+> +		dispc->tidss->max_pclk[i] = 0;
+> +
+
+Ain't the struct already kzalloced when tidss_device is allocated ?
+
+>   	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
+>   			     &dispc->memory_bandwidth_limit);
+>   
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+> index b8614f62186c..45b1a8aa9089 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+> @@ -75,7 +75,6 @@ enum dispc_dss_subrevision {
+>   
+>   struct dispc_features {
+>   	int min_pclk_khz;
+> -	int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
+>   
+>   	struct dispc_features_scaling scaling;
+>   
+> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
+> index d14d5d28f0a3..59c67ae8e721 100644
+> --- a/drivers/gpu/drm/tidss/tidss_drv.h
+> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
+> @@ -22,6 +22,8 @@ struct tidss_device {
+>   
+>   	const struct dispc_features *feat;
+>   	struct dispc_device *dispc;
+> +	long max_pclk[TIDSS_MAX_PORTS];
+
+unsigned long ??
+
+Regards
+Devarsh
+> +
+>   
+>   	unsigned int num_crtcs;
+>   	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
