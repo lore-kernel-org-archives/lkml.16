@@ -1,179 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0028FAAC
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0669925E46A;
+	Mon, 30 Jun 2025 14:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293246; cv=none; b=UvENn6dwKxvSWOexY4NlCS8s32rPH3PetsteJjSeulRD4ybwszmlbzO/OlQYyFttPUFRkWQd4yZH1gbqIUkq5RwEvrZOBxEx1dvVxyZp8nwss8A04pXDAFR/QNw2F5HPFRX05Nq9bWchn6NbAi1Gv50lhp3jIQ/KNY6i6AuRdiA=
+	t=1751293263; cv=none; b=Kmp6wCUAUHpePce9X7izsd8INZ0niwyCi7TrtGiafh95CZjq80Et3+pdp3KCgYm94o4e96JbKfrTnRCqOwpTGpaEQje3ozNfJQsR4MsgN1PGb2RkTLmblDEk7aCLfJeIF6ZRyBURpsAmQW0xc+dXkSRixeFfdNGbK9wqiaA5tCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293246; c=relaxed/simple;
-	bh=z+vrdGt+E7vi7zWe8/QRIdf6JmwA3MGFwbNW8p1J80w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQ9vMP2ebWqgsof9Tks+Ahc33PUc8giMi3y3eaV0cKzw2WxXYccid+8BqnLx81YBg8HhN7ecE6hPtl5Xi5QmzqsKb6TnFnTGuNg9GEWigpdd23i0jcO4wGruE8CJspOtUiy/k/4xHqMyiO2o8ThPxlT4EgCegQNqp3g2n2K6+tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQ5wqecQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751293263; c=relaxed/simple;
+	bh=AGPZJVVdHZw0WSjLqpq3nXG49DDSI8HhtnKhoZB7T8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4ekPudybFNz7tCOhe6jovfJwUxnzy+N2T7RQ7pO4isVT1zz8J+Lgz/Mq4TfezQzV2JYm4ecFbECb5WMf2DXmRhw8EOKZKyKy0NYwyrZgFMleubL4dYF9yMB1xnw/eQllE+XmJX0xo19lvPolN2k/N+tMD2Q9OWPKpIIZx5Y6/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRzhUCzi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQ5wqecQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751293242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pOU168osJCt4Z5drZRRfb6m13pzDoAsHwXIgB0F76VE=;
-	b=jQ5wqecQHVWw78XO5gWW7eD64CMj58po0neywh+JL0sZ+u3c801RqZMPIw2yJTjmeO0WRC
-	9NiejHWjDZWhq8NWRyqnEqV3AM6/fqv2E7eKM/zYIrx90YbinBD/iZLNK3ptMjmoLTttRn
-	MSS3yXw0aS2/mJvcudQa9Kc2/Ry0r94=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-qHuLkgCzNyanoNZtrUvFeg-1; Mon,
- 30 Jun 2025 10:20:41 -0400
-X-MC-Unique: qHuLkgCzNyanoNZtrUvFeg-1
-X-Mimecast-MFC-AGG-ID: qHuLkgCzNyanoNZtrUvFeg_1751293240
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D1B5018DA5D2;
-	Mon, 30 Jun 2025 14:20:39 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.44.22.9])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3542D19560A7;
-	Mon, 30 Jun 2025 14:20:36 +0000 (UTC)
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [RFC PATCH v3] tracing: add testable specifications for event_enable_write/read
-Date: Mon, 30 Jun 2025 16:20:32 +0200
-Message-ID: <20250630142032.3322-1-gpaoloni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRzhUCzi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C326C4CEE3;
+	Mon, 30 Jun 2025 14:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751293262;
+	bh=AGPZJVVdHZw0WSjLqpq3nXG49DDSI8HhtnKhoZB7T8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HRzhUCzidJonVITkVO0/FIulGBPiwsQJms96ktW5chl1KeCY7+mH6//d/Gf+UZ9df
+	 t7HogmiSFj0cgypkMTkh0Zq21E/YdR2bemEn8nrzJNrFJVm3CTeuXEQ2TIfoiKdlD9
+	 XacZk/QDfVXktPxRJO7X50uwO+svoWbWdMNP5ltNa/2zdy/AjXqmhKC/t3KaGrUXiX
+	 VC6yaD8Qy6LzQ4e716zFPccK6TaB6gvxaTKcy66B6uha1lu/WCBeodXlGTMDzS7phB
+	 fNkoslMzDnQYLsDaeyDUSBQX+lGGPbI3wfhW49dYkRXwMMZv90ntZoQM3X9S7Nqq62
+	 MzLzBWrjDIrGw==
+Date: Mon, 30 Jun 2025 15:20:57 +0100
+From: Will Deacon <will@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>,
+	Steven Moreland <smoreland@google.com>,
+	Frederick Mayle <fmayle@google.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 3/5] vhost/vsock: Allocate nonlinear SKBs for handling
+ large receive buffers
+Message-ID: <aGKdSVJTjg_vi-12@willie-the-truck>
+References: <20250625131543.5155-1-will@kernel.org>
+ <20250625131543.5155-4-will@kernel.org>
+ <orht2imwke5xhnmeewxrbey3xbn2ivjzujksqnrtfe3cjtgrg2@6ls6dyexnkvc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <orht2imwke5xhnmeewxrbey3xbn2ivjzujksqnrtfe3cjtgrg2@6ls6dyexnkvc>
 
-This patch implements the documentation of event_enable_write and
-event_enable_read in the form of testable function's expectations.
+On Fri, Jun 27, 2025 at 12:45:45PM +0200, Stefano Garzarella wrote:
+> On Wed, Jun 25, 2025 at 02:15:41PM +0100, Will Deacon wrote:
+> > When receiving a packet from a guest, vhost_vsock_handle_tx_kick()
+> > calls vhost_vsock_alloc_skb() to allocate and fill an SKB with the
+> > receive data. Unfortunately, these are always linear allocations and can
+> > therefore result in significant pressure on kmalloc() considering that
+> > the maximum packet size (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE +
+> > VIRTIO_VSOCK_SKB_HEADROOM) is a little over 64KiB, resulting in a 128KiB
+> > allocation for each packet.
+> > 
+> > Rework the vsock SKB allocation so that, for sizes with page order
+> > greater than PAGE_ALLOC_COSTLY_ORDER, a nonlinear SKB is allocated
+> > instead with the packet header in the SKB and the receive data in the
+> > fragments.
+> > 
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> > drivers/vhost/vsock.c        | 15 +++++++++------
+> > include/linux/virtio_vsock.h | 31 +++++++++++++++++++++++++------
+> > 2 files changed, 34 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> > index 66a0f060770e..cfa4e1bcf367 100644
+> > --- a/drivers/vhost/vsock.c
+> > +++ b/drivers/vhost/vsock.c
+> > @@ -344,11 +344,16 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+> > 
+> > 	len = iov_length(vq->iov, out);
+> > 
+> > -	if (len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
+> > +	if (len < VIRTIO_VSOCK_SKB_HEADROOM ||
+> 
+> Why moving this check here?
 
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
----
-Following the discussion in v1 (see [1]), v3 adds improvements with
-the "Context" specifications and the definition of the assumptions
-of use for the correct invocation of the documented functions.
+I moved it here because virtio_vsock_alloc_skb_with_frags() does:
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250612104349.5047-1-gpaoloni@redhat.com/
++       size -= VIRTIO_VSOCK_SKB_HEADROOM;
++       return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
++                                                  size, mask);
 
-v3 has been sent as in v2 there is a mistake in the return value
-specifications of event_enable_read
----
- kernel/trace/trace_events.c | 80 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+and so having the check in __virtio_vsock_alloc_skb_with_frags() looks
+strange as, by then, it really only applies to the linear case. It also
+feels weird to me to have the upper-bound of the length checked by the
+caller but the lower-bound checked in the callee. I certainly find it
+easier to reason about if they're in the same place.
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..aa9992b0f43c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1771,6 +1771,51 @@ static void p_stop(struct seq_file *m, void *p)
- 	mutex_unlock(&event_mutex);
+Additionally, the lower-bound check is only needed by the vhost receive
+code, as the transmit path uses virtio_vsock_alloc_skb(), which never
+passes a size smaller than VIRTIO_VSOCK_SKB_HEADROOM.
+
+Given all that, moving it to the one place that needs it seemed like the
+best option. What do you think?
+
+> > +	    len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM)
+> > 		return NULL;
+> > 
+> > 	/* len contains both payload and hdr */
+> > -	skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+> > +	if (len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+> > +		skb = virtio_vsock_alloc_skb_with_frags(len, GFP_KERNEL);
+> > +	else
+> > +		skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+> 
+> Can we do this directly in virtio_vsock_alloc_skb() so we don't need
+> to duplicate code on virtio/vhost code?
+
+We can, but then I think we should do something different for the
+rx_fill() path -- it feels fragile to rely on that using small-enough
+buffers to guarantee linear allocations. How about I:
+
+ 1. Add virtio_vsock_alloc_linear_skb(), which always performs a linear
+    allocation.
+
+ 2. Change virtio_vsock_alloc_skb() to use nonlinear SKBs for sizes
+    greater than SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER)
+
+ 3. Use virtio_vsock_alloc_linear_skb() to fill the guest RX buffers
+
+ 4. Use virtio_vsock_alloc_skb() for everything else
+
+If you like the idea, I'll rework the series along those lines.
+Diff below... (see end of mail)
+
+> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > index 67ffb64325ef..8f9fa1cab32a 100644
+> > --- a/include/linux/virtio_vsock.h
+> > +++ b/include/linux/virtio_vsock.h
+> > @@ -51,27 +51,46 @@ static inline void virtio_vsock_skb_rx_put(struct sk_buff *skb)
+> > {
+> > 	u32 len;
+> > 
+> > +	DEBUG_NET_WARN_ON_ONCE(skb->len);
+> 
+> Should we mention in the commit message?
+
+Sure, I'll add something. The non-linear handling doesn't accumulate len,
+so it's a debug check to ensure that len hasn't been messed with between
+allocation and here.
+
+> > 	len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
+> > 
+> > -	if (len > 0)
+> 
+> Why removing this check?
+
+I think it's redundant: len is a u32, so we're basically just checking
+to see if it's non-zero. All the callers have already checked for this
+but, even if they didn't, skb_put(skb, 0) is harmless afaict.
+
+Will
+
+--->8
+
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index 3799c0aeeec5..a6cd72a32f63 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -349,11 +349,7 @@ vhost_vsock_alloc_skb(struct vhost_virtqueue *vq,
+ 		return NULL;
+ 
+ 	/* len contains both payload and hdr */
+-	if (len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+-		skb = virtio_vsock_alloc_skb_with_frags(len, GFP_KERNEL);
+-	else
+-		skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+-
++	skb = virtio_vsock_alloc_skb(len, GFP_KERNEL);
+ 	if (!skb)
+ 		return NULL;
+ 
+diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+index 0e265921be03..ed5eab46e3dc 100644
+--- a/include/linux/virtio_vsock.h
++++ b/include/linux/virtio_vsock.h
+@@ -79,16 +79,19 @@ __virtio_vsock_alloc_skb_with_frags(unsigned int header_len,
  }
  
-+/**
-+ * event_enable_read - read from a trace event file to retrieve its status.
-+ * @filp: file pointer associated with the target trace event;
-+ * @ubuf: user space buffer where the event status is copied to;
-+ * @cnt: number of bytes to be copied to the user space buffer;
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to retrieve the status of a
-+ * specific event
-+ *
-+ * Function's expectations:
-+ * - This function shall lock the global event_mutex before performing any
-+ *   operation on the target event file and unlock it after all operations on
-+ *   the target event file have completed;
-+ * - This function shall retrieve the status flags from the file associated
-+ *   with the target event;
-+ * - This function shall format the string to report the event status to user
-+ *   space:
-+ *   - The first character of the string to be copied to user space shall be
-+ *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
-+ *     set, else it shall be set to "0";
-+ *   - The second character of the string to be copied to user space shall be
-+ *     set to "*" if either the soft_disabled flag or the soft_mode flag is
-+ *     set, else it shall be set to "\n";
-+ *   - The third character of the string to be copied to user space shall b
-+ *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
-+ *     set, else it shall be set to "0";
-+ *   - Any other character in the string to be copied to user space shall be
-+ *     set to "0";
-+ * - This function shall invoke simple_read_from_buffer() to perform the copy
-+ *   of the kernel space string to ubuf.
-+ *
-+ * Assumptions of Use:
-+ * - The caller shall  pass cnt equal or greater than the length of the string
-+ *   to be copied to user space;
-+ * - Any read operation on a file descriptor, unless it is the first operation
-+ *   following a trace event file open, shall be preceded by an lseek
-+ *   invocation to reposition the file offset to zero.
-+ *
-+ * Context: process context, locks and unlocks event_mutex.
-+ *
-+ * Return: the number of copied bytes on success, -ENODEV if the event file
-+ * cannot be retrieved from the input filp, any error returned by
-+ * simple_read_from_buffer.
-+ */
- static ssize_t
- event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 		  loff_t *ppos)
-@@ -1801,6 +1846,41 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
+ static inline struct sk_buff *
+-virtio_vsock_alloc_skb_with_frags(unsigned int size, gfp_t mask)
++virtio_vsock_alloc_linear_skb(unsigned int size, gfp_t mask)
+ {
+-	size -= VIRTIO_VSOCK_SKB_HEADROOM;
+-	return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
+-						   size, mask);
++	return __virtio_vsock_alloc_skb_with_frags(size, 0, mask);
  }
  
-+/**
-+ * event_enable_write - write to a trace event file to enable/disable it.
-+ * @filp: file pointer associated with the target trace event;
-+ * @ubuf: user space buffer where the enable/disable value is copied from;
-+ * @cnt: number of bytes to be copied from the user space buffer;
-+ * @ppos: the current position in the buffer.
-+ *
-+ * This is a way for user space executables to enable or disable event
-+ * recording.
-+ *
-+ * Function's expectations:
-+ * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
-+ *   space buffer and shall convert the string within the kernel space buffer
-+ *   into a decimal base format number;
-+ * - This function shall lock the global event_mutex before performing any
-+ *   operation on the target event file and unlock it after all operations on
-+ *   the target event file have completed;
-+ * - This function shall check the size of the per-cpu ring-buffers used for
-+ *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
-+ *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
-+ *   TRACE_BUF_SIZE_DEFAULT are not allowed);
-+ * - This function shall invoke ftrace_event_enable_disable to enable or
-+ *   disable the target trace event according to the value read from user space
-+ *   (0 - disable, 1 - enable);
-+ * - This function shall increase the file position pointed by ppos by the
-+ *   number of bytes specified by cnt;
-+ *
-+ * Context: process context, locks and unlocks event_mutex.
-+ *
-+ * Return: the number of written bytes on success, any error returned by
-+ * kstrtoul_from_user, -ENODEV if the event file cannot be retrieved from the
-+ * input filp, any error returned by tracing_update_buffers, any error returned
-+ * by ftrace_event_enable_disable, -EINVAL if the value copied from the user
-+ * space ubuf is different from 0 or 1.
-+ */
- static ssize_t
- event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		   loff_t *ppos)
--- 
-2.48.1
+ static inline struct sk_buff *virtio_vsock_alloc_skb(unsigned int size, gfp_t mask)
+ {
+-	return __virtio_vsock_alloc_skb_with_frags(size, 0, mask);
++	if (size <= SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
++		return virtio_vsock_alloc_linear_skb(size, mask);
++
++	size -= VIRTIO_VSOCK_SKB_HEADROOM;
++	return __virtio_vsock_alloc_skb_with_frags(VIRTIO_VSOCK_SKB_HEADROOM,
++						   size, mask);
+ }
+ 
+ static inline void
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 4ae714397ca3..8c9ca0cb0d4e 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -321,7 +321,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+ 	vq = vsock->vqs[VSOCK_VQ_RX];
+ 
+ 	do {
+-		skb = virtio_vsock_alloc_skb(total_len, GFP_KERNEL);
++		skb = virtio_vsock_alloc_linear_skb(total_len, GFP_KERNEL);
+ 		if (!skb)
+ 			break;
+ 
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 424eb69e84f9..f74677c3511e 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -262,11 +262,7 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
+ 	if (!zcopy)
+ 		skb_len += payload_len;
+ 
+-	if (skb_len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
+-		skb = virtio_vsock_alloc_skb_with_frags(skb_len, GFP_KERNEL);
+-	else
+-		skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
+-
++	skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
+ 	if (!skb)
+ 		return NULL;
+ 
 
