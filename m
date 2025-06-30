@@ -1,67 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26F7241CB7;
-	Mon, 30 Jun 2025 17:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586202900BA;
+	Mon, 30 Jun 2025 17:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303813; cv=none; b=cJuWMffNLsL0b731ynLlc2Ti7tRLcurR+mZk4TLCuUMa4rXRCBGDd+W22pQMi52ZKXuvFIsUYPTAMdxDJY7Y+FD6QOKtYA2Hr1JcggcPbRZynEWVm9f1wzB3JyXoCOqXjuWpTownvsnon8YkcunapwH2fmQ9VozLRJG0htQMQXw=
+	t=1751303826; cv=none; b=upU0zfj+diI8gnzkFmMQV0oKssaI62hKlPfIXXxH9NpK8JlbZkusp1aW+6v1hphFVjrSUFqWDahI945CBye8iFP+/OSh7TsE6fSeh2RxgxAe12zuXQHb/fgtjzSgo7r7b4tURNRJE9QODGIiL/ZZ0Of7rsZzyHHIsrJ4bZtf89E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303813; c=relaxed/simple;
-	bh=LwAN6m7tROMs6LOdXu2EvKHYPn+ncv17qhL0rq5kdoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGveEzAcXN0PzYqUCee1MWvh2aqrPuaHmQWIljedjr5SyZiFAk7AdlsOuZoySh70674CPBKOSGHYv+Xy0+/dJ8g9onDma7HvqeM0PtCStokkcQo6mc6tmB+O00OMkzGuW4wyrKA7/P5t8v+8TrHh+1A02APD/uD5Cftz2GOymC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B07C4CEE3;
-	Mon, 30 Jun 2025 17:16:49 +0000 (UTC)
-Date: Mon, 30 Jun 2025 18:16:47 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Song Liu <song@kernel.org>
-Cc: Will Deacon <will@kernel.org>, live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
-	pmladek@suse.com, joe.lawrence@redhat.com, dylanbhatch@google.com,
-	fj6611ie@aa.jp.fujitsu.com, mark.rutland@arm.com,
-	kernel-team@meta.com, Suraj Jitindar Singh <surajjs@amazon.com>,
-	Torsten Duwe <duwe@suse.de>, Breno Leitao <leitao@debian.org>,
-	Andrea della Porta <andrea.porta@suse.com>
-Subject: Re: [PATCH v4] arm64: Implement HAVE_LIVEPATCH
-Message-ID: <aGLGf5feF4gT-dgR@arm.com>
-References: <20250617173734.651611-1-song@kernel.org>
- <aF1JShCkslGkch26@willie-the-truck>
- <CAPhsuW7WY54jYDBtApRRw4mnjM0cZu4GBUZQ58ZHAV+zd79uXw@mail.gmail.com>
+	s=arc-20240116; t=1751303826; c=relaxed/simple;
+	bh=RxENiAIxryG/e9PnDRmuJ2qoeNevxHN+jSL1+CqMpqw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fHDN7ifSfRRY6Brj/5st0MCjspk5TK8OKf6ScFYYxaS/iMb7IoUrLblkKfCXEVPXHblIZwiCUT5ZwuH110+sHhpzuZyU/VjSv9dtNaZ4MqZ3SK+6BjPvYjvXp7pUZ3ckJiKKfnvZC/kqp1sCPA+DmsgvQdgTpTQ9zgMQbJC1PDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gK7PLjxP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gK7PLjxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5D1C4CEE3;
+	Mon, 30 Jun 2025 17:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751303825;
+	bh=RxENiAIxryG/e9PnDRmuJ2qoeNevxHN+jSL1+CqMpqw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gK7PLjxPWHRqv8leFMCxzAZgWK02KxZqRotqN8kQWL4Io69FgUlJ0Fo2ZgCYWBJlY
+	 CeCre45jA8BT+VMmEktD6EtSMdfkCjYyWxky07IUb4TgRoihvNGYCfGgHwN/OYSeif
+	 9W7RDwjwepqgEJxMt/owvKqHaszwHtqfAaYrVyn+HOQrPRB1YiVjl2As0HL0IQExd1
+	 Jv7zwgafCJbW98b7kjfQCCT4wE/cjPlopOmSyPb1pDVQLsBcTB0Kaekf+LAHdHsgfa
+	 vT0o7Yat4+natNFdPbKo49LdEHjQFKvQK+qt0Mx+usj4BSXqBwbItRTTQvMvp2YPRG
+	 Qh4Clax4BIHiA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uWI7r-00BJye-1d;
+	Mon, 30 Jun 2025 18:17:03 +0100
+Date: Mon, 30 Jun 2025 18:17:02 +0100
+Message-ID: <86jz4tb14h.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 00/31] Arm GICv5: Host driver implementation
+In-Reply-To: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+References: <20250626-gicv5-host-v6-0-48e046af4642@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW7WY54jYDBtApRRw4mnjM0cZu4GBUZQ58ZHAV+zd79uXw@mail.gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, Jonathan.Cameron@huawei.com, timothy.hayes@arm.com, bhelgaas@google.com, Liam.Howlett@oracle.com, peter.maydell@linaro.org, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, Jun 26, 2025 at 07:55:28AM -0700, Song Liu wrote:
-> On Thu, Jun 26, 2025 at 6:21 AM Will Deacon <will@kernel.org> wrote:
-> > On Tue, Jun 17, 2025 at 10:37:34AM -0700, Song Liu wrote:
-> > > This is largely based on [1] by Suraj Jitindar Singh.
-> >
-> > I think it would be useful to preserve at least some parts of the
-> > original commit message here so that folks don't have to pull it out
-> > of the list archives if they want to see more about the rationale.
+On Thu, 26 Jun 2025 11:25:51 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> The relevant message from the original commit message is:
+> Implement the irqchip kernel driver for the Arm GICv5 architecture,
+> as described in the GICv5 beta0 specification, available at:
 > 
-> Allocate a task flag used to represent the patch pending state for the
-> task.
+> https://developer.arm.com/documentation/aes0070
 > 
-> Shall I respin this patch to add this? Or maybe Catalin can add
-> this while applying the patch?
+> The GICv5 architecture is composed of multiple components:
+> 
+> - one or more IRS (Interrupt Routing Service)
+> - zero or more ITS (Interrupt Translation Service)
+> - zero or more IWB (Interrupt Wire Bridge)
 
-Please repost with a more meaningful description and a justification why
-a new thread flag is needed.
+[...]
 
-Thanks.
+I think what is here is pretty solid, and definitely in a better shape
+than the equivalent GICv3 support patches at a similar point in the
+lifetime of the architecture.
+
+For patches in this series except patch 18:
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+If this goes into 6.17 (which I hope), it'd be good to have this
+series on a stable branch so that we can take the corresponding KVM
+patches[1] independently if they are deemed in a good enough state.
+
+	M.
+
+[1] https://lore.kernel.org/r/20250627100847.1022515-1-sascha.bischoff@arm.com
 
 -- 
-Catalin
+Without deviation from the norm, progress is not possible.
