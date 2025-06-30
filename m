@@ -1,112 +1,112 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7A41E5B6A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C443621ABB1;
+	Mon, 30 Jun 2025 07:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751267483; cv=none; b=in356KfuAyZ9a7j6Qog1BcysblmzFRBsaDGIIeFvhiHMQ8MZu+Ncr4J196IB4xRBXi9msO8h5tMe58ENghFs2Yd61QcXnkmOdDMvzefWv4CAfm02opX/sF4JeeU8jVFuHkHEs5iI9bfr85iGwD7Kgeegll/lRdqGll1gaQdPjOU=
+	t=1751267489; cv=none; b=uVaD5+kndoneFYO27zKge8uvNtq9e7Jzzmy37YcOSR/xWQbGZ2b60DEm6LuWv9ktg8jYOHajRCPw2KJcYV7C04Od5Drj585YMLTzYHAUIFa5oaWHtSshUbofoaeY99MCfuzLgo5a5npMn5H8XFYB7M/fMpvSRjB/xpjchoj9K+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751267483; c=relaxed/simple;
-	bh=BbncrQR33gGTRQBqxnEXDNwRGG/SDwVRLRNPyxR0KV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KOQA7jC7h8cm97RIBMbWyexlTu8TPdGZjZwyPhR7NswUREznaTH6kBxOvA6Cqo/pFNy8lQaVA7xLTpXTS5MPBT5ma06SQK9RHtOxvJg4bmFADCe9gpYTF6PrQf0nNA1JHaGR7zyh0k4sWCAG3l3BEe5kw/635v4lF0a4WK0WveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bA5XElZ3; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751267489; c=relaxed/simple;
+	bh=aLJ5Fh7woyj6lcXkF33z0s0wIaI2PABc4me1NR5K6wA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EUF5PS8AY9N2Kdpkmxh18RIupzyNPNCVOx6P2pC1JDUxlxavCouFHKuP9Eb2ae/F7eGbBtGl8MJyYjH2k5ZbELC5j44zhLoCzVWfcRHqM/6e71qmePuspX9DRWKonZaAVqpHWA2tx9vFJkL0ejwzt7jvdBwcevdEpP97bpBJtRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iPbGolaQ; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bA5XElZ3"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ce671a08so10327055e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751267479; x=1751872279; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3M33IweNKB23NoNM33aEFltvshX1Eakka7go5CXq6iQ=;
-        b=bA5XElZ3m0oMh5IuOdlH3O2a7rjarrGAbkbNrOlqdzzUVAwctLK2lkZb89fN0uwU/b
-         jdTwzQJ+NjWeFOLsF9vxtipMGQC/6UVTYDN8tb+NsFdzw+bhW37ZpmNfThi+nkEfoJL/
-         Fc13NAnjDreKGAjbYzFwOdwGLrStlZu0eeVPmi4JxT8bSoC2CYCazveLyGjKsK/drgYZ
-         pWGw85AscU6RlbOkQ2fP+xrDBvbIbXivklI6mIvvzLxmDxG9Mg0SOQfupIV0TOuAL6nw
-         YRkkFy/EotCqx8qS2MlBBKRUmD5B/7CNCoLS6LTd6RAdKiliOOTnngTGilYZv+RZ0Xyg
-         1PWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751267479; x=1751872279;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3M33IweNKB23NoNM33aEFltvshX1Eakka7go5CXq6iQ=;
-        b=u1m9h3GAI9Nhk4zyRavXiQpeADajTFHYE65iHBgwNAWNHmcSgYo3rOd3yX+VaE7Emq
-         Nc7AVhuGZtoPrd5KKFl6iqTMoRU4aYEKLXlgTMSYe7JtIZxcXbOug8XdVRXiaHptYgen
-         ATJNicQN8STP7XwouoHwD0jmrTCmMGR56KYePp5k0YMuYCRuXW/t3ZUMJEOPXVd8CoJZ
-         oRAD3bPeogcfLlBDYy4daTBcEG8twatYcHZU59z1Gi4ZIkxT/nFWEMZCZeUPdzdSJ+UD
-         ZLLxGxyJvhqtKVfLzvlcu5xQ5p3nYGfqi0+6mejjZx3KY3lDUuWJUffU4YNQV5pdUZu0
-         Z2Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+UcBwkVLLys6JdQiqjHeaH/SyzUjT45PPJ7qkbDnBVH9RPph/MkOaTF3ASHKyp0Ab5892rHEzsPzkqNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJQei0AYZZka3TnEUFXwL82jWclbwGVzTHatbK4tg1j+J25ECI
-	8/AlQ3mR3MUPVpVloaH3jBQBMmlxQ2WyCnDqEOrrm/25STg01b5Lh3tP10NK19dwmX0=
-X-Gm-Gg: ASbGnctUGlNey4eI7pBFb/N67x1boJFlcmIcJ7vcrOteMk3x/iUvMglYMB1fWzdPb4b
-	jp5c4SCjPJUNa2Lei52DpTg5wneerhjAMx/d+ltnkohhBuuzYen09YuAqLvx+QCXNqKJwjTCGLO
-	GT1Cm9JsP38Mav+66HoEIVjrz5Mlgt4q5mcmjldM0jLPGN5XVPzW5siwhztGTaHEJlwRYPp2BVI
-	Wt4fyK95668UDPLfzI8TYeypTUZX3R4vKfTISRnpONu63wmV5/jfzWd7gFHSQulzMsQYXPIMc1o
-	wMyorUwp1F4cdJO3Si5jVBlhk54sLp9vfSf/L+ifhdm8fyn/K7WhrX5Mm7R8nK0=
-X-Google-Smtp-Source: AGHT+IG/R7CC+U7ZRabx/kXZa5HP+oumZGvsCP9NRHqQD9Rwf30kvmvGtsy7NTEikbNMBjYRtI/+qA==
-X-Received: by 2002:a05:600c:1389:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-4539b3f67c8mr54429725e9.16.1751267478977;
-        Mon, 30 Jun 2025 00:11:18 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c5fasm157989535e9.8.2025.06.30.00.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 00:11:18 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Drew Fustini <drew@pdp7.com>,
-	Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Michal Wilczynski <m.wilczynski@samsung.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-riscv@lists.infradead.org,
-	linux-pm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iPbGolaQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=mq
+	+lCN5C85/urD5+hhWk5hPE/mDa4QuDWCpfswWybYs=; b=iPbGolaQYSsX2LY5Lg
+	YeS8LyytWOVYe7IWNc/iQ19vSx6etOz9qnODdMMDIC3dj8YApUId4XvKbmENke6w
+	a0saHNE93OvkVY4S6H5heKlRk1iRoTZX+5RWGUFcyMOaWXcts+6vmpO8r1R68CWh
+	7xakozcZpQdUraaw6f2ruoRvA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDHzzBlOGJoS3s5Bg--.7606S2;
+	Mon, 30 Jun 2025 15:10:30 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	willemb@google.com,
+	almasrymina@google.com,
+	kerneljasonxing@gmail.com,
+	ebiggers@google.com,
+	asml.silence@gmail.com,
+	aleksander.lobakin@intel.com,
+	stfomichev@gmail.com,
+	david.laight.linux@gmail.com
+Cc: yangfeng@kylinos.cn,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] pwrseq: replace magic numbers with defines for match() return values
-Date: Mon, 30 Jun 2025 09:11:17 +0200
-Message-ID: <175126743944.9502.1874026392338721581.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
-References: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
+Subject: [PATCH v3] skbuff: Add MSG_MORE flag to optimize large packet transmission
+Date: Mon, 30 Jun 2025 15:10:29 +0800
+Message-Id: <20250630071029.76482-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHzzBlOGJoS3s5Bg--.7606S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KF17tFyktw15CFyrXF1UKFg_yoW8Aw1kpa
+	98WFWDZF47Jw13WFs7Jws8ur47Kws5GFyj9FWYv345GasFqr1vgrWDKrWYvFs5KrZ7CFy3
+	XrsFvF1UK3yYvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UZiSLUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTg98eGhiNtQyRwAAsY
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Feng Yang <yangfeng@kylinos.cn>
 
+The "MSG_MORE" flag is added to improve the transmission performance of large packets.
+The improvement is more significant for TCP, while there is a slight enhancement for UDP.
 
-On Tue, 24 Jun 2025 16:32:17 +0200, Bartosz Golaszewski wrote:
-> We currently use 0 or 1 as magic numbers returned from the match()
-> callback. It's more readable to replace them with proper defines whose
-> names indicate the meaning. While at it: fix a build issue with the
-> thead-gpu driver I noticed and extend build coverage for the drivers.
-> 
-> 
+When using sockmap for forwarding, the average latency for different packet sizes
+after sending 10,000 packets(TCP) is as follows:
+size    old(us)         new(us)
+512     56              55
+1472    58              58
+1600    106             81
+3000    145             105
+5000    182             125
 
-Applied with commit subjects tweaked to say "power: sequencing: ...", thanks!
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+Changes in v3:
+- Use Msg_MORE flag. Thanks: Eric Dumazet, David Laight.
+- Link to v2: https://lore.kernel.org/all/20250627094406.100919-1-yangfeng59949@163.com/
 
-[1/5] pwrseq: thead-gpu: add missing header
-      https://git.kernel.org/brgl/linux/c/5bcfc4ef40dabcd16a0b736fea7f0d00a9efdbfb
-[2/5] pwrseq: extend build coverage for pwrseq drivers with COMPILE_TEST=y
-      https://git.kernel.org/brgl/linux/c/1a7312b93ab023f68b48a1550049a4f850c2c808
-[3/5] pwrseq: add defines for return values of the match() callback
-      https://git.kernel.org/brgl/linux/c/62b5848f73dd4f8ae17304dae54562d0c9ecdd3d
-[4/5] pwrseq: qcom-wcn: use new defines for match() return values
-      https://git.kernel.org/brgl/linux/c/f698155029efc708349126c8944fa8c95b28098c
-[5/5] pwrseq: thead-gpu: use new defines for match() return values
-      https://git.kernel.org/brgl/linux/c/385b735c90ae44dbde65fab76e356a96ff8f67be
+Changes in v2:
+- Delete dynamic memory allocation, thanks: Paolo Abeni,Stanislav Fomichev.
+- Link to v1: https://lore.kernel.org/all/20250623084212.122284-1-yangfeng59949@163.com/
+---
+ net/core/skbuff.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Best regards,
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 85fc82f72d26..cd1ed96607a5 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3252,6 +3252,8 @@ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
+ 		kv.iov_len = slen;
+ 		memset(&msg, 0, sizeof(msg));
+ 		msg.msg_flags = MSG_DONTWAIT | flags;
++		if (slen < len)
++			msg.msg_flags |= MSG_MORE;
+ 
+ 		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
+ 		ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
+@@ -3292,6 +3294,8 @@ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
+ 					     flags,
+ 			};
+ 
++			if (slen < len)
++				msg.msg_flags |= MSG_MORE;
+ 			bvec_set_page(&bvec, skb_frag_page(frag), slen,
+ 				      skb_frag_off(frag) + offset);
+ 			iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.43.0
+
