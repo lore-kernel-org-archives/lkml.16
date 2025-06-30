@@ -1,112 +1,169 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CE1248F44;
-	Mon, 30 Jun 2025 09:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39479244683;
+	Mon, 30 Jun 2025 09:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276154; cv=none; b=EMj+zG4c8ifwcPsobPhHQ65GAawyeNlAs7rltDK9tfUqrVgpgcWPcwgIQCWga4cSFDppM0bLPjUZ23wg22aYQsOFowlbDAOb1ggMaIu9cLOMzFQ/vj1i2t7YVYtLbbl/48XNPfnz+LLbQfHxWqC2+07ejKk0ZEqtVi3os72G4ds=
+	t=1751276197; cv=none; b=fEceNSYB1CO6eV19QDelqTZU3VxY5Eui5vYQH8oMCT/YK264LlsG0ZXfey/9PSkxTKgdSBujjFuVyAcxk/tuhHA7cOi+g+xb3TQhLqcZ2iE5AWIHMKuPyfeXDzjtAq6V+umJnyxopHhdFx4VoKOOvN9PCkVmpVhlrjuLyPvjb/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276154; c=relaxed/simple;
-	bh=z29HrFDi9s65t9GNCGzh74kdd7wcDIierOJOKdAPlLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jAo74iLkE16vn0TqNzPLGiZELY82IvTeRuaS6DOKo1jxNun+Xh55NkCZRtKKwZZtEakVOkeqiF2+EaY1M+aK5Pg2a1fzKJ2qSKrUofaXXRvb4n8Gvw0NNN+1DMkDlUkToOBxDsxjlPo6C7wPTNt7hLjyUo9fqX6I9DkwtZIXn2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsYx3mjU; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751276197; c=relaxed/simple;
+	bh=u1wSOQ/c7/ofEu2h9hbQ/4iI7lWdBhtbLLe0jwM9Ou4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dzr9TBfTa36NdJ3ejjnS4L/ILreb41qBjRfzqw7s9fUYfkiYtCu6YH/PiH3B0bLbRaquDfca66kXkEfGYze0SOjOxUCjNoJ8fZYqlmS7I66IZwiDp8mFFM0ljz2uL4ui35HMC057vP1yTGi/iqwzplf0vx2mYFCNeuN0EGGmJy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z4FMDe5y; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsYx3mjU"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4e62619afso464245f8f.1;
-        Mon, 30 Jun 2025 02:35:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751276150; x=1751880950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y1A5u/XezbCzc0vXccv/POOZnvtspnWkWrOLPiV9LNk=;
-        b=gsYx3mjUSXnSoJBZTLI/ou4abMltHTOOBAppbHxNo9HyNLIKcJuB/M+zr/R1YToFat
-         m6AneMUwojfAI5BQTYCcMULbqegeCIyDZztmKHq3QvKprDajV3C0On2XZZ8uM2lUfNC4
-         MnI6UwpZcvbY4W5dJH4lyi2SinUyCNtGSTB1xwF9TcMrXjsHGoA4AY/e3G2ifDCx3Opa
-         Ybx6K1/5OGGPU7HRzfKONi7mvObqBV/7lUaiuyql5l7e3Q6i5kBZ7fZbsZZa7KJ8Rsbi
-         cjQctlOhKyaTQvFOr/rtnBIxPyVAUvcLqN4K8DWAwZdknB534XtETk0KqrAGzhK2HoXS
-         Q66w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751276150; x=1751880950;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y1A5u/XezbCzc0vXccv/POOZnvtspnWkWrOLPiV9LNk=;
-        b=hpVyIb2KRCrs3Vtyg06Xh8gnmhlPCfOwC17KL7ApdFTqaGN5MUswfDzwIcG+VcNb8y
-         f9OSo05bggykTpKQ1axLupGPpucfr3UxvAppNKGcD+b0mgspjT6Fc/gWUfXXMUB5xjnA
-         QY5uRfud/OD7cUwPIozNMOXj64lY65BTabP2QWdFI/2Ge0DfmC92Rs7ACzCz5J6iF/E0
-         gI4M1JTr4bPo3Pj9w9Bg9pTwUYpz+3Bo+SmvLKEEp0+MLI1UOMT1RUy7dH3NhMAfihrE
-         BHu9kBIhs6ez6H5V0nSwTTQA+qnZbN5UgDahrVCysZIoWiSBbXDPf50RJroEGKruQHkW
-         UoLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn+bAlhBR561F1LCS9Um+zL1CcJmi6wXUyCRTNMz+WTmoMkIsyPxgLwt0uyOj2iHeNgxBUK8RuUMVW@vger.kernel.org, AJvYcCXArlL3GN+GK09eaIUmhTFVz+NVR7m0wFdgFOK0lxzSFOfP2ykFdInAZzGzBxEldFBy2EzScHRPwyNm/ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMrfgQEi2YO564UQqQE6K+n37TcVUlFgsnEAnHzXFWQukx8lNz
-	iwGgumXfwcvbWKuhQQ6ZYOxFTUxm0JolnO/DOm4bbdMAJ5/ux4Jdi+nH
-X-Gm-Gg: ASbGnctau/JBqOZAtPuOJttaDJeS1NplTFQAJeNiaL/ZqwAMTWZjULsk9MgAT0Bo6KG
-	ia7ogqdDekU3EVfarjsib7bXshWndVsJFiCFeloLM2aGWLy6NpmBAMYKy5JKYL3tmK37beGHgMY
-	cJj63I17e/q/rzCKccc6LG+WcsHP+GGGVmYzaxtCfXttckoGRGYeRNW5G/+rd+58yzfCaOT/uek
-	seTZZceFwxicSbWKYPnDXa8bEoQlYhq4meSFFeg9F6gAu0As9gTAqITFrPgCOdoFo73eMlguNP4
-	jEabBvY6IVM+A4yaszwZjYBNDiGwgBk+WT+8uyJIkiVjMNL/RmCerKhAPSzMss134xe4TIxPPhl
-	W5P5s1yEWr7pZSqhHIi4lSOl8cA==
-X-Google-Smtp-Source: AGHT+IENoQHFcKucvcnuAdWdAyrPNttNlfViNN8c8eBHYW6QCFoessLifIGmNu5Aps8j4D3BqFxOXw==
-X-Received: by 2002:a5d:64cb:0:b0:3a6:d680:f282 with SMTP id ffacd0b85a97d-3aaf43b95cfmr2363583f8f.7.1751276150193;
-        Mon, 30 Jun 2025 02:35:50 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec69dsm9774684f8f.6.2025.06.30.02.35.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:35:49 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Yumeng Fang <fang.yumeng@zte.com.cn>,
-	Eric Anholt <eric@anholt.net>,
-	linux-mmc@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: bcm2835: Fix dma_unmap_sg() nents value
-Date: Mon, 30 Jun 2025 11:35:07 +0200
-Message-ID: <20250630093510.82871-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z4FMDe5y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751276193;
+	bh=u1wSOQ/c7/ofEu2h9hbQ/4iI7lWdBhtbLLe0jwM9Ou4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z4FMDe5yXZNkebN+3Zo/Uj/Nqc7Zt1c/Vzh/95R+B15UKHo51B+khrudvuTItHBC8
+	 SwXJacNZE16Pj0PkwP8/ySOz7KI5jlWd7sEbSS8792+SBk9JQ84KKfKeZVye5/fcQw
+	 u7CjVh4/F9c04rTSg2aIh6YaheMdDXrdMY21iuHklz8GDFIaVBggjvTsMvoT/b7e1x
+	 XJuRxI9ygnW59VOqoNSDB20+0rgfeY5x+bqL/UAhnAprZGxHhAJ3qg7WM6F5CnBjt7
+	 hUhObydkS2dAVZ/Jquw3Y35aS6w4mCJO4ksHagkXS8IvznaP88k/yuXcM8u3ojtCkC
+	 Yrbj0FQZx5zKQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6FF5317E0342;
+	Mon, 30 Jun 2025 11:36:32 +0200 (CEST)
+Message-ID: <e59b2bbb-ee1e-42b5-9516-f2e545dbf700@collabora.com>
+Date: Mon, 30 Jun 2025 11:36:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/13] dt-bindings: power: mediatek: Document
+ mediatek,bus-protection
+To: Rob Herring <robh@kernel.org>
+Cc: linux-mediatek@lists.infradead.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, ulf.hansson@linaro.org,
+ y.oudjana@protonmail.com, fshao@chromium.org, wenst@chromium.org,
+ lihongbo22@huawei.com, mandyjh.liu@mediatek.com, mbrugger@suse.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+ kernel@collabora.com
+References: <20250623120154.109429-1-angelogioacchino.delregno@collabora.com>
+ <20250623120154.109429-2-angelogioacchino.delregno@collabora.com>
+ <20250627201543.GA4171766-robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250627201543.GA4171766-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The dma_unmap_sg() functions should be called with the same nents as the
-dma_map_sg(), not the value the map function returned.
+Il 27/06/25 22:15, Rob Herring ha scritto:
+> On Mon, Jun 23, 2025 at 02:01:42PM +0200, AngeloGioacchino Del Regno wrote:
+>> Add a new mediatek,bus-protection property in the main power
+>> controller node and deprecate the old mediatek,infracfg,
+>> mediatek,infracfg-nao and mediatek,smi properties located in
+>> the children.
+>>
+>> This is done in order to both simplify the power controller
+>> nodes and in preparation for adding support for new generation
+>> SoCs like MT8196/MT6991 and other variants, which will need
+>> to set protection on new busses.
+> 
+> Protection like access controls? We have the access-controller binding
+> for that.
+> 
 
-Fixes: 2f5da678351f ("mmc: bcm2835: Properly handle dmaengine_prep_slave_sg")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/mmc/host/bcm2835.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I was not aware of that - but that's *so* cool.
 
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index def054ddd256..4fced9b36c80 100644
---- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -503,7 +503,8 @@ void bcm2835_prepare_dma(struct bcm2835_host *host, struct mmc_data *data)
- 				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 
- 	if (!desc) {
--		dma_unmap_sg(dma_chan->device->dev, data->sg, sg_len, dir_data);
-+		dma_unmap_sg(dma_chan->device->dev, data->sg, data->sg_len,
-+			     dir_data);
- 		return;
- 	}
- 
--- 
-2.43.0
+ From a very (very, very) fast look, it looks like that fits this case perfectly.
+I'll check if that's right and will come up with a v2 for that.
 
+Thanks a lot!
+Angelo
+
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../power/mediatek,power-controller.yaml      | 40 +++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+>> index 9c7cc632abee..2530c873bb3c 100644
+>> --- a/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+>> +++ b/Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
+>> @@ -44,6 +44,18 @@ properties:
+>>     '#size-cells':
+>>       const: 0
+>>   
+>> +  mediatek,bus-protection:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description:
+>> +      A number of phandles to external blocks to set and clear the required
+>> +      bits to enable or disable bus protection, necessary to avoid any bus
+>> +      faults while enabling or disabling a power domain.
+>> +      For example, this may hold phandles to INFRACFG and SMI.
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      maxItems: 1
+>> +
+>>   patternProperties:
+>>     "^power-domain@[0-9a-f]+$":
+>>       $ref: "#/$defs/power-domain-node"
+>> @@ -123,14 +135,17 @@ $defs:
+>>         mediatek,infracfg:
+>>           $ref: /schemas/types.yaml#/definitions/phandle
+>>           description: phandle to the device containing the INFRACFG register range.
+>> +        deprecated: true
+>>   
+>>         mediatek,infracfg-nao:
+>>           $ref: /schemas/types.yaml#/definitions/phandle
+>>           description: phandle to the device containing the INFRACFG-NAO register range.
+>> +        deprecated: true
+>>   
+>>         mediatek,smi:
+>>           $ref: /schemas/types.yaml#/definitions/phandle
+>>           description: phandle to the device containing the SMI register range.
+>> +        deprecated: true
+>>   
+>>       required:
+>>         - reg
+>> @@ -138,6 +153,31 @@ $defs:
+>>   required:
+>>     - compatible
+>>   
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - mediatek,mt8183-power-controller
+>> +    then:
+>> +      properties:
+>> +        mediatek,bus-protection:
+>> +          minItems: 2
+>> +          maxItems: 2
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - mediatek,mt8365-power-controller
+>> +    then:
+>> +      properties:
+>> +        mediatek,bus-protection:
+>> +          minItems: 3
+>> +          maxItems: 3
+>> +
+>>   additionalProperties: false
+>>   
+>>   examples:
+>> -- 
+>> 2.49.0
+>>
