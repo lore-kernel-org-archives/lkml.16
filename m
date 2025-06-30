@@ -1,123 +1,124 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D384242D9B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197C24418E;
+	Mon, 30 Jun 2025 08:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272727; cv=none; b=QAOrWAYdc+SvYMOnlQgIKWXjFIvk7gYTVmyFo421ioULIon6nqcPQgaNW5jnPXWP4BDYgcN+f+jeAsxYoJwNe+0kTNU6FFbHtATCvLnhl/tY+vli11CtHupycNK5tml79WFeu6D5PbXXZ9tDMf6pWzf+mhIsljc/g4aqGZxLSnM=
+	t=1751272736; cv=none; b=h/oxAygwjPDaKU/g/tRpVBbTkkiyrY4frFqPRR0qA87T53yv/IpN3uGCJgEv13Ax0pScGRrp5cw02Ctf7QfGFORE/7S/hYHC+dwlrc1saUJ3fkwDewrltchdbtnzzcFgIeu1ynqYbtei3mGnEF5qYCNP1QwGEOylpXh9ZI8azWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272727; c=relaxed/simple;
-	bh=GWGc5XkXW057UkUoas7KcMmCELtNfEXEicrspHRhoKc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sZrc7dz4NSTDP7LXpb+DtRSAl9VyKTkEubTd6fiaKEfy0RvqZzTkdt19biw9FWM0C6QJapVe0yUWGNjv7s/Kwcdgd5Ib8S0q74XJtm/jCYJ/oa9eTBtc4Rw8sY54rNRxDCLtZ3gWAsRyI7fxzQ9/LwaHcBjpqkbaS0pwK5/j8zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWA1w-00011j-R3; Mon, 30 Jun 2025 10:38:24 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWA1t-0064Zw-1S;
-	Mon, 30 Jun 2025 10:38:21 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uWA1t-0007Gn-14;
-	Mon, 30 Jun 2025 10:38:21 +0200
-Message-ID: <5d4cf5bff7733421c8a031493742ba6a21e98583.camel@pengutronix.de>
-Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: =?ISO-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob
- Herring <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,  Jonathan Corbet
- <corbet@lwn.net>, Gatien Chevallier <gatien.chevallier@foss.st.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Date: Mon, 30 Jun 2025 10:38:21 +0200
-In-Reply-To: <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
-References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
-	 <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1751272736; c=relaxed/simple;
+	bh=+4yjQWAsZkfU8NsCh7RM+iBUGBH14NL/rn43HsII/dM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fQX6TT3ZG4GSeIYOybB3Vn+DEYrpX7X51tQoWAlAfKTgOxktips8+eO3ZGlOJXxG1vdhccHfd3N8ZQhAWd8PMbV+KB+4Ytso3bVpMoceEB1rl8l/Hgchr7IyE8hIencw/wPU6ciTaHLD8keQKlWd6WiPvK5y4hy5dE9pDr8jZFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87f13aba2ccso442812241.3;
+        Mon, 30 Jun 2025 01:38:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751272733; x=1751877533;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HyReJn5zseFX3ZIz/ns2toxwkOANwmqgOiT1aGJ1WH0=;
+        b=sTzx9er62KZMNRfKuqL93f35g0vb0xFGM7aA9ae4BQbQg5Q6+rwusTcznFpcdVkju9
+         a5CkYYdAfAWgpziDw8mlT0CQPK0AdJSDPmvZUDizcnkCf5D7c1NsoSv3EzVivPtbmp+H
+         cBS2bTnzuFpd6B6J8zCyEwC9VCeqWfetErzumJszOK+KmreQEacJYQ0ugFlmsyIHJ4/L
+         azOOQtOvTUe/HjQQD9+t6kdIBa9XvlilFAf/TbBJPBCaphRzc5o4N0ukwRWRE81lS9RT
+         Kbm+wtB4EO2tDww+b2SPXx6yzkVhDTe9oVM8FEp2ELlCeAZHqKVxTpP36m2v4JjONEYo
+         CeKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZQhneiEfM6mnRumeSnRFWJj0ozDfHZaRVxDL2lXaYHQKXZ6W25fjjejAP9WbnbDMUu148tacfjBRl@vger.kernel.org, AJvYcCVl27+o6Jhg4Nznv0fjZ5j2kdESfe/ky7lUIgfukNvu83TV4sU8zvxrQvGDudsXNZxg8HrvmwIpy/R7RQ==@vger.kernel.org, AJvYcCXl5s0IjjAWjRNKLW1mP13BSP97bh9s+BxFwaAZCkadIoufuaC9sIqTU+MkWtSf+XWo2ldMoZJzYWe2N0u1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza/quryKxfbMOV+vZnWg2CZ8fG5wt7gi618CEVs9Jh/5XEtFPO
+	Xvd1bErMuPPE712wtyEYS27Z7vQP22AGXh/4XUbOaaSmTCCvzgil3p7taT5Zal4/
+X-Gm-Gg: ASbGnctVertFYXwfW8vBdZdq28vJDuR+Cns0obrN496/f5JqxphhhkP/Y83Gv8VUWsT
+	Q9BLV/JFQwQnj0i072p4IPZLsB1b3Q+azEHLpWoxUq6vZhOFO/MCawkWlDbR4S6rfN2Mto/i6Q4
+	4QCa+f8oZrSegYYApyTgFq2amIyV/keC98ZJocTyRjrNq6oAnxsOloCpsSyjhc3zNJ+BHvPFSx9
+	9k9umkdaeTQb68njCdwS9cD9xMWwk7jfQNGmjbilgbLee+1b5CvB/5n+sqzvNTgmUh8rKity3D0
+	tJnN0nSLXwD6xSCg2g77o1z7IyCWUea7LE/pZ/YL4hUbIBq7qr21skRG36RdcDgibQ2wc4DFxAr
+	2OYty3YuSKkFbW0g/3xLlbcbfqlZ1tnd9eitv0Dc=
+X-Google-Smtp-Source: AGHT+IHebGfBWUO28zQZivFnlHzXC8tyy8rrbZiBc9Yu7JBp2vheur66LWIJedPc57truLBaQ3Fbkw==
+X-Received: by 2002:a05:6102:3708:b0:4e6:a33d:9925 with SMTP id ada2fe7eead31-4ee4f480368mr7144099137.5.1751272732739;
+        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7e774csm1178130137.8.2025.06.30.01.38.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5313ea766d8so1405296e0c.0;
+        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUc8Z6ufWGVO2xXxZEYI+aXIkFiNQX0pPJ63r7rtSDfI7YhIzcT2Z4PFY5Ec6shBx4lpcvdCaEoFjsjYg==@vger.kernel.org, AJvYcCVSy1gjSMu546ZxGlXPwKP1tnJWcme0goK/pV9oWyTFLdnwzbDgDsKmw1gHmlDj0wN7LAsZWflcxHGJ2466@vger.kernel.org, AJvYcCWnVxOjEVcbEhQsgwUKahfek0o/+7JCizMn2xCE3kUUajJ5n+35XT5herT/WiNcuB54jjrMtEra3g67@vger.kernel.org
+X-Received: by 2002:a05:6122:2526:b0:530:720b:abe9 with SMTP id
+ 71dfb90a1353d-5330bfbe262mr7226304e0c.7.1751272732090; Mon, 30 Jun 2025
+ 01:38:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-7-jefflessard3@gmail.com> <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
+ <760A6F11-6783-4B24-9A99-E043297CF039@gmail.com>
+In-Reply-To: <760A6F11-6783-4B24-9A99-E043297CF039@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 30 Jun 2025 10:38:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVgEbbOh9t+k5eBoGTD1OTLrC7btgb8O6yZ5f0_y5Q2rw@mail.gmail.com>
+X-Gm-Features: Ac12FXyXU4uC2yPcHJkd5_O4blSGBeChGO91bmJOYDCnSyDkJYaozuzebbF_Dl0
+Message-ID: <CAMuHMdVgEbbOh9t+k5eBoGTD1OTLrC7btgb8O6yZ5f0_y5Q2rw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core Electronics
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: =?UTF-8?Q?Jean=2DFran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Boris Gjenero <boris.gjenero@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Paolo Sabatino <paolo.sabatino@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mo, 2025-06-23 at 11:27 +0200, Cl=C3=A9ment Le Goffic wrote:
-> Introduce the driver for the DDR Performance Monitor available on
-> STM32MPU SoC.
->=20
-> On STM32MP2 platforms, the DDRPERFM allows to monitor up to 8 DDR events
-> that come from the DDR Controller such as read or write events.
->=20
-> On STM32MP1 platforms, the DDRPERFM cannot monitor any event on any
-> counter, there is a notion of set of events.
-> Events from different sets cannot be monitored at the same time.
-> The first chosen event selects the set.
-> The set is coded in the first two bytes of the config value which is on 4
-> bytes.
->=20
-> On STM32MP25x series, the DDRPERFM clock is shared with the DDR controlle=
-r
-> and may be secured by bootloaders.
-> Access controllers allow to check access to a resource. Use the access
-> controller defined in the devicetree to know about the access to the
-> DDRPERFM clock.
->=20
-> Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  drivers/perf/Kconfig         |  11 +
->  drivers/perf/Makefile        |   1 +
->  drivers/perf/stm32_ddr_pmu.c | 893 +++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 905 insertions(+)
->=20
-[...]
-> diff --git a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c
-> new file mode 100644
-> index 000000000000..c0bce1f446a0
-> --- /dev/null
-> +++ b/drivers/perf/stm32_ddr_pmu.c
-> @@ -0,0 +1,893 @@
-[...]
-> +	if (of_property_present(pdev->dev.of_node, "resets")) {
-> +		rst =3D devm_reset_control_get(&pdev->dev, NULL);
+Hi Christian,
 
-Use devm_reset_control_get_optional_exclusive() instead. It returns
-NULL if the device tree doesn't contain a resets property.
+On Mon, 30 Jun 2025 at 10:31, Christian Hewitt
+<christianshewitt@gmail.com> wrote:
+> > On 30 Jun 2025, at 12:19=E2=80=AFpm, Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
+> > On Sun, 29 Jun 2025 at 15:00, Jean-Fran=C3=A7ois Lessard
+> > <jefflessard3@gmail.com> wrote:
+> >> Assign vendor prefix "icore", based on their domain name.
+> >>
+> >> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> >> @@ -694,6 +694,8 @@ patternProperties:
+> >>     description: International Business Machines (IBM)
+> >>   "^ibm,.*":
+> >>     description: International Business Machines (IBM)
+> >> +  "^icore,.*":
+> >> +    description: Wuxi i-Core Electronics Co., Ltd.
+> >
+> > This sounds a bit too generic to me.  What is the domain name?
+>
+> Their domain/website is http://www.i-core.cn/en/ and i-Core is used
+> as the watermark in their datasheets [0]. We=E2=80=99ve thought to drop t=
+he
+> hyphen and use plain =E2=80=98icore=E2=80=99 to avoid future typos.
 
-> +		if (IS_ERR(rst)) {
-> +			dev_err(&pdev->dev, "Failed to get reset\n");
+OK (i-core.com seems to be unused, and parked).
 
-Please consider using dev_err_probe() instead.
+Gr{oetje,eeting}s,
 
-> +			ret =3D PTR_ERR(rst);
-> +			goto err_clk;
-> +		}
-> +		reset_control_assert(rst);
-> +		reset_control_deassert(rst);
+                        Geert
 
-These can be done unconditionally, as they are no-ops for rst =3D=3D NULL.=
-=20
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-regards
-Philipp
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
