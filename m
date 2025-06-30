@@ -1,109 +1,89 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197E1E7C10;
-	Mon, 30 Jun 2025 07:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3245849C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269744; cv=none; b=dsHV8HSBfUI50s/24T4M1fxQ71ELGivvqj/GJdtEBJzH5yYPPqX9PtOWd7s0+MhpGSQ6jYEnBsYV66ZFJfhvviJYSCnwACgvhOadQ42UbrqnhftSCaVKEnfx15y4SNwLWzk2UL45ueaDyP51jHCFW7J980dpEXhAdqaPlDWKX4U=
+	t=1751269792; cv=none; b=s85VyubQSHNhPI0IAaG9IGcCdVqe4NT7KfwC7OD/3T5O67YGs/KsWqRvHFoKPtH5RSdF7dTf8ptfeBY7HZIbkPm66cnzLcGEgcoXu/XqAH1P8kXNE59YdCPtfjwHQOcfO79fcLthz7DpuHZ1xjNoPNVMily8rn4qExmBWwnP8HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269744; c=relaxed/simple;
-	bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=S7b1cKhpBaXGNSFiNJ20lU9IHVomQCkcjhKb+a0Hr8PmIHUIcK9w3RZMtWSgESZjM2dqbDDMImbwbOykKluvFiELkgIc8lwVXwDDxdzQmcVwlok+cqBAWQUcI40z7BVyvrgk4uFz9KI0TnRc7Jte1VPjpOhW9lNPaQ2VI0h86lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SNxOXlQZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a/d4+f4m; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1751269792; c=relaxed/simple;
+	bh=jg211Mox4ogn3OGNwnvBYTugy0iLOS2ZtfUU2JwxfPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjek7xpYx7yW6i9TJwp77gXFbGXzSa6M5qWeHTp8VLuEyfw3YGJNlEeEVsneOoInDRkdtABhFb1qnc/FV15RCEkBZNHO2mKyYUzsMRVPo2mQzqcdhavWNWamPxpb68EI9h8FM2TgFUL3ZQBVnvpE637igZgKHPwktcldKeBjL40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i/3qzLN5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SNxOXlQZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a/d4+f4m"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 6D01E1D00161;
-	Mon, 30 Jun 2025 03:49:00 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Mon, 30 Jun 2025 03:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1751269740;
-	 x=1751356140; bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=; b=
-	SNxOXlQZyL9Oq2I4GRpokV8scZvw8Z38mDYuhwKSD99bLH7i0Pueqw86g8BW410b
-	YIeN59Aa6Op9VWU9QbiRMEpTl/Rbz7svK7a0DqS4eJgl8xVSEj60lh+daJEVo19i
-	+d5DFxiCxVn98MWLneFfWiUaoN0mIyk8A7bVSY2a01e7IuftxljMX49qWMvNpZUk
-	oeLtWASOC4q17oNfrzUoAEkSaZgO0aGu9dQuUxzL4tssLyvaxeGIP+TY2CAx7fIa
-	JQjac1mKzK8Qh7IUdTXiCn/AEIaSC/ekHxEXcuxxsn6/TCRN/xJbDmazBMcDI5T2
-	YKCt9oeri3Bx+OCfkGQQAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751269740; x=
-	1751356140; bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=; b=a
-	/d4+f4mnM79Y5T+pzVKY9v7swzfASLL1RhmWw/fmy99YfsLOdqecBMd2StFIfbr2
-	fkmAqFDMZyi3bA6B9a4C+J7B7kNGRH6BvpRjoLFYCrr53VNjqDkVp2Bsb5KaClsp
-	eyr/jPYmXchvIjU5USKUws6lFizcsnUp1ruC94dVyM5VBCMcY3QDjDAgnBrV7+D0
-	Fhri/sbpMIOdT/kCoQctNStsJ+An9ahL56aAg5V3D2/f5T6ka0sXkoxTIpTzW0Vb
-	Tbl84RB6qhy/3F1r8WempqEXkmlwTmTfpeg2NxubtU/HmPh6YWiWuznoSsCuXUp3
-	9/Sa8ZPhomPBKtEGUjKIg==
-X-ME-Sender: <xms:a0FiaGTNjN3ACZ9D22CF-KPIfVnbRFg0yOTF158rjy905thge8t70g>
-    <xme:a0FiaLxnoS1FK-x8eTLoWBlkXNXr7U0ZwOLjjvCvZIIAY__MvfEjcWhIOnVBM-dvD
-    KxD2Bs7a8h08-4nyHE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduuddugecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepjhhprghnihhssegsrgihlhhisghrvgdrtghomhdprhgtphhtthhope
-    hlghhirhgufihoohgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:a0FiaD1rnBFWt5xL9tPWpOAN7t2DBqECvzHvLM_dmWOU02HPAeaWBg>
-    <xmx:a0FiaCDjEQ_mpBPR5EYgnc4qf72UqASCVQhcio_pLTBs3LLgIx2Kuw>
-    <xmx:a0FiaPg4cNpmsoDZO7RGwQ6CcT7Xf7pyP_yNHFsdJmQ06AdtgBTIUQ>
-    <xmx:a0FiaOqtfepci8NWB5LSgfmMmys_s6N4UVyKH-tVMMWnTqbkw6eP5g>
-    <xmx:bEFiaAei7bwcu6KxSqfZASuYasaVExh6rkRioyW2b6qStGYue-yvhl7B>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D3B23700068; Mon, 30 Jun 2025 03:48:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i/3qzLN5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=l3fYRR450ammdDlTOiwajM+tXSXrmrYjTa8TBG4lRN0=; b=i/3qzLN5vV3pv40SYcFnPmDz5U
+	aTDvzmPcXciZCgSXlmQ/J5VpmC4ZgDoeoC314vbEMqesoDrWpSjq3XiL3CjSTRgt02qS3Ic5k888+
+	KGRW5z1wNbasAQzokmZ6zqvJtSJwKuHCRXE1qD3yh4rlgzmlMFA0MCS+XsskK6CzVrfk9oWFBbSiW
+	pJZC1UHPes7/tKgo2YuIxtXt/nVxu4kL1n73UvLYqDmYytoe++cgj3ixcXYdY1Qq3XQ8lCD6O33m3
+	CpjSpGmZn/Ly5DWgJIAh/u0+AasU3HO5m8px+YhQ7GDO9tm02QcuzPkr/CV2dXgjfQHduFvz/Ov6+
+	g8mAkAqQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW9Gp-00000006k7R-0910;
+	Mon, 30 Jun 2025 07:49:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 96703300125; Mon, 30 Jun 2025 09:49:42 +0200 (CEST)
+Date: Mon, 30 Jun 2025 09:49:42 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexander Potapenko <glider@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, x86@kernel.org,
+	Aleksandr Nogikh <nogikh@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 06/11] kcov: x86: introduce CONFIG_KCOV_UNIQUE
+Message-ID: <20250630074942.GH1613200@noisy.programming.kicks-ass.net>
+References: <20250626134158.3385080-1-glider@google.com>
+ <20250626134158.3385080-7-glider@google.com>
+ <20250627081146.GR1613200@noisy.programming.kicks-ass.net>
+ <CAG_fn=UrOBF=hQ5y6VN9VuA67GeVOyaaWtrnaSLz4TnC7u1fiw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T53991f9249d0193f
-Date: Mon, 30 Jun 2025 09:48:05 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Michael Walle" <mwalle@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Julien Panis" <jpanis@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Message-Id: <c07229ed-d4b8-4e5f-a518-ea9d703fa617@app.fastmail.com>
-In-Reply-To: <20250613114518.1772109-3-mwalle@kernel.org>
-References: <20250613114518.1772109-1-mwalle@kernel.org>
- <20250613114518.1772109-3-mwalle@kernel.org>
-Subject: Re: [PATCH v2 2/7] misc: tps6594-pfsm: Add TI TPS652G1 PMIC PFSM
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG_fn=UrOBF=hQ5y6VN9VuA67GeVOyaaWtrnaSLz4TnC7u1fiw@mail.gmail.com>
 
-On Fri, Jun 13, 2025, at 13:45, Michael Walle wrote:
-> The TPS652G1 is a stripped down TPS65224, but the PFSM is the same.
-> Thus, handle it the same way as the TPS65224 in the driver.
->
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
-> ---
+On Fri, Jun 27, 2025 at 04:24:36PM +0200, Alexander Potapenko wrote:
+> On Fri, Jun 27, 2025 at 10:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Jun 26, 2025 at 03:41:53PM +0200, Alexander Potapenko wrote:
+> > > The new config switches coverage instrumentation to using
+> > >   __sanitizer_cov_trace_pc_guard(u32 *guard)
+> > > instead of
+> > >   __sanitizer_cov_trace_pc(void)
+> > >
+> > > This relies on Clang's -fsanitize-coverage=trace-pc-guard flag [1].
+> > >
+> > > Each callback receives a unique 32-bit guard variable residing in the
+> > > __sancov_guards section. Those guards can be used by kcov to deduplicate
+> > > the coverage on the fly.
+> >
+> > This sounds like a *LOT* of data; how big is this for a typical kernel
+> > build?
+> 
+> I have a 1.6Gb sized vmlinux, which has a .text section of 176Mb.
+> There are 1809419 calls to __sanitizer_cov_trace_pc_guard, and the
+> __sancov_guards section has a size of 6Mb, which are only allocated at
+> runtime.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de> # drivers/misc/
+OK, that's less than I feared. That's ~3.5% of .text, and should be
+quite manageable.
