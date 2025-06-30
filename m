@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90A166BFC0;
-	Mon, 30 Jun 2025 07:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945456BFC0;
+	Mon, 30 Jun 2025 07:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268581; cv=none; b=n/a6AHMyzBnYsE2d3D6sBG+kMQLtRr4V7kNvCNKTmxfeGx8dMRJ37av1xrKwYSwEzVmoPbvA8XkifBi3rT1gyqBMZc+zKB8GTsKZv7SJU/eQFnYIbqA+SHjNwtBItmxTsArMwiQ0CQIYItGgQmRxTsu3euZoGV4hkwQFGM2+4wI=
+	t=1751268585; cv=none; b=U6rA/hrdk2L2bI4qEY84kt0E5IJdQhEVPKOL3PYEJGjLCF5fe36VAT18AmI7plPVCZZ0z3r98EBSrRIJAq798jI7jWT5Bwgqy4aFMJoP0r7I1mlJO+3veebJo5uY8cZyHLtQha7M2jj69lf7qm/QZ/itYi/s398DxSPnQ4wHRYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268581; c=relaxed/simple;
-	bh=a0h2GHTo3K13Mw0AUJepxxnoHiBa6c5feuRAOj5bqrc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=se+8uCAb693l/ZudXpleRgZ8KNozfSPYjDPG+86xD1UfRWv4y0cm2GZBtIrS01d1raW4kxYxnpSDziC1gQzh/iyUWaJyli7WBQlkTEJDbO5COsS2yXjz0iwb15kmJVnA8blOvdK2afwnOS/HqY+JOqogwFpqhRi2ni7sQGwtbBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D663F152B;
-	Mon, 30 Jun 2025 00:29:22 -0700 (PDT)
-Received: from [10.163.37.132] (unknown [10.163.37.132])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800EF3F6A8;
-	Mon, 30 Jun 2025 00:29:34 -0700 (PDT)
-Message-ID: <4f8b7ac8-7dcd-4cc9-a97f-4d6ab573e83a@arm.com>
-Date: Mon, 30 Jun 2025 12:59:31 +0530
+	s=arc-20240116; t=1751268585; c=relaxed/simple;
+	bh=d4y8+hqplOcGJJ/rNY/oDMRKZ0L4Q60ZUzRRcNJDT1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=GF9JzuQJ5oLEuRG9XQRiORoawat9u2KH39RvRlonmaDbjjy2JWOixnY13cXL/0zVVfWNu4n3aZZXFgJCg8uJYCFbm1codA70HUmiB1OSuL4NS6ibQZJv0f1yARMpdjodX10elYQ+u0EXSTHLvCGw4LoVwBf/T9peMBsbK/I9eQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kbD1+/P5; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kbD1+/P5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751268576;
+	bh=d4y8+hqplOcGJJ/rNY/oDMRKZ0L4Q60ZUzRRcNJDT1Q=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=kbD1+/P5H9bkqVVAmP7J2kyS9/Q8TesbyfEdHQApY6e6CAXcECdkwDi9F14S15xBV
+	 nEC9ZKJ0eTXfihRHL3XCm5bQfbcwsdE54Jgwv2wKeH1/J8zjJz66fpv076LsOJgI4w
+	 C4AnKNNURKG3gOOr2gFqXNxx8QJU/c7DIl2Oj8HXBHXlUJYVBzu/xwY6725s45I5Ux
+	 hW1Aax8R8qxaijT2Ifnrg/to+R5y8A+Bvk6hmFdIR1HjQN5WqQVy3YuyZKYdp7/7Ej
+	 yUzsoyiplH9LZ9Rrj6LmM/iOc0B7kcBqg2jsZWEFJLpjirr54nDSpdMF9kPYNFPngK
+	 Txg1nQ/ozCWdw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 70E1117E0B0D;
+	Mon, 30 Jun 2025 09:29:35 +0200 (CEST)
+Message-ID: <f16c18eb-9a28-4f44-ad8c-7303ee5347a8@collabora.com>
+Date: Mon, 30 Jun 2025 09:29:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,168 +42,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: Remove prepare_hugepage_range()
-To: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Huacai Chen <chenhuacai@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- Jason Gunthorpe <jgg@nvidia.com>, David Hildenbrand <david@redhat.com>
-References: <20250627160707.2124580-1-peterx@redhat.com>
+Subject: Re: [PATCH 2/3] thermal/drivers/mediatek: Add support for MT7981 SoC
+To: Aleksander Jan Bajkowski <olek2@wp.pl>, rafael@kernel.org,
+ daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, zhiyong.tao@mediatek.com, linux-pm@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250628223837.848244-1-olek2@wp.pl>
+ <20250628223837.848244-3-olek2@wp.pl>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250627160707.2124580-1-peterx@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250628223837.848244-3-olek2@wp.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 27/06/25 9:37 PM, Peter Xu wrote:
-> Only mips and loongarch implemented this API, however what it does was
-> checking against stack overflow for either len or addr.  That's already
-> done in arch's arch_get_unmapped_area*() functions, even though it may not
-> be 100% identical checks.
+Il 29/06/25 00:38, Aleksander Jan Bajkowski ha scritto:
+> The temperature sensor support on the MT7981 is exactly the same
+> as on the MT7986.
 > 
-> For example, for both of the architectures, there will be a trivial
-> difference on how stack top was defined.  The old code uses STACK_TOP which
-> may be slightly smaller than TASK_SIZE on either of them, but the hope is
-> that shouldn't be a problem.
-> 
-> It means the whole API is pretty much obsolete at least now, remove it
-> completely.
 
-Agreed, this API is now redundant.
+If it is exactly the same, great! ... but then this change is wrong :-)
+You should, instead, change the bindings to allow you to specify
 
-> 
-> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Muchun Song <muchun.song@linux.dev>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: loongarch@lists.linux.dev
-> Cc: linux-mips@vger.kernel.org
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
+compatible = "mediatek,mt7981-thermal", "mediatek,mt7986-thermal";
+
+...and that's about it, no driver changes to be done.
+
+Cheers,
+Angelo
+
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 > ---
->  arch/loongarch/include/asm/hugetlb.h | 14 --------------
->  arch/mips/include/asm/hugetlb.h      | 14 --------------
->  fs/hugetlbfs/inode.c                 |  8 ++------
->  include/asm-generic/hugetlb.h        |  8 --------
->  include/linux/hugetlb.h              |  6 ------
->  5 files changed, 2 insertions(+), 48 deletions(-)
+>   drivers/thermal/mediatek/auxadc_thermal.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/arch/loongarch/include/asm/hugetlb.h b/arch/loongarch/include/asm/hugetlb.h
-> index 4dc4b3e04225..ab68b594f889 100644
-> --- a/arch/loongarch/include/asm/hugetlb.h
-> +++ b/arch/loongarch/include/asm/hugetlb.h
-> @@ -10,20 +10,6 @@
->  
->  uint64_t pmd_to_entrylo(unsigned long pmd_val);
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-> -
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
->  #define __HAVE_ARCH_HUGE_PTE_CLEAR
->  static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
->  				  pte_t *ptep, unsigned long sz)
-> diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-> index fbc71ddcf0f6..8c460ce01ffe 100644
-> --- a/arch/mips/include/asm/hugetlb.h
-> +++ b/arch/mips/include/asm/hugetlb.h
-> @@ -11,20 +11,6 @@
->  
->  #include <asm/page.h>
->  
-> -#define __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -					 unsigned long addr,
-> -					 unsigned long len)
-> -{
-> -	unsigned long task_size = STACK_TOP;
-> -
-> -	if (len > task_size)
-> -		return -ENOMEM;
-> -	if (task_size - len < addr)
-> -		return -EINVAL;
-> -	return 0;
-> -}
-> -
->  #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
->  static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
->  					    unsigned long addr, pte_t *ptep,
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index 00b2d1a032fd..81a6acddd690 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -179,12 +179,8 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
->  
->  	if (len & ~huge_page_mask(h))
->  		return -EINVAL;
-> -	if (flags & MAP_FIXED) {
-> -		if (addr & ~huge_page_mask(h))
-> -			return -EINVAL;
-> -		if (prepare_hugepage_range(file, addr, len))
-> -			return -EINVAL;
-> -	}
-> +	if ((flags & MAP_FIXED) && (addr & ~huge_page_mask(h)))
-> +		return -EINVAL;
->  	if (addr)
->  		addr0 = ALIGN(addr, huge_page_size(h));
->  
-> diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
-> index 3e0a8fe9b108..4bce4f07f44f 100644
-> --- a/include/asm-generic/hugetlb.h
-> +++ b/include/asm-generic/hugetlb.h
-> @@ -114,14 +114,6 @@ static inline int huge_pte_none_mostly(pte_t pte)
->  }
->  #endif
->  
-> -#ifndef __HAVE_ARCH_PREPARE_HUGEPAGE_RANGE
-> -static inline int prepare_hugepage_range(struct file *file,
-> -		unsigned long addr, unsigned long len)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  #ifndef __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
->  static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  		unsigned long addr, pte_t *ptep)
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index c6c87eae4a8d..474de8e2a8f2 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -359,12 +359,6 @@ static inline void hugetlb_show_meminfo_node(int nid)
->  {
->  }
->  
-> -static inline int prepare_hugepage_range(struct file *file,
-> -				unsigned long addr, unsigned long len)
-> -{
-> -	return -EINVAL;
-> -}
-> -
->  static inline void hugetlb_vma_lock_read(struct vm_area_struct *vma)
->  {
->  }
+> diff --git a/drivers/thermal/mediatek/auxadc_thermal.c b/drivers/thermal/mediatek/auxadc_thermal.c
+> index 9ee2e7283435..020324901505 100644
+> --- a/drivers/thermal/mediatek/auxadc_thermal.c
+> +++ b/drivers/thermal/mediatek/auxadc_thermal.c
+> @@ -1149,6 +1149,10 @@ static const struct of_device_id mtk_thermal_of_match[] = {
+>   		.compatible = "mediatek,mt7622-thermal",
+>   		.data = (void *)&mt7622_thermal_data,
+>   	},
+> +	{
+> +		.compatible = "mediatek,mt7981-thermal",
+> +		.data = (void *)&mt7986_thermal_data,
+> +	},
+>   	{
+>   		.compatible = "mediatek,mt7986-thermal",
+>   		.data = (void *)&mt7986_thermal_data,
 
-A small nit - there is a now stale in code comment still referring
-to prepare_hugepage_range() in hugetlbfs_file_mmap().
-
-Otherwise LGTM.
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
