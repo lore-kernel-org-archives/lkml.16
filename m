@@ -1,135 +1,171 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023132.outbound.protection.outlook.com [40.107.44.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC48B239E95
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270578; cv=none; b=oJWWKSt7nDSaIGPpgYRtctmRSBlOJ+/lzcbmUE/5qX8a7ClGnhXJ4IqusicbXv7mFKy/REvMHYOqCPkB1WWR7lWkkjtQh+WAQkNU7R8fxBoqBOyb5aCpwE0iuLGb02uBYmFwV52VmbtBTZDXdTlz3sUIJ6jC8vLkPi2gEoGB8AU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270578; c=relaxed/simple;
-	bh=zgMSdYUK9yNCJ2s3hpP0j/gTKnVm2enHM9w454p24n8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fk3vATxGGpCWCIgnjHAJMSoq2xu9y5iw5xgLvu+h8O6x49XiPXr06fBM9F72sGyOIHmHwwIOgi/kMwJCmqtzhqKNJOe8CjX9ewxsor+pI+bVJ5VlPwPAHHoNq0Oe7pGH9Au3oFmbpDo5WLljaw3oTpJgbJ9aLqX7pEOst0mmgJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZwMmpHJ2; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZwMmpHJ2"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso4382373f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:02:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751270575; x=1751875375; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ska9I3Y1aB1MGchq/+g1Gg5HtDvHRWWCZw8erAwmjVs=;
-        b=ZwMmpHJ2okjzzQ4B6SP6Qq14E3pyLz0aagaOtFlMmzclPHu6kCxYhMsA8IlPb6rHrn
-         tB6PeFJ12MwiAzQJVMyk0CGMvkqBeLh1oZ0L8rC3E3GkdgAju3prK3MTfnXAzVOcV/U4
-         YQ/phOWMNw2mQ53n2bix8LE7HZtIl+hAm0pThaMsdzlefeCa3u9qAgjytWRHks4xnLR2
-         t6GvXnIAPwOLvQ2Toh6ScIuLLmlWEtKCGtOId8hpAggSpkrvKW/4VN6qr2aqPG4/BTK0
-         hCj3Uv4lBm1YlTu68O/WopzvY29xiQbN2g1zkkfT0aMefKyfx5hLpIDkvYurRhD3FE0f
-         Xr9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751270575; x=1751875375;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ska9I3Y1aB1MGchq/+g1Gg5HtDvHRWWCZw8erAwmjVs=;
-        b=EO62ZyiJc9Dg48iBonGBArrIs1r4oumPqWOiIxc++maLV29I4rTaqbuuQA1Q/BdM1C
-         moDWH0BVQKondmT8oZzH6KlHHCI6UQgw5h9HxsW2Bn8rpAw5kXGEdbt7bYqvFVxGRcJ+
-         dt4Yw5HH6Fa8xTp4yOqOu8UDjttZ9466zmvkzFbdQs2dkgl8hwkq7M7i6yC0TBUQmSXU
-         zajnEMvGXdUD103K0/bOVNT/IK6tA2L3x6Vwkka1XFFVRrZAVUXTH5v7yomMpiJWuf2G
-         sSxXPi7H3L56cLV7epEcQyBHN9OHTPNO4B9+3+qccR89ZP5HCkRwHkiBjsBaEAzqJ3KN
-         mw7Q==
-X-Gm-Message-State: AOJu0YxSLXwaYCz6IBdoTYL3kO1F+TZnfuQDgS+sHreYMuhcF6bgQiQQ
-	tljYNmHH/pyWGGOTvTy2mRTsfr6r0+4V1FLW5MxhugJjY3r8VkjEsaEQxIrcOUG/h9o=
-X-Gm-Gg: ASbGnctvyOLS/Dvic5PAHtf7E7RsvGeKH+p3mk3RmUgdjEOATwo84ABeJTjCdoUBQQu
-	WQOOou4o5S5B72OGmYIUjbFoEqVNcwJeFNajBbXua3vDF1qfM4bhjfni6vUq6pl5th//x5EdJXW
-	3fna2W1THn1nVOIot6u65SUTW/LDQGbIF9bIVoqAGd0jck5sjUVuMHtw8q0hG+PqanHP9XIz7+u
-	sGInYP30WDm0E8NpZSvtFFKwKt1YrFvkYTQdc3fYzHjJ5TuGrdeE2zusOu3Rtti5kUJMlwU8aI9
-	OHAgQkuND5eFfb7E0MU3kiebh3fdE7CYMsBGSB/RrIs9fqWWGSuZ/iIS/gI1
-X-Google-Smtp-Source: AGHT+IF9DvJJg0skDidkDsih4Ch3HhJLBIarQJZKBHX8xHPqB+4mHwpjYWK0XFUsByASmkbm+oOmbg==
-X-Received: by 2002:a05:6000:dcb:b0:3a5:8977:e10f with SMTP id ffacd0b85a97d-3a917603b5cmr7981361f8f.28.1751270574863;
-        Mon, 30 Jun 2025 01:02:54 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::5485])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f842sm9499471f8f.86.2025.06.30.01.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 01:02:54 -0700 (PDT)
-Date: Mon, 30 Jun 2025 10:02:53 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-acpi@vger.kernel.org, iommu@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Anup Patel <apatel@ventanamicro.com>, 
-	Atish Patra <atishp@rivosinc.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v3 2/3] ACPI: scan: Add support for RISC-V in
- acpi_iommu_configure_id()
-Message-ID: <20250630-c479c6607cf8c1430f11336f@orel>
-References: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
- <20250630034803.1611262-3-sunilvl@ventanamicro.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E1321B191;
+	Mon, 30 Jun 2025 08:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.132
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751270579; cv=fail; b=MVoc/2GswKX5peEMJxftshYo9KzEqvFehov9kaBe3K9rgOWA1hFx5Cbl+y8Nl8wNE+UfLjTvrQt+wczfcliBEyB6P0GorFqUBp4dopNT9xopEGHqscHTGkgyK6XBV7YEwAONmJvmEjGVuI8D2GgFI7ktKWUs1SEhL/ESu6UmSEc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751270579; c=relaxed/simple;
+	bh=HeVJNhAmf1lNQS/q8VEDjMYQqF5Tt5OoNVPmwKh68iE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=luRMn1OyMlKpMi0i0oni0Ra88sHVQg595WUfvT+swqCQ8QlZYf3eskmXRzzMHpYMWCNGpA0IClbSFZT2+sQUxkVFp6kLcsvHz980oQ9/iRtDuN542O0X2uG/8Pju/DuAotBoGYbnjeoa0AW/uoLjW73otqOlxgYZcQCEd2GpB54=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ocIuveDVWXNqAFI7OAWH4yh+xmB2Tzj5hYzt/HE8s0egCwCO479+LSBa10NVln1oiDUOoWfdDMnqUq2hctBOF3mO2MBFshZ+78s1YBT67R5LVckF1ZcpIzAWTwqJrigUauzME0NG40s9k2u8szsab29FVTpsO72hW8uN73MG44BvAavWd4PROw9/kWvMUEkxYxHjyfINwhOmlv1ke2+VooJ4swcT9dP+G5Alp/O5OHNzDswD/eQx59WhCfSrhkOFAYT9LqcJ1eo0NYUfPbVYYh5DD/OY7Gj+LqhifncDJuWb47lwQ5OdIs+K1kZrH5NKWbv+SeDkgCOX29uwRvd50w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RJnmzNsuF7G5YZni2Ipu6cU5cBn/S7Wm4f1EU3GnDa8=;
+ b=A3bMadK08w8PBQej/dpBVUMw6HGWsmUHpTDbxjASKo4fwaWIxziccjskSvyhsXkAV0IsEb2PPc4r3v+BMhuzQ2WxuDnmG8fSp7wMK9WzMgF5CkiwRr0jIX+HHETBHZdRzoF88v0R0QnbBmURvxFbfRU1POCHgUxaw0MDhiqzxJVTQqHC/NL1HDnBltWr27SDKGy/HFFdipbj4QCpdMcN0OXSwqXn/CpCX9GJ63zsZpFK52GwBYbsfJTfGATBCeaWSSZoYvamgBHoo9iSslFQ3bJLDXt5RE4Zv0sPwi/FKXEQfBVP6KbUBYmiJZsCejQWywIXKIkK5hhLGjyP/Vsa/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TY2PR02CA0065.apcprd02.prod.outlook.com (2603:1096:404:e2::29)
+ by KL1PR06MB6162.apcprd06.prod.outlook.com (2603:1096:820:d3::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
+ 2025 08:02:52 +0000
+Received: from TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+ (2603:1096:404:e2:cafe::f9) by TY2PR02CA0065.outlook.office365.com
+ (2603:1096:404:e2::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.25 via Frontend Transport; Mon,
+ 30 Jun 2025 08:02:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB8A.mail.protection.outlook.com (10.167.253.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 08:02:50 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 0873E44C3CAA;
+	Mon, 30 Jun 2025 16:02:45 +0800 (CST)
+Message-ID: <afeda0c7-1959-4501-b85b-5685698dc432@cixtech.com>
+Date: Mon, 30 Jun 2025 16:02:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630034803.1611262-3-sunilvl@ventanamicro.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible for
+ new RP configuration
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
+ fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
+ cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-2-hans.zhang@cixtech.com>
+ <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB8A:EE_|KL1PR06MB6162:EE_
+X-MS-Office365-Filtering-Correlation-Id: 664117c1-2c3e-4d38-24e4-08ddb7ac8275
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MllndEZDOUcrVmFaM25aeVJYMk5SamR5UTQxRlM0UjhoZXdpS1VxTE95ZDBt?=
+ =?utf-8?B?VXdxVWR2dnBOVTRwWFpNZ0FELzd3b1dxWTV6TmpyZmNSWThacnRMK1JSbnBj?=
+ =?utf-8?B?VkpnVG40akgrOFh4Nkl6Z2VDeitVdTVrNVJHVXdlVWt3blh6ekZGL2FZSXJt?=
+ =?utf-8?B?eS96cHA4VGZDeXoxMWxPSnJiSTVkY1o0aHhBbXNiUnlFY2NOWk9JTTNhakV6?=
+ =?utf-8?B?cUNDNXRvS0VOaGRlSFZVRGFjRlZ0SSs1bXBEZjJrRlpRWnppRjZiWDZzalJE?=
+ =?utf-8?B?cjROazdERjlvcS9wMmRQRGUyRlFsampZTGxmWE9NTWQ3UXFETnZWYldBSlZD?=
+ =?utf-8?B?N3JHdkpjc1Z3Uk1FSzMyUWxFZzhiZlVqeE1JZThZTWQyRzBvcGpKcXBQR3pY?=
+ =?utf-8?B?WlRqdlJMSmhSSFVhYnRGVTVmeWdQazM2QWVtU2prVTEvNlJYUWlPaVIzRE95?=
+ =?utf-8?B?LzNQUXdiVkhlTStNU1RvSC9lU1NkeXN6UEhHVWNsSHlUN1BHUnlwSldPQTUw?=
+ =?utf-8?B?bWNCd2ZYL01yZDBPb3ZyNXVYdlpmZ1RHTklWQ0R0b3VCc014azZRczcwL3U4?=
+ =?utf-8?B?cGo5dy8ydVNFcktJTXRhd3lIZTNYdFZQelNjVXJHcTIzMHo2ZE54NGtkZncz?=
+ =?utf-8?B?cEgyWTIxTEJiTnU3bTA2a2dmaStLeVN4VFFuc0ZIMXo5RnMxYXc0bnFMak5w?=
+ =?utf-8?B?cTk2OVhxMEp3djl5TURlcTRhOHlvN1JUNVJYWjA4ZUtvVmc4MkE0Q2M2REpr?=
+ =?utf-8?B?RTU0dUFIM1NxbXFkUFhvUHYrMTliUHlQdkQ3Y0RZbGl4RFpZZ2pjNlpRcGFZ?=
+ =?utf-8?B?eFE0MWlYWjNwUzBBUjlTVktRMThHNFZqMk1FZXBzQnBON253NGJLeGVzYzRI?=
+ =?utf-8?B?WllhbHhsQUhpN3R1a2VMRDBiNWMrUFdURWhYMFp1aHA5VDBSUjhaQ1diSW5Y?=
+ =?utf-8?B?SXAzREFlSEkwL1FOQkNHL0FZM0JDUlNmeCtOYUtEN0dyMHFsNEt5RldhUlkw?=
+ =?utf-8?B?ZmNZbTh2N0lvVHBEN3RQRi9EYWhaMm5KSjNLaGQ4Nk9Uc0YySnZEOFdnS1J5?=
+ =?utf-8?B?QlZmckpMUCs4RW1MSjYxTnNYYVdndk10eHJybVZ5eldvY1BkRlNDc1ZUNVV6?=
+ =?utf-8?B?bFZDWEVqNWlmMU1uYnlsdUlRTGxMVTBuYWQ2R0F5Mmd6aUR3NUN1QXptcHd1?=
+ =?utf-8?B?YVpGTjRXYVNWVjhVRW0zVlVSc28vbmVqeFR5VXlVSUJ4d1orQkNHSTkyM3Yx?=
+ =?utf-8?B?dEtraUhDSDhEeE1mZ0dPODB4bzFJRUhTT3JRNVlYNVdCUUxoVnZYR005MXpD?=
+ =?utf-8?B?ZEdDTVlSOXloRVJTdnVnRHJjMFhicUx3TSt1WGNwU0haa01lYnpDKzlaTlBK?=
+ =?utf-8?B?dEp5bkZOWDRDMm44STlJUHBVemFnRnRyQ0JmTmJVb1ExRkg3V1NCTjRTZ0Yw?=
+ =?utf-8?B?TnZIZHdrWmhwL01QYnBubExrSlVtaCtOM3lZaXhTaFFaalRKQ0w0emZldW82?=
+ =?utf-8?B?WW1iTms2SFBvMk1hbE5FdDVPRnE4T2dNWFJCSGlxUUVTd1pXWlR4a0JaL2p3?=
+ =?utf-8?B?VXlCS0Z3S1NVQ1FSRnRrK01lazRTcWVSSm02NTVHT01RNlJ6OW5WUzVDZHgx?=
+ =?utf-8?B?NktsU3J5bHliNFZZUWFsTFlObmJiWEF6R2RuZEdMN1pZbWhGZTUvTDNNMzBY?=
+ =?utf-8?B?V0pzVlBHNXNWUm96cHNseGhkYW9DbmE5MCtSdksxZ0JIeHc5NzBUVVovaGY0?=
+ =?utf-8?B?K0M5OXRmVUJaY1BYd0k4Q3pUN2VCMkQ0eFNCWlc2dGhCY2FDTkVQTVJUYmpO?=
+ =?utf-8?B?YWVJVWtBNkJROHdFRlFGNEEwZzdCMGFZTzE4RVFMQzUzbzVkU05QRDI3MXov?=
+ =?utf-8?B?ZU13aDI3dDJ6blltLzBQdnVwOGhIZ3V5RUVvRU0xVWZ1WGYyVFplZld2cEVX?=
+ =?utf-8?B?S3VHR3VpU3NTTXYvNUxGOExuYXdnQUtmelVDNFloejUyYkRROE1BZ2lxT2NU?=
+ =?utf-8?B?WDBzRlZsMUhQa09VMUMwTUxOREtkZGNXOSs0R0lHaENQejVLL00yODNYM1VU?=
+ =?utf-8?B?dVRLanFVeE5XKzIxWndodjdSWUkrSHVYNS9pUT09?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014)(7053199007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:02:50.5318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 664117c1-2c3e-4d38-24e4-08ddb7ac8275
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	TY2PEPF0000AB8A.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6162
 
-On Mon, Jun 30, 2025 at 09:18:02AM +0530, Sunil V L wrote:
-> acpi_iommu_configure_id() currently supports only IORT (ARM) and VIOT.
-> Add support for RISC-V as well.
+
+
+On 2025/6/30 15:30, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
 > 
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/acpi/scan.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com wrote:
+>> From: Manikandan K Pillai <mpillai@cadence.com>
+>>
+>> Document the compatible property for HPA (High Performance Architecture)
+>> PCIe controller RP configuration.
 > 
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index fb1fe9f3b1a3..70f57d58fd61 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/acpi.h>
->  #include <linux/acpi_iort.h>
-> +#include <linux/acpi_rimt.h>
->  #include <linux/acpi_viot.h>
->  #include <linux/iommu.h>
->  #include <linux/signal.h>
-> @@ -1628,8 +1629,12 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
->  	}
->  
->  	err = iort_iommu_configure_id(dev, id_in);
-> -	if (err && err != -EPROBE_DEFER)
-> -		err = viot_iommu_configure(dev);
-> +	if (err && err != -EPROBE_DEFER) {
-> +		err = rimt_iommu_configure_id(dev, id_in);
-> +		if (err && err != -EPROBE_DEFER)
-> +			err = viot_iommu_configure(dev);
-> +	}
+> I don't see Conor's comment addressed:
+> 
+> https://lore.kernel.org/linux-devicetree/20250424-elm-magma-b791798477ab@spud/
+> 
+> You cannot just send someone's work and bypassing the review feedback.
+> 
+>>
+>> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+> 
+> SoB.
 
-This can just be
+Dear Krzysztof,
 
-  err = iort_iommu_configure_id(dev, id_in);
-  if (err...
-     err = rimt_iommu_configure_id(dev, id_in);
-  if (err...
-     err = viot_iommu_configure(dev);
+Thank you very much for your reply. The questions mentioned above, 
+please answer by Manikandan.
 
-Thanks,
-drew
+Sorry, I missed it. Will add:
+Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 
-> +
->  	mutex_unlock(&iommu_probe_device_lock);
->  
->  	return err;
-> -- 
-> 2.43.0
+Best regards,
+Hans
+
+> 
+> Best regards,
+> Krzysztof
 > 
