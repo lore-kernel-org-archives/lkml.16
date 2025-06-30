@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F932E613F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DE12E62AF;
 	Mon, 30 Jun 2025 19:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751310421; cv=none; b=dr+2K8vpyvkYbcbNb07th0wX5HQ6MJalf9T3TZBQI3FWhGkSvw7f9orWDQi0Jy0DdPebmCPkGm40NlH8Uz6TiBDtoOrUqbCLG1T9aTJjwrp65JLqjQ1IE2cWzSAI1/Gsx7YjDeC+WUn8pGZHVMrmDztrSIB6xCZuZJ40lV3lBRI=
+	t=1751310421; cv=none; b=S2P2l6mmL6D48j2+yXse5YDTDk3WYLALMG46brzABs6TPsAfqxTebBnuvQOX4/CkqZOjZ1qgib3qIwJecVWS7VfxsK1+Vt63EU6Pqw+fSLt2g6W4hrX/kZxzcajSgEWJK9C2W0x+xl5HKqIFFFbAljkCmkbrL+kSzSYezVZk4pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751310421; c=relaxed/simple;
-	bh=CsLioO4S0UhSQ7xBbQqFYY0bp80O1MggCmDLd/9lJc8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bF1AXbDBzqa25qWMlLBp/8/yCFm4CxfifJSm5Em6PuoJLTNEq9oOJ0s30ZJFFb4OL15sXo1Q8VX+jVDx2C2zj1qLq5c9WRQv6S3+C15Q44hwxDYkxYIJw5t6VIc4uv1taLco9zJ1MjZc+l1Q1qadQCFTSJe6EO9500aQb1H7mJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PlQBH0PW; arc=none smtp.client-ip=10.30.226.201
+	bh=1oA5HYoHDlOdLDnH2gUHr3xPvXZnlg4xzE1bc8Tsssg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=P8kWHGCHCqe6jTwUaRysnv7Nb1JAm0u9Gw99GSTTyXWfrjREq0EovFVAImdRV56wcxe98CyA+y+F7i5QdlSctHA/TAqCnCpipytkHLJ/iGq1LZ47HGzsXL40Xi+M6EHmDnu6b8BrGMojpgRmZdQXRB6ZvNgHQsROhW2dx6yffIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDQWat00; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PlQBH0PW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6035FC4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDQWat00"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A7CCBC4CEF5;
 	Mon, 30 Jun 2025 19:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751310421;
-	bh=CsLioO4S0UhSQ7xBbQqFYY0bp80O1MggCmDLd/9lJc8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=PlQBH0PWlJYa/B7U7CxgcpUy8NX1h/n3g4YL/iRTHMi6VyxwoXdcWmsXI7gEch3UG
-	 ajDwlXr1m2nGyJP2N+o5hdAH+uxQP6f2JS2j5Mikg4SWDxfJ2bqSpVj2FYePT2Crcd
-	 IcHi+ydMwKXuv66fxP7eEjwyVP30phPZbquF4SNwPaTQ97GIEOqbvHsKvu/CO/QD6r
-	 VUCPtwm11opb6TS/4HjzOlr01b0wcXehuEGVJdBqUbPEHc34s5umhjgpBS3RGch9Gw
-	 n9T/VNs/SppEPph+NTNbCWiWdUXJb2jaYpVUF82ZXj3AXVnfCrM5fU6lwRlWiVH2xL
-	 aVZF+rq7xXmFw==
+	bh=1oA5HYoHDlOdLDnH2gUHr3xPvXZnlg4xzE1bc8Tsssg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=MDQWat00IX0M+hPXctSam4UpLCDAAG7PQKUvBtEy/G3DuCNUZ2tu72yRP93nZQXLL
+	 fJ5pKLfUcnh3MW/UjBo1xphtffmVDWoSnHYw7O8bQHzbnwXqY0so/UZEiDLgscCQ7K
+	 a1ZP+X+rx4i2BkS5ocsKEVq/q5e1iuVHHcBHiJD3liU7CB4pfVpG4gof2fEzORGWLm
+	 yy1dxufw4r++S3PXMgLSDaL6COmOL/7g3vY211zJOeCBg4pI5YUtxFyLfGDbj06evJ
+	 pDfpfjomqQXETmVLGMMRMKfld/Ug8sf7Qgek0fxNp8Se8lUxqDga6yYMYtK5Yxtd3Y
+	 /bUf6Exl+/jTQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A9CC83036;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F798C8303A;
 	Mon, 30 Jun 2025 19:07:01 +0000 (UTC)
 From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Subject: [PATCH v2 0/5] media: i2c: imx214: Add some style improvements
-Date: Mon, 30 Jun 2025 21:05:20 +0200
-Message-Id: <20250630-imx214_fixes-v2-0-cd1a76c412c0@apitzsch.eu>
+Date: Mon, 30 Jun 2025 21:05:25 +0200
+Subject: [PATCH v2 5/5] media: i2c: imx214: Separate legacy link frequency
+ check from PLL calculation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAPDfYmgC/1WMyw6CMBBFf4XM2pp2ShFc+R+GGB5TmYVAOkhQw
- r9bSVy4PPfmnBWEApPAOVkh0MzCQx8BDwk0XdXfSXEbGVCj0xlaxY8FTXrzvJAog9Zj7ryrM4S
- ojIH2IxrXMnLHMg3htddn811/oeI/NBulVX6yVBdp1WbWXaqRp7c03ZGeUG7b9gESRQKlqgAAA
- A==
-X-Change-ID: 20250623-imx214_fixes-123f285f5b62
+Message-Id: <20250630-imx214_fixes-v2-5-cd1a76c412c0@apitzsch.eu>
+References: <20250630-imx214_fixes-v2-0-cd1a76c412c0@apitzsch.eu>
+In-Reply-To: <20250630-imx214_fixes-v2-0-cd1a76c412c0@apitzsch.eu>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
  Ricardo Ribalda <ribalda@kernel.org>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -54,11 +53,11 @@ Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
  linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751310420; l=1246;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751310420; l=1224;
  i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=CsLioO4S0UhSQ7xBbQqFYY0bp80O1MggCmDLd/9lJc8=;
- b=xY/S9YNCYbMxswSn24N7cArYaza0xKkgnfeEQCugtMHm+SSemOAnDrPx5aS1f6dP47z1nF3Ey
- 5ZQuK//kTsYBh+u/a5dcuBvhu2e1OW646Gfd0S9bZSzY0hw47WGNoFJ
+ bh=B0DoG/QzE0dwOg3xIuySaJ133mLZqVs0+/AN502VxYw=;
+ b=lG0lxn/StKH0FQAb/9jjIFE6k22V29bS9210YQKnoanP22iorKdSgUmML+KnrEC1JQSGRo3Wp
+ CZkKn2iRn6XB+VCLz/YJRzdjuIH5u8jWN3BlXkiL1I8QVu6nYtVhCyQ
 X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
  pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
 X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
@@ -66,37 +65,44 @@ X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
 X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 Reply-To: git@apitzsch.eu
 
-The following changes have be suggested by Laurent in [1]. But the
-related series had already be applied. That's why they are addressed in
-this series.
+From: André Apitzsch <git@apitzsch.eu>
 
-[1] https://lore.kernel.org/linux-media/20250621181751.GA9125@pendragon.ideasonboard.com/
+Make it easier to drop the legacy support from the driver later.
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: André Apitzsch <git@apitzsch.eu>
 ---
-Changes in v2:
-- Drop unnecessary sentence from commit message (patch 3/5)
-- Fix typo in summary (patch 5/5)
-- Use imperative mood for commit message (patch 5/5)
-- Add R-b tags
-- Link to v1: https://lore.kernel.org/r/20250629-imx214_fixes-v1-0-873eb94ad635@apitzsch.eu
+ drivers/media/i2c/imx214.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
----
-André Apitzsch (5):
-      media: i2c: imx214: Remove unneeded parentheses
-      media: i2c: imx214: Drop dev argument from imx214_parse_fwnode()
-      media: i2c: imx214: Use __free(fwnode_handle)
-      media: i2c: imx214: Move imx214_pll_update to imx214_ctrls_init
-      media: i2c: imx214: Separate legacy link frequency check from PLL calculation
+diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+index 63cf30acdc241de2f9ab3db339590da4af3d5102..52433775e9baddd8ab988e866a83387d53c1fd5c 100644
+--- a/drivers/media/i2c/imx214.c
++++ b/drivers/media/i2c/imx214.c
+@@ -1362,18 +1362,16 @@ static int imx214_parse_fwnode(struct imx214 *imx214)
+ 		u64 freq = bus_cfg->link_frequencies[i];
+ 		struct ccs_pll pll;
+ 
+-		if (!imx214_pll_calculate(imx214, &pll, freq))
+-			break;
+ 		if (freq == IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+ 			dev_warn(dev,
+ 				 "link-frequencies %d not supported, please review your DT. Continuing anyway\n",
+ 				 IMX214_DEFAULT_LINK_FREQ);
+ 			freq = IMX214_DEFAULT_LINK_FREQ;
+-			if (imx214_pll_calculate(imx214, &pll, freq))
+-				continue;
+ 			bus_cfg->link_frequencies[i] = freq;
+-			break;
+ 		}
++
++		if (!imx214_pll_calculate(imx214, &pll, freq))
++			break;
+ 	}
+ 
+ 	if (i == bus_cfg->nr_of_link_frequencies)
 
- drivers/media/i2c/imx214.c | 245 ++++++++++++++++++++++-----------------------
- 1 file changed, 121 insertions(+), 124 deletions(-)
----
-base-commit: 5e2562c1e46d3623fbdef77693f374eade075840
-change-id: 20250623-imx214_fixes-123f285f5b62
-
-Best regards,
 -- 
-André Apitzsch <git@apitzsch.eu>
+2.50.0
 
 
