@@ -1,99 +1,133 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E191E2E2EFC;
-	Mon, 30 Jun 2025 17:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A752DBF7C;
+	Mon, 30 Jun 2025 17:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304581; cv=none; b=KV4zcYXv12kyDgm9jVOe9ZYMbA0hapmYGhOmj8LkGEi6OdYaVxW/6iXL4z9+nSZdHmEwx+8lrSt29L4vfUCMuFH82IA1dmySH5dPoOQ86OsWt/Uw1ffCp7r6wPrBJn14smihq2EtYYRRgLvN2JbD3iqGPbkral0SjIpJBe3F1MA=
+	t=1751304584; cv=none; b=ucCrDxAbzufCXoyUXG9KsenoWihhKLrXjmcAz7skerQ0HRWQGSsjivHMK0UTbZPhbI+yoE0bf+3tHmXz+jbhDdXUF8/e+aOIYZQinmlIKKnWnfM+IUrAsl6CaoBFDzucUxCn38zfp7g5XlmtNh+d1cD65RI4Snk0PJEGbMUevMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304581; c=relaxed/simple;
-	bh=CUYIdjmgv9njUUHSesywfXCZRgrZmBoh9yxN+weH9h4=;
+	s=arc-20240116; t=1751304584; c=relaxed/simple;
+	bh=2EXuYQU7ofnFyRQG+83B5WuZEhJmLAt5qEiC4cw0Gmg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l/RyOHyFb6LOqwpf4seqJmfUfR8ajAVeEt2NYut1F0oH8WKdQaOWnHtyeTm2h72guneTund7j1VMGjrnBOm1fjMDydxscHU3zh+0oQs0lmJdaYgheo1QZMjxcZW995n2nPK4sXbSQCokZipmwht9SY0NFAsQnm4DYhmDQfFXrug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y483vTnz; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=U6DzinQ5bygsJzikLB73KuA1UZMdNXxAeR/inRjkdfhfFEtzHrIogBDm+1iaLgfVS/sLlrWjYPF481tRCyKjiaISFUx/vHNWJgxdjfKWqq8BAPdvBHL0oBF7TsIhEd6qzVDtzpgXIW4+LdRrO6o6AejBF7F+Vm8vF8litLAuo/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JyhlBMHy; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y483vTnz"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235248ba788so4160855ad.0;
-        Mon, 30 Jun 2025 10:29:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyhlBMHy"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-312efc384fcso585362a91.3;
+        Mon, 30 Jun 2025 10:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751304579; x=1751909379; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751304582; x=1751909382; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CUYIdjmgv9njUUHSesywfXCZRgrZmBoh9yxN+weH9h4=;
-        b=Y483vTnzTdj9jL76I8gxnUEW2ebBucFjeuw3nDfz/6sDOwSlVbTjYxWvU8i1Jm+nal
-         H/oGuMKcShDneGuCoSJsXm0UQl0GKicgXR7jtbp87NGwNXVtQKA2g/TF2wga5cRq9Edi
-         kkx0eGdvDwkK47w3Aft9wu3LlkOPXK45iTL3LzIn/nBZo+0yO5BR6psg40p161P+FW+F
-         A0HVaYknq8JMnM0HnTU5GAxXADkdvKIbY/n+8J6KpWiEXjk+OIOEWKHmFHp8FSdicgNu
-         L/03KYFuFp87CgNFF+tp/zKW8PHcJ8954aCshNyQv8sNZkxqRd2TnLOSbp+sepuu5+c+
-         CbUA==
+        bh=2EXuYQU7ofnFyRQG+83B5WuZEhJmLAt5qEiC4cw0Gmg=;
+        b=JyhlBMHyg97spm5L6SCRl4lD85oO4h1v5VPfeZ3fz3ULoBfq8c1QRvcaU0Uwcr2Ih3
+         QDFtAX6JnFPBJVaZaQ330Mw4/IBmVBb2I4r+CyOWTaD4eH0xULjVILifkyMS90wYhQUZ
+         t6s6xyprDD27uRH8Npv9ncRY2AwU5Zm89GolEpbTuz18Ecf6HZz4wO1csPEvSiRzglBB
+         s/Cx7cmcyzTOdmJRiqp6MBUYsuxLnOUyXjTzo3PDFjqEVRm+CgITBKblpUMTiVr7usSB
+         /eOCeG5IN+SCQer3Dab3mc65lGsgsdlv1amAnqk0H6e3056rRXkxRc/+wDyA+OnyUoDl
+         R5Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751304579; x=1751909379;
+        d=1e100.net; s=20230601; t=1751304582; x=1751909382;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CUYIdjmgv9njUUHSesywfXCZRgrZmBoh9yxN+weH9h4=;
-        b=m78Y1Lz2v/vn6sWA8ZkovYPbwVrSy5ydPmo6XpKPQfoHDBw/UXzleZf8rVvQ9eYzww
-         CCv2kb/89CbBAc1ApY46ek1fJK/QQZ+dTOO9jSG+mDvp+8vtxLwzjuVxRaewrHa/GYe1
-         WY74S9J0AY7qTm0nIyWISsdJJUHRADOzbOyVY73KF0TX3vhgXV1wFWBF2k/B1fF7DKMW
-         GJ9WTZF8fq1nVYM5Dt4ULK6syMIcTLUjX5bByAHoKxWN6JUL4dvvMG1e4mBc8D4Cj1iR
-         AI0EGogXguKLNKAF/L2qiP4nKxewZmCAhJZ1AUKiVyGGmzOxxeWcJHC1Fwd92HMmDA8k
-         cqHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDTKOID6m0QY4r4ey8IB+ajM5b5m2X/1mPkraRDGdLmo7sLfYWn1bDzg6iZsPLZBhADzlIRf1aLarO4sShoVI=@vger.kernel.org, AJvYcCUavvKGx/2UqXZFwGj3WT219HYuRZv5bD94H+HMYEycz53mc/+z81ttphHr2rOvHV9p+m1lK3zxDLh5OP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIV/vXxJNK52KCsjFAy7sBH8Hrf4zuRZ3TKts+8OlMo8DhhLyJ
-	Fx9tjPY00v6jvVNq9gLlDt04Zp20pXBS9VRu3toiicAjy49O4+ESJ4yocsneL3tSFJDqTj4MKsb
-	Q2rr6+tb5iX8PknhdOjtXLxToE4anhIg=
-X-Gm-Gg: ASbGncuM676gcr7AUq33ow0fRrO5tx4l4tXvzhoA2mT++NZ9F4d7cMsIYyQEId78B16
-	7rTRRw+C1XIAEtZzI4T6chE8XR92KAb5cFPv2u1aNIZ1B5CYnjs2DhI+S+2k1/nVaeKVByfCqsM
-	tXv1mlle8sni3gJkqJQ0nZQ/TCJn1p9yHvtPLExonL09latfeftjNM7Q==
-X-Google-Smtp-Source: AGHT+IGlkyCbo6YfmrmszAWcBbTqpCcv1RsznazCnMzfIyfKQkN92UVyVeB8q+z39JjyvyKMtBZVUyeG1clRThxO3Bw=
-X-Received: by 2002:a17:902:c412:b0:235:f250:84be with SMTP id
- d9443c01a7336-23ae93fe435mr60182125ad.9.1751304579036; Mon, 30 Jun 2025
- 10:29:39 -0700 (PDT)
+        bh=2EXuYQU7ofnFyRQG+83B5WuZEhJmLAt5qEiC4cw0Gmg=;
+        b=dXDKDCp8khEsolq3KFrogN1LvCVOUkCSAzKt7uHn19UO+7t0IrlDW95lLfHFWrExDv
+         aB8E/6DffDReKuzFuby4PlVx4dBdVKzvbFd4Box8akDFmsYqF5eeXXkWO4UyC6A9vp2G
+         KpyldcNc7yZ9OmeXjnyj8mOnDjLu9qHo3t+I+BuyHV0ohOEXrw1E+22Gk2EEEaNx0qZo
+         j7sNsULMZROhac73US4dTzEG7gadRiIKGV0b5S1H4CM/AsdapngQ+Cwo80Z9V6S7ohzH
+         G/cqKPvFc7bexGZC5RNqlau+xB3fb+fm+XhajzZaUjle793XvwXdZLQha620TLJqTJl6
+         X1Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/bEAQxhslokvD4nrig3CG3baAFEoFbOi8EX3rwrqVSgJswvrR9CwG0bd9sYrrpeg0bqsplVRPWCVDdCV78As=@vger.kernel.org, AJvYcCVAnMLCY7/Wx6os/fg2Evs/+nvRJmh1VZNS6myxv+L1lzoPu3aKfIJQRhS+zCFpXoGlqqYwzFS6QumMvag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQGWjZ5iSdUanavgn2ZukkS2NSo0uv2UfLwTRiF9ayQ4iFbCjp
+	j7MpQNXT9O6OONPDkH7oX8A1tsOCWAkvvwtbUvGw5ElQKz7rktV0lnv1E9bFd4K7E6033UBYlqg
+	UxhNkhoa8ogp2BtDZ2G1buxd1BU5N5/k=
+X-Gm-Gg: ASbGncuUgAxFzeT5K7hyK2+Sm/xLJoUluDIe6GDURm0CxYr88YvOsuYpW1RnyGaqxko
+	SmdvznJoq6BYv1r4TuXQ6AIK+PzoVwBMBut5tZOzasv4dPyq/ZbhgZgYAcUji4Q5WVQjEr97AfU
+	Few/zqdQUZBxuaG/nc6XCJeJAmBep7Q2RYRpFS61P3n34iD1TbjTGBZw==
+X-Google-Smtp-Source: AGHT+IHNFAoy4LZZlwy+/lc9cF0GFvTc1DQcOMPk7F5P4dPZFOhIkhTNy3nlwLcOglC6k+NTX3ec5cp0d0xZXUE089s=
+X-Received: by 2002:a17:90b:390b:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-318edd3da95mr5373513a91.0.1751304582241; Mon, 30 Jun 2025
+ 10:29:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com> <aF8lYpK_l2I-ts1k@pollux>
- <9D9AFE08-2CBB-4A89-866D-512D9080754C@collabora.com> <CANiq72mgt4ZD43Tm2bFr-gpicXMhFbC2DLqA6F0rN_J4rAe_CQ@mail.gmail.com>
- <CAL_JsqJktA2F4y8YFfZ5FzrwrJbtxkbiqts1LWT2KvXLSSDLjg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJktA2F4y8YFfZ5FzrwrJbtxkbiqts1LWT2KvXLSSDLjg@mail.gmail.com>
+References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com> <CANiq72nJcEM09HbQB3_NpKGxr9x8Ah0VE+=XS=xvA26P2qg=_g@mail.gmail.com>
+ <48605183-78B6-461E-9476-C96C8E55A55D@collabora.com> <CANiq72kWGUbpDW+WjKki4JUYX63j_GFBcyQse-rgddwyoFw7cg@mail.gmail.com>
+ <5F5F10F8-C082-44AA-9126-3436E14D0855@collabora.com>
+In-Reply-To: <5F5F10F8-C082-44AA-9126-3436E14D0855@collabora.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 30 Jun 2025 19:29:26 +0200
-X-Gm-Features: Ac12FXxGto_ukqtLcE7Azeq2vHM4J-jtxUirDXVzVuk5d6cwm2TGh_Ol6EnHOWI
-Message-ID: <CANiq72mnQWU13qYi1jrhyhwp7iRPPijQ-pXJcyZhwS9WcbXo5w@mail.gmail.com>
+Date: Mon, 30 Jun 2025 19:29:29 +0200
+X-Gm-Features: Ac12FXzbdm4NBVEeo_qmkEvUx8JoBPgE0GdbkjzAa5lShkG5ds9T9qC8hzuoveA
+Message-ID: <CANiq72kYP5WcrFNhdAuJ_mK6s4kuBoJp3E_88HrXU4zfcb5UzQ@mail.gmail.com>
 Subject: Re: [PATCH] Introduce Tyr
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
 	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
 	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
 	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
 	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Daniel Stone <daniels@collabora.com>, Alice Ryhl <alice.ryhl@google.com>, 
-	Beata Michalska <beata.michalska@arm.com>, Carsten Haitzler <carsten.haitzler@foss.arm.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Stone <daniels@collabora.com>, Rob Herring <robh@kernel.org>, 
+	Alice Ryhl <alice.ryhl@google.com>, Beata Michalska <beata.michalska@arm.com>, 
+	Carsten Haitzler <carsten.haitzler@foss.arm.com>, 
 	Boris Brezillon <boris.brezillon@collabora.com>, Ashley Smith <ashley.smith@collabora.com>, 
 	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
 	rust-for-linux@vger.kernel.org, kernel@collabora.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 3:52=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
+On Mon, Jun 30, 2025 at 5:23=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
 >
-> No. Drivers rely on empty stubs for all the providers they need. It
-> would be pretty unmaintainable to depend on all of them. You want
-> enabling drivers for compile testing as easy as possible.
+> When I said "in development"I was referring to "dead_code" specifically, =
+as we
+> will invariably have some of that until the other parts of the driver lan=
+d.
+>
+> Just as an example: IMHO it doesn't make much sense to only introduce the
+> register definitions used for this patch if we know for sure that:
+>
+> a) the currently unused definitions will be used once the subsequent part=
+s land,
+>
+> b) they will not change, as they're derived from the hardware itself
+>
+> It makes more sense to just sit down and transcribe this part of the spec=
+ at
+> once. It lowers the chance of copy and paste errors too.
+>
+> As I said, I was unfamiliar with "expect". Can it be made to work on a mo=
+dule
+> level? Anyway, I can try to make this work with "expect" instead of =E2=
+=80=9Callow", no
+> worries :)
 
-That is fine -- I was referring to the current patch, which at the
-moment requires it to build.
+Hmm... I am not sure what you are trying to say -- using `expect`
+should just generally be as simple as changing the word from `allow`.
+`expect` works like `allow`, except it will complain if the lint does
+not trigger. It is essentially just that. And, yeah, it works on
+modules.
+
+In particular, it should not change how you decide anything else. In
+other words, it is not about avoiding `dead_code`, but rather about
+using a better `allow(dead_code)`.
+
+Sometimes `allow` is simpler, e.g. when triggering a lint depends on
+the kernel configuration or other reasons, in which case using `allow`
+is just fine (please see the docs I linked). But I don't think you are
+in those cases (e.g. I don't see conditional compilation, at least in
+the patch above), so that is why I suggested it.
+
+I hope that clarifies.
 
 Cheers,
 Miguel
