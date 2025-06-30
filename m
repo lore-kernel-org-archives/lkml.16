@@ -1,262 +1,304 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9678289E17;
-	Mon, 30 Jun 2025 12:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF968285C89;
+	Mon, 30 Jun 2025 12:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285311; cv=none; b=PIcG6zY8hJrj6lJfqNr+Sp/xxynE+16199xmdQhgxLQM6hddMGn4YYeTd3Z9a2+Occvy+kHpKP/B9Ge1L7ZzgFCzQn7zkAbiIzF4MRuQp3i3CwB31selnYFfXjcHrNAWvXfus+26iHKXS+Vjc8Kl5jzm3WJ4vTl7qu9UiBdEoBg=
+	t=1751285362; cv=none; b=RjzeQuegOmRXQ7lxvt8bRYNGOYFtDZzi/7yFmopKzOLcbrG4wmCQbsPPgAU5P8ZScPX80uu7WjGTUszCSgylMLv8U12QBsBVHBbN2sMmmfKk9DQ593fVp144DbSFeLCEciyQQDJFDJY2ewnUhlqPgvsr6zqxQg21T/goas0OkHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285311; c=relaxed/simple;
-	bh=tvZg4BwFQFp9qXk8LOfSnmYas1LLCBXoBwsdinGav/4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Nm8Jon3GuVOq1gAZxAx01nY0KMKYXearyYJ5/ZrG8Dkok9TI4n7bPEWe3JjIRMZHlpIyJX3d9e2AWpFval0bhGqMy13s8NYp7ai2Aq4KUOW6eU2oywTU7wDbZzvPkjjJGESl6t3bAIw6w20RopoQenvvIDRbNs9FSkrmHG5ZucQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaNXEMZg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751285362; c=relaxed/simple;
+	bh=mjcDggyNISX/qzUMVv+sNg50fc1cVis7bTvUTXsAkTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pjwW+FqQ+QlStQVeEGDE/lpcvoIgL8Lblbja/wqGR8iEpEemIgZsofhWYxBPVKrDnYH5WYdtUAgxeZK0gJR8Rlf8PiyH+K53GO/0nZHvNR2/gAS2Oc3u7WerOLLiBZHUA3fV/N9y2kFjXQhPNfZjwJ0r+28jlmuREV9cd8Vqe70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/F+EUkG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaNXEMZg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751285310; x=1782821310;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tvZg4BwFQFp9qXk8LOfSnmYas1LLCBXoBwsdinGav/4=;
-  b=AaNXEMZgvUkiTAXKdoL+G0E1uyMrNsh8+4bVpfvQWsd7YU+0ssyYL9DE
-   PO56H2lek8Fp7gzXa5qOSeUPQf8XZ+JNSupBVgXoxQxEbVHkCS5ku8R2p
-   xuJNzIH/MOKtHLR0JFN5Z76VeyZTh10O58jpqUx4bfr0AGzzyYHLPUM6S
-   eeHQP5lT7Dd+srL4f5qx5Nx7ms6y9OV9hGZk/3SGh3eoJOgqLBDOHf/Ng
-   vQcxwfCbmSReNNc7lKWb8NXdHfN08E5z3Cl0guVRl/1l9alz33VSdV7g6
-   AIpdG9001yJQwiN7L2LKx+E23i+EwbE8i2nvqta81TInLObVaQAJe+Ej6
-   w==;
-X-CSE-ConnectionGUID: 3iz39t/nTC2DqX1Zq3Fwbg==
-X-CSE-MsgGUID: aCqbF8cxRtOy0vAlxc3L8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="76057586"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="76057586"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 05:08:29 -0700
-X-CSE-ConnectionGUID: CYx8uifpR/mRmsaaFAKvDg==
-X-CSE-MsgGUID: 3akPhiGtQN+cqO7jT2YXiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="158950341"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 05:08:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Jun 2025 15:08:24 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH V2] platform/x86/intel/pmt/telemetry: Add API to retrieve
- telemetry regions by feature
-In-Reply-To: <20250617014041.2861032-15-david.e.box@linux.intel.com>
-Message-ID: <077c52bb-6dec-a140-cd7b-8bf26f46dc65@linux.intel.com>
-References: <20250617014041.2861032-1-david.e.box@linux.intel.com> <20250617014041.2861032-15-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/F+EUkG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFA7C4CEE3;
+	Mon, 30 Jun 2025 12:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751285361;
+	bh=mjcDggyNISX/qzUMVv+sNg50fc1cVis7bTvUTXsAkTY=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b/F+EUkGv/BEQbbyjSsIGu3E4mwQlQ6Cr4RMdjl7EIQLShHOV4mIarsITKFSOSbkf
+	 0VIV7rgrse6Be8VEq0hPkLNcfyC70yVpCen+wFg8ESCThGQzuwoNCLJgkRMzpo/Vk8
+	 9aI7F9pPc0s23CPcaPO5Lqu6U2PM8zHKgDTRauu/Hy5+4eDyz72GLotl5qp+x9RfE/
+	 YECHwCWLi6hK/Ott+CJfw1ZkvesOXIcke0fuDU0WjEAX03KpxtFDtG3B1Z/Z/YCd29
+	 hd5q9pqq0b2JwdITMfoluQT28ONjey2+V1KKavZ1+AzV+FoWWH8QvqlTwQM5oc60/q
+	 nQV6kE+xee2ig==
+Message-ID: <bcfc588e-71de-4715-bcdb-754afaba3b50@kernel.org>
+Date: Mon, 30 Jun 2025 14:09:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH v2 1/2] module: Fix memory deallocation on error path in
+ move_module()
+To: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250618122730.51324-1-petr.pavlu@suse.com>
+ <20250618122730.51324-2-petr.pavlu@suse.com>
+Content-Language: en-US
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250618122730.51324-2-petr.pavlu@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Jun 2025, David E. Box wrote:
+On 18/06/2025 14.26, Petr Pavlu wrote:
+> The function move_module() uses the variable t to track how many memory
+> types it has allocated and consequently how many should be freed if an
+> error occurs.
+> 
+> The variable is initially set to 0 and is updated when a call to
+> module_memory_alloc() fails. However, move_module() can fail for other
+> reasons as well, in which case t remains set to 0 and no memory is freed.
+> 
+> Fix the problem by initializing t to MOD_MEM_NUM_TYPES. Additionally, make
+> the deallocation loop more robust by not relying on the mod_mem_type_t enum
+> having a signed integer as its underlying type.
 
-b4 didn't like how this patch was created and failed to link it with the 
-rest of the series.
+This is a follow up based on v1 discussion [1] regarding a way to reproduce
+the leak.
 
--- 
- i.
+[1]
+https://lore.kernel.org/linux-modules/ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org/
 
-> Introduce a new API, intel_pmt_get_regions_by_feature(), that gathers
-> telemetry regions based on a provided capability flag. This API enables
-> retrieval of regions with various capabilities (for example, RMID-based
-> telemetry) and provides a unified interface for accessing them. Resource
-> management is handled via reference counting using
-> intel_pmt_put_feature_group().
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> 
-> Changes in v2:
->   - In pmt_telem_get_endpoint_info() use __free() for feature_group
->   - Add missing header for ERR_PTR()
->   - Split static inline function into multiple lines
-> 
->  drivers/platform/x86/intel/pmt/telemetry.c | 89 +++++++++++++++++++++-
->  include/linux/intel_vsec.h                 | 18 +++++
->  2 files changed, 106 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-> index 58d06749e417..a4dfca6cac19 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -9,16 +9,21 @@
->   */
->  
->  #include <linux/auxiliary_bus.h>
-> +#include <linux/bitops.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/err.h>
->  #include <linux/intel_pmt_features.h>
->  #include <linux/intel_vsec.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> -#include <linux/overflow.h>
-> +#include <linux/xarray.h>
->  
->  #include "class.h"
->  
-> @@ -209,6 +214,87 @@ int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
->  }
->  EXPORT_SYMBOL_NS_GPL(pmt_telem_get_endpoint_info, "INTEL_PMT_TELEMETRY");
->  
-> +static int pmt_copy_region(struct telemetry_region *region,
-> +			   struct intel_pmt_entry *entry)
-> +{
-> +
-> +	struct oobmsm_plat_info *plat_info;
-> +
-> +	plat_info = intel_vsec_get_mapping(entry->ep->pcidev);
-> +	if (IS_ERR(plat_info))
-> +		return PTR_ERR(plat_info);
-> +
-> +	region->plat_info = *plat_info;
-> +	region->guid = entry->guid;
-> +	region->addr = entry->ep->base;
-> +	region->size = entry->size;
-> +	region->num_rmids = entry->num_rmids;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pmt_feature_group_release(struct kref *kref)
-> +{
-> +	struct pmt_feature_group *feature_group;
-> +
-> +	feature_group = container_of(kref, struct pmt_feature_group, kref);
-> +	kfree(feature_group);
-> +}
-> +
-> +struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{
-> +	struct pmt_feature_group *feature_group __free(kfree) = NULL;
-> +	struct telemetry_region *region;
-> +	struct intel_pmt_entry *entry;
-> +	unsigned long idx;
-> +	int count = 0;
-> +	size_t size;
-> +
-> +	if (!pmt_feature_id_is_valid(id))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	guard(mutex)(&ep_lock);
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		if (entry->feature_flags & BIT(id))
-> +			count++;
-> +	}
-> +
-> +	if (!count)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	size = struct_size(feature_group, regions, count);
-> +	feature_group = kzalloc(size, GFP_KERNEL);
-> +	if (!feature_group)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	feature_group->count = count;
-> +
-> +	region = feature_group->regions;
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		int ret;
-> +
-> +		if (!(entry->feature_flags & BIT(id)))
-> +			continue;
-> +
-> +		ret = pmt_copy_region(region, entry);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-> +
-> +		region++;
-> +	}
-> +
-> +	kref_init(&feature_group->kref);
-> +
-> +	return no_free_ptr(feature_group);
-> +}
-> +EXPORT_SYMBOL(intel_pmt_get_regions_by_feature);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
-> +{
-> +	kref_put(&feature_group->kref, pmt_feature_group_release);
-> +}
-> +EXPORT_SYMBOL(intel_pmt_put_feature_group);
-> +
->  int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
->  {
->  	u32 offset, size;
-> @@ -353,3 +439,4 @@ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
->  MODULE_LICENSE("GPL v2");
->  MODULE_IMPORT_NS("INTEL_PMT");
-> +MODULE_IMPORT_NS("INTEL_VSEC");
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index f63e67398a8e..0d127d3a18b3 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/auxiliary_bus.h>
->  #include <linux/bits.h>
-> +#include <linux/err.h>
->  #include <linux/intel_pmt_features.h>
->  
->  /*
-> @@ -220,4 +221,21 @@ static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pd
->  	return ERR_PTR(-ENODEV);
->  }
->  #endif
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMT_TELEMETRY)
-> +struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
-> +#else
-> +static inline struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void
-> +intel_pmt_put_feature_group(struct pmt_feature_group *feature_group) {}
-> +#endif
-> +
->  #endif
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> prerequisite-patch-id: b38c42e1e0ad4a9d7c2bad26bafc44e4710b221e
-> prerequisite-patch-id: 8c78f389183292e444aea2450bbd9c49cbd2b276
-> prerequisite-patch-id: cde36b6a28c7c6b8fce58aecfef7f442ff6d1e50
-> prerequisite-patch-id: 0657fb342c016c1aa47501c17a69e78178371c02
-> prerequisite-patch-id: a9d8e0500e5eda1146a3203d70375ae2b2b25a9d
-> prerequisite-patch-id: c8b1a9d4e48c13353cc41b815b69141118b3d457
-> prerequisite-patch-id: 6f676b5e6d90b87fb8e39154998cc06f0cd99914
-> prerequisite-patch-id: 4aa05c3ad0e61fe133ee82d84831a451ec551f5d
-> prerequisite-patch-id: d92f2986c580d720420a371923f788265d22dc02
-> prerequisite-patch-id: f281f452c8cdc2545abc881f4761a79b633b2847
-> prerequisite-patch-id: 01215266d8d3e0450ed991feb1d17a9b54ed771b
-> prerequisite-patch-id: ee9f8ca9f1357aebd5f240a1b089be1f0e3258e9
-> prerequisite-patch-id: 82ee7c3801bca82569d1cf8febcab7ded56e5bd1
-> 
+I tried using eBPF and moderr [2][3] to find a way to reproduce this. I run into
+some issues but I applied some workarounds. If this is useful we can check at
+how to solve this properly.
+
+[2] moderr RFC:
+https://lore.kernel.org/linux-modules/20250122-modules-error-injection-v1-0-910590a04fd5@samsung.com/
+
+[3] updated moderr branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/da.gomez/linux.git/?h=b4%2Fmodules-error-injection
+
+The logs below show an A/B test memory consumption comparison when a module
+is loaded and leaked (A) because of the issue described in the commit log
+vs when is correctly loaded/unloaded (B). Besides observing a huge leak,
+kernel logs (dmesg) show the message "execmem: unable to allocate memory".
+Note that we can't use kmemleak as we skip it with kmemleak_not_leak() in
+module_memory_alloc(), except for is_rox memory.
+
+Memory lost:
+A test: 1220444 kB
+B test: 892 kB
+
+Thoughts?
+
+
+Workflow to reproduce the issue (before applying this patchset):
+
+1. Run moderr to return error in codetag_needs_module_section()
+
+sudo moderr \
+  -modname=brd
+  --modfunc=module_codetag_needs_module_section \
+  --error=1
+
+Note: We can also force codetag_alloc_module_section() with:
+
+sudo moderr \
+--modname=brd \
+--modfunc=module_codetag_alloc_module_section \
+--error=-22
+ 
+2. Run a loop to probe a module with:
+
+while true; do modprobe brd; done
+
+3. Monitor memory before/after and check delta:
+
+Note: this output it's a wrapper around the above loop.
+
+[*] Dropping caches...
+[*] Wait...
+[*] Starting memory: 6758564 kB
+[*] Loop 200s...
+[*] Wait...
+[*] Dropping caches...
+[*] Wait...
+[*] Ending memory: 5538120 kB
+[*] Memory lost: 1220444 kB
+--- meminfo_before.txt  2025-06-30 10:29:49.880661145 +0000
++++ meminfo_after.txt   2025-06-30 10:33:20.091501671 +0000
+@@ -1,38 +1,38 @@
+ MemTotal:        8133036 kB
+-MemFree:         6858820 kB
+-MemAvailable:    6758652 kB
+-Buffers:            2576 kB
+-Cached:            73164 kB
++MemFree:         5620596 kB
++MemAvailable:    5538204 kB
++Buffers:            2552 kB
++Cached:           107256 kB
+ SwapCached:            0 kB
+-Active:            25448 kB
+-Inactive:          95272 kB
+-Active(anon):        176 kB
+-Inactive(anon):    45684 kB
+-Active(file):      25272 kB
+-Inactive(file):    49588 kB
++Active:            67688 kB
++Inactive:          95284 kB
++Active(anon):        184 kB
++Inactive(anon):    54028 kB
++Active(file):      67504 kB
++Inactive(file):    41256 kB
+ Unevictable:           0 kB
+ Mlocked:               0 kB
+ SwapTotal:             0 kB
+ SwapFree:              0 kB
+-Dirty:               468 kB
++Dirty:              2804 kB
+ Writeback:             0 kB
+-AnonPages:         45192 kB
+-Mapped:            72028 kB
+-Shmem:               916 kB
+-KReclaimable:       5816 kB
+-Slab:              42336 kB
+-SReclaimable:       5816 kB
+-SUnreclaim:        36520 kB
+-KernelStack:        1984 kB
+-PageTables:         2652 kB
++AnonPages:         53556 kB
++Mapped:           105784 kB
++Shmem:               936 kB
++KReclaimable:       7468 kB
++Slab:             176080 kB
++SReclaimable:       7468 kB
++SUnreclaim:       168612 kB
++KernelStack:        2016 kB
++PageTables:         5472 kB
+ SecPageTables:         0 kB
+ NFS_Unstable:          0 kB
+ Bounce:                0 kB
+ WritebackTmp:          0 kB
+ CommitLimit:     3542228 kB
+-Committed_AS:      89960 kB
++Committed_AS:      92956 kB
+ VmallocTotal:   34359738367 kB
+-VmallocUsed:        5112 kB
++VmallocUsed:     1041252 kB
+ VmallocChunk:          0 kB
+ Percpu:             1712 kB
+ AnonHugePages:      4096 kB
+@@ -49,6 +49,6 @@
+ HugePages_Surp:        0
+ Hugepagesize:       2048 kB
+ Hugetlb:         1048576 kB
+-DirectMap4k:       30548 kB
+-DirectMap2M:     3115008 kB
+-DirectMap1G:     7340032 kB
++DirectMap4k:      730964 kB
++DirectMap2M:     3463168 kB
++DirectMap1G:     6291456 kB
+
+4. Check kernel logs
+
+[   30.099667] tee (618): drop_caches: 3
+[  221.695667] execmem: unable to allocate memory
+{...}
+[  226.701772] execmem_vmalloc: 1110 callbacks suppressed
+{...}
+[  231.705976] execmem_vmalloc: 1099 callbacks suppressed
+{...}
+[  231.742226] execmem: unable to allocate memory
+[  231.747107] execmem: unable to allocate memory
+[  240.109107] tee (92935): drop_caches: 3
+
+
+Now, I repeated the test without error injection:
+
+Loop:
+while true; do modprobe brd && rmmod brd; done
+
+
+[*] Dropping caches...
+[*] Wait...
+[*] Starting memory: 6747960 kB
+Loop 100s...
+[*] Wait...
+[*] Dropping caches...
+[*] Wait...
+[*] Ending memory: 6747068 kB
+[*] Memory lost: 892 kB
+--- meminfo_before.txt  2025-06-30 11:21:44.922597662 +0000
++++ meminfo_after.txt   2025-06-30 11:23:35.023419139 +0000
+@@ -1,38 +1,38 @@
+ MemTotal:        8133036 kB
+-MemFree:         6853796 kB
+-MemAvailable:    6747960 kB
+-Buffers:            2920 kB
+-Cached:            61976 kB
++MemFree:         6852956 kB
++MemAvailable:    6747244 kB
++Buffers:            2540 kB
++Cached:            62124 kB
+ SwapCached:            0 kB
+-Active:            25968 kB
+-Inactive:          83616 kB
+-Active(anon):        176 kB
+-Inactive(anon):    45744 kB
+-Active(file):      25792 kB
+-Inactive(file):    37872 kB
++Active:            26744 kB
++Inactive:          83120 kB
++Active(anon):        172 kB
++Inactive(anon):    46048 kB
++Active(file):      26572 kB
++Inactive(file):    37072 kB
+ Unevictable:           0 kB
+ Mlocked:               0 kB
+ SwapTotal:             0 kB
+ SwapFree:              0 kB
+-Dirty:               996 kB
++Dirty:               452 kB
+ Writeback:             0 kB
+-AnonPages:         45116 kB
+-Mapped:            54632 kB
+-Shmem:               928 kB
+-KReclaimable:       5680 kB
+-Slab:              42392 kB
+-SReclaimable:       5680 kB
+-SUnreclaim:        36712 kB
+-KernelStack:        1888 kB
+-PageTables:         2468 kB
++AnonPages:         45372 kB
++Mapped:            59120 kB
++Shmem:               992 kB
++KReclaimable:       5940 kB
++Slab:              43056 kB
++SReclaimable:       5940 kB
++SUnreclaim:        37116 kB
++KernelStack:        1904 kB
++PageTables:         2460 kB
+ SecPageTables:         0 kB
+ NFS_Unstable:          0 kB
+ Bounce:                0 kB
+ WritebackTmp:          0 kB
+ CommitLimit:     3542228 kB
+-Committed_AS:      81484 kB
++Committed_AS:      81680 kB
+ VmallocTotal:   34359738367 kB
+-VmallocUsed:        5056 kB
++VmallocUsed:        7112 kB
+ VmallocChunk:          0 kB
+ Percpu:             1632 kB
+ AnonHugePages:      2048 kB
+@@ -49,6 +49,6 @@
+ HugePages_Surp:        0
+ Hugepagesize:       2048 kB
+ Hugetlb:         1048576 kB
+-DirectMap4k:       28500 kB
+-DirectMap2M:     3117056 kB
+-DirectMap1G:     7340032 kB
++DirectMap4k:      274260 kB
++DirectMap2M:     3919872 kB
++DirectMap1G:     6291456 kB
