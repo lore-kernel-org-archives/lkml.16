@@ -1,104 +1,126 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E16328A1D4
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CCD290D9C;
+	Mon, 30 Jun 2025 16:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751300906; cv=none; b=Aw8zotsQY4a9j6W6HKQUts5x3QDdkW71l4F9u9pgwNjhTP+ob7ypaYV0tZbzKgLBmhthZR/3UFN/x2TiJolbga+nVId7O9DhTz24y4LJpm99TBiH00DwcjPZA/JWSKSDqapHndu7iO+WXSy9CTPtxdeJNg+nJFlTHYW5UjLkJLM=
+	t=1751301007; cv=none; b=P15rIAduxD9IG7rqGRdA4lLU5mmMhU9Ty0oYehBXxVxDaMlAlqG7rut2b2GpAlkNHUrpvdtyyCIKZjuA6YPWd91tAUVu4exGDXUcYz7Mz7o3ZNFx3Wz8q7tonQuZtZkGy0l5FLscWni7/K8AShODIu4O03PRf+i34d+g9L5WGyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751300906; c=relaxed/simple;
-	bh=kZz5sHMIEYQknhrJKSrbiWd5YuyAAbeWM7s7ko+r/GA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZAXBxOQ6KRgDvvvsIKuxzVSQXtEf8m4fKA6lRgNwd9gCFfcI9GECfzXs1pzmBVPL8h8RbyIZlwXYZNcXeKtefBOl+0hPGNUBTPIvKQSJc2626VNo7AsLMS70BOcKmczj4IjL30Qw0p6hI2w2wlbX3ptO1+7p4p4grBycIiQisoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uhEc38fE; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751301007; c=relaxed/simple;
+	bh=0HxkYgJxPovw38S/ncV1y0Tb+2e4bvKdNpiGuJwX7+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELoba10+obbUhEY+bXiMUVeIBG30mWWwbA3Y8mEh+3DlqtfyrZItuV3iwJ9GYcZ2kzBY+rX6wCvNJef9xSq8Xigdl8mMJ5neN8DPqKYfB+0rPwayhbyZjZrotoe5HV2huySukQMT58RNBcAR3VbFR7FFIV+1ixVmF3OuOTK3xHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWS6p1Zq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uhEc38fE"
-Message-ID: <bf733634-cb99-48db-9b02-09b9700cd1f0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751300893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lO8fF4ZORcVnpss8t30+j+JORZPUFhEkRrsTLVwbWlk=;
-	b=uhEc38fE1oedPOeKthtmO5ZaenunlM/yUS6Oy2FsJydoCnS5wdUne4Eejv4eW4uQBmBRSH
-	0cd4Ffqtdi1fcFv2Q3SYquB6XlbjYb+RZQoSB53CQkE5GbLh3yKYOkk1d2pVYwzerAclVU
-	WI+x25s4CDgdHYVLZVvwnXXd95nO96c=
-Date: Tue, 1 Jul 2025 00:28:03 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWS6p1Zq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B14FC4CEE3;
+	Mon, 30 Jun 2025 16:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751301006;
+	bh=0HxkYgJxPovw38S/ncV1y0Tb+2e4bvKdNpiGuJwX7+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GWS6p1ZqJY1wyPDCa5Q+4k7uUZFH7e1dhC6M0vVyKzT0AWn1SyJC1X1g/4Hqu/63a
+	 3WJAloRinPotqkJKcJxkD7KgWvhkyIcaKT8cfy6pTMBVbKyFRUTqRrNd51K/P+gy3G
+	 8Yp58LunVtmh0MFDS+s35dAS32ijVX60vAV6hmVTY0b2dHAbKmPBb7v1XH58A29SGo
+	 H3hoDDjwJ5fUR/VD9TgSokq65t0ANmV6I8CsnYSpRaJmBF/i7wY3OS+jRqqxRiefw/
+	 qzfYVjeL+W/AC+4ihwgUS1oDXrhHGh9KWunYqEVkUDgyXYkIoQDFOg+b98ZAZmbje9
+	 Vdsgs/5TwzvlQ==
+Date: Mon, 30 Jun 2025 17:29:59 +0100
+From: Simon Horman <horms@kernel.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Felix Fietkau <nbd@nbd.name>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
+	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
+	Sky Huang <skylake.huang@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next v2 3/3] net: ethernet: mtk_eth_soc: use genpool
+ allocator for SRAM
+Message-ID: <20250630162959.GA57523@horms.kernel.org>
+References: <cover.1751229149.git.daniel@makrotopia.org>
+ <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: =?UTF-8?Q?Re=3A_=5BRFC_v2_00/11=5D_dm-pcache_=E2=80=93_persistent-m?=
- =?UTF-8?Q?emory_cache_for_block_devices?=
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
- dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250605142306.1930831-1-dongsheng.yang@linux.dev>
- <dc019764-5128-526e-d8ea-effa78e37b39@redhat.com>
- <3c9f304a-b830-4242-8e01-04efab4e0eaa@linux.dev>
- <202b7987-5652-ba46-2f9d-1a90679d89b5@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-In-Reply-To: <202b7987-5652-ba46-2f9d-1a90679d89b5@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
 
+On Sun, Jun 29, 2025 at 11:22:44PM +0100, Daniel Golle wrote:
+> Use a dedicated "mmio-sram" and the genpool allocator instead of
+> open-coding SRAM allocation for DMA rings.
+> Keep support for legacy device trees but notify the user via a
+> warning to update.
+> 
+> Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+> v2: fix return type of mtk_dma_ring_alloc() in case of error
+> 
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 120 +++++++++++++-------
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.h |   4 +-
+>  2 files changed, 84 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 
-在 6/30/2025 11:57 PM, Mikulas Patocka 写道:
->
-> On Mon, 23 Jun 2025, Dongsheng Yang wrote:
->
->> +static int dm_pcache_map_bio(struct dm_target *ti, struct bio *bio)
->> +{
->> +     struct pcache_request *pcache_req = dm_per_bio_data(bio, sizeof(struct pcache_request));
->> +     struct dm_pcache *pcache = ti->private;
->> +     int ret;
->> +
->> +     pcache_req->pcache = pcache;
->> +     kref_init(&pcache_req->ref);
->> +     pcache_req->ret = 0;
->> +     pcache_req->bio = bio;
->> +     pcache_req->off = (u64)bio->bi_iter.bi_sector << SECTOR_SHIFT;
->> +     pcache_req->data_len = bio->bi_iter.bi_size;
->> +     INIT_LIST_HEAD(&pcache_req->list_node);
->> +     bio->bi_iter.bi_sector = dm_target_offset(ti, bio->bi_iter.bi_sector);
->>
->> This looks suspicious because you store the original bi_sector to
->> pcache_req->off and then subtract the target offset from it. Shouldn't
->> "bio->bi_iter.bi_sector = dm_target_offset(ti, bio->bi_iter.bi_sector);"
->> be before "pcache_req->off = (u64)bio->bi_iter.bi_sector <<
->> SECTOR_SHIFT;"?
->>
->>
->> Yes, that logic is indeed questionable, but it works in testing.
->>
->> Since we define dm-pcache as a **singleton**, both behaviors should
->> effectively be equivalent, IIUC. Also, in V1 I moved the call to
->> `dm_target_offset()` so it runs before setting up `pcache_req->off`,
->> making the code logic correct.
-> If this target is singleton, you can delete the call to dm_target_offset
-> at all.
->
-> That call is harmless, but it looks confusing when reviewing the code,
-> because pcache_req->off is set to the absolute bio sector (from the start
-> of the table) and bio->bi_iter.bi_sector is set to the relative bio sector
-> (from the start of the target). If the target always starts at offset 0,
-> dm_target_offset just returns bi_sector.
+...
 
+> @@ -5117,16 +5148,27 @@ static int mtk_probe(struct platform_device *pdev)
+>  			err = -EINVAL;
+>  			goto err_destroy_sgmii;
+>  		}
+> +
+>  		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
+> -			if (mtk_is_netsys_v3_or_greater(eth)) {
+> -				res_sram = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -				if (!res_sram) {
+> -					err = -EINVAL;
+> -					goto err_destroy_sgmii;
+> +			eth->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
+> +			if (!eth->sram_pool) {
+> +				if (!mtk_is_netsys_v3_or_greater(eth)) {
+> +					/*
+> +					 * Legacy support for missing 'sram' node in DT.
+> +					 * SRAM is actual memory and supports transparent access
+> +					 * just like DRAM. Hence we don't require __iomem being
+> +					 * set and don't need to use accessor functions to read from
+> +					 * or write to SRAM.
+> +					 */
+> +					eth->sram_base = (void __force *)eth->base +
+> +							 MTK_ETH_SRAM_OFFSET;
+> +					eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
+> +					dev_warn(&pdev->dev,
+> +						 "legacy DT: using hard-coded SRAM offset.\n");
+> +				} else {
+> +					dev_err(&pdev->dev, "Could not get SRAM pool\n");
+> +					return -ENODEV;
 
-That makes sense
+Hi Daniel,
 
-Thanx
+Rather than returning, should this
+jump to err_destroy_sgmii to avoid leaking resources?
 
->
-> Mikulas
->
+Flagged by Smatch.
+
+>  				}
+> -				eth->phy_scratch_ring = res_sram->start;
+> -			} else {
+> -				eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
+>  			}
+>  		}
+>  	}
