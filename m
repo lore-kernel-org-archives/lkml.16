@@ -1,185 +1,69 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F551FAC37;
-	Mon, 30 Jun 2025 06:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3221E32A3
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751266532; cv=none; b=AXoKZxtjOQhmAqjxyq5fEOqJBQ/t0zeynG9MI/5/589HPSjdyy/b5hF378onv0B1b1glsdUlE3OJGY2OeD6pPlh32vdOEjG2ms8IVy6J+YjZ4dGhaqDUnGc67SbRVtCjGsN4oh4nymSZ1W45GY1MixPZPi66+gRg4z4wpqIIjo8=
+	t=1751266584; cv=none; b=nrHG+PsgKGPB21sGYcCFI3pm9cpJWRk6zanivQJlA4Pah+S06EC1wUdbfw6FoMaLIOmnf5h3queGlEr1+jB5A9HhFhfGTPW3YINmvsFl1NpRPxryMkpqQ2x7TPHiGQpCa6Jxk1q6zMat+4G6xNCvfu0ToyBq0Q6YVJpH1vGyfH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751266532; c=relaxed/simple;
-	bh=oDRy6+pnTxXZ6RV1g2T7V837UtifdG7isk6y74V3pug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HemnCgHNH/rN8Ss36CLwbZ8gaDYbQSbIhEsiEb7QhwhYTxcOytUPlUuWGwpGGFdlJreqoLBhXEDmc/fTrV5p3RApvFVLBGadWSG3R++tuitQtc5RSt9NLFRsV94AVKsmavubiEtMactS+vQ1DbNntndnSKmPblH/eaH5MJpckGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BFfXnmfR; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751266584; c=relaxed/simple;
+	bh=9k4TDCp1s1sw9Eu4SIhTH14EyDKmYapBGy/5BhYSTlk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uH4EK5SA3aQg7enGe6IcOjue2cNWm78G7XJyjcQXdljn0qs//Rs1wpXYJZEGP6e7pNCBwMavTqP/mCZ1G4We4YlV/tMzAMl4C1LPqsCyPrTDSyhW55iJJ/M+UYU8ZbThA8pB6PjG5l/HcIRoLdX6MJpQFelJ8rAvagNX20BvYE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=DfLz/HnA; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BFfXnmfR"
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="DfLz/HnA"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=JLJNqBrK8VItnnOACmsphdDR0i4rdVFTfR/cReJyqWc=; b=BFfXnmfRPWgSfEp/yk/nwToxln
-	3AHHClgrzCPOIjApa3urqh5eJ9iZr6h2mhdTelSIRYOC0M/FotOA/pw16ScDDVbGWPflIIfEECKsV
-	fVUS5qWvZThRvn9dRmQKG+FK2Y+roz9o1S9ubz1bjKEg80ZB1LJK+fwCXZGpER9yzcFQSFzIFQP8k
-	/X4SgyFWsS/f6EoN+CWus3VrIHw3yefraDc4zZWMimYK9x+2E4SfnLYSO/CG/FPg1R8D+BRQa+a2R
-	4W/Knsm9CSNE+zfgXJ6saoV65ZC1bMGPRWrvbgO/e2my6KHqTLu7NETcn9Fckj7kUo4WiJjTqkSWR
-	gCLSjjYg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW8QI-00000006jn9-3dJp;
-	Mon, 30 Jun 2025 06:55:27 +0000
-Message-ID: <cb9bd1e4-9424-4ed2-bdfa-49c883c60a66@infradead.org>
-Date: Sun, 29 Jun 2025 23:55:25 -0700
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
+	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=9k4TDCp1s1sw9Eu4SIhTH14EyDKmYapBGy/5BhYSTlk=;
+	t=1751266583; x=1752476183; b=DfLz/HnA6ewL/qa4P2Rk6gPe+xgW6kOhwOTPMi/j5ZuHusP
+	YbEsh2a+kg7EgM2ejqGcAXjNUBygiC1YLrxQ+BKuZcn3SMwxb3ne5Ega1p6ioM3TpSOZSeTzMN2XC
+	bmLl4BX8hmEJ1zHMC23KQfcMjIQ5FPvFHfWbDGeYUHoMH1FI1XbCZoNzpwiPm1ILigeOgAidxjvlH
+	LlWsIQ92tJ1jKRFRC48OnExd6inq1s+oPnwOAg8nWqB1zMA8Fk6IpTdH7es4ObVFB1OxOkATiwMdP
+	7YVcFQevKv4qOyxeeqx/J1vEJD4cU95VdTOjC23HTYV4BJAwilA3GDYU/fvzxlLg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uW8Qm-00000000avX-2lH3;
+	Mon, 30 Jun 2025 08:55:58 +0200
+Message-ID: <e64a4c40b0234fc265a74cb60633117dc6911518.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 1/1] um: virt-pci: Switch to
+ msi_create_parent_irq_domain()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Richard Weinberger <richard@nod.at>, Anton
+ Ivanov	 <anton.ivanov@cambridgegreys.com>, linux-um@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 30 Jun 2025 08:55:54 +0200
+In-Reply-To: <5f0bd8e877e7bfdfb1a7e99d6b126caf6a7eea48.1751266049.git.namcao@linutronix.de> (sfid-20250630_085140_752354_0F18E422)
+References: <cover.1751266049.git.namcao@linutronix.de>
+	 <5f0bd8e877e7bfdfb1a7e99d6b126caf6a7eea48.1751266049.git.namcao@linutronix.de>
+	 (sfid-20250630_085140_752354_0F18E422)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/66] kconfig: improve xconfig and gconfig
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-malware-bazaar: not-scanned
 
+On Mon, 2025-06-30 at 08:51 +0200, Nam Cao wrote:
+> Move away from the legacy MSI domain setup, switch to use
+> msi_create_parent_irq_domain().
+>=20
 
+Do you want this to go through the UML tree, or is it a dependency
+somewhere else? In the latter case, I suppose you can add
 
-On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> [xconfig]
-> 
->  - small improvement for choice
-> 
-> [gconfig]
-> 
->  - Fix memory leak
->  - Lots of refactoring
->  - Migrate GTK 2 to GTK 3
->  - Fix all compile warnings
->  - Improve usability (grey out buttons, keep the item selection, etc.)
-> 
-> 
+Acked-by: Johannes Berg <johannes@sipsolutions.net>
+Tested-by: Johannes Berg <johannes@sipsolutions.net>
 
-Hi,
-I have tested all 65 patches here (omitting 52).
-They worked well. Good job.
-I will test your git tree/branch Monday/Tuesday.
-
-I did notice one visual difference. The GTK+2 version of
-gconfig (before the patches) uses an alternating white/light gray
-background for the menu items while the GTK+3 version (after the
-patches) uses an all white background.
-
-I prefer the alternating but it may be just some collateral damage
-in the name of progress.  Or could be something else entirely!
-
-Before you posted all of these gconfig patches, I was going to ask
-how many gconfig users are there?  I don't see much on the mailing
-list about gconfig from users and suggest that maybe we should just
-drop it, but if you are OK with maintaining it and updating it like
-in this patch series, so be it.
-
-I did seem to have found one gconfig user [1]. Maybe you are also
-a gconfig user.
-
-
-[1] https://lore.kernel.org/linux-kbuild/67b44d49-d23c-fab0-e165-cc84817562af@infradead.org/
-
-
-
-> 
-> Masahiro Yamada (66):
->   kconfig: set MENU_CHANGED to choice when the selected member is
->     changed
->   kconfig: qconf: do not show checkbox icon for choice
->   kconfig: qconf: show selected choice in the Value column
->   kconfig: rename menu_get_parent_menu() to
->     menu_get_menu_or_parent_menu()
->   kconfig: re-add menu_get_parent_menu() that returns parent menu
->   kconfig: gconf: make columns resizable
->   kconfig: gconf: fix potential memory leak in renderer_edited()
->   kconfig: gconf: always destroy dialog in on_window1_delete_event()
->   kconfig: gconf: remove old #ifdef GTK_CHECK_VERSION
->   kconfig: gconf: remove empty if-block
->   kconfig: gconf: remove meaningless code in init_main_window()
->   kconfig: gconf: remove unneeded gtk_tree_view_set_headers_visible()
->     calls
->   kconfig: gconf: remove gtk_tree_view_column_set_visible() calls
->   kconfig: gconf: remove gtk_widget_realize() calls
->   kconfig: gconf: remove gtk_tree_view_set_rules_hint() calls
->   kconfig: gconf: remove unnecessary gtk_set_locale() call
->   kconfig: gconf: remove internal-child="image" nodes from glade
->   kconfig: gconf: remove parents[] array and indent variable
->   kconfig: gconf: remove unnecessary NULL checks for tree1 and tree2
->   kconfig: gconf: remove unneeded variable in on_split_clicked()
->   kconfig: gconf: remove unneeded variables in
->     on_treeview*_button_press_event()
->   kconfig: gconf: remove unused 'color' variable
->   kconfig: gconf: add static qualifiers to variables
->   kconfig: gconf: move init_*() functions below
->   kconfig: gconf: refactor view setting code
->   kconfig: gconf: grey out button for current view
->   kconfig: gconf: move the main window event handlers below
->   kconfig: gconf: move button1 initialization below
->   kconfig: gconf: add static qualifiers to event handlers
->   kconfig: gconf: remove glade_xml_signal_autoconnect() call
->   kconfig: gconf: make key_press_event work in left pane too
->   kconfig: gconf: avoid hardcoding model2 in
->     on_treeview2_cursor_changed()
->   kconfig: gconf: avoid hardcoding model2 in renderer_edited()
->   kconfig: gconf: avoid hardcoding model* in
->     on_treeview*_button_press_event()
->   kconfig: gconf: add on_save_clicked() event handler
->   kconfig: gconf: use GtkFileChooser in on_load1_activate()
->   kconfig: gconf: use GtkFileChooser in on_save_as1_activate()
->   kconfig: gconf: use GdkPixbuf in replace_button_icon()
->   kconfig: gconf: refactor replace_button_icon()
->   kconfig: gconf: make introduction, about, license dialogs modal
->   kconfig: gconf: remove global 'tree' variable
->   kconfig: gconf: merge 'current' and 'browsed' global variables
->   kconfig: gconf: preserve menu selection when switching view mode
->   kconfig: gconf: use GtkTreeModelFilter to control row visibility
->   kconfig: gconf: remove global 'model1' and 'model2' variables
->   kconfig: gconf: remove init_tree_model()
->   kconfig: gconf: inline fill_row() into set_node()
->   kconfig: gconf: do not reconstruct tree store when a symbol is changed
->   kconfig: gconf: inline display_list() into set_view_mode()
->   kconfig: gconf: remove dead code in display_tree_part()
->   kconfig: gconf: rename display_tree_part()
->   kconfig: gconf: remove fixup_rootmenu()
->   kconfig: gconf: use size_allocate event handler
->   kconfig: gconf: replace GDK_space with GDK_KEY_space
->   kconfig: gconf: replace GTK_STOCK_{OK,NO,CANCEL}
->   kconfig: gconf: remove "tooltips" property from glade
->   kconfig: gconf: replace "tooltip" property with "tooltip-text"
->   kconfig: gconf: remove unnecessary default message in text view
->   kconfig: gconf: use gtk_check_menu_item_get_active() accessor
->   kconfig: gconf: use gtk_dialog_get_content_area() accessor
->   kconfig: gconf: remove GtkHandleBox from glade
->   kconfig: gconf: rename gconf.glade to gconf.ui
->   kconfig: gconf: migrate to GTK 3
->   kconfig: gconf: replace GtkVbox with GtkBox
->   kconfig: gconf: replace GdkColor with GdkRGBA
->   kconfig: gconf: show GTK version in About dialog
-> 
->  scripts/kconfig/conf.c                    |    2 +-
->  scripts/kconfig/gconf-cfg.sh              |   11 +-
->  scripts/kconfig/gconf.c                   | 1828 ++++++++++-----------
->  scripts/kconfig/{gconf.glade => gconf.ui} |  360 ++--
->  scripts/kconfig/lkc.h                     |    1 +
->  scripts/kconfig/menu.c                    |   20 +
->  scripts/kconfig/qconf.cc                  |   26 +-
->  scripts/kconfig/symbol.c                  |    4 +
->  8 files changed, 1023 insertions(+), 1229 deletions(-)
->  rename scripts/kconfig/{gconf.glade => gconf.ui} (57%)
-> 
-
--- 
-~Randy
-
+johannes
