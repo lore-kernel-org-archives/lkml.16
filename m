@@ -1,244 +1,158 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493E01FDE02;
-	Mon, 30 Jun 2025 08:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270761; cv=fail; b=hmhk2vuF5YD2DgnlSs3KD7q0/6sz39H5DEkLRu9ezkQZXfMq27uuSmlv4D77a9Q79WHmFWZrDLwPVPPEz8+MtBaYLZSsNaEDjFlrgCNLwfwDWKIQEUiWWaWbiE28CeyEmou4341kQirin4tpVDW6OhzEDW/ZznHIBvUkbqbzCs0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270761; c=relaxed/simple;
-	bh=gDdKvzE5ZVu/37UnmOg8vBtBiRTwbmKDfZk82G/82pY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PLnmEM0f5McJFULy2fwist+0vXx+9SX4MhfHe0vFgK3p0WNpbA/BShKeO2z2L4xhNevRt0RugHx8rgJ3fMMJ3xv49KcoOUObSUD3T+ZDLJ18Jb13rSjBmA3HATiRrzHW8GB8qJuhqGZogkSDHQDzLp3MXmjMA6tuep3BY8VOBds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=To/KT9Rf; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=whC+UTq+; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799D921B191
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751270777; cv=none; b=U4/EvyhJSIM1t+7RxSjGctukQnotN2Ov+HiT3MrwA94puhMAKDq65oigdwTRccb0VtGeTmBeYMUlo5ln+7mG8AeUcn/OY3bd9XS3l5YurFOMvP1YCXqczimFkS+09B/0SXrdr8XRELFYikObLHQAz9jIvgLPO8K3kzTVp96JKSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751270777; c=relaxed/simple;
+	bh=S/EpnBGQ23gp4JiHzy5oq+JGfLpcnQ3MnqsaAokNUT0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sq/TNjDB279NYCiloa90veNxfWlP7tuPMWYrCwuS0N4CrhFE58efwnydzMqGXFpke61wsevl9CbXUhDhaDEdDtaNEwebgYnBMFiO1ZR7aSwkFBI/qk+me6xnZZ/pi0ESj8yXApKd/Rdg2hMD9wfkstBJLXLHYWPG2uqvX0SRneo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YC7wlbx7; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="To/KT9Rf";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="whC+UTq+"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7thAL015740;
-	Mon, 30 Jun 2025 08:04:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=nhqeIp2P+YVTxBeFCS
-	VK8CgkYLQ+lMXJo3Tb2Nw3cc8=; b=To/KT9RfjMrFz6MiPbNOo278Y1rvlj0zy4
-	FOcmKlNEQ10cEs+FKTIEUWcz6ZdD6ofNrc9/tA0VdZjdLB9SJ0j36p11E/Wz1Asy
-	rqtnonLeRIM9h5YKr5+ODVA4OP4y+Uur7s4xVxeQ5BfuYf0Xg+vJBz1v3weArUCL
-	d4mWP85HZT5dZhf2U3LElhOBKqeGnrNteB/1JkVAAzeka/8Q24XoiRk/daoxMWQn
-	chSgaQonk8k717e1ncqh7EE4WGuce/HvXWcgDb3etH80dxaBUEcybEv4qd6/Q9nC
-	ri2zOZKIaOb59ofqpaeozCJ3NJMikcs6bsft5OWa/+phNLk4O6Sw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j7af1yd4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 08:04:25 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55U71UB8029028;
-	Mon, 30 Jun 2025 08:04:25 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2082.outbound.protection.outlook.com [40.107.93.82])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u8190m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 08:04:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ioxDmS66e2b0+mcN+Wes8d93m5CCvjdHJEzpVta3+dF1j87FqD4GShSP+lSm++tDL7pLNok4Ugkiz7Snaony1xbsJabHSwe/DFhl2DENIlsShuOBMjlHZEZ+kmU5DBnrT8jVlQtcMmLN0aO/WSYA9LlE8ggycUra0mwcrWsWKj6TOgv2CRgRhgdds8ZJszY98CYzUOpXqypRNDd2zOPV9IYe/zZP2jkrAeKOf0+NzOXVc7v8/9OD5CMLL6hG3Yg9XS7offIvZGzxLpwncmq6NQ3xgLx+rmy3/SzWukyEjgVkpPqnnKNJRl/QF6ZQKnTYxjZqzNAPlOCX9aaUnUixZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nhqeIp2P+YVTxBeFCSVK8CgkYLQ+lMXJo3Tb2Nw3cc8=;
- b=fSplykF/zOfbp2E/EIiCJpi0Qipo9DEToOHVbo0ovmtBN8Gg3KyKuUx0zyQyongOfisIoWBLyHlWiVJdIMHMs49ux6RXTc1DfJEH5gz/CI3gRHWM5oLTlqaOcN/xtS/TjaEhKTSIpCG8L7OgPHO8/eZ5HbkVtNi9FJvFpbNyAnZIYDM8S8W1BR66Nqa0IJQ7ewh9qmoFAFao+yIx9yKoeLmi/KNlB30TR+no9M/KEzxTi+I5x6uaYDVaaUOgfVzWwsW8jn1biVS/bbIYGaYE9S7jffCOn6l6gfz3MfMbvp+9iu0qFy2yXzHgXWX46FbisOLfyZSumaYXXE+XZerg5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YC7wlbx7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234f17910d8so37214195ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:06:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nhqeIp2P+YVTxBeFCSVK8CgkYLQ+lMXJo3Tb2Nw3cc8=;
- b=whC+UTq+A3Tmlsq0wZy4gGKF5zd7JMdOe4BEb6Po/hPAHVGVCjjPvsCIPnHbmWBqV3FmLgFwKIJLDI+TQanIICfLrj9nDMgzkqXKPILltDf5vH/reSRJ0tOBBOZoLqxC4E3A5ZFhzuXvimRAgxFm51mPj4cIDSxmbfOyGhWGOHc=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by DS7PR10MB4879.namprd10.prod.outlook.com (2603:10b6:5:3b0::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.28; Mon, 30 Jun
- 2025 08:04:20 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71%6]) with mapi id 15.20.8880.021; Mon, 30 Jun 2025
- 08:04:19 +0000
-Date: Mon, 30 Jun 2025 17:04:01 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
-        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
-        Ying Huang <ying.huang@linux.alibaba.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Naoya Horiguchi <nao.horiguchi@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
- isolate_movable_ops_page()
-Message-ID: <aGJE3r5uSzRj8BsR@hyeyoo>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-8-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618174014.1168640-8-david@redhat.com>
-X-ClientProxiedBy: SL2P216CA0167.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:1b::16) To CH3PR10MB7329.namprd10.prod.outlook.com
- (2603:10b6:610:12c::16)
+        d=gmail.com; s=20230601; t=1751270776; x=1751875576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhC93MdNH/UajdLJw5ecd5t+o/SSFcevhmB+meDS1bE=;
+        b=YC7wlbx7XUv+DiIxniIDBKdkqtupAVDMcJsfJ1q2Kpz92yb3+xstgPqGkH+WQHgGl2
+         U9oCrCTtbCkiazyd1jT7Jqg2A7EgnvSsz+twH5JRxBbT5/fPOX46xgIffBFHQ3MzXiL6
+         OZJqsEghe+eGl6XrNT3nPbnZJ3ssCzno56zLRZceiOQi2B7GnYkrIZ2qWVtjWteqaFxV
+         KznAA5MuqoFX6zrJeMhlsJ8YlRVz47YWYkvX7OOi5KxAvWopINghMT1Rnggu0QuUvQ2D
+         4XWryJSbFQE3XwEZ6Vse7GKUk+p+jm5MFRkgpcQoaR7jYP5XsWYS9hl4dxQukk9F+Ffa
+         HthQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751270776; x=1751875576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qhC93MdNH/UajdLJw5ecd5t+o/SSFcevhmB+meDS1bE=;
+        b=Bc5u6ic9NcqXaf584WEzQ2e17xax3WqTjJIbNQVyxQYytbq4eWirl0B7nFhU6Q9OsR
+         ZfQ5x7U35nXlRr4A55tt8CdYu5YhMjADi+S/JmELpZm5I9HMn2zg10qLoZifXMFnrCrq
+         a+hk5B60wzwn8AJKDwoiQyJmw41/vGpt/kS74Zs+xDuAnzUe27LMK649CiqN4hDR+iZ7
+         lxzGNib5zI4p4BQMq7kv9qZpQCpPogIoMmy4RlGEDCRf9GKYk4Z/k/2eOZVfaJfkRPA1
+         qlVwCOCm16ypehOdMlWHPKyA5JYYvZQcTmoowsWE5+mFo4VJlontd+VxT1yJ0HWP6/J2
+         H1CA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxPzCkrVLSIg74kb13vAXJZbXKL+1HrLB19YNFJr8AtSv4pRlasB42xJdWkAuWSf79LoD27NUUFmW8GHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI9gyh+MiwEUteljWFNOPOBA1rhM0seiCDDdHlHL4R2zDyp5JT
+	kVBAZGvSi2cbX6P17mofY6jyDCUJKtAY8wSpPmcT8cJLC37qZCw3e2iU
+X-Gm-Gg: ASbGnctTeNdWf5wcDJ9AGkY0OcA2kaj7nal5pRM8xRzAAtt5nWZyNVPGjPKM+bhuURj
+	MeJR8yCGeQFlD6ha4DyYvpb7cMe0S6DaZv7e1g2bZv+as1VcjGJ7JsFrMXgG9fq+HBZMf4fK9+W
+	YRNRsEO5dAESUlpd1Vujsohs1px69baoXUSvgK4Cjjs1ruErWniBuuUI7Azoy3dvBM8FauKq0ta
+	JKd0x63z+4xTaeZgVvP+cAr8O6qnnGRMwZ9KWjG2UVTNNTJHrd8JwPl37OUcvdU5RYNjAkqyRz8
+	X2NkPRf1MJ3yX5uxZN4JbavYfMDiIcbbBDDTq1qEYOKTMZoVsd94b7P8XtRBGCVfXnnj826WAxa
+	gq9GDIZk8LBcCulbAChPUA224PQ==
+X-Google-Smtp-Source: AGHT+IFYFmTkEVvMadrUbJdKv+7Ssnr4mG3NMLJzWM81hFR4r3jACsts3LwVX1i57j4OWVs3w3Hgsw==
+X-Received: by 2002:a17:902:ec89:b0:234:8a4a:adad with SMTP id d9443c01a7336-23ac46824a1mr205108515ad.26.1751270775574;
+        Mon, 30 Jun 2025 01:06:15 -0700 (PDT)
+Received: from localhost.localdomain ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3023a11sm6525673a12.25.2025.06.30.01.06.10
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 30 Jun 2025 01:06:15 -0700 (PDT)
+From: Hao Jia <jiahao.kernel@gmail.com>
+To: akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	yuzhao@google.com,
+	kinseyho@google.com,
+	david@redhat.com,
+	mhocko@kernel.org,
+	zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Hao Jia <jiahao1@lixiang.com>
+Subject: [PATCH] mm/mglru: Stop try_to_inc_min_seq() if the oldest generation LRU lists are not empty
+Date: Mon, 30 Jun 2025 16:06:03 +0800
+Message-Id: <20250630080603.36171-1-jiahao.kernel@gmail.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|DS7PR10MB4879:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45878c34-a7c6-40f4-2de4-08ddb7acb733
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XYFNYa66R/aNt6BfclgYmxedM/tY6BzW3S6FvQejIvQAbd4aaxZpL7ztGkdu?=
- =?us-ascii?Q?HyHVnLCHKyK5yL91AqZbLYzhPbsCod4TqbFG35+9UYEO/dtygVsOesOg27/1?=
- =?us-ascii?Q?WF64cQo72DiffqPkodRLv804Gl7QJ4aXxghZiU5/r7oYE1wDZCA9rZdertGg?=
- =?us-ascii?Q?43+DP1y85ZuDHd38bM07PgVx46L8gLpDSWjQj6z1yrhUHFI2KPX+5t008ttM?=
- =?us-ascii?Q?5mvCcNq+7T9N+25Mh7pGOKqjQ6jg816otKjozhC/Tj69z6Ydqtkw4WfTQcmC?=
- =?us-ascii?Q?uLtJ//uUxByYGdqWfmJkT1+a1lJC5cdzDj9lWCP8JVbxTwq0v5JnWY36cm0A?=
- =?us-ascii?Q?dRBv+spgt0PSUuUVG/31WkD+Xth7wlf8/ZfUPy0Li7MYdMqv1v7yVKqojmQC?=
- =?us-ascii?Q?wHiOchz747DB2Oj+30KULj3KFoXyy5sXKoyMm9/S+jeM5zUCLVrLL2Uc3Mxh?=
- =?us-ascii?Q?XBnscX2/7U6+p61C3GbB/tNSdbqa9CAZQYH3H5FarI74TvTJnWba0570O7A8?=
- =?us-ascii?Q?rfDwkb0VL4bYmK8TxEz8UQrWkdbUzsK5Erqzi9hUBtCSIO7NedT0W+A/2gMV?=
- =?us-ascii?Q?Spb7jUGF/UxhwhFR9KLjGKHo1uM3tLXcbj9yYJHkKO8TzlpIqplH5ELRWAYv?=
- =?us-ascii?Q?Zx4bFws6CgXxmtb5/L07Ef2mtVm5NJWd64HAtznJSx3WnbVrtmskDqcYYFIH?=
- =?us-ascii?Q?Fx8HNU8N3GAPzyYmh+H49u671AskkcLGaI/1Ye2EhuieP3fxKM67gZZu5S6M?=
- =?us-ascii?Q?FEasal1BSaq4pcnAWQRJAVqYx2tq0ER7+ZjMcrS63HKcWfeSSxcriVknqEIr?=
- =?us-ascii?Q?efm+6k3bH8WQGnoYhHDx7JOi6KHoqI554GBBA3y9rAExX8XK+YWcjgmYzuM1?=
- =?us-ascii?Q?Z++SkJnihv39aaMCO8wznBFK2FZCAgHe6N5CPuz+thEyNWUl7bKlqoSZCGP3?=
- =?us-ascii?Q?Jh82wd6QwqYLEx16qgwXYeInYQkhwH3cbOVIcPFAaa5LgbO/F/OvV1XYMTyt?=
- =?us-ascii?Q?5DbI8kvoqmS9eGp5FWrIjrR6g6Q0kn9i5D+Rvb486vDFp9dowoDZsoAyxuoL?=
- =?us-ascii?Q?0VKPzdmlBc5uIYDGP3Bw/QGvWJOQUvngujwRJnrGHDZIai3u56IRRpSCQZSN?=
- =?us-ascii?Q?jkZHEeIoNTTMkGcl1aX8hmdiwRE1TA3GUfehz7jeDuatXtewyGM7dm6VA7XC?=
- =?us-ascii?Q?i0Z5i6kMKcNxslkUB0f8z4eM6g3dakboXH82B/jS3v9ZuVB7562GQYZFqlV3?=
- =?us-ascii?Q?4CtZjzEfcn0Iaq4EHYPeBy6pRD7SBpWzIfTuz6zzxClvMVNLLByCbs29bg9O?=
- =?us-ascii?Q?Qk5eumPX7G9pA6natBTZQm8Vya/d/VcZjzbqpkxw3P+cnMm15YgWNIBXHyo/?=
- =?us-ascii?Q?jvbdoY7X8Qclqv9Y2+y8W6TSgvcrCsE1Z+/jW7seG38zes8ZlpfO29g/i0a4?=
- =?us-ascii?Q?m4XjDQJD7A8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+uNCvWwCwzCUg0HI8NlBZjZgZQB78j5yPiahpdMer30q0AoJTtPMfsoUR8FB?=
- =?us-ascii?Q?Nz9iLotfdr5xWp85MCy76IsntxLz9B/XGEgoGDze+RL4XOJueVm0gLAAnj54?=
- =?us-ascii?Q?ZigoPt2pRTXMu0iTwF9z7uj2mrqfG4FteEznsGHg/2sA9T82Uq6FHZdLDrJn?=
- =?us-ascii?Q?o3jmYCqgd58Xo0YcBTzTnddzceq6Td2Uj5sGCTYDgu/MRrngSFqmlHpHIz8g?=
- =?us-ascii?Q?yYLrsGC6rGFLn0zhEwD6QzZzCwXlbuPSyw4JsKs2ZcOtCHGT2dHnoXeGXFPT?=
- =?us-ascii?Q?FxSoWDwgfEAuniFBxrgKenGj5RjDuo9HXltIdkqegTx1NLw/CeyFpWJ+crYm?=
- =?us-ascii?Q?1R/vT20iLV5pAOJxCxLnTmlGZCJsGS2DGO5ByTQGtNUDh3MZvlXwmwt6cmM2?=
- =?us-ascii?Q?7yk6ihj0f+8A2EZYF6yPCMT/71dLThbddcYbE4fI3BW/JL0QA7DaQW7ckjqt?=
- =?us-ascii?Q?IlcI8ETAMybaCkEBGSPot9W3mUywp3eFna7zibeseYfx2PwJxU6YmlXOksSy?=
- =?us-ascii?Q?EWWakIpONObVtcoyXTklvwpLYMuFHeuRH/0MiCIcDv0WnN94Kuv0+y07oUGm?=
- =?us-ascii?Q?nbrFjI2xZwJH7DKYkP5kHNdDjcveUs1rzwLBIl4wZpdkm9GVMWN8RG2qdhX6?=
- =?us-ascii?Q?y0FjPt/zJCrSHipSNCUyX56+gGPUripgfZVSuVbw2iA+7Yfilm4sliiG61sa?=
- =?us-ascii?Q?KP8Qo5K0vsYqp+eLcXz/F5IdKuZ3kWMViK/oujEgVJv5P5L0LShWjLCR63qa?=
- =?us-ascii?Q?CMI9NASBbH0WXZSBWm/+QQx/dwSokIzge2B3ny5YaXD23OYnWGpfTrc7tMyC?=
- =?us-ascii?Q?3OCzphrZayl5FwYo230hi+WdgRowZfI1I/AoG+pbh7ILnq2FdryCr8S/6hyK?=
- =?us-ascii?Q?6cbCYM6ih1aB15DgZ2xepwsK+mCBwOA1hSG5xQ4OQRXzCGAdLM5HLIepd73U?=
- =?us-ascii?Q?8r6LddaANItwDtV5vJi1Nvfk8qa5rai5yB2YxlYOj/bWu941+kNuLip7fO4x?=
- =?us-ascii?Q?46URmWGorElzEmFHRiJUYSWkNyVBZlw5V7qQkMU1lA08vt9C/gTXWZpUE03y?=
- =?us-ascii?Q?PKB30NgNABkUvrS5xheqeQ0oOX2n3VsTrW/X7oaoo0T6KUI//90eOjst0hOM?=
- =?us-ascii?Q?iWr94cQI+TK/g2uRq6IndsoBhl7U/VSocNGcZMYIw/2IPbYQiVKg0y7KMTPT?=
- =?us-ascii?Q?1z00CNnSy9BnsEkgDR+OSKbzugDmlzUXWavq1oQgTy4Y0roG5cIWpz/jPupy?=
- =?us-ascii?Q?rzpxTTnFDrxT5d+dO4xB48dochdMZYkyGEMC1Us8F6htGV9zIPjR8eydm2VC?=
- =?us-ascii?Q?qdVFC8xPxxPf7WoK7Hr6EFf1f9jxiZPpqVci/HQJw8CounfklxV6PZrgzEFV?=
- =?us-ascii?Q?dmCilG6M0BQ2wU5o6dMjeydV9IF91GKQ7M/V51QSpKxK2jE4sdlOEZZ5wx+Z?=
- =?us-ascii?Q?waIXEAoxYZyhz1WCjHjI/ncZZhzNtzJjkITiF3jXRYKx3B201iKAwf/xuG78?=
- =?us-ascii?Q?4dki9UETqLkFheIsqg/m1L26TnsONvqEnSCAEWd7b9o2ncxKQ0pz/B3NOPy1?=
- =?us-ascii?Q?bbEaSaLGM9wcjcwTsRZU5IfqsPwYiDWp60Rtud6m?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	VE3a95hbSryhqYytm+WA69RB9EsT4DPiEqaiht0Sba/6Ym9JE4C7X8vSkZjsH3N1DK/VkfYJfo2GXc6enqumrLjvr7c2XoPZT6fMfWHocBev6axuw4JqwTmgLvdbfYR/aRzvOakW/9NpZgZNtaN0HqgoK5PEX3lvUwx4EcVjf6f+ZhkCGtBWADommaX7P99mhYBsuP/69z66vlaVErSfh/OyEMhFDFfZrEajRKWsplBCM6H7PrZ2o7eBmkKZDMMl81jp4sINCFCqI/2+HPbqxlfosCDCtH6EoUF56vDnsX+LpgaCnnrnfaMk/NLhStW9tbEpHvCOuHDkVr+ws5eDyKYMXG7ZQlLXDWgWDo5m30maNnGUL1nVCk/Zvc+ZT7Gj4plYqfvfBHhtKVSDc/1w3ALSNfHFm6XFG7gs3SCeXOymAHGEF9te7QJ7mTZdxU+DMFXPItxMJte+tsT4SzPw8Wx2fNH3NYuz0fz1Xq/hpipJgo5WhBBl67vJhKrstH6qE/zVRQR+ou8s0fwYUeFvaSPlumPXhUxRP2ji4ZRHzl6SdbcyCNLaqPs5U+emqAtKevrCSf4O+GtBRO+Ul0p6ZxbY1pq1djHACFm6/hqs/Yk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45878c34-a7c6-40f4-2de4-08ddb7acb733
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:04:19.5112
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7f/xQAWHT5gQOOJxbr+vLv3Zg0v7bcGXtxFKlw7c2JajceGusc2D2vEibRaUo+gmjuYvxuLbrpsvNWm0U4MvTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4879
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506300066
-X-Proofpoint-ORIG-GUID: q3NQTjDzFlbMakvawrv_09_7f9VVlX5-
-X-Proofpoint-GUID: q3NQTjDzFlbMakvawrv_09_7f9VVlX5-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA2NiBTYWx0ZWRfXw0aX64yJVyVU W7aWGRIu/mZ7BqyTJJ6bYDxamoZOYgHbSgu5QLeYUnb0SraUdcvAVlJubEDqjVyBgrU40wWtjpz df/f1KCIp03nGzz+Ixzu4YbMSXkGWY4Xo17w0d9sEqpvta82jl+mdpvtdBo3y6rFfhA5z9UpcC4
- 4soNyT4o5lpinAF0OBLMoYO3z0wX+7T31cUpwFCNFT9gcH2+uRNVXd3LgyHg+pxcM4YTlW4ZISq mlyr8lfh83jzzFqCZ+9xg2XTvxbI7EECcB1UEnkPQLa/UvQIBa2li/RywZ93ieibfeaJwgK2Y2U OvSI/UAIOS7RMnpdln8/z4edjH8j35Vymdw+nATfgo09uZm8MpwJetOdgVCM5YhSC3OHop9AR6T
- TI4OKR41assDBfeZ+0I5adx8AQC52dO50JSD3n4XwHPCPDqIr5IBc1Og/ZKunEV0AZPyU5PR
-X-Authority-Analysis: v=2.4 cv=b5Cy4sGx c=1 sm=1 tr=0 ts=6862450a cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=YMwQHEugdGb9FJnwGekA:9 a=CjuIK1q_8ugA:10
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 07:39:50PM +0200, David Hildenbrand wrote:
-> ... and start moving back to per-page things that will absolutely not be
-> folio things in the future. Add documentation and a comment that the
-> remaining folio stuff (lock, refcount) will have to be reworked as well.
-> 
-> While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and handle
-> it gracefully (relevant with further changes), and convert a
-> WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
+From: Hao Jia <jiahao1@lixiang.com>
 
-Haha yeah, back to pages after folio conversion :P
-But makes sense.
+In try_to_inc_min_seq(), if the oldest generation of LRU lists
+(anonymous and file) are not empty. Then we should return directly
+to avoid unnecessary subsequent overhead.
 
-Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+Corollary: If the lrugen->folios[gen][type][zone] lists of both
+anonymous and file are not empty, try_to_inc_min_seq() will fail.
 
-Side question: In the future, maybe we will be unable to tell whether
-a page is compound or not, without first inspecting page->memdesc?
-(e.g., struct slab could have an order and a pointer to the head page...
-just imagining).
+Proof: Taking LRU_GEN_ANON as an example, consider the following two cases:
 
+Case 1: min_seq[LRU_GEN_ANON] <= seq (seq is lrugen->max_seq - MIN_NR_GENS)
+
+Since min_seq[LRU_GEN_ANON] has not increased,
+so min_seq[LRU_GEN_ANON] is still equal to lrugen->min_seq[LRU_GEN_ANON].
+Therefore, in the following judgment:
+min_seq[LRU_GEN_ANON] <= lrugen->min_seq[LRU_GEN_ANON] is always true.
+So, we will not increase the seq of the oldest generation of anonymous,
+and try_to_inc_min_seq() will return false.
+
+case 2: min_seq[LRU_GEN_ANON] > seq (seq is lrugen->max_seq - MIN_NR_GENS)
+
+If min_seq[LRU_GEN_ANON] > seq, that is, lrugen->min_seq[LRU_GEN_ANON] > seq
+Then min_seq[LRU_GEN_ANON] is assigned seq.
+Therefore, in the following judgment:
+min_seq[LRU_GEN_ANON] (seq) <= lrugen->min_seq[LRU_GEN_ANON] is always true.
+So, we will not update the oldest generation seq of anonymous,
+and try_to_inc_min_seq() will return false.
+
+It is similar for LRU_GEN_FILE. Therefore, in try_to_inc_min_seq(),
+if the oldest generation LRU lists (anonymous and file) are not empty,
+in other words, min_seq[type] has not increased.
+we can directly return false to avoid unnecessary checking overhead later.
+
+Signed-off-by: Hao Jia <jiahao1@lixiang.com>
+---
+ mm/vmscan.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f8dfd2864bbf..3ba63d87563f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3928,6 +3928,7 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec, int swappiness)
+ 	int gen, type, zone;
+ 	bool success = false;
+ 	struct lru_gen_folio *lrugen = &lruvec->lrugen;
++	int seq_inc_flags[ANON_AND_FILE] = {0};
+ 	DEFINE_MIN_SEQ(lruvec);
+ 
+ 	VM_WARN_ON_ONCE(!seq_is_valid(lruvec));
+@@ -3943,11 +3944,20 @@ static bool try_to_inc_min_seq(struct lruvec *lruvec, int swappiness)
+ 			}
+ 
+ 			min_seq[type]++;
++			seq_inc_flags[type] = 1;
+ 		}
+ next:
+ 		;
+ 	}
+ 
++	/*
++	 * If the oldest generation of LRU lists (anonymous and file)
++	 * are not empty, we can directly return false to avoid unnecessary
++	 * checking overhead later.
++	 */
++	if (!seq_inc_flags[LRU_GEN_ANON] && !seq_inc_flags[LRU_GEN_FILE])
++		return success;
++
+ 	/* see the comment on lru_gen_folio */
+ 	if (swappiness && swappiness <= MAX_SWAPPINESS) {
+ 		unsigned long seq = lrugen->max_seq - MIN_NR_GENS;
 -- 
-Cheers,
-Harry / Hyeonggon
+2.34.1
+
