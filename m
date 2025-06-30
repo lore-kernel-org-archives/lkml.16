@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B06A260585;
-	Mon, 30 Jun 2025 11:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DE6260585;
+	Mon, 30 Jun 2025 11:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283642; cv=none; b=JPVX8deMMlYdNaEJharxIKqgDCpdAQwXTjZIT0p1LJ76N9eDhoKZmsZ4+dNRUuvePTyDYPz4voNteI9ekka/7YZpscs/ztnPkUWFluGMxNcO73Ak0DWZLPVSO/oZCpyp49xdxdlagJfBU+53nCc9F8JZi95bReJTSQ4lmgti4Yo=
+	t=1751283651; cv=none; b=SGtssXPA5ThwRGabpnCMmNQhHCXQMzEHjblLalYJG0GmRCYVk5KRVK0+eyWuqZlBKsSCbIx4SgfQqey3Q/RVFzAuXh2Kr6fdaL+GdyhIy6dDOZjQrq/+BuPT2dfWYm5U1+5VBod0bVbfAqiNbjecA7dz+V7zQ9Oq7G2k9VsO9sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283642; c=relaxed/simple;
-	bh=gmKNcGdDMCFPQSOys3Imzl6Vfp2FCLYfLD0o34CSah4=;
+	s=arc-20240116; t=1751283651; c=relaxed/simple;
+	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tc0/o6ah/oIiqalTC15mMOWydPw2se31i8gM7a8NbYjAHiyQchXjlkpUAHnyxRe3s3VPxWyj4IK4JQQRADsdjUhG88MOTgM2QVjnf6iCq5Ph7ayY3owEHdX5wvwRbdznq1eG5vlj+mvFtJWrCsqtv57VTGaBsSAQJi+ZnnmbDFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcYFD092; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=klSrQwrtmqgA9iFVFigHXCzATlfnuPotAzDd8gtUtnzIzz0Rk4N89aeyLvS6Qu3exL9+kn+T7hhwsZv1mvU2+2GFipOoyLvPLL7+EuU87pgC0kd8/OU5OSay0SuiDfblhCKMcPAUKKWxDUgkpNBsJi+HQhJ0iHatCeLdkQgtnso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bgLez+HX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcYFD092"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5071AC4CEF3;
-	Mon, 30 Jun 2025 11:40:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bgLez+HX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74121C4CEE3;
+	Mon, 30 Jun 2025 11:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283642;
-	bh=gmKNcGdDMCFPQSOys3Imzl6Vfp2FCLYfLD0o34CSah4=;
+	s=k20201202; t=1751283650;
+	bh=ftNktXx3viZwDTtRvJBBYVylno1HnW9Egn+Kkhk6AGc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=UcYFD0927/OKFLo3KDynhMZSrwVblmbb1GdKDvnrfIM3KMNW6GF58Qpyjb/3oISnP
-	 yMg0cIxfxgoaFNNG31QhGRuWPWuQidyT1Fn0EyM+7L9mVc1V8NcoW4T/Qe7OGvxsI9
-	 twnJHt1/8v1jS7ev1KWQGd7oR3ZY/nsCCOeuyCMCx5yXs2Xr2OsSAlheWrXLBU2iUp
-	 rgFkObIeEDbek558v9DhhWaQimEbJyo5txXQtRAITL3jHX1OgpJyDSLQVXyz5WUvOe
-	 aH52d1RuA1OY82vlztjDLDujQ2nsxLd0ocG4xPlSxcSnccPgNOtt2KGKzmYstGLVYY
-	 9G4N6YKBmdxmQ==
+	b=bgLez+HXlFANtNBrQDtXBKnd3LtN7bLY5hLHEsx+pDJtWlg9HvhK5sazMio5sQijC
+	 MUtdekGSSf3sPBFjhb0RtVom5b2C9pra/P0PDIrTvncDBzScCO2IRLkKd5NGwaCvhz
+	 +1zBi+Bf6q5R0N4i56Tw64XQlFGPO7b1AcDpd7JIvFsD+Nhlm4xE+PS7RoAAFE/5gp
+	 +p9AM7W46qckbniToFXS8bCzcPHF0fBAdUEBgaDyrgGm62jwPraqo28n1nXR1hkePV
+	 wP/aho+87KhbJf4iRb/alT+xt+K2x2ZIiD5tSbXPP2HllyuHJ4JCApclvNnRYPv6B6
+	 V3yO5ytFHpAnQ==
 From: Mark Brown <broonie@kernel.org>
-To: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
- rogerq@kernel.org, tony@atomide.com, lee@kernel.org, d-gole@ti.com, 
- robertcnelson@gmail.com, jkridner@gmail.com, linux-omap@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: m-leonard@ti.com, praneeth@ti.com, afd@ti.com
-In-Reply-To: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
-References: <20250620154541.2713036-1-s-ramamoorthy@ti.com>
-Subject: Re: [PATCH v2] regulator: tps65219: Fix devm_kmalloc size
- allocation
-Message-Id: <175128363906.28827.3502546879680346196.b4-ty@kernel.org>
-Date: Mon, 30 Jun 2025 12:40:39 +0100
+To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ "Rafael J . Wysocki" <rafael@kernel.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250505184936.312274-1-csokas.bence@prolan.hu>
+References: <20250505184936.312274-1-csokas.bence@prolan.hu>
+Subject: Re: (subset) [PATCH v5 0/2] Add `devm_dma_request_chan()` to
+ simplify probe path in atmel-quadspi.c
+Message-Id: <175128364820.28911.16876247019790951320.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 12:40:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,30 +49,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev-cff91
 
-On Fri, 20 Jun 2025 10:45:41 -0500, Shree Ramamoorthy wrote:
-> In probe(), two arrays of structs are allocated with the devm_kmalloc()
-> function, but the memory size of the allocations were given as the arrays'
-> length (pmic->common_irq_size for the first call and pmic->dev_irq_size for
-> the second devm_kmalloc call). The memory size should have been the total
-> memory needed.
-> 
-> This led to a heap overflow when the struct array was used. The issue was
-> first discovered with the PocketBeagle2 and BeaglePlay. The common and
-> device-specific structs are now allocated one at a time within the loop.
+On Mon, 05 May 2025 20:49:32 +0200, Bence Csókás wrote:
+> The probe function of the atmel-quadspi driver got quite convoluted,
+> especially since the addition of SAMA7G5 support, that was forward-ported
+> from an older vendor kernel. To alleivate this - and similar problems in
+> the future - an effort was made to migrate as many functions as possible,
+> to their devm_ managed counterparts. Patch 1/2 adds the new
+> `devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
+> simplify the probe() function.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: tps65219: Fix devm_kmalloc size allocation
-      commit: eeca209124bb694650026216d3e59cae02d91686
+[2/2] spi: atmel-quadspi: Use `devm_dma_request_chan()`
+      commit: 2555691165a0285a4617230fed859f20dcc51608
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
