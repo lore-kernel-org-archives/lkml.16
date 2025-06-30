@@ -1,89 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7C053365
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF9953365;
+	Mon, 30 Jun 2025 22:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322903; cv=none; b=tn1aKQjks1126g1lfHPPjRuxLC1Tj3CouHpeiKytLlCkmcsf5y/1rrbecwkRYCmGPSpZRT3YwdIvoubtYQSPhgKy/j5PwjOLe0YrwbJc1KXDv5eqL3CMp4Gru3d9xCCaRkhYjWPHoYJ0GJGdyO8xc3MW9SeJIG1uV3NIJaFbdlU=
+	t=1751322982; cv=none; b=GzXrfoiuYIN4s8+3M/Uspu8vxjXRLtP2ityLVH1b3nIRqG5nzx8WupKcDvKfLq6Uf/fJiFAaZJSbAylo2GqGxXNA+ULR0SA84agOVmudDC3LX2pqvCDvEMmasKb09MR3DMWnQgV5evB8gQVnOgYS6ubvuA/lw/rXT6oFti2xxRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322903; c=relaxed/simple;
-	bh=ce8Cwit0P9uvsqHgJ2VoewpjioHRndHSgnVlcFV7jiM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oeSbzo+zCMu/659xPNA02LIGvsSiGCNTarik+fIjU5b3QCBvPLOh705PKiQdyVG0RpfhlO6b44QkrDqMbIbF9QJ6jlq73NU+3h6CigMa63SrH8+S9LsV8g+uRJZBntTxtAjLeGqtjt4l+zm1X5im1j0HO0D1b6fy33d+PcBthRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aLNA9Hmy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751322982; c=relaxed/simple;
+	bh=HMy/2bTDCDxJHYgG5atG/+KZlrtP7zOKegC7ge7E4nA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QTvsPcoozuquHT1R9VjLWK4Imo/niHq2CiEHoBlh2qgl7/Bzlsswp/2zIwGdOAgM5KMgjWLTpNdNpgaZi/mBRUZGbzphrf2pSe3BgIGBYg6dP/KH7k0ltdF3+fCrae4/ScB60cglUtzaep2B5xSucE1Lt75TVJxHHbaKgE+lOD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KIrvpHGQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6Ayu/pb7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aLNA9Hmy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B7CDC4CEE3;
-	Mon, 30 Jun 2025 22:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751322902;
-	bh=ce8Cwit0P9uvsqHgJ2VoewpjioHRndHSgnVlcFV7jiM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aLNA9Hmy6i1HvsFiv0tFkbY/H3/yEd2uBGmAQM07lNmJ8qgbr6KfAwK0zKjQYkNkz
-	 rVUXKSwhL4nlHKfnIoicDp4zEF1BZOfhX79llchH3d1hIHMOg/YFZaCpvcOuQo7oQb
-	 YXb8+EKzroNuWdJ5IDZ/7ZpmT0pSJUg1/ePVoLFU=
-Date: Mon, 30 Jun 2025 15:35:01 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Kees Bakker <kees@ijzerbout.nl>, Gregory Price <gourry@gourry.net>,
- Alistair Popple <apopple@nvidia.com>, Byungchul Park <byungchul@sk.com>,
- David Hildenbrand <david@redhat.com>, Matthew Brost
- <matthew.brost@intel.com>, Rakie Kim <rakie.kim@sk.com>, Ying Huang
- <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk
- in weighted interleave
-Message-Id: <20250630153501.64160f386faa541c93344e48@linux-foundation.org>
-In-Reply-To: <20250630202115.1439224-1-joshua.hahnjy@gmail.com>
-References: <7c1180f4-923c-4138-b756-618cb5d597ac@ijzerbout.nl>
-	<20250630202115.1439224-1-joshua.hahnjy@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KIrvpHGQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6Ayu/pb7"
+Date: Mon, 30 Jun 2025 22:36:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751322977;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ufhqaBIhxPaRx29lTLOc9AHC4bKR6eluN9he0ddA47w=;
+	b=KIrvpHGQxz12tviOjO6chkvezsu53EygpbSN2f4JE0vhv46VQoc3YL8B/acGMtks3GlOaQ
+	HJiOJP182RTq8oToqZ5SIKPcaXHiXln3oD0mvSzOCNKtZwfnEheKsmbT9lTqZptd8iG2wg
+	AeOplo/Gz+sybSr/goJScBs/7uOhcaSRfMmHkXOK9IRhurfv6uOVW7IE+IxjwpaqCqr5SW
+	E901Fs2BTKLfhSX0TupY2VZ3o5TpwYozZqNbHrRM0z4Um68QgC+fgCqhKE5e/cPxE/521s
+	6s0lZCmH+s/seNdRKwdSo33t2Z4aMaqvKm55sOnmV4r8ZTfqLmxupC//h4P1CA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751322977;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ufhqaBIhxPaRx29lTLOc9AHC4bKR6eluN9he0ddA47w=;
+	b=6Ayu/pb7y6kvhoUyyd+rG1fgX7b/3rAy+NzPOCR2rayHTxhumf0fW5ldSxSBLqFV2QJ77I
+	WRmgaGpjH3vEupAg==
+From: "tip-bot2 for Nikunj A Dadhania" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/sev: Use TSC_FACTOR for Secure TSC frequency
+ calculation
+Cc: Nikunj A Dadhania <nikunj@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250630081858.485187-1-nikunj@amd.com>
+References: <20250630081858.485187-1-nikunj@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Message-ID: <175132297648.406.7975995047248838474.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Jun 2025 13:21:14 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> > This is a goto into the middle of a for-loop.
-> > What do you think is going to happen at the end of that loop?
-> > 
-> > I think (only tested with a small C program) it will go to the start of
-> > the loop, do the i++, check i<nnodes, and possibly do the loop again.
-> > Variable i is uninitialized at that point. In the loop it hits several
-> > uninitialized variables.
-> 
-> >From what I can see from my code, I think the only the goto statement leads
-> to a second iteration of the for loop is if allocation fails.
-> But otherwise, it should be ok since we always hit
-> 
-> if (total_allocated == nr_pages)
-> 	break;
-> 
-> within the loop. For the branch that takes the goto, we set
-> node_pages = rem_pages, then jump to the label and allocate.
-> So nr_allocated = node_pages, and total_allocated = 0 + nr_allocated
-> so total_allocated = node_pages
-> 
-> total_allocated == node_pages == rem_pages == nr_pages, so we will break. Phew!
-> 
-> To cover the case where allocation fails, I think we should be breaking
-> anyways, so I can definitely add a new check for this.
+Commit-ID:     52e1a03e6cf61ae165f59f41c44394a653a0a788
+Gitweb:        https://git.kernel.org/tip/52e1a03e6cf61ae165f59f41c44394a653a0a788
+Author:        Nikunj A Dadhania <nikunj@amd.com>
+AuthorDate:    Mon, 30 Jun 2025 13:48:58 +05:30
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 01 Jul 2025 00:29:27 +02:00
 
-I do agree, that goto is a "goto too far".  That we can do a thing
-doesn't mean we should do it!
+x86/sev: Use TSC_FACTOR for Secure TSC frequency calculation
 
-> > Even if this is legal C code, it is pretty obscure.
-> 
-> I agree that it not very clean. I did this to reduce the amount of repeated
-> code there is. Even if this code works, it could definitely be written
-> better to make it more readable and maintainable. As I noted in my second
-> response to Gregory, I'm not planning on pursuing this version anymore,
-> so if I decide to send a second version, I'll keep this in mind.
+When using Secure TSC, the GUEST_TSC_FREQ MSR reports a frequency based on
+the nominal P0 frequency, which deviates slightly (typically ~0.2%) from
+the actual mean TSC frequency due to clocking parameters.
 
-Cool, I'll drop this version from mm-unstable.
+Over extended VM uptime, this discrepancy accumulates, causing clock skew
+between the hypervisor and a SEV-SNP VM, leading to early timer interrupts as
+perceived by the guest.
+
+The guest kernel relies on the reported nominal frequency for TSC-based
+timekeeping, while the actual frequency set during SNP_LAUNCH_START may
+differ. This mismatch results in inaccurate time calculations, causing the
+guest to perceive hrtimers as firing earlier than expected.
+
+Utilize the TSC_FACTOR from the SEV firmware's secrets page (see "Secrets
+Page Format" in the SNP Firmware ABI Specification) to calculate the mean
+TSC frequency, ensuring accurate timekeeping and mitigating clock skew in
+SEV-SNP VMs.
+
+Use early_ioremap_encrypted() to map the secrets page as
+ioremap_encrypted() uses kmalloc() which is not available during early TSC
+initialization and causes a panic.
+
+  [ bp: Drop the silly dummy var:
+    https://lore.kernel.org/r/20250630192726.GBaGLlHl84xIopx4Pt@fat_crate.local ]
+
+Fixes: 73bbf3b0fbba ("x86/tsc: Init the TSC for Secure TSC guests")
+Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/20250630081858.485187-1-nikunj@amd.com
+---
+ arch/x86/coco/sev/core.c   | 22 +++++++++++++++++++---
+ arch/x86/include/asm/sev.h | 17 ++++++++++++++++-
+ 2 files changed, 35 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index b6db4e0..7543a8b 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -88,7 +88,7 @@ static const char * const sev_status_feat_names[] = {
+  */
+ static u64 snp_tsc_scale __ro_after_init;
+ static u64 snp_tsc_offset __ro_after_init;
+-static u64 snp_tsc_freq_khz __ro_after_init;
++static unsigned long snp_tsc_freq_khz __ro_after_init;
+ 
+ DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
+ DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
+@@ -2167,15 +2167,31 @@ static unsigned long securetsc_get_tsc_khz(void)
+ 
+ void __init snp_secure_tsc_init(void)
+ {
+-	unsigned long long tsc_freq_mhz;
++	struct snp_secrets_page *secrets;
++	unsigned long tsc_freq_mhz;
++	void *mem;
+ 
+ 	if (!cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
+ 		return;
+ 
++	mem = early_memremap_encrypted(sev_secrets_pa, PAGE_SIZE);
++	if (!mem) {
++		pr_err("Unable to get TSC_FACTOR: failed to map the SNP secrets page.\n");
++		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SECURE_TSC);
++	}
++
++	secrets = (__force struct snp_secrets_page *)mem;
++
+ 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	rdmsrq(MSR_AMD64_GUEST_TSC_FREQ, tsc_freq_mhz);
+-	snp_tsc_freq_khz = (unsigned long)(tsc_freq_mhz * 1000);
++
++	/* Extract the GUEST TSC MHZ from BIT[17:0], rest is reserved space */
++	tsc_freq_mhz &= GENMASK_ULL(17, 0);
++
++	snp_tsc_freq_khz = SNP_SCALE_TSC_FREQ(tsc_freq_mhz * 1000, secrets->tsc_factor);
+ 
+ 	x86_platform.calibrate_cpu = securetsc_get_tsc_khz;
+ 	x86_platform.calibrate_tsc = securetsc_get_tsc_khz;
++
++	early_memunmap(mem, PAGE_SIZE);
+ }
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 58e028d..a631f7d 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -223,6 +223,18 @@ struct snp_tsc_info_resp {
+ 	u8 rsvd2[100];
+ } __packed;
+ 
++/*
++ * Obtain the mean TSC frequency by decreasing the nominal TSC frequency with
++ * TSC_FACTOR as documented in the SNP Firmware ABI specification:
++ *
++ * GUEST_TSC_FREQ * (1 - (TSC_FACTOR * 0.00001))
++ *
++ * which is equivalent to:
++ *
++ * GUEST_TSC_FREQ -= (GUEST_TSC_FREQ * TSC_FACTOR) / 100000;
++ */
++#define SNP_SCALE_TSC_FREQ(freq, factor) ((freq) - (freq) * (factor) / 100000)
++
+ struct snp_guest_req {
+ 	void *req_buf;
+ 	size_t req_sz;
+@@ -282,8 +294,11 @@ struct snp_secrets_page {
+ 	u8 svsm_guest_vmpl;
+ 	u8 rsvd3[3];
+ 
++	/* The percentage decrease from nominal to mean TSC frequency. */
++	u32 tsc_factor;
++
+ 	/* Remainder of page */
+-	u8 rsvd4[3744];
++	u8 rsvd4[3740];
+ } __packed;
+ 
+ struct snp_msg_desc {
