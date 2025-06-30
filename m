@@ -1,150 +1,103 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DDE28C014;
-	Mon, 30 Jun 2025 15:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B230828DF06;
+	Mon, 30 Jun 2025 15:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297091; cv=none; b=ahh5TSL1HvJH8pZPH8EUSnC1jULgB5z+FPfUqWH5eJ5ZLcQyJucW5cnOrT31SjnLg0pkwNIFXdfN6A85M1UinA8aV5hoYrzE/QD/pVCKkf8N6wQaTPjTCVJ8JD1kWSF6/zVd87XI30yt62T9yzmAysf7aK5jFHBpGbGXC45YvRk=
+	t=1751297106; cv=none; b=bzmwJdopz3BSnvcqh8odt+vQh2BgboNoJsYiUWM83uTs/4QZ2UfbuU4ts2wPXAjfYu78b9A5uh6CV7BDvqySzW22FPD0LuKdaRYQszrDGrD8z/5J4KGF9fbmOAbSS3XGOQ/EY9MURxEre7Eatg5O+XVhxW8iIGTVolz67zgxFvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297091; c=relaxed/simple;
-	bh=MkzWJgPQR17Th0knT93bxXAJb8awnh4Bk4PIKq3v7QI=;
+	s=arc-20240116; t=1751297106; c=relaxed/simple;
+	bh=TCbNJNoCNlDEgh6pf2YWPfPCGxiDYYRd7XMyuy0im1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K0ueGkqqPs8HcEyWDGCroO17vE/3TwLLIxLbUU/Bca1oH08jnnMEQlUy2gKcRU+plAE2X3LIiS1BXe/w7iKz6755ISOgYXttC755inpkedUhSEpGvjCYRbkOTw4MLv0lPZz8pK8PbqOgnR4Z8vUcwHXxMey3XlDZuDwJz9FpIbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mK0mUS1T; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JU1XVW0W5IJfJti+GPyDpv1uzF+H6qXwQDJ68P36li/RHto0vKbOe4F41y8Vk8SGcSg57ccedIzoGW6Wm133ZHTMoTfN/lhU26P8mIkbha436n7BwEhlZzMCKY4y/bB3SJFjrkLD84d1fYh4Bs3Nt9S9oIRH4bCW6HP+8p6cZ9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIEyza8q; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mK0mUS1T"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 07D05928;
-	Mon, 30 Jun 2025 17:24:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751297066;
-	bh=MkzWJgPQR17Th0knT93bxXAJb8awnh4Bk4PIKq3v7QI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mK0mUS1TssIy7ANlUN4+TYrBxcZohSiFDoXe0dwdzMgAW8MhKgKNo7rvNnCKCtGC4
-	 12XA+QL0rQC9sa/vzMl1cevg3+uxFUjvbvTmYbIOKsOnbpNZ6hkf9/85Qn+Q7VLhcg
-	 /T+vWDPe03zVXIgsUZrW9hur5/n2qiiA3DAPuG9U=
-Date: Mon, 30 Jun 2025 18:24:22 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Hans Verkuil <hans@jjverkuil.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
-Message-ID: <20250630152422.GF24861@pendragon.ideasonboard.com>
-References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
- <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
- <20250630141707.GG20333@pendragon.ideasonboard.com>
- <d541ee58-2fa5-4c1e-b744-2e080065fe39@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIEyza8q"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b271f3ae786so4179766a12.3;
+        Mon, 30 Jun 2025 08:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751297104; x=1751901904; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fFMt2MdBt4V+3jVyKnzW2CbyNPSCknGZaPAUm9S6KuY=;
+        b=PIEyza8qREImeJ03yE6GuOBiLYmHJmDQ07f4HCJqe4Z2kVTIcGHTTsXrW7kIOFteME
+         1akJJB5nR38ebZutiQ64szy6eELMfNvrnuUWClxnEysLk5Pu2asIWY7J/mb0TAW8ualK
+         frQ87h0AbI1cfjPZWpLQKF46Qlnzswv53KeGsfzDc5cpTyD8eP8y0ycKUxhlyh1nq5ja
+         hzLp7hOJTy5KXL2NkdEOhrL5LgmRCAXZR07xMp3wN/dyRGnAoj8Ds40R6eWXqD0wpC+k
+         RNV+Q0BryFW5xLEnwCKP303mNI+5i2BsDxGPDgJSkmZPpsBs9IAoE5HgapPGzrUSEX3W
+         SpCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751297104; x=1751901904;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fFMt2MdBt4V+3jVyKnzW2CbyNPSCknGZaPAUm9S6KuY=;
+        b=vLOCAGQj4HfrUcMuZHm+LykUCroI0Jq+ECn7PMV1/IhjZ4P11IL+63F3CRGNVl0hkD
+         atle1JnSaMxifGR91e/a6xwzYFN6q8S7y6FeESXqdyH34dLZy/gOfmr44Dn2AeE0XTy5
+         SdOdODDgSw55wYkKFKs7V09+FD7Z7KKqNuhxZNPs/N/97ezMfSj2zgMZISjzbgdW9rxB
+         A+kIK4xqC0Fp3J+n0L74x9wibmJJZsAtfGc1dqx1Me+QqFXLyJKnrMZAepAHyVFAqUm4
+         pw063kqo+nWpK7C9wBZZUMj4ZAMlZaFAbR6svQnAXjbLbZDH4DYQw3e0+DojzYVWaida
+         VFIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwLtvKKAXhoweSr9FOsdJKeF4gw28/sC1AvcS+7iVPEC7Zlyui7uJcc1+Xv4h0ZzN/uZAbwy6Kl4rFSA==@vger.kernel.org, AJvYcCWVAVZ90onrwG/L2xn3zPHA3D07h9zFMaeTcB/ddaWPKJo5CWkgk6ZTy3XRSgkV7SXfAAmgMa5XOtWX3fdA@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb4sLtF6jQXtA1W/CH0TUMp6uG+65q++T+9deqcRG5sw0BH2Kh
+	B2cTvtjAgpefOAxB7/ITc087LhVbkqXzhYkbBPxRw9XHf3Myc20c+baA
+X-Gm-Gg: ASbGnctIc/EXwYe5yIbipUdEtuFZ8kYT5m716G8Zf4qNX4LE4CQ6cjl8GTczsHcCQ0n
+	mBUPm/vvwZBgRgjRPn9FPyzI67nKWgkoJf8OsovHJccpui6XZrGQ5DdPekxIc1lclmwXQxsx1ia
+	DVrfXcWgk26KBSgoI+rltIqzQd8H7m1YhZaya0bu80Hn50EWlgI+6rEoNLThbT5q/fL1lN6gOrl
+	5F/pVCzhk0ZQQq6gQonRAP12U3SJ9prfEDIFZINWpnukRXaLEH4FOB7o2/M9oIWWgPG+PbHEeOx
+	HKqPohVGlSUwKuGYgaeHuftFA/Iqkar2dMafwjeX3Sjvd1YQk3JqhvyvRNBkRA==
+X-Google-Smtp-Source: AGHT+IGi/BV1hm+wNmwcS/bd33jUP4+OQR0MfEr1fQJGvAe2GucDnTzkLjVIBYkKRzDtwbp3LLJong==
+X-Received: by 2002:a05:6a21:329c:b0:220:7994:1df1 with SMTP id adf61e73a8af0-220a16e46d5mr24227498637.31.1751297103625;
+        Mon, 30 Jun 2025 08:25:03 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b350d81f0ecsm3185769a12.27.2025.06.30.08.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 08:25:03 -0700 (PDT)
+Date: Mon, 30 Jun 2025 08:25:00 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, kernel@collabora.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] Input: mtk-pmic-keys: Fix null pointer dereference when
+ no compatible data
+Message-ID: <d373gpdyqejppdysdbb4k6aat5i33epnqsebxdkjbrgfwsnqtm@43si4kmjvsmq>
+References: <20250630-mtk-pmic-keys-fix-crash-v1-1-e47351fa9d1f@collabora.com>
+ <28111607-d5a2-4b54-964a-d010fb99193a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d541ee58-2fa5-4c1e-b744-2e080065fe39@kernel.org>
+In-Reply-To: <28111607-d5a2-4b54-964a-d010fb99193a@collabora.com>
 
-On Mon, Jun 30, 2025 at 05:12:29PM +0200, Hans de Goede wrote:
-> On 30-Jun-25 4:17 PM, Laurent Pinchart wrote:
-> > On Mon, Jun 16, 2025 at 03:24:40PM +0000, Ricardo Ribalda wrote:
-> >> uvc_stop_streaming() is used for meta and video nodes. Split the function
-> >> in two to avoid confusion.
-> >>
-> >> Use this opportunity to rename uvc_start_streaming() to
-> >> uvc_start_streaming_video(), as it is only called by the video nodes.
-> >>
-> >> Reviewed-by: Hans de Goede <hansg@kernel.org>
-> >> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >> ---
-> >>  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
-> >>  1 file changed, 15 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> >> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
-> >> --- a/drivers/media/usb/uvc/uvc_queue.c
-> >> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> >> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
-> >>  		uvc_video_clock_update(stream, vbuf, buf);
-> >>  }
-> >>  
-> >> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
-> >>  {
-> >>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> >>  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
-> >> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >>  	return ret;
-> >>  }
-> >>  
-> >> -static void uvc_stop_streaming(struct vb2_queue *vq)
-> >> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
-> >>  {
-> >>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> >>  
-> >>  	lockdep_assert_irqs_enabled();
-> >>  
-> >> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
-> >> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
-> >> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
-> >> +
-> >> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
-> >> +}
-> >> +
-> >> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
-> >> +{
-> >> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> >> +
-> >> +	lockdep_assert_irqs_enabled();
-> >>  
-> >>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
-> > 
-> > I haven't checked where it was introduced, but I think you have a race
-> > here. uvc_queue_return_buffers() will return all buffers currently
-> > sitting in the queue->irqqueue. This can race with a bunch of places in
-> > uvc_video.c that call uvc_queue_get_current_buffer() or
-> > uvc_queue_get_next_buffer(), as those functions return a buffer without
-> > removing it from the list.
+On Mon, Jun 30, 2025 at 04:06:53PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 30/06/25 16:03, Louis-Alexis Eyraud ha scritto:
+
+[... snip ...]
+
+> > @@ -316,6 +316,9 @@ static int mtk_pmic_keys_probe(struct platform_device *pdev)
+> >   	const struct of_device_id *of_id =
+> >   		of_match_device(of_mtk_pmic_keys_match_tbl, &pdev->dev);
+> > +	if (!of_id)
+> > +		return -EINVAL;
 > 
-> This change just splits uvc_stop_streaming() into 2 separate
-> functions for uvc_queue_qops + uvc_meta_queue_qops to remove
-> the weird looking "if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)"
-> check done in the shared uvc_stop_streaming().
-> 
-> This patch does not make any functional changes. So if such
-> a race exists then that is a pre-existing problem and not
-> caused by this patch.
+> Please, change this to `return -ENODEV;`
 
-Yes, that's why I said I'm not sure where it was introduced. I only
-noticed the issue here, it comes from before this patch.
+No, this definitely should not be a "silent" error because it indicates
+there is something wrong with the kernel.
 
-> >>  }
-> >> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
-> >>  	.buf_prepare = uvc_buffer_prepare,
-> >>  	.buf_queue = uvc_buffer_queue,
-> >>  	.buf_finish = uvc_buffer_finish,
-> >> -	.start_streaming = uvc_start_streaming,
-> >> -	.stop_streaming = uvc_stop_streaming,
-> >> +	.start_streaming = uvc_start_streaming_video,
-> >> +	.stop_streaming = uvc_stop_streaming_video,
-> >>  };
-> >>  
-> >>  static const struct vb2_ops uvc_meta_queue_qops = {
-> >>  	.queue_setup = uvc_queue_setup,
-> >>  	.buf_prepare = uvc_buffer_prepare,
-> >>  	.buf_queue = uvc_buffer_queue,
-> >> -	.stop_streaming = uvc_stop_streaming,
-> >> +	.stop_streaming = uvc_stop_streaming_meta,
-> >>  };
-> >>  
-> >>  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type)
+Stepping back, why do we even enter mtk_pmic_keys_probe() if there is
+not a matching OF ID? Are there any other patches that are not upstream?
+
+Thanks.
 
 -- 
-Regards,
-
-Laurent Pinchart
+Dmitry
