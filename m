@@ -1,119 +1,179 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DAB1B0435;
-	Mon, 30 Jun 2025 11:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0671F419B;
+	Mon, 30 Jun 2025 11:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282321; cv=none; b=hOeByh19ov1unuvfVez17n63AAO5as+0pDQlHO/VHLyTX0rKgdcQeIKh6ZSrPjBTz7IKU4LW9//+2nzioQNcs1qJvwoTN6R9cGwje799HQU3B2B3S2Yf9rTLeyXpXYdTckcXu8uaMZBNMeQm0S7Sesc3HGnlIA5ph8ZUAwKqs+w=
+	t=1751282346; cv=none; b=Rn2vsWJKrYlafnSLE+wvOfD1Z9oLKbT2iAVmrdZbBJLPRZti++WOHmPDoFBFnyb8N/rZu92Cf2LZxZ3Nycc8GEVs2tmZJ1eZflpO5BdVBaUfm7CmULYBtfjL7OyTeD8whX+a1Vdx2V6aS+sDLyeH3hcUuaTVCCyHbFa+VLA/iYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282321; c=relaxed/simple;
-	bh=nKcIly6qaq1Nl910VPmWYltAsx8yIOGi9TwL2l47JKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rXHA99Snx4byqIkIrTYILBseeGYf+/pIrfKC/LW5Z6qPtvSt2KTaZx6LlcS2t2SHf9lDRp2t6hy5oV3VmbEF84kkFIXQWg34z1KnHyj9xUU2OdvuI0MRTIRX9A7o2obg27FZmef5WMMhKTuy1jJTJz7uAjppQIXXHvnApo9s9uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lDS+86l6; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751282346; c=relaxed/simple;
+	bh=bIpgmPc0b9EDJv5uYq+XPXXxnqq2jlRbVDbZ7cCRdNY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rmuamDiUgRpNeCB1P8sOMG8yAemi/RxxyCX/X8uuAN9D5sJZTPo68ZbJK2dVVOTS+105VDw+tHIegE250ZoHJevsPjECltY0ILV/x0YbdMEUze6EXYrIbxg0kwClTkCX1NbJNHfFeElr/fVja+S4qXzMQHnD4gqyDvMdtcJj0HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kf8eheID; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lDS+86l6"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a528e301b0so134901f8f.1;
-        Mon, 30 Jun 2025 04:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751282318; x=1751887118; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bHSrGkiQpDnv6V2m1S1L8Uez278g9vphJNWWJac9vY=;
-        b=lDS+86l6vfroD9D2y2sVFTiIuxFSSTo0ojDmanHX4VJ6Xph8OHwS3ciflH4ia+QpiY
-         LKx80Zf6yFRKfsTkkN+rm2/3EYCpRYhwFnWnm9aGyUZaAwP3yFej4zCJZ9vUWzjSjn4f
-         E16/f/GEk8ae18QQKQ/mdnVRBzOzK/WL9/gdOYbkMf4UT/mwFqCCB7BwftHN2lZ5nUXC
-         UtyusmtT/iB0QqirS+C69MWhMpJ3k1ILLOJtIlg3zKbyablF4Ijg37L1E1Q7TtfeJVpG
-         JsOZ8AcavdzYXMW9B8UxUPO8WnDxKgEHNcKMLMe4WFBPUwHmtzWjM/sOAOciqY2rMXQm
-         DcKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751282318; x=1751887118;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4bHSrGkiQpDnv6V2m1S1L8Uez278g9vphJNWWJac9vY=;
-        b=ZjefrvQqehLwDhj+C4ITZUEnNU8AGbN0/Nx3e9ZkJVHumdkXW3nKyAO5Zr0jNslyIb
-         AMXA7sWM03opxnbiaErcuIXql77uAKFPJlGahdEACYfdFm+gTWXrZAY33y0VMC7LhhFN
-         NCkmJ98b27pht18qRornCC2OQrzeOB/WrNeTqw01Ll322A8uNzIbwkA8E+LbQXf6P273
-         D1GnZPPZn0FPVUKcHmDVsHWinMPTEJFEOUMi0oZXxCroZBZsR6T2eACCb9kSJ0XEOxd6
-         ljLjSlND8fQKHMfX6eXB4YS0TSBrUu/7mPiwLIG7V0sS/iJJT7ljUQbPb2UxD9/COUjK
-         +NKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiZmBMbGrEil1BKH+Ik2O3/19dMGoj0Fz64S4pz8usP1nrfU/QcpeyBYZJIu2/19ad8RNtTFN6bWStBsqb@vger.kernel.org, AJvYcCVUKcApRQuWvWBuaBGv17pWPJJY54dVSj792AQxYvQn+MHtdc10Dbkm8Pm+Ym3PQtGdVNNk499sRPS3oA==@vger.kernel.org, AJvYcCW9ypGJiekyf7LCzqNOQxZRUmVNTS0VLCxdGL8VzJDPkv97cfaf32D/0DpBzqkoN9cLipRTbH7pGz1eBE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywugza07xj50pt6IhqZXiIK7sIvp6WWqe5rTY4O1rIBKp2sD+sB
-	KEnC/NAGfz6PRiDCFY2ml7MuEQchjQ83QNwLO4cc3W9OsX++j1H5N0lM
-X-Gm-Gg: ASbGncvOn4Omo4yXfGv5U5NuDJfD3WcR/vuN0Dt/N8tLvYG1FgiW8rU+TFc/QnCRG+l
-	TEZkrna/BVMXDaAZay/mV15yxeF/Z/dwb7++4B0HU1+jY3mlAExPGMjhHDS2NFcvsMH3bTy45Qk
-	HbZX7LPvOXexUVHFb2tvSBAG4D91JbO2lemtmwOBo5EcL3/1QCEPdxq61YOUrL/+MeU1BiJ8ZEV
-	Voc/NVbnVK8K9KBBUquboAm6qPbYtJGDR5BmlN9/pVQ14SPrPWfrXsluBGJ5pSqp/Z0OUlXEQIN
-	Kvz1UzwDnxE5iM9YVHm+QkMc8M+BU2gLtlb6X6LmNgxNSZNNZW97MrLysfTZf7FO/fDEQtmpAqX
-	seKUI0rUdHev7ta9akjP8mL6X
-X-Google-Smtp-Source: AGHT+IFdIa5i+fsO4DexCnu4Udg7U+ph+4pACdyaAuy7OOOpwvuoUSrPIyws5b5Rh7q2WXLZTCK1fQ==
-X-Received: by 2002:a5d:5849:0:b0:3a4:e0e1:8dc8 with SMTP id ffacd0b85a97d-3aaf4a75781mr2515514f8f.9.1751282317752;
-        Mon, 30 Jun 2025 04:18:37 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:43e:be8c:f80c:622a])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec6aesm10112826f8f.5.2025.06.30.04.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 04:18:37 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Tyrel Datwyler <tyreld@linux.ibm.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Nicholas Bellinger <nab@linux-iscsi.org>,
-	Steven Royer <seroyer@linux.vnet.ibm.com>,
-	"Bryant G. Ly" <bryantly@linux.vnet.ibm.com>,
-	Michael Cyr <mikecyr@linux.vnet.ibm.com>,
-	linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ibmvscsis: Fix dma_unmap_sg() nents value
-Date: Mon, 30 Jun 2025 13:18:02 +0200
-Message-ID: <20250630111803.94389-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kf8eheID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252FEC4CEE3;
+	Mon, 30 Jun 2025 11:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751282345;
+	bh=bIpgmPc0b9EDJv5uYq+XPXXxnqq2jlRbVDbZ7cCRdNY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kf8eheID+HbtQNViBTZdMnfh46M5zDwW4hrciZ2nqmYkjJgSgB/IRja6MfrIue0re
+	 vzi/mCxqv51nkQ/jXoxJGslxFjz288XftiQTGncQbwbHxkE3SZuHba6z1OsNneHrky
+	 7b8UmG1yF0eQ44o1nDm2zPozg2+J3BqdxaFouGK6s06SJh9XYT527l1qohMcSAiS/Y
+	 YTgP71PC1zz0PF9km5sT1l3c6DQj9O4BTImKlLmLgTmf+xI51wDrkCPGAN7LCGzO+l
+	 t3tlmvlAJVAGRAkh18CvOBnxlghbgpU50aFePVsELZcxyY24IctuLnhMHCQAEADUjN
+	 CD7XbmpJ/8Dng==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Masahiro Yamada" <masahiroy@kernel.org>,
+  "Nathan Chancellor" <nathan@kernel.org>,  "Luis Chamberlain"
+ <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Nicolas
+ Schier" <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+In-Reply-To: <DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> (Benno Lossin's message
+	of "Fri, 27 Jun 2025 10:23:16 +0200")
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+	<20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+	<COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid>
+	<DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org>
+	<smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid>
+	<DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org>
+	<Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid>
+	<DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org>
+	<RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid>
+	<DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org>
+	<87plepzke5.fsf@kernel.org>
+	<xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid>
+	<DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 30 Jun 2025 13:18:50 +0200
+Message-ID: <87wm8txysl.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The dma_unmap_sg() functions should be called with the same nents as the
-dma_map_sg(), not the value the map function returned.
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Fixes: 88a678bbc34c ("ibmvscsis: Initial commit of IBM VSCSI Tgt Driver")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/scsi/ibmvscsi_tgt/libsrp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> On Fri Jun 27, 2025 at 9:57 AM CEST, Andreas Hindborg wrote:
+>> Andreas Hindborg <a.hindborg@kernel.org> writes:
+>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>> That's good to know, then let's try to go for something simple.
+>>>>
+>>>> I don't think that we can just use a `Mutex<T>`, because we don't have a
+>>>> way to create it at const time... I guess we could have
+>>>>
+>>>>     impl<T> Mutex<T>
+>>>>         /// # Safety
+>>>>         ///
+>>>>         /// The returned value needs to be pinned and then `init` needs
+>>>>         /// to be called before any other methods are called on this.
+>>>>         pub unsafe const fn const_new() -> Self;
+>>>>
+>>>>         pub unsafe fn init(&self);
+>>>>     }
+>>>>
+>>>> But that seems like a bad idea, because where would we call the `init`
+>>>> function? That also needs to be synchronized...
+>>>
+>>> Ah, that is unfortunate. The init function will not run before this, so
+>>> we would need a `Once` or an atomic anyway to initialize the lock.
+>>>
+>>> I am not sure if we are allowed to sleep during this, I would have to
+>>> check. But then we could use a spin lock.
+>>>
+>>> We will need the locking anyway, when we want to enable sysfs write
+>>> access to the parameters.
+>>>
+>>>>
+>>>> Maybe we can just like you said use an atomic bool?
+>>>
+>>> Sigh, I will have to check how far that series has come.
+>>>
+>>
+>> I think I am going to build some kind of `Once` feature on top of
+>> Boqun's atomic series [1], so that we can initialize a lock in these
+>> statics. We can't use `global_lock!`, because that depends on module
+>> init to initialize the lock before first use.
+>
+> Sounds good, though we probably don't want to name it `Once`. Since it
+> is something that will be populated in the future, but not by some
+> random accessor, but rather a specific populator.
+>
+> So maybe:
+>
+>     pub struct Delayed<T> {
+>         dummy: T,
+>         real: Opaque<T>,
+>         populated: Atomic<bool>, // or Atomic<Flag>
+>         writing: Atomic<bool>, // or Atomic<Flag>
+>     }
+>
+>     impl<T> Delayed<T> {
+>         pub fn new(dummy: T) -> Self {
+>             Self {
+>                 dummy,
+>                 real: Opaque::uninit(),
+>                 populated: Atomic::new(false),
+>                 writing: Atomic::new(false),
+>             }
+>         }
+>
+>         pub fn get(&self) -> &T {
+>             if self.populated.load(Acquire) {
+>                 unsafe { &*self.real.get() }
+>             } else {
+>                 // maybe print a warning here?
+>                 // or maybe let the user configure this in `new()`?
+>                 &self.dummy
+>             }
+>         }
+>
+>         pub fn populate(&self, value: T) {
+>             if self.writing.cmpxchg(false, true, Release) {
+>                 unsafe { *self.real.get() = value };
+>                 self.populated.store(true, Release);
+>             } else {
+>                 pr_warn!("`Delayed<{}>` written to twice!\n", core::any::type_name::<T>());
+>             }
+>         }
+>     }
+>
+> (no idea if the orderings are correct, I always have to think way to
+> much about that... especially since our atomics seem to only take one
+> ordering in compare_exchange?)
+>
+>> As far as I can tell, atomics may not land in v6.17, so this series
+>> will probably not be ready for merge until v6.18 at the earliest.
+>
+> Yeah, sorry about that :(
 
-diff --git a/drivers/scsi/ibmvscsi_tgt/libsrp.c b/drivers/scsi/ibmvscsi_tgt/libsrp.c
-index 8a0e28aec928..0ecad398ed3d 100644
---- a/drivers/scsi/ibmvscsi_tgt/libsrp.c
-+++ b/drivers/scsi/ibmvscsi_tgt/libsrp.c
-@@ -184,7 +184,8 @@ static int srp_direct_data(struct ibmvscsis_cmd *cmd, struct srp_direct_buf *md,
- 	err = rdma_io(cmd, sg, nsg, md, 1, dir, len);
- 
- 	if (dma_map)
--		dma_unmap_sg(iue->target->dev, sg, nsg, DMA_BIDIRECTIONAL);
-+		dma_unmap_sg(iue->target->dev, sg, cmd->se_cmd.t_data_nents,
-+			     DMA_BIDIRECTIONAL);
- 
- 	return err;
- }
-@@ -256,7 +257,8 @@ static int srp_indirect_data(struct ibmvscsis_cmd *cmd, struct srp_cmd *srp_cmd,
- 	err = rdma_io(cmd, sg, nsg, md, nmd, dir, len);
- 
- 	if (dma_map)
--		dma_unmap_sg(iue->target->dev, sg, nsg, DMA_BIDIRECTIONAL);
-+		dma_unmap_sg(iue->target->dev, sg, cmd->se_cmd.t_data_nents,
-+			     DMA_BIDIRECTIONAL);
- 
- free_mem:
- 	if (token && dma_map) {
--- 
-2.43.0
+Actually, perhaps we could aim at merging this code without this
+synchronization? The lack of synchronization is only a problem if we
+support custom parsing. This patch set does not allow custom parsing
+code, so it does not suffer this issue.
+
+
+Best regards,
+Andreas Hindborg
+
+
 
