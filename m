@@ -1,121 +1,104 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991251E2858;
-	Mon, 30 Jun 2025 10:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D3024501D;
+	Mon, 30 Jun 2025 10:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277663; cv=none; b=iWecyi3RMaO5yB/uhdt+eb2wNyT0r+uLVioqwXlE4bRoJEciXpy1vxTSLlZY+5nUGwASsPMpdnsVGb4L1UznvbBXmnkY4hqFeJmeM6oenzzw70Ph5AQeDT8DK8LTCbmGWvsrfp9koOodJHgyjOS62qdwfexcLzm38ATpB9ApyZU=
+	t=1751277725; cv=none; b=WFQePYlQ8I860ODqDmpvAvlM1J03CjoJZ5c+2WmNdspfBClfFj+Z5Gf+dwCbUEX4KfP1GUlAHnLCZ4w3QfRb9gz6YJoX4FV1IfTRyMSKWYIf3llCPIMCuCKPHcvijo1uqEioXzpLxFMR8gk3MY0qR+aOzvBjc7PqOoGa5NPwfYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277663; c=relaxed/simple;
-	bh=eP/79sG5uEeC7F5/Gqfpy1aZG6Wrq0Aun6AllwdWNPg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=j3SK2gYI3nm64M28t2Sx7K5FP+H0VUxomifRwJcLUyeS+Qeu3tS/0QTK2qsJ+J+Nowgetdwsp1uvX+tlucTIdq5IuxlLRI2HzC+A40MvNWsM5GdUIGC0ay/IOE5YTaaz+yTndD2EdBW6rxBprxtlLuYxvwh/TCWgsTcraWU+ebM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FKxpCMPY; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1751277725; c=relaxed/simple;
+	bh=bfjuw9gXAYyPF7VQZoSgZnNTMnWd678yVZRGAvIW96A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YDFG2o3ATczwyS0MVFLOQC0fC2/8G1tgkCUsspMZX3W8wiuh8GL1flH+tGcb4ItodGT7R1KefHf/3iYfxO4b+RHxDBDUGXhfHdl1CIJ4+1ShdJa6wnOG2rfg8GHdr3/+g2wexnd5CzLw4qlPh3X/PI1OFkk79KL7NbXmbXWfLg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkLJPpGn; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FKxpCMPY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1751277641; x=1751882441; i=markus.elfring@web.de;
-	bh=kugrVosBTJwA6XoBbQtPkhNHnaFGI7cyFhg63KcNtLY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FKxpCMPYoVdYh3eaHxD/Ry/7xAZ3bWzRAVqgm7uAziKtEjZj1c8jqKYysasM9cxx
-	 5EazAQBtCzavGtQ70VkHs1jdSExG4RdwGIYQcGug8OR9l61BtCc/AnaaPAmVMnrmQ
-	 gDCbXrff617fZAYnCAOa/wWUeEQkbm/0JcWazDveWMnIFBqPfmD19PKYdxDleNSUv
-	 7WK6aqjFzZ5WlwPwkV7qoJCap7M24d+59pNr0JgAcvozoHEcx2X/IyM/q8tzG/b9H
-	 uGa0g/w6f7N2YnkVSBX8RQNVZOXK54Ca8ZwvF5CVRjI2aGL6S3y8X8MXEAlJMevVW
-	 Ba6BlPeaE9D1oCAQ9w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.202]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MXoYQ-1uDPSH1Pfo-00OyE9; Mon, 30
- Jun 2025 12:00:41 +0200
-Message-ID: <c148ac93-2284-4591-a3a2-3df0e42a6cb1@web.de>
-Date: Mon, 30 Jun 2025 12:00:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkLJPpGn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751277724; x=1782813724;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bfjuw9gXAYyPF7VQZoSgZnNTMnWd678yVZRGAvIW96A=;
+  b=nkLJPpGnTGVAVbj3m4r2ydKLmg2RsJNNZhHHDawFU3vq3k7oh5b/cKyy
+   12DKTkLp4ifcizpARpXuqLZ0VBRZY7fNH8SLs6gQtG4IUwI0rXjpdRrtY
+   I5goyw3AO9t37D0+Eb4V/5knmd+IREE51ADgyt21Acg6e50uW7fO92QUw
+   aORXwiWtVd9wA+8hbbG1JkT7JldJQxuqCTX13YjO+NQcLo++ZBO1wtn8P
+   EyhOaLVFBT6ZBzeMRnF8W40gjHStVtO9kuKtNKZLS2IwWbPmMYuCYZERX
+   nQ0K33KSQpowM/CoX3EOOyjyOPZ1V4rNzzsbS4UC6E1WC5mZO1TYUBmj+
+   A==;
+X-CSE-ConnectionGUID: oz5nxvp2R3KZC9IzvZ15TQ==
+X-CSE-MsgGUID: MHPj5nVVRaug42t7VSxFEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57277422"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="57277422"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:02:01 -0700
+X-CSE-ConnectionGUID: gx+DFMCRQLifpuG30/l9/g==
+X-CSE-MsgGUID: DVrlXRpKSkKD3jGYQ9DL7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="190587470"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:01:58 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 13:01:54 +0300 (EEST)
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+cc: hansg@kernel.org, vadimp@nvidia.com, platform-driver-x86@vger.kernel.org, 
+    darren.kenny@oracle.com, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/mellanox: Fix logic error in power state check
+ in mlxreg-lc
+In-Reply-To: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
+Message-ID: <8e86e409-0a19-ec74-f126-2e5315e3dc0a@linux.intel.com>
+References: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zigit Zo <zuozhijie@bytedance.com>, netdev@vger.kernel.org,
- virtualization@lists.linux.dev
-Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Jason Wang <jasowang@redhat.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-References: <20250630095109.214013-1-zuozhijie@bytedance.com>
-Subject: Re: [PATCH net] virtio-net: fix a rtnl_lock() deadlock during probing
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250630095109.214013-1-zuozhijie@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NoTe6grqiAkLrY2As2V9hJ3vMVujTWuhDeyBsjG/3NHc0o+qYAD
- tvt12aMGG94pIq7eBBaome4fDZV5YsDiqfdnXplMYWMthkxDwTkjKA0aFP4gvlQZX1BXbHo
- ZzJ9+IrdyCK9Fb2oaoCs+9XBcGYjaN5A+NIsKDB5B1dZakHaJIgIrTO5oDwyo4kmeAYSkkA
- k9hety3U+Bsf69QoiUBcg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:D7CBCqAQhuk=;3lU83Jvu8zxuMefB5ECwufMxEvk
- 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
- US/f6XmHLczXYB7SWSvtMK0=
+Content-Type: text/plain; charset=US-ASCII
 
-=E2=80=A6
-> Fix it by skip acking the annouce in virtnet_config_changed_work() when
-=E2=80=A6
+On Mon, 30 Jun 2025, Alok Tiwari wrote:
 
-                            announce?
+> Fixes a logic issue in mlxreg_lc_completion_notify() where the
+> intention was to check if MLXREG_LC_POWERED flag is not set before
+> powering on the device.
+> 
+> The original code used "state & ~MLXREG_LC_POWERED" to check for the
+> absence of the POWERED bit. However this condition evaluates to true
+> even when other bits are set, leading to potentially incorrect
+> behavior.
+> 
+> Corrected the logic to explicitly check for the absence of
+> MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
+> 
+> Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-Regards,
-Markus
+Makes sense but please add Fixes tag and resubmit as v2.
+
+> ---
+>  drivers/platform/mellanox/mlxreg-lc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+> index aee395bb48ae4..8681ceb7144ba 100644
+> --- a/drivers/platform/mellanox/mlxreg-lc.c
+> +++ b/drivers/platform/mellanox/mlxreg-lc.c
+> @@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
+>  	if (regval & mlxreg_lc->data->mask) {
+>  		mlxreg_lc->state |= MLXREG_LC_SYNCED;
+>  		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
+> -		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
+> +		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
+>  			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
+>  			if (err)
+>  				goto mlxreg_lc_regmap_power_on_off_fail;
+> 
+
+-- 
+ i.
+
