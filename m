@@ -1,119 +1,131 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614814C6C;
-	Mon, 30 Jun 2025 21:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EDF1D7E41;
+	Mon, 30 Jun 2025 21:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751318498; cv=none; b=njLDVgyvf2Yh6Gnnl8tHq8H9pWEp+YmyQV30btaQdtDuJ751ejTB9uD/QLebItQJf7htbfQsKysc+BahGkNBBSbrMhOnhHHp+x6usp+KNpGmSckFsVFi+t+L7gx8dJmrv/H2SWkHinBekAMbU9LkGkKNlu6arsxdDR4OZhuLcUs=
+	t=1751319214; cv=none; b=o5J3kasucIZFhZJ79XBqQTED83rMy9LW2gzKcwJi55LGQN/mRPoXRvjcy02vjAZL30xdQ8WbzC95nqfFboxwCrdW4Q97/wMKlqPptabNdrGR6Vw7+MFnD93BtHW6jegUcKg74F9bZfofj4D1rRx8WLFAvRKLTNULrERN6DRJW9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751318498; c=relaxed/simple;
-	bh=2ryoA5kkM/lRzndBu5WvKiYQE2hLvpGyMnJc0TN5g7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OnLa31VVyLvOLKEkOp6g9PLL7ObjRFbDv6YBLuCaQPjA+UiG6I00n3kMQ1UUwJeUhJtPYXi/e5GxAgx4Gzo3yKoKZQuXBhVNknGWVOtKZ6mNfGtKyXMhry3wc0TtEGlREzuLDYcityR5IpRLhRwzuE98VL3wZc1JePnSrXX3r+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=OsY4xs8h; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1751319214; c=relaxed/simple;
+	bh=203ZgCZh+qPPesbZd4Z294GUTkzv22U70O3LqGCjSCA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y+Dd2BeR3lBxynOsVXqM9WmknT/yFukaizchrl1OKz86BKB8ofGrF4ZT2Y1baqiyqodmwUU+OeOQ2rgKgw9AfFVfBaZbxm0+9gOF2XG9S/FCRZNei112YlCH+anSCiHGNV5/DFj+xuPAKXggqTPcAEPgSi6rzS4XGxwAAILQVPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=kXPOClJk; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="OsY4xs8h"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.24])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 2C19D407618E;
-	Mon, 30 Jun 2025 21:21:33 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2C19D407618E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1751318493;
-	bh=2F3EogwDEnJvzuxBQjf9S7/RInXYPKivFjLuSHo7src=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OsY4xs8h1hebKF3JZOF1/HL7iaxomDsxU5ZzMwq9dn7B9uRnlLa7WjfRturDZstoO
-	 aaiQujlHzl1075mQtDV6WTeJIyjCwvGPYBuc0oSYfYFE/gexMoZ8U819UqvviCzr8c
-	 gHY83VWQRNNxqgrhcQq6KP9H+3ozFty05hEypTIc=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Zack Rusin <zack.rusin@broadcom.com>,
-	Ian Forbes <ian.forbes@broadcom.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/vmwgfx: handle allocation failure of waiter context
-Date: Tue,  1 Jul 2025 00:19:47 +0300
-Message-ID: <20250630211948.1556524-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="kXPOClJk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=BTJWDoX6+dZpqVbCI05HYOZjmWwxTYx7suIMcGN7BKI=; b=kXPOClJk1Kmb/DiiyBtViPQ7s4
+	BtvZG0K9yDMyQ4fGAOW0in3ubCmp2jBQZQuvmSkNvuRkZoBH5+Cd9uXGWaJLcrZnzwTlI6ctkPg0E
+	MPCtQMCm0MxNBF+z6YN3VNCvT0Y5AP4nvgRmrHCPBIAzCPyr/yGFufXgaB7zRpS5fSshucWqrdNkz
+	cTRAN+LkSxuoc10IY9ad5dILrvGnMUn61DobyKVq28TF0PSvch2asNQdHHgXEZLWQArucI5zeklKY
+	dl7HGTSabPyPOfaLNFCCXbNHXk2/MWobnlFcqn2HpHbxaBkwOcjzD90tFzh6Nld+AGVo80RkSVSmM
+	XfhReTgw==;
+Received: from i53875bfd.versanet.de ([83.135.91.253] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uWM7s-00084a-BS; Mon, 30 Jun 2025 23:33:20 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: linux-rockchip@lists.infradead.org,
+ Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rick wertenbroek <rick.wertenbroek@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v8 3/4] phy: rockchip-pcie: Enable all four lanes if required
+Date: Mon, 30 Jun 2025 23:33:19 +0200
+Message-ID: <4006908.X513TT2pbd@diego>
+In-Reply-To:
+ <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
+References:
+ <cover.1751307390.git.geraldogabriel@gmail.com>
+ <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Handle result of kmalloc() to prevent possible NULL pointer dereference.
-For the sake of not introducing additional layer of indentation, extract
-seqno_waiter_rm_context creating code into a separate helper function.
+Am Montag, 30. Juni 2025, 20:22:01 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b Geraldo Nascimento:
+> Current code enables only Lane 0 because pwr_cnt will be incremented on
+> first call to the function. Let's reorder the enablement code to enable
+> all 4 lanes through GRF.
+>=20
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>=20
+> Signed-off-by: Valmantas Paliksa <walmis@gmail.com>
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 
-Judging by commit 0039a3b35b10 ("drm/vmwgfx: Add seqno waiter for
-sync_files"), possible errors in seqno waiting aren't fatal, thus just
-skip this block if an allocation failure occurs - no need to propagate
-upwards.
+hmm, if Valmantas is the original author you should probably keep that auth=
+orship
+  git commit --amend --author=3D"Valmantas Paliksa <walmis@gmail.com>"
+should do the trick.
 
-Found by Linux Verification Center (linuxtesting.org) with Svace static
-analysis tool.
+The first signed-off should be from the patch author, then your signed-off
+indicates you handling the patch later as part of this series.
 
-Fixes: 0039a3b35b10 ("drm/vmwgfx: Add seqno waiter for sync_files")
-Cc: stable@vger.kernel.org
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 27 ++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+[or, if you modified the code of the patch heavily, Co-developed-by could
+ also be appropriate]
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-index e831e324e737..12d897eca410 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -4085,6 +4085,23 @@ static void seqno_waiter_rm_cb(struct dma_fence *f, struct dma_fence_cb *cb)
- 	kfree(ctx);
- }
- 
-+static void seqno_waiter_create(struct dma_fence *f,
-+				struct vmw_private *dev_priv)
-+{
-+	struct seqno_waiter_rm_context *ctx;
-+
-+	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return;
-+
-+	ctx->dev_priv = dev_priv;
-+	vmw_seqno_waiter_add(dev_priv);
-+	if (dma_fence_add_callback(f, &ctx->base, seqno_waiter_rm_cb) < 0) {
-+		vmw_seqno_waiter_remove(dev_priv);
-+		kfree(ctx);
-+	}
-+}
-+
- int vmw_execbuf_process(struct drm_file *file_priv,
- 			struct vmw_private *dev_priv,
- 			void __user *user_commands, void *kernel_commands,
-@@ -4265,15 +4282,7 @@ int vmw_execbuf_process(struct drm_file *file_priv,
- 		} else {
- 			/* Link the fence with the FD created earlier */
- 			fd_install(out_fence_fd, sync_file->file);
--			struct seqno_waiter_rm_context *ctx =
--				kmalloc(sizeof(*ctx), GFP_KERNEL);
--			ctx->dev_priv = dev_priv;
--			vmw_seqno_waiter_add(dev_priv);
--			if (dma_fence_add_callback(&fence->base, &ctx->base,
--						   seqno_waiter_rm_cb) < 0) {
--				vmw_seqno_waiter_remove(dev_priv);
--				kfree(ctx);
--			}
-+			seqno_waiter_create(&fence->base, dev_priv);
- 		}
- 	}
- 
--- 
-2.50.0
+Heiko
+
+> ---
+>  drivers/phy/rockchip/phy-rockchip-pcie.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockc=
+hip/phy-rockchip-pcie.c
+> index bd44af36c67a..f22ffb41cdc2 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+> @@ -160,6 +160,12 @@ static int rockchip_pcie_phy_power_on(struct phy *ph=
+y)
+> =20
+>  	guard(mutex)(&rk_phy->pcie_mutex);
+> =20
+> +	regmap_write(rk_phy->reg_base,
+> +		     rk_phy->phy_data->pcie_laneoff,
+> +		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+> +				   PHY_LANE_IDLE_MASK,
+> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+> +
+>  	if (rk_phy->pwr_cnt++) {
+>  		return 0;
+>  	}
+> @@ -176,12 +182,6 @@ static int rockchip_pcie_phy_power_on(struct phy *ph=
+y)
+>  				   PHY_CFG_ADDR_MASK,
+>  				   PHY_CFG_ADDR_SHIFT));
+> =20
+> -	regmap_write(rk_phy->reg_base,
+> -		     rk_phy->phy_data->pcie_laneoff,
+> -		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+> -				   PHY_LANE_IDLE_MASK,
+> -				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+> -
+>  	/*
+>  	 * No documented timeout value for phy operation below,
+>  	 * so we make it large enough here. And we use loop-break
+>=20
+
+
+
 
