@@ -1,218 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6FC2E403
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1EE226165;
+	Mon, 30 Jun 2025 08:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272856; cv=none; b=G+Gy162up5Hko56nXEn4jUw1wJBioBehX3NXYCz5ve/Ylk5AjUE5vwGrRacQtVtoJbELR0d+ahu1J5EnVC55A3IsijRbWO5HFKV6RzppUXCt09lSAIVjPUaOJRlIIGfjGkBvR4EEgqbukCIpwIaI/FsDf8zgYUW0ggzHfgD6c3Y=
+	t=1751272873; cv=none; b=aKdgpkNRa3LKcMHou4FBLjwACm803BRbJhLgRk8y9dkIuIvltEmbMA+MQSZbnJmVrTSMG22vUf5FBExiACxV9OKwhXyHFzENfvJ5bkihqcMf+gpst++vDdiAYusfZtTRy2eEIDbcBH5LrGcwL7hG7AtjLGpJzleD57WwjdBn/bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272856; c=relaxed/simple;
-	bh=TtvZmKcu5ULV30hDwJa7QtVvX83gJrgmBcIfmoYQekA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XKTjKxri4Ds/KqPsJjfWOn1L4D7ycrSGlM9NR6Dj6ojtA3XhqEBL128eeCVV+yCfgFENNdJBurX+sz0Jmeb7OVRUloJ1FRcoDS4KVRtO/OPrtE5ll2x3dyWYyTH42OrVtvffqSFUB9wPiNdQ9II0laFbfaB4bowoyLS9NmJhXDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h6Pvm/1a; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751272873; c=relaxed/simple;
+	bh=GFMcwvHqQu6q6QWAz3DVJhxBQG7XyQqTZN85s49tnbM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VSnnmqOQ/bksAq4oI3VQ61BM/WG5KVnDhcccLwGVv0PEh3vRny/0aA1QDzyaRysJyQqsFOouURi+tY6UL8T7rF+Yx1tOjdaoVVup00KtH3ivdzEfpNedmSbf1nXUDviFiRHIGLhG+Le0VfJ1TG8J4sgjR8o0p4vBQ3Xrtg+JH3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KL7Yk92j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6Pvm/1a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751272853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GbzS3/7wOLVYMQM7fq09DAq/NtYuBLxSJ0uQz6yllZw=;
-	b=h6Pvm/1afEJ2Ib8Gx1Xp74IaLTIm/EozgDwhO6Zvyfl3ks0/k2r/JsaYRH8BfT4l9rQ73F
-	dQ6P4nrcVjZ4HiT4cT0LJgzg1p436Wq+G9znqKCxa4+x1ISmTy229vpZAjwvbqGQSXodo6
-	qXXnWEdUuEgP3zmpgokmKrWUe8YFCGo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-504-9Xi5y4XpOgaLG103OtkD9w-1; Mon, 30 Jun 2025 04:40:50 -0400
-X-MC-Unique: 9Xi5y4XpOgaLG103OtkD9w-1
-X-Mimecast-MFC-AGG-ID: 9Xi5y4XpOgaLG103OtkD9w_1751272849
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae2b7bdc8f6so256509766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:40:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751272849; x=1751877649;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GbzS3/7wOLVYMQM7fq09DAq/NtYuBLxSJ0uQz6yllZw=;
-        b=IKqKYAEZy7rJATsa2wvY7Lx0tUKzRl9wuc6YUxK1xZOYiaWWS+/yI2VoIoWI6iEEZ8
-         nq0n70/RNlYp1NjSuOFxh0daX5iSoVpnlgJC6ZEW6zNdRjkmklyYah8Xb9+qXuKIuQ6u
-         YIT5a3o6orj+9r59V0dxhg/KzWFUW6XbYMubsjQuehzlw23HVnQ0+h/C8P6nRWuj3LXy
-         +DTjvyBckaBKdcHwJ13+hTHRDAmOcemaCshkXu6ThslJsBZcUbUkbMOgZgPjTagMdOso
-         E3sLcXlLkF9B7E+2PQ4BI3ATApmO83ZRHN+miRjjSPGWyT8q0BFe731LpfnRVBf5k9cJ
-         WctA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2f8cfe5XQd48aoeuOy86gjVQewjyYRIm2KUibyOfSycA5zhbSlDFeB0lIhfSuV3NtJv8D5iqR1Ut3LcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+IOdF4C+Ejurkow3fuUHBNAjQe81GqnCX/D4BQQTJmEWi/pw8
-	4ErRHpfEwn9aX8WupATN4RN/8Our8qKEVzTvfo0X3M9Lp9vw1JVFkMYKFKK7wJScalDPXrzpnRf
-	rcKWfhOnkoEPuVEaMgrC7C9E+ullHHS2sjQhOAXAquE1v2/lENKmBd23qroyqFXcGJA==
-X-Gm-Gg: ASbGncsbUfYv8YRZi5QkMsRBDKu/xp0FV4ZUkCDGRAz997OwMF8KL7GhCF70IpHIEhG
-	gG248FP1uZWx9cJMXa4h/IE1q8NbNCRFf8eNxJUaFpCZFB3AV8GVsXfQ0/eRuMW0jDFqZIWvGkl
-	iPY+7FDX1ILuXps21WVXFXdPJcPHtZ4HtiupyG0hL5PvN1Kwny8QD7/GHNuFApF166UHwYE3uCk
-	9Z5YCqBSmyeq6jUJvdc5I3vr4fb3mzvDSnJk4iksdgucTGE3SVdqY8GS3zT0RQ9pCcP7aFO6h+N
-	o5Zj+R5gr8t3ri5V7Llzus+nvgdu4rloEC9Kkn8dYqbcSEsaJP2dG8q88UKkXfIIxYrGYZPnRwE
-	r+upRBLKDa9w4nR6+vZ45Cg2N/OrygM9H+BtwR4Wo60fD7DYvFpWopCyMPeoiYAAllTx3wXOD/A
-	==
-X-Received: by 2002:a17:907:3c91:b0:ae3:61ea:31b1 with SMTP id a640c23a62f3a-ae361ea3303mr1065072966b.12.1751272848985;
-        Mon, 30 Jun 2025 01:40:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF/y7vOHMHZ5AF4xuBNceBfPbSy8M7ATw5UKXH09WWku0rRQgHald4Jy38PCYx58QuWLBfH7g==
-X-Received: by 2002:a17:907:3c91:b0:ae3:61ea:31b1 with SMTP id a640c23a62f3a-ae361ea3303mr1065069566b.12.1751272848439;
-        Mon, 30 Jun 2025 01:40:48 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae362cbf19asm547457166b.128.2025.06.30.01.40.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 01:40:47 -0700 (PDT)
-Message-ID: <e534d496-6ce0-46c8-835d-94b3346446a7@redhat.com>
-Date: Mon, 30 Jun 2025 10:40:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KL7Yk92j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76628C4CEE3;
+	Mon, 30 Jun 2025 08:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751272872;
+	bh=GFMcwvHqQu6q6QWAz3DVJhxBQG7XyQqTZN85s49tnbM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KL7Yk92jmI3hWHySdadSShj47zKUAdMNPSUGdu2mkgve36nntPf/tIItn35WCiToj
+	 mkxK8IlWKNdJ8MI6c2tiWDVH2xBLQ3Po/tavIuI9wrtRQhoKcX4jugguxQHQllTPCG
+	 Ud5a+t6f8vc/c6hEoz/Etsr1AjnSUIyI1ig9/YdGC9fXlPA6wd7WUZt0ubqwBCPgJv
+	 poiyTWz4ZUKSPc/KCCFPJpYI/isYOgzxeK0SXXd0iDUvzvF4ZCNS05pdVO413d4H48
+	 IGIghQKT9rdsXBiyFonw6/xuJWAwVxftVCac0nerVfNNCoIY+msxttFbptSFSpSSv6
+	 mYuSaupDO0ysQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uWA4c-00B9a3-5l;
+	Mon, 30 Jun 2025 09:41:10 +0100
+Date: Mon, 30 Jun 2025 09:41:09 +0100
+Message-ID: <86ldp9bp0a.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: perlarsen@google.com
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ahomescu@google.com,
+	armellel@google.com,
+	arve@android.com,
+	ayrton@google.com,
+	qperret@google.com,
+	sebastianene@google.com,
+	qwandor@google.com
+Subject: Re: [PATCH v6 4/5] KVM: arm64: Bump the supported version of FF-A to 1.2
+In-Reply-To: <20250627-virtio-msg-ffa-v6-4-8c02fd94edac@google.com>
+References: <20250627-virtio-msg-ffa-v6-0-8c02fd94edac@google.com>
+	<20250627-virtio-msg-ffa-v6-4-8c02fd94edac@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Luca Weiss <luca.weiss@fairphone.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
- <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
- <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
- <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
- <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
- <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: perlarsen@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, ahomescu@google.com, armellel@google.com, arve@android.com, ayrton@google.com, qperret@google.com, sebastianene@google.com, qwandor@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi,
-
-On 30-Jun-25 10:24 AM, Krzysztof Kozlowski wrote:
-> On 29/06/2025 14:07, Hans de Goede wrote:
->> Hi Krzysztof,
->>
->> On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
->>> On 27/06/2025 11:48, Luca Weiss wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
->>>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
->>>>>> Document the interconnects property which is a list of interconnect
->>>>>> paths that is used by the framebuffer and therefore needs to be kept
->>>>>> alive when the framebuffer is being used.
->>>>>>
->>>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
->>>>>>  1 file changed, 3 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
->>>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
->>>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
->>>>>> @@ -79,6 +79,9 @@ properties:
->>>>>>    power-domains:
->>>>>>      description: List of power domains used by the framebuffer.
->>>>>>  
->>>>>> +  interconnects:
->>>>>> +    description: List of interconnect paths used by the framebuffer.
->>>>>> +
->>>>>
->>>>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
->>>>> some sort of resources in unknown way is not simple anymore. You need
->>>>> device specific bindings.
->>>>
->>>> The bindings support an arbitrary number of clocks, regulators,
->>>> power-domains. Why should I artificially limit the interconnects to only
->>>> one?
->>>
->>> And IMO they should not. Bindings are not supposed to be generic.
->>
->> The simplefb binding is a binding to allow keeping the firmware, e.g.
->> uboot setup framebuffer alive to e.g. show a boot splash until
->> the native display-engine drive loads. Needing display-engine
->> specific bindings totally contradicts the whole goal of 
+On Fri, 27 Jun 2025 08:12:28 +0100,
+Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org> wrote:
 > 
-> No, it does not. DT is well designed for that through expressing
-> compatibility. I did not say you cannot have generic fallback for simple
-> use case.
+> From: Per Larsen <perlarsen@google.com>
 > 
-> But this (and previous patchset) grows this into generic binding ONLY
-> and that is not correct.
-
-I think that it is important here to notice that this is not
-a generic fallback binding, this is not and will never be
-intended to replace have a proper binding for
-the display-engine.
-
-This is just a way to give the kernel access to the firmware
-setup framebuffer to e.g. show a bootsplash but also fatal
-kernel errors until the real display-engine driver loads.
-
-Note sometimes the whole framebuffer memory is not touched
-at all and the sole reason for having a driver attach to
-the simplefb node early on is just to keep the resources
-needed to keep the panel lit up around (on) until the real
-display-engine driver comes along to claim those resources.
-
-This avoids the display going black if the display-engine
-driver only binds after the kernel starts turning off
-unused resources, this typically happens when the display-engine
-driver is a module.
-
->> It is generic by nature and I really do not see how clocks and
->> regulators are any different then interconnects here.
+> FF-A version 1.2 introduces the DIRECT_REQ2 ABI. Bump the FF-A version
+> preferred by the hypervisor as a precursor to implementing the 1.2-only
+> FFA_MSG_SEND_DIRECT_REQ2 and FFA_MSG_SEND_RESP2 messaging interfaces.
 > 
-> Yeah, they are also wrong. I already commented on this.
+> We must also use SMCCC 1.2 for 64-bit SMCs if hypervisor negotiated FF-A
+> 1.2, so ffa_set_retval is updated and a new function to call 64-bit smcs
+> using SMCCC 1.2 with fallback to SMCCC 1.1 is introduced.
 > 
->>
->> Note that we had a huge discussion about adding clock
->> and regulators to simplefb many years ago with pretty
->> much the same arguments against doing so. In the end it was
->> decided to add regulator and clocks support to the simplefb
->> bindings and non of the feared problems with e.g. ordening
->> of turning things on happened.
->>
->> A big part of this is that the claiming of clks / regulators /
->> interconnects by the simplefb driver is there to keep things on,
->> so it happens before the kernel starts tuning off unused resources
->> IOW everything is already up and running and this really is about
->> avoiding turning things off.
+> Update ffa_call_supported to mark FF-A 1.2 interfaces as unsupported
+> lest they get forwarded.
 > 
-> No one asks to drop them from the driver. I only want specific front
-> compatible which will list and constrain the properties. It is not
-> contradictory to your statements, U-boot support, driver support. I
-> really do not see ANY argument why this cannot follow standard DT rules.
+> Co-developed-by: Ayrton Munoz <ayrton@google.com>
+> Signed-off-by: Ayrton Munoz <ayrton@google.com>
+> Signed-off-by: Per Larsen <perlarsen@google.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 14 ++++++++++----
+>  include/linux/arm_ffa.h       |  1 +
+>  2 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index 5fd6474d96ae4b90d99796ee81bb36373219afc4..d543d1f5ddd62fb15f8d39f4ff7d5bb0006da4a1 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -678,6 +678,12 @@ static bool ffa_call_supported(u64 func_id)
+>  	case FFA_NOTIFICATION_SET:
+>  	case FFA_NOTIFICATION_GET:
+>  	case FFA_NOTIFICATION_INFO_GET:
+> +	/* Unimplemented interfaces added in FF-A 1.2 */
+> +	case FFA_MSG_SEND_DIRECT_REQ2:
+> +	case FFA_MSG_SEND_DIRECT_RESP2:
 
-So what you are saying is that you want something like:
+Are those actually optional?
 
-framebuffer0: framebuffer@1d385000 {
-	compatible = "qcom.simple-framebuffer-sm8650-mdss", "simple-framebuffer";
-}
+> +	case FFA_CONSOLE_LOG:
+> +	case FFA_PARTITION_INFO_GET_REGS:
+> +	case FFA_EL3_INTR_HANDLE:
+>  		return false;
+>  	}
+>  
+> @@ -734,7 +740,7 @@ static int hyp_ffa_post_init(void)
+>  	if (res.a0 != FFA_SUCCESS)
+>  		return -EOPNOTSUPP;
+>  
+> -	switch (res.a2) {
+> +	switch (res.a2 & FFA_FEAT_RXTX_MIN_SZ_MASK) {
 
-and that the binding for qcom.simple-framebuffer-sm8650-mdss
-can then list interconnects ?
+You should also check that the MBZ fields are still 0. Ideally, you'd
+also do that with x3.
 
-Regards,
+>  	case FFA_FEAT_RXTX_MIN_SZ_4K:
+>  		min_rxtx_sz = SZ_4K;
+>  		break;
+> @@ -931,7 +937,7 @@ int hyp_ffa_init(void *pages)
+>  
+>  	arm_smccc_1_2_smc(&(struct arm_smccc_1_2_regs) {
+>  		.a0 = FFA_VERSION,
+> -		.a1 = FFA_VERSION_1_1,
+> +		.a1 = FFA_VERSION_1_2,
+>  	}, &res);
+>  	if (res.a0 == FFA_RET_NOT_SUPPORTED)
+>  		return 0;
+> @@ -952,10 +958,10 @@ int hyp_ffa_init(void *pages)
+>  	if (FFA_MAJOR_VERSION(res.a0) != 1)
+>  		return -EOPNOTSUPP;
+>  
+> -	if (FFA_MINOR_VERSION(res.a0) < FFA_MINOR_VERSION(FFA_VERSION_1_1))
+> +	if (FFA_MINOR_VERSION(res.a0) < FFA_MINOR_VERSION(FFA_VERSION_1_2))
+>  		hyp_ffa_version = res.a0;
+>  	else
+> -		hyp_ffa_version = FFA_VERSION_1_1;
+> +		hyp_ffa_version = FFA_VERSION_1_2;
+>  
+>  	tx = pages;
+>  	pages += KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE;
+> diff --git a/include/linux/arm_ffa.h b/include/linux/arm_ffa.h
+> index 5bded24dc24fea8cdcbe42bf79c7c025c3fa5f4b..c0dd6183d956043192114a522b7eef465e7078ac 100644
+> --- a/include/linux/arm_ffa.h
+> +++ b/include/linux/arm_ffa.h
+> @@ -128,6 +128,7 @@
+>  #define FFA_FEAT_RXTX_MIN_SZ_4K		0
+>  #define FFA_FEAT_RXTX_MIN_SZ_64K	1
+>  #define FFA_FEAT_RXTX_MIN_SZ_16K	2
+> +#define FFA_FEAT_RXTX_MIN_SZ_MASK	3
 
-Hans
+nit: a mask is better expressed with GENMASK, making it obvious that
+this is not just another value.
 
+Thanks,
 
+	M.
 
-
+-- 
+Without deviation from the norm, progress is not possible.
