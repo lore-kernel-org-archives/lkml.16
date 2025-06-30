@@ -1,257 +1,206 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011024.outbound.protection.outlook.com [52.103.68.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD73289E05;
-	Mon, 30 Jun 2025 12:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287044; cv=fail; b=UeGRShfCnegXfcWbB2Hgmdguh4i27+wEFCHKFcIKgmM46gMG5MG6yMN9UEgq0GtM6EoXHZdTDyM9U364nT5JSS3Hcv4bPDOpPMofSG1RPyvbo7YK1AYlQB4S9STxETHcqVUhTykKUuLMkkIRn11d0L48uxPIHYOwZCRDzThHcwM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287044; c=relaxed/simple;
-	bh=Bd5flgCQW8tE3ZQrY40hgeX/OMHhFdM3/Y06c/0U/UY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=O8lQst4V8Z0PwouyjHl1HeRZqPHy/q2RE7PFfaky9pazTiKgOuwgi6mdc5Z2dcjB9QJ4j9aKBho0nx5aZI+5E3X0fYDGJ79XlEEc6WLhkf2kPMcc3jl3RFomTLC91RYIPWdf2/FT1LLWL+TFHa7yHAGz+SUC8uRTOPpJx9HMbbk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Ow+qjnB/; arc=fail smtp.client-ip=52.103.68.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAA128A723
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751287047; cv=none; b=Z6BwoMp+MCBathfipDytVNu4U3mRskCv3UfZYIVhKtOFkyjb2UyKzdYf0/RM8LH/E5+Ozd32ecKKyaFWZz0PEXDQVFyHCF9UiFA2Po5OuamU/eqsbqqOkPdSEsH7dOuhaiy9JFVCg4iHXBLEEKXNSl+T8LlrUGuQGgQ4oGHnWZ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751287047; c=relaxed/simple;
+	bh=vSJoeqW/0YSRNvc3L8Rq4FI72ozCDU5AyIHLHoUl5+k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QyZONmuRgGFgowFMWXm6MKVLWFNq1ZdySns5PbeTorQ14maerQIeTdiRM3SPBDJIvpp8b1JwrJBn/HLUQ9tUvhpxmNfFCM8D88zCmHkCSIq+4Z7oI2dlO2XTKJwjV7WD4HbPWZ6Zl0zjexartaZUmIpMIkHrtj73GEXgbsDlkQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fOewLP23; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Ow+qjnB/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CjlNICdY0oFA6wIEMR5OdtH7swkD1NZvmn5RTb1C3NxwZhW+wWYHDg396pCXpUqbBRXB0qId6UsRR0mFq5aXj9YKmraIdJhY5TwayPFq+SnxUucghm+DvM/eaP7aKK9cmu+RlyANCw8Xw/8/zbPW8ln9ziwPTTLd0FrxH3ZxXvKM6+n0/+Ke8Gm2cS9E+0q0ej3UujdA3Vb16tOSH38E+275diGv4qWLnjERR11sjLbqO1gph7932rJGQ9Ml1vpfWzVwt/gTM0YHPvkrZbqUT2HHYTaMoZz02xT2Hs0txMig26uFdy6bejeRgg8RtwiuPQPVTsESv6QGnT3pT/bTCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CQNC/cOSpIZVgzNgwji4426d0Js4jdAtVFgK1J8dj8g=;
- b=bql7wY0OBg125ZymKjTz1krHoVaOtiaLKjqE+T5A7s0UCrvxy1Az0FSyh75F/6hzD6B/awhpv/V2lY6xYF7xAd8MxBVOGJsSLDG3CkLVUuXnO1oVQv+b7OMrMBJoOOFH/NWQ2kuCpQ1Y34YO0yumnO1AdDWWO+5Ia2CEzSvkMMVp3Fd2HliuB4/KTJtVduhMXon/RQQD3Je8/YLYs1nJAd8xhv1xa3NX/eIk/GzB5xgU88g4aaXfhBTWVl2uiBH9D84MIA3TLFQJ1Rbw4sx3WolR+n9G5illmIZRbLQpH6IgSFE1662SwX/2L3nZilXqaoKC99fSpXDINoC5I/DZXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CQNC/cOSpIZVgzNgwji4426d0Js4jdAtVFgK1J8dj8g=;
- b=Ow+qjnB/gNN8MM+UcJuqchLrzBX4/zIznmsyxWHSrQzqIdpY/J7nHYvIZaUOne3bEDsUokjdKI1XhAabixEgrXH7gutaPd7xHEPG6mLv57kW+7d/Sqsz6f7AHMV84bmqjsQYPn5kq4s/eJtNzTkE2lYjQWc3N1p1n3X6RtZen0K7pnJUUFnUkuZ/AH44N/p3OpexT/e73QfUQOQ4WxABfqtzkO51c6brosGzntCHmWybwQ5A7gmOQlkjM8YKjJT4aSTbW3p/oEkdqecPJfWeYwIYiD3SsilPNGHqLYYosm2hnzvg7Q8FBfPOKsJdFB9DfQ/qIbuip8wVHIfAGVHNmw==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN0PR01MB6210.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:6b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
- 2025 12:37:14 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%3]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
- 12:37:14 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
-CC: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	=?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v2 2/4] HID: magicmouse: avoid setting up battery timer when
- not needed
-Thread-Topic: [PATCH v2 2/4] HID: magicmouse: avoid setting up battery timer
- when not needed
-Thread-Index: AQHb6bu0+MDa7xrg90+z0DbzfExmmQ==
-Date: Mon, 30 Jun 2025 12:37:13 +0000
-Message-ID: <20250630123649.80395-3-gargaditya08@live.com>
-References: <20250630123649.80395-1-gargaditya08@live.com>
-In-Reply-To: <20250630123649.80395-1-gargaditya08@live.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|PN0PR01MB6210:EE_
-x-ms-office365-filtering-correlation-id: ef150f74-0d50-46d8-66ee-08ddb7d2d784
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799006|15080799009|41001999006|8062599006|7092599006|8060799009|461199028|38102599003|52005399003|40105399003|440099028|3412199025|102099032;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?YFBpi8u9pryQ/06EYpSaiDU+6K++ZhHI4lu5ZLWIwaka9weu9SsK5vEwdw?=
- =?iso-8859-1?Q?ltc0Bk59H2D++SsplaDXqn5qeMh2WiRslrnyrWjleudgN6Xi7zjpNI5aY8?=
- =?iso-8859-1?Q?y5Hgo6YNBPPLv8opdw3lOyLORyHULmYJsC5ftNKWaXWC2i/1OoAyQVCn2Q?=
- =?iso-8859-1?Q?k8fXM4x813v8OPurTRxtpCqpbDDfhs6d9brR4Ef9cNsR6Dz5/DabpLUnYX?=
- =?iso-8859-1?Q?3qPZWVK821WmJpqV6wObj7KHpn05tCM8N6u5W3vk2ckMbwskoyGmEYmP9V?=
- =?iso-8859-1?Q?b/p13VFpwYQ2KzHQjpyVcNakq28Q96bQElIvRGbz3MpqNEix9Su3FOr3Qq?=
- =?iso-8859-1?Q?8IvKkS4U8YGGheAZ+Lxn5OKCgXFRG1MoVSdrcEm5fryD64W1Q9KXoUqUPi?=
- =?iso-8859-1?Q?Liw6v6wSEzO6cn7veWYORZiJedoXJQU4wgFhLELKQSsOMJgcAGA7zC9FUr?=
- =?iso-8859-1?Q?fF9jRgdY163xlKxJoB0osdPM9fVkl7wL6VJYBi9ppuejbobB0tvcX26rVR?=
- =?iso-8859-1?Q?4gXUDe3Q20EpM8+vAxCq9Dvlj800p6GuDxW1/lahIMTSAeyBqVh6zkvzBX?=
- =?iso-8859-1?Q?F43j0bqe4DBSHc2TyWc3tqQC1NpBWnHBEjLZ0GSkjUfcrKfQLt99n2hBuR?=
- =?iso-8859-1?Q?a/rcFRY0RKoGJZGkZdJjnVxemOvA9ErmqVPWVYj+ubxjJoTiDLZPuU50Le?=
- =?iso-8859-1?Q?eC2QN9tlXDZwUYiH1gjg9MRqTs51zhNipHJy6KGJnfBKW5KdsSq9Mokihp?=
- =?iso-8859-1?Q?N0lq6qj/80vw4zi/HnTQhyfUemS9dlJ/1qJuAKO+VOSTehvHAaDbgDhQI9?=
- =?iso-8859-1?Q?YShE1WSZ8U0GbwUjFWdf6f4G0vVXCk4e0hBTFkEFxpccWrriI5nCF2dQ68?=
- =?iso-8859-1?Q?euV3Q3DSgX+oqn431PbHPwJT+JwZLI62i/IyvOS6j7Paz0OJ2T9fQdSkiY?=
- =?iso-8859-1?Q?l60wNyc8pupU2F621PZFuRXW/o+NofF9q11BVcfipdCRng1eYj4W3ZDeZQ?=
- =?iso-8859-1?Q?gfP9EZ5dLcmn9DbNP6Bv37bNNa1ZkbAhj/bi9zQ0hkCkwFkqnze9ckJBB+?=
- =?iso-8859-1?Q?zHUAPI4qgCThfOJWtXGCUt+7cZZOVK8tVL/8onbRT3Z5gztZWDGtOnbOpx?=
- =?iso-8859-1?Q?xg1peFGkUOhaP826KApqCmK5WXF92upf562igIRSTBmsvrtLlHctnb8Esa?=
- =?iso-8859-1?Q?nocqBOO4dp8Ltes9PS8df+Gu6UnK/z+G/ThUfzobq9+GmXHMK0tfZGhlWT?=
- =?iso-8859-1?Q?Gn73iIDf8GwQbnXqacSKMhxxZLcsZmKgToJeUvwAc=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?JbGja3Sl0xyt51unrsIbk4BO0l3J/oJyvoSr9CYII2t9z3+Txe0nBcWXiY?=
- =?iso-8859-1?Q?y5CbMurztZNGLvOn0/xwVG8tSI/DyavswaFwaTiwvqf4gPIOeACPBWeG4L?=
- =?iso-8859-1?Q?dpwIdJIWhTcW9RU6zs8LCoKWQLC1PQhBvzhpHjBTvvg2Jm76aCj6bPuE7Z?=
- =?iso-8859-1?Q?ekhGf7wOECsvdITMdqQGsaydjhDiRZ0hIqGr3fNYOYg1WbpDJTYclf30FV?=
- =?iso-8859-1?Q?qdfj0+xdwaQjh2MYPQ0dTN7rtPq32S72FgmwIcwG5PLWgDtJdtn//a7PQ2?=
- =?iso-8859-1?Q?xpeeEmUvONq3fO4Y9tQVV6ccCkqCt6KdOEuILr/e/FKPgMvPdiMX4ioi7i?=
- =?iso-8859-1?Q?F84OsPA1LiXCW82uw7BkesQ16PGyb2BrqyofN8Y1uuuQsVkacmW0frA+ro?=
- =?iso-8859-1?Q?zL9oQSx6h4AgG6oQDqAkfVzBqlt4rrYgpPEzZKt6MLGYCHhI+louF2KG/a?=
- =?iso-8859-1?Q?PnTr5zSN/dAdzLs9nqcu7cYZ6zi4Wo1bz3OqtDoH986ZWcu4355qIwPTAT?=
- =?iso-8859-1?Q?1YdkNkKiui8aVDK/iwjR04A0Npi+TSSHh2R99U4WqlFP8r53BKKWcasUzg?=
- =?iso-8859-1?Q?tBzKeQHkEA36+Y5b3sDOBcuQOj3HnVhDSfXWOz2GFlTE/qovFysn5lqafZ?=
- =?iso-8859-1?Q?Lyw4SQ6IICNrtcSkJusbSgEsrlxSu+ca5V0gK147MabgvslsjOGvCMtDv6?=
- =?iso-8859-1?Q?B9oj6sowxfMhpxz7u8dyBiqE1eZSTPOUrXq07GMmqk+J3Xue+evb8D6x1g?=
- =?iso-8859-1?Q?2HD+d9jxIXoWRGf4jouz2nlEurIyvXVaeA60yBPOp9RmgjJy0HVMGGR3Pr?=
- =?iso-8859-1?Q?PLY3RkkDZmfE7xtZZ33+UpkgiUI/rX+WH40vwylvIJde5WR7fhJqCElNGH?=
- =?iso-8859-1?Q?KjP+q/NZUOp7PNFVyysH4oFF4f5XEZ6IUqbxAqItmD8vzQxJI0ZEoIKn70?=
- =?iso-8859-1?Q?mr+coCjCxkTObvVKgjawfGW0TlWw+A59uoj9YHx7AF0bIrHUQrHTfxres1?=
- =?iso-8859-1?Q?/IQwiG6FW441g7+meR/prviQNnqDe0lxDk95m+TZSrAdCOKXe73dmreGMY?=
- =?iso-8859-1?Q?6rvA0arW7PfQYAdOFhWbd/UzdHawlDchKpxvYVI5ZefyV10wYu3LII/8L1?=
- =?iso-8859-1?Q?hd2ZhuuJDW5tHxJWwP948w92jI8h+4++fiEfzcGTQOUXf6S6fRewm/FKTg?=
- =?iso-8859-1?Q?bpiIXzmvJrJJSFVBknT6SDYtExYi+n6pugxTpEKGMseAUvicxBMYv52VxQ?=
- =?iso-8859-1?Q?331kY1JeW5J8v1U2kgwreZda1ijne0mwzCnfGAv8E=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fOewLP23"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so2848783f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751287044; x=1751891844; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NBujJaT2ckR8gXJqLyS4Jh8PI0jBXSRVKotutG8LOQo=;
+        b=fOewLP23liey9saXvmCTzUkwDXBpaPVs2BhwSAgaVX9S7Wbf+v54ZPP/B5V1hf/itN
+         Nz+XPkhgFNuKwF6gBOjmzn+2q0MAx290ccfQd6Kfn+yH1+jX4c9dWMsl6L6FPCsX8490
+         dUPGnQC4ZuLK0cqzj/kwqnbJysFcYWphqzgJT0eclDeAOspBisZip4i0oQNd+r+d3G7X
+         5tPxuRN2A20RKw/IZvOyEvpDuZ+bwcMch7iwDtbRJ18s7vbFN4Go9C3ufM+mmrC8KdT9
+         yEYhLEwIf7qmuxgaD1gDx1edsa+7SAkkGVPlDmBXWvR/I4zeAZh4WiLgNfYnuqONKjLf
+         IZ6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751287044; x=1751891844;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NBujJaT2ckR8gXJqLyS4Jh8PI0jBXSRVKotutG8LOQo=;
+        b=H2D3hK9JEhbONDVIdgN9voKxweDWc0Uo5TN6Rr6JPhh8jZObNb7V4QvMEhm7JRpWmm
+         cP+ImPwF99PJeA3/KrRGX/mrYdIxiqtRiBFioHO6zIHaqnKRXEUJuj4OF6u6zEEp/GYU
+         hEVVioUM6fnM4mr9RoM7JeUFQYTf2EgL5u6zPN4JPWvKq0DqUVcVot2ge7nmEOJPZp8F
+         dCwTD7Ou2ww6uo1pp9XPEAIgTF6SzN4H8g3b3NNC/Dosd/wl8X0swV4pHd0ZI43pOskx
+         8pTtUI+bWZpjQbCYRkWU+7Kg0w2m71o01cbLB0TvfqLnzNbTUvayXMNpdbY3pDC8x4qS
+         Eb5A==
+X-Forwarded-Encrypted: i=1; AJvYcCX+vec9JmaAx9j+IFa/InI6vv0X0Yeth/A3RVe6mzznubfhmMZHMnlpWKW0pWQKjZEHUQlwuXJ36HntB6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjEu5ONsf8YN5jjxzLYWyjDMHeAiQO5OlZ6MejoKKouamf5h3Y
+	ZSub22oeZffxM1fX9IyT5ipseOme3/rf9UveVUDm5OwZWv9v0lz3lZ2WkqEV2UF/ccU=
+X-Gm-Gg: ASbGncu+y0b04yIBdOhYFpxuLQN/spXivWg9v13xrZEHv/Tb1PSIkmplQu7jMpX7Qm3
+	Vk3E+HwqN3GPaiIgb9QnEzskXxoqgsKue+6Yn3wgW8HrCNx0od0u8YqEIrr8P5RCpBAWd19nxB2
+	6EsKZUIU8tF2il75RS9pYS3bZ2nXbZyK7mjcK9OZOkop2aWkqGW0encgzLH2fPC4jXH2whWmPGe
+	Ag0F1Lxqfcbz8AKSLCERvaJl5VKpl0QSNj992r/UnPYmfkcf8vXVMHn0OlWbcZqeJ2DkM/t3lqD
+	BfXZ8kf9QZyjHBEN9QGVycXIvcPGEyWihTp7/CdyGZK3KIen6GHqEQPo
+X-Google-Smtp-Source: AGHT+IHglAXB1wnvkqWxyHxMYu72HLDiEZaxm7U9T8x9s8smG5cJzd9yYqNquK1LeDcO80+diHi/Sw==
+X-Received: by 2002:a05:6000:178d:b0:3a4:f7ae:77c9 with SMTP id ffacd0b85a97d-3a97fcd2905mr10665040f8f.5.1751287043715;
+        Mon, 30 Jun 2025 05:37:23 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa2a7sm10238192f8f.21.2025.06.30.05.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 05:37:23 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 30 Jun 2025 14:37:10 +0200
+Subject: [PATCH v3 03/10] gpio: sysfs: only get the dirent reference for
+ the value attr once
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-8813-0-msonline-outlook-f2c18.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef150f74-0d50-46d8-66ee-08ddb7d2d784
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 12:37:13.8488
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB6210
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-gpio-sysfs-chip-export-v3-3-b997be9b7137@linaro.org>
+References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+ Kent Gibson <warthog618@gmail.com>, 
+ =?utf-8?q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
+ Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3193;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=Kq4vIpbMDkM9HUAJCvHdAXUcnUau3HDlw/dUGiXf3t8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoYoT9E/maTlsY/nE0aovpxqbzCj3vTAlXvXCR0
+ v+MhxV/q5SJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGKE/QAKCRARpy6gFHHX
+ cmZfEACgDyaxXOf2YWHa1md8hIOOqEJbcwTKNfix6jO8pX8zMcTpTNt19SJtFcwaonfup4v3aEp
+ mjbLEe6IrHnG/yZNE/NgV1DspecIkzQkO/7Hf+3FI+hSz5GRlORvi+vdfSiSjfnjMzErSbEERnV
+ wPPeX7IE2EwkW8igcQTgktvJQV++RJagEpvcQgEJZeS3VNK0qKzzYDSw6az09DJCnc2Zq8M6I3H
+ pRJGgn6TXHtwfQUWb4RHCtJrjnUKjJFeY67I5SSW68Vr7fYdyDZZN0ly2pzzgCVDWYZ594Q4lE+
+ jsqGzL46zrYbS6dbT9K2NM/AL/zakLSkRohnsQy16R64Cey801cKbJJOw5OrXJNYuBaePtewPDY
+ zN4Ff199EYwX4xtd99KqYltpkro5azcOfRo7A4cn7wK0VxqU4cMOp/IYdCjmp/Dy0+yqiVRa6VW
+ 3TqbXzg8YOJByzjmq8lniTkh9hks6O4ERzPYVC18lf9Fq5mRqULKhpUWjuAMOxv8jG8KtrquzlV
+ je02XE3eztJzaC1htqSitjgMD/dkzdgsL+F4VsbIKcywXX63DA4zRopcT4zjTxjGtJrTTScMjDN
+ Q4cFfpfXoD1fgO544MIOiJ3JsOJvvdlpelbCCjt1PTfPg6loneXhBddM86NrYgznE+FYU8DL7tf
+ gXx8Cdkz8o5Tq7A==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Currently, the battery timer is set up for all devices using
-hid-magicmouse, irrespective of whether they actually need it or not.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The current implementation requires the battery timer for Magic Mouse 2
-and Magic Trackpad 2 when connected via USB only. Add checks to ensure
-that the battery timer is only set up when they are connected via USB.
+There's no reason to retrieve the reference to the sysfs dirent every
+time we request an interrupt, we can as well only do it once when
+exporting the GPIO. While at it: change the name of the kernfs node
+field to value_class_node ahead of adding a second one for the
+chip-local GPIO line value attribute.
 
-Fixes: 0b91b4e4dae6 ("HID: magicmouse: Report battery level over USB")
-Cc: stable@vger.kernel.org
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/hid/hid-magicmouse.c | 62 +++++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 23 deletions(-)
+ drivers/gpio/gpiolib-sysfs.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/hid-magicmouse.c b/drivers/hid/hid-magicmouse.c
-index d4d91e49b..4ca0cbac9 100644
---- a/drivers/hid/hid-magicmouse.c
-+++ b/drivers/hid/hid-magicmouse.c
-@@ -791,17 +791,31 @@ static void magicmouse_enable_mt_work(struct work_str=
-uct *work)
- 		hid_err(msc->hdev, "unable to request touch data (%d)\n", ret);
- }
-=20
-+static bool is_usb_magicmouse2(__u32 vendor, __u32 product)
-+{
-+	if (vendor !=3D USB_VENDOR_ID_APPLE)
-+		return false;
-+	return product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
-+	       product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC;
-+}
-+
-+static bool is_usb_magictrackpad2(__u32 vendor, __u32 product)
-+{
-+	if (vendor !=3D USB_VENDOR_ID_APPLE)
-+		return false;
-+	return product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
-+	       product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC;
-+}
-+
- static int magicmouse_fetch_battery(struct hid_device *hdev)
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 990db0405cc86c42bad61295dc823f970199534e..80bb58c96b9b45ce4e1a4def8085d71baa0ce45d 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -36,7 +36,7 @@ struct gpiod_data {
+ 	struct gpio_desc *desc;
+ 
+ 	struct mutex mutex;
+-	struct kernfs_node *value_kn;
++	struct kernfs_node *value_class_node;
+ 	int irq;
+ 	unsigned char irq_flags;
+ 
+@@ -156,7 +156,7 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
  {
- #ifdef CONFIG_HID_BATTERY_STRENGTH
- 	struct hid_report_enum *report_enum;
- 	struct hid_report *report;
-=20
--	if (!hdev->battery || hdev->vendor !=3D USB_VENDOR_ID_APPLE ||
--	    (hdev->product !=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
--	     hdev->product !=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC &&
--	     hdev->product !=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
--	     hdev->product !=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC))
-+	if (!hdev->battery ||
-+	    (!is_usb_magicmouse2(hdev->vendor, hdev->product) &&
-+	     !is_usb_magictrackpad2(hdev->vendor, hdev->product)))
- 		return -1;
-=20
- 	report_enum =3D &hdev->report_enum[hdev->battery_report_type];
-@@ -863,17 +877,17 @@ static int magicmouse_probe(struct hid_device *hdev,
- 		return ret;
- 	}
-=20
--	timer_setup(&msc->battery_timer, magicmouse_battery_timer_tick, 0);
--	mod_timer(&msc->battery_timer,
--		  jiffies + msecs_to_jiffies(USB_BATTERY_TIMEOUT_MS));
--	magicmouse_fetch_battery(hdev);
+ 	struct gpiod_data *data = priv;
+ 
+-	sysfs_notify_dirent(data->value_kn);
++	sysfs_notify_dirent(data->value_class_node);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -177,10 +177,6 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	if (data->irq < 0)
+ 		return -EIO;
+ 
+-	data->value_kn = sysfs_get_dirent(dev->kobj.sd, "value");
+-	if (!data->value_kn)
+-		return -ENODEV;
 -
--	if (id->vendor =3D=3D USB_VENDOR_ID_APPLE &&
--	    (id->product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
--	     id->product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
--	     ((id->product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
--	       id->product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
--	      hdev->type !=3D HID_TYPE_USBMOUSE)))
-+	if (is_usb_magicmouse2(id->vendor, id->product) ||
-+	    is_usb_magictrackpad2(id->vendor, id->product)) {
-+		timer_setup(&msc->battery_timer, magicmouse_battery_timer_tick, 0);
-+		mod_timer(&msc->battery_timer,
-+			  jiffies + msecs_to_jiffies(USB_BATTERY_TIMEOUT_MS));
-+		magicmouse_fetch_battery(hdev);
-+	}
-+
-+	if (is_usb_magicmouse2(id->vendor, id->product) ||
-+	    (is_usb_magictrackpad2(id->vendor, id->product) &&
-+	     hdev->type !=3D HID_TYPE_USBMOUSE))
- 		return 0;
-=20
- 	if (!msc->input) {
-@@ -936,7 +950,10 @@ static int magicmouse_probe(struct hid_device *hdev,
-=20
- 	return 0;
- err_stop_hw:
--	timer_delete_sync(&msc->battery_timer);
-+	if (is_usb_magicmouse2(id->vendor, id->product) ||
-+	    is_usb_magictrackpad2(id->vendor, id->product))
-+		timer_delete_sync(&msc->battery_timer);
-+
- 	hid_hw_stop(hdev);
+ 	irq_flags = IRQF_SHARED;
+ 	if (flags & GPIO_IRQF_TRIGGER_FALLING) {
+ 		irq_flags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+@@ -203,7 +199,7 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	 */
+ 	ret = gpiochip_lock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+ 	if (ret < 0)
+-		goto err_put_kn;
++		goto err_clr_bits;
+ 
+ 	ret = request_any_context_irq(data->irq, gpio_sysfs_irq, irq_flags,
+ 				"gpiolib", data);
+@@ -216,10 +212,9 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 
+ err_unlock:
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+-err_put_kn:
++err_clr_bits:
+ 	clear_bit(FLAG_EDGE_RISING, &desc->flags);
+ 	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+-	sysfs_put(data->value_kn);
+ 
  	return ret;
  }
-@@ -947,7 +964,9 @@ static void magicmouse_remove(struct hid_device *hdev)
-=20
- 	if (msc) {
- 		cancel_delayed_work_sync(&msc->work);
--		timer_delete_sync(&msc->battery_timer);
-+		if (is_usb_magicmouse2(hdev->vendor, hdev->product) ||
-+		    is_usb_magictrackpad2(hdev->vendor, hdev->product))
-+			timer_delete_sync(&msc->battery_timer);
+@@ -242,7 +237,6 @@ static void gpio_sysfs_free_irq(struct device *dev)
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+ 	clear_bit(FLAG_EDGE_RISING, &desc->flags);
+ 	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+-	sysfs_put(data->value_kn);
+ }
+ 
+ static const char *const trigger_names[] = {
+@@ -726,8 +720,16 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 		goto err_free_data;
  	}
-=20
- 	hid_hw_stop(hdev);
-@@ -964,11 +983,8 @@ static const __u8 *magicmouse_report_fixup(struct hid_=
-device *hdev, __u8 *rdesc,
- 	 *   0x05, 0x01,       // Usage Page (Generic Desktop)        0
- 	 *   0x09, 0x02,       // Usage (Mouse)                       2
- 	 */
--	if (hdev->vendor =3D=3D USB_VENDOR_ID_APPLE &&
--	    (hdev->product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
--	     hdev->product =3D=3D USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
--	     hdev->product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
--	     hdev->product =3D=3D USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
-+	if ((is_usb_magicmouse2(hdev->vendor, hdev->product) ||
-+	     is_usb_magictrackpad2(hdev->vendor, hdev->product)) &&
- 	    *rsize =3D=3D 83 && rdesc[46] =3D=3D 0x84 && rdesc[58] =3D=3D 0x85) {
- 		hid_info(hdev,
- 			 "fixing up magicmouse battery report descriptor\n");
---=20
-2.49.0
+ 
++	data->value_class_node = sysfs_get_dirent(dev->kobj.sd, "value");
++	if (!data->value_class_node) {
++		status = -ENODEV;
++		goto err_unregister_device;
++	}
++
+ 	return 0;
+ 
++err_unregister_device:
++	device_unregister(dev);
+ err_free_data:
+ 	kfree(data);
+ err_clear_bit:
+@@ -804,6 +806,7 @@ void gpiod_unexport(struct gpio_desc *desc)
+ 
+ 		data = dev_get_drvdata(dev);
+ 		clear_bit(FLAG_EXPORT, &desc->flags);
++		sysfs_put(data->value_class_node);
+ 		device_unregister(dev);
+ 
+ 		/*
+
+-- 
+2.48.1
 
