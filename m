@@ -1,165 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3943528DB7E;
-	Mon, 30 Jun 2025 16:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3603191484;
+	Mon, 30 Jun 2025 16:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751300646; cv=none; b=pyaGTHwC7hgrWCLwXrUNKw2N+uTu5j0nv8EUBEVqMQ5EIA5No9Cbgd7DVk51jblbHrWqWNCFX3LYhpHBscVrA9UWiPckla6S3W2jlQh2uWaZYnMvFYs8jxhHFnnihU86dFHfRP1LI4T6pgPiD0uJYXfoKZY2i25hjmfqBNmW2pw=
+	t=1751300670; cv=none; b=Jx7U9/3+NWuL1ju7wpgZ+L+v23VIVe//t9tyPc+4S5ZiP27OliTEf4Lei4+ozse5nIBfbZtzyAYC0cqo0dauGX8xgEE8Kyh1KcjsWOG54HxYZobfFskBUrAgdvMth9D0qmXEmsB/5b2Hn9KauHth/ycB2fhAigN+twIGfEx5C88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751300646; c=relaxed/simple;
-	bh=dpCVtlENo5W9k9lJpKTyBfsyoAgADkuZW3XhDzpqLNE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MhExCF7xSBSi2qb3ZJrKzvw5AD4d5g8MIA4DfJ/BqL0qH2RUi0/jiyC6TIxLPtQXdOYrx5AT5PxTJF3WmQb7l1mRuxRPaB3PGwptcxVWm/L50CsbzffYDmQeUcliQOaB6OlG0duybl1EW6JS17mrsM8RVcVIo0ZJVlU8ExhXbQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DxdQex7A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vlBJ+6vP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751300670; c=relaxed/simple;
+	bh=aiWuN3GhqocDI35YBp5qTR55DHhbOh5tOWXvy8Qdgcc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SgbiAIEdu5ncc4W554zsAZaJj7qjTvU3mShLo5mYvu08JngDJ1Ono9wIXJ8JjhBu0t761Y4GxmYUNbjjko5A/4AVPxDlwoWRYZpdrpn9ohcIBbOP6uoLVvqcESG806s+BxMClhlpTNfAAXvGnVex/q3Pz7eFBetLBSM6hOvJ/VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnUaNgTr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DxdQex7A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vlBJ+6vP"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751300642;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XXonc0KksfgcMOKjNgh+rkn7Fuh0D7ZEpOfg1sBxbSc=;
-	b=DxdQex7A4h47bp/vTs/wSvi+EJoKciQsC/faneSoI9IaundjT1ihjXVfwkiAk0y7ZpO4DV
-	aSClAYkqJx9gf2ej8TaBhBioaU3OXEHApWREQ/9CF1Fu+HrTJh426wRyAbcGdbe/NciNJN
-	zUxRfPZ2xDx94lA6OJQht/J5oU0+4L+MeRo9W5Os5KQNGEJ8r0NY/MUbImFbYyEp8KSFI6
-	szLMkOomImbugHzwroBwo10PzF1aMwb54sTNbKLp+h9Ydx4R7Dn8Fc03BjfIsxS4X4zpeV
-	Fjz973bJxJjtkoiF4VuWoQ+Xmg2eGrCBCGOFQ+JF8cL1JboXfN67YkBjnqTObQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751300642;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XXonc0KksfgcMOKjNgh+rkn7Fuh0D7ZEpOfg1sBxbSc=;
-	b=vlBJ+6vPAw7wT/FS5SFaJJbVEQlbqZk2uRm+Q78sgJXzy5aipZiStMNgLNeSbJbI3ODqtU
-	gLhVGsirUyEzViAA==
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v2] tracing: Fix inconsistency in irq tracking on NMIs
-In-Reply-To: <20250625120823.60600-1-gmonaco@redhat.com>
-References: <20250625120823.60600-1-gmonaco@redhat.com>
-Date: Mon, 30 Jun 2025 18:24:02 +0200
-Message-ID: <87tt3xmc4d.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnUaNgTr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D01C4CEE3;
+	Mon, 30 Jun 2025 16:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751300670;
+	bh=aiWuN3GhqocDI35YBp5qTR55DHhbOh5tOWXvy8Qdgcc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DnUaNgTrFrd5oOvO/6bSOKTcJRGYb1m3IgxrWXMjQ8qV6dHtKS2r1V7FDscI7TLZ9
+	 7/SBtIZ2Bw62EgSgJ+1JXea1GgYOpgsogllqdf72Wlf/sL8uEXALO3KDlMAciWwCUQ
+	 L6e7czVtx3FcorhEPkyJenfU+EtPGpL/xbmYJpK1dAkB9Hv9/K4VQStsi8LYGeFk2J
+	 ElItXwJsm/GcdKFNdSd/Ruk2krjr8yuonuHHx6uT+nrRaIcFpavwsedaaeC1OJL8LD
+	 /tQxNcuwl8IklFsrj0JC5gOtL/M0vFWoggCEyDOTBdb31pNx3Jlj4LZuQLBh6ENBJ9
+	 yZO3J4h/KcptQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH v3 0/2] KUnit tests for SHA-2 library functions
+Date: Mon, 30 Jun 2025 09:20:12 -0700
+Message-ID: <20250630162014.6463-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25 2025 at 14:08, Gabriele Monaco wrote:
-> The irq_enable/irq_disable tracepoints fire only when there's an actual
-> transition (enabled->disabled and vice versa), this needs special care
+This series is also available at:
 
-vice versa). This needs ...
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha2-kunit-v3
 
-> in NMIs, as they can potentially start with interrupts already disabled.
-> The current implementation takes care of this by tracking the lockdep
-> state on nmi_entry as well as using the variable tracing_irq_cpu to
-> synchronise with other calls (e.g. local_irq_disable/enable).
->
-> This can be racy in case of NMIs when lockdep is enabled, and can lead
-> to missing events when lockdep is disabled.
->
-> Remove dependency on the lockdep status in the NMI common entry/exit
-> code and adapt the tracing code to make sure that:
->
-> - The first call disabling interrupts fires the tracepoint
-> - The first non-NMI call enabling interrupts fires the tracepoint
-> - The last NMI call enabling interrupts fires the tracepoint unless
->   interrupts were disabled before the NMI
-> - All other calls don't fire
+This series adds KUnit tests for the SHA-2 library functions.
 
-Please mention, that you fix the same problem in the ARM64 specific variant.
+Most of this code was originally part of my series
+"SHA-512 library functions".  I made a few updates in
+"SHA-256 library improvements".  As per the request from Linus that the
+tests be kept last on the branch for a separate pull request, I've
+reordered the history to add the tests last.  Thus this patch series.
 
-> Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
-> Fixes: f0cd5ac1e4c5 ("arm64: entry: fix NMI {user, kernel}->kernel transitions")
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
->
-> The inconsistency is visible with the sncid RV monitor and particularly
-> likely on machines with the following setup:
-> - x86 bare-metal with 40+ CPUs
-> - tuned throughput-performance (activating regular perf NMIs)
-> - workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
->
-> The presence of the RV monitor is useful to see the error but it is not
-> necessary to trigger it.
->
-> Changes since V1:
-> * Reworded confusing changelog
-> * Remove dependency on lockdep counters for tracepoints
-> * Ensure we don't drop valid tracepoints
-> * Extend change to arm64 code
->
->  arch/arm64/kernel/entry-common.c |  5 ++---
->  kernel/entry/common.c            |  5 ++---
->  kernel/trace/trace_preemptirq.c  | 12 +++++++-----
->  3 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index 7c1970b341b8c..7f1844123642e 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -213,10 +213,9 @@ static void noinstr arm64_exit_nmi(struct pt_regs *regs)
->  	bool restore = regs->lockdep_hardirqs;
->  
->  	ftrace_nmi_exit();
-> -	if (restore) {
-> -		trace_hardirqs_on_prepare();
-> +	trace_hardirqs_on_prepare();
-> +	if (restore)
->  		lockdep_hardirqs_on_prepare();
-> -	}
->  
->  	ct_nmi_exit();
->  	lockdep_hardirq_exit();
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index a8dd1f27417cf..e234f264fb495 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -343,10 +343,9 @@ void noinstr irqentry_nmi_exit(struct pt_regs *regs, irqentry_state_t irq_state)
->  {
->  	instrumentation_begin();
->  	ftrace_nmi_exit();
-> -	if (irq_state.lockdep) {
-> -		trace_hardirqs_on_prepare();
-> +	trace_hardirqs_on_prepare();
-> +	if (irq_state.lockdep)
->  		lockdep_hardirqs_on_prepare();
-> -	}
->  	instrumentation_end();
->  
->  	ct_nmi_exit();
-> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> index 0c42b15c38004..fa45474fc54f1 100644
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -58,7 +58,11 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
->   */
->  void trace_hardirqs_on_prepare(void)
->  {
-> -	if (this_cpu_read(tracing_irq_cpu)) {
-> +	int tracing_count = this_cpu_read(tracing_irq_cpu);
-> +
-> +	if (in_nmi() && tracing_count > 1)
-> +		this_cpu_dec(tracing_irq_cpu);
+Testing strategy:
+- Each SHA variant gets its own KUnit test suite, but a header is used
+  to share most of the test code among the SHA variants.
+- Test against vectors generated by the Python hashlib and hmac modules.
+- Test incremental computation.
+- Test with a guard page to catch buffer overruns even in assembly code.
+- Test various overlap and alignment cases.
+- Compute hashes in task, softirq, and hardirq context in parallel, to
+  verify that the functions work as expected in all contexts and that
+  fallback code paths are exercised.
+- Test that the finalization functions zeroize their context.
+- Include benchmarks, guarded by a separate Kconfig option.
 
-This if clause wants curly brackets and please add a comment explaining
-this in_nmi() magic. Two month down the road everyone forgot including
-you :)
+Eric Biggers (2):
+  lib/crypto: sha512: Add KUnit tests for SHA-384 and SHA-512
+  lib/crypto: sha256: Add KUnit tests for SHA-224 and SHA-256
 
-Thanks,
+ lib/crypto/Kconfig                    |   2 +
+ lib/crypto/Makefile                   |   2 +
+ lib/crypto/tests/Kconfig              |  25 +
+ lib/crypto/tests/Makefile             |   6 +
+ lib/crypto/tests/hash-test-template.h | 512 ++++++++++++++++++++
+ lib/crypto/tests/sha224-testvecs.h    | 470 ++++++++++++++++++
+ lib/crypto/tests/sha224_kunit.c       |  48 ++
+ lib/crypto/tests/sha256-testvecs.h    | 470 ++++++++++++++++++
+ lib/crypto/tests/sha256_kunit.c       |  48 ++
+ lib/crypto/tests/sha384-testvecs.h    | 566 ++++++++++++++++++++++
+ lib/crypto/tests/sha384_kunit.c       |  48 ++
+ lib/crypto/tests/sha512-testvecs.h    | 662 ++++++++++++++++++++++++++
+ lib/crypto/tests/sha512_kunit.c       |  48 ++
+ scripts/crypto/gen-hash-testvecs.py   |  83 ++++
+ 14 files changed, 2990 insertions(+)
+ create mode 100644 lib/crypto/tests/Kconfig
+ create mode 100644 lib/crypto/tests/Makefile
+ create mode 100644 lib/crypto/tests/hash-test-template.h
+ create mode 100644 lib/crypto/tests/sha224-testvecs.h
+ create mode 100644 lib/crypto/tests/sha224_kunit.c
+ create mode 100644 lib/crypto/tests/sha256-testvecs.h
+ create mode 100644 lib/crypto/tests/sha256_kunit.c
+ create mode 100644 lib/crypto/tests/sha384-testvecs.h
+ create mode 100644 lib/crypto/tests/sha384_kunit.c
+ create mode 100644 lib/crypto/tests/sha512-testvecs.h
+ create mode 100644 lib/crypto/tests/sha512_kunit.c
+ create mode 100755 scripts/crypto/gen-hash-testvecs.py
 
-        tglx
+-- 
+2.50.0
+
