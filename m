@@ -1,133 +1,221 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CAD2E7195
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25EB2F4A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751310471; cv=none; b=IjyJzcq2T3rICzgZOT7418rtLNHmT1fJ7QjjAoL8y47LmLODd42lznQPUWwL9uzrN02xQHJZpMa83rstgEfqFa114Iue3WVd29EgO+Ms95DWfqqYEKA8QJWybgsBw/WmIlqx/qkqHXsqLwidGh9hDgWUshfsz76wB2e++JrpJSI=
+	t=1751310841; cv=none; b=a9SeLCPpZHOL7KlKk4r3HR/ZbjyGZgTBmn8fmEjM4zOU8DYQvbnbHJmEGsyUG0aAFW8almgCs+Y6lsn8HuEvve2chJxkjaJRfZY34gD51VnwaJC2heul2HQCIMkd6NlEC6GJhH3j1Dm2FeWssICjNx35Cq3IJVSCezRMev+tKm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751310471; c=relaxed/simple;
-	bh=fZfTk5Vh6fk3qEeQcDy4mPHUEYnCIWWCDffCZM4Mbko=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C7ktOzo/t5kwSaCIPeXdRch0DrN0c9f7ia7XtTwI50NCDe/b7oo97QuRzY88BFVYmH6zRwMl/zm57IuEJapSxdy21DN0jYPKa76q+ZHc2NyupDparw9oZa/7hndzk9Z6siwv25rvTzAGnxSgawMHYcDSknAfmnlomCznV7c5Xf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QysighSP; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QysighSP"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-453a1208973so11905e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751310468; x=1751915268; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXx0muI33yyrsJI+RM5hAO2k29pecRZJHRerqdYdA4w=;
-        b=QysighSPx++2K4p7lfNc5QclhM1Iu5k1LU9V+v9rsdOGkq91C99RcRwGSHE3MnNpY2
-         MgxlD6zRR6a4Ksd/sADGmiZjdZezbX6IgwACz4q3vCBM3E1SU8HK+h1OrNORBb/618sN
-         w475etu55qOEb/CBg2m45gyj48UWDaMNvq8zARmxYx+jD7pH9rbPEGg35freQTd3g5MN
-         4u5Bg5BN2k63WBnZbynJAXHgoTM0/+PrZWR423+0AF/Q9qyQyvjFp3oya71Oaj7alkGU
-         Y63ON8GVTKrMdhUvG1jmHe5Y/d1slUzOOiKp1VXoLDdOVnMOlnF90VoFKsdUJi0bAHHW
-         6afQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751310468; x=1751915268;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hXx0muI33yyrsJI+RM5hAO2k29pecRZJHRerqdYdA4w=;
-        b=T1dbpt0kH/p2JIPbHn+mqMTOOu4My7RgsdX3tDurXfc1gDrbhXMLiQvwzpzVveWcTR
-         R3BB57U/Gm6urHwlFHPcEqYYU3sGb3aLBpyyGODBe0tBVzDtviMGMJZaI3XM0oq+69GT
-         hjUQtOjMgttRwrzXLqbpv2RKcIKBc7sckc1CEU/MTTj2GxRo0UXNlW5NuZyybaj8A83V
-         sLMi6PEBOMfqP3u9xmiBxIekMTVl/e2GwvY+WbDtHs+mV3ZBLlAZtLxTeK2ryX9qgg1V
-         paA6gk9wWJYCLL195sgwJahvhRaCpLsHjn4Yk3M0Kn/Bj4WYPu6URg23AExOqrOpLNbC
-         n7PA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXXlIwHchRmJHkyi8cKKQOokfyOwbPJvmMfPHiOGqn6TcdgXnmI2i8/7CoFSkR9lovdOqdHxk/1ZTep3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKBrbPjY68LGVPh0SubiL0QKsRDP05voPzrG+LW+GWpwyCpuc5
-	cQNj05xhJDg0Lhdicv8ZwWKw7449xqRGQAXqi/MXLkJWdbpOKZDpiMOasqi2ooaxVg==
-X-Gm-Gg: ASbGncvrGsMydxxcPaK1fSw7V08f1cMKkTQoTa/GTEEKFuFyzxpur/YGXSIBE/EwkrA
-	jcDLDl9OfgXbT/wgfv/qPktTTgGBKTGUzYVx95UzVpb64ta89HQgZKX6htHNrx2lWrpdh77M/Hg
-	ys+byfvuEVzPohcK9qvnEwtqrrg8SvfPp2F60r9wyuN87xAOHgW6O5sYzzXgpJyWDnHNTMqP6Rw
-	KgwNgXYCH4GbCD2meQWbnZOS5YV24ziMtLrdIe5BYm7KjjTwaFzq6iHzUq7hCakEluQMXpEcosA
-	57jphAqOuaBCTXgSAQm9fdn3En7CRgqWggjxBz3sIyOvZZD5EQ==
-X-Google-Smtp-Source: AGHT+IEOtpexKrK9C200H5QylvI7By2axtMWEC2awkl7w6Yep+kOnYzpwv7SNg5/2NVyrrB7n8uhfA==
-X-Received: by 2002:a05:600c:8b54:b0:453:7d31:2f8c with SMTP id 5b1f17b1804b1-453a82f541dmr100835e9.3.1751310467398;
-        Mon, 30 Jun 2025 12:07:47 -0700 (PDT)
-Received: from localhost ([2a00:79e0:9d:4:efbc:81c2:63ca:f4bd])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453a85b3211sm171495e9.1.2025.06.30.12.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 12:07:46 -0700 (PDT)
-From: Jann Horn <jannh@google.com>
-Date: Mon, 30 Jun 2025 21:07:34 +0200
-Subject: [PATCH] x86/mm: Disable hugetlb page table sharing on non-PAE
- 32-bit
+	s=arc-20240116; t=1751310841; c=relaxed/simple;
+	bh=vC+HdlLK2uQpa9hM9tyXtzylbHhz2ojIl4Gg2G1JG5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mx+ElzcLByWFwq0wx2WaIq4LGasuGI7WL4iBdXkdAXMGSEVBKk5sdJkqXxas4Lstw2pi3+Fc2n98+8vV46A6GJe5Flgy9wwtoY7SRVTbHrfIA4pafepF+DyJwPVAG3tVBYpp4mMDiudB2d1G+zzO7F2eU4SJ1VEzA8ePIJnEHYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id C4A8728FA02;
+	Mon, 30 Jun 2025 21:13:48 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id YZ7k-ld464wG; Mon, 30 Jun 2025 21:13:48 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 56F8C2A7F55;
+	Mon, 30 Jun 2025 21:13:48 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 9plolHkoNwC4; Mon, 30 Jun 2025 21:13:48 +0200 (CEST)
+Received: from nailgun.corp.sigma-star.at (85-127-104-84.dsl.dynamic.surfer.at [85.127.104.84])
+	by lithops.sigma-star.at (Postfix) with ESMTPSA id EBC382A7F43;
+	Mon, 30 Jun 2025 21:13:47 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: linux-nvme@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	kch@nvidia.com,
+	sagi@grimberg.me,
+	hch@lst.de,
+	dlemoal@kernel.org,
+	upstream+nvme@sigma-star.at,
+	Richard Weinberger <richard@nod.at>
+Subject: [PATCH v2] nvmet: Make blksize_shift configurable
+Date: Mon, 30 Jun 2025 21:13:41 +0200
+Message-ID: <20250630191341.1263000-1-richard@nod.at>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-x86-2level-hugetlb-v1-1-077cd53d8255@google.com>
-X-B4-Tracking: v=1; b=H4sIAHXgYmgC/x3MQQqAIBBG4avErBsww4iuEi2yfm1AKrQiiO6et
- PwW7z2UEAWJuuKhiEuSbGtGVRY0LePqwTJnk1baqKZWfLcN64ALgZfT4wiWbTW3DlYbM4FyuEc
- 4uf9pP7zvB5jCzAFkAAAA
-X-Change-ID: 20250630-x86-2level-hugetlb-b1d8feb255ce
-To: Dave Hansen <dave.hansen@linux.intel.com>, 
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
- Vitaly Chikunov <vt@altlinux.org>, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, stable@vger.kernel.org, Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751310463; l=1751;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=fZfTk5Vh6fk3qEeQcDy4mPHUEYnCIWWCDffCZM4Mbko=;
- b=kvQS4ouJ3b19TCoh5GA7p1y72qr1wSvm2vBPrDtuH/ptozufVWlQnwIJEVJgZVGCD4avNN+Ph
- sdoHh9GDeRFB/3o80OYgEquVoPd1SnKDwWdYKGd/UzJKzG59yxQgeHs
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
+Content-Transfer-Encoding: quoted-printable
 
-Only select ARCH_WANT_HUGE_PMD_SHARE if hugetlb page table sharing is
-actually possible; page table sharing requires at least three levels,
-because it involves shared references to PMD tables.
+Currently, the block size is automatically configured, and for
+file-backed namespaces it is likely to be 4K.
+While this is a reasonable default for modern storage, it can
+cause confusion if someone wants to export a pre-created disk image
+that uses a 512-byte block size.
+As a result, partition parsing will fail.
 
-Having ARCH_WANT_HUGE_PMD_SHARE enabled on non-PAE 32-bit X86 (which
-has 2-level paging) became particularly problematic after commit
-59d9094df3d7 ("mm: hugetlb: independent PMD page table shared count"),
-since that changes `struct ptdesc` such that the `pt_mm` (for PGDs) and
-the `pt_share_count` (for PMDs) share the same union storage - and with
-2-level paging, PMDs are PGDs.
+So, just like we already do for the loop block device, let the user
+configure the block size if they know better.
 
-(For comparison, arm64 also gates ARCH_WANT_HUGE_PMD_SHARE on the
-configuration of page tables such that it is never enabled with 2-level
-paging.)
-
-Reported-by: Vitaly Chikunov <vt@altlinux.org>
-Closes: https://lore.kernel.org/r/srhpjxlqfna67blvma5frmy3aa@altlinux.org
-Fixes: cfe28c5d63d8 ("x86: mm: Remove x86 version of huge_pmd_share.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 ---
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1 (RFC)[0]:
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 71019b3b54ea..917f523b994b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -147,7 +147,7 @@ config X86
- 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANT_GENERAL_HUGETLB
--	select ARCH_WANT_HUGE_PMD_SHARE
-+	select ARCH_WANT_HUGE_PMD_SHARE		if PGTABLE_LEVELS > 2
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP	if X86_64
- 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
+- Make sure blksize_shift is in general within reason
+- In the bdev case and when using direct IO, blksize_shift has to be
+  smaller than the logical block it the device
+- In the file case and when using direct IO try to use STATX_DIOALIGN,
+  just like the loop device does
 
+[0] https://lore.kernel.org/linux-nvme/20250418090834.2755289-1-richard@n=
+od.at/
+
+Thanks,
+//richard
 ---
-base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
-change-id: 20250630-x86-2level-hugetlb-b1d8feb255ce
+ drivers/nvme/target/configfs.c    | 37 +++++++++++++++++++++++++++++++
+ drivers/nvme/target/io-cmd-bdev.c | 13 ++++++++++-
+ drivers/nvme/target/io-cmd-file.c | 28 ++++++++++++++++++-----
+ 3 files changed, 71 insertions(+), 7 deletions(-)
 
--- 
-Jann Horn <jannh@google.com>
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configf=
+s.c
+index e44ef69dffc24..26175c37374ab 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -797,6 +797,42 @@ static ssize_t nvmet_ns_resv_enable_store(struct con=
+fig_item *item,
+ }
+ CONFIGFS_ATTR(nvmet_ns_, resv_enable);
+=20
++static ssize_t nvmet_ns_blksize_shift_show(struct config_item *item, cha=
+r *page)
++{
++	return sysfs_emit(page, "%u\n", to_nvmet_ns(item)->blksize_shift);
++}
++
++static ssize_t nvmet_ns_blksize_shift_store(struct config_item *item,
++		const char *page, size_t count)
++{
++	struct nvmet_ns *ns =3D to_nvmet_ns(item);
++	u32 shift;
++	int ret;
++
++	ret =3D kstrtou32(page, 0, &shift);
++	if (ret)
++		return ret;
++
++	/*
++	 * Make sure block size is within reason, something between 512 and
++	 * BLK_MAX_BLOCK_SIZE.
++	 */
++	if (shift < 9 || shift > 16)
++		return -EINVAL;
++
++	mutex_lock(&ns->subsys->lock);
++	if (ns->enabled) {
++		pr_err("the ns:%d is already enabled.\n", ns->nsid);
++		mutex_unlock(&ns->subsys->lock);
++		return -EINVAL;
++	}
++	ns->blksize_shift =3D shift;
++	mutex_unlock(&ns->subsys->lock);
++
++	return count;
++}
++CONFIGFS_ATTR(nvmet_ns_, blksize_shift);
++
+ static struct configfs_attribute *nvmet_ns_attrs[] =3D {
+ 	&nvmet_ns_attr_device_path,
+ 	&nvmet_ns_attr_device_nguid,
+@@ -806,6 +842,7 @@ static struct configfs_attribute *nvmet_ns_attrs[] =3D=
+ {
+ 	&nvmet_ns_attr_buffered_io,
+ 	&nvmet_ns_attr_revalidate_size,
+ 	&nvmet_ns_attr_resv_enable,
++	&nvmet_ns_attr_blksize_shift,
+ #ifdef CONFIG_PCI_P2PDMA
+ 	&nvmet_ns_attr_p2pmem,
+ #endif
+diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-c=
+md-bdev.c
+index eba42df2f8215..be39837d4d792 100644
+--- a/drivers/nvme/target/io-cmd-bdev.c
++++ b/drivers/nvme/target/io-cmd-bdev.c
+@@ -77,6 +77,7 @@ static void nvmet_bdev_ns_enable_integrity(struct nvmet=
+_ns *ns)
+=20
+ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
+ {
++	int bdev_blksize_shift;
+ 	int ret;
+=20
+ 	/*
+@@ -100,7 +101,17 @@ int nvmet_bdev_ns_enable(struct nvmet_ns *ns)
+ 	}
+ 	ns->bdev =3D file_bdev(ns->bdev_file);
+ 	ns->size =3D bdev_nr_bytes(ns->bdev);
+-	ns->blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bdev));
++	bdev_blksize_shift =3D blksize_bits(bdev_logical_block_size(ns->bdev));
++
++	if (ns->blksize_shift) {
++		if (ns->blksize_shift < bdev_blksize_shift) {
++			pr_err("Configured blksize_shift needs to be at least %d for device %=
+s\n",
++				bdev_blksize_shift, ns->device_path);
++			return -EINVAL;
++		}
++	} else {
++		ns->blksize_shift =3D bdev_blksize_shift;
++	}
+=20
+ 	ns->pi_type =3D 0;
+ 	ns->metadata_size =3D 0;
+diff --git a/drivers/nvme/target/io-cmd-file.c b/drivers/nvme/target/io-c=
+md-file.c
+index 2d068439b129c..a4066b5a1dc97 100644
+--- a/drivers/nvme/target/io-cmd-file.c
++++ b/drivers/nvme/target/io-cmd-file.c
+@@ -49,12 +49,28 @@ int nvmet_file_ns_enable(struct nvmet_ns *ns)
+=20
+ 	nvmet_file_ns_revalidate(ns);
+=20
+-	/*
+-	 * i_blkbits can be greater than the universally accepted upper bound,
+-	 * so make sure we export a sane namespace lba_shift.
+-	 */
+-	ns->blksize_shift =3D min_t(u8,
+-			file_inode(ns->file)->i_blkbits, 12);
++	if (ns->blksize_shift) {
++		if (!ns->buffered_io) {
++			struct block_device *sb_bdev =3D ns->file->f_mapping->host->i_sb->s_b=
+dev;
++			struct kstat st;
++
++			if (!vfs_getattr(&ns->file->f_path, &st, STATX_DIOALIGN, 0) &&
++			    (st.result_mask & STATX_DIOALIGN) &&
++			    (1 << ns->blksize_shift) < st.dio_offset_align)
++				return -EINVAL;
++
++			if (sb_bdev && (1 << ns->blksize_shift < bdev_logical_block_size(sb_b=
+dev)))
++				return -EINVAL;
++		}
++	} else {
++		/*
++		 * i_blkbits can be greater than the universally accepted
++		 * upper bound, so make sure we export a sane namespace
++		 * lba_shift.
++		 */
++		ns->blksize_shift =3D min_t(u8,
++				file_inode(ns->file)->i_blkbits, 12);
++	}
+=20
+ 	ns->bvec_pool =3D mempool_create(NVMET_MIN_MPOOL_OBJ, mempool_alloc_sla=
+b,
+ 			mempool_free_slab, nvmet_bvec_cache);
+--=20
+2.49.0
 
