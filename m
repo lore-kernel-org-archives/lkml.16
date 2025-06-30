@@ -1,132 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377F528CF44
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2577228FAA5
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298128; cv=none; b=eRCLL8JobTk91rBkhCG0W+kEYBk6aB33mifP5wzdPpfovliSekva6UR/9N9QGd1rNT4ZxlA/JUbd4OuO1bpYqzqyarR8mUZoSVGMh0P2LIuCSSGpXKwIm13Hwr9nUgYgFKK3wbXkvrcA/jZsR75o/6DvAhG8bpYpgVbRPUgaDzI=
+	t=1751298137; cv=none; b=jNITPYidFG5+u3GbhRbqaVP3WrcrE5xlBFDmIuiFb6tAw3PsaIieAe0S60kVj/3jqYwLeOM+muSgQPqhX5GLcCB5F3/s4tw1BQfr+LOCc6UfTU+7rtAFc0gGksafhuV/FbyE1G5OZR/Dtd9OaZh7lYQxOmLCsCLnpLMlYpcG/E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298128; c=relaxed/simple;
-	bh=R0lIFjuLXFzsojWvKy5z/lHpiRyyhea0daF5z8sv42I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CMqjAlmimW1+Zn1IXjzR3f8YwZI0fGjbBctml2trjNUiYxBPxhjzl5v1ndQnT/EtXjiSaUbeVoOMg42ek2nVcsG+aS8MSy7H8AYafRC66LBr3xFgWoywz98Vz+ZJKsORR1mf5dixdHSygJ5nqn4DEY0VCdZXnlnekiIly7QCZX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U9+rnY/3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QReYLgc9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751298137; c=relaxed/simple;
+	bh=4OwvVcEXN+UWNsFrOml/tG+qm85cKbHt02d2ltcoNYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=blRl0E7a4HbWbNwW0bBGU3K0UzlRm31qcmU5e8ZPBfJp24rsEVXjX06hewza4rya+v7bkP7scm9Byag3qcjtvEWdluIocgjA4jWkLoIt2mmfRkWQNWOhyv+aBUyvdiDl1aKyCS+gB2mT6AZtqfcu90Z7fR60MqKFyYpglhQg2ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z9f+3YiX; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9+rnY/3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QReYLgc9"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751298125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3FFwaj24UtG8REJ9k5qrWsBLKd8309QvXEWaw7nU18=;
-	b=U9+rnY/32lQdkUzflzfnioaBgMz05sDK/eDym5mIjMsNeTKZtKVkn29cw2GNdwf5KQDN01
-	oN+/SxB3UCwRphfF1X6AfpfDGxX8+8DloqI859I2NjcN5J4E7wlVTqZ3ORTjzuHU/26r/K
-	PxKTQl8mT+xwxcF8Qx8qn/AjbT1R5xv+6aIpEvHDb7rwC+flIdJTy+6I8Gvr27FBHmedg3
-	Ca3USOcy01f3eBjjlelMtbb5gCVuS/n4Za9ZWYXcsPD2OB9aep6c5/XWyQKtcwb6Wr9tJC
-	TM25pkBDeOh8+p6i0Bbrtxhyh6hTJUJrH2YbuLKh4eEP8KgxIbtfG5MCSlqL2g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751298125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z3FFwaj24UtG8REJ9k5qrWsBLKd8309QvXEWaw7nU18=;
-	b=QReYLgc98p/A6z2QCV1Wxw3IszBDubS3ab8HKBTax1urV0PIjAvQAiV/ai2rrgkqB9mFx8
-	Z54C6hV2ut/gqTCg==
-To: Wladislav Wiebe <wladislav.wiebe@nokia.com>, anna-maria@linutronix.de,
- frederic@kernel.org, mingo@kernel.org
-Cc: akpm@linux-foundation.org, bigeasy@linutronix.de, peterz@infradead.org,
- linux-kernel@vger.kernel.org, wladislav.wiebe@nokia.com
-Subject: Re: [PATCH] irq: add support for warning on long-running IRQ handlers
-In-Reply-To: <20250630124721.18232-1-wladislav.wiebe@nokia.com>
-References: <20250630124721.18232-1-wladislav.wiebe@nokia.com>
-Date: Mon, 30 Jun 2025 17:42:04 +0200
-Message-ID: <875xgdnsmr.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z9f+3YiX"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so490015ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751298135; x=1751902935; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k4GR1A3VoneV+NpZxt5J9kbL5U526gB3aS4wwAL+DY4=;
+        b=z9f+3YiXNUR2dTC6Nt7PO2pgvJhxMZeL6pjgzwdN+07izTpZr3cYKnzbpMQEDXShGu
+         EWV5Q3AXNsxhwtMLZIAS83qoUvfSeOnyZHni+eIC6NZlfZTYOYJRCFzFb18QiTEh/YCi
+         3fsvypAzjupewu7ZPvCEKaBsCSyHdTdTSf6Fb5Pc7iP66moTg9h/sh7/KwWYuYTOmEbR
+         L69cpPpbna4PBnZOAjsrwky9cNFvAYmEsbJhoUW5UTrrHTbQHGwvaX4veRHVuX3d+C2F
+         caFVu9fDzf0ZZoQMEVLBpAPzsVHJu3pUXmtHHZ/tXez62GnY3PagLHcG03oFD2+KzwAn
+         Skfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751298135; x=1751902935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k4GR1A3VoneV+NpZxt5J9kbL5U526gB3aS4wwAL+DY4=;
+        b=ID9GZhqYoCqihKyPc9vwaQb84qE23icuADDKr1NIQ4fIeKNRS3b7otjScxTVDQ69CA
+         49b57DCTxAMBTIjA+Z2AxheKeI4qwgH2y6RkRZm/JrdVlxBT5pBRwQSu4EzvdSXjQgbj
+         RqritfJU4tpCSuB/4Pg7yAN546A17yeIZZVNiXWh93XaKYiFN5EVl4t/dZJPVUm06890
+         vfvdy9qhbtd2xlj0aqTz+aje9O81T5xCkD4Rdylu9JbBRcfwiky00GQWluH1jP41t+Df
+         jKoBdOdz9y0DGliDnQA2vNrFINDFnupaDQAWqYVpQ+WLkKxFjAxxupSiYFcNx10S9IDw
+         DEjw==
+X-Gm-Message-State: AOJu0YwGEtsW4itkWevJySTrCkxAqSrqq7D8cQ58Qzd8xBRmxn+UaYN4
+	/Aep2kKNFMFTJWzyfYdNfaeV89YC86lSWJQqLGqSJb2DwDQRKZGM+PsN/l0RRWlBdFHxMgIQcJI
+	MvBaMPYkp3YnIIOzaq1VavH7SJaOKHEIj55WotymG
+X-Gm-Gg: ASbGncvMWF/Z9bsRR8FSx3Zz267gPqdl7jrCilw7U+tApYkFCUeDxhAxiLP0z4BOYTS
+	jKDjaqxycdjFaAeall/U04dU9iCyKv3VJQwjuoxn6qg60aE8anXEAqvPro3uJUB0Q4IJ5/S0Piw
+	4c6DYzmqlsqyaschsFCCFRmFE5CqTw/7jpMU/cObkggfuvo/ruKDgbV6KfUerbmdyF7Q0VNvD5H
+	DVTcO7vLw==
+X-Google-Smtp-Source: AGHT+IHFpDWiLyNLndY1f7Cyt5ObXxyBXFCg52HYgsqNuPCsfO0EOo/myycOnJfLYwJhrCK5SJR/bRMqve/jwdbkZ5U=
+X-Received: by 2002:a05:6e02:b49:b0:3dd:f699:b167 with SMTP id
+ e9e14a558f8ab-3df56ce74a8mr7082115ab.15.1751298134991; Mon, 30 Jun 2025
+ 08:42:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250630091613.3061664-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250630091613.3061664-1-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 30 Jun 2025 08:42:01 -0700
+X-Gm-Features: Ac12FXxVHD2CMy2yiygOJ78LkGhzZ7nqL-Yfiv0I5XZjPSnN6PvAtkY_EllkwgA
+Message-ID: <CAP-5=fWGiitgromQRTxEsU3cY99gFAU6WPLnmiS7-Q8vQNGbYw@mail.gmail.com>
+Subject: Re: [PATCH] perf test: perf header test fails on s390
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30 2025 at 14:46, Wladislav Wiebe wrote:
-
-The subsystem prefix is 'genirq:' See
-
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
-
-> Introduce a new option CONFIG_IRQ_LATENCY_WARN that enables warnings when
-> IRQ handlers take an unusually long time to execute.
+On Mon, Jun 30, 2025 at 2:16=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> When triggered, the warning includes the CPU, IRQ number, handler address,
-> name, and execution duration, for example:
+> commit 2d584688643fa ("perf test: Add header shell test")
+> introduced a new test case for perf header. It fails on s390
+> because call graph option -g is not supported on s390.
+> Also the option --call-graph dwarf is only supported for
+> the event cpu-clock.
 >
->   [CPU0] latency on IRQ[787:bad_irq_handler+0x1/0x34 [bad_irq]], took: 5 jiffies (~50 ms)
+> Remove this option and the test succeeds.
 >
-> To keep runtime overhead minimal, this implementation uses a jiffies-based
-> timing mechanism. While coarse, it is sufficient to detect problematic IRQs.
+> Output after:
+>  # ./perf test 76
+>  76: perf header tests                           : Ok
+>
+> Fixes: 2d584688643fa ("perf test: Add header shell test")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
 
-Define sufficient. That really depends on your use case. For a real-time
-system a hard interrupt handler running longer than a few microseconds
-can be problematic.
+Thanks Thomas! Given the s390 restriction to require dwarf, should we
+switch the default "-g" meaning on s390 to mean use dwarf? James Clark
+proposed this previously. It doesn't affect the change here so:
 
-So instead of adding some single purpose mechanism, can we please add
-something flexible which can be used for a wide range of scenarios.
-
-> +#ifdef CONFIG_IRQ_LATENCY_WARN
-> +static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
-> +				       unsigned long jiffies_start)
-
-latency is the wrong term here. This is about the runtime, duration of
-the handler.
-
-> +{
-> +	unsigned long delta = jiffies - jiffies_start;
-> +
-> +	/*
-> +	 * Warn about long IRQ handler latency only if jiffies are reliable.
-
-What means jiffies are reliable?
-
-> +	 * The reporting condition hits only when there are at least two CPUs
-> +	 * with active ticks.
-> +	 * Jiffies updates are stalled on this CPU until MAX_STALLED_JIFFIES
-> +	 * reaches and a force update happens on another CPU with active ticks.
-> +	 */
-> +	if (unlikely(delta >= (MAX_STALLED_JIFFIES + CONFIG_IRQ_LATENCY_WARN_THRESHOLD))) {
-> +		pr_warn_ratelimited("[CPU%d] latency on IRQ[%u:%pS], took: %lu jiffies (~%u ms)\n",
-> +				    smp_processor_id(), irq, action->handler,
-> +				    delta, jiffies_to_msecs(delta));
-> +	}
-> +}
-> +#else
-> +static inline void warn_on_irq_latency(struct irqaction *action, unsigned int irq,
-> +				       unsigned long jiffies_start) { }
-> +#endif
-
-I'm absolutely not fond of this #ifdeffery and yet more Kconfig
-knobs. Something like this should just work:
-
-DEFINE_STATIC_KEY_FALSE(handler_duration_check);
-
-        if (static_branch_unlikely(&handler_duration_check))
-		ts_start = local_clock();
-	res = action->handler(irq, action->dev_id);
-        if (static_branch_unlikely(&handler_duration_check))
-		check_handler_duration(ts_start);
-
-Then have a command-line option which allows the user to set a warning
-threshold > 0 in microseconds. When the option is evaluated the
-threshold is stored in a __ro_after_init variable and the static branch
-is enabled.
-
-Hmm?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
+Ian
 
-        tglx
+> ---
+>  tools/perf/tests/shell/header.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/he=
+ader.sh
+> index 813831cff0bd..412263de6ed7 100755
+> --- a/tools/perf/tests/shell/header.sh
+> +++ b/tools/perf/tests/shell/header.sh
+> @@ -51,7 +51,7 @@ check_header_output() {
+>  test_file() {
+>    echo "Test perf header file"
+>
+> -  perf record -o "${perfdata}" -g -- perf test -w noploop
+> +  perf record -o "${perfdata}" -- perf test -w noploop
+>    perf report --header-only -I -i "${perfdata}" > "${script_output}"
+>    check_header_output
+>
+> @@ -61,7 +61,7 @@ test_file() {
+>  test_pipe() {
+>    echo "Test perf header pipe"
+>
+> -  perf record -o - -g -- perf test -w noploop | perf report --header-onl=
+y -I -i - > "${script_output}"
+> +  perf record -o - -- perf test -w noploop | perf report --header-only -=
+I -i - > "${script_output}"
+>    check_header_output
+>
+>    echo "Test perf header pipe [Done]"
+> --
+> 2.50.0
+>
