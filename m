@@ -1,117 +1,119 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E370382
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614814C6C;
+	Mon, 30 Jun 2025 21:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751318153; cv=none; b=sVymZDDVd9+XJxbZr9FaAFxkxrt+L42wgiG+6PP0+HOwklW01HMD6kPSWb/SEs7V9hfj2vyPqiqLbOFYnODxfr65uxNlZXpdcV6jfsfRS9KpvKrOZB/uB9VBO2RZ+kQODCLpjtUzh4DrmKG6GR1yYIJbsoq6w4bRDC5uPyB/TSs=
+	t=1751318498; cv=none; b=njLDVgyvf2Yh6Gnnl8tHq8H9pWEp+YmyQV30btaQdtDuJ751ejTB9uD/QLebItQJf7htbfQsKysc+BahGkNBBSbrMhOnhHHp+x6usp+KNpGmSckFsVFi+t+L7gx8dJmrv/H2SWkHinBekAMbU9LkGkKNlu6arsxdDR4OZhuLcUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751318153; c=relaxed/simple;
-	bh=EGUon6c0S5wpmsyNf3auE4SlWk7SFOne67nKm/p9eaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k9z5MqvPfxsobNCKE4ThhRRr1pV+WtqvlRp+k3l8mlBcSsRgRaKsQ3qNbk6WFupNI/38Do6ReMnL8hLFGbg3m+uFZFMMICD/2rRYY0fWuU6ewes2XJQUe2iOqqdEDxv1X0LA2+xckQsAkrOg1tW1DpShH39h2mH3qYG7+7jvgTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=qWgKdeSx; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1751318498; c=relaxed/simple;
+	bh=2ryoA5kkM/lRzndBu5WvKiYQE2hLvpGyMnJc0TN5g7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OnLa31VVyLvOLKEkOp6g9PLL7ObjRFbDv6YBLuCaQPjA+UiG6I00n3kMQ1UUwJeUhJtPYXi/e5GxAgx4Gzo3yKoKZQuXBhVNknGWVOtKZ6mNfGtKyXMhry3wc0TtEGlREzuLDYcityR5IpRLhRwzuE98VL3wZc1JePnSrXX3r+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=OsY4xs8h; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="qWgKdeSx"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234f17910d8so46885085ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1751318151; x=1751922951; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ui5dGJRoAHrxep2bvtPWXcSrwRnwojJa521Ykl4R4a0=;
-        b=qWgKdeSxtfuthwyhcRUpqhtxbJ4JVweEL6ykeugSgj1zN6lULJ+yCzKW71D5a+Bqzh
-         /YssF/mH/E+mK+N3mLxVjJx6D7ZwQ+rOsTpguJFtatkdjVWh1teT4xmwZQk3TsQ2feVy
-         lSJ8iczo530+IrXsqmdJft2d5zjY/WWBqmlff1h0uy8ImuWuPGJxPvqGAm5VEuAuRhm2
-         nh0sZnmJa+rzTNfk78hRzebCGwTtP/a7M0ec4H/1E9CvsUoJ1Cr39hnwtWflIkT/znAT
-         0iAytVWDaXjvFvbSVKVIqgTQNkGw3zfjVZKfhlW2Krc4mVBBZBhpYijO84H1BlC2UPJx
-         u7IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751318151; x=1751922951;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ui5dGJRoAHrxep2bvtPWXcSrwRnwojJa521Ykl4R4a0=;
-        b=liAmny0P8mT4LK0ABW2C3KL8aORAiRqsIB0Ogsxv0vikN0DUWewDKOHtt5l5q/6NUl
-         TNGR1AxjJBAZqfAeeVSfdbFs9COpFJeGwupW0sLqkO1LYxXe17HdZ6UQnKp9Jol/fQRj
-         0R1niMTkgGCjmhOwxdoMkrmxgIPm3NkzJv1tQqPgdV2wL/1zRrcKThKQkBWvAwMivCdh
-         qt2DFPS7MkW7N432tr5TyRRURk3USNsjGZqlegVa0er3pNmLAk+AfxVM5YjDFfNUha0V
-         bmqxDnTGASKI4/EO92roJlDgGmn/Hf5HKB26HC1+8WTjiBGiiRg6E+lmVJf1GpnEqvaB
-         8izA==
-X-Gm-Message-State: AOJu0Yym+UzSL7RYcwA9yg8tDw/pSw3dZ+MhLHtHpTl+JJfJTfNw/3GZ
-	qNDgeJqijDSOigDMpDYiLxcxw9mXnfeS50Oo+pgyNSmpO9BBJEYpQWlWLoRpeSl4G6E=
-X-Gm-Gg: ASbGnctLQdivax2BjgZV6cfECKZW8nYMFBxsSLyJkhgvbbD4fDMDRWc/0adp+GFFv92
-	T3SzJGczOx6VEWndcei0jIB9Dv952znump+hp+157vzFHfFnRaKA2asmmUwM4IG4t8TKRd4QdaC
-	16rKGPisUrzpdTOw2GfStUPMaw7+Dm1LF2zETesVAy9ituVyCrHXNo2MoGXGAumzHmmhs4AerQ6
-	USj4SBYe35ov6feajbwj4OTjZUNoE6vJiDi4BsFlFCjc1Tko6+lGdcJczIWh6ykuRhkoCAq6cBg
-	ko+eK5VbW5O2I+zHXI3aW9Wv8BSmbo7g44pH+lHpQtwhVR08tBF94Hd30ZYCnzJ17nsHxGigyQ=
-	=
-X-Google-Smtp-Source: AGHT+IEyw7233FYYeEFBhbG1DmnWndFTQcE89Yo/ew7d0gNg3b/uX0RLSZbwsu33rmRds6xFsAeFYA==
-X-Received: by 2002:a17:903:284:b0:234:8c64:7878 with SMTP id d9443c01a7336-23ac45c0f4cmr182206965ad.11.1751318151393;
-        Mon, 30 Jun 2025 14:15:51 -0700 (PDT)
-Received: from x1 (97-120-252-192.ptld.qwest.net. [97.120.252.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3d27dbsm87144555ad.256.2025.06.30.14.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 14:15:50 -0700 (PDT)
-Date: Mon, 30 Jun 2025 14:15:49 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the thead-dt tree
-Message-ID: <aGL+hY7q3+R+v9PR@x1>
-References: <20250630072646.23076119@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="OsY4xs8h"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.24])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 2C19D407618E;
+	Mon, 30 Jun 2025 21:21:33 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2C19D407618E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1751318493;
+	bh=2F3EogwDEnJvzuxBQjf9S7/RInXYPKivFjLuSHo7src=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OsY4xs8h1hebKF3JZOF1/HL7iaxomDsxU5ZzMwq9dn7B9uRnlLa7WjfRturDZstoO
+	 aaiQujlHzl1075mQtDV6WTeJIyjCwvGPYBuc0oSYfYFE/gexMoZ8U819UqvviCzr8c
+	 gHY83VWQRNNxqgrhcQq6KP9H+3ozFty05hEypTIc=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Zack Rusin <zack.rusin@broadcom.com>,
+	Ian Forbes <ian.forbes@broadcom.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/vmwgfx: handle allocation failure of waiter context
+Date: Tue,  1 Jul 2025 00:19:47 +0300
+Message-ID: <20250630211948.1556524-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Zu7H1/6luxU1XJuA"
-Content-Disposition: inline
-In-Reply-To: <20250630072646.23076119@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
+Handle result of kmalloc() to prevent possible NULL pointer dereference.
+For the sake of not introducing additional layer of indentation, extract
+seqno_waiter_rm_context creating code into a separate helper function.
 
---Zu7H1/6luxU1XJuA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Judging by commit 0039a3b35b10 ("drm/vmwgfx: Add seqno waiter for
+sync_files"), possible errors in seqno waiting aren't fatal, thus just
+skip this block if an allocation failure occurs - no need to propagate
+upwards.
 
-On Mon, Jun 30, 2025 at 07:26:46AM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> ommits
->=20
->   66cba75806a3 ("riscv: dts: thead: Add PVT node")
->   9c2f4c0b2731 ("riscv: dts: thead: th1520: Add GPU clkgen reset to AON n=
-ode")
->=20
-> are missing a Signed-off-by from their committers.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
+Found by Linux Verification Center (linuxtesting.org) with Svace static
+analysis tool.
 
-Sorry about that and thanks for letting me know. I've now added my=20
-Signed-off-by tag to both and updated thead-dts-for-next.
+Fixes: 0039a3b35b10 ("drm/vmwgfx: Add seqno waiter for sync_files")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 27 ++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Thanks,
-Drew
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+index e831e324e737..12d897eca410 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -4085,6 +4085,23 @@ static void seqno_waiter_rm_cb(struct dma_fence *f, struct dma_fence_cb *cb)
+ 	kfree(ctx);
+ }
+ 
++static void seqno_waiter_create(struct dma_fence *f,
++				struct vmw_private *dev_priv)
++{
++	struct seqno_waiter_rm_context *ctx;
++
++	ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return;
++
++	ctx->dev_priv = dev_priv;
++	vmw_seqno_waiter_add(dev_priv);
++	if (dma_fence_add_callback(f, &ctx->base, seqno_waiter_rm_cb) < 0) {
++		vmw_seqno_waiter_remove(dev_priv);
++		kfree(ctx);
++	}
++}
++
+ int vmw_execbuf_process(struct drm_file *file_priv,
+ 			struct vmw_private *dev_priv,
+ 			void __user *user_commands, void *kernel_commands,
+@@ -4265,15 +4282,7 @@ int vmw_execbuf_process(struct drm_file *file_priv,
+ 		} else {
+ 			/* Link the fence with the FD created earlier */
+ 			fd_install(out_fence_fd, sync_file->file);
+-			struct seqno_waiter_rm_context *ctx =
+-				kmalloc(sizeof(*ctx), GFP_KERNEL);
+-			ctx->dev_priv = dev_priv;
+-			vmw_seqno_waiter_add(dev_priv);
+-			if (dma_fence_add_callback(&fence->base, &ctx->base,
+-						   seqno_waiter_rm_cb) < 0) {
+-				vmw_seqno_waiter_remove(dev_priv);
+-				kfree(ctx);
+-			}
++			seqno_waiter_create(&fence->base, dev_priv);
+ 		}
+ 	}
+ 
+-- 
+2.50.0
 
-
---Zu7H1/6luxU1XJuA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSy8G7QpEpV9aCf6Lbb7CzD2SixDAUCaGL+hQAKCRDb7CzD2Six
-DE0FAP9drjMFn2HMy1sX8aRa+8QdbEGvZBQ1GDrR/K+FqXKpHwD/SfuV0lXMb1yk
-RlTPsnJEANaVl6hAf3q6y1Vl1iI7RQ0=
-=Cq4Q
------END PGP SIGNATURE-----
-
---Zu7H1/6luxU1XJuA--
