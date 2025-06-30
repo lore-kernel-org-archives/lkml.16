@@ -1,172 +1,109 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF1128C870;
-	Mon, 30 Jun 2025 15:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A7142AA4
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297285; cv=none; b=j75Yeo0cxIwLJcL3os9KPBRbm2pCuZcQKa/M2x6/bJmKkzetD6sl1dKhurjBulJmyBa/Si65k38bJN9SvajWdrQWOXO6bMe84nPE7a4dZ075oy1M5u0ByezLfXbwsaDTR7gNNdaCunHEaYcBudccxP0qgUcQs/YuoHdoCy+R1xc=
+	t=1751297313; cv=none; b=X8XK0WqLSbsvP+t7u8g/5e2dKHu/oEH7lSjpeeTJdD8syQ4ug8IlVzN7jS0wO/lghnfVE2yPXWb1mvqWyzudPB/N4EcAuSz1YbhF9sdYShszXujw7q4hsrz67Qr+/S4fcnycBp532b1q5UBFbKHy0ap0d0qZ8XHzWCFQegdQMM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297285; c=relaxed/simple;
-	bh=R4ZKd5Izt9SSWjSSLD/vaRFa31ZYb9nuV07HQ1qG4yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tg/eQEV/3dtVrAy7CtGqQ5ftn7GxkdyGlUoLrt5mp17OrY/458AmDL0V2NqdwqShFOgNWCgT8UMxUM7xZwRZY1rRlE0cEoG197jskZVzzzuej+/evm4c397ETsit7+maGnHPzGTGwvcNNwlTdGUrK9RHYZlgoVQltDRAU9slqqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XiKBLHy8; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751297313; c=relaxed/simple;
+	bh=D7U0pnvVS2+iu7MH6rh8y9K5RjFJxIkQr+hESRb3c8w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KMoZ8pq9XQHbPY3Ap1tQlkHoNiyUyoS1Tv+y7o6do270Zit3iSrDnRomU/T8DKpKVqZj8Whc9/zsJkBMcGcL/CVL0m5alPP7m5pH7JvinwM0Yzol6tEkKSTbUn9eRrF1i1l7dGJC5Z9udlLDiruBlY4CWmHEsbi5XmQNdJBGOnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=SRKsIjp6; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiKBLHy8"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fad3400ea3so41819836d6.0;
-        Mon, 30 Jun 2025 08:28:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="SRKsIjp6"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-875f57e0cb9so421885039f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:28:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751297282; x=1751902082; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DRWe4SgiDv0tsg7Z/Uvyrshrg1+1baaByE8+3IYg1qQ=;
-        b=XiKBLHy8E936CXxiBkQ3O4RU1pXmo8zUi9JwMKRURjbkE1vo3e2CXJu8Pa+xSMjfrk
-         YBLxavhTLLw5qFKn/AaljEWSDUf2LG68t1Ay7DUsn6l8VtZLfubRi8Fs0QcJ5Kx874pe
-         /MRTFOZvo7vEB5EgdSN4i6VvPcw+9HmxTcDIb5G/vNusKRVb0xff/4ya8b1S1WtUtOfq
-         T7oy7NM8ubb9Jjk0CCNF9nJscVUzMUu+fnnsWAmmewTkM6AvlRVaiBt+/BXY9D2/XaKx
-         IyOjSoTkTl2I8pfbSctvg7QwPd1V3DiY136eoZwiDwRmOl3rAV2oBb68nSib2zB9Ap2k
-         XY1w==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751297310; x=1751902110; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9VuEu1YaPE4JQdW7TK82bSLbxpMab3+HcLUGcU2VsrY=;
+        b=SRKsIjp6DTjOPmztfsvxEl0AiEMKtyVXwlOMmH/M4m4N5YEz1vnBHH4VqpWi4+OiH2
+         JOr5yH/6b66U+0yPXLzMxGPOmGzeT6xbu8gR6aPbXg8b4h5BZy2yLW9HcLsct7borjxg
+         zyyMQ97ZqSyBpwuvwX0i4SdaxzJDs36DEDA2Pd+ZUs7crTeFk9TWheDefAoxIp3J35yW
+         JGcDVJcTlPBapw4t5fsU8bMEPrzFegH9U3twSHwRUG118C0glLHeqYxg5ue1MZxoDRBI
+         3nhu7BnynQQ5ey8CxIMSh2So/QYEivWYxsjftxcl8aDDXVraheJ1+ppEZwp2NqRM6xsP
+         b6HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297282; x=1751902082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DRWe4SgiDv0tsg7Z/Uvyrshrg1+1baaByE8+3IYg1qQ=;
-        b=dNjJ1VcKYDRqvY55LOqgYPNhUTVOFe8JRUd+5oJnaWlBaK1ERBsZsKgUHn7A3HYRW8
-         iBJHhR+WvBRUAMTyzZskV6gLKGy/lUUgeBuKjQaHYjFI/8f1LWPIakbkVTTqBLZ0AyZF
-         +PS+nNMd/rKfNHBlnTD3A/QIIl9TvDd9WQob24ZLqo5LG0gigjInvNK9U1iu710Ls9Nm
-         /Z7+8rsluT5/xFMJEG6087lHaJsMaIG6u4zVN1h9BYvi0kH0kPbxA1INt7CDpj5iNBgD
-         slf8sTZmC6ctr4euMxa4qMyClw5LSbs1PjZjH8/bULJz5+VTC4+p+7GsfprrtP7r3BqV
-         yy7A==
-X-Forwarded-Encrypted: i=1; AJvYcCV4oXI/d6xmN4gVOYKitinvbuTB82Ltbk0FSC9A3XVjZChobBeUB3dB6isvFOlpiU+nw6IGuqIqlkBx@vger.kernel.org, AJvYcCXPI6rC6syG3BOvTmknha/epROqFVIwBwsPLaXQNExt4BKh9TUpSvqNzOGkM/im/B6ow/01ODUAE5rzmf4BUVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYcwx7CXal+CoDEfh83vMDVInVhlNDiB6NamQDPSifqxY+2P/T
-	B+BNHnUio7KVjN6vhKnLlEL9VIPZGEs0vxFtppdJilhAl+ClrLcDtQxX
-X-Gm-Gg: ASbGncte3RV6TkBfyECdzw5IQSfg5MrEVQixMSc0S+Rv+PjyGVDCmTrgllDk8fXJI27
-	yHfxtBMSY6sTjqh3ueqFq/5twYB7+Qzz9eYvHsr5iiFzKEBvNZw7KcP31/B1ls0suSs718bzXsN
-	KeeouyVNBfqMhmEDHwacbMW6bOz7+pqakUGxeri3eoaWQ+MGHGBQKjzfI1mgJFdWtz3GHjMc5i9
-	ZJUPhG9m+cGj5l1XNUU5ETNsv2iwZKo2MeT9FnKxMsQVnLPP03/Dci1P7M3QcB4bWaYuGkk1AMi
-	ZT1Z8CXL3k2fVoTKzTfoSkQFQmcs9pGP+BXckEyQG0is1cjp2/2IrwoZ1KXm8W+X3olsaFXYlby
-	3LZjZ6p5JLtOzUMYBAnxY366GaktOW2wjLGh4dnw5EXqGtphdZl+s
-X-Google-Smtp-Source: AGHT+IHBoKvVU4bpVWy26A88umlSdYg7xDFOn/6WBb9a3Unoq7wnWyZHIkO35I8WAP6pzd32QS3AzQ==
-X-Received: by 2002:a05:6214:2345:b0:6fb:619c:98ac with SMTP id 6a1803df08f44-7000841ca3cmr224617726d6.39.1751297282157;
-        Mon, 30 Jun 2025 08:28:02 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771b5027sm68355766d6.33.2025.06.30.08.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 08:28:01 -0700 (PDT)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id AC81DF4006D;
-	Mon, 30 Jun 2025 11:28:00 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Mon, 30 Jun 2025 11:28:00 -0400
-X-ME-Sender: <xms:AK1iaBDkzTk8wXkRcRCl0ZTQaamobcNFNn2lthfQZAaBqYl-rvBptw>
-    <xme:AK1iaPiWRv5GW2N2xd_TSxK11S4xArae6LLB3mTudbzSy98B2ENiOkAy04ETpJubY
-    dj3boj5xv_pjVM_HQ>
-X-ME-Received: <xmr:AK1iaMlvsePwJadZVdYTYO32qtVdofMVsHMQumkgvmvR8SHoQiqe7o_PMPCy9g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvddtiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
-    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
-    drnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtoheplhhoshhsihhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhsthdq
-    fhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlkh
-    hmmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhgt
-    hhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjoh
-    hrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:AK1iaLyaKv3kaC8pF1jREu432UFhp9rOe2NMpIMUqK0kb7Dp5dFABA>
-    <xmx:AK1iaGSOvPvFxO7IawSH5fP1OvTeoOjQL8T6Hq-IcY7XeTXcgMzesw>
-    <xmx:AK1iaOYUTRQh-zeZJ4piKuc_bVkOZuDUcVUFMwjrdbQfWLnFm0FxNA>
-    <xmx:AK1iaHQbPhBvh5QjX3knerCzXuzVJrYCFEVQAyasK8azsx1TzieD8Q>
-    <xmx:AK1iaEC1vKaFzsxfrU6HFdoOerQvp30nvKAebfMON3CWlBwXZfESzDaO>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Jun 2025 11:28:00 -0400 (EDT)
-Date: Mon, 30 Jun 2025 08:27:59 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
- operations
-Message-ID: <aGKs_21dK7y50fxh@tardis-2.local>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <20250618164934.19817-6-boqun.feng@gmail.com>
- <DAX6WZ87S99G.1CMIN6IQXJYPL@kernel.org>
- <aF6iXB6wiHcpAKIU@Mac.home>
- <DAXY0EJHHDWM.1KRSSJLOTCZ8F@kernel.org>
- <aF-aS5FLX7QIiiPa@Mac.home>
- <DAY0AZXDTCD3.OAWZ91IQJT2Q@kernel.org>
- <aGKsHZ0saC-XkQlA@tardis-2.local>
+        d=1e100.net; s=20230601; t=1751297310; x=1751902110;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9VuEu1YaPE4JQdW7TK82bSLbxpMab3+HcLUGcU2VsrY=;
+        b=m1VAYoCiQma8Qpm1gUWuSo9B+Sj3TEQbryS3jiqWDg/cyfkrJ1FxyK9SxOizM/B1Rl
+         BAQghQZbi7ZNsoeFavm3WdaKHF/WukbbFbesM9L++7imPeF8tFe0TpO4OvNlvydcuR2J
+         67BAUddwwtgyA4dEXKCnGyTUaxojBGPmjzqyTRpAkTiRZOfLxfZ7AOMZjp3CC7tpiXSx
+         Yrw7wxpkt/ywkbN7DiQdIU7JEd8r0Cbl4s+VBLHk7Qz4LvxC0qNoqE7QaYoGYLjRQq7s
+         jwwqfpQLISITmtOKuverS5ZiaIca6BVcCY+zVKVm9a8d4H4Z0oqksO8iM+rYkJJ79C6z
+         PhJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfj5Wek5EcIADonXpuIE/re3B6nlFNsJsBYMqgFzUVj9iiJxjJGtkJunK1WZ6WAC6EX7Ccx3FuQUTWc28=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDE8CEMgK5+JKFkCyLPfuXRPZi3DnecFr8+aDXacJj4Ptb385q
+	Fom4GIyN3PgSUgK98c8+SC01ZodJwA3p3qVCf2P9+Rl0ygzd81frmpOzlkFmadhKYtJRDufpzrG
+	CWnVt
+X-Gm-Gg: ASbGncsjp9pvfc71nfjO514nb0b8UxjHTca8cZ1invUQ8HRZIz5LSB7M/2VVsTrlC3W
+	ti4df+54g8KWJ4ftY1tQPXp+fRGGDd9rssHes4+f+BJHU1o8Vxf1Wn/R5q7jLH6eNxmPbv+ygEv
+	4b7ZvsFvBRpOw+r2yYYVmBLq08nFsqXgJtKUEXJwpNPlShhisFsvKsvDn7qe5F0nJFgPjXXrG69
+	H00dsr4unyNgX0bPiekaKL77CgRK71eC2YYu8RM80lnCjr3PSE73n6/r7sSl3EObSS50emFPSOy
+	dytjcQ0s09I6FHX0KdYvwhGH943iTjfTSa3pD0ZCd7T42Alt7w00yxlzLLM=
+X-Google-Smtp-Source: AGHT+IEdD4UsdePsKXvWlz70RuEmw35/ChkJ1zJScXKk3wog8psWRo+HSC0roNqa5XbmTtjua+ZWsw==
+X-Received: by 2002:a05:6e02:a:b0:3dd:f3e1:2899 with SMTP id e9e14a558f8ab-3df4ab4f22dmr148535265ab.2.1751297310466;
+        Mon, 30 Jun 2025 08:28:30 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3df4a091b58sm24046835ab.33.2025.06.30.08.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 08:28:29 -0700 (PDT)
+Message-ID: <a2dc2566-44e1-4460-bbff-bb813f4655d9@kernel.dk>
+Date: Mon, 30 Jun 2025 09:28:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGKsHZ0saC-XkQlA@tardis-2.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] brd: fix sleeping function called from invalid context
+ in brd_insert_page()
+From: Jens Axboe <axboe@kernel.dk>
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, yukuai3@huawei.com
+Cc: penguin-kernel@I-love.SAKURA.ne.jp, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250630112828.421219-1-yukuai1@huaweicloud.com>
+ <eb41cab3-5946-4fe3-a1be-843dd6fca159@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <eb41cab3-5946-4fe3-a1be-843dd6fca159@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 30, 2025 at 08:24:13AM -0700, Boqun Feng wrote:
-[...]
+On 6/30/25 9:24 AM, Jens Axboe wrote:
+> On 6/30/25 5:28 AM, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> __xa_cmpxchg() is called with rcu_read_lock(), and it will allocate
+>> memory if necessary.
+>>
+>> Fix the problem by moving rcu_read_lock() after __xa_cmpxchg(), meanwhile,
+>> it still should be held before xa_unlock(), prevent returned page to be
+>> freed by concurrent discard.
 > 
-> Make senses, so added:
-> 
-> --- a/rust/kernel/sync/atomic/generic.rs
-> +++ b/rust/kernel/sync/atomic/generic.rs
-> @@ -310,7 +310,7 @@ impl<T: AllowAtomic> Atomic<T>
->      /// assert_eq!(42, x.xchg(52, Acquire));
->      /// assert_eq!(52, x.load(Relaxed));
->      /// ```
-> -    #[doc(alias("atomic_xchg", "atomic64_xchg"))]
-> +    #[doc(alias("atomic_xchg", "atomic64_xchg", "swap"))]
->      #[inline(always)]
->      pub fn xchg<Ordering: Any>(&self, v: T, _: Ordering) -> T {
->          let v = T::into_repr(v);
-> @@ -382,6 +382,7 @@ pub fn xchg<Ordering: Any>(&self, v: T, _: Ordering) -> T {
->          "atomic64_cmpxchg",
->          "atomic_try_cmpxchg",
->          "atomic64_try_cmpxchg"
+> The rcu locking in there is a bit of a mess, imho. What _exactly_ is the
+> rcu read side locking protecting? Is it only needed around the lookup
+> and insert? We even hold it over the kmap and copy, which seems very
+> heavy handed.
 
-Missing a comma here, fixed locally.
+Gah it's holding the page alive too. Can't we just grab a ref to the
+page when inserting it, and drop that at free time? It would be a lot
+better to have only the lookup be RCU protected, having the full
+copies under it seems kind of crazy.
 
-Regards,
-Boqun
+IOW, I think there's room for some good cleanups here.
 
-> +        "compare_exchange"
->      ))]
->      #[inline(always)]
->      pub fn cmpxchg<Ordering: Any>(&self, mut old: T, new: T, o: Ordering) -> Result<T, T> {
-> 
-> Seems good?
-> 
-> Regards,
-> Boqun
+-- 
+Jens Axboe
+
