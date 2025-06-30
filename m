@@ -1,123 +1,110 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF9248F4B;
-	Mon, 30 Jun 2025 09:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21DB247280;
+	Mon, 30 Jun 2025 09:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751277023; cv=none; b=cfe9n0ru9b6L+liJmsBHR8dno99Sx5G42Z/ItTtX+VXoChhAacSACVqkfaikL8erTtEOhazjw/nSQmNqFjwozPhL2O6jdOoCu2xFMCjdGv9OLecqDvjV5r8gZvO9MATSWR+OwfGNdBFwP+TTU2s9cetNh4acHlc0sIBNvj7W5zI=
+	t=1751277062; cv=none; b=p5nyvYUEM3CwE20Bt9EZOls6y6rQaV79fVxLSCLu0Ar13wSP70hf1tj621nPxHCUOUBYsopJVqW9paDpKhqiWbI7YUXpxMmoMargRAU9wlGtookHQ2RBMKpxVtxmOvnN78q0ozqfQpC8jdxsPkiDA8im7ESVGPipKCDrtK5VZhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751277023; c=relaxed/simple;
-	bh=OlR9PO94f1hpbZsfLLpaoTmAlbcl6nqpnsyTcK20dmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jlpwIFFvwRcb/i6JyEhlQGTyif1THPWbm0FvcKk34KF0VrxeWfNSurpXkFZvHhJByYq8BjHS8FRvadHrXMwZoSeIBVUL2bt9c4YW4NGXsZyQexOxINQM5t0BzX/0OCojsCdbTOM4/2m4mMVp5jZxoRym5OCdsCDB67jof9cQewY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=OKbbifEZ; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751277062; c=relaxed/simple;
+	bh=O5oLr3bwWsZD8uL73nva/6Unk6JmucG8/TRTyuz5QlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c5sjwtRx4S9INjOCNAw2bQPYnae5112whPPgPI9NGYi46vt8PIZBCieBueaEeHy3ae1Pl2oi+kZfrzXUfFplSdlekBXtqey47ucwXRiOUld+DWIhGeFYh7HLqmb9ebqBvuq3dFzwaBd3SkU/z/3nmQ6jh/amW34MTCrs5YXSoZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cykCsxnM; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="OKbbifEZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=fdCzhVsNXpe5AUC2cbbE/8xzVg3QlWI9Hb+MzbVyv/U=; b=OKbbifEZUNsRrPyg/milb2gP6P
-	Lo2KatzmVJ+9ENyCsgIIQ5f4iQPQ1FOk5hemSdMqb+pbAsqtHLlUqf6VAhM1MOqOWy/GeDHNBy5xf
-	ZIUEYXZdhdvfFeM4fDtf4+9FWUkluhSmHBG1yhA7ridYmCy63fgzTmHa5FGFfxJyWeUxaIuYM9Oot
-	F4FbPP8wwK1npthTkVx3BkLHcVhJUZ5YpYbqPSDxHm7As9nAoXivSp4o6DHeFxxndUy/THVqBI3KW
-	jbAN4pP3/DaJxjgM+nz6G3CaOhLIKUKEWuxejLgRMmHfNUVpXjeKtrK4f/3HCHy7Cm4Wb2Ua3XUKy
-	s0DXQP7g==;
-Received: from i53875bfd.versanet.de ([83.135.91.253] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uWB9Q-0006dy-Kw; Mon, 30 Jun 2025 11:50:12 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Olivier Benjamin <olivier.benjamin@bootlin.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
- Nicholas Roth <nicholas@rothemail.net>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
- ~diederik/pine64-discuss@lists.sr.ht, Dragan Simic <dsimic@manjaro.org>,
- Ondrej Jirman <megi@xff.cz>
-Subject: Re: [PATCH v4 0/4] Describe the cameras in the PinePhone Pro dts
-Date: Mon, 30 Jun 2025 11:50:11 +0200
-Message-ID: <7067942.rnE6jSC6OK@diego>
-In-Reply-To: <aFknh7weIKoGKajQ@kekkonen.localdomain>
-References:
- <20250620-camera-v4-0-0201a8ed5fae@bootlin.com> <13788127.uLZWGnKmhe@phil>
- <aFknh7weIKoGKajQ@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cykCsxnM"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U84fBH004461;
+	Mon, 30 Jun 2025 09:50:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=DKjS5goKMi5rK2GbghAH6/rgG28ei
+	A8yPjSPHnwGwiU=; b=cykCsxnMIgofblcqsKXBVZ2xLbV5R2pH2FBysEBHvaMEl
+	GBsbPm4tbiJ6lNF37SwuY8M9mhSzQaD8FM/T7arH4x0uqMNAcY5srRTy2GxNqpmj
+	RExaCDGYjvV3MMQaoC2LrFH7Q7zGkuFjALXI7I7bSUs8e4NSR8yYujSLz5Xx0Qup
+	aQGbWjX5iP9YZ6JnkmnMuZV7SnysVTty9zhRU/yMlImgqXrEXX8MeXryX0MYlK8L
+	MdV76/tNdMae7kzYL7cFHpAikZY6xmA7eHr5jSbYhMJJWpB5DB3Cqmzav10+T9R5
+	UNwY8Ev/z3oZD3pTemZkPLHC0HeUVICFOfltSS4fw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j766a600-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:50:55 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8dmeK028997;
+	Mon, 30 Jun 2025 09:50:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u84adh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:50:54 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55U9orcK038230;
+	Mon, 30 Jun 2025 09:50:53 GMT
+Received: from ca-dev110.us.oracle.com (ca-dev110.us.oracle.com [10.129.136.45])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47j6u84abs-1;
+	Mon, 30 Jun 2025 09:50:53 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, darren.kenny@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/mellanox: Fix logic error in power state check in mlxreg-lc
+Date: Mon, 30 Jun 2025 02:49:51 -0700
+Message-ID: <20250630095001.598061-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506300081
+X-Proofpoint-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
+X-Proofpoint-ORIG-GUID: WHia3CpVMJ399UiOZItjb_KNX2mE4riw
+X-Authority-Analysis: v=2.4 cv=b82y4sGx c=1 sm=1 tr=0 ts=68625dff cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6IFa9wvqVegA:10 a=Ikd4Dj_1AAAA:8 a=yPCof4ZbAAAA:8 a=gBumKNB3FYnGDgap0wUA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA4MSBTYWx0ZWRfX6NWuw3aMVu1p uI9N3K4onrFfMNpk6+QyhY72nRShtBgwTqMUvukboNbBYRZdZ8ID7m9XAfrr9euRiTHCThauqpP IpFn2nKS7zazKA6FlKpimxFFP4uh3NpwHn75pBHS6RKISkFltYSImqfaFcLnmvbgZ++s8fUPTl4
+ 5ft4Ag22Fnd/CZE8e5HWjy0ox4+HSqjZIPGXTgFifZtFc1Vq8gwcugHAgkR2/OU5y3LH1tFtnUq vDVfwfSZplwo/sXulJ1EWiE/ST//eKcPr899EMG5x5qkRCabW7oam+g5uZKkhcy3eQBhvM2bGt/ df/vD9x4TD76LvtpMmCCoUWl4DHHynW07Ld4VIiiOX1/c9rrrtA85HoP5jyLbA4GDjl6hvHp2/l
+ WQnaMm6U5SYl48BUllvqT7bTOcxj0mcljod4ye1L4CjpvIs2LvwqdRH2+ZT985zYLlDNWp+y
 
-Am Montag, 23. Juni 2025, 12:08:07 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Sakari Ailus:
-> Hi Heiko,
->=20
-> On Mon, Jun 23, 2025 at 12:05:22PM +0200, Heiko Stuebner wrote:
-> > Hi,
-> >=20
-> > Am Montag, 23. Juni 2025, 08:47:44 Mitteleurop=C3=A4ische Sommerzeit sc=
-hrieb Sakari Ailus:
-> > > Hi Olivier,
-> > >=20
-> > > On Fri, Jun 20, 2025 at 05:21:31PM +0200, Olivier Benjamin wrote:
-> > > > This series adds support for the Pine64 PinePhone Pro's rear and fr=
-ont
-> > > > cameras in Device Tree.
-> > > > This is based on some of Ondrej Jirman's patches hosted in his tree=
- at
-> > > > https://codeberg.org/megi/linux, but I have also fully reviewed and
-> > > > re-written the code from the RK3399 datasheet, the PinePhone Pro
-> > > > schematic, and the IMX258-0AQH5 software reference manual.
-> > > >=20
-> > > > I have tested these changes on my PinePhone Pro and am able to take
-> > > > photos from both cameras using libcamera's cam.
-> > > >=20
-> > > > This series has raised a question about the proper label name for t=
-he
-> > > > front/user camera and rear/world camera for phones.
-> > > > This series is using "ucam" and "wcam", which is used in a few other
-> > > > Rockship DTBs:
-> > > >  - arch/arm64/boot/dts/rockchip/px30-evb.dts
-> > > >  - rk3399-gru-scarlet.dtsi
-> > > >=20
-> > > > Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
-> > >=20
-> > > Thanks for the patches.
-> > >=20
-> > > I've picked the first two in the set, presumably the rest will be mer=
-ged
-> > > via another tree?
-> >=20
-> > correct, and with the first two being applied, I can now also safely pi=
-ck
-> > the other two :-)
->=20
-> Once in my tree, they'll next end up to the media committers' tree and
-> after some time you should be able to find them in linux-next. This proce=
-ss
-> will take some time. Just FYI.
+Fixes a logic issue in mlxreg_lc_completion_notify() where the
+intention was to check if MLXREG_LC_POWERED flag is not set before
+powering on the device.
 
-thanks for the heads up :-) .
+The original code used "state & ~MLXREG_LC_POWERED" to check for the
+absence of the POWERED bit. However this condition evaluates to true
+even when other bits are set, leading to potentially incorrect
+behavior.
 
-So I'll give that a bit more time for the bindings to appear.
+Corrected the logic to explicitly check for the absence of
+MLXREG_LC_POWERED using !(state & MLXREG_LC_POWERED).
 
-Thanks
-Heiko
+Suggested-by: Vadim Pasternak <vadimp@nvidia.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+ drivers/platform/mellanox/mlxreg-lc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/platform/mellanox/mlxreg-lc.c b/drivers/platform/mellanox/mlxreg-lc.c
+index aee395bb48ae4..8681ceb7144ba 100644
+--- a/drivers/platform/mellanox/mlxreg-lc.c
++++ b/drivers/platform/mellanox/mlxreg-lc.c
+@@ -688,7 +688,7 @@ static int mlxreg_lc_completion_notify(void *handle, struct i2c_adapter *parent,
+ 	if (regval & mlxreg_lc->data->mask) {
+ 		mlxreg_lc->state |= MLXREG_LC_SYNCED;
+ 		mlxreg_lc_state_update_locked(mlxreg_lc, MLXREG_LC_SYNCED, 1);
+-		if (mlxreg_lc->state & ~MLXREG_LC_POWERED) {
++		if (!(mlxreg_lc->state & MLXREG_LC_POWERED)) {
+ 			err = mlxreg_lc_power_on_off(mlxreg_lc, 1);
+ 			if (err)
+ 				goto mlxreg_lc_regmap_power_on_off_fail;
+-- 
+2.46.0
 
