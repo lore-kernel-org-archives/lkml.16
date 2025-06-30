@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC49239E7F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBEF2367B2;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751320364; cv=none; b=Erono8S/uzbWnrCzc8eiFO6JY1s8vojWsR0cOLNXUQBRzNm5eDyuh9Cy4NGuQXS/Z1NXa+CeJs5Xlq1vSf3FwlSJJ5Jh8fAe62nbzKC//ANkycz/ODW1du9lb+Q0z7fBQWSQ1HHIF9DWYQlkACME8eKxiT7vAJvBizBxA15iwg8=
+	t=1751320364; cv=none; b=dle1iNHsnDO4lsljdWO77+PVLsIFFe3THZTgNA/r3EQjzwsmJf3wR4THORFyukS6gHKKchQJsjKhAXM8G0PjggYZAmva7E+A1s6wBrbjYxTYNOyQEM0ZYJAIyZ4n9U0VD7ymRLcua2X8NYnEitcUJD2sTgtgMNMDRm0VDQ7cgpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751320364; c=relaxed/simple;
-	bh=tRHbxQ8xRhDpil6Zr05w8pog9obBdefehr/BAJUtAVE=;
+	bh=DHtfPYJYXR8ddBt77pelHOR6W6f51lVt8KBAeP14qlI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JeK1QVeI9auIiLpbHVOnWjQgr1+DRAcNBigKKvn+3LqcQNbHtAUbDPgWPU2GxWryajHxyAasD9q5lQ2SR9WhD7Hji4KCus1PAQpsX5QizecX1zPozUck5NNkSEWFy90n7RysvNpFFVAP/uXhg8qapKMeQv4MpelvyMx+uNZgMaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxi7wC3n; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uiceutQNcYRUAeSsz59SulXp7OplwRDF4LAXAWSkIcfrRld1c1z591yRhIEr4yb25WkbWHHhl5KlfPcYlBy/+Z1pRFtI4d6iY5NlIMoE0TJWIkBll3LCTgYX0itZYxyiMhJBfksju0Zj0HURPC1Z7axVcN8wM0sVyEsnFfa9dvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c26XOtEC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lxi7wC3n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE9FC4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c26XOtEC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568A6C4CEF0;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751320364;
-	bh=tRHbxQ8xRhDpil6Zr05w8pog9obBdefehr/BAJUtAVE=;
+	bh=DHtfPYJYXR8ddBt77pelHOR6W6f51lVt8KBAeP14qlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lxi7wC3n9/1SvuETVUF8+kHukWb/9MSKM+xMagidHMoEAEyfwbajSmVvYY8qGt3I9
-	 dBD5rBAO8OCQwomJcjX2XQwHkNHTBc9vosdJhUNZ9ATGjT7YaXeLGV3D3pbktby5Ms
-	 5rTxEmf1A6NfD/zQpCfGT0d3p/48eVS8CS3c5Ht4NRe2A+MVj2v7Qd1idRAGhPKHHe
-	 iyqGRBmGyLYPkx50NBmESQbqt2uhunM1uZ0L3kFHz3B9EK1/OKG1CZuhhi+WnAocGn
-	 40YvJiGEB1R8IZox/N/5aHxCdmT5/+bb4SPq0ndNH3T5RVeHC8mXEvkwhXt669URxX
-	 o+GKk0y++fojg==
+	b=c26XOtEC+BRg/drzRLy48xwhA4h+bhz6bR/IgPX0q0g0LOlcHCkksq0A0vq5UMn0p
+	 tfJ/PwHaZALWHEenzdW6Egbn7NvOQ/sZqh5VrIWMHt3w63NdcpHNnoeBuUDwE4cySf
+	 z08/he7zTvtQTbRTFo8FKhOCm394Xz8EX9QH2FiNvGMQXzGp8n8taH+lM2reAJplpk
+	 blWxyMISw0mD6lKhHHggOzgnetldOyqSFhSnJTbKVL++HfUjSn4wZGx5I4uXokfE2D
+	 C8FLvMwvdNaQB6cbJ0WoPF3ZdI0bBB8wm1WaTWMgcJsIDrDPnyTuVcra/ATwylZ5qp
+	 gAt9ajqC7JWvA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uWMQc-00000003QWJ-1aTO;
+	id 1uWMQc-00000003QWd-29GE;
 	Mon, 30 Jun 2025 23:52:42 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -38,9 +38,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	"Sai Vishnu M" <saivishnu725@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/15] scripts: sphinx-pre-install: fix version check for Fedora
-Date: Mon, 30 Jun 2025 23:34:49 +0200
-Message-ID: <05f9d16f8a4d95ad7a1d26447d6f600a99e0c92d.1751318230.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 06/15] scripts: sphinx-pre-install: drop obsolete routines
+Date: Mon, 30 Jun 2025 23:34:54 +0200
+Message-ID: <1287964385f0df25c2b0cf91c51d1dfcdeaea8fc.1751318230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <cover.1751318230.git.mchehab+huawei@kernel.org>
 References: <cover.1751318230.git.mchehab+huawei@kernel.org>
@@ -53,26 +53,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The script is now picking the wrong version. Fix it.
-
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/sphinx-pre-install | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/sphinx-pre-install.py | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 3f8d6925e896..07234d482fa8 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -413,7 +413,7 @@ sub give_redhat_hints()
- 	my $old = 0;
- 	my $rel;
- 	my $noto_sans_redhat = "google-noto-sans-cjk-ttc-fonts";
--	$rel = $1 if ($system_release =~ /(release|Linux)\s+(\d+)/);
-+	$rel = $2 if ($system_release =~ /(release|Linux)\s+(\d+)/);
+diff --git a/scripts/sphinx-pre-install.py b/scripts/sphinx-pre-install.py
+index 3912359d2bae..b639acd455cc 100755
+--- a/scripts/sphinx-pre-install.py
++++ b/scripts/sphinx-pre-install.py
+@@ -114,27 +114,6 @@ class SphinxDependencyChecker:
  
- 	if (!($system_release =~ /Fedora/)) {
- 		$map{"virtualenv"} = "python-virtualenv";
+         return None
+ 
+-    @staticmethod
+-    def find_python_no_venv():
+-        # FIXME: does it makes sense now that this script is in Python?
+-
+-        result = SphinxDependencyChecker.run(["pwd"], capture_output=True,
+-                                             text=True)
+-        cur_dir = result.stdout.strip()
+-
+-        python_names = ["python3", "python"]
+-
+-        for d in os.environ.get("PATH", "").split(":"):
+-            if f"{cur_dir}/sphinx" in d:
+-                continue
+-
+-            for p in python_names:
+-                if os.access(os.path.join(d, p), os.X_OK):
+-                    return os.path.join(d, p)
+-
+-        # Python not found at the PATH
+-        return python_names[-1]
+-
+     @staticmethod
+     def get_python_version(cmd):
+ 
+@@ -940,7 +919,7 @@ class SphinxDependencyChecker:
+         else:
+             print("\nSphinx needs to be installed either:\n1) via pip/pypi with:\n")
+ 
+-        self.python_cmd = self.find_python_no_venv()
++        self.python_cmd = os.path.abspath(sys.argv[0])
+ 
+         print(f"\t{virtualenv_cmd} {self.virtenv_dir}")
+         print(f"\t. {self.virtenv_dir}/bin/activate")
 -- 
 2.50.0
 
