@@ -1,170 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC5F2737E7;
-	Mon, 30 Jun 2025 13:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A272522B6;
+	Mon, 30 Jun 2025 13:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289886; cv=none; b=KZihxCcUh8RvNcVLKKGxhn9RRykZ+3+S8Jtgp61k+Mn68OueOEBUuidQih/DyxNBkVtP+/EymIBBeCBy7cX1lzoY9Cb9MuoObzVmvBV6G0WjDECcYPXULD50e4zJ/RKGgeTeWkLR1Rv3Bg7LszP1LRXb3X7Uy7RhaCh/Hz10U6A=
+	t=1751289907; cv=none; b=piFdGl73tV8aMt75K8/LNFVVv4D0F/wBWMMKzl3w2upHtPLAp3/KAnq2S3tvhumUxekIty1eU28ImpnLgYuNydBB++jzNuei8y6VgHEma548ybA8yy/zq+RbrWQOOv81XU5jSuNvH9f3V1ew33YEJ3CHcnGrE3W3wokWPtidYms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289886; c=relaxed/simple;
-	bh=C/KLwVpP5vnvnPOKwYbYJLVyr9fOvwvaHrGH3cxFg0s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uSdlhBJflSjKaEGVX+CQPNGXoIA6TjH9jk0RE9mi5L1zi/C0/WY/gRCmkzQRNZFVBG14fPpAAQT7aV8D5yGH1nrm0/J89NpTORMWPLLD0WyV5Bswl9w+h/K2Y9hgkR2acSJrzn7zZInBiJYBxY9GYvb+lfEekd7VyykOv/O2kaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OymH8Dh9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751289907; c=relaxed/simple;
+	bh=39GspmHXfLO8iqlwrFTn7btp/d+2V7xPthkkOs9xCXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uw2C35+fFVwAbT9l5Eg3qgihrsmq5t2hR3bYKgNen/IkQK6Mvk6cnh6vpu6wzuoPr0Mlj0V8fYNwWYqY4ITd7xamdF1itsp5pA/boAUtxvWLr37eXZ6c0awfjepmQY9m/81UTWVpB4jHSritOPX0OusgeLD1mopEQAj/7bWTZJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rTqzn3tE; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OymH8Dh9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64A7C4CEF1;
-	Mon, 30 Jun 2025 13:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751289885;
-	bh=C/KLwVpP5vnvnPOKwYbYJLVyr9fOvwvaHrGH3cxFg0s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OymH8Dh9BlD0r5vlxqHynf4+ixUT8pqe92NBhQh8kCAGv7fAUwGvXvMejQQZUnruy
-	 xnPx3yBjrjMGROw/yyZM95VcwNnDcHVaB8gBtPKMlazMX0YWRjQgVaczADH/mCt8w+
-	 4Av9uwfO9F9wU3bghMN6sBKh4CNKtaxPnw7tmZr2O01decJrpzyGdV50Hz6YIjoxE4
-	 XruyUQUZhDXOBgapP5EEPRBlmoWCA4R09e3bJ24XeiN30b1m9ndKF2Q+k8hv2q+B5s
-	 RL3H66Hwj9LgPH1iUH2vtLTc/C2ymbq95+DHJcc1r2JXnan7R5GeNkvRS0FVJDsm5u
-	 zK6q48EC0xnrQ==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553c31542b1so2401080e87.2;
-        Mon, 30 Jun 2025 06:24:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV49BSH2A9Q67wZZngvVWBwJ2x3D/BPnx8somx9HSdnvDG1TUMYKWE70dvSW103UjVa9VD5hN50BKskpzQ=@vger.kernel.org, AJvYcCVQ4AWzkPary3gVuwSJjHvovCT48OvjE5BWGuQ97y4DhowuuQpCfcxzOO9ix7HrbqQwEdDsLyQCruj/HBaVYA==@vger.kernel.org, AJvYcCWH8zkunrE1Uzmgv8nyhvVn5FJReM+g2jhxgNgkbpwndz6O08Fc3gN5tDva4elnety1PgbW8SckiJDq/Rpb@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg7k0m6C8pcbmXo1hAZWjzzOQ5/HU00UuweP5Q8wRw4AVe0bGl
-	LKdNakMoEyrOR7974Ib3SmQBFUMts2TYl16mXeOQPFlxm4DIEryN/+ZKCo5Q0nDh+ZkfIGYdpAV
-	URdhu4HhE/hHL5lwTgDA0Hp9jRe0hFPs=
-X-Google-Smtp-Source: AGHT+IEPzeuwWBdYagliwzijFiih6tkbayTrYgIeMSfrJEjQfMGuWR0UrzbUSJHDJ6lRnmEznbVIahWtFQmo5AgezlU=
-X-Received: by 2002:a05:6512:224b:b0:553:1f90:cca4 with SMTP id
- 2adb3069b0e04-5550b87a206mr4541686e87.13.1751289884414; Mon, 30 Jun 2025
- 06:24:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rTqzn3tE"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id AC497928;
+	Mon, 30 Jun 2025 15:24:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751289882;
+	bh=39GspmHXfLO8iqlwrFTn7btp/d+2V7xPthkkOs9xCXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rTqzn3tEXJ66vbughkyAN8Hm8niv3uyiCE1PHOAz0qbloCLBLB2JnaDJ1ya9gx2yf
+	 Zu/3U/pr7E2z23T9SHpH7yeZ23n1kxiOhjIyKqoO2tg9QF0uD/E0XeIzxLySigB1Ii
+	 DgOXG7qul7KR6ICVXB7QzeP21/WgT5pEGy4dU3kY=
+Date: Mon, 30 Jun 2025 16:24:38 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	Ricardo Ribalda <ribalda@chromium.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
+Message-ID: <20250630132438.GC23516@pendragon.ideasonboard.com>
+References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
+ <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
+ <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
+ <c97af8e7-5c11-45f4-838c-d934b0a379c1@kernel.org>
+ <20250630131004.GF20333@pendragon.ideasonboard.com>
+ <d449ae59-11a2-436e-a51c-cf2fa3657ba2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
- <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com> <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
-In-Reply-To: <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 30 Jun 2025 22:24:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATp1n2c9RqNoe0oztRtLoMy8JqHF1KqSRsj5avp3vjHCQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwwD9lkICBnBWvlITUhX_Y0G7ZiNvAyww9EJdEFCZePWHqzKfblx7Gg6Qs
-Message-ID: <CAK7LNATp1n2c9RqNoe0oztRtLoMy8JqHF1KqSRsj5avp3vjHCQ@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
-To: Giuliano Procida <gprocida@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d449ae59-11a2-436e-a51c-cf2fa3657ba2@kernel.org>
 
-On Mon, Jun 30, 2025 at 7:05=E2=80=AFPM Giuliano Procida <gprocida@google.c=
-om> wrote:
->
-> Hi.
->
-> On Sun, 29 Jun 2025 at 18:51, Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
-> >
-> > On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@goog=
-le.com> wrote:
-> > >
-> > > When writing symtypes information, we iterate through the entire hash
-> > > table containing type expansions. The key order varies unpredictably
-> > > as new entries are added, making it harder to compare symtypes betwee=
-n
-> > > builds.
-> > >
-> > > Resolve this by sorting the type expansions by name before output.
-> > >
-> > > Signed-off-by: Giuliano Procida <gprocida@google.com>
-> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-> > > ---
-> > >  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
-> > >  1 file changed, 26 insertions(+), 3 deletions(-)
-> > >
-> > > [Adjusted the first line of the description. Added reviewer tags.
-> > >  Added missing CC to linux-modules.]
-> > >
-> > > diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/ty=
-pes.c
-> > > index 7bd459ea6c59..51c1471e8684 100644
-> > > --- a/scripts/gendwarfksyms/types.c
-> > > +++ b/scripts/gendwarfksyms/types.c
-> > > @@ -6,6 +6,8 @@
-> > >  #define _GNU_SOURCE
-> > >  #include <inttypes.h>
-> > >  #include <stdio.h>
-> > > +#include <stdlib.h>
-> > > +#include <string.h>
-> > >  #include <zlib.h>
-> > >
-> > >  #include "gendwarfksyms.h"
-> > > @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struc=
-t type_expansion **res)
-> > >         return -1;
-> > >  }
-> > >
-> > > +static int cmp_expansion_name(const void *p1, const void *p2)
-> > > +{
-> > > +       struct type_expansion *const *e1 =3D p1;
-> > > +       struct type_expansion *const *e2 =3D p2;
-> > > +
-> > > +       return strcmp((*e1)->name, (*e2)->name);
-> > > +}
-> > > +
-> > >  static void type_map_write(FILE *file)
-> > >  {
-> > >         struct type_expansion *e;
-> > >         struct hlist_node *tmp;
-> > > +       struct type_expansion **es;
-> > > +       size_t count =3D 0;
-> > > +       size_t i =3D 0;
-> > >
-> > >         if (!file)
-> > >                 return;
-> > >
-> > > -       hash_for_each_safe(type_map, e, tmp, hash) {
-> > > -               checkp(fputs(e->name, file));
-> > > +       hash_for_each_safe(type_map, e, tmp, hash)
-> > > +               ++count;
-> > > +       es =3D xmalloc(count * sizeof(struct type_expansion *));
-> >
-> > Just a nit:
-> >
-> >            es =3D xmalloc(count * sizeof(*es));
-> >
-> > is better?
-> >
-> > > +       hash_for_each_safe(type_map, e, tmp, hash)
-> > > +               es[i++] =3D e;
-> > > +
-> > > +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansi=
-on_name);
-> >
-> > qsort(es, count, sizeof(*es), cmp_expansion_name);
-> >
->
-> That's a fair point.
->
-> However, in the gendwarfksyms code, all but one of the sizeofs uses an
-> explicit type name. The exception is sizeof(stats) where stats is an arra=
-y.
->
-> I'll leave Sami's code as it is.
+On Mon, Jun 30, 2025 at 03:12:38PM +0200, Hans de Goede wrote:
+> On 30-Jun-25 3:10 PM, Laurent Pinchart wrote:
+> > On Mon, Jun 30, 2025 at 02:59:05PM +0200, Hans de Goede wrote:
+> >> On 17-Jun-25 11:27 AM, Hans Verkuil wrote:
+> >>> On 16/06/2025 17:24, Ricardo Ribalda wrote:
+> >>>> uvc_stop_streaming() is used for meta and video nodes. Split the function
+> >>>> in two to avoid confusion.
+> >>>>
+> >>>> Use this opportunity to rename uvc_start_streaming() to
+> >>>> uvc_start_streaming_video(), as it is only called by the video nodes.
+> >>>>
+> >>>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+> >>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> >>>> ---
+> >>>>  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
+> >>>>  1 file changed, 15 insertions(+), 7 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+> >>>> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
+> >>>> --- a/drivers/media/usb/uvc/uvc_queue.c
+> >>>> +++ b/drivers/media/usb/uvc/uvc_queue.c
+> >>>> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
+> >>>>  		uvc_video_clock_update(stream, vbuf, buf);
+> >>>>  }
+> >>>>  
+> >>>> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >>>> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
+> >>>>  {
+> >>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+> >>>>  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
+> >>>> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >>>>  	return ret;
+> >>>>  }
+> >>>>  
+> >>>> -static void uvc_stop_streaming(struct vb2_queue *vq)
+> >>>> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
+> >>>>  {
+> >>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+> >>>>  
+> >>>>  	lockdep_assert_irqs_enabled();
+> >>>>  
+> >>>> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
+> >>>> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+> >>>> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+> >>>> +
+> >>>> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+> >>>> +}
+> >>>> +
+> >>>> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
+> >>>> +{
+> >>>> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+> >>>> +
+> >>>> +	lockdep_assert_irqs_enabled();
+> >>>>  
+> >>>>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+> >>>>  }
+> >>>> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
+> >>>>  	.buf_prepare = uvc_buffer_prepare,
+> >>>>  	.buf_queue = uvc_buffer_queue,
+> >>>>  	.buf_finish = uvc_buffer_finish,
+> >>>> -	.start_streaming = uvc_start_streaming,
+> >>>> -	.stop_streaming = uvc_stop_streaming,
+> >>>> +	.start_streaming = uvc_start_streaming_video,
+> >>>> +	.stop_streaming = uvc_stop_streaming_video,
+> >>>>  };
+> >>>>  
+> >>>>  static const struct vb2_ops uvc_meta_queue_qops = {
+> >>>>  	.queue_setup = uvc_queue_setup,
+> >>>>  	.buf_prepare = uvc_buffer_prepare,
+> >>>>  	.buf_queue = uvc_buffer_queue,
+> >>>> -	.stop_streaming = uvc_stop_streaming,
+> >>>> +	.stop_streaming = uvc_stop_streaming_meta,
+> >>>>  };
+> >>>
+> >>> I think there should be a comment stating that the metadata stream
+> >>> expects that video is streaming, it does not start streaming by itself.
+> >>>
+> >>> Something like:
+> >>>
+> >>> 	/*
+> >>> 	 * .start_streaming is not provided here. Metadata relies on
+> >>> 	 * video streaming being active. If video isn't streaming, then
+> >>> 	 * no metadata will arrive either.
+> >>> 	 */
+> >>>
+> >>> It's unexpected that there is no start_streaming for metadata, so a
+> >>> comment wouldn't hurt.
+> >>
+> >> I've added this comment while merging this series and I've now pushed
+> >> the entire series to uvc.git/for-next .
+> >>
+> >> BTW it seems that both uvc.git/next and uvc.git/for-next are in
+> >> use now?  With uvc.git/next seemingly following media-commiters/next ?
+> > 
+> > As far as I understand, some jobs in the media CI use the next branch,
+> > for instance the bisect job that tries to compile every commit uses the
+> > next branch as a base. We therefore need to keep the next branch
+> > up-to-date, mirroring upstream.
+> 
+> Ok, so we have the next branch mirroring upstream and then we
+> use for-next to merge new patches as I've just done ?
 
+Sounds good.
 
-This rule is clearly documented with rationale.
+-- 
+Regards,
 
-See this:
-https://github.com/torvalds/linux/blob/v6.15/Documentation/process/coding-s=
-tyle.rst?plain=3D1#L941
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+Laurent Pinchart
