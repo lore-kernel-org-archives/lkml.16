@@ -1,156 +1,147 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90F9D515;
-	Mon, 30 Jun 2025 14:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC828BA95;
+	Mon, 30 Jun 2025 14:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293011; cv=none; b=pqAtykh+iBykFdd75ICPiun+l5IpgwtbRTll00HyFNYHcj80uW9FtPjO/9/1Z0t0azx469RXeexaVo7wrpyzeZgiAm9DN2CoYFQtZj4I6XtFDX6h8LbRwj6uY+StRzn6pC+5WQeh50yiAxi4h4paeOrTgX1cPwuNt3IiYGZEak0=
+	t=1751293013; cv=none; b=cb6akJpnzf8l7ISxu/Uxd8piE6E6/KVolRtGGIDg2YassMH0ZWiRsoqVdGy9HDjsgVUb4CKSAMNnsxqMCVC0VBALBTKdD+q4gj4GSq2J7psyjYdgEpp74mVFBdSw4D9CZbXqX/IBTPy+na6/vxshLKhu6H/zyjaoztd4k3glRB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293011; c=relaxed/simple;
-	bh=DsBq9tZtAD9KPVGyGRX1S8v30OuJNyMeLdB8EVJnnqs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=g80fAY1HbjBq6oXdEBT7cMzO2oJt7y+3H+saNZYLfxOBHJMjvHLlDdXDvag9yFZADRjpMkh91bzOawnJIxh5D6tmPxXy/u5xL8PGOW9CddgCdpyzYRiin9AmFLVBS+vdTP54Gv5L9x3ddO7qtjnhNR9urYyod76W7IiAGeMTIOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HVAwiJv4; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751293013; c=relaxed/simple;
+	bh=OzPYGM4z9O73qf5/x0rNrOGtpP0MsiPbpJZyM0orLTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WkLAfGPOUv9/fcyjzWYA/UPlqrEY98D//LyGLh05g9KW7DP/kn3VqQhK8wDKM8Yl+qf5FTsk8lDujlvaeusiEfCNHuuQCmtflyeiS9UNZqOJtTZDjvAH8OLelmSrFUWDDOIuE45bX9p9m2knaxlvv4foY9YJBnx1sXuJh8kYRcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NFMFuzaO; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HVAwiJv4"
-Message-ID: <43e84a3e-f574-4c97-9f33-35fcb3751e01@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751293005;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0iYONongsRME1HKcKR/MgEpiRBLSAhkg/xqodBzNJUQ=;
-	b=HVAwiJv4C5Quke8pQpYZkngirfjh+NUNubClehgrHz7VhHs2nETxN1/2UCX/GNPx762l6v
-	IV1tzGyIq3q3UFiR3YzNKvdo4fOm84j5fcn9pO3V2SulMaP1LBp1tHxsB6y6n+b5kRa71y
-	hSS310Ju4kB3jtFDvh0smpd5TFUgf+w=
-Date: Mon, 30 Jun 2025 22:16:37 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NFMFuzaO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751293011; x=1782829011;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OzPYGM4z9O73qf5/x0rNrOGtpP0MsiPbpJZyM0orLTE=;
+  b=NFMFuzaOcrhWaK9s8IOKDOkIRE5uzWVcN/lo/dlEdoGkdik9SnW21Vw6
+   /rCJ/hgubR0LVwoivhZzvRKx5Ud8dOchPLuupx0ea4gAJesxg4GeDGzo5
+   lvYEQ9zxAGN27JSokyV4x2/NPzhWxe4RX3EMNjnwGgqgEoFLMCQmNdO9W
+   xwKDrjBEnbrJ9ZIhCRVGzolCma2rertwmMN+rpOidGtmKIY0VGhuJ0afu
+   9W8ndSKAEpJh8ova5waKAfBlgNCG5foRO5wURAaT8IqHlMEtSit6B0IA6
+   THS9cryIx1F0fWn03KRoi2Zf2X0jLfp5zPe24CABWEnHmPJwCkRMBaxF2
+   Q==;
+X-CSE-ConnectionGUID: WO6ex5tEQ4eNpwidPok5wA==
+X-CSE-MsgGUID: w4OQGq97S0qKcqZGx4md5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="70953170"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="70953170"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:16:51 -0700
+X-CSE-ConnectionGUID: 58+RhZqhRG+b0WD5ZFiBsw==
+X-CSE-MsgGUID: YYmDo1P1T2mvWYNOXes65w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="184493720"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa002.jf.intel.com with SMTP; 30 Jun 2025 07:16:45 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 30 Jun 2025 17:16:44 +0300
+Date: Mon, 30 Jun 2025 17:16:44 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
+Message-ID: <aGKcTCSL4QMkx86I@kuha.fi.intel.com>
+References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
+ <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
+ <aF6nEOVhLURyf616@smile.fi.intel.com>
+ <aF8N0dYk_WAJjvVu@intel.com>
+ <aGI9C6MR8qhe0MHR@smile.fi.intel.com>
+ <aGJGWFOpccaNzpni@kuha.fi.intel.com>
+ <aGJg0FZK__xYGP7C@smile.fi.intel.com>
+ <aGJ8GZXEzJo1IVXM@kuha.fi.intel.com>
+ <aGKOSIfS2kTqeHLt@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00/11=5D_dm-pcache_=E2=80=93_persistent?=
- =?UTF-8?Q?-memory_cache_for_block_devices?=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
- dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
- <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
- <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
-In-Reply-To: <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGKOSIfS2kTqeHLt@smile.fi.intel.com>
 
+On Mon, Jun 30, 2025 at 04:16:56PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 30, 2025 at 02:59:21PM +0300, Heikki Krogerus wrote:
+> > On Mon, Jun 30, 2025 at 01:02:56PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Jun 30, 2025 at 11:10:00AM +0300, Heikki Krogerus wrote:
+> > > > On Mon, Jun 30, 2025 at 10:30:19AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Jun 27, 2025 at 05:32:01PM -0400, Rodrigo Vivi wrote:
+> > > > > > On Fri, Jun 27, 2025 at 05:13:36PM +0300, Andy Shevchenko wrote:
+> > > > > > > On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
+> 
+> ...
+> 
+> > > > > > > >  static int dw_i2c_plat_probe(struct platform_device *pdev)
+> > > > > > > >  {
+> > > > > > > > +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
+> > > > > > > 
+> > > > > > > > -	dev->flags = (uintptr_t)device_get_match_data(device);
+> > > > > > > >  	if (device_property_present(device, "wx,i2c-snps-model"))
+> > > > > > > > -		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+> > > > > > > > +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
+> > > > > > > >  
+> > > > > > > >  	dev->dev = device;
+> > > > > > > >  	dev->irq = irq;
+> > > > > > > > +	dev->flags = flags;
+> > > > > > > 
+> > > > > > > Maybe I'm missing something, but why do we need these (above) changes?
+> > > > > > 
+> > > > > > in between, it is introduced a new one:
+> > > > > > flags |= ACCESS_POLLING;
+> > > > > > 
+> > > > > > So, the initialization moved up, before the ACCESS_POLLING, and
+> > > > > > it let the assignment to the last, along with the group.
+> > > > > 
+> > > > > I still don't get. The cited code is complete equivalent.
+> > > > 
+> > > > This was requested by Jarkko.
+> > > 
+> > > Okay, but why? Sounds to me like unneeded churn. Can't we do this later when
+> > > required?
+> > 
+> > You need to ask why from Jarkko - I did not really question him on
+> > this one. Unfortunately his on vacation at the moment.
+> 
+> Yeah :-(
+> 
+> > I can drop this, but then I'll have to drop also Jarkko's ACK.
+> 
+> I can give mine if it helps. The code as far as I can see is 100% equivalent.
+> 
+> > I think we already agreed that this function, and probable the entire
+> > file, need to be refactored a bit, so would you mind much if we just
+> > went ahead with this as it is?
+> > 
+> > I'm asking that also because I don't have means or time to test this
+> > anymore before I start my vacation.
+> 
+> I see, then we may ask Andi and Wolfram on this. I slightly prefer to have
+> no additional churn added without a good reason.
 
-在 6/30/2025 9:40 PM, Dongsheng Yang 写道:
->
-> 在 6/30/2025 9:30 PM, Mikulas Patocka 写道:
->>
->> On Tue, 24 Jun 2025, Dongsheng Yang wrote:
->>
->>> Hi Mikulas,
->>>     This is V1 for dm-pcache, please take a look.
->>>
->>> Code:
->>>      https://github.com/DataTravelGuide/linux tags/pcache_v1
->>>
->>> Changelogs from RFC-V2:
->>>     - use crc32c to replace crc32
->>>     - only retry pcache_req when cache full, add pcache_req into 
->>> defer_list,
->>>       and wait cache invalidation happen.
->>>     - new format for pcache table, it is more easily extended with
->>>       new parameters later.
->>>     - remove __packed.
->>>     - use spin_lock_irq in req_complete_fn to replace
->>>       spin_lock_irqsave.
->>>     - fix bug in backing_dev_bio_end with spin_lock_irqsave.
->>>     - queue_work() inside spinlock.
->>>     - introduce inline_bvecs in backing_dev_req.
->>>     - use kmalloc_array for bvecs allocation.
->>>     - calculate ->off with dm_target_offset() before use it.
->> Hi
->>
->> The out-of-memory handling still doesn't seem right.
->>
->> If the GFP_NOWAIT allocation doesn't succeed (which may happen anytime,
->> for example it happens when the machine is receiving network packets
->> faster than the swapper is able to swap out data), create_cache_miss_req
->> returns NULL, the caller changes it to -ENOMEM, cache_read returns
->> -ENOMEM, -ENOMEM is propagated up to end_req and end_req will set the
->> status to BLK_STS_RESOURCE. So, it may randomly fail I/Os with an error.
->>
->> Properly, you should use mempools. The mempool allocation will wait 
->> until
->> some other process frees data into the mempool.
->>
->> If you need to allocate memory inside a spinlock, you can't do it 
->> reliably
->> (because you can't sleep inside a spinlock and non-sleepng memory
->> allocation may fail anytime). So, in this case, you should drop the
->> spinlock, allocate the memory from a mempool with GFP_NOIO and jump back
->> to grab the spinlock - and now you holding the allocated object, so you
->> can use it while you hold the spinlock.
->
->
-> Hi Mikulas,
->
->     Thanx for your suggestion, I will cook a GFP_NOIO version for the 
-> memory allocation for pcache data path.
+OK. I'll fix this.
 
-Hi Mikulas,
+thanks,
 
-     The reason why we don’t release the spinlock here is that if we do, 
-the subtree could change.
-
-For example, in the `fixup_overlap_contained()` function, we may need to 
-split a certain `cache_key`, and that requires allocating a new 
-`cache_key`.
-
-If we drop the spinlock at this point and then re-acquire it after the 
-allocation, the subtree might already have been modified, and we cannot 
-safely continue with the split operation.
-
-     In this case, we would have to restart the entire subtree search 
-and walk. But the new walk might require more memory—or less,
-
-so it's very difficult to know in advance how much memory will be needed 
-before acquiring the spinlock.
-
-     So allocating memory inside a spinlock is actually a more direct 
-and feasible approach. `GFP_NOWAIT` fails too easily, maybe `GFP_ATOMIC` 
-is more appropriate.
-
-
-What do you think?
-
->
->>
->>
->> Another comment:
->> set_bit/clear_bit use atomic instructions which are slow. As you already
->> hold a spinlock when calling them, you don't need the atomicity, so you
->> can replace them with __set_bit and __clear_bit.
->
->
-> Good idea.
->
->
-> Thanx
->
-> Dongsheng
->
->>
->> Mikulas
->>
->
+-- 
+heikki
