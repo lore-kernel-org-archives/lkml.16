@@ -1,134 +1,136 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFC4246765;
-	Mon, 30 Jun 2025 09:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BEE190072
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276042; cv=none; b=QbHT1fizUTKXrPHZmj7vkerM2y5WayLSjeqFWXaVv8br1rdZkMjYaSZ914pEqJZx+i1O32upciZORO4PhqDpStgrL4+iV+ZQ01nSeRt1v7UP2EIlLw9HCGmDcWxk8js6zHsz3xhrawgVqKyQf9HbT0UAOK3G3oqlt9Jc1QsVArg=
+	t=1751276044; cv=none; b=uVlIqO/9L0ajMPIWuvI1Ir7a5hQOUdX+CxyOg/y89dHGoR5flU1KHa2EfXPd70cOE4Apc58PaLhE4MPSGpRIpNsZwQiKUAgP0fk+T+FM6H8cIpNv/yfuocZIx51EA+D4k8YP2KJ0kY1fXPUCyrX5Snt+Xv09hLzCuITuwecurCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276042; c=relaxed/simple;
-	bh=lKvKAZPsS/KYd+XrqLIcBDlTMIP0wJNpfc9MKVQDw0Q=;
+	s=arc-20240116; t=1751276044; c=relaxed/simple;
+	bh=i2H7wxuvjKrprsdjJQ79FfENDYU2gTxNL+H4wIq0OH0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUYMz0r5VE5UpWoibWpUGcc1fXIT5ZoHJvtEKwI+tlmHX8K0J6B4wJJ8wnAFit34VufrKuzlfhzpnEgueWdhMcBHXujz0ceCqcDX6LkNTbdMqxVMo7b+lmhRkrjjI5ieqXGgtCbloOhC2j0DKFr2k4zx4jyK6e3U/7rIThintlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yc9TT+/3; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=D951QAbWrr/e+YwKobAoqi2ErMcFskg+ajxBmogKJpVPNPTex1zgXde5N45eUQOlVXpU+/yfbePUrPsFfTd+yTGJ19ZVR1j1z2T0lJZnmxi2PTRo3d0xQFycGPh7X/ZxPFJ7R15lpBlVzpWEzk24+o0foV9e6RnjQ58ZgOwyBsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=O4fKiMhe; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yc9TT+/3"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450ce671a08so11440575e9.3;
-        Mon, 30 Jun 2025 02:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751276039; x=1751880839; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v7ZTVpIkruy1/6yYqzE1LD33CXiYUWxEYB34IGforkg=;
-        b=Yc9TT+/3fvPY1QL0MSjrSwCgHCZafOP0w1ndPUuOTI4TS995agKmyNwoc0qZZkiHc4
-         c3sAPHUIDIzq3TNO9+XKuH2aqn6wtjkrnrPDPhbQawDmbPSiRnFo/VRLAbEbtTcDOTFe
-         Q6mYP5FsrFXYHlPCLLZdCi46mIy3clj85qJgwhP89D3Y25pxCZJElMIl5j2OjznSYIzf
-         9ha16fE6tglwmJCj+OoIAsehBjGWcUerGAmgy+gZ0+4t9lbE50PpmcOZUDgiKnw8MiS/
-         0cr3rwGO0qoueoOPmg02jaAqwtNXOr/6E17cJQg7uEOzzkv0BJeG3atCgNVnH/YUT3tr
-         h87g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751276039; x=1751880839;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v7ZTVpIkruy1/6yYqzE1LD33CXiYUWxEYB34IGforkg=;
-        b=d1ZIx9SHQKJ4oewaGvJVa7iXXsGeYI/B1M0D2qT6o1IhPkqkPVEUyQXHJQSeRIao+h
-         stZnoVYZeCRfEHzBUM92GPjXXIsqAii7VTiiY7lLE7dc7XXtB4yYPell8zT540xpIDp+
-         WLFpyYcrv8twCnEj2NgwuZ9GUFdOoBwBXbxjDB6CN9ACWwiY+TMXeLPks/wQj66lJdk3
-         U752YmYBvn7Fm9rguJojzmk0n+KezBYwsY5PejR5cRXvubIsGk6cXPAtE3OX3oKcVX4F
-         EcGHUEPCgpdY75SdKupaBk77Io1qj26QjhXu0yr531eRArGCedmQGx6e8tz+CG0oQZFn
-         ADUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBvjCEhSY0Zt1vHVnRF96jVPZXgJazeeTGKVAaHcXfT47zXM6OSPJDmet2lo3HNXbr4z2R/rSCHZmYBg==@vger.kernel.org, AJvYcCWH17ZSJHgKjSirjNbkIr9t2a/DcPYE24VASJ5glbXxY1cnRgVEA0dMLRCR1rPl3U/k28NCRop8CTCc7T/v@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJjNBC1JhmNWL7ZuFSLhpagelmE5slEmjaZxIax4vbbzKY0ULT
-	YJ9Py17Lmkkvf595qt58+HuDJ1ZhNYCHNSDa8aY+QJ8UY/xer9JGotgT
-X-Gm-Gg: ASbGncvy8/1uhSachY7t8TqYqzPgipiT8DqhsM2MWqBsa0WVHn0Czr/x5effB7OG8G1
-	+1B+K2lfUn9WGm6V5A3/ngnSFOFUxVVzGyFju9jcPxrEm0XRg5r7TEUpX26NhPS2F4mdNVwlONX
-	yDROIZ6xEPQMjEX6BxzmoOl4gdgeFBvRsNHErCxnUBU1QzsxbPJ0e0iIpOn/95OacstDxCfj8Z8
-	VP/kIVgpsFFdfUjlgGUUBZhZkth0vVqRoRNenCkYKHAKl54QRT3TGSerq/MFq6JMJRCkTyaLbpp
-	0x/mZqBWKmcS7PiAumYGl8L6XK+cL03v1qq5UslsRp/LHa49TPYKVN0h3vI=
-X-Google-Smtp-Source: AGHT+IGKfXk732rhiWztdNceNorQETUHYReSZk9+wn+MlI8DijKdKrW4IoL0uoGwato1K0rcRQndCw==
-X-Received: by 2002:a05:600c:1c25:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-453a349da7dmr13780585e9.8.1751276038748;
-        Mon, 30 Jun 2025 02:33:58 -0700 (PDT)
-Received: from fedora ([94.73.34.56])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad1adsm159957825e9.24.2025.06.30.02.33.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:33:58 -0700 (PDT)
-Date: Mon, 30 Jun 2025 11:33:56 +0200
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] HID: apple: avoid setting up battery timer for
- devices without battery
-Message-ID: <aGJaBJLwA7vbq32k@fedora>
-References: <PN3PR01MB95973218D6B4ECDAE8ECF60BB87BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB9597321C9A619D3CB336FB23B87BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O4fKiMhe"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id B7672EFF;
+	Mon, 30 Jun 2025 11:33:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751276018;
+	bh=i2H7wxuvjKrprsdjJQ79FfENDYU2gTxNL+H4wIq0OH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O4fKiMherV54uzy8RutgjMV0OtIp04hwC+DMxJkG42JHGNI8cF/uHsRS9l6o3niDD
+	 s5Ea8f07ZdnnnkZ4NyavKg289o/DF+vnJqdkPJnS1W+zdp8gkXjcbcDN8F9KxVVQJP
+	 QJcp2IzhJYO+z6uvzjg1H8pja1S8OAU383ewUuP8=
+Date: Mon, 30 Jun 2025 12:33:35 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mike Looijmans <mike.looijmans@topic.nl>,
+	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
+Message-ID: <20250630093335.GC20333@pendragon.ideasonboard.com>
+References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
+ <20250627145058.6880-1-mike.looijmans@topic.nl>
+ <20250627181911.GF24912@pendragon.ideasonboard.com>
+ <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
+ <20250630-psychedelic-tested-smilodon-adcbb3@houat>
+ <20250630091156.GE24861@pendragon.ideasonboard.com>
+ <20250630-phenomenal-taipan-of-imagination-59b300@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <PN3PR01MB9597321C9A619D3CB336FB23B87BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <20250630-phenomenal-taipan-of-imagination-59b300@houat>
 
-On Wed, Jun 25, 2025 at 07:46:03PM +0530, Aditya Garg wrote:
-> Currently, the battery timer is set up for all devices using hid-apple,
-> irrespective of whether they actually have a battery or not.
+On Mon, Jun 30, 2025 at 11:29:08AM +0200, Maxime Ripard wrote:
+> On Mon, Jun 30, 2025 at 12:11:56PM +0300, Laurent Pinchart wrote:
+> > On Mon, Jun 30, 2025 at 10:27:55AM +0200, Maxime Ripard wrote:
+> > > On Mon, Jun 30, 2025 at 10:03:16AM +0200, Mike Looijmans wrote:
+> > > > On 27-06-2025 20:19, Laurent Pinchart wrote:
+> > > > > On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wrote:
+> > > > > > XRGB8888 is the default mode that Xorg will want to use. Add support
+> > > > > > for this to the Zynqmp DisplayPort driver, so that applications can use
+> > > > > > 32-bit framebuffers. This solves that the X server would fail to start
+> > > > > > unless one provided an xorg.conf that sets DefaultDepth to 16.
+> > > > > > 
+> > > > > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> > > > > > ---
+> > > > > > 
+> > > > > >   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
+> > > > > >   1 file changed, 5 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > index 80d1e499a18d..501428437000 100644
+> > > > > > --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > @@ -312,6 +312,11 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
+> > > > > >   		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
+> > > > > >   		.swap		= true,
+> > > > > >   		.sf		= scaling_factors_888,
+> > > > > > +	}, {
+> > > > > > +		.drm_fmt	= DRM_FORMAT_XRGB8888,
+> > > > > > +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
+> > > > > > +		.swap		= true,
+> > > > > > +		.sf		= scaling_factors_888,
+> > > > > 
+> > > > > I'm afraid that's not enough. There's a crucial difference between
+> > > > > DRM_FORMAT_ARGB8888 (already supported by this driver) and
+> > > > > DRM_FORMAT_XRGB8888: for the latter, the 'X' component must be ignored.
+> > > > > The graphics layer is blended on top of the video layer, and the blender
+> > > > > uses both a global alpha parameter and the alpha channel of the graphics
+> > > > > layer for 32-bit RGB formats. This will lead to incorrect operation when
+> > > > > the 'X' component is not set to full opacity.
+> > > > 
+> > > > I spent a few hours digging in the source code and what I could find in the
+> > > > TRM and register maps, but there's not enough information in there to
+> > > > explain how the blender works. The obvious "XRGB" implementation would be to
+> > > > just disable the blender.
+> > > > 
+> > > > What I got from experimenting so far is that the alpha component is ignored
+> > > > anyway while the video path isn't active. So as long as one isn't using the
+> > > > video blending path, the ARGB and XRGB modes are identical.
+> > > > 
+> > > > Guess I'll need assistance from AMD/Xilinx to completely implement the XRGB
+> > > > modes.
+> > > > 
+> > > > (For our application, this patch is sufficient as it solves the issues like
+> > > > X11 not starting up, OpenGL not working and horrendously slow scaling
+> > > > performance)
+> > > 
+> > > Given that we consider XRGB8888 mandatory,
+> > 
+> > How about platforms that can't support it at all ?
 > 
-> APPLE_RDESC_BATTERY is a quirk that indicates the device has a battery
-> and needs the battery timer. This patch checks for this quirk before
-> setting up the timer, ensuring that only devices with a battery will
-> have the timer set up.
-> 
-> Fixes: 6e143293e17a ("HID: apple: Report Magic Keyboard battery over USB")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Aditya Garg <gargaditya08@live.com>
-> ---
->  drivers/hid/hid-apple.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> index b8b99eb01..b9f45c089 100644
-> --- a/drivers/hid/hid-apple.c
-> +++ b/drivers/hid/hid-apple.c
-> @@ -959,10 +959,12 @@ static int apple_probe(struct hid_device *hdev,
->  		return ret;
->  	}
->  
-> -	timer_setup(&asc->battery_timer, apple_battery_timer_tick, 0);
-> -	mod_timer(&asc->battery_timer,
-> -		  jiffies + msecs_to_jiffies(APPLE_BATTERY_TIMEOUT_MS));
-> -	apple_fetch_battery(hdev);
-> +	if (quirks & APPLE_RDESC_BATTERY) {
-> +		timer_setup(&asc->battery_timer, apple_battery_timer_tick, 0);
-> +		mod_timer(&asc->battery_timer,
-> +			  jiffies + msecs_to_jiffies(APPLE_BATTERY_TIMEOUT_MS));
-> +		apple_fetch_battery(hdev);
-> +	}
->
+> We emulate it.
 
-The same here, the `out_err:` error case uses the timer and it can
-be uninitialized.
+Does that imply a full memcpy of the frame buffer in the kernel driver,
+or is it emulated in userspace ?
 
-Jose
-
->  	if (quirks & APPLE_BACKLIGHT_CTL)
->  		apple_backlight_init(hdev);
-> @@ -985,7 +987,8 @@ static void apple_remove(struct hid_device *hdev)
->  {
->  	struct apple_sc *asc = hid_get_drvdata(hdev);
->  
-> -	timer_delete_sync(&asc->battery_timer);
-> +	if (asc->quirks & APPLE_RDESC_BATTERY)
-> +		timer_delete_sync(&asc->battery_timer);
->  
->  	hid_hw_stop(hdev);
->  }
-> -- 
-> 2.43.0
+> > > this patch is a good thing to
+> > > have anyway, even if suboptimal, or broken in some scenario we can
+> > > always fix later.
+> > 
+> > It needs to at least be updated to disallow XRGB8888 usage when the
+> > video plan is enabled, or when global alpha is set to a non-opaque
+> > value.
 > 
+> Yeah, that's reasonable
+
+-- 
+Regards,
+
+Laurent Pinchart
