@@ -1,244 +1,168 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25C723E325
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A426D2397B0;
+	Mon, 30 Jun 2025 08:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272508; cv=none; b=J9l0xYfF5Blyq1zZX8hSsywNcMvzmDNPzX6uPk3YXI+hJcfJmdjJi78yyTXYFtRouF/+QrVl7Yb4w0sSb4me5fZyTEa1UfiW0Zjem+nUnQQoYI85JCbUakIzpn6n2M4kY4vjD2x401ShSqMr12E4Z4oTNPd2HYigJ3pyInzVbUw=
+	t=1751272556; cv=none; b=MkyJy+X5binDkq8S3I1K7K97YCvtcVdawAPXQWiUJlHk0HmQ4xe2OEPXhOeH1QAV5gFNTmefaqUHjzSxc2J4BYp8IKheigLuianix2DvUqFKZTj1pT3CL5wbL6e3IGyBthFid/mfVsZMg0ApFnRTJYnuC+ldVWRqR2uhH33rr5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272508; c=relaxed/simple;
-	bh=KugLlYAD2LleLePnFiqZ2ZUqh7vrYEKpovYcsYTZsM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nuJKrBTaz1eataseNcgK+fX+bA3wevLTTNTCrlBDhntzX4d/W6W3WkRa7nv0nuriBVAbIxZr4HajtWjCJWJaH5kdj5sft8J6uP9dVS7I6EXnS4dFqoYChOKxJT7BFxTtY4u3GqPdJMdTNPNSoB8zjtECpbkQNBwKx8EgVlhhyR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YaHawtC5; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751272556; c=relaxed/simple;
+	bh=hbl6aKOFyrCpAMd3O9ukAhgw6X3wjq6glq0MIKEE2gk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ErGUBPFysG91mUBF9ojvcghNbT9geuCUuAs0dB0i9q79NKEWFdFUd1uxKIo2fblix5T+4aeTf20lC0Ts49QvxcvPa4YvSyBohEUZ1ZePGIQntgS/XvX/oY4c4oimDnsCDhtRxCYhba1rA9ylyn80pduVvw23Pms8igTamTkn/RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKHQ5+0m; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YaHawtC5"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b6a349ccso2017069e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:35:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKHQ5+0m"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so4034473b3a.1;
+        Mon, 30 Jun 2025 01:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751272504; x=1751877304; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yKa/Onc4wBm+A53XbVVZfjcePpt4oSz+cRgODhBWQ5k=;
-        b=YaHawtC5If1GSWnOe+XLxuYsf7eckbrsJ9NaTLIwEnVZUqjrfCY10Gj6MM0omaIJEn
-         h9uTw2nJFw8rVVpeFHeHvkxI07XBOdD3KfOqLamk8ZnxoIEi7IkdaTUK9M+mke7XqdrJ
-         /XoxEB1bcXh4r1VgNvsGkXxZ9DOrvguX0u898WEG/HIu97brvR/Enjd2dA1429Amiegv
-         NLza4V0vEcfE//640vXWuc6NR7gAIJ3BamF+hLIohP4rgL97bMNSXRF6+uIK/hNR7bVd
-         vsME9VIB8lZSDQV+K6zAtPYrfTnUPoHGaXVzgff8wuptH1Up0C/NuyvDBleh8wkrQHM5
-         5ZbA==
+        d=gmail.com; s=20230601; t=1751272554; x=1751877354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4plGK5bq5RnwaM8ctVOu6ZgjjUnMHD+gm6XjSI880o=;
+        b=JKHQ5+0mIWsvzEMBMcDUAmcgBy55rmQ3rcn1DGIbNTcTC3GLWshpC85OVWQwJvehlC
+         NyDJrx8wdAACQYqlngeAK7X6bPQSsaVFawCNzIbb0bcHs0p+oOtrV6qb63kdPhjN7DYK
+         dbgxVdOo0xffpjb6QgPPnEmyDriPVWVn50OFgjnaAH9v4ozUIgPniQVvFV6daYXfsqd3
+         N1YZw1J8wKIDOSJHr38tdpB7hsOh7w8S0f9GMvd+ASqToYeYolnf3GAPhl5R7B/+sc39
+         LTTnzJoqfhxOozti/ufmjAJGkG0EUiiC6h/MwEwKcTOs9Y3Kq1k1apdJvfHibUsexSyr
+         FQDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751272504; x=1751877304;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yKa/Onc4wBm+A53XbVVZfjcePpt4oSz+cRgODhBWQ5k=;
-        b=AFLJHxUsY0/PUN7z7lNRz3jFjCjJZWBrDzt18bO6rEQHZ4a4RPvAXyL0o8VQU9SfG3
-         1ZU5Q9fIJ6lCNpcd+gpGNon5Ur5tnMclr6V+RE55Tr3fiP3MCTNPp7zkLhT1IIcpXA1Y
-         SIPF0DCZ2CKMXftIDWsDN2NyeWB7JXw1o/j01m4lF/19+aau+6BhjVm9OGNzyz3QoC/H
-         1/ViO6xy10EVmhqSPhWm0BIg/gRojk0auXMDGBrj7CncEWf+G562D2ZF3gQzV55l4RgM
-         Y13PzJAg7X6cnkD8kPrGEmoV5cyHe9U3AOw1ylSl1+t9T5L6GI6xmKgRDk4guxVsaOuA
-         ImbA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+ZZt3LU/uxdyM4ofUI/4ageoFMb6T0I94gYzodKec5zf+0KZE01pF2mLZR0lGcSN5/VztLovGuyD7JaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlV3UASaImkK0HRJiottCbIDLxH0DAYKeImxCnckrYJS3eDJ/o
-	g6nHrdlqz9YUvT4Mgt9LtDnTNiKVuRmNdF/BoWirca29pqQHPkErU5JTkIJdKLBdfRWzHFuHCT+
-	UrINtXDimyK9Nw2h9PooSMHHK1t4CWqkMM80QEgjKWw==
-X-Gm-Gg: ASbGncsZMlY8v6USIwPttRgV6Df5OWZg8oY3qOqYats9WgXHJue1rINe3NNUCfn/jm7
-	6ENUgyeTESb8O+DqV2AX8K6CKG8kxkkBdNDYsxse4wmi8DnqQiURFn+OaWhwIRMFg3o8tSNqTuL
-	yB/S/jfG/R5kEWiqrczOHwM9quuLMw4v7v+qW74DiV3Fk1yIR2wX9QzdXiah842I0zw7KGvUIdt
-	aY=
-X-Google-Smtp-Source: AGHT+IGLFbI/oj/m56i7yTSGNYyD/abp82gQ6IFpfIiOODHABIW0Gjarq66eVDHDhAlzLlnOFAMHf5+mzvXzLMEeqRE=
-X-Received: by 2002:ac2:4bd5:0:b0:54f:c6b0:4b67 with SMTP id
- 2adb3069b0e04-5550b7e6742mr4577930e87.4.1751272503893; Mon, 30 Jun 2025
- 01:35:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751272554; x=1751877354;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c4plGK5bq5RnwaM8ctVOu6ZgjjUnMHD+gm6XjSI880o=;
+        b=Grn2rb/O4/qZj+u5KQSaBNW/jWtfzbY2uBLFr8GB6rAGh/HB+Y0MNRNKHkWNbgJbJX
+         3FLjFUylGXLK594tXXoV/P8iWlxCgvI6SH2GDV89h48B3CtEnxQTgASoNQ50ffgl6n71
+         NBne4vHT4Qxi6Ex6vJYuAsuQexB+8yrqIcrp5A32LlryOO4vSMIdeSnjqV7pwIm6V4L9
+         VrNDkqdwlsnaKlfB50NjwoQq7uSvy/3+Csc5eZOXfnW4N0NWobhL2jrIfXxvCpuSrsXm
+         P/tXDAUxcPqEulk4Ohd8IwaXbfNPRhFMHx577WxMnj3IYzc12lnn8OdRuzQzT/UaWdOg
+         ko3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWq5eLLt0bFdCGSWJsMi5sKVa2dFPljj8Ta0ZPslresfNXuYMFY+YbSPHedI+lkzRxKEIPTiZs1@vger.kernel.org, AJvYcCWtoGwAl3e37GNZJW+VFSdMOr4RDs8KzXW6wx7Vwb/mBGsgI5anL2wPn0bkQT54aGpaXb2QF834grGeuAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf2stLFz+Yuu2o/UbJBOiHQCXsJX9X/+0kVrIOz0KJGKd1jak8
+	FoCpvRrnX3eB2IU8RT24oxTgLsoeK/x28Rr6di/eSpT+4VKOV174RqKm
+X-Gm-Gg: ASbGncuRl58ZQxnpZt5OCT9BZvtcxOb9qLc5aTigArtkOMLsfbMdBetltwqiiySzeRK
+	r/OXZz11SGywNDKqPVZcKeII2BsRA5HGLtYZO3Y+kMDlgUqloVHMAhWdcmfZWMCLhclLS+VFb3V
+	2WBRoi0NI6Q9ffDANxDSnmq58kwEcdvqmNzdZ+JZv2bVf0mgGBYux4PpdoOonXTf3GUMLp3aBw1
+	NthaUKmj8SoYdVDK1UfteFCiEYt6N700mjEy4bbm9STq/7nu25XZacH5CLueVJlkn+Iofl5qPfE
+	mtVCOQDyK+6YgFwNPRd5HEhgRJe5J9CuQ1GIIRi5GjkX5dtRuet7AljOLmlCD2N/RK61UN00iYw
+	XlVFPow==
+X-Google-Smtp-Source: AGHT+IGM9wfHSeMMXfeBZheGggepk2ZqiWnb9R0ko13yd/AL0hGgh5N+CjMk8e3oprn88leMOC/mQA==
+X-Received: by 2002:a05:6a00:b52:b0:748:6a12:1b47 with SMTP id d2e1a72fcca58-74af7aef473mr17756726b3a.10.1751272553630;
+        Mon, 30 Jun 2025 01:35:53 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c31:3031:bed6:689:68b3:ea6e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ebcb5sm8320722b3a.151.2025.06.30.01.35.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 01:35:53 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: ocfs2-devel@oss.oracle.com,
+	linux-kernel@vger.kernel.org
+Cc: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com,
+	pvmohammedanees2003@gmail.com,
+	akpm@linux-foundation.org,
+	gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	skhan@linuxfoundation.org,
+	stable@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com,
+	Junxiao Bi <junxiao.bi@oracle.com>,
+	Changwei Ge <gechangwei@live.cn>,
+	Gang He <ghe@suse.com>,
+	Jun Piao <piaojun@huawei.com>,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH 5.15.y] ocfs2: fix deadlock in ocfs2_get_system_file_inode
+Date: Mon, 30 Jun 2025 14:05:42 +0530
+Message-ID: <20250630083542.10121-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org> <aF627RVZ8GFZ_S_x@black.fi.intel.com>
-In-Reply-To: <aF627RVZ8GFZ_S_x@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 10:34:52 +0200
-X-Gm-Features: Ac12FXwteuFWX5OxpPzhYCStpBUe26-_BiNn01jAiVVAZa1D5iI1G9kmFgXiCF8
-Message-ID: <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] gpio: sysfs: add a parallel class device for each
- GPIO chip using device IDs
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 5:21=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Mon, Jun 23, 2025 at 10:59:49AM +0200, Bartosz Golaszewski wrote:
-> >
-> > In order to enable moving away from the global GPIO numberspace-based
-> > exporting of lines over sysfs: add a parallel, per-chip entry under
-> > /sys/class/gpio/ for every registered GPIO chip, denoted by device ID
-> > in the file name and not its base GPIO number.
-> >
-> > Compared to the existing chip group: it does not contain the "base"
-> > attribute as the goal of this change is to not refer to GPIOs by their
-> > global number from user-space anymore. It also contains its own,
-> > per-chip export/unexport attribute pair which allow to export lines by
-> > their hardware offset within the chip.
-> >
-> > Caveat #1: the new device cannot be a link to (or be linked to by) the
-> > existing "gpiochip<BASE>" entry as we cannot create links in
-> > /sys/class/xyz/.
-> >
-> > Caveat #2: the new entry cannot be named "gpiochipX" as it could
-> > conflict with devices whose base is statically defined to a low number.
-> > Let's go with "chipX" instead.
-> >
-> > While at it: the chip label is unique so update the untrue statement
-> > when extending the docs.
->
-> ...
->
-> >  struct gpiodev_data {
-> >       struct gpio_device *gdev;
-> >       struct device *cdev_base; /* Class device by GPIO base */
-> > +     struct device *cdev_id; /* Class device by GPIO device ID */
->
-> I would add it in the middle in a way of the possible drop or conditional
-> compiling of the legacy access in the future.
->
+From: Mohammed Anees <pvmohammedanees2003@gmail.com>
 
-I'm not sure what difference it makes?
+[ Upstream commit 7bf1823e010e8db2fb649c790bd1b449a75f52d8 ]
 
-> >  };
->
-> ...
->
-> > +static int export_gpio_desc(struct gpio_desc *desc)
-> > +{
-> > +     int offset, ret;
->
-> Why offset is signed?
->
+syzbot has found a possible deadlock in ocfs2_get_system_file_inode [1].
 
-Because gpio_chip_hwgpio() returns a signed int.
+The scenario is depicted here,
 
-> > +     CLASS(gpio_chip_guard, guard)(desc);
-> > +     if (!guard.gc)
-> > +             return -ENODEV;
-> > +
-> > +     offset =3D gpio_chip_hwgpio(desc);
-> > +     if (!gpiochip_line_is_valid(guard.gc, offset)) {
-> > +             pr_debug_ratelimited("%s: GPIO %d masked\n", __func__,
-> > +                                  gpio_chip_hwgpio(desc));
->
-> Can we use gdev here? (IIRC we can't due to some legacy corner cases)
->
+	CPU0					CPU1
+lock(&ocfs2_file_ip_alloc_sem_key);
+                               lock(&osb->system_file_mutex);
+                               lock(&ocfs2_file_ip_alloc_sem_key);
+lock(&osb->system_file_mutex);
 
-Yeah, I think there was some revert here? In any case: it's material
-for a different series, I'm just moving the code here.
+The function calls which could lead to this are:
 
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     /*
-> > +      * No extra locking here; FLAG_SYSFS just signifies that the
-> > +      * request and export were done by on behalf of userspace, so
-> > +      * they may be undone on its behalf too.
-> > +      */
-> > +
-> > +     ret =3D gpiod_request_user(desc, "sysfs");
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D gpiod_set_transitory(desc, false);
-> > +     if (ret) {
-> > +             gpiod_free(desc);
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret =3D gpiod_export(desc, true);
-> > +     if (ret < 0) {
-> > +             gpiod_free(desc);
-> > +     } else {
-> > +             set_bit(FLAG_SYSFS, &desc->flags);
-> > +             gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUES=
-TED);
-> > +     }
-> > +
-> > +     return ret;
-> > +}
->
-> ...
->
-> > +static struct device_attribute dev_attr_export =3D __ATTR(export, 0200=
-, NULL,
-> > +                                                     chip_export_store=
-);
->
-> __ATTR_WO()
->
+CPU0
+ocfs2_mknod - lock(&ocfs2_file_ip_alloc_sem_key);
+.
+.
+.
+ocfs2_get_system_file_inode - lock(&osb->system_file_mutex);
 
-No can do, the attribute would have to be called "chip_export". A
-function called export_store() already exists in this file.
+CPU1 -
+ocfs2_fill_super - lock(&osb->system_file_mutex);
+.
+.
+.
+ocfs2_read_virt_blocks - lock(&ocfs2_file_ip_alloc_sem_key);
 
-> ...
->
-> > +static struct device_attribute dev_attr_unexport =3D __ATTR(unexport, =
-0200,
-> > +                                                       NULL,
-> > +                                                       chip_unexport_s=
-tore);
->
-> Ditto.
->
-> ...
->
-> > +static struct attribute *gpiochip_ext_attrs[] =3D {
-> > +     &dev_attr_label.attr,
-> > +     &dev_attr_ngpio.attr,
-> > +     &dev_attr_export.attr,
-> > +     &dev_attr_unexport.attr,
-> > +     NULL,
->
-> No comma for the terminator, please.
->
+This issue can be resolved by making the down_read -> down_read_try
+in the ocfs2_read_virt_blocks.
 
-Ok.
+[1] https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
 
-> > +};
->
-> ...
->
-> > +     data->cdev_id =3D device_create_with_groups(&gpio_class, parent,
-> > +                                               MKDEV(0, 0), data,
-> > +                                               gpiochip_ext_groups,
-> > +                                               "chip%d", gdev->id);
-> > +     if (IS_ERR(data->cdev_id)) {
-> > +             device_unregister(data->cdev_base);
-> > +             kfree(data);
->
-> UAF
->
+[ Backport to 5.15: context cleanly applied with no semantic changes.
+Build-tested. ]
 
-Ok.
+Link: https://lkml.kernel.org/r/20240924093257.7181-1-pvmohammedanees2003@gmail.com
+Signed-off-by: Mohammed Anees <pvmohammedanees2003@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: <syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+Tested-by: syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ fs/ocfs2/extent_map.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> > +             return PTR_ERR(data->cdev_id);
-> > +     }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+diff --git a/fs/ocfs2/extent_map.c b/fs/ocfs2/extent_map.c
+index 70a768b623cf..f7672472fa82 100644
+--- a/fs/ocfs2/extent_map.c
++++ b/fs/ocfs2/extent_map.c
+@@ -973,7 +973,13 @@ int ocfs2_read_virt_blocks(struct inode *inode, u64 v_block, int nr,
+ 	}
+ 
+ 	while (done < nr) {
+-		down_read(&OCFS2_I(inode)->ip_alloc_sem);
++		if (!down_read_trylock(&OCFS2_I(inode)->ip_alloc_sem)) {
++			rc = -EAGAIN;
++			mlog(ML_ERROR,
++				 "Inode #%llu ip_alloc_sem is temporarily unavailable\n",
++				 (unsigned long long)OCFS2_I(inode)->ip_blkno);
++			break;
++		}
+ 		rc = ocfs2_extent_map_get_blocks(inode, v_block + done,
+ 						 &p_block, &p_count, NULL);
+ 		up_read(&OCFS2_I(inode)->ip_alloc_sem);
+-- 
+2.49.0
 
-Thanks,
-Bart
