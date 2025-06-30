@@ -1,203 +1,223 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB283987D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE4D543147
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751262398; cv=none; b=d0/rQZ3sqC0giiASGjNApFSGYEf43n0uM2qw+K44K/8hqd/4pqOt2F9Yz4U5UvSDyRsNkGiwLb9tsK51BFIa8oJa3B0HNCTQfvIuuriDgcOx3wO6VfRwyvRX9Z/TKuj/HiQW+O1mcyEFxVof425AwVGapGMxoCncx1YtkOzVr3k=
+	t=1751262482; cv=none; b=RKAVo5opN59Twf085dAD/PtQMmJN+vVoXnEEkHOnN/38yNTBKU+XeOjOV7YzEYHumifATIRW1xSzfU6sql90oCIF+nIsW34yGsnB0xQw4o0YO2gi96e8U41JWNrLVo3uF5pNEUcO1SnKivjyX5yaIzmuFkKldizX9cu1gZPis1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751262398; c=relaxed/simple;
-	bh=vSOzRne14JlU94xeMdnMdVZdut1+dfhDJWu8jSNU4co=;
+	s=arc-20240116; t=1751262482; c=relaxed/simple;
+	bh=2IruJvIGNeHKNHFZLJZCXUmlfpg/XFDsCde7VhwpoF8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oVpPEJV17RmQbbdx3WOgmzSlGeublJq8ADRz56U7EnrAHUH7qxCL/1ntBHOVL3a7g/MhlDxlmyhrlAk0OtlSqx1b4tN429ySJS3685Iu0kF5IVl1hq0rr+5jwIbffdPNJUG6ySpb5BiHD1gH53RflHIWiP06xcwEd9yT118TVpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ciBi5XLv; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ciBi5XLv"
-Message-ID: <2070d1d5-d1d3-4653-83c0-ec13e4a9b0de@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751262379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1SFI+2RTNSLf2HFfmb12EMAYVqKRoDz3A5tt6oW5UUE=;
-	b=ciBi5XLveZFqQ3Q09ThtON/lNT87QyUn/CkRoB1bilzs9ElHMhe246n/skcV7NDQefzc/V
-	9RJJY/2Db95dqmNF+r2JpzJYI9fIcZ6AIiuCPyuSwC+s/+JCFmo0BjdbvHzVDO8sP7M1S5
-	Q/Av30SDbb3C3GkqRHlxZYsWtbdutrI=
-Date: Mon, 30 Jun 2025 13:46:11 +0800
+	 In-Reply-To:Content-Type; b=RKeBckvXXOYE9CPGCj0ZxA8AYl+J0ASxGkicy7VXqC406lB7gKxdSPhxL2HuoeFLIlgA/SaA+9W1+b6Vh9gkV8CSACUfIZTMmIwKhTNucL+EKJp1JKXhxYfX4EZEDw2mWuixSaZqYtX192EQiJk3tRCuaCoTG6CBsCfrxtHD7jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30BA91F60;
+	Sun, 29 Jun 2025 22:47:44 -0700 (PDT)
+Received: from [10.163.37.132] (unknown [10.163.37.132])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 042F93F6A8;
+	Sun, 29 Jun 2025 22:47:56 -0700 (PDT)
+Message-ID: <d7286c62-8c7a-493e-8149-72d9c77eca00@arm.com>
+Date: Mon, 30 Jun 2025 11:17:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/3] Docs/zh_CN: Translate netif-msg.rst to Simplified
- Chinese
-To: jiang.kun2@zte.com.cn, alexs@kernel.org, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, wang.yaxin@zte.com.cn,
- fan.yu9@zte.com.cn, he.peilin@zte.com.cn, tu.qiang35@zte.com.cn,
- qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn, ye.xingchen@zte.com.cn
-References: <20250627141707799nmybVYALZSRANqHIwCTCi@zte.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/10] coresight: Refactor driver data allocation
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250627-arm_cs_fix_clock_v4-v4-0-0ce0009c38f8@arm.com>
+ <20250627-arm_cs_fix_clock_v4-v4-8-0ce0009c38f8@arm.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250627141707799nmybVYALZSRANqHIwCTCi@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250627-arm_cs_fix_clock_v4-v4-8-0ce0009c38f8@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-在 6/27/25 2:17 PM, jiang.kun2@zte.com.cn 写道:
-> From: Wang Yaxin <wang.yaxin@zte.com.cn>
->
-> translate the "netif-msg.rst" into Simplified Chinese.
->
-> Update the translation through commit c4d5dff60f0a
-> ("docs: networking: convert netif-msg.txt to ReST")
->
-> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
 
-Reviewed-by: Yanteng Si <siyanteng@cqsoftware.com.cn>
+On 27/06/25 5:21 PM, Leo Yan wrote:
+> The driver data no longer needs to be allocated separately in the static
+> and dynamic probes. Moved the allocation into the low-level functions to
+> avoid code duplication.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-
-Thanks,
-
-Yanteng
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
 > ---
-> v2->v3:
-> 1. adjust table format.
-> 2. update commit id in commit message.
->
->  .../translations/zh_CN/networking/index.rst  |  2 +-
->  .../zh_CN/networking/netif-msg.rst           | 92 +++++++++++++++++++
->  2 files changed, 93 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/translations/zh_CN/networking/netif-msg.rst
->
-> diff --git a/Documentation/translations/zh_CN/networking/index.rst b/Documentation/translations/zh_CN/networking/index.rst
-> index 07a3933afe92..4dd75ec27dec 100644
-> --- a/Documentation/translations/zh_CN/networking/index.rst
-> +++ b/Documentation/translations/zh_CN/networking/index.rst
-> @@ -22,6 +22,7 @@
->     msg_zerocopy
->     napi.rst
-> +   netif-msg
->  Todolist:
-> @@ -100,7 +101,6 @@ Todolist:
->  *   netdev-features
->  *   netdevices
->  *   netfilter-sysctl
-> -*   netif-msg
->  *   netmem
->  *   nexthop-group-resilient
->  *   nf_conntrack-sysctl
-> diff --git a/Documentation/translations/zh_CN/networking/netif-msg.rst b/Documentation/translations/zh_CN/networking/netif-msg.rst
-> new file mode 100644
-> index 000000000000..877399b169fe
-> --- /dev/null
-> +++ b/Documentation/translations/zh_CN/networking/netif-msg.rst
-> @@ -0,0 +1,92 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+>  drivers/hwtracing/coresight/coresight-catu.c      | 20 +++++++-------------
+>  drivers/hwtracing/coresight/coresight-cpu-debug.c | 21 +++++++--------------
+>  drivers/hwtracing/coresight/coresight-tmc-core.c  | 20 +++++++-------------
+>  3 files changed, 21 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+> index 0f476a0cbd740c233d039c5c411ca192681e2023..a3ccb7034ae14d7339bc2549bccadf11e28c45e2 100644
+> --- a/drivers/hwtracing/coresight/coresight-catu.c
+> +++ b/drivers/hwtracing/coresight/coresight-catu.c
+> @@ -515,11 +515,17 @@ static int __catu_probe(struct device *dev, struct resource *res)
+>  {
+>  	int ret = 0;
+>  	u32 dma_mask;
+> -	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
+> +	struct catu_drvdata *drvdata;
+>  	struct coresight_desc catu_desc;
+>  	struct coresight_platform_data *pdata = NULL;
+>  	void __iomem *base;
+>  
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
 > +
-> +.. include:: ../disclaimer-zh_CN.rst
+> +	dev_set_drvdata(dev, drvdata);
 > +
-> +:Original: Documentation/networking/netif-msg.rst
+>  	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
+>  	if (ret)
+>  		return ret;
+> @@ -580,14 +586,8 @@ static int __catu_probe(struct device *dev, struct resource *res)
+>  
+>  static int catu_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+> -	struct catu_drvdata *drvdata;
+>  	int ret;
+>  
+> -	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+> -	amba_set_drvdata(adev, drvdata);
+>  	ret = __catu_probe(&adev->dev, &adev->res);
+>  	if (!ret)
+>  		pm_runtime_put(&adev->dev);
+> @@ -627,18 +627,12 @@ static struct amba_driver catu_driver = {
+>  static int catu_platform_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	struct catu_drvdata *drvdata;
+>  	int ret = 0;
+>  
+> -	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> -	dev_set_drvdata(&pdev->dev, drvdata);
+>  	ret = __catu_probe(&pdev->dev, res);
+>  	pm_runtime_put(&pdev->dev);
+>  	if (ret)
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> index 5f6db2fb95d4623a0bab08828ae00442870abd7d..3edfb5d3d02056afcaab4da575d1101c68aeac80 100644
+> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -562,10 +562,16 @@ static void debug_func_exit(void)
+>  
+>  static int __debug_probe(struct device *dev, struct resource *res)
+>  {
+> -	struct debug_drvdata *drvdata = dev_get_drvdata(dev);
+> +	struct debug_drvdata *drvdata;
+>  	void __iomem *base;
+>  	int ret;
+>  
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
 > +
-> +:翻译:
+> +	dev_set_drvdata(dev, drvdata);
 > +
-> +   王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
+>  	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, NULL);
+>  	if (ret)
+>  		return ret;
+> @@ -629,13 +635,6 @@ static int __debug_probe(struct device *dev, struct resource *res)
+>  
+>  static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+> -	struct debug_drvdata *drvdata;
+> -
+> -	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+> -	amba_set_drvdata(adev, drvdata);
+>  	return __debug_probe(&adev->dev, &adev->res);
+>  }
+>  
+> @@ -694,14 +693,8 @@ static struct amba_driver debug_driver = {
+>  static int debug_platform_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	struct debug_drvdata *drvdata;
+>  	int ret = 0;
+>  
+> -	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+> -	dev_set_drvdata(&pdev->dev, drvdata);
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> index ead3f5358d411b1d9e45f87986bd85cbe5be720a..e5ab4a0323354d826c831f68c71d81808cbcd8ff 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -785,10 +785,16 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+>  	u32 devid;
+>  	void __iomem *base;
+>  	struct coresight_platform_data *pdata = NULL;
+> -	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
+> +	struct tmc_drvdata *drvdata;
+>  	struct coresight_desc desc = { 0 };
+>  	struct coresight_dev_list *dev_list = NULL;
+>  
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
 > +
-> +================
-> +网络接口消息级别
-> +================
+> +	dev_set_drvdata(dev, drvdata);
 > +
-> +网络接口消息级别设置的设计方案。
-> +
-> +历史背景
-> +--------
-> +
-> +调试消息接口的设计遵循并受制于向后兼容性及历史实践。理解其发展历史有助于把握
-> +当前实践，并将其与旧版驱动代码相关联。
-> +
-> +自Linux诞生之初，每个网络设备驱动均包含一个本地整型变量以控制调试消息级别。
-> +消息级别范围为0至7，数值越大表示输出越详细。
-> +
-> +消息级别的定义在3级之后未明确细化，但实际实现通常与指定级别相差±1。驱动程序
-> +成熟后，冗余的详细级别消息常被移除。
-> +
-> +  - 0  最简消息，仅显示致命错误的关键信息。
-> +  - 1  标准消息，初始化状态。无运行时消息。
-> +  - 2  特殊介质选择消息，通常由定时器驱动。
-> +  - 3  接口开启和停止消息，包括正常状态信息。
-> +  - 4  Tx/Rx帧错误消息及异常驱动操作。
-> +  - 5  Tx数据包队列信息、中断事件。
-> +  - 6  每个完成的Tx数据包和接收的Rx数据包状态。
-> +  - 7  Tx/Rx数据包初始内容。
-> +
-> +最初，该消息级别变量在各驱动中具有唯一名称（如"lance_debug"），便于通过
-> +内核符号调试器定位和修改其设置。模块化内核出现后，变量统一重命名为"debug"，
-> +并作为模块参数设置。
-> +
-> +这种方法效果良好。然而，人们始终对附加功能存在需求。多年来，以下功能逐渐
-> +成为合理且易于实现的增强方案：
-> +
-> +  - 通过ioctl()调用修改消息级别。
-> +  - 按接口而非驱动设置消息级别。
-> +  - 对发出的消息类型进行更具选择性的控制。
-> +
-> +netif_msg 建议添加了这些功能，仅带来了轻微的复杂性增加和代码规模增长。
-> +
-> +推荐方案如下：
-> +
-> +  - 保留驱动级整型变量"debug"作为模块参数，默认值为'1'。
-> +
-> +  - 添加一个名为 "msg_enable" 的接口私有变量。该变量是位图而非级别，
-> +    并按如下方式初始化::
-> +
-> +       1 << debug
-> +
-> +     或更精确地说::
-> +
-> +debug < 0 ? 0 : 1 << min(sizeof(int)-1, debug)
-> +
-> +    消息应从以下形式更改::
-> +
-> +      if (debug > 1)
-> + printk(MSG_DEBUG "%s: ...
-> +
-> +    改为::
-> +
-> +      if (np->msg_enable & NETIF_MSG_LINK)
-> + printk(MSG_DEBUG "%s: ...
-> +
-> +消息级别命名对应关系
-> +
-> +
-> +  =========  =================== ============
-> +  旧级别       名称 位位置
-> +  =========  =================== ============
-> +    1         NETIF_MSG_PROBE    0x0002
-> +    2         NETIF_MSG_LINK     0x0004
-> +    2         NETIF_MSG_TIMER    0x0004
-> +    3         NETIF_MSG_IFDOWN     0x0008
-> +    3         NETIF_MSG_IFUP     0x0008
-> +    4         NETIF_MSG_RX_ERR     0x0010
-> +    4         NETIF_MSG_TX_ERR     0x0010
-> +    5  NETIF_MSG_TX_QUEUED   0x0020
-> +    5         NETIF_MSG_INTR     0x0020
-> +    6         NETIF_MSG_TX_DONE    0x0040
-> +    6  NETIF_MSG_RX_STATUS   0x0040
-> +    7         NETIF_MSG_PKTDATA    0x0080
-> +  =========  =================== ============
-> -- 
-> 2.25.1
->
->
->
->
->
+>  	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
+>  	if (ret)
+>  		return ret;
+> @@ -898,14 +904,8 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+>  
+>  static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+> -	struct tmc_drvdata *drvdata;
+>  	int ret;
+>  
+> -	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+> -	amba_set_drvdata(adev, drvdata);
+>  	ret = __tmc_probe(&adev->dev, &adev->res);
+>  	if (!ret)
+>  		pm_runtime_put(&adev->dev);
+> @@ -982,14 +982,8 @@ static struct amba_driver tmc_driver = {
+>  static int tmc_platform_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	struct tmc_drvdata *drvdata;
+>  	int ret = 0;
+>  
+> -	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+> -	dev_set_drvdata(&pdev->dev, drvdata);
+>  	pm_runtime_get_noresume(&pdev->dev);
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+> 
+
