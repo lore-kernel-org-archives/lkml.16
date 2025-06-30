@@ -1,143 +1,147 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FE23BCEC
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436871F1317;
+	Mon, 30 Jun 2025 08:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272268; cv=none; b=fplvW+4K3DM3QY5An2lC0CAj/j23A8EPjHvlthCrXH4BHvoIc4MmwhzAdbHbRiist2uTTcTD+P6QMX7Rojm669ljuWHP4nAanBhUnhJ7aklr5IjgS+DX8dYcGZ9fT58RAw9ZjBYe3KGIAniJyCfA7PnWYb/5HaMUnw0jt7NkXmU=
+	t=1751272306; cv=none; b=dfIaS3yFhDexa+MU8YZMs8a8ddjbLolRS6BOJHELCnwmIXW0UY/ncxo/+LmKDYXP9TUNBwvsufvvvKJ6Qtu70301NybayjqC79a/qFI52/pJ7AFeEPKFmqabznEsuJQHfXhJrOOVNhpysZyqJFSUaxIEBVO/5M9N6RptvEWHWfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272268; c=relaxed/simple;
-	bh=5gcrW0C/6iIcYmamZ1YR+qDyc9+/q61v7UhulYN4UVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dClK1E+9QBZEiaxW88swCjTbOgMtCLK184XhWR+o/mM+WzZzkmh5krkSAY2DSKvVa/pMXvsKxvPmWhks4DFFEfgTARlOR8kOBUsMF/iNvmCoV46CfXFVWjNjiLgSFzSeMA0y/j5315aJOYYSZnmWRrln27FHrV4YpvPaZwDD0A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f4YOmTyf; arc=none smtp.client-ip=209.85.218.46
+	s=arc-20240116; t=1751272306; c=relaxed/simple;
+	bh=gxiKTUjIPpJX72jE2FhnPJpJfMICc6tLKV+XgUhybpA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pvnZ5jTZHWKbvGW5Mxhu1Ws7Uler/qceTuJMGuryex0v7TD6JfDvr+rCFWt32Se/m/PH+Q7R5cX7yZfbe9Pzg/sbyz8pF59mDFKgw/CGYRlYk2+mLJvs4ctsYQXNww/ireiKld42k+H9iPGK7WI49LwGEViBB4Kb2Mi8gvTGP7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+9/qABn; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4YOmTyf"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ae223591067so328507366b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:31:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+9/qABn"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5551a770828so913444e87.1;
+        Mon, 30 Jun 2025 01:31:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751272265; x=1751877065; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1751272302; x=1751877102; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b1IkmRFvnV11ov8AHbvaYSjGTtAI8bgVhqxnUQpHeEg=;
-        b=f4YOmTyfSJxNL3T2gKqQiMnUH00uf/mM0h/WggrVyR2jXSyjWOMpkglukAufc+yapU
-         GGW/i8F88z+mASJKAc2EENNOb3BcSO4GVJu0AUQbegeTCVo12frJYtyrtVyDF3J4VbvK
-         ZEFabL8tSb2zA0AMorXkXbTeYmp3nB1K/w4H4U40/W4nre3UZ8eJuSWUzYdwpqP/bdfn
-         u2JJBX/pKLv3ffso0IV3vLZc6RX4ZhLt15lJSPXlidY8bdFd8IF6fu5iRTHZIV5STHe4
-         iTMxCh1SPJDF/9ErJS8qdE9qVTxR6ixAl77uF5wMQIgdJlrRYwYU+fPEb/4VZryCFAaT
-         dgxg==
+        bh=OshmcBnwF2TfDnNpqHQYtOEtTGgXhczTcUFCfy0wLaI=;
+        b=T+9/qABnXcpCer09XCdC/pB3uQdcZieZ7J3dl/dKJMKH2cxwHuKM4yU8tcV+crpMs6
+         ixwW38Un1d5uKAHB3D04z0v2y8ePPWFS7VJ9uDzzarZ7KF6pBLe9CIig39JVLPZHKAtb
+         M8xE31xo1qYEqSL1cZJNrNRUmFHBuf2JBVaMOT1DlBypeB2de4t1NuNct74XAap7DGhz
+         jDE2WZ63mZ5YXYEhTO8YxSMaVKuPUeOQrkH/aDw7tqjSudDQOjySXjL4it1e9nIbhkTe
+         /DaNknv7pq4DQ5RB8bFzSk7s1P95VdRvIcYE9HhCPx0Fmq/C46WRa/NIepl/pvEJC/Cq
+         CBMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751272265; x=1751877065;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751272302; x=1751877102;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b1IkmRFvnV11ov8AHbvaYSjGTtAI8bgVhqxnUQpHeEg=;
-        b=O4J/4I+HAXM1AlP8UqRebnch17BCIdyOnv1AIRrhh7ZGLOiYpROjHuv7nM3vtTehGt
-         cGfzvcI83gGEX4O3D0QJwTniZOMHs1UTvU/uQA8hydIjO5CM8NUjGizaUgvNqSS3N6UO
-         bBNtWySa4p6sN9n6RWBnwvau+5Jjqcd8QrR3Stk1ue6zMAb6SmHDDyAwt0Om3+jPiam7
-         pGyWYUo7xN1xIX+tAbkOC52b342tTKTi3Ij0oI3HU5HBNgAyhUj0cRAQJjASvjDzFPmZ
-         uI+ZleMmknguAx4LpLvM9pQIpoQr06P970anvoIE9H/Zx0r6/tHOC9vpFdM++frgN5Ha
-         fQsg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3SS4B+nr61EVBUgmqlgw1XyZsD6/bMVTngTY8h4QNUq7e2n+kKQlcRez93iixLbAvGzBDcG1f4BYIwZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynLuDFVgsR96xehZNzkQLTTOH0ZNbf6d4ZR3N9S8Je4mjxbSdd
-	0iaqHB7vRCl4TUlCiRjmTpJpclgJgC6BpvJ2C5r72aaiF3eC/E19FfdB
-X-Gm-Gg: ASbGncvNLu44LySktD9wZDIHLW26yDeqw5gtVJxOBVO8EmNwWQzoc8BEYh+03gs+BzM
-	DfzZMSBJr+Zwr3SOWaEEMp8tSsfqFJdWf8Y6SV/EKRGYYShknrv4cVq4mDOGcri/FdOjVJtsZV/
-	Ky4bmF2mmzOcjxF2lTl2r4j85vo3PbqwRYIEHAZOUDzjaEha1wBgJ3C4awB2Fkx6oLkqBfpPCfI
-	8VeBT5SKMaZqS6o9yMhHBP9f336Oq/MBnF2Tx61sXZ/ZeNGVpjbPKwBglDcdcBTsdz/7rvWvVkA
-	76pP9CzB00OKG95QZHZzhMcNxPQIE7zjTHAg2DZIYvUTXIQyIL6X9YPfoPGdS053yk2ndrB4cze
-	TtxU=
-X-Google-Smtp-Source: AGHT+IGA2r07/9DrczynTDZkbcf5/JuSdSiIkO+prJuWlI2qyoarXRFTY/6FXuka/JGeQdGyNCCyag==
-X-Received: by 2002:a17:907:3e04:b0:ad8:ac7e:eead with SMTP id a640c23a62f3a-ae3500f5e01mr1062026166b.39.1751272264709;
-        Mon, 30 Jun 2025 01:31:04 -0700 (PDT)
-Received: from localhost.localdomain ([95.90.184.252])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae360e6ce54sm577568766b.37.2025.06.30.01.31.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 01:31:04 -0700 (PDT)
-From: Michael Straube <straube.linux@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: hdegoede@redhat.com,
-	Larry.Finger@lwfinger.net,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 3/3] staging: rtl8723bs: remove redundant static function
-Date: Mon, 30 Jun 2025 10:30:49 +0200
-Message-ID: <20250630083049.103734-4-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250630083049.103734-1-straube.linux@gmail.com>
-References: <20250630083049.103734-1-straube.linux@gmail.com>
+        bh=OshmcBnwF2TfDnNpqHQYtOEtTGgXhczTcUFCfy0wLaI=;
+        b=KxwvvdBcVy9YIgYHP1rzDsUI8Ex7haQvOJl7pS9uCOdvZZxs+JQp3WzA8NEJoq3h/r
+         Zb20T2PC9ZgJWDj0pxaSKv0DMuhJKdC0VcM9jgXkX1wjrhnqpOXtEa7x/2Wa/rZrLUfE
+         K7JDQR+TlrofLmfKH6R/emYVr8PAn534Wv4MyufJrP0h/NeU7UEWRTbIL6KL37xmKYQZ
+         geeW+heFRjjtjrQ/zl7uFR9XFexhRzNSwlfDDDrDeTkE7uCSTfGI64vJvYIt5UtzuwZD
+         piyqDzdGYU3TLWdoCm0TXw3QopXct3ze4fZ9eRoA0T2D1MSrZ1cX+C1KSf5UYDsmASah
+         VUmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxp36VbFh/eXrHKWBkkeEQLvoTSoA3KXbi/7e1JEzRH1FS1ZMnaL7dVeo+/2NyFs9pXZDFM1phM933LeaN@vger.kernel.org, AJvYcCWFyVf2j+vMHSj546Sm4Tz5wNHdFjzl7E+eNmjsgvOjaPBiXkRrE2aPRXtwzGRtMFViI7b0X0kV9Ql4yQ==@vger.kernel.org, AJvYcCX+ekFuL00mTCX9WV8rZtRHtue9ZnXYSKpktvPTQbML716/hqyUJUgX3/6685Mhk+5X0Gz13/7j4ya/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqIRHgPDNQv7wWnO/OooocZUAMaPqaIqy5nxMqFs/FMYT18UVa
+	TwU7mYhEk6ycbnTiWUF7FQ5zKzrDqKtxcEjgA6xVr9qWOBLYusMM1bSZ
+X-Gm-Gg: ASbGncvlS17JbfQMBsDHWUEYo6z3l1LSaOsRSRT3re9igXqFggt5UcVMn2O5kS6Q1H5
+	J4D2IJ0uPgMzaMwXpvoMejv7qifX6VGLxeXDYH3M0mGcnVVggYWi91EWct1UXR+9MmjMe0GX/7O
+	sc0KjMTpMZeixodxTh7X0xf6ke3fvE1uJ8bbY38MvC6+g0lxNmQ51cf220bMvIZfv0qHjL/4G5s
+	NgnFKMZr23KR2L28L0A2G8EunauH6iv2ZQxQA6Bkk+EMM8CKkF/Sd278LIBFJpfLFbqOSWzPfWO
+	ZbrWn3WwKjIoNK60DWCzbZn4L5AV49LcBjWSoF80Ym8gzpbGjtJvHqurFaRgGzkIMc7539j5daX
+	pMkssgQlYAq0=
+X-Google-Smtp-Source: AGHT+IE1QKZLyq6F5mfdpgGw6f0P5pBCenGMP/iG5NwW8Wsk6jpYmi2D3mR7EEF083TGVlyz3Be0rw==
+X-Received: by 2002:a05:6512:3b9a:b0:553:a77f:9c45 with SMTP id 2adb3069b0e04-5550ba16fe9mr3405972e87.39.1751272301913;
+        Mon, 30 Jun 2025 01:31:41 -0700 (PDT)
+Received: from smtpclient.apple ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f3271sm1320723e87.258.2025.06.30.01.31.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Jun 2025 01:31:41 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core
+ Electronics
+From: Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
+Date: Mon, 30 Jun 2025 12:31:26 +0400
+Cc: =?utf-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <760A6F11-6783-4B24-9A99-E043297CF039@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-7-jefflessard3@gmail.com>
+ <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-Both wifi_regd.c and ioctl_cfg80211.c define a static function
-rtw_ieee80211_channel_to_frequency() with identical functionality.
-Remove the function from wifi_regd.c and make it non-static in
-ioctl_cfg80211.c to avoid code duplication.
+> On 30 Jun 2025, at 12:19=E2=80=AFpm, Geert Uytterhoeven =
+<geert@linux-m68k.org> wrote:
+>=20
+> Hi Jean-Fran=C3=A7ois,
+>=20
+> On Sun, 29 Jun 2025 at 15:00, Jean-Fran=C3=A7ois Lessard
+> <jefflessard3@gmail.com> wrote:
+>> Assign vendor prefix "icore", based on their domain name.
+>>=20
+>> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
+>=20
+> Thanks for your patch!
+>=20
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> @@ -694,6 +694,8 @@ patternProperties:
+>>     description: International Business Machines (IBM)
+>>   "^ibm,.*":
+>>     description: International Business Machines (IBM)
+>> +  "^icore,.*":
+>> +    description: Wuxi i-Core Electronics Co., Ltd.
+>=20
+> This sounds a bit too generic to me.  What is the domain name?
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8723bs/include/ioctl_cfg80211.h |  1 +
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c  |  2 +-
- drivers/staging/rtl8723bs/os_dep/wifi_regd.c       | 11 -----------
- 3 files changed, 2 insertions(+), 12 deletions(-)
+Their domain/website is http://www.i-core.cn/en/ and i-Core is used
+as the watermark in their datasheets [0]. We=E2=80=99ve thought to drop =
+the
+hyphen and use plain =E2=80=98icore=E2=80=99 to avoid future typos.
 
-diff --git a/drivers/staging/rtl8723bs/include/ioctl_cfg80211.h b/drivers/staging/rtl8723bs/include/ioctl_cfg80211.h
-index 993a7b3c3d22..753009b07451 100644
---- a/drivers/staging/rtl8723bs/include/ioctl_cfg80211.h
-+++ b/drivers/staging/rtl8723bs/include/ioctl_cfg80211.h
-@@ -94,6 +94,7 @@ void rtw_cfg80211_init_wiphy(struct adapter *padapter);
- 
- void rtw_cfg80211_unlink_bss(struct adapter *padapter, struct wlan_network *pnetwork);
- void rtw_cfg80211_surveydone_event_callback(struct adapter *padapter);
-+int rtw_ieee80211_channel_to_frequency(int chan);
- struct cfg80211_bss *rtw_cfg80211_inform_bss(struct adapter *padapter, struct wlan_network *pnetwork);
- int rtw_cfg80211_check_bss(struct adapter *padapter);
- void rtw_cfg80211_ibss_indicate_connect(struct adapter *padapter);
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 7cc1e036d2c4..eddf6da27a20 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -192,7 +192,7 @@ rtw_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] = {
- 	},
- };
- 
--static int rtw_ieee80211_channel_to_frequency(int chan)
-+int rtw_ieee80211_channel_to_frequency(int chan)
- {
- 	/* NL80211_BAND_2GHZ */
- 	if (chan == 14)
-diff --git a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-index ac0b58a8b5d3..f9c4d487badf 100644
---- a/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-+++ b/drivers/staging/rtl8723bs/os_dep/wifi_regd.c
-@@ -41,17 +41,6 @@ static const struct ieee80211_regdomain rtw_regdom_rd = {
- 	}
- };
- 
--static int rtw_ieee80211_channel_to_frequency(int chan)
--{
--	/* NL80211_BAND_2GHZ */
--	if (chan == 14)
--		return 2484;
--	else if (chan < 14)
--		return 2407 + chan * 5;
--	else
--		return 0;	/* not supported */
--}
--
- static void _rtw_reg_apply_flags(struct wiphy *wiphy)
- {
- 	struct adapter *padapter = wiphy_to_adapter(wiphy);
--- 
-2.49.0
+[0] =
+https://github.com/jefflessard/tm16xx-display/blob/main/datasheets/AiP1628=
+.pdf
+
+CH.
+
+>>   "^icplus,.*":
+>>     description: IC Plus Corp.
+>>   "^idt,.*":
+>> --
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                        Geert
+>=20
+> --=20
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- =
+geert@linux-m68k.org
+>=20
+> In personal conversations with technical people, I call myself a =
+hacker. But
+> when I'm talking to journalists I just say "programmer" or something =
+like that.
+>                                -- Linus Torvalds
 
