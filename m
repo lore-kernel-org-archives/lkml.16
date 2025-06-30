@@ -1,93 +1,178 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B2E246BDE;
-	Mon, 30 Jun 2025 09:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E11EB9E3
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276781; cv=none; b=GFUckcUyIXuJWHOVb1feSpvrbozZ4WakqZ1prObfeQzu+vtGPSQEorOgllwz/b5xPXyaPxzPmX3OIS/j4fAtwseJupZ7OSe+nDw6SwyS264ksKxz0SiRr4x9B5YBZ+c4dGsIMx+RvTSU8C4DKVWF97X72AzUQoNp5NCccvp97E0=
+	t=1751276841; cv=none; b=RC1mANkX19R9c53s3ZNOuEHXQOEWcHYRBTjwhuHPGl97Yqw8zxSzsfMyTvLN8K3qEpgVoT6pnkvt7Jl34PHC84XTA6r9c43UDft0qQuF0ArOBUEjsbzVllpAH8pM2pgZhaI//PvEN3+xPx+XMJARTlP1/j8IDuKfgImUiuJ9gbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276781; c=relaxed/simple;
-	bh=PLueSt++Ts2krxIFLmq/SQC+sljmxI5Q0voO9Xojcq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tPdcza8yRrp0K5BqsRiLeAmiKFE60hGK4K1/r/XpDRQx7lEbeGvWb2j+D7R1u/S4QnJaCUjZl81bcxID1i6/OAuWiSCLRFtcqL6fnLqkOzLXjAs1GRf+I4pw0JQkV9SaYp/A9HJh2QuM1AP8r02E+dnhtKPjVA3cMZEM++s4/F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Pu/fibC1; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751276841; c=relaxed/simple;
+	bh=u2PQA0S/gy/0ITz+24bqC/IeF/VMz3qlCfRMUN/YZwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HfMAL+qSJw8EoHePDDe+GRs5rd22cai3O/dwbivC0cC3owRcPNrMNNObwlR121rZjVIo9pq593o7OcR6WReqSsC552Uxo8CtSpG14+0eXPPFBiAed8FOqvPWlmy8R1hPgG1/RZ68uwNs4pY82x3x5Zlka3pOxe8LGcxmaCuQ+Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jw0g3I8G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Pu/fibC1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=Y9NDST3Jz+7qAkVnnzdeFtTSjYFFZgsmdrwgsOErAQY=; b=Pu/fibC1BioK2jFS+/Suan3gfe
-	zBYwD4ZBY7ZB1zEtAPgJm2z3UNMA+PnhtTqRzjvNcvb2KuMnEWkHaxxUCCHHEQXpWGq20qDhRLWU+
-	G+wtiuiql6xdkh6SD9oiHa53LDdVNnmwh1AoRN/Y1RAiWEqA2sx+mW2pCf99z5xSyw0NYAXItuI5V
-	Ce/KUF5+ZK7a9RrW3DQsMM8EAhCh1Elb69rFXWZA38eEQCx8AsIed1xwO1+Au+ILf4RaTNOxuHZEy
-	XA7OR98Su158f5OEA3BxePxjf1vptmkojr1my+NDYGstJnVBCVo4c/wBt7IGPXyWj9cJXDWDc3jzE
-	VAWVHt1Q==;
-Received: from i53875bfd.versanet.de ([83.135.91.253] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uWB5J-0006Zc-NW; Mon, 30 Jun 2025 11:45:57 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	kernel@collabora.com,
-	Andy Yan <andyshrk@163.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
-Date: Mon, 30 Jun 2025 11:45:43 +0200
-Message-ID: <175127673170.138768.2750019660187884094.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
-References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jw0g3I8G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751276839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cYM+l9u3eA7xXNWMmpxmynV8BtHDfFyAj+GAIS/oRBQ=;
+	b=Jw0g3I8GHfUHPOHKL/k4hATHSvJ1SkQpdlu5f5MdkdqI5a8oD8FxD3gCXCVnw4bJ86Q//3
+	cKzyK8yDE4zE/oh+6NIPNm/RVzXCDvuydpqZizzXTdfM2/O2LE0UagTsUb6qVl1Au1kSuU
+	VawrOSZUtg4TIQho4MfxHjz60g1+EIM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-gGngiulwPe2VRvlMqQCeFQ-1; Mon, 30 Jun 2025 05:47:17 -0400
+X-MC-Unique: gGngiulwPe2VRvlMqQCeFQ-1
+X-Mimecast-MFC-AGG-ID: gGngiulwPe2VRvlMqQCeFQ_1751276836
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450eaae2934so13662535e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:47:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751276836; x=1751881636;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cYM+l9u3eA7xXNWMmpxmynV8BtHDfFyAj+GAIS/oRBQ=;
+        b=U3JUlerAFAi95KbKQB6FwGqH7fX1MA+y+19cGNtmoGEJD8m1n1+9PKVrd66gbHx+CP
+         rJ+bV6Vtq4yfq1GA656hmlXPtLP/b5gSy+IVUjeQncJbMJFZY5IeDGSynTQxrfqOsqBj
+         lSh0Ap7/7hWh/w7vBHVkm2uZrD8ETkrpmwhkcHUkuBaDy4Rqk6KSEA2VfAJjOs0AzUQf
+         ObNwOFA7+WPr98CH9PjwF7MDAQfIHlrtgVnPon9ASFhUe5GJuT/OIW9LZReLboKUmfIz
+         rBwYqwPOGtnDlFZhYM6lR7g7APbL0P7HZ5Wrdg7//25XEaPOIar45VxS7ihRLYCUJigr
+         MQfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNq7o1I2Ds3e+tJSAMqWf48dezzXfpPDpudQ6pUOXdTWs6j+tMGmc4bpc8wBM3LZ5LUhJzTzA7TDCisRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQC16U29MaAuYbfQKL6pJxcE+X8Z0FtoI6ZPGvJ81J6/90QIJz
+	ZHRnbVNDW0xVNdcEWrYbPXcW73fNr+Zy3AHcgl5KaZPUOXfKwJBKMGih3V89xZb4UOrjD8z1pJw
+	Vs9CBrY1lgXHaKoDT/WTczDzMh0da2ywOECdT0kceME02j4dUeFz6osuRIaILmMOcTw==
+X-Gm-Gg: ASbGncua08NueZWCWXT/q5OnNjXL9y774B/330PXJdeyy8iW0maSnvB0uHTBvssah11
+	zPCYf2ln3BxhY44s2sDCAmlkYzlU5/Hclc5vfR4O0O+0wdXJRgpgQe18ZHUiGrH/uSSNbZZmkdn
+	bHwVZW6oTigKiu6Wr8MuT/NVM1/6vegGa9LdDrg3po0m/JTqA13YZO0TEhc14pUOpeDJLI4bEL0
+	fLSR1O4+z0QfqTjZzS5lyTSQU5RkTbBYO+lGTx6VNrkzMTo5kVGCFRslxLMrGt5AkZfg3Qh1jKW
+	mhJSzNT+Ho8saEoQt2/IVgljcZ2R
+X-Received: by 2002:a05:600c:4ed3:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-4538f244121mr129104885e9.4.1751276835601;
+        Mon, 30 Jun 2025 02:47:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCsgQCAMCNSYIs4yUUiqL9XaX4IgpvXxCsiWAizlF8onAmxWpgouuXgVa8Tozt+Jbmj2XBUw==
+X-Received: by 2002:a05:600c:4ed3:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-4538f244121mr129104465e9.4.1751276835016;
+        Mon, 30 Jun 2025 02:47:15 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.177.127])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a87e947431sm9969199f8f.0.2025.06.30.02.47.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 02:47:14 -0700 (PDT)
+Date: Mon, 30 Jun 2025 11:47:08 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net v2 2/3] vsock: Fix transport_* TOCTOU
+Message-ID: <o2erk5qbypfrla2afvlswzp7al43xulrucdo7b7wvnhsytjchm@jh6spvmgfo2c>
+References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
+ <20250620-vsock-transports-toctou-v2-2-02ebd20b1d03@rbox.co>
+ <l6yqfwqjzygrs74shfsiptexwqydw3ts2eiuet2te3b7sseelo@ygussce5st4h>
+ <b0b49299-6373-4fea-914b-271f6451e27b@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b0b49299-6373-4fea-914b-271f6451e27b@rbox.co>
 
+On Sun, Jun 29, 2025 at 11:26:25PM +0200, Michal Luczaj wrote:
+>On 6/27/25 10:08, Stefano Garzarella wrote:
+>> On Fri, Jun 20, 2025 at 09:52:44PM +0200, Michal Luczaj wrote:
+>>> Transport assignment may race with module unload. Protect new_transport
+>>>from becoming a stale pointer.
+>>>
+>>> This also takes care of an insecure call in vsock_use_local_transport();
+>>> add a lockdep assert.
+>>>
+>>> BUG: unable to handle page fault for address: fffffbfff8056000
+>>> Oops: Oops: 0000 [#1] SMP KASAN
+>>> RIP: 0010:vsock_assign_transport+0x366/0x600
+>>> Call Trace:
+>>> vsock_connect+0x59c/0xc40
+>>> __sys_connect+0xe8/0x100
+>>> __x64_sys_connect+0x6e/0xc0
+>>> do_syscall_64+0x92/0x1c0
+>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>>>
+>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
+>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>>> ---
+>>> net/vmw_vsock/af_vsock.c | 28 +++++++++++++++++++++++-----
+>>> 1 file changed, 23 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>>> index 63a920af5bfe6960306a3e5eeae0cbf30648985e..a1b1073a2c89f865fcdb58b38d8e7feffcf1544f 100644
+>>> --- a/net/vmw_vsock/af_vsock.c
+>>> +++ b/net/vmw_vsock/af_vsock.c
+>>> @@ -407,6 +407,8 @@ EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
+>>>
+>>> static bool vsock_use_local_transport(unsigned int remote_cid)
+>>> {
+>>> +	lockdep_assert_held(&vsock_register_mutex);
+>>> +
+>>> 	if (!transport_local)
+>>> 		return false;
+>>>
+>>> @@ -464,6 +466,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>>>
+>>> 	remote_flags = vsk->remote_addr.svm_flags;
+>>>
+>>> +	mutex_lock(&vsock_register_mutex);
+>>> +
+>>> 	switch (sk->sk_type) {
+>>> 	case SOCK_DGRAM:
+>>> 		new_transport = transport_dgram;
+>>> @@ -479,12 +483,15 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>>> 			new_transport = transport_h2g;
+>>> 		break;
+>>> 	default:
+>>> -		return -ESOCKTNOSUPPORT;
+>>> +		ret = -ESOCKTNOSUPPORT;
+>>> +		goto err;
+>>> 	}
+>>>
+>>> 	if (vsk->transport) {
+>>> -		if (vsk->transport == new_transport)
+>>> -			return 0;
+>>> +		if (vsk->transport == new_transport) {
+>>> +			ret = 0;
+>>> +			goto err;
+>>> +		}
+>>
+>> 		/* transport->release() must be called with sock lock acquired.
+>> 		 * This path can only be taken during vsock_connect(), where we
+>> 		 * have already held the sock lock. In the other cases, this
+>> 		 * function is called on a new socket which is not assigned to
+>> 		 * any transport.
+>> 		 */
+>> 		vsk->transport->release(vsk);
+>> 		vsock_deassign_transport(vsk);
+>>
+>> Thinking back to this patch, could there be a deadlock between call
+>> vsock_deassign_transport(), which call module_put(), now with the
+>> `vsock_register_mutex` held, and the call to vsock_core_unregister()
+>> usually made by modules in the exit function?
+>
+>I think we're good. module_put() does not call the module cleanup function
+>(kernel/module/main.c:delete_module() syscall does that), so
+>vsock_core_unregister() won't happen in this path here. Have I missed
+>anything else?
+>
 
-On Thu, 12 Jun 2025 00:47:46 +0300, Cristian Ciocaltea wrote:
-> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
-> char rate via phy_configure_opts_hdmi"), the workaround of passing the
-> PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
-> partially broken, unless the rate adjustment is done as with RK3588,
-> i.e. by CCF from VOP2.
-> 
-> Attempting to fix this up at PHY level would not only introduce
-> additional hacks, but it would also fail to adequately resolve the
-> display issues that are a consequence of the system CRU limitations.
-> 
-> [...]
+Nope, I reached the same conclusion!
 
-Applied, thanks!
+Thanks,
+Stefano
 
-[2/3] arm64: dts: rockchip: Enable HDMI PHY clk provider on rk3576
-      commit: aba7987a536cee67fb0cb724099096fd8f8f5350
-[3/3] arm64: dts: rockchip: Add HDMI PHY PLL clock source to VOP2 on rk3576
-      commit: 4ab8b8ac952fb08d03655e1da0cfee07589e428f
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
