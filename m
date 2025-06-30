@@ -1,112 +1,177 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABBA3D6F;
-	Mon, 30 Jun 2025 03:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F3A3D6F
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253837; cv=none; b=RFJajZcsYzF/YvWQac8F0byLFqYD1CJcFnjIuSM7vUrnq7zgGXosPXeIxVW/vC+UE9SIoFGrx/z0a1HrtfXkZlWYQ88mBtPgTJ7i6k6FDK4yhadRXoaP8PM5u1t079qoHawWiobV+jc9FzII7e8S4mkGKO1DCRz8wrg6DOVixzc=
+	t=1751253914; cv=none; b=XoQSfbjqwEOnfCPAn9Q7uny5vhVTptjJkJASBnrWhgw/iAXHk6Hq6/jTzN0PuNS7ows04M/W92X9KsoE3v3m+rk/amIgZegzXKgx571P384hGZYaMiqEGE+BojW5MHTdlDZEiJDWrDdzie6820VNNPjzJQy+drwhXVBTRPT5x1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253837; c=relaxed/simple;
-	bh=nUnKD4t2oC6+/m2WbqjH/Yj7qnmYdAYy8/5qle03KCc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nxl797YNFUqjZl+Ish61YOzbRrBfas25E/aMC4K86RQVevA+6VppGevt/NF3NPICdpIM8RZgzkYTerhDGRW1Pkl4YSvjp2NKRRYNn1P/udi4kaSew8EsWWLsZVwXy1At1hE9tFxjHpbP8V80J5DML/2PewSiYcaxq+Y21LUl0TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhoN/Fvy; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751253914; c=relaxed/simple;
+	bh=HqxsES9BjFxb1DzfPVlIXMOHtqBQW4SMuesB6hb3kh8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ql79OEMn43A07ATnfUk7OFrRdlu82HrUqbgpxiwsq1iWxbYmCbSqA6p6R+XLUmLkvJr352XJw5XDj/BnHRJxRmahFwJtcnzKOfNv1HxldOq9gI9wRL4XAxKC7qaCWpB7Gtt5vvJbkLM8/z3NzASgoAxsJ28ZeONRTT4MDmkCVBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K+9/Xx58; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhoN/Fvy"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-748f54dfa5fso3483599b3a.2;
-        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K+9/Xx58"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5551a770828so710172e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751253835; x=1751858635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bt40NLOekWCUP4N5pOq5H/L4sYgVc3vJQNm3hCjDNnk=;
-        b=bhoN/Fvy7nih17aQe7eNhUHjFPd6A2cFhEPNKEw+fR3U+la154gbTKwqZLAGmYMgur
-         VBfGjBWqRw5zhntx8qWnaHtZWVYvNt4KIyNXnB053tJvkYnTp7cUM/mzCzGY6WiSoTeE
-         s9rV6pvnPSEVGTH+q7rY6+svIPePxm4xXbtvqYoYYKlKsOaY0vZH0qTc+0WoFWBOg1Kl
-         RRwIkXdxOKKvZqW0bQzYBoKoQ033Ohb9HCO9wXJZxl3e5YypLW+bu/OetUfMS5hBlNaa
-         qQS8NMRetbrPyvHIlbgsIjuDti+hxQwWstq2xsDf6Y/yFcFyZHh2eKUzogC2Ti6JGxTN
-         W4Ig==
+        d=chromium.org; s=google; t=1751253911; x=1751858711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Arx/vh/1p7726lfU61ekP8LCF9/XaIuNl/Y+OL2yoTY=;
+        b=K+9/Xx58RnS3aCXRivTcl5I3kJhfRFnXSKxxHVOJELVz7f52aTb7YrSzHkg33zujZL
+         EPp3dZjxhMBOB+52IItIf4KAhCJVw008U8Ld/G0hhUT/Pk3juNHcPJz+irtHId3Q8HLW
+         j5BJfrHPIMlc7eIs+3KkSOabnnr350F2tLzc0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751253835; x=1751858635;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bt40NLOekWCUP4N5pOq5H/L4sYgVc3vJQNm3hCjDNnk=;
-        b=lDSeTrJe9SjpsWrztJFgCCSLK+zd2okhLZv4/NL1EBBJ52eq7eB2t8uvuFojxoO8pd
-         NdqqFlpzzc0fA1gbEQg+/KXft8NwEJMl+8f+Wv61ZqXKkjp4BLfqn/BOSR1IwqxqyWj7
-         h7Tu37vdDHHMcDHYIL5LOYiIFdU8tlksQcWU7OXvHEoW/8cLpDIgu3r4T/DMAV+qxiRH
-         /E9Qx1WEAkwvSpOWwc1GGtqFkhFce2fvJy0ika9ibvvNdIDB+bXhUiOFFbTiju2nWs7M
-         4z7LMPFysDxKHKyRAllqtNbnR2MgEhWeZ2CHUCq5Xd01E76dW7RnzKYeZnne/aAnKt/T
-         nfiA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2pf9Hk1jjyJ/iJonOMrot0Y+JJNom+t/VVcLDetDGrbS8Fuig5r5zN0lbx7C+9D5VVkoUA6MdONu0/z9lpIs=@vger.kernel.org, AJvYcCXitEYKpyK0XkmK6fbMcHCORwlnvsGZ7PCws7lo2HUhUDOkgYN156xJ2TVS0X/8e4tyiRgpAk6yd4wSlFqO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWtdojCmzik0hIuaeDPOvcPNqQlRUUuW74TLCY7Jec/pQ1svoV
-	6I8FLCA+tvW+T+gDkNJhnUDqW/MVLnozb8LJy15Y6KdU7xe0V+T6SA5c
-X-Gm-Gg: ASbGncvrId0Pc0CyLp7TjLRj+J3gaQ4kjKH4Lof3pk+pFDTkUUV3YpmfaeNzK6vgs4/
-	cUTB/3qaI+dW5EqQWWuHR5PuiamMHG4Efzt9idM+50SknrNtf7RY3Z54N5MqSs8bJ/ycy5gih4D
-	YcS3ZwV0JGF4eBAeFGtLmbNQAnKGqgocPnp7rQuI55VzrdKN4DNhiuSzbCw+xT8tpZmGsXjhdpj
-	unEkXy3k+oxHHJuAzj3GVCnrRF3zUy5ZwcLTLweONjLBgFpaagel5c0sxlizQTXlFdj3mgQQFrF
-	tRHooHwFg5mAAd8fUVNUWLBCEtuc30eENlY7acg2cn8b/YxEJmWG27VoKYH8E3jPAhV7co9DF4J
-	eOiO/GEhnGNep/YqINSd9RHUI+LMmLsop+UPYxpA=
-X-Google-Smtp-Source: AGHT+IEweQDpqbFoLegd5G81mQV+h2WunYcZCHxDgyatO1uuacJRxYQuuA9LTPUZYHMhBdlFOYEQ/w==
-X-Received: by 2002:a05:6a00:170b:b0:748:fb7c:bbe0 with SMTP id d2e1a72fcca58-74af6fde46amr18069903b3a.24.1751253835362;
-        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:84f2:7459:db60:b146])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af54099b2sm7752501b3a.28.2025.06.29.20.23.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
-	syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com
-Subject: [PATCH] Bluetooth: set bcsp to NULL after purging
-Date: Sun, 29 Jun 2025 23:23:35 -0400
-Message-ID: <20250630032335.473671-1-ipravdin.official@gmail.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1751253911; x=1751858711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Arx/vh/1p7726lfU61ekP8LCF9/XaIuNl/Y+OL2yoTY=;
+        b=poAEJALALv7CerDeZ/1zgO/PKTgEXSEUYEyW+aQRW+nBLR44cXYjmoeoIM1awkpwNj
+         5tZpg+m+kisZOTccC6BuQLF8LQGGfqVnb//vHtIWOTvwygURhpnP2XlIXiYMesCklp/l
+         ALAwmXCD9fjnDPx/pwwHJRtkXc51MiOkw4uArdkAffE08QvRKKpl2fKGIPkGbtY5FFTq
+         uq35jlQsxBSmKGB2mLE8TJfMmMONi4/WKUejchTA8pu6OznXVwqU8cC9BiVJzBMBhD0V
+         up85Dco96ccmhfAnZj2GEzXx+E4gxe8stfAYu8DTB2nMYct3U5V9sVKeHN5IVvemzGzs
+         ENCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU98q1tM7zU/roKIw/qgaW5clMOjT2AnjxvWoHsT5kggN+5+81o8nKyl/Q2eeRtw/TlTuFLxSYdASLxJLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEdGZ8ZtCWrH2zztjtquOKDrO8JMCsowCXlIJmM4DRvDkKDFvu
+	IAj11OMxw43abYiIRVwV8HCljEIPkWaf0oqVEcH5rhVZ0uHEyOJKbDpxdr+dHCIguJwU3cgEH2B
+	B1yMD8Cif4K0htaHwqZ6VuRWHbkX5ddbtfBY4fPNm5IeqGQM+ZPc=
+X-Gm-Gg: ASbGncvxnvt8aXmUPN+B+g6h0twWmrfs1BGOoRKlXYR/AxhRdhfMi+XILbwvkiQojzH
+	7HOn+uUkqMAUINUlHm+TgaqGRwrrRDjMQ40R91BYcl3wRVz8btCoS4HMJ3hmFYd4EhuLHQHgtYG
+	rAUhBVUN2doHbRqkc//SDNkLw3guasQArkxlc6yProM0MT+8Rao5hjJrMfbiuUTQkGIHguzwT4e
+	aXg2TA=
+X-Google-Smtp-Source: AGHT+IG9cnl6ModTYi6p2CiPzEyX+jlxQEfwAMhFMxkNl7fS/RoRC0YYR5H1zSIeP2ag3GvJxVUZnK/m4syzOJSkQKo=
+X-Received: by 2002:a05:6512:3041:b0:553:addb:ef51 with SMTP id
+ 2adb3069b0e04-5550b886294mr3126600e87.18.1751253911120; Sun, 29 Jun 2025
+ 20:25:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250624073548.29732-1-angelogioacchino.delregno@collabora.com>
+ <20250624073548.29732-4-angelogioacchino.delregno@collabora.com> <20250627-neon-hidden-sheep-ed8dae@krzk-bin>
+In-Reply-To: <20250627-neon-hidden-sheep-ed8dae@krzk-bin>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Mon, 30 Jun 2025 11:25:00 +0800
+X-Gm-Features: Ac12FXzEzclUPx2ytH0n81YEF7rV0XFgxUmmA57Z4fo3T5oQBKH_wjXRPSro-S0
+Message-ID: <CAGXv+5GLJ7cfAQW_kbTqqe_QO+RfU7KL57n77qenpDiRS5BybA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: regulator: Document MediaTek MT6363
+ PMIC Regulators
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Set hu->priv to NULL after skb purging in bcsp_close to prevent NULL
-pointer dereference in bcsp_recv.
+On Fri, Jun 27, 2025 at 4:24=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On Tue, Jun 24, 2025 at 09:35:45AM +0200, AngeloGioacchino Del Regno wrot=
+e:
+> > Add bindings for the regulators found in the MediaTek MT6363 PMIC,
+> > usually found in board designs using the MT6991 Dimensity 9400 and
+> > on MT8196 Kompanio SoC for Chromebooks, along with the MT6316 and
+> > MT6373 PMICs.
+> >
+> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@co=
+llabora.com>
+> > ---
+> >  .../regulator/mediatek,mt6363-regulator.yaml  | 123 ++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/mediate=
+k,mt6363-regulator.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt636=
+3-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6=
+363-regulator.yaml
+> > new file mode 100644
+> > index 000000000000..f866c89c56f7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6363-regul=
+ator.yaml
+> > @@ -0,0 +1,123 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/regulator/mediatek,mt6363-regulator=
+.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MediaTek MT6363 PMIC Regulators
+> > +
+> > +maintainers:
+> > +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.co=
+m>
+> > +
+> > +description:
+> > +  The MT6363 SPMI PMIC provides 10 BUCK and 26 LDO (Low Dropout) regul=
+ators
+> > +  and can optionally provide overcurrent warnings with one ocp interru=
+pt
+> > +  for each voltage regulator.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: mediatek,mt6363-regulator
+> > +
+> > +  interrupts:
+> > +    description: Overcurrent warning interrupts
+>
+> Are you sure interrupts are physically not connected?
 
-Reported-by: syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67b0cc5b.050a0220.6f0b7.0014.GAE@google.com/T/
-Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
----
- drivers/bluetooth/hci_bcsp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Side note:
 
-diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
-index 610d0e3c36d4..de9a6ed3a8aa 100644
---- a/drivers/bluetooth/hci_bcsp.c
-+++ b/drivers/bluetooth/hci_bcsp.c
-@@ -739,8 +739,6 @@ static int bcsp_close(struct hci_uart *hu)
- 
- 	timer_shutdown_sync(&bcsp->tbcsp);
- 
--	hu->priv = NULL;
--
- 	BT_DBG("hu %p", hu);
- 
- 	skb_queue_purge(&bcsp->unack);
-@@ -753,6 +751,8 @@ static int bcsp_close(struct hci_uart *hu)
- 	}
- 
- 	kfree(bcsp);
-+	hu->priv = NULL;
-+
- 	return 0;
- }
- 
--- 
-2.45.2
+I wonder if we really need to describe _all_ the interrupts here.
 
+Looking at the PMIC as a whole, the interrupt tree is something like
+
+SoC <- SPMI inband IRQ - PMIC top level IRQ block <- sub-function IRQ block=
+s:
+
+    - BUCK (buck regulator over current)
+    - LDO (LDO regulator over current)
+    - PSC (key press / system low voltage)
+    - MISC (protected registers accessed / SPMI stuff)
+
+And some other blocks that may apply to other MediaTek PMICs:
+
+    - HK (some threshold triggered interrupt)
+    - BM (battery management related)
+
+The thing I'm trying to get to is that all these interrupt vectors are
+internal to the whole PMIC. Do we really need to spell them out in the
+device tree? The top level compatible should already imply how all the
+internals are wired up.
+
+
+ChenYu
+
+> > +    minItems: 1
+> > +    maxItems: 36
+> > +
+> > +  interrupt-names:
+> > +    description:
+> > +      Names for the overcurrent interrupts are the same as the name
+> > +      of a regulator (hence the same as each regulator's node name).
+> > +      For example, the interrupt name for regulator vs2 will be "vs2".
+>
+> You need to define the items or pattern if this is really flexible in
+> the hardware (not drivers).
+>
+> Best regards,
+> Krzysztof
+>
+>
