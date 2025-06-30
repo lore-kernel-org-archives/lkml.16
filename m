@@ -1,93 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A53C26CE0A;
-	Mon, 30 Jun 2025 13:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E060B283FCE;
+	Mon, 30 Jun 2025 13:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288791; cv=none; b=PFk7b0bbwvk9mCS2HcyxIXBPW9N0Q0r+b+5KSdChQI7hqH1w4P0da4EW66VoNqvMiNHDf3tmLrW7QOzlTI5aMwqVBsdt9i3SgIk3J7y5EGHCBjS0WWXS9qIYLSfH+KXSxu9pCjHm8kndBNsWbZN1qdacXuBQ8uE2tZZfqziAamc=
+	t=1751288818; cv=none; b=Fg6+XM9TAdEK8/Grkv9mJtztj2kDsxFBt7P0oeoc94vpNnX2akzqxzHwAJr0y3OEJgf/3QzfVxpfxO8RBeizlvBJfbZU5UrjzjJbcl2/4QG1f6t7X/bIEpSBejMeZSff/TSpWJ89hV30ZJa0CoT1UmfzED+tGfmf/eAOefa8mXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288791; c=relaxed/simple;
-	bh=+lcYT3Qsyi5zoHaSuGNHweYKALQqdJG5Jboo6FTA39A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nmJ/AEmHR3MPZs25iAy7nm1iZLNHa+gvTCKWJD+qYnMo6twa9vb97yYXyod9t9SZHBE7BeXn03Qdnv09wK6+QA+T0cic5T6vW1H/kPLslzk3T9VyitXgJfJ8P0bXOH2u5g4eLJeDKEexPJzKNvl1HdV8Mec22UMLYon1o6okC3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d71zoHgN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751288818; c=relaxed/simple;
+	bh=t/bQaJgksnkhC8SrnPoDlqGUAnUGdbY94CBRM7dU3Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MuzY99jLzjdjw/TQzlRAQkBIv2xcdy8Zd61B75/BiD0Cb0PKDV1IcRoF0Cf/1WelQuJcGRQsICt9hjsIH+7N8ndDvVghx8GNEsMa3Qlz3trdK3BfyGaDIY8m1Qki/feNj1JejuHakKOtDt339Tql5XVQMV5dAgbjOGR7lu1Zeik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGcmm3OG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d71zoHgN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8DBC4CEE3;
-	Mon, 30 Jun 2025 13:06:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGcmm3OG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C19C4CEE3;
+	Mon, 30 Jun 2025 13:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751288790;
-	bh=+lcYT3Qsyi5zoHaSuGNHweYKALQqdJG5Jboo6FTA39A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d71zoHgNy/pl9vjL0hhHZWmHnTsNmwLJuVF7hIncktBn+EtUCY+of2fUtbdLlnmpe
-	 kWGaplFqYlQBjDkMJX2VH2wyg9vde8Kpmh47s3MbvVOCb+v8LHNzSjUJ8EYfWZzcRp
-	 w9GZytrkbnhLzTkacvEepDpeB0e9oyW52xKXLicLHXFDYHdVGZQadRlHSfFoNZgmIc
-	 cms9p8RFQ5Jh71f7A8vrkabwcPMxSTdv9OSjJCS16D4RzLFwEj5m527TB6L8OcGTMp
-	 /AxOJ0Qbsu2VZvBuJKddT8giO3Hz9AOVLuM3dxEnMpkhx84815P+z+O5e5ZCSJmQl1
-	 Y8IMnXUBJ5vQw==
-Message-ID: <128433cb-b8c0-47cb-8cc8-0c625d3984f8@kernel.org>
-Date: Mon, 30 Jun 2025 15:06:26 +0200
+	s=k20201202; t=1751288817;
+	bh=t/bQaJgksnkhC8SrnPoDlqGUAnUGdbY94CBRM7dU3Ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WGcmm3OGEJP4Yegahnbv3NjUrCik9edY6saeXWrT5QlXJcZOMUEK9mVjc9+x7MrbP
+	 PbiQfTknsEbxE5XKUuzQPvPPKPeTWdx/B+xB4dz8MKy1fPRWRxgVk14sR2imlX4XtO
+	 VLPxH1/es3xeH94QWxdX2q9oBIEXeMfDvX7Q7d+QS6i5NEFGRzmsZ1z6rkAKDvYoYG
+	 UY/iGIxccs9oAihs0V+I0SD4oT5ifYA4Xa+SEb+tILg9u3Sd2ZB2u1whrjebaPp/8h
+	 IoOnKDnjcsTg8z9+DKezHzth8jQvdOAosJ6vHK8e+oPkMKns91lnK/4muSTO9qCbgb
+	 lxIIo+dX9tgrQ==
+Date: Mon, 30 Jun 2025 14:06:52 +0100
+From: Will Deacon <will@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>,
+	Steven Moreland <smoreland@google.com>,
+	Frederick Mayle <fmayle@google.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 2/5] vsock/virtio: Resize receive buffers so that each
+ SKB fits in a page
+Message-ID: <aGKL7F18knOCQVVS@willie-the-truck>
+References: <20250625131543.5155-1-will@kernel.org>
+ <20250625131543.5155-3-will@kernel.org>
+ <rl5x3fw5rgyrptof2h7qc2wgimxd4ldh4tp4yhm52n4utksjdm@zei2wzme65jj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/9] media: core: export v4l2_compat_translate_cmd()
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
- <20250602-uvc-grannular-invert-v2-8-c871934ad880@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250602-uvc-grannular-invert-v2-8-c871934ad880@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <rl5x3fw5rgyrptof2h7qc2wgimxd4ldh4tp4yhm52n4utksjdm@zei2wzme65jj>
 
-Hi All,
-
-On 2-Jun-25 3:06 PM, Ricardo Ribalda wrote:
-> v4l2_compat_translate_cmd() can be useful for drivers to convert between
-> the VIDIOC_*32 and VIDIOC_ defines.
+On Fri, Jun 27, 2025 at 12:41:48PM +0200, Stefano Garzarella wrote:
+> On Wed, Jun 25, 2025 at 02:15:40PM +0100, Will Deacon wrote:
+> > When allocating receive buffers for the vsock virtio RX virtqueue, an
+> > SKB is allocated with a 4140 data payload (the 44-byte packet header +
+> > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE). Even when factoring in the SKB
+> > overhead, the resulting 8KiB allocation thanks to the rounding in
+> > kmalloc_reserve() is wasteful (~3700 unusable bytes) and results in a
+> > higher-order page allocation for the sake of a few hundred bytes of
+> > packet data.
+> > 
+> > Limit the vsock virtio RX buffers to a page per SKB, resulting in much
+> > better memory utilisation and removing the need to allocate higher-order
+> > pages entirely.
+> > 
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> > ---
+> > include/linux/virtio_vsock.h | 3 ++-
+> > 1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > index 36fb3edfa403..67ffb64325ef 100644
+> > --- a/include/linux/virtio_vsock.h
+> > +++ b/include/linux/virtio_vsock.h
+> > @@ -111,7 +111,8 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
+> > 	return (size_t)(skb_end_pointer(skb) - skb->head);
+> > }
+> > 
+> > -#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
+> > +#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(SKB_WITH_OVERHEAD(PAGE_SIZE) \
+> > +						 - VIRTIO_VSOCK_SKB_HEADROOM)
 > 
-> The VIDIOC_*32 defines are not accessible by the drivers, they live in
-> v4l2-compat-ioctl32.c.
+> This is only used in net/vmw_vsock/virtio_transport.c :
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-
-Hans Verkuil with newer versions of patches 1-4 now merged
-through other patch-series patches 5-9 are now ready for
-merging.
-
-This will require merging this core patch through the UVC
-tree, may I please have your ack for this?
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 1 +
->  1 file changed, 1 insertion(+)
+> static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+> {
+> 	int total_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM;
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> index 8c07400bd280dea5d2e66e2759658c423bcd3866..ced4892b42597d605887b7c6a14373e3922f7bc6 100644
-> --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> @@ -929,6 +929,7 @@ unsigned int v4l2_compat_translate_cmd(unsigned int cmd)
->  	}
->  	return cmd;
->  }
-> +EXPORT_SYMBOL_GPL(v4l2_compat_translate_cmd);
->  
->  int v4l2_compat_get_user(void __user *arg, void *parg, unsigned int cmd)
->  {
 > 
+> What about just remove VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE and use
+> `SKB_WITH_OVERHEAD(PAGE_SIZE)` there? (maybe with a comment summarizing
+> the issue we found).
 
+Sure, works for me. That gets rid of the funny +- VIRTIO_VSOCK_SKB_HEADROOM
+too.
+
+Will
