@@ -1,147 +1,100 @@
-Received: from pf-012.whm.fr-par.scw.cloud (pf-012.whm.fr-par.scw.cloud [51.159.173.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98B527054C;
-	Mon, 30 Jun 2025 12:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.173.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A3B27055A;
+	Mon, 30 Jun 2025 12:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751286857; cv=none; b=j6RhIXkMvx33LrUNDtIrtg0DVI/p5LkaZYeu+dRwkgKQ4cyQNZjfmP+epRpkQYvTfNl8nifQASQO1K8md0raluwScEJ+CDE7C6CUK20Hx/rVpradVGWxrNciOo4k8KqbP1t982eif3eyVla4rMLFVxFjKd8JtDIk9Eq3t746Bcw=
+	t=1751286909; cv=none; b=MQ5FIshUloX30jEJV9FBRALA4QR3OsUdq4Dqc1QVoZ6Tv5TMxe4PrNJK9bQBerdP+aiq7kijxsdt62AQ5Z1zCM9qknEIhiP0+4z763E7zTOemTRPqtye35UFZ0QorTxLH77d8pJ2QJqr8kCk0PzbPHwObZVoQ2A+d4A8Me5kLC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751286857; c=relaxed/simple;
-	bh=YmvdTn3Yb59iQwNFWY3RaUBVLJtG9DvMo8XScgsgnsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J3hmwqV/noj+buF+6lFt9NWpJCtOnFQbsPeIpJMWGiBID7tzFKNivLF8UtFO+UcA8bkFcyg5r3+cShlVaKO2jxlLbxsYfWexOsHc3AgRuZQFlGodn1lbEyDf9v4QSYH0ku8W5HOr+jJ7HafnK8TSVf2pbF5fEhEbqFSdxK6URuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=c3dh3Tj3; arc=none smtp.client-ip=51.159.173.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
+	s=arc-20240116; t=1751286909; c=relaxed/simple;
+	bh=8Y2htiPy5meWxzHXQzhyzo1AQtbeIgcyev3Yn6FKh6Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KIDGfLini0mZBAJmWFk/1Oy2zbsCpca2d52gGLKcd0VQX5hylZVAbN2zLLo4psqfKim+NGZPgqkrCVeN+Mp6KVNlakakG9QxvDy+Y94YWGrXJb+U8IOGa+Mi4OpHOK1dcSe/ksPNxZ+ZKC+8vm7LvoRJnoSAfEm5GnSghhLnjl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPMT8vHr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="c3dh3Tj3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=oss.cyber.gouv.fr; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NGnf4bhFU/j1HOvGLBdTQiqonwf7x0+KACKFefOASB8=; b=c3dh3Tj342SZjQS/lvgmtgByhz
-	ONc3yL8o9CZVZXgPoxWSHqp8J9/sry28+pEvjFzWxo3rCb1sPHJHavrAfdRmN9gjIVa+wB9CCt9bg
-	05sgw/7Bx0SshXHYmiHUjhZlm15H9A6RURjn+5/ETyUp1nyL9UoywLk/G7Jm6SY3ibpJRU2XqB2U6
-	Jm1n5OwoezCenLC3XMtbMpqUWShmJ6eQgz33vKshf+tBJtS/WBi89bF+eKJf+YNFXNQTRqQmXPi41
-	GrzEHGTrUZEQDTTV+G7tEqs//kVJ2cKut93RyoOALA4mN/oonufSRaRF6t/fqPYYDsMHTo4TGpGSg
-	uvniamtw==;
-Received: from laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr ([90.63.246.187]:27863 helo=[10.224.8.110])
-	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <nicolas.bouchinet@oss.cyber.gouv.fr>)
-	id 1uWDi9-00000000PNw-1JF9;
-	Mon, 30 Jun 2025 14:34:13 +0200
-Message-ID: <6dce47fd-01fb-4401-88a3-d9e85ee5529a@oss.cyber.gouv.fr>
-Date: Mon, 30 Jun 2025 14:34:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPMT8vHr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 34C5BC4CEEF;
+	Mon, 30 Jun 2025 12:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751286909;
+	bh=8Y2htiPy5meWxzHXQzhyzo1AQtbeIgcyev3Yn6FKh6Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=mPMT8vHrQ0V8KVI6Il0mkawZgYlIFi9d7naOFlzYL9Mwpr8To2hAhfefixrG7H/yc
+	 izB8lNc91m7b0b3hi4bSaxYvEmTZuIKTowvifjxIYFR6Ug7SW7mHUP7SlagELLi0ST
+	 +rzwm8ZMnKFspMOchqaD8d81SDxbofmxjbzKyDTi0BgwVHgvjGFSVBWpRu4bnc68o6
+	 jB2kd3ztkdO9DhrnK5KVcDMlL2NkxmomMmGBsnrIYzS9P9cpLQYHguljrFM9LjhoeQ
+	 /uEXzZVZqDc90aw/t+dGB7GAJnnOZsWOkHTpNskCgviRYSNd/y5t7GxPHiLt+OPAVG
+	 5dXBoR/Ze0o7w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23671C8302F;
+	Mon, 30 Jun 2025 12:35:09 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Mon, 30 Jun 2025 16:35:00 +0400
+Subject: [PATCH v6 1/3] clk: qcom: gcc-ipq5018: fix GE PHY reset
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/4] usb: core: Plug the usb authentication capability
-To: Oliver Neukum <oneukum@suse.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
- Kannappan R <r.kannappan@intel.com>,
- Sabyrzhan Tasbolatov <snovitoll@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Stefan Eichenberger <stefan.eichenberger@toradex.com>,
- Thomas Gleixner <tglx@linutronix.de>, Pawel Laszczak <pawell@cadence.com>,
- Ma Ke <make_ruc2021@163.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Luc Bonnafoux <luc.bonnafoux@ssi.gouv.fr>,
- Luc Bonnafoux <luc.bonnafoux@oss.cyber.gouv.fr>,
- Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250620-usb_authentication-v1-0-0d92261a5779@ssi.gouv.fr>
- <20250620-usb_authentication-v1-3-0d92261a5779@ssi.gouv.fr>
- <94cd36e2-db7c-4693-9f43-01c855dc6891@suse.com>
-Content-Language: en-US
-From: Nicolas Bouchinet <nicolas.bouchinet@oss.cyber.gouv.fr>
-In-Reply-To: <94cd36e2-db7c-4693-9f43-01c855dc6891@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - pf-012.whm.fr-par.scw.cloud
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oss.cyber.gouv.fr
-X-Get-Message-Sender-Via: pf-012.whm.fr-par.scw.cloud: authenticated_id: nicolas.bouchinet@oss.cyber.gouv.fr
-X-Authenticated-Sender: pf-012.whm.fr-par.scw.cloud: nicolas.bouchinet@oss.cyber.gouv.fr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-ipq5018-ge-phy-v6-1-01be06378c15@outlook.com>
+References: <20250630-ipq5018-ge-phy-v6-0-01be06378c15@outlook.com>
+In-Reply-To: <20250630-ipq5018-ge-phy-v6-0-01be06378c15@outlook.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751286906; l=1220;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=y65n0Od6u+x9wP3HKotpTyPdgu84le/dyFb7G8W0t/E=;
+ b=8GFFdXl2KAWvcdLAfio5sbRql6URuWxu1LrF2UScWzaP2crAPzgbOSYYGfwb2CyAvqVN6HQvG
+ cKUzsL4FKfOCe0qZu/cImN6p6estTR7yvV1/7E6WEQD7X3ZhI9T9Gqf
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-Hi Olivier,
+From: George Moussalem <george.moussalem@outlook.com>
 
-Thank you for your review.
+The MISC reset is supposed to trigger a resets across the MDC, DSP, and
+RX & TX clocks of the IPQ5018 internal GE PHY. So let's set the bitmask
+of the reset definition accordingly in the GCC as per the downstream
+driver.
 
-Indeed our current implementation of the usb authentication is still a bit
-crude.
-Currently, most, if not all of usb devices can't handle authentication. 
-If we
-want to have an integration that doesn't break on current hosts, we need to
-have a fail safe. We are still working on the best way to handle the
-combination of authentication and authorization.
-See the reply to Alan [1].
+Link: https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/commit/00743c3e82fa87cba4460e7a2ba32f473a9ce932
 
-[1]: 
-https://lore.kernel.org/linux-usb/8cc10112-23a7-41af-b81f-7fc0c097d34d@oss.cyber.gouv.fr/
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+ drivers/clk/qcom/gcc-ipq5018.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 6/23/25 20:15, Oliver Neukum wrote:
-> Hi,
->
-> I am afraid someone has to address this.
->
-> On 20.06.25 16:27, nicolas.bouchinet@oss.cyber.gouv.fr wrote:
->
->> +    // Set a default value for authenticated at true in order not to 
->> block devices
->> +    // that do not support the authentication
->> +    dev->authenticated = 1;
->
-> So the default is authenticated. OK.
->
->> +    if (le16_to_cpu(dev->descriptor.bcdUSB) >= 0x0201) {
->> +        pr_notice("bcdUSB >= 0x0201\n");
->> +        retval = usb_get_bos_descriptor(dev);
->> +        if (!retval) {
->> +            pr_notice("found BOS\n");
->> +#ifdef CONFIG_USB_AUTHENTICATION
->> +            if (dev->bos->authent_cap) {
->
-> If the device claims not to support authentication ...
->
->> +                /* If authentication cap is present, start device 
->> authent */
->> +                pr_notice("found Authent BOS\n");
->> +                retval = usb_authenticate_device(dev);
->> +                if (retval != 0) {
->> +                    pr_err("failed to authenticate the device: %d\n",
->> +                           retval);
->> +                } else if (!dev->authenticated) {
->> +                    pr_notice("device has been rejected\n");
->> +                    // return early from the configuration process
->> +                    return 0;
->> +                } else {
->> +                    pr_notice("device has been authorized\n");
->> +                }
->> +            } else {
->> +                // USB authentication unsupported
->> +                // Apply security policy on failed devices
->> +                pr_notice("no authentication capability\n");
->
-> ... we do nothing about it. We enumerate.
->
-> The purpose of authentication is guarding against unknown or malicious 
-> devices,
-> isn't it? This behavior seems to be kind of incompatible with the goal.
->
->     Regards
->         Oliver
->
->
+diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
+index 70f5dcb96700f55da1fb19fc893d22350a7e63bf..6eb86c034fda18c38dcd9726f0903841252381da 100644
+--- a/drivers/clk/qcom/gcc-ipq5018.c
++++ b/drivers/clk/qcom/gcc-ipq5018.c
+@@ -3660,7 +3660,7 @@ static const struct qcom_reset_map gcc_ipq5018_resets[] = {
+ 	[GCC_WCSS_AXI_S_ARES] = { 0x59008, 6 },
+ 	[GCC_WCSS_Q6_BCR] = { 0x18004, 0 },
+ 	[GCC_WCSSAON_RESET] = { 0x59010, 0},
+-	[GCC_GEPHY_MISC_ARES] = { 0x56004, 0 },
++	[GCC_GEPHY_MISC_ARES] = { 0x56004, .bitmask = GENMASK(3, 0) },
+ };
+ 
+ static const struct of_device_id gcc_ipq5018_match_table[] = {
+
+-- 
+2.49.0
+
+
