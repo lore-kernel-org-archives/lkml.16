@@ -1,97 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7549128DEE5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E10028C5AC;
+	Mon, 30 Jun 2025 16:08:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751299722; cv=none; b=cebMHjDZf6sL2xeaEP5Y7rRxE2wEqhE1az0qVWYGjQMLQwW3UzzwVMVAeGiyuyY/dxq0LCjhoZlJg5uHVM+y8w/zfkz8IijSMvkkfwD0EVhglS7ZB8gwUwoCv56BeNbddDMuQbHQtIXWE00T07JZ7KBFot7wt/u5XS10eEmWhMU=
+	t=1751299736; cv=none; b=g3leX6uaRsEoSDvU4PjMLk+gJNU03q0OBSb3+JuKChZolp9N6nxnt3u2kLWE/onVFVxveCUN7L+Y2UCyHjWFc10mJGhw05f4pdgn0mk19JO8PKBp/9neBrfoC0ZK0D9FBZWQmxyyfRYEv5gKI9IxZK1brJyLjpMcnaZw2xZUe/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751299722; c=relaxed/simple;
-	bh=6aZ6RrcZTZwQoW5ivL50ynDXvw/g7SfaRb+9dlOqfpc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jrP6tubG8LPiPoLJjfAvMaOhxMMbsUOkEPrnzoUc1CwD4zB+kysqanMTz0jaAeTEfdZsnficFoDJyX5FbTpaVOI/UMia57XuWTqkdJy0xonNJHazybu0T0vJzKoX6uL9MORlAXcAUZyM+xdb5VNPJlnDRs6xI104c1/XV2GpEbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPljEV38; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751299736; c=relaxed/simple;
+	bh=d7ebQZ9wclnu40DUKgk0nl9hmE8n7d9aqFn5Ipss2bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7sRx6oRpNb165K5fGU/7mo+9OH5EPtpmHH9P5t0YZPEd/aIxVuJBaNh9mrgDt7wKxQSU8QHbjXvZKw/+1tFg6hZGB3cdzXmXPyt1ng5D9tMK+TJbNHxGv4X1qZcko6tWjgQuP1DnYRYlSZFnpdbrhUZPGC7sGdI7igQ6hAzMk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3tsqHUP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPljEV38"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE91C4CEE3;
-	Mon, 30 Jun 2025 16:08:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3tsqHUP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8026CC4CEE3;
+	Mon, 30 Jun 2025 16:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751299721;
-	bh=6aZ6RrcZTZwQoW5ivL50ynDXvw/g7SfaRb+9dlOqfpc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XPljEV38kuR3dBAxZXLsOowg833OEWE64z1v3LWtHuIHSQplNC57ZKbr6RIcRaBtf
-	 /hU7sBAAmbrmiWTdH91GNFjVZ5WoO6nz7ajvh9sWEtiDhnFuZ0Xj59WpkqZQqY/HU6
-	 umKopUpan3FF/aomxcesf6yjyeYJeZAO5UG6QGi/sCM1CJp70qC8KQm3ltfEOyfyxk
-	 QiEE2BiRs49/WPU+TJ7KcmzQDjZ7QZChndlQQC1mE7sozs6bXGDMf1avRD7EwhXKU6
-	 zM1k5WWHl7uFEPXjCpDES5bbIugGZ4eKKrHQQy87iud+gi4K0Mf1j7JP7p7gIcfW2N
-	 WyWwdx2y3sjdg==
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: check the generic conditions first
-Date: Mon, 30 Jun 2025 16:08:38 +0000
-Message-ID: <20250630160839.1142073-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+	s=k20201202; t=1751299736;
+	bh=d7ebQZ9wclnu40DUKgk0nl9hmE8n7d9aqFn5Ipss2bw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f3tsqHUPO0tM+UYSW8LA4BnwsY77eHZ1XNKY+EmhkDKF87bhUhEPObVgy/OWCL2c0
+	 0xd+01bErPnNss5JqdULHFjg9xMtIuiKduCE8t4APSO6aJt4AXYKzrtD0zQapNXcQM
+	 G30vLGUEcIhEhHCL1ph2q2uYxS3QYe2PxvK7CwngG3+GmpSCY7o6Nl8m0k9bDAK2eG
+	 Nxc+4Dq9u5/ANDgvRpVaGuQnhdIEHFeHcLhkC91TyXu+sij6MhJVXfA70Ynz9gOP2+
+	 Kwn3T8NWJGhDZw3gQPHRRNXZzS/pcPEr1Z1rEVVbWxmaryizM3pizCD6VxIOyeahQx
+	 K28KI0IdXiBBA==
+Date: Mon, 30 Jun 2025 17:08:50 +0100
+From: Simon Horman <horms@kernel.org>
+To: Andrea Mayer <andrea.mayer@uniroma2.it>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Stefano Salsano <stefano.salsano@uniroma2.it>,
+	Paolo Lungaroni <paolo.lungaroni@uniroma2.it>
+Subject: Re: [PATCH net-next 1/2] seg6: fix lenghts typo in a comment
+Message-ID: <20250630160850.GH41770@horms.kernel.org>
+References: <20250629171226.4988-1-andrea.mayer@uniroma2.it>
+ <20250629171226.4988-2-andrea.mayer@uniroma2.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250629171226.4988-2-andrea.mayer@uniroma2.it>
 
-Let's return errors caught by the generic checks. This fixes generic/494 where
-it expects to see EBUSY by setattr_prepare instead of EINVAL by f2fs for active
-swapfile.
+On Sun, Jun 29, 2025 at 07:12:25PM +0200, Andrea Mayer wrote:
+> Fix a typo:
+>   lenghts -> length
+> 
+> The typo has been identified using codespell, and the tool currently
+> does not report any additional issues in comments.
+> 
+> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/file.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+Thanks,
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index bc0ca697e064..bd835c4f874a 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1048,6 +1048,18 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	if (unlikely(f2fs_cp_error(sbi)))
- 		return -EIO;
- 
-+	err = setattr_prepare(idmap, dentry, attr);
-+	if (err)
-+		return err;
-+
-+	err = fscrypt_prepare_setattr(dentry, attr);
-+	if (err)
-+		return err;
-+
-+	err = fsverity_prepare_setattr(dentry, attr);
-+	if (err)
-+		return err;
-+
- 	if (unlikely(IS_IMMUTABLE(inode)))
- 		return -EPERM;
- 
-@@ -1077,18 +1089,6 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			return -EINVAL;
- 	}
- 
--	err = setattr_prepare(idmap, dentry, attr);
--	if (err)
--		return err;
--
--	err = fscrypt_prepare_setattr(dentry, attr);
--	if (err)
--		return err;
--
--	err = fsverity_prepare_setattr(dentry, attr);
--	if (err)
--		return err;
--
- 	if (is_quota_modification(idmap, inode, attr)) {
- 		err = f2fs_dquot_initialize(inode);
- 		if (err)
--- 
-2.50.0.727.gbf7dc18ff4-goog
+With this patch in place I see that codespell only flags
+false-positives for net/ipv6/seg6_*
 
+Reviewed-by: Simon Horman <horms@kernel.org>
