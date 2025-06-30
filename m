@@ -1,71 +1,86 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC0A235056;
-	Mon, 30 Jun 2025 11:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C4D24467A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282692; cv=none; b=TdpFoG9PoMXsmqk9Iouw1vS7O3URAkaa8nJzVy+17ymBjOuzoafKTAbuiHgIDPjNkVB/qH5HfJddCsbylIfl48xkeLuv04+GCD7u0pHkLVKYrAVENY4jCndGsFRmlcwD190DTmNVXQ162rdlqtY8u2d7x+yq2uiSH/IzCLC/PdY=
+	t=1751282719; cv=none; b=STfYU9OISxc7grzjPp1xG6MhGJN3NaKKndneRebaKZOK5xV1F9laXjRa5ULjtLH0NsvG3EeGnPOMtcQkcXWFm7baARgbEryDxG/Q1Rw1hm36rMsNVVVHGVnQ/oHomkPfKyqKTxKQW9T3E+yEbA5D1QHVyrwDeQEl94RBgf/53U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282692; c=relaxed/simple;
-	bh=vDmXOaFg61Wb877I3fCvD/03Zl6rNBUVdNz0g55bENs=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=LjenZ+E4dwd8g7qqz7rUO6v+LUChXYyFYRYtQHYQJj98j/ggpKPNVygLQ6G9DoHesZ8sIl61opinOw40ZcGK+AvZSiz1GaTs6m/m1MWqEbhPP65rWncbrhNyf+89+qx/x5wVUYlRb27MjT+0ESziGNHSVQ52yNSegHDRjjnKHSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bW3jC1byDz5DXWj;
-	Mon, 30 Jun 2025 19:24:47 +0800 (CST)
-Received: from njy2app01.zte.com.cn ([10.40.12.136])
-	by mse-fl1.zte.com.cn with SMTP id 55UBOdmB051251;
-	Mon, 30 Jun 2025 19:24:39 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app07[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Mon, 30 Jun 2025 19:24:43 +0800 (CST)
-Date: Mon, 30 Jun 2025 19:24:43 +0800 (CST)
-X-Zmail-TransId: 2aff686273fb32a-5b8d8
-X-Mailer: Zmail v1.0
-Message-ID: <20250630192443193j2wDCmmnHGLns9ki1GXcv@zte.com.cn>
+	s=arc-20240116; t=1751282719; c=relaxed/simple;
+	bh=MiWhWsU6Nk+nyhYaGOjRyY5dkxoKOJRqdg6QZYyp45U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jo1f42kZRSVSrcYPyL2Gym1bHBC1Pi6L/y2RsyqCTNKi6Nc3CV5Os5sFwPUipYQkuDifcRIQXYGa4595jypsitlcCZbIxlww7Raskskmpn08s1rKQF9jbAvwV6GdxxJHLWLh4DbHDOZGG/0155cySvMHKIolqJLwrUj6SogccHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=TzFAC95G reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="TzFAC95G"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1751282714; x=1782818714;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MiWhWsU6Nk+nyhYaGOjRyY5dkxoKOJRqdg6QZYyp45U=;
+  b=TzFAC95GdwhczyOnc7ipf1EulLoZQJ3BAqIP09J0Ulok/7E4clWWKqks
+   GnIqssqGNZxgM35bVa2pOd0Y1sFm7W+PQvT6I+FN/nrV2/I7FJ1X/gKaF
+   +ZlqWJJ+Wy+Zc4mCiZUVp7bVVVCTd9XmLl7wNNAHIgRvsn7Tne3wBiNOB
+   3nEFe2Vaw8KdnkusoJYm+IV8HGqF0fciUVsGeTPSVNeL9Dv/Xxjg+FOVg
+   79LApPOGHohPeKs4DOmyIQrDp/bc/PlytTrjW3cj3uPAk9Kuy7RzYwOPv
+   DF1RBZGNkMg4Ch2+uz99+Mh3B9RxJZnJZNnPLukQY7HIjA93+0mXLNLQ0
+   A==;
+X-CSE-ConnectionGUID: dXKz/3FrT5iT/UY0LAzDcw==
+X-CSE-MsgGUID: 8G1CDNvHRm2FXTpq9y4XFw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 14:24:03 +0300
+X-CSE-ConnectionGUID: pMAH1rCrQJa5kQD9iN+fzw==
+X-CSE-MsgGUID: q/P7gEazQMSWGOq4CdiiSA==
+Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.1])
+  by ces03_data.me-corp.lan with SMTP; 30 Jun 2025 14:24:00 +0300
+Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Mon, 30 Jun 2025 14:24:01 +0300
+From: Pnina Feder <pnina.feder@mobileye.com>
+To: bjorn@kernel.org
+Cc: alex@ghiti.fr,
+	bjorn@rivosinc.com,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	mick@ics.forth.gr,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	Pnina Feder <pnina.feder@mobileye.com>
+Subject: [PATCH 0/1] Fix for riscv vmcore issue
+Date: Mon, 30 Jun 2025 14:21:28 +0300
+Message-ID: <20250630112309.97162-2-pnina.feder@mobileye.com>
+In-Reply-To: <20250409182129.634415-1-bjorn@kernel.org>
+References: <20250409182129.634415-1-bjorn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>, <jiang.kun2@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHY0IDAvMyBsaW51eCBuZXh0XSBEb2NzL3poX0NOOiBUcmFuc2xhdGUKIG5ldHdvcmtpbmcgZG9jcyB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 55UBOdmB051251
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 686273FF.000/4bW3jC1byDz5DXWj
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
+We are creating a vmcore using kexec on a Linux 6.15 RISC-V system and analyzing it with the crash tool on the host.
+This workflow used to work on Linux 6.14 but is now broken in 6.15.
 
-translate networking docs to Simplified Chinese
+The issue is caused by a change in the kernel:
+In Linux 6.15, certain memblock sections are now marked as Reserved in /proc/iomem.
+The kexec tool excludes all Reserved regions when generating the vmcore, so these sections are missing from the dump.
 
-Wang Yaxin (3):
-  Docs/zh_CN: Translate netif-msg.rst to Simplified Chinese
-  Docs/zh_CN: Translate xfrm_proc.rst to Simplified Chinese
-  Docs/zh_CN: Translate netmem.rst to Simplified Chinese
+However, the kernel still uses addresses in these regions—for example, for IRQ pointers.
+Since the crash tool needs access to these memory areas to function correctly, their exclusion breaks the analysis.
 
- .../translations/zh_CN/networking/index.rst   |   6 +-
- .../zh_CN/networking/netif-msg.rst            |  92 +++++++++++++
- .../translations/zh_CN/networking/netmem.rst  |  92 +++++++++++++
- .../zh_CN/networking/xfrm_proc.rst            | 126 ++++++++++++++++++
- 4 files changed, 313 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/translations/zh_CN/networking/netif-msg.rst
- create mode 100644 Documentation/translations/zh_CN/networking/netmem.rst
- create mode 100644 Documentation/translations/zh_CN/networking/xfrm_proc.rst
+
+Pnina Feder (1):
+  riscv: Change memblock reserved name to be recognized on kexec
+
+ arch/riscv/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
-2.25.1
+2.43.0
+
