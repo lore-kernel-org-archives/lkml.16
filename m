@@ -1,135 +1,195 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD62A28C84D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FFD23ABB5
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324512; cv=none; b=ADMJGbYj7+viIO6x5W+v2kgb07jSpJWDka0y9M+c5Z1z0ma3ejTzb3hpDRq1i7enBZDk40sl4/tBYzIIt/m9T1ao8JimZbtvNIH9i+xfdNW5dV3I2a7vZivpV39PjTI/u90plhntaCjDBrGtg8/YWpQiImIjZmO100bTJ7KtP+Q=
+	t=1751324557; cv=none; b=WHMusFqVpU3V7M2ASbaMAw1PAJWzNc5clzgQ55LvA8XQFl7CWyrbor6pcTt+DTdH4v33vdDA+sZW2ieYYgLu48FxzlMns6Ebupj28ntBGB5nmRRK3K2vJ+R7ysStyoX3BTjpIK+uNzm3WaDJcR2a1mLDB2+sFgW2sSLcA/zosMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324512; c=relaxed/simple;
-	bh=Tty0qrvMwYTCfMPtmDhnbSDXZzzQiNA90N1yyqbo/wU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bvth/lWuayj4C7L+JM65O8INcum75KRM/p5s2WoFt1Xd5ob4Qj/WVnH8N7pDX1QHaRRNY+aY2JRlIipb5ovh4IERsiFtmCsaiX3UXrrnmCwrvfwdnYl2P9/WPp3f3xFC/0jB7NH2Ev4TXlcyVCrQh3lT6bj+N80zr7idWHwBKTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfimQ5HX; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751324557; c=relaxed/simple;
+	bh=hwtZs/WGUT3Y7iYGgULmVMdUiB+5NtljGQeMNYIR6Kw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kac2RP/fvAQGcIfqW07RA+wDIowCfdZ9mpx5PK8EaLdL/p2GSua/z1AXZHd+lYjRtmco2PjokJLBdVkL3IOSY5cFDlkf8Tgai+n7ol2hpXgCIxbj3MJq6c0o9FqK6UavA7eoQcRwi95ewj6o2O7GMulHxLry1aXcJDBeAK5NU1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BGXhKyS/; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfimQ5HX"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e81f311a86fso3912673276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:01:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BGXhKyS/"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so1995a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751324510; x=1751929310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1751324553; x=1751929353; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vd/NZyP4j5CIAg7Amb14AGL2U5qa5YAKuUp//LRpLKU=;
-        b=RfimQ5HXV772HGrw860tc4gkRzxqaFi10Mw6Y6S0au0VjoVQYCpbvYl3MypZ2gp0zZ
-         KLJAtVqYuaGu23URjrse15aWLG+WygEZavbHzTqSjfsMTOvWVbrNKmtkufccUkus2sET
-         kcao2riUpcV889yLxIZflZEKBWz2OXLB3Y2akaSykWTsLP+smuYq362VdZGsEEbPH/5v
-         qS9SMxH8B2USJZ9l2kQV0W9NT5tFKWXeR1DloY0qKRPQo4uR1P6CpkJwJG3CDMCIRH8X
-         zF3hMO3XL3HhQpvAWX0KWR+Yofpv9FyiQEjjt7HoQYkDEEqnTjj9gbGjgsl4Clxxoit5
-         t++g==
+        bh=0qLMLP3Ske3Nf/leK3GVL8kkxjqArizAC4Coyy9U/9k=;
+        b=BGXhKyS/XZosubbljqIJiL42QxA4LlXCEBc2xwjP4bgj/cvk1VK8Vw6rKZ4s57er8t
+         vnj9rwoDjHm+PcNoNqVP8P5saut0QmqB4GmsMdNsDBFsXuEIvG+Z+YwpRin94Pfihcfm
+         oHYKWEcmYsCWym9xUOqZWGoMVE1CNA2PLUf7EnCUlrxO4rMKnx2I0q3rHt9vWfTwoudu
+         +xfmfBWY6+6D2bqDBlzSWAf147GjQV7YiC314YUM8+JVBF+kctXBXx35LKzsGg5j+8jV
+         vQNl5zR3Q/BKTrQPrkqilLc9avbMNEoGaCVIFodXTQarkpKeyHuPg2m/bxrd6puLYuEo
+         gzIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751324510; x=1751929310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751324553; x=1751929353;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vd/NZyP4j5CIAg7Amb14AGL2U5qa5YAKuUp//LRpLKU=;
-        b=ADycrdHIFGAv3g6uZbVXU1epPacf4qZvtVa+CaQAPrerNOHBjrjGqrzsG2ba4OKv//
-         uIL7pu70e4KduHTg1vLrDLABbxRb1yg3PkqaApp8OkIClksonecLocbzbg9LQVuNiSNL
-         NxDdN6/5Plj/1mWBySNwywz+MV+7rR6EyDjxY11EYxDj7yWmvHVmEBFkdbsAW0Ii4nOM
-         5j+BFtiPNX0+fHrOPrm/PwwuBb4Vb9fmfiFWs3HKrWqx2fvPSC8Nh1yp8dzW/hVabQNf
-         j0/cGTOS889eo17GKb4fJzw3apmGnmWb4X1qIiBMtg3D6FYYEQfNmqsVrBynncDFDyke
-         U2zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUL9KGTQMvNGN5ZAL9yjkuR/MIDra5NaLQcWoPs86cTG2vNwodCxvHWY7lZVHABe6negjaNtUCyWm+H2nI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1AzhaKst1JQgFNta+F0t7ZR8T3B29Dfyyl7U7rWPM2Bs4BjvL
-	9mEYAUd8niEbnAnxmC61IKcULAUa4xE4gBYhRqsuhrIqIru0PU3+iCHC
-X-Gm-Gg: ASbGnculSR4x4frBqwKxR7h/C/9lF8wb5GsakNp7xFBbdk+vPmmRS9+peDi2XwsfCET
-	UqGIkVQQqDeJGHR+nuoahsCC3M3fDVMFyf9Hi96T9PhKBi125mnaQVR3Uk7P1wIpzVC3EhCSmcQ
-	L/Oo+r/+9n6KU8tADQ/4Jce90MQzimpgjAnUdFE0yVO++G97oi567n3kO+Aiy90P36XqIDbdd/j
-	Y4DfsDNlzBfbqoytErEIXPAyavZnzYIYfQotg/74ozq+1/E7qY7rbURpjVQp7EoN2K0gphz35LB
-	qDraYMgvshJgLWVbbz9zlBD3dujDsVgb80D83pt702zIVOaeHAddKcd/WclHqg==
-X-Google-Smtp-Source: AGHT+IFpfRCMEe7rPVfxOs6jnHFhnNRIF9xkxBkqGqTqtf6voR/zjxDyFUksRp8lfHUxGj97L5OKiA==
-X-Received: by 2002:a05:690c:6601:b0:70d:ecdd:9bd1 with SMTP id 00721157ae682-715171abbc5mr204846657b3.24.1751324509568;
-        Mon, 30 Jun 2025 16:01:49 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:5f::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cc7f10sm17386857b3.114.2025.06.30.16.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 16:01:49 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Bakker <kees@ijzerbout.nl>,
-	Gregory Price <gourry@gourry.net>,
-	Alistair Popple <apopple@nvidia.com>,
-	Byungchul Park <byungchul@sk.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk in weighted interleave
-Date: Mon, 30 Jun 2025 16:01:47 -0700
-Message-ID: <20250630230147.2280374-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250630153501.64160f386faa541c93344e48@linux-foundation.org>
-References: 
+        bh=0qLMLP3Ske3Nf/leK3GVL8kkxjqArizAC4Coyy9U/9k=;
+        b=YhnGqF4EsaGYSZPkTrU9SCAdR2smXr4IAW2B3OP4o92apcyGAMQ/HnyTmTX24/pKk9
+         b2tGQVkazV6HVXCUUBOo5tdtZqkyiy3cxbPhPIF/ArRaet91NTcNtnCvdiU8vtf9qiPT
+         2Z9gOVepIQEVlsMK2N7KFkdRyzo1zE9w6bzXqGec3c/K4XKY0akCWr/eoMqJ6Z3mOPqZ
+         6j3b2ZovS89lMqkcIxHhc2IninMNiT+4VB2LKejMgdI2yEecalzVfbwmNpUHi4srB+kh
+         jF53YXHnye2LnDJqaPVnHhDAFJgSIvS+oU93NbxJQy7Olzrczx77P0n0l+qRUJRawNMg
+         LYQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhsNyqx9QH/sp9NhV+FMBJ2g3O0hxvCl6et2Ly1IZAzGZS4xghqZ6WPpdrVETveOTmedsPeQKV0IKdwJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGWwdH+rwto0C8xdEvSXJaqo377uwi4aRLz2mmFyLYiMKLr4YU
+	jcSkNLLxU9gboE6zurV8ZdoPdxSWYoJ1Z8pNmqHK/0YDeOzmfFLOOnNhZ4GWyrNf2MjgCkcgMyn
+	GfawGoRL6TGUQY5ToyPc0AV9E+Ie79NUnEBMxatsAvE/4aIbTQmoBUHyiRlo=
+X-Gm-Gg: ASbGncvokyDwnY5K1jZYhwEM2Q8BBU1E15eoUAlvQiBMs8KDpvQvvaUFGXiwArsXWCq
+	qKVZWEJWrnzW5NCmwWcRoXdOhQV2+iJK6mY+L8TvyUlXyzy/n9j81Tx2WLC8NtvjNZKV8cus8cm
+	sPspZUgLPcqBLuANZQhzBsBsm7YUO+mt0b6aeHpZx9mo06chtUWROiAQH/DYsCTNEsv9W2cA/Ad
+	lo8NIMMbrkJ
+X-Google-Smtp-Source: AGHT+IFS0q55gmlJO1hey+/BYI7FeaCTIrlOqFtFfHKgmIhIAMpK39dpsalABFCEMDB/+CBiks2Od8jLmmLp43XyJeE=
+X-Received: by 2002:a50:fc10:0:b0:607:30a0:12f4 with SMTP id
+ 4fb4d7f45d1cf-60e38a75510mr3647a12.5.1751324552596; Mon, 30 Jun 2025 16:02:32
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250615144235.1836469-1-chullee@google.com> <20250615144235.1836469-2-chullee@google.com>
+ <0f09a845-fbaf-4ddf-b684-a1182f85a9ff@kernel.org>
+In-Reply-To: <0f09a845-fbaf-4ddf-b684-a1182f85a9ff@kernel.org>
+From: Daniel Lee <chullee@google.com>
+Date: Mon, 30 Jun 2025 16:02:20 -0700
+X-Gm-Features: Ac12FXyYd5KOlSBFKj1urp028eA0EYYBuMW47qdrBBYTKnM3VCqPKVInYiuw36Y
+Message-ID: <CALBjLoDVk976imbZ8-G97jD0aHE2yzL5y-covCmp7V-97aEg6g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] f2fs: Apply bio flags to direct I/O
+To: Chao Yu <chao@kernel.org>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 30 Jun 2025 15:35:01 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+On Mon, Jun 16, 2025 at 5:41=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
+>
+> On 6/15/25 22:42, Daniel Lee wrote:
+> > Bio flags like REQ_PRIO, REQ_META, and REQ_FUA, determined by
+> > f2fs_io_flags(), were not being applied to direct I/O (DIO) writes.
+> > This meant that DIO writes would not respect filesystem-level hints
+> > (for REQ_META/FUA) or inode-level hints (like F2FS_IOPRIO_WRITE).
+> >
+> > This patch refactors f2fs_io_flags() to use a direct inode pointer
+> > instead of deriving it from a page. The function is then called from
+> > the DIO write path, ensuring that bio flags are handled consistently
+> > for both buffered and DIO writes.
+> >
+> > Signed-off-by: Daniel Lee <chullee@google.com>
+> > ---
+> >  fs/f2fs/data.c | 10 +++++-----
+> >  fs/f2fs/f2fs.h |  1 +
+> >  fs/f2fs/file.c | 11 +++++++++++
+> >  3 files changed, 17 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> > index 31e892842625..71dde494b892 100644
+> > --- a/fs/f2fs/data.c
+> > +++ b/fs/f2fs/data.c
+> > @@ -416,10 +416,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *=
+sbi, block_t blkaddr)
+> >       return 0;
+> >  }
+> >
+> > -static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
+> > +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio, struct inode *inode)
+> >  {
+> >       unsigned int temp_mask =3D GENMASK(NR_TEMP_TYPE - 1, 0);
+> > -     struct folio *fio_folio =3D page_folio(fio->page);
+> >       unsigned int fua_flag, meta_flag, io_flag;
+> >       blk_opf_t op_flags =3D 0;
+> >
+> > @@ -446,8 +445,8 @@ static blk_opf_t f2fs_io_flags(struct f2fs_io_info =
+*fio)
+> >       if (BIT(fio->temp) & fua_flag)
+> >               op_flags |=3D REQ_FUA;
+> >
+> > -     if (fio->type =3D=3D DATA &&
+> > -         F2FS_I(fio_folio->mapping->host)->ioprio_hint =3D=3D F2FS_IOP=
+RIO_WRITE)
+> > +     if (inode && fio->type =3D=3D DATA &&
+> > +         F2FS_I(inode)->ioprio_hint =3D=3D F2FS_IOPRIO_WRITE)
+> >               op_flags |=3D REQ_PRIO;
+> >
+> >       return op_flags;
+> > @@ -459,10 +458,11 @@ static struct bio *__bio_alloc(struct f2fs_io_inf=
+o *fio, int npages)
+> >       struct block_device *bdev;
+> >       sector_t sector;
+> >       struct bio *bio;
+> > +     struct inode *inode =3D fio->page ? fio->page->mapping->host : NU=
+LL;
+>
+> fio->page will always be true now? We can pass fio->page->mapping->host t=
+o f2fs_io_flags()
+> directly?
+>
+> Thanks,
 
-> On Mon, 30 Jun 2025 13:21:14 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
-> 
-> > > This is a goto into the middle of a for-loop.
-> > > What do you think is going to happen at the end of that loop?
-> > > 
-> > > I think (only tested with a small C program) it will go to the start of
-> > > the loop, do the i++, check i<nnodes, and possibly do the loop again.
-> > > Variable i is uninitialized at that point. In the loop it hits several
-> > > uninitialized variables.
-> > 
-> > >From what I can see from my code, I think the only the goto statement leads
-> > to a second iteration of the for loop is if allocation fails.
-> > But otherwise, it should be ok since we always hit
-> > 
-> > if (total_allocated == nr_pages)
-> > 	break;
-> > 
-> > within the loop. For the branch that takes the goto, we set
-> > node_pages = rem_pages, then jump to the label and allocate.
-> > So nr_allocated = node_pages, and total_allocated = 0 + nr_allocated
-> > so total_allocated = node_pages
-> > 
-> > total_allocated == node_pages == rem_pages == nr_pages, so we will break. Phew!
-> > 
-> > To cover the case where allocation fails, I think we should be breaking
-> > anyways, so I can definitely add a new check for this.
-> 
-> I do agree, that goto is a "goto too far".  That we can do a thing
-> doesn't mean we should do it!
+Thanks for the insight. Since fio->page is always non-null here, I'll
+remove the unnecessary code.
 
-Haha : -)
-
-> > > Even if this is legal C code, it is pretty obscure.
-> > 
-> > I agree that it not very clean. I did this to reduce the amount of repeated
-> > code there is. Even if this code works, it could definitely be written
-> > better to make it more readable and maintainable. As I noted in my second
-> > response to Gregory, I'm not planning on pursuing this version anymore,
-> > so if I decide to send a second version, I'll keep this in mind.
-> 
-> Cool, I'll drop this version from mm-unstable.
-
-Sounds good Andrew, thank you always for all of your help!
-Joshua
-
-Sent using hkml (https://github.com/sjp38/hackermail)
+>
+> >
+> >       bdev =3D f2fs_target_device(sbi, fio->new_blkaddr, &sector);
+> >       bio =3D bio_alloc_bioset(bdev, npages,
+> > -                             fio->op | fio->op_flags | f2fs_io_flags(f=
+io),
+> > +                             fio->op | fio->op_flags | f2fs_io_flags(f=
+io, inode),
+> >                               GFP_NOIO, &f2fs_bioset);
+> >       bio->bi_iter.bi_sector =3D sector;
+> >       if (is_read_io(fio->op)) {
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 9333a22b9a01..3e02687c1b58 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -3972,6 +3972,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *=
+fio);
+> >  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
+> >               block_t blk_addr, sector_t *sector);
+> >  int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr=
+);
+> > +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio, struct inode *inode)=
+;
+> >  void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
+> >  void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkadd=
+r);
+> >  int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count);
+> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> > index 696131e655ed..3eb40d7bf602 100644
+> > --- a/fs/f2fs/file.c
+> > +++ b/fs/f2fs/file.c
+> > @@ -5015,6 +5015,17 @@ static void f2fs_dio_write_submit_io(const struc=
+t iomap_iter *iter,
+> >       enum log_type type =3D f2fs_rw_hint_to_seg_type(sbi, inode->i_wri=
+te_hint);
+> >       enum temp_type temp =3D f2fs_get_segment_temp(sbi, type);
+> >
+> > +     /* if fadvise set to hot, override the temperature */
+> > +     struct f2fs_io_info fio =3D {
+> > +             .sbi =3D sbi,
+> > +             .type =3D DATA,
+> > +             .op =3D REQ_OP_WRITE,
+> > +             .temp =3D file_is_hot(inode) ? HOT : temp,
+> > +             .op_flags =3D bio->bi_opf,
+> > +             .page =3D NULL,
+> > +     };
+> > +     bio->bi_opf |=3D f2fs_io_flags(&fio, inode);
+> > +
+> >       bio->bi_write_hint =3D f2fs_io_type_to_rw_hint(sbi, DATA, temp);
+> >       submit_bio(bio);
+> >  }
+>
