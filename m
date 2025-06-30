@@ -1,74 +1,129 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 783C45227;
-	Mon, 30 Jun 2025 22:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D231B21C161;
+	Mon, 30 Jun 2025 22:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322220; cv=none; b=uTeF+ayHqX0Ul1vJAN1IOfIo9ZxE+qKFMTrwEaRGLyGe00Fc1LLx3D+hcp14JfpAqvOWIl6r2OuOSBL4XUmUEUTpGKe7SOWE6GeOc6+C07Lr/p2e0q4TSNgTxvGU9tKbVzBrsdP/f8EbWCLe974nJ4pSinP+tKUAKNN9AYcwjwg=
+	t=1751322274; cv=none; b=BpjJWXeQS1Kym7naGX8grHnid5QmRbYcfbVhOf69biJfkMz4Xs+Bl9+8Luot5x2HvM5xE6lS690Ei9tCkZTDsMKu2rS00X48uLMHvbgEHKmIIxCHxM2ze6uWFK4mBej/h8sja0W2c7bhUk8L6M8cZEIDK0I25OMlxwpiQa6M7II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322220; c=relaxed/simple;
-	bh=HcakANzATe9tMLxVNbaluex5vdQKi8x1kHVi0Py7suc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NURknI68wmqjvI4Yom0dxabP/kroVzBUic4QIG2IaMwSQb+0UWeFvo8flKJz+6eplHO6RlNuZaV1jVRetZcKgBm/2TQHoyzWpvg6m3maLUM1rY1KMmbAeVa0y+PagnH3d+CJSWBH0NwQwU5beS6ZY9TgSD7HUnxeGUaRm5H/Gnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AcgUP7F5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1751322274; c=relaxed/simple;
+	bh=Gw4w+JlfU8ZSipHyP2abRxrCX6poC9T1o7K49sJWZcs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=G4C7i17H6+MAl1u9tfC7YqiFIuxON8C0pvwIhZ8HfmYozmr/UISnwFuDoLPESJVXCQZ22yokLyWSvyW5pIkSrBm5rSmXmAdEXPKBqYI8sgtnRmCJp57O6Z+S/G0oBPivBbsOIW9JU4OY48XOE57wRjPI9NhinqXtkMRbrrnHHaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DKTnWNwD; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AcgUP7F5"
-Received: from [100.65.217.140] (unknown [20.236.10.206])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 600CF201A4B1;
-	Mon, 30 Jun 2025 15:23:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 600CF201A4B1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1751322218;
-	bh=DfXdfCU1JXYHWgM00Dwc4NWjntBjNe637EIYzIR8E9M=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=AcgUP7F5Xs4efIzQ5AVmdKa7P852sKqoOBD9OFtayslYiPtUbgrNCaPsB5x3Gld0L
-	 LP1XW6CcFe5MMWGw+TQYVQ9v4jHISvIhVkeCZpleKKdszGvQhRpLVlunF5jrreMfri
-	 Oz/KtwqHFyjwVxxQTH3wGx+4JaIlZHQAou0j86rs=
-Message-ID: <44e48ee7-07a8-4bbc-a98b-095bb1d585a0@linux.microsoft.com>
-Date: Mon, 30 Jun 2025 15:23:36 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKTnWNwD"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a818ed5b51so11064971cf.1;
+        Mon, 30 Jun 2025 15:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751322272; x=1751927072; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nOqcQ9E+8drflPFHAs4vSUWLT7BoxqpED98LP9u+w/s=;
+        b=DKTnWNwDCcMPhwWQFx0kicuuvIVPtpAYlBZ2OomfNsfyoMxCoCwU0GN+6hJoS7zpgm
+         tNW/6wsXkVxeoOc41iH1tfWGQqNMKn8zGIx3Lpo31d+kuFTHYI+p92vKhkTOsjISBVSM
+         zNmcfDz653CANHsY5qrFKUvetnnM1a+KXuj4Ie6B63Nn6BdoDMXAuSeqI01qbt60/4Ar
+         rCzO9OaAFitjW/7ky+yDFVdLpHsd6U1ph+H4YZIJnlRRWYj2ZPR/DOZ+uBvxwOKDvwme
+         goEmDSAeYAkrDIzk6IttxYXNhp/ubqUHGAqrd8BB63OxDIVlXyPEM3z8d3fwRB+RaHEU
+         86qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751322272; x=1751927072;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOqcQ9E+8drflPFHAs4vSUWLT7BoxqpED98LP9u+w/s=;
+        b=jRnbdl7YWdDB5mMC4hHY0CUoVhf81sP95Wbv1/rut0JGpYBY1RZJfI1fDgC9S8nUGC
+         JhaQ9gTWRw9fm+XokrSZaImLlpaHpyxj20QFih9KyA19tDO3PbTc0UJfrzVcbJ9Tmrhp
+         RAWBi9oK7MYXjvwcEPVFAiyVw6z1WNhV7WHwUfeyr2MaRwSrrkxXBPc7DJdCpEgaoVSy
+         9bnPf5SHBfc1hW4mAxsqtCLVO9RD8WWOFdGLsXmM99ITkDIMSs8r9bESNlVzm9BQxz0o
+         SWY4hIeuBimdana87HvBQ71DTk+Ralk2x0R3WL6D+EjGzBbCoVQ3uqdzjQpjdKKL8avw
+         xUHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBN6d/dRYbQlLlp86LOFuJqXwmxdlp1NVN78Uja15ZtwN375GRaZBPtUwTYmrgtarEGgNvZk7dDh3M@vger.kernel.org, AJvYcCXjd90dGoJwLJ8/5Xw6J51zW0iaem8PaXU4R1C8LJNk+IzLgtkvG+uU0Acow0L/ceDKBWcEuGGuOqEkClg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmEr8Or0jw/DdhX4LSwlBa1JlkmCY0Pm/kJYfK5bl6yAZrr2s4
+	vlCAl9dX5KxUHDrT2wbKGpXd/TzEcSnN8mcA8UFrO/h2mReRAbgTITa2
+X-Gm-Gg: ASbGncsDyC8F7pf6o5MPI7Wj1cRJfC7rrcdmNk3aOiElmjTx360YkpLUgn/pvZAXKVo
+	+JBZUvBDXYX+ziuhuZMAOUQ2FRZ/r7P5Y3xi/nH2aSSjxMQAHNcEU7x3x6OdIXYJuON8ATWox47
+	CSSrLNv7Y1WshVE4vcIkza4lfJRcc69RnXvTvSrYvRJ7VeH7ryCPpZFCHoprnMKmxX6nAitdy1C
+	Yalmlg+cNZBxbMJmYhia1wSn1ijBtSURsGRQnsKPKE5CKzwv+lsnKSyK/JGXuViJGWoDMRT1dw6
+	XEtgQZO8WRofDieZr0Wdp1M6SVKbhrS+Tk3IjPEKuVW6MUQjohtqiJdKEbOY
+X-Google-Smtp-Source: AGHT+IHQqj4onXTfLWFSXWgdbcEMH4oCP6peKWldHaIP1cBl7zoluZL5kjSP1aRSbi/hl5ifZScA2g==
+X-Received: by 2002:a05:622a:2305:b0:4a6:ef9c:eaf6 with SMTP id d75a77b69052e-4a7fcbdc53amr248768291cf.41.1751322271627;
+        Mon, 30 Jun 2025 15:24:31 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:4851::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771b8854sm74755966d6.37.2025.06.30.15.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 15:24:31 -0700 (PDT)
+Date: Mon, 30 Jun 2025 19:24:15 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v9 0/4] PCI: rockchip: Improve driver quality
+Message-ID: <cover.1751322015.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: eahariha@linux.microsoft.com,
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- kernel@collabora.com, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Subject: Re: [PATCH] Input: mtk-pmic-keys: Fix null pointer dereference when
- no compatible data
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-References: <20250630-mtk-pmic-keys-fix-crash-v1-1-e47351fa9d1f@collabora.com>
- <41f3cc74-694e-41be-b767-20c7561990b8@linux.microsoft.com>
- <667whxdsghpao5irl66oh66l5y55m4k6n3ztifaizbqtrzccju@cmghlz2yauxq>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <667whxdsghpao5irl66oh66l5y55m4k6n3ztifaizbqtrzccju@cmghlz2yauxq>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/30/2025 2:46 PM, Dmitry Torokhov wrote:
-> On Mon, Jun 30, 2025 at 01:18:40PM -0700, Easwar Hariharan wrote:
->>
->> Also, it may make sense to CC: stable@vger.kernel.org for backports
-> 
-> What for? Stable does not need a patch papering over an oops, it needs a
-> patch making the keypad working on the affected device.
-> 
-> Thanks.
-> 
+During a 30-day debugging-run fighting quirky PCIe devices on RK3399
+some quality improvements began to take form and after feedback from
+community they reached more polished state.
 
-I don't have a stake either way, it was simply a suggestion, since it qualifies
-IMHO, per https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html,
-the patch "...fixes a problem like an oops..."
+This will ensure maximum chance of retraining to 5.0GT/s, on all four
+lanes and fix async strobe TEST_WRITE disablement. On top of this,
+standard PCIe defines are now used to reference registers from offset
+at Capabilities Register.
 
-The proper fix might well be, as Nicolas suggested, adding the required compatibles.
+Unfortunately, it seems Rockchip-IP PCIe is unable to handle 16-bit
+register writes and there's risk of corrupting state of RW1C registers,
+an issue raised by Bjorn Helgaas. There's little I could do to fix that,
+so on this issue the situation remains the same.
 
-- Easwar (he/him)
+---
+V8 -> V9: modify third patch to better reflect authorship by Valmantas
+V7 -> V8: add Valmantas Paliksa Signed-off-by to third patch
+V6 -> V7: drop RFC tag as per Heiko Stuebner's reminder, update cover
+letter
+V5 -> V6: reflow to 75 cols, use 5.0GTs instead of Gen2 nomenclature,
+clarify strobe write adjustment and remove PHY_CFG_RD_MASK
+V4 -> V5: fix build failure, reflow commit messages and also convert
+registers for EP operation, all suggested by Ilpo
+V3 -> V4: fix setting-up of TLS in Link Control and Status Register 2,
+also adjust commit titles
+V2 -> V3: correctly clean-up with standard PCIe defines as per Bjorn's
+suggestion
+V1 -> V2: use standard PCIe defines as suggested by Bjorn
+
+Geraldo Nascimento (3):
+  PCI: rockchip: Use standard PCIe defines
+  PCI: rockchip: Set Target Link Speed before retraining
+  phy: rockchip-pcie: Properly disable TEST_WRITE strobe signal
+
+Valmantas Paliksa (1):
+  phy: rockchip-pcie: Enable all four lanes if required
+
+ drivers/pci/controller/pcie-rockchip-ep.c   |  4 +-
+ drivers/pci/controller/pcie-rockchip-host.c | 48 +++++++++++----------
+ drivers/pci/controller/pcie-rockchip.h      | 12 +-----
+ drivers/phy/rockchip/phy-rockchip-pcie.c    | 15 +++----
+ 4 files changed, 36 insertions(+), 43 deletions(-)
+
+-- 
+2.49.0
+
