@@ -1,106 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9885821ABB1;
-	Mon, 30 Jun 2025 07:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E276BFC0;
+	Mon, 30 Jun 2025 07:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268474; cv=none; b=o2UW9lFNHhOgI584pydBcGRDeP5ZR+Ghq2F7XrktaVoVo2nivfgz2yebcNREXAClsT0kOnrq96ZNF0dubQgVu8ksQbMbWc+IO2Xh3RCEpkm45A0l1vbDreSWw29vc1c4/qPTEn5GBHE3Ot85TPsu7z/c9kk3OXjuw/Iy3AZHGmY=
+	t=1751268550; cv=none; b=pXtnQuLiixn/71iMiHzoitdBVlG0f7PhS8mhEsJxFaizq0i//iy0kKX97Bb4t3NV5rolCY0whcwrHUsUycxPGHeuUoI87pqDP8nWZOQm7LZrFgdunS509QuBeLmZUD0Pkkh5CwiBhnbiRT40w9IzccqaRrRhctb1KWVB355sOYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268474; c=relaxed/simple;
-	bh=s7O3QKU1w7yXcBtvu+PX0pRrT+Gaj3+NMtxsSSmo9b8=;
+	s=arc-20240116; t=1751268550; c=relaxed/simple;
+	bh=+INW3nAu0nxQ/JcAC4uwQZLDZ2j0TSAZCd9ja+OVjs8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N29n1bdDFpwzzdnds+NmKI646ik5I6FnZEfxtqNLZvx/3/bf3jJoyS8Q6gN4znxMqh2XrQ/K3T8RY1vEIFkQz1LbNVff8TLb1oa75mhulaqulGJsJaa8dvCwWy0xX6fz4ILd9x14fo/WuJQPY0rHOvgyvyMNEX8/KxV6rp3LFX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haBqXJON; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Te6Z8kpNs1jWKo7MCNv9RJ4zzH2zlTYxMbNZNjWRc8PhNx9ZiIuhKvsGVGejvdB/LKfxEf+HbIZfMhVzxdihOwoW1Fc6cA9rOv9KHZSMXgqi7LhRrZ9/RsedKDrpdwd332KfQu9M17plSZnXbpvVVAYvLU9jqw/tw/fN1cKisjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGhdBsoL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haBqXJON"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751268472; x=1782804472;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=s7O3QKU1w7yXcBtvu+PX0pRrT+Gaj3+NMtxsSSmo9b8=;
-  b=haBqXJONDS//idGACf7Uma5SAlfva/YVSd9ua4K96o+lNzgLIqoxOHn/
-   T2vvxU8D3KvYYfDLjSYdGfT3N4mXo63FLB5PZ7uJXzzCW7Q7QjELlNSAm
-   b+pWoZKY640E1KwbBw/n9uZpbvxih/4HwQMCIyqjUSOKPx3h0HHC/ObvP
-   af99uWW0WwHdEECwO8aj7skybJVBaFkicySkhP9c484qXBEvlxvNOYPhJ
-   JJMuEIluBc+VTDKSfjxeYz5qacr7nFLdeJ1p6n6pw4axiX8WI0IqRttsI
-   Yd+67LWGcRIYER3fSwkpio9EUo1t1NY1akbwZ8thFtruebx/YfBGhc7zd
-   Q==;
-X-CSE-ConnectionGUID: jLd0XQj6ReWYEN3OyiBsmQ==
-X-CSE-MsgGUID: wQh1notWTZmtGvGyvirXaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64835628"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="64835628"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:27:49 -0700
-X-CSE-ConnectionGUID: h6P/rFWnTa25eiiDrjgeMw==
-X-CSE-MsgGUID: UWXeOLEbQoCH8xVTUk3umQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="157773770"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:27:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uW8vT-0000000BEd7-3G98;
-	Mon, 30 Jun 2025 10:27:39 +0300
-Date: Mon, 30 Jun 2025 10:27:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?iso-8859-1?Q?Jean-Fran=E7ois?= Lessard <jefflessard3@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Boris Gjenero <boris.gjenero@gmail.com>,
-	Christian Hewitt <christianshewitt@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
- controllers driver
-Message-ID: <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
- <20250629131830.50034-1-jefflessard3@gmail.com>
- <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGhdBsoL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FEF5C4CEE3;
+	Mon, 30 Jun 2025 07:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751268550;
+	bh=+INW3nAu0nxQ/JcAC4uwQZLDZ2j0TSAZCd9ja+OVjs8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qGhdBsoLhOFDArOIcJ2yfIl0KV0fzMrdmXUzH8aDrGRjyE25aY2C51cM5Dr3VH30/
+	 /2PcGSxbqi3Kzx5Dj57rg+5vFbw+mCfYnScnZ6SNRPqwvt5bMRalb3v2uvvmfhYrwB
+	 0asbQBfEdwIcMB2ADOx0SIMkGZdBAzQ9oXc28Jc4o8LwKZcA3MfEbbGzTEPfDUvZTY
+	 MWHot4Hy1CdXreExtEmPOvhAAxB/CrYBDG3G28GhQxK4oeuRv8w22HX3UZAzsC4Add
+	 p1IOG9hcLPieOUweTIsrJv9msD3CtkgABxjozTXo89usmrbAepbcOz9SEBJ9Fn4NLc
+	 2Lulg4va6Eqkw==
+Date: Mon, 30 Jun 2025 09:29:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: hans.zhang@cixtech.com
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
+	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 12/14] MAINTAINERS: add entry for CIX Sky1 PCIe driver
+Message-ID: <20250630-delectable-greedy-sambar-5dacd8@krzk-bin>
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-13-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250630041601.399921-13-hans.zhang@cixtech.com>
 
-On Mon, Jun 30, 2025 at 08:12:16AM +0200, Krzysztof Kozlowski wrote:
-> On 29/06/2025 15:18, Jean-François Lessard wrote:
-
-...
-
-> > +	display->leds =
-> > +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KERNEL);
+On Mon, Jun 30, 2025 at 12:15:59PM +0800, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
 > 
-> Wrong wrapping. Use kernel style, not clang style.
+> Add myself as maintainer of Sky1 PCIe host driver
 > 
-> 
-> > +	if (!display->leds)
-> > +		return -ENOMEM;
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
 
-Just wondering how .clang-format is official? Note some of the maintainers even
-prefer (ugly in some cases in my opinion) style because it's generated by the
-clang-format.
+Where? Provide please lore links, since your changelog/cover letter is
+missing them.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
