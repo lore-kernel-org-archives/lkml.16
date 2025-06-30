@@ -1,136 +1,104 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C212328C5BD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6CE28C2C7;
+	Mon, 30 Jun 2025 15:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295695; cv=none; b=hJTKoeg48mVuV6gVS1scUxGVPhhHL3Abmb4NZx/xOS+3lbkQh3KS81NTdSys/4uFi3naarRpSi5T7tCZDKvERmFTitpUkocKpLUdWUWbrV9Yp/itgmnm0KtWrDrHzi0uoP54SXBdhCWjUDR5NbtvjVYaZOoL7pwojXLZ0bo6oHk=
+	t=1751295705; cv=none; b=NImeCTZVwcoW6wu3vBFWEpYsVZm96blYIlW9KY7dozCG7dIPkkT1hKReIRZB8qoA4zmvokkkLMMXc0GWZgsoOn7aQH0r9PgpcBbV9J7zkdr/0trYSuX7AedHocr1V4bkZbaV2WfzFjNYj6z10eDck/TunN/RGkwAmpZWk86hKcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295695; c=relaxed/simple;
-	bh=bA2iVNqi1xBKfeRItYPrF/CNMUgz/auMZ2sX65vERlU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o9rLq43UWMN+WINlZNGnsHM+BjdhVCYRcTxy3LDqo6IPBQBw4OO/MyApRoE8p/D5xgzZRvXzbbG1IRsz0Y4yUzPefyUvrnFHoIuPN2qsVhMymHkcETEo9l/w2YL4BSh80oufaJtat4IhU+Qnnc6hSFxGDf2B6RyHqhstocK47p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uCKsBch2; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751295705; c=relaxed/simple;
+	bh=w9MfvAx89K2O+0I4paKkLnEviET5iBYuUnorptpspYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/D1uKpCNNn7tNBFPMjNWkW6rkUOGntngCtWD3M+Yr2TePEuMNkvrM72NnGnbigyzeqgcGagONlXu97FDVL8Z9aOrkk9UeeceT/VZZd6r4EviR6BwInns7rTmxLC2hSy04dsCRsGdR8ngsWVtAYEprZCkvOwmUzD1fet1q5HOQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5FcmFti; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uCKsBch2"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2eff5d1c7efso1397255fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:01:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751295692; x=1751900492; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=15iePih5BC5Jn/3k3dCq80lQGBhxEjm0LI0eUO5reYk=;
-        b=uCKsBch2OVUu3+mV617U4c1Rp6E4Cr61unWNVV1P+4IEUxOlw0hZGxQvgVvWEWCQYe
-         L3PjlHnR8947/pjnoXfWyNaKLw9UzzHsy29cI70YLQmDyNTUekKz3z+rxVsTp8B6YNIO
-         TXm5BBSKjTtLzX9Znr1YXFMVOdcic7gj+P4KHO6+BkpxKTE6UNuv7TqWnVbSXGXClFRt
-         dnhEzRd3XXDyC7kTVA/5IVpQzH6YD3XOdCHKUfyO6Art1cLtOI9q35Ax5ylH5XSB/icn
-         rOLVhhJcVPyjiZYtvAxYwJj7GLlXeTWBy0q9eqS14c6RJIbPNIuLOPt2oFJ0ZJVbYeOo
-         DyCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751295692; x=1751900492;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=15iePih5BC5Jn/3k3dCq80lQGBhxEjm0LI0eUO5reYk=;
-        b=ZqgohsblhSDeArJUxYml0M2bm3R54kAtrAeWMFIbuKfMybgStTl+9UYvWBgAZr0oDk
-         ALVUGPeO+Gip5TaIsI3gQtscNhaps3M0pPMMpEESpt8Nha7te33Sqblh0X7Cz9BJHvWg
-         dMaWd9GNG0ssN3UeLzhywmP3qKWD1oPRzdtCW1fVK6jXmAT/yHfjDEdGnuDKsVgRMnLW
-         NOnHT0DiKNakHY4rzGUlOnNos/0binH93zRX33Ux8ViTi4evEa5/W1LmVw5IeNuU2yp1
-         ApWZcUX9BF60p8WHcODutSAa45S3i6FLykP0+6tmoCxd6vua6aQqztH4jI0fKrkm0jKT
-         os6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVf8uH8bUqrJACpLiPH03ichOEspC2QjZMmEUAYZeeZMl8Jcn4gDd5o4GOIvYTeAJApcc9H72/624rexKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyghmWNPx5NGJ8nGH3101bgCdVJJ6+HMt1Fq7cus/eJzDcBb0Gy
-	XQooYzHLlOXGyR3Z5FauTThtiWf0jr5fvo5BKp7MRB0bIid2MaZKlBMbI8OpGtvy9RBTUBNDp1x
-	clXxVcax4yHCu1u3SH5msxjUuARwEhd7om7lSZHBZ9A==
-X-Gm-Gg: ASbGnctAV+z77cCkLGNrxkJUl05G6DOz3pK3R6Ip0aaIu5LcFxNzO1Hug4PBJ3O8B2e
-	x+Rzqjk1wiLFfzL1X4l/YVAhBE+FXCk7ZUsSzQTDh7uwVakBj1XuxLoS6PNIDytelOALG0gYQ3u
-	lDbs7n2jNwMvp2keF5c+RbZhtuxLsgPx4yo8kvQQ+e0P0R
-X-Google-Smtp-Source: AGHT+IH39dcYGayERTHKwfkUbm8atj+vg9Buf7IQPXCRI9PooAjIYyvSqsdYej+jsm7V5GylTSqfC6HfkDzqBwhgvgQ=
-X-Received: by 2002:a05:6870:a512:b0:2bc:7811:5bb8 with SMTP id
- 586e51a60fabf-2efed6aa567mr9175890fac.18.1751295691384; Mon, 30 Jun 2025
- 08:01:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5FcmFti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C31C4CEEF;
+	Mon, 30 Jun 2025 15:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751295703;
+	bh=w9MfvAx89K2O+0I4paKkLnEviET5iBYuUnorptpspYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X5FcmFtieBiJOPPwvbDM1N3cU/8xhfwzu4R42Xgstoziz4zDO7rWdpwi5NbESRFRO
+	 UddIslKFqyfm5miuUeAZ7KZMyhQ4GCCNwtw+RQHdM7Hdz+BGPAsBL1StD5q2d8huq0
+	 qySJaTxlZMLbvxhFneERTyy5jfVgUaBdFeuZ2GPv0EuhC81mxk0bVzwGv8Town74rr
+	 D2Ms5cQroYjjH9S+VrmuTr5UoGcWI+6vFI0f7sXOcSPByTGST6XcDh6Ph9P6nN0Ysh
+	 zvy81nFBa3wcvf36m752033ECUHhznyV+7c+8LMwsmrSc14j3WOlJPIUSxzFpV/O7n
+	 RPwUSRw6tKlnQ==
+Date: Mon, 30 Jun 2025 11:01:41 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, tytso@mit.edu
+Subject: Re: [PATCH] ext4: fix JBD2 credit overflow with large folios
+Message-ID: <aGKm1W71BP636aWd@lappy>
+References: <20250630131324.1253313-1-sashal@kernel.org>
+ <0d7b0731-88c3-4114-a401-e6aa8a085c5f@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627200501.1712389-1-almasrymina@google.com> <20250627200501.1712389-2-almasrymina@google.com>
-In-Reply-To: <20250627200501.1712389-2-almasrymina@google.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Mon, 30 Jun 2025 18:00:55 +0300
-X-Gm-Features: Ac12FXy1xBEUxoV-RSx5hkK5xW-WOODrAl4t6LxpeZZdNAPeYcO-k0boL2C7b-c
-Message-ID: <CAC_iWjLY10NAW7b7-vk5UD3x-Nay=4sfAW5uowq2MKyK_h-6aQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v1 2/2] selftests: pp-bench: remove
- page_pool_put_page wrapper
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <0d7b0731-88c3-4114-a401-e6aa8a085c5f@huaweicloud.com>
 
-On Fri, 27 Jun 2025 at 23:05, Mina Almasry <almasrymina@google.com> wrote:
+On Mon, Jun 30, 2025 at 09:58:52PM +0800, Zhang Yi wrote:
+>On 2025/6/30 21:13, Sasha Levin wrote:
+>> When large folios are enabled, the blocks-per-folio calculation in
+>> ext4_da_writepages_trans_blocks() can overflow the journal transaction
+>> limits, causing the writeback path to fail with errors like:
+>>
+>>   JBD2: kworker/u8:0 wants too many credits credits:416 rsv_credits:21 max:334
+>>
+>> This occurs with small block sizes (1KB) and large folios (32MB), where
+>> the calculation results in 32768 blocks per folio. The transaction credit
+>> calculation then requests more credits than the journal can handle, leading
+>> to the following warning and writeback failure:
+>>
+>>   WARNING: CPU: 1 PID: 43 at fs/jbd2/transaction.c:334 start_this_handle+0x4c0/0x4e0
+>>   EXT4-fs (loop0): ext4_do_writepages: jbd2_start: 9223372036854775807 pages, ino 14; err -28
+>>
+>> Call trace leading to the issue:
+>>   ext4_do_writepages()
+>>     ext4_da_writepages_trans_blocks()
+>>       bpp = ext4_journal_blocks_per_folio() // Returns 32768 for 32MB folio with 1KB blocks
+>>       ext4_meta_trans_blocks(inode, MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp)
+>>         // With bpp=32768, lblocks=34815, pextents=32768
+>>         // Returns credits=415, but with overhead becomes 416 > max 334
+>>     ext4_journal_start_with_reserve()
+>>       jbd2_journal_start_reserved()
+>>         start_this_handle()
+>>           // Fails with warning when credits:416 > max:334
+>>
+>> The issue was introduced by commit d6bf294773a47 ("ext4/jbd2: convert
+>> jbd2_journal_blocks_per_page() to support large folio"), which added
+>> support for large folios but didn't account for the journal credit limits.
+>>
+>> Fix this by capping the blocks-per-folio value at 8192 in the writeback
+>> path. This is the value we'd get with 32MB folios and 4KB blocks, or 8MB
+>> folios with 1KB blocks, which is reasonable and safe for typical journal
+>> configurations.
+>>
+>> Fixes: d6bf294773a4 ("ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
 >
-> Minor cleanup: remove the pointless looking _ wrapper around
-> page_pool_put_page, and just do the call directly.
+>Hi, Sasha!
 >
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>Thank you for the fix. However, simply limiting the credits is not enough,
+>as this may result in a scenario where there are not enough credits
+>available to map a large, non-contiguous folio. I've been working on this
+>issue[1] and I'll release v3 tomorrow if my tests looks fine.
+>
+>[1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
 
-Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Ah perfect, I haven't seen your work, thank you for that.
 
-> ---
->  .../net/bench/page_pool/bench_page_pool_simple.c     | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-> index 1cd3157fb6a9..cb6468adbda4 100644
-> --- a/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-> +++ b/tools/testing/selftests/net/bench/page_pool/bench_page_pool_simple.c
-> @@ -16,12 +16,6 @@
->  static int verbose = 1;
->  #define MY_POOL_SIZE 1024
->
-> -static void _page_pool_put_page(struct page_pool *pool, struct page *page,
-> -                               bool allow_direct)
-> -{
-> -       page_pool_put_page(pool, page, -1, allow_direct);
-> -}
-> -
->  /* Makes tests selectable. Useful for perf-record to analyze a single test.
->   * Hint: Bash shells support writing binary number like: $((2#101010)
->   *
-> @@ -121,7 +115,7 @@ static void pp_fill_ptr_ring(struct page_pool *pp, int elems)
->         for (i = 0; i < elems; i++)
->                 array[i] = page_pool_alloc_pages(pp, gfp_mask);
->         for (i = 0; i < elems; i++)
-> -               _page_pool_put_page(pp, array[i], false);
-> +               page_pool_put_page(pp, array[i], -1, false);
->
->         kfree(array);
->  }
-> @@ -180,14 +174,14 @@ static int time_bench_page_pool(struct time_bench_record *rec, void *data,
->
->                 } else if (type == type_ptr_ring) {
->                         /* Normal return path */
-> -                       _page_pool_put_page(pp, page, false);
-> +                       page_pool_put_page(pp, page, -1, false);
->
->                 } else if (type == type_page_allocator) {
->                         /* Test if not pages are recycled, but instead
->                          * returned back into systems page allocator
->                          */
->                         get_page(page); /* cause no-recycling */
-> -                       _page_pool_put_page(pp, page, false);
-> +                       page_pool_put_page(pp, page, -1, false);
->                         put_page(page);
->                 } else {
->                         BUILD_BUG();
-> --
-> 2.50.0.727.gbf7dc18ff4-goog
->
+Please ignore my patch.
+
+-- 
+Thanks,
+Sasha
