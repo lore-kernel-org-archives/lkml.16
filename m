@@ -1,69 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC85A21A452;
-	Mon, 30 Jun 2025 07:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9885821ABB1;
+	Mon, 30 Jun 2025 07:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268430; cv=none; b=sT0HJK8R/qOuy35V0v2gxCdeEEZ/kaIhS1Vlz9vJrMUvKjPihOYJZIyeJBJFuyxXhlmpsy1NNHPKHeLGfFQn7jSfd0N6R6yn14wzQU13/cqnhTFA6pnU6QIevinbV4cJ3FP9lwS9HQDrcQUarxHWzB/Yj1UORKfVMt6lmJ30Zm4=
+	t=1751268474; cv=none; b=o2UW9lFNHhOgI584pydBcGRDeP5ZR+Ghq2F7XrktaVoVo2nivfgz2yebcNREXAClsT0kOnrq96ZNF0dubQgVu8ksQbMbWc+IO2Xh3RCEpkm45A0l1vbDreSWw29vc1c4/qPTEn5GBHE3Ot85TPsu7z/c9kk3OXjuw/Iy3AZHGmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268430; c=relaxed/simple;
-	bh=FWrl2p3qQeCBwBc+iddcMGfISqzr9IL2sZSnnO0P3zs=;
+	s=arc-20240116; t=1751268474; c=relaxed/simple;
+	bh=s7O3QKU1w7yXcBtvu+PX0pRrT+Gaj3+NMtxsSSmo9b8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HYDsr5n6yTwc5xzHzK1327gubAPpA16FQxX0unZaB1gt1IQiZq0XyeMTwVGmkaRkCBcPfT7y0UWat1ta7inn0QJcCFRdxp7tbF0yyFQlOlUy7z2LMjgdBNqdZ5wR2/fvDLPx5Zcc1sMIQmqkecmMjaczxxqCJLoglY2GEUfDOVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEJYe4x9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N29n1bdDFpwzzdnds+NmKI646ik5I6FnZEfxtqNLZvx/3/bf3jJoyS8Q6gN4znxMqh2XrQ/K3T8RY1vEIFkQz1LbNVff8TLb1oa75mhulaqulGJsJaa8dvCwWy0xX6fz4ILd9x14fo/WuJQPY0rHOvgyvyMNEX8/KxV6rp3LFX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haBqXJON; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEJYe4x9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2601C4CEEB;
-	Mon, 30 Jun 2025 07:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751268430;
-	bh=FWrl2p3qQeCBwBc+iddcMGfISqzr9IL2sZSnnO0P3zs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEJYe4x9/sFWmnbjhQynE5TdQU1WA1dlhsPNY+Cz/9RvKGhTvvmcj+/4MQSkyjlau
-	 mGPXQDK/+5NbfO75xXrLB6lzSaOCsRMTt2ThsbcYlrVw1e0lButaaPMjWApUyT4YHT
-	 boQ8B1FU8M1wAD+W6FdvDjJcCsPGXyZispul0gE2+klcobIJ0c8w4h9IRMmJwttZ5G
-	 sQh/aCNx/CxyxiDgXE9N4UiUUxKQ5yBJJOtESnw23DwvANnUU8ed75SJ9xhrlsIJ0i
-	 4jq5nRqsr3UG/U6Saup3/VD6SowuGyJOXRQP2DBvvTzbCNZIMlSnzIp4ZBhCNFSP5y
-	 eXTkHqpaoS5Kw==
-Date: Mon, 30 Jun 2025 09:27:07 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: hans.zhang@cixtech.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
-	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/14] dt-bindings: pci: cadence: Extend compatible
- for new EP configuration
-Message-ID: <20250630-antique-therapeutic-swift-dec350@krzk-bin>
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-3-hans.zhang@cixtech.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haBqXJON"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751268472; x=1782804472;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=s7O3QKU1w7yXcBtvu+PX0pRrT+Gaj3+NMtxsSSmo9b8=;
+  b=haBqXJONDS//idGACf7Uma5SAlfva/YVSd9ua4K96o+lNzgLIqoxOHn/
+   T2vvxU8D3KvYYfDLjSYdGfT3N4mXo63FLB5PZ7uJXzzCW7Q7QjELlNSAm
+   b+pWoZKY640E1KwbBw/n9uZpbvxih/4HwQMCIyqjUSOKPx3h0HHC/ObvP
+   af99uWW0WwHdEECwO8aj7skybJVBaFkicySkhP9c484qXBEvlxvNOYPhJ
+   JJMuEIluBc+VTDKSfjxeYz5qacr7nFLdeJ1p6n6pw4axiX8WI0IqRttsI
+   Yd+67LWGcRIYER3fSwkpio9EUo1t1NY1akbwZ8thFtruebx/YfBGhc7zd
+   Q==;
+X-CSE-ConnectionGUID: jLd0XQj6ReWYEN3OyiBsmQ==
+X-CSE-MsgGUID: wQh1notWTZmtGvGyvirXaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64835628"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="64835628"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:27:49 -0700
+X-CSE-ConnectionGUID: h6P/rFWnTa25eiiDrjgeMw==
+X-CSE-MsgGUID: UWXeOLEbQoCH8xVTUk3umQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157773770"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 00:27:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uW8vT-0000000BEd7-3G98;
+	Mon, 30 Jun 2025 10:27:39 +0300
+Date: Mon, 30 Jun 2025 10:27:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: =?iso-8859-1?Q?Jean-Fran=E7ois?= Lessard <jefflessard3@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Boris Gjenero <boris.gjenero@gmail.com>,
+	Christian Hewitt <christianshewitt@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Paolo Sabatino <paolo.sabatino@gmail.com>
+Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
+ controllers driver
+Message-ID: <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629131830.50034-1-jefflessard3@gmail.com>
+ <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250630041601.399921-3-hans.zhang@cixtech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jun 30, 2025 at 12:15:49PM +0800, hans.zhang@cixtech.com wrote:
-> From: Manikandan K Pillai <mpillai@cadence.com>
+On Mon, Jun 30, 2025 at 08:12:16AM +0200, Krzysztof Kozlowski wrote:
+> On 29/06/2025 15:18, Jean-François Lessard wrote:
+
+...
+
+> > +	display->leds =
+> > +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KERNEL);
 > 
-> Document the compatible property for HPA (High Performance Architecture)
-> PCIe controller EP configuration.
+> Wrong wrapping. Use kernel style, not clang style.
 > 
-> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+> 
+> > +	if (!display->leds)
+> > +		return -ENOMEM;
 
-Missing SoB.
+Just wondering how .clang-format is official? Note some of the maintainers even
+prefer (ugly in some cases in my opinion) style because it's generated by the
+clang-format.
 
-Why are you sending someone else's patches? This just duplicates the
-review and creates confusion.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Did you address ENTIRE previous review when you resent this?
-
-Best regards,
-Krzysztof
 
