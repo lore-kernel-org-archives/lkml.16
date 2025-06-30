@@ -1,94 +1,85 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF62B28CF76
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE2128E5F3;
+	Mon, 30 Jun 2025 14:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294561; cv=none; b=JRZF60dq4o8IP038pZQSuLIkLrpLipU6cIDovqwIdSMmzg5JZNHvwqeD3ayZuuT7RA/drt5dcgbZR+C2jngbXyiUU7rSdz4GGn1r0DK+DAGsPvbkipHlxOg2YoBQvTHVxdlO42Dv1iTMPJRae3pokXfdHzJSvTEhp0TCUbnJ8KQ=
+	t=1751294565; cv=none; b=GH+Mo4iCYuT5DmszuskzecwH1E40Na+RTI4aoxCfXC3/kxA5RZWTDBuJEcUyWmPosf68OJwumuM+xVZurpUE6ZK9inEL4mWbuKw7s5g2xVdRfHATpo6CNEXoVH3rfduPu77t5mkQXk6LiAXHZYQ8ODVtY2qnrVE0Y8qBawzAqpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294561; c=relaxed/simple;
-	bh=wNc5/0oYy9n47qFvbw589KeGQi7wI1lepwH1WsSR3yU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vAoOcNW32e0ynlqGWvOdec+s5G70W6SnoIAvutrypUNQpNRq5niO8T6TNptlFfIAau0+fMfKuKOO61XrEz0fC3j4TGlaTk0OFSiTgX8R2dxXdNgQBqCfUzyCSyWgprE9Dl7sQz4AXL9uDcXQhl0QdfN2GaMhkBRuHzR4VeadR2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ErG1j74Z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SVjaLSc+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ErG1j74Z; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SVjaLSc+; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751294565; c=relaxed/simple;
+	bh=6qMdcAVrzLINFWGhEHKx2bOfsr29+z1VuJLunXEJhWY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BneZ/4pCdU92QHq7RRTtRp+E2Wl8oM0rDBPz39nxP7mgEZF7wL9SURpoYBpQNUAZB+aBt13JGkk+zmDr0cFJh0L+aOU2u7NkDcTGPbhbkEtfsH2dQiYjcUHBsBadyDmYipnl4bLg8uesqyFtyJ74RQ51jPPHlXHd0AJDNvOhvYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3+4wMAg; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ErG1j74Z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SVjaLSc+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ErG1j74Z";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SVjaLSc+"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5268521169;
-	Mon, 30 Jun 2025 14:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751294539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/0nrP3gEwMU8Fn4GtEZKqKPsnJhVzjLl9aZ9S6/OZg=;
-	b=ErG1j74ZDfTCSF0jDtWMy7eMFoREIa+dH54jLRbAtEd/+HJYayYIXfTuI7aAyxoYhsLaIx
-	/6KzhxVVr20gGd42bQQo+fP4BDYwolkMiBalHr2egN0762gaOk1TrmanYxMbkL/hGWWcP9
-	H9vIqrX3lLN1wpnoIILvVQJRqjtln24=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751294539;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/0nrP3gEwMU8Fn4GtEZKqKPsnJhVzjLl9aZ9S6/OZg=;
-	b=SVjaLSc+Qk0F3x37ufNyImVLYi7z8sovgvTcJbk0HtoNj2VBgjqeFYVOpop0iRxXfZ/bKO
-	aAqc18JLN+ZD5FBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ErG1j74Z;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SVjaLSc+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751294539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/0nrP3gEwMU8Fn4GtEZKqKPsnJhVzjLl9aZ9S6/OZg=;
-	b=ErG1j74ZDfTCSF0jDtWMy7eMFoREIa+dH54jLRbAtEd/+HJYayYIXfTuI7aAyxoYhsLaIx
-	/6KzhxVVr20gGd42bQQo+fP4BDYwolkMiBalHr2egN0762gaOk1TrmanYxMbkL/hGWWcP9
-	H9vIqrX3lLN1wpnoIILvVQJRqjtln24=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751294539;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/0nrP3gEwMU8Fn4GtEZKqKPsnJhVzjLl9aZ9S6/OZg=;
-	b=SVjaLSc+Qk0F3x37ufNyImVLYi7z8sovgvTcJbk0HtoNj2VBgjqeFYVOpop0iRxXfZ/bKO
-	aAqc18JLN+ZD5FBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CE49E13A24;
-	Mon, 30 Jun 2025 14:42:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2PyqL0qiYmjqdAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 30 Jun 2025 14:42:18 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Peter Xu <peterx@redhat.com>,
-	Gavin Guo <gavinguo@igalia.com>,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3+4wMAg"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2352400344aso41498375ad.2;
+        Mon, 30 Jun 2025 07:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751294563; x=1751899363; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5aofoMvYrH1y9lMP9RzucrOBhds6qNg3gudKz2Vjufs=;
+        b=T3+4wMAgn8Fn6meJFWEjeKz0hEq6dyWbjL7uxMTj8qz9bEJzPxKzxJXKUNmGDUNl6t
+         Hf7JnD1Dpha4TDwJT7SrQo4PjJyUVjR2ZOlLZdyvwIQKNyh8PA/JulyVLP8MKRKdgXUJ
+         jeJc2IBj8cZrxtWiJM8mbc0JmIAUqX+3is0Yef69x5zI9nzk+Cl8B8coLtftlxY5ovZa
+         fhms6cYG/JxeGQgvabvuJ5cQr252YLcVJhLnHC155HBDDvCmI7fZvEoQ2wNMXU6xZL/2
+         VFo0yuIjTV5/yCHlIY8hHZ/m0fdhoaAuZ2nIAqahtgWi9GZxIOhUJI38ed3NdTtnmpSR
+         CpBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751294563; x=1751899363;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5aofoMvYrH1y9lMP9RzucrOBhds6qNg3gudKz2Vjufs=;
+        b=g+uDx9OGz6RqEOjqEwPrCkaQdPuebIKp00eKHZ5ou+n6m4u7KtLFfRoLfoDZgx8zNf
+         qNiOf9er2JnM3YNADBSYIKPYrakEya5mPNrSkbc+kscLBsPrqyE7i/NvtV6z1SNScO+8
+         rDGfetS3q4+mTgmctLVy95chXHVdUncd/lEM2yyNbKUBpG89Sv8ytoxEbFy7nw8OANes
+         IC4cd3IHvwiJv6fZNH7g6UHxUgsRaPAJOnS7z8N+iulWOa2wophD5NMXiSRXZZt7n43u
+         xtncqZlByxtOQmbG9uEdEcUKTHYOrE8m8jlHHtlnG5w/GvZIvG4YvXfhJtqnojczCCpN
+         hmoA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0zMvROY2J4Z8gXHlKLtyoZY8IzKjRijPNW+7BIQjbULEAZnB0/HL7qUBnaPw76WAZ480=@vger.kernel.org, AJvYcCVPCST7bnjBmTLnrJz9Znax/NutGyLAFho9C92vFGKSeBIhFPZ8irKmpaMajxTHcfqz/Ib/uAffoVSEhyOK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoTvMr47kJQrZ0pjaJIKa5JqUdM02KlXsLPG76qpTgEwTqwd0r
+	IXN0RdRqlk3163PVpzvKYXv9rio8jes9sbdp/bl6H3Krr9lP/xA1OpSB9PNtqw==
+X-Gm-Gg: ASbGncupr3WFGIcmnN66cvssFWKpUdDDbaprwgN2KyVigZSWUZ9rk1ZVFhKF4K7UadC
+	0vQoaFLeGk8HjPlWzFk5f++Xf6JnywgwZLmV80yKBiNBJnZK/ZsRmEqJX2xsi6474WE5swWInqu
+	eGHVLdX0aMbOEdxemak0PK13/nXmgvLdxk068i40iJ2UdjExQkOH3DSdUtw81d8w2RgND4mdbd+
+	B//pnvm9etq56ddEe2fgi7fo1ZSrbJRL9YzLIWDasc/30abM0bm1uVW1eztBtnreN+FQHkia73x
+	2QwftZLapSiMcf5iulJg+mohEogAf0GMXz6MXpJi9QpB27oRhStvYcgB6/5H85G8IwjlaJYB2Kj
+	H
+X-Google-Smtp-Source: AGHT+IH7KkUfeVZi1PbvFQWZ5RQ3dxQDhFjmunArM3SrATO1+z5mke2EDZHIxwCOZsltxOQabz5ffA==
+X-Received: by 2002:a17:90b:3f0b:b0:301:9f62:a944 with SMTP id 98e67ed59e1d1-318c926ca4emr23469190a91.33.1751294562884;
+        Mon, 30 Jun 2025 07:42:42 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:2f51:de71:60e:eca9])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-318c13a270csm9170017a91.16.2025.06.30.07.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 07:42:42 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: netdev@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	virtualization@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v4 5/5] mm,hugetlb: drop unlikelys from hugetlb_fault
-Date: Mon, 30 Jun 2025 16:42:12 +0200
-Message-ID: <20250630144212.156938-6-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250630144212.156938-1-osalvador@suse.de>
-References: <20250630144212.156938-1-osalvador@suse.de>
+	bpf@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>
+Subject: [PATCH net v2 0/3] virtio-net: fixes for mergeable XDP receive path
+Date: Mon, 30 Jun 2025 21:42:09 +0700
+Message-ID: <20250630144212.48471-1-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,79 +87,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 5268521169
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,linux.dev:email];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	R_RATELIMIT(0.00)[to_ip_from(RLfw9wkb71jz54yo3bnq4aib6i)];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.01
-X-Spam-Level: 
 
-The unlikely predates an era where we were checking for
-hwpoisoned/migration entries prior to checking whether the pte was
-present.
+Hi everyone,
 
-Currently, we check for the pte to be a migration/hwpoison entry after we
-have checked that is not present, so it must be either one or the other.
+This series contains fixes for XDP receive path in virtio-net
+- Patch 1: add a missing check for the received data length with our
+allocated buffer size in mergeable mode.
+- Patch 2: remove a redundant truesize check with PAGE_SIZE in mergeable
+mode
+- Patch 3: make the current repeated code use the check_mergeable_len to
+check for received data length in mergeable mode
 
-Link: https://lkml.kernel.org/r/20250627102904.107202-6-osalvador@suse.de
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Gavin Guo <gavinguo@igalia.com>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Peter Xu <peterx@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
- mm/hugetlb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Version 2 changes:
+- Move the check_mergeable_len helper definition to the patch 1.
+- Remove patch 4.
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index ba078aa1cb96..fda6b748e985 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6747,7 +6747,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 
- 	/* Not present, either a migration or a hwpoisoned entry */
- 	if (!pte_present(vmf.orig_pte)) {
--		if (unlikely(is_hugetlb_entry_migration(vmf.orig_pte))) {
-+		if (is_hugetlb_entry_migration(vmf.orig_pte)) {
- 			/*
- 			 * Release the hugetlb fault lock now, but retain
- 			 * the vma lock, because it is needed to guard the
-@@ -6758,7 +6758,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
- 			migration_entry_wait_huge(vma, vmf.address, vmf.pte);
- 			return 0;
--		} else if (unlikely(is_hugetlb_entry_hwpoisoned(vmf.orig_pte)))
-+		} else if (is_hugetlb_entry_hwpoisoned(vmf.orig_pte))
- 			ret = VM_FAULT_HWPOISON_LARGE |
- 			    VM_FAULT_SET_HINDEX(hstate_index(h));
- 		goto out_mutex;
+Thanks,
+Quang Minh.
+
+Bui Quang Minh (3):
+  virtio-net: ensure the received length does not exceed allocated size
+  virtio-net: remove redundant truesize check with PAGE_SIZE
+  virtio-net: use the check_mergeable_len helper
+
+ drivers/net/virtio_net.c | 75 ++++++++++++++++++++++------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
+
 -- 
-2.50.0
+2.43.0
 
