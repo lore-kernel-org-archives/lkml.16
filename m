@@ -1,180 +1,281 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5195F9D6;
-	Mon, 30 Jun 2025 14:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659D028C2D3
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294539; cv=none; b=XjNWELuEpDCriYe2//XVTPbhRctv1IOY9rJ93iRkfuk4Mb2KjOlgN66I31FXddt+atfjdSJghnHK0pr4AXUp6VeTCjrFd/HYbklBVssPiBOu31Qk1KE5k4dhV06HKIq3H74adKDWaWH6cqNaT1c3rKFRTz7fdsW1o4A2fCaDbTM=
+	t=1751294541; cv=none; b=ZkiPl6jii6z03CN3CBJp2I2p1OtJFw0PfuYPESEEM0bv6dNgnUHW71F/Y0ADHHTFcDn/FZ/+parE+I3bj9rGitzUsEgxYVDZdVcVcr3OBF4dvySQIj+0WPWZfpyn87Ft2a2zL0aDrHKJ7kaqhADccWU8mXdIpgrzK20UKoAFRuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294539; c=relaxed/simple;
-	bh=7rRLWTSIYgRgKpl7chljwX5P3VJunIFaGVfmvydxrJY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lZtzNi5EFwMlU5vuDFPc8741IKY393ODwmOf8yGTuPJPf/rWu2yd9aMV86wvYv/zLoVH3VWl6wttsCcZ3BYtJHWFgvracWW2oRDcOeZkXM5n7ysuRa/yg9waDC5642i1YoHJtVyhkpfPk5+AQAi60HIN5zU1pkVK/mY7TfNnI+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=azRt7egx; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1751294541; c=relaxed/simple;
+	bh=WFPQNGAJITHf32OWZme2nTms9NHLOZOiry3XwYpeMho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dLyECsVOJ6fXUho7ugnEjVFKyBMbRIvIT5ftTjoU69arSDQ//EsH/mrhJ9cC6sjUnpDLnPonCGQybrG4v5j6ColIjWtcTbuzwmsP1Y3DH9sogOxYQvOZfW1v4UZPasAe0dwfdpI97NkniW18KcZ1f5/OqhpvL0Fm/4oGxonuKfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dbwaxbQZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7QYbxML7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dbwaxbQZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7QYbxML7; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="azRt7egx"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dbwaxbQZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7QYbxML7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dbwaxbQZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7QYbxML7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4bW84x3lD3z19T1;
-	Mon, 30 Jun 2025 14:42:09 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bW84x0Dbkz2xWq;
-	Mon, 30 Jun 2025 14:42:09 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=azRt7egx;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1751294529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Oefc1I1TGBbFAU5VsJxxdk7pMhWRjgBMKnVGuJzRmaw=;
-	b=azRt7egxZ37ieo+2aeLq7D3TCyVFZ1LQVAzDxu2GOI4OwhoHxphePeA3vouOxKLgy2mlVe
-	FwR5Eu9m9Mbi4ulOcQH22CxzPOMqdFF5ZKQ0fDHJc7WZ+i0fA+nJ73A++TFrVj3d1QYcWY
-	x0LHkuusfrAIaNXHLkNr1PU05WG5zRAUEb4jtsqVyJRCRvK8v11ZXJlSzIyo9zNAoxWKTx
-	6Jx6XO2Ea9iElYf9HXKKWg/qaL2yoqv7WtnjmsemiUowTE4cigYVs1ldN8ixqlH/JXLLhX
-	QP/TdGKjOTbpGQ6P02DcPKo0ojMQID9e8U1qA0d+tzIGdpqP99q8enYibDttXg==
-X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=6862a241 a=smkfPCmiGCBx+NgG8pXs4w==:117 a=smkfPCmiGCBx+NgG8pXs4w==:17 a=IkcTkHD0fZMA:10 a=cm27Pg_UAAAA:8 a=xOd6jRPJAAAA:8 a=7tNz1FnvlWAMBOXk5aYA:9 a=QEXdDO2ut3YA:10
-X-CM-Envelope: MS4xfC9CKFQdDf0bIrpch3LVRP2Zf0Fi7GbcxYzlxlva5c775EYS7FsttBA3Zwyzdpf+9K5MF5pcEf+S89ieBCeWFB0IsY2XR31biyz2tECzRzdksARa1ts+ h0heybhZ06L6Qi/CtOcOVWDcXtEGMqsOEyy3LOIR6tmpHKyMI4jTPm68GDF5IqYK0P0N//ojNQ81CR9/aTvzBMgeqWScc4qE7libJ3f4rIuxH2fw2E8Qdy/z HwVvB2c0Em66FYvKLVoO6KzikkS/aZdlTTKvPbOvC53ZGY5999CG9szX9AkwYF2yLp3+2rfyW2NdjRJnlXFaaM/1TW88CO/ZwwaeAk1TYAaXYHAG/q1ao8/B 4hkl89aw1TQFo6W9a5+cEV+irOYcqdUOMfCcMw6+7xASGkR0nsU=
-Message-ID: <a8e3b608-f26b-42dc-b69a-df51afc5edf3@jjverkuil.nl>
-Date: Mon, 30 Jun 2025 16:42:08 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A4D021164;
+	Mon, 30 Jun 2025 14:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751294536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=GzLMyabYZWnfai/GjIlaaIB9T8NN4dI3ADLvoB8CDB0=;
+	b=dbwaxbQZWOqWpC+fVhTa7AD0Qn8LYOYRhkGykz2AOwLW/heZZEww7Gn96579sDolInGNwu
+	n58h5yEvyQSoZ24+Q5pHlr+sDjFH9TUvGAa18yHHodprzqxsiNNqw4TL1rn3FPeNnGBahu
+	Ircdc8kxDzt9QpFpwSGgosIs28J+fKU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751294536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=GzLMyabYZWnfai/GjIlaaIB9T8NN4dI3ADLvoB8CDB0=;
+	b=7QYbxML7KbZkNz5tB8x4iZE2G+JMl/ioo10zic3Wn+10lOZcLitxYVbwV3c03IvbFi7oz6
+	zdLUMPNtcM1p16DA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dbwaxbQZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7QYbxML7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751294536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=GzLMyabYZWnfai/GjIlaaIB9T8NN4dI3ADLvoB8CDB0=;
+	b=dbwaxbQZWOqWpC+fVhTa7AD0Qn8LYOYRhkGykz2AOwLW/heZZEww7Gn96579sDolInGNwu
+	n58h5yEvyQSoZ24+Q5pHlr+sDjFH9TUvGAa18yHHodprzqxsiNNqw4TL1rn3FPeNnGBahu
+	Ircdc8kxDzt9QpFpwSGgosIs28J+fKU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751294536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=GzLMyabYZWnfai/GjIlaaIB9T8NN4dI3ADLvoB8CDB0=;
+	b=7QYbxML7KbZkNz5tB8x4iZE2G+JMl/ioo10zic3Wn+10lOZcLitxYVbwV3c03IvbFi7oz6
+	zdLUMPNtcM1p16DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F3B691399F;
+	Mon, 30 Jun 2025 14:42:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oHReOEeiYmjqdAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Mon, 30 Jun 2025 14:42:15 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Peter Xu <peterx@redhat.com>,
+	Gavin Guo <gavinguo@igalia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v4 0/5] Misc rework on hugetlb faulting path
+Date: Mon, 30 Jun 2025 16:42:07 +0200
+Message-ID: <20250630144212.156938-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: hans@jjverkuil.nl
-Subject: Re: [PATCH v3 7/8] media: core: export v4l2_translate_cmd
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
- <20250630-uvc-grannular-invert-v3-7-abd5cb5c45b7@chromium.org>
-Content-Language: en-US, nl
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250630-uvc-grannular-invert-v3-7-abd5cb5c45b7@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 7A4D021164
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid]
+X-Spam-Score: -3.01
+X-Spam-Level: 
 
-On 30/06/2025 16:20, Ricardo Ribalda wrote:
-> video_translate_cmd() can be useful for drivers to convert between the
-> VIDIOC_*32 and VIDIOC_ defines. Let's export it.
-> 
-> Now that the function is exported, use this opportunity to rename the
-> function with the v4l2_ prefix, that is less ambiguous than video_
-> 
-> The VIDIOC_*32 defines are not accessible by the drivers, they live in
-> v4l2-compat-ioctl32.c.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ioctl.c | 5 +++--
->  include/media/v4l2-ioctl.h           | 1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 650dc1956f73d2f1943b56c42140c7b8d757259f..1e22ca898ab77e581d78c1a618e1de0e57281cde 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -3245,7 +3245,7 @@ static int check_array_args(unsigned int cmd, void *parg, size_t *array_size,
->  	return ret;
->  }
->  
-> -static unsigned int video_translate_cmd(unsigned int cmd)
-> +unsigned int v4l2_translate_cmd(unsigned int cmd)
->  {
->  #if !defined(CONFIG_64BIT) && defined(CONFIG_COMPAT_32BIT_TIME)
->  	switch (cmd) {
-> @@ -3266,6 +3266,7 @@ static unsigned int video_translate_cmd(unsigned int cmd)
->  
->  	return cmd;
->  }
-> +EXPORT_SYMBOL(v4l2_translate_cmd);
 
-Please use EXPORT_SYMBOL_GPL.
+ v3 -> v4:
+  - Fix the deadlock for real in patch#1 (Kudos to Galving for testing out v3)
+  - Keep trylock as the original code does
+  - Add reproducer in the cover letter
 
-With that change:
+ v2 -> v3:
+   - Addressed issue folio_lock when holding spinlock (per David)
+   - Simplify new_anon_folio (per David)
+   - Slightly rework patch#2 to make it simpler
 
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
+ v1 -> v2:
+   - Addressed feedback from David
+   - Settle ideas wrt. locking in faulting path after
+     discussion with David
+   - Add Acks-by
 
-Regards,
+ RFC -> v1:
+   - Stop looking up folio in the pagecache for detecting a COW
+     on a private mapping.
+   - Document the locks
 
-	Hans
+This patchset aims to give some love to the hugetlb faulting path, doing so
+by removing obsolete comments that are no longer true, sorting out the folio
+lock, and changing the mechanism we use to determine whether we are COWing a
+private mapping already.
 
->  
->  static int video_get_user(void __user *arg, void *parg,
->  			  unsigned int real_cmd, unsigned int cmd,
-> @@ -3426,7 +3427,7 @@ video_usercopy(struct file *file, unsigned int orig_cmd, unsigned long arg,
->  	size_t  array_size = 0;
->  	void __user *user_ptr = NULL;
->  	void	**kernel_ptr = NULL;
-> -	unsigned int cmd = video_translate_cmd(orig_cmd);
-> +	unsigned int cmd = v4l2_translate_cmd(orig_cmd);
->  	const size_t ioc_size = _IOC_SIZE(cmd);
->  
->  	/*  Copy arguments into temp kernel buffer  */
-> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
-> index c6ec87e88dfef9e6cfe1d1fb587c1600882fb14d..82695c3a300a73219f262fb556ed61a8f09d273e 100644
-> --- a/include/media/v4l2-ioctl.h
-> +++ b/include/media/v4l2-ioctl.h
-> @@ -679,6 +679,7 @@ long int v4l2_compat_ioctl32(struct file *file, unsigned int cmd,
->  #endif
->  
->  unsigned int v4l2_compat_translate_cmd(unsigned int cmd);
-> +unsigned int v4l2_translate_cmd(unsigned int cmd);
->  int v4l2_compat_get_user(void __user *arg, void *parg, unsigned int cmd);
->  int v4l2_compat_put_user(void __user *arg, void *parg, unsigned int cmd);
->  int v4l2_compat_get_array_args(struct file *file, void *mbuf,
-> 
+The most important patch of the series is #1, as it fixes a deadlock that
+was described in [1], where two processes were holding the same lock
+for the folio in the pagecache, and then deadlocked in the mutex.
+Note that this can also happen for anymous folios. This has been tested using
+this reproducer [2].
+
+Looking up and locking the folio in the pagecache was done to check whether
+that folio was the same folio we had mapped in our pagetables, meaning that if it
+was different we knew that we already mapped that folio privately, so any
+further CoW would be made on a private mapping, which lead us to the  question:
+ __Was the reservation for that address consumed?__
+That is all we care about, because if it was indeed consumed and we are the
+owner and we cannot allocate more folios, we need to unmap the folio from the
+processes pagetables and make it exclusive for us.
+
+We figured we do not need to look up the folio at all, and it is just enough to
+check whether the folio we have mapped is anonymous, which means we mapped it
+privately, so the reservation was indeed consumed.
+
+Patch#2 sorts out folio locking in the faulting path, reducing the scope of it
+,only taking it when we are dealing with an anonymous folio and document it.
+More details in the patch.
+
+Patch#3-5 are cleanups.
+
+[1] https://lore.kernel.org/lkml/20250513093448.592150-1-gavinguo@igalia.com/
+[2] Here is the reproducer:
+
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+ 
+ #define PROTECTION (PROT_READ | PROT_WRITE)
+ #define LENGTH (2UL*1024*1024)
+ 
+ #define ADDR (void *)(0x0UL)
+ #define FLAGS (MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB)
+ 
+ void __read(char *addr)
+ {
+ 	int i = 0;
+ 
+ 	printf("a[%d]: %c\n", i, addr[i]);
+ }
+ 
+ void fill(char *addr)
+ {
+ 	addr[0] = 'd';
+ 
+ 	printf("addr: %c\n", addr[0]);
+ }
+ 
+ int main(void)
+ {
+ 	void *addr;
+ 	pid_t pid, wpid;
+ 	int status;
+ 
+ 	addr = mmap(ADDR, LENGTH, PROTECTION, FLAGS, -1, 0);
+ 	if (addr == MAP_FAILED) {
+ 		perror("mmap");
+ 		return -1;
+ 	}
+ 
+ 	printf("Parent faulting in RO\n");
+ 	__read(addr);
+ 
+ 	sleep (10);
+ 	printf("Forking\n");
+ 
+ 	pid = fork();
+ 	switch (pid) {
+ 	case -1:
+ 		perror("fork");
+ 		break;
+ 	case 0:
+ 		sleep (4);
+ 		printf("Child: Faulting in\n");
+ 		fill(addr);
+ 		exit(0);
+ 		break;
+ 	default:
+ 		printf("Parent: Faulting in\n");
+ 		fill(addr);
+ 		while((wpid = wait(&status)) > 0);
+ 		if (munmap(addr, LENGTH))
+ 			perror("munmap");
+ 	}
+ 
+ 
+ 	return 0;
+ }
+
+You will also have to add a delay in hugetlb_wp, after releasing the mutex and
+before unmapping, so the window is large enough to reproduce it reliably.
+
+ diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+ index fda6b748e985..5601a9cf819b 100644
+ --- a/mm/hugetlb.c
+ +++ b/mm/hugetlb.c
+ @@ -38,6 +38,7 @@
+  #include <linux/memory.h>
+  #include <linux/mm_inline.h>
+  #include <linux/padata.h>
+ +#include <linux/delay.h>
+  
+  #include <asm/page.h>
+  #include <asm/pgalloc.h>
+ @@ -6261,6 +6262,8 @@ static vm_fault_t hugetlb_wp(struct vm_fault *vmf)
+  			hugetlb_vma_unlock_read(vma);
+  			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
+  
+ +			mdelay(8000);
+ +
+  			unmap_ref_private(mm, vma, old_folio, vmf->address);
+  
+  			mutex_lock(&hugetlb_fault_mutex_table[hash]);
+
+
+Oscar Salvador (5):
+  mm,hugetlb: change mechanism to detect a COW on private mapping
+  mm,hugetlb: sort out folio locking in the faulting path
+  mm,hugetlb: rename anon_rmap to new_anon_folio and make it boolean
+  mm,hugetlb: drop obsolete comment about non-present pte and second
+    faults
+  mm,hugetlb: drop unlikelys from hugetlb_fault
+
+ mm/hugetlb.c | 132 +++++++++++++++++++++++----------------------------
+ 1 file changed, 60 insertions(+), 72 deletions(-)
+
+-- 
+2.50.0
 
