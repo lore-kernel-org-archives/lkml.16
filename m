@@ -1,110 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC73828C5D9;
-	Mon, 30 Jun 2025 16:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F7F28C02A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301321; cv=none; b=a7KlUb0EC6HvPstlZjn2v73jP6ddUZPmrcwkabbGC/Kg7lvKgBr8Aky90ylG8meGd55d4xjyzi9oK/S/HF7Vmolsmg2SurB9FhXUGs+vomu2gwy9mJYSgOKLON1Q8zJYpyADBfBze8WeKpkNE/8qUuLe+Uuyxrsrpe7vnURABU8=
+	t=1751301352; cv=none; b=QOJUE6vpBviOdTm0YMxnvLvGaoPY9OkUp2kYtMBjC1EG0WOEY8dyuhyKJ9v17r0c+9ggeJXCXn2vncvVnLliyHtDdOcvv/8reYiiN68qi6RTt5/NDYg4smwsofL543/MBZls3W7hgsZDZzk/DqVw2HTu/a44qoV/XF3edXycX3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301321; c=relaxed/simple;
-	bh=SIsBG0bE6nVpLYGGzrorldUCYalfWsYLdprcRg+JujY=;
+	s=arc-20240116; t=1751301352; c=relaxed/simple;
+	bh=Ml+ykxexs/4VAYBnw+V4Z2aKCJJuZGuUfSSJ+SJWmEk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GLNZ6ip1V3sJdJik45ONmYVRUcRFyYjcwoFWEFPUkzncxjLwck7sgTHQnspUGMCrlsdYpWMfTgpTko+RlwlF7Yg0HXY8U8Do0669PkKqjPc+i3RM1qit6GsUeneQM10uU9VXRMrtXkWl9LAvdsT+LrDpY1RIKJLVJKEcEVYBNC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtD4F3rz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WMVfoFWAyeT0c5gNAhUtygXhXJLLRmOjjIGYj2VlwR6lI/eBQ7GVFlZBLAlBXH3UJ0uH8O2hUbGlCTPLEwN4cuO09HhavU0THL/iJZrGkhRHtOaZDpSKU0w8Mr2zX05pxCFv1R1EmLOlqEVlcBjcIxYbMEJboKHHMI3j3WtCQJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAg/zjah; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtD4F3rz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D63AC4CEE3;
-	Mon, 30 Jun 2025 16:35:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAg/zjah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD49C4CEF1;
+	Mon, 30 Jun 2025 16:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751301321;
-	bh=SIsBG0bE6nVpLYGGzrorldUCYalfWsYLdprcRg+JujY=;
+	s=k20201202; t=1751301352;
+	bh=Ml+ykxexs/4VAYBnw+V4Z2aKCJJuZGuUfSSJ+SJWmEk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qtD4F3rz1jSJAySp7brJDviaCYCb1oXFEXYzexxwNzUm777WkleHoLoaCHvPVnJ3U
-	 8ikDP69a8TG5SfA5ZuAH6+jVCuoMs/57eT+rmfgjebWE7eswSvRcLei39T5nCSkr9M
-	 ISgeOsazaBwnjbx2Uyi/NfEONkF0lLRjF9cAV8129aV4VZdvF2u6mRjTIShRd5jLGm
-	 9geP1aoN7pYIE5xc4RszrodEFOt9v6NoV9WcxqKO4bAQ54mo49iMCfPE5bVB5Xa09M
-	 AJJW67Fn/5+7gX5c/N1DQhR5uXc5aLytVWZf7tcq/rYZSCdNRj1Ag36QTJH1AduRav
-	 a23zkXX8prl9g==
-Date: Mon, 30 Jun 2025 09:35:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Florian Weimer <fweimer@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <aGK8x1Oo6Pgl6rGV@google.com>
-References: <20250625225600.555017347@goodmis.org>
- <878ql9mlzn.fsf@oldenburg.str.redhat.com>
+	b=rAg/zjah/TaXBn/ewKWLXuAWNIq3V6JQ2P/51AHn/AHYNADyenNKO727uxLbNDd0C
+	 AIpaPXBQlKuAgEgkD9QmLi1ze/FWsXvEI4MOd3rATvEfggjApkxzIA8irTnvmPXI2w
+	 cs0OJlOi9duJEOcfyYkzzMlgQb82tBM9W3vcdFha8lPWJyisYyyRjtgtGrUW22TWeH
+	 /yTQjLpiq4BEz1YAWxEAMXoBzIQi/wDK1JYnqedlzJTa5FYHLs+zikXYIVR330zASA
+	 4uHqZcpKXbb8E3dNySo5/8qqc9OClvNlo3pzN+UiM15Ben2iamxpHcinOWcUQEPRz1
+	 1NCFhInJMbCrw==
+Date: Mon, 30 Jun 2025 16:35:49 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: wangzijie <wangzijie1@honor.com>
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org, bintian.wang@honor.com,
+	feng.han@honor.com, niuzhiguo84@gmail.com
+Subject: Re: [f2fs-dev] [PATCH v5 2/2] f2fs: don't allow unaligned truncation
+ to smaller/equal size on pinned file
+Message-ID: <aGK85SAE9kDcVAMe@google.com>
+References: <20250630095454.3912441-1-wangzijie1@honor.com>
+ <20250630095454.3912441-2-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
+In-Reply-To: <20250630095454.3912441-2-wangzijie1@honor.com>
 
-Hello,
+I think we can clean up more like this?
 
-On Mon, Jun 30, 2025 at 02:50:52PM +0200, Florian Weimer wrote:
-> * Steven Rostedt:
-> 
-> > SFrames is now supported in gcc binutils and soon will also be supported
-> > by LLVM.
-> 
-> Is the LLVM support discussed here?
-> 
->   [RFC] Adding SFrame support to llvm
->   <https://discourse.llvm.org/t/rfc-adding-sframe-support-to-llvm/86900>
-> 
-> Or is there a secone effort?
-> 
-> > I have more patches on top of this series that add perf support, ftrace
-> > support, sframe support and the x86 fix ups (for VDSO). But each of those
-> > patch series can be worked on independently, but they all depend on this
-> > series (although the x86 specific patches at the end isn't necessarily
-> > needed, at least for other architectures).
-> 
-> Related to perf support: I'm writing up the SFrame change proposal for
-> Fedora, and I want to include testing instructions.  Any idea yet what a
-> typical “perf top” or “perf report” command line would look like?
+https://lore.kernel.org/linux-f2fs-devel/20250630160839.1142073-1-jaegeuk@kernel.org/T/#u
 
-I think you can run "perf report -s dso,sym -g none" then it will show
-"Children" and "Self" overheads.  If callchain in userspace works ok,
-you will get non-kernel entries (symbols start with "[.]") having more
-children overhead than the self.
-
-  $ perf record -g -- perf bench sched messaging
-  
-  $ perf report -s dso,sym -g none | grep -F -e Children -e '[.]' | head
-  # Children      Self  Shared Object           Symbol
-      63.09%     0.01%  perf                    [.] run_bench
-      63.09%     0.00%  libc.so.6               [.] __libc_start_call_main
-      63.09%     0.00%  perf                    [.] cmd_bench
-      63.09%     0.00%  perf                    [.] handle_internal_command
-      63.09%     0.00%  perf                    [.] main
-      63.09%     0.00%  perf                    [.] run_argv
-      63.09%     0.00%  perf                    [.] run_builtin
-      63.02%     0.00%  perf                    [.] bench_sched_messaging
-      62.79%     0.00%  perf                    [.] group
-
-Thanks,
-Namhyung
-
+On 06/30, wangzijie wrote:
+> To prevent scattered pin block generation, don't allow non-section aligned truncation
+> to smaller or equal size on pinned file. But for truncation to larger size, after
+> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
+> we only support overwrite IO to pinned file, so we don't need to consider
+> attr->ia_size > i_size case.
+> In addition, xfstests #494 assumes truncation on active swapfile(pinned) will return
+> ETXTBSY by setattr_prepare() -> inode_newsize_ok(), so we relocate this check after
+> setattr_prepare().
+> 
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+> v5:
+> - fix xfstests #494 fail
+> ---
+>  fs/f2fs/file.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 78368b793..d4feea44b 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1070,6 +1070,23 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	if (err)
+>  		return err;
+>  
+> +	/*
+> +	 * To prevent scattered pin block generation, we don't allow
+> +	 * smaller/equal size unaligned truncation for pinned file.
+> +	 * We only support overwrite IO to pinned file, so don't
+> +	 * care about larger size truncation.
+> +	 * We need to check this after setattr_prepare() because xfstests
+> +	 * #494 assumes truncation on active swapfile(pinned) will
+> +	 * return ETXTBSY by setattr_prepare() -> inode_newsize_ok().
+> +	 */
+> +	if (attr->ia_valid & ATTR_SIZE) {
+> +		if (f2fs_is_pinned_file(inode) &&
+> +			attr->ia_size <= i_size_read(inode) &&
+> +			!IS_ALIGNED(attr->ia_size,
+> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
+> +			return -EINVAL;
+> +	}
+> +
+>  	err = fscrypt_prepare_setattr(dentry, attr);
+>  	if (err)
+>  		return err;
+> -- 
+> 2.25.1
