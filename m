@@ -1,70 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A292459C4;
-	Mon, 30 Jun 2025 17:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26F7241CB7;
+	Mon, 30 Jun 2025 17:16:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303801; cv=none; b=o5uwlaIqVwzURyiI+TaI/dejZ3tN5gshAXkkulJRXkiCMk/2yTFMdnCl23qXryiAl6AoH/uMkiVQfN22sGoqdRkCjka5bNhK/MxvYp6C3JGlyT5Al7vUgy0GeQNUrzrr7mVn8zQ2XKMr4XNVgt8CgzUdN55nXHLCF50iBvtvLq4=
+	t=1751303813; cv=none; b=cJuWMffNLsL0b731ynLlc2Ti7tRLcurR+mZk4TLCuUMa4rXRCBGDd+W22pQMi52ZKXuvFIsUYPTAMdxDJY7Y+FD6QOKtYA2Hr1JcggcPbRZynEWVm9f1wzB3JyXoCOqXjuWpTownvsnon8YkcunapwH2fmQ9VozLRJG0htQMQXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303801; c=relaxed/simple;
-	bh=o46b+qzEeO5R+D3GfcJjy0xzYMzH4gfbKZTrdNsCCQY=;
+	s=arc-20240116; t=1751303813; c=relaxed/simple;
+	bh=LwAN6m7tROMs6LOdXu2EvKHYPn+ncv17qhL0rq5kdoM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SxQxKwXbNmGKXt7ob+S3lEZhkS4s5aDFP48Vm4BmyYQ1HyI9TFSH2UTQUSUpds1wDuBdH0k0DestCHXHqGYALUOCgmg38FeskoXzl85fuhqgErDb5K2d8AKdpaDT+f4X4G/BhyQCvc0admj3GnpGgV5V8m+dHuhwIixJEdq0opU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DOsbfGRd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DOsbfGRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F4A0C4CEE3;
-	Mon, 30 Jun 2025 17:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751303801;
-	bh=o46b+qzEeO5R+D3GfcJjy0xzYMzH4gfbKZTrdNsCCQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DOsbfGRdjmqBhSjcurza6/J672t3KpGEeR9L9vM56lWHXo6AndByMKkYi2RXmzMuH
-	 1leVCf3j5rj9rWhkqKfISe8yIXBjosIT1yPIwxCywADlK33B1GrdabVqESroC2qwp3
-	 O1peHe2k3f9xco2dbJZPvfqFJqkE/uOKUQFOXvcY=
-Date: Mon, 30 Jun 2025 19:16:38 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: andy@kernel.org, dan.carpenter@linaro.org, lorenzo.stoakes@oracle.com,
-	tzimmermann@suse.de, riyandhiman14@gmail.com, willy@infradead.org,
-	notro@tronnes.org, thomas.petazzoni@free-electrons.com,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v3 2/2] staging: fbtft: cleanup error handling in
- fbtft_framebuffer_alloc()
-Message-ID: <2025063022-chump-pointless-6580@gregkh>
-References: <cover.1751207100.git.abdun.nihaal@gmail.com>
- <4e062d040806dc29d6124ac0309e741c63f13ac0.1751207100.git.abdun.nihaal@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGveEzAcXN0PzYqUCee1MWvh2aqrPuaHmQWIljedjr5SyZiFAk7AdlsOuZoySh70674CPBKOSGHYv+Xy0+/dJ8g9onDma7HvqeM0PtCStokkcQo6mc6tmB+O00OMkzGuW4wyrKA7/P5t8v+8TrHh+1A02APD/uD5Cftz2GOymC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B07C4CEE3;
+	Mon, 30 Jun 2025 17:16:49 +0000 (UTC)
+Date: Mon, 30 Jun 2025 18:16:47 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Song Liu <song@kernel.org>
+Cc: Will Deacon <will@kernel.org>, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz,
+	pmladek@suse.com, joe.lawrence@redhat.com, dylanbhatch@google.com,
+	fj6611ie@aa.jp.fujitsu.com, mark.rutland@arm.com,
+	kernel-team@meta.com, Suraj Jitindar Singh <surajjs@amazon.com>,
+	Torsten Duwe <duwe@suse.de>, Breno Leitao <leitao@debian.org>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: Re: [PATCH v4] arm64: Implement HAVE_LIVEPATCH
+Message-ID: <aGLGf5feF4gT-dgR@arm.com>
+References: <20250617173734.651611-1-song@kernel.org>
+ <aF1JShCkslGkch26@willie-the-truck>
+ <CAPhsuW7WY54jYDBtApRRw4mnjM0cZu4GBUZQ58ZHAV+zd79uXw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4e062d040806dc29d6124ac0309e741c63f13ac0.1751207100.git.abdun.nihaal@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW7WY54jYDBtApRRw4mnjM0cZu4GBUZQ58ZHAV+zd79uXw@mail.gmail.com>
 
-On Sun, Jun 29, 2025 at 08:10:11PM +0530, Abdun Nihaal wrote:
-> The error handling in fbtft_framebuffer_alloc() mixes managed allocation
-> and plain allocation, and performs error handling in an order different
-> from the order in fbtft_framebuffer_release().
+On Thu, Jun 26, 2025 at 07:55:28AM -0700, Song Liu wrote:
+> On Thu, Jun 26, 2025 at 6:21 AM Will Deacon <will@kernel.org> wrote:
+> > On Tue, Jun 17, 2025 at 10:37:34AM -0700, Song Liu wrote:
+> > > This is largely based on [1] by Suraj Jitindar Singh.
+> >
+> > I think it would be useful to preserve at least some parts of the
+> > original commit message here so that folks don't have to pull it out
+> > of the list archives if they want to see more about the rationale.
 > 
-> Fix them by moving vmem allocation closer to where it is used, and using
-> plain kzalloc() for txbuf allocation.
+> The relevant message from the original commit message is:
 > 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-> ---
-> v2->v3: 
-> - Remove the if check before kfree of txbuf.buf, because it is zero
->   initialized on allocation, and kfree is NULL aware.
+> Allocate a task flag used to represent the patch pending state for the
+> task.
+> 
+> Shall I respin this patch to add this? Or maybe Catalin can add
+> this while applying the patch?
 
-This patch does not apply to my tree, can you rebase and resend?
+Please repost with a more meaningful description and a justification why
+a new thread flag is needed.
 
-thanks,
+Thanks.
 
-greg k-h
+-- 
+Catalin
