@@ -1,173 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7461E3D6F
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A371F3D6F;
+	Mon, 30 Jun 2025 03:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253931; cv=none; b=mV88SZnUXaxOxN9TtIsQJCjzW/HFqQbGz26aBn6fehmWWO8JZ2s36WVx+FeYrGcEba2uGVlX8slAQ7ecdijxvQgIZPaig8xoWHDldp7sbvQ90rqrofDmNQobTHHKYGzrI+k6dMyPKXAqKAldYPeMIULIiaipBLNMncS3jikMtl8=
+	t=1751253962; cv=none; b=r9GNOcN64Yb0by1981esp4c/Gom6Dyq4zhxFL27OdtWYKUWrs1/rnZCUOm5NZr3WSBozmvDfVdkFmg7z2fdJWbvKpHTlSI2Y4P3pLAJNkFaaSd3kIV1FBCxPaB/ERjMO9Z261AOBMFUnuDIZclXymDbaoBAk89g1ADTz3ptxd5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253931; c=relaxed/simple;
-	bh=LV1RbfJMboY121pq/OVMD9JfCIwBjXF7y439XzrIWzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PgEtpi+JdWMk/2f/CbXKAJp3YY1Mn2rE5ObMj97TFJdAyP1okVdobktJn9/oNQDsYNcOP8p5LqTirTBTkFuui1frklud04S+IJiCYwx3w6m5Im0R4NPpSXpJ03Gj/73L4WroN5KkgCD2rro+9nDc+xTL7QTiyvKDjANBiaevCSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f1uWtMrz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751253962; c=relaxed/simple;
+	bh=nkFNFydvDXG5Ba98QcGrP++oQAGa50jqGrB/mKVqye8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GR0ZXixyHXz4914jjAVAEGxsoNyu4jDvCX8BMTPlql0901nkGDamphOt/Jc3AoEq6eDxwT5yQWe9V3JOOOCNDK5SqWHGbHIKJTnl8CvfhJaVwM3bIl83aJDm0BgSvbpkM4TfntXfuMYBEaOJyfa0wQrt8zk8/oRiJXX67EmaUts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eRPZO0o+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1uWtMrz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751253928;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AdAJraI8U0XhGTjVP+sopEbvVySi3zH6N4wromX92ys=;
-	b=f1uWtMrz/xEBzEjNY5pv1CUzw+Ty759R3uOEp3RC4aACw4ImUKQGZwxFIra4eaWVj5Kv72
-	NipTbDgsImw62yKbDdmZ6uYYg0mtW3K/b7TZmEX4qdeSYFCRwn1JrK6ppkpFtPOcy4ZNZI
-	Q8rthgTaqDot8eE+FMh1e53g5ES/PSY=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-599-bQIaVvq6PS2zdHHd5JK4Aw-1; Sun, 29 Jun 2025 23:25:27 -0400
-X-MC-Unique: bQIaVvq6PS2zdHHd5JK4Aw-1
-X-Mimecast-MFC-AGG-ID: bQIaVvq6PS2zdHHd5JK4Aw_1751253926
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-5551b49f37fso293452e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:25:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751253925; x=1751858725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AdAJraI8U0XhGTjVP+sopEbvVySi3zH6N4wromX92ys=;
-        b=BsD/fxHpCySSCfVApny30O4IbOo5aR+9IMP1F2+A0ISG/Spfna3KLpRV8pslfgPWL3
-         AgWEWK1NfPu7kSB/thomsYxXniM/RMTsypGVXGT8Bs98RJOowAELgSWHKOvu6k07/7qk
-         AGjymuYn1gYjyw6HcmiGXq3hGP2iBICxey1HwvKRoqh3389FRRvnS+I1fq/vJ/Pib3KT
-         x3nkOjZNwhLnFPOLhPE6QRmBTOumjCYf7WfjMpTeOnKnQW5GLnYQG32jwpWkHzO4HRp7
-         Vr2lDeEmH76hDaPu2xCVrLCHEpg1T5VabhJyrNOc6rGCDI2lTW3+Zvf5SB71xpzFl7ht
-         3Mxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVKAqZNAk8ndaa1wrY5eTQPA9K15gGIpHmr/r3E7i3nQ4OGx/HcQAngF6iGD2SgeC8nK4j+fWtFpZpav8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw65Ov0ITBhve5PB4XxmWYA/LhtCmL+KaJZFmb4bwUhr+2HfP1X
-	y875sK+qFazTWohVaRBE3tJiuwFxx6/YY9aGCqOTiV8yd+yk0oacbzZZtHwUO2QFytLoXtblqS2
-	9IyH65MRx4mrZIDOfW8KRKAAgvqOgg7l6L8/RjWdvxzKmudZXGwAerb53E2Jg7/BFVzSGCnITNM
-	Cx09My4f+O5dIAnur2UNanXwX2VRQoNgXY66+r6TUnivoxX7hSx8A=
-X-Gm-Gg: ASbGncvCKTqjdSWcyhvk5pDuOoS9ROOlEYN2tv2sd6RC2/OdPurtwN98JRukLGBo/68
-	ajYDK07ZxCfqmdN34MfasZT6iUYbnc7fsLfAX0PZl7FD7m0eye0FmFa1Pa2IQLtHi3HX2sLXREI
-	A6Z50v
-X-Received: by 2002:a05:6512:4007:b0:553:5283:980f with SMTP id 2adb3069b0e04-5550ba29ed0mr4059523e87.51.1751253924557;
-        Sun, 29 Jun 2025 20:25:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFGyLLTQ+hUO0WJJg7JLMiyQj3myWZqAvEdNrAeYoZ9AFQ3o2tQ0Qa2acrnVn4SpO4MOI2jPSt7MbClt01/TxM=
-X-Received: by 2002:a05:6512:4007:b0:553:5283:980f with SMTP id
- 2adb3069b0e04-5550ba29ed0mr4059516e87.51.1751253924142; Sun, 29 Jun 2025
- 20:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eRPZO0o+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=D9LHEGOvi+nMfrnlGssRdeQGgsXaJ7B/FFOO9D5QlG4=; b=eRPZO0o+rSjHzXopMavWA2E04J
+	wtgEXuammFqYthm4EMJqoaLEUuWIL5aGcyYGWcRFu3D3aWWXW7eg6CRv+/8vOFJbe5WhWAyDlwQfF
+	ksKpmDZoW+ZR3bLWctyj6iGITlfiGiDB5q/j4fdexykDj6svdU7fvmzTcKzPDiHv1S/4eWU0ZpKHb
+	LfcPyVaBfhsk+4XrSoR6MHhFp2dbyxqRVVuxFTcQl4eR1uN25hx2ipCTqebrEd7iAar4ysuzg9msZ
+	4qT1Iktw8DvJtjwOJOD9fSdqz2nf2UP0E9842VYnHP0Y1d/1dy5w7HYIYXUet3yzyDnI4GRrVY65V
+	V9EP5fXg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW59J-00000006iaf-050U;
+	Mon, 30 Jun 2025 03:25:43 +0000
+Message-ID: <cc2207e4-2118-41be-bd35-97cbdbe85521@infradead.org>
+Date: Sun, 29 Jun 2025 20:25:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <808d3fb3-92a9-4a25-a70c-7408f20fb554@redhat.com> <288be678-990b-86f9-1ffd-858cee18eef3@huaweicloud.com>
-In-Reply-To: <288be678-990b-86f9-1ffd-858cee18eef3@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Mon, 30 Jun 2025 11:25:12 +0800
-X-Gm-Features: Ac12FXy84WM0Pt-z6-03Ek6OEzyZO-QLHqRx9zGvHmE5_V1IAcfGF77I2Lcfu28
-Message-ID: <CALTww28grnb=2tpJOG1o+rKG4rD7chjtV3Nmx9D1GJjQtVqWhA@mail.gmail.com>
-Subject: Re: [PATCH 00/23] md/llbitmap: md/md-llbitmap: introduce a new
- lockless bitmap
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, johnny.chenyi@huawei.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 1/2] arm64: refactor the rodata=xxx
+To: Huang Shijie <shijie@os.amperecomputing.com>, catalin.marinas@arm.com,
+ will@kernel.org, corbet@lwn.net
+Cc: patches@amperecomputing.com, cl@linux.com, yang@os.amperecomputing.com,
+ akpm@linux-foundation.org, paulmck@kernel.org, rostedt@goodmis.org,
+ Neeraj.Upadhyay@amd.com, bp@alien8.de, ardb@kernel.org,
+ anshuman.khandual@arm.com, suzuki.poulose@arm.com, gshan@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250630030228.4221-1-shijie@os.amperecomputing.com>
+ <20250630030228.4221-2-shijie@os.amperecomputing.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250630030228.4221-2-shijie@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 30, 2025 at 10:34=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> =
-wrote:
->
-> Hi,
->
-> =E5=9C=A8 2025/06/30 9:59, Xiao Ni =E5=86=99=E9=81=93:
-> >
-> > After reading other patches, I want to check if I understand right.
-> >
-> > The first write sets the bitmap bit. The second write which hits the
-> > same block (one sector, 512 bits) will call llbitmap_infect_dirty_bits
-> > to set all other bits. Then the third write doesn't need to set bitmap
-> > bits. If I'm right, the comments above should say only the first two
-> > writes have additional overhead?
->
-> Yes, for the same bit, it's twice; For different bit in the same block,
-> it's third, by infect all bits in the block in the second.
 
-For different bits in the same block, test_and_set_bit(bit,
-pctl->dirty) should be true too, right? So it infects other bits when
-second write hits the same block too.
 
-[946761.035079] llbitmap_set_page_dirty:390 page[0] offset 2024, block 3
-[946761.035430] llbitmap_state_machine:646 delay raid456 initial recovery
-[946761.035802] llbitmap_state_machine:652 bit 1001 state from 0 to 3
-[946761.036498] llbitmap_set_page_dirty:390 page[0] offset 2025, block 3
-[946761.036856] llbitmap_set_page_dirty:403 call llbitmap_infect_dirty_bits
+On 6/29/25 8:02 PM, Huang Shijie wrote:
+> As per admin guide documentation, "rodata=on" should be the default on
+> platforms. Documentation/admin-guide/kernel-parameters.txt describes
+> these options as
+> 
+>    rodata=         [KNL,EARLY]
+>            on      Mark read-only kernel memory as read-only (default).
+>            off     Leave read-only kernel memory writable for debugging.
+>            full    Mark read-only kernel memory and aliases as read-only
+>                    [arm64]
+> 
+> But on arm64 platform, "rodata=full" is the default instead. This patch
+> implements the following changes.
+> 
+>  - Make "rodata=on" behaviour same as the original "rodata=full"
+>  - Make "rodata=noalias" (new) behaviour same as the original "rodata=on"
+>  - Drop the original "rodata=full"
+>  - Add comment for arch_parse_debug_rodata()
+>  - Update kernel-parameters.txt as required
+> 
+> After this patch, the "rodata=on" will be the default on arm64 platform
+> as well.
+> 
+> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  2 +-
+>  arch/arm64/include/asm/setup.h                | 28 +++++++++++++++++--
+>  2 files changed, 27 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index ee0735c6b8e2..e0cd6dac26d3 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6354,7 +6354,7 @@
+>  	rodata=		[KNL,EARLY]
+>  		on	Mark read-only kernel memory as read-only (default).
+>  		off	Leave read-only kernel memory writable for debugging.
+> -		full	Mark read-only kernel memory and aliases as read-only
+> +		noalias	Use more block mappings,may have better performance.
 
-As the debug logs show, different bits in the same block, the second
-write (offset 2025) infects other bits.
+Add space after comma, please.                 ^
 
->
->   For Reload action, if the bitmap bit is
-> > NeedSync, the changed status will be x. It can't trigger resync/recover=
-y.
->
-> This is not expected, see llbitmap_state_machine(), if old or new state
-> is need_sync, it will trigger a resync.
->
-> c =3D llbitmap_read(llbitmap, start);
-> if (c =3D=3D BitNeedSync)
->   need_resync =3D true;
-> -> for RELOAD case, need_resync is still set.
->
-> state =3D state_machine[c][action];
-> if (state =3D=3D BitNone)
->   continue
+>  		        [arm64]
+>  
+>  	rockchip.usb_uart
+> diff --git a/arch/arm64/include/asm/setup.h b/arch/arm64/include/asm/setup.h
+> index ba269a7a3201..6b994d0881d1 100644
+> --- a/arch/arm64/include/asm/setup.h
+> +++ b/arch/arm64/include/asm/setup.h
+> @@ -13,6 +13,30 @@
+>  extern phys_addr_t __fdt_pointer __initdata;
+>  extern u64 __cacheline_aligned boot_args[4];
+>  
+> +/*
+> + * rodata=on (default)
+> + *
+> + *    This applies read-only attributes to VM areas and to the linear
+> + *    alias of the backing pages as well. This prevents code or read-
+> + *    only data from being modified (inadvertently or intentionally),
+> + *    via another mapping for the same memory page.
+> + *
+> + *    But this might cause linear map region to be mapped down to base
+> + *    pages, which may adversely affect performance in some cases.
+> + *
+> + * rodata=off
+> + *
+> + *    This provides more block mappings and contiguous hints for linear
+> + *    map region which would minimize TLB footprint. This also leaves
+> + *    read-only kernel memory writable for debugging.
+> + *
+> + * rodata=noalias
+> + *
+> + *    This provides more block mappings and contiguous hints for linear
+> + *    map region which would minimize TLB footprint. This leaves the linear
+> + *    alias of read-only mappings in the vmalloc space writeable, making
+> + *    them susceptible to inadvertent modification by software.
+> + */
+>  static inline bool arch_parse_debug_rodata(char *arg)
+>  {
+>  	extern bool rodata_enabled;
+> @@ -21,7 +45,7 @@ static inline bool arch_parse_debug_rodata(char *arg)
+>  	if (!arg)
+>  		return false;
+>  
+> -	if (!strcmp(arg, "full")) {
+> +	if (!strcmp(arg, "on")) {
+>  		rodata_enabled = rodata_full = true;
+>  		return true;
+>  	}
+> @@ -31,7 +55,7 @@ static inline bool arch_parse_debug_rodata(char *arg)
+>  		return true;
+>  	}
+>  
+> -	if (!strcmp(arg, "on")) {
+> +	if (!strcmp(arg, "noalias")) {
+>  		rodata_enabled = true;
+>  		rodata_full = false;
+>  		return true;
 
-If bitmap bit is BitNeedSync,
-state_machine[BitNeedSync][BitmapActionReload] returns BitNone, so if
-(state =3D=3D BitNone) is true, it can't set MD_RECOVERY_NEEDED and it
-can't start sync after assembling the array.
-
-> if (state =3D=3D BitNeedSync)
->   need_resync =3D true;
->
-> >
-> > For example:
-> >
-> > cat /sys/block/md127/md/llbitmap/bits
-> > unwritten 3480
-> > clean 2
-> > dirty 0
-> > need sync 510
-> >
-> > It doesn't do resync after aseembling the array. Does it need to modify
-> > the changed status from x to NeedSync?
->
-> Can you explain in detail how to reporduce this? Aseembling in my VM is
-> fine.
-
-I added many debug logs, so the sync request runs slowly. The test I do:
-mdadm -CR /dev/md0 -l5 -n3 /dev/loop[0-2] --bitmap=3Dlockless -x 1 /dev/loo=
-p3
-dd if=3D/dev/zero of=3D/dev/md0 bs=3D1M count=3D1 seek=3D500 oflag=3Ddirect
-mdadm --stop /dev/md0 (the sync thread finishes the region that two
-bitmap bits represent, so you can see llbitmap/bits has 510 bits (need
-sync))
-mdadm -As
-
-Regards
-Xiao
->
-> Thanks,
-> Kuai
->
->
+-- 
+~Randy
 
