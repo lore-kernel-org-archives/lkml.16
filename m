@@ -1,286 +1,267 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-009a6c02.pphosted.com (mx0a-009a6c02.pphosted.com [148.163.145.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8764721A437
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269906; cv=none; b=lXHCFw9xESVdY4hu4ofnHaudCbmKoHPL+piuxC85GSr6s9rER09L+qYNy2eOw8beocS2N+Nb9T189lFNbZq1p3QnBPZorb8KXadm/6lbEV1jtYzhLj2rg58FZWMNLPKfjD4Y+dGaRxkruZMU0JMEhWOPGDJkcg9OzljNCmmnH/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269906; c=relaxed/simple;
-	bh=emoAFZ1b+GgUOpO3M8FG4gUGAnp3Cyx8bdpFZ0xrJzU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NEMAKmf6YHPUkv4zw3X45W9ayJBM3DQcRDfYJqVV6GiXSHYIFiPoy22ZK9ssfYQOZLZRBSFczZafePbTBDXKRZrprGKbbbC/D0+Tq1nW/lKqhu1V2G7S31ii3xQ39jv5SIjKH18z5fxoEzIuLyc89TRRgHaTK89tgL0TjyuMM+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tpa9jmpR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QL2/x/RK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7F5849C;
+	Mon, 30 Jun 2025 07:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.145.158
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751269967; cv=fail; b=cgDcQfCXdUxvMzInG8S93FL+JSJG5druutfY4uwFr7x+ltMyR00TIGHvWLpOLiaflHf5oS63+8MAprlCWk/zBQS1eX4wgu1jvLV4v6SqR2GByiDcwa7vyoOtrOkNHBSit8Q56OTqrmr12/DAquJGZ38EzRRb+NTrhbNILJ+AJk0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751269967; c=relaxed/simple;
+	bh=tojcD1sWJ+5Z8Z3jZrpla6MAEVQaFob3wGtZ0iw3Oqo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Rgavve2qjhM5HsnQWWm6nU/any5Weon36J78YsV3oagc5YqI8lHYTZs32IbDWPsn9OVTDG1xsyqj8iR37j8yMduwqL1bhMrHdzx0QEeDEmKGog1Y/Cs/zXeWyvsFFuRMQlSZ+Lq1KE0gsFaeZ4BvsMFrtoriCiTEFuEWZnf7TT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=Bc2sAaPP; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=czqeF7Jt; arc=fail smtp.client-ip=148.163.145.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tpa9jmpR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QL2/x/RK"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751269903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q+/+TJx5zGjOq+57kScFIM4NRFWqBfLwRzYM+FCAdPE=;
-	b=Tpa9jmpR9R4eR+6ZmGSZUo9a8/Y0x2dYDGUmq6n2Nk3k9HuceEBH6WcLNMBZBumlfOJvYH
-	Eh8E1z1UzSKrqle7LKSZHG0LKCtaOCN3sumMRdkhcxua/va8IweAW1dIX1mSngTDBdUIvP
-	JDNbTGNg4uvRtG06Md8DNZO9J6qJM6TWBhfO5cW8TWVGkQWCC7NZwcQKd9EH7578t1hytj
-	Aj4WuW9uEPzTp7Qqgjws7DO0izQ29rZ3NkrlSIzYflHuEfn3M4s2vqhXFpKG0Qt3BLYbA8
-	9pz+qOEAxk9famxNFfDP9J8TekOj6CxOb35dmp78rD3ExYkg71ZB1uL9K84gyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751269903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q+/+TJx5zGjOq+57kScFIM4NRFWqBfLwRzYM+FCAdPE=;
-	b=QL2/x/RKcshGQ9/es5pF4slQbyxeOkKJYTAHuWFeZGEXBRaGRTjWmephoraE3y+dQyn2mg
-	AaazCQbMldepN1CA==
-To: linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Cc: tglx@linutronix.de,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v3 1/1] local_lock: Move this_cpu_ptr() notation from internal to main header.
-Date: Mon, 30 Jun 2025 09:51:38 +0200
-Message-ID: <20250630075138.3448715-2-bigeasy@linutronix.de>
-In-Reply-To: <20250630075138.3448715-1-bigeasy@linutronix.de>
-References: <20250630075138.3448715-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="Bc2sAaPP";
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="czqeF7Jt"
+Received: from pps.filterd (m0462404.ppops.net [127.0.0.1])
+	by mx0a-009a6c02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TMBBgM000992;
+	Mon, 30 Jun 2025 15:31:42 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=20250420; bh=IqTetl6upexAsH4ZMTdRxrm
+	6z3s/zmsA9UK2sAWt5FA=; b=Bc2sAaPPqrWcYDDdeupjgifVPby7DgiYr9TnJHj
+	WevAxsWa1ZjhFvt17dvO8h4nlcWZS+aerb82CB/vVOyWnu4V2S1tJv3QkRWZp3UM
+	syF8BR1/6apVqjAtLE/iMbLf3jsCJRbvI7xpgo44ogvlGVd24CCShRUw+V/Bs8uf
+	EmqhiJXKnNqr8Qp+AonG3yn2T0pBDRuDYEImhxpDxCiu19yhBQ0jn+S+OfOfyVHu
+	yFle1T+eLgK1IuIeyuE0Igyc34GdeSV3kWJhmV+RGKG6Ja476ip5pxlEsp+eHWFx
+	89oEEOqFG8R+p9G5klnLG7LFXHzrtdBF3qhyP5l+/7pUxmQ==
+Received: from typpr03cu001.outbound.protection.outlook.com (mail-japaneastazon11012036.outbound.protection.outlook.com [52.101.126.36])
+	by mx0a-009a6c02.pphosted.com (PPS) with ESMTPS id 47jpyvs6rr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 15:31:42 +0800 (WST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ccDU7Nr5EeU3/k9QUnetJWE/AEzSdqMfS5XW9FGEDOcZoMzTrxD/YR/m+IgnJEknUA74wJwBXSRJDWZ17Wl+QByK20PJfPONrTOfbnaP07ZK5bmsxPy+/zAx1sVwewEWd8X3X5yWf5WUD1+K0N6ToovHDqdyd4HRxK6KrkspcSEFv6GTiGXD61HhrE4TmCt2Q7xlfmALtP6tLH4RoMn02zU8niToKZZtEQ2UkraGLuvsF5qKyWJX1PmihomxAQA/1uINnwzPaW1H0PEjF8pxJJ5AaAxvCvdMn8LSBYj978Bbhnu6OPsYbsHVbc9bfce2Azoe2po0Pq6rm/Bu9HT04Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IqTetl6upexAsH4ZMTdRxrm6z3s/zmsA9UK2sAWt5FA=;
+ b=Cap5f1R3hEk4vjFydNVxyAkshaPFGY3qPjpSs5kvh7E5PNQf4ub/VtWmoI2jpN01uLZrugH+t8cWY+R9eUEvDePV6cErfk5bi9Lfx9X6XB5eyCF7dJSnBmTEk0teCjIO6zNiASrl67DH2wuwAdwEqhgVs2pR1kHzIAUksieZYPoZLgfbAnod7jjGo2HdZGmlyOQAEcdlfuy5cMXtbuPsdg8faXs+Jtq6j3tyT+tvQRpH2rhDk6J62B9hPti1xkwboHOKhCXq70oIywGZdsSO2vXwvfDHgHlx4R6dFnfmmUp6nG+yn2lQdSnLLpPs+peJZNVaJ+2dQtCU9tsadJeURQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IqTetl6upexAsH4ZMTdRxrm6z3s/zmsA9UK2sAWt5FA=;
+ b=czqeF7Jt2j17XzdNlRzkKdr20tfwVhHAbJms+Ja/J/xcY8Gl76IGEcJxxAVJLA+5+CCrcS73eWAYj01pEY373/n2kD5vj5bwoLKTyf8iWp5gnJYV1mQybWcagaMoTdh7UnCeqawi/GeUwVt3Rbzy3HIq/rjmsxowE4rADvoOVgUFlmQW3PjPa0T37Gb4eeUlOZUUAplVxFQGv8K1MVyql2PnvMif5UbFUZAsAVXVbNIKdGpv3o3sRwXBS4wvmRej50wk5ui6OvhtDncNrqqBN6Eg8N4cOKv1zidm9ZrHyG1R18drmW01bYfcgrezKAh5ZUMQ+drLbA9Xf+lXEFReNA==
+Received: from SG2PR02CA0132.apcprd02.prod.outlook.com (2603:1096:4:188::15)
+ by KUXPR04MB8950.apcprd04.prod.outlook.com (2603:1096:d10:50::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.28; Mon, 30 Jun
+ 2025 07:31:39 +0000
+Received: from SG2PEPF000B66C9.apcprd03.prod.outlook.com
+ (2603:1096:4:188:cafe::8a) by SG2PR02CA0132.outlook.office365.com
+ (2603:1096:4:188::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.29 via Frontend Transport; Mon,
+ 30 Jun 2025 07:31:39 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
+ smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
+Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
+ designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.20.1.79; helo=localhost.localdomain;
+Received: from localhost.localdomain (211.20.1.79) by
+ SG2PEPF000B66C9.mail.protection.outlook.com (10.167.240.20) with Microsoft
+ SMTP Server id 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025
+ 07:31:38 +0000
+From: Marshall Zhan <marshall_zhan@wiwynn.com>
+To: patrick@stwcx.xyz
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@codeconstruct.com.au>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5] ARM: dts: aspeed: yosemite4: add gpio name for uart mux sel
+Date: Mon, 30 Jun 2025 15:31:37 +0800
+Message-Id: <20250630073138.3315947-1-marshall_zhan@wiwynn.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66C9:EE_|KUXPR04MB8950:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 017047d2-c2a6-4125-1e8b-08ddb7a826de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Tb6YRECxFAdgp+qIAyMCCNEMy0WziS5ESDizt5A6+rDKZDCHMoI0cnlZ+uCh?=
+ =?us-ascii?Q?d/LYhdD0J3f3hLlIVTV8eHRKCgDH7nktHfYmdJ/PwejwARCnbhUGw/zj2VUL?=
+ =?us-ascii?Q?WO1TrivFpb8RcAjliJJA1UVucEYoYZtltTEU8jMk9Edur82NECfGqYGc2BHj?=
+ =?us-ascii?Q?eEh5YJx07gmdPqoUYT8mutzP2qfaUkUR1gpQYTMFFKpcjF9dNZpeq/i5zC7x?=
+ =?us-ascii?Q?NWo3GeCv9YVlTuGTTJUpivhFzAhmxKN74Ju+/udEEGsl+pQheOL78Bm+kzKI?=
+ =?us-ascii?Q?maIoAHJ3VoT4jTyJFB8fo25eBBuq+HSOLPR4Oyen9wn9GtEj2CrDQ4Oy1iuE?=
+ =?us-ascii?Q?UYve7kxoGF6IxebjJsp3C5/dD0XuT7mccE2dPg/0TGMDnt508pRXupS1IgVP?=
+ =?us-ascii?Q?TGzPqYRWKPFbWYLAK4K7kkjwhoL71ooPW6lABDuLmNXApCkS5lK6ZPa5pw7d?=
+ =?us-ascii?Q?AqOphoC8/HTl+1aj0kQuYA9Mnp2hQ5NfO6bljQ2P5EQmHRV9hRASPeYY2g1O?=
+ =?us-ascii?Q?pqaCe3m6g86/CySqSei1yqltbvRUJCoFsUSiUPVsh+3Q9Jh7K+On0/wBFd26?=
+ =?us-ascii?Q?yfROHNbpuCI2bEja7cwQn+vi8PBKUpsbx1+8WJwzHEx8bCJ05kcxFqFG8QcR?=
+ =?us-ascii?Q?WNVpY0/Fh26mBU5nLWauzZnPMvt9Re+VC3UlPwpyuSygarYTBQ0G5HBM1xL5?=
+ =?us-ascii?Q?c9MTUp7Cu+2GcTVPHuvxvkpwMjcQCj7p9ohRHd/B8lTJrPC4XMJ5V0aQarXD?=
+ =?us-ascii?Q?95RQe3fQNlChH57eCmiyPC9K1f0FYtQUPEebZFOL+90rKF0IXIhDTMurmELZ?=
+ =?us-ascii?Q?+7pR18IMAxOj9e4PLxmCU1QLbJd7ciaYmr7uefgwKR7Vt5fHx0HiYe7pB9+B?=
+ =?us-ascii?Q?VBD8GdGDGHHaKtyCvISsw8sBsOBcNttm33qbjbTUG/VeRs6Nj5yXSOjvd2l5?=
+ =?us-ascii?Q?r7vl5S7Fxe504ZzLbawMT6Qt+rH5tOgefcmVQBRERoKNLThk8jJ0+xh+j/E8?=
+ =?us-ascii?Q?3f9TREf6hlZ0glMMj6gxjf/yakpe6X5TOTCQDcXI5i5gTRp6qmyIZ7EJMY82?=
+ =?us-ascii?Q?gpnKPb9CS7mVZD5ArvmouF6SLHT+EJNbHKDOH1hb/8V3jqqITqyHLrYhSsQw?=
+ =?us-ascii?Q?5wOqjb1vj8oHQDu/vr8oysDqEsSKHY6f6obL59VM1N3V1qLRBZlB2M5aI8Za?=
+ =?us-ascii?Q?/oyntPPXKUU5Hr4TdVHCHTPTYYGkGhrCRKc/T+Ys3pLvk/2KfkY8u88sIjOj?=
+ =?us-ascii?Q?Lu5cKtunXNpCJ5CzJqsPRiBpAkpLjrtzFtO7etGJylLp6916xDRUqKBK8pNK?=
+ =?us-ascii?Q?KFQoy7aaGuLWoa8f+EuvFfU0g8Ysx+D1A6f0RMH/TG6XEOvUMaGRjAGF+ozm?=
+ =?us-ascii?Q?FWpERxnv+CsaLFVxPQPeUOyr8KMtfHpanD7HQ1hTSsXJXMr4/bnzEx38PELK?=
+ =?us-ascii?Q?lOyFfEXcn5ljOoe/cVBMiQ/oFJwv+RC5X696enP7WHXNVQ+TYHFNeHSDMQY3?=
+ =?us-ascii?Q?4I+mwFSHlnEKfnxg9HPa52t7TVQsh8+eShXs?=
+X-Forefront-Antispam-Report:
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	eQj2AgwbAPOf3Rnv1J/Wf8ZMYLKvdZhDr1elFw8QRd6fPi0KDAcZqMhbWjscxBSJwfemya2wohTQpTXjtJcWtfqPk8YueMJ4lALCpxGSqNaT+nJagP37/6BkwxP/LBIq5LekIhA33y3J0v5DNXjQWFbVNvK4B91JSiKOxjFZXPU7hjt5TaMxnxQqR54E+7lNeCi0z1Nuil/SO5FaueK6w9ov4/46+Kuq/VBtFTkhU0MQbansffOFg647UQuE0P5fkLqSFU2PHAj2kY+fGLLkM6762f/TTg+mABs9D+DoUJ/Y6AH9lD1xQwurLkimo7CnoGqV3EZHb1CWU2kmT5LdPnTs4TeNj3mO5jC0kNOFkpXI4GUo3pfOkqp4CpsJQQpx3gX9LTT2b117XnDfFs6TRMLTgLawQoxnK5hE4cvi/E6lLDUEArTQrQEUqjPBaFTRMAfUFcDDHDrWup12+bQWdKZ+UqJVPmwfIwigSruVygVlgR7icn8+P3yafQgJ5YjE2exMYNk4ggh4OfOpG7Ca3xBELk8suI+Cb162S6quxmk5Osh6G40BEedg4+WeP3iYqxd42xPDusedAFJcT9nlr6Tfw7UByb0TD8IrhqFZQNA6KKtkxBJKNz9kUEvH6amt
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 07:31:38.4841
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 017047d2-c2a6-4125-1e8b-08ddb7a826de
+X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66C9.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KUXPR04MB8950
+X-Proofpoint-ORIG-GUID: W6Q8rJrQ_Tcx9zFXYOBbzBLGtcnpKjjF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA2MSBTYWx0ZWRfX4w1oEPw0hYWR afo2xulobcV1KqZ6d7RRYFUfiTajtLObwZqVWiO8xSilVC00WYoqlE9akj9WSnOj+EuF/pPs76E BhtDj6p9d32n09MIzRsPInb/h+9IuBduvcdJHtNNbdD1mj7dh22VQO6CV+wmk2mQE7MucbZ2RUK
+ WQKRMCgYIcOzPYbXsznpK/lADmhXXrMkocWruGsMcSpHDmkTn3S8cmH4k3QszmUjLY08le5+idD HqdQK8ZH+TT9rjuSWhASzI8IoOJqDdlA108gztzwqYoV7sNN42FFpuG/fuPDHwoSvA57CKV86KB 2O5a5OZD4Kz61QH9x0c34xhg5Bw7giPtszPrbfQQA7LQ/v+UKwjNoTbvoCBrNumOWVJ/LI2fTIo
+ vDykXTwuPdNJsdgbGlAX2vDBgzPx8+XOsFg8HfqjQC4Q9Pc3WsuUnL1juFpRtTwsvjvfVjvY
+X-Proofpoint-GUID: W6Q8rJrQ_Tcx9zFXYOBbzBLGtcnpKjjF
+X-Authority-Analysis: v=2.4 cv=fJ853Yae c=1 sm=1 tr=0 ts=68623d5e cx=c_pps a=riyPWYh4HAMCiMlNrdWGFg==:117 a=6rDDh2uRNVCE5HFPCIqeAA==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
+ a=4AL28aEVfeMA:10 a=cPYzWk29AAAA:8 a=u2kzlEoHWhBIlCB3pKYA:9 a=oSR2DF9YFqZEN4IGatwP:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 suspectscore=0 malwarescore=0
+ impostorscore=0 phishscore=0 mlxlogscore=802 priorityscore=1501
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
+ definitions=main-2506300061
 
-The local_lock.h is the main entry for the local_lock_t type and
-provides wrappers around internal functions prefixed with __ in
-local_lock_internal.h.
+Add gpio line name to support multiplexed console
 
-Move the this_cpu_ptr() dereference of the variable from the internal to
-the main header. Since it is all macro implemented, this_cpu_ptr() will
-still happen within the preempt/ IRQ disabled section.
-This will free the internal implementation (__) to be used on
-local_lock_t types which are local variables and must not be accessed
-via this_cpu_ptr().
-
-Acked-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Marshall Zhan <marshall_zhan@wiwynn.com>
 ---
- include/linux/local_lock.h          | 20 +++++++++----------
- include/linux/local_lock_internal.h | 30 ++++++++++++++---------------
- 2 files changed, 25 insertions(+), 25 deletions(-)
+ .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4f8310b..2ba8464195244 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -13,13 +13,13 @@
-  * local_lock - Acquire a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_lock(lock)		__local_lock(lock)
-+#define local_lock(lock)		__local_lock(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irq - Acquire a per CPU local lock and disable interrupts
-  * @lock:	The lock variable
-  */
--#define local_lock_irq(lock)		__local_lock_irq(lock)
-+#define local_lock_irq(lock)		__local_lock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-@@ -28,19 +28,19 @@
-  * @flags:	Storage for interrupt flags
-  */
- #define local_lock_irqsave(lock, flags)				\
--	__local_lock_irqsave(lock, flags)
-+	__local_lock_irqsave(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_unlock - Release a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_unlock(lock)		__local_unlock(lock)
-+#define local_unlock(lock)		__local_unlock(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irq - Release a per CPU local lock and enable interrupts
-  * @lock:	The lock variable
-  */
--#define local_unlock_irq(lock)		__local_unlock_irq(lock)
-+#define local_unlock_irq(lock)		__local_unlock_irq(this_cpu_ptr(lock))
-=20
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-@@ -49,7 +49,7 @@
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
--	__local_unlock_irqrestore(lock, flags)
-+	__local_unlock_irqrestore(this_cpu_ptr(lock), flags)
-=20
- /**
-  * local_lock_init - Runtime initialize a lock instance
-@@ -64,7 +64,7 @@
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
--#define local_trylock(lock)		__local_trylock(lock)
-+#define local_trylock(lock)		__local_trylock(this_cpu_ptr(lock))
-=20
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and d=
-isable
-@@ -77,7 +77,7 @@
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock_irqsave(lock, flags)			\
--	__local_trylock_irqsave(lock, flags)
-+	__local_trylock_irqsave(this_cpu_ptr(lock), flags)
-=20
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
- 	     local_lock(_T),
-@@ -91,10 +91,10 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __=
-percpu,
- 		    unsigned long flags)
-=20
- #define local_lock_nested_bh(_lock)				\
--	__local_lock_nested_bh(_lock)
-+	__local_lock_nested_bh(this_cpu_ptr(_lock))
-=20
- #define local_unlock_nested_bh(_lock)				\
--	__local_unlock_nested_bh(_lock)
-+	__local_unlock_nested_bh(this_cpu_ptr(_lock))
-=20
- DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
- 	     local_lock_nested_bh(_T),
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock=
-_internal.h
-index 8d5ac16a9b179..d80b5306a2c0c 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -99,14 +99,14 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);				\
- 		tl =3D (local_trylock_t *)l;				\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({				\
- 				lockdep_assert(tl->acquired =3D=3D 0);	\
- 				WRITE_ONCE(tl->acquired, 1);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);			\
- 		local_lock_acquire(l);					\
- 	} while (0)
-=20
-@@ -133,7 +133,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		preempt_disable();				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			preempt_enable();			\
- 			tl =3D NULL;				\
-@@ -150,7 +150,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		local_irq_save(flags);				\
--		tl =3D this_cpu_ptr(lock);			\
-+		tl =3D (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			local_irq_restore(flags);		\
- 			tl =3D NULL;				\
-@@ -167,15 +167,15 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l =3D (local_lock_t *)this_cpu_ptr(lock);			\
-+		l =3D (local_lock_t *)(lock);				\
- 		tl =3D (local_trylock_t *)l;				\
- 		local_lock_release(l);					\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({				\
- 				lockdep_assert(tl->acquired =3D=3D 1);	\
- 				WRITE_ONCE(tl->acquired, 0);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);			\
- 	} while (0)
-=20
- #define __local_unlock(lock)					\
-@@ -199,11 +199,11 @@ do {								\
- #define __local_lock_nested_bh(lock)				\
- 	do {							\
- 		lockdep_assert_in_softirq();			\
--		local_lock_acquire(this_cpu_ptr(lock));	\
-+		local_lock_acquire((lock));			\
- 	} while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
--	local_lock_release(this_cpu_ptr(lock))
-+	local_lock_release((lock))
-=20
- #else /* !CONFIG_PREEMPT_RT */
-=20
-@@ -227,7 +227,7 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock(__lock)					\
- 	do {							\
- 		migrate_disable();				\
--		spin_lock(this_cpu_ptr((__lock)));		\
-+		spin_lock((__lock));				\
- 	} while (0)
-=20
- #define __local_lock_irq(lock)			__local_lock(lock)
-@@ -241,7 +241,7 @@ typedef spinlock_t local_trylock_t;
-=20
- #define __local_unlock(__lock)					\
- 	do {							\
--		spin_unlock(this_cpu_ptr((__lock)));		\
-+		spin_unlock((__lock));				\
- 		migrate_enable();				\
- 	} while (0)
-=20
-@@ -252,12 +252,12 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock_nested_bh(lock)				\
- do {								\
- 	lockdep_assert_in_softirq_func();			\
--	spin_lock(this_cpu_ptr(lock));				\
-+	spin_lock((lock));					\
- } while (0)
-=20
- #define __local_unlock_nested_bh(lock)				\
- do {								\
--	spin_unlock(this_cpu_ptr((lock)));			\
-+	spin_unlock((lock));					\
- } while (0)
-=20
- #define __local_trylock(lock)					\
-@@ -268,7 +268,7 @@ do {								\
- 			__locked =3D 0;				\
- 		} else {					\
- 			migrate_disable();			\
--			__locked =3D spin_trylock(this_cpu_ptr((lock)));	\
-+			__locked =3D spin_trylock((lock));	\
- 			if (!__locked)				\
- 				migrate_enable();		\
- 		}						\
---=20
-2.50.0
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
+index 29f224bccd63..aae789854c52 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
+@@ -189,6 +189,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT1_UART_SEL0","SLOT1_UART_SEL1",
++				"SLOT1_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -235,6 +240,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT2_UART_SEL0","SLOT2_UART_SEL1",
++				"SLOT2_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -281,6 +291,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT3_UART_SEL0","SLOT3_UART_SEL1",
++				"SLOT3_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -327,6 +342,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT4_UART_SEL0","SLOT4_UART_SEL1",
++				"SLOT4_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -373,6 +393,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT5_UART_SEL0","SLOT5_UART_SEL1",
++				"SLOT5_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -419,6 +444,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT6_UART_SEL0","SLOT6_UART_SEL1",
++				"SLOT6_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -465,6 +495,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT7_UART_SEL0","SLOT7_UART_SEL1",
++				"SLOT7_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+@@ -511,6 +546,11 @@ gpio@22 {
+ 		reg = <0x22>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		gpio-line-names = "SLOT8_UART_SEL0","SLOT8_UART_SEL1",
++				"SLOT8_UART_SEL2","","","","","",
++				"","","","","","","","",
++				"","","","","","","","",
++				"","","","","","","","";
+ 	};
+ 
+ 	gpio@23 {
+-- 
+2.25.1
 
