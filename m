@@ -1,81 +1,92 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6734E258CE8
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BFE2475CB;
+	Mon, 30 Jun 2025 10:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280013; cv=none; b=k5UAXoLXp1cnUDktpcBvkpDcizSGoVV1oV+B+OANKe8H0T4bd2bGCCtqVEzb+8aWxwZ/2r85iOrUJVctMiEJXylhsHLKWq0cEZBZcBiBoYYVw/OMx4GvQVfGIymtMjfDoQ6ZsPZ/7buTZz4wELR+FGQryan22N6lKqWYih9XNiA=
+	t=1751280029; cv=none; b=jQdKhiUdYh9Nd3G7NdEo/u2KLhMXoxQi8ItCqj3XljgP5B6fN8QONUtmGhnyDB64aB+Dx0Xev1oOIn3iQ8B2bgWExZmxnC9asDJ9A2PTcJHo+GaxZOQWodFP6bqqJrRgRXeQGf3dElik0r9Drm+j33GZC7oQ7nUiJxFtvO+wD54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280013; c=relaxed/simple;
-	bh=ag/DlPi/GiUzdTGiYeoSQM0mRQHdDoRF+vlZgdiAFeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=CWd+FhHBXZ6cCakefNgsrmcKMN/fu0Q4DJZE0IzG93TOCH612sG8W3CHPtc+xJEVsnzev3U461E1BE9aU6h+omij8RVYLmgzF075zqakGOpCd0E5hsgdR/Vbtj44IUPjymy7+uTwxOf7cADr8pJsjHvYWAtuCJ8RPUDrNAv8qgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55UAdp6B053479;
-	Mon, 30 Jun 2025 19:39:51 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55UAdpXZ053475
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 30 Jun 2025 19:39:51 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <d54a0eb8-5899-4ea7-bc86-7a0d56c190d2@I-love.SAKURA.ne.jp>
-Date: Mon, 30 Jun 2025 19:39:50 +0900
+	s=arc-20240116; t=1751280029; c=relaxed/simple;
+	bh=7eOYym6I7H8HHs2QY52x9mBtw9X9NrH9Lscp9i8ZlT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5jbQbPsbxSuUUpZRZ1upw4CDCTZXqYgfchvUnfO7Oe7A6uoTsXOC5pT2SnHhYnCIwNQA7Zp25RHNGF4iiWUquppLFROFDkHvNB9DRf1wGYl4PdDQ1jFVK3CyXzTVtyyWGTmlqY1YhcokUbGh9WVpqwiynGx+CUem7MPqo/4Ib8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bW2jz4364z9svm;
+	Mon, 30 Jun 2025 12:40:23 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	mcgrof@kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Cc: Baokun Li <libaokun1@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	kernel@pankajraghav.com,
+	Zhang Yi <yi.zhang@huawei.com>,
+	linux-fsdevel@vger.kernel.org,
+	gost.dev@samsung.com,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v2] fs/libfs: don't assume blocksize <= PAGE_SIZE in generic_check_addressable
+Date: Mon, 30 Jun 2025 12:40:18 +0200
+Message-ID: <20250630104018.213985-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: embed actual values into ocfs2_sysfile_lock_key
- names
-To: Heming Zhao <heming.zhao@suse.com>
-References: <29348724-639c-443d-bbce-65c3a0a13a38@I-love.SAKURA.ne.jp>
- <d490a3ad-6309-42f3-9774-91871fbf7330@linux.alibaba.com>
- <d76672e5-0d69-42b1-a9d3-b70439c194b5@suse.com>
-Content-Language: en-US
-Cc: Joseph Qi <joseph.qi@linux.alibaba.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>, ocfs2-devel@lists.linux.dev,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <d76672e5-0d69-42b1-a9d3-b70439c194b5@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Virus-Status: clean
-X-Anti-Virus-Server: fsav404.rs.sakura.ne.jp
+Content-Transfer-Encoding: 8bit
 
-On 2025/06/30 11:42, Heming Zhao wrote:
-> I am not familiar with lockdep, and just have two questions regarding
-> the lockdep in ocfs2.
-> 
-> 1>
-> there are three global "static struct lock_class_key" definitions:
-> - fs/ocfs2/inode.c  : ocfs2_sysfile_lock_key[NUM_SYSTEM_INODES]
-> - fs/ocfs2/dlmglue.c: lockdep_keys[OCFS2_NUM_LOCK_TYPES]
-> - fs/ocfs2/sysfile.c: ocfs2_sysfile_cluster_lock_key[NUM_SYSTEM_INODES]
-> 
-> why did you env only trigger the ocfs2_sysfile_lock_key[] warning?
+Since [1], it is possible for filesystems to have blocksize > PAGE_SIZE
+of the system.
 
-Because syzbot is reporting lockdep warning on ocfs2_sysfile_lock_key
-at https://syzkaller.appspot.com/bug?extid=68c788938ba0326046a9 and
-I couldn't find which lock_class_key syzbot is reporting.
+Remove the assumption and make the check generic for all blocksizes in
+generic_check_addressable().
 
-Unless you want me to update all keys within this patch, you can submit
-similar changes on lockdep_keys and ocfs2_sysfile_cluster_lock_key as
-separate patches.
+[1] https://lore.kernel.org/linux-xfs/20240822135018.1931258-1-kernel@pankajraghav.com/
 
-> 
-> 2>
-> It seems the existing CONFIG_DEBUG_LOCK_ALLOC is incorrect, it should be
-> replaced with CONFIG_LOCKDEP.
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+Changes since v1:
+- Removed the unnecessary parantheses.
+- Added RVB from Jan Kara (Thanks).
 
-I couldn't catch what you mean. There are many modules which declare
-"struct lock_class_key" under CONFIG_DEBUG_LOCK_ALLOC=y.
+ fs/libfs.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 4d1862f589e8..f99ecc300647 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -1584,13 +1584,17 @@ EXPORT_SYMBOL(generic_file_fsync);
+ int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
+ {
+ 	u64 last_fs_block = num_blocks - 1;
+-	u64 last_fs_page =
+-		last_fs_block >> (PAGE_SHIFT - blocksize_bits);
++	u64 last_fs_page, max_bytes;
++
++	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
++		return -EFBIG;
++
++	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
+ 
+ 	if (unlikely(num_blocks == 0))
+ 		return 0;
+ 
+-	if ((blocksize_bits < 9) || (blocksize_bits > PAGE_SHIFT))
++	if (blocksize_bits < 9)
+ 		return -EINVAL;
+ 
+ 	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
+
+base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
+-- 
+2.49.0
 
