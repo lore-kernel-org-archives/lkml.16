@@ -1,202 +1,202 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2059.outbound.protection.outlook.com [40.107.236.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5C828DB5D;
-	Mon, 30 Jun 2025 15:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751296368; cv=none; b=mxrIcfvEDQ1/zRUNAfvIh1l3q0UQ+cYRmRHL6h5cLQtSlr7DxTMk95z4sdUZJ5iBleUu/w/jsvP+1MXJ1RPDXKJSqBRAmP+Xuyl5TZCfvl7GM5cMNWB8ytfjvNjF7pz6A3pwBehPRAg7BV69CDV2M3Z2llwcedTVrUkmEzhQP1Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751296368; c=relaxed/simple;
-	bh=DRVwtCNqcIY5zcQdsRZsM0qpmQoaT3TR9n/N8B5xSRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eppKtk7nmBBABkd9woBjFQOwQXiC+BqtlcdNNZgP0Z/SZxqbQ2pb1ph6U4uO+26iAKUHI7QSy/l/1vRSsFIWpyyVYdaTjSOcMWwXLP1VtNLyW49VKIJM7RJ0yGEUW7lTJLR//TCawXDgQQorVN7m455/g5D04mSw9KK4E/Vz4ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eVwxPjZ9; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F397828DB58
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751296379; cv=fail; b=h7vWt9vL7IIp9N5FrRz0MxEe806agFSURvGoYLHcg1F6se9CKOTntEdWHUFEULnr2w5o7c4W6lgsnHMOtrxNIAnEzUK+E+LqfuMYmEB4dDL/kxALLja6PyB6ES0ujYjE1vlc/DJRhTr4qH0citLdFE20jkCu2hrsv6ssVA4T+CM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751296379; c=relaxed/simple;
+	bh=rBvCtFAMVeUbOXnMZ5zY3nw04klOPO5PzN+LYs6mhaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qnexs2lb30lJo9O53rSgfG+eQhcosiduPX2ou9XOdabI/LrCdrgq+N+32NvW+c4KR5cFcC65VBkt9l0SJbf1SuqCxgmFL/j5duznfGDSS+XiufCqNNt+7kmkhq58tRFqjn/QGUaKQDzJlcUZw0WFJEmq+BwGMBzXsc/ayzg5Ub8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kWb++ymm; arc=fail smtp.client-ip=40.107.236.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVwxPjZ9"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a58ebece05so24288471cf.1;
-        Mon, 30 Jun 2025 08:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751296365; x=1751901165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SaOLegHrcn1eXx3UWYOL64GB4OGC7u3vLrNV/6rSYsM=;
-        b=eVwxPjZ9/H3RfrVRRkJRfsT1BWq3gi3DqAxIGLzt8Z13zSOmIcinQ3CrkJz7V1z7LD
-         ABbxccXKPm1juCVEhkmR6KsYBANFbFCh+9L5liaVSOibKM46BD9Km1TbUqDju6ohwKzX
-         kkt+LhqiAjb8XgOWSp1iFUassBcHxvOGvluCsRPzq+xZEjE25XWXpiM2SGJoeqOm2emh
-         z8Uwqu+ILWDknLdodvB0pQGXx/vMQ3dyl7626tUBhcdU7jnZUwsHAI6Oqub6IrPe+2m7
-         EF8EkE1mirxkqdQ++dIyXWkwOCsMcXbB50IT9S5rca2r61aG4qna5ud4BaskAw3J5yNa
-         YuYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751296365; x=1751901165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SaOLegHrcn1eXx3UWYOL64GB4OGC7u3vLrNV/6rSYsM=;
-        b=XLd+WmV8PyFMq4w0tl/k/7R+rpxtoaU+nlZEiUBt71YMDhsbLS2zAfxIhkckiurquo
-         CcS7uTvAaucDGSYXDlL+XevmKnN9PuGPbehrZW5sYofHPzJPpn/Jpmaa9PBORBjEHoAa
-         aNMk6GxPXLoDwkWXTSrmq3g49aqo3CufsmfBhyW8cbxiz/NW5TcQuos7jDnflGDWi27R
-         nm7T34YQjKUszLICKaztJLUNcTrznB6I83hsBlc1Mqmv5dMV14eNC1Ha5hVatAGuj3y2
-         wwyQgZ5o5dDGiOjV28ILx2mIZQZzww7TsmMv8g3fpw4re645RNpFttn3nhPJ0Ai6G59b
-         MP/A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+L1H3def5pd5e+L+rTolUytV7GPFmURd9CKSHbqdhsdDoNcp3ntK1VqZV8zjVZsQzqO+Njof7MHxBd78p+/Y=@vger.kernel.org, AJvYcCVs87Xr3rotEfLEL9+9SuFmJpa47dZ5XnRPshOuWVT09HDo7s5im795N6jKjknpOfTrYfjHgZwCZhJh@vger.kernel.org, AJvYcCXDVQikoy+YOHlSd3A6kl395Au04e4b98aMuOs5+9L+GytrZCaUiyJu13dUQR25Ny0TJVbyEHD2pKUzAGej@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+5LBFhXfeAx8Ru0f/FlQtvet1iRtkE8qt5QGwSWz/iFvYFsnG
-	UJaOzC10/+uJxmdw9LIlr3Lit3jfdhQdCLTMoeIqprsQKpObfYT+ZgiT
-X-Gm-Gg: ASbGncu/VeghezMAPvo8pp+Jik0A4Jt8cHe0rWXrB95qIFGJd17ePuNmu6dUguzjghh
-	m9V2u0Qgy5WvuOQKdHjDyipaNkfqsrrTvPl6T6gk2dPnbeJUx546bjsXmhiR+c0g4wKEGlZ2wRr
-	6TPXlc9VcILTH+jn9CiJvcFlKzGSu2t2qnFQ+O3WJMz7adIsLgf/eWhK/9R99cbXArluW5C+ZEv
-	7iVTLyLatsn1nc4N3ROzZrEz2173rfkWBF8ZBFfPL6wdRides/cw3pgEohu49Q7Px5YihiOJnMH
-	dKnLFWP5zo0gcMFXpzz/+PHK6uDuVAqFin6/hjxRWQYJUb7GcNRqVSz+MCOaG2MwI+wGY2gdksC
-	LKoMoQG/ojwNZmX5EK3hlC6zZA1bUaPtRP982HiAFOx2mYVopbqqR
-X-Google-Smtp-Source: AGHT+IF4/b5ksWqDbDU0roRQ3BW5PvN7+2E2foS0GiY85GNlwFSrjehK8SMdetGdO5NFItvx9tP16g==
-X-Received: by 2002:a05:622a:111:b0:4a4:3a4e:b77c with SMTP id d75a77b69052e-4a7fca0781emr217381661cf.17.1751296365175;
-        Mon, 30 Jun 2025 08:12:45 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc5ad3c6sm59909241cf.78.2025.06.30.08.12.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 08:12:44 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C0151F4006A;
-	Mon, 30 Jun 2025 11:12:43 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 30 Jun 2025 11:12:43 -0400
-X-ME-Sender: <xms:a6liaCOZK0Si2jNcqBsGnZs4J7g8DBX0ow6zTnK5qXW200lQPDNtyw>
-    <xme:a6liaA_CXwBuK-Nug70W4vQUX8e8-uTfYYsPJbWIAW7hTVHdcwOrvB5B1iw12OeRU
-    S5JM8eOgrgjN45Y0Q>
-X-ME-Received: <xmr:a6liaJRyUxCTXh69iIvE08a1VbmysNaO6wW369ymQqmF4WM6W8TwbOm5segJAg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduvddtvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
-    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
-    drnhgrmhgvpdhnsggprhgtphhtthhopedvjedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtth
-    hopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhush
-    htqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrg
-    hrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtg
-    homhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvth
-X-ME-Proxy: <xmx:a6liaCstzCm5svvpiZfFQnFbON1YbLLhalgqr0R6u8I70KyUsXGyyg>
-    <xmx:a6liaKeha2bPZbpRi-DoW4zn5bEeQScHW3BFeBDQFGAvvnMxVMWL2w>
-    <xmx:a6liaG166qeo-ic7TvaQy-l2VY6GImnCXSeANjKNxxO-g7eCodqcWQ>
-    <xmx:a6liaO-f7f0nkKNV8d6cyc9FDNIe8xjoosmrGuo2FRTej7O7Nr1LHg>
-    <xmx:a6liaJ-f4la_XrC1RYPUt7iwkqVkpGecQhrcEAcOPLSLY-egrFsKZWHg>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Jun 2025 11:12:42 -0400 (EDT)
-Date: Mon, 30 Jun 2025 08:12:42 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, lkmm@lists.linux.dev,
-	linux-arch@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kWb++ymm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cvlkyXrQOSQNbF5LpQJaDSCvGzTHdhrF1feYVpylaZH896YGyuTW5rShlgeWKeBSuVnkb6slIW+6WAQgXp2seMtgBaR34crdidv9IvFuIY//ZVh4YK1il+ZMF+PC7xd1zkhJKR7ED4sLNnToizd7OWNm/r/XAj3HRf46o28/XpKgtVFz97CV1sJJ+z4e20QWcOQs7LCRCXuPdGH4y0Djfp2XAbAf7xYLtTfN8KxVZMEASuGB34NsiQlEoL9g1bGUpFN79dum+RxVNMzs+75R1tbNVz3jdDUkEuxpOx3gQFALEdPUF1uz4PJnkZdpHfzSxvo2mVAusuksP/A9NuyTKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=buJAc0RZWriTrboVGUOZUdWWF6zm8iXRUNjr6OPeoww=;
+ b=rsVnqBCPWGsRXtRKyGq+0+E6PZscMSU/w06HzetM7UrdTteX4aQFmagL+waNB7h3MZ368nqaAF9CCDtjN042owQZP5Gjmrtr/sgLN/qDqqljPYpl7uWVL+ZF0arot7uZn0ZSMmJGT305uLzb/oNQeyamy7MijT5/a8qBqY/ZpDvitnvA9UdzJU0TbG+HWdg7Y1lmLB863j9pkmv/ajM2oGA8qV0uJht1hUPZEA+8JlTK8hCL5ObL3FqOpMxmHd67NzQii1KiBw+UoC6+nZdyrqOCJcVTFbEgaQ8w/GXFwqLmtSCbkK6Ax1o2X0ZI3jXrJWw+9mNFZEFz4qtxO9cqcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=buJAc0RZWriTrboVGUOZUdWWF6zm8iXRUNjr6OPeoww=;
+ b=kWb++ymm3Hv3QBJmWX+CI6MhjyRAvCHcgRp2a8DCe4O31CYwsXdOLfMFfkuknlxQ4B0OfBtG4Y0s7Y+5XRXK2HUzwB3KLGBp+I51z7jZesT6Hz2kF196QZ94nryq6jYQt7IdWHH5ijaweE+hfyX0AC1cWbGFbT4EroZJYWzMChl5HR5NpwGK6td5LAC1kMJWmAvkdu8Kcdfxz7U81CgSpd2MUxbdwcLyQKhfZv5WoXUoYdTzWlemf7cYtpx/Ud7lzmK5Tgz8g6WgIUATbo29MWJ4a8tPE7zY/e8OLtR6cI+vZ+uuicYAcz85fb9utzwYH2bjUhNXYuHz7zT4r8cYmw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by CH2PR12MB9495.namprd12.prod.outlook.com (2603:10b6:610:27d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Mon, 30 Jun
+ 2025 15:12:55 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8835.027; Mon, 30 Jun 2025
+ 15:12:55 +0000
+Date: Mon, 30 Jun 2025 11:12:52 -0400
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 05/10] rust: sync: atomic: Add atomic {cmp,}xchg
- operations
-Message-ID: <aGKpaoZt5Ab2a7Zj@tardis.local>
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
- <jBAtISwM9LKkR7KuCHEnym75NfGOM4z408pMuDfk4U8VzN8PQuk9JJfBc33Usre3YSjbgtFRj8c0ZNeeQMpZsA==@protonmail.internalid>
- <20250618164934.19817-6-boqun.feng@gmail.com>
- <87a55uzlxv.fsf@kernel.org>
- <_pLa3zqu-AHBOnxkEz7l13l9W-OsKBtuXIkjRsIJJy6EnYTrM99E8Yr24pzjqwCAj1_qs_PI-cVxRsBsbgiFdA==@protonmail.internalid>
- <aF9bmpX-i6HVMlaj@Mac.home>
- <878ql9zg90.fsf@kernel.org>
- <1cf36f94-7e70-48eb-a79f-ebde218cd716@rowland.harvard.edu>
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>,
+	Luigi De Matteis <ldematteis123@gmail.com>,
+	sched-ext@lists.linux.dev
+Subject: Re: [PATCH v5 08/14] sched/ext: Add a DL server for sched_ext tasks
+Message-ID: <20250630151252.GA2443566@joelnvbox>
+References: <20250620203234.3349930-1-joelagnelf@nvidia.com>
+ <20250620203234.3349930-9-joelagnelf@nvidia.com>
+ <aFnQ-3L6ixL7nSz0@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFnQ-3L6ixL7nSz0@slm.duckdns.org>
+X-ClientProxiedBy: BL0PR02CA0014.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::27) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cf36f94-7e70-48eb-a79f-ebde218cd716@rowland.harvard.edu>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CH2PR12MB9495:EE_
+X-MS-Office365-Filtering-Correlation-Id: fffe3ef0-670a-4a22-40e6-08ddb7e896d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Incc/qkqLfZsdFRhnI99MsAUJyYq25mV0zXbpNhfYTVtOMdzAcVm+l6WRjm1?=
+ =?us-ascii?Q?f7EuGB1yXQZJjVIoHf7o1OsFpgOtrak5BYiUBL7MQtRFoJbCR3vOuVDwWLq7?=
+ =?us-ascii?Q?vbSl5oeUCk2lTxhMuSE/Wjk5LxRVamgWAez5Yw3JWIu/xd2GCZAKHGPWPk9Z?=
+ =?us-ascii?Q?7RLiS256sTZdN1VTsnpWBeY/RXjKo7D0oEji+p8VgYWBGxa4XpVu9PS7e5Q3?=
+ =?us-ascii?Q?6KlDpq53iYh512qzCi6Ffm9DDLHpRF1KvsOW0b7lLRBpx3ihIqjXwLs2U0Ra?=
+ =?us-ascii?Q?Jde4KqspZj+KuebEVT70Y+cZQmAaNAxf3T8ZiRP/fP6lCQ5XdTLBortcsKBe?=
+ =?us-ascii?Q?PzwdiQ91XKQkOWX3xz0Jng/IePzmKZ7UviziGp42of/wsQQBU8yXHzvSsAIE?=
+ =?us-ascii?Q?NU7dqoaM71MbyfuQv0IM/ucf4aNebRW/7ORMVxJENM6Icw2O8CQ8W89AS/FQ?=
+ =?us-ascii?Q?r+FiMOjDo69Vojjz5RejCGdKFUuDN3EJXejR5K0r7Z1FBq1IUJdMu81qfQxE?=
+ =?us-ascii?Q?2hKQrIUJ0V0DhunaCkpf9UycqlZe2OUHETU7/uObdKPKrexIQ015ovF2gZ94?=
+ =?us-ascii?Q?YJ0/WbDBxcy712PG/Es0KjHPbH1QQ0CMoVcSbuWBRGL7d700Br/wHmiS58jk?=
+ =?us-ascii?Q?2F57Qw94dMBjmKYULJxG97bnd1c4vPr98PfbS1zNxFxA/ILI3dnBXwgzZn98?=
+ =?us-ascii?Q?fBfO16EDp/LtWxZL2GGGVZb0SCEsWiFleoGhlUFl8+Ac7UprwaWPwl9+GyQy?=
+ =?us-ascii?Q?pRqv0fPrUIaKcNs8NzSWMyG9nW7CvknKfJeNoxAl1zJCjOMueoRoDf5eh14F?=
+ =?us-ascii?Q?evH4SahNIa0p3gMacNs/X8YB5I7JjpjZAXSr7EGRJ4pgLInDX6ONqjsSR8nR?=
+ =?us-ascii?Q?rRXD1nHRDABR3yKsBi89l3Aq3O5ItCJAw0NGU5MHQdWerFMHaxEaeABmJYMP?=
+ =?us-ascii?Q?FoW6Mw8kz5FZp2HjiLTPF7I/taV5fewqsQriM0N8gIyuqEnQmLQQY54O0UR0?=
+ =?us-ascii?Q?kDgHQZeUJK/h/QICA4S+vQUUaUBZ8lFHQ84E7qO/SiQ2EWeyitHRYtMcbGdS?=
+ =?us-ascii?Q?8EOa6dHas2nuSRo8Saw5PwYFX9DsseiV9FhJrO0qRFneMVALWoLtKZuum/0V?=
+ =?us-ascii?Q?c6UmXRbzEJlk3JRm9doEctvTHQOApRYHrNkk5DwC8aZohsS9omIPwZEAadjm?=
+ =?us-ascii?Q?a//OVl83uH9DilJOxpUyofNBOgL+oZ0yaoro/Bxrr5/kDl/+GFZxUb1ccXRU?=
+ =?us-ascii?Q?kdqeblNpX0H5EfT8Xw+FwVPEdjK8dM1hnPjCj1ujusqNxMYa9FPZDy0WoQSS?=
+ =?us-ascii?Q?pKPHo7vn6jbpfSnyMm6cZ4wXc2kj7gm7lKy0wbfFXLefmkclUaSW2cqxlug5?=
+ =?us-ascii?Q?4GVt9m6VAIAePzEgSsmVG8Wh1wMxpqf/l9QWXlDGys+bG4+SO/cSBHTdkmhO?=
+ =?us-ascii?Q?arNVd/eG5QU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TymJ9ZjGoSm8TE0IVXyqN16IXoLAnHfUE9DnvyJ4LbTc6d2Gym8NF1/XsACl?=
+ =?us-ascii?Q?lscOe9rWqDTc4FY0Y69rTFJNPWkNz0eEnHuplXlj96paczFr6VRSfsP5rC5z?=
+ =?us-ascii?Q?MFDUh1bPYjjvJ6bOBgzaIYZMTNs3Fy2+JSlRq0Znnr8TmcTp9vINjPuLUoBM?=
+ =?us-ascii?Q?4kNzSaQ93gORYq1rDM9y8299o28ZD5Z0IsMFfyNOfE1k9IXTAdBe3NjPKP2z?=
+ =?us-ascii?Q?5OFuW0rCcFRcct/51X0MrL/UAnJLG+DVNjmwfog9rWx7+sucAlmAcHH+SICI?=
+ =?us-ascii?Q?8oRvMYU0KUb5XfDi4P5TIMJQ4P7npuh7g37Jx/o8C13atfHlpJWDY8Npizc6?=
+ =?us-ascii?Q?sIhhmL0+x8bTAP2mtBLPEpzR4Z1A+IKTFCUoyFDZS1qdF9I9dkeOlmZlZes6?=
+ =?us-ascii?Q?UJjoXWtanBotTy2qbo/OT2OdjpmyBCWEhmdSWvas8A60rcwkFoqdL88Ejbqy?=
+ =?us-ascii?Q?PPdUQDH7ICqx5JU46E8aXVZQfOMn6/HB064Ff33cjSznzScH0wdcvJHhoa0c?=
+ =?us-ascii?Q?GKqmSWUNi+9MCVCYLpt4pYmaaJxmW/NaT3leuxJVL0QGl618GYKizXL5gCO3?=
+ =?us-ascii?Q?Rwe2Fy8CowW0Kb2ts4u0rFkLz6hmkDESlsUCCXBuhNH0n4P8Ul6ZE1G88SMW?=
+ =?us-ascii?Q?r0bi9fqyf+ewzz+ZNGTHFESreNw1WX5Fe+B3hsBEu5tFWPkj9q42uWjCJFZj?=
+ =?us-ascii?Q?1IKrD1AhNzwmbKD+Ryb9kDfwKxLJFU4UAi60LvNCchWyXt2DTm4h8NJDdDYz?=
+ =?us-ascii?Q?O+tv8vTQypZIbDLB3EU49QmOSU8uNjmf6Fn6xvv01yAnX82izFdF2pbtDkZy?=
+ =?us-ascii?Q?RZLNnUHpk9FcqFSRMsWFXMAj9YC6dHbTc6Y1hMVn6To8lizANPzwKqPDRj0q?=
+ =?us-ascii?Q?jDpg3bIULCrELlBe5g56KaPXNWBDvyYCY3XCjTKPZ1istb/pv+a6k67A9ywG?=
+ =?us-ascii?Q?5sT+FGfBndKSev4Ka8TP5uJ82/UEmND5GhGPfLLjxSzpAZ/AoGUkyF5E2hYm?=
+ =?us-ascii?Q?aQm/LhAQHdf3DsUP50wAT21sqOqsAY5sxSP+ExGDE/Lm7QXCgIHgCiuhT1Qp?=
+ =?us-ascii?Q?7mEstAztdve2TNoZcuCmRXUObyCL6flSutcj5PkBuIkrqiJFiV+sXYROnnjX?=
+ =?us-ascii?Q?KzS9wmimcox5SG6EriyGjLUVKUJiuPAd19+tJg6VZwpeLYko9e9RHErT0szY?=
+ =?us-ascii?Q?C60NBFwgOuXWAKqClAXZUL3sVIv5JmChj9uwZVIMkqJNBHwLrsk7NmCV/u2n?=
+ =?us-ascii?Q?IQBV/xhw8mUjx76822lrR30t0kCkXXLNVXXCR6lmrGWKFB4lSZdgoih70pc9?=
+ =?us-ascii?Q?YVsbHE5ZQwCfSFf5Ca90qXNkEaM+m5mswGcZ/7ZpfTC+7ksuA9ZgEio9mZae?=
+ =?us-ascii?Q?sm6KMT5/v2Y+DkNgxSat/yBX+nTKtS/yh2CulMPw0I5jiENqJ5LidZQjZaHP?=
+ =?us-ascii?Q?AzVdbasz2Dss9MHYpU88h/qzwA5yisOjNWv52HdZSv70ETu4NxbS+RW3MWKO?=
+ =?us-ascii?Q?LPX/lka30fAfr7ZoQAC71b0xGqycU7EkRMkm74e7QhqqlJTR4rwlhVkxh6k2?=
+ =?us-ascii?Q?myYuoYMgMZE+anGKSm9GXkq3j2SzC/jA4oNXWnJQ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fffe3ef0-670a-4a22-40e6-08ddb7e896d6
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 15:12:54.9414
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z/TA+FIev6XlRPGlEa1POp3KfCMuAzCTWmBudIeFRJImpf+DksLBoqgo6wEQJVLO5RLLcupbUXstuguCcOEHIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9495
 
-On Mon, Jun 30, 2025 at 10:51:00AM -0400, Alan Stern wrote:
-> On Mon, Jun 30, 2025 at 12:16:27PM +0200, Andreas Hindborg wrote:
-> > "Boqun Feng" <boqun.feng@gmail.com> writes:
-> > > in atomic/ordering.rs, I think I can extend it to:
-> > >
-> > > //! - [`Acquire`] provides ordering between the load part of the annotated operation and all the
-> > > //!   following memory accesses, and if there is a store part, it has Relaxed ordering.
-> > > //! - [`Release`] provides ordering between all the preceding memory accesses and the store part of
-> > > //!   the annotated operation, and if there is load part, it has Relaxed ordering
-> > >
-> > > This aligns with what we usually describe things in tool/memory-model/.
-> > 
-> > Cool. When you start to go into details of ordering concepts, I feel
-
-Well, avoiding going too much into the details is what I wanted for
-those documentation comments ;-)
-
-> > like something is missing though. For example for this sentence:
-> > 
-> >   [`Release`] provides ordering between all the preceding memory
-> >   accesses and the store part of the annotated operation.
-> > 
-> > I guess this provided ordering is only guaranteed to be observable for
-> > threads that read the same location with `Acquire` or stronger ordering?
-> > 
-> > If we start expanding on the orderings, rather than deferring to LKMM,
-> > we should include this info.
-
-I'm not sure I follow you on this one. I'm not trying to expand on
-orderings, instead I'm trying to resolve your feedback that my previous
-version didn't mention what ordering the unspecific part of a
-read-modify-write has (like the store part of an Acquire and load part
-of the Release). And to me, they are naturally just Relaxed, but I feel
-that given the feedback I got from you, maybe I should explicitly
-mention they are Relaxed.
-
-It's simply just making things more explicit and I'm still deferring to
-LKMM about the exact meaning of the ordering.
-
+On Mon, Jun 23, 2025 at 12:11:07PM -1000, Tejun Heo wrote:
+> On Fri, Jun 20, 2025 at 04:32:23PM -0400, Joel Fernandes wrote:
+> > +static struct task_struct *ext_server_pick_task(struct sched_dl_entity *dl_se,
+> > +						void *flags)
+> > +{
+> > +	struct rq_flags *rf = flags;
+> > +
+> > +	balance_scx(dl_se->rq, dl_se->rq->curr, rf);
+> > +	return pick_task_scx(dl_se->rq, rf);
+> > +}
+> ...
+> > +void ext_server_init(struct rq *rq)
+> > +{
+> > +	struct sched_dl_entity *dl_se = &rq->ext_server;
+> > +
+> > +	init_dl_entity(dl_se);
+> > +
+> > +	dl_server_init(dl_se, rq, ext_server_has_tasks, ext_server_pick_task);
+> > +}
 > 
-> The problem with the word "ordering" is that it is too general, not 
-> specific enough.  You need more context to know exactly what the 
-> ordering means.
+> Needing to pass in @rf to ext_server_pick_task() makes sense as SCX always
+> needs to balance first. However, I still don't understand why that
+> necessitates adding @rf to sched_class->pick_task(). The existing assumption
+> is that ->pick_task() cannot release and regrab the rq lock and that's why
+> ->balance() exists in the first place. Breaking this can lead to other
+> misbehaviors - e.g. if a higher priority class ->pick_task() releases the rq
+> lock, a lower one may end up losing a task that its ->balance() saw. This
+> can lead to lower priority class's ->pick_task() being called without its
+> ->balance() being called which can lead to stalls.
 > 
-> For example, ordering store A against store B (which comes later in the 
-> code) could mean that the CPU executes A before it executes B.  Or it 
-> could mean that a different CPU will see the data from A before it sees 
-> the data from B.
-> 
-> A more explicit description would be helpful.
-> 
+> One thing that confuses me is that all that the patchset needs to do seems
+> to be adding @rf to dl_server_pick_f and that seems fine to me. Why is it
+> necessary to add @rf to sched_class->pick_task()?
 
-Except that the explicit description should be in tools/memory-model/
-instead of the comments of a function or the Rust atomic module. Like
-Documentation/atomic_t.txt vs
-tools/memory-model/Documentation/explanation.txt. Because one is for
-people to get a quick idea about what these annotations/suffixes mean,
-and the other is the more elaborate on their precise meaning. Most of
-the cases, people won't need to get the subtilly of the memory model to
-write correct code.
+Because ext_server_pick_task is called via DL's pick_task?
 
-Regards,
-Boqun
+In deadline.c, pick_task_dl -> _pick_task_dl -> ext_server_pick_task
 
-> Alan Stern
+This changes the signature of the pick_task_dl function, which in turn
+changes the signature of class->pick_task.
+
+How about I pass NULL to pick_task_scx() from ext_server_pick_task(), and
+also annotate all functions where rf is unused, by naming the argument as
+rf_unused (except for DL), would that make it more clear that the rq lock
+should not be arbitrarily dropped just because rf was passed? And perhaps
+sprinkling some more code comments.
+
+thanks,
+
+ - Joel
+
