@@ -1,74 +1,31 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AED025FA0A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B6B1DFF7;
+	Mon, 30 Jun 2025 12:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287413; cv=none; b=sZprVngfFGvx7zG77gWn4ku3YswdbToXhjQ3vrs02qHswanUYvqra5NOOdS1FPQmcxkovhXZpEVZ8rXGITXtppMeLtSaFoeLE6pb/FESDFX6A7VNbZ0t8qjdTgAuBukZDsx2alXQ5eid0tcp7GdXtWrbI7zITSk1xC48Wg6IyPk=
+	t=1751287542; cv=none; b=c2Qpm0i1mDZceYuxF8MTyUH0N3aIVjdfbuUfsPay3zaUIWEmbwxeQhgmhXYrDOOuv8eQ+y+xB52WQ0/FtBiV82KzYqT1dGhtYgYTw9LBMp95IExkAXON9PtZbsXwJVrk7syUe6Z/UmaVCub5oUuKZY0CJnzeG2NSvQ1JHut/XSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287413; c=relaxed/simple;
-	bh=jX/AmnyTXmXRMW43Ube/tbKSQWPvBUKcTNDIPOnQyXA=;
+	s=arc-20240116; t=1751287542; c=relaxed/simple;
+	bh=nI6ubp+e9wwWOQEzFxWxfJ8iVfs97f4UpsJdUisnoxQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jRrTo6E2Qv1y6umSCsJEJFPKjkyO92nwq9HpNtFxu6cBkz+rHhX3Awa2fM9APhZyV9QPewHFaCW5aAj0kJNRox+sT9qBGP4h82RLtBo4UnO1mbnTm+i9ASryQPlmXnfJtrewwlXn7MVHXH5SgK9IkwJdAe4SBo02eljNSdbHo2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BzqN+Au0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=P2F+O+fUSFtfJstWy6ySqxHHn0BPaVzazLgTW4jyBLlNnJBLomKhKlMYHuHsCYiuo/Q80J5pLufrx4+1wcKhrHPIj3TkUAri0sXX0ksC6+HH027pvMMdr9X7TPPfbuIuPs/VRfub47Pz9Mp1Hz6UH/vmgudHorCKurhiV9v7mig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=piYlEXJy; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BzqN+Au0"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8DEYa002217
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:43:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LyQZIyqrPdU8CUNwsF+Y17dwiZfR3VxulP5rdlb6Wow=; b=BzqN+Au0hKWVG9em
-	usSFXiVvbdiCi+1KDPehzYpnia7drrQxCDGs3gBj3v6+q2xkECWVWGF8FVIe3n4f
-	n93W2WT3HlXHmBdoAwF13mIifMlWCK7wsW8gQeTVsiwIV9qlaTdj7bKdJQPqZVmL
-	1toiD4+zsFPP/HCq8GvCR58dmp7+6gwSpXKF+66HnxiGeTx06/BZEQTWzeOqyUMg
-	Drly0wz5/euWl8ECdw2sO6D38G+aV8roLH4zM/IixjfbzF5gVgPKok/4enM93FLa
-	caoEef+McTo4qmfDDLo17LpD8DBqbYLhYS3KocIqrhq6gcuQVDmYKUZ2i+/Erla3
-	uknEbQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9pcmq01-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:43:31 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0979e6263so16293085a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:43:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751287410; x=1751892210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LyQZIyqrPdU8CUNwsF+Y17dwiZfR3VxulP5rdlb6Wow=;
-        b=Rt4HSU0NJpxLOLf9WJk2AoQfMOxgAcZfQOqgNcpoDMh+C+1IIw0CG6r51ZtCnbWXA0
-         cvi+sPqA+zBw1gb6mFXAIpO3/DW7hVbxKnC5XsKym2PvLK00jUSituFzVl6br8blCCDI
-         m1nV4cpMuyDpyCKti6WGO898PsN6KKggE0iwYKcdMcPtgFTkA7tmbMt+ZpoGS7hfNeBP
-         dpE491U0VfwFP1sNIt5OCCXqqcmw/iD9FUg3P5wE9cX+FVSfoDIUdIslUVJBDPgHvQSQ
-         fjFYJl7xiWePlzLAfhPJ4CrXR4ixhiWC6Nt0XxDcFBQsnnAySf+22rLCdJmXJUpFRdZa
-         A4mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWF8zfHh3UZK7J8Jlie3NCA2aRBBx0P2uEWRkkWpKVxE8suqBISRF5cY+N+rY4noow2amDlo2mXq0ecsJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKfE/oPIVOUMo7EPXhECJpH0PY29GcnjXsyHaOT0pvV0r8hbom
-	8pgKD2fME719q3EYR8WD93sfxZpi2fHZEC0eb65UmHfLhTFNPD28E/+XFTB/wz52YHgmI1XdEzG
-	bzXDYwgk+Nj4mL3qMjBWMyT722gjAsDzhay/LNOJuMG6nZZro0VANiJ5LpLFIwA98+qT1iNvP8C
-	M=
-X-Gm-Gg: ASbGncvOMD14UsCSLYbJjDD3bz4sxC4qZ0Q3Y/lG6bpE8jjTYVzE2/orGNeEI9S0f4J
-	l5nd6C2VnuoOF7yG8OhTV1JR302M9OM7U4XIH0FA27MPZmSJmnj73M93P4xkh7dQ0ou3A3lEglE
-	DKUKDhGKejv0ApaO8g42TPVb6JI6pzWyGC1tr0CV8AdEOaQ7txIkm11SQ1OKvpBJ28k0HvYga3G
-	STMl0kCdP06c8ULHJwd7cJxBgyXM4ItRJOQcZGuFs0kKyqLMOpF2K9K4ehtYl028CMaeBx4DXa1
-	hvPGoZLfti/QskicS9EL1sy0xi/yelyt/8ha7ith+Q12LkLbcc36GGgsI3+bRncsWRTm4vypIXz
-	oyyDbjkfS
-X-Received: by 2002:a05:620a:1911:b0:7d3:cf9b:511f with SMTP id af79cd13be357-7d44c214b76mr509667485a.5.1751287410062;
-        Mon, 30 Jun 2025 05:43:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+9H7GyJO1Tgn7URrH450skC1FcVFfpRh/HH2LooElNcKzAnTRx0fRWDZsl0nEZJM09hrdNA==
-X-Received: by 2002:a05:620a:1911:b0:7d3:cf9b:511f with SMTP id af79cd13be357-7d44c214b76mr509665985a.5.1751287409624;
-        Mon, 30 Jun 2025 05:43:29 -0700 (PDT)
-Received: from [192.168.1.114] (83.9.29.190.neoplus.adsl.tpnet.pl. [83.9.29.190])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae36ffe2981sm457103366b.120.2025.06.30.05.43.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 05:43:29 -0700 (PDT)
-Message-ID: <1309f269-9b52-4f0c-a463-c4e5ae48cdd3@oss.qualcomm.com>
-Date: Mon, 30 Jun 2025 14:43:27 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="piYlEXJy"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751287536; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=CHy/aj7Sn9juzFVwa9OaHVeiczeTLceLUFgOEXprNU0=;
+	b=piYlEXJypkwW3L2h79WCrH+NQRt5qT/2o4djgi1ztWKISRVF86qqjDf83Cjy4AOQDOpwjket1nrEYKszwgHauxVFUzEg/Tjt2Cvkb1mm48Gn75LiLwFlQj9bN2rs7NyS/fzPkt6uxWrN9dREflKKaEYUWTXfKL/J2DU0CiswDXg=
+Received: from 30.221.128.140(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0WgCGO0A_1751287534 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 20:45:34 +0800
+Message-ID: <b13fd9f0-6f65-404b-9625-e431ee45ed17@linux.alibaba.com>
+Date: Mon, 30 Jun 2025 20:45:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,68 +33,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] firmware: qcom: scm: take struct device as
- argument in SHM bridge enable
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250630-qcom-scm-race-v2-0-fa3851c98611@linaro.org>
- <20250630-qcom-scm-race-v2-2-fa3851c98611@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250630-qcom-scm-race-v2-2-fa3851c98611@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250627072921.52754-1-guwen@linux.alibaba.com>
+ <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: uEQ8S5DEz7JPX5OSXp_X2E1JNA7pmbCq
-X-Proofpoint-ORIG-GUID: uEQ8S5DEz7JPX5OSXp_X2E1JNA7pmbCq
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEwNCBTYWx0ZWRfXx2wyyYB6t3ji
- GQACvGhHl/sHf86FaPH4akpQ5RM88bwivBXioUriYOvOTjGvjoEuBim1Fcy6/Z8vBUS3npcMOgS
- N5kx2gjBt14XqDq2AOdikkmPSLgN6CijX/E3VhfFsx0ZMPQbsTfX6yY9sKcBVAgK2SUdWsP3pZk
- gAUELBrF9MDaiyWTx1vP+MXTybj5DnBYhRLZEkGEFD4QLm1/hsiu46HS6P+S1LBpHjSEwbK+199
- ascowGwQYT7fsSlPkGXBoSTkKpHXvV0ShN0B0BglnwUbhihpbFD3+4oiwkVretnGNuLSm8+aRKm
- VbkJeEaf00kccSiJII8NNCVr6JfUq8YO7Ndn7W1fy1nNiduwqU/8EvAhpwu+RcbnDRixarCkbkZ
- IrCFTPN9hHOUkX8gLM1H7ej5I9i6rW9wGpt+ufo7MZaNi7bDXDB9b2MVWvcw394DovuRUJSg
-X-Authority-Analysis: v=2.4 cv=QMFoRhLL c=1 sm=1 tr=0 ts=68628673 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=fKQzr7EGRj+VoE0XNsDNvQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=RNNxD7A6MxM0MKzNLocA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 bulkscore=0 spamscore=0 adultscore=0
- mlxlogscore=825 mlxscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300104
 
 
 
-On 30-Jun-25 14:12, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2025/6/27 15:57, Andrew Lunn wrote:
+>> +#define PTP_CIPU_LOG_SUB(dev, level, type, event, fmt, ...) \
+>> +({ \
+>> +	static DEFINE_RATELIMIT_STATE(_rs, \
+>> +				      DEFAULT_RATELIMIT_INTERVAL, \
+>> +				      DEFAULT_RATELIMIT_BURST); \
+>> +	if (__ratelimit(&_rs)) \
+>> +		dev_printk(level, dev, "[%02x:%02x]: " fmt, \
+>> +			   type, event, ##__VA_ARGS__); \
+>> +})
 > 
-> qcom_scm_shm_bridge_enable() is used early in the SCM initialization
-> routine. It makes an SCM call and so expects the internal __scm pointer
-> in the SCM driver to be assigned. For this reason the tzmem memory pool
-> is allocated *after* this pointer is assigned. However, this can lead to
-> a crash if another consumer of the SCM API makes a call using the memory
-> pool between the assignment of the __scm pointer and the initialization
-> of the tzmem memory pool.
+> Please don't use such wrappers. Just use dev_dbg_ratelimited() etc.
 > 
-> As qcom_scm_shm_bridge_enable() is a special case, not meant to be
-> called by ordinary users, pull it into the local SCM header. Make it
-> take struct device as argument. This is the device that will be used to
-> make the SCM call as opposed to the global __scm pointer. This will
-> allow us to move the tzmem initialization *before* the __scm assignment
-> in the core SCM driver.
+
+Agree. This was for compatibility with older kernels, I should
+change it to new helpers.. Will fix in next version. Thanks!
+
+>> +static int cipu_iowrite8_and_check(void __iomem *addr,
+>> +				   u8 value, u8 *res)
+>> +{
+>> +	iowrite8(value, addr);
+>> +	if (value != ioread8(addr))
+>> +		return -EIO;
+>> +	*res = value;
+>> +	return 0;
+>> +}
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+> This probably needs a comment. I assume the hardware is broken and
+> sometimes writes don't work? You should state that.
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Yes, If the cloud device thinks the written value is not what it
+expected, the write will fail. I will add a comment about that, thanks.
 
-Konrad
+>> +static void ptp_cipu_print_dev_events(struct ptp_cipu_ctx *ptp_ctx,
+>> +				      int event)
+>> +{
+>> +	struct device *dev = &ptp_ctx->pdev->dev;
+>> +	int type = PTP_CIPU_EVT_TYPE_DEV;
+>> +
+>> +	switch (event) {
+>> +	case PTP_CIPU_EVT_H_CLK_ABN:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+>> +				 "Atomic Clock Error Detected\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_CLK_ABN_REC:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+>> +				 "Atomic Clock Error Recovered\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_MT:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+>> +				 "Maintenance Exception Detected\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_MT_REC:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+>> +				 "Maintenance Exception Recovered\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_MT_TOUT:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+>> +				 "Maintenance Exception Failed to Recover "
+>> +				 "within %d us\n", ptp_ctx->regs.mt_tout_us);
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_BUSY:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+>> +				 "PHC Busy Detected\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_BUSY_REC:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+>> +				 "PHC Busy Recovered\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_ERR:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
+>> +				 "PHC Error Detected\n");
+>> +		break;
+>> +	case PTP_CIPU_EVT_H_DEV_ERR_REC:
+>> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
+>> +				 "PHC Error Recovered\n");
+> 
+> Are these fatal? Or can the device still be used after these errors
+> occur?
+
+The clock can't work as expected if these events happened.
+
+The gettime operation will get an invalid timestamp whose
+PTP_CIPU_M_TS_ABN bit is set and return -EIO.
+
+> 
+>> +static int ptp_cipu_enable(struct ptp_clock_info *info,
+>> +			   struct ptp_clock_request *request, int on)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>> +
+>> +static int ptp_cipu_settime(struct ptp_clock_info *p,
+>> +			    const struct timespec64 *ts)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>> +
+>> +static int ptp_cipu_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>> +
+>> +static int ptp_cipu_adjtime(struct ptp_clock_info *ptp, s64 delta)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+> 
+> I've not looked at the core. Are these actually required? Or if they
+> are missing, does the core default to -EOPNOTSUPP?
+> 
+
+See reply to Vadim :)
+
+>> +static ssize_t register_snapshot_show(struct device *dev,
+>> +				      struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct ptp_cipu_ctx *ctx = pci_get_drvdata(to_pci_dev(dev));
+>> +	struct ptp_cipu_regs *regs = &ctx->regs;
+>> +
+>> +	return sysfs_emit(buf, "%s 0x%x %s 0x%x %s 0x%x %s 0x%x "
+>> +			  "%s 0x%x %s 0x%x %s 0x%x %s 0x%x %s 0x%x "
+>> +			  "%s 0x%x %s 0x%x %s 0x%x\n",
+>> +			  "device_features", regs->dev_feat,
+>> +			  "guest_features", regs->gst_feat,
+>> +			  "driver_version", regs->drv_ver,
+>> +			  "environment_version", regs->env_ver,
+>> +			  "device_status", regs->dev_stat,
+>> +			  "sync_status", regs->sync_stat,
+>> +			  "time_precision(ns)", regs->tm_prec_ns,
+>> +			  "epoch_base(years)", regs->epo_base_yr,
+>> +			  "leap_second(s)", regs->leap_sec,
+>> +			  "max_latency(ns)", regs->max_lat_ns,
+>> +			  "maintenance_timeout(us)", regs->mt_tout_us,
+>> +			  "offset_threshold(us)", regs->thresh_us);
+>> +}
+> 
+> Is this debug? Maybe it should be placed in debugfs, rather than
+> sysfs.
+
+These are considered attributes of the CIPU ptp device, so I perfer
+to put them in sysfs.
+
+But I found sysfs prefers only one value per file [1]. The format
+here may need to be improved.
+
+[1] https://docs.kernel.org/filesystems/sysfs.html
+
+Thank you for these comments!
+
+Wen Gu
+
+> 
+> 	Andrew
+
