@@ -1,136 +1,112 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BEE190072
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CE1248F44;
+	Mon, 30 Jun 2025 09:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276044; cv=none; b=uVlIqO/9L0ajMPIWuvI1Ir7a5hQOUdX+CxyOg/y89dHGoR5flU1KHa2EfXPd70cOE4Apc58PaLhE4MPSGpRIpNsZwQiKUAgP0fk+T+FM6H8cIpNv/yfuocZIx51EA+D4k8YP2KJ0kY1fXPUCyrX5Snt+Xv09hLzCuITuwecurCM=
+	t=1751276154; cv=none; b=EMj+zG4c8ifwcPsobPhHQ65GAawyeNlAs7rltDK9tfUqrVgpgcWPcwgIQCWga4cSFDppM0bLPjUZ23wg22aYQsOFowlbDAOb1ggMaIu9cLOMzFQ/vj1i2t7YVYtLbbl/48XNPfnz+LLbQfHxWqC2+07ejKk0ZEqtVi3os72G4ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276044; c=relaxed/simple;
-	bh=i2H7wxuvjKrprsdjJQ79FfENDYU2gTxNL+H4wIq0OH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D951QAbWrr/e+YwKobAoqi2ErMcFskg+ajxBmogKJpVPNPTex1zgXde5N45eUQOlVXpU+/yfbePUrPsFfTd+yTGJ19ZVR1j1z2T0lJZnmxi2PTRo3d0xQFycGPh7X/ZxPFJ7R15lpBlVzpWEzk24+o0foV9e6RnjQ58ZgOwyBsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=O4fKiMhe; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1751276154; c=relaxed/simple;
+	bh=z29HrFDi9s65t9GNCGzh74kdd7wcDIierOJOKdAPlLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jAo74iLkE16vn0TqNzPLGiZELY82IvTeRuaS6DOKo1jxNun+Xh55NkCZRtKKwZZtEakVOkeqiF2+EaY1M+aK5Pg2a1fzKJ2qSKrUofaXXRvb4n8Gvw0NNN+1DMkDlUkToOBxDsxjlPo6C7wPTNt7hLjyUo9fqX6I9DkwtZIXn2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsYx3mjU; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O4fKiMhe"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id B7672EFF;
-	Mon, 30 Jun 2025 11:33:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751276018;
-	bh=i2H7wxuvjKrprsdjJQ79FfENDYU2gTxNL+H4wIq0OH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O4fKiMherV54uzy8RutgjMV0OtIp04hwC+DMxJkG42JHGNI8cF/uHsRS9l6o3niDD
-	 s5Ea8f07ZdnnnkZ4NyavKg289o/DF+vnJqdkPJnS1W+zdp8gkXjcbcDN8F9KxVVQJP
-	 QJcp2IzhJYO+z6uvzjg1H8pja1S8OAU383ewUuP8=
-Date: Mon, 30 Jun 2025 12:33:35 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>,
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-Message-ID: <20250630093335.GC20333@pendragon.ideasonboard.com>
-References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
- <20250627145058.6880-1-mike.looijmans@topic.nl>
- <20250627181911.GF24912@pendragon.ideasonboard.com>
- <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
- <20250630-psychedelic-tested-smilodon-adcbb3@houat>
- <20250630091156.GE24861@pendragon.ideasonboard.com>
- <20250630-phenomenal-taipan-of-imagination-59b300@houat>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsYx3mjU"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4e62619afso464245f8f.1;
+        Mon, 30 Jun 2025 02:35:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751276150; x=1751880950; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y1A5u/XezbCzc0vXccv/POOZnvtspnWkWrOLPiV9LNk=;
+        b=gsYx3mjUSXnSoJBZTLI/ou4abMltHTOOBAppbHxNo9HyNLIKcJuB/M+zr/R1YToFat
+         m6AneMUwojfAI5BQTYCcMULbqegeCIyDZztmKHq3QvKprDajV3C0On2XZZ8uM2lUfNC4
+         MnI6UwpZcvbY4W5dJH4lyi2SinUyCNtGSTB1xwF9TcMrXjsHGoA4AY/e3G2ifDCx3Opa
+         Ybx6K1/5OGGPU7HRzfKONi7mvObqBV/7lUaiuyql5l7e3Q6i5kBZ7fZbsZZa7KJ8Rsbi
+         cjQctlOhKyaTQvFOr/rtnBIxPyVAUvcLqN4K8DWAwZdknB534XtETk0KqrAGzhK2HoXS
+         Q66w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751276150; x=1751880950;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y1A5u/XezbCzc0vXccv/POOZnvtspnWkWrOLPiV9LNk=;
+        b=hpVyIb2KRCrs3Vtyg06Xh8gnmhlPCfOwC17KL7ApdFTqaGN5MUswfDzwIcG+VcNb8y
+         f9OSo05bggykTpKQ1axLupGPpucfr3UxvAppNKGcD+b0mgspjT6Fc/gWUfXXMUB5xjnA
+         QY5uRfud/OD7cUwPIozNMOXj64lY65BTabP2QWdFI/2Ge0DfmC92Rs7ACzCz5J6iF/E0
+         gI4M1JTr4bPo3Pj9w9Bg9pTwUYpz+3Bo+SmvLKEEp0+MLI1UOMT1RUy7dH3NhMAfihrE
+         BHu9kBIhs6ez6H5V0nSwTTQA+qnZbN5UgDahrVCysZIoWiSBbXDPf50RJroEGKruQHkW
+         UoLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVn+bAlhBR561F1LCS9Um+zL1CcJmi6wXUyCRTNMz+WTmoMkIsyPxgLwt0uyOj2iHeNgxBUK8RuUMVW@vger.kernel.org, AJvYcCXArlL3GN+GK09eaIUmhTFVz+NVR7m0wFdgFOK0lxzSFOfP2ykFdInAZzGzBxEldFBy2EzScHRPwyNm/ng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMrfgQEi2YO564UQqQE6K+n37TcVUlFgsnEAnHzXFWQukx8lNz
+	iwGgumXfwcvbWKuhQQ6ZYOxFTUxm0JolnO/DOm4bbdMAJ5/ux4Jdi+nH
+X-Gm-Gg: ASbGnctau/JBqOZAtPuOJttaDJeS1NplTFQAJeNiaL/ZqwAMTWZjULsk9MgAT0Bo6KG
+	ia7ogqdDekU3EVfarjsib7bXshWndVsJFiCFeloLM2aGWLy6NpmBAMYKy5JKYL3tmK37beGHgMY
+	cJj63I17e/q/rzCKccc6LG+WcsHP+GGGVmYzaxtCfXttckoGRGYeRNW5G/+rd+58yzfCaOT/uek
+	seTZZceFwxicSbWKYPnDXa8bEoQlYhq4meSFFeg9F6gAu0As9gTAqITFrPgCOdoFo73eMlguNP4
+	jEabBvY6IVM+A4yaszwZjYBNDiGwgBk+WT+8uyJIkiVjMNL/RmCerKhAPSzMss134xe4TIxPPhl
+	W5P5s1yEWr7pZSqhHIi4lSOl8cA==
+X-Google-Smtp-Source: AGHT+IENoQHFcKucvcnuAdWdAyrPNttNlfViNN8c8eBHYW6QCFoessLifIGmNu5Aps8j4D3BqFxOXw==
+X-Received: by 2002:a5d:64cb:0:b0:3a6:d680:f282 with SMTP id ffacd0b85a97d-3aaf43b95cfmr2363583f8f.7.1751276150193;
+        Mon, 30 Jun 2025 02:35:50 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec69dsm9774684f8f.6.2025.06.30.02.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 02:35:49 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Yumeng Fang <fang.yumeng@zte.com.cn>,
+	Eric Anholt <eric@anholt.net>,
+	linux-mmc@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: bcm2835: Fix dma_unmap_sg() nents value
+Date: Mon, 30 Jun 2025 11:35:07 +0200
+Message-ID: <20250630093510.82871-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250630-phenomenal-taipan-of-imagination-59b300@houat>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 11:29:08AM +0200, Maxime Ripard wrote:
-> On Mon, Jun 30, 2025 at 12:11:56PM +0300, Laurent Pinchart wrote:
-> > On Mon, Jun 30, 2025 at 10:27:55AM +0200, Maxime Ripard wrote:
-> > > On Mon, Jun 30, 2025 at 10:03:16AM +0200, Mike Looijmans wrote:
-> > > > On 27-06-2025 20:19, Laurent Pinchart wrote:
-> > > > > On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wrote:
-> > > > > > XRGB8888 is the default mode that Xorg will want to use. Add support
-> > > > > > for this to the Zynqmp DisplayPort driver, so that applications can use
-> > > > > > 32-bit framebuffers. This solves that the X server would fail to start
-> > > > > > unless one provided an xorg.conf that sets DefaultDepth to 16.
-> > > > > > 
-> > > > > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> > > > > > ---
-> > > > > > 
-> > > > > >   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
-> > > > > >   1 file changed, 5 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > index 80d1e499a18d..501428437000 100644
-> > > > > > --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > @@ -312,6 +312,11 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
-> > > > > >   		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > > > > >   		.swap		= true,
-> > > > > >   		.sf		= scaling_factors_888,
-> > > > > > +	}, {
-> > > > > > +		.drm_fmt	= DRM_FORMAT_XRGB8888,
-> > > > > > +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > > > > > +		.swap		= true,
-> > > > > > +		.sf		= scaling_factors_888,
-> > > > > 
-> > > > > I'm afraid that's not enough. There's a crucial difference between
-> > > > > DRM_FORMAT_ARGB8888 (already supported by this driver) and
-> > > > > DRM_FORMAT_XRGB8888: for the latter, the 'X' component must be ignored.
-> > > > > The graphics layer is blended on top of the video layer, and the blender
-> > > > > uses both a global alpha parameter and the alpha channel of the graphics
-> > > > > layer for 32-bit RGB formats. This will lead to incorrect operation when
-> > > > > the 'X' component is not set to full opacity.
-> > > > 
-> > > > I spent a few hours digging in the source code and what I could find in the
-> > > > TRM and register maps, but there's not enough information in there to
-> > > > explain how the blender works. The obvious "XRGB" implementation would be to
-> > > > just disable the blender.
-> > > > 
-> > > > What I got from experimenting so far is that the alpha component is ignored
-> > > > anyway while the video path isn't active. So as long as one isn't using the
-> > > > video blending path, the ARGB and XRGB modes are identical.
-> > > > 
-> > > > Guess I'll need assistance from AMD/Xilinx to completely implement the XRGB
-> > > > modes.
-> > > > 
-> > > > (For our application, this patch is sufficient as it solves the issues like
-> > > > X11 not starting up, OpenGL not working and horrendously slow scaling
-> > > > performance)
-> > > 
-> > > Given that we consider XRGB8888 mandatory,
-> > 
-> > How about platforms that can't support it at all ?
-> 
-> We emulate it.
+The dma_unmap_sg() functions should be called with the same nents as the
+dma_map_sg(), not the value the map function returned.
 
-Does that imply a full memcpy of the frame buffer in the kernel driver,
-or is it emulated in userspace ?
+Fixes: 2f5da678351f ("mmc: bcm2835: Properly handle dmaengine_prep_slave_sg")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/mmc/host/bcm2835.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > > this patch is a good thing to
-> > > have anyway, even if suboptimal, or broken in some scenario we can
-> > > always fix later.
-> > 
-> > It needs to at least be updated to disallow XRGB8888 usage when the
-> > video plan is enabled, or when global alpha is set to a non-opaque
-> > value.
-> 
-> Yeah, that's reasonable
-
+diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+index def054ddd256..4fced9b36c80 100644
+--- a/drivers/mmc/host/bcm2835.c
++++ b/drivers/mmc/host/bcm2835.c
+@@ -503,7 +503,8 @@ void bcm2835_prepare_dma(struct bcm2835_host *host, struct mmc_data *data)
+ 				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+ 
+ 	if (!desc) {
+-		dma_unmap_sg(dma_chan->device->dev, data->sg, sg_len, dir_data);
++		dma_unmap_sg(dma_chan->device->dev, data->sg, data->sg_len,
++			     dir_data);
+ 		return;
+ 	}
+ 
 -- 
-Regards,
+2.43.0
 
-Laurent Pinchart
