@@ -1,132 +1,144 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C2F1C84D5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5761D61A3;
+	Mon, 30 Jun 2025 03:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751255305; cv=none; b=s0STLpv51yax/8MMv41bpQjFdX54egmIS9+q9WPvlArsBi7j+HhkM2b40PKyzlwsSlJBTfbxg96BmpT8EIZ3/yttKl9JnFP4rhbsW44FDIRR3AxAHH/D9M6QfoRvEn5bcM52LgsLnKyjNnJHv8yDvL/K8CwSCzHoUAwTgwfPYx0=
+	t=1751255308; cv=none; b=Fvld9j3nCLQs+cDf93ZguATMhsFJiT8u3uR9nzfxRA+7hiPz6vC65KmxEj/USFO0V5ZWVFC7BEoc419AuQJnb9huKelqRHZ7BpE1cL3qZVoP7GaAMOCR/rcMTWHyOtgKAgxt7ElUKFN1md8DmjE199SCsYJziWwz4ng1Ne7wPko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751255305; c=relaxed/simple;
-	bh=rcXB8sUVYbgV/LLd1eTDWsHjfWUpMTfAU5sX2LEsSqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iNOw7bpDbEbt7hRa/BB/YE3Q7Xx84tGRo2dt504OGe2VyFqQej5NSOx8pwWmtpI/j9m/GTQS5Otgq4gL0ElPcOs/t7/DtieVuOeRihRplL5A2y4lIhuK01bHVkOqwqjFnlIXVME1PRv7BjvWdb43IioS1vuFj11+W2u3hqidCuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=nGQu5xHB; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="nGQu5xHB"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4179976b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751255302; x=1751860102; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ri1e7xvqfD1xJqzMHYa8cxstKVT8liDfwJUs4Nyy/QU=;
-        b=nGQu5xHBdZu4RrFpUhYeQ/5dMhpGrfKrQP2iW+7NPkBOchXxwuZD5CPD2c9zPVDozB
-         wosV4xwdpBqfw3Z3eoPEffFj1H0OdoFKSKTotfdKi5rqIZLaJPMwOadlseplTD8D2Fti
-         5H1ND4pVynUNR0RGuQv6KKWtH1Q/4IoMjBgdhb13pNNEznd/FDCsHUrHMU5zzkeRbI0O
-         0oJaWz8f0iS77bnyUeJDnoxFJuPdsoo4K9zixFatCgt8VjRNnbSKseQE3VHBI4k83zDO
-         BdT9Sy1VotZWjOItxHlNPAmJgxkrU2I9fgqiWlyjCMmLkDWPTtiAGK3Eb0DVWw496NHo
-         FFxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751255302; x=1751860102;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ri1e7xvqfD1xJqzMHYa8cxstKVT8liDfwJUs4Nyy/QU=;
-        b=FGF235qU9RIPzraN0L9eS8dmhOAvqNHbyb3yO2SS+JLlnI3d5XkQKIeztN53djW8kh
-         3QhMvMnZ5xveZ2ett9DrNSC9EBK7hAdic48JbpZaLTElftejC3+ZHooUPhXHgXg7gC0+
-         CKZHBKeV8PDqpOtRt7phIM/Wnvc24JRa38JyGxbf/lhtfuM8UsiOXDzpCXitkzKRfCIi
-         lS+lmqkGTBeI4bkPpE5ZEfFLWoGINDjFasP06WSsepnW9RYO0rsnDcAArsA3kum3oPke
-         RTzsbi6bmtcDxfOWX6ouCCP5Qv/rW8xnLK7rzVwoiikfWUCg8GUrWNDsrAbXCSE3M5tk
-         OBdw==
-X-Gm-Message-State: AOJu0YyV+w6oIJVTYKB3W13X0tuBEs8pCjXdlA1KQyHngwWhvirfBmFd
-	8gnRjWWxvIvZlZTisVHkMpVKYo2WeViECCyiQRO7ZzJTaxp/Oa4jvpgrZ/GtJ0+HA3g5Ba/gUsP
-	mLFkc
-X-Gm-Gg: ASbGncs02IuxomSUHH/4PzKLZITYyCzrUQq4FhbMlJ3i8ZAmFcvhqu8ixn+65NsV6LV
-	TSNrxdTsLjlWS8nZHCFiOS5hV3aW4aHiYxsCNeXCSV29+BZ+JebtsFvHW81uDsZENkQM1rvBeyp
-	G8pIhjYJJb7YmKeEjfui6H8e4XCWUZhz86SrCueMeQNaZg1NUuvVcNoCrb+aZuujP637Vv4IqGG
-	Z8QYRT3UvQapv6HY5xq0jjpksSom3ksUmsxBtEwD1u9tud4+9RIckInoJE0Xzl+rLv00odBnRyN
-	suClSvI4jdt9/x0U6Uq+hy4nkKqh17xFHM3ob+/G7TRbccmiqFGgHKRvyT4Z6PRBhpaXVBd3
-X-Google-Smtp-Source: AGHT+IG71WwVUzest/mJtvn+9x2w5xMiAsY0zQAJe8GnER+ZaxhJXmmKNzdMlkrBD48ocwYkdyfatg==
-X-Received: by 2002:a05:6a00:1813:b0:746:2591:e531 with SMTP id d2e1a72fcca58-74af6f081c9mr17099430b3a.12.1751255302416;
-        Sun, 29 Jun 2025 20:48:22 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.195.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57efaecsm7837862b3a.161.2025.06.29.20.48.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 20:48:21 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 2/3] ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
-Date: Mon, 30 Jun 2025 09:18:02 +0530
-Message-ID: <20250630034803.1611262-3-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
-References: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
+	s=arc-20240116; t=1751255308; c=relaxed/simple;
+	bh=17QpAgJ4r9C/x9Pu2xFPaLnne8wZM8gBFobd40eyv0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WvS9xdeeR0v6k1qhN4GoOX6LH85K+0mK7ZBIPHtvo8cucYffY9Wxn+YpjHyF90WqxWeUbUfGdOEVdAxsNWuykJCQmkyuHu9OwWbztqDgSDBv1iCyX4eYgIuKL2d06cGpnteWocxxXCC6PK2gq78sdQSWYBtt8LWcRBQY1Ns1d/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bVsWl4zH3z13Md3;
+	Mon, 30 Jun 2025 11:45:55 +0800 (CST)
+Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
+	by mail.maildlp.com (Postfix) with ESMTPS id 88788180064;
+	Mon, 30 Jun 2025 11:48:22 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
+ (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
+ 2025 11:48:21 +0800
+Message-ID: <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
+Date: Mon, 30 Jun 2025 11:48:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
+ s_mb_last_group
+To: Jan Kara <jack@suse.cz>
+CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, Baokun Li
+	<libaokun1@huawei.com>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-4-libaokun1@huawei.com>
+ <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500013.china.huawei.com (7.185.36.188)
 
-acpi_iommu_configure_id() currently supports only IORT (ARM) and VIOT.
-Add support for RISC-V as well.
+On 2025/6/28 2:19, Jan Kara wrote:
+> On Mon 23-06-25 15:32:51, Baokun Li wrote:
+>> After we optimized the block group lock, we found another lock
+>> contention issue when running will-it-scale/fallocate2 with multiple
+>> processes. The fallocate's block allocation and the truncate's block
+>> release were fighting over the s_md_lock. The problem is, this lock
+>> protects totally different things in those two processes: the list of
+>> freed data blocks (s_freed_data_list) when releasing, and where to start
+>> looking for new blocks (mb_last_group) when allocating.
+>>
+>> Now we only need to track s_mb_last_group and no longer need to track
+>> s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
+>> two are consistent, and we can ensure that the s_mb_last_group read is up
+>> to date by using smp_store_release/smp_load_acquire.
+>>
+>> Besides, the s_mb_last_group data type only requires ext4_group_t
+>> (i.e., unsigned int), rendering unsigned long superfluous.
+>>
+>> Performance test data follows:
+>>
+>> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+>> Observation: Average fallocate operations per container per second.
+>>
+>>                     | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+>>   Disk: 960GB SSD   |-------------------------|-------------------------|
+>>                     | base  |    patched      | base  |    patched      |
+>> -------------------|-------|-----------------|-------|-----------------|
+>> mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
+>> mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
+>>
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> ...
+>
+>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+>> index 5cdae3bda072..3f103919868b 100644
+>> --- a/fs/ext4/mballoc.c
+>> +++ b/fs/ext4/mballoc.c
+>> @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+>>   	ac->ac_buddy_folio = e4b->bd_buddy_folio;
+>>   	folio_get(ac->ac_buddy_folio);
+>>   	/* store last allocated for subsequent stream allocation */
+>> -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+>> -		spin_lock(&sbi->s_md_lock);
+>> -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+>> -		spin_unlock(&sbi->s_md_lock);
+>> -	}
+>> +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
+>> +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
+>> +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
+> Do you really need any kind of barrier (implied by smp_store_release())
+> here? I mean the store to s_mb_last_group is perfectly fine to be reordered
+> with other accesses from the thread, isn't it? As such it should be enough
+> to have WRITE_ONCE() here...
 
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/scan.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
+that variable reads/writes access values directly from L1/L2 cache rather
+than registers.
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index fb1fe9f3b1a3..70f57d58fd61 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/acpi.h>
- #include <linux/acpi_iort.h>
-+#include <linux/acpi_rimt.h>
- #include <linux/acpi_viot.h>
- #include <linux/iommu.h>
- #include <linux/signal.h>
-@@ -1628,8 +1629,12 @@ static int acpi_iommu_configure_id(struct device *dev, const u32 *id_in)
- 	}
- 
- 	err = iort_iommu_configure_id(dev, id_in);
--	if (err && err != -EPROBE_DEFER)
--		err = viot_iommu_configure(dev);
-+	if (err && err != -EPROBE_DEFER) {
-+		err = rimt_iommu_configure_id(dev, id_in);
-+		if (err && err != -EPROBE_DEFER)
-+			err = viot_iommu_configure(dev);
-+	}
-+
- 	mutex_unlock(&iommu_probe_device_lock);
- 
- 	return err;
--- 
-2.43.0
+They do not guarantee that other CPUs see the latest values. Reading stale
+values could lead to more useless traversals, which might incur higher
+overhead than memory barriers. This is why we use memory barriers to ensure
+the latest values are read.
+
+If we could guarantee that each goal is used on only one CPU, we could
+switch to the cheaper WRITE_ONCE()/READ_ONCE().
+
+
+Regards,
+Baokun
+
+>>   	/*
+>>   	 * As we've just preallocated more space than
+>>   	 * user requested originally, we store allocated
+>> @@ -2844,12 +2842,9 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
+>>   	}
+>>   
+>>   	/* if stream allocation is enabled, use global goal */
+>> -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+>> -		/* TBD: may be hot point */
+>> -		spin_lock(&sbi->s_md_lock);
+>> -		ac->ac_g_ex.fe_group = sbi->s_mb_last_group;
+>> -		spin_unlock(&sbi->s_md_lock);
+>> -	}
+>> +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
+>> +		/* pairs with smp_store_release in ext4_mb_use_best_found() */
+>> +		ac->ac_g_ex.fe_group = smp_load_acquire(&sbi->s_mb_last_group);
+> ... and READ_ONCE() here.
+>
+> 								Honza
+
 
