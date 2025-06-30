@@ -1,148 +1,299 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864B91F0E39
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42BF1EB5D0;
+	Mon, 30 Jun 2025 19:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751311054; cv=none; b=Q9S8gIMIWs0zkrvz+oS56fPL4H52hxBgRKHybgIRRLgwmraqcnaUtYcg0tR0Gm3OfKluJPY/JJfDuBTq+8B4KTrGnB7x0s19oaAfGHHEO/98efLkSB7cyll1FCw3Gjq4KSSm8154CS84FY087nBionAjTuh12Gwn4vPMx9bX75Y=
+	t=1751311089; cv=none; b=UtLHSO83C1xk8cCJNnlMzRtF/um4HeEcZQitwlO2vi5VDr+MatRO5AWcfn38R2SdThdCzREQyR4HOb6UZ8zLVEj6penaUzVGDdrmYQUW2zbhLmhB4c2vfGs6cFHyOovUVYF4xdfcphHg7PH9jhgyvPHS/I9ViZbOyrcQjYOj6z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751311054; c=relaxed/simple;
-	bh=lgRqjNK57P/pT7MRMMd5GG7KE5rQwAii6UcuUqlhc6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GC5j6Cf3oeU75vaarh5reqaEjqiQ/tkKpGX2iQr2QrOue8hRDVdnOjFAx6e4jTz7VGSo/Im2m0+dqvfxmugjDHtb1DVq3foDlBf4GyLA2XPt41e8yUcT6jsiuvH9EZx9p7zCHqPIn59wsrexCm4Eoj8kmDY4FIPpExHkYG3aGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RdvyOrlX; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RdvyOrlX"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747c2cc3419so4679014b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751311052; x=1751915852; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/icnc7Os7AoQTpBWqs6e62GRa9dnHnzsYDszjaelMPM=;
-        b=RdvyOrlXurTea1bFF1NhgDMrt69061KzK7Suc0NT6baFI2TfZzp7XE+1AyIOjkEwdu
-         BgNx7hB/Wt5/YjvAYBNVjJ1Ph/t99wTELFFjch+lJ+cCte/tuVJFcvgrUD7zStSLJMrn
-         IQo5yTu/vtB9j4PgeghVYTXEDbpQJCrUaxoBI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751311052; x=1751915852;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/icnc7Os7AoQTpBWqs6e62GRa9dnHnzsYDszjaelMPM=;
-        b=cfQiefU4OAJZcKoxugulmyqJsNjwzW7OfN4o2t2FyBeO/8gOzs9IcH167tVY5L2p6K
-         9ziuaVreY/bmADgoYyhrO6cUYUquwEDLlk1G2X0U3AjJ/pfLBNQlbZ/EujO7BgrtYnWx
-         KhTrCfR0ZQy3TmoIipRuoaeH7IOcKofasD34EbJW62ughNNBvAxap4+HdnyFDQ8m4g7D
-         0wRlwyNlR5RVsL3mXz56Wn2bQwdvb/AwJA7pd9fqCEJi/F2bhjeSOkewVpGo8Yc5oHFC
-         axPrgGgmI7IRXMz9mlhxFOI0M2xov7d5ssZ9arnG/56wfb+/KSsms0EROqpCC7YR7Ce0
-         L/Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVu6zH5bi2Jnb+sg6tl73P9J3EcTIvgxpr6wl/Kuf4D6WBt8RxtNNztK+FLiC8R6mBpFRu8Ez2/WH9laJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnYMeoMyH/wD/XZ8ZSZnDzOj+dT2hiFk5GTn391jUx5MsgXaVZ
-	J5O8KprU+9cYya2srtYfKBUSFnnMspC4YnWyHPfKan7KHQsDwtpOr6PoBq24MVeWsw==
-X-Gm-Gg: ASbGncsR0w2Rr56NsZB2vkRHd5cfd+aDcDoUEG3qr7YvqGg3TmNaTYqtKUy/eNIJG6U
-	18ph/NbWuXdZFB8C0M0IjpU4NQ8KpSN8Wv3O8A1c89GFg+e08Pwy0GWTzok/WHgYEAJ6dPEGbfH
-	0x2kGQlcxq+9NC9NJ+70u0p8fd9qk1+tL42Mna2OcNwR471cKgfb1fxkUTDB+9o/Gr3ajaLITkx
-	40G5Ega9GjojLSpZq/yzVI9j+9Q2QGAhD2AqtbJzIbS16M0z/CT8/YYjGzpcZnaubWSgOnNkNBG
-	DX5EG/lzuFdneSac2r1dtqlFvGxL03iN0tghF9CYhU8en4tan3prhkGDwyDBs+CPYcUNETNLioM
-	KJZKczRi7yAyrfDAtHaGS1mmehw==
-X-Google-Smtp-Source: AGHT+IEki0KdQAjRMkHvaX3/gkmEnLE6D4qqKuPqbMXVfDYcUkTnDLdWtpcfzqFXZLm1SNTNGyqJEw==
-X-Received: by 2002:a05:6a00:845:b0:749:540:ca72 with SMTP id d2e1a72fcca58-74af6f5b39amr21961216b3a.24.1751311051789;
-        Mon, 30 Jun 2025 12:17:31 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e8fasm9787662b3a.67.2025.06.30.12.17.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 12:17:31 -0700 (PDT)
-Message-ID: <d90c0d21-9544-44f7-b987-8d7b7c71f135@broadcom.com>
-Date: Mon, 30 Jun 2025 12:17:27 -0700
+	s=arc-20240116; t=1751311089; c=relaxed/simple;
+	bh=GRf15//kYt30s15Y9TEb/Zr/0IQjmiILEY2CR1LttCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O9RayB7/iP3+uuzyz5mSqFWMDJHc9nTXPylvvP/lgID4DD4AsApuNT1WxT0XnNsIxN6oZ8s77aVSrDTDL/A0CjLu+tiuZkgprvthUb7CMZB7+W9bEbKmXn5/YXJuoWC1GagO9u2AKfaRRMQ35J4Kv98Qq9/E84+nYq1sHnvmp08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 5F85EB3BF3;
+	Mon, 30 Jun 2025 19:17:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 9670620027;
+	Mon, 30 Jun 2025 19:17:57 +0000 (UTC)
+Date: Mon, 30 Jun 2025 15:17:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH v10 13/19] rv: Add support for LTL monitors
+Message-ID: <20250630151756.3104c5e9@batman.local.home>
+In-Reply-To: <1750e36e7b445cbba283cd564b07e16dcd65aac5.1749547399.git.namcao@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+	<1750e36e7b445cbba283cd564b07e16dcd65aac5.1749547399.git.namcao@linutronix.de>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/16] PCI: iproc: Switch to
- msi_create_parent_irq_domain()
-To: Nam Cao <namcao@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>, "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Joyce Ooi <joyce.ooi@intel.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>,
- Marek Vasut <marek.vasut+renesas@gmail.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- Michal Simek <michal.simek@amd.com>,
- Daire McNamara <daire.mcnamara@microchip.com>,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org
-References: <cover.1750858083.git.namcao@linutronix.de>
- <53946d74caf1fd134a1820eac82c3cf64d48779f.1750858083.git.namcao@linutronix.de>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <53946d74caf1fd134a1820eac82c3cf64d48779f.1750858083.git.namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 6shsomqmjgcihybaqascin94w7hynoeq
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 9670620027
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18fiNKiASJTgCqFiFfib6u+P2dM1kLzSaU=
+X-HE-Tag: 1751311077-642000
+X-HE-Meta: U2FsdGVkX1/kO334lXKO/c0UZGzuQ06DcdwhLqLUXj0NO/uN99kkgWMW/SGzv7CE046gLFO+I/ucrMCEtFWYtPjSmna0PQA+QRZZ74dSilcg3MxgyfIqkdcg3+K6stBkNxy2lM/wlkBk2FpMApbLo+VPUghHnkeHeqIjcmoeZgPBFiT6hSGePoMpfggSP3bU/1nI2T1geWQGdZkEw2InB6D4UBsloYCRhYlGRjQV6v+tjv49gipMiYbbzAwPsYIEUG+r3otSh17/wr8KvXq06D+PhIFiIl7Q1geNEFUBGK/22cuPq0XJhkWVQFJaeej3
 
-On 6/26/25 07:47, Nam Cao wrote:
-> Move away from the legacy MSI domain setup, switch to use
-> msi_create_parent_irq_domain().
-> 
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+On Tue, 10 Jun 2025 11:43:38 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+> diff --git a/Documentation/trace/rv/linear_temporal_logic.rst b/Documentation/trace/rv/linear_temporal_logic.rst
+> new file mode 100644
+> index 0000000000000..9dc1de4ca9349
+> --- /dev/null
+> +++ b/Documentation/trace/rv/linear_temporal_logic.rst
+> @@ -0,0 +1,122 @@
+> +Linear temporal logic
+> +=====================
+> +
+> +Introduction
+> +------------
+> +
+> +Runtime verification monitor is a verification technique which checks that the kernel follows a
+> +specification. It does so by using tracepoints to monitor the kernel's execution trace, and
+> +verifying that the execution trace sastifies the specification.
+> +
+> +Initially, the specification can only be written in the form of deterministic automaton (DA).
+> +However, while attempting to implement DA monitors for some complex specifications, deterministic
+> +automaton is found to be inappropriate as the specification language. The automaton is complicated,
+> +hard to understand, and error-prone.
+
+The lines in this file are unnecessarily long. Can you keep them at a
+max of 80 characters? This isn't a hard limit. For examples and where
+it makes sense to break that limit if it makes the output more
+readable, then by all means, break the 80 char limit. But There's a lot
+of places here that break that limit for no reason. As I get older, it
+becomes harder to read long lines.
+
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -10,6 +10,10 @@
+>  #define MAX_DA_NAME_LEN	32
+>  
+>  #ifdef CONFIG_RV
+> +#include <linux/bitops.h>
+> +#include <linux/types.h>
+> +#include <linux/array_size.h>
+> +
+>  /*
+>   * Deterministic automaton per-object variables.
+>   */
+> @@ -18,6 +22,58 @@ struct da_monitor {
+>  	unsigned int	curr_state;
+>  };
+>  
+> +#ifdef CONFIG_RV_LTL_MONITOR
+> +
+> +/*
+> + * In the future, if the number of atomic propositions or the size of Buchi automaton is larger, we
+> + * can switch to dynamic allocation. For now, the code is simpler this way.
+
+Same for the comments in the code.
+
+> + */
+> +#define RV_MAX_LTL_ATOM 32
+> +#define RV_MAX_BA_STATES 32
+> +
+> +/**
+> + * struct ltl_monitor - A linear temporal logic runtime verification monitor
+> + * @states:	States in the Buchi automaton. As Buchi automaton is a
+> + *		non-deterministic state machine, the monitor can be in multiple states
+> + *		simultaneously. This is a bitmask of all possible states.
+> + *		If this is zero, that means either:
+> + *		    - The monitor has not started yet (e.g. because not all atomic propositions are
+> + *		      known).
+> + *		    - there is no possible state to be in. In other words, a violation of the
+> + *		      LTL property is detected.
+> + * @atoms:	The values of atomic propositions.
+> + * @unknown_atoms: Atomic propositions which are still unknown.
+> + */
+> +struct ltl_monitor {
+> +	DECLARE_BITMAP(states, RV_MAX_BA_STATES);
+> +	DECLARE_BITMAP(atoms, RV_MAX_LTL_ATOM);
+> +	DECLARE_BITMAP(unknown_atoms, RV_MAX_LTL_ATOM);
+> +};
+> +
+> +static inline bool rv_ltl_valid_state(struct ltl_monitor *mon)
+> +{
+> +	for (int i = 0; i < ARRAY_SIZE(mon->states); ++i) {
+> +		if (mon->states[i])
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +
+> +static inline bool rv_ltl_all_atoms_known(struct ltl_monitor *mon)
+> +{
+> +	for (int i = 0; i < ARRAY_SIZE(mon->unknown_atoms); ++i) {
+> +		if (mon->unknown_atoms[i])
+> +			return false;
+> +	}
+> +	return true;
+> +}
+> +
+> +#else
+> +
+> +struct ltl_monitor {};
+> +
+> +#endif /* CONFIG_RV_LTL_MONITOR */
+> +
+>  /*
+>   * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
+>   * If we find justification for more monitors, we can think about
+> @@ -27,11 +83,9 @@ struct da_monitor {
+>  #define RV_PER_TASK_MONITORS		1
+>  #define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
+>  
+> -/*
+> - * Futher monitor types are expected, so make this a union.
+> - */
+>  union rv_task_monitor {
+> -	struct da_monitor da_mon;
+> +	struct da_monitor	da_mon;
+> +	struct ltl_monitor	ltl_mon;
+>  };
+>  
+>  #ifdef CONFIG_RV_REACTORS
+> diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+> new file mode 100644
+> index 0000000000000..78f5a11976659
+> --- /dev/null
+> +++ b/include/rv/ltl_monitor.h
+> @@ -0,0 +1,184 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/**
+> + * This file must be combined with the $(MODEL_NAME).h file generated by
+> + * tools/verification/rvgen.
+> + */
+> +
+> +#include <linux/args.h>
+> +#include <linux/rv.h>
+> +#include <linux/stringify.h>
+> +#include <linux/seq_buf.h>
+> +#include <rv/instrumentation.h>
+> +#include <trace/events/task.h>
+> +#include <trace/events/sched.h>
+> +
+> +#ifndef MONITOR_NAME
+> +#error "MONITOR_NAME macro is not defined. Did you include $(MODEL_NAME).h generated by rvgen?"
+> +#endif
+> +
+> +#ifdef CONFIG_RV_REACTORS
+> +#define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
+> +static struct rv_monitor RV_MONITOR_NAME;
+> +
+> +static void rv_cond_react(struct task_struct *task)
+> +{
+> +	if (!rv_reacting_on() || !RV_MONITOR_NAME.react)
+> +		return;
+> +	RV_MONITOR_NAME.react("rv: "__stringify(MONITOR_NAME)": %s[%d]: violation detected\n",
+
+Note, the above *is* OK to break the limit, as we shouldn't break
+strings.
+
+
+> +			      task->comm, task->pid);
+> +}
+> +#else
+> +static void rv_cond_react(struct task_struct *task)
+> +{
+> +}
+> +#endif
+> +
+> +static int ltl_monitor_slot = RV_PER_TASK_MONITOR_INIT;
+> +
+> +static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *mon);
+> +static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bool task_creation);
+> +
+> +static struct ltl_monitor *ltl_get_monitor(struct task_struct *task)
+> +{
+> +	return &task->rv[ltl_monitor_slot].ltl_mon;
+> +}
+> +
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 1ee8eb11f38ba..b258728792e09 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1886,10 +1886,7 @@ static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
+>  #ifdef CONFIG_RV
+>  static void rv_task_fork(struct task_struct *p)
+>  {
+> -	int i;
+> -
+> -	for (i = 0; i < RV_PER_TASK_MONITORS; i++)
+> -		p->rv[i].da_mon.monitoring = false;
+> +	memset(p->rv, 0, sizeof(p->rv));
+
+It's not apparent that the above is a static array and memset() like
+that is commonly a bug. Perhaps make it:
+
+	memset(&p->rv, 0, sizeof(p->rv));
+
+So that it doesn't look like a bug?
+
+>  }
+>  #else
+>  #define rv_task_fork(p) do {} while (0)
+> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+> index 6cdffc04b73c2..6e157f9649915 100644
+> --- a/kernel/trace/rv/Kconfig
+
+
+
+> diff --git a/tools/verification/rvgen/.gitignore b/tools/verification/rvgen/.gitignore
+> new file mode 100644
+> index 0000000000000..1e288a076560e
+> --- /dev/null
+> +++ b/tools/verification/rvgen/.gitignore
+
+BTW, this is quite a big patch. Can you break it up into three patches?
+
+One for the Documentation, one for the kernel, and one for the tools
+portion. I may even put the tools and documentation patches into a
+separate patch that the one that modifies the kernel. As Linus likes
+tools code to be separate from the kernel code. It's not a hard rule,
+but it does make things slightly easier.
+
+So far the patches look good. I'm still reviewing them.
+
+-- Steve
+
+
+> @@ -0,0 +1,3 @@
+> +__pycache__/
+> +parser.out
+> +parsetab.py
+> diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/Makefile
+> index cca8c9ba82e8b..cfc4056c1e87a 100644
+> --- a/tools/verification/rvgen/Makefile
+> +++ b/tools/verification/rvgen/Makefile
+> @@ -21,5 +21,7 @@ install:
+>  	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
+>  	$(INSTALL) rvgen/container.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/container.py
+>  	$(INSTALL) rvgen/generator.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/generator.py
+> +	$(INSTALL) rvgen/ltl2ba.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/ltl2ba.py
+> +	$(INSTALL) rvgen/ltl2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/ltl2k.py
+>  	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+>  	cp -rp rvgen/templates $(DESTDIR)$(PYLIB)/rvgen/
+> diff --git a/tools/verification/rvgen/__main__.py b/tools/verification/rvgen/__main__.py
+> index 63ecf0c370343..fa6fc1f4de2f7 100644
+> --- a/tools/verification/rvgen/__main__.py
+> +++ b/tools/verification/rvgen/__main__.py
+> @@ -12,6 +12,7 @@ if __name__ == '__main__':
+>      from rvgen.dot2k import dot2k
+>      from rvgen.generator import Monitor
+>      from rvgen.container import Container
+> +    from rvgen.ltl2k import ltl2k
