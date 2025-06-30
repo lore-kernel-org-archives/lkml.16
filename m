@@ -1,228 +1,179 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1122B28DF33
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0028FAAC
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293238; cv=none; b=k8QPsXZ6xN1U1ICcQ9em1htV9KHdatO2X0fGdfEFyz5Q0ZNmLgpKKk40ReeASfTkpoSjUmpYRKnIAe+TOjtwcrqSMZEWOnw94D7EyRCBXI92BSjRwXv1VIh0a7U1j1XlQpbmJaZcGLxq5bfxJ/3zkMkferq6uDftRaGZ1cmAva4=
+	t=1751293246; cv=none; b=UvENn6dwKxvSWOexY4NlCS8s32rPH3PetsteJjSeulRD4ybwszmlbzO/OlQYyFttPUFRkWQd4yZH1gbqIUkq5RwEvrZOBxEx1dvVxyZp8nwss8A04pXDAFR/QNw2F5HPFRX05Nq9bWchn6NbAi1Gv50lhp3jIQ/KNY6i6AuRdiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293238; c=relaxed/simple;
-	bh=hUSTM0cz4lDmfgU98My5Gb8Nx4v9DP1TnSn7IZqRpUY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Gyki5yiXeHQLiQP61p7kNa2w1ruEIzwOnz7XWVk5tfx0EOQ8C2hqCFehBfgOGBoeg7YptecauR5YUBohkZDN6LaU/Q6RShQoG/8bgmmap37EGte55mmcThE3Ak5zi/htqOBEjxBd3Re8TS65CgMppCCX4hh+mYP2UGa0bQXwoHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PiBvIEsN; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751293246; c=relaxed/simple;
+	bh=z+vrdGt+E7vi7zWe8/QRIdf6JmwA3MGFwbNW8p1J80w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQ9vMP2ebWqgsof9Tks+Ahc33PUc8giMi3y3eaV0cKzw2WxXYccid+8BqnLx81YBg8HhN7ecE6hPtl5Xi5QmzqsKb6TnFnTGuNg9GEWigpdd23i0jcO4wGruE8CJspOtUiy/k/4xHqMyiO2o8ThPxlT4EgCegQNqp3g2n2K6+tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQ5wqecQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PiBvIEsN"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b50f357ecso20309911fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751293235; x=1751898035; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dnt386dfMPODMMm6G8wrSthRtbiPhPkQSBX13EJa6EE=;
-        b=PiBvIEsNTvjHVdevvsOI2Uon/M/uZxjRxeM4doVgLpzxR3R5yStmBRrmtZFI+usV93
-         +2wEXtzKWomVl31FFLwWFsyaDILDYo6167xBxf2vT5eQoMljgGNAux58TIUlucz60lRi
-         P6bijaVX8NufnvMwLV5zqKBgOWZJrkEcTrwHI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293235; x=1751898035;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dnt386dfMPODMMm6G8wrSthRtbiPhPkQSBX13EJa6EE=;
-        b=PJjYlf/Eqt5k5xFh3BRcNmy9g/pf93qVwBP6G8YO89OwrvdD5OASi4syqjAuXKxO+i
-         EvBOUz8bQgOD6/+4ZI7SrI3K4h4LSABWkRcw+ewT5ojbxtakEdMyQfl65UEf7J76oNnk
-         uMeKUHrIAHIASplgOvr2Kpxj4z/oUaGBRjAZ0nNYTdNiUROvtw1s4xPf0EhvcEnrJqUw
-         XiyJooi9RHMkMOtzn9YO1nOxPbvC8HXcto1evDCjYpwhsbd56GVsnm7WYye5ltq5C7pq
-         5mZ+NOFvsvMF+oTtTN+OTczl9Q333rr4TzwBV2nyRNY4VbpNPjIvvJCQCZQVpeaNdoiS
-         pFQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYBq/ywcQg6kZtxkMM5zLZbtEiJ8DMZ78donT0WEhjhbfjSInUcqJw5tpl1auER+HtIpL4otyaqQH6mMc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+fC/eszw1J/JnbpRW17wRNUaRhuuvrK5f8XtqH508vkULCZFX
-	v9x4irLDOqOrHVx/m6VtkuNhbtmpNBQtOQDgV0+ipXxIot1H3eet+sp1qjZWRk84fvl73tztH0g
-	2mJNQuA==
-X-Gm-Gg: ASbGncvhQvQjHHQSr3W5lj1SH4fPXbjwlu4DeqwO0kxRNji6reI2JgGc0TlB/zRLrNw
-	GHfD9SlIZxSzZT0XuV6uyPxVgm9nqx/fQVgsT5YZ6aoW+b3vJ0p7norQn1g2RvdfRWYcArBHbSM
-	Bl0cy4jaI+ZBu2L0atkaFXoYRTgWwDUXsYTk2z2mRgWKao0yqxZiLy5Cp4ZmXaoH4VZgHUwANMZ
-	pSnGtr4F/++8bLcmM+rQoAH+9mUmG7cqGybSmT6Ae0vWa9yAcg4xyhCi1WUAQFtmOk/lxTl1ofF
-	G53QLSynqngkfC8o8dnq6KQsT3J9tCDZunELfBDrS7jfAiWitFMnyTBY+c+3JBVmvzRFxOpEeiA
-	7b+AIF8KolwyYFKKt5zMhDuLG5XlLB+iFASsq1bcRXw==
-X-Google-Smtp-Source: AGHT+IGdwXnpgUB0vN6sIBFwmisdEJIRVa6FJTkVxayzmF/fNIKWfsG+a9C1TibVfwWUCEy4vc7WRA==
-X-Received: by 2002:a05:6512:3156:b0:553:34b7:5731 with SMTP id 2adb3069b0e04-5550b7eccf9mr3761330e87.3.1751293229598;
-        Mon, 30 Jun 2025 07:20:29 -0700 (PDT)
-Received: from ribalda.c.googlers.com (166.141.88.34.bc.googleusercontent.com. [34.88.141.166])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2d8ea8sm1432363e87.210.2025.06.30.07.20.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 07:20:29 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 30 Jun 2025 14:20:29 +0000
-Subject: [PATCH v3 4/8] media: uvcvideo: Remove stream->is_streaming field
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQ5wqecQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751293242;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pOU168osJCt4Z5drZRRfb6m13pzDoAsHwXIgB0F76VE=;
+	b=jQ5wqecQHVWw78XO5gWW7eD64CMj58po0neywh+JL0sZ+u3c801RqZMPIw2yJTjmeO0WRC
+	9NiejHWjDZWhq8NWRyqnEqV3AM6/fqv2E7eKM/zYIrx90YbinBD/iZLNK3ptMjmoLTttRn
+	MSS3yXw0aS2/mJvcudQa9Kc2/Ry0r94=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-qHuLkgCzNyanoNZtrUvFeg-1; Mon,
+ 30 Jun 2025 10:20:41 -0400
+X-MC-Unique: qHuLkgCzNyanoNZtrUvFeg-1
+X-Mimecast-MFC-AGG-ID: qHuLkgCzNyanoNZtrUvFeg_1751293240
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D1B5018DA5D2;
+	Mon, 30 Jun 2025 14:20:39 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.22.9])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3542D19560A7;
+	Mon, 30 Jun 2025 14:20:36 +0000 (UTC)
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Paoloni <gpaoloni@redhat.com>
+Subject: [RFC PATCH v3] tracing: add testable specifications for event_enable_write/read
+Date: Mon, 30 Jun 2025 16:20:32 +0200
+Message-ID: <20250630142032.3322-1-gpaoloni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-uvc-grannular-invert-v3-4-abd5cb5c45b7@chromium.org>
-References: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
-In-Reply-To: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>, 
- Hans de Goede <hansg@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-The is_streaming field is used by modular PM to know if the device is
-currently streaming or not.
+This patch implements the documentation of event_enable_write and
+event_enable_read in the form of testable function's expectations.
 
-With the transition to vb2 and fop helpers, we can use vb2 functions for
-the same functionality. The great benefit is that vb2 already tracks the
-streaming state for us.
-
-Reviewed-by: Hans de Goede <hansg@kernel.org>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-Link: https://lore.kernel.org/r/20250616-uvc-fop-v4-4-250286570ee7@chromium.org
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
 ---
- drivers/media/usb/uvc/uvc_queue.c |  9 +++++++
- drivers/media/usb/uvc/uvc_v4l2.c  | 51 ++-------------------------------------
- drivers/media/usb/uvc/uvcvideo.h  |  1 -
- 3 files changed, 11 insertions(+), 50 deletions(-)
+Following the discussion in v1 (see [1]), v3 adds improvements with
+the "Context" specifications and the definition of the assumptions
+of use for the correct invocation of the documented functions.
 
-diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-index b11f56d62ec0495a8610580367486dfaa31c450d..790184c9843d211d34fa7d66801631d5a07450bd 100644
---- a/drivers/media/usb/uvc/uvc_queue.c
-+++ b/drivers/media/usb/uvc/uvc_queue.c
-@@ -175,12 +175,18 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
- 
- 	lockdep_assert_irqs_enabled();
- 
-+	ret = uvc_pm_get(stream->dev);
-+	if (ret)
-+		return ret;
-+
- 	queue->buf_used = 0;
- 
- 	ret = uvc_video_start_streaming(stream);
- 	if (ret == 0)
- 		return 0;
- 
-+	uvc_pm_put(stream->dev);
-+
- 	uvc_queue_return_buffers(queue, UVC_BUF_STATE_QUEUED);
- 
- 	return ret;
-@@ -189,11 +195,14 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
- static void uvc_stop_streaming_video(struct vb2_queue *vq)
- {
- 	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-+	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
- 
- 	lockdep_assert_irqs_enabled();
- 
- 	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
- 
-+	uvc_pm_put(stream->dev);
-+
- 	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+[1] https://lore.kernel.org/linux-trace-kernel/20250612104349.5047-1-gpaoloni@redhat.com/
+
+v3 has been sent as in v2 there is a mistake in the return value
+specifications of event_enable_read
+---
+ kernel/trace/trace_events.c | 80 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 120531268abf..aa9992b0f43c 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1771,6 +1771,51 @@ static void p_stop(struct seq_file *m, void *p)
+ 	mutex_unlock(&event_mutex);
  }
  
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index d06ecf3418a988152c6c413568ce32e60040fd87..7ab1bdcfb493fe9f47dbdc86da23cba98d7d10ff 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -617,9 +617,6 @@ static int uvc_v4l2_release(struct file *file)
- 
- 	uvc_ctrl_cleanup_fh(handle);
- 
--	if (handle->is_streaming)
--		uvc_pm_put(stream->dev);
--
- 	/* Release the file handle. */
- 	vb2_fop_release(file);
- 
-@@ -676,50 +673,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
- 	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
++/**
++ * event_enable_read - read from a trace event file to retrieve its status.
++ * @filp: file pointer associated with the target trace event;
++ * @ubuf: user space buffer where the event status is copied to;
++ * @cnt: number of bytes to be copied to the user space buffer;
++ * @ppos: the current position in the buffer.
++ *
++ * This is a way for user space executables to retrieve the status of a
++ * specific event
++ *
++ * Function's expectations:
++ * - This function shall lock the global event_mutex before performing any
++ *   operation on the target event file and unlock it after all operations on
++ *   the target event file have completed;
++ * - This function shall retrieve the status flags from the file associated
++ *   with the target event;
++ * - This function shall format the string to report the event status to user
++ *   space:
++ *   - The first character of the string to be copied to user space shall be
++ *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
++ *     set, else it shall be set to "0";
++ *   - The second character of the string to be copied to user space shall be
++ *     set to "*" if either the soft_disabled flag or the soft_mode flag is
++ *     set, else it shall be set to "\n";
++ *   - The third character of the string to be copied to user space shall b
++ *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
++ *     set, else it shall be set to "0";
++ *   - Any other character in the string to be copied to user space shall be
++ *     set to "0";
++ * - This function shall invoke simple_read_from_buffer() to perform the copy
++ *   of the kernel space string to ubuf.
++ *
++ * Assumptions of Use:
++ * - The caller shall  pass cnt equal or greater than the length of the string
++ *   to be copied to user space;
++ * - Any read operation on a file descriptor, unless it is the first operation
++ *   following a trace event file open, shall be preceded by an lseek
++ *   invocation to reposition the file offset to zero.
++ *
++ * Context: process context, locks and unlocks event_mutex.
++ *
++ * Return: the number of copied bytes on success, -ENODEV if the event file
++ * cannot be retrieved from the input filp, any error returned by
++ * simple_read_from_buffer.
++ */
+ static ssize_t
+ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 		  loff_t *ppos)
+@@ -1801,6 +1846,41 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
  }
  
--static int uvc_ioctl_streamon(struct file *file, void *fh,
--			      enum v4l2_buf_type type)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--	int ret;
--
--	if (handle->is_streaming)
--		return 0;
--
--	ret = uvc_pm_get(stream->dev);
--	if (ret)
--		return ret;
--
--	ret = vb2_ioctl_streamon(file, fh, type);
--	if (ret) {
--		uvc_pm_put(stream->dev);
--		return ret;
--	}
--
--	handle->is_streaming = true;
--
--	return 0;
--}
--
--static int uvc_ioctl_streamoff(struct file *file, void *fh,
--			       enum v4l2_buf_type type)
--{
--	struct uvc_fh *handle = fh;
--	struct uvc_streaming *stream = handle->stream;
--	int ret;
--
--	ret = vb2_ioctl_streamoff(file, fh, type);
--	if (ret)
--		return ret;
--
--	if (handle->is_streaming) {
--		handle->is_streaming = false;
--		uvc_pm_put(stream->dev);
--	}
--
--	return 0;
--}
--
- static int uvc_ioctl_enum_input(struct file *file, void *fh,
- 				struct v4l2_input *input)
- {
-@@ -1320,8 +1273,8 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
- 	.vidioc_expbuf = vb2_ioctl_expbuf,
- 	.vidioc_dqbuf = vb2_ioctl_dqbuf,
- 	.vidioc_create_bufs = vb2_ioctl_create_bufs,
--	.vidioc_streamon = uvc_ioctl_streamon,
--	.vidioc_streamoff = uvc_ioctl_streamoff,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
- 	.vidioc_enum_input = uvc_ioctl_enum_input,
- 	.vidioc_g_input = uvc_ioctl_g_input,
- 	.vidioc_s_input = uvc_ioctl_s_input,
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index b300487e6ec9163ac8236803b9e819814233f419..3e6d2d912f3a1cfcf63b2bc8edd3f86f3da305db 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -629,7 +629,6 @@ struct uvc_fh {
- 	struct uvc_video_chain *chain;
- 	struct uvc_streaming *stream;
- 	unsigned int pending_async_ctrls;
--	bool is_streaming;
- };
- 
- /* ------------------------------------------------------------------------
-
++/**
++ * event_enable_write - write to a trace event file to enable/disable it.
++ * @filp: file pointer associated with the target trace event;
++ * @ubuf: user space buffer where the enable/disable value is copied from;
++ * @cnt: number of bytes to be copied from the user space buffer;
++ * @ppos: the current position in the buffer.
++ *
++ * This is a way for user space executables to enable or disable event
++ * recording.
++ *
++ * Function's expectations:
++ * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
++ *   space buffer and shall convert the string within the kernel space buffer
++ *   into a decimal base format number;
++ * - This function shall lock the global event_mutex before performing any
++ *   operation on the target event file and unlock it after all operations on
++ *   the target event file have completed;
++ * - This function shall check the size of the per-cpu ring-buffers used for
++ *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
++ *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
++ *   TRACE_BUF_SIZE_DEFAULT are not allowed);
++ * - This function shall invoke ftrace_event_enable_disable to enable or
++ *   disable the target trace event according to the value read from user space
++ *   (0 - disable, 1 - enable);
++ * - This function shall increase the file position pointed by ppos by the
++ *   number of bytes specified by cnt;
++ *
++ * Context: process context, locks and unlocks event_mutex.
++ *
++ * Return: the number of written bytes on success, any error returned by
++ * kstrtoul_from_user, -ENODEV if the event file cannot be retrieved from the
++ * input filp, any error returned by tracing_update_buffers, any error returned
++ * by ftrace_event_enable_disable, -EINVAL if the value copied from the user
++ * space ubuf is different from 0 or 1.
++ */
+ static ssize_t
+ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 		   loff_t *ppos)
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+2.48.1
 
