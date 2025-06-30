@@ -1,206 +1,165 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B6B1DFF7;
-	Mon, 30 Jun 2025 12:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0B8238151;
+	Mon, 30 Jun 2025 12:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287542; cv=none; b=c2Qpm0i1mDZceYuxF8MTyUH0N3aIVjdfbuUfsPay3zaUIWEmbwxeQhgmhXYrDOOuv8eQ+y+xB52WQ0/FtBiV82KzYqT1dGhtYgYTw9LBMp95IExkAXON9PtZbsXwJVrk7syUe6Z/UmaVCub5oUuKZY0CJnzeG2NSvQ1JHut/XSI=
+	t=1751287659; cv=none; b=n3JuCIGxAy4NkW2AFcnMmKPdd9haRjIlEKCv2nRWMYPaZtirKsfe7l5mBbbRjWC+7HTXOsf3GkyVHgBTsuFYrz0wswXkLjRDs/bk5m1kOlEY9bM7lPNH+60ZQJ6XyzAmnZw/qWSgKvxgmd59s4UUUQVxbaQmWBT11/CAph+fSbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287542; c=relaxed/simple;
-	bh=nI6ubp+e9wwWOQEzFxWxfJ8iVfs97f4UpsJdUisnoxQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2F+O+fUSFtfJstWy6ySqxHHn0BPaVzazLgTW4jyBLlNnJBLomKhKlMYHuHsCYiuo/Q80J5pLufrx4+1wcKhrHPIj3TkUAri0sXX0ksC6+HH027pvMMdr9X7TPPfbuIuPs/VRfub47Pz9Mp1Hz6UH/vmgudHorCKurhiV9v7mig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=piYlEXJy; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="piYlEXJy"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751287536; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=CHy/aj7Sn9juzFVwa9OaHVeiczeTLceLUFgOEXprNU0=;
-	b=piYlEXJypkwW3L2h79WCrH+NQRt5qT/2o4djgi1ztWKISRVF86qqjDf83Cjy4AOQDOpwjket1nrEYKszwgHauxVFUzEg/Tjt2Cvkb1mm48Gn75LiLwFlQj9bN2rs7NyS/fzPkt6uxWrN9dREflKKaEYUWTXfKL/J2DU0CiswDXg=
-Received: from 30.221.128.140(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0WgCGO0A_1751287534 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 20:45:34 +0800
-Message-ID: <b13fd9f0-6f65-404b-9625-e431ee45ed17@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 20:45:33 +0800
+	s=arc-20240116; t=1751287659; c=relaxed/simple;
+	bh=RI4JfP4uMiyhmak/PvP3vrFP+lLcCWroER12Jm2IaVI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LLNW/TG3Gms4g/rqSLxRItSoH5ILQ76oUVylqQG/RC1rm9/acrIISsPfhDELU7i8PgKVVlRM0QQIF+FDoKW5a1K6uxB35zR4mQJ9ZaFz7IUO+KRa55Y6ayGCVGGO4Zdvjp5/oitBL3tP+nxhi7fIwUvSLkHt6BM7DhLgWQ0RF4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bW5Tt2fXZz13Mjw;
+	Mon, 30 Jun 2025 20:45:06 +0800 (CST)
+Received: from kwepemg100016.china.huawei.com (unknown [7.202.181.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id A78181402CF;
+	Mon, 30 Jun 2025 20:47:33 +0800 (CST)
+Received: from huawei.com (10.67.174.33) by kwepemg100016.china.huawei.com
+ (7.202.181.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
+ 2025 20:47:32 +0800
+From: GONG Ruiqi <gongruiqi1@huawei.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu
+	<roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+CC: Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore
+	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E . Hallyn"
+	<serge@hallyn.com>, <linux-kernel@vger.kernel.org>,
+	<linux-integrity@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	Lu Jialin <lujialin4@huawei.com>, <gongruiqi1@huawei.com>
+Subject: [PATCH -next RFC 0/4] IMA Root of Trust (RoT) Framework
+Date: Mon, 30 Jun 2025 20:59:24 +0800
+Message-ID: <20250630125928.765285-1-gongruiqi1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627072921.52754-1-guwen@linux.alibaba.com>
- <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemg100016.china.huawei.com (7.202.181.57)
+
+Currently, the IMA subsystem can only use TPM as the Root of Trust
+(RoT) device, and its coding is tightly coupled with TPM operations.
+
+        ┌──────────┐    ┌───────────┐
+       ┌┴─────────┐│   ┌┴──────────┐│
+       │ Programs ├┘   │ Libraries ├┘
+       └────┬─────┘    └────┬──────┘                       User
+─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+            └────────┬──────┘                              Kernel
+                     ▼
+  ┌────────────────────────────────────┐  ┌────────────────┐
+  │              IMA Hooks             │  │                │
+  │ (file read, executed, mmapped etc) │  │                │
+  └──────────────────┬─────────────────┘  │      IMA       │
+                     ▼                    │ Initialization │
+  ┌────────────────────────────────────┐  │                │
+  │        IMA Measurement List        │  │                │
+  └──────────────────┬─────────────────┘  └────┬───────┬───┘
+               extend│      calc_boot_aggregate│   init│
+                     ▼                         ▼       ▼
+  ┌────────────────────────────────────────────────────────┐
+  │                    TPM Device Driver                   │
+  └─────────────────────────────┬──────────────────────────┘
+                                │
+─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+                                ▼                          Hardware
+                     ┌──────────────────┐
+                     │    TPM Device    │
+                     └──────────────────┘
+
+In recent years, new scenarios such as Confidential Computing have
+emerged, requiring IMA to use various new RoT devices proposed by
+different vendors, such as Intel TDX[1] and Huawei VirtCCA[2]. To make
+it easier for these devices to be integrated into the IMA subsystem, it
+is necessary to decouple TPM specific code from IMA, while abstracting
+IMA's configuration and operation to RoT devices into multiple
+independent interfaces, ultimately forming an IMA RoT device framework.
+This framework abstracts away the underlying details of various RoT
+devices for IMA, and each type of RoT devices can be "plugged in" and
+utilized by IMA simply via implementing the framework interfaces.
+
+            ┌──────────┐    ┌───────────┐
+           ┌┴─────────┐│   ┌┴──────────┐│
+           │ Programs ├┘   │ Libraries ├┘
+           └────┬─────┘    └────┬──────┘                        User
+─ ─ ─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ─ ─ ─ │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─
+                └───────┬───────┘                               Kernel
+                        ▼
+     ┌────────────────────────────────────┐  ┌────────────────┐
+     │              IMA Hooks             │  │                │
+     │ (file read, executed, mmapped etc) │  │                │
+     └──────────────────┬─────────────────┘  │      IMA       │
+                        ▼                    │ Initialization │
+     ┌────────────────────────────────────┐  │                │
+     │        IMA Measurement List        │  │                │
+     └──────────────────┬─────────────────┘  └────┬───────┬───┘
+                  extend│      calc_boot_aggregate│   init│
+                        ▼                         ▼       ▼
+     ┌────────────────────────────────────────────────────────┐
+     │                        IMA RoT                         │
+     │                       Framework                        │
+     └───────────────────────────┬────────────────────────────┘
+         ┌───────────────┬───────┴─────────┬─────────────────┐
+         ▼               ▼                 ▼                 ▼
+┌────────────────┐ ┌────────────┐ ┌──────────────────┐ ┌────────────┐
+│ VirtCCA Driver │ │ TPM Driver │ │ Intel TDX Driver │ │ xxx Driver │
+└────────┬───────┘ └─────┬──────┘ └────────┬─────────┘ └─────┬──────┘
+         │               │                 │                 │
+─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─
+         │               │                 │                 │  Hardware
+         ▼               ▼                 ▼                 ▼
+┌────────────────┐ ┌────────────┐ ┌──────────────────┐ ┌────────────┐
+│ VirtCCA Device │ │ TPM Device │ │ Intel TDX Device │ │ xxx Device │
+└────────────────┘ └────────────┘ └──────────────────┘ └────────────┘
+
+This patch set provides an implementation of the aforementioned IMA RoT
+framework, which can facilitate easier adaptation for new devices such
+as Intel TDX and Huawei VirtCCA, as well as the classic TPM, to be an
+RoT that IMA can utilize to maintain system's integrity.
+
+[1]: Reference for Intel TDX with IMA:
+https://www.intel.cn/content/www/cn/zh/developer/articles/community/runtime-integrity-measure-and-attest-trust-domain.html
+
+[2]: Reference for Huawei VirtCCA:
+https://gitee.com/openeuler/kernel/blob/OLK-6.6/Documentation/virtcca/virtcca.txt
 
 
+GONG Ruiqi (4):
+  ima: rot: Introduce basic framework
+  ima: rot: Prepare TPM as an RoT
+  ima: rot: Make RoT kick in
+  ima: rot: Involve per-RoT default PCR index
 
-On 2025/6/27 15:57, Andrew Lunn wrote:
->> +#define PTP_CIPU_LOG_SUB(dev, level, type, event, fmt, ...) \
->> +({ \
->> +	static DEFINE_RATELIMIT_STATE(_rs, \
->> +				      DEFAULT_RATELIMIT_INTERVAL, \
->> +				      DEFAULT_RATELIMIT_BURST); \
->> +	if (__ratelimit(&_rs)) \
->> +		dev_printk(level, dev, "[%02x:%02x]: " fmt, \
->> +			   type, event, ##__VA_ARGS__); \
->> +})
-> 
-> Please don't use such wrappers. Just use dev_dbg_ratelimited() etc.
-> 
+ security/integrity/ima/Kconfig            |  12 +-
+ security/integrity/ima/Makefile           |   3 +-
+ security/integrity/ima/ima.h              |  11 +-
+ security/integrity/ima/ima_api.c          |   4 +-
+ security/integrity/ima/ima_crypto.c       | 139 +++----------------
+ security/integrity/ima/ima_fs.c           |   4 +-
+ security/integrity/ima/ima_init.c         |  14 +-
+ security/integrity/ima/ima_main.c         |   4 +-
+ security/integrity/ima/ima_queue.c        |  39 ++----
+ security/integrity/ima/ima_rot.c          | 108 +++++++++++++++
+ security/integrity/ima/ima_rot.h          |  42 ++++++
+ security/integrity/ima/ima_template.c     |   2 +-
+ security/integrity/ima/ima_template_lib.c |   4 +-
+ security/integrity/ima/ima_tpm.c          | 154 ++++++++++++++++++++++
+ security/integrity/ima/ima_tpm.h          |  19 +++
+ 15 files changed, 388 insertions(+), 171 deletions(-)
+ create mode 100644 security/integrity/ima/ima_rot.c
+ create mode 100644 security/integrity/ima/ima_rot.h
+ create mode 100644 security/integrity/ima/ima_tpm.c
+ create mode 100644 security/integrity/ima/ima_tpm.h
 
-Agree. This was for compatibility with older kernels, I should
-change it to new helpers.. Will fix in next version. Thanks!
-
->> +static int cipu_iowrite8_and_check(void __iomem *addr,
->> +				   u8 value, u8 *res)
->> +{
->> +	iowrite8(value, addr);
->> +	if (value != ioread8(addr))
->> +		return -EIO;
->> +	*res = value;
->> +	return 0;
->> +}
-> 
-> This probably needs a comment. I assume the hardware is broken and
-> sometimes writes don't work? You should state that.
-> 
-
-Yes, If the cloud device thinks the written value is not what it
-expected, the write will fail. I will add a comment about that, thanks.
-
->> +static void ptp_cipu_print_dev_events(struct ptp_cipu_ctx *ptp_ctx,
->> +				      int event)
->> +{
->> +	struct device *dev = &ptp_ctx->pdev->dev;
->> +	int type = PTP_CIPU_EVT_TYPE_DEV;
->> +
->> +	switch (event) {
->> +	case PTP_CIPU_EVT_H_CLK_ABN:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
->> +				 "Atomic Clock Error Detected\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_CLK_ABN_REC:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
->> +				 "Atomic Clock Error Recovered\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_MT:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
->> +				 "Maintenance Exception Detected\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_MT_REC:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
->> +				 "Maintenance Exception Recovered\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_MT_TOUT:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
->> +				 "Maintenance Exception Failed to Recover "
->> +				 "within %d us\n", ptp_ctx->regs.mt_tout_us);
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_BUSY:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
->> +				 "PHC Busy Detected\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_BUSY_REC:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
->> +				 "PHC Busy Recovered\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_ERR:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_ERR, type, event,
->> +				 "PHC Error Detected\n");
->> +		break;
->> +	case PTP_CIPU_EVT_H_DEV_ERR_REC:
->> +		PTP_CIPU_LOG_SUB(dev, KERN_INFO, type, event,
->> +				 "PHC Error Recovered\n");
-> 
-> Are these fatal? Or can the device still be used after these errors
-> occur?
-
-The clock can't work as expected if these events happened.
-
-The gettime operation will get an invalid timestamp whose
-PTP_CIPU_M_TS_ABN bit is set and return -EIO.
-
-> 
->> +static int ptp_cipu_enable(struct ptp_clock_info *info,
->> +			   struct ptp_clock_request *request, int on)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_settime(struct ptp_clock_info *p,
->> +			    const struct timespec64 *ts)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +
->> +static int ptp_cipu_adjtime(struct ptp_clock_info *ptp, s64 delta)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
-> 
-> I've not looked at the core. Are these actually required? Or if they
-> are missing, does the core default to -EOPNOTSUPP?
-> 
-
-See reply to Vadim :)
-
->> +static ssize_t register_snapshot_show(struct device *dev,
->> +				      struct device_attribute *attr, char *buf)
->> +{
->> +	struct ptp_cipu_ctx *ctx = pci_get_drvdata(to_pci_dev(dev));
->> +	struct ptp_cipu_regs *regs = &ctx->regs;
->> +
->> +	return sysfs_emit(buf, "%s 0x%x %s 0x%x %s 0x%x %s 0x%x "
->> +			  "%s 0x%x %s 0x%x %s 0x%x %s 0x%x %s 0x%x "
->> +			  "%s 0x%x %s 0x%x %s 0x%x\n",
->> +			  "device_features", regs->dev_feat,
->> +			  "guest_features", regs->gst_feat,
->> +			  "driver_version", regs->drv_ver,
->> +			  "environment_version", regs->env_ver,
->> +			  "device_status", regs->dev_stat,
->> +			  "sync_status", regs->sync_stat,
->> +			  "time_precision(ns)", regs->tm_prec_ns,
->> +			  "epoch_base(years)", regs->epo_base_yr,
->> +			  "leap_second(s)", regs->leap_sec,
->> +			  "max_latency(ns)", regs->max_lat_ns,
->> +			  "maintenance_timeout(us)", regs->mt_tout_us,
->> +			  "offset_threshold(us)", regs->thresh_us);
->> +}
-> 
-> Is this debug? Maybe it should be placed in debugfs, rather than
-> sysfs.
-
-These are considered attributes of the CIPU ptp device, so I perfer
-to put them in sysfs.
-
-But I found sysfs prefers only one value per file [1]. The format
-here may need to be improved.
-
-[1] https://docs.kernel.org/filesystems/sysfs.html
-
-Thank you for these comments!
-
-Wen Gu
-
-> 
-> 	Andrew
+-- 
+2.25.1
 
