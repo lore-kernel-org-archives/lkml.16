@@ -1,132 +1,109 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DF623ABB3;
-	Mon, 30 Jun 2025 08:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4278C23BF96
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273857; cv=none; b=Su1ZIQ1uAGGx7yCLpzo5dRdVHyzITed18BMVVKisDXW7zwCPqpKF5ign3XgNzLlCM9JLbgbhz5je7DTBkeIeO9PZ2qKor1/DXqOZ4mGxMVAiGx4FyXRp0t4P4IiG6wJGEwchhRJYZF5zVZ6Gj948D1sjEjT6DfUVe9iYov71Sho=
+	t=1751273879; cv=none; b=Fb7Bs6XCm/e1vXu22vLrnyTB16d7Q+ErVRqzCted58TFtL96hWnVJjqB/P6Z9Z4y3v12WfP5EgKz0XuT7fTmc/osoymQpvByyi7ztEbAxp/cRct1zs+HaYXE8njHk0AIsIgXZnblLDCiEFbHGo/JNBtuWRr2Tic4UBVNXLhHX6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273857; c=relaxed/simple;
-	bh=APQjnfC0ho26CdR02Kmbiu4E9JMnLLbwfYZ7NNh8DYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZSJl8NaMene9URlR35XHuxw8oKwmcwO9BRhgwt8fcNrfUpez8WQzuu2XVIPx1R35sFAcGA/dD6bXB88NvvYr+YDX8Un9nDNLxljMUyfwkyaLLUAOPf7CyMwOBPDljiE+e0ihVSMgfVWPF9cxUAPQAKU6RCNpluRS3tndgur2kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dv/vKlEW; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751273879; c=relaxed/simple;
+	bh=onLgqf9wBQTKSo4b8bzwNbk/HjG4OEyCuw7AQptX5lc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hi+O3UphXTCM+cWIx2P6bAbwyRYdNxvtV/WFNugvI2H1a+6VBMYVHT/I9WqH9R7INrejO2jEeDkHoXNgSjeh7feA+jzp1X9xN3u5ZGvwLRyltRuIbW0JK8eBp/L/w5Q3yfWvt9l7H193I5L7XS8YcIHOma2/LIRmwWSJj2pamxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vICJWPed; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dv/vKlEW"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso683307f8f.1;
-        Mon, 30 Jun 2025 01:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vICJWPed"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553b9eb2299so4698507e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751273854; x=1751878654; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=POF/lfjlBstPPmJqK/rxTYHM0xgWsKYRn8MW4p37XQs=;
-        b=Dv/vKlEWT9/oquHFb5ZheJlDCP0WqB9NbF/sGP2Wz9ITsB0GcPGoW8W/OdyGBSDioa
-         hYfnFggD3FmlzH9KUxaEfnWmuzWvwd8wAetYGZhhTmnmqlc1KAvR+HYXxO9BtAwzF02C
-         3SnT+mVHlT7Qlr8zDKC8tQ4H7MQw2rWLmutY6sQ59ofaTjvps6acVqN0sZAA1V0vEXvQ
-         1q+nef7KDJOUdPhx1kQM9WuhN1YcGu8nD0yQszWdDKerSscVwFVbmg2zWjbMPBsPJIR5
-         bFxTLLQPxTOE1WcvKDS07uOc89Gp7HqNyJUKGYr2YJayahcnYXnfObbn+N8jAiplUqLM
-         OYCQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751273875; x=1751878675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aFXh1Z91L70sdrJwqWRqSBN592H16a2JIB1wd9q9WPE=;
+        b=vICJWPed84G7CviciejousAgpZUjAY9W7mXrPCSzycY6Lf4+tS3rQSfRDGzHtxWvEF
+         cD84eLu5UKyVKxNVXy7UMhw5vzqLN8g18KuTEKErg12jAIFQYjvgw2hsnYbIDAfw9uMt
+         VLET3VctgLCQxshJ0+Fru9GmmfZD/LlARt6ZmQ7t2mBxJ1vm8sFJCYXnZUey4MrtCCGf
+         a5GG2bZKwTADX9adF0ITpS08n0XvI/7Eos35WhTl85QQNZ454EOX1iQ18OLdqgK+3UNc
+         a8+7QGnkiUHoGFBeT27047mqL91tse/uT/hTJGXPD0ZmRiJtzRCofrUQskDFRjqQ3d3d
+         1VVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751273854; x=1751878654;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=POF/lfjlBstPPmJqK/rxTYHM0xgWsKYRn8MW4p37XQs=;
-        b=byq87HAazaMhUVZIm7P6b8uCMFG2KhHFrsrTRD1Qpqj4G5g+4AAho7/QgLmDSZE5Eg
-         WVOM6+I3VrCBkuAm1XoLIvKNTX3SBagrWlY750aJjKZzI9kMmghZuW7msTwFPZ+0XkWi
-         v+SkkHr20inxm3K3dlpdt72OYIgAm85eF2bfPu47kkDn/hIyBwO/NoT/XNFsB8YlUAnr
-         qrsz8jKWSgxVUZdZGlGbFJTAx3H9NPi4N41W5DG1Ze8zHduc4mh9x58OXT9KGrrzAb8r
-         k9PY4A6FNK69SUFN47hV8iGrzZgH9qgEM3kcDlIOjP2Uu5QZVSW+5cH/cJiCytT8VLPW
-         Ct0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVT3mrNeqbCPDQ0N1zVHN13k8FyOJMn0VPrBrRcLiU51h2IuDiCcnxKVgEitCy+H6XF5tgAnx+7ZZzJE0in@vger.kernel.org, AJvYcCXXD2Il9keOW5Bw6lMYLFybST1lR7jUqqxQ50L3jNL3bxZioaz2ySAS7deuhDqeXaLR887D35IAgswnvqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRJFjYHItd0+Yp1iCkgvNXSC+bWZk6kgVBLAslSW7bM59OEsoN
-	qP9hPhFv2Ntk+B5nvjkiaiwpCZM8VIpAItv7R0gzCNMI7VbNPXYyryfu
-X-Gm-Gg: ASbGncvofkm3qs3ONfFKUQH5IN/qXvXAuWUzNgTfEep0VhnoqtFBxGnkQNyHvcEb7ss
-	qBjHz46iKXCrUvDls4YXG5hkfOoM+qE8CB95MIlc7XOYZ/RSBQ8koAJB86KMbz4iM2ZQCFICR+i
-	XmhDQcj0u/JZZiIY82NRQc33lTA/oyHKhAo9xgo4+1OIPJYDhwvtqBEn2z0+mqotK5ospbUc+YV
-	TQ1owQYhCgCa6YmhxGDqKXpAWm5HX5btiAMTf2QoatSJbtzztX4Upcjp2vpHO3m/bnj4wl+cCZD
-	y0JyXK1mq5Lu+f9aWRzHQo9l4XeLAEsyqsRWO4oNWGtad/w/AaNbaAwQRLoUm9yBuDKaeOAtnzS
-	UbgjJeIT9jsaV0co=
-X-Google-Smtp-Source: AGHT+IGlknY67astPqQ6Ts4eyHBJeWoLGAdmYYOyXUPQ5uMHairQGPegGqQwCezY1A48qiQrcuUVNw==
-X-Received: by 2002:a05:6000:402b:b0:3a4:f912:86af with SMTP id ffacd0b85a97d-3aaf2e9231cmr2195341f8f.2.1751273853675;
-        Mon, 30 Jun 2025 01:57:33 -0700 (PDT)
-Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe587sm130162475e9.19.2025.06.30.01.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 01:57:33 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-	Declan Murphy <declan.murphy@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Mark Gross <mgross@linux.intel.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: keembay: Fix dma_unmap_sg() nents value
-Date: Mon, 30 Jun 2025 10:57:06 +0200
-Message-ID: <20250630085707.62981-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1751273875; x=1751878675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aFXh1Z91L70sdrJwqWRqSBN592H16a2JIB1wd9q9WPE=;
+        b=P3J56EV3Ko6n6xnyL8Aovyy7rGI/wBrzzvapbySTd/ZteN3FAIPt/l2VtpWCeakQnk
+         86bSIuX9ntnUYdoqMv3rpG6Qku/SB0Cx1oyudu3URPSTu2pVDuAIHGuyiFLfH4VeQ76x
+         rYtJtIJwP+tz++lxu67GAa9EGHfcIY7m9DVhwCBn42+dL4A4+SN2ppDYLNcp4rf+lF73
+         8Y64UU28/d2q1FwKM/kqXowE+js4ESw67vLrX1E55plex4EtuqjLCAVUW6OHBea4qqDg
+         vCrFvHgHcVwAcnCm7rn5NPmq+GzVXTnYdqdl4xPClLUWvW2EZafrHALmCiIwfvvqf9Yw
+         roGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTZo9bo/p+n4wWuwuJlKsy9LPjeHy85kFHPKhyqVAeRt1U8NjhOGlUEnNFJ0Q15WIdr+qDhr1rgpzMlVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuMhMvj85Z/1zCBIqy3RCM3BbGTvYlhiSBtP0i6chL5K0SXCir
+	fikoulNUs7td5pvKJlJuOQ498vw0NX8RXEblSdAHWkcTNU89cFC7OGtejtK621gih8eWmbZF8Na
+	9W3dkpYtD9770gO0lXGIVdckaZ0lepazb2BCiPi6kHA==
+X-Gm-Gg: ASbGncsAcajzQlJkkNx68YCKTAxc6fE+uv+KqZ0ZRqtytrky6u2EP9JWJJ6b/kHjrqr
+	7Y6NByL6mg0a7BXgVRtoViRR9EacTYohBcOprnwUrTfvRA/HW/JZXLOEgX/50lcKcy54KvsyegW
+	eFbKcZJh559xhOai7uQqJNilav4Tayq/VSC8biyeleg6J/T5SdHr9zv9AqrPi3sgDQYwoZmNVsk
+	bk=
+X-Google-Smtp-Source: AGHT+IHOVxPAMJSWh0SZLmaax8LuaMUfFhCW4STA1Hrax7bYhPG3/h1ZqtEQ5/+skwDUgLGcELqi8cmedawhg6Ze3Rg=
+X-Received: by 2002:ac2:4bd1:0:b0:554:f82f:180e with SMTP id
+ 2adb3069b0e04-55502cb4e30mr5622503e87.16.1751273875362; Mon, 30 Jun 2025
+ 01:57:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
+ <20250623-gpio-sysfs-chip-export-v2-5-d592793f8964@linaro.org> <aF68N4ZYKupWHJoL@black.fi.intel.com>
+In-Reply-To: <aF68N4ZYKupWHJoL@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 30 Jun 2025 10:57:44 +0200
+X-Gm-Features: Ac12FXyIhO7e-cJUzkPo19wadzgUrXNHYc5Zx6JLIkPswC_feeEvjBGPtz7bWAE
+Message-ID: <CAMRc=Me9QX8OWwFcTHQjXgDKiu_90gaLGeQp600aSSJi0yzbYg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] gpio: sysfs: rename the data variable in gpiod_(un)export()
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The dma_unmap_sg() functions should be called with the same nents as the
-dma_map_sg(), not the value the map function returned.
+On Fri, Jun 27, 2025 at 5:43=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Mon, Jun 23, 2025 at 10:59:53AM +0200, Bartosz Golaszewski wrote:
+> >
+> > In preparation for future commits which will make use of descriptor AND
+> > GPIO-device data in the same functions rename the former from data to
+> > desc_data separately which will make future changes smaller and easier
+> > to read.
+>
+> ...
+>
+> > +     attrs =3D desc_data->attrs;
+> > +     desc_data->attr_group.is_visible =3D gpio_is_visible;
+> > +     attrs[GPIO_SYSFS_LINE_ATTR_DIRECTION] =3D &desc_data->dir_attr.at=
+tr;
+> > +     attrs[GPIO_SYSFS_LINE_ATTR_VALUE] =3D &desc_data->val_attr.attr;
+> > +     attrs[GPIO_SYSFS_LINE_ATTR_EDGE] =3D &desc_data->edge_attr.attr;
+> >       attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =3D
+> > -                                             &data->active_low_attr.at=
+tr;
+> > +                             &desc_data->active_low_attr.attr;
+>
+> These were added in the previous patch and immediately got rewritten?!
+> Sounds like a wrong patch order.
+>
 
-Fixes: 472b04444cd3 ("crypto: keembay - Add Keem Bay OCS HCU driver")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Yeah, bad rebase. Thanks for catching it.
 
-diff --git a/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c b/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
-index 95dc8979918d..8f9e21ced0fe 100644
---- a/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
-+++ b/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
-@@ -68,6 +68,7 @@ struct ocs_hcu_ctx {
-  * @sg_data_total:  Total data in the SG list at any time.
-  * @sg_data_offset: Offset into the data of the current individual SG node.
-  * @sg_dma_nents:   Number of sg entries mapped in dma_list.
-+ * @nents:          Number of entries in the scatterlist.
-  */
- struct ocs_hcu_rctx {
- 	struct ocs_hcu_dev	*hcu_dev;
-@@ -91,6 +92,7 @@ struct ocs_hcu_rctx {
- 	unsigned int		sg_data_total;
- 	unsigned int		sg_data_offset;
- 	unsigned int		sg_dma_nents;
-+	unsigned int		nents;
- };
- 
- /**
-@@ -199,7 +201,7 @@ static void kmb_ocs_hcu_dma_cleanup(struct ahash_request *req,
- 
- 	/* Unmap req->src (if mapped). */
- 	if (rctx->sg_dma_nents) {
--		dma_unmap_sg(dev, req->src, rctx->sg_dma_nents, DMA_TO_DEVICE);
-+		dma_unmap_sg(dev, req->src, rctx->nents, DMA_TO_DEVICE);
- 		rctx->sg_dma_nents = 0;
- 	}
- 
-@@ -260,6 +262,10 @@ static int kmb_ocs_dma_prepare(struct ahash_request *req)
- 			rc = -ENOMEM;
- 			goto cleanup;
- 		}
-+
-+		/* Save the value of nents to pass to dma_unmap_sg. */
-+		rctx->nents = nents;
-+
- 		/*
- 		 * The value returned by dma_map_sg() can be < nents; so update
- 		 * nents accordingly.
--- 
-2.43.0
-
+Bart
