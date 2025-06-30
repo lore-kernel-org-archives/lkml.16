@@ -1,91 +1,130 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633C626AF3;
-	Mon, 30 Jun 2025 09:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED7317A2FC;
+	Mon, 30 Jun 2025 09:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274916; cv=none; b=q3AUcj6xa96SEQF0NYKOvNtretieSqzI271+0le60p4AfJzzpfNkQHJqeOno3ZMwdMtREATseDP0+z6hHK5hI5k8I/kowgdDVIueHNkQqZeYNolyhIzOwOgIA4DeC+xsgLlbyA+lRd3MJZgEm4oEVgE2C+W3qhjV/XJgq7fMRrI=
+	t=1751274983; cv=none; b=mNEJooCyothrhowgJ//bblhfeRMSHETFvFNydQlqxfDvjWyioOKtHNPvVd9HU7MiStrTS07DyVIcI3pgReaRYaRkg1sI3OyhpNnzCu9MOL2CGeELZZV4wpUfxkFWxOMd87yOVJJ8AoyelEOgpkVPvlIh8YU3oAdyhZmfgZLJQ2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274916; c=relaxed/simple;
-	bh=TkLhFhWumGvB9oEam+IXBxxJbwl1aAR9CRlttTKT5kM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wm4cCIkZC+A21PmGR3hA7yeqmaLoqEPJ+Gh51oA/+v3Z4wTVNWkV6mVrOnCuwtVzGvfcsqQOqu6nBU1htkz0yntqWs1e3eulrsWEMdtTZyVkgzyrSaZXJNLN5t1jbsm8Fi4GBQtl3Sl6m2oapmiT2bU+ru7b0HiSyUXPEG47x6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=p+mVLfZ6; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751274983; c=relaxed/simple;
+	bh=hIF4DF7VIC131YOfiv8wb+VyxCwoXmZfuDNsCoEXrmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XimVl8cKQxtCuNjhKM5JohjYvTZOhmVb+LAphZ+nHe3/xdF0pj8pq/F/eY5EzZDstqcTY5rtZ/sRLhd+YeeDYtENkJ+mUafGrpDtBsQJeKCrZ+2chdOhlCHYWu+/VFeZC1DJuzWzAluMP9BdP3Z1pu/gtAzetqyR1R2/SB83uTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ehvij6iy; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="p+mVLfZ6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=+fqpA/Lpac9+JlswIBpsVSCZtAGmxs1CgIvPDGfFS84=; b=p+mVLfZ6Sbj4jjBCwKAaXU3Eh1
-	BQ99XI07HJ0uWwEVHEhluIiblIYNyzteiu1sClMHdiViQuFQv9vaL+EHhkDWTefKVtNq7H9Kv/DwN
-	WrvFu7bkHcLzdUQ5FeJRWha2fWeH3X38S+6GSE/7Ey7ZUcqB3n/xlMv38L5tlPqUTsgFLLnTy7ENu
-	9Riljpgx4CyvPsr9fYiTfOOc98BULHfeQ4F6W8vDaCuJ88QY/YuuTtCuvjmIa2XEaLx6zUBOtnAwB
-	VhYe/9iU26D7U0XmPloUlvO575XgXzYLPEzaJxXN8SopKWtsSPrBb0EoJZSHWVCMJdtvwFYyi4NDE
-	Qa3cWGnw==;
-Received: from i53875bfd.versanet.de ([83.135.91.253] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uWAbC-00068L-5E; Mon, 30 Jun 2025 11:14:50 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	kernel@collabora.com,
-	Andy Yan <andyshrk@163.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
-Date: Mon, 30 Jun 2025 11:14:38 +0200
-Message-ID: <175127486757.133006.13048263625888495346.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
-References: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ehvij6iy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751274982; x=1782810982;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hIF4DF7VIC131YOfiv8wb+VyxCwoXmZfuDNsCoEXrmA=;
+  b=ehvij6iyVicmrxlX4xbE0hjbFuT5aNM9jVe7iPQL66HUQv88QPe0mSkZ
+   nkroL7UmkajEqYElVcCQmMkDMzk7chbGROUO4EUMkGcnlos6HM6GBI34e
+   KhW5GJE3LWlCdhYLrm7SpPMhteFCjpkgHBc5od0a6Pv7COK+0VJotM0Lp
+   uTA0mKtfKtYvzpmbn9flXe8yDHnHP1vcXX2x9bpWltHfKNYFnfYqYXJRH
+   IvXgS8c6PTXGccifOz8yvfhrdEkllaW4X3Z9pghQXervw2CehX7MKbHiw
+   k2gVYYGtizh1KwIi0b+Tt1qWI/aRXsYq0iaIxKFeNb3G0GMutw74wW87D
+   w==;
+X-CSE-ConnectionGUID: WbgP1acDQsiwhQRYFDBnWw==
+X-CSE-MsgGUID: uY8xco08S7KRGHtJog0Xtg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53369753"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53369753"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:16:20 -0700
+X-CSE-ConnectionGUID: vgpnXkQESpib0RBqEXahuw==
+X-CSE-MsgGUID: 8U4qTSUCQ1KOQB2aSzWAJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157794187"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:16:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWAcY-0000000BG2u-2D3F;
+	Mon, 30 Jun 2025 12:16:14 +0300
+Date: Mon, 30 Jun 2025 12:16:14 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Kent Gibson <warthog618@gmail.com>,
+	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 1/9] gpio: sysfs: add a parallel class device for each
+ GPIO chip using device IDs
+Message-ID: <aGJV3uvuFV4rrOUa@smile.fi.intel.com>
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
+ <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org>
+ <aF627RVZ8GFZ_S_x@black.fi.intel.com>
+ <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Mon, Jun 30, 2025 at 10:34:52AM +0200, Bartosz Golaszewski wrote:
+> On Fri, Jun 27, 2025 at 5:21 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Mon, Jun 23, 2025 at 10:59:49AM +0200, Bartosz Golaszewski wrote:
 
-On Thu, 12 Jun 2025 00:47:46 +0300, Cristian Ciocaltea wrote:
-> Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
-> char rate via phy_configure_opts_hdmi"), the workaround of passing the
-> PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
-> partially broken, unless the rate adjustment is done as with RK3588,
-> i.e. by CCF from VOP2.
+...
+
+> > >  struct gpiodev_data {
+> > >       struct gpio_device *gdev;
+> > >       struct device *cdev_base; /* Class device by GPIO base */
+> > > +     struct device *cdev_id; /* Class device by GPIO device ID */
+> >
+> > I would add it in the middle in a way of the possible drop or conditional
+> > compiling of the legacy access in the future.
 > 
-> Attempting to fix this up at PHY level would not only introduce
-> additional hacks, but it would also fail to adequately resolve the
-> display issues that are a consequence of the system CRU limitations.
+> I'm not sure what difference it makes?
+
+It collects optional (which you do with ifdeffery later on) at the end of the
+structure. Maybe there is no effect now, but it might be in the future.
+
+> > >  };
+
+...
+
+> > > +static struct device_attribute dev_attr_export = __ATTR(export, 0200, NULL,
+> > > +                                                     chip_export_store);
+> >
+> > __ATTR_WO()
+> >
 > 
-> [...]
+> No can do, the attribute would have to be called "chip_export". A
+> function called export_store() already exists in this file.
 
-Applied, thanks!
+I didn't get, we have two "export" nodes implemented in the same file?
 
-[1/3] dt-bindings: display: vop2: Add optional PLL clock property for rk3576
-      commit: 3832dc42aed9b047ccecebf5917d008bd2dac940
+...
 
-Best regards,
+> > > +static struct device_attribute dev_attr_unexport = __ATTR(unexport, 0200,
+> > > +                                                       NULL,
+> > > +                                                       chip_unexport_store);
+> >
+> > Ditto.
+
+Ditto.
+
 -- 
-Heiko Stuebner <heiko@sntech.de>
+With Best Regards,
+Andy Shevchenko
+
+
