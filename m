@@ -1,119 +1,107 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101554918;
-	Mon, 30 Jun 2025 10:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315E61E2858
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278938; cv=none; b=MP6wyQD5H3TsDL0hQ+NTjVjTjetOv+W4P9TrwQGXroqQnxs+5i8xEn1gJQB6Ff1m+ms25QBVxc4y7a8wgSNtV7DRNWAUZwFnynZlM+lm00Oy8BQ1DYciBoUAYXAgMAbmEczNwsjJegPab7yRZyr4ngGBYcoIBipoBoWaInzKi7Y=
+	t=1751279011; cv=none; b=AO9eoH/rAK1TBrA0WcJaX7pbTGTc02GGEzG5sa7diRHY5xxzApeDKz1D5sH8uPHnXlQufNkcSAF6/EQ/JYUSIZAOK2ewo+V17vNZ2nQxOlF+qv9DALDC5/yTaD07IAlj3WVWstkSmhSOeSA4dbShmkvT6q9ya9bDo/P2T1oR77c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278938; c=relaxed/simple;
-	bh=c0imhKHbJkUS2T2103cRnQw57MXF9vmxeRzMctCDrmA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=m5HtUlTLe9bf6hjhvY9eaXf9dFktOdXWcObizjQSOVL2EmSBMhqTW+M3Uu8c3AYrDlY96N8cGoSUbsfJZmqR0hx9LiVOb/42Jij4rCMseZmmeUqybdlLx71VXtyN759rCCerxPabZRznW3NFpTxjgaJSLHpwsftbX5AzycMEqr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55UALWld048042;
-	Mon, 30 Jun 2025 19:21:32 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55UALVLY048038
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 30 Jun 2025 19:21:32 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <da5be67d-2a0b-4b93-85d6-42f3b7440135@I-love.SAKURA.ne.jp>
-Date: Mon, 30 Jun 2025 19:21:31 +0900
+	s=arc-20240116; t=1751279011; c=relaxed/simple;
+	bh=lpKkakJCyHNDziD7laY1BPP8T8GfpG2fhvlOiEPGIn0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ppzsebSkSX2ad1CyKfAZ6Xdh+vHfj4VkUfQNXzFlkapsRHo9jA7OCafCescqsaA9gInCFvALBSaNdLEAeX9hqTwYShfatBuuGG5eHS4RvJGLjJRsUiIHMUUjosj2POdWbIu5lZJ3BBirO2mansvio0qjf7mojtse7pE0n2NyjqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz; spf=pass smtp.mailfrom=listout.xyz; dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b=HlY3xmGA; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=listout.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=listout.xyz header.i=@listout.xyz header.b="HlY3xmGA"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bW2LP1kcwz9srf;
+	Mon, 30 Jun 2025 12:23:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=listout.xyz; s=MBO0001;
+	t=1751279005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=P1YWpKOF3vYfj3PmhCsTImm+Uuv9FkxaiKd+e3qrF3I=;
+	b=HlY3xmGAP09TX8HiSokZkLx+TfJ7FQC+23omt1NL5io1Y4eCiqmWbOjCMA8l1OcNKscjeq
+	P0tCTEM9Yht5gcFK+XTHopJjexDDTZxa2bBmQF4TX7tdqstR3s3rP5aSzUjHycbKUssE1l
+	3BXt/1DIt1TCGb5LXoGlsR/scui2+U13hjuIuRD7wfdT5dZf8FZyYa2EsBFbO/i//+QG7Q
+	HNSCAWpSIp98QKtGjCJg/l3jrxIWGTP0djJOfQceqhRiK7FeChXx2cAowBSoHtk5vKNO3o
+	h7YksA/Tl1Lqfl+Kb5UW9eKNDDJ2jqq7H05CYmvarPgTjzkmUC6DDasYiq/a1A==
+From: Brahmajit Das <listout@listout.xyz>
+To: linux-kernel@vger.kernel.org
+Cc: krisman@suse.de,
+	jack@suse.cz
+Subject: [PATCH] samples: fix building fs-monitor on musl systems.
+Date: Mon, 30 Jun 2025 15:52:56 +0530
+Message-ID: <20250630102256.14456-1-listout@listout.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v3] ocfs2: update d_splice_alias() return code checking
-To: Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
- <20250626033411.GU1880847@ZenIV>
- <d84dc916-2982-45dc-a9a5-a6255cbc62bd@I-love.SAKURA.ne.jp>
- <973af6b9-e4c7-4519-99af-9c82dc6ca98f@linux.alibaba.com>
-Content-Language: en-US
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>, Richard Weinberger <richard@nod.at>,
-        ocfs2-devel@lists.linux.dev,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <973af6b9-e4c7-4519-99af-9c82dc6ca98f@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav203.rs.sakura.ne.jp
-X-Virus-Status: clean
+Content-Transfer-Encoding: 8bit
 
-When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
-checking") was merged into v3.18-rc3, d_splice_alias() was returning
-one of a valid dentry, NULL or an ERR_PTR.
+On musl systems with make allyesconfig fs-monitor.c fails to build with
 
-When commit b5ae6b15bd73 ("merge d_materialise_unique() into
-d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
-returning -ELOOP as one of ERR_PTR values.
+samples/fanotify/fs-monitor.c:22:9: error: unknown type name '__s32'
+   22 |         __s32 error;
+      |         ^~~~~
+samples/fanotify/fs-monitor.c:23:9: error: unknown type name '__u32'
+   23 |         __u32 error_count;
+      |         ^~~~~
+samples/fanotify/fs-monitor.c: In function 'handle_notifications':
+samples/fanotify/fs-monitor.c:98:50: error: 'fsid_t' has no member named 'val'; did you mean '__val'?
+   98 |                                        fid->fsid.val[0], fid->fsid.val[1]);
+      |                                                  ^~~
+      |                                                  __val
+samples/fanotify/fs-monitor.c:98:68: error: 'fsid_t' has no member named 'val'; did you mean '__val'?
+   98 |                                        fid->fsid.val[0], fid->fsid.val[1]);
+      |                                                                    ^~~
+      |                                                                    __val
 
-Now, when syzkaller mounts a crafted ocfs2 filesystem image that hits
-d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup() fails
-to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy inodes
-after unmount" message.
+This is due to sys/fanotify.h on musl does not include
+linux/fanotify.h[0] unlike glibc which includes it. This also results in
+fsid not being of type __kernel_fsid_t, rather the libc's definition of
+it which does not have val, but instead __val.
 
-Instead of calling ocfs2_dentry_attach_lock() or ocfs2_dentry_attach_gen()
-when d_splice_alias() returned an ERR_PTR value, change ocfs2_lookup() to
-bail out immediately.
-
-Also, ocfs2_lookup() needs to call dupt() when ocfs2_dentry_attach_lock()
-returned an ERR_PTR value.
-
-Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+[0]: https://git.musl-libc.org/cgit/musl/tree/include/sys/fanotify.h
+Signed-off-by: Brahmajit Das <listout@listout.xyz>
 ---
- fs/ocfs2/namei.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ samples/fanotify/fs-monitor.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
-index 99278c8f0e24..721580dfce3a 100644
---- a/fs/ocfs2/namei.c
-+++ b/fs/ocfs2/namei.c
-@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/samples/fanotify/fs-monitor.c b/samples/fanotify/fs-monitor.c
+index 608db24c471e..28c0a652ffeb 100644
+--- a/samples/fanotify/fs-monitor.c
++++ b/samples/fanotify/fs-monitor.c
+@@ -12,6 +12,9 @@
+ #include <sys/fanotify.h>
+ #include <sys/types.h>
+ #include <unistd.h>
++#ifndef __GLIBC__
++#include <asm-generic/int-ll64.h>
++#endif
  
- bail_add:
- 	ret = d_splice_alias(inode, dentry);
-+	if (IS_ERR(ret))
-+		goto bail_unlock;
+ #ifndef FAN_FS_ERROR
+ #define FAN_FS_ERROR		0x00008000
+@@ -95,7 +98,11 @@ static void handle_notifications(char *buffer, int len)
+ 				fid = (struct fanotify_event_info_fid *) info;
  
- 	if (inode) {
- 		/*
-@@ -154,15 +156,16 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
- 		 * NOTE: This dentry already has ->d_op set from
- 		 * ocfs2_get_parent() and ocfs2_get_dentry()
- 		 */
--		if (!IS_ERR_OR_NULL(ret))
-+		if (ret)
- 			dentry = ret;
+ 				printf("\tfsid: %x%x\n",
++#if defined(__GLIBC__)
+ 				       fid->fsid.val[0], fid->fsid.val[1]);
++#else
++				       fid->fsid.__val[0], fid->fsid.__val[1]);
++#endif
+ 				print_fh((struct file_handle *) &fid->handle);
+ 				break;
  
- 		status = ocfs2_dentry_attach_lock(dentry, inode,
- 						  OCFS2_I(dir)->ip_blkno);
- 		if (status) {
- 			mlog_errno(status);
-+			if (ret)
-+				dput(ret);
- 			ret = ERR_PTR(status);
--			goto bail_unlock;
- 		}
- 	} else
- 		ocfs2_dentry_attach_gen(dentry);
 -- 
-2.47.1
-
+2.50.0
 
