@@ -1,180 +1,138 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B167328A1DD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9CB287251;
+	Mon, 30 Jun 2025 12:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285538; cv=none; b=PgCEhmw8qnRsApYZxhzVdZT8Kq5rMzGCYXiuaP51dXpEpff05xSPDsFxgtOEpE8P4PsctwLpfH4xuNukPlai33dKq57TQ0bvAuWpOipL0rgnd5p/ChWLt+yHH3e+ZPfmtok9lCCOD/9a3Jw1Y/XoaDIMJkyAM8Aqb+vjIcRt8rE=
+	t=1751285548; cv=none; b=lOWlDc6GTcYHoGnJ7Bg9VAq98PXHJ/sU+TZTOD7SpY31gpN12zIwt3U3t+C51VjJzBRJf1RfMJd6pKG36+EHSVz4Fvzfvc8Gd1YYL33brAVi6CkCqG9KRH0D4t1Aj/ErK1x+sQnLQmdWUJowFbgG/1G2LSbxvPtfekbWcDegRnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285538; c=relaxed/simple;
-	bh=BKfqqka86bDL0dJyNuOG9LjYml165Lxh5NhMO1RrfhA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sDDHiz01QEnIE/cJNlSMaquVhwanQApmfrvfaIkjXIBkIh1g3TRtTuw545rME4h2ZKHXRupomFX+udKaTn5ZlNXIrj0Nn4Qyhv76zZVn5GlGDXe9/9V0hI28A8WYxf6/4XTJrQa+wcOg0zIoavQykp0zGFlNCFCdtOtx8hCcnxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=u2NpsNCI; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751285548; c=relaxed/simple;
+	bh=ymAm2RGsauWyqhaGIKdrhj01x13vqQy3GTjiWCnEznI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGcll/t1iHGbpiu77vYbYZww8YsalmoooENXp0wUQo4lcnmVlC2FepjN76KSzCIurXmn1e4UgT8NieyolkEQlFxNJ41Hc/YYc6yE9RiWWyBQivCNI9DBbHE2T4bVRUU+kN7796O2NdTM+02pDzliE6G8fgNcGLGHwICjEpqLYkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7B8gy6C; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="u2NpsNCI"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so1787885f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:12:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7B8gy6C"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b31e076f714so5044974a12.0;
+        Mon, 30 Jun 2025 05:12:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751285535; x=1751890335; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+QlXPJik67OJ+ji5i52hXuqCUQwHGO8iJergE6aP1vs=;
-        b=u2NpsNCIPQa0/7jy5FSxDDbRejKyurQgt0oiypcar3yNiWL5F96Xr6Ak+6kgFecw29
-         UIn47MGrLRF9UdsZfLkqUmfcE5XR01pXPbRmQaCMzCoveSTtBWZTA02tUmAWSgHXqyiM
-         c913l+sfSDlp3P9StUV1yrpJEvR69SFJrgWl28a6Cnt3mpiOnEIbBRUN9roqgnPOI2Gk
-         HGDtgAw99jMXR+GJfA79VlsItADByiaVf5Zin6vSry/jiSipIGwF5N8Ei1nDedL8fRu/
-         EmqjRBT40jaYgHroMeWm4H5nFeuI9Qwhh4KwJ+pkpVTzqYwdHpQHD5tfi4WwqmLWB4Ee
-         Gfrg==
+        d=gmail.com; s=20230601; t=1751285547; x=1751890347; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kYgTWxigFnMh6J+7o3rXH2dHsX5hLP6u8Al9k3eKS4=;
+        b=B7B8gy6CqaZryVm5kzfiTAxCrTHwctQFEwzXrSaPOWP/4lTNuhuZN+y0M/k4Pt0bWZ
+         liS8OFfihJfm226Qb3LkQzEd0T4NqbKiXQL0mlz9uPHTX81oxb8YPI/ilVlSlh+vjmtR
+         UWwCAyLcRP0MESXYsau3lwacR2gORp1LY22Q0nPR1jn9GZJi68VwGeLU7TpL5QE9D2vB
+         ZWCin1BJBQ0mDXrOlonM4Jd7u76qUO4H3uY857Kt8/oQiuonBr6DuX4Tr5WIxJ7EvFZd
+         qO4g7tH3eXozztOVY4Y31mNP+6LrhbT64nPUPGIS+A5OaaS3S9Doq/3Tuj0CRS0XvPDC
+         9qYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751285535; x=1751890335;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+QlXPJik67OJ+ji5i52hXuqCUQwHGO8iJergE6aP1vs=;
-        b=K0AwIBJNGV8cpgJ8YI2VC6iRMiPYgl5VHeDIx5ANjthwnmm+IbMX92J4baiwYo2T81
-         xdsZfD8TiUdogYNJ6Al0JUkpn5NLXJ+BNs817l/7WHdxIV3jtfL71rH5eNend9sRMnsZ
-         G8cfTGZXFwU6q6PDceBJdHjCkDhNpAhKW2iEjLdVdU98szFpDzAtRdyimFHF6t+lPLY/
-         auj9Qzf2IdG2NbBJM4V1gibse1slnECup7Ssa/+OxHotkTPSddZAQuVxtWv1LMnUA5I2
-         TSuvfbGxMjVUso4K9Fe4Kqa84wlTR3EPg2+/vi5YB0TeFJ4YA5pQT8jFFNptiBt6VEf8
-         9XDw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9YlHR3lG8LdwVEjo2nkcbdg9d5XELLYoI8VeDKxMAvT7eD+gKJCv9bfWAGKPPFCVAKgDEJqtZdaxziRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQOcKHq9dJ7t/9UnSFxlmZgWObymnmX/dCxccGRfLNbfPqz01c
-	EBa3p2maqedXggPKukc+jpCN+bbfORgj0n7L0Qbfr3OLSV7xDCL28ZtC1UnA406ljog=
-X-Gm-Gg: ASbGnctR66jmFOJe0KcVyucEBO1soLzG0LGbIh/hb8lpvvfxJlxhHZdFGKd+rZJy4Km
-	iI8DWAQ0rzZhRlCELnQJSiUkh3DjZYJkZmjigF1nvvyDFK20317mO3/xmoAst6sjQSzyQKQzKon
-	JkZT3eQSw4lhdLbxEPDig6ZZoCVemB3zyixI0zOUvrbiOTO841KDFP84zJIM7gwq1l7Xmg9y7Bw
-	SsVP2bu+0A8w9cWlsn3AgDxSEnaroNMIjQNF6HMJHRTC8aFt+kfas5N0WiHEIzbVvSnxArvP8wZ
-	m1LIwtx4POt3ytN1xkmvHfRDM3kYmftiWN/2kcyTzMn6idxJrU3/6+mV
-X-Google-Smtp-Source: AGHT+IFQXwxIM2HUr1IQmwXbE2oEZjblR7pgcFR+7RdIC1AVXJ7VrKdoozRAzizI1O0LoBUAsA/j2A==
-X-Received: by 2002:a5d:584b:0:b0:3a5:3e64:1ac4 with SMTP id ffacd0b85a97d-3a8fee64d08mr12789954f8f.33.1751285534948;
-        Mon, 30 Jun 2025 05:12:14 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c800eaasm10470472f8f.37.2025.06.30.05.12.13
+        d=1e100.net; s=20230601; t=1751285547; x=1751890347;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9kYgTWxigFnMh6J+7o3rXH2dHsX5hLP6u8Al9k3eKS4=;
+        b=SNkWSrULNV/XepQQ1HmfaAqKNak2fVNEGOqihms6jLl5ws0vr29N2+LaRrdTjKouqr
+         tGH6wO3dgISBMy9pi0Z+xJUGVbAcGjKgU857uojLijn+mZA8JiB0evO6aMswcJNsGHZe
+         o++ADZCEhGQej4t1JXld6Zd+lAEzM+Tw2TpldqTmtX6MQUBUBEkCy7P77fUxlYtnTVSd
+         HB9vviTxZ6x7H6qL20cKj5ey3BUsTYJghIOMBQ1yucw3oimShU15jfzPdhDrFnquElky
+         h0888e3klwazBUJPpGugJO5EhCw/TdGhg6wcfkqXgR6zKR07bKY0Lj9kgJsPkd8YfRN8
+         yYQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWH/yvFUttYAKBdg3ziGcqINVatHW+yO9B6L2W0DOMvueNIb4TFtva1t1ti+mx7NVcreIzEIfXzIXWdZN/z@vger.kernel.org, AJvYcCWcr32YEa0MC0XPgD2agEJ5oiHl+3XdMNy5k77eGuM2gPLhUbXusix7Ym6OWKZqn0BexT+3e8ITn3ot@vger.kernel.org, AJvYcCXzIPen8ejNaTHddwcn1HitGnNY6mDGRQIIxgGX5OcI2G0MB62HtN/JVVufZryIez+cvi5sA/EpeOoq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV8wpSJu8tJE59wn/x8aAwGM/DzvTJEoHkU//Ui3zDi/w8OjVz
+	3Pax2CsGzm8PWsTXN0cKDHGdDh7ldezWyz/YVMBsqx0cY9WvEBH8lGcj
+X-Gm-Gg: ASbGncsx9IEzqawCvQRZ/P9HZVfoIYKRqrfQRuLCU3Twyylq0BsKKguYS/m4NIIIYWH
+	8SpK9PuuYlArBvjEyezBV3VxmzNc4ejSGrn1uGOEhvO2H8OdvOlsc7Os/js9ljo3KLBLmctGK00
+	4Xd2zGgtKo6B/qbdPZbHiwwVzV992fPytWFW8efErYvFhba8el6Swr4hfKFA1DQ7K20Pm7l7opy
+	HyX2L4qoF8pbIHTEbkK/mffmmqzUov/uCaeYD/qTzfNFg8grNiqPPBprGNf1zIxsSjJ/xNkZPHg
+	a7T6AMxD58z+lcjJ1Wv0gPo5HIFQQYHJNKa0IR8DviDm0eqPrwg=
+X-Google-Smtp-Source: AGHT+IHsIFpQ45mX5GXGIU8w06ZUsQgrAuvEXHa4TYUkn6AoK+LxDTuZVhduM++WcW9fKEEMhIst4g==
+X-Received: by 2002:a17:90b:55d0:b0:311:482a:f956 with SMTP id 98e67ed59e1d1-316d69bf0cbmr24097074a91.5.1751285546499;
+        Mon, 30 Jun 2025 05:12:26 -0700 (PDT)
+Received: from localhost ([2001:250:5800:1002::cd55])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-315f54412c6sm13168373a91.43.2025.06.30.05.12.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 05:12:13 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 14:12:05 +0200
-Subject: [PATCH v2 4/4] firmware: qcom: scm: request the waitqueue irq
- *after* initializing SCM
+        Mon, 30 Jun 2025 05:12:25 -0700 (PDT)
+Date: Mon, 30 Jun 2025 20:12:22 +0800
+From: Zixian Zeng <sycamoremoon376@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Longbin Li <looong.bin@gmail.com>, linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org, sophgo@lists.linux.dev,
+	linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] spi: dt-bindings: spi-sg2044-nor: Change SOPHGO
+ SG2042
+Message-ID: <aGJ_JtThs7VpRIwa@calculate>
+References: <20250629-sfg-spifmc-v3-0-28db1f27e999@gmail.com>
+ <20250629-sfg-spifmc-v3-1-28db1f27e999@gmail.com>
+ <20250630-ancient-quail-of-joy-effd60@krzk-bin>
+ <aGJ5XAYZ1nmQyBQT@calculate>
+ <4afcef9e-db98-4679-b9c1-40ffcf4861c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-qcom-scm-race-v2-4-fa3851c98611@linaro.org>
-References: <20250630-qcom-scm-race-v2-0-fa3851c98611@linaro.org>
-In-Reply-To: <20250630-qcom-scm-race-v2-0-fa3851c98611@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2669;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=PcAqvM6FBpCoLkNCxS4qTB03W5O8x/84hACrv61h9wk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoYn8Yx15pNqlt0atuJpYpP50OvajemYIKa09s+
- ekM0xLA3tyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaGJ/GAAKCRARpy6gFHHX
- ch39D/9oDWM+eSjmgaVqiQPFLysRWcTpuyu6+mfAoyuIOI4xMyTNBOVzEH3DBCI1mFYnFA3b+W1
- mzSkILp7RIA/JbCx5b4xhxyxrdELnMDBojM9UWwGlmtcs2o+mV7TskNvGGs+Kyy/0nzHwBxdDzo
- LLhjEQ065UtVT84EyQvnfc3U1rH+r2dvWUCrH36TC9wn4yRykeF4+A0UNBYtK0n3N97dIJxJ4dH
- 7aq2N+C+9CB9F9een5g5Ue7bhb5R65xMCT4v0xpkFPK01Wmmsr6AMoDPZ47yTO15u5vcSIHD8eI
- IZs4Q8fAwg3/dKPNAWS7BchTT0KejeRVRtViyBkoqnBwAh+b5DsRYoNkepK8I1FFSs+i6WRkJBs
- XyNbOncDGTYGqqQJNFOmNZjkCGeNetxEywG7N2SjSZkmdAKkoA/cQY/h/ko1fN3eljMGnd7/1vP
- rXTiJ6Mh017fjIICDjhQNr4Rb8NTfzodV04ji8/FCSq8t1rWNJxEKB4CEhFf8nC6dV8gyOZcWrw
- CzlPuZWljCl7vM/Onps19IJugJS7Zmb48M2zo9E7A/MrNWxw/oCYFkgWxnNcYvJCpck5p3+nLX9
- MeibYJ9/VLCOVwQHJwOqZfc0Jdepsc5ya6YsUm522BCdQB5jGbDjTXXNVX83FRNfaeX6690pQxl
- CBsWjW6CY+GT0VQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4afcef9e-db98-4679-b9c1-40ffcf4861c6@kernel.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 30, 2025 at 01:55:58PM +0200, Krzysztof Kozlowski wrote:
+> On 30/06/2025 13:47, Zixian Zeng wrote:
+> > On Mon, Jun 30, 2025 at 09:17:09AM +0200, Krzysztof Kozlowski wrote:
+> >> On Sun, Jun 29, 2025 at 04:23:10PM +0800, Zixian Zeng wrote:
+> >>> SG2042 is not fully compatiable with SG2044,
+> >>
+> >> Typo, run spellcheck.
+> >>
+> > Thanks for spotting that! I will add spellcheck to my patch checking script next.
+> > 
+> >>> So it is necessary to become independent const
+> >>
+> >> No capital letters after ,.
+> >>
+> > Ok, thanks
+> > 
+> >> Anyway, explain why it is not fully compatible.
+> >>
+> > I have asked the technical staff of SOPHGO,
+> > the SG2044 and SG2042 are indeed incompatible with each other in some places
+> > because of the hardware details, regarding the configuration of the OPT register
+> > and FFTrgLvl(fifo trigger level) bit setting.
+> 
+> So when driver binds with sg2044, the device does not work? Or what
+> exactly does not work?
+> 
+> All this is supposed to be explained in the commit msg.
+> 
 
-There's a subtle race in the SCM driver: we assign the __scm pointer
-before requesting the waitqueue interrupt. Assigning __scm marks the SCM
-API as ready to accept calls. It's possible that a user makes a call
-right after we set __scm and the firmware raises an interrupt before the
-driver's ready to service it. Move the __scm assignment after we request
-the interrupt.
+I got it, I think I had explained this in the driver patch[3/4].
+If this reason is acceptable, I would like to ask whether
+the explanation should be put in the binding patch commit msg [1/4]
+instead of the driver patch commit msg [3/4]? or both?
 
-This has the added benefit of allowing us to drop the goto label.
+Thank you.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/firmware/qcom/qcom_scm.c | 36 ++++++++++++++----------------------
- 1 file changed, 14 insertions(+), 22 deletions(-)
+> Best regards,
+> Krzysztof
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index b6e0420bb2b72247e4d772b66314d81f336f5d9d..26cd0458aacd67dcd36f065675e969cea97eb465 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -2276,29 +2276,27 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 		return dev_err_probe(scm->dev, PTR_ERR(scm->mempool),
- 				     "Failed to create the SCM memory pool\n");
- 
-+	irq = platform_get_irq_optional(pdev, 0);
-+	if (irq < 0) {
-+		if (irq != -ENXIO)
-+			return irq;
-+	} else {
-+		ret = devm_request_threaded_irq(scm->dev, irq, NULL, qcom_scm_irq_handler,
-+						IRQF_ONESHOT, "qcom-scm", scm);
-+		if (ret < 0)
-+			return dev_err_probe(scm->dev, ret,
-+					     "Failed to request qcom-scm irq\n");
-+	}
-+
- 	/*
- 	 * Paired with smp_load_acquire() in qcom_scm_is_available().
- 	 *
- 	 * This marks the SCM API as ready to accept user calls and can only
--	 * be called after the TrustZone memory pool is initialized.
-+	 * be called after the TrustZone memory pool is initialized and the
-+	 * waitqueue interrupt requested.
- 	 */
- 	smp_store_release(&__scm, scm);
- 
--	irq = platform_get_irq_optional(pdev, 0);
--	if (irq < 0) {
--		if (irq != -ENXIO) {
--			ret = irq;
--			goto err;
--		}
--	} else {
--		ret = devm_request_threaded_irq(__scm->dev, irq, NULL, qcom_scm_irq_handler,
--						IRQF_ONESHOT, "qcom-scm", __scm);
--		if (ret < 0) {
--			dev_err_probe(scm->dev, ret, "Failed to request qcom-scm irq\n");
--			goto err;
--		}
--	}
--
- 	__get_convention();
- 
- 	/*
-@@ -2328,12 +2326,6 @@ static int qcom_scm_probe(struct platform_device *pdev)
- 	WARN(ret < 0, "failed to initialize qseecom: %d\n", ret);
- 
- 	return 0;
--
--err:
--	/* Paired with smp_load_acquire() in qcom_scm_is_available(). */
--	smp_store_release(&__scm, NULL);
--
--	return ret;
- }
- 
- static void qcom_scm_shutdown(struct platform_device *pdev)
-
--- 
-2.48.1
-
+Best regards,
+Zixian
