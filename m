@@ -1,92 +1,107 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BFE2475CB;
-	Mon, 30 Jun 2025 10:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B379725A2A5;
+	Mon, 30 Jun 2025 10:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280029; cv=none; b=jQdKhiUdYh9Nd3G7NdEo/u2KLhMXoxQi8ItCqj3XljgP5B6fN8QONUtmGhnyDB64aB+Dx0Xev1oOIn3iQ8B2bgWExZmxnC9asDJ9A2PTcJHo+GaxZOQWodFP6bqqJrRgRXeQGf3dElik0r9Drm+j33GZC7oQ7nUiJxFtvO+wD54=
+	t=1751280035; cv=none; b=i2eksSk5QZGpQIvk1RwPGaHdhmVReR8IJEzVbxJ/qYrNDpNDNt1i3/dNaZ6pBYcrCv9cahx/DmwRFnCXzQf1B7syl1cSqISpzC550Xv2KrdPzFYcSWpvjYVTgFH/UklDgypzZ8oKb8HRZkkCvhbc9tk28uW8lDdN3ohG5fcWiw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280029; c=relaxed/simple;
-	bh=7eOYym6I7H8HHs2QY52x9mBtw9X9NrH9Lscp9i8ZlT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5jbQbPsbxSuUUpZRZ1upw4CDCTZXqYgfchvUnfO7Oe7A6uoTsXOC5pT2SnHhYnCIwNQA7Zp25RHNGF4iiWUquppLFROFDkHvNB9DRf1wGYl4PdDQ1jFVK3CyXzTVtyyWGTmlqY1YhcokUbGh9WVpqwiynGx+CUem7MPqo/4Ib8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bW2jz4364z9svm;
-	Mon, 30 Jun 2025 12:40:23 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	mcgrof@kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Cc: Baokun Li <libaokun1@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	kernel@pankajraghav.com,
-	Zhang Yi <yi.zhang@huawei.com>,
-	linux-fsdevel@vger.kernel.org,
-	gost.dev@samsung.com,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v2] fs/libfs: don't assume blocksize <= PAGE_SIZE in generic_check_addressable
-Date: Mon, 30 Jun 2025 12:40:18 +0200
-Message-ID: <20250630104018.213985-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1751280035; c=relaxed/simple;
+	bh=3t3k7Ct3a0HRwaDOGed+FMIfYKuOY32Y2DX1uImXJSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=URDeCJKPnl+utj/7nCNUhar0Z00fqUkDd6TIIo5tSxzPllTB9b7xSN5rYtdfocsVKsoUmf8iiS2hAJ/Be4VHY5W76gOgYirq82kvyOzrfYKIWTclLrrAZXd9Th2mUnwv7qRoKr9HFD2Hu0EFoeva/KP27C+XA3+WwQaYI6seGkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=e7RfufcJ; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e7RfufcJ"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55UAeSM22595858;
+	Mon, 30 Jun 2025 05:40:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751280028;
+	bh=Or3Fb/WF8EJOLX3hfbXxuApssXPXU/JG/S4dM81jnbs=;
+	h=Date:Subject:To:References:From:In-Reply-To;
+	b=e7RfufcJ/YrCholWO71bIGFe2swBBPtYrdBAHh9Uag8WSD69ZH9FSSaU4WiD+y4Er
+	 4J6szct9oFfmNo1La4D5KXIlsAieTOFb9Sj+VDGx9c/K++81ANtIt+HrM4yt+vCixd
+	 vBq/fgmjZXtP0tV3XCtkk7Yx9VMDFxiktvtm/aEI=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55UAeSFx1816172
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 30 Jun 2025 05:40:28 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 30
+ Jun 2025 05:40:27 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Mon, 30 Jun 2025 05:40:27 -0500
+Received: from [172.24.227.241] (santhoshkumark.dhcp.ti.com [172.24.227.241])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55UAePCl3467470;
+	Mon, 30 Jun 2025 05:40:26 -0500
+Message-ID: <dc6a3c05-27cf-4e72-aacd-0d374610ae60@ti.com>
+Date: Mon, 30 Jun 2025 16:10:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] spi: cadence-quadspi: fix cleanup of rx_chan on
+ failure paths
+To: <khairul.anuar.romli@altera.com>, Mark Brown <broonie@kernel.org>,
+        "open
+ list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        open list
+	<linux-kernel@vger.kernel.org>,
+        Matthew Gerlach <matthew.gerlach@altera.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+References: <cover.1751274389.git.khairul.anuar.romli@altera.com>
+ <89765a2b94f047ded4f14babaefb7ef92ba07cb2.1751274389.git.khairul.anuar.romli@altera.com>
+Content-Language: en-US
+From: Santhosh Kumar K <s-k6@ti.com>
+In-Reply-To: <89765a2b94f047ded4f14babaefb7ef92ba07cb2.1751274389.git.khairul.anuar.romli@altera.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Since [1], it is possible for filesystems to have blocksize > PAGE_SIZE
-of the system.
+Hello Khairul,
 
-Remove the assumption and make the check generic for all blocksizes in
-generic_check_addressable().
+On 30/06/25 14:41, khairul.anuar.romli@altera.com wrote:
+> From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+> 
+> Remove incorrect checks on cqspi->rx_chan that cause driver breakage
+> during failure cleanup. Ensure proper resource freeing on the success
+> path when operating in cqspi->use_direct_mode, preventing leaks and
+> improving stability.
+> 
+> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
 
-[1] https://lore.kernel.org/linux-xfs/20240822135018.1931258-1-kernel@pankajraghav.com/
+Please add 'Fixes' tag and add stable in cc.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
-Changes since v1:
-- Removed the unnecessary parantheses.
-- Added RVB from Jan Kara (Thanks).
+Regards,
+Santhosh.
 
- fs/libfs.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 4d1862f589e8..f99ecc300647 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -1584,13 +1584,17 @@ EXPORT_SYMBOL(generic_file_fsync);
- int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
- {
- 	u64 last_fs_block = num_blocks - 1;
--	u64 last_fs_page =
--		last_fs_block >> (PAGE_SHIFT - blocksize_bits);
-+	u64 last_fs_page, max_bytes;
-+
-+	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
-+		return -EFBIG;
-+
-+	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
- 
- 	if (unlikely(num_blocks == 0))
- 		return 0;
- 
--	if ((blocksize_bits < 9) || (blocksize_bits > PAGE_SHIFT))
-+	if (blocksize_bits < 9)
- 		return -EINVAL;
- 
- 	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
-
-base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
--- 
-2.49.0
-
+> ---
+>   drivers/spi/spi-cadence-quadspi.c | 5 -----
+>   1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+> index aa1932ba17cb..d3c78f59b22c 100644
+> --- a/drivers/spi/spi-cadence-quadspi.c
+> +++ b/drivers/spi/spi-cadence-quadspi.c
+> @@ -1960,11 +1960,6 @@ static int cqspi_probe(struct platform_device *pdev)
+>   
+>   	pm_runtime_enable(dev);
+>   
+> -	if (cqspi->rx_chan) {
+> -		dma_release_channel(cqspi->rx_chan);
+> -		goto probe_setup_failed;
+> -	}
+> -
+>   	pm_runtime_set_autosuspend_delay(dev, CQSPI_AUTOSUSPEND_TIMEOUT);
+>   	pm_runtime_use_autosuspend(dev);
+>   	pm_runtime_get_noresume(dev);
