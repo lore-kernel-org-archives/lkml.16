@@ -1,81 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4052723C39A;
-	Mon, 30 Jun 2025 09:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E99244664;
+	Mon, 30 Jun 2025 09:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275182; cv=none; b=dfT/RCBD/4G9enBKaHS3Ak+TnJZxsCW+UDZrBI0sqgoEhKXG3Y8i1qU31+R5sjEpU0oBeYr9mtvKXIx02z3sQRVjD+kCfbm7S2DmHthvkyRykF+5dtdBkVh2F0yqqGzfc/u19k0iTuHdWk25+a+dBi0FxvA8uf1kPO+VNn9gSQc=
+	t=1751275186; cv=none; b=EspCC6mlUoBLRgzFeNzoebx8os9v2z2VwrxX97Df7lHUIcTHczINsEQoEHnjsiBL6iUAmqkOhiVT2JbNoLhA+JfwcRIVWlpB6UxfQkVs2pLO8tLiubBxXSvjWnJs1X5dLeQK6I9mWOZeWO1PyhyxgkeWt9vtsnN3NqRrgTz354U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275182; c=relaxed/simple;
-	bh=OaGFhytglZ8f3wf/FalzVY9HkEox8Uvz34SHduA0e50=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Tj6LFx10bUK6+kaZFVMpmyTgQrsfJ3yeLs817lO+CrboQCyrBG8+ms0sDAu2M60PdccbpkNz2xc0FRam7cxJp2BkjWvsKxRRLA3FQfof1e/BYIBSaJ9OfRyG7VWDO6P83+eXx+4ppLsNBJK+nG9T0vZG0EChuyIWjlF5s5m9oq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANBWgHI/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751275186; c=relaxed/simple;
+	bh=HzOC8ReOOr/Gp7Sb4wbuD5vyKncI41XqdTEB56Jw3Y0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=DyFfvDpKpm4TAlRsfK466qOMW7LRuilIPBIWtIXtGM0iypSG6GPU3fgU3zU3+Zbn20vYuCTLumsGOCDbZH5snBWRyeiRt0NhY/JsMceHxDunSWUlgP3KR/yqordQPQ9om949z1ZNfqCo3CwRVMXHS13qfzZ3zmsVBqwcDWN+ozw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rv8FQoEW; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANBWgHI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36D5C4CEE3;
-	Mon, 30 Jun 2025 09:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751275181;
-	bh=OaGFhytglZ8f3wf/FalzVY9HkEox8Uvz34SHduA0e50=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ANBWgHI/r4OUflplYDYlTGpp+uLCHb0M5ibpUjRjWyK3PC8Dho7ZWoRL8XREVYBhx
-	 5dUsV4im/PLWLzFrwIHQaM4qBFDf+y2gGFFg6ISuY4PJZoOuT+6f9q3T03o/JdfZI3
-	 0zW9WJvP7laH2H58xyrTk2/dQg3a/KKP0pIfL2iNb07xmlLjrPOB1vdBlgRVW90eHS
-	 /NzQuPKaM2FcpenHmIGvyEVEAzvQ07bsUtie8Gwf5VZKkdWc0m2woMyY7dxxsU9TBi
-	 Vi6gAAa8njc754mFV1bwtXyfmJdbI160t8MJTwKLYdtL6fZI507yi1563QbeyUE4J5
-	 f2jlMXReBdWJw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DFC383BA00;
-	Mon, 30 Jun 2025 09:20:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rv8FQoEW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751275185; x=1782811185;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=HzOC8ReOOr/Gp7Sb4wbuD5vyKncI41XqdTEB56Jw3Y0=;
+  b=Rv8FQoEW95gOuW8aqbEna2CL+30pukPBolGRDedIPgV/s09fCrpOgvEW
+   /wA9jmOiRc5tbeeQsMTY7Qomd97A5LWbNqNJcE/sH5q4Zdc0A37xbrQNa
+   vRqmZCqJkA8WihTNDQYm6uTYbyw4n7eNTePQVrfJ/nylG84SDaF/lT7I7
+   qGwJGrHBoa1zussRGdBd3jhlsZKZxzzO1nuACrDbScxyBeykq/CaZxBPX
+   JSlPa3MCSynvvdOoi/pytSNaJv8cSsKYOXXFSvat2jS4CpR8QfERQPkER
+   575MkpSkZuy5l7qg0hs5nhAyOtIRCP5+LaxyqKT3FVy5XyaU1U8sgufLa
+   g==;
+X-CSE-ConnectionGUID: sG/ZPK91StOKoFMFq56wFQ==
+X-CSE-MsgGUID: 2wtQJRpYQ7udwK97riqSzA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57300481"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="57300481"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:44 -0700
+X-CSE-ConnectionGUID: rqR/kIFiR+CdjSPBv0dkFQ==
+X-CSE-MsgGUID: uPkVVIL+QrSDjXHLO1XxXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153499264"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Mario Limonciello <mario.limonciello@amd.com>, 
+ Divya Bharathi <divya.bharathi@dell.com>, Armin Wolf <W_Armin@gmx.de>, 
+ Linus Torvalds <torvalds@linux-foundation.org>, 
+ Kurt Borja <kuurtb@gmail.com>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>
+In-Reply-To: <20250630-sysman-fix-v2-1-d185674d0a30@gmail.com>
+References: <20250630-sysman-fix-v2-1-d185674d0a30@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: dell-wmi-sysman: Fix WMI data block
+ retrieval in sysfs callbacks
+Message-Id: <175127517470.2486.17723027460891485584.b4-ty@linux.intel.com>
+Date: Mon, 30 Jun 2025 12:19:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] net/mlx5e: Fix error handling in RQ memory
- model
- registration
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175127520701.3307680.6593592387964609243.git-patchwork-notify@kernel.org>
-Date: Mon, 30 Jun 2025 09:20:07 +0000
-References: <20250626053003.45807-1-wangfushuai@baidu.com>
-In-Reply-To: <20250626053003.45807-1-wangfushuai@baidu.com>
-To: Fushuai Wang <wangfushuai@baidu.com>
-Cc: saeedm@nvidia.com, tariqt@nvidia.com, leon@kernel.org,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- yanjun.zhu@linux.dev, dtatulea@nvidia.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Hello:
+On Mon, 30 Jun 2025 00:43:12 -0300, Kurt Borja wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 26 Jun 2025 13:30:03 +0800 you wrote:
-> Currently when xdp_rxq_info_reg_mem_model() fails in the XSK path, the
-> error handling incorrectly jumps to err_destroy_page_pool. While this
-> may not cause errors, we should make it jump to the correct location.
+> After retrieving WMI data blocks in sysfs callbacks, check for the
+> validity of them before dereferencing their content.
 > 
-> Signed-off-by: Fushuai Wang <wangfushuai@baidu.com>
-> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-> Acked-by: Dragos Tatulea <dtatulea@nvidia.com>
 > 
-> [...]
 
-Here is the summary with links:
-  - [net-next,v2] net/mlx5e: Fix error handling in RQ memory model registration
-    https://git.kernel.org/netdev/net-next/c/7012d4f3c7a8
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
+The list of commits applied:
+[1/1] platform/x86: dell-wmi-sysman: Fix WMI data block retrieval in sysfs callbacks
+      commit: eb617dd25ca176f3fee24f873f0fd60010773d67
+
+--
+ i.
 
