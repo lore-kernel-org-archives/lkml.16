@@ -1,122 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7592022068D;
-	Mon, 30 Jun 2025 20:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E25A1E32D6;
+	Mon, 30 Jun 2025 20:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751316770; cv=none; b=ULhSMpoORfw69UwS0Ta2nEggbIYuYY3q48+m7ZTqn6gdI2SiurhXnC8NTN4s4v0UETiKfysCBnNJBwx9dHXkERvdrSeGkSSMkFz0eVko4tSsSPaerJE31TyqWtiribpJPTVPU2OiaUZ4IWQHXamIY9ylfVFujFZGfocYdd0Pscc=
+	t=1751316921; cv=none; b=Biyf3Se+CUlindablECHSqbMT2KGDsECCnQwgPA9CU4n2qjknnCk9R1M3x7+jOD25KMDM4gbtXBbQyEzMk2ft/utx6LyVu8IXFv8kTbYceFijGlIdYvc5SrpkMh76N4pCEtU0kvjacFZsvXUSdE2xLS5u7cqMU7vxn1MFoGjizY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751316770; c=relaxed/simple;
-	bh=HxNS8mhOfCb2u6BZlip3RJTcxTguswhUtDe5juU/JBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TuU8/iIYP5ljAmPR2tmX0mWv4ih0WsNrz/25ePPPJ4gVHKKZSPffolsmBDYks5DWe5hEnK7FQo2lgJ+rzNw+WhOybaCJPIg9tXbwp1pB8eDFx3IlrmJqdTSLkxvfqEZo1H37/8xilCEO91P0Yq5d+1r64gwLrt4D9FKeBfIUeqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miH6P3n5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751316921; c=relaxed/simple;
+	bh=YAy+RYbvkjFNXj6qRy0vOgUuY9yZY7ywM3hdS46BqJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FjH7E5lPkKfIvm8mQNXRwP3M1o7UgR12EpXibu7D0jRqtqRAN11ktWhnyQyuL5lse06Uc8JgC2feBkGiiuGn7OUQP1g2kBF6InyrozN+mu3kqN98DWyBkhArJrRXGS/xo8DfAbEFbQT+q6nHF3suHC/UjL7kdTWlJt9Us8Ge1JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dCLipoCC; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miH6P3n5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A063C4CEE3;
-	Mon, 30 Jun 2025 20:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751316770;
-	bh=HxNS8mhOfCb2u6BZlip3RJTcxTguswhUtDe5juU/JBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=miH6P3n5QAkKFfbrZCDoFYqmhti01pJkS6lvdQerD1SnIftpFt/Qf/xe7XbAoFGlg
-	 EjJqkwhJWK2x5MmXkwFLgNxI+VC1v3BfmWHz1aY+sFVcw0J6DtJ4RMRXuauuedNK+I
-	 1KbuO53vw1Nx0Ubl0xUWpAynhUCcglsRdTSBwMyZyXGCJc8/j4GJ2qS1CLFWyVbuPR
-	 wQWkRqUzkd126bIx4FdFve76YSEhhMi28G8F/43AycBB551pfKinVpjyVlX1/EU48J
-	 tYQcgJCtEYl/pqDmc5jdKGZAi7yOFC2VO3pnc3aJgpEf0cnF1JuGRqSJZgOcDg1LHI
-	 Mh7Eoj/UXwT2Q==
-Date: Mon, 30 Jun 2025 13:52:48 -0700
-From: Drew Fustini <fustini@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCLipoCC"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a6f2c6715fso2813008f8f.1;
+        Mon, 30 Jun 2025 13:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751316918; x=1751921718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zd3aDNyOIB9wHWaZVV19V4mFjMaaumQH2H9cWTuStEg=;
+        b=dCLipoCCFPg1Ui7RhXIp8nxB2Nc6yHRJnKFkcKs2LG9Fzso4g/f0z9tVCN2v5k+/BR
+         FhWIZuAkP1u5MIvW3JUMSjYc9r/o0NQT/OuXEO7s27OUKVP4RUJx0Zz1koBz4X92Y78s
+         ogMv2J3zt4UXeTdkVyrc/UK1myIJ+f/1at29D/XZjhmXTXCb/9fRFTSbUjqQGDpjPnH2
+         tTLvxpW6GK6/SaV8tHgyRVKuUnAzhMeeBUp+9WVBj9Evn5Xp/kd2ebNBIx+aiyjBwT7m
+         6cOQms4ckiQw95taPeq2d17M5r6WAJUFGlT3VAkX9Ogl22NHDFvwuc+L4/aXu09WKiam
+         GF+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751316918; x=1751921718;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zd3aDNyOIB9wHWaZVV19V4mFjMaaumQH2H9cWTuStEg=;
+        b=JpmikVxol+8zASabby/4ED4dr/4zsGnMotklFp5//CHVaZo+fMxpamLBugc8WIKwQq
+         dySWmHA2MsX27JjctCjR7O6oo7TdGRUAVx6kqqfd6bBHDFhzM+mmjIPw/gSt2KtN+l4o
+         0kP7rkDzBjHzrISt/qlEhJnIAROKh3HyRZRd1mVpn+Qhh8vA5RLQmMUDV4+KaiLuY09+
+         IACGHagwWnidy6tvfTXR9+w0HlN10hY4GpOyD7jMKf9XXCAFnDLC6dExdcGNTm/AOD1c
+         dnFzopqjdeq7l/zXqP2aOy1D5O2SbUl3e4XU2zBfHmIuiJRD/Rq35i5Y9lp9mko2lkwF
+         0DUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWE5KLj2xFVDQbGV0UThTDwAAsGSW6Su331DbsL2ksFvjq3tu95QpgB/CBK8dGA5OBKixkxzJRy7mdRCSb6@vger.kernel.org, AJvYcCWJXv8fb+xo8gQIAvzWte2ZdXbevskMU6jVuyYh03JBPAN5V7El2ycbM1850P6Myxz95vnPZPxu5+9t@vger.kernel.org, AJvYcCXWn0jGpjG8ddrjtmfJYh30KuANsstvxppKngdRr9w3eigxFWViansFqCh34JNnR4ByltyMI23vKS2kcN8tdg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf5Z29PaqrYRRRiimYLckjvrfOmOpfG/0SbMmU9jP4AGZpw4JS
+	C4EM+c1q4u5O1BAJnOFHSaQBKhhKhlF4Xn/A/C6ufND0hevZpaVGSVw=
+X-Gm-Gg: ASbGncunvgIXfMI2gTsEvTiW/vHKfOKepDnDJPzWL0VsullZ74YpZbgIqu8U5GaZ4fd
+	HFm3Ztjo8XjyYZNd7iYRUehUPVsjOTcRJgHBd7Tx9G9syrTG0FUft8WoPut1R1UMyIsiHsAUERa
+	tPL/2Ffd/WGl3oA1NHrxWDBk2oZggKwZy/BLSOlraFb0rl+fIjnXFZtwI+V3WoFx2T1kuerLzvM
+	zmq+5vx/b3vhL+6Nt60UmBVLuy+380MJjQASmTbQRjxJYGu9NKVuhlfdH0cDCVgBp+MmRjZ/m+8
+	DV2u0jdxCxhevpgXbe6wNKxVuqIqm0n6ch4PVSwB2kT47XdimYtEf7NDBWwjERiisKP5Hi1GCEB
+	8DDr9Dw==
+X-Google-Smtp-Source: AGHT+IFrE9HwofGcor97Y0FzWUP+kIRDDKBiMV8P13HhAHJMChp80FEEZPsKhaYmNfzTzCdBYzAEwA==
+X-Received: by 2002:a5d:5e8f:0:b0:3a5:21c8:af31 with SMTP id ffacd0b85a97d-3a8f482bc23mr13759664f8f.16.1751316917626;
+        Mon, 30 Jun 2025 13:55:17 -0700 (PDT)
+Received: from alex-9345.localdomain ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec6aesm11322814f8f.5.2025.06.30.13.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 13:55:17 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 3/5] riscv: dts: thead: th1520: Add GPU clkgen reset
- to AON node
-Message-ID: <aGL5IBDii4kLXeQH@x1>
-References: <20250626-apr_14_for_sending-v7-0-6593722e0217@samsung.com>
- <CGME20250626093359eucas1p20a737f31b582ef0a2d54082eb172586e@eucas1p2.samsung.com>
- <20250626-apr_14_for_sending-v7-3-6593722e0217@samsung.com>
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Subject: [PATCH v1 1/2] arm64: dts: qcom: x1-crd: Enable HBR3 on external DPs
+Date: Mon, 30 Jun 2025 22:54:10 +0200
+Message-ID: <20250630205514.14022-2-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250630205514.14022-1-alex.vinarskis@gmail.com>
+References: <20250630205514.14022-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626-apr_14_for_sending-v7-3-6593722e0217@samsung.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 11:33:48AM +0200, Michal Wilczynski wrote:
-> Add the "gpu-clkgen" reset property to the AON device tree node. This
-> allows the AON power domain driver to detect the capability to power
-> sequence the GPU and spawn the necessary pwrseq-thead-gpu auxiliary
-> driver for managing the GPU's complex power sequence.
-> 
-> This commit also adds the prerequisite
-> dt-bindings/reset/thead,th1520-reset.h include to make the
-> TH1520_RESET_ID_GPU_CLKGEN available. This include was previously
-> dropped during a conflict resolution [1].
-> 
-> Link: https://lore.kernel.org/all/aAvfn2mq0Ksi8DF2@x1/ [1]
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Drew Fustini <drew@pdp7.com>
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> index 1db0054c4e093400e9dbebcee5fcfa5b5cae6e32..f3f5db0201ab8c0306d4d63072a1573431e51893 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
->  #include <dt-bindings/power/thead,th1520-power.h>
-> +#include <dt-bindings/reset/thead,th1520-reset.h>
->  
->  / {
->  	compatible = "thead,th1520";
-> @@ -234,6 +235,8 @@ aon: aon {
->  		compatible = "thead,th1520-aon";
->  		mboxes = <&mbox_910t 1>;
->  		mbox-names = "aon";
-> +		resets = <&rst TH1520_RESET_ID_GPU_CLKGEN>;
-> +		reset-names = "gpu-clkgen";
->  		#power-domain-cells = <1>;
->  	};
->  
-> 
-> -- 
-> 2.34.1
-> 
+When no link frequencies are set, msm/dp driver defaults to HBR2 speed.
+Explicitly list supported frequencies including HBR3/8.1Gbps for all
+external DisplayPort(s).
 
-I have applied this patch to thead-dt-for-next [1] as commit cf5e81d [2].
+Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/x1-crd.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Thanks,
-Drew
+diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+index c9f0d5052670..bbaa1f34b804 100644
+--- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+@@ -1129,6 +1129,7 @@ &mdss_dp0 {
+ 
+ &mdss_dp0_out {
+ 	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
+ };
+ 
+ &mdss_dp1 {
+@@ -1137,6 +1138,7 @@ &mdss_dp1 {
+ 
+ &mdss_dp1_out {
+ 	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
+ };
+ 
+ &mdss_dp2 {
+@@ -1145,6 +1147,7 @@ &mdss_dp2 {
+ 
+ &mdss_dp2_out {
+ 	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
+ };
+ 
+ &mdss_dp3 {
+-- 
+2.48.1
 
-[1] https://github.com/pdp7/linux/commits/thead-dt-for-next/
-[2] https://github.com/pdp7/linux/commit/cf5e81da0ed7f548367a9687ad73956a8dfb54d1
