@@ -1,103 +1,72 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEF42F3E;
-	Mon, 30 Jun 2025 00:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156BF2F3E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751245024; cv=none; b=YEM5ti06a3lgpwVHH3sTaVaCX5+MGAApahBos/IARLKPpPWFk0BXUda0ArsQPhyulZ7X6K0+Q0LkjZZdXcfGqYniFpIEFhhGhTaqlKSDS0bwJuIVUJCy4zx0CPlFx0h4IxBY5UxKC4fhr8mNsAFZ5AsnkBB8ISeQgGNfBuFY2JY=
+	t=1751245084; cv=none; b=K6fnLnku22w/ZQJYvYkn9MbOXHNainEwznIIeOMfmzVSs+drTa6DD1n9D5W6rSiXUYgADaNVGJLwYgUW9zs/RbuFvWglvBqKomILxE/r/Sdyg9PXRqAM8SwjVYp7XVupbxeGvLpZJBPsa2y7Q0qIhbKOLNubCcLQEJ6kFg6vh1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751245024; c=relaxed/simple;
-	bh=BBZgu+DZlKIok5OQHf9Am2D4MpjqFBtak9lJqy9Sc/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCJaCNVRjTUY1G2qaAPWRRjOIQx3kvSUg3lDq/FzP68uNpcyajtZg0R0CD+QtbGuuCOVYdg3jVX/TDrCLEadhfF7gFowJec5116qjizx/gU3pwvrY6CpE8+DEVqk/7OL4XbKyG2ws/l+B6PuAQ+FeSAtudy9K7hmkGe+XfDyvQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DMrL7He+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DMrL7He+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Lw7n2AxmCEQrsNdm/8VCeVeIc/sX3Qjyz1uVOChL+Oc=; b=DMrL7He+9Pyc1jOJLlB+l2eIrF
-	I1JGY9ikP/A56WYHk/zt0JP0mo+oXcIZCHSN0UJGtRJPYexXZDVMa5oQ9lZsfhpIW7xzpRZioNTwg
-	UblIJA9WGL44qJJ0dzE2r0Qq3j2KQ0Pj3uO/tZgdy8Yphxshrf0ni9yEFbZ+C2/xxckaHccHJgWbz
-	prk7UbIEdtWMqZLeNqfJIlM3RiMLUEpLwF04MzNB02jyID+B5ZHH4Utvv+yhuVMaDX00Gycf8pe4y
-	EJF/7l+FPrrJyXupHr1kCCKaKVazXqgAIoNY5igrKZjaQ+dDDp4MYtSI7LsKSPaUY8xeyhHjoR3+G
-	s/dNfS8A==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW2pQ-00000006hbH-1qSW;
-	Mon, 30 Jun 2025 00:57:01 +0000
-Message-ID: <3bf620bf-8c8a-4aa2-af10-51476bc62dba@infradead.org>
-Date: Sun, 29 Jun 2025 17:56:58 -0700
+	s=arc-20240116; t=1751245084; c=relaxed/simple;
+	bh=JbKnPNSpeB2oeFwxfFliUKPkAAFPMHl8syw2PGMtsQU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=himLSu1HS6Md7t4D9n95ylVbuyrBRlJghOcfsrq/UjX3CHA+oPaeAjB61sXGQ1uD3bWbnZJNA/vnr2pGnnx41gM4OVC8wwmAPxzhsW/E1SJvyOMB6OifTJCW5uzwZOUBbLlizOolbSbEpMt5URGV3pQ5ff5Sz3jZxe9CwcKS5+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df309d9842so49828785ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 17:58:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751245082; x=1751849882;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=56XNd+Ou2Us1vABRYUBcUtjEFc2zUC+FHVej5u5ivXk=;
+        b=JmWnrMbqLn8o7AotHCBcMRUbcL1LhPWn3o0ZytkyLjUGWyhGv56GkpZNToZoMOTUCW
+         KdYaUlVsc73plezhwXLrfsQfR1VHFUHMBZFzmF/e48mL5XOV2xWQS6Ai2CUz1yP53VP8
+         2g5pAfooCibI+JrZISSW6JdkEE58vf2BYEoIqU0NKJ/OF1IsXxJUFwLBo8hOZ9mQhqMr
+         Nc/oPfpVfHU5c1UL04Ub8389a36HGSHkNzyNGkXI3WXPox5+LrJhTxv8aExESsZvd1AX
+         pFN9bC1yq1oXTOH3RGWv1w6tFPEbWE+wTDK1y+8Iikk457wrhaZfPWqoiv1CeBj/hEpO
+         XXew==
+X-Forwarded-Encrypted: i=1; AJvYcCWYUUC44KEoP/4l2lrP5aJzniSaX4DK1hMJyMhN57VOBWwqUW9DCQmJadNSWcg0Aw+9yxPLaU7R3Ocuwt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwdotJPvHOozO0uKa+ZmGJJwZxssfDdpSjAnsw/RB3Gutw9RdK
+	XqmCV/EHISx3GDQDzE/Meo/wz3LKWfu6JSlMAzQnOrY25b1P3yrUamZyweC4YY/5KShqL3xVNht
+	Sk8nwXvZmSebLPR+kbmWOBKS5ER2zT59wrJmoS9qJxqstgaeHotGlDGyD9as=
+X-Google-Smtp-Source: AGHT+IFrLNWH1Ugf12B9eiKogzKis15Moy+Ai73JDpaGszuQ52uZbpnmWbbnc7+cps7hk+PU0AXxrdm/vqBJZHCz/P0g7btZZnqm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/66] kconfig: qconf: show selected choice in the Value
- column
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-4-masahiroy@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-4-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:5e07:b0:3df:4cf8:dd50 with SMTP id
+ e9e14a558f8ab-3df4cf8e050mr80079955ab.19.1751245082278; Sun, 29 Jun 2025
+ 17:58:02 -0700 (PDT)
+Date: Sun, 29 Jun 2025 17:58:02 -0700
+In-Reply-To: <20250630002712.2109-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6861e11a.a70a0220.2f4de1.0024.GAE@google.com>
+Subject: Re: [syzbot] [smc?] KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
+From: syzbot <syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> It is useful to display the selected choice's value in the Value column.
+Reported-by: syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com
+Tested-by: syzbot+827ae2bfb3a3529333e9@syzkaller.appspotmail.com
 
-(instead of 'N', useless)
+Tested on:
 
+commit:         d0b3b7b2 Linux 6.16-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11da6982580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=31697df50f24445
+dashboard link: https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b963d4580000
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Nice, thanks.
-
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  scripts/kconfig/qconf.cc | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> index 546738a5c3b1..68640e507ec4 100644
-> --- a/scripts/kconfig/qconf.cc
-> +++ b/scripts/kconfig/qconf.cc
-> @@ -127,6 +127,9 @@ void ConfigItem::updateMenu(void)
->  		goto set_prompt;
->  	case M_CHOICE:
->  		setIcon(promptColIdx, QIcon());
-> +		sym = sym_calc_choice(menu);
-> +		if (sym)
-> +			setText(dataColIdx, sym->name);
->  		goto set_prompt;
->  	default:
->  		;
-> @@ -189,7 +192,11 @@ void ConfigItem::testUpdateMenu(void)
->  	if (!menu)
->  		return;
->  
-> -	sym_calc_value(menu->sym);
-> +	if (menu->type == M_CHOICE)
-> +		sym_calc_choice(menu);
-> +	else
-> +		sym_calc_value(menu->sym);
-> +
->  	if (menu->flags & MENU_CHANGED) {
->  		/* the menu entry changed, so update all list items */
->  		menu->flags &= ~MENU_CHANGED;
-
--- 
-~Randy
+Note: testing is done by a robot and is best-effort only.
