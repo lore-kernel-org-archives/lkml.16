@@ -1,74 +1,75 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F073D6F
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A26137932
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751256940; cv=none; b=RZbbBVeuwts2wNqo/F4kgrqMIM2onGicoPsr6FPBWRxkNJZwkqovM68a7UH1m+HBHWJ+CM5gulVxrvGMfhJDZ3HgF7wXHoIF4w33/OVSNbBVm/2/7Q/eOfioYC7YTAYpU41OD8lKGsUEEkHhvfVTq0O1yHfucQEBaLIEw172UTI=
+	t=1751256942; cv=none; b=B9BroY6aZABKPHmm2/MeFLK/nOhtNaPw2yCD0RMJQQFgGkcA7InDEdqFcs+9od+ZWKbHSqLzjtYgNRxXhBDbJPQuud7el5zEwY4IM0bD7YHcnSO1ZS3GpHFBPiFmcCJcd+ajwQoKfoSXUc9aNhJnuz8vY+Bh3gjHfl95pWzK0sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751256940; c=relaxed/simple;
-	bh=dpAMUqYYxK35rw+dfbYr6B3/oW/qsvP66eDQqd4x29c=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DMDjalKsFq1gBX5KZBuY1vuH+p8zu7004m1hJyt3LvSq8neWaOqm+fgX0SMeesmrwauiwnBZhEN7U0VNcHycBwiu5V+HQGw8fzKWBldm3K54UmeNi8g4wB5r9DTsHB4DbPXujtYSXw92/ecL577GZo0dp3aa4Gwczh18ZN4IE5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AaqFnwHm; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1751256942; c=relaxed/simple;
+	bh=gId2u+fplwARN3H2Gx3Mt3u/2TqgZ8s8QJu0KktFhqs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R+W+q5KwWguibFhUQYXaz+s+VHOVNa3kKyhY3LrLHSLJcvl4vmTykgTLMXHi4qEmlJ/CwcBlaDTKqsQnUatpxTKyYUq/wLxFUZSU/dMx3bnuRqkdWPA1ygoC/vKVxnMCfElvWxhjcekGkROIwQAJVfwxIr3O9V0NWJib/hcOEPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P7fj5ShU; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AaqFnwHm"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P7fj5ShU"
 Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TNs6on018627
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:37 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TMqkIX009065
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=qGzcms3g66ClBMUbAsGHzO
-	LkXJSGY0Hq5IfiKugct0Q=; b=AaqFnwHm6yBQRurkcdNN6iPNLtySSvS+eMRbGb
-	MQ4XVxHDG2f6Jb1qAhTo717ER5E1K8svP9YDRjmO5b74VP5lhRv7Q01SZ8Gwr8lC
-	ZKWujMFlnf/WKJZ8z7ARj/yfVIP1V3IvstFRFVp3vQ6wfbAQlRl6ZvTGGnwKRJYt
-	mLkQZl/M/Z2FLDHcKc3UL+DEsYoDIDYq4dn0B9Occ29t2fMT0XN87RZ5gZFUKOLB
-	g/inyzDTpzCswWfmbR+PpaGBnbXx65/kIxurV2CTeP9pt+mjMuugzk/XAd8ghkWj
-	nytkAcr8p/r4c00o4tpoKN1H/2rjFxUhNHBx2sJq5lAImWlA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9jpu6dt-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UdTye510OYDYG62A1JsNtJ9LFBEkO+WKF1r4hc3opg0=; b=P7fj5ShUWJgFqBXy
+	DgGTo17iR+d6NhJrBlx99DEI25Zd6h0Vrfheqbgkc/YqkCtsXV2SJf0jkdiCLRam
+	V6NYPtVEYge2UnfWHBP7ThZzPrej7HuhH8fceFToBn62UOgeasMeRCAaprUlmWkv
+	/BD6iSmJp7Zkt08hWkAarBNwus5KnqScnOOu6EtN26Ue9g9AhCJAm7LE0S+9OFT4
+	oPdFFJ348mKY4HZEQBI2aVH4jEMcllmzVL6e3L0p44B8Pne6yx1rVGVjXgh7sURN
+	o/DLVhGem3f7AwRM5rO0j9tJ0EDPLBHN1grN5WknzhQRePUUtHq+e5/JaqZeV0LG
+	8ckh9Q==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j9jpu6du-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:37 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23507382e64so13421505ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:15:37 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:15:39 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235e3f93687so25470815ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 21:15:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751256937; x=1751861737;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qGzcms3g66ClBMUbAsGHzOLkXJSGY0Hq5IfiKugct0Q=;
-        b=f7DDY/wsWzPQ5Z1WltLpQB3HetV5KH4C5ZnjXJze9KeUztoz0byYe5MgvDFeNgYluO
-         GQnZSCLxTGbZF3A7BIbFUDPoqz0wWEj2qkxRpewsj2QJtFHWyMA9i6ypl1RtgK6Rs28z
-         w8atarKogzTRbUk3IDs5KiXTUfaWsuTfkok5K/4ybz1rQb5m/qH8OO4BjFz1aiauAuci
-         FxJvo/lgDMwWrA87wEfF6anrAbgRyFzX/XxB3IKwqS40Ul1zLcAnb7AVLngOvrLZ+IeF
-         uX4pB10Dh5cR8SADX8Zl1Oyqu9ar7eWbOp+Kvbjujmxt7x5R1qlWR8LYJe32j0a3avdE
-         wzGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUscOjwP01mzpo5OTuHivou/U7UBFvdnnUIUSHdvqyWVH4yX2TRKbyk/wmxUk28JzmVPSsq/z59xiYJatE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziolpG9JCBb6Tf+IImLfsIz9ITiBc9Et/LXE0E2kBequaGMuFG
-	2do+52CH+ZNZStU6xDcd9CeZL1ccLNaGMrTgu8Gc/N8nBcKwZ8MIkpxpmqK2odUuqcMauJNT/iH
-	33HbEXsUA8zw6rA+l8s1T0S/jkmX73Uz8m1bNlbVccStF1OwkptJFk8VXhAKmB3gLQYg=
-X-Gm-Gg: ASbGncvwHrdQALNeYC1LRTgB7PZ3MCTm9co0JRn7aus2cS5FyT22Jw/A1vtgwDngs9A
-	DSldrxEkNAe/XsR9fLE2zUeSHrEmdCC8pJNReJhygUlpg/XxMhK8QmtKG20ATF9oJ5OUbGdGKMo
-	wigp5QdKTImam8jR/Rl2kKHvVw528wxMeftAChp+sA9a5r5hEHhrZpY+QF4eT4GBPEhR29C0Trv
-	ETNzmWztxxT2eOtoz5pVSZ7fChAq63LLk77JPKUwXreo9LGtPsYqcquqGXuHG1wf8k5gvlrIupM
-	cvHj8ItoCxiSWCRnWodqp88sjam+Dh+qdKcNNa+Q5yMM8dt0+5ZldtoXdRPi9+t/4H/xquWr0L7
-	FxQZLPK7uANDeYll57LsoSTzxOT7UBzhuFbyjnS1g7Xa1gUw=
-X-Received: by 2002:a17:902:d2cf:b0:235:be0:db6b with SMTP id d9443c01a7336-23ac46072cdmr186350285ad.45.1751256936645;
-        Sun, 29 Jun 2025 21:15:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHqeRKfxDY/iKMYr5DMAalZ4UACgTDBd3pi1SPietxc+zp47vSCTe+s2PWEi7FrhvcHcloqnQ==
-X-Received: by 2002:a17:902:d2cf:b0:235:be0:db6b with SMTP id d9443c01a7336-23ac46072cdmr186349995ad.45.1751256936247;
-        Sun, 29 Jun 2025 21:15:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751256939; x=1751861739;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UdTye510OYDYG62A1JsNtJ9LFBEkO+WKF1r4hc3opg0=;
+        b=rbwqoByZo1ZehkbQv/8kuvAlImvE/cjUnyzKaY9K9p4MVuOcotS5V9/jZbE9d4F9mJ
+         BkyWb4uNtbyUgCTxEGgXhUVVg7Vy+oTu4wKO+mbio0jVaq8wnOTnm4mL8QlfJBf+KBAy
+         w1ISaxAYt6uOOKzA7hDk3nvEbMFJeP0TIVJv8xRmw/a+5lq9WCOIyWU4goSr/OJbSfEf
+         pccj34Wp25HKkREmiP1wjARdDlERHZUoMHmcOM47Kwhw9ARzWUHBwkld9FVhEJOZVyQ7
+         TKf8X44Lni6Wc/t5joIZ/x3TVSS5OXi8HLtCfluUJfgPbpQGpCb8+W5zepNayavdIf3E
+         RJqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXoLh3D4JNFHaPeGotr5aD8a9lgBCWZB0RdbRNoQzfaIsZkuQCs1L6qIxx0XdYwfGUPAMVZlCsnzCbhbTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzTohzqloxLXDJKZNOm6M2+JbG/C6aiEfDBL+HI4AzbmIYcdm5
+	liQ8h4U5UNStXCoE7PO26aX7cT9dc4Wd8+M+3ikAPujQXNFfYGuV7/VzHQubZrJ8RThhJT9Cn5S
+	9dMDyI5zIVLhNPwWJZo+vG/cXZeGY5ZBzFDWcPf4hZg276jZB8o8gtmCc7HbeiEkkJc8=
+X-Gm-Gg: ASbGncsJ21tA1Ywo6fOgtORbaSClMo0oEENWZFfcHT/asxXizdzdb8I2THbp9d8MLhI
+	6NTRvJqa3xcJABt0ZXYxRqmF4NSd/byiw82RB97WFFadoTQEKMQSkha0bwpQH/xIYiCywIpSCV6
+	SGin02oT8cCFUkUTFnCiOBSf/bc8ntKbHeh3A876OyVBdH+JvxgrWluvyh+5ZJVI8d7OksZA/3o
+	m9zJsA6yJNxb//heb5iwysWz0wzanJXTp+YNd3NDLh0iyKiX4Wup32cwjfZTbgDObQTaUjreouE
+	bnI9hS469qs9FbIvl3XN2CDJ4ED+MF7QVvlUf6HSa8nAdhzWT8mP6axvEo1+EIUI1s7KpZvIlM+
+	IqoxHIoXrLy1najXR8P+cwHeGEjo+NfLdLTmedZKxCdVOJ/s=
+X-Received: by 2002:a17:902:ea0e:b0:21f:617a:f1b2 with SMTP id d9443c01a7336-23ac46580damr170504895ad.46.1751256938709;
+        Sun, 29 Jun 2025 21:15:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9G96ApR0eBbaENnYeG1mS8KI5XaYp1Xqu3Vniu/Rg1UqzEY9srtAkAlTndfRFWKHOFEgZNA==
+X-Received: by 2002:a17:902:ea0e:b0:21f:617a:f1b2 with SMTP id d9443c01a7336-23ac46580damr170504535ad.46.1751256938319;
+        Sun, 29 Jun 2025 21:15:38 -0700 (PDT)
 Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f069csm69366955ad.59.2025.06.29.21.15.34
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f069csm69366955ad.59.2025.06.29.21.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 21:15:35 -0700 (PDT)
+        Sun, 29 Jun 2025 21:15:38 -0700 (PDT)
 From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Subject: [PATCH ath-next 0/2] wifi: ath12k: add support for Tx Power
- insertion
-Date: Mon, 30 Jun 2025 09:45:14 +0530
-Message-Id: <20250630-support-for-tx-power-insertion-v1-0-77f45484d5bb@oss.qualcomm.com>
+Date: Mon, 30 Jun 2025 09:45:15 +0530
+Subject: [PATCH ath-next 1/2] wifi: ath12k: add support for Tx Power
+ insertion in RRM action frame
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,35 +78,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFIPYmgC/yWOSw7CMAxEr1J5jaU0ERVwFcSiog7xJgmOW4Kq3
- p2ULmee5rNCIWEqcOtWEFq4cIpN9KcOnmGML0KemgZr7NkMzmCZc06i6JOgVszpQ4IcW422KDo
- 3eN9fJhqvFlpJFvJc/wN3GDVgpKrwOIjQe26LeuDdDFw0yXe/s23bD5rnrcWeAAAA
-X-Change-ID: 20250630-support-for-tx-power-insertion-336ff18dea92
+Message-Id: <20250630-support-for-tx-power-insertion-v1-1-77f45484d5bb@oss.qualcomm.com>
+References: <20250630-support-for-tx-power-insertion-v1-0-77f45484d5bb@oss.qualcomm.com>
+In-Reply-To: <20250630-support-for-tx-power-insertion-v1-0-77f45484d5bb@oss.qualcomm.com>
 To: Jeff Johnson <jjohnson@kernel.org>
 Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDAzMiBTYWx0ZWRfXyzYDYK2VgRH8
- z16Uo+BTK2tRiCEsBiJGltt81WrJ0kodW3c4nEHG2voocEHXpwx8IlUKI+GW2C43Iuv3E7HsQK/
- JkUyBDrQkpCXyc8yob2bz5fLUlnvoiqYP3W5F1LicohxHozFvR/3z9pfEJyDgx3iwSNzEYGykzh
- gdmkw2igXCjRDf1CWbtiPtnAYo61EQm+ezCy5JnxTlUYqv01DizFYTrMauuun9diZ8CuNqmo0oW
- bwbD5P6jliBq6SUFpS0ZkrJY4JtdsXCVCrLy8UL9T6yR6kLnbLGwCct7DcOTJ0CAnVEtjmapOmO
- dlgAAi80wchCgb1RJ5UYlK60e3u6LQB3efjRyDJMPcsh3hbaV3w6j0XGeB/u47pcsS/DrvuppNF
- MFMsWUvuD2Vftt+BobUzYDidiYG12H8TMYy3kNauWAFnX1nL5oJpMOd72iyIXilu8BpsNDzd
-X-Proofpoint-ORIG-GUID: Si7IpBJakzoW9xUuV6hRMIkCMbdF6VBO
-X-Authority-Analysis: v=2.4 cv=Tq7mhCXh c=1 sm=1 tr=0 ts=68620f69 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=j-PG032osGwMdhHMkLkA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: Si7IpBJakzoW9xUuV6hRMIkCMbdF6VBO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDAzMiBTYWx0ZWRfX7ZGdoMTqBfXS
+ MD4eikA/V1Tjof62GLAhVwJErjsI2UjwzAlYfmq42rVRqGjf4Iy2tk3bM5fW4J+Xiv2Qk/SLTCu
+ ij2/ANXtxpxGAgjHT+D3s86Fd/k2ZVWaPl4ae2rqRI1Do3UbB/l6hYSFCi18FDHZOhFxWsjCle5
+ 5lJol8a0xoziyqybjbjYHKxk/QxTNbjYRarvUmJhuA7QO5aU+V75UDWws3fVQrEEq2mnW6YYL7g
+ OceJR7EdE+tX1r/XcwzOL22bjeRXxNm0b6hmMSoic4q5aVUXjaEkppD0c7zQ0OI6iElKm6ooxdD
+ r6QALe5gPVHoDoYJcscROZXSPuqzOFBmB6MHO5KidarQaKmE4kY+j1PU42I1NnxnRojBbpcgDUv
+ en356PngFE20AxSXjVQLrZnYT2L96QvdjQz/IJiLLBi0uRv31L3GtuCNX84B+SITYHa6JK97
+X-Proofpoint-ORIG-GUID: ESOQXzd4O-dpzkDnEo9dER2nbdlAfYc8
+X-Authority-Analysis: v=2.4 cv=Tq7mhCXh c=1 sm=1 tr=0 ts=68620f6b cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=U2OQ5zEU71Qse62bi5cA:9
+ a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-GUID: ESOQXzd4O-dpzkDnEo9dER2nbdlAfYc8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-27_05,2025-06-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  clxscore=1015 lowpriorityscore=0 adultscore=0 priorityscore=1501
  impostorscore=0 phishscore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=953 classifier=spam authscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 classifier=spam authscore=0
  authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2505280000 definitions=main-2506300032
 
@@ -114,21 +114,219 @@ TPC Report action frame, and in the Radio Measurement Link Measurement
 Report action frame there is a requirement to fill in the current
 and max Tx power of the device in the packet.
 
-Add support to populate these fields in the relevant packets. Advertise
-this capability from the driver using the feature flag
-NL80211_FEATURE_TX_POWER_INSERTION.
+Add support to populate these fields in the relevant packets.
 
 In software-encrypted cases such as PMF, skip insertion since the packets
 are already encrypted and cannot be modified.
 
----
-Aditya Kumar Singh (2):
-      wifi: ath12k: add support for Tx Power insertion in RRM action frame
-      wifi: ath12k: advertise NL80211_FEATURE_TX_POWER_INSERTION support
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
 
- drivers/net/wireless/ath/ath12k/mac.c | 184 ++++++++++++++++++++++++++++++++++
- 1 file changed, 184 insertions(+)
+Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 ---
-base-commit: 391a83d0c8ebb1e476cba73bf4c010af73993111
-change-id: 20250630-support-for-tx-power-insertion-336ff18dea92
+ drivers/net/wireless/ath/ath12k/mac.c | 182 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 71e07c546a2dfce62101770ea54948df5db35060..241f11bd8c4051db4873d1109acbafa1aa9815c2 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -7807,6 +7807,174 @@ static void ath12k_mgmt_over_wmi_tx_purge(struct ath12k *ar)
+ 		ath12k_mgmt_over_wmi_tx_drop(ar, skb);
+ }
+ 
++static int ath12k_mac_mgmt_action_frame_fill_elem_data(struct ath12k_link_vif *arvif,
++						       struct sk_buff *skb)
++{
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++	u8 category, *buf, iv_len, action_code, dialog_token;
++	struct ieee80211_bss_conf *link_conf;
++	struct ieee80211_chanctx_conf *conf;
++	int cur_tx_power, max_tx_power;
++	struct ath12k *ar = arvif->ar;
++	struct ieee80211_hw *hw = ath12k_ar_to_hw(ar);
++	struct wiphy *wiphy = hw->wiphy;
++	struct ath12k_skb_cb *skb_cb;
++	struct ieee80211_mgmt *mgmt;
++	unsigned int remaining_len;
++	bool has_protected;
++
++	lockdep_assert_wiphy(wiphy);
++
++	/* make sure category field is present */
++	if (skb->len < IEEE80211_MIN_ACTION_SIZE)
++		return -EINVAL;
++
++	remaining_len = skb->len - IEEE80211_MIN_ACTION_SIZE;
++	has_protected = ieee80211_has_protected(hdr->frame_control);
++
++	/* In case of SW crypto and hdr protected (PMF), packet will already be encrypted,
++	 * we can't put in data in this case
++	 */
++	if (test_bit(ATH12K_FLAG_HW_CRYPTO_DISABLED, &ar->ab->dev_flags) &&
++	    has_protected)
++		return 0;
++
++	mgmt = (struct ieee80211_mgmt *)hdr;
++	buf = (u8 *)&mgmt->u.action;
++
++	/* FCTL_PROTECTED frame might have extra space added for HDR_LEN. Offset that
++	 * many bytes if it is there
++	 */
++	if (has_protected) {
++		skb_cb = ATH12K_SKB_CB(skb);
++
++		switch (skb_cb->cipher) {
++		/* Cipher suite having flag %IEEE80211_KEY_FLAG_GENERATE_IV_MGMT set in
++		 * key needs to be processed. See ath12k_install_key()
++		 */
++		case WLAN_CIPHER_SUITE_CCMP:
++		case WLAN_CIPHER_SUITE_CCMP_256:
++		case WLAN_CIPHER_SUITE_GCMP:
++		case WLAN_CIPHER_SUITE_GCMP_256:
++			iv_len = IEEE80211_CCMP_HDR_LEN;
++			break;
++		case WLAN_CIPHER_SUITE_TKIP:
++			iv_len = 0;
++			break;
++		default:
++			return -EINVAL;
++		}
++
++		if (remaining_len < iv_len)
++			return -EINVAL;
++
++		buf += iv_len;
++		remaining_len -= iv_len;
++	}
++
++	category = *buf++;
++	/* category code is already taken care in %IEEE80211_MIN_ACTION_SIZE hence
++	 * no need to adjust remaining_len
++	 */
++
++	switch (category) {
++	case WLAN_CATEGORY_RADIO_MEASUREMENT:
++		/* need action code and dialog token */
++		if (remaining_len < 2)
++			return -EINVAL;
++
++		/* Packet Format:
++		 *	Action Code | Dialog Token | Variable Len (based on Action Code)
++		 */
++		action_code = *buf++;
++		dialog_token = *buf++;
++		remaining_len -= 2;
++
++		link_conf = ath12k_mac_get_link_bss_conf(arvif);
++		if (!link_conf) {
++			ath12k_warn(ar->ab,
++				    "failed to get bss link conf for vdev %d in RM handling\n",
++				    arvif->vdev_id);
++			return -EINVAL;
++		}
++
++		conf = wiphy_dereference(wiphy, link_conf->chanctx_conf);
++		if (!conf)
++			return -ENOENT;
++
++		cur_tx_power = link_conf->txpower;
++		max_tx_power = min(conf->def.chan->max_reg_power,
++				   (int)ar->max_tx_power / 2);
++
++		ath12k_mac_op_get_txpower(hw, arvif->ahvif->vif, arvif->link_id,
++					  &cur_tx_power);
++
++		switch (action_code) {
++		case WLAN_RM_ACTION_LINK_MEASUREMENT_REQUEST:
++			/* need variable fields to be present in len */
++			if (remaining_len < 2)
++				return -EINVAL;
++
++			/* Variable length format as defined in IEEE 802.11-2024,
++			 * Figure 9-1187-Link Measurement Request frame Action field
++			 * format.
++			 *	Transmit Power | Max Tx Power
++			 * We fill both of these.
++			 */
++			*buf++ = cur_tx_power;
++			*buf = max_tx_power;
++
++			ath12k_dbg(ar->ab, ATH12K_DBG_MAC,
++				   "RRM: Link Measurement Req dialog_token %u cur_tx_power %d max_tx_power %d\n",
++				   dialog_token, cur_tx_power, max_tx_power);
++			break;
++		case WLAN_RM_ACTION_LINK_MEASUREMENT_REPORT:
++			/* need variable fields to be present in len */
++			if (remaining_len < 3)
++				return -EINVAL;
++
++			/* Variable length format as defined in IEEE 802.11-2024,
++			 * Figure 9-1188-Link Measurement Report frame Action field format
++			 *	TPC Report | Variable Fields
++			 *
++			 * TPC Report Format:
++			 *	Element ID | Len | Tx Power | Link Margin
++			 *
++			 * We fill Tx power in the TPC Report (2nd index)
++			 */
++			buf[2] = cur_tx_power;
++
++			/* TODO: At present, Link margin data is not present so can't
++			 * really fill it now. Once it is available, it can be added
++			 * here
++			 */
++			ath12k_dbg(ar->ab, ATH12K_DBG_MAC,
++				   "RRM: Link Measurement Report dialog_token %u cur_tx_power %d\n",
++				   dialog_token, cur_tx_power);
++			break;
++		default:
++			return -EINVAL;
++		}
++		break;
++	default:
++		/* nothing to fill */
++		return 0;
++	}
++
++	return 0;
++}
++
++static int ath12k_mac_mgmt_frame_fill_elem_data(struct ath12k_link_vif *arvif,
++						struct sk_buff *skb)
++{
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++
++	if (!ieee80211_is_action(hdr->frame_control))
++		return 0;
++
++	return ath12k_mac_mgmt_action_frame_fill_elem_data(arvif, skb);
++}
++
+ static void ath12k_mgmt_over_wmi_tx_work(struct wiphy *wiphy, struct wiphy_work *work)
+ {
+ 	struct ath12k *ar = container_of(work, struct ath12k, wmi_mgmt_tx_work);
+@@ -7838,6 +8006,20 @@ static void ath12k_mgmt_over_wmi_tx_work(struct wiphy *wiphy, struct wiphy_work
+ 
+ 		arvif = wiphy_dereference(ah->hw->wiphy, ahvif->link[skb_cb->link_id]);
+ 		if (ar->allocated_vdev_map & (1LL << arvif->vdev_id)) {
++			/* Fill in the data which is required to be filled by the driver
++			 * For example: Max Tx power in Link Measurement Request/Report
++			 */
++			ret = ath12k_mac_mgmt_frame_fill_elem_data(arvif, skb);
++			if (ret) {
++				/* If we couldn't fill the data due to any reason,
++				 * let's not discard transmitting the packet.
++				 * For example: Software crypto and PMF case
++				 */
++				ath12k_dbg(ar->ab, ATH12K_DBG_MAC,
++					   "Failed to fill the required data for the mgmt packet err %d\n",
++					   ret);
++			}
++
+ 			ret = ath12k_mac_mgmt_tx_wmi(ar, arvif, skb);
+ 			if (ret) {
+ 				ath12k_warn(ar->ab, "failed to tx mgmt frame, vdev_id %d :%d\n",
+
+-- 
+2.34.1
 
