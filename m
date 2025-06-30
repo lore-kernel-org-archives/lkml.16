@@ -1,210 +1,158 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A3D20103A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4109F2A1CA
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324202; cv=none; b=ryYe5+lDzk7g07CUWyTbgyoqkQ/r9BNQ/WjG/yF2jw8g3W+N4reB6qMbdsSjtd08CNNBG9LKYGH9jtygwjmBQLXaBgvXR9zqb10CuFf8SaOSVpFFgSxGycwlFbPE1zGEyoHP66auReDcA3CuVYKWDnxs3/gFCOkZ5OtljhyEJbE=
+	t=1751324471; cv=none; b=C0lxbmzxB+NctqhRXhGF71HTt0daieZLZKB0LJPFJImX2e6kZn9bj2LF1AnOFQo9VBrA0reSwPYH3Vm4fqRRRfICH55Ww8v7c4zyWhuifuprhi9JV1nfCGNL5mzWPqJ3UN7R5iGeKs1g9TeBSK69Z0W/0sGzh5f751+BNTu12Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324202; c=relaxed/simple;
-	bh=/4SjED/6P5QMWfmvfhHEAO9Iq2kipcz5xfs91SBDivM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxDigKz9QMw3fy7cBs96RAJ24G879y6/3uww6ATNrknx5FwFloSJFdELM1ZmJ4G8vn0HUazbVCbtyFbKNOgFCCJIgZ4ntdFF5NPa3HB9x9/hcEEYvhE7MwWg+z3xlqagMCptEAGSlwLLT2VLP+XpskYaJHsG6NxJQKghMVjcGFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EvGRD57w; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751324471; c=relaxed/simple;
+	bh=P+UhLg5UvlsbFtO0lztSNSWbnFv/C84K1aZ/0ZYwqXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hoD3nqEVJi2XrdLsDs7I5qhFRihBcsO9TipCwufc+6lx7bwh6a/vIQirF1kn+5rdgF/y/5jAVFI9Dkq1RWZbgktpCVhIi5VA4KSNe48IMixLCxhFJZJHyA6YruTkYkd7g1RAN1nSkxt6sqw+2ByzsEU+orYj+rGS75b+5ZtgSfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgsmulHZ; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EvGRD57w"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6098ef283f0so4592a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:56:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgsmulHZ"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-315c1b0623cso2623187a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751324199; x=1751928999; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M7R5ktcV401kDH/d+qwKCQlLBLAeHgEGNUeVhuIZukw=;
-        b=EvGRD57w/ey53kIOFLWDBM0umU9fx04FdbKgmVsX9eCMBRLPdJMnfrwLI+lhGch9mF
-         GIk3D5tVYg+Stt10azH50NhyseP1U7EwQeM/OjnZjEt0hx8+4FGUnNOrwhhCSibbHCZo
-         ICLz/10eTMu2yE16AKC2KPMO9Ul33+zNNHUmpbU6bGfZpTnCbAV52vpXksOlxBoT4+zh
-         St6DlYxRuBTTTjKAFvPKn4JPj5K85/rAfXqoLV99T//deR8CAxDJKklmbBvEd1OhE5EQ
-         5EEkqF3N2Obf3Q4830JGn178f532/QisLmBrSQWKQ7F3Z6y+jP3e3FUgiNp0vXrxqkR/
-         ejnA==
+        d=gmail.com; s=20230601; t=1751324469; x=1751929269; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/kcwhdLYH9QDCoM+AkPn/ixYQdxBo2mfkENfGHWF2vw=;
+        b=bgsmulHZrHIszYdPHF3JasT9yFR3RrJiqr34+LT+svnlGN3cOYFhWGn4XdqtktSOsj
+         c/DSBCZ4lJlyatTlTNjgzkfZ57d9tRmLWvbKr1rr/LSJwHzEOSmdL4UQjuMK2C/rvyAv
+         Q+W0ArWfyUGjZUMTWF7eMwXjDh8vCrZyMW2waTLWsDwBsrIdEQ8wO/Vg8BNbm3jKts9X
+         s8wwD5+MuPwNlFrW+F9RVPIGc342aDGO+qQMJgz7PHOncYMGGXkmlVPAnICkYQjGzMJ3
+         Dvn6Ygj572w7RQmRE612p1a9ARHknquMnbZ1bPg7vTrBLBNEv9AmZO39Efnf9rPhxIPN
+         TfJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751324199; x=1751928999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M7R5ktcV401kDH/d+qwKCQlLBLAeHgEGNUeVhuIZukw=;
-        b=d0mvwjebqeR8O0+2nP0VmU/deh/dHol3OWjFCjsZRF9jj9VQIoJy6hSuwuDbq/aJhN
-         PPFiur5eq1gKk7MsqwuJCIVBRVhEjdG9WuwAsL+MuajrckIiUgOkEB15pVfineWZ6M5I
-         7kzUDsS22ROAt2MhciQpto203goHnmmLRIyHp58X+MmGBBdJFZnfzeRRofERVZdR7mDq
-         uphP3dIQlYeQhJOh3JilOU5QJQyxhBnpKV7F8k3zpPVNT1TCoJT6LenvFsFsy36tIWhn
-         IAM+H0w9D5lUQfZ5XbNcoS7+j+V8gwFNHkwUVlp64bEEUIaErDNb+rDJCnNpQq8ikIxl
-         M8GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWB/DTEyjrMnYdTanYDO9tNMGuBY4GA/NjLhchIUlGAic5r6qAyWkJVaWkGZALKjGdfMhL7toAjOX8pNEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmVlQRU62yjmpTtvlgAaBm7MgEvpc9npdX0c70FTor0oLIga6C
-	4CKSGCeKc+RfuA2kG3Pqhfy75yMjxqKLhqHAMKFwFcw6URRb+LwbC00SSkOGVsxkvYfu0NSDyMf
-	KfX0lYR5mgnln6Fml1A1w07j2eUtf5+JIymy6k2YTh5wbT6KVQpGkhkjlvMg=
-X-Gm-Gg: ASbGncukbiC9I7DaB+3ydwMGnn37sVjFSSeRjXfMifbSWndDvNsWU6NK7q9kxCPKauP
-	bPMq8sqmuIdG+b4mSHgX9ZeeZWkgfj3Exq4vCyXviOE04K76DIMoxafavQ/DpzwuIEm2eRrk5FF
-	AmkOErfT2V5jzHPuIzGoH/nxX7YeFLbf+MVqqrBdXfB/M6fpSVRoFGzJSBkKmvKOpNbqxAAwL2F
-	g==
-X-Google-Smtp-Source: AGHT+IHN4Q5qVv7STN2zkQigTwd6ckNtyug0GjwCzMak6D3eFupekwm7Mzvsg61LwR7bzp8dNQGph0F51sdiQBVIGzM=
-X-Received: by 2002:aa7:d887:0:b0:60b:9d04:2cec with SMTP id
- 4fb4d7f45d1cf-60e38a923f8mr2580a12.5.1751324199107; Mon, 30 Jun 2025 15:56:39
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751324469; x=1751929269;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/kcwhdLYH9QDCoM+AkPn/ixYQdxBo2mfkENfGHWF2vw=;
+        b=ZjXtlPqKQJ7n4dKVVmpNrmUaz2bXMf4Bi6O2szuvx8TkO+C4SV3L7UwbX3vH1kGkfX
+         T0z/jun0kXXGQUErJFdKD06A0DRkqnfpgQge99vWXznipfWZRdtwHkt3EELwG5Z7Tk9o
+         YRWepPQdde/TCJQ5Qow4vBNlltcx0P4NZDRXY1Vizt+rDzUy4XKbpn+QGDACHiJ8bH/p
+         3sKhdF8Kywt1mqqY4TOcbyLU3EWoEpgg5t88JUTI4fDzuqKgfv5XrL5vVtjdDXwM1jaR
+         tmRJzrI0xTlY9ErHHdqBLE8KRu+O8Xzk3lRSITOTHpKj7SChW3jR6sVxnhQ857KMehSF
+         fjTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNsJYqkjm2lV/bMKXoA+bNzJPSt56LD9MrtmlR8CehDKo0il/p9Id5bwxIzakBqm1EzHoLYqlaB4wHnPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygwSBji1gUmRP6jgOq0Uqc3ht9UKbB3xbm5LK0mLfNfgvMSZbL
+	BMUi8STsULwNGGsB/dYLYS+URK7qwIm000rO+qoYESYO7zwM7WaJN2Mkaemviw==
+X-Gm-Gg: ASbGncvOKmIPSLbGaa6XLfHqm4/p6j6yvv9clVmjJtNfMrZQSkWrtQXueTOaEUCT3xV
+	RQ3hUdhxnrQugCpo6UR3Z/FaKXZbBy+pfoNNxprwGrpxoL2r6yUQoKYCgMzWKA/dUMv3PXWhxUU
+	eTkk7bXPuDPTkT/ZlVUfNQzhQ0ScL6e1afnnOv3fdMhvKyFXZ2++hWgUjxYBt/GiqaQ9WTHBroM
+	EfhC00LxD82IxcHA3+nXRXk6CJqOErDyQmOInbKvoDghNGIgspDvyMR4RIUHy0zfftbhk7QbLlx
+	hoDCVx4V7hhgvrOwF+lPyrRRP2evS9Z+Ivfmr0JuLtSV0hPQPQIrsz6rvGiz5w==
+X-Google-Smtp-Source: AGHT+IH/YP+qsLsAUJeoIl5Ftc1VJsIoDYRrAzxIfVfqHDzSeIu+OzhjwmD/bR84c4zzsWnFKLgMSw==
+X-Received: by 2002:a17:90b:5348:b0:311:f684:d3cd with SMTP id 98e67ed59e1d1-318c910a649mr27346171a91.12.1751324469281;
+        Mon, 30 Jun 2025 16:01:09 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5441770sm14974126a91.48.2025.06.30.16.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 16:01:08 -0700 (PDT)
+Date: Mon, 30 Jun 2025 16:01:06 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yassine Oudjana <y.oudjana@protonmail.com>, 
+	=?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>, Fabien Parent <fparent@baylibre.com>, Reported-by: 
+	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: [PATCH] MFD: mt6397: do not use generic name for keypad sub-devices
+Message-ID: <r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615144235.1836469-1-chullee@google.com> <20250615144235.1836469-3-chullee@google.com>
- <c8389c1a-16d2-4de4-bc3f-7a5e4ccdbc34@kernel.org>
-In-Reply-To: <c8389c1a-16d2-4de4-bc3f-7a5e4ccdbc34@kernel.org>
-From: Daniel Lee <chullee@google.com>
-Date: Mon, 30 Jun 2025 15:56:28 -0700
-X-Gm-Features: Ac12FXxzXkzy0qePDKtuBAjgWeWGzgYc_s5Wj4IDCSbA2BAhcYaaMIv-ITP6RRU
-Message-ID: <CALBjLoB6+FgWJMqKPN1o1bpeYWB-d-7BWtGbYPo18fcFWZqEkw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] f2fs: use ioprio hint for hot and pinned files
-To: Chao Yu <chao@kernel.org>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Jun 16, 2025 at 5:50=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> On 6/15/25 22:42, Daniel Lee wrote:
-> > Apply the `ioprio_hint` to set `F2FS_IOPRIO_WRITE` priority
-> > on files identified as "hot" at creation and on files that are
-> > pinned via ioctl.
-> >
-> > Signed-off-by: Daniel Lee <chullee@google.com>
-> > ---
-> >  fs/f2fs/f2fs.h  | 19 +++++++++++++++++++
-> >  fs/f2fs/file.c  |  3 +++
-> >  fs/f2fs/namei.c | 11 +++++++----
-> >  3 files changed, 29 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 3e02687c1b58..0c4f52892ff7 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -3440,6 +3440,25 @@ static inline void set_file(struct inode *inode,=
- int type)
-> >       f2fs_mark_inode_dirty_sync(inode, true);
-> >  }
-> >
-> > +static inline int get_ioprio(struct inode *inode)
-> > +{
-> > +     return F2FS_I(inode)->ioprio_hint;
-> > +}
-> > +
-> > +static inline void set_ioprio(struct inode *inode, int level)
-> > +{
-> > +     if (get_ioprio(inode) =3D=3D level)
-> > +             return;
-> > +     F2FS_I(inode)->ioprio_hint =3D level;
-> > +}
-> > +
-> > +static inline void clear_ioprio(struct inode *inode)
-> > +{
-> > +     if (get_ioprio(inode) =3D=3D 0)
-> > +             return;
-> > +     F2FS_I(inode)->ioprio_hint =3D 0;
-> > +}
-> > +
-> >  static inline void clear_file(struct inode *inode, int type)
-> >  {
-> >       if (!is_file(inode, type))
-> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > index 3eb40d7bf602..a18fb7f3d019 100644
-> > --- a/fs/f2fs/file.c
-> > +++ b/fs/f2fs/file.c
-> > @@ -3496,6 +3496,7 @@ static int f2fs_ioc_set_pin_file(struct file *fil=
-p, unsigned long arg)
-> >
-> >       if (!pin) {
-> >               clear_inode_flag(inode, FI_PIN_FILE);
-> > +             clear_ioprio(inode);
->
-> I guess there are more places clearing FI_PIN_FILE? we need to cover
-> them all?
+Do not use "mtk-pmic-keys" when creating sub-device for the keypad to
+make sure the keypad driver will only bind to the sub-device if it has
+support for the variant/has matching compatible.
 
-Yes, you're right. FI_PIN_FILE is toggled in several places. However,
-this change is intended to set the HOT and IOPRIO on the files that
-users explicitly pin through IOCTL. The other kernel internal
-mechanisms (e.g., swap or gc_failures) remain the same. Are there any
-potential issues that I should consider?
+Reported-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Fixes: 6e31bb8d3a63 ("mfd: mt6397: Add initial support for MT6328")
+Fixes: de58cee8c6b8 ("mfd: mt6397-core: Add MT6357 PMIC support")
+Fixes: 4a901e305011 ("mfd: mt6397-core: Add resources for PMIC keys for MT6359")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
 
- >
-> >               f2fs_i_gc_failures_write(inode, 0);
-> >               goto done;
-> >       } else if (f2fs_is_pinned_file(inode)) {
-> > @@ -3529,6 +3530,8 @@ static int f2fs_ioc_set_pin_file(struct file *fil=
-p, unsigned long arg)
-> >       }
-> >
-> >       set_inode_flag(inode, FI_PIN_FILE);
-> > +     file_set_hot(inode);
->
-> Unnecessary file_set_hot() invoking? Or am I missing anything?
->
-> Thanks,
+This is not tested so if someone with hardware could try it out that
+would be great. I *think* it should work...
 
-Setting HOT and IOPRIO by default is also intentional. We set both
-flags by default because the main use case for pinned files involves
-frequently updated or short-lived data that needs fast write speeds.
+ drivers/mfd/mt6397-core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
->
-> > +     set_ioprio(inode, F2FS_IOPRIO_WRITE);
-> >       ret =3D F2FS_I(inode)->i_gc_failures;
-> >  done:
-> >       f2fs_update_time(sbi, REQ_TIME);
-> > diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-> > index 07e333ee21b7..0f96a0b86c40 100644
-> > --- a/fs/f2fs/namei.c
-> > +++ b/fs/f2fs/namei.c
-> > @@ -191,9 +191,10 @@ static void set_compress_new_inode(struct f2fs_sb_=
-info *sbi, struct inode *dir,
-> >  }
-> >
-> >  /*
-> > - * Set file's temperature for hot/cold data separation
-> > + * Set file's temperature (for hot/cold data separation) and
-> > + * I/O priority, based on filename extension
-> >   */
-> > -static void set_file_temperature(struct f2fs_sb_info *sbi, struct inod=
-e *inode,
-> > +static void set_file_temp_prio(struct f2fs_sb_info *sbi, struct inode =
-*inode,
-> >               const unsigned char *name)
-> >  {
-> >       __u8 (*extlist)[F2FS_EXTENSION_LEN] =3D sbi->raw_super->extension=
-_list;
-> > @@ -212,8 +213,10 @@ static void set_file_temperature(struct f2fs_sb_in=
-fo *sbi, struct inode *inode,
-> >
-> >       if (i < cold_count)
-> >               file_set_cold(inode);
-> > -     else
-> > +     else {
-> >               file_set_hot(inode);
-> > +             set_ioprio(inode, F2FS_IOPRIO_WRITE);
-> > +     }
-> >  }
-> >
-> >  static struct inode *f2fs_new_inode(struct mnt_idmap *idmap,
-> > @@ -317,7 +320,7 @@ static struct inode *f2fs_new_inode(struct mnt_idma=
-p *idmap,
-> >               set_inode_flag(inode, FI_INLINE_DATA);
-> >
-> >       if (name && !test_opt(sbi, DISABLE_EXT_IDENTIFY))
-> > -             set_file_temperature(sbi, inode, name);
-> > +             set_file_temp_prio(sbi, inode, name);
-> >
-> >       stat_inc_inline_xattr(inode);
-> >       stat_inc_inline_inode(inode);
->
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 5f8ed8988907..3e58d0764c7e 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -136,7 +136,7 @@ static const struct mfd_cell mt6323_devs[] = {
+ 		.name = "mt6323-led",
+ 		.of_compatible = "mediatek,mt6323-led"
+ 	}, {
+-		.name = "mtk-pmic-keys",
++		.name = "mt6323-keys",
+ 		.num_resources = ARRAY_SIZE(mt6323_keys_resources),
+ 		.resources = mt6323_keys_resources,
+ 		.of_compatible = "mediatek,mt6323-keys"
+@@ -153,7 +153,7 @@ static const struct mfd_cell mt6328_devs[] = {
+ 		.name = "mt6328-regulator",
+ 		.of_compatible = "mediatek,mt6328-regulator"
+ 	}, {
+-		.name = "mtk-pmic-keys",
++		.name = "mt6328-keys",
+ 		.num_resources = ARRAY_SIZE(mt6328_keys_resources),
+ 		.resources = mt6328_keys_resources,
+ 		.of_compatible = "mediatek,mt6328-keys"
+@@ -175,7 +175,7 @@ static const struct mfd_cell mt6357_devs[] = {
+ 		.name = "mt6357-sound",
+ 		.of_compatible = "mediatek,mt6357-sound"
+ 	}, {
+-		.name = "mtk-pmic-keys",
++		.name = "mt6357-keys",
+ 		.num_resources = ARRAY_SIZE(mt6357_keys_resources),
+ 		.resources = mt6357_keys_resources,
+ 		.of_compatible = "mediatek,mt6357-keys"
+@@ -196,7 +196,7 @@ static const struct mfd_cell mt6331_mt6332_devs[] = {
+ 		.name = "mt6332-regulator",
+ 		.of_compatible = "mediatek,mt6332-regulator"
+ 	}, {
+-		.name = "mtk-pmic-keys",
++		.name = "mt6331-keys",
+ 		.num_resources = ARRAY_SIZE(mt6331_keys_resources),
+ 		.resources = mt6331_keys_resources,
+ 		.of_compatible = "mediatek,mt6331-keys"
+@@ -240,7 +240,7 @@ static const struct mfd_cell mt6359_devs[] = {
+ 	},
+ 	{ .name = "mt6359-sound", },
+ 	{
+-		.name = "mtk-pmic-keys",
++		.name = "mt6359-keys",
+ 		.num_resources = ARRAY_SIZE(mt6359_keys_resources),
+ 		.resources = mt6359_keys_resources,
+ 		.of_compatible = "mediatek,mt6359-keys"
+@@ -272,7 +272,7 @@ static const struct mfd_cell mt6397_devs[] = {
+ 		.name = "mt6397-pinctrl",
+ 		.of_compatible = "mediatek,mt6397-pinctrl",
+ 	}, {
+-		.name = "mtk-pmic-keys",
++		.name = "mt6397-keys",
+ 		.num_resources = ARRAY_SIZE(mt6397_keys_resources),
+ 		.resources = mt6397_keys_resources,
+ 		.of_compatible = "mediatek,mt6397-keys"
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
+
+-- 
+Dmitry
