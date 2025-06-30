@@ -1,178 +1,231 @@
-Received: from mail186-10.suw21.mandrillapp.com (mail186-10.suw21.mandrillapp.com [198.2.186.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2478D1D6AA
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.2.186.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FC6149C4D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279703; cv=none; b=GjLJ63hEU06VEHJFZGa0u9O1NsqMQLucbrIBY2jssAeJvXrUyeOk23Wlj1cNZd0a5bKsCC0NW6aiYZKEYgtbQ6sEEeXkiPrEDsYSaeJrjlzk6phCftaaL8mosIOJeyk0Ju9zLiFtpyhkslXeQ6ve9nHho8lz4u9yDDlszCJrOu4=
+	t=1751279720; cv=none; b=dlFxlELlcTg73lXjod51VZJ+MOL07ZkOfPnCxkkOBUpLp7gxCAdKQevM6Bl61b08A/dgqih8r45LpnPWzUKTlaBj42AJb1O9nQn36YOK0XzsOz8H86xD/rZpGvQP05y+cvkWb/iy4b3Ql0ziB3FQjDz/PXigCpDCGTTzkfOSLGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279703; c=relaxed/simple;
-	bh=F3s/p1/tiA0lO3K4wG3IXNfTFC5xpffPvlR7tUNwSy4=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Date:
-	 MIME-Version:Content-Type; b=Bh8RUPKA24c7k0NCqRoMF8dMLFDCtwUeOFAwdtATFoW8qwRRxML+ERuEGiBe3XiPG7l0bZTJ2ZkvApQmzlv3ZdywbpEDmEihs+c3m7fevxnQyRg1QoeQvuwb0/ONdu0s3cDFD/vA0jP/porwIqm3L2r1DaD68aH6KW2GhOK8eOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=bounce.vates.tech; dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b=Oz49rDZD; dkim=pass (2048-bit key) header.d=vates.tech header.i=ngoc-tu.dinh@vates.tech header.b=c/XYNGMv; arc=none smtp.client-ip=198.2.186.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vates.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.vates.tech
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="Oz49rDZD";
-	dkim=pass (2048-bit key) header.d=vates.tech header.i=ngoc-tu.dinh@vates.tech header.b="c/XYNGMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com;
-	s=mte1; t=1751279701; x=1751549701;
-	bh=3W5WXPPkdn52aUe9Wy9HcVhwmubgY5+gcpH4c7xElaU=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=Oz49rDZDB8dajSArmDRZ7B2P2E84euvmNLeHUdBnZZKlm62f/DN+IsUTcOzV6ANFu
-	 ycMmroNpqHqTdNG+cDa26xgzKHXXvAc+rPz/kfSE5n9hyLFuGFqwx49ENAre3M5JxE
-	 PK3xhYsyXaRdnxJG0hLymX2igxWdBD3qfqzF6XjtjzYWrsoK5dvy5N4v2RZK3hck8P
-	 6BT9aD4iJXt5j4vdsI25eBe1HcFDNoZLcicSrtgq7o2YvzqZ1/Zc6O/KaLvzIJBGLM
-	 xzrp3Nf4vD2F0IBIFB7c+RFy9YdM0vRGBwsmOXAtrrVsL3KGvu10JiZqgtV/xePmUn
-	 R9lkZsNaqtvRQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech; s=mte1;
-	t=1751279701; x=1751540201; i=ngoc-tu.dinh@vates.tech;
-	bh=3W5WXPPkdn52aUe9Wy9HcVhwmubgY5+gcpH4c7xElaU=;
-	h=From:Subject:Message-Id:To:Cc:References:In-Reply-To:Feedback-ID:
-	 Date:MIME-Version:Content-Type:Content-Transfer-Encoding:CC:Date:
-	 Subject:From;
-	b=c/XYNGMvxburOxs7t5nBB3BBVYLw9aCgvxdVtVPlMEeHt+bPnGGNh0DQUQd6bAI0C
-	 aGccB775XPgjar8+fY58/Rps8I4WSo1ZCKVlwPlvwmY9FainrhBfxTMLvPpBMbB4l+
-	 DFWToViErRmspUsN0K+Vk+j/Qn5HJWOQX9RYzjgtqJffxzW5cERrIaxy/jFkFv7L4l
-	 JmQrFlHb1bqtr5Vak3Js0QESRT3X6XbITPkoXlGgKKlaq/I8gmf/kKwpUm8sFAZtBk
-	 5EThPMUQRfrxU2SE6CE0w0Nfs++Kd+tWYfzI4ZO64wvhgodzRZPHHGvCQhx0wIB9Y2
-	 1ANNZ7rbtO6Lg==
-Received: from pmta10.mandrill.prod.suw01.rsglab.com (localhost [127.0.0.1])
-	by mail186-10.suw21.mandrillapp.com (Mailchimp) with ESMTP id 4bW2bn0fTGz5QkNKn
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:35:01 +0000 (GMT)
-From: "Tu Dinh" <ngoc-tu.dinh@vates.tech>
-Subject: =?utf-8?Q?Re:=20[RFC=20PATCH]=20xen/gntdev:=20reduce=20stack=20usage=20by=20dynamically=20allocating=20gntdev=5Fcopy=5Fbatch?=
-Received: from [37.26.189.201] by mandrillapp.com id bdd349c32e824d52a659923aa125c006; Mon, 30 Jun 2025 10:35:01 +0000
-X-Bm-Disclaimer: Yes
-X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1751279699533
-Message-Id: <5e67d651-830a-4d99-af37-26f2d0efd640@vates.tech>
-To: "Abinash Singh" <abinashlalotra@gmail.com>, jgross@suse.com, sstabellini@kernel.org
-Cc: oleksandr_tyshchenko@epam.com, xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org, "Abinash Singh" <abinashsinghlalotra@gmail.com>
-References: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com>
-In-Reply-To: <20250629204215.1651573-1-abinashsinghlalotra@gmail.com>
-X-Native-Encoded: 1
-X-Report-Abuse: =?UTF-8?Q?Please=20forward=20a=20copy=20of=20this=20message,=20including=20all=20headers,=20to=20abuse@mandrill.com.=20You=20can=20also=20report=20abuse=20here:=20https://mandrillapp.com/contact/abuse=3Fid=3D30504962.bdd349c32e824d52a659923aa125c006?=
-X-Mandrill-User: md_30504962
-Feedback-ID: 30504962:30504962.20250630:md
-Date: Mon, 30 Jun 2025 10:35:01 +0000
+	s=arc-20240116; t=1751279720; c=relaxed/simple;
+	bh=GbLLnyi1CxtxL4NZZ5A2wjiLRahn7+ZcNBqo1KMMroA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O/4/HwYiez4Bd3NnTm2d3h4IB9tQzhO41vfgngWm1rnuRM8HbdLEIVvq1iazdJ3iIzycTp+JdIl6AsWWETwR4RykgpoS71McnsRq4pCm0ZkwLmjRrSW2Hnfko1m/a7rbtiTER4LYMIV/xRxjtULT5b9OyAL6+MicujeGfpVHiYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70F191D34;
+	Mon, 30 Jun 2025 03:35:02 -0700 (PDT)
+Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54EB33F58B;
+	Mon, 30 Jun 2025 03:35:14 -0700 (PDT)
+Message-ID: <ced934c3-a1ea-4d1c-954a-613eb20a9105@arm.com>
+Date: Mon, 30 Jun 2025 11:35:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250628113435.46678-1-dev.jain@arm.com>
+ <20250628113435.46678-3-dev.jain@arm.com>
+ <5f2eb53d-5fce-411f-857b-2ac16295a9f9@arm.com>
+ <e1ce9e4e-03e2-4133-bbf6-9e0533dd13b1@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <e1ce9e4e-03e2-4133-bbf6-9e0533dd13b1@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On 30/06/2025 11:17, Dev Jain wrote:
+> 
+> On 30/06/25 3:40 pm, Ryan Roberts wrote:
+>> On 28/06/2025 12:34, Dev Jain wrote:
+>>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
+>>> Architecture can override these helpers; in case not, they are implemented
+>>> as a simple loop over the corresponding single pte helpers.
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   include/linux/pgtable.h | 83 ++++++++++++++++++++++++++++++++++++++++-
+>>>   mm/mprotect.c           |  4 +-
+>>>   2 files changed, 84 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>> index cf1515c163e2..662f39e7475a 100644
+>>> --- a/include/linux/pgtable.h
+>>> +++ b/include/linux/pgtable.h
+>>> @@ -1331,7 +1331,8 @@ static inline pte_t ptep_modify_prot_start(struct
+>>> vm_area_struct *vma,
+>>>     /*
+>>>    * Commit an update to a pte, leaving any hardware-controlled bits in
+>>> - * the PTE unmodified.
+>>> + * the PTE unmodified. The pte may have been "upgraded" w.r.t a/d bits compared
+>>> + * to the old_pte, as in, it may have a/d bits on which were off in old_pte.
+>> I find this last sentance a bit confusing. I think what you are trying to say is
+>> somehthing like:
+>>
+>> """
+>> old_pte is the value returned from ptep_modify_prot_start() but may additionally
+>> have have young and/or dirty bits set where previously they were not.
+>> """
+> 
+> Thanks.
+> 
+>> ?
+>>
+>>>    */
+>>>   static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
+>>>                          unsigned long addr,
+>>> @@ -1340,6 +1341,86 @@ static inline void ptep_modify_prot_commit(struct
+>>> vm_area_struct *vma,
+>>>       __ptep_modify_prot_commit(vma, addr, ptep, pte);
+>>>   }
+>>>   #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
+>>> +
+>>> +/**
+>>> + * modify_prot_start_ptes - Start a pte protection read-modify-write
+>>> transaction
+>>> + * over a batch of ptes, which protects against asynchronous hardware
+>>> + * modifications to the ptes. The intention is not to prevent the hardware from
+>>> + * making pte updates, but to prevent any updates it may make from being lost.
+>>> + * Please see the comment above ptep_modify_prot_start() for full description.
+>>> + *
+>>> + * @vma: The virtual memory area the pages are mapped into.
+>>> + * @addr: Address the first page is mapped at.
+>>> + * @ptep: Page table pointer for the first entry.
+>>> + * @nr: Number of entries.
+>>> + *
+>>> + * May be overridden by the architecture; otherwise, implemented as a simple
+>>> + * loop over ptep_modify_prot_start(), collecting the a/d bits from each pte
+>>> + * in the batch.
+>>> + *
+>>> + * Note that PTE bits in the PTE batch besides the PFN can differ.
+>>> + *
+>>> + * Context: The caller holds the page table lock.  The PTEs map consecutive
+>>> + * pages that belong to the same folio.  The PTEs are all in the same PMD.
+>>> + * Since the batch is determined from folio_pte_batch, the PTEs must differ
+>>> + * only in a/d bits (and the soft dirty bit; see fpb_t flags in
+>>> + * mprotect_folio_pte_batch()).
+>> This last sentence is confusing... You had previous said the PFN can differ, but
+>> here you imply on a, d and sd bits are allowed to differ.
+> 
+> Forgot to mention the PFNs, kind of took them as implied. So mentioning the PFNs
+> also will do or do you suggest a better wording?
 
-On 30/06/2025 06:54, Abinash Singh wrote:
-> While building the kernel with LLVM, a warning was reported due to
-> excessive stack usage in `gntdev_ioctl`:
-> 
-> 	drivers/xen/gntdev.c:991: warning: stack frame size (1160) exceeds limit (1024) in function 'gntdev_ioctl'
-> 
-> Further analysis revealed that the large stack frame was caused by
-> `struct gntdev_copy_batch`, which was declared on the stack inside
-> `gntdev_ioctl_grant_copy()`. Since this function was inlined into
-> `gntdev_ioctl`, the stack usage was attributed to the latter.
-> 
-> This patch fixes the issue by dynamically allocating `gntdev_copy_batch`
-> using `kmalloc()`, which significantly reduces the stack footprint and
-> eliminates the warning.
-> 
-> This approach is consistent with similar fixes upstream, such as:
-> 
-> commit fa26198d30f3 ("iommu/io-pgtable-arm: dynamically allocate selftest device struct")
-> 
-> Fixes: a4cdb556cae0 ("xen/gntdev: add ioctl for grant copy")
-> Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
-> ---
-> The stack usage was confirmed using the `-fstack-usage`  flag and mannual analysis, which showed:
-> 
->    drivers/xen/gntdev.c:953: gntdev_ioctl_grant_copy.isra   1048 bytes
->    drivers/xen/gntdev.c:826: gntdev_copy                     56 bytes
-> 
-> Since `gntdev_ioctl` was calling the inlined `gntdev_ioctl_grant_copy`, the total
-> frame size exceeded 1024 bytes, triggering the warning.
-> 
-> This patch addresses the warning and keeps stack usage within acceptable limits.
-> Is this patch fine or kmalloc may affect performance ?
-> ---
+Perhaps:
 
-Have you measured the performance impact? gntdev_ioctl_grant_copy is 
-called quite often especially by the backend. I'm afraid calling the 
-allocator here may cause even more slowdown than there already is, 
-especially when memory is tight.
+"""
+Context: The caller holds the page table lock.  The PTEs map consecutive
+pages that belong to the same folio.  All other PTE bits must be identical for
+all PTEs in the batch except for young and dirty bits.  The PTEs are all in the
+same PMD.
+"""
 
->   drivers/xen/gntdev.c | 24 +++++++++++++++---------
->   1 file changed, 15 insertions(+), 9 deletions(-)
+You mention the soft dirty bit not needing to be the same in your current
+wording, but I don't think that is correct? soft dirty needs to be the same, right?
+
 > 
-> diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-> index 61faea1f0663..9811f3d7c87c 100644
-> --- a/drivers/xen/gntdev.c
-> +++ b/drivers/xen/gntdev.c
-> @@ -953,15 +953,19 @@ static int gntdev_grant_copy_seg(struct gntdev_copy_batch *batch,
->   static long gntdev_ioctl_grant_copy(struct gntdev_priv *priv, void __user *u)
->   {
->   	struct ioctl_gntdev_grant_copy copy;
-> -	struct gntdev_copy_batch batch;
-> +	struct gntdev_copy_batch *batch;
->   	unsigned int i;
->   	int ret = 0;
->   
->   	if (copy_from_user(&copy, u, sizeof(copy)))
->   		return -EFAULT;
-> -
-> -	batch.nr_ops = 0;
-> -	batch.nr_pages = 0;
-> +
-> +	batch = kmalloc(sizeof(*batch), GFP_KERNEL);
-> +	if (!batch)
-> +		return -ENOMEM;
-> +
-> +	batch->nr_ops = 0;
-> +	batch->nr_pages = 0;
->   
->   	for (i = 0; i < copy.count; i++) {
->   		struct gntdev_grant_copy_segment seg;
-> @@ -971,18 +975,20 @@ static long gntdev_ioctl_grant_copy(struct gntdev_priv *priv, void __user *u)
->   			goto out;
->   		}
->   
-> -		ret = gntdev_grant_copy_seg(&batch, &seg, &copy.segments[i].status);
-> +		ret = gntdev_grant_copy_seg(batch, &seg, &copy.segments[i].status);
->   		if (ret < 0)
->   			goto out;
->   
->   		cond_resched();
->   	}
-> -	if (batch.nr_ops)
-> -		ret = gntdev_copy(&batch);
-> -	return ret;
-> +	if (batch->nr_ops)
-> +		ret = gntdev_copy(batch);
-> +	goto free_batch;
->   
->     out:
-> -	gntdev_put_pages(&batch);
-> +	gntdev_put_pages(batch);
-> +  free_batch:
-> +	kfree(batch);
->   	return ret;
->   }
->   
+>>
+>>> + */
+>>> +#ifndef modify_prot_start_ptes
+>>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>>> +        unsigned long addr, pte_t *ptep, unsigned int nr)
+>>> +{
+>>> +    pte_t pte, tmp_pte;
+>>> +
+>>> +    pte = ptep_modify_prot_start(vma, addr, ptep);
+>>> +    while (--nr) {
+>>> +        ptep++;
+>>> +        addr += PAGE_SIZE;
+>>> +        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+>>> +        if (pte_dirty(tmp_pte))
+>>> +            pte = pte_mkdirty(pte);
+>>> +        if (pte_young(tmp_pte))
+>>> +            pte = pte_mkyoung(pte);
+>>> +    }
+>>> +    return pte;
+>>> +}
+>>> +#endif
+>>> +
+>>> +/**
+>>> + * modify_prot_commit_ptes - Commit an update to a batch of ptes, leaving any
+>>> + * hardware-controlled bits in the PTE unmodified.
+>>> + *
+>>> + * @vma: The virtual memory area the pages are mapped into.
+>>> + * @addr: Address the first page is mapped at.
+>>> + * @ptep: Page table pointer for the first entry.
+>>> + * @old_pte: Old page table entry (for the first entry) which is now cleared.
+>>> + * @pte: New page table entry to be set.
+>>> + * @nr: Number of entries.
+>>> + *
+>>> + * May be overridden by the architecture; otherwise, implemented as a simple
+>>> + * loop over ptep_modify_prot_commit().
+>>> + *
+>>> + * Context: The caller holds the page table lock. The PTEs are all in the same
+>>> + * PMD. On exit, the set ptes in the batch map the same folio. The pte may have
+>>> + * been "upgraded" w.r.t a/d bits compared to the old_pte, as in, it may have
+>>> + * a/d bits on which were off in old_pte.
+>> Same comment as for ptep_modify_prot_start().
+>>
+>>> + */
+>>> +#ifndef modify_prot_commit_ptes
+>>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
+>>> unsigned long addr,
+>>> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+>>> +{
+>>> +    int i;
+>>> +
+>>> +    for (i = 0; i < nr; ++i) {
+>>> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+>>> +        ptep++;
+>>> +        addr += PAGE_SIZE;
+>>> +        old_pte = pte_next_pfn(old_pte);
+>>> +        pte = pte_next_pfn(pte);
+>>> +    }
+>>> +}
+>>> +#endif
+>>> +
+>>>   #endif /* CONFIG_MMU */
+>>>     /*
+>>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>>> index af10a7fbe6b8..627b0d67cc4a 100644
+>>> --- a/mm/mprotect.c
+>>> +++ b/mm/mprotect.c
+>>> @@ -206,7 +206,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                       continue;
+>>>               }
+>>>   -            oldpte = ptep_modify_prot_start(vma, addr, pte);
+>>> +            oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
+>> You're calling this with nr_ptes = 0 for the prot_numa case. But the
+>> implementation expects minimum nr_ptes == 1.
+> 
+> This will get fixed when I force nr_ptes = 1 in the previous patch right?
 
+Yep, just pointing it out.
 
-
-Ngoc Tu Dinh | Vates XCP-ng Developer
-
-XCP-ng & Xen Orchestra - Vates solutions
-
-web: https://vates.tech
+> 
+>>
+>>>               ptent = pte_modify(oldpte, newprot);
+>>>                 if (uffd_wp)
+>>> @@ -232,7 +232,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                   can_change_pte_writable(vma, addr, ptent))
+>>>                   ptent = pte_mkwrite(ptent, vma);
+>>>   -            ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
+>>> +            modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+>>>               if (pte_needs_flush(oldpte, ptent))
+>>>                   tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+>>>               pages++;
 
