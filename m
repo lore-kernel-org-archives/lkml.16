@@ -1,107 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20AC17A2F5;
-	Mon, 30 Jun 2025 22:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2140E1DED52;
+	Mon, 30 Jun 2025 22:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322063; cv=none; b=RIJ9MmnU8ylVMSH5HuQJwvO0d9a99VP119SjJ8u2GWHf6QCzOJofk6EnwCfcRpIqKAiOf0FLiygw/fCNcN4u/pQYyZ0CSV3Xt3yJjOtqAbumA2Ds8xV0XvlQ+8NtOA3d42hMyuGwufcgPNI9wrXUF+wy/z5x6Y9OhXzWJIxBH84=
+	t=1751322081; cv=none; b=TmqB+/l6JPS4nzJE59p9TA50DPIdU44d7cuiOK8vyfrYmivgjE9s1wFTJ3/uAEAgKdq2zvkKhvprH4dzuwkRIafobwTwWEy8kAGTXUBKU2w7NVK9o4dkGiGqRmSjlCRsr/JVPsiGmyA8j2DRFXRNL611MHAx92+b9qMFenDwP00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322063; c=relaxed/simple;
-	bh=T+kvLHHNBi3eAVSXnbHKPtUgScri0TI5apBm/HNsjRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nYsmJXPqKbVsaY0jRBLZ/5tr1B6oPo0nWxcZF9MhoYzzYtriZsTAADM0TsXsl1S3keHI2oK/3oEXbita6P5I7W/Xe56QSmslRnCUHEMFsY6hhCX4MY2XB3LeXGWiWuFT8NtS+sl8SN8awYtWjVKkSNr8pLro8at7kW919d3UFTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHs5iPkD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751322081; c=relaxed/simple;
+	bh=JHLt+E1KeWXx/Gt9usgyy3veEGfVkYPzqGFc9ljsgfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5PgNxK+bSY29J7m4BvCS2rhRXGh2hnZyh9MENxpBd9bqNk6KuM0AQy1O4hpill244t+GJ8X+eaWP7kYjlC73+aF0tC6uIonxQPY1i+sX2atamjO51JDTpiMPhmO9ETG1i2C5Os61jmTzk8dWTNQPW2QJND7EwAWAWkrUWr7d/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFf7s09i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHs5iPkD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE43AC4CEE3;
-	Mon, 30 Jun 2025 22:21:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFf7s09i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E69C4CEE3;
+	Mon, 30 Jun 2025 22:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751322063;
-	bh=T+kvLHHNBi3eAVSXnbHKPtUgScri0TI5apBm/HNsjRE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kHs5iPkDoZZxhxZYpwqKb4DDzqlD1lh64iYCdhDr1E0GLc/snDI2wbqfSfbzzuZ91
-	 mnKEFDM4B8MZLwKMHWIVOIVev+4lfQaZSE8MzP3QBELT4QnwwhQpLdk7oHOjsE6ICw
-	 MXIqyNHDGVk6qrzAB7qOt99266YST7TB2eh+z6HTcdkhznz2UFTHPoqF10HDwVxgV0
-	 pNABKVmn9yYZhmSahUzzusFC7SXqfQS6gxPnS3/ft5GSIbNpgujPF8Cw90ECO5wdfC
-	 Zw7CTaTyW2fqigaXsi7hRbKyzt6apMHI8DS8TLJSmE8cipkqJ9od2LZsz21VI910xF
-	 RhGUSZrrSExhQ==
-Date: Tue, 1 Jul 2025 00:20:58 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
- workflows@vger.kernel.org, tools@kernel.org
-Subject: Re: [RFC v2 01/22] kernel/api: introduce kernel API specification
- framework
-Message-ID: <20250701002058.1cae5a7e@foz.lan>
-In-Reply-To: <874ivxuht8.fsf@trenco.lwn.net>
-References: <20250624180742.5795-1-sashal@kernel.org>
-	<20250624180742.5795-2-sashal@kernel.org>
-	<874ivxuht8.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1751322080;
+	bh=JHLt+E1KeWXx/Gt9usgyy3veEGfVkYPzqGFc9ljsgfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YFf7s09ieUy3OZm0O29erTxiDFXTwuboV4OtF0EDQZTsXZUBu1SK5kse6Cd4jXrtf
+	 z8DlHSUyWC7N5DpR+6Z7h3VwdLKpFoD2Ugwe+ef/qn0luN/9Zp5ytIoOAS2Czq9G2l
+	 qVxvPa7doPX8cAZZLyzsnDYf10KSQb7Xv2kN6GbKhUHce67VbaNdYDXxiAFtXW3VyD
+	 avL5WSQDhWNKs2l2VF2eDSTwzW93Ylv0LOsIkC6w/02igMiYzeTmSsrr9mavZgvETc
+	 8RZNd2iVjE40Lwhm4I6yF86ydepbojvDMQzwylHmpml7cs4xLZSsdenbmXWIpZxay2
+	 ChXLKilahim9w==
+Date: Mon, 30 Jun 2025 17:21:19 -0500
+From: Rob Herring <robh@kernel.org>
+To: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+	devicetree@vger.kernel.org,
+	Lucca Fachinetti <luccafachinetti@gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: leds: is31fl32xx: convert the
+ binding to yaml
+Message-ID: <20250630222119.GA3578069-robh@kernel.org>
+References: <20250627-leds-is31fl3236a-v2-0-f6ef7495ce65@thegoodpenguin.co.uk>
+ <20250627-leds-is31fl3236a-v2-2-f6ef7495ce65@thegoodpenguin.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-leds-is31fl3236a-v2-2-f6ef7495ce65@thegoodpenguin.co.uk>
 
-Em Mon, 30 Jun 2025 13:53:55 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> Sasha Levin <sashal@kernel.org> writes:
+On Fri, Jun 27, 2025 at 11:20:36AM +0100, Pawel Zalewski wrote:
+> From: Lucca Fachinetti <luccafachinetti@gmail.com>
 > 
-> > Add a comprehensive framework for formally documenting kernel APIs with
-> > inline specifications. This framework provides:
-> >
-> > - Structured API documentation with parameter specifications, return
-> >   values, error conditions, and execution context requirements
-> > - Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME_CHECKS)
-> > - Export of specifications via debugfs for tooling integration
-> > - Support for both internal kernel APIs and system calls
-> >
-> > The framework stores specifications in a dedicated ELF section and
-> > provides infrastructure for:
-> > - Compile-time validation of specifications
-> > - Runtime querying of API documentation
-> > - Machine-readable export formats
-> > - Integration with existing SYSCALL_DEFINE macros
-> >
-> > This commit introduces the core infrastructure without modifying any
-> > existing APIs. Subsequent patches will add specifications to individual
-> > subsystems.
-> >
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  Documentation/admin-guide/kernel-api-spec.rst |  507 ++++++
+> Keep the old maintainers field as is.
+> Add datasheets for reference, NB that I was not able to find an
+> up-to-date, funtional direct URL for si-en products datasheet
+> so they were skipped.
 > 
-> You need to add that file to index.rst in that directory or it won't be
-> pulled into the docs build.
-> 
-> Wouldn't it be nice to integrate all this stuff with out existing
-> kerneldoc mechanism...? :)
+> Co-developed-by: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
+> Signed-off-by: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
+> Signed-off-by: Lucca Fachinetti <luccafachinetti@gmail.com>
+> ---
+>  .../devicetree/bindings/leds/leds-is31fl3236.yaml  | 101 +++++++++++++++++++++
 
-+1
+Also, not quite the compatible for filename: issi,is31fl3236.yaml
 
-Having two different mechanisms (kapi and kerneldoc) makes a lot harder
-to maintain kAPI.
-
-Also, IGT (a testing tool for DRM subsystem) used to have a macro
-based documentation system. It got outdated with time, as people
-ends forgetting to update the macros when changing the code. 
-Also, sometimes we want to add some rich text there, with graphs,
-tables, ...
-
-More important than that: people end not remembering to add such macros.
-As kerneldoc markups are similar to Doxygen and normal C comments,
-it is more likely that people will remember.
-
-So, IMO the best would be to use kerneldoc syntax there, letting
-Kerneldoc Sphinx extension handling it for docs, while having
-tools to implement the other features you mentioned.
-
-Thanks,
-Mauro
+>  .../devicetree/bindings/leds/leds-is31fl32xx.txt   |  52 -----------
+>  2 files changed, 101 insertions(+), 52 deletions(-)
