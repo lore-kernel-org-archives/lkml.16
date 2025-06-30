@@ -1,196 +1,119 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D694254846
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101554918;
+	Mon, 30 Jun 2025 10:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278902; cv=none; b=kMVCGtKrr6pcfyS+955ufHMM5EzSMj1IAqnntLvdXEi3Lrje/8NvYJyL7fwW+bSWwcga5OHSHML+g5cFEGt3LEn4LpPmByvn1IbWrBmnS8THd7PuBPxYKgdnthRl+DFRKpfB7QzEmoLr+v7egmZvyqdlQldXv3BYG5t8m+Ev9Tw=
+	t=1751278938; cv=none; b=MP6wyQD5H3TsDL0hQ+NTjVjTjetOv+W4P9TrwQGXroqQnxs+5i8xEn1gJQB6Ff1m+ms25QBVxc4y7a8wgSNtV7DRNWAUZwFnynZlM+lm00Oy8BQ1DYciBoUAYXAgMAbmEczNwsjJegPab7yRZyr4ngGBYcoIBipoBoWaInzKi7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278902; c=relaxed/simple;
-	bh=6BYE8AWJQLw8WAxO3Q5aBUTeX661u26mmGmL2fLnCZI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ZMWte7gXrGUqnavwgketK7hnIDbExh7q2oki11a66LE2f4YHBKu7r6zsvOtsSr7qa+q8pwN9/G47kSDHNun7FRn/BLvFh4O9OMkUM4vTKnj6oqc9WoJAu6fhK348Zy/savK5e+cz1NnnMcAB0RIFBNeAVlnbXegcAUBW7TruN40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=IrZueZJ4; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="IrZueZJ4"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-60789b450ceso3877594a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1751278898; x=1751883698; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=91/ZncbDlmcGCt22EAMRhuZKL6uaG/hY8UyZ2Q+pYCo=;
-        b=IrZueZJ4qgDMos5cOw6vsmAKPNI7cL5oHlBxR9UC1YhL+Gik/jTsoOe6XDscbMCl/D
-         m0b1kr5wj7n3L0V7y6Gu2taGzuNze2Trz/4F1hoehV3UkaCRyOYZv4FTAZrixGoXDCAL
-         Ra1lqJVB3V41Bag3if4dM7UPHCeXCsx+seRMCn4xlr5ZNTzn5tZzCD1+ZJgfiE58pMj4
-         k6y6iBv4TNPQowcdRpGeLnYeAWQjQ2JzHgL8eT1PYbAbBm4rGdx1FUt/OygzgsenUAeb
-         75KzQYafl73kX3Oa9A+8PbNa0dpos0iA2Aa65Cxrg2FkYdFlf78aMhT5bCYVDMC6TetI
-         mL7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751278898; x=1751883698;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=91/ZncbDlmcGCt22EAMRhuZKL6uaG/hY8UyZ2Q+pYCo=;
-        b=vLaVpzdmubfXv1i7ntTywtISESO0kEH0HlCTSDyPmLEfxKQYZ86f0ERPu/D98gM5Gu
-         j6Gk1ggNDoEwa6b2tvkxQOc0IEfzccz+sgKMy1mpLqdU9ty3Dy+g0nC9pKb5sqwl4OAQ
-         VHQ8JMuCmqBBU9jovxcmaXVmZO0vgoQrfQ9Axu5Ikcc1I18NlwRBC2mPWijhNAnnNwhe
-         c22ZiSo547PEy5hH7aZe/OAHNd5GiJrCfIeUk5t6Z15ZC9N7/ylooqDr8NW2Z/FJ7Br+
-         e7nop1Xp7/vzDqXsJVAxadfqvdHb00aVRUjaOuRzD5i4Op0zk/4yM4+qfGC71pc0yeSA
-         weuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtTou2jB8VjM8ZGcAuge2KLFniNNA2I9PB9PjtzAOeyZgQWNCMtfjBaAEGTdFITxALqz090xOyUJ0XPII=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt0C4aVNwprm+kF53thHQjBpKJpfjRuz3Yk8zeBvcyEwjS/0sE
-	w/1fGOKQP6ZJ8FeWX556YK9jFCVeM+KaUFyqlzl5nTGUKnO60lUsHLhXKEoA9jyuIqc=
-X-Gm-Gg: ASbGncvV/+u/HZeNyy5Nckuigay1LIq3yHK5FAMO3WwPMdQ0Rqa/t6TmuAp5+AjBIxg
-	h52N5xli/oaJTDeb607x7QUKzFq3NBSH0N15dyDCqRpRzyX7loLwFY1Bw3K4wMNGZu1rwTtmIPI
-	d3WKOzKJ9DrGVtHj3SQ595BKoW+e5jJbkZJiN+9vZ63LDLrFR4lTvkFXOZ93NM6O3h08pM7R15B
-	et5E4StA0fDAZs+112AwnNgWeG+eL3Os3TzIL4HqVwCLYpO9k+Qagrd4ypAcPiIULbXyIEv5rom
-	sBXsP5OfMe7Pw+ddVGlW9du9Fag2ccpqq3pKnpzdlwiCgr402Kz0dbHTvVwOxs3bYkTgZCCmvkf
-	ti63d+ulZSI7Fz7jXL6wovisYWmHzQ80r9l0ZrDIG1uU/ORwb3y53KFDUw8bpP6gwnjUWX30=
-X-Google-Smtp-Source: AGHT+IG0udIx5/vSjab4jTXQgQOixHxgW8J50sJp+ilVqsU6WQ7uEmPrf6nFFV5tvDzy3dhkra701g==
-X-Received: by 2002:a17:907:9691:b0:ae0:c6fb:2140 with SMTP id a640c23a62f3a-ae3500f374emr1085087666b.32.1751278898278;
-        Mon, 30 Jun 2025 03:21:38 -0700 (PDT)
-Received: from localhost (2001-1c00-3b8a-ea00-c4de-d39d-05f4-c77a.cable.dynamic.v6.ziggo.nl. [2001:1c00:3b8a:ea00:c4de:d39d:5f4:c77a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a95esm649858666b.59.2025.06.30.03.21.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 03:21:37 -0700 (PDT)
+	s=arc-20240116; t=1751278938; c=relaxed/simple;
+	bh=c0imhKHbJkUS2T2103cRnQw57MXF9vmxeRzMctCDrmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=m5HtUlTLe9bf6hjhvY9eaXf9dFktOdXWcObizjQSOVL2EmSBMhqTW+M3Uu8c3AYrDlY96N8cGoSUbsfJZmqR0hx9LiVOb/42Jij4rCMseZmmeUqybdlLx71VXtyN759rCCerxPabZRznW3NFpTxjgaJSLHpwsftbX5AzycMEqr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55UALWld048042;
+	Mon, 30 Jun 2025 19:21:32 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55UALVLY048038
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 30 Jun 2025 19:21:32 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <da5be67d-2a0b-4b93-85d6-42f3b7440135@I-love.SAKURA.ne.jp>
+Date: Mon, 30 Jun 2025 19:21:31 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3] ocfs2: update d_splice_alias() return code checking
+To: Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
+ <20250626033411.GU1880847@ZenIV>
+ <d84dc916-2982-45dc-a9a5-a6255cbc62bd@I-love.SAKURA.ne.jp>
+ <973af6b9-e4c7-4519-99af-9c82dc6ca98f@linux.alibaba.com>
+Content-Language: en-US
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>, Richard Weinberger <richard@nod.at>,
+        ocfs2-devel@lists.linux.dev,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <973af6b9-e4c7-4519-99af-9c82dc6ca98f@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Jun 2025 12:21:36 +0200
-Message-Id: <DAZSK2NT6TAT.1N6A4I8ETH92W@fairphone.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <dmaengine@vger.kernel.org>,
- <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 14/14] arm64: dts: qcom: Add The Fairphone (Gen. 6)
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Will Deacon"
- <will@kernel.org>, "Robin Murphy" <robin.murphy@arm.com>, "Joerg Roedel"
- <joro@8bytes.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
- "Vinod Koul" <vkoul@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>, "Robert Marko"
- <robimarko@gmail.com>, "Das Srinagesh" <quic_gurus@quicinc.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Jassi Brar" <jassisinghbrar@gmail.com>,
- "Amit Kucheria" <amitk@kernel.org>, "Thara Gopinath"
- <thara.gopinath@gmail.com>, "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Zhang Rui" <rui.zhang@intel.com>, "Lukasz Luba" <lukasz.luba@arm.com>,
- "Ulf Hansson" <ulf.hansson@linaro.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
- <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
- <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
- <DAXA7TKVM4GI.J6C7M3D1J1XF@fairphone.com>
- <6d4e77b3-0f92-44dd-b9b0-3129a5f3785b@oss.qualcomm.com>
- <DAXEA131KUXZ.WTO7PST1F3X6@fairphone.com>
- <3fbae47b-d20d-426b-a967-b584e32b8c6e@oss.qualcomm.com>
-In-Reply-To: <3fbae47b-d20d-426b-a967-b584e32b8c6e@oss.qualcomm.com>
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav203.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Fri Jun 27, 2025 at 5:34 PM CEST, Konrad Dybcio wrote:
-> On 6/27/25 4:44 PM, Luca Weiss wrote:
->> On Fri Jun 27, 2025 at 4:34 PM CEST, Konrad Dybcio wrote:
->>> On 6/27/25 1:33 PM, Luca Weiss wrote:
->>>> On Wed Jun 25, 2025 at 4:38 PM CEST, Konrad Dybcio wrote:
->>>>> On 6/25/25 11:23 AM, Luca Weiss wrote:
->>>>>> Add a devicetree for The Fairphone (Gen. 6) smartphone, which is bas=
-ed
->>>>>> on the SM7635 SoC.
->>>>>
->>>>> [...]
->>>>>
->>>>>> +&pm8550vs_d {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>> +
->>>>>> +&pm8550vs_e {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>> +
->>>>>> +&pm8550vs_g {
->>>>>> +	status =3D "disabled";
->>>>>> +};
->>>>>
->>>>> Hm... perhaps we should disable these by deafult
->>>>
->>>> Do you want me to do this in this patchset, or we clean this up later =
-at
->>>> some point? I'd prefer not adding even more dependencies to my patch
->>>> collection right now.
->>>
->>> I can totally hear that..
->>>
->>> Let's include it in this patchset, right before SoC addition
->>> I don't think there's any pm8550vs users trying to get merged in
->>> parallel so it should be OK
->>=20
->> Okay, can do. Disable all of them (_c, _d, _e, _g), and re-enable them
->> in current users? I assume there might also be boards that only have
->> e.g. _d and no _c.
->
-> I suppose it's only fair to do so, in line with
->
-> d37e2646c8a5 ("arm64: dts: qcom: x1e80100-pmics: Enable all SMB2360 separ=
-ately")
+When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
+checking") was merged into v3.18-rc3, d_splice_alias() was returning
+one of a valid dentry, NULL or an ERR_PTR.
 
-Sounds good, I've prepared this change for v2.
+When commit b5ae6b15bd73 ("merge d_materialise_unique() into
+d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
+returning -ELOOP as one of ERR_PTR values.
 
->
->
->>>>>> +&usb_1 {
->>>>>> +	dr_mode =3D "otg";
->>>>>> +
->>>>>> +	/* USB 2.0 only */
->>>>>
->>>>> Because there's no usb3phy description yet, or due to hw design?
->>>>
->>>> HW design. Funnily enough with clk_ignore_unused this property is not
->>>> needed, and USB(2.0) works fine then. Just when (I assume) the USB3
->>>> clock is turned off which the bootloader has enabled, USB stops workin=
-g.
->>>
->>> The USB controller has two possible clock sources: the PIPE_CLK that
->>> the QMPPHY outputs, or the UTMI clock (qcom,select-utmi-as-pipe-clk).
->>=20
->> So okay like this for you, for a USB2.0-only HW?
->
-> Yeah, maybe change the comment to something like:
->
-> /* USB 2.0 only (RX/TX lanes physically not routed) */
->
-> to avoid getting this question asked again
+Now, when syzkaller mounts a crafted ocfs2 filesystem image that hits
+d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup() fails
+to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy inodes
+after unmount" message.
 
-Ack
+Instead of calling ocfs2_dentry_attach_lock() or ocfs2_dentry_attach_gen()
+when d_splice_alias() returned an ERR_PTR value, change ocfs2_lookup() to
+bail out immediately.
 
-/* USB 2.0 only, HW does not support USB 3.x */
+Also, ocfs2_lookup() needs to call dupt() when ocfs2_dentry_attach_lock()
+returned an ERR_PTR value.
 
-Regards
-Luca
+Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ fs/ocfs2/namei.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
->
->>> Because you said there's no USB3, I'm assuming DP-over-Type-C won't
->>> be a thing either? :(
->>=20
->> Yep. I'd have preferred USB3+DP as well since it's actually quite cool
->> to have with proper Linux. On Android, at least on older versions it's
->> barely usable imo. Can't even properly watch videos on the big screen
->> with that SW stack.
->
-> Bummer! Not something we can change though :(
->
-> Konrad
+diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
+index 99278c8f0e24..721580dfce3a 100644
+--- a/fs/ocfs2/namei.c
++++ b/fs/ocfs2/namei.c
+@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
+ 
+ bail_add:
+ 	ret = d_splice_alias(inode, dentry);
++	if (IS_ERR(ret))
++		goto bail_unlock;
+ 
+ 	if (inode) {
+ 		/*
+@@ -154,15 +156,16 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
+ 		 * NOTE: This dentry already has ->d_op set from
+ 		 * ocfs2_get_parent() and ocfs2_get_dentry()
+ 		 */
+-		if (!IS_ERR_OR_NULL(ret))
++		if (ret)
+ 			dentry = ret;
+ 
+ 		status = ocfs2_dentry_attach_lock(dentry, inode,
+ 						  OCFS2_I(dir)->ip_blkno);
+ 		if (status) {
+ 			mlog_errno(status);
++			if (ret)
++				dput(ret);
+ 			ret = ERR_PTR(status);
+-			goto bail_unlock;
+ 		}
+ 	} else
+ 		ocfs2_dentry_attach_gen(dentry);
+-- 
+2.47.1
+
 
