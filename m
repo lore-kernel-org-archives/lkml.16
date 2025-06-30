@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC39241671;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBCF241666;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751320365; cv=none; b=iJkF1AfT/SHNSYszhJBA9tyq3XegipSW/dkylKVpN3s5iaVSTmoyxMnJKolijRH/pBUF3DgqwRt8fs/l7gvsEnTCCiiDi91Zo3a6gAGlItkexUKa3E/K2Jt8jYNnqJhblv/RGzLFlQnrUfV3Kfk/LXgKsk1cDLvu3eP/kOAFh+I=
+	t=1751320365; cv=none; b=pM00unBi7oHbasvhE+Q0xgcQCRXVjGAelCsfM4F/6nqBpwpjovSJNF/dZpeAW77NsvzaVuAn5Qzg1svq6u/MlsbZOqquPJZJWZPlTYFMoiAeWnvN00DF/28vYbqVOggKEB8sKyq4MZ38kGS/4evDlj3YVwuexE7uX39zM75dKmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751320365; c=relaxed/simple;
-	bh=NXRybsGIFDCGU4Lr+9EFPMUtfdXp93JNctJg3aAfuAU=;
+	bh=ziyDRVvP7fisTUmklw0p9ITY4D1AfmB7FOFn6nzbObA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JNIcG0Q+5Z7Pi9XmsRpoQGNvKCbXsfEv9qNLP3u0y6COypxKk8cVo+r0M9IychHgwrdTPvXUimXQ+2h8z6Ga/VnPQBboRlbGkYMn1sjByQzn6dsoAtnaJRcvjXCIPFENez6mLIwbEZ24TmEoa9Zgfyb2YmCO9+oVfYYWyfxFM44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPWCaZOT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IpKF6vuaJWg8HB6wh88dkD8aNeRFKP1NtGUjc2Le+CuBPN9o6Hm+LH6RfnGBGKpoW7cR0lnkImlVXMgAM0FkSq3t/3GX98Y1FIFEpCpsDzLrz5bUZsYfUyuDOcXy1tqnP4d9PJXlI2ygo8fcH0sdQV/7U+A0XMqwmuXHG46/MSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enprYEON; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPWCaZOT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6477FC4CEF8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enprYEON"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA28C4CEF7;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751320364;
-	bh=NXRybsGIFDCGU4Lr+9EFPMUtfdXp93JNctJg3aAfuAU=;
+	bh=ziyDRVvP7fisTUmklw0p9ITY4D1AfmB7FOFn6nzbObA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dPWCaZOTbkeZIEyX5OiYZSgZzfCubPGKWGFalmkmx0MnlgAzUVxH9wIKJ8n44N44Y
-	 S131rQ0wp/sqLKEYBHJSgH6k1uFbjCanMGkl9j3Wa9Hir9YVh/Bj8eHN7NifHTUW9J
-	 KE5zYQbbEL6Mc7SEoDxDPc9XNCbsvfdqk/0cMH8Re5qd721e5494ieIBt7Eqeg/1eI
-	 TL9qMTLNHgPtDSO415j2daKCwfuDRuKddw13myeiVsdgfdvbjClvmGdolT0YPQlI5R
-	 r6gpiPVfu3ZXxycvG3C2IgaRUVSnQHx3zSaz79gqUS8lPYf0+OVTI2zGI1n1OqFF2J
-	 oVbGwYVnDZdDA==
+	b=enprYEONABk6EFw4X0Tre9NFX1RQEVtkC6qH6dLcbyAJ5SOTZJR6uuL1hCnpFf/Vf
+	 2c73Z66ntsRvjQfxYS62QGSn0cBrx7oy/1rchbBSM9aJZ7BxeT7/r3qIcpebKG+dMi
+	 PFIe0oFNFhaLkmFdeRiJVHDCzT8+3gpTy4F0s4WzRxsdwwhrH+jyKRBzGJlSue/Q5S
+	 i7FHxnsKnupJawFhAdEEDTrRxL6pJrt/vQhkFZ5qOnnQsK4SzIb2K0c/UxSo6nhMx2
+	 /Z6gkBCWesKfrjhCqrAhK9API9c3usrEoZ4msVxyHVHAzLPosSvWYv9k+faXhGwTHH
+	 oRo3qRjl66g/Q==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uWMQc-00000003QWx-2hKb;
+	id 1uWMQc-00000003QWp-2Tj0;
 	Mon, 30 Jun 2025 23:52:42 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -38,9 +38,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	"Sai Vishnu M" <saivishnu725@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 11/15] scripts: sphinx-pre-install: Address issues with OpenSUSE Tumbleweed
-Date: Mon, 30 Jun 2025 23:34:59 +0200
-Message-ID: <4e89bf16dfd2be1e6c6c827a92bec1dc80c24774.1751318230.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 09/15] scripts: sphinx-pre-install.py fix opensuse hints
+Date: Mon, 30 Jun 2025 23:34:57 +0200
+Message-ID: <4c782ff5825d5437041e9a30d91141e59ab092a0.1751318230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <cover.1751318230.git.mchehab+huawei@kernel.org>
 References: <cover.1751318230.git.mchehab+huawei@kernel.org>
@@ -53,33 +53,35 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Tumbleweed, package names are named after python-313*, as it also
-has older python versions on it.
+yaml hints arw wrong.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/sphinx-pre-install.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ scripts/sphinx-pre-install.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/sphinx-pre-install.py b/scripts/sphinx-pre-install.py
-index 9cbf548b0b9c..72ac64f4e60b 100755
+index eca42d90ed01..69e2ea228df7 100755
 --- a/scripts/sphinx-pre-install.py
 +++ b/scripts/sphinx-pre-install.py
-@@ -571,6 +571,14 @@ class SphinxDependencyChecker:
+@@ -530,7 +530,7 @@ class SphinxDependencyChecker:
+             "python-sphinx": "python3-sphinx",
+             "virtualenv":    "python3-virtualenv",
+             "xelatex":       "texlive-xetex-bin",
+-            "yaml":          "python3-pyyaml",
++            "yaml":          "python3-pyyaml",     # or python3-PyYAML?
+         }
+ 
+         # On Tumbleweed, this package is also named rsvg-convert
+@@ -569,7 +569,7 @@ class SphinxDependencyChecker:
+                 progs.update({
+                     "python-sphinx": "python311-Sphinx",
                      "virtualenv":    "python311-virtualenv",
-                     "yaml":          "python311-PyYAML",
+-                    "yaml":          "python311-pyyaml",
++                    "yaml":          "python311-PyYAML",
                  })
-+        else:
-+            # Tumbleweed defaults to Python 3.11
-+
-+            progs.update({
-+                "python-sphinx": "python313-Sphinx",
-+                "virtualenv":    "python313-virtualenv",
-+                "yaml":          "python313-PyYAML",
-+            })
  
          # FIXME: add support for installing CJK fonts
-         #
 -- 
 2.50.0
 
