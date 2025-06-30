@@ -1,126 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C8C433A4
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A185E194A44;
+	Mon, 30 Jun 2025 04:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751258929; cv=none; b=dKqw0IkR4GfTUCpVsQclYAMaRG5qsFymEn1azwfeUlA3FmwC0vH4AQuWUuflzreGpwx6DuJkSbn+SqgUxsT95R+/zn71XYy5pRAYL+eVsGORg5TVfm7hRloRsf9ZLRMODxQZOgok9mc+djYczcyn5fpJuq2OcoG2to1uRjmBgy8=
+	t=1751259251; cv=none; b=LENQiwp8YkLTBNVuYlHZOprkcBgjdWoIhV/7SC+YGYZFWwWKZK9gKTFIM9mmLlu5zMHHyIDOe/PzibwJ1ZPZgK2x/3wJdTlVjxxdpFr7MGSns9iGsLHSdcY9e7947bfrMXtws+yahYQxFgBN/ASookQLBPf/A626S4CTy22OCZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751258929; c=relaxed/simple;
-	bh=9wL9K6gkJm5kkHECKe+vCLzKgpuEURqnEM2lSDa0WSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NpDBXwTXz+xqZK+rehAFxmVHVARxpPf7Ra57BcjWhJtFdAvhhEhVw6XpAWrE56XzxB7r1vSfyq1+/jYbT2uUCLvzobE/3jX6QUIIpUaXi9R2uCPN6GiGPzOD/e3bzqdICdwGrc8sgShuffXErzSHKqoSkRyDO0+LZagHlyiBCbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 475181F60;
-	Sun, 29 Jun 2025 21:48:30 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5D2093F58B;
-	Sun, 29 Jun 2025 21:48:42 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com
-Cc: ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	baohua@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] khugepaged: Reduce race probability between migration and khugepaged
-Date: Mon, 30 Jun 2025 10:18:37 +0530
-Message-Id: <20250630044837.4675-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1751259251; c=relaxed/simple;
+	bh=q4cChbdvhDL1OSZn8A56fKuAJVHQOXAwQbXbtQgi6LI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hUDtsisxlUC7fLzVMzA8raPCOZVP03sI3HfJTI84aqj5JOEi03xLIfudUDpfNleDm4DBzk9yacg6iCSSjF8U3aLRl8ZKklDNgHyCQ2h0FfJ2z9sejB7MMnI/rISETE7V6Ip+LOB0/hhssEEFBMxfpQKQdgxaQge8xtmpgOWjMos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5535652f42cso4737256e87.2;
+        Sun, 29 Jun 2025 21:54:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751259244; x=1751864044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+et2JbQsekjoDqNx2V23zrGG58Up1Zz2cWU2HWIxxkw=;
+        b=J7l+GeIPwAG9EqZ4O3gPdEEHLnDeSXM+pDI6ul1GI1yHvzlEPA3Eo5bVF40fP51+qP
+         T++bNfYYFvsCCNr8iGy5JCy7omXALrfXHYe1UGPF36Z/V3aqX+8VJ+52wJKp0ancCbfy
+         K4DY2FYAX+7kqX+y/Mo+achwRLj5tTHedHwe6w5VImNY60vuQ4nYwXMoExQsFRDwLMzS
+         JX+m8Wv00v/DRR7kFceoVLSXaH/513S1mIlUY+W2rR+Q/GiUSwRTg+qUfblLYXjA2hW1
+         c4qQntPB2Usc8m378GcQB4nfkN1/TI6YMpQ8UnSO4a5xRiYkF7GZpY2VAn7FFhdEEEie
+         mH8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV38otyxYvCYbLavSFnz7nLFFK8ZKLhTGw7+KcAatJVoBw7izQQKjuFwg2WBAKYFTarcHJWeNx9Rbq9@vger.kernel.org, AJvYcCVkJOr0NFVr3zNyqgqnXgEc4Bj75S8+6i/MPpz0RRoipoG3YlnYCQo0GYZCbbGVD7rF16ad5q7OGW1TtSK6@vger.kernel.org, AJvYcCWb6qrOfjUHmQT3D5sx9BagGtE1BlbFe7vMqGaFlxgUaDuF/SmjfU+5tPjNguYAO7agPFXMeFADzYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsP+nfC4WNDRrpSoiEiLtCkYVHOSDg5pv+GEtn3am3OWB2jy/p
+	sdflreBZAJWUEL2N1vHyK1q0oYkXv4tsihOxNPO111xp++KphkcFT5tYdFrIz6nE
+X-Gm-Gg: ASbGncutoOpZpuwyhkC271wBZaqG3YRmHnVRCS/1V4LHKmg9frryHbKzoKXfS0ooZIH
+	pwzUiJdMBA1ucCVBbaqoJoD8fax+2UaEIwPsXGeIro+ni4ZU2j0scy3heKq27YnEqAlPnCq2KJQ
+	vfBg+T3GeTJ99Pi7gNoKFhvWM2UKGBz6e/uK/0AnXCPTvWIPTbjhoLZVDQSrILoGmYuUM2gU/wJ
+	qGJrYpcwdU4wDQ5UhOO/luC0zvZSkV6wgjkbWLUm3olaJJqlBfXR2pX1gYGzKqBwxTrG392m3tM
+	7BqS8lsy3WBUcGOl2tNtaQgMB7tMhrcme1pJ4KgzZOyU72DaEftU4jWURMGTFyd9nW5zf8KUObv
+	RTvwvmsNw3lctYvNSEjo=
+X-Google-Smtp-Source: AGHT+IEPXdE08Sp3Oy4NMTRIgRjshR5wQvGlfnBAMYKeAZ2ac9PBCar5nquYG8ey///R0QWkpPyf4A==
+X-Received: by 2002:a05:6512:e95:b0:553:33b9:bd3a with SMTP id 2adb3069b0e04-5550b8e6179mr3083357e87.53.1751259244355;
+        Sun, 29 Jun 2025 21:54:04 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24ed7esm1296440e87.81.2025.06.29.21.54.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 21:54:03 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32b910593edso33078961fa.1;
+        Sun, 29 Jun 2025 21:54:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXoFPwTajZmdNDJv5gpY9As3jzy/9jE6EcXYRcezcAjLTOcDXmPhXDFN0iyQKOZ72UNtVTruGD29c=@vger.kernel.org, AJvYcCW/NGMFdB5zI+MzFBwYQ83N71XVP3byyvygbxqyQKVbFypbccL1FrttKIisdhYZDAcHefbXxWkMywpVrOhr@vger.kernel.org, AJvYcCXPUirFIg43WaEVRDHW5bgx9p8oMDkZFXU7zYjjrrJtZyxkAC/9PdXqoImfkPxL8TRe3E/6CJdD5aNA@vger.kernel.org
+X-Received: by 2002:a05:651c:31ca:10b0:32c:a851:e4e with SMTP id
+ 38308e7fff4ca-32cdc575ebcmr24256581fa.40.1751259243150; Sun, 29 Jun 2025
+ 21:54:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250411003827.782544-1-iuncuim@gmail.com> <20250411003827.782544-3-iuncuim@gmail.com>
+In-Reply-To: <20250411003827.782544-3-iuncuim@gmail.com>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Mon, 30 Jun 2025 12:53:51 +0800
+X-Gmail-Original-Message-ID: <CAGb2v670s_r4NG8hWHQ_exc6TM5JnvAEYw-vp5ndMn39X-B4Yw@mail.gmail.com>
+X-Gm-Features: Ac12FXylrAnNPmh-5tW8elyoVrQtjqLfo-AL1Tmi56dNnknRJjo1EfbWOyGYXgQ
+Message-ID: <CAGb2v670s_r4NG8hWHQ_exc6TM5JnvAEYw-vp5ndMn39X-B4Yw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] thermal/drivers/sun8i: replace devm_reset_control_get
+ to shared
+To: iuncuim <iuncuim@gmail.com>
+Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Andre Przywara <andre.przywara@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Suppose a folio is under migration, and khugepaged is also trying to
-collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
-page cache via filemap_lock_folio(), thus taking a reference on the folio
-and sleeping on the folio lock, since the lock is held by the migration
-path. Migration will then fail in
-__folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
-such a race happening (leading to migration failure) by bailing out
-if we detect a PMD is marked with a migration entry.
+On Fri, Apr 11, 2025 at 8:39=E2=80=AFAM iuncuim <iuncuim@gmail.com> wrote:
+>
+> From: Mikhail Kalashnikov <iuncuim@gmail.com>
+>
+> The A523 processor has two temperature controllers, but they share a comm=
+on
+> reset line. We need to use devm_reset_control_get_shared() instead of
+> devm_reset_control_get()
+>
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_ther=
+mal.c
+> index 1f3908a60..dc4055c9c 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -391,7 +391,7 @@ static int sun8i_ths_resource_init(struct ths_device =
+*tmdev)
+>                 return PTR_ERR(tmdev->regmap);
+>
+>         if (tmdev->chip->has_bus_clk_reset) {
+> -               tmdev->reset =3D devm_reset_control_get(dev, NULL);
+> +               tmdev->reset =3D devm_reset_control_get_shared(dev, NULL)=
+;
 
-This fixes the migration-shared-anon-thp testcase failure on Apple M3.
+You could just use devm_reset_control_get_shared_deasserted() and then
+drop the reset_control_deassert() and devm_add_action_or_reset() stuff belo=
+w
+this hunk. This simplifies the driver a bit.
 
-Note that, this is not a "fix" since it only reduces the chance of
-interference of khugepaged with migration, wherein both the kernel
-functionalities are deemed "best-effort".
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
-
-This patch was part of
-https://lore.kernel.org/all/20250625055806.82645-1-dev.jain@arm.com/
-but I have sent it separately on suggestion of Lorenzo, and also because
-I plan to send the first two patches after David Hildenbrand's
-folio_pte_batch series gets merged.
-
- mm/khugepaged.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 1aa7ca67c756..99977bb9bf6a 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -31,6 +31,7 @@ enum scan_result {
- 	SCAN_FAIL,
- 	SCAN_SUCCEED,
- 	SCAN_PMD_NULL,
-+	SCAN_PMD_MIGRATION,
- 	SCAN_PMD_NONE,
- 	SCAN_PMD_MAPPED,
- 	SCAN_EXCEED_NONE_PTE,
-@@ -941,6 +942,8 @@ static inline int check_pmd_state(pmd_t *pmd)
- 
- 	if (pmd_none(pmde))
- 		return SCAN_PMD_NONE;
-+	if (is_pmd_migration_entry(pmde))
-+		return SCAN_PMD_MIGRATION;
- 	if (!pmd_present(pmde))
- 		return SCAN_PMD_NULL;
- 	if (pmd_trans_huge(pmde))
-@@ -1502,9 +1505,12 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- 	    !range_in_vma(vma, haddr, haddr + HPAGE_PMD_SIZE))
- 		return SCAN_VMA_CHECK;
- 
--	/* Fast check before locking page if already PMD-mapped */
-+	/*
-+	 * Fast check before locking folio if already PMD-mapped, or if the
-+	 * folio is under migration
-+	 */
- 	result = find_pmd_or_thp_or_none(mm, haddr, &pmd);
--	if (result == SCAN_PMD_MAPPED)
-+	if (result == SCAN_PMD_MAPPED || result == SCAN_PMD_MIGRATION)
- 		return result;
- 
- 	/*
-@@ -2716,6 +2722,7 @@ static int madvise_collapse_errno(enum scan_result r)
- 	case SCAN_PAGE_LRU:
- 	case SCAN_DEL_PAGE_LRU:
- 	case SCAN_PAGE_FILLED:
-+	case SCAN_PMD_MIGRATION:
- 		return -EAGAIN;
- 	/*
- 	 * Other: Trying again likely not to succeed / error intrinsic to
-@@ -2802,6 +2809,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
- 			goto handle_result;
- 		/* Whitelisted set of results where continuing OK */
- 		case SCAN_PMD_NULL:
-+		case SCAN_PMD_MIGRATION:
- 		case SCAN_PTE_NON_PRESENT:
- 		case SCAN_PTE_UFFD_WP:
- 		case SCAN_PAGE_RO:
--- 
-2.30.2
-
+>                 if (IS_ERR(tmdev->reset))
+>                         return PTR_ERR(tmdev->reset);
+>
+> --
+> 2.49.0
+>
