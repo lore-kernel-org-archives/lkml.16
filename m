@@ -1,124 +1,110 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197C24418E;
-	Mon, 30 Jun 2025 08:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA34924466F;
+	Mon, 30 Jun 2025 08:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272736; cv=none; b=h/oxAygwjPDaKU/g/tRpVBbTkkiyrY4frFqPRR0qA87T53yv/IpN3uGCJgEv13Ax0pScGRrp5cw02Ctf7QfGFORE/7S/hYHC+dwlrc1saUJ3fkwDewrltchdbtnzzcFgIeu1ynqYbtei3mGnEF5qYCNP1QwGEOylpXh9ZI8azWk=
+	t=1751272744; cv=none; b=KnbMNBIP+qJ14gXeAf+/0bDjXvgM2E4APfpKzoJglCFGVZa6SMOSMLh2ijt+y6DyNgX8hS9Ex7cr6rHOJyRlriCcFBOS1zLonh/HCcqLgbtSPiz6NSPq/V0bfBQBYgF9l5NBICvAIHbbYNOENBeITSySP/n1rABW+clwLLST9is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272736; c=relaxed/simple;
-	bh=+4yjQWAsZkfU8NsCh7RM+iBUGBH14NL/rn43HsII/dM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fQX6TT3ZG4GSeIYOybB3Vn+DEYrpX7X51tQoWAlAfKTgOxktips8+eO3ZGlOJXxG1vdhccHfd3N8ZQhAWd8PMbV+KB+4Ytso3bVpMoceEB1rl8l/Hgchr7IyE8hIencw/wPU6ciTaHLD8keQKlWd6WiPvK5y4hy5dE9pDr8jZFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87f13aba2ccso442812241.3;
-        Mon, 30 Jun 2025 01:38:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751272733; x=1751877533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HyReJn5zseFX3ZIz/ns2toxwkOANwmqgOiT1aGJ1WH0=;
-        b=sTzx9er62KZMNRfKuqL93f35g0vb0xFGM7aA9ae4BQbQg5Q6+rwusTcznFpcdVkju9
-         a5CkYYdAfAWgpziDw8mlT0CQPK0AdJSDPmvZUDizcnkCf5D7c1NsoSv3EzVivPtbmp+H
-         cBS2bTnzuFpd6B6J8zCyEwC9VCeqWfetErzumJszOK+KmreQEacJYQ0ugFlmsyIHJ4/L
-         azOOQtOvTUe/HjQQD9+t6kdIBa9XvlilFAf/TbBJPBCaphRzc5o4N0ukwRWRE81lS9RT
-         Kbm+wtB4EO2tDww+b2SPXx6yzkVhDTe9oVM8FEp2ELlCeAZHqKVxTpP36m2v4JjONEYo
-         CeKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZQhneiEfM6mnRumeSnRFWJj0ozDfHZaRVxDL2lXaYHQKXZ6W25fjjejAP9WbnbDMUu148tacfjBRl@vger.kernel.org, AJvYcCVl27+o6Jhg4Nznv0fjZ5j2kdESfe/ky7lUIgfukNvu83TV4sU8zvxrQvGDudsXNZxg8HrvmwIpy/R7RQ==@vger.kernel.org, AJvYcCXl5s0IjjAWjRNKLW1mP13BSP97bh9s+BxFwaAZCkadIoufuaC9sIqTU+MkWtSf+XWo2ldMoZJzYWe2N0u1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yza/quryKxfbMOV+vZnWg2CZ8fG5wt7gi618CEVs9Jh/5XEtFPO
-	Xvd1bErMuPPE712wtyEYS27Z7vQP22AGXh/4XUbOaaSmTCCvzgil3p7taT5Zal4/
-X-Gm-Gg: ASbGnctVertFYXwfW8vBdZdq28vJDuR+Cns0obrN496/f5JqxphhhkP/Y83Gv8VUWsT
-	Q9BLV/JFQwQnj0i072p4IPZLsB1b3Q+azEHLpWoxUq6vZhOFO/MCawkWlDbR4S6rfN2Mto/i6Q4
-	4QCa+f8oZrSegYYApyTgFq2amIyV/keC98ZJocTyRjrNq6oAnxsOloCpsSyjhc3zNJ+BHvPFSx9
-	9k9umkdaeTQb68njCdwS9cD9xMWwk7jfQNGmjbilgbLee+1b5CvB/5n+sqzvNTgmUh8rKity3D0
-	tJnN0nSLXwD6xSCg2g77o1z7IyCWUea7LE/pZ/YL4hUbIBq7qr21skRG36RdcDgibQ2wc4DFxAr
-	2OYty3YuSKkFbW0g/3xLlbcbfqlZ1tnd9eitv0Dc=
-X-Google-Smtp-Source: AGHT+IHebGfBWUO28zQZivFnlHzXC8tyy8rrbZiBc9Yu7JBp2vheur66LWIJedPc57truLBaQ3Fbkw==
-X-Received: by 2002:a05:6102:3708:b0:4e6:a33d:9925 with SMTP id ada2fe7eead31-4ee4f480368mr7144099137.5.1751272732739;
-        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4c7e774csm1178130137.8.2025.06.30.01.38.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5313ea766d8so1405296e0c.0;
-        Mon, 30 Jun 2025 01:38:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUc8Z6ufWGVO2xXxZEYI+aXIkFiNQX0pPJ63r7rtSDfI7YhIzcT2Z4PFY5Ec6shBx4lpcvdCaEoFjsjYg==@vger.kernel.org, AJvYcCVSy1gjSMu546ZxGlXPwKP1tnJWcme0goK/pV9oWyTFLdnwzbDgDsKmw1gHmlDj0wN7LAsZWflcxHGJ2466@vger.kernel.org, AJvYcCWnVxOjEVcbEhQsgwUKahfek0o/+7JCizMn2xCE3kUUajJ5n+35XT5herT/WiNcuB54jjrMtEra3g67@vger.kernel.org
-X-Received: by 2002:a05:6122:2526:b0:530:720b:abe9 with SMTP id
- 71dfb90a1353d-5330bfbe262mr7226304e0c.7.1751272732090; Mon, 30 Jun 2025
- 01:38:52 -0700 (PDT)
+	s=arc-20240116; t=1751272744; c=relaxed/simple;
+	bh=dXeTuzcgcqEB0p+KJUY9jWL49qMbSvHNlA+EHsWxX3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXhRdl6eKI/Oq3DW5OajA1Oabjt/PUisJkqSFCP0UDttNYa0SVSZ+8hHDOCnEk0zYgRt7OMwu5uZrlOHvnfpydXVl6C6sv1yFP8zZer/oAIDJ8KhNIZfj3teGb66ZL6X99CtFSjnmKuXvKN7J7+kfVFsmC5bB5smxMppWuZ+3+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3aweSNK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3aweSNK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA1BC4CEE3;
+	Mon, 30 Jun 2025 08:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751272743;
+	bh=dXeTuzcgcqEB0p+KJUY9jWL49qMbSvHNlA+EHsWxX3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s3aweSNK50ehyIVaU33NZusDCONXpWb2aiAYnt4ufTSqdzqs7WetkbH3QfCmCfawH
+	 zvm7sb0KbzUocbZKOdEUotb7GavVcNjIbDb6PaDE5n6AfWLvtjILd7scwmUkrtUXIU
+	 5GRFBsp36BLCkqs/YK4Gv+smuEhmw+linY++VYeF92ydNUO6CrLNkyrY5cFET0ex83
+	 xKIJJzQr6DLpcifTLnwfqEtxENxUM7C7RR54vePZT7sxpeMw0ni+q69CH9l0MsvUOq
+	 5YMF64EW7Sr6sWaZjnnOhM+A22byK8MLSUj42XuiLhoX+xhjQHTwVJf26msZZ+IQbe
+	 CHVP+SaBbMwQA==
+Date: Mon, 30 Jun 2025 10:38:59 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/xfs: replace strncpy with strscpy
+Message-ID: <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
+References: <BgUaxdxshFCssVdvh_jiOf_C2IyUDDKB9gNz_bt5pLaC8fFmFa0E_Cvq6s9eXOGe8M0fvBUFYG3bqVQAsCyz3w==@protonmail.internalid>
+ <20250617124546.24102-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
- <20250629130002.49842-7-jefflessard3@gmail.com> <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
- <760A6F11-6783-4B24-9A99-E043297CF039@gmail.com>
-In-Reply-To: <760A6F11-6783-4B24-9A99-E043297CF039@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 30 Jun 2025 10:38:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVgEbbOh9t+k5eBoGTD1OTLrC7btgb8O6yZ5f0_y5Q2rw@mail.gmail.com>
-X-Gm-Features: Ac12FXyXU4uC2yPcHJkd5_O4blSGBeChGO91bmJOYDCnSyDkJYaozuzebbF_Dl0
-Message-ID: <CAMuHMdVgEbbOh9t+k5eBoGTD1OTLrC7btgb8O6yZ5f0_y5Q2rw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core Electronics
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: =?UTF-8?Q?Jean=2DFran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Boris Gjenero <boris.gjenero@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Paolo Sabatino <paolo.sabatino@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617124546.24102-1-pranav.tyagi03@gmail.com>
 
-Hi Christian,
+On Tue, Jun 17, 2025 at 06:15:46PM +0530, Pranav Tyagi wrote:
+> Replace the deprecated strncpy() with strscpy() as the destination
+> buffer should be NUL-terminated and does not require any trailing
+> NUL-padding. Also, since NUL-termination is guaranteed,
 
-On Mon, 30 Jun 2025 at 10:31, Christian Hewitt
-<christianshewitt@gmail.com> wrote:
-> > On 30 Jun 2025, at 12:19=E2=80=AFpm, Geert Uytterhoeven <geert@linux-m6=
-8k.org> wrote:
-> > On Sun, 29 Jun 2025 at 15:00, Jean-Fran=C3=A7ois Lessard
-> > <jefflessard3@gmail.com> wrote:
-> >> Assign vendor prefix "icore", based on their domain name.
-> >>
-> >> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
-> >
-> > Thanks for your patch!
-> >
-> >> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> >> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> >> @@ -694,6 +694,8 @@ patternProperties:
-> >>     description: International Business Machines (IBM)
-> >>   "^ibm,.*":
-> >>     description: International Business Machines (IBM)
-> >> +  "^icore,.*":
-> >> +    description: Wuxi i-Core Electronics Co., Ltd.
-> >
-> > This sounds a bit too generic to me.  What is the domain name?
->
-> Their domain/website is http://www.i-core.cn/en/ and i-Core is used
-> as the watermark in their datasheets [0]. We=E2=80=99ve thought to drop t=
-he
-> hyphen and use plain =E2=80=98icore=E2=80=99 to avoid future typos.
+NUL-termination is only guaranteed if you copy into the buffer one less
+byte than the label requires, i.e XFSLABEL_MAX.
 
-OK (i-core.com seems to be unused, and parked).
+> use sizeof(label) in place of XFSLABEL_MAX as the size
+> parameter.
 
-Gr{oetje,eeting}s,
+This is wrong, see below why.
 
-                        Geert
+> 
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> ---
+>  fs/xfs/xfs_ioctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index d250f7f74e3b..9f4d68c5b5ab 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -992,7 +992,7 @@ xfs_ioc_getlabel(
+>  	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
+>  	memset(label, 0, sizeof(label));
+>  	spin_lock(&mp->m_sb_lock);
+> -	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> +	strscpy(label, sbp->sb_fname, sizeof(label));
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+This is broken and you created a buffer overrun here.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+XFSLABEL_MAX is set to 12 bytes. The current label size is 13 bytes:
+
+char                    label[XFSLABEL_MAX + 1];
+
+This ensures the label will always have a null termination character as
+long as you copy XFSLABEL_MAX bytes into the label.
+
+- strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+
+Copies 12 bytes from sb_fname into label. This ensures we always have a
+trailing \0 at the last byte.
+
+Your version:
+
+strscpy(label, sbp->sb_fname, sizeof(label));
+
+Copies 13 bytes from sb_fname into the label buffer.
+
+This not only could have copied a non-null byte to the last byte in the
+label buffer, but also But sbp->sb_fname size is XFSLABEL_MAX, so you
+are reading beyond the source buffer size, causing a buffer overrun as you
+can see on the kernel test robot report.
+
+Carlos
+
+>  	spin_unlock(&mp->m_sb_lock);
+> 
+>  	if (copy_to_user(user_label, label, sizeof(label)))
+> --
+> 2.49.0
+> 
