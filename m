@@ -1,143 +1,181 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4662C3749
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE228DF40;
+	Mon, 30 Jun 2025 17:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751305375; cv=none; b=t6hNdZwAlIZ6lU4ibxQRm7mdaFChnSR2YoJjVlbonZpte3prw5x/5qk08AbDHOmBXYHcqfuQco0D0A3FRuXAc7F9gRrc0KMlvkjB5K6Mze9RP0wbbdhZcmkldOi2alrtxELugUELT1GhLdTy38rKmsxw+MmLw4qKO8MwGWknqiU=
+	t=1751305509; cv=none; b=DpzmcdtKkgxYbcSyA/KqlXt0UbAmq6x8ptVb63RT+k9FewGQIGoeEkfxOrgCAyjaua8x19MjY0iwAsfEX4wmRXvOafgevpt7xrLe4h/XaKD1N19QWM8qg11Ir1NywCTx3x4wCmxSBB4bx6AG9aKOnLrd/RjhqfFHM+Qck1X/M9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751305375; c=relaxed/simple;
-	bh=p9QHb3/hnKvWZKIXq5Fvg8ndjho6Otu5IGRMFihrTnE=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=JAirlTEdVgZcNFam06EN6sbJYOunp5jZQhmUio0GigCftCChGcPoKJbFWipXWRodsqcDRR+C/NBwussYzHLSVlwRBNtBCPlY5THDp+fZLXzLflj+u5vZmqR43URv0hUSYmczCmxL+BbI3V1TTb7S8NDquXvQjj40vhzU8g7E/Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LCAHmmTL; arc=none smtp.client-ip=209.85.166.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1751305509; c=relaxed/simple;
+	bh=i5RJ/sC/svK83YrMoFZztx4G0sX30XvRei6equEd/Hs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=THtJMMkgr70NbQ+QUh4Sql4h9u9qzfHVGwiBT+vUwK/QBjKd3uizM/rD8ZDk3lRiAsmPVvTLVYpMh5WkGz0DBbQCo4kaZ5zG4AULuKQ52VRweVNK4cYlJkdJwISQ8qtNfq3j9W2UChCJMLpbJ5Ch1KLEfr0WMBi/pnNe1AE/MjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDrzdZyp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LCAHmmTL"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3df2d0b7c50so25047415ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751305373; x=1751910173; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ImVsekYPJx+C4taW0n4SjIxS/mjgVChiR4QEyhkYP6w=;
-        b=LCAHmmTLlc7LAL9IhX3jzPcQ2WgcZGwwRiWm0xZqvthjUhf9xOGL3xxTV0q5Y15+3z
-         jvgDdqoloX97kyUqiC114rGfNYt8i8hYUDZsVOg44g8zsers9SA7WItxZdcuQAMTeBS8
-         caDBoOK9ePCqQ8SaACgl9PKgpCMdYcFwllcxDTdXHRyzNmJCLPdEa+jqYPV41FJ7LHDH
-         udAsChdeeY+kG61aHeWfqL8rjP9rZOlLinOxZoYqK49gI56wiJ/vGsSJYU+Ciqy+Y9KX
-         sOSgF29NYSEpQNpjqG0VUYPAbY0XrVNKCufua4aislkVEu69wRl8MF1qPmEEzSTnFcuQ
-         tuGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751305373; x=1751910173;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ImVsekYPJx+C4taW0n4SjIxS/mjgVChiR4QEyhkYP6w=;
-        b=ZglBI4iGnCWrN1RuQgptZi+4Q9usRlUhmo0sXAAvIDmtiL0r27VBKNAsIewgfZ1GaI
-         KfQwnOKDrcVZVYtXN1z7wmQfEigGmJuEE9eMoQij0LkwScykU3rGrPbK6hSrx6LT53B+
-         B/VQHoCKmDwrxfRe8SmoIekDz9L2lywfif0PxXHXB27+SKSFPHS6C9NNdDX4tlNaKEJI
-         3Dgy3RJs5sFjrOYZ0KKtkm0wce8JwytnpoQFRE5tLE7tL9xZk8DGSfOLVEFNOy+rHZvj
-         Snlu+8x003X5IU6px+z4CjidNtBut1HNlFz/fxH0yrIVMskploukX4Ppk2h4P7kW5ttn
-         h/lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlm/pw9iDAVIt1LbDuB26cZxqFco9bCS1eiJ8Hhqpv6kpCLzKE1Fa1ntfw3QYaED4Yf3XOUNEAqRmatAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUtzScke+6GlWnGpn4YrpZXUGEhCUIHvjyFpDZb4/02gsQFeIC
-	8KvI/cjb6EQIRT8DqgBGF9Sd4me+UgcAOUXHCd3kdcXGxQcTHdZSLQTRPrxbIfZOeNmze2CJlxs
-	ZbddCqEK2NOfy/u8bAa9sYL9+fw==
-X-Google-Smtp-Source: AGHT+IF9nPhO3RxMhccQIRyozfA0RZ1o/n5EUvH0ZvYssIkGUujSgAHo5a6XMuPc/RTrNVL6l8tA4e7hfnuN+vQINg==
-X-Received: from ilbbc5.prod.google.com ([2002:a05:6e02:85:b0:3df:2ece:7197])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6e02:3c85:b0:3dd:b808:be59 with SMTP id e9e14a558f8ab-3df4acc61ecmr180573955ab.21.1751305372798;
- Mon, 30 Jun 2025 10:42:52 -0700 (PDT)
-Date: Mon, 30 Jun 2025 17:42:52 +0000
-In-Reply-To: <aF8FPTupC_VnAldN@linux.dev> (message from Oliver Upton on Fri,
- 27 Jun 2025 13:55:25 -0700)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDrzdZyp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A0CC4CEE3;
+	Mon, 30 Jun 2025 17:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751305508;
+	bh=i5RJ/sC/svK83YrMoFZztx4G0sX30XvRei6equEd/Hs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oDrzdZypIrEsLQIZLa6c6QXtwB2jVjICOOVnRIfOHf86uSSrscF/DAl4rMU7Iu/Ls
+	 kprDTfME4Vm7NX98RUvXe+9xhVjM7USYFIJXWFXh1BunC6xyU8LFWPZDWyRKL3J0WS
+	 y6lRBPVlJXs4Tqabod4v179KaBriS7nWXPRtWdz1e359Vwb7tq497uc64wkFNeXLqj
+	 w5QJOosQu7ly8d//zo593m9/PqG6wcx+NlVbc/3vt8F8+DArH9MB5cUonsCp8SNm8C
+	 0JDQbqWZXASDlbh2/4/YRQTQYBsyZUscUfvbx0QMIhLjb9su6oOfilIAAd+AIu8EsK
+	 P+Imc9iQrWh/Q==
+From: Song Liu <song@kernel.org>
+To: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	dylanbhatch@google.com,
+	fj6611ie@aa.jp.fujitsu.com,
+	mark.rutland@arm.com,
+	kernel-team@meta.com,
+	Song Liu <song@kernel.org>,
+	Suraj Jitindar Singh <surajjs@amazon.com>,
+	Torsten Duwe <duwe@suse.de>,
+	Breno Leitao <leitao@debian.org>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH v5] arm64: Implement HAVE_LIVEPATCH
+Date: Mon, 30 Jun 2025 10:45:02 -0700
+Message-ID: <20250630174502.842486-1-song@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsnt4ivx86sj.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v3 02/22] arm64: Generate sign macro for sysreg Enums
-From: Colton Lewis <coltonlewis@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: ben.horgan@arm.com, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, mizhang@google.com, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, mark.rutland@arm.com, 
-	shuah@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+Allocate a task flag used to represent the patch pending state for the
+task. When a livepatch is being loaded or unloaded, the livepatch code
+uses this flag to select the proper version of a being patched kernel
+functions to use for current task.
 
-> On Fri, Jun 27, 2025 at 08:45:38PM +0000, Colton Lewis wrote:
->> Hi Ben. Thanks for the review.
+In arch/arm64/Kconfig, select HAVE_LIVEPATCH and include proper Kconfig.
 
->> Ben Horgan <ben.horgan@arm.com> writes:
+This is largely based on [1] by Suraj Jitindar Singh.
 
->> > Hi Colton,
+[1] https://lore.kernel.org/all/20210604235930.603-1-surajjs@amazon.com/
 
->> > On 6/26/25 21:04, Colton Lewis wrote:
->> > > There's no reason Enums shouldn't be equivalent to UnsignedEnums and
->> > > explicitly specify they are unsigned. This will avoid the annoyance I
->> > > had with HPMN0.
->> > An Enum can be annotated with the field's sign by updating it to
->> > UnsignedEnum or SignedEnum. This is explained in [1].
+Cc: Suraj Jitindar Singh <surajjs@amazon.com>
+Cc: Torsten Duwe <duwe@suse.de>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+Tested-by: Breno Leitao <leitao@debian.org>
+Tested-by: Andrea della Porta <andrea.porta@suse.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
 
->> > With this change ID_AA64PFR1_EL1.MTE_frac would be marked as unsigned
->> > when it should really be considered signed.
+---
 
->> > Enum	43:40	MTE_frac
->> > 	0b0000	ASYNC
->> > 	0b1111	NI
->> > EndEnum
+Changes v4 => v5:
+1. Update commit log.
 
->> Thanks for the explanation. I made this a separate commit because I
->> considered people might object and HPMN0 is already an UnsignedEnum in
->> my previous commit.
+v4: https://lore.kernel.org/live-patching/20250617173734.651611-1-song@kernel.org/
 
->> Do you think it would be a good idea to make plain Enums signed by
->> default or should I just remove this commit from the series?
+Changes v3 => v4:
+1. Only keep 2/2 from v3, as 1/2 is now included in [3].
+2. Change TIF_PATCH_PENDING from 7 to 13.
 
-> It is presumptive to associate a sign with an enumeration. Generally
-> speaking, the only fields that can do signed / unsigned comparisons are
-> the Feature ID register fields.
+v3: https://lore.kernel.org/linux-arm-kernel/20250320171559.3423224-1-song@kernel.org/
 
-> So please drop this and only keep the change for HPMN0.
+Changes v2 => v3:
+1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
+2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
 
-Done.
+v2: https://lore.kernel.org/live-patching/20250319213707.1784775-1-song@kernel.org/
 
+Changes v1 => v2:
 
-> Thanks,
-> Oliver
+1. Rework arch_stack_walk_reliable().
 
->> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> > > ---
->> > >    arch/arm64/tools/gen-sysreg.awk | 1 +
->> > >    1 file changed, 1 insertion(+)
+v1: https://lore.kernel.org/live-patching/20250308012742.3208215-1-song@kernel.org/
+---
+ arch/arm64/Kconfig                   | 3 +++
+ arch/arm64/include/asm/thread_info.h | 5 ++++-
+ arch/arm64/kernel/entry-common.c     | 4 ++++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
->> > > diff --git a/arch/arm64/tools/gen-sysreg.awk
->> > > b/arch/arm64/tools/gen-sysreg.awk
->> > > index f2a1732cb1f6..fa21a632d9b7 100755
->> > > --- a/arch/arm64/tools/gen-sysreg.awk
->> > > +++ b/arch/arm64/tools/gen-sysreg.awk
->> > > @@ -308,6 +308,7 @@ $1 == "Enum" && (block_current() == "Sysreg" ||
->> > > block_current() == "SysregFields
->> > >    	parse_bitdef(reg, field, $2)
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b7462424aa59..110218542920 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -280,6 +280,7 @@ config ARM64
+ 	select USER_STACKTRACE_SUPPORT
+ 	select VDSO_GETRANDOM
+ 	select HAVE_RELIABLE_STACKTRACE
++	select HAVE_LIVEPATCH
+ 	help
+ 	  ARM 64-bit (AArch64) Linux support.
+ 
+@@ -2499,3 +2500,5 @@ endmenu # "CPU Power Management"
+ source "drivers/acpi/Kconfig"
+ 
+ source "arch/arm64/kvm/Kconfig"
++
++source "kernel/livepatch/Kconfig"
+diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+index 1269c2487574..f241b8601ebd 100644
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -70,6 +70,7 @@ void arch_setup_new_exec(void);
+ #define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
+ #define TIF_SECCOMP		11	/* syscall secure computing */
+ #define TIF_SYSCALL_EMU		12	/* syscall emulation active */
++#define TIF_PATCH_PENDING	13	/* pending live patching update */
+ #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+ #define TIF_FREEZE		19
+ #define TIF_RESTORE_SIGMASK	20
+@@ -96,6 +97,7 @@ void arch_setup_new_exec(void);
+ #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+ #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
++#define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
+ #define _TIF_32BIT		(1 << TIF_32BIT)
+@@ -107,7 +109,8 @@ void arch_setup_new_exec(void);
+ #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY | \
+ 				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+ 				 _TIF_UPROBE | _TIF_MTE_ASYNC_FAULT | \
+-				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING)
++				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING | \
++				 _TIF_PATCH_PENDING)
+ 
+ #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
+ 				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
+diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+index 7c1970b341b8..a56878d7c733 100644
+--- a/arch/arm64/kernel/entry-common.c
++++ b/arch/arm64/kernel/entry-common.c
+@@ -8,6 +8,7 @@
+ #include <linux/context_tracking.h>
+ #include <linux/kasan.h>
+ #include <linux/linkage.h>
++#include <linux/livepatch.h>
+ #include <linux/lockdep.h>
+ #include <linux/ptrace.h>
+ #include <linux/resume_user_mode.h>
+@@ -144,6 +145,9 @@ static void do_notify_resume(struct pt_regs *regs, unsigned long thread_flags)
+ 				       (void __user *)NULL, current);
+ 		}
+ 
++		if (thread_flags & _TIF_PATCH_PENDING)
++			klp_update_patch_state(current);
++
+ 		if (thread_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+ 			do_signal(regs);
+ 
+-- 
+2.47.1
 
->> > >    	define_field(reg, field, msb, lsb)
->> > > +	define_field_sign(reg, field, "false")
-
->> > >    	next
->> > >    }
-
->> > Thanks,
-
->> > Ben
-
->> > [1]
->> >  
->> https://lore.kernel.org/all/20221207-arm64-sysreg-helpers-v4-1-25b6b3fb9d18@kernel.org/
