@@ -1,134 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09AEADC;
-	Mon, 30 Jun 2025 18:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF9723C4FA;
+	Mon, 30 Jun 2025 18:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751308693; cv=none; b=L/fd73yB2arOYNHHnh6g/kdoCjrr6UiJK9Db95RO7bXycMLjzT1HEC+Wzns3VYYbfJW/SHxKaG1wCUwIHGgOuzgLUwM4EB6cgdEqZqTAEu9FaNhYGQNC4YuBJCfvhGmdN2+Xma10ZBLW+9oHiZEP1AKQhF9uEvtp28I8B1RrhLE=
+	t=1751309035; cv=none; b=qwTz/A1GXr/BWwmwaigal/CRITi7Rufpg8fiTzR9ketcMhcHSFpa0GofDLOwJmlvf6TX5EHSmCMQVEk+ARqqX0BzRWY27jwyMEL0mqROYIGyAWaAh6a8a0Hql5sp8DbrCk71Cw5omjSI7X+BXVm3q+hzPu4RdMHjzJsl3g17f3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751308693; c=relaxed/simple;
-	bh=SFIdcYrq5Q88LPXoFIVLXlwzcx8YD6QNMwRzmkI9Dp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9S3497opCHr2CS4Y58s4Ly803VvQiAjOfKAgEDJMP+K8VIv6TN5OXRsx/AbJw8oa9+p5qId4KvMdyZ4HmF1nMZ9N3mQkmt/zJbq7e/lU+elQNTAfn9V7jSWDhkJL9zmkixZJNLt2sg4pCxgnoSnlEtgT0aKp8KhuaAhPoxsaKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQujNAHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751309035; c=relaxed/simple;
+	bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jWihqo4mujlv1Yyd0sGWKaaZ8KmbcMDz0gq9kywHoy4/xX5qUzDyH3RAxmT2e8FBmZst3eIX7PNS3076WntXem/r1ca5s2mthOHIn915KFDyT9zD7PVvzm9WpgMMlfHL7jxy7Jm8tEODFmUY/J2TB2LdkGsd2jlocH1Cayvsv5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bkOeEFum; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQujNAHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B07C4CEE3;
-	Mon, 30 Jun 2025 18:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751308692;
-	bh=SFIdcYrq5Q88LPXoFIVLXlwzcx8YD6QNMwRzmkI9Dp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qQujNAHqJXzyU0+wI5QuEtq3II7dIwcAcY1GgDoSFk4EcTOh9huZHfqmynSryvROu
-	 Xjkp+vTxybo+jickeG4xhgCeZYOicbptcjUNt4Rg++7PhVU7+J5MCnaZQobBdWDTHH
-	 2ybSnPCRFJMY3L4k3dQ3F1n1JQW75riWbYT1XZPhq0KpIZxyDxTmzJK3tT26V6QC63
-	 avV7JqqPhAzltiievS7BnhFnaU6VBiKZCQ1mb1h2Apcwu9Y/nyKGDDPZ8IKrmaCHpD
-	 6jSKyy+imYH/eIvk2HyTI12RkHz6XH0Szw0otqho93P2SCP4+p75eCphQK6wkz45e+
-	 gawT01Et6qiBQ==
-Date: Mon, 30 Jun 2025 20:38:08 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/xfs: replace strncpy with strscpy
-Message-ID: <6grkelqkotgz6hnwce5n7gzdixgzlaqkwzo243f7vyqjas3c4g@viyu57vmxltz>
-References: <BgUaxdxshFCssVdvh_jiOf_C2IyUDDKB9gNz_bt5pLaC8fFmFa0E_Cvq6s9eXOGe8M0fvBUFYG3bqVQAsCyz3w==@protonmail.internalid>
- <20250617124546.24102-1-pranav.tyagi03@gmail.com>
- <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
- <WBE4B1OP-kfASGRcvWwSonfk0K1Gt9aaX533GfEvt007c_wee2NnaupnonhPygu25xVhRW0racnd4Jig_diSMA==@protonmail.internalid>
- <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkOeEFum"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553cf020383so5410321e87.2;
+        Mon, 30 Jun 2025 11:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751309032; x=1751913832; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
+        b=bkOeEFumHtVdi0K3Ku8qM8LG8DUpLsPmDbhg/0hEEwSWjYBnZatRSG1NUOrj3ZuM2V
+         Z06R83W0L6Orly4J2oNfRYufyGuedlvSIcRJPiaqSx0i9BHP3J/Y6OXfOEaCliiCwnZI
+         ZDyncefWcwyg/kUqNQ9KnsvwHEhZuOTWcJp2hoOC/DkBA2Y2RA5HPzyWSXa4SYdT0YZN
+         nQAZ5U2w3rtmxIwbRi0+ZYU4sjIUnUuH/Bh/KEH9S+vf0bSmKWPnrEPahYRK9GZOTz0L
+         mZlm5WMW1e3d16EwgaIzSwna+cN6Hp6cbWQYyWEV556nkKeP2AI3RRCjJ5RH9vyOhU9G
+         GveA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751309032; x=1751913832;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aFSIbwA0Obs5QTHKNt8wYCpB5FVrzEDjx2aUoocbr9A=;
+        b=fNzPMCkYTpf5TFRQzquAPQ6I0BEnBEntMjCx1IS9AANE6QZ5BS35fATsFa7YDvFwbE
+         UErwNHrKaoqz9dCTXh9zO0KGz1S/2YhanBNMXJitWJwEGHAxGrHbtBeXP1PWMj/XfSKg
+         QAAfH1wIsabljJLjT6VNMehfGKPqhPmazjym6IDyK8VRlYKqrTMtpvnAsBlxAfpXE3uz
+         TsKd6Yf5AX4rO2UjP3j+o1NOAiisYMNYN638ByL0v+4Gbr27ho65Fok4yv2dhenobTk7
+         xNmWrXWhQwW6eoQntk3LiaJ2ZzeBK6RQB+C8Tr8ZJeluPmpcbbHPwejxLxstKjEddaqJ
+         D1UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgFB4yv3tPYryKh0r/1bLieNcxPeXfieHBCMtcIZ5K5uATd3kkZBPlytPVkvRvKbXgJpMlfwuQz1vts0o=@vger.kernel.org, AJvYcCWYYynIM7xA4muNxpvcORyDFChFOPkKvOkDZx4eKUICh8uZ1X0q2Oc43IinKYccPAEaDBHoH41QRYw=@vger.kernel.org, AJvYcCX0oxWBD6iJHP8wAMMS36DounI8i9aWLikNrrKaAmxx44jajLkBq52+W8B4sD8y7qwMv67wjSkhBd6ypqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZSjrvxE4rAlrH32fxVbANiccmY3UF9wQzGVkQPgRfXB8tDzh5
+	fSF0HdGBWod1TIVa4GyQSxVzBlZ505/STBB1Is13W0+bVR7+TuXiRXKhc8gxGKPcPUPEGGnwLrJ
+	DVBbBO5DmPV7fKHxg/O9APBglYUIaQtw=
+X-Gm-Gg: ASbGncuxxnVCFbzzknIf6B4/+xBru09rNYvViFWlc2FnhTjHo17rEMEs/OLG8c2i3ZL
+	snrjjXWBH39oCblPKtzjLp6/EfddePu3mkzGk1sAXgnWZkqZKYhI5kEixPBodTG8fjcPQ9FgH7v
+	p1pr1s8VSUXNTW/ZP/amgB85d7KzK1Zf5yI5AW1mD6Jr4=
+X-Google-Smtp-Source: AGHT+IFts7B2G94g1BsJej0yK8agM1bwVzu0mWbSXDl/5ZEwOcpHgL67IjAqouLat6jwnKktyvp8cEJm7vvx5kQIH00=
+X-Received: by 2002:a05:6512:b12:b0:554:f79d:ce59 with SMTP id
+ 2adb3069b0e04-5550b9ee228mr4566554e87.27.1751309031764; Mon, 30 Jun 2025
+ 11:43:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
+References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
+ <20250508-tegra124-cpufreq-v4-1-d142bcbd0234@gmail.com> <040b0d8b-e862-48dd-9b77-9266a5194f99@nvidia.com>
+ <20250519101725.k644wzizjwygtwa7@vireshk-i7> <49e7d006-e9cb-49da-a4cb-b73a08f6b792@nvidia.com>
+ <20250520100218.te5i5ltrx43zjsq6@vireshk-i7> <9826e66a-3474-4a00-967d-b7784ff60be4@nvidia.com>
+ <20250605105151.5s6eblr472mbhunt@vireshk-i7>
+In-Reply-To: <20250605105151.5s6eblr472mbhunt@vireshk-i7>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 30 Jun 2025 13:43:40 -0500
+X-Gm-Features: Ac12FXxHvk8KZYtykBjWMf5LNIhZa8_RViROFbSfDc-CY2-mP9QdqIlLFIs5w1U
+Message-ID: <CALHNRZ-uA6vHYbb5UdDvhRrNy5j2jyds4iTsiOxc6O=2nnedbg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] cpufreq: tegra124: Remove use of disable_cpufreq
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 02:36:01PM +0530, Pranav Tyagi wrote:
-> On Mon, Jun 30, 2025 at 2:09 PM Carlos Maiolino <cem@kernel.org> wrote:
-> >
-> > On Tue, Jun 17, 2025 at 06:15:46PM +0530, Pranav Tyagi wrote:
-> > > Replace the deprecated strncpy() with strscpy() as the destination
-> > > buffer should be NUL-terminated and does not require any trailing
-> > > NUL-padding. Also, since NUL-termination is guaranteed,
-> >
-> > NUL-termination is only guaranteed if you copy into the buffer one less
-> > byte than the label requires, i.e XFSLABEL_MAX.
-> >
-> > > use sizeof(label) in place of XFSLABEL_MAX as the size
-> > > parameter.
-> >
-> > This is wrong, see below why.
-> >
-> > >
-> > > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > > ---
-> > >  fs/xfs/xfs_ioctl.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > > index d250f7f74e3b..9f4d68c5b5ab 100644
-> > > --- a/fs/xfs/xfs_ioctl.c
-> > > +++ b/fs/xfs/xfs_ioctl.c
-> > > @@ -992,7 +992,7 @@ xfs_ioc_getlabel(
-> > >       /* 1 larger than sb_fname, so this ensures a trailing NUL char */
-> > >       memset(label, 0, sizeof(label));
-> > >       spin_lock(&mp->m_sb_lock);
-> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> > > +     strscpy(label, sbp->sb_fname, sizeof(label));
-> >
-> > This is broken and you created a buffer overrun here.
-> >
-> > XFSLABEL_MAX is set to 12 bytes. The current label size is 13 bytes:
-> >
-> > char                    label[XFSLABEL_MAX + 1];
-> >
-> > This ensures the label will always have a null termination character as
-> > long as you copy XFSLABEL_MAX bytes into the label.
-> >
-> > - strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> >
-> > Copies 12 bytes from sb_fname into label. This ensures we always have a
-> > trailing \0 at the last byte.
-> >
-> > Your version:
-> >
-> > strscpy(label, sbp->sb_fname, sizeof(label));
-> >
-> > Copies 13 bytes from sb_fname into the label buffer.
-> >
-> > This not only could have copied a non-null byte to the last byte in the
-> > label buffer, but also But sbp->sb_fname size is XFSLABEL_MAX, so you
-> > are reading beyond the source buffer size, causing a buffer overrun as you
-> > can see on the kernel test robot report.
-> >
-> > Carlos
-> >
-> > >       spin_unlock(&mp->m_sb_lock);
-> > >
-> > >       if (copy_to_user(user_label, label, sizeof(label)))
-> > > --
-> > > 2.49.0
-> > >
-> 
-> Hi,
-> 
-> Thank you for the feedback. I understand that my patch is incorrect and
-> it causes a buffer overrun. The destination buffer is indeed, already, null
-> terminated. Would you like me to send a corrected patch which uses
-> strscpy() (as strncpy() is deprecated)?
+On Thu, Jun 5, 2025 at 5:51=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
+>
+> On 05-06-25, 11:34, Jon Hunter wrote:
+> > I think that would be fine. Given that the tegra124-cpufreq driver is t=
+he
+> > parent, if it fails to resume, then I assume that cpufreq-dt driver wou=
+ld
+> > not resume either?
+>
+> There is no resume interface in the cpufreq-dt driver, it is the cpufreq =
+core
+> which resumes to doing DVFS and I think it will try to do DVFS even if te=
+gra's
+> driver failed.
 
-Sure, do so.
+In my opinion, I'm thinking the original flow makes more sense. If
+resume fails, disable cpufreq. Then the subsystem doesn't keep trying
+and failing and causing who knows what kind of havoc. But if that's
+still not desired, what should I do to get this moving again? Just
+drop the error handling entirely, as suggested?
 
-Carlos
-
-> 
-> Regret the inconvenience.
-> 
-> Regards
-> Pranav Tyagi
+Aaron
