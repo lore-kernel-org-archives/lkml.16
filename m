@@ -1,113 +1,107 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC7D17A2F5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20AC17A2F5;
+	Mon, 30 Jun 2025 22:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322007; cv=none; b=OfQxPlM1wBabUOtvYY1B8ibM9E8LEZCXO6UAdeSTO7GzaIr9MhbqdwE6y1545aEh0/JSwYRAz1wzWs5mLAJioYIDarlapBVDyoSwIcEDXKBa3Uhrx28sMme+C2DaOhorB7NHM2EVGY/wNDmKWcbu/C0Gh43VjlIY6p+EcWGokVY=
+	t=1751322063; cv=none; b=RIJ9MmnU8ylVMSH5HuQJwvO0d9a99VP119SjJ8u2GWHf6QCzOJofk6EnwCfcRpIqKAiOf0FLiygw/fCNcN4u/pQYyZ0CSV3Xt3yJjOtqAbumA2Ds8xV0XvlQ+8NtOA3d42hMyuGwufcgPNI9wrXUF+wy/z5x6Y9OhXzWJIxBH84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322007; c=relaxed/simple;
-	bh=LNt+L7iQh4ZxDFsFcFQoLjc0Sd/ALam1gWBrgrsaDis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8+j2+UzEDtHAFQI91I+F5mtPVYhw5fIw/Wo924/XqJ8TgiZ04oc91TdvywVbNCj9HlGR5lAoqXydGyBsm+zCSqg63ZVrJLDBndN0c4USFZkeJ8Mkpg9xn2RtrBcrDNtTe8IYsZ3m9iidHJklq+S/gSndsvTu6ONIkUXiB/RixY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XJVAqIOh; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751322063; c=relaxed/simple;
+	bh=T+kvLHHNBi3eAVSXnbHKPtUgScri0TI5apBm/HNsjRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nYsmJXPqKbVsaY0jRBLZ/5tr1B6oPo0nWxcZF9MhoYzzYtriZsTAADM0TsXsl1S3keHI2oK/3oEXbita6P5I7W/Xe56QSmslRnCUHEMFsY6hhCX4MY2XB3LeXGWiWuFT8NtS+sl8SN8awYtWjVKkSNr8pLro8at7kW919d3UFTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHs5iPkD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJVAqIOh"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2363616a1a6so20840555ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751322006; x=1751926806; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NHiuZMzfMwC6+R9h6OiCUTROtFSvuO1j8HDLI3Uql14=;
-        b=XJVAqIOhuC+38m3xy7DVzzjbcrPWvfy+zABlH8eRXDodDF76A5uQYoc2pDqBCnspJB
-         IIcA1MvmF17IFnA0+yaSVpNbcZfqaX+DeGTg9n4LhcPmIV3NGWFfNx7Dphvc0K0fzAmj
-         oKbmJsHBOqqXG/TMXDmkWA+av7aOpdGVKH8g3BxVSUPr2woDPbW+XZx7j9eg7DPXCelO
-         3d9nIvDFJrGBFrpwLyBFXvwSETij5X2N4KraNeX7Q8Nkba/Uy/NM14MApZVWQ4al31g5
-         lcMhef8Rz5E9LTpTH8a+C1Ip2YcKrU3+b7WJMeOH+3bEjqLeL0Dhs69skX/kZxYg0OAb
-         pOGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751322006; x=1751926806;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHiuZMzfMwC6+R9h6OiCUTROtFSvuO1j8HDLI3Uql14=;
-        b=RTSS8CAMDUV1/IQLTqmtBd3DtnMryA3ETkosLQ1izFNhh0DUFiWMy2I3I9t7Bc3xvO
-         Ck0G+ofFK4Il9m20S1eoXKR/rJGCSNcJGGNJDrdgtho2+FeQpexSMEcZ2Ez+kwMsXeg2
-         yurFGJa8tv5PqMDZHBm8zxF+2NtEHSaufs2ly33YHmiuKS7bVUWbLyWxKTgNmVdeioBx
-         EnCx3EeYC+TMI9GN389iCo/3PZVwh14TMxaMwRF4WfG0271NvssV/xViEBAdpoRTKljm
-         zDL8IdAbVqv5pfGZrhfrqM2v8mCTdBhBQlyPz4MpIQFLVKRxU04Ov1++v6dXdj0AiPqj
-         86tw==
-X-Gm-Message-State: AOJu0YxrpsSu8KWAZENJ8v2fF0CtlZeFwQRyd19ocxc+ZfhTjX4qdBw6
-	wu0b9PHvyVQssdZwx/Q+T/T2cMwM+KlD2fuvldMedAhq3ZGfUIMOB/pL
-X-Gm-Gg: ASbGncu8s7iEcRZxW59vqbr57lRcpejwqiTOIwVNVvv+qDnFIbBBQzuGYwxeGurHYgw
-	AmYHM9e4LZCa3YG7th5Xx8K7qxbnFoTpjjlDiVwqMf0maqSNK702eFwwQcbpuUUdXeA3CEoFWIY
-	iW5WZUerxyFk8+hi17Gk8YG3TWjAiA9BHAceE2iTviUFYCp7LsBGjslY/9hcBu1najTFrbiRDMI
-	xPbiEcjPMB0ldOlV7G5JlfRH0JyYHlrmOOyeoUujtxIkRwm+EXsxebdvNChu/TplzY8DIl3f84j
-	mrX6qQutMnMGrXKfiBl+6Egoj7TcRolEtr2WtwBofWo+qbuxDDqY/LQkJctdrQ==
-X-Google-Smtp-Source: AGHT+IGBsxbNKvaAB+y/2y328Um5BPe7Wjg0g4g9kDG4VOXg1/QRqgyAXH7egABiIMDNmkwj7hYcHg==
-X-Received: by 2002:a17:903:32c1:b0:235:e71e:a37b with SMTP id d9443c01a7336-23ac4633ccbmr244404305ad.34.1751322005549;
-        Mon, 30 Jun 2025 15:20:05 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7d97sm90566615ad.172.2025.06.30.15.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 15:20:04 -0700 (PDT)
-Date: Mon, 30 Jun 2025 18:20:02 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	David Laight <David.Laight@aculab.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/3] bits: Split asm and non-asm GENMASK*() and unify
- definitions
-Message-ID: <aGMNhk0FrcQGcC5P@yury>
-References: <20250609-consolidate-genmask-v2-0-b8cce8107e49@wanadoo.fr>
- <0e5988e2-eb98-4931-86b8-dcbb8b4cb605@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHs5iPkD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE43AC4CEE3;
+	Mon, 30 Jun 2025 22:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751322063;
+	bh=T+kvLHHNBi3eAVSXnbHKPtUgScri0TI5apBm/HNsjRE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kHs5iPkDoZZxhxZYpwqKb4DDzqlD1lh64iYCdhDr1E0GLc/snDI2wbqfSfbzzuZ91
+	 mnKEFDM4B8MZLwKMHWIVOIVev+4lfQaZSE8MzP3QBELT4QnwwhQpLdk7oHOjsE6ICw
+	 MXIqyNHDGVk6qrzAB7qOt99266YST7TB2eh+z6HTcdkhznz2UFTHPoqF10HDwVxgV0
+	 pNABKVmn9yYZhmSahUzzusFC7SXqfQS6gxPnS3/ft5GSIbNpgujPF8Cw90ECO5wdfC
+	 Zw7CTaTyW2fqigaXsi7hRbKyzt6apMHI8DS8TLJSmE8cipkqJ9od2LZsz21VI910xF
+	 RhGUSZrrSExhQ==
+Date: Tue, 1 Jul 2025 00:20:58 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
+ workflows@vger.kernel.org, tools@kernel.org
+Subject: Re: [RFC v2 01/22] kernel/api: introduce kernel API specification
+ framework
+Message-ID: <20250701002058.1cae5a7e@foz.lan>
+In-Reply-To: <874ivxuht8.fsf@trenco.lwn.net>
+References: <20250624180742.5795-1-sashal@kernel.org>
+	<20250624180742.5795-2-sashal@kernel.org>
+	<874ivxuht8.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e5988e2-eb98-4931-86b8-dcbb8b4cb605@wanadoo.fr>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 30, 2025 at 11:07:43PM +0900, Vincent Mailhol wrote:
-> Hi Yury,
+Em Mon, 30 Jun 2025 13:53:55 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-... 
-
-> I didn't hear back from you on this series. Are you still interested in this
-> cleanup or should I just abandon it?
+> Sasha Levin <sashal@kernel.org> writes:
 > 
-> Note that now that the GENMASK_U*() are upstream, I am done. I think that it
-> will be better with this clean-up, but I do not mind if we keep it as it.
+> > Add a comprehensive framework for formally documenting kernel APIs with
+> > inline specifications. This framework provides:
+> >
+> > - Structured API documentation with parameter specifications, return
+> >   values, error conditions, and execution context requirements
+> > - Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME_CHECKS)
+> > - Export of specifications via debugfs for tooling integration
+> > - Support for both internal kernel APIs and system calls
+> >
+> > The framework stores specifications in a dedicated ELF section and
+> > provides infrastructure for:
+> > - Compile-time validation of specifications
+> > - Runtime querying of API documentation
+> > - Machine-readable export formats
+> > - Integration with existing SYSCALL_DEFINE macros
+> >
+> > This commit introduces the core infrastructure without modifying any
+> > existing APIs. Subsequent patches will add specifications to individual
+> > subsystems.
+> >
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  Documentation/admin-guide/kernel-api-spec.rst |  507 ++++++
 > 
-> Just let me know what you think.
+> You need to add that file to index.rst in that directory or it won't be
+> pulled into the docs build.
+> 
+> Wouldn't it be nice to integrate all this stuff with out existing
+> kerneldoc mechanism...? :)
 
-Hi Vincent,
++1
 
-Sorry for delay and thank you for pinging me on it.
-I'll take a look on it at the weekend.
+Having two different mechanisms (kapi and kerneldoc) makes a lot harder
+to maintain kAPI.
+
+Also, IGT (a testing tool for DRM subsystem) used to have a macro
+based documentation system. It got outdated with time, as people
+ends forgetting to update the macros when changing the code. 
+Also, sometimes we want to add some rich text there, with graphs,
+tables, ...
+
+More important than that: people end not remembering to add such macros.
+As kerneldoc markups are similar to Doxygen and normal C comments,
+it is more likely that people will remember.
+
+So, IMO the best would be to use kerneldoc syntax there, letting
+Kerneldoc Sphinx extension handling it for docs, while having
+tools to implement the other features you mentioned.
 
 Thanks,
-Yury
+Mauro
