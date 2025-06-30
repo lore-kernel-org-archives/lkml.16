@@ -1,182 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D3C280338
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3F1283C91;
+	Mon, 30 Jun 2025 11:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284121; cv=none; b=QPAzrgymxwI8RuS5Sz6zMN5hvhgPJsbiQZddz0yQM9jAPkIWMutgLQch9SBRjhJeTVcSDTN+BrPOhD8PFH9GrJgcn2h3IalaXocHbIldvosJzySzJ4laEOZsIXGig5teO352bnF49l14LsdeBnLj9uFmld1KfNqBD5BjmjWsnTA=
+	t=1751284133; cv=none; b=im6PzjmzberAvco940KHCI/gdAhl0vfLjmfjZyR5x3R5JhDYbXOg3cofGzsRcn52AZYjpd/CL6zDPKuSkhl3cfsZG/mD8Zamg03lNsAInbMgEcy6q93RByJXD+vRjJYYfHmFYPG51tssv4oYSNSjloJI5zjgZR+8lOCXmv9mlaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284121; c=relaxed/simple;
-	bh=H184gVZ771yrtruI4xoO2jE86Qijx3ArlxTZ+pxORMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxxr1Bsbi2ecZIfUMTEk52SJFbRk7H3HNmipDJo8SiQ94954Ah96nOrPdeg5CRrOVnjx1bk87LpRfYmuxOztbJZcJSLvVCnVQvJJINfOhrut/GGmbN+6rK7xcMY7yn+uKaNMZqGuFAwBiXKGPso3CrxP6iSRnjtbcInci/ddWS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QERaeucq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751284133; c=relaxed/simple;
+	bh=DUJjBO7T5MaF7dBk+qD2Lmzq5qH9wDFK0AwvSWOj9Bs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=biUkwsWm2d2JO4r/5NJikSls8xFJarInpzTfZQBrjMQy7a1eldH7AAZ/9aL7nJyXbycFAUPrnSzRz+4BXawp+y0ud4ysVeciq7UulUk38+FXzHUYXxYiscbW1ueVmRBWVxAmGs7UKsnx7Ik0+gCUuIpG28i1dhqM8ly8zbgLhq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cFNtvq2G; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QERaeucq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71F3C4CEE3;
-	Mon, 30 Jun 2025 11:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751284121;
-	bh=H184gVZ771yrtruI4xoO2jE86Qijx3ArlxTZ+pxORMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QERaeucq4JWA9Qvl9kditWF4DbVCIQnmMeEDY7Wtr5mEgARFkJUr7J3T8tKscDDzq
-	 K+dvgRrID1nLArVWRaMFC+jOchrOKdohKMTolg6Q3nRkG+Z25pvuidzk+rd7Z0S6Dr
-	 exZUEtd1Mo2Abwpub3yH0ZaUOr8ncabv/FQDLDu1qHYX9bW1+wNxDkGMByKDc6FoaJ
-	 mN6tteUfm54fwlb40Z5fcLx29pMIAXMW2JqMN9RMnHgdZA1MaNYB02U4CTvsm92Qt3
-	 aB9ZynBO4wuOuYspGz7vVZGTeXyW/mxMJ97awTVnGoUZ+/CsLskhomQ90kGWJid80n
-	 O21/WxgINJDTg==
-Date: Mon, 30 Jun 2025 13:48:38 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, 
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Michal Simek <michal.simek@amd.com>, 
-	Simona Vetter <simona@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-Message-ID: <20250630-enormous-evasive-scorpion-58bcbd@houat>
-References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
- <20250627145058.6880-1-mike.looijmans@topic.nl>
- <20250627181911.GF24912@pendragon.ideasonboard.com>
- <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
- <20250630-psychedelic-tested-smilodon-adcbb3@houat>
- <20250630091156.GE24861@pendragon.ideasonboard.com>
- <20250630-phenomenal-taipan-of-imagination-59b300@houat>
- <20250630093335.GC20333@pendragon.ideasonboard.com>
- <20250630-delicate-stirring-sawfly-dd81be@houat>
- <20250630113008.GD20333@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cFNtvq2G"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7x1gK025447;
+	Mon, 30 Jun 2025 13:48:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	91jH5cFvvocFD9cZk0oZNMRRI8Lu1LwSiDDduj/iv9Q=; b=cFNtvq2G6gSzql0A
+	9toSeVBYzuHhPRn3p4gNSVQ6W6jAkSgqNetkM09uJ8qpEOncJd5IJZlDB6zf+WOO
+	A8hcTWHKsVQV5inpukGA+dgpKqGzNMWzXh6wo2ea/VLU/wcWDeGWXAy81n4RQcPo
+	yLyqI/J90HIom9VcxytldkfLF5ZeN5w8y+6PEuEXht5LKk5Qeg7/lw+r1FPb8Au5
+	vFBp8TjpQHTEr4keKHkx+N4V+8rYOcqUeqmKCmy7j3Q22voEx71SBs+RdTUFatK/
+	1IdrP7bn69pDx3XrZQ5LuDrGI6DpPM9BI6TaoLZqiFvNGLW5AsDq7WdyuuQr89vE
+	Jn4Inw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4myxj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 13:48:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F1A2C4004B;
+	Mon, 30 Jun 2025 13:47:40 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D89CDB28C48;
+	Mon, 30 Jun 2025 13:47:10 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.130.77.119) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 13:47:10 +0200
+Date: Mon, 30 Jun 2025 13:47:09 +0200
+From: Alain Volmat <alain.volmat@foss.st.com>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+CC: Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Dan
+ Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] spi: stm32: fix sram pool free in probe error path
+Message-ID: <20250630114709.GB398774@gnbcxd0016.gnb.st.com>
+References: <20250630-spi-fix-v1-1-2e671c006e15@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="6cnjeiuqjwcs7vod"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20250630113008.GD20333@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250630-spi-fix-v1-1-2e671c006e15@foss.st.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
 
+Hi Clément,
 
---6cnjeiuqjwcs7vod
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-MIME-Version: 1.0
+On Mon, Jun 30, 2025 at 10:20:13AM +0200, Clément Le Goffic wrote:
+> Add a test to check whether the sram_pool is NULL before freeing it.
+> 
+> Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to enhance DDR use")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  drivers/spi/spi-stm32.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+> index 3d20f09f1ae7..858470a2cab5 100644
+> --- a/drivers/spi/spi-stm32.c
+> +++ b/drivers/spi/spi-stm32.c
+> @@ -2486,7 +2486,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
+>  	if (spi->mdma_rx)
+>  		dma_release_channel(spi->mdma_rx);
+>  err_pool_free:
+> -	gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf, spi->sram_rx_buf_size);
+> +	if (spi->sram_pool)
+> +		gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf,
+> +			      spi->sram_rx_buf_size);
+>  err_dma_release:
+>  	if (spi->dma_tx)
+>  		dma_release_channel(spi->dma_tx);
+> 
 
-On Mon, Jun 30, 2025 at 02:30:08PM +0300, Laurent Pinchart wrote:
-> On Mon, Jun 30, 2025 at 12:52:48PM +0200, Maxime Ripard wrote:
-> > On Mon, Jun 30, 2025 at 12:33:35PM +0300, Laurent Pinchart wrote:
-> > > On Mon, Jun 30, 2025 at 11:29:08AM +0200, Maxime Ripard wrote:
-> > > > On Mon, Jun 30, 2025 at 12:11:56PM +0300, Laurent Pinchart wrote:
-> > > > > On Mon, Jun 30, 2025 at 10:27:55AM +0200, Maxime Ripard wrote:
-> > > > > > On Mon, Jun 30, 2025 at 10:03:16AM +0200, Mike Looijmans wrote:
-> > > > > > > On 27-06-2025 20:19, Laurent Pinchart wrote:
-> > > > > > > > On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wr=
-ote:
-> > > > > > > > > XRGB8888 is the default mode that Xorg will want to use. =
-Add support
-> > > > > > > > > for this to the Zynqmp DisplayPort driver, so that applic=
-ations can use
-> > > > > > > > > 32-bit framebuffers. This solves that the X server would =
-fail to start
-> > > > > > > > > unless one provided an xorg.conf that sets DefaultDepth t=
-o 16.
-> > > > > > > > >=20
-> > > > > > > > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> > > > > > > > > ---
-> > > > > > > > >=20
-> > > > > > > > >   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
-> > > > > > > > >   1 file changed, 5 insertions(+)
-> > > > > > > > >=20
-> > > > > > > > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers=
-/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > > > > index 80d1e499a18d..501428437000 100644
-> > > > > > > > > --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > > > > +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > > > > > > > @@ -312,6 +312,11 @@ static const struct zynqmp_disp_form=
-at avbuf_gfx_fmts[] =3D {
-> > > > > > > > >   		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > > > > > > > >   		.swap		=3D true,
-> > > > > > > > >   		.sf		=3D scaling_factors_888,
-> > > > > > > > > +	}, {
-> > > > > > > > > +		.drm_fmt	=3D DRM_FORMAT_XRGB8888,
-> > > > > > > > > +		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > > > > > > > > +		.swap		=3D true,
-> > > > > > > > > +		.sf		=3D scaling_factors_888,
-> > > > > > > >=20
-> > > > > > > > I'm afraid that's not enough. There's a crucial difference =
-between
-> > > > > > > > DRM_FORMAT_ARGB8888 (already supported by this driver) and
-> > > > > > > > DRM_FORMAT_XRGB8888: for the latter, the 'X' component must=
- be ignored.
-> > > > > > > > The graphics layer is blended on top of the video layer, an=
-d the blender
-> > > > > > > > uses both a global alpha parameter and the alpha channel of=
- the graphics
-> > > > > > > > layer for 32-bit RGB formats. This will lead to incorrect o=
-peration when
-> > > > > > > > the 'X' component is not set to full opacity.
-> > > > > > >=20
-> > > > > > > I spent a few hours digging in the source code and what I cou=
-ld find in the
-> > > > > > > TRM and register maps, but there's not enough information in =
-there to
-> > > > > > > explain how the blender works. The obvious "XRGB" implementat=
-ion would be to
-> > > > > > > just disable the blender.
-> > > > > > >=20
-> > > > > > > What I got from experimenting so far is that the alpha compon=
-ent is ignored
-> > > > > > > anyway while the video path isn't active. So as long as one i=
-sn't using the
-> > > > > > > video blending path, the ARGB and XRGB modes are identical.
-> > > > > > >=20
-> > > > > > > Guess I'll need assistance from AMD/Xilinx to completely impl=
-ement the XRGB
-> > > > > > > modes.
-> > > > > > >=20
-> > > > > > > (For our application, this patch is sufficient as it solves t=
-he issues like
-> > > > > > > X11 not starting up, OpenGL not working and horrendously slow=
- scaling
-> > > > > > > performance)
-> > > > > >=20
-> > > > > > Given that we consider XRGB8888 mandatory,
-> > > > >=20
-> > > > > How about platforms that can't support it at all ?
-> > > >=20
-> > > > We emulate it.
-> > >=20
-> > > Does that imply a full memcpy of the frame buffer in the kernel drive=
-r,
-> > > or is it emulated in userspace ?
-> >=20
-> > Neither :)
-> >=20
-> > The kernel deals with it through drm_fb_xrgb8888_to_* helpers, but only
-> > on the parts of the framebuffer that were modified through the damage
-> > API.
->=20
-> Aahhh OK, it's for the fbdev emulation. So that means that drivers are
-> not required to support XRGB8888 ?
+Looks good to me. Thanks.
+Acked-by: Alain Volmat <alain.volmat@foss.st.com>
 
-No, it's for KMS.
+Regards,
+Alain
 
-Maxime
-
---6cnjeiuqjwcs7vod
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGJ5kgAKCRAnX84Zoj2+
-dtHkAXwNtyyEjsQUv8JQdIBXT6tm3KJUjlzGhpdjE5afhE4oZw2ADEyDXOnl54o2
-NwOIvLUBf3Mz48PkLBlxwmZ/gjbSF8CEQWhXESLyMBhNlyn/SG1J5QxjCXKVIxfO
-/sSVScdEYA==
-=AOip
------END PGP SIGNATURE-----
-
---6cnjeiuqjwcs7vod--
+> ---
+> base-commit: 045719b1d0aab98e6abdd7715e8587b997d1cefa
+> change-id: 20250630-spi-fix-860416bfb96d
+> 
+> Best regards,
+> -- 
+> Clément Le Goffic <clement.legoffic@foss.st.com>
+> 
