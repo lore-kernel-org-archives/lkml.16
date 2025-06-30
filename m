@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D150121A455;
-	Mon, 30 Jun 2025 11:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9A725F96D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283577; cv=none; b=LwqPuGC7kA7Mh3pLyYSqHX6v7bQyMUW7JhxncKH6shh5WYbR/KG3FOSPJ/WQlMmy+8Z8w8M1tTd2lV8TXE7P3rqFBrf8zi2eJkt84I55UBlYW2AwTnQ3qJR35ACDGJWXjdosnvupRtyetTWcYAILhG1Dk1UXqcDJ99qBFwZDohM=
+	t=1751283582; cv=none; b=EjEjXjuA5CFpT6f6alfZonHi+F/NJib36TTZKgmKh23M5nzQ3iHU+vKkUu6RC0dGLG97nntivuFb6pP4/GjKNKmRh8+GRKQfv3ujnqSV5kGwjkzjo9hGwFq6jVNDFD9ct7IFY2akHzJUecI8PavBYkZPsscT4idjLJG0AkvdOwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283577; c=relaxed/simple;
-	bh=cw9JAhodZf38QL/wthjad8TavY/xMomZdphnAqT1w1Q=;
+	s=arc-20240116; t=1751283582; c=relaxed/simple;
+	bh=BHNO9ru84E4JC8FbSXbxOb6BVz2+i/147hwy/XHp99g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VA8d+n1m4dUjN/4vZkedp6VQU23QnLS8md8OwiWysniclX4BTLOf0SnozM2AmWY46hA4ir6t8Y7L7JUqpgx/mR77ws6Jm/Rq+v6pI84tei7KMpXhX9vsuBmRYuRe8/AOXZTer/gpyLVdwzMims1rfxkimHavMltt5tZBYvXiw2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdZ4HX9o; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdZ4HX9o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673F5C4CEE3;
-	Mon, 30 Jun 2025 11:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283575;
-	bh=cw9JAhodZf38QL/wthjad8TavY/xMomZdphnAqT1w1Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SdZ4HX9oR9A2x5iEhwygY8CwQdJxEaC7Qb/0W4FPM1vfieOTxOrRI6K+GwOmsUWAO
-	 AGG1bu7AtKL7uc2Y2e+yRDfi9JpjoFoYKVxrxm3uqk7iMndwmvTLVqjLks/ks7LtQf
-	 J/ExCMk6EyxRtkfpbm9S4b99xrcyyB60yRxV7QQGxnm1GPjsNBeUMF9uMEZPxw+YzL
-	 0YpviiIrmrU8KZw0RRaWhV0WCSgBJrqS8kcuqHPB2XwqepbjZCNNzbXwrcgc48dSb/
-	 DQANhYp8VVaE1jryQHHtQgMDiefr2iMMQNSdmeeR97F+BrDWHoSwKYAtz/ohRunziP
-	 nS/y1xWza3Ygg==
-Message-ID: <532c88b8-d938-4633-ac09-12bb3080a023@kernel.org>
-Date: Mon, 30 Jun 2025 13:39:25 +0200
+	 In-Reply-To:Content-Type; b=f8HeZhrQR/SrQ1SsomzRhvafWnWGG5rfaxwvDJdTj5zmzKOE9IUrWng2689gzvoMlmutUppySUX5AafryvMZixJb1pqqKfEycv5FRhZfyH4ClDEpCO+cxoK+EParhHTEYz1jUx/P9JDyNo6X7gzvD+xm9Z17AJSjjH69qlYA0ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C4CD150C;
+	Mon, 30 Jun 2025 04:39:23 -0700 (PDT)
+Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F4A63F6A8;
+	Mon, 30 Jun 2025 04:39:35 -0700 (PDT)
+Message-ID: <3df4db71-752f-4c59-841b-84025914870d@arm.com>
+Date: Mon, 30 Jun 2025 12:39:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,129 +27,265 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/8] auxdisplay: Add Titanmec TM16xx 7-segment display
- controllers driver
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, ojeda@kernel.org
-Cc: =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
- devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-kernel@vger.kernel.org, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Boris Gjenero <boris.gjenero@gmail.com>,
- Christian Hewitt <christianshewitt@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Paolo Sabatino <paolo.sabatino@gmail.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
- <20250629131830.50034-1-jefflessard3@gmail.com>
- <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
- <aGI8a4iaOpN5HMQe@smile.fi.intel.com>
- <57f0289a-7d82-4294-a1dc-c6986da0c5ce@kernel.org>
- <aGJe2krBnrPXQiU6@smile.fi.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aGJe2krBnrPXQiU6@smile.fi.intel.com>
+Subject: Re: [PATCH v4 1/4] mm: Optimize mprotect() for MM_CP_PROT_NUMA by
+ batch-skipping PTEs
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+ anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
+ ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
+ quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
+ yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
+ hughd@google.com, yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250628113435.46678-1-dev.jain@arm.com>
+ <20250628113435.46678-2-dev.jain@arm.com>
+ <79a48c48-53b1-4002-a8b2-447e69d96e49@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <79a48c48-53b1-4002-a8b2-447e69d96e49@lucifer.local>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 30/06/2025 11:54, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 11:27:21AM +0200, Krzysztof Kozlowski wrote:
->> On 30/06/2025 09:27, Andy Shevchenko wrote:
->>> On Mon, Jun 30, 2025 at 08:12:16AM +0200, Krzysztof Kozlowski wrote:
->>>> On 29/06/2025 15:18, Jean-François Lessard wrote:
+On 30/06/2025 12:25, Lorenzo Stoakes wrote:
+> On Sat, Jun 28, 2025 at 05:04:32PM +0530, Dev Jain wrote:
+>> In case of prot_numa, there are various cases in which we can skip to the
+>> next iteration. Since the skip condition is based on the folio and not
+>> the PTEs, we can skip a PTE batch. Additionally refactor all of this
+>> into a new function to clean up the existing code.
 > 
-> ...
+> Hmm, is this a completely new concept for this series?
 > 
->>>>> +	display->leds =
->>>>> +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KERNEL);
->>>>
->>>> Wrong wrapping. Use kernel style, not clang style.
->>>>
->>>>
->>>>> +	if (!display->leds)
->>>>> +		return -ENOMEM;
->>>
->>> Just wondering how .clang-format is official? Note some of the maintainers even
+> Please try not to introduce brand new things to a series midway through.
+> 
+> This seems to be adding a whole ton of questionable logic for an edge case.
+> 
+> Can we maybe just drop this for this series please?
+
+From my perspective, at least, there are no new logical changes in here vs the
+previous version. And I don't think the patches have been re-organised either.
+David (I think?) was asking for the name of the patch to be changed to include
+MM_CP_PROT_NUMA and also for the code to be moved out of line to it's own
+function. That's all that Dev has done AFAICT (although as per my review
+comments, the refactoring has introduced a bug).
+
+My preference is that we should ultimately support this batching. It could be a
+separate series if you insist, but it's all contbuting to the same goal
+ultimately; making mprotect support PTE batching.
+
+Just my 2c.
+
+Thanks,
+Ryan
+
+> 
 >>
->> First time I hear above clang style is preferred. Where is it expected?
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>  mm/mprotect.c | 134 ++++++++++++++++++++++++++++++++------------------
+>>  1 file changed, 87 insertions(+), 47 deletions(-)
+>>
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index 88709c01177b..af10a7fbe6b8 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -83,6 +83,83 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>>  	return pte_dirty(pte);
+>>  }
+>>
+>> +static int mprotect_folio_pte_batch(struct folio *folio, unsigned long addr,
+>> +		pte_t *ptep, pte_t pte, int max_nr_ptes)
+>> +{
+>> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> +
+>> +	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+>> +		return 1;
+>> +
+>> +	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+>> +			       NULL, NULL, NULL);
+>> +}
 > 
-> Documented here:
-> https://www.kernel.org/doc/html/latest/process/coding-style.html#you-ve-made-a-mess-of-it
-
-I mean, which maintainers prefer such style of wrapping. Above I know,
-but it does not solve the discussion we have here - above line wrapping
-preferred by clang and opposite to most of the kernel code.
-
+> I find it really odd that you're introducing this in a seemingly unrelated change.
 > 
-> For example, discussed here
-> https://lore.kernel.org/lkml/CAPcyv4ij3s+9uO0f9aLHGj3=ACG7hAjZ0Rf=tyFmpt3+uQyymw@mail.gmail.com/
-
-
-Heh, I read it and two emails earlier and still could not get they
-prefer to wrap at assignment instead of standard checkpatch-preferred
-wrapping at arguments.
-
-> or here
-> https://lore.kernel.org/lkml/64dbeffcf243a_47b5729487@dwillia2-mobl3.amr.corp.intel.com.notmuch/
-
-This is line length, so not the problem discussed here.
-
-
-> or
-> ...
+> Also won't this conflict with David's changes?
 > 
->> I assume clang-format is half-working and should not be used blindly,
->> but fixed to match actual kernel coding style.
+> I know you like to rush out a dozen series at once, but once again I'm asking
+> maybe please hold off?
 > 
-> That sounds like the case, at least in accordance with Miguel.
+> I seem to remember David asked you for the same thing because of this, but maybe
+> I'm misremembering.
 > 
->>> prefer (ugly in some cases in my opinion) style because it's generated by the
->>> clang-format.
+> We have only so much review resource and adding in brand new concepts mid-way
+> and doing things that blatantly conflict with other series really doesn't help.
 > 
+>> +
+>> +static int prot_numa_skip_ptes(struct folio **foliop, struct vm_area_struct *vma,
+>> +		unsigned long addr, pte_t oldpte, pte_t *pte, int target_node,
+>> +		int max_nr_ptes)
+>> +{
+>> +	struct folio *folio = NULL;
+>> +	int nr_ptes = 1;
+>> +	bool toptier;
+>> +	int nid;
+>> +
+>> +	/* Avoid TLB flush if possible */
+>> +	if (pte_protnone(oldpte))
+>> +		goto skip_batch;
+>> +
+>> +	folio = vm_normal_folio(vma, addr, oldpte);
+>> +	if (!folio)
+>> +		goto skip_batch;
+>> +
+>> +	if (folio_is_zone_device(folio) || folio_test_ksm(folio))
+>> +		goto skip_batch;
+>> +
+>> +	/* Also skip shared copy-on-write pages */
+>> +	if (is_cow_mapping(vma->vm_flags) &&
+>> +	    (folio_maybe_dma_pinned(folio) || folio_maybe_mapped_shared(folio)))
+>> +		goto skip_batch;
+>> +
+>> +	/*
+>> +	 * While migration can move some dirty pages,
+>> +	 * it cannot move them all from MIGRATE_ASYNC
+>> +	 * context.
+>> +	 */
+>> +	if (folio_is_file_lru(folio) && folio_test_dirty(folio))
+>> +		goto skip_batch;
+>> +
+>> +	/*
+>> +	 * Don't mess with PTEs if page is already on the node
+>> +	 * a single-threaded process is running on.
+>> +	 */
+>> +	nid = folio_nid(folio);
+>> +	if (target_node == nid)
+>> +		goto skip_batch;
+>> +
+>> +	toptier = node_is_toptier(nid);
+>> +
+>> +	/*
+>> +	 * Skip scanning top tier node if normal numa
+>> +	 * balancing is disabled
+>> +	 */
+>> +	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) && toptier)
+>> +		goto skip_batch;
+>> +
+>> +	if (folio_use_access_time(folio)) {
+>> +		folio_xchg_access_time(folio, jiffies_to_msecs(jiffies));
+>> +
+>> +		/* Do not skip in this case */
+>> +		nr_ptes = 0;
+>> +		goto out;
+>> +	}
+>> +
+>> +skip_batch:
+>> +	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte, max_nr_ptes);
+>> +out:
+>> +	*foliop = folio;
+>> +	return nr_ptes;
+>> +}
+> 
+> Yeah yuck. I don't like that we're doing all this for this edge case.
+> 
+>> +
+>>  static long change_pte_range(struct mmu_gather *tlb,
+>>  		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+>>  		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+>> @@ -94,6 +171,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>  	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+>>  	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
+>>  	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+>> +	int nr_ptes;
+>>
+>>  	tlb_change_page_size(tlb, PAGE_SIZE);
+>>  	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+>> @@ -108,8 +186,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>  	flush_tlb_batched_pending(vma->vm_mm);
+>>  	arch_enter_lazy_mmu_mode();
+>>  	do {
+>> +		nr_ptes = 1;
+>>  		oldpte = ptep_get(pte);
+>>  		if (pte_present(oldpte)) {
+>> +			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+>> +			struct folio *folio = NULL;
+>>  			pte_t ptent;
+>>
+>>  			/*
+>> @@ -117,53 +198,12 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>  			 * pages. See similar comment in change_huge_pmd.
+>>  			 */
+>>  			if (prot_numa) {
+>> -				struct folio *folio;
+>> -				int nid;
+>> -				bool toptier;
+>> -
+>> -				/* Avoid TLB flush if possible */
+>> -				if (pte_protnone(oldpte))
+>> -					continue;
+>> -
+>> -				folio = vm_normal_folio(vma, addr, oldpte);
+>> -				if (!folio || folio_is_zone_device(folio) ||
+>> -				    folio_test_ksm(folio))
+>> -					continue;
+>> -
+>> -				/* Also skip shared copy-on-write pages */
+>> -				if (is_cow_mapping(vma->vm_flags) &&
+>> -				    (folio_maybe_dma_pinned(folio) ||
+>> -				     folio_maybe_mapped_shared(folio)))
+>> -					continue;
+>> -
+>> -				/*
+>> -				 * While migration can move some dirty pages,
+>> -				 * it cannot move them all from MIGRATE_ASYNC
+>> -				 * context.
+>> -				 */
+>> -				if (folio_is_file_lru(folio) &&
+>> -				    folio_test_dirty(folio))
+>> -					continue;
+>> -
+>> -				/*
+>> -				 * Don't mess with PTEs if page is already on the node
+>> -				 * a single-threaded process is running on.
+>> -				 */
+>> -				nid = folio_nid(folio);
+>> -				if (target_node == nid)
+>> -					continue;
+>> -				toptier = node_is_toptier(nid);
+>> -
+>> -				/*
+>> -				 * Skip scanning top tier node if normal numa
+>> -				 * balancing is disabled
+>> -				 */
+>> -				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
+>> -				    toptier)
+>> +				nr_ptes = prot_numa_skip_ptes(&folio, vma,
+>> +							      addr, oldpte, pte,
+>> +							      target_node,
+>> +							      max_nr_ptes);
+>> +				if (nr_ptes)
+> 
+> I'm not really a fan of this being added (unless I'm missing something here) but
+> _generally_ it's better to separate out a move and a change if you can.
+> 
+>>  					continue;
+>> -				if (folio_use_access_time(folio))
+>> -					folio_xchg_access_time(folio,
+>> -						jiffies_to_msecs(jiffies));
+>>  			}
+>>
+>>  			oldpte = ptep_modify_prot_start(vma, addr, pte);
+>> @@ -280,7 +320,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>  				pages++;
+>>  			}
+>>  		}
+>> -	} while (pte++, addr += PAGE_SIZE, addr != end);
+>> +	} while (pte += nr_ptes, addr += nr_ptes * PAGE_SIZE, addr != end);
+>>  	arch_leave_lazy_mmu_mode();
+>>  	pte_unmap_unlock(pte - 1, ptl);
+>>
+>> --
+>> 2.30.2
+>>
+> 
+> Anyway will hold off on reviewing the actual changes here until we can figure
+> out whether this is event appropriate here.
 
-
-Best regards,
-Krzysztof
