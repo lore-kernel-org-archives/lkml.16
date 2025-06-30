@@ -1,54 +1,50 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022075.outbound.protection.outlook.com [40.107.75.75])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306B4634EC;
-	Mon, 30 Jun 2025 08:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272170; cv=fail; b=jmdnNZws1Mt+56M2kbzsR9HkZFAWItA3lpd1aByPjoTx7vWhIzjMJq29kvB5QICha54gzKuyvoD04YB9cW9sE23Zp4qiC6qchEpu47hogVdocTLdTdbAxv7kxGgjaFkm9eb9ZHRblU3ehavBVLyJoZSDuqcyc6w0FCnJnt4kIWc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272170; c=relaxed/simple;
-	bh=oLKVBhaW+sXJbr45ws9E9tdXcwGQsKn0yVLcqdni8Tg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r22dxwuqmiJvN4g17VXML9iTL7dttecGNb/eCTFvk41QiH2mLtvNr625+9slJfjz7ckQSJqz9FYW3RNBVj4YhZkTI3EGBAUR5CdTwyEHp0HLBIml86O88Tnn0WEwqfAUCICfmsFsCsb+s4x/xi1x8BvZQ8leC1T7AqQxafWBBUo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H412sXX7v2bQq2lppOtXyKyULGI4OY8t1CG0meIlV7P8y7arotztdcLBXyL2rKr+wKhuTEslCV6mD09Zfo+RxXq4/FJw+dxiniq/Zs0419zmov9Jr62fHFQhrCDCZn5GMvaQjFZ1KZpoHB5X14l9GVmFRvhz6ROmy9mDVdkbcB/S/glo/JrK2r/vpQVHjN2r8fxxRjF/peD2RPvIpILp+AHQfzg8FEVkR+kLFSH0yRfbTx8AQ5lKVFsRx/VO+fXdbqkDbsE5wG+o7atu4E2xqOkhyz4jL6uFS4UM8Bn0G5AL5FfZYFCvbP3asKOc0oB5SXJ//o/4nDmZki+cY56gIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8bi98fsaaV09RiwOkQ4KCDxYweHwHXmnhOJpttXiPUk=;
- b=GHWcdKV+XN3A8nQu+kJeAlY+b4rZeB+a+IaH1ag+JQhw0LFRtWaDucVT4bHgXWXdgVW+fdjPXVxwTiv6YSAvixY4B/6Ch4Z1cV+FGWSPGY0yTVDLlBqs1McMLn/PwOJYZJh/ReYfQrIK/eKr7sJVBbi500QiNje9xsNhX2noAvwBFi/DyXJXQT9VxZGKgAc4m4Pm2lOcwZzdL0xQay33/HvjZD6+lVMH70DHYiptAue+3IC/dyaVSSogVmkkinAZyWEO5rPXY2PQAsgiMuBH8s7Z2ShfEEVocFSn7Re1rtGx5uzrJBCwTiMnG5b+i66xp13mBYhLn7C37nG2aU12sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI1PR02CA0044.apcprd02.prod.outlook.com (2603:1096:4:1f6::6) by
- PUZPR06MB5520.apcprd06.prod.outlook.com (2603:1096:301:fb::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.28; Mon, 30 Jun 2025 08:29:19 +0000
-Received: from SG2PEPF000B66CA.apcprd03.prod.outlook.com
- (2603:1096:4:1f6:cafe::82) by SI1PR02CA0044.outlook.office365.com
- (2603:1096:4:1f6::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.30 via Frontend Transport; Mon,
- 30 Jun 2025 08:29:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CA.mail.protection.outlook.com (10.167.240.22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 08:29:15 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id AA1B244C3CA1;
-	Mon, 30 Jun 2025 16:29:14 +0800 (CST)
-Message-ID: <bb4889ca-ec99-4677-9ddc-28905b6fcc14@cixtech.com>
-Date: Mon, 30 Jun 2025 16:29:14 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F9F1F1317;
+	Mon, 30 Jun 2025 08:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751272234; cv=none; b=e8mxKUtZYJPAX35egEus3+IBGl9gCrdeaU+ucyhqCdJXMx886v1rDniPz3y0Fu+CP4qF9Cy0dUGIfNeh7oq63yKm7PdDgR3KoDooSQO0k77hLRc4VJ1VuQGIldewA0q5ukS2J0LAG2LhRsoGuA4GugOmKThgROTY+ueBUnB/jRA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751272234; c=relaxed/simple;
+	bh=WhUH3kd8yTWl4hqtKNADtnS30bPb+kigzXqNcalUCds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gN6mHmyBY/BvFyFQ4Q5ZuDQ8awg4YACGOfFzNo0HUkcG1tMRVbNRihsq2VWgWeWXeHaj5xtt8UpRNDjTy+pFs+Cr2OQgmE3mscKhZCROiLN6YNp7wbpD9ROx6dxMEhXfb3pbzZoce0RT47xJnNZA/koDGy/07C0rErRE9ZRYfPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=pN/5zQWC; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="pN/5zQWC"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7pr62007947;
+	Mon, 30 Jun 2025 10:30:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	MMhEswzfz6Tdga1zQpQyWh8QYxmL/LddetOQ1V55ux0=; b=pN/5zQWCnOEyU639
+	+qKc397SzTfJYoQP9dKXkQCFh5cqxElAX4z1jItyu3OExiThXPfQ+TXlXVGATpEx
+	yVy7GcyeoDpKa7RVik4OQtTmjYrGo75a0vZF/3zTFZndMDZWTZFxcSpzVxKbNAch
+	YqpoNI8XNHy9LkLuSrQ+ligkl+Wl+TGkl0woYBmxdHDO7DYqsSW7E/ERhIPwJAPP
+	Ftz/mEwNhbdMW9oNIAt/NyFLJjZV2JP+5MCE/NXaaBXCvf0WHkSZpSUu5KrSWzyZ
+	Kzbp21wHS64tB41Rn5XCykFeJb5ne7ZQAE+3Moni0R1Pr6rREDOAn5BeRCaF6udC
+	vtO8qw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47j5tkxsvm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 10:30:20 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9F8324002D;
+	Mon, 30 Jun 2025 10:29:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E4DA16F3FFE;
+	Mon, 30 Jun 2025 10:28:51 +0200 (CEST)
+Received: from [10.252.20.7] (10.252.20.7) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 10:28:51 +0200
+Message-ID: <5e61da51-cd02-41fd-9773-8bd776e1db62@foss.st.com>
+Date: Mon, 30 Jun 2025 10:28:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,282 +52,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/14] dt-bindings: PCI: Add CIX Sky1 PCIe Root Complex
- bindings
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mpillai@cadence.com,
- fugang.duan@cixtech.com, guoyin.chen@cixtech.com, peter.chen@cixtech.com,
- cix-kernel-upstream@cixtech.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630041601.399921-1-hans.zhang@cixtech.com>
- <20250630041601.399921-11-hans.zhang@cixtech.com>
- <20250630-graceful-horse-of-science-eecc53@krzk-bin>
+Subject: Re: [PATCH v2] spi: stm32: fix pointer-to-pointer variables usage
+To: Antonio Quartulli <antonio@mandelbit.com>, <linux-spi@vger.kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alain Volmat
+	<alain.volmat@foss.st.com>
+References: <20250630081253.17294-1-antonio@mandelbit.com>
 Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <20250630-graceful-horse-of-science-eecc53@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CA:EE_|PUZPR06MB5520:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ba43878-2565-41c0-037d-08ddb7b032ff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dVg2MnBqL2dPWlNBZ3FNZGl6MjM1amdGODRUakdZSE4vN1pPZ3BKTlV0WWNu?=
- =?utf-8?B?V3VkMERtT0JNOHRPUXpOa3RCaUZhaFpEajd5UUNjQTBxcDlhK0taVVFIZnhL?=
- =?utf-8?B?SVprNHZxK0tGTUF5ZlE4UU9ldTJaVnQyWlJmWVNsYzEreTFxblgxT0RJUGVj?=
- =?utf-8?B?QTE5TGV6a0c2WHdhRzdxd2l0Mm1iU3VIblNmNWhaTnlkWm9qS1ZZZXhHQ2ND?=
- =?utf-8?B?cjRWK3JmRVNySFdVczg2dWNzaEI5YnBBMEluemM3ZlUrV0EyR1kxMi9naXY1?=
- =?utf-8?B?OW9wcWR2UEh5bXdhSEhGVlZTUjdneURZdGx5OGI1eGh4KzQyVVJiMXVEcFp1?=
- =?utf-8?B?cWc3NG9Ebytsb1pHMmZ5TFhZME5FMk5XemJkTEJnUWE1VnplQXdsa3VHOGlH?=
- =?utf-8?B?ZFNlT3JaejFHN0dUNHpYYkFYSlB2UDBFZXJyQ3lUNFRubkFBdzJVc3o4RlRT?=
- =?utf-8?B?cWpBeHRucTV4MXJYeVFySUVwWjhDdE9Ka0VldVR1Z1lkZndBMVIwSGh2Q3VT?=
- =?utf-8?B?NHVCQ29mVWg3T3lnYlgrWVpKVk1NZmR0L0VxbDZ2c3NaZStWNURoemR3dmFo?=
- =?utf-8?B?N1NUL2J4RXNrNVJEQXlqWkQzK21MUVkrd05SYUxvZWo1VHVrZUErS2xHMys4?=
- =?utf-8?B?NFordUpyNTFsTXhvNVRneldFOG9FajgxdUJHa3g5dzhRWFF0aFhyUXhYckFK?=
- =?utf-8?B?Y1F3WC9TelVPUTloc2N1L1JuRUZWZzhqSno5bWRWYlllNEViN1JRY0NoRDMr?=
- =?utf-8?B?UjZBU1grRnBRNmRRN3oySVBLL214OUJ2bkVYWDhkV1hwZGM2S3lMMmVOY0tB?=
- =?utf-8?B?eGV3TDBTTlg2bHlmdTVpVFJraHNnSVluRVZkZFlnREdxalRUY2txUHA4aWhC?=
- =?utf-8?B?TVdYVTdUKzJHaHNyZCtQdFJ4RUs4V3IyWEMybjE4MHFnbG9xVkVubUZOK3Jh?=
- =?utf-8?B?RTFTYTBReUx2SXhBQ3ZTLzlJVlVsaUJTZllJRTVVb1liSHU1SXVSTk9WVDly?=
- =?utf-8?B?SkZ5TkVGMDVRMExCNVBKRy92VW51NkdvN1pyQk5KTWxJU3JXdGV0blovTkQz?=
- =?utf-8?B?L0ZsNFRrQ2M3T3lkQzcvU0haMll5NzJmeEl6K1piR0tWeFlwV1c3ODNwN01J?=
- =?utf-8?B?YUlCemYyTHBBUkpPb1MvUnZNQ0MyN1hBVTRkeEZJSlhWQ0tFL2E2NFNxSEhL?=
- =?utf-8?B?M0VodlgzeHdzbDg5eXk4bnVoYjIrUE1xaXBJMXlTWVMrSjg1SXFrbWdyMXJi?=
- =?utf-8?B?YUZMSHhjODlRdHcxdGVVemRkc01mblhlUCtwVGpzbjdKKzlyL2ViRUNQWlVh?=
- =?utf-8?B?d0IwSE51VkVZVzFvb2t4NGRHbjg5WHMzeTlSclNnY3ozWURseWRPMTVzWjV3?=
- =?utf-8?B?UVFtb3BGSlBOMDVNUjVrTzJyZlNLbm1uUnB0VkN4Tlo0YjNRa1RKTUpuRU1h?=
- =?utf-8?B?NUFQSkZxbjhacWtUa0tJSHJ1ZW5zQWdyVVZpVm4rUkNUWktXNDdibTFwUkZY?=
- =?utf-8?B?ZjhNdGthNmhCbTNienllZmluQ0JzbUo0czdzVHhmT01Tamx5cThGQllOOVhG?=
- =?utf-8?B?UUIwbHRGUTZURHA1cDhDKzR5V0RhcUdMdzU0UDhNVmhTUE80WGljTDhUZGZU?=
- =?utf-8?B?eldFVDlrSkdzWU5paDFaa01ORmFtdEE4T3VTekE5WUh2dnhSUklzV3d6bkN3?=
- =?utf-8?B?cVNPcWFmVEdIeEduVUdBWTYwdTVhdUV1UE91YmRTdGIwUWlsZlplREZvUENH?=
- =?utf-8?B?K2ZtMWxhYmlmbDV1cVRvajBZam5aN01JeFl3Z0lDZXNHS3R1WkxVMnpaV0R6?=
- =?utf-8?B?R3d1Zk9zVEJDY1BMZFVxWkU1WXY1aW5GZ296SlVsdk5EUmlJQXV3WVZDdE9T?=
- =?utf-8?B?T1EwQmdPOTY1YVdmd2pkWTEvTGNsR3l4REhRWDBZNVdscnArUngrRWxYemlz?=
- =?utf-8?B?VFU5K1RzTDVQekZOSXNXOVRJUDdmcmdGQzBicGJMa3B2TE1xK01BUFdlSU5r?=
- =?utf-8?Q?yc3tthlH+xShQRci2Nf7YPYXOrAtMc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024)(7053199007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:29:15.2442
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba43878-2565-41c0-037d-08ddb7b032ff
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CA.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5520
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20250630081253.17294-1-antonio@mandelbit.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
 
-
-
-On 2025/6/30 15:26, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
+On 6/30/25 10:12, Antonio Quartulli wrote:
+> In stm32_spi_prepare_rx_dma_mdma_chaining() both rx_dma_desc
+> and rx_mdma_desc are passed as pointer-to-pointer arguments.
 > 
-> On Mon, Jun 30, 2025 at 12:15:57PM +0800, hans.zhang@cixtech.com wrote:
->> From: Hans Zhang <hans.zhang@cixtech.com>
->>
->> Document the bindings for CIX Sky1 PCIe Controller configured in
->> root complex mode with five root port.
->>
->> Supports 4 INTx, MSI and MSI-x interrupts from the ARM GICv3 controller.
->>
->> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
->> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
->> Reviewed-by: Manikandan K Pillai <mpillai@cadence.com>
->> ---
->>   .../bindings/pci/cix,sky1-pcie-host.yaml      | 133 ++++++++++++++++++
->>   1 file changed, 133 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
->> new file mode 100644
->> index 000000000000..b4395bc06f2f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cix,sky1-pcie-host.yaml
->> @@ -0,0 +1,133 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/cix,sky1-pcie-host.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: CIX Sky1 PCIe Root Complex
->> +
->> +maintainers:
->> +  - Hans Zhang <hans.zhang@cixtech.com>
->> +
->> +description:
->> +  PCIe root complex controller based on the Cadence PCIe core.
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
->> +  - $ref: /schemas/pci/cdns-pcie.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: cix,sky1-pcie-host
->> +
->> +  reg:
->> +    items:
->> +      - description: PCIe controller registers.
->> +      - description: Remote CIX System Unit registers.
->> +      - description: ECAM registers.
->> +      - description: Region for sending messages registers.
->> +
->> +  reg-names:
->> +    items:
->> +      - const: reg
->> +      - const: rcsu
->> +      - const: cfg
+> The goal is to pass back to the caller the value returned
+> by dmaengine_prep_slave_sg(), when it is not NULL.
 > 
-> cfg is the second, look at cdns bindings.
+> However, these variables are wrongly handled as simple pointers
+> during later assignments and checks.
 > 
+> Fix this behaviour by introducing two pointer variables
+> which can then be treated accordingly.
+> 
+> Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to enhance DDR use")
+> Addresses-Coverity-ID: 1644715 ("Null pointer dereferences (REVERSE_INULL)")
+> Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
+> 
+> ---
+> Changes from v1:
+> * introduce *_mdma_desc and *_dma_desc for better readability
+> * fix another instance of rx_dma_desc bogus assignment in case of
+>    failure of sg_alloc_table()
+> * commit title/message reworded accordingly to the previous point
+> ---
+>   drivers/spi/spi-stm32.c | 22 ++++++++++++----------
+>   1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+> index 3d20f09f1ae7..4b7f074fdba9 100644
+> --- a/drivers/spi/spi-stm32.c
+> +++ b/drivers/spi/spi-stm32.c
+> @@ -1474,6 +1474,8 @@ static int stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>   						  struct dma_async_tx_descriptor **rx_dma_desc,
+>   						  struct dma_async_tx_descriptor **rx_mdma_desc)
+>   {
+> +	struct dma_async_tx_descriptor *_mdma_desc = *rx_mdma_desc;
+> +	struct dma_async_tx_descriptor *_dma_desc = *rx_dma_desc;
+>   	struct dma_slave_config rx_mdma_conf = {0};
+>   	u32 sram_period, nents = 0, spi_s_len;
+>   	struct sg_table dma_sgt, mdma_sgt;
+> @@ -1524,18 +1526,18 @@ static int stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>   		}
+>   	}
+>   
+> -	*rx_dma_desc = dmaengine_prep_slave_sg(spi->dma_rx, dma_sgt.sgl,
+> -					       dma_sgt.nents, rx_dma_conf->direction,
+> -					       DMA_PREP_INTERRUPT);
+> +	_dma_desc = dmaengine_prep_slave_sg(spi->dma_rx, dma_sgt.sgl,
+> +					    dma_sgt.nents, rx_dma_conf->direction,
+> +					    DMA_PREP_INTERRUPT);
+>   	sg_free_table(&dma_sgt);
+>   
+> -	if (!rx_dma_desc)
+> +	if (!_dma_desc)
+>   		return -EINVAL;
+>   
+>   	/* Prepare MDMA slave_sg transfer MEM_TO_MEM (SRAM>DDR) */
+>   	ret = sg_alloc_table(&mdma_sgt, nents, GFP_ATOMIC);
+>   	if (ret) {
+> -		rx_dma_desc = NULL;
+> +		_dma_desc = NULL;
+>   		return ret;
+>   	}
+>   
+> @@ -1558,13 +1560,13 @@ static int stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
+>   		}
+>   	}
+>   
+> -	*rx_mdma_desc = dmaengine_prep_slave_sg(spi->mdma_rx, mdma_sgt.sgl,
+> -						mdma_sgt.nents, rx_mdma_conf.direction,
+> -						DMA_PREP_INTERRUPT);
+> +	_mdma_desc = dmaengine_prep_slave_sg(spi->mdma_rx, mdma_sgt.sgl,
+> +					     mdma_sgt.nents, rx_mdma_conf.direction,
+> +					     DMA_PREP_INTERRUPT);
+>   	sg_free_table(&mdma_sgt);
+>   
+> -	if (!rx_mdma_desc) {
+> -		rx_dma_desc = NULL;
+> +	if (!_mdma_desc) {
+> +		_dma_desc = NULL;
+>   		return -EINVAL;
+>   	}
+>   
 
-Dear Krzysztof,
-
-Thank you very much for your reply. Will delete it.
-
->> +      - const: msg
->> +
->> +  "#interrupt-cells":
->> +    const: 1
->> +
->> +  interrupt-map-mask:
->> +    items:
->> +      - const: 0
->> +      - const: 0
->> +      - const: 0
->> +      - const: 7
->> +
->> +  interrupt-map:
->> +    maxItems: 4
->> +
->> +  max-link-speed:
->> +    maximum: 4
-> 
-> Why are you redefining core properties?
-I see. Just add it in "required". Will delete.
-
-> 
->> +
->> +  num-lanes:
->> +    maximum: 8
->> +
->> +  ranges:
->> +    maxItems: 3
->> +
->> +  msi-map:
->> +    maxItems: 1
->> +
->> +  vendor-id:
->> +    const: 0x1f6c
-> 
-> Why? This is implied by compatible.
-
-Because when we designed the SOC RTL, it was not set to the vendor id 
-and device id of our company. We are members of PCI-SIG. So we need to 
-set the vendor id and device id in the Root Port driver. Otherwise, the 
-output of lspci will be displayed incorrectly.
-
-> 
->> +
->> +  device-id:
->> +    enum:
->> +      - 0x0001
-> 
-> Why? This is implied by compatible.
-
-The reason is the same as above.
-
-> 
->> +
->> +  cdns,no-inbound-bar:
-> 
-> That's not a cdns binding, so wrong prefix.
-
-It will be added to Cadence's Doc. I will add a separate patch. What do 
-you think?
-
-> 
->> +    description: |
-> 
-> Do not need '|' unless you need to preserve formatting.
-
-Will delete '|'.
-
-> 
->> +      Indicates the PCIe controller does not require an inbound BAR region.
-> 
-> And anyway this is implied by compatible, drop.
-> 
-
-Because Cadence core driver has this judgment, the latest code of the 
-current linux master all has this process. As follows:
-int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
-     cdns_pcie_host_init_address_translation(rc);
-	cdns_pcie_host_map_dma_ranges(rc);
-	   cdns_pcie_host_bar_ib_config
-
-So this attribute has been added here, or is there a better way?
-
->> +    type: boolean
->> +
->> +  sky1,pcie-ctrl-id:
->> +    description: |
->> +      Specifies the PCIe controller instance identifier (0-4).
-> 
-> No, you don't get an instance ID. Drop the property and look how other
-> bindings encoded it (not sure about the purpose and you did not explain
-> it, so cannot advise).
-> 
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    minimum: 0
->> +    maximum: 4
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - "#interrupt-cells"
->> +  - interrupt-map-mask
->> +  - interrupt-map
->> +  - max-link-speed
->> +  - num-lanes
->> +  - bus-range
->> +  - device_type
->> +  - ranges
->> +  - msi-map
->> +  - vendor-id
->> +  - device-id
->> +  - cdns,no-inbound-bar
->> +  - sky1,pcie-ctrl-id
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +
->> +    pcie_x8_rc: pcie@a010000 {
-> 
-> Drop unused label.
-
-Will delete pcie_x8_rc.
+Thank you, LGTM
+You can add my Reviewed-by
 
 Best regards,
-Hans
-
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Clément
