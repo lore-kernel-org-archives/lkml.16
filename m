@@ -1,1406 +1,275 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011066.outbound.protection.outlook.com [52.101.65.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5005C2BF012
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301089; cv=none; b=pCrzeGS59hYJORi4SvC0cC5wzEiCU3XXFpBpjjRYmsLDloC9+/FLRFkM9AayHS15ijnz3pABS+9T3Wpr6/13LFnd8uQ7pgxrSGWaF+Tc3E0shHuObLR4JLKXcUFAcTxYXG6huQrkKdVgBhNogAuRJA1SSKszPMJUY94NnUA1oNE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301089; c=relaxed/simple;
-	bh=jwULxARIoZmzEMlGX3fZuLASpABREgeBPvOQtB7Ev+M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=kTkXwGuOJpZwdpWKSl2hGJgqCO/pyVxXEMVwqez9/pIFK8jDXq1zubkoq5lsQEvh6U1UjQqv2F5/+fG+Tnw4wWzqYQqeZ7yo8chhtbe+SvreBGaZV/gEM/Ocx0M6ufQba5rn/D3S5ihMLhGsXyRDvddeNZa4+8uObtCJ59I5d94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5Th+h+k; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF6C290083;
+	Mon, 30 Jun 2025 16:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751301169; cv=fail; b=q5ElCxq/mlPK+iMTEBJ00JmpiEFYuliykSzQoJXnxUy6J/72KzHUarF/1PmdVF4YBrMf1496iK90xYotNaBxXIXSJ4UOjuCdQmyEaa2lyVSMjQFcbt2M75LjRHUDOdnoDJGZw8dJ9kMksADDMspdJuxYzkk6WvMMb2H7+VnF6bY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751301169; c=relaxed/simple;
+	bh=gPx9f8uWYpwLO6wauDUgNnXldfSCAUBd/q6k7/IQ1As=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tZqtrsh5OqSl44CrXGreJZkHDe8x5j1sdqTfUXW3BTgIwoG2P7EXn0SJ70zemFzWen9S/NmkrkvwMDDvlWJ64QHzPO4sdn4nMv3yuJIGBsbcHYyh6cPNFyJpIHJRoGHG0SWSbS8Vi+lD5fw1G2yl3rYfp8siI/GJGOM8rPel4Ew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BUj6UU7W; arc=fail smtp.client-ip=52.101.65.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5Th+h+k"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74b185fba41so1473972b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301085; x=1751905885; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lNEWjUFMlGbeUEBWaHw7ehjoTm3uLNLhBQv/rEbTAQI=;
-        b=f5Th+h+kid/riX57YLS0HxkBLsr7KgaxrIklNdmU9wBW333LKe33XaID29M+zfjLF3
-         xIhTUZ2K/5hbQSc0Ja+KJQjXrRzUxFrPjzLHS4RTZNFXZi2O/w+IiYnhzWHKN1bZC24H
-         KzH3h3VmU836hnSw8SNrBrfYP4zcY82ZnBuZIsTf0lfGGvcIzT9CsraDUrMsqab7XcBb
-         1+I79ZwtZ9+BMwBHyO2q10SZnblbEg1Tkt/s2yB5ZYclnV1KNgEfhShq0nz/YqeLnj+2
-         OBQtSfUV/PRW3x3zXqKV1V8cY5PKpvSWW3AB0O7WQFJfp5Dd1EahBAGryFqPCBtxrBBr
-         5X3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301085; x=1751905885;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lNEWjUFMlGbeUEBWaHw7ehjoTm3uLNLhBQv/rEbTAQI=;
-        b=dpPih0SSYxVe7mupCOEkvQXCU4kk2O8y98hjfOg+LbI/V5zpN3FDxU9LW/U9iaTLiq
-         ph5gSZVPxXOFSCJEVTbpDbA1ETHD5I/YhCtoftCdnoq0/uQwC8wLOtHXxlStKZbl8nz+
-         NmGsPbbihiu2o1Vqozoh0DGfUUEVGNolIWdtOK0lMfUqTlNgTq9WodKuS3D3uHd7Blz1
-         s6S4nzri13hkin5vqXK5Gua/EOfhEn/V+HMcxtzGAbVXFoT3S+N7uHkHteSLoA83cR0w
-         H93pEASdwLpKRGl2/hjja5bbSY/FiMsLowsRcwM14e05IPpScjq9X14sv1RxUjkBxT0C
-         +aGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUhkKTXLFpQ1fyFhd88CxiDcoV7nyr7V4uMr7iTPlyuhN14/wpWmVKNc3GpTm/DZAIj48fhyvCd17TdmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVLEkkXYAfTM64QWv4qqPDVpzsd+lcXE+3uqAN4yLtuTw5ANtX
-	0BB9waxlKXqbUKTp/zAMRGvajPd75YO+GJD1J+Pq2hwX8cscaTRJ4EC+GbJx0DIZTSFiX8+q6/h
-	g9fDQrMa6hA==
-X-Google-Smtp-Source: AGHT+IGv8GGsp+IYc4e/rNfPWioWi4dTdMTkfszV7+mmcG9IkCGSxFU9yasBPxadaTAwhyDEDLrDbVzsjkvx
-X-Received: from pfbhx13.prod.google.com ([2002:a05:6a00:898d:b0:746:30f0:9b33])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:91e2:b0:740:a85b:7554
- with SMTP id d2e1a72fcca58-74af6e66243mr17129668b3a.2.1751301085571; Mon, 30
- Jun 2025 09:31:25 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:30:56 -0700
-In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BUj6UU7W"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u93jStN2FxQVJiRNLMNo3dEMwDFDPIvFZFhoVsJBIQe/aDw6U0XI8pc2Oh3eMa2zeogsSrBJe8Pe49GYOradMwWn65Wu787fNgs5TN2F6IMIM5VNkZQlnqmixCFfYCfgwDFMm6BgJiuT3yPicbZ5Pp/jIIWNxY64ScWoXDEVVKxwZ6Br5xqy1gDDGkpx17VYOZzGzK+Ufq9DFR/bFiZs5C1xEOk2ogMzQP/ZUcMVRMgyiBbegCHP53roo7wIOjgHJD8GI5fsc98UeJAldZ0jJWXQb0ow68iuVYPKTVvvJfUpAz2O13vEWZdRJCznk3wlbeu91NahA8hoh83BtusSkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gCmZbYCJfOr6WH0O5tAMZaWPDcWJgjhkvWzPM07viQs=;
+ b=Vred924M/yj/xQLI0vhePs54M0iU7AjxgjkMB5QHDiXIaugW09ZjS++eNHG8dcJfK9LqQI8v9B2aTu5bzyf9fdOLbzgYL+qTjfidMTlyaxQAXxcdTISRE1kAE3z3r0Psf76q0qs+aKjZDtiMxmJ/+/gOFXdQ6/PcOIgEJ8sHgmbJcz8+cy/Ei+BSayZDfSekhwuuFjWHgm2q9VcJCLNFJc8H6e1iTpnQdNA9I93zZD65wKriaSgpksCdNaONh1QlRFfq6F4G7+zxU3OwKqDtYJB4i1bOVjW4LiSO52zwEWiTsKCmf6dKu6NGRi0jGjHxJl9ngfioq7lGO+ncq2F55A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCmZbYCJfOr6WH0O5tAMZaWPDcWJgjhkvWzPM07viQs=;
+ b=BUj6UU7Wbos2UQ0vfoBITZIvXp73DgdKcUSLO/7BMm2NzY69ElU9+x5HliF2aqsOde5KShE8gHB1Nu/kMzj0gmUQD6yaTwtaFOHQESE+aa4IC8gGX1o+w0FzkhG/0OuaPEho8cNlnGdtRzkOTPXfZw+0NA1WlkbBCuXJcWMNDH5hK/DgnhUIYYtlYryGxyjNQDuZtLbuP/XbgcW9Lqa5esjsSDxXPizvTLR/uqlcT24s6Kn8cMKsqwOnso5iAJrzu0qpZb5nuBEv8iCVe5hJjnJkrW5UUL+DK8UbFrSpaHohUnD+Xp6swPaz5seIu8mfTA/2FAxMhYABxM6IpOHu1A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8754.eurprd04.prod.outlook.com (2603:10a6:20b:42d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
+ 2025 16:32:44 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
+ 16:32:43 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH v2 1/1] dt-bindings: input: convert lpc32xx-key.txt to yaml format
+Date: Mon, 30 Jun 2025 12:32:31 -0400
+Message-Id: <20250630163232.2839067-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR03CA0100.eurprd03.prod.outlook.com
+ (2603:10a6:208:69::41) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250630163101.1920170-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-12-irogers@google.com>
-Subject: [PATCH v2 11/15] perf vendor events: Add PantherLake events
-From: Ian Rogers <irogers@google.com>
-To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8754:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9552fa6d-cc4e-4462-f60d-08ddb7f3bcf4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|19092799006|366016|1800799024|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ktJHSSv5+FXjTQK/kQOh5phvk/hR48EVWzvEag3h8PFaVNX19YcM2o2ZPwhg?=
+ =?us-ascii?Q?K3onOu6dIwgES0rXVOQ7fjDI71BhWtlBM5jVrfm0EJYHeERfaySo74I4aLKf?=
+ =?us-ascii?Q?U+EnpbrqB9P2dOBSrRhSHdX7X6oDHlKe4EwX9otMV1JfAzGF3kdvo30S+0Vs?=
+ =?us-ascii?Q?+h68rwJOntlLYytabLP9myhbdYuZk+EJ/3CIKLzY47SsnJ/L204vW0UZsk2T?=
+ =?us-ascii?Q?dzYS1JSlzWcWrae93ivR0y5MepPq2mPaDf6r328Mpevf0fWJXA9kJabKOXS9?=
+ =?us-ascii?Q?IMm7vyxpDqxAJ9hmldFTPBlD8+ePfURCJSK81PPhzNVePA/61zA2miH6sYlF?=
+ =?us-ascii?Q?PvA9j7etu77q4O71XNoXIT1EE3puhrpW06rXgC/THKpB8P03pdVc88uWNHvd?=
+ =?us-ascii?Q?2TgVA70Rma/FCyz1QcOJdXG5MhsXUEZ9CGFRGqUzPftJooJ9opi5OjYl8xjz?=
+ =?us-ascii?Q?5B5ctoWJ9F0/mJFfcupRuHkVBHFjm0vcCIBJOdSvKGGkQ/scxN6Yef+DdAlH?=
+ =?us-ascii?Q?Y3LpWKqD9jkIFviBCDLvw0BFn3SjPctsrJHXlWJSc1FQ4HJt974B71TYBQkM?=
+ =?us-ascii?Q?EiZJLYZBzBvIf1okKqftSNdj4DPm1aN2Nv1+L38lXUK4XxxFY/N7LDqcETqv?=
+ =?us-ascii?Q?dnB1MAqyLqF0O4vYoIVcrwi/mKLbDZsgeeGFYT2rx7PsrOQo1y2Z5jPPX36r?=
+ =?us-ascii?Q?HyZRf95OrCU6FiddCpWB7EF6/e5Ug7Nn6S5Es0gKAJaMUGhzpOudeAGdlxKX?=
+ =?us-ascii?Q?4GeJWOmfdOOc3qVPDezZWmPxsOFxe3/bb4ERFpCdgXG031+T+BbIal1fPjN3?=
+ =?us-ascii?Q?W8aib08IgUh8DPqNPJJ8h6DZ0udDBuWldSGqNwGNnJVyA6zZGNOYz25FxcTH?=
+ =?us-ascii?Q?gD2E3Z+bEBVGrrjxD6AC0iFzZ84+EwtrjZFFmzcKnXx+E3I3UcdhgZKJM01N?=
+ =?us-ascii?Q?1HYACdqzDp2SYgBvO/c7iiLMGfySJ3kMXdhHZOOCanYgEmBLUiP9QEYYkHtU?=
+ =?us-ascii?Q?wKTyEoeXKlyRFqFCbn+72pkwmXmLMRQnsS+GA9Iv4paZpLlmFk6bzthV6qUP?=
+ =?us-ascii?Q?8q2cP2CVKp9Y1GbXi511H0V2GebfpvmRDKNoeSLwLeIGRl2+MfCjDhgpu/6m?=
+ =?us-ascii?Q?olLCBwMrxvbe9+cN+E7clMh8dKM965UheTeidHMofNsfRaPfjogiuDwPJlZK?=
+ =?us-ascii?Q?VxEIgsMibXf9dMRKd/6T24YQ97ooCTnRcnvPPmj8c+1Izu9MB7y3EZJpnt0p?=
+ =?us-ascii?Q?yda0cRhMLVL4uKV9Sh+j8VVXE1t+wPRDphKMEw9cWdbHcHTL97k8nlrb4yb5?=
+ =?us-ascii?Q?UjWoX3szwrYolnylTbKlaEFxrvfXMhaRrOyixS+0ZnH5K5/Bo5FRcilmhYWY?=
+ =?us-ascii?Q?mw3RCwkG+86/FAXdXmuL4C7UiT0hEGitThi00ZwzjpCSMGRNP3g0P46T+DkJ?=
+ =?us-ascii?Q?qgPV9gvC8//d/MThyooB/SSv/2w8V7eJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(19092799006)(366016)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ceRnjfrAa9SqazhF1l9kG5+T0CIeMd2aUDPXqwwph23KYiauXJg2RZsqGqtv?=
+ =?us-ascii?Q?erjAOxi0G32HZZ6lBtZmIEVc4nQcweiO/OuQAoUZ5te1neOYrokzclNmA3fW?=
+ =?us-ascii?Q?qzhyT3hB+F9goNBDfgMCCqUvBNJfhaHd8xmMlH3iDvyYkcF+ogFvCuIIdQY7?=
+ =?us-ascii?Q?sp7J9RYjgXWCFABVVl9KvHMbxFLIms2jR8qEqQUuIQACZv+Z42pLRixZ0iDd?=
+ =?us-ascii?Q?WR163Fse1A2AP+NFT3f9qRMf6QcdRQkVeUC1BP4L3F6laqRftzajZraLrt5F?=
+ =?us-ascii?Q?09Dd8l9NIZNlZ0uiXG3UxR6cQXx91SizONZbYhj5caE39E5ogy+wC1LYfRRD?=
+ =?us-ascii?Q?KjOg+BSCmlxxV8clSzpX/0RPGV9w7ls3asHjU5TdTr2e72VKPYE5yfBin1qV?=
+ =?us-ascii?Q?fuK4d4ioAsc7UTACgpHdcoH25c1eXazaizxwCI7etN29gB93NsOT9aXtcUDz?=
+ =?us-ascii?Q?x/vQYsgcyp16L7V3nEHrInwAo3Hj4Bps1gXF4LkbGMj2UemC5CIwjhLNN1Ls?=
+ =?us-ascii?Q?r/cEI37rfTCR6yNyQg3rlRD67dZAnQIFwz/MfGv5VxxddCdszXTGWJDvJxJw?=
+ =?us-ascii?Q?cvys/Tp4qPOCf88ap9JiRf8bskQMvfrxTMHvaIqCTOt0XDbIoEzsyyLwwPLa?=
+ =?us-ascii?Q?9hbjO9ogxNreH9Xzt2ctRICkI3fhXO8OM/c5iqBKMxzV+NQpFfR/3UUjGgB0?=
+ =?us-ascii?Q?HWWuwJvYYL1vXOq3vu8W8/So1TAG3HlDMQayM1ms3/2CL4fotG786oUUK2bk?=
+ =?us-ascii?Q?SEph4/rfJaW6M/ajpfZHEVGkxt+Xk7jL1z+d2Km84uxupPGtfPlYTJR7MKPW?=
+ =?us-ascii?Q?Ts8i34LcDUmnLO9d4UigwdHL/Ux+ckHHxgHjy2KzsxB/Rlvmf4xjcv3gdtcM?=
+ =?us-ascii?Q?leYRCHaegUJiWPMQZHKJ8NjBS+EQ2KZAwuBpz8LZupssEgonrwcTucPNFuKa?=
+ =?us-ascii?Q?vz4EpLtSXR3Xms2hFUrbJvYUskbfG8mV+y1G2xpXo63Z/tdcuDYy9zfwKPox?=
+ =?us-ascii?Q?3yayMalrcjjEr8TriDuTumrLEr9hQWm5A6xE7c0e3tfhefq4c6429/qAJknw?=
+ =?us-ascii?Q?ldcJAb0KGltG+iNLE+ZfEI/r7+Xu/+GChb4Tk5BAhZ1C3LY1M8G4n6tMxXVa?=
+ =?us-ascii?Q?f4t9R32MwhS4RH8QOiLX+WPz/KohD4fqXUJeSFc6v1DYbDNs5F9THiNF3O8z?=
+ =?us-ascii?Q?tJPAfd7eMSdEJKzcDp0rb3NhjD8AEZcrANjccnMZzum9VkQHH1N8xVePzYDX?=
+ =?us-ascii?Q?m22wOotlN2GaBd3uriuyW8t67XZTTWvD7NX1yiOTVGTCdZiQBMcgpB6ITs7e?=
+ =?us-ascii?Q?qe6APjeAo0uJZ8Kw39czZHW33Q7VKL9cQXg0LmU6S7dTdzcD3w2FW8KBg4Nh?=
+ =?us-ascii?Q?O5DRUAIFJJxCW9cV5mGGNgipk7vkMovI717gizkKB7grot+ylOlNJdG464Yo?=
+ =?us-ascii?Q?hbPQmo6H4bGYaEtuZfdMKiB9CxFgD/0ugfCYsGkNjc4AWcPtzdjEJIlYHxfU?=
+ =?us-ascii?Q?7i+Af834SBaeEjSl0Od57PDBIaHXdpIqFS1OrAC3NzC+FOaQbixu6KcaQRRJ?=
+ =?us-ascii?Q?sF3XfMf9WfsMKE8ij6Q=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9552fa6d-cc4e-4462-f60d-08ddb7f3bcf4
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 16:32:43.8903
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iGuocp1L48gGLYiY7Bect8AkcDyNQSM+rxBAhOKXtQ+VUagFTxiheUfBUr+WgkTQJhWQ+FEucE3aEVfhmlaGVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8754
 
-Bring in the events at v1.00:
-https://github.com/intel/perfmon/commit/d90a6737d0e4e6fbea4a5951e829615fd83=
-17c24
+Convert lpc32xx-key.txt to yaml format.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Additional changes:
+- set maximum of key-row(column) to 4.
+- add ref to matrix-keymap.yaml.
+
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
- .../arch/x86/pantherlake/cache.json           | 278 +++++++++++++++
- .../arch/x86/pantherlake/counter.json         |  12 +
- .../arch/x86/pantherlake/frontend.json        |  30 ++
- .../arch/x86/pantherlake/memory.json          | 215 ++++++++++++
- .../arch/x86/pantherlake/pipeline.json        | 325 ++++++++++++++++++
- .../arch/x86/pantherlake/virtual-memory.json  |  62 ++++
- 7 files changed, 923 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/frontend.jso=
-n
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/pipeline.jso=
-n
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/virtual-memo=
-ry.json
+change in v2
+- add ref to matrix-keymap.yaml.
+- remove properties, which already defined in matrix-keymap.yaml.
+- Add Vladimir Zapolskiy review tag
+---
+ .../devicetree/bindings/input/lpc32xx-key.txt | 34 -----------
+ .../bindings/input/nxp,lpc3220-key.yaml       | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/lpc32xx-key.txt
+ create mode 100644 Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 1185ea93b44a..252382751fa5 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -26,6 +26,7 @@ GenuineIntel-6-BD,v1.14,lunarlake,core
- GenuineIntel-6-(AA|AC|B5),v1.14,meteorlake,core
- GenuineIntel-6-1[AEF],v4,nehalemep,core
- GenuineIntel-6-2E,v4,nehalemex,core
-+GenuineIntel-6-CC,v1.00,pantherlake,core
- GenuineIntel-6-A7,v1.04,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
- GenuineIntel-6-8F,v1.25,sapphirerapids,core
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/cache.json b/tools/=
-perf/pmu-events/arch/x86/pantherlake/cache.json
+diff --git a/Documentation/devicetree/bindings/input/lpc32xx-key.txt b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+deleted file mode 100644
+index 2b075a080d303..0000000000000
+--- a/Documentation/devicetree/bindings/input/lpc32xx-key.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-NXP LPC32xx Key Scan Interface
+-
+-This binding is based on the matrix-keymap binding with the following
+-changes:
+-
+-Required Properties:
+-- compatible: Should be "nxp,lpc3220-key"
+-- reg: Physical base address of the controller and length of memory mapped
+-  region.
+-- interrupts: The interrupt number to the cpu.
+-- clocks: phandle to clock controller plus clock-specifier pair
+-- nxp,debounce-delay-ms: Debounce delay in ms
+-- nxp,scan-delay-ms: Repeated scan period in ms
+-- linux,keymap: the key-code to be reported when the key is pressed
+-  and released, see also
+-  Documentation/devicetree/bindings/input/matrix-keymap.txt
+-
+-Note: keypad,num-rows and keypad,num-columns are required, and must be equal
+-since LPC32xx only supports square matrices
+-
+-Example:
+-
+-	key@40050000 {
+-		compatible = "nxp,lpc3220-key";
+-		reg = <0x40050000 0x1000>;
+-		clocks = <&clk LPC32XX_CLK_KEY>;
+-		interrupt-parent = <&sic1>;
+-		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+-		keypad,num-rows = <1>;
+-		keypad,num-columns = <1>;
+-		nxp,debounce-delay-ms = <3>;
+-		nxp,scan-delay-ms = <34>;
+-		linux,keymap = <0x00000002>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml b/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
 new file mode 100644
-index 000000000000..c84f3d9fdb10
+index 0000000000000..9e0d977bdf5cd
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/cache.json
-@@ -0,0 +1,278 @@
-+[
-+    {
-+        "BriefDescription": "Counts the number of L2 cache accesses from f=
-ront door requests for Code Read, Data Read, RFO, ITOM, and L2 Prefetches. =
-Does not include rejects or recycles, per core event.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x24",
-+        "EventName": "L2_REQUEST.ALL",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1ff",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "L2 code requests",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x24",
-+        "EventName": "L2_RQSTS.ALL_CODE_RD",
-+        "PublicDescription": "Counts the total number of L2 code requests.=
-",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0xe4",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Demand Data Read access L2 cache",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x24",
-+        "EventName": "L2_RQSTS.ALL_DEMAND_DATA_RD",
-+        "PublicDescription": "Counts Demand Data Read requests accessing t=
-he L2 cache. These requests may hit or miss L2 cache. True-miss exclude mis=
-ses that were merged with ongoing L2 misses. An access is counted once.",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0xe1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of cacheable memory request=
-s that miss in the LLC. Counts on a per core basis.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.MISS",
-+        "PublicDescription": "Counts the number of cacheable memory reques=
-ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
-reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
- core has access to an L3 cache, the LLC is the L3 cache, otherwise it is t=
-he L2 cache. Counts on a per core basis.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x41",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Core-originated cacheable requests that misse=
-d L3  (Except hardware prefetches to the L3)",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.MISS",
-+        "PublicDescription": "Counts core-originated cacheable requests th=
-at miss the L3 cache (Longest Latency cache). Requests include data and cod=
-e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
-etches to the L1 and L2.  It does not include hardware prefetches to the L3=
-, and may not count other types of requests to the L3.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x41",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of cacheable memory request=
-s that access the LLC. Counts on a per core basis.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-+        "PublicDescription": "Counts the number of cacheable memory reques=
-ts that access the Last Level Cache (LLC). Requests include demand loads, r=
-eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
-core has access to an L3 cache, the LLC is the L3 cache, otherwise it is th=
-e L2 cache. Counts on a per core basis.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x4f",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Core-originated cacheable requests that refer=
- to L3 (Except hardware prefetches to the L3)",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-+        "PublicDescription": "Counts core-originated cacheable requests to=
- the L3 cache (Longest Latency cache). Requests include data and code reads=
-, Reads-for-Ownership (RFOs), speculative accesses and hardware prefetches =
-to the L1 and L2.  It does not include hardware prefetches to the L3, and m=
-ay not count other types of requests to the L3.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x4f",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts all retired load instructions.",
-+        "Counter": "0,1,2,3",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_INST_RETIRED.ALL_LOADS",
-+        "PublicDescription": "Counts Instructions with at least one archit=
-ecturally visible load retired. Available PDIST counters: 0",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x81",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Retired store instructions.",
-+        "Counter": "0,1,2,3",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_INST_RETIRED.ALL_STORES",
-+        "PublicDescription": "Counts all retired store instructions. Avail=
-able PDIST counters: 0",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x82",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of load ops retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x81",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of store ops retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x82",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x400",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x80",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x10",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x800",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x100",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x20",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x4",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x200",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x40",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of tagged load uops retired=
- that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
-- Only counts with PEBS enabled.",
-+        "Counter": "0,1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x8",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of  stores uops retired sam=
-e as MEM_UOPS_RETIRED.ALL_STORES",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x6",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "PublicDescription": "Counts demand data reads that have any type =
-of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "PublicDescription": "Counts demand data reads that have any type =
-of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
-y type of response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
-y type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/counter.json b/tool=
-s/perf/pmu-events/arch/x86/pantherlake/counter.json
-new file mode 100644
-index 000000000000..69f158a97707
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/counter.json
-@@ -0,0 +1,12 @@
-+[
-+    {
-+        "Unit": "cpu_atom",
-+        "CountersNumFixed": "3",
-+        "CountersNumGeneric": "39"
-+    },
-+    {
-+        "Unit": "cpu_core",
-+        "CountersNumFixed": "4",
-+        "CountersNumGeneric": "10"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/frontend.json b/too=
-ls/perf/pmu-events/arch/x86/pantherlake/frontend.json
-new file mode 100644
-index 000000000000..aedf631e3c0f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/frontend.json
-@@ -0,0 +1,30 @@
-+[
-+    {
-+        "BriefDescription": "Counts every time the code stream enters into=
- a new cache line by walking sequential from the previous line or being red=
-irected by a jump.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x80",
-+        "EventName": "ICACHE.ACCESSES",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x3",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts every time the code stream enters into=
- a new cache line by walking sequential from the previous line or being red=
-irected by a jump and the instruction cache registers bytes are not present=
-. -",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x80",
-+        "EventName": "ICACHE.MISSES",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that when no operation was delivered to the back-end pipeline due =
-to instruction fetch limitations when the back-end could have accepted more=
- operations. Common examples include instruction cache misses or x86 instru=
-ction decode limitations.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x9c",
-+        "EventName": "IDQ_BUBBLES.CORE",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that when no operation was delivered to the back-end pipeline due=
- to instruction fetch limitations when the back-end could have accepted mor=
-e operations. Common examples include instruction cache misses or x86 instr=
-uction decode limitations. Software can use this event as the numerator for=
- the Frontend Bound metric (or top-level category) of the Top-down Microarc=
-hitecture Analysis method.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/memory.json b/tools=
-/perf/pmu-events/arch/x86/pantherlake/memory.json
-new file mode 100644
-index 000000000000..47daee8cc00f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/memory.json
-@@ -0,0 +1,215 @@
-+[
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 1024 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_1024",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x400",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 1024 cycles.  Reporte=
-d latency may be longer than just the memory latency. Available PDIST count=
-ers: 0",
-+        "SampleAfterValue": "53",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 128 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x80",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 128 cycles.  Reported=
- latency may be longer than just the memory latency. Available PDIST counte=
-rs: 0",
-+        "SampleAfterValue": "1009",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 16 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x10",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 16 cycles.  Reported =
-latency may be longer than just the memory latency. Available PDIST counter=
-s: 0",
-+        "SampleAfterValue": "20011",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 2048 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_2048",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x800",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 2048 cycles.  Reporte=
-d latency may be longer than just the memory latency. Available PDIST count=
-ers: 0",
-+        "SampleAfterValue": "23",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 256 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x100",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 256 cycles.  Reported=
- latency may be longer than just the memory latency. Available PDIST counte=
-rs: 0",
-+        "SampleAfterValue": "503",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 32 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x20",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 32 cycles.  Reported =
-latency may be longer than just the memory latency. Available PDIST counter=
-s: 0",
-+        "SampleAfterValue": "100007",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 4 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x4",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 4 cycles.  Reported l=
-atency may be longer than just the memory latency. Available PDIST counters=
-: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 512 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x200",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 512 cycles.  Reported=
- latency may be longer than just the memory latency. Available PDIST counte=
-rs: 0",
-+        "SampleAfterValue": "101",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 64 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x40",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 64 cycles.  Reported =
-latency may be longer than just the memory latency. Available PDIST counter=
-s: 0",
-+        "SampleAfterValue": "2003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 8 cycles.",
-+        "Counter": "2,3,4,5,6,7,8,9",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x8",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 8 cycles.  Reported l=
-atency may be longer than just the memory latency. Available PDIST counters=
-: 0",
-+        "SampleAfterValue": "50021",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Retired memory store access operations. A PDi=
-st event for PEBS Store Latency Facility.",
-+        "Counter": "0,1",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.STORE_SAMPLE",
-+        "PublicDescription": "Counts Retired memory accesses with at least=
- 1 store operation. This PEBS event is the precisely-distributed (PDist) tr=
-igger covering all stores uops for sampling by the PEBS Store Latency Facil=
-ity. The facility is described in Intel SDM Volume 3 section 19.9.8 Availab=
-le PDIST counters: 0",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x7BC000001",
-+        "PublicDescription": "Counts demand data reads that were supplied =
-by DRAM. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x1E780000001",
-+        "PublicDescription": "Counts demand data reads that were supplied =
-by DRAM. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x13FBFC00001",
-+        "PublicDescription": "Counts demand data reads that were not suppl=
-ied by the L3 cache. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x9E7FA000001",
-+        "PublicDescription": "Counts demand data reads that were not suppl=
-ied by the L3 cache. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
-t supplied by the L3 cache.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x13FBFC00002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were n=
-ot supplied by the L3 cache. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) reques=
-ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
-t supplied by the L3 cache.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_RFO.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x9E7FA000002",
-+        "PublicDescription": "Counts demand read for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were n=
-ot supplied by the L3 cache. Available PDIST counters: 0",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/pipeline.json b/too=
-ls/perf/pmu-events/arch/x86/pantherlake/pipeline.json
-new file mode 100644
-index 000000000000..2caf2f85327f
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/pipeline.json
-@@ -0,0 +1,325 @@
-+[
-+    {
-+        "BriefDescription": "Counts the total number of branch instruction=
-s retired for all branch types.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc4",
-+        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-+        "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for.",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "All branch instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xc4",
-+        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-+        "PublicDescription": "Counts all branch instructions retired. Avai=
-lable PDIST counters: 0",
-+        "SampleAfterValue": "400009",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the total number of mispredicted branc=
-h instructions retired for all branch types.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc5",
-+        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-+        "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path.",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "All mispredicted branch instructions retired.=
-",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xc5",
-+        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-+        "PublicDescription": "Counts all the retired branch instructions t=
-hat were mispredicted by the processor. A branch misprediction occurs when =
-the processor incorrectly predicts the destination of the branch.  When the=
- misprediction is discovered at execution, all the instructions executed in=
- the wrong (speculative) path must be discarded, and the processor must sta=
-rt fetching from the correct path. Available PDIST counters: 0",
-+        "SampleAfterValue": "400009",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
-core clock cycles.",
-+        "Counter": "Fixed counter 1",
-+        "EventName": "CPU_CLK_UNHALTED.CORE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Core cycles when the core is not in a halt st=
-ate.",
-+        "Counter": "Fixed counter 1",
-+        "EventName": "CPU_CLK_UNHALTED.CORE",
-+        "PublicDescription": "Counts the number of core cycles while the c=
-ore is not in a halt state. The core enters the halt state when it is runni=
-ng the HLT instruction. This event is a component in many key event ratios.=
- The core frequency may change from time to time due to transitions associa=
-ted with Enhanced Intel SpeedStep Technology or TM2. For this reason this e=
-vent may have a changing ratio with regards to time. When the core frequenc=
-y is constant, this event can approximate elapsed time while the core was n=
-ot in the halt state. It is counted on a dedicated fixed counter, leaving t=
-he programmable counters available for other events.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of unhalted core clock cycl=
-es. [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.CORE_P",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Thread cycles when thread is not in halt stat=
-e [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.CORE_P",
-+        "PublicDescription": "This is an architectural event that counts t=
-he number of thread cycles while the thread is not in a halt state. The thr=
-ead enters the halt state when it is running the HLT instruction. The core =
-frequency may change from time to time due to power or thermal throttling. =
-For this reason, this event may have a changing ratio with regards to wall =
-clock time. [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
-+        "SampleAfterValue": "2000003",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
-reference clock cycles.",
-+        "Counter": "Fixed counter 2",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x3",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
-+        "Counter": "Fixed counter 2",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-+        "PublicDescription": "Counts the number of reference cycles when t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction or the MWAIT instruction. This event is not affe=
-cted by core frequency changes (for example, P states, TM2 transitions) but=
- has the same incrementing frequency as the time stamp counter. This event =
-can approximate elapsed time while the core was not in a halt state. Note: =
-On all current platforms this event stops counting during 'throttling (TM)'=
- states duty off periods the processor is 'halted'.  The counter update is =
-done at a lower clock rate then the core clock the overflow status bit for =
-this counter may appear 'sticky'.  After the counter has overflowed and sof=
-tware clears the overflow status bit and resets the counter to less than MA=
-X. The reset value to the counter is not clocked immediately so the overflo=
-w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
-er which the reset value gets clocked into the counter. Therefore, software=
- will get the interrupt, read the overflow status bit '1 for bit 34 while t=
-he counter value is less than MAX. Software should ignore this case.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x3",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of unhalted reference clock=
- cycles at TSC frequency.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
-+        "PublicDescription": "Counts the number of reference cycles that t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction. This event is not affected by core frequency ch=
-anges and increments at a fixed frequency that is also used for the Time St=
-amp Counter (TSC). This event uses a programmable general purpose performan=
-ce counter.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
-+        "PublicDescription": "Counts the number of reference cycles when t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction or the MWAIT instruction. This event is not affe=
-cted by core frequency changes (for example, P states, TM2 transitions) but=
- has the same incrementing frequency as the time stamp counter. This event =
-can approximate elapsed time while the core was not in a halt state. Note: =
-On all current platforms this event stops counting during 'throttling (TM)'=
- states duty off periods the processor is 'halted'.  The counter update is =
-done at a lower clock rate then the core clock the overflow status bit for =
-this counter may appear 'sticky'.  After the counter has overflowed and sof=
-tware clears the overflow status bit and resets the counter to less than MA=
-X. The reset value to the counter is not clocked immediately so the overflo=
-w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
-er which the reset value gets clocked into the counter. Therefore, software=
- will get the interrupt, read the overflow status bit '1 for bit 34 while t=
-he counter value is less than MAX. Software should ignore this case.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
-core clock cycles.",
-+        "Counter": "Fixed counter 1",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Core cycles when the thread is not in a halt =
-state.",
-+        "Counter": "Fixed counter 1",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD",
-+        "PublicDescription": "Counts the number of core cycles while the t=
-hread is not in a halt state. The thread enters the halt state when it is r=
-unning the HLT instruction. This event is a component in many key event rat=
-ios. The core frequency may change from time to time due to transitions ass=
-ociated with Enhanced Intel SpeedStep Technology or TM2. For this reason th=
-is event may have a changing ratio with regards to time. When the core freq=
-uency is constant, this event can approximate elapsed time while the core w=
-as not in the halt state. It is counted on a dedicated fixed counter, leavi=
-ng the programmable counters available for other events.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of unhalted core clock cycl=
-es. [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Thread cycles when thread is not in halt stat=
-e [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
-+        "PublicDescription": "This is an architectural event that counts t=
-he number of thread cycles while the thread is not in a halt state. The thr=
-ead enters the halt state when it is running the HLT instruction. The core =
-frequency may change from time to time due to power or thermal throttling. =
-For this reason, this event may have a changing ratio with regards to wall =
-clock time. [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
-+        "SampleAfterValue": "2000003",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of instructi=
-ons retired.",
-+        "Counter": "Fixed counter 0",
-+        "EventName": "INST_RETIRED.ANY",
-+        "PublicDescription": "Fixed Counter: Counts the number of instruct=
-ions retired. Available PDIST counters: 32",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Number of instructions retired. Fixed Counter=
- - architectural event",
-+        "Counter": "Fixed counter 0",
-+        "EventName": "INST_RETIRED.ANY",
-+        "PublicDescription": "Counts the number of X86 instructions retire=
-d - an Architectural PerfMon event. Counting continues during hardware inte=
-rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
-unted by a designated fixed counter freeing up programmable counters to cou=
-nt other events. INST_RETIRED.ANY_P is counted by a programmable counter. A=
-vailable PDIST counters: 32",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc0",
-+        "EventName": "INST_RETIRED.ANY_P",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Number of instructions retired. General Count=
-er - architectural event",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xc0",
-+        "EventName": "INST_RETIRED.ANY_P",
-+        "PublicDescription": "Counts the number of X86 instructions retire=
-d - an Architectural PerfMon event. Counting continues during hardware inte=
-rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
-unted by a designated fixed counter freeing up programmable counters to cou=
-nt other events. INST_RETIRED.ANY_P is counted by a programmable counter. A=
-vailable PDIST counters: 0",
-+        "SampleAfterValue": "2000003",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of retired loads that are b=
-locked because its address partially overlapped with an older store.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x03",
-+        "EventName": "LD_BLOCKS.STORE_FORWARD",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Loads blocked due to overlapping with a prece=
-ding store that cannot be forwarded.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x03",
-+        "EventName": "LD_BLOCKS.STORE_FORWARD",
-+        "PublicDescription": "Counts the number of times where store forwa=
-rding was prevented for a load operation. The most common case is a load bl=
-ocked due to the address of memory access (partially) overlapping with a pr=
-eceding uncompleted store. Note: See the table of not supported store forwa=
-rds in the Optimization Guide.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x82",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of LBR entries recorded. Re=
-quires LBRs to be enabled in IA32_LBR_CTL.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xe4",
-+        "EventName": "MISC_RETIRED.LBR_INSERTS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "LBR record is inserted",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xe4",
-+        "EventName": "MISC_RETIRED.LBR_INSERTS",
-+        "PublicDescription": "LBR record is inserted Available PDIST count=
-ers: 0",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that were not consumed by the back-end pipeline due to lack of bac=
-k-end resources, as a result of memory subsystem delays, execution units li=
-mitations, or other conditions.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that were not consumed by the back-end pipeline due to lack of ba=
-ck-end resources, as a result of memory subsystem delays, execution units l=
-imitations, or other conditions. Software can use this event as the numerat=
-or for the Backend Bound metric (or top-level category) of the Top-down Mic=
-roarchitecture Analysis method.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. Fixed counter - architectural event",
-+        "Counter": "Fixed counter 3",
-+        "EventName": "TOPDOWN.SLOTS",
-+        "PublicDescription": "Number of available slots for an unhalted lo=
-gical processor. The event increments by machine-width of the narrowest pip=
-eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
-Software can use this event as the denominator for the top-level metrics of=
- the TMA method. This architectural event is counted on a designated fixed =
-counter (Fixed Counter 3).",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x4",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. General counter - architectural event",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.SLOTS_P",
-+        "PublicDescription": "Counts the number of available slots for an =
-unhalted logical processor. The event increments by machine-width of the na=
-rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
-hod.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of issue slo=
-ts that were not consumed by the backend because allocation is stalled due =
-to a mispredicted jump or a machine clear.",
-+        "Counter": "36",
-+        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x5",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend because allocation is stalled due to a mispredict=
-ed jump or a machine clear.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x73",
-+        "EventName": "TOPDOWN_BAD_SPECULATION.ALL_P",
-+        "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend because allocation is stalled due to a mis=
-predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
-s such as memory ordering nukes are counted. Other nukes are not accounted =
-for. Counts all issue slots blocked during this recovery window, including =
-relevant microcode flows, and while uops are not yet available in the instr=
-uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
- Also includes the issue slots that were consumed by the backend but were t=
-hrown away because they were younger than the mispredict or machine clear."=
-,
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of retirement slots not con=
-sumed due to backend stalls. [This event is alias to TOPDOWN_BE_BOUND.ALL_P=
-]",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN_BE_BOUND.ALL",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of retirement slots not con=
-sumed due to backend stalls. [This event is alias to TOPDOWN_BE_BOUND.ALL]"=
-,
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN_BE_BOUND.ALL_P",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of retiremen=
-t slots not consumed due to front end stalls.",
-+        "Counter": "37",
-+        "EventName": "TOPDOWN_FE_BOUND.ALL",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x6",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of retirement slots not con=
-sumed due to front end stalls.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x9c",
-+        "EventName": "TOPDOWN_FE_BOUND.ALL_P",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Fixed Counter: Counts the number of consumed =
-retirement slots.",
-+        "Counter": "38",
-+        "EventName": "TOPDOWN_RETIRING.ALL",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x7",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of consumed retirement slot=
-s.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc2",
-+        "EventName": "TOPDOWN_RETIRING.ALL_P",
-+        "PublicDescription": "Counts the number of consumed retirement slo=
-ts. Available PDIST counters: 0,1",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that are utilized by operations that eventually get retired (commi=
-tted) by the processor pipeline. Usually, this event positively correlates =
-with higher performance  for example, as measured by the instructions-per-c=
-ycle metric.",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0xc2",
-+        "EventName": "UOPS_RETIRED.SLOTS",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that are utilized by operations that eventually get retired (comm=
-itted) by the processor pipeline. Usually, this event positively correlates=
- with higher performance  for example, as measured by the instructions-per-=
-cycle metric. Software can use this event as the numerator for the Retiring=
- metric (or top-level category) of the Top-down Microarchitecture Analysis =
-method.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_core"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/pantherlake/virtual-memory.json=
- b/tools/perf/pmu-events/arch/x86/pantherlake/virtual-memory.json
-new file mode 100644
-index 000000000000..690c5dff9d9e
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/pantherlake/virtual-memory.json
-@@ -0,0 +1,62 @@
-+[
-+    {
-+        "BriefDescription": "Counts the number of page walks completed due=
- to load DTLB misses to any page size.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x08",
-+        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts the number of page walks completed du=
-e to loads (including SW prefetches) whose address translations missed in a=
-ll Translation Lookaside Buffer (TLB) levels and were mapped to any page si=
-ze. Includes page walks that page fault.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Load miss in all TLB levels causes a page wal=
-k that completes. (All page sizes)",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x12",
-+        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks  (all page sizes=
-) caused by demand data loads. This implies it missed in the DTLB and furth=
-er levels of TLB. The page walk can end with or without a fault.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of page walks completed due=
- to store DTLB misses to any page size.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x49",
-+        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts the number of page walks completed du=
-e to stores whose address translations missed in all Translation Lookaside =
-Buffer (TLB) levels and were mapped to any page size.  Includes page walks =
-that page fault.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Store misses in all TLB levels causes a page =
-walk that completes. (All page sizes)",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x13",
-+        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks  (all page sizes=
-) caused by demand data stores. This implies it missed in the DTLB and furt=
-her levels of TLB. The page walk can end with or without a fault.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_core"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of page walks completed due=
- to instruction fetch misses to any page size.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x85",
-+        "EventName": "ITLB_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts the number of page walks completed du=
-e to instruction fetches whose address translations missed in all Translati=
-on Lookaside Buffer (TLB) levels and were mapped to any page size.  Include=
-s page walks that page fault.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Code miss in all TLB levels causes a page wal=
-k that completes. (All page sizes)",
-+        "Counter": "0,1,2,3,4,5,6,7,8,9",
-+        "EventCode": "0x11",
-+        "EventName": "ITLB_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks (all page sizes)=
- caused by a code fetch. This implies it missed in the ITLB (Instruction TL=
-B) and further levels of TLB. The page walk can end with or without a fault=
-.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe",
-+        "Unit": "cpu_core"
-+    }
-+]
---=20
-2.50.0.727.gbf7dc18ff4-goog
++++ b/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/nxp,lpc3220-key.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP LPC32xx Key Scan Interface
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++properties:
++  compatible:
++    const: nxp,lpc3220-key
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  nxp,debounce-delay-ms:
++    description: Debounce delay in ms
++
++  nxp,scan-delay-ms:
++    description: Repeated scan period in ms
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - nxp,debounce-delay-ms
++  - nxp,scan-delay-ms
++  - linux,keymap
++
++allOf:
++  - $ref: matrix-keymap.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/lpc32xx-clock.h>
++
++    key@40050000 {
++        compatible = "nxp,lpc3220-key";
++        reg = <0x40050000 0x1000>;
++        clocks = <&clk LPC32XX_CLK_KEY>;
++        interrupt-parent = <&sic1>;
++        interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
++        keypad,num-rows = <1>;
++        keypad,num-columns = <1>;
++        nxp,debounce-delay-ms = <3>;
++        nxp,scan-delay-ms = <34>;
++        linux,keymap = <0x00000002>;
++    };
+-- 
+2.34.1
 
