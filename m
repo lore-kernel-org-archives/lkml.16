@@ -1,73 +1,112 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A464C6C
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABBA3D6F;
+	Mon, 30 Jun 2025 03:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253724; cv=none; b=BxJK5p+9WEkvBixx86clfaQ0wwG2zrIMyQljkBPGCFazYnrVHt+cYmws6YUb6ylFGW9Re+G2c3EiFJmIiTGPWyvHNCrJoIZczU67gQ+2vGVFPyKB5/LCzhiwkIR9kdlxZ0OhjKIBwgxFkT0OUgvobrruHy5mjKfY2NBAUVguvvE=
+	t=1751253837; cv=none; b=RFJajZcsYzF/YvWQac8F0byLFqYD1CJcFnjIuSM7vUrnq7zgGXosPXeIxVW/vC+UE9SIoFGrx/z0a1HrtfXkZlWYQ88mBtPgTJ7i6k6FDK4yhadRXoaP8PM5u1t079qoHawWiobV+jc9FzII7e8S4mkGKO1DCRz8wrg6DOVixzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253724; c=relaxed/simple;
-	bh=uOWornTBWs9EqgNeYwRkEdGkZnM3Mpbh9ZeSQ6JqXoo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=oHDziPmH6lmk0xlhCZQEjCKronPw1Gkd8Lm+XYy94qHz0/hQTB7natbc1VPxNJ9bX7t80Sm8Qu0I8DUDatxTnXDg0MiAa5QyExew/QHq1yUVJMOJuU+NS/bmb6PNNIR4IFVeRXl4onXDXcYyBknydOH9GuhWQ65EXuF6e1LDKnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-87326a81ceaso420222739f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:22:02 -0700 (PDT)
+	s=arc-20240116; t=1751253837; c=relaxed/simple;
+	bh=nUnKD4t2oC6+/m2WbqjH/Yj7qnmYdAYy8/5qle03KCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nxl797YNFUqjZl+Ish61YOzbRrBfas25E/aMC4K86RQVevA+6VppGevt/NF3NPICdpIM8RZgzkYTerhDGRW1Pkl4YSvjp2NKRRYNn1P/udi4kaSew8EsWWLsZVwXy1At1hE9tFxjHpbP8V80J5DML/2PewSiYcaxq+Y21LUl0TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhoN/Fvy; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhoN/Fvy"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-748f54dfa5fso3483599b3a.2;
+        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751253835; x=1751858635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bt40NLOekWCUP4N5pOq5H/L4sYgVc3vJQNm3hCjDNnk=;
+        b=bhoN/Fvy7nih17aQe7eNhUHjFPd6A2cFhEPNKEw+fR3U+la154gbTKwqZLAGmYMgur
+         VBfGjBWqRw5zhntx8qWnaHtZWVYvNt4KIyNXnB053tJvkYnTp7cUM/mzCzGY6WiSoTeE
+         s9rV6pvnPSEVGTH+q7rY6+svIPePxm4xXbtvqYoYYKlKsOaY0vZH0qTc+0WoFWBOg1Kl
+         RRwIkXdxOKKvZqW0bQzYBoKoQ033Ohb9HCO9wXJZxl3e5YypLW+bu/OetUfMS5hBlNaa
+         qQS8NMRetbrPyvHIlbgsIjuDti+hxQwWstq2xsDf6Y/yFcFyZHh2eKUzogC2Ti6JGxTN
+         W4Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751253722; x=1751858522;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6dmo/Ho6Oqai/Lc1ieZWg3sVagbOK58/VG1TB3rW0V4=;
-        b=R6p7RCM2fnjRW8YFMqYwXMDL5SsC30DiPRcAB3YBy1PUR6GkEI3hGxbMhHi/h6DrGw
-         KOKb/1KaL4aUdD7tVFKb3Q1ZbSSJ7Iv16/0DI+turxBmQbDatLXX39WXn4BDA65H7im8
-         GZWN0uQe+3qyVkvA3B6t2iJsOygxvEW2vfSuaQ+6cSNeytLUHdyW8qQvfUmSiiFKH54m
-         nQfFDxUKbtQoYNKjpo1mGgAPNZ/tNUiNYZ8cJvs2oOG6f1yvS+huUR8pZEjZhexdePMY
-         xNbABMiHw4AjXY7WJGCTOTY3K3NmoubjQKkYYxfIMVGR78k2FaU0ac3+6nGNe7hfPnz7
-         2dMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOqJt/8N3piaP3+oN2G3oMvAfdVTcBbg0q4ki+iXhTRBpwOIZtgrJxZa6Agwa/fr8uMWBG8O61fUgSQVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRpuUAhE8+/v4s+18Dhhblofh2paJjcFUlooVaCzSQkSiNQtKm
-	7eGputAGIpyzIZzmITHHmnjHigHcJNUwKv+UM6l+s/wXe8W6847Vy1RWZnZk3AK+MOHvGf5Giv7
-	wkdz2UV0+OrDBWr9nxbcPhYfIaTIJ2yh/xmNYT9wriTdj1XlBYTbHOhOcQN8=
-X-Google-Smtp-Source: AGHT+IGrL7X3/EGYETKEO0sTcgpieyZGSNrjfqM4MB96FbEh2uMbQNVyTli4nk3iVgF9Yh1Bs0Ae9vaxGywPbwrg07eGjN6qczO6
+        d=1e100.net; s=20230601; t=1751253835; x=1751858635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bt40NLOekWCUP4N5pOq5H/L4sYgVc3vJQNm3hCjDNnk=;
+        b=lDSeTrJe9SjpsWrztJFgCCSLK+zd2okhLZv4/NL1EBBJ52eq7eB2t8uvuFojxoO8pd
+         NdqqFlpzzc0fA1gbEQg+/KXft8NwEJMl+8f+Wv61ZqXKkjp4BLfqn/BOSR1IwqxqyWj7
+         h7Tu37vdDHHMcDHYIL5LOYiIFdU8tlksQcWU7OXvHEoW/8cLpDIgu3r4T/DMAV+qxiRH
+         /E9Qx1WEAkwvSpOWwc1GGtqFkhFce2fvJy0ika9ibvvNdIDB+bXhUiOFFbTiju2nWs7M
+         4z7LMPFysDxKHKyRAllqtNbnR2MgEhWeZ2CHUCq5Xd01E76dW7RnzKYeZnne/aAnKt/T
+         nfiA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2pf9Hk1jjyJ/iJonOMrot0Y+JJNom+t/VVcLDetDGrbS8Fuig5r5zN0lbx7C+9D5VVkoUA6MdONu0/z9lpIs=@vger.kernel.org, AJvYcCXitEYKpyK0XkmK6fbMcHCORwlnvsGZ7PCws7lo2HUhUDOkgYN156xJ2TVS0X/8e4tyiRgpAk6yd4wSlFqO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWtdojCmzik0hIuaeDPOvcPNqQlRUUuW74TLCY7Jec/pQ1svoV
+	6I8FLCA+tvW+T+gDkNJhnUDqW/MVLnozb8LJy15Y6KdU7xe0V+T6SA5c
+X-Gm-Gg: ASbGncvrId0Pc0CyLp7TjLRj+J3gaQ4kjKH4Lof3pk+pFDTkUUV3YpmfaeNzK6vgs4/
+	cUTB/3qaI+dW5EqQWWuHR5PuiamMHG4Efzt9idM+50SknrNtf7RY3Z54N5MqSs8bJ/ycy5gih4D
+	YcS3ZwV0JGF4eBAeFGtLmbNQAnKGqgocPnp7rQuI55VzrdKN4DNhiuSzbCw+xT8tpZmGsXjhdpj
+	unEkXy3k+oxHHJuAzj3GVCnrRF3zUy5ZwcLTLweONjLBgFpaagel5c0sxlizQTXlFdj3mgQQFrF
+	tRHooHwFg5mAAd8fUVNUWLBCEtuc30eENlY7acg2cn8b/YxEJmWG27VoKYH8E3jPAhV7co9DF4J
+	eOiO/GEhnGNep/YqINSd9RHUI+LMmLsop+UPYxpA=
+X-Google-Smtp-Source: AGHT+IEweQDpqbFoLegd5G81mQV+h2WunYcZCHxDgyatO1uuacJRxYQuuA9LTPUZYHMhBdlFOYEQ/w==
+X-Received: by 2002:a05:6a00:170b:b0:748:fb7c:bbe0 with SMTP id d2e1a72fcca58-74af6fde46amr18069903b3a.24.1751253835362;
+        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:84f2:7459:db60:b146])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af54099b2sm7752501b3a.28.2025.06.29.20.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 20:23:55 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
+	syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com
+Subject: [PATCH] Bluetooth: set bcsp to NULL after purging
+Date: Sun, 29 Jun 2025 23:23:35 -0400
+Message-ID: <20250630032335.473671-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a82:b0:3dd:f1bb:c75a with SMTP id
- e9e14a558f8ab-3df4b48d29amr116176685ab.8.1751253722338; Sun, 29 Jun 2025
- 20:22:02 -0700 (PDT)
-Date: Sun, 29 Jun 2025 20:22:02 -0700
-In-Reply-To: <pxrxtntcuuqt5opsno55wx62yqafwhfqkqhylpbwwkqt4iabdv@2nmky356ufdo>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686202da.a70a0220.3b7e22.0b8d.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] general protection fault in bcsp_recv
-From: syzbot <syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com>
-To: ipravdin.official@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Set hu->priv to NULL after skb purging in bcsp_close to prevent NULL
+pointer dereference in bcsp_recv.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Reported-by: syzbot+4ed6852d4da4606c93da@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67b0cc5b.050a0220.6f0b7.0014.GAE@google.com/T/
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+---
+ drivers/bluetooth/hci_bcsp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-failed to apply patch:
-checking file drivers/bluetooth/hci_bcsp.c
-patch: **** unexpected end of file in patch
-
-
-
-Tested on:
-
-commit:         d0b3b7b2 Linux 6.16-rc4
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=efa83f9a6dd67d67
-dashboard link: https://syzkaller.appspot.com/bug?extid=4ed6852d4da4606c93da
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13eb2770580000
+diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
+index 610d0e3c36d4..de9a6ed3a8aa 100644
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -739,8 +739,6 @@ static int bcsp_close(struct hci_uart *hu)
+ 
+ 	timer_shutdown_sync(&bcsp->tbcsp);
+ 
+-	hu->priv = NULL;
+-
+ 	BT_DBG("hu %p", hu);
+ 
+ 	skb_queue_purge(&bcsp->unack);
+@@ -753,6 +751,8 @@ static int bcsp_close(struct hci_uart *hu)
+ 	}
+ 
+ 	kfree(bcsp);
++	hu->priv = NULL;
++
+ 	return 0;
+ }
+ 
+-- 
+2.45.2
 
