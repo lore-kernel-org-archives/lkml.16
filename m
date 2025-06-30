@@ -1,147 +1,210 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011059.outbound.protection.outlook.com [52.101.65.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBBC24BBFC;
-	Mon, 30 Jun 2025 07:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270349; cv=fail; b=nT4yX0oxMuqgH6S2a2guEYkDOUHMBZyW1LBUCaFvbfVytHKqtJIwX4+jDy8aeOCs0FOgu5ntkH4idtII4sYVX5XM1GRuF76NXP+numT+HuiWYZT3ose56RAYSyBKRDvAoer7spjE6XAn9pouHDB58vUwMLpJeJFJSPeM0zjzaQM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270349; c=relaxed/simple;
-	bh=ur2RHCoP+Ai1J+PIdgumAMTDOBdalxhejYdJHfVbuZc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I8yT5YIvFcWjph8px0vM/pk1WjZFxBSzPWxJtJ3NwcG5LcpQ+q9ibSJdjjTAqpdASOZ0QEimySW8TGe++3Pcl3bdXmDCScmqZYo5/Djsu031Hv8hDmQ8cPOKWaJUZYCpPjmEH+IbuEzDNaPwWLrcwYRVLafg9o3+EtW4IO0OpOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=ILHmruf0; arc=fail smtp.client-ip=52.101.65.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C182036FF;
+	Mon, 30 Jun 2025 08:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751270506; cv=none; b=B4DClWIuTHpUHbodqIIDbC3VEVlo+vvzCbCiZLt8NQM04j8jFIrbtfxbJtiVozQi70ak2Q3xdiFdQ4ro2uwLfk2d6Xv2Amy/o2QWaFQkorHtuvLlPJUOkLWsaA5K1SLMfIQ4oGM8fSil9lS0wGoird2MypBRTwAYQT4IGBd8LcA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751270506; c=relaxed/simple;
+	bh=DoAXV9wngZWUiP7rzz3sXHy4+GZXbAf7U+UdKuFrFFA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FzDVLw552bSnL14qU1YBuAhw966TrP29QwiXzpKI/Ey2ZotaqdNvZE1I64ckxnj4ibJAfs6WLZT/V+iWfjDoiyaEyHtovvbGuih4UBvzmpYPUlxZLFHbPoes8km1XfR1/YyRP/udbfdcpM23vn9WSPgPeTUkEX8uMAJ58y2rA5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pc6cDyd1; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="ILHmruf0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LuRO/kze0TXji7HuXS/s1AXxof0h3L9NHjas8XSgiz9MO556IW1G+rZnbMZw1YVl4dAP9t3rVTbQ74uRCZU57p6NSQ+fjZFzggpuTSZYxbDcaqC23K515WJXsYniVS2La6csAJEhMUWIRix6ycZrRlWO1i3Azn0rfk73mQTlGVWrzny2CrWs1iMUtDhMi0PvsBNkBYKGmPxWxj5iqtu7K/hDZ7DOA9eMhNdZA0j8B2t0wyaAp633MfcGjCJFjJ2R7C2NIDVHHIN8Jiow7NGeBJVKJeMBQlA529oQ1QNY1aW3mkmDRJ8tuTP3/l3bUVWXQy9MX+2fDqZhOXt+Keh3eQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G200Zh1fhMwFVNqirGO7c3FqtZ5xjSRvGBqiYDiWBjk=;
- b=KW34J65IU4ahPTZQh/fwgB1MDB3mOheK1923VFhd4AUe8BsKGN5n+/J98m56bMTxCBbnKB0AVuSYtUkiWcLr3DxzyL1B5LYQI/cZjAfoZ465qvDZnsbyz7O448d1EKWtgNGY0qJtX+7YTPZRzmKeL4xs+e7eYP+rNbty07CAZ80xG8Cv546xOPcFrs3Kv/5cazOuEwpLnfG9/LqynnEIQgErPD1n5pbeWSKcWvD10kVbRHPcwIPDUUBTh5BhPXwLD+kxapBN0SXDGQXTLrAkrzLqkpatDbBrSU2EtgUtEXSPCtWz5aWEXS6Yo6zv2RrX+2GRTJWC+f7p++/ND8m8Wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 217.111.95.7) smtp.rcpttodomain=holtmann.org smtp.mailfrom=arri.de;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=arri.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G200Zh1fhMwFVNqirGO7c3FqtZ5xjSRvGBqiYDiWBjk=;
- b=ILHmruf0UxdCD5JGLE3AbvqPzpU0sH9xT6GrseQ1swEWGjxDrzcZDKSKlTAj7dtYcmJGfolSEAtoteqrksIEBhrlSYKLkyjxfC9/YI/QHRZrkEBI2123dc96XMoSQTDhIne27O+A4PjNypHFfvwbZza6ySEAOV99pX3l4osH9bg=
-Received: from DU2PR04CA0164.eurprd04.prod.outlook.com (2603:10a6:10:2b0::19)
- by DBBPR03MB6857.eurprd03.prod.outlook.com (2603:10a6:10:202::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Mon, 30 Jun
- 2025 07:59:02 +0000
-Received: from DU2PEPF0001E9BF.eurprd03.prod.outlook.com
- (2603:10a6:10:2b0:cafe::7b) by DU2PR04CA0164.outlook.office365.com
- (2603:10a6:10:2b0::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.30 via Frontend Transport; Mon,
- 30 Jun 2025 07:59:02 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
- smtp.mailfrom=arri.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=arri.de;
-Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
- designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.111.95.7; helo=mta.arri.de;
-Received: from mta.arri.de (217.111.95.7) by
- DU2PEPF0001E9BF.mail.protection.outlook.com (10.167.8.68) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Mon, 30 Jun 2025 07:59:01 +0000
-Received: from N9W6SW14.arri.de (10.30.5.30) by mta.arri.de (10.10.18.5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Mon, 30 Jun
- 2025 09:59:01 +0200
-From: Christian Eggers <ceggers@arri.de>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-CC: <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Christian Eggers <ceggers@arri.de>
-Subject: [PATCH] Bluetooth: HCI: fix disabling of adv instance before updating params
-Date: Mon, 30 Jun 2025 09:58:48 +0200
-Message-ID: <20250630075848.14857-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pc6cDyd1"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6faf66905adso13557636d6.2;
+        Mon, 30 Jun 2025 01:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751270504; x=1751875304; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cD/p5gJYUMNxyDDUGD6foIW2SNpF7dP56MmSLAoJDgM=;
+        b=Pc6cDyd18F74C9bcxY/M7PrvBkpH41weNpbb2s8Pram6Gq6HQm56hKaNGop2zgecor
+         fCWux44aToE5KVY/4YD+NXGycUokoFIdEsr/G9H+wjuWpPTm/C7j5H60hMaKnq/4jP1m
+         A0WnVUAX5QAnYpvKYEHQD0A0VpQC2CVouzNRmzektK8UuantZN6DHjVIIKph0tOezLeY
+         6uhE7OKnflVkb04kg4Q08muYI4pricRQafCeHqFU6OiWjivnR4pVzm4/pdC8oU8eSm3L
+         m9T0iQWH/hv5iipos8EvWpH52TV3zTgYA83QUalv5qmRICMSKUI6lWdMylvOYFCLvJiu
+         772w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751270504; x=1751875304;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cD/p5gJYUMNxyDDUGD6foIW2SNpF7dP56MmSLAoJDgM=;
+        b=AjXYc1qn6Qfz4u5o7wLhpnMN6u+GaoyHq3e/K2lAfUip71KcuGC+2fhiS709pE9yEw
+         0bNptBdjJTF+zeh8XcaHqHVESyd19kIUvOIer3YitUB5fkjgmHRCr7D+w9F31oaKTGT8
+         wALmKAlXoGz+9YeREI7kgBGDLzEfFLzlqijW8kO5XJFCnEC1TdomknGtHwWgWfVfdZGh
+         wIdroFwMwm8BTw8kLLFaU22cuJc/3tfIApWRRIz4DXT4vFon5dYbmx517yQw4k0JKBOA
+         tSd0Hsqv2r5aAjbDPZCkzL6BREf2R3egKd4Vz0qlHHJz1F/2Mq5EBSuvoGNpyvGB4lb4
+         R3BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUY6rMY727y7UsD071aplIYgvKS/LPXIXNqjrdyROPx9oWmVsGwRtr/bCj153ZOMr2YWRwP/nwsK6kueqgWC6+x2cEquA==@vger.kernel.org, AJvYcCVCzadBpSw+0enTZjwrH+aBVeIbFa9pbnkNAN/cv0KWwydOFWDmuN/503dWbcYs/tt3VTeQou82Yhjccws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrPK6S+oDtUo7nLpUUMePx5Eu4XYVfu3HmFVhNzNTTusqcpwZd
+	gxHiVKWRU2oM/Xhk+ySkUpxrngb1WTkhSGplWJv5jXikh5NxNKH082PL
+X-Gm-Gg: ASbGncv/0TUhTKwSUuuA9y4b4J+RWfeFRmAT+IFInkvi4CbA0/7inCXEeZt1cLFKBuG
+	X+6CmK4qBBE9ryymLg3Rb8IkDnrPeyD2M1v+QUb7XN/mtDD+snn3+v6vTGanymlp9fr+XH2Wfed
+	D17pviqwe5wq4emiCYxr3vdTaco3/dxnftEuyxHU9jWLOm+grCgKXDpJowgjMLPdjDp0UGoLyMO
+	f8j4PfKZ0lWfToPt9bVKyqF+lm3KUMmqS7ZOvH/h7wuBWK/A3b46xd+g5g4oo848NKg+rhRqFM6
+	3RkHElRIYpQ7hV7vnEtC30WlNc5kyn1H/Em8TZecEnV9xpfH+pkUhhXL2obXbA==
+X-Google-Smtp-Source: AGHT+IFzXMv43Kt4mPH8uHa+I6hV15vE1eARVWFLGYXMMOyYy9/FNxs6UC1bQyxC4ZvkQ5+SaVu+6A==
+X-Received: by 2002:ad4:5c4c:0:b0:6fa:fbde:7e23 with SMTP id 6a1803df08f44-6ffed7a4863mr230495596d6.8.1751270503984;
+        Mon, 30 Jun 2025 01:01:43 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772df637sm63677026d6.79.2025.06.30.01.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 01:01:43 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH v4 0/6] platform/x86: firmware_attributes_class: Add a high
+ level API
+Date: Mon, 30 Jun 2025 05:01:07 -0300
+Message-Id: <20250630-fw-attrs-api-v4-0-1a04952b255f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PEPF0001E9BF:EE_|DBBPR03MB6857:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45437b42-664c-4bed-b57a-08ddb7abfa11
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GKM9YOnbyoGAsLZ04mm1S3zJXqGBIqjskjTQZF16PYay3m3mi46/N0ZPb53A?=
- =?us-ascii?Q?sWPssxTrUzYwknXcvvEfkj22yIgW4RBLG9jY93pnlnn9gLrrZi0i9sSGDF1P?=
- =?us-ascii?Q?7m7xPDjcEYAWqyqQ5CPlhno6iNzsD5NgBTUU+H7Vw9UOOE//Ug5pY0wbPsUd?=
- =?us-ascii?Q?biTGLBXXRiFpgr1ycD4aEV7mxK2NDahGarOZy+ik3z3/YajiXFHeeprNLZps?=
- =?us-ascii?Q?eQVCxGH1AShgVCvZadsU9JMaxQ8EryPpo1C6502GWPC3i5Ny7oy9U8lNfKl/?=
- =?us-ascii?Q?Pz0MnRdDB5gEoxPCGCKcGrLbW4dXJ1j9XVTPjEneCqTh8pv31md+KGKUQC+E?=
- =?us-ascii?Q?Isx03TqNmp3NOANPkOggS2xSCtI6MopV3HT47cJGaeJpxo6Dzquz7uJLNBAs?=
- =?us-ascii?Q?sxmP8oEKGLWWXODZq/Ms4WI+FlM0Jm32CUAPiFq//dE5NLMr2+osykgwD6VF?=
- =?us-ascii?Q?A+SHyuypyoa1olytPLUTW+8vNJsbp0PSgSAWu1nl2hwFr3rDTokgGkqdlRBX?=
- =?us-ascii?Q?s89D3tPQCJujgMuM5IamohkUzwRm/hJcBkEkGVFPhPCB57WxSfGsbuDFhkTb?=
- =?us-ascii?Q?l6DW16V4s2hlcyUzlNiUbwj89xAt9AEYhjKDF+6Fch4ut+4DTTHf9yPtPz+T?=
- =?us-ascii?Q?giElO0vvxRUjmdL19ZM62X4oPK5e0wqq8xQiDZyBpbevhDS37rUz+aM+HZRC?=
- =?us-ascii?Q?5C27TYs+xSYjMsXsNCkpwtUUJwfheO0Lsd+tX5PuFnuwMmIShUVqfMuMvPz/?=
- =?us-ascii?Q?5Aydpk3R6n6ao3bV1ZJim8AFzhaeOFhD82W3pkcnzWXULNOS0YXTQwKqxGl4?=
- =?us-ascii?Q?SGjqNLP5RKUvkvGYtuE5hKH4E3NpjjeexKH7qV8+/GlaETrtZ4Ey3fC9QH1C?=
- =?us-ascii?Q?8Sum/JoFddHR7uCWgs/ThCAM/sWvprAwxrJJAdmpv8q2XVA9OaF7Wma7lU15?=
- =?us-ascii?Q?L5IXwEvmugqUy7catzccfDKRblLsPeg00uAb0NQG3HapaSZZiHxoCpD/GJxn?=
- =?us-ascii?Q?MVJHg6zZ96BQLxZ69sG2zJBwpW6pwLGeRLpOOjxfo0TvnsTNo7jab8enf4Bm?=
- =?us-ascii?Q?IgtS/jAbbs2D3omOZLe0aLzneKwvRvBDAh+ULHyg994AUbKH8LSl5wPGTS4y?=
- =?us-ascii?Q?WiWPAFL+mmyxhDzshUArrBrJbev8y2NytC4DtUwts31yKQCG2SCawM4n3Jo2?=
- =?us-ascii?Q?C0XINE+WenosGl5SNuwuud64K+7zsEH9eolDgQJ/2vyRqFXOLzgfHg8QVuiR?=
- =?us-ascii?Q?cQ81ak4mq1AGz9CKbBIaCXJAyM/OGxlhiNdhLwfKDUAzUCbEa3R6PXbBjwvi?=
- =?us-ascii?Q?roETzg/XdvW2W5MoQSy6G9f+TervGTInLjdCerajWRPz/4HhU0MlALGnzEZT?=
- =?us-ascii?Q?mQAPvOA5an0HY8zeKwyRrxpPybWlFvgNEkbPd8Kqne6U4IhZbqk9+nd4ux0Z?=
- =?us-ascii?Q?CuDbIdEUpVYPaxKv8EDh1rCIQLmUxx7r+S6qjTzGR7tmqDnjcpQ08IbPA8lq?=
- =?us-ascii?Q?P4AnyZqtYOuVR37vN7+0mDzM2+Rad3KTJ/l6?=
-X-Forefront-Antispam-Report:
-	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arri.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 07:59:01.8504
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45437b42-664c-4bed-b57a-08ddb7abfa11
-X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF0001E9BF.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR03MB6857
+X-B4-Tracking: v=1; b=H4sIAENEYmgC/13MSw6CMBSF4a2Qjq1pb2lRR+7DOLjALTSRR1qCG
+ sLeLTgQGZ6TfP/EAnlHgV2SiXkaXXBdG0d6SFhRY1sRd2XcDARoocBw++Q4DD5w7B0XRJgVAkD
+ nhkXSe7LuteZu97hrF4bOv9f6KJf3G9Li/B8aJRcc9AktlUbnFq9Vg+5xLLqGLaERNlhmOwwRW
+ 5SYi1SjkMUeqx82IHdYRazKUmtKjVJns8XzPH8A0OWD9yIBAAA=
+X-Change-ID: 20250326-fw-attrs-api-0eea7c0225b6
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joshua Grisham <josh@joshuagrisham.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4708; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=DoAXV9wngZWUiP7rzz3sXHy4+GZXbAf7U+UdKuFrFFA=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBlJLhEb0sL/SyvOVMu7f+Tr/WniNmHr2x+r2PUuMvEz1
+ Nq4939vRykLgxgXg6yYIkt7wqJvj6Ly3vodCL0PM4eVCWQIAxenAExk60aG/25XzknqWjo+nOLb
+ sPDFL9sPrbfe34qaN++SVefxNbySbFcYGf4kubM8cZtt0HGuOHRe8c6rCqJyM2ZPUH9o6tJ4LtY
+ hhAUA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-struct adv_info::pending doesn't tell whether advertising is currently
-enabled. This is already checked in hci_disable_ext_adv_instance_sync().
+Hi all,
 
-Fixes: cba6b758711c ("Bluetooth: hci_sync: Make use of hci_cmd_sync_queue set 2")
-Signed-off-by: Christian Eggers <ceggers@arri.de>
+After my discussion with Joshua on v2, I realized the API I made was not
+ergonomic at all and it didn't exactly respond to driver needs. In this
+version I tried a completely different approach and IMO it's much much
+better now.
+
+First of all I adopted standard sysfs terminology for everything. A
+"firmware attribute" is just an attribute_group under the attributes/
+directory so everything related to this concept is just called "group"
+now. Everything refered as properties in the previous patch are now just
+plain "attributes".
+
+This new API revolves around the `fwat_{bool,enum,int,str}_data`
+structs. These hold all the metadata a "firmware_attribute" of that
+given type needs.
+
+These structs also hold `read` and `write` callbacks for the
+current_value attribute, because obviously that value is always dynamic.
+However the rest of attributes (default_value, display_name, min, max,
+etc) are constant.
+
+In the simple case this metadata structs can be defined statically with
+DEFINE_FWAT_{BOOL,ENUM,INT,STR}_GROUP() macros. However most users of
+this class obtain this values dynamically so you can also define this
+structs dynamically.
+
+In the end all groups (static and dynamic) will be created using
+fwat_create_group() after registering the class device.
+
+Let me know what you think, your feedback is very appreciated :)
+
+I do have one question for anyone interested. Should constraints over
+the current_value (such as min, max, increment, etc.) be enforced at the
+show/store level? i.e. before values reach read/write callbacks.
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- net/bluetooth/hci_sync.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v4:
 
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index 77b3691f3423..0066627c05eb 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -1345,7 +1345,7 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev *hdev, u8 instance)
- 	 * Command Disallowed error, so we must first disable the
- 	 * instance if it is active.
- 	 */
--	if (adv && !adv->pending) {
-+	if (adv) {
- 		err = hci_disable_ext_adv_instance_sync(hdev, instance);
- 		if (err)
- 			return err;
+[Patch 1]
+  - Embbed a device in fwat_device instead of a kobject.
+  - Instead of an attrs_kobj root kobj, create a kset with the same
+    name.
+[Patch 2]
+  - Add a (*show_override) callback in fwat_group_data.
+  - Instead of allocating and filling sysfs groups and attributes
+    manually, I defined custom ktypes for each fwat type. All groups are
+    now statically defined and added through default_groups.
+
+    I think this is a BIG optimization in terms of memory at least. Also
+    fwat_group memory is now managed by a kobject which is allocated one
+    time. This is also a less impactful performance optimization (less
+    individual allocations).
+  - No changes to API :) (I take suggestions though)
+
+I might have lost some of the changelog. Sorry for that!
+
+- Link to v3: https://lore.kernel.org/r/20250621-fw-attrs-api-v3-0-3dd55e463396@gmail.com
+
+Changes in v3:
+
+[Patch 1]
+- Fixed UAF in fwat_device_unregister(). Device was unregistered after
+  freeing fadev.
+[Patch 2]
+- Patch 2 was completely replaced. A new approach for the API is taken,
+  based on Joshua's suggestions.
+
+- Link to v2: https://lore.kernel.org/r/20250517-fw-attrs-api-v2-0-fa1ab045a01c@gmail.com
+
+Changes in v2:
+
+[Patch 1]
+ - Include kdev_t.h header
+[Patch 2]
+ - Use one line comments in fwat_create_attrs()
+ - Check propagate errors in fwat_create_attrs()
+ - Add `mode` to fwat_attr_config and related macros to let users
+   configure the `current_value` attribute mode
+ - Use defined structs in fwat_attr_ops instead of anonymous ones
+ - Move fwat_attr_type from config to ops
+[Patch 5]
+ - Just transition to new API without chaing ABI
+
+- Link to v1: https://lore.kernel.org/r/20250509-fw-attrs-api-v1-0-258afed65bfa@gmail.com
+
+---
+Kurt Borja (5):
+      platform/x86: firmware_attributes_class: Add high level API for the attributes interface
+      platform/x86: firmware_attributes_class: Move header to include directory
+      platform/x86: samsung-galaxybook: Transition new firmware_attributes API
+      Documentation: ABI: Update sysfs-class-firmware-attributes documentation
+      MAINTAINERS: Add FIRMWARE ATTRIBUTES CLASS entry
+
+Thomas Weißschuh (1):
+      platform/x86: firmware_attributes_class: Add device initialization methods
+
+ .../ABI/testing/sysfs-class-firmware-attributes    |   1 +
+ MAINTAINERS                                        |   8 +
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c |   2 +-
+ drivers/platform/x86/firmware_attributes_class.c   | 659 ++++++++++++++++++++-
+ drivers/platform/x86/firmware_attributes_class.h   |  12 -
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       |   2 +-
+ drivers/platform/x86/lenovo/think-lmi.c            |   2 +-
+ drivers/platform/x86/samsung-galaxybook.c          | 246 ++------
+ include/linux/firmware_attributes_class.h          | 375 ++++++++++++
+ 9 files changed, 1107 insertions(+), 200 deletions(-)
+---
+base-commit: 73f0f2b52c5ea67b3140b23f58d8079d158839c8
+change-id: 20250326-fw-attrs-api-0eea7c0225b6
 -- 
-2.43.0
+ ~ Kurt
 
