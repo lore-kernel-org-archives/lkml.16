@@ -1,67 +1,42 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59C528F53B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB7E28A1D4;
+	Mon, 30 Jun 2025 15:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297569; cv=none; b=bhY+gIWUDh1SoQjspuBHD43soFo79prwaW+LV4qDUAIX8yrQIQlUWdmmtRZiRMgBJtd38am5zmvtoMFSKd8i6ynzHnzQWE01YbJBwmVDPGqZagSEq3RHPL7/bl+VJZb3DTmXLIKteYkxdnTQhQVi+KIeby05BO9G2f0lX032Myw=
+	t=1751297571; cv=none; b=frCN7F50NT7Lv89lVHXybBDPqzHM5PfRkCJtQ1FX3LB4YYjS/1vIyOGY3qZUUChGhcO0nn9NnO0RiVE5JP+9erP4mTfjM0JNYU2xIOSjUpmgKyCgAM1YaKwqZDD2TPsxnegO0rkGxUeKRqQODfMAMsQueNT5mxqQNMN1nKNVt54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297569; c=relaxed/simple;
-	bh=8jE24o7YZNAkQDGENd9+5jokCstRAjfx8mRG6Xlu7I4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Y2hznoHQmA26JcCymYLyPUJ8FCMYq4EOLNZSltro1W93J4q74/Yr2ZbD/S3WEzVd82Q769Xkz8EhNA8XBzcQ3SRSJOJdJvJqrl4AJyTvMzM0dfrxDsSFOwhMVvLAchKpSDygfyv0IY0MAmOiprGfJBOZhpcxbmIax13dvDrVXf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ib7iG3QQ; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751297571; c=relaxed/simple;
+	bh=T5lSKSr/aPOKJcx+aLJlz6q2pyOBR4NaNMddccYdZtk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aUueSX0p8zAmrriGdCr46hY2Ucc/op8oaxFDSr3BakMRYCyasymAitSRisWrX+F+dy4h19rMEG0ez8sDJgYuDHT5loP8LMSqBvDAlxKuDjz8ussPNHdFO5Wt215UBNKlQ/dyWazqZDNQvVlyV445WZGGCxjzWwbxI7riKYp2RUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=MnqXWOgg reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ib7iG3QQ"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2410223f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751297566; x=1751902366; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=atA/KC1m61iI/EQIA0gGrqTkbU+o+kg8hTMAb8HLbKE=;
-        b=ib7iG3QQJPM5EV4ORhLmZhmx/v46+2gDTumaaywpZTxxCXVHonYToiAOfdlHPQZkiX
-         YKVTrcMK5UiecsCotjd7g62LB1Wkq/LhBRBTEcIpTghVLm6+C7qoGYZBnBZqPrvpD4Aq
-         thyD5r1qGil7VEusHT1Zd0KI5wzgLYPiqkZQZq/itytSCoSjXo3u+2isnGE3qB52GWv8
-         jfE0mPHENMJu7gclX/SuHGkfG6DtrakQ35FiCQR+k/XBrXzxpxFYQ5wRcc6FdUcfHQgZ
-         r09maOW5DAYrF11BZCvYfiSeiVCA/7ILxhuDO5plr3cQY3t/1MVAgO+echbv4nfaDBhL
-         2E7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297566; x=1751902366;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=atA/KC1m61iI/EQIA0gGrqTkbU+o+kg8hTMAb8HLbKE=;
-        b=RonWX0MSyOsu83IBv6ZI0Y9IpbkntivWTVmAGRk2+8rQrYsElwCW6pUbocjfonD1Bw
-         hPw1gXeWz6Bprxgb9rx3gDz8dSgcLyxXsBSjzUZybA986oIzA2JK/R6JpyJt0YoikbOz
-         zghH7dcxPUgq3RMdtTwc9hw491ufOk1cz0DfNtrtMaZXUHbP66q0cijYfNobj4s+3SkE
-         XqvJeU2xejLfUZFcXZu+WxggDcgS28VFGkh381+CxyifvV/xhIs/XS/4frPp1ZV4HkK6
-         tEN03RdxdcaZu2Hq6QeMRgzMkMOHu4pj15siDMaHoCx+wN0HZ4ZrA8pXNLgSBIakKEEJ
-         18DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTkLkbUT3xRtaIKu+J0lFCuTAkoWGYX6kL4M+lWU16xkc3DIy1/mRhSH6Qn4dPqrfkcPnAY5+6+0Eg1UM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjOW7xj5FKLDFjAqukatbfhbxQE54Ru7Y3vLcaYg6mKIdcqOJD
-	So9CcRGMTA9MFBiFdlcAtjCdvlRUHVvCAqsTfQBc1XyCunfGoo56MU+yhARk7zdqo9g=
-X-Gm-Gg: ASbGncu7dNyq25t4ySAi4orSVbfudVFw0HpRyQkPaAQp6fQ/Am5Zfa0oHN8IowXK+pX
-	vH9EpJcLnjyOfM1sqxIThB+YmPiFzwzjMCL3RbWHsjuYAnfodHf6+yoin711hSv6QQwnEBU4xwO
-	ULu3/3oP1GO7RketGGU0Srw/Jxyc2W0urw4SoEcd6ws3Kp/YLVgxBHeDRlj4fvSt6n21lSpaIkY
-	EPkgci9fIESp1b0vlA0pjzOYFrlDrfPMMalUrYf2qpxf7vYsf1vfquJIX0VPByRqcU2ae9/B+X1
-	ybTUGcv3w00V+8QOECLAhssuAvBkK5JN3Eh9s2GOPFjkae7LVyz9RcO7XJUKjXiUuasJeSE6Tpe
-	/rSeVUkFRwqc186Z/3NMkbqpdFJOyXPbjYVXpzHY=
-X-Google-Smtp-Source: AGHT+IF1MxZOvenNiix21YlE5Sm5JmNj/5PZM5XXAtE+bWTuEZDv9V6ZtvTAasrMlYozwOUVfjtjdw==
-X-Received: by 2002:a5d:55c9:0:b0:3a4:dd02:f724 with SMTP id ffacd0b85a97d-3a900575c7amr9522396f8f.43.1751297566132;
-        Mon, 30 Jun 2025 08:32:46 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb? ([2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f8e1sm10573229f8f.88.2025.06.30.08.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 08:32:45 -0700 (PDT)
-Message-ID: <2f317041-bdab-4cc1-a45e-952c97398687@linaro.org>
-Date: Mon, 30 Jun 2025 17:32:45 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="MnqXWOgg"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4bW91K5Vlnz1DDh0;
+	Mon, 30 Jun 2025 17:24:05 +0200 (CEST)
+Received: from [10.10.15.6] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4bW91K1FcDz1DNGp;
+	Mon, 30 Jun 2025 17:24:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1751297045;
+	bh=TCuz8wYG0OMRJ5WGli0CVDLwlocoMhb5D/fgiqVnow0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=MnqXWOgg+jJ+lZh0c5wrl4nReL6iOScU6lufaG3dZAGHiHfytBMOHPZqvRHbD2Ch+
+	 m3U5qEx3lGc07rftyLldqu3P2rEUhxMgpqRgnKbqNB6rbm8ZPGl7Z5GRnNFl54NULj
+	 cYGVNSDVLDwWcXicbCo0wu4QY5q7gNpubXjqI4du0EyF4EA2MUgnuuZsd5YJi0CMQO
+	 OI+x59rBYIg79jAvqHYkOBQrXlm9kSd8nSZSQW7LLcrL0TtyRDXliUDBjbg3ybYuXg
+	 MFrtWV18MT54DALHfihwuneTrj6shn+LnBXam7JCPVDFdqwVyx38JJRsKW+4/r+53h
+	 OSYvaYC3MnG0A==
+Message-ID: <dfd0a228-940d-4c30-b07e-9f3910e3aeaf@gaisler.com>
+Date: Mon, 30 Jun 2025 17:24:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,71 +44,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] drm/panel: raydium-rm67200: Add missing drm_display_mode
- flags
-To: Andy Yan <andyshrk@163.com>
-Cc: quic_jesszhan@quicinc.com, mripard@kernel.org, simona@ffwll.ch,
- tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
-References: <20250618080955.691048-1-andyshrk@163.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250618080955.691048-1-andyshrk@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: kernel/fork.c:3088:2: warning: clone3() entry point is missing,
+ please fix
+To: Arnd Bergmann <arnd@arndb.de>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ kernel test robot <lkp@intel.com>, Philip Li <philip.li@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
+ Dinh Nguyen <dinguyen@kernel.org>,
+ Simon Schuster <schuster.simon+binutils@siemens-energy.com>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ Christian Brauner <brauner@kernel.org>
+References: <202506282120.6vRwodm3-lkp@intel.com>
+ <2ef5bc91-f56d-4c76-b12e-2797999cba72@app.fastmail.com>
+ <57101e901013a8e6ff44e10c93d1689490c714bf.camel@physik.fu-berlin.de>
+ <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
+ <5375b5bb7221cf878d1f93e60e72807f66e26154.camel@physik.fu-berlin.de>
+ <ccf937cb-a139-4a07-aa47-4006b880b025@app.fastmail.com>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <ccf937cb-a139-4a07-aa47-4006b880b025@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/06/2025 10:09, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
+On 2025-06-30 14:07, Arnd Bergmann wrote:
+> On Mon, Jun 30, 2025, at 12:45, John Paul Adrian Glaubitz wrote:
+>> On Mon, 2025-06-30 at 12:02 +0200, Arnd Bergmann wrote:
+>>> Some architectures have custom calling conventions for the
+>>> fork/vfork/clone/clone3 syscalls, e.g. to handle copying all the
+>>> registers correctly when the normal syscall entry doesn't do that,
+>>> or to handle the changing stack correctly.
+>>>
+>>> I see that both sparc and hexagon have a custom clone() syscall,
+>>> so they likely need a custom clone3() as well, while sh and
+>>> nios2 probably don't.
+>>>
+>>> All four would need a custom assembler implementation in userspace
+>>> for each libc, in order to test the userspace calling the clone3()
+>>> function. For testing the kernel entry point itself, see Christian's
+>>> original test case[1].
+>>
+>> Thanks for the explanation. So, I guess as long as a proposed implementation
+>> of clone3() on sh would pass Arnd's test program, it should be good for merging?
 > 
-> Add missing drm_display_mode DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
-> flags. Those are used by various bridges(e.g. dw-mipi-dsi) in the
-> pipeline to correctly configure its sync signals polarity.
+> Yes, Christian's test program should be enough for merging into
+> the kernel, though I would recommend also coming up with the matching
+> glibc patch, in order to ensure it can actually be regression tested
+> automatically, and to use the new features provided by glibc clone3().
 > 
-> Tested on rk3568/rk3576/rk3588 EVB.
+> Right now glibc assumes that clone3() is available on linux-5.3 or
+> higher and uses it to implement the normal clone() in that case,
+> except where the implementation is missing.
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> ---
-> 
->   drivers/gpu/drm/panel/panel-raydium-rm67200.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67200.c b/drivers/gpu/drm/panel/panel-raydium-rm67200.c
-> index add6099ae8a64..92c3e20b903f0 100644
-> --- a/drivers/gpu/drm/panel/panel-raydium-rm67200.c
-> +++ b/drivers/gpu/drm/panel/panel-raydium-rm67200.c
-> @@ -478,6 +478,7 @@ static const struct raydium_rm67200_panel_info w552793baa_info = {
->   		.vtotal = 1952,
->   		.width_mm = 68, /* 68.04mm */
->   		.height_mm = 121, /* 120.96mm */
-> +		.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
->   		.type = DRM_MODE_TYPE_DRIVER,
->   	},
->   	.regulators = w552793baa_regulators,
+> I see that at alpha, csky, parisc and microblaze have a kernel
+> implementation in modern Linux versions, but are missing the
+> glibc wrapper for it, as the kernel side was done later without
+> the glibc version. sparc and sh are the only ones with a glibc
+> port that are missing both the kernel and userspace side,
+> while hexagon and nios2 are not currently part of mainline glibc.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Thanks for all the input Arnd! All this will be very good to have at
+hand when looking into implementing and testing it!
+
+I was not aware that clone3 was used under the hood in glibc. Given that
+clone3 is not exposed by glibc to the outside I did not realize that
+glibc would actually use it, so it never got high enough up in the
+priority even though I have been well aware of it being missing.
+
+Stopping the testing of these architectures in lkp because of the
+missing clone3 would be unfortunate and a bit excessive in my view. That
+testing is and has been very useful!
+
+Cheers,
+Andreas
