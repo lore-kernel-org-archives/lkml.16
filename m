@@ -1,299 +1,174 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4D922FF2D;
-	Mon, 30 Jun 2025 21:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110141EE033
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751320032; cv=none; b=FUouaNsun5AjYZmX7ZkZfxYPX7/ISk7NBclm6/WJsNcfrF+AqIV9IGhYzCEK1AKgXGgN5uMpLVvrKNkApHpRaZ6CJgAdjp5M/PmoP1rpFYlhtqfJH9P//HbqPKvJRbtHw5vYB5JUm9JYhpv4TDREHH9kocdgtHB0fu2sCnTtNhM=
+	t=1751320064; cv=none; b=FeG+up3LZGOXbtyef5sZ3Tri3RvEbUaa2HGDLIvgnmf3fzKUGbh7ct25m+4dcg8uHv4QZZZv43p5p9tuvzJ0vsgnxHOmBYrNnahLtTj+0M7ojeOq5r/rUap+HG02eXRZXoD1PFNekf8pe1p3gOZGfkZL5OlrYY45jfQpQP79W2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751320032; c=relaxed/simple;
-	bh=AURy5RoiCD0K69XxdYzpmhF+JbiihjsvLp8AKCK0RDE=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=esQ6ZiPx3oQTPzAw3MqIs0EOTPGveTQfxv/A/eST5vTSXf8yk1btGCmyRs/3Pg8XERLQ+d5XliTrqoGte1pcq9dzYS8oSYM0y5hQwzW5eZIMbZ5cazEKKkC9jN/3e6CJ3pB98be3duKB/a+0wtb3dmlO4eUBuLXbskAuBl1P6pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uWMLB-000000007Mt-1ikl;
-	Mon, 30 Jun 2025 21:47:05 +0000
-Date: Mon, 30 Jun 2025 22:47:02 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net-next v3 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <ec99dca250c0805a2307b0aaa9cf30b29ee2a989.1751319620.git.daniel@makrotopia.org>
-References: <cover.1751319620.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1751320064; c=relaxed/simple;
+	bh=njp18cMH7lr4zfBcTGbAllVh9FmkFpTqoiFl+vPks8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l/dF7s7AZDs9Iz7yl1wjbTmJZXEAMF9kKMiQUH+/LYYsij/6NTUX6lgLvrYGbdCeYMv63+dNPPB04grAaBOEHIZBTIJD2nrG+oVqd+X/FQ2xgoPuRkQRxEt4mMu1EW/OqQ1LTPISrJAdmDZhEbLj8nqSv9HKPj4GJvVzPgr/lsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CyBJpy54; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CyBJpy54"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-237f270513bso23165ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751320062; x=1751924862; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=njp18cMH7lr4zfBcTGbAllVh9FmkFpTqoiFl+vPks8o=;
+        b=CyBJpy54HrdgrAdmcXj5TbVqL39fJny9fkO7ZYzz6okcCPm/kBoMEPsZsDYys8qI2y
+         xx4bt+UBpiBVXTNJcOvCEnEda82tLn1YneBuphHKl0gqukL2YYLqjIiXOjvCxfaDBaTv
+         XWvygiI4PNW6a++Si2CS0zJlX3UrdKyZdHYLISq/P9utqfPqtcbC1BOrhIbwPA1KSndf
+         I4CxaCfFgfAhzOoe7ato6PRx/Q0KKj5fpYbB5xJkCIPG6frDtywvJR/joQvvZm/nkh2S
+         94CkHZDc4Qi/pbzoiioolaPX2OvCHs4Ul8whv+yRwg/s3pultrkezNs3qZpT6DHPmvJ1
+         5pGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751320062; x=1751924862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=njp18cMH7lr4zfBcTGbAllVh9FmkFpTqoiFl+vPks8o=;
+        b=n/mixawz74PkdwP+xbacwD4tpnlv1EjPLgoOlTi5JjMvXS4uPw68rQLf+lL/NxQfDG
+         mjTYpzUMTdFdsLOSgGhFNh45p1GjYgb0AX3pYjELFyW6vKJatcz5GQO4sSBCwUIM+xYg
+         sg0ns05WS2Dn3qr0mTr4DW0nupsd0+rdya0QlWn0AvKY1QNCfZFAh64n5kafk5VP/8af
+         nPwelRbWkAt88h04EiGQB0jeAvp4C1csTOeiPK4hz+wtQ+QxM7aCsvOePnwiypip3gt0
+         C+8/ync3Wip5fSTxToiacsIJCRo8ZXVfsZ/ozMEcH6vJPPQPipCLgV068ipqwlOgMpU7
+         kQBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlgltBgSuCgI2gNyD8mOhKyripCzCO+EkkegmjFeWUHq5Y4TYxbZD+6NryZ0B5bfldEY/MM+nJvFAuhKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk2PS+i6U7KVcv8vl15tFEhqiGeSH3oazsCaBf2KIZGnThGdjM
+	UfPDbL42EKTUk051gXnGIxWC93qon3RF290m1nxFFNY3NcU7A8HoxLZ4ubHrDrkxTkzlNqeDz+5
+	4DRDUu2Zf/i5Vjodvch+NiPP7KENssYXeOQ4nRaGb
+X-Gm-Gg: ASbGnctXyZJEd5AFu+JglCH7GFghvVT9VA1ItSXcxPuOexwrl76KyENLs9bBmQDeupN
+	Ol096jZGjjVeIJRQz616H5E29SC7zuHltpD50TQJA/CC0tqtcRDWWHWNIt3yMuHVSpgavGQ7a02
+	G8137Yeg6tbE/B2Zap26jTAIgnq2JnHVMeeyGkBwSfUq+JoHErZ+YBYXxAmNYgJs9fXiS+SmASa
+	w==
+X-Google-Smtp-Source: AGHT+IHsWoC5sk+fyO84erG9pnGz0dVeBMB05RRyjItIsROjgVEDZADKjWslFCfn2O3PbQtz0KUZqLi2S0IiIcE95ac=
+X-Received: by 2002:a17:902:f547:b0:237:edb8:21c0 with SMTP id
+ d9443c01a7336-23c5f5c9902mr247665ad.11.1751320061442; Mon, 30 Jun 2025
+ 14:47:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1751319620.git.daniel@makrotopia.org>
+References: <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
+ <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
+ <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
+ <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
+ <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
+ <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
+ <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
+ <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+In-Reply-To: <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Mon, 30 Jun 2025 14:47:27 -0700
+X-Gm-Features: Ac12FXzpGhie6P7qqJellgAG_ykX6J8coKdCCg1rWv1bbXPxNkzaSLSQsh0c13s
+Message-ID: <CAGtprH9DNVBTMZJuDQEHYBRJqUfWQJgv-2cveXqdE=TSAvp0fA@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "ackerleytng@google.com" <ackerleytng@google.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use a dedicated "mmio-sram" and the genpool allocator instead of
-open-coding SRAM allocation for DMA rings.
-Keep support for legacy device trees but notify the user via a
-warning to update.
+On Mon, Jun 30, 2025 at 10:55=E2=80=AFAM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+>
+> On Mon, 2025-06-30 at 19:13 +0800, Yan Zhao wrote:
+> > > > ok! Lets go f/g. Unless Yan objects.
+> > I'm ok with f/g. But I have two implementation specific questions:
+> >
+> > 1. How to set the HWPoison bit in TDX?
+> > 2. Should we set this bit for non-guest-memfd pages (e.g. for S-EPT pag=
+es) ?
+>
+> Argh, I guess we can keep the existing ref count based approach for the o=
+ther
+> types of TDX owned pages?
+>
+> >
+> > TDX can't invoke memory_failure() on error of removing guest private pa=
+ges or
+> > S-EPT pages, because holding write mmu_lock is regarded as in atomic co=
+ntext.
+> > As there's a mutex in memory_failure(),
+> > "BUG: sleeping function called from invalid context at kernel/locking/m=
+utex.c"
+> > will be printed.
+> >
+> > If TDX invokes memory_failure_queue() instead, looks guest_memfd can in=
+voke
+> > memory_failure_queue_kick() to ensure HWPoison bit is set timely.
+> > But which component could invoke memory_failure_queue_kick() for S-EPT =
+pages?
+> > KVM?
+>
+> Hmm, it only has queue of 10 pages per-cpu. If something goes wrong in th=
+e TDX
+> module, I could see exceeding this during a zap operation. At which point=
+, how
+> much have we really handled it?
+>
+>
+> But, at the risk of derailing the solution when we are close, some reflec=
+tion
+> has made me question whether this is all misprioritized. We are trying to=
+ handle
+> a case where a TDX module bug may return an error when we try to release =
+gmem
+> pages. For that, this solution is feeling way too complex.
+>
+> If there is a TDX module bug, a simpler way to handle it would be to fix =
+the
+> bug. In the meantime the kernel can take simpler, more drastic efforts to
+> reclaim the memory and ensure system stability.
+>
+> In the host kexec patches we need to handle a kexec while the TDX module =
+is
+> running. The solution is to simply wbinvd on each pCPU that might have en=
+tered
+> the TDX module. After that, barring no new SEAMCALLs that could dirty
+> memory, the pages are free to use by the next kernel. (at least on system=
+s
+> without the partial write errata)
+>
+> So for this we can do something similar. Have the arch/x86 side of TDX gr=
+ow a
+> new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out of
+> SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCALLs =
+after
+> that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in the s=
+ystem
+> die. Zap/cleanup paths return success in the buggy shutdown case.
 
-Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
-v3: fix resource leak on error in mtk_probe()
-v2: fix return type of mtk_dma_ring_alloc() in case of error
+This approach makes sense to me.
 
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 117 +++++++++++++-------
- drivers/net/ethernet/mediatek/mtk_eth_soc.h |   4 +-
- 2 files changed, 83 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 8f55069441f4..29b95d96f3d4 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -27,6 +27,7 @@
- #include <net/dsa.h>
- #include <net/dst_metadata.h>
- #include <net/page_pool/helpers.h>
-+#include <linux/genalloc.h>
- 
- #include "mtk_eth_soc.h"
- #include "mtk_wed.h"
-@@ -1267,6 +1268,45 @@ static void *mtk_max_lro_buf_alloc(gfp_t gfp_mask)
- 	return (void *)data;
- }
- 
-+static bool mtk_use_legacy_sram(struct mtk_eth *eth)
-+{
-+	return !eth->sram_pool && MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM);
-+}
-+
-+static void *mtk_dma_ring_alloc(struct mtk_eth *eth, size_t size,
-+				dma_addr_t *dma_handle)
-+{
-+	void *dma_ring;
-+
-+	if (WARN_ON(mtk_use_legacy_sram(eth)))
-+		return NULL;
-+
-+	if (eth->sram_pool) {
-+		dma_ring = (void *)gen_pool_alloc(eth->sram_pool, size);
-+		if (!dma_ring)
-+			return dma_ring;
-+		*dma_handle = gen_pool_virt_to_phys(eth->sram_pool,
-+						    (unsigned long)dma_ring);
-+	} else {
-+		dma_ring = dma_alloc_coherent(eth->dma_dev, size, dma_handle,
-+					      GFP_KERNEL);
-+	}
-+
-+	return dma_ring;
-+}
-+
-+static void mtk_dma_ring_free(struct mtk_eth *eth, size_t size, void *dma_ring,
-+			      dma_addr_t dma_handle)
-+{
-+	if (WARN_ON(mtk_use_legacy_sram(eth)))
-+		return;
-+
-+	if (eth->sram_pool)
-+		gen_pool_free(eth->sram_pool, (unsigned long)dma_ring, size);
-+	else
-+		dma_free_coherent(eth->dma_dev, size, dma_ring, dma_handle);
-+}
-+
- /* the qdma core needs scratch memory to be setup */
- static int mtk_init_fq_dma(struct mtk_eth *eth)
- {
-@@ -1276,13 +1316,12 @@ static int mtk_init_fq_dma(struct mtk_eth *eth)
- 	dma_addr_t dma_addr;
- 	int i, j, len;
- 
--	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM))
-+	if (!mtk_use_legacy_sram(eth)) {
-+		eth->scratch_ring = mtk_dma_ring_alloc(eth, cnt * soc->tx.desc_size,
-+						       &eth->phy_scratch_ring);
-+	} else {
- 		eth->scratch_ring = eth->sram_base;
--	else
--		eth->scratch_ring = dma_alloc_coherent(eth->dma_dev,
--						       cnt * soc->tx.desc_size,
--						       &eth->phy_scratch_ring,
--						       GFP_KERNEL);
-+	}
- 
- 	if (unlikely(!eth->scratch_ring))
- 		return -ENOMEM;
-@@ -2620,12 +2659,11 @@ static int mtk_tx_alloc(struct mtk_eth *eth)
- 	if (!ring->buf)
- 		goto no_tx_mem;
- 
--	if (MTK_HAS_CAPS(soc->caps, MTK_SRAM)) {
-+	if (!mtk_use_legacy_sram(eth)) {
-+		ring->dma = mtk_dma_ring_alloc(eth, ring_size * sz, &ring->phys);
-+	} else {
- 		ring->dma = eth->sram_base + soc->tx.fq_dma_size * sz;
- 		ring->phys = eth->phy_scratch_ring + soc->tx.fq_dma_size * (dma_addr_t)sz;
--	} else {
--		ring->dma = dma_alloc_coherent(eth->dma_dev, ring_size * sz,
--					       &ring->phys, GFP_KERNEL);
- 	}
- 
- 	if (!ring->dma)
-@@ -2726,9 +2764,9 @@ static void mtk_tx_clean(struct mtk_eth *eth)
- 		kfree(ring->buf);
- 		ring->buf = NULL;
- 	}
--	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && ring->dma) {
--		dma_free_coherent(eth->dma_dev,
--				  ring->dma_size * soc->tx.desc_size,
-+
-+	if (!mtk_use_legacy_sram(eth) && ring->dma) {
-+		mtk_dma_ring_free(eth, ring->dma_size * soc->tx.desc_size,
- 				  ring->dma, ring->phys);
- 		ring->dma = NULL;
- 	}
-@@ -2793,6 +2831,9 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
- 		ring->dma = dma_alloc_coherent(eth->dma_dev,
- 				rx_dma_size * eth->soc->rx.desc_size,
- 				&ring->phys, GFP_KERNEL);
-+	} else if (eth->sram_pool) {
-+		ring->dma = mtk_dma_ring_alloc(eth, rx_dma_size * eth->soc->rx.desc_size,
-+					       &ring->phys);
- 	} else {
- 		struct mtk_tx_ring *tx_ring = &eth->tx_ring;
- 
-@@ -2921,6 +2962,11 @@ static void mtk_rx_clean(struct mtk_eth *eth, struct mtk_rx_ring *ring, bool in_
- 				  ring->dma_size * eth->soc->rx.desc_size,
- 				  ring->dma, ring->phys);
- 		ring->dma = NULL;
-+	} else if (!mtk_use_legacy_sram(eth) && ring->dma) {
-+		mtk_dma_ring_free(eth,
-+				  ring->dma_size * eth->soc->rx.desc_size,
-+				  ring->dma, ring->phys);
-+		ring->dma = NULL;
- 	}
- 
- 	if (ring->page_pool) {
-@@ -3287,9 +3333,8 @@ static void mtk_dma_free(struct mtk_eth *eth)
- 			netdev_tx_reset_subqueue(eth->netdev[i], j);
- 	}
- 
--	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && eth->scratch_ring) {
--		dma_free_coherent(eth->dma_dev,
--				  MTK_QDMA_RING_SIZE * soc->tx.desc_size,
-+	if (!mtk_use_legacy_sram(eth) && eth->scratch_ring) {
-+		mtk_dma_ring_free(eth, soc->tx.fq_dma_size * soc->tx.desc_size,
- 				  eth->scratch_ring, eth->phy_scratch_ring);
- 		eth->scratch_ring = NULL;
- 		eth->phy_scratch_ring = 0;
-@@ -5009,7 +5054,7 @@ static int mtk_sgmii_init(struct mtk_eth *eth)
- 
- static int mtk_probe(struct platform_device *pdev)
- {
--	struct resource *res = NULL, *res_sram;
-+	struct resource *res = NULL;
- 	struct device_node *mac_np;
- 	struct mtk_eth *eth;
- 	int err, i;
-@@ -5029,20 +5074,6 @@ static int mtk_probe(struct platform_device *pdev)
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
- 		eth->ip_align = NET_IP_ALIGN;
- 
--	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
--		/* SRAM is actual memory and supports transparent access just like DRAM.
--		 * Hence we don't require __iomem being set and don't need to use accessor
--		 * functions to read from or write to SRAM.
--		 */
--		if (mtk_is_netsys_v3_or_greater(eth)) {
--			eth->sram_base = (void __force *)devm_platform_ioremap_resource(pdev, 1);
--			if (IS_ERR(eth->sram_base))
--				return PTR_ERR(eth->sram_base);
--		} else {
--			eth->sram_base = (void __force *)eth->base + MTK_ETH_SRAM_OFFSET;
--		}
--	}
--
- 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_36BIT_DMA)) {
- 		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(36));
- 		if (!err)
-@@ -5117,16 +5148,28 @@ static int mtk_probe(struct platform_device *pdev)
- 			err = -EINVAL;
- 			goto err_destroy_sgmii;
- 		}
-+
- 		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
--			if (mtk_is_netsys_v3_or_greater(eth)) {
--				res_sram = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--				if (!res_sram) {
-+			eth->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-+			if (!eth->sram_pool) {
-+				if (!mtk_is_netsys_v3_or_greater(eth)) {
-+					/*
-+					 * Legacy support for missing 'sram' node in DT.
-+					 * SRAM is actual memory and supports transparent access
-+					 * just like DRAM. Hence we don't require __iomem being
-+					 * set and don't need to use accessor functions to read from
-+					 * or write to SRAM.
-+					 */
-+					eth->sram_base = (void __force *)eth->base +
-+							 MTK_ETH_SRAM_OFFSET;
-+					eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
-+					dev_warn(&pdev->dev,
-+						 "legacy DT: using hard-coded SRAM offset.\n");
-+				} else {
-+					dev_err(&pdev->dev, "Could not get SRAM pool\n");
- 					err = -EINVAL;
- 					goto err_destroy_sgmii;
- 				}
--				eth->phy_scratch_ring = res_sram->start;
--			} else {
--				eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
- 			}
- 		}
- 	}
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 1ad9075a9b69..0104659e37f0 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -1245,7 +1245,8 @@ struct mtk_soc_data {
-  * @dev:		The device pointer
-  * @dma_dev:		The device pointer used for dma mapping/alloc
-  * @base:		The mapped register i/o base
-- * @sram_base:		The mapped SRAM base
-+ * @sram_base:		The mapped SRAM base (deprecated)
-+ * @sram_pool:		Pointer to SRAM pool used for DMA descriptor rings
-  * @page_lock:		Make sure that register operations are atomic
-  * @tx_irq__lock:	Make sure that IRQ register operations are atomic
-  * @rx_irq__lock:	Make sure that IRQ register operations are atomic
-@@ -1292,6 +1293,7 @@ struct mtk_eth {
- 	struct device			*dma_dev;
- 	void __iomem			*base;
- 	void				*sram_base;
-+	struct gen_pool			*sram_pool;
- 	spinlock_t			page_lock;
- 	spinlock_t			tx_irq_lock;
- 	spinlock_t			rx_irq_lock;
--- 
-2.50.0
+>
+> Does it fit? Or, can you guys argue that the failures here are actually n=
+on-
+> special cases that are worth more complex recovery? I remember we talked =
+about
+> IOMMU patterns that are similar, but it seems like the remaining cases un=
+der
+> discussion are about TDX bugs.
+>
