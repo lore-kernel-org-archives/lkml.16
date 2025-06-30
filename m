@@ -1,123 +1,91 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18CD1FDD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263731; cv=pass; b=n9u6sK5Ml1nmPDGnsJm2i0DK+EZb4Rm60UFUwdFLcvZdHliJwAzsxa1tKOfOhpx+Yrg21Twnkc/yZSwU8Fx+Wro1MlrozrmJsPIVKtxqucw4MRHdKNroXIB0uRtI3Gu4bdz0W+yz/SlWDhsvtP3V35MX5h1tm6LXvTLj+8w9uCo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263731; c=relaxed/simple;
-	bh=iRC+tRRP8GrjsRatfB75fE9uiS5Yy6BjWAGhqaMFjTk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=miu3rk/+SdSqgjMH6GoisH575Qm/GNgk3/YLxqEIgsRdQr+jPMN5D82vpdA40gXvXJuXw7pvcyuxkCN6o0nq+4Mrmzq9AKURBLfn513e/JfIngZaVw/eMRpMfxu+YkO9qWmeobwHFd8HaSPoLyVhv87f5k86MhTomKpH9Up2C8I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=g3OX35y3; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="g3OX35y3"
-ARC-Seal: i=1; a=rsa-sha256; t=1751263714; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=fNdim8rt3dYJWtzCAgZpYcSPqrCMUH/2cyNfkQ2Qa92I9A8IeAFfXk0fS3PN+Oa8w+Peh08lOal0tdSRR8LW55XbgvetrivcJoS6zQfQUKlLLjXHAxommEei+wIknoPdeHBcJpHKLsl8IVvyrOHKrHKz+Uz9+zoT0lEAH/jtlsw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751263714; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=7GLBN1xFjqC71Sa1Vn2ltQDBxX+pczKc5+Agjd3qE3E=; 
-	b=FFtzCrzz6chxWHyAJt+f19bYdzIfPWo3OJzX4eOh7hp9PlCCofGo4CgsuC172W6t6/mYdcgDtQTMhxzC6E5itf2jahyhPljorjjaMzvsoldkE38EBh+VtfZyBNt1lx2zNeuiyMJkdUP8HlP43jmePUJU+n2qcGAtKEx/kB4FDBk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751263714;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=7GLBN1xFjqC71Sa1Vn2ltQDBxX+pczKc5+Agjd3qE3E=;
-	b=g3OX35y3glpuE912Mx61jDeCZ18XTxWM0MuACRrX9VoGBuhZoHjakJOGCggwZibW
-	gs77P/bf1wlGlk93gIiUVb8joZyoTPmsbguCZQgL/IXz9drial2g9VQFRXPvSf9QQXU
-	4/slm2IpTI+ASLRiPo+C1vFzVuLSvwHcwulFv7WY=
-Received: by mx.zohomail.com with SMTPS id 1751263711942212.35138684064486;
-	Sun, 29 Jun 2025 23:08:31 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/debug: Add cond_resched() to sched_debug_show()
-Date: Mon, 30 Jun 2025 14:08:26 +0800
-Message-ID: <20250630060826.34217-1-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FFC6BFC0;
+	Mon, 30 Jun 2025 06:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751263778; cv=none; b=tIli6f5jT9+ofw7bnce4PjOtzUtRgSsfHvRNhF8epRXhNoDu/5CSXLAzuZCCqwKikxiTw3gfmBz6WVUZLEpqujKriaHpDrhc1LJJw3JAXQvy1Nvo1f85s3kp6NevNyy34ketZa4slj7abMrOzh/H2/OqG7HTQiyHZyNBeJvhVho=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751263778; c=relaxed/simple;
+	bh=TnK1WWG76ls+5mFQW9ETSEMY1f2TUQl0680rqrPC2s8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=C5LCX3Bn8DDQrkmvjA8O1sHOjvHJIU5SKndqKVR6fn5aSxJDdmqQUaGMtc8e2lfcavXUhR0692TjmvoIjkk9wG/AyhW/aVfW9sv67LgDHldTU7lH6LH/3cCqQxwbakEKt5FbXfDvwrfJEW9x8h6sx0Ott4kZXh2U1LX0KHAhh5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bVwjT43wBzYQtG8;
+	Mon, 30 Jun 2025 14:09:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 70E061A13F8;
+	Mon, 30 Jun 2025 14:09:32 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP3 (Coremail) with SMTP id _Ch0CgA3mSYaKmJolXe7AA--.51861S3;
+	Mon, 30 Jun 2025 14:09:32 +0800 (CST)
+Subject: Re: [PATCH 00/23] md/llbitmap: md/md-llbitmap: introduce a new
+ lockless bitmap
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <808d3fb3-92a9-4a25-a70c-7408f20fb554@redhat.com>
+ <288be678-990b-86f9-1ffd-858cee18eef3@huaweicloud.com>
+ <CALTww28grnb=2tpJOG1o+rKG4rD7chjtV3Nmx9D1GJjQtVqWhA@mail.gmail.com>
+ <3836a568-20c0-c034-7d7f-42a22fe77b4e@huaweicloud.com>
+ <CALTww281F6VhwfR+WRwSs0BYDdJai8aA0i9wg-gdu4emvhjFng@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <5d61b6cc-43a8-fe2f-0d5a-17b167c136f2@huaweicloud.com>
+Date: Mon, 30 Jun 2025 14:09:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CALTww281F6VhwfR+WRwSs0BYDdJai8aA0i9wg-gdu4emvhjFng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-CM-TRANSID:_Ch0CgA3mSYaKmJolXe7AA--.51861S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	oOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Li Chen <chenl311@chinatelecom.cn>
+Hi,
 
-Running stress-ng on large CPUs (e.g., ≥256 cores) can
-spawn numerous process/threads (e.g., over 70w told from
-vmcore) and trigger softlockup watchdogs when read
-/sys/kernel/debug/sched/debug:
-https://github.com/ColinIanKing/stress-ng/blob/V0.18.10/stress-cpu-sched.c#L860
+在 2025/06/30 13:38, Xiao Ni 写道:
+>> I don't quite understand, in my case, mdadm -As works fine.
+> Sorry for this, I forgot I removed the codes in function llbitmap_state_machine
+>          //if (c == BitNeedSync)
+>          //  need_resync = true;
+Ok.
 
-To improve responsiveness during extensive debug dumps,
-insert cond_resched() into sched_debug_show(). This allows the
-kernel to periodically yield and remain responsive, similar to how
-cond_resched() is used in other iteration-heavy code paths.
+> The reason I do this: I find if the status table changes like this, it
+> doesn't need to check the original status anymore
+> -               [BitmapActionReload]            = BitNone,
+> +               [BitmapActionReload]            = BitNeedSync,//?
 
-Below is soft lockup call trace:
+However, we don't want do dirty the bitmap page in this case, as nothing
+chagned in the bitmap. And because of this, we have to check the old
+value anyway...
 
-[ 1996.543070] RIP: 0010:print_cpu+0x2a4/0x770
-[ 1996.543084] Code: f6 ff ff 49 81 ff 58 fc c0 b6 74 69 49 8b 8f 58 03 00 00 48 8b 41 10 48 8d 51 10 48 8d 98 20 f5 ff ff 48 39 c2 74 37 8b 43 14 <39> c5 75 19 49 8b b5 10 0a 00 00 48 89 da 4c 89 e7 e8 d6 f1 ff ff
-[ 1996.543087] RSP: 0018:ffffc900704a7d40 EFLAGS: 00000202
-[ 1996.543090] RAX: 0000000000000038 RBX: ffff88b1b9073900 RCX: ffff88b326b86880
-[ 1996.543093] RDX: ffff88b326b86890 RSI: ffffffffb6527fde RDI: ffff88d579bd7256
-[ 1996.543096] RBP: 0000000000000000 R08: 0000000000000028 R09: ffff88d679bd722d
-[ 1996.543098] R10: ffffffffffffffff R11: 0000000000000000 R12: ffff88d4662cf880
-[ 1996.543099] R13: ffff889045e34d40 R14: ffff88b1b9073900 R15: ffff88b1b9074258
-[ 1996.543101] FS:  00007f0d2a254000(0000) GS:ffff88e04f080000(0000) knlGS:0000000000000000
-[ 1996.543104] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1996.543106] CR2: 0000000000b6d7c0 CR3: 00000033f894a000 CR4: 0000000000350ee0
-[ 1996.543108] Call Trace:
-[ 1996.543115]  <TASK>
-[ 1996.543122]  sched_debug_show+0x13/0x30
-[ 1996.543127]  seq_read_iter+0x122/0x470
-[ 1996.543133]  ? restore_fpregs_from_user+0xa9/0x150
-[ 1996.543139]  seq_read+0xaa/0xe0
-[ 1996.543148]  full_proxy_read+0x59/0x80
-[ 1996.543155]  vfs_read+0xa1/0x1c0
-[ 1996.543164]  ksys_read+0x63/0xe0
-[ 1996.543168]  do_syscall_64+0x55/0x100
-[ 1996.543175]  entry_SYSCALL_64_after_hwframe+0x78/0xe2
-
-The full soft lockup message is here:
-https://gist.github.com/FirstLoveLife/73f2185bed83a5faf7f94af8032a527b
-
-Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
----
- kernel/sched/debug.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 9d71baf080751..9dd444c604a8b 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -1065,6 +1065,7 @@ static int sched_debug_show(struct seq_file *m, void *v)
- 	else
- 		sched_debug_header(m);
- 
-+	cond_resched();
- 	return 0;
- }
- 
--- 
-2.49.0
+Thanks,
+Kuai
 
