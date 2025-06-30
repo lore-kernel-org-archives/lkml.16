@@ -1,121 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CF728C2D0;
-	Mon, 30 Jun 2025 15:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30FF28C87C;
+	Mon, 30 Jun 2025 15:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295894; cv=none; b=SZqDdD4Vco2cInpeKK2dQRSWqmmYMSeb8lpcAyyjaaLd8odD1Q9mDqR3OdAJ9ybzcMe8PjiV3r4TP+w92tYsHZkSqG8T1tIa/+FpjFIHHdhPQ87MPGXLA2zqP0OQzfs7VTsoHTVC0FK2RVF2+FqqzlxmKQ8ZU6xnDwE6Hzrxf/g=
+	t=1751295921; cv=none; b=LWJWv5b7gEpl0Gxe+crdFrQvtAsx+5P8CKj+Z+TcgPdEH3P2pETa7x10XqCwB5+Elx1WK1VPFkYdUtUOLX+ReBrCN6zfdx5uizXGn0edNrLEsr9vm346CtZHFJXyn13NVCRzlVWUAdw1S719QSrnPpo0L5ktV8FJOUvx59h/ml8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295894; c=relaxed/simple;
-	bh=dmoVYvTI3+suazAoJzq27ljT7xSAxYdGrhj8BhZXzhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rn92UhRGIHxAasrPyzOX8Bk5Y20Dl7XVg4wnOXDVeAYcRNr5d24Hse5En5X9f9SArj8eKBPu7ZOKExlHAO5mNbJRahNeSJ5q5vxSbXAj0+jTyAg84NnupCYxQaibd11n4cN6+RA8fNncSC7XZZaJ+clntepfKBwh/B/vA1Yr//s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRRH9WZM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751295921; c=relaxed/simple;
+	bh=mQzOLchImk2bOwbEyL2iPErb7HPGqFcQD6DOF2gHe+4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=EGbqfh4C7Pc6iLjUnOKa2NXZFsPKeWzIAqhqR2dwlYiv3fUR6UeyWZkT1F4thixin8N/JF8DQwaUoORH3YDPsKXq5xzQETywM+F5WWnAKuU61u4GJF65csDUvZ21kJ7V2YcFgXYHYByq5ixaD2jbcQhOEhZBlpbP9guQnE6dtV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QoFzX3Gw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mb07Q8pE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRRH9WZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 202AFC4CEE3;
-	Mon, 30 Jun 2025 15:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751295893;
-	bh=dmoVYvTI3+suazAoJzq27ljT7xSAxYdGrhj8BhZXzhY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iRRH9WZMZqUilBsRpDjeMtMNqXZ0LHhifC0TD6l5LuDwMakLrLuHgzJIZkYFPWLkC
-	 hwK4o7Tb6qRqldG+zz7Jr/ckMv5CoNzGIT9eTuGjDHX8XsWdyhK3UzAmMYrAnU7UO1
-	 peE7Y4ieGhAqW+Z2pdycmJKS7YPepFhmQ5DaSjhJhXnoviwtipvGQwuo1iVbfCxUAj
-	 N40ISc5VfmNirwrZD44lB2K2NzxYY7ys9AafBNpijv2h/7fugfnottKR37ojbDHRx7
-	 BR65DzOUWzD2pMcoPjhyFAX0c5bTnyt09EDqNxptWiI3Ck33ztZUrLm5l+xfq1XaNa
-	 4R0G98O9HW5dQ==
-Date: Mon, 30 Jun 2025 16:04:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: linux-i2c@vger.kernel.org, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: microchip-core: re-fix fake detections w/
- i2cdetect
-Message-ID: <20250630-carnage-portly-8ac978efd2b9@spud>
-References: <20250626-unusable-excess-da94ebc218e8@spud>
- <202506282209.FXWbPIPz-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QoFzX3Gw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mb07Q8pE"
+Date: Mon, 30 Jun 2025 15:05:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751295918;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulmopkkY5tPveB3D3nqgmb3vzMs0sI/pYs9cKSWYOmM=;
+	b=QoFzX3Gw/UwP2xSHRuUQ9jnyDEJubkkUUyN/3Eg6NHve885RVBgSY+aJ4Ylu9dn4kWawIh
+	jI/5N0U129sFuzFeSmBX7v2QhoVIpx07FCnYzcnTA4h2fdTna8grgEp2Eh+ZpPz4ZM0u3f
+	HxaKK4ZfMSO+l0NQADq51QqUp0lrIBOD6F9bEZNGxCUIZptL9slz6G9CHq6Y5/sfPHiDuf
+	XhYoX/L4LJP9liniPo7xsk/H5PZcmy1rgqF7XMyk6MBGl+fqSE956yt8Bs58sbG8qB5kYV
+	MRuYwUOUz6IgLR+oYi0GlcBRicWKFi1MNq41PQ7IooToA5yEVoMd/JoZx4aQ/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751295918;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ulmopkkY5tPveB3D3nqgmb3vzMs0sI/pYs9cKSWYOmM=;
+	b=mb07Q8pEYWpPCtGht0z+S9THEPNp1PvOlCfOFqOKD5qkZeZueVv3Bv+EWDzTmbHNmiJIuD
+	VukQkZkL/3vm4OAA==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: timers/ptp] timekeeping: Provide interface to control auxiliary clocks
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250625183758.444626478@linutronix.de>
+References: <20250625183758.444626478@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NC8mWXRcgp0oSWpd"
-Content-Disposition: inline
-In-Reply-To: <202506282209.FXWbPIPz-lkp@intel.com>
+Message-ID: <175129591680.406.14184432653481182434.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the timers/ptp branch of tip:
 
---NC8mWXRcgp0oSWpd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     7b95663a3d96b39b40f169dba5faef3e20163c5c
+Gitweb:        https://git.kernel.org/tip/7b95663a3d96b39b40f169dba5faef3e20163c5c
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 25 Jun 2025 20:38:49 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 27 Jun 2025 20:13:13 +02:00
 
-On Sat, Jun 28, 2025 at 10:28:45PM +0800, kernel test robot wrote:
-> Hi Conor,
->=20
-> kernel test robot noticed the following build warnings:
->=20
-> [auto build test WARNING on andi-shyti/i2c/i2c-host]
-> [also build test WARNING on linus/master v6.16-rc3 next-20250627]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->=20
-> url:    https://github.com/intel-lab-lkp/linux/commits/Conor-Dooley/i2c-m=
-icrochip-core-re-fix-fake-detections-w-i2cdetect/20250627-001626
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.=
-git i2c/i2c-host
-> patch link:    https://lore.kernel.org/r/20250626-unusable-excess-da94ebc=
-218e8%40spud
-> patch subject: [PATCH v2] i2c: microchip-core: re-fix fake detections w/ =
-i2cdetect
-> config: riscv-randconfig-002-20250628 (https://download.01.org/0day-ci/ar=
-chive/20250628/202506282209.FXWbPIPz-lkp@intel.com/config)
-> compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf=
-1a2591520c2491aa35339f227775f4d3adf6)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20250628/202506282209.FXWbPIPz-lkp@intel.com/reproduce)
->=20
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202506282209.FXWbPIPz-lkp=
-@intel.com/
->=20
-> All warnings (new ones prefixed by >>):
->=20
-> >> drivers/i2c/busses/i2c-microchip-corei2c.c:510:6: warning: variable 'r=
-et' is uninitialized when used here [-Wuninitialized]
->            if (ret < 0)
->                ^~~
->    drivers/i2c/busses/i2c-microchip-corei2c.c:438:9: note: initialize the=
- variable 'ret' to silence this warning
->            int ret;
->                   ^
->                    =3D 0
->    1 warning generated.
+timekeeping: Provide interface to control auxiliary clocks
 
-Oh damn it, I accidentally committed a version that I was using to
-provoke the WARN while trying to understand why this was corrupting
-the workqueue.
-V3 incoming.
+Auxiliary clocks are disabled by default and attempts to access them
+fail.
 
---NC8mWXRcgp0oSWpd
-Content-Type: application/pgp-signature; name="signature.asc"
+Provide an interface to enable/disable them at run-time.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/all/20250625183758.444626478@linutronix.de
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGKnkQAKCRB4tDGHoIJi
-0pc7AP0Y1GnupBJXRKJmeDyieIryx5crjwTM8DvEYXXxWecZ4wD/Y/34zvdE3lva
-D/89ILB25nTD6c/WWh+D2eKcBd7wFws=
-=IHf/
------END PGP SIGNATURE-----
+---
+ Documentation/ABI/stable/sysfs-kernel-time-aux-clocks |   5 +-
+ kernel/time/timekeeping.c                             | 116 +++++++++-
+ 2 files changed, 121 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-kernel-time-aux-clocks
 
---NC8mWXRcgp0oSWpd--
+diff --git a/Documentation/ABI/stable/sysfs-kernel-time-aux-clocks b/Documentation/ABI/stable/sysfs-kernel-time-aux-clocks
+new file mode 100644
+index 0000000..825508f
+--- /dev/null
++++ b/Documentation/ABI/stable/sysfs-kernel-time-aux-clocks
+@@ -0,0 +1,5 @@
++What:		/sys/kernel/time/aux_clocks/<ID>/enable
++Date:		May 2025
++Contact:	Thomas Gleixner <tglx@linutronix.de>
++Description:
++		Controls the enablement of auxiliary clock timekeepers.
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 568ba1f..6a61887 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -6,6 +6,7 @@
+ #include <linux/timekeeper_internal.h>
+ #include <linux/module.h>
+ #include <linux/interrupt.h>
++#include <linux/kobject.h>
+ #include <linux/percpu.h>
+ #include <linux/init.h>
+ #include <linux/mm.h>
+@@ -2916,6 +2917,121 @@ const struct k_clock clock_aux = {
+ 	.clock_adj		= aux_clock_adj,
+ };
+ 
++static void aux_clock_enable(clockid_t id)
++{
++	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
++	struct tk_data *aux_tkd = aux_get_tk_data(id);
++	struct timekeeper *aux_tks = &aux_tkd->shadow_timekeeper;
++
++	/* Prevent the core timekeeper from changing. */
++	guard(raw_spinlock_irq)(&tk_core.lock);
++
++	/*
++	 * Setup the auxiliary clock assuming that the raw core timekeeper
++	 * clock frequency conversion is close enough. Userspace has to
++	 * adjust for the deviation via clock_adjtime(2).
++	 */
++	guard(raw_spinlock_nested)(&aux_tkd->lock);
++
++	/* Remove leftovers of a previous registration */
++	memset(aux_tks, 0, sizeof(*aux_tks));
++	/* Restore the timekeeper id */
++	aux_tks->id = aux_tkd->timekeeper.id;
++	/* Setup the timekeeper based on the current system clocksource */
++	tk_setup_internals(aux_tks, tkr_raw->clock);
++
++	/* Mark it valid and set it live */
++	aux_tks->clock_valid = true;
++	timekeeping_update_from_shadow(aux_tkd, TK_UPDATE_ALL);
++}
++
++static void aux_clock_disable(clockid_t id)
++{
++	struct tk_data *aux_tkd = aux_get_tk_data(id);
++
++	guard(raw_spinlock_irq)(&aux_tkd->lock);
++	aux_tkd->shadow_timekeeper.clock_valid = false;
++	timekeeping_update_from_shadow(aux_tkd, TK_UPDATE_ALL);
++}
++
++static DEFINE_MUTEX(aux_clock_mutex);
++
++static ssize_t aux_clock_enable_store(struct kobject *kobj, struct kobj_attribute *attr,
++				      const char *buf, size_t count)
++{
++	/* Lazy atoi() as name is "0..7" */
++	int id = kobj->name[0] & 0x7;
++	bool enable;
++
++	if (!capable(CAP_SYS_TIME))
++		return -EPERM;
++
++	if (kstrtobool(buf, &enable) < 0)
++		return -EINVAL;
++
++	guard(mutex)(&aux_clock_mutex);
++	if (enable == test_bit(id, &aux_timekeepers))
++		return count;
++
++	if (enable) {
++		aux_clock_enable(CLOCK_AUX + id);
++		set_bit(id, &aux_timekeepers);
++	} else {
++		aux_clock_disable(CLOCK_AUX + id);
++		clear_bit(id, &aux_timekeepers);
++	}
++	return count;
++}
++
++static ssize_t aux_clock_enable_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	unsigned long active = READ_ONCE(aux_timekeepers);
++	/* Lazy atoi() as name is "0..7" */
++	int id = kobj->name[0] & 0x7;
++
++	return sysfs_emit(buf, "%d\n", test_bit(id, &active));
++}
++
++static struct kobj_attribute aux_clock_enable_attr = __ATTR_RW(aux_clock_enable);
++
++static struct attribute *aux_clock_enable_attrs[] = {
++	&aux_clock_enable_attr.attr,
++	NULL
++};
++
++static const struct attribute_group aux_clock_enable_attr_group = {
++	.attrs = aux_clock_enable_attrs,
++};
++
++static int __init tk_aux_sysfs_init(void)
++{
++	struct kobject *auxo, *tko = kobject_create_and_add("time", kernel_kobj);
++
++	if (!tko)
++		return -ENOMEM;
++
++	auxo = kobject_create_and_add("aux_clocks", tko);
++	if (!auxo) {
++		kobject_put(tko);
++		return -ENOMEM;
++	}
++
++	for (int i = 0; i <= MAX_AUX_CLOCKS; i++) {
++		char id[2] = { [0] = '0' + i, };
++		struct kobject *clk = kobject_create_and_add(id, auxo);
++
++		if (!clk)
++			return -ENOMEM;
++
++		int ret = sysfs_create_group(clk, &aux_clock_enable_attr_group);
++
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++late_initcall(tk_aux_sysfs_init);
++
+ static __init void tk_aux_setup(void)
+ {
+ 	for (int i = TIMEKEEPER_AUX_FIRST; i <= TIMEKEEPER_AUX_LAST; i++)
