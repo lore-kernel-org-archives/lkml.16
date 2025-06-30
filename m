@@ -1,163 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E683E28B7EF;
-	Mon, 30 Jun 2025 13:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF8F28C87A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289162; cv=none; b=nLwkbq7mSyNTrgsansVPwpA0adFSiYYbSjypY0mG7hCd9ZY7AU0YHvTqGQtILY3zQtOuDimznSHUr42gFlxc1yyK5zZN8KKsT21YLZ4furrWuahcr+XjELXcLjE+up7K4EyGjLVgV5E72nhhRSuiexv/yCzH67Kw0GgvwyyEEjE=
+	t=1751289192; cv=none; b=A0XiEB2Hs6sLex0ca+L/oROj+tJtbimxGTQeFI2XBrJvt/TyX4GVhZcNNwzC/6pKMCEpeIboCA9GTRkw/7kF8tHx2wjaUCjz7SfIoo1i0iufidu/1gFup7rJM2sgVl0WVoG92YM59NUIZ+1OjPTSz1jhT6MD3FjE/aiywHjEDIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289162; c=relaxed/simple;
-	bh=3vlsjbDTvmQj/WsIY9zNqu7qPR25a3VdjKTxsAo4JcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YahRCPSiP1cHj+q9+A247xlOirPRQq0vwoz9yIfQFWV/69XaLDoU+ocXScFBig8SWoxICBVlQGW4p/PSBIBAs65cEQ8WXq3CLw8n0YX7OQ5xhZAF8XSUCz3EdZA84moe7D3dimo9pbz8lP//ZF7JQwSgGFiUIHsx+Xzvy9iCcRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h33Sp5Qx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751289192; c=relaxed/simple;
+	bh=sBgkn0f8/4VXlX8UWPXjVuNBjjXBIZJ/mKg68iRvsJ4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=F/tGY5kQSW+IpqRCBDIV9kqci9Kixzwp3T36Y5/f9j+wUwgBmBe7k/0hB7EF0exhPLp+z4J8SwkFX2Vo11h1LDvrv0mUpP/QsGWaGrjlZ/emA0gixi+S6kqbPYx2aGOn8CGZzNtZ2DnGwcPOcRq7O265MF13GLt/EIIhqQcD+Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=Qt/xf8jv; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h33Sp5Qx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173A7C4CEEF;
-	Mon, 30 Jun 2025 13:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751289161;
-	bh=3vlsjbDTvmQj/WsIY9zNqu7qPR25a3VdjKTxsAo4JcA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h33Sp5QxfDssCYKqP6zwmKoDczTMqZw7E4KoMEuTvjhT95l3JXcHXs0RyFXIKUeJB
-	 vmTwGkIvJt2v/lOS6/kKJLYBcBgzkv+2LfufW/7Yh5QWrskzBqIQ0+rJT6cZN4XcD5
-	 3BmBkmRR4XM/+qno3oo53feJJnSm4NiqESIQiPlwTQIEOAy5brUlXe2asj11mEf1aJ
-	 LkzfgJNMbg9y0VU+RMctXjI0aujILfrjeRPPkmgYoYIPIgqCpw/fXdnM9ubrsbaFta
-	 69lJdGf3cUOqFFn5BTLkfOVlSebzwr8An6qTu7mFQgOGDAIvhBwMgCY6JVUQDxKhwm
-	 Isbf8CY1aMG/A==
-Message-ID: <d449ae59-11a2-436e-a51c-cf2fa3657ba2@kernel.org>
-Date: Mon, 30 Jun 2025 15:12:38 +0200
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="Qt/xf8jv"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Ricardo Ribalda
- <ribalda@chromium.org>, Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
- <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
- <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
- <c97af8e7-5c11-45f4-838c-d934b0a379c1@kernel.org>
- <20250630131004.GF20333@pendragon.ideasonboard.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250630131004.GF20333@pendragon.ideasonboard.com>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1751289184;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TpapsnvN2qo9hhPhQHWIegeAB6bx1Q9QSQ1S7RYoiB8=;
+	b=Qt/xf8jvowFgC12MA52xjmF0ThLOYdQaLftpgkvXJadJkSgMfDayzMLNa8IjYygLdcFLhg
+	z/WC7CnjE3bpRYZ4rwLuQI1pdSLIE7CU75h+QkuZ2Y09OPbcbCc5GtizQAnuqrkjZM2hEr
+	9g+wkuXxX/kxtOJz+KRFIv+SAmTBAq9wmztrlyEapOsPglHrN1D9qrrrspbcDhnGk9nC1h
+	cuMV2maGNu/Zfo+CcABkJBAczKh13xrTz88Jfk3CvOLAU81kP1lutYYfAXHTeCV33uvS54
+	ezpbVrnGiUMKbvOfrw6k+E9+IW3i1ABrBldKqDlaXHZKXE3J7lOqibP/spxoTA==
+Content-Type: multipart/signed;
+ boundary=cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Mon, 30 Jun 2025 15:12:56 +0200
+Message-Id: <DAZW78SRQQ0Y.2R1T9V72Q7AZH@cknow.org>
+Cc: <llvm@lists.linux.dev>, <oe-kbuild-all@lists.linux.dev>, "Dragan Simic"
+ <dsimic@manjaro.org>, "Quentin Schulz" <quentin.schulz@cherry.de>, "Johan
+ Jonker" <jbx6244@gmail.com>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
+ boards
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, "kernel test robot"
+ <lkp@intel.com>, "Rob Herring" <robh@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+References: <20250627152645.740981-3-didi.debian@cknow.org>
+ <202506290852.bWro2lBe-lkp@intel.com>
+ <DAYXOI4WITJW.1G5DBWEQDDY1Z@cknow.org>
+ <9f1ac97a-6109-40d1-bf85-f2a8e25138f0@kernel.org>
+In-Reply-To: <9f1ac97a-6109-40d1-bf85-f2a8e25138f0@kernel.org>
+X-Migadu-Flow: FLOW_OUT
+
+--cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon Jun 30, 2025 at 7:57 AM CEST, Krzysztof Kozlowski wrote:
+> On 29/06/2025 12:09, Diederik de Haas wrote:
+>>=20
+>> Luckily I've now found why my build script didn't catch it.
+>> ```sh
+>> export PATH=3D~/dev/kernel.org/dt-schema-venv/bin/:$PATH CROSS_COMPILE=
+=3Daarch64-linux-gnu- ARCH=3Darm64
+>> make distclean
+>> make debarm64_defconfig
+>> make CHECK_DTBS=3Dy W=3D1 rockchip/px30-cobra-ltk050h3146w-a2.dtb
+>> <quite-a-long-list-of-all-boards-at-least-I-thought-so>
+>> ```
+>>=20
+>> (debarm64_defconfig is my own defconfig based on Debian's kernel config)
+>>=20
+>> That long list didn't have ``rockchip/rk3399-rockpro64-screen.dtbo``.
+>> Is there a better/simpler way to validate all rockchip boards without
+>> having to explicitly list each and every one of them?
+> make defconfig && make
+>
+> or make dtbs
 
-On 30-Jun-25 3:10 PM, Laurent Pinchart wrote:
-> On Mon, Jun 30, 2025 at 02:59:05PM +0200, Hans de Goede wrote:
->> On 17-Jun-25 11:27 AM, Hans Verkuil wrote:
->>> On 16/06/2025 17:24, Ricardo Ribalda wrote:
->>>> uvc_stop_streaming() is used for meta and video nodes. Split the function
->>>> in two to avoid confusion.
->>>>
->>>> Use this opportunity to rename uvc_start_streaming() to
->>>> uvc_start_streaming_video(), as it is only called by the video nodes.
->>>>
->>>> Reviewed-by: Hans de Goede <hansg@kernel.org>
->>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->>>> ---
->>>>  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
->>>>  1 file changed, 15 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
->>>> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
->>>> --- a/drivers/media/usb/uvc/uvc_queue.c
->>>> +++ b/drivers/media/usb/uvc/uvc_queue.c
->>>> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
->>>>  		uvc_video_clock_update(stream, vbuf, buf);
->>>>  }
->>>>  
->>>> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
->>>> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
->>>>  {
->>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
->>>>  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
->>>> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
->>>>  	return ret;
->>>>  }
->>>>  
->>>> -static void uvc_stop_streaming(struct vb2_queue *vq)
->>>> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
->>>>  {
->>>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
->>>>  
->>>>  	lockdep_assert_irqs_enabled();
->>>>  
->>>> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
->>>> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
->>>> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
->>>> +
->>>> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
->>>> +}
->>>> +
->>>> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
->>>> +{
->>>> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
->>>> +
->>>> +	lockdep_assert_irqs_enabled();
->>>>  
->>>>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
->>>>  }
->>>> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
->>>>  	.buf_prepare = uvc_buffer_prepare,
->>>>  	.buf_queue = uvc_buffer_queue,
->>>>  	.buf_finish = uvc_buffer_finish,
->>>> -	.start_streaming = uvc_start_streaming,
->>>> -	.stop_streaming = uvc_stop_streaming,
->>>> +	.start_streaming = uvc_start_streaming_video,
->>>> +	.stop_streaming = uvc_stop_streaming_video,
->>>>  };
->>>>  
->>>>  static const struct vb2_ops uvc_meta_queue_qops = {
->>>>  	.queue_setup = uvc_queue_setup,
->>>>  	.buf_prepare = uvc_buffer_prepare,
->>>>  	.buf_queue = uvc_buffer_queue,
->>>> -	.stop_streaming = uvc_stop_streaming,
->>>> +	.stop_streaming = uvc_stop_streaming_meta,
->>>>  };
->>>
->>> I think there should be a comment stating that the metadata stream
->>> expects that video is streaming, it does not start streaming by itself.
->>>
->>> Something like:
->>>
->>> 	/*
->>> 	 * .start_streaming is not provided here. Metadata relies on
->>> 	 * video streaming being active. If video isn't streaming, then
->>> 	 * no metadata will arrive either.
->>> 	 */
->>>
->>> It's unexpected that there is no start_streaming for metadata, so a
->>> comment wouldn't hurt.
->>
->> I've added this comment while merging this series and I've now pushed
->> the entire series to uvc.git/for-next .
->>
->> BTW it seems that both uvc.git/next and uvc.git/for-next are in
->> use now?  With uvc.git/next seemingly following media-commiters/next ?
-> 
-> As far as I understand, some jobs in the media CI use the next branch,
-> for instance the bisect job that tries to compile every commit uses the
-> next branch as a base. We therefore need to keep the next branch
-> up-to-date, mirroring upstream.
+``make dtbs`` is faster then I recalled, but I do like the detail with
+``make CHECK_DTBS=3Dy W=3D1 rockchip/<board1>.dtb rockchip/<board2>.dtb``.
 
-Ok, so we have the next branch mirroring upstream and then we
-use for-next to merge new patches as I've just done ?
+If I don't specify a list of boards, then it will build them all
+including freescale/qcom/renesas/etc, while I only want the rockchip
+ones. And as my script takes 20-30 minutes, that will probably be
+several hours. Per run. And I ran it after each patch.
 
-Regards,
+Giving ``rockchip/*.dtb[o]`` as parameter is basically what I want, but
+I'm not aware of that being possible.
+OTOH it's (already) a script, so I will probably just do a ``find`` to
+dynamically generate the board list.
 
-Hans
+Cheers,
+  Diederik
 
+--cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGKNWgAKCRDXblvOeH7b
+brfvAQCxEpSIjkdmRZ7MkQ5i4THNqBXbUOtLpJCTsHAh8TEeqwD7Btya8sIXw2rg
+yTjCXv4ijLgp0OdfAo5k5i8MXuWUyQI=
+=isL+
+-----END PGP SIGNATURE-----
+
+--cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7--
