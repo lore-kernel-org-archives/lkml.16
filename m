@@ -1,157 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D172E6D1D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157C42A1CA
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751312608; cv=none; b=Z/iEhH6wy0xhu4nNPS0DFbWopDDChDCDDC0IqlGIeY7fVTnOdlpLsVslGoOdPWALP84cgK4V3Ci7Js9OKJiEkxe2jnirYEiV/c3eBvbekmCOosmtiTp/aHcrbq81exUltElD6/z1lZq1YGS2002L3M42PirQLe6LoXFgiGWrgAo=
+	t=1751312771; cv=none; b=kVC41NrpRxfkKQ2c78UgugV/jOqCqZ8ddxU6KlmAfMSsvf5WKCbzzfdchEwLIns7gok0XoS9OkbR2Om14fLDet0ATugMleUFuuQZfNG2Gsp8soYtrHKNkBQrqax2H7hlyudxYNfK19/hykWwRFw+RT82SnMYliy4KB1UGX98Nlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751312608; c=relaxed/simple;
-	bh=ZSkubfhqVXLd7YH+k9rQ3uDHyM9ioOoYHsHETArWmSk=;
+	s=arc-20240116; t=1751312771; c=relaxed/simple;
+	bh=Ut1C+FENnkT+4cfgRtU9RoHaXisarLEGCYE6Lskdgb0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s6a1y2QS8lZ6RVemflJljcl3AoLzHh1VtuUqVOMCMsR9rLULMfamKKulwnzu8POtJTEnOo52+MDfzDH1/TkinPo+A4BLt9W085ewnBysJ68899m5QQ0HAgBkTui/oqMdXVdaCE2802+E9V+vlPdUkJyWPD3dbcYDo44qzrRhpDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fL4n7rb1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Zl1cyu90/9Q82Y2pVxSLeaRmZjozAz+u+Qyp58NiaaIIaAE/RWi8CbADOVQdqqPFJQfsyC1IXSSFUf505AHrobmgttT7clPi5Y8Ocf9bwr2f3HrBdHBt9MD9EphJ/QlLU3YEzebJAIImp1MLoeCjcVmPeD841BTvZs4VleCn9Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G1HAjbB0; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fL4n7rb1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F170C4CEEF
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751312607;
-	bh=ZSkubfhqVXLd7YH+k9rQ3uDHyM9ioOoYHsHETArWmSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fL4n7rb16aEtoVokpBJRrVUOKTTZVhtTlR7guYgXhpca7bVPSjGL+7lKFKPGZzWJ1
-	 CXXYIi9Tn2V5fOF1JS+Mfu+mA411JumoDbgtHAgbsnjZRMnZRBlB/mdg5WgCK/z/a8
-	 e7lUsIkj0JPgL+n8K9W9AFSTZ7x1BHpf1gNctrZRycJS6W6rZ0+U7pcq0fdzLCH3RR
-	 VBdajIb1KVziXTZzFpK1uD0ub/hp2jJywmUBf3UoKSoqtvbo7qztti9zU/WH5aY63/
-	 UCUjbRXO8Din21t+4S53orbU4zYXHVqvHO5EE4b8Mr+nijBOYz6srIRUKHStcj5Or+
-	 h+1Bpc4w73aUA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad572ba1347so382751866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:43:27 -0700 (PDT)
-X-Gm-Message-State: AOJu0YztgQ57/IPCTF/9RJH7RzZtW3NypYj2ineJqckb9K812HdKcTB9
-	LqSNS4mIgSZ18q9GltVZx4QlyPhB1o7htbMUeQUZuXAl+r55DrUanG6rv2oxgkoJbrTfvjbN54v
-	9egubGdqUBTrNzxQqDV8ggUWA7+2+mw==
-X-Google-Smtp-Source: AGHT+IFKZ/kbBUfwZnqm7gEA5iSt95YpqCW1f5i6bgaXWikT6oqEphe4Aq6o75Dpbzy9bVcKNeNOa9VWgkYugZj0oW0=
-X-Received: by 2002:a17:907:3f99:b0:adb:1eee:a083 with SMTP id
- a640c23a62f3a-ae350101214mr1208078666b.47.1751312605837; Mon, 30 Jun 2025
- 12:43:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G1HAjbB0"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-313b6625cf1so3553729a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751312769; x=1751917569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KktxL0p+NacmVGtV0Wk3Tz5jFnTwh3r3Af+/Ktpmyn4=;
+        b=G1HAjbB0MjwWem69Bbh8RdV4pMt2HgadgwM9uR9K2kNCur9NmsCVOtinv/TgvPaO09
+         eJFbmf6aUvylvrtp/56Mjpi+hYTRB89UnklB/57tOHSD04juv+oOxN3C8LkkeotZ8QGT
+         +lUn4C67BoF5yLSPbTb74v8RB/tbbaJ4lhS94p3b6SKPQGNTsn8spMsg8y3dGMuR+WWO
+         rl01F3FGJo+VqusPbKM+OBoyPXCi/y3AsDrtld9X5z9xh5RuzO6OgBZBcD51Y3X+X8UI
+         JYoFFVauCfkAqsUQoXAfUQTnAP4ZSq7j0DIMo9QjQ3Ii3sxnL8WWo9sGO/T80wdSC7Ag
+         iNxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751312769; x=1751917569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KktxL0p+NacmVGtV0Wk3Tz5jFnTwh3r3Af+/Ktpmyn4=;
+        b=rm7nFS2cnynor1YH6vAz5noIUMRgazj2Jc3BipWvMcpLpIg2pL5LxKIhU5pAy5zTPI
+         sRIsp2RIlnXPK249iCZS4bWloSfSUiWviQaiVee9fb6FCpBrUuewG8UlhIyl6HLcEXzz
+         RRA57eaxLD9AkoGSjdNDPHU9/r0lz0ccfCYL9eEUwalniCicLztFmqQ1XiCkQB/Uiqpp
+         WmVEAwjtB4VxiNoQfxAJWkZ9mBgbWiGgue8IzUmqzgk/1efacpIcrdhrrPs/I1GwmKFP
+         OE43CH1gzr/d1Dc1fvFUQlWWrHYltvgnNh0QCloio0P1ank+F1WodzcxRZepZBlfDo2o
+         PflA==
+X-Gm-Message-State: AOJu0YxZqbTngyIoppOZH1bxnt+z97XT6eZ6jT5DKJxqAul3ZpvHbtgw
+	2Cwdf8Ppzuvp5/f9tZic6eVWxfCjW39ZSO98zO/9EQo3X0u17usDV2daNefqIvxP2B2G/yR2lQ1
+	0lHpdeGz8xWwZTMn7Ja3BoHNiIQHQu1YqKcbqSVolrxst+n6D/zR0XjqeuPhTgw==
+X-Gm-Gg: ASbGnctHCYnNlGpviT1Qt8F7UTCitjZrAs1eGogyF3/YVAoYT0244KwMMj760H6SI94
+	WzL2rrbNUCVqs5nBZwn8eKSlmZFApe8Q+Q5T8jRuhMjhSc1t9bXk9tuzXVXT6p6EYgzRu0prgqV
+	YAgpwP+eNpzsx3WvVzS8jPZC00qIaqgGsvWgYcuX5HuJ3WnWzEQ2J0W/GZRVr2UHdexgeroojxx
+	Q==
+X-Google-Smtp-Source: AGHT+IHnHZP+R4S25ckxNkU9XskVXK7VnWiPRQ6+iR7gEoZI9hDMO51yH4DlPmWK+oWpOitcW/MHzgpT1tQkLTAIu54=
+X-Received: by 2002:a17:90b:3b4b:b0:311:be43:f09a with SMTP id
+ 98e67ed59e1d1-31939b12132mr979498a91.9.1751312769138; Mon, 30 Jun 2025
+ 12:46:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613130356.8080-1-james.morse@arm.com> <20250613130356.8080-3-james.morse@arm.com>
- <CAL_Jsq+rsBq1Dsw4+hfkMhopN9Pdwyp9JJbqeT6yB+d++s4v7g@mail.gmail.com> <ee08ba7e-2669-447f-ae04-5a6b00a16e77@arm.com>
-In-Reply-To: <ee08ba7e-2669-447f-ae04-5a6b00a16e77@arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 30 Jun 2025 14:43:14 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+mXkQTM-zbozPGkCQ40CusOUudWgtaxx_ufqL+0t96mQ@mail.gmail.com>
-X-Gm-Features: Ac12FXztdZ7tU869i3uqHvpyvYlVYuzqfpcGXRVIaR9xnjjoItGphSvr73c5ZSM
-Message-ID: <CAL_Jsq+mXkQTM-zbozPGkCQ40CusOUudWgtaxx_ufqL+0t96mQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] cacheinfo: Add arch hook to compress CPU h/w id into
- 32 bits for cache-id
-To: James Morse <james.morse@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, sudeep.holla@arm.com, 
-	Ben Horgan <ben.horgan@arm.com>
+References: <20250629214449.14462-1-aleksandr.mikhalitsyn@canonical.com> <20250629214449.14462-4-aleksandr.mikhalitsyn@canonical.com>
+In-Reply-To: <20250629214449.14462-4-aleksandr.mikhalitsyn@canonical.com>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Mon, 30 Jun 2025 12:45:57 -0700
+X-Gm-Features: Ac12FXyD-RKudTR-v8h4D1atJ0tJpkTrf2lsb1SWQCdla-qfjRD1BQXVylhPgow
+Message-ID: <CAAVpQUAG+=PP67sCFSYJ6zubsEODUt+1Tf-2KtiPUcJTYAF_EQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH net-next 3/6] af_unix: introduce and use
+ __scm_replace_pid() helper
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Willem de Bruijn <willemb@google.com>, Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, Lennart Poettering <mzxreary@0pointer.de>, 
+	Luca Boccassi <bluca@debian.org>, David Rheinsberg <david@readahead.eu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 11:38=E2=80=AFAM James Morse <james.morse@arm.com> =
-wrote:
->
-> Hi Rob,
->
-> On 23/06/2025 15:48, Rob Herring wrote:
-> > On Fri, Jun 13, 2025 at 8:04=E2=80=AFAM James Morse <james.morse@arm.co=
-m> wrote:
-> >> Filesystems like resctrl use the cache-id exposed via sysfs to identif=
-y
-> >> groups of CPUs. The value is also used for PCIe cache steering tags. O=
-n
-> >> DT platforms cache-id is not something that is described in the
-> >> device-tree, but instead generated from the smallest CPU h/w id of the
-> >> CPUs associated with that cache.
-> >>
-> >> CPU h/w ids may be larger than 32 bits.
-> >>
-> >> Add a hook to allow architectures to compress the value from the devic=
-etree
-> >> into 32 bits. Returning the same value is always safe as cache_of_set_=
-id()
-> >> will stop if a value larger than 32 bits is seen.
-> >>
-> >> For example, on arm64 the value is the MPIDR affinity register, which =
-only
-> >> has 32 bits of affinity data, but spread across the 64 bit field. An
-> >> arch-specific bit swizzle gives a 32 bit value.
->
-> > What's missing here is why do we need the cache id to be only 32-bits?
-> > I suppose it is because the sysfs 'id' file has been implicitly that?
->
-> Yup, and its too late to change.
->
->
-> > Why can't we just allow 64-bit values there? Obviously, you can't have
-> > a 64-bit value on x86 because that might break existing userspace.
->
-> It's the same user-space. Users of resctrl should be portable between arc=
-hitectures.
-> Resctrl isn't the only user, of the cache-id field.
->
->
-> > But for Arm, there is no existing userspace to break.
->
-> libvirt: https://github.com/libvirt/libvirt/blob/master/src/util/virresct=
-rl.c#L1588
+[dropped my previous email address]
 
-Looks to me like AMD wasn't even supported til v10.8.0 (2024-10-01)[1].
-
-> DPDK: http://inbox.dpdk.org/dev/20241021015246.304431-2-wathsala.vithanag=
-e@arm.com/
-
-Is that even applied yet?
-
-> > Even with 32-bits,
-> > it is entirely possible that an existing userspace assumed values less
-> > than 32-bits and would be broken for Arm as-is.
+On Sun, Jun 29, 2025 at 2:45=E2=80=AFPM Alexander Mikhalitsyn
+<aleksandr.mikhalitsyn@canonical.com> wrote:
 >
-> Sure, but I've not found a project where that is broken yet.
+> Existing logic in __scm_send() related to filling an struct scm_cookie
+> with a proper struct pid reference is already pretty tricky. Let's
+> simplify it a bit by introducing a new helper. This helper will be
+> extended in one of the next patches.
 >
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Willem de Bruijn <willemb@google.com>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Kuniyuki Iwashima <kuniyu@google.com>
+> Cc: Lennart Poettering <mzxreary@0pointer.de>
+> Cc: Luca Boccassi <bluca@debian.org>
+> Cc: David Rheinsberg <david@readahead.eu>
+> Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com=
 >
-> > It is obviously nice
-> > if we can avoid modifying userspace, but I don't think that's a
-> > requirement and I'd be surprised if there's not other things that need
-> > to be adapted for MPAM support.
+> ---
+>  include/net/scm.h | 10 ++++++++++
+>  net/core/scm.c    | 11 ++++++++---
+>  2 files changed, 18 insertions(+), 3 deletions(-)
 >
-> The whole multi-year effort has been to make existing user-space work wit=
-hout any ABI
-> changes. The effect is some platforms have features that can't be used be=
-cause resctrl
-> expects things to be Xeon shaped.
-> But if your platform looks a bit like a Xeon (cache portion controls on t=
-he L3, memory
-> bandwidth controls somewhere that is believably the L3), then resctrl wor=
-ks as it does on
-> Intel. The only thing that has come a little unstuck is the 'num_rmid' pr=
-operty where MPAM
-> doesn't have an equivalent, so '1' is exposed as a safe value.
-
-Fair enough, but I'd be rather surprised if there doesn't end up being
-changes to support Arm platforms.
-
-> > Also, what if an architecture can't swizzle their value into 32-bits?
-> > They would be stuck with requiring userspace to deal with 64-bit
-> > values.
+> diff --git a/include/net/scm.h b/include/net/scm.h
+> index 84c4707e78a5..856eb3a380f6 100644
+> --- a/include/net/scm.h
+> +++ b/include/net/scm.h
+> @@ -88,6 +88,16 @@ static __inline__ void scm_destroy(struct scm_cookie *=
+scm)
+>                 __scm_destroy(scm);
+>  }
 >
-> Remap them in a more complicated way. Chances are there aren't 2^32 CPUs.
+> +static __inline__ int __scm_replace_pid(struct scm_cookie *scm, struct p=
+id *pid)
 
-What about using the logical CPU number instead? That's stable for a
-given machine and firmware. And then instead of having 3 sets of
-numbers (MPIDR, compressed MPIDR, and logical CPU), we'd still only
-have 2. And logical CPU is what sysfs already exposes to userspace.
+It seems this function is only called from __scm_send() so this should
+be moved to .c (and inlined ?).
 
-Rob
+> +{
+> +       /* drop all previous references */
+> +       scm_destroy_cred(scm);
+> +
+> +       scm->pid =3D get_pid(pid);
 
-[1] https://libvirt.org/news.html
+This looks redundant.  Maybe move the put_pid() under if (error)
+in __scm_send().
+
+> +       scm->creds.pid =3D pid_vnr(pid);
+> +       return 0;
+> +}
+> +
+>  static __inline__ int scm_send(struct socket *sock, struct msghdr *msg,
+>                                struct scm_cookie *scm, bool forcecreds)
+>  {
+> diff --git a/net/core/scm.c b/net/core/scm.c
+> index 0225bd94170f..0e71d5a249a1 100644
+> --- a/net/core/scm.c
+> +++ b/net/core/scm.c
+> @@ -189,15 +189,20 @@ int __scm_send(struct socket *sock, struct msghdr *=
+msg, struct scm_cookie *p)
+>                         if (err)
+>                                 goto error;
+>
+> -                       p->creds.pid =3D creds.pid;
+>                         if (!p->pid || pid_vnr(p->pid) !=3D creds.pid) {
+>                                 struct pid *pid;
+>                                 err =3D -ESRCH;
+>                                 pid =3D find_get_pid(creds.pid);
+>                                 if (!pid)
+>                                         goto error;
+> -                               put_pid(p->pid);
+> -                               p->pid =3D pid;
+> +
+> +                               err =3D __scm_replace_pid(p, pid);
+> +                               /* Release what we get from find_get_pid(=
+) as
+> +                                * __scm_replace_pid() takes all necessar=
+y refcounts.
+> +                                */
+> +                               put_pid(pid);
+> +                               if (err)
+> +                                       goto error;
+>                         }
+>
+>                         err =3D -EINVAL;
+> --
+> 2.43.0
+>
