@@ -1,111 +1,117 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0A5187346
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D26A2110;
+	Mon, 30 Jun 2025 09:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274067; cv=none; b=gdIE4y2l4SGivT9neESoN0bst8AcK+6Nsfx55rE3YLh3k3+r5qX5n868DTgxvdVIjP+L358bEJ5OczSuXaIe+5sgF5olqspGsoEpglFb5/vgxnqKktMiNKTlxocJhsNPFhbi5+GEV7ZpZUObB+blpxcmwpIL2VeX5S8ja9B/wXw=
+	t=1751274155; cv=none; b=hCtbL9a36z9Kao4lzrjY67dKgJ3ni51jMYdDURWjv/sloIrLVzCtmWEvzFDrt9H4ImjJse+GtjRsTHCj7eb2ML0dB45fWa5hs2R/w1hECtUo7MeeFkE6n65NZjPmoRIZ37tmMKIee8JR1sTwnW/Hnz8RUyr4RXeiIPIxqH8GRRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274067; c=relaxed/simple;
-	bh=rfzCgBEWaYCiudOe0Ir2DKKsp4oc2CFcNdaoEmUwWRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k8Qzx7gOtiyDGWiZ9U6maz5pomGfwo9ctnXJ5OSVwGd6+R60bMJKHws0iCw/+wowPU7OonnqENgeBRoGfzVczgLz9mbOnpOr2m31Szy89AOx1ZqPfj/2BzatIdu6wtLSwBPgEuqwYqvA3pZ/jhVhwGjjisei1htJJ3IOCRs/PjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hRNvhvU5; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751274155; c=relaxed/simple;
+	bh=BNV5dwz5C2CpBAwinG45/8SbEo8XjoILHf3jGxqkzJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UijM0rM1DIHAA605Hfs1iUsQ1j2p++U2tWwm2/gphiXeM7PoU81EGIOvctvI9etS9zKL8JqT4nmiO5kF1m6jCd5kqYWcERNXjtw8dyVs0Le181Wy81DTj2zNaU9n473D/oiU3d9lk0XmJ82rD1rcLlaWyaApUmQ7V2s19I58Aro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQrkY26H; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRNvhvU5"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so27192795e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751274064; x=1751878864; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w95P+dWG3ZuObvzvYSEnqdj+iXFN6Vo8U0ez9iwhMbM=;
-        b=hRNvhvU5HoZUaotzJONCLsCIVSO6uyubm1NfMpGKTa0N0Uq4U8DaTzGzuyBmFnpljk
-         CAANyd2O8oYDRcI0arQjf0+LMw6PJpn1wxzDli8DjKNLqRvpDlFpCDCSYQQFetv64Tgc
-         /XKvl5thqQS3ZtDFwJdLRsBxZEsVXMlbooiToBF8Da57LNUmlhd1OEr4I+9GaxVFG8/M
-         CjfyYAqbtEqgga5ggvJvA6Lshu0Zhpk2Z4EU8LMc1h8mHF7Gy4fasCj3wzbiQkoknqK+
-         LbScRTd7aR+dAeSwWmRGhZqxxY4We9bElfdo4g8YZ3lfO6mDX1REVf9H34lKqJ2v7tDa
-         Gm0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751274064; x=1751878864;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w95P+dWG3ZuObvzvYSEnqdj+iXFN6Vo8U0ez9iwhMbM=;
-        b=Jd+vvuY0yX3Z6jsC3YYiw2Ih7yioQmkct071F01cm0yCGXE/Z9N3tAqrD+OLAzu5JJ
-         euGU9cU+AQXCgduM6VdejKWa7RU5yYXtuIcSeqiBKQa4yud7L/ED6YGOtclqyMBcveS8
-         0hbjYhf+Mj/LwcTYo7CPipo7uCE38R2jlgjZcY6gKQOB5M6aEIfod3TNEUIl7Qg3IpAw
-         bAhCjvWQZqw4wfSiHVIRJRjMCd5YwiXzqRlikrOX6V8EtJD8FzOOZVZZDUJHLzz48PMU
-         sf56apVwNca7imowNMbykz5DRPvxrUNvx8Dsz8GZb1zOv+CLfd0Ed9dI5EFaGFu5b3J9
-         ay5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVMnUDvvffGIUp3lFLYJ5GZhdea4ApBVDkeOYoF6jWi8+l2vA7PsYHtIXsE2gdq5XhyMc3zkgMfYJ9V/a4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEB/8rdvNCIr3U2o49J3yS0hkX0M61TYz2OPhNb02jWHWcCdPO
-	bYmY8EiOcWaVvoFro4pqvw0c3z8qzCHFvwo6Jnqlgdt3hOgJxiIcNYwR
-X-Gm-Gg: ASbGncsLW8TI0UaZsGwWq/6vT7QjsHQcjtp6wa6q0pmvxs9aTKwr86CQpij1pg8dsQN
-	sjbzEJZXegJRf+JQclr/0jm07W3F8imCEtzZegbpUsY1k7JXiKLmnRM6eZiH65udoKPz22PULKT
-	BMHSWSWOeYRmoRJ94cyUTQ4PvFyUZJNXwGP4C4KJW2qavYJovlf2Ic6b5LCeFQTP7kUlQjESILm
-	Grpm0+aFsK6KVZXkNlbe+GTHTpPRUBLlfN5KWBIWFoOpPtWjfQHVsXWvDyh7h3hCQW70rNAWrCE
-	7UbgCSnOSNNIP6JkFvZAvbzAbxTZp3oJVvuPHdNmgN4qErQ/IpulX9UODo0=
-X-Google-Smtp-Source: AGHT+IEr8Bta3Dn7/9urhfz6+RJ6qK8vLaQt2JKl5jhIuXqaJyQdCt0DGEZzIL5ZZLcRPHKk0XkHHg==
-X-Received: by 2002:a05:600c:4fce:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-45390259d15mr98930845e9.6.1751274063522;
-        Mon, 30 Jun 2025 02:01:03 -0700 (PDT)
-Received: from fedora ([94.73.34.56])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b516sm9588408f8f.41.2025.06.30.02.01.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:01:03 -0700 (PDT)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: maarten.lankhorst@linux.intel.com
-Cc: mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	lumag@kernel.org,
-	cristian.ciocaltea@collabora.com,
-	gcarlos@disroot.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH 2/2] drm/tests: Fix drm_test_fb_xrgb8888_to_xrgb2101010() on big-endian
-Date: Mon, 30 Jun 2025 11:00:54 +0200
-Message-ID: <20250630090054.353246-2-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250630090054.353246-1-jose.exposito89@gmail.com>
-References: <20250630090054.353246-1-jose.exposito89@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQrkY26H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751274153; x=1782810153;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BNV5dwz5C2CpBAwinG45/8SbEo8XjoILHf3jGxqkzJo=;
+  b=cQrkY26HfNnYyE74V8eW9BnIT+gFPyp4SNn4vx1ka65E793sXjCs5mgP
+   KYafxoSWvQs+ELmxrYxmhL/weEkxgbxMVkApZcZbyCrPQiRCGOXZUvQMk
+   GA1QC7hgpBS1C/ODeD72GcCy4BXYHusj5+acLC/o/hhM1pZhOXA+tWeKx
+   Izz18pgWdE7zePs4iO9WBAKUHsKdY2FnLdxubmWQg7CpdZaiOppRmXLEa
+   IA7un8fuTGJ3FYQ0US983b5KMvTCm0Y+H3BII4ISuJGxJZuMwj93d9KAV
+   W90gMGhdEO5WTlhXNZmDg8WaSoesPSZROVxQyeTcign1eqoPpX+D/4lXa
+   A==;
+X-CSE-ConnectionGUID: YlGnDDu1TYO5Cl3fQKvxOQ==
+X-CSE-MsgGUID: o/8kh/UTTv2CUnsRUrYKqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53368633"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53368633"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:02:33 -0700
+X-CSE-ConnectionGUID: Oe+CdnWdR4CXE9wxPznqgg==
+X-CSE-MsgGUID: WkXbaZDyRV6b1jtMrRfagw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157946454"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:02:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uWAPC-0000000BFs4-3Snj;
+	Mon, 30 Jun 2025 12:02:26 +0300
+Date: Mon, 30 Jun 2025 12:02:26 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v2 05/11] iio: adc: ad_sigma_delta: audit included headers
+Message-ID: <aGJSoqDxkDQcJ1YE@smile.fi.intel.com>
+References: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-0-f49c55599113@baylibre.com>
+ <20250627-iio-adc-ad7173-add-spi-offload-support-v2-5-f49c55599113@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-iio-adc-ad7173-add-spi-offload-support-v2-5-f49c55599113@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Fix failures on big-endian architectures on tests cases
-single_pixel_source_buffer, single_pixel_clip_rectangle,
-well_known_colors and destination_pitch.
+On Fri, Jun 27, 2025 at 06:40:01PM -0500, David Lechner wrote:
+> Drop linux/iio/sysfs.h since it is unused and replace linux/kernel.h
+> with more explicit headers. There are a couple of other headers added
+> weren't covered by kernel.h, like linux/gpio/consumer.h that are added
+> since the module makes used of those APIs as well.
 
-Fixes: 15bda1f8de5d ("drm/tests: Add calls to drm_fb_blit() on supported format conversion tests")
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- drivers/gpu/drm/tests/drm_format_helper_test.c | 1 +
- 1 file changed, 1 insertion(+)
+s/used/use/
 
-diff --git a/drivers/gpu/drm/tests/drm_format_helper_test.c b/drivers/gpu/drm/tests/drm_format_helper_test.c
-index 86829e1cb7f0..981dada8f3a8 100644
---- a/drivers/gpu/drm/tests/drm_format_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_format_helper_test.c
-@@ -1040,6 +1040,7 @@ static void drm_test_fb_xrgb8888_to_xrgb2101010(struct kunit *test)
- 	memset(buf, 0, dst_size);
- 
- 	drm_fb_xrgb8888_to_xrgb2101010(&dst, dst_pitch, &src, &fb, &params->clip, &fmtcnv_state);
-+	buf = le32buf_to_cpu(test, (__force const __le32 *)buf, dst_size / sizeof(u32));
- 	KUNIT_EXPECT_MEMEQ(test, buf, result->expected, dst_size);
- }
- 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+
+...
+
+>  #include <linux/align.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/bitops.h>
+
+bitops.h is implied by bitmap.h, but I'm fine with this being left untouched.
+
+> +#include <linux/cleanup.h>
+> +#include <linux/completion.h>
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+> +#include <linux/export.h>
+> +#include <linux/find.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+> -#include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/spi/spi.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/string.h>
+>  #include <linux/types.h>
+>  #include <linux/unaligned.h>
+
 -- 
-2.50.0
+With Best Regards,
+Andy Shevchenko
+
 
