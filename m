@@ -1,57 +1,57 @@
-Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58F32BDC02
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37080291891
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301086; cv=none; b=Qidc6DKziWDogPra/rFL+fnp4zj1BqK6qGXRpg7c9eRW8F4FWq7CH0vcwz07fpG4rqzqvEedkUQqSuEsDg+x6smdM1a7hLS8OFYy+E68HSoLU8jNbbtioARfjxoSwk8Kt95/NBipXX3VEEP9m1gSCxuWit1l4CFCimF9wyqnGf4=
+	t=1751301090; cv=none; b=RbgOvRgkI0pkNDiVo4r/UK/ZihvpTRkBZ3iQNnf/9PzkamXg5jwX1Xw+b+0s53sk4NH6WvYWWkZoBGlHW1Dxgkj2l6bTdQJw1n+26tFSV9SnM2g5VJHS0dyKSzS1XRbL5hl7mO1NzE9PmxBkxM17wZd/jtaSHV+npPRMr6ZUPm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301086; c=relaxed/simple;
-	bh=+g9stw2MQAntOJZ+kh1FXeyCowowHJKXq/UCsDHjxnY=;
+	s=arc-20240116; t=1751301090; c=relaxed/simple;
+	bh=OnXbXgwjkX4hOiWlzrqKp2yfC7i3LXoOw+vRz6PF6+M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=pq2qGw0DuHaepHenNQrnBaLbCXUBNBmE3SuYUgZjFbF2NZPQbT5U1F7LKoKW75lSL5cvbIKhILS0SaESrgSZkkgh3s91AutLmAa1bahIK86sHcYGHUZJ7cAJ94hkAQuJR2V6yqTY9abNNvImjVvIxFiaD105TucmIIu7oEBHXis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eHTxiPsi; arc=none smtp.client-ip=209.85.161.74
+	 To:Content-Type; b=Y/9fFT2CMz4mMdDX9/JdnHBcwJPPXBRpOt/7FIDovj7u/SvE68PgbjFsSORWF7oY2HNy5ix3r36AZ5DeB86tQIBHJ/D7DGpnkuc9dIR9D5/kUPsej3GscX4e2cRsVXC9f7/iIJUihldP7yZ0jENb8TtS8eF6cWb+USUAesisoDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sPsKm2NU; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHTxiPsi"
-Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-60be0456405so287204eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sPsKm2NU"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31e1ef8890so1620918a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751301084; x=1751905884; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1751301087; x=1751905887; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=89HvY4zB6UR7umA8p+Rh7NZXEX65+JPdYsN7WZgrzSo=;
-        b=eHTxiPsiu0QFmYoajKRI09pVmcGsNxnJ415aUAXEfrBlQyhYiVt+x0RP+4w6ymbT26
-         PgKcTCGrPXzqEa3NmcaeNh+nK7eoHz/PHmQ5k4NH/B+tHZydOu5rCLJ7Fs3a/tOjohvf
-         6iTiygcHkgD0dDqZMx1gdslu//dMREzFa8zzFAXYorfJvdspwz2kiT9B0XcMdd7nzdy4
-         DRSP1GAyQjKjCs1d+hiaqZ6NHBT5P8tERzYIBwbiJMJJi91ltA3Z3CMn7+UWrpnztjIl
-         QzDeMz4293Ad/ZLmjoBD8mZAy1yXBhT3/pXztAI8Lryx3CW3lm8U+ZWt/bqRG4XsXUyR
-         R1qQ==
+        bh=W1gZcEjghHOCHhsFybicQ3hDyD+e4+regBqFqmIpmWI=;
+        b=sPsKm2NUZnmxyM/fzzzW1/N+xxlHxukc2qpf+CyWm7R+hEkbzBuUJOFz1xNPkr/w3F
+         iFckiAnlVEvwNDjIdkL9jMRP/4sp0zXdNCiqEMz617gvsrJFIz6IF2IvLt3nFUo3+prJ
+         JcGbs/pgA7hjRu4+MJO5vm0YeDwp3I7mvvskKayOVONziuymqNV3Wh2vh6gsUjgjsBRP
+         mYsCFK+p+WMRzKVy74+4Ix/FZSpiqZbITFcjjbtXAjVkZ7gH/wVJLsS6FZB8h0/DlkIJ
+         D0PEJFdNUbcPpbYDvVSTmUBDwrbY8iitq/Es7ik+Xh4tGWbs/yJ9xpTQ1OTqH+rdbPb+
+         GuPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751301084; x=1751905884;
+        d=1e100.net; s=20230601; t=1751301087; x=1751905887;
         h=content-transfer-encoding:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=89HvY4zB6UR7umA8p+Rh7NZXEX65+JPdYsN7WZgrzSo=;
-        b=AbxYtuHxPiPO9k15vJfis4RX+vsAqupnopwVPmTYfmC0m4MovqHU4LByJDwZ+5DcQA
-         MJp/EDoKqhSF2aH2f1Zl5SUJI2+aK6uL2zWgtPV9Oyl4km7Kc++hAy4q0OyvfxWBr/pY
-         26eV/2IdGaTkTxyARFp3qbaDe2BkEv7PaGHOzkfP7otAZiSud+eNeGPMAa5S+45z2N8Q
-         qFMSTcnql4eDqQ6uO/PNAJZYeF+YvBb3t0S3J44WOQHbFyQsGGyY3OPJiOSMC0Sk4KFa
-         FYd1CEZfFOB5QJquiY2AXBuinWAZ/yX7UBQQR74TKUppjLqkyFI6OCy/2cQcbkreXj2/
-         cmgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRzBh4075Y9zDoSiotHJKy31hcKFTU//JtRrDNGR1zckqzmsW06f0j5dw9TtfVW2fQ+5GIp4wxwX3Biyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweS3RkWgIT+o5FR6l8aFCJZqFkFPz2S19iZyrRgm/fBOlCUTPl
-	tzbfPrOBP9MKH/BBfgiOd4h3iIt+vVtqFUpXAWM+DAPAacuE4DsDlp8FRRDjScM/z9oq38e4pwI
-	jyzw/6tX1WA==
-X-Google-Smtp-Source: AGHT+IHbTmD+XGkF0K8uF87y5mq4GAcaJW22jwMMS5lrgEOygIyFtH9sIX3Gst+OYWK1jKZDblQVydg3YX3k
-X-Received: from oabqj21.prod.google.com ([2002:a05:6870:2f15:b0:2c1:c983:48c1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:3929:b0:2c2:2f08:5e5b
- with SMTP id 586e51a60fabf-2efed4d9536mr10162278fac.13.1751301083759; Mon, 30
- Jun 2025 09:31:23 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:30:55 -0700
+        bh=W1gZcEjghHOCHhsFybicQ3hDyD+e4+regBqFqmIpmWI=;
+        b=J4ArgeZpJM9dDjkikd+LKM+JOdOdyvEa9dckLOFTG4uZuGcKz+nVbril6ucSjED9VL
+         xTXjgZye5N9aUBTbkj2+1SJlFxVI8jT7X31AXsCS9Y00x3I8bXW9DeKlU8gzTowhlXa0
+         hgqI9n4j/Dpp0+PmGCdLcniAmB4czdfAOXV6Jd2SBL4eEDJsCMZplTeo9ybx+h1brLoY
+         ++CQmySyDlrzZFrqru8kmGstzUJ4CqKQHKW8ko4/fSg/Oc1JI3zHSuHXT8RVKAr0iuEy
+         Ze7iNIMohQotcXfNDPReUqbfRPDF4y0ewwSiwiQzAb+S55v4ElpzBaVIHAFsLfa/nT38
+         1uXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOSApLjWt4cktX7elqbUHtN50Exs3l45aR5Pv/SOIlfalql8qDbKGOMtK7NxIxDH2SLG+pcWGG55PZYrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW9v2QqQ0RQQTBlzezfGWpzfLuSctlzuKWMOQ/yqsbPOhCBQiw
+	mfj0za4JwYpaF7ytBsRnicEjxikMCkbE5oFXQy094p0KDOSBaQAt2FpErY1EjWWNcNbdt0HjIOm
+	dEM3RjM2XUw==
+X-Google-Smtp-Source: AGHT+IFfHnXKiDcDqf5beuBIAYEWrYfQK4rHMlX1LZaxcuNWvp+hs4mHod1JxjmmmLPEPSnAO72NrTT808Kk
+X-Received: from pfhp11.prod.google.com ([2002:a05:6a00:a0b:b0:746:2a27:3025])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9006:b0:21a:d1fe:9e82
+ with SMTP id adf61e73a8af0-220a16be3b8mr21520870637.30.1751301087567; Mon, 30
+ Jun 2025 09:31:27 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:30:57 -0700
 In-Reply-To: <20250630163101.1920170-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250630163101.1920170-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250630163101.1920170-11-irogers@google.com>
-Subject: [PATCH v2 10/15] perf vendor events: Update MeteorLake events
+Message-ID: <20250630163101.1920170-13-irogers@google.com>
+Subject: [PATCH v2 12/15] perf vendor events: Update SapphireRapids events
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,181 +76,42 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.13 to v1.14.
+Update events from v1.25 to v1.28.
 
-Bring in the event updates v1.14:
-https://github.com/intel/perfmon/commit/6c53969b8d1a83afe6ae90149c8dd4ee416=
-027ef
+Bring in the event updates v1.28:
+https://github.com/intel/perfmon/commit/990bfdff270adf08d408534d6d66ba47ec6=
+adb34
+https://github.com/intel/perfmon/commit/b7b4d7f18cf9a893438777a571abc7ecc08=
+7368b
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- .../pmu-events/arch/x86/meteorlake/cache.json |  2 +-
- .../arch/x86/meteorlake/frontend.json         | 72 +++++++++++++++++++
- .../arch/x86/meteorlake/pipeline.json         |  2 +-
- 4 files changed, 75 insertions(+), 3 deletions(-)
+ .../arch/x86/sapphirerapids/pipeline.json     |  2 +-
+ .../arch/x86/sapphirerapids/uncore-io.json    | 12 +++++++++++
+ .../x86/sapphirerapids/uncore-memory.json     | 20 +++++++++++++++++++
+ 4 files changed, 34 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 5f27b3700c3c..1185ea93b44a 100644
+index 252382751fa5..13eaed97b4ac 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -23,7 +23,7 @@ GenuineIntel-6-3E,v24,ivytown,core
- GenuineIntel-6-2D,v24,jaketown,core
- GenuineIntel-6-(57|85),v16,knightslanding,core
- GenuineIntel-6-BD,v1.14,lunarlake,core
--GenuineIntel-6-(AA|AC|B5),v1.13,meteorlake,core
-+GenuineIntel-6-(AA|AC|B5),v1.14,meteorlake,core
- GenuineIntel-6-1[AEF],v4,nehalemep,core
- GenuineIntel-6-2E,v4,nehalemex,core
+@@ -29,7 +29,7 @@ GenuineIntel-6-2E,v4,nehalemex,core
+ GenuineIntel-6-CC,v1.00,pantherlake,core
  GenuineIntel-6-A7,v1.04,rocketlake,core
-diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json b/tools/p=
-erf/pmu-events/arch/x86/meteorlake/cache.json
-index c980bbee6146..82b115183924 100644
---- a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
-@@ -231,7 +231,7 @@
-         "Unit": "cpu_core"
-     },
-     {
--        "BriefDescription": "Counts the number of L2 Cache Accesses that m=
-iss the L2 and get BBL reject  short and long rejects (includes those count=
-ed in L2_reject_XQ.any), per core event",
-+        "BriefDescription": "Counts the number of L2 Cache Accesses that m=
-iss the L2 and get BBL reject  short and long rejects, per core event",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "EventCode": "0x24",
-         "EventName": "L2_REQUEST.REJECTS",
-diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json b/tool=
-s/perf/pmu-events/arch/x86/meteorlake/frontend.json
-index 509ce68c2ea6..82727022efb6 100644
---- a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
-@@ -49,6 +49,14 @@
-         "UMask": "0x2",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired tha=
-t were tagged with having preceded with frontend bound behavior",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ALL",
-+        "SampleAfterValue": "1000003",
-+        "Unit": "cpu_atom"
-+    },
-     {
-         "BriefDescription": "Retired ANT branches",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -73,6 +81,43 @@
-         "UMask": "0x3",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that=
- are tagged after a branch instruction causes bubbles/empty issue slots due=
- to a baclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_DETECT",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that=
- are tagged after a branch instruction causes bubbles /empty issue slots du=
-e to a btclear",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.BRANCH_RESTEER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x40",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired tha=
-t were tagged following an ms flow due to the bubble/wasted issue slot from=
- exiting long ms flow",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.CISC",
-+        "PublicDescription": "Counts the number of  instructions retired t=
-hat were tagged following an ms flow due to the bubble/wasted issue slot fr=
-om exiting long ms flow",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired tha=
-t were tagged every cycle the decoder is unable to send 3 uops per cycle.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.DECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x8",
-+        "Unit": "cpu_atom"
-+    },
-     {
-         "BriefDescription": "Retired Instructions who experienced a critic=
-al DSB miss.",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -85,6 +130,15 @@
-         "UMask": "0x3",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instructions retired tha=
-t were tagged because empty issue slots were seen before the uop due to ica=
-che miss",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.ICACHE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x20",
-+        "Unit": "cpu_atom"
-+    },
-     {
-         "BriefDescription": "Counts the number of instructions retired tha=
-t were tagged because empty issue slots were seen before the uop due to ITL=
-B miss",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -286,6 +340,24 @@
-         "UMask": "0x3",
-         "Unit": "cpu_core"
-     },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired tagg=
-ed after a wasted issue slot if none of the previous events occurred",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.OTHER",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x80",
-+        "Unit": "cpu_atom"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of instruction retired that=
- are tagged after a branch instruction causes bubbles/empty issue slots due=
- to a predecode wrong.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xc6",
-+        "EventName": "FRONTEND_RETIRED.PREDECODE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x4",
-+        "Unit": "cpu_atom"
-+    },
-     {
-         "BriefDescription": "Retired Instructions who experienced STLB (2n=
-d level TLB) true miss.",
-         "Counter": "0,1,2,3,4,5,6,7",
-diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-index a833d6f53d0e..22b25708e799 100644
---- a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
-@@ -1076,7 +1076,7 @@
+ GenuineIntel-6-2A,v19,sandybridge,core
+-GenuineIntel-6-8F,v1.25,sapphirerapids,core
++GenuineIntel-6-8F,v1.28,sapphirerapids,core
+ GenuineIntel-6-AF,v1.09,sierraforest,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json b/=
+tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+index 00b05a77c289..48bec483b49a 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/pipeline.json
+@@ -684,7 +684,7 @@
          "Counter": "0,1,2,3",
          "EventCode": "0x4c",
          "EventName": "LOAD_HIT_PREFETCH.SWPF",
@@ -265,8 +126,83 @@ also be incremented by some lock instructions. So it should only be used wi=
 th profiling so that the locks can be excluded by ASM (Assembly File) inspe=
 ction of the nearby instructions. Available PDIST counters: 0",
          "SampleAfterValue": "100003",
+         "UMask": "0x1"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json b=
+/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
+index aab082ff9402..dac7e6c50f31 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
+@@ -1901,6 +1901,18 @@
+         "UMask": "0x4",
+         "Unit": "IIO"
+     },
++    {
++        "BriefDescription": "Posted requests sent by the integrated IO (II=
+O) controller to the Ubox, useful for counting message signaled interrupts =
+(MSI).",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x8e",
++        "EventName": "UNC_IIO_NUM_REQ_OF_CPU_BY_TGT.UBOX_POSTED",
++        "Experimental": "1",
++        "FCMask": "0x01",
++        "PerPkg": "1",
++        "PortMask": "0x00FF",
++        "UMask": "0x4",
++        "Unit": "IIO"
++    },
+     {
+         "BriefDescription": "ITC address map 1",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-memory.js=
+on b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-memory.json
+index aa06088dd26f..68be01dad7c9 100644
+--- a/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-memory.json
+@@ -2145,6 +2145,16 @@
          "UMask": "0x1",
-         "Unit": "cpu_core"
+         "Unit": "MCHBM"
+     },
++    {
++        "BriefDescription": "ECC Correctable Errors",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x09",
++        "EventName": "UNC_MCHBM_ECC_CORRECTABLE_ERRORS",
++        "Experimental": "1",
++        "PerPkg": "1",
++        "PublicDescription": "ECC Correctable Errors.  Counts the number o=
+f ECC errors detected and corrected by the iMC on this channel.  This count=
+er is only useful with ECC devices.  This count will increment one time for=
+ each correction regardless of the number of bits corrected.  The iMC can c=
+orrect up to 4 bit errors in independent channel mode and 8 bit errors in l=
+ockstep mode.",
++        "Unit": "MCHBM"
++    },
+     {
+         "BriefDescription": "HBM Precharge All Commands",
+         "Counter": "0,1,2,3",
+@@ -2759,6 +2769,16 @@
+         "UMask": "0x3",
+         "Unit": "iMC"
+     },
++    {
++        "BriefDescription": "ECC Correctable Errors",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x09",
++        "EventName": "UNC_M_ECC_CORRECTABLE_ERRORS",
++        "Experimental": "1",
++        "PerPkg": "1",
++        "PublicDescription": "ECC Correctable Errors : Counts the number o=
+f ECC errors detected and corrected by the iMC on this channel.  This count=
+er is only useful with ECC DRAM devices.  This count will increment one tim=
+e for each correction regardless of the number of bits corrected.  The iMC =
+can correct up to 4 bit errors in independent channel mode and 8 bit errors=
+ in lockstep mode.",
++        "Unit": "iMC"
++    },
+     {
+         "BriefDescription": "IMC Clockticks at HCLK frequency",
+         "Counter": "0,1,2,3",
 --=20
 2.50.0.727.gbf7dc18ff4-goog
 
