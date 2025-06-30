@@ -1,137 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872C53D6F;
-	Mon, 30 Jun 2025 03:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0231A23A5
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751254634; cv=none; b=gS87/6k1NZh27Unwgwho2YeXDGuAzrxpMGDu8D+IYkzVBvtembniVxQSmOxZc7t5Mnipg5Q8ZNf/pGA+pPrBFjwNt+wkGp3U4xkqCfzigx/YMLz4Broun8OldngWBQEnmGbBBGNfUJe5iwywmDCgLeM80JWXTj1uUCPvpa2eApI=
+	t=1751254639; cv=none; b=vEYDpwv4oWD+e5FaSgAxf2w5psU1LUmLjEKKxjYhHZv7wTgy9IdG7BIPjC/1tINGUIQXJPImZZJ01rqkGSA+lRCy2Rfc+cHMBnsIBkEws2uXXqhkgTk9Iifjp/CKFOXylshR5z/fqdKfX9/Dk7whpYJcS9byGsbSmriMTuKnsn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751254634; c=relaxed/simple;
-	bh=tBBO/xetKW3+8xdOXZEHVQmU70bwKwSu2UKBd7Fxjm0=;
+	s=arc-20240116; t=1751254639; c=relaxed/simple;
+	bh=nHAXEaVkqOjEIQ+g+zG5hflRIdiMhOy/cbZJ03K4CfI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tzHqq13r2vu4i1hoqYdZgJidwgjkNO3lmbI18egUoRUYUAhpITkbgnyqpt7RPKyBBX5Ap1rHvlAOZ+Tjx13bHvwt9GK+B/hVyDOSjyuNytfN1IJymCw7XHZeqVQr+UiqDSmABKRNZ949eGz18nLasvo0s6i4AObabg43v3NKb4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWlEoxIu; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=mngb77joDdad8K7VINVTfciDcGh8lHSVH1ZQ0Q5agDVQEcueywkWvUQBK/AurOLmV9eEPsaOeqckDHXdwIle0sdDc6H80+Ipx4muuQ9dpg7DUE2EyCZCcmsh73YHv++hF06RYcjxqPxaF3nC0wjXh6kytUGv5esJw3w+r9GMWUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYGg0tQK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWlEoxIu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BFFC4CEE3;
-	Mon, 30 Jun 2025 03:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751254634;
-	bh=tBBO/xetKW3+8xdOXZEHVQmU70bwKwSu2UKBd7Fxjm0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RWlEoxIulUkJQcCLFCQFOBENG9ri2l8jriXC2ope8+7he1ZsycDyeK13oP/D6TmGm
-	 qC0TvQPffXkAdv8f3DCHM8XZpjTn42OmcjFW90WTUTRuuxpApWeI1VjLmazXUn1aox
-	 ncaX6CtfX1CS4NtjNpFPWJX1/uZorwU9boZmOjNsIIhYpE5AXIf7J5WKlFnPK4tK/q
-	 FCF5Pc2BRNdwBT2d1nyFWkeYA/p1Byq8/doORdo6Vky0+aDisbzudUEAF8s5DgYA32
-	 dfMJxmCCO2pKbl8llUAxQlpjeEbYO6S50GX9zx17TUYu0dy+8/DGYtY8FCIreMq1HT
-	 xQXOI8Euje0/g==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso1850670e87.0;
-        Sun, 29 Jun 2025 20:37:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWPfo6FHmLK5X2OFZpuSSRIISPpVkejfuLllqFD98L2ZEyjsSLauYreQXOefxDLwIl6w2wyJZGbf9IHp94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwriX29eHRcTzqyfupabtMSQdSX70uGq56N5lOdBU24V8EkTGhQ
-	j8ZEgGBqFt+83etIdUww12nPI0ejJ1LuyW+KQkCJ99tGU/IzPihmSlZZuhrP+ObQIp/x51b8bvI
-	ifB4GRHkpkVS0TJk5LSdudD/PmrdhQEo=
-X-Google-Smtp-Source: AGHT+IGAIwtzmHNa7XNzytGab0LyD1KTbFoV0ASGIxgboBguZf4k0T5z7vCGX4VvY00rLDP+knL/2+4nT1AXCFI9FCc=
-X-Received: by 2002:a05:6512:4021:b0:553:aed7:9807 with SMTP id
- 2adb3069b0e04-5550b81135cmr3311832e87.9.1751254632730; Sun, 29 Jun 2025
- 20:37:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYGg0tQK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751254634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rkwpDUZl+sZWek7ZXNsWkAYIEZO6e0RDLuiHFNjssRY=;
+	b=RYGg0tQKTjIvfobg5dm0HXExJlDjuj+fKEfubu5GPgEfSt/KFmUKCYCffOBEetM9htAPtb
+	1xaQSUTCbzdZLVLJ/im3smtEV49pqQPIUEphwGDa4rlQE12WbCkPbpKZNQgCdG/JmZz9Ia
+	eA5cMA4SvOwGArjR13HK/Me/+CEdXms=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-326-CtBI9Q12NGO7wYL5LVqQzw-1; Sun, 29 Jun 2025 23:37:12 -0400
+X-MC-Unique: CtBI9Q12NGO7wYL5LVqQzw-1
+X-Mimecast-MFC-AGG-ID: CtBI9Q12NGO7wYL5LVqQzw_1751254630
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b34fa832869so859472a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:37:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751254630; x=1751859430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rkwpDUZl+sZWek7ZXNsWkAYIEZO6e0RDLuiHFNjssRY=;
+        b=rsIDS6bbo0mMZxIpNz2BLlE1otnZrxln9Lw0ti37fMgvhg9G1/t2gFTLb11Gn2w7t6
+         HTypvWDBkfAAo+IVbH0iiJi24ckO8B6zWXQHgEbV29NrYwqio30MLLaq0zfXZiLjnXFJ
+         Yj0FeyjPE9UaVQ1iDXkqCIkyaCt+WBBAZtz5bznmWH4Ilqo9GY9tCGaoCkVMXippVm52
+         k5Kc5tbHAK8LuS7mgNzUYQsGGFtEkstxXlfL31HBmzSl3r0Ctmu3ndJlqnoW811XPqSA
+         2TExe6pfxWNyzomDUWSm3SDNYF8NCqxbz5U4isdecOAnaSAQSSk7QQc4qGq2rOGgqhms
+         ZOpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLc7r3ETvXtT7o5qekgNND92f7rGwpVqFGMSp/xEGbU+9IObartNTJZbMROPN/NVxnx1HJRRH/8fGrgd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyckkvRbd4xuxcTCSep0pclA14oclShu3FtkJBJ+0ELYUMAMdDB
+	ksQwjWaBw4hWQR8ryobxnvEV8F/S6b5NJhe3D0voGmffaioHQllEzSsJR3gQ3U1KrNBqvKWknJz
+	IG/SrSDjZaoyHz4OTAMpIafHWcUpS3KqqmBk2/xeSwVxnRSVm5+0YmLpEx+OtZ1roLXlEx5rJH1
+	4J37dkpJKRSJP/I9Xwn0Ym49ulebCjYaDV1jWWyjnW
+X-Gm-Gg: ASbGnct1dWWRAw1X/gCGARM5995/4GcyrUrjwHUAKjantXkKnOTXdYysf9g6lMJ9xLV
+	gkA9hNVQdCVBBtyb5e/hm/Vtsz+WGBI+UGnPZQHl4eFPQvYlhhJpcwKnpuTFwCJfHuEP6BsedjL
+	Ps8snB
+X-Received: by 2002:a17:90b:380f:b0:313:f995:91cc with SMTP id 98e67ed59e1d1-316d69a9ebamr23854601a91.2.1751254630218;
+        Sun, 29 Jun 2025 20:37:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFC/PxeY2zPgmoqHLa5NYsPNWTtefEChjOO7AtX/7ybsjX+NZLbIw2wSOZC+yvf746Z7vQ9ZeDBKqdlVvccnBo=
+X-Received: by 2002:a17:90b:380f:b0:313:f995:91cc with SMTP id
+ 98e67ed59e1d1-316d69a9ebamr23854562a91.2.1751254629758; Sun, 29 Jun 2025
+ 20:37:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-3-masahiroy@kernel.org> <85eadc3b-391a-4fd1-a4b7-2e99de1ee6da@infradead.org>
-In-Reply-To: <85eadc3b-391a-4fd1-a4b7-2e99de1ee6da@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 30 Jun 2025 12:36:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQo5DKLdrn53yW3A0WnKxfyxJxyrxt8bDTVJvTM8kMyRw@mail.gmail.com>
-X-Gm-Features: Ac12FXwgsAv7vq418VjJjyocyqI2rEvOR9x782fQBvcsd_ST-4eji0qWgz9lW_Y
-Message-ID: <CAK7LNAQo5DKLdrn53yW3A0WnKxfyxJxyrxt8bDTVJvTM8kMyRw@mail.gmail.com>
-Subject: Re: [PATCH 02/66] kconfig: qconf: do not show checkbox icon for choice
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250626021445.49068-1-jasowang@redhat.com> <20250626021445.49068-2-jasowang@redhat.com>
+ <20250627174825.667e1e5f@kernel.org>
+In-Reply-To: <20250627174825.667e1e5f@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 30 Jun 2025 11:36:56 +0800
+X-Gm-Features: Ac12FXwSsmp5J2RbQVOjDCPt8sIK9w2DQyUQ567Xil-xT9G4D8CIR57TUiVmXz8
+Message-ID: <CACGkMEu6r66Jg3--eOCyMdd1WqKeP9Jvfv+DFmWk07oTJUKZyQ@mail.gmail.com>
+Subject: Re: [PATCH V2 net-next 2/2] vhost-net: reduce one userspace copy when
+ building XDP buff
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: willemdebruijn.kernel@gmail.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, mst@redhat.com, 
+	eperezma@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	Willem de Bruijn <willemb@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 5:15=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
+On Sat, Jun 28, 2025 at 8:48=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
->
->
-> On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> > When you select "Show All Options" or "Show Prompt Options", choice
-> > entries display a check box icon, but this has no point because
-> > choice is always y since commit
->
->                      since commit _____________________.
-
-
-since commit fde192511bdb ("kconfig: remove tristate choice support").
-
-
-I will fix it.
-Thanks.
-
-
-
+> On Thu, 26 Jun 2025 10:14:45 +0800 Jason Wang wrote:
+> > --- a/drivers/vhost/net.c
+> > +++ b/drivers/vhost/net.c
+> > @@ -690,13 +690,13 @@ static int vhost_net_build_xdp(struct vhost_net_v=
+irtqueue *nvq,
+> >       if (unlikely(!buf))
+> >               return -ENOMEM;
 > >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  scripts/kconfig/qconf.cc | 11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> > index eaa465b0ccf9..546738a5c3b1 100644
-> > --- a/scripts/kconfig/qconf.cc
-> > +++ b/scripts/kconfig/qconf.cc
-> > @@ -92,7 +92,6 @@ void ConfigItem::updateMenu(void)
-> >  {
-> >       ConfigList* list;
-> >       struct symbol* sym;
-> > -     struct property *prop;
-> >       QString prompt;
-> >       int type;
-> >       tristate expr;
-> > @@ -105,11 +104,10 @@ void ConfigItem::updateMenu(void)
+> > -     copied =3D copy_from_iter(buf, sock_hlen, from);
+> > -     if (copied !=3D sock_hlen) {
+> > +     copied =3D copy_from_iter(buf + pad - sock_hlen, len, from);
+> > +     if (copied !=3D len) {
+> >               ret =3D -EFAULT;
+> >               goto err;
 > >       }
 > >
-> >       sym =3D menu->sym;
-> > -     prop =3D menu->prompt;
-> >       prompt =3D menu_get_prompt(menu);
+> > -     gso =3D buf;
+> > +     gso =3D buf + pad - sock_hlen;
 > >
-> > -     if (prop) switch (prop->type) {
-> > -     case P_MENU:
-> > +     switch (menu->type) {
-> > +     case M_MENU:
-> >               if (list->mode =3D=3D singleMode) {
-> >                       /* a menuconfig entry is displayed differently
-> >                        * depending whether it's at the view root or a c=
-hild.
-> > @@ -123,10 +121,13 @@ void ConfigItem::updateMenu(void)
-> >                       setIcon(promptColIdx, QIcon());
+> >       if (!sock_hlen)
+> >               memset(buf, 0, pad);
+> > @@ -715,12 +715,8 @@ static int vhost_net_build_xdp(struct vhost_net_vi=
+rtqueue *nvq,
 > >               }
-> >               goto set_prompt;
-> > -     case P_COMMENT:
-> > +     case M_COMMENT:
-> >               setIcon(promptColIdx, QIcon());
-> >               prompt =3D "*** " + prompt + " ***";
-> >               goto set_prompt;
-> > +     case M_CHOICE:
-> > +             setIcon(promptColIdx, QIcon());
-> > +             goto set_prompt;
-> >       default:
-> >               ;
 > >       }
+> >
+> > -     len -=3D sock_hlen;
 >
+> we used to adjust @len here, now we don't..
+>
+> > -     copied =3D copy_from_iter(buf + pad, len, from);
+> > -     if (copied !=3D len) {
+> > -             ret =3D -EFAULT;
+> > -             goto err;
+> > -     }
+> > +     /* pad contains sock_hlen */
+> > +     memcpy(buf, buf + pad - sock_hlen, sock_hlen);
+> >
+> >       xdp_init_buff(xdp, buflen, NULL);
+> >       xdp_prepare_buff(xdp, buf, pad, len, true);
+>
+> .. yet we still use len as the packet size here.
+
+Exactly, it should be len - sock_hlen here.
+
+Thanks
+
 > --
-> ~Randy
+> pw-bot: cr
 >
 
-
---=20
-Best Regards
-Masahiro Yamada
