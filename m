@@ -1,59 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B484C251795
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9721A76DE;
+	Mon, 30 Jun 2025 10:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278351; cv=none; b=JewBpzIQWNzUeEAu6EuVJoG7pD9fFk0/z0k6FPUB37hUGL9nmo2j1SOBVml93Oz8GBZ3kZxYq1wZ8+s0jZEq/v327UBsluGvrY/zMuT7ASnCZ+S0vtZB8lcIAikZuH3jnATHUyjUhpzNvRT9S14bCEuDhWsIoOk9n9/9Kb6VO48=
+	t=1751278521; cv=none; b=AHOxwNQdOaYgAH9ZKNGywN2nRWhpkIWi30bNCI2QGPY+TIdOxapn3go+fT2FuRGg1CY1QW6U1dWc00Ue+VO7IeHmRPv0ClEDPJyzg1iwFItmB+NKI1OR4siJjg6oIL91LLNMPFQO7M7J/hIe3VQ3UF7SATdbf1+nY6jsVG/y/uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278351; c=relaxed/simple;
-	bh=MIPpdlBA+KiSQT0j9EKjsyMLybXln93qbbOkBRiJmGs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NPYc5J7th0f00EjkFaR4qWGyM417lF5tyLidCr65z9i7yEUDR65873v88h4vlLAwPfgchv8ym9z9iIrXWo93QtcXet917Jf2zH2kskkFBOH+f0blp6IyKngwuyodpryfx6lviFfDXbCpe9Dz3kDFJBlLXRTcMTVVVQXjnLa9nko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VTKmyAQm; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VTKmyAQm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751278349; x=1782814349;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MIPpdlBA+KiSQT0j9EKjsyMLybXln93qbbOkBRiJmGs=;
-  b=VTKmyAQm1sKmVn8Y0JsdeyVeTcME4VwVaAWW/sW95p02IFn25LliWIde
-   BGW3e8NFj7wW2SctvElpkNBAcuK4ngKIjCRIbgESL4Rb5MbxrNqs9Wnso
-   U0KjYoYSHzevYZE+6soFFgascn0IPzUVxyFpbZCEs3Q4yMLYD896Bnq3V
-   E0kGFhJh4SMh0qdjq3X+XPAVNzF+HI7g0ijyk0yMKKeivGdSxoiZxt3gX
-   rckTJ5k6vwn3Osssz1qi+eC5JidhFf4YEE+OMeIPvpMJ63GTfB0Irye/t
-   LSzRg7Jp1CCODISOitiPIFocTQoQCI9mDqB8jGhZ7lBlTn1ZBzIF/L4BM
-   w==;
-X-CSE-ConnectionGUID: S2KYnXVDQJ+WEW7Nc+omSA==
-X-CSE-MsgGUID: ooL1KPrLT/e6SnA6QAgQqw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="64852279"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="64852279"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:12:29 -0700
-X-CSE-ConnectionGUID: rksgmMnHSV6KRUI1kp0AHA==
-X-CSE-MsgGUID: 4w+3nGLHR4atCuOGlGCr2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153723902"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 30 Jun 2025 03:12:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 23B3F3AB; Mon, 30 Jun 2025 13:12:26 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/chrome: chromeos_laptop - Remove duplicate check
-Date: Mon, 30 Jun 2025 13:12:25 +0300
-Message-ID: <20250630101225.1855431-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1751278521; c=relaxed/simple;
+	bh=y/4YjTLWuIy0IC8lYRZeKfAEdR7HI1gNocKw3PUC0G4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQY791xGa1q8vYfRYl7t+vlrxxPEweusCgbwgakkbXXBij6CNi6QwX+6F+FI8z1UTavOdvWs+To2ecAJDlvhOUujsxOyZVDT6ff6pVlM7fIojS4e1h86qwXUPy8o1rzuUyAjsv/WNFB9aXnbi8c2vvJ/6/OcC2vEsLdkHgHYEJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bW28z4SQ0z9syT;
+	Mon, 30 Jun 2025 12:15:15 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	mcgrof@kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Cc: Baokun Li <libaokun1@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	Zhang Yi <yi.zhang@huawei.com>,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH] fs/libfs: don't assume blocksize <= PAGE_SIZE in generic_check_addressable
+Date: Mon, 30 Jun 2025 12:15:09 +0200
+Message-ID: <20250630101509.212291-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,28 +42,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fwnode_remove_software_node() is aware of invalid input,
-no need to perform checks in the caller.
+Since [1], it is possible for filesystems to have blocksize > PAGE_SIZE
+of the system.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Remove the assumption and make the check generic for all blocksizes in
+generic_check_addressable().
+
+[1] https://lore.kernel.org/linux-xfs/20240822135018.1931258-1-kernel@pankajraghav.com/
+
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- drivers/platform/chrome/chromeos_laptop.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/libfs.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/chrome/chromeos_laptop.c b/drivers/platform/chrome/chromeos_laptop.c
-index 69d366df3e26..dbf256071549 100644
---- a/drivers/platform/chrome/chromeos_laptop.c
-+++ b/drivers/platform/chrome/chromeos_laptop.c
-@@ -780,8 +780,7 @@ chromeos_laptop_prepare_i2c_peripherals(struct chromeos_laptop *cros_laptop,
- 	while (--i >= 0) {
- 		i2c_dev = &i2c_peripherals[i];
- 		info = &i2c_dev->board_info;
--		if (!IS_ERR_OR_NULL(info->fwnode))
--			fwnode_remove_software_node(info->fwnode);
-+		fwnode_remove_software_node(info->fwnode);
- 	}
- 	kfree(i2c_peripherals);
- 	return error;
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 4d1862f589e8..81756dc0be6d 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -1584,13 +1584,17 @@ EXPORT_SYMBOL(generic_file_fsync);
+ int generic_check_addressable(unsigned blocksize_bits, u64 num_blocks)
+ {
+ 	u64 last_fs_block = num_blocks - 1;
+-	u64 last_fs_page =
+-		last_fs_block >> (PAGE_SHIFT - blocksize_bits);
++	u64 last_fs_page, max_bytes;
++
++	if (check_shl_overflow(num_blocks, blocksize_bits, &max_bytes))
++		return -EFBIG;
++
++	last_fs_page = (max_bytes >> PAGE_SHIFT) - 1;
+ 
+ 	if (unlikely(num_blocks == 0))
+ 		return 0;
+ 
+-	if ((blocksize_bits < 9) || (blocksize_bits > PAGE_SHIFT))
++	if ((blocksize_bits < 9))
+ 		return -EINVAL;
+ 
+ 	if ((last_fs_block > (sector_t)(~0ULL) >> (blocksize_bits - 9)) ||
+
+base-commit: b39f7d75dc41b5f5d028192cd5d66cff71179f35
 -- 
-2.47.2
+2.49.0
 
