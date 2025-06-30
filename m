@@ -1,91 +1,184 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0C5132103;
-	Mon, 30 Jun 2025 12:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E7F27726;
+	Mon, 30 Jun 2025 12:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284965; cv=none; b=AHtYCIOZdPqSc0wf3sWXQxJQxg3J/F4aP7U0+PKLuEk7SaxuWYawSHRG2lBVeEAP53vRNEfv3N0WsDpqQDfz8EvTokq9q3skkjnQuTnkAUU4ODXfLyYS5tKNKUKATzO8Yd/1NwOJBMt8Cb/OnQr4ibT9sBC2BPQ1uIGhWegACU0=
+	t=1751285110; cv=none; b=q5aUc1w4w1NmFAk5zQBM5aftv+yIqSkTIhn6/JHMVblKURuZ07Xr2CMqXUPeQ+vYIxlbYEQpNvcwkNsKTcfC5bM0NKddLplbyNJO+svol/+MM2A9PlkyBszPBWprIvzQ5l/5M5wvXMn+/10C1kH4aSb0o/4ZmQd5FB0HOBP6Eic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284965; c=relaxed/simple;
-	bh=U1QgVE73GMBK0qSO6uHgXRDTMZCMdlmK0zuJgUetxII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SVTd/JifMtYEcEUBYXGvY/5ZXh5kNs+LnWVsPs4Yv+poRJxq4a/mWwx1aOgr93WTwlJ241BoxKpX0y0sEMrk5GEx3uFAG+iQtoRMZB1pG5gUNAL64Rw3ZPD0XkAOow5lColeRfI0VFNaOwFavQEs9U+TPvubs/llnM9MaKtzV/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=D1hgo3sd; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1751285110; c=relaxed/simple;
+	bh=n+176Hqk73YdNtUEpYApofCzd1fmowR9CSTTTZt6dmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdJDIuFzOkZnmkWU7PjUVnJuHFmONiT54VtMU6FOONzfnxF17aPuYH9ndKSmpyj18Fu64ahbNtfg1sSai2zVqw0V7mDLqXbNwdmKIZnYQGjW22v5/rrY4pUsS8lWHYcnyHgtdxUNBYmfT7Mc3ZpqmUP+8ebkLDYebxw5yo4yvVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ciLFrLcP; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="D1hgo3sd"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UAmwnf029679;
-	Mon, 30 Jun 2025 14:02:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	v1NgvuOJViNQoQa3YdxL37LV+10hlKR/k1LPKw76dTU=; b=D1hgo3sdFbaC2Bbs
-	9lLvzpaYsrXuOOHj40rLw8GUtIv69bF8So+wuyY4i5FosAPKndrnwhtcTubgkesG
-	csIa/1FLZkF6RZKb/OOaXseiCArM5OmD37WhIZ1Zqfk9vLAtvqYfnTI9sUhVULh9
-	TmXkQVS7m2hYFDwlkSZky7qd0ZC/rmGeMtplj5c2oOcPavL9o8QZmMC9/U8LN4gY
-	mJS4QjM9A5IPrYet6UyalO/UwZspUccurR++cth9P0Y73MpzwDRHSRymCf9G1LxP
-	SLspA/qgYu9rujKTdNHXO+yFWu9XeTMDd0yadDs6S1T+Sly0nCl4nWgLCmcghLja
-	nPr6Ag==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jubnmt6x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 14:02:34 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D0EA24004D;
-	Mon, 30 Jun 2025 14:01:36 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E2415B2B8D1;
-	Mon, 30 Jun 2025 14:00:51 +0200 (CEST)
-Received: from [10.252.20.7] (10.252.20.7) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
- 2025 14:00:51 +0200
-Message-ID: <3d4d0eb4-a9ec-4fb2-be9c-4d8999cfeebb@foss.st.com>
-Date: Mon, 30 Jun 2025 14:00:50 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ciLFrLcP"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751285104; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=DvTpPcJk2p/JaNDemgjUWLgjS7l0dR1b8xj6HI7SB5I=;
+	b=ciLFrLcPZZm4sAorMyMA0FuCgNGE+1VxLFqsxz0sKdvgkBIfsI080AWXFDQ35UstUnTPFbmde/eM2I8uoIbMzXmcLUj2G88gWf36VOUhEX7dx7BXjNGhKMzO3uXIIvYWdmrypWu2w2zxV9uVtLkHKrk+PuMhPhi4t33FzJBFsFQ=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WgBCaxG_1751285097 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 20:05:03 +0800
+From: cp0613@linux.alibaba.com
+To: yury.norov@gmail.com
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	cp0613@linux.alibaba.com,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux@rasmusvillemoes.dk,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
+Date: Mon, 30 Jun 2025 20:04:53 +0800
+Message-ID: <20250630120457.1941-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aGCbRguHwFY372Ut@yury>
+References: <aGCbRguHwFY372Ut@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] spi: stm32: fix pointer-to-pointer variables usage
-To: Mark Brown <broonie@kernel.org>
-CC: Antonio Quartulli <antonio@mandelbit.com>, <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alain Volmat <alain.volmat@foss.st.com>
-References: <20250630081253.17294-1-antonio@mandelbit.com>
- <5e61da51-cd02-41fd-9773-8bd776e1db62@foss.st.com>
- <192fb276-1e5a-4f69-8815-133f6bcd36b3@sirena.org.uk>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <192fb276-1e5a-4f69-8815-133f6bcd36b3@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
 
-On 6/30/25 13:20, Mark Brown wrote:
-> On Mon, Jun 30, 2025 at 10:28:50AM +0200, Clement LE GOFFIC wrote:
+On Sat, 28 Jun 2025 21:48:02 -0400, yury.norov@gmail.com wrote:
+
+> > > > +static inline u8 variable_ror8(u8 word, unsigned int shift)
+> > > > +{
+> > > > +	u32 word32 = ((u32)word << 24) | ((u32)word << 16) | ((u32)word << 8) | word;
+> > > 
+> > > Can you add a comment about what is happening here? Are you sure it's
+> > > optimized out in case of the 'legacy' alternative?
+> > 
+> > Thank you for your review. Yes, I referred to the existing variable__fls()
+> > implementation, which should be fine.
 > 
->> Thank you, LGTM
->> You can add my Reviewed-by
+> No, it's not fine. Because you trimmed your original email completely,
+> so there's no way to understand what I'm asking about; and because you
+> didn't answer my question. So I'll ask again: what exactly you are doing
+> in the line you've trimmed out?
+
+Sorry, I misunderstood your question. Now I have made up for the lost original
+email. This is my answer. The RISC-V Zbb extension only provides 64-bit data
+rotation instructions rol/ror and 32-bit data rotation instructions rolw/rorw.
+Therefore, for 16-bit and 8-bit data, in order to use the rolw/rorw instruction
+optimization, the data is cyclically spliced ​​here, and the corresponding number
+of bits is truncated after processing to achieve the function.
+
+This data preparation process does introduce additional operations. Compared with
+genneric's implementation, I use the web tool provided by David to illustrate.
+
+The two functions that need to be compared are briefly summarized as follows:
+```
+unsigned char generic_ror8(unsigned char word, unsigned int shift)
+{
+	return (word >> (shift & 7)) | (word << ((-shift) & 7));
+}
+
+unsigned char zbb_opt_ror8(unsigned char word, unsigned int shift)
+{
+	unsigned int word32 = ((unsigned int)word << 24) | \
+	    ((unsigned int)word << 16) | ((unsigned int)word << 8) | word;
+#ifdef __riscv
+	__asm__ volatile("nop"); // ALTERNATIVE(nop)
+
+	__asm__ volatile(
+		".option push\n"
+		".option arch,+zbb\n"
+		"rorw %0, %1, %2\n"
+		".option pop\n"
+		: "=r" (word32) : "r" (word32), "r" (shift) :);
+#endif
+	return (unsigned char)word32;
+}
+```
+The disassembly obtained is:
+```
+generic_ror8:
+    andi    a1,a1,7
+    negw    a5,a1
+    andi    a5,a5,7
+    sllw    a5,a0,a5
+    srlw    a0,a0,a1
+    or      a0,a0,a5
+    andi    a0,a0,0xff
+    ret
+
+zbb_opt_ror8:
+    slli    a5,a0,8
+    add     a0,a5,a0
+    slliw   a5,a0,16
+    addw    a5,a5,a0
+    nop
+    rorw a5, a5, a1
+    andi    a0,a5,0xff
+    ret
+```
+From the perspective of the total number of instructions, although zbb_opt_ror8 has
+one more instruction, one of them is a nop, so the difference with generic_ror8 should
+be very small, or using the solution provided by David would be better for non-x86.
+
+> > I did consider it, but I did not find any toolchain that provides an
+> > implementation similar to __builtin_ror or __builtin_rol. If there is one,
+> > please help point it out.
 > 
-> If you want to add a Reviewed-by you should actually write it out in the
-> mail, people rely on tooling like b4 to pick them up.
+> This is the example of the toolchain you're looking for:
+> 
+>   /**
+>    * rol64 - rotate a 64-bit value left
+>    * @word: value to rotate
+>    * @shift: bits to roll
+>    */
+>   static inline __u64 rol64(__u64 word, unsigned int shift)
+>   {
+>           return (word << (shift & 63)) | (word >> ((-shift) & 63));
+>   }
+> 
+> What I'm asking is: please show me that compile-time rol/ror is still
+> calculated at compile time, i.e. ror64(1234, 12) is evaluated at
+> compile time.
 
-Yes, sorry.
-Fixed it.
+I see what you mean, I didn't consider the case of constants being evaluated
+at compile time, as you pointed out earlier:
+"you wire ror/rol() to the variable_ror/rol() unconditionally, and that breaks
+compile-time rotation if the parameter is known at compile time."
 
-Best regards,
-Clément
+In the absence of compiler built-in function support, I think it can be handled
+like this:
+```
+#define rol16(word, shift) \
+	(__builtin_constant_p(word) && __builtin_constant_p(shift) ? \
+	generic_ror16(word, shift) : variable_rol16(word, shift))
+```
+How do you see?
+
+> > In addition, I did not consider it carefully before. If the rotate function
+> > is to be genericized, all archneed to include <asm-generic/bitops/rotate.h>.
+> > I missed this step.
+> 
+> Sorry, I'm lost here about what you've considered and what not. I'm OK
+> about accelerating ror/rol, but I want to make sure that;
+> 
+> 1. The most trivial compile-case is actually evaluated at compile time; and
+> 2. Any arch-specific code is well explained; and
+> 3. legacy case optimized just as well as non-legacy.
+
+1. As in the above reply, use the generic implementation when compile-time evaluation
+   is possible。
+2. I will improve the comments later.
+3. As mentioned before, only 8-bit rotation should have no optimization effect, and
+   16-bit and above will have significant optimization.
+
+Thanks,
+Pei
+
