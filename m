@@ -1,248 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539ED1C5D57;
-	Mon, 30 Jun 2025 18:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09AEADC;
+	Mon, 30 Jun 2025 18:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751308627; cv=none; b=VagqheQpqhmNFawEU0R2xox5q1dAeRuQ6mOmUb2oYR0LOfgHquLSbNMt9E4j4ruvpStUD7EYUInJ0lYWVFyphBQsCtDXqjA/zJ2SfMaVcm52pjDjCIkHZeWjmif/laKftCB8vvL3FcCP8lcrglkPUpjg5PCSyj9dfZjeY0hanuQ=
+	t=1751308693; cv=none; b=L/fd73yB2arOYNHHnh6g/kdoCjrr6UiJK9Db95RO7bXycMLjzT1HEC+Wzns3VYYbfJW/SHxKaG1wCUwIHGgOuzgLUwM4EB6cgdEqZqTAEu9FaNhYGQNC4YuBJCfvhGmdN2+Xma10ZBLW+9oHiZEP1AKQhF9uEvtp28I8B1RrhLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751308627; c=relaxed/simple;
-	bh=c9uAtQKv4NYSwOH3r6TmzxlDwchzoTPDdAumVK3QfAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j9ljZb2ZkYUtDnBjYW+h4OcgimPKR0kThJqQ1T3bBE953/h1Og7Utq6JIWlipkN4dp6Lrn8JZ67VS2GM40ACvhY/BrhKveg450F98aYK+Qbj94ahfhjNaFqn+9MnCtwganSuEIE2cSsXU58OFBDBAaFW3hGB+kP5j+itMHvvngo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cN0BY4IO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751308693; c=relaxed/simple;
+	bh=SFIdcYrq5Q88LPXoFIVLXlwzcx8YD6QNMwRzmkI9Dp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9S3497opCHr2CS4Y58s4Ly803VvQiAjOfKAgEDJMP+K8VIv6TN5OXRsx/AbJw8oa9+p5qId4KvMdyZ4HmF1nMZ9N3mQkmt/zJbq7e/lU+elQNTAfn9V7jSWDhkJL9zmkixZJNLt2sg4pCxgnoSnlEtgT0aKp8KhuaAhPoxsaKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQujNAHq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cN0BY4IO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30071C4CEE3;
-	Mon, 30 Jun 2025 18:37:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQujNAHq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B07C4CEE3;
+	Mon, 30 Jun 2025 18:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751308626;
-	bh=c9uAtQKv4NYSwOH3r6TmzxlDwchzoTPDdAumVK3QfAE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cN0BY4IOJa5X2g2U3gCon69bn9LJ3stx8QA5hrzXp/BuSkQlIBXr9owVFkfIQTC+i
-	 gbevZsHJPC1WyYnYvdPYEL91IJ2/N6DoxveR04QbFyx6sA2nWsmVNYb+lJgXF96SeX
-	 fTjZxs0DpCyyGxjUuaRuWOYr6/l9sIVsSazrq5LY2WB2f0ldsBh5FxaOJ/LUm5hb/G
-	 f+VS55iyLyYAY0W6MI5CHOqOhkPU+GCAeYMEAit1eh6ZOWaRVokC0AYuKghiH9ePAu
-	 1USlB1R/WPC6UZHa4PM5WQsndNqeQ7z2FC8TedHUsWzGl4QbBpdCr6Ld4RD2WKYpPy
-	 9JTJKfTYMm60g==
-Message-ID: <8f9efe23-c774-477d-97ad-8e22532ad6b2@kernel.org>
-Date: Mon, 30 Jun 2025 14:37:06 -0400
+	s=k20201202; t=1751308692;
+	bh=SFIdcYrq5Q88LPXoFIVLXlwzcx8YD6QNMwRzmkI9Dp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qQujNAHqJXzyU0+wI5QuEtq3II7dIwcAcY1GgDoSFk4EcTOh9huZHfqmynSryvROu
+	 Xjkp+vTxybo+jickeG4xhgCeZYOicbptcjUNt4Rg++7PhVU7+J5MCnaZQobBdWDTHH
+	 2ybSnPCRFJMY3L4k3dQ3F1n1JQW75riWbYT1XZPhq0KpIZxyDxTmzJK3tT26V6QC63
+	 avV7JqqPhAzltiievS7BnhFnaU6VBiKZCQ1mb1h2Apcwu9Y/nyKGDDPZ8IKrmaCHpD
+	 6jSKyy+imYH/eIvk2HyTI12RkHz6XH0Szw0otqho93P2SCP4+p75eCphQK6wkz45e+
+	 gawT01Et6qiBQ==
+Date: Mon, 30 Jun 2025 20:38:08 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/xfs: replace strncpy with strscpy
+Message-ID: <6grkelqkotgz6hnwce5n7gzdixgzlaqkwzo243f7vyqjas3c4g@viyu57vmxltz>
+References: <BgUaxdxshFCssVdvh_jiOf_C2IyUDDKB9gNz_bt5pLaC8fFmFa0E_Cvq6s9eXOGe8M0fvBUFYG3bqVQAsCyz3w==@protonmail.internalid>
+ <20250617124546.24102-1-pranav.tyagi03@gmail.com>
+ <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
+ <WBE4B1OP-kfASGRcvWwSonfk0K1Gt9aaX533GfEvt007c_wee2NnaupnonhPygu25xVhRW0racnd4Jig_diSMA==@protonmail.internalid>
+ <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 9/9] PCI: Add a new 'boot_display' attribute
-To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20250627043108.3141206-1-superm1@kernel.org>
- <20250627043108.3141206-10-superm1@kernel.org>
- <41587824-4a05-4ead-b24c-4729007cd663@suse.de>
- <8878af70-3eb8-495b-b8df-43a10285c4f5@kernel.org>
- <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <732aeb75-71e7-49e7-a5f2-2080ee94a273@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
 
-On 6/30/2025 2:24 AM, Thomas Zimmermann wrote:
-> Hi
+On Mon, Jun 30, 2025 at 02:36:01PM +0530, Pranav Tyagi wrote:
+> On Mon, Jun 30, 2025 at 2:09 PM Carlos Maiolino <cem@kernel.org> wrote:
+> >
+> > On Tue, Jun 17, 2025 at 06:15:46PM +0530, Pranav Tyagi wrote:
+> > > Replace the deprecated strncpy() with strscpy() as the destination
+> > > buffer should be NUL-terminated and does not require any trailing
+> > > NUL-padding. Also, since NUL-termination is guaranteed,
+> >
+> > NUL-termination is only guaranteed if you copy into the buffer one less
+> > byte than the label requires, i.e XFSLABEL_MAX.
+> >
+> > > use sizeof(label) in place of XFSLABEL_MAX as the size
+> > > parameter.
+> >
+> > This is wrong, see below why.
+> >
+> > >
+> > > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > > ---
+> > >  fs/xfs/xfs_ioctl.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > > index d250f7f74e3b..9f4d68c5b5ab 100644
+> > > --- a/fs/xfs/xfs_ioctl.c
+> > > +++ b/fs/xfs/xfs_ioctl.c
+> > > @@ -992,7 +992,7 @@ xfs_ioc_getlabel(
+> > >       /* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> > >       memset(label, 0, sizeof(label));
+> > >       spin_lock(&mp->m_sb_lock);
+> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> > > +     strscpy(label, sbp->sb_fname, sizeof(label));
+> >
+> > This is broken and you created a buffer overrun here.
+> >
+> > XFSLABEL_MAX is set to 12 bytes. The current label size is 13 bytes:
+> >
+> > char                    label[XFSLABEL_MAX + 1];
+> >
+> > This ensures the label will always have a null termination character as
+> > long as you copy XFSLABEL_MAX bytes into the label.
+> >
+> > - strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> >
+> > Copies 12 bytes from sb_fname into label. This ensures we always have a
+> > trailing \0 at the last byte.
+> >
+> > Your version:
+> >
+> > strscpy(label, sbp->sb_fname, sizeof(label));
+> >
+> > Copies 13 bytes from sb_fname into the label buffer.
+> >
+> > This not only could have copied a non-null byte to the last byte in the
+> > label buffer, but also But sbp->sb_fname size is XFSLABEL_MAX, so you
+> > are reading beyond the source buffer size, causing a buffer overrun as you
+> > can see on the kernel test robot report.
+> >
+> > Carlos
+> >
+> > >       spin_unlock(&mp->m_sb_lock);
+> > >
+> > >       if (copy_to_user(user_label, label, sizeof(label)))
+> > > --
+> > > 2.49.0
+> > >
 > 
-> Am 27.06.25 um 17:37 schrieb Mario Limonciello:
->> On 6/27/2025 2:07 AM, Thomas Zimmermann wrote:
->>> Hi
->>>
->>> Am 27.06.25 um 06:31 schrieb Mario Limonciello:
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> On systems with multiple GPUs there can be uncertainty which GPU is the
->>>> primary one used to drive the display at bootup. In order to 
->>>> disambiguate
->>>> this add a new sysfs attribute 'boot_display' that uses the output of
->>>> video_is_primary_device() to populate whether a PCI device was used for
->>>> driving the display.
->>>>
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> ---
->>>> v6:
->>>>   * Only show for the device that is boot display
->>>>   * Only create after PCI device sysfs files are initialized to ensure
->>>>     that resources are ready.
->>>> v4:
->>>>   * new patch
->>>> ---
->>>>   Documentation/ABI/testing/sysfs-bus-pci |  8 +++++
->>>>   drivers/pci/pci-sysfs.c                 | 46 +++++++++++++++++++++ 
->>>> ++++
->>>
->>> The code looks good. Just one more question: could this be added 
->>> independently from the PCI bus (at a reasonable cost)? There are 
->>> other busses that can host the boot display. Alternatively, we'd add 
->>> this attribute per bus as needed.
->>
->> It depends upon the underlying hardware implementation.  On x86 it's 
->> always PCI and so I realized there is a requirement that PCI resources 
->> are setup before screen_info event works.
->>
->> That is the v5 version of this patch would have had a potential race 
->> condition with userspace where boot_display didn't always show '1' if 
->> userspace read it too quickly.
->>
->> Other architecture's hardware implementation might have similar problem.
->>
->> So in summary I think it would be better to do it per-bus.  If we 
->> realize there is indeed code duplication we can always move this to a 
->> common helper at that point.
+> Hi,
 > 
-> Ok, makes sense. With the kernel test robot's issues fixed:
-> 
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Thank you for the feedback. I understand that my patch is incorrect and
+> it causes a buffer overrun. The destination buffer is indeed, already, null
+> terminated. Would you like me to send a corrected patch which uses
+> strscpy() (as strncpy() is deprecated)?
 
-Thanks, I've got a fix locally for it.
-> 
-> I guess that interface also needs some sort of OK from user-space devs?
-> 
+Sure, do so.
 
-Who needs to OK it?  I do have MR's for matching userspace 
-implementations mentioned in the cover letter already.
+Carlos
 
-> Best regards
-> Thomas
 > 
->>
->>>
->>> Best regards
->>> Thomas
->>>
->>>>   2 files changed, 54 insertions(+)
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/ 
->>>> Documentation/ ABI/testing/sysfs-bus-pci
->>>> index 69f952fffec72..8b455b1a58852 100644
->>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
->>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->>>> @@ -612,3 +612,11 @@ Description:
->>>>             # ls doe_features
->>>>             0001:01        0001:02        doe_discovery
->>>> +
->>>> +What:        /sys/bus/pci/devices/.../boot_display
->>>> +Date:        October 2025
->>>> +Contact:    Linux PCI developers <linux-pci@vger.kernel.org>
->>>> +Description:
->>>> +        This file indicates the device was used as a boot
->>>> +        display. If the device was used as the boot display, the file
->>>> +        will be present and contain "1".
->>>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->>>> index 268c69daa4d57..cc766461de1da 100644
->>>> --- a/drivers/pci/pci-sysfs.c
->>>> +++ b/drivers/pci/pci-sysfs.c
->>>> @@ -30,6 +30,7 @@
->>>>   #include <linux/msi.h>
->>>>   #include <linux/of.h>
->>>>   #include <linux/aperture.h>
->>>> +#include <asm/video.h>
->>>>   #include "pci.h"
->>>>   #ifndef ARCH_PCI_DEV_GROUPS
->>>> @@ -679,6 +680,13 @@ const struct attribute_group *pcibus_groups[] = {
->>>>       NULL,
->>>>   };
->>>> +static ssize_t boot_display_show(struct device *dev, struct 
->>>> device_attribute *attr,
->>>> +                 char *buf)
->>>> +{
->>>> +    return sysfs_emit(buf, "1\n");
->>>> +}
->>>> +static DEVICE_ATTR_RO(boot_display);
->>>> +
->>>>   static ssize_t boot_vga_show(struct device *dev, struct 
->>>> device_attribute *attr,
->>>>                    char *buf)
->>>>   {
->>>> @@ -1246,6 +1254,37 @@ static int pci_create_attr(struct pci_dev 
->>>> *pdev, int num, int write_combine)
->>>>       return 0;
->>>>   }
->>>> +/**
->>>> + * pci_create_boot_display_file - create a file in sysfs for @dev
->>>> + * @pdev: dev in question
->>>> + *
->>>> + * Creates a file `boot_display` in sysfs for the PCI device @pdev
->>>> + * if it is the boot display device.
->>>> + */
->>>> +static int pci_create_boot_display_file(struct pci_dev *pdev)
->>>> +{
->>>> +#ifdef CONFIG_VIDEO
->>>> +    if (video_is_primary_device(&pdev->dev))
->>>> +        return sysfs_create_file(&pdev->dev.kobj, 
->>>> &dev_attr_boot_display.attr);
->>>> +#endif
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +/**
->>>> + * pci_remove_boot_display_file - remove the boot display file for 
->>>> @dev
->>>> + * @pdev: dev in question
->>>> + *
->>>> + * Removes the file `boot_display` in sysfs for the PCI device @pdev
->>>> + * if it is the boot display device.
->>>> + */
->>>> +static void pci_remove_boot_display_file(struct pci_dev *pdev)
->>>> +{
->>>> +#ifdef CONFIG_VIDEO
->>>> +    if (video_is_primary_device(&pdev->dev))
->>>> +        sysfs_remove_file(&pdev->dev.kobj, 
->>>> &dev_attr_boot_display.attr);
->>>> +#endif
->>>> +}
->>>> +
->>>>   /**
->>>>    * pci_create_resource_files - create resource files in sysfs for 
->>>> @dev
->>>>    * @pdev: dev in question
->>>> @@ -1654,9 +1693,15 @@ static const struct attribute_group 
->>>> pci_dev_resource_resize_group = {
->>>>   int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->>>>   {
->>>> +    int retval;
->>>> +
->>>>       if (!sysfs_initialized)
->>>>           return -EACCES;
->>>> +    retval = pci_create_boot_display_file(pdev);
->>>> +    if (retval)
->>>> +        return retval;
->>>> +
->>>>       return pci_create_resource_files(pdev);
->>>>   }
->>>> @@ -1671,6 +1716,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev 
->>>> *pdev)
->>>>       if (!sysfs_initialized)
->>>>           return;
->>>> +    pci_remove_boot_display_file(pdev);
->>>>       pci_remove_resource_files(pdev);
->>>>   }
->>>
->>
+> Regret the inconvenience.
 > 
-
+> Regards
+> Pranav Tyagi
