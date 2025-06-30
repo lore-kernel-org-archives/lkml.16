@@ -1,109 +1,92 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF83243378;
-	Mon, 30 Jun 2025 12:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A08B2CCC9;
+	Mon, 30 Jun 2025 12:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287826; cv=none; b=cxNGnKHGtcjcg1QfrvZV+/DxB0BU5WReCcbLgjifi0dF7NfCXBsU19vcybNHc9NnU7vEsKDDlI1ydGGVxdeFqo0me4iDZAdbOt6Q2dUrsSSFWZR7GHJnp0JoLrEHL6Im0Su++aQ+mfdzKGP1TgxxNRHoYclOL+J54qPdW7ROxOU=
+	t=1751287849; cv=none; b=aiLCr7ym3jjJngphjzvIGbkOlvT4SziAq+mX3fYIrDvggYvNwWDe54WZHTanw6q4GhHY9gEVHd5YiAnukoNsEkC8AlTHo6SEz429ufqTkSOE42iqoG/VMjL/msGXPK2Du6xhzhEHRFTFB2sc99Y2k/Df4pe9+8C/3vsbgrCW1S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287826; c=relaxed/simple;
-	bh=1ry30HSaPyoCH8NX44+sha/2zVgc5ksFO7x3qZhWPcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HBNNNiAIueoNRjyuyY3rVeZCIHR/bgNepRCLQX67E/VYdfQ1k1KWHNNP4SLy5upXbjdDuU8xNEf45sUbQ5yG3DLw50+TF/N25BcCe1vhB6JvG4ggoflad/5m4M3jp3dQ2nYESD7sqIUIYquBGg2f/JPg+6F5JkLMnH6TwtbtAtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TLXEPkzY; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751287849; c=relaxed/simple;
+	bh=hsHw6bpXmSZW6CwH1/RrZulsuZqOy0tW9oGHlgfUVF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=clL8VfEWTv36E1BNHUvyK47K4Yt17WBgEIdXobZ4V1YAPunn9wsri45ngvg7Qhp4gcPaxSiwlGIzP1SEKZkZ3nHYq++qG5CD64+yZAmrK2wyKMBMlwhTGRyxcitfsfcm7LqJ2kPVIEH50S7hMo6fN4UV7c6UpUJ71SB+0eVVsGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAl2458W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TLXEPkzY"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-747ef5996edso1774742b3a.0;
-        Mon, 30 Jun 2025 05:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751287824; x=1751892624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NvcxIOVCr74ZJ+9mueD9krtKcBT0TziWtKZrkUEvt1Y=;
-        b=TLXEPkzYaaD1flw3ZCYflfMMFeJ7BwNzsb95YM55yz6ZIkTYk0ckIMHLzye/THkMaS
-         ibA8PQom/aKper9dnUdwHOmxcNCf6IA6m7e2nXg0DIRRs3uo2OixzmHG2VtMNs5wUvYQ
-         ZX8I6F16eKw/PxnHMEjYNCyWnI9nqJFDXGf+PVvv7POG9LgEygzOuv4doj0b5MvhBNQh
-         06YxkswuqistbVUPFZs5klQIRRjQHrZyUCIz3xfkrw1XfDz3Mz/rx701VQOEV0SGgg0v
-         rivrmHfCgOqTxlzPnNC9eZJUa/2xC+Gm9/bEq7zGGzatDXHOU+V371X9xb62J+R5lUOL
-         E4+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751287824; x=1751892624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NvcxIOVCr74ZJ+9mueD9krtKcBT0TziWtKZrkUEvt1Y=;
-        b=UxMeL7N3/Azm5cCOj3aHgFwmPuMJrYGYoFLldjCmsnaJhH3PJTs1gDX6RuEnHthoYa
-         8wZsxlTZh+gtwtqh/VF+btc2pOBI9TiUTqgzow4R4z/D9DC313VF8GZ1eLH4rDUvSIcK
-         cw1Ri0uBtDUtyZQg4m1E7yQr1MpoLcVE8zWA+v4pww5/7P712Tz3CQUeaRsAkfpvx9yC
-         cMCZ544OsYZY7KMnu12XbKymwP2PWKwbIk8z/cEPQ+gH+SUtGSwF3SnL1Sa8kUNjtnfF
-         cNu1UgdQI464dR61BilwJKpK2PEtWtE70+u1D2SdGIoFPxz5QHbrH00h9KCwVo0kdDYx
-         xuyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzzPsEDB/huY+gu/znEWRfLgElhDERxJWyfesmKGdEB0KZoJyfEtPYS2fKz81yhGYaYbgEEOuHjO8zsJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUh1a35Cp0FtmVjUmWKYK4zMSxToPLe+ZTKoItCGO1OFGwBrZ4
-	1uBKTuVAlx5Bg4geujLs6ARFav8umfVNUjkKV29qRUUtKJGKwIekRwIy
-X-Gm-Gg: ASbGnctuH82bsWq7tyBEid/7IGHoUk/OO+1ouWG92dDxHyfYJoIaXGY6LlwAf6g4X7H
-	TB1+j6XNP7WtTi0K4dn/yk96FEwL2mf55Rcq0s3EAXM4chWxK8Fbi1SdM7r6nPh1dQFDNkF/pYU
-	AA6rqAt4lfXzr75Mq06pUJWFtmvqfNc1VqDLT3YExdjo5tft7sWb1m6/+3t7AxxAD+3p1g+NVJ+
-	QZ5TpfMOMY6ElaNHVayhEM43ZeRE8wzHrZwtj7BdCeCmdOYcZa7k8Y3jejBpRaNnJ9C7ZwyIlEj
-	wEl22ajuStpcXX9Jx9OdDU0mTaSiRYoT7MCWdDgcPFG0UteBsLqigZHyc+TfG0BYRT8b3b1Dk7r
-	A1MvMkho/eFPhiWXTXIM=
-X-Google-Smtp-Source: AGHT+IG9/9nAYqg9z0wJH0s0jXNq02MM1YjkMaE9bQ8XVq7mhmuXd2OydcFIteqPxF2Nfyx+YFuRhw==
-X-Received: by 2002:a05:6a21:1343:b0:21e:eb3a:dc04 with SMTP id adf61e73a8af0-220a12a4e11mr19163816637.3.1751287824076;
-        Mon, 30 Jun 2025 05:50:24 -0700 (PDT)
-Received: from seokw-960QHA.Davolink ([115.137.3.141])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56d0002sm9487890b3a.136.2025.06.30.05.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 05:50:23 -0700 (PDT)
-From: Ryan Chung <seokwoo.chung130@gmail.com>
-To: hao.wu@intel.com,
-	trix@redhat.com,
-	mdf@kernel.org,
-	yilun.xu@intel.com
-Cc: linux-fpga@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ryan Chung <seokwoo.chung130@gmail.com>
-Subject: [PATCH] fpga: dfl: Replace scnprintf() with sysfs_emit()
-Date: Mon, 30 Jun 2025 21:50:18 +0900
-Message-ID: <20250630125018.48417-1-seokwoo.chung130@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAl2458W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 898C7C4CEF0;
+	Mon, 30 Jun 2025 12:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751287848;
+	bh=hsHw6bpXmSZW6CwH1/RrZulsuZqOy0tW9oGHlgfUVF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EAl2458W9At11F1iMq/0Arwgs8CoZ/KopI5BQ1ETxc9T0+4fNyvIo0sGbCP7EWQpf
+	 GXq669/I+ZNHd5LEzoINdfPJcoVLaFUyDXLuLYbeFBKyGys5HJhax1Vb9gSF6JwIyb
+	 N8JAg2qEbTCHwRTdleww73xb3rDU7BwuWE6CBt2aftu37w1DdAx04qOYU+0vTiXftp
+	 VmGCuG3LixSS7nDovbV/CEhEANKAN33tUuJmMEubnNxadcCW69foB1NWZHuIMBdOt5
+	 6zg1ZgeZgBj2ThvFqt2iQ3am+qTk5piUt/cl3161U6Mq4pQFbYf58XqFQswlCQTdEE
+	 NfAI2az8BBASA==
+Date: Mon, 30 Jun 2025 13:50:43 +0100
+From: Will Deacon <will@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>,
+	Steven Moreland <smoreland@google.com>,
+	Frederick Mayle <fmayle@google.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH 0/5] vsock/virtio: SKB allocation improvements
+Message-ID: <aGKII2RcxMpBY3Zc@willie-the-truck>
+References: <20250625131543.5155-1-will@kernel.org>
+ <izmrcafyog7cxvef2nipk5f2vzxxptyc4fopnvl3heqslsp7q6@32ssw2piag6h>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <izmrcafyog7cxvef2nipk5f2vzxxptyc4fopnvl3heqslsp7q6@32ssw2piag6h>
 
-Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
----
- drivers/fpga/dfl-afu-main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, Jun 27, 2025 at 12:51:45PM +0200, Stefano Garzarella wrote:
+> On Wed, Jun 25, 2025 at 02:15:38PM +0100, Will Deacon wrote:
+> > We're using vsock extensively in Android as a channel over which we can
+> > route binder transactions to/from virtual machines managed by the
+> > Android Virtualisation Framework. However, we have been observing some
+> > issues in production builds when using vsock in a low-memory environment
+> > (on the host and the guest) such as:
+> > 
+> >  * The host receive path hanging forever, despite the guest performing
+> >    a successful write to the socket.
+> > 
+> >  * Page allocation failures in the vhost receive path (this is a likely
+> >    contributor to the above)
+> > 
+> >  * -ENOMEM coming back from sendmsg()
+> > 
+> > This series aims to improve the vsock SKB allocation for both the host
+> > (vhost) and the guest when using the virtio transport to help mitigate
+> > these issues. Specifically:
+> > 
+> >  - Avoid single allocations of order > PAGE_ALLOC_COSTLY_ORDER
+> > 
+> >  - Use non-linear SKBs for the transmit and vhost receive paths
+> > 
+> >  - Reduce the guest RX buffers to a single page
+> > 
+> > There are more details in the individual commit messages but overall
+> > this results in less wasted memory and puts less pressure on the
+> > allocator.
+> > 
+> > This is my first time looking at this stuff, so all feedback is welcome.
+> 
+> Thank you very much for this series!
+> 
+> I left some minor comments, but overall LGTM!
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index 3bf8e7338dbe..f2dd4667a43d 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -156,7 +156,7 @@ id_show(struct device *dev, struct device_attribute *attr, char *buf)
- 	struct dfl_feature_dev_data *fdata = to_dfl_feature_dev_data(dev);
- 	int id = port_get_id(fdata);
- 
--	return scnprintf(buf, PAGE_SIZE, "%d\n", id);
-+	return sysfs_emit(buf, PAGE_SIZE, "%d\n", id);
- }
- static DEVICE_ATTR_RO(id);
- 
-@@ -475,7 +475,7 @@ afu_id_show(struct device *dev, struct device_attribute *attr, char *buf)
- 	guidh = readq(base + GUID_H);
- 	mutex_unlock(&fdata->lock);
- 
--	return scnprintf(buf, PAGE_SIZE, "%016llx%016llx\n", guidh, guidl);
-+	return sysfs_emit(buf, PAGE_SIZE, "%016llx%016llx\n", guidh, guidl);
- }
- static DEVICE_ATTR_RO(afu_id);
- 
--- 
-2.43.0
+Cheers for going through it! I'll work through your comments now...
 
+Will
