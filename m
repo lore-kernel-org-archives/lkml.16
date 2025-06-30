@@ -1,82 +1,84 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FDA35950;
-	Mon, 30 Jun 2025 02:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B7208CA;
+	Mon, 30 Jun 2025 02:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751250323; cv=none; b=o19m5Oca/xbHQx2hMiYnFMiBg8wI5kw3OYAGnChc2lTtI69gYyPpa8bRK9q4OpbF4ny/ONSLlX6uepK0TQMWc/4SPXhzRva5j8ttKOFZu+GcqZMQb6A+FrvcvhsRAobhpkdauQXOMTVbYqaCtQCPHmw/RAMbGL42wTlOpVWMbkA=
+	t=1751250350; cv=none; b=KTHld3YiiKxvh0Ae6yJsBH5dMxHnVVsPpF2s22QLZEgTTh9i9aFAvjVfN0DGDempBnsTycm/MEVUr9lkgokoBiUQoIQYHW3pdXSaaW1VFvwILc0cUOChswEzL32ajLiCfJNQ8iYPEmNOBT1lhmx2lDySwdcamnJWTTH2zT3iDhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751250323; c=relaxed/simple;
-	bh=PWcp9I/7wvScSS6/5VY+ppz/g1EkHrikkwU/m9OSGfY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qvN9zwNJ6hmEemsjozMRLO6XVq3k7K2jHcA660yZ7tTwsh4n8Y0Rrm6BqxNuUcCoXkz0lfcdydIM7XkY9V1BSpAqrywyvhAF4Qon3g4ZXxHs5PtkfRcmfDKafxXYsnV7Ihz66KpZqFFTvzfYREyOt7Lcxehfek/Shx4uot28o1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N015w0ij; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N015w0ij"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Mgo59Ps4QW45AbB3IJs8iwnrlhFBKq+TOkgdgmTNINY=; b=N015w0ijOLMz5fhJ3g43kgmZf7
-	qT3avWeixAdB8GSi8oVn3cIOGJxpqMfcI+TADb0VY8vMLgxSBL9t8LJUXhIX8HZu01ql0fJIkLzda
-	2MvPIGgsTF5/eRoTtk9j7+E0qdxZwCuePuJ256wyWB2Waxpcu4pihfceRB6x0491D+dWYaLVePJhF
-	IrhRB8jB4jWrdFX1sMybEczVvmcyMmodsjwjQUv/2cB3CkJl9M2oLH14FfOlG1WnX+UPzzOADczVx
-	joVOuV9IUU0gncEtzAN7pQ7Qc7JX9QFS9u75FEdMS9UKFAt+OOebTfYxaPBJeRc8cmxCBFJdRTK4N
-	QczKW84Q==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW4Cp-00000006iDl-42gZ;
-	Mon, 30 Jun 2025 02:25:18 +0000
-Message-ID: <12ae43a7-f5c5-4df7-8a83-41e35228e710@infradead.org>
-Date: Sun, 29 Jun 2025 19:25:14 -0700
+	s=arc-20240116; t=1751250350; c=relaxed/simple;
+	bh=ErF81TCjGCGVqMh8Fd4KAmWoyGhITyp7N04uBQ5N5tA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=n9MXlE896dzlAiynOcGZjQ7axCOeZKb0B7iA9L67BqxG4LkhTUmyzA9MY9eIefTPuYhmZhuCCNq7TcRUS0OqbLrBuCKjLl9G+hf2/rIryya6MUDnIWP0fc30XIW9Aoj4fR3setPVlzQzfmNDE8O9yZS5EasMRCxUmXMd0A95Enw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bVql85dF8zYQv5V;
+	Mon, 30 Jun 2025 10:25:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A83281A1915;
+	Mon, 30 Jun 2025 10:25:39 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP3 (Coremail) with SMTP id _Ch0CgB32Sai9WFo7x6rAA--.46414S3;
+	Mon, 30 Jun 2025 10:25:39 +0800 (CST)
+Subject: Re: [PATCH 16/23] md/md-llbitmap: implement bit state machine
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de,
+ colyli@kernel.org, song@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-17-yukuai1@huaweicloud.com>
+ <c76f44c0-fc61-41da-a16b-5a3510141487@redhat.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <cf6d7be1-af73-216c-b2ab-b34a8890450d@huaweicloud.com>
+Date: Mon, 30 Jun 2025 10:25:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/66] kconfig: gconf: remove empty if-block
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-11-masahiroy@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-11-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c76f44c0-fc61-41da-a16b-5a3510141487@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgB32Sai9WFo7x6rAA--.46414S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	F9a9DUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
+在 2025/06/30 10:14, Xiao Ni 写道:
+> For reload action, it runs continue here.
 
-On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> This if-block is empty.
+No one can concurent with reload.
+
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> And doesn't it need a lock when reading the state?
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Notice that from IO path, all concurrent context are doing the same
+thing, it doesn't matter if old state or new state are read. If old
+state is read, it will write new state in memory again; if new state is
+read, it just do nothing.
 
-> ---
-> 
->  scripts/kconfig/gconf.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-> index b2a0208b0a5f..7960c456e3b9 100644
-> --- a/scripts/kconfig/gconf.c
-> +++ b/scripts/kconfig/gconf.c
-> @@ -913,8 +913,6 @@ on_treeview2_key_press_event(GtkWidget * widget,
->  			gtk_tree_view_expand_row(view, path, FALSE);
->  		return TRUE;
->  	}
-> -	if (event->keyval == GDK_KP_Enter) {
-> -	}
->  	if (widget == tree1_w)
->  		return FALSE;
->  
+Thanks,
+Kuai
 
--- 
-~Randy
