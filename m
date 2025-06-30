@@ -1,132 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A79223A564
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CFC849C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270127; cv=none; b=VvwGSyqU+d4Z0Z/cKppyvYhgSzWSDdb+d11K1lc+SDVpXYr0eXqVLb/OQGyf+fM6SsyH0DZXqgoMVZL+js2gtwQTqaICSxfW1xZCUW4ZaGDTxrfIKi+B8Uc1eNCM5BIG636OQcZmC7fBQRIHdqlKXXwUIbgrHqt2skthTy88i/o=
+	t=1751270207; cv=none; b=Wv4Dv4/PVlq9OPbCpsx2N8BJJ1TNYa6J0j84HU0mUIohJBzSLeSB0X/qgaAaK1WbZRhYZIXDCh0/sz5zEmvzGtDidYBNEbkVRWaaDo3RdUQLSBEJANXUBRFUbyd+84tdcqejHzbhT1QnQVZhfLZ2bDR3FRpQyNJV8oztLoqfymw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270127; c=relaxed/simple;
-	bh=v+qpi3Ka67tWISY7vMzRP9XKIHWv/1TJKBwFBb2M7Mw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DOaBYwCBFFdHds+9fMlcjw8vZfsI8UmY+UYs6p+SDc+gUe1VdXERd/gBmLkZQX6vH33s/JKERhaeAQgO0l3z8lLc6eLk7f7jnIBqULVar9OtJ35VfEltl2h22S9f4H+HibjuApG57+epD3XX1oznVHAjoP+sXEQitSlV66IalDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C9CA15A1;
-	Mon, 30 Jun 2025 00:55:09 -0700 (PDT)
-Received: from [10.163.37.132] (unknown [10.163.37.132])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C60443F58B;
-	Mon, 30 Jun 2025 00:55:19 -0700 (PDT)
-Message-ID: <786c83e0-d69f-4fa3-a39c-94c4dfc08a20@arm.com>
-Date: Mon, 30 Jun 2025 13:25:14 +0530
+	s=arc-20240116; t=1751270207; c=relaxed/simple;
+	bh=RsPzyl1QaWRfmgCh0kdzgypQXy2dsV/pLN06k69m3YI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7JwwA5qHHfV2Bp258Wihx25toOxG2J3zXvZkjN788MsBWDdpLLm2JJ06xyM0IAfBnJ3JUW7T4ChxMYrVMYb0NwN69quIlK0PCx9YmKgGfasQECKYUFCINtOY3biNubu/r9HwE8E8xNS420/SlraAPElgnEyiXbKfvZOtM85hYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H3StGTsu; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H3StGTsu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=clXotmQK2fBKk6NffSDoLpVZjlb7gWYryEPzX0KmYXw=; b=H3StGTsu72IajGWEpgHO7DIDk9
+	2jth7bDUbnZtMlnVrG/T/Azv/YAK/67vCGHGscGAq125WlI2Ros/0nlh1q3RG0OCgcTdggMReuSi1
+	0m59RwzPQ/W7IPM9SSrGJkoDdJ7nUf2kIrM7E+CHkAzlQumLANsccybKxFWO0mP54w7Sokk2x/3v9
+	aYx5NwulPK2ZNiYm3j3MSwEFjd8fSaqHfgJSOofrr/7dmcTfrVOcXTj2mpkVewEikYcKv2QMD0FKW
+	rUPuCgHRhu6HJfLIq2Pj4b8qArqGkJqUwVGcz2+58USqdVnC1RoLqNZc1mw2V4d5N/DAT4UHcdHOC
+	VlJ8nIwQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW9NX-00000006k9z-26hv;
+	Mon, 30 Jun 2025 07:56:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 14413300125; Mon, 30 Jun 2025 09:56:39 +0200 (CEST)
+Date: Mon, 30 Jun 2025 09:56:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexander Potapenko <glider@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, quic_jiangenj@quicinc.com,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	Aleksandr Nogikh <nogikh@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 02/11] kcov: apply clang-format to kcov code
+Message-ID: <20250630075638.GJ1613200@noisy.programming.kicks-ass.net>
+References: <20250626134158.3385080-1-glider@google.com>
+ <20250626134158.3385080-3-glider@google.com>
+ <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
+ <CAG_fn=XCEHppY3Fn+x_JagxTjHYyi6C=qt-xgGmHq7xENVy4Jw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] khugepaged: Reduce race probability between migration and
- khugepaged
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250630044837.4675-1-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250630044837.4675-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=XCEHppY3Fn+x_JagxTjHYyi6C=qt-xgGmHq7xENVy4Jw@mail.gmail.com>
 
-On 30/06/25 10:18 AM, Dev Jain wrote:
-> Suppose a folio is under migration, and khugepaged is also trying to
-> collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
-> page cache via filemap_lock_folio(), thus taking a reference on the folio
-> and sleeping on the folio lock, since the lock is held by the migration
-> path. Migration will then fail in
-> __folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
-> such a race happening (leading to migration failure) by bailing out
-> if we detect a PMD is marked with a migration entry.
+On Fri, Jun 27, 2025 at 02:50:18PM +0200, Alexander Potapenko wrote:
 
-Could the migration be re-attempted after such failure ? Seems like
-the migration failure here is traded for a scan failure instead.
-
+> Setting AlignConsecutiveDeclarations: AcrossEmptyLinesAndComments will
+> replace the above with the following diff:
 > 
-> This fixes the migration-shared-anon-thp testcase failure on Apple M3.
+>  struct kcov_percpu_data {
+> -       void                    *irq_area;
+> -       local_lock_t            lock;
+> -
+> -       unsigned int            saved_mode;
+> -       unsigned int            saved_size;
+> -       void                    *saved_area;
+> -       struct kcov             *saved_kcov;
+> -       int                     saved_sequence;
+> +       void        *irq_area;
+> +       local_lock_t lock;
+> +
+> +       unsigned int saved_mode;
+> +       unsigned int saved_size;
+> +       void        *saved_area;
+> +       struct kcov *saved_kcov;
+> +       int          saved_sequence;
+>  };
+> 
+> (a bit denser, plus it aligns the variable names, not the pointer signs)
+> Does this look better?
 
-Could you please provide some more context why this test case was
-failing earlier and how does this change here fixes the problem ?
-
-> 
-> Note that, this is not a "fix" since it only reduces the chance of
-> interference of khugepaged with migration, wherein both the kernel
-> functionalities are deemed "best-effort".
-> > Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
-> 
-> This patch was part of
-> https://lore.kernel.org/all/20250625055806.82645-1-dev.jain@arm.com/
-> but I have sent it separately on suggestion of Lorenzo, and also because
-> I plan to send the first two patches after David Hildenbrand's
-> folio_pte_batch series gets merged.
-> 
->  mm/khugepaged.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 1aa7ca67c756..99977bb9bf6a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -31,6 +31,7 @@ enum scan_result {
->  	SCAN_FAIL,
->  	SCAN_SUCCEED,
->  	SCAN_PMD_NULL,
-> +	SCAN_PMD_MIGRATION,
->  	SCAN_PMD_NONE,
->  	SCAN_PMD_MAPPED,
->  	SCAN_EXCEED_NONE_PTE,
-> @@ -941,6 +942,8 @@ static inline int check_pmd_state(pmd_t *pmd)
->  
->  	if (pmd_none(pmde))
->  		return SCAN_PMD_NONE;
-> +	if (is_pmd_migration_entry(pmde))
-> +		return SCAN_PMD_MIGRATION;
->  	if (!pmd_present(pmde))
->  		return SCAN_PMD_NULL;
->  	if (pmd_trans_huge(pmde))
-> @@ -1502,9 +1505,12 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
->  	    !range_in_vma(vma, haddr, haddr + HPAGE_PMD_SIZE))
->  		return SCAN_VMA_CHECK;
->  
-> -	/* Fast check before locking page if already PMD-mapped */
-> +	/*
-> +	 * Fast check before locking folio if already PMD-mapped, or if the
-> +	 * folio is under migration
-> +	 */
->  	result = find_pmd_or_thp_or_none(mm, haddr, &pmd);
-> -	if (result == SCAN_PMD_MAPPED)
-> +	if (result == SCAN_PMD_MAPPED || result == SCAN_PMD_MIGRATION)
-Should mapped PMD and migrating PMD be treated equally while scanning ?
-
->  		return result;
->  
->  	/*
-> @@ -2716,6 +2722,7 @@ static int madvise_collapse_errno(enum scan_result r)
->  	case SCAN_PAGE_LRU:
->  	case SCAN_DEL_PAGE_LRU:
->  	case SCAN_PAGE_FILLED:
-> +	case SCAN_PMD_MIGRATION:
->  		return -EAGAIN;
->  	/*
->  	 * Other: Trying again likely not to succeed / error intrinsic to
-> @@ -2802,6 +2809,7 @@ int madvise_collapse(struct vm_area_struct *vma, unsigned long start,
->  			goto handle_result;
->  		/* Whitelisted set of results where continuing OK */
->  		case SCAN_PMD_NULL:
-> +		case SCAN_PMD_MIGRATION:
->  		case SCAN_PTE_NON_PRESENT:
->  		case SCAN_PTE_UFFD_WP:
->  		case SCAN_PAGE_RO:
+Better yes, but still not really nice.
