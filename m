@@ -1,134 +1,130 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE59433A4
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE001CDFCA;
+	Mon, 30 Jun 2025 18:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751307292; cv=none; b=MdRBlWX6DS5oGQFK5G+chCQ+obHOTTXosA3YVTMQQRqV89s8714JPs8HWmbJckrjr1EV9MTuf5zpWbeC8E3G0pyzFXtwZS4Nb3q/DOG300OGoUYAjO+u6+7LCeMb+QSYvvy3/NnNB6ko9QnFfmNwwNwABSS2yQ/FUyPByZ2MB/E=
+	t=1751307312; cv=none; b=MSrPAmO8V4V8bINVDwVOO39lwggwmcuLuuiT+CpAmpKfqeHAukTEGEqkrXPLhaPAByfTOsi32gYJUS74aA6Ahtr7FeAIlTzCBmRG/VzcKRTgHz7pb1+3U8dTptj9LTJi2t+OTAAWHoUmGKP1JIxKTVsi8Y26BuBt8NbsrsnAFL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751307292; c=relaxed/simple;
-	bh=uE/1CLhVseTq2X90BDfKnYPYQeZfMvQHHZ169uUdYbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZId/oCB1yzsDFna3YVTY44L8H/r/POeZZL+8zsJeiv5bjKE77BzM4fY3YyMBoati8XQ/omyx4GYMuYP6EF43aMF8iXgI1CnM0KvgeGYvtaZsPzxux68ntbNQhx/WZh7137bQ93+04wqqQ65WEU7E0lKhcAgAgurdQqzUXoigtZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IN1aTVRD; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1751307312; c=relaxed/simple;
+	bh=LDrdIDPKEff84B12ukoJJ5LXoAz2VrNgfonQmGr/YIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZleiNYngceQID/V6E50bc8V2DT3NjZT8KtWisV7rZUyul7wS+h5gnfe3WtscuQFCZaTr/Okb4BZrdwy6tIcZI9jTgme9yujASxtLgZ2VCe1l6yyjVOpFWaRoPaLBBMnSsm26U5rvZYSpCL90hjZSieOf6/0GraxNc3Ggoj+gs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jFDKDUk5; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IN1aTVRD"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313336f8438so1174029a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:14:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFDKDUk5"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4940748b3a.3;
+        Mon, 30 Jun 2025 11:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751307290; x=1751912090; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fjh4vA0/9tGFd6ND+oD1KaKIqLUUdClc6Lc/84XmOxg=;
-        b=IN1aTVRDsaxO6u4tmcEEQU+mNjB7TSArWHSdN4xaNswT2IOshRvph1nQgXnkcQ8oza
-         fBFiJO3KLvRO/ijTLPgqK/LHKp/Q2Y999W2ILDwAJ+RWstkAxjq0EgxM1mOKFugpZ8w/
-         gycUZZSuN7Uka/hxiEA4jLdpiZLjizD1ZXYUlkpIsvKS2gRQYvPTMVW8hy3xb/Ko0vmt
-         rZb9bp7CkfD8o7UBFmgDTqr2vSyX0FMA2e7jGQoJKCcPOyN8cDT2T+X0rv9V8+ABisUl
-         X8350i+agfypKfzZV1nHRVRhh5DUWMhs5NTEvSRJ4bxS9XtBdHvkBszQRURkD5jkLSUs
-         nxwg==
+        d=gmail.com; s=20230601; t=1751307310; x=1751912110; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H37e64s3170mpDSPHrCrQe6P7F5mto+begqdDnm3dHc=;
+        b=jFDKDUk5DGKmpSS8n6/lDvGe55f7DHW8KoB0iIQKjAtniZZLekGEFBA2ugguNctPfN
+         oAdKzbfCevpFfTzHL0qRIWsM1ZFTLrtInCU86SDOu/xzOQi+lS94QQf6nCxhZdBQvXLC
+         FA7wZrXz822taUEBsL8KwSe3Aj4E2Ln2PgQN/8g+01cbrku97/L/2OWZ8eEKbDeOTorg
+         EkUjzEhzcJKQC7iZWfcBl69v3hupJ5LrG7TZJ981CPJvsbB9jGZaoP2pT2ad+TRk9sIK
+         +v7syq10DdWYBvS4XRr2BVAjXI/szphFYOGMVOuNpw7CqmnomXCP9iyA8ZPJuwVp2Jnm
+         qP8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751307290; x=1751912090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fjh4vA0/9tGFd6ND+oD1KaKIqLUUdClc6Lc/84XmOxg=;
-        b=uDO7tZdwXznOvy+ld8aq6V61maK21jVpbcfkmgYpIMV93jZgHi6VwYwJK/RMBVT+CZ
-         hNpHfCHa0/EwTqTJCfxJ8J1O0vmDwp0KL/vDCDjlPJP5hvDI9h0KJL693YTk2cIkRcJA
-         C2YmVCS/SHPrxI17pgw1UfZ8d5PfLhj5LcY8BNFxOORH93VcIEY4X9Wdlmx48lER3Z44
-         HD4dBMH8uZdlNjXQAs0J4BflWWOGiujIW5goi4ulfgp5W4fUdQUDMbY7mronnA/luSB7
-         ac8Zq4fwld9oRYsZ5cxKurrPmQSFrLDG7dxhW8pU5QemDHpySJw0jsA61aaUwrV2IJ4B
-         emWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRaUsh12EdBMi8U5fT1aCM0RQZ/AyZ5q/BxSHmJkQXcXo68tVIzFEPbock0lekKliaHGfI3wG0VIN1s8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN7Bb4jkps0pYvBsHeOUrpFLajT0d/8+C7+5U4YF3VAfu7mgj5
-	0PRHLEb+Si7SS3kUEKJRayrUgcHYsXgqW43RYJBFgxhvu3Eia3Uqcs2HrC0O8/5PI0eWJsOq1By
-	kltBGLUllWxcouiYEJl5EZmHqID0HX5I=
-X-Gm-Gg: ASbGncu+Oh9BWQHoF10DsbYtfk8ebYYcuIdqQ+6ANT9hTksDc8HLzLofQkQo6qmR0LW
-	W/XdMZn0FjYn7ET7XaN0x6o9Q9wFInjeiNXvDCLGW1lF6lLHQJG2FqQP1uI+IrMch+vCDvJU6Bu
-	c+ctGKZhBnzGy46+6aUz/DnxXmTrqH0vpYeOJxtYz3LL8=
-X-Google-Smtp-Source: AGHT+IG7fa86LtvjoLxpO8be3RjD2WwHZGWwVRap24uOdaJ2ojBoqB5ygwyY13C0f0w1v0h8n6niNd79tYHE7zV9nFU=
-X-Received: by 2002:a17:90b:280a:b0:311:b0ec:135e with SMTP id
- 98e67ed59e1d1-3195196fe9fmr128173a91.2.1751307290129; Mon, 30 Jun 2025
- 11:14:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751307310; x=1751912110;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H37e64s3170mpDSPHrCrQe6P7F5mto+begqdDnm3dHc=;
+        b=Y69Rka1A+QLPHfdxXRSg++9Jvf+a5pPtsdvyUAzRZdQKt/hQloK/nXfq7UHIr/zuEw
+         4r9fIiELorxjCKuZvqeQeqJmLkEzAOhP2HbP50thy647xEHPLtnLcHNT8a8ZvdT217CJ
+         38WfBzFK9hbH0JMyJP2R1XILhFxLfGYPLF3RFsRSxfwVmOYvDglXBWqPyzR54jXWdtvy
+         zYE5xLlG+IdYS2wcU/Qi32Ew5nEbQxTeX3n6TX2MmqCatnY5mhWydfWHoaqWNcHcFqGL
+         6JRy7Y6bojWvJVOKAeBv+ZTeRNwlQI1t5s3K3Uwx+mSZsGyHTi1GeB99q32kxLdzrDRe
+         9plQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU46X9XIycdTyhLgg/HgflvIiWAnlbiktXcugxLFNMz0h8293nFNVpnwOtverVDZ48Fy5vhgSMy@vger.kernel.org, AJvYcCXYDDSla78c8yMTO6PdjI7RAj91WFOFpxjY4fOVcMdwlNtW3i4ycz4Cf75Hm4IKFxDjjNoGum12eKlANZg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRoWsBiqo0RAN4ua7Ex8m3TfBcBKmcgxjv1o0M/eBFlyeXttKu
+	FtICHkT8xVb2nk45s0oWeXkz+mnqcZdjOgMDP/v2A70SOn8WCj409tjD
+X-Gm-Gg: ASbGncs8YN89V9tGhuNm3ggMOkIorzY3E/k3MnH8EFH9kLIKhTAJYU/4yTENQXES7+j
+	CD4uarfAajzo2QA6S/9GMPhbzTuZIMj2WR6gXu7GTQ0yUu13i79YNjL66VIzjz2gPtZUowkZCyY
+	u9C7LrHn+sKfupDLwImxjwoUtDw270YWDkFHSCnFpB1wjfTL7vkN43rSrdrnWtJwtR3orGLVPVx
+	k1VSPVRXcCWvYL+iZyrm2vImNW2Ta3qeqJUIeZkWUtKFHVZBUEbEgcCyMqzJwGva4KGpKlQmgj3
+	yKTH9bWeW4zEH4l4PVEDTXZSFKXCsFZbgWSihn0ztcwHXCQnCeh9YX7evFVDdA==
+X-Google-Smtp-Source: AGHT+IGihescccQMP7vCe8xp0GzvZMGE5zbzUaAE5sBZpMnQ9pL1PuoCEq7KCoGc6qCy0cXZODYCfA==
+X-Received: by 2002:a05:6a20:d486:b0:201:2834:6c62 with SMTP id adf61e73a8af0-220a16b359bmr21990420637.25.1751307310226;
+        Mon, 30 Jun 2025 11:15:10 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af55c5837sm9756966b3a.116.2025.06.30.11.15.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 11:15:08 -0700 (PDT)
+Date: Mon, 30 Jun 2025 14:15:06 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] wireguard: queueing: simplify wg_cpumask_next_online()
+Message-ID: <aGLUKg8uNvNtimW0@yury>
+References: <20250619145501.351951-1-yury.norov@gmail.com>
+ <aGLIUZXHyBTG4zjm@zx2c4.com>
+ <aGLKcbR6QmrQ7HE8@yury>
+ <aGLLepPzC0kp9Ou1@zx2c4.com>
+ <aGLPOWUQeCxTPDix@yury>
+ <CAHmME9rjm3k1hw4yMd8Fe9WHxC48ruqFOGJp68Hm6keuondzuQ@mail.gmail.com>
+ <aGLQc5JGGpMdfbln@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626134158.3385080-1-glider@google.com> <20250626134158.3385080-3-glider@google.com>
- <20250627080248.GQ1613200@noisy.programming.kicks-ass.net>
- <CAG_fn=XCEHppY3Fn+x_JagxTjHYyi6C=qt-xgGmHq7xENVy4Jw@mail.gmail.com>
- <CANiq72mEMS+fmR+J2WkzhDeOMR3c88TRdEEhP12r-WD3dHW7=w@mail.gmail.com> <20250630080910.GK1613200@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250630080910.GK1613200@noisy.programming.kicks-ass.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 30 Jun 2025 20:14:37 +0200
-X-Gm-Features: Ac12FXyb2DQrVYl-Dwvo78mZOTpBIY790W8DikLM5bA8rznRUGZ1aVN_EqjtnQw
-Message-ID: <CANiq72nURu5usLAjj+C47iXPLRrJsNChWKGkVtw9MuDaHUzkfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] kcov: apply clang-format to kcov code
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexander Potapenko <glider@google.com>, Miguel Ojeda <ojeda@kernel.org>, quic_jiangenj@quicinc.com, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGLQc5JGGpMdfbln@yury>
 
-On Mon, Jun 30, 2025 at 10:09=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> Since clang format is an entirely optional thing, I don't think we
-> should care about old versions when inconvenient. Perhaps stick to the
-> very latest version.
+> > > From fbdce972342437fb12703cae0c3a4f8f9e218a1b Mon Sep 17 00:00:00 2001
+> > > From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+> > > Date: Mon, 30 Jun 2025 13:47:49 -0400
+> > > Subject: [PATCH] workqueue: relax condition in __queue_work()
+> > >
+> > > Some cpumask search functions may return a number greater than
+> > > nr_cpu_ids when nothing is found. Adjust __queue_work() to it.
+> > >
+> > > Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+> > > ---
+> > >  kernel/workqueue.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> > > index 9f9148075828..abacfe157fe6 100644
+> > > --- a/kernel/workqueue.c
+> > > +++ b/kernel/workqueue.c
+> > > @@ -2261,7 +2261,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
+> > >         rcu_read_lock();
+> > >  retry:
+> > >         /* pwq which will be used unless @work is executing elsewhere */
+> > > -       if (req_cpu == WORK_CPU_UNBOUND) {
+> > > +       if (req_cpu >= WORK_CPU_UNBOUND) {
+> > >                 if (wq->flags & WQ_UNBOUND)
+> > >                         cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+> > >                 else
+> > >
+> > 
+> > Seems reasonable to me... Maybe submit this to Tejun and CC me?
+> 
+> Sure, no problem.
 
-I would love that, but I am not sure about others that use their
-distribution toolchains (including for clang-format).
+Hmm... So, actually WORK_CPU_UNBOUND is NR_CPUS, which is not the same
+as nr_cpu_ids. For example, on my Ubuntu machine, the CONFIG_NR_CPUS
+is 8192, and nr_cpu_ids is 8.
 
-Hmm...
+So, for the wg_cpumask_next_online() to work properly, we need to
+return the WORK_CPU_UNBOUND in case of nothing is found.
 
-If it would now allow us to get very close to the average kernel
-style, then we should definitely consider it -- years ago it wasn't
-the case.
+I think I need to send a v3...
 
-> You can have per directory .clang-format files to account for this. Eg.
-> net/ can have its own file that allows their silly comment style etc.
+Thanks,
+Yury
 
-Yeah, that is what I recommended in:
-
-    https://docs.kernel.org/dev-tools/clang-format.html
-
-But nobody actually added their own files so far. (Which I guess, in a
-sense, is good... :)
-
-> Still, in general I don't like linters, they're too rigid, its either
-> all or nothing with those things.
-
-There is `// clang-format off/on` to locally disable it, so that is an
-escape hatch, but it is ugly, because we would still need to use it
-too much with the current setup.
-
-> And like I said, in my neovim-lsp adventures, I had to stomp hard on
-> clang-format, it got in the way far more than it was helpful.
-
-Yeah, clang-format for the kernel so far is most useful for getting
-reasonable formatting on e.g. snippets of existing code in an IDE, and
-possibly for new files where the maintainer is OK with the style (I
-mention a bit of that in the docs above).
-
-But we are not (or, at least, back then) at the point where we could
-consider using it on existing files (e.g. just the alignment on
-`#define`s makes it a mess in many cases).
-
-I will take a look at the config later this cycle and see how we would
-fare nowadays. It would be nice to get to the point where some
-subsystems can just use it for new files and look good enough.
-
-Thanks!
-
-Cheers,
-Miguel
