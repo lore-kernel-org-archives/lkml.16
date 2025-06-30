@@ -1,182 +1,202 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F15B28C868;
-	Mon, 30 Jun 2025 14:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C5328C868;
+	Mon, 30 Jun 2025 14:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294585; cv=none; b=D3wwmdacUwSSFsfnnwlghDnowiI5aTxs8SOpTyiFnJlKtIe+hEZzV30kwkZwwh5oatuMwY7a0JaAKG5QFuv7omZ7dOnafLaZKm1xJ2TCF9NFkG39dy//Phl6dyBAQmNjQaFpzqGKdv/E4rVSoKMkMWAU6T/X6c8i3JQxiKICcYc=
+	t=1751294606; cv=none; b=UneeGDv1chDfDqywVNa1VhR/nDdB850Eywf1ZB1eSpdFibFVAXoUApqfGQ8DaVy0iTkNPmKxNYM3TN3b+JlaM0TnPFRKslZq8KXPf3Kpm03WHoURgTNctJ5zJxJalzP2WWbCU5cblBKUNb0S9g5taGJNfzgpslN6GkE+uttF6zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294585; c=relaxed/simple;
-	bh=aJBZLRK2AtKTR7exY7C4jH9FsFz8pTE7CY5s0ADk6xI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dgyggPLmCgZxaK84EGD1Ld3Uro8bun3DozZNN9x6MOCpucBrlmEFI9CsSPynLZMYBA2Fs1JDldqjQh+oekbq3NmONFqFsNmTZKPkZB6n54mXNvOJdAUi7KxXW+5VBnq+nn0quJSej2aGdgD4hx1jnTM/w/cxeQIfRZoJ+emU9XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k3wsnbxQ; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751294606; c=relaxed/simple;
+	bh=ilmhCUcpL/i5Mksi9L81Yb0NbqlLiM9joUwzKLfdgFM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JBc9VFic7H2u4JdtN3AwJZFnCx5eLtelVvfB0nO82PepyDqklAH/ziYh1mVf5mkIApTz6e4aYOlw5wQw0c1p7HwA9+e40oVat8jh304k+EvDQNzvARBSubvGHIRDX6vYnmk3oWEHYieLyrnX48Zf+K54qzaAye8ipaPsnEXLvmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=CnaA+VsE; arc=none smtp.client-ip=185.233.34.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3wsnbxQ"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313a188174fso4480921a91.1;
-        Mon, 30 Jun 2025 07:43:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751294582; x=1751899382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n69gDXxPGfgIU+wPEIeigImTRma77DzYZ7Ve67R5PNg=;
-        b=k3wsnbxQhfH147uPEQ4IpjPytY2Twf66KS3rigfbaodTHKorJ5J55DPj0e+ekgQt+A
-         K7WPClQBMuafpx0PxNHFHGxFT+HmYyhDE5Qd8893VGsDhJKYLNULIWDcNBTAnOndyBSj
-         9g6g8YMFUYs7Nz98FcYW0CdwMFQeGGzPmpQiwfCNk6ZWb9gSd9dIiBVKdzPckHX6a9dT
-         Bxdk7eG+fI9CznJaY0m1NhLUaMeXSW/SThgipnNo9mphh/92Mva/E10ln7d3Zc+Xoo95
-         zGrVuZPLrr3JPNJDaPW+T1YIngr+DxxwcBPufQp5f9jbggqT9fPOsJ3lGeBTTmIj+mCC
-         i9UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751294582; x=1751899382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n69gDXxPGfgIU+wPEIeigImTRma77DzYZ7Ve67R5PNg=;
-        b=o41L/BiUteQueazmlXqUlPoAoKZ6hgg45OJtMa/irf+9g6D7r5PZL3ZGtr3Oi8Yh+0
-         oPQn7Wexj1xv8O03x1T1pdohCqTwVlgUE3ikzHlsU3l98lxNeg3aJozBl4jL6e5kJ3+F
-         IbqzODWCP8Jm09+Iz1faGvzvgir4+AfZOljfB6z7/ZDAU6DQlUP23x85ttjO96+LlX5f
-         YwGcImDDtnVkBTD99549qqwMUkBPpnQtFLXyxkdJI/KLzXUm+9m63T1obpnsaHi0oKqv
-         jRaCB7KpcV+SV8oDsltzqCVPx0WNuaYPlb8v5BVhMqiNaZ5mYASxHL2GgOjyB6u8oxsS
-         aIFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMgmlUee0G+nmk51qaudyim6FoDHNPT75t8m3uZ9UTLxdOPu5XAt2d9l8qfaE7vj+Ai3Y=@vger.kernel.org, AJvYcCVHWkbGr8p6wl5Ut8CXMXDUXx2/1Ajft23PYcV9Hdcm97qBiUnrzS6PFM2VJd0YwGkaTUixQ/IT2TMHvkDr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGHXdJj4IshmJ9Ri2AXqNVwGBha8uxG+t0ksRlSHRYajeEmC3j
-	T2yjAd1iKyzY4A+sQ5PTf4wtME3VrZ5M1OAwTaGsurwUQuekfd9ObOm8tTe/8Q==
-X-Gm-Gg: ASbGncuK53lCazCxAo6wrS7Zb5xEzK7Nb4GG2XuyZutKgcfIs1MjAH7fsd+KSlTCl4P
-	syrW0k/2JbcjWyfSRpeyb0cdZWLJi64nwNBKH/H5qvt0wTt7wFgPIMaQ6SO2cHDWdSw6oj2zGiv
-	yPOwcLpRYGhUy/JDKRWiiyvww1L7w0d4w2kec6+Ts4Evp25R3mvQTwn+T1c4oBHo2o9RUECif5O
-	opuwxBaRpnWSqmhBoVzOah6W6tbRObN4cVgve6D08AWtz3x838lymikNczs00AsBceBdbjp/CHE
-	yh97N+C2+4p7GQwqzyk920VmWHL3bQFU/4zdoK9DkJhRTdS5s8ZbRtIjUP7c1J5ted2vzcwX1hv
-	V
-X-Google-Smtp-Source: AGHT+IEBKjYr3kuohCQjY0CglzvBmQzIq01EIwspNpePjbfFFbP1AgODBoDwnck1jrdGsXqUo51EbA==
-X-Received: by 2002:a17:90b:1b0c:b0:30e:3737:7c87 with SMTP id 98e67ed59e1d1-318c91117a0mr17987244a91.5.1751294582368;
-        Mon, 30 Jun 2025 07:43:02 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:2f51:de71:60e:eca9])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-318c13a270csm9170017a91.16.2025.06.30.07.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 07:43:01 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net v2 3/3] virtio-net: use the check_mergeable_len helper
-Date: Mon, 30 Jun 2025 21:42:12 +0700
-Message-ID: <20250630144212.48471-4-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250630144212.48471-1-minhquangbui99@gmail.com>
-References: <20250630144212.48471-1-minhquangbui99@gmail.com>
+	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="CnaA+VsE"
+Received: from smtp.freedom.nl (unknown [10.10.4.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by dane.soverin.net (Postfix) with ESMTPS id 4bW86K2f5Yz19Vq;
+	Mon, 30 Jun 2025 14:43:21 +0000 (UTC)
+Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bW86J6jHGz2xWq;
+	Mon, 30 Jun 2025 14:43:20 +0000 (UTC)
+Authentication-Results: smtp.freedom.nl;
+	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=CnaA+VsE;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
+	s=soverin1; t=1751294601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HgIxYYWW7PGDTgooNb8M5sfCGnHXfJotXMCL7q2P04g=;
+	b=CnaA+VsE7wLrE1veVf2zmo9ECiE4Bhz3w3gZa5Gx+GAjA67SPDAVp3ASzjMqIFPAwbfx7z
+	sIGV5kCjR2W8NCKEUz2VsARYOXcmIxuAT/dOdoAFXozo1B3NEx5zGgvrZpVTggP+OCjpOG
+	iajtEUR5JzcwY/YVLV+0BTb9jUjv5/WUCCfXfGrZOtIRyv2HlBJfuiW59IWqvbquSQLEhS
+	SxzcK6UqS9argctMI5jSm44qp+N4AlX6to5qSCssm/oYnSK5IJzx9q74+HfT+47YAfqbs1
+	TG6ZhVVR6vQPl5np9XOP6/JGWmMEenjgF5kMc6eUp2nl4vPseYay9blhNDUdog==
+X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=6862a289 a=IkcTkHD0fZMA:10 a=WN6_cwnCAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=Za3Eev7SAAAA:8 a=T8oQY5rHyaLtZB5ehecA:9 a=QEXdDO2ut3YA:10 a=ndfOWLLM0rR49n6Yv1rF:22 a=I3fWsOZ8Wfyo0pj9SUN0:22
+Message-ID: <08670ad6-063e-4d56-a58d-9b8bb5520b54@jjverkuil.nl>
+Date: Mon, 30 Jun 2025 16:43:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Hans Verkuil <hans@jjverkuil.nl>
+Subject: Re: [PATCH v3 8/8] media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert
+ PM logic
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
+ <20250630-uvc-grannular-invert-v3-8-abd5cb5c45b7@chromium.org>
+Content-Language: en-US, nl
+Autocrypt: addr=hans@jjverkuil.nl; keydata=
+ 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
+In-Reply-To: <20250630-uvc-grannular-invert-v3-8-abd5cb5c45b7@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-Replace the current repeated code to check received length in mergeable
-mode with the new check_mergeable_len helper.
+On 30/06/2025 16:20, Ricardo Ribalda wrote:
+> Instead of listing the IOCTLs that do not need to turn on the camera,
+> list the IOCTLs that need to turn it on. This makes the code more
+> maintainable.
+> 
+> This patch changes the behaviour for unsupported IOCTLs. Those IOCTLs
+> will not turn on the camera.
+> 
+> Suggested-by: Hans Verkuil <hans@jjverkuil.nl>
+> Reviewed-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
- drivers/net/virtio_net.c | 34 +++++++---------------------------
- 1 file changed, 7 insertions(+), 27 deletions(-)
+Reviewed-by: Hans Verkuil <hans@hverkuil.nl>
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 535a4534c27f..ecd3f46deb5d 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2156,7 +2156,6 @@ static int virtnet_build_xdp_buff_mrg(struct net_device *dev,
- 				      struct virtnet_rq_stats *stats)
- {
- 	struct virtio_net_hdr_mrg_rxbuf *hdr = buf;
--	unsigned int headroom, tailroom, room;
- 	struct skb_shared_info *shinfo;
- 	unsigned int xdp_frags_truesz = 0;
- 	unsigned int truesize;
-@@ -2202,20 +2201,14 @@ static int virtnet_build_xdp_buff_mrg(struct net_device *dev,
- 		page = virt_to_head_page(buf);
- 		offset = buf - page_address(page);
- 
--		truesize = mergeable_ctx_to_truesize(ctx);
--		headroom = mergeable_ctx_to_headroom(ctx);
--		tailroom = headroom ? sizeof(struct skb_shared_info) : 0;
--		room = SKB_DATA_ALIGN(headroom + tailroom);
--
--		xdp_frags_truesz += truesize;
--		if (unlikely(len > truesize - room)) {
-+		if (check_mergeable_len(dev, ctx, len)) {
- 			put_page(page);
--			pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
--				 dev->name, len, (unsigned long)(truesize - room));
--			DEV_STATS_INC(dev, rx_length_errors);
- 			goto err;
- 		}
- 
-+		truesize = mergeable_ctx_to_truesize(ctx);
-+		xdp_frags_truesz += truesize;
-+
- 		frag = &shinfo->frags[shinfo->nr_frags++];
- 		skb_frag_fill_page_desc(frag, page, offset, len);
- 		if (page_is_pfmemalloc(page))
-@@ -2429,18 +2422,12 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
- 	struct sk_buff *head_skb, *curr_skb;
- 	unsigned int truesize = mergeable_ctx_to_truesize(ctx);
- 	unsigned int headroom = mergeable_ctx_to_headroom(ctx);
--	unsigned int tailroom = headroom ? sizeof(struct skb_shared_info) : 0;
--	unsigned int room = SKB_DATA_ALIGN(headroom + tailroom);
- 
- 	head_skb = NULL;
- 	u64_stats_add(&stats->bytes, len - vi->hdr_len);
- 
--	if (unlikely(len > truesize - room)) {
--		pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
--			 dev->name, len, (unsigned long)(truesize - room));
--		DEV_STATS_INC(dev, rx_length_errors);
-+	if (check_mergeable_len(dev, ctx, len))
- 		goto err_skb;
--	}
- 
- 	if (unlikely(vi->xdp_enabled)) {
- 		struct bpf_prog *xdp_prog;
-@@ -2475,17 +2462,10 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
- 		u64_stats_add(&stats->bytes, len);
- 		page = virt_to_head_page(buf);
- 
--		truesize = mergeable_ctx_to_truesize(ctx);
--		headroom = mergeable_ctx_to_headroom(ctx);
--		tailroom = headroom ? sizeof(struct skb_shared_info) : 0;
--		room = SKB_DATA_ALIGN(headroom + tailroom);
--		if (unlikely(len > truesize - room)) {
--			pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
--				 dev->name, len, (unsigned long)(truesize - room));
--			DEV_STATS_INC(dev, rx_length_errors);
-+		if (check_mergeable_len(dev, ctx, len))
- 			goto err_skb;
--		}
- 
-+		truesize = mergeable_ctx_to_truesize(ctx);
- 		curr_skb  = virtnet_skb_append_frag(head_skb, curr_skb, page,
- 						    buf, len, truesize);
- 		if (!curr_skb)
--- 
-2.43.0
+Much nicer!
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 52 +++++++++++++++++++---------------------
+>  1 file changed, 25 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 350cd2cc88f872d2e8bd19e2b8fb067894916364..94dc97448446d36a85a1b36d16c29f22af89c640 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -1222,37 +1222,35 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
+>  				    unsigned int cmd, unsigned long arg)
+>  {
+>  	struct uvc_fh *handle = file->private_data;
+> +	unsigned int converted_cmd = v4l2_translate_cmd(cmd);
+>  	int ret;
+>  
+> -	/* The following IOCTLs do not need to turn on the camera. */
+> -	switch (cmd) {
+> -	case UVCIOC_CTRL_MAP:
+> -	case VIDIOC_CREATE_BUFS:
+> -	case VIDIOC_DQBUF:
+> -	case VIDIOC_ENUM_FMT:
+> -	case VIDIOC_ENUM_FRAMEINTERVALS:
+> -	case VIDIOC_ENUM_FRAMESIZES:
+> -	case VIDIOC_ENUMINPUT:
+> -	case VIDIOC_EXPBUF:
+> -	case VIDIOC_G_FMT:
+> -	case VIDIOC_G_PARM:
+> -	case VIDIOC_G_SELECTION:
+> -	case VIDIOC_QBUF:
+> -	case VIDIOC_QUERYCAP:
+> -	case VIDIOC_REQBUFS:
+> -	case VIDIOC_SUBSCRIBE_EVENT:
+> -	case VIDIOC_UNSUBSCRIBE_EVENT:
+> -		return video_ioctl2(file, cmd, arg);
+> -	}
+> -
+> -	ret = uvc_pm_get(handle->stream->dev);
+> -	if (ret)
+> +	/* The following IOCTLs need to turn on the camera. */
+> +	switch (converted_cmd) {
+> +	case UVCIOC_CTRL_QUERY:
+> +	case VIDIOC_G_CTRL:
+> +	case VIDIOC_G_EXT_CTRLS:
+> +	case VIDIOC_G_INPUT:
+> +	case VIDIOC_QUERYCTRL:
+> +	case VIDIOC_QUERYMENU:
+> +	case VIDIOC_QUERY_EXT_CTRL:
+> +	case VIDIOC_S_CTRL:
+> +	case VIDIOC_S_EXT_CTRLS:
+> +	case VIDIOC_S_FMT:
+> +	case VIDIOC_S_INPUT:
+> +	case VIDIOC_S_PARM:
+> +	case VIDIOC_TRY_EXT_CTRLS:
+> +	case VIDIOC_TRY_FMT:
+> +		ret = uvc_pm_get(handle->stream->dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = video_ioctl2(file, cmd, arg);
+> +		uvc_pm_put(handle->stream->dev);
+>  		return ret;
+> +	}
+>  
+> -	ret = video_ioctl2(file, cmd, arg);
+> -
+> -	uvc_pm_put(handle->stream->dev);
+> -	return ret;
+> +	/* The other IOCTLs can run with the camera off. */
+> +	return video_ioctl2(file, cmd, arg);
+>  }
+>  
+>  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
+> 
 
