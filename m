@@ -1,37 +1,33 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3BB1FDD;
-	Mon, 30 Jun 2025 06:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAEF1FDD;
+	Mon, 30 Jun 2025 06:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263606; cv=none; b=ndmKF5XfKkYrgzH+p1QBS5ZcTo1bpOhTZBGzHVM+D5RIuM/Gn2U+/PgiRn6luGPavI71EMJolCK/VxH6hB31w+5Yq1Hpau1+vd6ijZH68jZyCuLCRfkonCHmG2p9hTFGlJpCA/r8n1zq2EL62YOjJmkDfySKIWgr/4xxRZttFRM=
+	t=1751263671; cv=none; b=HCcgYOq+DachLMTLbf/VY8YkXr79rEDznUZtF4v72JNsWnF9h64VdZcPzvElzGeEJC2cwI6e4e+Ys9wuaLGGoMWnpy5noLRKn6j7VkfAsNUz2xy11Tk18SEIOGjkj+8nH5ycMCpeJIZvOieJTi8fFtdxIeVQA7/9c3aI0xULZ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263606; c=relaxed/simple;
-	bh=HUhY7PoUs24V3YBoQzZ9KGLJDEedXhxuIMG3qmkkfHg=;
+	s=arc-20240116; t=1751263671; c=relaxed/simple;
+	bh=aEv5jxMcMMPvF2344nlFJr5X8UncA9lQIaofkJ840+o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0QQgp0A9fP05lhwm/Z9Z3hvoAF0c79YjqjyEH2nTFFppVzUHkpX9HJMUbVWDuhnz2+c6di04mb+VQD00JlU/X6a/g+HK5qDQXWqUIPUPQetyC7DSOYrzGvxR2VgWtbJBs3CmqAORqUxQwxSWy2Z0IJZrHkGi48m9keZcnCnxvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nVy5uQGW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=dHoYWDCZbLGZhawPPXc4TuLtun+zX2N1zSPSSmph63h860JQ/n8PPb1A07T2NKeo9sPHGn+A5th3LBYRv+pghSEZOJ8X5YkeNKF/jda5vWLmFMCvYMr0kR9mIx1RBDllnD5zvHGQLh+wkPv75yExLZQifghUDe2q+r7XE5/wfbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ge5RcT+7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nVy5uQGW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=4ut1Lv9D/BPjEG6Q/nzKguo7DsSLefV5+bwvE1C6ltc=; b=nVy5uQGW/TZGKhQIhpIx3Kw0lI
-	aeqvsE+nPJ2z9iKxND2YqtnhAXuDCc9vX7bCLYcV6JNkmxq/3ks70DbAk/Tjsr2kNEpfA9PZMfl0t
-	z8Hb5H1cQzON0refA+AdLbA1REsFIl/2A45L8yClAkpWAE4kwemCjPcmXUw7PyJnj892t42mgHraH
-	bZ5EvK4RdsV0zyACpnEGLpHsF9wEhT2eYFY6f4AQ0UzEjORtE9kDqGByJ829KiPuHvaC9wVHE7IyZ
-	Ect3iUcu6DjybNKQkCBTMgKXALzTLgAtq+2OPpAj4HIMINGcQwYUNYyhvWNXcEPHQJe+Cxyq2mJO/
-	OrcTNaxw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW7f7-00000006jXI-3uxZ;
-	Mon, 30 Jun 2025 06:06:42 +0000
-Message-ID: <14122bc8-3e41-426a-ab78-81bf865d122d@infradead.org>
-Date: Sun, 29 Jun 2025 23:06:40 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ge5RcT+7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C98C4CEEB;
+	Mon, 30 Jun 2025 06:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751263671;
+	bh=aEv5jxMcMMPvF2344nlFJr5X8UncA9lQIaofkJ840+o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ge5RcT+7LVEV+w+YASQpYZBAInTQ+hjo8EHvQNwzcHJ80NsZbF7W79pZSj4PcL4sI
+	 KIgAydVShhf7BkvwUNz4cWMiuGkNSG+OxwM6xgGi2BO0OXqZDDH+8JQ3Dgox6dSESD
+	 U+5pjf5ymOJ4hDyiOVdLp5maB6TmYAmGvoaBQNTuLHc5Q5Nu///lgIH8EurzoHQv42
+	 vS4i5tTgDtD9Lwulb/fKn5RrW3eO1Eq7tx+nXTrlZjUpS9AitxKFXM1PHxl6+LWs77
+	 ZnYZ5RjkiLbiQwR5nf7zDxZAC84/VcS1poG+FsTO73nVZF9COtLPl4T3S1lIb8DLc4
+	 mGWZEe/P2VdvA==
+Message-ID: <491ec8dd-8ca5-45bb-b5f4-dfd08a10e8de@kernel.org>
+Date: Mon, 30 Jun 2025 08:07:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,50 +35,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 66/66] kconfig: gconf: show GTK version in About dialog
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-67-masahiroy@kernel.org>
+Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core
+ Electronics
+To: =?UTF-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Boris Gjenero <boris.gjenero@gmail.com>,
+ Christian Hewitt <christianshewitt@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Paolo Sabatino <paolo.sabatino@gmail.com>
+References: <20250629130002.49842-1-jefflessard3@gmail.com>
+ <20250629130002.49842-7-jefflessard3@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-67-masahiroy@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250629130002.49842-7-jefflessard3@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/24/25 8:05 AM, Masahiro Yamada wrote:
-> Likewise xconfig, it is useful to display the GTK version in the About
-> dialog.
+On 29/06/2025 14:59, Jean-François Lessard wrote:
+> Assign vendor prefix "icore", based on their domain name.
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
+> Signed-off-by: Jean-François Lessard <jefflessard3@gmail.com>
 > ---
-> 
->  scripts/kconfig/gconf.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-> index 5b1b468e782d..7340407e4d6e 100644
-> --- a/scripts/kconfig/gconf.c
-> +++ b/scripts/kconfig/gconf.c
-> @@ -579,7 +579,11 @@ static void on_about1_activate(GtkMenuItem *menuitem, gpointer user_data)
->  	dialog = gtk_message_dialog_new(GTK_WINDOW(main_wnd),
->  					GTK_DIALOG_DESTROY_WITH_PARENT,
->  					GTK_MESSAGE_INFO,
-> -					GTK_BUTTONS_CLOSE, "%s", about_text);
-> +					GTK_BUTTONS_CLOSE, "%s\nGTK version: %d.%d.%d",
-> +					about_text,
-> +					gtk_get_major_version(),
-> +					gtk_get_minor_version(),
-> +					gtk_get_micro_version());
->  	gtk_dialog_run(GTK_DIALOG(dialog));
->  	gtk_widget_destroy(dialog);
->  }
 
--- 
-~Randy
+These 4 vendor prefix changes are one patch.
+
+Best regards,
+Krzysztof
