@@ -1,80 +1,170 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971BC2417D9
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC5F2737E7;
+	Mon, 30 Jun 2025 13:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289852; cv=none; b=LuaUwUeq7iu7ntOaRH4ONa420UA5Agt7BsFXMaKqW2z0Wid5MFr0R2jQLWF+3rdQ3Svu5sMCtCT6wzIhFFgvL+DeuXGEFzq/zZvq3RBu+YFmbFR8nsb5KPPf0tM9WfYr9BOkf0NsWTuMvfjcwnk+/adQcfrQKTjz5cz3xKsh39M=
+	t=1751289886; cv=none; b=KZihxCcUh8RvNcVLKKGxhn9RRykZ+3+S8Jtgp61k+Mn68OueOEBUuidQih/DyxNBkVtP+/EymIBBeCBy7cX1lzoY9Cb9MuoObzVmvBV6G0WjDECcYPXULD50e4zJ/RKGgeTeWkLR1Rv3Bg7LszP1LRXb3X7Uy7RhaCh/Hz10U6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289852; c=relaxed/simple;
-	bh=iFaywVTC8M4T+NJ2ZyVyZRGTl3ldMd0MMtrsUGsqZUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EntoZvbRyci61v0cJJECiiGNuItgkjuzTysHBlQyTXKnd8xDrdSRRpeHdOp6LxaSzdYY3bElyIIhqqTHgE5fswezkS+75S13EsCDKsP6a9wdZ8HESrbmDC5OW0JtMYoBZjRh0y4tASGDRxryJsYrr2TwU09nCBb48nwT6Wr5R54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AcTKM6Bu; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751289886; c=relaxed/simple;
+	bh=C/KLwVpP5vnvnPOKwYbYJLVyr9fOvwvaHrGH3cxFg0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uSdlhBJflSjKaEGVX+CQPNGXoIA6TjH9jk0RE9mi5L1zi/C0/WY/gRCmkzQRNZFVBG14fPpAAQT7aV8D5yGH1nrm0/J89NpTORMWPLLD0WyV5Bswl9w+h/K2Y9hgkR2acSJrzn7zZInBiJYBxY9GYvb+lfEekd7VyykOv/O2kaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OymH8Dh9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AcTKM6Bu"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751289847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qAGlzeWXRlMA2Zij8Qp03D2CGSSdLuFgwBSG6gDWPG8=;
-	b=AcTKM6BuqAY3kgrIzG/gg9kzJvLwnPRd8XO/VZDatCB/hIsFPIkSKia5dvTuIBHA+CKCfe
-	lnohH5xqW8rcVJKUI9VwpHIwLq7frob2pgU8+80Bua68KHsDZH5osZcew0iOJlKvHX8E1G
-	LyWbh89spp1PFk+JbgoN6Qd5uTp82pg=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/cma: Use str_plural() in cma_declare_contiguous_multi()
-Date: Mon, 30 Jun 2025 15:23:18 +0200
-Message-ID: <20250630132318.41339-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OymH8Dh9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64A7C4CEF1;
+	Mon, 30 Jun 2025 13:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751289885;
+	bh=C/KLwVpP5vnvnPOKwYbYJLVyr9fOvwvaHrGH3cxFg0s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OymH8Dh9BlD0r5vlxqHynf4+ixUT8pqe92NBhQh8kCAGv7fAUwGvXvMejQQZUnruy
+	 xnPx3yBjrjMGROw/yyZM95VcwNnDcHVaB8gBtPKMlazMX0YWRjQgVaczADH/mCt8w+
+	 4Av9uwfO9F9wU3bghMN6sBKh4CNKtaxPnw7tmZr2O01decJrpzyGdV50Hz6YIjoxE4
+	 XruyUQUZhDXOBgapP5EEPRBlmoWCA4R09e3bJ24XeiN30b1m9ndKF2Q+k8hv2q+B5s
+	 RL3H66Hwj9LgPH1iUH2vtLTc/C2ymbq95+DHJcc1r2JXnan7R5GeNkvRS0FVJDsm5u
+	 zK6q48EC0xnrQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553c31542b1so2401080e87.2;
+        Mon, 30 Jun 2025 06:24:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV49BSH2A9Q67wZZngvVWBwJ2x3D/BPnx8somx9HSdnvDG1TUMYKWE70dvSW103UjVa9VD5hN50BKskpzQ=@vger.kernel.org, AJvYcCVQ4AWzkPary3gVuwSJjHvovCT48OvjE5BWGuQ97y4DhowuuQpCfcxzOO9ix7HrbqQwEdDsLyQCruj/HBaVYA==@vger.kernel.org, AJvYcCWH8zkunrE1Uzmgv8nyhvVn5FJReM+g2jhxgNgkbpwndz6O08Fc3gN5tDva4elnety1PgbW8SckiJDq/Rpb@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg7k0m6C8pcbmXo1hAZWjzzOQ5/HU00UuweP5Q8wRw4AVe0bGl
+	LKdNakMoEyrOR7974Ib3SmQBFUMts2TYl16mXeOQPFlxm4DIEryN/+ZKCo5Q0nDh+ZkfIGYdpAV
+	URdhu4HhE/hHL5lwTgDA0Hp9jRe0hFPs=
+X-Google-Smtp-Source: AGHT+IEPzeuwWBdYagliwzijFiih6tkbayTrYgIeMSfrJEjQfMGuWR0UrzbUSJHDJ6lRnmEznbVIahWtFQmo5AgezlU=
+X-Received: by 2002:a05:6512:224b:b0:553:1f90:cca4 with SMTP id
+ 2adb3069b0e04-5550b87a206mr4541686e87.13.1751289884414; Mon, 30 Jun 2025
+ 06:24:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
+ <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com> <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
+In-Reply-To: <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 30 Jun 2025 22:24:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATp1n2c9RqNoe0oztRtLoMy8JqHF1KqSRsj5avp3vjHCQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwwD9lkICBnBWvlITUhX_Y0G7ZiNvAyww9EJdEFCZePWHqzKfblx7Gg6Qs
+Message-ID: <CAK7LNATp1n2c9RqNoe0oztRtLoMy8JqHF1KqSRsj5avp3vjHCQ@mail.gmail.com>
+Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
+To: Giuliano Procida <gprocida@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the string choice helper function str_plural() to simplify the code
-and to fix the following Coccinelle/coccicheck warning reported by
-string_choices.cocci:
+On Mon, Jun 30, 2025 at 7:05=E2=80=AFPM Giuliano Procida <gprocida@google.c=
+om> wrote:
+>
+> Hi.
+>
+> On Sun, 29 Jun 2025 at 18:51, Masahiro Yamada <masahiroy@kernel.org> wrot=
+e:
+> >
+> > On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@goog=
+le.com> wrote:
+> > >
+> > > When writing symtypes information, we iterate through the entire hash
+> > > table containing type expansions. The key order varies unpredictably
+> > > as new entries are added, making it harder to compare symtypes betwee=
+n
+> > > builds.
+> > >
+> > > Resolve this by sorting the type expansions by name before output.
+> > >
+> > > Signed-off-by: Giuliano Procida <gprocida@google.com>
+> > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+> > > ---
+> > >  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
+> > >  1 file changed, 26 insertions(+), 3 deletions(-)
+> > >
+> > > [Adjusted the first line of the description. Added reviewer tags.
+> > >  Added missing CC to linux-modules.]
+> > >
+> > > diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/ty=
+pes.c
+> > > index 7bd459ea6c59..51c1471e8684 100644
+> > > --- a/scripts/gendwarfksyms/types.c
+> > > +++ b/scripts/gendwarfksyms/types.c
+> > > @@ -6,6 +6,8 @@
+> > >  #define _GNU_SOURCE
+> > >  #include <inttypes.h>
+> > >  #include <stdio.h>
+> > > +#include <stdlib.h>
+> > > +#include <string.h>
+> > >  #include <zlib.h>
+> > >
+> > >  #include "gendwarfksyms.h"
+> > > @@ -179,20 +181,41 @@ static int type_map_get(const char *name, struc=
+t type_expansion **res)
+> > >         return -1;
+> > >  }
+> > >
+> > > +static int cmp_expansion_name(const void *p1, const void *p2)
+> > > +{
+> > > +       struct type_expansion *const *e1 =3D p1;
+> > > +       struct type_expansion *const *e2 =3D p2;
+> > > +
+> > > +       return strcmp((*e1)->name, (*e2)->name);
+> > > +}
+> > > +
+> > >  static void type_map_write(FILE *file)
+> > >  {
+> > >         struct type_expansion *e;
+> > >         struct hlist_node *tmp;
+> > > +       struct type_expansion **es;
+> > > +       size_t count =3D 0;
+> > > +       size_t i =3D 0;
+> > >
+> > >         if (!file)
+> > >                 return;
+> > >
+> > > -       hash_for_each_safe(type_map, e, tmp, hash) {
+> > > -               checkp(fputs(e->name, file));
+> > > +       hash_for_each_safe(type_map, e, tmp, hash)
+> > > +               ++count;
+> > > +       es =3D xmalloc(count * sizeof(struct type_expansion *));
+> >
+> > Just a nit:
+> >
+> >            es =3D xmalloc(count * sizeof(*es));
+> >
+> > is better?
+> >
+> > > +       hash_for_each_safe(type_map, e, tmp, hash)
+> > > +               es[i++] =3D e;
+> > > +
+> > > +       qsort(es, count, sizeof(struct type_expansion *), cmp_expansi=
+on_name);
+> >
+> > qsort(es, count, sizeof(*es), cmp_expansion_name);
+> >
+>
+> That's a fair point.
+>
+> However, in the gendwarfksyms code, all but one of the sizeofs uses an
+> explicit type name. The exception is sizeof(stats) where stats is an arra=
+y.
+>
+> I'll leave Sami's code as it is.
 
-  opportunity for str_plural(nr)
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- mm/cma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This rule is clearly documented with rationale.
 
-diff --git a/mm/cma.c b/mm/cma.c
-index c0b2630a1b81..c40d53298801 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -22,6 +22,7 @@
- #include <linux/mm.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <linux/string_choices.h>
- #include <linux/log2.h>
- #include <linux/cma.h>
- #include <linux/highmem.h>
-@@ -548,8 +549,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
- 			(unsigned long)total_size / SZ_1M);
- 	else
- 		pr_info("Reserved %lu MiB in %d range%s\n",
--			(unsigned long)total_size / SZ_1M, nr,
--			nr > 1 ? "s" : "");
-+			(unsigned long)total_size / SZ_1M, nr, str_plural(nr));
- 	return ret;
- }
- 
--- 
-2.50.0
+See this:
+https://github.com/torvalds/linux/blob/v6.15/Documentation/process/coding-s=
+tyle.rst?plain=3D1#L941
 
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
