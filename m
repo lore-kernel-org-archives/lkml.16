@@ -1,122 +1,82 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81B979D2;
-	Mon, 30 Jun 2025 04:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FD84A23;
+	Mon, 30 Jun 2025 04:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751257974; cv=none; b=cmdGzJXfxT3xrLEjmKNl1oPB0zRd5Vb9RUTMIMD9im0Q7pkcQI3fu7UIBZE4T/ExMMxkttOq6dnsaRnX6kEx1Y3MVcbJ/qniFu4sf51s5Qiqhp3B/xJ/hzITVz9ePCiM67h6YUIVn2hFgC3V5YoOxKYRxRZKQt4UDcW44TCGPRs=
+	t=1751258079; cv=none; b=RsoZRnE9yNQI+FbUqh3yGTTdFtFJiEe1dh3I72wOqPTZn5PwIMvXZRRV5tnT1vSnI9/eguUorh0v2++vdrvtvLagDWShro8wJJ40MeRzI8KsXJJHOa4hZbZjVPGP8rfr8fxeImoQhecvhh2b90a/tfF/mSwQITWY6WzDNXE8l3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751257974; c=relaxed/simple;
-	bh=R7zcCovUjtiZyN7Xl7zbfCp3HhGk37QNCfMdhJI4qQs=;
+	s=arc-20240116; t=1751258079; c=relaxed/simple;
+	bh=U/Z5Sd07oISMnb9GgjVS1CsZITDPkRHw3GfjdOp7/10=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OV+mY8GedZfAKrwTjFMRBeOPqRHLEsGOaTH1A6WqRNDwn/6O827lX07sFLffQAodm2M+FYXEL1yWgHtOPqzSqSy5yHyadKVcoppU7nsjd22W6Olai425HvtokStPTu3t17G8Lec8sUooXXfbbkmM0OqsPHo0zDbVOWLj7U49XkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b3a3a8201so14738541fa.0;
-        Sun, 29 Jun 2025 21:32:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751257967; x=1751862767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JbVuaR12V0J6Xt+/G9MNTrnfxERz+sAIcOpg6dKC95Y=;
-        b=g7lYg6hEQlzmpjzLwyTFmK5b3Ept/6Shb6y8yNBvP/qoYV4LFkIr+9KfQN7OobyZUG
-         /ipj2sy2fyOhajpoASKi5v59K/xXXaqNcm5tBEBqAURBue1cu3vwp6fQgTLueMQoT2ho
-         /vqlycc2zMlbxdSXnqqhabivTNKyFH9BP7RHglXx4lCHiOSUunMMdUhcZ1zAhcrbosqO
-         H7gqZvHqLh94MvTd/kj1ry7fpcgtVHhI+5f0/XvM8X6/Sdxsh8SiM6HyISeUIYBlfTAT
-         2o/gNugfDQFBhLZDEq8s5MqtrZhoZD7hgkdvPyTLl4F/tIQFrfRXXiGDwa5hwuVzZR0a
-         F07w==
-X-Forwarded-Encrypted: i=1; AJvYcCVLBtio+K2tWGARYXFzZokIlGVDVdDbA59lIQGavccU+F0eTrOhLDMG1eDLLq9yzROzoOl6uHnzBUHj@vger.kernel.org, AJvYcCVTAJ/EJTTPBMvoWpHjuxxzghNbGUVmRNIRAxrYtM4YkB/X5X6i1GSyvhhZZc2wxxLw94F7JuuO3to=@vger.kernel.org, AJvYcCVec/tIvmXz8paN+1fIX8CPNp4REjtZdb7SA17p9cp0IWqdlBQQ3BbNwsbN8b7DP1Vd9hcFCf2IcJQPQhI5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpsRyEp3BiR/Spou8vel96MnvCXdIiitiX85dYBAdm96w7Cx/u
-	q1D9sWtQtAlH7zuPBRVlpEnou1etWsDQCdYSHNC7/JxdJBwPTAxQYEaymn+ZDiDs
-X-Gm-Gg: ASbGncuYaGAkaYfwu6YhYWYfyEA76hepsFHJfmeFt8VJXXIC83iagH5wgerd+XOqNqh
-	PJmRDUj6/4TD/Wc79Ib9lNGtkL+1bCs4a6J2SmM0/R48QGmqLqZaGzoGMVpc9Z8V4vPwzsrbuiw
-	OyrNddJTviOipdGJtpUqqnzT5lIAONLr6RtBlDidcfRt1ZYxiqZo5IjaEGFZQeiXr9t7ue6bTYa
-	4dOQapcGb1vWoUuz0lz83pi0Rjq0cC+r+3/e3t0KxdbF9k4kKT7MRKb4SN2NapjzM0z05XZsGsE
-	ALIoXa40UWjjFwAvdO5a3n+0Feg3Vtc23mDkQ0PbmGAfleUTzDKkyIwaLpUsMZ/i8SG2pC5eBdj
-	8h+SniLoNzCrJ7YORLQ4=
-X-Google-Smtp-Source: AGHT+IHka60/fjRwCxsDIPnM9RNanmC9+SlPaHmhUHvYwouRWRyMWrT5ocMruSmQjcoM6MLq0ZhSUg==
-X-Received: by 2002:a05:6512:b87:b0:553:30fc:ceda with SMTP id 2adb3069b0e04-5550b7e6e32mr3341855e87.7.1751257967114;
-        Sun, 29 Jun 2025 21:32:47 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2f327dsm1284388e87.257.2025.06.29.21.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 21:32:45 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32add56e9ddso15704801fa.2;
-        Sun, 29 Jun 2025 21:32:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUHYVQseElP3rXd7AySTgeFqHcdbukMhKhyZx3wGgBZi4AjtGgh2A7HbllxIjJjjNEiOzLcZASy9lc=@vger.kernel.org, AJvYcCUbOmA9R+rcBYTALi9JJYTB1yIMrPdTZ4TRSFKAYQI/LP+Jp+lwczjU2GYwE4W2wFwcEJrEDWcLM9oo@vger.kernel.org, AJvYcCVbMxTbsWQORJUESXUicEwA4MsmUoXnm4vQG9fn9HIK+4feolGRnOIZhNhlv+elhFQBCtYMkcAlvqZLbAo6@vger.kernel.org
-X-Received: by 2002:a05:651c:20c5:b0:30b:edfc:5d8a with SMTP id
- 38308e7fff4ca-32cdc329543mr23944531fa.0.1751257965460; Sun, 29 Jun 2025
- 21:32:45 -0700 (PDT)
+	 To:Cc:Content-Type; b=qv3pSU2WXA6LjBwhhBNX2CnLaXXN5ahbZjy4Gbr71r1pYEBiEGtOxbpqkCAk7eYZ1oQI97IkYgKUk4S311lenAcqSLEx3P5GHLbVyuyJJLiWPtRgNXCVdlndF5becRuO+9xbbVbmRP50JMOXJR18bEisxcyhZK+ASj4K+9kS9jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TY5sXtUo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TY5sXtUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57126C4CEE3;
+	Mon, 30 Jun 2025 04:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751258079;
+	bh=U/Z5Sd07oISMnb9GgjVS1CsZITDPkRHw3GfjdOp7/10=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TY5sXtUoEQpRJJbt2weHVvFd2K0QoWQ1J+MpZ88nxnMcUexOsjjhSWUHo4kDKC/ol
+	 jQ1pH1eiEtL+PcCJRKh1rlwjF4q5HDieDPjbAGGv+wLNzVkK7mE+gbePBc7u1Ox+ns
+	 HNTceTFDj6YnRqclt6uEoGExybJZxs2VraDA4fSWFdqfPHg4+RslB4ECdZwbsl6Tfr
+	 E+ONWazPitmiT6NLKGMC2CyV07Yt6gL1Lsu6o1XyxostDorK6B38i2vQvti5FZuIbz
+	 7Z35UM+1AyAeQYUCXALB7ne3KdbOBTIZ8fiMOC/gxMjTTo0yr4lopyG4R721YXKzF9
+	 Kepz0rjtwPq5A==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553b5165cf5so5289951e87.0;
+        Sun, 29 Jun 2025 21:34:39 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxHJphMBX0rwjFYKXyozRRQsUv/TkR82a7aXviUsUdFQmrsrskg
+	QlpZKffy4GdIOJWEQ/x7x/1MsiD6BaONXm18VKYOxzmP6tipDXnMBqnyNz5sRkCO7RtwnwM7Vth
+	J0DjJAkrL9SxBSI4/EDp3hkRaf2747oo=
+X-Google-Smtp-Source: AGHT+IH0FBlqkBQKwXjr7mZ9yAYLRUa98XOYFPIIcs6sleAHfNF8tgiUpV5Vr0TyeOzQEybWPIJ6hecJDBk4xuvVGUE=
+X-Received: by 2002:a05:6512:6d6:b0:54b:117b:b54e with SMTP id
+ 2adb3069b0e04-5550ba6c08dmr3304549e87.57.1751258078026; Sun, 29 Jun 2025
+ 21:34:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411003827.782544-1-iuncuim@gmail.com> <20250411003827.782544-5-iuncuim@gmail.com>
-In-Reply-To: <20250411003827.782544-5-iuncuim@gmail.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 30 Jun 2025 12:32:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v659nQit-cOsr6q+ACO2MJ+c6RyfBWVg7iP_u1DO4fXBHQ@mail.gmail.com>
-X-Gm-Features: Ac12FXycZ4eBZnw1-9h5Z5_HZw9HoRSOqmeNCAZOYMw7KeNLsUjQ12gZN6IqRgQ
-Message-ID: <CAGb2v659nQit-cOsr6q+ACO2MJ+c6RyfBWVg7iP_u1DO4fXBHQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] arm64: dts: allwinner: A523: Add SID controller node
-To: iuncuim <iuncuim@gmail.com>
-Cc: Vasily Khoruzhick <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Andre Przywara <andre.przywara@arm.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+References: <20250629184554.407497-1-masahiroy@kernel.org> <20250629184554.407497-6-masahiroy@kernel.org>
+In-Reply-To: <20250629184554.407497-6-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 30 Jun 2025 13:34:00 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATDc8QECUWCiCsMaj7X=YqT4P_mVsEA051+aHYzFwWxvQ@mail.gmail.com>
+X-Gm-Features: Ac12FXygIKD-EEt_Y_ZyBXIO0mwd0pJKk_cmUK_q5_vOBFb6AcL9gkoVIT6_xEk
+Message-ID: <CAK7LNATDc8QECUWCiCsMaj7X=YqT4P_mVsEA051+aHYzFwWxvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] kconfig: gconf: migrate to GTK 3
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 8:40=E2=80=AFAM iuncuim <iuncuim@gmail.com> wrote:
+On Mon, Jun 30, 2025 at 3:46=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
 >
-> From: Mikhail Kalashnikov <iuncuim@gmail.com>
+> This commit switches from GTK 2.x to GTK 3, applying the following
+> necessary changes:
 >
-> The SID controller should be compatible with A64 and others SoC with 0x20=
-0
-> offset.
+>  - Do not include invidual headers
+
+This is a typo.
+
+I will fix it to "individual".
+
+
+
+>  - GtkObject is gone
+>  - Convert glade to GtkBuilder
 >
-> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-
-But this also needs a matching update to the binding.
-
+> [1]: https://docs.gtk.org/gtk3/migrating-2to3.html
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun55i-a523.dtsi
-> index ee485899b..d626612bb 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> @@ -171,6 +171,13 @@ ccu: clock-controller@2001000 {
->                         #reset-cells =3D <1>;
->                 };
->
-> +               sid: efuse@3006000 {
-> +                       compatible =3D "allwinner,sun50i-a523-sid", "allw=
-inner,sun50i-a64-sid";
-> +                       reg =3D <0x03006000 0x1000>;
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <1>;
-> +               };
-> +
->                 mmc0: mmc@4020000 {
->                         compatible =3D "allwinner,sun55i-a523-mmc",
->                                      "allwinner,sun20i-d1-mmc";
-> --
-> 2.49.0
->
+
+--=20
+Best Regards
+Masahiro Yamada
