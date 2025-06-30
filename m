@@ -1,55 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CCD290D9C;
-	Mon, 30 Jun 2025 16:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC970145FE0;
+	Mon, 30 Jun 2025 16:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301007; cv=none; b=P15rIAduxD9IG7rqGRdA4lLU5mmMhU9Ty0oYehBXxVxDaMlAlqG7rut2b2GpAlkNHUrpvdtyyCIKZjuA6YPWd91tAUVu4exGDXUcYz7Mz7o3ZNFx3Wz8q7tonQuZtZkGy0l5FLscWni7/K8AShODIu4O03PRf+i34d+g9L5WGyQ=
+	t=1751301027; cv=none; b=H0KLD0JMn/VzWgA424MD7yFeonCCnPPOqPX+4LRn/MqKUlIZYdDpZDkFEOvVevvjy6h1kkksmhjEhgtbWd0swQlWideJyp2VlMCVWovmLDIHKS1a2imvQOw4RCydtdeCPvHWfeX9USx3mm0SGD4ZfC2cS18ue6p78XG84NOcU6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301007; c=relaxed/simple;
-	bh=0HxkYgJxPovw38S/ncV1y0Tb+2e4bvKdNpiGuJwX7+k=;
+	s=arc-20240116; t=1751301027; c=relaxed/simple;
+	bh=Z2eTTLeHJFplwtYGcfhlybw6T9tyxAT1gUDIZzaklQg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ELoba10+obbUhEY+bXiMUVeIBG30mWWwbA3Y8mEh+3DlqtfyrZItuV3iwJ9GYcZ2kzBY+rX6wCvNJef9xSq8Xigdl8mMJ5neN8DPqKYfB+0rPwayhbyZjZrotoe5HV2huySukQMT58RNBcAR3VbFR7FFIV+1ixVmF3OuOTK3xHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWS6p1Zq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ew0BCrNa+THiesn3h4LgQpsiIUD2YhpSzz/b+5UFNjP4NWZubXQb7HVlmaTAv1FCNY4SQ41BSKMd9mGSwz3PC2ceVTsldYtyOyn5y3JKeuqXkq/kjrdjE2NZGyLgr8nBzRgP4hVx60v0kohsB45kGG8mS8JzxXla9D6/ikEN9VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJofbUpG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWS6p1Zq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B14FC4CEE3;
-	Mon, 30 Jun 2025 16:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJofbUpG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5552EC4CEE3;
+	Mon, 30 Jun 2025 16:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751301006;
-	bh=0HxkYgJxPovw38S/ncV1y0Tb+2e4bvKdNpiGuJwX7+k=;
+	s=k20201202; t=1751301027;
+	bh=Z2eTTLeHJFplwtYGcfhlybw6T9tyxAT1gUDIZzaklQg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GWS6p1ZqJY1wyPDCa5Q+4k7uUZFH7e1dhC6M0vVyKzT0AWn1SyJC1X1g/4Hqu/63a
-	 3WJAloRinPotqkJKcJxkD7KgWvhkyIcaKT8cfy6pTMBVbKyFRUTqRrNd51K/P+gy3G
-	 8Yp58LunVtmh0MFDS+s35dAS32ijVX60vAV6hmVTY0b2dHAbKmPBb7v1XH58A29SGo
-	 H3hoDDjwJ5fUR/VD9TgSokq65t0ANmV6I8CsnYSpRaJmBF/i7wY3OS+jRqqxRiefw/
-	 qzfYVjeL+W/AC+4ihwgUS1oDXrhHGh9KWunYqEVkUDgyXYkIoQDFOg+b98ZAZmbje9
-	 Vdsgs/5TwzvlQ==
-Date: Mon, 30 Jun 2025 17:29:59 +0100
-From: Simon Horman <horms@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>, Elad Yifee <eladwf@gmail.com>,
-	Bo-Cun Chen <bc-bocun.chen@mediatek.com>,
-	Sky Huang <skylake.huang@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v2 3/3] net: ethernet: mtk_eth_soc: use genpool
- allocator for SRAM
-Message-ID: <20250630162959.GA57523@horms.kernel.org>
-References: <cover.1751229149.git.daniel@makrotopia.org>
- <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
+	b=AJofbUpG/q1KTmDfuNZyc4ewqPgpkFy+jSAxhDsk3Vx5T/GeRwv3VuNgsSnbcUrYL
+	 Lyk8EV8fMwoEgkeRicVcdKDtPBh7jsVV+nd5iMZZoZ4h9KUKCnk1558HF4ZEzbek8O
+	 5s6bMEqqaY3CNLMEHe/EjkGmYqYUjrcVDE8dn/oeGKv0OiRYWyYrul4Q0tmekPpakw
+	 Y+ycwtxHrXEZNG10zl+Kab3uP6Rz32Jdd+t2+obPNZMEHFuYkdtZgx/e31QfxbaxXF
+	 WaYele9/nk4aByNT6DWg71XVmJYtj19KPy04tl+ox7OtKb0aI1Gvfb37kBOLMsxRVb
+	 3B5Drv/BSmhCA==
+Date: Mon, 30 Jun 2025 09:29:48 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: John Johansen <john.johansen@canonical.com>
+Cc: apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] apparmor: use SHA-256 library API instead of
+ crypto_shash API
+Message-ID: <20250630162948.GA1220@sol>
+References: <20250428190430.850240-1-ebiggers@kernel.org>
+ <20250514042147.GA2073@sol>
+ <4f37c07c-3a39-4c98-b9c4-13356f5a10dc@canonical.com>
+ <20250612191105.GE1283@sol>
+ <c80d4e69-ef03-462c-9084-e6bb56f428e6@canonical.com>
+ <20250627035918.GA15797@sol>
+ <540b7f72-58fa-4ee3-9b5b-6cd81c5959a7@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,69 +49,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <61897c7a3dcc0b2976ec2118226c06c220b00a80.1751229149.git.daniel@makrotopia.org>
+In-Reply-To: <540b7f72-58fa-4ee3-9b5b-6cd81c5959a7@canonical.com>
 
-On Sun, Jun 29, 2025 at 11:22:44PM +0100, Daniel Golle wrote:
-> Use a dedicated "mmio-sram" and the genpool allocator instead of
-> open-coding SRAM allocation for DMA rings.
-> Keep support for legacy device trees but notify the user via a
-> warning to update.
+On Thu, Jun 26, 2025 at 11:14:50PM -0700, John Johansen wrote:
+> On 6/26/25 20:59, Eric Biggers wrote:
+> > On Sun, Jun 22, 2025 at 02:16:07PM -0700, John Johansen wrote:
+> > > On 6/12/25 12:11, Eric Biggers wrote:
+> > > > On Sat, May 17, 2025 at 12:43:30AM -0700, John Johansen wrote:
+> > > > > On 5/13/25 21:21, Eric Biggers wrote:
+> > > > > > On Mon, Apr 28, 2025 at 12:04:30PM -0700, Eric Biggers wrote:
+> > > > > > > From: Eric Biggers <ebiggers@google.com>
+> > > > > > > 
+> > > > > > > This user of SHA-256 does not support any other algorithm, so the
+> > > > > > > crypto_shash abstraction provides no value.  Just use the SHA-256
+> > > > > > > library API instead, which is much simpler and easier to use.
+> > > > > > > 
+> > > > > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > > > > > ---
+> > > > > > > 
+> > > > > > > This patch is targeting the apparmor tree for 6.16.
+> > > > > > > 
+> > > > > > >     security/apparmor/Kconfig  |  3 +-
+> > > > > > >     security/apparmor/crypto.c | 85 ++++++--------------------------------
+> > > > > > >     2 files changed, 13 insertions(+), 75 deletions(-)
+> > > > > > 
+> > > > > > Any interest in taking this patch through the apparmor or security trees?
+> > > > > > 
+> > > > > I can take it through my tree
+> > > > 
+> > > > Thanks!  I notice this isn't in v6.16-rc1.  Do you have a pull request planned?
+> > > > 
+> > > 
+> > > Hey Eric,
+> > > 
+> > > sorry I have been sick and didn't get a 6.16 pull request out. I am slowly trying
+> > > to dig my way out of the backlog, which is several weeks deeo. I might get together
+> > > a small PR of bug fixes before the 6.17 merge window but the bulk of what is in
+> > > apparmor-next will be waiting to merge in 6.17 now.
+> > 
+> > Hope you're feeling better!  Actually, would you mind if instead I took this
+> I lot, though still generally tired/low on energy
 > 
-> Co-developed-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
-> v2: fix return type of mtk_dma_ring_alloc() in case of error
-> 
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 120 +++++++++++++-------
->  drivers/net/ethernet/mediatek/mtk_eth_soc.h |   4 +-
->  2 files changed, 84 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > patch (with your ack) through the libcrypto-next tree for 6.17?
+> > Otherwise there will be a silent merge conflict after I apply
+> > https://lore.kernel.org/r/20250625070819.1496119-11-ebiggers@kernel.org/
+> > 
+> Avoiding a merge conflict? You have my ACK and blessing I will pull it out of
+> the apparmor tree asap
 
-...
+Thanks, let me know once you've dropped it.
 
-> @@ -5117,16 +5148,27 @@ static int mtk_probe(struct platform_device *pdev)
->  			err = -EINVAL;
->  			goto err_destroy_sgmii;
->  		}
-> +
->  		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SRAM)) {
-> -			if (mtk_is_netsys_v3_or_greater(eth)) {
-> -				res_sram = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -				if (!res_sram) {
-> -					err = -EINVAL;
-> -					goto err_destroy_sgmii;
-> +			eth->sram_pool = of_gen_pool_get(pdev->dev.of_node, "sram", 0);
-> +			if (!eth->sram_pool) {
-> +				if (!mtk_is_netsys_v3_or_greater(eth)) {
-> +					/*
-> +					 * Legacy support for missing 'sram' node in DT.
-> +					 * SRAM is actual memory and supports transparent access
-> +					 * just like DRAM. Hence we don't require __iomem being
-> +					 * set and don't need to use accessor functions to read from
-> +					 * or write to SRAM.
-> +					 */
-> +					eth->sram_base = (void __force *)eth->base +
-> +							 MTK_ETH_SRAM_OFFSET;
-> +					eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
-> +					dev_warn(&pdev->dev,
-> +						 "legacy DT: using hard-coded SRAM offset.\n");
-> +				} else {
-> +					dev_err(&pdev->dev, "Could not get SRAM pool\n");
-> +					return -ENODEV;
-
-Hi Daniel,
-
-Rather than returning, should this
-jump to err_destroy_sgmii to avoid leaking resources?
-
-Flagged by Smatch.
-
->  				}
-> -				eth->phy_scratch_ring = res_sram->start;
-> -			} else {
-> -				eth->phy_scratch_ring = res->start + MTK_ETH_SRAM_OFFSET;
->  			}
->  		}
->  	}
+- Eric
