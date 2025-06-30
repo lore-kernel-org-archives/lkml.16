@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7C428B7FD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C82528DEE5
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295962; cv=none; b=peY4JzsoqdLur18mHwbIw58Ah0GQ+yl7j29i1sc34RZ/JeKMFypRTfLT/uODehclCU7Tv7u+fCuhAn4yoGYYUi8MDNv65odR893d2WMzkSuM+rH2S4WWrE9bxWGZNIVuDIL2oveE00cp41sK5elyt/xRIQqYnUJMzcSzdeXRh9w=
+	t=1751295963; cv=none; b=sFgjWqUV2ZW7JxtMdJjWzS1KLsXs4BXqtJI/cW6hi3VBmy72mhMgzfv0UkITgm3bfkx9Ww95xBA8FNVI7IVTUMYUw9PWCSVaVTeMEtN1RZjWrfJUaSniVR0wfPjj0JkdL+ln8vvma2eM1KKjx0tMrHzUTg6IXQ1Z5kaManbjpxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295962; c=relaxed/simple;
-	bh=u6d8n5rtJ0vsmJechY4Xz6Lnsx1q0Hy1z/DFz+Rny6o=;
+	s=arc-20240116; t=1751295963; c=relaxed/simple;
+	bh=iBnew5c+a7Ro2bpZC4juuII3jZCeT2R29Poi444M5o8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kl8xIWDvxasq/BDvduHzzRUVuwJDqeIKBtFLguCY2I5H9znt3lfWG81EzKQM0Mq7IzrYVYgUVSAdt+MIZMk7TZU0UU+L06WZjPApLZCbKkMRFxe15odf9SgwHHqJ26sK2sGyU/vq7ieoOiQ6tartz3aNxNuMTYmeLKK80UgbPVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqKMv7ns; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gzRqosholGFVQfzaJwBE9EAY2SBE3ww7FVyK7X2EE54Ka86Da4cFUmQ9T8vCPLvrobxIXIQuxGSKAjapTwmxBCUCC8GNUx1a2uzGQUN1C70iMLqOoCERhPP6G134dJ8nQ7Zf478XCSjf1+PTnRPCnchQhPg8SEyXylhd2VYwhZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO9nGu7a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqKMv7ns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6362C4CEE3;
-	Mon, 30 Jun 2025 15:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO9nGu7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD47AC4CEF0;
+	Mon, 30 Jun 2025 15:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751295961;
-	bh=u6d8n5rtJ0vsmJechY4Xz6Lnsx1q0Hy1z/DFz+Rny6o=;
+	s=k20201202; t=1751295962;
+	bh=iBnew5c+a7Ro2bpZC4juuII3jZCeT2R29Poi444M5o8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=uqKMv7nspM/XbNEyE7sjEDWkgXPz06aMoQmPWEuFHnRZMg4wzvm0bxO3DKTWueSiR
-	 3xJn9XBdcowEfNzcRjcWqzwhsnw3EQubjZJiC9h5aat+1y6D6FXrdgLdDUjMBn8hKm
-	 /h88hDSl3wJWcAuPdzVWK1ncM/GAU4a4GFYawNoKwCkczzZy/QOnIvt1Bz/5NAI3HK
-	 882pOv4Q+R/6JNdehY4S3R5UWbS7pWFNtJ4o0gj6b5z0cFJ01RMqSu4xtGCTychnrR
-	 Dv6om3SE/D6c4cI3RVg16su9LXlkpA1vQu6R0wqLQczQdQ33/FMJi2sJ23I3gpCRZv
-	 i22TQkvyQiJ9g==
+	b=VO9nGu7a+Rv9c03K/bnNu35DdDu7lvilzJnIV2ZRBGo3e7QM+87HZLjfebBdekNNZ
+	 D1lBZUhrPeafeZjqHip2+31qOUqeiOWkNeLh5PtPXFQ6bglQmXJYXKqUviJDDnswko
+	 +7WBNZyJEXydrKCgqm9WIbtyGXLMoxWp18NDqbBDTkxZGo20uuBwIuYEsIfsvJlddY
+	 P0+TnIt3+j4rx1xR1ssv5QVpVSnfmse+ZD+4FAGedD4hq0p3zFxOtj2a+EfeZTsYFw
+	 86yLx04PgDiIi65n6dk/1ZG0aSjmuDpL4hWgtYEPJmkUYhoh88ZdbDxjVYb6o9M0YQ
+	 SYpyjkqb6oyMw==
 From: Mark Brown <broonie@kernel.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Jisheng Zhang <jszhang@kernel.org>
 Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250629094803.776-1-jszhang@kernel.org>
-References: <20250629094803.776-1-jszhang@kernel.org>
-Subject: Re: [PATCH] regulator: rt5739: Enable REGCACHE_MAPLE
-Message-Id: <175129596061.1422008.1055186917296991718.b4-ty@kernel.org>
-Date: Mon, 30 Jun 2025 16:06:00 +0100
+In-Reply-To: <20250629095107.804-1-jszhang@kernel.org>
+References: <20250629095107.804-1-jszhang@kernel.org>
+Subject: Re: [PATCH] regulator: tps6286x-regulator: Enable REGCACHE_MAPLE
+Message-Id: <175129596165.1422008.2097697585958234896.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 16:06:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,7 +44,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-cff91
 
-On Sun, 29 Jun 2025 17:48:03 +0800, Jisheng Zhang wrote:
+On Sun, 29 Jun 2025 17:51:07 +0800, Jisheng Zhang wrote:
 > Enable regmap cache to reduce i2c transactions and corresponding
 > interrupts if regulator is accessed frequently.
 > 
@@ -56,8 +56,8 @@ Applied to
 
 Thanks!
 
-[1/1] regulator: rt5739: Enable REGCACHE_MAPLE
-      commit: bd7c7976f9716da4cc961ab8ff4e17811d522602
+[1/1] regulator: tps6286x-regulator: Enable REGCACHE_MAPLE
+      commit: 427ceac823e58813b510e585011488f603f0d891
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
