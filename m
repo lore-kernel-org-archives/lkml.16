@@ -1,63 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E99244664;
-	Mon, 30 Jun 2025 09:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E4F23F27B;
+	Mon, 30 Jun 2025 09:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275186; cv=none; b=EspCC6mlUoBLRgzFeNzoebx8os9v2z2VwrxX97Df7lHUIcTHczINsEQoEHnjsiBL6iUAmqkOhiVT2JbNoLhA+JfwcRIVWlpB6UxfQkVs2pLO8tLiubBxXSvjWnJs1X5dLeQK6I9mWOZeWO1PyhyxgkeWt9vtsnN3NqRrgTz354U=
+	t=1751275196; cv=none; b=dRLKD597abOyfXaJ7rd5rbesN9eckxuKCclLIZvQHlFPiMG+hD7dKa3cdJthcNMPX35+NFmVr24hGG+O7MS0mG+dwzkLTFuSRc2lBYCTzLOADI8O3J6Z54uNyq6+yo7p5btBPgL9fbjyKNqnvISVsIet3bQ72vUVBURMqHo4vCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275186; c=relaxed/simple;
-	bh=HzOC8ReOOr/Gp7Sb4wbuD5vyKncI41XqdTEB56Jw3Y0=;
+	s=arc-20240116; t=1751275196; c=relaxed/simple;
+	bh=OYn3aetuqBdYt+o51dvofYHK8kaRrWeuKWjm5NLIGtE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DyFfvDpKpm4TAlRsfK466qOMW7LRuilIPBIWtIXtGM0iypSG6GPU3fgU3zU3+Zbn20vYuCTLumsGOCDbZH5snBWRyeiRt0NhY/JsMceHxDunSWUlgP3KR/yqordQPQ9om949z1ZNfqCo3CwRVMXHS13qfzZ3zmsVBqwcDWN+ozw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rv8FQoEW; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version:Content-Type; b=lwoFIHvySqmZ4Ng1nB3bA3Saj0aOOBv6Ehz22wkHVXpEGSvxbkZeHyevYTe/MP8kzge0EqA4mh7ftvhXFX2vlcMet13qxiXlBtjrGFzvm3fQsG+dyuAWL+X5u0yuAz/sxbU23V1mtDzhoKdsWsfpg/tAMdpADD3uI0h8mcAs2xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T2cdAJXy; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rv8FQoEW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T2cdAJXy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751275185; x=1782811185;
+  t=1751275195; x=1782811195;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=HzOC8ReOOr/Gp7Sb4wbuD5vyKncI41XqdTEB56Jw3Y0=;
-  b=Rv8FQoEW95gOuW8aqbEna2CL+30pukPBolGRDedIPgV/s09fCrpOgvEW
-   /wA9jmOiRc5tbeeQsMTY7Qomd97A5LWbNqNJcE/sH5q4Zdc0A37xbrQNa
-   vRqmZCqJkA8WihTNDQYm6uTYbyw4n7eNTePQVrfJ/nylG84SDaF/lT7I7
-   qGwJGrHBoa1zussRGdBd3jhlsZKZxzzO1nuACrDbScxyBeykq/CaZxBPX
-   JSlPa3MCSynvvdOoi/pytSNaJv8cSsKYOXXFSvat2jS4CpR8QfERQPkER
-   575MkpSkZuy5l7qg0hs5nhAyOtIRCP5+LaxyqKT3FVy5XyaU1U8sgufLa
-   g==;
-X-CSE-ConnectionGUID: sG/ZPK91StOKoFMFq56wFQ==
-X-CSE-MsgGUID: 2wtQJRpYQ7udwK97riqSzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57300481"
+  bh=OYn3aetuqBdYt+o51dvofYHK8kaRrWeuKWjm5NLIGtE=;
+  b=T2cdAJXy4/VVTSRu6jMSv71ngHB8sSqyN7lEzrGPrTqLSKNIkUvMnDgG
+   esHL8+DlgMCQ6YvsHj7dVhUq346xSpEBvKbuTsZj2Yu1xx5tFzUBZAm9L
+   QNEr9NaOG8A1nJOE08hXOW5a1LBWun6sWHYfHuTHyWk9hsfmeCaytwcja
+   0nqks1jdiP/AYUiZ6sCDMTKlv9lXqIqOOW6RSGPqnfEkvrwj1qisOdghh
+   MwhMz5gz1t8gcnPVrc4dYYZNSrILg5sZf1xSfZsmnLKsOKQ8ynwpFHUih
+   jDiIZ7KMPM+u1nuh0Gs2se93yovXHGX1dFvnUnfuCZq+/jtrfcMCi1RSS
+   w==;
+X-CSE-ConnectionGUID: K5fny7UPR4yN9W11W7vlFA==
+X-CSE-MsgGUID: mS8bE1hASoiWG9EyguFZSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53434214"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="57300481"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:44 -0700
-X-CSE-ConnectionGUID: rqR/kIFiR+CdjSPBv0dkFQ==
-X-CSE-MsgGUID: uPkVVIL+QrSDjXHLO1XxXw==
+   d="scan'208";a="53434214"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:54 -0700
+X-CSE-ConnectionGUID: TGY92SIhSgyzJEcPCa/WIA==
+X-CSE-MsgGUID: AfZcAwREQiCMfEdyrYaicg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153499264"
+   d="scan'208";a="190579716"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:39 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:19:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- Divya Bharathi <divya.bharathi@dell.com>, Armin Wolf <W_Armin@gmx.de>, 
- Linus Torvalds <torvalds@linux-foundation.org>, 
- Kurt Borja <kuurtb@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jan Graczyk <jangraczyk@yahoo.ca>
-In-Reply-To: <20250630-sysman-fix-v2-1-d185674d0a30@gmail.com>
-References: <20250630-sysman-fix-v2-1-d185674d0a30@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-wmi-sysman: Fix WMI data block
- retrieval in sysfs callbacks
-Message-Id: <175127517470.2486.17723027460891485584.b4-ty@linux.intel.com>
-Date: Mon, 30 Jun 2025 12:19:34 +0300
+To: W_Armin@gmx.de, mario.limonciello@amd.com, 
+ Hans de Goede <hansg@kernel.org>, Pratap Nirujogi <pratap.nirujogi@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com, 
+ king.li@amd.com, Dominic.Antony@amd.com, Phil.Jawich@amd.com
+In-Reply-To: <20250618202958.3934822-1-pratap.nirujogi@amd.com>
+References: <20250618202958.3934822-1-pratap.nirujogi@amd.com>
+Subject: Re: [PATCH] platform/x86: Update swnode graph for amd isp4
+Message-Id: <175127518473.2486.7831984908188662697.b4-ty@linux.intel.com>
+Date: Mon, 30 Jun 2025 12:19:44 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,12 +64,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Mon, 30 Jun 2025 00:43:12 -0300, Kurt Borja wrote:
+On Wed, 18 Jun 2025 16:29:48 -0400, Pratap Nirujogi wrote:
 
-> After retrieving WMI data blocks in sysfs callbacks, check for the
-> validity of them before dereferencing their content.
+> Existing swnode graph format is specific to sensor device
+> and is causing conflicts when accessing standard property
+> variables outside the sensor driver.
 > 
+> To address this issue, enhanced swnode graph format with
+> dedicated nodes for i2c and isp devices, with sensor node
+> added as child to i2c node. This approach allows to have
+> standard property variables (ex: 'clock-frequency') with
+> values applicable for each of the devices (sensor, i2c and
+> isp).
 > 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -82,8 +86,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell-wmi-sysman: Fix WMI data block retrieval in sysfs callbacks
-      commit: eb617dd25ca176f3fee24f873f0fd60010773d67
+[1/1] platform/x86: Update swnode graph for amd isp4
+      commit: e1af6f0146d64fc4fb142504ba128a97cd171558
 
 --
  i.
