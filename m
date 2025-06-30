@@ -1,229 +1,377 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2066.outbound.protection.outlook.com [40.107.92.66])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BE3218EA2;
-	Mon, 30 Jun 2025 11:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284707; cv=fail; b=AgoKen+3FKWPLP4O7MNwkBVTKmgKsce+e6R4Dj2uQtjy0xhgOYQpu+R8EOfhQ42RI3MEyQnyF3OgcUWQyIDz37oQvlvEm4s0r+TA+REpPTpE5DVkH2/JR0c8UKWyNk1pbvJYPjBNX81zmQbqVYO8LsfLV1pifKrqG8aLNk7F/K0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284707; c=relaxed/simple;
-	bh=bFnCqn5JwcGswKbBTdZI+tyPKdA0yxUxx2KjX52K320=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QgH2b3Wg2urO8kBViHxu8bBmH9ml3Plc4F9MbpudsjyUjd+uZk/AFM8zxea9qgoRU40hb1U+hRgJ5fa9rbCKIveIjN2b/47yJBVKB02HGBNzEYl6HG5id7HTN+OjqmurYL7hCkLeTgZ6mRqCRmFjuuQhRk1rM3iyG7Q7rr8hhBk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Oow6qVdA; arc=fail smtp.client-ip=40.107.92.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E5523BF9E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751284766; cv=none; b=RRt30uNWvFl5WhzQxE/C1s2kyT/l6u3q1dWSiaoCGGVdH3c722lLoahq24rdFBmT8IxnW1mgigs84Q4AgQVXuaSAUhfaBwJZ2AF1R0hzu8+ZWEzGLCcf5BBSKQlUXQx2L2dYqInCh7hOR5O0OmcVfguYddf44ljSH+ViBk4d0g4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751284766; c=relaxed/simple;
+	bh=55eBdtfftDLRgleUY7SiRHw+4GF8hmWpJF0qXXKROnE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQMwxRo6LnpY2vFrWIj1KIeLQF8S+HidCJ7WtXGYqHK5xkzWfFLCohZEeS53iXarklS2u1DTZQLcTzcWjrxgTjEOo+NXQRDOHypi1q9C+8Vnzu2wFjf07AhsE0pbLEwS8K+W+P0+43WN1CPT/E205xp1/CEOvn1D+N/w5xMsAew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cfbdYrtb; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Oow6qVdA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A/IlUS1PKQPnsxMQjHDJEOE7aONjdRic5m1ysLJbwitbou9hJ5iW/55FgLmBr6txDsINJVsFsaHbdW+1VZaUMauwyygEvab2+kTXh+cB6DyKsnDXoir8bjAL58zcfJtvl1VPgOKgOx0T7oh7LWc3MoflcBt9pAdJ8jscnWlgZuERJHVbEorUiJP2ozpACOzwo0AldG3OK/ZBnEkUD6xXwVZgg0lWa9o6iKqF5c6sg81kJ4lk30yk6d5gUp48VWZ8rKxAbm8d7JJok2pdvWq5E3XvzuCtZcqUFkElno0Su/SoHhvHePdeDoOo357zr7BwrYg+VRg8sNribrBz5Py2gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cXhW9lH2xrMO1zm/Hw2E0sOkTMT6BVtsQhFT0EQcM2w=;
- b=oBmJImP2I6qz8XZqSlVtloRadsfOHRku5XvXqcrWDGdD82UycIe/t5N48PGLvBiejjyTgppphGI7DCqtNI9vn0eBQH+lrVCt5MqDaO+w97RiVJ800Tvf/z82kO8XGR112VCjU0RgRVj+lOegCQPP7c97Gzdcj115VBBGalTAkp6tzP9rduTbos7i/QBl/3w5BjqkkJzyf6bH3iCp3pusm9iFgdjCQIlezkSuH515mHbBL1IjIJWZVG9bj9+pBvW7uvFCnssXrU3DD7NIA+VN28paI3sTBUaSsUjfZ3ulXuvk0YR4oeHOxb1QeIDsnrlSgEoPESN2VujlPHbR/eM/bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cXhW9lH2xrMO1zm/Hw2E0sOkTMT6BVtsQhFT0EQcM2w=;
- b=Oow6qVdAvbS8nCF2X7+chWkD7Dc2quvX7G5KhXBybqFWl2IStMU1TL9SKQrpIytjTmfOGxOeY65ztLsBEdU5EAkPRNRBheUC1iWBgJjKDNPZUfXuJ/szaVV+MY412z6MiYXFDAfKBzB97bI6xBCmLXlMniFwav/b8otVKSeS6io=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS0PR12MB7801.namprd12.prod.outlook.com (2603:10b6:8:140::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.24; Mon, 30 Jun
- 2025 11:58:23 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 11:58:23 +0000
-Message-ID: <8806781b-90d1-4b99-a798-dd1d29d4c8c0@amd.com>
-Date: Mon, 30 Jun 2025 13:58:18 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] drm/amdgpu: skip kfd resume_process for
- dev_pm_ops.thaw()
-To: Samuel Zhang <guoqing.zhang@amd.com>, rafael@kernel.org,
- len.brown@intel.com, pavel@kernel.org, alexander.deucher@amd.com,
- mario.limonciello@amd.com, lijo.lazar@amd.com
-Cc: victor.zhao@amd.com, haijun.chang@amd.com, Qing.Ma@amd.com,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
- <20250630104116.3050306-4-guoqing.zhang@amd.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250630104116.3050306-4-guoqing.zhang@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0125.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b9::13) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cfbdYrtb"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751284760; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Y8H7m8HLVOBI13fTqp0z+6EpKf/yk1OdUFBjtRtsqMA=;
+	b=cfbdYrtb6VSr12wkUHUyPIXzNIK49LovgUs5S1x4n999xoz1Qc6YO9JO5Hx1bRK+/mJ/6DCjPDnNHNyX+febyku4+FUFFnQMg+Y3QqK0EowSfMAcIyTCqZt7EqtQOwbvZTlXycNDL38XHWVuUq6zN28kZNIlMh/vKMBx0U555uQ=
+Received: from 30.32.109.66(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WgCG7dJ_1751284759 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 19:59:20 +0800
+Message-ID: <1102fb2b-3e2e-4ae2-8609-cff6a4b0d821@linux.alibaba.com>
+Date: Mon, 30 Jun 2025 19:59:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB7801:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d5f9dcd-583d-4027-ad2d-08ddb7cd6a34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OXdaeVBHNTRBdzhQbHBPb0RydlRVMTliUmdUNlpPMEJCWXBnbk5PS2YvTG5m?=
- =?utf-8?B?VGIwOGpQaVJwOUsvVlE1RU9heTQzRWpDdE1wQ1RDWXNZeW0zbUhjR1hNREx5?=
- =?utf-8?B?NlMrTERFVUYzQU82L2gwa1NPekk3Y0srR2p0eFdCaGNTNFBIQ1puejgySk00?=
- =?utf-8?B?djlhNTRFK1A4VDcrQ0NJN2w1bSs1V3ZXZHQ3OXYvczl5TDhrZGNOcFBDOE9s?=
- =?utf-8?B?dGJSbVBRUllOaE9OUmRmclcvRnd2R1dEY0puaTNXQ2o0dDluTTl1bnA5N2Js?=
- =?utf-8?B?cTA1U2RzN3M3cDRIZ1VOUFY1b0RnNW5QUys2S2VsNEcyaTM2OG9hSEpRd251?=
- =?utf-8?B?enBwU1Juck40WUljZldvbHpwVGxRa2QyRGFKcVFyc3FiUGNRZjlxRko4cWhJ?=
- =?utf-8?B?VnE1MWJoZ0J2bTdyajJJMGZYUTlGRmU0U3lqSUpCNmhHRFpkSzRSelpZTXds?=
- =?utf-8?B?RzVZMmkyZS9BRmVVaUZZZ2MvUHhvYjBmeFVWVStuUkFXTlY5N2VZRGpNanZW?=
- =?utf-8?B?Vk5IcjdLalJVL2UxQ0hidGFGY0Q5Wld5cTdXOHFOa2xtNG9qR2F0S21Pdmk5?=
- =?utf-8?B?YXA0R1NwZ1ZBZGZBQmFFS0Z4Ti9PWmIvdFRadXFQOFFuakVwV09KeGtkbkcw?=
- =?utf-8?B?d0Y2b1ZIVFhzZ2RDczRucVZMNVRERXcwNGdxYU81SW1kV0doVFBZTzZsZnkx?=
- =?utf-8?B?WnIxYXRGM3VwUlAzc3lXdlo1SEdubGFLcmlZRE05dVJnM0w5MkppOUhDSXY3?=
- =?utf-8?B?alpCcFhzSkdLZUFjQkNVV3pCOVNDdE4wbWd4azY2VHdXVUlZaE1wUW5FMWJW?=
- =?utf-8?B?YkhuSGVndnZiOTJvaHZDUitiZHg4YW5TZDIrM1QvbHpXais4YXl6eGVzUmg5?=
- =?utf-8?B?Ui9Fbk5CR1JSaFhCN2lIc1d6TVFyZ1lWekMzOUJPVmJSeHQwVkFzRlBraWFG?=
- =?utf-8?B?NDB4VGROcm1yaU9lRDZSQm9DVG1yZHJ4Y1h1cnhrc3AwNE1KaGEwRWp2eWJ0?=
- =?utf-8?B?YTFFK2RFS3UwZGJFY2diaFM2bDNpODZSYklYYW9HODFrb0cyK1BOd2hDck1G?=
- =?utf-8?B?Z0U2MjJRMDBRdW9DUUw4NHBlRk55THRSZytkWG1ndW9ZV0FBSlE5eTBvNkVt?=
- =?utf-8?B?dUI5SUV1aXQweE9yM0NUUWoyQWY0eWkvNjVGNFM2UjZqTUZsQnFVVmZmVWl0?=
- =?utf-8?B?dWpkTitWR00vMDVFbVVqdlcyTThzd1JUMHFMWEF5REtVRTNBOG1keEtETDlE?=
- =?utf-8?B?cEkyaUNONTI4Vks5Mi8wcFplUDJyazFGdXpibkVkWFBMV1ZVTWxVMUwxZ3hs?=
- =?utf-8?B?WUozLzdPSEFiVDQyT2N6cTBOWTE4QmxsUStZZmVjdlVXd2xEeE8rS3YzOVRT?=
- =?utf-8?B?V29ERDhxQjVwbTBSbXZleEVMT0JjdHVTUHpESmxTeEg2amR4ODRCTThIbCtH?=
- =?utf-8?B?TDBxbEw1ekNGWXVjOVNRL1dTMDNMSzlZb2pFN1NpVnZmQVZIakpwaG5jUkNa?=
- =?utf-8?B?Z1RVWlZ1Q1VqeitDWnpFNVBmdnZXcEt4MXJKeFp1Qng1azUxNFIrVzlPTmRp?=
- =?utf-8?B?Yk1lNFhOdlVaNDNzNVRSTkg4eitSOTk1OUNldDNKODJtWkYrZ3lOVUF3Z1dr?=
- =?utf-8?B?ZHNvbkpYYUZoMCsrSWtQNzJaNXJuaVl2Wlowbm95MlBzN01pdmRGamt0UEEw?=
- =?utf-8?B?NVAzQnFJU2QzMWJpQ0pTSjR4NkF5aEc0NGdveTIxdmpRRXl1bzF0SjJIdG4v?=
- =?utf-8?B?V2JjQ0Z2UEFGRDJKOEZ3OXdiTGdEQ0tlRDk5Z0VYOGtWTnVwcFl1UEwxUEJt?=
- =?utf-8?B?Ujd6ZzJKcE9SdldtWGczc095emVjZ0I3WndWVTBUTFEwSE5NNmVjWm91WXVU?=
- =?utf-8?B?Q2VkY0cxVTZIMEZxeWh5NWNvL0NaK2h4TVNNSkxsRFZwNDRXUzRJOWJmbGhE?=
- =?utf-8?Q?1ETZfi4N/vI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OXd3c1pFY0dDRlhHaG1VdDh3dGpJU002aFdBVllsa3pzMG9RM21HbEZDdEF3?=
- =?utf-8?B?Z3I2MlI0M28wRWpiZjN0VVc4V1N3R2tiTDRxNTA3NHFuQ0ZYcCtMeC9jVDM3?=
- =?utf-8?B?MmRucXVBNEZnVFhmRDYrUmphWkQ5b3VVOU4reXNKT3BYdUVxUDZwMXZ3Rjly?=
- =?utf-8?B?VzZMTFQ5T3haU1pBQitHK3V6UlB0N1JFUmVHQ0ZKYVY0RUx1UUZHUFNEMzdh?=
- =?utf-8?B?aW8vbjNpaUZyRER4VTZldmQwa0ZnVXNUVnRFaXlRNm1PbzVQMWllcDZycnhM?=
- =?utf-8?B?bkVnVVBUemhFSnk2ZnFuMTJEN1FQczNPa1k4dE0rbHkyZ0x1eTZEWFNxb2xH?=
- =?utf-8?B?VHVwdmVaeWluc25DdWFzakk4Q0hJWjlqZFFLRVQ3MmZZaTU2dXgwNkV5YUdq?=
- =?utf-8?B?MGVnNjd5aEJ4Nm9tL2xJZ0JCL1o5MkF6Y2xRbXFnc0ZiOWhKNUl4a1llTGZO?=
- =?utf-8?B?Wm0vRjU4YUxYRCs4TloyMGFaMC9pMG04cDd1ZUJGUzJ4UmQ2Wk5taGJaL0NC?=
- =?utf-8?B?YlhiL3N0TUNFMENEYjBoTjNQRDRGTkNkbnhEdTdrMnZTN1ZMUUY4cXBEYzYx?=
- =?utf-8?B?MC9EejNHS0V4V0NicnluVms4d20rQythMnN6Rmc2OFZtQW9IMGxtQ1J2YzdZ?=
- =?utf-8?B?TnNBUk91ak9xSVNKQmFRRDRGc01mNlVKanRxMkY4dlplaTE0QU5hQkhWdkZ5?=
- =?utf-8?B?ZUpOTTRtRzV0Q3REdkx1ZlFCUDdKYXduVWZkdUtFRk1jVE16VldQbURCMDFV?=
- =?utf-8?B?Y2Rxa0xVQkhBMmRLOEVOc01xbG9JR24yTkg0YnI4WDZXcnNXRTJGa2VKRVVH?=
- =?utf-8?B?TnJtNUN4bWxsYUhlVFZzTU0rS0NaOVpMSkFJMm5sZVFXUUF2Q0N0d2V2aHgy?=
- =?utf-8?B?aW11QU1XbGcxamtqVWEzcDZscDhRTzQ4SVVTa3ZoallCVC9oNG1ubElabXlD?=
- =?utf-8?B?a0Qrbk5wUm90ajl1NmNVeGF2d0ZBYXJhaE1sa1lldTJldk9NM0dWMXpoaEQv?=
- =?utf-8?B?clJnRFpVZDNLRXBUMkhoSHp5c1JXeDlIekMyL3VQM2EvV0ZzcHVhU1ZUU1lm?=
- =?utf-8?B?OTdvc2kzNEZub2NqZWluS2N3ODJtOHlLaE1paDdWYkhLYmg0b1hyN3pKb2xa?=
- =?utf-8?B?NmpyQmJBbjBtY3JyOGFzRkNKVWdNYk5zcjJleGd5cFRrZEUvMmVMSWE1U2oy?=
- =?utf-8?B?b3BZWlAyMmp2SG1BRXBiS3VBNktRbXB0YTlpTDllRFY5aGR0SFpGQm9DaVUr?=
- =?utf-8?B?RmxIVll0K3dDOGtPeStGS3ZpTnVRZ25UYkFYaitBUTFEQ0grcDYzWUk2dXM5?=
- =?utf-8?B?OHhJbnByU21UTDBic1RkNFpyb3QrcHJpSUkzSGlGMGE4ZE04Q3BLU2puMXRD?=
- =?utf-8?B?RGw4OTlNb25MTURWdFdQUlZrMHJ5ditBZkJlSDFYV0JnR1JmcmhKRXVBU1F2?=
- =?utf-8?B?bnBGQlhocjMvYXRSZ2taRGlwU0UrTlE4WkR3VHNyN3Q0cktOWEVwRGlYb1hE?=
- =?utf-8?B?SmJJbEJqa2E0c3R4eDJ3TmViMXJRS2NRc01LWlN0WEk0VHJsNDc5TFNIQ0dC?=
- =?utf-8?B?ZVBjNy9zRjV2VUNGZ2JLN3NHK1VNZDU2WldDODM4b21MTmlKMEF6N0ZYZ0xU?=
- =?utf-8?B?K3hNakNwMThjcW80ZUVudWhXa1kwSndjSXVZbTNtK2t0emNpckpPTHBZdFE1?=
- =?utf-8?B?TGdRMkYxdkxlZXlUN0I1SHhUcU9Vd1M3R05sdlNGbk5hdTZIN1JLODM2OWo1?=
- =?utf-8?B?bnRqMlBXbDI2SHBQc2FsVTRUUmdhdkY2WUd2SHlxWXEwNnE0M0JZdHliY3NC?=
- =?utf-8?B?RGRIQk5JcGd4VUFkUDdlRk4wMFowZ0ZGOGk2RW0xVEZpakZ6U0VHVXptZlBB?=
- =?utf-8?B?QTFtbE9ETFRLc2Z4RFhmbGx4SUFOQmU2Q3BaNm54aDFvK2ZvdExET3FDTCt0?=
- =?utf-8?B?UDdjaUd6ZGpScHRRbEZsOXpGVjIxUXo3NVV6WmJFOVNNNVNyVkQva0RxaVJB?=
- =?utf-8?B?M1ZRVHdUU1pjbk1FYWZtMmVlb0xPUXJTejZTNW81MHU4WnZMeW40YVFPcndh?=
- =?utf-8?B?QU4raitEOGJKY1RMSmNtRkNBdlgvcVczVnhtQXMyNnJMTUNBWEp3WllJV21s?=
- =?utf-8?Q?xYGPh+7c4FmBitllcgx1lq5IC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d5f9dcd-583d-4027-ad2d-08ddb7cd6a34
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 11:58:23.5688
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T8mFV2LdDPJATDiCoE6UnNnoyC2+nA03mG1QVC+st25KIXX64MP6Yp4VY0oBuFEp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7801
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/7] mm/shmem, swap: clean up swap entry splitting
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Hugh Dickins <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250627062020.534-1-ryncsn@gmail.com>
+ <20250627062020.534-5-ryncsn@gmail.com>
+ <3d317ce9-2304-4361-adda-32abcc06e3dd@linux.alibaba.com>
+ <CAMgjq7Dc4QJAkxFpAkzXk-8Xe5zyx2HUzNKpoq_sqbyZUFpOkA@mail.gmail.com>
+ <ce54b1b1-1d3a-4783-bb76-6d4d4e902dac@linux.alibaba.com>
+ <CAMgjq7CmK3g_QpepGJP9Cyu2aA7t+R4XN+NQDqouLCKKF+RJPA@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAMgjq7CmK3g_QpepGJP9Cyu2aA7t+R4XN+NQDqouLCKKF+RJPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 30.06.25 12:41, Samuel Zhang wrote:
-> The hibernation successful workflow:
-> - prepare: evict VRAM and swapout GTT BOs
-> - freeze
-> - create the hibernation image in system memory
-> - thaw: swapin and restore BOs
 
-Why should a thaw happen here in between?
 
-> - complete
-> - write hibernation image to disk
-> - amdgpu_pci_shutdown
-> - goto S5, turn off the system.
+On 2025/6/30 18:06, Kairui Song wrote:
+> On Mon, Jun 30, 2025 at 5:53 PM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>> On 2025/6/30 17:16, Kairui Song wrote:
+>>> On Mon, Jun 30, 2025 at 2:34 PM Baolin Wang
+>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>> On 2025/6/27 14:20, Kairui Song wrote:
+>>>>> From: Kairui Song <kasong@tencent.com>
+>>>>>
+>>>>> Instead of keeping different paths of splitting the entry and
+>>>>> recalculating the swap entry and index, do it in one place.
+>>>>>
+>>>>> Whenever swapin brought in a folio smaller than the entry, split the
+>>>>> entry. And always recalculate the entry and index, in case it might
+>>>>> read in a folio that's larger than the entry order. This removes
+>>>>> duplicated code and function calls, and makes the code more robust.
+>>>>>
+>>>>> Signed-off-by: Kairui Song <kasong@tencent.com>
+>>>>> ---
+>>>>>     mm/shmem.c | 103 +++++++++++++++++++++--------------------------------
+>>>>>     1 file changed, 41 insertions(+), 62 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>>> index f85a985167c5..5be9c905396e 100644
+>>>>> --- a/mm/shmem.c
+>>>>> +++ b/mm/shmem.c
+>>>>> @@ -2178,8 +2178,12 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+>>>>>         swap_free_nr(swap, nr_pages);
+>>>>>     }
+>>>>>
+>>>>> -static int shmem_split_large_entry(struct inode *inode, pgoff_t index,
+>>>>> -                                swp_entry_t swap, gfp_t gfp)
+>>>>> +/*
+>>>>> + * Split an existing large swap entry. @index should point to one sub mapping
+>>>>> + * slot within the entry @swap, this sub slot will be split into order 0.
+>>>>> + */
+>>>>> +static int shmem_split_swap_entry(struct inode *inode, pgoff_t index,
+>>>>> +                               swp_entry_t swap, gfp_t gfp)
+>>>>>     {
+>>>>>         struct address_space *mapping = inode->i_mapping;
+>>>>>         XA_STATE_ORDER(xas, &mapping->i_pages, index, 0);
+>>>>> @@ -2250,7 +2254,7 @@ static int shmem_split_large_entry(struct inode *inode, pgoff_t index,
+>>>>>         if (xas_error(&xas))
+>>>>>                 return xas_error(&xas);
+>>>>>
+>>>>> -     return entry_order;
+>>>>> +     return 0;
+>>>>>     }
+>>>>>
+>>>>>     /*
+>>>>> @@ -2267,11 +2271,11 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>>>>>         struct address_space *mapping = inode->i_mapping;
+>>>>>         struct mm_struct *fault_mm = vma ? vma->vm_mm : NULL;
+>>>>>         struct shmem_inode_info *info = SHMEM_I(inode);
+>>>>> +     int error, nr_pages, order, swap_order;
+>>>>>         struct swap_info_struct *si;
+>>>>>         struct folio *folio = NULL;
+>>>>>         bool skip_swapcache = false;
+>>>>>         swp_entry_t swap;
+>>>>> -     int error, nr_pages, order, split_order;
+>>>>>
+>>>>>         VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+>>>>>         swap = radix_to_swp_entry(*foliop);
+>>>>> @@ -2321,70 +2325,43 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>>>>>                                 goto failed;
+>>>>>                 }
+>>>>>
+>>>>> -             /*
+>>>>> -              * Now swap device can only swap in order 0 folio, then we
+>>>>> -              * should split the large swap entry stored in the pagecache
+>>>>> -              * if necessary.
+>>>>> -              */
+>>>>> -             split_order = shmem_split_large_entry(inode, index, swap, gfp);
+>>>>> -             if (split_order < 0) {
+>>>>> -                     error = split_order;
+>>>>> -                     goto failed;
+>>>>> -             }
+>>>>> -
+>>>>> -             /*
+>>>>> -              * If the large swap entry has already been split, it is
+>>>>> -              * necessary to recalculate the new swap entry based on
+>>>>> -              * the old order alignment.
+>>>>> -              */
+>>>>> -             if (split_order > 0) {
+>>>>> -                     pgoff_t offset = index - round_down(index, 1 << split_order);
+>>>>> -
+>>>>> -                     swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+>>>>> -             }
+>>>>> -
+>>>>>                 /* Here we actually start the io */
+>>>>>                 folio = shmem_swapin_cluster(swap, gfp, info, index);
+>>>>>                 if (!folio) {
+>>>>>                         error = -ENOMEM;
+>>>>>                         goto failed;
+>>>>>                 }
+>>>>> -     } else if (order > folio_order(folio)) {
+>>>>> -             /*
+>>>>> -              * Swap readahead may swap in order 0 folios into swapcache
+>>>>> -              * asynchronously, while the shmem mapping can still stores
+>>>>> -              * large swap entries. In such cases, we should split the
+>>>>> -              * large swap entry to prevent possible data corruption.
+>>>>> -              */
+>>>>> -             split_order = shmem_split_large_entry(inode, index, swap, gfp);
+>>>>> -             if (split_order < 0) {
+>>>>> -                     folio_put(folio);
+>>>>> -                     folio = NULL;
+>>>>> -                     error = split_order;
+>>>>> -                     goto failed;
+>>>>> -             }
+>>>>> -
+>>>>> -             /*
+>>>>> -              * If the large swap entry has already been split, it is
+>>>>> -              * necessary to recalculate the new swap entry based on
+>>>>> -              * the old order alignment.
+>>>>> -              */
+>>>>> -             if (split_order > 0) {
+>>>>> -                     pgoff_t offset = index - round_down(index, 1 << split_order);
+>>>>> -
+>>>>> -                     swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+>>>>> -             }
+>>>>> -     } else if (order < folio_order(folio)) {
+>>>>> -             swap.val = round_down(swap.val, 1 << folio_order(folio));
+>>>>>         }
+>>>>>
+>>>>>     alloced:
+>>>>> +     /*
+>>>>> +      * We need to split an existing large entry if swapin brought in a
+>>>>> +      * smaller folio due to various of reasons.
+>>>>> +      *
+>>>>> +      * And worth noting there is a special case: if there is a smaller
+>>>>> +      * cached folio that covers @swap, but not @index (it only covers
+>>>>> +      * first few sub entries of the large entry, but @index points to
+>>>>> +      * later parts), the swap cache lookup will still see this folio,
+>>>>> +      * And we need to split the large entry here. Later checks will fail,
+>>>>> +      * as it can't satisfy the swap requirement, and we will retry
+>>>>> +      * the swapin from beginning.
+>>>>> +      */
+>>>>> +     swap_order = folio_order(folio);
+>>>>
+>>>> Nit: 'swap_order' is confusing, and can you just use folio_order() or a
+>>>> btter name?
+>>>
+>>> Good idea.
+>>>
+>>>>
+>>>>> +     if (order > swap_order) {
+>>>>> +             error = shmem_split_swap_entry(inode, index, swap, gfp);
+>>>>> +             if (error)
+>>>>> +                     goto failed_nolock;
+>>>>> +     }
+>>>>> +
+>>>>> +     index = round_down(index, 1 << swap_order);
+>>>>> +     swap.val = round_down(swap.val, 1 << swap_order);
+>>>>
+>>>> The round_down() of index and swap value here may cause
+>>>> shmem_add_to_page_cache() to fail to insert a new folio, because the
+>>>> swap value stored at that index in the shmem mapping does not match,
+>>>> leading to another swapin page fault for correction.
+>>>>
+>>>> For example, shmem stores a large swap entry of order 4 in the range of
+>>>> index 0-64. When a swapin fault occurs at index = 3, with swap.val =
+>>>> 0x4000, if a split happens and this round_down() logic is applied, then
+>>>> index = 3, swap.val = 0x4000. However, the actual swap.val should be
+>>>> 0x4003 stored in the shmem mapping. This would cause another swapin fault.
+>>>
+>>> Oops, I missed a swap value fixup in the !SWP_SYNCHRONOUS_IO path
+>>> above, it should re-calculate the swap value there. It's fixed in the
+>>> final patch but left unhandled here. I'll update this part.
+>>>
+>>>>
+>>>> I still prefer my original alignment method, and do you find this will
+>>>> cause any issues?
+>>>>
+>>>> "
+>>>> if (split_order > 0) {
+>>>>           pgoff_t offset = index - round_down(index, 1 << split_order);
+>>>>
+>>>>           swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+>>>> }
+>>>> "
+>>>
+>>> It only fits the cached swapin and uncached swapin, not the cache hit
+>>> case. Cache hits may see a larger folio so split didn't happen, but
+>>> the round_down is still needed.
+>>
+>> IMO, this only fits for the large swap entry split case.
+>>
+>>> And there is another racy case: before this patch, the split may
+>>> happen first, but shmem_swapin_cluster brought in a large folio due to
+>>> race in the swap cache layer.
+>>
+>> shmem_swapin_cluster() can only allocate order 0 folio, right?
 > 
-> During prepare stage of hibernation, VRAM and GTT BOs will be swapout to
-> shmem. Then in thaw stage, all BOs will be swapin and restored.
+> It can only allocate order 0 folio, but It can hit a large folio: eg.
+> a parallel swapin/swapout happened, and the folio stays in swap cache,
+> while we are handling a swapin here.
 
-That's not correct. This is done by the application starting again and not during thaw.
+Yes, I know this. This is exactly the issue that patch 1 wants to fix.
 
+>>> And I'm not sure if split_order is always reliable here, for example
+>>> concurrent split may return an inaccurate value here.
+>>
+>> We've held the xas lock to ensure the split is reliable, even though
+>> concurrent splits may occur, only one split can get the large
+>> 'split_order', another will return 0 (since it will see the large swao
+>> entry has already been split).
 > 
-> On server with 192GB VRAM * 8 dGPUs and 1.7TB system memory,
-> the swapin and restore BOs takes too long (50 minutes) and it is not
-> necessary since the follow-up stages does not use GPU.
-> 
-> This patch is to skip BOs restore during thaw to reduce the hibernation
-> time.
+> Yes, it may return 0, so we can get a large folio here, but get
+> `split_order = 0`?
 
-As far as I can see that doesn't make sense. The KFD processes need to be resumed here and that can't be skipped.
+If split happens, which means the 'order' > folio_order(), right? how 
+can you get a large folio in this context?
 
-Regards,
-Christian.
+> And if concurrently swapout/swapin happened, the `split_order` could
+> be a different value?
 
+What do you mean different value? The large swap entry can only be split 
+once, so the 'split_order' must be 0 or the original large order.
+
+
+>> Based on your current patch, would the following modifications be clearer?
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 5be9c905396e..91c071fb7b67 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -2254,7 +2254,7 @@ static int shmem_split_swap_entry(struct inode
+>> *inode, pgoff_t index,
+>>           if (xas_error(&xas))
+>>                   return xas_error(&xas);
+>>
+>> -       return 0;
+>> +       return split_order;
+>>    }
+>>
+>>    /*
+>> @@ -2351,10 +2351,23 @@ static int shmem_swapin_folio(struct inode
+>> *inode, pgoff_t index,
+>>                   error = shmem_split_swap_entry(inode, index, swap, gfp);
+>>                   if (error)
+>>                           goto failed_nolock;
+>> -       }
+>>
+>> -       index = round_down(index, 1 << swap_order);
+>> -       swap.val = round_down(swap.val, 1 << swap_order);
+>> +               /*
+>> +                * If the large swap entry has already been split, it is
+>> +                * necessary to recalculate the new swap entry based on
+>> +                * the old order alignment.
+>> +                */
+>> +               if (split_order > 0) {
+>> +                       pgoff_t offset = index - round_down(index, 1 <<
+>> split_order);
+>> +
+>> +                       swap = swp_entry(swp_type(swap),
+>> swp_offset(swap) + offset);
+>> +               }
+>> +       } else if (order < folio_order(folio)) {
+>> +               /*
+>> +                * TODO; explain the posible race...
+>> +                */
+>> +               swap.val = round_down(swap.val, 1 << folio_order(folio));
+>> +       }
+
+Sorry, you changes did not convince me. I still prefer my changes, 
+listing out the possible races that might require changes to the swap 
+value, as it would be clearer and more readable. Additionally, this is a 
+cleanup patch, so I hope there are no implicit functional changes.
+
+>>           /* We have to do this with folio locked to prevent races */
+>>           folio_lock(folio);
+>> @@ -2382,7 +2395,8 @@ static int shmem_swapin_folio(struct inode *inode,
+>> pgoff_t index,
+>>                           goto failed;
+>>           }
+>>
+>> -       error = shmem_add_to_page_cache(folio, mapping, index,
+>> +       error = shmem_add_to_page_cache(folio, mapping,
+>> +                                       round_down(index, nr_pages),
+>>                                           swp_to_radix_entry(swap), gfp);
+>>           if (error)
+>>                   goto failed;
+>>
+>>> So I wanted to simplify it: by round_down(folio_order(folio)) we
+>>> simply get the index and swap that will be covered by this specific
+>>> folio, if the covered range still has the corresponding swap entries
+>>> (check and ensured by shmem_add_to_page_cache which holds the
+>>> xa_lock), then the folio will be inserted back safely and
+>>> successfully.
+>>
 > 
-> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
+> I think adding the missing swap value fixup in the !SYNC_IO path
+> should be good enough?
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index a8f4697deb1b..b550d07190a2 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -5328,7 +5328,7 @@ int amdgpu_device_resume(struct drm_device *dev, bool notify_clients)
->  		amdgpu_virt_init_data_exchange(adev);
->  		amdgpu_virt_release_full_gpu(adev, true);
->  
-> -		if (!adev->in_s0ix && !r && !adev->in_runpm)
-> +		if (!adev->in_s0ix && !r && !adev->in_runpm && !adev->in_s4)
->  			r = amdgpu_amdkfd_resume_process(adev);
->  	}
->  
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> index 571b70da4562..23b76e8ac2fd 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> @@ -2734,7 +2734,9 @@ static int amdgpu_pmops_poweroff(struct device *dev)
->  static int amdgpu_pmops_restore(struct device *dev)
->  {
->  	struct drm_device *drm_dev = dev_get_drvdata(dev);
-> +	struct amdgpu_device *adev = drm_to_adev(drm_dev);
->  
-> +	adev->in_s4 = false;
->  	return amdgpu_device_resume(drm_dev, true);
->  }
->  
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 5be9c905396e..2620e4d1b56a 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2276,6 +2276,7 @@ static int shmem_swapin_folio(struct inode
+> *inode, pgoff_t index,
+>          struct folio *folio = NULL;
+>          bool skip_swapcache = false;
+>          swp_entry_t swap;
+> +       pgoff_t offset;
+> 
+>          VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+>          swap = radix_to_swp_entry(*foliop);
+> @@ -2325,7 +2326,9 @@ static int shmem_swapin_folio(struct inode
+> *inode, pgoff_t index,
+>                                  goto failed;
+>                  }
+> 
+> -               /* Here we actually start the io */
+> +               /* Cached swapin currently only supports order 0 swapin */
+> +               /* It may hit a large folio but that's OK and handled below */
+> +               offset = index - round_down(index, 1 << order);
+> +               swap.val = swap.val + offset;
+> 
+>                  folio = shmem_swapin_cluster(swap, gfp, info, index);
+>                  if (!folio) {
+>                          error = -ENOMEM;
 
