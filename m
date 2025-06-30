@@ -1,153 +1,155 @@
-Received: from dd54918.kasserver.com (dd54918.kasserver.com [85.13.167.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091C543164;
-	Mon, 30 Jun 2025 04:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.13.167.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BC14A3C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751258793; cv=none; b=Fl+pN4oMa0hX710B1u8Lr+TACimAxmFwGFkidcRiykaFndy7Soqn09QT4BvxvrQxzqJrQP5Wp7dYn+9piAuBr+o2a8gd+QDQFknxOZl5894tLsCh+oM/ZaFL3yGNINJAQ95qoccSC4hCBWJOcvJpPu5Q8VhmPLYVO1IJPp8q/wM=
+	t=1751258877; cv=none; b=INSaaC/VOl6V8imIEFnjZ4+8E3bzoe49/PJ+snq29yv9fsftJditRFzFgzxf8nhr6+IYztkiYeEaheZ0khts1ullGgYwnyqFJxV/Z6pxYzE44fq/ol5+OGFyZwdp7v8cMNxZSf+FSk1tRHsamTFrK5xXb3jOIudLc9vZmadwHcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751258793; c=relaxed/simple;
-	bh=uQYEMJIAMxFt54p5C9odTtA27keWxi+3jFSwhp78F88=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=exGSPJPdpuiurN6atWMYeggU8ChOyTGley94l/Or/5htM2OF/0+gx1JNCry9VP01MrBMdUqNYMK9khConON1A0qqQFSm/DVs81JGoHLajVl3N9+LGxewsahbJbRlF4n7qGJ8F2HMpx4hzqw+gD8i05JSKK1nK/DmdkAyjAWLbsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=KARO-electronics.de; spf=pass smtp.mailfrom=KARO-electronics.de; dkim=pass (2048-bit key) header.d=karo-electronics.de header.i=@karo-electronics.de header.b=U+LnXVeo; arc=none smtp.client-ip=85.13.167.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=KARO-electronics.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=KARO-electronics.de
+	s=arc-20240116; t=1751258877; c=relaxed/simple;
+	bh=nQilmbJTuBxgC16/Z8kgdRkHXoBD1LG9raHt/bxH9wo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iTu1r82tglVujx2nJqWNmMPWpYrp34gp5g2DGRzxDjh3+sq8MIBMZSrT4m4Zf13ENNnmlmmTUqT1D+fqI+JFTedELAaNZ7/yAKiJTrPjjcTOCcmVYV7sknuCPE0BrzqBtQkva5s/IZoUXvy5nvgPwmhxuANQ+LrnXNvBqOtDR40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CLlczm4F; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=karo-electronics.de header.i=@karo-electronics.de header.b="U+LnXVeo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karo-electronics.de;
-	s=kas202503070814; t=1751258378;
-	bh=MQEiCA64jRoe+4Q4HAhc5uROjPs+W2LELE2uGvHuU0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U+LnXVeo1J1pNgGk1RubYeAP/r0grfqxsUxdTPu4+n5feKZ48KCwQ11nnymPFNDii
-	 cCPRAKBwFhqiKCHpBQsdPXX5vlzmu6x9sp1fyUSLiD4HgK39bjlvv8Z0hoKxeeMEwG
-	 1icWV6et5DMSWtkEktkPdwUahsLhvroUdS7VT+i/JephS9g5d77bOQypugc2Tja4dz
-	 IkK8CXZvE2W4db1vAqSK7JfL2eFfkdELJJTblFquIg5QT5EKDs093g/2RkJshx65mO
-	 HJ6zIA9Jeb2+AdzOVUE7xqjqiEHfFVimvYQ+OGysiOhGpGpR80psvAwCM9DmGdxgWk
-	 CfLB55C+tsAnA==
-Received: from karo-electronics.de (unknown [89.1.81.74])
-	by dd54918.kasserver.com (Postfix) with ESMTPSA id F3EA7772144E;
-	Mon, 30 Jun 2025 06:39:37 +0200 (CEST)
-Date: Mon, 30 Jun 2025 06:39:37 +0200
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-To: Bence =?UTF-8?B?Q3PDs2vDoXM=?= <csokas.bence@prolan.hu>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm: DT: imx6: Replace license text comment with SPDX
- identifier
-Message-ID: <20250630063937.589bc18d@karo-electronics.de>
-In-Reply-To: <20250626-karo-dts-lic-v1-1-315f43121aaa@prolan.hu>
-References: <20250626-karo-dts-lic-v1-1-315f43121aaa@prolan.hu>
-Organization: Ka-Ro electronics GmbH
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CLlczm4F"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751258866; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=WYD0HqxSrvUGTem+8mYuwxu0D2LEMCE4OO4THT1vKBI=;
+	b=CLlczm4FUfhHmOOcP/7b8bsu0LeZ5PbKpa1hOUDKjOXCSRtczvA7CteEuN3SINfsMxd8UlgEipBEovrkMIPVw2IU+4hAdH57t3hVjaLCHIl5PgDN00DitQsnxs9brhsdz7EFKVx8qxyYGLITo2ETwNsKgNHIdFHttkQ/oq3A0PI=
+Received: from 30.74.144.137(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wg3hrCB_1751258864 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 12:47:44 +0800
+Message-ID: <00b95366-aa42-4051-9457-04a009aedbb2@linux.alibaba.com>
+Date: Mon, 30 Jun 2025 12:47:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Bar: +
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/7] mm/shmem, swap: tidy up THP swapin checks
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250627062020.534-1-ryncsn@gmail.com>
+ <20250627062020.534-4-ryncsn@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250627062020.534-4-ryncsn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On Thu, 26 Jun 2025 11:19:56 +0200 Bence Cs=C3=B3k=C3=A1s wrote:
-> Replace verbatim license text with a SPDX-License-Identifier:
->=20
-> The comment heades mis-attributes this license to be "X11", but the
-> license text does not include the last line "Except as contained in this
-> notice, the name of the X Consortium shall not be used in advertising or
-> otherwise to promote the sale, use or other dealings in this Software
-> without prior written authorization from the X Consortium.". Therefore,
-> this license is actually equivalent to the SPDX "MIT" license (confirmed
-> by text diffing).
->=20
-> Cc: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
+
+On 2025/6/27 14:20, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> Move all THP swapin related checks under CONFIG_TRANSPARENT_HUGEPAGE,
+> so they will be trimmed off by the compiler if not needed.
+> 
+> And add a WARN if shmem sees a order > 0 entry when
+> CONFIG_TRANSPARENT_HUGEPAGE is disabled, that should never happen unless
+> things went very wrong.
+> 
+> There should be no observable feature change except the new added WARN.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+
+LGTM. Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
 > ---
->  arch/arm/boot/dts/nxp/imx/imx53-tx53-x03x.dts      | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx53-tx53-x13x.dts      | 44 +---------------=
-------
->  arch/arm/boot/dts/nxp/imx/imx53-tx53.dtsi          | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6dl-comtft.dts  | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6s-8034-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6s-8034.dts     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6s-8035-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6s-8035.dts     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-801x.dts     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-8033-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-8033.dts     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-80xx-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-811x.dts     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6dl-tx6u-81xx-mb7.dts | 38 +---------------=
----
->  .../boot/dts/nxp/imx/imx6q-tx6q-1010-comtft.dts    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-1010.dts      | 38 +---------------=
----
->  .../boot/dts/nxp/imx/imx6q-tx6q-1020-comtft.dts    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-1020.dts      | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-1036-mb7.dts  | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-1036.dts      | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-10x0-mb7.dts  | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-1110.dts      | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6q-tx6q-11x0-mb7.dts  | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qdl-tx6-lcd.dtsi     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qdl-tx6-lvds.dtsi    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qdl-tx6-mb7.dtsi     | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qdl-tx6.dtsi         | 38 +---------------=
----
->  .../arm/boot/dts/nxp/imx/imx6qp-tx6qp-8037-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qp-tx6qp-8037.dts    | 38 +---------------=
----
->  .../arm/boot/dts/nxp/imx/imx6qp-tx6qp-8137-mb7.dts | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6qp-tx6qp-8137.dts    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6ul-tx6ul-0010.dts    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6ul-tx6ul-0011.dts    | 38 +---------------=
----
->  .../boot/dts/nxp/imx/imx6ul-tx6ul-mainboard.dts    | 38 +---------------=
----
->  arch/arm/boot/dts/nxp/imx/imx6ul-tx6ul.dtsi        | 38 +---------------=
----
->  35 files changed, 35 insertions(+), 1301 deletions(-)
->=20
-[...]
-> ---
-> base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-> change-id: 20250624-karo-dts-lic-2f7366e6feb4
->=20
-Acked-By: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+>   mm/shmem.c | 42 ++++++++++++++++++++----------------------
+>   1 file changed, 20 insertions(+), 22 deletions(-)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 033dc7a3435d..f85a985167c5 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1980,26 +1980,39 @@ static struct folio *shmem_swap_alloc_folio(struct inode *inode,
+>   		swp_entry_t entry, int order, gfp_t gfp)
+>   {
+>   	struct shmem_inode_info *info = SHMEM_I(inode);
+> +	int nr_pages = 1 << order;
+>   	struct folio *new;
+>   	void *shadow;
+> -	int nr_pages;
+>   
+>   	/*
+>   	 * We have arrived here because our zones are constrained, so don't
+>   	 * limit chance of success with further cpuset and node constraints.
+>   	 */
+>   	gfp &= ~GFP_CONSTRAINT_MASK;
+> -	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && order > 0) {
+> -		gfp_t huge_gfp = vma_thp_gfp_mask(vma);
+> -
+> -		gfp = limit_gfp_mask(huge_gfp, gfp);
+> +	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> +		if (WARN_ON_ONCE(order))
+> +			return ERR_PTR(-EINVAL);
+> +	} else if (order) {
+> +		/*
+> +		 * If uffd is active for the vma, we need per-page fault
+> +		 * fidelity to maintain the uffd semantics, then fallback
+> +		 * to swapin order-0 folio, as well as for zswap case.
+> +		 * Any existing sub folio in the swap cache also blocks
+> +		 * mTHP swapin.
+> +		 */
+> +		if ((vma && unlikely(userfaultfd_armed(vma))) ||
+> +		     !zswap_never_enabled() ||
+> +		     non_swapcache_batch(entry, nr_pages) != nr_pages) {
+> +			return ERR_PTR(-EINVAL);
+> +		} else {
+> +			gfp = limit_gfp_mask(vma_thp_gfp_mask(vma), gfp);
+> +		}
+>   	}
+>   
+>   	new = shmem_alloc_folio(gfp, order, info, index);
+>   	if (!new)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> -	nr_pages = folio_nr_pages(new);
+>   	if (mem_cgroup_swapin_charge_folio(new, vma ? vma->vm_mm : NULL,
+>   					   gfp, entry)) {
+>   		folio_put(new);
+> @@ -2283,9 +2296,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   	/* Look it up and read it in.. */
+>   	folio = swap_cache_get_folio(swap, NULL, 0);
+>   	if (!folio) {
+> -		int nr_pages = 1 << order;
+> -		bool fallback_order0 = false;
+> -
+>   		/* Or update major stats only when swapin succeeds?? */
+>   		if (fault_type) {
+>   			*fault_type |= VM_FAULT_MAJOR;
+> @@ -2293,20 +2303,8 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   			count_memcg_event_mm(fault_mm, PGMAJFAULT);
+>   		}
+>   
+> -		/*
+> -		 * If uffd is active for the vma, we need per-page fault
+> -		 * fidelity to maintain the uffd semantics, then fallback
+> -		 * to swapin order-0 folio, as well as for zswap case.
+> -		 * Any existing sub folio in the swap cache also blocks
+> -		 * mTHP swapin.
+> -		 */
+> -		if (order > 0 && ((vma && unlikely(userfaultfd_armed(vma))) ||
+> -				  !zswap_never_enabled() ||
+> -				  non_swapcache_batch(swap, nr_pages) != nr_pages))
+> -			fallback_order0 = true;
+> -
+>   		/* Skip swapcache for synchronous device. */
+> -		if (!fallback_order0 && data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
+> +		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
+>   			folio = shmem_swap_alloc_folio(inode, vma, index, swap, order, gfp);
+>   			if (!IS_ERR(folio)) {
+>   				skip_swapcache = true;
 
-
-Lothar Wa=C3=9Fmann
