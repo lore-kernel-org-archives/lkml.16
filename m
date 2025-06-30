@@ -1,176 +1,328 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5912AF1B;
-	Mon, 30 Jun 2025 10:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D488220F5C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279459; cv=none; b=s40+QPiS6LKtkQ7RbprnZSl+CoaGz29QTVV6q+EtLlk4LUAVhEq4i93stot//nXSj6eD8WPcoBCpIMK/YfC72OhEkyc1lWB2ss0Hp0RTuvGKRaIq5CIlMSE9SjNS5xvQB2xbj/chfhrPEW25Bw0EjJWLsfJ7esGEMpAR81oDDBw=
+	t=1751279492; cv=none; b=alfImdQ27bUbDcKaojL8L3cytkNboVS1BKXGtEwyOr3yoMsDBD2MImawyalqbXxENunLes5S/T/4ZfRHmd1As6x5tczNWH1ANQfZRsy4+mpfwft+zRw/7mfpYVQBpo3oEVNjpqBTVq+O341efWtM5nVGcObiCxpmuBPzXhvafRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279459; c=relaxed/simple;
-	bh=rzqf8KMfkh7J6fnUaHKXupiWofR6LjqFm240toyhNGI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8fMuuU7tbx1K3YbAQT4daVJx23wqwmaD/8LZ2hsuj5JaF8U/Fkb3WI2SpnXxEtYNxTPep0NlLEA2geRhA3gYuk5xYUiBeoJ79Me3rYGFOj7juafNeUZNczQk1BbvZfuaJYTZFKUpFbCVLA0cKJjw8rZNPfjtcSDp4+CM6T//Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8dsbeoV; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8dsbeoV"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-555024588b1so2204969e87.1;
-        Mon, 30 Jun 2025 03:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751279455; x=1751884255; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8e/7v2ltNn1nX9ioUgVxorlkzFe2GpNMHMiKKK8K6ls=;
-        b=G8dsbeoV+V23kG3rZj+HIuRKarlKyFKQaNX6fBJvg90Xbxe+cLV1YQlJ1wU81h8uCe
-         Jtj+QF8V0VEnHWkgIzL4h/Y9SVPmG4IM6AixQoWEIlhJUWG5RskGHndQmn8BoFBG9YjD
-         ZgPyGKSkGh/yp8buV08p9fHMiyV7currBXu07+empKlqtmngCYLxbthDOYxDyHqdbAxR
-         WdvVffMxV5ICKl3CO0AuwLZax2mocwENakVQB8ftCPELXtRNkeTHlE7K0X/kMZFgfJTH
-         eIfwsR0q/UNjrxU2mqMlFSXDwnt2W+8eKKIOf++kFSnxE/ZdvKkZCDTAgVryKwaf8t4e
-         Dc0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751279455; x=1751884255;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8e/7v2ltNn1nX9ioUgVxorlkzFe2GpNMHMiKKK8K6ls=;
-        b=OdHHmZ+y2n8fLdknpJxrvSGHzLFBW1jETLnV9uIrAoXhwSyhjkIiVFAiW00MfBm1ll
-         NNE1iV8qAcgUieCWba83zvrwNHtkbZxXgWRAzk6B2MzQQy8PFtf47wnbQervXoGgH5um
-         wPyPHQQaIHEfWz0h3e9XTXEe/VqFzm52G42bt/rGedhgsxnG3Rthd9BOOs6PVDmv/bxP
-         qNoQxaPRBF9IHNjoSRfoMHjRYpzPffVRcs4ivCXtx4ntgCqg8v7FAz3WFQW1MgN7AHBj
-         x8qLqljHkzl1gbyr/40ol7p7uSd//mbfoWDrr8QVQc/wXONfLII9qP0jj7fk7fh5FmsN
-         Jq0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVrm7xMQ4MW0w5W0eb6r64M1AnW32NfzAP3Vrgnw1721hte8uOMPK13NSUWVCSyKK7WJMUZicvM0U7lY7eGxDE=@vger.kernel.org, AJvYcCX8BzOx3jALWFLcefjvpAGJDPgidWGiEDVTpHUmwuiayDkn5oaVDlWAZ6kn2ayZENeIKx5HTvLN7cByzh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbkINqGtnphVs4ksRHI2lS77f7ZMyw5VnWjHnVcQisbwphqnge
-	xeEg2G1ZJNYaG+njqxsbM54c8SQStmCSRlwNE+44CU7l+eVsAji8z/Fh
-X-Gm-Gg: ASbGncv+2hXG/BewB16luQBXrd0kJ69ZtB0qdMQhCFv5R/NTGWkiDYFyww57lAYfLZj
-	+iLLRnIL67YuCkn+KvTvIiAXJYX35/2vM9ZqdVauz/s0mGEspxqVgcFN92ejJs1kK0INOt1UoHE
-	bTQOLN+oVqC+XJxmfIAvGRMW9RvYZwZygpw3yFVeHFRtMkqxNtO+lqGlEkMEDxElcjlX9SvRGtU
-	VoWRwAYHhVECY5/F5lWwj86W4pUiDCueCNGzl4JuIjvRYbQycsx6IWUX9deJfQsy4jesn4B/A6z
-	NeWo2VMd4QxixSRfwUTbNsu+YB7Jm8JNlg9UQbttt20LREzWmcyoxpZ6HTqQa0HOgsSpGmB646n
-	SG6jD6pOZE6Q=
-X-Google-Smtp-Source: AGHT+IEF2nOl072KkJX5VOycpUDoH66uDeT/lt1cf4dthiOO6DxJCwj1jJ46PgB8pAi9UlOEqIa06g==
-X-Received: by 2002:a05:6512:318f:b0:553:510d:f46b with SMTP id 2adb3069b0e04-5550b8b0549mr4515221e87.32.1751279455093;
-        Mon, 30 Jun 2025 03:30:55 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24d130sm1397220e87.54.2025.06.30.03.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 03:30:54 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Mon, 30 Jun 2025 12:30:52 +0200
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] mm/vmalloc: allow to set node and align in
- vrealloc
-Message-ID: <aGJnXLl_OLqwjAUt@pc636>
-References: <20250628102315.2542656-1-vitaly.wool@konsulko.se>
- <20250628102537.2542789-1-vitaly.wool@konsulko.se>
+	s=arc-20240116; t=1751279492; c=relaxed/simple;
+	bh=IpgyN0XzT8DVX4NMnbu0lCHuRETp2LGTJacku07jRRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N2ubCjTjbeHJwcoHdC3t76eHYo/ibsKVvS+mKx7AlcHGRmFBiO9pAXqZT8RJ6Ot3Fc54nvNEJ1sf08/hGzMns7ukQhFHKqgg6vV3OfcnY3L5LMYmxN1RZIoalBIS9OyditOGg30w0QKgSWfEPYSToZOmLFot6IYKhS07LQcNXOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB86F1D34;
+	Mon, 30 Jun 2025 03:31:13 -0700 (PDT)
+Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 986E93F58B;
+	Mon, 30 Jun 2025 03:31:25 -0700 (PDT)
+Message-ID: <41386e41-c1c4-4898-8958-2f4daa92dc7c@arm.com>
+Date: Mon, 30 Jun 2025 11:31:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250628102537.2542789-1-vitaly.wool@konsulko.se>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] mm: Optimize mprotect() by PTE-batching
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250628113435.46678-1-dev.jain@arm.com>
+ <20250628113435.46678-4-dev.jain@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250628113435.46678-4-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 28, 2025 at 12:25:37PM +0200, Vitaly Wool wrote:
-> Reimplement vrealloc() to be able to set node and alignment should
-> a user need to do so. Rename the function to vrealloc_node_align()
-> to better match what it actually does now and introduce macros for
-> vrealloc() and friends for backward compatibility.
+On 28/06/2025 12:34, Dev Jain wrote:
+> Use folio_pte_batch to batch process a large folio. Reuse the folio from
+> prot_numa case if possible.
 > 
-> With that change we also provide the ability for the Rust part of
-> the kernel to set node and aligmnent in its allocations.
+> For all cases other than the PageAnonExclusive case, if the case holds true
+> for one pte in the batch, one can confirm that that case will hold true for
+> other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
+> FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty
+> and access bits across the batch, therefore batching across
+> pte_dirty(): this is correct since the dirty bit on the PTE really is
+> just an indication that the folio got written to, so even if the PTE is
+> not actually dirty (but one of the PTEs in the batch is), the wp-fault
+> optimization can be made.
 > 
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> The crux now is how to batch around the PageAnonExclusive case; we must
+> check the corresponding condition for every single page. Therefore, from
+> the large folio batch, we process sub batches of ptes mapping pages with
+> the same PageAnonExclusive condition, and process that sub batch, then
+> determine and process the next sub batch, and so on. Note that this does
+> not cause any extra overhead; if suppose the size of the folio batch
+> is 512, then the sub batch processing in total will take 512 iterations,
+> which is the same as what we would have done before.
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 > ---
->  include/linux/vmalloc.h | 12 +++++++++---
->  mm/vmalloc.c            | 20 ++++++++++++++++----
->  2 files changed, 25 insertions(+), 7 deletions(-)
+>  mm/mprotect.c | 143 +++++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 117 insertions(+), 26 deletions(-)
 > 
-> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> index fdc9aeb74a44..68791f7cb3ba 100644
-> --- a/include/linux/vmalloc.h
-> +++ b/include/linux/vmalloc.h
-> @@ -197,9 +197,15 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
->  extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
->  #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index 627b0d67cc4a..28c7ce7728ff 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -40,35 +40,47 @@
 >  
-> -void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> -		__realloc_size(2);
-> -#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-> +void *__must_check vrealloc_node_align_noprof(const void *p, size_t size,
-> +		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
-> +#define vrealloc_node_noprof(_p, _s, _f, _nid)	\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, _nid)
-> +#define vrealloc_noprof(_p, _s, _f)		\
-> +	vrealloc_node_align_noprof(_p, _s, 1, _f, NUMA_NO_NODE)
-> +#define vrealloc_node_align(...)		alloc_hooks(vrealloc_node_align_noprof(__VA_ARGS__))
-> +#define vrealloc_node(...)			alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
-> +#define vrealloc(...)				alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+>  #include "internal.h"
 >  
->  extern void vfree(const void *addr);
->  extern void vfree_atomic(const void *addr);
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 6dbcdceecae1..d633ac0ff977 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -4089,12 +4089,15 @@ void *vzalloc_node_noprof(unsigned long size, int node)
->  EXPORT_SYMBOL(vzalloc_node_noprof);
+> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+> -			     pte_t pte)
+> -{
+> -	struct page *page;
+> +enum tristate {
+> +	TRI_FALSE = 0,
+> +	TRI_TRUE = 1,
+> +	TRI_MAYBE = -1,
+> +};
 >  
->  /**
-> - * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
-> + * vrealloc_node_align_noprof - reallocate virtually contiguous memory; contents
-> + * remain unchanged
->   * @p: object to reallocate memory for
->   * @size: the size to reallocate
-> + * @align: requested alignment
->   * @flags: the flags for the page level allocator
-> + * @nid: node id
->   *
-> - * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
-> + * If @p is %NULL, vrealloc_XXX() behaves exactly like vmalloc(). If @size is 0 and
->   * @p is not a %NULL pointer, the object pointed to is freed.
->   *
->   * If __GFP_ZERO logic is requested, callers must ensure that, starting with the
-> @@ -4111,7 +4114,8 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
->   * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
->   *         failure
->   */
-> -void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> +void *vrealloc_node_align_noprof(const void *p, size_t size, unsigned long align,
-> +				 gfp_t flags, int nid)
+> +/*
+> + * Returns enum tristate indicating whether the pte can be changed to writable.
+> + * If TRI_MAYBE is returned, then the folio is anonymous and the user must
+> + * additionally check PageAnonExclusive() for every page in the desired range.
+> + */
+> +static int maybe_change_pte_writable(struct vm_area_struct *vma,
+> +				     unsigned long addr, pte_t pte,
+> +				     struct folio *folio)
+> +{
+>  	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+> -		return false;
+> +		return TRI_FALSE;
+>  
+>  	/* Don't touch entries that are not even readable. */
+>  	if (pte_protnone(pte))
+> -		return false;
+> +		return TRI_FALSE;
+>  
+>  	/* Do we need write faults for softdirty tracking? */
+>  	if (pte_needs_soft_dirty_wp(vma, pte))
+> -		return false;
+> +		return TRI_FALSE;
+>  
+>  	/* Do we need write faults for uffd-wp tracking? */
+>  	if (userfaultfd_pte_wp(vma, pte))
+> -		return false;
+> +		return TRI_FALSE;
+>  
+>  	if (!(vma->vm_flags & VM_SHARED)) {
+>  		/*
+>  		 * Writable MAP_PRIVATE mapping: We can only special-case on
+>  		 * exclusive anonymous pages, because we know that our
+>  		 * write-fault handler similarly would map them writable without
+> -		 * any additional checks while holding the PT lock.
+> +		 * any additional checks while holding the PT lock. So if the
+> +		 * folio is not anonymous, we know we cannot change pte to
+> +		 * writable. If it is anonymous then the caller must further
+> +		 * check that the page is AnonExclusive().
+>  		 */
+> -		page = vm_normal_page(vma, addr, pte);
+> -		return page && PageAnon(page) && PageAnonExclusive(page);
+> +		return (!folio || folio_test_anon(folio)) ? TRI_MAYBE : TRI_FALSE;
+>  	}
+>  
+>  	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+> @@ -80,15 +92,61 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>  	 * FS was already notified and we can simply mark the PTE writable
+>  	 * just like the write-fault handler would do.
+>  	 */
+> -	return pte_dirty(pte);
+> +	return pte_dirty(pte) ? TRI_TRUE : TRI_FALSE;
+> +}
+> +
+> +/*
+> + * Returns the number of pages within the folio, starting from the page
+> + * indicated by pgidx and up to pgidx + max_nr, that have the same value of
+> + * PageAnonExclusive(). Must only be called for anonymous folios. Value of
+> + * PageAnonExclusive() is returned in *exclusive.
+> + */
+> +static int anon_exclusive_batch(struct folio *folio, int pgidx, int max_nr,
+> +				bool *exclusive)
+> +{
+> +	struct page *page;
+> +	int nr = 1;
+> +
+> +	if (!folio) {
+> +		*exclusive = false;
+> +		return nr;
+> +	}
+> +
+> +	page = folio_page(folio, pgidx++);
+> +	*exclusive = PageAnonExclusive(page);
+> +	while (nr < max_nr) {
+> +		page = folio_page(folio, pgidx++);
+> +		if ((*exclusive) != PageAnonExclusive(page))
+
+nit: brackets not required around *exclusive.
+
+> +			break;
+> +		nr++;
+> +	}
+> +
+> +	return nr;
+> +}
+> +
+> +bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+> +			     pte_t pte)
+> +{
+> +	struct page *page;
+> +	int ret;
+> +
+> +	ret = maybe_change_pte_writable(vma, addr, pte, NULL);
+> +	if (ret == TRI_MAYBE) {
+> +		page = vm_normal_page(vma, addr, pte);
+> +		ret = page && PageAnon(page) && PageAnonExclusive(page);
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static int mprotect_folio_pte_batch(struct folio *folio, unsigned long addr,
+> -		pte_t *ptep, pte_t pte, int max_nr_ptes)
+> +		pte_t *ptep, pte_t pte, int max_nr_ptes, fpb_t switch_off_flags)
 >  {
->  	struct vm_struct *vm = NULL;
->  	size_t alloced_size = 0;
-> @@ -4135,6 +4139,13 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
->  		if (WARN(alloced_size < old_size,
->  			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
->  			return NULL;
-> +		if (WARN(nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)),
-> +			 "vrealloc() has mismatched nids\n"))
-> +			return NULL;
-> +		if (WARN((uintptr_t)p & (align - 1),
-> +			 "will not reallocate with a bigger alignment (0x%lx)\n",
-> +			 align))
-> +			return NULL;
->
-IMO, IS_ALIGNED() should be used instead. We have already a macro for this
-purpose, i.e. the idea is just to check that "p" is aligned with "align"
-request.
+> -	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +	fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +
+> +	flags &= ~switch_off_flags;
 
-Can you replace the (uintptr_t) casting to (ulong) or (unsigned long)
-this is how we mostly cast in vmalloc code?
+This is mega confusing when reading the caller. Because the caller passes
+FPB_IGNORE_SOFT_DIRTY and that actually means DON'T ignore soft dirty.
 
-WARN() probably is worth to replace. Use WARN_ON_ONCE() to prevent
-flooding.
+Can't we just pass in the flags we want?
 
---
-Uladzislau Rezki
+>  
+> -	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+> +	if (!folio || !folio_test_large(folio))
+
+What's the rational for dropping the max_nr_ptes == 1 condition? If you don't
+need it, why did you add it in the earler patch?
+
+>  		return 1;
+>  
+>  	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+> @@ -154,7 +212,8 @@ static int prot_numa_skip_ptes(struct folio **foliop, struct vm_area_struct *vma
+>  	}
+>  
+>  skip_batch:
+> -	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte, max_nr_ptes);
+> +	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
+> +					   max_nr_ptes, 0);
+>  out:
+>  	*foliop = folio;
+>  	return nr_ptes;
+> @@ -191,7 +250,10 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  		if (pte_present(oldpte)) {
+>  			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+>  			struct folio *folio = NULL;
+> -			pte_t ptent;
+> +			int sub_nr_ptes, pgidx = 0;
+> +			pte_t ptent, newpte;
+> +			bool sub_set_write;
+> +			int set_write;
+>  
+>  			/*
+>  			 * Avoid trapping faults against the zero or KSM
+> @@ -206,6 +268,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  					continue;
+>  			}
+>  
+> +			if (!folio)
+> +				folio = vm_normal_folio(vma, addr, oldpte);
+> +
+> +			nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte,
+> +							   max_nr_ptes, FPB_IGNORE_SOFT_DIRTY);
+
+From the other thread, my memory is jogged that this function ignores write
+permission bit. So I think that's opening up a bug when applied here? If the
+first pte is writable but the rest are not (COW), doesn't this now make them all
+writable? I don't *think* that's a problem for the prot_numa use, but I could be
+wrong.
+
+>  			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
+
+Even if I'm wrong about ignoring write bit being a bug, I don't think the docs
+for this function permit write bit to be different across the batch?
+
+>  			ptent = pte_modify(oldpte, newprot);
+>  
+> @@ -227,15 +294,39 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  			 * example, if a PTE is already dirty and no other
+>  			 * COW or special handling is required.
+>  			 */
+> -			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+> -			    !pte_write(ptent) &&
+> -			    can_change_pte_writable(vma, addr, ptent))
+> -				ptent = pte_mkwrite(ptent, vma);
+> -
+> -			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+> -			if (pte_needs_flush(oldpte, ptent))
+> -				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+> -			pages++;
+> +			set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+> +				    !pte_write(ptent);
+> +			if (set_write)
+> +				set_write = maybe_change_pte_writable(vma, addr, ptent, folio);
+
+Why not just:
+			set_write = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+				    !pte_write(ptent) &&
+				    maybe_change_pte_writable(...);
+
+?
+
+> +
+> +			while (nr_ptes) {
+> +				if (set_write == TRI_MAYBE) {
+> +					sub_nr_ptes = anon_exclusive_batch(folio,
+> +						pgidx, nr_ptes, &sub_set_write);
+> +				} else {
+> +					sub_nr_ptes = nr_ptes;
+> +					sub_set_write = (set_write == TRI_TRUE);
+> +				}
+> +
+> +				if (sub_set_write)
+> +					newpte = pte_mkwrite(ptent, vma);
+> +				else
+> +					newpte = ptent;
+> +
+> +				modify_prot_commit_ptes(vma, addr, pte, oldpte,
+> +							newpte, sub_nr_ptes);
+> +				if (pte_needs_flush(oldpte, newpte))
+
+What did we conclude with pte_needs_flush()? I thought there was an arch where
+it looked dodgy calling this for just the pte at the head of the batch?
+
+Thanks,
+Ryan
+
+> +					tlb_flush_pte_range(tlb, addr,
+> +						sub_nr_ptes * PAGE_SIZE);
+> +
+> +				addr += sub_nr_ptes * PAGE_SIZE;
+> +				pte += sub_nr_ptes;
+> +				oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
+> +				ptent = pte_advance_pfn(ptent, sub_nr_ptes);
+> +				nr_ptes -= sub_nr_ptes;
+> +				pages += sub_nr_ptes;
+> +				pgidx += sub_nr_ptes;
+> +			}
+>  		} else if (is_swap_pte(oldpte)) {
+>  			swp_entry_t entry = pte_to_swp_entry(oldpte);
+>  			pte_t newpte;
+
