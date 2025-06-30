@@ -1,105 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D248B282FA;
-	Mon, 30 Jun 2025 15:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C466C17A30B;
+	Mon, 30 Jun 2025 15:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751296714; cv=none; b=DdwmV3D4yV1lfbei4bNIH5Lu00kl3frPpCAPoPWCu/E1vUEOnuaywGkk6+8Ul7OuWRWF5tliurweThW3uDuiwHcdd4sSbAYvIzdkxHkpUOiQWn6KROtPo33v/mtDUALCUd9ziUsKa83nRI90K+QBzM1LBWVv1foVIbQ62usGVIo=
+	t=1751296979; cv=none; b=oTJr0qKhDb5//uG9wQaLtBUmHZXSO3AbFSXG+NCDx0RRpTqIjJudhmWDly+46h59lBAYzcUhims9UV+i1OR2TOPj9bjMMbh/URVGtgeiWOq9Hk+Wbzkb76Ns+GUoAkZTGtLUe75E4aEZHETx2WcMpKJW0ogov3q/IwlHppYv/ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751296714; c=relaxed/simple;
-	bh=U2AYkXyi+bUCWm6XmkTuKdxo0QAUk/3UJs9F/FPmIvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pEOJIlHcBA4GXoY19/IK1f/yckdgDxBavY6lb9HNFym7/Vx4BvmhFthUwsuT2wz1lX9qA/QM1aduDaCwWqTnUoOASTddMNpcAhQtClP6SqmLQp6xACeRoydI03+KGhIWeCBwPm2WPn8z5vJfZvik42+kTBITJ38yyUpFdSK2X8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MB9FvA5P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751296979; c=relaxed/simple;
+	bh=hQ3Hy3MdVNdKkbdCtx32GYhhwvEtrA6ITeCeS4b35EA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T/MCyca0/qB4UEesTx0vXtvAwpbNxcThTK2CR6bvdtCok5cG7V7o9X5n9NkXIS22Y4aBasiTfQjr+tr8i3XgxZnkXaUFnTQq9a7rCwx3BC01v7vZXfszyU7Skh2bTqCzB9YEyAk13ghsi3NgstfAP1VxtoNjwjfTmyCElt9OcIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CijP8g/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MB9FvA5P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11977C4CEE3;
-	Mon, 30 Jun 2025 15:18:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CijP8g/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3257FC4CEE3;
+	Mon, 30 Jun 2025 15:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751296713;
-	bh=U2AYkXyi+bUCWm6XmkTuKdxo0QAUk/3UJs9F/FPmIvM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MB9FvA5PIfo17Jn/nQpX16XsA48DWqZJLAdz5ni1iKTs4wt12oQC1ssB9nfRZXJW6
-	 kqFKm8dWQ+H4C0o/R3t1LfbZhdbTGdsANIT3COJq93RY3Vhru4pf571VF4HX/L4Qc2
-	 BkbMs5Srb+nagw6Lyty1mtqMo0OpS/E1/0qNXJb1AESHbRddWlhOAjlZKSqgcj2gnm
-	 b3RejUVB6y3P/swZ+CuORp24dgBsCWhZsS9XhemnS8hpFBdAAgz6J++pVYkCuiMlIF
-	 91Amns1p+CjZczY0ltTx9oyWLQNM6ZKtcak8t9zogHap8WeVw616ulZj16XwkC8DNm
-	 2eTieZfDB1Z2Q==
-From: Conor Dooley <conor@kernel.org>
-To: linux-i2c@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] i2c: microchip-core: re-fix fake detections w/ i2cdetect
-Date: Mon, 30 Jun 2025 16:18:17 +0100
-Message-ID: <20250630-shopper-proven-500f4075e7d6@spud>
-X-Mailer: git-send-email 2.45.2
+	s=k20201202; t=1751296979;
+	bh=hQ3Hy3MdVNdKkbdCtx32GYhhwvEtrA6ITeCeS4b35EA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CijP8g/Ze30EpbF018f2U0mg2gE0bbijZqoi/Lgz43dzxdmVA5N4lpcq69y4dULTB
+	 MpXwXw/oIIfTErPbPNyRy4XjLx0IVVaB3SczIIqfvQNLi0vwL26fQMi93ek333XluG
+	 xzc9lHSc29eRK/XW5ukGJSKQ903b8MxZKh3po5slUgjfcsyJ2KQkJbpHQdF5MP7/5o
+	 aYnZymKdwjCs1A5rE4ZDG1w9jJKmVi44IQtEdhOHz+IwWEaxzpItRtFiLQhfz2X0LA
+	 N5s5A2+reyhrrLbyC7dhoDlHXVYqlyDunUVvVoMJgkCF3q+TRJLuvKnayu3/bjBwa9
+	 CCFxwYI3OBFOA==
+Date: Mon, 30 Jun 2025 08:22:58 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [PATCH 0/5] ext4 docs toctree reorganization
+Message-ID: <20250630152258.GD9987@frogsfrogsfrogs>
+References: <20250620105643.25141-2-bagasdotme@gmail.com>
+ <aGHgF0Aa8NlTw6Eh@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1992; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=5O2qCUOtftgmnPM/slUO0ZOp22pdYgLs1D49HYsG/IY=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBlJq3b4PCrc51RfNG3Boxq/pRv6Vbcv2/e6/cztJ2n/n VbMXLnBoqOUhUGMg0FWTJEl8XZfi9T6Py47nHvewsxhZQIZwsDFKQATmW3ByHCYJ+rlCSM3MX+Z +PM5FTaNS58/fHMyddXMnqiprtNef45g+GcodVE5xF5vRrCs3kPJIPnld1+azpQM+Pb18Emd/he q+5gB
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aGHgF0Aa8NlTw6Eh@archie.me>
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Mon, Jun 30, 2025 at 07:53:43AM +0700, Bagas Sanjaya wrote:
+> On Fri, Jun 20, 2025 at 05:56:39PM +0700, Bagas Sanjaya wrote:
+> > Hi Jon, hi Ted,
+> > 
+> > While discussing on my previous ext4 docs reorganization attempt
+> > by merging contents [1], Jon suggested that considering current docs
+> > file structure, a proper toctree would be ideal [2]. So, here's
+> > the patchset that does exactly that.
+> > 
+> > Actual conversion to toctree structure is in [1/5], while the rest
+> > is cleanups to make the resulting toctree nicer.
+> > 
+> 
+> review ping
 
-Introducing support for smbus re-broke i2cdetect, causing it to detect
-devices at every i2c address, just as it did prior to being fixed in
-commit 49e1f0fd0d4cb ("i2c: microchip-core: fix "ghost" detections").
-This was caused by an oversight, where the new smbus code failed to
-check the return value of mchp_corei2c_xfer(). Check it, and propagate
-any errors.
+This sounds a lot better than dumping everything into a single huge rst
+file. :)
 
-Fixes: d6ceb40538263 ("i2c: microchip-corei2c: add smbus support")
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-v3:
-- actually set ret before returning it, not whatever my debug code was
-  doing...
+The structural changes to the documents look ok to me, though I'm no rst
+expert so I trust you built the documentation and it didn't spawn DOOM
+II or anything... ;)
 
-v2:
-- replace "if (ret)" with "if (ret < 0)" because the xfer callback,
-  which the smbus code re-uses, can return positive numbers in success
-  cases.
+Acked-by: "Darrick J. Wong" <djwong@kernel.org>
 
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Andi Shyti <andi.shyti@kernel.org>
-CC: linux-i2c@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/i2c/busses/i2c-microchip-corei2c.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--D
 
-diff --git a/drivers/i2c/busses/i2c-microchip-corei2c.c b/drivers/i2c/busses/i2c-microchip-corei2c.c
-index 492bf4c34722c..2be9e8c720b10 100644
---- a/drivers/i2c/busses/i2c-microchip-corei2c.c
-+++ b/drivers/i2c/busses/i2c-microchip-corei2c.c
-@@ -435,6 +435,7 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
- 	u8 tx_buf[I2C_SMBUS_BLOCK_MAX + 2];
- 	u8 rx_buf[I2C_SMBUS_BLOCK_MAX + 1];
- 	int num_msgs = 1;
-+	int ret;
- 
- 	msgs[CORE_I2C_SMBUS_MSG_WR].addr = addr;
- 	msgs[CORE_I2C_SMBUS_MSG_WR].flags = 0;
-@@ -505,7 +506,10 @@ static int mchp_corei2c_smbus_xfer(struct i2c_adapter *adap, u16 addr, unsigned
- 		return -EOPNOTSUPP;
- 	}
- 
--	mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
-+	ret = mchp_corei2c_xfer(&idev->adapter, msgs, num_msgs);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (read_write == I2C_SMBUS_WRITE || size <= I2C_SMBUS_BYTE_DATA)
- 		return 0;
- 
--- 
-2.45.2
+> 
+> -- 
+> An old man doll... just what I always wanted! - Clara
+
 
