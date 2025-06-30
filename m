@@ -1,129 +1,158 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6909724501B;
-	Mon, 30 Jun 2025 13:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD02289E00;
+	Mon, 30 Jun 2025 13:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291658; cv=none; b=OGbQtxWAFFT+yqsbXkY5+s6Jk99ubBKG528UnqQT7rE5BC3eHhtajBdqIZFjckl6QKVvQqi7brIM++0mZYmoYr9h+0P+wiCGbDNBQxLfOfgrn1Rthy3A4cyT/S6bYug65GYF7nGgBe+DoteUhiSaC8rYwghjmPgntdghgPQzPRQ=
+	t=1751291661; cv=none; b=b3NHDH2H6EQ0mCSGyah1FjQB5IKN06NU+nYzjRtzb/sc9Ria352x1Ul/+eVvIIw8CNhqU7F+pgs1P31ZjdF+TbcedZPeAKBssHBE18vkqq2RI0KxUCfNJUmhGwQF5Nx73JA0a46DZK/HWjzWEY81OB3b4bGuv1gvk1UgZjDqyRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291658; c=relaxed/simple;
-	bh=dxI/ZkRM43EsL7xoK+Mw5w89VIq3Ip60hsYWHHvxh7Y=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=lAkCI8VQkUotyVGsldldhtSIatdOd7PFDRL8dzYvk2X6gCrtizw5NnukgixMemGkMW2wuz/2peDu7sRgtv4nKGnr7eCCdByGjud5FXNkil9JG0nBzlnd3XsHzP3wy+AkCr1obJ8OvVPQl3341br7wbQg2ojy4grpZit677OfXYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LBpBtzjt; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751291661; c=relaxed/simple;
+	bh=XDIHXs4K7QWZcdabHUjQZzHGSYnnwRmcj9GQSvFWMks=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=t84sjE7VE0SB3VROJzaOkbZyghVoKWN7+R8pNiVP32zgnsWsXJ2dg6vdwpzz2Tp+Mbnazg2qDv4XutXUqaM0GMbvwjpre0cdB6xiYU0nSUIclkSMaEBqoP/yLlx8HlC1xMFedBErKWRmCloJ/inHl3pq2cUyCq8eUdOpiB86Sbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HCpLW8xs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VlNd4II1; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBpBtzjt"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5561ab55c4dso709556e87.2;
-        Mon, 30 Jun 2025 06:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751291655; x=1751896455; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SfxKlKhqqc3sn6oQJ91bWsKwO4RMrtLJYTGaBDYAwXs=;
-        b=LBpBtzjtwWQLQAoL4dJ0fcn4z2cCl5FEuI94bDxP++UsKbrTaXHjlFMbi7D4/3qV3P
-         2XklGQgBMfdczWAqKY9FwUaFKwcwLsBvp/vtTpzpLiUCfFeCf6Vv1enYgp6TtLbHHOl8
-         VV8CEsZ8fIj1M/aDPq7KsYvGrhpVeYxJmLojUXesgD6hogpvRzRt9Bb9v9SBxiN9acPW
-         ly3Nw2ZKbNkXVKSE2kcDPFj6pd99H5X4dXWk/zD+smIxEf8S7UoctUIKIgN4m/AO7iKb
-         2YnT2gv37eD3phwReh1eU2YoGGHA2Msluj1VinEoIG6YopvAtDUKvoFHPosaS9J/IsGs
-         vo2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751291655; x=1751896455;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SfxKlKhqqc3sn6oQJ91bWsKwO4RMrtLJYTGaBDYAwXs=;
-        b=fDtRm7zUspit7swImLwQYHa+S86+DpH5w1ukDF2196kahCELiNbYoZHzDPjyqeJVfG
-         U69RiYtJ9dciUapwut+uoNEePapdJBcETJP4TSGlLqvY1CA+WGttmVbAwTSzZTrTOZEj
-         BaBEXz5PMvsFRbZP8Z5rmHlBG7sqFpQCGd3yG4m1CK3jdl43RySv7K8v5BYm2P6bvLZm
-         Td4Ea67Us8jQ9AYMYp3pcRmCU6BXY7c5eZHi90OiwtOjkQfAsIPNoy1W8K08DLUhM4L8
-         jnGG0Jr0hwv1FogjN8Av3aKyGcUEsM21QfGo8Ccl7DNW58lEIhH3wI8Feg8n+5crpfty
-         lBrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeXVs12rZm+1Fl5MBP8QmR9ZrhsYoNr/GVYCy1f3wi/StftIpo5zERzFn7HEkF3bs0JQElWRMjfW/c@vger.kernel.org, AJvYcCWjksT5M2b1lJsll4FRLRWARLavHLVFkFwzB5+OqF6JJX5XXK9T2rsz2hBhH39mE4+/32SOO6AzJZLjC5DB@vger.kernel.org, AJvYcCXRz6EqWQ4X1PGyMSuMLowt2p0ltvDGeWvltrzOP/aO10u+gl9grF22vDaszc4IXpMr2Zu3jJQvYQblxA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbMfUWRP8pdiSJgi3GR3f5Vgby2Ajmb1l+yJZ8ZCZk8AbeoRRP
-	KDFVaVxR0gC97OVCpX3elPSnd0w7YcipnaktU9EuE0kYX+DGNPDCDW0TEmmzVLO+
-X-Gm-Gg: ASbGncv4sz/gANiKOW9M1eGx5aq81AmSfcGIWn1qqbC2EDn/vo2NP0cGF+8KPhhMeL4
-	BS7tY1ETv50ZffJZGtf8UgDV3/tlJWzKBnt+tpe2Uf9a+TewH2OQVLco8fW+d+mh0QZm2TRYpgX
-	qz5/tetnkmDEmRrYZ9+WDU1wIOwDtJPhketemUQnKmWNpUiy2odJycR2ifnQnwx/wET4A7mRFai
-	Ar82ShgC9/kG6hVqsk0tDw8jxSN2AwRZ2653BJvaRy3Z1L0XA09OvCvf1sLFb0z9Ek7IUurGCSj
-	e1iKH7AaDTWP5L2XstkuAx5S26GJjF4APya6Z6dMu919E5vXzdwvg8EZVo6scLWWp66QeaI7XUz
-	O3xy1ek+ezI8=
-X-Google-Smtp-Source: AGHT+IEFfbreu10LLCTj7YTb4EDfAbv0b02bWlYyqbRfnaepG6UskV4t7Qf+MfrhQMwTBc9VIQUpEA==
-X-Received: by 2002:ac2:4e0a:0:b0:553:30fc:cee4 with SMTP id 2adb3069b0e04-5550b9e8f15mr3752361e87.49.1751291654151;
-        Mon, 30 Jun 2025 06:54:14 -0700 (PDT)
-Received: from smtpclient.apple ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2cdf62sm1440212e87.163.2025.06.30.06.54.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Jun 2025 06:54:13 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HCpLW8xs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VlNd4II1"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id A41121400028;
+	Mon, 30 Jun 2025 09:54:16 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 30 Jun 2025 09:54:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751291656;
+	 x=1751378056; bh=ik9oLe3KdALkxzKl69BBxlmJ8fpBBAh4pU7+UUhNIAg=; b=
+	HCpLW8xsF3EqejqRsdi4yjCzmlUTcGMoILiaKStETiAgoeykxvH8DpcWVyDgi7Zg
+	xX02l5ZTYkqo0QruDwzfQ++5RSoiqmz/kHiUUCOZiZA08maMoMNRBu4J0utGZaNS
+	TAFlOugGZqywPfBPzLWLK8CWreEh1ZpUQzLjUTy0KWh+FPWLM4HYflHiOyNjrWRp
+	M8ZaCKazgSGEfxTTuGveC6KrQEa0u/8GjsPXe85rOhttDPhXR8uogkwPdASMucj8
+	cjjdAgCA0JdmkfkfqRiP24v2d4N7x9f1V8PnIoLYLRQIBjAl4zCFd7nONXkI9Ech
+	FdRZ+inK4k7w8NzMsqM86Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751291656; x=
+	1751378056; bh=ik9oLe3KdALkxzKl69BBxlmJ8fpBBAh4pU7+UUhNIAg=; b=V
+	lNd4II1MEchvr393QhsqIMCypt8IeM8qeUKvGbO0Qq7Wy2w+ub3YgnUiT0mQ12FX
+	KF0q7wdPAn4E8Nf8hsS68cO3yock4OkiY4SQNaeDwGZwTX7+OUcxsGWZabCcpoqR
+	82mkry5p9IJHYDpnFQLQ60+rrZPg6O2OCS6gDDjtx+EywTTMjcSgJwg+1BhPqmGe
+	PpnSeLcYKRPmzR7KJHgEn8S2pEiY1ZWOJCucyk2cxBYIfbcYxwTM5cdAFrU3T/YU
+	sJK78LjTadM0IPbp4mu0dum9PnEdbzR28u75DTplu97uq3ZuQIAUe6hTtQiR2ybY
+	J7hVufrDRH7au8tk+7P8g==
+X-ME-Sender: <xms:BpdiaGUGolou3QitfZg4BLCqsIQsIym4YCDRZA9BPbVpjvQSFuKbOw>
+    <xme:BpdiaCmTzevwMOgsbNp3SurxN3fnfZd5hxQ7tFPxER-J8eWckiPqYPWHZeCXCn0bM
+    4_Dpna6uxf0VicV6Rk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudekjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtph
+    htthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgs
+    vghrthesghhonhguohhrrdgrphgrnhgrrdhorhhgrdgruhdprhgtphhtthhopegrnhguih
+    drshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrohhonhhivgeskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgr
+    rhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtth
+    hopegurghnihgvlhdrmhgrtghhohhnsehmihgtrhhotghhihhprdgtohhm
+X-ME-Proxy: <xmx:BpdiaKbW6kc3JjXJ_iF119Z2xF0TlpEZ7lZv-75taKItFXsh-Sj_Kg>
+    <xmx:BpdiaNX0wbV-b97Hre_u0SVfDSlOMJRgglPNtNh2F29eDDO-Qa2eMw>
+    <xmx:BpdiaAlhLEy218q7zgCoW-E8vY34X4w3snX9RIYXQv1AhPnnKNE1fQ>
+    <xmx:BpdiaCcDRhGlfi-Q6gHErHIhH-4Zlz1pe68U_7yL8dniJdgtiN14hw>
+    <xmx:CJdiaJYx9N4gSrfOr2NmNnOFHFvyapVyNj7lgmg6DXrTQTvDl3ADYuH->
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CBC52700063; Mon, 30 Jun 2025 09:54:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v2 5/8] dt-bindings: vendor-prefixes: Add Wuxi i-Core
- Electronics
-From: Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <779ee1b0-d624-4189-8452-6e27dfcf2684@kernel.org>
-Date: Mon, 30 Jun 2025 17:53:59 +0400
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- =?utf-8?Q?Jean-Fran=C3=A7ois_Lessard?= <jefflessard3@gmail.com>,
- Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org,
- linux-leds@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
- Boris Gjenero <boris.gjenero@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Paolo Sabatino <paolo.sabatino@gmail.com>
+MIME-Version: 1.0
+X-ThreadId: Tad13d72cbf59a799
+Date: Mon, 30 Jun 2025 15:53:54 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Robert Marko" <robert.marko@sartura.hr>
+Cc: "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Olivia Mackall" <olivia@selenic.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "David S . Miller" <davem@davemloft.net>, "Vinod Koul" <vkoul@kernel.org>,
+ "Andi Shyti" <andi.shyti@kernel.org>, "Mark Brown" <broonie@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>, ore@pengutronix.de,
+ luka.perkov@sartura.hr, "Daniel Machon" <daniel.machon@microchip.com>
+Message-Id: <3e522dcc-3b68-4137-bd3a-dcc2c889dbd3@app.fastmail.com>
+In-Reply-To: 
+ <CA+HBbNFd5hCKqUZY25Sws-o-0QALLue-JROyze_9biyuZZv4mg@mail.gmail.com>
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+ <3ba837f8-70bb-4b9e-a9f9-0e71b9e073c4@app.fastmail.com>
+ <CA+HBbNFd5hCKqUZY25Sws-o-0QALLue-JROyze_9biyuZZv4mg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] arm64: lan969x: Add support for Microchip LAN969x SoC
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <64C9BD77-1AFB-4B7B-BBD1-CE06F0F4642A@gmail.com>
-References: <20250629130002.49842-1-jefflessard3@gmail.com>
- <20250629130002.49842-7-jefflessard3@gmail.com>
- <CAMuHMdW+vGr-KyvPr84qr_k1sJV88SFn+oF_oi8_MKJkbyHXbg@mail.gmail.com>
- <779ee1b0-d624-4189-8452-6e27dfcf2684@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-> On 30 Jun 2025, at 4:24=E2=80=AFpm, Krzysztof Kozlowski =
-<krzk@kernel.org> wrote:
->=20
-> On 30/06/2025 10:19, Geert Uytterhoeven wrote:
->> Hi Jean-Fran=C3=A7ois,
->>=20
->> On Sun, 29 Jun 2025 at 15:00, Jean-Fran=C3=A7ois Lessard
->> <jefflessard3@gmail.com> wrote:
->>> Assign vendor prefix "icore", based on their domain name.
->>>=20
->>> Signed-off-by: Jean-Fran=C3=A7ois Lessard <jefflessard3@gmail.com>
->>=20
->> Thanks for your patch!
->>=20
->>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
->>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
->>> @@ -694,6 +694,8 @@ patternProperties:
->>>     description: International Business Machines (IBM)
->>>   "^ibm,.*":
->>>     description: International Business Machines (IBM)
->>> +  "^icore,.*":
->>> +    description: Wuxi i-Core Electronics Co., Ltd.
->>=20
->> This sounds a bit too generic to me.  What is the domain name?
->=20
-> Good point. icore.com should be but obviously it points somewhere =
-else,
-> so this does not follow ticker / domain name style.
+On Mon, Jun 30, 2025, at 15:21, Robert Marko wrote:
+> On Mon, Jun 16, 2025 at 8:34=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+>> On Fri, Jun 13, 2025, at 13:39, Robert Marko wrote:
+>>
+>> If the drivers on ARCH_LAN969X are largely shared with those on
+>> ARCH_AT91, should they perhaps depend on a common symbol?
+>>
+>> That could be either the existing ARCH_AT91 as we do with LAN966,
+>> or perhaps ARCH_MICROCHIP, which is already used for riscv/polarfire.
+>
+> Hi Arnd, I thought about this, but I am not sure whether its worth it
+> since we need LAN969x arch anyway for other drivers that currently
+> depend on LAN966x or SparX-5 but will be extended for LAN969x (I have
+> this already queued locally but need this to land first).
 
-As per the response to Geert earlier, the domain is i-core.cn (not .com)
+I think in that case we would want one symbol for all of the above.
+We have a couple of cases where there multiple SoC product families
+get handled by a shared config symbol to make life easier for the
+kernel:
 
-See: http://www.i-core.cn/en/
+- ARCH_IMX contains multiple chip families that are now owned
+  by NXP but that have a complex history with acquisitions and
+  product families that mix-and-match IP blocks, similar to
+  Microchip
 
-CH.=
+- ARCH_EXYNOS contains chips from Samsung, Google, Tesla and Axis
+  that all share a lot of components because they are all based on
+  Samsung designs
+
+- ARCH_BCM contains several chip families that all started out
+  in Broadcom but actually share very few common components.
+
+On the other hand, we have TI with its davinci, omap, omap2
+keystone2 and k3 platforms, or Marvell with orion, mvebu,
+pxa, mmp, octeon, octeontx, thunderx and thunderx2 platforms
+that overlap to varying degrees but use separate Kconfig symbols.
+
+Since you already have an ARCH_MICROCHIP used by one of the
+microchip platforms, the simplest approach seems to me to
+include at91, lan969x, lan966x and sparx-5 under that as well.
+You could just select that symbol from each of the four
+and then change any driver that is used by more than one of
+these families to use 'depends on ARCH_MICROCHIP' instead of
+listing them individually.
+
+I assume the mips based PIC32 and VCOREIII (ocelot/jaguar)
+are distant enough that they wouldn't share any drivers with
+the other families any more, but they could be put into that
+as well if that helps.
+
+     Arnd
