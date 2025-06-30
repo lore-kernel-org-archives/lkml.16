@@ -1,490 +1,127 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBAB295519
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F0228D822
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303915; cv=none; b=nyKIP/IVj7y4ydcgkD6nLjsNilhfLorirw8GAVXbhBrSTvOptmTfZ5JLaZgjZrq1gM9TKEo1ibuz9eO1sviZrj/HC7Vq/Hnd+DZlCzZDkdnKxFNRtxoPGuCPEJl2ByW5SQtEgQPnRxIh0rpYj8Sb3w3eLwulI+8KhaYnI56DgX4=
+	t=1751303940; cv=none; b=qO5g3Bc0Npoa9g/SRCLuyfruOfZx01u8Y0XWq/z00Ymdx7c2/t+/68fnWLclFlOhS+u9Wx5RH2r4LXgKMK0xPnW+p2pGzV04t/N527v9f1dnw3QVZ+2zX0Qddu3pMpYH6N/rcd7NrpVEvw/RNcQhWDHEhCuec1CmUPAyt3XRlvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303915; c=relaxed/simple;
-	bh=TWyQaN2iVUz94ynFB7bJuwDtzl/3YSHG8D7YpIvNZ+E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ARzSEc91/HGfFdhNMhDQ77U+L7rlNhI3ox8ntXqrTj8fP+YvIHmTbdn387vNQFOAB5J4kI8fNyqz0H5VgbYEdqFrE5Nyjm1oNWkNSQ3/yrqoqDq8ZQ+JJJ3SS5+GP+4C3Fc1UCTkeCBfLObGrgUon7Xh1Z0XgeolrKCNpQQzu18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso29720625ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:18:33 -0700 (PDT)
+	s=arc-20240116; t=1751303940; c=relaxed/simple;
+	bh=BAiyrEhhiV383mOUgct4OWopIaapKv+OJACBpBkj1ek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bno1PI4xcmJiDuivqxwnwifjTfANdKIbapacq2ZXlpBE1MHBafAjOS34mPCMvvDKc6nnIrFwTrECtE2Lvuidp/UXVsuuZSI23ZqrhfhENccDzYZcIjZJfnSSJHJJTIKsoHPcxSapRyevNs5FFKckljyNdEvZmjxKYU2tUaI0NSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com; spf=pass smtp.mailfrom=omnibond.com; dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b=N6SzM47S; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omnibond.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b="N6SzM47S"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c3d06de3so2829528b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20230601.gappssmtp.com; s=20230601; t=1751303938; x=1751908738; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BAiyrEhhiV383mOUgct4OWopIaapKv+OJACBpBkj1ek=;
+        b=N6SzM47SjBPaM9N5+BXTagoTQMRvP1/xg1Zk1DnYxUnqVLneVnD3p9nyuNSc0KuIf6
+         s2dhbU9CZtmyzFLPBNbmWZPWY9SsxC1l6bYiv/oGAUKa3B5RBYNT4GGEVdJgipkCehh4
+         tkBLqxfURK1yivMq06zFywLRQLX7S+IYw5QWdu2Gx1rQ7jes7cuM5Xbo2m6JNdlQ5cFx
+         NtExuzO3pZq0CAoSwErgZWcrIfLeJAK/z9csZOxX7NLdW+Jv5Nx2Ec+EkHvBneoqvR5i
+         0tkBZ6Y1b+an5dpXOKdVtSY/7TjoyYe3nGmOz7bu+YU0AEBoUeyVKNptp7uwZaF602oX
+         Kx2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751303912; x=1751908712;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kicb8xShHO5+Li5xCZS/gmc1HOZdXG+zKN5b5MtgnoA=;
-        b=K/aQouO8PsTbbnxK3Hbz3oBF65aya5kvMPWCIPa8wmqZe19kVFUpcT/oPN/9cLC1xV
-         8GcYWQr0I2+XKFdgrybbvyx3QN4+rd/MVhvgjK60LRO7VuIerOcmblbuXqKkGBDk32PG
-         YR2ERoBZWzGQk6I9905QkZwfXc3lSLUD/0rAUaohaP6BY6BuRJTJbFPWwsQcKNsdEbnl
-         dhwF2m12A7LwAiDWgc/qXmf2VSIambslFcCHMnIg7qxjvT7rfeRQ7rFrZT1QLvHDZRNC
-         o8asEQNFcSH/hAoqLzYkgBRuWwKV+O9PGchDn4BWmA1xyMiFe18OTbOBhwrop7svPoDl
-         hVfg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5xGXoyp6HDvZwyHQs8WZpIUK7nn2L844qdErGk2pjkqw3SNG46PFL2OzMdV68MQ+U4iQrO0c3yElidzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcYOxlA9t5VVyLLRVh24O7okwsKNXlN8atu24P11yQMB8AQgoI
-	KabimoSqyE1c+wpo0AQ09Q/1QtGr4cOmBKlmoo1uV7rkgauJVAFsPLpVLl1s66lJKQeSJThHJdO
-	v34pRdOz0xpqoJs2CvgKlzMRQdzZsGxS7fJvBl5Mjrj+LFoWeBmpooZpuu4o=
-X-Google-Smtp-Source: AGHT+IFaFcDOZuSSEO9gIqU4iFZ3sGjFDoZQM+sL6YMceFgKbB/4lI2U7VN2n7n1ygQx4B0vLF/m2nz8luC1HuO+nnymnZ3bfvDf
+        d=1e100.net; s=20230601; t=1751303938; x=1751908738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BAiyrEhhiV383mOUgct4OWopIaapKv+OJACBpBkj1ek=;
+        b=HT2R0+tQioEgMt769zs/3vzCnM6yIfErENuq9G488ubSotHqcBkD2+KSYs1Hh+Z/JQ
+         a+KjXbj6fGgCE7JRirPTxvBl1MhIkacnuagQncw62GGrJ3RlDmwDCpXmdFhj7c8QFpRQ
+         rqVbt5Ur84N7w+YB+OuT74eH8HVxSBMD8b2Zl3GnFClGmW1Ik8PfKDFbvfPsrqI/1dc4
+         YiJ7WA5C73uBRrw8quSfAXJCkGUUjoWR4WAbeuID8p/5UvjqD1nYY0/XBRRBj4JkejKI
+         zWy0NNgs8y9pbdOVl25FoniqG2rr/HxzLAWqqjPPWy+gJo6MnLLZMcWbQEJXlpqLUq1P
+         rByw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcfVa4SsKZicnV5G5tBWq02jdrvXICTXn8Onl8ntl/IKaI2iu+LAFWAq/N5Ku2DDjKgKQhtAFw/coKsCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDkr78yKrT9O4EIud9DUjvAufeQHnzGfFTKH+zyeP3kup8fba8
+	G+M54B2xZ+DOz8+PqfWdg0fKh2azjdUDxz7pI5O4Y87GF93tv2mOWLA3jS3QPMXuu+SRbU6xD1g
+	7aLZdBJpISR1ZtjCGdnuCdQqyTXsocZPHuVzbZ4k6A9TtpWfA9Eg=
+X-Gm-Gg: ASbGncv+x+IHwQW4wST04GeVb0Wa2qaLFkNhxh6CHvqTQgHYsoMFhl2H+xK8QNTC8Ek
+	sGFD6dV5N5wYICkSMF1Ows7+hWiUo82yxOZcTtc+0l3S3EyGqrFPWo0sfbTyqNGKl7ViTbf7Kcr
+	PewKnun8s8QdkYZQDbqPPWkp+04MP+SAZBP+V/Ce+7ui+iX3YCvcdUPBs=
+X-Google-Smtp-Source: AGHT+IF5EUFj3NXjU3AVcJ/Zu/DDPjIC7nSgpWEx00YDQf4mbck1Hjl5QK0YbghJ0YN5j+UjqF3+EU3iklA4MYf3sAc=
+X-Received: by 2002:a05:6a00:238b:b0:746:24c9:c92e with SMTP id
+ d2e1a72fcca58-74af6ef81a9mr20692678b3a.8.1751303938118; Mon, 30 Jun 2025
+ 10:18:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c245:0:b0:3df:4159:8fe5 with SMTP id
- e9e14a558f8ab-3df4ab55b4bmr165596905ab.4.1751303912481; Mon, 30 Jun 2025
- 10:18:32 -0700 (PDT)
-Date: Mon, 30 Jun 2025 10:18:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6862c6e8.a70a0220.3b7e22.10ad.GAE@google.com>
-Subject: [syzbot] [net?] possible deadlock in br_forward_delay_timer_expired (4)
-From: syzbot <syzbot+33d7a8d74e3e3439ef76@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	jv@jvosburgh.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+References: <20250608163559.36401-1-a.jahangirzad@gmail.com>
+ <CADf5TKvyKvaP3eZUR81ND6JQUfVqUEroCrXp=joZ8GHdu2EBbA@mail.gmail.com>
+ <20250622184815.GW1880847@ZenIV> <CADf5TKvorgeCJ=6u6=jhxetUhDx3SCnUBe+cpbUQu5gADqRRCg@mail.gmail.com>
+ <CAOg9mSQGNOrA0p4q+9Q_tLCMtBnCuEc5d+TYXdV+7XT4pqOQNg@mail.gmail.com>
+In-Reply-To: <CAOg9mSQGNOrA0p4q+9Q_tLCMtBnCuEc5d+TYXdV+7XT4pqOQNg@mail.gmail.com>
+From: Mike Marshall <hubcap@omnibond.com>
+Date: Mon, 30 Jun 2025 13:18:47 -0400
+X-Gm-Features: Ac12FXxG1vMznYMejNAEHasbVa_SYqnMqre4yhcxDzQgyJ9n0lVdgpRMdyqH75M
+Message-ID: <CAOg9mSScdVGLu6RFFe_Lcv5ugRmN8Ov-qZ=yNUM84Jv94jKz1g@mail.gmail.com>
+Subject: Re: [PATCH] fs/orangefs: use snprintf() instead of sprintf()
+To: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, devel@lists.orangefs.org, 
+	linux-kernel@vger.kernel.org, Mike Marshall <hubcap@omnibond.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Amir...
 
-syzbot found the following issue on:
+I added your patch to 6.16-rc3 and ran it through xfstests, it
+works fine. snprintf won't overflow the buffer and gives you
+the opportunity to compare the return code to the buffer size
+to detect truncation. It doesn't look like many of the other uses
+of snprintf in the kernel bother with checking for truncation.
 
-HEAD commit:    ee88bddf7f2f Merge tag 'bpf-fixes' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=133b03d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=641bc01f4fbdccd4
-dashboard link: https://syzkaller.appspot.com/bug?extid=33d7a8d74e3e3439ef76
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Whatever Al was pointing out is probably important... :-)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+-Mike
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-ee88bddf.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4d5b7a3f640a/vmlinux-ee88bddf.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/99b76e194ba7/bzImage-ee88bddf.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+33d7a8d74e3e3439ef76@syzkaller.appspotmail.com
-
-bond_slave_0: left promiscuous mode
-bond_slave_1: left promiscuous mode
-bond2: left promiscuous mode
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-6.16.0-rc3-syzkaller-00072-gee88bddf7f2f #0 Not tainted
------------------------------------------------------
-syz.4.769/9186 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
-ffff888059d58e18 (&bond->stats_lock){+.+.}-{3:3}
-, at: bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-
-and this task is already holding:
-ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
-ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: br_port_slave_changelink net/bridge/br_netlink.c:1212 [inline]
-ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: br_port_slave_changelink+0x3e/0x190 net/bridge/br_netlink.c:1200
-which would create a new lock dependency:
- (&br->lock){+.-.}-{3:3} -> (&bond->stats_lock){+.+.}-{3:3}
-
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (&br->lock){+.-.}-{3:3}
-
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire kernel/locking/lockdep.c:5871 [inline]
-  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-  __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-  _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-  spin_lock include/linux/spinlock.h:351 [inline]
-  br_forward_delay_timer_expired+0x4f/0x560 net/bridge/br_stp_timer.c:88
-  call_timer_fn+0x19a/0x620 kernel/time/timer.c:1747
-  expire_timers kernel/time/timer.c:1798 [inline]
-  __run_timers+0x6ef/0x960 kernel/time/timer.c:2372
-  __run_timer_base kernel/time/timer.c:2384 [inline]
-  __run_timer_base kernel/time/timer.c:2376 [inline]
-  run_timer_base+0x114/0x190 kernel/time/timer.c:2393
-  run_timer_softirq+0x1a/0x40 kernel/time/timer.c:2403
-  handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
-  __do_softirq kernel/softirq.c:613 [inline]
-  invoke_softirq kernel/softirq.c:453 [inline]
-  __irq_exit_rcu+0x109/0x170 kernel/softirq.c:680
-  irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
-  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
-  sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1050
-  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-  native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
-  pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:81
-  arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
-  default_idle+0x13/0x20 arch/x86/kernel/process.c:749
-  default_idle_call+0x6d/0xb0 kernel/sched/idle.c:117
-  cpuidle_idle_call kernel/sched/idle.c:185 [inline]
-  do_idle+0x391/0x510 kernel/sched/idle.c:325
-  cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
-  start_secondary+0x21d/0x2b0 arch/x86/kernel/smpboot.c:315
-  common_startup_64+0x13e/0x148
-
-to a SOFTIRQ-irq-unsafe lock:
- (&bond->stats_lock){+.+.}-{3:3}
-
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire kernel/locking/lockdep.c:5871 [inline]
-  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-  _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-  bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-  dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
-  rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
-  rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
-  rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
-  rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
-  rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
-  rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
-  register_netdevice+0x1bd9/0x2270 net/core/dev.c:11157
-  bond_create+0xb9/0x120 drivers/net/bonding/bond_main.c:6541
-  bonding_init+0xc1/0x140 drivers/net/bonding/bond_main.c:6635
-  do_one_initcall+0x120/0x6e0 init/main.c:1274
-  do_initcall_level init/main.c:1336 [inline]
-  do_initcalls init/main.c:1352 [inline]
-  do_basic_setup init/main.c:1371 [inline]
-  kernel_init_freeable+0x5c2/0x900 init/main.c:1584
-  kernel_init+0x1c/0x2b0 init/main.c:1474
-  ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
-  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&bond->stats_lock);
-                               local_irq_disable();
-                               lock(&br->lock);
-                               lock(&bond->stats_lock);
-  <Interrupt>
-    lock(&br->lock);
-
- *** DEADLOCK ***
-
-3 locks held by syz.4.769/9186:
- #0: ffffffff9034cbe8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #0: ffffffff9034cbe8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
- #0: ffffffff9034cbe8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x600/0x2000 net/core/rtnetlink.c:4054
- #1: ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
- #1: ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: br_port_slave_changelink net/bridge/br_netlink.c:1212 [inline]
- #1: ffff888033900d98 (&br->lock){+.-.}-{3:3}, at: br_port_slave_changelink+0x3e/0x190 net/bridge/br_netlink.c:1200
- #2: ffffffff8e5c4940 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #2: ffffffff8e5c4940 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #2: ffffffff8e5c4940 (rcu_read_lock){....}-{1:3}, at: bond_get_stats+0xc8/0x550 drivers/net/bonding/bond_main.c:4574
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
--> (&br->lock){+.-.}-{3:3} {
-   HARDIRQ-ON-W at:
-                    lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                    lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                    __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-                    _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-                    spin_lock_bh include/linux/spinlock.h:356 [inline]
-                    br_add_if+0xff1/0x1b70 net/bridge/br_if.c:682
-                    do_set_master+0x40f/0x730 net/core/rtnetlink.c:2946
-                    do_setlink.constprop.0+0xbd8/0x4380 net/core/rtnetlink.c:3148
-                    rtnl_changelink net/core/rtnetlink.c:3759 [inline]
-                    __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
-                    rtnl_newlink+0x1446/0x2000 net/core/rtnetlink.c:4055
-                    rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
-                    netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
-                    netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-                    netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
-                    netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
-                    sock_sendmsg_nosec net/socket.c:712 [inline]
-                    __sock_sendmsg net/socket.c:727 [inline]
-                    __sys_sendto+0x4a0/0x520 net/socket.c:2180
-                    __do_sys_sendto net/socket.c:2187 [inline]
-                    __se_sys_sendto net/socket.c:2183 [inline]
-                    __x64_sys_sendto+0xe0/0x1c0 net/socket.c:2183
-                    do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-                    do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
-                    entry_SYSCALL_64_after_hwframe+0x77/0x7f
-   IN-SOFTIRQ-W at:
-                    lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                    lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                    __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-                    _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-                    spin_lock include/linux/spinlock.h:351 [inline]
-                    br_forward_delay_timer_expired+0x4f/0x560 net/bridge/br_stp_timer.c:88
-                    call_timer_fn+0x19a/0x620 kernel/time/timer.c:1747
-                    expire_timers kernel/time/timer.c:1798 [inline]
-                    __run_timers+0x6ef/0x960 kernel/time/timer.c:2372
-                    __run_timer_base kernel/time/timer.c:2384 [inline]
-                    __run_timer_base kernel/time/timer.c:2376 [inline]
-                    run_timer_base+0x114/0x190 kernel/time/timer.c:2393
-                    run_timer_softirq+0x1a/0x40 kernel/time/timer.c:2403
-                    handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
-                    __do_softirq kernel/softirq.c:613 [inline]
-                    invoke_softirq kernel/softirq.c:453 [inline]
-                    __irq_exit_rcu+0x109/0x170 kernel/softirq.c:680
-                    irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
-                    instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
-                    sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1050
-                    asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-                    native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
-                    pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:81
-                    arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
-                    default_idle+0x13/0x20 arch/x86/kernel/process.c:749
-                    default_idle_call+0x6d/0xb0 kernel/sched/idle.c:117
-                    cpuidle_idle_call kernel/sched/idle.c:185 [inline]
-                    do_idle+0x391/0x510 kernel/sched/idle.c:325
-                    cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
-                    start_secondary+0x21d/0x2b0 arch/x86/kernel/smpboot.c:315
-                    common_startup_64+0x13e/0x148
-   INITIAL USE at:
-                   lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                   lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                   __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-                   _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-                   spin_lock_bh include/linux/spinlock.h:356 [inline]
-                   br_add_if+0xff1/0x1b70 net/bridge/br_if.c:682
-                   do_set_master+0x40f/0x730 net/core/rtnetlink.c:2946
-                   do_setlink.constprop.0+0xbd8/0x4380 net/core/rtnetlink.c:3148
-                   rtnl_changelink net/core/rtnetlink.c:3759 [inline]
-                   __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
-                   rtnl_newlink+0x1446/0x2000 net/core/rtnetlink.c:4055
-                   rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
-                   netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
-                   netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-                   netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
-                   netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
-                   sock_sendmsg_nosec net/socket.c:712 [inline]
-                   __sock_sendmsg net/socket.c:727 [inline]
-                   __sys_sendto+0x4a0/0x520 net/socket.c:2180
-                   __do_sys_sendto net/socket.c:2187 [inline]
-                   __se_sys_sendto net/socket.c:2183 [inline]
-                   __x64_sys_sendto+0xe0/0x1c0 net/socket.c:2183
-                   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-                   do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
-                   entry_SYSCALL_64_after_hwframe+0x77/0x7f
- }
- ... key      at: [<ffffffff9b267040>] __key.7+0x0/0x40
-
-the dependencies between the lock to be acquired
- and SOFTIRQ-irq-unsafe lock:
--> (&bond->stats_lock){+.+.}-{3:3} {
-   HARDIRQ-ON-W at:
-                    lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                    lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                    _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-                    bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-                    dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
-                    rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
-                    rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
-                    rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
-                    rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
-                    rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
-                    rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
-                    register_netdevice+0x1bd9/0x2270 net/core/dev.c:11157
-                    bond_create+0xb9/0x120 drivers/net/bonding/bond_main.c:6541
-                    bonding_init+0xc1/0x140 drivers/net/bonding/bond_main.c:6635
-                    do_one_initcall+0x120/0x6e0 init/main.c:1274
-                    do_initcall_level init/main.c:1336 [inline]
-                    do_initcalls init/main.c:1352 [inline]
-                    do_basic_setup init/main.c:1371 [inline]
-                    kernel_init_freeable+0x5c2/0x900 init/main.c:1584
-                    kernel_init+0x1c/0x2b0 init/main.c:1474
-                    ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
-                    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-   SOFTIRQ-ON-W at:
-                    lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                    lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                    _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-                    bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-                    dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
-                    rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
-                    rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
-                    rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
-                    rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
-                    rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
-                    rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
-                    register_netdevice+0x1bd9/0x2270 net/core/dev.c:11157
-                    bond_create+0xb9/0x120 drivers/net/bonding/bond_main.c:6541
-                    bonding_init+0xc1/0x140 drivers/net/bonding/bond_main.c:6635
-                    do_one_initcall+0x120/0x6e0 init/main.c:1274
-                    do_initcall_level init/main.c:1336 [inline]
-                    do_initcalls init/main.c:1352 [inline]
-                    do_basic_setup init/main.c:1371 [inline]
-                    kernel_init_freeable+0x5c2/0x900 init/main.c:1584
-                    kernel_init+0x1c/0x2b0 init/main.c:1474
-                    ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
-                    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-   INITIAL USE at:
-                   lock_acquire kernel/locking/lockdep.c:5871 [inline]
-                   lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-                   _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-                   bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-                   dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
-                   rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
-                   rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
-                   rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
-                   rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
-                   rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
-                   rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
-                   register_netdevice+0x1bd9/0x2270 net/core/dev.c:11157
-                   bond_create+0xb9/0x120 drivers/net/bonding/bond_main.c:6541
-                   bonding_init+0xc1/0x140 drivers/net/bonding/bond_main.c:6635
-                   do_one_initcall+0x120/0x6e0 init/main.c:1274
-                   do_initcall_level init/main.c:1336 [inline]
-                   do_initcalls init/main.c:1352 [inline]
-                   do_basic_setup init/main.c:1371 [inline]
-                   kernel_init_freeable+0x5c2/0x900 init/main.c:1584
-                   kernel_init+0x1c/0x2b0 init/main.c:1474
-                   ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
-                   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- }
- ... key      at: [<ffffffff9b0ae6a0>] __key.9+0x0/0x40
- ... acquired at:
-   lock_acquire kernel/locking/lockdep.c:5871 [inline]
-   lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
-   _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
-   bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
-   dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
-   rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
-   rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
-   rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
-   rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
-   rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
-   rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
-   __dev_notify_flags+0x24c/0x2e0 net/core/dev.c:9493
-   __dev_set_promiscuity+0x26b/0x590 net/core/dev.c:9295
-   netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
-   dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
-   bond_set_promiscuity drivers/net/bonding/bond_main.c:919 [inline]
-   bond_change_rx_flags+0x22b/0x740 drivers/net/bonding/bond_main.c:4738
-   dev_change_rx_flags net/core/dev.c:9241 [inline]
-   __dev_set_promiscuity+0x214/0x590 net/core/dev.c:9285
-   netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
-   dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
-   vlan_dev_change_rx_flags+0x123/0x150 net/8021q/vlan_dev.c:474
-   dev_change_rx_flags net/core/dev.c:9241 [inline]
-   __dev_set_promiscuity+0x214/0x590 net/core/dev.c:9285
-   netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
-   dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
-   br_port_clear_promisc net/bridge/br_if.c:135 [inline]
-   br_manage_promisc+0x3da/0x4f0 net/bridge/br_if.c:172
-   nbp_update_port_count net/bridge/br_if.c:242 [inline]
-   br_port_flags_change+0x184/0x1d0 net/bridge/br_if.c:761
-   br_setport+0xb7d/0x17d0 net/bridge/br_netlink.c:1000
-   br_port_slave_changelink net/bridge/br_netlink.c:1213 [inline]
-   br_port_slave_changelink+0xcf/0x190 net/bridge/br_netlink.c:1200
-   rtnl_changelink net/core/rtnetlink.c:3752 [inline]
-   __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
-   rtnl_newlink+0x1409/0x2000 net/core/rtnetlink.c:4055
-   rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
-   netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
-   netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-   netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
-   netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
-   sock_sendmsg_nosec net/socket.c:712 [inline]
-   __sock_sendmsg net/socket.c:727 [inline]
-   ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
-   ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
-   __sys_sendmsg+0x16d/0x220 net/socket.c:2652
-   do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-   do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 9186 Comm: syz.4.769 Not tainted 6.16.0-rc3-syzkaller-00072-gee88bddf7f2f #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_bad_irq_dependency kernel/locking/lockdep.c:2619 [inline]
- check_irq_usage+0x7dc/0x920 kernel/locking/lockdep.c:2860
- check_prev_add kernel/locking/lockdep.c:3172 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain kernel/locking/lockdep.c:3911 [inline]
- __lock_acquire+0x1285/0x1c90 kernel/locking/lockdep.c:5240
- lock_acquire kernel/locking/lockdep.c:5871 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
- _raw_spin_lock_nested+0x31/0x40 kernel/locking/spinlock.c:378
- bond_get_stats+0x115/0x550 drivers/net/bonding/bond_main.c:4579
- dev_get_stats+0xb0/0xa40 net/core/dev.c:11551
- rtnl_fill_stats+0x48/0xa90 net/core/rtnetlink.c:1474
- rtnl_fill_ifinfo.constprop.0+0x167d/0x4ca0 net/core/rtnetlink.c:2118
- rtmsg_ifinfo_build_skb+0x151/0x280 net/core/rtnetlink.c:4399
- rtmsg_ifinfo_event net/core/rtnetlink.c:4432 [inline]
- rtmsg_ifinfo_event net/core/rtnetlink.c:4422 [inline]
- rtmsg_ifinfo+0x9f/0x1a0 net/core/rtnetlink.c:4441
- __dev_notify_flags+0x24c/0x2e0 net/core/dev.c:9493
- __dev_set_promiscuity+0x26b/0x590 net/core/dev.c:9295
- netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
- dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
- bond_set_promiscuity drivers/net/bonding/bond_main.c:919 [inline]
- bond_change_rx_flags+0x22b/0x740 drivers/net/bonding/bond_main.c:4738
- dev_change_rx_flags net/core/dev.c:9241 [inline]
- __dev_set_promiscuity+0x214/0x590 net/core/dev.c:9285
- netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
- dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
- vlan_dev_change_rx_flags+0x123/0x150 net/8021q/vlan_dev.c:474
- dev_change_rx_flags net/core/dev.c:9241 [inline]
- __dev_set_promiscuity+0x214/0x590 net/core/dev.c:9285
- netif_set_promiscuity+0x52/0x150 net/core/dev.c:9305
- dev_set_promiscuity+0xb2/0x260 net/core/dev_api.c:287
- br_port_clear_promisc net/bridge/br_if.c:135 [inline]
- br_manage_promisc+0x3da/0x4f0 net/bridge/br_if.c:172
- nbp_update_port_count net/bridge/br_if.c:242 [inline]
- br_port_flags_change+0x184/0x1d0 net/bridge/br_if.c:761
- br_setport+0xb7d/0x17d0 net/bridge/br_netlink.c:1000
- br_port_slave_changelink net/bridge/br_netlink.c:1213 [inline]
- br_port_slave_changelink+0xcf/0x190 net/bridge/br_netlink.c:1200
- rtnl_changelink net/core/rtnetlink.c:3752 [inline]
- __rtnl_newlink net/core/rtnetlink.c:3918 [inline]
- rtnl_newlink+0x1409/0x2000 net/core/rtnetlink.c:4055
- rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
- netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg net/socket.c:727 [inline]
- ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
- ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
- __sys_sendmsg+0x16d/0x220 net/socket.c:2652
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f280f18e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f280ffed038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f280f3b5fa0 RCX: 00007f280f18e929
-RDX: 0000000000000000 RSI: 0000200000000000 RDI: 000000000000000e
-RBP: 00007f280f210b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f280f3b5fa0 R15: 00007ffd37a1aac8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+On Mon, Jun 23, 2025 at 1:02=E2=80=AFPM Mike Marshall <hubcap@omnibond.com>=
+ wrote:
+>
+> Hi Y'all...
+>
+> I was about to add Amir's patch on top of 6.16-rc3 and run it through
+> xfstests, when I saw Al's comment.
+>
+> Al patched a similar bit of code in orangefs-debugfs.c without
+> removing sprintf:
+>
+> 45063097 - "don't open-code file_inode()"
+>
+> When I look at orangefs_debug_read as it is now, I might be trusting
+> file->private_data's length too much and Amir's patch might risk sending
+> a bad sprintf_ret to simple_read_from_buffer. Al, could you be
+> more explicit?
+>
+> -Mike
+>
+> On Sun, Jun 22, 2025 at 4:10=E2=80=AFPM Amir Mohammad Jahangirzad
+> <a.jahangirzad@gmail.com> wrote:
+> >
+> > On Sun, Jun 22, 2025 at 10:18=E2=80=AFPM Al Viro <viro@zeniv.linux.org.=
+uk> wrote:
+> > >
+> > > On Sun, Jun 22, 2025 at 10:09:58PM +0330, Amir Mohammad Jahangirzad w=
+rote:
+> > >
+> > > > > Replace sprintf() with snprintf() for copying the debug string
+> > > > > into a temporary buffer, using ORANGEFS_MAX_DEBUG_STRING_LEN as
+> > > > > the maximum size to ensure safe formatting and prevent memory
+> > > > > corruption in edge cases.
+> > >
+> > > Out of curiosity - have you actually looked at the format used there?
+> >
+> > No, I just found this through static analysis. Is there any issue with =
+it?
