@@ -1,233 +1,387 @@
-Received: from dane.soverin.net (dane.soverin.net [185.233.34.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD182417D9;
-	Mon, 30 Jun 2025 13:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802AA2CCC9;
+	Mon, 30 Jun 2025 13:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290528; cv=none; b=V6qTqh7mUPWSOatkQ1I4+1B+q8Xa0D2O9pf9Z3JwA0I1PuV+8objxSgzD6oFkiH8Kr7mmkmx1acYi6h12hQexqGMtXoamtKg7NWGpurYuLg+5WuwoTGeeKxeoVMI3s/ojigdLB8blR0yUpl6BPcHWAyN0S7HwygKubzXr2TXQAw=
+	t=1751290582; cv=none; b=oFr9C99ldm3VmZ1pQRZ/Alu2w0DnflcWOPkT8cLLE9TQSYW33/v2bq8PNzLZWlB4NkbbUH600qnTEpUiOWU+chGY9s1UQquGKe5LXY3o92J3XAhUyKggGlu3MunPWFOarlbgwv4wphi1tYflldqeFfUUaLlnFWErSvkzEk5SQVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290528; c=relaxed/simple;
-	bh=/P7Bb+GBCsmkTGvOU3/poAoYvv8Pc3kcHUkQcSsenkc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=YJh3PtwBZ/KWvC8AKGUzw+YU7xbo+w0Wx1g3qXdCrLPwoPOB55sqcM8nm1vHjMKVbpRJraIowecJRI3Pf5+r6B9LYzzWVvBeokPLQnks/2b68PeJL93ZvJIBhfepxhpbcGwsjyCSg4/oMNwMADwUD6pb1sFIaaq3TDOSexRTb/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl; spf=pass smtp.mailfrom=jjverkuil.nl; dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b=n6h0365B; arc=none smtp.client-ip=185.233.34.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=jjverkuil.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jjverkuil.nl
+	s=arc-20240116; t=1751290582; c=relaxed/simple;
+	bh=Pb4IoNggSqEdmedEpRIpUE25EINncePR4G0HuxwQTSA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=PrSY4vAUjVe+B9Bqlws3wJzQ0gpJscVbpOUMlr/FskLLbN6/MNdfCVfJUu5UDDUxrhdiMBWmKAYOyTVzyUgAZjf6xn/hoiavAHrB5ccVW/TBjCITLGW1dQpzZpbMbNloTG6MSnh/NXjY/w22Rv09RLkxolJp7QkldzLtg7wc2jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=1Ck77Bxu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OAgRftnr; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.b="n6h0365B"
-Received: from smtp.freedom.nl (unknown [10.10.4.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by dane.soverin.net (Postfix) with ESMTPS id 4bW6bq41dtz176Q;
-	Mon, 30 Jun 2025 13:35:19 +0000 (UTC)
-Received: from smtp.freedom.nl (smtp.freedom.nl [10.10.4.108]) by freedom.nl (Postfix) with ESMTPSA id 4bW6bp12Cjz2xWq;
-	Mon, 30 Jun 2025 13:35:18 +0000 (UTC)
-Authentication-Results: smtp.freedom.nl;
-	dkim=pass (2048-bit key; unprotected) header.d=jjverkuil.nl header.i=@jjverkuil.nl header.a=rsa-sha256 header.s=soverin1 header.b=n6h0365B;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jjverkuil.nl;
-	s=soverin1; t=1751290519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IJJ0grH+oA2m0rVJnHlQgIHDE18CS9HCDq8kRv7TDlk=;
-	b=n6h0365B3pRTq4w/xIbmJszGc6lp+4nCAEq3mJpYLtIo9g9RcER4LhI/s5W5/eQW2XEQ+h
-	uwBlqq++nlHjnVBcKx42yRA767lZLqzN4/On3fmQBSGWsdKhKTzp0HJ7oPp9qYylAyKVD8
-	seTZ+BGbdCloqW6pmoBP4aMwH+OK/W/+PRoE7ujr3D6Dqrl17cKykmJTdaYm/Bs6ixrPIt
-	dJpfUcUHF1NxoqLBcnCWhBBd4Z+l9EKfume8P9ogERQcNumG8dKLdPMMRw6dZlC+6Y2gGY
-	rhFOsQ2gWjZkgM9EMLOr2sRXEJMuVrwYVw2X8/MLkWSqdt8u9Cu4g5GFy9ddKQ==
-X-CM-Analysis: v=2.4 cv=UsCZN/wB c=1 sm=1 tr=0 ts=68629296 a=IkcTkHD0fZMA:10 a=WN6_cwnCAAAA:8 a=cm27Pg_UAAAA:8 a=Af4PZqHWQyhPqpcfzgoA:9 a=QEXdDO2ut3YA:10 a=ndfOWLLM0rR49n6Yv1rF:22
-Message-ID: <c10e3dbf-c0c0-44f3-8699-48ac6fedb157@jjverkuil.nl>
-Date: Mon, 30 Jun 2025 15:35:17 +0200
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="1Ck77Bxu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OAgRftnr"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id AB4B17A028A;
+	Mon, 30 Jun 2025 09:36:18 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-06.internal (MEProxy); Mon, 30 Jun 2025 09:36:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1751290578;
+	 x=1751376978; bh=sEJ54Vv0MKysQVh8ZZThGPEIYeoAzfDcUt3/WS4I3aY=; b=
+	1Ck77Bxu+qRsqjIc1GeGMqiDluXPHlmc+u3HsUpCc+yE/m+C059TvHvzdeDfTZCg
+	DjiqvmmRwA0iu2Z6E3vMmDpRxggdAYq9a3cQGdL1IAniwdVTeXXU9DCAP0tEF3ZG
+	7vP4LQ+5TXAcaa6YJyx+XPcqaqutHaoxZU1QGv4A2RUcdWEKiwYL3C2buhuAJeY9
+	53Rtrtb4gokLy7alPCtC5KzHJC/xyDO3o8wEtdWf/Iad7rLzfg6AjlQLSyoKzn+O
+	o13WYWe/ibIwpZH7BMeC9qav3wED/iUmkwbVvpZkaUt/N7LadKdF/YLpr4DSofCh
+	frtgWjzOvovE6apgC7Kt7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751290578; x=
+	1751376978; bh=sEJ54Vv0MKysQVh8ZZThGPEIYeoAzfDcUt3/WS4I3aY=; b=O
+	AgRftnrSCElHAYl69PJH2WAxdW0C+xo13S2wIHkPj75qtg+c8mmcEwkvCFToqJ7O
+	EH6AL51wdbAeiP94nXWQtZAWm72XlxFLvuVKEooVBkZlBvwHJZAXoCg72QHA2ndj
+	XVfwgAOSHEYGCbwp4A5KStMEWhKFYTCJrSHXJ1A5IDhMDxCh6x1+/OkP+hrHadLR
+	JldCChL0jabESvngrlVjP7VrA3QjKOMn48mLvi3nuxV1qvw9tvW/pWleiup6hqfU
+	zY+ouVL6BtKrVRSq6fyXLt4gVvCLR2z7JflbsYm6HS5S715o6oiPIHfdpHqUxj9F
+	o9Pla5umPveFZtTMKHcpw==
+X-ME-Sender: <xms:ypJiaAGUKc9juD2ygJc6gAQDRDDb69IhFLXjikqdogHKGGbG6WVrOA>
+    <xme:ypJiaJUGjybum50JJYy259ashIWukFEOdIFn0F88VPQAomV-jQSC25ZCq-UrYqQnX
+    nYwIowVR-TBvEpVQOI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudekfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflihgrgihu
+    nhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffekteehhfelgfdvvedvkeeuffefkeeh
+    heegvefhveetjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhnsggprhgtphht
+    thhopeeffedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhssghoghgvnhguse
+    grlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehlihhnuhigsegrrhhmlhhi
+    nhhugidrohhrghdruhhkpdhrtghpthhtoheptgihrhhilhhlvgdrphhithgthhgvnhesrg
+    htmhgvlhdrtghomhdprhgtphhtthhopehhshhkihhnnhgvmhhovghnsegrthhmvghlrdgt
+    ohhmpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtg
+    homhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhr
+    tghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpd
+    hrtghpthhtoheprhgrfhgrlhhosegtrgguvghntggvrdgtohhmpdhrtghpthhtohepphgr
+    lhhmvghrsegurggssggvlhhtrdgtohhm
+X-ME-Proxy: <xmx:ypJiaKIDjCkyusFfkgBNhMk7LFXNmT2o5Ag8yvPSvsmTvlLeZDbKjw>
+    <xmx:ypJiaCGEHJZPw4N69DXz1l8BumTrqz_MAivU6Za3Vemr2WQqzvdbNA>
+    <xmx:ypJiaGWsiTEyymJTuPjZLZFpQUpXPG1ze56EMEjdaeMBqRKh8oOHOQ>
+    <xmx:ypJiaFPBg8zesaEEF8vBWRkELBv3dpBarBlIvB2si3vDbZEJgwwVug>
+    <xmx:0pJiaPk5vhhp_Whm7tXgy9jrXCmp5NUUyrActcYcLCuoup2TS2gBQij_>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C28682CE0071; Mon, 30 Jun 2025 09:36:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Hans Verkuil <hans@jjverkuil.nl>
-Subject: Re: [PATCH v2 7/9] media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert
- PM logic
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250602-uvc-grannular-invert-v2-0-c871934ad880@chromium.org>
- <20250602-uvc-grannular-invert-v2-7-c871934ad880@chromium.org>
-Content-Language: en-US, nl
-Autocrypt: addr=hans@jjverkuil.nl; keydata=
- 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
-In-Reply-To: <20250602-uvc-grannular-invert-v2-7-c871934ad880@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
+X-ThreadId: T1801f58283c6cf22
+Date: Mon, 30 Jun 2025 14:35:50 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+ "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ "Samuel Holland" <samuel.holland@sifive.com>,
+ "Richard Cochran" <richardcochran@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ "Gregory CLEMENT" <gregory.clement@bootlin.com>,
+ "Cyrille Pitchen" <cyrille.pitchen@atmel.com>,
+ "Harini Katakam" <harini.katakam@xilinx.com>,
+ "Rafal Ozieblo" <rafalo@cadence.com>,
+ "Haavard Skinnemoen" <hskinnemoen@atmel.com>,
+ "Jeff Garzik" <jeff@garzik.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ "Tawfik Bayouk" <tawfik.bayouk@mobileye.com>
+Message-Id: <984c1bea-7020-4121-9fea-7d657a5e8da1@app.fastmail.com>
+In-Reply-To: <20250627-macb-v2-16-ff8207d0bb77@bootlin.com>
+References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+ <20250627-macb-v2-16-ff8207d0bb77@bootlin.com>
+Subject: Re: [PATCH net-next v2 16/18] MIPS: mobileye: add EyeQ5 DMA IOCU support
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ricardo,
 
-These last three patches are a bit messy.
 
-It is much better to combine patch 7 and 9, and move patch 7 as the first
-one (but see my upcoming comment for that one, you should export a different
-function).
+=E5=9C=A82025=E5=B9=B46=E6=9C=8827=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=
+=8D=8810:09=EF=BC=8CTh=C3=A9o Lebrun=E5=86=99=E9=81=93=EF=BC=9A
+> Both Cadence GEM Ethernet controllers on EyeQ5 are hardwired through C=
+M3
+> IO Coherency Units (IOCU). For DMA coherent accesses, BIT(36) must be
+> set in DMA addresses.
 
-More comments below:
+Hi Th=C3=A9o,
 
-On 02/06/2025 15:06, Ricardo Ribalda wrote:
-> Instead of listing the IOCTLs that do not need to turn on the camera,
-> list the IOCTLs that need to turn it on. This makes the code more
-> maintainable.
-> 
-> This patch changes the behaviour for unsupported IOCTLs. Those IOCTLs
-> will not turn on the camera.
-> 
-> Suggested-by: Hans Verkuil <hans@jjverkuil.nl>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Just quick question, it seems like this special driver is only applying a
+fixed offset (1 << 36) to the DMA physical address, can we achieve that =
+with dma-ranges
+property in DeviceTree?
+
+I belive:
+```
+dma-coherent;
+             # Bus addr       # Phys  # Size
+dma-ranges =3D <0x10 0x00000000 0x0 0x0 0x10 0>;
+```
+
+Will do the job.
+
+Thanks
+Jiaxun
+>
+> Implement that in platform-specific dma_map_ops which get attached to
+> both instances of `cdns,eyeq5-gem` through a notifier block.
+>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 > ---
->  drivers/media/usb/uvc/uvc_v4l2.c | 61 ++++++++++++++++++++++++----------------
->  1 file changed, 36 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 020def11b60e00ca2875dd96f23ef9591fed11d9..13388879091c46ff74582226146521b5b5eb3d10 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -1219,43 +1219,54 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  }
->  #endif
->  
-> -static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> -				    unsigned int cmd, unsigned long arg)
-> +static long uvc_v4l2_pm_ioctl(struct file *file,
-> +			      unsigned int cmd, unsigned long arg)
-
-You don't need this function...
-
->  {
->  	struct uvc_fh *handle = file->private_data;
->  	int ret;
->  
-> -	/* The following IOCTLs do not need to turn on the camera. */
-> -	switch (cmd) {
-> -	case UVCIOC_CTRL_MAP:
-> -	case VIDIOC_CREATE_BUFS:
-> -	case VIDIOC_DQBUF:
-> -	case VIDIOC_ENUM_FMT:
-> -	case VIDIOC_ENUM_FRAMEINTERVALS:
-> -	case VIDIOC_ENUM_FRAMESIZES:
-> -	case VIDIOC_ENUMINPUT:
-> -	case VIDIOC_EXPBUF:
-> -	case VIDIOC_G_FMT:
-> -	case VIDIOC_G_PARM:
-> -	case VIDIOC_G_SELECTION:
-> -	case VIDIOC_QBUF:
-> -	case VIDIOC_QUERYCAP:
-> -	case VIDIOC_REQBUFS:
-> -	case VIDIOC_SUBSCRIBE_EVENT:
-> -	case VIDIOC_UNSUBSCRIBE_EVENT:
-> -		return video_ioctl2(file, cmd, arg);
-> -	}
-> -
->  	ret = uvc_pm_get(handle->stream->dev);
->  	if (ret)
->  		return ret;
-> -
->  	ret = video_ioctl2(file, cmd, arg);
-> -
->  	uvc_pm_put(handle->stream->dev);
+>  MAINTAINERS                         |   2 +-
+>  arch/mips/mobileye/Kconfig          |   1 +
+>  arch/mips/mobileye/Makefile         |   2 +
+>  arch/mips/mobileye/eyeq5-iocu-dma.c | 160 +++++++++++++++++++++++++++=
++++++++++
+>  4 files changed, 164 insertions(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index=20
+> bb9df569a3fff41ab40d7da5843f1e8564b47bf2..7ee68d7f8e8d0632846f59579412=
+458e301bd8fb=20
+> 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16789,7 +16789,7 @@=20
+> F:	Documentation/devicetree/bindings/mips/mobileye.yaml
+>  F:	Documentation/devicetree/bindings/soc/mobileye/
+>  F:	arch/mips/boot/dts/mobileye/
+>  F:	arch/mips/configs/eyeq5_defconfig
+> -F:	arch/mips/mobileye/board-epm5.its.S
+> +F:	arch/mips/mobileye/
+>  F:	drivers/clk/clk-eyeq.c
+>  F:	drivers/pinctrl/pinctrl-eyeq5.c
+>  F:	drivers/reset/reset-eyeq.c
+> diff --git a/arch/mips/mobileye/Kconfig b/arch/mips/mobileye/Kconfig
+> index=20
+> f9abb2d6e1787dbc5a173db48606ed5a02088e41..b9040f3a9b3ddc7f5addcd8e5f11=
+0cb9c775b6b1=20
+> 100644
+> --- a/arch/mips/mobileye/Kconfig
+> +++ b/arch/mips/mobileye/Kconfig
+> @@ -9,6 +9,7 @@ choice
+>=20
+>  	config MACH_EYEQ5
+>  		bool "Mobileye EyeQ5 SoC"
+> +		select ARCH_HAS_DMA_OPS
+>=20
+>  	config MACH_EYEQ6H
+>  		bool "Mobileye EyeQ6H SoC"
+> diff --git a/arch/mips/mobileye/Makefile b/arch/mips/mobileye/Makefile
+> index=20
+> 315c06b689cfbb83f9f205d1140ecf5058e2aa02..50fc7d0ae167c3fb3dc8585bcd45=
+583c6cc3f2d2=20
+> 100644
+> --- a/arch/mips/mobileye/Makefile
+> +++ b/arch/mips/mobileye/Makefile
+> @@ -1 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-or-later
 > +
->  	return ret;
->  }
->  
-> +static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> +				    unsigned int cmd, unsigned long arg)
+> +obj-$(CONFIG_MACH_EYEQ5)               +=3D eyeq5-iocu-dma.o
+> diff --git a/arch/mips/mobileye/eyeq5-iocu-dma.c=20
+> b/arch/mips/mobileye/eyeq5-iocu-dma.c
+> new file mode 100644
+> index=20
+> 0000000000000000000000000000000000000000..71d1c35f911636db141c4467dccc=
+405af69835ec
+> --- /dev/null
+> +++ b/arch/mips/mobileye/eyeq5-iocu-dma.c
+> @@ -0,0 +1,160 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/bits.h>
+> +#include <linux/device.h>
+> +#include <linux/device/bus.h>
+> +#include <linux/dma-direct.h>
+> +#include <linux/dma-direction.h>
+> +#include <linux/dma-map-ops.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/gfp_types.h>
+> +#include <linux/init.h>
+> +#include <linux/mm.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/notifier.h>
+> +#include <linux/pfn.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/types.h>
+> +
+> +static void *eyeq5_iocu_alloc(struct device *dev, size_t size,
+> +			      dma_addr_t *dma_handle, gfp_t gfp,
+> +			      unsigned long attrs)
 > +{
-> +	/*
-> +	 * For now, we do not support granular power saving for compat
-> +	 * syscalls.
-> +	 */
-> +	if (in_compat_syscall())
-> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-
-...you can drop this and just obtain the translated cmd (no need to
-check in_compat_syscall for that)...
-
+> +	void *p =3D dma_direct_alloc(dev, size, dma_handle, gfp, attrs);
 > +
-> +	/* The following IOCTLs do need to turn on the camera. */
-> +	switch (cmd) {
-> +	case UVCIOC_CTRL_QUERY:
-> +	case VIDIOC_G_CTRL:
-> +	case VIDIOC_G_EXT_CTRLS:
-> +	case VIDIOC_G_INPUT:
-> +	case VIDIOC_QUERYCTRL:
-> +	case VIDIOC_QUERYMENU:
-> +	case VIDIOC_QUERY_EXT_CTRL:
-> +	case VIDIOC_S_CTRL:
-> +	case VIDIOC_S_EXT_CTRLS:
-> +	case VIDIOC_S_FMT:
-> +	case VIDIOC_S_INPUT:
-> +	case VIDIOC_S_PARM:
-> +	case VIDIOC_TRY_EXT_CTRLS:
-> +	case VIDIOC_TRY_FMT:
-> +		return uvc_v4l2_pm_ioctl(file, cmd, arg);
-
-...and here you call uvc_pm_get/video_ioctl2/uvc_pm_put. It keeps everything nicely
-localized, no need to look up what happens in a different function.
-
-> +	}
-> +
-> +	/* The other IOCTLs can run with the camera off. */
-> +	return video_ioctl2(file, cmd, arg);
+> +	*dma_handle |=3D BIT_ULL(36);
+> +	return p;
 > +}
 > +
->  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_g_fmt_vid_cap = uvc_ioctl_g_fmt,
->  	.vidioc_g_fmt_vid_out = uvc_ioctl_g_fmt,
-> 
+> +static void eyeq5_iocu_free(struct device *dev, size_t size,
+> +			    void *vaddr, dma_addr_t dma_handle,
+> +			    unsigned long attrs)
+> +{
+> +	dma_handle &=3D ~BIT_ULL(36);
+> +	dma_direct_free(dev, size, vaddr, dma_handle, attrs);
+> +}
+> +
+> +static int eyeq5_iocu_mmap(struct device *dev, struct vm_area_struct=20
+> *vma,
+> +			   void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> +			   unsigned long attrs)
+> +{
+> +	unsigned long pfn =3D PHYS_PFN(dma_to_phys(dev, dma_addr));
+> +	unsigned long count =3D PAGE_ALIGN(size) >> PAGE_SHIFT;
+> +	unsigned long user_count =3D vma_pages(vma);
+> +	int ret;
+> +
+> +	vma->vm_page_prot =3D dma_pgprot(dev, vma->vm_page_prot, attrs);
+> +
+> +	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+> +		return ret;
+> +
+> +	if (vma->vm_pgoff >=3D count || user_count > count - vma->vm_pgoff)
+> +		return -ENXIO;
+> +
+> +	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
+> +			       user_count << PAGE_SHIFT, vma->vm_page_prot);
+> +}
+> +
+> +static int eyeq5_iocu_get_sgtable(struct device *dev, struct sg_table=20
+> *sgt,
+> +				  void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> +				  unsigned long attrs)
+> +{
+> +	struct page *page =3D virt_to_page(cpu_addr);
+> +	int ret;
+> +
+> +	ret =3D sg_alloc_table(sgt, 1, GFP_KERNEL);
+> +	if (!ret)
+> +		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
+> +	return ret;
+> +}
+> +
+> +static dma_addr_t eyeq5_iocu_map_page(struct device *dev, struct page=20
+> *page,
+> +				      unsigned long offset, size_t size,
+> +				      enum dma_data_direction dir,
+> +				      unsigned long attrs)
+> +{
+> +	phys_addr_t phys =3D page_to_phys(page) + offset;
+> +
+> +	/* BIT(36) toggles routing through IOCU for DMA operations. */
+> +	return phys_to_dma(dev, phys) | BIT_ULL(36);
+> +}
+> +
+> +static void eyeq5_iocu_unmap_page(struct device *dev, dma_addr_t=20
+> dma_handle,
+> +				  size_t size, enum dma_data_direction dir,
+> +		unsigned long attrs)
+> +{
+> +}
+> +
+> +static int eyeq5_iocu_map_sg(struct device *dev, struct scatterlist=20
+> *sgl,
+> +			     int nents, enum dma_data_direction dir,
+> +			     unsigned long attrs)
+> +{
+> +	struct scatterlist *sg;
+> +	int i;
+> +
+> +	for_each_sg(sgl, sg, nents, i) {
+> +		sg->dma_address =3D eyeq5_iocu_map_page(dev, sg_page(sg),
+> +						      sg->offset, sg->length,
+> +						      dir, attrs);
+> +		if (sg->dma_address =3D=3D DMA_MAPPING_ERROR)
+> +			return 0; /* No cleanup because ->unmap_page() is a no-op. */
+> +		sg_dma_len(sg) =3D sg->length;
+> +	}
+> +
+> +	return nents;
+> +}
+> +
+> +static void eyeq5_iocu_unmap_sg(struct device *dev, struct scatterlis=
+t=20
+> *sgl,
+> +				int nents, enum dma_data_direction dir,
+> +				unsigned long attrs)
+> +{
+> +	/* We know page ->unmap_page() is a no-op. */
+> +}
+> +
+> +const struct dma_map_ops eyeq5_iocu_ops =3D {
+> +	.alloc			=3D eyeq5_iocu_alloc,
+> +	.free			=3D eyeq5_iocu_free,
+> +	.alloc_pages_op		=3D dma_direct_alloc_pages,
+> +	.free_pages		=3D dma_direct_free_pages,
+> +	.mmap			=3D eyeq5_iocu_mmap,
+> +	.get_sgtable		=3D eyeq5_iocu_get_sgtable,
+> +	.map_page		=3D eyeq5_iocu_map_page,
+> +	.unmap_page		=3D eyeq5_iocu_unmap_page,
+> +	.map_sg			=3D eyeq5_iocu_map_sg,
+> +	.unmap_sg		=3D eyeq5_iocu_unmap_sg,
+> +	.get_required_mask	=3D dma_direct_get_required_mask,
+> +};
+> +EXPORT_SYMBOL(eyeq5_iocu_ops);
+> +
+> +static int eyeq5_iocu_notifier(struct notifier_block *nb,
+> +			       unsigned long event,
+> +			       void *data)
+> +{
+> +	struct device *dev =3D data;
+> +
+> +	/*
+> +	 * IOCU routing is hardwired; we must use our above custom
+> +	 * routines for cache-coherent DMA on ethernet interfaces.
+> +	 */
+> +	if (event =3D=3D BUS_NOTIFY_ADD_DEVICE &&
+> +	    device_is_compatible(dev, "mobileye,eyeq5-gem")) {
+> +		set_dma_ops(dev, &eyeq5_iocu_ops);
+> +		return NOTIFY_OK;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block eyeq5_iocu_nb =3D {
+> +	.notifier_call =3D eyeq5_iocu_notifier,
+> +};
+> +
+> +static int __init eyeq5_iocu_init(void)
+> +{
+> +	return bus_register_notifier(&platform_bus_type, &eyeq5_iocu_nb);
+> +}
+> +postcore_initcall(eyeq5_iocu_init);
+>
+> --=20
+> 2.50.0
 
-Regards,
-
-	Hans
+--=20
+- Jiaxun
