@@ -1,138 +1,146 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D262C23CB
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F0A8479;
+	Mon, 30 Jun 2025 01:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751245380; cv=none; b=DmH3ODwjX90lXcGNRJDf0fNXhpt/oxy3wb2n/o06geiCmjn10jItDPvpCpQtzrYvmLe8VeeY5UfTZ9qT4rYuTtSxw/AeRh3+yo8eujhwT3UyGVoaaH0JK8HNIpHH46a+fbYBcdIMXqbn5zdNRDJYO0hvSA74wDiACMt7DL3e9NA=
+	t=1751245419; cv=none; b=AqZ/6X8efQWGqnAEWBoVs0n8glZOAYYy3OJdYWO1a4EmyUoAgrTopr64RYQCvjuGSHlpleeIdm85nW+iZ4xIgNP39UGbqVbuS4m/MvzTBxUy3Sp4hujAggyKAcgiYBf5Eo5yaEKyz7n3NCrm3My2BrhHi2N9sTmRMJNgNJ046eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751245380; c=relaxed/simple;
-	bh=uSTgHYx4C4kBqf1HLkMQN6sxONduD5cTV2ZutL1GEdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUgMu+ddKA/Hs+Q8JKQ3z5yNC1svPgZjXwE4uNNA88SSs3t+7kfY6APC9UMGC+xtMUrcwIe6DAEHRmVO3KmQBEwgNO7R7j9DamekEf6JXdf4HnuhA7G4oiQOxu222sTXgEc1wI/Q8rOi6d42/JFF43WHcucDmjMf7X0DPbEytjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DbU/Y52z; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751245419; c=relaxed/simple;
+	bh=D24S1QGo63Mvn+RPZq3ItemdRDY0yJs6VmQvMVfkjw8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mF9QqCy3O7c4JhI8jD7VZkV9i3Z1iQnfzxu2KzFVCBLHC3FbTcu6GqCSx/60G70r4o+e598xhx57kEMxiYzh6aSJre6JWSKN43qB2n63LQdU+3FppDouiAg0Fpozch5dd94k+SP3Il3fJkmfccQdSYKKo0+kR2utiGORcZm0200=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A229tJ1I; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DbU/Y52z"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4119008b3a.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 18:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751245378; x=1751850178; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lHC8G37kFyRpeOrqLUvPPIOdjSNN7VBUfiKPLfHZcIs=;
-        b=DbU/Y52zsp2ru5YoOCxlHgr73TRes0Me/DuRHSM/biPCB9lBfrtYZ49ki2x/jvPxYr
-         JqG31xL3DjWyS6/rV/3yQ1g7n+yOxKBjyhH0c/E2fNa0Xt72Aqcop0w4ZmKPJ+OnRzMW
-         sstMpGXs1FipaBp24tX6pz8LJPFI6TnP6fEFd/zYufp/vbgMCbVJYZ4rfv0i3j4TYSC/
-         If+lCYIdeQD71KmDtW2/41KKnwAykv8NTcXf0RJVBBg4/lv8z175SfpQ8VW+fmTazhqs
-         K2Uav3a8j2uuoye/FwTduqtI1Kububx4CpXfzM50KH1hJ+VX080UVPNLGXwLMyRFayhC
-         Nc2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751245378; x=1751850178;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHC8G37kFyRpeOrqLUvPPIOdjSNN7VBUfiKPLfHZcIs=;
-        b=r8VBiTU2FL/4UignkZTVmeq0EaUAR7G9rtrFrKdDJRLSK65bIeoQPzcmGqbss5+mn8
-         9FPoktfzBvjlYiFaap+nXY8S4OFZgBMB8DWkyJWXFctswGrGzi0ZQ1w6p29FGxjtQG90
-         DDJYAzWWZ0cdzij0MDsbFkNSrSX9HbOWcSZDbyXYjutK65Mz1uuMz1sUQCeU9QylvXbB
-         hu8tep6JeaCssVcRGHBL9i3SCHe9mkJo65G0NhiIpVLYs7YKfrerjqM7aHCIBoXH/N3P
-         zypFrt7OqyieeyO2VKP8uOzk/bvWiSSSgyhl+YAsa50SznDs7X/6C7vvKtWGtL6uVfFD
-         0UQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFcoAuhfsofRPqZkgtDSehFkCmxmJXTirOHMXyoZXqP0/SdP6M/gsU3YCWMPWHmaQ3LWwY4MxYWmIhcA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1qcXRjblLvx8jLZXDC4JiaADVxWhxypHU241nf9ogUjQr5s8J
-	jXiuD6F29X4G8Ri3A7Jrg+ANmOBYFurZS+xnzDxFV4bgDYK2w0/8yuI+BIGQ6ize+cQ=
-X-Gm-Gg: ASbGncsyoESUjkUfeca9u7/8facugVBwaziJenjQ31ovueQhL2SSvl+SgOd47Wg7Cbi
-	I9vziMVFFshlk5L3GJlJSayIQJOjywaQ1npoybSdlk96/MZzQXgV0Upf0Uc1nyGf1HcibZqdvgd
-	+0ozbwofwdwLl70fVz9sGCKg4jsEGdiMx7cdYb/hKhftQKVmQOAh5wdy+aJ1qLReAKh3u8q+2u0
-	9F8SiBYEMSx8zKRynaBXPtx24zG0k/MNNbZHU75JmDeii2hq7MRD6/M3GDSyFnTPdCOGN3TQnt0
-	lA/9bx9I+Ph7BFXNZAEO4wsb8/hGXOqeXeOvZm711CUxJ3rXa4onqj356CnWmLIVu5uML0aI4p4
-	NSEn3B4+fDm4yJ4l4f8Tx6g==
-X-Google-Smtp-Source: AGHT+IEm7pC4jQ5wCTQ49NFxc+IKcZR+PXZpSdBzcwoRcmqxvtnLCfqF+Cj6519xtp9p1Fwj8KqI/w==
-X-Received: by 2002:a05:6a00:17a8:b0:747:ab61:e4fa with SMTP id d2e1a72fcca58-74af6f08162mr14240794b3a.14.1751245378059;
-        Sun, 29 Jun 2025 18:02:58 -0700 (PDT)
-Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56d91edsm8034737b3a.140.2025.06.29.18.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 18:02:57 -0700 (PDT)
-Date: Sun, 29 Jun 2025 18:02:54 -0700
-From: Sukrut Bellary <sbellary@baylibre.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
-	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] iio: adc: ti-adc128s052: Add lower resolution
- devices support
-Message-ID: <aGHiPpLeIB6pLb9I@dev-linux>
-References: <20250614091504.575685-1-sbellary@baylibre.com>
- <20250614091504.575685-5-sbellary@baylibre.com>
- <CAHp75Vf=zQ+pdo5V1fAq2qWEpdUfNfWdO+_iW0wETWSniXisyA@mail.gmail.com>
- <aGB2Fnv797Wrenza@dev-linux>
- <bd72b92e-bf8d-4fc2-84ae-4f9fd8b40c37@baylibre.com>
- <CAHp75VeXxPum242gE8NoC9f8ZKkFg2FTAkmBXvY9m-BNz6+i7g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A229tJ1I"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751245409; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=KE5Ke26crJ20g62CV0eTsdMDqmR58zlWRKiqOi/7eNA=;
+	b=A229tJ1I9ClWjaUj2mVAGYIsqG/1dWVSyjCT5ywnSgnvNcQv4qO/ysMvD8Q6qcbSwAoWCVvm46UhZ0vBagIZ1spumsIzfM+naijTKEG6jfk0QlqfUxANdEBtP7jnUaqjHfPANkkeV3/dE5Gh1FgLa/rSRKPGZXL0MwuZ6pJWnq0=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0Wg25R9f_1751245082 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 08:58:04 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>,  Zi Yan <ziy@nvidia.com>,  Matthew
+ Wilcox <willy@infradead.org>,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-doc@vger.kernel.org,
+  linuxppc-dev@lists.ozlabs.org,  virtualization@lists.linux.dev,
+  linux-fsdevel@vger.kernel.org,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jonathan Corbet <corbet@lwn.net>,  Madhavan
+ Srinivasan <maddy@linux.ibm.com>,  Michael Ellerman <mpe@ellerman.id.au>,
+  Nicholas Piggin <npiggin@gmail.com>,  Christophe Leroy
+ <christophe.leroy@csgroup.eu>,  Jerrin Shaji George
+ <jerrin.shaji-george@broadcom.com>,  Arnd Bergmann <arnd@arndb.de>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  "Michael S. Tsirkin"
+ <mst@redhat.com>,  Jason Wang <jasowang@redhat.com>,  Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>,  Eugenio =?utf-8?Q?P=C3=A9rez?=
+ <eperezma@redhat.com>,
+  Alexander Viro <viro@zeniv.linux.org.uk>,  Christian Brauner
+ <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,  Matthew Brost
+ <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,  Rakie
+ Kim <rakie.kim@sk.com>,  Byungchul Park <byungchul@sk.com>,  Gregory Price
+ <gourry@gourry.net>,  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,  "Liam
+ R. Howlett" <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@suse.cz>,
+  Mike Rapoport <rppt@kernel.org>,  Suren Baghdasaryan <surenb@google.com>,
+  Michal Hocko <mhocko@suse.com>,  Minchan Kim <minchan@kernel.org>,
+  Sergey Senozhatsky <senozhatsky@chromium.org>,  Brendan Jackman
+ <jackmanb@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Jason
+ Gunthorpe <jgg@ziepe.ca>,  John Hubbard <jhubbard@nvidia.com>,  Peter Xu
+ <peterx@redhat.com>,  Xu Xin <xu.xin16@zte.com.cn>,  Chengming Zhou
+ <chengming.zhou@linux.dev>,  Miaohe Lin <linmiaohe@huawei.com>,  Naoya
+ Horiguchi <nao.horiguchi@gmail.com>,  Oscar Salvador <osalvador@suse.de>,
+  Rik van Riel <riel@surriel.com>,  Harry Yoo <harry.yoo@oracle.com>,  Qi
+ Zheng <zhengqi.arch@bytedance.com>,  Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
+ isolate_movable_ops_page()
+In-Reply-To: <nr4e7unt2dtfav5y5ckmsrehu37xejqonarlulzcn6mnhnnvxl@o3ppo34wqyyj>
+	(Alistair Popple's message of "Mon, 30 Jun 2025 10:20:56 +1000")
+References: <20250618174014.1168640-1-david@redhat.com>
+	<20250618174014.1168640-8-david@redhat.com>
+	<9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
+	<aFMH0TmoPylhkSjZ@casper.infradead.org>
+	<4D6D7321-CAEC-4D82-9354-4B9786C4D05E@nvidia.com>
+	<bef13481-5218-4732-831d-fe22d95184c1@redhat.com>
+	<87h5zyrdl9.fsf@DESKTOP-5N7EMDA>
+	<nr4e7unt2dtfav5y5ckmsrehu37xejqonarlulzcn6mnhnnvxl@o3ppo34wqyyj>
+Date: Mon, 30 Jun 2025 08:58:03 +0800
+Message-ID: <878qlaqc4k.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeXxPum242gE8NoC9f8ZKkFg2FTAkmBXvY9m-BNz6+i7g@mail.gmail.com>
+Content-Type: text/plain; charset=ascii
 
-On Sun, Jun 29, 2025 at 09:06:47AM +0300, Andy Shevchenko wrote:
-> On Sun, Jun 29, 2025 at 2:30 AM David Lechner <dlechner@baylibre.com> wrote:
-> >
-> > On 6/28/25 6:09 PM, Sukrut Bellary wrote:
-> > > On Sat, Jun 14, 2025 at 09:45:43PM +0300, Andy Shevchenko wrote:
-> > >> On Sat, Jun 14, 2025 at 12:15 PM Sukrut Bellary <sbellary@baylibre.com> wrote:
-> > >>>
-> > >>> The adcxx communicates with a host processor via an SPI/Microwire Bus
-> > >>> interface. The device family responds with 12-bit data, of which the LSB bits
-> > >>> are transmitted by the lower resolution devices as 0.
-> > >>> The unavailable bits are 0 in LSB.
-> > >>> Shift is calculated per resolution and used in scaling and raw data read.
-> > >>>
-> > >>> Lets reuse the driver to support the family of devices with name
-> > >>> ADC<bb><c>S<sss>, where
-> > >>
-> > >> I believe it's incorrect, i.e. it's something like ...S<ss><?>, where
-> > >> <?> is something you need to clarify, and <ss> is definitely a speed
-> > >> in kSPS.
-> > >>
-> > > Thank you for the review.
-> > > I am not sure about the last s in <sss>.
-> > > It could be TI's silicon spins versioning.
-> > > I couldn't find any information about it in any of the datasheets.
-> > > I can drop the last s or mark it as <ssx> and specify the first two <ss> as
-> > > maximum speed.
-> > >
-> > I have a hunch that the last digit has to do with pinout/number of
-> > power supplies. adc128s052 has two supplies V_A and V_D while the
-> > others only have V_A.
-> >
-> > If this sounds vaguely familiar, it is because it was discussed
-> > today in this thread [1] that Jonathan CC'ed you in. :-)
-> 
-> With all this being said, please, switch to <ss><p> and describe <p>,
-> but with the caveat that the <p> is empirically deducted based on what
-> community observes.
-> 
-> > [1]: https://lore.kernel.org/linux-iio/20250628162910.1256b220@jic23-huawei/
-> 
-Ok, sure. I will use this in v5.
+Alistair Popple <apopple@nvidia.com> writes:
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> On Sun, Jun 29, 2025 at 07:28:50PM +0800, Huang, Ying wrote:
+>> David Hildenbrand <david@redhat.com> writes:
+>> 
+>> > On 18.06.25 20:48, Zi Yan wrote:
+>> >> On 18 Jun 2025, at 14:39, Matthew Wilcox wrote:
+>> >> 
+>> >>> On Wed, Jun 18, 2025 at 02:14:15PM -0400, Zi Yan wrote:
+>> >>>> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+>> >>>>
+>> >>>>> ... and start moving back to per-page things that will absolutely not be
+>> >>>>> folio things in the future. Add documentation and a comment that the
+>> >>>>> remaining folio stuff (lock, refcount) will have to be reworked as well.
+>> >>>>>
+>> >>>>> While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and handle
+>> >>>>> it gracefully (relevant with further changes), and convert a
+>> >>>>> WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
+>> >>>>
+>> >>>> The reason is that there is no upstream code, which use movable_ops for
+>> >>>> folios? Is there any fundamental reason preventing movable_ops from
+>> >>>> being used on folios?
+>> >>>
+>> >>> folios either belong to a filesystem or they are anonymous memory, and
+>> >>> so either the filesystem knows how to migrate them (through its a_ops)
+>> >>> or the migration code knows how to handle anon folios directly.
+>> >
+>> > Right, migration of folios will be handled by migration core.
+>> >
+>> >> for device private pages, to support migrating >0 order anon or fs
+>> >> folios
+>> >> to device, how should we represent them for devices? if you think folio is
+>> >> only for anon and fs.
+>> >
+>> > I assume they are proper folios, so yes. Just like they are handled
+>> > today (-> folios)
+>
+> Yes, they should be proper folios.
+
+So, folios include file cache, anonymous, and some device private.
+
+>> > I was asking a related question at LSF/MM in Alistair's session: are
+>> > we sure these things will be folios even before they are assigned to a
+>> > filesystem? I recall the answer was "yes".
+>> >
+>> > So we don't (and will not) support movable_ops for folios.
+>> 
+>> Is it possible to use some device specific callbacks (DMA?) to copy
+>> from/to the device private folios (or pages) to/from the normal
+>> file/anon folios in the future?
+>
+> I guess we could put such callbacks on the folio->pgmap, but I'm not sure why
+> we would want to. Currently all migration to/from device private (or coherent)
+> folios is managed by the device, which is one of the features of ZONE_DEVICE.
+
+Yes.  The is the current behavior per my understanding too.
+
+> Did you have some particular reason/idea for why we might want to do this?
+
+No.  Just want to check whether there are some requirements for that.  I
+think that it's just another way to organize code.
+
+---
+Best Regards,
+Huang, Ying
