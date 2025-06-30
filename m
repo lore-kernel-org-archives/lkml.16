@@ -1,130 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C72B2F4A;
-	Mon, 30 Jun 2025 06:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276ED2F4A;
+	Mon, 30 Jun 2025 06:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263273; cv=none; b=dxExg7EEAWGDWvSHNjiV6vTKccFzEYb+co9XEZDFxa2vcGUajwo4zujeqksi3IsWmMkhO0z1dN1uj07ubQlX39vc2VpeXoZkInHc5rxruPl2kjxgIMMQIKeLS7ANqIO7QPRJ+8Va5ScmoDX5BFJUBho7h3epFpX2QRRILrRq/4U=
+	t=1751263315; cv=none; b=hVCdn6uFwbvAZGr22Gy2JN9yEvNy1TSMaMLNHZeiMs47riJQHdpXB/3opcpC/uLfBgJYTztUHPgi66fTW49BLgSgOF5+sybeaymYIQZc4zmiFmHcZg9qccueFJAci4FZbX0OdayRxd0hq+ADwUOJPRdxuZAwOhoUlcb8wmTXmf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263273; c=relaxed/simple;
-	bh=v5/m+SptX3o0mtNDldvgpFmmeUsduy78ctRV5gEn5gI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=awiTzPQ5s+HjV805WPnS33Pc8vNHHgywH/Ai7S4W4+9jvL0yNhhDeSIMg0Nan5VGdR1NnBxYd16Bvrf9fGB4lSaJq0a9AnYPCXVOIhU78bG4LxizNzxsDfO04A2jzIsLsJdpQxAlh4Fi2b0jhrDIN7bg2IuOgA5voklbrWUyk+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXOpV5Ym; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751263315; c=relaxed/simple;
+	bh=qczW777iQz4wArWTbhCw2qu9kAv37gI8/e/m4EuvhO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FAOituwp+omG0dlxwKsOeQ0l40LEr3fT5ftXOnszRb4UeD1C+GnIYc9v/hPgqWuSg7qyhfg8JIr9EoaXOGSZTCwNZ2w8kwniXF6/S5VgJDWjBfi0nGGTw43tmkg5p1XHZIy+p+OPFXBj4y9FAa92ms7MDChxIFiskcKd/QjgfQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cWbi1juI; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXOpV5Ym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB84C4CEE3;
-	Mon, 30 Jun 2025 06:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751263273;
-	bh=v5/m+SptX3o0mtNDldvgpFmmeUsduy78ctRV5gEn5gI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CXOpV5YmwRciSLOSQwnJlXJ/stw5SCA4NcsEyMpcmu/Zyp1vYNKkbw2BojHRNlpW2
-	 cjdxkq9dt28NXYdWkJ4f2ocbiPnrZ6CH/TKDy7lMAHtXDwtL6wP+7SwPK3rrahTJ84
-	 tnLDMI3zozG2vgUVE0gt2lnWGG/76I/D1XqrmgTf0uyp6HSYqtX8BqX8rS+v06HFJX
-	 +vjhKoobIBDX2iqc7hhbIYuXMy6xRTcKTwuoaomSnFeYxGSKyNMKObxem8HplpDkY5
-	 BBlqipu2TJNIKT6o/jTC5gbA4B9zR0fh3bc/Ist0Nhxrl8dMahv4TsagEWqtXr/s3U
-	 c5k7DDY931+Ww==
-Message-ID: <c6c90a4b-b8d2-45d1-928a-464281ce7b37@kernel.org>
-Date: Mon, 30 Jun 2025 08:01:04 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cWbi1juI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1751263306;
+	bh=WKmaHGLzGfShKi7ENX78CD/CWzNHiFx2IRicO5n19OM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=cWbi1juI0XXRhjCnD3Syz53GuSqrUKV4daRd3c6FEJ3vtNWtW5+FYf1sgAQR3Aalt
+	 GD2nlXjPQBpwGRxvjpEEFNW8qpjkdwSDVTlQG42SER+6BZq+AYNVo1be/OFUD392MK
+	 2JjzB5L9fE2MK9q8L67iW51QCaYdu2We8+ORo1t4LmhQHFxSNTD9b2tHQOnfW0v0/y
+	 vWADyzCifilp4sH6rMROCV6NDGTfLAUqvJ6bJU82sQFnMg+/VzwJIdyyS7+wlsIWaZ
+	 xkaG/60z7WA+QJKLNR0rjq5E+WXwBHN4vFqFlHtN5ZKL4zy4a4JDxH9tG6G8tCxTrz
+	 o43KUVgJTMGKg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bVwXT4jf4z4x21;
+	Mon, 30 Jun 2025 16:01:45 +1000 (AEST)
+Date: Mon, 30 Jun 2025 16:00:59 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joerg.roedel@amd.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Nicolin Chen
+ <nicolinc@nvidia.com>
+Subject: linux-next: manual merge of the iommufd tree with the iommu tree
+Message-ID: <20250630160059.49544dde@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: exynos: gs101: ufs: add dma-coherent
- property
-To: Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, kernel-team@android.com,
- willmcvicker@google.com, stable@vger.kernel.org
-References: <20250314-ufs-dma-coherent-v1-0-bdf9f9be2919@linaro.org>
- <20250314-ufs-dma-coherent-v1-1-bdf9f9be2919@linaro.org>
- <CADrjBPqdr1NEd+W4ATJ-6Xi36y8Gi_=81LsFNtY_s2-pBPagFA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CADrjBPqdr1NEd+W4ATJ-6Xi36y8Gi_=81LsFNtY_s2-pBPagFA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/r.WIf1iNV/vkDrJ6SAirccM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 27/06/2025 18:28, Peter Griffin wrote:
-> Hi Krzysztof,
-> 
-> On Fri, 14 Mar 2025 at 15:38, Peter Griffin <peter.griffin@linaro.org> wrote:
->>
->> ufs-exynos driver configures the sysreg shareability as
->> cacheable for gs101 so we need to set the dma-coherent
->> property so the descriptors are also allocated cacheable.
->>
->> This fixes the UFS stability issues we have seen with
->> the upstream UFS driver on gs101.
->>
->> Fixes: 4c65d7054b4c ("arm64: dts: exynos: gs101: Add ufs and ufs-phy dt nodes")
->> Cc: stable@vger.kernel.org
->> Suggested-by: Will McVicker <willmcvicker@google.com>
->> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->> ---
-> 
-> Friendly ping about this patch :)
+--Sig_/r.WIf1iNV/vkDrJ6SAirccM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, I dropped it from my queue based on comments on the bindings
-patch, but that was too hasty.
+Hi all,
 
-I applied it now.
+Today's linux-next merge of the iommufd tree got a conflict in:
 
-Best regards,
-Krzysztof
+  include/linux/iommu.h
+
+between commit:
+
+  792ea7b6cafa ("iommu: Remove ops->pgsize_bitmap")
+
+from the iommu tree and commits:
+
+  187f146d5de6 ("iommu: Introduce get_viommu_size and viommu_init ops")
+  f842ea208e43 ("iommu: Deprecate viommu_alloc op")
+
+from the iommufd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/iommu.h
+index 7073be1d8841,04548b18df28..000000000000
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@@ -596,14 -597,17 +597,16 @@@ iommu_copy_struct_from_full_user_array(
+   *		- IOMMU_DOMAIN_DMA: must use a dma domain
+   *		- 0: use the default setting
+   * @default_domain_ops: the default ops for domains
+-  * @viommu_alloc: Allocate an iommufd_viommu on a physical IOMMU instance=
+ behind
+-  *                the @dev, as the set of virtualization resources shared=
+/passed
+-  *                to user space IOMMU instance. And associate it with a n=
+esting
+-  *                @parent_domain. The @viommu_type must be defined in the=
+ header
+-  *                include/uapi/linux/iommufd.h
+-  *                It is required to call iommufd_viommu_alloc() helper for
+-  *                a bundled allocation of the core and the driver structu=
+res,
+-  *                using the given @ictx pointer.
++  * @get_viommu_size: Get the size of a driver-level vIOMMU structure for =
+a given
++  *                   @dev corresponding to @viommu_type. Driver should re=
+turn 0
++  *                   if vIOMMU isn't supported accordingly. It is require=
+d for
++  *                   driver to use the VIOMMU_STRUCT_SIZE macro to saniti=
+ze the
++  *                   driver-level vIOMMU structure related to the core one
++  * @viommu_init: Init the driver-level struct of an iommufd_viommu on a p=
+hysical
++  *               IOMMU instance @viommu->iommu_dev, as the set of virtual=
+ization
++  *               resources shared/passed to user space IOMMU instance. As=
+sociate
++  *               it with a nesting @parent_domain. It is required for dri=
+ver to
++  *               set @viommu->ops pointing to its own viommu_ops
+ - * @pgsize_bitmap: bitmap of all possible supported page sizes
+   * @owner: Driver module providing these ops
+   * @identity_domain: An always available, always attachable identity
+   *                   translation.
+@@@ -653,11 -657,13 +656,12 @@@ struct iommu_ops=20
+ =20
+  	int (*def_domain_type)(struct device *dev);
+ =20
+- 	struct iommufd_viommu *(*viommu_alloc)(
+- 		struct device *dev, struct iommu_domain *parent_domain,
+- 		struct iommufd_ctx *ictx, unsigned int viommu_type);
++ 	size_t (*get_viommu_size)(struct device *dev,
++ 				  enum iommu_viommu_type viommu_type);
++ 	int (*viommu_init)(struct iommufd_viommu *viommu,
++ 			   struct iommu_domain *parent_domain);
+ =20
+  	const struct iommu_domain_ops *default_domain_ops;
+ -	unsigned long pgsize_bitmap;
+  	struct module *owner;
+  	struct iommu_domain *identity_domain;
+  	struct iommu_domain *blocked_domain;
+
+--Sig_/r.WIf1iNV/vkDrJ6SAirccM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhiKBsACgkQAVBC80lX
+0GyyVAgAmIDuZZk3cu5esXQq1UJjFEIUBO3GnJdmGbwh+ZzW63K1TyEZZNbJq8dO
+nWfh+O9+GCqp4HHCpYH8gWKrUlA4DNqxg9QHqXvof1+Uo7i72FBJlXpWKOuvCyya
+RiMya+2qkxMwNoWSeLaoar1xbgh9jD4unwiHutOCxgmv/GFyc4oU4zKS3XzA81ah
+rF124S24l+yG9W/WpVN1ZqNNTUUt7L5XxzO2WX9wFjFlMBBAIhF2Gk2U/BuYGDrh
+WzZzYFnjdpH35hj8McUNjOz65l5eceO3517bwV81aRBMuTiqg0lLq7dDvEomUyUn
+IUgQuGsZCt49U1UW7G6Nz51gsR53vA==
+=hdTA
+-----END PGP SIGNATURE-----
+
+--Sig_/r.WIf1iNV/vkDrJ6SAirccM--
