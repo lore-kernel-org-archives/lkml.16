@@ -1,37 +1,64 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A175D208CA;
-	Mon, 30 Jun 2025 02:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F6B374F1
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751250366; cv=none; b=ZBC/dItUOVvHwCnQrgMLLXExwxA6tUpegiPw8E9ujoJhEOKmDKM+sP2cmWS/r1VXHNelFG9qZLME6vJO0RCkYV2jhwGSvK+/kFO94nNjFLe5MNK100JlOXQ3s2n6S8TtTwCs++aTGbnzbie/QzwHvgPchHdwHDQ0AzEhUYc5pH4=
+	t=1751250765; cv=none; b=lFYX/txWOFfB0Y8jpv4LCpyEYAffubH8Ivn1Pm3M4p8kNIkyUXJ/6iRaMK4633QqKIGcvloE7mlF4DwW8gCkqI+XSnQTndoa9W5ngleGZ/B19XvLl6AIxNX/focfNrmMDhBf0q1jWtRSVwaiNs7tPdDf2xgGH68Z+PweU1Bqdo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751250366; c=relaxed/simple;
-	bh=UUhoyconC0CPYt0aa+wA5BFkj5Iqw8fNJdm4nOoWmVY=;
+	s=arc-20240116; t=1751250765; c=relaxed/simple;
+	bh=y3AHwHar+N9H3e942UyjUO2ocmj/PZKf1yl3Y61feWo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BfoCbNUFhfSvJhIB2Mn5IhbvitUe4M2b2tVM6aWFkjGpiycHh7+4pzacNAnF96VR0Zm0sYBOfVbruk3KXc+JhyX5rpTR4GL7X0B6F9SoOsiMAvJmUw6MyC8vt1PrhhkOzHp7OkELyGJiYU9rKBGh7NINMLLZ1gONzJRpu83BaGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ClCXTzss; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=BNUc1f0ELLx37bdi8DoDnTR/aZNoC7ziEaZZblI0rzacJLXW6t8OCOTeVJk7RVx4dj4W85qQ0tpZm30PiLcRz0a4jBAfsvglEQdXKSc7Jv1PYNNc1E8lCEKLqbt3tlzEbKza8Vrf40gdh3ktPoEpP8cCEfxVuqc1MBkO6KStJYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VPARdLe6; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ClCXTzss"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=5GkX+rTap612DRlKXQ7MVYWG2OIBPulg8AqEXuRXIZ0=; b=ClCXTzssm8bwDM+mzLp9IkuWSd
-	eaWFSIGKgnhjEjAjfGppR6/YGSkWKM4R+OdM9x6SvQTqZQ0QUGxUVGCShK7IQS7/MmNrBxIwJdfKG
-	lZ9wCfef219G2ad3sFf2QO9trmrMevJZUS7CGTT4JXQuNCwkH2oj+IMIPGvWETpDccH9vPfX08SrX
-	R3HCUeo4S5anAvbNTdoE59OnK9TDYC+kNHiDyyJRwM1dqMGIdB4RZ4bxrI48OFaK1kgsGMOY4WLNs
-	8fHXnGy9b2ccSgXn3sR2Hxyl6RIpn5v+2LMQKe+XTsOLss0xZkPfTsvuBYhtqv5r0/PeTaemI+FUu
-	dLpDUMrQ==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW4DZ-00000006iDx-1PSR;
-	Mon, 30 Jun 2025 02:26:02 +0000
-Message-ID: <f812ecbb-23bd-424e-91e5-ad278dac4f4d@infradead.org>
-Date: Sun, 29 Jun 2025 19:25:59 -0700
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VPARdLe6"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e62619afso427027f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751250761; x=1751855561; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l32+kcHFTvy/thF86Ip4IcL7WEZnxbK2oPIvL0HseaQ=;
+        b=VPARdLe6kOuY689KCBoQqTnmqMPd9+CsMAUEFTGdyRkT5bhZecL6bprsPg8H0EmetG
+         70R1yC8XEkvGqfHOWraEs76ticIqOlNa8YmT2o043WC9lPmLM7ZjN0di5SJHzlJR0RqI
+         WWtmwklWl3oNXdyBW0+fzCYvujHiu2XwWUW68VPA4X7OFItprMkpiEO3w3FDS/S6qxzC
+         UFMazCo3tSO6erQ1Fx+VndiwdBs03y1IZH+YmzJ2Au+5QR465V0slQ5EUv3bM3f6ZCTi
+         eerXvJ3WaPvfu98QRDm6nAvESXKC4bi5z2lGlzx+A+JuK31JZZpk4odHV5AGxLNRLkC2
+         AKYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751250761; x=1751855561;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l32+kcHFTvy/thF86Ip4IcL7WEZnxbK2oPIvL0HseaQ=;
+        b=QttDhIi8ehc7hQvtl4ZY6chEvv3cn4UpeqpANv2Xb3PUqJjowESM7cMbrNtmCyRZzI
+         MweXtM0AzQnoBknTvAC1wh6NkKebkd2WBkb6XqbRYj2wdK1Whx/lBhew+0N3oDuBEVjV
+         LrPrmMGwrsUX7NFUp/6s2RC301mwOL0Y7L7X3QPakF0DMbAG0dU10BjKWER70eef/LLt
+         tS84agjY+i7AoU1UnOzWf1qfUkoZNpNnF02VZCkv0o1/u7t+KCVZ2+ASrGnBYYSUI276
+         eEaSeUQCEiNpYMYY9cGHEcyd/yFz/LDgBHrXBZjllfB9jzIww0okWQVGYTZWXOfRkVNy
+         uc5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXewKJW9ySZ59KRIF7MKeJDyeJ3+cvFvGbQeKdGcSSpBtzDd20nuCJeX10n3864fRtNTXszqfXiJWLjXE0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9D9dKnDIjDfhmRPRj3uaD95EXDurGEAt2wI6Mc6AECpYwSr95
+	OxTwYAA1VPPjjJaZ3p91V4tKoNs1maS1iriGvVVCaSbuRAZwmdLvVImwvD5izGNy/hM=
+X-Gm-Gg: ASbGnct9DtSbtdPRGfNPHTDwYEh0is9Ju742jPkqxMeWUK9/l5ivWgI/PHmuwoIYpzP
+	ix6DWjY0wDiM6aZj+dKiWSOi02e0v/hoP8bCnv9Hn8YeOgrjy29SJLoyT9o0oiDgr8WpnkeUAlz
+	rp9xlJ3m86SHD/ZVSz3kmynD+t8Cl+Aa+P3m+s2SZvsgQD/OI3QN/1oNePJl36hp0OVDJOEsQ1P
+	Adoe2lg8E08hp/3NU6p6gR2QGLb6ycp+OfrdPDTbC+FdmBPmy7a3/a/H8u2Tu9MclRu874dVg13
+	G5fguyDmyBtCtM1giabbvR0MnR9rIA5v7LHhkyHXpkVUG+BTjGoV1hhnYXaU47yLI7AH
+X-Google-Smtp-Source: AGHT+IHJ3NA83lSuJiPSZMXnyu4C9IeZszL+f7Y95Ou8Uhmb0EnG9Rp+Ou87ri5n5sK2SBJ4yJXiyQ==
+X-Received: by 2002:a5d:64cb:0:b0:3a6:d680:f282 with SMTP id ffacd0b85a97d-3aaf43b95cfmr2011878f8f.7.1751250760988;
+        Sun, 29 Jun 2025 19:32:40 -0700 (PDT)
+Received: from [10.202.112.30] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3bbf9esm68908445ad.191.2025.06.29.19.32.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 19:32:40 -0700 (PDT)
+Message-ID: <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
+Date: Mon, 30 Jun 2025 10:32:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,44 +66,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/66] kconfig: gconf: remove meaningless code in
- init_main_window()
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-12-masahiroy@kernel.org>
+Subject: Re: [PATCH] ocfs2: Avoid NULL pointer dereference in
+ dx_dir_lookup_rec()
+To: Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Ivan Pravdin <ipravdin.official@gmail.com>, mark@fasheh.com,
+ jlbec@evilplan.org, ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
+References: <20250627023830.150291-1-ipravdin.official@gmail.com>
+ <d6c72ab8-d600-4cc2-9609-8b749b61703d@linux.alibaba.com>
+From: Heming Zhao <heming.zhao@suse.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-12-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <d6c72ab8-d600-4cc2-9609-8b749b61703d@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> The 'widget' variable is set, but not used in later code.
+On 6/30/25 09:26, Joseph Qi wrote:
+> Hi,
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-> ---
 > 
->  scripts/kconfig/gconf.c | 1 -
->  1 file changed, 1 deletion(-)
+> On 2025/6/27 10:38, Ivan Pravdin wrote:
+>> When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
+>> error message that unconditionally dereferences the 'rec' pointer.
+>> However, if 'rec' is NULL, this leads to a NULL pointer dereference and
+>> a kernel panic.
+>>
 > 
-> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-> index 7960c456e3b9..4b5befa4f685 100644
-> --- a/scripts/kconfig/gconf.c
-> +++ b/scripts/kconfig/gconf.c
-> @@ -129,7 +129,6 @@ static void init_main_window(const gchar *glade_file)
->  	conf_set_changed_callback(conf_changed);
->  
->  	style = gtk_widget_get_style(main_wnd);
-> -	widget = glade_xml_get_widget(xml, "toolbar1");
->  
->  	replace_button_icon(xml, main_wnd->window, style,
->  			    "button4", (gchar **) xpm_single_view);
+> This looks possible, but syzbot reports slab-out-of-bounds Read in
+> ocfs2_dx_dir_lookup_rec(), not NULL pointer dereference.
+> 
+> So I think it is because it construct a malicious image and set a wrong
+> l_recs, then access this damaged l_recs.
+> 
+> Thanks,
+> Joseph
 
--- 
-~Randy
+I think this proposed fix (at least the fix method) is acceptable.
+the crash occurs at ocfs2_error(), where the pointer 'rec' must be incorrect.
+look back at the previous code lines:
+         for (i = le16_to_cpu(el->l_next_free_rec) - 1; i >= 0; i--) {
+                 rec = &el->l_recs[i];
+
+                 if (le32_to_cpu(rec->e_cpos) <= major_hash) {
+                         found = 1;
+                         break;
+                 }
+         }
+
+either 'el->l_next_free_rec' or 'el->l_recs[i]' has an incorrect value.
+we can do nothing about this kind of error, simply returning errno to caller is sufficient.
+
+btw, ocfs2-tools has a similar function "static errcode_t ocfs2_dx_dir_lookup_rec()"@libocfs2/dir_indexed.c, which sets ret with OCFS2_ET_CORRUPT_EXTENT_BLOCK and return.
+
+- Heming
+
+> 
+> 
+>> Add an explicit check for a NULL 'rec' and use an alternate error
+>> message in that case to avoid unsafe access.
+>>
+>> Reported-by: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
+>> Closes: https://lore.kernel.org/all/67483b75.050a0220.253251.007c.GAE@google.com/T/
+>> Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+>> ---
+>>   fs/ocfs2/dir.c | 16 +++++++++++-----
+>>   1 file changed, 11 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
+>> index 7799f4d16ce9..dccf0349e523 100644
+>> --- a/fs/ocfs2/dir.c
+>> +++ b/fs/ocfs2/dir.c
+>> @@ -809,11 +809,17 @@ static int ocfs2_dx_dir_lookup_rec(struct inode *inode,
+>>   	}
+>>   
+>>   	if (!found) {
+>> -		ret = ocfs2_error(inode->i_sb,
+>> -				  "Inode %lu has bad extent record (%u, %u, 0) in btree\n",
+>> -				  inode->i_ino,
+>> -				  le32_to_cpu(rec->e_cpos),
+>> -				  ocfs2_rec_clusters(el, rec));
+>> +		if (rec) {
+>> +			ret = ocfs2_error(inode->i_sb,
+>> +					"Inode %lu has bad extent record (%u, %u, 0) in btree\n",
+>> +					inode->i_ino,
+>> +					le32_to_cpu(rec->e_cpos),
+>> +					ocfs2_rec_clusters(el, rec));
+>> +		} else {
+>> +			ret = ocfs2_error(inode->i_sb,
+>> +					"Inode %lu has no extent records in btree\n",
+>> +					inode->i_ino);
+>> +		}
+>>   		goto out;
+>>   	}
+>>   
+> 
+> 
+
