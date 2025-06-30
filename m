@@ -1,258 +1,244 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CB04A01
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25C723E325
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272490; cv=none; b=aEyrSmtYg9btmXQ7ZoNMCc8AvrhNf1VsDNUMGqbohuT3E7jnD84O5tTGHN6oG+XVLsmPowoQIBn68dBE2Iu6odQkcuMqpsdYQtq4eUNuufYTl+ME1LxFYnPhi8c/iPjQDJbpq+V6prxuYb0WXfo5jw/+/ldVgJKtkGqrFN/CJhk=
+	t=1751272508; cv=none; b=J9l0xYfF5Blyq1zZX8hSsywNcMvzmDNPzX6uPk3YXI+hJcfJmdjJi78yyTXYFtRouF/+QrVl7Yb4w0sSb4me5fZyTEa1UfiW0Zjem+nUnQQoYI85JCbUakIzpn6n2M4kY4vjD2x401ShSqMr12E4Z4oTNPd2HYigJ3pyInzVbUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272490; c=relaxed/simple;
-	bh=nC/C82fwTATbV/O/92DhgZV8ZDN71sYDFJj1hk7lRAA=;
+	s=arc-20240116; t=1751272508; c=relaxed/simple;
+	bh=KugLlYAD2LleLePnFiqZ2ZUqh7vrYEKpovYcsYTZsM4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lWrcpsAkh2UmnezOWnWHDV9jSH8vFe7sxvQFH34cRx+x/LR/HgR15xJ670ZMLglSaIhl9p8H2KfiNp6IPNtlRHUSCwSmILxm6lAm3+2aR/zc61SNpz/STeE1Vp1nX5hkUJk6YiD8i/iEusgon5gqIaV4/7HlgfWgvoW/gqeLvGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XV3wH+6T; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=nuJKrBTaz1eataseNcgK+fX+bA3wevLTTNTCrlBDhntzX4d/W6W3WkRa7nv0nuriBVAbIxZr4HajtWjCJWJaH5kdj5sft8J6uP9dVS7I6EXnS4dFqoYChOKxJT7BFxTtY4u3GqPdJMdTNPNSoB8zjtECpbkQNBwKx8EgVlhhyR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YaHawtC5; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XV3wH+6T"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553cf020383so4645989e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:34:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YaHawtC5"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b6a349ccso2017069e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:35:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751272486; x=1751877286; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751272504; x=1751877304; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kVgaB3k9Sbz8/PUf8gTuXUEgwfS3TrY+vZ/LVCHdKio=;
-        b=XV3wH+6TVKdQ+5AembbreyTvHcLB1aUWYLgjVKnyFTD3Zc1zcJVPYMF7xD9YtiX0Ej
-         Y+0QwxTcXiWvCn0aYfsYlGCfzVadwu/afi2iaFmx2SxQNEJ78S1KIdqwi7t1czQBeXxK
-         gnLlWzTws6+rRqHbRhXFYcYsdUoCe7XcTRROc=
+        bh=yKa/Onc4wBm+A53XbVVZfjcePpt4oSz+cRgODhBWQ5k=;
+        b=YaHawtC5If1GSWnOe+XLxuYsf7eckbrsJ9NaTLIwEnVZUqjrfCY10Gj6MM0omaIJEn
+         h9uTw2nJFw8rVVpeFHeHvkxI07XBOdD3KfOqLamk8ZnxoIEi7IkdaTUK9M+mke7XqdrJ
+         /XoxEB1bcXh4r1VgNvsGkXxZ9DOrvguX0u898WEG/HIu97brvR/Enjd2dA1429Amiegv
+         NLza4V0vEcfE//640vXWuc6NR7gAIJ3BamF+hLIohP4rgL97bMNSXRF6+uIK/hNR7bVd
+         vsME9VIB8lZSDQV+K6zAtPYrfTnUPoHGaXVzgff8wuptH1Up0C/NuyvDBleh8wkrQHM5
+         5ZbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751272486; x=1751877286;
+        d=1e100.net; s=20230601; t=1751272504; x=1751877304;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kVgaB3k9Sbz8/PUf8gTuXUEgwfS3TrY+vZ/LVCHdKio=;
-        b=tzHD2oMrpZyJprl5mJSM58yBNV6OuhLibUI0bE47bwRENYRum37W+sADG/ZqtO/es6
-         l6oPoo8/ITroPXuJoDFhw/qrNa+xO6Mv8Aegc25DUmn8PaLz8VvvqoaJeZ5dWGwA85Qb
-         zIPyQAcFB9YW37VoXh9qgY6TOLyoUiO4Zqq3e/bTZMurIr38+5OBkcaFayauKi/EWMTh
-         JV259U/WnWgbLjdtlTkQlnXJDI9RfQV2GnHiG7Yout/rfPVz4Ge63wweu/bzcqI5zoba
-         GKQWmX+jspPW/qDIv1hdY841KPmcd/yK1SowFJEXmn1t/+dqBfh5AULgT/yNnYLA46v8
-         mlTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+4WQq+IawBy3RY5rGjXcrhnjS6vS0jhJUy8sUkHxr0Q4R+bSetEmLhgmdmeOmyN39D8lqR0VILxiCw4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmzbbGicL7Mhj/UUoc2V4HjQbMDrSkhfOXg0XAc3ixg4li726X
-	IFtt7wmFNQGTaM1T+DqnsDt3d1KDGfMo86UmpStFEQgEn3u5eOxb8qssvrLzypPg+j4lIpv2K3M
-	zsZvLs2wZ5bUiLz4yRQQ8c9VSdlnDktu66TpfFD1i
-X-Gm-Gg: ASbGncvrd766s2usypSP8+BBQ0s5vDBk3XoykGTrQIfgloNBL3/6J8z2w/VRhfURxID
-	zeHjg1lQjgg0jJxjGOk5CtDva5NG8DQtFCmgyMgsEbKtiVbASdTH7Oh0WjP7yl8vsW3iwXDmTo2
-	wXukZ11sky7Uwr/TtPeyI6W3WW7P+BvsRBEiYo/YwY6cARlA2isj4St9h41dnk/C8SIPlAylU=
-X-Google-Smtp-Source: AGHT+IHlFcd7ds08VjRkhAd4B5pJTIKQJ0FaK20eZC09ottQSiiIyrXWfmbyhysoyNz0SfAaoXhAnX9I8zWuiDZ9khk=
-X-Received: by 2002:a05:6512:b12:b0:554:f79d:ce59 with SMTP id
- 2adb3069b0e04-5550b9ee228mr3819454e87.27.1751272486439; Mon, 30 Jun 2025
- 01:34:46 -0700 (PDT)
+        bh=yKa/Onc4wBm+A53XbVVZfjcePpt4oSz+cRgODhBWQ5k=;
+        b=AFLJHxUsY0/PUN7z7lNRz3jFjCjJZWBrDzt18bO6rEQHZ4a4RPvAXyL0o8VQU9SfG3
+         1ZU5Q9fIJ6lCNpcd+gpGNon5Ur5tnMclr6V+RE55Tr3fiP3MCTNPp7zkLhT1IIcpXA1Y
+         SIPF0DCZ2CKMXftIDWsDN2NyeWB7JXw1o/j01m4lF/19+aau+6BhjVm9OGNzyz3QoC/H
+         1/ViO6xy10EVmhqSPhWm0BIg/gRojk0auXMDGBrj7CncEWf+G562D2ZF3gQzV55l4RgM
+         Y13PzJAg7X6cnkD8kPrGEmoV5cyHe9U3AOw1ylSl1+t9T5L6GI6xmKgRDk4guxVsaOuA
+         ImbA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+ZZt3LU/uxdyM4ofUI/4ageoFMb6T0I94gYzodKec5zf+0KZE01pF2mLZR0lGcSN5/VztLovGuyD7JaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlV3UASaImkK0HRJiottCbIDLxH0DAYKeImxCnckrYJS3eDJ/o
+	g6nHrdlqz9YUvT4Mgt9LtDnTNiKVuRmNdF/BoWirca29pqQHPkErU5JTkIJdKLBdfRWzHFuHCT+
+	UrINtXDimyK9Nw2h9PooSMHHK1t4CWqkMM80QEgjKWw==
+X-Gm-Gg: ASbGncsZMlY8v6USIwPttRgV6Df5OWZg8oY3qOqYats9WgXHJue1rINe3NNUCfn/jm7
+	6ENUgyeTESb8O+DqV2AX8K6CKG8kxkkBdNDYsxse4wmi8DnqQiURFn+OaWhwIRMFg3o8tSNqTuL
+	yB/S/jfG/R5kEWiqrczOHwM9quuLMw4v7v+qW74DiV3Fk1yIR2wX9QzdXiah842I0zw7KGvUIdt
+	aY=
+X-Google-Smtp-Source: AGHT+IGLFbI/oj/m56i7yTSGNYyD/abp82gQ6IFpfIiOODHABIW0Gjarq66eVDHDhAlzLlnOFAMHf5+mzvXzLMEeqRE=
+X-Received: by 2002:ac2:4bd5:0:b0:54f:c6b0:4b67 with SMTP id
+ 2adb3069b0e04-5550b7e6742mr4577930e87.4.1751272503893; Mon, 30 Jun 2025
+ 01:35:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624073548.29732-1-angelogioacchino.delregno@collabora.com>
- <20250624073548.29732-4-angelogioacchino.delregno@collabora.com>
- <20250627-neon-hidden-sheep-ed8dae@krzk-bin> <CAGXv+5GLJ7cfAQW_kbTqqe_QO+RfU7KL57n77qenpDiRS5BybA@mail.gmail.com>
- <c5dffc8c-2abe-4fd3-a062-6d1adb417d27@collabora.com>
-In-Reply-To: <c5dffc8c-2abe-4fd3-a062-6d1adb417d27@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Mon, 30 Jun 2025 16:34:35 +0800
-X-Gm-Features: Ac12FXy9Bg8iczKYCRzfVVALHWEDTg9agbPGYTVqjyGmcI5uPshlMdfvswpTnDg
-Message-ID: <CAGXv+5EwLDue4y6fVuyNd-z1mytqXJJhQuohhe3htT-XiNcGHw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: regulator: Document MediaTek MT6363
- PMIC Regulators
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, broonie@kernel.org, lgirdwood@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
+ <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org> <aF627RVZ8GFZ_S_x@black.fi.intel.com>
+In-Reply-To: <aF627RVZ8GFZ_S_x@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 30 Jun 2025 10:34:52 +0200
+X-Gm-Features: Ac12FXwteuFWX5OxpPzhYCStpBUe26-_BiNn01jAiVVAZa1D5iI1G9kmFgXiCF8
+Message-ID: <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] gpio: sysfs: add a parallel class device for each
+ GPIO chip using device IDs
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Jun 27, 2025 at 5:21=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Mon, Jun 23, 2025 at 10:59:49AM +0200, Bartosz Golaszewski wrote:
+> >
+> > In order to enable moving away from the global GPIO numberspace-based
+> > exporting of lines over sysfs: add a parallel, per-chip entry under
+> > /sys/class/gpio/ for every registered GPIO chip, denoted by device ID
+> > in the file name and not its base GPIO number.
+> >
+> > Compared to the existing chip group: it does not contain the "base"
+> > attribute as the goal of this change is to not refer to GPIOs by their
+> > global number from user-space anymore. It also contains its own,
+> > per-chip export/unexport attribute pair which allow to export lines by
+> > their hardware offset within the chip.
+> >
+> > Caveat #1: the new device cannot be a link to (or be linked to by) the
+> > existing "gpiochip<BASE>" entry as we cannot create links in
+> > /sys/class/xyz/.
+> >
+> > Caveat #2: the new entry cannot be named "gpiochipX" as it could
+> > conflict with devices whose base is statically defined to a low number.
+> > Let's go with "chipX" instead.
+> >
+> > While at it: the chip label is unique so update the untrue statement
+> > when extending the docs.
+>
+> ...
+>
+> >  struct gpiodev_data {
+> >       struct gpio_device *gdev;
+> >       struct device *cdev_base; /* Class device by GPIO base */
+> > +     struct device *cdev_id; /* Class device by GPIO device ID */
+>
+> I would add it in the middle in a way of the possible drop or conditional
+> compiling of the legacy access in the future.
+>
 
-On Mon, Jun 30, 2025 at 3:52=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 30/06/25 05:25, Chen-Yu Tsai ha scritto:
-> > On Fri, Jun 27, 2025 at 4:24=E2=80=AFPM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >>
-> >> On Tue, Jun 24, 2025 at 09:35:45AM +0200, AngeloGioacchino Del Regno w=
-rote:
-> >>> Add bindings for the regulators found in the MediaTek MT6363 PMIC,
-> >>> usually found in board designs using the MT6991 Dimensity 9400 and
-> >>> on MT8196 Kompanio SoC for Chromebooks, along with the MT6316 and
-> >>> MT6373 PMICs.
-> >>>
-> >>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@=
-collabora.com>
-> >>> ---
-> >>>   .../regulator/mediatek,mt6363-regulator.yaml  | 123 +++++++++++++++=
-+++
-> >>>   1 file changed, 123 insertions(+)
-> >>>   create mode 100644 Documentation/devicetree/bindings/regulator/medi=
-atek,mt6363-regulator.yaml
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6=
-363-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,m=
-t6363-regulator.yaml
-> >>> new file mode 100644
-> >>> index 000000000000..f866c89c56f7
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6363-reg=
-ulator.yaml
-> >>> @@ -0,0 +1,123 @@
-> >>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +$id: http://devicetree.org/schemas/regulator/mediatek,mt6363-regulat=
-or.yaml#
-> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>> +
-> >>> +title: MediaTek MT6363 PMIC Regulators
-> >>> +
-> >>> +maintainers:
-> >>> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.=
-com>
-> >>> +
-> >>> +description:
-> >>> +  The MT6363 SPMI PMIC provides 10 BUCK and 26 LDO (Low Dropout) reg=
-ulators
-> >>> +  and can optionally provide overcurrent warnings with one ocp inter=
-rupt
-> >>> +  for each voltage regulator.
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    const: mediatek,mt6363-regulator
-> >>> +
-> >>> +  interrupts:
-> >>> +    description: Overcurrent warning interrupts
-> >>
-> >> Are you sure interrupts are physically not connected?
->
-> Yes, I'm sure, they are not.
->
-> >
-> > Side note:
-> >
-> > I wonder if we really need to describe _all_ the interrupts here.
-> >
-> > Looking at the PMIC as a whole, the interrupt tree is something like
-> >
-> > SoC <- SPMI inband IRQ - PMIC top level IRQ block <- sub-function IRQ b=
-locks:
-> >
-> >      - BUCK (buck regulator over current)
-> >      - LDO (LDO regulator over current)
-> >      - PSC (key press / system low voltage)
-> >      - MISC (protected registers accessed / SPMI stuff)
-> >
-> > And some other blocks that may apply to other MediaTek PMICs:
-> >
-> >      - HK (some threshold triggered interrupt)
-> >      - BM (battery management related)
-> >
-> > The thing I'm trying to get to is that all these interrupt vectors are
-> > internal to the whole PMIC. Do we really need to spell them out in the
-> > device tree? The top level compatible should already imply how all the
-> > internals are wired up.
-> >
->
-> Chen-Yu:
->
-> Yes, we do: not all boards need overcurrent protection on all of the rail=
-s, but
-> especially, in the past I have seen (multiple times) board designs (not M=
-ediaTek,
-> but that doesn't mean anything) that will trigger the overcurrent protect=
-ion due
-> to a high inrush upon rail enablement - in these cases, the ocp would hav=
-e to be
-> either ignored completely or reset and read after a while.
->
-> Not only that: since not all rails are actually used, due to EMI (and oth=
-er issues
-> which usually mean suboptimally built boards) some of those may randomly =
-trigger
-> OCP, and that's another case in which that should be ignored.
->
-> So... yes, we want to define the overcurrent interrupts in the devicetree=
-.
+I'm not sure what difference it makes?
 
-I understand the use case, but I think that's kind of giving the interrupts
-property a second meaning.
+> >  };
+>
+> ...
+>
+> > +static int export_gpio_desc(struct gpio_desc *desc)
+> > +{
+> > +     int offset, ret;
+>
+> Why offset is signed?
+>
 
-Instead, if you look at the common regulator bindings, there is a
-"regulator-over-current-protection" which signals that over current
-protection should be enabled for a given regulator. Perhaps you could
-use that? I think this common property also implies that over current
-protection has to be explicitly enabled.
+Because gpio_chip_hwgpio() returns a signed int.
 
-> >
-> > ChenYu
-> >
-> >>> +    minItems: 1
-> >>> +    maxItems: 36
-> >>> +
-> >>> +  interrupt-names:
-> >>> +    description:
-> >>> +      Names for the overcurrent interrupts are the same as the name
-> >>> +      of a regulator (hence the same as each regulator's node name).
-> >>> +      For example, the interrupt name for regulator vs2 will be "vs2=
-".
-> >>
-> >> You need to define the items or pattern if this is really flexible in
-> >> the hardware (not drivers).
+> > +     CLASS(gpio_chip_guard, guard)(desc);
+> > +     if (!guard.gc)
+> > +             return -ENODEV;
+> > +
+> > +     offset =3D gpio_chip_hwgpio(desc);
+> > +     if (!gpiochip_line_is_valid(guard.gc, offset)) {
+> > +             pr_debug_ratelimited("%s: GPIO %d masked\n", __func__,
+> > +                                  gpio_chip_hwgpio(desc));
 >
-> krzk:
+> Can we use gdev here? (IIRC we can't due to some legacy corner cases)
 >
-> It's flexible in the hardware... but how do I define a pattern here?
-> I avoided to define the items because you can miss some; I mean....
->
-> You may have, on one board:
-> "vs1", "vsram", "someother", "another"
->
-> on another: "vsram", "another"
->
-> ...and another: "vs1", "another"
->
-> (etc etc)
->
-> Is there any way to allow missing items in between?
-> Because then there's 36 possible items, so there are more than 100 possib=
-le
-> combinations (keeping the order, but missing something in between..!).
 
-I recently saw in the net/snps,dwmac.yaml binding the following:
+Yeah, I think there was some revert here? In any case: it's material
+for a different series, I'm just moving the code here.
 
-  clock-names:
-    minItems: 1
-    maxItems: 10
-    additionalItems: true
-    contains:
-      enum:
-        - stmmaceth
-        - pclk
-        - ptp_ref
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     /*
+> > +      * No extra locking here; FLAG_SYSFS just signifies that the
+> > +      * request and export were done by on behalf of userspace, so
+> > +      * they may be undone on its behalf too.
+> > +      */
+> > +
+> > +     ret =3D gpiod_request_user(desc, "sysfs");
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D gpiod_set_transitory(desc, false);
+> > +     if (ret) {
+> > +             gpiod_free(desc);
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret =3D gpiod_export(desc, true);
+> > +     if (ret < 0) {
+> > +             gpiod_free(desc);
+> > +     } else {
+> > +             set_bit(FLAG_SYSFS, &desc->flags);
+> > +             gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUES=
+TED);
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+>
+> ...
+>
+> > +static struct device_attribute dev_attr_export =3D __ATTR(export, 0200=
+, NULL,
+> > +                                                     chip_export_store=
+);
+>
+> __ATTR_WO()
+>
 
-I suppose you could adapt this pattern, list all the possibilities, and
-set additionalItems to false. I don't think it can pick out duplicates
-though.
+No can do, the attribute would have to be called "chip_export". A
+function called export_store() already exists in this file.
 
+> ...
+>
+> > +static struct device_attribute dev_attr_unexport =3D __ATTR(unexport, =
+0200,
+> > +                                                       NULL,
+> > +                                                       chip_unexport_s=
+tore);
+>
+> Ditto.
+>
+> ...
+>
+> > +static struct attribute *gpiochip_ext_attrs[] =3D {
+> > +     &dev_attr_label.attr,
+> > +     &dev_attr_ngpio.attr,
+> > +     &dev_attr_export.attr,
+> > +     &dev_attr_unexport.attr,
+> > +     NULL,
+>
+> No comma for the terminator, please.
+>
 
-ChenYu
+Ok.
 
-> Cheers,
-> Angelo
+> > +};
+>
+> ...
+>
+> > +     data->cdev_id =3D device_create_with_groups(&gpio_class, parent,
+> > +                                               MKDEV(0, 0), data,
+> > +                                               gpiochip_ext_groups,
+> > +                                               "chip%d", gdev->id);
+> > +     if (IS_ERR(data->cdev_id)) {
+> > +             device_unregister(data->cdev_base);
+> > +             kfree(data);
+>
+> UAF
+>
+
+Ok.
+
+> > +             return PTR_ERR(data->cdev_id);
+> > +     }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 >
 >
->
+
+Thanks,
+Bart
