@@ -1,83 +1,140 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98F25E462;
-	Mon, 30 Jun 2025 11:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7912A1DF73C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283027; cv=none; b=dXekpwgv4vGTKcfg1leYipKzARCnnBFX5lM/g4KVJ7uDjOIp/P5Spw4SREnKA9s0pH8j7ntSkFKE4G1G+j25VD5RxgjwZ2qywGL7A7xDh7H1Iy/IpPF+r5j9jUXupLWnOTwctOZW1UnwuPhCWN3TDNy7O+NAhI0sC14woEumHJo=
+	t=1751283039; cv=none; b=AGMYFZlBYtjdzVMhZ8E3FON7dfiEmOpgfpggQQ717ZRBeKtgEgKw8FGMZzCnK9fMttF9aRlf+EqltwoTB20NHVgA+OtfJIL50zWtXL4RX/PpY5/vX21fBZDqZFBvj/RiiazDcARCild4z/b6t2PfKFXt0S0NWhQzG7Hdj/WLRiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283027; c=relaxed/simple;
-	bh=X00OAOzkedO2pKDdCgXSF4VdGCiXd8SiYczoKkBwTBc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VXBX44CkYSKyL37mvjp0MxQ97onk7w72O4/srfivq6Fc5yWengRnak/9LftVLqf35ELFz+AHyqSKeVfa8Ul7AWbI8DlvI+r564Lt8SJQuEMHI0AvyGg5f9BOlGxfFFwEwalzWX5xMryof5ipaqKFB4tGenzPYdpxgXlxXmKDgE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bW3qh074FzKHNX3;
-	Mon, 30 Jun 2025 19:30:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 6560C1A0F18;
-	Mon, 30 Jun 2025 19:30:22 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP3 (Coremail) with SMTP id _Ch0CgBXuSZMdWJoFwTTAA--.58976S3;
-	Mon, 30 Jun 2025 19:30:22 +0800 (CST)
-Subject: Re: [PATCH 16/23] md/md-llbitmap: implement bit state machine
-To: Yu Kuai <yukuai1@huaweicloud.com>, Xiao Ni <xni@redhat.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-17-yukuai1@huaweicloud.com>
- <c76f44c0-fc61-41da-a16b-5a3510141487@redhat.com>
- <cf6d7be1-af73-216c-b2ab-b34a8890450d@huaweicloud.com>
- <CALTww2-RT64+twHo3=Djpuj81jArmePQShGynDrRtYab3c1i2w@mail.gmail.com>
- <93166d88-710f-c416-b009-5d57f870b152@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <8287b284-b1ec-6142-37e2-6f60cd587033@huaweicloud.com>
-Date: Mon, 30 Jun 2025 19:30:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1751283039; c=relaxed/simple;
+	bh=f8UGTCDHYUrbrwvxFMRydIPYre+TP2vUFa3uY2UjE3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uZQIxjarjBY0qe43GXmu1jIhGXyKe1w02PvSat0Y40zs5HKyCSZ7cKuzUucOKFhQ4QJ7HxBquywTVfU25bFd8zpDNsxUJGCPNpc5iHKucIJ6yYq5lhipIGkbzAQ4VLNYYU383ThpXJJecyqt8kxPqm8L4fLc2KbDCZcOf0JGrQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=V5JaRGrU; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V5JaRGrU"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 55B53928;
+	Mon, 30 Jun 2025 13:30:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751283012;
+	bh=f8UGTCDHYUrbrwvxFMRydIPYre+TP2vUFa3uY2UjE3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V5JaRGrUmgKsFenh53PLVTcWCNAKl1NB2vLxyVYinBaWGgSEFN5FULnUIocHmCZns
+	 lftjSc7ySRFu9V3xuE1aXarNkSVN7TcxHvbbJYR+1z6dvjXH+yrMiP53f12vzyQ1Vb
+	 CHekjsxnYiGfyj/MT8h2yYae02fw3lVyVRo6ufuY=
+Date: Mon, 30 Jun 2025 14:30:08 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mike Looijmans <mike.looijmans@topic.nl>,
+	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
+Message-ID: <20250630113008.GD20333@pendragon.ideasonboard.com>
+References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
+ <20250627145058.6880-1-mike.looijmans@topic.nl>
+ <20250627181911.GF24912@pendragon.ideasonboard.com>
+ <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
+ <20250630-psychedelic-tested-smilodon-adcbb3@houat>
+ <20250630091156.GE24861@pendragon.ideasonboard.com>
+ <20250630-phenomenal-taipan-of-imagination-59b300@houat>
+ <20250630093335.GC20333@pendragon.ideasonboard.com>
+ <20250630-delicate-stirring-sawfly-dd81be@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <93166d88-710f-c416-b009-5d57f870b152@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBXuSZMdWJoFwTTAA--.58976S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
-	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
-	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
-	oOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250630-delicate-stirring-sawfly-dd81be@houat>
 
-在 2025/06/30 19:05, Yu Kuai 写道:
-> Is it the reason
-> that it only changes one byte at a time and the system can guarantee
-> the atomic when updating one byte?
+On Mon, Jun 30, 2025 at 12:52:48PM +0200, Maxime Ripard wrote:
+> On Mon, Jun 30, 2025 at 12:33:35PM +0300, Laurent Pinchart wrote:
+> > On Mon, Jun 30, 2025 at 11:29:08AM +0200, Maxime Ripard wrote:
+> > > On Mon, Jun 30, 2025 at 12:11:56PM +0300, Laurent Pinchart wrote:
+> > > > On Mon, Jun 30, 2025 at 10:27:55AM +0200, Maxime Ripard wrote:
+> > > > > On Mon, Jun 30, 2025 at 10:03:16AM +0200, Mike Looijmans wrote:
+> > > > > > On 27-06-2025 20:19, Laurent Pinchart wrote:
+> > > > > > > On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wrote:
+> > > > > > > > XRGB8888 is the default mode that Xorg will want to use. Add support
+> > > > > > > > for this to the Zynqmp DisplayPort driver, so that applications can use
+> > > > > > > > 32-bit framebuffers. This solves that the X server would fail to start
+> > > > > > > > unless one provided an xorg.conf that sets DefaultDepth to 16.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> > > > > > > > ---
+> > > > > > > > 
+> > > > > > > >   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
+> > > > > > > >   1 file changed, 5 insertions(+)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > > > index 80d1e499a18d..501428437000 100644
+> > > > > > > > --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > > > +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> > > > > > > > @@ -312,6 +312,11 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
+> > > > > > > >   		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
+> > > > > > > >   		.swap		= true,
+> > > > > > > >   		.sf		= scaling_factors_888,
+> > > > > > > > +	}, {
+> > > > > > > > +		.drm_fmt	= DRM_FORMAT_XRGB8888,
+> > > > > > > > +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
+> > > > > > > > +		.swap		= true,
+> > > > > > > > +		.sf		= scaling_factors_888,
+> > > > > > > 
+> > > > > > > I'm afraid that's not enough. There's a crucial difference between
+> > > > > > > DRM_FORMAT_ARGB8888 (already supported by this driver) and
+> > > > > > > DRM_FORMAT_XRGB8888: for the latter, the 'X' component must be ignored.
+> > > > > > > The graphics layer is blended on top of the video layer, and the blender
+> > > > > > > uses both a global alpha parameter and the alpha channel of the graphics
+> > > > > > > layer for 32-bit RGB formats. This will lead to incorrect operation when
+> > > > > > > the 'X' component is not set to full opacity.
+> > > > > > 
+> > > > > > I spent a few hours digging in the source code and what I could find in the
+> > > > > > TRM and register maps, but there's not enough information in there to
+> > > > > > explain how the blender works. The obvious "XRGB" implementation would be to
+> > > > > > just disable the blender.
+> > > > > > 
+> > > > > > What I got from experimenting so far is that the alpha component is ignored
+> > > > > > anyway while the video path isn't active. So as long as one isn't using the
+> > > > > > video blending path, the ARGB and XRGB modes are identical.
+> > > > > > 
+> > > > > > Guess I'll need assistance from AMD/Xilinx to completely implement the XRGB
+> > > > > > modes.
+> > > > > > 
+> > > > > > (For our application, this patch is sufficient as it solves the issues like
+> > > > > > X11 not starting up, OpenGL not working and horrendously slow scaling
+> > > > > > performance)
+> > > > > 
+> > > > > Given that we consider XRGB8888 mandatory,
+> > > > 
+> > > > How about platforms that can't support it at all ?
+> > > 
+> > > We emulate it.
+> > 
+> > Does that imply a full memcpy of the frame buffer in the kernel driver,
+> > or is it emulated in userspace ?
+> 
+> Neither :)
+> 
+> The kernel deals with it through drm_fb_xrgb8888_to_* helpers, but only
+> on the parts of the framebuffer that were modified through the damage
+> API.
 
-I think it's not atomic, I don't use atomic API here, because all mormal
-write are always changing the byte to the same value, if old value is
-read by concurrent writes, then this byte will be written multiple
-times, and I don't see any problems this way, just pure memory
-operation.
+Aahhh OK, it's for the fbdev emulation. So that means that drivers are
+not required to support XRGB8888 ?
 
-Thanks,
-Kuai
 
+-- 
+Regards,
+
+Laurent Pinchart
