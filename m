@@ -1,89 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF09A25F96D;
-	Mon, 30 Jun 2025 11:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD2C25CC64;
+	Mon, 30 Jun 2025 11:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283586; cv=none; b=l5v8xMpnzNcZaz4j5NAf+L+BZU3O7ruzkOTLmZ/+CXXbKHvJ9Oer61CT8fJytBS/W6GQoH1v9AWHKaOrGFD6CtjRpAV6ZASjALfvmhXsYksaSb1/ftjvsasrmQbuxlJKv37YtFki/TqgU16vjJUMHRjNRepgWFBzGdF2QW+HKQw=
+	t=1751283616; cv=none; b=ZXaLQ/+CjczC0RmXu4f/DCax0wPio7h8BWsNc+hEVHHjf32Tu9Op4a3Y6X38/pOoCT4OdF1UZvfN2VtbDq7/AA6Uozmc0wo/23cwVkdlg1rqCOZLvY13GkgrMeIaeScOCHFpgdnnD06huC8X6NtbQEMQ6ejx2xriBD2bU7BPrFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283586; c=relaxed/simple;
-	bh=g00J8v4gyeoxiUOeUEh5TcENqOjHiixTY1cv2B+/Uqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZoTBhS+sXRXqw8RWOJfbkuOr4g90ABbJxomMB+iXn4Phxal+lmO8xNupvbwCyZ/cecsEGgYpMkPSa9zak8MiAmZYSDYX9+3ukhVZnyyuW+hVLive7H1ZvLc9MziH/1j+tr3fMfSuJ4WpDWKulPYgDer6wm1AnnfE5Vjllq7Tbfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRjOwJx+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751283616; c=relaxed/simple;
+	bh=LKlH+AYR76n8DFV4IF91R80s3PE0sUN7OOb+h3R9KXk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hCt3Y5hpNcOb7uNlN+yu0QLJ1MCk6ReslxZdB9M41zxS0BLslqhWzFXMWBZ7CIxVKgRoT2fZu72gg6oSrQFKfeMfKky9C1jiQCI1hjjCEpEfYT1xrl2inS18QmEl+w+jyew28L2pZ3zSmP5MFvB2iJ7fVSaw1ZejxVE58uUxjxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAo0Y5cq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRjOwJx+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA8BC4CEE3;
-	Mon, 30 Jun 2025 11:39:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAo0Y5cq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AD6C4CEEF;
+	Mon, 30 Jun 2025 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283585;
-	bh=g00J8v4gyeoxiUOeUEh5TcENqOjHiixTY1cv2B+/Uqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JRjOwJx+hZhuv+e867xmxOlJ1ongkF7wjsXd+A4LZ5xt0Snxdther9/cQ5bgNAles
-	 7zb4l3oRbknTqpmmlnc9hhIJPTs4oNgU3NjtwYaJNuO8hLpB2tgBfJsTFqbO7VSw+M
-	 WFoE6/XIQjex5EuOkiKm8kvDQjWPE2+3JWKukMvMhT9GuEo5T9e3EYBpO8WsotTVHc
-	 XewWNw4aFJ6YsWpvSpfZso9FscCksJH1b5+vNsXMPcFmMBUFxHgVyiA+HyKRfh3T/V
-	 1FpyCU487PgnMrwU1/PYiXm7fAMKO8kjefPN6Bg4DUECHjLWyn1Nh93PGmHN/r+3FN
-	 s7hg0hC8Iw1Yg==
-Date: Mon, 30 Jun 2025 19:39:37 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-usb@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel-janitors@vger.kernel.org, Chen Ni <nichen@iscas.ac.cn>,
-	Xu Yang <xu.yang_2@nxp.com>
-Subject: Re: [PATCH] usb: chipidea: udc: Use usb_endpoint_is_isoc_in() rather
- than duplicating its implementation
-Message-ID: <20250630113937.GA222582@nchen-desktop>
-References: <e9b363cb-1223-41fa-8613-73ff9a1d4a30@web.de>
+	s=k20201202; t=1751283615;
+	bh=LKlH+AYR76n8DFV4IF91R80s3PE0sUN7OOb+h3R9KXk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jAo0Y5cqO51tfTQigwo/NJEQq0+QcIu5+mlpcu0SMFAZZ2yGxDbGbaZIFrUtIDPMJ
+	 hFc66SForMUorqbW7VZnUx/qAfQQ9GId2+gvcywLPsbvbTl5TFaCRBA3pJKI8qC0kO
+	 x5fP/1sUfiCTGj7xUQBSbF8FN828Qd8Mpy4skxpShSR1l4CNP7ekmRUJ2dhdVJ3chY
+	 worfYae5O+OWwC3+6UO2Uvzm0HKJiQu2s+cKz3Hz2Iwc2O9bPdL/ruIEkSby3PxnF4
+	 cj/2720wx/4l1dT4bv62fHmRRwcAcdiDHYy2XL14kHRszO7JvFm/jy30I+zcCLhUmS
+	 5fgVjHT9YMVNg==
+From: Mark Brown <broonie@kernel.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+ Arun Raghavan <arun@arunraghavan.net>
+Cc: Fabio Estevam <festevam@gmail.com>, 
+ Nicolin Chen <nicoleotsuka@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Pieterjan Camerlynck <p.camerlynck@televic.com>, 
+ linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, Arun Raghavan <arun@asymptotic.io>, 
+ stable@vger.kernel.org
+In-Reply-To: <20250626130858.163825-1-arun@arunraghavan.net>
+References: <20250626130858.163825-1-arun@arunraghavan.net>
+Subject: Re: [PATCH v4] ASoC: fsl_sai: Force a software reset when starting
+ in consumer mode
+Message-Id: <175128361295.28563.443890248287811390.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 12:40:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9b363cb-1223-41fa-8613-73ff9a1d4a30@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-cff91
 
-On 25-06-24 17:40:17, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Tue, 24 Jun 2025 17:30:52 +0200
+On Thu, 26 Jun 2025 09:08:25 -0400, Arun Raghavan wrote:
+> On an imx8mm platform with an external clock provider, when running the
+> receiver (arecord) and triggering an xrun with xrun_injection, we see a
+> channel swap/offset. This happens sometimes when running only the
+> receiver, but occurs reliably if a transmitter (aplay) is also
+> concurrently running.
 > 
-> Reuse existing functionality from usb_endpoint_is_isoc_in() instead of
-> keeping duplicate source code.
+> It seems that the SAI loses track of frame sync during the trigger stop
+> -> trigger start cycle that occurs during an xrun. Doing just a FIFO
+> reset in this case does not suffice, and only a software reset seems to
+> get it back on track.
 > 
-> The source code was transformed by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> [...]
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
+Applied to
 
-Peter
-> ---
->  drivers/usb/chipidea/udc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 64a421ae0f05..75705089136c 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1992,7 +1992,7 @@ static struct usb_ep *ci_udc_match_ep(struct usb_gadget *gadget,
->  	struct ci_hdrc *ci = container_of(gadget, struct ci_hdrc, gadget);
->  	struct usb_ep *ep;
->  
-> -	if (usb_endpoint_xfer_isoc(desc) && usb_endpoint_dir_in(desc)) {
-> +	if (usb_endpoint_is_isoc_in(desc)) {
->  		list_for_each_entry_reverse(ep, &ci->gadget.ep_list, ep_list) {
->  			if (ep->caps.dir_in && !ep->claimed)
->  				return ep;
-> -- 
-> 2.50.0
-> 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- 
+Thanks!
 
-Best regards,
-Peter
+[1/1] ASoC: fsl_sai: Force a software reset when starting in consumer mode
+      commit: dc78f7e59169d3f0e6c3c95d23dc8e55e95741e2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
