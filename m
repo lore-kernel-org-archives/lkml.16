@@ -1,142 +1,91 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01662E425C
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08B2701CA;
+	Mon, 30 Jun 2025 17:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304829; cv=none; b=JXWTk/XdWveVK+rIqwK7dbsFBLDM4/L4+UI52bqegURgQ6FmzaPiMcDupvPdL6OFYh9oh5lQ8vhKwqaIjOde+txUdtNPaHY8aKqGakbTgKK2bNajkR/vce/gLhnzThxalLCXAwlUdsen59mlmxaaV/YzAWp9wC9ljY5goM/iM54=
+	t=1751304860; cv=none; b=heP5NEKp/HclbIlhM3DwUGgYbx84vBEYcKSFRWfYBX1wEQfiCF8qm9Ur2a9MpVzB0Tv7in3tPuCTu1E2VXyqms0rW42MAkRnHG3SX/2f0OmIsr2wGMXv2tWZNlwtj31wGv38+Mx2O2Gg2o4+MfMt89xA9OauWHebWm7sr80uJA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304829; c=relaxed/simple;
-	bh=WOgChIj8CdYn0jOoVt63RBLkUFDE8p+lFij2opL8/dQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qDHRqx1j4mp5kbH6QCLjSUANBdnea5PTg5W6iMm72VxLTz2iedMHnRJ2udHN8s07iaUbS07bQPvytxl7HK2QcJ/5aLilnFcJSB5vuYsuOtZiWd23ek4lMWCykVrCamDZiLJKMtpwh8PYNRJcaciX7Wl/sud7u8cpaQXlhmvTlAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNJ+RXLw; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751304860; c=relaxed/simple;
+	bh=TaK2FH9yiJmwJGSGOTvljnkUt8CYe3d5qFJFNNZcc/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hUiw4j7FOjMn0RLveV5STm5Pk0gkZadt6dkPO8E3X1eescLryXOAeDvukBHYsmfBBi3NhPU+X9nSyiIbF1Lesg9MbfmnBonL6KS/7FQRWLHx4N0Labh+EegsGwq6foVeYfbnvL1j2jUdjW2yqYFhz1P00xuJpXXJ+9jWyehI09M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJLQgmbt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNJ+RXLw"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4537deebb01so12366865e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751304826; x=1751909626; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ywKQCs/xgmEMMGX7vzOv8GIY/LFySjzj9TaSkXMmQo=;
-        b=MNJ+RXLwUMZkR3IBqG4mkBC4eDcjnj/ak90UGpo+Ylf3ocJOp8MitC4P2tSktmHXql
-         AZmPmWQZOLJ+/Ltuep2G3kAzctts22gOnpArY6Pz24EkWlfEaVw43mdUMTg0AOTaQTsX
-         KvoGgsqLJ9HOw6C3U03SfI60GqQHkGlVucM5KyIrYLvEs6eVxVuqqFqIXUsbalfoW1LZ
-         0CUN3Chf7mwUGHo1wcYTkWmg20k5ACcLdqMTp7Bkw4ZLJwjQdOT8WnPumUx4RXRiDhP8
-         fY6SwesMDAczmI6jGGTycrvP1AHlTUMPzJgP3GplqzBtCCDtBTuKakAhLsBLFAtCjsZ+
-         fcDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751304826; x=1751909626;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7ywKQCs/xgmEMMGX7vzOv8GIY/LFySjzj9TaSkXMmQo=;
-        b=VjcLM6yEgIz1bepN3QqQAh+di9znorGJu4rje4AxXIdpOcY50BTkYrdkXraHKErRC+
-         W9KwwfGDcZNb51Bcb2KpWchT3lqfjVoAp0J+melk4tSNdna/Ny8Ch8y6TQgLMu7Ws7kl
-         0WH0A87vn8drj9IsKItzk66JvF+FS9NNpijaIKrtkkhb9MoJeV8c+7aOw808yxJ7p4uJ
-         qKWx/yJ7h0qt4/Z+m9UCKqcKgm7l3MGaCvIwlP5g4xbksLmOv6aC+OKmfPjruhTFh9m7
-         7nsCANfdnZmoe6h2OlxWmILZMOvHPu+tkaxFbjDnp0f9ViY5HZGioV1xKn2k68yxv2dX
-         d3gw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEEbsDEUUwXkCVvT4eD54W6OeTHsEDXYqU8gMBmyxLguwpdwjT54zFvyZEK1HKMvQcEMq7/YOhcxBq1Sk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYN3EQOytGq5fO2OxkCc3nbMeadPpaswhtCMMUaGye8EtnmX9t
-	F1Bw7K7MIhAUnSDm75CLkApbqa7g6rZogRZxl1WMxcRqZYEcCNra4QOVt6XIPtRC
-X-Gm-Gg: ASbGncuHGsxc5i0rGQw905fwXsKH0ia5a+tH28Rqq7AtS9ItbBHwxdHBh0ePrj47xcv
-	K+1/QHahW1RE44sVyCSj4T+jvb46Dcw4W0HAKbe7oJiMAhuqioGvV+w1Z+74VVfGfiJPe9ePyHV
-	n93IIFP4d6SUHi/9m092V/YXjb1J/lBoqVz/eYVasXBh678QngPVflWNGSvm45XJvEIuMb/6eQk
-	tRpvt7Cz0Oz51ZgAyXwXltL8lser9fDwBZcL6mhbplatL0WbdUQTf/wOR0XqIfoTOg+Pm2EgBRp
-	/MUI8folU+Gns1ve1Df3tAV71wC6JaVVkIPVbaqcDopk7TLmRLDe7hxBZw5uNfDu+Im9yjTGda3
-	gGEdDqw==
-X-Google-Smtp-Source: AGHT+IHIh7wbjK1QsmtU3xg5nvAfhJT61IhHRyatqBPKjN7paC+Er9mKD5tayLFBbp8+UXK6aQyJ3A==
-X-Received: by 2002:a05:600c:1907:b0:440:61eb:2ce5 with SMTP id 5b1f17b1804b1-4538ee61fddmr160509985e9.17.1751304825838;
-        Mon, 30 Jun 2025 10:33:45 -0700 (PDT)
-Received: from cachyos.customer.ask4.lan ([89.26.177.221])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c1easm170493485e9.3.2025.06.30.10.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:33:45 -0700 (PDT)
-From: Marcos Garcia <magazo2005@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: philipp.g.hortmann@gmail.com,
-	dan.carpenter@linaro.org,
-	karanja99erick@gmail.com,
-	rodrigo.gobbi.7@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Marcos Garcia <magazo2005@gmail.com>
-Subject: [PATCH staging] staging: rtl8723bs: replace magic numbers in beacon init
-Date: Mon, 30 Jun 2025 19:33:39 +0200
-Message-ID: <20250630173339.3828756-1-magazo2005@gmail.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJLQgmbt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AE78C4CEEF;
+	Mon, 30 Jun 2025 17:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751304857;
+	bh=TaK2FH9yiJmwJGSGOTvljnkUt8CYe3d5qFJFNNZcc/8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rJLQgmbt/DWmf4OmbJ0sQ8HOx5dQ42qQd0nK3vrJk8SDsdQq9pFGyR0MDLhz/FgQ4
+	 8MdSqlyR+6NtxNLev58EJYpKPdaXTvvwRqT1Jjn3yvuX8Ig8MsZ+lUDpKZ5qERn851
+	 d8o46yAD1RVx7OqwjKTAtG2cMRSLAG9vtFP7YX4w0/Y9+3++tSww8L9ENtdRmJzYYe
+	 2tuL8S1OAKjPuaD733BRP/dvSN3vaxcrZHetDiYKI5ZJa2hPCyz3044QAx1/dSMr0b
+	 SM9K525UNRUruJM5XR/Dd0LDH9N57GzTGODhjUSLjluIyi0KTOUws0oLwNN2F/7BHQ
+	 F/2Ll3fpXF+TQ==
+Date: Mon, 30 Jun 2025 12:34:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Janne Grunau <j@jannau.net>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] PCI: host-generic: Fix driver_data overwriting bugs
+Message-ID: <20250630173415.GA1787642@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86ikkdb0uj.wl-maz@kernel.org>
 
-Replace hardcoded register values in rtl8723b_InitBeaconParameters()
-with properly named defines documenting their purpose:
-- TBTT_PROHIBIT_DEFAULT_MS (0x6404) for 100ms interval + 4ms margin
-- BCNTCFG_AIFS_LARGEST (0x660F) for maximum AIFS value
+On Mon, Jun 30, 2025 at 06:23:00PM +0100, Marc Zyngier wrote:
+> On Mon, 30 Jun 2025 18:06:01 +0100,
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > On Wed, Jun 25, 2025 at 12:18:03PM +0100, Marc Zyngier wrote:
+> > > Geert reports that some drivers do rely on the device driver_data
+> > > field containing a pointer to the bridge structure at the point of
+> > > initialising the root port, while this has been recently changed to
+> > > contain some other data for the benefit of the Apple PCIe driver.
+> > > 
+> > > This small series builds on top of Geert previously posted (and
+> > > included as a prefix for reference) fix for the Microchip driver,
+> > > which breaks the Apple driver. This is basically swapping a regression
+> > > for another, which isn't a massive deal at this stage, as the
+> > > follow-up patch fixes things for the Apple driver by adding extra
+> > > tracking.
+> > 
+> > Is there a bisection hole between patches 1 and 2?
+> > 
+> >   1: PCI: host-generic: Set driver_data before calling gen_pci_init()
+> >   2: PCI: apple: Add tracking of probed root ports
+> > 
+> > If so, would it be practical to avoid the hole by reordering those
+> > patches?
+> 
+> Sure, but you said you already had queued patch #1, and what is in
+> -rc1 already breaks Geert's box. So no matter the order, we break
+> something at some point.
 
-This improves maintainability while preserving the original behavior.
+I did, but when I saw your problem report and subsequent updates, I
+put Geert's patch on hold.
 
-Signed-off-by: Marcos Garcia <magazo2005@gmail.com>
----
- .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 27 +++++++++----------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+> If you want to only break one thing, then yes, swapping these two
+> patches is the correct thing to do.
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-index 893cab0532ed..cc7886d75a0b 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-@@ -1183,31 +1183,28 @@ void rtl8723b_read_chip_version(struct adapter *padapter)
- 	ReadChipVersion8723B(padapter);
- }
- 
-+/* Beacon Configuration */
-+#define TBTT_PROHIBIT_DEFAULT_MS	0x6404  /* 100ms interval + 4ms margin */
-+#define BCNTCFG_AIFS_LARGEST		0x660F  /* Max AIFS for beacon priority */
-+
- void rtl8723b_InitBeaconParameters(struct adapter *padapter)
- {
- 	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
- 	u16 val16;
- 	u8 val8 = DIS_TSF_UDT;
- 
--
--	val16 = val8 | (val8 << 8); /*  port0 and port1 */
--
--	/*  Enable prot0 beacon function for PSTDMA */
--	val16 |= EN_BCN_FUNCTION;
--
-+	val16 = val8 | (val8 << 8); /* port0 and port1 */
-+	val16 |= EN_BCN_FUNCTION;   /* Enable prot0 beacon function */
- 	rtw_write16(padapter, REG_BCN_CTRL, val16);
- 
--	/*  TODO: Remove these magic number */
--	rtw_write16(padapter, REG_TBTT_PROHIBIT, 0x6404);/*  ms */
--	/*  Firmware will control REG_DRVERLYINT when power saving is enable, */
--	/*  so don't set this register on STA mode. */
-+	/* Fixed: Replaced magic numbers with defines */
-+	rtw_write16(padapter, REG_TBTT_PROHIBIT, TBTT_PROHIBIT_DEFAULT_MS);
-+
- 	if (check_fwstate(&padapter->mlmepriv, WIFI_STATION_STATE) == false)
--		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B); /*  5ms */
--	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B); /*  2ms */
-+		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B);
- 
--	/*  Suggested by designer timchen. Change beacon AIFS to the largest number */
--	/*  because test chip does not contension before sending beacon. by tynli. 2009.11.03 */
--	rtw_write16(padapter, REG_BCNTCFG, 0x660F);
-+	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B);
-+	rtw_write16(padapter, REG_BCNTCFG, BCNTCFG_AIFS_LARGEST);
- 
- 	pHalData->RegBcnCtrlVal = rtw_read8(padapter, REG_BCN_CTRL);
- 	pHalData->RegTxPause = rtw_read8(padapter, REG_TXPAUSE);
--- 
-2.50.0
+I swapped them and put them back on pci/for-linus for v6.16:
 
+  https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/log/?h=for-linus&id=ba74278c638d
