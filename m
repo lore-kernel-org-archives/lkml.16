@@ -1,123 +1,167 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071371C36
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671BE1D9663
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273183; cv=none; b=hkLymnU8/odRQMWRVfk6bf1+Gy0R+uMHvifqNFBPJm55MgAsft/4LxL0GK5RphMMC3QG2fnPaWDJfcO2/xe8vd/dYtb4g0FFiAR4scIbBAaCudYOn3loyZ3Yt+42GqrFqy4BSexEz7srOLSngxsqfa5pYwTe13MfB5kZXFQszWY=
+	t=1751273304; cv=none; b=tLEuiNvolA17RtThO38oZ+LPJtTbk9S7KSEqHz8jleiJ6X6OlzxF11vATIr6u5ZUe8FGmvLclMx8cHz9BccpQeksYpGzSI+/cNV7WupgM6ieJZwsgwfe1RGXcALJanWHOxb9CbxzSfjmwGXTopnQOyArqr05FkkaeVoQHwtPtzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273183; c=relaxed/simple;
-	bh=4LUJ6548+InMpbqKv8I7giovimJrk+U7GLv94JQ0oVw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=TSw4mXQNXp100Ju4uvUOlahNJTEmGYaGnQ9pvU2D3I9Xu0OvaMbxk/eSvRMRAv1NmWwxwAfejrB/4AN8HWctgBJkMTKhbK7o30d59bM9SN7YOHGj0yWeon3ak/6WaLSyxyx4DTb5Hm+koX9VN2ZGqyDk43M8XfbvBJnGMFkMjJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=KR7LCM3T; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1751273304; c=relaxed/simple;
+	bh=GLyuwmhfQTbO6A0KpqxLq0nFrLsDd5zxBBhnfG9f2ig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bC0weDHBqi5GlZfjfWpxWfRcusL5h2VUwqbRnoOL/lDa6bvvbHuqwToWrwO7g+SwQdj4Q3N5nkPfUDLrFqEdPVEX3Ek5NzG4UllS8yOqLnpQI4UK6ToxijHWMpGumLW2fHo5KGgw6r6IoEA8Z4CM0hnFoI1IHhzSftbIVsxK/k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m/eEcyjR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="KR7LCM3T"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7kOF8012015;
-	Mon, 30 Jun 2025 10:46:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=3743PsDYmw0FuLo/fDLEYD
-	EF4/6D0ibRvsDao899kPc=; b=KR7LCM3TpS8rrysblkmnP0SsTAj5hWXjCqEK3k
-	Kb84t80ZltEIFeC+UTyns52nSFbgHL4pwMX7YRaPYLwEZQP5shnlHqyytIVYhKn9
-	wDIk/549yBVXDkJ29IQCIzvTGbvpMErWqRC72lXguhEtSNcJzZmk/8DMj+mhONpK
-	4gT3RUUxQYZkvtDmVDwu36Npc6SRuMBTjbkbzX5V2q6rjUEoo59bDUuuh4KIfZvF
-	R88DMLdX8Zpww3/kP//zqRPA2DlBXLxoqjz2hoA079FTBmDZsZEd1oC/gF6EKK9D
-	kiQ9DeWEcefHJRA0QMIqSfk3bvtxq5ATTpPL9WmDBQFKU4Vw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jsy4m3w9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 10:46:10 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E244440045;
-	Mon, 30 Jun 2025 10:45:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4CF34644565;
-	Mon, 30 Jun 2025 10:45:08 +0200 (CEST)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
- 2025 10:45:08 +0200
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 30 Jun 2025 10:44:53 +0200
-Subject: [PATCH v11] arm64: defconfig: Enable STM32 Octo Memory Manager and
- OcstoSPI driver
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m/eEcyjR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aZUzmgr4awk2OfqDwSA49N0EKn2TsPmuSjz/m/RegPQ=; b=m/eEcyjRCcdugCM6rkkWkm7M93
+	Bx47kBqlwjxKiY7ZRPwO0ae0JRCqZ2RK2a6CUwp2PvRw8KUWJ2PWp/YoQTr5waa3fXT/RMri5NDDa
+	WbuxrVpQweEsW7NKXmVaHYTshttKTjSsQmcrimXo8BP6bGphzBkQJ6RlTyp4ALS2BY8pzN9Duk99i
+	U6WIR68onUX5amQX6gworqxx2EEJSrBb2DiGAmOb2YHaY1Uhw9+LC1eNsWQGbLCakAk+0niEUUiPB
+	COFY3kJzQuzlQRLI8PUhBKbYXo3RcMp/KG72P8IpTZnK4352WcANip9rX+88H1vvLIRn7ZiPQttZk
+	KH/EtBdA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWABO-00000003Ktl-0L60;
+	Mon, 30 Jun 2025 08:48:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EAADD300125; Mon, 30 Jun 2025 10:48:08 +0200 (CEST)
+Date: Mon, 30 Jun 2025 10:48:08 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
+	James Morse <james.morse@arm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Rahul Bukte <rahul.bukte@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [RFC PATCH] kernel/cpu: in freeze_secondary_cpus() ensure
+ primary cpu is of domain type
+Message-ID: <20250630084808.GH1613376@noisy.programming.kicks-ass.net>
+References: <20250630082103.829352-1-shashank.mahadasyam@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250630-upstream_omm_ospi_defconfig-v11-1-6e934fabe698@foss.st.com>
-X-B4-Tracking: v=1; b=H4sIAIROYmgC/32NQQ6CMBBFr0K6tqStgOLKexhC2mEKs4CSDhIN4
- e5W4trFX7y3eH8TjJGQxS3bRMSVmMKUQOtTJmCwU4+SuiSEUaZUhVbyOfMS0Y5tGNN4prZDD2H
- y1Etw2NkLuLMyVqTCHNHT68g/msQD8RLi+3hb66/9dc31b3etpZZVBdo5C2VR6bsPzDkvOYRRN
- Pu+fwCWCjADyQAAAA==
-X-Change-ID: 20250410-upstream_omm_ospi_defconfig-cbeda7cb302a
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630082103.829352-1-shashank.mahadasyam@sony.com>
 
-Enable STM32 OctoSPI driver.
-Enable STM32 Octo Memory Manager (OMM) driver which is needed
-for OSPI usage on STM32MP257F-EV1 board.
+On Mon, Jun 30, 2025 at 05:20:59PM +0900, Shashank Balaji wrote:
+> On an x86 machine, when cpu 0 is isolated with "isolcpus=", on initiating
+> suspend to memory, a warning is triggered, followed by a kernel crash. This is
+> on a defconfig + CONFIG_ENERGY_MODEL kernel:
 
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
-Changes in v11:
-  - rebase on top of next-20250627.
-  - Add Alexandre in recipients.
+> This happens because in order to offline the last secondary cpu, i.e. cpu 1,
+> build_sched_domains() ends up being passed an empty cpumask, since the only remaining
+> cpu (cpu 0) is isolated. It warns and fails, after which perf domains are
+> are attempted to be built, which crashes the kernel. The same problem occurs
+> during cpu hotplug, but that was fixed by
+> commit 38685e2a0476127d ("cpu/hotplug: Don't offline the last non-isolated CPU").
+> 
+> Fix this by ensuring that the primary cpu, the last standing cpu, is of domain
+> type, so that build_sched_domains() is not passed an empty cpumask.
+> 
 
-Changes in v10:
-  - rebase on top of next-20250509.
-  - Link to v9: https://lore.kernel.org/r/20250428-upstream_omm_ospi_defconfig-v9-1-66c1bbac5461@foss.st.com
+> Co-developed-by: Rahul Bukte <rahul.bukte@sony.com>
+> Signed-off-by: Rahul Bukte <rahul.bukte@sony.com>
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> ---
+>  kernel/cpu.c | 27 ++++++++++++++++++++++-----
+>  1 file changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index a59e009e0be4..d9167b0559a5 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1902,12 +1902,28 @@ int freeze_secondary_cpus(int primary)
+>  
+>  	cpu_maps_update_begin();
+>  	if (primary == -1) {
+> -		primary = cpumask_first(cpu_online_mask);
+> -		if (!housekeeping_cpu(primary, HK_TYPE_TIMER))
+> -			primary = housekeeping_any_cpu(HK_TYPE_TIMER);
+> +		primary = cpumask_first_and_and(cpu_online_mask,
+> +								housekeeping_cpumask(HK_TYPE_TIMER),
+> +								housekeeping_cpumask(HK_TYPE_DOMAIN));
 
-Changes in v9:
-  - split patchset by susbsystem, current one include only defconfig related
-    patch.
-  - Link to v8: https://lore.kernel.org/r/20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+That's terrible indenting, please align after the opening bracket like:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2211c385195456f8609edfad40202002df0abb5f..978bcd554ee18b0fa1975a984b9eb9058727df81 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -582,6 +582,7 @@ CONFIG_SPI_QUP=y
- CONFIG_SPI_QCOM_GENI=m
- CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SH_MSIOF=m
-+CONFIG_SPI_STM32_OSPI=m
- CONFIG_SPI_SUN6I=y
- CONFIG_SPI_TEGRA210_QUAD=m
- CONFIG_SPI_TEGRA114=m
-@@ -1528,6 +1529,7 @@ CONFIG_EXTCON_USB_GPIO=y
- CONFIG_EXTCON_USBC_CROS_EC=y
- CONFIG_FSL_IFC=y
- CONFIG_RENESAS_RPCIF=m
-+CONFIG_STM32_OMM=m
- CONFIG_IIO=y
- CONFIG_EXYNOS_ADC=y
- CONFIG_IMX8QXP_ADC=m
+		primary = cpumask_first_and_and(cpu_online_mask,
+						housekeeping_cpumask(HK_TYPE_TIMER),
+						housekeeping_cpumask(HK_TYPE_DOMAIN));
 
----
-base-commit: 2aeda9592360c200085898a258c4754bfe879921
-change-id: 20250410-upstream_omm_ospi_defconfig-cbeda7cb302a
+Also, IIRC HK_TYPE_HRTIMER is deprecated and should be something like
+HK_TYPE_NOISE or somesuch. Frederic?
 
-Best regards,
--- 
-Patrice Chotard <patrice.chotard@foss.st.com>
+> +		if (primary >= nr_cpu_ids) {
+> +			error = -ENODEV;
+> +			pr_err("No suitable primary CPU found. Ensure at least one non-isolated, non-nohz_full CPU is online\n");
+> +			goto abort;
+> +		}
+>  	} else {
+> -		if (!cpu_online(primary))
+> -			primary = cpumask_first(cpu_online_mask);
+> +		if (!cpu_online(primary)) {
+> +			primary = cpumask_first_and(cpu_online_mask,
+> +								housekeeping_cpumask(HK_TYPE_DOMAIN));
 
+Indenting again.
+
+> +			if (primary >= nr_cpu_ids) {
+> +				error = -ENODEV;
+> +				pr_err("No suitable primary CPU found. Ensure at least one non-isolated CPU is online\n");
+> +				goto abort;
+> +			}
+> +		} else if (!housekeeping_cpu(primary, HK_TYPE_DOMAIN)) {
+> +			error = -ENODEV;
+> +			pr_err("Primary CPU %d should not be isolated\n", primary);
+> +			goto abort;
+> +		}
+>  	}
+>  
+>  	/*
+> @@ -1943,6 +1959,7 @@ int freeze_secondary_cpus(int primary)
+>  	else
+>  		pr_err("Non-boot CPUs are not disabled\n");
+>  
+> +abort:
+>  	/*
+>  	 * Make sure the CPUs won't be enabled by someone else. We need to do
+>  	 * this even in case of failure as all freeze_secondary_cpus() users are
+
+
+Also; doesn't the above boil down to something like:
+
+	if (primary == -1) {
+		primary = cpumask_first_and_and(cpu_online_mask,
+						housekeeping_cpumask(HK_TYPE_TIMER),
+						housekeeping_cpumask(HK_TYPE_DOMAIN));
+	} if (!cpu_online(primary)) {
+		primary = cpumask_first_and(cpu_online_mask,
+					    housekeeping_cpumask(HK_TYPE_DOMAIN));
+	} 
+
+	if (primary >= nr_cpu_ids || !housekeeping_cpu(primary, HK_TYPE_DOMAIN)) {
+		error = -ENODEV;
+		pr_err("Primary CPU %d should not be isolated\n", primary);
+		goto abort;
+	}
+
+Yes, this has less error string variation, but the code is simpler.
