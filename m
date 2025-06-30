@@ -1,141 +1,88 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B0927726
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F4E27726;
+	Mon, 30 Jun 2025 12:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285398; cv=none; b=qV2AVT/Jrd11+40QRxnYpoE0JAHPgz0H/4aeHjPPNYcjEnShbpzK0tbTS/QV26PXR6/pFh9xJ/2TphjXi5rBUKGIFbc4w0or3vot2JEOKEbvENz+tVwkyOt8YmnFyrPgIIB/TbTib5yQ+Aqq0/4lDK/vJADdggQeBW2SGAstO4c=
+	t=1751285528; cv=none; b=LIP/tJZzmPv76CIDxbql686aDqQFy79dN8mRRiQOV/t2L3/0YsUq9LPZtILLUWNOBGX2JdW/y7SCqcmQq3szR4kelbWUbPPAY4BGMhEmqczJIUdjVXsvNLItNgGSK5GbVhRe0+Ga0qCAaKBscnbPBmE+9Zwy+TALknuoN5+7wrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285398; c=relaxed/simple;
-	bh=J3wsYlprhYN6GTp36QWD/H/Zg82KI7gHFU+7n2Hv8iA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pas9PjXYoiLW4DO+eLDoa4h6DqvtoeYC2MEOiiHcY7fWxup7FAURLoLVPzOurBw13P399nH8SgiuMXs5W7U19ZToMT+hxSx0dnc38M4UBbE62McX0BXg87h9IdUWXdefXyZqFnZJZh8RjIm50ZjRRtvM9VBKnrsVANy0ipH3hUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EGrcSMip; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6/fLGakv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E+m6e1u2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AbnY+XFz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751285528; c=relaxed/simple;
+	bh=vivnRFXDAAz82GUWwNPXDfAlxh69B6b3d2ENBZfVKsQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u8Ee23xUvcn3BvfJNZmFrqlBn3xqHX+d95NJfI0+Lba3jTsIKzBmNZpJrAYyvh3k//EPxVA51bRtMFTScArvhd+ZdqqCxFOvzmKcrNArv8JNZfMGtWEPCoOmjrpQ3aWoXv285BGzfXCc5kysL6ZeeJCy8QHhAazghLXhmZgkiPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=XqE9fh3D; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EGrcSMip";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6/fLGakv";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E+m6e1u2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AbnY+XFz"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E4521F444;
-	Mon, 30 Jun 2025 12:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751285395; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qKuBBtfKfSI5K2kyHv4A8DiKQIqGQtCpfkELpzDZ53M=;
-	b=EGrcSMipX4jQx4CZtvb5ikdJrNzzqVYfoWMV0wfcvdDl6xN/J7gXa45zA7rsb3FYasoFmR
-	+O4HQAzLiOiVMeTwi2l25owR1ObHaW/svwzDUN7ZfItdVc+EHUxu694CiePLY6DJOH0XZI
-	GM3oEqPnximwQhNQxzgjgQgTfpAgnwM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751285395;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qKuBBtfKfSI5K2kyHv4A8DiKQIqGQtCpfkELpzDZ53M=;
-	b=6/fLGakvxZ4NeSdnm97IFYm++6nFGMJFioTBd8OSN8s4wIU9xBeIZwoXTFwprpTjDmINlo
-	s3qh8/oXB3uKwzCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E+m6e1u2;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AbnY+XFz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751285394; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qKuBBtfKfSI5K2kyHv4A8DiKQIqGQtCpfkELpzDZ53M=;
-	b=E+m6e1u213L/wbq59mHx2nU4fKOTM0FcgHQ0meYw3P4/+MB30g/zJC/eTbaSIuOPe7APE9
-	+5EsKg/flIQ45JWytHGRmMZAxjSA2wvOXJ9rSk4at0HdH/lModUAyscmX+RBWYgsDCQd9e
-	1Z2BGZKu2TkRcIMzc1SqtH8kCeA+dYY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751285394;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qKuBBtfKfSI5K2kyHv4A8DiKQIqGQtCpfkELpzDZ53M=;
-	b=AbnY+XFzSW/ZcSThBcH04olslsQHFIGpbtBx7WH/fv73JlsvMNH4sk3VXPhZdwzb/NBdzc
-	45+EpiH1CBw7YzBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 063E513983;
-	Mon, 30 Jun 2025 12:09:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 385TAJJ+YmgVRQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 30 Jun 2025 12:09:54 +0000
-Date: Mon, 30 Jun 2025 14:09:53 +0200
-Message-ID: <87qzz1e8ha.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Zack Rusin <zack.rusin@broadcom.com>,
-	Nam Cao <namcao@linutronix.de>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: dummy: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <20250630110945.2225-2-thorsten.blum@linux.dev>
-References: <20250630110945.2225-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="XqE9fh3D"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=4Utdtws3qFpWd3h2rnJnLtmtOA+LpMly7BwnrC1eTp4=;
+	t=1751285526; x=1752495126; b=XqE9fh3D1S4doURDty84xRwA+Z9lgnjsqXE6g+r1f3bhuHk
+	nT3K9P1kcwpzfEQRvudMrgaRGUo/n8cKVPTB33ATXfSIjtoongMNGi4du3T0WBzTqTIIId8HEMEuv
+	SS5N0vBPlJl6LHI5WVR7ZqnXO7N0OVWGwhZ309OhgfW3H6nTwRRY9tly6btFycFktkF6sx05tY90Z
+	1u5c6+NHfCTMw0vByfLUMF/2z/PUPZmMue3Npjh6AcJGlTZeEYwHCBdGK2RXATPp89aHwhX27JKvw
+	H5clGpt/HvS0Jbo4n1cXUgmKwzbqKOCmYAgN0giIeDIN69TgUHLUA9aT0kO7+P+w==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uWDMh-00000001CMh-0HFR;
+	Mon, 30 Jun 2025 14:12:03 +0200
+Message-ID: <3cfa6ddfb5493aff609c5a51c84d61a7ed36d13f.camel@sipsolutions.net>
+Subject: Re: [PATCH 0/3] wifi: brcm80211: Deadcoding around phy_cmn
+From: Johannes Berg <johannes@sipsolutions.net>
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: arend.vanspriel@broadcom.com, kvalo@kernel.org, 
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
+	brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org
+Date: Mon, 30 Jun 2025 14:12:02 +0200
+In-Reply-To: <aF7aPZc3xXfcc-UR@gallifrey>
+References: <20250626140812.56700-1-linux@treblig.org>
+	 <7625f178e7c2be9fd11f1b4cdeb4da47a4635c93.camel@sipsolutions.net>
+	 <aF7aPZc3xXfcc-UR@gallifrey>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 4E4521F444
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -3.51
-X-Spam-Level: 
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-On Mon, 30 Jun 2025 13:09:44 +0200,
-Thorsten Blum wrote:
-> 
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Hi,
 
-Applied now.   Thanks.
+> > 2) it'd help for the automatic bot runs etc. to have, in the subject,
+> >    '[PATCH wireless-next]' (or perhaps rtw-next etc.)
+>=20
+> Oh right; that wasn't too obvious to me because get_maintainer has
+> linux-wireless@ in the list but also had the brcm80211 - so I
+> didn't know if this went through brcm or wireless picked it up.
+> And what's rtw ?
 
+Hmm, right, brcm80211 does have a separate list but patches still flow
+only via the wireless list.
 
-Takashi
+Currently, we have:
+ath/ath-next - Qualcomm drivers
+rtw/rtw-next - Realtek drivers
+iwlwifi-fixes/iwlwifi-next - Intel iwlwifi driver
+mt76 - Mediatek drivers
+wireless / wireless-next - catch-all for everything else
+
+> (Perhaps a Documenation/process/maintainer-wireless.rst would be good? )
+
+Yeah, perhaps, though it's kind of difficult to really pin down the
+exact list, it has been changing a bit.
+
+TBH, wireless / wireless-next is mostly just fine anyway. Only if
+something depends on other work in the specific trees would the other
+tags really be needed, i.e. for people who work on it more actively.
+With wireless / wireless-next the bot will still build-test it etc.,
+whereas without a tag it may never do that at all.
+
+johannes
