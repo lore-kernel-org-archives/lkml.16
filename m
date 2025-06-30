@@ -1,104 +1,71 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4757724467A;
-	Mon, 30 Jun 2025 11:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC0A235056;
+	Mon, 30 Jun 2025 11:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282637; cv=none; b=FhwSJQf05PDr4YuQDBevzW0a3ppQVd7qXSQjT+7WyTERNoL5lp9WkXCIIFhx73N+VE2migjGQ4HF0bjUXAWKm1Lgt+2HCQdvEEdS7uGR+s2A/6nXer6SNG0IDJwokWA33uv2UnqL5H7yKLtBicIOOkZ/kw/5feO/OOUkPo9Zpcg=
+	t=1751282692; cv=none; b=TdpFoG9PoMXsmqk9Iouw1vS7O3URAkaa8nJzVy+17ymBjOuzoafKTAbuiHgIDPjNkVB/qH5HfJddCsbylIfl48xkeLuv04+GCD7u0pHkLVKYrAVENY4jCndGsFRmlcwD190DTmNVXQ162rdlqtY8u2d7x+yq2uiSH/IzCLC/PdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282637; c=relaxed/simple;
-	bh=aBMCVDnfYyty8SNzfmAEaV6AVMGfaRiFDoCm+qZ/g1Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nzd2pLuBNKjdJ5BnJwUGUhKH1i9NTyk6+vwFCj3P39gs/mRYJd1TUqLC5mg/0FjbU6Kts+6vmEsI/jNf3yJm2Yo24t77XgTas9mWIB1Y++ZIcCZLP6jRQkKvApbbthvKizcQP/7vK3KXNYaB4P/IlW+eyNeEYRQ3m1kgJjRtQo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PV9lopcf; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PV9lopcf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751282630; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BfH8Hrzvd1gCdLyLYHKn/jiJuwKhUgQolaRTiwi77X8=;
-	b=PV9lopcfDd2/2/bigEgboPIslWJyF9BYEV1Sg+Ym4Z9feOkfJzjWF622rVH/adeVlCvRss/2FxBSKQSUaXy3IEjLPUd+r2G0jnrnE7ZEoQVvGO49EPEIE13Vl4ZvMkceKPCByTbLWhGxLmQ6p/zv4HRGh4NwQmVRDOWu9kZw9RU=
-Received: from 30.221.128.140(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0WgBiejV_1751282629 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 19:23:50 +0800
-Message-ID: <ea85f778-a2d4-439c-abbd-2a8ecea0e928@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 19:23:49 +0800
+	s=arc-20240116; t=1751282692; c=relaxed/simple;
+	bh=vDmXOaFg61Wb877I3fCvD/03Zl6rNBUVdNz0g55bENs=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=LjenZ+E4dwd8g7qqz7rUO6v+LUChXYyFYRYtQHYQJj98j/ggpKPNVygLQ6G9DoHesZ8sIl61opinOw40ZcGK+AvZSiz1GaTs6m/m1MWqEbhPP65rWncbrhNyf+89+qx/x5wVUYlRb27MjT+0ESziGNHSVQ52yNSegHDRjjnKHSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bW3jC1byDz5DXWj;
+	Mon, 30 Jun 2025 19:24:47 +0800 (CST)
+Received: from njy2app01.zte.com.cn ([10.40.12.136])
+	by mse-fl1.zte.com.cn with SMTP id 55UBOdmB051251;
+	Mon, 30 Jun 2025 19:24:39 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njb2app07[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Mon, 30 Jun 2025 19:24:43 +0800 (CST)
+Date: Mon, 30 Jun 2025 19:24:43 +0800 (CST)
+X-Zmail-TransId: 2aff686273fb32a-5b8d8
+X-Mailer: Zmail v1.0
+Message-ID: <20250630192443193j2wDCmmnHGLns9ki1GXcv@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] ptp: add Alibaba CIPU PTP clock driver
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>, Andrew Lunn <andrew@lunn.ch>
-Cc: richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250627072921.52754-1-guwen@linux.alibaba.com>
- <0b0d3dad-3fe2-4b3a-a018-35a3603f8c10@lunn.ch>
- <99debaac-3768-45f5-b7e0-ec89704e39eb@linux.dev>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <99debaac-3768-45f5-b7e0-ec89704e39eb@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>, <jiang.kun2@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIHY0IDAvMyBsaW51eCBuZXh0XSBEb2NzL3poX0NOOiBUcmFuc2xhdGUKIG5ldHdvcmtpbmcgZG9jcyB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 55UBOdmB051251
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 686273FF.000/4bW3jC1byDz5DXWj
 
+From: Wang Yaxin <wang.yaxin@zte.com.cn>
 
+translate networking docs to Simplified Chinese
 
-On 2025/6/27 18:59, Vadim Fedorenko wrote:
-> On 27/06/2025 08:57, Andrew Lunn wrote:
-> 
->>> +static int ptp_cipu_enable(struct ptp_clock_info *info,
->>> +               struct ptp_clock_request *request, int on)
->>> +{
->>> +    return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static int ptp_cipu_settime(struct ptp_clock_info *p,
->>> +                const struct timespec64 *ts)
->>> +{
->>> +    return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static int ptp_cipu_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
->>> +{
->>> +    return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static int ptp_cipu_adjtime(struct ptp_clock_info *ptp, s64 delta)
->>> +{
->>> +    return -EOPNOTSUPP;
->>> +}
->>
->> I've not looked at the core. Are these actually required? Or if they
->> are missing, does the core default to -EOPNOTSUPP?
->>
-> 
-> I was going to say that these are not needed because posix clocks do
-> check if callbacks are assigned and return -EOPNOTSUPP if they are not.
-> That's why ptp_clock_* functions do call these callbacks without checks.
+Wang Yaxin (3):
+  Docs/zh_CN: Translate netif-msg.rst to Simplified Chinese
+  Docs/zh_CN: Translate xfrm_proc.rst to Simplified Chinese
+  Docs/zh_CN: Translate netmem.rst to Simplified Chinese
 
-Hi Vadim, do you mean posix clock functions like this:
+ .../translations/zh_CN/networking/index.rst   |   6 +-
+ .../zh_CN/networking/netif-msg.rst            |  92 +++++++++++++
+ .../translations/zh_CN/networking/netmem.rst  |  92 +++++++++++++
+ .../zh_CN/networking/xfrm_proc.rst            | 126 ++++++++++++++++++
+ 4 files changed, 313 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/translations/zh_CN/networking/netif-msg.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/netmem.rst
+ create mode 100644 Documentation/translations/zh_CN/networking/xfrm_proc.rst
 
-e.g. posix-clock.c:
-
-static int pc_clock_settime(clockid_t id, const struct timespec64 *ts)
-{
-<...>
-	if (cd.clk->ops.clock_settime)
-		err = cd.clk->ops.clock_settime(cd.clk, ts);
-	else
-		err = -EOPNOTSUPP;
-<...>
-}
-
-In ptp_clock.c, ops.clock_settime() is assigned to ptp_clock_settime(),
-and it will call ptp->info->settime64() without checks. So I think these
-'return -EOPNOTSUPP' functions are needed. Did I miss something?
-
-Thanks!
-
+-- 
+2.25.1
