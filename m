@@ -1,63 +1,63 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372AE293B61
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BF428FFD2
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303201; cv=none; b=mJVsg4h403fCPIh40FoPIzvWk8e1tEO1OMRnaB5fkv2SKeWiQYctRguCG/smEgh2gk+nu5lefYM6arwRzPZRGsb4yDAmPDB08/hmjrcCt2JnxGDQL6vSCdRUlTgDrvmZ6ieY6lgbITByq1mn/ikbq4qa7UmEmoW4bGKicdt4kBQ=
+	t=1751303214; cv=none; b=gFkpDXoEJk0mkGdOIjtBMG+x+S+7KapkrbCJ2EqiHBSRARKBJJf+5zd7qn/7VlUz767tL1VDbIYxpPP9p58VcXggglarv4D99r2funypA1uu8q7f0DYa/9LZuIoT6PbmvBuMXhLBNPoTx84gHiA0kQFQ0zKHAElT/ACqQ/eZ1SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303201; c=relaxed/simple;
-	bh=Rc4d7uA3KTPb0dBTant2cJkdRo112Z9ZMNCYt/L16FI=;
+	s=arc-20240116; t=1751303214; c=relaxed/simple;
+	bh=izs59r9WBrv5GyJx9Zpeq7S8DdpxMD+d6DH2ORoIOBE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NpuqzUvR27Bdqv3DnOClt/OkQAPrhqlIczGxeNIwZyLe2B9U7/M50Cpb7XOAlEdEqh/PxPy8aI0AmvKzrbXRj10W23H/usD3IrNHxRn3sqqU4GvoElRdYV3FAOEvXR9jXjN0x2mGs+j06QA+7iVS+hWvTq0+SxFv1JM8VMSJcDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Hm0Qr4MJ; arc=none smtp.client-ip=209.85.215.175
+	 In-Reply-To:Content-Type; b=HmwS0zqu+PUz0EnzDYdWfgSCb3qGcOCs2uC4pXocem+BkCWNaOqlHeUBnVcr7uZRpoXYcN+2MtWbRNbLEVEtFGievIV7ncbaJXOsFT6nP5iFCBT7/GTU/3Cnd8I2k3uM6gMR/ysMTtdPBiO9QerizeOj0LpogXrNxJAWjr3OKqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Ma3bcT7N; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Hm0Qr4MJ"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b170c99aa49so3839101a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:06:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ma3bcT7N"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b31e0ead80eso4156972a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751303199; x=1751907999; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1751303212; x=1751908012; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4pe2m6OO+aD5Db2RKVohczYrYxmhZoW19EPa28ikR2o=;
-        b=Hm0Qr4MJpLleVennQIGqtr8daQa6NusrX0L9w86eP8NT9s+x1CGnUPogP7QV6utJbU
-         jctXTtc9kV+n2GWSkNaSA6i8iwBJAovmnE8lxA2rUqMfa5EnCYNJSoWpiDyXZNA9Sq+Q
-         v+dooAGi0whVsvOEeBeiw6zE9O+EjvjCABVCU=
+        bh=NzPjt499qxPlLKt2L3CceptuBhtAjZ1REOION1W1xmY=;
+        b=Ma3bcT7NzPgIV3yZkGf88I5U/2wVqDXbWGBW8+LEgdQX98QrZZUFCX7c8VBXo8AGQ3
+         XbnepMbRrWjcuuvI0z6K9NA6vfNh2wxVf90P/l0i0uNUX8UxLbvbWLk2GDnw8eT/U+tZ
+         tXxhOaNrdKojeWzXqZ47KvI2UB5oPBATkD/2s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751303199; x=1751907999;
+        d=1e100.net; s=20230601; t=1751303212; x=1751908012;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4pe2m6OO+aD5Db2RKVohczYrYxmhZoW19EPa28ikR2o=;
-        b=YkviNbS+lXM9d261fTTWnvwjitnsVsKLI9/ZLJB0KlmZuz/lGXABHzcTPHQbRq8ApK
-         Uz3/txvMgDNd4mNWNThZN1WMzZBjbEATW3JUUnV3IzVh8XtEkZiTPSPHFP+enNhYENyn
-         iwHpE4w8juNWXTbyaKH6w5Dp2fYgJ3QL4tTRo++iuAkMoZNkBeFP18igAzQPjuyfIdet
-         NMcdyrkhARoit7QkEIOixGWHBPQ3VYzP5GRKNFliZ6/xGf+IgAO6k8RTQ4xaEV2rmqxI
-         ozR49AYvCGmV3X5UzqG1kaaNUty1/z6WkqCKxLli0Y4zqWVcxHMS2jhNuHlRyNQaBOE/
-         7utA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQualraIGjRW4AMRp8ZVMX9MALTO7rkDIMXmTav7wuau8w05LotO8s2UBLhfcdVMctfEhARIM9aZk+eqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT32bSvU3Ju3PDv50/kiiAoAWZGMkUhrB62MF4b4ilihz/9A5x
-	Ju5zHJDIEZGRaFgipKxfIkBcm1VEgAImuua8XGNZ7cmF3CXpRAmOjtDvPllCcj4jjQ==
-X-Gm-Gg: ASbGncsjnY/XrT2r7NtG1wLDs1CTVVPmXtNhx3AJ22AH2fao4JOcVyNDYULx8iXeyix
-	PiTAV1WeWGU60ORzneVvXYJgyesnq/p6qEBHhJyMHQR7yUS4U8S/JaaAzpEW1AS/IfHy3e+r1c9
-	H84FLQjoog+wdab2ghUoPO9cG9ZZOVrNCJwDc1wzzw0xaCAgRqItQcUsEBrj8ocZqE2rFs+vVE7
-	fiz2so4b4xvg23Ig2Wg8FsuOfei1mjRpvMqGqW4CHe98RWCgnAM+qh/uGpVdpI8NnoLG0oDBSeX
-	BLpZ5DwuZDPZpi0f15TfQhFLLYmcQCLOjBOQTzWOejvQWem6IvT3loj8bCzD6o8pmxppY6sm8T3
-	/OljDCP7uKPj10Vz7vw35EH37EQ==
-X-Google-Smtp-Source: AGHT+IEKg9TUOzSxppsmjj2yfzPJiqt0cGVRpjZz8q0wTCde0PRYfqv5J+NKU001pB8mLSvZjg6Bkw==
-X-Received: by 2002:a17:90b:2f8f:b0:311:a54d:8492 with SMTP id 98e67ed59e1d1-318c910de41mr20420929a91.6.1751303199555;
-        Mon, 30 Jun 2025 10:06:39 -0700 (PDT)
+        bh=NzPjt499qxPlLKt2L3CceptuBhtAjZ1REOION1W1xmY=;
+        b=eXlv7ka7+cIFQb5fipFfZ0XAkDypU5tSdyhFRTHKdB7nXJN/pMq7JM3H5QCIo0boo7
+         9tQb4vZ0J5zvu9ICXdwlY92ppzLQ8+3TCjUtWnTasiOeIvopboPxLLrjeVsikkpcRmDm
+         1FsBeHugfx4Oq1OXeb0SsczzkFziot0KT7P6aYuRM0BE9gk0YpsNAejpMpxXgQAtIY/0
+         sEYOhiSRxqaiP26K0aJPCVEGmn0ettOyxd/xndcpnFq5xLosRsLlrGvyJ02lZ2G6u6wi
+         Qtcq++zP/ZiNyALAPnfMlSEauHJ8MObKx8m3o17DRqYrgmtHhRi1ujFlLhNPsEPYjOO+
+         +szA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoNcewArtm/t9A2MJGWev3cI6NH9mLt+175leZlkpAuFSN7Q0yr3UxrSawmRGkYLWylK5Rwhlcr/lmxM0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiqFnjgnpBeMzM2XY6B2OH9CftCyHlN8M8MmSDBTzVsuSutekO
+	91PfpICnCeikQBe2STIrq97tjq1sJgGNRVJtn1O4pI09c7lhCSZ0nX1AYyUXZQzjfQ==
+X-Gm-Gg: ASbGnct6JUnOiwTe7PNFOCRyKzu8P6rnm4rrktjg5gqJhraPMV1C+3Tb7TWZ3pN1vi5
+	yAnLXFyFNhqG58SDZBRuMrPAbmXQbAqtxpittPNnNi4plp0ET5LnTbj3SujZ2MwEf3blpuDtEqr
+	snNUELiM9eROymj70I8J/ANd98sDy8NDEOkARK3/iGP/a7LM3aq0wy19ae7OT+ApJe4yV5ORn0G
+	/vMD7N7ujppy5mCVzrww6Lo8Scg+Qc2HwvwPAol5ngb912LFDeiSWT5QvcT7MRyVV9nxgOL+STa
+	vtzSO7byHetPpYXNm2rzPRwSbR1BXh4cQ8a5FIGGArbqgWfbQ3gelu2IcAku86BXHPlgELmtjeA
+	+Zt/Ed35AUKHULuZPhH/58KlGIw==
+X-Google-Smtp-Source: AGHT+IGa2iHXShPl4rP5sIP+kkEeguHbxJXpjTqQTzE38tO+uSGs6mcnvquRFlZAsEy9RRcd7GIa+Q==
+X-Received: by 2002:a05:6a20:12d3:b0:215:df3d:d56 with SMTP id adf61e73a8af0-220a169c8bcmr19470047637.21.1751303211997;
+        Mon, 30 Jun 2025 10:06:51 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5426bf0sm14325650a91.23.2025.06.30.10.06.37
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e300994asm8534393a12.3.2025.06.30.10.06.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 10:06:38 -0700 (PDT)
-Message-ID: <10c14d8b-f3e8-47a9-85fa-8780c412b900@broadcom.com>
-Date: Mon, 30 Jun 2025 10:06:37 -0700
+        Mon, 30 Jun 2025 10:06:51 -0700 (PDT)
+Message-ID: <f4d6d8bb-6100-4aff-9e18-15f464d6b569@broadcom.com>
+Date: Mon, 30 Jun 2025 10:06:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,17 +65,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v4 2/4] dt-bindings: ethernet-phy: add MII-Lite phy
- interface type
+Subject: Re: [PATCH net v4 3/4] net: phy: bcm5481x: MII-Lite activation
 To: =?UTF-8?Q?Kamil_Hor=C3=A1k_-_2N?= <kamilh@axis.com>,
  bcm-kernel-feedback-list@broadcom.com, andrew@lunn.ch, hkallweit1@gmail.com,
  linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com,
  kuba@kernel.org, pabeni@redhat.com, krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, f.fainelli@gmail.com, robh@kernel.org,
- andrew+netdev@lunn.ch, Maxime Chevallier <maxime.chevallier@bootlin.com>
+ andrew+netdev@lunn.ch
 References: <20250630135837.1173063-1-kamilh@axis.com>
- <20250630135837.1173063-3-kamilh@axis.com>
+ <20250630135837.1173063-4-kamilh@axis.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -110,23 +109,25 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250630135837.1173063-3-kamilh@axis.com>
+In-Reply-To: <20250630135837.1173063-4-kamilh@axis.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 On 6/30/25 06:58, Kamil Horák - 2N wrote:
-> Some Broadcom PHYs are capable to operate in simplified MII mode,
-> without TXER, RXER, CRS and COL signals as defined for the MII.
-> The MII-Lite mode can be used on most Ethernet controllers with full
-> MII interface by just leaving the input signals (RXER, CRS, COL)
-> inactive. The absence of COL signal makes half-duplex link modes
-> impossible but does not interfere with BroadR-Reach link modes on
-> Broadcom PHYs, because they are all full-duplex only.
+> Broadcom PHYs featuring the BroadR-Reach two-wire link mode are usually
+> capable to operate in simplified MII mode, without TXER, RXER, CRS and
+> COL signals as defined for the MII. The absence of COL signal makes
+> half-duplex link modes impossible, however, the BroadR-Reach modes are
+> all full-duplex only.
+> Depending on the IC encapsulation, there exist MII-Lite-only PHYs such
+> as bcm54811 in MLP. The PHY itself is hardware-strapped to select among
+> multiple RGMII and MII-Lite modes, but the MII-Lite mode must be also
+> activated by software.
 > 
-> Add new interface type "mii-lite" to phy-connection-type enum.
+> Add MII-Lite activation for bcm5481x PHYs.
 > 
+> Fixes: 03ab6c244bb0 ("net: phy: bcm-phy-lib: Implement BroadR-Reach link modes")
 > Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
