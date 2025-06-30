@@ -1,311 +1,191 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B78E25EF89;
-	Mon, 30 Jun 2025 11:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC0D20E032
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283402; cv=none; b=jSLXpZqKtmi+CAdVtztAGMpOS2IWiNaiLI1L1jciYMjWXhqfNH0lFSQRXX4Opmr1+/tCiKhCDUWvAvNpu2uJq4NfyEviPresDTpB3FaY9hiUA55bTeWx/FBkN2MPX/kxf9z2pX7SFp+QgD0g9zNy/kbKtPPpoc81S6AN1q+tFQk=
+	t=1751283441; cv=none; b=KJZfUO/kSJuyZSMCGubZUeGTHH61hntYHtOXCP4lsZlgJq3XgZikeO+Fmt3VP2d8tojT/iB6eDb8q1zAwIFueBQZnh55bv9iaJskecDy21tvyyr69QhJsxvQIa6xubH2UehfgFiENDr4QICOAAjJTCbzVgPNo0yudH0ISgdomMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283402; c=relaxed/simple;
-	bh=KGsAVlR6AlgnaseWmvAzZf7z3728oii+uockZUpwZiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J2zT9eKv2IP2lyjhR1XjQUBYKH2TBzBoh9bBKwYxiSIjhQcIUqqvWMVr6amsHahzR49J7GNgLmhESidrQLYPCPITRsUxSuP6VVBZkG6vtbSqzYxK2pAzFsk1BlzgDJEW9DrCzb60iyz5MqoUQQTNXo/hT7xss56WRgeMbQDhY9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OzkwFL8w; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751283441; c=relaxed/simple;
+	bh=k6RFILVugMSJXcK86odZo3f8SWM0jcB3GZUsc7r7a/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=emgAMzfJiUZBIho6T/FqV77kRNCp2NpAujRP6b/mRuq/no6FYvw7vyAD9m6p/DWzhFEpbaAJZipIP0pnHZZ3KXzfG85mGsxu6PsHn+M3VP4h8Y7ZBXYm5mlhgHBk4rRpVwLahUe017CSyyPZEwUXUzGPBmfn/QXl6o+p0QbJuq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qwgA3s8E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Whl5v57d; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qwgA3s8E; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Whl5v57d; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzkwFL8w"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b31befde0a0so1478093a12.0;
-        Mon, 30 Jun 2025 04:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751283399; x=1751888199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
-        b=OzkwFL8wNFXYXl7FxT9s4Ace6370i4N8iDBf0nHcnACaxf1mI0dx12XhVoguuttA82
-         W0+tBNE16vhSjAD2EF9LZMxVO/eUG47vTJyPlbnIb4RRfH+9rAIU2N0e7pWyGxEql5q9
-         uTKIZEVh+vBIl4WSuZHmP7cYiA9tSmwVRMKmyjEan19WavNHgzQnyFBZazjacaOYFiPW
-         dRWqfmgFHSA276Z+GDueeVo5FRuzAgZlo8X+TgP4Ta1gJIJHzPfW0yBAx02iQdWdoa/u
-         yd4VpxDormiwpPiVBy9JCUeTTH+YnVFVIbQsFXoysRHFDs63VuibwDJqhDDj/rQW9wOz
-         ghBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751283399; x=1751888199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gBqfzpg1C2pMp/LbszmIa2cVhvekm5ujBojGU8otmG8=;
-        b=fbvaohZFrsVaer4Prr1+e8Qb8z8nQ04uPmxEiLobVCFDsiKZOoo7k2/+LbNqgCKprr
-         DDrwweJyRz6g+Vj4fEhmnplQaYY5bBBEGuXfih0P1hf+Vlm0lp07nkNEi9bQGrqAatfs
-         ToPhdcoQVdEX0xBq/b+MQlIBCKrwiYbtNw+yVKGECRpnksvKDPqF8U2KBfGz00dfVOan
-         mPM4NiTVrtQECW8IABpuO0pysmOtkEMQJPT/bSbcZ2HJBsUXcj9+dQPki3cJN9LYyxds
-         6vrbT9o9nNWl3CSy8N55E65zWH7GalWePqZ2gCcKhcxXPVta7EX5DC0vCm3geguZ9H/9
-         9ckg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk/K12HT71L56yjILQquwxS28+p8cfaE8fJ/3plu5gCPCJDzE+tG0No8Wldjpqy7bzt7rnHuJZB8oNgI5xH0/+5OrWSw==@vger.kernel.org, AJvYcCWyFlQG7HjZSp1t/15EfAmsf07XIYsa5dEwfpPDtIDLofphZ+/1xR91u3OGFC7eH+kvS/oNBF6EfLTZT00w@vger.kernel.org, AJvYcCXQ/q/B6QyHqL4n8v65KwBHOFpIwwgZc+BHCkXL9Sv4jJUq0XGYwIW/z/hUlPqHzCzcgIeXIEnvSIjUvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyueYV6kQGmndln47tUztX+D6041UsTQsL5n2hwkDSPEkucFTKA
-	a9eUgXgECS5h4lnCh4YQ84VkOHWnPgunw5zAR8hHn5+GbgztohXx1NhZfeqFwoTUvscxaZ1NX/n
-	8cK6DOKu9xHQ37XYyVX/0xbPQsZRC/PU=
-X-Gm-Gg: ASbGnctC5mjIK73n+L4xRWYdFjTOtUkIV6ZV5hkO056EcRws0ke9N4jcksyLgoCbI/p
-	OF40slIOScFZx2x/AYalL/3RbtgTYNANfH+L4RnFN9sFxSmp8+oOcCLBjRXGVWFRS+3x3wlLm9i
-	t02OLOjY68TXxWBdx/VDyHzZcIxoNqg3aWURnqcQh1jVKnD8ADHU4XbaS5Yx4pDkKbX5oSFGxtW
-	/BHVw==
-X-Google-Smtp-Source: AGHT+IHT1QanRw0SG2T4GyW6c2j8HJpX9VMAOEb92ivAi9s1+4lDE8SiqMYwhejw16+krR4CNzHVDv9J7eln53v0wLo=
-X-Received: by 2002:a17:90b:2c83:b0:315:cc22:68d9 with SMTP id
- 98e67ed59e1d1-318c927f2e4mr17945627a91.31.1751283399365; Mon, 30 Jun 2025
- 04:36:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qwgA3s8E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Whl5v57d";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qwgA3s8E";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Whl5v57d"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 27EC51F390;
+	Mon, 30 Jun 2025 11:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751283438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fQP5n5jurUvp47X/wr/DaABvZAO1KzBq4Ptarr0vgys=;
+	b=qwgA3s8EEtOQHKBRyslwT2Z1B5j3qL8w2ZN5INLQ/BJjFPkicUv6zG1Sl0kDtdp9jE60v4
+	LR5kd3vwlHY3aogISL1lvavtBEsiYWnw1mKYfU3hBbDjntnFxWOEuJzqhNOEg9rb79I38z
+	rHgDjLV7QBrv8rRAnmcETTQTpu2hQto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751283438;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fQP5n5jurUvp47X/wr/DaABvZAO1KzBq4Ptarr0vgys=;
+	b=Whl5v57dSdUda0AqnmwFNGRD0TgaZ03w1wf6xjnb8WX3anOcu4GJPoR2ZggWGj8gIEPzjp
+	tu7RB4A8vEAdymDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751283438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fQP5n5jurUvp47X/wr/DaABvZAO1KzBq4Ptarr0vgys=;
+	b=qwgA3s8EEtOQHKBRyslwT2Z1B5j3qL8w2ZN5INLQ/BJjFPkicUv6zG1Sl0kDtdp9jE60v4
+	LR5kd3vwlHY3aogISL1lvavtBEsiYWnw1mKYfU3hBbDjntnFxWOEuJzqhNOEg9rb79I38z
+	rHgDjLV7QBrv8rRAnmcETTQTpu2hQto=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751283438;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fQP5n5jurUvp47X/wr/DaABvZAO1KzBq4Ptarr0vgys=;
+	b=Whl5v57dSdUda0AqnmwFNGRD0TgaZ03w1wf6xjnb8WX3anOcu4GJPoR2ZggWGj8gIEPzjp
+	tu7RB4A8vEAdymDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D76FB13983;
+	Mon, 30 Jun 2025 11:37:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YmcxM+12Ymg/OgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 30 Jun 2025 11:37:17 +0000
+Message-ID: <9f420ae9-beb5-43b0-8447-6f00d7f72535@suse.de>
+Date: Mon, 30 Jun 2025 13:37:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620004209.28250-1-vishnuocv@gmail.com> <c7eb2d82-a487-1baa-dd89-4276551974ec@linux.intel.com>
- <CABxCQKvt+vreQN1+BWr-XBu+pF81n5fh9Fa59UBsV_hLgpvh3A@mail.gmail.com>
- <4e846cf1-e7c7-3bb9-d8b3-d266b9dfbc4e@linux.intel.com> <CABxCQKt7SjMhX33WGOTk8hdZf1Hvkp8YYFWJK5v1xcbQQm14nQ@mail.gmail.com>
- <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
-In-Reply-To: <7ed97f5f-edb2-7f15-1d53-42b7b16a5ae6@linux.intel.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Mon, 30 Jun 2025 20:36:01 +0900
-X-Gm-Features: Ac12FXwTJ95mw7IU-AIogK8VMM4mq0SPmRExNfsuMUoY2Xn_PjPeYHZ7J1JgkH8
-Message-ID: <CABxCQKvsv3K_gviYMNS2gUQMdd+Q1w_hzJ5irTk5m9pphdSm9g@mail.gmail.com>
-Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint Doubletap handling
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: pali@kernel.org, dmitry.torokhov@gmail.com, hmh@hmh.eng.br, 
-	hansg@kernel.org, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
-	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] drm/tests: Fix endian warning
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+ maarten.lankhorst@linux.intel.com
+Cc: mripard@kernel.org, airlied@gmail.com, simona@ffwll.ch, lumag@kernel.org,
+ cristian.ciocaltea@collabora.com, gcarlos@disroot.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250630090054.353246-1-jose.exposito89@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250630090054.353246-1-jose.exposito89@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,linux.intel.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,ffwll.ch,collabora.com,disroot.org,lists.freedesktop.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Hi Ilpo,
 
-Sorry for the late reply.
 
-On Fri, Jun 27, 2025 at 4:28=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
+Am 30.06.25 um 11:00 schrieb José Expósito:
+> When compiling with sparse enabled, this warning is thrown:
 >
-> On Fri, 27 Jun 2025, Vishnu Sankar wrote:
+>    warning: incorrect type in argument 2 (different base types)
+>       expected restricted __le32 const [usertype] *buf
+>       got unsigned int [usertype] *[assigned] buf
 >
-> > Hi Ilpo,
-> >
-> > Thanks a lot for the review.
-> >
-> > On Fri, Jun 27, 2025 at 12:09=E2=80=AFAM Ilpo J=C3=A4rvinen <ilpo.jarvi=
-nen@linux.intel.com> wrote:
-> >       On Thu, 26 Jun 2025, Vishnu Sankar wrote:
-> >
-> >       > Hi Ilpo,
-> >       >
-> >       > Thanks a lot for the comments and guidance.
-> >       > Please find my comments inline below.
-> >       >
-> >       > On Wed, Jun 25, 2025 at 9:07 PM Ilpo J=C3=A4rvinen <
-> >       ilpo.jarvinen@linux.intel.com >
-> >       > wrote:
-> >       >       On Fri, 20 Jun 2025, Vishnu Sankar wrote:
-> >       >
-> >       >       I don't like the shortlog prefixes (in the subject), plea=
-se don't
-> >       make
-> >       >       confusing prefixes up like that.
-> >       >
-> >       > Got it.
-> >       > I will correct this in V2 (as a patch series).
-> >       >
-> >       >       > Newer ThinkPads have a doubletap feature that needs to =
-be
-> >       turned
-> >       >       > ON/OFF via the trackpoint registers.
-> >       >
-> >       >       Don't leave lines short mid-paragraph. Either reflow the
-> >       paragraph or add
-> >       >       an empty line in between paragraphs.
-> >       >
-> >       > Acked.
-> >       > Will correct this in V2.
-> >       >
-> >       >       > Systems released from 2023 have doubletap disabled by d=
-efault
-> >       and
-> >       >       > need the feature enabling to be useful.
-> >       >       >
-> >       >       > This patch introduces support for exposing and controll=
-ing the
-> >       >       > trackpoint doubletap feature via a sysfs attribute.
-> >       >       > /sys/devices/platform/thinkpad_acpi/tp_doubletap
-> >       >       > This can be toggled by an "enable" or a "disable".
-> >       >
-> >       >       This too has too short lines.
-> >       >
-> >       > Sorry!
-> >       > Will do the needful in v2.
-> >       >
-> >       >       >
-> >       >       > With this implemented we can remove the masking of even=
-ts, and
-> >       rely on
-> >       >
-> >       >       "With this implemented" is way too vague wording.
-> >       >
-> >       > Sorry for this!
-> >       > I will make this better.
-> >       >
-> >       >       > HW control instead, when the feature is disabled.
-> >       >       >
-> >       >       > Note - Early Thinkpads (pre 2015) used the same registe=
-r for
-> >       hysteris
-> >       >
-> >       >       hysteresis ?
-> >       >
-> >       > Sorry for not being clear.
-> >       > It's the trackpoint drag hysteris functionality. Pre-2015 Think=
-Pads
-> >       used to have a
-> >       > user-configurable drag hysterisis register (0x58).
-> >       > Drag hysterisis is not user configurable now.
-> >       >
-> >       >       > control, Check the FW IDs to make sure these are not af=
-fected.
-> >       >
-> >       >       This Note feels very much disconnected from the rest. Sho=
-uld be
-> >       properly
-> >       >       described and perhaps in own patch (I don't know)?
-> >       >
-> >       > my bad, it's not FW ID, but PnP ID.
-> >       > The older ThinkPad's trackpoint controllers use the same regist=
-er
-> >       (0x58) to control
-> >       > the drag hysteresis, which is obsolete now.
-> >       > Now (on newer systems from 2023) the same register (0x58) is re=
-mapped
-> >       as
-> >       > doubletap register.
-> >       > Just to exclude those older systems (with drag hysterisis contr=
-ol), we
-> >       check the PnP
-> >       > ID's.
-> >       >
-> >       > I will give a better commit message in V2.
-> >       >
-> >       >       > trackpoint.h is moved to linux/input/.
-> >       >
-> >       >       This patch doesn't look minimal and seems to be combining=
- many
-> >       changes
-> >       >       into one. Please make a patch series out of changes that =
-can be
-> >       separated
-> >       >       instead of putting all together.
-> >       >
-> >       > Understood.
-> >       > Will make a patch series on V2
-> >       > 0001: Move trackpoint.h to include/linux/input
-> >       > 0002: Add new doubletap set/status/capable logics to trackpoint=
-.c
-> >       > 0003: Add new trackpoint api's and trackpoint sysfs in thinkpad=
-_acpi.c
-> >
-> >       Okay, sounds better.
-> >
-> >       >       > +/* List of known incapable device PNP IDs */
-> >       >       > +static const char * const dt_incompatible_devices[] =
-=3D {
-> >       >       > +     "LEN0304",
-> >       >       > +     "LEN0306",
-> >       >       > +     "LEN0317",
-> >       >       > +     "LEN031A",
-> >       >       > +     "LEN031B",
-> >       >       > +     "LEN031C",
-> >       >       > +     "LEN031D",
-> >       >       > +};
-> >       >       > +
-> >       >       > +/*
-> >       >       > + * checks if it=E2=80=99s a doubletap capable device
-> >       >       > + * The PNP ID format eg: is "PNP: LEN030d PNP0f13".
+> Add a cast to fix it.
 >
-> There's case difference between this comment and the list.
-Thank you for pointing this out.
-Will correct this.
->
-> >       >       > + */
-> >       >       > +bool is_trackpoint_dt_capable(const char *pnp_id)
-> >       >       > +{
-> >       >       > +     char id[16];
-> >       >       > +
-> >       >       > +     /* Make sure string starts with "PNP: " */
-> >       >       > +     if (strncmp(pnp_id, "PNP: LEN03", 10) !=3D 0)
-> >       >
-> >       >       We seem to have strstarts().
-> >       >
-> >       > Thanks a lot for the suggestion.
-> >       > Will make use of this.
-> >       >
-> >       >       > +             return false;
-> >       >       > +
-> >       >       > +     /* Extract the first word after "PNP: " */
-> >       >       > +     if (sscanf(pnp_id + 5, "%15s", id) !=3D 1)
-> >       >       > +             return false;
-> >       >       > +
-> >       >       > +     /* Check if it's blacklisted */
-> >       >       > +     for (size_t i =3D 0; i <
-> >       ARRAY_SIZE(dt_incompatible_devices); ++i)
-> >       >       {
-> >       >       > +             if (strcmp(pnp_id, dt_incompatible_device=
-s[i]) =3D=3D
-> >       0)
-> >       >
-> >       >       Isn't this buggy wrt. the PNP: prefix??
-> >       >
-> >       >       Perhaps it would have been better to just do pnp_id +=3D =
-5 before
-> >       sscanf()
-> >       >       as you don't care about the prefix after that.
-> >       >
-> >       >
-> >       > Understood.
-> >       > Shall we have something like the following:
-> >       >         if (!strstarts(pnp_id, "PNP: LEN03"))
-> >       >               return false;
-> >       >
-> >       >         id =3D pnp_id + 5;
-> >       >
-> >       >         for (size_t i =3D 0; i < ARRAY_SIZE(dt_incompatible_dev=
-ices);
-> >       ++i) {
-> >       >                        if (strncmp(id, dt_incompatible_devices[=
-i],
-> >       > strlen(dt_incompatible_devices[i])) =3D=3D 0)
-> >
-> >       Why did you change to strncmp()?
-> >
-> > I switched to strncmp() to allow matching just the known prefix part in
-> > dt_incompatible_devices, rather than requiring an exact full string mat=
-ch.
-> > Will keep the original "if (strcmp(id, dt_incompatible_devices[i]) =3D=
-=3D 0) " logic as
-> > it serves the purpose.
->
-> I didn't mean to say the change is necessarily incorrect, I was just
-> asking for reasonale as it was different from the original.
-Understood.
->
-> If you think you it needs to be broader to the match to a prefix only,
-> I've no problem with that.
-Understood. Will keep the original as it is, without changes.
->
-> --
->  i.
+> Fixes: 453114319699 ("drm/format-helper: Add KUnit tests for drm_fb_xrgb8888_to_xrgb2101010()")
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
+> ---
+>   drivers/gpu/drm/tests/drm_format_helper_test.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/tests/drm_format_helper_test.c b/drivers/gpu/drm/tests/drm_format_helper_test.c
+> index 7299fa8971ce..86829e1cb7f0 100644
+> --- a/drivers/gpu/drm/tests/drm_format_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_format_helper_test.c
+> @@ -1033,7 +1033,7 @@ static void drm_test_fb_xrgb8888_to_xrgb2101010(struct kunit *test)
+>   		NULL : &result->dst_pitch;
+>   
+>   	drm_fb_xrgb8888_to_xrgb2101010(&dst, dst_pitch, &src, &fb, &params->clip, &fmtcnv_state);
+> -	buf = le32buf_to_cpu(test, buf, dst_size / sizeof(u32));
+> +	buf = le32buf_to_cpu(test, (__force const __le32 *)buf, dst_size / sizeof(u32));
+>   	KUNIT_EXPECT_MEMEQ(test, buf, result->expected, dst_size);
+>   
+>   	buf = dst.vaddr; /* restore original value of buf */
 
---=20
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Regards,
-
-      Vishnu Sankar
-     +817015150407 (Japan)
