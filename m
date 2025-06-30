@@ -1,31 +1,65 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7981FDD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A851F237A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268125; cv=none; b=CaXR9ABMt8t1T/YkCCZNlvPbhWr9WJik0U5gEtnDrJ0+JbcG9StgPrLFG5/bxdEokiZWYs+5TU+m3dU6gAHnODd8dYKSHbI44M8hY8FxeyILHUB+SChmbzJnk/JixbaFEMYrHovzC9fOuWNgsymxEFglvKcbjt3Pk1wLtG8/w80=
+	t=1751268196; cv=none; b=ats02CZbIgAM6wBiT8529rSzn9aJCdjbq9LjBNVbZdcn+Xo9p9rw+xn//8XaP4B9VLMTNUYJ9PR7C2jXPpYWghLGhXBAp1vtDZOuGlCTqAejIRkD6CdREaCLwy9ttsf9dfxNbK5YJ+GgPXSUIoF6TY6x1KJyhnSoOv7xcCX3X9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268125; c=relaxed/simple;
-	bh=QQkBTqCn3fiGgJfyo0xFKA5m9KMjAbCLMpN5tDOYp7U=;
+	s=arc-20240116; t=1751268196; c=relaxed/simple;
+	bh=L07bGvTxELmymjUxM2xQnfORKx4Enre4j/1hjyANcNQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nfyMTtKdZhxKncM9YWrMMVlHdRNwleVymKm1oct2p7qi1zQ31PmXlCIkH4kJtCM7uhPc/9giYrjUwpx60w27CLHhMl0ZdU8dXOJdfbzgi6V3WFL1SRi6WQnXLh2RdDlpIOFfzFcsjn5hXPMc+WBNUGGdtEN/ZLDvOWsoa94p7cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wdIM7kB3; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=buqh65Tkr/RgvZtX5lePlJs1Q9c9Kk9OPr6mbyIlpdZRbe9QZzxbRUhlUf2C1Q556BKJ8Zddr2YMvsNoan+cFpvSnQ+VCZGLxIIcnIvs3Tn2lBneWLbiNtUDYxCQxvrstasD5JPHwmijDrl1wAyfLOw1AN7lgKiDBi58Ja5QGoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Dw8jPdvu; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wdIM7kB3"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751268120; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=19m9ySZV/UYUd6rfS9gQ02pLAwrWjqGoPGuMgpPsrv4=;
-	b=wdIM7kB3qSpgKA5pd4ah1m4QAXGTXDDfvG/Q1+10nMD0E5ocrnXBw4wrCQUVT6yUwMNliocp8kuYQbsLyZ04oVuJhAzxvYRFmmphNU+gidRVTJd2FunmkvZRo34MxBk5ddzwM4vIgsqSv/c1zvhK8i3LuS4Oon18vYIxAF+yFkI=
-Received: from 30.74.144.137(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wg5v-l4_1751268118 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 15:21:58 +0800
-Message-ID: <b3e15124-f29a-4c73-b26e-184553b9137e@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 15:21:58 +0800
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Dw8jPdvu"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso637471f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1751268192; x=1751872992; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LCsXT39Oa/3YIM7cSMzutIRPzrnIV3/KBT6ARtsZFuc=;
+        b=Dw8jPdvuYp2J8i2WZVy0PIy0koh/Xa1rp79M6Y9sENGIAC/RqRPy8iLlBJ+vdMKAL7
+         TlH4EyBJ/JcLI0Y1dAVInl3MjCvjO/GqATXn34aWHcSUzIDlACC843OvN/uz5tN0Z4tD
+         dIF10lQryWwN8gtNXcD85dOKOLEg9amtP5m0tuOYbURLr0vmSSOm6KtxFHkPxCnCZ9xe
+         RydhHBwWBcZVp/cSz5/ut3ZOxhxE3USbHYGeTfOaOATDFxsmODN+gxM88nBwWXD9zYU6
+         yoFUOj8Hv5v5WMc7Lg0yryFlOR2iQloI5qOOtFhO5h5+TzR62wV3V7EDBLrSUd/06kbk
+         epcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751268192; x=1751872992;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LCsXT39Oa/3YIM7cSMzutIRPzrnIV3/KBT6ARtsZFuc=;
+        b=JY5aifytOM5CBkbbnqMoR1WBYQCG4vpuNz0OJ6BWe3iVq0Vak80JsEFwZr6BhXeoiy
+         Ms/4PGXOlYZH/PkRQqUjBzIcU2SovtGGkA88bpGjYdGzY3HmlQn2N5E9iTVw0IheVbeD
+         p15Y/06oRsrlDlqgDMo3ehRI3tRvNlRG5+DzO91AkI9BaudvtYYiv5jOOaruEfP2zn9n
+         VdlPu9ZhRq5NZniRyeZVR2/+Xjf1rVCjJaIInAFkdcXqb14Di5d+vcTFJ6gio0Rn3meq
+         dthPBcJFDz+3GiLZN3ohXzfs0aBEgX153shW5rVMiY5Kztn7p6m4+xX7gUpY3pT/IlF1
+         cGzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVa6hFPLxS3DFFHM7Qdke2olveuioU3aP8vXp3lIwfikDYJE6Q0eSQmktm13lhaHTYUWmcu+Xs1bXSvkAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys8wntlUKiVMm2Viufy+NAVh2vVFm3v2m0g/Fg6adVjECaCDNU
+	0yu0tk6Hpl2q3h5ZJkQ0Ns1/RNYazof4E7wb1JfOkDUli6bBUeaoTnho9Cj3nJ/8Pcg=
+X-Gm-Gg: ASbGncv8ivSfdgjs/u/hcFA8MYG8ypyLhVqZ358baotpcpb6HVos+mPf5snIUm7EAWN
+	l4rExVQnH0Ry339H/uzcAhNWROWojRi8LbYq0lmRQ4V1tAObCWA/xsATmxVzA9pfWkGbajRRa6u
+	/uXycGBARo0iZGauVyjRLVRc2JWIQYFRZiCYNG+3dtmBneJVAIfvzW/1+S4fkmV7XUl/RCZZDW8
+	EowwJhb+jEsI7wB0TAKr7CniA7Sp4bu76bPtcwoOIJ37DfJdDjS9+NEBn52jNFz8njHlXRxCybz
+	c5G255vu3PehdjvvYizU2RfN/T+hyucsY96RJMELL5w+0UwNml98XEkps+S6QxrI+CeXQmZDFR/
+	nPLw=
+X-Google-Smtp-Source: AGHT+IG4eyyw2abepmK2ynnFXOiM0Oc0Y7o+zdGUgCtbUL2WGGA0BFKUPvEwrIEszUgqgCR7T2o42Q==
+X-Received: by 2002:a5d:5cc9:0:b0:3a5:2ee8:ee1d with SMTP id ffacd0b85a97d-3aaf6189135mr1668010f8f.16.1751268192504;
+        Mon, 30 Jun 2025 00:23:12 -0700 (PDT)
+Received: from [10.202.112.30] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e39f7sm75291535ad.49.2025.06.30.00.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 00:23:11 -0700 (PDT)
+Message-ID: <d049aef6-4dc1-4a20-a8e3-306fd3e3b63a@suse.com>
+Date: Mon, 30 Jun 2025 15:23:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,194 +67,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] mm/shmem, swap: avoid false positive swap cache
- lookup
-To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
- Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
-References: <20250627062020.534-1-ryncsn@gmail.com>
- <20250627062020.534-8-ryncsn@gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250627062020.534-8-ryncsn@gmail.com>
+Subject: Re: [PATCH] ocfs2: Avoid NULL pointer dereference in
+ dx_dir_lookup_rec()
+To: Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Ivan Pravdin <ipravdin.official@gmail.com>, mark@fasheh.com,
+ jlbec@evilplan.org, ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
+References: <20250627023830.150291-1-ipravdin.official@gmail.com>
+ <d6c72ab8-d600-4cc2-9609-8b749b61703d@linux.alibaba.com>
+ <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
+ <a259f224-a471-45e3-84de-7071ec6595e9@linux.alibaba.com>
+From: Heming Zhao <heming.zhao@suse.com>
+Content-Language: en-US
+In-Reply-To: <a259f224-a471-45e3-84de-7071ec6595e9@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2025/6/27 14:20, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
+On 6/30/25 14:58, Joseph Qi wrote:
 > 
-> If the shmem read request's index points to the middle of a large swap
-> entry, shmem swap in does the swap cache lookup use the large swap entry's
-> starting value (the first sub swap entry of this large entry).  
-
-Right.
-
-This will
-> lead to false positive lookup result if only the first few swap entries
-> are cached, but the requested swap entry pointed by index is uncached.
 > 
-> Currently shmem will do a large entry split then retry the swapin from
-> beginning, which is a waste of CPU and fragile.  Handle this correctly.
-
-Sorry, I did not get you here. Only when the 'order' (get from 
-shmem_confirm_swap()) is not equal to folio_order(), will it trigger the 
-large swap entry split. Could you describe the issue in more detail?
-
-I also found a false positive swap-in in your patch 4, seems they are 
-related?
-
-> Also add some sanity checks to help understand the code and ensure things
-> won't go wrong.
+> On 2025/6/30 10:32, Heming Zhao wrote:
+>> On 6/30/25 09:26, Joseph Qi wrote:
+>>> Hi,
+>>>
+>>>
+>>> On 2025/6/27 10:38, Ivan Pravdin wrote:
+>>>> When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
+>>>> error message that unconditionally dereferences the 'rec' pointer.
+>>>> However, if 'rec' is NULL, this leads to a NULL pointer dereference and
+>>>> a kernel panic.
+>>>>
+>>>
+>>> This looks possible, but syzbot reports slab-out-of-bounds Read in
+>>> ocfs2_dx_dir_lookup_rec(), not NULL pointer dereference.
+>>>
+>>> So I think it is because it construct a malicious image and set a wrong
+>>> l_recs, then access this damaged l_recs.
+>>>
+>>> Thanks,
+>>> Joseph
+>>
+>> I think this proposed fix (at least the fix method) is acceptable.
 > 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> ---
->   mm/shmem.c | 60 +++++++++++++++++++++++++++++-------------------------
->   1 file changed, 32 insertions(+), 28 deletions(-)
+> But this seems different from the issue syzbot reports, right?
+> https://lore.kernel.org/all/67483b75.050a0220.253251.007c.GAE@google.com/T/
 > 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index ea9a105ded5d..9341c51c3d10 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1977,14 +1977,19 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
->   
->   static struct folio *shmem_swapin_direct(struct inode *inode,
->   		struct vm_area_struct *vma, pgoff_t index,
-> -		swp_entry_t entry, int order, gfp_t gfp)
-> +		swp_entry_t index_entry, swp_entry_t swap,
-> +		int order, gfp_t gfp)
->   {
->   	struct shmem_inode_info *info = SHMEM_I(inode);
-> -	int nr_pages = 1 << order;
->   	struct folio *new;
-> -	pgoff_t offset;
-> +	swp_entry_t entry;
->   	gfp_t swap_gfp;
->   	void *shadow;
-> +	int nr_pages;
-> +
-> +	/* Prefer aligned THP swapin */
-> +	entry.val = index_entry.val;
-> +	nr_pages = 1 << order;
->   
->   	/*
->   	 * We have arrived here because our zones are constrained, so don't
-> @@ -2011,6 +2016,7 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
->   			swap_gfp = limit_gfp_mask(vma_thp_gfp_mask(vma), gfp);
->   		}
->   	}
-> +
->   retry:
->   	new = shmem_alloc_folio(swap_gfp, order, info, index);
->   	if (!new) {
-> @@ -2056,11 +2062,10 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
->   	if (!order)
->   		return new;
->   	/* High order swapin failed, fallback to order 0 and retry */
-> -	order = 0;
-> -	nr_pages = 1;
-> +	entry.val = swap.val;
->   	swap_gfp = gfp;
-> -	offset = index - round_down(index, nr_pages);
-> -	entry = swp_entry(swp_type(entry), swp_offset(entry) + offset);
-> +	nr_pages = 1;
-> +	order = 0;
->   	goto retry;
->   }
->   
-> @@ -2288,20 +2293,21 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   	struct mm_struct *fault_mm = vma ? vma->vm_mm : NULL;
->   	struct shmem_inode_info *info = SHMEM_I(inode);
->   	int error, nr_pages, order, swap_order;
-> +	swp_entry_t swap, index_entry;
->   	struct swap_info_struct *si;
->   	struct folio *folio = NULL;
->   	bool skip_swapcache = false;
-> -	swp_entry_t swap;
-> +	pgoff_t offset;
->   
->   	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
-> -	swap = radix_to_swp_entry(*foliop);
-> +	index_entry = radix_to_swp_entry(*foliop);
->   	*foliop = NULL;
->   
-> -	if (is_poisoned_swp_entry(swap))
-> +	if (is_poisoned_swp_entry(index_entry))
->   		return -EIO;
->   
-> -	si = get_swap_device(swap);
-> -	order = shmem_confirm_swap(mapping, index, swap);
-> +	si = get_swap_device(index_entry);
-> +	order = shmem_confirm_swap(mapping, index, index_entry);
->   	if (unlikely(!si)) {
->   		if (order < 0)
->   			return -EEXIST;
-> @@ -2313,13 +2319,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   		return -EEXIST;
->   	}
->   
-> -	/* Look it up and read it in.. */
-> +	/* @index may points to the middle of a large entry, get the real swap value first */
-> +	offset = index - round_down(index, 1 << order);
-> +	swap.val = index_entry.val + offset;
->   	folio = swap_cache_get_folio(swap, NULL, 0);
->   	if (!folio) {
->   		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
->   			/* Direct mTHP swapin without swap cache or readahead */
->   			folio = shmem_swapin_direct(inode, vma, index,
-> -						    swap, order, gfp);
-> +						    index_entry, swap, order, gfp);
->   			if (IS_ERR(folio)) {
->   				error = PTR_ERR(folio);
->   				folio = NULL;
-> @@ -2341,28 +2349,25 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   			count_memcg_event_mm(fault_mm, PGMAJFAULT);
->   		}
->   	}
-> +
-> +	swap_order = folio_order(folio);
-> +	nr_pages = folio_nr_pages(folio);
-> +	/* The swap-in should cover both @swap and @index */
-> +	swap.val = round_down(swap.val, nr_pages);
-> +	VM_WARN_ON_ONCE(swap.val > index_entry.val + offset);
-> +	VM_WARN_ON_ONCE(swap.val + nr_pages <= index_entry.val + offset);
-> +
->   	/*
->   	 * We need to split an existing large entry if swapin brought in a
->   	 * smaller folio due to various of reasons.
-> -	 *
-> -	 * And worth noting there is a special case: if there is a smaller
-> -	 * cached folio that covers @swap, but not @index (it only covers
-> -	 * first few sub entries of the large entry, but @index points to
-> -	 * later parts), the swap cache lookup will still see this folio,
-> -	 * And we need to split the large entry here. Later checks will fail,
-> -	 * as it can't satisfy the swap requirement, and we will retry
-> -	 * the swapin from beginning.
->   	 */
-> -	swap_order = folio_order(folio);
-> +	index = round_down(index, nr_pages);
->   	if (order > swap_order) {
-> -		error = shmem_split_swap_entry(inode, index, swap, gfp);
-> +		error = shmem_split_swap_entry(inode, index, index_entry, gfp);
->   		if (error)
->   			goto failed_nolock;
->   	}
->   
-> -	index = round_down(index, 1 << swap_order);
-> -	swap.val = round_down(swap.val, 1 << swap_order);
-> -
->   	/* We have to do this with folio locked to prevent races */
->   	folio_lock(folio);
->   	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
-> @@ -2375,7 +2380,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
->   		goto failed;
->   	}
->   	folio_wait_writeback(folio);
-> -	nr_pages = folio_nr_pages(folio);
->   
->   	/*
->   	 * Some architectures may have to restore extra metadata to the
+> Thanks,
+> Joseph
+
+OK, I think I may have found the problem. In the URL above,
+there are two issues/reports:
+1> From: syzbot @ 2024-11-28  9:44 UTC
+2> From: syzbot @ 2025-03-09 11:40 UTC
+
+Your review comments about report <1>; Ivan's patch is about report <2>.
+
+And the dashboard shows the <2>:
+- https://syzkaller.appspot.com/bug?extid=20282c1b2184a857ac4c
+
+It seems syzbot changed the fuzz code and won't trigger issue <1>.
+
+For issue <1>, the rec was an illegal value, and made KASAN report a bug.
+
+> 
+>> the crash occurs at ocfs2_error(), where the pointer 'rec' must be incorrect.
+>> look back at the previous code lines:
+>>          for (i = le16_to_cpu(el->l_next_free_rec) - 1; i >= 0; i--) {
+>>                  rec = &el->l_recs[i];
+>>
+>>                  if (le32_to_cpu(rec->e_cpos) <= major_hash) {
+>>                          found = 1;
+>>                          break;
+>>                  }
+>>          }
+>>
+>> either 'el->l_next_free_rec' or 'el->l_recs[i]' has an incorrect value.
+>> we can do nothing about this kind of error, simply returning errno to caller is sufficient.
+>>
+>> btw, ocfs2-tools has a similar function "static errcode_t ocfs2_dx_dir_lookup_rec()"@libocfs2/dir_indexed.c, which sets ret with OCFS2_ET_CORRUPT_EXTENT_BLOCK and return.
+>>
+> 
+> 
+> 
 
