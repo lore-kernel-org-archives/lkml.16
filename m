@@ -1,195 +1,269 @@
-Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE1086334
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8C21C861B
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751260197; cv=none; b=Kpcad5ip9iOCDiTOIOJSZvU6OwVdG3lUOYgLY4pnfcLa8hbpdRWnR5c4AScdmcz5wi4GU1RXnhY+oHToCiTMuqnLVQsxr5N1XOdqJA0KNindG3m5DiKFxHOxOl+XomiWtFIO33sd8PkTh4DrsTiP/kZeAzRl43TBgpSbyijWyVo=
+	t=1751260201; cv=none; b=cgUELlFbtX7RONc9G2/lM9NwWfm5WrIh/ocOOPbdmxD7+j5hildDhZGO1Cs0s4FXdyyUmaGNc7DgH7Ezc0dwL8W3vyy8FXHR30aAZT61eXpG6GLxtYd1NMT+zlzBgaLkInAdoeP/E6bODCFHCcTGSdqUVrcUFYbCfJjjNSbZ4rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751260197; c=relaxed/simple;
-	bh=hDzhEJ8+CkPrGR3a/Qo6pfD/2fm3i6GhTfgx7wr7dhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YjDZYb0zvulVxEUur7KFJpLrJA58UfFWjPB6I9Xkjikt2tn4OdmDPSMGQdy03vivvm1UfkmctwiQt33YoZ4BGVGQCGeUM53//K8GXmvrjZHWcCtrXmk7pD7x9PNIRUowI2I9hpMtR78FmUck4dv6VqsExyujrXo73EggOi6tQPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=Q1uhhzjk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SjIX2I/G; arc=none smtp.client-ip=103.168.172.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1751260201; c=relaxed/simple;
+	bh=JWjmnMSXqklq9IN9cj/a+e53I1kMdgV5VDC4jVZ/pek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FhLkIa9gr5KilLtbqAy4i2aqaH1ldWst2oIZIPcj/acnYSeB4HUeDd1PdA9dhOQRhyKqRJBeXcEs17YDhSzj34Ch1CNDM1LJmLP/tX1Oy3qeIEQS/W+HW9apf5ZNpf6QUqxlD4Di17scaIGT4CyQbDuongBF2PAaPhhSmoCHga8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tpog0BUF; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Q1uhhzjk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SjIX2I/G"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id F10EB1380585;
-	Mon, 30 Jun 2025 01:09:53 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 30 Jun 2025 01:09:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1751260193; x=1751267393; bh=w7wKs+qsxq
-	BUzuc0366MPG4Jz3sxncJWG4moMfl3sRU=; b=Q1uhhzjkhkhulzqY0Ghk4Tba6O
-	a33nvtuMzHTcO5uguhEODHIfqTMyC/IMFx9eJSm27ZPrhHwlN1Rc6mOHCV8CIK7y
-	7gec28jyYYebL3lw/8uWllmm9XpLkMQe3IK3j3M+6FizYlrzP/+7ddIPO/caFWNw
-	+fpLmZ1Jhbwq2rg5sw02ul/KnIktVa8ariZswySbat1IgJXv+s0WlfkB0dxuXrv2
-	Je+wh/OCmBRXTyQWEJbwIOdnCc7WJ0DeT8Edsvur1l4V0CWU8k0ruqCDsb2Awm6d
-	71GvpyZWUKGtbu9zd8seaaYMitzkULtYN14s56IJfvjMQxWW+q206kbTpy4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1751260193; x=1751267393; bh=w7wKs+qsxqBUzuc0366MPG4Jz3sxncJWG4m
-	oMfl3sRU=; b=SjIX2I/GIW5JmxGDivyDOKtngdk47VtdBmfu4ZtNC+ktMMpj9W5
-	LTw8fliXTJGw8oJNXSH77yRw1nDLGCbnNgL9arT4vTT8Ra9GfoKrkqu5xKCIKqAf
-	LZatg+Zw043ZL1FTcTY88r3aej6MH2IYb6QDMabqYK2UBVEZxKz7K1rgsn5+qNcU
-	3HKn5GY8aHj+eckvF8oXGTyaEmH0EtP0QVPYgv1bb8xWd6Lr+37NQYakHqm4KaCD
-	n9rag9xIFpYuqrXo18+kZhJ/8e8eQwbAfUVN/eUpsH2D9zAhs3ZpMBAgLB5LmT1M
-	7BTtqe8W1dIzq1b5n51TPAbmX+8DSsvjmvw==
-X-ME-Sender: <xms:IBxiaIwchHOmA6FeQ7PffxwcoSSB3-g1Z_ZnzUOg5IYcDGPqmhidnw>
-    <xme:IBxiaMQL7OELz2kZexvdiO1vRd2CP8fPdlc30RROCsjgewHrrPZQWo7Lcdxg-a0Wx
-    O_JkUNQrg22rg>
-X-ME-Received: <xmr:IBxiaKVyIwxYKzJMfHpwzhGytsVuWOeLMjVnQ0x3zn_b58zyvq0Otxhl-zfDaYRYYBrZ0FWXBPy45Qt4BEO3g9jUuyljPTo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddutdekvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffj
-    uceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvvedvle
-    ejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
-    homhdpnhgspghrtghpthhtohepfeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
-    pehmrghrtggvlhhomhhorhgvihhrrgduledtheesghhmrghilhdrtghomhdprhgtphhtth
-    hopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepshhk
-    hhgrnheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuh
-    igqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhishhtshdrlhhinhhugihfohhunhgurght
-    ihhonhdrohhrghdprhgtphhtthhopeimlhhktggrmhhpsdhprghttghhvghssehlihhsth
-    hsrdhsrhdrhhhtpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghr
-    ohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopehlrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhm
-    pdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvg
-X-ME-Proxy: <xmx:IBxiaGh6Fw-RXzsEvIwmaBvaU1oxWtSorwjBkPn0QujLW7abjRPecQ>
-    <xmx:IBxiaKBSHMkgJBETZYvnXs_MkD0sUN6-xl5_AfasrSwFPPTIm_keqQ>
-    <xmx:IBxiaHKKsX_quCHlf_l55MONDvdM7abvMM50wSyL6KvfRJdDTGOsvw>
-    <xmx:IBxiaBDwr9D-KtrWmaafwhPVk8b7zkkynaTYeR9rqaeRNvhOGI545w>
-    <xmx:IRxiaCCowyhA3Rs2oRCJitMToWxsOdSp2RGm83Kxn4JsKOT-o7CgH9n5>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Jun 2025 01:09:52 -0400 (EDT)
-Date: Mon, 30 Jun 2025 07:09:50 +0200
-From: Greg KH <greg@kroah.com>
-To: Marcelo Moreira <marcelomoreira1905@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	~lkcamp/patches@lists.sr.ht,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/bridge: it6505: replace scnprintf with sysfs_emit_at
- in debugfs show
-Message-ID: <2025063006-recopy-playmaker-562d@gregkh>
-References: <20250629233509.291786-1-marcelomoreira1905@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tpog0BUF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751260200; x=1782796200;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JWjmnMSXqklq9IN9cj/a+e53I1kMdgV5VDC4jVZ/pek=;
+  b=Tpog0BUF1xMSofIU8gh49/C7IL1S3f2yEn7dvmDxSHSS+tVhy/IIdLJ0
+   uV1WPWj8Rah58rVEOMmpF9WAZmrlaF2JrhADrnFiTz6pqxS7T52Amro6E
+   C54H9qPIg0tPJUgAYWcbpSLOH4ujKetdS8/gLFJD8vf8K3LWlEimtuH3m
+   Z6qCjxZfaOkc40TZkMYuccwD8vCpH5QHPefwQ7SwzlEvNB0AwAGhoIqqa
+   NKBXcF3wjZR+fdcagL60tdqXao1GRyirgeGu0sbIy2tdgK+RBvcCHlM/O
+   R9zAyTr0CTmBHBvL7iHjvn8//Nj5Ol5yVxb8bjgcKojH5cP6pz66i97aw
+   g==;
+X-CSE-ConnectionGUID: 5aADmqVzT0CdIQHK0IffoA==
+X-CSE-MsgGUID: 77m1msSJR6i1IxBgROIa9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="57252713"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="57252713"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:10:00 -0700
+X-CSE-ConnectionGUID: xF8RxM6vRBy0C1z/ly1kgA==
+X-CSE-MsgGUID: lzGPO34hSdmxEwo1n0DoJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153659062"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:09:56 -0700
+Message-ID: <b5b84208-e43c-483e-838b-c42375d3bada@linux.intel.com>
+Date: Mon, 30 Jun 2025 13:08:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250629233509.291786-1-marcelomoreira1905@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
+To: Xu Yilun <yilun.xu@linux.intel.com>, jgg@nvidia.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, will@kernel.org, aneesh.kumar@kernel.org
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, joro@8bytes.org,
+ robin.murphy@arm.com, shuah@kernel.org, nicolinc@nvidia.com, aik@amd.com,
+ dan.j.williams@intel.com, yilun.xu@intel.com
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-3-yilun.xu@linux.intel.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250627033809.1730752-3-yilun.xu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 29, 2025 at 08:35:09PM -0300, Marcelo Moreira wrote:
-> Update the receive_timing_debugfs_show() function to utilize
-> sysfs_emit_at() for formatting output to the debugfs buffer.
-> This change adheres to the recommendation outlined
-> in Documentation/filesystems/sysfs.rst.
+On 6/27/25 11:38, Xu Yilun wrote:
+> Destroy iommufd_vdevice (vdev) on iommufd_idevice (idev) destroy so
+> that vdev can't outlive idev.
 > 
-> This modification aligns with current sysfs guidelines.
-
-But this isn't a sysfs file, it's a debugfs file, so why are you calling
-sysfs_emit_at()?
-
+> iommufd_device (idev) represents the physical device bound to iommufd,
+> while the iommufd_vdevice (vdev) represents the virtual instance of the
+> physical device in the VM. The lifecycle of the vdev should not be
+> longer than idev. This doesn't cause real problem on existing use cases
+> cause vdev doesn't impact the physical device, only provides
+> virtualization information. But to extend vdev for Confidential
+> Computing (CC), there are needs to do secure configuration for the vdev,
+> e.g. TSM Bind/Unbind. These configurations should be rolled back on idev
+> destroy, or the external driver (VFIO) functionality may be impact.
 > 
-> Signed-off-by: Marcelo Moreira <marcelomoreira1905@gmail.com>
+> Building the association between idev & vdev requires the two objects
+> pointing each other, but not referencing each other. This requires
+> proper locking. This is done by reviving some of Nicolin's patch [1].
+> 
+> There are 3 cases on idev destroy:
+> 
+>    1. vdev is already destroyed by userspace. No extra handling needed.
+>    2. vdev is still alive. Use iommufd_object_tombstone_user() to
+>       destroy vdev and tombstone the vdev ID.
+>    3. vdev is being destroyed by userspace. The vdev ID is already freed,
+>       but vdev destroy handler is not completed. Destroy the vdev
+>       immediately. To solve the racing with userspace destruction, make
+>       iommufd_vdevice_abort() reentrant.
+> 
+> [1]:https://lore.kernel.org/ 
+> all/53025c827c44d68edb6469bfd940a8e8bc6147a5.1729897278.git.nicolinc@nvidia.com/
+> 
+> Originally-by: Nicolin Chen<nicolinc@nvidia.com>
+> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
+> Co-developed-by: Aneesh Kumar K.V (Arm)<aneesh.kumar@kernel.org>
+> Signed-off-by: Aneesh Kumar K.V (Arm)<aneesh.kumar@kernel.org>
+> Signed-off-by: Xu Yilun<yilun.xu@linux.intel.com>
 > ---
->  drivers/gpu/drm/bridge/ite-it6505.c | 46 ++++++++++++++---------------
->  1 file changed, 22 insertions(+), 24 deletions(-)
+>   drivers/iommu/iommufd/device.c          | 42 +++++++++++++++++++++++
+>   drivers/iommu/iommufd/iommufd_private.h | 11 +++++++
+>   drivers/iommu/iommufd/main.c            |  1 +
+>   drivers/iommu/iommufd/viommu.c          | 44 +++++++++++++++++++++++--
+>   4 files changed, 95 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-> index 1383d1e21afe..98bea08a14e4 100644
-> --- a/drivers/gpu/drm/bridge/ite-it6505.c
-> +++ b/drivers/gpu/drm/bridge/ite-it6505.c
-> @@ -3427,37 +3427,35 @@ static ssize_t receive_timing_debugfs_show(struct file *file, char __user *buf,
->  	struct it6505 *it6505 = file->private_data;
->  	struct drm_display_mode *vid;
->  	u8 read_buf[READ_BUFFER_SIZE];
-> -	u8 *str = read_buf, *end = read_buf + READ_BUFFER_SIZE;
-> -	ssize_t ret, count;
-> +	ssize_t ret;
-> +	ssize_t count = 0;
->  
->  	if (!it6505)
->  		return -ENODEV;
->  
->  	it6505_calc_video_info(it6505);
->  	vid = &it6505->video_info;
-> -	str += scnprintf(str, end - str, "---video timing---\n");
-> -	str += scnprintf(str, end - str, "PCLK:%d.%03dMHz\n",
-> -			 vid->clock / 1000, vid->clock % 1000);
-> -	str += scnprintf(str, end - str, "HTotal:%d\n", vid->htotal);
-> -	str += scnprintf(str, end - str, "HActive:%d\n", vid->hdisplay);
-> -	str += scnprintf(str, end - str, "HFrontPorch:%d\n",
-> -			 vid->hsync_start - vid->hdisplay);
-> -	str += scnprintf(str, end - str, "HSyncWidth:%d\n",
-> -			 vid->hsync_end - vid->hsync_start);
-> -	str += scnprintf(str, end - str, "HBackPorch:%d\n",
-> -			 vid->htotal - vid->hsync_end);
-> -	str += scnprintf(str, end - str, "VTotal:%d\n", vid->vtotal);
-> -	str += scnprintf(str, end - str, "VActive:%d\n", vid->vdisplay);
-> -	str += scnprintf(str, end - str, "VFrontPorch:%d\n",
-> -			 vid->vsync_start - vid->vdisplay);
-> -	str += scnprintf(str, end - str, "VSyncWidth:%d\n",
-> -			 vid->vsync_end - vid->vsync_start);
-> -	str += scnprintf(str, end - str, "VBackPorch:%d\n",
-> -			 vid->vtotal - vid->vsync_end);
-> -
-> -	count = str - read_buf;
-> +	count += sysfs_emit_at(read_buf, count, "---video timing---\n");
-> +	count += sysfs_emit_at(read_buf, count, "PCLK:%d.%03dMHz\n",
-> +			vid->clock / 1000, vid->clock % 1000);
-> +	count += sysfs_emit_at(read_buf, count, "HTotal:%d\n", vid->htotal);
-> +	count += sysfs_emit_at(read_buf, count, "HActive:%d\n", vid->hdisplay);
-> +	count += sysfs_emit_at(read_buf, count, "HFrontPorch:%d\n",
-> +			vid->hsync_start - vid->hdisplay);
-> +	count += sysfs_emit_at(read_buf, count, "HSyncWidth:%d\n",
-> +			vid->hsync_end - vid->hsync_start);
-> +	count += sysfs_emit_at(read_buf, count, "HBackPorch:%d\n",
-> +			vid->htotal - vid->hsync_end);
-> +	count += sysfs_emit_at(read_buf, count, "VTotal:%d\n", vid->vtotal);
-> +	count += sysfs_emit_at(read_buf, count, "VActive:%d\n", vid->vdisplay);
-> +	count += sysfs_emit_at(read_buf, count, "VFrontPorch:%d\n",
-> +			vid->vsync_start - vid->vdisplay);
-> +	count += sysfs_emit_at(read_buf, count, "VSyncWidth:%d\n",
-> +			vid->vsync_end - vid->vsync_start);
-> +	count += sysfs_emit_at(read_buf, count, "VBackPorch:%d\n",
-> +			vid->vtotal - vid->vsync_end);
-> +	
->  	ret = simple_read_from_buffer(buf, len, ppos, read_buf, count);
-> -
+> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+> index 86244403b532..0937d4989185 100644
+> --- a/drivers/iommu/iommufd/device.c
+> +++ b/drivers/iommu/iommufd/device.c
+> @@ -137,11 +137,53 @@ static struct iommufd_group *iommufd_get_group(struct iommufd_ctx *ictx,
+>   	}
+>   }
+>   
+> +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
+> +{
+> +	struct iommufd_vdevice *vdev;
+> +
+> +	mutex_lock(&idev->igroup->lock);
+> +	/* vdev has been completely destroyed by userspace */
+> +	if (!idev->vdev)
+> +		goto out_unlock;
+> +
+> +	vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
+> +	if (IS_ERR(vdev)) {
+> +		/*
+> +		 * vdev is removed from xarray by userspace, but is not
+> +		 * destroyed/freed. Since iommufd_vdevice_abort() is reentrant,
+> +		 * safe to destroy vdev here.
+> +		 */
+> +		iommufd_vdevice_abort(&idev->vdev->obj);
+> +		goto out_unlock;
+> +	}
+> +
+> +	/* Should never happen */
+> +	if (WARN_ON(vdev != idev->vdev)) {
+> +		iommufd_put_object(idev->ictx, &vdev->obj);
+> +		goto out_unlock;
+> +	}
+> +
+> +	/*
+> +	 * vdev is still alive. Hold a users refcount to prevent racing with
+> +	 * userspace destruction, then use iommufd_object_tombstone_user() to
+> +	 * destroy it and leave a tombstone.
+> +	 */
+> +	refcount_inc(&vdev->obj.users);
+> +	iommufd_put_object(idev->ictx, &vdev->obj);
+> +	mutex_unlock(&idev->igroup->lock);
+> +	iommufd_object_tombstone_user(idev->ictx, &vdev->obj);
+> +	return;
+> +
+> +out_unlock:
+> +	mutex_unlock(&idev->igroup->lock);
+> +}
+> +
+>   void iommufd_device_destroy(struct iommufd_object *obj)
+>   {
+>   	struct iommufd_device *idev =
+>   		container_of(obj, struct iommufd_device, obj);
+>   
+> +	iommufd_device_remove_vdev(idev);
+>   	iommu_device_release_dma_owner(idev->dev);
+>   	iommufd_put_group(idev->igroup);
+>   	if (!iommufd_selftest_is_mock_dev(idev->dev))
+> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> index fbc9ef78d81f..f58aa4439c53 100644
+> --- a/drivers/iommu/iommufd/iommufd_private.h
+> +++ b/drivers/iommu/iommufd/iommufd_private.h
+> @@ -446,6 +446,7 @@ struct iommufd_device {
+>   	/* always the physical device */
+>   	struct device *dev;
+>   	bool enforce_cache_coherency;
+> +	struct iommufd_vdevice *vdev;
+>   };
+>   
+>   static inline struct iommufd_device *
+> @@ -621,6 +622,7 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd);
+>   void iommufd_viommu_destroy(struct iommufd_object *obj);
+>   int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd);
+>   void iommufd_vdevice_destroy(struct iommufd_object *obj);
+> +void iommufd_vdevice_abort(struct iommufd_object *obj);
+>   
+>   struct iommufd_vdevice {
+>   	struct iommufd_object obj;
+> @@ -628,8 +630,17 @@ struct iommufd_vdevice {
+>   	struct iommufd_viommu *viommu;
+>   	struct device *dev;
+>   	u64 id; /* per-vIOMMU virtual ID */
+> +	struct iommufd_device *idev;
+>   };
+>   
+> +static inline struct iommufd_vdevice *
+> +iommufd_get_vdevice(struct iommufd_ctx *ictx, u32 id)
+> +{
+> +	return container_of(iommufd_get_object(ictx, id,
+> +					       IOMMUFD_OBJ_VDEVICE),
+> +			    struct iommufd_vdevice, obj);
+> +}
+> +
+>   #ifdef CONFIG_IOMMUFD_TEST
+>   int iommufd_test(struct iommufd_ucmd *ucmd);
+>   void iommufd_selftest_destroy(struct iommufd_object *obj);
+> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> index 620923669b42..64731b4fdbdf 100644
+> --- a/drivers/iommu/iommufd/main.c
+> +++ b/drivers/iommu/iommufd/main.c
+> @@ -529,6 +529,7 @@ static const struct iommufd_object_ops iommufd_object_ops[] = {
+>   	},
+>   	[IOMMUFD_OBJ_VDEVICE] = {
+>   		.destroy = iommufd_vdevice_destroy,
+> +		.abort = iommufd_vdevice_abort,
+>   	},
+>   	[IOMMUFD_OBJ_VEVENTQ] = {
+>   		.destroy = iommufd_veventq_destroy,
+> diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+> index 01df2b985f02..632d1d7b8fd8 100644
+> --- a/drivers/iommu/iommufd/viommu.c
+> +++ b/drivers/iommu/iommufd/viommu.c
+> @@ -84,16 +84,38 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd)
+>   	return rc;
+>   }
+>   
+> -void iommufd_vdevice_destroy(struct iommufd_object *obj)
+> +void iommufd_vdevice_abort(struct iommufd_object *obj)
+>   {
+>   	struct iommufd_vdevice *vdev =
+>   		container_of(obj, struct iommufd_vdevice, obj);
+>   	struct iommufd_viommu *viommu = vdev->viommu;
+> +	struct iommufd_device *idev = vdev->idev;
+> +
+> +	lockdep_assert_held(&idev->igroup->lock);
+> +
+> +	/*
+> +	 * iommufd_vdevice_abort() could be reentrant, by
+> +	 * iommufd_device_unbind() or by iommufd_destroy(). Cleanup only once.
+> +	 */
+> +	if (!viommu)
+> +		return;
+>   
+>   	/* xa_cmpxchg is okay to fail if alloc failed xa_cmpxchg previously */
+>   	xa_cmpxchg(&viommu->vdevs, vdev->id, vdev, NULL, GFP_KERNEL);
+>   	refcount_dec(&viommu->obj.users);
+>   	put_device(vdev->dev);
+> +	vdev->viommu = NULL;
+> +	idev->vdev = NULL;
 
-Shouldn't this all be using seq_print() instead?
+I feel it makes more sense to reorder the operations like this:
 
-Again, don't use sysfs_emit*() functions for non-sysfs files, as you do
-NOT know the size of the buffer here (hint, it's not the same).
+	vdev->viommu = NULL;
+	vdev->idev = NULL;
+	idev->vdev = NULL;
+	put_device(vdev->dev);
 
-And, your patch added trailing whitespace, did you forget to run it
-through checkpatch.pl before sending it?
+put_device(vdev->dev) could potentially trigger other code paths that
+might attempt to reference vdev or its associated pointers. Therefore,
+it's safer to null all the relevant reference pointers before calling
+put_device().
 
-thanks,
+Others look good to me,
 
-greg k-h
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Thanks,
+baolu
