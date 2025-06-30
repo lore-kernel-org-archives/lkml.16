@@ -1,256 +1,74 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2133CFC1D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED6BFC1D;
+	Mon, 30 Jun 2025 09:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276578; cv=none; b=sg8YLjdxW/W9Bx6kDJlqdN8PaXhj3JBBWWs8jHDuQ5nWaupDmA1/grY+RQ1JUyBB8i9Ijpyj31J7g2Cj8h6ShLUX/iyP9eBXcnKFw1BK/sdToDCxLftoKZbwZe/30KrzmkouvMYFx8rOcoDYKD1eqabfoySSnNX6rUvvo62MqOc=
+	t=1751276764; cv=none; b=bYyqke4lgay4xPWuLur8OTo2RNE4foi3Z13oJhBEwGIXhgYk4EldEqTshy1OQc3fWRccycPda9GBXC+SKWcTy4IvQhRhX1GRTPiNUHQxw54zqLL9OgAQpbP/76I6q+txAtXSn6rFvzY1Oi4UcQqLqxjyscfb1xU2UBtu+FWqPW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276578; c=relaxed/simple;
-	bh=PcY8VNhfkb/zKeBLYzDJtoba9TiE/qyp8IWNsgekqZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=glsxrb+YN+diO+U50F6LWA+Khu3mEMNfdwVLBxFH8XUWQ1ZAC7ujvPx/wja21kHj/D611+6hdWXPs6ayw0dCs0a24aw+QlE/7J+2PiXxtL7HAdmIEe5n6woCzalpqCqVtgUK3JeA/Gm68IeRgVFSCbsnEWucMdfpXQMB/XV0jpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 652AC1D34;
-	Mon, 30 Jun 2025 02:42:39 -0700 (PDT)
-Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E6DB3F6A8;
-	Mon, 30 Jun 2025 02:42:50 -0700 (PDT)
-Message-ID: <e029c030-2b0c-412d-b203-4342250b2deb@arm.com>
-Date: Mon, 30 Jun 2025 10:42:48 +0100
+	s=arc-20240116; t=1751276764; c=relaxed/simple;
+	bh=lb2tpgsxG5/hQZJGyUa6eqq0qMhboF3PKqjWS4Z8kj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l9U1qu2RmJ/Phc60gSBTyPHIpDpNhKjw762xHAEJ1tYgBGXQd2v0D72o7gX6+Q+OmMAI4Uf87uXl0OkzVVFc7vEgYIOOWSoY1aCuWu/pXQvRbc9PUmtOkVM+baIuvDAULiy5SwqoKaYIZKmd7WrfFBwTdxfuu7oKTAMXsltyOV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=cha4O35O; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="cha4O35O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=4cCF6vjX7ITShKbqsLVLjUwSKKlXqYMqcfegwunYLhM=; b=cha4O35OOJHdKOGKk6ME/vjkG/
+	gkFx7rAvs1cXJErSj+lYsZ5N0RxvwHGZ/mCmpq4tIDNmKkf5h/g1i60rYTYovtz4i3vk0NsiZ7zIx
+	RDnDNXUHBy9nHXYdBr6/slIZgfiaBBzetZQ52L2X2IG4XWnmCUu8h8IrRSVmUsp5f3TB2MFI9THSl
+	z3pvDEUJ5ZjGD/7hyVThTZHfWlN/9rExzTCZpT011eLj8uoDPBvdvZvYeHFPhKgGcQK4gTmATdOie
+	uKmiJ88iWT6pho2e/Z3mQ4JAb29yi+PnTtsvj/6gshptThLXbODuz5WnHI5iyBvcPIodu3blcxva8
+	lITv+MWQ==;
+Received: from i53875bfd.versanet.de ([83.135.91.253] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uWB5K-0006Zc-4K; Mon, 30 Jun 2025 11:45:58 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix eMMC HS200 mode on Radxa E20C
+Date: Mon, 30 Jun 2025 11:45:44 +0200
+Message-ID: <175127673172.138768.2799587757457210088.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250621165832.2226160-1-jonas@kwiboo.se>
+References: <20250621165832.2226160-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] mm: Optimize mprotect() for MM_CP_PROT_NUMA by
- batch-skipping PTEs
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250628113435.46678-1-dev.jain@arm.com>
- <20250628113435.46678-2-dev.jain@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250628113435.46678-2-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 28/06/2025 12:34, Dev Jain wrote:
-> In case of prot_numa, there are various cases in which we can skip to the
-> next iteration. Since the skip condition is based on the folio and not
-> the PTEs, we can skip a PTE batch. Additionally refactor all of this
-> into a new function to clean up the existing code.
+
+On Sat, 21 Jun 2025 16:58:30 +0000, Jonas Karlman wrote:
+> eMMC HS200 mode (1.8V I/O) is supported by the MMC host controller on
+> RK3528 and works with the optional on-board eMMC module on Radxa E20C.
 > 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  mm/mprotect.c | 134 ++++++++++++++++++++++++++++++++------------------
->  1 file changed, 87 insertions(+), 47 deletions(-)
+> Be explicit about HS200 support in the device tree for Radxa E20C.
 > 
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index 88709c01177b..af10a7fbe6b8 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -83,6 +83,83 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->  	return pte_dirty(pte);
->  }
->  
-> +static int mprotect_folio_pte_batch(struct folio *folio, unsigned long addr,
-> +		pte_t *ptep, pte_t pte, int max_nr_ptes)
-> +{
-> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +
-> +	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+> 
 
-The !folio check wasn't in the previous version. Why is it needed now?
+Applied, thanks!
 
-> +		return 1;
-> +
-> +	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
-> +			       NULL, NULL, NULL);
-> +}
-> +
-> +static int prot_numa_skip_ptes(struct folio **foliop, struct vm_area_struct *vma,
-> +		unsigned long addr, pte_t oldpte, pte_t *pte, int target_node,
-> +		int max_nr_ptes)
-> +{
-> +	struct folio *folio = NULL;
-> +	int nr_ptes = 1;
-> +	bool toptier;
-> +	int nid;
-> +
-> +	/* Avoid TLB flush if possible */
-> +	if (pte_protnone(oldpte))
-> +		goto skip_batch;
-> +
-> +	folio = vm_normal_folio(vma, addr, oldpte);
-> +	if (!folio)
-> +		goto skip_batch;
-> +
-> +	if (folio_is_zone_device(folio) || folio_test_ksm(folio))
-> +		goto skip_batch;
-> +
-> +	/* Also skip shared copy-on-write pages */
-> +	if (is_cow_mapping(vma->vm_flags) &&
-> +	    (folio_maybe_dma_pinned(folio) || folio_maybe_mapped_shared(folio)))
-> +		goto skip_batch;
-> +
-> +	/*
-> +	 * While migration can move some dirty pages,
-> +	 * it cannot move them all from MIGRATE_ASYNC
-> +	 * context.
-> +	 */
-> +	if (folio_is_file_lru(folio) && folio_test_dirty(folio))
-> +		goto skip_batch;
-> +
-> +	/*
-> +	 * Don't mess with PTEs if page is already on the node
-> +	 * a single-threaded process is running on.
-> +	 */
-> +	nid = folio_nid(folio);
-> +	if (target_node == nid)
-> +		goto skip_batch;
-> +
-> +	toptier = node_is_toptier(nid);
-> +
-> +	/*
-> +	 * Skip scanning top tier node if normal numa
-> +	 * balancing is disabled
-> +	 */
-> +	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) && toptier)
-> +		goto skip_batch;
-> +
-> +	if (folio_use_access_time(folio)) {
-> +		folio_xchg_access_time(folio, jiffies_to_msecs(jiffies));
-> +
-> +		/* Do not skip in this case */
-> +		nr_ptes = 0;
-> +		goto out;
+[1/1] arm64: dts: rockchip: Fix eMMC HS200 mode on Radxa E20C
+      commit: 6e3071f4e03997ca0e4388ca61aa06df2802dcd1
 
-This doesn't smell right... perhaps I'm not understanding the logic. Why do you
-return nr_ptes = 0 if you end up in this conditional, but nr_ptes = 1 if you
-don't take this conditional? I think you want to return nr_ptes == 0 for both
-cases?...
-
-> +	}
-> +
-> +skip_batch:
-> +	nr_ptes = mprotect_folio_pte_batch(folio, addr, pte, oldpte, max_nr_ptes);
-> +out:
-> +	*foliop = folio;
-> +	return nr_ptes;
-> +}
-> +
->  static long change_pte_range(struct mmu_gather *tlb,
->  		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
->  		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
-> @@ -94,6 +171,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
->  	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
->  	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
-> +	int nr_ptes;
->  
->  	tlb_change_page_size(tlb, PAGE_SIZE);
->  	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> @@ -108,8 +186,11 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	flush_tlb_batched_pending(vma->vm_mm);
->  	arch_enter_lazy_mmu_mode();
->  	do {
-> +		nr_ptes = 1;
->  		oldpte = ptep_get(pte);
->  		if (pte_present(oldpte)) {
-> +			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
-> +			struct folio *folio = NULL;
->  			pte_t ptent;
->  
->  			/*
-> @@ -117,53 +198,12 @@ static long change_pte_range(struct mmu_gather *tlb,
->  			 * pages. See similar comment in change_huge_pmd.
->  			 */
->  			if (prot_numa) {
-> -				struct folio *folio;
-> -				int nid;
-> -				bool toptier;
-> -
-> -				/* Avoid TLB flush if possible */
-> -				if (pte_protnone(oldpte))
-> -					continue;
-> -
-> -				folio = vm_normal_folio(vma, addr, oldpte);
-> -				if (!folio || folio_is_zone_device(folio) ||
-> -				    folio_test_ksm(folio))
-> -					continue;
-> -
-> -				/* Also skip shared copy-on-write pages */
-> -				if (is_cow_mapping(vma->vm_flags) &&
-> -				    (folio_maybe_dma_pinned(folio) ||
-> -				     folio_maybe_mapped_shared(folio)))
-> -					continue;
-> -
-> -				/*
-> -				 * While migration can move some dirty pages,
-> -				 * it cannot move them all from MIGRATE_ASYNC
-> -				 * context.
-> -				 */
-> -				if (folio_is_file_lru(folio) &&
-> -				    folio_test_dirty(folio))
-> -					continue;
-> -
-> -				/*
-> -				 * Don't mess with PTEs if page is already on the node
-> -				 * a single-threaded process is running on.
-> -				 */
-> -				nid = folio_nid(folio);
-> -				if (target_node == nid)
-> -					continue;
-> -				toptier = node_is_toptier(nid);
-> -
-> -				/*
-> -				 * Skip scanning top tier node if normal numa
-> -				 * balancing is disabled
-> -				 */
-> -				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
-> -				    toptier)
-> +				nr_ptes = prot_numa_skip_ptes(&folio, vma,
-> +							      addr, oldpte, pte,
-> +							      target_node,
-> +							      max_nr_ptes);
-> +				if (nr_ptes)
->  					continue;
-
-...But now here nr_ptes == 0 for the "don't skip" case, so won't you process
-that PTE twice because while (pte += nr_ptes, ...) won't advance it?
-
-Suggest forcing nr_ptes = 1 after this conditional "continue"?
-
-Thanks,
-Ryan
-
-
-> -				if (folio_use_access_time(folio))
-> -					folio_xchg_access_time(folio,
-> -						jiffies_to_msecs(jiffies));
->  			}
->  
->  			oldpte = ptep_modify_prot_start(vma, addr, pte);
-> @@ -280,7 +320,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				pages++;
->  			}
->  		}
-> -	} while (pte++, addr += PAGE_SIZE, addr != end);
-> +	} while (pte += nr_ptes, addr += nr_ptes * PAGE_SIZE, addr != end);
->  	arch_leave_lazy_mmu_mode();
->  	pte_unmap_unlock(pte - 1, ptl);
->  
-
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
