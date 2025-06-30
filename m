@@ -1,149 +1,122 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6CC23CB;
-	Sun, 29 Jun 2025 23:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811B4382
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751241064; cv=none; b=EO4lmtsswHp9RLO9XudmZOU6WspIFEeBkyDAhmQgbFnw73k9Ui2J3hq5ZKV9tXhgsnq15+6/2FyT3qR/fyP5rtnqBq57mrs8KZ/1eKE9xTuEs4ixe7Sofdvpn/mCP2veOHWtCpAQObaJYjGATO0TBtr9xONiPQIVogbk6dCD7qM=
+	t=1751242338; cv=none; b=qPKGnM4blK8ekLmo7mz3/o3m9Acsx3/4X+DDMNGpxDAiOx/9rj8BJ+6QCNDghQwuUD8F9hq28yWH71MCHFsb96/TwbCdbkeetMkEWl7rYf46o1zYVecgvuN9lkb4y5iKCL1rjXkMDchZz2qjQ546riaRQhT9Iz0TimeQDXywufU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751241064; c=relaxed/simple;
-	bh=XF6pcLdmwx43z3Yq+k/jLrTG4hHJTLxzfMbYr2fql7s=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ZyBc8ME+NQAkQOI8plu38tqkRZS1ECDMgDeMGZlspbm1HnirDGyO5BVyvgYvoAbcBBT/yrh8747KHdos3Zh5a1mUh39uuJJeqqbX3A6GQ0wF0aSjDp2q23hsbg05EKWOP0oQjaeQ7RZX6r8XwnE3RpnDzPwF4lfnOw/Wq0vAT5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cXF2UPd0; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751242338; c=relaxed/simple;
+	bh=c9A/Im11BQ0KDvEwswakB0/BlL5G9CiKy4OMMq9AvDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bKROTL0sGNC2rehqzrZ4YqXianp8qrocBZhWA6xisyi+1FSnJDg9CmJhMmhODIgBynyYW7Nzo0g0M3HTNi3ninEuY+1z3XArQY+Wz8yLnb809bjhqf+Erj/GMMFRbtVaps4nWBsgcIHEuUbJtnw+71syqr03lmD/OB42Elb/gRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=haOj2J+k; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXF2UPd0"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-313a188174fso3923534a91.1;
-        Sun, 29 Jun 2025 16:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751241062; x=1751845862; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yn2mFATHof5uRRUV9gt2i4grfYSWqv8BODZ+twxdaK0=;
-        b=cXF2UPd0hv6RzlA+IwEFZXpirIY0wzSEMfdt+HIHBAWu3hpYYSJ19WJQJa1p4WuiJs
-         JUmIJ6x8HUD0/naAry8mxeeviCRM6SwfLTZDCSw0syYE+crrEDmVJBk6wUgbgz6j5xD0
-         Y4pC/8ga2X1I0L/fbyoV1ICtkLevDU5IYfhQMKmX6gtLOWUOSQBd0OmciJ1glmdM3j8o
-         Rz7QSFsgLIjaXyxzIPWPQ5qIpVS5hgrejBu88h15fVx335kI9Kiw+pKEB9viImiWOgsO
-         yqzxXmModRKCvUBDv5cVOU0vCqwq9WenUUE3ZMF3NxRILxaP0O8X0JSm32vReOIKzQIR
-         nWJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751241062; x=1751845862;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yn2mFATHof5uRRUV9gt2i4grfYSWqv8BODZ+twxdaK0=;
-        b=Y5S5m4brjw6J8EFellXtpRo9P7+rp/H+JMSMQ2TPr8NEwqOgTH/ZcmdEsxmw6M1lI7
-         O11vccSwWFkCLoLAKE7zCU6KOP1MscjmzhXhgOYMT2Rs1mh2A6Et1vkFr9kOVO2VfY6L
-         RWg/qcGpUYM3XNvjwxETVIHnShIjLQEQ/9P9cT2Y/om2pa0GrA6faq0Gh/kdaxOjvVcp
-         qv4f8BLi4HOG4FYy2vGSmMsjegnNRLmwu8qfYFtoy3JYHZ3oHJuWNayNoDylMPa02qYJ
-         LkJwTtvU2pOFZXHjMiwpKE3nuSW4i9FA/YvOG64Wfj6FPsjFticvUu79b+Po2C2fqQuE
-         vefg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGkmXyb575qHB6lrh6Ijs9gU/uh+p0+9f0OV9PzS9DUsOlk+bqp7EnTvZQ2iF/f2dQBEcBou1YurtVn4Db4c2VsLm8Ug==@vger.kernel.org, AJvYcCUQZpnNnZErOQ8xv89ygBdxTPu5doRiX5lqmwVxunykmjY7Mi378aVJ7HvwAL26EbseXayXTh5AsekVIFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9LIw9C4DBegTIGVmanH+/vIyJ2mB7+62zpMMSSYEqrc2Datoa
-	P+FvOTDl8GFzFZuq7Yzj80GTzvP0ON18OCGUE0taIv5FEOCgEnPQ+q9e
-X-Gm-Gg: ASbGncuBKNAA/kgHXXvaDxplVanaDyD246+s8lNowriyWoFBkqx7nq9QTXGVS//2SnC
-	UADbwhyyXFe1U1CZbtx2XSajdTWhZY6I/Px0YlGeIJ/XljnErX4gD1y0K6ZuPrApeeeuYKK5HyO
-	3woBfHBVVe2QRDCBF9nWNiVJJLYuW/yYUmYpaLh2lBaHeMcZ9KR+yTBzaw1+/LNS4h/jwD977fV
-	h/Co8T7HFMgxsSIjeLDlTWL1odDz5FTk0RwIKoKmBKDjQw0js74UtHh2p5LIALI5MJHLt4MznRL
-	sweZZQFZb56Ih0/776CHqq2Ouhpffd7SviPed9kPLRN7A9RD+d1pJKstbOgmjR52PQ==
-X-Google-Smtp-Source: AGHT+IHNBqQ1w2yoBTgp7/iAjHHX/miFsAt9FR6ru6zR0LgoUcXTgrZGC6oCV5825QmQvrlTywXVZQ==
-X-Received: by 2002:a17:90b:4c86:b0:302:fc48:4f0a with SMTP id 98e67ed59e1d1-318c8d001ffmr16826344a91.0.1751241061801;
-        Sun, 29 Jun 2025 16:51:01 -0700 (PDT)
-Received: from localhost ([181.88.247.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c152338bsm7487143a91.47.2025.06.29.16.50.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 16:51:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="haOj2J+k"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751242326; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=Kp53yHyclnfuXyHbcdfZXdkRcD9GyJnaFra1xJlpF/8=;
+	b=haOj2J+kXNkzOdQufojF3pMz9T9AFOhneN4MXT8eRtLEB3hqsy8F1rEDyakOoLGSgKjBrXs4G5j5JUIaI+ZuR8z96C0X/c++i8k1QK+8R4e2C4MLb+OBIq59MpHL/5LphTwcN3VoOtrdmIsGhq5g4pYRUmx6XCkU6cCas8jO3BA=
+Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0Wg1K.Qo_1751242325 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 08:12:05 +0800
+Date: Mon, 30 Jun 2025 08:12:05 +0800
+From: YinFengwei <fengwei_yin@linux.alibaba.com>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	zhourundong.zrd@linux.alibaba.com
+Subject: Re: [Question] About the elf program header size
+Message-ID: <4a3mhbhfvj2ctmovfknmdhskbmmhii3jcsdvba3e7xxytzkpc4@odtyzuhto7lx>
+References: <sxokzxpo74u7yhrhfrmgtdvkpshwl464jicrwwkwtvkwl5d5dj@fqto77h2prj2>
+ <202506270854.A729825@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 29 Jun 2025 20:50:57 -0300
-Message-Id: <DAZF57H19N50.2CQE5TCAK4U0W@gmail.com>
-Cc: <Dell.Client.Kernel@dell.com>, <platform-driver-x86@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Jan Graczyk" <jangraczyk@yahoo.ca>
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Fix WMI data block
- retrieval in sysfs callbacks
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Armin Wolf" <W_Armin@gmx.de>, "Prasanth Ksr" <prasanth.ksr@dell.com>,
- "Hans de Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, =?utf-8?q?Thomas_Wei=C3=9Fschuh?=
- <linux@weissschuh.net>, "Mario Limonciello" <mario.limonciello@amd.com>,
- "Divya Bharathi" <divya.bharathi@dell.com>, "Linus Torvalds"
- <torvalds@linux-foundation.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <20250629-sysman-fix-v1-1-fce0000a781d@gmail.com>
- <6a9b6660-acd2-44b4-a57e-2245043471ab@gmx.de>
-In-Reply-To: <6a9b6660-acd2-44b4-a57e-2245043471ab@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202506270854.A729825@keescook>
 
-On Sun Jun 29, 2025 at 8:37 PM -03, Armin Wolf wrote:
-> Am 29.06.25 um 20:33 schrieb Kurt Borja:
->
->> After retrieving WMI data blocks in sysfs callbacks, check for the
->> validity of them before dereferencing their content.
->>
->> Reported-by: Jan Graczyk <jangraczyk@yahoo.ca>
->> Closes: https://lore.kernel.org/r/CAHk-=3DwgMiSKXf7SvQrfEnxVtmT=3DQVQPjJ=
-dNjfm3aXS7wc=3DrzTw@mail.gmail.com/
->> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Manage=
-ment Driver over WMI for Dell Systems")
->> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>   drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h    | 7 +++=
-++++
->>   drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c    | 5 +++=
---
->>   drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c     | 5 +++=
---
->>   drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c | 5 +++=
---
->>   drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c  | 5 +++=
---
->>   drivers/platform/x86/dell/dell-wmi-sysman/sysman.c             | 8 +++=
-+----
->>   6 files changed, 23 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h=
- b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
->> index 3ad33a094588c6a258786a02f952eaa6bf953234..792e7d865bfb1cfc13b59c90=
-ddf7de47feff408f 100644
->> --- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
->> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
->> @@ -89,6 +89,13 @@ extern struct wmi_sysman_priv wmi_priv;
->>  =20
->>   enum { ENUM, INT, STR, PO };
->>  =20
->> +enum {
->> +	ENUM_MIN_ELEMENTS	=3D 8,
->> +	INT_MIN_ELEMENTS	=3D 9,
->> +	STR_MIN_ELEMENTS	=3D 8,
->> +	PO_MIN_ELEMENTS		=3D 4,
->> +};
->
-> Hi,
->
-> are you sure that this works? I suggest we use defines instead as ENUM_MI=
-N_ELEMENTS has the same value as STR_MIN_ELEMENTS.
+On Fri, Jun 27, 2025 at 09:35:45AM +0800, Kees Cook wrote:
+> On Fri, Jun 27, 2025 at 09:04:11AM +0800, YinFengwei wrote:
+> > We had a script generated assembly code. built it with gcc and the
+> > output elf file had 78 program headers.
+> 
+> Why so many?
+I don't know the detail. Just know it's a tool generates assembly
+code according to the trace data. From the objdump, it looks like
+there are many hole generated (I assume it just generates the code
+which is the code path just hit).
 
-Oh - I wrote that without thinking...
+> 
+> > On an arm64 platform, if we have 64KB base page size, the elf can
+> > be started correctly. But if we have 4KB base page size, the elf
+> > can NOT be started with:
+> >     cannot execute binary file: Exec format error
+> > 
+> > Look at the function load_elf_phdrs():
+> >         if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
+> > 	                goto out;
+> > 
+> > ELF_MIN_ALIGN is defined as PAGE_SIZE on arm64. Which can explain
+> > above inconsistent behaviors (from user perspetive).
+> > 
+> > I didn't find the limitation definition in ELF spec(Maybe I missed
+> > some obvious info there). If I remove "size > ELF_MIN_ALIGN", the
+> > same elf can be started correctly even with 4KB page size.
+> > 
+> > So my question is why we limit the who program headers total size
+> > to PAGE_SIZE? git history couldn't tell anything because the
+> > limitation was introduced when whole linux kernel tree was migrated
+> > to git. Is there a possible constrain on other architecture? Thanks.
+> 
+> Looking through
+> https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git
+> (which doesn't have linked history, so you have to examine explicit "pre
+> git" tags), I see:
+> 
+> 4779b38bcb96 ("[PATCH] Linux-0.99.13 (September 19, 1993)")
+> Which says "ELF binary support it a notable change." Here, the PAGE_SIZE
+> check does not exist. When ELF interp support was added in
+> 9e11983a5a3e ("Import 0.99.15f"), we see the check appear, and I can
+> find no rationale.
+> 
+> And with 6a8d38945cf4 ("binfmt_elf: Hoist ELF program header loading to
+> a function"), the PAGE_SIZE check is _added_ for non-interp loads.
+Thanks a lot for this information. I didn't know the pre-git history can
+be found here.
 
-I'm pretty sure it works, but I'll go with defines anyway.
+> 
+> It seems the 64K count limit is sufficient? (If the goal was to avoid
+> large memory allocations happening from userspace, we're way past
+> PAGE_SIZE these days between IPC, BPF, etc.) Does this work for you?
+Yes. It works good. Thanks.
 
->
-> For the rest:
->
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Regards
+Yin, Fengwei
 
-Thanks!
-
-
---=20
- ~ Kurt
+> 
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index a43363d593e5..92de44b8765f 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -519,7 +519,7 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
+>  	/* Sanity check the number of program headers... */
+>  	/* ...and their total size. */
+>  	size = sizeof(struct elf_phdr) * elf_ex->e_phnum;
+> -	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
+> +	if (size == 0 || size > 65536)
+>  		goto out;
+>  
+>  	elf_phdata = kmalloc(size, GFP_KERNEL);
+> 
+> 
+> -- 
+> Kees Cook
