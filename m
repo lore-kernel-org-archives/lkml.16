@@ -1,76 +1,81 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E5F2DBF7C;
-	Mon, 30 Jun 2025 17:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0025235055;
+	Mon, 30 Jun 2025 17:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751306046; cv=none; b=o944y1rAyp66O6gCzb+W4sKzOU2M9dRWu1CsNoBEDTX1lKDr+bWinbAkkLTWaL+zmTGrlwUde2CcaqO8JoMGcf4eu185whDVHj90zJXacOhEW3bX4gEQ9Xc5RgjnT8km9C33x3hx91PAPA5RnocVoLdrToSa89FXUG5IyMizu9k=
+	t=1751306115; cv=none; b=YYwbeSFDwF0P5EFLA79neR7QAV8fddFayXpoOyy8WwTK26wcdaWeyZYZBWO3A+WKjDYbMBz6IF9v8LCN+YSj+PJ2g1/URUDlZ1WKOXefEX7OMK/DDEwgravfAxWjaw82gjfQmg5qyGJdQpKgIP5ztqU6wRjHidol0hitE5bdqV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751306046; c=relaxed/simple;
-	bh=fYhsRNGbU6h5cvuC/fCJVnbVZ1LxOBkkipcwDepvRDA=;
+	s=arc-20240116; t=1751306115; c=relaxed/simple;
+	bh=xCP0lSFxIcMApdmiCN1IO19eX/+PljO+U2Ru8kuP1/E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BrmkxntCswFr9ApZsBU8wXRMKguxyK+HlEqsoQge273GJY5r4eG4eZggWwNL1peGet9AAY3vvtHP7q5S8kNMw1OupE1H78x//PpCikMgUn97Q8l7KFPdC44q/SFn0Rh87PHpObgLo1FJ0539WLyEDu6enZeKu2p2ISAYGz6sq2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOHVv1iK; arc=none smtp.client-ip=209.85.215.171
+	 Content-Type:Content-Disposition:In-Reply-To; b=AcqwN14HEYg92VvRJ0dAty3rYr7HxDiOWI3deNjFOWu+WByhYm7+M1teaSiCu4u6bVTv7NQIYjs1VenfMuj+ECE6iio59d3Ic9kY3UkJtRZMlz4z+BUaMZmDlrZBpu6qmBOqid3UGUH8QdN3MPkXsbYu8z8SCek9EScOIiSZSgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikdGqFVC; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOHVv1iK"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b321bd36a41so2124462a12.2;
-        Mon, 30 Jun 2025 10:54:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikdGqFVC"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d3f5796755so448099385a.1;
+        Mon, 30 Jun 2025 10:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751306044; x=1751910844; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751306113; x=1751910913; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+FvQdARxOE0AE0TkBrCFtqU1k4cnh7ikYsee8BD0XuE=;
-        b=LOHVv1iKUo1H6nuVLKMYWaFN70789Emt/ytPQhx1XvwKG9ZhW8jwF6ISs2olNTvefy
-         F5LIMRjtBv3ovMYp6wAWSeX5WqahtTLuYoi7YwJSk6hEnTQHhjkNKffczpAmLf26S7hS
-         Fk6RRt3W4fpSI5xvNM6HMednUdYUZq8+4M0V1wHxmuCSprhUuCOBqIXo1hOojfUC+N+3
-         X0ZaMS5YycCqboSRX0f5qo3xO1dSCtNgbnL2KsTRq/huLLpbLrWAAI2jKA3WX29ipOWF
-         +ywVekbQbFPdJm9+zwqkQlhmZtmJL3l/5UW4tYakXo9QtcnO6KJXXo3J90L8zOWyxpgX
-         MNyg==
+        bh=TkbKDizxju3W+51KZwQ3Fxa7XNUAV9NHwEQ1ocZXOb4=;
+        b=ikdGqFVCvD45KJtz/I1mNsWLKvaiRJVKLbo2/74k3g5EBsemP6nmOnFapjIGQIWz5I
+         TXHoGtdNY7sA6qc4aL7PHpOog9qRHXIO1NxOjlMKWvSO8gls5DQGIz3pzOzcvznctpkP
+         SZ5dYkp/cs+CWO+S2c4wFsfLtRio7g9dUxLNv4pQd5YLnEj4RpFQJzr6wwng0AzLh+Qp
+         ddwjYn9niA8Pwh6WRmUSoIK9q01w4h3hRvig1APBB5n7oTYWsg86gURg91wOt2nXroYm
+         fio5LTyUVqs+6jKDjK/txXYfp2plqZivgr//KThc+F1nGU/YqWnBXbt/iLNVrvN5XIkQ
+         PFMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751306044; x=1751910844;
+        d=1e100.net; s=20230601; t=1751306113; x=1751910913;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+FvQdARxOE0AE0TkBrCFtqU1k4cnh7ikYsee8BD0XuE=;
-        b=EnmbqvGumYfPj6ag13aKZiSdk1r04ehCM6dWjtGcUTZURrETZ/OMUU4kFRZDG95I/6
-         2LBaSYKmaWSRIZ06rJxWpOCi2phG/rgJCQfiKOeyAGTrO1K+Fr3Mj5r62zCAXt/Q+Kqj
-         BmOYhGLqZAEQj+EKjOCvnheTTX+IyJLIx+TcT8GSQGmtvG5wEjfiw1A/rBSiwDt/LpeS
-         +eTFz400XMn4ynX4Dwj8JoA/QDgZw0EM8t96G1sHCPw84iA28tvJ3YbIK4lOSwFcdjiH
-         pApn52SiaC/N5T5e6WpvOATwavIz4RaC57JWwRzZJ4CpPJocLXtFpxP8B9zAxaZUTjzM
-         Mq7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCVl9FAeh6UtFkSJYerT8oBVj/7VSuc4tFlo8t05C4aQ6zrOad4l4ImeUaCI6+pWYI/fNOdyET@vger.kernel.org, AJvYcCVdoXRZw14cxE/kYxN/oc2WV2DEJDvLTc86Rg+XH8NjpPndmoALBFPIL9kg3QypAl9Qt9Nct2W5IxuJ2Bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8rXhL/KYAmFW3KzBVp7OqKU8ICilL1E0n05ES5fObb0UQxMiO
-	ykzXvOKTnYbexGjUNVDeAvFWZt58Xb4/wVRcPfXMQLlsOtWh5xF7Kzu8
-X-Gm-Gg: ASbGnctZu1RSxMSEQouwSBikClT2120hMwi96K3Df7QbLYDakD//0YJpwQZay4k6lLP
-	m/tnL8bZSw2kDsQ9TPIocsCo5xCCMhH0o8FpLFu/j9zpIOLcF1YJq+v24pljvK+Jf+vhZ7cwej5
-	GH2UvOK71uUnLbnbpSR3c6JzPkR1+BUK5FFL1v6MbVmh00WN42bPAHYv29bUOddfC4bwNbRBdfP
-	J6frj1LuWrpaDt4XzGlF8Y2Leiuoauuk4556Oi4i4yf35HiRP75kdYe95q7bNiQtUFRA4bIyj1f
-	CypQ5Q+cu6lAIufUzX5lBHkKPicPqL1lIC26MY3IeW6TQTN1BXBTSZrOijiRPg==
-X-Google-Smtp-Source: AGHT+IGsSgosU0EFvN9ZODyenvi/+IbvPw/aAApH7JP0y41FfCRiPa0g42ZE4CsDkX1cZblqgDiC/A==
-X-Received: by 2002:a17:90b:4b50:b0:311:ea13:2e61 with SMTP id 98e67ed59e1d1-318c92839camr17182631a91.34.1751306044382;
-        Mon, 30 Jun 2025 10:54:04 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c1392096sm9637470a91.8.2025.06.30.10.54.03
+        bh=TkbKDizxju3W+51KZwQ3Fxa7XNUAV9NHwEQ1ocZXOb4=;
+        b=SW++OdUJoNG0VV0j30oG08Pr7C12nlyYH5FwM/K4c/ANsfncj7HnlRPwlvbM+6p1U/
+         a5rS654EYcexTxF4IFMHMJO3eeHuqgsUcx2cH+UyesR8lq15M765jgcoHpk6GWogWx8H
+         KqpQilYDcgP+rxNNYuKy+LXZO05Npc7ultJE/Zco9iReJXwLdRcCmZmNKqsDocEBNyx+
+         uA+h4Jb9ilTGgExBit4vE3u132qFVZSvcpvGKArKN0X38UAOVbq2Fm2iiRIJXg/e0pNN
+         A4uh6Mv2MzsrIeOVEN0KGFLX82LnOVL88mWGxYgs9unFDx/N9Y0Pzux6ANozzQNR60Vf
+         NttA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIR6x8aa86DUCxNf9uzTdT8CYgMSN0tNB62wkkh9MA7wjRMQODLX0cfzWuNcAf9/3fccXTGfsViY1C@vger.kernel.org, AJvYcCXuCoRYTTmENLlNAD/LYXE8hjp4qnpUtoa4+2liHtBqqkqO0FQpuCvCKHCQLSbDFZjXoeUIAzG3rJ8mJvM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz40dIoW/OvhLfZOoWhDef6AedOo1lFCaKnkze5t3ocxtnfd/6L
+	/ij6mH8L6ReJ5W2icBP/vKVPY/Q6rx6KjLREGOFZPm8FqU1R/earpJLf
+X-Gm-Gg: ASbGncsIrOHJ6f7w427T72Lzx6pJu/zgAGI5OY8BUCT2cPKx9zkmatr/c1Ulm5IxckU
+	siyx1FUE8CnlxTA+8vncL6AwEAlhlM0Vd6Ab8nf3FkQ8J/3rpZtHUGj1nfoq8gb60o1PmbNeE2S
+	zQ9QDzFXPZdQQ2pDqdKwQJVfyapmQ97qtVB1J0Po9LnyBHRAd/sTyj7qrLvOrUtXjOMRQgJgTZ3
+	Lln5T9DYoNXixn1X/hCwuIN/b6aeK8MGMlDyUk3484b388BKHwlKhPd9YZedMT08vwSKNh35AD4
+	f0u8QAai6/H+DOiYV3gjFAeKwdCX5i2Yhrs/Mb5AVXfxCr5UtQ==
+X-Google-Smtp-Source: AGHT+IEAoLv3ZFdFWjd7lAICC4bbFV6sU3+PxQlEK6DUAJNkCBCFRSmZ508WVU4rao0shvvKBCho+w==
+X-Received: by 2002:a05:620a:1993:b0:7d4:4d55:98f9 with SMTP id af79cd13be357-7d44d55b1f9mr1237496485a.28.1751306112549;
+        Mon, 30 Jun 2025 10:55:12 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:4851::dead:c001])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d443203279sm636637885a.54.2025.06.30.10.55.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:54:03 -0700 (PDT)
-Date: Mon, 30 Jun 2025 13:54:01 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] wireguard: queueing: simplify wg_cpumask_next_online()
-Message-ID: <aGLPOWUQeCxTPDix@yury>
-References: <20250619145501.351951-1-yury.norov@gmail.com>
- <aGLIUZXHyBTG4zjm@zx2c4.com>
- <aGLKcbR6QmrQ7HE8@yury>
- <aGLLepPzC0kp9Ou1@zx2c4.com>
+        Mon, 30 Jun 2025 10:55:12 -0700 (PDT)
+Date: Mon, 30 Jun 2025 14:55:05 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/4] phy: rockchip-pcie: Enable all four lanes if
+ required
+Message-ID: <aGLPeZn9ZSw3FurH@geday>
+References: <cover.1751200382.git.geraldogabriel@gmail.com>
+ <b203b067e369411b029039f96cfeae300874b4c7.1751200382.git.geraldogabriel@gmail.com>
+ <2affed16-f3c4-47d3-9ca6-e4f48e875367@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,95 +84,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGLLepPzC0kp9Ou1@zx2c4.com>
+In-Reply-To: <2affed16-f3c4-47d3-9ca6-e4f48e875367@arm.com>
 
-On Mon, Jun 30, 2025 at 07:38:02PM +0200, Jason A. Donenfeld wrote:
-> On Mon, Jun 30, 2025 at 01:33:37PM -0400, Yury Norov wrote:
-> > On Mon, Jun 30, 2025 at 07:24:33PM +0200, Jason A. Donenfeld wrote:
-> > > On Thu, Jun 19, 2025 at 10:54:59AM -0400, Yury Norov wrote:
-> > > > From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > > > 
-> > > > wg_cpumask_choose_online() opencodes cpumask_nth(). Use it and make the
-> > > > function significantly simpler. While there, fix opencoded cpu_online()
-> > > > too.
-> > > > 
-> > > > Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > > > ---
-> > > > v1: https://lore.kernel.org/all/20250604233656.41896-1-yury.norov@gmail.com/
-> > > > v2:
-> > > >  - fix 'cpu' undeclared;
-> > > >  - change subject (Jason);
-> > > >  - keep the original function structure (Jason);
-> > > > 
-> > > >  drivers/net/wireguard/queueing.h | 13 ++++---------
-> > > >  1 file changed, 4 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-> > > > index 7eb76724b3ed..56314f98b6ba 100644
-> > > > --- a/drivers/net/wireguard/queueing.h
-> > > > +++ b/drivers/net/wireguard/queueing.h
-> > > > @@ -104,16 +104,11 @@ static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
-> > > >  
-> > > >  static inline int wg_cpumask_choose_online(int *stored_cpu, unsigned int id)
-> > > >  {
-> > > > -	unsigned int cpu = *stored_cpu, cpu_index, i;
-> > > > +	unsigned int cpu = *stored_cpu;
-> > > > +
-> > > > +	if (unlikely(cpu >= nr_cpu_ids || !cpu_online(cpu)))
-> > > > +		cpu = *stored_cpu = cpumask_nth(id % num_online_cpus(), cpu_online_mask);
-> > > 
-> > > I was about to apply this but then it occurred to me: what happens if
-> > > cpu_online_mask changes (shrinks) after num_online_cpus() is evaluated?
-> > > cpumask_nth() will then return nr_cpu_ids?
-> > 
-> > It will return >= nd_cpu_ids. The original version based a for-loop
-> > does the same, so I decided that the caller is safe against it.
+On Mon, Jun 30, 2025 at 02:48:25PM +0100, Robin Murphy wrote:
+> On 29/06/2025 9:58 pm, Geraldo Nascimento wrote:
+> > Current code enables only Lane 0 because pwr_cnt will be incremented on
+> > first call to the function. Let's reorder the enablement code to enable
+> > all 4 lanes through GRF.
 > 
-> Good point. I just checked... This goes into queue_work_on() which
-> eventually hits:
+> As usual the TRM isn't very clear, but the way it describes the 
+> GRF_SOC_CON_5_PCIE bits does suggest they're driving external input 
+> signals of the phy block, so it seems reasonable that it could be OK to 
+> update the register itself without worrying about releasing the phy from 
+> reset first. In that case I'd agree this seems the cleanest fix, and if 
+> it works empirically then I think I'm now sufficiently convinced too;
 > 
->         /* pwq which will be used unless @work is executing elsewhere */
->         if (req_cpu == WORK_CPU_UNBOUND) {
-> 
-> And it turns out WORK_CPU_UNBOUND is the same as nr_cpu_ids. So I guess
-> that's a fine failure mode.
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Actually, cpumask_nth_cpu may return >= nr_cpu_ids because of
-small_cpumask_nbits optimization. So it's safer to relax the
-condition. 
+Hi Robin and Neil,
 
-Can you consider applying the following patch for that?
+Thank you both for the positive reviews and the effort.
+
+I must admit however that it looks like this patch was lifted verbatim
+from Armbian and I'm missing the Signed-off-by from the original author.
+
+As Robin may attest, I initially started by blindingly enabling all
+lanes which, of course, is no good. I tried a suggestion by Robin which
+did not work, and eventually settled on this Armbian solution, which at
+least has got some battle-testing.
+
+I already contacted Valmintas Paliksa, the original author of the patch,
+and asked permission to use his Signed-off-by. I'm aware I could probably
+use the Signed-off-by without strict permission, but it does not feel
+right to me.
 
 Thanks,
-Yury
-
-
-From fbdce972342437fb12703cae0c3a4f8f9e218a1b Mon Sep 17 00:00:00 2001
-From: Yury Norov (NVIDIA) <yury.norov@gmail.com>
-Date: Mon, 30 Jun 2025 13:47:49 -0400
-Subject: [PATCH] workqueue: relax condition in __queue_work()
-
-Some cpumask search functions may return a number greater than
-nr_cpu_ids when nothing is found. Adjust __queue_work() to it.
-
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
----
- kernel/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 9f9148075828..abacfe157fe6 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2261,7 +2261,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	rcu_read_lock();
- retry:
- 	/* pwq which will be used unless @work is executing elsewhere */
--	if (req_cpu == WORK_CPU_UNBOUND) {
-+	if (req_cpu >= WORK_CPU_UNBOUND) {
- 		if (wq->flags & WQ_UNBOUND)
- 			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
- 		else
--- 
-2.43.0
-
+Geraldo Nascimento
