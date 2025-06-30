@@ -1,44 +1,92 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A59719F11F;
-	Mon, 30 Jun 2025 05:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C6C1EB5B;
+	Mon, 30 Jun 2025 05:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751261728; cv=none; b=AGk07aOF8gyYIBu8ECbstbVXaM0BogVMbJ0VWbdlK1dvMIXplZdpQmiiGJ9Ko9f9faY2oCB1Qla50te5HFFssR7nevyX4W2njre8qrziXJDumXjGPXBsm3iXxzkME7sAXjVSR4XpjsG8es92RJNhYVoGlpz9Ph4cUWN7GF6pyqs=
+	t=1751261770; cv=none; b=MHDbowvv4KyEkIdCXSrT3Xf32ROsoTemm/ZDiJDTCCn+TY1xshQHuKUrmN4Cctm0/qSfaxBwmpaiNX8a/IGRKshMjxOz1uVPxTi7+Iu2pN5Ya8EZNkT52fu2tGLZ/958kZavf38muGmPQuFumVHOD+sFrV5msNVXH0Z2KIGmen8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751261728; c=relaxed/simple;
-	bh=jK7mgvIiXgSWDulrRrTEgyqtYM5DjFefRalwbMaxvFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I5ENNL0DcumWFqz6XuNjeorbQkeD2dOPRDaG3QEUXxDMoTcez+Hgeyd8z2tknPK6uOluP4WTZnESj7d6FB5m0EilM68o1xOH+KM3plVUZB1WRtJBLzmNkJyU9pOAHp8KnT5HC+PWMU9L2l6AgJRs4QEvy328v5VkRkm3rLz1nnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4BF4768AA6; Mon, 30 Jun 2025 07:35:12 +0200 (CEST)
-Date: Mon, 30 Jun 2025 07:35:12 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH] brd: fix leeping function called from invalid context
- in brd_insert_page()
-Message-ID: <20250630053512.GA28428@lst.de>
-References: <20250628011459.832760-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1751261770; c=relaxed/simple;
+	bh=0vfCw5cv/EAsGDc4WYfpgbmpPv5RFaiaeprd+D8KlY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5mNmhe89H2cUtiVZgJqj8TWqv8HIJUkf8kelk7aNDarMfNUntJ/8Y8tQp+JFP1/PIwPg1xR7ux1ZQgJQJvPtcD234cwMSjzs4rOyYCy8Sk1v+F0207KIMkB6/AYqAfikUAZlFbc51mXrMvX3+q4UmbxuoDRM9ESzUazQOr98ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eL/ucCyy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eL/ucCyy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=wB+goVDcUknWqVv96eK5+IlH1aFLvYq0IXbrZl50hxQ=; b=eL/ucCyyp6ebd4PnIzbR33W7jV
+	dZUArfA0AjJDFOT2+4FYGV/Xj3O73/+qibmZeztA5V7MsCVN1HCczeJTs62qBsZ4kmEaxqlGTnHcL
+	uul8vXV3X8pych0ceJHTvWnZuj+Itz4dlTLbHEXGQxoK/6xh/v3oTfxzuuHB39QvXF7kxXhyKcz5C
+	x6tTdBUKbVRi4qBLbF5SwnsWeksTQJF4WR81eCC5gPLOJC5FZBHBPbyDkkVlIKn3FMHuBhBDH1vUR
+	+xWGMFSHY78SFM2K0FFbyjX2rYWaCtiqD+i2oJvnV2sSn2Y7z8cepc9DhihgZu5/hgVIilwl6b7G/
+	MK8qmlMQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW7BU-00000006jMk-3lFl;
+	Mon, 30 Jun 2025 05:36:05 +0000
+Message-ID: <1f6cba18-60fe-4472-b186-2db0cf7fc0c5@infradead.org>
+Date: Sun, 29 Jun 2025 22:36:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250628011459.832760-1-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 57/66] kconfig: gconf: replace "tooltip" property with
+ "tooltip-text"
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <20250624150645.1107002-58-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-58-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-s/leeping/sleeping/ in the subject.
 
-Otherwise looks good:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+On 6/24/25 8:05 AM, Masahiro Yamada wrote:
+> This was replaced with "tooltip-text" in GtkBuilder with GTK 3.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+One nit below:
+
+> ---
+> 
+>  scripts/kconfig/gconf.glade | 34 +++++++++++++++++-----------------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
+> 
+> diff --git a/scripts/kconfig/gconf.glade b/scripts/kconfig/gconf.glade
+> index c0ada331a5bf..c3996f4635e9 100644
+> --- a/scripts/kconfig/gconf.glade
+> +++ b/scripts/kconfig/gconf.glade
+> @@ -230,7 +230,7 @@
+>  	      <child>
+>  		<widget class="GtkToolButton" id="button1">
+>  		  <property name="visible">True</property>
+> -		  <property name="tooltip" translatable="yes">Goes up of one level (single view)</property>
+> +		  <property name="tooltip-text" translatable="yes">Goes up of one level (single view)</property>
+
+You didn't change the text here, but this would read better as
+
+  Goes up by one level
+or
+  Goes up one level
+
+I.e., drop the "of".
+
+-- 
+~Randy
