@@ -1,201 +1,74 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A2F2BCF5;
-	Mon, 30 Jun 2025 08:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9F514F70;
+	Mon, 30 Jun 2025 08:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273534; cv=none; b=jihGw6+yCCwohRDmsFnrDxxNizmqK1y6Y5AQuWLgQD8X6+qDCKiegYeLmugvCwysMjqaqNi2k9Xr3UCKxqSZzP3Hiyx0ko8umDaYlCWi/Qmiw5Tx8HXwusmpdNcfGpVnnuBw1kCO1r19owuL24adR+7tmla7izuDX/UmMfS0Dss=
+	t=1751273666; cv=none; b=tiq2aQm5CmPOldsWCVIrbFLZe0zBTgm1TaPr+/pnQglF5+rKwgjo1U8L3V9mUyM78U/8mnHBPVObK6MeHn3YzW3hOL23dMkkBZIsjqr1aQyTvsOq6WceOb7e1ijF9o/XtA6tgJYjESVTBL03AcGUrEEZd55ZaFzxM9q4bC94bxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273534; c=relaxed/simple;
-	bh=TzBa5Htahk12/liIIhew3rL19S6s3qcifnural6TAY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mcE+dPQ75E1AIzxDYwpX+5N7mI9P6KalSByu2EryUAaikA8+7IWUuIZxJn4my4MeZp6dLDJuSRSUbf/rK+lVLE6pUA6nonFAQD3oLZx1IjgOtUfAg9uxFJGagwRrd/c1dIV13QpHQq4rAjbhRJkAKt7G6KgqzlGDQ5HSI1swp04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=K9OIzhqe; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="K9OIzhqe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 9382260022E5;
-	Mon, 30 Jun 2025 09:52:10 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id dLtn5WJTzlZG; Mon, 30 Jun 2025 09:52:08 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 65B5B60022FD;
-	Mon, 30 Jun 2025 09:52:08 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1751273528;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iYrszlhKrE+3rdPzD0KHo3Mkh5qRDqFv6VEwxfGiZyg=;
-	b=K9OIzhqeOT11oxMfGwHcvaqPsRscpGBxUmH5NTsbSN32JHsByyOEQffHecgeDvDEXRZNtG
-	rnIKZkbRc69JeEFBgTRX8876WVJFH7XwogYOP2eUEU8nXEnELU+djUYVPyDA87+Ajz1xDE
-	2W5JGY+dUitw26iPErv+Hgz+SMthuk8=
-Received: from [192.168.1.69] (unknown [92.56.11.86])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id BB96B360083;
-	Mon, 30 Jun 2025 09:52:06 +0100 (WEST)
-Message-ID: <b4f97871-bf42-45f8-b4c5-65fef7e583e3@tecnico.ulisboa.pt>
-Date: Mon, 30 Jun 2025 09:52:00 +0100
+	s=arc-20240116; t=1751273666; c=relaxed/simple;
+	bh=TZIvhrthRicC6Lvb+WGpxZCxTLY8ZHeL22qSl3BRQXY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WLjUe/Yo0jqPXMCb1NDch7HM9c832ciyX4DtbZ+vk6BkDArwiNpQw0qTLQs4PMuMZKEDhsQ3GwNoRKxO9MjjGjreorluGFzcUDzaIWHIAS8lHfOAEXbEZ2UoRFlBOyWRamalumscOF79YdVkfO9Sai99SGdevPshgrL/y57lezE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bW0KX4tzKz2BdX6;
+	Mon, 30 Jun 2025 16:52:32 +0800 (CST)
+Received: from dggpemf500015.china.huawei.com (unknown [7.185.36.143])
+	by mail.maildlp.com (Postfix) with ESMTPS id E3D881A0188;
+	Mon, 30 Jun 2025 16:54:15 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by dggpemf500015.china.huawei.com
+ (7.185.36.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
+ 2025 16:54:15 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH v5 0/3] update live migration configuration region
+Date: Mon, 30 Jun 2025 16:53:59 +0800
+Message-ID: <20250630085402.7491-1-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-To: Mikko Perttunen <cyndis@kapsi.fi>,
- Thierry Reding <thierry.reding@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
- <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
- <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
- <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
- <78cc8814-c89f-4a5f-9a70-08ed69580c3f@tecnico.ulisboa.pt>
- <36898d74-d9f7-4c5a-b6f2-d9652c674b84@kapsi.fi>
- <82bfabf0-8c55-4bbd-8c81-44dc86209b15@tecnico.ulisboa.pt>
- <338ae324-1f1a-429f-9ea2-ecab56331895@kapsi.fi>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <338ae324-1f1a-429f-9ea2-ecab56331895@kapsi.fi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf500015.china.huawei.com (7.185.36.143)
 
+On the new hardware platform, the configuration register space
+of the live migration function is set on the PF, while on the
+old platform, this part is placed on the VF.
 
-Hi Mikko,
+Change v4 -> v5
+	Remove BAR length alignment
 
-On 6/30/25 7:14 AM, Mikko Perttunen wrote:
-> On 6/17/25 6:26 PM, Diogo Ivo wrote:
->>
->>
->> On 6/17/25 5:40 AM, Mikko Perttunen wrote:
->>>
->>>
->>> On 6/16/25 7:21 PM, Diogo Ivo wrote:
->>>>
->>>>
->>>> On 6/11/25 4:06 PM, Thierry Reding wrote:
->>>>> On Wed, Jun 11, 2025 at 01:05:40PM +0100, Diogo Ivo wrote:
->>>>>>
->>>>>>
->>>>>> On 6/10/25 10:52 AM, Mikko Perttunen wrote:
->>>>>>> On 6/10/25 6:05 PM, Thierry Reding wrote:
->>>>>>>> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
->>>>>>>>> Hello,
->>>>>>>>>
->>>>>>>>> This series adds support for the NVJPG hardware accelerator 
->>>>>>>>> found in the
->>>>>>>>> Tegra210 SoC.
->>>>>>>>>
->>>>>>>>> The kernel driver is essentially a copy of the NVDEC driver as 
->>>>>>>>> both
->>>>>>>>> engines are Falcon-based.
->>>>>>>>>
->>>>>>>>> For the userspace part I have written a Mesa Gallium backend 
->>>>>>>>> [1] that,
->>>>>>>>> while still very much experimental, works in decoding images
->>>>>>>>> with VA- API.
->>>>>>>>>
->>>>>>>>> I have been using ffmpeg to call VA-API with the following 
->>>>>>>>> command:
->>>>>>>>>
->>>>>>>>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device
->>>>>>>>> /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev
->>>>>>>>> /dev/fb0
->>>>>>>>>
->>>>>>>>> which decodes <input.jpg> and shows the result in the framebuffer.
->>>>>>>>>
->>>>>>>>> The firmware for the engine can be obtained from a Linux for Tegra
->>>>>>>>> distribution.
->>>>>>>>
->>>>>>>> By the way, have you tried running this on anything newer than 
->>>>>>>> Tegra210?
->>>>>>>> Given your progress on this, we can probably start thinking about
->>>>>>>> submitting the binaries to linux-firmware.
->>>>>>>
->>>>>>> FWIW, the impression I have is that NVJPG is basically unchanged 
->>>>>>> all the
->>>>>>> way to Tegra234. So if we add stream ID support and the 
->>>>>>> firmwares, it'll
->>>>>>> probably just work. Tegra234 has the quirk that it has two 
->>>>>>> instances of
->>>>>>> NVJPG -- these have to be distinguished by their different class 
->>>>>>> IDs.
->>>>>>> But we should go ahead with the T210 support first.
->>>>>>
->>>>>> I have a question here, what exactly are the stream IDs? While 
->>>>>> working
->>>>>> on the driver this came up and I didn't manage to figure it out.
->>>>>
->>>>> Stream IDs are a way to identify memory transactions as belonging to a
->>>>> certain device. This comes into play when working with the IOMMU 
->>>>> (which
->>>>> is a Tegra SMMU on Tegra210 and earlier, and an ARM SMMU on Tegra) and
->>>>> is used to isolate DMA capable devices. Basically for every stream ID
->>>>> you get a separate I/O address space. NVJPG will have its own address
->>>>> space, and so will VIC. Each device can only access whatever has been
->>>>> mapped to it's I/O address space. That means NVJPG can't interfere 
->>>>> with
->>>>> VIC and vice-versa. And neither can any of these engines read from or
->>>>> write to random system memory if badly programmed.
->>>>
->>>> So if I understand this correctly a Stream ID corresponds to an IOMMU
->>>> domain right?
->>>
->>> Technically not necessarily, but in practice that's the case, as the 
->>> IOMMU driver creates IOMMU domains for each stream ID in the device 
->>> tree. They are similar to the SWGROUPs on Tegra210.
->>
->> Ok that makes sense, thank you for the clarification :)
->>
->>>> Ok, then in that case I'll keep the driver in its current state without
->>>> these implementations if that's ok. Connected with this I wanted to 
->>>> know
->>>> your thoughts on the best way to upstream this, is it better to wait 
->>>> for
->>>> testing on different platforms first and then if things work merge a
->>>> driver that works for all of them or go with Tegra210 first and then 
->>>> add
->>>> more platforms later on?
->>>
->>> Personally, I'd say to go for Tegra210 first.
->>
->> In that case I believe that in the v2 I sent out of the driver I 
->> addressed
->> both yours and Thierry's reviews and the driver should be in good 
->> condition
->> for Tegra210. What are the next steps in order to merge it?
-> 
-> I left one more comment on the v2 patch. With that fixed, if Thierry has 
-> no further objections, hopefully he can merge.
+Change v3 -> v4
+	Rebase on kernel 6.15
 
-I sent out v3 addressing this comment and picked up your Acked-by.
+Change v2 -> v3
+	Put the changes of Pre_Copy into another bugfix patchset.
 
-Thanks for the review!
-Diogo
+Change v1 -> v2
+	Delete the vf_qm_state read operation in Pre_Copy
 
-> Cheers,
-> Mikko
-> 
->>
->> Thanks,
->> Diogo
->>
->>> Cheers
->>> Mikko
->>
-> 
+Longfang Liu (3):
+  migration: update BAR space size
+  migration: qm updates BAR configuration
+  migration: adapt to new migration configuration
+
+ drivers/crypto/hisilicon/qm.c                 |  29 +++
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 202 ++++++++++++------
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   7 +
+ 3 files changed, 176 insertions(+), 62 deletions(-)
+
+-- 
+2.24.0
+
