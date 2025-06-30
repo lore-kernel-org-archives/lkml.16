@@ -1,148 +1,127 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954FF28DB7E
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301742; cv=none; b=JN8Iigf5ohqhea8OO/nzeNAUDFborUPh0GWFsNSeVjexFfmddn8Vz4unJbdtx5cyzv73Vi0skdNu2m83uxW5AmhZHxngNVbTjYET3cjSEuLrz1ewm/Dh8RvwGqTNkskmXCiRqF1bpYdiscBAdvMyFQ6CvTuWQHa0FRwq1Dta4pU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301742; c=relaxed/simple;
-	bh=fyg25kUdxi56X5fN8C4I80OctwwXPUDBJYonfzwtL5E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iEQoE00C+XVWM5LRoPcATnr8m01aRV2LWlZo7P4fYnNrG3ljaC+F4u6IuiGdtNWJnHS8jWGq8yOQST4d79T6/QXNzSQPqXGVgnZj3uhV/eDOHNpAaqKcZoKHiiQctReJzG1EK5Pw8rNlPpyC6liZGSopRkn4PjBeFOTebaFzOPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0QLuLkXG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1hhxprSW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECD328F94E;
+	Mon, 30 Jun 2025 16:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751301885; cv=pass; b=mziRTddd1DvKNGeak5JOpt187ZGxnR691WXUxt0qYM6FgzyqMkZjfJ0YudLo+/AyYil2qeAWFqyXX/EK2eIKIcB3d2nYY46AY+mBPMTZcp2s6/VvhFqrCSysoBl8i3+E8oPZYXTXfJ3Jplk/NhrgeXen4GzItqaaG84vP1pxwJs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751301885; c=relaxed/simple;
+	bh=X+WMHR6KsltwxPV+rL43bY8Z2+VB1DMqHWRlFcMifQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJ4prU0DtOTuV5+Ir7sEijQxOfwK0WNDAHTeNtNl5iSJVGhnBlNZ9+7F4vRu+zhdaCgUlyx16ZdWc+c3BKisFpF9ilNLk+dQWWgIDMMx5F/bNIlkvPdmMbqKCdSdnYcGVVBiukVx3uSRs2ZXG0uBQqkgi52DOGWfRjK+m8aynGc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=GrnR8y0h; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0QLuLkXG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1hhxprSW"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751301737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sF9E1GcllfD1MFNQQKAvA1nbW2DQm7ww8CpX+oG79/k=;
-	b=0QLuLkXGxPR90Hu6jSCWbi9iQAdgVpK26eGkLiR+JeCdTd65Gs8Mx9DWIo7cvlN3ZTFDsV
-	qPDDHsTECqv9lzWjPRQKbIMz9oE5V7eJO5xDTnztzXYvgM0r2ShS2MU0LO9mDIN0lrEaja
-	ntIvsZB5CjbK8gt/8MWz9uV0xOl8wEDeBffzlYtUjDpMEal1D5cd5YTR6EEuyLUT2x0QLo
-	TZAaEtdSdIGRYgL7i3jgvSK3664PZHjU5DHZ4oieUBk42DAr9In5Ha1HwN5ppMO/7JoGTC
-	b0MURD6pP5Nqje1SnYWG7uOcaNgDUOId0Tvj+zQmpOzGAFE8/PwPmkRunC/jwQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751301737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sF9E1GcllfD1MFNQQKAvA1nbW2DQm7ww8CpX+oG79/k=;
-	b=1hhxprSW9LLIbEziJad/YMrC7HvzvCzaWcNgQ3bHKUibPplVR5gR7P8Fu/LoFbisMj4N/1
-	v7jmGC9s/6QxF1Bw==
-To: Khalid Ali <khaliidcaliy@gmail.com>, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org, Khalid Ali
- <khaliidcaliy@gmail.com>, Kai Huang <kai.huang@intel.com>
-Subject: Re: [RESEND PATCH v5] x86/boot: Don't return encryption mask from
- __startup_64()
-In-Reply-To: <20250625160238.734-1-khaliidcaliy@gmail.com>
-References: <20250625160238.734-1-khaliidcaliy@gmail.com>
-Date: Mon, 30 Jun 2025 18:42:16 +0200
-Message-ID: <87qzz1mb9z.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="GrnR8y0h"
+ARC-Seal: i=1; a=rsa-sha256; t=1751301858; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZKG1pUuIE3SbInx6lum+enVMNuGIW0ZN6xW94yLOaTmRBa72DDWfve2rMRITUUjXPs1k+A9aTnMOS4pLz8C2/feqkshU55AShExQXiZDCq1WxS2CSTyxKWqaN3CeMFAt5uPNtr5uMNi3cu8MM8CgYAZlVZSCIb3iHobJPCGSM24=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751301858; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=PzDU9nqyjpEDS4lSPx+RFrm4zapOV2CV9JDtSEwn19Y=; 
+	b=bvCepyT3rZsZlQALMYOAUCFNg4Hx8XFD+GNdKB17X09K6zFoi9thSvnKiwOg6xfczIPB4X8aD8Jd9M1j/ZOch89bir+uvvOjyi20jkhDZ2YdAlznC9qIQOSxSFAhPPbesavDrr0wDYnaVafsfuSMYw4NirgqzGaKL+xT02zaNWI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
+	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751301858;
+	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=PzDU9nqyjpEDS4lSPx+RFrm4zapOV2CV9JDtSEwn19Y=;
+	b=GrnR8y0hL1DqLSOlikB5obbZISVLcVPNmo97EfbOwJBhnPyKxiV6sWXTqSWjma1E
+	mSIGx/s3Xmlj2KciJ3Vjyt115le/iQm06OBpCUz7JDRVymU/X/MqAj6LHYJvggpbOaM
+	M0CsArhsYoIvqdEmwflkPHuI3opxO+gvj3Sd6p9Y=
+Received: by mx.zohomail.com with SMTPS id 1751301856714404.94728450710375;
+	Mon, 30 Jun 2025 09:44:16 -0700 (PDT)
+Message-ID: <05a7c67f-d1fa-4ad4-a794-cc081cd04abc@collabora.com>
+Date: Mon, 30 Jun 2025 18:44:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
+To: Dan Carpenter <dan.carpenter@linaro.org>, oe-kbuild@lists.linux.dev,
+ joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+ nicolas.dufresne@collabora.com, jgg@ziepe.ca
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ kernel@collabora.com
+References: <9d247bec-d206-495e-b8d6-23a7c3cc0882@suswa.mountain>
+Content-Language: en-US
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <9d247bec-d206-495e-b8d6-23a7c3cc0882@suswa.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Khalid!
 
-On Wed, Jun 25 2025 at 16:02, Khalid Ali wrote:
-> From: Khalid Ali <khaliidcaliy@gmail.com>
+Le 30/06/2025 à 18:13, Dan Carpenter a écrit :
+> Hi Benjamin,
 >
-> Currently, __startup_64() returns encryption mask to the caller, however
-> caller can directly access the encryption.
+> kernel test robot noticed the following build warnings:
 >
-> The C code can access encryption by including
-> arch/x86/include/asm/setup.h and calling sme_get_me_mask(). The assembly
-> code can access directly via "sme_me_mask" variable.
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 >
-> This patches accounts that, by adjusting __startup_64() to not return
-
-This patch.... I pointed you to the tip tree documentation before ....
-
-> encryption mask, and update startup_64() to access "sme_me_mask" only if
-> CONFIG_AMD_MEM_ENCRYPT is set.
+> url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Gaignard/dt-bindings-vendor-prefixes-Add-Verisilicon/20250623-234734
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> patch link:    https://lore.kernel.org/r/20250623153931.158765-4-benjamin.gaignard%40collabora.com
+> patch subject: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
+> config: alpha-randconfig-r073-20250627 (https://download.01.org/0day-ci/archive/20250629/202506290711.T0HOr5wS-lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 8.5.0
 >
-> This cleans up the function and does seperation of concern.
-> __startup_64() should focus on action like encrypting the kernel, and
-> let the caller retrieve the mask directly.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> | Closes: https://lore.kernel.org/r/202506290711.T0HOr5wS-lkp@intel.com/
 >
-> CHanges in v5:
->  * Improve commit message for better clarity.
->  * Fix some issues returned by kernel test robot.
->  * Add Huang, Kai Ack tag.
-
-Please put this behind the --- seperator. It's not part of the change
-log. That's documented too.
-
-> Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
-> Acked-by: Kai Huang <kai.huang@intel.com>
-> ---
->  arch/x86/boot/startup/map_kernel.c | 11 +++--------
->  arch/x86/include/asm/setup.h       |  2 +-
->  arch/x86/kernel/head_64.S          |  8 +++-----
->  3 files changed, 7 insertions(+), 14 deletions(-)
+> smatch warnings:
+> drivers/iommu/vsi-iommu.c:657 vsi_iommu_probe() error: uninitialized symbol 'err'.
 >
-> diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-> index 332dbe6688c4..0425d49be16e 100644
-> --- a/arch/x86/boot/startup/map_kernel.c
-> +++ b/arch/x86/boot/startup/map_kernel.c
-> @@ -30,7 +30,7 @@ static inline bool check_la57_support(void)
->  	return true;
->  }
->  
-> -static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
-> +static void __head sme_postprocess_startup(struct boot_params *bp,
->  						    pmdval_t *pmd,
->  						    unsigned long p2v_offset)
+> vim +/err +657 drivers/iommu/vsi-iommu.c
+>
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  639  static int vsi_iommu_probe(struct platform_device *pdev)
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  640  {
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  641  	struct device *dev = &pdev->dev;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  642  	struct vsi_iommu *iommu;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  643  	int err;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  644
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  645  	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  646  	if (!iommu)
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  647  		return -ENOMEM;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  648
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  649  	iommu->dev = dev;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  650
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  651  	iommu->regs = devm_platform_ioremap_resource(pdev, 0);
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  652  	if (IS_ERR(iommu->regs))
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  653  		return -ENOMEM;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  654
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  655  	iommu->num_clocks = devm_clk_bulk_get_all(dev, &iommu->clocks);
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  656  	if  (iommu->num_clocks < 0)
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23 @657  		return err;
+>
+> s/err/iommu->num_clocks/
 
-See documentation about parameter alignment.
+I will fix that in next version but I will wait for more
+comments/review before send it.
 
->  {
-> @@ -68,11 +68,6 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
->  		}
->  	}
->  
-> -	/*
-> -	 * Return the SME encryption mask (if SME is active) to be used as a
-> -	 * modifier for the initial pgdir entry programmed into CR3.
-> -	 */
-> -	return sme_get_me_mask();
->  }
->  
->  /*
-> @@ -84,7 +79,7 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
->   * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
->   * subtracting p2v_offset from the RIP-relative address.
->   */
-> -unsigned long __head __startup_64(unsigned long p2v_offset,
-> +void __head __startup_64(unsigned long p2v_offset,
->  				  struct boot_params *bp)
+Regards,
+Benjamin
 
-Ditto
-
->  	/*
->  	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
-> -	 * the kernel and retrieve the modifier (SME encryption mask if SME
-> -	 * is active) to be added to the initial pgdir entry that will be
-> -	 * programmed into CR3.
-> +	 * the kernel.
-
-Why are you dropping valuable information from that comment, instead of
-moving the important information about the SME mask next to the code
-which retrieves it?
-
-Thanks,
-
-        tglx
+>
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  658
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  659  	err = clk_bulk_prepare(iommu->num_clocks, iommu->clocks);
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  660  	if (err)
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  661  		return err;
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  662
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  663  	iommu->irq = platform_get_irq(pdev, 0);
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  664  	if (iommu->irq < 0)
+> 15ea72d5401fb7 Benjamin Gaignard 2025-06-23  665  		return iommu->irq;
+>
