@@ -1,125 +1,95 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22041FF7D7;
-	Mon, 30 Jun 2025 07:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C43C1FF7D7;
+	Mon, 30 Jun 2025 07:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268927; cv=none; b=Zq51W5HkghNbnTnQyBM2IRDtXjSXaG7OwG5TnkcaSEiiuUF3ARItZ7k66G3EaUgwCUM8rQdSiNabWVyQXoawJxbIDpMhRkhRIKa4DEY6WUEogwi1L39fDmYHZiOTzz7o202pQTDJXXu9NyY4W2K/Vqs9JZPesMiagydOSm54ys8=
+	t=1751268933; cv=none; b=QFzNlciIFjx6sErenlRlI9BbcHFCibGAL4yttsKqwHSVqEbpxJpKAU/AmL84ISiE3qm0awxEdHWqt2bsR8oEmZo+eQav9cdi3s5vXXKU05kKPUd9/vyEwAjaO+Nj3FZm5RABL+hL3Hj9C8L2fE/eOXIhee3nBj4fOS6W/RdNYi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268927; c=relaxed/simple;
-	bh=jkIlxlqR6dkhaRi5tKtg0KroXow+mtT58NSsTlcQK84=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZFo5LQYdvn/hZNGBZ8vKB4HjwAg2udEM3wtuPZEx4yX7YYfMmIMg420LjNxAzNz2PJJXuIxRuNXbh5VkrpHfE0tgT4NiSUu6cgsl8jQbhKM9eA/j8ai6CrUM0Aekcr22/cRCd9JSI/fSZp3CdVf7kP6mp3QDUQNhez/ODF0jl7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kOK75j+7; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1751268933; c=relaxed/simple;
+	bh=pBH6f9Yut4Y+IOdKkB8kToAtqO5eOMUX8Oytj6ItvVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDF/kGOjk7YS8Z456zRISU+TQCKmB6qnP6PqHUjLw87Wz/hqM+BrJA4giAZtuJjEUU9nY4E6VLGh/lPh179jnnAg2zGFuOyNv+Q5m14mf9wbMZchfppKgeV35ASsBacAiEpDb0f42Wo/xs4KfjkOzPHF9XKRLlA+6aRhJEwApyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F0nPajaB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kOK75j+7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A5244436F;
-	Mon, 30 Jun 2025 07:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1751268917;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JuVJ/CxPFVKaLj6q3g7OpqlgAGq7QUGwLKk52Bvpvho=;
-	b=kOK75j+7YnpfYwL2R4pu19Ic3etEL48gJSANQnXMicYqwk9NNVSOK7sNwMywPO4XoUDH/c
-	Q0yBqzCKNgteoFeEqaOnLBbLY3+/wIeVL3Wu0AxhOqmGvYJaf0pg0gmTdJ/GegcjKduaL1
-	nxqLq93gFCkiMPmEbXaXl6izG5ciJIPvyJX/LSheuyYD1ik+Mb+HZFSRe1R5jWxTjm3Uku
-	OCSasTw85InjQ48efBNhqAgI2hhHkMOB6sUs0hJjQ2sPUVK7FusZ70cIjggshfhfyDppHL
-	CsEoxzIjWDizKZOpxsJu6m42FkuM+GXM7KWE+u2tp1pQY4drsbPGQlv7C5PCMA==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: =?utf-8?Q?Beno=C3=AEt?= Monin <benoit.monin@bootlin.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
- =?utf-8?Q?=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Adrian Hunter <adrian.hunter@intel.com>,
- Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Monin <benoit.monin@bootlin.com>,
- linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 5/6] MIPS: mobileye: dts: eyeq5: add the emmc controller
-In-Reply-To: <1846b26773eb48cc970bba1524e9d2a7a612a2e3.1750156323.git.benoit.monin@bootlin.com>
-References: <cover.1750156323.git.benoit.monin@bootlin.com>
- <1846b26773eb48cc970bba1524e9d2a7a612a2e3.1750156323.git.benoit.monin@bootlin.com>
-Date: Mon, 30 Jun 2025 09:35:15 +0200
-Message-ID: <87bjq5iswc.fsf@BLaptop.bootlin.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F0nPajaB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9BGsYPOhKDHjSJL4ToFtlXBhQtz+EUS/bpoAUkX9Rbs=; b=F0nPajaBTPRrvPW4EHktXO9riX
+	7hVl0GK/Uvq9X8MOQA/WPMQYtZevNQ0zzjAyn91ElX8i2zi2zFqRRm2n7fFJ1XA2o48jaOADXmWgG
+	L7CkqpRtHj+OLoM14kjYYShIixYJ9u89pHr1+fFtRsfb/f0BYi+LtW7ZYdBZto5ZlGWyHdP/rcSYq
+	nwJOsfFEgRy3BYtW3ZlmY3XOlcMzY2XOOAGDJ+z/UZ8lpuYjGT+i/i3GoMvq+H9ntVpw445L5OcFH
+	78Yd3dSDWQrJv4mn3Ky4EhUW+1UnKbYNKP4xqUIOqdB6xpwPJmhxYqFZPh2xF3dcPlkYCkqALUzYP
+	YRRviNkw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW92x-00000003BlX-1XeU;
+	Mon, 30 Jun 2025 07:35:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E5B3B300125; Mon, 30 Jun 2025 09:35:22 +0200 (CEST)
+Date: Mon, 30 Jun 2025 09:35:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Dylan Hatch <dylanbhatch@google.com>
+Subject: Re: [PATCH v3 44/64] x86/jump_label: Define ELF section entry size
+ for jump labels
+Message-ID: <20250630073522.GF1613200@noisy.programming.kicks-ass.net>
+References: <cover.1750980516.git.jpoimboe@kernel.org>
+ <7217634a8158e56703dfe22199f1b9c08c501ae3.1750980517.git.jpoimboe@kernel.org>
+ <20250627104818.GW1613200@noisy.programming.kicks-ass.net>
+ <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffffkgggtgfesthhqredttddtjeenucfhrhhomhepifhrvghgohhrhicuvefngffogffpvfcuoehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefghfegvdehgfdtjedvtefhvdeikefgteeuhfeukeettefgvdeuueettddtkeegveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffeekieemsgdvtgdvmegstghfjeemlegurgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffeekieemsgdvtgdvmegstghfjeemlegurgejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopegsvghnohhithdrmhhonhhinhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehrohgshhesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvg
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dhuk7aokj2hpqy3q65uqpv7bz4pwvg2zhngyfh44y7gmiujg4y@h6s354xixgf2>
 
-Hello Beno=C3=AEt,
+On Fri, Jun 27, 2025 at 09:55:30AM -0700, Josh Poimboeuf wrote:
+> On Fri, Jun 27, 2025 at 12:48:18PM +0200, Peter Zijlstra wrote:
+> > > +#define JUMP_TABLE_ENTRY(key, label)				\
+> > > +	".pushsection __jump_table,  \"aM\", @progbits, "	\
+> > > +	__stringify(JUMP_ENTRY_SIZE) "\n\t"			\
+> > 
+> > Argh, can you please not do this line-break. Yes it'll be long, but this
+> > is most confusing.
+> 
+> Yeah, I'll go indent that like the extable one.
+> 
+> > > @@ -29,6 +30,9 @@ int main(void)
+> > >  #else
+> > >  	DEFINE(LRU_GEN_WIDTH, 0);
+> > >  	DEFINE(__LRU_REFS_WIDTH, 0);
+> > > +#endif
+> > > +#if defined(CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE) && defined(CONFIG_JUMP_LABEL)
+> > 
+> > How is HAVE_ARCH_JUMP_LABEL_RELATIVE relevant here?
+> 
+> #ifdef CONFIG_HAVE_ARCH_JUMP_LABEL_RELATIVE
+> 
+> struct jump_entry {
+> 	s32 code;
+> 	s32 target;
+> 	long key;	// key may be far away from the core kernel under KASLR
+> };
 
-> Add the MMC/SDHCI controller found in the eyeQ5 SoC. It is based on the
-> cadence sd4hc controller and support modes up to HS400 enhanced strobe.
->
-> Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
-
-The binding being accepted,
-
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-
-Thanks,
-
-Gregory
-
-
-> ---
->  arch/mips/boot/dts/mobileye/eyeq5.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/=
-mobileye/eyeq5.dtsi
-> index a84e6e720619..e15d9ce0bdf4 100644
-> --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> @@ -178,6 +178,28 @@ timer {
->  				clocks =3D <&olb EQ5C_CPU_CORE0>;
->  			};
->  		};
-> +
-> +		emmc: sdhci@2200000 {
-> +			compatible =3D "mobileye,eyeq-sd4hc", "cdns,sd4hc";
-> +			reg =3D <0 0x2200000 0x0 0x1000>;
-> +			interrupt-parent =3D <&gic>;
-> +			interrupts =3D <GIC_SHARED 10 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&olb EQ5C_PER_EMMC>;
-> +			bus-width =3D <8>;
-> +			max-frequency =3D <200000000>;
-> +			mmc-ddr-1_8v;
-> +			sd-uhs-ddr50;
-> +			mmc-hs200-1_8v;
-> +			mmc-hs400-1_8v;
-> +			mmc-hs400-enhanced-strobe;
-> +
-> +			cdns,phy-input-delay-legacy =3D <4>;
-> +			cdns,phy-input-delay-mmc-highspeed =3D <2>;
-> +			cdns,phy-input-delay-mmc-ddr =3D <3>;
-> +			cdns,phy-dll-delay-sdclk =3D <32>;
-> +			cdns,phy-dll-delay-sdclk-hsmmc =3D <32>;
-> +			cdns,phy-dll-delay-strobe =3D <32>;
-> +		};
->  	};
->  };
->=20=20
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Well,... that's odd. I was sure there was a
+!HAVE_ARCH_JUMP_LABEL_RELATIVE version somewhere... Oh well.
