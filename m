@@ -1,121 +1,227 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779AD2EBDEB;
-	Mon, 30 Jun 2025 22:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D3A2459E0
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322536; cv=none; b=AsHwRc9J/JwAk7MwedCfUmfdYitAofgDd3jnCgaq8C7BlFSAyewvAGmo7UIIPtiNIA5WcqgulCA2gHGmRukBHmRruhXxJ5txBbInEjOztzr8S2nt64Xd8JThxHqfCpIGEnoElFwXS32oIyFieVDXhBr9s0x/WtQS3+9UeUj/7o4=
+	t=1751322560; cv=none; b=Z6T0S/xDOagz9O9KsdrgVxfT6V1JGa/WJUTbNZr6KQwrEDHU+UTSDriaGfetSgKzLhTK67XohsSwL7WSxFnooTqmwAg9dGPImx8i6ZXzY0GPN5sLe+EZOUY3pWtwrAA+yU0FReNu25OJXHg+agZpU5EFdmnizG0CVGUoNBFbh9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322536; c=relaxed/simple;
-	bh=Xag5C87540GSrW72HBWHgaujiHZmcBDcLbme+rawpeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdTrHl5btsHxNH4uLBk7LMq6KcBwmJb2dq43mKfpvTa5nTHHCk88YJJXGOZuMCaiByXTSaJ+mBv09/z5sbosDLBYU7HwhC1UCKzLltIy2T7Vj7tIbhmN3w9RYg5tfcKO9Tb4zq/Y5av/rMzj61tPd3Ci8fmwYZn53lSKmPkxFOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWsX5rPv; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751322560; c=relaxed/simple;
+	bh=TH6VDimW9Tj/0bjuzSN5fQ5HqY/XfIdb4j7Fmht/4dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=L/LmQTuRNXdIpzjg1Mj7WxL6BMbuZpWkZv63JTY9Vq+mC4kkC+wADAhraIVRb/PdG0oeQcKl1OOS3SDqwe+IvUEEtyupk/VJH5/ONjb61MYfnFBc4rvO2N3I/OXlvU0/PYM4qpqWCniirIjrNRG/ISdYXxzbKl5hcUWCJJ7nPMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=erp7m6Ku; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWsX5rPv"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a4323fe8caso16886161cf.2;
-        Mon, 30 Jun 2025 15:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751322533; x=1751927333; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bSaP5bu22sODePS3O3o6OuW/Yz/Yqp93mwqWTCEkiNY=;
-        b=dWsX5rPvfLHl0doyYf9q0mB8cUwIsQG6WfDdP22s9uDvof9hQ95AtbnotSf4m7hNuH
-         3ntbxIlUaNiXYE7ot2ztnh4b6XONcvjU8FPTTidyuL4afBl4uCsUwYBeJPLUFdP1bjzO
-         KXfxUuJknrtVjVAnvRAE6VepCAhbpK/CecsUXa7oWjC4sr6s77aGiaNduANVN47YR2FI
-         ihddLhM/quLpqpE+3p4Id48aaRZqvyjuOlg6iyetbsfcDgQUPnlOIZqgnaRuXYCHomiu
-         FCpRM9eJpggY3sP2RUk1C/H0FhrZH0V3TPA4+4dEFK8Klob8w7mCwveivvpb2Jewih+S
-         DAGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751322533; x=1751927333;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bSaP5bu22sODePS3O3o6OuW/Yz/Yqp93mwqWTCEkiNY=;
-        b=RCGVp9R296hP0lKgUQIsbMqAQr54LGUuaYjpeHLBY/Xv0nSaE4+WSjcktikxTJePRq
-         eniAKT1w+j6e9rOMLaAuE4WQWog8G6LpFan329uQJsJ0RtjMCrw3zyYC9LDwTctWXLo4
-         lGNY01eCbnug53ByStdFhzqUNh+dEdiOa5Iq+AoNBEukDALWFI5vfXu5tNUW/0EuNcXg
-         sHe1vFLP24PCd/YgJBv8QnCazDoZ0Jp/ctmsmbjcLRPAnw+MzGcWen7/nr2yawYZmsCN
-         WBG0uCKDP0FXi+GBGitBE/3bP3FpRwWT9bE/vvp66aoR6/yeYdvLGNmVl/f1y5VyeWil
-         KITQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU75kou7yfluDBulTwzT8GVjgAoAg7z29NWesJhMBdM1RTfBPhZQpmZBEPL+IMwd+BVPZF5Y6C3XJEYnQI=@vger.kernel.org, AJvYcCW3Ll3xQaOg6OTHDACq2APQK3+Bg76dzKvYgwgvQJbUgDAmvJ5yFXrZrUZwDlSWmfMKN4rYJq8iVvB3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzCsA4ofJ3dxX1l7BSEh9AdmW59Ikyz7OXso3Y6ZJqZO444zfC
-	Pw47KTpess4KD9B57jUTvbIXnZUBoxPj/4IPzFeBx8ysF5T/c8FoYG2X0fPfBgUi
-X-Gm-Gg: ASbGncspD+s7niXBamZys8fp07Ozvqo4YapWQ0fBymHF5TTv8J/3x3aWTtMzG38nLcB
-	aqzYyKlKIx25pJa7O/+7aLouzytcFh3ilnO4i2hJARA8i/9tHZFMZV4Ggn2SQpAfzwxSP8ctg7I
-	Dl6wa0Rn/iCu71JHWp9lQEaGyOWRdo0pl8/yK3O2OBLVe2x6onlzwNWnZNJXpjKmrV2bCH3vaba
-	B76edyrA6Z1RVwC9Uhmxmr8ZUuHACa7gfxIVX0NO917bEH0vW4W8x57pkrKjt2jTMtGICxv/WzF
-	o1tSdV7IN6cdZmx1yKHYZepPLeC9H884392/av9TjQg2Yw3UtQ==
-X-Google-Smtp-Source: AGHT+IEMPUqeW45dRJW4czX3mdDVSLcJrOSDF/YCwt3dJID5kuK14Ei+8Rr00WsM+IEYTAg6AuZ/Vg==
-X-Received: by 2002:a05:622a:1994:b0:4a3:d015:38c0 with SMTP id d75a77b69052e-4a7fcbc9f4bmr253146511cf.37.1751322533182;
-        Mon, 30 Jun 2025 15:28:53 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:4851::dead:c001])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc13a311sm66966841cf.25.2025.06.30.15.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 15:28:52 -0700 (PDT)
-Date: Mon, 30 Jun 2025 19:28:46 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 3/4] phy: rockchip-pcie: Enable all four lanes if
- required
-Message-ID: <aGMPnvF-TLsmA8rz@geday>
-References: <cover.1751307390.git.geraldogabriel@gmail.com>
- <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
- <4006908.X513TT2pbd@diego>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="erp7m6Ku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751322558; x=1782858558;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=TH6VDimW9Tj/0bjuzSN5fQ5HqY/XfIdb4j7Fmht/4dw=;
+  b=erp7m6KulWnmF6ndgZXrqq+jN5WXKu09+a32JQhhnYrMPTZpbTAPacAW
+   Zv5ktY96cO2VzeC0d3gOwUDwp0tTFHOuuo9yT6pYES1VYNw3Ka6lWjYpt
+   5pTwv8i2SxHPveczbs4DrYB4ytLwMHkGNcMNAoOWXNNn2xjZadgjErf9P
+   A0BckrdyCmOj7mlVA+Fghs5RBiLV+mXbvuCBZhmzpDTRrW7YoSCJzvlgZ
+   1qy8DpC6Q9/ykhwRHzB4g0po/CDKV4omWxmWYwEQDsa3Zhd1ErZtEsf0V
+   K2OBtl5YJ68ngdVsEg0NZdzpmyVh5pW6OCkykqwRKfWAlBikDv1ABU/dr
+   w==;
+X-CSE-ConnectionGUID: jDlsguYdRZKIjuSjyAchIg==
+X-CSE-MsgGUID: vZtajL0KQ8yCVWUmHvJepg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="76111537"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="76111537"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:29:18 -0700
+X-CSE-ConnectionGUID: eNKms1soTT6rcbcJRa92tA==
+X-CSE-MsgGUID: 9EzHB/m2T7unHKUfLSiD0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="153063620"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 30 Jun 2025 15:29:16 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWMzx-000ZQI-1X;
+	Mon, 30 Jun 2025 22:29:13 +0000
+Date: Tue, 1 Jul 2025 06:29:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Zhang <markzhang@nvidia.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>
+Subject: drivers/infiniband/core/nldev.c:2459:12: warning: stack frame size
+ (1032) exceeds limit (1024) in 'nldev_stat_get_counter_status_doit'
+Message-ID: <202507010618.ffCC4JWZ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4006908.X513TT2pbd@diego>
 
-On Mon, Jun 30, 2025 at 11:33:19PM +0200, Heiko Stübner wrote:
-> Am Montag, 30. Juni 2025, 20:22:01 Mitteleuropäische Sommerzeit schrieb Geraldo Nascimento:
-> > Current code enables only Lane 0 because pwr_cnt will be incremented on
-> > first call to the function. Let's reorder the enablement code to enable
-> > all 4 lanes through GRF.
-> > 
-> > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> > 
-> > Signed-off-by: Valmantas Paliksa <walmis@gmail.com>
-> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
-> 
-> hmm, if Valmantas is the original author you should probably keep that authorship
->   git commit --amend --author="Valmantas Paliksa <walmis@gmail.com>"
-> should do the trick.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+commit: 060c642b2ab8b40b39f9db99c1d14c7d19ba507f RDMA/nldev: Add support to add/delete a sub IB device through netlink
+date:   12 months ago
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250701/202507010618.ffCC4JWZ-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507010618.ffCC4JWZ-lkp@intel.com/reproduce)
 
-Hi again Heiko,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507010618.ffCC4JWZ-lkp@intel.com/
 
-Since I don't use git-send-email and instead rely on mutt to send the
-patches it seems I needed "git config format.from true" to properly
-add the From: to the email body.
+All warnings (new ones prefixed by >>):
 
-First try mangled From: email header, resulting in Valmantas' name
-together with my email address :|
+   In file included from drivers/infiniband/core/nldev.c:35:
+   In file included from include/linux/pid_namespace.h:7:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     501 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     508 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     520 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     529 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   drivers/infiniband/core/nldev.c:1251:12: warning: stack frame size (1048) exceeds limit (1024) in 'nldev_port_get_dumpit' [-Wframe-larger-than]
+    1251 | static int nldev_port_get_dumpit(struct sk_buff *skb,
+         |            ^
+   drivers/infiniband/core/nldev.c:2402:12: warning: stack frame size (1048) exceeds limit (1024) in 'nldev_stat_get_doit' [-Wframe-larger-than]
+    2402 | static int nldev_stat_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
+         |            ^
+>> drivers/infiniband/core/nldev.c:2459:12: warning: stack frame size (1032) exceeds limit (1024) in 'nldev_stat_get_counter_status_doit' [-Wframe-larger-than]
+    2459 | static int nldev_stat_get_counter_status_doit(struct sk_buff *skb,
+         |            ^
+   drivers/infiniband/core/nldev.c:1536:12: warning: stack frame size (1032) exceeds limit (1024) in 'res_get_common_dumpit' [-Wframe-larger-than]
+    1536 | static int res_get_common_dumpit(struct sk_buff *skb,
+         |            ^
+   9 warnings generated.
 
-I've resent it (hopefully) corrected now.
 
-Thanks!
-Geraldo Nascimento
+vim +/nldev_stat_get_counter_status_doit +2459 drivers/infiniband/core/nldev.c
+
+c4ffee7c9bdba7 Mark Zhang    2019-07-02  2458  
+7301d0a9834c7f Aharon Landau 2021-10-08 @2459  static int nldev_stat_get_counter_status_doit(struct sk_buff *skb,
+7301d0a9834c7f Aharon Landau 2021-10-08  2460  					      struct nlmsghdr *nlh,
+7301d0a9834c7f Aharon Landau 2021-10-08  2461  					      struct netlink_ext_ack *extack)
+7301d0a9834c7f Aharon Landau 2021-10-08  2462  {
+7301d0a9834c7f Aharon Landau 2021-10-08  2463  	struct nlattr *tb[RDMA_NLDEV_ATTR_MAX], *table, *entry;
+7301d0a9834c7f Aharon Landau 2021-10-08  2464  	struct rdma_hw_stats *stats;
+7301d0a9834c7f Aharon Landau 2021-10-08  2465  	struct ib_device *device;
+7301d0a9834c7f Aharon Landau 2021-10-08  2466  	struct sk_buff *msg;
+7301d0a9834c7f Aharon Landau 2021-10-08  2467  	u32 devid, port;
+7301d0a9834c7f Aharon Landau 2021-10-08  2468  	int ret, i;
+7301d0a9834c7f Aharon Landau 2021-10-08  2469  
+7301d0a9834c7f Aharon Landau 2021-10-08  2470  	ret = nlmsg_parse(nlh, 0, tb, RDMA_NLDEV_ATTR_MAX - 1,
+7301d0a9834c7f Aharon Landau 2021-10-08  2471  			  nldev_policy, extack);
+7301d0a9834c7f Aharon Landau 2021-10-08  2472  	if (ret || !tb[RDMA_NLDEV_ATTR_DEV_INDEX] ||
+7301d0a9834c7f Aharon Landau 2021-10-08  2473  	    !tb[RDMA_NLDEV_ATTR_PORT_INDEX])
+7301d0a9834c7f Aharon Landau 2021-10-08  2474  		return -EINVAL;
+7301d0a9834c7f Aharon Landau 2021-10-08  2475  
+7301d0a9834c7f Aharon Landau 2021-10-08  2476  	devid = nla_get_u32(tb[RDMA_NLDEV_ATTR_DEV_INDEX]);
+7301d0a9834c7f Aharon Landau 2021-10-08  2477  	device = ib_device_get_by_index(sock_net(skb->sk), devid);
+7301d0a9834c7f Aharon Landau 2021-10-08  2478  	if (!device)
+7301d0a9834c7f Aharon Landau 2021-10-08  2479  		return -EINVAL;
+7301d0a9834c7f Aharon Landau 2021-10-08  2480  
+7301d0a9834c7f Aharon Landau 2021-10-08  2481  	port = nla_get_u32(tb[RDMA_NLDEV_ATTR_PORT_INDEX]);
+7301d0a9834c7f Aharon Landau 2021-10-08  2482  	if (!rdma_is_port_valid(device, port)) {
+7301d0a9834c7f Aharon Landau 2021-10-08  2483  		ret = -EINVAL;
+7301d0a9834c7f Aharon Landau 2021-10-08  2484  		goto err;
+7301d0a9834c7f Aharon Landau 2021-10-08  2485  	}
+7301d0a9834c7f Aharon Landau 2021-10-08  2486  
+7301d0a9834c7f Aharon Landau 2021-10-08  2487  	stats = ib_get_hw_stats_port(device, port);
+7301d0a9834c7f Aharon Landau 2021-10-08  2488  	if (!stats) {
+7301d0a9834c7f Aharon Landau 2021-10-08  2489  		ret = -EINVAL;
+7301d0a9834c7f Aharon Landau 2021-10-08  2490  		goto err;
+7301d0a9834c7f Aharon Landau 2021-10-08  2491  	}
+7301d0a9834c7f Aharon Landau 2021-10-08  2492  
+7301d0a9834c7f Aharon Landau 2021-10-08  2493  	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+7301d0a9834c7f Aharon Landau 2021-10-08  2494  	if (!msg) {
+7301d0a9834c7f Aharon Landau 2021-10-08  2495  		ret = -ENOMEM;
+7301d0a9834c7f Aharon Landau 2021-10-08  2496  		goto err;
+7301d0a9834c7f Aharon Landau 2021-10-08  2497  	}
+7301d0a9834c7f Aharon Landau 2021-10-08  2498  
+7301d0a9834c7f Aharon Landau 2021-10-08  2499  	nlh = nlmsg_put(
+7301d0a9834c7f Aharon Landau 2021-10-08  2500  		msg, NETLINK_CB(skb).portid, nlh->nlmsg_seq,
+7301d0a9834c7f Aharon Landau 2021-10-08  2501  		RDMA_NL_GET_TYPE(RDMA_NL_NLDEV, RDMA_NLDEV_CMD_STAT_GET_STATUS),
+7301d0a9834c7f Aharon Landau 2021-10-08  2502  		0, 0);
+7301d0a9834c7f Aharon Landau 2021-10-08  2503  
+7301d0a9834c7f Aharon Landau 2021-10-08  2504  	ret = -EMSGSIZE;
+67e6272d53386f Or Har-Toov   2022-11-28  2505  	if (!nlh || fill_nldev_handle(msg, device) ||
+7301d0a9834c7f Aharon Landau 2021-10-08  2506  	    nla_put_u32(msg, RDMA_NLDEV_ATTR_PORT_INDEX, port))
+7301d0a9834c7f Aharon Landau 2021-10-08  2507  		goto err_msg;
+7301d0a9834c7f Aharon Landau 2021-10-08  2508  
+7301d0a9834c7f Aharon Landau 2021-10-08  2509  	table = nla_nest_start(msg, RDMA_NLDEV_ATTR_STAT_HWCOUNTERS);
+7301d0a9834c7f Aharon Landau 2021-10-08  2510  	if (!table)
+7301d0a9834c7f Aharon Landau 2021-10-08  2511  		goto err_msg;
+7301d0a9834c7f Aharon Landau 2021-10-08  2512  
+7301d0a9834c7f Aharon Landau 2021-10-08  2513  	mutex_lock(&stats->lock);
+7301d0a9834c7f Aharon Landau 2021-10-08  2514  	for (i = 0; i < stats->num_counters; i++) {
+7301d0a9834c7f Aharon Landau 2021-10-08  2515  		entry = nla_nest_start(msg,
+7301d0a9834c7f Aharon Landau 2021-10-08  2516  				       RDMA_NLDEV_ATTR_STAT_HWCOUNTER_ENTRY);
+7301d0a9834c7f Aharon Landau 2021-10-08  2517  		if (!entry)
+7301d0a9834c7f Aharon Landau 2021-10-08  2518  			goto err_msg_table;
+7301d0a9834c7f Aharon Landau 2021-10-08  2519  
+7301d0a9834c7f Aharon Landau 2021-10-08  2520  		if (nla_put_string(msg,
+7301d0a9834c7f Aharon Landau 2021-10-08  2521  				   RDMA_NLDEV_ATTR_STAT_HWCOUNTER_ENTRY_NAME,
+7301d0a9834c7f Aharon Landau 2021-10-08  2522  				   stats->descs[i].name) ||
+7301d0a9834c7f Aharon Landau 2021-10-08  2523  		    nla_put_u32(msg, RDMA_NLDEV_ATTR_STAT_HWCOUNTER_INDEX, i))
+7301d0a9834c7f Aharon Landau 2021-10-08  2524  			goto err_msg_entry;
+7301d0a9834c7f Aharon Landau 2021-10-08  2525  
+7301d0a9834c7f Aharon Landau 2021-10-08  2526  		if ((stats->descs[i].flags & IB_STAT_FLAG_OPTIONAL) &&
+7301d0a9834c7f Aharon Landau 2021-10-08  2527  		    (nla_put_u8(msg, RDMA_NLDEV_ATTR_STAT_HWCOUNTER_DYNAMIC,
+7301d0a9834c7f Aharon Landau 2021-10-08  2528  				!test_bit(i, stats->is_disabled))))
+7301d0a9834c7f Aharon Landau 2021-10-08  2529  			goto err_msg_entry;
+7301d0a9834c7f Aharon Landau 2021-10-08  2530  
+7301d0a9834c7f Aharon Landau 2021-10-08  2531  		nla_nest_end(msg, entry);
+7301d0a9834c7f Aharon Landau 2021-10-08  2532  	}
+7301d0a9834c7f Aharon Landau 2021-10-08  2533  	mutex_unlock(&stats->lock);
+7301d0a9834c7f Aharon Landau 2021-10-08  2534  
+7301d0a9834c7f Aharon Landau 2021-10-08  2535  	nla_nest_end(msg, table);
+7301d0a9834c7f Aharon Landau 2021-10-08  2536  	nlmsg_end(msg, nlh);
+7301d0a9834c7f Aharon Landau 2021-10-08  2537  	ib_device_put(device);
+7301d0a9834c7f Aharon Landau 2021-10-08  2538  	return rdma_nl_unicast(sock_net(skb->sk), msg, NETLINK_CB(skb).portid);
+7301d0a9834c7f Aharon Landau 2021-10-08  2539  
+7301d0a9834c7f Aharon Landau 2021-10-08  2540  err_msg_entry:
+7301d0a9834c7f Aharon Landau 2021-10-08  2541  	nla_nest_cancel(msg, entry);
+7301d0a9834c7f Aharon Landau 2021-10-08  2542  err_msg_table:
+7301d0a9834c7f Aharon Landau 2021-10-08  2543  	mutex_unlock(&stats->lock);
+7301d0a9834c7f Aharon Landau 2021-10-08  2544  	nla_nest_cancel(msg, table);
+7301d0a9834c7f Aharon Landau 2021-10-08  2545  err_msg:
+7301d0a9834c7f Aharon Landau 2021-10-08  2546  	nlmsg_free(msg);
+7301d0a9834c7f Aharon Landau 2021-10-08  2547  err:
+7301d0a9834c7f Aharon Landau 2021-10-08  2548  	ib_device_put(device);
+7301d0a9834c7f Aharon Landau 2021-10-08  2549  	return ret;
+7301d0a9834c7f Aharon Landau 2021-10-08  2550  }
+7301d0a9834c7f Aharon Landau 2021-10-08  2551  
+
+:::::: The code at line 2459 was first introduced by commit
+:::::: 7301d0a9834c7f1f0c91c1f0a46c7b191b1fd0da RDMA/nldev: Add support to get status of all counters
+
+:::::: TO: Aharon Landau <aharonl@nvidia.com>
+:::::: CC: Jason Gunthorpe <jgg@nvidia.com>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
