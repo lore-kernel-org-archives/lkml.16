@@ -1,93 +1,60 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0470C285411
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF07C1DFCB;
+	Mon, 30 Jun 2025 13:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290012; cv=none; b=dVzicBCM8APiBIkYdQbtOqlpL1BbjK3Jpbiy0wMFtz4zhcaN9a9bjD1VBvTIYi8nHh/KWPDm2yeXBBzqmdWP40zu90MEtnuw3w74e/XceyD5gFnJJskCqty5mU2pFLL/0AuXYX3buPzQK1AAy4/Eowmkw7rO5/ZBNF6Od66fqvg=
+	t=1751290025; cv=none; b=FejkROEYGwUYFTMcJdEk9xv8++39w+AdZB0kQ2u4ktXxZeUqz/Kmm1FgXstdoj4PweOO980GWglpcoySePLKJBPENZHDHmNO37I4DQnGtvieSx56gCjmM6PKOTm/U2GYuaO+kIK8k0rPRGswtBJLMtltWpNPsEgi315715aMBrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290012; c=relaxed/simple;
-	bh=6qCKRWZANcFjZy+jbXJSxvPG7FHCQWeErLwuiSVg2vc=;
+	s=arc-20240116; t=1751290025; c=relaxed/simple;
+	bh=WB0nc/JVBgjX+0w5qWA+TY03gWgQdNO+7U5DPyzBrc0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWmMiqqePFXMjYcyyHV7v/keXwYqkgDX5hAxSi4RbhMW6y/ODpwCIjnrMKq634O5CnLFw6HNL7k8zJfhChicR8nC1Vusrgc0BTr4XX6znZa+dhOlw/duEz1Pg4eE6TS+X8TdHXW+6ydv6igLaPKIPcYUt4g/y5miUE59lh8EZfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=twVn18qU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rH1ToKF8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=twVn18qU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rH1ToKF8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvjKn5ba3ktf6dfJ6g95TfJiki5HphJtp/nXQ+CXCff4aFwaPNk9DAvOx3cN8jHI7cQ3WvjIo0FaKpnN2+nta8fcasVv1jlwF+Yp3acMwoA/qb5s4Kh0azY570fyJE0NyY/z1K+pY4Cod+OKQ8LOhANJ0l0HMNWkJcNpGWDBVvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fylkOZ5k; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="twVn18qU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rH1ToKF8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="twVn18qU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rH1ToKF8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9BE281F397;
-	Mon, 30 Jun 2025 13:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751290008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4dKDhV7HkHnR/fM06ZQ3VumFSoemzPHeiTMaH7qh8g=;
-	b=twVn18qUxwWl/xc6qNMIqVlShHP0g2wOWcv9pruz7LQ3sJ6LlLgexX2WuITrlO+pZNlxt1
-	Sklq4cwwcRHsQkKLUdA+kBsevjE+OT6TUZGmDwEvoVl4WY2XoHvkFYVUOZaapyafSanJhW
-	a3lI7R2fWlT+et7jSHOPz7mrWWsLnak=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751290008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4dKDhV7HkHnR/fM06ZQ3VumFSoemzPHeiTMaH7qh8g=;
-	b=rH1ToKF8a//Wim8aB/cQ2WQ92HMBCwrquiYSTV/ulwveH9qAQ8NYtgxsNSh5O6SDXpibzw
-	JzU+Qc3fSwkZHgBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=twVn18qU;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rH1ToKF8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751290008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4dKDhV7HkHnR/fM06ZQ3VumFSoemzPHeiTMaH7qh8g=;
-	b=twVn18qUxwWl/xc6qNMIqVlShHP0g2wOWcv9pruz7LQ3sJ6LlLgexX2WuITrlO+pZNlxt1
-	Sklq4cwwcRHsQkKLUdA+kBsevjE+OT6TUZGmDwEvoVl4WY2XoHvkFYVUOZaapyafSanJhW
-	a3lI7R2fWlT+et7jSHOPz7mrWWsLnak=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751290008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P4dKDhV7HkHnR/fM06ZQ3VumFSoemzPHeiTMaH7qh8g=;
-	b=rH1ToKF8a//Wim8aB/cQ2WQ92HMBCwrquiYSTV/ulwveH9qAQ8NYtgxsNSh5O6SDXpibzw
-	JzU+Qc3fSwkZHgBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 235C513983;
-	Mon, 30 Jun 2025 13:26:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YAjdBZiQYmhPXQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 30 Jun 2025 13:26:48 +0000
-Date: Mon, 30 Jun 2025 15:26:45 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Oscar Salvador <osalvador.vilardaga@gmail.com>
-Cc: Gavin Guo <gavinguo@igalia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] mm,hugetlb: Change mechanism to detect a COW on
- private mapping
-Message-ID: <aGKQlSNmF5ELFaYB@localhost.localdomain>
-References: <20250627102904.107202-1-osalvador@suse.de>
- <20250627102904.107202-2-osalvador@suse.de>
- <e8287af7-08bd-491c-bca8-70af107e0fea@igalia.com>
- <CAOXBz7gP9Zur3804zJhxFhSjprNc-gfi4vg7w2g07HA2S9EkcA@mail.gmail.com>
- <aGF8v50STTr3fV57@localhost.localdomain>
- <aGGeFrPwAxsu-f3F@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fylkOZ5k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YYG13o2W8Ak2/TreizFs+5Zc+1d5uQAAtxrsG6NxhF8=; b=fylkOZ5k7E1+e+XbEZHOeRgIUT
+	eBG2zbCQb23kdh8/0XTcUnWMcpr52XqGYKK4TqDZRjI2dhPGgOzHJHvP0t4W4FZ8bXdtbATp0lNsl
+	2JM/6omQYE1nyAde5P61f560L4PKXNef0rwzKiRJup8jUjme4AwOHiTk8TEO32VKKMpJcCYq4EWUT
+	hCieesBkq3ZN35mTtq1cnxACfvLKXXMJ9uhKPhNdm9AQjFpjZyW0YI8Gtn4Hb0UVW4e4RARkiIJmA
+	OuctUxOFamGi0JSTIU+IUrjz1k1wR8grATon+2IvlzadZijCahOLRE9kk+lVHVruNqjq7Szd0VJU7
+	hUblIiCQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWEX9-00000003tYR-2Sg3;
+	Mon, 30 Jun 2025 13:26:55 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id ACDC0300158; Mon, 30 Jun 2025 15:26:54 +0200 (CEST)
+Date: Mon, 30 Jun 2025 15:26:54 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ricardo Neri <ricardo.neri@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to
+ smpwakeup.c
+Message-ID: <20250630132654.GN1613376@noisy.programming.kicks-ass.net>
+References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
+ <20250627-rneri-wakeup-mailbox-v5-2-df547b1d196e@linux.intel.com>
+ <20250630110316.GJ1613376@noisy.programming.kicks-ass.net>
+ <sh3fz5qlmy2smu74ezibbptxgmlpedzui3c4q6x22jc5w5ik4q@qms3osoxh74t>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,57 +63,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGGeFrPwAxsu-f3F@localhost.localdomain>
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,localhost.localdomain:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 9BE281F397
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
+In-Reply-To: <sh3fz5qlmy2smu74ezibbptxgmlpedzui3c4q6x22jc5w5ik4q@qms3osoxh74t>
 
-On Sun, Jun 29, 2025 at 10:12:06PM +0200, Oscar Salvador wrote:
-> Nevermind, I just wrote my own reproducer.
-> I see two ways of fixing this, the simpler being a trylock instead of a
-> lock, like the original code did.
-> I'll sleep on it and fix it tomorrow.
+On Mon, Jun 30, 2025 at 03:07:08PM +0300, Kirill A. Shutemov wrote:
+> On Mon, Jun 30, 2025 at 01:03:16PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jun 27, 2025 at 08:35:08PM -0700, Ricardo Neri wrote:
+> > 
+> > > -	/*
+> > > -	 * Wait for the CPU to wake up.
+> > > -	 *
+> > > -	 * The CPU being woken up is essentially in a spin loop waiting to be
+> > > -	 * woken up. It should not take long for it wake up and acknowledge by
+> > > -	 * zeroing out ->command.
+> > > -	 *
+> > > -	 * ACPI specification doesn't provide any guidance on how long kernel
+> > > -	 * has to wait for a wake up acknowledgment. It also doesn't provide
+> > > -	 * a way to cancel a wake up request if it takes too long.
+> > > -	 *
+> > > -	 * In TDX environment, the VMM has control over how long it takes to
+> > > -	 * wake up secondary. It can postpone scheduling secondary vCPU
+> > > -	 * indefinitely. Giving up on wake up request and reporting error opens
+> > > -	 * possible attack vector for VMM: it can wake up a secondary CPU when
+> > > -	 * kernel doesn't expect it. Wait until positive result of the wake up
+> > > -	 * request.
+> > > -	 */
+> > > -	while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> > > -		cpu_relax();
+> > > -
+> > > -	return 0;
+> > > -}
+> > 
+> > > +	while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> > > +		cpu_relax();
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > So I realize this is just code movement at this point, but this will
+> > hard lockup the machine if the AP doesn't come up, right?
+> 
+> Correct.
+> 
+> > IIRC we have some timeout in the regular SIPI bringup if the AP doesn't
+> > respond.
+> 
+> See the comment.
 
-I crafted the fix, and now my reproducer no longer reproduces the
-problem.
-Also, with the fix the whole lock-unlock dance becomes much more simple.
-I'll send out a v4 later today.
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
+Doh, reading hard ;-) Thanks!
