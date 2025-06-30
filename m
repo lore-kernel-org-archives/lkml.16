@@ -1,149 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D37728B3ED;
-	Mon, 30 Jun 2025 13:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45B39ACF;
+	Mon, 30 Jun 2025 13:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289427; cv=none; b=Dk3/TeEyd5Xl6Z4cUQLQcewu3BcNTKwM3AbvpN6tIiVZa7KbLaMM1ANmvj1r7lxCtCv5eEETAbyGYnzPGW+9tvQPipS1yBN/VD2B1dTgjGD5rmHz00PdWI33DcKlszupq6xNnRA5+8v45c6Q29C5E6OGJg2cFy84ONEbAOGiYgw=
+	t=1751289496; cv=none; b=UZwk6SGd57uey7junHePXmWe6vnqtTtBvgsn2MzMx0T6FtYF7vEJ/gal2DVgQkb5WnkRjT5uMobkSnbfP5gd6iTc1b/J37QgFTR2iwvH1RwiJKGph397K7qfgt6/3g03Pd/MyighmngKgoRzFvNQU1IuuDuxhRBwsqQRRK0KSN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289427; c=relaxed/simple;
-	bh=C4G61X+GZRiY0wySqD/8oZ9zCG/EbzIivgQZ9FfrQkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fTOJrONrHSO74zHj6VkI9hwZ1NleeONbX/2K8qfNZF/bfFBWyLxNA6R/4YJV2oDfu1dPojeVK/8knLez8Mw/I8CmcL1fSDLV8oh2tJnUjZChmyqkid5+OKI0JobPNWsr+bg0c+ggGJuUpupAtSZOWxqxm2WMXJCqmT1VBJzz4xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDutYxkP; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751289496; c=relaxed/simple;
+	bh=LWtl4j1jLq8PqQO/Pjn8Neb7rM5FiqI9Uwfbvbrse6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IlCV2kN3uNR/klKdktA2wDHyJN7H5RA49qPprGYxIexq3BwJcLteQSiFdvBngtwKh5Ukq/8pL5Xv5FjeM8cUG9CcRsZIjLDV0FPWgdc7MzyARUMo0KCNAmPIvSOQHXXhmUx+FIlLzK5jXrU9I9oyZ+TdUS1wK6Fe4G9ueM9S61s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AE6ZrdMj; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDutYxkP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751289426; x=1782825426;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C4G61X+GZRiY0wySqD/8oZ9zCG/EbzIivgQZ9FfrQkI=;
-  b=BDutYxkPgHnTuUMC+ObqeyGoERYwBIOQpglXo5o+nfV1nFUWGxFdcZv2
-   dBDYu7pURoYIRuFutQ1C18lp3rNGsBgMTfyHdbaDQrd7BG0ZkZbkHMzon
-   OfSX7enSr7awpdWvs5x9FFyzOLMFKtYgiRdRxru4rWNEg1VqiCQpIzEgc
-   V28cHWt3wjtkYVr41EnaJl9DZ4Ug/nenykVCq45ZEkDDYyMdl7+khJour
-   ZLrI7cnaQOkvHDZrc4uNaNLBnSdJ0MpYfW7R4T1UhtXCMb+0qnUV+1Sd6
-   aS/jCsnqI3Uh2vra8i5N5s/DajJuYZzr6QizwQXpN8ht69YEEfen7v6E/
-   w==;
-X-CSE-ConnectionGUID: XfbVQf3HQ66peYXkca0fmA==
-X-CSE-MsgGUID: Verl4tf4TaKwDSVethLzzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="57320129"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="57320129"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:17:04 -0700
-X-CSE-ConnectionGUID: 11SXBEQeR8GzYBlWXx7EDw==
-X-CSE-MsgGUID: ZP+cpgEURHOK7ryIU+BFBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153088137"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:16:59 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWENU-0000000BJat-1ySr;
-	Mon, 30 Jun 2025 16:16:56 +0300
-Date: Mon, 30 Jun 2025 16:16:56 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
-Message-ID: <aGKOSIfS2kTqeHLt@smile.fi.intel.com>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
- <aF6nEOVhLURyf616@smile.fi.intel.com>
- <aF8N0dYk_WAJjvVu@intel.com>
- <aGI9C6MR8qhe0MHR@smile.fi.intel.com>
- <aGJGWFOpccaNzpni@kuha.fi.intel.com>
- <aGJg0FZK__xYGP7C@smile.fi.intel.com>
- <aGJ8GZXEzJo1IVXM@kuha.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AE6ZrdMj"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b7113ed6bso19488931fa.1;
+        Mon, 30 Jun 2025 06:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751289493; x=1751894293; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UNOIh/VXRrY1ezaTWJtZc13yn8Bcesz6/VHThRKHEao=;
+        b=AE6ZrdMj8waQiU6B0q8emmyFwTsFSfkT3hCljcpfvNiFYdyDCtvxUgpsyu8cTC8IQr
+         MdtBxNPg0fdylTVn0Vk25HVSH6IySfmKSgWkHKJvGBEqdB4Wt+kvE5/W1nnvJ9ebLaCT
+         1NQ11rrqoP7rAFuWvLy2iv+2r0qC2ZU5hQW7a99JwDmNmdGvXZZTq7mbHPFYNcPPOft6
+         Rg6olpTfKZ4V/oq7XO4Lha6qHba5FWbaaWBxnKCQgUCKCIEoKaSphTgqdkJnIABIwoFD
+         TEVh+6QdVrvAOt3WdHc0OJ2QO3Baqp5bVei94ZydCHgGXsiw1kcYsc3D/RUu/bAsih8Y
+         HfAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751289493; x=1751894293;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UNOIh/VXRrY1ezaTWJtZc13yn8Bcesz6/VHThRKHEao=;
+        b=TgYQxMNqHuftJh639DefgiarU7WoXwadq+By2tuMgr0GqDejou4LUUs+P2GDpUXxfd
+         Y7hSXCS7vHIg4Q/hDywwTjeyKbS+NJZUdoJksdF346NUYLg4WCY3S+wbO8C7GVQvs0n6
+         oT1eApO0Tld8lZ2FPvwNGZdC8fuHcnAizpGWOUPVSXbIP8se+alqNDSXu/V972t3TCeF
+         M6L/rq5xV36W2lY62OEsjqYQAB375FPilhK6xfKAtKNFDnEsGyvbJyN+pLl0ACItCjEr
+         IUrGnp29VMjQOkR2AFiMfNfyg8eZtS27W/0oH4rq+jHJ0Jqy+X8Smj+HkdcbItTdU7bc
+         BQCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrMKHX7pzNYqijgtKjOnyRHYKUQK8hlU6WH9XuczmCxZUHPkiSoTyg12hfAUedwjXe/4y+nHn4Qg5WX4hB@vger.kernel.org, AJvYcCXBrsw+4MI9RmPshgI2cqeKJnXvNOEGtCz5Nk2h84J0Zfxy4n4D1ZnQev0g4+7UHzC91ZdxE2ceEj/LqqE0+c0=@vger.kernel.org, AJvYcCXhjkenW3DzBP6Pm/qn+K9X2ac5xVhFsCJYEhSNRhbx93d7daSMIHH7UDmaMm4SzV/5h/WMfTgB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF20ZjdCtM2XHEKdgSczUc6P3+PmVaYmKjNjuA6KqwSm4kjpSC
+	O7tf8epBLISPWhXWS0q1qRQktQ+29hv2X0+b4DS3aIB0ptowFwk4C4B/lj7PAXkag9wsfBcSTsS
+	A8TIUAYiIM5JENuIwDxHDnFfzkkree2guSs5h4O5DvQ==
+X-Gm-Gg: ASbGnctO6F8AJa90/lbnPWt7QhpAMMRg/vQ/aP4BJfzdYfoOOnvzOHmWI+hQEAP4WAn
+	cyrsT23IxCSg2UgOgdSwIOsKDQIF6LfZPgvUBnXtYrm1hK0jviKjAg+eXB7lCrI7eAi1YQcs5z1
+	UyPMVaiMP69mGVNphzBstHZ0bNI+vkvNP0aQbNiDBmgg==
+X-Google-Smtp-Source: AGHT+IHhLUgvQS1IRJmj8+Otz83kPT/LLtNEeqAfUEV7kfIiVy9AOTSEytmM4leWmVTEB8xHQjE6IdmVDFlW7HLS3Vg=
+X-Received: by 2002:a2e:b5dc:0:b0:32a:7332:bf7a with SMTP id
+ 38308e7fff4ca-32cdc49c5c6mr29479231fa.13.1751289492559; Mon, 30 Jun 2025
+ 06:18:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGJ8GZXEzJo1IVXM@kuha.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250630075848.14857-1-ceggers@arri.de>
+In-Reply-To: <20250630075848.14857-1-ceggers@arri.de>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 30 Jun 2025 09:18:00 -0400
+X-Gm-Features: Ac12FXzbzgUbhSp5TkUkjZ7zN1R4I8Snqjim6k2-2dTDga8J_iuSbxQCjWfkEFY
+Message-ID: <CABBYNZK1u4G3ZTH_Z+aPpDkGLoLj-1PhnRCEmwHEjLjLXAD=fQ@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: HCI: fix disabling of adv instance before
+ updating params
+To: Christian Eggers <ceggers@arri.de>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 02:59:21PM +0300, Heikki Krogerus wrote:
-> On Mon, Jun 30, 2025 at 01:02:56PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 30, 2025 at 11:10:00AM +0300, Heikki Krogerus wrote:
-> > > On Mon, Jun 30, 2025 at 10:30:19AM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Jun 27, 2025 at 05:32:01PM -0400, Rodrigo Vivi wrote:
-> > > > > On Fri, Jun 27, 2025 at 05:13:36PM +0300, Andy Shevchenko wrote:
-> > > > > > On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
+Hi Christian,
 
-...
+On Mon, Jun 30, 2025 at 3:59=E2=80=AFAM Christian Eggers <ceggers@arri.de> =
+wrote:
+>
+> struct adv_info::pending doesn't tell whether advertising is currently
+> enabled. This is already checked in hci_disable_ext_adv_instance_sync().
+>
+> Fixes: cba6b758711c ("Bluetooth: hci_sync: Make use of hci_cmd_sync_queue=
+ set 2")
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> ---
+>  net/bluetooth/hci_sync.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+> index 77b3691f3423..0066627c05eb 100644
+> --- a/net/bluetooth/hci_sync.c
+> +++ b/net/bluetooth/hci_sync.c
+> @@ -1345,7 +1345,7 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev =
+*hdev, u8 instance)
+>          * Command Disallowed error, so we must first disable the
+>          * instance if it is active.
+>          */
+> -       if (adv && !adv->pending) {
+> +       if (adv) {
+>                 err =3D hci_disable_ext_adv_instance_sync(hdev, instance)=
+;
+>                 if (err)
+>                         return err;
+> --
+> 2.43.0
+>
 
-> > > > > > >  static int dw_i2c_plat_probe(struct platform_device *pdev)
-> > > > > > >  {
-> > > > > > > +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
-> > > > > > 
-> > > > > > > -	dev->flags = (uintptr_t)device_get_match_data(device);
-> > > > > > >  	if (device_property_present(device, "wx,i2c-snps-model"))
-> > > > > > > -		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> > > > > > > +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> > > > > > >  
-> > > > > > >  	dev->dev = device;
-> > > > > > >  	dev->irq = irq;
-> > > > > > > +	dev->flags = flags;
-> > > > > > 
-> > > > > > Maybe I'm missing something, but why do we need these (above) changes?
-> > > > > 
-> > > > > in between, it is introduced a new one:
-> > > > > flags |= ACCESS_POLLING;
-> > > > > 
-> > > > > So, the initialization moved up, before the ACCESS_POLLING, and
-> > > > > it let the assignment to the last, along with the group.
-> > > > 
-> > > > I still don't get. The cited code is complete equivalent.
-> > > 
-> > > This was requested by Jarkko.
-> > 
-> > Okay, but why? Sounds to me like unneeded churn. Can't we do this later when
-> > required?
-> 
-> You need to ask why from Jarkko - I did not really question him on
-> this one. Unfortunately his on vacation at the moment.
+Ive already submitted a similar fix last week:
 
-Yeah :-(
+https://patchwork.kernel.org/project/bluetooth/patch/20250627163133.430614-=
+1-luiz.dentz@gmail.com/
 
-> I can drop this, but then I'll have to drop also Jarkko's ACK.
-
-I can give mine if it helps. The code as far as I can see is 100% equivalent.
-
-> I think we already agreed that this function, and probable the entire
-> file, need to be refactored a bit, so would you mind much if we just
-> went ahead with this as it is?
-> 
-> I'm asking that also because I don't have means or time to test this
-> anymore before I start my vacation.
-
-I see, then we may ask Andi and Wolfram on this. I slightly prefer to have
-no additional churn added without a good reason.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--=20
+Luiz Augusto von Dentz
