@@ -1,358 +1,129 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8D926ADD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5711026ADD
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288680; cv=none; b=dIFv8rnID9oVg2QccDKeyUThFtC8LhN8lKR+7TYaqOUHn3sSuCdiOKCRzioLAZNzSk7SNGFmAygJRrFhI2WF1CXhk4rUP4HgH+2xO5B5bo7tQun879AbI4xyISXpWqBnOTQRIfR8DrO2XV7Jki81xVr8k1ROfH3RDSDkH/gfgPQ=
+	t=1751288686; cv=none; b=V8N0d5BcjiFxAErdv4wYdDICWhV1MKgaphGABXQbYcirc4dSDKBKvkJbSK18+iLMdFvw8r3IwaXkuwU5jZQl+Qb5cmsyeLjyvEShsHeh8RtOp7tvTRDBCPN1LOTnSvD38hjw4XN0Osuc3jEa0V7pU76FAz+ciyNLuc1zAkq8ckQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288680; c=relaxed/simple;
-	bh=eLaHHZE65Wb8JkFwWT2Xbck6LlHWFomrc4pFQpVUTYg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KWoHiCpKJcXsfFWLYR8YXsrtMKp27vlS5BDkNERM9XJj2heXOTbMoxE0MZG4svw8XYbidTO+q0FU+2pwtjGWhHyjVhnNR/Lvdnb/uhJ7yPArIVOUkKp3KdRHtS8z7q6B7FNAb47UMBsV72gjF/7U4O5s7rPmGPqykLZsJzKMaMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qE5umnSW; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751288686; c=relaxed/simple;
+	bh=E9BcmReFTteZ0kVf6bHV2/8RRI+kRg6XgrN/+LxgbEs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Wt/d7QUNRPaHBanfNFa5WKJvUnPFjKs6fz4CysfzjqETYJ5LebqOQMZ/i01b/hgA9fyMEFQyVJ5bSpyEHO4iji6j+2TasUvqHF/91TL28my/58Rdwpe4TE4KKDkIyQsmRBvTbC9YxFBt+SgZvWk/ssOJ84ELLwG3sI211NDB1OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i2IpwXFU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xDelbUwl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qE5umnSW"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55UD49L32626771;
-	Mon, 30 Jun 2025 08:04:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751288649;
-	bh=CSjmg654iKbhp0vIomNxU29sKDgmLT4I7lK4aG+jWS0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=qE5umnSW9Nkibm57cg2SQeGfiCyLrv9jLcQOPqTM9H8GEKG2Q3LNuClWHHtL20m47
-	 PGY6ll4YWNh2MSQYzHhHf77mK/nUmu0G3BS4ryCCds8qgIIPjOBYukeA8nDNHS/q4U
-	 M0W3vI7PjDpuqhJ6/M73hfmqSxXOhD1nq40W93SY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55UD49HL1908816
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 30 Jun 2025 08:04:09 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Mon, 30
- Jun 2025 08:04:08 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Mon, 30 Jun 2025 08:04:08 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55UD45Sw3932686;
-	Mon, 30 Jun 2025 08:04:05 -0500
-Message-ID: <a90d2db8-0c38-45b1-b295-9c7b38215a38@ti.com>
-Date: Mon, 30 Jun 2025 18:34:04 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i2IpwXFU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xDelbUwl"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751288683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mKD4LqOb/OFKeriTEqhtRMZOhRcpx++y1FjlbRonJ+o=;
+	b=i2IpwXFUe6RnuxYQLNhPDq258343n9fW/QdCH/ftSf66HyChBvr4hmi4/n8BYrhAvDjLaG
+	SYDcp8lsYfyCGSIQzpxRVuBkWh4+Xl5rAfNGjcpS4S0X7ihtsKMW9wHUNOi41UFo54fWH+
+	5d9gceZp+EeAKFLjk7UC/ykKZ/LQpkBqHpWhG6UqohFMLUlj5CPCeI1m8xpU3oWrcE/Tjc
+	OEPqQqRvknhXQxRwm2HPFFBPhFmO+fH2PxZbPdGitRZ2+H+TPDBpF/vlzGywr49LFOCFVG
+	vaNdlkXOW14krkk9Ufeu0oJAdapWcklfCRviTCmueRYNMiuBFc7YVJYfcWUZ8Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751288683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mKD4LqOb/OFKeriTEqhtRMZOhRcpx++y1FjlbRonJ+o=;
+	b=xDelbUwl5N/42gYTMCjUGkW+zcKGBJRubrigZJzSeTeLw5QVx7npJuq3pEC2T0/0nidSMq
+	HbdURRfHxsL6ZICQ==
+Date: Mon, 30 Jun 2025 15:02:18 +0200
+Subject: [PATCH] uapi: bitops: use UAPI-safe variant of BITS_PER_LONG again
+ (2)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/tidss: Decouple max_pclk from tidss feats to
- remove clock dependency
-To: Jayesh Choudhary <j-choudhary@ti.com>, <jyri.sarha@iki.fi>,
-        <dri-devel@lists.freedesktop.org>, <tomi.valkeinen@ideasonboard.com>
-CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>
-References: <20250618100509.20386-1-j-choudhary@ti.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <20250618100509.20386-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250630-uapi-genmask-v1-1-eb0ad956a83e@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIANmKYmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM2MD3dLEgkzd9NS83MTibN0UY7NU47S0ZFMzS0MloJaCotS0zAqwcdG
+ xtbUA7j6URl4AAAA=
+X-Change-ID: 20250630-uapi-genmask-d36e3ffc5691
+To: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+ Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751288679; l=2794;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=E9BcmReFTteZ0kVf6bHV2/8RRI+kRg6XgrN/+LxgbEs=;
+ b=mguinIN0D8T4i+cqTXY82MrjMmoQ8lmX+N309NupRZOMVz/pFQ13PdGuVp9FdZ2O0ZcqI1+Jt
+ woj6s+lH7DaAylhX9iAuZhZPL07+V4sJHcUaTai9Mi8O8Xx4HU9y4O6
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Jayesh,
+BITS_PER_LONG does not exist in UAPI headers, so can't be used by the UAPI
+__GENMASK(). Instead __BITS_PER_LONG needs to be used.
 
-Thanks for the patch.
+When __GENMASK() was introduced in commit 3c7a8e190bc5 ("uapi: introduce uapi-friendly macros for GENMASK"),
+the code was fine. A broken revert in 1e7933a575ed ("uapi: Revert "bitops: avoid integer overflow in GENMASK(_ULL)"")
+introduced the incorrect usage of BITS_PER_LONG.
+That was fixed in commit 11fcf368506d ("uapi: bitops: use UAPI-safe variant of BITS_PER_LONG again").
+But a broken sync of the kernel headers with the tools/ headers in
+commit fc92099902fb ("tools headers: Synchronize linux/bits.h with the kernel sources")
+undid the fix.
 
-On 18/06/25 15:35, Jayesh Choudhary wrote:
-> TIDSS hardware by itself does not have variable max_pclk for each VP.
-> Each VP supports a fixed maximum pixel clock. 
+Reapply the fix and while at it also fix the tools header.
 
-As discussed offline, I think VP max pixel clock is more dependent on 
-SoC than DSS itself as SoC provides the pixel clock to the DSS.
+Fixes: fc92099902fb ("tools headers: Synchronize linux/bits.h with the kernel sources")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ include/uapi/linux/bits.h       | 4 ++--
+ tools/include/uapi/linux/bits.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-K2 devices and AM62*
-> devices uses "ultra-light" version where each VP supports a max of
-> 300MHz
+diff --git a/include/uapi/linux/bits.h b/include/uapi/linux/bits.h
+index 682b406e10679dc8baa188830ab0811e7e3e13e3..a04afef9efca42f062e142fcb33f5d267512b1e5 100644
+--- a/include/uapi/linux/bits.h
++++ b/include/uapi/linux/bits.h
+@@ -4,9 +4,9 @@
+ #ifndef _UAPI_LINUX_BITS_H
+ #define _UAPI_LINUX_BITS_H
+ 
+-#define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
+ 
+-#define __GENMASK_ULL(h, l) (((~_ULL(0)) << (l)) & (~_ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define __GENMASK_ULL(h, l) (((~_ULL(0)) << (l)) & (~_ULL(0) >> (__BITS_PER_LONG_LONG - 1 - (h))))
+ 
+ #define __GENMASK_U128(h, l) \
+ 	((_BIT128((h)) << 1) - (_BIT128(l)))
+diff --git a/tools/include/uapi/linux/bits.h b/tools/include/uapi/linux/bits.h
+index 682b406e10679dc8baa188830ab0811e7e3e13e3..a04afef9efca42f062e142fcb33f5d267512b1e5 100644
+--- a/tools/include/uapi/linux/bits.h
++++ b/tools/include/uapi/linux/bits.h
+@@ -4,9 +4,9 @@
+ #ifndef _UAPI_LINUX_BITS_H
+ #define _UAPI_LINUX_BITS_H
+ 
+-#define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (BITS_PER_LONG - 1 - (h))))
++#define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (__BITS_PER_LONG - 1 - (h))))
+ 
+-#define __GENMASK_ULL(h, l) (((~_ULL(0)) << (l)) & (~_ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
++#define __GENMASK_ULL(h, l) (((~_ULL(0)) << (l)) & (~_ULL(0) >> (__BITS_PER_LONG_LONG - 1 - (h))))
+ 
+ #define __GENMASK_U128(h, l) \
+ 	((_BIT128((h)) << 1) - (_BIT128(l)))
 
-Again it depends on SoC, AM62 and AM62A have around 165Mhz, AM62P has 
-300 Mhz for some VPs.
+---
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+change-id: 20250630-uapi-genmask-d36e3ffc5691
 
-  whereas J7* devices uses TIDSS where all VP can support a
-> max pclk of 600MHz.
-> The limitation that has been modeled till now comes from the clock
-> (PLL can only be programmed to a particular max value). Due to this
-> we end up using different compatible for each SoC when the clocking
-> architecture changes for VPs, even when the hardware is essentially
-> the same.
-> max_pclk cannot be entirely removed since the display controller
-> should tell if a particular mode clock can be supported or not in crtc's
-> "mode_valid()" call. So remove "max_pclk_khz" from the static display
-> feat and add it to "tidss_device" structure which would be modified in
-> runtime.
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-
-I think we can totally go away with max_pixel_clk then since it is 
-anyway not dependent on DSS version but SoC and for checking a 
-particular mode can be supported or not, you are anyway making a call to 
-DM via clk_round_rate API to determine whether a pixel clock is possible 
-to set or not.
-
-  In mode_valid() call, check if a best frequency match for mode
-> clock can be found or not using "clk_round_rate()". Based on that,
-> propagate "max_pclk" and check max_clk again only if the requested mode
-> clock is greater than saved value. (As the preferred display mode is
-> usually the max resolution, driver ends up checking the maximum clock
-
-Yes usually preferred is the highest but not compulsory and when it is 
-not max_pixel_clk for the first mode encountered won't be actually the 
-max, hence the name might be misleading.
-
-> the first time itself which is used in subsequent checks)
-
-Ok, so you basically want to buffer the highest pixel clock encountered 
-while checking mode_valid for each new mode getting set. However the 
-name max_pixel_clk is little misleading as it tends to signify that this 
-is actually the max vp clock at all the times, so someone else might 
-misuse this field. Say for e.g. you cannect a 1280x720 monitor and it 
-would give very less pixel clock value in this field even though VP can 
-support much higher.
-
-So maybe, rename it as cur_max_pclk and add a comment to mention what it 
-signifies.
-
-
-> Since TIDSS display controller provides clock tolerance of 5%, we use
-> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
-> before it is called.
-> 
-> This will make the existing compatibles reusable.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
-> 
-> Changelog v1->v2:
-> - Rebase it on linux-next after OLDI support series[0] as all of its
->    patches are reviewed and tested and it touches one of the functions
->    used.
->    
-> v1 patch link:
-> <https://lore.kernel.org/all/20250618075804.139844-1-j-choudhary@ti.com/>
-> 
-> Test log on TI's J784S4 SoC with a couple of downstream patches
-> to integrate DSI support on one of the video ports:
-> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
-> 
->  From the logs, we can see that for CLK ID 218 (DSS), we do not have to
-> call sci_clk_determine_rate() multiple times. So there is very little
-> overhead of this call even with multiple mode_valid() called during
-> display run.
->  From weston-simple-egl application, I have seen that there is no frame
-> drop or performance impact.
-> 
-> Once this patch gets in, I will send patches for AM62P and J722S DSS
-> support.
-> 
-> [0]: https://lore.kernel.org/all/20250528122544.817829-1-aradhya.bhatia@linux.dev/
-> 
->   drivers/gpu/drm/tidss/tidss_dispc.c | 74 ++++++++++++-----------------
->   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
->   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
->   3 files changed, 33 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-> index c0277fa36425..ad9ffc3685b4 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-> @@ -58,10 +58,6 @@ static const u16 tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->   const struct dispc_features dispc_k2g_feats = {
->   	.min_pclk_khz = 4375,
->   
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 150000,
-> -	},
-> -
->   	/*
->   	 * XXX According TRM the RGB input buffer width up to 2560 should
->   	 *     work on 3 taps, but in practice it only works up to 1280.
-> @@ -144,11 +140,6 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->   };
->   
->   const struct dispc_features dispc_am65x_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -		[DISPC_VP_OLDI_AM65X] = 165000,
-> -	},
-> -
->   	.scaling = {
->   		.in_width_max_5tap_rgb = 1280,
->   		.in_width_max_3tap_rgb = 2560,
-> @@ -244,11 +235,6 @@ static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->   };
->   
->   const struct dispc_features dispc_j721e_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 170000,
-> -		[DISPC_VP_INTERNAL] = 600000,
-> -	},
-> -
->   	.scaling = {
->   		.in_width_max_5tap_rgb = 2048,
->   		.in_width_max_3tap_rgb = 4096,
-> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
->   };
->   
->   const struct dispc_features dispc_am625_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -		[DISPC_VP_INTERNAL] = 170000,
-> -	},
-> -
->   	.scaling = {
->   		.in_width_max_5tap_rgb = 1280,
->   		.in_width_max_3tap_rgb = 2560,
-> @@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
->   	 * if the code reaches dispc_mode_valid with VP1,
->   	 * it should return MODE_BAD.
->   	 */
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_TIED_OFF] = 0,
-> -		[DISPC_VP_DPI] = 165000,
-> -	},
->   
->   	.scaling = {
->   		.in_width_max_5tap_rgb = 1280,
-> @@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
->   };
->   
->   const struct dispc_features dispc_am62l_feats = {
-> -	.max_pclk_khz = {
-> -		[DISPC_VP_DPI] = 165000,
-> -	},
-> -
->   	.subrev = DISPC_AM62L,
->   
->   	.common = "common",
-> @@ -1347,25 +1320,48 @@ static void dispc_vp_set_default_color(struct dispc_device *dispc,
->   			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
->   }
->   
-> +/*
-> + * Calculate the percentage difference between the requested pixel clock rate
-> + * and the effective rate resulting from calculating the clock divider value.
-> + */
-> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
-> +{
-> +	int r = rate / 100, rr = real_rate / 100;
-> +
-> +	return (unsigned int)(abs(((rr - r) * 100) / r));
-> +}
-> +
-> +static int check_max_pixel_clock(struct dispc_device *dispc,
-> +				 u32 hw_videoport, unsigned long clock)
-> +{
-> +	if (clock > dispc->tidss->max_pclk[hw_videoport]) {
-> +		unsigned long round_clock = clk_round_rate(dispc->vp_clk[hw_videoport], clock);
-> +
-> +		if (dispc_pclk_diff(clock, round_clock) > 5)
-> +			return -EINVAL;
-> +
-> +		dispc->tidss->max_pclk[hw_videoport] = round_clock;
-> +	}
-> +
-
-s/max_pclk/curr_max_pclk
-
-> +	return 0;
-> +}
-> +
->   enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
->   					 u32 hw_videoport,
->   					 const struct drm_display_mode *mode)
->   {
->   	u32 hsw, hfp, hbp, vsw, vfp, vbp;
->   	enum dispc_vp_bus_type bus_type;
-> -	int max_pclk;
->   
->   	bus_type = dispc->feat->vp_bus_type[hw_videoport];
->   
-> -	max_pclk = dispc->feat->max_pclk_khz[bus_type];
-> -
-> -	if (WARN_ON(max_pclk == 0))
-> +	if (bus_type == DISPC_VP_TIED_OFF)
->   		return MODE_BAD;
->   
->   	if (mode->clock < dispc->feat->min_pclk_khz)
->   		return MODE_CLOCK_LOW;
->   
-> -	if (mode->clock > max_pclk)
-> +	if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
->   		return MODE_CLOCK_HIGH;
->   
->   	if (mode->hdisplay > 4096)
-> @@ -1437,17 +1433,6 @@ void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
->   	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
->   }
->   
-> -/*
-> - * Calculate the percentage difference between the requested pixel clock rate
-> - * and the effective rate resulting from calculating the clock divider value.
-> - */
-> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
-> -{
-> -	int r = rate / 100, rr = real_rate / 100;
-> -
-> -	return (unsigned int)(abs(((rr - r) * 100) / r));
-> -}
-> -
->   int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->   			  unsigned long rate)
->   {
-> @@ -3087,6 +3072,9 @@ int dispc_init(struct tidss_device *tidss)
->   	}
->   	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
->   
-> +	for (i = 0; i < dispc->feat->num_vps; i++)
-> +		dispc->tidss->max_pclk[i] = 0;
-> +
-
-Ain't the struct already kzalloced when tidss_device is allocated ?
-
->   	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
->   			     &dispc->memory_bandwidth_limit);
->   
-> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-> index b8614f62186c..45b1a8aa9089 100644
-> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
-> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-> @@ -75,7 +75,6 @@ enum dispc_dss_subrevision {
->   
->   struct dispc_features {
->   	int min_pclk_khz;
-> -	int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
->   
->   	struct dispc_features_scaling scaling;
->   
-> diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
-> index d14d5d28f0a3..59c67ae8e721 100644
-> --- a/drivers/gpu/drm/tidss/tidss_drv.h
-> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
-> @@ -22,6 +22,8 @@ struct tidss_device {
->   
->   	const struct dispc_features *feat;
->   	struct dispc_device *dispc;
-> +	long max_pclk[TIDSS_MAX_PORTS];
-
-unsigned long ??
-
-Regards
-Devarsh
-> +
->   
->   	unsigned int num_crtcs;
->   	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
