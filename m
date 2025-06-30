@@ -1,137 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D6F1DDA15;
-	Mon, 30 Jun 2025 20:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67CC19994F;
+	Mon, 30 Jun 2025 20:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751315720; cv=none; b=BGYmtOlpITrD37ZzKhaadUIhL3U4qgn/OntuRv9GGRz4slbzr3eJpZ8CfQNa/1aO8JJjg5B6pJx4aZXr8AiwlUc05u0krEfF86yL4iWTGj6Tda1M3TefPRxohXwgJzpMddYvyGPf6GrIVSk/R4IldFAOCKbURL1COIFZ4MBOiJI=
+	t=1751315818; cv=none; b=ugMIR0Aa3XC/J1kNU1urgd3CcYIW9SG5dl/vAxnSRsv58X2PhApAS+RuHj53rSz2hpkjsGFajIYK4cRIv2x07/ZIBWIvfsfJi0kv0XzamJ6z5TKrwWak8wp1BfaSorVM8fUluvqb4E0KWMH4JNEbIawRIXkOV+vEIK7s644cQ04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751315720; c=relaxed/simple;
-	bh=tQs2Z2Qlt33u9MXNYKvC5h012PuPJ3SbrN4OrPh6WUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=erO+vHyKlcLq5QwVI1nxhxQHi/H95wdTuEAe8TlBK8fE3/fQCohzmiygDg/KyOAusMFD6+Rey25GqJ8y8yaYAVc2GZRtUPM0WI3d2b6ILRZsjXbduigpQxyzVtp2Xe8BM4s2IPaGf2vB9+B8dZarrhuvCjbwu6/PFdHrvNZsgBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQdPVWlE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751315818; c=relaxed/simple;
+	bh=xJYX+//5oV9dbrN8BNhaG+fyKZzrOYQDh7HMTywYW2M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DSQpjF0uclZSopQW3vQQmZe17qqSHbMkBcmBxi+rWr/g/oPeGmdR9ZpGKyvhghCfI7tw2/dU4pFc7KVpOx9Ud3aNR7h4Y0MI8runhCELPAA1J1OLjKjoLYtkWSISXPXr/pEGUnY0rIrmuYZXVPPizvkfvBRAOwtp/mYNOmuodOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=FW2kyEmk; arc=none smtp.client-ip=89.58.62.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQdPVWlE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8278FC4CEE3;
-	Mon, 30 Jun 2025 20:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751315720;
-	bh=tQs2Z2Qlt33u9MXNYKvC5h012PuPJ3SbrN4OrPh6WUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jQdPVWlEXvMQf260xJdBEwJ5mye0aeV5BlmUUkJyQiwtf4pqIzmLONkUBMckpQoc9
-	 W/Gf30/G7C3LEJuIqE8b2ijFpfBO2Z9jhqb2AF62IGrJXteH9c6lSB7k7fBCecGEH4
-	 9S37AvxNcIpOYeUr+5NNnQoXyK81waffWOCYOZO3Wl5bJYSH5r+QSkoDh0pB6SASoa
-	 DPOgBmc691vLQSaDa82hz08t8TNYhHg5WTC600Nb4o3OTeYG0VTQsUc2pi48hpm25L
-	 i1KUb5f1JjCndHAgnhqZQ0svQ3XmvjKUn0GJb4HFDru94h27kWiGJGdA5EqLj0LR9j
-	 3d2oOyqVsae3g==
-Date: Mon, 30 Jun 2025 13:35:18 -0700
-From: Drew Fustini <fustini@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>,
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] clk: thead: Mark essential bus clocks as
- CLK_IGNORE_UNUSED
-Message-ID: <aGL1BjGowU3HNsYE@x1>
-References: <20250618-rust-next-pwm-working-fan-for-sending-v4-0-a6a28f2b6d8a@samsung.com>
- <CGME20250618122808eucas1p1734efef72b723602969465d6cd0c01d2@eucas1p1.samsung.com>
- <20250618-rust-next-pwm-working-fan-for-sending-v4-5-a6a28f2b6d8a@samsung.com>
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="FW2kyEmk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1751315808;
+	bh=xJYX+//5oV9dbrN8BNhaG+fyKZzrOYQDh7HMTywYW2M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
+	 Content-Transfer-Encoding:Message-ID:Date:From:Reply-To:Subject:To:
+	 Cc:In-Reply-To:References:Resent-Date:Resent-From:Resent-To:
+	 Resent-Cc:User-Agent:Content-Type:Content-Transfer-Encoding;
+	b=FW2kyEmkiGkRhcg6Ul7JzICq4iWJjClpXNZQiWh74OIKu3AlnIDa9UhhDgZhQljBf
+	 crsTyAlvu6uTQ/5ChNNflEqDaYddQjhuTm202HgiUPCeNVp7J/QZBuKyUczGAAqYTv
+	 XNhzIzkWxQZZYT1ZPftmP8pbncIvpuX/ZKo+owU9CMiji1WCaM6wxxuRWGaX65DzXU
+	 lV2/DRYwRvhXsi1sTu0/DFglo4nHQTrcqjWct/XNt38Muw9Kik3R00FTHtXkQUcjrr
+	 2muQ84MrX2UFZMtICHj2ROGhblUN0gXmag8y+OB1mEqziysq1cuKm/60cHm9Q76emY
+	 0vqfQg6etfUaw==
+Received: from integral2.. (unknown [182.253.126.254])
+	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 3153E2109A7C;
+	Mon, 30 Jun 2025 20:36:47 +0000 (UTC)
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	io-uring Mailing List <io-uring@vger.kernel.org>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Christian Mazakas <christian.mazakas@gmail.com>,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+Subject: [PATCH liburing] liburing.h: Only use `IOURINGINLINE` macro for FFI functions
+X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
+Date: Tue,  1 Jul 2025 03:36:40 +0700
+Message-Id: <20250630203641.1217131-1-ammarfaizi2@gnuweeb.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-rust-next-pwm-working-fan-for-sending-v4-5-a6a28f2b6d8a@samsung.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 02:27:38PM +0200, Michal Wilczynski wrote:
-> Probing peripherals in the AON and PERI domains, such as the PVT thermal
-> sensor and the PWM controller, can lead to boot hangs or unresponsive
-> devices on the LPi4A board. The root cause is that their parent bus
-> clocks ('CLK_CPU2AON_X2H' and the 'CLK_PERISYS_APB' clocks) are
-> automatically gated by the kernel's power-saving mechanisms when the bus
-> is perceived as idle.
-> 
-> Alternative solutions were investigated, including modeling the parent
-> bus in the Device Tree with 'simple-pm-bus' or refactoring the clock
-> driver's parentage. The 'simple-pm-bus' approach is not viable due to
-> the lack of defined bus address ranges in the hardware manual and its
-> creation of improper dependencies on the 'pm_runtime' API for consumer
-> drivers.
-> 
-> Therefore, applying the'`CLK_IGNORE_UNUSED' flag directly to the
-> essential bus clocks is the most direct and targeted fix. This prevents
-> the kernel from auto-gating these buses and ensures peripherals remain
-> accessible.
-> 
-> This change fixes the boot hang associated with the PVT sensor and
-> resolves the functional issues with the PWM controller.
-> 
-> Link: https://lore.kernel.org/all/9e8a12db-236d-474c-b110-b3be96edf057@samsung.com/ [1]
-> 
-> Reviewed-by: Drew Fustini <drew@pdp7.com>
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  drivers/clk/thead/clk-th1520-ap.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-> index ebfb1d59401d05443716eb0029403b01775e8f73..cf7f6bd428a0faa4611b3fc61edbbc6690e565d9 100644
-> --- a/drivers/clk/thead/clk-th1520-ap.c
-> +++ b/drivers/clk/thead/clk-th1520-ap.c
-> @@ -792,11 +792,12 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
->  		0x134, BIT(8), 0);
->  static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
->  		0x134, BIT(7), 0);
-> -static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
-> +static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd,
-> +		0x138, BIT(8), CLK_IGNORE_UNUSED);
->  static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
->  		0x140, BIT(9), CLK_IGNORE_UNUSED);
->  static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
-> -		0x150, BIT(9), 0);
-> +		0x150, BIT(9), CLK_IGNORE_UNUSED);
->  static CCU_GATE(CLK_PERISYS_APB2_HCLK, perisys_apb2_hclk, "perisys-apb2-hclk", perisys_ahb_hclk_pd,
->  		0x150, BIT(10), CLK_IGNORE_UNUSED);
->  static CCU_GATE(CLK_PERISYS_APB3_HCLK, perisys_apb3_hclk, "perisys-apb3-hclk", perisys_ahb_hclk_pd,
-> 
-> -- 
-> 2.34.1
-> 
+From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 
-I've applied this patch to thead-clk-for-next [1] as commit 0370395 [2].
+These 3 inline functions are for liburing internal use, it does not
+make much sense to export them:
 
-Thanks,
-Drew
+  uring_ptr_to_u64
+  io_uring_cqe_iter_init
+  io_uring_cqe_iter_next
 
-[1] https://github.com/pdp7/linux/commits/thead-clk-for-next/
-[2] https://github.com/pdp7/linux/commit/0370395d45ca6dd53bb931978f0e91ac8dd6f1c5
-~                                                                                                                                                     
-~                                                                                                                                                     
-~                                                                                                 
+Don't use IOURINGINLINE on them. Also, add a comment on the
+IOURINGINLINE macro definition explaining when to use IOURINGINLINE
+and remind the reader to add the exported function to liburing-ffi.map
+if they introduce a function marked with IOURINGINLINE.
 
+Cc: Christian Mazakas <christian.mazakas@gmail.com>
+Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+---
+ src/include/liburing.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
+diff --git a/src/include/liburing.h b/src/include/liburing.h
+index 35d2b271b546..3948a5a6ed47 100644
+--- a/src/include/liburing.h
++++ b/src/include/liburing.h
+@@ -28,6 +28,13 @@
+ #define uring_likely(cond)	__builtin_expect(!!(cond), 1)
+ #endif
+ 
++/*
++ * NOTE: Only use IOURINGINLINE macro for 'static inline' functions
++ *       that are expected to be available in the FFI bindings.
++ *
++ *       Functions that are marked as IOURINGINLINE should be
++ *       included in the liburing-ffi.map file.
++ */
+ #ifndef IOURINGINLINE
+ #define IOURINGINLINE static inline
+ #endif
+@@ -146,7 +153,7 @@ struct io_uring_zcrx_rq {
+  * Library interface
+  */
+ 
+-IOURINGINLINE __u64 uring_ptr_to_u64(const void *ptr)
++static inline __u64 uring_ptr_to_u64(const void *ptr)
+ {
+ 	return (__u64) (unsigned long) ptr;
+ }
+@@ -360,7 +367,7 @@ struct io_uring_cqe_iter {
+ 	unsigned tail;
+ };
+ 
+-IOURINGINLINE struct io_uring_cqe_iter
++static inline struct io_uring_cqe_iter
+ io_uring_cqe_iter_init(const struct io_uring *ring)
+ {
+ 	return (struct io_uring_cqe_iter) {
+@@ -373,7 +380,7 @@ io_uring_cqe_iter_init(const struct io_uring *ring)
+ 	};
+ }
+ 
+-IOURINGINLINE bool io_uring_cqe_iter_next(struct io_uring_cqe_iter *iter,
++static inline bool io_uring_cqe_iter_next(struct io_uring_cqe_iter *iter,
+ 					  struct io_uring_cqe **cqe)
+ {
+ 	if (iter->head == iter->tail)
+-- 
+Ammar Faizi
 
