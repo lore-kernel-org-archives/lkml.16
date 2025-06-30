@@ -1,82 +1,83 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCCA1D5ACE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1F17BD3;
+	Mon, 30 Jun 2025 20:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751314879; cv=none; b=HOJF7cAd4QQ8tRBtP+8hruniDFuWblr67HT5tn4MP0VEzOqP8M2DHEGqVtYU57Hx/B9LZNQKT1+B/QvcbKrkZrBJ+HIuANF1CCNvOkcLZJp9Ly0V9AuvL42IeJx/Uc9ibcE94ClxB6Xwk+T6FiUun5wTmyyQXSl4FHk4fTiY2aw=
+	t=1751315009; cv=none; b=bqY04OgUIrrjM9VQbhJ+V0cgAXx87LcJuYtvQ2o8ShXDEShB/mtqUUSOpS66AwH/yugv0m+F9/AJenekid6OUVxTtUedEa+IhLcrk5cKt/VbaeW9k8lgSVT5AGCQRcDVg9xc3I1N4uGXd0MJZc81j1SbvVB6Y7DZlyvO69fW3R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751314879; c=relaxed/simple;
-	bh=ivGahGY7AoIXIaP2diJNkSV4ddRTveOH5YcBNIzoKFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GTdVy40kz/+soaYLqKBBJl2LRWO+FXOHiF5Vo7RimWMPG8rqS5F1nw8UC0h6xYASx8hAfpWiYHjNlH5GP8CR6ONtJ032/ETkNVZFqV72FrxoLBAYQRDaUzcOttr++uaA0d7u3b0/4F8loqp3w+78SepRTldoH9XPv9dY06ynx6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AA4Huje7; arc=none smtp.client-ip=209.85.219.181
+	s=arc-20240116; t=1751315009; c=relaxed/simple;
+	bh=0Zna5OeI4/pYz2IVZehR4olgjeXgWdFnPu+MsOPUKyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cb20Tcwll/5T7gYhdw8pre/vzJ3IHBSH90zpKAwvXTNKAwRRzTGx53AhpHTAa4jHCXJ/qp6tyYNc+JrmvHGU5WERFZ8haOr1xiA6GYub0PkVpYamDX+OWkj4Y9yVHhH6ZdRJUIVMdt6+uomAt7JTL5Iv8mB+Hhul5W7lSDd492U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RegCB9Be; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AA4Huje7"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso2200874276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RegCB9Be"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a54700a46eso2511705f8f.1;
+        Mon, 30 Jun 2025 13:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751314877; x=1751919677; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HgXc86l3T23qZ79gfE3FKqPxMD3UW7tVI+PzzFMqzaw=;
-        b=AA4Huje74T5idlytHKap1GuIlI43QV3m6UMf2GKYEHCSV9IMxKV2pffmHJ9Nl83mOE
-         6ahmw8utlGVYLrsN2EqKKczPBTmeXUoR3FvqjEq9YtgaNgGtVMOBPxkxSaFVNTMRw0bo
-         7fDwV/c2aCAkhUdcnWTxfZRpOwqP2o2pxKeUn+y47uuP42vRm/Nv86vuYQ+bP6CtpZZD
-         x1nTpw1NXEO6VlEp7vzu9PnIXIr/1OEUWAJOdbd1WS/u2AmLZHrNwYDwJ/ipn0gSLlu4
-         ZkQz89FyWJa8oe7YMxHXshC44LT9vrJGDf/znHS9266ZZdBc+n1d+N/5FRx2ELOP9ojc
-         4RVQ==
+        d=gmail.com; s=20230601; t=1751315006; x=1751919806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MJs33trCtM4FO+BRynBQSLIFoFQoDytGB9w8reb9K60=;
+        b=RegCB9Be0WsepuyCciv03zmF+6UzvCcqDMAS392nb84sYei5rcm07Neb9s3MdJvNe8
+         qkKe2C3nU8QjwJNF//S0ti61bsGp6KtIq1lEf/r57XZ5ZTtAQIiC7QW5w7gxjCHd3uO+
+         N/stAnnB/OCRzY+MfrMSL64R6zpJvOF4VCCv9DuNTyukPtTyEyAcJAqvNspd9fVAkOCW
+         HKGxvYjRhv/HR+LLNNMbq9OJ4qGItigB5pcmPnM2rwblyV3EZFt0AV9WJ2kKFtBF2R6m
+         98KDFZqy8z7YMrxI74taEHtVl7zGb8WKxHAjOlIFrjqIpFaI27gvOeIWQ4JfDZSkOwUJ
+         0LIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751314877; x=1751919677;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HgXc86l3T23qZ79gfE3FKqPxMD3UW7tVI+PzzFMqzaw=;
-        b=naL5/gVmDjZqAPU+hajQ9g43uk71J2aXpxP7ecsygKWbzO9axzyjOnlXnM/vybeA6I
-         EgaU6PnUJF9SFEX0CQmBG156L+1xXx6y+6Kem8mMnpQFkv3kgVuPbPP56MMZ/viWc495
-         lHFf3KTFSPDCQvLtHYQdqSpoWOwydN2B80qiOcrekqD90y01vBn/ydLK5+jUilLbs8ii
-         LkgggrT0lCctWxIbo4+iVtilQLrxrYkNcs2tyegQqTcfyhllp3kNfw0/C1nJccjIDEll
-         7lQrdwVrKEemKbuzwZg21CbEYjR5sb3OxQgs69FtiwXaFzwKpOglUxk77LzXVMh2L1xo
-         AyXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2P2prQt3Y7YlC7zFSIwZ0rN1JM4kUERL60BH0SoqViE8zgQcye3uGbRaNWIcGEGUVMEmWDnWoQEjRnL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQqJyAGqJOs9clZFnyPcF9DY+T0zn/9KCvMTsukdzi1WrkuNcn
-	tXTKIzasa0kDUd/j54Y52PBTutPdRfLoyaAmXLsjmBSNpM7H1BICWKTgRGiFpg==
-X-Gm-Gg: ASbGnctEQmtYhrZRlqIq/0dmHkkXWx1Eu6RN8dZZqIuWtQ90yLQl6yEllX3lkbRg6Gk
-	d2ZKAcYic6O+9nfaDq64HiLS+XFtlH3/FWCilmuGt9PRMrfxF29DNtGB/ODQgpqIUrPoYByq+LD
-	Hek8E1KsGZt+Q2Al2m1YfrfOpBzlBKw1+EqOSenD2jpJ8+kswX3w/lR3POU4LJgZ7gaxuTKhciV
-	icU9XCAV8wTmir8aPhmF6e32CJsMIxnUdsByJTbhNL+sKFFGtwMr0ZU1vgkW28CL3m/x/4WKw7I
-	hHOKi+AgcybKL6HxaD2mMTHRYtxxFS7tPqCu2JeNCUoutWGerb3jyb38THG69w==
-X-Google-Smtp-Source: AGHT+IEcvfcb6sMTAzxKd4/1cEnZ6U0v/7EgCWtGtwIPSedzt8CFdzKxTUX4M//4qdWXDFc3L2o1cQ==
-X-Received: by 2002:a05:690c:931c:10b0:714:586:8486 with SMTP id 00721157ae682-7151714d498mr149647047b3.9.1751314876673;
-        Mon, 30 Jun 2025 13:21:16 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:57::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cc52f3sm16757447b3.107.2025.06.30.13.21.16
+        d=1e100.net; s=20230601; t=1751315006; x=1751919806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MJs33trCtM4FO+BRynBQSLIFoFQoDytGB9w8reb9K60=;
+        b=RAhPBtxxHtCzTFLsgZn0jahNEp2q4YWeyPStPxjwTPKGAusTQroOcP4O9GEKc74qVO
+         sOB4fUTRaJ1ohZIf8YFdn0cX+/A7SozRpBFUBP+tT5Hx9OkOfjzSMCCIyZdQAMDjvHWH
+         0CiViB4DvV1uQl9ZDHsNykwW752RE/Lob+5iejRzeMi3TTa1uytXVc4YcWWevSYEumTP
+         EzhTW8xiQQa/eGrxSDzuqBpnyDoxezIODW9Mwaw+tSWlyzOn5TLKInBXeD48pjASSoqQ
+         iwCKNwbSJIK1nYwgGB8wQ8dgtonyhRBKY7eRiy4V/h2j6QSsM2qFBWFXTTN+xx+pttto
+         GgcA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1iF0nQIWuorqOm+1s+05Z6NbbKKjpwvriJHwO9TOv5exTmYigPT43GF+NRyCMKhQOxDlU9srhks9pE3TAOXLmuYU=@vger.kernel.org, AJvYcCWsyISb8/RKkMxlnaSjb1LRCU9bCiA4ufXR00Z5+MtHcD7kVGf5O6wcWfnJgX+i2ivlRzsQ/VgvKQFj@vger.kernel.org, AJvYcCWxEtWRk2/nE4lw8b78VMG6gNMXatzLMOhp7xmuKFCi9fzJa8jvBvL6hlJKqPrNH5sWFQeUXpTCK8HgESg1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT0JLk75TIxa7/VSq7RhRxF4hbCkQQ3LvZ7Uu7UwFkgt/quRpk
+	ltOtAAAOgmbna5IEjB/PAEuBpI9kiW58RFGlmsqwtutOqHITyEG6vxm7
+X-Gm-Gg: ASbGncscRfmFL/4V/dgch5X3KJvFwMzd3vqJkiNODoQxjBUsycrNeX8cPCaUmDlzx9o
+	Ayo6JEbuLOhWk9JZAYK+81BfWxL48htXzBKqnXkzgMiGbjF/RLzEZ7n9d/5JBKxT2sld7Ia/UW4
+	ZiD1SHpOS7OfBTuo3E/nQsbk9wVwgzHotEslKG3dKpr/+l/CKm8UQZYGYvhxEccjigjn6gg2S3G
+	Se3/tgQtqH9D66EZJC86F48U90svgD6JXxGzbIlD+39QVN8NXZu+lePei3nZfRuhTjpIuQ4c9fl
+	RPdeSc1HJ/OZ2IS1KDv1Xr2x9q23PLnWsgodj5d/AsJD1U8uCW4R7heshw6UirpEovAdJ9BshwP
+	m3NG6URQL4nU=
+X-Google-Smtp-Source: AGHT+IE5/W8Gf1/21JSZa4TvDeD7KT2eI7tMaNWTTrnHLcG5flQAyc+E9OrKK+YlRfdFzx8BJ3kdaA==
+X-Received: by 2002:a5d:5487:0:b0:3a5:2cf3:d6af with SMTP id ffacd0b85a97d-3a900949a6fmr11756548f8f.45.1751315005646;
+        Mon, 30 Jun 2025 13:23:25 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:a065:f77f:7ac4:1c25])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5b7fsm148523195e9.10.2025.06.30.13.23.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 13:21:16 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Kees Bakker <kees@ijzerbout.nl>
-Cc: Gregory Price <gourry@gourry.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>,
-	Byungchul Park <byungchul@sk.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk in weighted interleave
-Date: Mon, 30 Jun 2025 13:21:14 -0700
-Message-ID: <20250630202115.1439224-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <7c1180f4-923c-4138-b756-618cb5d597ac@ijzerbout.nl>
-References: 
+        Mon, 30 Jun 2025 13:23:25 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v14 0/5] Add RSCI driver for Renesas RZ/T2H SoC
+Date: Mon, 30 Jun 2025 21:23:18 +0100
+Message-ID: <20250630202323.279809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,80 +86,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 30 Jun 2025 22:05:48 +0200 Kees Bakker <kees@ijzerbout.nl> wrote:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> >   mm/mempolicy.c | 39 ++++++++++++++++++++-------------------
-> >   1 file changed, 20 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 78ad74a0e249..0d693f96cf66 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -2569,7 +2569,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
-> >   	unsigned long node_pages, delta;
-> >   	u8 *weights, weight;
-> >   	unsigned int weight_total = 0;
-> > -	unsigned long rem_pages = nr_pages;
-> > +	unsigned long rem_pages = nr_pages, carryover = 0;
-> >   	nodemask_t nodes;
-> >   	int nnodes, node;
-> >   	int resume_node = MAX_NUMNODES - 1;
-> > @@ -2594,18 +2594,12 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
-> >   	node = me->il_prev;
-> >   	weight = me->il_weight;
-> >   	if (weight && node_isset(node, nodes)) {
-> > -		node_pages = min(rem_pages, weight);
-> > -		nr_allocated = __alloc_pages_bulk(gfp, node, NULL, node_pages,
-> > -						  page_array);
-> > -		page_array += nr_allocated;
-> > -		total_allocated += nr_allocated;
-> > -		/* if that's all the pages, no need to interleave */
-> >   		if (rem_pages <= weight) {
-> > -			me->il_weight -= rem_pages;
-> > -			return total_allocated;
-> > +			node_pages = rem_pages;
-> > +			me->il_weight -= node_pages;
-> > +			goto allocate;
+Hi all,
 
-Hello Kees,
+This patch series adds support for the Renesas RSCI (Renesas Serial
+Communication Interface) driver for the RZ/T2H SoC. The RSCI is a serial
+communication interface that provides UART functionality and is used in
+various Renesas SoCs.
 
-Thank you for reviewing my code!
+The series includes the following changes:
+1. Device Tree Bindings
+2. RSCI Driver Implementation
+3. SH-SCI Driver Modifications
+4. Maintainer Updates
 
-> This is a goto into the middle of a for-loop.
-> What do you think is going to happen at the end of that loop?
-> 
-> I think (only tested with a small C program) it will go to the start of
-> the loop, do the i++, check i<nnodes, and possibly do the loop again.
-> Variable i is uninitialized at that point. In the loop it hits several
-> uninitialized variables.
+v13->v14:
+- Rebased on latest linux-next.
+- Switched to using `EXPORT_SYMBOL_NS_GPL` for all exported
+  symbols in the sh-sci driver to allow RSCI driver to use SH-SCI symbols.
+- Added MODULE_IMPORT_NS for SH_SCI to allow RSCI driver to use SH-SCI
+  symbols.
+- Dropped using `R9A09G077_CLK_PCLKM` macro in DT binding
 
-From what I can see from my code, I think the only the goto statement leads
-to a second iteration of the for loop is if allocation fails.
-But otherwise, it should be ok since we always hit
+v12->v13:
+- Rebased on latest linux-next.
+- Updated commit message for patch 1/5 to clarify the ABI change.
+- Used `R9A09G077_CLK_PCLKM` macro for core clock.
+- Dropped the defconfig patch as it is already in the queue.
+- Added reviewed-by and acked-by tags to relevant patches.
 
-if (total_allocated == nr_pages)
-	break;
+v11->v12:
+- Rebased on latest linux-next.
+- Added defconfig patch to enable RSCI driver.
+- Added RZ/N2H support to the dt-bindings
+- Used port ops callbacks in sci_shutdown() to allow RSCI driver
+  to reuse the core shutdown logic.
+- Added reviewed-by tags.
 
-within the loop. For the branch that takes the goto, we set
-node_pages = rem_pages, then jump to the label and allocate.
-So nr_allocated = node_pages, and total_allocated = 0 + nr_allocated
-so total_allocated = node_pages
+v10->v11:
+- Rebased on latest linux-next.
+- Added a new patch to update the dt-bindings maintainer entry.
+- Added a new patch to use port ops callbacks.
+- Implemented shutdown_complete callback
+- Added reviewed-by tags
 
-total_allocated == node_pages == rem_pages == nr_pages, so we will break. Phew!
+Cheers,
+Prabhakar
 
-To cover the case where allocation fails, I think we should be breaking
-anyways, so I can definitely add a new check for this.
+Lad Prabhakar (2):
+  dt-bindings: serial: rsci: Update maintainer entry
+  serial: sh-sci: Replace direct stop_rx/stop_tx calls with port ops in
+    sci_shutdown()
 
-> Even if this is legal C code, it is pretty obscure.
+Thierry Bultel (3):
+  dt-bindings: serial: renesas,rsci: Add optional secondary clock input
+  serial: sh-sci: Use private port ID
+  serial: sh-sci: Add support for RZ/T2H SCI
 
-I agree that it not very clean. I did this to reduce the amount of repeated
-code there is. Even if this code works, it could definitely be written
-better to make it more readable and maintainable. As I noted in my second
-response to Gregory, I'm not planning on pursuing this version anymore,
-so if I decide to send a second version, I'll keep this in mind.
+ .../bindings/serial/renesas,rsci.yaml         |  19 +-
+ drivers/tty/serial/Kconfig                    |   7 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/rsci.c                     | 480 ++++++++++++++++++
+ drivers/tty/serial/rsci.h                     |  10 +
+ drivers/tty/serial/sh-sci-common.h            |   8 +
+ drivers/tty/serial/sh-sci.c                   | 212 +++++---
+ 7 files changed, 648 insertions(+), 89 deletions(-)
+ create mode 100644 drivers/tty/serial/rsci.c
+ create mode 100644 drivers/tty/serial/rsci.h
 
-Thank you again for taking the time to review this, and also testing it on
-your end! I hope you have a great day : -)
-Joshua
+-- 
+2.49.0
 
-Sent using hkml (https://github.com/sjp38/hackermail)
