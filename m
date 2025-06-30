@@ -1,221 +1,163 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6A725B687;
-	Mon, 30 Jun 2025 13:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2A328B7F8
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291436; cv=none; b=agVx17c2RxqVOC5vXo/hR32DuEiqcYX61Wv3E8NRNPQJ08R4ZdDJ6QOL58BZYQDUpm0zD2M8cajl9Ha/p509eSl+zCtWRCPdO8t1YxuJMxkjDI0VHPxLS9XK9rDQGWkEoXOfryb0Knz2ioQ7nLQeO1/W0J/1H5xEyf4XkU89MA8=
+	t=1751291441; cv=none; b=orVcApsm6hTMxlo8BwRVicSXgETTVxMgOMb37fqZ6wrsuwaTyQOwsahGIcn0bwHQwJZ7sZmtpG4jyilt6C5IygaVfUorh1hja/3tUkmQDpiyMtn0Pv47geqbQPNkE1kaF0MBjfXmFl0E1JOuQyTlEGmSYD7dPauDaR6DASYzemY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291436; c=relaxed/simple;
-	bh=IQVhGSw27mbrhh2Uwszh19QwB+gQgLHGxJNAYOIfAUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgAlx1S+SHIJbQtpzS+rHZlLz1dLxk4C2I51Ci8j2q1Thy4domiApyR2P5D6NsI9n3Kb6F++tQ/Xx/TLj7V8EQbhuPpY4Dz8MeGD9NDr9k8kxYGa8zJCLVbSHS5oXNbWXdAl4MH1GoSayjTg5HkqZe7k2efnIiadg0XnsdePSvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLSX97ud; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLSX97ud"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fad4e6d949so14500096d6.0;
-        Mon, 30 Jun 2025 06:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751291433; x=1751896233; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N5Lb9XyF7dArjU8ijxNd19g2e4SY59XNR0KZZKcVnQQ=;
-        b=kLSX97ud6gG/NVDwsXJjOewUDFYkK+qKVEqUQaVnROEmN9CWP9u5WullWazKWscKm7
-         UPTuJTM8yJJP3WJisgdgkI7CgX+1/FM/XNJaO4YwOgu3tOc2vNZU6K29GTrwftsEsDp9
-         I/SokZCxly9lg5whXdior0cqFqApaugB550Hg2E+0WN+DJNs6tWHJZqdeufpHxusEd3x
-         c/7/gxyefJ6TZKu8B3QkZYV9ZMIeSRk9w/OXCML81PhkSBCKdU2Q6OnodFG6ZXuf1KQY
-         1TbLGNJl1mUx8uJcTxtOFjgfEgxVI6ncoxsc5pT6ZDn+a0Y2E7/Xp8MdCVv2fwTLZOWJ
-         mDpg==
+	s=arc-20240116; t=1751291441; c=relaxed/simple;
+	bh=Vg9nGVU0uFpGqFaJ21lWzf1qScLwRwSjeWE1zKUiVQc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=KIeaJnSqS4Z9zYAYWWpk09YvQd9BmAyy6kXS6vyOjiY3PtPPQ28wC5mbtIBKJ6XwaOPsXy8JsKLnEWd5EtzIdx94S6KMyjMm9TyUl3n6RQ87yqrCjnggedVWboauyPmzSe3mdOGiSUTTFmveLmzxe21eGVNp1hMgnVYdFf8oAbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddbec809acso50252055ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:50:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751291433; x=1751896233;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N5Lb9XyF7dArjU8ijxNd19g2e4SY59XNR0KZZKcVnQQ=;
-        b=iS9+AM9v/wZLOqtGg82XRHAwPBjO+XqTj4ffd/mW+/IorNmc3oZsQa9Z4resLKSb14
-         KtBdnEWJqlRH4k8LexnWWkwu1fPse5e7J6weJk5KjwG0DWkL8cmzPKYUbCaU8JY2YCEO
-         0B9zIg1aJ0r7JIHgh4XJUO9RRcJAXwnfNN2fLMHMLpN4ZSdALzR6mhvilkdwkI80yvC3
-         V2qg9vMj9hVX1XjR0d02KhJz7V/+tW4za+FeMAANXyGTxXm6YaTpDpR2cTRCEKZcbVOE
-         TObRsUKho616ej8ERb9qIf0CC1aDx2eoVFKF7rfGRr1+oHwNfkm2YaIb+fZ5EwW5OUF3
-         O1zg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVcG+9dx8G3HD5utatjD8touzH+J4TUAoQVMwL+zrb7VL1yNXbYy7YIjbeyxCrJqHPMBg9Byce/CElTLE=@vger.kernel.org, AJvYcCXAA27ufZ64rvqx46EEUZoRpSXoBdO1rnFWujJa8eLsRZ1YKN144i8vtLf11JlSlqNiNVE0ujKAujy+oKbRNi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUc/yWdlPSLBTJKXqMFV0Xwy+QJXidCfk6Utw6LXhOCfuCRqxg
-	BQzRl8LJReNSXnaNA5y28ewxDvmT00hg86/V5+IrIEQv7JwAlkfry/vw
-X-Gm-Gg: ASbGncvtY+akG5nmgZxHCr7kU/UtfWEW0/W8bPyKIUAd4IJdrdDGwB59zeV3CEzG7wM
-	KtW30WrS32Xl9ERfbTRVYS13py2Zy46RS8MLaVqFUpJUhG/+PpNEPGP/ZkrFbA2ArpQC/+wJj+F
-	Y/+zwik0SZiz9Y+rtdE0ecQpPCkpwY8m7tb4fw0YdZ9KsL9lhchVGzx6etflj7zyU/4A0ZbTg76
-	RFnUZnbJrpNdETFqN3GNEoXf4CuKvHIAUu2s6kVzzs87SPWx9Y1zrVkXxN36cnzRY89ZWqdup+e
-	xAeB46/xq1kz2J/BuENFZFMe66n7ldm3CO8kzwqkVfqzjuSRTOXLWXzd2CmKaRD5lRjO8gTevp2
-	ny20uQV2c7UrmFvM5MJ3j19sUY3lU9gdgtJCbIO2YvZF2Pe6h8EeL
-X-Google-Smtp-Source: AGHT+IEHxeGpLNvKFW1gWPsvXXwQLIfBdOzO4xQXmaXIvW3hINkG5Lb3gWbZJ55wDEeX5PNX6IYdqQ==
-X-Received: by 2002:a05:6214:76f:b0:6fa:c81a:6204 with SMTP id 6a1803df08f44-6fffdcff257mr195938466d6.10.1751291432568;
-        Mon, 30 Jun 2025 06:50:32 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718d8f2sm68154456d6.23.2025.06.30.06.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 06:50:28 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 24AEEF40066;
-	Mon, 30 Jun 2025 09:50:26 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 30 Jun 2025 09:50:26 -0400
-X-ME-Sender: <xms:IpZiaK1guDOH7SmL4XT_MroNhCJtGq9O-mSASHLW9HgsuJjT-nGGwQ>
-    <xme:IpZiaNGzzhlRHUL5l6VTOwdhl9vj6S6TuLsjOrhx33TjWyQVMj0mp7WmUFe3rRX6x
-    ra9ug2ouqJLrW6-XQ>
-X-ME-Received: <xmr:IpZiaC6unKwSHMhWsd-3QhRgTcUo3ggbnQwvPlNPz6thLwyLmn4aUHkImQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudekjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhephfetvdfgtdeukedvkeeiteeiteejieehvdetheduudejvdektdekfeegvddvhedt
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghr
-    shhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvg
-    hngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohep
-    feehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmihhnghhosehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgt
-    phhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopehjuhhrihdrlh
-    gvlhhlihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepvhhinhgtvghnthdrghhuihht
-    thhotheslhhinhgrrhhordhorhhgpdhrtghpthhtohepughivghtmhgrrhdrvghgghgvmh
-    grnhhnsegrrhhmrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdr
-    ohhrghdprhgtphhtthhopegsshgvghgrlhhlsehgohhoghhlvgdrtghomhdprhgtphhtth
-    hopehmghhorhhmrghnsehsuhhsvgdruggv
-X-ME-Proxy: <xmx:IpZiaL3pfv5C-L8GiSrTyFayQftmx5D6SfPZ9AEAd-tMNIHODA4QPA>
-    <xmx:IpZiaNEXif6gWn7z1G3LnIF5N4A7kDuaXo7bHnwovfv1o7ayjxaFeg>
-    <xmx:IpZiaE-GVz9OC470fbW0XQ7IbsLuU8t-yrSZdvV-DpoSFlsrOEsalA>
-    <xmx:IpZiaCm7YGAZvjzBatdIIymAhDzx9vg4lxZhGDzmxStRnNz-0cbWlg>
-    <xmx:IpZiaFFT0xHuCvNQvEdFBMIsoGSLWN6pvZ4qEkzvYnvF5qOh-m34U5Ij>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 30 Jun 2025 09:50:25 -0400 (EDT)
-Date: Mon, 30 Jun 2025 06:50:24 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,	Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>,	Valentin Schneider <vschneid@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Tamir Duberstein <tamird@gmail.com>,	Kunwu Chan <kunwu.chan@hotmail.com>,
-	Mitchell Levy <levymitchell0@gmail.com>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	Borys Tyran <borys.tyran@protonmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Panagiotis Foliadis <pfoliadis@posteo.net>,	linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev
-Subject: Re: [GIT PULL] [PATCH v2 0/5] rust: Task & schedule related changes
- for v6.17
-Message-ID: <aGKWIFVl4nwSl8SG@Mac.home>
-References: <20250625051518.15255-1-boqun.feng@gmail.com>
+        d=1e100.net; s=20230601; t=1751291438; x=1751896238;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jhrN57tRASQZfXCRJf6lFHVz7sDmGWR5JpV8E4+RqZA=;
+        b=UG8R2OrPafa540NIGjsMf4e8do51fB7D8FrkgHQOtsqsxrIDjYn0Bk2zQ3FsQSm+S1
+         5EzAMoBDbAGfCw5OtI3ldjYkM34VVbkNuzcui7TZD+b2+lVtqjcKJWy2pOnCbqSCx3nu
+         LWQ3cENXwIuB8ChwuariMqHAQbN7Ip5KRvjIS6inqum8B0e+xiwxi+xgtCw5bh3mUO7z
+         UHa44OmLFb0dkcWC7AzeNdKpEpDAJKY4zAoQDEt4doq0H6oWEZ2Qu89G+x4MxNWsBwBS
+         kQ5/6V+w96yYF8AWiMKkWjosBM+slz/nfIvyaspB7YK1a5p23TwU+HbtLYshgUj6afjy
+         yKHQ==
+X-Gm-Message-State: AOJu0YwnP0JiWKqNbNc1ouqFt4qnShLVcXJO5/BZHHAJvvSWqjOQKcM5
+	3C1WeJC8R0cpUOR60TkWFqDdzgZM6uTa9Nk7S/YUoeNINZdTWCNpphf5gJFxeB18JZOeLWmDA+K
+	ZAa8WFjr76YmYMCfB9ZHuPDNIQbSeMZzLyV6aiq3unxItyJKluah3Mz6hb6s=
+X-Google-Smtp-Source: AGHT+IGnW+FdwNrYZR2a5VJorB1IX7+kDdx9+91bbAC1L5jYkYbkQAg9yiiGKA1oBML+wL228F2oskVfElE75gVH7ZcqbEc1bM+7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625051518.15255-1-boqun.feng@gmail.com>
+X-Received: by 2002:a05:6e02:3f0e:b0:3dd:d18a:2d71 with SMTP id
+ e9e14a558f8ab-3df4ab5dd4cmr134340385ab.2.1751291438706; Mon, 30 Jun 2025
+ 06:50:38 -0700 (PDT)
+Date: Mon, 30 Jun 2025 06:50:38 -0700
+In-Reply-To: <68610b72.a70a0220.2f4de1.0019.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6862962e.a70a0220.3b7e22.0f14.GAE@google.com>
+Subject: Re: [syzbot] Private message regarding: [syzbot] [ntfs3?] WARNING in ni_rename
+From: syzbot <syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 24, 2025 at 10:15:13PM -0700, Boqun Feng wrote:
-> Hi Ingo & Peter,
-> 
-> This is the updated version from my pull request last cycle:
-> 
-> v1: https://lore.kernel.org/rust-for-linux/20250506045843.51258-1-boqun.feng@gmail.com/
-> 
-> Please take a look, thanks!
-> 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Ping ;-) I forgot to add that this is a dependency for Rust version's
-read_poll_timeout(), which is a dependency to a few things:
+***
 
-* In the `Tyr` driver:
+Subject: Private message regarding: [syzbot] [ntfs3?] WARNING in ni_rename
+Author: kapoorarnav43@gmail.com
 
-  https://lore.kernel.org/rust-for-linux/20250628.224928.690831629261546521.fujita.tomonori@gmail.com/
+#syz test: 
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
 
-* In Nova, the gpu driver:
+From 00325fe8a9658ef0d9e0082dd98c09adc01875fa Mon Sep 17 00:00:00 2001
+From: Arnav Kapoor <kapoor...@gmail.com>
+Date: Sun, 29 Jun 2025 15:29:27 +0530
+Subject: [PATCH] ntfs3: log error instead of WARN_ON in ni_rename cleanup 
+failure
 
-  https://lore.kernel.org/rust-for-linux/20250619-nova-frts-v6-24-ecf41ef99252@nvidia.com/
+If ni_remove_name fails and undoing ni_add_name also fails,
+add an error log and mark the inode as bad,
+instead of triggering a WARN_ON.
 
-* In the qt2025 phy driver:
+This avoids kernel WARNING reports from syzbot,
+while still keeping the error visible in logs.
 
-  https://lore.kernel.org/lkml/20250220070611.214262-9-fujita.tomonori@gmail.com/
+Reported-by: syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com
+Signed-off-by: Arnav Kapoor <kapoor...@gmail.com>
+---
+ fs/ntfs3/frecord.c | 2 +-
+ 1 file changed, 1 insertions(+), 1 deletions(-)
 
-Thanks!
+diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.cindex 
+b7a83200f2cc..xxxxxxxxxxxx 100644
+--- a/fs/ntfs3/frecord.c
++++ b/fs/ntfs3/frecord.c
+@@ -3029,11 +3029,11 @@ int ni_rename(...)
+        if (err && ni_remove_name(new_dir_ni, ni, new_de, &de2, &undo)) {
+                ntfs_err(sb, "ni_rename: failed to clean up after add_name 
+failure");
+                *is_bad = true;
+-               WARN_ON(err);
++               ntfs_warn(sb, "ni_rename: incomplete rename cleanup, 
+marking bad");
+        }
 
-Regards,
-Boqun
 
-> Changes since v1:
-> 
-> - `Location::file_with_nul()` is used to avoid the C changes of
->   __might_sleep()
-> 
-> Regards,
-> Boqun
-> 
-> 
-> The following changes since commit 5bc34be478d09c4d16009e665e020ad0fcd0deea:
-> 
->   sched/core: Reorganize cgroup bandwidth control interface file writes (2025-06-18 13:59:57 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux.git tags/rust-sched.2025.06.24
-> 
-> for you to fetch changes up to 7e611710acf966df1e14bcf4e067385e38e549a1:
-> 
->   rust: task: Add Rust version of might_sleep() (2025-06-24 15:53:50 -0700)
-> 
-> ----------------------------------------------------------------
-> Rust task & schedule changes for v6.17:
-> 
-> - Make Task, CondVar and PollCondVar methods inline to avoid unnecessary
->   function calls
-> 
-> - Add might_sleep() support for Rust code: Rust's "#[track_caller]"
->   mechanism is used so that Rust's might_sleep() doesn't need to be
->   defined as a macro
-> 
-> ----------------------------------------------------------------
-> Boqun Feng (1):
->   rust: Introduce file_from_location()
-> 
-> FUJITA Tomonori (1):
->   rust: task: Add Rust version of might_sleep()
-> 
-> Kunwu Chan (2):
->   rust: sync: Mark CondVar::notify_*() inline
->   rust: sync: Mark PollCondVar::drop() inline
-> 
-> Panagiotis Foliadis (1):
->   rust: task: Mark Task methods inline
-> 
->  init/Kconfig                |  3 +++
->  rust/helpers/task.c         |  6 +++++
->  rust/kernel/lib.rs          | 48 +++++++++++++++++++++++++++++++++++++
->  rust/kernel/sync/condvar.rs |  3 +++
->  rust/kernel/sync/poll.rs    |  1 +
->  rust/kernel/task.rs         | 33 +++++++++++++++++++++++++
->  6 files changed, 94 insertions(+)
-> 
-> -- 
-> 2.39.5 (Apple Git-154)
-> 
+On Monday, 30 June 2025 at 17:25:07 UTC+5:30 syzbot wrote:
+
+Hello, 
+
+syzbot has tested the proposed patch but the reproducer is still triggering 
+an issue: 
+WARNING in ni_rename 
+
+loop0: detected capacity change from 0 to 4096 
+------------[ cut here ]------------ 
+WARNING: fs/ntfs3/frecord.c:3030 at ni_rename+0xee/0x100 
+fs/ntfs3/frecord.c:3029, CPU#0: syz.0.16/6714 
+Modules linked in: 
+CPU: 0 UID: 0 PID: 6714 Comm: syz.0.16 Not tainted 
+6.16.0-rc4-next-20250630-syzkaller-g1343433ed389 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
+Google 05/07/2025 
+RIP: 0010:ni_rename+0xee/0x100 fs/ntfs3/frecord.c:3029 
+Code: 8b 05 66 63 9a 0f 48 3b 44 24 10 75 22 44 89 e0 48 83 c4 18 5b 41 5c 
+41 5d 41 5e 41 5f 5d e9 49 ac 6c 08 cc e8 b3 fe b9 fe 90 <0f> 0b 90 eb c5 
+e8 18 d2 69 08 0f 1f 84 00 00 00 00 00 90 90 90 90 
+RSP: 0018:ffffc90002eb7ab8 EFLAGS: 00010293 
+RAX: ffffffff8305ccdd RBX: 00000000fffffffe RCX: ffff888020b28000 
+RDX: 0000000000000000 RSI: 00000000fffffffe RDI: 0000000000000000 
+RBP: 00000000fffffffe R08: ffffffff8fa17437 R09: 1ffffffff1f42e86 
+R10: dffffc0000000000 R11: fffffbfff1f42e87 R12: 0000000000000000 
+R13: ffff88803385e600 R14: ffff888077140758 R15: ffff888066ebe6d0 
+FS: 00007f59ac0016c0(0000) GS:ffff888125c1d000(0000) knlGS:0000000000000000 
+CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+CR2: 00007f8e813c3000 CR3: 000000007f64a000 CR4: 00000000003526f0 
+Call Trace: 
+<TASK> 
+ntfs_rename+0x6e2/0xb40 fs/ntfs3/namei.c:316 
+vfs_rename+0xbd7/0xf00 fs/namei.c:5129 
+do_renameat2+0x6ce/0xa80 fs/namei.c:5278 
+__do_sys_rename fs/namei.c:5325 [inline] 
+__se_sys_rename fs/namei.c:5323 [inline] 
+__x64_sys_rename+0x82/0x90 fs/namei.c:5323 
+do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline] 
+do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94 
+entry_SYSCALL_64_after_hwframe+0x77/0x7f 
+RIP: 0033:0x7f59ab18e929 
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff 
+ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48 
+RSP: 002b:00007f59ac001038 EFLAGS: 00000246 ORIG_RAX: 0000000000000052 
+RAX: ffffffffffffffda RBX: 00007f59ab3b5fa0 RCX: 00007f59ab18e929 
+RDX: 0000000000000000 RSI: 0000200000001040 RDI: 0000200000000280 
+RBP: 00007f59ab210b39 R08: 0000000000000000 R09: 0000000000000000 
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000 
+R13: 0000000000000000 R14: 00007f59ab3b5fa0 R15: 00007fff104b3398 
+</TASK> 
+
+
+Tested on: 
+
+commit: 1343433e Add linux-next specific files for 20250630 
+git tree: linux-next 
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bfa770580000 
+kernel config: https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397 
+dashboard link: https://syzkaller.appspot.com/bug?extid=b0373017f711c06ada64 
+compiler: Debian clang version 20.1.6 
+(++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 
+20.1.6 
+patch: https://syzkaller.appspot.com/x/patch.diff?x=1147848c580000 
+
