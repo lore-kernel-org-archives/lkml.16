@@ -1,95 +1,267 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58932580F0;
-	Mon, 30 Jun 2025 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854AF8460;
+	Mon, 30 Jun 2025 16:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302036; cv=none; b=SV14HH9yzH/zfq3RWYdVeqJOKPfwHEWz8r7sA/oXNRTgjnqwvLuyutuU/zVYaSBpfHCy4tQvRomRCmfPUzBkloL2TIkRxkb3IJsf8BUtv4I5IHBHROPF9IuugmsSXySlG8mTKovUD5J0c3qZ49g6Oo3uL8gYw2JKodJPzc8xB08=
+	t=1751302076; cv=none; b=g8aPd1d0O1IY1hq4UwTBTRXGJr5EhrSfD+SL4nEHG5O+bNAXPN9Mw3IF5YyIZgLXKAGpCC8tireVmpSht7JNCr+WgDueOovcqBztXvh2BHu5eFc767pzciA0EZvnGl7vUyeWMZtPeKkEnnLOZhem8ywZY14+dGcG6+FY2UQK4zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302036; c=relaxed/simple;
-	bh=Kdnnb4D69VxZOJNmENQk4mHq7LJOEUjRiIRlpgviKn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qh/Y5agj5I8/wxrQFT2yGmglDEhuqK2wasKouW7egar8r8NrE/ljFXOuJzez6j3u9vgp9GnKBkqn3X4P9BPQiQZ/jTRJEZiHQkHdq8VgPH1l5cCOBPhgGDUMqSmGqiOVG5P8mni44G77rUUIyU/CbzgyV+U9OfTdF1SZG7HLo9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iEdnNNLh; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751302076; c=relaxed/simple;
+	bh=rsfOEOJugX34XA+jCFmt6YE10O4CFvj6rkIm5zunCpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JacmMgIgZQisktcrzl3yUDzUOVURPHzH03rLPaCKix8M1Z0gt2ikdzHAGsLIZRT5aR2aQzMTcDDglUXdHiBi7DxQxPzVwBo30f7Qrh9d6gn12QgihDvp4zI/9trvRhXPIqGmB+Zd+Qedf67U+yPob8Ze5JeJxJi1Gq9CsVRetPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FIyFedhA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEdnNNLh"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso2257646b3a.0;
-        Mon, 30 Jun 2025 09:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751302034; x=1751906834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iY/hTIZ/gvLsdKZo7lZtiHxsOyS7iQMgBig8vPRRf5w=;
-        b=iEdnNNLhCvo+mW8KmZHFjNEckWilKKAOJT38MhulquR/HqMbwh1GmYzQxhMfQaV+if
-         NPmGVV7dDUYqSHJINO45hd49/ynrxc+awSX0fx25GEfkPXmQjmfjcVWnsMu/YixB9c9Q
-         gp/jGi4YMRphGkTlfSEx4YmHCI2I+UNIXLs1u3QRJW8CpWcQdetlBOvdMiOqXPzCoag0
-         HeQZ9YDH1vs3utyvqFmyr5EcQ+Sg3uVEk8PNdISb0/qbv3TM34mB8k1AhczOCFjvJ1id
-         dp/L/XHvG6yPKTU37XPd8mWfXhhYmy4shAXsTKgYBzRAOJ4Q5yVSCdkkGH6Yizk3fX9n
-         Wd3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751302034; x=1751906834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iY/hTIZ/gvLsdKZo7lZtiHxsOyS7iQMgBig8vPRRf5w=;
-        b=Rh3B4+LIh0YJ2YDitkJ1muRsM8jnkCYbHYlrICcxwCoOXuhT6uRCLUkRVT7AjhFERm
-         xjIjQvv4zNdPDFGQZ6YR+eiISF/JTbn8bAcflJHKTCf0mcWKaHfF9gvmGyjQ4riedpCl
-         suBtggToeCbMTFiNcYzMoVSGUY1eC/ItTueZYHxf9Qk4irIHkYA2/Jiw+g20V1B4PoZL
-         1LJfw+ezpS4nim1mNfCmCXv9JqQat5gqb5rVOjWqkj6pYUSQBd7MUlkALcfK+SKxw46G
-         uKcKy//TB/Zm3jSy1LLyP5+ibMf5ZBkH08xrnS5Ftc/Jt5YFvjVsqVk3PtjM2iy2eG9P
-         dGFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0HuySZ9P6GeJbo5mR05z80md5C+SVJTdGNnJficjlCIJ2Gt2wVHvHQEXd2P+FHGhXpiSscVdUC6MA1TY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzECyJPreUIdWXjp/tZMvQXJ9091kphJaFXEzEkgfgjW/f0NnOV
-	5SLyDzJvIgHxBFWBH7sHo03cGiOjIhEzc5sftlUAf0MbP17HKTSjbZSy
-X-Gm-Gg: ASbGncuGoGMDKBJqB66ubimw3qFxnVUoEaHc6oSlLAK5beDu5FRnFB0BIOVk1kTrIcr
-	M/kFA6/j5nwNW8bVFKFst/5dpoxSFaueQlJRO03pJyoXu+XSOWPy56iBp2KX7oKAR5s2ib3++LO
-	EmpAcInQH8yCPaSSOu4F0ttd6iso3ZjpoS9+Hg1T6kz2wqNGkwVj4d3yssr0HVW1c0AqIRSvVh7
-	eoRetpPzJE4+Z/WzsQFnfedtGZNYkt/kalpSBXrwN9db/hdS8jrjxlSvBpAP1XNDSqajzj0kRCQ
-	/+u4Z+TCK/F3godsXp7mAu01YVySaAQvMgX5Il/5p06TV+yaPD3dEA4yxCNOjw==
-X-Google-Smtp-Source: AGHT+IG9jq9ZJLejjxDTbu7m8qrKofqReKrLSPHkpNKE10yzAigb30sRcx2Iag6Mho41WtMtEwm6qQ==
-X-Received: by 2002:a05:6a00:240c:b0:742:a77b:8bc with SMTP id d2e1a72fcca58-74af6e89170mr16767121b3a.2.1751302033802;
-        Mon, 30 Jun 2025 09:47:13 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541c399sm9742119b3a.52.2025.06.30.09.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 09:47:13 -0700 (PDT)
-Date: Mon, 30 Jun 2025 09:47:10 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH v1 1/1] Input: alps - switch to use scnprintf() to
- suppress truncation warning
-Message-ID: <ibj3zqv7amhu6yqyfjunpj6ibv3pna7zou56lp3cry3ibwvw6c@wts2psxqswjd>
-References: <20250630082245.1416796-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FIyFedhA"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UBD7Hb023854;
+	Mon, 30 Jun 2025 16:47:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=AufIWocE5AuvJtPV1wlgowl9nYF3OzzI2gj6BnaMb
+	ts=; b=FIyFedhA/dGopM8gjgfb77ELLHTz2d+5DUgWSOfJIb3tEQIaAuXjH9w0r
+	wQIJBZgDc1JjfTOo6mDTLaJzfVoLPWnVIDg0HdM2PrBPvEmRyC7Kx/WqX70GJuCD
+	48dc1bHa8cihoN3DcaCKSFm5Wru+yGC78IDA7G4F9SmUYz+NGqDN3nOumoTXN2eq
+	EJ5PDw3FuZYOT3/z6v1WCQEA4YHZxEVpM6EEbbDyuCGRwhybT7RHC+49nY4Buog+
+	3iTLlEMNoMryGaZiJVYBL04Uz8sBZvqJxF0/SMG67Ir0tJ0I6xjK4A8ScUZPyJI2
+	lIJ53RHhxYlAqz2M2Q7vpCs91/0xw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j6u1jmpk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 16:47:37 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55UE6N6f021945;
+	Mon, 30 Jun 2025 16:47:36 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpepwg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 16:47:36 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UGlYeJ51053014
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 16:47:34 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8009420040;
+	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 55BFA2004B;
+	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Jun 2025 16:47:34 +0000 (GMT)
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Matthew Wilcox <willy@infradead.org>, David Hildenbrand <david@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: [PATCH] mm/debug_vm_pgtable: Use a swp_entry_t input value for swap tests
+Date: Mon, 30 Jun 2025 18:47:25 +0200
+Message-ID: <20250630164726.930405-1-gerald.schaefer@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630082245.1416796-1-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ry2V18RJOMmtSxE0l4oahA2WZlmSjeeJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEzOCBTYWx0ZWRfX0kvpwDntTdUg 0+0ZeQMZlFBp3uT7tL5Qx9+tPHwjJD05c1iCfNbFF1YIeLEepNS3COO91oyyuYKsX/SvbOElP4r LycnGSTdSapD/Rw+KRYXz/Ye04S2eiggr+xuQlABM8sin22fUiRUajjlZGmfbmWAZlYWzdwg3h8
+ y3Hz6sCImfOlz66E/6nabSYgEp2Dg5amWOcDogZiQi/IeGJzq8jX8AIZ0GZ2OyAfgYJejMB9tG2 KF/hBedYQWBH3ChJe9Yvs9qEGXxDEVt9IT1GwjP4eQj/eMgWEMby3nD5BYFCizEQcQRJ+KA4cW8 S5ysEgCknJnY39XQzMJf4j2fi3V6Wg2TlvWPPk7aX3cThwrlLSm4e2+d6dREUi38Y2TCcN0OK3+
+ YAYen7p/bTPTyFPV7ovOFQphAbGzESj9/lt9bn65yKLGLPrJUudKDzZNwJ1CFYWXJOP3A2lv
+X-Proofpoint-GUID: ry2V18RJOMmtSxE0l4oahA2WZlmSjeeJ
+X-Authority-Analysis: v=2.4 cv=GrRC+l1C c=1 sm=1 tr=0 ts=6862bfa9 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=ZTx8QE4AkKJnx8U2w1UA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_04,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300138
 
-On Mon, Jun 30, 2025 at 11:21:52AM +0300, Andy Shevchenko wrote:
-> The commit 76c968e75715 ("Input: alps - switch to use scnprintf() to suppress
-> truncation warning") converted one place in the driver while the other left
-> untouched. Convert the other place as well.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Dmitry, thanks for fixing those problems! This one can be folded into mentioned
-> commit if you are still can / want to rebase.
+The various __pte/pmd_to_swp_entry and __swp_entry_to_pte/pmd helper
+functions are expected to operate on swap PTE/PMD entries, not on
+present and mapped entries.
 
-Thank you Andy, I strongly prefer not to rebase for-linus branch so I
-applied this as a separate patch.
+Reflect this in the swap tests by using a swp_entry_t as input value,
+and convert it to a swap PTE/PMD for testing, similar to how it is already
+done in pte_swap_exclusive_tests(). Move the swap entry creation from
+there to init_args() and store it in args, so it can also be used in other
+functions.
 
-Thanks.
+The pte/pmd_swap_tests() are also changed to compare entries instead of
+pfn values, again similar to pte_swap_exclusive_tests(). pte/pmd_pfn()
+helpers are also not expected to operate on swap PTE/PMD entries at all.
 
+Also update documentation, to reflect that the helpers operate on swap
+PTE/PMD entries and not present and mapped entries, and use correct names,
+i.e. __swp_to_pte/pmd_entry -> __swp_entry_to_pte/pmd.
+
+For consistency, also change pte/pmd_swap_soft_dirty_tests() to use
+args->swp_entry instead of a present and mapped PTE/PMD.
+
+Link: https://lore.kernel.org/all/20250623184321.927418-1-gerald.schaefer@linux.ibm.com
+Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+---
+ Documentation/mm/arch_pgtable_helpers.rst |  8 ++--
+ mm/debug_vm_pgtable.c                     | 53 ++++++++++++++---------
+ 2 files changed, 36 insertions(+), 25 deletions(-)
+
+diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
+index c88c7fa665d6..ba2f658bc241 100644
+--- a/Documentation/mm/arch_pgtable_helpers.rst
++++ b/Documentation/mm/arch_pgtable_helpers.rst
+@@ -236,13 +236,13 @@ SWAP Page Table Helpers
+ ========================
+ 
+ +---------------------------+--------------------------------------------------+
+-| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
++| __pte_to_swp_entry        | Creates a swp_entry_t (arch) from a swap PTE     |
+ +---------------------------+--------------------------------------------------+
+-| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
++| __swp_entry_to_pte        | Creates a swap PTE from a swp_entry_t (arch)     |
+ +---------------------------+--------------------------------------------------+
+-| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
++| __pmd_to_swp_entry        | Creates a swp_entry_t (arch) from a swap PMD     |
+ +---------------------------+--------------------------------------------------+
+-| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
++| __swp_entry_to_pmd        | Creates a swap PMD from a swp_entry_t (arch)     |
+ +---------------------------+--------------------------------------------------+
+ | is_migration_entry        | Tests a migration (read or write) swapped entry  |
+ +-------------------------------+----------------------------------------------+
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+index bd8f9317b025..d19031f275a3 100644
+--- a/mm/debug_vm_pgtable.c
++++ b/mm/debug_vm_pgtable.c
+@@ -72,6 +72,8 @@ struct pgtable_debug_args {
+ 	unsigned long		fixed_pud_pfn;
+ 	unsigned long		fixed_pmd_pfn;
+ 	unsigned long		fixed_pte_pfn;
++
++	swp_entry_t		swp_entry;
+ };
+ 
+ static void __init pte_basic_tests(struct pgtable_debug_args *args, int idx)
+@@ -698,12 +700,15 @@ static void __init pte_soft_dirty_tests(struct pgtable_debug_args *args)
+ 
+ static void __init pte_swap_soft_dirty_tests(struct pgtable_debug_args *args)
+ {
+-	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
++	pte_t pte;
+ 
+ 	if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
+ 		return;
+ 
+ 	pr_debug("Validating PTE swap soft dirty\n");
++	pte = swp_entry_to_pte(args->swp_entry);
++	WARN_ON(!is_swap_pte(pte));
++
+ 	WARN_ON(!pte_swp_soft_dirty(pte_swp_mksoft_dirty(pte)));
+ 	WARN_ON(pte_swp_soft_dirty(pte_swp_clear_soft_dirty(pte)));
+ }
+@@ -737,7 +742,9 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args)
+ 		return;
+ 
+ 	pr_debug("Validating PMD swap soft dirty\n");
+-	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
++	pmd = swp_entry_to_pmd(args->swp_entry);
++	WARN_ON(!is_swap_pmd(pmd));
++
+ 	WARN_ON(!pmd_swp_soft_dirty(pmd_swp_mksoft_dirty(pmd)));
+ 	WARN_ON(pmd_swp_soft_dirty(pmd_swp_clear_soft_dirty(pmd)));
+ }
+@@ -748,17 +755,11 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
+ 
+ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
+ {
+-	unsigned long max_swap_offset;
+ 	swp_entry_t entry, entry2;
+ 	pte_t pte;
+ 
+ 	pr_debug("Validating PTE swap exclusive\n");
+-
+-	/* See generic_max_swapfile_size(): probe the maximum offset */
+-	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
+-
+-	/* Create a swp entry with all possible bits set */
+-	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
++	entry = args->swp_entry;
+ 
+ 	pte = swp_entry_to_pte(entry);
+ 	WARN_ON(pte_swp_exclusive(pte));
+@@ -782,30 +783,34 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
+ 
+ static void __init pte_swap_tests(struct pgtable_debug_args *args)
+ {
+-	swp_entry_t swp;
+-	pte_t pte;
++	swp_entry_t arch_entry;
++	pte_t pte1, pte2;
+ 
+ 	pr_debug("Validating PTE swap\n");
+-	pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
+-	swp = __pte_to_swp_entry(pte);
+-	pte = __swp_entry_to_pte(swp);
+-	WARN_ON(args->fixed_pte_pfn != pte_pfn(pte));
++	pte1 = swp_entry_to_pte(args->swp_entry);
++	WARN_ON(!is_swap_pte(pte1));
++
++	arch_entry = __pte_to_swp_entry(pte1);
++	pte2 = __swp_entry_to_pte(arch_entry);
++	WARN_ON(memcmp(&pte1, &pte2, sizeof(pte1)));
+ }
+ 
+ #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+ static void __init pmd_swap_tests(struct pgtable_debug_args *args)
+ {
+-	swp_entry_t swp;
+-	pmd_t pmd;
++	swp_entry_t arch_entry;
++	pmd_t pmd1, pmd2;
+ 
+ 	if (!has_transparent_hugepage())
+ 		return;
+ 
+ 	pr_debug("Validating PMD swap\n");
+-	pmd = pfn_pmd(args->fixed_pmd_pfn, args->page_prot);
+-	swp = __pmd_to_swp_entry(pmd);
+-	pmd = __swp_entry_to_pmd(swp);
+-	WARN_ON(args->fixed_pmd_pfn != pmd_pfn(pmd));
++	pmd1 = swp_entry_to_pmd(args->swp_entry);
++	WARN_ON(!is_swap_pmd(pmd1));
++
++	arch_entry = __pmd_to_swp_entry(pmd1);
++	pmd2 = __swp_entry_to_pmd(arch_entry);
++	WARN_ON(memcmp(&pmd1, &pmd2, sizeof(pmd1)));
+ }
+ #else  /* !CONFIG_ARCH_ENABLE_THP_MIGRATION */
+ static void __init pmd_swap_tests(struct pgtable_debug_args *args) { }
+@@ -1110,6 +1115,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
+ 
+ static int __init init_args(struct pgtable_debug_args *args)
+ {
++	unsigned long max_swap_offset;
+ 	struct page *page = NULL;
+ 	int ret = 0;
+ 
+@@ -1192,6 +1198,11 @@ static int __init init_args(struct pgtable_debug_args *args)
+ 
+ 	init_fixed_pfns(args);
+ 
++	/* See generic_max_swapfile_size(): probe the maximum offset */
++	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
++	/* Create a swp entry with all possible bits set */
++	args->swp_entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
++
+ 	/*
+ 	 * Allocate (huge) pages because some of the tests need to access
+ 	 * the data in the pages. The corresponding tests will be skipped
 -- 
-Dmitry
+2.48.1
+
