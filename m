@@ -1,71 +1,90 @@
-Received: from sonic315-54.consmr.mail.gq1.yahoo.com (sonic315-54.consmr.mail.gq1.yahoo.com [98.137.65.30])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2952E28F514
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.65.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FAA28E5F3;
+	Mon, 30 Jun 2025 14:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294568; cv=none; b=AWFxnRMptno1dZYzoL8/Br+umf3JyNes2uI1zE7I/JfTkHXiGNbrUVAr0FGxmaLeFbAzR9P2egCwZST7bzrLOhgIpxu6JKf+RfYoiMPNPd+SGq2EwmriygisbhBHdy0kzk0wSyZ2+Zq6u0ep0UwPb6v+eza/+/HyDfw3CVuOi+8=
+	t=1751294572; cv=none; b=A9pEiYj4MzcSEZfObiCQUh/uSujNQ4gnyk93Tmeg563DmV+4fzoP4KoVFb7CEJqKUIzaYl8sp8hp9QKl3eBBUfk29oYBNphH07wv6CJGUSqb+Kvfl6wzAZacOqr4UgOgnJQO6PKuR+QGMstonS2QkdqDu7GMQgubVewr6N1lxtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294568; c=relaxed/simple;
-	bh=0iQTgytDpXPifoTXnzLi7AzAuu4j8wWJg3k4W5clvV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=T4SQja2RkuBGjOvN1UJmrKcdSZBkNvaB7DktjmBLojpfTk3szFA/NVyTAmbNKx4gUlP9ZSn0vrFbtJ9ZazCMBojVxy4eTL+UAbFUdjaN1xd74N6gdVhzqRJCxEPQL8R+bhMOvnU/bhuil2cVjU8ZtuLi/cFnYoktKvBMkNmVdBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=JDritgBc; arc=none smtp.client-ip=98.137.65.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	s=arc-20240116; t=1751294572; c=relaxed/simple;
+	bh=yXGAI8fsp9QAmSJK3IamseOR28dXJb3MxGrhuL4c8hA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RDE7j1pxrFQpeBh9dNeLqK5aUGCcgEIXB0ta3pLwgEwO8r54NjuoXyNQ6EKW5AI2Ag1F85jXkK2EyeBSYBS3w+tAaJ6+YKG/YWGUdXJqMnrhgBVd5Lsiic2ZhaEJ7YC9JVr7lw3u9Qym7lruhPizPFgYd5A0DqgJvVKIO0V1pIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/KgzVaY; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="JDritgBc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1751294565; bh=1ReWLvjRkJ8pgsu7xZweYzjXrECUSPSYIVXB+9ZsJ3Y=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=JDritgBcRyAmegzrApj9ul90cWdv8/Q//rVibRu+vzEjkagSwrTOYEojyMlwxeZBgbz3Q7TSXRmrcW5/QGJefghOwuP1Ovk5VbpfVpjRf+rvmRQogm7BqCiSxZ2YJWNVFoIK3rjd3R75hTvscaEB25LY3+4grgCkc6dbqk7/3CXNcuyM4Ew1seMMaEw0Rl3UMRHizdq0TRSYDANnQAssVekCjxEeSknaAI5VdfhS6WP7Qr9ueiyvxrpwkb1AFH6ZauUEvVQHTCB6pvPi24VlRaHBWBVbNblFjOb2p9Ycz1jE6D+DhArbgK/SGF6rsKT/zAnENFBTvTZj40ZLRRMv0w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1751294565; bh=Vsf5W+UUi4xMuoKFxR1E2TWeBDpRHdiLh3gyN4g975k=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=JI61cKjoZtayfF+0IvTlYXlcUygY2n891i4LBsythiSnyDJJGmLzAnpIISp8pvQ8piBOT3q8rc4ZmK9YBJoHiWdu/EdklvhIEVVWxBy08cRdlbMA92B+a67ajMQdV9InA4hO9weo940iQyFdfLowCYWEZKYcY9LEg6k9MuGIv5pIl2oGRpp80h2V/c8iv06qeMFKfdfBuymijskf9TcaErmJyfG0egBE7gayUxdxAN+GNbupSz73c+O77M2YZmyJ1l3MKXoeKgWHR0/O7SoVMmUItW8LVGvJeUr6IYA829V1bn9j1VYHcszhiCt42O+EefOcZU4TWM1VoHAGCa4XKg==
-X-YMail-OSG: vLXKlo8VM1kC_GBokyhKql3g5D3n44H0KS7CEHuPNMPBB3rW7_8zIWoEnU8iKuq
- a2Vbpmdv2Byn1riR.rSw6iUBDGBz8JIu8Lpk8xgCHbIzcXTs18bALKOGtI8RE6VyultWkaxWNNoR
- tV85q2OTc5ClhyTc1IwjRIEPbHF9O.xr1OO3iHAeDQ9prglGwONd4UqWaJU4NPuOWOu1SQ__G7oI
- 3Vw09En51co0zTwnmEw6JIeeAdr.vAZhGOSrhbS3SBgvzK1_k3vE3ncTZJRn70w0H_cdj7S9bSRh
- 84vc6aLumd1OfhVQdkm1tPd5dNTu1LzYsoWfg8rCpj59VHz1eCZVHcVRWEL6cMq5wzmNBciUYIhb
- mNq9Ow..o2v2u81p.4oWVvAq3wqW7ukr1y9flI0nOH2QpijnmgppYsg_3kGHcKpCxxJvI2ZGVjl3
- Qa5MbAdflQRQuGQNxCUiAlmRDvNFU9lCPZITt0DuLgngedZNUJ7lm9727bMwD8dBm4XUqNDlcQdk
- 6bNUmUcF9tXq2JJljggYcPAh.C8w7r8.gNEiOQIJNTx4gMlxxqn8V9CuZOPFh9qUwMJJwzv28qjc
- Ht3LP9zXi_LYfGmy6Wv5f5FuQXGE9rCAb58K.kVdoydwg0g.jENCi4OE_TXWFFirz7UIjDC5gMzs
- BVIGuG9YIHkAwuL8oHmckjG24Ic.enNWwbF1_4SzabS4K6W2ohH0MyqD_WA1.zSspRbmY17s1BrF
- IXJ9ApCwRkiL9Fy1IiD0jjF_ws_0MJSQGy9N2V6.kzMB4ty1b6VsYPwMCTgggah.jQ04aImQ4H8P
- PTNae_Hz_kO7kQ4nhbQZFT2MB.VOu1IoJjGxwNXPaMfWRahTiiJAWiK1t1Lsocc29tPY9ndT0g1B
- gE2T478K6W.CDDN9wV8D3tkpA4lw3sj_CERlyD33v_LtMjGINdEWYgPi.bvROiuLHZAYwUbdzq9w
- aU0yd7fhpAutJRMUvMpruRpoX_MRK1gIDX.3nu2Zhj4rdPX4BOXwgdBGtMkbQPnS2I.Y0aPGGdEQ
- cJBcrIoOaIvzFaQez5n8JgHNRiQXbso.BGAvsxHZs8gfIB6M_QZOpP7pc.YNW99YZeB5hZ2ItjVh
- AGDhsG_5P1FwJcW7aPF.wvq_Og5gYtG91kMILnW.eaoUe3OAJouDshYlXGfLl3ME5gf3uD9Lle4y
- Kl5q7I23WiJ11Loaf51yAUp9Diy7aocbQZeuAlAciaTt6p74m.yfvABeo814QrOkSYcMo4xcPn0f
- DVzq4.Kt0WT3sEWeXBeB6CxRcxUEGMjJME_qlnKqcWir5qmjKWTxPEUhJaI7ms8REh_6dZpOfqd7
- u6AbCgCVlOzCmPdp5EW5zrK0FJqJE.eg3jpwDZfnKBNrlGznp8I.idBBb3DpCQOyBl56MQwk4WdF
- 8Pq7Cb5p3RvfEBfVydGjavsSKKk0KW7v0uFk2aHA5G6gb08N7teXyaXT6OwulUbWtss27UF1J_2i
- HTx8JNNrMpLdzoAa98MAvxxDUBSZ_Ru_yPERslfRjH7QTB5Sai8I1aESw2eZbSxg_Wk_K9yZd1rF
- F_m0QPehAyU3bV7iFrT4a8CJZDNQz64qVvkS2BA5DQaLL962.SisTenY0PUqptCFHvtNWEmy2f.9
- S7yODoLnNuUqIW95nYxU6bcYHgHScym9H3yIHsC5VmdE39w8bZl4_PgwSarDvbjgrFNtKCWFgckk
- Y6wT0jq5dQM9dv6xZV3yrvTlJAyBi.NF79bi3msDgkjmt750XBXJOMvw.M_0JNAU4xhK.DpBO4DY
- ZAGZe29__DGhvdQs.QexC.AwqOl75vvEiIQHdW5v5rRJ3rGIk04rKaebgtl.b7ha7rF_1e3I4lLZ
- GsPTm1BwEucICeJqRRYBAvKWpD1Aujm3qABtTJUVsH90i0cHwZz9YHSTW8G3pzJqbi.mhusvB7Xz
- C3oyh2s4NUrBr94BHgeHzXRjlhRJ4isLT8yrRYnrhPVlrs77i7W9SctOeES2gvl5In5AScLJqY1j
- UrN8GQml7QiVo2zhvWUbSHqjFaBBM2SVZzd7jFYH367vcOhc99RSib7a_ZfOQrUSRK4yGqNoAoWK
- gc94tTP7PVwA2M3wu3BtchnKX4JE2T2srL4ZKuNnaz1XU326.ezsFDwbFLZ08XdymbtdQnDnMyvN
- j.z_UOocrl7R_CsshTthFyXQieykh_M34eqcR4a_AO_1IT6Gs0x2RqM88yO2aEMXgFSPY6QW26rq
- sdE6XOgY8AeHJJH3D9MtGX3qoUmuBTBRmEys.oMK4.yH2IZj1qJflvlun53zBiXc-
-X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: 766bb39a-390c-4aee-9b1c-c2095b160f48
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Mon, 30 Jun 2025 14:42:45 +0000
-Received: by hermes--production-ir2-858bd4ff7b-vtq9f (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID e14431b72d654bdbc2a2f9f3f5f89e1e;
-          Mon, 30 Jun 2025 14:32:34 +0000 (UTC)
-From: Ruben Wauters <rubenru09@aol.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Ruben Wauters <rubenru09@aol.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] x86/cpu/intel: replace deprecated strcpy with strscpy
-Date: Mon, 30 Jun 2025 15:29:30 +0100
-Message-ID: <20250630143225.6059-1-rubenru09@aol.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/KgzVaY"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313154270bbso2129675a91.2;
+        Mon, 30 Jun 2025 07:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751294570; x=1751899370; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TatuTvD/KRI25aZVKetSkdRBKo49t17GGxSNN77vHt4=;
+        b=k/KgzVaYC5/wDF7IKDPIk2ygBCdaqI8o+f9izu0GcP7E5UKi13a8GBNfILMUfYGbQO
+         2iCb3i0JbcNcodQ8WynF6f1CKHT8gTY49XvON2A8tqMilqr0fubAi10jZNJCbDM+pv9M
+         vBflnmfdusiDjez1oEsO8kXHc/5Ul+5qkOvQdLLv7alL0AhYGLMSJ5+Tz1Blns8OblE6
+         ueO+kfpqakKGbIa8E+lsdVboglV0gNne6/vCR3n2EHSodz7Kx9nLrwARvU9Q0Xqz+y5d
+         soP31ThEGD36AMawpA7BR+69vCW2YSL4sE2qH+jAbNs2/4/hIKQZObSIWJanpQreQSZX
+         wiuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751294570; x=1751899370;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TatuTvD/KRI25aZVKetSkdRBKo49t17GGxSNN77vHt4=;
+        b=DGJd7rQX7MJEAdBgYxj+ne/kKhDDUlSU62nHHhhLahL8CDQ+PcyiEy/+ZrlV/PxAz8
+         X2+FCg2esiw4RSAOmSQKlMew6V+ywTvSnOyn9ct0idHu8CrZ+1KL0aqBV/VP0j2NWqJL
+         1kHA2ZAAb4+aGj79mY1Nmr6Ymur4hLf8pvbbaCt0keNUF+E1WGuhoq221KC5NV0MQ8Bi
+         eNDrBnrXsKEX2eN8Zs3YY7afYY4hGTgrdzujBa00aJPuXZIsX067JWkJXMjJsMOxfJzW
+         r9GTuPVMAO4QefUP9T+UseM5BH79YaLbtvWTDd8ulf8L8HjpOVynC8Jeeo2452b/UQTx
+         yDcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuJ5KU6A18JY+Op6rwBzVkyVsd2+uF4c/MQ6DAZ+dg0KqgfAMOaALpG2XFrjDuKJTClk3w7Me0Y8X8bbQq@vger.kernel.org, AJvYcCW7DxVmHQmIh9dqvAP+XkSIHS78WxYrLNXD/GQPq3CFE+y/7Jpx/xixeqtOTNiTvmTVa34=@vger.kernel.org, AJvYcCWLlJbREvyyOQI5xbGPuMvKA1Tmw691PbR/yZXumL7cMqC8rWgTgbQxmkV56VDMDqkEXwTqbBEp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNesvRxNxaBiHCHO2LCLFkN0CTBwpJcliEzv7EbqN2JPMqtTuR
+	bQLSYG6Lu1DlWR+gJT08DgbJHIYf7lr9qExtRVzuz+Pz7cn2We/0mvp0jLsQCw==
+X-Gm-Gg: ASbGnctQjqKBWDC7QeT5f1aS0/gCD02nmMt6fRqyew91c5xrs/QKmdWmscNTCO2lT0+
+	kCpln1Z21sLcI6W5bpW27UGJ5+BMmFWNvqnNM8pjnv6xL2sIjmivNaSaTB986aCXToJZyLutD9p
+	5vamjBckb4xNxV/tolqeI1WdVhXd263jTduVY1mPrN+r6kJyFhPSMo1U+yNEyVWQXoJJ1ulW4MA
+	BQCMuT3bUlUmPvvKZ6zE8EHEDsarz6n1JGtBpEPXk/N/sZO815HdA0AI6Y0g5szKK9BgcnP3TKk
+	gXe8XEcy4O3g43T4XfpS7yxigU5J9gbCa5z2lWMTpv2r9HYp76KczGj9mprElMAOhRMpA6wC1DB
+	6
+X-Google-Smtp-Source: AGHT+IETLZuBDgN03KgQWXJ9JG6CGzKwn4TSRbQqf09y4q790qyn1wuwU+dXImOnss1ZphjmrXsFHQ==
+X-Received: by 2002:a17:90b:5445:b0:311:c970:c9c0 with SMTP id 98e67ed59e1d1-318c9243c49mr16601470a91.22.1751294569638;
+        Mon, 30 Jun 2025 07:42:49 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:2f51:de71:60e:eca9])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-318c13a270csm9170017a91.16.2025.06.30.07.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 07:42:49 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: netdev@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH net v2 1/3] virtio-net: ensure the received length does not exceed allocated size
+Date: Mon, 30 Jun 2025 21:42:10 +0700
+Message-ID: <20250630144212.48471-2-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250630144212.48471-1-minhquangbui99@gmail.com>
+References: <20250630144212.48471-1-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,39 +92,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20250630143225.6059-1-rubenru09.ref@aol.com>
 
-strcpy is deprecated due to lack of bounds checking.
-This patch replaces strcpy with strscpy, the recommended alternative for
-null terminated strings, to follow best practices.
+In xdp_linearize_page, when reading the following buffers from the ring,
+we forget to check the received length with the true allocate size. This
+can lead to an out-of-bound read. This commit adds that missing check.
 
-Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 4941d472bf95 ("virtio-net: do not reset during XDP set")
+Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 ---
-This patch was reviewed by H. Peter Anvin and (by my understanding)
-was deemed ok to apply. I have not added a Reviewed-by tag as H.
-Peter Anvin did not do so.
+ drivers/net/virtio_net.c | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
-The last time I resent this patch was during the merge window so it
-understandably did not get applied or further reviewed.
-I have resent it again as the merge window has now closed, hopefully
-so it can be further reviewed and applied
----
- arch/x86/kernel/cpu/intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 584dd55bf739..b49bba30434d 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
- 		}
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index e53ba600605a..31661bcb3932 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -778,6 +778,26 @@ static unsigned int mergeable_ctx_to_truesize(void *mrg_ctx)
+ 	return (unsigned long)mrg_ctx & ((1 << MRG_CTX_HEADER_SHIFT) - 1);
+ }
  
- 		if (p)
--			strcpy(c->x86_model_id, p);
-+			strscpy(c->x86_model_id, p);
- 	}
- #endif
++static int check_mergeable_len(struct net_device *dev, void *mrg_ctx,
++			       unsigned int len)
++{
++	unsigned int headroom, tailroom, room, truesize;
++
++	truesize = mergeable_ctx_to_truesize(mrg_ctx);
++	headroom = mergeable_ctx_to_headroom(mrg_ctx);
++	tailroom = headroom ? sizeof(struct skb_shared_info) : 0;
++	room = SKB_DATA_ALIGN(headroom + tailroom);
++
++	if (len > truesize - room) {
++		pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
++			 dev->name, len, (unsigned long)(truesize - room));
++		DEV_STATS_INC(dev, rx_length_errors);
++		return -1;
++	}
++
++	return 0;
++}
++
+ static struct sk_buff *virtnet_build_skb(void *buf, unsigned int buflen,
+ 					 unsigned int headroom,
+ 					 unsigned int len)
+@@ -1797,7 +1817,8 @@ static unsigned int virtnet_get_headroom(struct virtnet_info *vi)
+  * across multiple buffers (num_buf > 1), and we make sure buffers
+  * have enough headroom.
+  */
+-static struct page *xdp_linearize_page(struct receive_queue *rq,
++static struct page *xdp_linearize_page(struct net_device *dev,
++				       struct receive_queue *rq,
+ 				       int *num_buf,
+ 				       struct page *p,
+ 				       int offset,
+@@ -1817,18 +1838,27 @@ static struct page *xdp_linearize_page(struct receive_queue *rq,
+ 	memcpy(page_address(page) + page_off, page_address(p) + offset, *len);
+ 	page_off += *len;
  
++	/* Only mergeable mode can go inside this while loop. In small mode,
++	 * *num_buf == 1, so it cannot go inside.
++	 */
+ 	while (--*num_buf) {
+ 		unsigned int buflen;
+ 		void *buf;
++		void *ctx;
+ 		int off;
+ 
+-		buf = virtnet_rq_get_buf(rq, &buflen, NULL);
++		buf = virtnet_rq_get_buf(rq, &buflen, &ctx);
+ 		if (unlikely(!buf))
+ 			goto err_buf;
+ 
+ 		p = virt_to_head_page(buf);
+ 		off = buf - page_address(p);
+ 
++		if (check_mergeable_len(dev, ctx, buflen)) {
++			put_page(p);
++			goto err_buf;
++		}
++
+ 		/* guard against a misconfigured or uncooperative backend that
+ 		 * is sending packet larger than the MTU.
+ 		 */
+@@ -1917,7 +1947,7 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+ 		headroom = vi->hdr_len + header_offset;
+ 		buflen = SKB_DATA_ALIGN(GOOD_PACKET_LEN + headroom) +
+ 			SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+-		xdp_page = xdp_linearize_page(rq, &num_buf, page,
++		xdp_page = xdp_linearize_page(dev, rq, &num_buf, page,
+ 					      offset, header_offset,
+ 					      &tlen);
+ 		if (!xdp_page)
+@@ -2252,7 +2282,7 @@ static void *mergeable_xdp_get_buf(struct virtnet_info *vi,
+ 	 */
+ 	if (!xdp_prog->aux->xdp_has_frags) {
+ 		/* linearize data for XDP */
+-		xdp_page = xdp_linearize_page(rq, num_buf,
++		xdp_page = xdp_linearize_page(vi->dev, rq, num_buf,
+ 					      *page, offset,
+ 					      XDP_PACKET_HEADROOM,
+ 					      len);
 -- 
-2.48.1
+2.43.0
 
