@@ -1,80 +1,73 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4BE2E4258
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BAD2E5436
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751305196; cv=none; b=IBq/YrvvpNR3IZpJqZYfvxWpVUftUgq3oLpeBaDe5GxUypSbOt9wN0dYHWqZBZTFKh8dKE7yN2eu65KcC43itAXghwpRyxdUZWiLwr5F2SLPR5MXbLIkPb0Adic0b40Gjf+oP97SLS0NddyQu0O2K9cetAUyL1IErt3LBiVuhuc=
+	t=1751305202; cv=none; b=A9Ab5gGWlz2ZMmazdJPoDgWGZsnwHXsW997P0yGZ71ksfRTd9cfsoa1w5SurDMdJk4HM8qnPub+NSrj6wBtQfJzIXxIPMMEVyCRStZ/xk8lDhXkW60dRruFADGY+Kq+GMnPed3pXPuZvH5fuS+GvDooUMxAROIUtLD/TZgJhhoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751305196; c=relaxed/simple;
-	bh=2Y9uMTwID9j6ls06ernf7fmJNC/MA8FlRHuc49tIeXI=;
+	s=arc-20240116; t=1751305202; c=relaxed/simple;
+	bh=kF69PbKH3v9K2NyJ9RPiVgwPyU0A+sLE7fuw+9YvFCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OD/91AWORXIYQU1+OP8g51c6/mb2vCPrtyU4xWIP26SiaA39DEUA+Q98axgxBO/Nxb/RngWAyDuzwYRiXWvEX2I2vDa/0/wLD7pxSlSPV7i/m5LBLzvy4TDzfKSQz/uLowq2Ca3FfezfeBLVhuYmQkKjfEbWRBHN+YysP+eZ7dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=F0MsI79S; arc=none smtp.client-ip=209.85.128.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQvfXYJcBOO0zVwvvASpmFp8OkhaIPdIAzrfSdQO0FPNXEL2GLS5AXhhzT0U6a94/eY2AhxKjP2iQBKHzr3xtO5Q3ITXOPu0W42YjWE4X5KUORPG8TSoXhJnryIOrRpmpTectDKW5d55ISIJvqIxYlAFkU812zUxhiL7NodD3Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HIewKhAw; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="F0MsI79S"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4530921461aso31566125e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:39:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HIewKhAw"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4530921461aso31566985e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751305189; x=1751909989; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1751305198; x=1751909998; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Y9uMTwID9j6ls06ernf7fmJNC/MA8FlRHuc49tIeXI=;
-        b=F0MsI79Svly9l7hdwSJ1OTrFDSUBy+wqbufyOlCtDhDGkACxNPNI7Bm6buxPGyHRdk
-         Ea0OMhNtnWdI7ojFcy2oPlKu0B/5iGWiDHHc/LvGeofggStKan7SNowxK/gdjnvFWJA0
-         vY8WgDKRxqy3DespFezjas+aiBDj8rvUwQIIOE7mFFzQzfsMplgmDJcyETUerymqHogV
-         peWpw0w49K2XAdRDk+rKU2nqwxq3KiJmXa50Qs1w6ESZSamwju0YnjWJLv3tC96flZLy
-         0YR9PLgiF7l40kaay6Ybl1mu0FWEhwgX0LM85Hhm7+eX99hWqW81wnBTQ1jG8tBs1aw/
-         NrYA==
+        bh=kF69PbKH3v9K2NyJ9RPiVgwPyU0A+sLE7fuw+9YvFCo=;
+        b=HIewKhAw4LqbUHYNvCmsvdWSvEmbRu+4aj1p1H+V33cPW3sq/jy3VtafEi7HB9lcLT
+         C2OE7C8SOzi0Qb9Mb8FeNlD36bH328QprT0l8nXjsIooBKb4v95I6pSiyR3YfuqoDsf0
+         9lKMTAvnHP7eSZlhGhXPKVa92r0zaHQR2SHdU0wzK0MtZhyUEFA1gZGbw8zU03kmROkL
+         9Vj+Cy1MvuWeYRPriTG66paijqc0Ccb9FsuSCciDriTvxpVOAvvvxzOk9H2RNuccQFeh
+         aWNelNra3usq9qkbyMbs/fFAIvzrMozFexCpBghs0y/kYwPhaHwFbnVDSNsQGDklC3lG
+         ESbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751305189; x=1751909989;
+        d=1e100.net; s=20230601; t=1751305198; x=1751909998;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2Y9uMTwID9j6ls06ernf7fmJNC/MA8FlRHuc49tIeXI=;
-        b=uYkSUJbBaEKZxw9fTHhdtFA/3/dnpPkSdw/XWuZTH+lKmLW6dcObrdZtG8yg9pf9vY
-         WgL4IpZ5g2ru7zUX7bYoOmiCGpcbz8eW9u6Md6aS3Oa7F0+Izfvy0v3r6mD5eGs9FI9S
-         U+Ou3tAVME+BJmPqHBJ1Yal7nT7HrJJTrZp/1NNLFpytwohjdVmaT8s6MkdNB3k1W/H9
-         CbbpqxME91Nysi7eegWSwvlPaxrgNvtG1kUaZKFk6bzA1FSSBz4qlqPQweMPyAsssy0G
-         iOsGB9Rf5Wi3QTu1LisewkRNryuihNXPGJQYMqPHYZ8DnQdFfwacYYtZJl5bU7q3B9tm
-         JZcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkRslkOhOUGEnmjkaIGzJldvY4E321/WQ/LEPXGmUwGVai1v1b7bb2ZpvJQxLbJJkHQPyg6tUwgRH18+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGDU1wdnKNBnAb95G0M/LwNElKvv61vxGZhvOBRHNPUXB0FDOo
-	/Pmm/H2bktUu0RovW2M8Px/fy3GbkJwHuv+V0HKonoK404Uf3UKWVGMrd11lahxpexcDQnRyokd
-	av6bF
-X-Gm-Gg: ASbGncvgFgc3tfbXapwwQ5OssG1jNmp+d4oRTrQkP4J/YDUNMhUT+8rbLBrxdQYdKMH
-	6t3YMT5R+CVNpCMe9afBo90ibhJxAPIMqjodiW9x+1/WtknojFABta97geL/JGh+ylSND7Vitfn
-	H5N2voToTjrGxHo68W156cWI2G1eagOl9YRG0+L1KI3Wsvkiut2+trLRT/KrMzlKET/FN+N2HNM
-	31qHroBiZKsbPjsaAWcE6AwY/fOQDJsanpLabh8yAXPzOk0Z6Zf7GfQ8EXBI4s2GjlGF9CCv2FR
-	qTz4QtPJYIXaPmTJFNf7AiC4lzs+ehU3+XneN0dDBtKXKTQo1sdBnNg/XBU3F0z4
-X-Google-Smtp-Source: AGHT+IHJy4btGv0fVS1tLOScDjwEh+rbzrQMUABP+ayXSxOTT48qfvdOfpAA/8f2BAYnhuti0aw65A==
-X-Received: by 2002:a05:600c:c4ac:b0:442:d9fc:7de with SMTP id 5b1f17b1804b1-4538ee85615mr124990995e9.22.1751305189383;
-        Mon, 30 Jun 2025 10:39:49 -0700 (PDT)
+        bh=kF69PbKH3v9K2NyJ9RPiVgwPyU0A+sLE7fuw+9YvFCo=;
+        b=GaZIIXFwoObCX8mnStqMI1iwT6dbO4UMPhb7KXP682om/Zwd/bP5+fVRhD+ZIYyDnu
+         1fGoDB9Z5lbNwSaxdaeQ8Ze3ZcLE0j1Fw5S0MOesAUtWFZqcbEd1mqf1IrLiTwr72Rzw
+         HXhexiCBH793uCSiz1mbaCFm8PebMs1grZq/jHANMalOiaS90aBFKTrIgcommGnf4j8r
+         vfgZdgDgxlbf/wt6UbRVS+bF5wGBcPEWir9dn3TRBstFk0ZsqZihCTVAjswlMsxuX05E
+         KJMR8DucFQQ6DJKUU2BEOjMAnLKE2x9PW5wMBBbvwU8NPe65nv1ZxhhDg3qEPFnLl2DG
+         gQxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCoOP78s5XkAze1JEAZwjSg8riFNwYuFTIbHtW6EfeBkiYq0awRDsVDfKlEIygpTevJJEMCLWJI31HDnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn7Wa8uxnZRMP1CQRKzf047616y+NwYYy8hAolbet5ytXsUcBG
+	mWi0pRl0gb3oeptArm3oWY8gCO/yPofiWbbsEtt6y4WgK99ek4d3CKh9oRZ23tVQvnY=
+X-Gm-Gg: ASbGncuV9e1Rmo60IRq+EY4lVYCvsB2Bjsu2d864ogqnv07wNqkkfGpNHUcqQ7kvZoL
+	ji9mWMUSta4+oiP6/RjeLi/hTZTxFUzoGnZ3SadtTGi4zPi4u1SyO9ov7HJ778GA+CubXQOfGXl
+	KVXMsprV7Uf5jSVfKX5V4mI7WUBP3ZFyIj5/wpdRoTMn94oOUi9kbxcBA+FNUU/9Y3QvLp35QmL
+	anQ0k3OUq7+49zzedCJOeZjNDSqQs2Es/8ossxJr175yasXtvSZpNYVCgE6GzJlRVBFCnlUdr5A
+	Ll70IEgQfFYffifHpOjlj5xNZft0H9+uPv4DNp2jIgaYKhEi9d/Ev0GssLXzuegJ
+X-Google-Smtp-Source: AGHT+IEn4x+LWHIZ+ye24E02ObY+nFFikxf87Wzg5FnfMupZhCIvdNxgTxB7ZFi5tWXEIE75/n9DUA==
+X-Received: by 2002:a05:600c:c05a:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4538ee8565bmr115090155e9.18.1751305198454;
+        Mon, 30 Jun 2025 10:39:58 -0700 (PDT)
 Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453923a22fbsm100856365e9.34.2025.06.30.10.39.48
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b913esm168859405e9.33.2025.06.30.10.39.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:39:48 -0700 (PDT)
-Date: Mon, 30 Jun 2025 19:39:47 +0200
+        Mon, 30 Jun 2025 10:39:58 -0700 (PDT)
+Date: Mon, 30 Jun 2025 19:39:56 +0200
 From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: YoungJun Park <youngjun.park@lge.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, shikemeng@huaweicloud.com, 
-	kasong@tencent.com, nphamcs@gmail.com, bhe@redhat.com, baohua@kernel.org, 
-	chrisl@kernel.org, muchun.song@linux.dev, iamjoonsoo.kim@lge.com, 
-	taejoon.song@lge.com, gunho.lee@lge.com
-Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
- per cgroup swap priority control
-Message-ID: <bhcx37fve7sgyod3bxsky5wb3zixn4o3dwuiknmpy7fsbqgtli@rmrxmvjro4ht>
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <20250612103743.3385842-2-youngjun.park@lge.com>
- <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
- <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
- <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
- <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>, Jemmy Wong <jemmywong512@gmail.com>, 
+	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
+Message-ID: <zrl7ijmx6vrzcmmnxojgbkmhjymrpuhcjh3sc6py622abn5iee@qmbmkcwnnzgd>
+References: <20250606161841.44354-1-jemmywong512@gmail.com>
+ <2dd7rwkxuirjqpxzdvplt26vgfydomu56j3dkmr37765zk67pd@aou7jw4d6wtq>
+ <9BDD726A-2EAE-46C3-9D00-004E051B8F5B@gmail.com>
+ <aFYeU_dL0VOvyeYs@slm.duckdns.org>
+ <20250623140321.GA3372@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,52 +75,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fpnjag4xaqb26ddt"
+	protocol="application/pgp-signature"; boundary="xzakd6so4dlmt2c5"
 Content-Disposition: inline
-In-Reply-To: <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
+In-Reply-To: <20250623140321.GA3372@cmpxchg.org>
 
 
---fpnjag4xaqb26ddt
+--xzakd6so4dlmt2c5
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
- per cgroup swap priority control
+Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
 MIME-Version: 1.0
 
-On Wed, Jun 18, 2025 at 09:07:51PM +0900, YoungJun Park <youngjun.park@lge.=
-com> wrote:
-> This is because cgroups can still restrict swap device usage and control=
-=20
-> device order without requiring explicit priorities for all devices.
-> In this view, the cgroup interface serves more as a limit or preference=
-=20
-> mechanism across the full set of available swap devices, rather than
-> requiring full enumeration and configuration.
+On Mon, Jun 23, 2025 at 04:03:21PM +0200, Johannes Weiner <hannes@cmpxchg.o=
+rg> wrote:
+> > People can argue these things to high heavens on abstract grounds,
+> > but if you break it down to practical gains vs. costs, it's not a
+> > huge difference.
 
-I was wondering whether your use cases would be catered by having
-memory.swap.max limit per device (essentially disable swap to undesired
-device(s) for given group). The disadvantage is that memory.swap.max is
-already existing as scalar. Alternatively, remapping priorities to
-memory.swap.weight -- with sibling vs sibling competition and children
-treated with weight of parent when approached from the top. I find this
-weight semantics little weird as it'd clash with other .weight which are
-dual to this (cgroups compete over one device vs cgroup is choosing
-between multiple devices).
+This makes it sound like we were discussing tabs-vs-spaces (at least I
+perceive there are more benefits of guard locks ;-))
 
-Please try to take the existing distribution models into account not to
-make something overly unidiomatic,
+(I also believe that the encouraged separation per lock (locking type)
+would allow easier backporting of this transformation.)
+
+> > But, again, I'm not against it. Johannes, any second thoughts?
+>=20
+> Yeah, letting the primitives get used organically in new code and
+> patches sounds better to me than retrofitting it into an existing
+> function graph that wasn't designed with these in mind.
+
+But OK, it sounds there's no objection against combining *_lock calling-
+and guarded code at one time, so in the future the ratio of those two
+may be more favorable for one-time switch to the latter.
+
+I thank Jemmy for giving the preview of the transformation.
+
+
 Michal
 
---fpnjag4xaqb26ddt
+
+--xzakd6so4dlmt2c5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGLL4AAKCRB+PQLnlNv4
-CI2lAP9cNd8Fw/efDHTo0CbYimuJjQR8y9PUoLFpqTT1zfv2CQEAmh2uxUSEceTY
-Y2x0oL70yfEQ4Y16HdkMDSN3MpuANAA=
-=Xz7b
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGLL6gAKCRB+PQLnlNv4
+CGX9AP9ZX2bNRF7xntOZQwCIHogFfK/3hdH71Tea4D3CBl0PxQEAktVMJ0BeFa7J
+uVP84IbvErgGx89YR8RAKDCAsblaPwg=
+=tIRH
 -----END PGP SIGNATURE-----
 
---fpnjag4xaqb26ddt--
+--xzakd6so4dlmt2c5--
