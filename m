@@ -1,202 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818A4270540
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7230828A718
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751294313; cv=none; b=jaoyvdup6lOyqY6gaSj1Vx22b0DTcaDa5QtUFIswvntjh6e6Bs4IQN/k+QwMoDDxpBpiD1PerPeomU4hoBU8NlUZrJjXMIeaPgonvIA/RkqMjwxZL85eWcRdH7fFuBCihvX9wYD6YveZuxfx9ECQ4dSkXGBE7j+eSEBEtKLBUZ8=
+	t=1751294326; cv=none; b=mLLHgCPYa9rNf91BX7evYrywVsEDv/JN95PO7Q80MIQnjiVQYP/aRGIjJKuc2tkasIxjcxxrrFyDutJFERfm6UBwMNEMDKQFHDmF6+PS8jtuRKUQlijgUteCwJSAtWvu2PUt4Scv+OYBGfRgkc3Y31s0sVgADP+9HxZb+y++N+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751294313; c=relaxed/simple;
-	bh=YMmmwj4I70wT+dNJaxfQgP5CbbH7usffFIoS5o5D9mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qqPl5Fa+I106e9wGk57IuZ3cYgM0bgn6hTj2aauv7w58xYKr0u+At4qxFChR8oyyEyi9q+PppP95AfOIVjvxgGceWNgREztjbN+5AXMsjCjaFiWdDs+bGS3lC45gfi7h5N7xa7vZZXEwk0s1c4lbDtO2jimMVlTREvAlmxaRQX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d6WMAHl8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751294326; c=relaxed/simple;
+	bh=q41UMOkYp6U8rXBQmxcMnX0PDl9yne69OVTJZiPDNQg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Sf4XrwUL05DlWnyBjVvzN9Ycvd9/RNwxVnaXhKXk618iuEhMpQn0FwRYH4nzSDlJFe2H/O3XZDyrDZUD0c5HbIGIwtxdkms9ZH1pA/i5OeRnuPgViS3UIXA+K6lct2jdgQ6pbZd/uv8RUfznu7hPs6BIkjS85pW+zgDqnGlq9rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com; spf=none smtp.mailfrom=hifiphile.com; dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b=PyTzx8bt; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hifiphile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hifiphile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d6WMAHl8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751294309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dLNDWn+c6Slj1cTlasvqzpQ5+dIBruMnNq/SRSmpwEw=;
-	b=d6WMAHl85IvFDFdPi+upP32xpB2nZVfwbAPZU9nREAbwlibAyCAtoXzESARljbpa/lNesn
-	6oJur4psMhf2pxlE766fHvb5Q1KamTBUWlc5pZWOhnAhhja4CzxHaLdvl9teVRP1GpgZ42
-	A2aE0OS/8tbMIkledSzlu4hbHC7g2T8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-693-rddDqH7ANXCouROBiMsXLg-1; Mon, 30 Jun 2025 10:38:28 -0400
-X-MC-Unique: rddDqH7ANXCouROBiMsXLg-1
-X-Mimecast-MFC-AGG-ID: rddDqH7ANXCouROBiMsXLg_1751294307
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4538f375e86so21945915e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:38:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751294307; x=1751899107;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+	dkim=pass (2048-bit key) header.d=hifiphile-com.20230601.gappssmtp.com header.i=@hifiphile-com.20230601.gappssmtp.com header.b="PyTzx8bt"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5550dca1241so2161981e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hifiphile-com.20230601.gappssmtp.com; s=20230601; t=1751294322; x=1751899122; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dLNDWn+c6Slj1cTlasvqzpQ5+dIBruMnNq/SRSmpwEw=;
-        b=sqJHayINXm6H/oWwdmyMXSphn8F1PNZA6YjYKVX8sg3t2PCOT6E+snWPki2I06VbRn
-         V3tJa4M1GNcH4oK3t7OQcLB5m6/ThMFeGBx2RZPOlxLzaDo0ofl9TJx9CFyUxXY5zE6I
-         3qByzsPRRGXdyssC1S6NvhdLtv5HZj8/T+jU07fz+60DuPJokoGQlL1TGunJmNpT4LJv
-         mqqvzOLNKl7oRGNlf7JowynpKDFveI0O8zfeJMSzHMa9K9Q028k4JL5vWxOXseESrRsT
-         vrGt0W6uvV+ewDrPsvmyraD69SCr8m9NYiqILCqtu0kYUYUga61DNOvNcX/kPEPOFPit
-         VB6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVdLyDT6kTsYKcyBOyX+iZaMUGcsFg2XGQ/lWXEVLDYuh46eQ+P1itGra4bHi3NIs2Ns9E9H9mTZbrU5gE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqXGxx70/2l2TrSaafKCHtQiRYhkUaTa27vTRc8ReeYmPIam7l
-	Mclez4yw7fX8u0P7H2vfWfIcHIq60DkWwIuLJNETSSHA/VLcTo6d2qBTnz+ucxmHHCbWFm3rnwj
-	Gr+5v49MwAWgd8ldiU3waNswCF/ATx5XkhA0IDn/JndQ67yyE4p1jG9uOG53VGvlDQw==
-X-Gm-Gg: ASbGnctmXD4pCnqbCYW3c63DVcJk2dZo51bE94t4ovbBoz5eeJxBv6LZZf08mJKIZNb
-	Cly/Xr1g/yZzB5qwapuN8FE/p5urOQBUxiklxZrZzzb9Yh/vRLVoxqlx9VsXyNvMWIjLIAPlisB
-	hmJwEOnDu9PRj0Eip/Ebt2hXdX/TPRbOKFLHDIlpGylSuxge432UNyycLFG5U5yrgQm3zrJthyc
-	Zxrjw6fg472WbUoDK4qNdHa5mZ3Equ1x5EvmUXlputvaAvZu5NHMfzkxrT87oCilx/pEOoKDCMi
-	QoEYRsOQimTkPZqCCuihkex0G+uvEPBaQwJ1mTMtBt86Taq8zm4N4xVVhJSmyhRDC/V+NAgmrID
-	3FVN9AcwGdWyQ5xSve/m4uJD2+tB1DJP3BQJMc0uqB7OdqxFkcA==
-X-Received: by 2002:a05:600c:1c8b:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-453917ee4afmr129222685e9.4.1751294306669;
-        Mon, 30 Jun 2025 07:38:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnD9r4PvOzD5cwTLp6+K47C3mOJEJPn5vbMsxpz5jwCGLxU4Kqf3vYGoh2dZvH6exJkEnPWA==
-X-Received: by 2002:a05:600c:1c8b:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-453917ee4afmr129222315e9.4.1751294306269;
-        Mon, 30 Jun 2025 07:38:26 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f40:b300:53f7:d260:aff4:7256? (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ac6ee0d0b9sm4870506f8f.18.2025.06.30.07.38.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 07:38:25 -0700 (PDT)
-Message-ID: <1df06854-f5e6-493f-98e6-6426bd37da3c@redhat.com>
-Date: Mon, 30 Jun 2025 16:38:24 +0200
+        bh=5aROwHTVbyl9D9zeojKZoCOh6LjGW5da//8YHEuJ/oI=;
+        b=PyTzx8btQ5qzpnwOOtYbHAOP8nuTpRUf+bwKaq7/dvF1+KGquUbFUCJMhb72Uin6Bv
+         M3yh44T0NyL0kH+9QCeUvYZg8bO5MAo+j/E/6nA6OH7aHDhBV2y9WyNp+kHGc4zRbJM/
+         jApjz7benoWiMnDobWa1KgKKhStvv7er3OhfKfTigyJUUAjIINETmpznkO9z7xv/Z1Mc
+         4cgFBkFWPcmuxch6wAG5jg8GBIYTKHEnguOgkZ1kbL1zCsW8jIbXxgFVNf5ubRJLvEsQ
+         9eh8rqm6sHR9ZrSZrJBl2z+vSX2P7QPLvvNcWDnwfXBa3fvd0pKgJBakQkO4NtqAOvqo
+         J7cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751294322; x=1751899122;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5aROwHTVbyl9D9zeojKZoCOh6LjGW5da//8YHEuJ/oI=;
+        b=bd47BiGl/US1VX/e2VDWJvFaIkU9B0Kxqpma1OaByi/F1ESKExpKy+r4c9hSCyMqL5
+         zK4zGdkRGPwY/flSkbs0Z9YuchUNkF/QmyJadyeo/RGCSShyrDUBtbsKZMseeaRi9bm3
+         Wc67N4Cv2W+dt1MwiuQadfUHxVtaKQjv334ycVhdvS5w5jfvqZ1hG2XOY+QD1QEVKHHG
+         ca3rFDBvzOqckIY5tE3fOUu2Bz7bmTmPmigA97JzAJE2dGN/xelBv71p2+MzcuSYRTP1
+         YeyzGQr3pUD5OHqr8ZWDkVzcLMW6u32jj58GPPakfGmdIhyFIUAx603yGR1yanvwC2xt
+         uF9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKMN1P1Y1lR2KLh5hJIUn+x7VMag+OZJJT5XXonD2/qf9Dsee1RifwsCZdF3J6HRZlWQn9UyxbWbV6jzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOIAMyp4CZyvoROKgHohF8tyqSVNEl2nWnUITWcvjTIzxAOKyh
+	pd2g5UMXNjH0lWB3xmjPpBl9Laagfp600d4/DytW9kvd4/5zOAWWffkJEsq4IQHxbJ5dGjhLiXQ
+	nFdPgyyGIW5Iy4zCZNe/CSSZbnAUE7C68moB/zFgxnQ==
+X-Gm-Gg: ASbGnctSzZcomoUs9o3+AybRsYWsVgKoasAeBgFFXYGsYga52EFRHepiHZ+qSR2YHfG
+	+/rn0v/SIczSd910Pz0KNqnPMZXv2F6ZozhCPSReaOMkosn6kxV1lfskQrnEH3+T5ii9nm7Nnvc
+	yyiU7WeUPTUmWOt2/JE3CVPGdsAcQLE7euBPMCw0bCtNU=
+X-Google-Smtp-Source: AGHT+IFnqcLpgxNaCsk7PoNMYONyRs0hnLK3ll4UkAxFSTpn8mAkmMX5sbsExFDwtXdwFg+jhcuCDPedsHKii9UuAHs=
+X-Received: by 2002:a05:651c:1116:20b0:32c:bc69:e91a with SMTP id
+ 38308e7fff4ca-32cdc525e8amr30785301fa.36.1751294322210; Mon, 30 Jun 2025
+ 07:38:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
- value for swap tests
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-mm <linux-mm@kvack.org>, linux-s390@vger.kernel.org
-References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
- <20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
- <9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
- <20250625182846.5bce1aaf@thinkpad-T15>
- <db8ab8d0-20f5-4922-a1e2-6f7409747664@redhat.com>
- <e60539ab-e319-4a7c-a7ee-493df3f7f833@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <e60539ab-e319-4a7c-a7ee-493df3f7f833@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Zixun LI <admin@hifiphile.com>
+Date: Mon, 30 Jun 2025 16:38:31 +0200
+X-Gm-Features: Ac12FXyz1YASyU_kIOho436uejsR4G8SmZtLl7LY6YsKeZfU1QFCNlm6WQE6lL0
+Message-ID: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
+Subject: mtd: rawnand: atmel: ECC error after update to kernel 6.6
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	linux-mtd@lists.infradead.org, 
+	"SoC support'" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.06.25 06:18, Anshuman Khandual wrote:
-> 
-> 
-> On 25/06/25 10:17 PM, David Hildenbrand wrote:
->>> [...]
->>>>> @@ -1166,6 +1173,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
->>>>>      static int __init init_args(struct pgtable_debug_args *args)
->>>>>    {
->>>>> +    unsigned long max_swap_offset;
->>>>>        struct page *page = NULL;
->>>>>        int ret = 0;
->>>>>    @@ -1248,6 +1256,11 @@ static int __init init_args(struct pgtable_debug_args *args)
->>>>>          init_fixed_pfns(args);
->>>>>    +    /* See generic_max_swapfile_size(): probe the maximum offset */
->>>>> +    max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
->>>> Why not directly use generic_max_swapfile_size() which is doing exact same thing.
->>>>
->>>> unsigned long generic_max_swapfile_size(void)
->>>> {
->>>>      return swp_offset(pte_to_swp_entry(
->>>>              swp_entry_to_pte(swp_entry(0, ~0UL)))) + 1;
->>>> }
->>>
->>> Good question. I just moved this code here from pte_swap_exclusive_tests(),
->>> see above, and did not think about that. Now I also wonder why
->>> generic_max_swapfile_size() wasn't used before.
->>>
->>> But it is not exactly the same thing, there is an extra "+ 1" there.
->>> Maybe that is the reason, but I don't really understand the details /
->>> difference, and therefore would not want to change it.
->>>
->>> David, do you remember why you didn't use generic_max_swapfile_size()
->>> in your pte_swap_exclusive_tests()?
->>
->> Excellent question. If only I would remember :)
->>
->> generic_max_swapfile_size() resides in mm/swapfile.c, which is only around with CONFIG_SWAP.
->>
->> It makes sense to have that function only if there are ... actual swapfiles.
->>
->> These checks here are independent of CONFIG_SWAP (at least in theory -- for migration entries etc we don't need CONFIG_SWAP), and we simply want to construct a swap PTE with all possible bits set.
-> 
-> After this modification of PMD based swap test - there will be now
-> two uses for generic_max_swapfile_size(). Rather than refactoring
-> these into a similar helper in mm/debug_vm_pgtable.c - should the
-> existing helper just be moved outside of CONFIG_SWAP, thus making
-> it available in general ?
+Hi,
 
-As I said, having generic_max_swapfile_size() that returns something != 
-0 with !CONFIG_SWAP feels rather odd.
+After updating our SAM9G25 device from kernel 3.16 to 6.6, we have
+encountered UBIFS failures with ECC errors:
 
-No swap -> no swapfile -> no swapfile max size.
+  ubi0 warning: ubi_io_read: error -74 (ECC error) while reading
+126976 bytes from PEB 8:4096, read only 126976 bytes, retry
 
-No strong opinion though,, but desperately trying to de-duplicate 2 LOC 
-might not be worth the churn at all.
+On the old system (kernel 3.16), nandtest passed successfully:
 
--- 
-Cheers,
+  nandtest -p 1 -l 0x40000 /dev/mtd2
+  ECC corrections: 1
+  ECC failures : 0
+  Bad blocks : 0
+  BBT blocks : 0
+  00020000: checking...
+  Finished pass 1 successfully
 
-David / dhildenb
+But on the new system (kernel 6.6), nandtest reports many errors:
 
+  nandtest -p 1 -l 0x40000 /dev/mtd2
+  ECC corrections: 1667
+  ECC failures : 1205
+  Bad blocks : 1
+  BBT blocks : 0
+  00000000: reading (1 of 4)...
+  218 bit(s) ECC corrected at 00000000
+
+After some diagnostics, I used devmem2 to compare SMC and PMECC
+registers between the two kernels. All values match except for the
+PMECC_CLK register, which is 2 in kernel 3.16 [1] and 0 in kernel 6.6
+[2]. It appears the clock setting is missing since the kernel 4.14
+refactor.
+
+According to the SAM9G25 datasheet this field must be programmed with 2.
+
+Manually setting PMECC_CLK to 2 (devmem2 0xffffe010 w 2) resolves the
+nandtest issue.
+
+Is the clock setting moved to elsewhere after the refactor ?
+
+Best regards,
+Zixun LI
+
+[1] https://github.com/torvalds/linux/blob/19583ca584d6f574384e17fe7613dfaeadcdc4a6/drivers/mtd/nand/atmel_nand.c#L1058
+[2] https://github.com/torvalds/linux/blob/ffc253263a1375a65fa6c9f62a893e9767fbebfa/drivers/mtd/nand/raw/atmel/pmecc.c#L772
