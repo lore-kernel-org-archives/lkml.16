@@ -1,131 +1,82 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EDF1D7E41;
-	Mon, 30 Jun 2025 21:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0784A1D7E41;
+	Mon, 30 Jun 2025 21:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751319214; cv=none; b=o5J3kasucIZFhZJ79XBqQTED83rMy9LW2gzKcwJi55LGQN/mRPoXRvjcy02vjAZL30xdQ8WbzC95nqfFboxwCrdW4Q97/wMKlqPptabNdrGR6Vw7+MFnD93BtHW6jegUcKg74F9bZfofj4D1rRx8WLFAvRKLTNULrERN6DRJW9A=
+	t=1751319390; cv=none; b=nfuJpDQKeMSF1yc6l2uXouauQKG+0/owCGRBZw3EtLvrVzon+CRyRReZFHMxd20v6L7lbmVrFWHYtL+w950RTrITBlVis0/Z9CJpGRiES+9PxVACXXUaUtFLC9GIlpPeU85/W6EXeCucMkjT+WUyDxgjdyHONM4PWuqaYmGwp0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751319214; c=relaxed/simple;
-	bh=203ZgCZh+qPPesbZd4Z294GUTkzv22U70O3LqGCjSCA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y+Dd2BeR3lBxynOsVXqM9WmknT/yFukaizchrl1OKz86BKB8ofGrF4ZT2Y1baqiyqodmwUU+OeOQ2rgKgw9AfFVfBaZbxm0+9gOF2XG9S/FCRZNei112YlCH+anSCiHGNV5/DFj+xuPAKXggqTPcAEPgSi6rzS4XGxwAAILQVPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=kXPOClJk; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1751319390; c=relaxed/simple;
+	bh=mZ5FIEorJVzzShKFZlqCCCfYQI+bkZcqGcvsqQdrGBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gx6yb/UO0hV/RSUMTxPmjfLqkmsU+dAAoRaeluuLP6ZEk6Fel91z2+XA7sak8o6UDuFajVJO4QtRe6RUoQwblWTM1+4J7f7n/rzwTGBz8XmmIh9h9NBxQc5nXhdJ5eTSvKR+k03ueqLdVnveLw6Ve2rovr/A8BAiPcp3iSWHinc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHgGDUtx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="kXPOClJk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=BTJWDoX6+dZpqVbCI05HYOZjmWwxTYx7suIMcGN7BKI=; b=kXPOClJk1Kmb/DiiyBtViPQ7s4
-	BtvZG0K9yDMyQ4fGAOW0in3ubCmp2jBQZQuvmSkNvuRkZoBH5+Cd9uXGWaJLcrZnzwTlI6ctkPg0E
-	MPCtQMCm0MxNBF+z6YN3VNCvT0Y5AP4nvgRmrHCPBIAzCPyr/yGFufXgaB7zRpS5fSshucWqrdNkz
-	cTRAN+LkSxuoc10IY9ad5dILrvGnMUn61DobyKVq28TF0PSvch2asNQdHHgXEZLWQArucI5zeklKY
-	dl7HGTSabPyPOfaLNFCCXbNHXk2/MWobnlFcqn2HpHbxaBkwOcjzD90tFzh6Nld+AGVo80RkSVSmM
-	XfhReTgw==;
-Received: from i53875bfd.versanet.de ([83.135.91.253] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uWM7s-00084a-BS; Mon, 30 Jun 2025 23:33:20 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: linux-rockchip@lists.infradead.org,
- Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Rick wertenbroek <rick.wertenbroek@gmail.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v8 3/4] phy: rockchip-pcie: Enable all four lanes if required
-Date: Mon, 30 Jun 2025 23:33:19 +0200
-Message-ID: <4006908.X513TT2pbd@diego>
-In-Reply-To:
- <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
-References:
- <cover.1751307390.git.geraldogabriel@gmail.com>
- <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHgGDUtx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F937C4CEE3;
+	Mon, 30 Jun 2025 21:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751319389;
+	bh=mZ5FIEorJVzzShKFZlqCCCfYQI+bkZcqGcvsqQdrGBs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QHgGDUtxTDuTIVFyC97+axikseCSVj8INevAe7xYq/UXxZPS9A/9ueB06xNKjpqF7
+	 CUUllHEgVSD+SHBdIQmm5uEAc2FS70xoKsrm787KN12c986QHD8n8QeRimL2X1VCpW
+	 bs7CpvQkPKoufzhz7Zqh7ZyxN9tEYCT57XU30cauy5F7nDN/+9gyBX8M3S9vj5McCq
+	 pCTkL7/e3OFwDPpjywWk1Oib+E4pCuY9h9H0IclDnzHdJinZIdMRfDCgWNRh3jmdp2
+	 wCaW9JuUdWbArfxZRYiTAr7sKv5f+ocN7ikyVCwh4nbxyiL6hvAifU5d2l8OJJOMle
+	 4CYnMJ72nsEFA==
+Date: Mon, 30 Jun 2025 16:36:28 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org, Crystal Wood <oss@buserror.net>,
+	linux-kernel@vger.kernel.org, Naveen N Rao <naveen@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert
+ fsl,mpic-msi to YAML
+Message-ID: <175131938693.3399448.343722096560779428.robh@kernel.org>
+References: <20250611-msipic-yaml-v2-1-f2e174c48802@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250611-msipic-yaml-v2-1-f2e174c48802@posteo.net>
 
-Am Montag, 30. Juni 2025, 20:22:01 Mitteleurop=C3=A4ische Sommerzeit schrie=
-b Geraldo Nascimento:
-> Current code enables only Lane 0 because pwr_cnt will be incremented on
-> first call to the function. Let's reorder the enablement code to enable
-> all 4 lanes through GRF.
->=20
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->=20
-> Signed-off-by: Valmantas Paliksa <walmis@gmail.com>
-> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 
-hmm, if Valmantas is the original author you should probably keep that auth=
-orship
-  git commit --amend --author=3D"Valmantas Paliksa <walmis@gmail.com>"
-should do the trick.
-
-The first signed-off should be from the patch author, then your signed-off
-indicates you handling the patch later as part of this series.
-
-[or, if you modified the code of the patch heavily, Co-developed-by could
- also be appropriate]
-
-Heiko
-
+On Wed, 11 Jun 2025 11:42:09 +0200, J. Neuschäfer wrote:
+> As part of a larger effort to bring various PowerPC-related bindings
+> into the YAML world, this patch converts msi-pic.txt to YAML and moves
+> it into the bindings/interrupt-controller/ directory. The conversion may
+> necessarily be a bit hard to read because the binding is quite verbose.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > ---
->  drivers/phy/rockchip/phy-rockchip-pcie.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockc=
-hip/phy-rockchip-pcie.c
-> index bd44af36c67a..f22ffb41cdc2 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> @@ -160,6 +160,12 @@ static int rockchip_pcie_phy_power_on(struct phy *ph=
-y)
-> =20
->  	guard(mutex)(&rk_phy->pcie_mutex);
-> =20
-> +	regmap_write(rk_phy->reg_base,
-> +		     rk_phy->phy_data->pcie_laneoff,
-> +		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> +				   PHY_LANE_IDLE_MASK,
-> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> +
->  	if (rk_phy->pwr_cnt++) {
->  		return 0;
->  	}
-> @@ -176,12 +182,6 @@ static int rockchip_pcie_phy_power_on(struct phy *ph=
-y)
->  				   PHY_CFG_ADDR_MASK,
->  				   PHY_CFG_ADDR_SHIFT));
-> =20
-> -	regmap_write(rk_phy->reg_base,
-> -		     rk_phy->phy_data->pcie_laneoff,
-> -		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> -				   PHY_LANE_IDLE_MASK,
-> -				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> -
->  	/*
->  	 * No documented timeout value for phy operation below,
->  	 * so we make it large enough here. And we use loop-break
->=20
+> Changes in v2:
+> - Rebase on v6.16-rc1
+> - Address Conor Dooley's review comments:
+>   - Add multiline marker (|) to preserve formatting
+>   - Split 'reg' list in second example
+>   - Rewrite version dependent information as an if/else schema
+> 
+> Link to v1: https://lore.kernel.org/r/20250403-msipic-yaml-v1-1-f4248475714f@posteo.net
+> ---
+> ---
+>  .../interrupt-controller/fsl,mpic-msi.yaml         | 161 +++++++++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/msi-pic.txt    | 111 --------------
+>  2 files changed, 161 insertions(+), 111 deletions(-)
+> 
 
-
-
+Applied, thanks!
 
