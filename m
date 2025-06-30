@@ -1,201 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D06A21C186;
-	Mon, 30 Jun 2025 12:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0C525BEE8;
+	Mon, 30 Jun 2025 12:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751286475; cv=none; b=CZDn/FIrxj17YMETFd97b5HQYTWIjZj/cGbFoq90WAWiZfg9+lY45v03P7LgHi9yAMbtR5S8SmX4yjVdtjROiqFedrXKZiF6q2QpdTf450f+YEO0vdJ7UnjYuXXyy6EKu598u0JHKqvHF08beoz9w2SZbckbh11bxL86JllnaZ8=
+	t=1751286570; cv=none; b=qAnJ+V0mf4Ew3jVY54uPxHCMP1ZNAU7Z+cbUFlcrFePIDcWhH02Z6HBv5NknD6X9wo2BwqH/fTkrOUwAT09ZCMdx4SvfvVkSNljhSRLKGWKbGGsRn8zxJI4W62Nygro3KInjWCas/IYwxtnylg5SbyRCFgla362kxwqh5Bez/+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751286475; c=relaxed/simple;
-	bh=TdkNbXOSEdCNBRION+A5vF/XNr0ga0/GKwNsi4yCSA4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=tkIbmU0RdJfgyFcHfGYwambzjrlJPFJakGFLpxf/xuNz96ECPbVX5VQqwVWa1RevYDKdtLXLUi69MSALJs4R9NReAGZmQjfZW0iEf/n7i2n13XXPBT+KjNRS2H7Dqpyq+VCIBLMgZRrYGb4BYSmkOoDgLEjJAubCWlrvwf778VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9r2lQ7x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9r2lQ7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A9E8C4CEE3;
-	Mon, 30 Jun 2025 12:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751286473;
-	bh=TdkNbXOSEdCNBRION+A5vF/XNr0ga0/GKwNsi4yCSA4=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=C9r2lQ7xLa1CG57hZnMQ/cxxrJVKBryIAUf2UHq1rW95CIn3COVgtCw7EL7CMLjqJ
-	 qGsXMAYq87zlK4fTVlB85LpFzDlo2OJHlWpwqE5N7huY7w2eBO/qcIrBFe3p1bwSjI
-	 eTWUy65fz/ge31BZV9MlalxKOPrPu0geyfIBcafy8x68VIVA3ZsgM5JUIxySBFrBpq
-	 zXLnQdUOYJeQhDYT98BDykMc3TvQ9yHfmJr+5JdFIiVmnWs/qHvoWT0lVVDO2NUigw
-	 LPyymUz/9YoIFG4L4FJCdSHBLG/vZKVywkmpcR83yq6gtgmCLmK453RqgGXnCB9hC3
-	 t5QsfuimZgVIw==
+	s=arc-20240116; t=1751286570; c=relaxed/simple;
+	bh=/i9egio95Bx06U/iIP9MFYqlD2hAJ6hhxZw8tSnbl5c=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Iu3J3AGE6n+0p9HT6BvzxWZj7DtuTDlc0qb/9csZdtU+N2Q5POkFrqS+N87s54Cl7GLurXkl2dR+RcbgxTji+eY8mTF0tMmBRgzEC6wLL7+ideSi2XDP5v1p5s2EZBIWJynhySTupExgIVjc7q4YedQRzrVSKwzMhjzdIM+JN20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bW54Y0qHKz6L5PT;
+	Mon, 30 Jun 2025 20:26:37 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 95FD51402EC;
+	Mon, 30 Jun 2025 20:29:24 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 30 Jun 2025 14:29:24 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 30 Jun 2025 14:29:24 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>, Tony Luck
+	<tony.luck@intel.com>
+CC: Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, Robert Richter <rric@kernel.org>,
+	"Dave Jiang" <dave.jiang@intel.com>, Alison Schofield
+	<alison.schofield@intel.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] EDAC: mem_repair: reduce stack usage in
+ edac_mem_repair_get_desc()
+Thread-Topic: [PATCH] EDAC: mem_repair: reduce stack usage in
+ edac_mem_repair_get_desc()
+Thread-Index: AQHb4dhPRsv0qIv9s0aOmor2xoQzHbQbsD0Q
+Date: Mon, 30 Jun 2025 12:29:24 +0000
+Message-ID: <ff6cdc5223664c53a269a5c259c156bd@huawei.com>
+References: <20250620114135.4017183-1-arnd@kernel.org>
+In-Reply-To: <20250620114135.4017183-1-arnd@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 30 Jun 2025 14:27:47 +0200
-Message-Id: <DAZV8OGL8BMH.11SLXBXQ17ZJ9@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Masahiro
- Yamada" <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Nicolas Schier" <nicolas.schier@linux.dev>, "Trevor
- Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye" <ark.email@gmail.com>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kbuild@vger.kernel.org>, "Petr Pavlu" <petr.pavlu@suse.com>, "Sami
- Tolvanen" <samitolvanen@google.com>, "Daniel Gomez" <da.gomez@samsung.com>,
- "Simona Vetter" <simona.vetter@ffwll.ch>, "Greg KH"
- <gregkh@linuxfoundation.org>, "Fiona Behrens" <me@kloenk.dev>, "Daniel
- Almeida" <daniel.almeida@collabora.com>, <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
- <COU2bqJOzCHRf6g4rwFpu2NY3wLY0G0AmNjRaU9aGEqu1HaPZ5X4KzfDT_CEB3Okh5BV50sJS10sKhmtHut8ew==@protonmail.internalid> <DAQJCUE1C2JE.204A8IS7LBIVZ@kernel.org> <87ikkq648o.fsf@kernel.org> <smOfUo2mEmQu-lykKKMiNOUWq2ze6p_CoEEpgGE0dtAnoJDGEpvQMkP1q-n13MiUxLK1xAiM-4QLsivPrG57sg==@protonmail.internalid> <DARCZYNPIJVZ.3JJSZ6PSAEMEC@kernel.org> <877c126bce.fsf@kernel.org> <Mg1_h6lRpg9tdi0VjiyDfIEy2juzgDWxOhYX61qSUfyEpeMMksWW1e-blTka_G1dXUvpZVktdD-zL3X1a6T6Cg==@protonmail.internalid> <DATW0XWNN45X.1L2WMZ41JJ5O8@kernel.org> <87v7om4jhq.fsf@kernel.org> <RPPvXQKnjK77Kp9mKaiFxbNj1fTHKb_I7_nbY81fZop-Wz8n5TTi4_lpXP9U9AwjocvZKqJPI8PGKufJn9cIzQ==@protonmail.internalid> <DAU0J3T0IEVM.2K7ZRQOVOHF8H@kernel.org> <878qlh4aj1.fsf@kernel.org> <87plepzke5.fsf@kernel.org> <xFouVLxX1_t1mH69FDYwlIhBlI72M0IzQEKn0ntG_wT9z7V5DtbxiwVP_frH_yiS-Gf0q_AhqetbLmuvJ_yP5Q==@protonmail.internalid> <DAX65TRN0TGP.25VZ9DYV86XWY@kernel.org> <87wm8txysl.fsf@kernel.org>
-In-Reply-To: <87wm8txysl.fsf@kernel.org>
+MIME-Version: 1.0
 
-On Mon Jun 30, 2025 at 1:18 PM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
->> On Fri Jun 27, 2025 at 9:57 AM CEST, Andreas Hindborg wrote:
->>> Andreas Hindborg <a.hindborg@kernel.org> writes:
->>>> "Benno Lossin" <lossin@kernel.org> writes:
->>>>> That's good to know, then let's try to go for something simple.
->>>>>
->>>>> I don't think that we can just use a `Mutex<T>`, because we don't hav=
-e a
->>>>> way to create it at const time... I guess we could have
->>>>>
->>>>>     impl<T> Mutex<T>
->>>>>         /// # Safety
->>>>>         ///
->>>>>         /// The returned value needs to be pinned and then `init` nee=
-ds
->>>>>         /// to be called before any other methods are called on this.
->>>>>         pub unsafe const fn const_new() -> Self;
->>>>>
->>>>>         pub unsafe fn init(&self);
->>>>>     }
->>>>>
->>>>> But that seems like a bad idea, because where would we call the `init=
-`
->>>>> function? That also needs to be synchronized...
->>>>
->>>> Ah, that is unfortunate. The init function will not run before this, s=
-o
->>>> we would need a `Once` or an atomic anyway to initialize the lock.
->>>>
->>>> I am not sure if we are allowed to sleep during this, I would have to
->>>> check. But then we could use a spin lock.
->>>>
->>>> We will need the locking anyway, when we want to enable sysfs write
->>>> access to the parameters.
->>>>
->>>>>
->>>>> Maybe we can just like you said use an atomic bool?
->>>>
->>>> Sigh, I will have to check how far that series has come.
->>>>
->>>
->>> I think I am going to build some kind of `Once` feature on top of
->>> Boqun's atomic series [1], so that we can initialize a lock in these
->>> statics. We can't use `global_lock!`, because that depends on module
->>> init to initialize the lock before first use.
->>
->> Sounds good, though we probably don't want to name it `Once`. Since it
->> is something that will be populated in the future, but not by some
->> random accessor, but rather a specific populator.
->>
->> So maybe:
->>
->>     pub struct Delayed<T> {
->>         dummy: T,
->>         real: Opaque<T>,
->>         populated: Atomic<bool>, // or Atomic<Flag>
->>         writing: Atomic<bool>, // or Atomic<Flag>
->>     }
->>
->>     impl<T> Delayed<T> {
->>         pub fn new(dummy: T) -> Self {
->>             Self {
->>                 dummy,
->>                 real: Opaque::uninit(),
->>                 populated: Atomic::new(false),
->>                 writing: Atomic::new(false),
->>             }
->>         }
->>
->>         pub fn get(&self) -> &T {
->>             if self.populated.load(Acquire) {
->>                 unsafe { &*self.real.get() }
->>             } else {
->>                 // maybe print a warning here?
->>                 // or maybe let the user configure this in `new()`?
->>                 &self.dummy
->>             }
->>         }
->>
->>         pub fn populate(&self, value: T) {
->>             if self.writing.cmpxchg(false, true, Release) {
->>                 unsafe { *self.real.get() =3D value };
->>                 self.populated.store(true, Release);
->>             } else {
->>                 pr_warn!("`Delayed<{}>` written to twice!\n", core::any:=
-:type_name::<T>());
->>             }
->>         }
->>     }
->>
->> (no idea if the orderings are correct, I always have to think way to
->> much about that... especially since our atomics seem to only take one
->> ordering in compare_exchange?)
->>
->>> As far as I can tell, atomics may not land in v6.17, so this series
->>> will probably not be ready for merge until v6.18 at the earliest.
->>
->> Yeah, sorry about that :(
+>-----Original Message-----
+>From: Arnd Bergmann <arnd@kernel.org>
+>Sent: 20 June 2025 12:41
+>To: Borislav Petkov <bp@alien8.de>; Tony Luck <tony.luck@intel.com>; Shiju
+>Jose <shiju.jose@huawei.com>
+>Cc: Arnd Bergmann <arnd@arndb.de>; James Morse <james.morse@arm.com>;
+>Mauro Carvalho Chehab <mchehab@kernel.org>; Robert Richter
+><rric@kernel.org>; Dave Jiang <dave.jiang@intel.com>; Alison Schofield
+><alison.schofield@intel.com>; linux-edac@vger.kernel.org; linux-
+>kernel@vger.kernel.org
+>Subject: [PATCH] EDAC: mem_repair: reduce stack usage in
+>edac_mem_repair_get_desc()
 >
-> Actually, perhaps we could aim at merging this code without this
-> synchronization?
+>From: Arnd Bergmann <arnd@arndb.de>
+>
+>Constructing an array on the stack adds complexity and can exceed the warn=
+ing
+>limit for per-function stack usage:
+>
+>drivers/edac/mem_repair.c:361:5: error: stack frame size (1296) exceeds li=
+mit
+>(1280) in 'edac_mem_repair_get_desc' [-Werror,-Wframe-larger-than]
+>
+>Change this to have the actual attribute array allocated statically and th=
+en just
+>add the instance number on the per-instance copy.
+>
+>Fixes: 699ea5219c4b ("EDAC: Add a memory repair control feature")
+>Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Sorry, I missed this patch.
+Tested-by: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
+>---
+> drivers/edac/mem_repair.c | 56 +++++++++++++++------------------------
+> 1 file changed, 22 insertions(+), 34 deletions(-)
+>
+>diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c index
+>d1a8caa85369..2e4e790e0ffe 100755
+>--- a/drivers/edac/mem_repair.c
+>+++ b/drivers/edac/mem_repair.c
+>@@ -286,17 +286,26 @@ static umode_t mem_repair_attr_visible(struct
+>kobject *kobj, struct attribute *a
+> 	return 0;
+> }
+>
+>-#define MR_ATTR_RO(_name, _instance)       \
+>-	((struct edac_mem_repair_dev_attr) { .dev_attr =3D __ATTR_RO(_name),
+>\
+>-					     .instance =3D _instance })
+>-
+>-#define MR_ATTR_WO(_name, _instance)       \
+>-	((struct edac_mem_repair_dev_attr) { .dev_attr =3D __ATTR_WO(_name),
+>\
+>-					     .instance =3D _instance })
+>-
+>-#define MR_ATTR_RW(_name, _instance)       \
+>-	((struct edac_mem_repair_dev_attr) { .dev_attr =3D __ATTR_RW(_name),
+>\
+>-					     .instance =3D _instance })
+>+static const struct device_attribute mem_repair_dev_attr[] =3D {
+>+	[MR_TYPE]	  =3D __ATTR_RO(repair_type),
+>+	[MR_PERSIST_MODE] =3D __ATTR_RW(persist_mode),
+>+	[MR_SAFE_IN_USE]  =3D __ATTR_RO(repair_safe_when_in_use),
+>+	[MR_HPA]	  =3D __ATTR_RW(hpa),
+>+	[MR_MIN_HPA]	  =3D __ATTR_RO(min_hpa),
+>+	[MR_MAX_HPA]	  =3D __ATTR_RO(max_hpa),
+>+	[MR_DPA]	  =3D __ATTR_RW(dpa),
+>+	[MR_MIN_DPA]	  =3D __ATTR_RO(min_dpa),
+>+	[MR_MAX_DPA]	  =3D __ATTR_RO(max_dpa),
+>+	[MR_NIBBLE_MASK]  =3D __ATTR_RW(nibble_mask),
+>+	[MR_BANK_GROUP]   =3D __ATTR_RW(bank_group),
+>+	[MR_BANK]	  =3D __ATTR_RW(bank),
+>+	[MR_RANK]	  =3D __ATTR_RW(rank),
+>+	[MR_ROW]	  =3D __ATTR_RW(row),
+>+	[MR_COLUMN]	  =3D __ATTR_RW(column),
+>+	[MR_CHANNEL]	  =3D __ATTR_RW(channel),
+>+	[MR_SUB_CHANNEL]  =3D __ATTR_RW(sub_channel),
+>+	[MEM_DO_REPAIR]	  =3D __ATTR_WO(repair)
+>+};
+>
+> static int mem_repair_create_desc(struct device *dev,
+> 				  const struct attribute_group **attr_groups,
+>@@ -305,34 +314,13 @@ static int mem_repair_create_desc(struct device
+>*dev,
+> 	struct edac_mem_repair_context *ctx;
+> 	struct attribute_group *group;
+> 	int i;
+>-	struct edac_mem_repair_dev_attr dev_attr[] =3D {
+>-		[MR_TYPE]	  =3D MR_ATTR_RO(repair_type, instance),
+>-		[MR_PERSIST_MODE] =3D MR_ATTR_RW(persist_mode, instance),
+>-		[MR_SAFE_IN_USE]  =3D MR_ATTR_RO(repair_safe_when_in_use,
+>instance),
+>-		[MR_HPA]	  =3D MR_ATTR_RW(hpa, instance),
+>-		[MR_MIN_HPA]	  =3D MR_ATTR_RO(min_hpa, instance),
+>-		[MR_MAX_HPA]	  =3D MR_ATTR_RO(max_hpa, instance),
+>-		[MR_DPA]	  =3D MR_ATTR_RW(dpa, instance),
+>-		[MR_MIN_DPA]	  =3D MR_ATTR_RO(min_dpa, instance),
+>-		[MR_MAX_DPA]	  =3D MR_ATTR_RO(max_dpa, instance),
+>-		[MR_NIBBLE_MASK]  =3D MR_ATTR_RW(nibble_mask, instance),
+>-		[MR_BANK_GROUP]   =3D MR_ATTR_RW(bank_group, instance),
+>-		[MR_BANK]	  =3D MR_ATTR_RW(bank, instance),
+>-		[MR_RANK]	  =3D MR_ATTR_RW(rank, instance),
+>-		[MR_ROW]	  =3D MR_ATTR_RW(row, instance),
+>-		[MR_COLUMN]	  =3D MR_ATTR_RW(column, instance),
+>-		[MR_CHANNEL]	  =3D MR_ATTR_RW(channel, instance),
+>-		[MR_SUB_CHANNEL]  =3D MR_ATTR_RW(sub_channel, instance),
+>-		[MEM_DO_REPAIR]	  =3D MR_ATTR_WO(repair, instance)
+>-	};
+>-
+> 	ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> 	if (!ctx)
+> 		return -ENOMEM;
+>
+> 	for (i =3D 0; i < MR_MAX_ATTRS; i++) {
+>-		memcpy(&ctx->mem_repair_dev_attr[i],
+>-		       &dev_attr[i], sizeof(dev_attr[i]));
+>+		ctx->mem_repair_dev_attr[i].dev_attr =3D
+>mem_repair_dev_attr[i];
+>+		ctx->mem_repair_dev_attr[i].instance =3D instance;
+> 		ctx->mem_repair_attrs[i] =3D
+> 			&ctx->mem_repair_dev_attr[i].dev_attr.attr;
+> 	}
+>--
+>2.39.5
+>
 
-I won't remember this issue in a few weeks and I fear that it will just
-get buried. In fact, I already had to re-read now what the actual issue
-was...
-
-> The lack of synchronization is only a problem if we
-> support custom parsing. This patch set does not allow custom parsing
-> code, so it does not suffer this issue.
-
-... In doing that, I saw my original example of UB:
-
-    module! {                                                              =
-                                                                 =20
-        // ...                                                             =
-                                                                 =20
-        params: {                                                          =
-                                                                 =20
-            my_param: i64 {                                                =
-                                                                 =20
-                default: 0,                                                =
-                                                                 =20
-                description: "",                                           =
-                                                                 =20
-            },                                                             =
-                                                                 =20
-        },                                                                 =
-                                                                 =20
-    }                                                                      =
-                                                                 =20
-                                                                           =
-                                                                 =20
-    static BAD: &'static i64 =3D module_parameters::my_param.get();
-
-That can happen without custom parsing, so it's still a problem...
-
----
-Cheers,
-Benno
