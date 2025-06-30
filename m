@@ -1,208 +1,189 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37D0292B36;
-	Mon, 30 Jun 2025 23:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324840; cv=none; b=ix2ykw33oNYt0Y8Ke823CFxq2HORG/WoMwGpKQpNvx8IzVx4J5KII5TdfY6xlLTmjaXmq0/8UTY8kGt783+WOLjtt1zWP8uH06TNtRagPYHA2NIjJkRH9AVcx10l0PsWEkSi64bhRsEq7tRxqxea+ngVjNNNEV6o5hkHjVsRtEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324840; c=relaxed/simple;
-	bh=F2c86YPB2yWAluPyg1zOw8RQH2nzZ+7OT6X/Myd+15c=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5FB202976;
+	Mon, 30 Jun 2025 23:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751325045; cv=pass; b=hy8b3HSd119TCkEvnXHezrQreSBWLQ9zYT7QQEd4poX3DBTB65w0wPOQEj8irQLQ3q6QaHmkdEx13lJEXik6CpRiBlTxQyLnOQGyrawNBLeraxTef1RwevRwwbmafj1IByr+fc9m7elYKM/IC7lwPg9OumcGNiInOP0z+Tjvp/g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751325045; c=relaxed/simple;
+	bh=e+eRDizTChxsNQSlu63KUtprX9rdJ9Csf/xbJCFc9FI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WB4YkVS0XKTOnNbkqTyW31uNHEN8cHKZaRn66F0onYjp9NZfbNZzM5PBf1UNZKroa5qOktVWADm2/Q2q7Ojz/aZn1h5Bmmh9y/QyIuUrYEBwQ2yfVPlHwoXvCDl9EaBPJmFSX6PsqKhtbPBZy53aIkrjMrAbTU5poMybBylCbIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JeCrGwaY; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWXLG74nt1kJaGIrqaXnLs6QPt0PBhXw+/PNLObuxjViDgR6JFg3DpxyDVato64f4pxbnymAr8gAPSIsAiJlPKrOXhmE3cH3XzHMvP1u6XNo6VKP9BxrcghJkktOsxl2NuVI3mO5ae9//tM1/9CH8krHhchx19yA2KZqA9h1zhs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=bRyJuM7I; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JeCrGwaY"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id BAC54838;
-	Tue,  1 Jul 2025 01:06:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751324815;
-	bh=F2c86YPB2yWAluPyg1zOw8RQH2nzZ+7OT6X/Myd+15c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JeCrGwaYFsgs0iI5OCZ3bsli3VjmGyndnl7tiGVlTdY5UFlCl3E1nJn1OThNKowdz
-	 eNBW4azDl5RQKTLJieyRSCdNckf2KXPnKoLPoKevlcHiWkmUYvH2UWNKKwOhIvElAx
-	 MqQ5xsQkTXr3MxxPBfNXwgbC8kAfEz1ZffCHg1ao=
-Date: Tue, 1 Jul 2025 02:06:51 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: imx8qxp-mek: add parallel ov5640 camera
- support
-Message-ID: <20250630230651.GG15184@pendragon.ideasonboard.com>
-References: <20250630-imx8qxp_pcam-v1-0-eccd38d99201@nxp.com>
- <20250630-imx8qxp_pcam-v1-5-eccd38d99201@nxp.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="bRyJuM7I"
+ARC-Seal: i=1; a=rsa-sha256; t=1751325027; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kNUtf021KMtv7ipHIehHdCrJkE1VU45x1iToozGgvTRjrieFWc96z/FUK/djFDZVoZpCXu5fFtC9SEoIq/fbPnFRzlYDbRZ71hJSK8glw5BBggkbbRKS4Ri72NTdaJjOySUDdW7i+7yGMvAQHUvfbBR766/BfI2WLAlKc8pWFSg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1751325027; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=NMoRzxFpPcptg7A9l+92hIng0UBiDJ8hvoxFQ6v0Zsk=; 
+	b=I+gt4qsOCCsvFVeFA0HL9zNhomzKmIbSgkJTYGi6hOsi1gnEbhWC54cuiWQxphYzftkhmUg+fybCpb7qOjQfM8qytP0vxwk95IbJBxPIsdknVzS7Y6vLIp0vFqijkkI83nNChfTGZdOvFE8JBKJlP7pf1+7Ms440/gRaXruhKXA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751325027;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=NMoRzxFpPcptg7A9l+92hIng0UBiDJ8hvoxFQ6v0Zsk=;
+	b=bRyJuM7InKHLhoFTGk9AWIOnRw25H4iGk+0AZvpubUikxOdRiMFwO9u8KIQvCxI6
+	9gDtmjVv8sZ6CRBxoKtXOrWBARmlLxYlaeHL4c//D6V1hIeICesda2nmqlPEEsY+zYg
+	onV/fIBT7xiC3nsI1R9ckqQ53MolB89tzMwiEO9c=
+Received: by mx.zohomail.com with SMTPS id 1751325024081616.6563756773481;
+	Mon, 30 Jun 2025 16:10:24 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 8AD3B1809B6; Tue, 01 Jul 2025 01:10:19 +0200 (CEST)
+Date: Tue, 1 Jul 2025 01:10:19 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, kernel@collabora.com, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: adjust dcin regulator on ROCK
+ 4D
+Message-ID: <5acizoywvjolaffojiawqlzixiclrqzohuhq55lbsjm6yhhlwi@w2amqugl3ee2>
+References: <20250630-rock4d-reg-usb-wifi-v1-0-1057f412d98c@collabora.com>
+ <20250630-rock4d-reg-usb-wifi-v1-1-1057f412d98c@collabora.com>
+ <DB02KKR1VK9H.1Q1Y5A98FKGLK@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="d22k3ikyl4mwgwcs"
 Content-Disposition: inline
-In-Reply-To: <20250630-imx8qxp_pcam-v1-5-eccd38d99201@nxp.com>
+In-Reply-To: <DB02KKR1VK9H.1Q1Y5A98FKGLK@cknow.org>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.3/251.316.55
+X-ZohoMailClient: External
 
-Hi Frank,
 
-Thank you for the patch.
+--d22k3ikyl4mwgwcs
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: adjust dcin regulator on ROCK
+ 4D
+MIME-Version: 1.0
 
-On Mon, Jun 30, 2025 at 06:28:21PM -0400, Frank Li wrote:
-> Add parallel ov5640 nodes in imx8qxp-mek and create overlay file to enable
-> it because it can work at two mode: MIPI and parallel mode.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile             |  3 ++
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      | 37 +++++++++++++++++++
->  .../dts/freescale/imx8x-mek-ov5640-parallel.dtso   | 43 ++++++++++++++++++++++
->  3 files changed, 83 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 02ef35578dbc7..a9fb11ccd3dea 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -330,6 +330,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek-pcie-ep.dtb
->  imx8qxp-mek-ov5640-csi-dtbs := imx8qxp-mek.dtb imx8qxp-mek-ov5640-csi.dtbo
->  dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-csi.dtb
->  
-> +imx8qxp-mek-ov5640-parallel-dtbs := imx8qxp-mek.dtb imx8x-mek-ov5640-parallel.dtbo
-> +dtb-${CONFIG_ARCH_MXC} += imx8qxp-mek-ov5640-parallel.dtb
-> +
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqp-mba8xx.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-tqma8xqps-mb-smarc-2.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> index c95cb8acc360a..09eb85a9759e2 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> @@ -487,6 +487,23 @@ pca6416: gpio@20 {
->  		#gpio-cells = <2>;
->  	};
->  
-> +	ov5640_pi: camera@3c {
-> +		compatible = "ovti,ov5640";
-> +		reg = <0x3c>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_parallel_csi>;
-> +		clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
-> +		assigned-clocks = <&pi0_misc_lpcg IMX_LPCG_CLK_0>;
-> +		assigned-clock-rates = <24000000>;
-> +		clock-names = "xclk";
-> +		powerdown-gpios = <&lsio_gpio3 2 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&lsio_gpio3 3 GPIO_ACTIVE_LOW>;
-> +		AVDD-supply = <&reg_2v8>;
-> +		DVDD-supply = <&reg_1v5>;
-> +		DOVDD-supply = <&reg_1v8>;
-> +		status = "disabled"; /* Overlay enable it */
-> +	};
-> +
+Hi,
 
-As far as I can tell, the sensor isn't soldered on the board, but is an
-external module connected through a cable. This DT node should therefore
-be moved to the overlay.
+On Mon, Jun 30, 2025 at 08:12:27PM +0200, Diederik de Haas wrote:
+> Hi Nicolas,
+>=20
+> On Mon Jun 30, 2025 at 5:36 PM CEST, Nicolas Frattaroli wrote:
+> > The ROCK 4D's actual DC input is 5V, and the schematic names it as being
+> > 5V as well.
+> >
+> > Rename the regulator, and change the voltage it claims to be at.
+>=20
+> Shouldn't it have a fixes tag then? Providing 12V where 5V is expected
+> sounds problematic ;-)
 
->  	cs42888: audio-codec@48 {
->  		compatible = "cirrus,cs42888";
->  		reg = <0x48>;
-> @@ -865,6 +882,26 @@ IMX8QXP_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT	0xC0000041
->  		>;
->  	};
->  
-> +	pinctrl_parallel_csi: parallelcsigrp {
-> +		fsl,pins = <
-> +			IMX8QXP_CSI_D00_CI_PI_D02				0xc0000041
-> +			IMX8QXP_CSI_D01_CI_PI_D03				0xc0000041
-> +			IMX8QXP_CSI_D02_CI_PI_D04				0xc0000041
-> +			IMX8QXP_CSI_D03_CI_PI_D05				0xc0000041
-> +			IMX8QXP_CSI_D04_CI_PI_D06				0xc0000041
-> +			IMX8QXP_CSI_D05_CI_PI_D07				0xc0000041
-> +			IMX8QXP_CSI_D06_CI_PI_D08				0xc0000041
-> +			IMX8QXP_CSI_D07_CI_PI_D09				0xc0000041
-> +
-> +			IMX8QXP_CSI_MCLK_CI_PI_MCLK				0xc0000041
-> +			IMX8QXP_CSI_PCLK_CI_PI_PCLK				0xc0000041
-> +			IMX8QXP_CSI_HSYNC_CI_PI_HSYNC				0xc0000041
-> +			IMX8QXP_CSI_VSYNC_CI_PI_VSYNC				0xc0000041
-> +			IMX8QXP_CSI_EN_LSIO_GPIO3_IO02				0xc0000041
-> +			IMX8QXP_CSI_RESET_LSIO_GPIO3_IO03			0xc0000041
-> +		>;
-> +	};
+This is basically "just" documentation, as the DT just describes
+a fixed regulator (i.e. nothing software controllable). This just
+changes a number in sysfs :)
 
-Same for this one.
+Note, that the 5V DCIN is a USB-C port, which does not do any PD
+negotiation, but has the 5K1 resistors on the CC lines to "request"
+5V. If for whatever reason a higher voltage is applied (which does
+not happen as long as the power is provided by anything remotely
+following the USB specifications) there also is an over-voltage
+protection chip. So it's not problematic :)
 
-> +
->  	pinctrl_pcieb: pcieagrp {
->  		fsl,pins = <
->  			IMX8QXP_PCIE_CTRL0_PERST_B_LSIO_GPIO4_IO00		0x06000021
-> diff --git a/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso b/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso
-> new file mode 100644
-> index 0000000000000..927d6640662f3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8x-mek-ov5640-parallel.dtso
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2025 NXP
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/media/video-interfaces.h>
-> +
-> +&ov5640_pi {
-> +	status = "okay";
-> +
-> +	port {
-> +		ov5640_pi_ep: endpoint {
-> +			remote-endpoint = <&parallel_csi_in>;
-> +			data-lanes = <1 2>;
+OTOH adding a Fixes tag does not hurt ;)
 
-data-lanes is not allowed for parallel buses.
+-- Sebastian
 
-> +			bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
-> +			bus-width = <8>;
-> +			vsync-active = <0>;
-> +			hsync-active = <1>;
-> +			pclk-sample = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +&parallel_csi {
-> +	status = "okay";
-> +
-> +	ports {
-> +		port@0 {
-> +			parallel_csi_in: endpoint {
-> +				remote-endpoint = <&ov5640_pi_ep>;
-> +			};
-> +		};
-> +
-> +	};
-> +};
-> +
-> +&isi {
-> +	status = "okay";
-> +};
+> > Furthermore, fix vcc_1v1_nldo_s3's vin-supply as coming from
+> > vcc_5v0_sys, and not the DCIN, as per the schematic. This makes no
+> > functional change; both regulators are always on, and one feeds into the
+> > other.
+> >
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts b/arch/arm=
+64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > index 6756403111e704cad42f6674d5ab55eb0306f1e3..352e3df165688219bfedc19=
+734d9eb32c547ec44 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts
+> > @@ -57,13 +57,13 @@ user-led {
+> >  		};
+> >  	};
+> > =20
+> > -	vcc_12v0_dcin: regulator-vcc-12v0-dcin {
+> > +	vcc_5v0_dcin: regulator-vcc-5v0-dcin {
+> >  		compatible =3D "regulator-fixed";
+> >  		regulator-always-on;
+> >  		regulator-boot-on;
+> > -		regulator-min-microvolt =3D <12000000>;
+> > -		regulator-max-microvolt =3D <12000000>;
+> > -		regulator-name =3D "vcc_12v0_dcin";
+> > +		regulator-min-microvolt =3D <5000000>;
+> > +		regulator-max-microvolt =3D <5000000>;
+> > +		regulator-name =3D "vcc_5v0_dcin";
+> >  	};
+>=20
+> With the name change, this block needs to be moved down.
+>=20
+> Cheers,
+>   Diederik
+> > =20
+> >  	vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
+> > @@ -166,7 +166,7 @@ vcc_5v0_device: regulator-vcc-5v0-device {
+> >  		regulator-min-microvolt =3D <5000000>;
+> >  		regulator-max-microvolt =3D <5000000>;
+> >  		regulator-name =3D "vcc_5v0_device";
+> > -		vin-supply =3D <&vcc_12v0_dcin>;
+> > +		vin-supply =3D <&vcc_5v0_sys>;
+> >  	};
+> > =20
+> >  	vcc_5v0_host: regulator-vcc-5v0-host {
+> > @@ -190,7 +190,7 @@ vcc_5v0_sys: regulator-vcc-5v0-sys {
+> >  		regulator-min-microvolt =3D <5000000>;
+> >  		regulator-max-microvolt =3D <5000000>;
+> >  		regulator-name =3D "vcc_5v0_sys";
+> > -		vin-supply =3D <&vcc_12v0_dcin>;
+> > +		vin-supply =3D <&vcc_5v0_dcin>;
+> >  	};
+> >  };
+> > =20
+>=20
 
--- 
-Regards,
 
-Laurent Pinchart
+
+--d22k3ikyl4mwgwcs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmhjGVgACgkQ2O7X88g7
++pq8fhAAkPFlVvN2lEwUG4bNLm+GgZTuLazptAsw4tjhJ84qzDA8jiPT//VFbSYo
+Rkx2KZD9GEeBnjW8bVDqNhEKrcHR5AoBBmciXgNeCvFPon/YR9zC5aYnGmb3MgYL
+Qwn7dbpwtKwSdTPC4p0xOH706rJn7gORx6VhIy1jls8lX0VyU+RsKs+9axztrlIO
+YAFGNwtTJgUSaBzDKhbGtswmi3pNZVef+4RgM6nJhaf7x1LClFnCvyL3q0Ma0uKn
+gI5PWZ5X+qKh5wxAbVNTB4U597AzukdK94OAZS7/vSGpMhXPcTGPB+VlXvE5vPbr
+c3mquGrcPSW47wpcI+8v+OmY0u/EuvCDqfWb2XovQst01FPL4FXPZzSjkFsHWoJ0
+aV5pb9JBHdt+HIVv4B8/jwabVtFIi+7x4Ma19I72tkFcOv7+Ue6u8ox41Fs0oGDg
+CTo1boGHCv8hsF0Z74hQAiZnGXHUrdjsdIzEY/02o4+b3+h0IeLYdQbzc9S1aEV5
+UA2RpUaQweHy7JZ0odYY2jj3JbGa8mwPien/JZN78K+LW3kuJfHXr7R6aCrdHyzt
+TZCR9uxodGvF8UO4vSfjA/URXoAp1DXS5Sb6ltJYCQZ3ZzAv6YvTHJaa4rrNqubh
+1Vrnf014Tm6oa7arlUHzgfZ+mDEPj3FFutGz/JLmcn/GC3AppsA=
+=c3Lc
+-----END PGP SIGNATURE-----
+
+--d22k3ikyl4mwgwcs--
