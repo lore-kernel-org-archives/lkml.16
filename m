@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57715258CCB
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9723022488B
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751315123; cv=none; b=CF2EiccuPnAOUb1bb8pl3r4rMI8Bi1+mCRNSYbUg977gxwPHOBt8uzldZVvm6T589iSjfMd7t8DdwxKCNEq9PO+lNX8GnZOg8GVhq7ltX1JKaJ0OFc4jpqCjUx1+Vb3GJx2HYf1oUKjGqqMS/CDzbpJpxgicL4nWT1nBLzUxo18=
+	t=1751315122; cv=none; b=h30n9mteSkOiyP2HUtY5YMZZI9SG3K8/RbQrJ9hzs9nPQXq0roHhGV7X6Tn+FXgzETY6rAQrEG6npDFIYX4ds3QRpu8jEta1kliwSFN/N0rMLiMzzVcPBhpfuVaK/PFc173f4rk3ICP1atR6LcZ0syzBfgHHdMSlJjrkF9h5Yb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751315123; c=relaxed/simple;
-	bh=J6V/lWrwi9SsMBmzCiPDoKNqm/YDWe50nHVIVs90nIQ=;
+	s=arc-20240116; t=1751315122; c=relaxed/simple;
+	bh=fxBidSTxcC5cmm2hasTHrn3nbg5AwwakEPtE0JdkZFA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DNSREKfSUiLOenYBNqQWU7Wpjpq0YRh8jeLoZoJm1f84TznmFPlTP+zbtKLI12kv9dUjud6sK9yAydCZsI8QSC8mnGDMGr/PGiGvqJoFrM1ccIIS73NEEYfubjfJpc8i+YmhfYA2wnfUO0rQexcpTZEcLDCQz+wWIRVtUgzwVaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mu0z/X8A; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=AfozodEivEkPlIM8K5byEoa8bZPpVMFA4En1K5Xg0Vu0iWPhqJnXDzGpJeZVlRJ8n0+izs0PlllojeK2loOEHLuBxcu2dGOBWfJouxmxz0bnsT8icAu7YHYVumjyjpbHBDDD6idfRORWmab8T8cAMD1VWm2WpxRKSAwP0segE0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Su94egqC; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mu0z/X8A"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Su94egqC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751315119;
-	bh=J6V/lWrwi9SsMBmzCiPDoKNqm/YDWe50nHVIVs90nIQ=;
+	s=mail; t=1751315118;
+	bh=fxBidSTxcC5cmm2hasTHrn3nbg5AwwakEPtE0JdkZFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mu0z/X8AmTIjayN0bAnRAS9nfn6UZcOmdLAAuEvu/e+/dufrgoAy5I8q6J0V2MtG5
-	 OzwF4csF0orH0w9+hqpg+xorakwuR6ASnPEtiLcY1n57gLdpit/oF4XBNPTolLGppq
-	 wH5nRm5NgNlIzS82lYoFGFlAgdk1FKP/dcyK1HOZP4wsg5L+YwLRoLpYp710oB1zrA
-	 m6GygwO/IOcjkfGjBDqALWYHNH4BCNOrurDNnRGmWaf5l+N8i1Mix8N7lytiOttnlT
-	 Vu68Q1Q0zwX1jiYXVb+7loLS8s+33V6RS77GU7wnqd6v/6eheDvnCjSSrELiv7rrss
-	 10fM1BfMAzhvQ==
+	b=Su94egqCnd9tsJ3X+G7zC24t9Tb9K7u9tusOA21a1Ht0ZeQ29EVbMRcYFrTGdcgWZ
+	 mGTVXl+qy/R4PA7WUK4NPCbOwes2rfr3BsB/JFZeRb/Qv1ympD6EnAvNlvCDpgXWLT
+	 IR9XHQvsVOfKG9Zdut3qurVZCW/l1DddGWWTX/+Mji8rKSg3CaQNp8B00djKFwwa/S
+	 wLzRyiMc997AirrLE7HaTAvoBt6HK5RMRiKrr8fAedyGIpvdnoe/W9Fj93tJ0tryUI
+	 VA4M1mCvFE73Yyu3tiR1/x+8KeCnnP/u1PJIGnnREdnX7oVmfaNJNpwiPNcIY80+ap
+	 176JZA1XuDNAA==
 Received: from localhost.localdomain (unknown [92.206.120.105])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: gerddie)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 34DC417E0F38;
-	Mon, 30 Jun 2025 22:25:19 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4E8CD17E04D0;
+	Mon, 30 Jun 2025 22:25:18 +0200 (CEST)
 From: Gert Wollny <gert.wollny@collabora.com>
 To: Lucas Stach <l.stach@pengutronix.de>,
 	Russell King <linux+etnaviv@armlinux.org.uk>,
@@ -43,9 +43,9 @@ Cc: etnaviv@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Gert Wollny <gert.wollny@collabora.com>
-Subject: [PATCH v3 3/5] drm/etnaviv: Add a new function to emit a series of states to cmd stream
-Date: Mon, 30 Jun 2025 22:26:29 +0200
-Message-ID: <20250630202703.13844-4-gert.wollny@collabora.com>
+Subject: [PATCH v3 1/5] drm/etnaviv: Add command stream definitions required for a PPU flop reset
+Date: Mon, 30 Jun 2025 22:26:27 +0200
+Message-ID: <20250630202703.13844-2-gert.wollny@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250630202703.13844-1-gert.wollny@collabora.com>
 References: <20250618204400.21808-1-gert.wollny@collabora.com>
@@ -58,37 +58,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2: fix formatting and remove superfluous masking (Lucas)
+v2: move some defines that resided in etnaviv_flop_reset.c
+    into the header as well
+
+v3: fix spacing/tab stops
 
 Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_buffer.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/etnaviv/state_3d.xml.h | 97 ++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.h b/drivers/gpu/drm/etnaviv/etnaviv_buffer.h
-index caf820d91ef5..842a7ca55c44 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.h
-@@ -41,6 +41,19 @@ static inline void CMD_LOAD_STATE(struct etnaviv_cmdbuf *buffer,
- 	OUT(buffer, value);
- }
+diff --git a/drivers/gpu/drm/etnaviv/state_3d.xml.h b/drivers/gpu/drm/etnaviv/state_3d.xml.h
+index ebbd4fcf3096..b9e9b78df074 100644
+--- a/drivers/gpu/drm/etnaviv/state_3d.xml.h
++++ b/drivers/gpu/drm/etnaviv/state_3d.xml.h
+@@ -4,6 +4,103 @@
  
-+static inline void CMD_LOAD_STATES_START(struct etnaviv_cmdbuf *buffer,
-+					u32 reg, u32 nvalues)
-+{
-+	u32 index = reg >> VIV_FE_LOAD_STATE_HEADER_OFFSET__SHR;
+ /* This is a cut-down version of the state_3d.xml.h file */
+ 
++#define VIVS_CL_CONFIG						0x00000900
++#define VIVS_CL_CONFIG_DIMENSIONS__MASK				0x00000003
++#define VIVS_CL_CONFIG_DIMENSIONS__SHIFT			0
++#define VIVS_CL_CONFIG_DIMENSIONS(x)				(((x) << VIVS_CL_CONFIG_DIMENSIONS__SHIFT) & VIVS_CL_CONFIG_DIMENSIONS__MASK)
++#define VIVS_CL_CONFIG_TRAVERSE_ORDER__MASK			0x00000070
++#define VIVS_CL_CONFIG_TRAVERSE_ORDER__SHIFT			4
++#define VIVS_CL_CONFIG_TRAVERSE_ORDER(x)			(((x) << VIVS_CL_CONFIG_TRAVERSE_ORDER__SHIFT) & VIVS_CL_CONFIG_TRAVERSE_ORDER__MASK)
++#define VIVS_CL_CONFIG_ENABLE_SWATH_X				0x00000100
++#define VIVS_CL_CONFIG_ENABLE_SWATH_Y				0x00000200
++#define VIVS_CL_CONFIG_ENABLE_SWATH_Z				0x00000400
++#define VIVS_CL_CONFIG_SWATH_SIZE_X__MASK			0x0000f000
++#define VIVS_CL_CONFIG_SWATH_SIZE_X__SHIFT			12
++#define VIVS_CL_CONFIG_SWATH_SIZE_X(x)				(((x) << VIVS_CL_CONFIG_SWATH_SIZE_X__SHIFT) & VIVS_CL_CONFIG_SWATH_SIZE_X__MASK)
++#define VIVS_CL_CONFIG_SWATH_SIZE_Y__MASK			0x000f0000
++#define VIVS_CL_CONFIG_SWATH_SIZE_Y__SHIFT			16
++#define VIVS_CL_CONFIG_SWATH_SIZE_Y(x)				(((x) << VIVS_CL_CONFIG_SWATH_SIZE_Y__SHIFT) & VIVS_CL_CONFIG_SWATH_SIZE_Y__MASK)
++#define VIVS_CL_CONFIG_SWATH_SIZE_Z__MASK			0x00f00000
++#define VIVS_CL_CONFIG_SWATH_SIZE_Z__SHIFT			20
++#define VIVS_CL_CONFIG_SWATH_SIZE_Z(x)				(((x) << VIVS_CL_CONFIG_SWATH_SIZE_Z__SHIFT) & VIVS_CL_CONFIG_SWATH_SIZE_Z__MASK)
 +
-+	buffer->user_size = ALIGN(buffer->user_size, 8);
++#define VIVS_CL_CONFIG_DIMENSIONS__MASK				0x00000003
++#define VIVS_CL_CONFIG_DIMENSIONS__SHIFT			0
++#define VIVS_CL_CONFIG_DIMENSIONS(x)				(((x) << VIVS_CL_CONFIG_DIMENSIONS__SHIFT) & VIVS_CL_CONFIG_DIMENSIONS__MASK)
 +
-+	/* write a register via cmd stream */
-+	OUT(buffer, VIV_FE_LOAD_STATE_HEADER_OP_LOAD_STATE |
-+	            VIV_FE_LOAD_STATE_HEADER_OFFSET(index) |
-+	            VIV_FE_LOAD_STATE_HEADER_COUNT(nvalues));
-+}
++#define VIVS_CL_CONFIG_VALUE_ORDER__MASK			0x07000000
++#define VIVS_CL_CONFIG_VALUE_ORDER__SHIFT			24
++#define VIVS_CL_CONFIG_VALUE_ORDER(x)				(((x) << VIVS_CL_CONFIG_VALUE_ORDER__SHIFT) & VIVS_CL_CONFIG_VALUE_ORDER__MASK)
 +
- static inline void CMD_END(struct etnaviv_cmdbuf *buffer)
- {
- 	buffer->user_size = ALIGN(buffer->user_size, 8);
++#define VIVS_CL_GLOBAL_WORK_OFFSET_X				0x0000092c
++#define VIVS_CL_GLOBAL_WORK_OFFSET_Y				0x00000934
++#define VIVS_CL_GLOBAL_WORK_OFFSET_Z				0x0000093c
++
++#define VIVS_CL_KICKER						0x00000920
++#define VIVS_CL_THREAD_ALLOCATION				0x0000091c
++#define VIVS_CL_UNK00924					0x00000924
++
++#define VIVS_CL_WORKGROUP_COUNT_X				0x00000940
++#define VIVS_CL_WORKGROUP_COUNT_Y				0x00000944
++#define VIVS_CL_WORKGROUP_COUNT_Z				0x00000948
++#define VIVS_CL_WORKGROUP_SIZE_X				0x0000094c
++#define VIVS_CL_WORKGROUP_SIZE_Y				0x00000950
++#define VIVS_CL_WORKGROUP_SIZE_Z				0x00000954
++
++#define VIVS_CL_GLOBAL_SCALE_X					0x00000958
++#define VIVS_CL_GLOBAL_SCALE_Y					0x0000095c
++#define VIVS_CL_GLOBAL_SCALE_Z					0x00000960
++
++#define VIVS_PA_VS_OUTPUT_COUNT					0x00000aa8
++#define VIVS_PS_CONTROL_EXT					0x00001030
++#define VIVS_PS_ICACHE_COUNT					0x00001094
++#define VIVS_PS_ICACHE_PREFETCH					0x00001048
++
++#define VIVS_PS_INPUT_COUNT					0x00001008
++#define VIVS_PS_INPUT_COUNT_COUNT__MASK				0x0000001f
++#define VIVS_PS_INPUT_COUNT_COUNT__SHIFT			0
++#define VIVS_PS_INPUT_COUNT_COUNT(x)				(((x) << VIVS_PS_INPUT_COUNT_COUNT__SHIFT) & VIVS_PS_INPUT_COUNT_COUNT__MASK)
++
++
++#define VIVS_PS_NEWRANGE_LOW					0x0000087c
++#define VIVS_PS_NEWRANGE_HIGH					0x00001090
++#define VIVS_PS_SAMPLER_BASE					0x00001058
++
++#define VIVS_PS_UNIFORM_BASE					0x00001024
++#define VIVS_PS_INST_ADDR					0x00001028
++
++#define VIVS_PS_TEMP_REGISTER_CONTROL				0x0000100c
++#define VIVS_PS_TEMP_REGISTER_CONTROL_NUM_TEMPS__MASK		0x0000003f
++#define VIVS_PS_TEMP_REGISTER_CONTROL_NUM_TEMPS__SHIFT		0
++#define VIVS_PS_TEMP_REGISTER_CONTROL_NUM_TEMPS(x)		(((x) << VIVS_PS_TEMP_REGISTER_CONTROL_NUM_TEMPS__SHIFT) & VIVS_PS_TEMP_REGISTER_CONTROL_NUM_TEMPS__MASK)
++
++#define VIVS_PS_VARYING_NUM_COMPONENTS(i0)		       (0x00001080 + 0x4*(i0))
++#define VIVS_PS_VARYING_NUM_COMPONENTS__ESIZE			0x00000004
++#define VIVS_PS_VARYING_NUM_COMPONENTS__LEN			0x00000004
++
++#define VIVS_SH_CONFIG						0x00015600
++#define VIVS_SH_CONFIG_RTNE_ROUNDING				0x00000002
++
++#define VIVS_SH_HALTI5_UNIFORMS(i0)			       (0x00036000 + 0x4*(i0))
++#define VIVS_SH_HALTI5_UNIFORMS__ESIZE				0x00000004
++#define VIVS_SH_HALTI5_UNIFORMS__LEN				0x00000800
++
++#define VIVS_VS_HALTI5_UNK008A0					0x000008a0
++#define VIVS_VS_HALTI5_UNK008A0_A__MASK				0x0000003f
++#define VIVS_VS_HALTI5_UNK008A0_A__SHIFT			0
++#define VIVS_VS_HALTI5_UNK008A0_A(x)				(((x) << VIVS_VS_HALTI5_UNK008A0_A__SHIFT) & VIVS_VS_HALTI5_UNK008A0_A__MASK)
++
++
++#define VIVS_VS_ICACHE_CONTROL					0x00000868
++#define VIVS_VS_ICACHE_CONTROL_ENABLE				0x00000001
++
++#define VIVS_VS_ICACHE_INVALIDATE				0x000008b0
++
++#define VIVS_VS_OUTPUT_COUNT					0x00000804
++#define VIVS_VS_OUTPUT_COUNT_COUNT__MASK			0x000000ff
++#define VIVS_VS_OUTPUT_COUNT_COUNT__SHIFT			0
++#define VIVS_VS_OUTPUT_COUNT_COUNT(x)				(((x) << VIVS_VS_OUTPUT_COUNT_COUNT__SHIFT) & VIVS_VS_OUTPUT_COUNT_COUNT__MASK)
++
+ #define VIVS_TS_FLUSH_CACHE					0x00001650
+ #define VIVS_TS_FLUSH_CACHE_FLUSH				0x00000001
+ 
 -- 
 2.49.0
 
