@@ -1,191 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63B5259CBF;
-	Mon, 30 Jun 2025 10:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4BA84A2B;
+	Mon, 30 Jun 2025 10:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280310; cv=none; b=g7eGo3bK8jBw0ciQypCGI4p4pcN588F4wpRXnkeQ1XLFwZ9IM2n+hTD4IjYMgOm+whJHCPHG3KLSmLXc550jqA/xlLo4cIt3PbSR1/avJTgWDxpoWJGrTGL+wnUm4t9THD4vuVGWhYIdY/uggkpmvEAjYUp8rHTnKkSPP5Zostk=
+	t=1751280350; cv=none; b=HV2Mu6/KZGtLMBMxef13KnhjaYQQhR2juKSzfZtly3C+gbaeAlufR2ZU0jSFu3WFjkWcNR+p+VIjEXr5lKpTsAWMpekisNPbGkMMhzaoynx59zXMRorCqe+0pZFieHFqAW37XnBp9c7Gl6G7hgbMXBitvHdhlN+ZclvN8QoEr5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280310; c=relaxed/simple;
-	bh=wXMWujE7XchWdZ1zs2TcjwFnfNGsISRibnIGmp2rHBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xd6wgnBOti4gve8SMRvyoDF2CGVi2n1naRzK6eqhFsXdxtl8XSluEKBvnZSM/oNE9CAgLsiIFk6gL5tCPhUqDDdpdh5z7NEzb5oWnO3Xs/0wZ0SG1Wxo+EJosGkkUEhCK07i8EAEnqz3/MP45WBrj+I30A3tLf3o/ZozuTg4kr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wv8UFVB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751280350; c=relaxed/simple;
+	bh=1qYyqEbzXKw1kYwIHnancyXtFBiFkWq5bCUGJRFKZSs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ttk2h/F+/vBYSI4JkDLwtKFI1Y2mhFPRjjpmW9LkUjS/2ZSSXJoX9yXkV1gGr9LqfiQ/Iov/lMExxttH6gti2BXujih77Ug4fdGI1WLsGQ3s4jP/E04xvKsccfE305TlfxCRoy2mGiFvDMqzd1wc+IBz3HXWwhQxk+VKH0ShudI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=c7zuP1pY; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wv8UFVB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78F1C4CEE3;
-	Mon, 30 Jun 2025 10:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751280310;
-	bh=wXMWujE7XchWdZ1zs2TcjwFnfNGsISRibnIGmp2rHBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wv8UFVB1aU4AvzIw1ixfToJE1xEcqMoMHqYghwS78xjMENr06K8/DX6FHA3Mf3wDe
-	 Eo1Rr3ee6ZGEWGAmOKgF1i6f3GVlN3nDpwd+riFvj5z/BPnxA4R0AWJn0S6DItq05o
-	 8WK0Bl96+tRkn2HLbNoy1AJcIEkXViT3bIG340LONbwIuedqpekwlBzGYT9X4XwUWX
-	 W5ORZ8Ej2+zfwfiortCTzgSvQfJZ+6FspsFztS+1QHk2wTxbd7yzXeKoo4fZvrHJLW
-	 umdUfe8Bu2okJ3c99tNMqapZJfNw1yTPvNhE12oaOwYI3iQDTghzvzB50ZWBwK6TSh
-	 hvPlygaXqrocg==
-Date: Mon, 30 Jun 2025 12:45:07 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Luca Weiss <luca.weiss@fairphone.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-Message-ID: <20250630-tapir-of-astonishing-artistry-ad0bd8@houat>
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
- <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
- <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
- <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
- <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
- <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
- <20250630-stirring-kiwi-of-adventure-8f22ba@houat>
- <b9f010ca-1564-4a3a-b004-ef179d5c90a6@kernel.org>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="c7zuP1pY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=RG0EfRjcxYEAjzaFRWe/5+PpKyJWNxUyLp33WTrxNYY=; t=1751280347; x=1751885147; 
+	b=c7zuP1pYpl/7jClrcP5vmlVuvuwAvu3bMz6IDSGKlYuz3IKZnnR+MFxJy0kR++jxaHNhf9PVGER
+	izaLXvEVjPjTgb9k32l9fqx111sjz0mBEM7lqohKVShLm5+4UAzcArVuF+7SvY5tJMusW5sxM3s62
+	V/DYAs8qhBb5KUrbPNiL4MH54pr0DBGNsiTBCF2ChtSCmBjYVVpqoY14KbXdXZINix8g85aCsoqEf
+	VzIr9IfsHPeCrc/yXFk/BRt7XSbwfTrjcS5Hmeo8ccwLuF2Qhaqm+TZ1k0bPRS+fE/XUr+vPJV8tm
+	o3HqJGQf8lTqCh4rAEe1KKrGNFuRIAamHrNw==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1uWC1A-0000000499Z-2hFo; Mon, 30 Jun 2025 12:45:44 +0200
+Received: from p57bd96d0.dip0.t-ipconnect.de ([87.189.150.208] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1uWC1A-00000001qO8-1tjy; Mon, 30 Jun 2025 12:45:44 +0200
+Message-ID: <5375b5bb7221cf878d1f93e60e72807f66e26154.camel@physik.fu-berlin.de>
+Subject: Re: kernel/fork.c:3088:2: warning: clone3() entry point is missing,
+ please fix
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org, Dinh Nguyen
+	 <dinguyen@kernel.org>, Simon Schuster
+	 <schuster.simon+binutils@siemens-energy.com>, Linux-Arch
+	 <linux-arch@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
+Date: Mon, 30 Jun 2025 12:45:43 +0200
+In-Reply-To: <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
+References: <202506282120.6vRwodm3-lkp@intel.com>
+	 <2ef5bc91-f56d-4c76-b12e-2797999cba72@app.fastmail.com>
+	 <57101e901013a8e6ff44e10c93d1689490c714bf.camel@physik.fu-berlin.de>
+	 <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="2z4ar3mqh5a4nutv"
-Content-Disposition: inline
-In-Reply-To: <b9f010ca-1564-4a3a-b004-ef179d5c90a6@kernel.org>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
+Hi Arnd,
 
---2z4ar3mqh5a4nutv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-MIME-Version: 1.0
-
-On Mon, Jun 30, 2025 at 11:36:51AM +0200, Krzysztof Kozlowski wrote:
-> On 30/06/2025 10:38, Maxime Ripard wrote:
-> > On Mon, Jun 30, 2025 at 10:24:06AM +0200, Krzysztof Kozlowski wrote:
-> >> On 29/06/2025 14:07, Hans de Goede wrote:
-> >>> Hi Krzysztof,
-> >>>
-> >>> On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
-> >>>> On 27/06/2025 11:48, Luca Weiss wrote:
-> >>>>> Hi Krzysztof,
-> >>>>>
-> >>>>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
-> >>>>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
-> >>>>>>> Document the interconnects property which is a list of interconne=
-ct
-> >>>>>>> paths that is used by the framebuffer and therefore needs to be k=
-ept
-> >>>>>>> alive when the framebuffer is being used.
-> >>>>>>>
-> >>>>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> >>>>>>> ---
-> >>>>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yam=
-l | 3 +++
-> >>>>>>>  1 file changed, 3 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/Documentation/devicetree/bindings/display/simple-fra=
-mebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffe=
-r.yaml
-> >>>>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043df=
-b2b220c654b80e2e80850cd 100644
-> >>>>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffe=
-r.yaml
-> >>>>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffe=
-r.yaml
-> >>>>>>> @@ -79,6 +79,9 @@ properties:
-> >>>>>>>    power-domains:
-> >>>>>>>      description: List of power domains used by the framebuffer.
-> >>>>>>> =20
-> >>>>>>> +  interconnects:
-> >>>>>>> +    description: List of interconnect paths used by the framebuf=
-fer.
-> >>>>>>> +
-> >>>>>>
-> >>>>>> maxItems: 1, or this is not a simple FB anymore. Anything which ne=
-eds
-> >>>>>> some sort of resources in unknown way is not simple anymore. You n=
-eed
-> >>>>>> device specific bindings.
-> >>>>>
-> >>>>> The bindings support an arbitrary number of clocks, regulators,
-> >>>>> power-domains. Why should I artificially limit the interconnects to=
- only
-> >>>>> one?
-> >>>>
-> >>>> And IMO they should not. Bindings are not supposed to be generic.
-> >>>
-> >>> The simplefb binding is a binding to allow keeping the firmware, e.g.
-> >>> uboot setup framebuffer alive to e.g. show a boot splash until
-> >>> the native display-engine drive loads. Needing display-engine
-> >>> specific bindings totally contradicts the whole goal of=20
-> >>
-> >> No, it does not. DT is well designed for that through expressing
-> >> compatibility. I did not say you cannot have generic fallback for simp=
-le
-> >> use case.
-> >>
-> >> But this (and previous patchset) grows this into generic binding ONLY
-> >> and that is not correct.
-> >=20
-> > Can we have a proper definition of what a correct device tree binding is
-> > then?
-> >=20
-> > It's a bit surprising to have *that* discussion over a binding that is
-> > now well older than a decade now, and while there is definitely some
-> > generic bindings in ePAPR/DT spec, like the CPU ones.
+On Mon, 2025-06-30 at 12:02 +0200, Arnd Bergmann wrote:
+> Some architectures have custom calling conventions for the
+> fork/vfork/clone/clone3 syscalls, e.g. to handle copying all the
+> registers correctly when the normal syscall entry doesn't do that,
+> or to handle the changing stack correctly.
 >=20
-> Hm? In ARM world at least they are specific, e.g. they have specific
-> compatibles.
+> I see that both sparc and hexagon have a custom clone() syscall,
+> so they likely need a custom clone3() as well, while sh and
+> nios2 probably don't.
 >=20
-> >=20
-> > If you don't consider that spec to be correct DT bindings, please
-> > provide a definition of what that is, and / or reasonable alternatives.
-> >=20
-> > Also, no, a device specific binding isn't reasonable here, because we
-> > *don't* have a device. From a technical standpoint, the firmware creates
->=20
-> You touch internal parts of the SoC and you list very specific SoC
-> parts. Interconnect is internal part of the SoC and only specific
-> devices are using it.
->=20
-> You define here generic SW construct for something which is opposite of
-> generic: the interconnect connecting two specific, unique components of
-> one, given SoC.
->=20
-> > the framebuffer, Linux just uses it. Just like you don't have a
-> > device/platform specific compatible for PSCI, SCPI, et al.
->=20
-> They follow some sort of spec and still they do not reference chosen
-> SoC-design-specific properties.
+> All four would need a custom assembler implementation in userspace
+> for each libc, in order to test the userspace calling the clone3()
+> function. For testing the kernel entry point itself, see Christian's
+> original test case[1].
 
-ish.
+Thanks for the explanation. So, I guess as long as a proposed implementatio=
+n
+of clone3() on sh would pass Arnd's test program, it should be good for mer=
+ging?
 
-I mean, on theory, you're absolutely correct. In practice,
-assigned-clock-parents, assigned-clock-rates, or protected-clocks for
-example exist and are *only* about SoC-design specific behaviours.
+Adrian
 
-Maxime
-
---2z4ar3mqh5a4nutv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGJqrwAKCRAnX84Zoj2+
-dh39AX9zdlE7lH+G78LqemzNaC1qyQx2EBeMEMVM3nimVQN4kHOYHHm+tp+q2szm
-O8OMuqkBgMxiYf+EbLKsRFdu5yB6Q8lQ1WgOmR8mtOKsPjecd8iby7KGmzt/2n/d
-5IpPDuJG2w==
-=h3OD
------END PGP SIGNATURE-----
-
---2z4ar3mqh5a4nutv--
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
