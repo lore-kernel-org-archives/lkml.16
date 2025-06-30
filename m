@@ -1,166 +1,110 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74201FDD
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935596BFCE
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751251517; cv=none; b=ACNV6+ro8YoUEuCIGaOyrH5byOCgqVO/Rid2f6aY0LnjnGWMOsIXwbOr4zdnQKbQlxoVDRLl5yYBh486aqoL3pM8Wf9eibl0hKIBfeyuS2Uh/xBU4WsS1HHGnsOA866h4OfomnLSCYxazo+tja3ZZURKOdHkNTdYdIqv6u0D1ik=
+	t=1751251541; cv=none; b=u48QLJfCOprny0y/MTkfzf4lHxHnHgaCNpvtef9FbwTKKbdMX+5VyOS9O5jQBXDKEyAgwwh2COzNatUklDiEsdVh26jByCcLOz+R8h2Hsival5lY9W7WdYKIynwn6hlB9XXrwuHk7TdUClQe76G1vzlBEy+PKTvRTgvcVpIYra8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751251517; c=relaxed/simple;
-	bh=Vo6W5GRQ6H3qzWX3UombAMvAKBGTLOzp6x+XKizs6RU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZuSJarqtK0P0MSHoponZJsHKAzbSnlePYQB/xU5b9Uk7oX6XRzdxA33sVJ8ohkBfccwqrJo4qUkIAyEMtRQjHlSZsQ2YwfWS/2oVq/Yu50d07WSp81JpyIjmmDzdRyM2jmo0gAb9cOFPxKUHh2yEs2I4td2LIUzNBIwxqV20jLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEsPsqmO; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751251541; c=relaxed/simple;
+	bh=UHNjZp9vnc8N0fE+mqLUroxaGrEdiH+dy5HU8/n87p4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SixkQ58Ub9HFRxnYBsyaOag511zgmNCF/jW2u1L6VRqrs9GC9EiUElFuNFk4JozuHdhHpCOQGnX9JLpi973+DbMTsPc+J90Lm8vYTyurkhwlh+68DwBSoDW2j3CyCAk2u+1iPkkVVLNFop72MwxkwA1/NDqAg77IixjqeDT4GzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BeRiULvz; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEsPsqmO"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso3871224a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:45:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BeRiULvz"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23aeac7d77aso10548065ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 19:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751251515; x=1751856315; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IpcXOgS4DRYfBKMIVCF0qH9xXAuT76wTmWAshDnkkU=;
-        b=DEsPsqmOdbhPwq+vFadQH09JYUyAtTlA7AqNuo9rLEWLt5aqUC3jwgrtQlBLlmgFmG
-         s72fIVM4J2DsVwABTWeQS3qz5xouOPp03ekCPtYx7gwF10Q5WgO+X0cNpEWldNOt1XnU
-         4kK+JkTqDrR+ifRWVlbho2ei6SBKcjxvI7sAKTmS9BBCxCLhr2HNVIUWzlx7wTn5NVS4
-         42t0+QFJ21dVtOXs43c7uJTFp+frZzUZR5G1tNNm0ldT9IPZ5D+nUhAPkYMNw4JbZU3M
-         XVbtxfQbHVTuaTBzIVGPM09UE4keqfeVumaE1l9RHHQPHA3ISgiZ3+F8uvEVAEZU9At4
-         b54w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751251515; x=1751856315;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1751251538; x=1751856338; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1IpcXOgS4DRYfBKMIVCF0qH9xXAuT76wTmWAshDnkkU=;
-        b=K3AFQ+6MUI+glHz6KlYyxSHx8bprZ9vZH5K6uM80w3TjzUEyiFbXsmyw9HZu4yX2SA
-         6iMHZLOZ6ZQqHxcl0RkYCScBkReml3q1gVP1+v7x9ulrLURZYI82+Qzpb9aQQ9InwqKt
-         6JD+pzIiCxtndDVmHWUnGRADhYrfxRfGNo1aKsekaMP86rhQ0VOY6Ip/jP2NODTnUWr0
-         FS4JZJvIoMHIHapfANZ3oJmGmDh8DUS8a58XimPFKFs0iSAJKsZDYygrh/SshGqNX+SA
-         zJy9qLeh0WcHkAZ196gZbfnsHNNou45bV4aJGmJKgbEGJ1yE1It3aDD7FrD5IUSjnw0r
-         bF5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWLhmE8fxz8mmiAVMcxCAyfbLnxlcXY9b3BXE5COnnAjJzwbRnxd4C16A8Ox9+KGFrBBYA/qqJKZJ1Ig3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP99EVqojTZkhKMzZ1y7/r3ClDnzU3Qm0Hlo8VkNez73DirQMI
-	hQV6v+UqjPYHbELBkEE7a/x+S0ba2IgMCVPs08hTFJ0Mb2Wgthg0aiGL
-X-Gm-Gg: ASbGnctzwaaRIPkTX5HqNOwsVSqvniT2G3NLbX8BjVqSBYmHJkiBG+rqsVPO6U9O2f+
-	bARSyZJIJ2hbEnWiYZ0n6TP4Kb1T8X1H4NsApC0nQlELWCR4R1vAuHcJ6kXcwuUW6c0tCvKCq42
-	O8Wk2didqTG7wZ1f8u0m6HsP+qE4c2Wq4P17s2tBqtxfBWyQJ3Ewp9ryndnnsCKpQwX2baWCdxC
-	odQ94k0A2y6O6f09QUASlwW4sDrFAjOkEPBT8hUjtvnpj06vyRcQXBlYBJaqUv3A9ybL7QYyTnT
-	7ql63NjqbUNAkMoFSHAF9OFc32wOwmbmDrZqkyU2vWhi0/QwDkhdkIBC4LtAY4I7mxdOFNkHoi2
-	VDD2WY3RnsYfw
-X-Google-Smtp-Source: AGHT+IGxYHOEoC7d9V3SX/9r0y0UZ4hPGyESGJPZAar/1QHd0h4+Cd1lUvfxijoo2AT1Y37w59s1Hw==
-X-Received: by 2002:a05:6a21:6d8f:b0:220:396b:991e with SMTP id adf61e73a8af0-220a16c98efmr17264682637.32.1751251515038;
-        Sun, 29 Jun 2025 19:45:15 -0700 (PDT)
-Received: from ipravd-Nitro-AN515-55 ([2601:646:a000:5fc0:84f2:7459:db60:b146])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3008e2esm6899030a12.16.2025.06.29.19.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 19:45:14 -0700 (PDT)
-Date: Sun, 29 Jun 2025 22:45:12 -0400
-From: Ivan Pravdin <ipravdin.official@gmail.com>
-To: Heming Zhao <heming.zhao@suse.com>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, mark@fasheh.com, jlbec@evilplan.org, ocfs2-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Cc: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
-Subject: Re: [PATCH] ocfs2: Avoid NULL pointer dereference in
- dx_dir_lookup_rec()
-Message-ID: <f5qcns4xuba3r52cmqoiwdfveyv3xez7zhohq64ktcswjw2otk@qoqlu7ui5yp4>
-References: <20250627023830.150291-1-ipravdin.official@gmail.com>
- <d6c72ab8-d600-4cc2-9609-8b749b61703d@linux.alibaba.com>
- <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
+        bh=2eh2c0RNhVOz1J8G3YkRJ2Bdd8xTOnKuaM/L2dwLoys=;
+        b=BeRiULvzpWO6jNpWdQwr01JamXztuAbkA+VZYdwrY9Kd20L4gZSLs1hgVJlfjWo6Sb
+         g4IBKG9G7/rPgnHyBDHiMAHDY7YSPtfyZmI1IMO7lQPNXAKiISTQeZf7XY+0OVVt8vVy
+         znjEx50EgaKxplVQ5X7JZf6RBAWyQBCgZpxEaNULrk1a9SZ3+0DWwA/jehJdGXAJ5nqc
+         ULdWZkNvd6w+5QWiVuQjiHmSuqtX18QlOaQ+AUJibUssxBOJRqioH93f8HpONqpckqTb
+         vCModUw/PKzFGxVeXSAXVzbtJgt1mqhvXWBpM8TIe9M/RJlbNRr9MF2WFHCnps9CgSC1
+         leiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751251538; x=1751856338;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2eh2c0RNhVOz1J8G3YkRJ2Bdd8xTOnKuaM/L2dwLoys=;
+        b=HkHcP1VE+Qi4dCgAJ70QRyKh+5hvhv+LDCwYdhe/q2lF76LxeP+0+KRBnBngDV/jmI
+         MB7+lJ5nJetLybJpwyhFIHIM2b1H1Kv0serXGgs+8Z5wgAIZZWJXtT9ilnbBIZpNRhjj
+         9cL0Wm60TYDMIaTJeqqclk5xg/+f8m/zXBb+U9R7hS/umnTsVDWxmZmhrelkFZ6PWlO/
+         xsRFijejwPLbS+frMYYbkV7N+GQLc8mnFqAPq/kD5QDWBno5NB9OYLqqp+jwN5ErthS6
+         Ic7AWG4+4yNJWV8JG1lW1wc+fyWoWt7+3svhcKbN02O9b5xnTZvR1UaYYT+XKzkhsyZz
+         ul2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUDmY9sM0ns1RJrNlr11JAJC6oBukAjaUXGd4TOxDh3rqk7vx53Lb339eUguRx5dNGK3M4mIKiygReNpFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfjobtSXWdgQcvUz8BSLrBMvTA65MLKXG5VAcXDAAU1kxIEJkl
+	sTpbUP6r0tCzg7XNYO+QoqsvdB0g9YvKs9sgUriw6Fd1QAMDLyXVOY2ehlDdMmb5wDo=
+X-Gm-Gg: ASbGncto16Nypw15OJX/rlgKcjO+jcnOq+BhX6iPe7ZczCHb6oFAimiWN+Stgq1Uwwf
+	V9kBUpbpNOxcp8JsynPiMzvW72VH9uZTDuHHK7jIy6zE9gv5qt74/+syKleKAgmYd9XQGFLFyGv
+	eK0KxXRZ6qVXLMDs/Fq3OvqWPK+CmoCIGE9CvRlUivgxrhY9JWb6eYlsH/ZHk33I7jTu5M6/n6S
+	oaP9dZb2VSaHOzjMbvGe9qpzHRrAL5kuyscrSai9ry2BWx9QWcsm4dORa16QSs0zdi8sesF4C+I
+	eJyHnjPS7n/m3a+TkRXdDv476VE5RwQBKm3/XYRZVGCjlUQh5/KKbMFNIzEXJSBCUpU/J2xK+xX
+	9LiGEQs4=
+X-Google-Smtp-Source: AGHT+IHkMW4IThiZ2urOldb1y5zT3OBTJNJjaWpv+ESNfp/34TTRddvqxjqDrw748ODDT4UHRObB2g==
+X-Received: by 2002:a17:902:db0a:b0:231:d0a8:5179 with SMTP id d9443c01a7336-23ac3df2193mr178800645ad.23.1751251537746;
+        Sun, 29 Jun 2025 19:45:37 -0700 (PDT)
+Received: from localhost.localdomain ([2001:c10:ff04:0:1000:0:1:a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7915sm70255965ad.165.2025.06.29.19.45.34
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 29 Jun 2025 19:45:37 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: alex.williamson@redhat.com
+Cc: david@redhat.com,
+	jgg@ziepe.ca,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v5 1/3] vfio/type1: batch vfio_find_vpfn() in function vfio_unpin_pages_remote()
+Date: Mon, 30 Jun 2025 10:45:31 +0800
+Message-ID: <20250630024531.12377-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250627154059.0e134073.alex.williamson@redhat.com>
+References: <20250627154059.0e134073.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 10:32:35AM GMT, Heming Zhao wrote:
-> On 6/30/25 09:26, Joseph Qi wrote:
-> > Hi,
-> > 
-> > 
-> > On 2025/6/27 10:38, Ivan Pravdin wrote:
-> > > When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
-> > > error message that unconditionally dereferences the 'rec' pointer.
-> > > However, if 'rec' is NULL, this leads to a NULL pointer dereference and
-> > > a kernel panic.
-> > > 
-> > 
-> > This looks possible, but syzbot reports slab-out-of-bounds Read in
-> > ocfs2_dx_dir_lookup_rec(), not NULL pointer dereference.
-> > 
-> > So I think it is because it construct a malicious image and set a wrong
-> > l_recs, then access this damaged l_recs.
-> > 
-> > Thanks,
-> > Joseph
-> 
-> I think this proposed fix (at least the fix method) is acceptable.
-> the crash occurs at ocfs2_error(), where the pointer 'rec' must be incorrect.
-> look back at the previous code lines:
->         for (i = le16_to_cpu(el->l_next_free_rec) - 1; i >= 0; i--) {
->                 rec = &el->l_recs[i];
-> 
->                 if (le32_to_cpu(rec->e_cpos) <= major_hash) {
->                         found = 1;
->                         break;
->                 }
->         }
-> 
-> either 'el->l_next_free_rec' or 'el->l_recs[i]' has an incorrect value.
-> we can do nothing about this kind of error, simply returning errno to caller is sufficient.
-> 
-> btw, ocfs2-tools has a similar function "static errcode_t ocfs2_dx_dir_lookup_rec()"@libocfs2/dir_indexed.c, which sets ret with OCFS2_ET_CORRUPT_EXTENT_BLOCK and return.
+On Fri, 27 Jun 2025 15:40:59 -0600, alex.williamson@redhat.com wrote:
 
-Thanks, I will include it in v2.
+> On Fri, 20 Jun 2025 11:23:42 +0800
+> lizhe.67@bytedance.com wrote:
+> 
+> > From: Li Zhe <lizhe.67@bytedance.com>
+> > 
+> > This patch is based on patch 'vfio/type1: optimize
+> > vfio_pin_pages_remote() for large folios'[1].
+> 
+> The above and the below link are only necessary in the cover letter, or
+> below the --- marker below, they don't really make sense in the
+> committed log.
+> 
+> Anyway, aside from that and one nit on 2/ (sent separately), the series
+> looks ok to me and I hope David and Jason will chime in with A-b/R-b
+> give the previous discussions.
+> 
+> Given the build bot error[1] I'd suggest resending all your work in a
+> single series, the previous map optimization and the unmap optimization
+> here.  That way the dependency is already included, and it's a good
+> nudge for acks.  Thanks,
 
-> 
-> - Heming
-> 
-> > 
-> > 
-> > > Add an explicit check for a NULL 'rec' and use an alternate error
-> > > message in that case to avoid unsafe access.
-> > > 
-> > > Reported-by: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
-> > > Closes: https://lore.kernel.org/all/67483b75.050a0220.253251.007c.GAE@google.com/T/
-> > > Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
-> > > ---
-> > >   fs/ocfs2/dir.c | 16 +++++++++++-----
-> > >   1 file changed, 11 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
-> > > index 7799f4d16ce9..dccf0349e523 100644
-> > > --- a/fs/ocfs2/dir.c
-> > > +++ b/fs/ocfs2/dir.c
-> > > @@ -809,11 +809,17 @@ static int ocfs2_dx_dir_lookup_rec(struct inode *inode,
-> > >   	}
-> > >   	if (!found) {
-> > > -		ret = ocfs2_error(inode->i_sb,
-> > > -				  "Inode %lu has bad extent record (%u, %u, 0) in btree\n",
-> > > -				  inode->i_ino,
-> > > -				  le32_to_cpu(rec->e_cpos),
-> > > -				  ocfs2_rec_clusters(el, rec));
-> > > +		if (rec) {
-> > > +			ret = ocfs2_error(inode->i_sb,
-> > > +					"Inode %lu has bad extent record (%u, %u, 0) in btree\n",
-> > > +					inode->i_ino,
-> > > +					le32_to_cpu(rec->e_cpos),
-> > > +					ocfs2_rec_clusters(el, rec));
-> > > +		} else {
-> > > +			ret = ocfs2_error(inode->i_sb,
-> > > +					"Inode %lu has no extent records in btree\n",
-> > > +					inode->i_ino);
-> > > +		}
-> > >   		goto out;
-> > >   	}
-> > 
-> > 
-> 
+Thank you for your review. I will send a new patchset that includes
+the latest optimizations for both map and unmap.
 
-	Ivan Pravdin
+Thanks,
+Zhe
