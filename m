@@ -1,132 +1,200 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E4928F1
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FAB28F1
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751252767; cv=none; b=PjkyC0OYNSfBL9lIZ57GgEjDwFmEm3x2dFLQw0ee0bYVvxVKbSio2XQ2S3+P+OYQfYd6eI1HzAPO2l+u/cz8jKtTLLrMgUQ9k+EAYoNxEeEHUsO3XPd7bNpJvRgWr4RZtE5iPehhXj+bjR6Oz8p66EG5wbv4KIwOItdCNfZwxPA=
+	t=1751252991; cv=none; b=IrZEatk+kPnna4FXfbpZKDV0NehpLyqed6ov4h2u4K4zGwlv3xYyP6b9flMOMWy/OUhBzn5aGvj8V/Td/N4Ogk/U6HhAkfZHlGdry4B0NYM4dZ/60R5vuD4zuo+G+EAMGH8O7+frEKvpDtG9Q+TGIK0y05Rkcq/UNmoc11DV2XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751252767; c=relaxed/simple;
-	bh=Wt0vPJZZQdFBm6sRPr2s5cgrwmzjSgk8OV3nE9ZfszM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z6VWmp1GPdx49eoTKMEA7hwH4RCJvKEtjlKtuZ+VoxW8oGWrmm7+JyyBkBJq4U4KKioFvwQT4H4vnvz3lq3QOLX8qWCp5eSlchm20garuTwfNQI8UJqcVi0p2zRMfsUNEx+P/3d3ma40D2e7NQc3Vr7n2QQYQ7wTYmIcJP37nac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bVrDz4gPyzYm65y;
-	Mon, 30 Jun 2025 10:48:03 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
- 2025 10:50:24 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
- 2025 10:50:23 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <linux-f2fs-devel@lists.sourceforge.net>
-CC: <chao@kernel.org>, <feng.han@honor.com>, <jaegeuk@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <wangzijie1@honor.com>
-Subject: Re: [f2fs-dev] [PATCH v4 2/2] f2fs: don't allow unaligned truncation to smaller/equal size on pinned file
-Date: Mon, 30 Jun 2025 10:50:23 +0800
-Message-ID: <20250630025023.3876706-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <4a227a94-6e8e-4ab3-a6f4-fdebc6419764@kernel.org>
-References: <4a227a94-6e8e-4ab3-a6f4-fdebc6419764@kernel.org>
+	s=arc-20240116; t=1751252991; c=relaxed/simple;
+	bh=t5JwbbNEl0lnqERUNCit63TPZ7Qwsr0qqua3KN/g6I8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aILLfjgmsHigbS1VY/XXHlb+S5doV75eDcNCjVGfvJwX28mvav7r2S2Zo9LPbWoAM9r5Y3iCqNn7F6wzXpGTl6Tp1ymVwFA5c29oBN+l0iYvU+BqWLxeGjoy7TP8Xg3knLPkQutB5NHcrGxLbWFtjkHIWZ3HZLuQTkHy1bUIoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gz5IdP0F; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gz5IdP0F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751252990; x=1782788990;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=t5JwbbNEl0lnqERUNCit63TPZ7Qwsr0qqua3KN/g6I8=;
+  b=gz5IdP0FyNlrAcUzKrwfP9ccSVpofdSpieN8CrW2FGyBHwDqgj65/UlN
+   CfI5bSGXdbt8FZpGVdYzwtKZQfTivcJCDWp96QacIXkRgpd92z+4tsV9O
+   9/LGmbfm5RPgkZXSl629X7jVyE5QNFamB3inW+ymEg9U2QJDngExZxM3/
+   t/tUdSAV0x+7LOljMl6E5AARTLqzQXO7idim0e+7zYrPCeiQ2se6zJINj
+   dkbQtbdJk4d5s7Pd9NOLuYlhgUbZTv5U1IVnF60J0lBbiBajLGaKBvnKb
+   Qe2F17R+3luDJ1fcqvzUj9UNmrTkQPf96egjakp/78QWFso9Gx4eldcEI
+   A==;
+X-CSE-ConnectionGUID: 4dVSMd52RsCZCtBioNvP2g==
+X-CSE-MsgGUID: kiw7efXjTLOZlcMi9oTTfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53591358"
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="53591358"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 20:09:49 -0700
+X-CSE-ConnectionGUID: E4oAp4QZRLSUDeJtJj1lsQ==
+X-CSE-MsgGUID: 7PAEcqyeQySnkpDCiiggrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,276,1744095600"; 
+   d="scan'208";a="152958221"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 20:09:46 -0700
+Message-ID: <b531ec51-625b-4ea0-a0e1-a90c02cb5e8a@linux.intel.com>
+Date: Mon, 30 Jun 2025 11:08:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
- (10.68.31.243)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] iommufd: Add iommufd_object_tombstone_user()
+ helper
+To: Xu Yilun <yilun.xu@linux.intel.com>, jgg@nvidia.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, will@kernel.org, aneesh.kumar@kernel.org
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, joro@8bytes.org,
+ robin.murphy@arm.com, shuah@kernel.org, nicolinc@nvidia.com, aik@amd.com,
+ dan.j.williams@intel.com, yilun.xu@intel.com
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-2-yilun.xu@linux.intel.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250627033809.1730752-2-yilun.xu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->On 6/24/25 11:59, wangzijie wrote:
->> To prevent scattered pin block generation, don't allow non-section aligned truncation
->> to smaller or equal size on pinned file. But for truncation to larger size, after
->> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
->> we only support overwrite IO to pinned file, so we don't need to consider
->> attr->ia_size > i_size case.
->
->Zijie, can you take a look generic/494? suspect that it is caused by this change.
->
->generic/494 3s ... - output mismatch (see /share/git/fstests/results//generic/494.out.bad)
->    --- tests/generic/494.out   2025-01-12 21:57:40.279440664 +0800
->    +++ /share/git/fstests/results//generic/494.out.bad 2025-06-30 10:01:37.000000000 +0800
->    @@ -2,7 +2,7 @@
->     Format and mount
->     Initialize file
->     Try to truncate
->    -ftruncate: Text file busy
->    +ftruncate: Invalid argument
->     Try to punch hole
->     fallocate: Text file busy
->    ...
->    (Run 'diff -u /share/git/fstests/tests/generic/494.out /share/git/fstests/results//generic/494.out.bad'  to see the entire diff)
->Ran: generic/494
->Failures: generic/494
->Failed 1 of 1 tests
->
->Thanks,
+On 6/27/25 11:38, Xu Yilun wrote:
+> Add the iommufd_object_tombstone_user() helper, which allows the caller
+> to destroy an iommufd object created by userspace.
+> 
+> This is useful on some destroy paths when the kernel caller finds the
+> object should have been removed by userspace but is still alive. With
+> this helper, the caller destroys the object but leave the object ID
+> reserved (so called tombstone). The tombstone prevents repurposing the
+> object ID without awareness of the original user.
+> 
+> Since this happens for abnomal userspace behavior, for simplicity, the
+> tombstoned object ID would be permanently leaked until
+> iommufd_fops_release(). I.e. the original user gets an error when
+> calling ioctl(IOMMU_DESTROY) on that ID.
+> 
+> The first use case would be to ensure the iommufd_vdevice can't outlive
+> the associated iommufd_device.
+> 
+> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
+> Co-developed-by: Aneesh Kumar K.V (Arm)<aneesh.kumar@kernel.org>
+> Signed-off-by: Aneesh Kumar K.V (Arm)<aneesh.kumar@kernel.org>
+> Signed-off-by: Xu Yilun<yilun.xu@linux.intel.com>
+> ---
+>   drivers/iommu/iommufd/iommufd_private.h | 23 ++++++++++++++++++++++-
+>   drivers/iommu/iommufd/main.c            | 19 ++++++++++++++++---
+>   2 files changed, 38 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> index 9ccc83341f32..fbc9ef78d81f 100644
+> --- a/drivers/iommu/iommufd/iommufd_private.h
+> +++ b/drivers/iommu/iommufd/iommufd_private.h
+> @@ -187,7 +187,8 @@ void iommufd_object_finalize(struct iommufd_ctx *ictx,
+>   			     struct iommufd_object *obj);
+>   
+>   enum {
+> -	REMOVE_WAIT_SHORTTERM = 1,
+> +	REMOVE_WAIT_SHORTTERM	= BIT(0),
+> +	REMOVE_OBJ_TOMBSTONE	= BIT(1),
+>   };
+>   int iommufd_object_remove(struct iommufd_ctx *ictx,
+>   			  struct iommufd_object *to_destroy, u32 id,
+> @@ -213,6 +214,26 @@ static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
+>   	WARN_ON(ret);
+>   }
+>   
+> +/*
+> + * Similar to iommufd_object_destroy_user(), except that the object ID is left
+> + * reserved/tombstoned.
+> + */
+> +static inline void iommufd_object_tombstone_user(struct iommufd_ctx *ictx,
+> +						 struct iommufd_object *obj)
+> +{
+> +	int ret;
+> +
+> +	ret = iommufd_object_remove(ictx, obj, obj->id,
+> +				    REMOVE_WAIT_SHORTTERM | REMOVE_OBJ_TOMBSTONE);
+> +
+> +	/*
+> +	 * If there is a bug and we couldn't destroy the object then we did put
+> +	 * back the caller's users refcount and will eventually try to free it
+> +	 * again during close.
+> +	 */
+> +	WARN_ON(ret);
+> +}
+> +
+>   /*
+>    * The HWPT allocated by autodomains is used in possibly many devices and
+>    * is automatically destroyed when its refcount reaches zero.
+> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> index 3df468f64e7d..620923669b42 100644
+> --- a/drivers/iommu/iommufd/main.c
+> +++ b/drivers/iommu/iommufd/main.c
+> @@ -167,7 +167,7 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
+>   		goto err_xa;
+>   	}
+>   
+> -	xas_store(&xas, NULL);
+> +	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
+>   	if (ictx->vfio_ioas == container_of(obj, struct iommufd_ioas, obj))
+>   		ictx->vfio_ioas = NULL;
+>   	xa_unlock(&ictx->objects);
+> @@ -239,6 +239,7 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
+>   	struct iommufd_sw_msi_map *next;
+>   	struct iommufd_sw_msi_map *cur;
+>   	struct iommufd_object *obj;
+> +	bool empty;
+>   
+>   	/*
+>   	 * The objects in the xarray form a graph of "users" counts, and we have
+> @@ -249,23 +250,35 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
+>   	 * until the entire list is destroyed. If this can't progress then there
+>   	 * is some bug related to object refcounting.
+>   	 */
+> -	while (!xa_empty(&ictx->objects)) {
+> +	for (;;) {
+>   		unsigned int destroyed = 0;
+>   		unsigned long index;
+>   
+> +		empty = true;
+>   		xa_for_each(&ictx->objects, index, obj) {
+> +			empty = false;
 
-Hi, Chao
-generic/494 swapon file and try to ftruncate.
+People like me, who don't know the details of how xa_for_each() and
+xa_empty() work, will ask why "empty = xa_empty()" isn't used here. So
+it's better to add some comments to make it more readable.
 
-Before this change
-swap_acticate:
-set_inode_flag(inode, FI_PIN_FILE)
+/* XA_ZERO_ENTRY is treated as a null entry by xa_for_each(). */
 
-ftruncate:
-setattr_prepare
--inode_newsize_ok
---return -ETXTBSY for SWAPFILE
+Others look good to me.
 
-After this change:
-swap_acticate:
-set_inode_flag(inode, FI_PIN_FILE)
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-ftruncate: 
-prevent unaligned truncation before setattr_prepare()
-return -EINVAL
+>   			if (!refcount_dec_if_one(&obj->users))
+>   				continue;
+> +
+>   			destroyed++;
+>   			xa_erase(&ictx->objects, index);
+>   			iommufd_object_ops[obj->type].destroy(obj);
+>   			kfree(obj);
+>   		}
+> +
+> +		if (empty)
+> +			break;
+> +
+>   		/* Bug related to users refcount */
+>   		if (WARN_ON(!destroyed))
+>   			break;
+>   	}
 
-Sorry for this. Maybe I should apply this check after setattr_prepare()? Or do
-you have some suggestions?
-
-
->> 
->> Signed-off-by: wangzijie <wangzijie1@honor.com>
->> ---
->> v4:
->> - convert sbi first and apply change
->> ---
->>  fs/f2fs/file.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->> 
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index 209f43653..4809f0fd6 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -1048,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->>  			!IS_ALIGNED(attr->ia_size,
->>  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
->>  			return -EINVAL;
->> +		/*
->> +		 * To prevent scattered pin block generation, we don't allow
->> +		 * smaller/equal size unaligned truncation for pinned file.
->> +		 * We only support overwrite IO to pinned file, so don't
->> +		 * care about larger size truncation.
->> +		 */
->> +		if (f2fs_is_pinned_file(inode) &&
->> +			attr->ia_size <= i_size_read(inode) &&
->> +			!IS_ALIGNED(attr->ia_size,
->> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
->> +			return -EINVAL;
->>  	}
->>  
->>  	err = setattr_prepare(idmap, dentry, attr);
-
+Thanks,
+baolu
