@@ -1,138 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CE72580FB
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA472AF1B
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279206; cv=none; b=Hfp1fPJqEazCTmBR+MAulac/V0FrWILJ3jCN17zIMnUuCNGEbKHVfdbBJuJtm+GuXW367YzeKOC4o2ML3KgQpNbPjJdntVynVfjnt5GAk0yUgMZ7K153JILfCAR9g4cr1HSZE7wKuOlDu4BNnUNqho1zA9kwapeBArChpLBJ6lc=
+	t=1751279226; cv=none; b=TH+vS3D05I+2rnO26RtnU+uBd8V71ATbv2dai/jlcUuCud4QGmOWOnckYLVsVzrcwGw61eGgXBmtOOGhmuPzF8wArbVoAy8RjQmwcy6b9/4EQGBcRfruKzHfPetYfeYcAAMqbRW7US8+bDR0X4YKlTxo3QAsbRTDWVutfYkC3+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279206; c=relaxed/simple;
-	bh=lP9cZ5ZVd213PgYvBxRjMQzsYmVuhyx9RNU0p02YOoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OvGBYdR4igamwkdRt+Nxa4MSUxyAynSYXLy7eHEmD/uiHB6QUKlWNo/xZq6c8YHrEW1QwiKb+sclI1jQ0nLN5X8oS+o7V8Qw+NJyrD3Zv667OnHjeWl5/2+PLnfKfgDpHdKO4nuOABn+lJyMzEn/apAOWNbAvxKxqD4uFedL74w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fPfesW2j; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751279226; c=relaxed/simple;
+	bh=H0MaE5zBOSHO3LkNCLftptGerNAPEoWExbl9pw4hqbk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=PgkE3FEDmLrNfZ7fMMhio29B3DiQUsxI8lL5s0lp+Sd96PFtsoMm5zBcBvkpSHuyyNCnBtv/VKjseXgh4fBVB6pJjLSiZ6YxssLtDNlejCX5Zntqeq7DdV9iGQzWTvywgGfP+WBMgzGXUZKWW2BD4+m943KBsXH+/4VEN/rQm7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GQ7lQFld; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fPfesW2j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751279206; x=1782815206;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lP9cZ5ZVd213PgYvBxRjMQzsYmVuhyx9RNU0p02YOoU=;
-  b=fPfesW2j89FgU9T2NtE++pAB/wY7F9nYLJSE8cu/g+95rKdoM6I2GP5L
-   X82b82zVfgnXmGANbsRoueChkG/d0wVRI2DmMgpjzXZJ5aT5z3W5tbsNH
-   TZkJj1JLT/1SnOJsf2+F9mV9y+NDJU7dX+O4nLqthOrDClXLAUZAcrV1y
-   X43o/LFVCR9cG8Shh5C9ZAh99GzB6noLH9nZu3dQq5sQp30cNBO3IEy6o
-   TmQ34mRsd98Ij3ef+Oc0oVEm6rj949xqcEcIVXtH/A+NmAPvQt/KJ9urj
-   h5gtmzHIe9kVD4DoYhrew3ee271Tv5nCXHqw+PjMuKfxYjCfBd8R7FxT0
-   A==;
-X-CSE-ConnectionGUID: CZh3T9sfRweohpKnXch1DQ==
-X-CSE-MsgGUID: DnPl9310TDWt9o/UJyptyQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53649399"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53649399"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:26:45 -0700
-X-CSE-ConnectionGUID: 6QCD6s3aRCuhF1tFyrQ++Q==
-X-CSE-MsgGUID: ifNOHc7BR3KyP2lv8WUJbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="152900050"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa006.jf.intel.com with ESMTP; 30 Jun 2025 03:26:41 -0700
-Date: Mon, 30 Jun 2025 18:18:50 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "jgg@nvidia.com" <jgg@nvidia.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"will@kernel.org" <will@kernel.org>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"aik@amd.com" <aik@amd.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"Xu, Yilun" <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <aGJkitx6wjfQ888t@yilunxu-OptiPlex-7050>
-References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
- <20250627033809.1730752-3-yilun.xu@linux.intel.com>
- <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GQ7lQFld"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8D5D9008138;
+	Mon, 30 Jun 2025 10:26:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=RNwyz2uPyTgf5iTMXJhK4t
+	1OLAWKnwrjx6NHrYAot/k=; b=GQ7lQFld32m1MZciqSayJxeeWOAXoJ6L1PBpzy
+	oK1XDRoK6gt2Snee14kqS+W47yGJvpuvvNyBPtXgqgLEpk+mN31Oyb62b9o66jd9
+	K2JkbWTrZCVhDVqP8Vl8+R0Epjcdc9AHWPyCHLdjwYfqc/OrjoCpJmpbB/te1vZp
+	O6VzZtL2M1YTLYBEHMGpwNy7dw+qeHQ/t1h/hnebfx8jLigYO56z/m/+7LDbbHAp
+	6/BGRBTPNfAU3wWOkC05Fh5TI1f7tuHDdTvgx5of2yfufZwcgr5+Pat4iLv51hfp
+	XUe5gXVFb2UmOaNhV4ILTn1/X+1LDaq+bvdr4v7SxjO1MUiQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkfms0e1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 10:26:56 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55UAQtLr028282
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 10:26:55 GMT
+Received: from yuanfang4-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Mon, 30 Jun 2025 03:26:53 -0700
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Date: Mon, 30 Jun 2025 18:26:19 +0800
+Subject: [PATCH] coresight: Only register perf symlink for sinks with
+ alloc_buffer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250630-etm_perf_sink-v1-1-e4a7211f9ad7@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAEpmYmgC/x3M0QpAQBBG4VfRXNsaK5JXkaT1D5Ms7UpK3t3m8
+ rs456GIoIjUZg8FXBp19wlFnpFbRj/D6JRMlm3FdckG5zYcCDJE9asBWJyIqxvLlJojQPT+f13
+ /vh+gPyWtXwAAAA==
+X-Change-ID: 20250630-etm_perf_sink-ee0fcffc6820
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>
+CC: <kernel@oss.qualcomm.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751279213; l=1521;
+ i=quic_yuanfang@quicinc.com; s=20241209; h=from:subject:message-id;
+ bh=H0MaE5zBOSHO3LkNCLftptGerNAPEoWExbl9pw4hqbk=;
+ b=vnAxtFOL7djNa+vwjH/7/Runb2sNbuIdgf67egd/SWFD/dYSYcr2rIv7OP0+2xsrWLoFZX6FR
+ oCNia01W7hCBe8E5Mg2tTmPjq6h4Q6rpiTbWCi56U2naomwflbxVPrn
+X-Developer-Key: i=quic_yuanfang@quicinc.com; a=ed25519;
+ pk=ZrIjRVq9LN8/zCQGbDEwrZK/sfnVjwQ2elyEZAOaV1Q=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _DvWm0v9RiTWO0ItHcZ0r8IqVpA07VDo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA4NiBTYWx0ZWRfX2RpDxWFY9W5M
+ rLypVQu84WV8EWsCb4fGbsgF9Y7dSDUxJarec3Vh4DWv7+YQcUp3L8MVX2pShiSRKM1y+80U1Jx
+ 17ChT9LDERo0WBdIQcelkm6M1Ghhf6E1h9vWweQ+zC9VI1nyI+E0L/GH5ts99tHEerqbJ2srM+u
+ 5bS/28quVylRTPB0w4b8rmytbzXb9Izzska9NYRy6ylLa6A/yrGCEaqtypq2AeYh6VWy87Z8j2S
+ XyfNjBDounZ0ES/2Gj6cF/kb2M4YuyPLTuNoFa/ZY04Cwq2A79glx8gesOe3MBcyLUvEQ5uKPxE
+ KMZhtc5hO60j/UzMVv5Agmhm5pwxEU6ksGmBjiztRmx5eIHED6peZg/Vxb/yAZ1H+quvwJaXUvT
+ Wv9CYygC7T67sdM2AdsCYBUsWEdZyvNLf/pKek/zi2fnShCNPIgIeRqTjmmzAJCzb73SZgTC
+X-Authority-Analysis: v=2.4 cv=L9sdQ/T8 c=1 sm=1 tr=0 ts=68626670 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=biE8C0GMo9j7lGmchtYA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: _DvWm0v9RiTWO0ItHcZ0r8IqVpA07VDo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=961
+ bulkscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300086
 
-On Mon, Jun 30, 2025 at 06:27:51AM +0000, Tian, Kevin wrote:
-> > From: Xu Yilun <yilun.xu@linux.intel.com>
-> > Sent: Friday, June 27, 2025 11:38 AM
-> > 
-> > +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
-> > +{
-> > +	struct iommufd_vdevice *vdev;
-> > +
-> > +	mutex_lock(&idev->igroup->lock);
-> > +	/* vdev has been completely destroyed by userspace */
-> > +	if (!idev->vdev)
-> > +		goto out_unlock;
-> > +
-> > +	vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
-> > +	if (IS_ERR(vdev)) {
-> > +		/*
-> > +		 * vdev is removed from xarray by userspace, but is not
-> > +		 * destroyed/freed. Since iommufd_vdevice_abort() is
-> > reentrant,
-> > +		 * safe to destroy vdev here.
-> > +		 */
-> > +		iommufd_vdevice_abort(&idev->vdev->obj);
-> > +		goto out_unlock;
-> > +	}
-> 
-> let's add a comment that vdev is still freed in iommufd_destroy()
-> in this situation.
+Ensure that etm_perf_add_symlink_sink() is only called for devices
+that implement the alloc_buffer operation. This prevents invalid
+symlink creation for dummy sinks that do not implement alloc_buffer.
 
-Yes.
+Without this check, perf may attempt to use a dummy sink that lacks
+alloc_buffer operationsu to initialise perf's ring buffer, leading
+to runtime failures.
 
-> 
-> > -void iommufd_vdevice_destroy(struct iommufd_object *obj)
-> > +void iommufd_vdevice_abort(struct iommufd_object *obj)
-> >  {
-> >  	struct iommufd_vdevice *vdev =
-> >  		container_of(obj, struct iommufd_vdevice, obj);
-> >  	struct iommufd_viommu *viommu = vdev->viommu;
-> > +	struct iommufd_device *idev = vdev->idev;
-> > +
-> > +	lockdep_assert_held(&idev->igroup->lock);
-> > +
-> > +	/*
-> > +	 * iommufd_vdevice_abort() could be reentrant, by
-> > +	 * iommufd_device_unbind() or by iommufd_destroy(). Cleanup only
-> > once.
-> > +	 */
-> > +	if (!viommu)
-> > +		return;
-> 
-> Just check idev->vdev, to be consistent with the other path.
+Fixes: 9d3ba0b6c0569 ("Coresight: Add coresight dummy driver")
+Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+---
+ drivers/hwtracing/coresight/coresight-core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-I think there is problem here. From your comments above, vdev could be
-aborted/destroyed by iommufd_destroy() again *after* idev is freed.
-That means in iommufd_vdevice_abort/destroy(), usage of vdev->idev or
-idev->vdev or vdev->idev->igroup->lock may be invalid.
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index fa758cc21827552a5c97b6bdd05d22dec4994b22..fddf04c5ee46eb4d559416296f7e85ce6c5689fa 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -1374,8 +1374,9 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 		goto out_unlock;
+ 	}
+ 
+-	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+-	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
++	if ((csdev->type == CORESIGHT_DEV_TYPE_SINK ||
++	     csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) &&
++	    sink_ops(csdev)->alloc_buffer) {
+ 		ret = etm_perf_add_symlink_sink(csdev);
+ 
+ 		if (ret) {
 
-I need to reconsider this, seems we need a dedicated vdev lock to
-synchronize concurrent vdev abort/destroy.
+---
+base-commit: 408c97c4a5e0b634dcd15bf8b8808b382e888164
+change-id: 20250630-etm_perf_sink-ee0fcffc6820
 
-Thanks,
-Yilun
+Best regards,
+-- 
+Yuanfang Zhang <quic_yuanfang@quicinc.com>
 
