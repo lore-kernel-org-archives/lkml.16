@@ -1,120 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E7228C874
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB7D28F92F;
+	Mon, 30 Jun 2025 15:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298336; cv=none; b=lBnq/LQasj281oHtA+4AwyXlLvh1cgh6v6XuTjsnc7llQ4ONVuEBmzDM8NMYQBQsN1tF+jJNbI5+504qEOkTe8EEuGTDZOagklfRP7JbxDVOgibrbwxFDqCmIyWoQ18Nlsdc2mETO7v4gltYNmau1viYowcd/RYnSXc09O0JZzE=
+	t=1751298494; cv=none; b=PE82SEr0KfF5OAQBxyyCUYk/nTyFOiFDyMR2rt6ZMnbhU0Je/+HiPIAq7oRIF4sph4oQktIyZ3SunaCf2c7wYLRjacJDo5gv/UfPkl/Q4ogMZxZqLTDg2I6sOU+NtqMRoeirA6WrbR1TZddNl+hjPrfbc4qjQknwlUaFkmOImcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298336; c=relaxed/simple;
-	bh=ALmsu4DpCtGbbhmY3nVRw1xg+2esadVAR3daySXJWtg=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VUwG28EZvcqEr7ETHboSJmpHyndAwJqaHQ7xbVm8bB7V/LTlaMguFBzyQZSxrnmuiJ9JphubKbR1Vw/1rsnpy17b7tmIy4tfteLlRw1weuGR1R1b6+ayXbXGppbxDMY/23VPEuP9528C/Ynjc/T5XMpMaGscDYTu352sU5ofRxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TG2KMl31; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751298494; c=relaxed/simple;
+	bh=eIE0i202yBSVq2vFvn7H0pZzWtP/NNzlLy34uoqAuCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GooX3mxTl73ZC8fsIgriWLB3LemkGf8O/cVFihvX1Nbj/+sEUHYlBZ4A4bqDzQVPbTy5HImjV1woEk8sWWRDyxcr6J9aPv4AVCEsXDE2qTaWNWjZz+Qdy6uxmMDFlmok53B9kDZxQ2bwlnXoPQPbOS+f5+hOYK+3nwV9S1GrrlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqV1JNfi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TG2KMl31"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751298333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ihrgL7XLc9K6vXziileToqhZtOGRjkRkc3jWqhOJ//8=;
-	b=TG2KMl31uahSMg5BCM0BOmQT5Rf8+0eIKOMoCWYv8VQnfduIINIhmLO7WerrzpdABKtCbE
-	TkINENSdFiIo2ZVSminixqqLxoMT+3ixwdS0sVjiN4V+D7TqBobGIu4d3fj4Yx2OgQpUeI
-	b5qyj7oeSzfHtKgNBobM7OeH0SEGz7c=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-375-4pFzU12FOIqSwJaSEVD59A-1; Mon,
- 30 Jun 2025 11:45:30 -0400
-X-MC-Unique: 4pFzU12FOIqSwJaSEVD59A-1
-X-Mimecast-MFC-AGG-ID: 4pFzU12FOIqSwJaSEVD59A_1751298328
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF5091978F63;
-	Mon, 30 Jun 2025 15:45:27 +0000 (UTC)
-Received: from [10.22.80.10] (unknown [10.22.80.10])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 41AF31800285;
-	Mon, 30 Jun 2025 15:45:23 +0000 (UTC)
-Date: Mon, 30 Jun 2025 17:45:18 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de, 
-    dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-    dm-devel@lists.linux.dev
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00=2F11=5D_dm-pcache_=E2=80=93_pe?=
- =?UTF-8?Q?rsistent-memory_cache_for_block_devices?=
-In-Reply-To: <43e84a3e-f574-4c97-9f33-35fcb3751e01@linux.dev>
-Message-ID: <f0c46aba-9756-5f05-a843-51bc4898a313@redhat.com>
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev> <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com> <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev> <43e84a3e-f574-4c97-9f33-35fcb3751e01@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqV1JNfi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4147AC4CEE3;
+	Mon, 30 Jun 2025 15:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751298494;
+	bh=eIE0i202yBSVq2vFvn7H0pZzWtP/NNzlLy34uoqAuCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EqV1JNfiEoc5CZt4vqohqNOYgJodmRJGG3smmMQJ1+KiCvNI753OSDqD+Zqq6EKIz
+	 9pPzYfZJQT+KGw2lSLCRk+t618nmU54t7/W9QghzuKFAot2y+qi1zviTyO1V6plAqS
+	 YF0Hh4OTLbfTqO36YinjdVPht1K6mHGJL8MisQaK9pdE+I/l6PkDQuP0BqzRkXGVDy
+	 n1fxI7rBCgoqAvFCeFsC1pCTZnwpei3AvXRIAyHgWn5CtoqwVJGgn8TYXcePaeH5lj
+	 9DZWUV7vPkiBif7cjNTLKARjyS0f6SqPhV3ZYNqfoiObPcur9yTlvWziPEGYcqXOMZ
+	 kcflmECOlx45Q==
+Date: Mon, 30 Jun 2025 05:48:13 -1000
+From: "tj@kernel.org" <tj@kernel.org>
+To: "Wlodarczyk, Bertrand" <bertrand.wlodarczyk@intel.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"mkoutny@suse.com" <mkoutny@suse.com>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"inwardvessel@gmail.com" <inwardvessel@gmail.com>
+Subject: Re: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
+Message-ID: <aGKxvQdAZ-vSd48D@slm.duckdns.org>
+References: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
+ <ykbwsq7xckhjaeoe6ba7tqm55vxrth74tmep4ey7feui3lblcf@vt43elwkqqf7>
+ <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
+ <aF7L8jRkWm1TrwSu@slm.duckdns.org>
+ <CH3PR11MB7894D2570AEA9AB67DBF706DF146A@CH3PR11MB7894.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811712-2042544932-1751298327=:274049"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH3PR11MB7894D2570AEA9AB67DBF706DF146A@CH3PR11MB7894.namprd11.prod.outlook.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
----1463811712-2042544932-1751298327=:274049
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-
-
-On Mon, 30 Jun 2025, Dongsheng Yang wrote:
-
-> Hi Mikulas,
+On Mon, Jun 30, 2025 at 02:25:27PM +0000, Wlodarczyk, Bertrand wrote:
+> >  > Also the response to the tearing issue explained by JP is not satisfying.
+> > 
+> > In other words, the claim is: "it's better to stall other cpus in 
+> > spinlock plus disable IRQ every time in order to serve outdated snapshot instead of providing user to the freshest statistics much, much faster".
+> > In term of statistics, freshest data served fast to the user is, in my opinion, better behavior.
 > 
->     The reason why we don’t release the spinlock here is that if we do, the
-> subtree could change.
+> > This is a false choice, I think. e.g. We can easily use seqlock to remove strict synchronization only from user side, right?
 > 
-> For example, in the `fixup_overlap_contained()` function, we may need to split
-> a certain `cache_key`, and that requires allocating a new `cache_key`.
+> Yes, that's second possibility to solve a problem.
+> I choose atomics approach because, in my opinion, incremental statistics are somewhat natural use case for them.
+
+They're good for individual counters but I'm not sure they're natural fit
+for a group of stats. A series of atomic ops can be significantly more
+expensive than locked updates and it also comes with problems like split
+updates as discussed in this thread. I think most of resistance is from the
+use of atomics. Can you please try a different approach?
+
+> > I wouldn't be addressing this issue if there were no customers 
+> > affected by rstat latency in multi-container multi-cpu scenarios.
 > 
-> If we drop the spinlock at this point and then re-acquire it after the
-> allocation, the subtree might already have been modified, and we cannot safely
-> continue with the split operation.
-
-Yes, I understand this.
-
->     In this case, we would have to restart the entire subtree search and walk.
-> But the new walk might require more memory—or less,
+> > Out of curiosity, can you explain the case that you observed in more detail?
+> > What were the customer doing?
 > 
-> so it's very difficult to know in advance how much memory will be needed
-> before acquiring the spinlock.
+> Single hierarchy, hundreds of the containers on one server, multiple independent owners.
+> Some of them wants to have current stats available in their webgui.
+> They are hammering the stats for their cgroups. 
+> Server experience inefficiencies, perf shows visible percentage of cpu cycles spent in cgroup_rstat_flush.
 > 
->     So allocating memory inside a spinlock is actually a more direct and
-> feasible approach. `GFP_NOWAIT` fails too easily, maybe `GFP_ATOMIC` is more
-> appropriate.
+> I prepared benchmark which can be example of the issue faced by the customer:
+> https://gist.github.com/bwlodarcz/21bbc24813bced8e6ffc9e5ca3150fcc
+> 
+> qemu vm:
+>                +---------+---------+
+>      mean (s)  |8dcb0ed8 | patched |
+> +--------------+---------+---------+
+> |cpu, KCSAN on |16.13*   |3.75     |
+> +--------------+---------+---------+
+> |cpu, KCSAN off|4.45     |0.81     |
+> +--------------+---------+---------+
+> *race condition still present
+> 
+> It's not hammering the lock so much as previous stressor, so the results are better for for-6.17 branch.
+> The customer has much bigger scale than 4 cgroups in benchmark. 
+> There are workarounds implemented so it's not that hot now (for them).
+> Anyway, I think it's worth to try improving the scalability situation, 
+> especially that as far as I see it, there are no downsides.
+>  
+> There also reports about similar problems in memory rstats but I didn't look on them yet. 
 
-Even GFP_ATOMIC can fail. And it is not appropriate to return error and 
-corrupt data when GFP_ATOMIC fails.
+Yeah, I saw the benchmark but I was more curious what actual use case would
+lead to behaviors like that because you'd have to hammer on those stats
+really hard for this to be a problem. In most use cases that I'm aware of,
+the polling frequencies of these stats are >= 1sec. I guess the users in
+your use case were banging on them way harder, at least previously.
 
-> What do you think?
+I don't think switching to atomics is a good idea, but improving the read
+scalability would definitely be nice.
 
-If you need memory, you should drop the spinlock, allocate the memory 
-(with mempool_alloc(GFP_NOIO)), attach the allocated memory to "struct 
-pcache_request" and retry the request (call pcache_cache_handle_req 
-again).
+Thanks.
 
-When you retry the request, there are these possibilities:
-* you don't need the memory anymore - then, you just free it
-* you need the amount of memory that was allocated - you just proceed 
-  while holding the spinlock
-* you need more memory than what you allocated - you drop the spinlock, 
-  free the memory, allocate a larger memory block and retry again
-
-Mikulas
----1463811712-2042544932-1751298327=:274049--
-
+-- 
+tejun
