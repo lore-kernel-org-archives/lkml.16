@@ -1,104 +1,124 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B647E1FFC55
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E787C8C0B;
+	Mon, 30 Jun 2025 21:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751319587; cv=none; b=JdF6wFTZ7sv/SrpiYX7J+SklCVLk31VTlqG6C3O7UIkXcvjQxaLptxnwGcF/U1iLgAI5zINkzwQrYjd8B4hx+C3yPg4Z6C3CURq7V1awULgrhq/LCOfepVl8vEXd9/sCSfWXCMcD9lpx4aZLLhWEW3baoRu+8gcA1N8AHtFRcX4=
+	t=1751319792; cv=none; b=lpqnREjv+5cSD1WT+YEqAtkVDE1M3e5eCNWGNW9NTlJF6AmqUQ9Nh6EM1t56kI+d8vHcPsRoHarGoRcKkIMFm+3Tg1SibDhYb4ztjwWgmAjEEGYk8Jte/k6zBE2BVfolAXe7e6y7fEN7wYVvBgDL2w/YyOr1LNtZxG/Wp2Ih8Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751319587; c=relaxed/simple;
-	bh=pwawUxuTJKMJ0eihvMj0l2HZinYV17lWiqOb1DIZatw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=KT7Kh/JruWr3Ubf3uLuEWPH32TZWK93bEaIge2uHK34JAPBeuAGCFovBtqn5Deu3uaXrZe2A2p5Czuxa8KIe5NHNd+LVF4CtDGoq40tnLFSY8XdZkyNWL52h4vD2gnrBUDvX0TkSDmfflPIzSN2RLZqeIRe5hHsgD2X3WiV9hTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=fTpt2g1j; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1751319792; c=relaxed/simple;
+	bh=VO2ZcU2HLvz9dvPE95F4wfp1ew+6bx6yzwi2MOIs4dU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6TQ0Ebt3CFaUEfPnmtDNGnrjbPsniPVY81EAopm1dtjtXdgGFUsXnqrkQxDxVynxz5kUyCJKFylbJMGbEO/ColeuqK+8bJfSGnC56owI8c4hXWAZ8LHCL1MAeXZUtLwfN95FXOgV5GHWCa/CINKZUvddLcPo3QzXUvZty1/LhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnEIE3Bo; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="fTpt2g1j"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3dddc17e4e4so8358915ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:39:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnEIE3Bo"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a77ffcb795so50150421cf.0;
+        Mon, 30 Jun 2025 14:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1751319583; x=1751924383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nx5J66R25s/M941oKLiPzdOIFt0QLiFvc7xJpi+QQqI=;
-        b=fTpt2g1j1KaXEoiQlHeafM9hSlJkAR2Qsvs3jJN7+mxW9nzt2Ciw/wAYWnLlmUa6px
-         oYoXhP7k3ZWKykhbQxfxJNIqOZ3ToS0eSxFXbNItFMTUVpbbs4nEjBFDV5e4cFt10EMi
-         lzuHzV3VWvPcad5e2A3tahg/5luICcErhzUYTNMUbT55rtlBQitBzyXs1ZImdVg1egH7
-         V8/p+38KVRsHLI0WtGhVdAj1OVxmLkMulbO3CkeR5VrX/SqxIQJCAIncp6+eq6Qd2VhH
-         BhyC8kjNoXBOZHo0Qtk5WFJflS7Ut2v7G6p9uG8VozLxniZJfgsMjVepmnbTQNEYzlXO
-         jHNg==
+        d=gmail.com; s=20230601; t=1751319790; x=1751924590; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/n8VfpILnh3xTd/ry0xCdOmAPegbbmqua23xjp6yCbU=;
+        b=EnEIE3Bo3wPfmlO9OE2Y6kWWD338zfZ92ZIxdzfvO1xdnGuBE0iizrac5PhVOvo6JW
+         AMFv3SVFM/oRazSHIwRUWSjgm+qLY/j2dzjOec1OaHSfUm6058+5Cjs+jdiwSRe5aT57
+         HCccBD+cqPpWyFGSlnJjhN9O0+ge2SJH3VN24Q/0Qae5ki4ZD9O9wPLxfarvGy6Wa58d
+         DgHe0B7lSqCdiEGrwmRf6KwGbejsC9xw4CVgb5MCBYgbYqsM3UjtBUtuoIPpqKW6GLyl
+         4j6tpHGvrrJq3YhYn5JXbVQEFTdrj6e7v0mGaJdASGJS+L8310SoKKqUC6U2yEvL8zn8
+         JPQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751319583; x=1751924383;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nx5J66R25s/M941oKLiPzdOIFt0QLiFvc7xJpi+QQqI=;
-        b=V2CT1M5v8esxlikE+xlHHQH3odE1+rU30sgDQl1hHoA5uyewKe4kyBK0pA5RUEMKI4
-         ystiTX/2d5UOen1bR8uTaS1pig68yDaZ6G0RXZLKA+KeE9/1hMs/j9BVHeJ1yGKW/Xi7
-         sWoOfNPwWsxe4dsJElLryv4vUlb5GMsmos4Rpn0+t88++5OgL4T0PK5psD35ajUyeIQw
-         5ydNKJQ/kwRZVT2Eps13YL6fRonLJBINeOFhPEsV0qVGOBbIIs/qYE0NTFcsdXXrU1de
-         IKyH4EAKJqHp4othXrpaNkKQgg/hTpBko2jh88dUFeG+0HXSqPfGXYT3oBQoz2eL9Gvi
-         jMdA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0fEd7gbpzP4RpUhIivDzytHE5hYgqUAAQYl9J+zo3R+2jAGa8i1awGrOxioPmVYv/lYb7xAP5PoXMBPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy37C0UdrwiAlbjNucBcj13lzpiCBJHJIcBBh0/zV+Qwijd1khQ
-	HuBCMenne10s+vNQlt6aAkTmAdVp1GoqpmPM/Swhr3HKKIpWbPj23BTLOON3GcjlPKk=
-X-Gm-Gg: ASbGncv8lq9I0yY0X4EKMudAPaNiFUmCiREbLbgaTRjk9u+1BzaO2bYamywvfrGMZF+
-	Uc56wa80KpCi9sAjMcHOlqEORBfWg3f/oAP7Nws9YY0d3fVb5FBYb3GEqCHjY6XCNTk/VHHNOGH
-	qd0rxYyjIpeknPSEVNUFi2/mOWVkedLSYiNn0hqqx0kQtn1Hg3FVQaYFP/+mjKrJo2jgcOyQFbq
-	T6wAbo/bbGpnPVlWE/wQjI28emMFJLNN84ofy4XSaZSy1Nr3oBOWL/APRPi7L8kSsQB1wIAgAe+
-	kHtXZk4SHfRBJZifm7cWhI0dNVMIunEwcLbVfaSLLrbToKdjKJe2rA==
-X-Google-Smtp-Source: AGHT+IGFZ1UGeRClqiUXKlzMceHpj7brXENqsvG+bvfkY2FdCvIG9Gw0zeAAdhwMDcM3lkPL4MxhIA==
-X-Received: by 2002:a05:6e02:4506:10b0:3df:4cf8:dd46 with SMTP id e9e14a558f8ab-3df4cf8e0bamr92283245ab.10.1751319583358;
-        Mon, 30 Jun 2025 14:39:43 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3df4a09133esm25220145ab.41.2025.06.30.14.39.42
+        d=1e100.net; s=20230601; t=1751319790; x=1751924590;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/n8VfpILnh3xTd/ry0xCdOmAPegbbmqua23xjp6yCbU=;
+        b=bLiGuIplHIYVFldIkzGCDgc0bWvdII4iBBvroJRm/MIrYXanUHfd+Cryg+Pt/B7HuL
+         zmFSlIkAaFPc0BvgiVtOF+rEirLEpI21LdTGFNVAzMVTUd/YXHnqXvwDXbqbEdahWQJg
+         UMrtlxxlhs8gZz+wyz6zkntNear2s/LjLYR2wUgLhCKJcu2v4QrvYh+nR+pMY4vcbXVw
+         i4li2xak2maB6CIElCf3KHGcn5nPFBjBS5gYxd08KIkd3MPC4en8VZt4YnytZ9a93DAF
+         SM3MUxytpj4tiRUhiHIXFTNvbe3tzXTQWN+45YklKye0gY2o/TF4oO76DwvayhzbAT+S
+         g0Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWC1mhmnvI4Uxz3yCEvi8foYrNu1S0W9JkBmTrvYn6eetPRlxlm7ICWIjGWFwyXou7ptxA4QnM2xO3G@vger.kernel.org, AJvYcCXPDkXWlx9b/P0wAPcGytSZ7x6XvVBrOYSjeTOIkWoIBpwzEsI6DyH7Dx3HMGZ8Sjmrm5CkorVSfGB7gmg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3fu0E8HX1S/W5KB0pLHvB2Cp1NHOir75H1lZ1mRENKfxuf+MU
+	H7niZdEbpJ87eUYJZX/btKJWwq2CHCs2aDAKocFXjOzyUueStpPInusneccT+aai
+X-Gm-Gg: ASbGnctDspeY7Iqb7udE4X5bp2N9LKh4f6m4jKgjCZLq67FbzOhnCGKlruFNz/9b/6v
+	BUOJ7ADotwa8KekrE5t83mDCIE/AH098lEgZHRhFs2g2iS/N1F0AxS8r5ve5+CoQu+6vwoOikb9
+	AWTtpmCYInPB302LQPhCt1+gKU4+bRg62Hyr0Xx1m3auJZ8Jx1KoydATFRxfyzwwaTzZ0BZdoPv
+	Q017uQu5+PR2/WKvFp7aPhdQacNRw0fxm2vfxXPkTPz7CsSwbt9gxHZATIy5pW9RQh1qn3+WmOT
+	itm0yqdUqvkjNWsMG8/ZhRN0yS/hX9X7bW93K+4HKD9OjtWp3A==
+X-Google-Smtp-Source: AGHT+IGgiesFUWV/yzbfRLw9KUgtdZVfuq32iKhJIw8iUWSflMfyK58IUhuPCz10MrQuAnv+l4ThFw==
+X-Received: by 2002:a05:622a:578d:b0:4a4:40b7:9cc with SMTP id d75a77b69052e-4a7fc9f8ee0mr225437281cf.12.1751319789601;
+        Mon, 30 Jun 2025 14:43:09 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:4851::dead:c001])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc138d7esm66590201cf.21.2025.06.30.14.43.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 14:39:42 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Cc: io-uring Mailing List <io-uring@vger.kernel.org>, 
- GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>, 
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
- Christian Mazakas <christian.mazakas@gmail.com>, 
- Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-In-Reply-To: <20250630203641.1217131-1-ammarfaizi2@gnuweeb.org>
-References: <20250630203641.1217131-1-ammarfaizi2@gnuweeb.org>
-Subject: Re: [PATCH liburing] liburing.h: Only use `IOURINGINLINE` macro
- for FFI functions
-Message-Id: <175131958214.269614.649326071375683625.b4-ty@kernel.dk>
-Date: Mon, 30 Jun 2025 15:39:42 -0600
+        Mon, 30 Jun 2025 14:43:08 -0700 (PDT)
+Date: Mon, 30 Jun 2025 18:43:02 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rick wertenbroek <rick.wertenbroek@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/4] phy: rockchip-pcie: Enable all four lanes if
+ required
+Message-ID: <aGME5sh1fLJlmVCD@geday>
+References: <cover.1751307390.git.geraldogabriel@gmail.com>
+ <d3e7dc38bd287aa93a5d6bba87bf3c428ae92ca4.1751307390.git.geraldogabriel@gmail.com>
+ <4006908.X513TT2pbd@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-d7477
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4006908.X513TT2pbd@diego>
 
-
-On Tue, 01 Jul 2025 03:36:40 +0700, Ammar Faizi wrote:
-> These 3 inline functions are for liburing internal use, it does not
-> make much sense to export them:
+On Mon, Jun 30, 2025 at 11:33:19PM +0200, Heiko Stübner wrote:
+> Am Montag, 30. Juni 2025, 20:22:01 Mitteleuropäische Sommerzeit schrieb Geraldo Nascimento:
+> > Current code enables only Lane 0 because pwr_cnt will be incremented on
+> > first call to the function. Let's reorder the enablement code to enable
+> > all 4 lanes through GRF.
+> > 
+> > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> > 
+> > Signed-off-by: Valmantas Paliksa <walmis@gmail.com>
+> > Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 > 
->   uring_ptr_to_u64
->   io_uring_cqe_iter_init
->   io_uring_cqe_iter_next
+> hmm, if Valmantas is the original author you should probably keep that authorship
+>   git commit --amend --author="Valmantas Paliksa <walmis@gmail.com>"
+> should do the trick.
 > 
-> [...]
+> The first signed-off should be from the patch author, then your signed-off
+> indicates you handling the patch later as part of this series.
+> 
+> [or, if you modified the code of the patch heavily, Co-developed-by could
+>  also be appropriate]
+> 
 
-Applied, thanks!
+Hi Heiko,
 
-[1/1] liburing.h: Only use `IOURINGINLINE` macro for FFI functions
-      commit: fe1fc8c0516954d345ee5f7613b8e4740b69b9c1
+thanks for the pointer on doing things right. I'd hate to appropriate
+someone's else work. I already emailed Valmantas and he's fine with
+the inclusion of his signed-off, so let's give him due credit.
 
-Best regards,
--- 
-Jens Axboe
+Geraldo Nascimento
 
-
-
+> Heiko
