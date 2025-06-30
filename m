@@ -1,241 +1,237 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD47328AAEA
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293434; cv=none; b=YDcuWg3J4ul2i6qqO8Cbq9cwGu78c2JO3/rbKjR5v8exNtzVgTeEV2BF1zOhp1IFDOcDtXMSGqRMtT9sC8jxV3ATprFb7FDw8ZqvDBizG4SRSV/j0di2twF94sRGnCGUgJVx7kSniJ/Xm1HSQuQgjHn9uk5/SbiOexGRGOm9xes=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293434; c=relaxed/simple;
-	bh=EVdGHxFj7R2lvNR2PW9IbUqmGDuMs576qFxuJLd2zj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=atbEkSmo7H/GVieNoAnI7M+kb6jeVN85AnefA50H2QN+CYgy7F/BhPrCBPm4q9kipwNGwdodq+w7At5TUjTP8/fMGz83j8enqaLg10ORb27BkV7dHbrhi5HJPggT8yLmdZREvtl3Uil0RcNpFLl9cIt9r3c59vMBux9xITaLbE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bnp6x4gT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B15272633;
+	Mon, 30 Jun 2025 14:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751293560; cv=fail; b=awdb/LjdMOTD/NBzauyC/kLUaK+shsElbSso789NaT/d0OAlL179PZ6YY+dZuzfDNpBLpA4QMxeZbi8p4YH53KeelIy/+7GaxHajxGkNtNY5XcuYDvMrdO8PwzWPoelEkrpJNXf+mf2P+52rJVBo0YAZup/xnR3lY9DlE/vyCQA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751293560; c=relaxed/simple;
+	bh=jllWxY9T7DwiVz96HKRSLwlNE3FUQdimAZ1tP8g/BEM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HiMtzPdomHbi7o805sCxo3SsJNnGZwhsY6mPrEUYwoF+acjMNTKtvv8S6xMVjH6GxeszPChSvnJVVTOZN+YjVGDcokExorhLiMjjrcqEkLhC2X6tBs4XZsp74giuHi45OGeU+u43lKgOoere9K0LVRDY515rPCD3MTPUr2cxMWI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1BLxah6; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bnp6x4gT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751293431;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xdovFaBBmd/2kkwjuLB1TgmyFJy3oMjvZokOLh7RDBw=;
-	b=Bnp6x4gTK2O9ur6JVEn3sbgIInvHY0dZGA+49yEPYIUABqoRrqIh7Vp7oQH0JJxm56cytS
-	PAkpYtjpcNJzojI23SrgjsdSkud72cukut6J+i5+EjAdxDF3nTkR4Xq2yovrKhIXYisDHn
-	AzCZTC9hTdCOPJSNrcOoAxKetZEco0s=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-483-K0mzXjp8M6-m6paBAnboVg-1; Mon, 30 Jun 2025 10:23:50 -0400
-X-MC-Unique: K0mzXjp8M6-m6paBAnboVg-1
-X-Mimecast-MFC-AGG-ID: K0mzXjp8M6-m6paBAnboVg_1751293430
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a589edc51aso67186121cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:23:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293430; x=1751898230;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xdovFaBBmd/2kkwjuLB1TgmyFJy3oMjvZokOLh7RDBw=;
-        b=AKHekYsp1CjPksU2j+CmI/TWX7+Dh7wjuxQUesNvQw2q/H+f59ruFWbtx+j7HXFrPJ
-         W6LY9Fwa0eoIE45oxMvqpeFP11qFBkcJp9dwnrBmRQX2iqiLAizQq4oqVCG4yUtnspC/
-         9SSjbY8y2sHEEpFjxOEEKEwtRaoZcec/u6QjniXRkd/E4E7BAE4GOnZR9uiw4eGGd4jh
-         DYA5XgenmUzG6PNb8lg1U0cL26wHFMha73Tf35yrdA9YZinRqIWIu9538UPNoOLVdEv4
-         bhk7X1mtIEYAJUh3sMOwSNvt6xA/V4tPb+D8P6xkMJOG4tIMZM97Gva8wYzn13Z9kS/9
-         ZXMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZhtuucyXZLjDMN5vcZkOpOSLV/r71GWEBAYJwujjmmh795BHTL41iglEZ+GY4Bbovqpqc7MQaR5x4AY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Z47AeTsElUd+3Z5jC5yBub0RAKgq1fVbtFnLgMOfF/XyYS2K
-	UKNSivt5igUlOdUqWqMYY5anrDIVqiJ3ji7ro6S9jjfpjoj2X864PiWQyxIK224FXI5iRajKpa/
-	OZAxKBHB4C08Wn81opYiL3i5FheLZ5k9shbGwuN/ntRzrwtNmBtuYZd73zn7Ze142aAHOhd9xkc
-	wpI8paIZFMVnQlCKsokJ3W5CtJfQL4tWHjCCTIOadi
-X-Gm-Gg: ASbGncsl/PhIONR91jzzWo0Di1cth6GekkQq0c5wDB32unG8PgZpAA0NgdC4a05nbLX
-	9FiMrmgp2hKrFylj07HoYo+h5Gfx56XzUSeq2qYrA6PiR17QFAnnuvhMrzC7agqNKCCGX8Gwm7N
-	oyCLBrncwrLyh/cMXTtT2xtlNDc6xxy2c2Rg03
-X-Received: by 2002:ac8:7e94:0:b0:4a6:f7ca:2fec with SMTP id d75a77b69052e-4a7fcad52cbmr174610211cf.24.1751293429489;
-        Mon, 30 Jun 2025 07:23:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGBx6kvlsf0HAW+47EWCZROILjtBtY+tNf1X4LVnWQFfs1oE0j0fNksgekjuc/2wsgKmmJrPBGuAR6faiiyDM=
-X-Received: by 2002:ac8:7e94:0:b0:4a6:f7ca:2fec with SMTP id
- d75a77b69052e-4a7fcad52cbmr174609791cf.24.1751293428982; Mon, 30 Jun 2025
- 07:23:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1BLxah6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751293559; x=1782829559;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=jllWxY9T7DwiVz96HKRSLwlNE3FUQdimAZ1tP8g/BEM=;
+  b=b1BLxah6c68q3oqcfpRh9PfKP0rrTYQz6qci39puoRkH9eUHCJ8Sc/Ku
+   /5lN9q5VZbiSm0mV29eV1x3i4ficUjrs9GXiknbmwLhMuz4ZdJkoSDK6Z
+   tZTjcDV8QFRM1az/h7GXuHMxLkkitpujXUuiFrxJhaMQxGnRjgcbruKKe
+   /ZIQSeHo5PAThvGmvwaaFOFSBBt48wT+Mn94TP+7eVlHkMus2qRhcqTNk
+   DaK53fp7ZWJ5j0SlQYMZYRR29MsHS5rjzUbSn8PkX+n+JYLnpBjhk23yR
+   /tZY0KzhHm6ToERbxIrpzkmdiJUs9pOUzAJEfbvFJB0d0oMGObg0xE9DS
+   Q==;
+X-CSE-ConnectionGUID: jsayIX2qSQybVZ9jnr4PQw==
+X-CSE-MsgGUID: zoIkZAbJTASq+rT+Ytzzfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53383054"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53383054"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:25:58 -0700
+X-CSE-ConnectionGUID: ROsLq2H7TkeuDSPyqLgLtQ==
+X-CSE-MsgGUID: WAfEOxOjRiuedL5t/XRKQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="153109144"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:25:57 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 07:25:57 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 30 Jun 2025 07:25:57 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.68)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 30 Jun 2025 07:25:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aP+Qx4h35P9jwg1iYHOmpLJxtsJge/QWHaHjqMTKM71BkjJmsgYnRGGMsVQ2mWoglGhhk4+F5lDP+RZTu/I9B/cgS0SgXsx7Nw+4aRGZxJA/+E6ON36KRvdAu1VHuir5Bm575fKc04tlODYrolW6I5eGKO7VNcg0YYh3veDHTj+6qP9x7PkWaWBIq53lmTrCi4nOwFILzFyuu/hEWiwO1I/w9baQBXJc3b4WS2QhPPD6XGxAIuRNjrEIaHVZXIH5h+hfLJfeXedf1+1EPFYTdVKpZsmvNxaVsU7Vt4w7YH4NngH71oirjgqxvMMoOnxZ25LArwyWjlooQ7ukn8VvHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S6S5LUHDHM9cxiol8KcRNNZZSYOEnj4WqI55jsqy84k=;
+ b=Tm0u88DnACEQHe8BHGiDn7yd77X215rJyfUXcOZJB8wPRSaImUalTVGlf3BLBPRHv6sRV0ZkZhIbJN3hISd31gAizlAYv1kgA3CtBBhxThug4RZ7yeUlqvJjyjjd3K52lVN1U1faYOQCAflGpkM4Yyny+redlB/TuWCDRvWo5IpbrctPdYn2syvH+Lk9NwHlr6zz2cjjGlOA3ugCQg7iveEX/s/Z+HlIG/OxgKNDOopwhJvkjZcorZKAJAdUhpM9VJvGGxLlY5KftoZ/8jbouuliRxLFt5yCrktxF/EOchQvCUe6v6yQHvHaKKjKrBpFa5JrYUVwyPnHKWQTpz780g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB7894.namprd11.prod.outlook.com (2603:10b6:610:12c::17)
+ by SA1PR11MB5828.namprd11.prod.outlook.com (2603:10b6:806:237::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.23; Mon, 30 Jun
+ 2025 14:25:27 +0000
+Received: from CH3PR11MB7894.namprd11.prod.outlook.com
+ ([fe80::4d2:ecb9:b88:6c9a]) by CH3PR11MB7894.namprd11.prod.outlook.com
+ ([fe80::4d2:ecb9:b88:6c9a%3]) with mapi id 15.20.8857.026; Mon, 30 Jun 2025
+ 14:25:27 +0000
+From: "Wlodarczyk, Bertrand" <bertrand.wlodarczyk@intel.com>
+To: "tj@kernel.org" <tj@kernel.org>
+CC: Shakeel Butt <shakeel.butt@linux.dev>, "hannes@cmpxchg.org"
+	<hannes@cmpxchg.org>, "mkoutny@suse.com" <mkoutny@suse.com>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"inwardvessel@gmail.com" <inwardvessel@gmail.com>
+Subject: RE: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
+Thread-Topic: [PATCH v2] cgroup/rstat: change cgroup_base_stat to atomic
+Thread-Index: AQHb5RcNKOjgP8rvyEWnUhbN1DoTcLQV00mAgAEXB3CAAFLRAIAEgU7Q
+Date: Mon, 30 Jun 2025 14:25:27 +0000
+Message-ID: <CH3PR11MB7894D2570AEA9AB67DBF706DF146A@CH3PR11MB7894.namprd11.prod.outlook.com>
+References: <20250624144558.2291253-1-bertrand.wlodarczyk@intel.com>
+ <ykbwsq7xckhjaeoe6ba7tqm55vxrth74tmep4ey7feui3lblcf@vt43elwkqqf7>
+ <CH3PR11MB7894DDEE6C630D5A3A4D23A1F145A@CH3PR11MB7894.namprd11.prod.outlook.com>
+ <aF7L8jRkWm1TrwSu@slm.duckdns.org>
+In-Reply-To: <aF7L8jRkWm1TrwSu@slm.duckdns.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB7894:EE_|SA1PR11MB5828:EE_
+x-ms-office365-filtering-correlation-id: dd10b476-1db7-413d-3c27-08ddb7e1f594
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|42112799006|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?CMjhCplhT4BmUkDNfiXkKuyXRRO/mfBGABQm8Xd/PryJkdEbuyDqTnzVLz5g?=
+ =?us-ascii?Q?mt8BIAUmI4Miy09iY2gbD27JHy4+yYKCx0D9lvbdz0mPzJLXoZUDhWJsVgwO?=
+ =?us-ascii?Q?hbPtAmNjVbf9SP+iri6HODe3+Xo5ag/hjT5C8+fVsWlfNcnuSOGN9hFiXOB+?=
+ =?us-ascii?Q?SHinvuC+qYYZ3Ov99462p+E9oQYKvCwdo5cME/qy9wF4BhCGNk7zvINJfvFc?=
+ =?us-ascii?Q?kVGeV5uk20pBWTQGD5D9E7zXI+RhcBjxnjmven3RIStK+WdFC/dAuhpJvJLJ?=
+ =?us-ascii?Q?dJVcUTzDavG27exKfqInffZAUUo/RstMOg3nOGmhzGaHf0CsZg3G4HTPky9f?=
+ =?us-ascii?Q?R7cWMXi4eRDfLFNdF5FKTFyHQkYgtYlh/KJapK+tRVkQMVj0n51fJkuiBhXI?=
+ =?us-ascii?Q?LP7Ecj+ZZJnv0De+cmWrCUW35nOK2k2IHMvMKIHkhUsFVGFf6vYPogep8ewj?=
+ =?us-ascii?Q?VkPOTHtwpOi5TpbgyaQ3PQB1wgdn1kRdn2ARqVneHGtbM6nLGVsn4S1zuII0?=
+ =?us-ascii?Q?3B71GE2HtlCv2A8L0rDJk6yGuRgYjKM4OfA68fhk6ZJeX4+rqhu3YGtTPlIz?=
+ =?us-ascii?Q?+bZx78sGm4MmC3hkIUdVros7wxmQgj7z4ySxCHrqyuDdnH13UFSTj4sLr5qZ?=
+ =?us-ascii?Q?SAc/jW/fAm7RuXPmhJTJtHK0Un9gVZYVxamrPBMRvozNzlSkGslp3pCkWM0t?=
+ =?us-ascii?Q?FUHF7wgbuGiJ8fUu9kdq1UQd9vCdNAKwK1dMFynkzrJn1iNBX2LxaT+6uBkg?=
+ =?us-ascii?Q?c0OAMqZd9kbpR4Z6jkOPOWCB1Prk14Zvipaf7y+QO80RMtS9detR3MUiOI2K?=
+ =?us-ascii?Q?GFKHVetC7T+2Ki7pVtXvI5gpQOBZt1sEuB0p68GaVVwam3t7hfc3hnrB5BRS?=
+ =?us-ascii?Q?lGWGBb5W7aZqcYltEFrCjYOF9nAYGTSNHlUjTUwNUKLdkzO3QXwce0N0I8Jd?=
+ =?us-ascii?Q?aKOliv4YjakRjXbI6rhOyVEJAhGB+HwP064IoF9bi9Jtla5a2BC2TdXetswL?=
+ =?us-ascii?Q?QoHU8K/925pnO4hb5vI6IcRpLlfIPI9y4Ai+Ud/TS1Ew3zY8y28oQ/TB5FSZ?=
+ =?us-ascii?Q?fPTQEfSt+L2Q2iTOdC4Psex4QVVZuyb+NU7Jb4NkUhDYgm1qUrDLbvagAeBG?=
+ =?us-ascii?Q?DY0v/DjSnfTJgLgLpJuoGUbyf9PyD1cNvygL67ItsVoh+wEiEZa+Uf0Ldm/9?=
+ =?us-ascii?Q?VYovJJdMP/PZIzQdSGHtx4fxjiR6+8t/SGwvJdm7jmPyExIQcRJl7DYCb3BH?=
+ =?us-ascii?Q?ok+hDwoxf5a5Oc1XzVqBe3E0qBqHFm3EKw3nKlhNJ41dUhVWFRbyl/deTf/U?=
+ =?us-ascii?Q?tIiGmWP0Jj12I0kddtMfHgQkhsdpaOFBQ4Dd5K+hj5+zLON0F++GRcNxsy1S?=
+ =?us-ascii?Q?alTTgO3jZmQMuGN2F/4VHZlowA50/yKcB8G+2sRr6ambxiD8KqvTbxq5/JX0?=
+ =?us-ascii?Q?OLkkjQfCD9edzjHauTzrXEpGkUxCpwW27jQmZiK3yLdvkw1V/IkIDeSZPLCV?=
+ =?us-ascii?Q?Tx1m5/JSNug/id8=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB7894.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(42112799006)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?uqsGFuqsfURXX/8E/wUB1UQhh7u2afn01Mv0GRXvMrlmK4tZih90flXjQVaG?=
+ =?us-ascii?Q?EaxgAH3HZkPnib340ewijNOebci1Y7GajY/8pgdyz+NDLmIK0H4zPnb4WLzi?=
+ =?us-ascii?Q?e7gfMEQuMKEtf3gfKObkbLAQIBFh4LIJi6A5aPrF0Pg0PjsOqAuNFrO16zac?=
+ =?us-ascii?Q?VMQkWr5XE0nj+//wjgAAG96zcfE03d2EK1CcjN3PbAK5rAmIxjTsPffgwhK7?=
+ =?us-ascii?Q?MEgEwCh08OWCpSHVE72Zf5RM2v6ADG2NC/fOOWVKDZ/BlJo4pDz7mssCEKg9?=
+ =?us-ascii?Q?oETgYwdne1xP5Y9v+IXLJu0F49h40+LXDle/rXqc/Ank5ibxeQzaTjvjTWV4?=
+ =?us-ascii?Q?yh+YXw5nwrpoOhMUDsSWHTqNnZNenStoadXtzpbCJS3wxisQClC64xc8x8C8?=
+ =?us-ascii?Q?afZbGJOUePX5XzGUTbRLQ3bmW/SfgQlx8zIzxh1vy8YNnfmFDXCRpolm8ni3?=
+ =?us-ascii?Q?SjppJrlOF6FVIAO/cI++ct5YvHFYWmBk1Aw3DdIR9L9ZedOX8RYNywTmYOfD?=
+ =?us-ascii?Q?zId8QgbSzQ0SFeDivFjg/fqDiU70mtE7Sfg1LfI2/WuwqUR1yLPbdpvleEbC?=
+ =?us-ascii?Q?NkJ5MT/sNL0e6pxIVAIxki/O5U100HlUlsqVGoUz390NpqONyHVP2DHXRhjB?=
+ =?us-ascii?Q?FP6d2iaY5WKocOWhsNdV0gXicT7Si71llj9Yv15yC7oziLVO0TacfDwUiYOB?=
+ =?us-ascii?Q?tEMZu3eT1rBfPS9YdFbqP2SrmOd2kxx7ZFWHFT87I7H8SX2fE2a64eHZK5aX?=
+ =?us-ascii?Q?8Uf7pHCBTU64V1rn6Dnftm3qo6IFcn0deP0C9b0IpU10t54MLCuWmU+QOzW+?=
+ =?us-ascii?Q?VbeuEUm7C3e2yLGXRdRf+HOhMKqw7xIvb7Y8aTou4gd/NdgUiuzjE8wfv7yZ?=
+ =?us-ascii?Q?BXjVCLbN5zIrQoCUWixoP42jsX+ZdNslkX8bRLfC8e/mVJ8n0fre2bhbsGCr?=
+ =?us-ascii?Q?ixDvTv8nAXVEruahGaaw2G3Bmbl/eNF4QTi6KNcgVrUONArfjB6KZYLHf/3U?=
+ =?us-ascii?Q?jBNxpwHOMQHBGjdZs5125sxPUiicJszMpq7n71hrPAPajb8Tw4OogUUB4YWe?=
+ =?us-ascii?Q?yzhMTMxa5uCDe9/LetFYIebe/X1j+c82wadmXwSJoVSQ/Aw5aKaHOeI9UAnb?=
+ =?us-ascii?Q?Qaj0spnzRgqNMm8C0QfspAfhJcnBmTRlZU2i1qLwtPOeGPemdVOOTjDe/9Os?=
+ =?us-ascii?Q?qPEfiZmPBrv1DAk9CYHrdyu2S6vKIUHL0okVVyU7twmakf8RPLZDw+kkWLwG?=
+ =?us-ascii?Q?ruxyIZYNpx5EtQG4wJELuSGrzB6rCjktpVrZbiQK6AkLO5u8ycBWRZNQvU2i?=
+ =?us-ascii?Q?/14nTg5QOUYML4k4WFxR3xm4suZCud+u7AZA+m5MeEQu6azCUvEm3n7l+ktE?=
+ =?us-ascii?Q?v8I1dept3sVg2fgpO4WouInosaRpLWVg1KRpzv18/UTpW5jPTiK3rK3+wjxw?=
+ =?us-ascii?Q?Cx5B454m1LAtD3UAjYxV2HCPwIe1kLidMTs3HbYP0+Zh+3235ET0Xf24FRbr?=
+ =?us-ascii?Q?kTtUeooJKfHXzhi8XreETRdGp8fdF1NNmtDqsujd0Jxb8kyD5T11HUErx1uc?=
+ =?us-ascii?Q?YgpaBfIdcfcSiswnUNsY/49AJSZ/4dgs0dxKNYxyw7Lk9Dqh79EjE1bpeZLb?=
+ =?us-ascii?Q?ag=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630135519.11429-1-gpaoloni@redhat.com>
-In-Reply-To: <20250630135519.11429-1-gpaoloni@redhat.com>
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-Date: Mon, 30 Jun 2025 16:23:38 +0200
-X-Gm-Features: Ac12FXzPIg1Ohi8SNWfszDeBlwJjq5syqSxuL4LIeLWvCE8I6LkXyKSmk9Imv1A
-Message-ID: <CA+wEVJax6owyYJVfVn+=uoFXsy8qgc_sTHHwJBMU0fiAXDtUfA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] tracing: add testable specifications for event_enable_write/read
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB7894.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd10b476-1db7-413d-3c27-08ddb7e1f594
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 14:25:27.1659
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CxR2kVetUAQK3pddGK8sImDX2/k8oYQI7wsSulMDmtEVLv7NoUMAjNzBFSul7hFU/ysWHJrAJNYnihx4OSQSv1S49xrDK9ZloLlrBRmVG6A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5828
+X-OriginatorOrg: intel.com
 
-On Mon, Jun 30, 2025 at 3:55=E2=80=AFPM Gabriele Paoloni <gpaoloni@redhat.c=
-om> wrote:
->
-> This patch implements the documentation of event_enable_write and
-> event_enable_read in the form of testable function's expectations.
->
-> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-> ---
-> Following the discussion in v1 (see [1]), v2 adds improvements with
-> the "Context" specifications and the definition of the assumptions
-> of use for the correct invocation of the documented functions.
->
-> [1] https://lore.kernel.org/linux-trace-kernel/20250612104349.5047-1-gpao=
-loni@redhat.com/
-> ---
->  kernel/trace/trace_events.c | 81 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 120531268abf..57284f540566 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1771,6 +1771,52 @@ static void p_stop(struct seq_file *m, void *p)
->         mutex_unlock(&event_mutex);
->  }
->
-> +/**
-> + * event_enable_read - read from a trace event file to retrieve its stat=
-us.
-> + * @filp: file pointer associated with the target trace event;
-> + * @ubuf: user space buffer where the event status is copied to;
-> + * @cnt: number of bytes to be copied to the user space buffer;
-> + * @ppos: the current position in the buffer.
-> + *
-> + * This is a way for user space executables to retrieve the status of a
-> + * specific event
-> + *
-> + * Function's expectations:
-> + * - This function shall lock the global event_mutex before performing a=
-ny
-> + *   operation on the target event file and unlock it after all operatio=
-ns on
-> + *   the target event file have completed;
-> + * - This function shall retrieve the status flags from the file associa=
-ted
-> + *   with the target event;
-> + * - This function shall format the string to report the event status to=
- user
-> + *   space:
-> + *   - The first character of the string to be copied to user space shal=
-l be
-> + *     set to "1" if the enabled flag is set AND the soft_disabled flag =
-is not
-> + *     set, else it shall be set to "0";
-> + *   - The second character of the string to be copied to user space sha=
-ll be
-> + *     set to "*" if either the soft_disabled flag or the soft_mode flag=
- is
-> + *     set, else it shall be set to "\n";
-> + *   - The third character of the string to be copied to user space shal=
-l b
-> + *     set to "\n" if either the soft_disabled flag or the soft_mode fla=
-g is
-> + *     set, else it shall be set to "0";
-> + *   - Any other character in the string to be copied to user space shal=
-l be
-> + *     set to "0";
-> + * - This function shall invoke simple_read_from_buffer() to perform the=
- copy
-> + *   of the kernel space string to ubuf.
-> + *
-> + * Assumptions of Use:
-> + * - The caller shall  pass cnt equal or greater than the length of the =
-string
-> + *   to be copied to user space;
-> + * - Any read operation on a file descriptor, unless it is the first ope=
-ration
-> + *   following a trace event file open, shall be preceded by an lseek
-> + *   invocation to reposition the file offset to zero.
-> + *
-> + * Context: process context, locks and unlocks event_mutex.
-> + *
-> + * Return: the number of copied bytes on success, -ENODEV if the event f=
-ile
-> + * cannot be retrieved from the input filp, -EINVAL if cnt is less than =
-the
-> + * length of the string to be copied to ubuf, any error returned by
-> + * simple_read_from_buffer
 
-Please neglect this RFC since the above return value is not correct.
-I have fixed the issue in v3.
 
-Apologies for the noise
-Gab
+>  > Also the response to the tearing issue explained by JP is not satisfyi=
+ng.
+>=20
+> In other words, the claim is: "it's better to stall other cpus in=20
+> spinlock plus disable IRQ every time in order to serve outdated snapshot =
+instead of providing user to the freshest statistics much, much faster".
+> In term of statistics, freshest data served fast to the user is, in my op=
+inion, better behavior.
 
-> + */
->  static ssize_t
->  event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
->                   loff_t *ppos)
-> @@ -1801,6 +1847,41 @@ event_enable_read(struct file *filp, char __user *=
-ubuf, size_t cnt,
->         return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf))=
-;
->  }
->
-> +/**
-> + * event_enable_write - write to a trace event file to enable/disable it=
-.
-> + * @filp: file pointer associated with the target trace event;
-> + * @ubuf: user space buffer where the enable/disable value is copied fro=
-m;
-> + * @cnt: number of bytes to be copied from the user space buffer;
-> + * @ppos: the current position in the buffer.
-> + *
-> + * This is a way for user space executables to enable or disable event
-> + * recording.
-> + *
-> + * Function's expectations:
-> + * - This function shall copy cnt bytes from the input ubuf buffer to a =
-kernel
-> + *   space buffer and shall convert the string within the kernel space b=
-uffer
-> + *   into a decimal base format number;
-> + * - This function shall lock the global event_mutex before performing a=
-ny
-> + *   operation on the target event file and unlock it after all operatio=
-ns on
-> + *   the target event file have completed;
-> + * - This function shall check the size of the per-cpu ring-buffers used=
- for
-> + *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, e=
-xpand
-> + *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
-> + *   TRACE_BUF_SIZE_DEFAULT are not allowed);
-> + * - This function shall invoke ftrace_event_enable_disable to enable or
-> + *   disable the target trace event according to the value read from use=
-r space
-> + *   (0 - disable, 1 - enable);
-> + * - This function shall increase the file position pointed by ppos by t=
-he
-> + *   number of bytes speicified by cnt;
-> + *
-> + * Context: process context, locks and unlocks event_mutex.
-> + *
-> + * Return: the number of written bytes on success, any error returned by
-> + * kstrtoul_from_user, -ENODEV if the event file cannot be retrieved fro=
-m the
-> + * input filp, any error returned by tracing_update_buffers, any error r=
-eturned
-> + * by ftrace_event_enable_disable, -EINVAL if the value copied from the =
-user
-> + * space ubuf is different from 0 or 1.
-> + */
->  static ssize_t
->  event_enable_write(struct file *filp, const char __user *ubuf, size_t cn=
-t,
->                    loff_t *ppos)
-> --
-> 2.48.1
->
+> This is a false choice, I think. e.g. We can easily use seqlock to remove=
+ strict synchronization only from user side, right?
+
+Yes, that's second possibility to solve a problem.
+I choose atomics approach because, in my opinion, incremental statistics ar=
+e somewhat natural use case for them.
+
+> I wouldn't be addressing this issue if there were no customers=20
+> affected by rstat latency in multi-container multi-cpu scenarios.
+
+> Out of curiosity, can you explain the case that you observed in more deta=
+il?
+> What were the customer doing?
+
+Single hierarchy, hundreds of the containers on one server, multiple indepe=
+ndent owners.
+Some of them wants to have current stats available in their webgui.
+They are hammering the stats for their cgroups.=20
+Server experience inefficiencies, perf shows visible percentage of cpu cycl=
+es spent in cgroup_rstat_flush.
+
+I prepared benchmark which can be example of the issue faced by the custome=
+r:
+https://gist.github.com/bwlodarcz/21bbc24813bced8e6ffc9e5ca3150fcc
+
+qemu vm:
+               +---------+---------+
+     mean (s)  |8dcb0ed8 | patched |
++--------------+---------+---------+
+|cpu, KCSAN on |16.13*   |3.75     |
++--------------+---------+---------+
+|cpu, KCSAN off|4.45     |0.81     |
++--------------+---------+---------+
+*race condition still present
+
+It's not hammering the lock so much as previous stressor, so the results ar=
+e better for for-6.17 branch.
+The customer has much bigger scale than 4 cgroups in benchmark.=20
+There are workarounds implemented so it's not that hot now (for them).
+Anyway, I think it's worth to try improving the scalability situation,=20
+especially that as far as I see it, there are no downsides.
+=20
+There also reports about similar problems in memory rstats but I didn't loo=
+k on them yet.=20
 
