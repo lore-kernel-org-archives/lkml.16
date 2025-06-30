@@ -1,225 +1,133 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB18714901B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8E3D69
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291166; cv=none; b=PF6uSuxUXRzJYJELXLFYnZc2xXoAIDk1B67/580aso3HKtE0wOU7nK2Ywht7fa16G4+NyYV0FKP0PCziyujIutBuFmuFcbzuYNiyoY6IzZRGPNI0NH7frLbcX3MhOMCNmJu3BSN9l6FQEW59PG7rm6heKwbrjkFwug842LWxC4E=
+	t=1751291183; cv=none; b=txref7PjIC6WVm+R2J5JksIHRqClxYov4LQnx0HL1qlMbY4VPRT1iqVrRnLa6uAbGflBYEdGRliXs6DjI7WJQeL3rkniYNGpr64Qbn+Y2FQdR5Y8QMb7bh7A1JpV+CvlVZf9ZmUy40UEuFwXSwLX/abS/lWQ7DQBauM/bL5bIBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291166; c=relaxed/simple;
-	bh=WLs+gGIU1PtbBCiZBkVwqHlql9fq1h3FbV/Wrgmm7i0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dgwt1y5lmCdj19orRMeX9/y1H68dqEw09eVjSedsB8GhDOVMQwv4aqrnXyXnntGOMxKC6LnMjyErLoNUFVLyD7a6Z3EGdPbU0JflYy7RNgLLOAz54Ty09Y0WpLY2R1Rgc9L+cKxXTDRuQTusMvFEDK6MRkPx65nkVHR6zQyqqKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kX1oZ/9K; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751291183; c=relaxed/simple;
+	bh=kFNJt0XYPtU4pD5AfSIvYtEE9BPgTXWPKB+BM9PyUcA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M+Snvh/RTUO/qB8zEjZnAKfhkBf1pXVSgJ4ZKUCEy5hkVvlzzsQf0WdnwbeWkrpNz4kQRfKO+aYy3LYkcPoMNV+WMsxQfH0FGKk6vHHhdrOMfO/vBKCXOcG/M3rEveo9bCQun9BHTII22x/6d/1KzLuZOozOFL/NnpTMMunRFr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d/x7GnYP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kX1oZ/9K"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a528243636so2744769f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751291163; x=1751895963; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x6AggRvfqBPUM7xSqjPZuM2RvyKgPoiX7/6ImLDs6xk=;
-        b=kX1oZ/9Ksfpz9fHgzFB3UXJtQ6KIygik+b1J2pINfOJ+GlqybVHxIUfDQK9iwvh+Ej
-         nIxrzdzprsbqpuR6rc7qjkusKFRxXQ7/wPMWqa8SUfhjaYypLmvBw5xhTVMebLW67bdQ
-         srAOaSuYmyGHzPN4CrPLjkay6lsPqLgGdTeP/65BrB/apgUdXdkXlltnKYrjHUdnkCoM
-         lQsUPtxjTVwxyHG1HF0Z5p46syKrPEGjosWHHTTl3VkLtnb/9m4MvmPkpc0jEWat+vxT
-         3suyR8Z7FfnGfk6/t2X3c/Ij1VE0Qt0ONYPBvJlkHUMRIU0ogW7I9qQ5LydpZt9/z5s1
-         zjTQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d/x7GnYP"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8DiXd029531
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:46:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=
+	qcppdkim1; bh=+sYnLgd8EuSPJsu+25KS1pMeFZ2cMLM0v+K0r09oi+A=; b=d/
+	x7GnYPjDfc5+P3s5A4GfdW6ZT7EzDKVz4SYgw21z9BPf71LWmPsRJC1BX1vXebAH
+	7fJoLOs2hTPImwXK8p0PwzUvPShJTt6yDQasSoTPdNJeMfdk7o+xhsC5uMwcs4mz
+	wUhSYYcWfDXf5QN3iN7OwyvkrIvdEV4AmJsQpjdZ79pCqCJNMOqfixPZ4pybcn0k
+	JFkpUWjZm4L6AcNOaMmmjPVsMvzYMgMwelxCKqSOGCDghqNDkQS+dw+LAy46u1lX
+	PhWqFei0v7GigR4J5/9BWhXi1lfQGAmyQ5gIb9a+5TP2DwD+60bhavkmiS9GAXt3
+	HgYSX25pl1EHBQsQbGUQ==
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7bvmyus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:46:20 +0000 (GMT)
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-40b5955b907so1140776b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:46:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751291163; x=1751895963;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6AggRvfqBPUM7xSqjPZuM2RvyKgPoiX7/6ImLDs6xk=;
-        b=FfSSUNHWjPoYFLjpy5qEJNP8csNY6jMEGn64s+VwCiss5rf7EAuQlkCbfeWkHMYPW1
-         JBi/CIrkBdoXNBey7bAxJKRbJKPeaGmJQa3PjJ+HG1pKrt4tO7/ByRY5VayphYiOJQsX
-         B4PrkvSc566wpVpSbCFuYrGFYpLiwXOFjN9oKa8m2F+HJOfRhC9NfiLOjAAbeF90qv1R
-         jRQYCMClWd0MuUD3lb8EA+pWXFSpY2MowAZOs3eaybYf57+eb7Ydu11NFTUqbmu/eP7A
-         dBSGo1fwhuSWV5/pv9NMIdc5nAguVMqPv+07BBm4JcpsRFsDaI1R+RlB4DD3AXmFZL0M
-         RLWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDJCwkxuhma5S5Z3PVreU3tXDNYfe8OQfZdfB9Wo4U2Sa514PxmX8MiAw/mx4tgRE1Ph6GEmXQKj8AwOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuTgycs46OCJSoX1Oe2O2ms1UHZYilOAzaI84PsgOyHQHzGOaU
-	1mbMMxL2cgcZ1hA/WQEKjvXC63HAjrbAVkXvFN0mGn0v7x9cwFRUHEQdOAcVroabtko=
-X-Gm-Gg: ASbGncv75BaUB1dqr4ufN0uBglbfEPQGkPS9Qb4yA85wwoU9tQ0CIWUXXYUTygCVMbB
-	wojt/9VdKAhn3pvfNtvQFkU/BH333hCKWD6zucTKIhc5klEJizU0kZvLg7JXoqmx6HHvND1pZps
-	X40+buymPt/Dy2BXTJS2ErkJETE1qqWbfBVTYcqUEBNLXy2ewL2dNqTxb7VNXGhX2uCE8Nkb/gy
-	V+WqURqxCQjHHj8hdiLyWYMsfuzLgX3sPyyap5ROLhEYsiHMQ495VuQLcYXy+3Nt91YpDh68Nr2
-	gTpxdTnYBXa7ErPJsJ9U9jtSRezgC3uqcCcwnaObMCh++7jiBRNU86Rly3PEuiEPOMk=
-X-Google-Smtp-Source: AGHT+IHZw5qo7ZkrFE6ipOaPB5kCsXwJmt/AoFiz9rbjLSUFLi406xeDw2ABOa9CC2jfbdPGNmOfxA==
-X-Received: by 2002:a05:6000:22c2:b0:3a5:1c71:432a with SMTP id ffacd0b85a97d-3a8fe1deba9mr10003038f8f.14.1751291162821;
-        Mon, 30 Jun 2025 06:46:02 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7518sm10335232f8f.2.2025.06.30.06.46.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 06:46:02 -0700 (PDT)
-Message-ID: <be3e8397-53d6-447a-97ba-4b54c7762f54@linaro.org>
-Date: Mon, 30 Jun 2025 14:46:01 +0100
+        d=1e100.net; s=20230601; t=1751291179; x=1751895979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+sYnLgd8EuSPJsu+25KS1pMeFZ2cMLM0v+K0r09oi+A=;
+        b=lpO+JhB2btUryjldm2MP8Jbi/wf27Nh88NRGQhlFD8IDnt4E/kpni22xcoLarWQBqd
+         LQOKrI8EBjClg9qoYBtZuiTVoJ7NJdz9KXXygXyOZejZCvMnvVFEo74FuqYh1qCFB5TW
+         lVKHe8lNRO3BiS8UVhGay4fkarx/3D7iAThBXu0FvumbukKy0EvFI3ALxsszgdL1bWnV
+         I/2guVNC1S06KI13/ziqu9h3jZ9HJ5cyBtOV6XihCLcrkhcFyW1mbjKY61ywtXTtO1Z1
+         Rq2biIu9dg1YF3HIo+I44TJ8hmbgxN+ktiF7IkG/Gu4Bp5n433Tfnjk0Y30GDN6os2uX
+         yL6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV9eCVNa6o7DQXCelQT52S5HufbEXT0qb0soaDLNutMwYeaIJQc91K/0wn3KfPR/dzmy2rk2Kj32avehRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSJKtx8mnNVBegTGXnvu91eBFCHpdvQF+KV8tDQsr+C/V8k/Yv
+	AAW0s+Fbwlx0yWGwc+S8B4bUIKOfvcXaBho9wsJRzK/vzJptaKgVPxNndwi9chjqN5eDGnpRkmD
+	2v3ila04WMjTuNF2s9Qo5JRYNcJQKZ1DRfUpT5WmSyohEYnPsiKMVYO38VIplUR9R0nN14yvkKZ
+	oRt0Uvq1EWhEYTakHFVA8a3fFplltSu5ElzDI+T8MCpw==
+X-Gm-Gg: ASbGncsYcQIfPzE8pOzqpOC1rPqDSkVJTQY0IWwkO6wSlHcueHATRGhgn8LkYXk75Ta
+	Tut9VWGZ2WrJjtr7tzXgDlL6V58Z3Kf+Qi+LeNHQu0lGps8T6vgRuiXMTbdKaA5nYPf1paAequV
+	2/3hFCUI1gRc7BtjdcfY4y1ndZGz5mkPaWrlE=
+X-Received: by 2002:a05:6808:1887:b0:404:e0b3:12f with SMTP id 5614622812f47-40b33d8ff56mr10677499b6e.11.1751291179438;
+        Mon, 30 Jun 2025 06:46:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGC/ZONBovjaxT4as2yCPYzH6bLcayS9bEQ9eiCn71Z5acFjEn88qadQUxBV/FIurbHxcQ5liO5UIZuHKwhFlA=
+X-Received: by 2002:a05:6808:1887:b0:404:e0b3:12f with SMTP id
+ 5614622812f47-40b33d8ff56mr10677478b6e.11.1751291179085; Mon, 30 Jun 2025
+ 06:46:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight-tmc: Add configurable timeout for flush and
- tmcready
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, Leo Yan <leo.yan@arm.com>
-Cc: kernel@oss.qualcomm.com, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-References: <20250627-flush_timeout-v1-1-2f46a8e9f842@quicinc.com>
- <78f2179d-26c2-47f0-bc19-b72e5e51ad29@linaro.org>
- <416f8284-ad98-4922-96d8-7ec873f7b9b8@quicinc.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <416f8284-ad98-4922-96d8-7ec873f7b9b8@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250629135843.30097-1-robin.clark@oss.qualcomm.com> <92314f06-e6a8-4882-a31c-914438d7761d@oss.qualcomm.com>
+In-Reply-To: <92314f06-e6a8-4882-a31c-914438d7761d@oss.qualcomm.com>
+Reply-To: rob.clark@oss.qualcomm.com
+From: Rob Clark <rob.clark@oss.qualcomm.com>
+Date: Mon, 30 Jun 2025 06:46:08 -0700
+X-Gm-Features: Ac12FXz1ANfzhNdQG9PbXKs-9CTqnjt4T4STXGnoeX_oH1xYF5iTCEgVXLupVM0
+Message-ID: <CACSVV01AUOp7vZ7kLt+gwxvfv4CYLtAQg6MhUccygbi1NpVJMg@mail.gmail.com>
+Subject: Re: [PATCH] drm/ci: Remove sdm845/cheza jobs
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, Helen Koike <helen.fornazier@gmail.com>,
+        Vignesh Raman <vignesh.raman@collabora.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: DVNwNUz2Ht6CQRq14PMYfx_B7Qwjj39m
+X-Authority-Analysis: v=2.4 cv=RJCzH5i+ c=1 sm=1 tr=0 ts=6862952c cx=c_pps
+ a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=EUspDBNiAAAA:8 a=0RMLDebWjREeJsuOEsEA:9 a=QEXdDO2ut3YA:10
+ a=efpaJB4zofY2dbm2aIRb:22
+X-Proofpoint-ORIG-GUID: DVNwNUz2Ht6CQRq14PMYfx_B7Qwjj39m
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDExMyBTYWx0ZWRfX3TKgxymDK814
+ hI9xDVM2filz+qZnjgvgBPJl3uIjF6VTJDO+zB7cp85yhgKr8sCdelnJ0L9hoQA9n+aGmnG0vci
+ P0X7fMx3a40poYZqDl3MWsSfsVc4HIzkmYyuf8Ysqy58hA2T2JSX4v7l++qcye0TTpYbYQ+hmNf
+ h9O2HypeaM7uNusF6GZRaysnnLVSISr9QCMpsjKXbywLPEWSdN4EMWeaFZoIsa5W+SEkJXueB2Y
+ 3vkBzHjaJg0qb+2ZzNrzPY1dPMbqdlA6d+nyBadYkYgo3El2dEetsXDW3rfW7su/0sc6iUCFVIe
+ XGyYfrQjwXjczVn9O+eRw4f+/acq2bXUTDoUgcaQpS9r3/o97egIoPDDmCDH9HZaodK00qQ3y91
+ wXMlcMravR/zUcHRZdQu9HiUgLNCKGksF4IltTjk2I5navCF40+K3wuHX6WoH/GVa+gQyiVp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=726 adultscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300113
 
+On Mon, Jun 30, 2025 at 3:34=E2=80=AFAM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+>
+>
+> On 29-Jun-25 15:58, Rob Clark wrote:
+> > These runners are no more.  So remove the jobs.
+> >
+> > Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+> > ---
+>
+> Do we have anyone using cheza at all anymore then?
 
+Probably not
 
-On 30/06/2025 11:03 am, Yuanfang Zhang wrote:
-> 
-> 
-> On 6/27/2025 7:23 PM, James Clark wrote:
->>
->>
->> On 27/06/2025 12:10 pm, Yuanfang Zhang wrote:
->>> The current implementation uses a fixed timeout via
->>> coresight_timeout(), which may be insufficient when multiple
->>> sources are enabled or under heavy load, leading to TMC
->>> readiness or flush completion timeout.
->>>
->>> This patch introduces a configurable timeout mechanism for
->>> flush and tmcready.
->>>
->>
->> What kind of values are you using? Is there a reason to not increase the global one?
-> 1000, Because only TMC FLUSH will face timeout situations.
-
-How long was the flush taking exactly? You should be able to log the 
-time it took to get past the flush. Because if it's 101us then we can 
-increase the global timeout to 150us or 200us without too much thought.
-
-I don't think we can justify why 100us was picked over any other value 
-anyway. And we've seen a couple of timeouts in our own CI.
-
->>
->> I don't think it's important what value we choose because it's only to stop hangs and make it terminate eventually. As far as I can see it wouldn't matter if we set it to a huge value like 1 second. That would only cause a big delay when something has actually gone wrong. Under normal circumstances the timeout won't be hit so it doesn't really need to be configurable.
-> 
-> But in some cases, TMC doesn't hang up, it just requires a longer waiting time.
->>
->>> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
->>> ---
->>>    drivers/hwtracing/coresight/coresight-tmc-core.c | 43 ++++++++++++++++++++++--
->>>    1 file changed, 41 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
->>> index 88afb16bb6bec395ba535155228d176250f38625..286d56ce88fe80fbfa022946dc798f0f4e72f961 100644
->>> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
->>> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
->>> @@ -8,6 +8,7 @@
->>>    #include <linux/kernel.h>
->>>    #include <linux/init.h>
->>>    #include <linux/types.h>
->>> +#include <linux/delay.h>
->>>    #include <linux/device.h>
->>>    #include <linux/idr.h>
->>>    #include <linux/io.h>
->>> @@ -35,13 +36,31 @@ DEFINE_CORESIGHT_DEVLIST(etb_devs, "tmc_etb");
->>>    DEFINE_CORESIGHT_DEVLIST(etf_devs, "tmc_etf");
->>>    DEFINE_CORESIGHT_DEVLIST(etr_devs, "tmc_etr");
->>>    +static u32 tmc_timeout;
->>> +
->>> +static void tmc_extend_timeout(struct csdev_access *csa, u32 offset, int pos, int val)
->>> +{
->>> +    int i;
->>> +
->>> +    for (i = tmc_timeout; i > 0; i--) {
->>> +        if (i - 1)
->>
->> I didn't get what the if is for here? Removing it does basically the same thing, but if you do want to keep it maybe if (i > 1) is more explanatory.
-> sure.
->>
->>> +            udelay(1);
->>
->> Can you not do udelay(tmc_timeout)?
-> sure.
->>
->>> +    }
->>> +}
->>> +
->>> +static int tmc_wait_status(struct csdev_access *csa, u32 offset, int pos, int val)
->>> +{
->>> +    return coresight_timeout_action(csa, offset, pos, val,
->>> +            tmc_extend_timeout);
->>> +}
->>> +
->>>    int tmc_wait_for_tmcready(struct tmc_drvdata *drvdata)
->>>    {
->>>        struct coresight_device *csdev = drvdata->csdev;
->>>        struct csdev_access *csa = &csdev->access;
->>>          /* Ensure formatter, unformatter and hardware fifo are empty */
->>> -    if (coresight_timeout(csa, TMC_STS, TMC_STS_TMCREADY_BIT, 1)) {
->>> +    if (tmc_wait_status(csa, TMC_STS, TMC_STS_TMCREADY_BIT, 1)) {
->>>            dev_err(&csdev->dev,
->>>                "timeout while waiting for TMC to be Ready\n");
->>>            return -EBUSY;
->>> @@ -61,7 +80,7 @@ void tmc_flush_and_stop(struct tmc_drvdata *drvdata)
->>>        ffcr |= BIT(TMC_FFCR_FLUSHMAN_BIT);
->>>        writel_relaxed(ffcr, drvdata->base + TMC_FFCR);
->>>        /* Ensure flush completes */
->>> -    if (coresight_timeout(csa, TMC_FFCR, TMC_FFCR_FLUSHMAN_BIT, 0)) {
->>> +    if (tmc_wait_status(csa, TMC_FFCR, TMC_FFCR_FLUSHMAN_BIT, 0)) {
->>>            dev_err(&csdev->dev,
->>>            "timeout while waiting for completion of Manual Flush\n");
->>>        }
->>> @@ -561,11 +580,31 @@ static ssize_t stop_on_flush_store(struct device *dev,
->>>      static DEVICE_ATTR_RW(stop_on_flush);
->>>    +static ssize_t timeout_cfg_show(struct device *dev,
->>> +                struct device_attribute *attr, char *buf)
->>> +{
->>> +    return scnprintf(buf, PAGE_SIZE, "%d\n", tmc_timeout);
->>> +}
->>> +
->>> +static ssize_t timeout_cfg_store(struct device *dev,
->>> +                 struct device_attribute *attr,
->>> +                 const char *buf, size_t size)
->>> +{
->>> +    unsigned long val;
->>> +
->>> +    if (kstrtoul(buf, 0, &val))
->>> +        return -EINVAL;
->>> +    tmc_timeout = val;
->>> +
->>> +    return size;
->>> +}
->>> +static DEVICE_ATTR_RW(timeout_cfg);
->>>    
->>
->> Seeing as the existing timeout is global for all devices, if we do want a configurable one shouldn't we make the global one configurable rather than per-device? That seems too fine grained to me.
-> sure.
->>
->>>    static struct attribute *coresight_tmc_attrs[] = {
->>>        &dev_attr_trigger_cntr.attr,
->>>        &dev_attr_buffer_size.attr,
->>>        &dev_attr_stop_on_flush.attr,
->>> +    &dev_attr_timeout_cfg.attr,
->>>        NULL,
->>>    };
->>>   
->>> ---
->>> base-commit: 408c97c4a5e0b634dcd15bf8b8808b382e888164
->>> change-id: 20250627-flush_timeout-a598b4c0ce7b
->>>
->>> Best regards,
->>
-> 
-
+BR,
+-R
