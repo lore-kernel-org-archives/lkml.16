@@ -1,113 +1,106 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26E24C6C;
-	Mon, 30 Jun 2025 03:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF81DA55;
+	Mon, 30 Jun 2025 03:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751253556; cv=none; b=K9qXXm0q0Ou2WG/cYSgGgohO/bQtLg2tzvJgg8GK7sdStpKHP63ujC5uOaFoeuAIdunBzobV8QPV3F9UHYLPPyXnHAV2MOLnCKPQ4SEXTE9vQCPlyVlGW2Tmjpm1YB95YAZImRAM61rI7GCWJGc3IzgxJFcJHk635mtBKXuCHJg=
+	t=1751253602; cv=none; b=SYCMZKPT8Az/n17+WUcjZkmlv6WpKg98wRHinNRqc6FYAKi46hQy/xh2qo29FP2MtHkxN9NlXc48MpLG6FmQheCobT9LDzsMjIdj11VGjAYMsGMBx2cyPDdSB0vGL+Ij/Rdh4rSo6mF3VLx7tsg+yzWw/iWZef6G0AjbZZXErc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751253556; c=relaxed/simple;
-	bh=24mF+f1aBPsZZ9WvExocelIJ24L/eUq8BiwB4pRl6QQ=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=dtNcJgbBzJvc9uNyu9q6Ha1SrTpfA4gYZaO/HmbXcMV+08aWgqIOJyd718fHTMsAaH90ljtp+tr/Wwcj/nkusRQ4NlCEY5Bzy/fKO0gfsD8L7cCFmk22bnABNArn4I8fTUkgEqnhbisjil/dqE3jbQtdbFwgU81cnTI1mrVFK/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bVrwr5KC7z51STg;
-	Mon, 30 Jun 2025 11:19:08 +0800 (CST)
-Received: from njy2app01.zte.com.cn ([10.40.12.136])
-	by mse-fl2.zte.com.cn with SMTP id 55U3IJAk006345;
-	Mon, 30 Jun 2025 11:18:40 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app07[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Mon, 30 Jun 2025 11:18:42 +0800 (CST)
-Date: Mon, 30 Jun 2025 11:18:42 +0800 (CST)
-X-Zmail-TransId: 2aff68620212ffffffffdef-116e5
-X-Mailer: Zmail v1.0
-Message-ID: <20250630111842136Podxz5UuLjjgBb274mr_W@zte.com.cn>
-In-Reply-To: <2949fb39-7e94-40a6-ad75-636a194f0b2f@linux.dev>
-References: 20250630104028091JYqwlWt_OOKp3u4LK6A_1@zte.com.cn,2949fb39-7e94-40a6-ad75-636a194f0b2f@linux.dev
+	s=arc-20240116; t=1751253602; c=relaxed/simple;
+	bh=I+E03Pih6Nc8R/ntsygbzVXB+VC/CQ5HinZSLniQbM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VBetRoR4XfWH97Z/L1vprH4ofAOJSuBALEAE9v35uEU3E9IZHe57wbvY10zy5dlnAl6HnLkjyMbO9PmpdvgOb8scM4z91AKazbOqioi75KcjFu5vSJqEUpvYrrk7MVl3j41YK4HOs6guWrylQcel2qwAHEwNtdW4YuYHuZ9dOIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KX9WY1hR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KX9WY1hR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04368C4CEEB;
+	Mon, 30 Jun 2025 03:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751253602;
+	bh=I+E03Pih6Nc8R/ntsygbzVXB+VC/CQ5HinZSLniQbM0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KX9WY1hRAbcunK11JaGE9UFymH5CUhaFBBbpAQTkvvBP+HAPGNz/+9Byw6Sl1tcDg
+	 72Js+EaI382Ylk9jtThNh0JCi7/sQzn6YAu3U2mehSspH6WwrYsE7Le42wy5jCXBny
+	 aSVNvXXrsLUGm2eL0MngEhD8WUzxvf0El9qeKoNPp8HX6B+n24zM3EO0cW7+qWcevy
+	 zJSxxT54eEPe96wHEVspKO5lW6DEMjOHyM1OjIfZXniNY4g4KDesTBy6pcaonAOOwE
+	 GYyZ0MfiZupg4Yj0i7QL+pds5x6obGOPMHfyCTTfQSdm4jXMkeCdZaT5w693AhJFaD
+	 JUCSbcTohKVtA==
+From: Sasha Levin <sashal@kernel.org>
+To: akpm@linux-foundation.org,
+	peterx@redhat.com
+Cc: aarcange@redhat.com,
+	surenb@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] mm/userfaultfd: fix missing PTE unmap for non-migration entries
+Date: Sun, 29 Jun 2025 23:19:58 -0400
+Message-Id: <20250630031958.1225651-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <si.yanteng@linux.dev>
-Cc: <alexs@kernel.org>, <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
-        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAwLzMgbGludXggbmV4dF0gRG9jcy96aF9DTjogVHJhbnNsYXRlIG5ldHdvcmtpbmcgZG9jcyB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 55U3IJAk006345
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6862022C.004/4bVrwr5KC7z51STg
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+When handling non-swap entries in move_pages_pte(), the error handling
+for entries that are NOT migration entries fails to unmap the page table
+entries before jumping to the error handling label.
 
+This results in a kmap/kunmap imbalance which on CONFIG_HIGHPTE systems
+triggers a WARNING in kunmap_local_indexed() because the kmap stack is
+corrupted.
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+Example call trace on ARM32 (CONFIG_HIGHPTE enabled):
+  WARNING: CPU: 1 PID: 633 at mm/highmem.c:622 kunmap_local_indexed+0x178/0x17c
+  Call trace:
+    kunmap_local_indexed from move_pages+0x964/0x19f4
+    move_pages from userfaultfd_ioctl+0x129c/0x2144
+    userfaultfd_ioctl from sys_ioctl+0x558/0xd24
 
+The issue was introduced with the UFFDIO_MOVE feature but became more
+frequent with the addition of guard pages (commit 7c53dfbdb024 ("mm: add
+PTE_MARKER_GUARD PTE marker")) which made the non-migration entry code
+path more commonly executed during userfaultfd operations.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
+Fix this by ensuring PTEs are properly unmapped in all non-swap entry
+paths before jumping to the error handling label, not just for migration
+entries.
 
+Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/userfaultfd.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-Pj4gUGluZw0KPg0KPllvdSBzZW50IG91dCB0aGlzIHBhdGNoIHNldCBsYXN0IEZyaWRheSBhbmQg
-dGhlbiBwdXNoZWQgZm9yIGEgcmVzcG9uc2UNCj4NCj5vbiB0aGUgbWFpbGluZyBsaXN0IG9uIE1v
-bmRheSAod2hlbiB0aGUgdXN1YWwgdGltZWZyYW1lIGlzIHR3byB3ZWVrcyksDQo+DQo+d2hpY2gg
-aXMgbm90IGEgZnJpZW5kbHkgd2F5IHRvIGNvbGxhYm9yYXRlLg0KPg0KPk5vdCBldmVyeW9uZSB3
-b3JrcyBvbiB3ZWVrZW5kc+KAlGF0IGxlYXN0IEkgbmVlZCB0aW1lIHRvIHJlc3QuDQo+DQo+WWFu
-dGVuZw0KDQpJJ20gc28gc29ycnksIHRoaXMgZW1haWwgd2FzIHNlbnQgYnkgbWlzdGFrZSwgYW5k
-IHRoZSByZXBseSB3YXMgcXVpdGUgdW5mcmllbmRseS4gSSBhcG9sb2dpemUgdG8geW91IG9uY2Ug
-YWdhaW4u
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxNHB4O2ZvbnQt
-ZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7bGluZS1oZWlnaHQ6MS41Ij48ZGl2
-IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPiZndDsmZ3Q7IFBpbmc8L2Rpdj48ZGl2IHN0eWxlPSJs
-aW5lLWhlaWdodDoxLjUiPiZndDs8L2Rpdj48ZGl2IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPiZn
-dDtZb3Ugc2VudCBvdXQgdGhpcyBwYXRjaCBzZXQgbGFzdCBGcmlkYXkgYW5kIHRoZW4gcHVzaGVk
-IGZvciBhIHJlc3BvbnNlPC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij4mZ3Q7PC9k
-aXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij4mZ3Q7b24gdGhlIG1haWxpbmcgbGlzdCBv
-biBNb25kYXkgKHdoZW4gdGhlIHVzdWFsIHRpbWVmcmFtZSBpcyB0d28gd2Vla3MpLDwvZGl2Pjxk
-aXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+Jmd0OzwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVp
-Z2h0OjEuNSI+Jmd0O3doaWNoIGlzIG5vdCBhIGZyaWVuZGx5IHdheSB0byBjb2xsYWJvcmF0ZS48
-L2Rpdj48ZGl2IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPiZndDs8L2Rpdj48ZGl2IHN0eWxlPSJs
-aW5lLWhlaWdodDoxLjUiPiZndDtOb3QgZXZlcnlvbmUgd29ya3Mgb24gd2Vla2VuZHPigJRhdCBs
-ZWFzdCBJIG5lZWQgdGltZSB0byByZXN0LjwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEu
-NSI+Jmd0OzwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+Jmd0O1lhbnRlbmc8L2Rp
-dj48ZGl2IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPjxicj48L2Rpdj48ZGl2IHN0eWxlPSJsaW5l
-LWhlaWdodDoxLjUiPkknbSBzbyBzb3JyeSwgdGhpcyBlbWFpbCB3YXMgc2VudCBieSBtaXN0YWtl
-LCBhbmQgdGhlIHJlcGx5IHdhcyBxdWl0ZSB1bmZyaWVuZGx5LiBJIGFwb2xvZ2l6ZSB0byB5b3Ug
-b25jZSBhZ2Fpbi48L2Rpdj48L2Rpdj48YnI+PGJyPjxicj48YnI+PC9kaXY+
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 8253978ee0fb1..7c298e9cbc18f 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1384,14 +1384,15 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 
+ 		entry = pte_to_swp_entry(orig_src_pte);
+ 		if (non_swap_entry(entry)) {
++			pte_unmap(src_pte);
++			pte_unmap(dst_pte);
++			src_pte = dst_pte = NULL;
+ 			if (is_migration_entry(entry)) {
+-				pte_unmap(src_pte);
+-				pte_unmap(dst_pte);
+-				src_pte = dst_pte = NULL;
+ 				migration_entry_wait(mm, src_pmd, src_addr);
+ 				err = -EAGAIN;
+-			} else
++			} else {
+ 				err = -EFAULT;
++			}
+ 			goto out;
+ 		}
+ 
+-- 
+2.39.5
 
