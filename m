@@ -1,137 +1,143 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D928981B
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C78B23A987;
+	Mon, 30 Jun 2025 12:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285283; cv=none; b=sxZLlpAk/VUyHaVJAqqTFjr+4vRCXyrXBxQmO3yzSDwgdqlGo0WucF9fqFWhVQAVrOy7mtMeCfvnameLbAwSCn8qq0hwUSMMthaJHa7CNlydUMqAoUcSYdlKbNVNItEdeFJfcs7TBl4sSryvN1v5ekDGm21PLaiVn3lCQBPRBJE=
+	t=1751285303; cv=none; b=SMPOHJMBVBRXxxZJEh8z/Z4xSRRPoT+hFVHm6AuteL5y54qTHwdi8lJzqad2WeV7qZ0wu7WVE35vMRZM4qLWkH34M4eqv5ihJrz2aJT+dqjf6BDP48rFOKYdDcgmhhOOCKdV+SAvYRyu2lhWO9HruFzylrEzFJyh2/Lx8u6xNbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285283; c=relaxed/simple;
-	bh=loRvepv0cmUyZBC31dA/Ap2Jw9Q6U/aN5ftlrmP5Dlk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fsUqrld+Iu+knVYAfhNrIIXh5Y5Dxzv8FlYQN6or4wBZ7Zv6VbE5Cb3CptrQXp/gpp9/2lGLKJHcjzuP1fU5ljf2DiGlPP6Jasfmspa0NYrWO1NwHFnQeuk8LSETsoIgnmdbeMQRL9hXwM1tCx7L5HWJoIxXFWPjyaSxS7z5Hu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wR6nhyNC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WpjmRO8L; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qRlMvt4Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oMpujkD7; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1751285303; c=relaxed/simple;
+	bh=ZZFsv75i5DyeRoNwPNk5Y+xJh0q+P/KZtwKC9QqMkEQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=klw1EuNL9acXNJrbYWewQBL8FudKVqHfN9ZtyMolvM7BRz/2SHrQjBi2FfUQs/EInxMvSS3OV/I1CbYvwY9VistuCYa1PHqKqoDoP5eVQmV1RaqKsNHJQmSrGgVLiCVz1JIv3RU17CYwC2lweAIz81XoAejLGC+sdo0usyfIGNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=iugN6wBE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UZ7ycnM8; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wR6nhyNC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WpjmRO8L";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qRlMvt4Q";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oMpujkD7"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3E8AD2115E;
-	Mon, 30 Jun 2025 12:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751285279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1SQkZPtOxt/LGcSxb/WkgWDcsNlGsJ/AuGpzqFh4r0=;
-	b=wR6nhyNCvIlaTklJhn1Ngb4pg/6OA/SxmJm/2n4QUhkerUBYeWWerbe88JVkdOYiNMCE8A
-	nVzmbn7t6XgUlb8l8AsTt0r2oMZmbvKBCYq5p1pmQy9aqT/Jiz2sfYYtpOWgJBWSB+ACjs
-	ownoZ9dpAwv5QWlAoebUyOdrPJDndBg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751285279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1SQkZPtOxt/LGcSxb/WkgWDcsNlGsJ/AuGpzqFh4r0=;
-	b=WpjmRO8LYULHEObeg+RsQ6R3ZUvrxUJPkxTPaPSQX7M2l8lwSDD7LR4h3VWiJ2ZO+xra9X
-	iS/i8V8YWy5ANyAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1751285278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1SQkZPtOxt/LGcSxb/WkgWDcsNlGsJ/AuGpzqFh4r0=;
-	b=qRlMvt4QarpLccULlAZ3Fp/9RNw3y3TwYX83J93j8fY6fNbD3oI6REA57SK4RIoKRoGj3V
-	oYRjqQUT8/AlDsarqrZ95rovlwgFjM+gdVXGBtLStuoxgw32KyOGX755WNpzKbVGMyRSrF
-	7MjhfQtMh7dbd8HquNmLxxpfd1mH7rA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1751285278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1SQkZPtOxt/LGcSxb/WkgWDcsNlGsJ/AuGpzqFh4r0=;
-	b=oMpujkD7vH1XjlZLx/ZyNkUSynRMWPI+NbjFsXMOiRtjC2BIMDNfgu06hJBEYX5hG9DW2B
-	xr5BNnl6svlHCIAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8E8713983;
-	Mon, 30 Jun 2025 12:07:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mO+hMx1+Ymh0RAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 30 Jun 2025 12:07:57 +0000
-Date: Mon, 30 Jun 2025 14:07:56 +0200
-Message-ID: <87tt3xe8kj.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: timer: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <20250630105420.1448-2-thorsten.blum@linux.dev>
-References: <20250630105420.1448-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="iugN6wBE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UZ7ycnM8"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 56229EC0462;
+	Mon, 30 Jun 2025 08:08:20 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 30 Jun 2025 08:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751285300;
+	 x=1751371700; bh=yA4pB/ln0DpXJQFu0EMsyGjmOJrxSRSOcs2tGhcBfiI=; b=
+	iugN6wBEfLrLIsOpfsE7dIFwzFoetLZ209ragPJTslG+Q8vsgw/xOTHcLdBLUlVm
+	ndU9Wtf+GF6m3CMFF37GgzgIG942Gaf2Xi+9HU9EZO7e/Y/X04WIgxXAyYtWUyW9
+	CJabDAHvS+KWDX/0RTRkg6gRajY/hCXRXMN0qd86u6sfHC6aC+JJsqEKCMMKETaB
+	z1JOd6ZVCpHw0iPa/+1GuXmdHaeLgbfhnFcgiCGH3HYf5v1PPVcTes0OHNeOzKpO
+	La1rGSh1cdHllR37z6nVWttzsdgD/Ajjv+oyq+Srhr3YdO61xneUvQRwRVIiTRMu
+	s4BypaMeasqIFoUYIRSUjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751285300; x=
+	1751371700; bh=yA4pB/ln0DpXJQFu0EMsyGjmOJrxSRSOcs2tGhcBfiI=; b=U
+	Z7ycnM8RZuVvBBBuljXJq4LhjzZNjY9IqIT/89BBugRodoIRVxx1RKh5sluqSdSB
+	GdHNPgaC2t+G9qK0MRLysdyNlDjlXppPkZQDYI/VL5+RrVQewUlrQ/uQQHJVffzl
+	3ofwRX+GM2Zkp+twAzf3WGlUwdrySyJEW98VvCDBtZ6qEotvBu/WnhqzZOIc+4Op
+	1qxtItUmV70Rr6HfSTKeGLHYMdlO5MsBTqzhcwOtQK2zSiT5A/pdb3E8qoTMFm0n
+	zvhAZ01OIaAyVqm/MBzszwbnA+ouGGJRIj6KIe/IczQyMmAh/9vKZiBXewq+FoYo
+	P4QCiy9nAcRWR9JHI545g==
+X-ME-Sender: <xms:M35iaHThVK9hc5fV8Y7q4vYLytwXKGSjl3hS9t410f19wTGDJfVMYg>
+    <xme:M35iaIxSmKAGGZbHFyp1NdybIzTnZC7Hzp7SxUafnSuYaaSA4HBrjvOoWag6Qo5L3
+    biXGflrRai8DVqpDV4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudeiiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopegsrhgruhhnvg
+    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguihhnghhuhigvnheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtg
+    hpthhtohepohgvqdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdp
+    rhgtphhtthhopehglhgruhgsihhtiiesphhhhihsihhkrdhfuhdqsggvrhhlihhnrdguvg
+    dprhgtphhtthhopehstghhuhhsthgvrhdrshhimhhonhdosghinhhuthhilhhssehsihgv
+    mhgvnhhsqdgvnhgvrhhghidrtghomhdprhgtphhtthhopehlihhnuhigqdgrrhgthhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhvgigrghgohhn
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:M35iaM1FdbOFfKqqI_dgsxajeKECIOaEiMxsytq1m7tl05CtpZbBzA>
+    <xmx:M35iaHBShCmBmYhlrecMCoYFT1AoslmOOwbeiAaF-ahwJoUx_jR4-A>
+    <xmx:M35iaAh-6-oA2baOhW6ZKJeU4CQUAD4fris2SoALFvoyJB9Lk0Hidw>
+    <xmx:M35iaLp1xjlq-k66C1nuz67F1rx7M95KmzDCIwh11pdVTnAL7LH0Sg>
+    <xmx:NH5iaPS4a9l9hu-H1VKC-r4u_z3OfbQaLQsaiOQ91aNmfwJQ6JV17pQq>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A869570006A; Mon, 30 Jun 2025 08:08:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,linutronix.de,kernel.org,gmail.com,zeniv.linux.org.uk,huawei.com,suse.de,vger.kernel.org];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
+MIME-Version: 1.0
+X-ThreadId: T9274589f850a4c5d
+Date: Mon, 30 Jun 2025 14:07:58 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "kernel test robot" <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-sh@vger.kernel.org,
+ "Dinh Nguyen" <dinguyen@kernel.org>,
+ "Simon Schuster" <schuster.simon+binutils@siemens-energy.com>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Christian Brauner" <brauner@kernel.org>
+Message-Id: <ccf937cb-a139-4a07-aa47-4006b880b025@app.fastmail.com>
+In-Reply-To: 
+ <5375b5bb7221cf878d1f93e60e72807f66e26154.camel@physik.fu-berlin.de>
+References: <202506282120.6vRwodm3-lkp@intel.com>
+ <2ef5bc91-f56d-4c76-b12e-2797999cba72@app.fastmail.com>
+ <57101e901013a8e6ff44e10c93d1689490c714bf.camel@physik.fu-berlin.de>
+ <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
+ <5375b5bb7221cf878d1f93e60e72807f66e26154.camel@physik.fu-berlin.de>
+Subject: Re: kernel/fork.c:3088:2: warning: clone3() entry point is missing, please fix
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Jun 2025 12:54:18 +0200,
-Thorsten Blum wrote:
-> 
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+On Mon, Jun 30, 2025, at 12:45, John Paul Adrian Glaubitz wrote:
+> On Mon, 2025-06-30 at 12:02 +0200, Arnd Bergmann wrote:
+>> Some architectures have custom calling conventions for the
+>> fork/vfork/clone/clone3 syscalls, e.g. to handle copying all the
+>> registers correctly when the normal syscall entry doesn't do that,
+>> or to handle the changing stack correctly.
+>> 
+>> I see that both sparc and hexagon have a custom clone() syscall,
+>> so they likely need a custom clone3() as well, while sh and
+>> nios2 probably don't.
+>> 
+>> All four would need a custom assembler implementation in userspace
+>> for each libc, in order to test the userspace calling the clone3()
+>> function. For testing the kernel entry point itself, see Christian's
+>> original test case[1].
+>
+> Thanks for the explanation. So, I guess as long as a proposed implementation
+> of clone3() on sh would pass Arnd's test program, it should be good for merging?
 
-Applied now.  Thanks.
+Yes, Christian's test program should be enough for merging into
+the kernel, though I would recommend also coming up with the matching
+glibc patch, in order to ensure it can actually be regression tested
+automatically, and to use the new features provided by glibc clone3().
 
+Right now glibc assumes that clone3() is available on linux-5.3 or
+higher and uses it to implement the normal clone() in that case,
+except where the implementation is missing.
 
-Takashi
+I see that at alpha, csky, parisc and microblaze have a kernel
+implementation in modern Linux versions, but are missing the
+glibc wrapper for it, as the kernel side was done later without
+the glibc version. sparc and sh are the only ones with a glibc
+port that are missing both the kernel and userspace side,
+while hexagon and nios2 are not currently part of mainline glibc.
+
+     Arnd
