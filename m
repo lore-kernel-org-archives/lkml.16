@@ -1,279 +1,226 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687C91FDD;
-	Mon, 30 Jun 2025 07:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7981FDD
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268037; cv=none; b=h7quAbLtCLL7H7weCkXiLL1wD9BAQuPhxoJ+W6vjPsnA4+9/28IqchoCfobvcgJK3IXbNUakj7a0QMKSrpGhX3NjaOHjpYH058HIW7IMLYfEmqlK2LUZdVKnG4KtL4DfNOkdpqMBYsVC1EqB8FpzBWl+xA6gjBKlqILk82mggfI=
+	t=1751268125; cv=none; b=CaXR9ABMt8t1T/YkCCZNlvPbhWr9WJik0U5gEtnDrJ0+JbcG9StgPrLFG5/bxdEokiZWYs+5TU+m3dU6gAHnODd8dYKSHbI44M8hY8FxeyILHUB+SChmbzJnk/JixbaFEMYrHovzC9fOuWNgsymxEFglvKcbjt3Pk1wLtG8/w80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268037; c=relaxed/simple;
-	bh=j8gArzniIGkkAWG+ouaYATMEvt6mFEDaFB28LnAOnic=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UcH+KS8BghfuexZ4PSaHhATgV0RGIpGBh5nYP2yaCtklXiVsudLf2Enrmz6njtJW0Stt+PhZp+wwkpYdbJ2gU44Swfe7hXcTUIHB1Huvo75m1lvyKz3SQgoMc+scYWGOUSRS6oJG/4K38QegUWni76JtGg4Sirs6GzFiiRRJ3Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJt6Mp4x; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751268125; c=relaxed/simple;
+	bh=QQkBTqCn3fiGgJfyo0xFKA5m9KMjAbCLMpN5tDOYp7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nfyMTtKdZhxKncM9YWrMMVlHdRNwleVymKm1oct2p7qi1zQ31PmXlCIkH4kJtCM7uhPc/9giYrjUwpx60w27CLHhMl0ZdU8dXOJdfbzgi6V3WFL1SRi6WQnXLh2RdDlpIOFfzFcsjn5hXPMc+WBNUGGdtEN/ZLDvOWsoa94p7cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wdIM7kB3; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJt6Mp4x"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af51596da56so1809497a12.0;
-        Mon, 30 Jun 2025 00:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751268034; x=1751872834; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4DttZca4H6CBXm/X6mCOIuNHic7ttctct+0OCFubo14=;
-        b=dJt6Mp4xRQcjAJ63mSG5OIVmeK2yAen95vCjH5T18w4JJvFZvf2pbAsg3mZC0hMRiL
-         Mk6tkjOt8X+3z9uj7lvZrVdBMC6kfppjMZynRacX6RVYzSCMriPo0xKfSpTeyLLHBTrM
-         fjDGmTIZEqvFUtSH7J8Kz3y7CX1ezk36fa3pdVEX7jumJFnerUJvFp1fLhXBN/T3yp9z
-         fEzsU6rM2wq5nr64Xzg7d35ZAMuqkwECi/imh/HGeWMR+olcsXVtRT0XmVmUxNuJWC6a
-         bN6Fj3PQgnY2QspQkcX/xh94HgYuQ09nyT3slwS9VfgSIYeUcKRu2FJ+hyArzXoFLvPG
-         FJKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751268034; x=1751872834;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4DttZca4H6CBXm/X6mCOIuNHic7ttctct+0OCFubo14=;
-        b=gifVlcsNRCvOxE3BJ5Ai5tixWfUtRKtV5p+QGdoTejaUSfGav5kuuSKr9n0z6qewPH
-         2i5rR2aXzYH44FFuvcdNV/5C1hjLXzQWkre8Gp4KRMmK64Awoo12FDAIsibsjel1Y/Mw
-         vSJFeTuE+Acmc0fuaiIdFxsJfIpzOfb462YZSz8ziK/0EKkgVCZw90JK+SAbaPn953yW
-         AfKzMSqPoASPTBtGVVVo/gVvpit+9d3syM1v9e6QAwVWE/qGxXnaUaVhCmooxNqWCIcI
-         DHKRG6b464VrsVJUdzZiL2wM1kOMZdWLcQOqxIdui2Z/Wl5fguXhOOXg+5IEyTUVQ+gn
-         6Hyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbYNUofrKSEcFHJl+Z26NpIjBzuQkNuFj/paOrGH9YTh59pcW1CWJZpNBQmmrCJ79hDiKR2nX3EE6uvoYh@vger.kernel.org, AJvYcCXVQzBnMHWfnrEXxRjdXqjRn1QdI6hq7D21buFwQdQ8zzmMDjT22cwYo59tMJEvSbhYt9p84WrvpeIF@vger.kernel.org, AJvYcCXynW3M36jq/pJxZss67WLDARiietHJwHEerMCy1UPmUH8J9q44DWSZuOmBxXX9yoVk+Hpv8kClNDsl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaVKhSegSRiLyNfjSLpYvzvCnhm0p7v235r7jq5gKgOMohXVM1
-	QzbX/OcAWiYoYzLQSqlcP1hQ6FOJHflbifUY7kD/N4l5en1tnzsOZfj5Qrbqa20L4z0=
-X-Gm-Gg: ASbGncvfSd3MzPaMRZxDt/gBGqli5JHKXqByDh+P0KeJhm0RS+9qjBd0QathMUEEFrM
-	U4KLcW93jlbSwMhbaALuiOjARrIAE5KvYdHwMMyLsDN5NGv6TN49lJlJeRV+KXZMcAO7xSwozBM
-	MY4oIZNaHABeiaxwVVieRKE8UE/lH7Fej3qIPsD8IHuimF8JymCHqCBca5BeqskFGRBhqpKJLQF
-	ZL4NF2RdvP/Xqux2Qehfcytyy+SLEJ9PrWjouWqs65YVCYwGlX+PsYOpQYH3r+tIpneSVXVCr6a
-	BBuvhgnzW43ZU16hKoQZZaX+kXaSa+aiEeF9ayaJvZ0tk65jw9cFYkxsM7H+1NVo
-X-Google-Smtp-Source: AGHT+IFNfnhS4SJNhSiO7/WTxOgwWl5cz4as13ze1C+5b8UztDamYXc5EtE3RqspmnNrOz2GzvGyGw==
-X-Received: by 2002:a05:6a21:15cf:b0:1fd:f4df:96ed with SMTP id adf61e73a8af0-220a1696177mr16134092637.26.1751268034529;
-        Mon, 30 Jun 2025 00:20:34 -0700 (PDT)
-Received: from localhost.localdomain ([103.149.27.191])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e3029858sm6864109a12.31.2025.06.30.00.20.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 30 Jun 2025 00:20:34 -0700 (PDT)
-From: fuqiang wang <fuqiang.wng@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: wangfuqiang49 <wangfuqiang49@jd.com>,
-	yaozhenguo <yaozhenguo@jd.com>,
-	fuqiang wang <fuqiang.wng@gmail.com>
-Subject: [RFC PATCH] pci hotplug: fix hotplug bug during kernel boot
-Date: Mon, 30 Jun 2025 15:20:28 +0800
-Message-ID: <20250630072028.35178-1-fuqiang.wng@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wdIM7kB3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751268120; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=19m9ySZV/UYUd6rfS9gQ02pLAwrWjqGoPGuMgpPsrv4=;
+	b=wdIM7kB3qSpgKA5pd4ah1m4QAXGTXDDfvG/Q1+10nMD0E5ocrnXBw4wrCQUVT6yUwMNliocp8kuYQbsLyZ04oVuJhAzxvYRFmmphNU+gidRVTJd2FunmkvZRo34MxBk5ddzwM4vIgsqSv/c1zvhK8i3LuS4Oon18vYIxAF+yFkI=
+Received: from 30.74.144.137(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wg5v-l4_1751268118 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 30 Jun 2025 15:21:58 +0800
+Message-ID: <b3e15124-f29a-4c73-b26e-184553b9137e@linux.alibaba.com>
+Date: Mon, 30 Jun 2025 15:21:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 7/7] mm/shmem, swap: avoid false positive swap cache
+ lookup
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, Matthew Wilcox <willy@infradead.org>,
+ Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250627062020.534-1-ryncsn@gmail.com>
+ <20250627062020.534-8-ryncsn@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250627062020.534-8-ryncsn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Performing hotplug operations when the virtual machine is just started
-may cause the virtual machine kernel to trigger a bug_on in x86
-architecture, with the bug_on dmesg as follows:
 
-  ------------[ cut here ]------------
-  kernel BUG at kernel/resource.c:792!
-  Oops: invalid opcode: 0000 [#1] PREEMPT SMP PTI
-  CPU: 1 UID: 0 PID: 215 Comm: kworker/u128:5 Not tainted 6.14.0-rc1+ #17
-  Hardware name: JD JCloud Iaas Jvirt, BIOS unknown 2/2/2022
-  Workqueue: kacpi_hotplug acpi_hotplug_work_fn
 
-  RIP: 0010:reallocate_resource+0x197/0x1d0
-  Code: 20 48 8b 44 24 28 48 89 43 28 48 8b 44 24 30 48 89 43 30 48 8b 44 24 38 48 89 43 38 e8 12 db ff ff 48 85 c0 0f 84 5d ff ff ff <0f> 0b 48 8b 74 24 08 48 3b 73 08 0f 82 1c ff ff ff 48 89 0b 48 89
-  RSP: 0000:ffffc900008479b0 EFLAGS: 00010282
-  RAX: ffff8881020c73b0 RBX: ffff8881021813b0 RCX: 000000000000343f
-  RDX: 0000000000003400 RSI: ffff8881021813b0 RDI: ffff8881020c73b0
-  RBP: 0000000000000000 R08: ffff8881021863e0 R09: 0000000000000040
-  R10: 0000000000000000 R11: 000000000000343f R12: ffff88810020d6f0
-  R13: ffffc90000847a20 R14: ffff88810020d6f0 R15: ffffffff82edb970
-  FS:  0000000000000000(0000) GS:ffff88842ee80000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 0000000003036001 CR4: 0000000000170ef0
-  Call Trace:
-   <TASK>
-   ? die+0x32/0x80
-   ? do_trap+0xd9/0x100
-   ? reallocate_resource+0x197/0x1d0
-   ? do_error_trap+0x65/0x80
-   ? reallocate_resource+0x197/0x1d0
-   ? exc_invalid_op+0x4c/0x60
-   ? reallocate_resource+0x197/0x1d0
-   ? asm_exc_invalid_op+0x16/0x20
-   ? reallocate_resource+0x197/0x1d0
-   allocate_resource+0x57/0xd0
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   pci_bus_alloc_from_region+0x1df/0x240
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   pci_bus_alloc_resource+0x86/0xb0
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   _pci_assign_resource+0x9e/0x120
-   ? __pfx_pcibios_align_resource+0x10/0x10
-   pci_assign_resource+0xae/0x290
-   assign_requested_resources_sorted+0x4a/0xb0
-   __assign_resources_sorted+0x491/0x4d0
-   ? __dev_sort_resources+0x9b/0x2a0
-   __pci_bus_assign_resources+0x6f/0x1f0
-   enable_slot+0x25e/0x440
-   ? pci_device_is_present+0x49/0x70
-   acpiphp_check_bridge.part.0+0x117/0x150
-   hotplug_event+0x13d/0x220
-   ? __pfx_acpiphp_hotplug_notify+0x10/0x10
-   acpiphp_hotplug_notify+0x20/0x60
-   acpi_device_hotplug+0xae/0x240
-   acpi_hotplug_work_fn+0x1a/0x30
-   process_one_work+0x184/0x3a0
-   worker_thread+0x24d/0x360
-   ? __pfx_worker_thread+0x10/0x10
-   kthread+0xed/0x220
-   ? finish_task_switch.isra.0+0x88/0x2b0
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork+0x30/0x50
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
-  Modules linked in:
+On 2025/6/27 14:20, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> If the shmem read request's index points to the middle of a large swap
+> entry, shmem swap in does the swap cache lookup use the large swap entry's
+> starting value (the first sub swap entry of this large entry).  
 
-The cause of the issue is that the enable_slot process in hotplug
-conflicts with the pcibios_init process during kernel initialization.
-This leads to the situation where, in the enable_slot process,
-__dev_sort_resources first links all the resources of the devices
-downstream of the bridge into the head (since there is no parent).
-Subsequently, in the pcibios_init process, pci_claim_resource allocates
-the BIOS-assigned ranges for these devices.
+Right.
 
-  hotplug CPU                              kernel init CPU
-  enable_slot
-  ...
-   __dev_sort_resources
+This will
+> lead to false positive lookup result if only the first few swap entries
+> are cached, but the requested swap entry pointed by index is uncached.
+> 
+> Currently shmem will do a large entry split then retry the swapin from
+> beginning, which is a waste of CPU and fragile.  Handle this correctly.
 
-   //link all resources behind the bus
-   //into head
-                                           pci_bios_init
-                                           ...
-                                             pcibios_allocate_bus_resources
-                                           //alloc resource for all bus
-   //resources linked into head have
-   //sibling and parent
+Sorry, I did not get you here. Only when the 'order' (get from 
+shmem_confirm_swap()) is not equal to folio_order(), will it trigger the 
+large swap entry split. Could you describe the issue in more detail?
 
-However, in the subsequent steps of enable_slot, certain resources may
-be reallocated due to the x86 alignment rule -- "0x00, 0xff region
-modulo 0x400" (see pcibios_align_resource). During this reallocation,
-alignment can cause gaps, leading to allocation failures and resulting
-in the resource reset. Additionally, since this resource has already
-been linked into bus->resource[]->child during the kernel initialization
-process, a strange resource range [0, 0] appears in this chain. This
-causes subsequent devices to be allocated ranges that conflict with
-other resources. For a detailed analysis, see [1]:
+I also found a false positive swap-in in your patch 4, seems they are 
+related?
 
-This patch will make the hotplug process wait for the pcibios_init
-process in kernel initialization to complete. (However, I am not sure if
-this modification is appropriate, so I would appreciate your advice.)
-
-[1]: https://github.com/cai-fuqiang/md/blob/master/case/guestkernel_hotplug_BUG_ON/kernel_panic.md
-
-Signed-off-by: fuqiang wang <fuqiang.wng@gmail.com>
----
- arch/x86/pci/common.c | 16 ++++++++++++++++
- drivers/acpi/scan.c   |  6 ++++++
- include/linux/pci.h   |  1 +
- 3 files changed, 23 insertions(+)
-
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index ddb798603201..06ff04ab2a26 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -37,6 +37,8 @@ unsigned long pirq_table_addr;
- const struct pci_raw_ops *__read_mostly raw_pci_ops;
- const struct pci_raw_ops *__read_mostly raw_pci_ext_ops;
- 
-+DECLARE_COMPLETION(pcibios_init_completion);
-+
- int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int devfn,
- 						int reg, int len, u32 *val)
- {
-@@ -498,6 +500,17 @@ void __init pcibios_set_cache_line_size(void)
- 	}
- }
- 
-+static DEFINE_STATIC_KEY_FALSE(pcibios_init_done);
-+
-+void arch_wait_pcibios_init_complete(void)
-+{
-+	if (static_branch_likely(&pcibios_init_done))
-+		return;
-+
-+	wait_for_completion(&pcibios_init_completion);
-+	static_branch_enable(&pcibios_init_done);
-+}
-+
- int __init pcibios_init(void)
- {
- 	if (!raw_pci_ops && !raw_pci_ext_ops) {
-@@ -510,6 +523,9 @@ int __init pcibios_init(void)
- 
- 	if (pci_bf_sort >= pci_force_bf)
- 		pci_sort_breadthfirst();
-+
-+	complete(&pcibios_init_completion);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 9f4efa8f75a6..a66fbc262fb8 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -21,6 +21,7 @@
- #include <linux/pgtable.h>
- #include <linux/crc32.h>
- #include <linux/dma-direct.h>
-+#include <linux/pci.h>
- 
- #include "internal.h"
- #include "sleep.h"
-@@ -435,12 +436,17 @@ static int acpi_generic_hotplug_event(struct acpi_device *adev, u32 type)
- 	return -EINVAL;
- }
- 
-+void __weak arch_wait_pcibios_init_complete(void) {}
-+
- void acpi_device_hotplug(struct acpi_device *adev, u32 src)
- {
- 	u32 ost_code = ACPI_OST_SC_NON_SPECIFIC_FAILURE;
- 	int error = -ENODEV;
- 
- 	lock_device_hotplug();
-+
-+	arch_wait_pcibios_init_complete();
-+
- 	mutex_lock(&acpi_scan_lock);
- 
- 	/*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..8078b68a9b0f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2356,6 +2356,7 @@ static inline void pcibios_penalize_isa_irq(int irq, int active) {}
- int pcibios_alloc_irq(struct pci_dev *dev);
- void pcibios_free_irq(struct pci_dev *dev);
- resource_size_t pcibios_default_alignment(void);
-+void arch_wait_pcibios_init_complete(void);
- 
- #if !defined(HAVE_PCI_MMAP) && !defined(ARCH_GENERIC_PCI_MMAP_RESOURCE)
- extern int pci_create_resource_files(struct pci_dev *dev);
--- 
-2.47.0
+> Also add some sanity checks to help understand the code and ensure things
+> won't go wrong.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>   mm/shmem.c | 60 +++++++++++++++++++++++++++++-------------------------
+>   1 file changed, 32 insertions(+), 28 deletions(-)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index ea9a105ded5d..9341c51c3d10 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -1977,14 +1977,19 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+>   
+>   static struct folio *shmem_swapin_direct(struct inode *inode,
+>   		struct vm_area_struct *vma, pgoff_t index,
+> -		swp_entry_t entry, int order, gfp_t gfp)
+> +		swp_entry_t index_entry, swp_entry_t swap,
+> +		int order, gfp_t gfp)
+>   {
+>   	struct shmem_inode_info *info = SHMEM_I(inode);
+> -	int nr_pages = 1 << order;
+>   	struct folio *new;
+> -	pgoff_t offset;
+> +	swp_entry_t entry;
+>   	gfp_t swap_gfp;
+>   	void *shadow;
+> +	int nr_pages;
+> +
+> +	/* Prefer aligned THP swapin */
+> +	entry.val = index_entry.val;
+> +	nr_pages = 1 << order;
+>   
+>   	/*
+>   	 * We have arrived here because our zones are constrained, so don't
+> @@ -2011,6 +2016,7 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
+>   			swap_gfp = limit_gfp_mask(vma_thp_gfp_mask(vma), gfp);
+>   		}
+>   	}
+> +
+>   retry:
+>   	new = shmem_alloc_folio(swap_gfp, order, info, index);
+>   	if (!new) {
+> @@ -2056,11 +2062,10 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
+>   	if (!order)
+>   		return new;
+>   	/* High order swapin failed, fallback to order 0 and retry */
+> -	order = 0;
+> -	nr_pages = 1;
+> +	entry.val = swap.val;
+>   	swap_gfp = gfp;
+> -	offset = index - round_down(index, nr_pages);
+> -	entry = swp_entry(swp_type(entry), swp_offset(entry) + offset);
+> +	nr_pages = 1;
+> +	order = 0;
+>   	goto retry;
+>   }
+>   
+> @@ -2288,20 +2293,21 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   	struct mm_struct *fault_mm = vma ? vma->vm_mm : NULL;
+>   	struct shmem_inode_info *info = SHMEM_I(inode);
+>   	int error, nr_pages, order, swap_order;
+> +	swp_entry_t swap, index_entry;
+>   	struct swap_info_struct *si;
+>   	struct folio *folio = NULL;
+>   	bool skip_swapcache = false;
+> -	swp_entry_t swap;
+> +	pgoff_t offset;
+>   
+>   	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+> -	swap = radix_to_swp_entry(*foliop);
+> +	index_entry = radix_to_swp_entry(*foliop);
+>   	*foliop = NULL;
+>   
+> -	if (is_poisoned_swp_entry(swap))
+> +	if (is_poisoned_swp_entry(index_entry))
+>   		return -EIO;
+>   
+> -	si = get_swap_device(swap);
+> -	order = shmem_confirm_swap(mapping, index, swap);
+> +	si = get_swap_device(index_entry);
+> +	order = shmem_confirm_swap(mapping, index, index_entry);
+>   	if (unlikely(!si)) {
+>   		if (order < 0)
+>   			return -EEXIST;
+> @@ -2313,13 +2319,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   		return -EEXIST;
+>   	}
+>   
+> -	/* Look it up and read it in.. */
+> +	/* @index may points to the middle of a large entry, get the real swap value first */
+> +	offset = index - round_down(index, 1 << order);
+> +	swap.val = index_entry.val + offset;
+>   	folio = swap_cache_get_folio(swap, NULL, 0);
+>   	if (!folio) {
+>   		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
+>   			/* Direct mTHP swapin without swap cache or readahead */
+>   			folio = shmem_swapin_direct(inode, vma, index,
+> -						    swap, order, gfp);
+> +						    index_entry, swap, order, gfp);
+>   			if (IS_ERR(folio)) {
+>   				error = PTR_ERR(folio);
+>   				folio = NULL;
+> @@ -2341,28 +2349,25 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   			count_memcg_event_mm(fault_mm, PGMAJFAULT);
+>   		}
+>   	}
+> +
+> +	swap_order = folio_order(folio);
+> +	nr_pages = folio_nr_pages(folio);
+> +	/* The swap-in should cover both @swap and @index */
+> +	swap.val = round_down(swap.val, nr_pages);
+> +	VM_WARN_ON_ONCE(swap.val > index_entry.val + offset);
+> +	VM_WARN_ON_ONCE(swap.val + nr_pages <= index_entry.val + offset);
+> +
+>   	/*
+>   	 * We need to split an existing large entry if swapin brought in a
+>   	 * smaller folio due to various of reasons.
+> -	 *
+> -	 * And worth noting there is a special case: if there is a smaller
+> -	 * cached folio that covers @swap, but not @index (it only covers
+> -	 * first few sub entries of the large entry, but @index points to
+> -	 * later parts), the swap cache lookup will still see this folio,
+> -	 * And we need to split the large entry here. Later checks will fail,
+> -	 * as it can't satisfy the swap requirement, and we will retry
+> -	 * the swapin from beginning.
+>   	 */
+> -	swap_order = folio_order(folio);
+> +	index = round_down(index, nr_pages);
+>   	if (order > swap_order) {
+> -		error = shmem_split_swap_entry(inode, index, swap, gfp);
+> +		error = shmem_split_swap_entry(inode, index, index_entry, gfp);
+>   		if (error)
+>   			goto failed_nolock;
+>   	}
+>   
+> -	index = round_down(index, 1 << swap_order);
+> -	swap.val = round_down(swap.val, 1 << swap_order);
+> -
+>   	/* We have to do this with folio locked to prevent races */
+>   	folio_lock(folio);
+>   	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+> @@ -2375,7 +2380,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>   		goto failed;
+>   	}
+>   	folio_wait_writeback(folio);
+> -	nr_pages = folio_nr_pages(folio);
+>   
+>   	/*
+>   	 * Some architectures may have to restore extra metadata to the
 
