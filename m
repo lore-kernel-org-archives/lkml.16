@@ -1,164 +1,217 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169481E32A3;
-	Mon, 30 Jun 2025 06:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971AE1E7C10
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751266510; cv=none; b=jXNQvz07lO9lhXA6fpNAPsiOrgrSvR00qeWtoybrFRCWO0ZqAuGMt6csSHtCdW+015+b2XJQ2OtgCKnUKPPvicxEiLMG+fL9M1kafh+IEi3Hx3yd+0iT+6fvfUKR7Efj2KdChcvwZYNWpwpH9bAcQYoRgie41u85BUxGYXDioSc=
+	t=1751266510; cv=none; b=ATuM2+38/xy3Q8Fbwn3ctZ9ggqoBtZxTfy9Ui6Ys96IbgM6FddKxIaE6+RYAZ/UKi4AnWnwFTQwS4x5jHIZul43SfFo4hSa4a7mQUCpq/CRGvWke1orbLKlych6509k84kMKE047Iaa+yFZWr+D8V2Czl9/h2An3UVSn9GoENbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751266510; c=relaxed/simple;
-	bh=KUxKFurlKFsNM2mppY621IFrTmXqdnoQH3I4dV6w9hA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Z2AqD8G66aHijRZdp8XL5Qik7FwahdP0nSBSvT9VuyR0JmXA+Y3HPnrwcPG/PAG7nxFCvGerwDcWvJm6qfe0QQ9SQ09VfSWh72BH2uX8rvuk91nG4/hICdc5QNyIqbxLZf+gK0OVZoVpPHUxiDYz7H0w+T4rHPJNDeg6oHQ/8Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oKgH7KOC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=W3/qUmYR6QyOvmumbF5zNgCLQg69m81T3y9dtD4rHzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n3QJHcExFtL0Fz6Z1HklP5Bh6B1T23UnKZXs5M7zRj2Us/aJyWAE615OcOeoak6Ko0r9ZujB4CddVrV8g2ttLpkkyPrBfYG/xOMnQSSeEzI6t73XQKLlN2IoueZaViJrpi/PQEQArHM6v44nnRzuQAGT11dFZjXoXwXB1fIs4Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PAN2Pxpp; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oKgH7KOC"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6GTQK002603;
-	Mon, 30 Jun 2025 06:54:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MZYOwvxv2hKfe6jAzA+YOBKsVoqOdAIyhTkeDyeR8ZI=; b=oKgH7KOC3rQmhf5h
-	24X1EuhRrGZgrNQN8PnM+jmZy0zalU1AzzlsACzooxDUlOHGI7pp92rQNOAMFm6W
-	GVAN9qhJ3UTrmOue4AtD5L+YE64H+Y1yuH9LwrXNcoAG/H8BjQKkGyrecZGGB6hy
-	TLNGF61OMsA+2iQEw6nxks8vya34HUSrAIPpZd8i0kDtLEgnb4t/hxFXIgjzt2Xe
-	zPKv8V01YSudgBU3/AHK1Zx5vL8mapcLt9i3/QEJu5F0gW26KhIJ60gNoKMsuaXf
-	rdOFbPPxz/60VHoRm6o2gJloXTJFLwna3pAzUhlLLfJN/INpnTjaXQbUZlT44axH
-	4u5R3w==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5j82wu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 06:54:57 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55U6svfD004625
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 06:54:57 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Sun, 29 Jun
- 2025 23:54:54 -0700
-Message-ID: <be751d7b-9216-4564-ad21-2df6a19477fa@quicinc.com>
-Date: Mon, 30 Jun 2025 12:24:51 +0530
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PAN2Pxpp"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae0d11bb2a7so595285266b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751266507; x=1751871307; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pku19sNVP6VuOr/+3IUAfIt54nYSogJc7sn5HCCxY5g=;
+        b=PAN2PxppL7vITxOtcii9RB9Ilu8WJHoZkU2lPBh2Nizz4hxeaOf/Wl5mFCiACXOBvJ
+         6P/DOiCGc6l0dOjkXCLvYdadjLb8YblS466iKQaKFScLCMP23Csoy42STsuHsXzNuCQe
+         NeChu08ItU66iDbEE++lEMUDmVdvvpcksSrJ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751266507; x=1751871307;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pku19sNVP6VuOr/+3IUAfIt54nYSogJc7sn5HCCxY5g=;
+        b=xNo7EFbymJeKjALnxqDjQ0MFdRP2f/y2LjDAOLXE/ysSGnixlKPMlyVvtSF+4PLcwT
+         YYnukNo+KHRlbDvebEZn55Y490IvRSqxY1sOF0xDQDC9CTbpPqZnKv+HQo5DTW/9xm6S
+         xhURnl3zBe1+e/ChEpYQfstsTA4gTwbfPHVcaQ4XLKlRdBap04h0GxuEjETOz/72XVqA
+         oWIdt0Rti8FelneLZbifhFuhfS0zM1fu7gjEwFaOVAaYOfBaaDq6td0Lo2w8leJjsBAh
+         /xSutWXhwtu91HxwhyN6Vju+w3cclSL1DO4ZitZv3xC6fA9dV3dukmoQlIzpuduE0PJY
+         d5aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiBKkcxe6KH/DoQKkSNZEUDVgP2umXNMYrXjsAjsk/ZGY+kXCijVHgb5Du4YJ+HnZ8OrrIzUgum2B9jmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyteqM6aaG/AeELLtK9AebPQTk/wpwjdHSVfY/JlEoktn0npEJM
+	d3OCtMdZiwxLooY4Urm+bFSk7U4Eqg+TccesPdiMo1VHi+yo0+Ui49ny9tMqs2k6CqX5Floj+jt
+	xpldoWg==
+X-Gm-Gg: ASbGncukBbOb6W5nl140Mvll0nLiwocIIftM6eAz/7LoUQQLoLhRI7tseYviIPmZEfC
+	hHnG8tHGsW2pK51IB7T2OQdocpOYhtEUq6pTg0I7gWX3Lq9JVLclw1NPB0lZq714wqSrSz5IyB8
+	qNzXDjKrtvU6LbpaF9+CPTWXRgqEbOgJDlaQ90GQVLixj0zCAWp+QmrVfJ+7Yo6eKNrisGp45Bm
+	CYr6oIfUhL47CHcYmaDNWBiozEHPtdEoqTpI2IY/2zTRrkev124JPUC2JkJoo4kHzngQ9BBc85m
+	LlgTWYm9e1W8lzKfZTraLKcpdU/lPWTLDCABs1Y4IY1y+6rwPEbet0aF0nfCdDsiT1l8LBeSLOW
+	yAVzsHv1iORlw6/JdV0YSw2ea
+X-Google-Smtp-Source: AGHT+IG1EBJjDSZA1j0LVTIxAPAKcpUtDwdHN4heEEvSu/EQEWyq7JDqTVbVfjg/dpP/TWct2F/tGw==
+X-Received: by 2002:a17:907:9721:b0:ae0:de30:8569 with SMTP id a640c23a62f3a-ae34fd1227emr1104983666b.1.1751266506673;
+        Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b06esm623110566b.17.2025.06.29.23.55.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso4316706f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW/Rp794JjkPFWj17t4trCRvUUr1Qqvi2OuUr6diKxtgQOp4HXvHwz9BBADBJ/sPlvtvMDkf/GRyznAsAs=@vger.kernel.org
+X-Received: by 2002:a05:6512:3e2a:b0:553:3770:c912 with SMTP id
+ 2adb3069b0e04-5550ba2bc7emr3296124e87.47.1751266115614; Sun, 29 Jun 2025
+ 23:48:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 3/3] SPI: Add virtio SPI driver.
-To: Haixu Cui <quic_haixcui@quicinc.com>, <broonie@kernel.org>,
-        <virtio-dev@lists.linux.dev>, <viresh.kumar@linaro.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hdanton@sina.com>, <qiang4.zhang@linux.intel.com>,
-        <alex.bennee@linaro.org>
-CC: <quic_ztu@quicinc.com>
-References: <20250620041230.731504-1-quic_haixcui@quicinc.com>
- <20250620041230.731504-4-quic_haixcui@quicinc.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250620041230.731504-4-quic_haixcui@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=686234c1 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=uBtOIxTJ7MnckNxzp6gA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 9egaJJ7Ni2o2eKeiacU3hQyaoYK2rNv3
-X-Proofpoint-GUID: 9egaJJ7Ni2o2eKeiacU3hQyaoYK2rNv3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA1NiBTYWx0ZWRfX74/iWbfsflDy
- g4tCJZh/YGVUFBXnH0xYZJhtJwFw1OsDsRgL7QMTr8tmWsITr9Br1p6hjKWQdKHYJRPMYpW6xnk
- hBDAO6zUuSf1Yev/OnpllC61Idnejwn7iWZMWIkAhWZIxnyQbNmWsnqrn/38gFFb3UcQV2/iphR
- USV8J0KQo2G5OWBoEcahGEeQGgaStOIdMIVyoEmN1mAMBj1vy9RCrf6FbNPNtepYEGYbLRhcv76
- 3izd5Fhf7t8FbCJgoEOjI4nqJC4XkA8+bscn25Eh6xnYf+iyEDAU2u1DiyK+DHUHVTO15ji2b5q
- zDcqdBWUxIEXo9Z7RojV8ozYoPUGMMmjR7BCi3XJSnO1wOjuev/xuIDx19axJ2mCqBMeonEwh7i
- UZY+4+Fc/PA5bmoBhYgApJk+yWTy6F322ZQ2XVsyAG/0qIoAONY9VaUxd9WaPb0fCVbKawRD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1011 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300056
+References: <20250627101939.3649295-1-xu.yang_2@nxp.com> <20250627101939.3649295-2-xu.yang_2@nxp.com>
+ <1c4f505f-d684-4643-bf77-89d97e01a9f2@rowland.harvard.edu> <20250629233924.GC20732@pendragon.ideasonboard.com>
+In-Reply-To: <20250629233924.GC20732@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 30 Jun 2025 08:48:23 +0200
+X-Gmail-Original-Message-ID: <CANiDSCswzMouJrRn2A3EAbGzHTf88q_qQ=DC_KX7dbf_LJzqBg@mail.gmail.com>
+X-Gm-Features: Ac12FXygHhnlFKiXR-4gqAGeNFFl6ex4EPtMW2SIZttm2I0yNPjkXicKbD_z69Y
+Message-ID: <CANiDSCswzMouJrRn2A3EAbGzHTf88q_qQ=DC_KX7dbf_LJzqBg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] usb: core: add dma-noncoherent buffer alloc and
+ free API
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Christoph Hellwig <hch@lst.de>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Xu Yang <xu.yang_2@nxp.com>, 
+	ezequiel@vanguardiasur.com.ar, mchehab@kernel.org, hdegoede@redhat.com, 
+	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de, 
+	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk, 
+	thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, imx@lists.linux.dev, 
+	jun.li@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Haixu, Thanks !
+On Mon, 30 Jun 2025 at 01:39, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Fri, Jun 27, 2025 at 10:23:36AM -0400, Alan Stern wrote:
+> > On Fri, Jun 27, 2025 at 06:19:37PM +0800, Xu Yang wrote:
+> > > This will add usb_alloc_noncoherent() and usb_free_noncoherent()
+> > > functions to support alloc and free buffer in a dma-noncoherent way.
+> > >
+> > > To explicit manage the memory ownership for the kernel and device,
+> > > this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
+> > > and call it at proper time.  The management requires the user save
+> > > sg_table returned by usb_alloc_noncoherent() to urb->sgt.
+> > >
+> > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> > > ---
+> > >  drivers/usb/core/hcd.c | 30 ++++++++++++++++
+> > >  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/usb.h    |  9 +++++
+> > >  3 files changed, 119 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> > > index c22de97432a0..5fa00d32afb8 100644
+> > > --- a/drivers/usb/core/hcd.c
+> > > +++ b/drivers/usb/core/hcd.c
+> > > @@ -1496,6 +1496,34 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(usb_hcd_map_urb_for_dma);
+> > >
+> > > +static void usb_dma_noncoherent_sync_for_cpu(struct usb_hcd *hcd,
+> > > +                                        struct urb *urb)
+> > > +{
+> > > +   enum dma_data_direction dir;
+> > > +
+> > > +   if (!urb->sgt)
+> > > +           return;
+> > > +
+> > > +   dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
+> >
+> > Are the following operations really necessary if the direction is OUT?
+> > There are no bidirectional URBs, and an OUT transfer never modifies the
+> > contents of the transfer buffer so the buffer contents will be the same
+> > after the URB completes as they were when the URB was submitted.
+>
+> The arch part of dma_sync_sgtable_for_cpu(DMA_TO_DEVICE) is a no-op on
+> all architectures but microblaze, mips, parisc and powerpc (at least in
+> some configurations of those architectures).
+>
+> The IOMMU DMA mapping backend calls into the arch-specific code, and
+> also handles swiotlb, which is a no-op for DMA_TO_DEVICE. There's also
+> some IOMMU-related arch-specific handling for sparc.
+>
+> I think dma_sync_sgtable_for_cpu() should be called for the
+> DMA_TO_DEVICE direction, to ensure proper operation in those uncommon
+> but real cases where platforms need to perform some operation. It has a
+> non-zero cost on other platforms, as the CPU will need to go through a
+> few function calls to end up in no-ops and then go back up the call
+> stack.
+>
+> invalidate_kernel_vmap_range() may not be needed. I don't recall why it
+> was added. The call was introduced in
+>
+> commit 20e1dbf2bbe2431072571000ed31dfef09359c08
+> Author: Ricardo Ribalda <ribalda@chromium.org>
+> Date:   Sat Mar 13 00:55:20 2021 +0100
+>
+>     media: uvcvideo: Use dma_alloc_noncontiguous API
+>
+> Ricardo, do we need to invalidate the vmap range in the DMA_TO_DEVICE
+> case ?
 
-On 6/20/2025 9:42 AM, Haixu Cui wrote:
-> This is the virtio SPI Linux kernel driver.
-> 
-> Signed-off-by: Haixu Cui <quic_haixcui@quicinc.com>
-> ---
->   MAINTAINERS              |   6 +
->   drivers/spi/Kconfig      |  11 +
->   drivers/spi/Makefile     |   1 +
->   drivers/spi/spi-virtio.c | 444 +++++++++++++++++++++++++++++++++++++++
->   4 files changed, 462 insertions(+)
->   create mode 100644 drivers/spi/spi-virtio.c
-> 
+That change came from Christoph
+https://lore.kernel.org/linux-media/20210128150955.GA30563@lst.de/
 
-[...]
+"""
 
-> + * So the corresponding relationship:
-> + * A   <===> cs_setup_ns (after CS asserted)
-And "before clock start" ? to be added in bracket as comment.
-> + * B   <===> word_delay_ns (delay between adjacent words within a transfer)
-> + * C+D <===> cs_delay_hold_ns (before CS deasserted)
-> + * E+F <===> cs_change_delay_inactive_ns (after CS deasserted, these two
-> + * values are also recommended in the Linux driver to be added up)
-> + */
+Given that we vmap the addresses this also needs
+flush_kernel_vmap_range / invalidate_kernel_vmap_range calls for
+VIVT architectures.
 
-> +
-> +static int virtio_spi_transfer_one(struct spi_controller *ctrl,
-> +				   struct spi_device *spi,
-> +				   struct spi_transfer *xfer)
-> +{
+"""
 
-[...]
-
-> +	wait_for_completion(&priv->spi_req.completion);
-> +
-I see init_completion(spi_req.completion) is called during probe() but 
-successive transfer doent have reinit_completion(spi_req.completion). 
-wondering how is this working for back to back transfers.
-> +	/* Read result from message and translate return code */
-> +	switch (priv->spi_req.result.result) {
-> +	case VIRTIO_SPI_TRANS_OK:
-> +		/* ret is 0 */
-> +		break;
-> +	case VIRTIO_SPI_PARAM_ERR:
-> +		ret = -EINVAL;
-> +		break;
-> +	case VIRTIO_SPI_TRANS_ERR:
-> +		ret = -EIO;
-> +		break;
-> +	default: /* Protocol violation */
-Comment in new line ? following same method across.
-> +		ret = -EIO;
-> +		break;
-> +	}
-
-[...]
-
-> +static void virtio_spi_remove(struct virtio_device *vdev)
-> +{
-> +	struct spi_controller *ctrl = dev_get_drvdata(&vdev->dev);
-> +
-> +	/* Order: 1.) unregister controller, 2.) remove virtqueue */
-Is this a specific flow for virtio OR generic ? if its generic, we can 
-remove the comments.
-> +	spi_unregister_controller(ctrl);
-> +	virtio_spi_del_vq(vdev);
-> +}
-> +
+>
+> > > +   invalidate_kernel_vmap_range(urb->transfer_buffer,
+> > > +                                urb->transfer_buffer_length);
+> > > +   dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
+>
+> In the DMA_FROM_DEVICE case, shouldn't the vmap range should be
+> invalidated after calling dma_sync_sgtable_for_cpu() ? Otherwise I think
+> speculative reads coming between invalidation and dma sync could result
+> in data corruption.
+>
+> > > +}
+> >
+> > This entire routine should be inserted at the appropriate place in
+> > usb_hcd_unmap_urb_for_dma() instead of being standalone.
+> >
+> > > +static void usb_dma_noncoherent_sync_for_device(struct usb_hcd *hcd,
+> > > +                                           struct urb *urb)
+> > > +{
+> > > +   enum dma_data_direction dir;
+> > > +
+> > > +   if (!urb->sgt)
+> > > +           return;
+> > > +
+> > > +   dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
+> > > +   flush_kernel_vmap_range(urb->transfer_buffer,
+> > > +                           urb->transfer_buffer_length);
+> > > +   dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
+> > > +}
+> >
+> > Likewise, this code belongs inside usb_hcd_map_urb_for_dma().
+> >
+> > Also, the material that this routine replaces in the uvc and stk1160
+> > drivers do not call flush_kernel_vmap_range().  Why did you add that
+> > here?  Was this omission a bug in those drivers?
+> >
+> > Alan Stern
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
 
+
+-- 
+Ricardo Ribalda
