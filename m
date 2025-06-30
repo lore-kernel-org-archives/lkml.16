@@ -1,60 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3106886359
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B70736D;
+	Mon, 30 Jun 2025 05:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751260735; cv=none; b=ThF8aau0FzHHcjhxWVnFQv43tJtl3Av9j2Lb1EqO2lYUPJxFo3Q0y+gwFnJ0XbjJLfwuZLjz6KAC5qT/5wi7SdPTkzl6CQt/MrSeiuwfzn0IKX3rxelpmiK6rpqg72mrKh6rRB12FP6oFle87cYD6L4PMrUveMrwm5FarQ5SA1A=
+	t=1751260813; cv=none; b=KWeAjlnrxEn125x8fDEEL65H0Xku+xrvE2jj+rx0VBgNN9nuuDnAKw9CxtVi+2YtbEVlctcuuLiMxGqUp8yDxAbTnTGWqxQTD+w/8PYsN79zLU6YOnhvMh8veO841gZ07C3DjkHvB6++PDEDsq0Ke3LtfaU6YSsxIsAoKI44518=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751260735; c=relaxed/simple;
-	bh=aStqK1GA6HeCMgPP1SpWL2bIqFbZwwBQdmEDqf1lQI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=s/tjNgqNoicOCH+qjBuWt2t5LZIQQXeKSyGY7aqhsdt0dcww45KAmqanzE90yOYHBbNCkJh2jqfJSHHmFPBApxrpAR7bMUD44H88zSEaJ7Gui9E7rZfJlmvFKt3IeLbKE2gXuyPaGWNjd6u3JedSp/YDTkyxZ8fVaHimF0vzwXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l0P+N97R; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751260813; c=relaxed/simple;
+	bh=X01KpDvK/ZG/ntgsn9hKY7oG3ZQU0KFjK73/vQfttlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bkRJVMH1qMUr3BuiednhG7k0Z0CINok9/Cce3b4JOrhWyyv5/mpWImhaLyXQwjHZ7CU/Ev/4nsmdTE5Qj6VvJmIzcu9eFg4wP18Ymbr4LL8/PqdGYZ/YQjO0cojyBQ4O6HRj1zLze6an/5ggVH1IvGgMW11ISG73zERGOyOEwSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BqUcwz67; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l0P+N97R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751260734; x=1782796734;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=aStqK1GA6HeCMgPP1SpWL2bIqFbZwwBQdmEDqf1lQI4=;
-  b=l0P+N97RdhbYdHshxfvo4R7JYevAAjUcE/loWZJ/ffxd7QQLYAKhsWCb
-   rTR2rMzeGiXWwSrEqYRMF9/aBxtl88zGv09Ggrhm/Y+ohMhbsy5gqFmj5
-   irQ5H0UHW4VrcyQ/IiH/hFXwdWAd0gK4ZUt9fnvqyPwKlq3OKIW2w58mm
-   zMDDyZJRvoe23XyV01Pj7jWMwLYm0XR/hHjkvjQQA9ZdgQB9HneReFuuT
-   9QZkK8s51F8dGHSkA+ajCLjaTX1Js0sSR8LKxJjpGLgYSFF58QgT/itJM
-   QDEiyUcx7QmIegULV9SDVcmSlbIjZ5e2n2aFEfNTaH5DS8E2/0/6fBmBG
-   A==;
-X-CSE-ConnectionGUID: ATi7r2PbRcKNC3B/9X9Ybg==
-X-CSE-MsgGUID: h8AWOKi9SBiJyJDUV+UCgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53599969"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53599969"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:18:54 -0700
-X-CSE-ConnectionGUID: 6UaC7HCNSLGWmPrKJL5Q/w==
-X-CSE-MsgGUID: Fm4ZTnsPTkyiHXYz9JRRoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153898981"
-Received: from igk-lkp-server01.igk.intel.com (HELO e588e990b675) ([10.91.175.65])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Jun 2025 22:18:52 -0700
-Received: from kbuild by e588e990b675 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uW6un-00013H-20;
-	Mon, 30 Jun 2025 05:18:49 +0000
-Date: Mon, 30 Jun 2025 07:18:31 +0200
-From: kernel test robot <lkp@intel.com>
-To: Oliver Neukum <oneukum@suse.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Colin Ian King <colin.i.king@gmail.com>
-Subject: drivers/scsi/dc395x.c:2185:13: warning: variable 'fact' set but not
- used
-Message-ID: <202506300705.3Sj0EHmY-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqUcwz67"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23649faf69fso12364165ad.0;
+        Sun, 29 Jun 2025 22:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751260811; x=1751865611; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WaJ4C0zWWu9yrnACARDN83F3kZ6XpuexPtSIsWrNK/g=;
+        b=BqUcwz67lG0FJ2Dce7cTkGKVX2n8D7BeMsPiGdcmpD0ZlWoXKv6k8BtdJiWT0Ev4wN
+         C+3DUMdXJ37YHXrjO1gpun2FHILB84rdRKoRNv172ibpjq34pbAJtmzSc1ixeAlSZ9tR
+         WAzO1O/sm4QDMy6RB331drBXq/JilOxV0itM2Lzi5bziqntdl+WpK8cZ1OZPXPtPKtEC
+         ZhjiGoQTHjv3xV7P0bgvMeC1KvT/6vDqvPEJ4NnL7qpiJCk7AgEVFXmei8A2/wV/51vo
+         thtz7Evy6fEzDHlqoivFZ63K++8SxscQraw9c02JSlS/ZLLjmlRt2K2Wi87gIF1AgjzD
+         z30w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751260811; x=1751865611;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WaJ4C0zWWu9yrnACARDN83F3kZ6XpuexPtSIsWrNK/g=;
+        b=tZ87clol1pMqJ8/YHCegQ9fh5i+jjCqT6H3Bu8UJENLjz+rOTHbyF1a+qfzvkkRo13
+         SkVIZ/vdaFTc1he7a/o8z12TghsPOONXm968xFF/v/o8FXXctiW7VcxWdNf2VbXTH4wo
+         WXvxrpI1DcSzoZD2o+8vcBbBtLzo3akJMhMU5sUwlOMyUlaJl6wq8/lX3QFCvMNTK9rg
+         cRx4qJn3FZaz9cL/RLzoscmuBwfENCSqrwdHGhV+AonXEHeHWkp8U0d5HkGTG28Pd9Ai
+         EJu/pK0FE3SXWtGbka20299mUnie05ORPHnS8abanlFZJbvrGsrDrJZm9NKh5YyjFNQ8
+         pE9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVDygYGztf+ouUBdunLCJyhNRXA0dj6rkwkwtZC+Re7XM1j9DzOz6oDiUlPBYgPouBthapdFBrzCLT54A==@vger.kernel.org, AJvYcCXFJIiz8xYLZhKJ3w+f+GHzgFo43djAr8sCMCt3DgOhrk/5JxDyRRP7E4xaghulgEmwLI4mXKInTEnEVi3K@vger.kernel.org, AJvYcCXyPpK4E7pY0t61mewsZ+ZTyBTk9u9O0TpWKQ8eq2ecFVWgjckdcdfABz5kNYR5uaB+kFGNKWQziGVpZFmN+5XPwd7C4w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ULMspON0NCVD+aQf5Mwl6U3Ww6zwf54KhsWCBsMSRdyp6z4v
+	zeHZGz/HlU84fumN/7xyneRFrHMQ/LyzP8UZAkHuIjOsAJc8cqZGG7jc
+X-Gm-Gg: ASbGncvctnjBg8hv/D1CK86HmJA8ejUh3mFjUDTYLr11Hvq54nwNuzlgpnYZLt1u+bz
+	A0GWxi+iAsOrpn3cRibuJLGX685vxdJXdHAQQfta1/TOaMFSLHwKETyh6p59eSIJmOvJ6KsfDx3
+	C+kZO2XGqe3zIK8bJkV3lb3rjctixxFDJ36Ui8JNsAFG2xILKHgLIl2oPpCb4XZVPnuCbhK7TF7
+	BY05951NVtBPtZejrbQrh+9/OI2O4E6XmEYxWxSbNHyhyGo02i/xBdPUXtOXCSyuaopoeV0fJLa
+	W5EnfpHQRqVmxJw9u4XBKv8FAffC0otqdjTbtNcr6J4J8/CFG69EgytcV15LzQ==
+X-Google-Smtp-Source: AGHT+IGljq9y7uyYbWJk8IEUOp3noeR3/2KTd8Pg83rOjo/0K4IILNVBfNxEreQd5THLNbtRj5CfVw==
+X-Received: by 2002:a17:902:d603:b0:234:8c64:7885 with SMTP id d9443c01a7336-23ac48b6862mr175872145ad.53.1751260811397;
+        Sun, 29 Jun 2025 22:20:11 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2f1837sm75936735ad.65.2025.06.29.22.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 22:20:11 -0700 (PDT)
+Date: Sun, 29 Jun 2025 22:20:07 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Vishnu Sankar <vishnuocv@gmail.com>, pali@kernel.org, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, hansg@kernel.org, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, tglx@linutronix.de, mingo@kernel.org, jon_xie@pixart.com, 
+	jay_lee@pixart.com, zhoubinbin@loongson.cn, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Vishnu Sankar <vsankar@lenovo.com>
+Subject: Re: [PATCH] x86/Mouse: thinkpad_acpi/Trackpoint: Trackpoint
+ Doubletap handling
+Message-ID: <bviu4igchqy6bvu54fw6afts7ooctlmmcutdq6tc4rutzhjvfs@o56kezrit6un>
+References: <20250620004209.28250-1-vishnuocv@gmail.com>
+ <5jgix7znkfrkopmwnmwkxx35dj2ovvdpplhadcozbpejm32o2j@yxnbfvmealtl>
+ <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,92 +79,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <4ad6e1e1-aca8-4774-aa4a-60edccaa6d0e@app.fastmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
-commit: 62b434b0db2cdc21d6fe978d24d8f84e473cb5e7 scsi: dc395x: Remove DEBUG conditional compilation
-date:   9 weeks ago
-config: loongarch-randconfig-2006-20250625 (https://download.01.org/0day-ci/archive/20250630/202506300705.3Sj0EHmY-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250630/202506300705.3Sj0EHmY-lkp@intel.com/reproduce)
+Hi Mark,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506300705.3Sj0EHmY-lkp@intel.com/
+On Mon, Jun 30, 2025 at 05:42:45AM +0900, Mark Pearson wrote:
+> Hi Dmitry,
+> 
+> On Fri, Jun 27, 2025, at 2:14 PM, Dmitry Torokhov wrote:
+> > Hi Vishnu,
+> >
+> > On Fri, Jun 20, 2025 at 09:42:08AM +0900, Vishnu Sankar wrote:
+> >> Newer ThinkPads have a doubletap feature that needs to be turned
+> >> ON/OFF via the trackpoint registers.
+> >> Systems released from 2023 have doubletap disabled by default and
+> >> need the feature enabling to be useful.
+> >> 
+> >> This patch introduces support for exposing and controlling the
+> >> trackpoint doubletap feature via a sysfs attribute.
+> >> /sys/devices/platform/thinkpad_acpi/tp_doubletap
+> >> This can be toggled by an "enable" or a "disable".
+> >> 
+> >> With this implemented we can remove the masking of events, and rely on
+> >> HW control instead, when the feature is disabled.
+> >> 
+> >> Note - Early Thinkpads (pre 2015) used the same register for hysteris
+> >> control, Check the FW IDs to make sure these are not affected.
+> >> 
+> >> trackpoint.h is moved to linux/input/.
+> >
+> > No, please keep everything private to trackpoint.c and do not involve
+> > thinkpad_acpi driver. By doing so you are introducing unwanted
+> > dependencies (for both module loading, driver initialization, and
+> > operation) and unsafe use of non-owned pointers/dangling pointers, etc.
+> >
+> 
+> Do you have recommendations on how to handle this case then?
+> 
+> This is a Thinkpad specific feature and hence the logic for involving
+> thinkpad_acpi. There are Thinkpad hotkeys that will enable/disable the
+> trackpoint doubletap feature - so there is some linkage. I'm not sure
+> how to avoid that.
+> 
+> Is there a cleaner way to do this that you'd recommend we look at
+> using? It's a feature (albeit a minor one) on the laptops that we'd
+> like to make available to Linux users.
 
-All warnings (new ones prefixed by >>):
+I believe if you define the doubletap as an attribute (see
+TRACKPOINT_INT_ATTR or TRACKPOINT_BIT_ATTR in
+drivers/input/mouse/trackpoint.c) then whatever process is handling the
+hot keys switching this function on or off should be able to toggle the
+behavior. The difference is that it will have to locate trackpoint node
+in /sys/bus/serio/devices/* (or maybe scan
+/sys/devices/platform/i8042/serio*) instead of expecting the attributes
+be atached to thinkpad_acpi instance.
 
-   drivers/scsi/dc395x.c: In function 'msgin_set_sync':
->> drivers/scsi/dc395x.c:2185:13: warning: variable 'fact' set but not used [-Wunused-but-set-variable]
-    2185 |         int fact;
-         |             ^~~~
+You just don't want to have one driver directly peeking into another,
+because then it starts breaking if you unbind or force use of a
+different protocol, etc.
 
-
-vim +/fact +2185 drivers/scsi/dc395x.c
-
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2178  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2179  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2180  /* set sync transfer mode */
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2181  static void msgin_set_sync(struct AdapterCtlBlk *acb, struct ScsiReqBlk *srb)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2182  {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2183  	struct DeviceCtlBlk *dcb = srb->dcb;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2184  	u8 bval;
-^1da177e4c3f41 Linus Torvalds 2005-04-16 @2185  	int fact;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2186  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2187  	if (srb->msgin_buf[4] > 15)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2188  		srb->msgin_buf[4] = 15;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2189  	if (!(dcb->dev_mode & NTC_DO_SYNC_NEGO))
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2190  		dcb->sync_offset = 0;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2191  	else if (dcb->sync_offset == 0)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2192  		dcb->sync_offset = srb->msgin_buf[4];
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2193  	if (srb->msgin_buf[4] > dcb->sync_offset)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2194  		srb->msgin_buf[4] = dcb->sync_offset;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2195  	else
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2196  		dcb->sync_offset = srb->msgin_buf[4];
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2197  	bval = 0;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2198  	while (bval < 7 && (srb->msgin_buf[3] > clock_period[bval]
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2199  			    || dcb->min_nego_period >
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2200  			    clock_period[bval]))
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2201  		bval++;
-62b434b0db2cdc Oliver Neukum  2025-04-28  2202  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2203  	srb->msgin_buf[3] = clock_period[bval];
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2204  	dcb->sync_period &= 0xf0;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2205  	dcb->sync_period |= ALT_SYNC | bval;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2206  	dcb->min_nego_period = srb->msgin_buf[3];
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2207  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2208  	if (dcb->sync_period & WIDE_SYNC)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2209  		fact = 500;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2210  	else
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2211  		fact = 250;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2212  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2213  	if (!(srb->state & SRB_DO_SYNC_NEGO)) {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2214  		/* Reply with corrected SDTR Message */
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2215  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2216  		memcpy(srb->msgout_buf, srb->msgin_buf, 5);
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2217  		srb->msg_count = 5;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2218  		DC395x_ENABLE_MSGOUT;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2219  		dcb->sync_mode |= SYNC_NEGO_DONE;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2220  	} else {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2221  		if ((dcb->sync_mode & WIDE_NEGO_ENABLE)
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2222  		    && !(dcb->sync_mode & WIDE_NEGO_DONE)) {
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2223  			build_wdtr(acb, dcb, srb);
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2224  			DC395x_ENABLE_MSGOUT;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2225  		}
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2226  	}
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2227  	srb->state &= ~SRB_DO_SYNC_NEGO;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2228  	dcb->sync_mode |= SYNC_NEGO_DONE | SYNC_NEGO_ENABLE;
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2229  
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2230  	reprogram_regs(acb, dcb);
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2231  }
-^1da177e4c3f41 Linus Torvalds 2005-04-16  2232  
-
-:::::: The code at line 2185 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
-
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dmitry
