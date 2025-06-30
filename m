@@ -1,93 +1,153 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DADA285075
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBF28B4EB;
+	Mon, 30 Jun 2025 12:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288344; cv=none; b=rz0zNsQ9LUDVodAKSSVjzi/pcasag4+rG2471dyXddBAeNAdrJuVcnHSMMUYEKv3ItZDTOJ5CyNZj5dTXT2GtIPD2fiOPsalSyqLMTa1uRfp94EMmFg6NS/+lY+1InXKbMfHSoiESPWv3l5q+1vJK+e4Vvot4ouWj/ktFiYggSo=
+	t=1751288349; cv=none; b=Kxwn7Rbzm0Ra8LU0mhcPAJdQgPJN+mAGxbxgvAxT+c66hrYUW8rzUEgDe1dSOqjTGdc10+9X4BRIVXn984m96AbaJCBWSWGeHblR0t5dNvqgP+xYkSXQ2K/St7KGiSAUnAOSgW7uqoj9GcH+6w3XnSxNHsK/1FrzUG6xKOgC3mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288344; c=relaxed/simple;
-	bh=2HCNxwnVn3E25Gr1Y94nbzeByRqc884EvDUmwrqDa+8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jupGKGKjuTSpNrBwMjjVHSiIxXTcbwvwzvfxyvn41tGFKiCXW+Y+jlgnHoJ+y5QsliMN1e6I+BjEKLafau12MELsblD93QVZJx2HZ+m6PIoMcdgdjHAgbLPNZfj48SIKMG4lwp/Vz35ZXKCMBrNAk020cQlFaKyr2KHDEeS5UdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YqNXHcSe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3IKH00+R; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751288349; c=relaxed/simple;
+	bh=ySzpaPXJOjpCF8AV/n8QxRqh+v6VeNRTl6MDFLOEpGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PFYghQn7LMBq8AgN+4Kv/waFG8JEVYCCqKW5UeDeYxkvPcbEhs8ZnBlxtpnmkBeVnwyXGfc2H0vVEeSVzrkt3E/bpcQYJxBS/ZX3dsrKbU/VfrAa9mrkdxeMpqQma4HQSU4d70/Ko8aBoyhCEDC0XRkHgaTFLMuo9RrjKgVXoBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kG/566Ax; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YqNXHcSe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3IKH00+R"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751288341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/t8WT+CEw8DpiDJZRZUOBsoX4SUNCxdtYF7mwRpIXkY=;
-	b=YqNXHcSefou04MdgtGobKj22bzaxzBCmCHK+6+u69x7xqet6ubFM50yCJZwyHMFN0gPUT/
-	wBDdDtyn9gASGjnmGPvkoflCSWqWUMIHNj3ul+rjSwB24C8LHLWFKz7enY0xtszt8Ukrrm
-	FEc8Vc7u84XnCuQWdbyAn1P0C5V5A44I8bFREUhm66Xkc8tKj0yoxg5zowiVen+wDJ52QM
-	8XFzJ3s6BcvbBGMNhIn2XsMYVwuuIPuo9wYK/vN/U+dK/JguLRVcwMRU7acKqNNJrV0qbW
-	+F10iHG4R6YN0u0SJfN9PbKS+FLBo3seKiuymS3knnK5W6LJoYjaRrvlqW4W6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751288341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/t8WT+CEw8DpiDJZRZUOBsoX4SUNCxdtYF7mwRpIXkY=;
-	b=3IKH00+RID0eSuV+P8GA7QJJ7Z+XX61+j0Y0K6mJg02U+KlExKJXzZ5YYwSStLmQgkEwmc
-	ZhT8uj+4NucD0BCw==
-To: Phil Auld <pauld@redhat.com>, Waiman Long <llong@redhat.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Marco
- Crivellari <marco.crivellari@suse.com>, Michal Hocko <mhocko@suse.com>,
- Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 02/27] sched/isolation: Introduce housekeeping per-cpu
- rwsem
-In-Reply-To: <20250627004851.GB222768@pauld.westford.csb>
-References: <20250620152308.27492-1-frederic@kernel.org>
- <20250620152308.27492-3-frederic@kernel.org>
- <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
- <20250625121850.GA57862@pauld.westford.csb>
- <aFwI6sCtObAGoMBt@localhost.localdomain>
- <20250625155017.GC57862@pauld.westford.csb>
- <c205b6a8-89ee-424e-ac83-94584d59a449@redhat.com>
- <20250627004851.GB222768@pauld.westford.csb>
-Date: Mon, 30 Jun 2025 14:59:00 +0200
-Message-ID: <878ql9o06j.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kG/566Ax"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5DDC4CEE3;
+	Mon, 30 Jun 2025 12:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751288348;
+	bh=ySzpaPXJOjpCF8AV/n8QxRqh+v6VeNRTl6MDFLOEpGE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kG/566AxKhap6V3M8HaXJ8DE6tu8lXe2U9vyH1YQUQq1N1+OSGRznZA98pNdHHIiB
+	 vI/JGAMziCnFktuGjQGmyi2qCh1W9wBLcjYbg2HP/oCzWNTlyV7JxORKxeHbZdS3tU
+	 4zYUVk0sjmDt/Zrbs3VIaQ1ZcJXgRshfDfglRqsvxmF747ic2rr2NUWuvWvqeTEQqY
+	 IfN3oVk4VnlHY9UNltgotVH+Cm8+LDjHo0of7rmxaBVo1I6ydzOFmXBOfPp8gv81gQ
+	 Ymd6KcXi8CO8oQIskpp/PJt7NDWXWrACKlnhUsju0hXKU2bHczuDW4/jp1fq3Eht3x
+	 KxwtbSoV5AT+Q==
+Message-ID: <c97af8e7-5c11-45f4-838c-d934b0a379c1@kernel.org>
+Date: Mon, 30 Jun 2025 14:59:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
+To: Hans Verkuil <hverkuil@xs4all.nl>, Ricardo Ribalda
+ <ribalda@chromium.org>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
+ <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
+ <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26 2025 at 20:48, Phil Auld wrote:
-> On Thu, Jun 26, 2025 at 08:11:54PM -0400 Waiman Long wrote:
->> > My understanding is that it's the stop machine issue. If you have a way
->> > around that then great!
->> 
->> My current thinking is to just run a selected set of CPUHP teardown and
->> startup methods relevant to housekeeping cpumasks usage without calling the
->> full set from CPUHP_ONLINE to CPUHP_OFFLINE. I don't know if it is possible
->> or not or how much additional changes will be needed to make that possible.
->> That will skip the CPUHP_TEARDOWN_CPU teardown method that is likely the
->> cause of most the latency spike experienced by other CPUs.
+Hi all,
+
+On 17-Jun-25 11:27 AM, Hans Verkuil wrote:
+> On 16/06/2025 17:24, Ricardo Ribalda wrote:
+>> uvc_stop_streaming() is used for meta and video nodes. Split the function
+>> in two to avoid confusion.
 >>
->
-> Yes, CPUHP_TEARDOWN_CPU is the source of the stop_machine I believe.
+>> Use this opportunity to rename uvc_start_streaming() to
+>> uvc_start_streaming_video(), as it is only called by the video nodes.
+>>
+>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>> ---
+>>  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
+>>  1 file changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+>> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
+>> --- a/drivers/media/usb/uvc/uvc_queue.c
+>> +++ b/drivers/media/usb/uvc/uvc_queue.c
+>> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
+>>  		uvc_video_clock_update(stream, vbuf, buf);
+>>  }
+>>  
+>> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+>> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
+>>  {
+>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>>  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
+>> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>  	return ret;
+>>  }
+>>  
+>> -static void uvc_stop_streaming(struct vb2_queue *vq)
+>> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
+>>  {
+>>  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>>  
+>>  	lockdep_assert_irqs_enabled();
+>>  
+>> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
+>> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+>> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
+>> +
+>> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+>> +}
+>> +
+>> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
+>> +{
+>> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
+>> +
+>> +	lockdep_assert_irqs_enabled();
+>>  
+>>  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
+>>  }
+>> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
+>>  	.buf_prepare = uvc_buffer_prepare,
+>>  	.buf_queue = uvc_buffer_queue,
+>>  	.buf_finish = uvc_buffer_finish,
+>> -	.start_streaming = uvc_start_streaming,
+>> -	.stop_streaming = uvc_stop_streaming,
+>> +	.start_streaming = uvc_start_streaming_video,
+>> +	.stop_streaming = uvc_stop_streaming_video,
+>>  };
+>>  
+>>  static const struct vb2_ops uvc_meta_queue_qops = {
+>>  	.queue_setup = uvc_queue_setup,
+>>  	.buf_prepare = uvc_buffer_prepare,
+>>  	.buf_queue = uvc_buffer_queue,
+>> -	.stop_streaming = uvc_stop_streaming,
+>> +	.stop_streaming = uvc_stop_streaming_meta,
+>>  };
+> 
+> I think there should be a comment stating that the metadata stream
+> expects that video is streaming, it does not start streaming by itself.
+> 
+> Something like:
+> 
+> 	/*
+> 	 * .start_streaming is not provided here. Metadata relies on
+> 	 * video streaming being active. If video isn't streaming, then
+> 	 * no metadata will arrive either.
+> 	 */
+> 
+> It's unexpected that there is no start_streaming for metadata, so a
+> comment wouldn't hurt.
 
-Correct.
+I've added this comment while merging this series and I've now pushed
+the entire series to uvc.git/for-next .
 
-> It'll be interesting to see if you can safely use the cpuhp machinery
-> selectively like that :)
+BTW it seems that both uvc.git/next and uvc.git/for-next are in
+use now?  With uvc.git/next seemingly following media-commiters/next ?
 
-It is supposed to work that way and you can exercise it from userspace
-via sysfs already. If it fails, then there are bugs in hotplug callbacks
-or ordering or ..., which need to be fixed anyway :)
+I thought we had agreed to only use uvc.git/for-next ?
 
-Thanks,
+Regards,
 
-        tglx
+Hans
+
+
+
