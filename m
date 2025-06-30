@@ -1,285 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE691B87F0;
-	Mon, 30 Jun 2025 20:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666611B87F0
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751314271; cv=none; b=BAioQx9I+ijxgeRUWO1qzO6s/xq4xlD//hprQN0avEFXUmNkQGTJkmDusCIPxrG3k1xUxOateZCGTbCzCLvGkfRUcvgpmb8OAprNSb2JmvnhlLy7/SH4ei9ErPtZCKkUYX2bkB4klxeIkL/Z/v06qPO5OKDbddxh5VeWkyu7riM=
+	t=1751314336; cv=none; b=eDBBkGvn++HAA7SAwUmcR+CbgftnELuRXQ6rW9MES83275l/mq38h4rUBYan5eCiz08As3Xx6Lsa/bAPerxCDuHuhQYMkV+2smuws5Vv3M+CGZN7KIUCgGie7dEmvG9bAPqOF1+CxZiHqT/wf+AnoDteba2JXnjPeQ1c3hpZInk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751314271; c=relaxed/simple;
-	bh=CF8N+TwAuO0PoFnw1FLiMkt7/JQwaRY88SAx44FaeVw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sqdECW2NtRbEVZ/yNOt8bLJOKUJNhf8NWeplljMY8UW88nazK42kMNCSoFzjk4fN2ukHUcxrc+DYHonxqJSvMx755oLM7DHJqrjK+A5XRBbwTeQHE6CNnB1d5zeFSSetArMeDH1kYRRUGAFko/3rvBkhVMRpinUUCS/04o3Mdqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrDHvwih; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751314336; c=relaxed/simple;
+	bh=yBg3GB3lhCpdzzmoDQuhGODKp6X+ylUuiDnqkO/v3S8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0l4cX/YxI9AmgcU7B4duCx0iQW4JZaRY+nw0juGjYNwUJOLGAV4Tpoe/iu8yaxyjF537KCW2dRmAiW9lgxrW6LKWhfTrdT16//7QzaA3HlHQDBfUzu6GTBUkqES1071Ke9KhcebD93hmlupbiv2DdYBPJLCJDkCApRb/GbDcBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=fail smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=cbXEB+53; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=ijzerbout.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrDHvwih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBDDC4CEEB;
-	Mon, 30 Jun 2025 20:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751314271;
-	bh=CF8N+TwAuO0PoFnw1FLiMkt7/JQwaRY88SAx44FaeVw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MrDHvwih+6HKXG4deS9oTfTkK6q0kkCIdFuwgTx7Mwpca5Lqk8KVL2vOBeAikJIbB
-	 AA14ZInbFhOXTDb5sHly+HLFu8UdYC94/E8SiUjYIwlyOfUEZiOMoLB2x3ZcPpG1WT
-	 88T76kqy0hlR21wJaGlrXgQPcXURyjOOxPThvQ287unOwKULU3wghGrFJ/uFRzACRJ
-	 MB1viJ9QI7WTCL9biKIRLASCHN0VOxSX8HiRNF+yFnoGVe8EsZoLvpV8DcG80Wlbnl
-	 bJMjsUvU5Ro+5z7ryfRHXBAwPc7xQ9jiXDJZ8oKcEjLMLJ80mm1HZA+VtLEenzMNh+
-	 TlBpCt5lBaleg==
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-40669fd81b5so1501941b6e.1;
-        Mon, 30 Jun 2025 13:11:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU808v5M3A1L4VtaP946jMMxRxtIVlRFYWe/SWcJBm/qp8t+F49QFrkW6bu6nWAKtG6VcqmQv8OfLSW9UQs@vger.kernel.org, AJvYcCVjR0bw8oaGf6sT89Tzl600G3UJfZwVOcDIxYdAGyeUXNMy0h/tPid0fCuKgFmy5FePYP5Dy3w4hvGt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx91rYkSMYuW6DQ0COlh4GKlUyJAUgvBV/NcNK1aXtE5M4A/ZBH
-	CbZ7iGpA1I0nPyj7hVtnznT1mhxEoa6CGwekyaG38z4aezVrrIMvS86VHdS9xr4ZBmUY6bMZy0E
-	V2y3GkMePIbBHDYz9ttBg4+drHfMWJKY=
-X-Google-Smtp-Source: AGHT+IH6VbaWNDgEp4LsIzOC5laKKwbjfEgyJslwNPDiGRh9moPgDyA+YDecbRWUixH02vzpC/9d13K0ebO8CBOHXVQ=
-X-Received: by 2002:a05:6808:1208:b0:40a:5765:eee2 with SMTP id
- 5614622812f47-40b33e18341mr12815177b6e.21.1751314270313; Mon, 30 Jun 2025
- 13:11:10 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="cbXEB+53"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1751313953; bh=yBg3GB3lhCpdzzmoDQuhGODKp6X+ylUuiDnqkO/v3S8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cbXEB+5313Qe3bFolzb3FEF0a0/NGTgKnULUlrUZpcne1NsIM3XXmoZo/hXDGFvHk
+	 ZLLUaDDJkXprkREqmt+AbxkLuyxI/9QpHPSFwiNyfVUKrVmIY9KJ+k5RSkgZ9mpRF2
+	 vjTfcWU0Fg3qC4wMOGEdE/widwi4cyd2CgCyzEv0CrAhiXWiNbucR8lRIswaJ7ZpMY
+	 1kJqQg83xSn9CCE+Fm230hskiQcNOJKb0mANaay4JsFJyi6z4i2XOVaq085wGZkDql
+	 f4gt6FJmYNihkdlCoLBMfDJ7ZEPMdQSL9qPMhQtzc0Xlz2ngSSkOKS6OGaNi9WGk2+
+	 DrOgiuncYSG2+/hCul8lOG2AG6w/z1vTMYPsIo1jDEzLz97Wi8bMhTkax2rA6NnvHY
+	 CXL20edyECqgP5s7uFgMMG6S2k6Fc0ThjK61lwxA3iKHQLKIcY36dIPpo32MZ4yE0l
+	 wYEFizbjEQMmDIZ+Ju1Z60X96BOaKJz7WGQM2vy9fYhKV/XPF1QsCobQzr6ceOn847
+	 04MNWGrJ3ZNVV/y9/3GaINBECfINYjkkIt7gWrUDP1oQgUy1HJDXnaXQL+SEGB+Eqm
+	 uWIQyjO2A5bVGmOG6nzjcXSKoS3ZrOv47Akkg0V96etBuU2m9nZ0e3VKQwpQWcFVhw
+	 ymK8xQ2v1kImlfuhjxwH6dsY=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 805C6162A20;
+	Mon, 30 Jun 2025 22:05:51 +0200 (CEST)
+Message-ID: <7c1180f4-923c-4138-b756-618cb5d597ac@ijzerbout.nl>
+Date: Mon, 30 Jun 2025 22:05:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604022956.3723438-1-yu.c.chen@intel.com>
-In-Reply-To: <20250604022956.3723438-1-yu.c.chen@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 30 Jun 2025 22:10:59 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j9r0TdS7EVRz0RHzi=F11t3EHq8xyf81=Z4kW0HXAueA@mail.gmail.com>
-X-Gm-Features: Ac12FXziDLO2YdCjInjGZYVycQtkKNscFf_UZIrwOZ99lmsmnm2u8OQjNpqKLYA
-Message-ID: <CAJZ5v0j9r0TdS7EVRz0RHzi=F11t3EHq8xyf81=Z4kW0HXAueA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: pfr_update: Add more debug information when
- firmware update failed
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Govindarajulu, Hariganesh" <hariganesh.govindarajulu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk
+ in weighted interleave
+To: Joshua Hahn <joshua.hahnjy@gmail.com>, Gregory Price <gourry@gourry.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Alistair Popple <apopple@nvidia.com>, Byungchul Park <byungchul@sk.com>,
+ David Hildenbrand <david@redhat.com>, Matthew Brost
+ <matthew.brost@intel.com>, Rakie Kim <rakie.kim@sk.com>,
+ Ying Huang <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
+References: <20250626200936.3974420-1-joshua.hahnjy@gmail.com>
+ <20250626200936.3974420-3-joshua.hahnjy@gmail.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20250626200936.3974420-3-joshua.hahnjy@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 4, 2025 at 4:36=E2=80=AFAM Chen Yu <yu.c.chen@intel.com> wrote:
+Op 26-06-2025 om 22:09 schreef Joshua Hahn:
+> Currently, alloc_pages_bulk_weighted_interleave can make up to nr_node_ids+1
+> calls to __alloc_pages_bulk. The additional allocation can happen if the
+> previous call to this function finished the weighted round robin allocation
+> partially on a node. To make up for this, the next time this function is
+> called, an extra allocation is made to finish cleanly on the node boundaries
+> before performing the weighted round-robin cycles again.
 >
-> Users reported insufficient error information for debugging during
-> firmware update failures on certain platforms. Add verbose error logs
-> in the error code path to enhance debuggability.
+> Instead of making an additional call, we can calculate how many additional
+> pages should be allocated from the first node (aka carryover) and add that
+> value to the number of pages that should be allocated as part of the current
+> round-robin cycle.
 >
-> Reported-by: "Govindarajulu, Hariganesh" <hariganesh.govindarajulu@intel.=
-com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> Running a quick benchmark by compiling the kernel shows a small increase
+> in performance. These experiments were run on a machine with 2 nodes, each
+> with 125GB memory and 40 CPUs.
+>
+> time numactl -w 0,1 make -j$(nproc)
+>
+> +----------+---------+------------+---------+
+> | Time (s) |  6.16   | With patch | % Delta |
+> +----------+---------+------------+---------+
+> | Real     |  88.374 |    88.3356 | -0.2019 |
+> | User     |  3631.7 |   3636.263 |  0.0631 |
+> | Sys      | 366.029 |    363.792 | -0.7534 |
+> +----------+---------+------------+---------+
+>
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>
 > ---
->  drivers/acpi/pfr_update.c | 63 +++++++++++++++++++++++++++++----------
->  1 file changed, 48 insertions(+), 15 deletions(-)
+>   mm/mempolicy.c | 39 ++++++++++++++++++++-------------------
+>   1 file changed, 20 insertions(+), 19 deletions(-)
 >
-> diff --git a/drivers/acpi/pfr_update.c b/drivers/acpi/pfr_update.c
-> index 031d1ba81b86..318683744ed1 100644
-> --- a/drivers/acpi/pfr_update.c
-> +++ b/drivers/acpi/pfr_update.c
-> @@ -127,8 +127,11 @@ static int query_capability(struct pfru_update_cap_i=
-nfo *cap_hdr,
->                                           pfru_dev->rev_id,
->                                           PFRU_FUNC_QUERY_UPDATE_CAP,
->                                           NULL, ACPI_TYPE_PACKAGE);
-> -       if (!out_obj)
-> +       if (!out_obj) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query cap failed with no object\n");
->                 return ret;
-> +       }
->
->         if (out_obj->package.count < CAP_NR_IDX ||
->             out_obj->package.elements[CAP_STATUS_IDX].type !=3D ACPI_TYPE=
-_INTEGER ||
-> @@ -141,13 +144,17 @@ static int query_capability(struct pfru_update_cap_=
-info *cap_hdr,
->             out_obj->package.elements[CAP_DRV_SVN_IDX].type !=3D ACPI_TYP=
-E_INTEGER ||
->             out_obj->package.elements[CAP_PLAT_ID_IDX].type !=3D ACPI_TYP=
-E_BUFFER ||
->             out_obj->package.elements[CAP_OEM_ID_IDX].type !=3D ACPI_TYPE=
-_BUFFER ||
-> -           out_obj->package.elements[CAP_OEM_INFO_IDX].type !=3D ACPI_TY=
-PE_BUFFER)
-> +           out_obj->package.elements[CAP_OEM_INFO_IDX].type !=3D ACPI_TY=
-PE_BUFFER) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query cap failed with invalid package count/type=
-\n");
->                 goto free_acpi_buffer;
-> +       }
->
->         cap_hdr->status =3D out_obj->package.elements[CAP_STATUS_IDX].int=
-eger.value;
->         if (cap_hdr->status !=3D DSM_SUCCEED) {
->                 ret =3D -EBUSY;
-> -               dev_dbg(pfru_dev->parent_dev, "Error Status:%d\n", cap_hd=
-r->status);
-> +               dev_dbg(pfru_dev->parent_dev, "Query cap Error Status:%d\=
-n",
-> +                       cap_hdr->status);
->                 goto free_acpi_buffer;
->         }
->
-> @@ -193,24 +200,32 @@ static int query_buffer(struct pfru_com_buf_info *i=
-nfo,
->         out_obj =3D acpi_evaluate_dsm_typed(handle, &pfru_guid,
->                                           pfru_dev->rev_id, PFRU_FUNC_QUE=
-RY_BUF,
->                                           NULL, ACPI_TYPE_PACKAGE);
-> -       if (!out_obj)
-> +       if (!out_obj) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query buf failed with no object\n");
->                 return ret;
-> +       }
->
->         if (out_obj->package.count < BUF_NR_IDX ||
->             out_obj->package.elements[BUF_STATUS_IDX].type !=3D ACPI_TYPE=
-_INTEGER ||
->             out_obj->package.elements[BUF_EXT_STATUS_IDX].type !=3D ACPI_=
-TYPE_INTEGER ||
->             out_obj->package.elements[BUF_ADDR_LOW_IDX].type !=3D ACPI_TY=
-PE_INTEGER ||
->             out_obj->package.elements[BUF_ADDR_HI_IDX].type !=3D ACPI_TYP=
-E_INTEGER ||
-> -           out_obj->package.elements[BUF_SIZE_IDX].type !=3D ACPI_TYPE_I=
-NTEGER)
-> +           out_obj->package.elements[BUF_SIZE_IDX].type !=3D ACPI_TYPE_I=
-NTEGER) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query buf failed with invalid package count/type=
-\n");
->                 goto free_acpi_buffer;
-> +       }
->
->         info->status =3D out_obj->package.elements[BUF_STATUS_IDX].intege=
-r.value;
->         info->ext_status =3D
->                 out_obj->package.elements[BUF_EXT_STATUS_IDX].integer.val=
-ue;
->         if (info->status !=3D DSM_SUCCEED) {
->                 ret =3D -EBUSY;
-> -               dev_dbg(pfru_dev->parent_dev, "Error Status:%d\n", info->=
-status);
-> -               dev_dbg(pfru_dev->parent_dev, "Error Extended Status:%d\n=
-", info->ext_status);
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query buf failed with Error Status:%d\n", info->=
-status);
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Query buf failed with Error Extended Status:%d\n=
-", info->ext_status);
->
->                 goto free_acpi_buffer;
->         }
-> @@ -295,12 +310,16 @@ static bool applicable_image(const void *data, stru=
-ct pfru_update_cap_info *cap,
->         m_img_hdr =3D data + size;
->
->         type =3D get_image_type(m_img_hdr, pfru_dev);
-> -       if (type < 0)
-> +       if (type < 0) {
-> +               dev_dbg(pfru_dev->parent_dev, "Invalid image type\n");
->                 return false;
-> +       }
->
->         size =3D adjust_efi_size(m_img_hdr, size);
-> -       if (size < 0)
-> +       if (size < 0) {
-> +               dev_dbg(pfru_dev->parent_dev, "Invalid image size\n");
->                 return false;
-> +       }
->
->         auth =3D data + size;
->         size +=3D sizeof(u64) + auth->auth_info.hdr.len;
-> @@ -346,8 +365,11 @@ static int start_update(int action, struct pfru_devi=
-ce *pfru_dev)
->         out_obj =3D acpi_evaluate_dsm_typed(handle, &pfru_guid,
->                                           pfru_dev->rev_id, PFRU_FUNC_STA=
-RT,
->                                           &in_obj, ACPI_TYPE_PACKAGE);
-> -       if (!out_obj)
-> +       if (!out_obj) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Update failed to start with no object\n");
->                 return ret;
-> +       }
->
->         if (out_obj->package.count < UPDATE_NR_IDX ||
->             out_obj->package.elements[UPDATE_STATUS_IDX].type !=3D ACPI_T=
-YPE_INTEGER ||
-> @@ -355,8 +377,11 @@ static int start_update(int action, struct pfru_devi=
-ce *pfru_dev)
->             out_obj->package.elements[UPDATE_AUTH_TIME_LOW_IDX].type !=3D=
- ACPI_TYPE_INTEGER ||
->             out_obj->package.elements[UPDATE_AUTH_TIME_HI_IDX].type !=3D =
-ACPI_TYPE_INTEGER ||
->             out_obj->package.elements[UPDATE_EXEC_TIME_LOW_IDX].type !=3D=
- ACPI_TYPE_INTEGER ||
-> -           out_obj->package.elements[UPDATE_EXEC_TIME_HI_IDX].type !=3D =
-ACPI_TYPE_INTEGER)
-> +           out_obj->package.elements[UPDATE_EXEC_TIME_HI_IDX].type !=3D =
-ACPI_TYPE_INTEGER) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Update failed with invalid package count/type\n"=
-);
->                 goto free_acpi_buffer;
-> +       }
->
->         update_result.status =3D
->                 out_obj->package.elements[UPDATE_STATUS_IDX].integer.valu=
-e;
-> @@ -365,8 +390,10 @@ static int start_update(int action, struct pfru_devi=
-ce *pfru_dev)
->
->         if (update_result.status !=3D DSM_SUCCEED) {
->                 ret =3D -EBUSY;
-> -               dev_dbg(pfru_dev->parent_dev, "Error Status:%d\n", update=
-_result.status);
-> -               dev_dbg(pfru_dev->parent_dev, "Error Extended Status:%d\n=
-",
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Update failed with Error Status:%d\n", update_re=
-sult.status);
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Update failed with Error Extended Status:%d\n",
->                         update_result.ext_status);
->
->                 goto free_acpi_buffer;
-> @@ -450,8 +477,10 @@ static ssize_t pfru_write(struct file *file, const c=
-har __user *buf,
->         if (ret)
->                 return ret;
->
-> -       if (len > buf_info.buf_size)
-> +       if (len > buf_info.buf_size) {
-> +               dev_dbg(pfru_dev->parent_dev, "Capsule image size too lar=
-ge\n");
->                 return -EINVAL;
-> +       }
->
->         iov.iov_base =3D (void __user *)buf;
->         iov.iov_len =3D len;
-> @@ -460,10 +489,14 @@ static ssize_t pfru_write(struct file *file, const =
-char __user *buf,
->         /* map the communication buffer */
->         phy_addr =3D (phys_addr_t)((buf_info.addr_hi << 32) | buf_info.ad=
-dr_lo);
->         buf_ptr =3D memremap(phy_addr, buf_info.buf_size, MEMREMAP_WB);
-> -       if (!buf_ptr)
-> +       if (!buf_ptr) {
-> +               dev_dbg(pfru_dev->parent_dev, "Failed to remap the buffer=
-\n");
->                 return -ENOMEM;
-> +       }
->
->         if (!copy_from_iter_full(buf_ptr, len, &iter)) {
-> +               dev_dbg(pfru_dev->parent_dev,
-> +                       "Failed to copy the data from the user space buff=
-er\n");
->                 ret =3D -EINVAL;
->                 goto unmap;
->         }
-> --
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 78ad74a0e249..0d693f96cf66 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -2569,7 +2569,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   	unsigned long node_pages, delta;
+>   	u8 *weights, weight;
+>   	unsigned int weight_total = 0;
+> -	unsigned long rem_pages = nr_pages;
+> +	unsigned long rem_pages = nr_pages, carryover = 0;
+>   	nodemask_t nodes;
+>   	int nnodes, node;
+>   	int resume_node = MAX_NUMNODES - 1;
+> @@ -2594,18 +2594,12 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   	node = me->il_prev;
+>   	weight = me->il_weight;
+>   	if (weight && node_isset(node, nodes)) {
+> -		node_pages = min(rem_pages, weight);
+> -		nr_allocated = __alloc_pages_bulk(gfp, node, NULL, node_pages,
+> -						  page_array);
+> -		page_array += nr_allocated;
+> -		total_allocated += nr_allocated;
+> -		/* if that's all the pages, no need to interleave */
+>   		if (rem_pages <= weight) {
+> -			me->il_weight -= rem_pages;
+> -			return total_allocated;
+> +			node_pages = rem_pages;
+> +			me->il_weight -= node_pages;
+> +			goto allocate;
+This is a goto into the middle of a for-loop.
+What do you think is going to happen at the end of that loop?
 
-Applied as 6.17 material, thanks!
+I think (only tested with a small C program) it will go to the start of
+the loop, do the i++, check i<nnodes, and possibly do the loop again.
+Variable i is uninitialized at that point. In the loop it hits several
+uninitialized variables.
+
+Even if this is legal C code, it is pretty obscure.
+
+>   		}
+> -		/* Otherwise we adjust remaining pages, continue from there */
+> -		rem_pages -= weight;
+> +		carryover = weight;
+>   	}
+>   	/* clear active weight in case of an allocation failure */
+>   	me->il_weight = 0;
+> @@ -2614,7 +2608,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   	/* create a local copy of node weights to operate on outside rcu */
+>   	weights = kzalloc(nr_node_ids, GFP_KERNEL);
+>   	if (!weights)
+> -		return total_allocated;
+> +		return 0;
+>   
+>   	rcu_read_lock();
+>   	state = rcu_dereference(wi_state);
+> @@ -2634,16 +2628,17 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   	/*
+>   	 * Calculate rounds/partial rounds to minimize __alloc_pages_bulk calls.
+>   	 * Track which node weighted interleave should resume from.
+> +	 * Account for carryover. It is always allocated from the first node.
+>   	 *
+>   	 * if (rounds > 0) and (delta == 0), resume_node will always be
+>   	 * the node following prev_node and its weight.
+>   	 */
+> -	rounds = rem_pages / weight_total;
+> -	delta = rem_pages % weight_total;
+> +	rounds = (rem_pages - carryover) / weight_total;
+> +	delta = (rem_pages - carryover) % weight_total;
+>   	resume_node = next_node_in(prev_node, nodes);
+>   	resume_weight = weights[resume_node];
+> +	node = carryover ? prev_node : next_node_in(prev_node, nodes);
+>   	for (i = 0; i < nnodes; i++) {
+> -		node = next_node_in(prev_node, nodes);
+>   		weight = weights[node];
+>   		/* when delta is depleted, resume from that node */
+>   		if (delta && delta < weight) {
+> @@ -2651,12 +2646,14 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   			resume_weight = weight - delta;
+>   		}
+>   		/* Add the node's portion of the delta, if there is one */
+> -		node_pages = weight * rounds + min(delta, weight);
+> +		node_pages = weight * rounds + min(delta, weight) + carryover;
+>   		delta -= min(delta, weight);
+> +		carryover = 0;
+>   
+>   		/* node_pages can be 0 if an allocation fails and rounds == 0 */
+>   		if (!node_pages)
+>   			break;
+> +allocate:
+>   		nr_allocated = __alloc_pages_bulk(gfp, node, NULL, node_pages,
+>   						  page_array);
+>   		page_array += nr_allocated;
+> @@ -2664,10 +2661,14 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+>   		if (total_allocated == nr_pages)
+>   			break;
+>   		prev_node = node;
+> +		node = next_node_in(prev_node, nodes);
+> +	}
+> +
+> +	if (weights) {
+> +		me->il_prev = resume_node;
+> +		me->il_weight = resume_weight;
+> +		kfree(weights);
+>   	}
+> -	me->il_prev = resume_node;
+> -	me->il_weight = resume_weight;
+> -	kfree(weights);
+>   	return total_allocated;
+>   }
+>   
+
