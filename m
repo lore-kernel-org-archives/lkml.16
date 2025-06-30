@@ -1,242 +1,184 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010062.outbound.protection.outlook.com [52.101.84.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C940924166A;
-	Mon, 30 Jun 2025 08:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751271828; cv=fail; b=OhrE73zQbGLKQuJYyPqAEVQZWZ0k4wbRdVEtWDnqPTuhCtgtpKyM3COtGnirbRfblZuBy9CrL3A/dx9l37s8wKUkfvTunzyf+VUXndaPwDlEMhcrsAzG6wsOuu48SObAjSiTYFcm0N4LkCmrNMJo3pTLGN/GJa0KfercEr0gceU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751271828; c=relaxed/simple;
-	bh=MHiRt6BRvQdBs9Yuo5AoH7riwn7uHaTxFzABCw64uh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PP963qFhGjTV7kKY9P6w/SnPukJvuY8dPEHz1Irgi1thCGxXE8s8T6ICDoDvR7AYuJPTJSy8GgjR5Cj5UYfrdwxqiFA+yDK2Ypf65bg988N7+W2oLU3VmlwWxk44XTgUJXZlksPatm8k+epiLIpUe0Z/gTI41LfyzbliX7z2+4o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=IZZPY6+6; arc=fail smtp.client-ip=52.101.84.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E74221286;
+	Mon, 30 Jun 2025 08:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751271856; cv=none; b=BjsIFR+84f8WnAVNTpIqZ/GFUeInLoa6x1tHEIz865NES5BQu/hY2/eoFrBJU9+FBWrmxooyY6Uym3NhgdBZiuUH6cfaW2pjVCW32s9HTxX+GUXRSlBqG6oQolMuf5kLEgWSi2fZjMSlA0/9Wc5cd0b6o462akNTZicF4wKEEAk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751271856; c=relaxed/simple;
+	bh=KnqdYmSo9s5NiZ0efI74+ehXh+hBILnC72jZRK1fvLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e7IOZi1n6c/LL+cx5AaZ6ghpjsBZJ9+PT2rRgAHALY7H/y8RTRXeoFaOqie9I30CAJ31xAGEucr2njp1qvNewhqWEfEDxYOWO/3HLwWS6eOrxQFNssIeXb9g77y0jI9cAVfadc7kOQppcCKlPipM7uUD6TNfEd9NSaiNKUYeyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+Bb7Inn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="IZZPY6+6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ttj/6Y2DzA5CmMI/uqz2TV9w5onmuEkoawHbncpfCiy2BL1KarIqo3hdX4m394e3QRDC60fza9EoB3IaskW5gEDJzOmBbK7tGuQG/prUVytP76jNBKeugQ1Io8IuV4KBIdzAko5PL5L8k9hCEyjXD9XzTNcp/aWZqy/Nlyw4bNmNHSQv98uzYvJDDsKo/GnVlHpMz7sZyraLzUjOKBfnHY30tBIS3COgmlz2fTZJts1SwSz8slmdRXIA/XIVE/1zg/Gj8fj25PMJk/gupHzSIC19sdVq+A0nEwCHRbdab+Stf7mc1cFhsVDOtKswj2Y+LvmCzALS3obLuUN958B7BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=odOa7NBnUIPKua65+OUbpJ4xD7sDqXygvxXU/cZcJxA=;
- b=zCzEcIB5bSHNCljG4+M0mDt5GrXiQCqRmuzXtYKi4ILTy+XxRryOj+jfd26pWl1BlgAjT4hpQ7MdPZ024SOdobLxR460loMEH+4zIDLzFIE5gCwsND9w5MMfzrutv5xCv15SU5PnZ+1l+DqXkZFMm18LWws9Khpt1qQpP5NiLwkUWiplXrhp7DeecvEH51iE4HrjoSorBdGkyLqSrPynsG/enwMWtwgxxrBN0b3MFcld2GDTz6wkawGbnQSKimGMkCAYYguqjHQJ6iznoByze6mDQevOY+Snf1XK2F1zICfhePlPYgjdXReq0t0O5qxl6v4KIXMrMbRFzSdlSAcoQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=odOa7NBnUIPKua65+OUbpJ4xD7sDqXygvxXU/cZcJxA=;
- b=IZZPY6+6bDuMsNTCeJG5R82qqRMS/NoBjTjBYPlxvqgZvsYZ5gB/03YrvPs/zpSiDipSiZx8bQgpIhH/sbnJND4bJI9LB3BtAYFeVl5Vi6GCq/His6E6tKs1WvXZ6zPplaFXfeLDjW7KmRI1BljaagTAgwB/vOlhk03CPiFYDZExlAPMmB6J6wnZcHoKsXgvRdgiDv71PJJGXNm5C7UB4ZIdV8XC9XdVII6T/2xuD/n2fE6hZBP7951rfAaFPY5D4YH29gCvxrDUH9th9a/h2u4trH90voUU+MOx/MN4amUXnr7U2h93xL/+B+rFJDk1b/rHcI0qP9We2da2iB+81w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by VI2PR04MB10192.eurprd04.prod.outlook.com (2603:10a6:800:229::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.25; Mon, 30 Jun
- 2025 08:23:42 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7%6]) with mapi id 15.20.8880.027; Mon, 30 Jun 2025
- 08:23:42 +0000
-Date: Mon, 30 Jun 2025 16:18:51 +0800
-From: Xu Yang <xu.yang_2@nxp.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: ezequiel@vanguardiasur.com.ar, mchehab@kernel.org, 
-	laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, gregkh@linuxfoundation.org, 
-	mingo@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, 
-	viro@zeniv.linux.org.uk, thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v2 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <wddmyx4lccthln7mbngkd4zbh6y7mwetdba5e7ob6u4xevecmj@zopp65eqbeuu>
-References: <20250627101939.3649295-1-xu.yang_2@nxp.com>
- <20250627101939.3649295-2-xu.yang_2@nxp.com>
- <1c4f505f-d684-4643-bf77-89d97e01a9f2@rowland.harvard.edu>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c4f505f-d684-4643-bf77-89d97e01a9f2@rowland.harvard.edu>
-X-ClientProxiedBy: MA0PR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ae::17) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+Bb7Inn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2659CC4CEE3;
+	Mon, 30 Jun 2025 08:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751271854;
+	bh=KnqdYmSo9s5NiZ0efI74+ehXh+hBILnC72jZRK1fvLM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r+Bb7Inn8Vy22KXD38198pUWEe8FBp2sBCqQ/yUmybovKrqN9wygoCuEuRVC5SMm2
+	 gm5xd3AkSqygRW7xfmyOBN6Csv2e8N44KurbNvRX+ALrOeI1elU4d5Q+a1lIXLnoR6
+	 0Q3rUcmlKktOzdHPRgv7FLNFvu4prXlIcGskbjkE7UphuvtsJJP65JhMGMUOYs5Cqi
+	 2LYK52Rve1YoVwrRXIw1UUyWvAzX7AioHPSu2chfAnP9EYo4++db3BEsed0ItGEzzL
+	 7znY+g/b6ynYiqNdOLnrUTGNdZARlYsWenJDUc21bFeLYj3jl7jOyCVQVTET9p3kDe
+	 lKhTxR/iCX6iw==
+Message-ID: <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
+Date: Mon, 30 Jun 2025 10:24:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|VI2PR04MB10192:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6e4ed2a6-0ef6-4ff9-5cbf-08ddb7af6c6b
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|1800799024|366016|52116014|19092799006|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?3dyuPMmDKwoSEAQ/UMInNfAC1+9MD6Un+/pSmeWCkZVp6G4zv8g+IRdrsQdL?=
- =?us-ascii?Q?lm2/OpR3STqdoYXykWuVvEg4/fJX6QljkHv7ZqGghJ7v8vDZ/7dhRKCC4Pj5?=
- =?us-ascii?Q?XX/HiY4k6w4urazLCpq68ewfMp5JNThd4VwJFub14Jjl4CEgAdFGII9oeG8H?=
- =?us-ascii?Q?J5YErmuuQVPgL0ggm5nmpxJwu+YLWn7+TUow9koQ8LEhPTMZAXeuefSaAize?=
- =?us-ascii?Q?WhEHChUEZLfGoEOVObeOjioT4Z/abu/3fQeV1DaQp31x3zMO4sJs8HkwnKRn?=
- =?us-ascii?Q?p6WRpCWsKYW3f9C6iN1RKEjWEhxHPQKYUzL98YaecishYCF+PSjjXQKbgCAB?=
- =?us-ascii?Q?cbPCbQAzFrtawqyDZcSKNt7DaIi/3K2BSZlbSvTXtdQiKNqn/yC/elmva410?=
- =?us-ascii?Q?BJ9uQF9PoKdrffpYaOW2xBN5BuL6jlz/A6Oou8nSsYIY4vPRwAcSZE6hByq1?=
- =?us-ascii?Q?EH3G55A7DtcksNLl1Fn0Wq9K2aXlCIqahHIDSAwIt/VWILCtaWvzWm8V87dw?=
- =?us-ascii?Q?io1BG4s7oLtC6D02tH4Hjb+aHqxMeIPsK5XkO7s/yNIZ1k8tkAwpOqSjpVjy?=
- =?us-ascii?Q?MSZyzuIEvT8ez735/VLUqkC1D2VFYoKAGNpCPg16R5ibpcEzAQHnBKsS8HL9?=
- =?us-ascii?Q?f7IZaA8YpYT8hqEDI+xw7AN8G27y5R9p5YNS29dei+aVe2QvPehp4hba70PI?=
- =?us-ascii?Q?NnTt8rQwkaDMXD+beEYBQejKi0zmXJj2Db3U7UoVCNrSUl2D6zU04QpF0aEa?=
- =?us-ascii?Q?XCIJPgMdshjxhRemrrRU9SO4/xGjFGQq94g5RCxnI9lO/2+z2XJoh2B4N/1G?=
- =?us-ascii?Q?KNK0T5eQR1SU93sbdickzJOYoCnpbwfH11OkmLG50gGmrGxT3jC/peWvvsgU?=
- =?us-ascii?Q?Z4hztiSTeKMX2JiymUiNZcJpCZ8pk3XBfc5N+GlYyrs2QW0m1YWkdAUTfvPz?=
- =?us-ascii?Q?Ik7SLgTw9SsBvA9QQHaJ2uNZVmvMWJBOfOCeN/P4D3ir7I3tKaPxfcsHDoEb?=
- =?us-ascii?Q?4uBaBNm+Kk5IOO3NSDYJYSroL8bRSTyR5JePs33DkAKKLyDPC5vHaMxspDCb?=
- =?us-ascii?Q?AGqLwFqJckOYq1/ixB+bhrXBYZAa9uOTvVZ0Cia+hwUB7CpGt6+aaFTclNX/?=
- =?us-ascii?Q?J8Om/+6fuVLBoFDTBAvh4HDW9h3zvyPF5Eczji0gLPlhQj59Bl/jfM/D2jTK?=
- =?us-ascii?Q?7045qbpNert19lyQgWvEMDlb0/nyuApMg/N7tEyR/pt7r9Ixc8pVAr0dy1p6?=
- =?us-ascii?Q?VdDETIcQH7EdhFvz6p5CtaLY8iAZOhjhj4gkLvuPLprNobLjnUIDo41Ro9qV?=
- =?us-ascii?Q?DuDu+PqAxoj5h5F69FBruauzTRFGoIEydJ3tP2MahcoS/I+3RKlT/Knwjw7z?=
- =?us-ascii?Q?I5JLxR3CKCe6jpGGQsgZyr08cHGj4EEIMI1esy9b74v/areAy1qgMWNZzYGX?=
- =?us-ascii?Q?BHS9/pmrxlSvgHcb8ztJ+za4FdslYjmgOiQ8AOniYmFBLpYF6muM9jYSbFBR?=
- =?us-ascii?Q?Aio1DugFm7JfFHg=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(19092799006)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?vzWkJpWfDERskYLVUnEkteojrdtde3/tNr6m/uMIZlhZWdhDjaVMoiCoq7qv?=
- =?us-ascii?Q?wik8Vv3tE+NkGK07mMUQiOhDIw2eFI6r7r5ViqpeFCdFGD1QW7kp6MsOBYf1?=
- =?us-ascii?Q?29EYsRB3ZtkZQ63+iZgcsvc2ZCdtWpZZAkos0doCyAhkwGEY6E+9ydCahJdT?=
- =?us-ascii?Q?hzTFicSAaSDk+FYA/cACPzV49jC6Wd0FmsgXeBRckosG2QVRO9rD9WrH/Ysp?=
- =?us-ascii?Q?cYSJn0oxNZ/nIkPWIyits8GrrmSyBOVlwOfIAy5pAR98DKxiqzhMiLq5kOcm?=
- =?us-ascii?Q?Fe7WiIjeE6trLYdymZTcGyMlilZad+TxAO2Y9GB2XQvFqI9mImeFenOqCU3j?=
- =?us-ascii?Q?ieZ7O2+piDpCGpl1qHgc+MTV2yM2dUh60q8HGoWSM3SLNJ7AH0Zb7aXmZS0r?=
- =?us-ascii?Q?dBCrK4gWpHXy82sJutR+EPOzeqdSvbsUANeZqkq+a7FPXSn8phTF5G6iSkwT?=
- =?us-ascii?Q?EIMT7qnuIBZ/uUEyATvb324GK/gQh323BAWHZwveYG7GPujndqWaIU7s+DrK?=
- =?us-ascii?Q?TA47YM/xL3TTlN5lZHA42ZF1AMcxfyr0xfkWLjq8E60I35l6DBfZ82qjRDbS?=
- =?us-ascii?Q?RGHmdZq0td4EC6/yKTyl1nMJY1U+uXGUmGR42HaMfvxz2srVUkwNB9LbNNAi?=
- =?us-ascii?Q?2hjGJPSc/+czrGmHVDX5zariCDSBsNsu6jiqXAx0vUgPbyG1AMi8IKG1xYCL?=
- =?us-ascii?Q?xnuFUSWfW+63mMge65vyeQZJeWUTO9KDXkc5q6U9JHKNpf2wL+a8hBKtCKBY?=
- =?us-ascii?Q?LL3TlLzVMLO8mQWUX97ehFYYGGN1cYEPWea5Ufe/r1apnK30K9bLC3RA3SdF?=
- =?us-ascii?Q?uCQutKVyeTsC/0kNDwlR4KkXT/YA8jIXDCYDR/iqc0eN820ig5ILAg/nP/TT?=
- =?us-ascii?Q?uz702qFbGppmOLSD/Mnyqc2m4rWnOPDX/AcCDX5k45Tf4yoabMHIEEO3QrL/?=
- =?us-ascii?Q?/kpYEGQQBO0I1iIgnrHqDxc/NmR2J6m0ryPpPfti3Y30UPGq27IZZrB9Zrju?=
- =?us-ascii?Q?Ao39GY13GLeU6zA6/GfFMVxbpUV4ygivu6guD6VZsfCPcF0O2EpGo1u/0YzB?=
- =?us-ascii?Q?c6THcxXNtG/grz1nSRJ0k0C8xLUH7WPI9jAsvozwpi2gH0sTbj/D2F5lmvBa?=
- =?us-ascii?Q?whqb0hi/1WLCOLv5/KLzZoAFNgumYQcJlMZQ0iP2Y+AOYaNtQr/2ilBKuNpH?=
- =?us-ascii?Q?+Burix+iAwPwWfed4IAukd4ST2Kb+eIb6dV6nXSusCxSkerN59XScZXNJUGg?=
- =?us-ascii?Q?UpzOW3ZDkoxocqcupGkQrlmCik4arNjLPE0nilz7vUmbh0FtDsa7VgyPVxzL?=
- =?us-ascii?Q?P31zKK/uOeJQnMVL1xO73N+odB3hU/Xj9wm7cx0/etevATVhqc7Wu4mFfPkm?=
- =?us-ascii?Q?0hpdjGqcdU2vuPM/DHlIvCayEcEN5UIYkwsofJnb13km6vWS93uBFX39JA5A?=
- =?us-ascii?Q?ZfF81SmX508LezZt5EVsrkkEfc3OBLlx2dNIxjlhEawszXscTah/5e1hoDFc?=
- =?us-ascii?Q?lpwmJ4b8TRn1caknKSmkRhLGVy/GA4mz8lKbnrSV7MVUrlnDBnC29E+UWkx8?=
- =?us-ascii?Q?Mk1asz7IO2vJESUygfdl/5bKl8W2FbDuyPkTSgdM?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e4ed2a6-0ef6-4ff9-5cbf-08ddb7af6c6b
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:23:42.4252
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3kJdG4q/5aewk0RJACOD+qhzmER3eVQKYMzj4Ey1ZBJI9NOW6BQQ9b7QqBd8tGwQ4mj/k5IhHxO2AzuuBp+qJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10192
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+To: Hans de Goede <hdegoede@redhat.com>, Luca Weiss <luca.weiss@fairphone.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+ <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+ <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
+ <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Alan,
-
-On Fri, Jun 27, 2025 at 10:23:36AM -0400, Alan Stern wrote:
-> On Fri, Jun 27, 2025 at 06:19:37PM +0800, Xu Yang wrote:
-> > This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> > functions to support alloc and free buffer in a dma-noncoherent way.
-> > 
-> > To explicit manage the memory ownership for the kernel and device,
-> > this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> > and call it at proper time.  The management requires the user save
-> > sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-> > 
-> > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > ---
-> >  drivers/usb/core/hcd.c | 30 ++++++++++++++++
-> >  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb.h    |  9 +++++
-> >  3 files changed, 119 insertions(+)
-> > 
-> > diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> > index c22de97432a0..5fa00d32afb8 100644
-> > --- a/drivers/usb/core/hcd.c
-> > +++ b/drivers/usb/core/hcd.c
-> > @@ -1496,6 +1496,34 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_hcd_map_urb_for_dma);
-> >  
-> > +static void usb_dma_noncoherent_sync_for_cpu(struct usb_hcd *hcd,
-> > +					     struct urb *urb)
-> > +{
-> > +	enum dma_data_direction dir;
-> > +
-> > +	if (!urb->sgt)
-> > +		return;
-> > +
-> > +	dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
+On 29/06/2025 14:07, Hans de Goede wrote:
+> Hi Krzysztof,
 > 
-> Are the following operations really necessary if the direction is OUT?  
-> There are no bidirectional URBs, and an OUT transfer never modifies the 
-> contents of the transfer buffer so the buffer contents will be the same 
-> after the URB completes as they were when the URB was submitted.
-
-According to Laurent's reply email, it may be needed for some archs.
-
+> On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
+>> On 27/06/2025 11:48, Luca Weiss wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
+>>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
+>>>>> Document the interconnects property which is a list of interconnect
+>>>>> paths that is used by the framebuffer and therefore needs to be kept
+>>>>> alive when the framebuffer is being used.
+>>>>>
+>>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
+>>>>>  1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
+>>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>> @@ -79,6 +79,9 @@ properties:
+>>>>>    power-domains:
+>>>>>      description: List of power domains used by the framebuffer.
+>>>>>  
+>>>>> +  interconnects:
+>>>>> +    description: List of interconnect paths used by the framebuffer.
+>>>>> +
+>>>>
+>>>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
+>>>> some sort of resources in unknown way is not simple anymore. You need
+>>>> device specific bindings.
+>>>
+>>> The bindings support an arbitrary number of clocks, regulators,
+>>> power-domains. Why should I artificially limit the interconnects to only
+>>> one?
+>>
+>> And IMO they should not. Bindings are not supposed to be generic.
 > 
-> > +	invalidate_kernel_vmap_range(urb->transfer_buffer,
-> > +				     urb->transfer_buffer_length);
-> > +	dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
-> > +}
-> 
-> This entire routine should be inserted at the appropriate place in 
-> usb_hcd_unmap_urb_for_dma() instead of being standalone.
+> The simplefb binding is a binding to allow keeping the firmware, e.g.
+> uboot setup framebuffer alive to e.g. show a boot splash until
+> the native display-engine drive loads. Needing display-engine
+> specific bindings totally contradicts the whole goal of 
 
-Okay.
+No, it does not. DT is well designed for that through expressing
+compatibility. I did not say you cannot have generic fallback for simple
+use case.
+
+But this (and previous patchset) grows this into generic binding ONLY
+and that is not correct.
+
 
 > 
-> > +static void usb_dma_noncoherent_sync_for_device(struct usb_hcd *hcd,
-> > +						struct urb *urb)
-> > +{
-> > +	enum dma_data_direction dir;
-> > +
-> > +	if (!urb->sgt)
-> > +		return;
-> > +
-> > +	dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
-> > +	flush_kernel_vmap_range(urb->transfer_buffer,
-> > +				urb->transfer_buffer_length);
-> > +	dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
-> > +}
-> 
-> Likewise, this code belongs inside usb_hcd_map_urb_for_dma().
+> It is generic by nature and I really do not see how clocks and
+> regulators are any different then interconnects here.
 
-Okay.
+Yeah, they are also wrong. I already commented on this.
 
 > 
-> Also, the material that this routine replaces in the uvc and stk1160 
-> drivers do not call flush_kernel_vmap_range().  Why did you add that 
-> here?  Was this omission a bug in those drivers?
-
-According to dma-api.rst:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/tree/Documentation/core-api/dma-api.rst?h=linux-6.15.y#n664
-
-"Once a non-contiguous allocation is mapped using this function, the
-flush_kernel_vmap_range() and invalidate_kernel_vmap_range() APIs must
-be used to manage the coherency between the kernel mapping, the device
-and user space mappings (if any)."
-
-Possibly the uvc and stk1160 missed calling it, but since they won't be
-the only user of the USB core, so we'd better call these APIs.
-
-Thanks,
-Xu Yang
-
+> Note that we had a huge discussion about adding clock
+> and regulators to simplefb many years ago with pretty
+> much the same arguments against doing so. In the end it was
+> decided to add regulator and clocks support to the simplefb
+> bindings and non of the feared problems with e.g. ordening
+> of turning things on happened.
 > 
-> Alan Stern
+> A big part of this is that the claiming of clks / regulators /
+> interconnects by the simplefb driver is there to keep things on,
+> so it happens before the kernel starts tuning off unused resources
+> IOW everything is already up and running and this really is about
+> avoiding turning things off.
+
+No one asks to drop them from the driver. I only want specific front
+compatible which will list and constrain the properties. It is not
+contradictory to your statements, U-boot support, driver support. I
+really do not see ANY argument why this cannot follow standard DT rules.
+
+Best regards,
+Krzysztof
