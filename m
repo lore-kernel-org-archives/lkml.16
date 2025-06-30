@@ -1,88 +1,87 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7133C38
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DE03C38;
+	Mon, 30 Jun 2025 02:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751249793; cv=none; b=dqzODq9szH9uV42HTzJOjqJpbeKSIB0IRudN3Vn6kIK+iDIOL6XcoRz1YF851+yxKi/bSDRU08LnFe3O1hBvUKWi52ed82Kic96+pZ1cXuda2QkV5Jmk2TM8Zxp9fJW9fN+pE5SqByrNUJ/Ao9WRIAt0G/KHBPL8LYSyfNN9HvQ=
+	t=1751249869; cv=none; b=QLM/g7vFAfuYoUgg6HsPBdusPwn9qbvDqe3D8Kw2VBm69rpV7cZVcknejXigL+QVHPiG7I4YMhKvGjHJWirXRZjX6W+M4WfReqIQnaOSwuXdNwOgKiVHBUx//5CH2wlPDR1teocbgzA7BdeMx84p2gpKbJNZPS+DBa/ImoxYcxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751249793; c=relaxed/simple;
-	bh=B1XLNkpeS8NfNTBT1GpddtwssUrLMKYAjPEkicgNxqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVLUluZDPhbHBWdorMzJEq5ppyjvM4S8gPfrfJTlVNrgPGfXOlu7LF5Nf2ezg5vepvDizg7SUdx8iSaSzyavSp79883sDDwHwY4RAekT9gDEBgT3D2Vbi7PSpJUb0C8jtJQifB9NpnwTQQ2ulz8YOTFjYMBag+az0361xfKp2NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y+suG37x; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y+suG37x"
-Message-ID: <3e7fa26f-16b0-4564-80e8-4f2b5bcae3e9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751249788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iFjDOLlecrclWt7YJmrrObsIk820FSakImsrzSFHDw8=;
-	b=Y+suG37x8DCkAZOCu1nt4ebEM9AELhOVAXOvGG+LAVn0o4CikCtI+Qx+xhmntwH8tajLPa
-	KKWOVmi9CpAO3bTJX1+JFeSKt4bj/zCKrhygkRFCGzGgCjwb8+nVUX5Y+E7O0MvYTWWIwp
-	llBFzp9AwtrGI9r9mriTD53Bstw3yi4=
-Date: Mon, 30 Jun 2025 10:16:20 +0800
+	s=arc-20240116; t=1751249869; c=relaxed/simple;
+	bh=LbqzbrMcEiwmJYFiqq/MnQJtvZFIDnS/seI54Nz8Xi8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=M6jnhRWScOM5bmGc/8dpxeio1Ajnnvu/0zM/r7JwHU22phrY9uXgnsmDFwYfvna7/+X5YJT2+bFUxXV5Uybobf49WgCQQrcpb535be1KlX7VacoSlWgJpN/JxtqYJPSHoLrDQxfiwKc6qDDG97bgNtPLPdUUYkZkSyR8cJZeCik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bVqYw14plzKHMTx;
+	Mon, 30 Jun 2025 10:17:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 86ED71A13B7;
+	Mon, 30 Jun 2025 10:17:38 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP3 (Coremail) with SMTP id _Ch0CgBHpyTA82For4WqAA--.36383S3;
+	Mon, 30 Jun 2025 10:17:38 +0800 (CST)
+Subject: Re: [PATCH 15/23] md/md-llbitmap: implement llbitmap IO
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de,
+ colyli@kernel.org, song@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-16-yukuai1@huaweicloud.com>
+ <0bb1fb81-603d-45a9-9f23-a4f370084fd6@redhat.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <047fb193-3d9c-65d8-6379-84af1a61b283@huaweicloud.com>
+Date: Mon, 30 Jun 2025 10:17:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] net: stmmac: add support for dwmac 5.20
-To: Andrew Lunn <andrew@lunn.ch>, Jisheng Zhang <jszhang@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250629094425.718-1-jszhang@kernel.org>
- <4d5a599a-60e5-4141-8671-ffcbda3aca02@lunn.ch>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <4d5a599a-60e5-4141-8671-ffcbda3aca02@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <0bb1fb81-603d-45a9-9f23-a4f370084fd6@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:_Ch0CgBHpyTA82For4WqAA--.36383S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	oOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-在 6/30/25 2:26 AM, Andrew Lunn 写道:
-> On Sun, Jun 29, 2025 at 05:44:25PM +0800, Jisheng Zhang wrote:
->> The dwmac 5.20 IP can be found on some synaptics SoCs. Add a
->> compatibility flag, and extend coverage of the dwmac-generic driver
->> for the 5.20 IP.
->>
->> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
->> ---
->>   drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
->> index b9218c07eb6b..cecce6ed9aa6 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
->> @@ -59,6 +59,7 @@ static const struct of_device_id dwmac_generic_match[] = {
->>   	{ .compatible = "snps,dwmac-3.72a"},
->>   	{ .compatible = "snps,dwmac-4.00"},
->>   	{ .compatible = "snps,dwmac-4.10a"},
->> +	{ .compatible = "snps,dwmac-5.20"},
->>   	{ .compatible = "snps,dwmac"},
->>   	{ .compatible = "snps,dwxgmac-2.10"},
->>   	{ .compatible = "snps,dwxgmac"},
-> 
-> I can see a compatible flag being added. But what about the extending
-> the coverage of the dwmac-generic driver part?
-I don't think the timing is ripe yet (including the patch itself).
-Maybe it would be better to do this when a hardware driver is to
-be introduced into the kernel.
+Hi,
+
+在 2025/06/30 10:07, Xiao Ni 写道:
+> Can this for loop run? If one bit is dirty, it must set pctl->dirty. So 
+> the second write comes, it finds pctl->dirty is set and 
+> llbitmap_infect_dirty_bits function run and return. So it looks like it 
+> will not run the for loop.
+
+I don't quite understand what you mean ...
+
+There are two cases:
+
+1) write two bits int the same block twice, then test_and_set_bit() will
+pass;
+2) write one bit, set block dirty, after bitmap unplug and before
+cleaning the bit, then test_and_set_bit() will fail, and the loop will
+run.
 
 Thanks,
-Yanteng
+Kuai
 
