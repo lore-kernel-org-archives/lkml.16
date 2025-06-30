@@ -1,108 +1,178 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48C025DCE5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816A254918;
+	Mon, 30 Jun 2025 11:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284507; cv=none; b=Mz/z1RKrRgVnj7eLt0ZR9d/TvC1viyMACVmXZN7IeFqmXbTM+8ytu23xaLT0lC+N+50X7PKkaRIzECGFzqFpaQvosy8O4wFuze44pbrcgC0sTfIrYEIK9HilBIGMn3bQG/BDQnE6/xcW9G/+PW2KwZwiOz3H5PkWGU9aQ6acDNA=
+	t=1751284554; cv=none; b=G5YkB8VgKDE6Wj94mcIpsNkJfVKWFKF3F8WzeXugN32pVpFom1tspoEKbdSGe+g7OZ/Yf6DOLIb20uqyI2/ovwINN43mER0ggGs0GFQCUfxUTFAcWgM1TcnzB2HX0vysxArpRxXeFCb0myXBGyE9ZKJ3I7CwRK3eZQxIwFaTAak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284507; c=relaxed/simple;
-	bh=Ws6DFGRoSDTRT92XZumHmgCt5koISWrAkrtJoXcaQ+s=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=imQU7X+hFmhbJjANtEtU2WILGZkY2Z+4BY6dlKRbS1FRu95yMR3TyZw5mXH/iaiqgj/O8KWE1pRuPUvc/g9oGYlxzUTI/RS5FXZ5FrCD7DBuGTl6DUjVdWu+s6e9Nf1r/eNHdv7/YUoz6CV3IKzddHbN8HI9IF2GJjWPVaGNA9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddce213201so37753105ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:55:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751284505; x=1751889305;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vkonErfnUrUyv0V4wfwSaciJeRp1ywEAqrtvBjZZHvQ=;
-        b=SRE3xW9k4hLHroi7EDtlMIHlIEKzGZy2TuQHvjLRKjvCXHQjnDqG9eTcih025u0fNU
-         /byGApsDMc3Mi2BDZdh0JSBn5eUBFTLbTcg5KsSXpkbCQY7BgcTqFgepL3uGeJrVjlTy
-         Y030xi3qzasvnbFr5ov8D19G6D235vSZkZPf0OKhyiPAovJAVIoTn4RyL3z6y6V2XL27
-         YahEBMgK/65qcykM3JQAWa8ss7BtP3x0qjXcDb9EA+FYI0h81ZmmGJyvKEWG7daWpkBR
-         NDVxm5ha3pBwv+BZ3B8gVSn3AdK0t5Kh7Yw1IZRRFrzqwjY8Ot0+C7DANrWZOXWQNhOi
-         O2fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXk9y0CMKpiOQf/tpAzeQzHhJ05NQW2bnSY8K0Pu53nek59uELcL5AtRUxaWuuqXvaK1xX1QbK8FOq2YFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPsEOwmqptrF2VuqUIxnOK3euC1CfI7mpwAxpEoU+xi2CZdnbt
-	+jlAEztvX6DCq1vjyz+QzHr9Hf2Cj20Gj6s/ZNub7edYs2t99WScK7VB5myG/ZbDZX24TIEAeY5
-	v/AzbgFLOavV6e1AD38mW7uBVp4S7twJuEHsu3PWqPtL7wBqynS+Ox4aZGis=
-X-Google-Smtp-Source: AGHT+IFagh6Ptgc8wY+wTGvPTvxsU14zR0OzeUl1X2QUWjUMLo8SJL4ESc+r4K+zrxa+xz7vRdBTC6e2jA4FoLeVxOX/BEabdeZE
+	s=arc-20240116; t=1751284554; c=relaxed/simple;
+	bh=OAdObtNjz1gSQejy5rqJ+xlQ4X9D1M8OhMHiG1zlYco=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OoeHttSLv3O/ocN1jXsaSymmpP2xLVqln3mDKTj1zaZ8FQVoS32uY9fudFKTpMwb7pSSLX5OiKjobMhlRlzPsuZ33UXf6rwRYxLWWW4DCerEfeikjECdrF1hasfhqx8xtNmut7TAGo3J464sYsIyJlcKHrS/d5Bf0woVes0T3XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXu/hO9+; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXu/hO9+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751284552; x=1782820552;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OAdObtNjz1gSQejy5rqJ+xlQ4X9D1M8OhMHiG1zlYco=;
+  b=hXu/hO9+/W91gUyRupNn6kGF8OR7sRrNlrLcXIjtjqD4dXdeM2nLFT++
+   KsiZVjZw0kREIYs1xxw6FrNiYhbHK6Fk0Xi3INC81foQoF5AbBTmi0Hh+
+   9GnT1qK7ii1OnSn3S5yQKmnh+J2YVXFZRNdGcg/hw13+JtVkgKUxtxPBc
+   iHBR/VR23zNocYVwQEK0QwWwTE0DQvKPTnyi+JRVPM753KSzCgDkhBAJa
+   /HjzhQZ9ulebuXvuXN8vndK5w9cOjWOSO3xDSgbhS/SKg4zpXMUEqAfMT
+   KAV/+AJ6zUkUCxhZc0nJaQHUBUYOZv7OgRVws+YZMfjl/ymliswh3Q+/C
+   g==;
+X-CSE-ConnectionGUID: mPdkRibnROSE8Hj0uySaMg==
+X-CSE-MsgGUID: y9yyP5CSRKWB+SgeYyYTzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="41134448"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="41134448"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:55:46 -0700
+X-CSE-ConnectionGUID: WeaMPAFQTnGxgJ4R0+/2/Q==
+X-CSE-MsgGUID: rxnmX8CLSB+XC/MFMaznJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="157715145"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:55:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 14:55:41 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    srinivas.pandruvada@linux.intel.com, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
+    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH V2 11/15] platform/x86/intel/vsec: Set OOBMSM to CPU
+ mapping
+In-Reply-To: <20250617014041.2861032-12-david.e.box@linux.intel.com>
+Message-ID: <9911d37b-eff6-2562-2e52-7bcd656186c0@linux.intel.com>
+References: <20250617014041.2861032-1-david.e.box@linux.intel.com> <20250617014041.2861032-12-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b41:b0:3de:e74:be13 with SMTP id
- e9e14a558f8ab-3df3e09c6b5mr214978595ab.0.1751284504896; Mon, 30 Jun 2025
- 04:55:04 -0700 (PDT)
-Date: Mon, 30 Jun 2025 04:55:04 -0700
-In-Reply-To: <0620687c-30d7-405d-b4f3-636546ef1823n@googlegroups.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68627b18.a70a0220.3b7e22.0dcc.GAE@google.com>
-Subject: Re: [syzbot] [ntfs3?] WARNING in ni_rename
-From: syzbot <syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com>
-To: kapoorarnav43@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-Hello,
+On Mon, 16 Jun 2025, David E. Box wrote:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in ni_rename
+> Add functions, intel_vsec_set/get_mapping(), to set and retrieve the
+> OOBMSM-to-CPU mapping data in the private data of the parent Intel VSEC
+> driver. With this mapping information available, other Intel VSEC features
+> on the same OOBMSM device can easily access and use the mapping data,
+> allowing each of the OOBMSM features to map to the CPUs they provides data
+> for.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> 
+> Changes in v2:
+>   - No changes
+> 
+>  drivers/platform/x86/intel/vsec.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/intel_vsec.h        | 14 ++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index 98f570a389c6..8c330b57e4d4 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -43,6 +43,7 @@ enum vsec_device_state {
+>  struct vsec_priv {
+>  	struct intel_vsec_platform_info *info;
+>  	struct device *suppliers[VSEC_FEATURE_COUNT];
+> +	struct oobmsm_plat_info plat_info;
+>  	enum vsec_device_state state[VSEC_FEATURE_COUNT];
+>  	unsigned long found_caps;
+>  };
+> @@ -660,6 +661,36 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+>  	return 0;
+>  }
+>  
+> +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +			   struct intel_vsec_device *vsec_dev)
+> +{
+> +	struct vsec_priv *priv;
+> +
+> +	priv = pci_get_drvdata(vsec_dev->pcidev);
+> +	if (!priv)
+> +		return -EINVAL;
+> +
+> +	priv->plat_info = *plat_info;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(intel_vsec_set_mapping, "INTEL_VSEC");
+> +
+> +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> +{
+> +	struct vsec_priv *priv;
+> +
+> +	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	priv = pci_get_drvdata(pdev);
+> +	if (!priv)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return &priv->plat_info;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(intel_vsec_get_mapping, "INTEL_VSEC");
+> +
+>  /* DG1 info */
+>  static struct intel_vsec_header dg1_header = {
+>  	.length = 0x10,
+> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> index cd78d0b2e623..b15155ff1154 100644
+> --- a/include/linux/intel_vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -170,6 +170,8 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+>  		       struct intel_vsec_device *intel_vsec_dev,
+>  		       const char *name);
+>  
+> +int intel_vsec_suppliers_ready(struct intel_vsec_device *vsec_dev,
+> +			       unsigned long needs);
 
-loop0: detected capacity change from 0 to 4096
-------------[ cut here ]------------
-WARNING: fs/ntfs3/frecord.c:3030 at ni_rename+0xee/0x100 fs/ntfs3/frecord.c:3029, CPU#0: syz.0.16/6714
-Modules linked in:
-CPU: 0 UID: 0 PID: 6714 Comm: syz.0.16 Not tainted 6.16.0-rc4-next-20250630-syzkaller-g1343433ed389 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:ni_rename+0xee/0x100 fs/ntfs3/frecord.c:3029
-Code: 8b 05 66 63 9a 0f 48 3b 44 24 10 75 22 44 89 e0 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d e9 49 ac 6c 08 cc e8 b3 fe b9 fe 90 <0f> 0b 90 eb c5 e8 18 d2 69 08 0f 1f 84 00 00 00 00 00 90 90 90 90
-RSP: 0018:ffffc90002eb7ab8 EFLAGS: 00010293
-RAX: ffffffff8305ccdd RBX: 00000000fffffffe RCX: ffff888020b28000
-RDX: 0000000000000000 RSI: 00000000fffffffe RDI: 0000000000000000
-RBP: 00000000fffffffe R08: ffffffff8fa17437 R09: 1ffffffff1f42e86
-R10: dffffc0000000000 R11: fffffbfff1f42e87 R12: 0000000000000000
-R13: ffff88803385e600 R14: ffff888077140758 R15: ffff888066ebe6d0
-FS:  00007f59ac0016c0(0000) GS:ffff888125c1d000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8e813c3000 CR3: 000000007f64a000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- ntfs_rename+0x6e2/0xb40 fs/ntfs3/namei.c:316
- vfs_rename+0xbd7/0xf00 fs/namei.c:5129
- do_renameat2+0x6ce/0xa80 fs/namei.c:5278
- __do_sys_rename fs/namei.c:5325 [inline]
- __se_sys_rename fs/namei.c:5323 [inline]
- __x64_sys_rename+0x82/0x90 fs/namei.c:5323
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f59ab18e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f59ac001038 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-RAX: ffffffffffffffda RBX: 00007f59ab3b5fa0 RCX: 00007f59ab18e929
-RDX: 0000000000000000 RSI: 0000200000001040 RDI: 0000200000000280
-RBP: 00007f59ab210b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f59ab3b5fa0 R15: 00007fff104b3398
- </TASK>
+There's no code for this anywhere in the series??
 
+>  static inline struct intel_vsec_device *dev_to_ivdev(struct device *dev)
+>  {
+>  	return container_of(dev, struct intel_vsec_device, auxdev.dev);
+> @@ -183,11 +185,23 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
+>  #if IS_ENABLED(CONFIG_INTEL_VSEC)
+>  int intel_vsec_register(struct pci_dev *pdev,
+>  			 struct intel_vsec_platform_info *info);
+> +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +			   struct intel_vsec_device *vsec_dev);
+> +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev);
+>  #else
+>  static inline int intel_vsec_register(struct pci_dev *pdev,
+>  				       struct intel_vsec_platform_info *info)
+>  {
+>  	return -ENODEV;
+>  }
+> +static inline int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> +					 struct intel_vsec_device *vsec_dev)
+> +{
+> +	return -ENODEV;
+> +}
+> +static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+>  #endif
+>  #endif
+> 
 
-Tested on:
-
-commit:         1343433e Add linux-next specific files for 20250630
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10bfa770580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c1ce97baf6bd6397
-dashboard link: https://syzkaller.appspot.com/bug?extid=b0373017f711c06ada64
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1147848c580000
+-- 
+ i.
 
