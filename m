@@ -1,73 +1,146 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A99C3D69
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9281DEADC;
+	Mon, 30 Jun 2025 14:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293926; cv=none; b=YDqwUEPyFtwdnU9R3i2yMRTqteUfF1qTa0eIDAFU/WLSRaubt+aLk/XCoPICSg+sal6+ZXJwaMZgK2Ia1se9N0cxbbSUvgjSQUhBw8//lfq/mM25UH2/4JkG5kUZMh1KPF0RAMb5ToPZON7+dHMrRFctTJkFaR+nYe8gtawoSSs=
+	t=1751293986; cv=none; b=K9YRLJBdgpRpYmD1zRQdS+8x8QpqeHgjslzFADNhGga5QKgz79hDM8+vk4G9K4t8NVW7asHH2Z9ijFUmn+ZJunANWon0yb2mIACtktb702Kp1QPO4nIhbDNp88kSu2PELiWgjU9RE0mp98wL2SW95F2IDUaN8UJSW94GhyG897I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293926; c=relaxed/simple;
-	bh=paK1o7yHiubSycjhW7QFWMXqOYbkYxDkZaM+RT3djIk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=cRCzZm9cRoc/A1iFj86iYG8Q0fXmnQKBtEFP7D3uC5rblTQDyd5G0JPkYJ4Yj8zuW65gnkMk/6idguVVuEsqh6pW/UJHT0wKfj2LCQSbVYHO60AzKHO020N/0aBjbD9dZnPfKbsEsZlbE33PCmOV4ajwY2PZ/0/llAwXjbN1InU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-86f4e2434b6so194398339f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:32:05 -0700 (PDT)
+	s=arc-20240116; t=1751293986; c=relaxed/simple;
+	bh=qjTt84KBfEtBg95rqhCzltj23WXxyrqGZt9ItTvbZTc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uu6CyhK3TwteqFhkduqjuT8hEGiEAih7YNt+XpdrHpd8016oK4VdlJi29jFLLHYcIA6cRncB4fv5EABnMedZMZJL3szhYb5wsSAfVzaN0txGfYNAvh0no7zAkC+TeRJWz6/49jbGgpRShkcyCg1ftIMemfB7swNuReTxGtWqaIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so3781940a12.2;
+        Mon, 30 Jun 2025 07:33:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751293924; x=1751898724;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d6HBrsR+tCEswzSMPXXeBLs3OfGGqiNtBtJT4F8VTIM=;
-        b=fiCtBPCfjpXU8Ew1kG+T7wwtYn9lgkkS3ZpPj4u4ERbczf1CUzpFMjX47PP42ROd+U
-         TE4C+1BlLHlo2vLtwz2oMwlOzaoajN3TX0jynMMywaLJmwx8rSVRGBCBpN1NEBWID4MR
-         R3am3JpeXDPNBjbvTTGiCG11sdzNx+/D6Fh3UT+aDwUiDOxukBF7XYt3xUgTnI7wCa4a
-         IjwKY+bpQSscnZq+26Mt85B1mfEgXQhgGFg/OL7wqxWVwV2O4RemRMa60+RNmxJted+o
-         GgyHfEGbzO/+yRPEuJX9hi6WHxpO7kTvYtrHkdKBbmY3EHnEfN4MKNg7G0ZNOsS1jeY6
-         +RRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Rrvm59Kl0sDzDYqy6wnNlGAySil+RIHNj76DSNDkSWyelW6VFGlcmjJXgXu3T8COzOpaTAH2IbBxKRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOnFdgzOcGilFbTMWWkGPDTva/ZqdFC9tXUIeDDjgjJUjwpkU3
-	TEHtUKyuRQcgXC8xYJpAA3DLWrj0MBzlgG8iTrUDdHyZIin6Cx4/p+ZRKrIQL9qz9VEIGZziubr
-	iuFVmk1eVTc4rwxjulhlv+UqZaUCPutGx/wf6G7+TmTzpEQb9C4tM6fmrW/M=
-X-Google-Smtp-Source: AGHT+IFPYPYzoqor7Hr6RKnygkDnpXZMooQMNukoW9qi2rfx/P7QgfjItbn8tClxvlh4G3a+U15Q/a6TEh7HmK7By2ypu7zafJyc
+        d=1e100.net; s=20230601; t=1751293983; x=1751898783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dSg20GDoGMGjYNXdLie7adRbEtdaFM3ql2cFF4814Fk=;
+        b=PoConTs4oyShUdUdbsiuExVpX6EHqS94CLUT4itzIFDIX+sM6+ze7Exbp3KJZonagn
+         3/Y7MaJ2ezILtfj6+sI6P4+txQwW6OeFR9s3LgcF6m7sspzdY3P5HUI6A1m49spakcJE
+         mDOiL4vNT9J2NT5eTyXTzDddkAAVRQvKhYxjMDTfDPVm6N/DyB1G3yEIc8T9mm2Shweh
+         WrggjV5coheRvC9GsZoEkPnVKA3V+j8txjeWBt6ixZCE56XbeZkwG7JdgFnlg84EJc6s
+         3tpAhRKPhqTWEIuUbmvC2bxG2RfwDBBtQ3L3MIBySOZWiBpgN0AHXTzxwFY6uU9Nk+fX
+         pjwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUd/UA35kFZG2QTPKgh0oZmkE/FkxBiwxRw2qLFPLxY7cqwc3sdUSCahkJSG9Kye6vp7WWg/rqO@vger.kernel.org, AJvYcCV3ZYcvwSJ5ScoIL9mHPROK+tEK4xyvh5RAmJG9xkSNGl8xL93czLlQEuXJOhD64/t3UgpRqUd4SyFe/W4y@vger.kernel.org, AJvYcCVmCipOcm9Hwl9F8uPGFZ1vSPU/Vpj0SrcSZUaxFxXHZlIDY1oHMy4J79cXMYtifwhXo3bdiEbTtRFr3AS5zoke@vger.kernel.org, AJvYcCXkLq56VEi9VLlaFFtlCx00HrPTLTQ4aDR1x5qsEoxonkZPAIs2hPyMYvd7lNHdmteDS7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKLsnVFs08Y0hK0s1IEejBbTNto1p8wDxMOjpsgO4rG/X8U8r6
+	k/YhPVCHl1iv7Ymw8ykyd+1f5yvhyFaxVN7dRhLZrSC4SJDgr3ixqHAt
+X-Gm-Gg: ASbGnctF/W3YgBHmJNaZu3IXDPmk8fz3cyolO9OkdvTsVWmGJjg0DdMIIAiqCfVJ4zC
+	djmD9hb3ddJrrp2WCwJj9ixHno40s9K5JFpOV+QCpejfthlAO6viIzEfzf1esTQDRI3mZ1EtBzQ
+	+A6rEpaCmB9HurSGiFvMMfJOEsDilKqxo2naD1kdCZhVVvLY4lk1le2Su7zXJJreKmNWhQisROT
+	lXKd6ayjW1/jeAGBAnwZe9dZ+NCydL/r+6eWiaWlmJQP+QirvhIwVvxUYNlHvkVNSevyG4sIZ2S
+	92qcSalOrbikWCUpSMak+Og2U4Nn9Pn6/hWkap+rN3Bk4++uedP3
+X-Google-Smtp-Source: AGHT+IG5SjwBNYpgtsZ2GrAPYTJ3w1Wwt/wPQJnP1CIFTpzXnOVWiVVkg3kGL9lQcuyRxx5C/zHEOg==
+X-Received: by 2002:a17:906:1446:b0:ad8:9997:aa76 with SMTP id a640c23a62f3a-ae3500e3d11mr1083912566b.37.1751293982547;
+        Mon, 30 Jun 2025 07:33:02 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:3::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35aad8275sm651946666b.23.2025.06.30.07.33.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 07:33:02 -0700 (PDT)
+Date: Mon, 30 Jun 2025 07:32:59 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	ast@kernel.org
+Subject: Re: [PATCH net-next v3 3/3] selftests: net: add netpoll basic
+ functionality test
+Message-ID: <aGKgG+uE+UXEIIbf@gmail.com>
+References: <20250627-netpoll_test-v3-0-575bd200c8a9@debian.org>
+ <20250627-netpoll_test-v3-3-575bd200c8a9@debian.org>
+ <686002d028f_a131d29458@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:398d:b0:3df:347f:eb68 with SMTP id
- e9e14a558f8ab-3df4ab61ab1mr140446465ab.7.1751293924490; Mon, 30 Jun 2025
- 07:32:04 -0700 (PDT)
-Date: Mon, 30 Jun 2025 07:32:04 -0700
-In-Reply-To: <840cee6a-44db-4c88-8501-6291f0c26486n@googlegroups.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68629fe4.a70a0220.2f4de1.002b.GAE@google.com>
-Subject: Re: [syzbot] [ntfs3?] WARNING in ni_rename
-From: syzbot <syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com>
-To: kapoorarnav43@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <686002d028f_a131d29458@willemb.c.googlers.com.notmuch>
 
-Hello,
+Hello Willem,
 
-syzbot tried to test the proposed patch but the build/boot failed:
+On Sat, Jun 28, 2025 at 10:57:20AM -0400, Willem de Bruijn wrote:
+> Breno Leitao wrote:
+> > +NETCONSOLE_CONFIGFS_PATH: str = "/sys/kernel/config/netconsole"
+> > +NETCONS_REMOTE_PORT: int = 6666
+> > +NETCONS_LOCAL_PORT: int = 1514
+> > +# Max number of netcons messages to send. Each iteration will setup
+> > +# netconsole and send 10 messages
+> > +ITERATIONS: int = 20
+> > +# MAPS contains the information coming from bpftrace
+> > +# it will have only one key: @hits, which tells the number of times
+> > +# netpoll_poll_dev() was called
+> 
+> nit: no longer has ampersand prefix
 
-failed to apply patch:
-checking file fs/ntfs3/frecord.c
-patch: **** unexpected end of file in patch
+Good catch. I will update.
+
+> > +def ethtool_read_rx_tx_queue(interface_name: str) -> tuple[int, int]:
+> > +    """
+> > +    Read the number of RX and TX queues using ethtool. This will be used
+> > +    to restore it after the test
+> > +    """
+> > +    rx_queue = 0
+> > +    tx_queue = 0
+> > +
+> > +    try:
+> > +        ethtool_result = ethtool(f"-g {interface_name}").stdout
+> > +        for line in ethtool_result.splitlines():
+> > +            if line.startswith("RX:"):
+> > +                rx_queue = int(line.split()[1])
+> > +            if line.startswith("TX:"):
+> > +                tx_queue = int(line.split()[1])
+> 
+> Does this work on devices that use combined?
+
+Not sure. This is suppossed to work mostly on netdevsim (for now).
+
+Since I am not familiar with combined TX/RX, I've looked at ethtool
+code, and it seems RX and TX wil always be printed?
+
+This is what I found when `-g` is passed to ethtool.
+
+	static int dump_ring(const struct ethtool_ringparam *ering)
+	{
+		fprintf(stdout,
+			"Pre-set maximums:\n"
+			"RX:            %u\n"
+			"RX Mini:       %u\n"
+			"RX Jumbo:      %u\n"
+			"TX:            %u\n",
+			ering->rx_max_pending,
+			ering->rx_mini_max_pending,
+			ering->rx_jumbo_max_pending,
+			ering->tx_max_pending);
+
+		fprintf(stdout,
+			"Current hardware settings:\n"
+			"RX:            %u\n"
+			"RX Mini:       %u\n"
+			"RX Jumbo:      %u\n"
+			"TX:            %u\n",
+			ering->rx_pending,
+			ering->rx_mini_pending,
+			ering->rx_jumbo_pending,
+			ering->tx_pending);
+
+		fprintf(stdout, "\n");
+		return 0;
+	}
 
 
-
-Tested on:
-
-commit:         1343433e Add linux-next specific files for 20250630
-git tree:       linux-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a3d8d413c6928dae
-dashboard link: https://syzkaller.appspot.com/bug?extid=b0373017f711c06ada64
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1362988c580000
-
+Thanks for the review,
+--breno
