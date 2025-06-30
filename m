@@ -1,276 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085EE238C20
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883FC239E7C;
+	Mon, 30 Jun 2025 09:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274370; cv=none; b=SKzPHwzUbjmilGJLbUrmHge3H/SHhB4m4oOglOB9LHTTOcb+jUtciBBS5/E+841vfy7kIkj4XPro62uOChSXXvuOSzFvznhgMX4uoCBljEFxisYjFpPOWxzOAgNjXRwIjLmDOn4hUbTaduPGvuts208Htkp/9CxC1xChhkmm7GE=
+	t=1751274378; cv=none; b=At/92TsykcsWxuFRiur9NENAzjOlQWptcuE0vFDL1jiMVl08sdHPVeTM5mulp0x68MCPmYlsLCES8uzC99iiLpXXASOP62dpyJAjwcRHzJUYE6d28OxCaSueq19MOubokXyYlsMtF3Fy6HvedlrJUJuxUwcQYD1xm34R427ZGFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274370; c=relaxed/simple;
-	bh=wRPjo9rf+tUKuB78jhsyCXImccziciYaYS7TdDqiExs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aLyQQWBgFfZlzPJx0o4lghs4r8CrrujxtYs6ssbGwRArKodHfBBfZ36JPnrwku9icPyHFX1K6VeWeF8gyyqzeURMj5wUZ/nOj6nkrq6wyVTxVG+tj8BG9Ij654Fe2r3V/lWLq3To2KE+Hw3NeC2umqPnKJnXFFX/4brLXDOY/44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ps8VDkqM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751274378; c=relaxed/simple;
+	bh=5gHgaJRDbCKSv2ytqimG2JxpO3g5IlQOq1sbnXKKmVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=taJZjxbePNQv0VSf8J6hWt79KAMlXxtVrXSNSwpYW3CuxitosU9phu8PKDv0bD8mRLSFAuhVB9ldMZ0eyi1d3Tu/41rG1nwwIzNe/Fs2efFDvtWUC9uqsnczeDU+i20T7sqnGjjJQ/Xwe1TpnLj0Tzy9XECFQZTzA/MPtFVmSs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQOS5NK3; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ps8VDkqM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751274367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IP0b5VG41bBhmyGe33Uf59EFBAK0BAw5ZnVY9pFjKm8=;
-	b=Ps8VDkqM505mNNKYx5/vxNRK68bCYf3S51UlEQnG2rNPGVsQT1cmNwHmeocRj9Mm7aEu3s
-	AWw0lSXq2MXTuIMFL89DPS/HQwik1hKwJ1vMPaLiShrynegQFE7OwwjiFfvcv0b+D+8X+v
-	IillxBt3qR/psPm829nKoDATji6Msnk=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-416-ZF-PmB_KNUKW1riDrXr6iQ-1; Mon, 30 Jun 2025 05:06:00 -0400
-X-MC-Unique: ZF-PmB_KNUKW1riDrXr6iQ-1
-X-Mimecast-MFC-AGG-ID: ZF-PmB_KNUKW1riDrXr6iQ_1751274360
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-408d05d8c03so1412776b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 02:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQOS5NK3"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so8437785a12.3;
+        Mon, 30 Jun 2025 02:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751274375; x=1751879175; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkB7mEEipMdqVFva/up+3uvXTv0EJjxJagKL7Ep/rFs=;
+        b=KQOS5NK3nrD83B/P462a7As7v8fQT71yRrOg1VxkOIjv0EREGow5i27/kEol2nzEim
+         t+jSJJaplYZHYqLQHElp6B7QeA7fj/TSZbf2LyoXyvxLUnMjIL1wYCO/m1XLk9cvJkOL
+         XtnexGJ4mceMCsK08d2mnMcamUljIbyYX2tIp5o6HP3CVkqDz9Dl5NHYhzSC8VUrwjqZ
+         HaiGG/iOye7YHVF1JEt4WYYy9Fp6KmGaGAuYABmX+AHuNQwkD3U03PoQGFZUt3vUcYhB
+         WlLVB+vkx1dKddprUy7aNFfJ2aujlhozqQI63Y31CQy794LtXSpOuNBmORtpdii7+wnM
+         Y0ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751274360; x=1751879160;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IP0b5VG41bBhmyGe33Uf59EFBAK0BAw5ZnVY9pFjKm8=;
-        b=T4ipwA7yqmfy5tnVWTlhamC5PZWfdH4MVqJw5ag4l3vit3xXCvLZWt2F4zwKqeRIMJ
-         dkHhrlnqeuMp8HgU8LUG++m7gV8RXsAWOmL0Grp1qfNfLv5+FFikS9xQzxMf7wKSFQzy
-         UErVZq5dCK2HTHdVVaW+I6t/D/bo0GX1tI4NTcG3u43aUu5b5lIGFgUBDH1Fhn2MMVKV
-         FGaM09+HE+0+Kv2QXnE4xsRrf+yIRQMql3Np7xckICrDjM7i/pIMVPcB08SOsIqO1rr2
-         nVSMY7STJhVz/FoBIOSsTLglZiyP42AnBEJ9l1suFqF8B0s5dVZmcovyg7OKJ5FUdzN1
-         F7eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWgGbabzMZq8Z/uaj90caslcrMbkNm9F4p0q7zOH0KNxiclsDF69e7I5z7wf6c/Hg3yHpPQ9TVHa3ruU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzowmRvYkLuH12Y6rJJlyBsi6gMye5X4ucRmR9YmJ/oNLV367q
-	dcfRDALHfgEFC0pNVVaIvmxiBQA1H0zWI/XA7ZDK9xbhwMdkZOPmb77ICOTHZH9PxtC6/EuH3pX
-	EqzB3iJwtHd8fnotT6BUcGS7ofypZo3xZ1f4gFzJGbETUyHo7MAnU9hhSuECOinavWw==
-X-Gm-Gg: ASbGnct95bD9JZvcGbXzlyLeH3Kwd8WDgYf5D3MyOBPbLn6RYgTty7k4ZzAazF2GoPE
-	ubcHKuqYAhd8VQ9KmoPPQaqZhg9V+H/lmWc76dx1SkNabNXD8byt3Zp44M8UER9WvyPW42AFAZm
-	7LvYWdswh0oUhpjdb7U3B7s+unkQVwF7o0XOFu2DO3O3NbBPhIrF7BcNOIoaiO5NrXTmZ+V05WU
-	jX/WW30SEnmCZtEDo7qWWAo7eB/xoQpZxJ1r+tbDNPVRNSlPdd80rp6i6Y4l9+cGgwiLtxcwaOT
-	/nF/XopGCjU+p1U1/US/OSaf3EXO
-X-Received: by 2002:a05:6808:2448:b0:406:6efa:3595 with SMTP id 5614622812f47-40b33e15bb8mr9814797b6e.24.1751274359682;
-        Mon, 30 Jun 2025 02:05:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEepeaV8KclWnT/fUB+9LJI7sNEW53kR2xRdO2kaJqSt6uJ0a2hZ7/U6zTmIrJ8UvZVW5bmTA==
-X-Received: by 2002:a05:6808:2448:b0:406:6efa:3595 with SMTP id 5614622812f47-40b33e15bb8mr9814779b6e.24.1751274359216;
-        Mon, 30 Jun 2025 02:05:59 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.177.127])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b32421052sm1617002b6e.37.2025.06.30.02.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:05:58 -0700 (PDT)
-Date: Mon, 30 Jun 2025 11:05:44 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net v2 1/3] vsock: Fix transport_{g2h,h2g} TOCTOU
-Message-ID: <4vsrtxs3uttx6w2zyk6rxescpwvrikypiw6tvjheplht6yzonc@ch6k3xlftikw>
-References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
- <20250620-vsock-transports-toctou-v2-1-02ebd20b1d03@rbox.co>
- <zdiqu6pszqwb4y5o7oqzdovfvzkbrvc6ijuxoef2iloklahyoy@njsnvn7hfwye>
- <d8d4edb2-bf14-42b2-8592-79d7b014e1a7@rbox.co>
- <owafhdinyjdnol4zwpcdqsz26nfndawl53wnosdhhgmfz6t25n@2dualdqgpq3q>
- <e97b5cae-f6ef-4221-98e1-6efd7fdc6676@rbox.co>
+        d=1e100.net; s=20230601; t=1751274375; x=1751879175;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zkB7mEEipMdqVFva/up+3uvXTv0EJjxJagKL7Ep/rFs=;
+        b=lOmrGB48lZib9wcByQyuhUqvf9eYuP86Eu8zyJYKkBXcs5mAaJNqvM9/jcI/BuhGG8
+         03IfWDmxN6rRtg/Uuqy7omorviktsaHEy68RGPzq4vFLVF/jabSzyGBQCMoPoO3z+uM4
+         OvVZ1SpzhBIKK6MRT2hRadteV0p5up1+pHXMsiQhvrQcnrWkhhJWoFibi78DWsUI5Z+J
+         rwHMoIe1KfK3KQL30shzYrgSuOqKZkU6jjiBavQCVmCxLbnOkXTigtnYYcZ+vm8HpveC
+         uhKmpoiFXAqx2WMNADmZJhv8QqEL6o7T/ZmG5RKASw1qSU5vyGSgG75Nabofl0cquNef
+         YNEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJB0SzUGYeHfZie/YUKlgllyCBxu+WM60jsPcGGFFNMtNvMDDZZ/9hwaZmIzVIUB4iUrEAMeJffWZvTeQ=@vger.kernel.org, AJvYcCXPTKTdGIWdzL0nUoEousV1qytXdMwLzvH0+Y6tUD2zWVxGodqOyLKRGLRuYPs8KQdrMQ37w3jZG9vS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqQ+riVOWVkdu11Rs/UNmA4bjQ2DV2wtBaTBuhu8sF0FvqGR7O
+	gOm5bbATZb+SUVhn99hGhE5JLSrzkZxfdpS3MqWfbH4n4akdq/OU5RU0dD7wxYJfn6AFEIRxFeU
+	+0EwZ7+5hPAjjGS2MCz4P4Ts6MbTAiaA=
+X-Gm-Gg: ASbGnctdkT7yzRgI2b/nlSW9E3Mb/BYsd72YA5jUQFSMGtwJZjR5zlPonkutAZ1F9Nx
+	XTbLulQyVswvvKR0lAgsDrOqTm96DnyEkLX/xWMPMQDMg/HrObAC3IoUzZSgvgghPs2S/CbpLIf
+	8AiItLzl7okROWEKj6S75EZ9WDbviACcTeNAo7rCDpvX0Xuk7BdjBFBZuzPwEz8DeVErR/2tc2b
+	ZlAQmqfjVMQNCE=
+X-Google-Smtp-Source: AGHT+IFwTxcyTIa8fzprZ+ugwGCzJpImOkoMGnG2ENcUx+MwC8Um4xsbA+LiwKFmDE08uC5QoYs1DEPe5zA4p/Q2t8I=
+X-Received: by 2002:a05:6402:254a:b0:60c:3b63:d026 with SMTP id
+ 4fb4d7f45d1cf-60c88e59f4amr11089474a12.26.1751274374529; Mon, 30 Jun 2025
+ 02:06:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e97b5cae-f6ef-4221-98e1-6efd7fdc6676@rbox.co>
+References: <BgUaxdxshFCssVdvh_jiOf_C2IyUDDKB9gNz_bt5pLaC8fFmFa0E_Cvq6s9eXOGe8M0fvBUFYG3bqVQAsCyz3w==@protonmail.internalid>
+ <20250617124546.24102-1-pranav.tyagi03@gmail.com> <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
+In-Reply-To: <qlogdnggv2y4nbzzt62oq4yguitq4ytkqavdwele3xrqi6gwfo@aj45rl7f3eik>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Mon, 30 Jun 2025 14:36:01 +0530
+X-Gm-Features: Ac12FXyJJULHsrmqDZ-6EY8YAD-MmRxLrWdoQ4FALL0Aw5V02Zuh37C80PEcs1c
+Message-ID: <CAH4c4jLjiBEqVxgRG0GH37RELDp=Py3EoY6bcJhzA+ydfV=Q1A@mail.gmail.com>
+Subject: Re: [PATCH] fs/xfs: replace strncpy with strscpy
+To: Carlos Maiolino <cem@kernel.org>
+Cc: skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 29, 2025 at 11:26:12PM +0200, Michal Luczaj wrote:
->On 6/27/25 10:02, Stefano Garzarella wrote:
->> On Wed, Jun 25, 2025 at 11:23:30PM +0200, Michal Luczaj wrote:
->>> On 6/25/25 10:43, Stefano Garzarella wrote:
->>>> On Fri, Jun 20, 2025 at 09:52:43PM +0200, Michal Luczaj wrote:
->>>>> vsock_find_cid() and vsock_dev_do_ioctl() may race with module unload.
->>>>> transport_{g2h,h2g} may become NULL after the NULL check.
->>>>>
->>>>> Introduce vsock_transport_local_cid() to protect from a potential
->>>>> null-ptr-deref.
->>>>>
->>>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->>>>> RIP: 0010:vsock_find_cid+0x47/0x90
->>>>> Call Trace:
->>>>> __vsock_bind+0x4b2/0x720
->>>>> vsock_bind+0x90/0xe0
->>>>> __sys_bind+0x14d/0x1e0
->>>>> __x64_sys_bind+0x6e/0xc0
->>>>> do_syscall_64+0x92/0x1c0
->>>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>>
->>>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->>>>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
->>>>> Call Trace:
->>>>> __x64_sys_ioctl+0x12d/0x190
->>>>> do_syscall_64+0x92/0x1c0
->>>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>>
->>>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->>>>> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->>>>> ---
->>>>> net/vmw_vsock/af_vsock.c | 23 +++++++++++++++++------
->>>>> 1 file changed, 17 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->>>>> index 2e7a3034e965db30b6ee295370d866e6d8b1c341..63a920af5bfe6960306a3e5eeae0cbf30648985e 100644
->>>>> --- a/net/vmw_vsock/af_vsock.c
->>>>> +++ b/net/vmw_vsock/af_vsock.c
->>>>> @@ -531,9 +531,21 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
->>>>> }
->>>>> EXPORT_SYMBOL_GPL(vsock_assign_transport);
->>>>>
->>>>> +static u32 vsock_transport_local_cid(const struct vsock_transport **transport)
->>>>
->>>> Why we need double pointer?
->>>
->>> Because of a possible race. If @transport is `struct vsock_transport*` and
->>> we pass `transport_g2h`, the passed non-NULL pointer value may immediately
->>> become stale (due to module unload). But if it's `vsock_transport**` and we
->>> pass `&transport_g2h`, then we can take the mutex, check `*transport` for
->>> NULL and safely go ahead.
->>>
->>> Or are you saying this could be simplified?
->>
->> Nope, you're right! I was still thinking about my old version where we
->> had the switch inside...
->>
->> BTW I'd like to change the name, `vsock_transport_local` prefix is
->> confusing IMO, since it seems related only to the `transport_local`.
->>
->> Another thing I'm worried about is that we'll then start using it on
->> `vsk->transport` when this is only to be used on registered transports
->> (i.e. `static ...`), though, I don't think there's a way to force type
->> checking from the compiler (unless you wrap it in a struct). (...)
+On Mon, Jun 30, 2025 at 2:09=E2=80=AFPM Carlos Maiolino <cem@kernel.org> wr=
+ote:
 >
->I've found (on SO[1]) this somewhat hackish compile-time `static`-checking:
+> On Tue, Jun 17, 2025 at 06:15:46PM +0530, Pranav Tyagi wrote:
+> > Replace the deprecated strncpy() with strscpy() as the destination
+> > buffer should be NUL-terminated and does not require any trailing
+> > NUL-padding. Also, since NUL-termination is guaranteed,
 >
->static u32 __vsock_registered_transport_cid(const struct vsock_transport
->**transport)
->{
->	u32 cid = VMADDR_CID_ANY;
+> NUL-termination is only guaranteed if you copy into the buffer one less
+> byte than the label requires, i.e XFSLABEL_MAX.
 >
->	mutex_lock(&vsock_register_mutex);
->	if (*transport)
->		cid = (*transport)->get_local_cid();
->	mutex_unlock(&vsock_register_mutex);
+> > use sizeof(label) in place of XFSLABEL_MAX as the size
+> > parameter.
 >
->	return cid;
->}
+> This is wrong, see below why.
 >
->#define ASSERT_REGISTERED_TRANSPORT(t)					\
->	__always_unused static void *__UNIQUE_ID(vsock) = (t)
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  fs/xfs/xfs_ioctl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index d250f7f74e3b..9f4d68c5b5ab 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -992,7 +992,7 @@ xfs_ioc_getlabel(
+> >       /* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> >       memset(label, 0, sizeof(label));
+> >       spin_lock(&mp->m_sb_lock);
+> > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> > +     strscpy(label, sbp->sb_fname, sizeof(label));
 >
->#define vsock_registered_transport_cid(transport)			\
->({									\
->	ASSERT_REGISTERED_TRANSPORT(transport);				\
->	__vsock_registered_transport_cid(transport);			\
->})
+> This is broken and you created a buffer overrun here.
 >
->It does the trick, compilation fails on
->vsock_registered_transport_cid(&vsk->transport):
+> XFSLABEL_MAX is set to 12 bytes. The current label size is 13 bytes:
 >
->net/vmw_vsock/af_vsock.c: In function ‘vsock_send_shutdown’:
->net/vmw_vsock/af_vsock.c:565:59: error: initializer element is not constant
->  565 |         __always_unused static void *__UNIQUE_ID(vsock) = (t)
->      |                                                           ^
->net/vmw_vsock/af_vsock.c:569:9: note: in expansion of macro
->‘ASSERT_REGISTERED_TRANSPORT’
->  569 |         ASSERT_REGISTERED_TRANSPORT(transport);
->    \
->      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->net/vmw_vsock/af_vsock.c:626:9: note: in expansion of macro
->‘vsock_registered_transport_cid’
->  626 |         vsock_registered_transport_cid(&vsk->transport);
->      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> char                    label[XFSLABEL_MAX + 1];
 >
->But perhaps adding a comment wouldn't hurt either, e.g.
+> This ensures the label will always have a null termination character as
+> long as you copy XFSLABEL_MAX bytes into the label.
 >
->/* Provide safe access to static transport_{h2g,g2h,dgram,local} callbacks.
-> * Otherwise we may race with module removal. Do not use on
-> * `vsk->transport`.
-> */
+> - strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+>
+> Copies 12 bytes from sb_fname into label. This ensures we always have a
+> trailing \0 at the last byte.
+>
+> Your version:
+>
+> strscpy(label, sbp->sb_fname, sizeof(label));
+>
+> Copies 13 bytes from sb_fname into the label buffer.
+>
+> This not only could have copied a non-null byte to the last byte in the
+> label buffer, but also But sbp->sb_fname size is XFSLABEL_MAX, so you
+> are reading beyond the source buffer size, causing a buffer overrun as yo=
+u
+> can see on the kernel test robot report.
+>
+> Carlos
+>
+> >       spin_unlock(&mp->m_sb_lock);
+> >
+> >       if (copy_to_user(user_label, label, sizeof(label)))
+> > --
+> > 2.49.0
+> >
 
-Yeah, I'd just go with the comment, without introduce complex macros.
-Also because in the worst case we don't do anything wrong.
+Hi,
 
-BTW if we have some macros already defined in the kernel that we can 
-re-use, it's fine.
+Thank you for the feedback. I understand that my patch is incorrect and
+it causes a buffer overrun. The destination buffer is indeed, already, null
+terminated. Would you like me to send a corrected patch which uses
+strscpy() (as strncpy() is deprecated)?
 
->
->? ...which begs another question: do we stick to the netdev special comment
->style? See commit 82b8000c28b5 ("net: drop special comment style").
+Regret the inconvenience.
 
-If checkpatch is fine, I'm fine :-)
-
->
->Oh, and come to think of it, we don't really need that (easily contended?)
->mutex here. Same can be done with RCU. Which should speed up vsock_bind()
->-> __vsock_bind() -> vsock_find_cid(), right? This is what I mean, roughly:
->
->+static u32 vsock_registered_transport_cid(const struct vsock_transport
->__rcu **trans_ptr)
->+{
->+	const struct vsock_transport *transport;
->+	u32 cid = VMADDR_CID_ANY;
->+
->+	rcu_read_lock();
->+	transport = rcu_dereference(*trans_ptr);
->+	if (transport)
->+		cid = transport->get_local_cid();
->+	rcu_read_unlock();
->+
->+	return cid;
->+}
->...
->@@ -2713,6 +2726,7 @@ void vsock_core_unregister(const struct
->vsock_transport *t)
-> 		transport_local = NULL;
->
-> 	mutex_unlock(&vsock_register_mutex);
->+	synchronize_rcu();
-> }
->
->I've realized I'm throwing multiple unrelated ideas/questions, so let me
->summarise:
->1. Hackish macro can be used to guard against calling
->vsock_registered_transport_cid() on a non-static variable.
->2. We can comment the function to add some context and avoid confusion.
-
-I'd go with 2.
-
->3. Instead of taking mutex in vsock_registered_transport_cid() we can use RCU.
-
-Since the vsock_bind() is not in the hot path, maybe a mutex is fine.
-WDYT?
-
-Thanks,
-Stefano
-
->
->> So, if we can't do much, I'd add a comment and make the function name
->> more clear. e.g. vsock_registered_transport_cid() ? or something
->> similar.
->
->Sure, will do.
->
->Thanks!
->
->[1]:
->https://stackoverflow.com/questions/5645695/how-can-i-add-a-static-assert-to-check-if-a-variable-is-static/5672637#5672637
->
-
+Regards
+Pranav Tyagi
