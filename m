@@ -1,212 +1,227 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011024.outbound.protection.outlook.com [52.103.68.24])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1A8253B59;
-	Mon, 30 Jun 2025 10:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751278257; cv=fail; b=Ob2kSdKPRMnw7j7nil6ggxLQVgkTyD/aBgjAPiWIZHYTbPv6ZJWtW7XNFoMwL9Hy/bMh8Lp5IK5GACZQwC5pTymAKzd4lC6thzz94Gx8NQo8ieM3kwMFiMQvrPuejkUk7l6u2eEuJQ5ZfnULoyaxpBA/N00QgfDR+afj8IBmFKg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751278257; c=relaxed/simple;
-	bh=ewDlNOZ7l4XlAjsBhVqIndzDDqS8JWTFaOpwxNnpn88=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ednwpC2ZDORW/NBmtYas7UaxjcsK1S/rbE7LbvM2N46Ivu7sBRZtSzfXGMD4mRrCuh9a6XhyHC2vn6dsGLPN59hSDh2cNTKySvaUuQyTSOF96WHzsr6SEc1cjHrma+AaVl8W05OG7YNbk69clyD7V9wWXaqGzM/06O6h3c/5vgY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=joFVF5SO; arc=fail smtp.client-ip=52.103.68.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555752566D1
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751278263; cv=none; b=r5adEkHFs9PBl88NhKQfD/KH7buh+5OhQ6h2391DLeq37A+5Q+vmzaMh3QxMTdWcJiRxI+bOlFzKZofO0crbY95BPfM0+SRDDkjUhvFDr8AT0dodChCI+mgj/fKIKq0/xHONgBJm7QQRyeBB21SQ+8Psp4uhswxJhC1sPE03Tj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751278263; c=relaxed/simple;
+	bh=q1THjVn1VpIgW56NWxwaDH7UQqOVPhom8dNRs+AxCHE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a/8O4H1D06qTAbWTpGG6PQWemQknwpH2ZVd9ui1oVGQ32ITkhsbdc+ERGjuffjnHavOdC1BYQGBpByO+YjD5KEiEaEO0s66RmScRxJZQ86ZYUyihwK1zVYB/0Zr3+Wzzv378FlZVTIDFC16HVL+9QX65xroD6Lrh+J3HpAJIMc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C450icFA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="joFVF5SO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iBcfEoE5B75vwLsLtiSeljyraTqVM5aTfI/ArSr57lVCO94oqTsrjpIC+K36bGg/d3NfoZ13vxDGHI7nxYiOVGrO4Lx/wu2CgA7LZLgMMNRhqgWNFoBCKoNjVaaZW28+ov7cfllwOlJU5JPL+T1izuEocLBnvKhvmQixbP/LvzquVkt6b4XHOi3EQm9vXYquz9fBkSXdh5n0w2ThQSL8NHKb+jUBqA8Sopr+ajBYdi+T2z7sCpSRIRp+aqFYXEpz6JKSTs5wq0ruOedbCKZZ3mV3s0k59J2ZyUn8J0/4PJ+KP1M2fljIcxAzxKVptCO0vQo7Lt1cPdbeH1Hrjl8a5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dkOSmG33EtNR8CpLanyqktqD1gP+CbB00zIX73W5Zz4=;
- b=AAF1LmL4VBTXGg9gSYkRd6W6+KzLn4ZY84QybEQP+kygM1xtBrpZQy4UpBOUIxY13cVDAN3RwFBTm2me4VvY/yuI7OMNttPNipExtAUGCCb2yNOGMFJxEArTavnSadHBFE4BuMsIu2B2QgVqX5uMnpYvhDx1cx+oppsE8z050ZjB1tsI6+OUGTIrXVss+UrmzKWkKYjWvFUbe2APzaKjO+zD1bNL9hL0EgljXUzYkkb5pOhJccqNo8mrxEXJu7TXTXptCka+PelLXevopQnqbfTUxCKFBsIMiUnGXTGoAnhbWsnfiRy8/2giAK9JN8eNzxYq16kTBpjrSc6LQn0pDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dkOSmG33EtNR8CpLanyqktqD1gP+CbB00zIX73W5Zz4=;
- b=joFVF5SOlsJWaEEhyFU4kAMVPAAG4xePKRqnf+aidopQdO0FGUIyhq3nfUCFwnJCRrOgcj3Spz3qtaXzhDm4K/x8VWx+O4Xk0l0Lid2Es+MkX9a0QGjxYEdrPgvaKkgK/mkzhoIYcHJraz8qP/x3k8gnv9IxprkbjnaHyxP5c7rJx+YgeQQUW0fBc/MwghXH/tzx5laO0nALRTn6W3rlLeR28dWgbBQRD4uV06kDeyc5UoFGBF4RfsG8MFN8Om0pefFcF4K0Ipqz6BbyrC5a+B5n46euEDz0yI8iPzeNJ0DVtZ77AmDi4HLBt5BYG+X/nvyLqdoU0cUuXgKocV+J2A==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PNYPR01MB10948.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:2a7::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Mon, 30 Jun
- 2025 10:10:50 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%3]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
- 10:10:50 +0000
-Message-ID:
- <PN3PR01MB959796A52701ACD2703157B1B846A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 30 Jun 2025 15:40:47 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] HID: apple: avoid setting up battery timer for
- devices without battery
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <PN3PR01MB95973218D6B4ECDAE8ECF60BB87BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB9597321C9A619D3CB336FB23B87BA@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aGJaBJLwA7vbq32k@fedora>
-Content-Language: en-US
-From: Aditya Garg <gargaditya08@live.com>
-In-Reply-To: <aGJaBJLwA7vbq32k@fedora>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0P287CA0012.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:d9::11) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <ee9c3f78-0dec-4446-8edb-fc36dc0ea55e@live.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C450icFA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751278260;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9A7R1NMgwmGs+rq/3fZEJMO/E+9JHfs2TTptrHFa6kI=;
+	b=C450icFAfvvh11Qpg1g1g06gf/CNVpI9Vn1GxeUSH+QRavgdIkMvFp73hu2P8WaKYLgHId
+	4YZZg68CKwlZkBFQN4fsgyU0xctKiLKzlgYqv4TRzPYpDwByvgT1+sG5RZM9ZJRNV2EZML
+	aQt8/S4S6NWfkAVkvV3p6VlEBQT18VA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-557-D8BABNzlNeexiVbI-uqiOA-1; Mon, 30 Jun 2025 06:10:58 -0400
+X-MC-Unique: D8BABNzlNeexiVbI-uqiOA-1
+X-Mimecast-MFC-AGG-ID: D8BABNzlNeexiVbI-uqiOA_1751278257
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ae0a0683d6dso174747966b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:10:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751278257; x=1751883057;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9A7R1NMgwmGs+rq/3fZEJMO/E+9JHfs2TTptrHFa6kI=;
+        b=N3S4O/MPEdpkWxk8B+ySuHcOCxPIclXJo4aLmk+Fl2HMk/FnW/1aefkxLik9LZf6ZR
+         KKiWttwL/gosJbTQnFBJFJszHsJ0VrfNn45TCAy6MPma3KfkvLMdC0JstYl1PVNtD67e
+         UvaIlHGeWxdtH8kh1tK2XGedTyXAkIwNrBIQeg74rTpdznI/swYcR2Q4gNQF7BvNzs+q
+         nW0ISKxNLY9pjzSZIVX5mlFVAhk0i6EBNaB/Nb4r3ilwvsOYKOz9vXHbwrVJfJWdcpxE
+         w9V4r7srLdco619PCve7dSsGsHDEIOLIWO6Ueh15AHDjjd3a8HnZvayXoBtaLFt6j8Wi
+         UV/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW5gLyWvRySyuz5i3yaX0FcU0ZW6PPRU43zJbvWSwvMN/VW3U8KXBw2qmuw5ZIuNVV4naNNi8BvVAlebFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG+tI+nOmzzwxHsgrroPFdjz2iHb/R+8B5ENfKTeEovWtKunoV
+	5Yym+hYbKwTksjCMukb6AQiTYYEgKYJvxBLgXehXCJr2Fx7XOPHkJ+gBJej8XyfDAg6hyT6ag87
+	LcOcH0T8L1wo27rix2eJ8kykrL9V1ObxGQqjVwUUAsbRx+7vDWWPax1T6pUHdH60MLg==
+X-Gm-Gg: ASbGncvsJW9QoBb9adiy2MxJrGD4+KrQBoiK3K+3ju9wCPLztmb7hrVUaRVj1xF/vNH
+	mzfrWBt/glB6CDYzZ+cApEovjQkQc9YKbIK8lRhkBvnQpA/0KKJQOFOnEfHJKxNjYgha6gDomYY
+	pnBi5dWWaBiCd/ma5KiXJ8ARAGa6jSsY64AVjqBBGmaEN8gS6ADKpL+gmY7SOOzlWRDM0IIEt4v
+	1aC0It1NJebvcbNlzgAHlbzzmFlyVUbPjdRvj66i0iWcAtXATon8c9jwnlBOA+9mu9F2KYeAc5f
+	894BbzLI6vYwZSXo6tPGdoMPZjgc1la1LhXFRtQnJAzLt0L6UPolzEZErXTSZjXgI9WVB7s9m5B
+	kwanQvdpMgUCNqxnu5FSw8AS6SuFVGk8US2BPg6qIcUnJmsBENC/1Kd47H1lxs3mV+SVV0E6qLQ
+	==
+X-Received: by 2002:a17:907:2d90:b0:ae0:cde3:4bbd with SMTP id a640c23a62f3a-ae350105a64mr1132308366b.44.1751278256897;
+        Mon, 30 Jun 2025 03:10:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8QLpRvbfPVUFa7p0t3e8hsAtXsONL5FPVYF4A4uxvUKJ0kZK4E7910YTHu2a3V2kjkojunQ==
+X-Received: by 2002:a17:907:2d90:b0:ae0:cde3:4bbd with SMTP id a640c23a62f3a-ae350105a64mr1132304666b.44.1751278256380;
+        Mon, 30 Jun 2025 03:10:56 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bbf2sm633581266b.129.2025.06.30.03.10.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 03:10:55 -0700 (PDT)
+Message-ID: <484bb47b-3e20-41fa-a4e4-f8fe2369d7df@redhat.com>
+Date: Mon, 30 Jun 2025 12:10:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PNYPR01MB10948:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff136d63-a5d7-4d7f-0afa-08ddb7be63e3
-X-MS-Exchange-SLBlob-MailProps:
-	ScCmN3RHayELNF2Vmhju1u70eQ9JKDE9gOdwvQv+ywTCjRzqB2dUKZmo7B1Cp0E+cNqEXc4chwN8j1tcwq2Mp+xPXGbtvXPHnSSOICUQOokVbQMOXJ9SrX0HPwKmxJ5mXW3ujpIbdKcZxflErZ43TkX27+xsQ07PNP8newxhitAZ38tbQ69N+cTV1evI2sMkfzQAefXDy2XyVruP0y/gMygci+wOp759O09zisUuu2htilxD8CHdKA7HsehMhLijgWDwTcJGSdgbTtvkd3cII0WfuFSIyO2vUoPg52dhpGri0uoB8p7750yZFcBrArlxEJmgQLFnNARhpNvp8zILR4zxA/lB93TxT+ST54GDgHN/5s5Lu1HxK2QQXt7IUD9LTtzMg7UxLdmUtjVuS9iUZHA9PiEUcYEEelOS+sokJD2O5CZwF5evqnwHRZHvHAkP6+46gdExmfW0Biq7yQ2gXv8JrnzcVTWw1E9bItaueXqcDfsRZg6/oIZy8UKfPNPKCmWPxjm5OMqrtSGMBFEgEmDBzN+cLmgcRIQ/NQKjvkg/IzedXCmikIdSlFAF8NkdNy5lKGSqteBLFEfXSNsXC5yZtl8wAuGKrSzx8y+9uNA9p/vpn+3xeFM76EpLfY0C/BwLkGt7+Dnrq8pGGgL4TfcXoN0GpCSgLF5s/xHEjQcrFScgV5aT5z0BJoocwbkhPukLYzOtoX3c/fW9EK9xInCVZptOkOY9YlrcG5UTpZw=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|8060799009|15080799009|5072599009|6090799003|7092599006|19110799006|41001999006|52005399003|40105399003|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M0k0eEM1MUJvQjBIMGRaUDFrcWZvczRLQjVuOFRaeE1HQkl0eVNRem5sL2NI?=
- =?utf-8?B?MUdYSmVRR3VEbGE1bVp5RTRaVnoxdzRnVU10R1M5ZGU1ZnFuS0l4TzN3RjJx?=
- =?utf-8?B?RUxZSThZZmQ2MHBkb0ZNK0x4VkdaQTVYUGtGVjVVdnk2ZlJqaTJnNGlQSVdh?=
- =?utf-8?B?djgvM3IwakVBSDl5VVpIbVBVUVVoTTJHK01XRnFkYktvT2g1V2tNdHVJTnpk?=
- =?utf-8?B?K2gwWU1yYUxBSDExRmc1b2hBWUxuaWdGU05LWkg3WFQvRllyN2NtYVJwVWho?=
- =?utf-8?B?STV3M09qS3NpQXp1K0NEK0UyNDBSUWVRZ3RtaDNuQlh0Q1ZVUyt4VUZON3Bl?=
- =?utf-8?B?TnJ0WWZLVzFUMHYzZlVsbTd2RElvOFF0NW1YMUF4V3JoRWJ0ajVGeWdYLzNT?=
- =?utf-8?B?WWt4UXhNT3FXZlAzUVoxV2hGK0w4TU1wYi9iRjAyeENjZ3NKWXpFSzlPVzZq?=
- =?utf-8?B?aUFPeEd1bEY4U0d4c3loWUtCVHlybURWamwzT2phREp6TzBYekhGOTJsSnhJ?=
- =?utf-8?B?dFVEVE5BeW55OEhBR1ArMFo2bW12N2d0WmsyL3RZbVU1Y2VEczc4c1BVRTFX?=
- =?utf-8?B?blZubERvNVhHR0U1YU4yNjcvZWJvcm1HODNCNGNTWDNyQlJjWEJCeThpN1Fn?=
- =?utf-8?B?cXpaT3pVMG1hNlM4cmw2eC9jazRYM3BSNjFsQzFBWFhScmc3QURPdS94Sm8r?=
- =?utf-8?B?M04vTlRYWmNLeC9ySHB4T3dOOXJpTTdQTEhWZkFMVGNXVlRzbHROTldRNDNL?=
- =?utf-8?B?aWJrYmdPWWM5Nlh1UHd6WkE2UTFBMW5ibFk1N2VoR1BMZFhnQm8vZHBGVVBm?=
- =?utf-8?B?eE1rMk83V3Rtalc4cFVXcXU5cytVSlloVDUyRlBJTTJ5S0pKRytVcFVuMzdH?=
- =?utf-8?B?aWxnTXEzUDdSQUkxTlQ5M0tRWlB1Z1VGS2t4aHE5eEFlelBFMnhOaSs5K2JT?=
- =?utf-8?B?cWRJVWFacXdEMmpoSnFCbytMaUpsM1puVU1XcFdHU1NhNjd4WDZxMEtBazMx?=
- =?utf-8?B?R2puSFdpcnBWeXAzTlRpN3hyS0NrUmlNOWl2Rmc3eGxCeFdUbUNIUE0vSTU5?=
- =?utf-8?B?aUpNK3FKWmpScjI2QmpDUXllemhSR0l3M2QydHlhQnBHT1JlM0hHOEljcm5O?=
- =?utf-8?B?N2E2d05WQnhncjM5Vk5kQjZlN0w2ZHlKNHdodW1PRGJmeUdSb0d2LzErNkov?=
- =?utf-8?B?eE5ON1BpeU1NY0EydmVmRXdzYUYxWHJBVEJIaXhTeCt5TjlKSlE4ajhnNmhL?=
- =?utf-8?B?S2pqVUQ0SEpnL1Bob2RQS2t1MGIwRXQ3THdIbU9jQmdpU3BLd0hTSnBtNFpp?=
- =?utf-8?B?TXNWRmxLeVRldHJXTHJDWDkvd2Z2UzRwb0pMSnU1cDJmWHJjK1lMYXMxdFlP?=
- =?utf-8?B?TzdYcVJsa1R2d2N1T2xyUytDa0VuTE1jRkVzSm91cUNqUUdyZGc0SGYzKy93?=
- =?utf-8?B?Z3RXcEVWVVlrRnV2ZFlUUFlPUjYzK3kyOTNVQll1Q2tmNG1ncjVIM015b2lT?=
- =?utf-8?B?OWJQQ3VOWlVlaHJaV2FzUGg2NnNtYzZRRmFMVjhtN1daSlNVaUZqNG9qK0Rp?=
- =?utf-8?B?TWZLd3NEb01jM1FuQkV4cTFkQ1NOS2V5OXBkL1FWYlRuUkZMemJDWms4WlBa?=
- =?utf-8?Q?Ui8AcXHAAt3L1PbWlcUGHIMDBK5Uag7NURKsepEh8l2c=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V3h3VDVqM1pKWkl2UzlaU0hoWnhZMU4wNk5hdjRjNWxjMU5LWFBXUW9iNklt?=
- =?utf-8?B?UWZsOE9haVhPQWtBKy84NC91S1FpYlA3bzhOZFpRb3J1Um5OOFdvc1pEYzJH?=
- =?utf-8?B?WWgzQU5BZE1sRUFDazRQODhVa0FEQXJlcW9tZVJ4TnFidGZiZ2QwOGc1Q3dT?=
- =?utf-8?B?ZHM2eElCZEsydlhyaFliTGNKNkRYUVV0TnZqQS90RjRDc21WTHpXMGt0MFlL?=
- =?utf-8?B?N0V0eHd0R1lRdzgyNzNFVlVCL25adzh0c2VlY2JMSWxZK094aHBpalpTUVRY?=
- =?utf-8?B?Ty9uckNEclN5OWJaVTZLR2kxcGxxUENBNWRGMGtRNSs2WThDSzZRUlNNTm1R?=
- =?utf-8?B?alZ4LzQ4a242YmhlaVJ3WUdpejRld3J2eUFnNndBVjA4eTJJU1BwaXBjTG56?=
- =?utf-8?B?RjFWVEgxSVVBTm9vRTZsaUZzN2FpVGNQemxpMlY2Q3ZqL2dONitiRnUrY2ZG?=
- =?utf-8?B?MHBDZVQ5azBjdHZHQ1dsZlF6c3AxU2taYVEzdmxEZnYzQUNEb3Vwc0RRU1U3?=
- =?utf-8?B?SFoycWZ6ZkV5dGZMbDRFeWhJcGRyQm5jT2krTXF6SCtjcE8xQTBsbnRrNHBU?=
- =?utf-8?B?NXR3akphYXo5K1hlaUcrcEM5QXFJWWRuREZSVVVwVEIrMlpRc3F4L2RPMkIr?=
- =?utf-8?B?aEpiQlNtZmVkMEdZUm40TUFrRmVaamNpdjg1R1ZqcjMvc3NFYlhiaUFCYzFo?=
- =?utf-8?B?NVBETjM1SWp0RFJxZmxDb2FXYnU3c0dMck9DaG5PdGljbUE5RlZlSWdkNGxW?=
- =?utf-8?B?b3BGc0ZtbGRsOVRGUFBjUmV1emlGdzJ1cFRBZ1lqWUNMUVdKa2k5WjdQcVNp?=
- =?utf-8?B?azNsaS8xdVhWWmk5VUwvQmNRU09EU0xtVVYzbXIwblloUHpsMkw0NC9uL2hX?=
- =?utf-8?B?TjdKQVMrZ0x3OTZwZUlGZ09NYjZGcEJGQVluV1JwSEYwcXoySXRobFpoRzhP?=
- =?utf-8?B?QnpNUCsrUDNHK2VlNTZkRnEyaGwyaE55eWVhdjVCRkYzWVRuSkl2NkhiN1F1?=
- =?utf-8?B?TTNkWmlFZkFIeUpXNHdhdzZpVFc4Y1VEZmJNeFdTdGltd2lNTzdGS0RtL085?=
- =?utf-8?B?enJic1kvdkZFMVBEZmw1OEllZmtZTjIwZzJ6YW42cDVUODg0WlBENXN5eWVE?=
- =?utf-8?B?bFpIVUpzS0J5U0NONjFGeFk1aGNwNVJCZm5MMnE2ZTdBZVJUcnN5bXlYc2Nn?=
- =?utf-8?B?clpwaHBZT3ZXT0pic2FXdnd1TDYzcndJNGwwcTNHUGs1NHhHRlZvMlVvUU45?=
- =?utf-8?B?OGJWeS9DSXVEWHpaaTdrTmt6L2tSM3pvMk9HTDY2Q0lpbHhST1QyQm1pQTBE?=
- =?utf-8?B?eGgweWx2aEJMVE5CV3BFVms2V3NFQlY1c244WllrQTA4Ukw1TFY4ZzdzWjd6?=
- =?utf-8?B?NXd6TDJjVDdOVEZQN0dOczZuSVRSaWJhYzNNbWhxWDByRHUyNTVKbFdCY2pa?=
- =?utf-8?B?SXB4dVE1UXM2bktDUlRXKy8zTTdFUEVzV3ljMzVyN2hSYmY2cWIzbnZLcGo5?=
- =?utf-8?B?bUdEV3hlY0ZRdFFZRmF4a0ZhWmFmS2E1cjU0MzB3R2svOG9SbURGaEl0aGJj?=
- =?utf-8?B?WXNqRXpsVzFYYlZmODNVNTNYL0lmTHU5WnN0MTc5eXB4SE4vVzF1a1JqTll5?=
- =?utf-8?B?UHlTdXgrYS9uY1NUY2FmU3ZqUXRTMWVnNXZ5SGRSU2FHZWovR3BMZWE0Z1B2?=
- =?utf-8?B?dysxMU0zaUZlTmkwTWFSajZWY2JIVGt0L1RiM1J6T1h5OTVYeUh1RnlodS9J?=
- =?utf-8?Q?tx2Jlcjt1vONMjMg76pDff0/f88L+6Y3Yv+eATv?=
-X-OriginatorOrg: sct-15-20-8813-0-msonline-outlook-f2c18.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff136d63-a5d7-4d7f-0afa-08ddb7be63e3
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 10:10:50.7518
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PNYPR01MB10948
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
+ interconnects property
+To: Krzysztof Kozlowski <krzk@kernel.org>, Maxime Ripard <mripard@kernel.org>
+Cc: Luca Weiss <luca.weiss@fairphone.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>,
+ Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
+ <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
+ <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
+ <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
+ <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
+ <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
+ <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
+ <20250630-stirring-kiwi-of-adventure-8f22ba@houat>
+ <b9f010ca-1564-4a3a-b004-ef179d5c90a6@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <b9f010ca-1564-4a3a-b004-ef179d5c90a6@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Krzysztof,
 
-
-On 30-06-2025 03:03 pm, José Expósito wrote:
-> On Wed, Jun 25, 2025 at 07:46:03PM +0530, Aditya Garg wrote:
->> Currently, the battery timer is set up for all devices using hid-apple,
->> irrespective of whether they actually have a battery or not.
+On 30-Jun-25 11:36 AM, Krzysztof Kozlowski wrote:
+> On 30/06/2025 10:38, Maxime Ripard wrote:
+>> On Mon, Jun 30, 2025 at 10:24:06AM +0200, Krzysztof Kozlowski wrote:
+>>> On 29/06/2025 14:07, Hans de Goede wrote:
+>>>> Hi Krzysztof,
+>>>>
+>>>> On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
+>>>>> On 27/06/2025 11:48, Luca Weiss wrote:
+>>>>>> Hi Krzysztof,
+>>>>>>
+>>>>>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
+>>>>>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
+>>>>>>>> Document the interconnects property which is a list of interconnect
+>>>>>>>> paths that is used by the framebuffer and therefore needs to be kept
+>>>>>>>> alive when the framebuffer is being used.
+>>>>>>>>
+>>>>>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>>>>>>> ---
+>>>>>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml | 3 +++
+>>>>>>>>  1 file changed, 3 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2b220c654b80e2e80850cd 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+>>>>>>>> @@ -79,6 +79,9 @@ properties:
+>>>>>>>>    power-domains:
+>>>>>>>>      description: List of power domains used by the framebuffer.
+>>>>>>>>  
+>>>>>>>> +  interconnects:
+>>>>>>>> +    description: List of interconnect paths used by the framebuffer.
+>>>>>>>> +
+>>>>>>>
+>>>>>>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
+>>>>>>> some sort of resources in unknown way is not simple anymore. You need
+>>>>>>> device specific bindings.
+>>>>>>
+>>>>>> The bindings support an arbitrary number of clocks, regulators,
+>>>>>> power-domains. Why should I artificially limit the interconnects to only
+>>>>>> one?
+>>>>>
+>>>>> And IMO they should not. Bindings are not supposed to be generic.
+>>>>
+>>>> The simplefb binding is a binding to allow keeping the firmware, e.g.
+>>>> uboot setup framebuffer alive to e.g. show a boot splash until
+>>>> the native display-engine drive loads. Needing display-engine
+>>>> specific bindings totally contradicts the whole goal of 
+>>>
+>>> No, it does not. DT is well designed for that through expressing
+>>> compatibility. I did not say you cannot have generic fallback for simple
+>>> use case.
+>>>
+>>> But this (and previous patchset) grows this into generic binding ONLY
+>>> and that is not correct.
 >>
->> APPLE_RDESC_BATTERY is a quirk that indicates the device has a battery
->> and needs the battery timer. This patch checks for this quirk before
->> setting up the timer, ensuring that only devices with a battery will
->> have the timer set up.
+>> Can we have a proper definition of what a correct device tree binding is
+>> then?
 >>
->> Fixes: 6e143293e17a ("HID: apple: Report Magic Keyboard battery over USB")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Aditya Garg <gargaditya08@live.com>
->> ---
->>  drivers/hid/hid-apple.c | 13 ++++++++-----
->>  1 file changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
->> index b8b99eb01..b9f45c089 100644
->> --- a/drivers/hid/hid-apple.c
->> +++ b/drivers/hid/hid-apple.c
->> @@ -959,10 +959,12 @@ static int apple_probe(struct hid_device *hdev,
->>  		return ret;
->>  	}
->>  
->> -	timer_setup(&asc->battery_timer, apple_battery_timer_tick, 0);
->> -	mod_timer(&asc->battery_timer,
->> -		  jiffies + msecs_to_jiffies(APPLE_BATTERY_TIMEOUT_MS));
->> -	apple_fetch_battery(hdev);
->> +	if (quirks & APPLE_RDESC_BATTERY) {
->> +		timer_setup(&asc->battery_timer, apple_battery_timer_tick, 0);
->> +		mod_timer(&asc->battery_timer,
->> +			  jiffies + msecs_to_jiffies(APPLE_BATTERY_TIMEOUT_MS));
->> +		apple_fetch_battery(hdev);
->> +	}
->>
+>> It's a bit surprising to have *that* discussion over a binding that is
+>> now well older than a decade now, and while there is definitely some
+>> generic bindings in ePAPR/DT spec, like the CPU ones.
 > 
-> The same here, the `out_err:` error case uses the timer and it can
-> be uninitialized.
-
-Ah yes, good catch
-
+> Hm? In ARM world at least they are specific, e.g. they have specific
+> compatibles.
 > 
-> Jose
-> 
->>  	if (quirks & APPLE_BACKLIGHT_CTL)
->>  		apple_backlight_init(hdev);
->> @@ -985,7 +987,8 @@ static void apple_remove(struct hid_device *hdev)
->>  {
->>  	struct apple_sc *asc = hid_get_drvdata(hdev);
->>  
->> -	timer_delete_sync(&asc->battery_timer);
->> +	if (asc->quirks & APPLE_RDESC_BATTERY)
->> +		timer_delete_sync(&asc->battery_timer);
->>  
->>  	hid_hw_stop(hdev);
->>  }
->> -- 
->> 2.43.0
 >>
+>> If you don't consider that spec to be correct DT bindings, please
+>> provide a definition of what that is, and / or reasonable alternatives.
+>>
+>> Also, no, a device specific binding isn't reasonable here, because we
+>> *don't* have a device. From a technical standpoint, the firmware creates
+> 
+> You touch internal parts of the SoC and you list very specific SoC
+> parts. Interconnect is internal part of the SoC and only specific
+> devices are using it.
+> 
+> You define here generic SW construct for something which is opposite of
+> generic: the interconnect connecting two specific, unique components of
+> one, given SoC.
+> 
+>> the framebuffer, Linux just uses it. Just like you don't have a
+>> device/platform specific compatible for PSCI, SCPI, et al.
+> 
+> They follow some sort of spec and still they do not reference chosen
+> SoC-design-specific properties.
+
+It does not look like this discussion is going anywhere,
+despite 2 drm subsystem maintainers and the simplefb
+maintainer telling you that this is what is necessary
+and also that we believe this is the right thing todo.
+
+IOW despite 3 domain experts telling you we want this,
+you keep coming up with vague, not really technical
+argument about this not being generic / simple enough.
+
+Looking at this from a driver pov interconnects are just
+another resource we need to avoid from turning off.
+
+And this is simple and generic, the actual display-engine
+drivers are very complex and when powering things up
+this needs to be done in a very specific order with
+specific delays. That is hw-specific. The simplefb/simpledrm
+code does not need any of this knowledge everything is
+already setup. The simple* drivers just needs to claim all
+listed resources in an arbitrary order and without any delays
+as someone who has written many many drivers this is
+about as simple and generic as it can get.
+
+But as mentioned it looks like this discussion is going
+anywhere. Is there some sort of arbitration / appeal
+process which we can use when DT-maintainers block
+a binding which has been acked and is seen as necessary
+by the subsystem maintainers of the subsystem for which
+the bindings are ?
+
+Regards,
+
+Hans
+
 
