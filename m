@@ -1,142 +1,82 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEDA21C186;
-	Mon, 30 Jun 2025 12:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2A52749E1;
+	Mon, 30 Jun 2025 12:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285683; cv=none; b=hblfoGwnGysZblNPXdox+3o9wTEnQshUXMqcw4H8Jwa0oRWVizaW4IqURpLlvlSEadK16I/565ds13sKHIWtvHg3GEhNTbTkjM+ExGvXSeYTPDz6uY4a1/rTa46vO43rCc5aXPlQixU/Nyo1hu7/TAZjiXIIi7HseugqHEH9/PA=
+	t=1751285706; cv=none; b=B4kMzNnfDBJzHSuG5rmu7C1CArPHVOfUk1hVaHiyGa858XusqGvCLqFw5tNpCrnmhx6/d8FI2L18D5Fvlg1Pnznt0Ts6U2U70SB4h3Ibqjq0i50i5bC6c9eE4F0pivNijVStuhIIGGp9l4J1OrDf8RZ6tVGmNEa/hcNqVn7QatQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285683; c=relaxed/simple;
-	bh=8FAcqR+oJMD9khdH7biBb/06gHWL5Lp51C29BEBo9h4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nmW07aqfWjnqn1SmKKVnsnjI0HvovT5luJT0Jd1S0HGK5Q/QuLnvDE1RYbreu0Ngxffu7HAkwshr77ldbmNcWjdgUEvQNpc6lbseq8OYo7l1kzPdMmVfQfdNlHFbo4pGDY7aeEvMBnRkd0RJW9mcB8cBfkFC3i7ai47t3a4zjjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZskL992U; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751285706; c=relaxed/simple;
+	bh=lsvia4jB5cwuxRsdD89/gppA5DNlBI8D4wea+9BDgIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXqqKB8jclIIIALsKMamQRIGuQ9JPSxTW3uLJSYh81tx0nwRmeTV8b4FmsGWTWW9+A9E3YsnU8d3iGm/RNcf/oQFErG+YIeNYTedHucoBFfCr79jIi2sxdGmv+4ByxIWlU6dmy0A7f8fBwVfvNYb+hRs6UyTBFNDQNBEVg8RtSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMrUwMkz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZskL992U"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751285676; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=TEyW6enmLuv9dUWsoyuMlg4cv4ltLIiIq6AY8UJQMfQ=;
-	b=ZskL992U9rq5PHdUOtrW/JQqzFhWF3e4QqU0qbm79jVFIYtdbIUNCvmvx4QxGqN4ZYSOZ6oMvd3EUKycCLsTafl3Jg7VPvx0Uz19GmZNmm9hQtF9yWxltoheqTaeqQWVffD2VFUVWxN3UYKLrCYzteJD/2gBbACRQIjZtfnZGac=
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WgCGCGw_1751285670 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 20:14:35 +0800
-From: cp0613@linux.alibaba.com
-To: david.laight.linux@gmail.com
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	arnd@arndb.de,
-	cp0613@linux.alibaba.com,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux@rasmusvillemoes.dk,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	yury.norov@gmail.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
-Date: Mon, 30 Jun 2025 20:14:30 +0800
-Message-ID: <20250630121430.1989-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250629113840.2f319956@pumpkin>
-References: <20250629113840.2f319956@pumpkin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMrUwMkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E027BC4CEE3;
+	Mon, 30 Jun 2025 12:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751285705;
+	bh=lsvia4jB5cwuxRsdD89/gppA5DNlBI8D4wea+9BDgIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CMrUwMkzKVMeySSCgkTEwgLP2ucOR46mj+OjA/EG3sG7d1uSS34jeoW1FyKfG+/Fr
+	 ukUNvw24XXyZQgqJBy9eM7S2ju9HeIWOMWRgV5Su183QaFfzd+g1V6FBhk8OyWHEDu
+	 J9S93IFUAggYjJs0d+F0WkiEYr25gL/pyNRHshnYn7EspUPVU9eP/p2GTRFDJRlh/H
+	 pV9hzSApTV7bqO59ZXsk0FLQM+wpSPIPsh0nc7STVr/Hidk8OuoZW4Ru7ZEuHwqQQx
+	 TmRQTyLhiOWRTJJ1zGJAcGpDyLcWBEf6VnkNOhSKnZCp4y/uY6j2o71tZpyz5PZ3cD
+	 eutUtAbenFnAw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uWDPc-000000007jB-0OqY;
+	Mon, 30 Jun 2025 14:15:04 +0200
+Date: Mon, 30 Jun 2025 14:15:04 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v4 1/8] efi: efivars: don't crash in
+ efivar_set_variable{,_locked} in r/o case
+Message-ID: <aGJ_yIdfZil0EhoU@hovoldconsulting.com>
+References: <20250625-more-qseecom-v4-0-aacca9306cee@oss.qualcomm.com>
+ <20250625-more-qseecom-v4-1-aacca9306cee@oss.qualcomm.com>
+ <aF0bLtnABcGTi0wM@hovoldconsulting.com>
+ <zw5u5c2itmpxq34d22y5wmtr32d4zsmjj5clf77ryeqs5jgd4v@t3wjfyj43yra>
+ <aF1CX2uWZ_KaMDVR@hovoldconsulting.com>
+ <CAO9ioeWwyxSgG9DNYpW-Z_SU_Scv+4sSBs8UeZnxFz+tOaESEQ@mail.gmail.com>
+ <aF6OQqD9V7AYUkwO@hovoldconsulting.com>
+ <h6huo4dohj6y5ne6ehs7ysjnarhtlztyycuztaixpvumvskmjj@x64n7svubc3q>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <h6huo4dohj6y5ne6ehs7ysjnarhtlztyycuztaixpvumvskmjj@x64n7svubc3q>
 
-On Sun, 29 Jun 2025 11:38:40 +0100, david.laight.linux@gmail.com wrote:
+On Sat, Jun 28, 2025 at 06:05:51PM +0300, Dmitry Baryshkov wrote:
+> On Fri, Jun 27, 2025 at 02:27:46PM +0200, Johan Hovold wrote:
 
-> > It can be found that the zbb optimized implementation uses fewer instructions,
-> > even for 16-bit and 8-bit data.
+> > Ok, so then there are no current drivers that will benefit from your
+> > change, but you may (or may not) need it if you enable RO efivars on
+> > this particular platform. That is, this patch is not actually fixing
+> > anything that is broken currently.
 > 
-> Far too many register spills to stack.
-> I think you've forgotten to specify -O2
+> I'd leave that to a discretion of EFI / EFI vars maintainers. RTC driver
+> definitely is broken in its current state.
 
-Yes, I extracted it from the vmlinux disassembly, without compiling with -O2, and
-I used the web tool you provided as follows:
-```
-unsigned int generic_ror32(unsigned int word, unsigned int shift)
-{
-	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-}
+Again, no. We only need this when you start enabling RO efivars on
+Qualcomm platforms. So you're not fixing anything that is currently
+broken.
 
-unsigned int zbb_opt_ror32(unsigned int word, unsigned int shift)
-{
-#ifdef __riscv
-	__asm__ volatile("nop"); // ALTERNATIVE(nop)
-
-	__asm__ volatile(
-		".option push\n"
-		".option arch,+zbb\n"
-		"rorw %0, %1, %2\n"
-		".option pop\n"
-		: "=r" (word) : "r" (word), "r" (shift) :);
-#endif
-	return word;
-}
-
-unsigned short generic_ror16(unsigned short word, unsigned int shift)
-{
-	return (word >> (shift & 15)) | (word << ((-shift) & 15));
-}
-
-unsigned short zbb_opt_ror16(unsigned short word, unsigned int shift)
-{
-	unsigned int word32 = ((unsigned int)word << 16) | word;
-#ifdef __riscv
-	__asm__ volatile("nop"); // ALTERNATIVE(nop)
-
-	__asm__ volatile(
-		".option push\n"
-		".option arch,+zbb\n"
-		"rorw %0, %1, %2\n"
-		".option pop\n"
-		: "=r" (word32) : "r" (word32), "r" (shift) :);
-#endif
-	return (unsigned short)word;
-}
-```
-The disassembly obtained is:
-```
-generic_ror32:
-    andi    a1,a1,31
-    negw    a5,a1
-    sllw    a5,a0,a5
-    srlw    a0,a0,a1
-    or      a0,a5,a0
-    ret
-
-zbb_opt_ror32:
-    nop
-    rorw a0, a0, a1
-    sext.w  a0,a0
-    ret
-
-generic_ror16:
-    andi    a1,a1,15
-    negw    a5,a1
-    andi    a5,a5,15
-    sllw    a5,a0,a5
-    srlw    a0,a0,a1
-    or      a0,a0,a5
-    slli    a0,a0,48
-    srli    a0,a0,48
-    ret
-
-zbb_opt_ror16:
-    slliw   a5,a0,16
-    addw    a5,a5,a0
-    nop
-    rorw a5, a5, a1
-    ret
-```
-
-Thanks,
-Pei
+Johan
