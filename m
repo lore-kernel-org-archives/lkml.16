@@ -1,167 +1,159 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B602BD5B5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACE32459F2
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751305234; cv=none; b=kcj2DA8WttkIc61oegVaX4qyk8ZdPQUVxVSuT1UDK20pVs8XP+CyIFqSH/P6+8QeEfRE7UjBvOaT+L3N3Dmyumi0QiGjxud3VSMQW5CHRElGmKjKE3S/4e33Qni8cWrMaYSfYZGnkmzw8QlmBNOyheDm8HkwlVNCAVjN1ow19ow=
+	t=1751305306; cv=none; b=APkPxlBOcTGUMe5d4BVzqBFcNpeA5zuEgpTAGeWwwkDmKhFirhjjxoYvvg1IY5Z3j6iYWS5X3uFZ+z6QvVLjSj/s0bP6oynuyL8mtgfq7UbK2FYRXtG8xoe8671pbSXgTXJTDKArl7aLNLLiIps3GiFPsQux7B7FX8klky8Q+7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751305234; c=relaxed/simple;
-	bh=sDPU6bO8ExBa+wJj21pGHQYwTA7ckq1nAJsUXRzp8CQ=;
+	s=arc-20240116; t=1751305306; c=relaxed/simple;
+	bh=MKC6WgTK53IkV2utREflpT+8t0y2MRP28JRtYbd3T/g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXL4A2pijRzz8EBfRlrctsqEXYaSfh6fcU4lRC54/rXcCT592rVyJDFRwufWMuyjxHEpz+aQq1RlPbW4bJj7YhhX/7jDQPeyZbXsuuuWBmc1h8Y6fR1AeBsA6nb7VmTLx1rx6eAwsSqy7TnPkA2lN8WtKkNSYXqouBmhWbz9JJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O/gQjrsk; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaZl7vyv7F4Vt68aHxFtBaeN5kSv+5lJi1Ao7dArAQ4a6AUAsui+gWHZTWNHxoe2rip7AOCK6dE5XWaYJSeJQ8+SEkBNStHlSeN7gug/PUpbqP/Yw1m1Pou7t23tkM1i4q+Jal4wazegLQU88NzoWoMcQ7yKb8eeQrHosr0uBvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DR19nqDT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iM0UBs/8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=c0rr6qM2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1mQo3tjy; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O/gQjrsk"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a54700a46eso2431496f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751305231; x=1751910031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sDPU6bO8ExBa+wJj21pGHQYwTA7ckq1nAJsUXRzp8CQ=;
-        b=O/gQjrsksUpExQ+cerCU3y9k6eE/ioPmjwBuC/+mw7Tfco/kBpdvsQ7/lQqC6tMrER
-         oUugz3eCxGBfidetZrJjDNT50W8EuApxSsMkrNUUimvKIm1V/nojlfY5/Qy32e2fzGWa
-         R9ccF77P9uu2J7/25w8h++FKbBBSmCCfHy28eEh7rcwCdSli4E2jRSnIpjS0IRMwuP9R
-         79dZQh9c+4tJ03ue7RKOno0k/+G4tcUV6PLWGpdhbnYeh0zRkndQ8yDAGB6WY5nF33Xl
-         NTdXoTspKgjYKT6liTplFnBHh/qa1ijQarNPG1xAyYc30HEqU/GEpPBpFczv5/HYC16q
-         KvcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751305231; x=1751910031;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sDPU6bO8ExBa+wJj21pGHQYwTA7ckq1nAJsUXRzp8CQ=;
-        b=BB6WOIAY4mat8iDOK4PVPHLvY8y+vhFZ+VD9Crq8h1jbmkMkgslqrv72DCX2JBxJ97
-         c1lNTUOJN/rNA57CIcUNaz2c/mR6Dz4TX/64LpwhtjJqazXZgc5aODmJLyjP1vto3IrG
-         jtDgESqfXjv5ipwQ0VwsH1yDOC0zyiJOwMsasU+9lfcAtaod5Svs81lVYHYX+DwJovC8
-         YaBbcNCUG7ZiweRj1vE4iHZf6cyPxtBCGriolUdTyvY4rNPePQaR948Q2AfwZXGcFUUv
-         rGLcf2Y4sCx8V0Po5eaZfOcB/s7tbrpCu2vn8zVgv8sL4/IBsFCHuEd6hnw5VIhjAcdf
-         W2VQ==
-X-Gm-Message-State: AOJu0YwQIxLybdiv5dabhQP1EAb8EPLYxXpgWAVHAxcTmjuHBj76OCoF
-	+3SedYKHwO2Tv1W6PF4YyHIb6mtR3g5uoSOMtaz2y2X+EglORLKfN40LPYiuRAv/02g=
-X-Gm-Gg: ASbGncvg74HdnTaAy4Ju1c/eaNajXE5bQDeVI36l8WVjT438PUNNCKsuMPfBoO6O4mm
-	1J4gDzynlEWRXWfkKdctXu0wAtKUgqJRwITYod84GDeFfpyewxJfTCIvLSCAbhuu5mATUhbrO31
-	AZ8MuGmE6u0XPu84HyZuXdmRZyOsidnqWVK/MCMBD6rmjuiC8vK0D5mkHNQEGCyEONA3zGiYb0g
-	NcPVZKCf0g52COYd52RnhVlq40Mrcr3tRInmw4Fqq4yMWJ5CzhuBqcfvbl4c3qvgYvL6OFQOC7i
-	ys0HTOAZ8x07osBpMH2p3+3/naqgszALuPiQ6TQGXvflhsllJBbN0BkrUBi0jWYu
-X-Google-Smtp-Source: AGHT+IH+GjtEXN/h8/C6vsZ4Wo0GrIMYfCWE/katLEA3Cl1hrbNXZ7dRHxUdSMY79vE1MYNL6qKphA==
-X-Received: by 2002:a5d:5f92:0:b0:3a5:39d8:57e4 with SMTP id ffacd0b85a97d-3a9002968a3mr12054061f8f.41.1751305231025;
-        Mon, 30 Jun 2025 10:40:31 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fb67dsm11205310f8f.35.2025.06.30.10.40.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:40:30 -0700 (PDT)
-Date: Mon, 30 Jun 2025 19:40:28 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Tiffany Yang <ynaffit@google.com>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	kernel-team@android.com, John Stultz <jstultz@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Chen Ridong <chenridong@huawei.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
-Message-ID: <ry6p5w3p4l7pnsovyapu6n2by7f4zl63c7umwut2ngdxinx6fs@yu53tunbkxdi>
-References: <20250603224304.3198729-3-ynaffit@google.com>
- <gn6xiuqczaoiepdczg364cj46riiskvqwgvyaawbb3bpaybaw4@5iiohkyscrek>
- <dbx8h601k4ms.fsf@ynaffit-andsys.c.googlers.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DR19nqDT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iM0UBs/8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="c0rr6qM2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1mQo3tjy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DE31921163;
+	Mon, 30 Jun 2025 17:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751305303; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DduZmfIRYnUE6a825bqzfBebQAdLHgav/Uc/BQtMODE=;
+	b=DR19nqDTijWhJeX4xPeGV44KlrwL2eGV6JR5Xv1gRw6g64pUYQ88MTsQssHsw3ds92fMjN
+	HTajtB/wfOil/3H/qrr2MaQbEPkN3TRYY2RFkNAWLUc8TRn6Xc8IlP8WayaOFq91A5jJON
+	ajIQ6HUk9NYqD8/ZpPtrarvOpEsle9s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751305303;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DduZmfIRYnUE6a825bqzfBebQAdLHgav/Uc/BQtMODE=;
+	b=iM0UBs/8C6I1QPNWt5sK+4iEh9VLDUo13U7Df2t4PfWMkXkEbX2zKLq85Yu3BFLdyELVR1
+	U+6wwkdlfgqrDDAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=c0rr6qM2;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=1mQo3tjy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751305301; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DduZmfIRYnUE6a825bqzfBebQAdLHgav/Uc/BQtMODE=;
+	b=c0rr6qM2HRK65PiynbHtAo6ET06R3c3PUeMVRoKKM+xOaAYeelQI81pa1P2z5MfarwdzAo
+	DBYeApdotaBzNiv0x6D4Qzq84mDZs+O21TdfMKgVb2lI8cLIGdQ3vLFR0DBENLWcOWx93n
+	CxOnBuOExLm0F6iM8CTEb+ZwWQd0Ttk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751305301;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DduZmfIRYnUE6a825bqzfBebQAdLHgav/Uc/BQtMODE=;
+	b=1mQo3tjyazJuJNrxsY21lFDbDUXLKrZktDHDzok+lHiIrfzFuyJzuoCkpk1307tfmpD2ib
+	qpfreVDyO6b3KSAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C833C1399F;
+	Mon, 30 Jun 2025 17:41:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YeeSMFXMYmhPLQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 30 Jun 2025 17:41:41 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 592DEA0A31; Mon, 30 Jun 2025 19:41:41 +0200 (CEST)
+Date: Mon, 30 Jun 2025 19:41:41 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 04/16] ext4: utilize multiple global goals to reduce
+ contention
+Message-ID: <trjf7lqckchx6bc3p4lwh5yy3bqczo6yvdll7ujguhvvezwtja@cpfhj6ai7gzp>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-5-libaokun1@huawei.com>
+ <xmhuzjcgujdvmgmnc3mfd45txehmq73fiyg32vr6h7ldznctlq@rosxe25scojb>
+ <77077598-45d6-43dd-90a0-f3668a27ca15@huawei.com>
+ <qtdxe2rmnvrxdjmp26ro4l5erwq5lrbvmvysxfgqddadnpr7x4@xrkrdjkgsh67>
+ <4f15d0aa-39e0-42ef-a9ca-ddbb3ff36060@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yt7skpektyeugjjr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dbx8h601k4ms.fsf@ynaffit-andsys.c.googlers.com>
+In-Reply-To: <4f15d0aa-39e0-42ef-a9ca-ddbb3ff36060@huawei.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: DE31921163
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
+On Mon 30-06-25 18:02:49, Baokun Li wrote:
+> On 2025/6/30 16:38, Jan Kara wrote:
+> > We could make streaming goal to be ext4_fsblk_t so that also offset of the
+> > last big allocation in the group is recorded as I wrote above. That would
+> > tend to pack big allocations in each group together which is benefitial to
+> > combat fragmentation even with higher proportion of groups that are streaming
+> > goals (and likely becomes more important as the blocksize and thus group
+> > size grow). We can discuss proper number of slots for streaming allocation
+> > (I'm not hung up on it being quarter of the group count) but I'm convinced
+> > sb->s_groups_count is too much :)
+> > 
+> > 								Honza
+> 
+> I think sbi->s_groups_count / 4 is indeed acceptable. However, I don't
+> believe recording offsets is necessary. As groups become larger,
+> contention for groups will intensify, and adding offsets would only
+> make this contention worse.
 
---yt7skpektyeugjjr
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
-MIME-Version: 1.0
+I agree the contention for groups will increase when the group count goes
+down. I just thought offsets may help to find free space faster in large
+groups (and thus reduce contention) and also reduce free space
+fragmentation within a group (by having higher chances of placing large
+allocations close together within a group) but maybe that's not the case.
+Offsets are definitely not requirement at this point.
 
-On Fri, Jun 27, 2025 at 12:47:23AM -0700, Tiffany Yang <ynaffit@google.com> wrote:
-> In our case, the deadline is meant to be relative to the time our task
-> spends running; since we don't have a clock for that, we set our timer
-> against the system time (CLOCK_MONOTONIC, in this case) as an
-> approximation.
+								Honza
 
-Would it be sufficient to measure that deadline against
-cpu.stat:usage_usec (CPU time consumed by the cgroup)? Or do I
-misunderstand your latter deadline metric?
-
-> Adding it to /proc/<pid>/stat is an option, but because this metric
-> isn't very widely used and exactly what it measures is pretty particular
-> ("freezer time, but no, cgroup freezer time, but v2 and not v1"), we
-> were hesitant to add it there and make this interface even more
-> difficult for folks to parse.
-
-Yeah, it'd need strong use case to add it there.
-
-> Thank you for asking this! This is a very helpful question. My answer is
-> that other causes of delay may be equally important, but this is another
-> place where things get messy because of the spectrum of types of
-> "delay". If we break delays into 2 categories, delays that were
-> requested (sleep) and delays that were not (SIGSTOP), I can say that we
-> are primarily interested in delays that were not requested.
-
-(Note that SIGSTOP may be sent to self or within the group but) mind
-that even the category "not requested" is split into two other: resource
-contention and freezing management. And the latter should be under
-control of the agent that sets the deadlines.
-
-> However, there are many cases that fall somewhere in between, like the
-> wakeup latency after a sleep, or that are difficult to account for,
-> like blocking on a futex (requested), where the owner might be
-> preempted (not requested).
-
-Those are order(s) of magnitude different. I can't imagine that using
-freezer for jobs where also wakeup latency matters.
-
-
-> Ideally, we could abstract this out in a more general way to other
-> delays (like SIGSTOP), but the challenge here is that there isn't a
-> clear line that separates a problematic delay from an acceptable
-> delay. Suggestions for a framework to approach this more generally are
-> very welcome.
-
-Well, there are multiple similar metrics: various (cgroup) PSI, (global)
-steal time, cpu.stat:throttled_usage and perhaps some more.
-
-> In the meantime, focusing on task frozen/stopped time seems like the
-> most reasonable approach. Maybe that would be clear enough to make it
-> palatable for proc/<pid>/stat ?
-
-Tejun's suggestion with tracking cgroup's frozen time of whole cgroup
-could complement other "debugging" stats provided by cgroups by I tend
-to think that it's not good (and certainly not complete) solution to
-your problem.
-
-Regards,
-Michal
-
---yt7skpektyeugjjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGLMCgAKCRB+PQLnlNv4
-CICTAQCwJTOL9Cw6RFMN4JRHX6xIXQ7ir1qtV/o3cUZo8M749wD/WZxiV6PKbnV/
-ZlsyYOCjy/M/7yml9Tbmzhp46hU79QU=
-=i0k9
------END PGP SIGNATURE-----
-
---yt7skpektyeugjjr--
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
