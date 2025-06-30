@@ -1,154 +1,157 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0D43AA8;
-	Mon, 30 Jun 2025 19:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB311624E9
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751312002; cv=none; b=WW3h5wDw0DHRg6jquE1zET/m5xhj92pGKNO7fbSDhjEOlLukqwfY8BrkN/4gWV+PcKyn7m0YN/dAXVWu6tqTZui+Bfpq3m/0GVOejUYfuPoefKDPj49nl6l50zl9plHb+MO3HBtyPBm/ZCFPhUorBarAo6No9TwQvjaEsp6/jNA=
+	t=1751312011; cv=none; b=XKPzDFTDhaykekxXkerMIplJcB0lDZdEX+VNzxp1od/GYvGkm+M8iRiLoJKREMaU7bputvIZRGJ1jCX88Pw8ASVZoN/6gf3JkkkdrQmeFtmQByC0Of+AdOl8RlFA7TX/jnW6Zm3tk538jjp5iVipLA+pqPtMM7sriY7oLMtviiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751312002; c=relaxed/simple;
-	bh=kAgCkIezU6dLBy1qMupKYWlktOvfEHFfvi2Jw9Kl2mQ=;
+	s=arc-20240116; t=1751312011; c=relaxed/simple;
+	bh=L1dWw3ul8yVaWeCdfKGPbkNq6yPKle7qYiNxccwTWIk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TjjQoDDKxPVn8yI/CijBA23Vqp/qnIODtsmp4w6wLDghuSfe/Ec9fw379/owGeUIOLcXkaC1kBDiaakeadjYjuGuTbvbJozSQxw1WspMcJaWza666MURhYn7O49N3w8N5wXA/Z6EEMadADYwFh5FEH4LxkBfOL6stUKnSn0GIb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzHLCqZz; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ciNNVjMInb0u50K3HkLlvmxdP/eJXtwfPgLksbkNmACPEyfHxr4hvNYybwwRHkks46qQX7VOYI3Bo5OsX9mWAum58waqVma2Q9A0xyBf0psJcqKoAZpHFd0ozvUyfPto6pOhypVJzbzq5fQbKdBJs6JWBV2nru0OX6oojqXWOL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QbK+FEdh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzHLCqZz"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553b6a349ccso2815743e87.0;
-        Mon, 30 Jun 2025 12:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751311999; x=1751916799; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UFs/ehALtL0+qFoc09farxfhDThHkq27kEeWKbJRfGk=;
-        b=UzHLCqZzj5VdFge5P2m69zRTiOQb3akVYozKL8eB0wVLA3pt1BpronGJobo/KBWeWD
-         DSO/85yqe0mhDPHOnvTFU0OatKWF4komXCQlESno6uhogZM7h2Oy2WTqMDoNUCFPnGrW
-         YKjZrC/vxJBeXQZBxnpZRJaPGZ7zkbVLrFD2lK8j/wmcb035sfZzAsN1+SWYGxN2TkOB
-         O+nxy2YSHVLj8OCJVSK4EGOFIx701r2DT1BAQthXg1RzLrVMiQNQ/+QrHEyxjKu9JUIO
-         vawL+9+nHbMVCiihEaA2QWnRCVmPgOXAW3+XaJN4DEl66O95ggUwDQMQDlMygnQD0bOT
-         hkYg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QbK+FEdh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751312008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xLG9XHK+6+oCii41uDgkWY6xC+gN79cm3T8XpClkT4c=;
+	b=QbK+FEdhOvMJAjk0BeCUtUdLkz5XhMmAOEEp31tY0lh2xuYQJ6ON55DhxWDcJIAD3cQuEx
+	StVKcoOBoE10czjjM09DWQSBVe0LO6Ig1EccAexhu1xiHL8RXb6KD2/fkPl4qXkx0lb6dp
+	oN5W71/TgT4/89FEacoUYsHsk/1if5s=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-533-70gxJcK9PFa7niJLW6r5Ow-1; Mon, 30 Jun 2025 15:33:27 -0400
+X-MC-Unique: 70gxJcK9PFa7niJLW6r5Ow-1
+X-Mimecast-MFC-AGG-ID: 70gxJcK9PFa7niJLW6r5Ow_1751312006
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddc5137992so27683795ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:33:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751311999; x=1751916799;
+        d=1e100.net; s=20230601; t=1751312006; x=1751916806;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UFs/ehALtL0+qFoc09farxfhDThHkq27kEeWKbJRfGk=;
-        b=cpK0K8QGhudYWkGClAZwbZT45awnVDRI43QUsHR6bSrE1ua/fHa4dydXAPGqVV8a2j
-         DHE+mm3Q+IOoZCJ9G7V+ON8CqH3GVgcFn45+31Mqw7pCjwmb3XuQ1Its6W0rMr5NlKrD
-         MiCFjDB9/sYyglhQyMDK+9PSrx6PquISztLTmzgHY6NAo/1UrjRWU8+26k5y8cNnYEzW
-         Xob6lK4Z+Q5jpAPYfI36b/GmFBTLFsM8PXlT+Qc1Bg29r8xgeLIkFnfU7bxYY2ddAP+O
-         nSneXA/QcjR3Zs5qDY3ivnsVy/ItOT3TzxOxdWt+Akvao5gVPvMRPJRMpcZcHorymtz9
-         jqVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOFlw9So+YVi4sIyijQBrOly/lQQd+rmBnJrOCEwO6RALdjATTgUfwoqDEcCbPaD8SOsI1IfyJdA/SbPpO@vger.kernel.org, AJvYcCVkPBcB5VDrm3SbVUNg61LkAl8ktNstWfjHk5TehnzhEK7QugLjDJHXLc01mQYP/NmypdRQ2KBTCGSN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuFEDAzxFPB9m3HZ0x1KAphZ8IXU7/9r9GRT+nDfitCQy09YTr
-	vpa9tLAUg4ms4USKd5ofgVfPelolXY0nBGYbYzYl8QSZ7Le9HiMZgdt9C/sSK79O1ZcKSiu27I7
-	zLqgZxiUa2esTbWzu3QrkqaZZPw1AgAk=
-X-Gm-Gg: ASbGnctyGWeif/he9M2GEx0ChYrgnnVIjvMxutD0bi8sYB4zEsx7wGg/4A3cVoY9wmK
-	HZfAp3K98o36je5fqMcC1VluVuv9Gd41YXk/8N4sDHH8P+gR/OHByotkZCRvtv4r4xipAnaAw4M
-	4UXluQ1iYgmFxupI6ZreBaRx8Wb1NrfDPBXAhmwQv3sws=
-X-Google-Smtp-Source: AGHT+IGL1mELHdrz6HdxzWEWB3SBn7d/Rnj0vx3ffhkVy9NM2gVR9bObheCFocjQaqGhjFns4WPlclmCGQsLdR2UqGw=
-X-Received: by 2002:a05:6512:3055:b0:553:cc61:1724 with SMTP id
- 2adb3069b0e04-5550b84e53dmr4479902e87.24.1751311998729; Mon, 30 Jun 2025
- 12:33:18 -0700 (PDT)
+        bh=xLG9XHK+6+oCii41uDgkWY6xC+gN79cm3T8XpClkT4c=;
+        b=LAX1mXLADHD7Q2m0tFaXRxV3zJUIbYPufUy+9VdtQFXAHx8aIxyY6VIEkzxHYHLvTk
+         j8tKdjOK8sTzoJDUkoqPgTml19cQnD4JRHob1T/9g6t9FQz6q52bcqBpVxtaLgqG4z47
+         wTSOPiZcENxxkMI7Neo8wQx1/t4u9D8PATwx/cbZiZTTcgB4wQhsneYvucHvWkMGTUaR
+         gzUBV8Sc0gU3riACSz1temBJO5lZNdwYqinVeiOXf+mn6jwwGzM8Wn6LUa+Dm9xWiAKV
+         ODO8rGuaqo0oo1ao0oI+M6icrFm9B+s6cml64Z1pY76xDpv+ZPIr4TWsHxJsq/JwygMz
+         PIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDpZ7mfxp6kJWBX9IjVFLbTHJPRKhBJqVkSqTriHymXo8fm7lYhx+B2Tc0jFAulN8kdrztTRWiaogibZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywfyt9iY6nseAcXwo8awqJz6xVJYUa1rLEco3+GlNMoETdcpPni
+	nOr50kE0ltmPEDtUOHIRj53oprEB0Mwu1Rci5uRxAHkAizFylGQJENg+1paoQm4bBX4Eeqa6ZDL
+	jt7CtzRXGkyvcRLnqCuM7Sf+HDzNYYVOcTgEHBftRJXdL59zwZkTmYd6gh7c+wtDKvl8Syfmce8
+	0cfGesuNMY6JWh9+WLr6g4w7rIqLL/LhxynaZSBkVZ
+X-Gm-Gg: ASbGnct5+WzmQOR5WXmOrAJO2dS+gsjSNegb3UZYjMYJoi9uS+z6q9Po5klY6wEmslg
+	o37QhxNukUsJMlBUuIlC+/Uh2JonIrtJGYr3OUsBwsy6Iuj8YS52v/XFEgzXRLY6bK3kfqi74F+
+	hgWIPvGeLLRb3Tugz5JJpVugb5oXFJCHvcdQ==
+X-Received: by 2002:a05:6e02:19cb:b0:3dd:cbbb:b731 with SMTP id e9e14a558f8ab-3df4ab4ba97mr150694495ab.9.1751312006509;
+        Mon, 30 Jun 2025 12:33:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGLhV90dERUX5Cd1c5ylxgqUOBdppuowz9AEfillEd98+IoEDDYoWIMv0J5NlnbYP/AW4Dv2idc1WkdgUvuL7M=
+X-Received: by 2002:a05:6e02:19cb:b0:3dd:cbbb:b731 with SMTP id
+ e9e14a558f8ab-3df4ab4ba97mr150694345ab.9.1751312006196; Mon, 30 Jun 2025
+ 12:33:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-gpio-palmas-gpio-v2-1-89f209d4a949@gmail.com> <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdwa=DuubA6P+EnjUAQE8XupYsbo=3LuH-jYEBttREGqg@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 30 Jun 2025 14:33:07 -0500
-X-Gm-Features: Ac12FXxKnkWwA36VsVoD5Hl-K0ZXp6mKLB_zzh_TkqusAXbCh-DmgE3rxpQWCi4
-Message-ID: <CALHNRZ9=u9hrXZ79N3VzMwdFuJO75TomOzRzgDxzmcTEeatzAQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: palmas: Allow building as a module
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250630150107.23421-1-desnesn@redhat.com> <CANiDSCu83Ky-604gu2Yt34Wj1Km6Xh+TcPYzQxKZJNWdT7=m8A@mail.gmail.com>
+In-Reply-To: <CANiDSCu83Ky-604gu2Yt34Wj1Km6Xh+TcPYzQxKZJNWdT7=m8A@mail.gmail.com>
+From: Desnes Nunes <desnesn@redhat.com>
+Date: Mon, 30 Jun 2025 16:33:15 -0300
+X-Gm-Features: Ac12FXy--Z6I9HxATLzBVcIlb8GTaPJ1_nqz4ejlUIKc7XXzJzGy66npCNZsE3E
+Message-ID: <CACaw+exN2qHSPpEmZBNBvXCkrzVUb_VCW7YfYYYaaLzNoOSebg@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: fix build error in uvc_ctrl_cleanup_fh
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: laurent.pinchart@ideasonboard.com, hansg@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 2, 2025 at 4:48=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+Hello Ricardo,
+
+I triggered this build error while working in an older codebase that
+uses C89 due to legacy support reasons.
+Indeed - will focus on submitting C11 compatible fixes even when
+working on older codebases.
+
+Thanks for the review Ricardo,
+
+
+On Mon, Jun 30, 2025 at 12:16=E2=80=AFPM Ricardo Ribalda <ribalda@chromium.=
+org> wrote:
 >
-> On Fri, May 23, 2025 at 12:22=E2=80=AFAM Aaron Kling via B4 Relay
-> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
+> Hi Desdes
+>
+> How did you trigger this build warning? I believe we use C11
+>
+> https://www.kernel.org/doc/html/latest/process/programming-language.html
+>
+>
+> Regards!
+>
+> On Mon, 30 Jun 2025 at 17:07, Desnes Nunes <desnesn@redhat.com> wrote:
 > >
-> > From: Aaron Kling <webgeek1234@gmail.com>
+> > This fixes the following compilation failure: "error: =E2=80=98for=E2=
+=80=99 loop
+> > initial declarations are only allowed in C99 or C11 mode"
 > >
-> > The driver works fine as a module, so allowing building as such. This
-> > drops the driver specific init in favor of the module macro which does
-> > the same, plus handling exit.
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > Cc: stable@vger.kernel.org
+> > Fixes: 221cd51efe45 ("media: uvcvideo: Remove dangling pointers")
+> > Signed-off-by: Desnes Nunes <desnesn@redhat.com>
 > > ---
-> > Changes in v2:
-> > - Drop module alias and add module device table
-> > - Link to v1: https://lore.kernel.org/r/20250522-gpio-palmas-gpio-v1-1-=
-d6b1a3776ef5@gmail.com
-> > ---
-> >  drivers/gpio/Kconfig       |  2 +-
-> >  drivers/gpio/gpio-palmas.c | 10 +++++-----
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231=
-dac6a82bf10887118 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1464,7 +1464,7 @@ config GPIO_MAX77650
-> >           These chips have a single pin that can be configured as GPIO.
-> >
-> >  config GPIO_PALMAS
-> > -       bool "TI PALMAS series PMICs GPIO"
-> > +       tristate "TI PALMAS series PMICs GPIO"
-> >         depends on MFD_PALMAS
-> >         help
-> >           Select this option to enable GPIO driver for the TI PALMAS
-> > diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-> > index 28dba7048509a3ef9c7972c1be53ea30adddabb0..eaef29f59292de5281f31e1=
-96961d90974e65b75 100644
-> > --- a/drivers/gpio/gpio-palmas.c
-> > +++ b/drivers/gpio/gpio-palmas.c
-> > @@ -140,6 +140,7 @@ static const struct of_device_id of_palmas_gpio_mat=
-ch[] =3D {
-> >         { .compatible =3D "ti,tps80036-gpio", .data =3D &tps80036_dev_d=
-ata,},
-> >         { },
-> >  };
-> > +MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
-> >
-> >  static int palmas_gpio_probe(struct platform_device *pdev)
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/u=
+vc_ctrl.c
+> > index 44b6513c5264..532615d8484b 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -3260,7 +3260,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
 > >  {
-> > @@ -191,9 +192,8 @@ static struct platform_driver palmas_gpio_driver =
-=3D {
-> >         .driver.of_match_table =3D of_palmas_gpio_match,
-> >         .probe          =3D palmas_gpio_probe,
-> >  };
-> > +module_platform_driver(palmas_gpio_driver);
+> >         struct uvc_entity *entity;
+> > -       int i;
+> > +       unsigned int i;
 > >
-> > -static int __init palmas_gpio_init(void)
-> > -{
-> > -       return platform_driver_register(&palmas_gpio_driver);
-> > -}
-> > -subsys_initcall(palmas_gpio_init);
+> >         guard(mutex)(&handle->chain->ctrl_mutex);
+> >
+> > @@ -3268,7 +3268,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >                 return;
+> >
+> >         list_for_each_entry(entity, &handle->chain->dev->entities, list=
+) {
+> > -               for (unsigned int i =3D 0; i < entity->ncontrols; ++i) =
+{
+> > +               for (i =3D 0; i < entity->ncontrols; ++i) {
+> >                         if (entity->controls[i].handle !=3D handle)
+> >                                 continue;
+> >                         uvc_ctrl_set_handle(handle, &entity->controls[i=
+], NULL);
+> > --
+> > 2.49.0
+> >
+> >
 >
-> This being put into an earlier initcall than device_initcall() makes
-> me think, someone had a reason for it and this change can break this.
-> I'm Cc'ing the original author who seems to still be active in the
-> kernel.
 >
-> Laxman: can you verify that this can be safely moved to module_initcall()=
-?
+> --
+> Ricardo Ribalda
 >
 
-Reminder about this patch/question. It's well into the 6.16 cycle now.
-If Laxman doesn't respond, is this mergeable? I didn't see any issues
-in my basic boot tests on a tegra124 device using a tps65913. But I
-didn't do anything close to full functionality tests.
 
-Aaron
+--=20
+Desnes Nunes
+
