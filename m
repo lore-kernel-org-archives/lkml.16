@@ -1,91 +1,110 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F26728ECF5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9A928DF20
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297995; cv=none; b=VqbIrCt7LlfK567AGCsGtL4HVavsS0NRPevu/ianQ0LtTwqu5e4zL5WmjpzIp3H65ssSJie05dPPIXO7/34Ms9vFsa7T2ZJwPR7DbMWbO8qh62XXlsvutA5+uckWX4mnoVo0TSc3Aj6ynLOMO8Ufn992zCx7O1VxEmy8SABhMqc=
+	t=1751298083; cv=none; b=jgmKM2puWA5gh9MXQN0sZr16lS+wnX59ebkUwD6cTT4BTFkD8WwcyBD9wWhie1cJcXYin9poCXZy1nI29pQ6WzutieWmqix4Gbz72DH9Ap4Sk+XRi8WBtUJmMtLrJ4otxH2Hfs9MHXVXRyPxTx+3vE1zVrFcwZPn6F8MFhD+TLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297995; c=relaxed/simple;
-	bh=3w63HtcrTJ91JYwdGPTwy1GlgEB58Nzr8tG6+Ue5pOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QnLPfKdg119UhK/aP13DmOGyFaPDxmRh2gTavIULVYkmdnGYZXbF4+GHM9b9ju2rZ5RJaxDqvPvnifZGf/Taq7/6PN4ZHm6PkpbXmrZWrsds8CVkyYxWDvkKhNdi+tjL1F8zAMcau2E+bK27k4Kwpryru3BcsEocaN3gQejN1wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2eQBEW++; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751298083; c=relaxed/simple;
+	bh=TxdOtgVn7aBHw3u7r5Eza56bp9saXogFpjFjd1vydaA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WbHuqul1WkF9VIrTir87SYjoLeBn4xDsodnJTmrTQDlowoilPjBulr2RZgS6T0grw5HZ3tzicoxi7UirjWZCjte853SbLrslZPAfSfibxLdq4ewQGy4UDltbdX7FmueGCXwDlg4OMe9BaVNJAg7CNl8LLmJKp82irSFqoj7+WbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l/bvYIwT; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2eQBEW++"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so531615ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:39:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l/bvYIwT"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4530921461aso30401395e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:41:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751297992; x=1751902792; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1751298080; x=1751902880; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3w63HtcrTJ91JYwdGPTwy1GlgEB58Nzr8tG6+Ue5pOU=;
-        b=2eQBEW++n9SvD07n9szVeQCXHDN5flWmK9rIXRKf1mHHrbvmwluudTar7JiDhmAfUo
-         +/kDOlRn91Kb7VVuLOsun4SPXTzF6UpxW7nT2Von18z/VF5AuvR9rNIpfIji6hCpGHrM
-         g3iia87lDjcRuOiOhB3dBo6maiE6Fc+PMEBibzHJYvgNgcwNhmhxbTpTPH292adqfNfm
-         3K2KxJqH43VgnEyKbui4sWs1q4gDAZe22+1RiEvGpDECRo7er8WwxaFuC5pw23QN4XVn
-         8xtc8En3w2sIK/X5wKRn1Swqsr7awRzMVHLzkySp+5DQ2Cgtslk7Dj5FVyDtbxcp5U6H
-         zgXw==
+        bh=wIBoKnvqHm7jPzDveA9hy26/rZ1VMnuhsibGyxt03cs=;
+        b=l/bvYIwTLe+P/YxQ/fVthVLj/wfTXaueom7iYq9pGA7+Bvd4VgzG3PwqZ+lxILFWH7
+         hEGMmAd6MnVHwua0SxlkMHoKunanemfIY9O2nxdZD4SKsPBoDLP8YMsEG2jOiOzlE9fa
+         cKhdz14FkEtQen+0ydDmPnAYuzh/U3efxThxySe1s03BGkRizYEbjO3adrhWTZq/ruq5
+         vKUATi+Y4/8s0Hmk3OjrJr7FSvexq4nzkv421HRr1Gh6lA0kWpqgakO9qtJaXLbuzyph
+         BhFQ/jocYNXYRil7QSzNL7JcTqWIW+NhSK9PgAu7JeYdB8GPV3ztkB7N07npA+xLorDc
+         TBDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297992; x=1751902792;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1751298080; x=1751902880;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3w63HtcrTJ91JYwdGPTwy1GlgEB58Nzr8tG6+Ue5pOU=;
-        b=eopZ6qhOOBIS3sH7cEn/ilagk185a6Q242hTVUueu50RSbeHWteismn9MSjvnD8hZP
-         ANr34AHQvTdLYLDzZmNJ7L8zGk5OlDpwGhFVSGSnbSZWTh5hnEOHHOFjfKVFjllPin9s
-         oMd9fe6bKZwNpOTwFFE8UKgz5rjKvGNN9jxZGBBIOkHwMKZaYvMcRs2xpz+Fh/4HqEIo
-         lQfY1H4yJYraR3z6JAKNUJLv+zu/g0AQwhSphjmI5ayFjsdkmIyFxdws3CtlPcw3NYy9
-         UexnLTQ7MPsmIep78ECSqC2PWfNsJIq1Xda8rir091p7Gr6HwL4EU/O5OR4m8fGTs+dp
-         wBYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoaNUtQwH3tgC2UgJE2WlQmwZqLaJ2wkYA4cNZ85tWIXAOU0cuZbbJDrUmOnEx8p42Nx6mGDyniX2VeYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwn+fy8F1YKgsHS2roLntw1xtMKwtR+cG20cxOEusM/JZ9B+Gi
-	WTFNY37bDS2ffe9EKn+8T914GHG/rYB3dDZJZsnzeoaGYGKGI6cpR7JCjPcagMEX3NshHEaDkI0
-	3LSUG9tCHh5ZtTz8Fbo+/RfuAYW2XuxAK0GyTy4/C
-X-Gm-Gg: ASbGncuNt1RRbl2jpC563iU0DwvZUIbRUmV1Mcf9AnK0uqNe0zLp/3aCWkBkhrOFSgZ
-	mfkiqjyuW/6cK940c91+QttovoN6V9ZCK8XL/Cw1vWgy4+c8tnWnMaslEHXF4tJPxgzTl3APkf8
-	cvCtvjk+LxiRwEQxYojtsaZdO740WFT8+Kb6fIiWh8y30+pucKgbNviYsPwifDklzjqsf5UW1Jd
-	N2CCSbfXg==
-X-Google-Smtp-Source: AGHT+IE3Gjk62YQq72+SdA23cor3rISzp+2vi5ogIScgBjQ8JLbbC6ZC7DtLKd3NdBa5DEDq5THLgobbPpD7gEYD/hQ=
-X-Received: by 2002:a05:6e02:1606:b0:3dd:cc4c:382c with SMTP id
- e9e14a558f8ab-3df558794bemr7428205ab.24.1751297992362; Mon, 30 Jun 2025
- 08:39:52 -0700 (PDT)
+        bh=wIBoKnvqHm7jPzDveA9hy26/rZ1VMnuhsibGyxt03cs=;
+        b=qp/NAfC5i1NEeNf2Kk2Vh/XDyc65ZvjpTNrEn2XYk/QalbnkctqHoVpiJWRlY6PkvP
+         yG3SQmHmuF5m7RHBRQp8x36HW4z+RNXncb/44JmKoJDeNEGHyeaQqmmKkFODSHzMtlVg
+         anbABzxwoWbCkaZ4Kb+staYCqT/5dXcAfp1d/Alysq54pu9CRCig0biLm5zB+YpUw+w9
+         kQ0rsAsG8+L5z5weqeAOwzDfZ9oQuQRQZe5JYxcL5qDv/SDvYAsEisaIZ09PKYozYqvD
+         m0ijHquT6z3kX0WKK80B5J1qnbKJJLfP749X4nPgCqogMbbRGsxhkVUSA9FeLGkKEunI
+         cA+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX9R+5GhAWmCfSYh1KbrZNz3O0E9S2khp74Lt/YoZ3dE9xsR7j3Fc+3HIeA9l2TWnqkfFpBXIuwu5nXssQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZO/QDt7j77aR9WIB42LHSb1P+mZynYLdX0YRBIyUEw2kdCnmZ
+	qiJbF2W4fqIMWtbqrO7RhCBLFxML/pwSF/iSLR1F2tbEQ/7kZWaxI7Idti/TRkScbWI=
+X-Gm-Gg: ASbGncs5r35icmLvyPunQMWCkBKjeBaREbqR3zV8zCMydi8Mjhvwoj44SgMyfZKW+14
+	NT4RGwiYQVkkWUWgjwajY+BOTk+y3NP5PiIrmYZk84KM1EZZO0lJyjxOVo5WTWP0oWcu36R890k
+	ly4kVuz0LpZwfZqHyMy3/8r9fBuhewJycbBAw5ceppa93fR/XgfyfjbbokjW/tu9tAlujn5nKUm
+	74emcS4h8Txqvm4j+ipS3+8Vbn3ZXsSwlMO/jL8s8yGlCuRBCV7V14qyR4Ku+hgnFVSWIMBGsvc
+	XDehhsgxAWeFyb/h3G9XsJj76lf4M5xJ5q0r7QxECw1y5SFFm368a11YgJGmoEwpvIktg3ftRlG
+	AeciKTLg=
+X-Google-Smtp-Source: AGHT+IE4551ep9ypNSyk+kUT7ORHBKsH3ZNJO70PmyyYi6i5YwLUZhV22aROUA+T9WDlUEHG+Ihrqw==
+X-Received: by 2002:a05:600c:5392:b0:445:1984:2479 with SMTP id 5b1f17b1804b1-45390bad330mr126646345e9.5.1751298079968;
+        Mon, 30 Jun 2025 08:41:19 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm170270975e9.22.2025.06.30.08.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 08:41:19 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Luca Weiss <luca@lucaweiss.eu>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
+In-Reply-To: <20250611-fp3-display-v4-0-ef67701e7687@lucaweiss.eu>
+References: <20250611-fp3-display-v4-0-ef67701e7687@lucaweiss.eu>
+Subject: Re: (subset) [PATCH v4 0/4] Add display support for Fairphone 3
+ smartphone
+Message-Id: <175129807911.2286551.14063311790282968036.b4-ty@linaro.org>
+Date: Mon, 30 Jun 2025 17:41:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612000224.780337-1-irogers@google.com> <CAP-5=fVGqnWuQNYM9XULyLuDvx-yAuyCMRh=uS0gybiEsYH9jw@mail.gmail.com>
- <fe821704ddd4a3ae5169ec974cc8cfde8dc44e7d.camel@intel.com>
-In-Reply-To: <fe821704ddd4a3ae5169ec974cc8cfde8dc44e7d.camel@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 30 Jun 2025 08:39:39 -0700
-X-Gm-Features: Ac12FXzCbmaQnlvNe8l_BtMCouk1SBtEALi3aMKfEu6hBpoEXaSqQxQQetV8l-Y
-Message-ID: <CAP-5=fWC_buKxJ9aSOWeRY2Z+NrhQy0QvVWaMLJa-Eqfwf-NHg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/15] perf vendor events: Update Intel events
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"Biggers, Caleb" <caleb.biggers@intel.com>, "Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
-	"Baker, Edward" <edward.baker@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"mani@kernel.org" <mani@kernel.org>, "acme@kernel.org" <acme@kernel.org>, "afaerber@suse.de" <afaerber@suse.de>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Mon, Jun 30, 2025 at 7:21=E2=80=AFAM Falcon, Thomas <thomas.falcon@intel=
-.com> wrote:
-> Hi Ian, not sure what happened but I can't find this series in my inbox. =
-Could you resend it?
+Hi,
 
-Will do. I'll rebase and send as a v2.
+On Wed, 11 Jun 2025 18:33:14 +0200, Luca Weiss wrote:
+> Add a driver for the HX83112B-based panel, and enable it on Fairphone 3
+> to enable display output, and enable GPU as well.
+> 
+> 
 
-Thanks,
-Ian
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+
+[1/4] dt-bindings: vendor-prefixes: document Shenzhen DJN Optronics Technology
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/978a84297371ac33a15c56a7d31fd1b125427dac
+[2/4] dt-bindings: display: panel: Add Himax HX83112B
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/54bd1390e98450a2c1cad99da3e2594e92c41a4c
+[3/4] drm/panel: Add driver for DJN HX83112B LCD panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/df401fa1b80775109e2a52360fcb0b2b2300525a
+
+-- 
+Neil
+
