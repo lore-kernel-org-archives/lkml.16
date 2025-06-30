@@ -1,174 +1,105 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4399E23F41A;
-	Mon, 30 Jun 2025 09:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC442405E4;
+	Mon, 30 Jun 2025 09:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275317; cv=none; b=sXXQHnhtVrtc/P7OocKWj9V9xsYSMX5BC2OkvrmMyJRIrNFHBwxg3IOUwDousSqLfHxUn2RUvvUipqwtNsODHSabBP07oftUFiXvVQHT06FAXu/rZZj8Coblr5mJcBvYOBdtx2in4gmHf1rRRg3jJR8MEmnFH9Tm20MPzv72fe8=
+	t=1751275451; cv=none; b=iH521kPZumG29LfcIsYBo4l3uk+q6AOBRZ4IY+8yB4Z9VEa6WfHhPts0x7xLmF/fSbYWxAEwwzKVL2/JoAhuvUyAa/55shNoo3SG6EXjOKPEBJyr722yzc8HA9pNHb1jv9WdO+QIGw2vlvNMKfSaDhhFbFxkDNgZ8erUjAlatc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275317; c=relaxed/simple;
-	bh=FvmMuITo9Ro24oRzUmSRrTyhE6Wm3EK03DVTU2JrtuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DkjCL+qqyfnZNyoOFAijgwXeuQlSupyW4yz3kjVxd2q4ixcfHgO/KqkgVSG6xO+c/IqNxUaYs7M2h0FegmuaxfvW3SrN4ZOHLcyywLhNAU58uyaews4mbENx0eeqna+31IaeBLciE/P8oAQGA5VlBDu2r8LPdm4iGW98JXDdLqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bW0sy6srBz14LpZ;
-	Mon, 30 Jun 2025 17:17:10 +0800 (CST)
-Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
-	by mail.maildlp.com (Postfix) with ESMTPS id 88C3E180493;
-	Mon, 30 Jun 2025 17:21:50 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
- (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 30 Jun
- 2025 17:21:49 +0800
-Message-ID: <db4b9d71-c34d-4315-a87d-2edf3bbaff2d@huawei.com>
-Date: Mon, 30 Jun 2025 17:21:48 +0800
+	s=arc-20240116; t=1751275451; c=relaxed/simple;
+	bh=LquRyjpxFCaRtwCdvq2Z5KQoRtxjQyJbFhR+XPOxYvU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QPGm7EnEpvPZDxZ/J9TENJMmPU9skxszhX8pniKgxqj3DCiRwDXWhV5s7GOBnMYMf1Dna+VvQsLfX8VZX55szRCKkdp4T0IXVYsKJInzE3xob3LuVsU8g5SA7LPjzh0RTpRfdCvtLN6gFswTfK+nZuV71RtAAFFX2QNGhDu7JM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WlYeRq8J; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlYeRq8J"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450ddb35583so5713385e9.1;
+        Mon, 30 Jun 2025 02:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751275448; x=1751880248; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QvxxU0NEcnFMHXz+8qtLt58LETg4jOKjluE7dIo97iw=;
+        b=WlYeRq8JWpxQ0/ad+v/nYemiYkhCk4p4Rbr682xWEFZhicEvAddIapnVNaiMGE4sR0
+         Cv/E3b9bo2RpeqrR3AOSJ+vbLyM54MshOCsw35LIs8YkPCzWhnnsDBmsbKhBs7F9w+rY
+         K8CvPvpgWth1H6No9avZMg4XDCFjgkdp0ouKl4scb4x4mc4Ig0HO2dSwYh7eC9ud+6R1
+         LseNvdJkL6N9fqxQkMqgBDAtxBF9iXhiQFxw1o2he1Sry6LzGb9aCLwavj8n/W4k2XsJ
+         pWNRm1QC2pq89qio66QLCChSfwW36tOZ4Qb4sagC+1e7YK+zdR4fqn+WGvNOCJbJj4zs
+         BpkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751275448; x=1751880248;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QvxxU0NEcnFMHXz+8qtLt58LETg4jOKjluE7dIo97iw=;
+        b=W7E0deU8NPB6lCb3ja0HkJygP46NN4mQdzSJc8aD1fnV1UUza8J7jLdQ5gBVI9eG4V
+         e+8tHxZFFiCnCe4LL2oIfMkcvP1Ab/s5ZwaYGxDyUkkQMeoZKVegk+uPs1sKUwpjyr6M
+         10tWJhQCrSOFsCYO1C4DIjEEhcb7ola4e4MGWOTtduLOMRixvm32yu1gMoZezMLIIKR7
+         tHW/MKpBl85U2NJPN99fp9xgWnzSo/pKUIbeQYRyg0+xZhsjUyrqrDF697IeBilRf56H
+         4nYcmEHLDLfao8yIHSl/8eQc/9mdegPg9WUp3HqE1uFcFnK3T7ozA4o/OtlVmh3b6lf9
+         j0Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUp0IMtUD2Zkbm1us6MUDXO35nlS+VOVGRNUov4LBO2HoHkhL2/N3yvDUe7eoTc8m7n3cAnNfDq69sAuw==@vger.kernel.org, AJvYcCVV3ICMoYUgpkAn+w39tsw/aaWKr9yyDRva9FE4syNrByjF7S6sOcc88oKUI9Kqj/rN1qcwhL7mn2cCrU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfQ5fYuY9Q1pTPGyW1Qiv1aMvzYf3NFOgJn4jym04P5o9f7UfL
+	ycfU6WvPbOH9Q51ZPMSyoMsNdV3R/Sr/LgPbulc4x8XLpm9vB9IpeQ1Z
+X-Gm-Gg: ASbGncsxKNfVrQj3oaWYCKldtlXbHjJhHXUTW2bXeChd7pEXF3lu5EwwAKKsPx38XWv
+	LPepQfN6K8o5xKKke6ynr6EfPuy80/0mkDaJx4ZzL2onZtmLHpmqr4SIu3+z3se/94ETBGD9+KD
+	u5hm/lHlc+i6PM3OXxVBE+QEsN5h9KEYLrDr4fUDA4SXfEOmAVACVKNn8rnUbHTBLIYoFYVCf9t
+	AmzdAq6M55B2cbtuTAHPMXCP7Nk3bzqmDy3YkHx2ot6c1+ZoRLB4Bft7X7YlXNH3o3HHz7cdTym
+	WMynI90agEH4VMb4zF67+iC6awQqhGo8WUxPo8Rk3FIrjnGQCwmxDUrH4+jiaxHNkJzUmXzll+g
+	1yPXGA/hyul/4+wQ7UZmOzccTyQ==
+X-Google-Smtp-Source: AGHT+IGnb/+6oC8qGbWFs/Z5wgynAAiq8Uo3c6ka+Ds1lOAm7tNYdkLYsKK+YgBtAmEBU5y5m7puDA==
+X-Received: by 2002:a05:6000:220f:b0:3a5:2d42:aa1e with SMTP id ffacd0b85a97d-3aaf56f0129mr2322107f8f.15.1751275447554;
+        Mon, 30 Jun 2025 02:24:07 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7ec6aesm9846368f8f.5.2025.06.30.02.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 02:24:07 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Cheng Xu <chengyou@linux.alibaba.com>,
+	Kai Shen <kaishen@linux.alibaba.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix dma_unmap_sg() nents value
+Date: Mon, 30 Jun 2025 11:23:46 +0200
+Message-ID: <20250630092346.81017-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
- s_mb_last_group
-To: Jan Kara <jack@suse.cz>
-CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
-	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, Baokun Li
-	<libaokun1@huawei.com>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-4-libaokun1@huawei.com>
- <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
- <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
- <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
-Content-Language: en-US
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500013.china.huawei.com (7.185.36.188)
 
-On 2025/6/30 15:47, Jan Kara wrote:
-> On Mon 30-06-25 11:48:20, Baokun Li wrote:
->> On 2025/6/28 2:19, Jan Kara wrote:
->>> On Mon 23-06-25 15:32:51, Baokun Li wrote:
->>>> After we optimized the block group lock, we found another lock
->>>> contention issue when running will-it-scale/fallocate2 with multiple
->>>> processes. The fallocate's block allocation and the truncate's block
->>>> release were fighting over the s_md_lock. The problem is, this lock
->>>> protects totally different things in those two processes: the list of
->>>> freed data blocks (s_freed_data_list) when releasing, and where to start
->>>> looking for new blocks (mb_last_group) when allocating.
->>>>
->>>> Now we only need to track s_mb_last_group and no longer need to track
->>>> s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
->>>> two are consistent, and we can ensure that the s_mb_last_group read is up
->>>> to date by using smp_store_release/smp_load_acquire.
->>>>
->>>> Besides, the s_mb_last_group data type only requires ext4_group_t
->>>> (i.e., unsigned int), rendering unsigned long superfluous.
->>>>
->>>> Performance test data follows:
->>>>
->>>> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
->>>> Observation: Average fallocate operations per container per second.
->>>>
->>>>                      | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
->>>>    Disk: 960GB SSD   |-------------------------|-------------------------|
->>>>                      | base  |    patched      | base  |    patched      |
->>>> -------------------|-------|-----------------|-------|-----------------|
->>>> mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
->>>> mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
->>>>
->>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>> ...
->>>
->>>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
->>>> index 5cdae3bda072..3f103919868b 100644
->>>> --- a/fs/ext4/mballoc.c
->>>> +++ b/fs/ext4/mballoc.c
->>>> @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
->>>>    	ac->ac_buddy_folio = e4b->bd_buddy_folio;
->>>>    	folio_get(ac->ac_buddy_folio);
->>>>    	/* store last allocated for subsequent stream allocation */
->>>> -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
->>>> -		spin_lock(&sbi->s_md_lock);
->>>> -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
->>>> -		spin_unlock(&sbi->s_md_lock);
->>>> -	}
->>>> +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
->>>> +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
->>>> +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
->>> Do you really need any kind of barrier (implied by smp_store_release())
->>> here? I mean the store to s_mb_last_group is perfectly fine to be reordered
->>> with other accesses from the thread, isn't it? As such it should be enough
->>> to have WRITE_ONCE() here...
->> WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
->> that variable reads/writes access values directly from L1/L2 cache rather
->> than registers.
-> I agree READ_ONCE() / WRITE_ONCE() are about compiler optimizations - in
-> particular they force the compiler to read / write the memory location
-> exactly once instead of reading it potentially multiple times in different
-> parts of expression and getting inconsistent values, or possibly writing
-> the value say byte by byte (yes, that would be insane but not contrary to
-> the C standard).
-READ_ONCE() and WRITE_ONCE() rely on the volatile keyword, which serves
-two main purposes:
+The dma_unmap_sg() functions should be called with the same nents as the
+dma_map_sg(), not the value the map function returned.
 
-1. It tells the compiler that the variable's value can change unexpectedly,
-    preventing the compiler from making incorrect optimizations based on
-    assumptions about its stability.
+Fixes: ed10435d3583 ("RDMA/erdma: Implement hierarchical MTT")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/infiniband/hw/erdma/erdma_verbs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-2. It ensures the CPU directly reads from or writes to the variable's
-    memory address. This means the value will be fetched from cache (L1/L2)
-    if available, or from main memory otherwise, rather than using a stale
-    value from a CPU register.
->> They do not guarantee that other CPUs see the latest values. Reading stale
->> values could lead to more useless traversals, which might incur higher
->> overhead than memory barriers. This is why we use memory barriers to ensure
->> the latest values are read.
-> But smp_load_acquire() / smp_store_release() have no guarantee about CPU
-> seeing latest values either. They are just speculation barriers meaning
-> they prevent the CPU from reordering accesses in the code after
-> smp_load_acquire() to be performed before the smp_load_acquire() is
-> executed and similarly with smp_store_release(). So I dare to say that
-> these barries have no (positive) impact on the allocation performance and
-> just complicate the code - but if you have some data that show otherwise,
-> I'd be happy to be proven wrong.
-smp_load_acquire() / smp_store_release() guarantee that CPUs read the
-latest data.
-
-For example, imagine a variable a = 0, with both CPU0 and CPU1 having
-a=0 in their caches.
-
-Without a memory barrier:
-When CPU0 executes WRITE_ONCE(a, 1), a=1 is written to the store buffer,
-an RFO is broadcast, and CPU0 continues other tasks. After receiving ACKs,
-a=1 is written to main memory and becomes visible to other CPUs.
-Then, if CPU1 executes READ_ONCE(a), it receives the RFO and adds it to
-its invalidation queue. However, it might not process it immediately;
-instead, it could perform the read first, potentially still reading a=0
-from its cache.
-
-With a memory barrier:
-When CPU0 executes smp_store_release(&a, 1), a=1 is not only written to
-the store buffer, but data in the store buffer is also written to main
-memory. An RFO is then broadcast, and CPU0 waits for ACKs from all CPUs.
-
-When CPU1 executes smp_load_acquire(a), it receives the RFO and adds it
-to its invalidation queue. Here, the invalidation queue is flushed, which
-invalidates a in CPU1's cache. CPU1 then replies with an ACK, and when it
-performs the read, its cache is invalid, so it reads the latest a=1 from
-main memory.
-
-This is a general overview. Please let me know if I've missed anything.
-
-
-Thanks,
-Baokun
+diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.c b/drivers/infiniband/hw/erdma/erdma_verbs.c
+index af36a8d2df22..ec0ad4086066 100644
+--- a/drivers/infiniband/hw/erdma/erdma_verbs.c
++++ b/drivers/infiniband/hw/erdma/erdma_verbs.c
+@@ -629,7 +629,8 @@ static struct erdma_mtt *erdma_create_cont_mtt(struct erdma_dev *dev,
+ static void erdma_destroy_mtt_buf_sg(struct erdma_dev *dev,
+ 				     struct erdma_mtt *mtt)
+ {
+-	dma_unmap_sg(&dev->pdev->dev, mtt->sglist, mtt->nsg, DMA_TO_DEVICE);
++	dma_unmap_sg(&dev->pdev->dev, mtt->sglist,
++		     DIV_ROUND_UP(mtt->size, PAGE_SIZE), DMA_TO_DEVICE);
+ 	vfree(mtt->sglist);
+ }
+ 
+-- 
+2.43.0
 
