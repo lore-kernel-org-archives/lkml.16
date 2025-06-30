@@ -1,52 +1,63 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A8361D79A5;
-	Mon, 30 Jun 2025 06:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5988818CC1C;
+	Mon, 30 Jun 2025 06:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751265778; cv=none; b=Ml9qKjKwjIgJmUHQ4X5WWE2Mcy4ZL0kBg78/0GL2/D1feFUvmV21hbDFoMjZ8exn2UnuQ74M73cLnv+xPTYGow5VbICgoWkqgh9n0z2MLJ562QT4ZN0PdarZzr+DchnXZR36+79kttxNpxnhKIYoza/JD38HOYNDTbswdvuIzdg=
+	t=1751265829; cv=none; b=b5aAH2RNV5YTvzQd2qg8anGcHcXrlb3RbTZ/oV6ECCXxnC3tlZcZq9qGCl8roQiDtc9MI/Z7hlqKeyoVTuPlCS7LrnWgOSkEv8LAyS/8FdiyKArH45MrGF6IXYnYF0LC+v93S8lZgvRXoeSRw0mMPKe/h6P7sa6I9V/x0ugm6VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751265778; c=relaxed/simple;
-	bh=dmBlpegE9rKAvLD82Gm4eaxuW6Mr6OFStIpe4VEMhW8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bB2QgIHgpVvoYvm5JBcLNeW8favYdll5DcOQ2794rwQKbaQkKvcamZQFw4oIGAoo7M1OXKeBAuoNoAUoe/tbfUYMBymk0UnP2tkjr8kSnInvyQAxlll3GdvkuqOoORfoIOS5kht+b+n/FataYBV41kARwWoFDrrKu5v2PUXtXEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jS9fPYq/; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1751265829; c=relaxed/simple;
+	bh=AoCV/CL2uLxgEJw9pVSZJcmMBZDrZqa07MP+IMSkLTc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cciH6LTozTHOL/03IKlh1qm5HmSgBnw0Qr5XVQGLm4sUqUGi+t8fNREweEGr9d3STz/3qYlsVOsxPckVhzsCsP+dJ0Ph+HILvWgQryN0D6ptu6MOlAzISl0VyfE0E5MphOFc0C7jHzxProot78SPxblgbxPcD2FHz00mRvSXlD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hZlCQHKp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jS9fPYq/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Mj
-	0//ntO7V6GTvOGZ5O6Fosu16j1jVIMCZpAZZqbU/I=; b=jS9fPYq/60AsWixize
-	aFVygS+QLr9kEHzab7bH6X9c0DnxuzB/wG5kiova5gNYZDPzXiGeqEqSl+NrUQQN
-	FvMbzfax8JrMRlZ7SuqQ3jdU+oz2Y0qWZcWNacTDbA8vQGz2KGAv1ukh1lUTiUok
-	xTWzZPbpMET6NGa+FdwIWa8wY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3T42+MWJomBI0Bg--.44606S2;
-	Mon, 30 Jun 2025 14:42:06 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: david.laight.linux@gmail.com
-Cc: aleksander.lobakin@intel.com,
-	almasrymina@google.com,
-	asml.silence@gmail.com,
-	davem@davemloft.net,
-	ebiggers@google.com,
-	edumazet@google.com,
-	horms@kernel.org,
-	kerneljasonxing@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	stfomichev@gmail.com,
-	willemb@google.com,
-	yangfeng59949@163.com,
-	yangfeng@kylinos.cn
-Subject: Re: [PATCH v2] skbuff: Improve the sending efficiency of __skb_send_sock
-Date: Mon, 30 Jun 2025 14:42:06 +0800
-Message-Id: <20250630064206.70948-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250629123339.0dd73fb1@pumpkin>
-References: <20250629123339.0dd73fb1@pumpkin>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hZlCQHKp"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TNU1LO005295;
+	Mon, 30 Jun 2025 06:43:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=4VYkcedFyAoDplquSeQ//Iiyw69vweBomdR
+	n0hYrRY8=; b=hZlCQHKpffAQ3bbOMW4BooCuP8bWIMFLm+muUS392lweVOVMCzW
+	/NZaC8sohlWxr5H3N9zgSTR9Bhn/kSx/aDiauxRRP9yg8jFgsk0AK/H6t+Ex38PE
+	vhEqKoc0AyxT6Y7FSwHbsC8D4wsefm7AdB4frz9ywrCEMCmNa1o4yBm0LqSeYhFR
+	VyzdWEZsFA74rHcNVzdoku+y1U6nXB2Hx67BLzSIcBZ2nVaVffHcJzSqnYvN+Qrb
+	9VjjSWykSBkuvXAfeJM9a1Nr4Sxh81ndXR+Ibonp+3WwMR3EkNol3BHut2BNoxld
+	1OoMpvRCMnrkOeJykVjmPUM1I9r+sKO1OAQ==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64gwkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 06:43:43 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6he0l026895;
+	Mon, 30 Jun 2025 06:43:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47j9fkm1u7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 06:43:40 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55U6heO0026890;
+	Mon, 30 Jun 2025 06:43:40 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.97.252])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55U6hesS026889
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 06:43:40 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
+	id 7CB4E513; Mon, 30 Jun 2025 12:13:39 +0530 (+0530)
+From: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
+        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] arm64: dts: qcom: qcs615: add missing dt property in QUP SEs
+Date: Mon, 30 Jun 2025 12:13:38 +0530
+Message-Id: <20250630064338.2487409-1-viken.dadhaniya@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,67 +65,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3T42+MWJomBI0Bg--.44606S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr13uF1kGw1UKr47Jw1DKFg_yoW8Zw4Dpa
-	95WFyqvFsrJ3WYgrs2q3yrAr4Yy3s5Ca48u3yFqas5t3s0gr9Ygr4UKF4Yka4Fgrs7Cry3
-	XF4qvw1ak397ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRcTmhUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiZQx8eGhiLyBRZwAAse
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6862321f cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=1G3-eJrk4WENrBlVEWAA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA1NCBTYWx0ZWRfX4tabQh/dggR/
+ DQt1BWlbj+CFZBHwVIXGHNOXXSN3MswtieDhuxSD/ditcxQwwMR7OfDP3PmpYIT+/NSct+0uhqH
+ Rjz+f57ssk+P4BWS5I8xz1cMDtLgDdTslTAdx1+WxlcEZyxIqyIajuB61NylBKx2ocX/RwjXAqi
+ Oa6gYJT41IPjzJFLqHZFPVHM1ZcYrMakSEJyIVsDGyznQvKIrnePVKcqZGpZ2LjBXKaLcL2utAC
+ mppzg9W0Oz4IlLiyI+9uWL+bdVye1goE63FKXh4RjeCZ08LYL1O5tpY5DVuyco5sJnipZ9YHPcV
+ FU7GWS2MN5zAhdBvJbkEH23XmoJBgWnjW8LEugR+MQdpDhciLI9+5UT4Z4wu8G/RZgLWaegVfNr
+ IRnA4b8dpRQwxtkDwwXvaZLaEbMKjRa+qGZLTr+xjkhcgGA9afM+zgMgqZz46qLYIHhkmoN5
+X-Proofpoint-GUID: SdE5ssLDq0yA4i4k33dyLnhYrf2w53Mg
+X-Proofpoint-ORIG-GUID: SdE5ssLDq0yA4i4k33dyLnhYrf2w53Mg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxlogscore=918
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300054
 
-On Fri, 27 Jun 2025 03:23:24 -0700 Eric Dumazet <edumazet@google.com> wrote:
+Add the missing required-opps and operating-points-v2 properties to
+several I2C, SPI, and UART nodes in the QUP SEs.
 
-> On Fri, Jun 27, 2025 at 3:19 AM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Fri, Jun 27, 2025 at 2:44 AM Feng Yang <yangfeng59949@163.com> wrote:
-> > >
-> > > From: Feng Yang <yangfeng@kylinos.cn>
-> > >
-> > > By aggregating skb data into a bvec array for transmission, when using sockmap to forward large packets,
-> > > what previously required multiple transmissions now only needs a single transmission, which significantly enhances performance.
-> > > For small packets, the performance remains comparable to the original level.
-> > >
-> > > When using sockmap for forwarding, the average latency for different packet sizes
-> > > after sending 10,000 packets is as follows:
-> > > size    old(us)         new(us)
-> > > 512     56              55
-> > > 1472    58              58
-> > > 1600    106             79
-> > > 3000    145             108
-> > > 5000    182             123
-> > >
-> > > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> >
-> > Instead of changing everything, have you tried strategically adding
-> > MSG_MORE in this function ?
-> 
-> Untested patch:
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index d6420b74ea9c6a9c53a7c16634cce82a1cd1bbd3..b0f5e8898fdf450129948d829240b570f3cbf9eb
-> 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -3252,6 +3252,8 @@ static int __skb_send_sock(struct sock *sk,
-> struct sk_buff *skb, int offset,
->                 kv.iov_len = slen;
->                 memset(&msg, 0, sizeof(msg));
->                 msg.msg_flags = MSG_DONTWAIT | flags;
-> +               if (slen < len)
-> +                       msg.msg_flags |= MSG_MORE;
-> 
->                 iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
->                 ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
-> @@ -3292,6 +3294,8 @@ static int __skb_send_sock(struct sock *sk,
-> struct sk_buff *skb, int offset,
->                                              flags,
->                         };
-> 
-> +                       if (slen < len)
-> +                               msg.msg_flags |= MSG_MORE;
->                         bvec_set_page(&bvec, skb_frag_page(frag), slen,
->                                       skb_frag_off(frag) + offset);
->                         iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
+Fixes: f6746dc9e379 ("arm64: dts: qcom: qcs615: Add QUPv3 configuration")
+Cc: stable@vger.kernel.org
+Signed-off-by: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+---
 
-After testing, there is a performance improvement for large packets in both TCP and UDP.
-Thanks.
+v1 -> v2:
+
+- Added Fixes and Cc tag.
+
+v1 Link: https://lore.kernel.org/all/20250626102826.3422984-1-viken.dadhaniya@oss.qualcomm.com/
+---
+---
+ arch/arm64/boot/dts/qcom/qcs615.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+index bfbb21035492..e033b53f0f0f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+@@ -631,6 +631,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				operating-points-v2 = <&qup_opp_table>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -654,6 +655,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
+ 						     "qup-config",
+ 						     "qup-memory";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				required-opps = <&rpmhpd_opp_low_svs>;
+ 				dmas = <&gpi_dma0 0 1 QCOM_GPI_I2C>,
+ 				       <&gpi_dma0 1 1 QCOM_GPI_I2C>;
+ 				dma-names = "tx",
+@@ -681,6 +683,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
+ 						     "qup-config",
+ 						     "qup-memory";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				required-opps = <&rpmhpd_opp_low_svs>;
+ 				dmas = <&gpi_dma0 0 2 QCOM_GPI_I2C>,
+ 				       <&gpi_dma0 1 2 QCOM_GPI_I2C>;
+ 				dma-names = "tx",
+@@ -703,6 +706,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				operating-points-v2 = <&qup_opp_table>;
+ 				dmas = <&gpi_dma0 0 2 QCOM_GPI_SPI>,
+ 				       <&gpi_dma0 1 2 QCOM_GPI_SPI>;
+ 				dma-names = "tx",
+@@ -728,6 +732,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 				interconnect-names = "qup-core",
+ 						     "qup-config";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				operating-points-v2 = <&qup_opp_table>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -751,6 +756,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
+ 						     "qup-config",
+ 						     "qup-memory";
+ 				power-domains = <&rpmhpd RPMHPD_CX>;
++				required-opps = <&rpmhpd_opp_low_svs>;
+ 				dmas = <&gpi_dma0 0 3 QCOM_GPI_I2C>,
+ 				       <&gpi_dma0 1 3 QCOM_GPI_I2C>;
+ 				dma-names = "tx",
+-- 
+2.34.1
 
