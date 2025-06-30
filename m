@@ -1,70 +1,71 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914C220F23;
-	Mon, 30 Jun 2025 07:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183372192E5;
+	Mon, 30 Jun 2025 07:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268611; cv=none; b=F2MkiDsPIPEzC+OGeMFUQo8Zlb/Zfbx/6iYZ1oqbqTT3wbxpSwfcTJQ4mVf/3279AmA7fg+WpOyW30v+f/4yC++rGmhsBIwN/P2KSXz8TqEQ/aDLXGx0BrJzIrgg29ROZNt9qzXwV+odQz8zKajCYo1Atlqw6YpjKTrTAzVUfuM=
+	t=1751268630; cv=none; b=qzyHaG/SCUgXQ9OcshFODUrEPf3SbnBli2K0rC5EWuLY16HihyQXNq5TjjtpOlwJmq+LN1387ZAsZCgkgUW+OWL4F9Q/D6+wrE5gJCJB9zlCdHNJbryarR3TNhoCSFNuPgKnooKl618nzVL6kJ1a+bdT9ERmq+VWWvLr2YQtCK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268611; c=relaxed/simple;
-	bh=h3+BbSsRzFSbCWdeIHhuw9v25Gxev7MQWBIq8T/6F3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=D8ZE+I1MA6ULzk7rLkAyWVOrmJJkC7CSVqjDyX9ppOwvojHx1EpmOEncPbikQVnRRDWOwSbNYdDJwesXV4049rFgA1OoN68qLSSdAnMWfSazDRvImulZnJgEvpbTuNeoxflkNlVGbqSi0/ky/ciBIkgoKqihz3HPS2LGGf5IGx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aa0jE+HD; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751268630; c=relaxed/simple;
+	bh=+W++RPlYJEyAeuhS3hRC53KAjTd0o4yYfaYBlxSa/zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAHoqRRA/M+mkGVeXV4E0tYkTvLUKl7e/fPXpnc7KkeCaiD81kaEo0jWFZUQVI/Ilt9meUq6qncKmzx5cVm/B7H9uwyHZvlXnuI9uIUQ7fbreb735XP0dyQbrRXg4rW48s6RGXlWL+1C4Lcrqh97h/IrZ86tnfKBM26qZ2srNlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAC1e2gL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aa0jE+HD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751268607;
-	bh=h3+BbSsRzFSbCWdeIHhuw9v25Gxev7MQWBIq8T/6F3k=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aa0jE+HDyg7qAOkBA0l+7XGeqlGtp7ZiPTI9HCT25cmM/J6GI2hCOV0v7C3yzx2Mh
-	 LktFuM+PfqaeYwQ5w5AlUmTsGn1gbfFJbW20fCLVTh0noO/PbrFR5EkTMtmvAsDv29
-	 8SY3mOGCS6KysPRAmRCSRLredMiOf+A09CotRf2oZS3dVvOk9byVdoHBL5iqep81sj
-	 pJAvSoXW+KrExpONnWGBf87BH1W7mkcGtnRSTniqmVZ6vxf0+kWoIXX4ZxAhcT7HCP
-	 r6y03zs6ta3j10t8n2mn1SkkAvxFtjNdUOqisLPQ1Oni8flReaK41SSWGE2kOal/uJ
-	 oMlQNW1iQ+gWQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D461217E0B0D;
-	Mon, 30 Jun 2025 09:30:06 +0200 (CEST)
-Message-ID: <ef28bb5d-8d5b-4505-8b00-56c9e5abd90d@collabora.com>
-Date: Mon, 30 Jun 2025 09:30:06 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAC1e2gL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E810AC4CEF2;
+	Mon, 30 Jun 2025 07:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751268629;
+	bh=+W++RPlYJEyAeuhS3hRC53KAjTd0o4yYfaYBlxSa/zw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GAC1e2gLG7Df7mfRBYmNwG6e6iHLGCh+oVWTpyAYbdn3N/WC0KEt1U8m4VzEJeqT3
+	 O13ZFjZLLcPCegp0S15d0IvwXJ3s/pCOQ+3YPEa7DNsuFoSPBNctHpuwSlQLAHnFsl
+	 zG3W50+2cLWtxIbJlGz4Ko51w6S1w/acU67vl02gmVm7/29t/75UhfnscOME4WsasH
+	 kSutFgDcoVS+Um4UQ43LHcL9sN7VDjcMIkk3SC0c8XEsFGh6HamnTpw2d787yLfuGT
+	 1o44BUSbuTQLrbV5XFSurXgj4Z+VI6VgCNglgLVSkqE3tlrP9PUUNeslXBQQSiN1Nw
+	 CX/thVImS8hnw==
+Date: Mon, 30 Jun 2025 09:30:26 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: hans.zhang@cixtech.com
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	mani@kernel.org, robh@kernel.org, kwilczynski@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mpillai@cadence.com, fugang.duan@cixtech.com, 
+	guoyin.chen@cixtech.com, peter.chen@cixtech.com, cix-kernel-upstream@cixtech.com, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/14] dt-bindings: pci: cadence: Extend compatible
+ for new RP configuration
+Message-ID: <20250630-heretic-space-bullfrog-d6b212@krzk-bin>
+References: <20250630041601.399921-1-hans.zhang@cixtech.com>
+ <20250630041601.399921-2-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: Add support for MT7981
-To: Aleksander Jan Bajkowski <olek2@wp.pl>, rafael@kernel.org,
- daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
- jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, zhiyong.tao@mediatek.com, linux-pm@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250628223837.848244-1-olek2@wp.pl>
- <20250628223837.848244-4-olek2@wp.pl>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250628223837.848244-4-olek2@wp.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250630041601.399921-2-hans.zhang@cixtech.com>
 
-Il 29/06/25 00:38, Aleksander Jan Bajkowski ha scritto:
-> The temperature sensor in the MT7981 is same as in the MT7986.
-> Add compatible string for mt7981.
+On Mon, Jun 30, 2025 at 12:15:48PM +0800, hans.zhang@cixtech.com wrote:
+> From: Manikandan K Pillai <mpillai@cadence.com>
 > 
-> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+> Document the compatible property for HPA (High Performance Architecture)
+> PCIe controller RP configuration.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+I don't see Conor's comment addressed:
 
+https://lore.kernel.org/linux-devicetree/20250424-elm-magma-b791798477ab@spud/
+
+You cannot just send someone's work and bypassing the review feedback.
+
+> 
+> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+
+SoB.
+
+Best regards,
+Krzysztof
 
