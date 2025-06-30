@@ -1,145 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AF01E2858
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADB523ABB1
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272078; cv=none; b=J5NSkYBSFl2x31CcsYwu2F0GJHSUzqQOX1NqR/r6TZVOc6EMhU6AI/PWgSEUxKGhIJR3UiszvIrypw19f8vZJBuotN402IC1p35p5Ot3kf2T7h7MdbWe4qbs14BS7dbxh2yo7y/aMzUEivHmbingoAUZGGG/38qmNlqYT6UbdBw=
+	t=1751272105; cv=none; b=JE9tsEUZoip8NvoRqV7A5VNXWj7Z04ToTkwU9CPw1IHzpVAdlYHPRpT045x1T6k2f7TNMkBdov8oxnXSpAo2ZRQY1xYKS7dbz/r0ajA207qjUdHwS/OsL1yn33RAUGi7TYNyMIOKp863WCqwno85D8dbnTAjDVxNNpXyTawol4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272078; c=relaxed/simple;
-	bh=ExGZ+hp1EMO7sgbPEgeTbzMknTG+/ihzeS1dOJyPhJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FGzcynowLho94lM7pw6qePfouyRnYuttLPKAmnE7ydmwpSr/Da1XeYXMUDKgzF8rtOG3VUN5CKidjHe+OVl4QE2orGD9D+/d9MBXrROeQKZITUXp2e6Ov7PJT+MRh34Z+YBcv+9Zh4c3Ui53HV/P+kjWpuNfsOyOzku9keECXBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQ6xH78q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751272105; c=relaxed/simple;
+	bh=opuEB7LyWEqgR61ttBKTDpTpAkIB9+/UeaBrxZSbziY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rf/1V6VUMVFQMwPnn3EcKYDBLC+Z7ewAwtjbhwVUQRxvZStTTBM5gEqZV8lK4nV3DoTbEd93Z5JvNQalUrpQvaK+KbYfrtnUFtufZyrQZius1dKdpbER5u3zDGrVWrj5y/Cm27OKlYJF2VHjAom7xP8cvX0dTuIplW7G4kVJFyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Np6/mk64; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQ6xH78q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EF9EC4CEE3;
-	Mon, 30 Jun 2025 08:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751272078;
-	bh=ExGZ+hp1EMO7sgbPEgeTbzMknTG+/ihzeS1dOJyPhJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQ6xH78qLJp+C4tcNHw2W+kht79GTUHVzvgfA6HEiaSjI85fxBdkO2h43U8B99SpA
-	 sshvE0Sgm02SKHweBo330bCJpiJAere5OZXxznjkT9VZjuSCJ1AIUytKGDGyCw7VCE
-	 uEbIFIL0UofF3xWZbuniVtEjK15/je81RNWb81BmeXddoN0rp/B0KPviSrJP16SxoH
-	 pnFqCDTr5znVFoN3zHiLrlg0JNTtWYRg8dofrq39/nSA4vvB4d1QlLyEulrxTphX12
-	 UfiD7QlMuJuahrbIwk0fBRLnC5KOBX6PJF7DQlfQMHJBQ5YDqbWy6D93CkurMkN7Jr
-	 fGf640YpNsi3w==
-Date: Mon, 30 Jun 2025 10:27:55 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	dri-devel@lists.freedesktop.org, David Airlie <airlied@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Michal Simek <michal.simek@amd.com>, 
-	Simona Vetter <simona@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-Message-ID: <20250630-psychedelic-tested-smilodon-adcbb3@houat>
-References: <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
- <20250627145058.6880-1-mike.looijmans@topic.nl>
- <20250627181911.GF24912@pendragon.ideasonboard.com>
- <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Np6/mk64"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8DTXh000438
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:28:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vKpr6yzIcJB1d9WyXdee0CZFQ4Hog1591SCG7KI65o0=; b=Np6/mk64Wnssv3Zz
+	qL236c9QdxAfqMiESBMSJ7eZ2BUw7Nfv3R6sDMyzXYZwdbZ9VpejQLHsN0czm9U1
+	WKtvbvp/o80RDjV9fzdRFfyk/Db9r2jGWSJ04AyuYMq3Jra2WvIONRUEVYb8eE/N
+	+ANgnuqGT4wBKeA+D4HJFKIdtKTUIQIZxtzjthPKhOUihLxF7b00uFsvNB6Yqgdl
+	ZUvqhA+8yP5mzUuozDwxxasRXbjbadZGW5Egai9oin2jzU/fKCMEA/AaYDdQGtkk
+	FouYeoUk+V2J4mExMLQQuF2YNgejMLbOUwMkZpF2+CJtKAz+WVU/xzrlMT2A9UAJ
+	a9NuYQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j7qm3wke-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:28:22 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b3510c0cfc7so558067a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:28:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751272101; x=1751876901;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vKpr6yzIcJB1d9WyXdee0CZFQ4Hog1591SCG7KI65o0=;
+        b=uEf7aHfapuvrtvmxxFlgbqv7wEJXnG9tZtSCvZaRtDF0wxD2iw7Bvmtk6eYwkYzikD
+         Rr2Wd8w4WLI2INSAJGap/oEyeROYE7Y7JZhIdNxcY3PKSQVq0+htHMVGDz6e1ZJhB2oR
+         1AcK0qj08H/TBvOQ8iWO5eMKkDlLI9+BbdEoXcBzP9SKG+SsdkLDhoLEVA8w1mrMYpz9
+         +zP9SNdU/rnfsmrgRgMkf70zwkC6VhDaFVWHUT90DqkhZz2xo9xSmvCGI5inXSMbA8AK
+         vdWA/LKj/MDS3/RFdROiqD7wb6BkKpR5imTR675rJO5xEkrVTXJEqJpzmkVXBGA0ERk4
+         aGrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWXDirCJ1a5Pu6X13xe1KxZWVeGZLOcjygl7jQLkeD2sMciSP+anj6m019k0MO4BBMIHduevBRPJjBgdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPpUMAKBsV2/6xBQdCHi2uRIh68G9BYy8TWVzMopRjxzBedSZb
+	G7j0tpEG3JFbER/Z5W5DGRZpFwe0vyS6i1R253oI13tBtMU4HaqnoTJIXbhWbr5zgHYfcU6wVSi
+	CvJ+BXCe9plt728+ydhzuwxfc19ZFE9533msXegS9vlVwqlfMShCZJSrNSlHfuKIxEpzh3Dvt3s
+	Q=
+X-Gm-Gg: ASbGncup767AphgjSx/yzw+/NOtApX0EErlzWPa0qJYWGAb+lH7azlV+/y2hdoebMxK
+	9jcbSzRyELokFUkQPc88jmnNmST7/M0vVq6chqtzv5AHkrkMIhaBOQZ0Ylh/9CHv49BjBkdB256
+	QR1oiXeSCdxDSyHy+IgtDG1zRWgrUDceImHozgD6mOZyETssZKH7yfSQI1iUnWKs4fdkH4d1uDl
+	KYMQuxoqJmrqO7/OVTGWeCZhrtHG/1efsYZs3jIPwkMFXW5cWVnlvFwIgL0J0tWfLPTMaNv2JTL
+	s0fxW0XlGmGhub5p9DAdin2RI1sUkM/Pa4ndTWPHAPbjPh3LvXJY5hy80b9k0dFpq2EVxNXAqGh
+	Xex6btfx2UKA=
+X-Received: by 2002:a17:903:46cd:b0:233:f3df:513d with SMTP id d9443c01a7336-23ac4607b79mr203783835ad.35.1751272100783;
+        Mon, 30 Jun 2025 01:28:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFpoJe/E22crPOG7XWE9BLjLycCr22wMPAkT8qjvh8z5NDNDo/Aolfr358a5ZWAnCeRRw7gg==
+X-Received: by 2002:a17:903:46cd:b0:233:f3df:513d with SMTP id d9443c01a7336-23ac4607b79mr203783485ad.35.1751272100359;
+        Mon, 30 Jun 2025 01:28:20 -0700 (PDT)
+Received: from [10.133.33.109] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b54sm75066315ad.15.2025.06.30.01.28.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 01:28:19 -0700 (PDT)
+Message-ID: <e9160bb8-2b5c-4c30-b60f-520decde851e@oss.qualcomm.com>
+Date: Mon, 30 Jun 2025 16:28:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="wubb6iu6izzzylya"
-Content-Disposition: inline
-In-Reply-To: <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] power: supply: core: Add resistance power supply
+ property
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        David Collins <david.collins@oss.qualcomm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-1-9e377193a656@oss.qualcomm.com>
+ <b7m55sjc2rtvtelvez6sxnjvdostvxmfjhhsr4uxhyhh4bxrcd@xmioz2bsgis2>
+Content-Language: en-US
+From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+In-Reply-To: <b7m55sjc2rtvtelvez6sxnjvdostvxmfjhhsr4uxhyhh4bxrcd@xmioz2bsgis2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=C4TpyRP+ c=1 sm=1 tr=0 ts=68624aa6 cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
+ a=N6g_Jt28wG8IcqWndf0A:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-ORIG-GUID: L5e2107uExrXUtxM0FbruHEa6mxMKDBP
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA2OSBTYWx0ZWRfX37e+mQQtefjP
+ xEtEIY/iOvwG/QzKbI1zdqWhkcy52e2x9x3ALandXHgjEjx6BlhWd1PFHyTwreIto8V01dBrjg/
+ V66m9BXyh/1Mt+ZP9/YkycuWeLrhSBVATVO7StKKFQW79Z/rbb2fbRuofRiVDqPUIukL80TUeI7
+ Tzl48K0ZLPrYT8/O89zi2PlZl2qMi37JhsS3BdTja3INDNBSVzuNnh8UGZJRXpthRtSXOusgil5
+ ek5y0fmQ0+GKEDfzdb8mW5g7UGeNrMFqrzHH7ZvVC+rQYkiTKBG8rySpMb4v00Wamww01fE4s27
+ ++TguVWxQWnEFm4+9huYHh2ZtOLX5ncPTlTB+19vaIa3rw1GdgFfJ/OfmdyQmnkJ99Nar8imDXc
+ sJbdfpud/PfJWkVG1lTUJoBckrDorUmkjOvQ5143ii0xDN4aMUGbiL9sdvQdYngBzd/zsZlE
+X-Proofpoint-GUID: L5e2107uExrXUtxM0FbruHEa6mxMKDBP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300069
 
 
---wubb6iu6izzzylya
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
-MIME-Version: 1.0
+On 6/22/2025 9:26 AM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Fri, May 30, 2025 at 03:35:06PM +0800, Fenglin Wu via B4 Relay wrote:
+>> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+>>
+>> Some battery drivers provide the ability to export resistance as a
+>> parameter. Add resistance power supply property for that purpose.
+> This is missing some information and the naming is bad.
+>
+> Which resistance (I suppose battery internal resistance)?
+>
+> That is heavily dependent on the battery temperature. So this needs
+> to document if this is for the current temperature or for some
+> specific one.
+>
+> -- Sebastian
 
-On Mon, Jun 30, 2025 at 10:03:16AM +0200, Mike Looijmans wrote:
-> On 27-06-2025 20:19, Laurent Pinchart wrote:
-> > Hi Mike,
-> >=20
-> > Thank you for the patch.
-> >=20
-> > On Fri, Jun 27, 2025 at 04:50:46PM +0200, Mike Looijmans wrote:
-> > > XRGB8888 is the default mode that Xorg will want to use. Add support
-> > > for this to the Zynqmp DisplayPort driver, so that applications can u=
-se
-> > > 32-bit framebuffers. This solves that the X server would fail to start
-> > > unless one provided an xorg.conf that sets DefaultDepth to 16.
-> > >=20
-> > > Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> > > ---
-> > >=20
-> > >   drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
-> > >   1 file changed, 5 insertions(+)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xln=
-x/zynqmp_disp.c
-> > > index 80d1e499a18d..501428437000 100644
-> > > --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> > > @@ -312,6 +312,11 @@ static const struct zynqmp_disp_format avbuf_gfx=
-_fmts[] =3D {
-> > >   		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > >   		.swap		=3D true,
-> > >   		.sf		=3D scaling_factors_888,
-> > > +	}, {
-> > > +		.drm_fmt	=3D DRM_FORMAT_XRGB8888,
-> > > +		.buf_fmt	=3D ZYNQMP_DISP_AV_BUF_FMT_NL_GFX_RGBA8888,
-> > > +		.swap		=3D true,
-> > > +		.sf		=3D scaling_factors_888,
-> > I'm afraid that's not enough. There's a crucial difference between
-> > DRM_FORMAT_ARGB8888 (already supported by this driver) and
-> > DRM_FORMAT_XRGB8888: for the latter, the 'X' component must be ignored.
-> > The graphics layer is blended on top of the video layer, and the blender
-> > uses both a global alpha parameter and the alpha channel of the graphics
-> > layer for 32-bit RGB formats. This will lead to incorrect operation when
-> > the 'X' component is not set to full opacity.
->=20
-> I spent a few hours digging in the source code and what I could find in t=
-he
-> TRM and register maps, but there's not enough information in there to
-> explain how the blender works. The obvious "XRGB" implementation would be=
- to
-> just disable the blender.
->=20
-> What I got from experimenting so far is that the alpha component is ignor=
-ed
-> anyway while the video path isn't active. So as long as one isn't using t=
-he
-> video blending path, the ARGB and XRGB modes are identical.
->=20
-> Guess I'll need assistance from AMD/Xilinx to completely implement the XR=
-GB
-> modes.
->=20
-> (For our application, this patch is sufficient as it solves the issues li=
-ke
-> X11 not starting up, OpenGL not working and horrendously slow scaling
-> performance)
+This is battery internal resistance calculated by battery management 
+system, using the real-time temperature measured by the thermistor 
+inside the battery pack.
 
-Given that we consider XRGB8888 mandatory, this patch is a good thing to
-have anyway, even if suboptimal, or broken in some scenario we can
-always fix later.
+I can update the name to something like "rt_internal_resistance" and 
+update the description accordingly.
 
-Maxime
-
---wubb6iu6izzzylya
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGJKiwAKCRAnX84Zoj2+
-doZjAYDh8BvtZ4CVCSL3YLa/LXA8KJsca7YWzmy1bXxRsVQNdO7RqPJnh655oKNG
-GawAt0kBfR/KxUOlvfUoVhDMGpTxWXOYm2YMcamWeB6hJNTXvgJu3HiRdIKB4BBD
-kP7VjQzWVA==
-=3bOh
------END PGP SIGNATURE-----
-
---wubb6iu6izzzylya--
+>> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+>> ---
+>>   Documentation/ABI/testing/sysfs-class-power | 10 ++++++++++
+>>   drivers/power/supply/power_supply_sysfs.c   |  1 +
+>>   include/linux/power_supply.h                |  1 +
+>>   3 files changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+>> index 560124cc31770cde03bcdbbba0d85a5bd78b15a0..22a565a6a1c509461b8c483e12975295765121d6 100644
+>> --- a/Documentation/ABI/testing/sysfs-class-power
+>> +++ b/Documentation/ABI/testing/sysfs-class-power
+>> @@ -552,6 +552,16 @@ Description:
+>>   			Integer > 0: representing full cycles
+>>   			Integer = 0: cycle_count info is not available
+>>   
+>> +What:		/sys/class/power_supply/<supply_name>/resistance
+>> +Date:		May 2025
+>> +Contact:	linux-arm-msm@vger.kernel.org
+>> +Description:
+>> +		Reports the resistance of the battery power supply.
+>> +
+>> +		Access: Read
+>> +
+>> +		Valid values: Represented in microohms
+>> +
+>>   **USB Properties**
+>>   
+>>   What:		/sys/class/power_supply/<supply_name>/input_current_limit
+>> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+>> index a438f7983d4f6a832e9d479184c7c35453e1757c..dd829148eb6fda5dcd7eab53fc70f99081763714 100644
+>> --- a/drivers/power/supply/power_supply_sysfs.c
+>> +++ b/drivers/power/supply/power_supply_sysfs.c
+>> @@ -220,6 +220,7 @@ static struct power_supply_attr power_supply_attrs[] __ro_after_init = {
+>>   	POWER_SUPPLY_ATTR(MANUFACTURE_YEAR),
+>>   	POWER_SUPPLY_ATTR(MANUFACTURE_MONTH),
+>>   	POWER_SUPPLY_ATTR(MANUFACTURE_DAY),
+>> +	POWER_SUPPLY_ATTR(RESISTANCE),
+>>   	/* Properties of type `const char *' */
+>>   	POWER_SUPPLY_ATTR(MODEL_NAME),
+>>   	POWER_SUPPLY_ATTR(MANUFACTURER),
+>> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+>> index c4cb854971f53a244ba7742a15ce7a5515da6199..de3e88810e322546470b21258913abc7707c86a7 100644
+>> --- a/include/linux/power_supply.h
+>> +++ b/include/linux/power_supply.h
+>> @@ -174,6 +174,7 @@ enum power_supply_property {
+>>   	POWER_SUPPLY_PROP_MANUFACTURE_YEAR,
+>>   	POWER_SUPPLY_PROP_MANUFACTURE_MONTH,
+>>   	POWER_SUPPLY_PROP_MANUFACTURE_DAY,
+>> +	POWER_SUPPLY_PROP_RESISTANCE,
+>>   	/* Properties of type `const char *' */
+>>   	POWER_SUPPLY_PROP_MODEL_NAME,
+>>   	POWER_SUPPLY_PROP_MANUFACTURER,
+>>
+>> -- 
+>> 2.34.1
+>>
+>>
