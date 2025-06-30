@@ -1,76 +1,72 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2070.outbound.protection.outlook.com [40.107.212.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F76C126BF1;
-	Mon, 30 Jun 2025 06:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263872; cv=none; b=AyvDPc/nb4Dyv9+nOtAo5Gs/0VY/UqZANRBzVRKT7NU8lVxleFBJm/MnLHQuoZTKLgF0GPkydKh9mZE3oGSMrKObHvqrhs7Rgm6aYKFMGShpVHBDMdcIPT/g9dY+Ei6mSqHjiqatCi2yUrOdNIaAJHXBjcrpEQbgihySMeEgtHs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263872; c=relaxed/simple;
-	bh=Ryeg9tPQjRBtqEzhFgMzg9idJt4MwCNx+MOV14qyfRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=euKrUSDxgovcKs02QJuEPdWP8b9aRO6LhdQ14V4rSM1F1HNQay5LBBcXT3cGiX/MMq7InS40rsRUP6VNWQYvjNFAPmKxQH1XJa1lrBdEEYMDmbUTx5SIyUWC6KlSQ6DYDM7lNwQo225SGyi69Lwc+uuWCrhQ2nbJosRP6E7WeHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuX3CY1y; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93D31E7C12
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751263888; cv=fail; b=Z7gBcrz9LbFiU1nDzX09W1wAoJrOwhF8ZSubyLXNtavn/V/VEqKl61HxE84ZEh9iLH5Zmb6/Ohswt2EUi624oNUGWPUS/ZppyjM4KJPhHskxvudZQU5FL8iaOrWk9f1IeIeKuE8sE8c+TykAEiS6Ds3nWvWj9vpsjzh5Q7CFsVw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751263888; c=relaxed/simple;
+	bh=4PUuugHyT4NfENyz0RGz3ZLsCciMgxRGu0jOZ7HXCOY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FZnMW9jisVr1P5Y/9VSl8r2MljzojTbPAJ485D1adMjEzQloJ1nFVROAWSoPaH76LHF65JNfPJXTGGbe/yd37YGeViMWr3lFsthcdyBnL06gTdeBvlUUVulB1VSFZ1iaYUg5oqAZKlIEATI1vpaQEdUE7N6VtKxRZFSSfkvsaas=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F0moTqL1; arc=fail smtp.client-ip=40.107.212.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuX3CY1y"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso4190066a91.3;
-        Sun, 29 Jun 2025 23:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751263869; x=1751868669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mXWSUNDVrwzgye8WrpUxYrs0RsEUEhkGlaf8Xirky+w=;
-        b=MuX3CY1y4YuLqnBgM1cTEBgwugXuIyPe7nhovXYrgaJ8I0Bvy/X6PoiWl2urU5kUFo
-         W5VccUEXsTRIKKp1FZLk0WBSHgxgCeLkP6+jVPkd1Se+NU0yZZbmCVR0wVe2BZMD8ubu
-         IROuIKneQFoyxdrD5JvXRk0FOd4Vt9d9nLqtk8+IhpBCHC/N+Y0KJ3NHt3JyaIk1wNcl
-         HeRcShbroq0/GhjExhunVoUBT5eN3wuzBzDL6Hw4eymI7DTdHzVy/Y0VVerpYQ0MNY9l
-         EvxFF1Gzl17QqVa+LEvBzCrs/tCnTfTsdi4TafzjQpiidZV+jiQt/OZpoGNXt38DtmO9
-         PTOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751263869; x=1751868669;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mXWSUNDVrwzgye8WrpUxYrs0RsEUEhkGlaf8Xirky+w=;
-        b=b4dWbm1ETpM8zX94MnpZ4I4LfU4Db+srBNnw1AAoIlA2rwPExGBOszk+t8vun7pRad
-         i7PAA2O80ruIAQo9DsGUHZv2LwHF336EMDJDgDf79I3yQ2T0Ln3asjjMyCjHScLui86U
-         43u0a3NY1lqMuQJ+nrr8cKhT36YjidGvP785Rp16nQqhZZZMu9MZejkmNJMEy/miMgCi
-         CG8CyYD3lPA8+lbPOAFZBSjfvLj3/xn2vcQU6p1qeLFNpYXH3uY5sALmOP6lChLXQzBE
-         oTk+4mAktdJ96CW2dbLwY4KyFwPHh3doTpuleSjNLz1hLTbkWGm/j12HrjOh49Y6VBhI
-         kcOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCgtC6/NtBaACPnJCmScfCTlXMiyuBF92U0WOLLPxJKEPKDnw8dZpctSicwj/Ci0vx36yLoZOCwLCaL+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxpIh1utgbEQ6W56BdePvfXFLfu1Ayx4yHsa/649o7HPKn0YJK
-	MnGT+3gPpNRVvNnYoLa2/uztc68t9A7hAG6o+5SKki1Bj0VckNDF6VBo
-X-Gm-Gg: ASbGncsXWJkK65KlM3SHnojhDzsoYpyFT/lOzUKhuSp4SKR9PgCpd7rXNlw5I1mhcry
-	0oapBL1LAigDhdvDfpwsgfvgHr3ziMK83VuAOOf40flrBwDVyfDLq5SxpR4biz1p/czix9aFSOm
-	HJ9axulmaBt3kp4HWaE5QPXgPzlbvVG0bBdfhvNvtFAjt4/pBvz/3foDLS5diAtvi/atXkUNKCx
-	4N9gFpdJqFrB355si6BomTE0YComW1XRy/2HzCazg4pM9/6iYzS59HSmx9Lx6tj5/eofHExRw5G
-	G9PZR/sCXvpmp21x7cOn7947ZHBeCwHBnoInDhDRtQS3n5kAomx5J6tSA+uLRmXt6+qE1TYaiJe
-	be7wShV1Ge+GlKEFynYQTQhv1f1CU
-X-Google-Smtp-Source: AGHT+IEswSytuhmQ+YEegBCFz35d0mEST/hj6Ec+OA/gQDbzB2DBNjCGGiFWV+cPtZmqAbUgTBJMcQ==
-X-Received: by 2002:a17:90b:1fc5:b0:311:ad7f:329c with SMTP id 98e67ed59e1d1-318c92ec020mr20097603a91.18.1751263869459;
-        Sun, 29 Jun 2025 23:11:09 -0700 (PDT)
-Received: from localhost.localdomain ([114.242.33.243])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5382e87sm13343443a91.8.2025.06.29.23.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 23:11:09 -0700 (PDT)
-From: Wang Jinchao <wangjinchao600@gmail.com>
-To: Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wang Jinchao <wangjinchao600@gmail.com>
-Subject: [PATCH v4 2/2] md/raid1: remove struct pool_info and related code
-Date: Mon, 30 Jun 2025 14:10:43 +0800
-Message-ID: <20250630061051.741660-3-wangjinchao600@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F0moTqL1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FbYlsYrVx2OBU8w1W2Ay5eRZjBFDL8Eb1XVhnI1scJRrMxwn35Ej5bBGkicXQtBVZqpS4hukGu7oDd96gYRQYliE4MQQvcmQqoSk4SnzjQPesVstQv9ZdPn+rgkWUcxBeY3+ZcsTqq2C1c/KXJZDITKGEKT9TgEqLMxXTgd2mmrgDAP1KCF+CRCjwaqdL2Sipi92HCucNkZruYYVa3H4tdNlqbRuSbEWSA/jDjNE7Owjxrg6ALcWZiWKBonK9yg2i2VZlCyJcDLBIvuGjEDc926p4HfaXazn2rjtADnPAMCd/zlhFIQ0B4/iD1c0Q8Sb8D1Ab0ODoBEvL2Fup2aB7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vTkpYhzrFIGBIw0M+sEirUt0lDELO2ObnA2IwFyFHv4=;
+ b=liD64nSCQulwitpX1IZ/lXNmJKMipIkYeamOA76yFZVU+LiV2aRMMEEO7dvExDRwIewnkE8UgVLcq/aijXs6GTgiK1jIZyAQ+zQdAF+4s1zvJFFIpcWLHV0D4czpEedA+DHgypNSgY1pru9Jc6sKcaXqNFyu3HS38sDjc49vE/94+nieCj5ASwpVe5ToIeFCgnzgg7CP/cUjP0rXrjPCvkJ6fHKtzujgNaSSgSibUNuTqREQsF3cqr1UQPZx2sP8N1FI2lpzV+ZnZ9D9ZRBxY7yZWK3ijz04LwafoxwYKAWOaKvYdG3LSyHeR/H0412qSo2XjKWR62ZZHmOx16QmOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vTkpYhzrFIGBIw0M+sEirUt0lDELO2ObnA2IwFyFHv4=;
+ b=F0moTqL1vkZDBFEL/loGwPvkPqXwP/lIhrzGNg2JfnFZ3KEYwn3iIKo1sJ42g/im95K2GEzHYKPngQZo1tIfdgnnyj7RgPDmEnJeqYeSein1gHMZvr6VghMF4GnZwy+nIJExfIEDXLinDZ/rU/TRL+eW+Aj/YjLg5XB5hNdeGB0=
+Received: from CYZPR20CA0013.namprd20.prod.outlook.com (2603:10b6:930:a2::13)
+ by DS0PR12MB6488.namprd12.prod.outlook.com (2603:10b6:8:c3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Mon, 30 Jun
+ 2025 06:11:20 +0000
+Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
+ (2603:10b6:930:a2:cafe::6b) by CYZPR20CA0013.outlook.office365.com
+ (2603:10b6:930:a2::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.31 via Frontend Transport; Mon,
+ 30 Jun 2025 06:11:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 06:11:20 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 01:11:15 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Valentin Schneider <vschneid@redhat.com>, "Leon
+ Romanovsky" <leon@kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Steve Wahl <steve.wahl@hpe.com>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Madadi Vineeth Reddy
+	<vineethr@linux.ibm.com>, K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: [PATCH v2] sched/fair: Use sched_domain_span() for topology_span_sane()
+Date: Mon, 30 Jun 2025 06:10:59 +0000
+Message-ID: <20250630061059.1547-1-kprateek.nayak@amd.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250630061051.741660-2-wangjinchao600@gmail.com>
-References: <20250630061051.741660-1-wangjinchao600@gmail.com>
- <20250630061051.741660-2-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,241 +74,211 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|DS0PR12MB6488:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa08f714-95d0-46ab-7a77-08ddb79ceed6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|30052699003|36860700013|7416014|1800799024|376014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fynR6PUEWW1I8E08/XhqFYkjFAxLPkzHLT5bjCBqrIQI//RwQdhgzpBc+IRK?=
+ =?us-ascii?Q?d3EkKNdPCcOJ1cpg2RXjLpJFNvFNgvt1XHiGnjWdv/h/5oK5TxhriN9wvnyT?=
+ =?us-ascii?Q?CP3qNaFKPRKo3uTxPXAB08cASxgnaPrP+MKY8rpB9TPD20OTY/w3RyruV9q6?=
+ =?us-ascii?Q?N1KFw7Hl0JtawP7BDa8eeaUf2ZMEJsT9WgXPjmHPdsr2jAJIOa4pyVwP6rGp?=
+ =?us-ascii?Q?gAbzCJSn8svWz984EKVINAh4viv+KPcxKUj6JNtft+3Omsp6lUc8rad0MGbR?=
+ =?us-ascii?Q?ntyQKXC1kHv4zUskLViG3eKh3pXHJDcR8YjXc1Rrmo/hSEkUiDZ7hiJxET+h?=
+ =?us-ascii?Q?fOI309VZfzt5CHOpAsXFh06utPUSxMXeBOkfqRvihoh8SYG+6r05QO7cC8rd?=
+ =?us-ascii?Q?zKRQTKBzsS9+mdivdLAoNFdFeRBZ6EV3FuyfHLNHouj8yUODYCUGbX+PKMfs?=
+ =?us-ascii?Q?RmXO8kkp06um5IXA668qI47PMFojf59sv+S01RZePa/cHgMzzV5omX0/d8QT?=
+ =?us-ascii?Q?SjvhRyWsYWDAyYbeX/HVSCIZpMfffRMHUVT9WbjbQ3jlTQUq6cijBWcJp/yt?=
+ =?us-ascii?Q?gkNJWdRit0ZDjFelgMPq7vFT2bzRsR9Jrz+yDv24fpiFs9NGAttgG2cQ5BFq?=
+ =?us-ascii?Q?1NPhbeZ8y+cJcOOCpCjTmKbUBzq9d6vDZ/YTVLwoTTLYP7dI9QIap2ZBV5Iv?=
+ =?us-ascii?Q?H2N5kSAUNaWsSPXk8m2GX1DMjU58V9TrN/XeFX0dpgICsxYdKqyn334Atpua?=
+ =?us-ascii?Q?GujG+QtYPjMt8ZQq1pKgcFUhdZJQ8lqvc0Se/am3qDcvSvSLEDRluHs5oxHS?=
+ =?us-ascii?Q?er1qsrvU8XBipSQAS3BdrKeUfcjTMvB1HiCLeUls6fLuJzBqxavfYzk/uWNL?=
+ =?us-ascii?Q?e+COtJdcP49GpHcdSLuunaT5cASWyC7fHSKF6/HTHIS1+iniJdEHcjoU1BK0?=
+ =?us-ascii?Q?9Wicebk+v6aXR3q1jketveATRm5IsyGP4OHPZJqsn9bGSSZbscIHVXMOHDPL?=
+ =?us-ascii?Q?JN5Y5j2DA0MKnX2UqRPPtmdS9/1w8Y0o7R5C4o4D24p9nfOsz6tLKLgNz1dk?=
+ =?us-ascii?Q?7PFuP4nkLdMoQCVUF97uZd4wNolZordc/tNuqiofREaEcW4gf8But//EjAtP?=
+ =?us-ascii?Q?FLZGjk3kk8k01nR3YkzGix1XF1cs4CmPTNWkt355Zv5rNleVGbp0BdOvzgzz?=
+ =?us-ascii?Q?kssOP0vCbghZZn7EAwfDDhtOUHZjKrtNiyT3cA4impduENkH0eT+Y+0BnKNv?=
+ =?us-ascii?Q?i4pd3EF4zE1cLhWIfjDL6T/kl0VCm5HLRahBCyJPVKDeg6UQwU3WAzqmrxTE?=
+ =?us-ascii?Q?6sArZfXP3k0z4q5sSpg5TSBvXWXCG/LCamNiob3e1ORqlWWuUT11i45CrTjW?=
+ =?us-ascii?Q?Baf+gLlLx/Bglkpz8mgGI47Je70uVc49GFoWnc0kVqOQW2VCZV2CBAN3DxRc?=
+ =?us-ascii?Q?4uqnXlav/xGMjFM+8Sb9ZtEVumXsM3rlIvOFO+3wkLBUy6wTvwhrj9r9AgK7?=
+ =?us-ascii?Q?gizJugy3aBXnu/tIZP7gvnHj30gFOzNa4ECWzfUa+biloh/66QvC7De4og?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(30052699003)(36860700013)(7416014)(1800799024)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 06:11:20.5410
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa08f714-95d0-46ab-7a77-08ddb79ceed6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6488
 
-The struct pool_info was originally introduced mainly to support reshape
-operations, serving as a parameter for mempool_init() when raid_disks
-changes. Now that mempool_create_kmalloc_pool() is sufficient for this
-purpose, struct pool_info and its related code are no longer needed.
+Leon noted a topology_span_sane() warning in their guest deployment
+starting from v6.16-rc1 [1]. Debug that followed pointed to the
+tl->mask() for the NODE domain being incorrectly resolved to that of the
+highest NUMA domain.
 
-Remove struct pool_info and all associated code.
+tl->mask() for NODE is set to the sd_numa_mask() which depends on the
+global "sched_domains_curr_level" hack. "sched_domains_curr_level" is
+set to the "tl->numa_level" during tl traversal in build_sched_domains()
+calling sd_init() but was not reset before topology_span_sane().
 
-Signed-off-by: Wang Jinchao <wangjinchao600@gmail.com>
+Since "tl->numa_level" still reflected the old value from
+build_sched_domains(), topology_span_sane() for the NODE domain trips
+when the span of the last NUMA domain overlaps.
+
+Instead of replicating the "sched_domains_curr_level" hack, Valentin
+suggested using the spans from the sched_domain objects constructed
+during build_sched_domains() which can also catch overlaps when the
+domain spans are fixed up by build_sched_domain().
+
+The original warning was reproducble on the follwoing NUMA topology
+reported by Leon:
+
+    $ sudo numactl -H
+    available: 5 nodes (0-4)
+    node 0 cpus: 0 1
+    node 0 size: 2927 MB
+    node 0 free: 1603 MB
+    node 1 cpus: 2 3
+    node 1 size: 3023 MB
+    node 1 free: 3008 MB
+    node 2 cpus: 4 5
+    node 2 size: 3023 MB
+    node 2 free: 3007 MB
+    node 3 cpus: 6 7
+    node 3 size: 3023 MB
+    node 3 free: 3002 MB
+    node 4 cpus: 8 9
+    node 4 size: 3022 MB
+    node 4 free: 2718 MB
+    node distances:
+    node   0   1   2   3   4
+      0:  10  39  38  37  36
+      1:  39  10  38  37  36
+      2:  38  38  10  37  36
+      3:  37  37  37  10  36
+      4:  36  36  36  36  10
+
+The above topology can be mimicked using the following QEMU cmd that was
+used to reproduce the warning and test the fix:
+
+     sudo qemu-system-x86_64 -enable-kvm -cpu host \
+     -m 20G -smp cpus=10,sockets=10 -machine q35 \
+     -object memory-backend-ram,size=4G,id=m0 \
+     -object memory-backend-ram,size=4G,id=m1 \
+     -object memory-backend-ram,size=4G,id=m2 \
+     -object memory-backend-ram,size=4G,id=m3 \
+     -object memory-backend-ram,size=4G,id=m4 \
+     -numa node,cpus=0-1,memdev=m0,nodeid=0 \
+     -numa node,cpus=2-3,memdev=m1,nodeid=1 \
+     -numa node,cpus=4-5,memdev=m2,nodeid=2 \
+     -numa node,cpus=6-7,memdev=m3,nodeid=3 \
+     -numa node,cpus=8-9,memdev=m4,nodeid=4 \
+     -numa dist,src=0,dst=1,val=39 \
+     -numa dist,src=0,dst=2,val=38 \
+     -numa dist,src=0,dst=3,val=37 \
+     -numa dist,src=0,dst=4,val=36 \
+     -numa dist,src=1,dst=0,val=39 \
+     -numa dist,src=1,dst=2,val=38 \
+     -numa dist,src=1,dst=3,val=37 \
+     -numa dist,src=1,dst=4,val=36 \
+     -numa dist,src=2,dst=0,val=38 \
+     -numa dist,src=2,dst=1,val=38 \
+     -numa dist,src=2,dst=3,val=37 \
+     -numa dist,src=2,dst=4,val=36 \
+     -numa dist,src=3,dst=0,val=37 \
+     -numa dist,src=3,dst=1,val=37 \
+     -numa dist,src=3,dst=2,val=37 \
+     -numa dist,src=3,dst=4,val=36 \
+     -numa dist,src=4,dst=0,val=36 \
+     -numa dist,src=4,dst=1,val=36 \
+     -numa dist,src=4,dst=2,val=36 \
+     -numa dist,src=4,dst=3,val=36 \
+     ...
+
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Suggested-by: Valentin Schneider <vschneid@redhat.com>
+Reported-by: Leon Romanovsky <leon@kernel.org>
+Closes: https://lore.kernel.org/lkml/20250610110701.GA256154@unreal/ [1]
+Fixes: ccf74128d66c ("sched/topology: Assert non-NUMA topology masks don't (partially) overlap") # ce29a7da84cd, f55dac1dafb3
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
- drivers/md/raid1.c | 49 +++++++++++++---------------------------------
- drivers/md/raid1.h | 20 -------------------
- 2 files changed, 14 insertions(+), 55 deletions(-)
+v1..v2:
 
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 66726448d97c..90ac305971ee 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -127,10 +127,9 @@ static inline struct r1bio *get_resync_r1bio(struct bio *bio)
- 	return get_resync_pages(bio)->raid_bio;
- }
+o Use sched_domain_span() instead of replicating the
+  "sched_domains_curr_level" hack (Valentin)
+
+o Included the QEMU cmd in the commit message for the record (Valentin)
+
+v1: https://lore.kernel.org/lkml/20250624041235.1589-1-kprateek.nayak@amd.com/
+
+Changes are based on tip:sched/urgent at commit 914873bc7df9 ("Merge tag
+'x86-build-2025-05-25' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
+---
+ kernel/sched/topology.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index a2a38e1b6f18..734fee573992 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -2418,6 +2418,7 @@ static bool topology_span_sane(const struct cpumask *cpu_map)
+ 	id_seen = sched_domains_tmpmask2;
  
--static void * r1bio_pool_alloc(gfp_t gfp_flags, void *data)
-+static void *r1bio_pool_alloc(gfp_t gfp_flags, struct r1conf *conf)
- {
--	struct pool_info *pi = data;
--	int size = offsetof(struct r1bio, bios[pi->raid_disks]);
-+	int size = offsetof(struct r1bio, bios[conf->raid_disks * 2]);
+ 	for_each_sd_topology(tl) {
++		struct sd_data *sdd = &tl->data;
  
- 	/* allocate a r1bio with room for raid_disks entries in the bios array */
- 	return kzalloc(size, gfp_flags);
-@@ -145,18 +144,18 @@ static void * r1bio_pool_alloc(gfp_t gfp_flags, void *data)
+ 		/* NUMA levels are allowed to overlap */
+ 		if (tl->flags & SDTL_OVERLAP)
+@@ -2433,22 +2434,24 @@ static bool topology_span_sane(const struct cpumask *cpu_map)
+ 		 * breaks the linking done for an earlier span.
+ 		 */
+ 		for_each_cpu(cpu, cpu_map) {
+-			const struct cpumask *tl_cpu_mask = tl->mask(cpu);
++			struct sched_domain *sd = *per_cpu_ptr(sdd->sd, cpu);
++			struct cpumask *sd_span = sched_domain_span(sd);
+ 			int id;
  
- static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
- {
--	struct pool_info *pi = data;
-+	struct r1conf *conf = data;
- 	struct r1bio *r1_bio;
- 	struct bio *bio;
- 	int need_pages;
- 	int j;
- 	struct resync_pages *rps;
+ 			/* lowest bit set in this mask is used as a unique id */
+-			id = cpumask_first(tl_cpu_mask);
++			id = cpumask_first(sd_span);
  
--	r1_bio = r1bio_pool_alloc(gfp_flags, pi);
-+	r1_bio = r1bio_pool_alloc(gfp_flags, conf);
- 	if (!r1_bio)
- 		return NULL;
+ 			if (cpumask_test_cpu(id, id_seen)) {
+-				/* First CPU has already been seen, ensure identical spans */
+-				if (!cpumask_equal(tl->mask(id), tl_cpu_mask))
++				/* First CPU has already been seen, ensure identical sd spans */
++				sd = *per_cpu_ptr(sdd->sd, id);
++				if (!cpumask_equal(sched_domain_span(sd), sd_span))
+ 					return false;
+ 			} else {
+ 				/* First CPU hasn't been seen before, ensure it's a completely new span */
+-				if (cpumask_intersects(tl_cpu_mask, covered))
++				if (cpumask_intersects(sd_span, covered))
+ 					return false;
  
--	rps = kmalloc_array(pi->raid_disks, sizeof(struct resync_pages),
-+	rps = kmalloc_array(conf->raid_disks * 2, sizeof(struct resync_pages),
- 			    gfp_flags);
- 	if (!rps)
- 		goto out_free_r1bio;
-@@ -164,7 +163,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
- 	/*
- 	 * Allocate bios : 1 for reading, n-1 for writing
- 	 */
--	for (j = pi->raid_disks ; j-- ; ) {
-+	for (j = conf->raid_disks * 2; j-- ; ) {
- 		bio = bio_kmalloc(RESYNC_PAGES, gfp_flags);
- 		if (!bio)
- 			goto out_free_bio;
-@@ -177,11 +176,11 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
- 	 * If this is a user-requested check/repair, allocate
- 	 * RESYNC_PAGES for each bio.
- 	 */
--	if (test_bit(MD_RECOVERY_REQUESTED, &pi->mddev->recovery))
--		need_pages = pi->raid_disks;
-+	if (test_bit(MD_RECOVERY_REQUESTED, &conf->mddev->recovery))
-+		need_pages = conf->raid_disks * 2;
- 	else
- 		need_pages = 1;
--	for (j = 0; j < pi->raid_disks; j++) {
-+	for (j = 0; j < conf->raid_disks * 2; j++) {
- 		struct resync_pages *rp = &rps[j];
- 
- 		bio = r1_bio->bios[j];
-@@ -207,7 +206,7 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
- 		resync_free_pages(&rps[j]);
- 
- out_free_bio:
--	while (++j < pi->raid_disks) {
-+	while (++j < conf->raid_disks * 2) {
- 		bio_uninit(r1_bio->bios[j]);
- 		kfree(r1_bio->bios[j]);
- 	}
-@@ -220,12 +219,12 @@ static void * r1buf_pool_alloc(gfp_t gfp_flags, void *data)
- 
- static void r1buf_pool_free(void *__r1_bio, void *data)
- {
--	struct pool_info *pi = data;
-+	struct r1conf *conf = data;
- 	int i;
- 	struct r1bio *r1bio = __r1_bio;
- 	struct resync_pages *rp = NULL;
- 
--	for (i = pi->raid_disks; i--; ) {
-+	for (i = conf->raid_disks * 2; i--; ) {
- 		rp = get_resync_pages(r1bio->bios[i]);
- 		resync_free_pages(rp);
- 		bio_uninit(r1bio->bios[i]);
-@@ -2745,7 +2744,7 @@ static int init_resync(struct r1conf *conf)
- 	BUG_ON(mempool_initialized(&conf->r1buf_pool));
- 
- 	return mempool_init(&conf->r1buf_pool, buffs, r1buf_pool_alloc,
--			    r1buf_pool_free, conf->poolinfo);
-+			    r1buf_pool_free, conf);
- }
- 
- static struct r1bio *raid1_alloc_init_r1buf(struct r1conf *conf)
-@@ -2755,7 +2754,7 @@ static struct r1bio *raid1_alloc_init_r1buf(struct r1conf *conf)
- 	struct bio *bio;
- 	int i;
- 
--	for (i = conf->poolinfo->raid_disks; i--; ) {
-+	for (i = conf->raid_disks * 2; i--; ) {
- 		bio = r1bio->bios[i];
- 		rps = bio->bi_private;
- 		bio_reset(bio, NULL, 0);
-@@ -3119,11 +3118,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 	if (!conf->tmppage)
- 		goto abort;
- 
--	conf->poolinfo = kzalloc(sizeof(*conf->poolinfo), GFP_KERNEL);
--	if (!conf->poolinfo)
--		goto abort;
--	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
--
- 	conf->r1bio_pool = mempool_create_kmalloc_pool(NR_RAID_BIOS,
- 				offsetof(struct r1bio, bios[mddev->raid_disks * 2]));
- 	if (!conf->r1bio_pool)
-@@ -3133,8 +3127,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 	if (err)
- 		goto abort;
- 
--	conf->poolinfo->mddev = mddev;
--
- 	err = -EINVAL;
- 	spin_lock_init(&conf->device_lock);
- 	conf->raid_disks = mddev->raid_disks;
-@@ -3200,7 +3192,6 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 		mempool_destroy(conf->r1bio_pool);
- 		kfree(conf->mirrors);
- 		safe_put_page(conf->tmppage);
--		kfree(conf->poolinfo);
- 		kfree(conf->nr_pending);
- 		kfree(conf->nr_waiting);
- 		kfree(conf->nr_queued);
-@@ -3313,7 +3304,6 @@ static void raid1_free(struct mddev *mddev, void *priv)
- 	mempool_destroy(conf->r1bio_pool);
- 	kfree(conf->mirrors);
- 	safe_put_page(conf->tmppage);
--	kfree(conf->poolinfo);
- 	kfree(conf->nr_pending);
- 	kfree(conf->nr_waiting);
- 	kfree(conf->nr_queued);
-@@ -3367,7 +3357,6 @@ static int raid1_reshape(struct mddev *mddev)
- 	 * devices have the higher raid_disk numbers.
- 	 */
- 	mempool_t *newpool, *oldpool;
--	struct pool_info *newpoolinfo;
- 	struct raid1_info *newmirrors;
- 	struct r1conf *conf = mddev->private;
- 	int cnt, raid_disks;
-@@ -3398,23 +3387,15 @@ static int raid1_reshape(struct mddev *mddev)
- 			return -EBUSY;
- 	}
- 
--	newpoolinfo = kmalloc(sizeof(*newpoolinfo), GFP_KERNEL);
--	if (!newpoolinfo)
--		return -ENOMEM;
--	newpoolinfo->mddev = mddev;
--	newpoolinfo->raid_disks = raid_disks * 2;
--
- 	newpool = mempool_create_kmalloc_pool(NR_RAID_BIOS,
- 			offsetof(struct r1bio, bios[raid_disks * 2]));
- 	if (!newpool) {
--		kfree(newpoolinfo);
- 		return -ENOMEM;
- 	}
- 	newmirrors = kzalloc(array3_size(sizeof(struct raid1_info),
- 					 raid_disks, 2),
- 			     GFP_KERNEL);
- 	if (!newmirrors) {
--		kfree(newpoolinfo);
- 		mempool_destroy(newpool);
- 		return -ENOMEM;
- 	}
-@@ -3440,8 +3421,6 @@ static int raid1_reshape(struct mddev *mddev)
- 	}
- 	kfree(conf->mirrors);
- 	conf->mirrors = newmirrors;
--	kfree(conf->poolinfo);
--	conf->poolinfo = newpoolinfo;
- 
- 	spin_lock_irqsave(&conf->device_lock, flags);
- 	mddev->degraded += (raid_disks - conf->raid_disks);
-diff --git a/drivers/md/raid1.h b/drivers/md/raid1.h
-index 652c347b1a70..d236ef179cfb 100644
---- a/drivers/md/raid1.h
-+++ b/drivers/md/raid1.h
-@@ -49,22 +49,6 @@ struct raid1_info {
- 	sector_t	seq_start;
- };
- 
--/*
-- * memory pools need a pointer to the mddev, so they can force an unplug
-- * when memory is tight, and a count of the number of drives that the
-- * pool was allocated for, so they know how much to allocate and free.
-- * mddev->raid_disks cannot be used, as it can change while a pool is active
-- * These two datums are stored in a kmalloced struct.
-- * The 'raid_disks' here is twice the raid_disks in r1conf.
-- * This allows space for each 'real' device can have a replacement in the
-- * second half of the array.
-- */
--
--struct pool_info {
--	struct mddev *mddev;
--	int	raid_disks;
--};
--
- struct r1conf {
- 	struct mddev		*mddev;
- 	struct raid1_info	*mirrors;	/* twice 'raid_disks' to
-@@ -114,10 +98,6 @@ struct r1conf {
- 	 */
- 	int			recovery_disabled;
- 
--	/* poolinfo contains information about the content of the
--	 * mempools - it changes when the array grows or shrinks
--	 */
--	struct pool_info	*poolinfo;
- 	mempool_t		*r1bio_pool;
- 	mempool_t		r1buf_pool;
- 
+-				cpumask_or(covered, covered, tl_cpu_mask);
++				cpumask_or(covered, covered, sd_span);
+ 				cpumask_set_cpu(id, id_seen);
+ 			}
+ 		}
+
+base-commit: 914873bc7df913db988284876c16257e6ab772c6
 -- 
-2.43.0
+2.34.1
 
