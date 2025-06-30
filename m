@@ -1,117 +1,141 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57D023ABB3;
-	Mon, 30 Jun 2025 22:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04ADB21C161;
+	Mon, 30 Jun 2025 22:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751322339; cv=none; b=NM+SKOwQcrKA8ghH7rBQFL4Es97TMw267Qq9YDiKHrUTZ+OsO4Q8aIJqoHlWamyEJUoGO5RZmRPHU6kPXAOn1TSGYljEnf2yORBxyJzWIQOtHop7jihGmoTwPIPt4pCDyQRULHfhoih4t2qtJTqcwE17H8iMVPCahDX5eXcAAlk=
+	t=1751322375; cv=none; b=o4TMeyW7oywH5vH0aD++pX2YQA4D89UFk/12oh35LnXTx4ryb/Q5O9+HC4KHH6dDSjpBMzVaUehBh1DX9rn3QyLWuJCQqDOBpi8T397WjJyecircxOYddXJPXGaMMLxRN/q3FHpvmeuExNsxe9TiJEv0Dpvvjqa9qIlwl7K1oQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751322339; c=relaxed/simple;
-	bh=CNxK0279ukfbz74d9Orf//2RsynVo3ZY3ta36YHi0ZM=;
+	s=arc-20240116; t=1751322375; c=relaxed/simple;
+	bh=ywo5xG10qEL/PmGcJLop0F3WizcSPgoGQDCvcIqhRs0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P3X6nYrh6pRiORxo08u+xtE8d8woqVc2z+JLsHg49VS/Vu8QdkZeMIruB7m69gDxtba9qd7aD8qna9c1c9iLF7UbUNIFLBuai1uoBIS8SPgwaxIiHlc3csaqn+ivxfoOayUJ2kuBdkmuWXNZJRSFYUjJ8CGsuBk8qbl867ITyqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6QB3IW5; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z8TkyoWVtbwdN37/Pkvn0/pCRDT4tcAe1jRBEzfnk4K9W0UGxIelRZrnDGTdk/5J5zJ59u5vo2qAqlFMAcsap/CMnritcXv0xXq3puS7ffwg9wvfVm2cLw66SkuhH52abMeBfg2v/fBhwQX84ZBreOkdiPPIJk1ufYxMays2V80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Vg4u7wh3; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6QB3IW5"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6facc3b9559so36372536d6.0;
-        Mon, 30 Jun 2025 15:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751322335; x=1751927135; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMkTHKD3jio2hpq8BtE0DToF1CwksemxWLN6Z8dMYEk=;
-        b=c6QB3IW507XREmHj3sjfMGKKrRxndyqXRf1JS8IewcDA/DjlZZtn+k088KefDiyUn7
-         O1TxIPKZQgwsWuT3/JhwV3xyGzSXbYjgQKv+P2IXxVEgifZ3dPzdCJDRoI4QBindIk+O
-         DEVxQGe8PDvBUYdKUL/uwTn0/vX/RlaTB4ARQ2gWF3ZN9HZx+eRq4uiOTnlnRnB1+zc8
-         xt+zp03GIhLj8aRRNWZITEJnpBi71OwZjflFq+BcCB1lE1FCcXO+HnPAlfMHPSZ6Q8dW
-         QMRqPwi+nBFZkSgmJlZimYycCG9eP02ftkhjBOd1MuyTXvLWsZos6dNT7wJmXOFN8p1X
-         Ztlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751322335; x=1751927135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rMkTHKD3jio2hpq8BtE0DToF1CwksemxWLN6Z8dMYEk=;
-        b=pS5ORAhvp4o2lDdXOLQ09DFmnbCOvu91dxsxKNdthEC+fMvJ/BAnJ2eEOdEFcvpYK2
-         7R7N1HbKno+24VPy+AMb2EFhaWPrKetyoyyUxpDMsrxCr7GbifyBiXPPYZlVflwG4j8z
-         4DtcBzp0dMFEhBSay6w0AABdN/ak4nWkiE16DsobP9Ujp0a1WcUt+zuq7tawjb7XWzmR
-         EyrCTuR2p2Y1vGjGZkKeG4GXC4+6yFaPU1QK+Fuh3sU5XbkGb+h6zEHGVoElvhxLhl74
-         fMoHkmEliAD5DFVYzVsCGcfNgHD0lP1Mupxf47KA5Yt2ijd05JyamwYkHWRIO9YOP0I4
-         HI7g==
-X-Forwarded-Encrypted: i=1; AJvYcCW9TxMPrPDENEQfJsX40jEu6L/ZDFmZGaEqmHo0kFauD6HcBODREXrjBMMbm4Auzrv6UM4PpWW64g8RbPs=@vger.kernel.org, AJvYcCXwtLACxkDIhVJtNOa6ZD7b4CXsCemhlh2dIEjpexc07fQF0unKT1BRJ07BymvvdW85deI/WEzwu9ui@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxeOu6gi2r+ZviTUUbXxBg51qo0/2SmzLlQI8fXsz6o9zbaX23
-	usU00ld+nwmnamlmHXzlRbFT5SRVQbNCDv36+odgyIPCYtikt75xqhaz
-X-Gm-Gg: ASbGnctzDG2B9aAGJW1ZWXRIKewWboL4UlPVA1VEVbzN2RyHBxAgYkI16cJ9RiSKRUN
-	okIOhTNESv5ORP1ozrG0erJYFrPpObnNPiRdx4p1Qix//841UpTUz3uGFDzBxiIdkdxFFTjTTEX
-	26TFm8cErOQjOGj5JGwK4RzlroXYX75NjLGTry8FlZ1xc5SYSwn8HmpiMmHBzmk0VGWytAicACJ
-	2YnRcbH7D5filx+lGULrihImX6ZEmN414LbUQGqIzW0c4M5K0yp0g8xaYmPbp+TAbIBXkskvo43
-	XIqEblzd1gHnUyqoitsNcjj8LHW5+vZuUn17aWuWyGOWazWJkQ==
-X-Google-Smtp-Source: AGHT+IE4iPMoQHELkr+tznv/l/wb/8KLRUH+p7JvVVca5CKnURWz4GeCY3XtHhceEVufm737DrAHNQ==
-X-Received: by 2002:ad4:5ba5:0:b0:6fb:5249:59fe with SMTP id 6a1803df08f44-6ffed7a5653mr221531976d6.2.1751322335383;
-        Mon, 30 Jun 2025 15:25:35 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:4851::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e349dsm74788696d6.68.2025.06.30.15.25.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 15:25:34 -0700 (PDT)
-Date: Mon, 30 Jun 2025 19:25:28 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rick wertenbroek <rick.wertenbroek@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Valmantas Paliksa <walmis@gmail.com>, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH v9 4/4] phy: rockchip-pcie: Properly disable
- TEST_WRITE strobe signal
-Message-ID: <d514d5d5627680caafa8b7548cbdfee4307f5440.1751322015.git.geraldogabriel@gmail.com>
-References: <cover.1751322015.git.geraldogabriel@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Vg4u7wh3"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 5BA786A6;
+	Tue,  1 Jul 2025 00:25:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751322350;
+	bh=ywo5xG10qEL/PmGcJLop0F3WizcSPgoGQDCvcIqhRs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vg4u7wh3em1w7h5WWSduiae3z3bysZC8T8/famWZE6Xp/Q6iaorQ3d65BXNV9hygg
+	 WoSKN3PTtEUCDcybik5Db1+ypycyh0wsiKxDpmj3pHkCzokFKA2ZrBp9rCoJzmlHKs
+	 Ao4uw90bkpHqLqmBNwUct6mLuRMT1NzAGvRzUaIc=
+Date: Tue, 1 Jul 2025 01:25:46 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hansg@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Hans Verkuil <hans@jjverkuil.nl>
+Subject: Re: [PATCH v3 8/8] media: uvcvideo: uvc_v4l2_unlocked_ioctl: Invert
+ PM logic
+Message-ID: <20250630222546.GC15184@pendragon.ideasonboard.com>
+References: <20250630-uvc-grannular-invert-v3-0-abd5cb5c45b7@chromium.org>
+ <20250630-uvc-grannular-invert-v3-8-abd5cb5c45b7@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1751322015.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250630-uvc-grannular-invert-v3-8-abd5cb5c45b7@chromium.org>
 
-pcie_conf is used to touch TEST_WRITE strobe signal. This signal should
-be enabled, a little time waited, and then disabled. Current code clearly
-was copy-pasted and never disables the strobe signal. Adjust the define.
-While at it, remove PHY_CFG_RD_MASK which has been unused since
-64cdc0360811 ("phy: rockchip-pcie: remove unused phy_rd_cfg function").
+Hi Ricardo,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
----
- drivers/phy/rockchip/phy-rockchip-pcie.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On Mon, Jun 30, 2025 at 02:20:33PM +0000, Ricardo Ribalda wrote:
+> Instead of listing the IOCTLs that do not need to turn on the camera,
+> list the IOCTLs that need to turn it on. This makes the code more
+> maintainable.
+> 
+> This patch changes the behaviour for unsupported IOCTLs. Those IOCTLs
+> will not turn on the camera.
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index f22ffb41cdc2..4e2dfd01adf2 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -30,9 +30,8 @@
- #define PHY_CFG_ADDR_SHIFT    1
- #define PHY_CFG_DATA_MASK     0xf
- #define PHY_CFG_ADDR_MASK     0x3f
--#define PHY_CFG_RD_MASK       0x3ff
- #define PHY_CFG_WR_ENABLE     1
--#define PHY_CFG_WR_DISABLE    1
-+#define PHY_CFG_WR_DISABLE    0
- #define PHY_CFG_WR_SHIFT      0
- #define PHY_CFG_WR_MASK       1
- #define PHY_CFG_PLL_LOCK      0x10
+The idea is good, but you'll have to add UVCIOC_CTRL_MAP back (see 6/8).
+
+> Suggested-by: Hans Verkuil <hans@jjverkuil.nl>
+> Reviewed-by: Hans de Goede <hansg@kernel.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/uvc/uvc_v4l2.c | 52 +++++++++++++++++++---------------------
+>  1 file changed, 25 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 350cd2cc88f872d2e8bd19e2b8fb067894916364..94dc97448446d36a85a1b36d16c29f22af89c640 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -1222,37 +1222,35 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
+>  				    unsigned int cmd, unsigned long arg)
+>  {
+>  	struct uvc_fh *handle = file->private_data;
+> +	unsigned int converted_cmd = v4l2_translate_cmd(cmd);
+>  	int ret;
+>  
+> -	/* The following IOCTLs do not need to turn on the camera. */
+> -	switch (cmd) {
+> -	case UVCIOC_CTRL_MAP:
+> -	case VIDIOC_CREATE_BUFS:
+> -	case VIDIOC_DQBUF:
+> -	case VIDIOC_ENUM_FMT:
+> -	case VIDIOC_ENUM_FRAMEINTERVALS:
+> -	case VIDIOC_ENUM_FRAMESIZES:
+> -	case VIDIOC_ENUMINPUT:
+> -	case VIDIOC_EXPBUF:
+> -	case VIDIOC_G_FMT:
+> -	case VIDIOC_G_PARM:
+> -	case VIDIOC_G_SELECTION:
+> -	case VIDIOC_QBUF:
+> -	case VIDIOC_QUERYCAP:
+> -	case VIDIOC_REQBUFS:
+> -	case VIDIOC_SUBSCRIBE_EVENT:
+> -	case VIDIOC_UNSUBSCRIBE_EVENT:
+> -		return video_ioctl2(file, cmd, arg);
+> -	}
+> -
+> -	ret = uvc_pm_get(handle->stream->dev);
+> -	if (ret)
+> +	/* The following IOCTLs need to turn on the camera. */
+> +	switch (converted_cmd) {
+> +	case UVCIOC_CTRL_QUERY:
+> +	case VIDIOC_G_CTRL:
+> +	case VIDIOC_G_EXT_CTRLS:
+> +	case VIDIOC_G_INPUT:
+> +	case VIDIOC_QUERYCTRL:
+> +	case VIDIOC_QUERYMENU:
+> +	case VIDIOC_QUERY_EXT_CTRL:
+> +	case VIDIOC_S_CTRL:
+> +	case VIDIOC_S_EXT_CTRLS:
+> +	case VIDIOC_S_FMT:
+> +	case VIDIOC_S_INPUT:
+> +	case VIDIOC_S_PARM:
+> +	case VIDIOC_TRY_EXT_CTRLS:
+> +	case VIDIOC_TRY_FMT:
+> +		ret = uvc_pm_get(handle->stream->dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = video_ioctl2(file, cmd, arg);
+> +		uvc_pm_put(handle->stream->dev);
+>  		return ret;
+> +	}
+>  
+> -	ret = video_ioctl2(file, cmd, arg);
+> -
+> -	uvc_pm_put(handle->stream->dev);
+> -	return ret;
+> +	/* The other IOCTLs can run with the camera off. */
+> +	return video_ioctl2(file, cmd, arg);
+>  }
+>  
+>  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
+
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
