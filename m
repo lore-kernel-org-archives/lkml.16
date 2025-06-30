@@ -1,209 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155B91E32D6;
-	Mon, 30 Jun 2025 20:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8962C224225;
+	Mon, 30 Jun 2025 20:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751316977; cv=none; b=I1C9M5K6REYKz0LQpRzEUnpNy4uyTP6LMXkkAy+97pJ4I/F8uDD3UsD7FYttxEv14cALT/ymJ49FT1Q0hVvPx3tEIQ+6RrAX7TWEnJkG4lBRfiV/uZCa0ulKmxO73Hdo+NBlEmNbfGwF+maBp1sdiM+02eOlrICmb75JVjMHIu4=
+	t=1751317008; cv=none; b=gdHnz2RgQ6ywGEvToPupFlmasCPICcjoBw7rWyDurWjOrP6K2izQcrQ+I912+DcVrsNfcgUrqd/Z1rsbeMY0gGFNq0AZ68euG4G7gpLGReuEIAWD1q6kd8VZyLlU0fIpmSRko9ebWMB1aAMzgwgvJy+GXM2EF0imJWbClCBKbpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751316977; c=relaxed/simple;
-	bh=PO44svPAYFFi6GiqbWS4Fm1Ty0ssVHLymeJlTxwzafk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CVVNtiwdewpZkMn6DLggeld9XDg7QSwDSIQeqe/VJW1/vqLmp3cPTLPXjE1S7JzZcFd9eykaLN0fO+d1lhfKJzveJnBJdMETd1w0VqJRzIhp/CqYDgZ+knAccEWZcjx5nWYdw7QtoPyljwGcznmQzvx92tEt23bqWL7ZJ8fG6pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhKs9WPS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751317008; c=relaxed/simple;
+	bh=xcJj2Ho6aEt8FKDQN+GTeUbgQAvfBryq4Yyzc0joCRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PGehwwmUQadBG7FTKkrfoehvxhNc+HwAaAJQz0MCll2eEETGIikyCZNkxCEa7dr99hvD78sj2Fo3RPz/YbABJvHry3D04Dyf+ks2WiplSpHh+PSm0w1VsKoP+IISkgoMh7Syiu2LyZg8KKiZteaYLwVhwF2GyQ+mWNHbtiCsqDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEAEhQog; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhKs9WPS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8247EC4CEF7;
-	Mon, 30 Jun 2025 20:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751316975;
-	bh=PO44svPAYFFi6GiqbWS4Fm1Ty0ssVHLymeJlTxwzafk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HhKs9WPSntjrnVGvwtUXKtRXfRp7ZFQTMeoh2xdI+oPDKiaU8VWwMUVyewuWLutRg
-	 thNMMLiVjeUeK8jrFPHKkQyxzP2F2NksS+Un0A8qTqqrV8pBLyPcDk6KCv22zCVQYV
-	 qZ4FU2CVCJSancybT61fdQYX+fdRJEBBnLKiCvNU1+Q4l7zPtuANNbD94XMmClnpQc
-	 fl1gtL8ERG1fIzjVoe5OuU8vLVx1bKu7M3+zBmUIMmzC0EA6hJf/Xnu2pCN/sSbiII
-	 ck22XgFecXDsY2l7lnuGZhGrb+5aQiMIxfvnxQbH95E1q4CaoZnFLDAqHjLiwO3N5f
-	 WnRbpWKBx5XlA==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ae36e88a5daso506961166b.1;
-        Mon, 30 Jun 2025 13:56:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUkTJI/PPbxVrF73M3wqeC4KnBHg+bHY11A6mqOVP9b/rnnN76FTSkHTbW4AuYWDSv9sC6G7lg1dU/@vger.kernel.org, AJvYcCUYpIkAspNNTX9YxUvTjjHBOM2kGb8kYzA1vDqA3gMAbL5jk+Y1BYW5+obo9adTtSzjH+bqdn8K7WiKLJMA@vger.kernel.org, AJvYcCWFWSsIhdjidSvU/ZIU0PLMphtQd73qVz9KAU7f8bOZL+AYjWaxkHiKkPhhONgVUMZDWfidRUsL8u92@vger.kernel.org, AJvYcCWxp1pMinJYeeqyQmrNdOLp279XfvTM6xo9F7YuVlmVF0gjakPccYVf7KYJ4kdbE/Pp2k0wTvdXXJ4SUy8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp29YOz7PUDYlegOsFDuBGMXD3n5cJuUS3vWgyoaDBzWFp1uYE
-	wsTx8brXt4+/bNdJO8EnUXCVx22m2netZ1FDjSm/5xQwedKWmpKuo9wJwAfdroE47NpvI3ffLvp
-	05LIzowuU1sfpkQPB+GIIxH2O6HE0yw==
-X-Google-Smtp-Source: AGHT+IHN6KYVrLpEyM//LpRHGQ3ciilHAEEns6c2p0uRqrws7WdVXCCQfCRU6orJIR5QnGKwW7fUExXvkMdYX3eTq8k=
-X-Received: by 2002:a17:907:868b:b0:ad9:db54:ba47 with SMTP id
- a640c23a62f3a-ae350190c99mr1589912566b.43.1751316973962; Mon, 30 Jun 2025
- 13:56:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEAEhQog"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751317006; x=1782853006;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xcJj2Ho6aEt8FKDQN+GTeUbgQAvfBryq4Yyzc0joCRI=;
+  b=VEAEhQogdGCJy7/W40dOkAHOJmhpAz4w+3C1UBr7qQLXaCtYCKXK8HeI
+   +YV3mqbmN+SSFtyFEL4dze1+5BRyDiadRzOX9IsBbCCemcXLcE8pAjuxd
+   xpXCOsPgDqn2WVDv0FPcwzisIrXygu/DyOFB9yfcxDajqFCZ80Xg0+lTB
+   LkfaTDZT6kG2F1tZy2qUT8kocwVkFezTsigBpPkMpYuhw7uK3Dh8k/SRU
+   hDYw1GyTZtyE6+u1Rz1a2lXD4OvfAEjg1uMqIvC3LKNF2M9lixMOJDvuq
+   YI4JklJ66ng5F7KYQHIcuKLzW9lfjoIYlRzGqpMQZkZd8OV5Eo+utzJMA
+   Q==;
+X-CSE-ConnectionGUID: E42iXMyDRZaIqz8lwHC2Tw==
+X-CSE-MsgGUID: G+tKrZIYR+i1oPM0fM5mVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="64609661"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="64609661"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:56:45 -0700
+X-CSE-ConnectionGUID: ihL9zh0BQDard95Pi5cEOQ==
+X-CSE-MsgGUID: tOMaTQljQAyiYlx9GuZDCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="153042668"
+Received: from ldmartin-desk2.corp.intel.com (HELO localhost) ([10.124.221.227])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 13:56:46 -0700
+Date: Mon, 30 Jun 2025 13:56:44 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, srinivas.pandruvada@linux.intel.com, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, xi.pardee@linux.intel.com, 
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH V2 11/15] platform/x86/intel/vsec: Set OOBMSM to CPU
+ mapping
+Message-ID: <jccsjzzza6pdfaxzbtz5j6xydgyfv22pgviml4sdexatkux2h7@cr36qum7ksg7>
+References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
+ <20250617014041.2861032-12-david.e.box@linux.intel.com>
+ <9911d37b-eff6-2562-2e52-7bcd656186c0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net> <20250606-6-10-rocket-v7-4-dc16cfe6fe4e@tomeuvizoso.net>
-In-Reply-To: <20250606-6-10-rocket-v7-4-dc16cfe6fe4e@tomeuvizoso.net>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 30 Jun 2025 15:56:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJtKCXE0MLaBN5-r+w+2jVwt8UMwHtr-nP0PoBmfNodpg@mail.gmail.com>
-X-Gm-Features: Ac12FXy8hWxpEFoW3ELH4IZXVQDuQYuBeJxvmHd6gayxY_Y6diMDIDxJ1A0GBAM
-Message-ID: <CAL_JsqJtKCXE0MLaBN5-r+w+2jVwt8UMwHtr-nP0PoBmfNodpg@mail.gmail.com>
-Subject: Re: [PATCH v7 04/10] accel/rocket: Add job submission IOCTL
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Daniel Stone <daniel@fooishbar.org>, Da Xue <da@libre.computer>, 
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9911d37b-eff6-2562-2e52-7bcd656186c0@linux.intel.com>
 
-On Fri, Jun 6, 2025 at 1:29=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net>=
- wrote:
->
-> Using the DRM GPU scheduler infrastructure, with a scheduler for each
-> core.
->
-> Userspace can decide for a series of tasks to be executed sequentially
-> in the same core, so SRAM locality can be taken advantage of.
->
-> The job submission code was initially based on Panfrost.
->
-> v2:
-> - Remove hardcoded number of cores
-> - Misc. style fixes (Jeffrey Hugo)
-> - Repack IOCTL struct (Jeffrey Hugo)
->
-> v3:
-> - Adapt to a split of the register block in the DT bindings (Nicolas
->   Frattaroli)
-> - Make use of GPL-2.0-only for the copyright notice (Jeff Hugo)
-> - Use drm_* logging functions (Thomas Zimmermann)
-> - Rename reg i/o macros (Thomas Zimmermann)
-> - Add padding to ioctls and check for zero (Jeff Hugo)
-> - Improve error handling (Nicolas Frattaroli)
->
-> v6:
-> - Use mutexes guard (Markus Elfring)
-> - Use u64_to_user_ptr (Jeff Hugo)
-> - Drop rocket_fence (Rob Herring)
->
-> v7:
-> - Assign its own IOMMU domain to each client, for isolation (Daniel
->   Stone and Robin Murphy)
->
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> ---
+On Mon, Jun 30, 2025 at 02:55:41PM +0300, Ilpo Järvinen wrote:
+> On Mon, 16 Jun 2025, David E. Box wrote:
+> 
+> > Add functions, intel_vsec_set/get_mapping(), to set and retrieve the
+> > OOBMSM-to-CPU mapping data in the private data of the parent Intel VSEC
+> > driver. With this mapping information available, other Intel VSEC features
+> > on the same OOBMSM device can easily access and use the mapping data,
+> > allowing each of the OOBMSM features to map to the CPUs they provides data
+> > for.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > 
+> > Changes in v2:
+> >   - No changes
+> > 
+> >  drivers/platform/x86/intel/vsec.c | 31 +++++++++++++++++++++++++++++++
+> >  include/linux/intel_vsec.h        | 14 ++++++++++++++
+> >  2 files changed, 45 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> > index 98f570a389c6..8c330b57e4d4 100644
+> > --- a/drivers/platform/x86/intel/vsec.c
+> > +++ b/drivers/platform/x86/intel/vsec.c
+> > @@ -43,6 +43,7 @@ enum vsec_device_state {
+> >  struct vsec_priv {
+> >  	struct intel_vsec_platform_info *info;
+> >  	struct device *suppliers[VSEC_FEATURE_COUNT];
+> > +	struct oobmsm_plat_info plat_info;
+> >  	enum vsec_device_state state[VSEC_FEATURE_COUNT];
+> >  	unsigned long found_caps;
+> >  };
+> > @@ -660,6 +661,36 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+> >  	return 0;
+> >  }
+> >  
+> > +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> > +			   struct intel_vsec_device *vsec_dev)
+> > +{
+> > +	struct vsec_priv *priv;
+> > +
+> > +	priv = pci_get_drvdata(vsec_dev->pcidev);
+> > +	if (!priv)
+> > +		return -EINVAL;
+> > +
+> > +	priv->plat_info = *plat_info;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(intel_vsec_set_mapping, "INTEL_VSEC");
+> > +
+> > +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> > +{
+> > +	struct vsec_priv *priv;
+> > +
+> > +	if (!pci_match_id(intel_vsec_pci_ids, pdev))
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	priv = pci_get_drvdata(pdev);
+> > +	if (!priv)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	return &priv->plat_info;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(intel_vsec_get_mapping, "INTEL_VSEC");
+> > +
+> >  /* DG1 info */
+> >  static struct intel_vsec_header dg1_header = {
+> >  	.length = 0x10,
+> > diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> > index cd78d0b2e623..b15155ff1154 100644
+> > --- a/include/linux/intel_vsec.h
+> > +++ b/include/linux/intel_vsec.h
+> > @@ -170,6 +170,8 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+> >  		       struct intel_vsec_device *intel_vsec_dev,
+> >  		       const char *name);
+> >  
+> > +int intel_vsec_suppliers_ready(struct intel_vsec_device *vsec_dev,
+> > +			       unsigned long needs);
+> 
+> There's no code for this anywhere in the series??
 
-[...]
+You're right. This is a leftover from an earlier revision that was dropped
+during rework. It should be removed from the header. I’ll clean it up in the
+next version.
 
-> --- a/include/uapi/drm/rocket_accel.h
-> +++ b/include/uapi/drm/rocket_accel.h
-> @@ -12,8 +12,10 @@ extern "C" {
->  #endif
->
->  #define DRM_ROCKET_CREATE_BO                   0x00
-> +#define DRM_ROCKET_SUBMIT                      0x01
->
->  #define DRM_IOCTL_ROCKET_CREATE_BO             DRM_IOWR(DRM_COMMAND_BASE=
- + DRM_ROCKET_CREATE_BO, struct drm_rocket_create_bo)
-> +#define DRM_IOCTL_ROCKET_SUBMIT                        DRM_IOW(DRM_COMMA=
-ND_BASE + DRM_ROCKET_SUBMIT, struct drm_rocket_submit)
->
->  /**
->   * struct drm_rocket_create_bo - ioctl argument for creating Rocket BOs.
-> @@ -37,6 +39,68 @@ struct drm_rocket_create_bo {
->         __u64 offset;
->  };
->
-> +/**
-> + * struct drm_rocket_task - A task to be run on the NPU
-> + *
-> + * A task is the smallest unit of work that can be run on the NPU.
-> + */
-> +struct drm_rocket_task {
-> +       /** Input: DMA address to NPU mapping of register command buffer =
-*/
-> +       __u64 regcmd;
-> +
-> +       /** Input: Number of commands in the register command buffer */
-> +       __u32 regcmd_count;
-> +
-> +       /** Reserved, must be zero. */
-> +       __u32 reserved;
-> +};
-> +
-> +/**
-> + * struct drm_rocket_job - A job to be run on the NPU
-> + *
-> + * The kernel will schedule the execution of this job taking into accoun=
-t its
-> + * dependencies with other jobs. All tasks in the same job will be execu=
-ted
-> + * sequentially on the same core, to benefit from memory residency in SR=
-AM.
-> + */
-> +struct drm_rocket_job {
-> +       /** Input: Pointer to an array of struct drm_rocket_task. */
-> +       __u64 tasks;
-> +
-> +       /** Input: Pointer to a u32 array of the BOs that are read by the=
- job. */
-> +       __u64 in_bo_handles;
-> +
-> +       /** Input: Pointer to a u32 array of the BOs that are written to =
-by the job. */
-> +       __u64 out_bo_handles;
-> +
-> +       /** Input: Number of tasks passed in. */
-> +       __u32 task_count;
-> +
-> +       /** Input: Number of input BO handles passed in (size is that tim=
-es 4). */
-> +       __u32 in_bo_handle_count;
-> +
-> +       /** Input: Number of output BO handles passed in (size is that ti=
-mes 4). */
-> +       __u32 out_bo_handle_count;
-> +
-> +       /** Reserved, must be zero. */
-> +       __u32 reserved;
-> +};
-> +
-> +/**
-> + * struct drm_rocket_submit - ioctl argument for submitting commands to =
-the NPU.
-> + *
-> + * The kernel will schedule the execution of these jobs in dependency or=
-der.
-> + */
-> +struct drm_rocket_submit {
-> +       /** Input: Pointer to an array of struct drm_rocket_job. */
-> +       __u64 jobs;
-> +
-> +       /** Input: Number of jobs passed in. */
-> +       __u32 job_count;
-
-Isn't there a problem if you need to expand drm_rocket_job beyond
-using the 1 reserved field? You can't add to the struct because then
-you don't know the size here. So you have to modify drm_rocket_submit
-to modify drm_rocket_job. Maybe better if you plan for that now rather
-than later by making the size explicit.
-
-Though etnaviv at least has similar issues.
-
-Rob
-
-> +
-> +       /** Reserved, must be zero. */
-> +       __u32 reserved;
-> +};
+David
+> 
+> >  static inline struct intel_vsec_device *dev_to_ivdev(struct device *dev)
+> >  {
+> >  	return container_of(dev, struct intel_vsec_device, auxdev.dev);
+> > @@ -183,11 +185,23 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
+> >  #if IS_ENABLED(CONFIG_INTEL_VSEC)
+> >  int intel_vsec_register(struct pci_dev *pdev,
+> >  			 struct intel_vsec_platform_info *info);
+> > +int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> > +			   struct intel_vsec_device *vsec_dev);
+> > +struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev);
+> >  #else
+> >  static inline int intel_vsec_register(struct pci_dev *pdev,
+> >  				       struct intel_vsec_platform_info *info)
+> >  {
+> >  	return -ENODEV;
+> >  }
+> > +static inline int intel_vsec_set_mapping(struct oobmsm_plat_info *plat_info,
+> > +					 struct intel_vsec_device *vsec_dev)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pdev)
+> > +{
+> > +	return ERR_PTR(-ENODEV);
+> > +}
+> >  #endif
+> >  #endif
+> > 
+> 
+> -- 
+>  i.
+> 
+> 
