@@ -1,252 +1,138 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA3623E358;
-	Mon, 30 Jun 2025 10:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CE72580FB
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279188; cv=none; b=inhWksVm9AqXFJpogfCuh2ONpCkQnNACTYINpKy4IHmbUcrwwY4Ohcc4tYHout1aoLQ6r9WQTAtnqZtlRKxyuJp2kPNtYxJoamlKj1Gn1XZz0F3FMwZsaq8ATqXm8S0UIzrfIQFZU2rExxjwHvNpWnxlwQlqEgBh6r9vR8Q/dJk=
+	t=1751279206; cv=none; b=Hfp1fPJqEazCTmBR+MAulac/V0FrWILJ3jCN17zIMnUuCNGEbKHVfdbBJuJtm+GuXW367YzeKOC4o2ML3KgQpNbPjJdntVynVfjnt5GAk0yUgMZ7K153JILfCAR9g4cr1HSZE7wKuOlDu4BNnUNqho1zA9kwapeBArChpLBJ6lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279188; c=relaxed/simple;
-	bh=SN/vAaTyYzDQhlYaCs17NxtmkAdA7yz8PzP/EMg93rU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eWuedIjAp2aeVnuM/u0Wkl5bzmu54mEX6vWRis3su42oT/A+kOYYNgMrC7uadhxuyMxrUBhieh0UkiT2G/JvimzC+zjhliyh4z/qaJPyB7jSRU6M2986F7sO4Q3ffLN1Z7FMEdB1BxBXTX6qh4pXkExXRN+abq6XEQgqZoM/Tcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iGKH7SSu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RpAIem8w; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751279206; c=relaxed/simple;
+	bh=lP9cZ5ZVd213PgYvBxRjMQzsYmVuhyx9RNU0p02YOoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OvGBYdR4igamwkdRt+Nxa4MSUxyAynSYXLy7eHEmD/uiHB6QUKlWNo/xZq6c8YHrEW1QwiKb+sclI1jQ0nLN5X8oS+o7V8Qw+NJyrD3Zv667OnHjeWl5/2+PLnfKfgDpHdKO4nuOABn+lJyMzEn/apAOWNbAvxKxqD4uFedL74w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fPfesW2j; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iGKH7SSu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RpAIem8w"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751279184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yOUQVm3BJSm9B+6JOLgVfo34U1Tc6lgjFygyierZSZw=;
-	b=iGKH7SSu5vTHFP3nzhuB20bzyZTsOW9E1xKpfukwX7bxPa0JrjurRxDvgse5kXbR8G8Dmy
-	izAKLMJjCm7s9YR/V+7/YVOZ24kFGnA/V+JePBHXWCy7rTOcGjS9gxLiiBO30y4dnIpeVW
-	LDxTGsDNqnXl5XUclMq85kBdhNjx2j7nwI0yDwlm7+rkScg3s3guckB5umcMJmBgHme1En
-	0tDmpGR+3U0O61MOVFrQhqUNk2gy/oQjiWYjBQz5mTG44aMlmz4hVW9ZTGTEYtjY0nd2uD
-	z1Q6c4zEnoo/fnQjuJodGYQIlrMwk1s1rHHEGv4Cgu52piSntrnbsGrGtV7NBg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751279184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yOUQVm3BJSm9B+6JOLgVfo34U1Tc6lgjFygyierZSZw=;
-	b=RpAIem8wcOs3dVEz+DJK+TMZ79X8xVp2FthISR5jXA7X4CbIDrWYRkyCdgBA5efRL1zLbS
-	FOHhJ+FjGVzNCiCQ==
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v2 2/2] x86/hyperv: Switch to msi_create_parent_irq_domain()
-Date: Mon, 30 Jun 2025 12:26:15 +0200
-Message-Id: <5c0ada725449176dfeeb1f7aa98c324066c39d2c.1751277765.git.namcao@linutronix.de>
-In-Reply-To: <cover.1751277765.git.namcao@linutronix.de>
-References: <cover.1751277765.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fPfesW2j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751279206; x=1782815206;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lP9cZ5ZVd213PgYvBxRjMQzsYmVuhyx9RNU0p02YOoU=;
+  b=fPfesW2j89FgU9T2NtE++pAB/wY7F9nYLJSE8cu/g+95rKdoM6I2GP5L
+   X82b82zVfgnXmGANbsRoueChkG/d0wVRI2DmMgpjzXZJ5aT5z3W5tbsNH
+   TZkJj1JLT/1SnOJsf2+F9mV9y+NDJU7dX+O4nLqthOrDClXLAUZAcrV1y
+   X43o/LFVCR9cG8Shh5C9ZAh99GzB6noLH9nZu3dQq5sQp30cNBO3IEy6o
+   TmQ34mRsd98Ij3ef+Oc0oVEm6rj949xqcEcIVXtH/A+NmAPvQt/KJ9urj
+   h5gtmzHIe9kVD4DoYhrew3ee271Tv5nCXHqw+PjMuKfxYjCfBd8R7FxT0
+   A==;
+X-CSE-ConnectionGUID: CZh3T9sfRweohpKnXch1DQ==
+X-CSE-MsgGUID: DnPl9310TDWt9o/UJyptyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53649399"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53649399"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 03:26:45 -0700
+X-CSE-ConnectionGUID: 6QCD6s3aRCuhF1tFyrQ++Q==
+X-CSE-MsgGUID: ifNOHc7BR3KyP2lv8WUJbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="152900050"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 30 Jun 2025 03:26:41 -0700
+Date: Mon, 30 Jun 2025 18:18:50 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "jgg@nvidia.com" <jgg@nvidia.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"will@kernel.org" <will@kernel.org>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"aik@amd.com" <aik@amd.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"Xu, Yilun" <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 2/5] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <aGJkitx6wjfQ888t@yilunxu-OptiPlex-7050>
+References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
+ <20250627033809.1730752-3-yilun.xu@linux.intel.com>
+ <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL1PR11MB52712CE938B57E41C34580908C46A@BL1PR11MB5271.namprd11.prod.outlook.com>
 
-Move away from the legacy MSI domain setup, switch to use
-msi_create_parent_irq_domain().
+On Mon, Jun 30, 2025 at 06:27:51AM +0000, Tian, Kevin wrote:
+> > From: Xu Yilun <yilun.xu@linux.intel.com>
+> > Sent: Friday, June 27, 2025 11:38 AM
+> > 
+> > +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
+> > +{
+> > +	struct iommufd_vdevice *vdev;
+> > +
+> > +	mutex_lock(&idev->igroup->lock);
+> > +	/* vdev has been completely destroyed by userspace */
+> > +	if (!idev->vdev)
+> > +		goto out_unlock;
+> > +
+> > +	vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
+> > +	if (IS_ERR(vdev)) {
+> > +		/*
+> > +		 * vdev is removed from xarray by userspace, but is not
+> > +		 * destroyed/freed. Since iommufd_vdevice_abort() is
+> > reentrant,
+> > +		 * safe to destroy vdev here.
+> > +		 */
+> > +		iommufd_vdevice_abort(&idev->vdev->obj);
+> > +		goto out_unlock;
+> > +	}
+> 
+> let's add a comment that vdev is still freed in iommufd_destroy()
+> in this situation.
 
-While doing the conversion, I noticed that hv_irq_compose_msi_msg() is
-doing more than it is supposed to (composing message content). The
-interrupt allocation bits should be moved into hv_msi_domain_alloc().
-However, I have no hardware to test this change, therefore I leave a TODO
-note.
+Yes.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- arch/x86/hyperv/irqdomain.c | 111 ++++++++++++++++++++++++------------
- drivers/hv/Kconfig          |   1 +
- 2 files changed, 77 insertions(+), 35 deletions(-)
+> 
+> > -void iommufd_vdevice_destroy(struct iommufd_object *obj)
+> > +void iommufd_vdevice_abort(struct iommufd_object *obj)
+> >  {
+> >  	struct iommufd_vdevice *vdev =
+> >  		container_of(obj, struct iommufd_vdevice, obj);
+> >  	struct iommufd_viommu *viommu = vdev->viommu;
+> > +	struct iommufd_device *idev = vdev->idev;
+> > +
+> > +	lockdep_assert_held(&idev->igroup->lock);
+> > +
+> > +	/*
+> > +	 * iommufd_vdevice_abort() could be reentrant, by
+> > +	 * iommufd_device_unbind() or by iommufd_destroy(). Cleanup only
+> > once.
+> > +	 */
+> > +	if (!viommu)
+> > +		return;
+> 
+> Just check idev->vdev, to be consistent with the other path.
 
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 31f0d29cbc5e3..9b3b65ffbd2e2 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -10,6 +10,7 @@
-=20
- #include <linux/pci.h>
- #include <linux/irq.h>
-+#include <linux/irqchip/irq-msi-lib.h>
- #include <asm/mshyperv.h>
-=20
- static int hv_map_interrupt(union hv_device_id device_id, bool level,
-@@ -276,59 +277,99 @@ static void hv_teardown_msi_irq(struct pci_dev *dev, =
-struct irq_data *irqd)
- 		hv_status_err(status, "\n");
- }
-=20
--static void hv_msi_free_irq(struct irq_domain *domain,
--			    struct msi_domain_info *info, unsigned int virq)
--{
--	struct irq_data *irqd =3D irq_get_irq_data(virq);
--	struct msi_desc *desc;
--
--	if (!irqd)
--		return;
--
--	desc =3D irq_data_get_msi_desc(irqd);
--	if (!desc || !desc->irq || WARN_ON_ONCE(!dev_is_pci(desc->dev)))
--		return;
--
--	hv_teardown_msi_irq(to_pci_dev(desc->dev), irqd);
--}
--
- /*
-  * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
-  * which implement the MSI or MSI-X Capability Structure.
-  */
- static struct irq_chip hv_pci_msi_controller =3D {
- 	.name			=3D "HV-PCI-MSI",
--	.irq_unmask		=3D pci_msi_unmask_irq,
--	.irq_mask		=3D pci_msi_mask_irq,
- 	.irq_ack		=3D irq_chip_ack_parent,
--	.irq_retrigger		=3D irq_chip_retrigger_hierarchy,
- 	.irq_compose_msi_msg	=3D hv_irq_compose_msi_msg,
--	.irq_set_affinity	=3D msi_domain_set_affinity,
--	.flags			=3D IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MOVE_DEFERRED,
-+	.irq_set_affinity	=3D irq_chip_set_affinity_parent,
- };
-=20
--static struct msi_domain_ops pci_msi_domain_ops =3D {
--	.msi_free		=3D hv_msi_free_irq,
--	.msi_prepare		=3D pci_msi_prepare,
-+static bool hv_init_dev_msi_info(struct device *dev, struct irq_domain *do=
-main,
-+				 struct irq_domain *real_parent, struct msi_domain_info *info)
-+{
-+	struct irq_chip *chip =3D info->chip;
-+
-+	if (!msi_lib_init_dev_msi_info(dev, domain, real_parent, info))
-+		return false;
-+
-+	chip->flags |=3D IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MOVE_DEFERRED;
-+
-+	info->ops->msi_prepare =3D pci_msi_prepare;
-+
-+	return true;
-+}
-+
-+#define HV_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK | MSI_FLAG_PCI_MSIX)
-+#define HV_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF=
-_CHIP_OPS)
-+
-+static struct msi_parent_ops hv_msi_parent_ops =3D {
-+	.supported_flags	=3D HV_MSI_FLAGS_SUPPORTED,
-+	.required_flags		=3D HV_MSI_FLAGS_REQUIRED,
-+	.bus_select_token	=3D DOMAIN_BUS_NEXUS,
-+	.bus_select_mask	=3D MATCH_PCI_MSI,
-+	.chip_flags		=3D MSI_CHIP_FLAG_SET_ACK,
-+	.prefix			=3D "HV-",
-+	.init_dev_msi_info	=3D hv_init_dev_msi_info,
- };
-=20
--static struct msi_domain_info hv_pci_msi_domain_info =3D {
--	.flags		=3D MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--			  MSI_FLAG_PCI_MSIX,
--	.ops		=3D &pci_msi_domain_ops,
--	.chip		=3D &hv_pci_msi_controller,
--	.handler	=3D handle_edge_irq,
--	.handler_name	=3D "edge",
-+static int hv_msi_domain_alloc(struct irq_domain *d, unsigned int virq, un=
-signed int nr_irqs,
-+			       void *arg)
-+{
-+	/*
-+	 * TODO: The allocation bits of hv_irq_compose_msi_msg(), i.e. everything=
- except
-+	 * entry_to_msi_msg() should be in here.
-+	 */
-+
-+	int ret;
-+
-+	ret =3D irq_domain_alloc_irqs_parent(d, virq, nr_irqs, arg);
-+	if (ret)
-+		return ret;
-+
-+	for (int i =3D 0; i < nr_irqs; ++i) {
-+		irq_domain_set_info(d, virq + i, 0, &hv_pci_msi_controller, NULL,
-+				    handle_edge_irq, NULL, "edge");
-+	}
-+	return 0;
-+}
-+
-+static void hv_msi_domain_free(struct irq_domain *d, unsigned int virq, un=
-signed int nr_irqs)
-+{
-+	for (int i =3D 0; i < nr_irqs; ++i) {
-+		struct irq_data *irqd =3D irq_domain_get_irq_data(d, virq);
-+		struct msi_desc *desc;
-+
-+		desc =3D irq_data_get_msi_desc(irqd);
-+		if (!desc || !desc->irq || WARN_ON_ONCE(!dev_is_pci(desc->dev)))
-+			continue;
-+
-+		hv_teardown_msi_irq(to_pci_dev(desc->dev), irqd);
-+	}
-+	irq_domain_free_irqs_top(d, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops hv_msi_domain_ops =3D {
-+	.select	=3D msi_lib_irq_domain_select,
-+	.alloc	=3D hv_msi_domain_alloc,
-+	.free	=3D hv_msi_domain_free,
- };
-=20
- struct irq_domain * __init hv_create_pci_msi_domain(void)
- {
- 	struct irq_domain *d =3D NULL;
--	struct fwnode_handle *fn;
-=20
--	fn =3D irq_domain_alloc_named_fwnode("HV-PCI-MSI");
--	if (fn)
--		d =3D pci_msi_create_irq_domain(fn, &hv_pci_msi_domain_info, x86_vector_=
-domain);
-+	struct irq_domain_info info =3D {
-+		.fwnode		=3D irq_domain_alloc_named_fwnode("HV-PCI-MSI"),
-+		.ops		=3D &hv_msi_domain_ops,
-+		.parent		=3D x86_vector_domain,
-+	};
-+
-+	if (info.fwnode)
-+		d =3D msi_create_parent_irq_domain(&info, &hv_msi_parent_ops);
-=20
- 	/* No point in going further if we can't get an irq domain */
- 	BUG_ON(!d);
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 1cd188b73b743..e62a0f8b34198 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -10,6 +10,7 @@ config HYPERV
- 	select X86_HV_CALLBACK_VECTOR if X86
- 	select OF_EARLY_FLATTREE if OF
- 	select SYSFB if !HYPERV_VTL_MODE
-+	select IRQ_MSI_LIB if X86
- 	help
- 	  Select this option to run Linux as a Hyper-V client operating
- 	  system.
---=20
-2.39.5
+I think there is problem here. From your comments above, vdev could be
+aborted/destroyed by iommufd_destroy() again *after* idev is freed.
+That means in iommufd_vdevice_abort/destroy(), usage of vdev->idev or
+idev->vdev or vdev->idev->igroup->lock may be invalid.
+
+I need to reconsider this, seems we need a dedicated vdev lock to
+synchronize concurrent vdev abort/destroy.
+
+Thanks,
+Yilun
 
