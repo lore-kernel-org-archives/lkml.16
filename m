@@ -1,206 +1,119 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008982620F5;
-	Mon, 30 Jun 2025 18:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024391F0985
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 18:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751309082; cv=none; b=gG0w62q3+Bx3MSBW1oyRVwS+u3KYIFmRC0qtrGK6XVbh5DN0xGSzntgWDsbrDCUApP57AtG5oCkTo7ca3ECUXwxf0aCfHXrzxvgn97ouMuczeVsUhTble7vWgy+s3xxbaI4J6iP+UEX6DJS31jGmNt8wMznLGgmRb2FTzBKiEJ0=
+	t=1751309256; cv=none; b=YCFUF0WPOg3ISAdPPbVNkDfFxJMdMw6K++o8donmNg9rAnlifh5i9bsoO10BjhqlcFJEGgk8elaRUAN+LzabCV1ugZW1iMkiWRr1bgwSV6McwmHkqnGH05i3Gl5lzY9pzai325yhSvtvIHPL+tRsqoZ1vjbL6jkfl3G4hUhtcWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751309082; c=relaxed/simple;
-	bh=BNFWjlM83+wcoO+zJSYBmQXLGTNTc67RpeUwcFQhdU4=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=K+kt+U6shL+NfpOh5aEKVYPwBqBSl2LIh1Kt1RIL04PYTaUkG1a2KDB5NO7VJBw38JbFFNC6qBuW86/RUCbiAMEXrD1Gx55LIcvrownF0XJjQDIuMbRct7rGcrHzML/xJ+IMvHE1FSvUrE3QKgdanhFEPWkn9z9JRS2Lqy33eG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=LW6K0Q+e; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751309256; c=relaxed/simple;
+	bh=9cK6Eq4nefv/GghvD5HJZDoT7MsabKRb3dFtA7O/Kv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=juCwbFZZzQN9C0kaBSv9o3j2MITSGePp6KAbFEqht2AppE/4JQ7PtovSfmFXp14Tshm436YwMqkuyhjCfb1TT/FVyfloKurD9Xw+MctxHhvbXlUkT0s05cjiDQfpbMeWVuTv6CZN+uXKXMICiFPrnVYK8nA1LvCqgIbCqY79d58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dqQsoEFo; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="LW6K0Q+e"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 04F592061D;
-	Mon, 30 Jun 2025 20:44:36 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id OZkhyB3FWL8e; Mon, 30 Jun 2025 20:44:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751309074; bh=BNFWjlM83+wcoO+zJSYBmQXLGTNTc67RpeUwcFQhdU4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=LW6K0Q+eEJWWZqtuX2/Ong2KAgSekLogAKyAINQBmoE+pEqt+fEi+Hkb5aWe5XYli
-	 tqjjenxUsGb81afnJR6Kl1sxS8rFu+tExL0IBosOWz6c1nlVnsGpu8/hi2DRGbcjUH
-	 rrVs5IhvgrAAVuhr5tcOjqVlezmcKJQvN8gndQ3UdGhqo/+OVs7Vr4NzwzC8tGybGw
-	 +hG1WvOFdkJzPvysSCZ+8cWcuGafHMEVJPPRXFGQoXfi5SN3wQGzTVfKuHK6QOSot+
-	 +aFviXNBzZEc+npZQHOu/Dt4VE8fGTBBgnVG2SRD43BTjLC1ycR+gtZpRdJFzyRVt+
-	 AqBBvZ9R4OTsg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqQsoEFo"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a522224582so2509408f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751309253; x=1751914053; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bWCDZE0FTIR1xBnsspCUs5W2BaZP5zicVS/tsUtWrIE=;
+        b=dqQsoEFoa82EpqIFpgtn3aQm1tPlXr6oDbuuzngBefn04unAG3zXdGZ+3niZ9PWBNH
+         8jl4L9BjQXHCj01HZm5xHbeEE3g0s/NpCpmLqw5RA5Ci6inJIETsWI48fTCtefPUydLa
+         R0b6Yj4nHSnsmx33TmCfmsyzdXtVGtsguSu0J9dG6q44mK5g0nyEZMmZdB3/jXsE4BLh
+         GXHnuTMks6Tqk1rMacCd9Hd3+b4IpxKPk7iTDdoMquTEyO97Lt/2jWA0eBjE01gVV98x
+         Mlp7P8ewrGx4DGYPCsoa79/0YZI5a9WOREN7XpYxv/lznUMOba+tKeoQ81Pt4HuxS6Xx
+         MvxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751309253; x=1751914053;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bWCDZE0FTIR1xBnsspCUs5W2BaZP5zicVS/tsUtWrIE=;
+        b=f1+qw+DNhQTA/M8xXyIQFJPgYEgrqyLw/sJYhIGiRQY60BIztkUg8YcbxrJTLEMYzV
+         eK8eMsEruoSB015Kvr2H+asIKYXQDyaL/Gy1yvnLCXp/T7iS//gtLEQImV7HKLe9Iv/3
+         arhQnJuZleGrfDwg2vJeWg0rLqP+nGVd6pn9EZP+Dv+CPdg9vSkvdEL9KqxpMVq9y5kH
+         qADGMl0KKBE4mrBcuVOw4j7v/vHKBj2iH7uy5WIyHvaduFT61AwCUQAaFlTULxTIq7/4
+         JRzE1pm5DocAbdCVPWnESatU5d4nnL1FdjbCVLzI15pwDABFnAZqRzm/FNsMkYDY5R2o
+         WOTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUuYUp3Ez9tNnNSFwUrkXrqGww9D8IGofVy0D8LmO3e/M3WP8cFTI7rAEc/o9jmzAFhJwk8Cewi+wHbQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbgVNkGYTxcXQ1+QEUpV0/D4ZUXrzGYBtvs/TFQJntrVth9coF
+	M5iAoNiJk4xMrhcG5WJGRyR7Re1aCImfBwgfJErYq8lr1RG9ZGzg7CkW
+X-Gm-Gg: ASbGnctGA+qkyObfHcZHETdYTIYemeCnnV7mcBsvHQnlUlu4n1jp5Cb9eWyww50Bk7g
+	IWKAhQSgaDqLuv1r+ZAiPZPKe+yKBhPKpYwwYM7BfNdT93Yw6n8XPYLNEH9AKxkWe8a7XG68neZ
+	+dIiv/MTdHVbTohAdBC4BIlr9M3NHVcxe8LcWfu8SLuHNuWyC793pSJvi0xYzGu/vSL8Z7JVpk4
+	+zpC8ZSco9HdrXIGkeINScyHv/2TBR1Go9EQBm+ACAPPOdztMpudZZQfI9XmGa9JY2XTsbsL3O5
+	X2bQHvWgUCDhRZZQhVSqvfo4JWj9bCOb92jCadAVl4nTWMWdPb5dvyHvih9d6RPPfJdSTb9Tdqc
+	ji0TA8g==
+X-Google-Smtp-Source: AGHT+IFO2osZbMXuKWxvWyX9Foircyi48OTYoE9MHLpj0kcKgEMymDAzwhFfHneslieiNv0usMhi0w==
+X-Received: by 2002:a05:6000:648:b0:3a8:30b8:cb93 with SMTP id ffacd0b85a97d-3a8ffccac71mr11268712f8f.32.1751309253100;
+        Mon, 30 Jun 2025 11:47:33 -0700 (PDT)
+Received: from cachyos.customer.ask4.lan ([89.26.177.221])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fa751sm205862f8f.25.2025.06.30.11.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 11:47:32 -0700 (PDT)
+From: Marcos Garcia <magazo2005@gmail.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	mingo@redhat.com,
+	peterz@infradead.org
+Cc: arighi@nvidia.com,
+	changwoo@igalia.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	sched-ext@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Marcos Garcia <magazo2005@gmail.com>
+Subject: [PATCH sched/ext v2] sched/ext: Implement cgroup idle state notification
+Date: Mon, 30 Jun 2025 20:47:09 +0200
+Message-ID: <20250630184709.3831581-1-magazo2005@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 30 Jun 2025 18:44:34 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sangwon Jee <jeesw@melfas.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Henrik
- Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 3/5] Input: melfas-mip4 - add support for touchkey
- input events
-In-Reply-To: <ugwy3adqmxodsyhohpdv337lvbxpdzhgtojpbtrykkuyf2eivl@sl36qsvcju6v>
-References: <20250613-mip4-touchkey-v2-0-9bbbe14c016d@disroot.org>
- <20250613-mip4-touchkey-v2-3-9bbbe14c016d@disroot.org>
- <ugwy3adqmxodsyhohpdv337lvbxpdzhgtojpbtrykkuyf2eivl@sl36qsvcju6v>
-Message-ID: <e480fbc14bae5e2e24f2fec3d7be308c@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-29 05:12, Dmitry Torokhov wrote:
-> Hi Kaustabh,
-> 
-> On Fri, Jun 13, 2025 at 01:11:35AM +0530, Kaustabh Chakraborty wrote:
->> The MIP4 protocol are supposed to support touchscreens, touchkeys, and
->> combo-devices. The driver handles touchscreen events, but touchkey
->> events are unimplemented.
-> 
-> I am confused, because I clearly see the driver parsing and forwarding
-> key events. It appears that this patch adds the ability to set the
-> keymap via device tree instead of relying on userspace to load it.
+Add scx_group_set_idle() to notify BPF schedulers when task groups become
+idle or active. This enables schedulers to:
+- Optimize resource allocation for inactive cgroups
+- Implement power-saving policies
+- Improve load balancing decisions
 
-Yeah, you're correct. Though I'm not sure this is the correct way to do
-what I'm trying to do. What I want is a driver which will drive both
-touchscreen and pure-touchkey devices.
+The implementation safely invokes the BPF scheduler's cgroup_set_idle
+callback under RCU protection. The callback is optional - schedulers
+not needing this notification can omit it.
 
-I feel like a separate driver is how it should be done, although the
-protocol is same and it can be done here...
+Signed-off-by: Marcos Garcia <magazo2005@gmail.com>
+---
+ kernel/sched/ext.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-I had tried to get some input (hence the RFC) about this but I couldn't.
-Either my wording wasn't clear or I haven't been able to communicate it
-properly.
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index b498d867ba21..7cecc0ca700d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -4258,7 +4258,13 @@ void scx_group_set_weight(struct task_group *tg, unsigned long weight)
+ 
+ void scx_group_set_idle(struct task_group *tg, bool idle)
+ {
+-	/* TODO: Implement ops->cgroup_set_idle() */
++	struct sched_ext_ops *ops;
++
++	rcu_read_lock();
++	ops = rcu_dereference(ext_ops);
++	if (ops && ops->cgroup_set_idle)
++		ops->cgroup_set_idle(tg, idle);
++	rcu_read_unlock();
+ }
+ 
+ static void scx_cgroup_lock(void)
+-- 
+2.50.0
 
-Sorry for bringing this out of the blue in a thread.
-
-> 
-> Please adjust the patch description.
-> 
->> 
->> Implement them. If compiled with devicetree support, the driver 
->> attempts
->> to retrieve keycodes from a property named "linux,keycodes".
->> 
->> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
->> ---
->>  drivers/input/touchscreen/melfas_mip4.c | 32 
->> ++++++++++++++++++++++++++++++--
->>  1 file changed, 30 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/input/touchscreen/melfas_mip4.c 
->> b/drivers/input/touchscreen/melfas_mip4.c
->> index 
->> a6946e3d8376d7e9b4c26f4194409e0ba78bb075..061ac353bc7a2e28f17581411af81f35c89733a1 
->> 100644
->> --- a/drivers/input/touchscreen/melfas_mip4.c
->> +++ b/drivers/input/touchscreen/melfas_mip4.c
->> @@ -169,7 +169,7 @@ struct mip4_ts {
->>  	unsigned int event_format;
->> 
->>  	unsigned int key_num;
->> -	unsigned short key_code[MIP4_MAX_KEYS];
->> +	unsigned int key_code[MIP4_MAX_KEYS];
->> 
->>  	bool wake_irq_enabled;
->> 
->> @@ -337,8 +337,13 @@ static int mip4_query_device(struct mip4_ts *ts)
->>  			ts->ppm_x, ts->ppm_y);
->> 
->>  		/* Key ts */
->> -		if (ts->node_key > 0)
->> +		if (ts->node_key > MIP4_MAX_KEYS) {
->> +			dev_warn(&ts->client->dev,
->> +				"Too many keys (%u) found\n", ts->node_key);
->> +			ts->key_num = MIP4_MAX_KEYS;
->> +		} else {
->>  			ts->key_num = ts->node_key;
->> +		}
-> 
-> I believe this is a bugfix. Please extract it into a separate patch.
-
-Agree, will do so.
-
-> 
->>  	}
->> 
->>  	/* Protocol */
->> @@ -1080,6 +1085,7 @@ static int mip4_flash_fw(struct mip4_ts *ts,
->>  			 const u8 *fw_data, u32 fw_size, u32 fw_offset)
->>  {
->>  	struct i2c_client *client = ts->client;
->> +	unsigned int i;
->>  	int offset;
->>  	u16 buf_addr;
->>  	int error, error2;
->> @@ -1149,6 +1155,11 @@ static int mip4_flash_fw(struct mip4_ts *ts,
->>  	input_abs_set_res(ts->input, ABS_X, ts->ppm_x);
->>  	input_abs_set_res(ts->input, ABS_Y, ts->ppm_y);
->> 
->> +	for (i = 0; i < ts->key_num; i++) {
->> +		if (ts->key_code[i])
->> +			input_set_capability(ts->input, EV_KEY, ts->key_code[i]);
->> +	}
->> +
->>  	return error ? error : 0;
->>  }
->> 
->> @@ -1425,6 +1436,7 @@ static int mip4_probe(struct i2c_client *client)
->>  {
->>  	struct mip4_ts *ts;
->>  	struct input_dev *input;
->> +	unsigned int i;
->>  	int error;
->> 
->>  	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
->> @@ -1471,6 +1483,17 @@ static int mip4_probe(struct i2c_client 
->> *client)
->> 
->>  	input_set_drvdata(input, ts);
->> 
->> +#ifdef CONFIG_OF
->> +	error = of_property_read_u32_array(client->dev.of_node, 
->> "linux,keycodes",
->> +					   ts->key_code, ts->key_num);
->> +	if (error && ts->key_num) {
->> +		dev_warn(&client->dev,
->> +			 "Failed to get codes for %u supported keys", ts->key_num);
->> +		/* Disable touchkey support */
->> +		ts->key_num = 0;
->> +	}
-> 
-> Please use generic device properties (device_property_read_u32_array())
-> and drop the dependency on OF.
-> 
->> +#endif
->> +
->>  	input->keycode = ts->key_code;
->>  	input->keycodesize = sizeof(*ts->key_code);
->>  	input->keycodemax = ts->key_num;
->> @@ -1491,6 +1514,11 @@ static int mip4_probe(struct i2c_client 
->> *client)
->>  	if (error)
->>  		return error;
->> 
->> +	for (i = 0; i < ts->key_num; i++) {
->> +		if (ts->key_code[i])
->> +			input_set_capability(input, EV_KEY, ts->key_code[i]);
->> +	}
->> +
->>  	i2c_set_clientdata(client, ts);
->> 
->>  	error = devm_request_threaded_irq(&client->dev, client->irq,
->> 
-> 
-> Thanks.
-> 
-> --
-> Dmitry
