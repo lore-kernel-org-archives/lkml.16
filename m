@@ -1,135 +1,132 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6759D14F70
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DF623ABB3;
+	Mon, 30 Jun 2025 08:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751273841; cv=none; b=HX/kXbvOu6MN0uLPdR2/M11+fU72R6AR062qwhyXiAYEszGGEFQBdmdaHfI/nVKQYyZGRb14mciyOJ0lRAxav9zLNm7LXDv57SzoTxSZ2MvxzcSNdBJHDFuQKtSSQS6Yj3aBtyP5jaeUFVjeHyfhtee2br8NVF4a2czBbKLGJxY=
+	t=1751273857; cv=none; b=Su1ZIQ1uAGGx7yCLpzo5dRdVHyzITed18BMVVKisDXW7zwCPqpKF5ign3XgNzLlCM9JLbgbhz5je7DTBkeIeO9PZ2qKor1/DXqOZ4mGxMVAiGx4FyXRp0t4P4IiG6wJGEwchhRJYZF5zVZ6Gj948D1sjEjT6DfUVe9iYov71Sho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751273841; c=relaxed/simple;
-	bh=tHwsdwlV2RdkOWQDFpeoiWYoZwLF4ObvF548D0kUzbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VN4teQAckWHqEKC0CJabkAKmM6OmGUcxNBvbWG9DHERSMGrDlEVrHSrPHcI7GVu0cdK+sgwuddByOzYxmsDSzcYMmEAwsFAVRzNJLH88JonHrTzsmLpuB9xyoKvu64InuVnrkxMTmO6aJy0x8LftCwiwfUyyo1KVonyvAMekJ8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3FVT4QBN; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751273857; c=relaxed/simple;
+	bh=APQjnfC0ho26CdR02Kmbiu4E9JMnLLbwfYZ7NNh8DYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZSJl8NaMene9URlR35XHuxw8oKwmcwO9BRhgwt8fcNrfUpez8WQzuu2XVIPx1R35sFAcGA/dD6bXB88NvvYr+YDX8Un9nDNLxljMUyfwkyaLLUAOPf7CyMwOBPDljiE+e0ihVSMgfVWPF9cxUAPQAKU6RCNpluRS3tndgur2kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dv/vKlEW; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3FVT4QBN"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553dceb345eso2196111e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:57:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dv/vKlEW"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso683307f8f.1;
+        Mon, 30 Jun 2025 01:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751273837; x=1751878637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1/xWSuspPIRwEvJOqsaKy++PiaBV+Pm9M/ghPEWy/as=;
-        b=3FVT4QBNeVs4vQas3m1v8QJU1M01Iq0dvFNHHKJXa5N4rWYbhbcNa1NlnQIYqIj64A
-         BU36dbQcCh22NgHQLb21ZJ85+VG8KV4fdL6w+UuSKB0PkQnbABWsN1VDZoGGDFLAN2iM
-         2vcUnza/2k7uF1z/PeXRR7Vy4TqwykTKQWcmM03m1nCEUNc1EcxdoIIX1AXjacQWFNis
-         j4l36Q882gpkVga8k3eBYom6LqTk+IaznUS4kRpXijrKftZkczs7xLkr/vlcmnqNchD2
-         wjLNQx58tIQnLMLwL3j0mY1uX6G86FN68hhoZAYsAamYPk63pgYr6mkemhppp9T6H07A
-         SYsw==
+        d=gmail.com; s=20230601; t=1751273854; x=1751878654; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=POF/lfjlBstPPmJqK/rxTYHM0xgWsKYRn8MW4p37XQs=;
+        b=Dv/vKlEWT9/oquHFb5ZheJlDCP0WqB9NbF/sGP2Wz9ITsB0GcPGoW8W/OdyGBSDioa
+         hYfnFggD3FmlzH9KUxaEfnWmuzWvwd8wAetYGZhhTmnmqlc1KAvR+HYXxO9BtAwzF02C
+         3SnT+mVHlT7Qlr8zDKC8tQ4H7MQw2rWLmutY6sQ59ofaTjvps6acVqN0sZAA1V0vEXvQ
+         1q+nef7KDJOUdPhx1kQM9WuhN1YcGu8nD0yQszWdDKerSscVwFVbmg2zWjbMPBsPJIR5
+         bFxTLLQPxTOE1WcvKDS07uOc89Gp7HqNyJUKGYr2YJayahcnYXnfObbn+N8jAiplUqLM
+         OYCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751273837; x=1751878637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1/xWSuspPIRwEvJOqsaKy++PiaBV+Pm9M/ghPEWy/as=;
-        b=w7vUBjHfWx0irL/xhuGgf3C5WviQMNLZKYpSd71UCaN1fjUOC/K7s47lj8/kC6mOoH
-         U3pKX/kfA8dqFc6qiky8JEY8Bk5j05ybROwbedAXOt6lEMUrDeYzl1C5lbJEoZuUeIe7
-         xuINDlb8bF9cBgm4NALKWpxAB/2sqVer0Y+nY+05hDHmEKXjPOgk+mU7IPxfs/cw1KN6
-         AcWRGILlgiVUGI3wTzQFbI3raMazJlFzPEGPTnnggoRtIeMdmnYJIznR4Jt4DtPZ67h4
-         dFCiikJDWfbQBp0uw/6Z+mC4yznrQPyNUCFsGRR0g2ADQGGRjiJ+sm3EPp05rurTFhVN
-         pncw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpKdxYyy7NsRJ/xIZdB6Of7EmgiuzQzIbxo7Ub7uN7/FOiPv3du+GG83pNmoCwrOdEAQG/d5bZdE1yFdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOr432eG6RUoGgTWTx75rRBJBZmVKJ5Nxfaw9kKI9n2WpTiqGC
-	uCqRFEFLPRe+NOIUB/xotiYegS7OgcJmZfHYErYt89trDXpCL2P83JcxrLEvIbHoOoJ7tfhbt9W
-	N+8NdExrPIvnSx05lYPHDvA5Y9ClDzlcplLyjQh1TZg==
-X-Gm-Gg: ASbGnctoWGgRrIbkP8aXmkKuLYQnmNaG6kdYDechqQZXPRE43zPJx4Y2XuUwYpEuEtI
-	g1NcdaUZj2y6smOEM5TUlkaayfzhbUoIKMm/XF0sZkcFllc7oafJx4sk53hMKNvH9yWivXWDKBb
-	Wn0+wP7EYzFQXftZb8Afzrlf+6+6V2sPnxOrB7lsFI/lSmAa5TYjyZO3F50mKRkSn1FCVXWHd2Z
-	2g=
-X-Google-Smtp-Source: AGHT+IEZFMQfEkJUH+3rY8y+TTsjGBa4rf9U72HmIeYMgNLHPeZASdF9kS2CmUz3M5ntnAe3s+m3HBmPq0QCOl4h/9E=
-X-Received: by 2002:a05:6512:3b9d:b0:553:2bf7:77be with SMTP id
- 2adb3069b0e04-5550b84cb93mr4367395e87.22.1751273837415; Mon, 30 Jun 2025
- 01:57:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751273854; x=1751878654;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=POF/lfjlBstPPmJqK/rxTYHM0xgWsKYRn8MW4p37XQs=;
+        b=byq87HAazaMhUVZIm7P6b8uCMFG2KhHFrsrTRD1Qpqj4G5g+4AAho7/QgLmDSZE5Eg
+         WVOM6+I3VrCBkuAm1XoLIvKNTX3SBagrWlY750aJjKZzI9kMmghZuW7msTwFPZ+0XkWi
+         v+SkkHr20inxm3K3dlpdt72OYIgAm85eF2bfPu47kkDn/hIyBwO/NoT/XNFsB8YlUAnr
+         qrsz8jKWSgxVUZdZGlGbFJTAx3H9NPi4N41W5DG1Ze8zHduc4mh9x58OXT9KGrrzAb8r
+         k9PY4A6FNK69SUFN47hV8iGrzZgH9qgEM3kcDlIOjP2Uu5QZVSW+5cH/cJiCytT8VLPW
+         Ct0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVT3mrNeqbCPDQ0N1zVHN13k8FyOJMn0VPrBrRcLiU51h2IuDiCcnxKVgEitCy+H6XF5tgAnx+7ZZzJE0in@vger.kernel.org, AJvYcCXXD2Il9keOW5Bw6lMYLFybST1lR7jUqqxQ50L3jNL3bxZioaz2ySAS7deuhDqeXaLR887D35IAgswnvqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRJFjYHItd0+Yp1iCkgvNXSC+bWZk6kgVBLAslSW7bM59OEsoN
+	qP9hPhFv2Ntk+B5nvjkiaiwpCZM8VIpAItv7R0gzCNMI7VbNPXYyryfu
+X-Gm-Gg: ASbGncvofkm3qs3ONfFKUQH5IN/qXvXAuWUzNgTfEep0VhnoqtFBxGnkQNyHvcEb7ss
+	qBjHz46iKXCrUvDls4YXG5hkfOoM+qE8CB95MIlc7XOYZ/RSBQ8koAJB86KMbz4iM2ZQCFICR+i
+	XmhDQcj0u/JZZiIY82NRQc33lTA/oyHKhAo9xgo4+1OIPJYDhwvtqBEn2z0+mqotK5ospbUc+YV
+	TQ1owQYhCgCa6YmhxGDqKXpAWm5HX5btiAMTf2QoatSJbtzztX4Upcjp2vpHO3m/bnj4wl+cCZD
+	y0JyXK1mq5Lu+f9aWRzHQo9l4XeLAEsyqsRWO4oNWGtad/w/AaNbaAwQRLoUm9yBuDKaeOAtnzS
+	UbgjJeIT9jsaV0co=
+X-Google-Smtp-Source: AGHT+IGlknY67astPqQ6Ts4eyHBJeWoLGAdmYYOyXUPQ5uMHairQGPegGqQwCezY1A48qiQrcuUVNw==
+X-Received: by 2002:a05:6000:402b:b0:3a4:f912:86af with SMTP id ffacd0b85a97d-3aaf2e9231cmr2195341f8f.2.1751273853675;
+        Mon, 30 Jun 2025 01:57:33 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4538a3fe587sm130162475e9.19.2025.06.30.01.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 01:57:33 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+	Declan Murphy <declan.murphy@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Mark Gross <mgross@linux.intel.com>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: keembay: Fix dma_unmap_sg() nents value
+Date: Mon, 30 Jun 2025 10:57:06 +0200
+Message-ID: <20250630085707.62981-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org> <aF67oAqLmRJzy4Zt@black.fi.intel.com>
-In-Reply-To: <aF67oAqLmRJzy4Zt@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 30 Jun 2025 10:57:06 +0200
-X-Gm-Features: Ac12FXwUwnOAqU4puVzSKb72DH7ePHLAhCj8ihvhutkV1VkA2A2c_2dH8givJoE
-Message-ID: <CAMRc=MfXVTqncPsJ3QKqsGDi36gK4weWX1iygpqg1C-XinCEGg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] gpio: sysfs: don't use driver data in sysfs
- callbacks for line attributes
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 27, 2025 at 5:41=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Mon, Jun 23, 2025 at 10:59:52AM +0200, Bartosz Golaszewski wrote:
-> >
-> > Currently each exported GPIO is represented in sysfs as a separate clas=
-s
-> > device. This allows us to simply use dev_get_drvdata() to retrieve the
-> > pointer passed to device_create_with_groups() from sysfs ops callbacks.
-> >
-> > However, we're preparing to add a parallel set of per-line sysfs
-> > attributes that will live inside the associated gpiochip group. They ar=
-e
-> > not registered as class devices and so have the parent device passed as
-> > argument to their callbacks (the GPIO chip class device).
-> >
-> > Put the attribute structs inside the GPIO descriptor data and
-> > dereference the relevant ones using container_of() in the callbacks.
-> > This way, we'll be able to reuse the same code for both the legacy and
-> > new GPIO attributes.
->
-> ...
->
-> > -     struct gpiod_data *data =3D dev_get_drvdata(dev);
-> > +     struct gpiod_data *data =3D container_of(attr, struct gpiod_data,
-> > +                                            dir_attr);
->
-> Defining once something like
->
-> #define to_gpiod_data() ...
->
-> we may leave this and others as one-liners.
+The dma_unmap_sg() functions should be called with the same nents as the
+dma_map_sg(), not the value the map function returned.
 
-We'd need one per every attribute. Look closer, we do get a different
-attr address in every pair of callbacks.
+Fixes: 472b04444cd3 ("crypto: keembay - Add Keem Bay OCS HCU driver")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->
-> ...
->
-> > +     attrs[GPIO_SYSFS_LINE_ATTR_ACTIVE_LOW] =3D
-> > +                                             &data->active_low_attr.at=
-tr;
->
-> What's the point of two lines here?
->
+diff --git a/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c b/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
+index 95dc8979918d..8f9e21ced0fe 100644
+--- a/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
++++ b/drivers/crypto/intel/keembay/keembay-ocs-hcu-core.c
+@@ -68,6 +68,7 @@ struct ocs_hcu_ctx {
+  * @sg_data_total:  Total data in the SG list at any time.
+  * @sg_data_offset: Offset into the data of the current individual SG node.
+  * @sg_dma_nents:   Number of sg entries mapped in dma_list.
++ * @nents:          Number of entries in the scatterlist.
+  */
+ struct ocs_hcu_rctx {
+ 	struct ocs_hcu_dev	*hcu_dev;
+@@ -91,6 +92,7 @@ struct ocs_hcu_rctx {
+ 	unsigned int		sg_data_total;
+ 	unsigned int		sg_data_offset;
+ 	unsigned int		sg_dma_nents;
++	unsigned int		nents;
+ };
+ 
+ /**
+@@ -199,7 +201,7 @@ static void kmb_ocs_hcu_dma_cleanup(struct ahash_request *req,
+ 
+ 	/* Unmap req->src (if mapped). */
+ 	if (rctx->sg_dma_nents) {
+-		dma_unmap_sg(dev, req->src, rctx->sg_dma_nents, DMA_TO_DEVICE);
++		dma_unmap_sg(dev, req->src, rctx->nents, DMA_TO_DEVICE);
+ 		rctx->sg_dma_nents = 0;
+ 	}
+ 
+@@ -260,6 +262,10 @@ static int kmb_ocs_dma_prepare(struct ahash_request *req)
+ 			rc = -ENOMEM;
+ 			goto cleanup;
+ 		}
++
++		/* Save the value of nents to pass to dma_unmap_sg. */
++		rctx->nents = nents;
++
+ 		/*
+ 		 * The value returned by dma_map_sg() can be < nents; so update
+ 		 * nents accordingly.
+-- 
+2.43.0
 
-I tend to stick with the 80 chars limit even though it was lifted.
-
-Bart
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
