@@ -1,56 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8301C248F5E
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:33:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4A624DCF5
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275988; cv=none; b=p8h5wPqLNyWZ4pvJ8inEYOepAOnGNVjUO/AXe6n8/daj3qPI8sYqVNIT3HZS/nPLu2BvlOkk1w4CThjoXpUrd70nCtc8U9GGcj/4tSkEB/gV1o8CBoiftswupatGqThXIiTQ8V45gB9H6Z1/nyaWGYkSJGfezGyDlaLJJlA4O9o=
+	t=1751275989; cv=none; b=Y9lpV3FmAeu+RhWKbYelg/I9XxLVXzQxIAtu+lU4bu7xVoL7IgSCBloRgYrKf7qbzneepT84vgRcsbgFRCSiCEu5TULg44WuSHijzbbdoOxnBPbKDhLPBP5/vGfOxrj2Tkf3a5YQb2Gy7E5/qfsOQEaKMezrCnbDcmSYul92Tz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275988; c=relaxed/simple;
-	bh=FIfEkbz8JdHJOviN1RQuQrM8W1xMWoKA43IuApPDbZw=;
+	s=arc-20240116; t=1751275989; c=relaxed/simple;
+	bh=k6CpQI6U2HXDC55vGr6BSJJaxh2hOKhfwA+pkGvRtyM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NDq+VLc5oDsCD3/ueboHtV8y75TGPFEbBrZyyLBUS3LQLz4HLtRfFfzZwNufWvkaCLWRfmSQdehkXRhxu9scB3u23nLWI1nmnYRZUYpCfppJhRQ+Zbt+jjLXzNB+ImswNFbrW3lB0KfJx+seV4dJU2LrEKNPBgaVajll+eAqRqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wkx3CpU9; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=LoTBBO88P60M5H3G1FiWBYRfq/Wq6qO0iyIeuVCUa35Er4qIXdM5vxcVL5dEjRpVOIz/hVTm8huqO6T3RHIUXDsVisVa1qVyMcqqgQNrEz5ed0a96vMiZb3N8EwpxTsDKqjvYzdUYEjlQ9CRdNm7bMzh0cFe4KrFdD/2CqN1QFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HQ1tdvYD; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wkx3CpU9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HQ1tdvYD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751275987; x=1782811987;
+  t=1751275989; x=1782811989;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FIfEkbz8JdHJOviN1RQuQrM8W1xMWoKA43IuApPDbZw=;
-  b=Wkx3CpU9HcjZaNFDF6e73ltUrHPl386L4ZtlTvZUzR0EdAeU47mdakBT
-   FrcOdy9ZtMh+LUWBmdOl+0QQQb+/x9hI1oZjtduObnmpf3C+nzYqtm1MZ
-   P7T8h7j2ZX00aJzbdrCgpIMThBW7fIjoGNYnypwdbmzqZ3EDAUd+y8de8
-   Lfrx0k6k1/2v1jHgZjxAy1FU2YBfSFAjQXXcdK/jiV7NFRchefbWDbopp
-   ApxUv+Uky/YFTHLB0q4StHobNsrqbexZyhvHwFPjkfGn/3ewPt5Vfm2kA
-   ukLWKEy3mj+O5m2rHwMteJ/q8byucp2cF0HQNmRCdTNv4/JGd+TtFG21H
-   A==;
-X-CSE-ConnectionGUID: Lhtr0b78TiWmmzsgJc2LIQ==
-X-CSE-MsgGUID: 2SqzciRdSk2jd7b/1TVmxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53218593"
+  bh=k6CpQI6U2HXDC55vGr6BSJJaxh2hOKhfwA+pkGvRtyM=;
+  b=HQ1tdvYD1rf8+Ui9zzt6h2nUKf6oThfE9DBsNwyvCkyL0oaCkNbk+oCO
+   LfwX4X1242y3C66pqGe4ma9G77oTCp/R99rUurlcMzT4PWx5BdBKKeAfn
+   B+838aWfKJyI5aW0uvXBEXn2TJ0APOxKwmPmgXhRF2QFqg9tofZYUvyNJ
+   HLHVV+hfSA1wZqskh/xN++jP/7mPEUMFpKs4E74C8TV1unzfDKSNgz8Lf
+   SajKrfFxTK3I/wDMi0g4najzUxD1L0nyShw7UQ0ovpMZPJGb41DzZFVtm
+   R46N5DkUazngm4WABWDnKDx3Z0k3s8jq2J1cWQ8aJaelv2iVljgXAj8d2
+   g==;
+X-CSE-ConnectionGUID: LCrFoELqRyOyarJ/2jMIxA==
+X-CSE-MsgGUID: CxUO9itBSD67KZ6DFm+0xw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53218596"
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53218593"
+   d="scan'208";a="53218596"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:33:07 -0700
-X-CSE-ConnectionGUID: Lf0p4y5bRVubwnspdk+InA==
-X-CSE-MsgGUID: HS1TOjSoS2i6DkoHe/oZKg==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:33:08 -0700
+X-CSE-ConnectionGUID: U5Xtf1ZAS3CIztt2GkbnHQ==
+X-CSE-MsgGUID: upvenSqBQliRvM1PqC1TDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153039561"
+   d="scan'208";a="153039564"
 Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:33:05 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:33:07 -0700
 From: Alexander Usyskin <alexander.usyskin@intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
 	Alexander Usyskin <alexander.usyskin@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [char-misc-next v2 2/5] mei: make char device control its own lifetime
-Date: Mon, 30 Jun 2025 12:19:39 +0300
-Message-ID: <20250630091942.2116676-3-alexander.usyskin@intel.com>
+Subject: [char-misc-next v2 3/5] mei: bus: use cldev in prints
+Date: Mon, 30 Jun 2025 12:19:40 +0300
+Message-ID: <20250630091942.2116676-4-alexander.usyskin@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250630091942.2116676-1-alexander.usyskin@intel.com>
 References: <20250630091942.2116676-1-alexander.usyskin@intel.com>
@@ -62,125 +62,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allocate character device dynamically and allow to
-control its own lifetime as it may outlive mei_device
-structure while character device closes after parent
-device is removed from the system.
+For unifomity, print using client device on bus
+where possible.
 
 Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 ---
- drivers/misc/mei/main.c    | 36 +++++++++++++++++++++++-------------
- drivers/misc/mei/mei_dev.h |  4 ++--
- 2 files changed, 25 insertions(+), 15 deletions(-)
+ drivers/misc/mei/bus-fixup.c | 10 +++++-----
+ drivers/misc/mei/bus.c       | 18 +++++++++---------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index 95d4c1d8e4e6..5335cf39d663 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -51,7 +51,9 @@ static int mei_open(struct inode *inode, struct file *file)
- 
- 	int err;
- 
--	dev = container_of(inode->i_cdev, struct mei_device, cdev);
-+	dev = idr_find(&mei_idr, iminor(inode));
-+	if (!dev)
-+		return -ENODEV;
- 
- 	mutex_lock(&dev->device_lock);
- 
-@@ -1118,7 +1120,10 @@ void mei_set_devstate(struct mei_device *dev, enum mei_dev_state state)
- 
- 	dev->dev_state = state;
- 
--	clsdev = class_find_device_by_devt(&mei_class, dev->cdev.dev);
-+	if (!dev->cdev)
-+		return;
-+
-+	clsdev = class_find_device_by_devt(&mei_class, dev->cdev->dev);
- 	if (clsdev) {
- 		sysfs_notify(&clsdev->kobj, NULL, "dev_state");
- 		put_device(clsdev);
-@@ -1223,16 +1228,21 @@ int mei_register(struct mei_device *dev, struct device *parent)
- 
- 	/* Fill in the data structures */
- 	devno = MKDEV(MAJOR(mei_devt), dev->minor);
--	cdev_init(&dev->cdev, &mei_fops);
--	dev->cdev.owner = parent->driver->owner;
--	cdev_set_parent(&dev->cdev, &parent->kobj);
-+	dev->cdev = cdev_alloc();
-+	if (!dev->cdev) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+	dev->cdev->ops = &mei_fops;
-+	dev->cdev->owner = parent->driver->owner;
-+	cdev_set_parent(dev->cdev, &parent->kobj);
- 
- 	/* Add the device */
--	ret = cdev_add(&dev->cdev, devno, 1);
-+	ret = cdev_add(dev->cdev, devno, 1);
- 	if (ret) {
- 		dev_err(parent, "unable to add device %d:%d\n",
- 			MAJOR(mei_devt), dev->minor);
--		goto err_dev_add;
-+		goto err_del_cdev;
+diff --git a/drivers/misc/mei/bus-fixup.c b/drivers/misc/mei/bus-fixup.c
+index 9eebeffcd8fd..90dba20b2de7 100644
+--- a/drivers/misc/mei/bus-fixup.c
++++ b/drivers/misc/mei/bus-fixup.c
+@@ -463,14 +463,14 @@ static void mei_nfc(struct mei_cl_device *cldev)
+ 	if (IS_ERR(cl)) {
+ 		ret = PTR_ERR(cl);
+ 		cl = NULL;
+-		dev_err(bus->dev, "nfc hook alloc failed %d\n", ret);
++		dev_err(&cldev->dev, "nfc hook alloc failed %d\n", ret);
+ 		goto out;
  	}
  
- 	clsdev = device_create_with_groups(&mei_class, parent, devno,
-@@ -1243,16 +1253,16 @@ int mei_register(struct mei_device *dev, struct device *parent)
- 		dev_err(parent, "unable to create device %d:%d\n",
- 			MAJOR(mei_devt), dev->minor);
- 		ret = PTR_ERR(clsdev);
--		goto err_dev_create;
-+		goto err_del_cdev;
+ 	me_cl = mei_me_cl_by_uuid(bus, &mei_nfc_info_guid);
+ 	if (!me_cl) {
+ 		ret = -ENOTTY;
+-		dev_err(bus->dev, "Cannot find nfc info %d\n", ret);
++		dev_err(&cldev->dev, "Cannot find nfc info %d\n", ret);
+ 		goto out;
  	}
  
- 	mei_dbgfs_register(dev, dev_name(clsdev));
+@@ -496,13 +496,13 @@ static void mei_nfc(struct mei_cl_device *cldev)
+ 		goto disconnect;
+ 	}
  
- 	return 0;
+-	dev_dbg(bus->dev, "nfc radio %s\n", radio_name);
++	dev_dbg(&cldev->dev, "nfc radio %s\n", radio_name);
+ 	strscpy(cldev->name, radio_name, sizeof(cldev->name));
  
--err_dev_create:
--	cdev_del(&dev->cdev);
--err_dev_add:
-+err_del_cdev:
-+	cdev_del(dev->cdev);
-+err:
- 	mei_minor_free(dev);
- 	return ret;
+ disconnect:
+ 	mutex_lock(&bus->device_lock);
+ 	if (mei_cl_disconnect(cl) < 0)
+-		dev_err(bus->dev, "Can't disconnect the NFC INFO ME\n");
++		dev_err(&cldev->dev, "Can't disconnect the NFC INFO ME\n");
+ 
+ 	mei_cl_flush_queues(cl, NULL);
+ 
+@@ -515,7 +515,7 @@ static void mei_nfc(struct mei_cl_device *cldev)
+ 	if (ret)
+ 		cldev->do_match = 0;
+ 
+-	dev_dbg(bus->dev, "end of fixup match = %d\n", cldev->do_match);
++	dev_dbg(&cldev->dev, "end of fixup match = %d\n", cldev->do_match);
  }
-@@ -1262,8 +1272,8 @@ void mei_deregister(struct mei_device *dev)
+ 
+ /**
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 67176caf5416..d90d830b8261 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -875,14 +875,14 @@ int mei_cldev_disable(struct mei_cl_device *cldev)
+ 	mei_cl_bus_vtag_free(cldev);
+ 
+ 	if (!mei_cl_is_connected(cl)) {
+-		dev_dbg(bus->dev, "Already disconnected\n");
++		dev_dbg(&cldev->dev, "Already disconnected\n");
+ 		err = 0;
+ 		goto out;
+ 	}
+ 
+ 	err = mei_cl_disconnect(cl);
+ 	if (err < 0)
+-		dev_err(bus->dev, "Could not disconnect from the ME client\n");
++		dev_err(&cldev->dev, "Could not disconnect from the ME client\n");
+ 
+ out:
+ 	/* Flush queues and remove any pending read unless we have mapped DMA */
+@@ -935,7 +935,7 @@ ssize_t mei_cldev_send_gsc_command(struct mei_cl_device *cldev,
+ 	cl = cldev->cl;
+ 	bus = cldev->bus;
+ 
+-	dev_dbg(bus->dev, "client_id %u, fence_id %u\n", client_id, fence_id);
++	dev_dbg(&cldev->dev, "client_id %u, fence_id %u\n", client_id, fence_id);
+ 
+ 	if (!bus->hbm_f_gsc_supported)
+ 		return -EOPNOTSUPP;
+@@ -983,11 +983,11 @@ ssize_t mei_cldev_send_gsc_command(struct mei_cl_device *cldev,
+ 	/* send the message to GSC */
+ 	ret = __mei_cl_send(cl, (u8 *)ext_hdr, buf_sz, 0, MEI_CL_IO_SGL);
+ 	if (ret < 0) {
+-		dev_err(bus->dev, "__mei_cl_send failed, returned %zd\n", ret);
++		dev_err(&cldev->dev, "__mei_cl_send failed, returned %zd\n", ret);
+ 		goto end;
+ 	}
+ 	if (ret != buf_sz) {
+-		dev_err(bus->dev, "__mei_cl_send returned %zd instead of expected %zd\n",
++		dev_err(&cldev->dev, "__mei_cl_send returned %zd instead of expected %zd\n",
+ 			ret, buf_sz);
+ 		ret = -EIO;
+ 		goto end;
+@@ -997,7 +997,7 @@ ssize_t mei_cldev_send_gsc_command(struct mei_cl_device *cldev,
+ 	ret = __mei_cl_recv(cl, (u8 *)&rx_msg, sizeof(rx_msg), NULL, MEI_CL_IO_SGL, 0);
+ 
+ 	if (ret != sizeof(rx_msg)) {
+-		dev_err(bus->dev, "__mei_cl_recv returned %zd instead of expected %zd\n",
++		dev_err(&cldev->dev, "__mei_cl_recv returned %zd instead of expected %zd\n",
+ 			ret, sizeof(rx_msg));
+ 		if (ret >= 0)
+ 			ret = -EIO;
+@@ -1006,13 +1006,13 @@ ssize_t mei_cldev_send_gsc_command(struct mei_cl_device *cldev,
+ 
+ 	/* check rx_msg.client_id and rx_msg.fence_id match the ones we send */
+ 	if (rx_msg.client_id != client_id || rx_msg.fence_id != fence_id) {
+-		dev_err(bus->dev, "received client_id/fence_id  %u/%u  instead of %u/%u sent\n",
++		dev_err(&cldev->dev, "received client_id/fence_id  %u/%u  instead of %u/%u sent\n",
+ 			rx_msg.client_id, rx_msg.fence_id, client_id, fence_id);
+ 		ret = -EFAULT;
+ 		goto end;
+ 	}
+ 
+-	dev_dbg(bus->dev, "gsc command: successfully written %u bytes\n",  rx_msg.written);
++	dev_dbg(&cldev->dev, "gsc command: successfully written %u bytes\n", rx_msg.written);
+ 	ret = rx_msg.written;
+ 
+ end:
+@@ -1399,7 +1399,7 @@ static int mei_cl_bus_dev_add(struct mei_cl_device *cldev)
  {
- 	int devno;
+ 	int ret;
  
--	devno = dev->cdev.dev;
--	cdev_del(&dev->cdev);
-+	devno = dev->cdev->dev;
-+	cdev_del(dev->cdev);
- 
- 	mei_dbgfs_deregister(dev);
- 
-diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
-index 37d7fb15cad7..0cc943afa80a 100644
---- a/drivers/misc/mei/mei_dev.h
-+++ b/drivers/misc/mei/mei_dev.h
-@@ -471,7 +471,7 @@ struct mei_dev_timeouts {
-  * struct mei_device -  MEI private device struct
-  *
-  * @dev         : device on a bus
-- * @cdev        : character device
-+ * @cdev        : character device pointer
-  * @minor       : minor number allocated for device
-  *
-  * @write_list  : write pending list
-@@ -557,7 +557,7 @@ struct mei_dev_timeouts {
-  */
- struct mei_device {
- 	struct device *dev;
--	struct cdev cdev;
-+	struct cdev *cdev;
- 	int minor;
- 
- 	struct list_head write_list;
+-	dev_dbg(cldev->bus->dev, "adding %pUL:%02X\n",
++	dev_dbg(&cldev->dev, "adding %pUL:%02X\n",
+ 		mei_me_cl_uuid(cldev->me_cl),
+ 		mei_me_cl_ver(cldev->me_cl));
+ 	ret = device_add(&cldev->dev);
 -- 
 2.43.0
 
