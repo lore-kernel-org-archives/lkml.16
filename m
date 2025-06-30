@@ -1,421 +1,91 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17F8226D14
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C90D2EA75F;
+	Mon, 30 Jun 2025 20:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751315123; cv=none; b=UAaxazWSIrslrVTWemPXwGv7MHdo4FA3eEfKkkkeP92QRskY4XtZP5wFoJwJxl2/r1C34UZuromhscmCfEK5K0rtbCrxci79PJSfVfaeTstzdOqA21q8JpiLD+tI/0FwAQZS6z1vmifpSFst8XMA6cw6YG86qvaHqF7fcqnV+AE=
+	t=1751315126; cv=none; b=aOr84tksVXPWfIKtw56YV6oCQrclqpHCFxXiCWczrORdtAx+vgOc7B8oMdYBfZsUM3OM2eGOdgYSL4PPvhvp0NTg89b1umTfSCEu7Sx6Afn7Fti5JUiV4/Yt+Q7t+eMjQOxGuWV4DPssZZXiFI+ZeDOOWO+jEjzELtF3DJkB5es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751315123; c=relaxed/simple;
-	bh=U5zsqAbHyGfA8N0yhNm50r62i81ZbFOoVsvvHvo2eEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RDNHj0VuR/zt9amVnacRs50ksbGNhVMab3vxxHQ+4UIqPTIYF3NPZCryz9c1DKGHMsvvnGhUHdSwZH6nsGAcdrqfHrO8DW71ssom+eO60DAADV/c+V11D2lvXTiCPR8Y7NPiPDQJnFrjMIK5LNAc4SbXHvI7KLPSNvPa5trYGG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iHGVzFqu; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751315126; c=relaxed/simple;
+	bh=ui5hCeBwRvRdhzOlPRFBifufw7HRiacGECkcNfw+A/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLdpgqGOKQsstRq0GB0c+HmlBe+dCVfrkESptdtc/7FxWu8q4qY2/PVT3Horp23g/NfvrbseI67/TiI7o2M09jdS7jsy4ZIpp+m+07bYSjKI5CpymPl10xz081hIC7oxEh0WS/7k9XB7EoMiTkQwljQOq08M4bDi+qPh+DciCJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGR4UWsW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iHGVzFqu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751315119;
-	bh=U5zsqAbHyGfA8N0yhNm50r62i81ZbFOoVsvvHvo2eEw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iHGVzFqusZyCXGfmo/BajkrLD8mguJbUpDRwJcf5wYSQ3I8debxxnup7MGPcF9hhd
-	 rvxtWQHLReycqB1aK3MzKdCamK62623S6g/tH8qDlT+Xn2pmSNcczxqmgvrX8mk4Ls
-	 k8o/TeUjdm5vhfuvlfO6F1t+KpObk6CaB885V9ahFBRQVQYkVymBSH//FWImX28WhL
-	 aW7P02DyZe90bJNkFqUWNQslwO7XXXNu7o9sCIMRJ/XJzZjxAiypSvHnLLH7exR3IR
-	 68ndwwxPHTXtkYUc/WxLSLEzdIGwX/BfL/9sVd1g+sDcFMSe6jNVNzIeTCGaYmyjoJ
-	 rs6UkbgrxP1fw==
-Received: from localhost.localdomain (unknown [92.206.120.105])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: gerddie)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 998FF17E0F3C;
-	Mon, 30 Jun 2025 22:25:19 +0200 (CEST)
-From: Gert Wollny <gert.wollny@collabora.com>
-To: Lucas Stach <l.stach@pengutronix.de>,
-	Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: etnaviv@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Gert Wollny <gert.wollny@collabora.com>
-Subject: [PATCH v3 4/5] drm/etnaviv: Add PPU flop reset
-Date: Mon, 30 Jun 2025 22:26:30 +0200
-Message-ID: <20250630202703.13844-5-gert.wollny@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250630202703.13844-1-gert.wollny@collabora.com>
-References: <20250618204400.21808-1-gert.wollny@collabora.com>
- <20250630202703.13844-1-gert.wollny@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGR4UWsW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43772C4CEEB;
+	Mon, 30 Jun 2025 20:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751315125;
+	bh=ui5hCeBwRvRdhzOlPRFBifufw7HRiacGECkcNfw+A/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WGR4UWsWzR7g4+LhGxEPHvJBF2Y6j8XhE2knGrHs4Af42IDEzIZZWZmFsT4uolG2o
+	 Nk8aQwIbKcT8dtvkpRMM8TlDlCfuvFTdd92yrgeq8cAE1k2SEJcbCImLiyi7giYxFw
+	 9F41lpiCKhvWbnTJem8i5UbsQkX8THJSwANmP6s/nDR6PS9Cj2hmJVbqAh7/OvSk9v
+	 +g7WOcnsfsfggE+l5+suj77KKoG3Mg2QMX4U2dFDrplrwm1M245oQrrdL36fluZYkt
+	 WyB2mFBaIJv14r64KhB/Vj+FudX5cfmH76NatWknmo/jMOABwdUlUpgQ24r6d/YJ8O
+	 u5jxY04iWUYDw==
+Date: Mon, 30 Jun 2025 14:25:23 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Ben Copeland <ben.copeland@linaro.org>, linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
+	sagi@grimberg.me, iommu@lists.linux.dev
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
+ after 06cae0e3f61c
+Message-ID: <aGLyswGYD6Zai_sI@kbusch-mbp>
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630133343.GA26040@lst.de>
 
-The PPU flop reset is required on some hardware to clear the
-temporary registers. This code follows the implementation
-of the PPU flop reset as found in the public galcore kernel
-module. Compared to that code some superfluous parts were
-removed and only the code path for SoC chip_model = 0x8000
-and revision = 0x6205 is implemented and tested.
+On Mon, Jun 30, 2025 at 03:33:43PM +0200, Christoph Hellwig wrote:
+> Hi Ben,
+> 
+> > [   32.857521] iommu_dma_unmap_page+0xc4/0xe8 (P)
+> 
+> Can you resolve this to a source location for me. i.e.
+> 
+> gdb vmlinux
+> 
+> l *(iommu_dma_unmap_page+0xc4)
+> 
+> Also what IOMMU driver is this device using?  It looks like it
+> might not support a 4k IOMMU page size.
 
-v2: - Move flop reset data to etnaviv_drm_private and initialize it
-      from etnaviv_gpu_bind (Lucas)
-    - Prepare code for more chip IDs and other flop reset types
-    - Do some cleanups and rename some functions
+I think the PRP handling is broken. At the very least, handling the last
+element is wrong if it appears at the end of the list, so I think we
+need something like this:
 
-v3: - Move initialization of flop reset data to etnaviv_gpu_init (Lucas)
-    - Free PPU data suballocation (Lucas)
-
-Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
 ---
- drivers/gpu/drm/etnaviv/Makefile             |   1 +
- drivers/gpu/drm/etnaviv/etnaviv_buffer.c     |   6 +
- drivers/gpu/drm/etnaviv/etnaviv_drv.c        |   3 +
- drivers/gpu/drm/etnaviv/etnaviv_drv.h        |   3 +
- drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c | 206 +++++++++++++++++++
- drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h |  25 +++
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c        |   5 +
- 7 files changed, 249 insertions(+)
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -701,7 +701,7 @@ static void nvme_free_prps(struct request *req)
+        prp_list = iod->descriptors[desc];
+        do {
+                dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+-               if (i == NVME_CTRL_PAGE_SIZE >> 3) {
++               if (i == NVME_CTRL_PAGE_SIZE >> 3 && length > NVME_CTRL_PAGE_SIZE) {
+                        prp_list = iod->descriptors[++desc];
+                        i = 0;
+                }
+--
 
-diff --git a/drivers/gpu/drm/etnaviv/Makefile b/drivers/gpu/drm/etnaviv/Makefile
-index 46e5ffad69a6..903101e8751a 100644
---- a/drivers/gpu/drm/etnaviv/Makefile
-+++ b/drivers/gpu/drm/etnaviv/Makefile
-@@ -14,6 +14,7 @@ etnaviv-y := \
- 	etnaviv_iommu.o \
- 	etnaviv_mmu.o \
- 	etnaviv_perfmon.o \
-+	etnaviv_flop_reset.o \
- 	etnaviv_sched.o
- 
- obj-$(CONFIG_DRM_ETNAVIV)	+= etnaviv.o
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-index 9e007d977efe..a2da3212592f 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -18,6 +18,8 @@
- #include "state_3d.xml.h"
- #include "cmdstream.xml.h"
- 
-+#include "etnaviv_flop_reset.h"
-+
- static void etnaviv_cmd_select_pipe(struct etnaviv_gpu *gpu,
- 	struct etnaviv_cmdbuf *buffer, u8 pipe)
- {
-@@ -100,6 +102,10 @@ u16 etnaviv_buffer_init(struct etnaviv_gpu *gpu)
- 	/* initialize buffer */
- 	buffer->user_size = 0;
- 
-+	/* Queue in PPU flop reset */
-+	if (etnaviv_flop_reset_ppu_require(&gpu->identity))
-+		etnaviv_flop_reset_ppu_run(gpu);
-+
- 	CMD_WAIT(buffer, gpu->fe_waitcycles);
- 	CMD_LINK(buffer, 2,
- 		 etnaviv_cmdbuf_get_va(buffer, &gpu->mmu_context->cmdbuf_mapping)
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.c b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-index 3e91747ed339..0e916e6785c8 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.c
-@@ -600,6 +600,9 @@ static void etnaviv_unbind(struct device *dev)
- 
- 	component_unbind_all(dev, drm);
- 
-+	etnaviv_cmdbuf_free(priv->flop_reset_data_ppu);
-+	kfree(priv->flop_reset_data_ppu);
-+	
- 	etnaviv_cmdbuf_suballoc_destroy(priv->cmdbuf_suballoc);
- 
- 	xa_destroy(&priv->active_contexts);
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_drv.h b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-index b3eb1662e90c..20dad16fd554 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_drv.h
-@@ -48,6 +48,9 @@ struct etnaviv_drm_private {
- 	/* list of GEM objects: */
- 	struct mutex gem_lock;
- 	struct list_head gem_list;
-+
-+	/* ppu flop reset data */
-+	struct etnaviv_cmdbuf *flop_reset_data_ppu;
- };
- 
- int etnaviv_ioctl_gem_submit(struct drm_device *dev, void *data,
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
-new file mode 100644
-index 000000000000..138af3c33b5d
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.c
-@@ -0,0 +1,206 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Etnaviv Project
-+ */
-+
-+#include "asm-generic/int-ll64.h"
-+#include "etnaviv_buffer.h"
-+#include "etnaviv_cmdbuf.h"
-+#include "state_3d.xml.h"
-+
-+#include "etnaviv_flop_reset.h"
-+
-+enum etnaviv_flop_reset_type {
-+	flop_reset_ppu = 1 << 0,
-+	flop_reset_nn = 1 << 1,
-+	flop_reset_tp = 1 << 2
-+};
-+
-+#define PPU_IMAGE_STRIDE 64
-+#define PPU_IMAGE_XSIZE 64
-+#define PPU_IMAGE_YSIZE 6
-+
-+#define PPU_FLOP_RESET_INSTR_DWORD_COUNT 16
-+
-+static void
-+etnaviv_emit_flop_reset_state_ppu(struct etnaviv_cmdbuf *cmdbuf,
-+				  u32 buffer_base,
-+				  u32 input_offset,
-+				  u32 output_offset,
-+				  u32 shader_offset,
-+				  u32 shader_size,
-+				  u32 shader_register_count)
-+{
-+	CMD_LOAD_STATE(cmdbuf, VIVS_GL_API_MODE,
-+		               VIVS_GL_API_MODE_OPENCL);
-+	CMD_SEM(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+	CMD_STALL(cmdbuf, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+
-+	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(0), 4);
-+
-+	OUT(cmdbuf, buffer_base + input_offset);
-+	OUT(cmdbuf, PPU_IMAGE_STRIDE);
-+	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
-+	OUT(cmdbuf, 0x444051f0);
-+	OUT(cmdbuf, 0xffffffff);
-+
-+	CMD_LOAD_STATES_START(cmdbuf, VIVS_SH_HALTI5_UNIFORMS(4), 4);
-+	OUT(cmdbuf, buffer_base + output_offset);
-+	OUT(cmdbuf, PPU_IMAGE_STRIDE);
-+	OUT(cmdbuf, PPU_IMAGE_XSIZE | (PPU_IMAGE_YSIZE  << 16));
-+	OUT(cmdbuf, 0x444051f0);
-+	OUT(cmdbuf, 0xffffffff);
-+
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_CONFIG,
-+		               VIVS_CL_CONFIG_DIMENSIONS(2) |
-+		               VIVS_CL_CONFIG_VALUE_ORDER(3));
-+	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_INVALIDATE, 0x1f);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_VARYING_NUM_COMPONENTS(0), 0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_TEMP_REGISTER_CONTROL,
-+		               shader_register_count);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_SAMPLER_BASE, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_UNIFORM_BASE, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_LOW, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_NEWRANGE_HIGH,
-+		               shader_size / 16);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INST_ADDR,
-+		               buffer_base + shader_offset);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_SH_CONFIG,
-+		               VIVS_SH_CONFIG_RTNE_ROUNDING);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_VS_ICACHE_CONTROL,
-+		               VIVS_VS_ICACHE_CONTROL_ENABLE);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_COUNT,
-+		               shader_size / 16 - 1);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_INPUT_COUNT, 0x1f01);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_VS_HALTI5_UNK008A0, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PA_VS_OUTPUT_COUNT, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_GL_VARYING_TOTAL_COMPONENTS, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_CONTROL_EXT, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_VS_OUTPUT_COUNT, 0x1);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_GL_HALTI5_SH_SPECIALS, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_PS_ICACHE_PREFETCH, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_UNK00924, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_THREAD_ALLOCATION, 0x1);
-+
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_X, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Y, 0x0);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_GLOBAL_WORK_OFFSET_Z, 0x0);
-+
-+	CMD_LOAD_STATES_START(cmdbuf, VIVS_CL_WORKGROUP_COUNT_X, 9);
-+	OUT(cmdbuf, 0xf);
-+	OUT(cmdbuf, 0x5);
-+	OUT(cmdbuf, 0xffffffff);
-+	OUT(cmdbuf, 0x0);
-+	OUT(cmdbuf, 0x0);
-+	OUT(cmdbuf, 0x3ff);
-+	OUT(cmdbuf, 0x0);
-+	OUT(cmdbuf, 0x4);
-+	OUT(cmdbuf, 0x1);
-+	OUT(cmdbuf, 0x0);
-+
-+	CMD_LOAD_STATE(cmdbuf, VIVS_CL_KICKER, 0xbadabeeb);
-+	CMD_LOAD_STATE(cmdbuf, VIVS_GL_FLUSH_CACHE,
-+		               VIVS_GL_FLUSH_CACHE_SHADER_L1 |
-+		               VIVS_GL_FLUSH_CACHE_UNK10 |
-+		               VIVS_GL_FLUSH_CACHE_UNK11);
-+}
-+
-+static void
-+etnaviv_flop_reset_ppu_fill_input(u32 *buffer, u32 size)
-+{
-+	for (int i = 0; i < size/4; ++i, ++buffer)
-+		*buffer = 0x01010101;
-+}
-+
-+static void
-+etnaviv_flop_reset_ppu_set_shader(u8 *dest)
-+{
-+	const u32 inst[PPU_FLOP_RESET_INSTR_DWORD_COUNT] = {
-+		/* img_load.u8 r1, c0, r0.xy */
-+		0x78011779, 0x39000804, 0x00A90050, 0x00000000,
-+		/* img_load.u8 r2, c0, r0.xy */
-+		0x78021779, 0x39000804, 0x00A90050, 0x00000000,
-+		/* dp2x8 r1, r1, r2, c3_512 */
-+		0xB8017145, 0x390018FC, 0x01C90140, 0x40390028,
-+		/* img_store.u8 r1, c2, r0.xy, r1 */
-+		0x380007BA, 0x39001804, 0x00A90050, 0x00390018,
-+	};
-+	memcpy(dest, inst, sizeof(inst));
-+}
-+
-+static struct etnaviv_flop_reset_entry {
-+	u16 chip_model;
-+	u16 revision;
-+	u32 flags;
-+} etnaviv_flop_reset_db [] = {
-+	{
-+		.chip_model = 0x8000,
-+		.revision = 0x6205,
-+		.flags = flop_reset_ppu
-+	},
-+};
-+
-+bool
-+etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_id)
-+{
-+	const struct etnaviv_flop_reset_entry *e = etnaviv_flop_reset_db;
-+
-+	for (int i = 0; i < ARRAY_SIZE(etnaviv_flop_reset_db); ++i, ++e) {
-+		if (chip_id->model == e->chip_model &&
-+		    chip_id->revision == e->revision)
-+			return (e->flags & flop_reset_ppu) != 0;
-+	}
-+
-+	return false;
-+}
-+
-+static const u32 image_data_size = PPU_IMAGE_STRIDE * PPU_IMAGE_YSIZE;
-+static const u32 output_offset = ALIGN(image_data_size, 64);
-+static const u32 shader_offset = ALIGN(output_offset + image_data_size, 64);
-+static const u32 shader_size = PPU_FLOP_RESET_INSTR_DWORD_COUNT * sizeof(u32);
-+static const u32 shader_register_count = 3;
-+static const u32 buffer_size = shader_offset + shader_size;
-+
-+void
-+etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv)
-+{
-+	/* Get some space from the rung buffer to put the payload
-+	 * (input and output image, and shader), we keep this buffer
-+	 * for the whole life time the driver is bound
-+	 */
-+	priv->flop_reset_data_ppu =
-+	  kzalloc(sizeof(*priv->flop_reset_data_ppu), GFP_KERNEL);
-+
-+	etnaviv_cmdbuf_init(priv->cmdbuf_suballoc,
-+			    priv->flop_reset_data_ppu, buffer_size);
-+
-+	void *buffer_base = priv->flop_reset_data_ppu->vaddr;
-+
-+	u32 *input_data = (u32 *)buffer_base;
-+	etnaviv_flop_reset_ppu_fill_input(input_data, image_data_size);
-+
-+	u8 *shader_data = (u8 *)buffer_base + shader_offset;
-+	etnaviv_flop_reset_ppu_set_shader(shader_data);
-+}
-+
-+void
-+etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu)
-+{
-+	struct etnaviv_drm_private *priv = gpu->drm->dev_private;
-+
-+	if (!priv->flop_reset_data_ppu) {
-+		pr_err("Flop reset data was not initialized, skipping\n");
-+		return;
-+	}
-+
-+	u32 buffer_base = etnaviv_cmdbuf_get_va(priv->flop_reset_data_ppu,
-+						&gpu->mmu_context->cmdbuf_mapping);
-+
-+	etnaviv_emit_flop_reset_state_ppu(&gpu->buffer,
-+					  buffer_base,
-+					  0,
-+					  output_offset,
-+					  shader_offset,
-+					  shader_size,
-+					  shader_register_count);
-+}
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
-new file mode 100644
-index 000000000000..f51cece75507
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_flop_reset.h
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Etnaviv Project
-+ */
-+
-+
-+#ifndef etnaviv_flop_reset_h
-+#define etnaviv_flop_reset_h
-+
-+#include <linux/types.h>
-+
-+struct etnaviv_chip_identity;
-+struct etnaviv_drm_private;
-+struct etnaviv_gpu;
-+
-+bool
-+etnaviv_flop_reset_ppu_require(const struct etnaviv_chip_identity *chip_id);
-+
-+void
-+etnaviv_flop_reset_ppu_init(struct etnaviv_drm_private *priv);
-+
-+void
-+etnaviv_flop_reset_ppu_run(struct etnaviv_gpu *gpu);
-+
-+#endif
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index cf0d9049bcf1..0aac01c1021c 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -18,6 +18,7 @@
- 
- #include "etnaviv_cmdbuf.h"
- #include "etnaviv_dump.h"
-+#include "etnaviv_flop_reset.h"
- #include "etnaviv_gpu.h"
- #include "etnaviv_gem.h"
- #include "etnaviv_mmu.h"
-@@ -837,6 +838,10 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
- 		goto fail;
- 	}
- 
-+	if (etnaviv_flop_reset_ppu_require(&gpu->identity) &&
-+	    !priv->flop_reset_data_ppu)
-+		etnaviv_flop_reset_ppu_init(priv);
-+
- 	if (gpu->identity.nn_core_count > 0)
- 		dev_warn(gpu->dev, "etnaviv has been instantiated on a NPU, "
-                                    "for which the UAPI is still experimental\n");
--- 
-2.49.0
+But even that, the PRP setup doesn't match the teardown. We're calling
+dma_map_page() on each PRP even if consecutive PRP's came from the same
+dma mapping segment. So even if it had been coalesced, but if the device
+doesn't support SGLs, then it would use the prp unmap path.
 
+Ben, can you check if your device supports sgl?
+
+  # nvme id-ctrl /dev/nvme0 | grep sgl
