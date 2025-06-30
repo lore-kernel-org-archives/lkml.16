@@ -1,247 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269B72036ED;
-	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9360F1E5702
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751265914; cv=none; b=TirQP23sXgsDnUf/3sDCg0S3B/eN5ODM2VIIecPu7WUde/2G02bdlgZivGFN0Yihme9XTiTUmJyolAxSQSBlzw6sBs6S0nTARd2VAMN3Mis5V/e1/MlyUcznnyCY8+TZ17R1PCspXfGK2LjKhWdlrQw7fz7bsJtLHfXcPGP2G/w=
+	t=1751265921; cv=none; b=lVArnZUayG01EYMqQXI97ZM5JMigS/J7J48avp5EvY16lBQWBxWIjBychL5GXYf5e0IoJmq8RMZb3ujcGz8V+Mi6SkA+8xe5nqHOYbqe75CWCFNDabxBa1PC29Mx5TUvFX8UKUHzZRahCrk351lfbDynXhkbKMnKWno+w6FR64c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751265914; c=relaxed/simple;
-	bh=XUFiVpxKlK+wD+KyggI/eawF4MoFmp23D1qZF+oPfpU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uJUeqTBflEI0UleKyFigPxscpEbsM1BdO97OXP6ui4+tDdcR0rUofY3A3dgQ4qoSOsj7Or6rGjCQxyp0UTIUppIfBzJnmy15iD0Z+sInYPkGaOeytd5qxPD392rAEFEXeObYKOXwSCF6aOzyJvn7HYjYEf3Hk+c+9CxJespp3Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDz48jpE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751265921; c=relaxed/simple;
+	bh=zSBz5NdE8YYgdvvURKnoPcZyypOiXEf4BTV57OwDv8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZlIz/ZFVxE8RYLjFlPH9Ehju8ICp0+kUrMmVeoJhAHHKlpeZ+S3GElyXWtsntQWapyOfzQqcvc3c4jPb/Fa3SjzGauOmPNtIsrP7PJXYipLyESC+1uBomTdt1AgYvSCHtH5ANvleivZMw1ca8q9Mlk2z/ZDEXTllv4+iiH1mfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OujG/FW7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hCS6zI6m; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDz48jpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6645CC4CEEB;
-	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751265913;
-	bh=XUFiVpxKlK+wD+KyggI/eawF4MoFmp23D1qZF+oPfpU=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=UDz48jpEBBf2Vr7ZhJzVeNr+izJCrxu7tqobH+dYCmrXkk1Ahs+XNrjois6uqa/mv
-	 h7KSqyihMq1NGNCRlZ4wibYRoUUvyReR4PMwLJwHV2owXGRLOv/llHrLkapMjlnFmf
-	 VgSpbBEfDceUNM6Sk4ePOGsaBcE2UrgSFlk4MBniwIbdMLUigaltAU+iDBHQTR9K/E
-	 Di/kcR5NeXhrsn/K+w+e5VfbjvL2EJCb9hn07YFhGEhoDaM4/32JunBZx9XJmeja0h
-	 IGGgWhKq/apC8oHMUiaA6lh9dWGsX0U5guNy3ndIhez4bd40OffXLd1W+vgtN/sO2I
-	 +QPZJBv0iLnmg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D15C83026;
-	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
-From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
-Date: Mon, 30 Jun 2025 14:45:10 +0800
-Subject: [PATCH v3] Bluetooth: hci_event: Add support for handling LE BIG
- Sync Lost event
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OujG/FW7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCS6zI6m"
+Date: Mon, 30 Jun 2025 08:45:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1751265910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QZQltrJmsUv5t75sduP0xOfkCDCGatOPuiFCAR+zNeU=;
+	b=OujG/FW7w2zbApKtr9vE6HArhqNcbw3ImwDJDisdlEkk1t2HCMjwtrLRQ1/rs4+17H3YUl
+	XxFm/zjgI5M36oDVYIEHXbHI5FFg/VxL4YCbaDiXWa+YngTnTS4VVIxi5/BBYsDf4vAAQG
+	mF4uccUOgrl0gFifZlNA5GqOshFS/qqFbCz1GPdN4yNj8I8xn3KMhWObJ8sLblodxz1mTO
+	nuBOT/mcXz8YFjXJNOmLeWUh4gf7Ixg3VwtGF+ZHD5uQMSpIUhH50CgWvqUVQsaPLs1V6I
+	UdYFwF1415IuLHOUZnrtdqB8wZvKJ0gmYTLIOPtdy7vvVqp55NuD8xUhEyQ7hg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1751265910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QZQltrJmsUv5t75sduP0xOfkCDCGatOPuiFCAR+zNeU=;
+	b=hCS6zI6mXbfa8ruVxFhSDZbvAzAQ1i0Q2z+VsINTus+7rGoccNHJOH+xaOSwkTTWLOhGwS
+	617UoxWjv5els8BQ==
+From: Nam Cao <namcao@linutronix.de>
+To: kernel test robot <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	linux-riscv@lists.infradead.org
+Subject: Re: ld.lld: error: Function Import: link error: linking module flags
+ 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at
+ 899876), and 'i32 1' from vmlinux.a(security.o at 937376)
+Message-ID: <20250630064442.M5D7FRfm@linutronix.de>
+References: <202506290255.KBVM83vZ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250630-handle_big_sync_lost_event-v3-1-a4cf5bf6ec82@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAHUyYmgC/33NSw6CMBSF4a2Qjq2htzzUkfswhtTbCzTB1rSkk
- RD2biEOdMLwP4PvzCyQNxTYJZuZp2iCcTaFPGQMe2U74kanZpBDmVcCeBr1QM3DdE2YLDaDC2N
- DkezIC6w1VoU85wpYAl6eWvPe8Ns9dW/C6Py0fUWxrl8Wij02Ci44SkCStdaVKq/qObjO4BHdk
- 61whF+s3MUgYSfRikrmZa1A/GPLsnwA7EQyyhMBAAA=
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751265911; l=6290;
- i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
- bh=hd2J731iIuIotatLug2vmpMnVpPpDXpNF9inZ5U4hT0=;
- b=5dZKeucKuuFJr62uUw25C8Veatiw9E6VYmhqqRy9cGZ8xGyDLXD65tzfu/x7jT8NoeN7tfg5r
- /+cNZ9wSp1YC1O29aCnQbe1oFsi+tnO941S3B53XlpZHW/giU7pOwEr
-X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
- pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
-X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
- auth_id=180
-X-Original-From: Yang Li <yang.li@amlogic.com>
-Reply-To: yang.li@amlogic.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202506290255.KBVM83vZ-lkp@intel.com>
 
-From: Yang Li <yang.li@amlogic.com>
++Cc: linux-riscv@lists.infradead.org
 
-When the BIS source stops, the controller sends an LE BIG Sync Lost
-event (subevent 0x1E). Currently, this event is not handled, causing
-the BIS stream to remain active in BlueZ and preventing recovery.
+On Sun, Jun 29, 2025 at 02:25:33AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   aaf724ed69264719550ec4f194d3ab17b886af9a
+> commit: 890ba5be6335dbbbc99af14ea007befb5f83f174 Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
+> date:   5 days ago
+> config: riscv-randconfig-001-20250628 (https://download.01.org/0day-ci/archive/20250629/202506290255.KBVM83vZ-lkp@intel.com/config)
+> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250629/202506290255.KBVM83vZ-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506290255.KBVM83vZ-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(net-traces.o at 1014596)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(e1000_main.o at 992876)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(core.o at 912236)
+> >> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(security.o at 937376)
+> >> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(sock.o at 1012256)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(ioctl.o at 1015736)
+> >> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(socket.o at 1012196)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(ring_buffer.o at 910076)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(hugetlb.o at 919016)
+> >> ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(btf.o at 913916)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(page_alloc.o at 918536)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(slub.o at 918836)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(spi.o at 992036)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(vmalloc.o at 918296)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(syscall.o at 912296)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(trace.o at 910136)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(skbuff.o at 1012376)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(vmscan.o at 916376)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(xprtsock.o at 1024196)
+>    ld.lld: error: Function Import: link error: linking module flags 'Code Model': IDs have conflicting values: 'i32 3' from vmlinux.a(init.o at 899876), and 'i32 1' from vmlinux.a(filemap.o at 915776)
+>    ld.lld: error: too many errors emitted, stopping now (use --error-limit=0 to see all errors)
 
-Signed-off-by: Yang Li <yang.li@amlogic.com>
----
-Changes in v3:
-- Delete the PA sync connection separately.
-- Add state and role check when lookup BIS connections
-- Link to v2: https://lore.kernel.org/r/20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com
+I'm not sure what lld is saying here. It seems this problem has always been
+there, the revert commit just made it appears more.
 
-Changes in v2:
-- Matching the BIG handle is required when looking up a BIG connection.
-- Use ev->reason to determine the cause of disconnection.
-- Call hci_conn_del after hci_disconnect_cfm to remove the connection entry
-- Delete the big connection
-- Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com
----
- include/net/bluetooth/hci.h      |  6 ++++++
- include/net/bluetooth/hci_core.h | 16 ++++++++++++----
- net/bluetooth/hci_conn.c         |  3 ++-
- net/bluetooth/hci_event.c        | 39 ++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 58 insertions(+), 6 deletions(-)
+These errors should still be investigated, but I think the revert commit is
+fine.
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 82cbd54443ac..48389a64accb 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
- 	__le16  bis[];
- } __packed;
- 
-+#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
-+struct hci_evt_le_big_sync_lost {
-+	__u8    handle;
-+	__u8    reason;
-+} __packed;
-+
- #define HCI_EVT_LE_BIG_INFO_ADV_REPORT	0x22
- struct hci_evt_le_big_info_adv_report {
- 	__le16  sync_handle;
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index a760f05fa3fb..5ab19d4fef93 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1340,7 +1340,8 @@ hci_conn_hash_lookup_big_sync_pend(struct hci_dev *hdev,
- }
- 
- static inline struct hci_conn *
--hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
-+hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,
-+			       __u16 state, __u8 role)
- {
- 	struct hci_conn_hash *h = &hdev->conn_hash;
- 	struct hci_conn  *c;
-@@ -1348,9 +1349,16 @@ hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
- 	rcu_read_lock();
- 
- 	list_for_each_entry_rcu(c, &h->list, list) {
--		if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
--		    c->state != state)
--			continue;
-+		if (role == HCI_ROLE_MASTER) {
-+			if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
-+				c->state != state || c->role != role)
-+				continue;
-+		} else {
-+			if (c->type != BIS_LINK ||
-+				c->state != state ||
-+				c->role != role)
-+				continue;
-+		}
- 
- 		if (handle == c->iso_qos.bcast.big) {
- 			rcu_read_unlock();
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 4f379184df5b..6bb1ab42db39 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -2146,7 +2146,8 @@ struct hci_conn *hci_bind_bis(struct hci_dev *hdev, bdaddr_t *dst, __u8 sid,
- 	struct hci_link *link;
- 
- 	/* Look for any BIS that is open for rebinding */
--	conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big, BT_OPEN);
-+	conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big,
-+					     BT_OPEN, HCI_ROLE_MASTER);
- 	if (conn) {
- 		memcpy(qos, &conn->iso_qos, sizeof(*qos));
- 		conn->state = BT_CONNECTED;
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 66052d6aaa1d..f3e3e4964677 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3903,6 +3903,8 @@ static u8 hci_cc_le_setup_iso_path(struct hci_dev *hdev, void *data,
- 		goto unlock;
- 	}
- 
-+	conn->state = BT_CONNECTED;
-+
- 	switch (cp->direction) {
- 	/* Input (Host to Controller) */
- 	case 0x00:
-@@ -6913,7 +6915,7 @@ static void hci_le_create_big_complete_evt(struct hci_dev *hdev, void *data,
- 
- 	/* Connect all BISes that are bound to the BIG */
- 	while ((conn = hci_conn_hash_lookup_big_state(hdev, ev->handle,
--						      BT_BOUND))) {
-+					BT_BOUND, HCI_ROLE_MASTER))) {
- 		if (ev->status) {
- 			hci_connect_cfm(conn, ev->status);
- 			hci_conn_del(conn);
-@@ -6968,6 +6970,7 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
- 	}
- 
- 	clear_bit(HCI_CONN_CREATE_BIG_SYNC, &conn->flags);
-+	conn->state = BT_CONNECTED;
- 
- 	conn->num_bis = 0;
- 	memset(conn->bis, 0, sizeof(conn->num_bis));
-@@ -7026,6 +7029,35 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
- 	hci_dev_unlock(hdev);
- }
- 
-+static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
-+				     struct sk_buff *skb)
-+{
-+	struct hci_evt_le_big_sync_lost *ev = data;
-+	struct hci_conn *bis, *conn;
-+
-+	bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
-+
-+	hci_dev_lock(hdev);
-+
-+	/* Delete the pa sync connection */
-+	bis = hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle);
-+	if (bis) {
-+		conn = hci_conn_hash_lookup_pa_sync_handle(hdev, bis->sync_handle);
-+		if (conn)
-+			hci_conn_del(conn);
-+	}
-+
-+	/* Delete each bis connection */
-+	while ((bis = hci_conn_hash_lookup_big_state(hdev, ev->handle,
-+						BT_CONNECTED, HCI_ROLE_SLAVE))) {
-+		clear_bit(HCI_CONN_BIG_SYNC, &bis->flags);
-+		hci_disconn_cfm(bis, ev->reason);
-+		hci_conn_del(bis);
-+	}
-+
-+	hci_dev_unlock(hdev);
-+}
-+
- static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
- 					   struct sk_buff *skb)
- {
-@@ -7149,6 +7181,11 @@ static const struct hci_le_ev {
- 		     hci_le_big_sync_established_evt,
- 		     sizeof(struct hci_evt_le_big_sync_estabilished),
- 		     HCI_MAX_EVENT_SIZE),
-+	/* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
-+	HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
-+		     hci_le_big_sync_lost_evt,
-+		     sizeof(struct hci_evt_le_big_sync_lost),
-+		     HCI_MAX_EVENT_SIZE),
- 	/* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
- 	HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
- 		     hci_le_big_info_adv_report_evt,
+I see CONFIG_CMODEL_MEDLOW=y, so probably has something to do with
+arch/riscv/mm/init.c is compiled with -mcmodel=medany, while the others are
+compiled with -mcmodel=medlow. I leave it to smarter minds..
 
----
-base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
-change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
-
-Best regards,
--- 
-Yang Li <yang.li@amlogic.com>
-
-
+Nam
