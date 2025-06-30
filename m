@@ -1,129 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37794293B5C;
-	Mon, 30 Jun 2025 16:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2E3295DB4
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751299929; cv=none; b=EnIsAVVzCTw0pj1ibL8wNNQPqu43XTu1ANxvMnub4gmzDfgvqP/GPDCGnOpuNINdmfnvj/Ds2uOU5HctuwxYZXYTPWcywEsiqYwIKJ6/wWcgxT0XkDSj9SHsq8Dz3Y8H7WW1JgkZlKjP2oneZ14b8CAwUS4/iFuRcH+juEyb3Hc=
+	t=1751299946; cv=none; b=NFABU5RlmRnxS7FGYsaSDQObrnYpRpTGk8CpNeEcoQzahtMhe6zKFaAcvkABdGjduKXCexpnpiVWaYbrS7B5H+TrJPQml6i4AmfPCuuJwcE2j2CnpqEWECLgP9AL2MX9Z8W6n1q8tBlEZEEoCDmDR6hiiI5QNijhRmiNSayv5C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751299929; c=relaxed/simple;
-	bh=pMdI6QJaU0k9Tifk5m6sg1z61/DI88a7J1nzMO0v4cE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NDT8lkxazAcVkVJaT6u0AGhTvbx95jS7tjqNmp75BQtsN41+2JYvy1ocw4Xn/4uKUb3n2R3nO3TKELAhfy5n4SBEdACgoBqfA1UiRXfdr+BpEnaWTZhhtMr8YRfgzaJH1nbG72Tc+Tz59oUjfbcUApAtYQUGcbCUZnUs/Org5zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbkKMYdK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751299946; c=relaxed/simple;
+	bh=FtbBCj4+GHpgu7Dy06vOabgNMTD5RmMVmwY1Sgx2QS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ar+6H9YIo8w75SE614eCvF8hjd5Rr9GWVow4V5KmVZE4euWpitHrFo+JQUy0Sge1lpU6ti0fLqnHrwZe9H4vXbf+CHIJEsXXGvU0HFBiWsQ3S31C08OWezOtgw09oyMVFRZutV5b9mGqdTdF9qpV3hXieGvF0J2RN2iLLjmzRYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y96HeBAS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VHVowxXX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y96HeBAS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VHVowxXX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbkKMYdK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48084C4CEE3;
-	Mon, 30 Jun 2025 16:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751299929;
-	bh=pMdI6QJaU0k9Tifk5m6sg1z61/DI88a7J1nzMO0v4cE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JbkKMYdKLwJlbbYUyG93oRN55gMsdPUa16eCyB9QXrfNcfm/oKrmIDeQ148OE1sJ1
-	 l9FstzDwuLqEGpHVE6PeHYwZ8EBJ4+dmwJ1ODI35QnsM94xYT7s4Zw/zZqlfyHhk+m
-	 qT1Y6VL5IFf7rfk9uQ4S4eDvWpA4LezxIfmC/v5xi06vbbzBkMzv/ZQXAvJUNHsSOJ
-	 O5osbfYFt64BQYZjuwKgumkRBIDmlMDOWiQZQyY+zSc/iB0Qpmt8JUVvX/tdUX4yCA
-	 cD3pJ98XWWUKK/BZKs6bRQPxxSgPUS7kM+kcSiFBIbYolXh1Ave8u7J7ABaqNUz1f1
-	 EAwuVgzrGJ8Pg==
-Message-ID: <e64c20ae-5aaf-44cf-a463-c7eb1134daee@kernel.org>
-Date: Mon, 30 Jun 2025 18:12:02 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y96HeBAS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VHVowxXX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y96HeBAS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VHVowxXX"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AE6251F393;
+	Mon, 30 Jun 2025 16:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751299942;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SUNV0eE/zlK0f8cOMVjqCFlky3boOzUCMdC2jqfFRIU=;
+	b=y96HeBASLM1yYZoRZy72DEa8j7ntTocvEcul0i9At4pG0HzI64cSK3NxwCLjKMZBFTjTUK
+	dKBBryXLGZC92Sv1hxfGJaDU+8GlrY40g2JfB2fVYP3PESmjkbruHdzP1rOsVvc07jLkcu
+	9nJyQ0n451fNbnqad2RnPFzv3SCGSjA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751299942;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SUNV0eE/zlK0f8cOMVjqCFlky3boOzUCMdC2jqfFRIU=;
+	b=VHVowxXXkEf3jn0rjGRMQNoy7jQgml0gkz4qcDBINEEhOPpWaBUVerpLxXsfuXVT+g8QtI
+	SLa+Ko7n/Ge41yAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751299942;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SUNV0eE/zlK0f8cOMVjqCFlky3boOzUCMdC2jqfFRIU=;
+	b=y96HeBASLM1yYZoRZy72DEa8j7ntTocvEcul0i9At4pG0HzI64cSK3NxwCLjKMZBFTjTUK
+	dKBBryXLGZC92Sv1hxfGJaDU+8GlrY40g2JfB2fVYP3PESmjkbruHdzP1rOsVvc07jLkcu
+	9nJyQ0n451fNbnqad2RnPFzv3SCGSjA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751299942;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SUNV0eE/zlK0f8cOMVjqCFlky3boOzUCMdC2jqfFRIU=;
+	b=VHVowxXXkEf3jn0rjGRMQNoy7jQgml0gkz4qcDBINEEhOPpWaBUVerpLxXsfuXVT+g8QtI
+	SLa+Ko7n/Ge41yAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 90A6513983;
+	Mon, 30 Jun 2025 16:12:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y2EHI2a3Ymh2FAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 30 Jun 2025 16:12:22 +0000
+Date: Mon, 30 Jun 2025 18:12:21 +0200
+From: David Sterba <dsterba@suse.cz>
+To: George Hu <integral@archlinux.org>
+Cc: wqu@suse.com, clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: replace nested usage of min & max with clamp
+ in btrfs_compress_set_level()
+Message-ID: <20250630161221.GJ31241@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <669773b7-4428-43ca-ab80-d7ed1c71886c@suse.com>
+ <20250628052130.36111-1-integral@archlinux.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Introduce Tyr
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Daniel Stone <daniels@collabora.com>, Rob Herring <robh@kernel.org>,
- Alice Ryhl <alice.ryhl@google.com>, Beata Michalska
- <beata.michalska@arm.com>, Carsten Haitzler <carsten.haitzler@foss.arm.com>,
- Ashley Smith <ashley.smith@collabora.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
- kernel@collabora.com
-References: <20250627-tyr-v1-1-cb5f4c6ced46@collabora.com>
- <aF8lYpK_l2I-ts1k@pollux> <20250630180631.5e8066cd@fedora>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250630180631.5e8066cd@fedora>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250628052130.36111-1-integral@archlinux.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Level: 
 
-On 6/30/25 6:06 PM, Boris Brezillon wrote:
-> On Sat, 28 Jun 2025 01:12:34 +0200
-> Danilo Krummrich <dakr@kernel.org> wrote:
+On Sat, Jun 28, 2025 at 01:21:30PM +0800, George Hu wrote:
+> Refactor the btrfs_compress_set_level() function by replacing the
+> nested usage of min() and max() macro with clamp() to simplify the
+> code and improve readability.
 > 
->>> +    pub(crate) fn log(&self, pdev: &platform::Device) {
->>> +        let major = (self.gpu_id >> 16) & 0xff;
->>> +        let minor = (self.gpu_id >> 8) & 0xff;
->>> +        let status = self.gpu_id & 0xff;
->>> +
->>> +        let model_name = if let Some(model) = GPU_MODELS
->>> +            .iter()
->>> +            .find(|&f| f.major == major && f.minor == minor)
->>> +        {
->>> +            model.name
->>> +        } else {
->>> +            "unknown"
->>> +        };
->>> +
->>> +        dev_info!(
->>> +            pdev.as_ref(),
->>> +            "mali-{} id 0x{:x} major 0x{:x} minor 0x{:x} status 0x{:x}",
->>> +            model_name,
->>> +            self.gpu_id >> 16,
->>> +            major,
->>> +            minor,
->>> +            status
->>> +        );
->>> +
->>> +        dev_info!(
->>> +            pdev.as_ref(),
->>> +            "Features: L2:{:#x} Tiler:{:#x} Mem:{:#x} MMU:{:#x} AS:{:#x}",
->>> +            self.l2_features,
->>> +            self.tiler_features,
->>> +            self.mem_features,
->>> +            self.mmu_features,
->>> +            self.as_present
->>> +        );
->>> +
->>> +        dev_info!(
->>> +            pdev.as_ref(),
->>> +            "shader_present=0x{:016x} l2_present=0x{:016x} tiler_present=0x{:016x}",
->>> +            self.shader_present,
->>> +            self.l2_present,
->>> +            self.tiler_present
->>> +        );
->>> +
->>> +        dev_info!(
->>> +            pdev.as_ref(),
->>> +            "PA bits: {}, VA bits: {}",
->>> +            self.pa_bits(),
->>> +            self.va_bits()
->>> +        );
->>> +    }
->>
->> This is called from probe() and seems way too verbose for dev_info!(), please
->> use dev_dbg!() instead.
-> 
-> We do have the same level of verbosity in Panthor, and it's proven
-> useful when people are filling bug reports. Asking them to reload
-> the module with debug prints enabled is kinda annoying, and I don't
-> think I've heard anyone complaining that this was too verbose or slowing
-> down the boot, so I'd be tempted to keep it like that, and least for
-> the information printed in this function.
+> Signed-off-by: George Hu <integral@archlinux.org>
 
-Yeah, I think for the GPU revision bits that's reasonable, but do you really
-also need the other prints to be dev_info()? Don't you know this information
-from the combination of the GPU revision bits and the kernel version?
+Reviewed-by: David Sterba <dsterba@suse.com>
