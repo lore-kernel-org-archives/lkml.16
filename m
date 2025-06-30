@@ -1,166 +1,247 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5988818CC1C;
-	Mon, 30 Jun 2025 06:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269B72036ED;
+	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751265829; cv=none; b=b5aAH2RNV5YTvzQd2qg8anGcHcXrlb3RbTZ/oV6ECCXxnC3tlZcZq9qGCl8roQiDtc9MI/Z7hlqKeyoVTuPlCS7LrnWgOSkEv8LAyS/8FdiyKArH45MrGF6IXYnYF0LC+v93S8lZgvRXoeSRw0mMPKe/h6P7sa6I9V/x0ugm6VQ=
+	t=1751265914; cv=none; b=TirQP23sXgsDnUf/3sDCg0S3B/eN5ODM2VIIecPu7WUde/2G02bdlgZivGFN0Yihme9XTiTUmJyolAxSQSBlzw6sBs6S0nTARd2VAMN3Mis5V/e1/MlyUcznnyCY8+TZ17R1PCspXfGK2LjKhWdlrQw7fz7bsJtLHfXcPGP2G/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751265829; c=relaxed/simple;
-	bh=AoCV/CL2uLxgEJw9pVSZJcmMBZDrZqa07MP+IMSkLTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cciH6LTozTHOL/03IKlh1qm5HmSgBnw0Qr5XVQGLm4sUqUGi+t8fNREweEGr9d3STz/3qYlsVOsxPckVhzsCsP+dJ0Ph+HILvWgQryN0D6ptu6MOlAzISl0VyfE0E5MphOFc0C7jHzxProot78SPxblgbxPcD2FHz00mRvSXlD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hZlCQHKp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1751265914; c=relaxed/simple;
+	bh=XUFiVpxKlK+wD+KyggI/eawF4MoFmp23D1qZF+oPfpU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uJUeqTBflEI0UleKyFigPxscpEbsM1BdO97OXP6ui4+tDdcR0rUofY3A3dgQ4qoSOsj7Or6rGjCQxyp0UTIUppIfBzJnmy15iD0Z+sInYPkGaOeytd5qxPD392rAEFEXeObYKOXwSCF6aOzyJvn7HYjYEf3Hk+c+9CxJespp3Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDz48jpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hZlCQHKp"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TNU1LO005295;
-	Mon, 30 Jun 2025 06:43:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=4VYkcedFyAoDplquSeQ//Iiyw69vweBomdR
-	n0hYrRY8=; b=hZlCQHKpffAQ3bbOMW4BooCuP8bWIMFLm+muUS392lweVOVMCzW
-	/NZaC8sohlWxr5H3N9zgSTR9Bhn/kSx/aDiauxRRP9yg8jFgsk0AK/H6t+Ex38PE
-	vhEqKoc0AyxT6Y7FSwHbsC8D4wsefm7AdB4frz9ywrCEMCmNa1o4yBm0LqSeYhFR
-	VyzdWEZsFA74rHcNVzdoku+y1U6nXB2Hx67BLzSIcBZ2nVaVffHcJzSqnYvN+Qrb
-	9VjjSWykSBkuvXAfeJM9a1Nr4Sxh81ndXR+Ibonp+3WwMR3EkNol3BHut2BNoxld
-	1OoMpvRCMnrkOeJykVjmPUM1I9r+sKO1OAQ==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kd64gwkp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 06:43:43 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6he0l026895;
-	Mon, 30 Jun 2025 06:43:40 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47j9fkm1u7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 06:43:40 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55U6heO0026890;
-	Mon, 30 Jun 2025 06:43:40 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-vdadhani-hyd.qualcomm.com [10.213.97.252])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55U6hesS026889
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 06:43:40 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
-	id 7CB4E513; Mon, 30 Jun 2025 12:13:39 +0530 (+0530)
-From: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
-        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: qcom: qcs615: add missing dt property in QUP SEs
-Date: Mon, 30 Jun 2025 12:13:38 +0530
-Message-Id: <20250630064338.2487409-1-viken.dadhaniya@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDz48jpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6645CC4CEEB;
+	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751265913;
+	bh=XUFiVpxKlK+wD+KyggI/eawF4MoFmp23D1qZF+oPfpU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=UDz48jpEBBf2Vr7ZhJzVeNr+izJCrxu7tqobH+dYCmrXkk1Ahs+XNrjois6uqa/mv
+	 h7KSqyihMq1NGNCRlZ4wibYRoUUvyReR4PMwLJwHV2owXGRLOv/llHrLkapMjlnFmf
+	 VgSpbBEfDceUNM6Sk4ePOGsaBcE2UrgSFlk4MBniwIbdMLUigaltAU+iDBHQTR9K/E
+	 Di/kcR5NeXhrsn/K+w+e5VfbjvL2EJCb9hn07YFhGEhoDaM4/32JunBZx9XJmeja0h
+	 IGGgWhKq/apC8oHMUiaA6lh9dWGsX0U5guNy3ndIhez4bd40OffXLd1W+vgtN/sO2I
+	 +QPZJBv0iLnmg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D15C83026;
+	Mon, 30 Jun 2025 06:45:13 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Mon, 30 Jun 2025 14:45:10 +0800
+Subject: [PATCH v3] Bluetooth: hci_event: Add support for handling LE BIG
+ Sync Lost event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Z+PsHGRA c=1 sm=1 tr=0 ts=6862321f cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=1G3-eJrk4WENrBlVEWAA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA1NCBTYWx0ZWRfX4tabQh/dggR/
- DQt1BWlbj+CFZBHwVIXGHNOXXSN3MswtieDhuxSD/ditcxQwwMR7OfDP3PmpYIT+/NSct+0uhqH
- Rjz+f57ssk+P4BWS5I8xz1cMDtLgDdTslTAdx1+WxlcEZyxIqyIajuB61NylBKx2ocX/RwjXAqi
- Oa6gYJT41IPjzJFLqHZFPVHM1ZcYrMakSEJyIVsDGyznQvKIrnePVKcqZGpZ2LjBXKaLcL2utAC
- mppzg9W0Oz4IlLiyI+9uWL+bdVye1goE63FKXh4RjeCZ08LYL1O5tpY5DVuyco5sJnipZ9YHPcV
- FU7GWS2MN5zAhdBvJbkEH23XmoJBgWnjW8LEugR+MQdpDhciLI9+5UT4Z4wu8G/RZgLWaegVfNr
- IRnA4b8dpRQwxtkDwwXvaZLaEbMKjRa+qGZLTr+xjkhcgGA9afM+zgMgqZz46qLYIHhkmoN5
-X-Proofpoint-GUID: SdE5ssLDq0yA4i4k33dyLnhYrf2w53Mg
-X-Proofpoint-ORIG-GUID: SdE5ssLDq0yA4i4k33dyLnhYrf2w53Mg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxlogscore=918
- spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300054
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-handle_big_sync_lost_event-v3-1-a4cf5bf6ec82@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAHUyYmgC/33NSw6CMBSF4a2Qjq2htzzUkfswhtTbCzTB1rSkk
+ RD2biEOdMLwP4PvzCyQNxTYJZuZp2iCcTaFPGQMe2U74kanZpBDmVcCeBr1QM3DdE2YLDaDC2N
+ DkezIC6w1VoU85wpYAl6eWvPe8Ns9dW/C6Py0fUWxrl8Wij02Ci44SkCStdaVKq/qObjO4BHdk
+ 61whF+s3MUgYSfRikrmZa1A/GPLsnwA7EQyyhMBAAA=
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751265911; l=6290;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=hd2J731iIuIotatLug2vmpMnVpPpDXpNF9inZ5U4hT0=;
+ b=5dZKeucKuuFJr62uUw25C8Veatiw9E6VYmhqqRy9cGZ8xGyDLXD65tzfu/x7jT8NoeN7tfg5r
+ /+cNZ9wSp1YC1O29aCnQbe1oFsi+tnO941S3B53XlpZHW/giU7pOwEr
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-Add the missing required-opps and operating-points-v2 properties to
-several I2C, SPI, and UART nodes in the QUP SEs.
+From: Yang Li <yang.li@amlogic.com>
 
-Fixes: f6746dc9e379 ("arm64: dts: qcom: qcs615: Add QUPv3 configuration")
-Cc: stable@vger.kernel.org
-Signed-off-by: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+When the BIS source stops, the controller sends an LE BIG Sync Lost
+event (subevent 0x1E). Currently, this event is not handled, causing
+the BIS stream to remain active in BlueZ and preventing recovery.
+
+Signed-off-by: Yang Li <yang.li@amlogic.com>
 ---
+Changes in v3:
+- Delete the PA sync connection separately.
+- Add state and role check when lookup BIS connections
+- Link to v2: https://lore.kernel.org/r/20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com
 
-v1 -> v2:
-
-- Added Fixes and Cc tag.
-
-v1 Link: https://lore.kernel.org/all/20250626102826.3422984-1-viken.dadhaniya@oss.qualcomm.com/
+Changes in v2:
+- Matching the BIG handle is required when looking up a BIG connection.
+- Use ev->reason to determine the cause of disconnection.
+- Call hci_conn_del after hci_disconnect_cfm to remove the connection entry
+- Delete the big connection
+- Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com
 ---
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/net/bluetooth/hci.h      |  6 ++++++
+ include/net/bluetooth/hci_core.h | 16 ++++++++++++----
+ net/bluetooth/hci_conn.c         |  3 ++-
+ net/bluetooth/hci_event.c        | 39 ++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 58 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bfbb21035492..e033b53f0f0f 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -631,6 +631,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 82cbd54443ac..48389a64accb 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
+ 	__le16  bis[];
+ } __packed;
  
-@@ -654,6 +655,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 1 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 1 QCOM_GPI_I2C>;
- 				dma-names = "tx",
-@@ -681,6 +683,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 2 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 2 QCOM_GPI_I2C>;
- 				dma-names = "tx",
-@@ -703,6 +706,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				dmas = <&gpi_dma0 0 2 QCOM_GPI_SPI>,
- 				       <&gpi_dma0 1 2 QCOM_GPI_SPI>;
- 				dma-names = "tx",
-@@ -728,6 +732,7 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 				interconnect-names = "qup-core",
- 						     "qup-config";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				operating-points-v2 = <&qup_opp_table>;
- 				status = "disabled";
- 			};
++#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
++struct hci_evt_le_big_sync_lost {
++	__u8    handle;
++	__u8    reason;
++} __packed;
++
+ #define HCI_EVT_LE_BIG_INFO_ADV_REPORT	0x22
+ struct hci_evt_le_big_info_adv_report {
+ 	__le16  sync_handle;
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index a760f05fa3fb..5ab19d4fef93 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -1340,7 +1340,8 @@ hci_conn_hash_lookup_big_sync_pend(struct hci_dev *hdev,
+ }
  
-@@ -751,6 +756,7 @@ &config_noc SLAVE_QUP_0 QCOM_ICC_TAG_ALWAYS>,
- 						     "qup-config",
- 						     "qup-memory";
- 				power-domains = <&rpmhpd RPMHPD_CX>;
-+				required-opps = <&rpmhpd_opp_low_svs>;
- 				dmas = <&gpi_dma0 0 3 QCOM_GPI_I2C>,
- 				       <&gpi_dma0 1 3 QCOM_GPI_I2C>;
- 				dma-names = "tx",
+ static inline struct hci_conn *
+-hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
++hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,
++			       __u16 state, __u8 role)
+ {
+ 	struct hci_conn_hash *h = &hdev->conn_hash;
+ 	struct hci_conn  *c;
+@@ -1348,9 +1349,16 @@ hci_conn_hash_lookup_big_state(struct hci_dev *hdev, __u8 handle,  __u16 state)
+ 	rcu_read_lock();
+ 
+ 	list_for_each_entry_rcu(c, &h->list, list) {
+-		if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
+-		    c->state != state)
+-			continue;
++		if (role == HCI_ROLE_MASTER) {
++			if (c->type != BIS_LINK || bacmp(&c->dst, BDADDR_ANY) ||
++				c->state != state || c->role != role)
++				continue;
++		} else {
++			if (c->type != BIS_LINK ||
++				c->state != state ||
++				c->role != role)
++				continue;
++		}
+ 
+ 		if (handle == c->iso_qos.bcast.big) {
+ 			rcu_read_unlock();
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index 4f379184df5b..6bb1ab42db39 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -2146,7 +2146,8 @@ struct hci_conn *hci_bind_bis(struct hci_dev *hdev, bdaddr_t *dst, __u8 sid,
+ 	struct hci_link *link;
+ 
+ 	/* Look for any BIS that is open for rebinding */
+-	conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big, BT_OPEN);
++	conn = hci_conn_hash_lookup_big_state(hdev, qos->bcast.big,
++					     BT_OPEN, HCI_ROLE_MASTER);
+ 	if (conn) {
+ 		memcpy(qos, &conn->iso_qos, sizeof(*qos));
+ 		conn->state = BT_CONNECTED;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 66052d6aaa1d..f3e3e4964677 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3903,6 +3903,8 @@ static u8 hci_cc_le_setup_iso_path(struct hci_dev *hdev, void *data,
+ 		goto unlock;
+ 	}
+ 
++	conn->state = BT_CONNECTED;
++
+ 	switch (cp->direction) {
+ 	/* Input (Host to Controller) */
+ 	case 0x00:
+@@ -6913,7 +6915,7 @@ static void hci_le_create_big_complete_evt(struct hci_dev *hdev, void *data,
+ 
+ 	/* Connect all BISes that are bound to the BIG */
+ 	while ((conn = hci_conn_hash_lookup_big_state(hdev, ev->handle,
+-						      BT_BOUND))) {
++					BT_BOUND, HCI_ROLE_MASTER))) {
+ 		if (ev->status) {
+ 			hci_connect_cfm(conn, ev->status);
+ 			hci_conn_del(conn);
+@@ -6968,6 +6970,7 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 	}
+ 
+ 	clear_bit(HCI_CONN_CREATE_BIG_SYNC, &conn->flags);
++	conn->state = BT_CONNECTED;
+ 
+ 	conn->num_bis = 0;
+ 	memset(conn->bis, 0, sizeof(conn->num_bis));
+@@ -7026,6 +7029,35 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 	hci_dev_unlock(hdev);
+ }
+ 
++static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
++				     struct sk_buff *skb)
++{
++	struct hci_evt_le_big_sync_lost *ev = data;
++	struct hci_conn *bis, *conn;
++
++	bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
++
++	hci_dev_lock(hdev);
++
++	/* Delete the pa sync connection */
++	bis = hci_conn_hash_lookup_pa_sync_big_handle(hdev, ev->handle);
++	if (bis) {
++		conn = hci_conn_hash_lookup_pa_sync_handle(hdev, bis->sync_handle);
++		if (conn)
++			hci_conn_del(conn);
++	}
++
++	/* Delete each bis connection */
++	while ((bis = hci_conn_hash_lookup_big_state(hdev, ev->handle,
++						BT_CONNECTED, HCI_ROLE_SLAVE))) {
++		clear_bit(HCI_CONN_BIG_SYNC, &bis->flags);
++		hci_disconn_cfm(bis, ev->reason);
++		hci_conn_del(bis);
++	}
++
++	hci_dev_unlock(hdev);
++}
++
+ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+ 					   struct sk_buff *skb)
+ {
+@@ -7149,6 +7181,11 @@ static const struct hci_le_ev {
+ 		     hci_le_big_sync_established_evt,
+ 		     sizeof(struct hci_evt_le_big_sync_estabilished),
+ 		     HCI_MAX_EVENT_SIZE),
++	/* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
++	HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
++		     hci_le_big_sync_lost_evt,
++		     sizeof(struct hci_evt_le_big_sync_lost),
++		     HCI_MAX_EVENT_SIZE),
+ 	/* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
+ 	HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
+ 		     hci_le_big_info_adv_report_evt,
+
+---
+base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
+change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
+
+Best regards,
 -- 
-2.34.1
+Yang Li <yang.li@amlogic.com>
+
 
