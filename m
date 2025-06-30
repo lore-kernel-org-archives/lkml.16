@@ -1,187 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9941A2C178D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D876B28A1EE;
+	Mon, 30 Jun 2025 13:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751288512; cv=none; b=ctSWu36j0JMvjX6Yjaf8fB0LVCgpSHvJ1cSTOIKSEdR/B90kywGfo5R27m77g7znMOdMsUEkPfzeOBB/q/wIvcUtWtwn5iuOrcuw1rSJseyYCidraYBoC9fdncbfpXO/fell4KZ9kxIoV3l36UKsjg3J1MeqHKuq2HWFn+8EYLA=
+	t=1751288533; cv=none; b=G18KWcN2TposUKvkE6C7zoFvCCflKi5sEAc5r8U/T0/RW333tv631RQS7xlL4HACbaISC3gNm26x6avtqWr9Nw+Wxla8MWhnR61TJAJZvJt2k0AtOjXtGmyfTCmhO1j/MxtL51iQoZkQ7caGweAE2gc11ATXmjWOuAaQLxatad0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751288512; c=relaxed/simple;
-	bh=xmAX6FaG7PwzByxdVNWIboeTPGW5tjq2c62uEFet5m4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GtaQfuIbCHHlymSOTutyRypdgMCAeIO/LxZVgoCEQ2wh6yhxQUy6EcdJOvRKErTD49SIJNtYw7Fc9VeMIwjJMuuXFWgBa8s0exEchVFIM0Gl9osULxDug4kigvjBRRA/TY9Ht91UvVJfung2k2x8JtSViWG1is0WBmKm5geKWNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WRhiDl0s; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751288533; c=relaxed/simple;
+	bh=I31p0u6j058Rd5oGpFXUFGufdyBoIiWWrNqRhhb6Y2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GvJljaibu0YcpRct2XN6Ek/Vo0BKpKUnA2giBe1SMwA6LFt4+wFXdGLjnqp6JBKXNROgeF8zTeAghZ7iyH1p2IThPLf8ZQoBeQ6PVLlAueyx6Lpy+b80fVWSISJNKrn7j3ZloKihf0VL5MBOUSvkxRPgTQCJ7uUrlltGV42WV2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJDl6D67; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRhiDl0s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751288507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EpLhIwgxSmOTAUjcHZTQRVGXB1xFFa6Mgym/mVDU2pw=;
-	b=WRhiDl0sMm3VJwehlYNZzfSVx1qMjwtMVfBSlg0yxuOsZsiCLP5+90Ctt1q3gL45jWOWtL
-	ZcwFhFrvo1vHnAHo41e7nsRg2+ZL2U0Erw72SnQr4jc/S4iMwucYvU0udW+3H7FaU3lByG
-	Acdv4tpXKB+tl+mHElHMsqQKxwNVPCs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-147-41A0PjZAPq6zAVoKGDBC5A-1; Mon, 30 Jun 2025 09:01:41 -0400
-X-MC-Unique: 41A0PjZAPq6zAVoKGDBC5A-1
-X-Mimecast-MFC-AGG-ID: 41A0PjZAPq6zAVoKGDBC5A_1751288500
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso1530458f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:01:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751288500; x=1751893300;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EpLhIwgxSmOTAUjcHZTQRVGXB1xFFa6Mgym/mVDU2pw=;
-        b=Zht6VbiL5pEswphHlDlCvbyOwH8hC92t9Sgen8SWLZ9f70PqYXfrgEvYIzH9ABSeTV
-         BQEMsVHRYhnw7fAkRThDg8saWcXGllx6LN0PhNYiWfYNyhgeJ41iZST8cLBplKc/o1yE
-         8jXbdEIgLWOnVWB72sAEMR3OFh1J4l17didHK4soIfFZgil3cz8deQSvVKv7p/Tc46Cd
-         Olw2BZNeVTJP1wTXxxrbRgnIvufcm5hZ/KdFNWNQy8fDvNYi2LZopPuDCPPWcg3VGnNo
-         dSqTfxlV3lbywGF7WlNGMC90u9ierN3T7iGYv9jzrNLwMQVfm2cG+IJtM8fOq4TEX142
-         jVBA==
-X-Gm-Message-State: AOJu0Yxu+j9GuBKwUbrfB9ngUTjr9VAMVrWVgQasYaaoKEJfRC0Kz4MW
-	oNvX+RdIG2pZ2SdrZyUT1nIS1ZTW20c/i8h7ruWSrhrWevK+JWVGcZzHJKvLPfm+ae79ljTQiwb
-	yUSrx0ubkAwtlgizyF2YDK7BQnKHIvmHK1kR42i7A2/eN3KaouYWWbzg7RloTFqxst7nLbGS5AP
-	b0/rUl/UjLgOd2ATEK1OtQ/q4TULn5eplQ77QzzpsKpRNMIMlK
-X-Gm-Gg: ASbGncv0zNnZz8QQjVXoMj5L6sRBKHhtx2SirbicvMfTGBxcz8eMoWFcBgTjnQ/nGWE
-	6mge89fj+FG2EMdXkDAeIwz57jZZ0HLdoEOprG7aoZkUYwW5QAgVZ45pluvq1dPKgI1LrgqEObB
-	UOYtuimqUQpS4kaA5KrryOzOPvFTnVNcGHxBqMthnwAhGm4UWQ7BjVl6l0DfVW0DKzVj6AW6185
-	P0zdqI5ejIqC3ZwWjuosCN7cXHATbFWsc5BY3vbA/ECxT5R53/IbcS8WJqiOxNZeJiz8seuNqNJ
-	GTuy4CjeJmOAbxKyE6SK+r9vKXafqUSu9UDBQ8deLDS7mcsaiCWw7C9tjZvUwQ3/l6Q4T5IgERp
-	rzjgf4aY=
-X-Received: by 2002:a5d:5849:0:b0:3a5:8934:4940 with SMTP id ffacd0b85a97d-3a8feb70269mr11468396f8f.50.1751288499332;
-        Mon, 30 Jun 2025 06:01:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFU/EidvqQvGX4HPGBQwVJZ7hXZfY7F5Qe2rCBAm3bwMmXiBwrV5rV1e++rVLkevEN+RDkRKg==
-X-Received: by 2002:a5d:5849:0:b0:3a5:8934:4940 with SMTP id ffacd0b85a97d-3a8feb70269mr11468280f8f.50.1751288498410;
-        Mon, 30 Jun 2025 06:01:38 -0700 (PDT)
-Received: from localhost (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a892e5f92esm10485904f8f.90.2025.06.30.06.01.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 06:01:37 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	virtualization@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: [PATCH v1 28/29] mm/balloon_compaction: "movable_ops" doc updates
-Date: Mon, 30 Jun 2025 15:00:09 +0200
-Message-ID: <20250630130011.330477-29-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250630130011.330477-1-david@redhat.com>
-References: <20250630130011.330477-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJDl6D67"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD269C4CEE3;
+	Mon, 30 Jun 2025 13:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751288533;
+	bh=I31p0u6j058Rd5oGpFXUFGufdyBoIiWWrNqRhhb6Y2Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iJDl6D67cAP6q5VyN0Y1mNnnQGdjToZOW7f6/p4nRidWnjkW8VM5TPSkrgEL356rO
+	 36CNrT4aGJrq/xWnTGxWw4yJlLWr9hoAcYRCiPIXeEBCvVS9SEsTPR3iUyTG8Fn5dY
+	 kqJGmGylFyvdwzZ9IDaRk4rNvlKzivmXxblBMGYAt82LVY32l2mib3D/HV/EIfaUOh
+	 UEjGr54eXG4FSdEBYOUW6Cw+tDTKID0vs90V9yvekKKTPlphCv1siXuxnXqR1j7jJo
+	 L/qOO7sIgTXiRtixX9F1zDSpiGRGPtxAeAXrGP8+n4mo+gG188Q8m5JkbTx0bcpY4D
+	 PiQAu2NPS5WoA==
+Message-ID: <023bb251-255d-4f0e-8b2a-d6c8bc35d75b@kernel.org>
+Date: Mon, 30 Jun 2025 15:02:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] serial: 8520_ce4100: Reuse mem_serial_in() in
+ ce4100_mem_serial_in()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20250630125427.2266455-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250630125427.2266455-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Let's bring the docs up-to-date. Setting PG_movable_ops + page->private
-very likely still requires to be performed under documented locks:
-it's complicated.
+On 30. 06. 25, 14:54, Andy Shevchenko wrote:
+> In one place in ce4100_mem_serial_in() the code may be replaced with
+> mem_serial_in() call. Do it so and collapse two conditionals into one.
+> 
+> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/tty/serial/8250/8250_ce4100.c | 9 ++-------
+>   1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_ce4100.c b/drivers/tty/serial/8250/8250_ce4100.c
+> index 3dd88f372a51..8221b872fd33 100644
+> --- a/drivers/tty/serial/8250/8250_ce4100.c
+> +++ b/drivers/tty/serial/8250/8250_ce4100.c
+> @@ -35,13 +35,8 @@ static u32 ce4100_mem_serial_in(struct uart_port *p, unsigned int offset)
+>   {
+>   	u32 ret, ier, lsr;
+>   
+> -	if (offset != UART_IIR)
+> -		return mem_serial_in(p, offset);
+> -
+> -	offset <<= p->regshift;
+> -
+> -	ret = readl(p->membase + offset);
+> -	if (!(ret & UART_IIR_NO_INT))
+> +	ret = mem_serial_in(p, offset);
+> +	if (!(offset == UART_IIR) && (ret & UART_IIR_NO_INT))
 
-We will rework this in the future, as we will try avoiding using the
-page lock.
+I am in haste, but a misplaced right paren (should be at the end)?
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/balloon_compaction.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+>   		return ret;
+>   
+>   	/* see if the TX interrupt should have really set */
 
-diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
-index b222b0737c466..2fecfead91d26 100644
---- a/include/linux/balloon_compaction.h
-+++ b/include/linux/balloon_compaction.h
-@@ -4,12 +4,13 @@
-  *
-  * Common interface definitions for making balloon pages movable by compaction.
-  *
-- * Balloon page migration makes use of the general non-lru movable page
-+ * Balloon page migration makes use of the general "movable_ops page migration"
-  * feature.
-  *
-  * page->private is used to reference the responsible balloon device.
-- * page->mapping is used in context of non-lru page migration to reference
-- * the address space operations for page isolation/migration/compaction.
-+ * That these pages have movable_ops, and which movable_ops apply,
-+ * is derived from the page type (PageOffline()) combined with the
-+ * PG_movable_ops flag (PageMovableOps()).
-  *
-  * As the page isolation scanning step a compaction thread does is a lockless
-  * procedure (from a page standpoint), it might bring some racy situations while
-@@ -17,12 +18,10 @@
-  * and safely perform balloon's page compaction and migration we must, always,
-  * ensure following these simple rules:
-  *
-- *   i. when updating a balloon's page ->mapping element, strictly do it under
-- *      the following lock order, independently of the far superior
-- *      locking scheme (lru_lock, balloon_lock):
-+ *   i. Setting the PG_movable_ops flag and page->private with the following
-+ *	lock order
-  *	    +-page_lock(page);
-  *	      +--spin_lock_irq(&b_dev_info->pages_lock);
-- *	            ... page->mapping updates here ...
-  *
-  *  ii. isolation or dequeueing procedure must remove the page from balloon
-  *      device page list under b_dev_info->pages_lock.
+
 -- 
-2.49.0
-
+js
+suse labs
