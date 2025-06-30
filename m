@@ -1,83 +1,111 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475654A11;
-	Mon, 30 Jun 2025 04:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751259433; cv=pass; b=TTxvomKpGIlwtPHL5Xo+gHreUim23Xb4YPm04SImEZj920I546io8yTBSfWhOGDav7gj9RTZuRtwM6Ejr+0Ogn4Z0eLPtT/QpmsIblHqf2ddbvKpMsJ6IWbE9ijsqaVa/pDuu5jBGZ8QLwy0aXWbzHJswrIuXxGg5qEJ02SL52o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751259433; c=relaxed/simple;
-	bh=tsPzHoTP69t7UQGuZNF5lccrCFCkO2R+bQABb5/VYo0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fzXGJtkfPo36ynLLS59/rag9RLXcADLt23QxjK9nAozMDXuLgrJS9C5SAKwK4tjUj2H0wXllTP6WD5azLCY6hyWU0v4yhSMEimmgNM+A6zY+P6eGg1q4i5BPMJBMUo1b64sswJ7BP8MLKzCs4mNfcWE4U8mHOcE13zlIAI+UXsE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=BUp2IR4d; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7FF1FDD;
+	Mon, 30 Jun 2025 05:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751259772; cv=none; b=J/sstf+59woIU9N97M/lT4mzR4aI27xqh8T3JoBFd5dGwxRcs0kNoNMLB71LVhGzrwMowxIB78HXNuSpBwH3K+uo76sQCVKn9JM1/+Tus21cgkuQqdApPABYicXBrpvcy6vjPOoqLWX1REb5yDRMzScQwjYFre+sXZ5U4WRG7vM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751259772; c=relaxed/simple;
+	bh=5VTdQ4tGtrefrn2S+93SpE0Y+HCmh+YKtuLUej5R6hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qFuDn9+hrAdEPtY6bwSQsW0gSRiBouR5kqkQelBqUCKWNPdJI9COGILPc3MBFAUn6WGuNEHg+gHHGPc6R/PwfxM8a7H/9VI7RSL9+pezljDo3RmRicsCCZiUTtSSoBsXn0YvlNRbWIXZpVy4nqOEgxWVP9s1eVWIJaDrjtaA8xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmS2Fw2G; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="BUp2IR4d"
-ARC-Seal: i=1; a=rsa-sha256; t=1751259412; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=aNBxOG9MrqP8RezOUv56vdKKnG+C7aGLjygJSDs8fV72lMpDlEIZIJ4jYydgaPgLWGfYfX/rV9AxWxSkKUOd1RxzgvKLkQcRhPa0ojrzq2wpQC0HbDnpXvDdJc0ZJOUH4Y2zU+RXXOAXjmqjD7VFTTwyLifimToRDYTYXUVpjsY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751259412; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=jGKWoTpD7SxWUMBPwQaXaTR3Gama9L+E0Wl4eK3bRmU=; 
-	b=YCld4xI1WsRJfRG1mlbAeiH5M73pInTi36MyA8fQS4CC3GgrZfJzQIqqLgrrPo68/rA/I2Flzh+t7+MmyRhRxbkZ+IHbtg/4tslQOAwycqmv/Bs6Ajp1Bacb+dLxHZkKqWpU/OOeQw3014KwwROmbwuFbKntCblsXDBuWF2jHqs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751259412;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=jGKWoTpD7SxWUMBPwQaXaTR3Gama9L+E0Wl4eK3bRmU=;
-	b=BUp2IR4dGhIeW2SchfspdU2qvt19KLKhDgaW/ZCMFAGvfk+WvxPG1P9kfJDQjEYA
-	N91Aebty7vhdehflrhuTxKYMKdkXPCEDg6Lial2TiYUlsdT/wU1ZQB98+m6kr9u2YrI
-	FXTz+0BIAxtHVF9a+xahxlkLUXNrcTyRF+0jIXoQ=
-Received: by mx.zohomail.com with SMTPS id 1751259411024461.30494157265355;
-	Sun, 29 Jun 2025 21:56:51 -0700 (PDT)
-Message-ID: <03c83257-defd-4083-970b-9b803442e792@zohomail.com>
-Date: Mon, 30 Jun 2025 12:56:48 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmS2Fw2G"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23602481460so39240355ad.0;
+        Sun, 29 Jun 2025 22:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751259770; x=1751864570; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=k14vHInxFXfvWiA3yiBDXZSY6za1W36jbGVMCLDj9aM=;
+        b=NmS2Fw2Gva9xt7kq0M2uJfYhSPTu4fR/+snZ3x5jhn0yOFngl5cjVbpkyUi8mIb38v
+         xSiiYbO4fbFZEP/zOXpkGNotTiuU1RhjtKa2rxGiyH8tXeK+5z9U00RtAtWZxFArDxbn
+         VwWNFN5n1oQR9bbHkAOw/3CXFS3p5m89ZmHfAwPHgSko7CBngCJgOaqXmrKZv+WpunN4
+         uOIqq2V7SdoioUegdVe9TlPbhInWUmiYOD4UJDs7ssqJGOn8XYXM/tyrST8f9qjuVpkn
+         jBXbA8R4bgryh1deQ2hfRIBT2rxjHmdj0cnvs85cUzJ7IQTSR+KLWpgjctHLacF3qSlx
+         Ik5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751259770; x=1751864570;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k14vHInxFXfvWiA3yiBDXZSY6za1W36jbGVMCLDj9aM=;
+        b=o0UM6sMTMohk2KGGBg7wdxefzp+sHzqwTQlNIyftQxw2C869k6whfM4kg/zWEe9kMC
+         dU0PXiJwBk0IfCmp54AfFomKBtqXxYagnXITR3W3cKOkDMa78PYS71ZI75MhgVW+aido
+         ZLxmyLRIzpM4SkYvbON8glQr3lrKn7/G7n+Md58z28tsqUtYFHEdvtgy2hs//29pHG/C
+         xKfQRaiJYKbYpVryWhHgfpAI9/LSSeGIFVWivgdcr4oFeQwUrA3l688MPm99OrJshTkt
+         uwdlfUJTBD4fIS1dUm6fxiR42J87GdqI+AWsi2yhWXOEgtgip+5hCunb5rvzplaMisGF
+         Zdag==
+X-Forwarded-Encrypted: i=1; AJvYcCUJgDzRRT63CVF1NDAnuh0Bp/TJKNT8We9G6EYCGYGyITQFu3G95cxSmxn3qhzswkAdCB5grsjwG5fBKrZP@vger.kernel.org, AJvYcCVVi8p2Bz4EUcPgddkDubzzVvMLlVe0rdPeSFAFhLEtFjunbAlo75jtqp9n38dwdeIhCM5Gb/1NU2I=@vger.kernel.org, AJvYcCWKJkiyGk4vr1aoaj9aePklXL/ucWo19pLOXS9vb3VskTXIahDVRas5ZHJ8dsqrgEAdocCHx/Dg+cU=@vger.kernel.org, AJvYcCXCgex86kRCUlE182BacLliR51XaZU5WfxHmsJGzSXx/2n2z0jETrBGZEmz11aKwGbQoKJpuj9rqIpl@vger.kernel.org, AJvYcCXlIZihNSA+/QVwREhfhuN2lvWKzL2DgN/5xqisQUcHMrDKDIptBWI1uq+ODIQRsnRT+FxESlJWJ3H4aumYcJzFnB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiJF34tTWo2B1N8Pkd6e/k2U8nDAUmCEekqKsUju+ntInKxSwa
+	zPhPAjDWtYNI+aMkOTJj0UB2oyVt/pli8vr115xFbbRJt5vFeyAtD3F6
+X-Gm-Gg: ASbGncufSmskDRwVYIlA/wuYI+gjgD7mGCHPm90rpBirtfKp2gV9hZK6YpvdJklNMMs
+	6XRu7Ian3aJzzCRxdke1X9AHuVVVMD0HPG0lZV1vUjzZr3hUi40FwZnnybobTlAhKH4qbGGHm9A
+	eZBFs+8oGTMAQZWwpMa0PbHwxbRtUzuP5a8R4muoAG3bOsjH5Y52Vpd7w1boA9c1SAydGRAleyK
+	U8yQ4kMkaC1aupilJkdIvMs7AU47SK1fJXrCOb4yDCiCCHpiyBfkBbR+LB/HyntzlwR0ttfXuqX
+	Oiy3vNSpFmZbfo3x3fy/BKGLljA2QWf+ms8glBwxVcg2cz8yNq8kHdrBQsRE1YN0mCSJkKbS
+X-Google-Smtp-Source: AGHT+IE5SYnmn2DsoXc2OcyiJSIeLfFJprEUGRZPg+PLqeBpDfsjB+lQj9pvXgneyXycHf+dUh7hcA==
+X-Received: by 2002:a17:902:e881:b0:235:f3e6:4680 with SMTP id d9443c01a7336-23ac3cf5c12mr163799695ad.21.1751259769921;
+        Sun, 29 Jun 2025 22:02:49 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3bc4fdsm72602095ad.202.2025.06.29.22.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 22:02:49 -0700 (PDT)
+Date: Sun, 29 Jun 2025 22:02:45 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	gregkh@linuxfoundation.org, dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	jic23@kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
+	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	fabrizio.castro.jz@renesas.com, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	linux-i2c <linux-i2c@vger.kernel.org>, "andi.shyti@kernel.org" <andi.shyti@kernel.org>
+Subject: Re: [PATCH v4 1/2] PM: domains: Detach on device_unbind_cleanup()
+Message-ID: <f4vj7rab6uftieicz5s3qur7yk26cg3xxaabhcmqnx3nybhshl@j6ahyvw6grik>
+References: <20250616135357.3929441-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250616135357.3929441-2-claudiu.beznea.uj@bp.renesas.com>
+ <CAJZ5v0j_nm_z4ma2AsRkjiZn-AJ2bK982+Mwa8+_PoUAveNATQ@mail.gmail.com>
+ <04a6c53c-8383-4496-b502-149bd261cfdb@tuxon.dev>
+ <CAJZ5v0gZ3GZ79j2gbhVSjTN+RmYjEUJQjGMSoLsEkUYtjWTngQ@mail.gmail.com>
+ <CAPDyKFo5=_eiWBf8fpv6kG8qhM6K3DxnqhttgHHgSTP6CM8LuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] cxl/core: Add a helper function to check dpa
- availability
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250629082042.256123-1-ming.li@zohomail.com>
- <20250629082042.256123-2-ming.li@zohomail.com>
- <aGHrSVX7ce96nTmt@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aGHrSVX7ce96nTmt@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: rr080112279800526b93a969bfa6dd1fa300003ab9feb424604d0d1bf076f71a6a5b5ced1a2ce74130e6a15d:zu080112273f5149f167ad1fe50fdde0570000acde40cc24b4bc4df2b4ae94173601471b183924a58d120e8e:rf0801122dc953c5b6d4687a0ae5f19f6a000020a6b9e4d434071a42d47b58c3f86f693ce01caaa9ac6b2363b3a8ce2f3a8b:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFo5=_eiWBf8fpv6kG8qhM6K3DxnqhttgHHgSTP6CM8LuA@mail.gmail.com>
 
-On 6/30/2025 9:41 AM, Alison Schofield wrote:
-> On Sun, Jun 29, 2025 at 04:20:42PM +0800, Li Ming wrote:
->> In CXL subsystem, many pieces of code that need to check dpa
->> availability in case using wrong dpa. Add a helper function called
->> is_valid_dpa() for dpa availability checking.
-> Does this have anything DPA special about it. Could it be done in
-I think no special DPA here, my understanding is that all DPA should be included in cxlds->dpa_res.
-> in a new helper like resource_contains_addr() for all to employ.
-> In CXL, we'd use it in at least one more place, checking for HPA
-> in a region resource. 
-That is a good idea, I will add it into include/linux/ioport.h
->
-> -- Alison
->
+On Thu, Jun 19, 2025 at 02:16:37PM +0200, Ulf Hansson wrote:
+> 
+> I am not sure it's needed, unless it's especially targeted for the
+> ACPI PM domain, which I find hard to believe.
+> 
+> Also, I find it awkward why the i2c bus should be any different from
+> many other types of buses. It's probably just because of legacy and
+> that someone took a decision when we added it.
 
-Ming
+It has nothing to do with I2C and everything to do with ACPI and the
+fact that it brings devices into D0 when probing. On ACPI systems
+(unlike DT ones) power sequencing is done in firmware so drivers are
+unable to control this. And this causes annoying flashing of privacy
+leds on webcams.
 
-[snip]
+See details in 1e96078e0ae4 ("at24: Support probing while in non-zero ACPI D state")
 
+If there was a SPI device sharing power rails with a camera we'd need
+similar hack in SPI bus.
+
+Thanks.
+
+-- 
+Dmitry
