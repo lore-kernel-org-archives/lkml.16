@@ -1,190 +1,108 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6FA1EBA0D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B871EBA0D;
+	Mon, 30 Jun 2025 19:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751311552; cv=none; b=FU7oxTk8y849soXloYuTH8c/IXlp/HFlEUtU5woiZGjKi9i3WLvWOzBINVQApkXkM+PpPtx0AtCu/AkxgLGtG5eHxDgEngTYrZ6jMdU2btn/wqvEJ6VDxSdt59paXsEjMDBDWKKELmTDmeZDHh0wNvQnBgajUM5NaV/dBZ+y0jc=
+	t=1751311580; cv=none; b=j1Ow89UvfMEHTSktW8u+jX/R9I6adJ2YYDkuPk/O0W0PkeTSl23oixB6dsp2catAFig6oRP5GnhB1bA3GXuYPcdBnYFyrC2G8UJOqViNjxfwp42gDPWNiy8JfsPzdasltpM4pRZwz6t6JaUkyzcXleP+pS4jWVtHfRZx6FnRklY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751311552; c=relaxed/simple;
-	bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DNuYtvhUkpIY0A6eWPm9aprnBEWfbaXkxK1fFUKca/MT6mvkqCj4wHppQXgVcVM4iwPP75Lk2pEWZbbZ7jty2vSqQ93qkPtWwddCzVGvE4YJPZS1rRQ8i4jDzEyYhWMbZyHDmI6enAJXxuWYWfOtQKmg6VfLTWi7WzK4qr59VLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=utt1sk+B; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1751311580; c=relaxed/simple;
+	bh=wKRcjJ8IJ5I1/hcwkxE8abvJ8pZVh3LuCx0XVjbKl3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ye093KeGEF8260XAWwwxUF2p+BFxOqkAOJ8yeSkYbpu0USjYRriHv35n8if8rSn7q2LWN6SwPAEK5dgXYoLeGOPgWdbnFjMLZiikcXklNZXOw9++yRCiUnMc1vPApZF0guIvEseNBM92j/Xr2Cwt2ERpKiHjPICXqACEXAlljhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mNSsVETm; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="utt1sk+B"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7492da755a1so2031760b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:25:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNSsVETm"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-553dceb345eso2994280e87.1;
+        Mon, 30 Jun 2025 12:26:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751311550; x=1751916350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
-        b=utt1sk+BvBn7fFAd+o9Sf4o+1lPYZjocSrrLT+dNxb0A5lfuUG9z5dQfIIB44kaPlP
-         Tfk7C+CFP01FRTxFjLYq0q8I7oQDL1cXRVFruJblymT6ctxtf6Smyt3565cQguwWyc4+
-         cIT3DOxr5MZ5v+fA1WoggQfX7o/C3G7dyyXYNcSEM1++i34ARoIoxgS+jeS3hgjS9Twg
-         zCbdoMT2ecNn/sRLyXCaWK9KSwYHDulIPbB90pdQP/vHHEhWoe5v8YQmVOtVAgGSP3na
-         9LEi6VqI0Uu0dwX7jxlJJF9c2hpRnKJF7tD/P4ldvdkxD6/BVOuVs0uA9ESVfcQR1olQ
-         K8Pw==
+        d=gmail.com; s=20230601; t=1751311577; x=1751916377; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wKRcjJ8IJ5I1/hcwkxE8abvJ8pZVh3LuCx0XVjbKl3k=;
+        b=mNSsVETmSLc1f7dJl2x1G+u+EzgZHz1kkOwrZ/LSp1HMPA/5FpGUD9D3tMQGINoh55
+         50PFAk/+YYO2lu5NXuQqEcsDxyDJJPAyjt7n9R7XYlo3RE0Yhc1LYe3G83ITLFfD2HTN
+         AFWaoqfuEd0w09/bRuzmMPfPq3Xfq3c6Qi+dyRX8qCYWYTkPPZczTlU2fzRh26VWPROL
+         MaCd7JRMEas+jH3bathYtwCI1EtW87FieFnJ/Jg7BtVu0Re+USG2CLsOgUk5HOOtoit7
+         XBJKZSi/COWdEbo0kDm5Gy6cpZ6lUpvBhq/060a3Jg86ZocpJiiMCBhHrfuOIT++1itY
+         hcHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751311550; x=1751916350;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MgwlNA+u2quDSQ7yajLtN11JeCOGdcJ7wasKI58DoAw=;
-        b=Rc9IHQYazNnj4N63/lhv61J5TLXqFK0+K+8nCQR+NzL/W8Xjz40Dy2/Gg3qejzV3lF
-         WDxIl+PH/bWKi2BRj2NJCD7jEIMYRa30NH5Z/rWacIcf8fitnQYySOFADqMZESB0yqUU
-         qAnuVquIPvhu+aZn4qC7MHZNeEAGGGg+0L8Us0VtrG122hxoQioqzeczd7Sa2TCMeMMr
-         3KGsII79GHIdVAHtyLe4BwEUqyf2g/P6jTaMF8X/CmYfKGY7NOM6a29OSCyHgWwYf54P
-         7yX+lSmrCkZtXCxtkBiqOwuRZ+dOIm22srSz3Un3UgUf2AQFjkzcX50OZkn0zDPKcarA
-         H8LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXVHCDBf9kCscdDSh7sY5rmyfgk4IMMygwZhbKKTAn1jwebrbtjh/oM4d1Nbdx2VtdPOX/P7Cvf1Zxhvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKdDxNlqhXL0w5GppipHZiPeChx6BxAF9duuBclLA7+ikTB/+S
-	+g7SUAKGkN/bRxPbXUC+6fkPo2xNqTXVGCWRs5PiYX+uD9YNYGc2wQVK5gOT6Trclw6fOwEuKBT
-	NhLY2qfgOcVHorH0Cf7kGHJlCDw==
-X-Google-Smtp-Source: AGHT+IEM3NAm2OsnhE6rbsmiMe42AuE8aEPB3EVgzuajXVv2Zs+VmfSL7ZNVcO9oi89tDaSplPmcERQJBM1Ly5wFIQ==
-X-Received: from pfbbw20.prod.google.com ([2002:a05:6a00:4094:b0:746:247f:7384])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:91e9:b0:748:68dd:eb8c with SMTP id d2e1a72fcca58-74af7049b1bmr22091856b3a.23.1751311550592;
- Mon, 30 Jun 2025 12:25:50 -0700 (PDT)
-Date: Mon, 30 Jun 2025 12:25:49 -0700
-In-Reply-To: <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
+        d=1e100.net; s=20230601; t=1751311577; x=1751916377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wKRcjJ8IJ5I1/hcwkxE8abvJ8pZVh3LuCx0XVjbKl3k=;
+        b=o/vOGyfRbcrmryDg/qEwjlerFdtPWa7B6O6ybhCXyCPbXFkUAyRj7zux/684+b0zpV
+         n2UkiAEhy4gcXo6TG9SYqYOdbV7bzMUOEdrN1E87iv7tOdupfRhT5tRclKk/Qh54NMLi
+         PtNNoQcZrk5VturddPizVtrgmediKZj/9Rh2Fu5JjnYZEXU8zxuAyvW4/c/rfD4CC1ko
+         ma7GMc6CSp/zDaHys1YwyQLBgl6Bn125F0fodbqykkPefE/ZVTOv8jB4NjzBm5bpkuA1
+         cJa4mHNYgtfCJ/ZIyi5jpHDKqwTyKYiBUUa6iJCAHNe1qbkK620j2iRXz14KNyGMc5R1
+         JvKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkQawQOvSwU4/Fn/xLnZSyFn/isL74gtXk1zK/ErF0IVovYJXyLWC8hpkzOLnpPdc7psS+LUr0kRVm@vger.kernel.org, AJvYcCWzW5atgHnyMU3CqJ6Y0sDjsR8J+a9WNhODxfvURWHUhN72z9uUOYwrK5q5wRmYF88TvyK55JgmxOdS7xOd@vger.kernel.org, AJvYcCXDqnGsRlwrhdd3qdxPadhUu61hJMEbFSveIC2nL6BVBr7mFYGPJympdvB8MDTBGNVjrDWTj6/QU1LGoWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx77ZCaq6F7hKdmjhszIr0w0YOe+DAy63i2jz0nkT2X7UdPTVWw
+	zFnXhnj8IfV24uXFP+d+roPbxTzGfM+I7hWZfwS4lXaYbL050gWN9goZupbIKaBKW4U9KJMQIHE
+	aJRKFanpbCS9qq/m22mG2WU/9pRjmCaM=
+X-Gm-Gg: ASbGncv5gCyHDnJavg6NTsfaPbyISVnxvvvHCErQdcR1wnb4NPP9mUb/Bx2E4J/JpGD
+	v43XNayRW0drZFXohvz/PZGnARJ9RJiyTE1pN0sLuCvLRGYe7fDY6q53MXzN3NBUoGjFm6pI6sc
+	Ocq4H9SJKMuobcEfYoTl40rTchgmMbvFeBIAmjKt60gQk=
+X-Google-Smtp-Source: AGHT+IHnQj7y+Dl9g5kiC3I+E0jB7g5wgs7HmhJsfXnM4AlrTPCijnp0mIeFvDPT88kU7jYenEX31bWfp2XcsKVTEOQ=
+X-Received: by 2002:a05:6512:e96:b0:553:314e:81f7 with SMTP id
+ 2adb3069b0e04-5550b817b57mr5015974e87.17.1751311577095; Mon, 30 Jun 2025
+ 12:26:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
- <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
- <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
-Message-ID: <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc: "Shutemov, Kirill" <kirill.shutemov@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250508-tegra210-emc-dt-v2-0-d33dc20a1123@gmail.com>
+ <qhhv27thjnbz7rtcfja767bpxjvwa6iivc2bphar7t2wobuzb7@aspkmrgp2ihy>
+ <CALHNRZ-q7W9CfeD4ipmwFVqHm7oGfTgJpwNoVhfbSXFPDxF91Q@mail.gmail.com>
+ <eba00bd5-fa1a-4cad-bb41-b395011235e1@kernel.org> <CALHNRZ_WPUM8wKSLcyyZm4jc9onBYiP3oLd=39k4=hoqLzHhrA@mail.gmail.com>
+ <ckimvttxjgx44xhfql3nov3qbf35y73nbu3p4m63nqbi22vh37@6p2ji7he5toy> <CALHNRZ-r_U+ByS0FWxamv9ozzjBWdkqAh2wJOt3s3cMsX6K_kQ@mail.gmail.com>
+In-Reply-To: <CALHNRZ-r_U+ByS0FWxamv9ozzjBWdkqAh2wJOt3s3cMsX6K_kQ@mail.gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Mon, 30 Jun 2025 14:26:06 -0500
+X-Gm-Features: Ac12FXyaTeW4lrs8R7FQvoMe70nThJ0r6JGE-5KdWbLLXq1Ag3ZQhyfvTrrx5-A
+Message-ID: <CALHNRZ8qyu6wsTTnmRWtNgYL4XWR8G7TFammqTFPfHH5d==LbA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] memory: tegra210-emc: Support Device Tree EMC Tables
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
-
-> On Mon, 2025-06-30 at 19:13 +0800, Yan Zhao wrote:
->> > > ok! Lets go f/g. Unless Yan objects.
->> I'm ok with f/g. But I have two implementation specific questions:
->>=20
->> 1. How to set the HWPoison bit in TDX?
-
-I was thinking to set the HWpoison flag based on page type. If regular
-4K page, set the flag. If THP page (not (yet) supported by guest_memfd),
-set the has_hwpoison flag, and if HugeTLB page, call
-folio_set_hugetlb_hwpoison().
-
-But if we go with Rick's suggestion below, then we don't have to figure
-this out.
-
->> 2. Should we set this bit for non-guest-memfd pages (e.g. for S-EPT page=
-s) ?
+On Wed, May 28, 2025 at 12:41=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com=
+> wrote:
 >
-> Argh, I guess we can keep the existing ref count based approach for the o=
-ther
-> types of TDX owned pages?
+> On Thu, May 8, 2025 at 7:48=E2=80=AFAM Thierry Reding <thierry.reding@gma=
+il.com> wrote:
+> >
+> > On Thu, May 08, 2025 at 07:27:52AM -0500, Aaron Kling wrote:
+> > [...]
+> > > The devices I'm talking about are not yet end of life, so it is
+> > > physically possible for them to get a bootloader update to conform to
+> > > the existing mainline model. But I'm just one guy trying to do 3rd
+> > > party support for these devices, I can't affect what Nvidia does with
+> > > the signed bootloader on these devices. I'd love to be able to swap
+> > > out an open source bootloader on these, but the secure boot setup
+> > > prevents that.
+> >
+> > I've reached out to our Android team internally to see if there's
+> > anything we can realistically do about this.
+> >
+> > Thierry
 >
-
-Wait TDX can only use guest_memfd pages, right? Even if TDX can use
-non-guest_memfd pages, why not also set HWpoison for non-guest_memfd
-pages?
-
-Either way I guess if we go with Rick's suggestion below, then we don't
-have to figure the above out.
-
->>=20
->> TDX can't invoke memory_failure() on error of removing guest private pag=
-es or
->> S-EPT pages, because holding write mmu_lock is regarded as in atomic con=
-text.
->> As there's a mutex in memory_failure(),
->> "BUG: sleeping function called from invalid context at kernel/locking/mu=
-tex.c"
->> will be printed.
->>=20
->> If TDX invokes memory_failure_queue() instead, looks guest_memfd can inv=
-oke
->> memory_failure_queue_kick() to ensure HWPoison bit is set timely.
->> But which component could invoke memory_failure_queue_kick() for S-EPT p=
-ages?
->> KVM?
->
-> Hmm, it only has queue of 10 pages per-cpu. If something goes wrong in th=
-e TDX
-> module, I could see exceeding this during a zap operation. At which point=
-, how
-> much have we really handled it?
->
->
-> But, at the risk of derailing the solution when we are close, some reflec=
-tion
-> has made me question whether this is all misprioritized. We are trying to=
- handle
-> a case where a TDX module bug may return an error when we try to release =
-gmem
-> pages. For that, this solution is feeling way too complex.
->
-> If there is a TDX module bug, a simpler way to handle it would be to fix =
-the
-> bug. In the meantime the kernel can take simpler, more drastic efforts to
-> reclaim the memory and ensure system stability.
->
-> In the host kexec patches we need to handle a kexec while the TDX module =
-is
-> running. The solution is to simply wbinvd on each pCPU that might have en=
-tered
-> the TDX module. After that, barring no new SEAMCALLs that could dirty
-> memory,=C2=A0the pages are free to use by the next kernel. (at least on s=
-ystems
-> without the partial write errata)
->
-> So for this we can do something similar. Have the arch/x86 side of TDX gr=
-ow a
-> new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs out of
-> SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any SEAMCALLs =
-after
-> that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs in the s=
-ystem
-> die. Zap/cleanup paths return success in the buggy shutdown case.
+> Thierry, has there been any feedback about this?
 >
 
-Do you mean that on unmap/split failure: there is a way to make 100%
-sure all memory becomes re-usable by the rest of the host, using
-tdx_buggy_shutdown(), wbinvd, etc?
+Reminder about this question. Has there been any response from the
+Nvidia Android team? Or do I/we need to continue pursuing independent
+solutions?
 
-If yes, then I'm onboard with this, and if we are 100% sure all memory
-becomes re-usable by the host after all the extensive cleanup, then we
-don't need to HWpoison anything.
-
-> Does it fit? Or, can you guys argue that the failures here are actually n=
-on-
-> special cases that are worth more complex recovery? I remember we talked =
-about
-> IOMMU patterns that are similar, but it seems like the remaining cases un=
-der
-> discussion are about TDX bugs.
+Aaron
