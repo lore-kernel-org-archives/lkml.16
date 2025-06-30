@@ -1,210 +1,185 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013051.outbound.protection.outlook.com [40.107.159.51])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F74128B7EA;
-	Mon, 30 Jun 2025 13:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751291941; cv=fail; b=hEME9u2/3q1Kox95cWd4k1V5+pmYJ9Is9WCLBHS31cAIvuooxakHI6NcYY/xtOBQnJP/xvoOG137kMkN6B0NYc9wRcnL6+k62NXaL7DW40dAexJpiExHa2mvJ+FQsTFUomqzxnpZRK2DZLZrLBKd6Ruvtut2whFbasCNBSM3nDU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751291941; c=relaxed/simple;
-	bh=NcvAuScwKf4k9DVehdsie1SetQBKOo9OmyLYS3eIquY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kt+TlAVbKWO9lL5DzCvq9dJrSQyGAoYCyKuZFVQyE2fRRMMkURS0GDtGV24UspS11Vl6kFARgsUBDdOV9e7Qb7jTKl8UocoAJ3OTKFR5zvjMiUhTXJvCBKUFxHVgVpdflCUS4fXRcmeKGVEnuoCM6rPA43dYxeiGSpU5yTujXTQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=IrW5ph0c; arc=fail smtp.client-ip=40.107.159.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="IrW5ph0c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kFdYrYBId8ZQ7deR0c84WU5C56mwMkNhAbrquXHc0YV7A67BqSlmQec8cRcmLyXIRO9k8DpM0U34vu84PzTnUxXaVO70kSeIwQ3vtnec1RA3deGNfwigBJwkHpa4A5OTJoKTaTIvV75PLGh81j3pJ6pBeAvgABYXkgOIoxSpuMg0CH/XCeyhv3/fx8Lo6T5B9N//BX8x7jJBtRmLg9y9mO4kWIh5cEC2Q0VWrG0KX8J9bmMq44R+A23L7fhgx/f2Ac/gpQbOLwgJdZWaDlGxmVytb1pjdV+e5DWfOWLt/G/ic1EtlAobslnUD8F2Q08MRIQhzNimzvTPUJ63/TI4ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rocE4T0RwHkcDDJAiBjxAByskvGc+jdclVl1Q6awb7w=;
- b=pf4yJvXJnk3x3BJe5jv3vA6ORezlcVAJ8jY0hJYR5V4bZw51JLgK+T9wEKX/INDp8C4T6FFIpvx/sVpEe9PibREMCIs2bAsNUlYYx0yXRZ7yJYQe0hjt5HUYBP59SX49WA+15/BiqD0k1r6Hci+g7zAnr65JBhDFyo4YWKLH0NY3aFO/qWoMF5slE4O4TqZpaPu84DAMYjVZt5gzpGoSdzLPHZweXmb2WuNzGwENVGtXq8B1OsAUvqnayp0ecrAQee1HfrmLNjKBv2SQwwmtJsGcmtXv+1F6Nbzs4YAS1ceBJrKPm2g3adEBMQIfjYCXxVaE3ZjrMnQlAsiyR4F5lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rocE4T0RwHkcDDJAiBjxAByskvGc+jdclVl1Q6awb7w=;
- b=IrW5ph0c66YntRvmR7mPzeP6OMf3clAFP48ESVMS6rvF9A9fyPfAguFhSWmFewIhzViyFN3b6ZT8WNjg0Nak9wLU0zhG3yA0hKx9qYYtQHFwcQS1aEj+dQqTMvPeWHHygheUUF7GqYIOSVln0Hv2d+jPKkMcPm9iZAFY1I01y+c=
-Received: from DU6P191CA0040.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53f::15)
- by AS2PR02MB9785.eurprd02.prod.outlook.com (2603:10a6:20b:60e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.25; Mon, 30 Jun
- 2025 13:58:56 +0000
-Received: from DB1PEPF000509F8.eurprd02.prod.outlook.com
- (2603:10a6:10:53f:cafe::be) by DU6P191CA0040.outlook.office365.com
- (2603:10a6:10:53f::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.31 via Frontend Transport; Mon,
- 30 Jun 2025 13:58:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
- action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB1PEPF000509F8.mail.protection.outlook.com (10.167.242.154) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Mon, 30 Jun 2025 13:58:55 +0000
-Received: from pcczc3457tyd.2n.cz.axis.com (10.4.0.13) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 30 Jun
- 2025 15:58:54 +0200
-From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
-To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-	<andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <kamilh@axis.com>, <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <f.fainelli@gmail.com>, <robh@kernel.org>,
-	<andrew+netdev@lunn.ch>
-Subject: [PATCH net v4 3/4] net: phy: bcm5481x: MII-Lite activation
-Date: Mon, 30 Jun 2025 15:58:36 +0200
-Message-ID: <20250630135837.1173063-4-kamilh@axis.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250630135837.1173063-1-kamilh@axis.com>
-References: <20250630135837.1173063-1-kamilh@axis.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A927828B7F9;
+	Mon, 30 Jun 2025 13:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751291943; cv=none; b=LIbIL33UnsqVxAyq+EId+JQpnsjux4TWG+wuteP+PwWr9htpDNq1S07vsujBYE5JFK9F+jKzd1Y78O/IbE8iLpit6K3ZdQ8Kw7EI8TTU83LJi5EfRlVBJ37qD3REX/zDW68GUIkdXd9FMyO3UOE+QKeBABUV0gwRaAE6MuWXStA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751291943; c=relaxed/simple;
+	bh=lnuCtoZ25M8XX5pqOcDT82hZ0f7dTMbUDFp1u5jiT1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SJF21ic0iSN8Ca8JYuHRosHUM2ddHvbZQNh7LHUWsvREKwi5ST5UTy1+rNzcJbqZ43/3mJNpSRKPg+BZYRZKXQdDqU1XoAyNHEIvCPVjoJfxXd8618WXXfcHvMnBfIzZPkRy5oPeTELXFIuesE0Ii5o16mVoX76M907pP7tFrAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bW7755qtczYQvGC;
+	Mon, 30 Jun 2025 21:58:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A9B9D1A1447;
+	Mon, 30 Jun 2025 21:58:56 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgAXeCUdmGJooO7dAA--.62190S3;
+	Mon, 30 Jun 2025 21:58:54 +0800 (CST)
+Message-ID: <0d7b0731-88c3-4114-a401-e6aa8a085c5f@huaweicloud.com>
+Date: Mon, 30 Jun 2025 21:58:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509F8:EE_|AS2PR02MB9785:EE_
-X-MS-Office365-Filtering-Correlation-Id: 870eb034-d2e8-40d4-4eff-08ddb7de412a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|7416014|1800799024|376014|19092799006|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aDVsS0x1UnN6Mk4zSDlUemdTVTVUQjF3WVk5WlU3bVBQRWtSOGN4WnhVWTlD?=
- =?utf-8?B?OEltdk1XUnlMMzNxOVNKQnh1SkJXdWVHQ3Y0VHBaZVY2WlpHSDc2aTcwZTBu?=
- =?utf-8?B?OVpUckZ2WnBmY0E4WmpVL1FRZktpSHhnZXh2ckNsWWcvMVFrVjZ4dEtVSkcy?=
- =?utf-8?B?a0JOYVUzcXpQQVRyTGtnQk5WUVY2N2FPcmVaSlNjcVZRMSsrOXE4NzR5WE5w?=
- =?utf-8?B?RHhwU0NSQTVNeTNDeUowbFN6b00rRTlSRmVINVR2WGora3JzVEJ4MFhlU212?=
- =?utf-8?B?eHlYc2RKVkZiUTFRYmdZaE5XWWVROExIcXRxVW04YTJ5QXJnbldHRGZQM09q?=
- =?utf-8?B?aDY1SzdBT3NqNFVlb3prWHlqWS9OaldHUWVsbDMveEdicFF4cGZjWFl5Si9H?=
- =?utf-8?B?bVNXYkVnOUZ6M2lhenBCdXoxaDlIeTdTTUlxRVN5REVvRFV5bGhJVUR0eE1k?=
- =?utf-8?B?dThjNTN1M2l1Y1RYWGNLcXd0dTNIK2dlZUNZRWxKWmRSbWNHNWZuZFQzRkFL?=
- =?utf-8?B?MmN3TUkvWDhZbkh4OEQ2SmtiR1QyZ2d2QnRjZk5QSFpHTjdYZnVKL0FHVlZk?=
- =?utf-8?B?ckdFMS9WL1kySnNrYXJldWY2aCtkbG5WL2x2OXBYbXA2TlA5aWZhK2Y5bU9O?=
- =?utf-8?B?Z2FSc0FLZkFPUEM1VW5KR2ZJa3NsazhtaHJ1WnRkNHlqK3RwRGpERjlFZjMv?=
- =?utf-8?B?R1VsZkJmZDZ3bVZ6OUNjYVd3SUN1TWZXbjkvK2ZtTURzT2diYk13N3FyMUIv?=
- =?utf-8?B?bDlJSC9tNU1HWEc1N21pQVlUVlRVUkxXM0lxU0d2bGdIMHROYlBuQWdlYnpp?=
- =?utf-8?B?RWpXcmFRUm15elV2TDJMNEdoSTNER3hZeDIyNThBYUVCcmdJWDV5eXVFTDBx?=
- =?utf-8?B?R0RsVW9LK1o2dzl2T0c2aUdUdVUzRDI1ZUtkOFlTcGZTdVltK3VCVUcrenV4?=
- =?utf-8?B?WUZpT3gwNitYVU1UWVBFSXdyVktQS0l2SmZMTnJoWkowQVR1TFRvdDlFc25o?=
- =?utf-8?B?TmlnSlRiWlVKM1ZPQi9FYTNBTEdPL0VSc0Z0aG9VV1poSmJjNmoxV0dSb0lr?=
- =?utf-8?B?eVUvUlVERS9GOG5Fa1F4RkZFWk1ULzI2R0U0UzZlRFVWNTd1cDdXREdyM24v?=
- =?utf-8?B?YUd0Z0pkc0FZbVFMaEg5dWNTY0JBeit3MTVzN0JLdTVaM0JnS084TlYxcmYx?=
- =?utf-8?B?Q1lrQUdKMkRRYjJBQThjaUYyaXI3SWZRTTlhbEZWZytOWTA2WDRWbHFkK0Q4?=
- =?utf-8?B?UTFvbmhiMS81OU1xUHI0aEFCN0JxN2ZBb1hBN0R6S0srMHhKZnNTaElldWl6?=
- =?utf-8?B?K0xPRkdUZTN1WVZiUHQ5M3dYaC9IY1JJMDE0RlFuQWxZR2l1QkJRak9xTGhr?=
- =?utf-8?B?ak01NUtFL1VSYU5MWG5zOTJLYjhyUWdjeERxcm1WVUZ6ZE1iRERKQmhaQTVo?=
- =?utf-8?B?T3NZdVhrZktqNzg3Yjd5blR1NzFhbmJDb3ErVUhZRnZRZGF2K1lNL1F1Rldm?=
- =?utf-8?B?ZjdhTnRJME1XV3FZL3RUVEdTQ0txZ1hoakJFcWkxODZ6N0NCYjAvRi9mWmg5?=
- =?utf-8?B?OXB2QS9LblFnaWxLMUZ0U2tQbzlISDh5YTZ6YnkwQ3lLVFYwNHZyTys5RENW?=
- =?utf-8?B?bXY3YWJlTkc1cnE1QjFjZUJDUFlWZTF5WWgybFE1Z1p2UEJqZDc2UlpPT0Iw?=
- =?utf-8?B?N3dYU08zQm14Wjdnck9pYW45M3ZzQjlmWDNwa1hRQW1FdUVkdHltQTl2aG9x?=
- =?utf-8?B?a3ptWjM1azF4OTUxN05uSzlNdWtua1JNUFh2NG5ESGVzbkNPWjJUd29IdUpj?=
- =?utf-8?B?bVVReWN2eEhDWGRxd09BaWJNZTI4YnBIYWNUSzdzZFg2RU5yZmlnRDBTSlJG?=
- =?utf-8?B?VnNyOGhDallGY2NnZmw3cU5EbUZhUmc4Y1A3SENOaGdRVUZwYmIyczFQTWVq?=
- =?utf-8?B?TE54OFU0Z0R1SDJ2QWFrWTN2ZGVGbVhZdjZFaE0zandIVjMvaW5tME9QZUFM?=
- =?utf-8?B?aGROUFBSZUhmVlFOLzJIZE85M2NxeGFCYWt2WjlxWGlBblhsTWRER2ZIRFF2?=
- =?utf-8?B?VTlXSGVzekl2L2VTTHJibWlkZHZ1TTBvaTlZQT09?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(7416014)(1800799024)(376014)(19092799006)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 13:58:55.9866
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 870eb034-d2e8-40d4-4eff-08ddb7de412a
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509F8.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB9785
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ext4: fix JBD2 credit overflow with large folios
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, tytso@mit.edu
+References: <20250630131324.1253313-1-sashal@kernel.org>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250630131324.1253313-1-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgAXeCUdmGJooO7dAA--.62190S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3JF1DArWUGFyDGF47CF15Jwb_yoW7GryfpF
+	W7CFsxCr98Za4fu3WSkw4UZF1Fg348CF4UGF1fKrn2va98Wr1xKFn8tw15KFyjkr4xGwnY
+	qF15ur9rW3Z0yrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Broadcom PHYs featuring the BroadR-Reach two-wire link mode are usually
-capable to operate in simplified MII mode, without TXER, RXER, CRS and
-COL signals as defined for the MII. The absence of COL signal makes
-half-duplex link modes impossible, however, the BroadR-Reach modes are
-all full-duplex only.
-Depending on the IC encapsulation, there exist MII-Lite-only PHYs such
-as bcm54811 in MLP. The PHY itself is hardware-strapped to select among
-multiple RGMII and MII-Lite modes, but the MII-Lite mode must be also
-activated by software.
+On 2025/6/30 21:13, Sasha Levin wrote:
+> When large folios are enabled, the blocks-per-folio calculation in
+> ext4_da_writepages_trans_blocks() can overflow the journal transaction
+> limits, causing the writeback path to fail with errors like:
+> 
+>   JBD2: kworker/u8:0 wants too many credits credits:416 rsv_credits:21 max:334
+> 
+> This occurs with small block sizes (1KB) and large folios (32MB), where
+> the calculation results in 32768 blocks per folio. The transaction credit
+> calculation then requests more credits than the journal can handle, leading
+> to the following warning and writeback failure:
+> 
+>   WARNING: CPU: 1 PID: 43 at fs/jbd2/transaction.c:334 start_this_handle+0x4c0/0x4e0
+>   EXT4-fs (loop0): ext4_do_writepages: jbd2_start: 9223372036854775807 pages, ino 14; err -28
+> 
+> Call trace leading to the issue:
+>   ext4_do_writepages()
+>     ext4_da_writepages_trans_blocks()
+>       bpp = ext4_journal_blocks_per_folio() // Returns 32768 for 32MB folio with 1KB blocks
+>       ext4_meta_trans_blocks(inode, MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp)
+>         // With bpp=32768, lblocks=34815, pextents=32768
+>         // Returns credits=415, but with overhead becomes 416 > max 334
+>     ext4_journal_start_with_reserve()
+>       jbd2_journal_start_reserved()
+>         start_this_handle()
+>           // Fails with warning when credits:416 > max:334
+> 
+> The issue was introduced by commit d6bf294773a47 ("ext4/jbd2: convert
+> jbd2_journal_blocks_per_page() to support large folio"), which added
+> support for large folios but didn't account for the journal credit limits.
+> 
+> Fix this by capping the blocks-per-folio value at 8192 in the writeback
+> path. This is the value we'd get with 32MB folios and 4KB blocks, or 8MB
+> folios with 1KB blocks, which is reasonable and safe for typical journal
+> configurations.
+> 
+> Fixes: d6bf294773a4 ("ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Add MII-Lite activation for bcm5481x PHYs.
+Hi, Sasha!
 
-Fixes: 03ab6c244bb0 ("net: phy: bcm-phy-lib: Implement BroadR-Reach link modes")
-Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
----
- drivers/net/phy/broadcom.c | 14 +++++++++++++-
- include/linux/brcmphy.h    |  6 ++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+Thank you for the fix. However, simply limiting the credits is not enough,
+as this may result in a scenario where there are not enough credits
+available to map a large, non-contiguous folio. I've been working on this
+issue[1] and I'll release v3 tomorrow if my tests looks fine.
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 9b1de54fd483..8547983bd72f 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -407,7 +407,7 @@ static int bcm5481x_set_brrmode(struct phy_device *phydev, bool on)
- static int bcm54811_config_init(struct phy_device *phydev)
- {
- 	struct bcm54xx_phy_priv *priv = phydev->priv;
--	int err, reg;
-+	int err, reg, exp_sync_ethernet;
- 
- 	/* Enable CLK125 MUX on LED4 if ref clock is enabled. */
- 	if (!(phydev->dev_flags & PHY_BRCM_RX_REFCLK_UNUSED)) {
-@@ -424,6 +424,18 @@ static int bcm54811_config_init(struct phy_device *phydev)
- 	if (priv->brr_mode)
- 		phydev->autoneg = 0;
- 
-+	/* Enable MII Lite (No TXER, RXER, CRS, COL) if configured */
-+	if (phydev->interface == PHY_INTERFACE_MODE_MIILITE)
-+		exp_sync_ethernet = BCM_EXP_SYNC_ETHERNET_MII_LITE;
-+	else
-+		exp_sync_ethernet = 0;
-+
-+	err = bcm_phy_modify_exp(phydev, BCM_EXP_SYNC_ETHERNET,
-+				 BCM_EXP_SYNC_ETHERNET_MII_LITE,
-+				 exp_sync_ethernet);
-+	if (err < 0)
-+		return err;
-+
- 	return bcm5481x_set_brrmode(phydev, priv->brr_mode);
- }
- 
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 028b3e00378e..15c35655f482 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -182,6 +182,12 @@
- #define BCM_LED_MULTICOLOR_ACT		0x9
- #define BCM_LED_MULTICOLOR_PROGRAM	0xa
- 
-+/*
-+ * Broadcom Synchronous Ethernet Controls (expansion register 0x0E)
-+ */
-+#define BCM_EXP_SYNC_ETHERNET		(MII_BCM54XX_EXP_SEL_ER + 0x0E)
-+#define BCM_EXP_SYNC_ETHERNET_MII_LITE	BIT(11)
-+
- /*
-  * BCM5482: Shadow registers
-  * Shadow values go into bits [14:10] of register 0x1c to select a shadow
--- 
-2.39.5
+[1] https://lore.kernel.org/linux-ext4/20250611111625.1668035-1-yi.zhang@huaweicloud.com/
+
+Thanks,
+Yi.
+
+> ---
+>  fs/ext4/inode.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index be9a4cba35fd5..860e59a176c97 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -2070,6 +2070,14 @@ static int mpage_submit_folio(struct mpage_da_data *mpd, struct folio *folio)
+>   */
+>  #define MAX_WRITEPAGES_EXTENT_LEN 2048
+>  
+> +/*
+> + * Maximum blocks per folio to avoid JBD2 credit overflow.
+> + * This is the value we'd get with 32MB folios and 4KB blocks,
+> + * or 8MB folios with 1KB blocks, which is reasonable and safe
+> + * for typical journal configurations.
+> + */
+> +#define MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK 8192
+> +
+>  /*
+>   * mpage_add_bh_to_extent - try to add bh to extent of blocks to map
+>   *
+> @@ -2481,6 +2489,18 @@ static int ext4_da_writepages_trans_blocks(struct inode *inode)
+>  {
+>  	int bpp = ext4_journal_blocks_per_folio(inode);
+>  
+> +	/*
+> +	 * With large folios, blocks per folio can get excessively large,
+> +	 * especially with small block sizes. For example, with 32MB folios
+> +	 * (order 11) and 1KB blocks, we get 32768 blocks per folio. This
+> +	 * leads to credit requests that overflow the journal's transaction
+> +	 * limit.
+> +	 *
+> +	 * Limit the value to avoid excessive credit requests.
+> +	 */
+> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
+> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
+> +
+>  	return ext4_meta_trans_blocks(inode,
+>  				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
+>  }
+> @@ -2559,6 +2579,13 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+>  	handle_t *handle = NULL;
+>  	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
+>  
+> +	/*
+> +	 * With large folios, blocks per folio can get excessively large,
+> +	 * especially with small block sizes. Cap it to avoid credit overflow.
+> +	 */
+> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
+> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
+> +
+>  	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
+>  		tag = PAGECACHE_TAG_TOWRITE;
+>  	else
+> @@ -6179,6 +6206,13 @@ int ext4_writepage_trans_blocks(struct inode *inode)
+>  	int bpp = ext4_journal_blocks_per_folio(inode);
+>  	int ret;
+>  
+> +	/*
+> +	 * With large folios, blocks per folio can get excessively large,
+> +	 * especially with small block sizes. Cap it to avoid credit overflow.
+> +	 */
+> +	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
+> +		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
+> +
+>  	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
+>  
+>  	/* Account for data blocks for journalled mode */
 
