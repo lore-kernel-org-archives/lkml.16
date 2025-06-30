@@ -1,148 +1,109 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6111A23A5;
-	Mon, 30 Jun 2025 19:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8681DFE26
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751312113; cv=none; b=f7bfZex9PypdGhJl7eCKvV4Z3Yy4eoiFbYyexmi6lZEU8eC762FR5tvBUQ6WJmK8n3LxqIlKeNwttx3EoLR6W5fMqryjO6NmZJ4HIRPE/neEQm0RkUJG4oIUcETJIO6LP2QAfBJgMilHfYz28YO+9xFo6VwiiimkO1J8CrkZ0Zo=
+	t=1751312114; cv=none; b=klpJVILX/LVKprrRp+FxLZJn++QC5VoW+bDsr1NYJec4JHU4l5C56M24u72B0s4MP4obo3+x5y13n1ddESdsXqiywfFCFjwsRwwHx6RwK3Qxf+mPlK/XZTNPk2U68yyvmNZ5Ekbna6v5iSXUB3X9PeBt9AVzwVov02WhDOtvOdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751312113; c=relaxed/simple;
-	bh=pCe0UWQj5p0UjomBq3BotCN6hd9SYCM6I5RJj7dfTfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HTS1RmfdicdIf3YxdjYSIRac2U+z2CUEoEu41oxskrJR6Wz56kIjmWBS4whk+xK4nXkXTkVfRGegdmEpQAG1OydFPG4ZcZ9f1GYHV4qzA9MW/Eem9jGKY4eTzIy59iJ3Z4zWNJCni0VMpau9CB0sUe3GqPJteX7U1pguGAKJ374=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Felx1SCr; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751312114; c=relaxed/simple;
+	bh=qXtzQduWyG1nnENxyFhaOaAmJ0Qdb9v1mRc0A8dmTZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=M+X6kGSo40eZLN5XmzBO+bxJIUC9lSCbyvL/6w4OwuHE4PuihsMWU7LlMpc3aV0AJpcuttlo+RVrU9R5ixRdUyC5DefYM1H4/kr82bGv2THoZNxH6hPG7dHOrsr/z3VrlaLdRmClMAIMSNYQDKycg01an4jTSHg4VI7X5Vhi0a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ni09lOP9; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Felx1SCr"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5551a770828so1685474e87.1;
-        Mon, 30 Jun 2025 12:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ni09lOP9"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2ebb468cbb4so2289801fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751312110; x=1751916910; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OglMbGQ+Y/qJHraGlD7x6aapMaYudTkxwNEgY4J4Ewg=;
-        b=Felx1SCr9CvKhvfX2rE9u3JjYF4qO5v4qL4P3T5RE5STeXES7plX7jshAHtGkvljH6
-         +XjeiqrPyqz8zehSUQqQGQDIvkt6AuB+xTuOxftWClCn/kYbazTTaw0rjYCbBmnGC/yf
-         NWNSoSXVCLoN/VKZBQl4cdw9JCF23bJVHFdNTI8BnMdR8a6VKyUfDL2bKrRot0se2VPv
-         IsvLqs1Su4C0jbongiuzS/wJHjUSxJRvGHz9ODGM2YDKVtmSzc8Jo1cQsBqKp70JqYvV
-         5FkdfxZ6sEE6m1gFmTMsp3uowczMeCXD/4PgY9UgvaJb0p2ZS3+CQCljUro+rOaaeKLW
-         lIQg==
+        d=linaro.org; s=google; t=1751312112; x=1751916912; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CXsvGPzWyN5t9Z1gnvLwhC+mL0nu2lbnJlTwsulGJGU=;
+        b=ni09lOP9WqOG72I7EUutge3hqeAKr/ONT9wPjgPqDuFihxEcrVV+ByqoR6m8qgrFnY
+         mj6cEzq8EAmtUz5Sf0N8VaS0rbAHAdyJnnHZXS7bkzv4Gt52+9ll3PAiVJrwSdLX4/EU
+         uKvcpIE4HT2BKhfKehD9Xr6AaKxWaHwwaukJ+1Y6PeaFY7pbS6SMNM3k6plh1ljRD5/+
+         C0DgUXTb2f+229rNesHsfiylKNgKEtbrV4P1/KMeIzSYWioYlMgcMh0WqxdxpDvYlX3F
+         iMITN5o3dQPclBAssLJgywiRTAQJt6j9h+JnN/yd/C3XZfU05+xEDEUCb07eKPUuIx7+
+         NjUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751312110; x=1751916910;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OglMbGQ+Y/qJHraGlD7x6aapMaYudTkxwNEgY4J4Ewg=;
-        b=jmFiBDVFdrPXo6ECKqjurvvNooVvK/zHlwkEOK3tTQYrTvp5a7/8yXP2onK3Brdu8t
-         yOKoHBqD2P42VmlnP1pO37MMYcVEnh83Gphk+fXNaQrWgSxLbhNk0QB0VdJHDW5KlZs2
-         vTdpgEgfTJO4TCLfpSUNqndcoB6oFnoo6vh1jzhDykfbIv81qWZku23wFVnXes2KVEu/
-         kkfYcVIPZpsHsgj9oL9DyuUzLbSSmgnhhqnXiZ8dDyvzgSYtx/IRB7OH/Z+jJuZraNNp
-         7O7H9vUKJzOoJSavne79L+cI0fu40InweqptyP0trrhXaUOUMlZudCHNqu5D4ATZzehW
-         q3bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdWaAZqpE2mOWes12kzuqd+s9iKZYGKEePDRhHhldMGIxZdIH/qwA6Foi5mnoQyY+FFJYE/cuRKD/V@vger.kernel.org, AJvYcCUppjSKUxgqOU3epRClpaf1g5mv0JPLkZfPiSfAESyaypTj/qMi3VCZHT9PpdlyzplwbY7qupsOFZDu7EUW@vger.kernel.org, AJvYcCXi4Svo+XmF4MaoUjCQz6srpK8aCvKFMOkZNlqCEkHxgU5nlcpVrP0XGczqJLnJqClfLREUwxBn+kla31A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEmWofLVr5szGyXJKKHoSfXFEUgjD17LIzsph0WXP4J2jgUPG+
-	ClsbhRyvHb7pADInTf5AAagCDiwiAZFUvG1X5NLMnWmrzIicpZblN7OC0pqKEYbtwHYUwYQq+nu
-	z14R3tTrrl4lTshDUNorfluyMUUvXYI/Bv/QcrPY=
-X-Gm-Gg: ASbGncv+jAPzA7rIBquNvhjna4fs3sHqaRROouZx08J4MM5rd8s4xhrQpY3Cy3F1lUh
-	q3Zv9hoNXQitW60ieK4Gq/gyTjVsJ4qlq4b52xJV1fmB/pwq+ENEL0am9JfsZGpz66n5nWsAm+i
-	yrByVFx3IWHoUqhrnHtasvdVaqFJ/Zl/QPkpjyUVNUH88=
-X-Google-Smtp-Source: AGHT+IFthP3fIFTbr1jHVDjh5GjZDjDXJV+6FmRWZhCwU9Tk0eHFm8Y8SYay9LxMwKPSLoRHVpx8oAKlgfQjJWWV7y0=
-X-Received: by 2002:a05:6512:3f1d:b0:553:aadd:1987 with SMTP id
- 2adb3069b0e04-5550b9ee8a2mr4745009e87.30.1751312109880; Mon, 30 Jun 2025
- 12:35:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751312112; x=1751916912;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CXsvGPzWyN5t9Z1gnvLwhC+mL0nu2lbnJlTwsulGJGU=;
+        b=mHQZYTaCLuX1r86DigKChqWCrdd/alAVM/KiwkRerWcyDlOlI5tILw0kQZs1xikh2R
+         12ab3LjbSJvNDSlOy5LQKUdbXmSCyW9DHAUItZi1gc/rb/PWW/bZZC/qnlkZgr4c0jD1
+         iJoDvWxQtJ9MsBQ9Vmo/A95TcC/q3C66S2Y/I5GAy5AW5IaZi8ftInNq5fYcFZd2Dwec
+         elcGhlUGoRN4qkOrNbADkRNkNISzjnAdA+w8w63DiFzBFj7UALTmc+MRy1cBgbx/K1pZ
+         3rIKq5eWoFax1TT+BaBxD04bmkm/uCz8/RPTSSZ9t1RiGKYb6fOkXeXYBQmiklHVQw8y
+         2K1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWUhpJTd8MOGfXIvmX7SkBe8tkjQMPp0Gn3hSHoOVF7cdytBzS10M9IGqTq27hoiss/vVxuUjCFJuPjDM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT1HTVC/SF3eMqPR4Q+iMXyQYBinX6PkSbfq1u+SyAEgV9UEDo
+	YXr9cZ+wOfK04ZpDO4zhFbnouQzQBgD49ym4O/FaXky6cBf8V3iYHpU9d8Ntu7IHoW88LWMwfe2
+	RlsaIDrA=
+X-Gm-Gg: ASbGncvV+fxTwoPmcezXN7KtkKr9NZ8oHwYLo+RGhFaY4yayYggSzoSkOy1jNeV1vGj
+	xuZBO/x+ZUHYr4gndsTjiJzjGycxKc0vX+Htj6jjrLIFrknV64+4pKIqwYpLWOTpPKhSyM2CCxX
+	PY8NCtnNVFH6O7VtP5YbgQ/iqZ19FW2ozm0sqltSdIwolhxwpfv87mQrzXZJI704WLO69AEygmU
+	5WllRNLiJy4QKkYS0HouP7ubFuUVqvnYdiYM7JaVmu2ssIJP3kxa+0YsUQLVcNLWaJCUbai5U2H
+	GWVv8mmA+jlcvxAn42G4Bc0dcXnzwaqpAyL1Pp4AYn6nf9IC84UOplRkwWEYvEGsXalc
+X-Google-Smtp-Source: AGHT+IHBfKAmf1lqnS2UU9I7hvaUGYYEqpqLvNDpx99U9Z8tqVzOU3X1JHzaOOJJorbDRYRHSHPO0A==
+X-Received: by 2002:a05:6870:f721:b0:2c3:1651:ca78 with SMTP id 586e51a60fabf-2efed4b5be6mr11398659fac.14.1751312111789;
+        Mon, 30 Jun 2025 12:35:11 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:49cc:1768:3819:b67])
+        by smtp.gmail.com with UTF8SMTPSA id 586e51a60fabf-2efd50b1b2fsm2876906fac.32.2025.06.30.12.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 12:35:11 -0700 (PDT)
+Date: Mon, 30 Jun 2025 14:35:09 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] pinctrl: rp1: silence uninitialized variable warning
+Message-ID: <748d256a-dc9d-4f85-aaa4-d480b7c4fd22@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526-p3450-mts-bug-v1-1-78500613f02c@gmail.com> <CALHNRZ_7wChDsvpUnQHnOTT9VzT1Lgg8JYgg13AFV8Jg_3itwQ@mail.gmail.com>
-In-Reply-To: <CALHNRZ_7wChDsvpUnQHnOTT9VzT1Lgg8JYgg13AFV8Jg_3itwQ@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 30 Jun 2025 14:34:57 -0500
-X-Gm-Features: Ac12FXwRTWfAZBRnWky7vBCy_porlzvhHwzuTdc1h8-WwX9HAH84biN0zTIrW2M
-Message-ID: <CALHNRZ_+wU3saUR025HynpiRps_3ace6769NcKfQDOAS2owPHw@mail.gmail.com>
-Subject: Re: [PATCH RFC] arm64: tegra: Add reserved-memory node for P3450
-To: webgeek1234@gmail.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Mon, May 26, 2025 at 2:07=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
- wrote:
->
-> On Mon, May 26, 2025 at 2:06=E2=80=AFPM Aaron Kling via B4 Relay
-> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> >
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > The Tegra210 L4T bootloader ram training will corrupt the in-ram kernel
-> > dt if no reserved-memory node exists. This prevents said bootloader fro=
-m
-> > being able to boot a kernel without this node, unless a chainloaded
-> > bootloader loads the dt. Add the node to eliminate the requirement for
-> > extra boot stages.
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/=
-arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-> > index 0ecdd7243b2eb1abba9adbe9a404b226c29b85ef..8fc995e71696f2ef5e662a2=
-1feb96ea771c7a53f 100644
-> > --- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-> > +++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-> > @@ -22,6 +22,12 @@ chosen {
-> >                 stdout-path =3D "serial0:115200n8";
-> >         };
-> >
-> > +       reserved-memory {
-> > +               #address-cells =3D <2>;
-> > +               #size-cells =3D <2>;
-> > +               ranges;
-> > +       };
-> > +
-> >         memory@80000000 {
-> >                 device_type =3D "memory";
-> >                 reg =3D <0x0 0x80000000 0x1 0x0>;
-> >
-> > ---
-> > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> > change-id: 20250526-p3450-mts-bug-02394af31f0a
-> >
-> > Best regards,
-> > --
-> > Aaron Kling <webgeek1234@gmail.com>
->
-> This was sent as an RFC to see if there are any better solutions to
-> this problem. Mts in l4t r32 for t210 tries to copy the training data
-> to the reserved ram location provided by the kernel dt. But if that
-> node doesn't exist, it somehow corrupts that dt, causing later stage
-> boot stages and the kernel itself to fail. Since software support for
-> this hardware is EOL, no fix for the bug can be expected. The normal
-> Linux boot flow on this hardware involves placing the downstream dt in
-> both the bootloader-dtb and kernel-dtb slots, allowing mts to work,
-> then u-boot loading whatever dt the kernel expects. However, my use
-> for Android does not need u-boot, as nvidia's cboot can load a
-> standard android boot image without the extra complexity of additional
-> boot stages. And I would prefer to keep complexity to a minimum. It
-> should be noted that this affects p2371-2180 using the L4T bootloader
-> as well, but since I am using the Android bootloader there, I sidestep
-> the issue.
->
-> Are there any thoughts on how to handle this problem? I know that it
-> is typically undesirable to add broken bootloader workarounds to the
-> kernel dt. But it would be preferable to have a fix upstream, instead
-> of having to carry various workarounds in downstream forks.
+This default path could probably can't be reached but Smatch can't
+verify it so it complains that "arg" isn't initialized on this path.
 
-Friendly reminder about this question.
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+I didn't add a Fixes tag because this likely isn't a real bug.  Plus this
+code is very new so it doesn't need to be backported anyway.
 
-Aaron
+Also checkpatch complains:
+
+	WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+
+But I left it that way so it's consistent with the other return in
+the function.  Maybe we should change both?
+
+ drivers/pinctrl/pinctrl-rp1.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+index d300f28c52cd..f9cc6b28994c 100644
+--- a/drivers/pinctrl/pinctrl-rp1.c
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -1524,6 +1524,8 @@ static int rp1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int offset,
+ 		case RP1_PAD_DRIVE_12MA:
+ 			arg = 12;
+ 			break;
++		default:
++			return -ENOTSUPP;
+ 		}
+ 		break;
+ 	case PIN_CONFIG_BIAS_DISABLE:
+-- 
+2.47.2
+
