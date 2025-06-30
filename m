@@ -1,112 +1,138 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C01F74059;
-	Mon, 30 Jun 2025 01:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D262C23CB
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 01:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751245206; cv=none; b=kKetwT6sJhVmFm/RtJjHDG8KAomSZZgZJNgdFMPTI3kQFK8a8Kt1Q79N+Wxi1Wk8NhJORcMN1auf3TgsCn2rRydHRcijg4YuMDBGZuhD5w4dG8PxSdHFQa3ngIBQ5SNIxjUR2JziLbS7IxLFh3+UJiQGFDBRMb1nGBXAkjiCoqA=
+	t=1751245380; cv=none; b=DmH3ODwjX90lXcGNRJDf0fNXhpt/oxy3wb2n/o06geiCmjn10jItDPvpCpQtzrYvmLe8VeeY5UfTZ9qT4rYuTtSxw/AeRh3+yo8eujhwT3UyGVoaaH0JK8HNIpHH46a+fbYBcdIMXqbn5zdNRDJYO0hvSA74wDiACMt7DL3e9NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751245206; c=relaxed/simple;
-	bh=GFjFJMAVSs9KyLtLxETnKkrUXWGo3lN/pPbmcW2U/NM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnF5YrYf+1BBV9gmiGU4CjFXfobdOEOvwv+HZ0NsYvNNhvvuuWNnxLcwmNeTOl4gesavIWORBnZLwGBfab2hKM2JSj+MbRGv6Mv3Quf3GV8xXfV3YKv0iIgf9qUREIxd9t2NiUmRBJbV8GM2cHiW5npfJHKqf81z0BGmJG0+E10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UJzeUh6u; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751245380; c=relaxed/simple;
+	bh=uSTgHYx4C4kBqf1HLkMQN6sxONduD5cTV2ZutL1GEdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUgMu+ddKA/Hs+Q8JKQ3z5yNC1svPgZjXwE4uNNA88SSs3t+7kfY6APC9UMGC+xtMUrcwIe6DAEHRmVO3KmQBEwgNO7R7j9DamekEf6JXdf4HnuhA7G4oiQOxu222sTXgEc1wI/Q8rOi6d42/JFF43WHcucDmjMf7X0DPbEytjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DbU/Y52z; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UJzeUh6u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=865HJSo130qT7e8Va8U13uOH+cd/QDvz9ar5tellCy0=; b=UJzeUh6uCRQxTLa22sBpa3brnT
-	FkchkiZi5IiT/CM9TbfW0qRqbOgRiU/QICx8Axqh+SU4EeEcv9PSdv/JlSCf6IkZyF24jXTnFQHvw
-	BGGo8QgeVAIXt3irLW6HTbthttR4SwqCan4oTLjXTeYFPr81FW5Iy96aRJ74WwfSbmPTITdRBk0qv
-	+Qqx1Mo7x8KnPCVDttnvLehWUnMu5k6P8mleUokosQwYAJ5jKJRbDPgymTS74WIbqQbm20jkn7Mza
-	L8BkHsMEzdaFxt/w7AusVnRi58Vu4p/CH8AIchiEUMMuLZAhZtLzVX1LtXKGtCvmD34D3C87VA7zy
-	4i3JwsuA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW2sH-00000006hbt-2zvb;
-	Mon, 30 Jun 2025 01:00:01 +0000
-Message-ID: <ae75ae31-a73b-4d15-9e67-5dc38b751c70@infradead.org>
-Date: Sun, 29 Jun 2025 17:59:55 -0700
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DbU/Y52z"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4119008b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 18:02:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751245378; x=1751850178; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lHC8G37kFyRpeOrqLUvPPIOdjSNN7VBUfiKPLfHZcIs=;
+        b=DbU/Y52zsp2ru5YoOCxlHgr73TRes0Me/DuRHSM/biPCB9lBfrtYZ49ki2x/jvPxYr
+         JqG31xL3DjWyS6/rV/3yQ1g7n+yOxKBjyhH0c/E2fNa0Xt72Aqcop0w4ZmKPJ+OnRzMW
+         sstMpGXs1FipaBp24tX6pz8LJPFI6TnP6fEFd/zYufp/vbgMCbVJYZ4rfv0i3j4TYSC/
+         If+lCYIdeQD71KmDtW2/41KKnwAykv8NTcXf0RJVBBg4/lv8z175SfpQ8VW+fmTazhqs
+         K2Uav3a8j2uuoye/FwTduqtI1Kububx4CpXfzM50KH1hJ+VX080UVPNLGXwLMyRFayhC
+         Nc2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751245378; x=1751850178;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lHC8G37kFyRpeOrqLUvPPIOdjSNN7VBUfiKPLfHZcIs=;
+        b=r8VBiTU2FL/4UignkZTVmeq0EaUAR7G9rtrFrKdDJRLSK65bIeoQPzcmGqbss5+mn8
+         9FPoktfzBvjlYiFaap+nXY8S4OFZgBMB8DWkyJWXFctswGrGzi0ZQ1w6p29FGxjtQG90
+         DDJYAzWWZ0cdzij0MDsbFkNSrSX9HbOWcSZDbyXYjutK65Mz1uuMz1sUQCeU9QylvXbB
+         hu8tep6JeaCssVcRGHBL9i3SCHe9mkJo65G0NhiIpVLYs7YKfrerjqM7aHCIBoXH/N3P
+         zypFrt7OqyieeyO2VKP8uOzk/bvWiSSSgyhl+YAsa50SznDs7X/6C7vvKtWGtL6uVfFD
+         0UQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFcoAuhfsofRPqZkgtDSehFkCmxmJXTirOHMXyoZXqP0/SdP6M/gsU3YCWMPWHmaQ3LWwY4MxYWmIhcA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1qcXRjblLvx8jLZXDC4JiaADVxWhxypHU241nf9ogUjQr5s8J
+	jXiuD6F29X4G8Ri3A7Jrg+ANmOBYFurZS+xnzDxFV4bgDYK2w0/8yuI+BIGQ6ize+cQ=
+X-Gm-Gg: ASbGncsyoESUjkUfeca9u7/8facugVBwaziJenjQ31ovueQhL2SSvl+SgOd47Wg7Cbi
+	I9vziMVFFshlk5L3GJlJSayIQJOjywaQ1npoybSdlk96/MZzQXgV0Upf0Uc1nyGf1HcibZqdvgd
+	+0ozbwofwdwLl70fVz9sGCKg4jsEGdiMx7cdYb/hKhftQKVmQOAh5wdy+aJ1qLReAKh3u8q+2u0
+	9F8SiBYEMSx8zKRynaBXPtx24zG0k/MNNbZHU75JmDeii2hq7MRD6/M3GDSyFnTPdCOGN3TQnt0
+	lA/9bx9I+Ph7BFXNZAEO4wsb8/hGXOqeXeOvZm711CUxJ3rXa4onqj356CnWmLIVu5uML0aI4p4
+	NSEn3B4+fDm4yJ4l4f8Tx6g==
+X-Google-Smtp-Source: AGHT+IEm7pC4jQ5wCTQ49NFxc+IKcZR+PXZpSdBzcwoRcmqxvtnLCfqF+Cj6519xtp9p1Fwj8KqI/w==
+X-Received: by 2002:a05:6a00:17a8:b0:747:ab61:e4fa with SMTP id d2e1a72fcca58-74af6f08162mr14240794b3a.14.1751245378059;
+        Sun, 29 Jun 2025 18:02:58 -0700 (PDT)
+Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56d91edsm8034737b3a.140.2025.06.29.18.02.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 18:02:57 -0700 (PDT)
+Date: Sun, 29 Jun 2025 18:02:54 -0700
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] iio: adc: ti-adc128s052: Add lower resolution
+ devices support
+Message-ID: <aGHiPpLeIB6pLb9I@dev-linux>
+References: <20250614091504.575685-1-sbellary@baylibre.com>
+ <20250614091504.575685-5-sbellary@baylibre.com>
+ <CAHp75Vf=zQ+pdo5V1fAq2qWEpdUfNfWdO+_iW0wETWSniXisyA@mail.gmail.com>
+ <aGB2Fnv797Wrenza@dev-linux>
+ <bd72b92e-bf8d-4fc2-84ae-4f9fd8b40c37@baylibre.com>
+ <CAHp75VeXxPum242gE8NoC9f8ZKkFg2FTAkmBXvY9m-BNz6+i7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/66] kconfig: re-add menu_get_parent_menu() that returns
- parent menu
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
- <20250624150645.1107002-6-masahiroy@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250624150645.1107002-6-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeXxPum242gE8NoC9f8ZKkFg2FTAkmBXvY9m-BNz6+i7g@mail.gmail.com>
 
-
-
-On 6/24/25 8:04 AM, Masahiro Yamada wrote:
-> This helper returns the parent menu, or NULL if there is no parent.
-> The main difference from the previous version is that it always returns
-> the parent menu even when the given argument is itself a menu.
+On Sun, Jun 29, 2025 at 09:06:47AM +0300, Andy Shevchenko wrote:
+> On Sun, Jun 29, 2025 at 2:30 AM David Lechner <dlechner@baylibre.com> wrote:
+> >
+> > On 6/28/25 6:09 PM, Sukrut Bellary wrote:
+> > > On Sat, Jun 14, 2025 at 09:45:43PM +0300, Andy Shevchenko wrote:
+> > >> On Sat, Jun 14, 2025 at 12:15 PM Sukrut Bellary <sbellary@baylibre.com> wrote:
+> > >>>
+> > >>> The adcxx communicates with a host processor via an SPI/Microwire Bus
+> > >>> interface. The device family responds with 12-bit data, of which the LSB bits
+> > >>> are transmitted by the lower resolution devices as 0.
+> > >>> The unavailable bits are 0 in LSB.
+> > >>> Shift is calculated per resolution and used in scaling and raw data read.
+> > >>>
+> > >>> Lets reuse the driver to support the family of devices with name
+> > >>> ADC<bb><c>S<sss>, where
+> > >>
+> > >> I believe it's incorrect, i.e. it's something like ...S<ss><?>, where
+> > >> <?> is something you need to clarify, and <ss> is definitely a speed
+> > >> in kSPS.
+> > >>
+> > > Thank you for the review.
+> > > I am not sure about the last s in <sss>.
+> > > It could be TI's silicon spins versioning.
+> > > I couldn't find any information about it in any of the datasheets.
+> > > I can drop the last s or mark it as <ssx> and specify the first two <ss> as
+> > > maximum speed.
+> > >
+> > I have a hunch that the last digit has to do with pinout/number of
+> > power supplies. adc128s052 has two supplies V_A and V_D while the
+> > others only have V_A.
+> >
+> > If this sounds vaguely familiar, it is because it was discussed
+> > today in this thread [1] that Jonathan CC'ed you in. :-)
 > 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-> ---
+> With all this being said, please, switch to <ss><p> and describe <p>,
+> but with the caveat that the <p> is empirically deducted based on what
+> community observes.
 > 
->  scripts/kconfig/lkc.h  |  1 +
->  scripts/kconfig/menu.c | 14 ++++++++++++++
->  2 files changed, 15 insertions(+)
+> > [1]: https://lore.kernel.org/linux-iio/20250628162910.1256b220@jic23-huawei/
 > 
-> diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-> index 5cc85c3d4aaa..37b606c74bff 100644
-> --- a/scripts/kconfig/lkc.h
-> +++ b/scripts/kconfig/lkc.h
-> @@ -97,6 +97,7 @@ bool menu_is_empty(struct menu *menu);
->  bool menu_is_visible(struct menu *menu);
->  bool menu_has_prompt(const struct menu *menu);
->  const char *menu_get_prompt(const struct menu *menu);
-> +struct menu *menu_get_parent_menu(struct menu *menu);
->  struct menu *menu_get_menu_or_parent_menu(struct menu *menu);
->  int get_jump_key_char(void);
->  struct gstr get_relations_str(struct symbol **sym_arr, struct list_head *head);
-> diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-> index ccb690bbf05d..a5e5b4fdcd93 100644
-> --- a/scripts/kconfig/menu.c
-> +++ b/scripts/kconfig/menu.c
-> @@ -575,6 +575,20 @@ const char *menu_get_prompt(const struct menu *menu)
->  	return NULL;
->  }
->  
-> +/**
-> + * menu_get_parent_menu - return the parent menu or NULL
-> + * @menu: pointer to the menu
-> + * return: the parent menu, or NULL if there is no parent.
-> + */
-> +struct menu *menu_get_parent_menu(struct menu *menu)
-> +{
-> +	for (menu = menu->parent; menu; menu = menu->parent)
-> +		if (menu->type == M_MENU)
-> +			return menu;
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * menu_get_menu_or_parent_menu - return the parent menu or the menu itself
->   * @menu: pointer to the menu
+Ok, sure. I will use this in v5.
 
--- 
-~Randy
+> -- 
+> With Best Regards,
+> Andy Shevchenko
