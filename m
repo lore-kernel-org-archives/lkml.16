@@ -1,33 +1,37 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD55199BC;
-	Mon, 30 Jun 2025 02:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAE817A30B;
+	Mon, 30 Jun 2025 02:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751252042; cv=none; b=jeuwszYhuLgUXpONMjYd8uwH6pXoWMztCdRECw3B1ZK/7XCTA9vBqYiclxvQKr9NKm//7VCMXplC+dfNZRN4UszJKiwJcBs6LbTyxSW73xhYjo4uquiIRFA2EHQdrXRj00IC/h+E/OGfDB/Haj40ZxAlFLNiSzbGr6eXPhNLJSQ=
+	t=1751252133; cv=none; b=AZea4ebuZYQepgyLQ6UNdcHNTr5BqIgyaoR4Ov3RYSttqY1ZyzmYF1X2S/u0gsVghzg9mCTyzb30ODPoVwmM21sjJAdiXc2KugU8UaGGjAZQ5NZqaA8rOnoulnfULRmWIUqI7sNIEzyYM4dpJXZAK/Jbyzs+GTqhkQRDUTSKDoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751252042; c=relaxed/simple;
-	bh=54Say1SOTnuZO5ZvOloKIxYm5TB/+LjiHHVkLV/s41Y=;
+	s=arc-20240116; t=1751252133; c=relaxed/simple;
+	bh=nHMwre0FnXsyOmp0bg9DGSvJNEEWsEeCtW2rCrwIkZk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jOJPonzvyM84dqVTdGMebvHzhQYz12X76a1yqxA7YEGRPlguIoCn3JSe6G+elzGYT6W/zT6qkNEbTpckjTxViMpxSq5ipk/F+W4iMXzwRqOO1jTXPqXw4NlBB5hn4vy5y/C0EWEV9Ni+qJA3OIkMpgv8jr+AQPBhz1pqE7ZHZC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpBRmFkC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kVTOtYBKFLGrK4O/vsYAoWkCddLgSZjBL6A/DPSmixS4cldWrFW0OR+u/CPz+A4vc5PIY8dzHSONA4VTm+Tnvb/l9IxOtRay+Q+vpGJrD9kPhKf7jpMa3HuqWGRVAfwc2yoPBazB3zxsSY0jdeEEll3/lYo6WKS9a2KIfEWiakg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ev6KbqvN; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpBRmFkC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6880CC4CEEB;
-	Mon, 30 Jun 2025 02:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751252042;
-	bh=54Say1SOTnuZO5ZvOloKIxYm5TB/+LjiHHVkLV/s41Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KpBRmFkCEu1xa+PII5+QsaOEFgPcCRlXrV7xeLL1lSSglGo3dlTTwl5kKX3FPHMHf
-	 rUY9dFnNvPTVBnbFxmAfo7lpHDXdz2VcnfBNOYCx8XeyBjpBQSRgRGbqEYjIb/SEIv
-	 hmg7BTZMFMn1ZSxhTNL/coKyKNzMPERUVYxXzY9nPcdwsu/ibkjr1o/lAG6FFPf2mr
-	 ANQ4/6jqSv83sl7/ZJYY6ugM5K2YJLxqhj1H2gMUpN0IwnItmHfR0yGk6XZvVG3rB/
-	 SEArTVM3zAtboRnaGp4Hkjv0p1I8cWdRWgV9iyctrnz//+Z4kQ/7KWZyuypWA9oMM/
-	 BxyXnKLtu47+A==
-Message-ID: <826118ef-a95d-4c1c-afe4-bc22a7473f71@kernel.org>
-Date: Mon, 30 Jun 2025 11:51:51 +0900
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ev6KbqvN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=jPLlvlNhkyWZDvYS/BN+b6gutnSYD4uNUAGYX2yJwh8=; b=Ev6KbqvNvuuK94XxMlZ0UMTS6s
+	SfNC2b0V38IjqSPbr0NrPiJmO2gA3YpYmGAHCigAwxm+Ng42CVnzi6DUq774K54CtlUDNWk/dO5JS
+	KqidJE0WYaJrR2p7RhzAse7IIm33b73FD6yDMQa0FJ2Yhs7r1Env7QZUs3CiIkYx5DBNKxvYiFes+
+	t7VCgdv13YDgApysa++FcvogqmqQr4BtzDibsJ3LuXXzC9SsPk7GXg7rLxI+Zd/MvDeldoAI8gyO2
+	Xen53ZtMlZ/Lr+FKR0jWEnENDuKFmVtFr+MDiNwqfcav5tOyCjtriWRts8OClI4D6EwmdwfMlnKDO
+	6nLnb/kQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW4g0-00000006iOL-32ql;
+	Mon, 30 Jun 2025 02:55:29 +0000
+Message-ID: <37b10343-a0fb-4c74-918d-5b49c0db77e3@infradead.org>
+Date: Sun, 29 Jun 2025 19:55:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,413 +39,627 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ata: ahci: Add ALPM power state accounting to the AHCI
- driver
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Niklas Cassel <cassel@kernel.org>
-Cc: Arjan van de Ven <arjan@linux.intel.com>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>
-References: <20250629192456.3761-2-pmenzel@molgen.mpg.de>
-From: Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH 29/66] kconfig: gconf: add static qualifiers to event
+ handlers
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <20250624150645.1107002-30-masahiroy@kernel.org>
 Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20250629192456.3761-2-pmenzel@molgen.mpg.de>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-30-masahiroy@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/30/25 4:24 AM, Paul Menzel wrote:
-> From: Arjan van de Ven <arjan@linux.intel.com>
+
+
+On 6/24/25 8:05 AM, Masahiro Yamada wrote:
+> This fixes several -Wmissing-prototypes warnings.
 > 
-> PowerTOP wants to be able to show the user how effective the ALPM link
-> power management is for the user. ALPM is worth around 0.5W on a quiet
-> link; PowerTOP wants to be able to find cases where the "quiet link" isn't
-> actually quiet.
-> 
-> This patch adds state accounting functionality to the AHCI driver for
-> PowerTOP to use.
-> 
-> The parts of the patch are
-> 
-> 1)  the sysfs logic of exposing the stats for each state in sysfs
-> 2)  the basic accounting logic that gets update on link change interrupts
->     (or when the user accesses the info from sysfs)
-> 3)  an "accounting enable" flag; in order to get the accounting to work,
->     the driver needs to get phyrdy interrupts on link status changes.
->     Normally and currently this is disabled by the driver when ALPM is
->     on (to reduce overhead); when PowerTOP is running this will need
->     to be on to get usable statistics... hence the sysfs tunable.
-> 
-> The PowerTOP output currently looks like this:
-> 
->     Recent SATA AHCI link activity statistics
->     Active	Partial	Slumber	Device name
->       0.5%	 99.5%	  0.0%	host0
-> 
-> (work to resolve "host0" to a more human readable name is in progress)
-> 
->     [root@dyn-252 host1]# grep ^ ahci_alpm_*
->     ahci_alpm_accounting:1
->     ahci_alpm_active:1334912
->     ahci_alpm_devslp:251547
->     ahci_alpm_partial:0
->     ahci_alpm_slumber:1020283
-> 
-> Signed-off-by: Arjan van de Ven <arjan@linux.intel.com>
-> [rebased from https://raw.github.com/fenrus75/powertop/master/patches/linux-3.3.0-ahci-alpm-accounting.patch]
-> Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
-> [rebased from https://lore.kernel.org/all/1364473277.14860.33.camel@i7.infradead.org/
-> and slightly modify commit message and update David’s email address]
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
 > ---
-> See https://lore.kernel.org/all/20091113192429.4dfc9c39@infradead.org/
-> for the original discussion
 > 
->  drivers/ata/ahci.h    |  17 ++++
->  drivers/ata/libahci.c | 212 +++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 227 insertions(+), 2 deletions(-)
+>  scripts/kconfig/gconf.c     | 173 +++++++++++++++++++++++++-----------
+>  scripts/kconfig/gconf.glade |  30 -------
+>  2 files changed, 120 insertions(+), 83 deletions(-)
 > 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 2c10c8f440d1..d02dd726adfd 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -304,6 +304,14 @@ struct ahci_em_priv {
->  	struct ata_link *link;
->  };
->  
-> +enum ahci_port_states {
-> +	AHCI_PORT_NOLINK = 0,
-> +	AHCI_PORT_ACTIVE = 1,
-> +	AHCI_PORT_PARTIAL = 2,
-> +	AHCI_PORT_SLUMBER = 3,
-> +	AHCI_PORT_DEVSLP = 4
-> +};
-
-See below. These should probably be called SATA_xxx and be defined in
-drivers/ata/libata.h.
-
-> +
->  struct ahci_port_priv {
->  	struct ata_link		*active_link;
->  	struct ahci_cmd_hdr	*cmd_slot;
-> @@ -324,6 +332,15 @@ struct ahci_port_priv {
->  	/* enclosure management info per PM slot */
->  	struct ahci_em_priv	em_priv[EM_MAX_SLOTS];
->  	char			*irq_desc;	/* desc in /proc/interrupts */
-> +
-> +	/* ALPM accounting state and stats */
-> +	unsigned int 		accounting_active:1;
-> +	u64			active_jiffies;
-> +	u64			partial_jiffies;
-> +	u64			slumber_jiffies;
-> +	u64			devslp_jiffies;
-> +	int			previous_state;
-> +	int			previous_jiffies;
->  };
-
-I wonder if this is the right place to put this... The SSTATUS register that
-defines the IPM field used to determine the interface state is not an AHCI only
-register. It is defined by the SATA-IO specification (v3.5a, section 14.2.2)
-and so this is also all valid for a libsas HBA. So may be this should be moved
-to ata_port instead and the sysfs attributes code moved to libata-sata.c.
-That will also allow supporting AHCI-platform devices and other SATA adapters
-that are not AHCI. These all should work too.
-
-There is also the problem of port multipliers devices, which have several ports
-behind a single physical link. Would need further checks there to see if this
-really should be attached to ata_port or if this should go to ata_link... Still
-scratching my head on this one. Will need more time to check.
-
-Though it begs the question: does PowerTop really expect the names
-ahci_alpm_xxx ? It that something that is already coded in that tool ? Or is
-this a new feature that is being added now ? (in which case we can still change
-the names to be more generic)
-
->  struct ahci_host_priv {
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index 4e9c82f36df1..4b787eb246bd 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-> @@ -85,6 +85,19 @@ static ssize_t ahci_activity_store(struct ata_device *dev,
->  				   enum sw_activity val);
->  static void ahci_init_sw_activity(struct ata_link *link);
->  
-> +static ssize_t ahci_alpm_show_active(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_slumber(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_devslp(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_partial(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_show_accounting(struct device *dev,
-> +				  struct device_attribute *attr, char *buf);
-> +static ssize_t ahci_alpm_set_accounting(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count);
->  static ssize_t ahci_show_host_caps(struct device *dev,
->  				   struct device_attribute *attr, char *buf);
->  static ssize_t ahci_show_host_cap2(struct device *dev,
-> @@ -106,6 +119,13 @@ static DEVICE_ATTR(ahci_host_caps, S_IRUGO, ahci_show_host_caps, NULL);
->  static DEVICE_ATTR(ahci_host_cap2, S_IRUGO, ahci_show_host_cap2, NULL);
->  static DEVICE_ATTR(ahci_host_version, S_IRUGO, ahci_show_host_version, NULL);
->  static DEVICE_ATTR(ahci_port_cmd, S_IRUGO, ahci_show_port_cmd, NULL);
-> +static DEVICE_ATTR(ahci_alpm_active, S_IRUGO, ahci_alpm_show_active, NULL);
-> +static DEVICE_ATTR(ahci_alpm_partial, S_IRUGO, ahci_alpm_show_partial, NULL);
-> +static DEVICE_ATTR(ahci_alpm_slumber, S_IRUGO, ahci_alpm_show_slumber, NULL);
-> +static DEVICE_ATTR(ahci_alpm_devslp, S_IRUGO, ahci_alpm_show_devslp, NULL);
-> +static DEVICE_ATTR(ahci_alpm_accounting, S_IRUGO | S_IWUSR,
-> +		ahci_alpm_show_accounting, ahci_alpm_set_accounting);
-> +
->  static DEVICE_ATTR(em_buffer, S_IWUSR | S_IRUGO,
->  		   ahci_read_em_buffer, ahci_store_em_buffer);
->  static DEVICE_ATTR(em_message_supported, S_IRUGO, ahci_show_em_supported, NULL);
-> @@ -118,6 +138,11 @@ static struct attribute *ahci_shost_attrs[] = {
->  	&dev_attr_ahci_host_cap2.attr,
->  	&dev_attr_ahci_host_version.attr,
->  	&dev_attr_ahci_port_cmd.attr,
-> +	&dev_attr_ahci_alpm_active.attr,
-> +	&dev_attr_ahci_alpm_partial.attr,
-> +	&dev_attr_ahci_alpm_slumber.attr,
-> +	&dev_attr_ahci_alpm_devslp.attr,
-> +	&dev_attr_ahci_alpm_accounting.attr,
->  	&dev_attr_em_buffer.attr,
->  	&dev_attr_em_message_supported.attr,
->  	NULL
-> @@ -257,6 +282,183 @@ static void ahci_rpm_put_port(struct ata_port *ap)
->  	pm_runtime_put(ap->dev);
+> diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+> index bed4c86c2085..02bbb7ce4c4a 100644
+> --- a/scripts/kconfig/gconf.c
+> +++ b/scripts/kconfig/gconf.c
+> @@ -172,7 +172,7 @@ load_filename(GtkFileSelection * file_selector, gpointer user_data)
+>  		display_tree_part();
 >  }
 >  
-> +static int get_current_alpm_state(struct ata_port *ap)
-
-Naming not consistent. I would prefer you keep ahci_lpm_ prefix. But that
-depends if we move this to libata-sata.c.
-
-> +{
-> +	u32 status = 0;
-
-	u8 ipm;
-
-> +
-> +	ahci_scr_read(&ap->link, SCR_STATUS, &status);
-
-Check for errors ?
-
-> +
-> +	/* link status is in bits 11-8 */
-> +	status = status >> 8;
-> +	status = status & 0xf;
-
-Please use the field name: it is "Interface Power Management (IPM)". So:
-
-	ipm = (status >> 8) & 0x0f;
-
-> +
-> +	if (status == 8)
-> +		return AHCI_PORT_DEVSLP;
-> +	if (status == 6)
-> +		return AHCI_PORT_SLUMBER;
-> +	if (status == 2)
-> +		return AHCI_PORT_PARTIAL;
-> +	if (status == 1)
-> +		return AHCI_PORT_ACTIVE;
-> +	return AHCI_PORT_NOLINK;
-
-This clearly needs to be a switch/case. And to match the specifications (AHCI
-1.3.1, section 3.3.10), please use hex values. E.g.:
-
-	switch (ipm) {
-	case 0x01:
-		/* Interface in active state */
-		return AHCI_PORT_ACTIVE;
-	case 0x02:
-		/* Interface in Partial power management state */
-		return AHCI_PORT_PARTIAL;
-	case 0x06:
-		/* Interface in Slumber power management state */
-		return AHCI_PORT_SLUMBER;
-	case 0x08:
-		/* Interface in DevSleep power management state */
-		return AHCI_PORT_DEVSLP;
-	case 0x00:
-	default:
-		/* Device not present or communication not established */
-		return AHCI_PORT_NOLINK;
-	}
-
-
-> +}
-> +
-> +static void account_alpm_stats(struct ata_port *ap)
-
-Missing ahci_lpm_ prefix...
-May be call this ahci_alpm_update_stats() ? Or sata_lpm_xxx if we move the code
-to libata-sata.c.
-
-> +{
-> +	struct ahci_port_priv *pp;
-> +
-> +	int new_state;
-> +	u64 new_jiffies, jiffies_delta;
-> +
-> +	if (ap == NULL)
-> +		return;
-> +	pp = ap->private_data;
-> +
-> +	if (!pp) return;
-> +
-> +	new_state = get_current_alpm_state(ap);
-> +	new_jiffies = jiffies;
-> +
-> +	jiffies_delta = new_jiffies - pp->previous_jiffies;
-> +
-> +	switch (pp->previous_state) {
-> +	case AHCI_PORT_NOLINK:
-> +		pp->active_jiffies = 0;
-> +		pp->partial_jiffies = 0;
-> +		pp->slumber_jiffies = 0;
-> +		break;
-> +	case AHCI_PORT_ACTIVE:
-> +		pp->active_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_PARTIAL:
-> +		pp->partial_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_SLUMBER:
-> +		pp->slumber_jiffies += jiffies_delta;
-> +		break;
-> +	case AHCI_PORT_DEVSLP:
-> +		pp->devslp_jiffies += jiffies_delta;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	pp->previous_state = new_state;
-> +	pp->previous_jiffies = new_jiffies;
-> +}
-> +
-> +static ssize_t ahci_alpm_show_active(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-
-Why not showing "0" ?
-
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->active_jiffies));
-> +}
-> +
-> +static ssize_t ahci_alpm_show_partial(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return -EINVAL;
-
-Same. And same for the other states.
-
-> +
-> +	pp = ap->private_data;
-> +	account_alpm_stats(ap);
-> +
-> +	return sprintf(buf, "%u\n", jiffies_to_msecs(pp->partial_jiffies));
-> +}
-> +
-
-[...]
-
-> +static ssize_t ahci_alpm_set_accounting(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	unsigned long flags;
-> +	struct Scsi_Host *shost = class_to_shost(dev);
-> +	struct ata_port *ap = ata_shost_to_port(shost);
-> +	struct ahci_port_priv *pp;
-> +	void __iomem *port_mmio;
-> +
-> +	if (!ap || ata_port_is_dummy(ap))
-> +		return 1;
-
-Return a proper error code please. Otherwise, it looks like you wrote 1 character.
-
-> +
-> +	pp = ap->private_data;
-> +	port_mmio = ahci_port_base(ap);
-> +
-> +	if (!pp)
-> +		return 1;
-
-Same here. But I fail to see how this can happen.
-
-> +	if (buf[0] == '0')
-> +		pp->accounting_active = 0;
-> +	if (buf[0] == '1')
-> +		pp->accounting_active = 1;
-
-Make accounting_active a bool and use kstrtobool().
-
-> +
-> +	/* we need to enable the PHYRDY interrupt when we want accounting */
-> +	if (pp->accounting_active) {
-> +		spin_lock_irqsave(ap->lock, flags);
-> +		pp->intr_mask |= PORT_IRQ_PHYRDY;
-> +		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		spin_unlock_irqrestore(ap->lock, flags);
-> +	}
-
-Hmmm... This would allow enabling that interrupt at random, even when EH is
-running. Not sure that is wise.... Do we need to define an EH action to set this ?
-
-Also, if accounting_active was set to 0 (false), PORT_IRQ_PHYRDY should be
-masked again, no ?
-
-> +
-> +	return count;
-> +}
-> +
->  static ssize_t ahci_show_host_caps(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
+> -void on_load1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_load1_activate(GtkMenuItem *menuitem, gpointer user_data)
 >  {
-> @@ -821,9 +1023,14 @@ static int ahci_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
->  		 * Disable interrupts on Phy Ready. This keeps us from
->  		 * getting woken up due to spurious phy ready
->  		 * interrupts.
-> +		 *
-> +		 * However, when accounting_active is set, we do want
-> +		 * the interrupts for accounting purposes.
->  		 */
-> -		pp->intr_mask &= ~PORT_IRQ_PHYRDY;
-> -		writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		if (!pp->accounting_active) {
-> +			pp->intr_mask &= ~PORT_IRQ_PHYRDY;
-> +			writel(pp->intr_mask, port_mmio + PORT_IRQ_MASK);
-> +		}
-
-Is this interrupt always already enabled by default ?
-
+>  	GtkWidget *fs;
 >  
->  		sata_link_scr_lpm(link, policy, false);
->  	}
-> @@ -1903,6 +2110,7 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
+> @@ -191,8 +191,7 @@ void on_load1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  	gtk_widget_show(fs);
+>  }
 >  
->  	if (sata_lpm_ignore_phy_events(&ap->link)) {
->  		status &= ~PORT_IRQ_PHYRDY;
-> +		account_alpm_stats(ap);
->  		ahci_scr_write(&ap->link, SCR_ERROR, SERR_PHYRDY_CHG);
->  	}
+> -
+> -void on_save_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_save_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	if (conf_write(NULL))
+>  		text_insert_msg("Error", "Unable to save configuration !");
+> @@ -214,7 +213,7 @@ store_filename(GtkFileSelection * file_selector, gpointer user_data)
+>  	gtk_widget_destroy(GTK_WIDGET(user_data));
+>  }
 >  
-
+> -void on_save_as1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_save_as1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkWidget *fs;
+>  
+> @@ -233,7 +232,7 @@ void on_save_as1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  	gtk_widget_show(fs);
+>  }
+>  
+> -void on_show_name1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_show_name1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkTreeViewColumn *col;
+>  
+> @@ -243,8 +242,7 @@ void on_show_name1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  		gtk_tree_view_column_set_visible(col, show_name);
+>  }
+>  
+> -
+> -void on_show_range1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_show_range1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkTreeViewColumn *col;
+>  
+> @@ -261,8 +259,7 @@ void on_show_range1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  
+>  }
+>  
+> -
+> -void on_show_data1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_show_data1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkTreeViewColumn *col;
+>  
+> @@ -272,35 +269,31 @@ void on_show_data1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  		gtk_tree_view_column_set_visible(col, show_value);
+>  }
+>  
+> -
+> -void
+> -on_set_option_mode1_activate(GtkMenuItem *menuitem, gpointer user_data)
+> +static void on_set_option_mode1_activate(GtkMenuItem *menuitem,
+> +					 gpointer user_data)
+>  {
+>  	opt_mode = OPT_NORMAL;
+>  	gtk_tree_store_clear(tree2);
+>  	display_tree(&rootmenu);	/* instead of update_tree to speed-up */
+>  }
+>  
+> -
+> -void
+> -on_set_option_mode2_activate(GtkMenuItem *menuitem, gpointer user_data)
+> +static void on_set_option_mode2_activate(GtkMenuItem *menuitem,
+> +					 gpointer user_data)
+>  {
+>  	opt_mode = OPT_ALL;
+>  	gtk_tree_store_clear(tree2);
+>  	display_tree(&rootmenu);	/* instead of update_tree to speed-up */
+>  }
+>  
+> -
+> -void
+> -on_set_option_mode3_activate(GtkMenuItem *menuitem, gpointer user_data)
+> +static void on_set_option_mode3_activate(GtkMenuItem *menuitem,
+> +					 gpointer user_data)
+>  {
+>  	opt_mode = OPT_PROMPT;
+>  	gtk_tree_store_clear(tree2);
+>  	display_tree(&rootmenu);	/* instead of update_tree to speed-up */
+>  }
+>  
+> -
+> -void on_introduction1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_introduction1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkWidget *dialog;
+>  	const gchar *intro_text =
+> @@ -327,8 +320,7 @@ void on_introduction1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  	gtk_widget_show_all(dialog);
+>  }
+>  
+> -
+> -void on_about1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_about1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkWidget *dialog;
+>  	const gchar *about_text =
+> @@ -345,8 +337,7 @@ void on_about1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  	gtk_widget_show_all(dialog);
+>  }
+>  
+> -
+> -void on_license1_activate(GtkMenuItem * menuitem, gpointer user_data)
+> +static void on_license1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	GtkWidget *dialog;
+>  	const gchar *license_text =
+> @@ -364,8 +355,8 @@ void on_license1_activate(GtkMenuItem * menuitem, gpointer user_data)
+>  	gtk_widget_show_all(dialog);
+>  }
+>  
+> -
+> -void on_back_clicked(GtkButton * button, gpointer user_data)
+> +/* toolbar handlers */
+> +static void on_back_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	enum prop_type ptype;
+>  
+> @@ -379,50 +370,44 @@ void on_back_clicked(GtkButton * button, gpointer user_data)
+>  		gtk_widget_set_sensitive(back_btn, FALSE);
+>  }
+>  
+> -
+> -void on_load_clicked(GtkButton * button, gpointer user_data)
+> +static void on_load_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	on_load1_activate(NULL, user_data);
+>  }
+>  
+> -
+> -void on_single_clicked(GtkButton * button, gpointer user_data)
+> +static void on_single_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	set_view_mode(SINGLE_VIEW);
+>  }
+>  
+> -
+> -void on_split_clicked(GtkButton * button, gpointer user_data)
+> +static void on_split_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	set_view_mode(SPLIT_VIEW);
+>  }
+>  
+> -
+> -void on_full_clicked(GtkButton * button, gpointer user_data)
+> +static void on_full_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	set_view_mode(FULL_VIEW);
+>  }
+>  
+> -
+> -void on_collapse_clicked(GtkButton * button, gpointer user_data)
+> +static void on_collapse_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	gtk_tree_view_collapse_all(GTK_TREE_VIEW(tree2_w));
+>  }
+>  
+> -
+> -void on_expand_clicked(GtkButton * button, gpointer user_data)
+> +static void on_expand_clicked(GtkButton *button, gpointer user_data)
+>  {
+>  	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree2_w));
+>  }
+>  
+>  /* Main Windows Callbacks */
+>  
+> -void on_window1_destroy(GtkObject *object, gpointer user_data)
+> +static void on_window1_destroy(GtkObject *object, gpointer user_data)
+>  {
+>  	gtk_main_quit();
+>  }
+>  
+> -void on_window1_size_request(GtkWidget *widget,
+> +static void on_window1_size_request(GtkWidget *widget,
+>  				    GtkRequisition *requisition,
+>  				    gpointer user_data)
+>  {
+> @@ -441,7 +426,7 @@ void on_window1_size_request(GtkWidget *widget,
+>  	gtk_paned_set_position(GTK_PANED(vpaned), 2 * h / 3);
+>  }
+>  
+> -gboolean on_window1_delete_event(GtkWidget *widget, GdkEvent *event,
+> +static gboolean on_window1_delete_event(GtkWidget *widget, GdkEvent *event,
+>  					gpointer user_data)
+>  {
+>  	GtkWidget *dialog, *label;
+> @@ -488,7 +473,7 @@ gboolean on_window1_delete_event(GtkWidget *widget, GdkEvent *event,
+>  	return ret;
+>  }
+>  
+> -void on_quit1_activate(GtkMenuItem *menuitem, gpointer user_data)
+> +static void on_quit1_activate(GtkMenuItem *menuitem, gpointer user_data)
+>  {
+>  	if (!on_window1_delete_event(NULL, NULL, NULL))
+>  		gtk_widget_destroy(GTK_WIDGET(main_wnd));
+> @@ -598,9 +583,9 @@ static gint column2index(GtkTreeViewColumn * column)
+>  
+>  
+>  /* User click: update choice (full) or goes down (single) */
+> -gboolean
+> -on_treeview2_button_press_event(GtkWidget * widget,
+> -				GdkEventButton * event, gpointer user_data)
+> +static gboolean on_treeview2_button_press_event(GtkWidget *widget,
+> +						GdkEventButton *event,
+> +						gpointer user_data)
+>  {
+>  	GtkTreeView *view = GTK_TREE_VIEW(widget);
+>  	GtkTreePath *path;
+> @@ -648,9 +633,9 @@ on_treeview2_button_press_event(GtkWidget * widget,
+>  }
+>  
+>  /* Key pressed: update choice */
+> -gboolean
+> -on_treeview2_key_press_event(GtkWidget * widget,
+> -			     GdkEventKey * event, gpointer user_data)
+> +static gboolean on_treeview2_key_press_event(GtkWidget *widget,
+> +					     GdkEventKey *event,
+> +					     gpointer user_data)
+>  {
+>  	GtkTreeView *view = GTK_TREE_VIEW(widget);
+>  	GtkTreePath *path;
+> @@ -690,8 +675,8 @@ on_treeview2_key_press_event(GtkWidget * widget,
+>  
+>  
+>  /* Row selection changed: update help */
+> -void
+> -on_treeview2_cursor_changed(GtkTreeView * treeview, gpointer user_data)
+> +static void on_treeview2_cursor_changed(GtkTreeView *treeview,
+> +					gpointer user_data)
+>  {
+>  	GtkTreeSelection *selection;
+>  	GtkTreeIter iter;
+> @@ -706,9 +691,9 @@ on_treeview2_cursor_changed(GtkTreeView * treeview, gpointer user_data)
+>  
+>  
+>  /* User click: display sub-tree in the right frame. */
+> -gboolean
+> -on_treeview1_button_press_event(GtkWidget * widget,
+> -				GdkEventButton * event, gpointer user_data)
+> +static gboolean on_treeview1_button_press_event(GtkWidget *widget,
+> +						GdkEventButton *event,
+> +						gpointer user_data)
+>  {
+>  	GtkTreeView *view = GTK_TREE_VIEW(widget);
+>  	GtkTreePath *path;
+> @@ -1138,47 +1123,129 @@ static void init_main_window(const gchar *glade_file)
+>  	glade_xml_signal_autoconnect(xml);
+>  
+>  	main_wnd = glade_xml_get_widget(xml, "window1");
+> +	g_signal_connect(main_wnd, "destroy",
+> +			 G_CALLBACK(on_window1_destroy), NULL);
+> +	g_signal_connect(main_wnd, "size_request",
+> +			 G_CALLBACK(on_window1_size_request), NULL);
+> +	g_signal_connect(main_wnd, "delete_event",
+> +			 G_CALLBACK(on_window1_delete_event), NULL);
+> +
+>  	hpaned = glade_xml_get_widget(xml, "hpaned1");
+>  	vpaned = glade_xml_get_widget(xml, "vpaned1");
+>  	tree1_w = glade_xml_get_widget(xml, "treeview1");
+> +	g_signal_connect(tree1_w, "cursor_changed",
+> +			 G_CALLBACK(on_treeview2_cursor_changed), NULL);
+> +	g_signal_connect(tree1_w, "button_press_event",
+> +			 G_CALLBACK(on_treeview1_button_press_event), NULL);
+> +	g_signal_connect(tree1_w, "key_press_event",
+> +			 G_CALLBACK(on_treeview2_key_press_event), NULL);
+> +
+>  	tree2_w = glade_xml_get_widget(xml, "treeview2");
+> +	g_signal_connect(tree2_w, "cursor_changed",
+> +			 G_CALLBACK(on_treeview2_cursor_changed), NULL);
+> +	g_signal_connect(tree2_w, "button_press_event",
+> +			 G_CALLBACK(on_treeview2_button_press_event), NULL);
+> +	g_signal_connect(tree2_w, "key_press_event",
+> +			 G_CALLBACK(on_treeview2_key_press_event), NULL);
+> +
+>  	text_w = glade_xml_get_widget(xml, "textview3");
+>  
+>  	/* menubar */
+> +	widget = glade_xml_get_widget(xml, "load1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_load1_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "save1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_save_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "save_as1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_save_as1_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "quit1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_quit1_activate), NULL);
+> +
+>  	widget = glade_xml_get_widget(xml, "show_name1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_show_name1_activate), NULL);
+>  	gtk_check_menu_item_set_active((GtkCheckMenuItem *) widget,
+>  				       show_name);
+>  
+>  	widget = glade_xml_get_widget(xml, "show_range1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_show_range1_activate), NULL);
+>  	gtk_check_menu_item_set_active((GtkCheckMenuItem *) widget,
+>  				       show_range);
+>  
+>  	widget = glade_xml_get_widget(xml, "show_data1");
+> +	g_signal_connect(widget, "activate", G_CALLBACK(on_show_data1_activate), NULL);
+>  	gtk_check_menu_item_set_active((GtkCheckMenuItem *) widget,
+>  				       show_value);
+>  
+> +	widget = glade_xml_get_widget(xml, "set_option_mode1");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_set_option_mode1_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "set_option_mode2");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_set_option_mode2_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "set_option_mode3");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_set_option_mode3_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "introduction1");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_introduction1_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "about1");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_about1_activate), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "license1");
+> +	g_signal_connect(widget, "activate",
+> +			 G_CALLBACK(on_license1_activate), NULL);
+> +
+>  	/* toolbar */
+>  	back_btn = glade_xml_get_widget(xml, "button1");
+> +	g_signal_connect(back_btn, "clicked",
+> +			 G_CALLBACK(on_back_clicked), NULL);
+>  	gtk_widget_set_sensitive(back_btn, FALSE);
+>  
+> +	widget = glade_xml_get_widget(xml, "button2");
+> +	g_signal_connect(widget, "clicked",
+> +			 G_CALLBACK(on_load_clicked), NULL);
+> +
+>  	save_btn = glade_xml_get_widget(xml, "button3");
+> +	g_signal_connect(save_btn, "clicked",
+> +			 G_CALLBACK(on_save_activate), NULL);
+>  	save_menu_item = glade_xml_get_widget(xml, "save1");
+>  	conf_set_changed_callback(conf_changed);
+>  
+>  	style = gtk_widget_get_style(main_wnd);
+>  
+>  	single_btn = glade_xml_get_widget(xml, "button4");
+> +	g_signal_connect(single_btn, "clicked",
+> +			 G_CALLBACK(on_single_clicked), NULL);
+>  	replace_button_icon(xml, main_wnd->window, style,
+>  			    "button4", (gchar **) xpm_single_view);
+>  
+>  	split_btn = glade_xml_get_widget(xml, "button5");
+> +	g_signal_connect(split_btn, "clicked",
+> +			 G_CALLBACK(on_split_clicked), NULL);
+>  	replace_button_icon(xml, main_wnd->window, style,
+>  			    "button5", (gchar **) xpm_split_view);
+>  
+>  	full_btn = glade_xml_get_widget(xml, "button6");
+> +	g_signal_connect(full_btn, "clicked",
+> +			 G_CALLBACK(on_full_clicked), NULL);
+>  	replace_button_icon(xml, main_wnd->window, style,
+>  			    "button6", (gchar **) xpm_tree_view);
+>  
+> +	widget = glade_xml_get_widget(xml, "button7");
+> +	g_signal_connect(widget, "clicked",
+> +			 G_CALLBACK(on_collapse_clicked), NULL);
+> +
+> +	widget = glade_xml_get_widget(xml, "button8");
+> +	g_signal_connect(widget, "clicked",
+> +			 G_CALLBACK(on_expand_clicked), NULL);
+> +
+>  	txtbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_w));
+>  	tag1 = gtk_text_buffer_create_tag(txtbuf, "mytag1",
+>  					  "foreground", "red",
+> diff --git a/scripts/kconfig/gconf.glade b/scripts/kconfig/gconf.glade
+> index 19b80f2ec1ff..8519104a3c2b 100644
+> --- a/scripts/kconfig/gconf.glade
+> +++ b/scripts/kconfig/gconf.glade
+> @@ -17,9 +17,6 @@
+>    <property name="skip_pager_hint">False</property>
+>    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+>    <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+> -  <signal name="destroy" handler="on_window1_destroy" object="window1"/>
+> -  <signal name="size_request" handler="on_window1_size_request" object="vpaned1" last_modification_time="Fri, 11 Jan 2002 16:17:11 GMT"/>
+> -  <signal name="delete_event" handler="on_window1_delete_event" object="window1" last_modification_time="Sun, 09 Mar 2003 19:42:46 GMT"/>
+>  
+>    <child>
+>      <widget class="GtkVBox" id="vbox1">
+> @@ -46,7 +43,6 @@
+>  		      <property name="tooltip" translatable="yes">Load a config file</property>
+>  		      <property name="label" translatable="yes">_Load</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_load1_activate"/>
+>  		      <accelerator key="L" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+>  		    </widget>
+>  		  </child>
+> @@ -57,7 +53,6 @@
+>  		      <property name="tooltip" translatable="yes">Save the config in .config</property>
+>  		      <property name="label" translatable="yes">_Save</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_save_activate"/>
+>  		      <accelerator key="S" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+>  		    </widget>
+>  		  </child>
+> @@ -68,7 +63,6 @@
+>  		      <property name="tooltip" translatable="yes">Save the config in a file</property>
+>  		      <property name="label" translatable="yes">Save _as</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_save_as1_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -83,7 +77,6 @@
+>  		      <property name="visible">True</property>
+>  		      <property name="label" translatable="yes">_Quit</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_quit1_activate"/>
+>  		      <accelerator key="Q" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+>  		    </widget>
+>  		  </child>
+> @@ -108,7 +101,6 @@
+>  		      <property name="label" translatable="yes">Show _name</property>
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">False</property>
+> -		      <signal name="activate" handler="on_show_name1_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -119,7 +111,6 @@
+>  		      <property name="label" translatable="yes">Show _range</property>
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">False</property>
+> -		      <signal name="activate" handler="on_show_range1_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -130,7 +121,6 @@
+>  		      <property name="label" translatable="yes">Show _data</property>
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">False</property>
+> -		      <signal name="activate" handler="on_show_data1_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -147,7 +137,6 @@
+>  		      <property name="label" translatable="yes">Show normal options</property>
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">True</property>
+> -		      <signal name="activate" handler="on_set_option_mode1_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -159,7 +148,6 @@
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">False</property>
+>  		      <property name="group">set_option_mode1</property>
+> -		      <signal name="activate" handler="on_set_option_mode2_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -171,7 +159,6 @@
+>  		      <property name="use_underline">True</property>
+>  		      <property name="active">False</property>
+>  		      <property name="group">set_option_mode1</property>
+> -		      <signal name="activate" handler="on_set_option_mode3_activate"/>
+>  		    </widget>
+>  		  </child>
+>  
+> @@ -194,7 +181,6 @@
+>  		      <property name="visible">True</property>
+>  		      <property name="label" translatable="yes">_Introduction</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_introduction1_activate" last_modification_time="Fri, 15 Nov 2002 20:26:30 GMT"/>
+>  		      <accelerator key="I" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+>  		    </widget>
+>  		  </child>
+> @@ -204,7 +190,6 @@
+>  		      <property name="visible">True</property>
+>  		      <property name="label" translatable="yes">_About</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_about1_activate" last_modification_time="Fri, 15 Nov 2002 20:26:30 GMT"/>
+>  		      <accelerator key="A" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+>  		    </widget>
+>  		  </child>
+> @@ -214,7 +199,6 @@
+>  		      <property name="visible">True</property>
+>  		      <property name="label" translatable="yes">_License</property>
+>  		      <property name="use_underline">True</property>
+> -		      <signal name="activate" handler="on_license1_activate" last_modification_time="Fri, 15 Nov 2002 20:26:30 GMT"/>
+>  		    </widget>
+>  		  </child>
+>  		</widget>
+> @@ -254,7 +238,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_back_clicked"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -291,7 +274,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_load_clicked"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -309,7 +291,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_save_activate"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -346,7 +327,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_single_clicked" last_modification_time="Sun, 12 Jan 2003 14:28:39 GMT"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -364,7 +344,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_split_clicked" last_modification_time="Sun, 12 Jan 2003 14:28:45 GMT"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -382,7 +361,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_full_clicked" last_modification_time="Sun, 12 Jan 2003 14:28:50 GMT"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -419,7 +397,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_collapse_clicked"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -437,7 +414,6 @@
+>  		  <property name="visible_horizontal">True</property>
+>  		  <property name="visible_vertical">True</property>
+>  		  <property name="is_important">False</property>
+> -		  <signal name="clicked" handler="on_expand_clicked"/>
+>  		</widget>
+>  		<packing>
+>  		  <property name="expand">False</property>
+> @@ -477,9 +453,6 @@
+>  		  <property name="rules_hint">False</property>
+>  		  <property name="reorderable">False</property>
+>  		  <property name="enable_search">False</property>
+> -		  <signal name="cursor_changed" handler="on_treeview2_cursor_changed" last_modification_time="Sun, 12 Jan 2003 15:58:22 GMT"/>
+> -		  <signal name="button_press_event" handler="on_treeview1_button_press_event" last_modification_time="Sun, 12 Jan 2003 16:03:52 GMT"/>
+> -		  <signal name="key_press_event" handler="on_treeview2_key_press_event" last_modification_time="Sun, 12 Jan 2003 16:11:44 GMT"/>
+>  		</widget>
+>  	      </child>
+>  	    </widget>
+> @@ -512,9 +485,6 @@
+>  		      <property name="rules_hint">False</property>
+>  		      <property name="reorderable">False</property>
+>  		      <property name="enable_search">False</property>
+> -		      <signal name="cursor_changed" handler="on_treeview2_cursor_changed" last_modification_time="Sun, 12 Jan 2003 15:57:55 GMT"/>
+> -		      <signal name="button_press_event" handler="on_treeview2_button_press_event" last_modification_time="Sun, 12 Jan 2003 15:57:58 GMT"/>
+> -		      <signal name="key_press_event" handler="on_treeview2_key_press_event" last_modification_time="Sun, 12 Jan 2003 15:58:01 GMT"/>
+>  		    </widget>
+>  		  </child>
+>  		</widget>
 
 -- 
-Damien Le Moal
-Western Digital Research
+~Randy
