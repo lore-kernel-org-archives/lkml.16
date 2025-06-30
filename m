@@ -1,290 +1,703 @@
-Received: from jpms-ob02-os7.noc.sony.co.jp (jpms-ob02-os7.noc.sony.co.jp [211.125.139.72])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2067.outbound.protection.outlook.com [40.107.243.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11A2241CA8
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272309; cv=none; b=SpWd97z4zQ1vrPJj6Ra/+SoGCIRGNtqxPhrOXr5N2SiUti/X+QAZ9kSucfkHlrMxaDbuCpp25YJvilcBtWXnwB10eO75pjJzgmZeh37fRrfKS643wkrKeFaFpfYueQETwlNshrjlGv+jTf4/V/nPvwgVm/rWfMA+M9HTkMjC7G8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272309; c=relaxed/simple;
-	bh=DRwjgPF84TbkDM3m8v1SllWoMAXxWABKMDdLRZ4vwdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ie4AhY6DRamp9JD87TV1O8yP0UIj/EVaw+epBxUxdiaC6uCQxGpJXMbdOGH+ZY5hrCO5hxa9x55MqBQRQEvJkXJH3E/EV4vWYpDeVzbJt91xzeIUWtM9KNDl88ZEoqPtndFyoRsiqt8h6rJyUkVlORbhvc8qMynDW1Xn4oRYjuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=kHN29tKP; arc=none smtp.client-ip=211.125.139.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7853F4A01;
+	Mon, 30 Jun 2025 08:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751272450; cv=fail; b=V5Rp2bHW5V4KydnHaBQq4WEYOpcssTjNtRAbHFtSev3HmYYHxavNSEepE8qQNfYOmJTgK2eoriNAllo+32XYpYdMgPY5nhI+07hJ3t4ts5cC3dZ3Y7bWPNfTxRVp8D1dfd/9kObvQdvaOa33IgluqzlolheJv7h2qtpwuTGQ1Ck=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751272450; c=relaxed/simple;
+	bh=rfAR6CNfqlEdKp5uraMm7SJcmwH9Oud3uss8Rim2xME=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=a2g7hNJIMEJDzcNX6KFYyvuGK40ZBJ7wF9STsa2fd4CyPyO+L3RvgAva0AzgGazVRDJNialoj00YApx1oYEGVUgDSThgrmCsYi4McVQXL/0SfugQDU22Rn27QDfkWILHtsXUoqXEX/xkcZn1YFbfQ/3MHnFYWez1C8CIyKWpjMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IfLWt05o; arc=fail smtp.client-ip=40.107.243.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="kHN29tKP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1751272307; x=1782808307;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Uitd6oh6KCpbNrNNeOPO+tzBZw/kd9RgRigYJVdjhfM=;
-  b=kHN29tKPPDZHcyCjFa7xMonCA1q4gDo40+5XTJ4Qa0dI4YuFAKBESJNf
-   TP3AuQtYNMQhcPN37RhI9pkxRmzoOgBHXWP2XZTZ6aaAIRHIGR8Bxv49/
-   rawrlo6UcUlXpl6c8QIyk+0a/xrG+4AgKvksiXupicwdNq4CvZfcOV5Da
-   /TKpcHlOpNozWhfIQtUUMJPZLM6VokTULtDflTXSNVGEpCRgubcTn7nT1
-   vfQxq/l+TAUmyyDiMQSXXgVoxFVW6Pcd8DfHtmbjrIV7ATum0jW41isbd
-   CtjQakpTRTDUQt50T3CXHMsGbHpHYALqz3g5YWJ76p/DhoVHVH7igW8G9
-   g==;
-Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
-  by jpms-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 17:21:38 +0900
-X-IronPort-AV: E=Sophos;i="6.16,277,1744038000"; 
-   d="scan'208";a="2622884"
-Received: from unknown (HELO JPC00244420..) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
-  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP; 30 Jun 2025 17:21:37 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Shashank Balaji <shashank.mahadasyam@sony.com>,
-	linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	James Morse <james.morse@arm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Rahul Bukte <rahul.bukte@sony.com>,
-	Daniel Palmer <daniel.palmer@sony.com>,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: [RFC PATCH] kernel/cpu: in freeze_secondary_cpus() ensure primary cpu is of domain type
-Date: Mon, 30 Jun 2025 17:20:59 +0900
-Message-ID: <20250630082103.829352-1-shashank.mahadasyam@sony.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IfLWt05o"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q0TUmpXuGfMmV7kOdpIE5GwFBNkqLpH9hnYB6rcoMl1U/iLKs8ppVvhzoEqG+F3LfEnnz6w9l2Wcn9THkgtOPBhuYofNV6cVYF/j4zxQ/REpXQW6wns4Ahs6ktWD2lS95BPx6DjQxNiolbCxHxlmiooTjGnNssCzv6cjffepcpfrVWQ3ZtoLY2WKl2k+izXndz9jeMxyWAYDq+PsDqZOBgYzo6pHpv1dXwoGP6xQ5FpeopLwsG77kQpzTKi7/mCU8f6isDcfcgn5QwzNNYQ5ieLAbI45kpfSe6zqEU68drntZueHJbcvt30PLNEXqkIFiP+4JUGj0J6QTgzV7nYxUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a8J2RbVyEOKwbzkgejXonOAkwIc+GVcNtAnnGmD2Jwk=;
+ b=yqZjSctv5K1jVqxHyI1plbZszQUIXKkiSW6kpOuOithJBZtZA1HW67kHN6dSb9q4ad2Q6Qw99Bo80jedQL1DqH50xlQZOIsJoPjzsPSmVNRD7lOTMklB8TEI+QSNWpOUNMpQgeu0O6gPhG/ur9fsilwQ/GqxvhRPUB10KOZAYT8aunyeQscPIXhBqRe2AVqEbIVEHc0tvut88p5qnComA0zIHLjyLjiIuDIwJoWXMqVka0EhmmdK8lihPjbOH78jy9Tvbl65395Py1Tck8Q+Hiykt5/XIbnXvTu9YjhjDsEL2RuxIFQlkPziSRgGTQkN785HECXxFk/vLXVOMw8Ipg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a8J2RbVyEOKwbzkgejXonOAkwIc+GVcNtAnnGmD2Jwk=;
+ b=IfLWt05o3lFZS4kyEu85V6iZm4uu6bmsOIz8gMFZCWl0FPrBNm0kStinTJDXBvmc/fysRfaJZ21pQ416dboOt2S5Ml4D3s99+c/epT9qCqWtv30WGYf51TREH00h6XoS5a21LX8JUiaVngrH6OS78z+RpgN8ilhIxrwMKVllYLoppPvjCowq/kPZ0/hX3yeZeoS2A44uvXaxeI0HNP+IZPMUDX+3r4RSWWKq1cvsWMoLEtvZlVsWXi7y+apql/rODOoScZZNijrMunDvOfdujWRxLZEoad5TtZjT7/MFM5edx9PS5vBuJYEQAVQgYD2uwRK0u2ZkCSg+qa0zGi16fQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SA1PR12MB7223.namprd12.prod.outlook.com (2603:10b6:806:2bc::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Mon, 30 Jun
+ 2025 08:34:04 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8880.021; Mon, 30 Jun 2025
+ 08:34:03 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 30 Jun 2025 17:34:00 +0900
+Message-Id: <DAZQ9OGC1648.2WWABTO7A7UU6@nvidia.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Valentin Obst"
+ <kernel@valentinobst.de>, "open list" <linux-kernel@vger.kernel.org>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>, "Robin Murphy"
+ <robin.murphy@arm.com>, <airlied@redhat.com>,
+ <rust-for-linux@vger.kernel.org>, "open list:DMA MAPPING HELPERS"
+ <iommu@lists.linux.dev>, "Petr Tesarik" <petr@tesarici.cz>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Sui Jingfeng" <sui.jingfeng@linux.dev>, "Randy Dunlap"
+ <rdunlap@infradead.org>, "Michael Kelley" <mhklinux@outlook.com>
+Subject: Re: [PATCH v2 1/2] rust: add initial scatterlist bindings
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>, <jgg@ziepe.ca>,
+ <lyude@redhat.com>, <dakr@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250626203247.816273-1-abdiel.janulgue@gmail.com>
+ <20250626203247.816273-2-abdiel.janulgue@gmail.com>
+In-Reply-To: <20250626203247.816273-2-abdiel.janulgue@gmail.com>
+X-ClientProxiedBy: TY1PR01CA0189.jpnprd01.prod.outlook.com (2603:1096:403::19)
+ To CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SA1PR12MB7223:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb38edc7-bdcb-450c-d0e1-08ddb7b0dea7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RVVML1NBMFA0QW9JWUdNcHRIS2xMbzBhMXJEbVdNOTBzd2lTa3RTRDV6Uzhk?=
+ =?utf-8?B?MUFWa0J5RlNiVlF3UXFiRlpuL050TVQ0M1g1NFF3eUFkRkVqd29CWXEvTzRC?=
+ =?utf-8?B?VUcxUVlmaWJxZ2lUWFBraEtCeHF5NTBlL0w3QklVdjd1c0ZpU2N2dDhwaGwz?=
+ =?utf-8?B?d2Q5MDRMZjhvK2NWcVU1N21YTE9ENUkwVzQ1QURPMWl1THFYcG1vcTJXVmRP?=
+ =?utf-8?B?MDZwS2hlZjNTbzR1WTJnZVR6d0V1K3l5N1NpaUk1K1Ezdnc0K01mZ3c5Q3ZO?=
+ =?utf-8?B?dFhTbi82eGtQSjN3SXVkMWpxMTRKdnJQNHo1dUhzQll4ZTlhaW54RXllbWpl?=
+ =?utf-8?B?RHczUXBDU05GU3dpeHBEQ0lpcGtkWWNEamxGQVFJczNmWHNXbEtzMWdFYzNh?=
+ =?utf-8?B?NkVKYTJIbGVKeU81ajJZTzJJNlRwV3dLVlR1YjRUUFdlRTJOUDd1RjNzbXBH?=
+ =?utf-8?B?SjkrUkMwK2hqcWNYT24xNElxL3lSR0NsZGpCQ3gxR2Z6c29tUkxIaXVNYkw0?=
+ =?utf-8?B?ZUFtdm9nNmpCa3BRTFl2SWJLeTFtM0JMVytwc08xdHUrK0o3b1ZOOW1GUXQx?=
+ =?utf-8?B?WWVhZlBEY3M2UlN2WStuRGpyZmFuVGZVOXFGUnErSlJBZXo3cW93eFRVNGZv?=
+ =?utf-8?B?YXlSc2NGVnA0Zk5sZjZBbGFMWGFkVmpsQ2hnbDBPWThCUDBQVnRmU0RtUFNQ?=
+ =?utf-8?B?WWJXTFpGZ2VnVTd1MkJweXN1VUdaVTI4WkNSU25Ma1RHUjY4SHA1SHlZU1Uz?=
+ =?utf-8?B?WW9CTnJPSG9BRHdlWkRVRFJ2RFBTWkFMZWd4NURHUzlLV0sxMHVZNzRrQ1lq?=
+ =?utf-8?B?VFhGZldXcjZaUFlhTkRoc3hIZldlcWlyaGdmRTlwWWR5ZURSTnArb0dvS3lk?=
+ =?utf-8?B?ak1iTjB4NGVlU0JCbXBXeHQyWmprZkxmN3lJQys3VEJtanZOOFQwYUJJT2ta?=
+ =?utf-8?B?cVlXT0c2M0dGTGZBeGZkTGFtVnJwSDlSNnJqNkN2OGY2REpFNEtlRzZYS3Zj?=
+ =?utf-8?B?WkN6aDVzSUx3VGk4Q1FkL1ZwV1NpOFBkNy8rb1FXN1hEWWJtUlFnai9MYTFr?=
+ =?utf-8?B?bjBBN1VuNWw0eDZwY09HMnVNNlJ2L0RIM3h0bEdtdEhWQURJM1ZIRTk3cXI1?=
+ =?utf-8?B?VVBXTnA0eDVLam9pb3MrZDJXN1YzM0ZLOTVXK0ZYWkxSYVFXS2hBdC9ZZGxo?=
+ =?utf-8?B?bWUrdmJoV0ZIMytic0NORFB6SC9GMlphL1o4c3JTeFg4NXZUNGcxbHZlaTNL?=
+ =?utf-8?B?ME9BYldUdUVXbGhpUmpPRnB2dGVZcTR2Wk9RenFtUkhwTmJBeE9FVmdkTkdK?=
+ =?utf-8?B?STZLbXZ5cHlkOUIzTFBWZGo2aXpiRE44d2N0WG1UbkpSeTdCcFpvcE05cFJM?=
+ =?utf-8?B?MlVHRkdTQkhzRC9EOStuQkZyMVJFbDAwZUhBNWlXa05EK2ZiSElEa0ZJTXJE?=
+ =?utf-8?B?K1R0bzREdjlvaXloV0hHRjB6dEMvNXJkem9tTDFxRkxUYmtjc1k4eWxuaHNI?=
+ =?utf-8?B?S0pCb3RFVDFrRE9KaFAyMmVKWk1yT2Jub3djZHVORUprMHF3dlMxM21kbzJC?=
+ =?utf-8?B?NFdMWFN4Tjg5R09IUk0yU1lVczBwTXNJUjZxYTFzVVduVFJYU0FBb1VVeUJa?=
+ =?utf-8?B?RzhHazZSZUR3RjFyMWVoSTRHRGQ0dktXNHFjWWNKeG5uKzlCQTV6SFlkc1hh?=
+ =?utf-8?B?U1FiV3kvZU42VStUa3VoaTc0NHJPdTh0S3NWb3A3QUoybEhkWWIvSUJkZ0h4?=
+ =?utf-8?B?M0tpdmlieDE1bFZ3UUdDVVN0Q2dWWkovTDMvY1hYR0RKeC9XU1J3eVNGK0I1?=
+ =?utf-8?B?WmEwcVphVDZEWGI3ZWNsSWtSYXE5VXFKK1R2U0RsMkw1R0RDaUpML0lPcEVV?=
+ =?utf-8?B?THZuWHZQbXRUanEzNS9aN0UydmVTYlZ4VWZKcXRONWwwMUpxbEQrRkx3ZzZk?=
+ =?utf-8?Q?Eu5kuwcd5O4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NUVOSnBLS1J0MnVSVUs1M3ZaUDhUd1pFaGRJZW42NlNkc2N0UGEyYUp5ckpv?=
+ =?utf-8?B?angwQjdXc0tzU1k5cFBXWHRCb0dmTW1pcG9aL3JMUEMwUE9FRmNROWZ1Z1dV?=
+ =?utf-8?B?U2pQelF2L2tmOThYOXBaOU5rVmVlSVB2YXEzRmg5ejRpZ29MQUNpcUpCVStv?=
+ =?utf-8?B?MVpvenFLQklIenBDSkNCQ0pMVTFkSExqM2N5OW9qYjlSWll2S3ZTaktnTkph?=
+ =?utf-8?B?Sk1wbWNEcUVjWU5tZ3BJeU1oM3REbjRyZ01xbEpZbFVlTEZvY1dGZWlTekhI?=
+ =?utf-8?B?VGlFQ1Vsd1MzVVZCVi9MY0xGNm5zN3lSMXlnOWlLM3NrSk9URFZmSFdueGx3?=
+ =?utf-8?B?UUdXLzl4b2oxOGhJcEFTNUNEN0t0YWdabjZNSU9sMUNBMGl4NUdRN01wbHV2?=
+ =?utf-8?B?VCt2RUkzTjhtQXVuQ3hQckVDdXd3Nis5NG80VXlVekpWRDM2bC85NUIwY3o2?=
+ =?utf-8?B?Ykl3dFhLZXhFc2JYZlJiRHNGUFRNZWlxdWVOSDVLTVYwMmgwdkJBcmpkSDJ1?=
+ =?utf-8?B?RENmalVKdHFhdlViSFovZ3pIdGhIWU5KVmFWZ3FxTmZjM1FBM1VkVDcvYVR4?=
+ =?utf-8?B?SjFHdlkzRVpsVmNkKzhiTGRkWVZNYlFMb1g2dHJpTGJrY2krQXBlMWp6elZX?=
+ =?utf-8?B?R05NQzV5OS9iSlcrRWdxTmhrSHd5cnV5SDlYTUtWZ01KZWV1R3pXMWhqNTBT?=
+ =?utf-8?B?eEdnUWtVOFVnMDB0ZnRhTUdqR3JYczNjcEJscG9VVTFQZTVyV1JuVGFhVmYz?=
+ =?utf-8?B?MWg1RVVpdDJ3cnppbUxnc0twa1dPSWdQdzdCaDlFMVpJdk1FTmVUcXFSTTVk?=
+ =?utf-8?B?dXliOGpTOUtmYTJXU3ErNS81M3l1SEVzZGNQMUNLcjVUdHdNR0pqM2FnNitR?=
+ =?utf-8?B?dWFiVXJqczJRMFJ1U2E5TG5nSW92eXg3aUpoSmJaM3RpU3Zsc2t1ZGptWllh?=
+ =?utf-8?B?UkliUTF4L293T095U0dCSjFIZWh5VEpwWGtXdVAwVmpqMkVnWklRcjdwb2dn?=
+ =?utf-8?B?RVBpd29oN1pQWWd1MDhVWm5qZVk4YkpLVm04UjBoTnBpalpQYkV5UlJEa2pW?=
+ =?utf-8?B?cjlpRXBkTm5yeXd0NzJMaXBOeVBndUlud2tLa1pGbWx4WEl0VjJkY2JYbWwx?=
+ =?utf-8?B?WmFTcDV5bmV3VFVLTzdFZFllaVc3MHFiMVNkZW1iZFlRRjhPM2hwZzlmK09k?=
+ =?utf-8?B?SE54N3hjL2dBNmJrUXo2eWY4bVFzOVVIYXZGcXpNMytPa01BZlJJRDI1T00v?=
+ =?utf-8?B?UmlyZmRpVkJTazU3MEVZcVdWU05VNnp2UW82T3ZwQUY3ZndmZWRrSEpxZW1l?=
+ =?utf-8?B?cHRxT3BqUmg2MDNrT0RGb0RMRGk4WjV5aEhnQjZRS2czYTN3ZVczTVc5aTEv?=
+ =?utf-8?B?SmRiekFYYnArbkdIQlBwSTI3SDMwSWZnTkdUcjQ4d2cvSENaQlREOU1xUmRy?=
+ =?utf-8?B?Vzgrc3JVcThFZjZJNmRBVjdoK25Ha1kxYmRJeHlYUkJ2c205SXpsNnBwN2pm?=
+ =?utf-8?B?M2JQYURNakxOT0ltaDh0VFo5Wk1rMFpYdTJtOG45Q3B1YmZqcS85WGtGM0kr?=
+ =?utf-8?B?MzRLMXpyVHBmb2E1cWZVWWNiL25ueGh4S3FCUUZMSmhjOVp2U1JtMzROWjlw?=
+ =?utf-8?B?WWhoN2NMWlVURUtGbHVyck04cSs1SjBkZTZjdkhEbUpFVVhFeUJnTWExL3RF?=
+ =?utf-8?B?Nm8yN2MrRVNKTzNESDhMdEw5V2cyd2FJWGIwMHpoT0ZYeU5PVG9McHJlUExl?=
+ =?utf-8?B?ZjQ2ZFE2T1pWT0ZjU2xaMENPSjRQdlY4aHoySGVNVGF1Z0Z6UTI3NnZ0NzJx?=
+ =?utf-8?B?ejBTVGN5OEJYR3dlMzdBZ0dsVzR1RXVhU0gwZG80RG5vczN2ZStjRjM0RmdT?=
+ =?utf-8?B?RXFWdldyT0R5cWYyUzFsTlBIY3RacjV3UngwM2lPS1U5eWNIMjQxUUZoZlRO?=
+ =?utf-8?B?cG13YlVuL3lTdXZLOU5DVGtaZFJFZkpKTWYyME4vWW10SktaRjNYZjFhbHh6?=
+ =?utf-8?B?TmpFNXI1TXVmY284THYvMzJsTGtkOVp1ZCt3Yy9xcmx4Y1FjUUMxVitMbnEz?=
+ =?utf-8?B?MTQ3YW5NZVlaQjRla1BmUHNMN3ozNytBQ3pGbTE2Y05PR3ROYnJ0RlhDTzk3?=
+ =?utf-8?B?N0NtT2FPcy9wUklaY1JaRGx1UVhYa3NzRnNvc3ZOYVFIUXV0OEVwVWl3Y24x?=
+ =?utf-8?Q?kyrixnwmLrRJeGwgA+A0pRMVebWlHi8aARbfH9P7smbE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb38edc7-bdcb-450c-d0e1-08ddb7b0dea7
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 08:34:03.8812
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JK3MeS2exnBqtB1Bwu+4LVhgUzXxjqgyredJN6uAcBlppUBbo6PqAPwqg7/2BeW3DbvowMs2R4WiAEMzhCqv9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7223
 
-On an x86 machine, when cpu 0 is isolated with "isolcpus=", on initiating
-suspend to memory, a warning is triggered, followed by a kernel crash. This is
-on a defconfig + CONFIG_ENERGY_MODEL kernel:
+On Fri Jun 27, 2025 at 5:30 AM JST, Abdiel Janulgue wrote:
+> Add the rust abstraction for scatterlist. This allows use of the C
+> scatterlist within Rust code which the caller can allocate themselves
+> or to wrap existing kernel sg_table objects.
+>
+> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+> ---
+<snip>
+> diff --git a/rust/kernel/scatterlist.rs b/rust/kernel/scatterlist.rs
+> new file mode 100644
+> index 000000000000..2e17a56ea7c7
+> --- /dev/null
+> +++ b/rust/kernel/scatterlist.rs
+> @@ -0,0 +1,390 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Scatterlist
+> +//!
+> +//! C header: [`include/linux/scatterlist.h`](srctree/include/linux/scat=
+terlist.h)
+> +
+> +use crate::{
+> +    bindings,
+> +    device::{Bound, Device},
+> +    dma::DmaDataDirection,
+> +    error::{Error, Result},
+> +    page::Page,
+> +    types::{ARef, Opaque},
+> +};
+> +
+> +/// A single scatter-gather entry, representing a span of pages in the d=
+evice's DMA address space.
+> +///
+> +/// This interface is accessible only via the `SGTable` iterators. When =
+using the API safely, certain
+> +/// methods are only available depending on a specific state of operatio=
+n of the scatter-gather table,
+> +/// i.e. setting page entries is done internally only during constructio=
+n while retrieving the DMA address
+> +/// is only possible when the `SGTable` is already mapped for DMA via a =
+device.
+> +///
+> +/// # Invariants
+> +///
+> +/// The `scatterlist` pointer is valid for the lifetime of an SGEntry in=
+stance.
+> +#[repr(transparent)]
+> +pub struct SGEntry(Opaque<bindings::scatterlist>);
 
-$ cat /proc/version
-Linux version 6.16.0-rc4 (shashank@machine) (gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #56 SMP PREEMPT_DYNAMIC Mon Jun 30 16:27:42 JST 2025
-$ cat /proc/cmdline
-kernel-6.16-rc4 console=tty0 initrd=ramdisk.cpio.lz4 console=ttyS4,115200n8 no_console_suspend ignore_loglevel isolcpus=0
-$ echo mem > /sys/power/state
-[  124.899083] PM: suspend entry (deep)
-    <snip>
-[  125.169816] smpboot: CPU 2 is now offline
-[  125.174167] ------------[ cut here ]------------
-[  125.178838] WARNING: CPU: 1 PID: 20 at kernel/sched/topology.c:2459 build_sched_domains+0x1246/0x1550
-[  125.188117] Modules linked in:
-[  125.191232] CPU: 1 UID: 0 PID: 20 Comm: cpuhp/1 Tainted: G S                  6.16.0-rc4 #56 PREEMPT(voluntary)
-[  125.201453] Tainted: [S]=CPU_OUT_OF_SPEC
-    <snip>
-[  125.303753] Call Trace:
-[  125.306248]  <TASK>
-[  125.308394]  ? cpu_attach_domain+0x3f1/0x730
-[  125.312710]  ? __kmalloc_cache_noprof+0x26a/0x300
-[  125.317465]  partition_sched_domains+0x294/0x7f0
-[  125.322136]  cpuset_reset_sched_domains+0x1e/0x30
-[  125.326893]  sched_cpu_deactivate+0x11d/0x160
-[  125.331298]  ? __pfx_sched_cpu_deactivate+0x10/0x10
-[  125.336225]  cpuhp_invoke_callback+0x107/0x470
-[  125.340714]  ? __pfx_smpboot_thread_fn+0x10/0x10
-[  125.345385]  cpuhp_thread_fun+0xdb/0x160
-[  125.349352]  smpboot_thread_fn+0xeb/0x220
-[  125.353411]  kthread+0xf3/0x1f0
-[  125.356600]  ? __pfx_kthread+0x10/0x10
-[  125.360402]  ? __pfx_kthread+0x10/0x10
-[  125.364204]  ret_from_fork+0x7d/0xd0
-[  125.367832]  ? __pfx_kthread+0x10/0x10
-[  125.371634]  ret_from_fork_asm+0x1a/0x30
-[  125.375614]  </TASK>
-[  125.377848] ---[ end trace 0000000000000000 ]---
-[  125.382511] BUG: unable to handle page fault for address: 0000000087520483
-[  125.389436] #PF: supervisor read access in kernel mode
-[  125.394613] #PF: error_code(0x0000) - not-present page
-[  125.399800] PGD 0 P4D 0
-[  125.402374] Oops: Oops: 0000 [#1] SMP NOPTI
-[  125.406601] CPU: 1 UID: 0 PID: 20 Comm: cpuhp/1 Tainted: G S      W           6.16.0-rc4 #56 PREEMPT(voluntary)
-[  125.416819] Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
-    <snip>
-[  125.430828] RIP: 0010:partition_sched_domains+0x36d/0x7f0
-[  125.436265] Code: 02 00 48 8b 4d 00 41 bc 01 00 00 00 4c 89 c0 74 a0 b8 40 00 00 00 48 85 c9 74 05 f3 48 0f bc c1 48 98 48 8b 04 c5 e0 bb 85 86 <4e> 8b bc 30 c0 0a 00 00 8b 05 f5 8f 75 01 85 c0 0f 84 090
-[  125.455082] RSP: 0018:ffffb185001dfd90 EFLAGS: 00010246
-[  125.460352] RAX: 0000000100000003 RBX: ffff98ac9cae6cd0 RCX: 0000000000000000
-[  125.467529] RDX: 0000000000000000 RSI: ffff98ac80bf1ed8 RDI: 0000000000000040
-[  125.474715] RBP: ffff98ac9cae6cc8 R08: ffff98ac80bf1ed0 R09: fffffffffffffffe
-[  125.481894] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-[  125.489070] R13: 0000000000000001 R14: ffffffff8751f9c0 R15: 0000000000000004
-[  125.496248] FS:  0000000000000000(0000) GS:ffff98b068749000(0000) knlGS:0000000000000000
-[  125.504379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  125.510166] CR2: 0000000087520483 CR3: 0000000122f01004 CR4: 0000000000f70ef0
-[  125.517351] PKRU: 55555554
-[  125.520097] Call Trace:
-[  125.522590]  <TASK>
-[  125.524733]  cpuset_reset_sched_domains+0x1e/0x30
-[  125.529484]  sched_cpu_deactivate+0x11d/0x160
-[  125.533894]  ? __pfx_sched_cpu_deactivate+0x10/0x10
-[  125.538814]  cpuhp_invoke_callback+0x107/0x470
-[  125.543305]  ? __pfx_smpboot_thread_fn+0x10/0x10
-[  125.547971]  cpuhp_thread_fun+0xdb/0x160
-[  125.551933]  smpboot_thread_fn+0xeb/0x220
-[  125.555991]  kthread+0xf3/0x1f0
-[  125.559174]  ? __pfx_kthread+0x10/0x10
-[  125.562966]  ? __pfx_kthread+0x10/0x10
-[  125.566758]  ret_from_fork+0x7d/0xd0
-[  125.570383]  ? __pfx_kthread+0x10/0x10
-[  125.574184]  ret_from_fork_asm+0x1a/0x30
-[  125.578149]  </TASK>
-[  125.580382] Modules linked in:
-[  125.583485] CR2: 0000000087520483
-[  125.586853] ---[ end trace 0000000000000000 ]---
-[  125.591507] RIP: 0010:partition_sched_domains+0x36d/0x7f0
-[  125.596954] Code: 02 00 48 8b 4d 00 41 bc 01 00 00 00 4c 89 c0 74 a0 b8 40 00 00 00 48 85 c9 74 05 f3 48 0f bc c1 48 98 48 8b 04 c5 e0 bb 85 86 <4e> 8b bc 30 c0 0a 00 00 8b 05 f5 8f 75 01 85 c0 0f 84 090
-[  125.615763] RSP: 0018:ffffb185001dfd90 EFLAGS: 00010246
-[  125.621032] RAX: 0000000100000003 RBX: ffff98ac9cae6cd0 RCX: 0000000000000000
-[  125.628211] RDX: 0000000000000000 RSI: ffff98ac80bf1ed8 RDI: 0000000000000040
-[  125.635390] RBP: ffff98ac9cae6cc8 R08: ffff98ac80bf1ed0 R09: fffffffffffffffe
-[  125.642568] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
-[  125.649745] R13: 0000000000000001 R14: ffffffff8751f9c0 R15: 0000000000000004
-[  125.656923] FS:  0000000000000000(0000) GS:ffff98b068749000(0000) knlGS:0000000000000000
-[  125.665054] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  125.670849] CR2: 0000000087520483 CR3: 0000000122f01004 CR4: 0000000000f70ef0
-[  125.678026] PKRU: 55555554
-[  125.680773] note: cpuhp/1[20] exited with irqs disabled
+I am not sure to understand why you dropped the typestate here. Not all
+members of `scatterlist` are valid at all times, and the typestate
+allowed us to control which members could be accessed. Dropping it
+forces you to define access rules using unsafe methods and invariants,
+pushing the responsibility of writing valid code to the user while we
+could very well use the compiler for this.
 
-This happens because in order to offline the last secondary cpu, i.e. cpu 1,
-build_sched_domains() ends up being passed an empty cpumask, since the only remaining
-cpu (cpu 0) is isolated. It warns and fails, after which perf domains are
-are attempted to be built, which crashes the kernel. The same problem occurs
-during cpu hotplug, but that was fixed by
-commit 38685e2a0476127d ("cpu/hotplug: Don't offline the last non-isolated CPU").
+> +
+> +impl SGEntry {
+> +    /// Convert a raw `struct scatterlist *` to a `&'a SGEntry`.
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the `struct scatterlist` pointed to by =
+`ptr` is valid for the lifetime
+> +    /// of the returned reference.
+> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::scatterlist) -> =
+&'a Self {
+> +        // SAFETY: The pointer is valid and guaranteed by the safety req=
+uirements of the function.
+> +        unsafe { &*ptr.cast() }
+> +    }
+> +
+> +    /// Convert a raw `struct scatterlist *` to a `&'a mut SGEntry`.
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// See safety requirements of [`SGEntry::as_ref`]. In addition, cal=
+lers must ensure that only
+> +    /// a single mutable reference can be taken from the same raw pointe=
+r, i.e. for the lifetime of the
+> +    /// returned reference, no other call to this function on the same `=
+struct scatterlist *` should
+> +    /// be permitted.
+> +    pub(crate) unsafe fn as_mut<'a>(ptr: *mut bindings::scatterlist) -> =
+&'a mut Self {
+> +        // SAFETY: The pointer is valid and guaranteed by the safety req=
+uirements of the function.
+> +        unsafe { &mut *ptr.cast() }
+> +    }
+> +
+> +    /// Obtain the raw `struct scatterlist *`.
+> +    pub(crate) fn as_raw(&self) -> *mut bindings::scatterlist {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Returns the DMA address of this SG entry.
+> +    pub fn dma_address(&self) -> bindings::dma_addr_t {
+> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
+> +        unsafe { bindings::sg_dma_address(self.0.get()) }
+> +    }
+> +
+> +    /// Returns the length of this SG entry.
+> +    pub fn dma_len(&self) -> u32 {
+> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
+> +        unsafe { bindings::sg_dma_len(self.0.get()) }
+> +    }
+> +
+> +    /// Internal constructor helper to set this entry to point at a give=
+n page. Not to be used directly.
+> +    fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
+> +        let c: *mut bindings::scatterlist =3D self.0.get();
+> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist=
+ pointer is valid.
+> +        // `Page` invariant also ensure the pointer is valid.
+> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset)=
+ };
+> +    }
+> +}
+> +
+> +/// A scatter-gather table of DMA address spans.
+> +///
+> +/// This structure represents the Rust abstraction for a C `struct sg_ta=
+ble`. This implementation
+> +/// abstracts the usage of an already existing C `struct sg_table` withi=
+n Rust code that we get
+> +/// passed from the C side.
+> +///
+> +/// Note that constructing a new scatter-gather object using [`SGTable::=
+alloc_table`] enforces safe
+> +/// and proper use of the API.
+> +///
+> +/// # Invariants
+> +///
+> +/// The `sg_table` pointer is valid for the lifetime of an SGTable insta=
+nce.
+> +#[repr(transparent)]
+> +pub struct SGTable(Opaque<bindings::sg_table>);
+> +
+> +impl SGTable {
+> +    /// Convert a raw `struct sg_table *` to a `&'a SGTable`.
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the `struct sg_table` pointed to by `pt=
+r` is initialized and valid for
+> +    /// the lifetime of the returned reference.
+> +    #[allow(unused)]
+> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::sg_table) -> &'a=
+ Self {
+> +        // SAFETY: Guaranteed by the safety requirements of the function=
+.
+> +        unsafe { &*ptr.cast() }
+> +    }
+> +
+> +    /// Convert a raw `struct sg_table *` to a `&'a mut SGTable`.
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// See safety requirements of [`SGTable::as_ref`]. In addition, cal=
+lers must ensure that only
+> +    /// a single mutable reference can be taken from the same raw pointe=
+r, i.e. for the lifetime of the
+> +    /// returned reference, no other call to this function on the same `=
+struct sg_table *` should
+> +    /// be permitted.
+> +    #[allow(unused)]
+> +    pub(crate) unsafe fn as_mut<'a>(ptr: *mut bindings::sg_table) -> &'a=
+ mut Self {
+> +        // SAFETY: Guaranteed by the safety requirements of the function=
+.
+> +        unsafe { &mut *ptr.cast() }
+> +    }
+> +
+> +    /// Obtain the raw `struct sg_table *`.
+> +    pub(crate) fn as_raw(&self) -> *mut bindings::sg_table {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Allocate and build a new scatter-gather table from an existing l=
+ist of `pages`. This method
+> +    /// moves the ownership of `pages` to the table.
+> +    ///
+> +    /// To build a scatter-gather table, provide the `pages` object whic=
+h must implement the
+> +    /// `SGTablePages` trait.
+> +    ///
+> +    ///# Examples
+> +    ///
+> +    /// ```
+> +    /// use kernel::{device::Device, scatterlist::*, page::*, prelude::*=
+};
+> +    ///
+> +    /// struct PagesArray(KVec<Page>);
+> +    /// impl SGTablePages for PagesArray {
+> +    ///     fn iter<'a>(&'a self) -> impl Iterator<Item =3D (&'a Page, u=
+size, usize)> {
+> +    ///         self.0.iter().map(|page| (page, kernel::page::PAGE_SIZE,=
+ 0))
+> +    ///     }
+> +    ///
+> +    ///     fn entries(&self) -> usize {
+> +    ///         self.0.len()
+> +    ///     }
+> +    /// }
+> +    ///
+> +    /// let mut pages =3D KVec::new();
+> +    /// let _ =3D pages.push(Page::alloc_page(GFP_KERNEL)?, GFP_KERNEL);
+> +    /// let _ =3D pages.push(Page::alloc_page(GFP_KERNEL)?, GFP_KERNEL);
+> +    /// let sgt =3D SGTable::alloc_table(PagesArray(pages), GFP_KERNEL)?=
+;
+> +    /// # Ok::<(), Error>(())
+> +    /// ```
+> +    pub fn alloc_table<P: SGTablePages>(
+> +        pages: P,
+> +        flags: kernel::alloc::Flags,
+> +    ) -> Result<SGTablePageList<P>> {
 
-Fix this by ensuring that the primary cpu, the last standing cpu, is of domain
-type, so that build_sched_domains() is not passed an empty cpumask.
+This returns a `SGTablePageList`, so why is this a method of `SGTable`?
 
----
+> +        let sgt: Opaque<bindings::sg_table> =3D Opaque::uninit();
+> +
+> +        // SAFETY: The sgt pointer is from the Opaque-wrapped `sg_table`=
+ object hence is valid.
+> +        let ret =3D
+> +            unsafe { bindings::sg_alloc_table(sgt.get(), pages.entries()=
+ as u32, flags.as_raw()) };
+> +        if ret !=3D 0 {
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +        let mut sgtable =3D Self(sgt);
+> +        let sgentries =3D sgtable.iter_mut().zip(pages.iter());
+> +        for entry in sgentries {
+> +            let page =3D entry.1;
+> +            entry.0.set_page(page.0, page.1 as u32, page.2 as u32)
+> +        }
+> +
+> +        // INVARIANT: We just successfully allocated and built the table=
+ from the page entries.
+> +        Ok(SGTablePageList { sg: sgtable, pages })
+> +    }
+> +
+> +    /// Map this scatter-gather table describing a buffer for DMA by the=
+ `Device`.
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    /// See also the safe version [`SGTablePageList::dma_map`] which enf=
+orces the safety requirements below.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// * The caller takes responsibility that the sg entries in the sca=
+tter-gather table object are
+> +    ///   already populated beforehand.
+> +    /// * The caller takes responsibility that the table does not get ma=
+pped more than once to prevent UB.
 
-While this patch fixes the panic, I do have some questions about the code its
-concerned with:
+These safety requirements would not be needed if you had a typestate in
+`SGTable`. :)
 
-1. build_sched_domains() returns an error code, but none of its callers do
-   anything meaningful with it. partition_sched_domains_locked() calls it, and
-   ignores the return value. sched_init_domains() calls it, does return its
-   error code, but its caller sched_init_smp() ignores the return value. So, in
-   all the call chains leading to build_sched_domains(), its return value
-   is ignored.
+> +    pub(crate) unsafe fn dma_map_raw(&self, dev: &Device<Bound>, dir: Dm=
+aDataDirection) -> Result {
+> +        // SAFETY: Invariants on `Device` and `SGTable` ensures that the=
+ pointers are valid.
+> +        let ret =3D unsafe {
+> +            bindings::dma_map_sgtable(
+> +                dev.as_raw(),
+> +                self.as_raw(),
+> +                dir as i32,
+> +                bindings::DMA_ATTR_NO_WARN as usize,
+> +            )
+> +        };
+> +        if ret !=3D 0 {
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +        Ok(())
+> +    }
+> +
+> +    /// Returns an immutable iterator over the scatter-gather table that=
+ is mapped for DMA. The iterator
+> +    /// serves as an interface to retrieve the DMA address of the entrie=
+s
+> +    ///
+> +    /// This is meant as a helper for other kernel subsystems and not to=
+ be used by device drivers directly.
+> +    /// See also the safe version [`DeviceSGTable::iter`] which enforces=
+ the safety requirement below.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers take responsibility that `self` is already mapped for DM=
+A by a device.
+> +    pub(crate) unsafe fn iter_raw(&self) -> SGTableIter<'_> {
+> +        SGTableIter {
+> +            // SAFETY: dereferenced pointer is valid due to the type inv=
+ariants on `SGTable`.
+> +            pos: Some(unsafe { SGEntry::as_ref((*self.0.get()).sgl) }),
+> +        }
+> +    }
+> +
+> +    /// Internal helper to create a mutable iterator for the constructor=
+ when building the table. Not
+> +    /// to be used directly.
+> +    fn iter_mut(&mut self) -> SGTableIterMut<'_> {
 
-   So, is any failure in build_sched_domains() so fatal that it should crash
-   the kernel, or should its callers actually handle the error?
+Just because it is private does not dispense this method from being
+unsafe, as `iter_raw` is.
 
-2. This concerns the following snippet of freeze_secondary_cpus():
+> +        SGTableIterMut {
+> +            // SAFETY: dereferenced pointer is valid due to the type inv=
+ariants on `SGTable`. This call
+> +            // is within a private method called only within the `[SGTab=
+le::alloc_table]` constructor
+> +            // ensuring that the mutable reference can only be obtained =
+once for this object.
+> +            pos: Some(unsafe { SGEntry::as_mut((*self.0.get()).sgl) }),
+> +        }
+> +    }
+> +}
+> +
+> +/// Provides a list of pages that can be used to build a `SGTable`.
+> +pub trait SGTablePages {
+> +    /// Returns an iterator to the pages providing the backing memory of=
+ `self`.
+> +    ///
+> +    /// Implementers should return an iterator which provides informatio=
+n regarding each page entry to
+> +    /// build the `SGTable`. The first element in the tuple is a referen=
+ce to the Page, the second element
+> +    /// as the offset into the page, and the third as the length of data=
+. The fields correspond to the
+> +    /// first three fields of the C `struct scatterlist`.
+> +    fn iter<'a>(&'a self) -> impl Iterator<Item =3D (&'a Page, usize, us=
+ize)>;
 
-        if (primary == -1) {
-            primary = cpumask_first(cpu_online_mask);
-            if (!housekeeping_cpu(primary, HK_TYPE_TIMER))
-                primary = housekeeping_any_cpu(HK_TYPE_TIMER);
-        } else {
-            if (!cpu_online(primary))
-                primary = cpumask_first(cpu_online_mask);
-        }
+How about using a `Range<usize>` instead of an (offset, length) tuple?
 
-    suspend_disable_secondary_cpus() calls freeze_secondary_cpus() with primary = -1,
-    if CONFIG_PM_SLEEP_SMP_NONZERO_CPU, and primary = 0 otherwise. On x86 and arm64,
-    for example, it's called with primary = 0. In the primary != -1 branch, why
-    isn't primary checked for HK_TYPE_TIMER as is done in the primary == 1 branch?
-    On x86 this is fine, since it doesn't advertise ARCH_SUSPEND_NONZERO_CPU,
-    cpu 0 will be removed out of the nohz_full mask even if it's specified. And it
-    also cannot be offlined. So on x86, the primary cpu will always be online and
-    non-nohz_full. But on arm64, for example, cpu 0 _can_ be offlined. So
-    cpumask_first(cpu_online_mask) will find the next online cpu, which may not
-    be non-nohz_full.
+> +
+> +    /// Returns the number of pages in the list.
+> +    fn entries(&self) -> usize;
 
-    Also, why the requirement for the primary cpu to be of HK_TYPE_TIMER?
+Maybe `num_entries` or `len`? The current name suggests that the entries
+themselves are going to be returned, which is not the case.
 
-3. Referring to the above snippet of freeze_secondary_cpus(), if a primary cpu
-   is specified and it's offline, why are we trying to find another online cpu?
-   The caller specified a primary cpu because that's the one they want. If they
-   wanted any ol' online cpu to be primary, they could have passed -1. If we look
-   at all the callers of freeze_secondary_cpus():
+> +}
+> +
+> +/// A scatter-gather table that owns the page entries.
+> +///
+> +/// # Invariants
+> +///
+> +/// The scatter-gather table is valid and initialized with sg entries.
+> +pub struct SGTablePageList<P: SGTablePages> {
+> +    sg: SGTable,
+> +    pages: P,
+> +}
+> +
+> +impl<P: SGTablePages> SGTablePageList<P> {
+> +    /// Map this scatter-gather table describing a buffer for DMA by the=
+ `Device`.
+> +    ///
+> +    /// To prevent the table from being mapped more than once, this call=
+ consumes `self` and transfers
+> +    /// ownership of resources to the new `DeviceSGTable` object.
+> +    pub fn dma_map(self, dev: &Device<Bound>, dir: DmaDataDirection) -> =
+Result<DeviceSGTable<P>> {
+> +        // SAFETY: By the type invariant, `self.sg` is already built wit=
+h valid sg entries. Since we are
+> +        // in a method that consumes self, it also ensures that dma_map_=
+raw is only called once for
+> +        // this `SGTable`.
+> +        unsafe {
+> +            self.sg.dma_map_raw(dev, dir)?;
+> +        }
+> +
+> +        // INVARIANT: We just successfully mapped the table for DMA.
+> +        Ok(DeviceSGTable {
+> +            sg: self.sg,
+> +            dir,
+> +            dev: dev.into(),
+> +            _pages: self.pages,
+> +        })
+> +    }
+> +}
+> +
+> +/// A scatter-gather table that is mapped for DMA operation.
+> +///
+> +/// # Invariants
+> +///
+> +/// The scatter-gather table is mapped for DMA operation.
+> +pub struct DeviceSGTable<P: SGTablePages> {
+> +    sg: SGTable,
+> +    dir: DmaDataDirection,
+> +    dev: ARef<Device>,
+> +    _pages: P,
+> +}
+> +
+> +impl<P: SGTablePages> DeviceSGTable<P> {
+> +    /// Returns an immutable iterator over the scather-gather table that=
+ is mapped for DMA. The iterator
+> +    /// serves as an interface to retrieve the DMA address of the entrie=
+s
+> +    pub fn iter(&self) -> SGTableIter<'_> {
+> +        // SAFETY: By the type invariant, `self.sg` is already mapped fo=
+r DMA.
+> +        unsafe { self.sg.iter_raw() }
+> +    }
+> +}
+> +
+> +impl<P: SGTablePages> Drop for DeviceSGTable<P> {
+> +    fn drop(&mut self) {
+> +        // SAFETY: Invariants on `Device<Bound>` and `SGTable` ensures t=
+hat the `self.dev` and `self.sg`
+> +        // pointers are valid.
+> +        unsafe {
+> +            bindings::dma_unmap_sgtable(self.dev.as_raw(), self.sg.as_ra=
+w(), self.dir as i32, 0)
+> +        };
+> +    }
+> +}
+> +
+> +/// SAFETY: A `SGTable<Mapped>` is an immutable interface and should be =
+safe to `Send` across threads.
+> +unsafe impl Send for SGTable {}
+> +
+> +/// A mutable iterator through `SGTable` entries.
+> +pub struct SGTableIterMut<'a> {
+> +    pos: Option<&'a mut SGEntry>,
+> +}
+> +
+> +impl<'a> Iterator for SGTableIterMut<'a> {
+> +    type Item =3D &'a mut SGEntry;
+> +
+> +    fn next(&mut self) -> Option<Self::Item> {
+> +        self.pos.take().map(|entry| {
+> +            let sg =3D entry.as_raw();
+> +            // SAFETY: `sg` is guaranteed to be valid and non-NULL while=
+ inside this closure.
+> +            let next =3D unsafe { bindings::sg_next(sg) };
+> +            self.pos =3D (!next.is_null()).then(||
+> +                                              // SAFETY: `SGEntry::as_mu=
+t` is called on `next` only once,
+> +                                              // which is valid and non-=
+NULL
+> +                                              // inside the closure.
+> +                                              unsafe { SGEntry::as_mut(n=
+ext) });
+> +            // SAFETY: `SGEntry::as_mut` is called on `sg` only once, wh=
+ich is valid and non-NULL
+> +            // inside the closure.
+> +            unsafe { SGEntry::as_mut(sg) }
+> +        })
+> +    }
+> +}
+> +
+> +impl<'a> IntoIterator for &'a mut SGTable {
+> +    type Item =3D &'a mut SGEntry;
+> +    type IntoIter =3D SGTableIterMut<'a>;
+> +
+> +    fn into_iter(self) -> Self::IntoIter {
+> +        self.iter_mut()
+> +    }
+> +}
 
-   (a) riscv's hibernate_resume_nonboot_cpu_disable() calls with sleep_cpu, which is
-       the cpu the system hibernated on. This call doesn't rely on the "if the
-       specified primary is offline, then find another online cpu" fallback
-       behavior because sleep_cpu is online'd, if required, by bringup_hibernate_cpu()
-       in arch_hibernation_header_restore() before
-       hibernate_resume_nonboot_cpu_disable() is called.
+Why is this so far from `SGTable` compared to its other impl blocks?
 
-   (b) arm64's case is the same as riscv. Again, no reliance on the fallback.
+The fact that this calls the above-mentioned `iter_mut`, which should be
+unsafe, is worrying. Basically one can just=20
 
-   (c) x86's hibernate_resume_nonboot_cpu_disable() calls with an explicit 0. Again,
-       no reliance on the fallback since cpu 0 cannot be offlined on x86.
+> +
+> +/// An iterator through `SGTable` entries.
+> +pub struct SGTableIter<'a> {
+> +    pos: Option<&'a SGEntry>,
+> +}
+> +
+> +impl<'a> Iterator for SGTableIter<'a> {
+> +    type Item =3D &'a SGEntry;
+> +
+> +    fn next(&mut self) -> Option<Self::Item> {
+> +        let entry =3D self.pos;
+> +        // SAFETY: `sg` is an immutable reference and is equivalent to `=
+scatterlist` via its type
+> +        // invariants, so its safe to use with sg_next.
+> +        let next =3D unsafe { bindings::sg_next(self.pos?.as_raw()) };
+> +
+> +        // SAFETY: `sg_next` returns either a valid pointer to a `scatte=
+rlist`, or null if we
+> +        // are at the end of the scatterlist.
+> +        self.pos =3D (!next.is_null()).then(|| unsafe { SGEntry::as_ref(=
+next) });
+> +        entry
+> +    }
+> +}
+> +
+> +impl<'a, P: SGTablePages> IntoIterator for &'a DeviceSGTable<P> {
+> +    type Item =3D &'a SGEntry;
+> +    type IntoIter =3D SGTableIter<'a>;
+> +
+> +    fn into_iter(self) -> Self::IntoIter {
+> +        self.iter()
+> +    }
+> +}
+> +
+> +impl Drop for SGTable {
+> +    fn drop(&mut self) {
+> +        // SAFETY: Invariant on `SGTable` ensures that the sg_table is v=
+alid.
+> +        unsafe { bindings::sg_free_table(self.as_raw()) };
+> +    }
+> +}
 
-   (d) suspend_disable_secondary_cpus() calls it with 0 if CONFIG_PM_SLEEP_SMP_NONZERO_CPU,
-       and -1 otherwise. So the question is, are there architectures which rely
-       on the fallback behavior even though they don't have
-       CONFIG_PM_SLEEP_SMP_NONZERO_CPU? arm64 and riscv sure do. They can
-       suspend/hibernate on any cpu, but they don't have CONFIG_PM_SLEEP_SMP_NONZERO_CPU.
-       Shouldn't arm64 and riscv advertise ARCH_SUSPEND_NONZERO_CPU (which
-       in turn enables CONFIG_PM_SLEEP_SMP_NONZERO_CPU)?
+Ditto.
 
-    There's possibly only one case of reliance on this fallback behavior.
-
-Co-developed-by: Rahul Bukte <rahul.bukte@sony.com>
-Signed-off-by: Rahul Bukte <rahul.bukte@sony.com>
-Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
----
- kernel/cpu.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index a59e009e0be4..d9167b0559a5 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1902,12 +1902,28 @@ int freeze_secondary_cpus(int primary)
- 
- 	cpu_maps_update_begin();
- 	if (primary == -1) {
--		primary = cpumask_first(cpu_online_mask);
--		if (!housekeeping_cpu(primary, HK_TYPE_TIMER))
--			primary = housekeeping_any_cpu(HK_TYPE_TIMER);
-+		primary = cpumask_first_and_and(cpu_online_mask,
-+								housekeeping_cpumask(HK_TYPE_TIMER),
-+								housekeeping_cpumask(HK_TYPE_DOMAIN));
-+		if (primary >= nr_cpu_ids) {
-+			error = -ENODEV;
-+			pr_err("No suitable primary CPU found. Ensure at least one non-isolated, non-nohz_full CPU is online\n");
-+			goto abort;
-+		}
- 	} else {
--		if (!cpu_online(primary))
--			primary = cpumask_first(cpu_online_mask);
-+		if (!cpu_online(primary)) {
-+			primary = cpumask_first_and(cpu_online_mask,
-+								housekeeping_cpumask(HK_TYPE_DOMAIN));
-+			if (primary >= nr_cpu_ids) {
-+				error = -ENODEV;
-+				pr_err("No suitable primary CPU found. Ensure at least one non-isolated CPU is online\n");
-+				goto abort;
-+			}
-+		} else if (!housekeeping_cpu(primary, HK_TYPE_DOMAIN)) {
-+			error = -ENODEV;
-+			pr_err("Primary CPU %d should not be isolated\n", primary);
-+			goto abort;
-+		}
- 	}
- 
- 	/*
-@@ -1943,6 +1959,7 @@ int freeze_secondary_cpus(int primary)
- 	else
- 		pr_err("Non-boot CPUs are not disabled\n");
- 
-+abort:
- 	/*
- 	 * Make sure the CPUs won't be enabled by someone else. We need to do
- 	 * this even in case of failure as all freeze_secondary_cpus() users are
--- 
-2.43.0
-
+I actually have some more comments, but I'd like to understasnd first
+why you decided to drop the typestate. If there is no good reason, I
+think I can provide a more detailed explanation about the design I had
+in mind when thinking about Lyude's usecase - basically, a two-stages
+typestate SGTable type where the first stage is unsafe, but the second
+one leverages SGTablePages and is safe. But going into that explanation
+now would be pointless if the typestate cannot be used for some reason.
