@@ -1,130 +1,73 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB3023CE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 03:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCE818B464;
+	Mon, 30 Jun 2025 03:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751255294; cv=none; b=NVHmZbBVWOlZCVBlM7KraCQ3ByPbCwIbWJkcuLO05Ma/HIspe/Bz3ItnbbUKnEbPGe2Sgw7gHDL39AP4rh1ya68Ha9k4CSEA/mo42I6qiLGg9oO1WIDQZ40FBlMScc7Iihcsc6Bqf8BiCuNi0oBuO/Aqo86JerTOcpNBfW9zV1I=
+	t=1751255299; cv=none; b=h6YqXfWHWLCQaLrtmDBeq1w/y1T+te7CbdcdbHn7ReSqwh4mQWdZggzJK8j6igedmaA7Voc7u1y+HWMqElBqD0F8IcZrIzHAZ6fOR0cXjJyl6RS1tFavc3mO5cb5QFPO6PJTGG8Tmd4bvziEh0OcHSq3IQzqTKB5ByS0PwWOUIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751255294; c=relaxed/simple;
-	bh=LBM4mSRpBpLLuf5KUL4CdOdRDoNegAjkYl+r+qplyOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OCHbMF69LrMC9fBNiy9uinz7Fv+MIOKZbv6IJ5/SM2dLL4YzZyG9T/XnDLKwDLPyr8OI16FraP64ukD+EVwo83YrETVnjNfMUdFPmE94GuybnguxcQN7qDfmQ44b4WDWXBP9DzFLCFLw+w3EAn6nWFhcN5cAzh482ZfZJyjphMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=k85nFJXQ; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1751255299; c=relaxed/simple;
+	bh=+t1jPnYCOVF0SdtSuEp+RHL45lFV8uYHWwhOlZuzCAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCLoWloTgoI5rlXMVWmpyBaDGz3oOSd2Qkf25l5XSJWGPfgOPjpjXmGNzC1zw0K0YroImK+8Q6qwN7b4dm/RGlwV1AJiUoJ56G+tUEUMymI1TGGkTW3ypcXc+BJePuI0se+cyZU5k0fH46QsR7egdE7IUh6coBEpbAlkjOk1Q+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=N7aGd5qd; arc=none smtp.client-ip=1.95.21.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="k85nFJXQ"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso2032521b3a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 20:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1751255291; x=1751860091; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yFeBhYBHOrC/0c43zTo39sGlheeTzLpojcRGicgsOS8=;
-        b=k85nFJXQqw9OpJkkpUjRJiY9ByGW7C9hcqMn0usRVc3F/BmQbtn4j/phhDIcp7s6ek
-         Ox/ZJ4ICe7Ty+X5q+rbQqOoN/mWPszJnX+dqj/0qH9IXPu8QJx68RSQHbHB5Ng+TrAdL
-         CIBvOWXy8Ddd+BL19n6PzkBbz00llTPPeq68j57TppX3ikSGx4lQzWlOnV7uCfEQn6V5
-         daCiqaaFmOpvhkz7CqDe1ndxOcKGQx/FZlYGoReEUnBzv7hxYKsSSAKqCiJoqtnM2FH7
-         VzndeP7M4esUD7i7eiuao+2fUX0SeXC/Qf0phT3sv522BuunbdU+kH8+UL/xCaKURaFR
-         toFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751255291; x=1751860091;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yFeBhYBHOrC/0c43zTo39sGlheeTzLpojcRGicgsOS8=;
-        b=O8AKtFHVFXlEJkrCNpm3mkWkDHyfCim99JHqIXqXK1MUHPLXyM3m00V4NPb1fJeuP4
-         7SjX5RnHYXwkn9ZFBpJNn5Bst+vr6ysDrKm7j/GjJNrhib0fiCopdfoRt7ZPEkPXd0Nz
-         PlY+e2jm7FyTto46wKbrw2XoiuvWS9hUPp/f0pmUHIuBxmvsHjIJ4fGEiT3dv+KPbkpB
-         ND7NtvXzR6wTQIUTCGNSq4AUHPuc5uhmt9GxCiwRKcSDTR0rKgxWQVjhDg7YTtm8MeF8
-         E1sIWaBOhyMALY40NXzdA3m4XBOIvDJth6W/lRoRpe21N3OClOzq1CEvLH6J8YgJn6bf
-         B4Lg==
-X-Gm-Message-State: AOJu0Yx9HINfyQQRryQo7Oe2UNV2gByfNse02z9hdSFWo+5oVJszOHMp
-	MXOeRmF27YVrOudJpzNySt/UKGeTveh7KnDRAuG7nwvGSmtjFI2N9HlcdEBQaBbdPNUNEXExlw2
-	msCg2
-X-Gm-Gg: ASbGnctp+GEIXWZP+tqxbXY4igzAArCXTLgXh0HyG5Sd64k+HA9xX1MV7zREXSqyjAB
-	pscq9bueIrsbFnxdFu5OQd/WkzKLBP9ga8ad3iOX4xIGhSiWajvA7KRaa5iDny8ASB1sThVyNsu
-	oVSR3nUNqevwCERkqYCxsSrgkuOFv5Jo7smja0S315kI11qkrHu+hY0oVDRc5luVkLx7+SVwTR7
-	OB6yT3bgpaOrqx4m3MxsRtsM8K2lxZ8Mmwyj91XxlobMAk8gphECyEVhVQcmaQC1Prh1iz8SBtV
-	RpSP1thvUDMZt+Wq4Y1dMqyjbDPbD7PSL2pFa9U/7QNkq/IVsnbKSuLtjRkupVKmGPG5fr/a
-X-Google-Smtp-Source: AGHT+IEzTTqz9HI75CbRtfblsCPZ+bl54XYhiD9/Nlz3V+rIBZOaNxNzGv638imyLy83nUUnGEXiUg==
-X-Received: by 2002:a05:6a00:3e25:b0:748:2f4e:ab4e with SMTP id d2e1a72fcca58-74af6fcf67emr16315764b3a.11.1751255291494;
-        Sun, 29 Jun 2025 20:48:11 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.195.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57efaecsm7837862b3a.161.2025.06.29.20.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 20:48:10 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH v3 0/3] RISC-V: Add ACPI support for IOMMU
-Date: Mon, 30 Jun 2025 09:18:00 +0530
-Message-ID: <20250630034803.1611262-1-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="N7aGd5qd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=MC3PpwZilNiTUO9T3N1jve3LMEKnZfHx+jcycfs6XYI=;
+	b=N7aGd5qdzoWWFzieN9fkXxNetlhygQmqSIiZToazHyALyoSFCZESx52z1V66gK
+	he+efT+cy3t+JM44yyIZ1CTxwW+7NzuhOgh7GjvyyP4uUqUrhvLUVSGjCMIC25R9
+	WEszdsj3W6LW0hwHdc3I75YNpYnSDAJ5041WHQNkaTzUM=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgD3nzjFCGJoEjPOAQ--.37623S3;
+	Mon, 30 Jun 2025 11:47:19 +0800 (CST)
+Date: Mon, 30 Jun 2025 11:47:17 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Meng Li <Meng.Li@windriver.com>
+Cc: krzk+dt@kernel.org, linux@roeck-us.net, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, linux-watchdog@vger.kernel.org,
+	imx@lists.linux.dev, shawnguo@kernel.org, robh@kernel.org,
+	conor+dt@kernel.org, Frank.Li@nxp.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [v4 PATCH 2/2] arch: arm64: dts: add big-endian property back
+ into watchdog node
+Message-ID: <aGIIxTjmpPPhhtpN@dragon>
+References: <20250608030616.3874517-1-Meng.Li@windriver.com>
+ <20250608030616.3874517-3-Meng.Li@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250608030616.3874517-3-Meng.Li@windriver.com>
+X-CM-TRANSID:M88vCgD3nzjFCGJoEjPOAQ--.37623S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF1fXw1DZw47CFy3Gr4Uurg_yoWxAFgE9F
+	15Cry8WF9xJa4jyws0yan3Zr9YgF4UCrWrG3WrCay3Aa93JFn5JF4ayFsYqa1fAanxZr98
+	Aan5ZFZaqr48CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1D73JUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCQ98ZWhh4l2X2QACsl
 
-This series adds support for RISC-V IOMMU on ACPI based platforms.
-RISC-V IO Mapping Table (RIMT) is a new static ACPI table [1] introduced
-to communicate IOMMU information to the OS.
+On Sun, Jun 08, 2025 at 11:06:16AM +0800, Meng Li wrote:
+> Watchdog doesn't work on NXP ls1046ardb board because in commit
+> 7c8ffc5555cb("arm64: dts: layerscape: remove big-endian for mmc nodes"),
+> it intended to remove the big-endian from mmc node, but the big-endian of
+> watchdog node is also removed by accident. So, add watchdog big-endian
+> property back.
+> 
+> In addition, add compatible string fsl,ls1046a-wdt, which allow big-endian
+> property.
+> 
+> Fixes: 7c8ffc5555cb ("arm64: dts: layerscape: remove big-endian for mmc nodes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Meng Li <Meng.Li@windriver.com>
 
-[1] - https://github.com/riscv-non-isa/riscv-acpi-rimt/releases/download/v1.0/rimt-spec.pdf
-
-Changes since v2:
-	1) Rebased to 6.16-rc4
-	2) Removed Anup's SOB and link tags added by mistake in v2.
-
-Changes since v1:
-	1) Rebased to v6.16-rc1.
-	2) Dropped ACPICA patch since it is already available in 6.16-rc1.
-	3) Added Rafael's ACK.
-	4) Fixed few issues found by bots.
-
-
-Sunil V L (3):
-  ACPI: RISC-V: Add support for RIMT
-  ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
-  iommu/riscv: Add ACPI support
-
- MAINTAINERS                          |   1 +
- arch/riscv/Kconfig                   |   1 +
- drivers/acpi/Kconfig                 |   4 +
- drivers/acpi/riscv/Kconfig           |   7 +
- drivers/acpi/riscv/Makefile          |   1 +
- drivers/acpi/riscv/init.c            |   2 +
- drivers/acpi/riscv/init.h            |   1 +
- drivers/acpi/riscv/rimt.c            | 523 +++++++++++++++++++++++++++
- drivers/acpi/scan.c                  |   9 +-
- drivers/iommu/riscv/iommu-platform.c |  17 +-
- drivers/iommu/riscv/iommu.c          |  10 +
- include/linux/acpi_rimt.h            |  26 ++
- 12 files changed, 599 insertions(+), 3 deletions(-)
- create mode 100644 drivers/acpi/riscv/Kconfig
- create mode 100644 drivers/acpi/riscv/rimt.c
- create mode 100644 include/linux/acpi_rimt.h
-
--- 
-2.43.0
+Applied this one, thanks!
 
