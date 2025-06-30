@@ -1,182 +1,112 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8A125F780;
-	Mon, 30 Jun 2025 11:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2373B25D21A;
+	Mon, 30 Jun 2025 11:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283327; cv=none; b=hX2RX2C/MhUrmZDn7drhtRr0t7gecm6iqdlOPwfDZvLd1/yDbkjA8qFW4cRuWQb7/NGtbXSGTR4teAl9Ot4KZmlpbChUmNRGtvO/Og/p7n5O/r/PPiVs3x6tp6MLzryEAT6yDvBJhtWPu540d7purUUfScftLNjEncmU52JEa/w=
+	t=1751283339; cv=none; b=boxu4FlYDTb4CvFMsLtRD57btB1BSiZinRL/7R1R640OWWvhmdW4jWlZDmBKB6pADMeAKziVQa8liL81+RENCtRQ75BO8s4mHRlMebZCy1yMKNvyNX5qwsFNVgWwANr4jq+zwS8mJFM6O9kOL0+54yEiZoE/WKxQKAhyXhMxNyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283327; c=relaxed/simple;
-	bh=jxDgTymgrkOCfaHXF2Y6MXcF4JNlwCcl3zCw9mUO+7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n06ryWl7Yf26TRNXFyw4bMO3Ufl29CLIIv4MVx5BeJbqV+5ZNAx4Sh/jB9HNfrQ4dHmbQyTMJPd/50O83L9I1Phrg6Q396Iz67N7MGU72SxvT2ueB2/3wT2dY5P7YFAlh1P5WXPAa8AYDHVXiLdpo4Gw8BBZDyzxCF2oB1/sqJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9q8UUaM; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9q8UUaM"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae3a604b43bso6961266b.0;
-        Mon, 30 Jun 2025 04:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751283324; x=1751888124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TN1pNkGyILLKxYs8q0ZgJa0IyHDHxUxA0RrIfq1B4rM=;
-        b=W9q8UUaMrCeeMHwVZpFZG93F04vUq97QIKHlFKmn9hRF9kKU7E5dP2xngBiF/WHW/r
-         t5TAajjRCPggG71z7pD5R5zRYDJwewgXx7AGjlXSxfgINgTmkLSowHCdVNXR7tH7gtv9
-         tTO0x/X013tY1OHAtDpp/Xo2j3F+I4bV9wueZKhsG/Pqiqds7NPt5H3mrJYNCDkHO6ZF
-         SvL41lE7DxZRGLdhK9kp+jcdliVYMB2/whXDJr291omjplMY8p0m2+bGtjsy86gynEBF
-         uYUZXNJ6H3e1mVD5NibOPMoG7paDwymkIdsxbslCjCFUmLnQCbk6TH7tcqG4Y+J818sl
-         UgOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751283324; x=1751888124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TN1pNkGyILLKxYs8q0ZgJa0IyHDHxUxA0RrIfq1B4rM=;
-        b=gxdgLzaAoBELJ3ItVN7GCo68tn5txc7jM1ZIQHfv1NHQZnrJdyjj/HYlc8d9R2ZoTO
-         yKeZ64NxB5zV04ph2td8VhicD3NLhsLWsK66y+PFTvn5hI8fpzsqSnSmT0qkS4BoRkFS
-         VXVZluTDFpQJPPgsXUgSBR87anuxhMjM+wiXE/woIaCFRNrWL7fNPlMYFF0ZBdbfwX5t
-         5vmtyKeqvHfaqAr5+T0KlqX0+D3jorZ5mwBoV9CgFrtoD5TqdtvGW1gFM5PuzM5d+TXj
-         YDjweZX1wl1lvyfC7OqpySGDdHIsRLGlbrRTxAOW6swxKS7AkzhHCCmj9nekBLoc0tu3
-         7bgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXhsGYIfczRNZORwo/ZkhAQOJPNrTSw7a3xyt+j9gT+HqjZ1/KkxweGEl+dLZ3N9Y8jJQwuRqY8xuLUHK+@vger.kernel.org, AJvYcCWUgl568lrC93ZWK3ATn6oP1mcp5JDMDHAUaoRG6Jzt3CdH1YKYZMc357Y+ic4aJNAhp+Bfa6hTIqiKiiog@vger.kernel.org, AJvYcCXGwzOHCNYIOYpxe/iZe7Pay86c0N1D7G+s8aLUDw7UvjUpxxAtoonb34ungVWETmkT+XLKaplk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwToVPHscd+zOKg860+3moqULrL2NDFufTfo0TZ7+lxQqLAmTEY
-	JXDrnE6GTfIh3VFLIJqjFP4n2QJPtEoog+lxsrj3cYMzyhBXtCD+t3bN4+PV/YyZWgmUBj51mlU
-	s7Cq/TA8fg7Jpj0NM4JVgYX1UyuE7pk+WnQ==
-X-Gm-Gg: ASbGncutM5JWdtUkOgXyJ3rjFbVUGDm91NP0x6IiRI/Ool6nj/ZYhNwJBf7RPAV1Y2K
-	bQaDg7SelKmZa0LcVlFu5XHE9eRt4SA1ZRS//+xdqDN+ImREp+TBZXpM5CBgngI4KJU44KyyeK8
-	ZxdspUTZQ+piFRvTk/YPtB4SLLojeJ4JpRWg2hEvsTDg==
-X-Google-Smtp-Source: AGHT+IGtXw4MK1+g3jT+Sq0XnairCuX39bxiUwT4AmNz3L+jvZSG0RA+WE095s6R3gIsGqhSXEWOHoc0lKUTw6QvQsA=
-X-Received: by 2002:a17:907:e84c:b0:ae3:53b3:b67d with SMTP id
- a640c23a62f3a-ae353b3b746mr1037919966b.1.1751283323269; Mon, 30 Jun 2025
- 04:35:23 -0700 (PDT)
+	s=arc-20240116; t=1751283339; c=relaxed/simple;
+	bh=j8vjuXopMOzgU6kVsIB49GXlMX2NKPWeeErZMdyvwJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K8Te/yFUI95U5gLZ0rj5n9PWA+eAhffFd3yog5RGn8KZsEysfKYvMUa+FAFnWiKmodTULvbyyL0hGjsHJR2PTMDPLkfJ1AMVzoEd/AORkup9F7o4yipjKMNyWTmjqD+7ImJnbPmk24Pz1TSOX+F2Kd1n9cF3yLv22BiRC7cohDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bW3xg3sxFzYQvwn;
+	Mon, 30 Jun 2025 19:35:35 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 68F031A1741;
+	Mon, 30 Jun 2025 19:35:34 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnxySCdmJomWTTAA--.54607S4;
+	Mon, 30 Jun 2025 19:35:32 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: hch@lst.de,
+	axboe@kernel.dk,
+	yukuai3@huawei.com
+Cc: penguin-kernel@I-love.SAKURA.ne.jp,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v2] brd: fix sleeping function called from invalid context in brd_insert_page()
+Date: Mon, 30 Jun 2025 19:28:28 +0800
+Message-Id: <20250630112828.421219-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250629074021.1038845-1-sashal@kernel.org> <i3l4wxfnnnqfg76yg22zfjwzluog2buvc7rtpp67nnxtbslsb3@sggjxvhv7j2h>
- <aGIA18cgkzv-05A2@lappy>
-In-Reply-To: <aGIA18cgkzv-05A2@lappy>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Mon, 30 Jun 2025 13:35:08 +0200
-X-Gm-Features: Ac12FXxKcLCNFnGjHQv0vFJY-m6rv6DvOVyZJ9Y8NkFLTQErXrsXjDGNf3iGevE
-Message-ID: <CAGudoHHuBBX_FWKp96TZV7vs2xvxkFNkukt4wysx7K3OZDsLDw@mail.gmail.com>
-Subject: Re: [PATCH] fs: Prevent file descriptor table allocations exceeding INT_MAX
-To: Sasha Levin <sashal@kernel.org>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, dada1@cosmosbay.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgBnxySCdmJomWTTAA--.54607S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFW5XFW7JFyUGr17WryfZwb_yoW8Xr1xpF
+	ZIvFy7Cry5CF42v3W7Z3ZrCF1rGa93WayIkFyYqw1F9rW3Jry2934Ik34Yq3W5GrWxAFs8
+	ZFs0ywn5AFWDA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Mon, Jun 30, 2025 at 5:13=E2=80=AFAM Sasha Levin <sashal@kernel.org> wro=
-te:
->
-> On Sun, Jun 29, 2025 at 09:58:12PM +0200, Mateusz Guzik wrote:
-> >On Sun, Jun 29, 2025 at 03:40:21AM -0400, Sasha Levin wrote:
-> >> When sysctl_nr_open is set to a very high value (for example, 10737418=
-16
-> >> as set by systemd), processes attempting to use file descriptors near
-> >> the limit can trigger massive memory allocation attempts that exceed
-> >> INT_MAX, resulting in a WARNING in mm/slub.c:
-> >>
-> >>   WARNING: CPU: 0 PID: 44 at mm/slub.c:5027 __kvmalloc_node_noprof+0x2=
-1a/0x288
-> >>
-> >> This happens because kvmalloc_array() and kvmalloc() check if the
-> >> requested size exceeds INT_MAX and emit a warning when the allocation =
-is
-> >> not flagged with __GFP_NOWARN.
-> >>
-> >> Specifically, when nr_open is set to 1073741816 (0x3ffffff8) and a
-> >> process calls dup2(oldfd, 1073741880), the kernel attempts to allocate=
-:
-> >> - File descriptor array: 1073741880 * 8 bytes =3D 8,589,935,040 bytes
-> >> - Multiple bitmaps: ~400MB
-> >> - Total allocation size: > 8GB (exceeding INT_MAX =3D 2,147,483,647)
-> >>
-> >> Reproducer:
-> >> 1. Set /proc/sys/fs/nr_open to 1073741816:
-> >>    # echo 1073741816 > /proc/sys/fs/nr_open
-> >>
-> >> 2. Run a program that uses a high file descriptor:
-> >>    #include <unistd.h>
-> >>    #include <sys/resource.h>
-> >>
-> >>    int main() {
-> >>        struct rlimit rlim =3D {1073741824, 1073741824};
-> >>        setrlimit(RLIMIT_NOFILE, &rlim);
-> >>        dup2(2, 1073741880);  // Triggers the warning
-> >>        return 0;
-> >>    }
-> >>
-> >> 3. Observe WARNING in dmesg at mm/slub.c:5027
-> >>
-> >> systemd commit a8b627a introduced automatic bumping of fs.nr_open to t=
-he
-> >> maximum possible value. The rationale was that systems with memory
-> >> control groups (memcg) no longer need separate file descriptor limits
-> >> since memory is properly accounted. However, this change overlooked
-> >> that:
-> >>
-> >> 1. The kernel's allocation functions still enforce INT_MAX as a maximu=
-m
-> >>    size regardless of memcg accounting
-> >> 2. Programs and tests that legitimately test file descriptor limits ca=
-n
-> >>    inadvertently trigger massive allocations
-> >> 3. The resulting allocations (>8GB) are impractical and will always fa=
-il
-> >>
-> >
-> >alloc_fdtable() seems like the wrong place to do it.
-> >
-> >If there is an explicit de facto limit, the machinery which alters
-> >fs.nr_open should validate against it.
-> >
-> >I understand this might result in systemd setting a new value which
-> >significantly lower than what it uses now which technically is a change
-> >in behavior, but I don't think it's a big deal.
-> >
-> >I'm assuming the kernel can't just set the value to something very high
-> >by default.
-> >
-> >But in that case perhaps it could expose the max settable value? Then
-> >systemd would not have to guess.
->
-> The patch is in alloc_fdtable() because it's addressing a memory
-> allocator limitation, not a fundamental file descriptor limitation.
->
-> The INT_MAX restriction comes from kvmalloc(), not from any inherent
-> constraint on how many FDs a process can have. If we implemented sparse
-> FD tables or if kvmalloc() later supports larger allocations, the same
-> nr_open value could become usable without any changes to FD handling
-> code.
->
-> Putting the check at the sysctl layer would codify a temporary
-> implementation detail of the memory allocator as if it were a
-> fundamental FD limit. By keeping it at the allocation point, the check
-> reflects what it actually is - a current limitation of how large a
-> contiguous allocation we can make.
->
-> This placement also means the limit naturally adjusts if the underlying
-> implementation changes, rather than requiring coordinated updates
-> between the sysctl validation and the allocator capabilities.
->
-> I don't have a strong opinion either way...
->
+From: Yu Kuai <yukuai3@huawei.com>
 
-Allowing privileged userspace to set a limit which the kernel knows it
-cannot reach sounds like a bug to me.
+__xa_cmpxchg() is called with rcu_read_lock(), and it will allocate
+memory if necessary.
 
-Indeed the limitation is an artifact of the current implementation, I
-don't understand the logic behind pretending it's not there.
+Fix the problem by moving rcu_read_lock() after __xa_cmpxchg(), meanwhile,
+it still should be held before xa_unlock(), prevent returned page to be
+freed by concurrent discard.
 
-Regardless, not my call :)
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Fixes: bbcacab2e8ee ("brd: avoid extra xarray lookups on first write")
+Reported-by: syzbot+ea4c8fd177a47338881a@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/685ec4c9.a00a0220.129264.000c.GAE@google.com/
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+Changes in v2:
+ - fix typo in the subject
+ - add review tag.
+
+ drivers/block/brd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index b1be6c510372..0c2eabe14af3 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -64,13 +64,15 @@ static struct page *brd_insert_page(struct brd_device *brd, sector_t sector,
+ 
+ 	rcu_read_unlock();
+ 	page = alloc_page(gfp | __GFP_ZERO | __GFP_HIGHMEM);
+-	rcu_read_lock();
+-	if (!page)
++	if (!page) {
++		rcu_read_lock();
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	xa_lock(&brd->brd_pages);
+ 	ret = __xa_cmpxchg(&brd->brd_pages, sector >> PAGE_SECTORS_SHIFT, NULL,
+ 			page, gfp);
++	rcu_read_lock();
+ 	if (ret) {
+ 		xa_unlock(&brd->brd_pages);
+ 		__free_page(page);
+-- 
+2.39.2
+
