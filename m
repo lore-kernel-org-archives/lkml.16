@@ -1,157 +1,180 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFF6285053;
-	Mon, 30 Jun 2025 12:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C1E285053;
+	Mon, 30 Jun 2025 12:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751286757; cv=none; b=qSCr6N4YqngIS3SwJEjWFSM+nNtrrgb/ug55PB27gZyMYCbuoYah1cq0RbCpBf2JurGQ3I/3VJDEmuJwyhCaM3MGkWRDYDFF/RMCzd5txSNzsBLkAgXoQSIjjY0LsrwwrZK/ISG4q0Rak9ZISmoSLhkE02DQx1nrMKUlH+zbrtA=
+	t=1751286767; cv=none; b=fYYtlMXsoOp+wHZ+spjNICsRiJuqLEm/FpZhIu8VRcwBswAEXXlJxO0XRRRDD+5fahzXxRjUQE7N59Bqn7b8Gjik4KgbsVfoC6v2+a6ZmtcDTALPoaoRXgPFF8LjQzH9ltvVuZY9xvDTV+yemwYNa2eiev1SBStUxCte3UpCeVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751286757; c=relaxed/simple;
-	bh=gYCG8FHDoxPiS4cChv4vaWjc2p2+Rm2TYd/XSHuij1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ep8gB6SptnyYPm7tQ4F5n0q+GqX/rCGuOgzbmzuNM60ZH+MYK306f65nisFNc3J2bEIGLaPfGnWP1ePeFC3d6u0xnZ9wp6dq9P1UJkMRzeXnInX/x7e3VSnJH94VI9G0MvuWSwO6Ujs/iIxHn0N7VZLOXzKzQAePKdLGakBioa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LB8Vi2OA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751286767; c=relaxed/simple;
+	bh=FeNoAyq3jHM1qlXEr+ML3rMIo5zE1+yRsauys3cNdX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bP6kQmzG3LXtOVgg6Rzm51JjlU8JyxpmNd55z8ty7NxiE1UR89q5CYM1QZArc5h2MAQ2qJ2U34qq+FNg+S8TmfomnaKb25UBPC1NUGJYEYcaAk9+ZLQVt/MkMeHs7dUXjPBNQjuopODC8hje/GWfcMREc93bEgyQkkj2VQAerDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=O+DuHUGU; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LB8Vi2OA"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6gHw4011086;
-	Mon, 30 Jun 2025 12:31:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=4/4W5HOVsxTPqI9wS6wr9RV849JR3+
-	7l1M8P6DKnK7E=; b=LB8Vi2OACgTppHxL4gQCI1A+GKWdbknClc9UVU5sjvPPbc
-	dVnMk+PdxxmazNNLEQtJFsdNescZIPGdHqvmmzGuBgmu6MSVCrZlSLBO4sNnhKDC
-	+TCO5g+SoawK8YYzgTA8R/AvZ5sR73DCwEG5xPkbipDLTYGjUj9bO7LbZhWQvo5s
-	QBRCPI2tlSvfy5BrI8EFkTmv5L3qNiCmoCS9l4sFWI728JVtXwReVVFiMyagm30/
-	557kETEAGIC1MZ/ITL0WFLL87P/j4L/6m5BHOqpRYCCxp1AQWQCJ/2kxdt46bpdH
-	Op/+/fV+KYuSSWcGugl5NBqxkM2MsHlM4dqfaxJQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82fh257-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 12:31:09 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55UCTi7R021773;
-	Mon, 30 Jun 2025 12:31:09 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j82fh254-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 12:31:08 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U9adWG021906;
-	Mon, 30 Jun 2025 12:31:08 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47juqpdspx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 12:31:07 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55UCV30356820034
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 12:31:03 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9FB8B20043;
-	Mon, 30 Jun 2025 12:31:03 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 35F6B2004B;
-	Mon, 30 Jun 2025 12:31:02 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 30 Jun 2025 12:31:02 +0000 (GMT)
-Date: Mon, 30 Jun 2025 14:31:00 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
-        dvyukov@google.com, vincenzo.frascino@arm.com, linux@armlinux.org.uk,
-        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        akpm@linux-foundation.org, nathan@kernel.org,
-        nick.desaulniers+lkml@gmail.com, morbo@google.com,
-        justinstitt@google.com, arnd@arndb.de, rppt@kernel.org,
-        geert@linux-m68k.org, mcgrof@kernel.org, guoweikang.kernel@gmail.com,
-        tiwei.btw@antgroup.com, kevin.brodsky@arm.com, benjamin.berg@intel.com,
-        kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-mm@kvack.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 01/11] kasan: unify static kasan_flag_enabled across
- modes
-Message-ID: <aGKDhPBgDv2JjJZr@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250626153147.145312-1-snovitoll@gmail.com>
- <20250626153147.145312-2-snovitoll@gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="O+DuHUGU"
+Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 92C972FC0063;
+	Mon, 30 Jun 2025 14:32:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1751286755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yhGvoqdOe7yh094iGUBaDkhOeEpKHo5Q7tP3mz6Y7TY=;
+	b=O+DuHUGU8tARnh31Jhg3jTbQ7yNEHDPavXA2Vx/rA6SbSiKs6BIpehVConpn1rDs0hMnWa
+	Riixjy7R1yRhFStDw6097B4a7hDob7ZRdIT9Zz3Ud5XDEnWepcFx+7unAkmGKTHR+HYd12
+	d7kWx11IBF2/9nYXGfuv7+hpIKq7r4Y=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <c689db31-60cc-4494-b700-88744376f589@tuxedocomputers.com>
+Date: Mon, 30 Jun 2025 14:32:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626153147.145312-2-snovitoll@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: R7Lk-5oMpjro9s1CXJZKtYujyDGXFMxp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEwMCBTYWx0ZWRfX2xhLgGojvA6t r8g7/ecZ+357bnq+V4oK+PEwZaj+zHbXyN+Ru1n3DrFdaSLAos0buS5jL9C1tta7atkJYiZIQaF 9sZWyxHNaJUrQqIMbo0QDjD1aBJf17TqXpAKHau1WcUR0r9MB3HXL9faXzF4lvrkQdsuGxUK17d
- z3tORR8HbmqzluxydjcIqwSK3SZaH8E4vH7dXCceoC74KSHRAZLLwuOQaLM4i+tX7f/u/Ckvpml 5uKodiLIM+IjigsvvYu04D4oduCbahyVPqy6GNw4VE+yf6xOzYsj1s/uUrTjsgyO/jp3mfjTdFr /qtf53aSQ4op7pY9TqPllefkk/R6721w5VzJc11hrTLtAQeHUx9tUD6J7VDv5TGalxp7Ob0FALy
- f7LBwFKXJq+utLCJBkCcPsmtnhAftjy9J/oYjEBrOgpvCYmkO++L/gKuaTAOTK1/jfEyvMMe
-X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=6862838d cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=mW8dxBt0ZUAMIGVGd2EA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: UVJc73yvgF4Y4S9SoMFvV1Dqh0my0GoM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_03,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011
- impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
+To: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?P=C5=91cze_Barnab=C3=A1s?=
+ <pobrn@protonmail.com>, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+ chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de, ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-3-W_Armin@gmx.de>
+ <1b79a3c3-c493-471b-aa37-92458b356e8d@protonmail.com>
+ <7b0243fd-15c6-42da-8570-9ad9cd5163af@gmx.de>
+ <7a58972f-5256-4598-b729-224f20f3ecd2@protonmail.com>
+ <7b29df39-8146-4913-83ff-d71db26983c8@gmx.de>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <7b29df39-8146-4913-83ff-d71db26983c8@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 08:31:37PM +0500, Sabyrzhan Tasbolatov wrote:
+Hi,
 
-Hi Sabyrzhan,
+Am 28.06.25 um 01:09 schrieb Armin Wolf:
+> Am 25.06.25 um 17:59 schrieb Pőcze Barnabás:
+>
+>> Hi
+>>
+>> 2025. 06. 23. 0:36 keltezéssel, Armin Wolf írta:
+>>> Am 22.06.25 um 23:37 schrieb Pőcze Barnabás:
+>>>
+>>>> Hi
+>>>>
+>>>>
+>>>> 2025. 06. 15. 19:59 keltezéssel, Armin Wolf írta:
+>>>>> Add a new driver for Uniwill laptops. The driver uses a ACPI WMI
+>>>>> interface to talk with the embedded controller, but relies on a
+>>>>> DMI whitelist for autoloading since Uniwill just copied the WMI
+>>>>> GUID from the Windows driver example.
+>>>>>
+>>>>> The driver is reverse-engineered based on the following information:
+>>>>> - OEM software from intel
+>>>>> - https://github.com/pobrn/qc71_laptop
+>>>> Oh... I suppose an end of an era for me...
+>>> I now remember that we interacted on the mailing lists before, sorry for not 
+>>> CCing
+>>> you on this patch series.
+>>>
+>>> Do you want a Co-developed-by tag on those patches?
+>> I'll leave it up to you.
+>>
+>>
+>>>>> - https://github.com/tuxedocomputers/tuxedo-drivers
+>>>>> - https://github.com/tuxedocomputers/tuxedo-control-center
+>>>>>
+>>>>> The underlying EC supports various features, including hwmon sensors,
+>>>>> battery charge limiting, a RGB lightbar and keyboard-related controls.
+>>>>>
+>>>>> Reported-by: cyear <chumuzero@gmail.com>
+>>>>> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
+>>>>> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
+>>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>>>> ---
+>>>>>      .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
+>>>>>      Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
+>>>>>      MAINTAINERS                                   |    8 +
+>>>>>      drivers/platform/x86/uniwill/Kconfig          |   17 +
+>>>>>      drivers/platform/x86/uniwill/Makefile         |    1 +
+>>>>>      drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 +++++++++++++++++
+>>>>>      drivers/platform/x86/uniwill/uniwill-wmi.c    |    3 +-
+>>>>>      7 files changed, 1667 insertions(+), 1 deletion(-)
+>>>>>      create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwill-laptop
+>>>>>      create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
+>>>>>      create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
+>>>>>
+>>> [...]
+>>>>> +
+>>>>> +static const unsigned int uniwill_led_channel_to_bat_reg[LED_CHANNELS] = {
+>>>>> +    EC_ADDR_LIGHTBAR_BAT_RED,
+>>>>> +    EC_ADDR_LIGHTBAR_BAT_GREEN,
+>>>>> +    EC_ADDR_LIGHTBAR_BAT_BLUE,
+>>>>> +};
+>>>>> +
+>>>>> +static const unsigned int uniwill_led_channel_to_ac_reg[LED_CHANNELS] = {
+>>>>> +    EC_ADDR_LIGHTBAR_AC_RED,
+>>>>> +    EC_ADDR_LIGHTBAR_AC_GREEN,
+>>>>> +    EC_ADDR_LIGHTBAR_AC_BLUE,
+>>>>> +};
+>>>>> +
+>>>>> +static int uniwill_led_brightness_set(struct led_classdev *led_cdev, enum 
+>>>>> led_brightness brightness)
+>>>>> +{
+>>>>> +    struct led_classdev_mc *led_mc_cdev = lcdev_to_mccdev(led_cdev);
+>>>>> +    struct uniwill_data *data = container_of(led_mc_cdev, struct 
+>>>>> uniwill_data, led_mc_cdev);
+>>>>> +    unsigned int value;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    ret = led_mc_calc_color_components(led_mc_cdev, brightness);
+>>>>> +    if (ret < 0)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    for (int i = 0; i < LED_CHANNELS; i++) {
+>>>>> +        /* Prevent the brightness values from overflowing */
+>>>>> +        value = min(LED_MAX_BRIGHTNESS, 
+>>>>> data->led_mc_subled_info[i].brightness);
+>>>>> +        ret = regmap_write(data->regmap, 
+>>>>> uniwill_led_channel_to_ac_reg[i], value);
+>>>> This is interesting. I am not sure which "control center" application you 
+>>>> have looked at,
+>>>> but I found many lookup tables based on the exact model, etc. For example, 
+>>>> on my laptop
+>>>> any value larger than 36 will simply turn that color component off. Have 
+>>>> you seen
+>>>> anything like that?
+>>> I was using the Intel NUC studio software application during 
+>>> reverse-engineering and had a user
+>>> test the resulting code on a Intel NUC notebook. AFAIK the OEM software did 
+>>> not use a lookup table.
+>>>
+>>> If we extend this driver in the future then we might indeed use the quirk 
+>>> system to change the max.
+>>> LED brightness depending on the model.
+>> I see. So everything up to 200 works. And after that do you know if it turns 
+>> off or what happens?
+>
+> The user who tested the driver reported that "the brightest lightbar setting 
+> is 200", so i assume
+> that the lightbar simply clamps the values. However i would not trust the EC 
+> firmware in the slightest,
+> i can definitely imagine that other models react differently.
 
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index d54e89f8c3e..32c432df24a 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -36,6 +36,17 @@
->  #include "kasan.h"
->  #include "../slab.h"
->  
-> +/*
-> + * Initialize Generic KASAN and enable runtime checks.
-> + * This should be called from arch kasan_init() once shadow memory is ready.
-> + */
-> +void __init kasan_init_generic(void)
-> +{
-> +	static_branch_enable(&kasan_flag_enabled);
+Iirc at least for keyboard backlight on tf devices there was a value that could 
+be overwritten to make the values 0-255 instead of 0-200, maybe this is also 
+true for the lightbar, but i don't know if this affects the livespan of the leds.
 
-s390 crashes at this line, when the whole series is applied.
+Best regards,
 
-FWIW, it looks like kasan is called while its state is not yet finalized.
-E.g. whether calling __asan_report_store4_noabort() before kasan_init_generic()
-is expected?
+Werner
 
- 32e0a54:       c0 e5 fe a9 70 56       brasl   %r14,80eb00 <__asan_report_store4_noabort>
- 32e0a5a:       c4 28 ff cb bb a3       lgrl    %r2,2c581a0 <_GLOBAL_OFFSET_TABLE_+0x70c0>
-        sort_extable(__start_amode31_ex_table, __stop_amode31_ex_table);        
- 32e0a60:       a5 ac 00 1c             llihh   %r10,28                         
-        init_task.kasan_depth = 0;                                              
- 32e0a64:       e3 40 2b c8 01 71       lay     %r4,7112(%r2)                   
- 32e0a6a:       e5 4c 40 00 00 00       mvhi    0(%r4),0                        
-        kasan_init_generic();                                                   
- 32e0a70:       c0 e5 00 01 e7 3c       brasl   %r14,331d8e8 <kasan_init_generic>
-
-> +	pr_info("KernelAddressSanitizer initialized (generic)\n");
-> +}
-
-Thanks!
