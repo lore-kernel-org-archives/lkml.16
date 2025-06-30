@@ -1,191 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C30328C2B1;
-	Mon, 30 Jun 2025 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4898528C5CE;
+	Mon, 30 Jun 2025 14:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293643; cv=none; b=PzskdNEtaXvNwAbkqe3OIltLUvfpO/ijrnchNxPDokPTCsslWOiNl/rJci3N8yIoORk9fYZ7ePb2lXJBQzZg6PXn9wGcTkfqjtI9dD/OI7VhZCb7WV90L0/kMh4VC1otjpvLh1bOdgU9r+yKFvU8X2v4mrmmIzMZf7tst8FngvU=
+	t=1751293651; cv=none; b=ILHfKizQrc4OGISZ8NM6juw48og8ZMhkjTnsGNA7bYMF1F1hSDpz3nCQiVF+7o1XqgO6xbI/e+s3+62pdkzrmn6aR4fjVsZhi8NqHjCvVwqgIajM2pPNCjcuEZm16xU2bX9auttwQAAIGCOwGhCeN3UvgkbFps4TR7ybKWWd5ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293643; c=relaxed/simple;
-	bh=nuAWTsMItNCCzscLTP8xkr9U8H1LoMJ5NrTQyP/NGvo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rm56f9nr0tGbFXiPHMj2pxExZwR5i5zFd9PcV3zWi73Knc4caHlwxnCEFCxZk3mKZSShIF7E+rRdp8AfBetSmPxJ4NMz16iZTWl09ZLVNAOxNiF+hEA+n5/LFKVhz4fdkNFVn9TbZtqtzJR5EwQyIHV547563J1+fmBENz92FfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHkyl209; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751293651; c=relaxed/simple;
+	bh=LuPF47WhT0AJn95Uf0PtKKadOSwppv1z8iDklhuyFAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+55LO2pBrOBF2OX60XEu+uI//SGA3bIdvYujvv+OLynFG+E3G/Nwu5LOCmUGMtbdWF1beAaj5c8zvR3ue43Pco69HVn7x7jxvwBTSUc4nuOnzpDPVxJkYFwKrsgZGd3xLZGqJQVitsWBUmYsitFR88tu5Yfvnbqv0C3p7sUDZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fq7I9ZSy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHkyl209"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751293642; x=1782829642;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nuAWTsMItNCCzscLTP8xkr9U8H1LoMJ5NrTQyP/NGvo=;
-  b=WHkyl2092MfQgWL5xTnlJmQ9HZwcLIwXLXbBuII8VhBCK20FvVgom9Z6
-   yF4q8MvGgkboelSeHa/hDTV4ti/SAl1URFEGu3PwA/iU//PfaTZS+5B2o
-   n148NJKWx6P9zvzE94NAOezsoTkhkav3x48zp0u1YJRZvt/0j2oHJ0MXR
-   H50hi9rW8VOyRnv7nxBff1/NWdJ6iJFZkGR3QUg4kytJbcrkp8F1gB/WT
-   HcIrFpMsMuUXFl3rLbX07OgzENWNfmABQEIqcXMdUWuEsein9Q8941SW2
-   vR3EowBvOSle0haEZKBF6y7X7uzOOQWrBP0vuWQbPePADxZuz9BinGldn
-   A==;
-X-CSE-ConnectionGUID: TQqkPNVhRMiNr0bIDuA27w==
-X-CSE-MsgGUID: 84iJt1sJQ5qaUGCRt+mfpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="76071121"
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="76071121"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:27:21 -0700
-X-CSE-ConnectionGUID: 0vWuU3l9Tz6APbBipBzcfQ==
-X-CSE-MsgGUID: MEyr22i0SgOMn8ipV46Uwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="153649823"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:27:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rio <rio@r26.me>,
-	D Scott Phillips <scott@os.amperecomputing.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 3/3] PCI: Fix failure detection during resource resize
-Date: Mon, 30 Jun 2025 17:26:41 +0300
-Message-Id: <20250630142641.3516-4-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250630142641.3516-1-ilpo.jarvinen@linux.intel.com>
-References: <20250630142641.3516-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fq7I9ZSy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E76C4CEE3;
+	Mon, 30 Jun 2025 14:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751293650;
+	bh=LuPF47WhT0AJn95Uf0PtKKadOSwppv1z8iDklhuyFAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fq7I9ZSyMC+55NSAgzCN3tL69hpCl4CwhmC3n0tv56trL2dGP/WsHr3pQd/eMPTjP
+	 mwGosZhofwYUcC8yQsEXlpIVigwGwF9btxbySx5AXDea0Z2n2CBdjS7G0RUA5XLt8O
+	 ficf0iHlU7yoYS1iuOjIlhyEenc7LwyE2XPJrmIAHrEGsNZiP5U8bcUW4QvUKBXxWP
+	 5GYJc0qw63wdQRbIbMvcx1SoXVHK2VT/LUaARMYt5r9eLeficss+9DyiRPBb+XWbon
+	 04fy1717BVMq7lkyJ8myidWHmnDHC0b/geDP99HfmUCAG6FICwHQdNjBrkp7ZSQX0Z
+	 PCru1U+uhJWWA==
+Date: Mon, 30 Jun 2025 10:27:29 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: kees@kernel.org, elver@google.com, linux-api@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tools@kernel.org,
+	workflows@vger.kernel.org
+Subject: Re: [RFC 00/19] Kernel API Specification Framework
+Message-ID: <aGKe0bcv1mzBnnQr@lappy>
+References: <aFNYQkbEctT6N0Hb@lappy>
+ <20250623132803.26760-1-dvyukov@google.com>
+ <aFsE0ogdbKupvt7o@lappy>
+ <CACT4Y+Y04JC359J3DnLzLzhMRPNLem11oj+u04GoEazhpmzWTw@mail.gmail.com>
+ <aFwb_3EE2VMEV_tf@lappy>
+ <CACT4Y+b9u6_wx9BU0hH0L6ogGKN_+R5T7OsgJVFAWm8yeD0E7Q@mail.gmail.com>
+ <CACT4Y+b1Sou9bzhsuJ_LAjwCtynWN1iNRnaUkkTecNWxLUfMUw@mail.gmail.com>
+ <aF10Cu0GI092Sjr3@lappy>
+ <CACT4Y+ZB45ovD0hX3xX_yTUVSRDc1UCXnVDB57jxyWPPc7k=MA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZB45ovD0hX3xX_yTUVSRDc1UCXnVDB57jxyWPPc7k=MA@mail.gmail.com>
 
-Since the commit 96336ec70264 ("PCI: Perform reset_resource() and build
-fail list in sync") the failed list is always built and returned to let
-the caller decide what to do with the failures. The caller may want to
-retry resource fitting and assignment and before that can happen, the
-resources should be restored to their original state (a reset
-effectively clears the struct resource), which requires returning them
-on the failed list so that the original state remains stored in the
-associated struct pci_dev_resource.
+On Fri, Jun 27, 2025 at 08:23:41AM +0200, Dmitry Vyukov wrote:
+>On Thu, 26 Jun 2025 at 18:23, Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> On Thu, Jun 26, 2025 at 10:37:33AM +0200, Dmitry Vyukov wrote:
+>> >On Thu, 26 Jun 2025 at 10:32, Dmitry Vyukov <dvyukov@google.com> wrote:
+>> >>
+>> >> On Wed, 25 Jun 2025 at 17:55, Sasha Levin <sashal@kernel.org> wrote:
+>> >> >
+>> >> > On Wed, Jun 25, 2025 at 10:52:46AM +0200, Dmitry Vyukov wrote:
+>> >> > >On Tue, 24 Jun 2025 at 22:04, Sasha Levin <sashal@kernel.org> wrote:
+>> >> > >
+>> >> > >> >6. What's the goal of validation of the input arguments?
+>> >> > >> >Kernel code must do this validation anyway, right.
+>> >> > >> >Any non-trivial validation is hard, e.g. even for open the validation function
+>> >> > >> >for file name would need to have access to flags and check file precense for
+>> >> > >> >some flags combinations. That may add significant amount of non-trivial code
+>> >> > >> >that duplicates main syscall logic, and that logic may also have bugs and
+>> >> > >> >memory leaks.
+>> >> > >>
+>> >> > >> Mostly to catch divergence from the spec: think of a scenario where
+>> >> > >> someone added a new param/flag/etc but forgot to update the spec - this
+>> >> > >> will help catch it.
+>> >> > >
+>> >> > >How exactly is this supposed to work?
+>> >> > >Even if we run with a unit test suite, a test suite may include some
+>> >> > >incorrect inputs to check for error conditions. The framework will
+>> >> > >report violations on these incorrect inputs. These are not bugs in the
+>> >> > >API specifications, nor in the test suite (read false positives).
+>> >> >
+>> >> > Right now it would be something along the lines of the test checking for
+>> >> > an expected failure message in dmesg, something along the lines of:
+>> >> >
+>> >> >         https://github.com/linux-test-project/ltp/blob/0c99c7915f029d32de893b15b0a213ff3de210af/testcases/commands/sysctl/sysctl02.sh#L67
+>> >> >
+>> >> > I'm not opposed to coming up with a better story...
+>> >
+>> >If the goal of validation is just indirectly validating correctness of
+>> >the specification itself, then I would look for other ways of
+>> >validating correctness of the spec.
+>> >Either removing duplication between specification and actual code
+>> >(i.e. generating it from SYSCALL_DEFINE, or the other way around) ,
+>> >then spec is correct by construction. Or, cross-validating it with
+>> >info automatically extracted from the source (using
+>> >clang/dwarf/pahole).
+>> >This would be more scalable (O(1) work, rather than thousands more
+>> >manually written tests).
+>> >
+>> >> Oh, you mean special tests for this framework (rather than existing tests).
+>> >> I don't think this is going to work in practice. Besides writing all
+>> >> these specifications, we will also need to write dozens of tests per
+>> >> each specification (e.g. for each fd arg one needs at least 3 tests:
+>> >> -1, valid fd, inclid fd; an enum may need 5 various inputs of
+>> >> something; let alone netlink specifications).
+>>
+>> I didn't mean just for the framework: being able to specify the APIs in
+>> machine readable format will enable us to automatically generate
+>> exhaustive tests for each such API.
+>>
+>> I've been playing with the kapi tool (see last patch) which already
+>> supports different formatters. Right now it outputs human readable
+>> output, but I have proof-of-concept code that outputs testcases for
+>> specced APIs.
+>>
+>> The dream here is to be able to automatically generate
+>> hundreds/thousands of tests for each API in an automated fashion, and
+>> verify the results with:
+>>
+>> 1. Simply checking expected return value.
+>>
+>> 2. Checking that the actual action happened (i.e. we called close(fd),
+>> verify that `fd` is really closed).
+>>
+>> 3. Check for side effects (i.e. close(fd) isn't supposed to allocate
+>> memory - verify that it didn't allocate memory).
+>>
+>> 4. Code coverage: our tests are supposed to cover 100% of the code in
+>> that APIs call chain, do we have code that didn't run (missing/incorrect
+>> specs).
+>
+>
+>This is all good. I was asking the argument verification part of the
+>framework. Is it required for any of this? How?
 
-Resource resizing is different from the ordinary resource fitting and
-assignment in that it only considers part of the resources. This means
-failures for other resource types are not relevant at all and should be
-ignored. As resize doesn't unassign such unrelated resources, those
-resource ending up into the failed list implies assignment of that
-resource must have failed before resize too. The check in
-pci_reassign_bridge_resources() to decide if the whole assignment is
-successful, however, is based on list emptiness which will cause false
-negatives when the failed list has resources with an unrelated type.
+Specifications without enforcement are just documentation :)
 
-If the failed list is not empty, call pci_required_resource_failed()
-and extend it to be able to filter on specific resource types too (if
-provided).
+In my mind, there are a few reasons we want this:
 
-Calling pci_required_resource_failed() at this point is slightly
-problematic because the resource itself is reset when the failed list
-is constructed in __assign_resources_sorted(). As a result,
-pci_resource_is_optional() does not have access to the original
-resource flags. This could be worked around by restoring and
-re-reseting the resource around the call to pci_resource_is_optional(),
-however, it shouldn't cause issue as resource resizing is meant for
-64-bit prefetchable resources according to Christian König (see the
-Link which unfortunately doesn't point directly to Christian's reply
-because lore didn't store that email at all).
+1. For folks coding against the kernel, it's a way for them to know that
+the code they're writing fits within the spec of the kernel's API.
 
-Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
-Link: https://lore.kernel.org/all/c5d1b5d8-8669-5572-75a7-0b480f581ac1@linux.intel.com/
-Reported-by: D Scott Phillips <scott@os.amperecomputing.com>
-Tested-by: D Scott Phillips <scott@os.amperecomputing.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: <stable@vger.kernel.org>
----
- drivers/pci/setup-bus.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+2. Enforcement around kernel changes: think of a scenario where a flag
+is added to a syscall - the author of that change will have to also
+update the spec because otherwise the verification layer will complain
+about the new flag. This helps prevent divergence between the code and
+the spec.
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 24863d8d0053..dbbd80d78d3d 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -28,6 +28,10 @@
- #include <linux/acpi.h>
- #include "pci.h"
- 
-+#define PCI_RES_TYPE_MASK \
-+	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
-+	 IORESOURCE_MEM_64)
-+
- unsigned int pci_flags;
- EXPORT_SYMBOL_GPL(pci_flags);
- 
-@@ -384,13 +388,19 @@ static bool pci_need_to_release(unsigned long mask, struct resource *res)
- }
- 
- /* Return: @true if assignment of a required resource failed. */
--static bool pci_required_resource_failed(struct list_head *fail_head)
-+static bool pci_required_resource_failed(struct list_head *fail_head,
-+					 unsigned long type)
- {
- 	struct pci_dev_resource *fail_res;
- 
-+	type &= PCI_RES_TYPE_MASK;
-+
- 	list_for_each_entry(fail_res, fail_head, list) {
- 		int idx = pci_resource_num(fail_res->dev, fail_res->res);
- 
-+		if (type && (fail_res->flags & PCI_RES_TYPE_MASK) != type)
-+			continue;
-+
- 		if (!pci_resource_is_optional(fail_res->dev, idx))
- 			return true;
- 	}
-@@ -504,7 +514,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 	}
- 
- 	/* Without realloc_head and only optional fails, nothing more to do. */
--	if (!pci_required_resource_failed(&local_fail_head) &&
-+	if (!pci_required_resource_failed(&local_fail_head, 0) &&
- 	    list_empty(realloc_head)) {
- 		list_for_each_entry(save_res, &save_head, list) {
- 			struct resource *res = save_res->res;
-@@ -1708,10 +1718,6 @@ static void __pci_bridge_assign_resources(const struct pci_dev *bridge,
- 	}
- }
- 
--#define PCI_RES_TYPE_MASK \
--	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
--	 IORESOURCE_MEM_64)
--
- static void pci_bridge_release_resources(struct pci_bus *bus,
- 					 unsigned long type)
- {
-@@ -2449,8 +2455,12 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
- 		free_list(&added);
- 
- 	if (!list_empty(&failed)) {
--		ret = -ENOSPC;
--		goto cleanup;
-+		if (pci_required_resource_failed(&failed, type)) {
-+			ret = -ENOSPC;
-+			goto cleanup;
-+		}
-+		/* Only resources with unrelated types failed (again) */
-+		free_list(&failed);
- 	}
- 
- 	list_for_each_entry(dev_res, &saved, list) {
+3. Extra layer of security: we can choose to enable this as an
+additional layer to protect us from missing checks in our userspace
+facing API.
+
 -- 
-2.39.5
-
+Thanks,
+Sasha
