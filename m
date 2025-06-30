@@ -1,117 +1,73 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A7D185B61;
-	Mon, 30 Jun 2025 02:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07582EAF6;
+	Mon, 30 Jun 2025 02:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751250884; cv=none; b=XWochNjOYe5wEbTYJgKg2hIcRygC2nSeg0K+yQDES0mHd6TqFzXdqfaKFcqynTR5Yt2P1UYLrwFZs58KssETCp/ib6PV1GKZk5uew1HDps07BKshdW21++f4JnD9vuAIEQP4mR+/9IXcU5p3Wte4j+Ow5T1vq8Lg+aCFwcVetBE=
+	t=1751251237; cv=none; b=F/9yiOVc0G+G/Yefh9ItoTGm2fEFw8CMIjB4D3oNnnwsLIYPE9q5mlCLr99HYISHlZvNeAAArCVJwIgm34tM5wAxLY8X8dHPAUOajnSPD4nqrHQr5aH9H9Bnd8U4NwrjkJt3XJ3IiS7CBromdHe4TkB29KLnFdsCidVKSZe+Lt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751250884; c=relaxed/simple;
-	bh=RIemBj2DXyd5P39hVlUKFpLDK1tXwVPtM1Qh6kNs7LU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=V2KMy53Sdh0G02BHCzI/OjDjcbONTcuoMMiKIgMmIuW79nSKLS8GPvmvN9BLgSTgvHcnsE15DQ6jWFFkzwCjjkjafumr/EyazN9qrKlV/dqF2pZqs9GWIAmGZzJoahKHfhaQ+/BeSQxHQ/f/XNG3VQUyfLzU/e4gGx+6tD/1Vc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bVqxY2Bk6zKHMqv;
-	Mon, 30 Jun 2025 10:34:41 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id AC5651A115D;
-	Mon, 30 Jun 2025 10:34:39 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP3 (Coremail) with SMTP id _Ch0CgBHpyS992Fo2sSrAA--.36797S3;
-	Mon, 30 Jun 2025 10:34:39 +0800 (CST)
-Subject: Re: [PATCH 00/23] md/llbitmap: md/md-llbitmap: introduce a new
- lockless bitmap
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de,
- colyli@kernel.org, song@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <808d3fb3-92a9-4a25-a70c-7408f20fb554@redhat.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <288be678-990b-86f9-1ffd-858cee18eef3@huaweicloud.com>
-Date: Mon, 30 Jun 2025 10:34:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1751251237; c=relaxed/simple;
+	bh=34uGY7zT5D22LO8JJC1zH/+TdWSbLVFD6zdn3atmFgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dpRz3WmVBW3bBvWpFcqG+5KRJ0rhSpoAI0h+4Q08KLA4iDgY+wX6L4L6dxvGaReJfHvK1R9TUdXCRIzC3K1xJQr+a9k0wiRxgyThS0qRECE7nZFiEisv37abrQ1sHM84t3zuxtUjCI9CwQbDX7ngK+1hrO4wafL/d3Ucc1facVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JmK++WOB; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JmK++WOB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=J7m4+7hZWAyaQqqHmYe9PTp1FpqSsqjIOa3lbYhL62U=; b=JmK++WOB7lPSThdB5kattjpMEF
+	2DXbGk9MBpEm5BNmLDixoP7aGDrdLzKk9c3WubuaPKaLWarZQzYHmcD0nHQzSyyCknU+ln4n2RvOB
+	TFYz2P+vzQiF1C/eLxn5+7+oUrmK6yCj621Ot51klNNn3ovqaIqJ1sg2ctk7WS0wbxNmf9aSz9ObI
+	ZqO/NBGknJWSxOdgiKHscr3VW9GSsfWMMW1Rcx3oj3TO1NWvk/mRiNer3UI2cN9NTH7ZRxSzp/sMb
+	dS9LmCq8XfmnMQU2+ueqPc7HspdVvzG/vypu25Q313+G9jV0qqwmYFBroSRDeHydkAVM+6nS9HNKL
+	NqmHYySQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW4Rc-00000006iJB-2jej;
+	Mon, 30 Jun 2025 02:40:34 +0000
+Message-ID: <85b71c14-485e-4c85-9801-c61f7419abe3@infradead.org>
+Date: Sun, 29 Jun 2025 19:40:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <808d3fb3-92a9-4a25-a70c-7408f20fb554@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBHpyS992Fo2sSrAA--.36797S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFy5Gr4xXFW7KF4kCF17Wrg_yoW8Gr4rpa
-	n7Zw13Gws8Ga1SgrZrZ3yIyF4Ikrn3Jry2qrn5twn3CFn5GFnagFsYgFW5Za4UWr9aqF1U
-	Zr4rGrZ5CF4DZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 21/66] kconfig: gconf: remove unneeded variables in
+ on_treeview*_button_press_event()
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <20250624150645.1107002-22-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-22-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-在 2025/06/30 9:59, Xiao Ni 写道:
+
+On 6/24/25 8:05 AM, Masahiro Yamada wrote:
+> No all position parameters are used here. Passing NULL to
+
+  Not all
+
+> gtk_tree_view_get_cursor() or gtk_tree_view_get_path_at_pos() is
+> allowed. [1] [2]
 > 
-> After reading other patches, I want to check if I understand right.
+> [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/gtk/gtktreeview.c#L12638
+> [1]: https://gitlab.gnome.org/GNOME/gtk/-/blob/2.24.33/gtk/gtktreeview.c#L12795
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 > 
-> The first write sets the bitmap bit. The second write which hits the 
-> same block (one sector, 512 bits) will call llbitmap_infect_dirty_bits 
-> to set all other bits. Then the third write doesn't need to set bitmap 
-> bits. If I'm right, the comments above should say only the first two 
-> writes have additional overhead?
+>  scripts/kconfig/gconf.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
 
-Yes, for the same bit, it's twice; For different bit in the same block,
-it's third, by infect all bits in the block in the second.
-
-  For Reload action, if the bitmap bit is
-> NeedSync, the changed status will be x. It can't trigger resync/recovery.
-
-This is not expected, see llbitmap_state_machine(), if old or new state
-is need_sync, it will trigger a resync.
-
-c = llbitmap_read(llbitmap, start);
-if (c == BitNeedSync)
-  need_resync = true;
--> for RELOAD case, need_resync is still set.
-
-state = state_machine[c][action];
-if (state == BitNone)
-  continue
-if (state == BitNeedSync)
-  need_resync = true;
-
-> 
-> For example:
-> 
-> cat /sys/block/md127/md/llbitmap/bits
-> unwritten 3480
-> clean 2
-> dirty 0
-> need sync 510
-> 
-> It doesn't do resync after aseembling the array. Does it need to modify 
-> the changed status from x to NeedSync?
-
-Can you explain in detail how to reporduce this? Aseembling in my VM is
-fine.
-
-Thanks,
-Kuai
-
+-- 
+~Randy
