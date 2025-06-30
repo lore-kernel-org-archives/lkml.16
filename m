@@ -1,301 +1,195 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83884156678;
-	Mon, 30 Jun 2025 20:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751317115; cv=fail; b=GV7rpyvzZa+W9GyfFsIpusDCFsm3K0iZXpqskGeuoBgvgkHddXCoApBOMmlFSZJ0o55MAp/E1gmaf9HD0hpwT6y+sZ7RTHSiBNAsjrVRyCi4ODHrTqBq2Ve5n0yuQUppXDj+KmNJhKdF231HcLsGlR2HUkhYWERj3mDt9XfVDDA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751317115; c=relaxed/simple;
-	bh=WCm8njcepux03LKT/proMzfkEwohPDx7dbUzqLM2u6c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=swPgYRKoPEblXFSxE8pDWtBNoemr1ReG9a+grADn/dKzETwzE3oPRLHd1AlgoKSyUjL59tRSnW9Db14eh4Td5TohtdhbsJtNyXbW/dyh0q73pCuWrXDFdMhOIaCZeoxFSYKK8N1xF1SDDVm5VBPPwoSGmE50xS5/7v3/Fg21ob8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=05tT/N3g; arc=fail smtp.client-ip=40.107.94.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509AF289809
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 21:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751317344; cv=none; b=lxJRi9r7SnkJODff/qOSqBXPYw37biQrkfT4fUXCVJSThWPHSPyAh/iiPj20Q0wSwiAw4p0jwlnheaKFmEm/rbqHNqYGL3hI/SwLhc320HaTHGeVX560+XoJskbm88LJl/O9ZZbzNJaPOMfmHhPL4UQRJGzWharJz/KmM/uWlAA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751317344; c=relaxed/simple;
+	bh=fN5AyUDSjivmScTDQEptYySYmoeck1+soU1qFzXnDF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l/MG3MotBuIfyo7qfhHpTgtCq/rreVIXMyjv3L7jFt/jX4YaknkkPCp6jah1MBlTrBGJRPn89vvZLJGf8hlnJztHxK4oPryzHCkk3lHbryvDY3zpjWBab+P6cu7rlqtkUU/TEFaJNzQgnmj1pHtbj/AKEL/wIUWOMdHJXrNZ+8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwptlcNu; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="05tT/N3g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JTSPj85CKDE0ZhpYVmj8RSC89/LgiqDBFvwcT/G9YWz64k5E46EISdddnwSXxXZz74/zGOAt4R40KBm6xQkkJprfBg8FqF0Yoe6S9grsV1ZX5KQ3aN+a7l90OJsZqDgHFnfjbnbgBUkV5vZu6jmQ0xwiVeIB7mjKWOX+YjaCGLL5iwhXvbZrrqVA24mHWUf5VYTRLdNyeshiHWJfXS6Bg2DzR0h8KJUSgS0hVP4JcaDL0K6ECr61/1vTo4HINNge/qtPcwnUOUa3UtYXDXsIWjH08p1bEQmJxTkxBw3q/7IXaVMmkC1gkdUFojFWS+6qu+5VbNY4C6T8M9UXywNqIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UqaQ8MygrHaOxSf/2+kijxuS2Qw1RwozJq7EDVkUbM0=;
- b=I0s2EUuyTTUP97lH2H4KGZcNw44oWRgAsOe11odPk3DcuSj3YdVNVGOXPKzyMjNDE5ioVDEfa+OMAiKBv/QvNYKLDvpvj4Kd2DHps/8L5pA9ZBAtM4jXg4QqtOjcg1cRlT36Q5Xk6zwHDpQvkj4Rw0i0h3kwhR1LOo+jonswk+QPetariZ6AvPLmf3hpzEQn0DLNi6374hXThWlCbtl2PTm4UV9fwrmhizfaa5Mhx/NDhwSjr0V6mBkuHL8tflkMW7w0/M0wud0DZbhU+Y/7xl37QTiloE7xRUyzmkpjZsgQa0Lqc9AK27e8NaWacwFH0aC60E0B5w4QIpdlvmYK1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UqaQ8MygrHaOxSf/2+kijxuS2Qw1RwozJq7EDVkUbM0=;
- b=05tT/N3g4atFJnua3pn6iVpjdKJbnySQjzgOe2g5koWNWWp+ZiseUNOZjMzsrc2pyBjYq3+8ZWoWBU0URdKOwVOs7+QfataiE79A+khAaMbffkCCjvYV2a31M43vCSK4Dy9HkwqDgfmH/xk0tGsCejVvgWoRv2TIO/dUpYBAmw8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DM4PR12MB6229.namprd12.prod.outlook.com (2603:10b6:8:a8::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Mon, 30 Jun
- 2025 20:58:29 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8880.021; Mon, 30 Jun 2025
- 20:58:29 +0000
-Message-ID: <f80f254c-af8b-4d7a-96cc-e8aa569b6d45@amd.com>
-Date: Mon, 30 Jun 2025 15:58:25 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v14 21/32] fs/resctrl: Pass entire struct rdtgroup rather
- than passing individual members
-To: Reinette Chatre <reinette.chatre@intel.com>,
- "corbet@lwn.net" <corbet@lwn.net>, "tony.luck@intel.com"
- <tony.luck@intel.com>, "Dave.Martin@arm.com" <Dave.Martin@arm.com>,
- "james.morse@arm.com" <james.morse@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "paulmck@kernel.org" <paulmck@kernel.org>,
- "thuth@redhat.com" <thuth@redhat.com>, "ardb@kernel.org" <ardb@kernel.org>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "seanjc@google.com" <seanjc@google.com>,
- "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
- "pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
- "Shukla, Manali" <Manali.Shukla@amd.com>, "Yuan, Perry"
- <Perry.Yuan@amd.com>, "kai.huang@intel.com" <kai.huang@intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- "xin3.li@intel.com" <xin3.li@intel.com>,
- "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
- "xin@zytor.com" <xin@zytor.com>,
- "chang.seok.bae@intel.com" <chang.seok.bae@intel.com>,
- "fenghuay@nvidia.com" <fenghuay@nvidia.com>,
- "peternewman@google.com" <peternewman@google.com>,
- "maciej.wieczor-retman@intel.com" <maciej.wieczor-retman@intel.com>,
- "eranian@google.com" <eranian@google.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1749848714.git.babu.moger@amd.com>
- <84e5cffb2b3f8088f77781babe89b0cab513ed79.1749848715.git.babu.moger@amd.com>
- <918e2679-9778-44ea-9755-270658578f76@intel.com>
- <ac378dff-3eb1-498c-8b01-b7c5146c96bd@amd.com>
- <f8e15067-401c-4644-89a3-fd00cd59d58d@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <f8e15067-401c-4644-89a3-fd00cd59d58d@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0156.namprd04.prod.outlook.com
- (2603:10b6:806:125::11) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwptlcNu"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a52874d593so2214650f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751317341; x=1751922141; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ws/TSm+ZZeehlVxXUB88Ms5rsDGr5e9O7TxAj23rWQw=;
+        b=jwptlcNu2VlKN187YbaZgwkd13TDGkw8hrQ+o9BRCqRAKY4GvA69oCdjPx85Dmc9tB
+         Na1pf9hG6emTVL5cbJEgsHlqIi11LThqgAiS9mnbEBfPxHEysJJgG0xjiSXkID/YMeVg
+         FbU63CodN9ovw05eW/kIhZGRJEbap6+kypy/LAefRrsxb0u0ZVdzK8amXiiTnLJleNUP
+         S/9GVRkVkmYFHlgKLm3cJWxN+v00EtW5S9WowlLkK6LherUx+aZJ0BJyHq4uZOJrC5dN
+         0dPI5Su/IFZnwHCZU5YjNGnYNvQBcI/ZBkeq3D9cQHTmKoSyf8+u5JFHtCF0RrkuMCBS
+         SVzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751317341; x=1751922141;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ws/TSm+ZZeehlVxXUB88Ms5rsDGr5e9O7TxAj23rWQw=;
+        b=aCG6krXNS/Nk0GtZo+2UsSjrxb/USsasm9+glHVO972EPzizB1cTfm8W6Ze2jAKAZL
+         0o6C/f14TvDn4u55Elmrkmo62W2gW8aog1OA5Z/karRzA1rhmxgem7S+CMgrD2qQqhMW
+         /8YGJ81LBzD/ckBp0HIehUBFDe1DBjXW8KJp6DypSwdbk4x3MsPbf1X0OZGDesuFOvmd
+         gk+rT8DPXfCw/VI20SxAFeNlg5v75hGMWgraz9B6rR2AkbT5fYww2hrgHkzazsI+cOpy
+         V95RogOl1a7YSDcK5S4a7SPuydkAnD1HK+mGc06Gn2Kr666Cps7wheVDbz9vnCZYn6Oe
+         g/cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWa1PAor9b45FT4jFD3zfFi9RZXkV/EsFWrcjsBQzu7d+QiDk1bCy6D0dxqVcam1uhn8OyAW/1qb9ITT4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcX7gqxSRsz6n+YNa+k7VGiWt03yqqXtbz/cMy7pYwIFlE464b
+	/PXXG0LTj2olcl5Qb+WZUotBywaOpHMYj+MkelzttZYoojv/WxAponcOCWnj0Hhn
+X-Gm-Gg: ASbGnctkHg0wh3bMrjPUzjdp0QG3DdIREoqYxTZjYkDKPYkrk7w5+eIyIav42pyap3b
+	pch/UcIbRMrsVhrsyXaTAn8EmJ2aR+LrDvTFFlSzm5HQE8NXSd2fTAIzb7mDvpv9iA4+l94NXiU
+	UabYSXupTdLnJ4Eh86Tu0Ubgtt8+ZIJ7Rt6GeIhKzS8wioyRfZZebX0QIs1ie4NXvIx3myF7sRk
+	vFmWrIVYvusYdzIi6m6EtICFUYy4Wccp7E29A/rDoFYIwkptoYBWhmms/AMMDRdLt7vB1MJYV7x
+	Zdu3JrkAd85G+0VQ44DqKcvyHP+iodjRCr/2h4s/q48rbCsfWt+6+OKU4MY9IEtPhAAFis8lmcs
+	P8sYiyQ==
+X-Google-Smtp-Source: AGHT+IGSemyFfun8x66j729jzWKL23uFr3oT8p6ycJ2Gqg8IaVogp53Aua09Ypb0xc3CjaZ29XZz+A==
+X-Received: by 2002:adf:b649:0:b0:3a4:cf40:ff37 with SMTP id ffacd0b85a97d-3a8f45494cdmr11129730f8f.6.1751317340305;
+        Mon, 30 Jun 2025 14:02:20 -0700 (PDT)
+Received: from cachyos.customer.ask4.lan ([89.26.177.221])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7fada5sm11503584f8f.32.2025.06.30.14.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 14:02:19 -0700 (PDT)
+From: Marcos Garcia <magazo2005@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: philipp.g.hortmann@gmail.com,
+	dan.carpenter@linaro.org,
+	karanja99erick@gmail.com,
+	rodrigo.gobbi.7@gmail.com,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Marcos Garcia <magazo2005@gmail.com>
+Subject: [PATCH staging] staging: rtl8723bs: Replace magic numbers in beacon initialization
+Date: Mon, 30 Jun 2025 23:02:11 +0200
+Message-ID: <20250630210211.3922530-1-magazo2005@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <38411a98-d907-4173-a528-8d50b337de0c@suswa.mountain>
+References: <38411a98-d907-4173-a528-8d50b337de0c@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DM4PR12MB6229:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7a21c95-a849-4ff0-188e-08ddb818dd9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YUtqVFVYa0lqTTQyK1U1NXJrU2Jyblo4NHZKNU8zYzRXcXZwalVSLzlYZ05r?=
- =?utf-8?B?NHZBM1lsQ21jc3NmdGQwNXpTQ05hcEIzR3BqTitPM25IRGJzbjVuOFQwd2I0?=
- =?utf-8?B?V1pneDJCWENIc05oeGxYWTVaTjlRRjkxZ0VncTd1N0Y0Q01yblRNamU0c1VO?=
- =?utf-8?B?QWUzTXJmc2JSaktqcHlUZ3NuN2xxbGtBMG0wdWlNYm1JRWVpelhoL0JJcUd0?=
- =?utf-8?B?TENjcXdBQzBkRzVyOTNJWitma3hnUXBNdTJWRzZxUk15TFlUTVNDUW9OKzhu?=
- =?utf-8?B?QjhJeEFPUlVQeUQvSkVJOG1TYkRha2tjbzlTVXREd1dWakw5UHkwRnJRSWg4?=
- =?utf-8?B?TWFFK0M1VGRDNjhRbEJPSG40b1VJOEgzcjBjcFEweHZKNS9MZTRzeXlzNlly?=
- =?utf-8?B?TjE3b0hKdEZDcVd4REp3Uk9tZ1pZUFJJYkc1VUljTVFoRGVaa3Fua1JPaWcy?=
- =?utf-8?B?eGlHZmlGRElyb0c3dmhmdE9sbGRzRUlkdDh1NkNvNTFMT1B6Qkw4cTBiWXE1?=
- =?utf-8?B?NUh4dk1CZi9ud1NnMGtXK3A0OVltNlk1YlJwZ2VnMm9aak1kMm1HbitqYjBy?=
- =?utf-8?B?d2wyS1F3bEswTUVtRnBtamh1NTRxUGJhTDl4ek4vcWdUcGpUYXlKTlJmM0l6?=
- =?utf-8?B?VGs0OElYeHdRZEU4NTVPSVZBc2VFRXgyalZkQkROQnVGRGJCR1RiblRhMjZB?=
- =?utf-8?B?TTFoRUE4QUpScFArVWg0TFY1TkJPeGNneWt6VTFUTmZiL1dTbjQzZUJvQThJ?=
- =?utf-8?B?Undxc08rMjU1T3lFb0lBaCtSZE5xd1B3Wm1uZnpZSENJOW9XNm1qSFVKTUFL?=
- =?utf-8?B?NDBJTTJIWjZJejlERStUTzR1N2tZakJsSlBFbDFpTFgwUlpwUHgvQmMzTnBE?=
- =?utf-8?B?ZkpEaXVHMkgwOHZBb2dsK2lXY1V6blpDbjhhdmorNnFFeGswSkRhQ2Viei85?=
- =?utf-8?B?WFQzR0lscUQwelEzWWVaaEtiWTVJSlhGR21sZ1Y0RytuMXg4TzR1OC8vYTNX?=
- =?utf-8?B?NzM0Nzhmai9YOG5PTVJLa2pZSGdsaXgzWFB1U2ErTWgzLzlpalNON2F5ekk4?=
- =?utf-8?B?VU9hTW10bFViREJIVDRoTWNFNHNPSm9ZVVYwNlNQRXFPcDJVTmFMS3NSdUY4?=
- =?utf-8?B?QlJoc1FwWnQxZktsT0FpdklETW5JQ0ExczdKRkhOZ3Ryd0pSbVp2Nmo4bkJv?=
- =?utf-8?B?bW0zUzN1dkJ4YU9USGswQjJQbFM3bFdWWDFtbW1iVDJjckNFZlU2Q1VRT1p1?=
- =?utf-8?B?NjkvVjZCZ3lvZkhKVlhiMjU4clM1REY1RGJSaXNtVkR4YkpEWnVXRnNUWmZ0?=
- =?utf-8?B?ZStFTjlsM0lFWDZMVkZodStITWhlb2p2NkRmZTNsRXVMRFdVM1ZqU0dVQkZE?=
- =?utf-8?B?ckJKZnBTTm94TmZMdXd4a25HWlFJSGluY2xUV3doeDVCRXZVc2hWa1VKWUcr?=
- =?utf-8?B?ZXJDdVdURU11Szc3YWkvTTcvV1dIR3lsd3pmTkNGakhZWlhHaVNMRE1yWkU5?=
- =?utf-8?B?dmdmcmFJSTVKS1g4NWNGT092Z0NDbVdZL29qRm9JQjFWbmpHQXM0ZG9QRTZ0?=
- =?utf-8?B?QVZ2M2YvNUFmZ3BFQlpIRmRxc1BldDJ4bkRtSXhPeHRGSlRnQTJZNC9Mbkcz?=
- =?utf-8?B?ZlJLL1I3bkxPdzk0RFI2TWkxZTRXZnExZkpON3E5NVpXSGlPZHpRM1VYR241?=
- =?utf-8?B?MEYxUXhSeXVLRXNzUGNjTVBTTHdXQ2wxZmM2UDA5ZHZ4enFMSzhWbE1NZC82?=
- =?utf-8?B?Nmx5aStTWmlFWElueUdRdWo1Rnl1NmdGbjBnd255eGw0WG9OZUxpemhsMUt6?=
- =?utf-8?B?T215UWczNlV3dEl0clRxL1JHR1BwQnlkNlNQdWFRUmp5WnBGMnNQQWhYaGU2?=
- =?utf-8?B?cVNZRFF1ekwreE5QZkpUSkUrR2Zvc1dEWkNTb21KTmlGenVqd1o5ekw3aFN3?=
- =?utf-8?Q?6pqKUXG54wc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eVdTMWo4WVE4K0lBMjlUQ2lLSi9tYUxVNi8zeXhzWmxsbC91ZTN0Tzd6aGVU?=
- =?utf-8?B?UmFVRDJoVThRWGV1aFVYNHBneWVsRk5mczVEcktEMHJpTnFsQlBaRXNQL2Z1?=
- =?utf-8?B?RUkvZ3ZGcnFrUDNTRFlXKzlHb29sdlprZ2tQWmFQbjlPdUJ6NXJ6N1J2Uith?=
- =?utf-8?B?Y3BYNmZ2eEMrRU9zUjBTcWVrMU9Uc1JlT01ZU2tGQUFUTTVINkI3SVVFcndv?=
- =?utf-8?B?RWRIeVFad3hiQmhyQVZhRCthN1FtNWlEYkZQYUlKb0c3RmpyY0IzdnFHakFR?=
- =?utf-8?B?SEhuVDYraC9mSTNzc2tTQkJWYngzUTV4VGVEellxejkzaVdrSjNSMDQwd2dC?=
- =?utf-8?B?My85dFBHYld2cWlTTUkyTDhDeFpCQzY4cHdkdGZqS0pYVE9ZcVBJSTI0dU9n?=
- =?utf-8?B?dGFuRVU1M2dyWXF0Z2FQMmVCVjJzWlp0TmgrNklBU1puNkJJRmpia3Rwc1Z2?=
- =?utf-8?B?UXhCVzd4d2xoMWh0RVV4M25oTkJ6SUtEMXNpT2RzMTBOTzJIZVFLRDl4ZEth?=
- =?utf-8?B?RnJ5TmJ1ZTZhOHZOUis2eTNYZlI0S1ZOWE15T08ySHl0Q1lGY0FoUGZYK2o3?=
- =?utf-8?B?cmttb1FjQXBIeENnZzB6SDZaSllIdEU1SFk4YndNRzl0ZDZGKzFXUU4xdFZJ?=
- =?utf-8?B?dDZmTUZPaWlzTy9DeFNjOVBsUlpRNUQ5djI5aWQrdVhRWExPazhZSUZKV2dt?=
- =?utf-8?B?eEdRSVdPY2V3WVlIcTExTS9HV2hCTCtqSW9KTG0vQVhOSjFVWE1qL25qaWJC?=
- =?utf-8?B?c0ZJMGppN21ncmVMMHVCbzY0aXByMEpKVGJjR0d2L2pPY0h3SVdmQzZOdmZt?=
- =?utf-8?B?eS9tWndGV0FzbGowc2YxQ3ExL3dCYmxkNjJWQVZIenI3RmpvS2l6WFY4aWVE?=
- =?utf-8?B?SUpsbjJ4aVhzUDZpZCttbFVCNklXYnJWZGcxRjZiOFVETDUzdEhZVXVCQ3Mv?=
- =?utf-8?B?eXc5SHpZZFd0OVBkREpheU1sUXFJYk9GOHAxYW9OZXJKMzVveHlMYmo1Vjdu?=
- =?utf-8?B?NUNjM0x6ZHZHRDZ1TURzQXJSOVUrRUFJQ1Q4Zy9YUEZ0WVVmRUROUmtXVkE4?=
- =?utf-8?B?YlE1d2lTV04yWFp4bVB0WVBxSlUwUmw3RTRJVzdMZ1JUYnA0c3hncGRKNGFt?=
- =?utf-8?B?enJpUGxLZzYyOTBUN1daYVR0emRMMzBPTkNyRFdMRXNCQjI4QnY2aWdYSG5R?=
- =?utf-8?B?Nks3TXRDeXQ1bDdiOHlFdkdnc3N2RHNWUHpxMHovSS9qejd2T0lWTEJTZXMv?=
- =?utf-8?B?N21JeU1YYWtnMTJxc3VoZTZwWE1xMzUzdUZnVmQ3OEp3djhMbGN0YWNaaENM?=
- =?utf-8?B?UDc4Z25DaUQ1ZGVGMGloMFl4ZlFNeUo4cEFWeHU0ZlBwK1BxM0RGeXUvRVAw?=
- =?utf-8?B?YWwyUWZjeFVaR2J6eEpLM1VwQTU5YWhRNUF2QVUyT1JWbWJzRm0yeUJEQUpB?=
- =?utf-8?B?NjhTS0dlTzgvQUVuL0tZckthb2tLWU9FUnM0dUFnUTNZWGc3UENSTW14b2VY?=
- =?utf-8?B?THZ4WXJ4WndBczdPSUFQRnY3RFk0WGJCTFJzYk51WVFRZ0NZeHF1Z2g4VnVT?=
- =?utf-8?B?QnRCd2tvMDhEaHkyQkd6ZkV0V3RpbDI1QkJpY2tTWXlTUFM1RDdJeWpHSkRZ?=
- =?utf-8?B?ekxHWG9TdXVaUEVSS1lZUVNva1NuSnd6NkRzS0lONUc3WVh5di94VHJWMVM5?=
- =?utf-8?B?ZDMvV2JwUG9YaU4yYi9yVlBMOE1BRHhRU0NuSDJhOVVSOXpRZUlSQlBxYTEx?=
- =?utf-8?B?Ungvcldwa1VDaXREcXRWK0gxaGUzanczWCtMbGExMndhSFpBSHJycklQM0Vs?=
- =?utf-8?B?VW9YdFBOdG90K3R1aytZOElONUVhWWRxKzZxcDZXV2ZvNGRPYzdSN3ZHSGVw?=
- =?utf-8?B?Qm9yWHpwclg1NDR2MDhuZWhFWk9IVWtxd2t1S0wwcm9pdm1wWEtFc0JHUk15?=
- =?utf-8?B?NU9OelZEeUJ1LzFUZUo3RHNRNTNaQXpEOGt2aXR1aHU0M2dHTDN0TS82cDRS?=
- =?utf-8?B?SVNOa0x1NkF2RnNIT0xhcm0ra0Ixd0o1ZTJGa1V4ZXBFekhUZ1Z0cGhmdFpv?=
- =?utf-8?B?TCtwUmd1a3Mwb3BBQm5ML09oT2l0U1NtTmt4RlI2U0lIakFxU1FkWUdzaWsv?=
- =?utf-8?Q?u2+I=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7a21c95-a849-4ff0-188e-08ddb818dd9a
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 20:58:29.6844
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kFVLP1qI/7Ya78rN+1DXqgq9mOewr9/FHsNdO+XBA1N9aO+13pNlBOsZjuqmELcP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6229
+Content-Transfer-Encoding: 8bit
 
-Hi Reinette,
+Replace hardcoded register values in rtl8723b_InitBeaconParameters()
+with descriptive defines to improve code readability and maintainability:
+- TBTT_PROHIBIT_DEFAULT (0x6404): Sets TBTT prohibit time to 100ms
+  (bits [15:8]) with a 2ms margin (bits [7:0]).
+- BCNTCFG_DEFAULT (0x660F): Configures maximum AIFS for beacon
+  transmission to ensure high priority, as recommended by the designer.
 
-On 6/30/25 10:44, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 6/30/25 6:57 AM, Moger, Babu wrote:
->> Hi Reinette,
->>
->> On 6/24/2025 11:18 PM, Reinette Chatre wrote:
->>> Hi Babu,
->>>
->>> On 6/13/25 2:05 PM, Babu Moger wrote:
->>>> Reading the monitoring data requires RMID, CLOSID, and event ID, among
->>>> other parameters. These are passed individually, resulting in architecture
->>>
->>> It is not clear how "event ID" and "other parameters" are relevant to this
->>> change since (in this context) it is only RMID and CLOSID that can be
->>> found in rdtgroup.
->>>
->>>> specific function calls.
->>>
->>> Could you please elaborate what you meant with: "These are passed individually,
->>> resulting in architecture specific function calls."?
->>
->> Rephrased the whole changelog.
->>
->> "fs/resctrl: Pass the full rdtgroup structure instead of individual RMID
->> and CLOSID
-> 
-> nit, can be simplified to:
-> 	fs/resctrl: Pass struct rdtgroup instead of individual members
+Preserve original comments where they provide useful context, such as
+firmware control in power-saving mode and designer notes about beacon
+contention. Fix typo "contension" to "contention" in the comment.
 
-sure.
+Signed-off-by: Marcos Garcia <magazo2005@gmail.com>
+---
+ .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 50 +++++++++++++++----
+ kernel/sched/ext.c                            |  8 ++-
+ 2 files changed, 46 insertions(+), 12 deletions(-)
 
-> 
->>
->> The functions resctrl_arch_reset_rmid() and resctrl_arch_rmid_read()
-> 
-> (No need to say "function" when using ().)
-> 
-> But wait ... this now changes to different functions from what the original
-> patch touched and even more so it changes _arch_ functions that should not
-> have access to struct rdtgroup. This new changelog does not seem to document
-> the original patch but something new that has not yet been posted.
-
-No. patch has not changed.
-
-> 
->> require several parameters, including RMID and CLOSID. Currently, RMID and
->> CLOSID are passed individually, even though they are available within the
->> rdtgroup structure.
->>
->> Refactor the code to pass a pointer to struct rdtgroup instead of
->> individual members in preparation for this requirement.
-> 
-> "this requirement" .. what requirement are you referring to?
-> There is no requirement that individual members of a struct cannot be passed
-> as separate parameters and there is no problem doing so.
-> 
->>From "Changelog" in Documentation/process/maintainer-tip.rst:
-> "A good structure is to explain the context, the problem and the solution in
->  separate paragraphs and this order."
-> 
-> This new changelog has structure of "context, solution, problem".
-> 
->>
->> Additionally, when "mbm_event" counter assignment mode is enabled, a
-> 
-> This seems to be primary motivation since passing struct rdtgroup will
-> simplify the code (when I consider the original patch, not what this new
-> changelog implies) ... but if this change is indeed to the arch API as the
-> context suggest then passing the individual members is the right thing to
-> do because arch code should not access struct rdtgroup.
-
-Again.  patch did not change.
-> 
->> counter ID is required to read the event. The counter ID is obtained
->> through mbm_cntr_get(), which expects a struct rdtgroup pointer."
-> 
-> This is even stranger. mbm_cntr_get() is private to resctrl fs while
-> the new changelog describes how the arch functions resctrl_arch_reset_rmid()
-> and resctrl_arch_rmid_read() need struct rdtgroup to call mbm_cntr_get()?
-> 
-> Reinette
-> 
-> 
-
-Patch is same.. I am having trouble with changelog. ):
-
-How does this look?
-
-"fs/resctrl: Pass struct rdtgroup instead of individual members
-
-Reading monitoring data for a resctrl group requires both the RMID and
-CLOSID. These parameters are passed to functions like __mon_event_count(),
-mbm_bw_count(), mbm_update_one_event(), and mbm_update(), where they are
-ultimately used to retrieve event data.
-
-When "mbm_event" counter assignment mode is enabled, a counter ID is
-required to read the event. The counter ID is obtained through
-mbm_cntr_get(), which expects a struct rdtgroup pointer.
-
-Passing the pointer to the full rdtgroup structure simplifies access to
-these parameters. Refactor the code to pass a pointer to struct rdtgroup
-instead of individual members in preparation for this requirement."
-
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+index cc7886d75a0b..a3438280e1ab 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+@@ -1183,9 +1183,25 @@ void rtl8723b_read_chip_version(struct adapter *padapter)
+ 	ReadChipVersion8723B(padapter);
+ }
+ 
+-/* Beacon Configuration */
+-#define TBTT_PROHIBIT_DEFAULT_MS	0x6404  /* 100ms interval + 4ms margin */
+-#define BCNTCFG_AIFS_LARGEST		0x660F  /* Max AIFS for beacon priority */
++/*
++ * Beacon Configuration
++ *
++ * REG_TBTT_PROHIBIT: 16-bit register where:
++ *   - Bits [15:8] = TBTT prohibit time in units of 1ms
++ *   - Bits [7:0] = TBTT prohibit margin time in units of 0.5ms
++ * Default value of 0x6404 means:
++ *   - 0x64 (100) ms prohibit time
++ *   - 0x04 (4 * 0.5 = 2) ms margin time
++ */
++#define TBTT_PROHIBIT_100MS_2MS_MARGIN 0x6404
++
++/*
++ * REG_BCNTCFG: Beacon configuration register
++ * 0x660F sets AIFS to maximum value (0xF) with other default parameters
++ * This ensures beacons get highest priority (no contention window),
++ * as suggested by the original designer for test chips.
++ */
++#define BCNTCFG_MAX_AIFS 0x660F
+ 
+ void rtl8723b_InitBeaconParameters(struct adapter *padapter)
+ {
+@@ -1193,19 +1209,31 @@ void rtl8723b_InitBeaconParameters(struct adapter *padapter)
+ 	u16 val16;
+ 	u8 val8 = DIS_TSF_UDT;
+ 
+-	val16 = val8 | (val8 << 8); /* port0 and port1 */
+-	val16 |= EN_BCN_FUNCTION;   /* Enable prot0 beacon function */
++	/* Configure beacon control for both port 0 and port 1 */
++	val16 = val8 | (val8 << 8);
++	val16 |= EN_BCN_FUNCTION; /* Enable beacon function for PSTDMA */
+ 	rtw_write16(padapter, REG_BCN_CTRL, val16);
+ 
+-	/* Fixed: Replaced magic numbers with defines */
+-	rtw_write16(padapter, REG_TBTT_PROHIBIT, TBTT_PROHIBIT_DEFAULT_MS);
++	/* Configure TBTT prohibit timer with 100ms interval + 2ms margin */
++	rtw_write16(padapter, REG_TBTT_PROHIBIT, TBTT_PROHIBIT_100MS_2MS_MARGIN);
++
++	/*
++	 * Firmware controls early interrupt timing in power save mode,
++	 * so only set REG_DRVERLYINT when not in station mode
++	 */
++	if (!check_fwstate(&padapter->mlmepriv, WIFI_STATION_STATE))
++		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B); /* 5ms */
+ 
+-	if (check_fwstate(&padapter->mlmepriv, WIFI_STATION_STATE) == false)
+-		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B);
++	/* Set beacon DMA interrupt time to 2ms */
++	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B); /* 2ms */
+ 
+-	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B);
+-	rtw_write16(padapter, REG_BCNTCFG, BCNTCFG_AIFS_LARGEST);
++	/*
++	 * Suggested by designer timchen: Set AIFS to maximum to avoid contention
++	 * before sending beacons on test chips. By tynli, 2009.11.03
++	 */
++	rtw_write16(padapter, REG_BCNTCFG, BCNTCFG_MAX_AIFS);
+ 
++	/* Save initial register values for reference */
+ 	pHalData->RegBcnCtrlVal = rtw_read8(padapter, REG_BCN_CTRL);
+ 	pHalData->RegTxPause = rtw_read8(padapter, REG_TXPAUSE);
+ 	pHalData->RegFwHwTxQCtrl = rtw_read8(padapter, REG_FWHW_TXQ_CTRL+2);
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index b498d867ba21..7cecc0ca700d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -4258,7 +4258,13 @@ void scx_group_set_weight(struct task_group *tg, unsigned long weight)
+ 
+ void scx_group_set_idle(struct task_group *tg, bool idle)
+ {
+-	/* TODO: Implement ops->cgroup_set_idle() */
++	struct sched_ext_ops *ops;
++
++	rcu_read_lock();
++	ops = rcu_dereference(ext_ops);
++	if (ops && ops->cgroup_set_idle)
++		ops->cgroup_set_idle(tg, idle);
++	rcu_read_unlock();
+ }
+ 
+ static void scx_cgroup_lock(void)
 -- 
-Thanks
-Babu Moger
+2.50.0
+
