@@ -1,256 +1,214 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from FR5P281CU006.outbound.protection.outlook.com (mail-germanywestcentralazon11022115.outbound.protection.outlook.com [40.107.149.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2CE259CAC
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751295311; cv=none; b=kqurcure8owenDDf4Ydl37tlWvsGVjiEhGzxkoR0EXPL9KemlMwCax3GD//Ip0rIwB5MDJOdwsMeLBELV19/FXWqn4ojtVSbTKklZAhj80ONaQSLdFt0l/n1R8c7HWEuQQP0Ju68cvbKRAZ/rx138zKEKOzaNH5u8ny0wqE3p/I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751295311; c=relaxed/simple;
-	bh=fEQFPd4FK5sx/tvPM1/MvIZfotYiCdHdYCsc3MdwbyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6WLGV0WR9zXgru9XS9SFm/zWC1ni7nHkLlWHbZjXIk76w6Ds/3EmldJs3rQ6ruU2ohYFVwLD1Q4OuDQ9LhG03I0GLk5GR7TBxr3pDqB8pRBYm1uEsKWC/TyaWiBg1l8I5jbkK3EQUVdHuynNlADpHXmu242lN+q1kdnFO0ckcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=U3KbueHG; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DA628DB7D;
+	Mon, 30 Jun 2025 14:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.149.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751295363; cv=fail; b=VR+n4yp9oWGOCrbTxnO12fdpVtcx6KLiANmjGOU8/jm+94/tr2wHukHl1k/ZJDUZS1AeRJjxrJW20SJXbP+JVz/d3qNwgwxylWawOwhCxWFBloBalDfDX6wuv9M7o9IFezkddh44JvE/3Aj6eMgKS60kV2kMBSF2u2ytHqzMQwI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751295363; c=relaxed/simple;
+	bh=qNvR6bbULq0CYZs8GALDL6dDTsRjeTeRZTrTdleRPHw=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ud77iYhYqTZxfFhlemDL2VRDIVbZxMGqkYXVUXCUWFDSArXYvEr9EZGDQF4BIVOJUamQGiRObOvPjk+WzU10E5hkakt6FffUSoF7Ah1vtWF9qkodWRHwe+9dBKlGpLEKr1CdIbaIPCArJoWX1vUVZJTCiq01v5Vzi9RYbRhfiVc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adtran.com; spf=pass smtp.mailfrom=adtran.com; dkim=pass (1024-bit key) header.d=adtran.com header.i=@adtran.com header.b=N6uRXteb; arc=fail smtp.client-ip=40.107.149.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adtran.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=adtran.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="U3KbueHG"
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UDIpxS013125;
-	Mon, 30 Jun 2025 14:39:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pps0720; bh=66GwBjAxEu1pvgNz0ZHYg7BWw2
-	W7KDyqi63IZhYN8gI=; b=U3KbueHGyLjp7XF905Vl6vXVNucFUCgHRBjZPWnO8H
-	KObaVWifl9qk195cnXSnpdWcpiFaXC2z89Wuyanccqb22yE3e8G7k4MJDB/tyMK5
-	acKN8AyOfkJ40gPsMWNwUj6e0YhJdHmaTBvtD6yxFWeq9PgzpjJvv7UZx86tlWzp
-	3ofVApdePYY3oKnD/HvkdklLv57zbNtuby4S9ZZi6eY+2Hd3YOEIGM3IoGHjSL6G
-	TwdUkxIiekoUFn9tZ1LUmTx4N1e0KKVyHrk9ntBx+cp9beCLVMxsZ77Mo5/OgbSb
-	wGZXGTJVXu1em/cl8OB+/+/llgJhMFWsLZiaLLkPdFYQ==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 47kubgrur5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 14:39:22 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 9E7688003B9;
-	Mon, 30 Jun 2025 14:39:21 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id D57D58041D4;
-	Mon, 30 Jun 2025 14:39:18 +0000 (UTC)
-Date: Mon, 30 Jun 2025 09:39:17 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: Re: [PATCH v2] sched/fair: Use sched_domain_span() for
- topology_span_sane()
-Message-ID: <aGKhlYO_SJaNm1mJ@swahl-home.5wahls.com>
-References: <20250630061059.1547-1-kprateek.nayak@amd.com>
+	dkim=pass (1024-bit key) header.d=adtran.com header.i=@adtran.com header.b="N6uRXteb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F6lOufwKzZTMduKFzxoY8PD+7UcT7mafN/gz/3B35qwUCFoSkLi+QnoMpT0vAozjkshzjT9jjgSMjRdCCdyWC88FkYq9bVyVIjjV/hRo8SVfkGEJVGlrLM346xgBLmglj69FtXf4XbCF+OPkEWEv5VWbRCyc0+nIWOuUbI+MvGBNLX9drIXzc6CuTmtLspRIVvGOajYIRmSS0ma4uI7GkOY0A2Zd5oyEx5HOeeZpS4PbOTtDeR9I0EraWfNqaF7IELbO7ih5Gh2K8/uAyZtlhiP+wy9Yk/Ic7ML8F4VOuNDcjPOeplfs9YeIZcE5aC5YVF8tWlSuBeudvKOb92N28Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qNvR6bbULq0CYZs8GALDL6dDTsRjeTeRZTrTdleRPHw=;
+ b=g0dpCa8D1gLN/bbiJHwVl/bfcVtIYX7nqv/tLjE3EiTFCNMTmqsnt7tubbhDWOIpcseQ+hcVPHZvI0IAgnEbVfVpjRSGObATNkJ2qrnRlnX21y+9IRVWRQ7jr4bNOsTqjWnBtpKqCz+vNrjY8sZq6xflt+TRl/d4YBPrp6L/UrJaK6Az/O6EOV7earlbZqR3ZuNu4cFqbd974o7X0RimEaqEVvZoKoEMPwy+FQPzVSFGzVpBMAxNDzRLruMTAk9IxqRSYmn5Pi/0BYzH1BRllzzkx++19sVHdJCJb5rakx7pptTyARr58PDSxHvo9YBgQsJ6Xh8VPHbN0EwoEyw35g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=adtran.com; dmarc=pass action=none header.from=adtran.com;
+ dkim=pass header.d=adtran.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=adtran.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qNvR6bbULq0CYZs8GALDL6dDTsRjeTeRZTrTdleRPHw=;
+ b=N6uRXtebZKhW5HCs2N4tHFb4avlds290/06jqi/LkYWTo29sRYnSLkhxINo0QjDtGARY+7mI3P9ziPIDLiEAtT8igXa9TeU3nH9fQEXETMgxQ59u+j7+sr0oBHh1NJflWqsHngqzKUiabiK4eBK/f1JOTj+sDfQfCf1dOD90AYo=
+Received: from FR2PPF3DF8BD4D5.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d18:2::26)
+ by FR6P281MB3553.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:c4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.32; Mon, 30 Jun
+ 2025 14:55:54 +0000
+Received: from FR2PPF3DF8BD4D5.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::84a9:2a79:4c0d:e41a]) by FR2PPF3DF8BD4D5.DEUP281.PROD.OUTLOOK.COM
+ ([fe80::84a9:2a79:4c0d:e41a%3]) with mapi id 15.20.8880.021; Mon, 30 Jun 2025
+ 14:55:54 +0000
+From: Piotr Kubik <piotr.kubik@adtran.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Kory Maincent
+	<kory.maincent@bootlin.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next v4 0/2] Add Si3474 PSE controller driver
+Thread-Topic: [PATCH net-next v4 0/2] Add Si3474 PSE controller driver
+Thread-Index: AQHb6c8U2p8lLJQ8ykWgHL26TvuA0g==
+Date: Mon, 30 Jun 2025 14:55:54 +0000
+Message-ID: <c0c284b8-6438-4163-a627-bbf5f4bcc624@adtran.com>
+Accept-Language: pl-PL, en-US
+Content-Language: pl-PL
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=adtran.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: FR2PPF3DF8BD4D5:EE_|FR6P281MB3553:EE_
+x-ms-office365-filtering-correlation-id: 224ad949-a71e-4432-1af5-08ddb7e636d2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ejFwRnM1SXZKaXc0Qk9YYmlVb01sOGtpTlZyUXdPN295RmZ5Y1E3QWVRdDRR?=
+ =?utf-8?B?a2ZJVmJ0VTVqM2RRSm95V3pLek81WmdhUTBUQjduM1Y4OWZpRHkxQzdYWmNt?=
+ =?utf-8?B?MUQxbXVOS0JDSVlzMEk2WGc5ejdWTlZESEtPUDRUSkJSSjl0Z3huQVVpWVAx?=
+ =?utf-8?B?bUhCZDNCYnJPNnR4NTlVTmdaOWN6eFJ1TkFBcXhxdEF2K3VGZUE1OTk1Z1Uv?=
+ =?utf-8?B?TXlnUnM1S1BFWUdsK0dDcVM3SFJBK2FBUi9WNjNWMHRlbm4yTHFPdVZzU1Bs?=
+ =?utf-8?B?eWVPalpCaXZ2Z0IwTWhnSmFuNU9Mek0yMlh2SUExc3VJRzVuVEVudDlBL3dI?=
+ =?utf-8?B?R1pDcGhWZ3pUekJrRHQ5YjBYZENsdEYwdEpRMTZWSmkyamhnK2tnNGwvM2tT?=
+ =?utf-8?B?REZ0bUc5OXhWYnZMRGV2VW1saXdWQ2xpelNybTFuR3dxM2s5SWQzcmVSanlu?=
+ =?utf-8?B?ZlZDZDlKS1NncGVWQjkya0k5MU04MExieW9pOXVEMVI3OFU2VTByVDA2M28y?=
+ =?utf-8?B?NFpXZXZQdldkQnNpWENDUUZ0b0ZMOExGcm8rY1cxZUlpZzhRdlptYzJEVkpx?=
+ =?utf-8?B?MW84blhlNTB2aGFkeURUQVpmYURnRHAzem05M3hYa05JT0dTUllyQmhWeVpy?=
+ =?utf-8?B?K2xmYld6TllvOGRUaWRpU0pHYm9hLzhJclM4eC85NWdqV0RtMk1DUXliR0FY?=
+ =?utf-8?B?cHpvZUlmWjU3VkMxaE9ySnJXZTBmcHg4T1Y1Z25DMnJKdkkyZ3NTR2xLb3hi?=
+ =?utf-8?B?ZHFFbHFFRnFHRkt4RnBNRHVLYnJibE9NVW5ueGx4R3Nid0UwdEp5aU1nbG5K?=
+ =?utf-8?B?NkNyZ3Y4M1l6bUF3WnhoSW1Od1RqMXZvWStvNHcvcjErZDN6ajE0YnBJYkwx?=
+ =?utf-8?B?Z3JiRDBIR3ZsaitpY083aEIxcCtzQlI5MDc5dGcwcjNCSE5lZk4xRHBnWEVu?=
+ =?utf-8?B?OXlBTURFQXg2dy9jd0J5VGxST3BlUnYxSFFEaFlXejRoOUxEb2diQ3ZISDF0?=
+ =?utf-8?B?bmlKZDdjQ1hmd2lEM096WVN0OVplaXZQbU56ZDMwa0J1alByOHlYM2wyeU1x?=
+ =?utf-8?B?YzVZUFlzbmdYZXMvVmRXSG85b2d3VXl4Z2NqVFNYM3VUYlVJRGptTHV4T25V?=
+ =?utf-8?B?OVRSamRUUi83TzVRNWw0OTg4TjgwaUt0dUxEVllYRGdsMUlnbDJqV1E0VXly?=
+ =?utf-8?B?eXZ5ZU4xWjZkRFVnRU9TNytQYXR1MkhWMVU5R1pTdjNVeWpWaXVmYVY0MHh5?=
+ =?utf-8?B?c3IyTDhMZ2J1WlU3RnVVWmZXVkE3MW0zMjdiZVh3bUhFOFRGbzJlTGZXUG5X?=
+ =?utf-8?B?VWNQMnRqMW41b1lpK0FZMXVxVU8yWXEzajVERVNxRTZneDQ1czlYUUo2eXAr?=
+ =?utf-8?B?K0I2d29KM3RVT2gzSXlIT1kvWlRqY2ZSeTZoUEpoOFR1VktVbC9tZ3p4bExR?=
+ =?utf-8?B?bkFBTmRvMHhseldHRFdUR0QwemU5V1daNHREak9FTXMyL1FVWWhTZXZtOG1J?=
+ =?utf-8?B?MFJCblBTbnlNVUtSeDdEZmpWQm01b2p2NlRDMDFJN29kYmtVY0VSTGlLc2lK?=
+ =?utf-8?B?TXZURjhOeDVTZERDRWtoOE1yWXBML0hIaldjWXZOY2FJY3ZjRmZqUzZGRGVk?=
+ =?utf-8?B?RzRaOTNjeFZRd25EUUdhNEZVcGZVdkV0NGdHTE9LcmhvNFJtNExXaXR4RkRO?=
+ =?utf-8?B?RmRaZVVJTytGZ2hydXlZV21vLyswenVSeDkrTDJvdkpIMnR4YjluNW9YM1dP?=
+ =?utf-8?B?Ukl6azJET2IybHJqTWVPb1BOakRqU2FObkdxV1FRZEY1bmZmb2NwMmpRZDN4?=
+ =?utf-8?B?QmJEVjhnMTNSNEVqRHBoQjFBaGRUOVp5UXgvNUpvdm5SL3g4RW9Rc3FIYXVo?=
+ =?utf-8?B?NEc2ZWt2MFdrQnBWR2FpdkpUYkFFSkl6eWhsMFdITEYzY2FjMFhleFQ4N2Va?=
+ =?utf-8?Q?SalNDQzU9uzdVUcP6ojODQNUnXHX+aIn?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR2PPF3DF8BD4D5.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018)(921020);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UElORFEyMEpOQkVocE51ODlja25ueWFsVDJ6MHBFZUptQkZNOUIydGM4dUR2?=
+ =?utf-8?B?L0xveEIxWmNtU2prM2xvS255ejdVamd6RUlNRERiV1BpdU05U3JCazZNVUY2?=
+ =?utf-8?B?aSt1VFlSTjdVa3duMEpkTmpyQUdoTFdhWUQ3clczcmZCTENwbllQK2NTcFkx?=
+ =?utf-8?B?alFIVW1BU1llejhPTUVTWUN2L1V0a21wT296TzF1aWpDL3Q4OHVuWk83TGpW?=
+ =?utf-8?B?VUlGNzhFbkhwaG5GMG94eGczQVNQWEl1SG5LYmZjYVFqaGM3dXN0b21heXVO?=
+ =?utf-8?B?ci95YTlxQmdhL3BaK1lreEw5dVcrcVlVRHRtMEE5NnNnZVdXWC9iZ2NIZ0tL?=
+ =?utf-8?B?RGk0bVFKazNsMi9zUnl3WXRJUkFYeG1KVDA5empmQlJaeXZLOGcwVVJ4eTZr?=
+ =?utf-8?B?UkpZcHo3eFlpSE02aXJyYXNmV0JjVnlseW4waC9SVUtHSnBrbVl4bDB6YTc0?=
+ =?utf-8?B?b1J5U1pxU1dXKzd1QXRYazNsWmdsR2Y3VnVZRUVNbWx1aWdHejFPMFRxTDNU?=
+ =?utf-8?B?WnhWbU1NVGV0TnJ3QkZKaVZUOTQrTlVJRGptZEZCa2J0ZC94L1g1TVo4TG56?=
+ =?utf-8?B?UHRxRUd3U3ZMOWIxNWduWkQzbTFQYWtETHUwZGIwUU5abHJzNFdzSGJZYjdD?=
+ =?utf-8?B?b0ZrWGt0ek84eHVmc0Y2OHNFZmVMNlZOelFWV2RMU2RCUjJkODRHUkFNcDhN?=
+ =?utf-8?B?TkNBTUl3TmJGazFueFBGVlBFeEUvanBiOUtyNzd5azArZDdUL01IQlBGS1Ey?=
+ =?utf-8?B?ZGhsQUJkQ3I1bzRLWjZOUlZyZkVidzMzcWcwaXRxMWJBSDF2TWx1MHF6YkRO?=
+ =?utf-8?B?UlVXd0FqbzV1Qm4xZ3YxUXRQenU0UWNJYktTRExuU3VKVUFLYkhJaWJ1WHV1?=
+ =?utf-8?B?TGtWWVN3Y2tzRWZVeHZCc2Vja1ozZnMybFRKQStleDBmaU9PSjdMMDNDMHM5?=
+ =?utf-8?B?WjdVN3BnMEJzMDY1dVBQZGl5RzREcDRXcnZidmFBTUJaRXU5Uldya2llNjEx?=
+ =?utf-8?B?c0lFclJrRlRvTWxabTlUbUg4ZnNYRER3UnZDQ2JSQm5rdWhUbTljL011Z3hz?=
+ =?utf-8?B?cEdzYXNSWmNrbTdkamY0WFVyTGdJQTNSOFNzeXJSQnhyc0xxeDJTSEw5SG01?=
+ =?utf-8?B?NEJjdHFzdjZmeWo5eDdIcGE0RlRYNlRNNXVDbjZ0c21IdHhMOE45SlZxUldk?=
+ =?utf-8?B?RGJkdExINEtYdDRLYTJBUnQ5V1BqUStKNGV6bVZSTU4rVnQ0aU9hZWlZVStr?=
+ =?utf-8?B?TThnWnlXRS83c1phSm5ZaStFejZNMkN6a3lUNXJqRnJOQ0pmcW9NaWRpMy9y?=
+ =?utf-8?B?ZmQ5TEU5WjdRcDVTS2FOOWVhZU80NlVIK0Zzb2Y1VWJEa2tUYnkwQWl2Nmp5?=
+ =?utf-8?B?QU4vNHFNcEYrY0huQm8wUG5uTW1EUXF6aGxvaDlYYVZPOUFsQ3BKUkRFNXM5?=
+ =?utf-8?B?OG9pUkdXWVM0RXRjNzlTdkZzYTVRWSt0ZUxRU2w2aURXaFIyVkU5NlQ4a1Y5?=
+ =?utf-8?B?SVVvRS9PeGQyUTNhSXh6Q0ovV3FnaXMvbkNyeEVPaVJvNGxpaEJ2WXJHMXh1?=
+ =?utf-8?B?QVE3d1JTc1grbDBYZGZYZjVWbHFYWnRqMXV6MFp2QW9lMU5HVWlxUDgrYVZv?=
+ =?utf-8?B?OTBoenBDQ1JvSThFS2ZBck1FMVE0Wkl0UEJ2SC9idnJXT2dJc1B3SjNHemhY?=
+ =?utf-8?B?dWNDWmJBLzUwdWhJRXp1Z0l1UHZPYXhRdFI5QXhqMk16YTdSb2ZOc1d1YnV1?=
+ =?utf-8?B?WkFCUGFVeXZIa0hnWmZ5QklMWmFIQkJZakxOa0s5L1hGb250M0NvNDBEQjR6?=
+ =?utf-8?B?c1FUdGV0dDZLU1pCTGlWY2JOaS8xM1V6U3VuWEpuU1BJYXBteEVneWt3WkM0?=
+ =?utf-8?B?cTEwVmNkU0NtdkRnVnpobUMwSkFHekdBdHJGRTR5RlBuYmhTU2txNzRkQjlJ?=
+ =?utf-8?B?SEVXVkhlWE5OT01TVkdOMzVucHlac3Z5cUk2ckxaZVE2WElnZ3VuazNJdEtp?=
+ =?utf-8?B?UFJqL0FNcFNGbTFMTkQ0VUlORTBVeElyK1Q5Zm04b3lFSk52NHhhWGFacFFX?=
+ =?utf-8?B?ajBJcHg1ang3aWFucGVsbHBsTHRxVVJxdHJwbURDR2FiRVRSeDZsUisyZHN2?=
+ =?utf-8?Q?zLkDII0V/0wDwZnDakXoIvMIU?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D98A5C374DA62348A1F13D3EBE7FF056@DEUP281.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630061059.1547-1-kprateek.nayak@amd.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDEyMCBTYWx0ZWRfXyJ92YMHiLRex geH5DztTo5ds2xkg0qLZGQKb5yvB8tEOjw7PCLlR7efXJ9t9L8dsJdMEjFiGbq02LLzApFCNE9f 2qJV+Vxo70BoAjNWBlhFu260H5PXe4gM7/7ufRwDNtSUkiLfb2vCFxS9qJDfgBPoV1DSAsGPFHM
- 3QFKhytgUJgM3PHklVKuRkZ03H1HP0lpzxoWGEJ+eFNz/cfubFhWfqgFa/JeNFeWbxtZb97N1RD yIeku7E2LP8UuGN0wKBO65Nu2hrrZCWcLivm0pHSHvhU2BFUfuAl/dECD+oVQELelZ9R+nPi/kI jzkO+x+OGBZtqxo7JIrpLEHAzbGCJGy+hJApYiQPHRcmXeHg0sT1gAc5PPOkUdV6mlZl7E8d0Wu
- /LJH9phW1Rn8ZG2tK8QQOIbmZ0h18x43y+0MxXyvrJnE6lzNWtP5dL1x5fysbD5DgEBRrdqC
-X-Proofpoint-ORIG-GUID: 8X5QfIk2KkYm5ZCh2ebeMGivlJuIwgXk
-X-Authority-Analysis: v=2.4 cv=fN853Yae c=1 sm=1 tr=0 ts=6862a19a cx=c_pps a=A+SOMQ4XYIH4HgQ50p3F5Q==:117 a=A+SOMQ4XYIH4HgQ50p3F5Q==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=MvuuwTCpAAAA:8 a=20KFwNOVAAAA:8
- a=w75tlOWRVCw27MFiDcoA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 8X5QfIk2KkYm5ZCh2ebeMGivlJuIwgXk
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_04,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0
- phishscore=0 adultscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300120
+X-OriginatorOrg: adtran.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: FR2PPF3DF8BD4D5.DEUP281.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 224ad949-a71e-4432-1af5-08ddb7e636d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 14:55:54.6459
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 423946e4-28c0-4deb-904c-a4a4b174fb3f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qo/6Agz41PfdihwkgT0JGrDbKSWjFVeDBO1b/xZXkV9bYQsG31wQMMBq1v6ASX75YTma6gRG6PLbZXIti2mdUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR6P281MB3553
 
-Prateek,
-
-This looks good to me.
-
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-
-
-On Mon, Jun 30, 2025 at 06:10:59AM +0000, K Prateek Nayak wrote:
-> Leon noted a topology_span_sane() warning in their guest deployment
-> starting from v6.16-rc1 [1]. Debug that followed pointed to the
-> tl->mask() for the NODE domain being incorrectly resolved to that of the
-> highest NUMA domain.
-> 
-> tl->mask() for NODE is set to the sd_numa_mask() which depends on the
-> global "sched_domains_curr_level" hack. "sched_domains_curr_level" is
-> set to the "tl->numa_level" during tl traversal in build_sched_domains()
-> calling sd_init() but was not reset before topology_span_sane().
-> 
-> Since "tl->numa_level" still reflected the old value from
-> build_sched_domains(), topology_span_sane() for the NODE domain trips
-> when the span of the last NUMA domain overlaps.
-> 
-> Instead of replicating the "sched_domains_curr_level" hack, Valentin
-> suggested using the spans from the sched_domain objects constructed
-> during build_sched_domains() which can also catch overlaps when the
-> domain spans are fixed up by build_sched_domain().
-> 
-> The original warning was reproducble on the follwoing NUMA topology
-> reported by Leon:
-> 
->     $ sudo numactl -H
->     available: 5 nodes (0-4)
->     node 0 cpus: 0 1
->     node 0 size: 2927 MB
->     node 0 free: 1603 MB
->     node 1 cpus: 2 3
->     node 1 size: 3023 MB
->     node 1 free: 3008 MB
->     node 2 cpus: 4 5
->     node 2 size: 3023 MB
->     node 2 free: 3007 MB
->     node 3 cpus: 6 7
->     node 3 size: 3023 MB
->     node 3 free: 3002 MB
->     node 4 cpus: 8 9
->     node 4 size: 3022 MB
->     node 4 free: 2718 MB
->     node distances:
->     node   0   1   2   3   4
->       0:  10  39  38  37  36
->       1:  39  10  38  37  36
->       2:  38  38  10  37  36
->       3:  37  37  37  10  36
->       4:  36  36  36  36  10
-> 
-> The above topology can be mimicked using the following QEMU cmd that was
-> used to reproduce the warning and test the fix:
-> 
->      sudo qemu-system-x86_64 -enable-kvm -cpu host \
->      -m 20G -smp cpus=10,sockets=10 -machine q35 \
->      -object memory-backend-ram,size=4G,id=m0 \
->      -object memory-backend-ram,size=4G,id=m1 \
->      -object memory-backend-ram,size=4G,id=m2 \
->      -object memory-backend-ram,size=4G,id=m3 \
->      -object memory-backend-ram,size=4G,id=m4 \
->      -numa node,cpus=0-1,memdev=m0,nodeid=0 \
->      -numa node,cpus=2-3,memdev=m1,nodeid=1 \
->      -numa node,cpus=4-5,memdev=m2,nodeid=2 \
->      -numa node,cpus=6-7,memdev=m3,nodeid=3 \
->      -numa node,cpus=8-9,memdev=m4,nodeid=4 \
->      -numa dist,src=0,dst=1,val=39 \
->      -numa dist,src=0,dst=2,val=38 \
->      -numa dist,src=0,dst=3,val=37 \
->      -numa dist,src=0,dst=4,val=36 \
->      -numa dist,src=1,dst=0,val=39 \
->      -numa dist,src=1,dst=2,val=38 \
->      -numa dist,src=1,dst=3,val=37 \
->      -numa dist,src=1,dst=4,val=36 \
->      -numa dist,src=2,dst=0,val=38 \
->      -numa dist,src=2,dst=1,val=38 \
->      -numa dist,src=2,dst=3,val=37 \
->      -numa dist,src=2,dst=4,val=36 \
->      -numa dist,src=3,dst=0,val=37 \
->      -numa dist,src=3,dst=1,val=37 \
->      -numa dist,src=3,dst=2,val=37 \
->      -numa dist,src=3,dst=4,val=36 \
->      -numa dist,src=4,dst=0,val=36 \
->      -numa dist,src=4,dst=1,val=36 \
->      -numa dist,src=4,dst=2,val=36 \
->      -numa dist,src=4,dst=3,val=36 \
->      ...
-> 
-> Cc: Steve Wahl <steve.wahl@hpe.com>
-> Suggested-by: Valentin Schneider <vschneid@redhat.com>
-> Reported-by: Leon Romanovsky <leon@kernel.org>
-> Closes: https://lore.kernel.org/lkml/20250610110701.GA256154@unreal/  [1]
-> Fixes: ccf74128d66c ("sched/topology: Assert non-NUMA topology masks don't (partially) overlap") # ce29a7da84cd, f55dac1dafb3
-> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> ---
-> v1..v2:
-> 
-> o Use sched_domain_span() instead of replicating the
->   "sched_domains_curr_level" hack (Valentin)
-> 
-> o Included the QEMU cmd in the commit message for the record (Valentin)
-> 
-> v1: https://lore.kernel.org/lkml/20250624041235.1589-1-kprateek.nayak@amd.com/ 
-> 
-> Changes are based on tip:sched/urgent at commit 914873bc7df9 ("Merge tag
-> 'x86-build-2025-05-25' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip")
-> ---
->  kernel/sched/topology.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index a2a38e1b6f18..734fee573992 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -2418,6 +2418,7 @@ static bool topology_span_sane(const struct cpumask *cpu_map)
->  	id_seen = sched_domains_tmpmask2;
->  
->  	for_each_sd_topology(tl) {
-> +		struct sd_data *sdd = &tl->data;
->  
->  		/* NUMA levels are allowed to overlap */
->  		if (tl->flags & SDTL_OVERLAP)
-> @@ -2433,22 +2434,24 @@ static bool topology_span_sane(const struct cpumask *cpu_map)
->  		 * breaks the linking done for an earlier span.
->  		 */
->  		for_each_cpu(cpu, cpu_map) {
-> -			const struct cpumask *tl_cpu_mask = tl->mask(cpu);
-> +			struct sched_domain *sd = *per_cpu_ptr(sdd->sd, cpu);
-> +			struct cpumask *sd_span = sched_domain_span(sd);
->  			int id;
->  
->  			/* lowest bit set in this mask is used as a unique id */
-> -			id = cpumask_first(tl_cpu_mask);
-> +			id = cpumask_first(sd_span);
->  
->  			if (cpumask_test_cpu(id, id_seen)) {
-> -				/* First CPU has already been seen, ensure identical spans */
-> -				if (!cpumask_equal(tl->mask(id), tl_cpu_mask))
-> +				/* First CPU has already been seen, ensure identical sd spans */
-> +				sd = *per_cpu_ptr(sdd->sd, id);
-> +				if (!cpumask_equal(sched_domain_span(sd), sd_span))
->  					return false;
->  			} else {
->  				/* First CPU hasn't been seen before, ensure it's a completely new span */
-> -				if (cpumask_intersects(tl_cpu_mask, covered))
-> +				if (cpumask_intersects(sd_span, covered))
->  					return false;
->  
-> -				cpumask_or(covered, covered, tl_cpu_mask);
-> +				cpumask_or(covered, covered, sd_span);
->  				cpumask_set_cpu(id, id_seen);
->  			}
->  		}
-> 
-> base-commit: 914873bc7df913db988284876c16257e6ab772c6
-> -- 
-> 2.34.1
-> 
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+RnJvbTogUGlvdHIgS3ViaWsgPHBpb3RyLmt1YmlrQGFkdHJhbi5jb20+DQoNClRoZXNlIHBhdGNo
+IHNlcmllcyBwcm92aWRlIHN1cHBvcnQgZm9yIFNreXdvcmtzIFNpMzQ3NCBJMkMgUG93ZXINClNv
+dXJjaW5nIEVxdWlwbWVudCBjb250cm9sbGVyLg0KDQpCYXNlZCBvbiB0aGUgVFBTMjM4ODEgZHJp
+dmVyIGNvZGUuDQoNClN1cHBvcnRlZCBmZWF0dXJlcyBvZiBTaTM0NzQ6DQotIGdldCBwb3J0IHN0
+YXR1cywNCi0gZ2V0IHBvcnQgcG93ZXIsDQotIGdldCBwb3J0IHZvbHRhZ2UsDQotIGVuYWJsZS9k
+aXNhYmxlIHBvcnQgcG93ZXINCg0KU2lnbmVkLW9mZi1ieTogUGlvdHIgS3ViaWsgPHBpb3RyLmt1
+YmlrQGFkdHJhbi5jb20+DQotLS0NCg0KQ2hhbmdlcyBpbiB2NDoNCiAgLSBSZW1vdmUgcGFyc2lu
+ZyBvZiBwc2UtcGlzIG5vZGU7IG5vdyByZWxpZXMgc29sZWx5IG9uIHRoZSBwY2Rldi0+cGlbeF0g
+cHJvdmlkZWQgYnkgdGhlIGZyYW1ld29yay4NCiAgLSBTZXQgdGhlIERFVEVDVF9DTEFTU19FTkFC
+TEUgcmVnaXN0ZXIsIGVuc3VyaW5nIHJlbGlhYmxlIFBJIHBvd2VyLXVwIHdpdGhvdXQgYXJ0aWZp
+Y2lhbCBkZWxheXMuDQogIC0gSW50cm9kdWNlIGhlbHBlciBtYWNyb3MgZm9yIGJpdCBtYW5pcHVs
+YXRpb24gbG9naWMuDQogIC0gQWRkIHNpMzQ3NF9nZXRfY2hhbm5lbHMoKSBhbmQgc2kzNDc0X2dl
+dF9jaGFuX2NsaWVudCgpIGhlbHBlcnMgdG8gcmVkdWNlIHJlZHVuZGFudCBjb2RlLg0KICAtIEtj
+b25maWc6IENsYXJpZnkgdGhhdCBvbmx5IDQtcGFpciBQU0UgY29uZmlndXJhdGlvbnMgYXJlIHN1
+cHBvcnRlZC4NCiAgLSBGaXggc2Vjb25kIGNoYW5uZWwgdm9sdGFnZSByZWFkIGlmIHRoZSBmaXJz
+dCBvbmUgaXMgaW5hY3RpdmUuDQogIC0gQXZvaWQgcmVhZGluZyBjdXJyZW50cyBhbmQgY29tcHV0
+aW5nIHBvd2VyIHdoZW4gUEkgdm9sdGFnZSBpcyB6ZXJvLg0KICAtIExpbmsgdG8gdjM6IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL25ldGRldi9mOTc1ZjIzZS04NGE3LTQ4ZTYtYTJiMi0xOGNlYjkx
+NDg2NzVAYWR0cmFuLmNvbQ0KDQpDaGFuZ2VzIGluIHYzOg0KICAtIFVzZSBfc2NvcGVkIHZlcnNp
+b24gb2YgZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZSgpLg0KICAtIFJlbW92ZSByZWR1bmRhbnQgcmV0
+dXJuIHZhbHVlIGFzc2lnbm1lbnRzIGluIHNpMzQ3NF9nZXRfb2ZfY2hhbm5lbHMoKS4NCiAgLSBD
+aGFuZ2UgZGV2X2luZm8oKSB0byBkZXZfZGJnKCkgb24gc3VjY2Vzc2Z1bCBwcm9iZS4NCiAgLSBS
+ZW5hbWUgYWxsIGluc3RhbmNlcyBvZiAic2xhdmUiIHRvICJzZWNvbmRhcnkiLg0KICAtIFJlZ2lz
+dGVyIGRldm0gY2xlYW51cCBhY3Rpb24gZm9yIGFuY2lsbGFyeSBpMmMsIHNpbXBsaWZ5aW5nIGNs
+ZWFudXAgbG9naWMgaW4gc2kzNDc0X2kyY19wcm9iZSgpLg0KICAtIEFkZCBleHBsaWNpdCByZXR1
+cm4gMCBvbiBzdWNjZXNzZnVsIHByb2JlLg0KICAtIERyb3AgdW5uZWNlc3NhcnkgLnJlbW92ZSBj
+YWxsYmFjay4NCiAgLSBVcGRhdGUgY2hhbm5lbCBub2RlIGRlc2NyaXB0aW9uIGluIGRldmljZSB0
+cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbi4NCiAgLSBSZW9yZGVyIHJlZyBhbmQgcmVnLW5hbWVz
+IHByb3BlcnRpZXMgaW4gZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uLg0KICAtIFJl
+bmFtZSBhbGwgInNsYXZlIiByZWZlcmVuY2VzIHRvICJzZWNvbmRhcnkiIGluIGRldmljZSB0cmVl
+IGJpbmRpbmdzIGRvY3VtZW50YXRpb24uDQogIC0gTGluayB0byB2MjogaHR0cHM6Ly9sb3JlLmtl
+cm5lbC5vcmcvbmV0ZGV2L2JmOWU1Yzc3LTUxMmQtNGVmYi1hZDFkLWYxNDEyMGM0ZTA2YkBhZHRy
+YW4uY29tDQoNCkNoYW5nZXMgaW4gdjI6DQogIC0gSGFuZGxlIGJvdGggSUMgcXVhZHMgdmlhIHNp
+bmdsZSBkcml2ZXIgaW5zdGFuY2UNCiAgLSBBZGQgYXJjaGl0ZWN0dXJlICYgdGVybWlub2xvZ3kg
+ZGVzY3JpcHRpb24gY29tbWVudA0KICAtIENoYW5nZSBwaV9lbmFibGUsIHBpX2Rpc2FibGUsIHBp
+X2dldF9hZG1pbl9zdGF0ZSB0byB1c2UgUE9SVF9NT0RFIHJlZ2lzdGVyDQogIC0gUmVuYW1lIHBv
+d2VyIHBvcnRzIHRvICdwaScNCiAgLSBVc2UgaTJjX3NtYnVzX3dyaXRlX2J5dGVfZGF0YSgpIGZv
+ciBzaW5nbGUgYnl0ZSByZWdpc3RlcnMNCiAgLSBDb2Rpbmcgc3R5bGUgaW1wcm92ZW1lbnRzDQog
+IC0gTGluayB0byB2MTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbmV0ZGV2L2E5MmJlNjAzLTdh
+ZDQtNGRkMy1iMDgzLTU0ODY1OGE0NDQ4YUBhZHRyYW4uY29tDQoNCi0tLQ0KUGlvdHIgS3ViaWsg
+KDIpOg0KICBkdC1iaW5kaW5nczogbmV0OiBwc2UtcGQ6IEFkZCBiaW5kaW5ncyBmb3IgU2kzNDc0
+IFBTRSBjb250cm9sbGVyDQogIG5ldDogcHNlLXBkOiBBZGQgU2kzNDc0IFBTRSBjb250cm9sbGVy
+IGRyaXZlcg0KDQogLi4uL2JpbmRpbmdzL25ldC9wc2UtcGQvc2t5d29ya3Msc2kzNDc0LnlhbWwg
+IHwgMTQ0ICsrKysrDQogZHJpdmVycy9uZXQvcHNlLXBkL0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgIHwgIDExICsNCiBkcml2ZXJzL25ldC9wc2UtcGQvTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgfCAgIDEgKw0KIGRyaXZlcnMvbmV0L3BzZS1wZC9zaTM0NzQuYyAgICAgICAgICAgICAgICAg
+ICB8IDU4NCArKysrKysrKysrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDc0MCBpbnNlcnRp
+b25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9uZXQvcHNlLXBkL3NreXdvcmtzLHNpMzQ3NC55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvbmV0L3BzZS1wZC9zaTM0NzQuYw0KDQotLSANCjIuNDMuMA0KDQoNClBpb3RyIEt1
+YmlrDQoNCnBpb3RyLmt1YmlrQGFkdHJhbi5jb20NCnd3dy5hZHRyYW4uY29tDQoNCg==
