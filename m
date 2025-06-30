@@ -1,99 +1,100 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2B41A257D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375631DE3BA
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751266691; cv=none; b=pqP/A/A5miOB9LUUQteif2tNxn10nqJJ7Cqivm3DgHGAOdOIMph5YFKNeFPl8If9wcklo2lXygYaFbwVyNy7K77h8cQ2hNPblRCEfpX355fM2vk+aU/EYwuE2kTuAcEWlVEmHyDuvZ4VME4A6/JjlePAIP17XJPUcSzwotZ4R9k=
+	t=1751266752; cv=none; b=Jf6MCxTlui9MLtdFu0CAYX/ggziJFpTB1lt+WVb35xqatfhk4RjpkXW9qVri+kzSr0RiSf5oKgazbm9PYA8WDXkz8IPwCB9J0uxo+QHiC+/++rd4DJBOfCRhaqaefWIFdciJgK1Bb0+OT2VBllJ+m9SaT3hXWEZZnQJ3MncTPVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751266691; c=relaxed/simple;
-	bh=22muhudrKAP9SyPktRxaDI0DWxOAHRAa/eScSXEoNkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=temgGMnCwrvWVsD5+MipsOS5D+qHTcsg+Nl9B1OZKdoJtof0ljZQPky7lmjIxTB4/ZUPXSqgmxpqW85aZcKS0JsAa+8NlvHMXzlWK9+ofzimmtcYgU7i33Tb1SeRwZZ0UuGM52eEYC4Jo+O9/AeVpFMi/I/sdxFz3GURefu4eSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NE8PdBGG; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751266752; c=relaxed/simple;
+	bh=N8NcPPJxadXWse0HT/QBGjpeBDejSpL4abXtBlKXbck=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QtBfIQXVrE6y++y2UEWUbAt2y6YcUKdBXo7uBuvRvOx4xuL9eEL3hGj95ZAR2UH2qSnJyfjql8kTgER8SWnJSeUByx9SMYZRy+QzRyG1SAMIPSNWEUIpJAmBXgoviIidSp9YewUAQ0YuKW0K3ZWv3lQKWQiv1F2LD2t2cXm+CMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xe9xc3Hl; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NE8PdBGG"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751266683; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Cd0yPD5GQTE25xLtG5ldmJA2ScotRmfC39N8dTBHOgk=;
-	b=NE8PdBGGd33B1z8+WQVu+S0EbMgTpWukoCv1g+2OR7tx8v7AwIUOku8gIJFVraOgkHOmPqVqgRZvNOTs+lmOGtzfRFOwKeOvdcxvtzqtf60TI+nrHjP/9OR4+6BY95Syx+p875qBM4C9Wbd3/zCBYhOPrvoHqT6ENemg1+Gcsac=
-Received: from 30.221.128.206(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Wg5ZvMJ_1751266681 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 30 Jun 2025 14:58:02 +0800
-Message-ID: <a259f224-a471-45e3-84de-7071ec6595e9@linux.alibaba.com>
-Date: Mon, 30 Jun 2025 14:58:01 +0800
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xe9xc3Hl"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45348bff79fso17584095e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751266749; x=1751871549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
+        b=xe9xc3HlPX8LXegkX0gjRzPIbtIryZyHqpA6AkhiH9JoKyElnk2aHozSII7rR97PP7
+         Z66bhK7Z0gCcsProyh8BE3SZ1y3NI52XP/Md2FajcBcQywk858GIEQwuqM7U0kah5Kru
+         N2a/ww2Nqsq6+ymbl4AITOQpi7ZwYSLPS7rAclMKAjd7Mz883MH+5+x5G3qxwSirH5g4
+         FVXmkYw6pA9M4A23vjgbfClM5oR/p87EBsk6W9vDpz41TxMwcr6GHm5YH93Z6NK43utF
+         x3PdsuFV5ZqMq7YVilgjbkL8Qba5W4lliaRWSOJdjtd9fcYRaXXJfFFe7fJSWAXjHCpS
+         HHvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751266749; x=1751871549;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
+        b=nms+WTQARTpbg5iF0TayAAvfpjQL/pOEg0dX6tH3MJzpjTLsIjKLyMFiCMPJKWM+UD
+         8fxByFInyKUMMeeCCX8nz+hpycpL1v9Vd3Iqg6TANTk2NsMZeXM66BTQciWsrhXDzizS
+         68wqQePy+2X/ILd08ftV3mYPfY1w7xC3++20tzaTWonJQqgArR2YsCryZTUk8fE3378D
+         xUGdzPo1w9kIUjpwz6ndjNzS3rlLnq2tMECyrjC+sVfhfKDZanQD3LTY8+cJRyCL6oaq
+         LPcvsc3e6so9nTtI8hKGxFODUgj+mzXtBtuWFyaWjJC5jYeSEkCg9l4GqO+dQDjOHdK2
+         JskA==
+X-Forwarded-Encrypted: i=1; AJvYcCVq9YzD2x/UfIPL95lX4V6uc1DqeedRZvA6I9k7xGf4FvMtbyUiQGtA5XpJy9h5oCkZnHwvxUNkJCDluLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7fya50lUwv6Y/L9b/wFAucN+sb8/jiZCw9YEWKjGygLkI3JvJ
+	y7JZ3kvUu8iZj0705S4FQ8GohchDHVK/fj6frOAkRFeSU4S3v67PqyzdDylngheAXRU=
+X-Gm-Gg: ASbGnctCQdQ4gFMVlK8pcpN3Z23YcirrQvD1USlwb90B1fUnNiX4g2FnFHfyThxnr5z
+	itsPPq9Cbnl+eVJ4r6b6DkiZIqWs6jgjEZ2W+Jh+Y1Ma+S7nDHBrLVe/zxzHQs8u5NwODPTJjrW
+	u9mceDQFxf7JLaYehbCSctRPjBMHrNJ0LjzXdBOBuEawYrU4klyPMtGPLx0e0R8mISJ6MsZe9ha
+	RgLWdIWZU0T7w/UK5ZLegJOftI9vdPMRsNrJ9WUsP9vDSmFVzejMlnyxSxjoWNfd/26RtQcSW6o
+	VtvAwhs+fb2VecQLTG/efB4fj77yJoG4ezjmt7agDuW+hQSn2WB0zzvb31UtSSc=
+X-Google-Smtp-Source: AGHT+IEnf1e311CHx7pGdkMuMp3hPcgdVROv8BNvfkAw7T5EXn7m4sv+gadF6ts7WpBEDZmQ9c71rw==
+X-Received: by 2002:a05:6000:2d08:b0:3a4:ec23:dba5 with SMTP id ffacd0b85a97d-3a8f435e55dmr7677203f8f.5.1751266749380;
+        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7481sm9686783f8f.14.2025.06.29.23.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 0/2] gpio: improve gpiod_is_equal()
+Date: Mon, 30 Jun 2025 08:58:43 +0200
+Message-ID: <175126671926.7549.9629868942672241575.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
+References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: Avoid NULL pointer dereference in
- dx_dir_lookup_rec()
-To: Heming Zhao <heming.zhao@suse.com>,
- Ivan Pravdin <ipravdin.official@gmail.com>, mark@fasheh.com,
- jlbec@evilplan.org, ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
-References: <20250627023830.150291-1-ipravdin.official@gmail.com>
- <d6c72ab8-d600-4cc2-9609-8b749b61703d@linux.alibaba.com>
- <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <d6a11613-9763-4d9a-b4ad-5f451f770b70@suse.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On 2025/6/30 10:32, Heming Zhao wrote:
-> On 6/30/25 09:26, Joseph Qi wrote:
->> Hi,
->>
->>
->> On 2025/6/27 10:38, Ivan Pravdin wrote:
->>> When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
->>> error message that unconditionally dereferences the 'rec' pointer.
->>> However, if 'rec' is NULL, this leads to a NULL pointer dereference and
->>> a kernel panic.
->>>
->>
->> This looks possible, but syzbot reports slab-out-of-bounds Read in
->> ocfs2_dx_dir_lookup_rec(), not NULL pointer dereference.
->>
->> So I think it is because it construct a malicious image and set a wrong
->> l_recs, then access this damaged l_recs.
->>
->> Thanks,
->> Joseph
+On Fri, 20 Jun 2025 14:58:00 +0200, Bartosz Golaszewski wrote:
+> This short series contains small improvements to the gpiod_is_equal()
+> GPIO descriptor comparator added last cycle.
 > 
-> I think this proposed fix (at least the fix method) is acceptable.
-
-But this seems different from the issue syzbot reports, right?
-https://lore.kernel.org/all/67483b75.050a0220.253251.007c.GAE@google.com/T/
-
-Thanks,
-Joseph
-
-> the crash occurs at ocfs2_error(), where the pointer 'rec' must be incorrect.
-> look back at the previous code lines:
->         for (i = le16_to_cpu(el->l_next_free_rec) - 1; i >= 0; i--) {
->                 rec = &el->l_recs[i];
-> 
->                 if (le32_to_cpu(rec->e_cpos) <= major_hash) {
->                         found = 1;
->                         break;
->                 }
->         }
-> 
-> either 'el->l_next_free_rec' or 'el->l_recs[i]' has an incorrect value.
-> we can do nothing about this kind of error, simply returning errno to caller is sufficient.
-> 
-> btw, ocfs2-tools has a similar function "static errcode_t ocfs2_dx_dir_lookup_rec()"@libocfs2/dir_indexed.c, which sets ret with OCFS2_ET_CORRUPT_EXTENT_BLOCK and return.
 > 
 
+Applied, thanks!
 
+[1/2] gpio: constify arguments of gpiod_is_equal()
+      https://git.kernel.org/brgl/linux/c/08ad63bbd681ae4eeb50644564435035c38e5795
+[2/2] gpio: make gpiod_is_equal() arguments stricter
+      https://git.kernel.org/brgl/linux/c/26981e8906bb5c902e2d34874f64ecfa975d28c8
 
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
