@@ -1,64 +1,80 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F79243378
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971BC2417D9
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289735; cv=none; b=KM51gSGIXj1dLEbQci5tsf0eTM1fc0AERivf9QMsvUanA5vQj0DjdNlt9o73iu3TxeuCiWard+8aKuGUSqBlmlnNL17OtHzK03QLTYYlMJVC/kQQtGHQCnYK6s3Yy1NiE4c3dadGW+++dxey/qdLGgfnC2NFnUNbGr+6hmFRoIs=
+	t=1751289852; cv=none; b=LuaUwUeq7iu7ntOaRH4ONa420UA5Agt7BsFXMaKqW2z0Wid5MFr0R2jQLWF+3rdQ3Svu5sMCtCT6wzIhFFgvL+DeuXGEFzq/zZvq3RBu+YFmbFR8nsb5KPPf0tM9WfYr9BOkf0NsWTuMvfjcwnk+/adQcfrQKTjz5cz3xKsh39M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289735; c=relaxed/simple;
-	bh=Jr7+w4HbugE03E3Lx8VkbvxjMdVWpxs7OMe1tCng0ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpz6foKkveRbDP66m/gs9gwT1gdpumH98QgeL7caCDKj/rsj2CF12M9ly9eDN1Sc/EEQ7aamVXzYGV2Xh/6wnDnQfT3iIihcZEP4sEKKVS3sczW2msi1TFe07C57egX0rKlByQnlXvVh3P3zLthgAo6A4dQJUSJt8+LDAzIXCz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JGoRXNy4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751289852; c=relaxed/simple;
+	bh=iFaywVTC8M4T+NJ2ZyVyZRGTl3ldMd0MMtrsUGsqZUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EntoZvbRyci61v0cJJECiiGNuItgkjuzTysHBlQyTXKnd8xDrdSRRpeHdOp6LxaSzdYY3bElyIIhqqTHgE5fswezkS+75S13EsCDKsP6a9wdZ8HESrbmDC5OW0JtMYoBZjRh0y4tASGDRxryJsYrr2TwU09nCBb48nwT6Wr5R54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AcTKM6Bu; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JGoRXNy4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ggmhFGoUHM2tT0xKDJXNPqjYExBy9UkalZiiW/8jWso=; b=JGoRXNy4QbhwvWd2UEMNc+MY9X
-	EgDKeCYSdexrAjqZz1lkEiv3WcYpgrJvYP9LrH3RCv1jc4dPwfBl9ekLGM9OpySHfGH1VvJ/J2VA+
-	GnErelAUW5uwHjSXTFTcLqdkzlf/m1fb13RfD8PVJUKONjRvTO1frEB+BlNYnK5SNEOdN/Gt+NAxo
-	CYrCJs9Mq62byLDze/jCkQQ7NWW7kAmlBI+witIWBLI0OT5hjBilUbfUB8urv8pcHtxFsXiskVE4U
-	EAVL9+T5GP6TX0WWpkuLx4JGQqGbn9UqBS79K1uzPdIhh2MbswGWEzhIVR/oAW3i8xcCLYTYCA8Ot
-	uNKE+Kdw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uWESZ-00000006mNu-0zTm;
-	Mon, 30 Jun 2025 13:22:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C647F300125; Mon, 30 Jun 2025 15:22:10 +0200 (CEST)
-Date: Mon, 30 Jun 2025 15:22:10 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: Add missing endian conversion to read_annotate()
-Message-ID: <20250630132210.GL1613376@noisy.programming.kicks-ass.net>
-References: <20250630131230.4130185-1-hca@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AcTKM6Bu"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751289847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qAGlzeWXRlMA2Zij8Qp03D2CGSSdLuFgwBSG6gDWPG8=;
+	b=AcTKM6BuqAY3kgrIzG/gg9kzJvLwnPRd8XO/VZDatCB/hIsFPIkSKia5dvTuIBHA+CKCfe
+	lnohH5xqW8rcVJKUI9VwpHIwLq7frob2pgU8+80Bua68KHsDZH5osZcew0iOJlKvHX8E1G
+	LyWbh89spp1PFk+JbgoN6Qd5uTp82pg=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/cma: Use str_plural() in cma_declare_contiguous_multi()
+Date: Mon, 30 Jun 2025 15:23:18 +0200
+Message-ID: <20250630132318.41339-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630131230.4130185-1-hca@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 30, 2025 at 03:12:30PM +0200, Heiko Carstens wrote:
-> Trying to compile an x86 kernel on big endian results in this error:
-> 
-> net/ipv4/netfilter/iptable_nat.o: warning: objtool: iptable_nat_table_init+0x150: Unknown annotation type: 50331648
-> make[5]: *** [scripts/Makefile.build:287: net/ipv4/netfilter/iptable_nat.o] Error 255
-> 
-> Reason is a missing endian conversion in read_annotate().
-> Add the missing conversion to fix this.
-> 
-> Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Use the string choice helper function str_plural() to simplify the code
+and to fix the following Coccinelle/coccicheck warning reported by
+string_choices.cocci:
 
-Thanks!
+  opportunity for str_plural(nr)
+
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ mm/cma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/cma.c b/mm/cma.c
+index c0b2630a1b81..c40d53298801 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -22,6 +22,7 @@
+ #include <linux/mm.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/log2.h>
+ #include <linux/cma.h>
+ #include <linux/highmem.h>
+@@ -548,8 +549,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
+ 			(unsigned long)total_size / SZ_1M);
+ 	else
+ 		pr_info("Reserved %lu MiB in %d range%s\n",
+-			(unsigned long)total_size / SZ_1M, nr,
+-			nr > 1 ? "s" : "");
++			(unsigned long)total_size / SZ_1M, nr, str_plural(nr));
+ 	return ret;
+ }
+ 
+-- 
+2.50.0
+
