@@ -1,275 +1,283 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011066.outbound.protection.outlook.com [52.101.65.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF6C290083;
-	Mon, 30 Jun 2025 16:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301169; cv=fail; b=q5ElCxq/mlPK+iMTEBJ00JmpiEFYuliykSzQoJXnxUy6J/72KzHUarF/1PmdVF4YBrMf1496iK90xYotNaBxXIXSJ4UOjuCdQmyEaa2lyVSMjQFcbt2M75LjRHUDOdnoDJGZw8dJ9kMksADDMspdJuxYzkk6WvMMb2H7+VnF6bY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301169; c=relaxed/simple;
-	bh=gPx9f8uWYpwLO6wauDUgNnXldfSCAUBd/q6k7/IQ1As=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tZqtrsh5OqSl44CrXGreJZkHDe8x5j1sdqTfUXW3BTgIwoG2P7EXn0SJ70zemFzWen9S/NmkrkvwMDDvlWJ64QHzPO4sdn4nMv3yuJIGBsbcHYyh6cPNFyJpIHJRoGHG0SWSbS8Vi+lD5fw1G2yl3rYfp8siI/GJGOM8rPel4Ew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BUj6UU7W; arc=fail smtp.client-ip=52.101.65.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A176293B53
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751301182; cv=none; b=fQBtkHQGmE7Gwosxzf7v2PWfUwu2yZxSHnJsr2xTJ9/SyRiKWg2Cb631m1DDjNih22ql/1oP131lubuOx57/GcwLz4GVmYNzcviCrSJTDgxnOK+5lNzIoWrV1kI9MTxFnbXeb4H4gMB2F8DKJEhi20sztHwS4fegb2R+T1lClrE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751301182; c=relaxed/simple;
+	bh=hILGVps7WZuRoAglos6o6D6bgZ1NoYmpFBWzkIxRNjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQkzrmRMF3IxIl+Dw03n7QBLwYAzOaENCCSjQA8MYm2AMr9/sa5Zy6eXe63IS2EXrmliHTX8aMY9d9NNip1GGPdKPE3o/j2AA6METlNKdpqCBR0XvsCIg8zwmeapC9jMEFHRErPPnpwNKTk7WMZdamLqCVDxB3YeFMpFIEpOhtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cozCC9hM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Lr3mFZoL; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cozCC9hM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Lr3mFZoL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BUj6UU7W"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u93jStN2FxQVJiRNLMNo3dEMwDFDPIvFZFhoVsJBIQe/aDw6U0XI8pc2Oh3eMa2zeogsSrBJe8Pe49GYOradMwWn65Wu787fNgs5TN2F6IMIM5VNkZQlnqmixCFfYCfgwDFMm6BgJiuT3yPicbZ5Pp/jIIWNxY64ScWoXDEVVKxwZ6Br5xqy1gDDGkpx17VYOZzGzK+Ufq9DFR/bFiZs5C1xEOk2ogMzQP/ZUcMVRMgyiBbegCHP53roo7wIOjgHJD8GI5fsc98UeJAldZ0jJWXQb0ow68iuVYPKTVvvJfUpAz2O13vEWZdRJCznk3wlbeu91NahA8hoh83BtusSkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gCmZbYCJfOr6WH0O5tAMZaWPDcWJgjhkvWzPM07viQs=;
- b=Vred924M/yj/xQLI0vhePs54M0iU7AjxgjkMB5QHDiXIaugW09ZjS++eNHG8dcJfK9LqQI8v9B2aTu5bzyf9fdOLbzgYL+qTjfidMTlyaxQAXxcdTISRE1kAE3z3r0Psf76q0qs+aKjZDtiMxmJ/+/gOFXdQ6/PcOIgEJ8sHgmbJcz8+cy/Ei+BSayZDfSekhwuuFjWHgm2q9VcJCLNFJc8H6e1iTpnQdNA9I93zZD65wKriaSgpksCdNaONh1QlRFfq6F4G7+zxU3OwKqDtYJB4i1bOVjW4LiSO52zwEWiTsKCmf6dKu6NGRi0jGjHxJl9ngfioq7lGO+ncq2F55A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gCmZbYCJfOr6WH0O5tAMZaWPDcWJgjhkvWzPM07viQs=;
- b=BUj6UU7Wbos2UQ0vfoBITZIvXp73DgdKcUSLO/7BMm2NzY69ElU9+x5HliF2aqsOde5KShE8gHB1Nu/kMzj0gmUQD6yaTwtaFOHQESE+aa4IC8gGX1o+w0FzkhG/0OuaPEho8cNlnGdtRzkOTPXfZw+0NA1WlkbBCuXJcWMNDH5hK/DgnhUIYYtlYryGxyjNQDuZtLbuP/XbgcW9Lqa5esjsSDxXPizvTLR/uqlcT24s6Kn8cMKsqwOnso5iAJrzu0qpZb5nuBEv8iCVe5hJjnJkrW5UUL+DK8UbFrSpaHohUnD+Xp6swPaz5seIu8mfTA/2FAxMhYABxM6IpOHu1A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB8754.eurprd04.prod.outlook.com (2603:10a6:20b:42d::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.30; Mon, 30 Jun
- 2025 16:32:44 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
- 16:32:43 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] dt-bindings: input: convert lpc32xx-key.txt to yaml format
-Date: Mon, 30 Jun 2025 12:32:31 -0400
-Message-Id: <20250630163232.2839067-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR03CA0100.eurprd03.prod.outlook.com
- (2603:10a6:208:69::41) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cozCC9hM";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Lr3mFZoL";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cozCC9hM";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Lr3mFZoL"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 922DA211FA;
+	Mon, 30 Jun 2025 16:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751301178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZhig65L9jQkcX5aL7br2qiBHujlq+/I7yPqCDoVk5g=;
+	b=cozCC9hMGf3Z9RkXVYmyrZ71MTHkaYet7MO4w1Di516KdTgLkkTquFvebjWJT9VWyjkPll
+	5gKMRGUFaQuG0MruZkJ+0NV18PpBHyH705CaPxP6eRtEgI2OYb6W1IbaX9VXzKjqBkEoRT
+	M8C8xYHc4vsx+3+elUV9OcOj04Sd0tA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751301178;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZhig65L9jQkcX5aL7br2qiBHujlq+/I7yPqCDoVk5g=;
+	b=Lr3mFZoLyWQKTZpfHjB20a4X1kkP2DMrpvPE/hZNZC2nbRl5dD7BbvJyFWnEHvNvthN4dW
+	3I5GHq0PIqXNRzBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751301178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZhig65L9jQkcX5aL7br2qiBHujlq+/I7yPqCDoVk5g=;
+	b=cozCC9hMGf3Z9RkXVYmyrZ71MTHkaYet7MO4w1Di516KdTgLkkTquFvebjWJT9VWyjkPll
+	5gKMRGUFaQuG0MruZkJ+0NV18PpBHyH705CaPxP6eRtEgI2OYb6W1IbaX9VXzKjqBkEoRT
+	M8C8xYHc4vsx+3+elUV9OcOj04Sd0tA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751301178;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZhig65L9jQkcX5aL7br2qiBHujlq+/I7yPqCDoVk5g=;
+	b=Lr3mFZoLyWQKTZpfHjB20a4X1kkP2DMrpvPE/hZNZC2nbRl5dD7BbvJyFWnEHvNvthN4dW
+	3I5GHq0PIqXNRzBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8699013983;
+	Mon, 30 Jun 2025 16:32:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DILUIDq8YmhIGgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 30 Jun 2025 16:32:58 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 3442EA0A31; Mon, 30 Jun 2025 18:32:54 +0200 (CEST)
+Date: Mon, 30 Jun 2025 18:32:54 +0200
+From: Jan Kara <jack@suse.cz>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
+ s_mb_last_group
+Message-ID: <e2dgjtqvqjapir5xizb5ixkilhzr7fm7m7ymxzk6ixzdbwxjjs@24n4nzolye77>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-4-libaokun1@huawei.com>
+ <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
+ <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
+ <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
+ <db4b9d71-c34d-4315-a87d-2edf3bbaff2d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8754:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9552fa6d-cc4e-4462-f60d-08ddb7f3bcf4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|19092799006|366016|1800799024|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ktJHSSv5+FXjTQK/kQOh5phvk/hR48EVWzvEag3h8PFaVNX19YcM2o2ZPwhg?=
- =?us-ascii?Q?K3onOu6dIwgES0rXVOQ7fjDI71BhWtlBM5jVrfm0EJYHeERfaySo74I4aLKf?=
- =?us-ascii?Q?U+EnpbrqB9P2dOBSrRhSHdX7X6oDHlKe4EwX9otMV1JfAzGF3kdvo30S+0Vs?=
- =?us-ascii?Q?+h68rwJOntlLYytabLP9myhbdYuZk+EJ/3CIKLzY47SsnJ/L204vW0UZsk2T?=
- =?us-ascii?Q?dzYS1JSlzWcWrae93ivR0y5MepPq2mPaDf6r328Mpevf0fWJXA9kJabKOXS9?=
- =?us-ascii?Q?IMm7vyxpDqxAJ9hmldFTPBlD8+ePfURCJSK81PPhzNVePA/61zA2miH6sYlF?=
- =?us-ascii?Q?PvA9j7etu77q4O71XNoXIT1EE3puhrpW06rXgC/THKpB8P03pdVc88uWNHvd?=
- =?us-ascii?Q?2TgVA70Rma/FCyz1QcOJdXG5MhsXUEZ9CGFRGqUzPftJooJ9opi5OjYl8xjz?=
- =?us-ascii?Q?5B5ctoWJ9F0/mJFfcupRuHkVBHFjm0vcCIBJOdSvKGGkQ/scxN6Yef+DdAlH?=
- =?us-ascii?Q?Y3LpWKqD9jkIFviBCDLvw0BFn3SjPctsrJHXlWJSc1FQ4HJt974B71TYBQkM?=
- =?us-ascii?Q?EiZJLYZBzBvIf1okKqftSNdj4DPm1aN2Nv1+L38lXUK4XxxFY/N7LDqcETqv?=
- =?us-ascii?Q?dnB1MAqyLqF0O4vYoIVcrwi/mKLbDZsgeeGFYT2rx7PsrOQo1y2Z5jPPX36r?=
- =?us-ascii?Q?HyZRf95OrCU6FiddCpWB7EF6/e5Ug7Nn6S5Es0gKAJaMUGhzpOudeAGdlxKX?=
- =?us-ascii?Q?4GeJWOmfdOOc3qVPDezZWmPxsOFxe3/bb4ERFpCdgXG031+T+BbIal1fPjN3?=
- =?us-ascii?Q?W8aib08IgUh8DPqNPJJ8h6DZ0udDBuWldSGqNwGNnJVyA6zZGNOYz25FxcTH?=
- =?us-ascii?Q?gD2E3Z+bEBVGrrjxD6AC0iFzZ84+EwtrjZFFmzcKnXx+E3I3UcdhgZKJM01N?=
- =?us-ascii?Q?1HYACdqzDp2SYgBvO/c7iiLMGfySJ3kMXdhHZOOCanYgEmBLUiP9QEYYkHtU?=
- =?us-ascii?Q?wKTyEoeXKlyRFqFCbn+72pkwmXmLMRQnsS+GA9Iv4paZpLlmFk6bzthV6qUP?=
- =?us-ascii?Q?8q2cP2CVKp9Y1GbXi511H0V2GebfpvmRDKNoeSLwLeIGRl2+MfCjDhgpu/6m?=
- =?us-ascii?Q?olLCBwMrxvbe9+cN+E7clMh8dKM965UheTeidHMofNsfRaPfjogiuDwPJlZK?=
- =?us-ascii?Q?VxEIgsMibXf9dMRKd/6T24YQ97ooCTnRcnvPPmj8c+1Izu9MB7y3EZJpnt0p?=
- =?us-ascii?Q?yda0cRhMLVL4uKV9Sh+j8VVXE1t+wPRDphKMEw9cWdbHcHTL97k8nlrb4yb5?=
- =?us-ascii?Q?UjWoX3szwrYolnylTbKlaEFxrvfXMhaRrOyixS+0ZnH5K5/Bo5FRcilmhYWY?=
- =?us-ascii?Q?mw3RCwkG+86/FAXdXmuL4C7UiT0hEGitThi00ZwzjpCSMGRNP3g0P46T+DkJ?=
- =?us-ascii?Q?qgPV9gvC8//d/MThyooB/SSv/2w8V7eJ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(19092799006)(366016)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ceRnjfrAa9SqazhF1l9kG5+T0CIeMd2aUDPXqwwph23KYiauXJg2RZsqGqtv?=
- =?us-ascii?Q?erjAOxi0G32HZZ6lBtZmIEVc4nQcweiO/OuQAoUZ5te1neOYrokzclNmA3fW?=
- =?us-ascii?Q?qzhyT3hB+F9goNBDfgMCCqUvBNJfhaHd8xmMlH3iDvyYkcF+ogFvCuIIdQY7?=
- =?us-ascii?Q?sp7J9RYjgXWCFABVVl9KvHMbxFLIms2jR8qEqQUuIQACZv+Z42pLRixZ0iDd?=
- =?us-ascii?Q?WR163Fse1A2AP+NFT3f9qRMf6QcdRQkVeUC1BP4L3F6laqRftzajZraLrt5F?=
- =?us-ascii?Q?09Dd8l9NIZNlZ0uiXG3UxR6cQXx91SizONZbYhj5caE39E5ogy+wC1LYfRRD?=
- =?us-ascii?Q?KjOg+BSCmlxxV8clSzpX/0RPGV9w7ls3asHjU5TdTr2e72VKPYE5yfBin1qV?=
- =?us-ascii?Q?fuK4d4ioAsc7UTACgpHdcoH25c1eXazaizxwCI7etN29gB93NsOT9aXtcUDz?=
- =?us-ascii?Q?x/vQYsgcyp16L7V3nEHrInwAo3Hj4Bps1gXF4LkbGMj2UemC5CIwjhLNN1Ls?=
- =?us-ascii?Q?r/cEI37rfTCR6yNyQg3rlRD67dZAnQIFwz/MfGv5VxxddCdszXTGWJDvJxJw?=
- =?us-ascii?Q?cvys/Tp4qPOCf88ap9JiRf8bskQMvfrxTMHvaIqCTOt0XDbIoEzsyyLwwPLa?=
- =?us-ascii?Q?9hbjO9ogxNreH9Xzt2ctRICkI3fhXO8OM/c5iqBKMxzV+NQpFfR/3UUjGgB0?=
- =?us-ascii?Q?HWWuwJvYYL1vXOq3vu8W8/So1TAG3HlDMQayM1ms3/2CL4fotG786oUUK2bk?=
- =?us-ascii?Q?SEph4/rfJaW6M/ajpfZHEVGkxt+Xk7jL1z+d2Km84uxupPGtfPlYTJR7MKPW?=
- =?us-ascii?Q?Ts8i34LcDUmnLO9d4UigwdHL/Ux+ckHHxgHjy2KzsxB/Rlvmf4xjcv3gdtcM?=
- =?us-ascii?Q?leYRCHaegUJiWPMQZHKJ8NjBS+EQ2KZAwuBpz8LZupssEgonrwcTucPNFuKa?=
- =?us-ascii?Q?vz4EpLtSXR3Xms2hFUrbJvYUskbfG8mV+y1G2xpXo63Z/tdcuDYy9zfwKPox?=
- =?us-ascii?Q?3yayMalrcjjEr8TriDuTumrLEr9hQWm5A6xE7c0e3tfhefq4c6429/qAJknw?=
- =?us-ascii?Q?ldcJAb0KGltG+iNLE+ZfEI/r7+Xu/+GChb4Tk5BAhZ1C3LY1M8G4n6tMxXVa?=
- =?us-ascii?Q?f4t9R32MwhS4RH8QOiLX+WPz/KohD4fqXUJeSFc6v1DYbDNs5F9THiNF3O8z?=
- =?us-ascii?Q?tJPAfd7eMSdEJKzcDp0rb3NhjD8AEZcrANjccnMZzum9VkQHH1N8xVePzYDX?=
- =?us-ascii?Q?m22wOotlN2GaBd3uriuyW8t67XZTTWvD7NX1yiOTVGTCdZiQBMcgpB6ITs7e?=
- =?us-ascii?Q?qe6APjeAo0uJZ8Kw39czZHW33Q7VKL9cQXg0LmU6S7dTdzcD3w2FW8KBg4Nh?=
- =?us-ascii?Q?O5DRUAIFJJxCW9cV5mGGNgipk7vkMovI717gizkKB7grot+ylOlNJdG464Yo?=
- =?us-ascii?Q?hbPQmo6H4bGYaEtuZfdMKiB9CxFgD/0ugfCYsGkNjc4AWcPtzdjEJIlYHxfU?=
- =?us-ascii?Q?7i+Af834SBaeEjSl0Od57PDBIaHXdpIqFS1OrAC3NzC+FOaQbixu6KcaQRRJ?=
- =?us-ascii?Q?sF3XfMf9WfsMKE8ij6Q=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9552fa6d-cc4e-4462-f60d-08ddb7f3bcf4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 16:32:43.8903
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iGuocp1L48gGLYiY7Bect8AkcDyNQSM+rxBAhOKXtQ+VUagFTxiheUfBUr+WgkTQJhWQ+FEucE3aEVfhmlaGVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8754
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db4b9d71-c34d-4315-a87d-2edf3bbaff2d@huawei.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,huawei.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Convert lpc32xx-key.txt to yaml format.
+On Mon 30-06-25 17:21:48, Baokun Li wrote:
+> On 2025/6/30 15:47, Jan Kara wrote:
+> > On Mon 30-06-25 11:48:20, Baokun Li wrote:
+> > > On 2025/6/28 2:19, Jan Kara wrote:
+> > > > On Mon 23-06-25 15:32:51, Baokun Li wrote:
+> > > > > After we optimized the block group lock, we found another lock
+> > > > > contention issue when running will-it-scale/fallocate2 with multiple
+> > > > > processes. The fallocate's block allocation and the truncate's block
+> > > > > release were fighting over the s_md_lock. The problem is, this lock
+> > > > > protects totally different things in those two processes: the list of
+> > > > > freed data blocks (s_freed_data_list) when releasing, and where to start
+> > > > > looking for new blocks (mb_last_group) when allocating.
+> > > > > 
+> > > > > Now we only need to track s_mb_last_group and no longer need to track
+> > > > > s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
+> > > > > two are consistent, and we can ensure that the s_mb_last_group read is up
+> > > > > to date by using smp_store_release/smp_load_acquire.
+> > > > > 
+> > > > > Besides, the s_mb_last_group data type only requires ext4_group_t
+> > > > > (i.e., unsigned int), rendering unsigned long superfluous.
+> > > > > 
+> > > > > Performance test data follows:
+> > > > > 
+> > > > > Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+> > > > > Observation: Average fallocate operations per container per second.
+> > > > > 
+> > > > >                      | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+> > > > >    Disk: 960GB SSD   |-------------------------|-------------------------|
+> > > > >                      | base  |    patched      | base  |    patched      |
+> > > > > -------------------|-------|-----------------|-------|-----------------|
+> > > > > mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
+> > > > > mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
+> > > > > 
+> > > > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > > > ...
+> > > > 
+> > > > > diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> > > > > index 5cdae3bda072..3f103919868b 100644
+> > > > > --- a/fs/ext4/mballoc.c
+> > > > > +++ b/fs/ext4/mballoc.c
+> > > > > @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+> > > > >    	ac->ac_buddy_folio = e4b->bd_buddy_folio;
+> > > > >    	folio_get(ac->ac_buddy_folio);
+> > > > >    	/* store last allocated for subsequent stream allocation */
+> > > > > -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+> > > > > -		spin_lock(&sbi->s_md_lock);
+> > > > > -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+> > > > > -		spin_unlock(&sbi->s_md_lock);
+> > > > > -	}
+> > > > > +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
+> > > > > +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
+> > > > > +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
+> > > > Do you really need any kind of barrier (implied by smp_store_release())
+> > > > here? I mean the store to s_mb_last_group is perfectly fine to be reordered
+> > > > with other accesses from the thread, isn't it? As such it should be enough
+> > > > to have WRITE_ONCE() here...
+> > > WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
+> > > that variable reads/writes access values directly from L1/L2 cache rather
+> > > than registers.
+> > I agree READ_ONCE() / WRITE_ONCE() are about compiler optimizations - in
+> > particular they force the compiler to read / write the memory location
+> > exactly once instead of reading it potentially multiple times in different
+> > parts of expression and getting inconsistent values, or possibly writing
+> > the value say byte by byte (yes, that would be insane but not contrary to
+> > the C standard).
+> READ_ONCE() and WRITE_ONCE() rely on the volatile keyword, which serves
+> two main purposes:
+> 
+> 1. It tells the compiler that the variable's value can change unexpectedly,
+>    preventing the compiler from making incorrect optimizations based on
+>    assumptions about its stability.
+> 
+> 2. It ensures the CPU directly reads from or writes to the variable's
+>    memory address. This means the value will be fetched from cache (L1/L2)
+>    if available, or from main memory otherwise, rather than using a stale
+>    value from a CPU register.
 
-Additional changes:
-- set maximum of key-row(column) to 4.
-- add ref to matrix-keymap.yaml.
+Yes, we agree on this.
 
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v2
-- add ref to matrix-keymap.yaml.
-- remove properties, which already defined in matrix-keymap.yaml.
-- Add Vladimir Zapolskiy review tag
----
- .../devicetree/bindings/input/lpc32xx-key.txt | 34 -----------
- .../bindings/input/nxp,lpc3220-key.yaml       | 61 +++++++++++++++++++
- 2 files changed, 61 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/lpc32xx-key.txt
- create mode 100644 Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
+> > > They do not guarantee that other CPUs see the latest values. Reading stale
+> > > values could lead to more useless traversals, which might incur higher
+> > > overhead than memory barriers. This is why we use memory barriers to ensure
+> > > the latest values are read.
+> > But smp_load_acquire() / smp_store_release() have no guarantee about CPU
+> > seeing latest values either. They are just speculation barriers meaning
+> > they prevent the CPU from reordering accesses in the code after
+> > smp_load_acquire() to be performed before the smp_load_acquire() is
+> > executed and similarly with smp_store_release(). So I dare to say that
+> > these barries have no (positive) impact on the allocation performance and
+> > just complicate the code - but if you have some data that show otherwise,
+> > I'd be happy to be proven wrong.
+> smp_load_acquire() / smp_store_release() guarantee that CPUs read the
+> latest data.
+> 
+> For example, imagine a variable a = 0, with both CPU0 and CPU1 having
+> a=0 in their caches.
+> 
+> Without a memory barrier:
+> When CPU0 executes WRITE_ONCE(a, 1), a=1 is written to the store buffer,
+> an RFO is broadcast, and CPU0 continues other tasks. After receiving ACKs,
+> a=1 is written to main memory and becomes visible to other CPUs.
+> Then, if CPU1 executes READ_ONCE(a), it receives the RFO and adds it to
+> its invalidation queue. However, it might not process it immediately;
+> instead, it could perform the read first, potentially still reading a=0
+> from its cache.
+> 
+> With a memory barrier:
+> When CPU0 executes smp_store_release(&a, 1), a=1 is not only written to
+> the store buffer, but data in the store buffer is also written to main
+> memory. An RFO is then broadcast, and CPU0 waits for ACKs from all CPUs.
+> 
+> When CPU1 executes smp_load_acquire(a), it receives the RFO and adds it
+> to its invalidation queue. Here, the invalidation queue is flushed, which
+> invalidates a in CPU1's cache. CPU1 then replies with an ACK, and when it
+> performs the read, its cache is invalid, so it reads the latest a=1 from
+> main memory.
 
-diff --git a/Documentation/devicetree/bindings/input/lpc32xx-key.txt b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
-deleted file mode 100644
-index 2b075a080d303..0000000000000
---- a/Documentation/devicetree/bindings/input/lpc32xx-key.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--NXP LPC32xx Key Scan Interface
--
--This binding is based on the matrix-keymap binding with the following
--changes:
--
--Required Properties:
--- compatible: Should be "nxp,lpc3220-key"
--- reg: Physical base address of the controller and length of memory mapped
--  region.
--- interrupts: The interrupt number to the cpu.
--- clocks: phandle to clock controller plus clock-specifier pair
--- nxp,debounce-delay-ms: Debounce delay in ms
--- nxp,scan-delay-ms: Repeated scan period in ms
--- linux,keymap: the key-code to be reported when the key is pressed
--  and released, see also
--  Documentation/devicetree/bindings/input/matrix-keymap.txt
--
--Note: keypad,num-rows and keypad,num-columns are required, and must be equal
--since LPC32xx only supports square matrices
--
--Example:
--
--	key@40050000 {
--		compatible = "nxp,lpc3220-key";
--		reg = <0x40050000 0x1000>;
--		clocks = <&clk LPC32XX_CLK_KEY>;
--		interrupt-parent = <&sic1>;
--		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
--		keypad,num-rows = <1>;
--		keypad,num-columns = <1>;
--		nxp,debounce-delay-ms = <3>;
--		nxp,scan-delay-ms = <34>;
--		linux,keymap = <0x00000002>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml b/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
-new file mode 100644
-index 0000000000000..9e0d977bdf5cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/nxp,lpc3220-key.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/nxp,lpc3220-key.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC32xx Key Scan Interface
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: nxp,lpc3220-key
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  nxp,debounce-delay-ms:
-+    description: Debounce delay in ms
-+
-+  nxp,scan-delay-ms:
-+    description: Repeated scan period in ms
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - nxp,debounce-delay-ms
-+  - nxp,scan-delay-ms
-+  - linux,keymap
-+
-+allOf:
-+  - $ref: matrix-keymap.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/lpc32xx-clock.h>
-+
-+    key@40050000 {
-+        compatible = "nxp,lpc3220-key";
-+        reg = <0x40050000 0x1000>;
-+        clocks = <&clk LPC32XX_CLK_KEY>;
-+        interrupt-parent = <&sic1>;
-+        interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
-+        keypad,num-rows = <1>;
-+        keypad,num-columns = <1>;
-+        nxp,debounce-delay-ms = <3>;
-+        nxp,scan-delay-ms = <34>;
-+        linux,keymap = <0x00000002>;
-+    };
+Well, here I think you assume way more about the CPU architecture than is
+generally true (and I didn't find what you write above guaranteed neither
+by x86 nor by arm64 CPU documentation). Generally I'm following the
+guarantees as defined by Documentation/memory-barriers.txt and there you
+can argue only about order of effects as observed by different CPUs but not
+really about when content is fetched to / from CPU caches.
+
+BTW on x86 in particular smp_load_acquire() and smp_store_release() aren't
+very different from pure READ_ONCE() / WRITE_ONCE:
+
+arch/x86/include/asm/barrier.h:
+
+#define __smp_store_release(p, v)                                       \
+do {                                                                    \
+        compiletime_assert_atomic_type(*p);                             \
+        barrier();                                                      \
+        WRITE_ONCE(*p, v);                                              \
+} while (0)
+
+#define __smp_load_acquire(p)                                           \
+({                                                                      \
+        typeof(*p) ___p1 = READ_ONCE(*p);                               \
+        compiletime_assert_atomic_type(*p);                             \
+        barrier();                                                      \
+        ___p1;                                                          \
+})
+
+where barrier() is just a compiler barrier - i.e., preventing the compiler
+from reordering accesses around this point. This is because x86 is strongly
+ordered and the CPU can only reorder loads earlier than previous stores.
+TL;DR; on x86 there's no practical difference between using READ_ONCE() /
+WRITE_ONCE() and smp_load_acquire() and smp_store_release() in your code.
+So I still think using those will be clearer and I'd be curious if you can
+see any performance impacts from using READ_ONCE / WRITE_ONCE instead of
+smp_load_acquire() / smp_store_release().
+
+								Honza
 -- 
-2.34.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
