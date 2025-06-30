@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C38261378;
-	Mon, 30 Jun 2025 11:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BF525F97A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751283625; cv=none; b=mxW0WWkZBInWQzkh+IkE3F8JFDi8c5BpffvVq+aTiHmB6u23nlG4T2n1SQysvAD8phSrN+xZJHCMAx897250XDNIZG+SmU29Vz0+TOVV9uOG6QPrUmAXUDudgQPCWI40cuhO6BbSNwZ6xcJUGX8agj9tRNc89M6h9kDdokMBdTo=
+	t=1751283631; cv=none; b=JhOrM68QyyPlkLUmLvcjITfkPHVV4xpdPuzTxa+/BN7vDq4c2pGy3zh4Zb1HTFSSCi+M6qhiiWrViJ1/x+qWXRv9iSjvlTX/h6AcCzQIiEumbAWKENYP51sFWLuFzgFz5372yAnI9nZezHkL/qBqwIul6J9mUZOVC09TjLbIH+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751283625; c=relaxed/simple;
-	bh=N5nwle+Z07WArrrqBSVZE6m6izNoLkuvtuWlM2WawF4=;
+	s=arc-20240116; t=1751283631; c=relaxed/simple;
+	bh=2Fvt+aO1cI1fwgtC/7qmlUKKCjIelkiItkI+ytF3KiI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UrgqYtugDt66RTQ1N/Uuc3S7iiXEA2P/nLtgL90AxHmlunECWB+Q6zxmUVpny0CWTo297g2ve1rZ4/6q2zEL2U/Zh31A+42DCrwRIAmkR07AynavmEYNfgKaNnhaziKX/mSzBPx1qPGOpIh8hrJiWkWduyWW+7NRosqEvzpXv8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DOzOwMkA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tlHapuDMP10nunzWQqjPCxyqgehozWzS7SzYMsT3Gq8yhcsLTzs7p14WBcRuapiGymCZTpyPawofDO2N5qx8NIfgSUfMczcdfOZNnBK/fL7HJr3dLQltIjTImHlrK6oiWGfoABuvVwTmXu30XUD8jtKhjMXEbKxmMLNA8bxwZkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOJXJXPF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOzOwMkA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A41AC4CEEF;
-	Mon, 30 Jun 2025 11:40:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOJXJXPF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 584C9C4CEE3;
+	Mon, 30 Jun 2025 11:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751283625;
-	bh=N5nwle+Z07WArrrqBSVZE6m6izNoLkuvtuWlM2WawF4=;
+	s=k20201202; t=1751283631;
+	bh=2Fvt+aO1cI1fwgtC/7qmlUKKCjIelkiItkI+ytF3KiI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=DOzOwMkAYVqljFUoAhKYKE31wda+DkQV+t/t4nt8MvAgdl5l/1S9YqzV7kZDTIgSE
-	 S+BQVlIt5gssWHt80/6PkJBoUZ2RwjRIY/6o4B3576WgkW6fpvXFKYrcfxCfUQbS1E
-	 JZJiXvvSgpx1MfhnPwNfMQ3of9aTFAJr9vxqP0la8tfb0B1hAI6GloKXbyy1n9eMFb
-	 0yGJRlqSl7sQ7ip+wuwZzjrYM6n+QiX8ttXgPismb2qL6QE2tD0BljqurH2dxMeF7q
-	 3Ym5UXnt83Sw5Yi3hq15w4xKUl0OlQE0CEIVbkhC77Wg676qUxcCGUlbtJxnuiXNdg
-	 cqcMVqDhHDPNw==
+	b=YOJXJXPFm7bOGQrT+IUPK12RsODpirsKygH9kpA4UA/2q89Y0KIJpEeR2lR4DuiYc
+	 AS/oPG+gAmwQJ8jSJ3sA5e7ZuzSYpPubOl/ejciTy9Ru2j+G78qi7MBIPFb02+tjQu
+	 bbjHxKm0XEnTiriwiO1g6NDyt3gNK/dGMB4O3aMRmfVz79nNWNlTg6Qp4pHmrJtM+a
+	 SmcJWZnz/l75GqHyhW8u2WXXCCorvin3gDEqWADZagjRGDk0AQAlhUGO/8q/ixlApc
+	 Plftto37rxUPeM6nCDwgtYmBd52LJ2kpV7QC5+J+Yq+vpKzzm3aucjJSHt0B3t0pPY
+	 LSFqnv8dPwKKg==
 From: Mark Brown <broonie@kernel.org>
-To: srinivas.kandagatla@oss.qualcomm.com
-Cc: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org
-In-Reply-To: <20250627160329.442795-1-srinivas.kandagatla@oss.qualcomm.com>
-References: <20250627160329.442795-1-srinivas.kandagatla@oss.qualcomm.com>
-Subject: Re: [PATCH] MAINTAINERS: update Qualcomm audio codec drivers list
-Message-Id: <175128362404.28563.7607369612683502987.b4-ty@kernel.org>
-Date: Mon, 30 Jun 2025 12:40:24 +0100
+To: Abdun Nihaal <abdun.nihaal@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, 
+ tanureal@opensource.cirrus.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20250626172823.18725-1-abdun.nihaal@gmail.com>
+References: <20250626172823.18725-1-abdun.nihaal@gmail.com>
+Subject: Re: [PATCH] regmap: fix potential memory leak of regmap_bus
+Message-Id: <175128363009.28771.16646321017336879402.b4-ty@kernel.org>
+Date: Mon, 30 Jun 2025 12:40:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,22 +45,27 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-cff91
 
-On Fri, 27 Jun 2025 17:03:29 +0100, srinivas.kandagatla@oss.qualcomm.com wrote:
-> Some of the codec drivers like wcd939x are missing in the MAINTAINERS
-> which is resulting in incorrect list from get_maintainers script.
-> Fix this by using wildcard matching on both wcd93* and wsa88* codec and
-> bindings.
+On Thu, 26 Jun 2025 22:58:21 +0530, Abdun Nihaal wrote:
+> When __regmap_init() is called from __regmap_init_i2c() and
+> __regmap_init_spi() (and their devm versions), the bus argument
+> obtained from regmap_get_i2c_bus() and regmap_get_spi_bus(), may be
+> allocated using kmemdup() to support quirks. In those cases, the
+> bus->free_on_exit field is set to true.
 > 
+> However, inside __regmap_init(), buf is not freed on any error path.
+> This could lead to a memory leak of regmap_bus when __regmap_init()
+> fails. Fix that by freeing bus on error path when free_on_exit is set.
 > 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
 Thanks!
 
-[1/1] MAINTAINERS: update Qualcomm audio codec drivers list
-      commit: be2e1a63448b35bd6736b5934f7720534649b51e
+[1/1] regmap: fix potential memory leak of regmap_bus
+      commit: c871c199accb39d0f4cb941ad0dccabfc21e9214
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
