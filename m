@@ -1,130 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED7317A2FC;
-	Mon, 30 Jun 2025 09:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262EDFC1D;
+	Mon, 30 Jun 2025 09:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751274983; cv=none; b=mNEJooCyothrhowgJ//bblhfeRMSHETFvFNydQlqxfDvjWyioOKtHNPvVd9HU7MiStrTS07DyVIcI3pgReaRYaRkg1sI3OyhpNnzCu9MOL2CGeELZZV4wpUfxkFWxOMd87yOVJJ8AoyelEOgpkVPvlIh8YU3oAdyhZmfgZLJQ2s=
+	t=1751274995; cv=none; b=UB0Y4iTKN0nFI0+lnqJHTXD+8ML2ED0EpBFf1S265fbopwc9JADzR5hFM7v1SXJ/JtSK+aLSKUqk4sSKdzGHkyrD7UTcEmOv2TN9YLTAxL77w4OTvBGivaZm55DS+MVecTeCdvMds32Cui2w3iwhgglKW9SYh+F2UM7vG8k4ifE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751274983; c=relaxed/simple;
-	bh=hIF4DF7VIC131YOfiv8wb+VyxCwoXmZfuDNsCoEXrmA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XimVl8cKQxtCuNjhKM5JohjYvTZOhmVb+LAphZ+nHe3/xdF0pj8pq/F/eY5EzZDstqcTY5rtZ/sRLhd+YeeDYtENkJ+mUafGrpDtBsQJeKCrZ+2chdOhlCHYWu+/VFeZC1DJuzWzAluMP9BdP3Z1pu/gtAzetqyR1R2/SB83uTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ehvij6iy; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751274995; c=relaxed/simple;
+	bh=Iwck2mG1lJ5lx8e17hXJ+xo4ZCdQXb8iwMS3mtR5Btc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aKvzavNQGxtF1wA6jOxdLWs6goE6jr92mvjKZsgprTdbXpRbBbJvjyfYPcD13Y6iu1U7+QNRDGmo6U8JOpF3mql8dL8+VUdaY8kdtbJtHAeX36+rIDLsPkux33FNODJHSh9SWK017jgeT6w2PZnil77lUOiY3gQVI6jPVXGJm4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kdzla65V; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ehvij6iy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751274982; x=1782810982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hIF4DF7VIC131YOfiv8wb+VyxCwoXmZfuDNsCoEXrmA=;
-  b=ehvij6iyVicmrxlX4xbE0hjbFuT5aNM9jVe7iPQL66HUQv88QPe0mSkZ
-   nkroL7UmkajEqYElVcCQmMkDMzk7chbGROUO4EUMkGcnlos6HM6GBI34e
-   KhW5GJE3LWlCdhYLrm7SpPMhteFCjpkgHBc5od0a6Pv7COK+0VJotM0Lp
-   uTA0mKtfKtYvzpmbn9flXe8yDHnHP1vcXX2x9bpWltHfKNYFnfYqYXJRH
-   IvXgS8c6PTXGccifOz8yvfhrdEkllaW4X3Z9pghQXervw2CehX7MKbHiw
-   k2gVYYGtizh1KwIi0b+Tt1qWI/aRXsYq0iaIxKFeNb3G0GMutw74wW87D
-   w==;
-X-CSE-ConnectionGUID: WbgP1acDQsiwhQRYFDBnWw==
-X-CSE-MsgGUID: uY8xco08S7KRGHtJog0Xtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53369753"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53369753"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:16:20 -0700
-X-CSE-ConnectionGUID: vgpnXkQESpib0RBqEXahuw==
-X-CSE-MsgGUID: 8U4qTSUCQ1KOQB2aSzWAJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="157794187"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 02:16:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWAcY-0000000BG2u-2D3F;
-	Mon, 30 Jun 2025 12:16:14 +0300
-Date: Mon, 30 Jun 2025 12:16:14 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Kent Gibson <warthog618@gmail.com>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/9] gpio: sysfs: add a parallel class device for each
- GPIO chip using device IDs
-Message-ID: <aGJV3uvuFV4rrOUa@smile.fi.intel.com>
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org>
- <20250623-gpio-sysfs-chip-export-v2-1-d592793f8964@linaro.org>
- <aF627RVZ8GFZ_S_x@black.fi.intel.com>
- <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kdzla65V"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U6IQud014585;
+	Mon, 30 Jun 2025 09:16:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=rh2Tduwrlnki1FQ5vsOskOQbINxd9zCyPRvM5+9Ga
+	PE=; b=kdzla65V3Ror2Ys2/xxk9JDa81wgLJZ5N8ZS2i1mCTpNC4glAL3OnUOkW
+	EU3pn63r8qwu760lzOqCgz6OyM1eRD5rO9tCKWPhem1MJj4sbvhDz4u2ptL/13/d
+	HGw58qh+2ZgKlQ8WajtbxCj+Cs/+weZp44EvogwCRCNDFb4n88uqY1+lfR072XQW
+	RppiZv6/RcHrlRXVMI51dmfKCK5XnFW03SvPWVcjVRVJJwbuHdTt2NN5XKVVigvT
+	Z0DgtODpgsSmX5KwzEnKaO+Em5aPi9UnnRVQs1Lg0ZFBOPPNk/OnK7JDwQiZwHsk
+	vZEz+FjYxHx2sT4IupApyruD2MwbA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gak2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55U9BS0Q016831;
+	Mon, 30 Jun 2025 09:16:31 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j830gajn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:31 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U8mfie021117;
+	Mon, 30 Jun 2025 09:16:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqu5bdx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 09:16:25 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55U9GL7R20447600
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Jun 2025 09:16:21 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 66BD62004B;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2EF9C20043;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Jun 2025 09:16:21 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: perf header test fails on s390
+Date: Mon, 30 Jun 2025 11:16:13 +0200
+Message-ID: <20250630091613.3061664-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mci_q8PsJT2A33KtsPfSoO1BiDhB854M9__0KSv9YcB9w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8qTbJrlhJ3epZwh0_kVLqi8Mdh4JvVIH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA3NiBTYWx0ZWRfX1Xe1QzeuC8Rk vU6GsvC8m9uymHpX3GIej5UhAmcWRDSAh54+TCN8Tx3472uvPXsyERwB8SsS31l4IA9J5k7cUcR rvYjgoGBn9uWbgdU0g1n6G0mGfaJydV8/cKVqafhZ1OwBHmvI6N6FTRZ0/Uud73yLBbF3ZqRqoM
+ GF5wma/WRSNthzkyk+JFfchdr3FWCZkdXtgrSS9aAfdKIhPL9IhX42bFBoFPLxVB8rE6itg7DVU spVcgeX7b+mQInVny97QmBBTs0jnlufvt0lGlCG1HqBbI3J9rsLwR53xl2JM4qWwJtphytf1GT9 FbdnWVsVasbV0Qw/ESIlEulAUG+5lrrVOWixIJ5naD6MFZlm4RLG76kk8UoMJhIv5sDqcSr6Lq2
+ n3XHuZMXmcbBlWoHrUBUbLUx/641f/Bt9EiA2fXCTiLUkdScqTw/gm3GfT7HnFJnxSxSsUo3
+X-Authority-Analysis: v=2.4 cv=MOlgmNZl c=1 sm=1 tr=0 ts=686255ef cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=5pymjkY0oZ0wbNViOC4A:9
+X-Proofpoint-GUID: a_82e_qKMD0E4uUXRU0oWzRasEgyyaR4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506300076
 
-On Mon, Jun 30, 2025 at 10:34:52AM +0200, Bartosz Golaszewski wrote:
-> On Fri, Jun 27, 2025 at 5:21 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Mon, Jun 23, 2025 at 10:59:49AM +0200, Bartosz Golaszewski wrote:
+commit 2d584688643fa ("perf test: Add header shell test")
+introduced a new test case for perf header. It fails on s390
+because call graph option -g is not supported on s390.
+Also the option --call-graph dwarf is only supported for
+the event cpu-clock.
 
-...
+Remove this option and the test succeeds.
 
-> > >  struct gpiodev_data {
-> > >       struct gpio_device *gdev;
-> > >       struct device *cdev_base; /* Class device by GPIO base */
-> > > +     struct device *cdev_id; /* Class device by GPIO device ID */
-> >
-> > I would add it in the middle in a way of the possible drop or conditional
-> > compiling of the legacy access in the future.
-> 
-> I'm not sure what difference it makes?
+Output after:
+ # ./perf test 76
+ 76: perf header tests                           : Ok
 
-It collects optional (which you do with ifdeffery later on) at the end of the
-structure. Maybe there is no effect now, but it might be in the future.
+Fixes: 2d584688643fa ("perf test: Add header shell test")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/header.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > >  };
-
-...
-
-> > > +static struct device_attribute dev_attr_export = __ATTR(export, 0200, NULL,
-> > > +                                                     chip_export_store);
-> >
-> > __ATTR_WO()
-> >
-> 
-> No can do, the attribute would have to be called "chip_export". A
-> function called export_store() already exists in this file.
-
-I didn't get, we have two "export" nodes implemented in the same file?
-
-...
-
-> > > +static struct device_attribute dev_attr_unexport = __ATTR(unexport, 0200,
-> > > +                                                       NULL,
-> > > +                                                       chip_unexport_store);
-> >
-> > Ditto.
-
-Ditto.
-
+diff --git a/tools/perf/tests/shell/header.sh b/tools/perf/tests/shell/header.sh
+index 813831cff0bd..412263de6ed7 100755
+--- a/tools/perf/tests/shell/header.sh
++++ b/tools/perf/tests/shell/header.sh
+@@ -51,7 +51,7 @@ check_header_output() {
+ test_file() {
+   echo "Test perf header file"
+ 
+-  perf record -o "${perfdata}" -g -- perf test -w noploop
++  perf record -o "${perfdata}" -- perf test -w noploop
+   perf report --header-only -I -i "${perfdata}" > "${script_output}"
+   check_header_output
+ 
+@@ -61,7 +61,7 @@ test_file() {
+ test_pipe() {
+   echo "Test perf header pipe"
+ 
+-  perf record -o - -g -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
++  perf record -o - -- perf test -w noploop | perf report --header-only -I -i - > "${script_output}"
+   check_header_output
+ 
+   echo "Test perf header pipe [Done]"
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.50.0
 
