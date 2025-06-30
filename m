@@ -1,87 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C628C014;
-	Mon, 30 Jun 2025 13:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E30B28B519;
+	Mon, 30 Jun 2025 13:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289199; cv=none; b=rsApfvKGuyDtiSAq+LAoZWKW8wEnbM+38B8CqZ9YldKw8F/l2CU2QH0vKp4f5keGRFCjt4yqW8qF/Th9V/169fj3LeQny+auF/Reyc6B6gTL9glLUKeF214zuaSoqHSP991xH6xCp+8sWGGFOJS01NcJDNH39C2cHHM9vLCeGn4=
+	t=1751289208; cv=none; b=hyCRXcklHj7sIZlMjxuxKnFuyJIRlDlfcJwKZIsNKbNf9dvPPCmB9KGddhDrS5301l3rEdicCOxLz9Bdak8s2Hk7GTg1xM1fEApqLrg7HjJiEW93kRY8jHUzXVgI7OlQ1bO6Zo9UbRhG3UjUpXxhBjNg7Z/Cl08D11dAAV154Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289199; c=relaxed/simple;
-	bh=Z2f49MRAkcAIik6EDCw58iFDWFajLQ9xjmzjWBeVoqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SZH0XKwq/cf+e+hff0wDj6cZFsBLVVjhb+AwGWJVWCqYflgrfxCD1ZYTLhLVcC3A4lC3mRG+Nr91gOWwUafS+QCXEIlimB38CjPUvg6rIKFBuiAZTc1QEi4zKkH6J3h0yPgHjBoksFk2yjEUxrLlzva3kfySBKwx3lcXXLW7vyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZRIuQjZP; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751289208; c=relaxed/simple;
+	bh=oJRu8E8wcaqBMHFOS5BZfM24plB5VjY1CkIOzjkM+fE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XzNEl1OBh5oMuL3FSYbFy9WvXth3zsikm/ylu6otEEugM+EKYVSN8CvjOksJJ8YmbtBsTEO51LTMTfIMwdKfTMVTFw/oxHxBJwiJHW1s6UYoAqukCNC6MJDb5cCWeX7DkmlIx+3kO/qKL+/cACleaLQ0IwZLEmzEhY/Iy9ceS2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjjR2m6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRIuQjZP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751289198; x=1782825198;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z2f49MRAkcAIik6EDCw58iFDWFajLQ9xjmzjWBeVoqQ=;
-  b=ZRIuQjZPQZdybLJd+HwOF98JZ12SgHGTzvyVBpiGwzYRobKL5RWMaL5A
-   olzTMo6MBd6h+4RrMK03TxGPb/CqtN3TuGLvgoZTwaLIvGn24BLpwzX7W
-   BaaiyiYtP/pMeivDEFUm35MS7OXxL5knBkSZlLhqrtPXT6IM0V3Q9EaWn
-   i5eqQ7EC9SfZjL7rl3KU2XateLl8UrgQwA7134FAERmGMrvG+QXHKytmt
-   wI9H2nW7Mp4jC6QJEZ6IVHpGb3N70wIjXcvQjkrGk8/c+4maWJiPPDTcy
-   I8avJTCEXspVfIqnnL5ZgGULicOrsVBDRgqFuYM3hN3px0rj6KTDiwoaN
-   w==;
-X-CSE-ConnectionGUID: 2M081xrxSJWCmUZd74ig/g==
-X-CSE-MsgGUID: O06uZWULTIWOMLrfgztsiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53475783"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53475783"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:13:17 -0700
-X-CSE-ConnectionGUID: E8Oiju1TSjWVo2FwFfPkLA==
-X-CSE-MsgGUID: wV9Um+L9QVS/vJetc8RE2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="153996838"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:13:15 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWEJt-0000000BJYV-0Nrz;
-	Mon, 30 Jun 2025 16:13:13 +0300
-Date: Mon, 30 Jun 2025 16:13:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2] pch_uart: Fix dma_sync_sg_for_device() nents value
-Message-ID: <aGKNaKvndRhQhwwE@smile.fi.intel.com>
-References: <20250630121021.106643-2-fourier.thomas@gmail.com>
- <624ba0b2-afe0-4111-96b9-8b678b6472fe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjjR2m6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22CCC4CEEF;
+	Mon, 30 Jun 2025 13:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751289207;
+	bh=oJRu8E8wcaqBMHFOS5BZfM24plB5VjY1CkIOzjkM+fE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RjjR2m6wSBY0rZZrCZFhmKNWvsjzerQnlwdSGZaUStNrxj09Wvy+WRpD14QO+NyUY
+	 tGJRL+wurZ5nUbE/ryQP55Wv900pWoHYeRq7zbORXDalvJ8DulTOveta74apaNE0P2
+	 ky2LqK4BElPtrsKZjVcq1xfzNh8xkBaZEcPWRUZAwKaDYHM1TQUYQDvG1h5p1Z5HxP
+	 0lJUvuvYMkQ7QfBm0GkuLPGBtLc1cfpbxMVfJ8cztNhnUjwG8GRM2nrZ2lmdfnNgc7
+	 06/AEyu2RFk5BReaZeu2aObgrNXdbZwJKGI6+WymzxhSeqvyT6XOTthUiKG6fsIxPn
+	 O8HHRm4a+Y6QQ==
+From: Sasha Levin <sashal@kernel.org>
+To: tytso@mit.edu
+Cc: yi.zhang@huawei.com,
+	linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] ext4: fix JBD2 credit overflow with large folios
+Date: Mon, 30 Jun 2025 09:13:24 -0400
+Message-Id: <20250630131324.1253313-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <624ba0b2-afe0-4111-96b9-8b678b6472fe@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 03:01:01PM +0200, Jiri Slaby wrote:
-> On 30. 06. 25, 14:10, Thomas Fourier wrote:
-> > The dma_sync_sg_for_device() functions should be called with the same
-> > nents as the dma_map_sg(), not the value the map function returned.
-> 
-> Care to explain why do you intend to sync more than mapped? "should be
-> called" is way to vague.
+When large folios are enabled, the blocks-per-folio calculation in
+ext4_da_writepages_trans_blocks() can overflow the journal transaction
+limits, causing the writeback path to fail with errors like:
 
-It's documented as the correct use of the DMA streaming API.
-Should we go deeper and understand why?
+  JBD2: kworker/u8:0 wants too many credits credits:416 rsv_credits:21 max:334
 
+This occurs with small block sizes (1KB) and large folios (32MB), where
+the calculation results in 32768 blocks per folio. The transaction credit
+calculation then requests more credits than the journal can handle, leading
+to the following warning and writeback failure:
+
+  WARNING: CPU: 1 PID: 43 at fs/jbd2/transaction.c:334 start_this_handle+0x4c0/0x4e0
+  EXT4-fs (loop0): ext4_do_writepages: jbd2_start: 9223372036854775807 pages, ino 14; err -28
+
+Call trace leading to the issue:
+  ext4_do_writepages()
+    ext4_da_writepages_trans_blocks()
+      bpp = ext4_journal_blocks_per_folio() // Returns 32768 for 32MB folio with 1KB blocks
+      ext4_meta_trans_blocks(inode, MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp)
+        // With bpp=32768, lblocks=34815, pextents=32768
+        // Returns credits=415, but with overhead becomes 416 > max 334
+    ext4_journal_start_with_reserve()
+      jbd2_journal_start_reserved()
+        start_this_handle()
+          // Fails with warning when credits:416 > max:334
+
+The issue was introduced by commit d6bf294773a47 ("ext4/jbd2: convert
+jbd2_journal_blocks_per_page() to support large folio"), which added
+support for large folios but didn't account for the journal credit limits.
+
+Fix this by capping the blocks-per-folio value at 8192 in the writeback
+path. This is the value we'd get with 32MB folios and 4KB blocks, or 8MB
+folios with 1KB blocks, which is reasonable and safe for typical journal
+configurations.
+
+Fixes: d6bf294773a4 ("ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ext4/inode.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index be9a4cba35fd5..860e59a176c97 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2070,6 +2070,14 @@ static int mpage_submit_folio(struct mpage_da_data *mpd, struct folio *folio)
+  */
+ #define MAX_WRITEPAGES_EXTENT_LEN 2048
+ 
++/*
++ * Maximum blocks per folio to avoid JBD2 credit overflow.
++ * This is the value we'd get with 32MB folios and 4KB blocks,
++ * or 8MB folios with 1KB blocks, which is reasonable and safe
++ * for typical journal configurations.
++ */
++#define MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK 8192
++
+ /*
+  * mpage_add_bh_to_extent - try to add bh to extent of blocks to map
+  *
+@@ -2481,6 +2489,18 @@ static int ext4_da_writepages_trans_blocks(struct inode *inode)
+ {
+ 	int bpp = ext4_journal_blocks_per_folio(inode);
+ 
++	/*
++	 * With large folios, blocks per folio can get excessively large,
++	 * especially with small block sizes. For example, with 32MB folios
++	 * (order 11) and 1KB blocks, we get 32768 blocks per folio. This
++	 * leads to credit requests that overflow the journal's transaction
++	 * limit.
++	 *
++	 * Limit the value to avoid excessive credit requests.
++	 */
++	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
++		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
++
+ 	return ext4_meta_trans_blocks(inode,
+ 				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
+ }
+@@ -2559,6 +2579,13 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
+ 	handle_t *handle = NULL;
+ 	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
+ 
++	/*
++	 * With large folios, blocks per folio can get excessively large,
++	 * especially with small block sizes. Cap it to avoid credit overflow.
++	 */
++	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
++		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
++
+ 	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
+ 		tag = PAGECACHE_TAG_TOWRITE;
+ 	else
+@@ -6179,6 +6206,13 @@ int ext4_writepage_trans_blocks(struct inode *inode)
+ 	int bpp = ext4_journal_blocks_per_folio(inode);
+ 	int ret;
+ 
++	/*
++	 * With large folios, blocks per folio can get excessively large,
++	 * especially with small block sizes. Cap it to avoid credit overflow.
++	 */
++	if (bpp > MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK)
++		bpp = MAX_BLOCKS_PER_FOLIO_FOR_WRITEBACK;
++
+ 	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
+ 
+ 	/* Account for data blocks for journalled mode */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
