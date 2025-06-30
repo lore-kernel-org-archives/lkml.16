@@ -1,201 +1,88 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C58243374
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC35258CFF;
+	Mon, 30 Jun 2025 12:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751285864; cv=none; b=GukYGHna2QQTxJbpgYWazqzNvcVo7HdP9lhInD7TwzsBUvlwPcjGjTg7Y5+ksJjFdVieEx0C9811lZxg9bMXgzLMQjUjjHmFw7OTCD7ned5ThcDKm8/BcTpu2cEBQKXSgyiGBqU+JpKPeGIwLsnaAyxF9U/w5f/DgJAo6RYQnfk=
+	t=1751285900; cv=none; b=PQsjb9bTOjK52NQZjDFSGSrhHPtKEg3I5smvk2colkYBK/y0g3Y7ZUDIk5QNdtCXy+5ISCTYq+hIz5Rgoqt3hfYaD74LUa32DBwnBZOvU8NrS2NiZEH0Lwv2sxXeAY1LXX15bCafqf0S8XMSuAXos5r3tlY2s1phCJXUSA3mZOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751285864; c=relaxed/simple;
-	bh=5dhNh3sdSUsVirKXK90ehWyFI9ZhRpVh6xrGa+wtpeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KtLc5yGHhHJmCliFOadxUsKK+MO2szzVvSjGdmWIXsitH88WN+Wu6rbAVSgrIRk+z7gwOcG4OBmO57SxIY+9+HPSsFgJ44uBkrVKh2qF4Yx2CavztJ+KDjI1S47GoKFX7aDZysHHU3dRaDrkF7q6h+qhX3wfR4Fy4OCftkYHe8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uWDRr-0004km-3r; Mon, 30 Jun 2025 14:17:23 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uWDRq-0066DT-2U;
-	Mon, 30 Jun 2025 14:17:22 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uWDRq-009ggO-1c;
-	Mon, 30 Jun 2025 14:17:22 +0200
-Date: Mon, 30 Jun 2025 14:17:22 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: Pankaj Gupta <pankaj.gupta@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	Frank Li <frank.li@nxp.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v18 3/7] firmware: imx: add driver for NXP
- EdgeLock Enclave
-Message-ID: <20250630121722.wviidlggt7hguyt7@pengutronix.de>
-References: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
- <20250619-imx-se-if-v18-3-c98391ba446d@nxp.com>
- <20250625105546.pxuatcnfpe7mssgs@pengutronix.de>
- <AM9PR04MB8604611B8D91B5526C9704E69545A@AM9PR04MB8604.eurprd04.prod.outlook.com>
- <20250627084653.6vgwnm3llf3zknlp@pengutronix.de>
- <b02055bb-0995-4fd8-99f3-4ca5146eedd4@kontron.de>
+	s=arc-20240116; t=1751285900; c=relaxed/simple;
+	bh=903MGmEH/WYMrISs/XiXkrDeI8bDOSbRIvorOEn70PE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KHqW0kz5i/WNtmCtTtphVs1aFJ9yssb/lkB8Vv7Y8Iy2qRKgnMCs+RhuAqsHUodC6RmmtJOjcD+cUA9CUfWNtsmdX6nXCVwYKYibeh3YEvCKa6taPooTEhR8Sbe97pT2rJp5wg+Y1rASgNcwoJJer9PbXXExQArq/yhYRGZWNPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0TkobtU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0TkobtU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA70C4CEE3;
+	Mon, 30 Jun 2025 12:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751285900;
+	bh=903MGmEH/WYMrISs/XiXkrDeI8bDOSbRIvorOEn70PE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=l0TkobtUsSZZHT/L/9wHYWdlwMsjzydObQgWGmU3Im2/x1bfherEHA2IBQK2+E1Tm
+	 48SQsz8h5kVc4Xh5atPfW7TMzihCNEAo+pJHTLqt00S9m78SeOLvDCjvsbdhE48nlR
+	 h/yrzlD9bX7oqKgDdNYsQuLRkg3EFcrLSIXoKsaz9xQcjq1cl1KYnzIjwo030V/uJm
+	 vBZra+bTq5oIsg34H1iD/BlArmEjPya1cY0itCH7WwmcUhVsqCyB52bxjT6QHfM4am
+	 wvfT69JjEhQaMQQ5zau1a14y7S53FNlmfz/RiSqQr+mfFtW+hBeSvJaT5IN1ms/J/8
+	 Z/yrR7VdfcvEQ==
+Message-ID: <211a3491-7082-488a-b744-fa7416db18c3@kernel.org>
+Date: Mon, 30 Jun 2025 14:18:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b02055bb-0995-4fd8-99f3-4ca5146eedd4@kontron.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 5/6] rust: samples: add a module parameter to the
+ rust_minimal sample
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Benno Lossin <lossin@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Trevor Gross <tmgross@umich.edu>, Adam Bratschi-Kaye <ark.email@gmail.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>,
+ Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-5-bc219cd1a3f8@kernel.org>
+ <Ewn_4yTakSQtGyiitglJP70oWR-szfflywmDJoIY6EFgJVwLYQfXICpOyUk7rIq6_5dAb5Lf0JAREGMnakfylg==@protonmail.internalid>
+ <a343d3ce-a179-4c2c-a279-e2c3919a0a99@kernel.org> <87qzz1xwdg.fsf@kernel.org>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <87qzz1xwdg.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Frieder,
-
-On 25-06-30, Frieder Schrempf wrote:
-> Hi Marco,
+On 6/30/25 2:12 PM, Andreas Hindborg wrote:
+> "Danilo Krummrich" <dakr@kernel.org> writes:
 > 
-> Am 27.06.25 um 10:46 schrieb Marco Felsch:
-> > Hi,
-> > 
-> > your e-mail configuration mixed my e-mail with your answer, which makes
-> > it hard to read. Can you please check the quoting next time :)
-> > 
-> > On 25-06-27, Pankaj Gupta wrote:
-> >>>> Add driver for enabling MU based communication interface to
-> >> secure-enclave.
-> >>>>
-> >>>> NXP hardware IP(s) for secure-enclaves like Edgelock Enclave(ELE), are 
-> >>>> embedded in the SoC to support the features like HSM, SHE & V2X, using 
-> >>>> message based communication interface.
-> >>>>
-> >>>> The secure enclave FW communicates with Linux over single or multiple 
-> >>>> dedicated messaging unit(MU) based interface(s).
-> >>>> Exists on i.MX SoC(s) like i.MX8ULP, i.MX93, i.MX95 etc.
-> >>
-> >>> You write single or multiple MUs are possible. I'm aware that the i.MX93
-> >>> has two MUs one for the secure and one for the non-secure world. But I'm
-> >>> really concerned about the fact that both MUs can't be used at the same time
-> >>> from both world:
-> >>
-> >> Yes, you are correct.
-> >>
-> >> Fix is still work in progress.
-> > 
-> > So after ~6 months no fix is available :(
-> > 
-> >>> Also how is the secure and non-secure world talking to the ELE if there is
-> >>> only one MU as you have written?
-> >>
-> >> Till the fix is WIP, either Linux or OPTEE can use the ELE, at one point in
-> >> time.
-> > 
-> > That has nothing to do with the fix. The fix is for platforms/SoCs which
-> > do have 2-MUs, but you also have written that there are platforms with
-> > only 1-MU.
-> > 
-> > This MU can't be shared between secure and non-secure world.
-> > 
-> >>> IMHO it makes much more sense to put the complete ELE communication into
-> >>> (OP-)TEE and let the secure OS taking care of it. All non-secure world
-> >>> requests are passed via (OP-)TEE to the ELE. This involves:
-> >>> - eFuse access (done via OP-TEE i.MX specific PTA)
-> >>> - ELE 23h59m ping (kernel SMC WDG driver, requires OP-TEE watchdog driver)
-> >>> - HW-RNG (kernel OP-TEE HWRNG driver + OP-TEE HWRNG PTA)
-> >>
-> >> There is a dedicated MU "trusted-MU" for OPTEE-OS. The idea to converge to a
-> > 
-> > Yes for systems with 2-MUs there is a "trusted-MU" and a
-> > "non-trusted-MU". As of now, there is no fix available for using both
-> > MUs at the same time. Furhtermore there are platforms/SoCs with only
-> > 1-MU, as you have written in your commit message. This 1-MU system can
-> > have the MU either trusted or non-trusted.
-> > 
-> >> single path via OPTEE-OS, is good. But it will impact the performance of the
-> >> features at Linux side.
-> > 
-> > Performance? We are talking about a ping every 23h59m (I still don't
-> > know if this is a feature or bug), eFuse write/read, and the HW-RNG
-> > which can seed the Linux PRNG.
-> > 
-> >> Since the fix is still WIP. Let's wait till then.
-> > 
-> > The fix is for the 2-MUs SoCs but not the 1-MU case.
-> > 
-> > I would like to have a system design which doesn't differ too much
-> > between SoCs which are equipped with the ELE engine.
+>> (Sorry for being late on this one, just a minor nit below.)
+>>
+>> On 6/12/25 3:40 PM, Andreas Hindborg wrote:
+>>>    struct RustMinimal {
+>>> @@ -20,6 +26,10 @@ impl kernel::Module for RustMinimal {
+>>>        fn init(_module: &'static ThisModule) -> Result<Self> {
+>>>            pr_info!("Rust minimal sample (init)\n");
+>>>            pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
+>>> +        pr_info!(
+>>> +            "test_parameter: {}\n",
+>>> +            *module_parameters::test_parameter.get()
+>>
+>> Can we please call it something else than get(), maybe obtain(), access() or
+>> just ref()?
 > 
-> Do we really want to depend on OP-TEE to be available for having things
-> like OTP fuse access and HWRNG? Personally I'd like to be able to build
-> systems with OTP access and HWRNG but without OP-TEE. Requiring OP-TEE
-> only to make the ELE available to the kernel in cases where the secure
-> world isn't used for anything else seems to be unnecessarily complex.
+> Probably `ref` is the most precise of the options you propose. I would
+> go with that one. Or, should it be `as_ref`?
 
-I understand your point. I don't like pulling in more FW neither but we
-need to the face the following facts:
+Guess that works as well.
 
- - OTP eFuse R/W access after doing the LOCK_DOWN fuse is no longer
-   possible without OP-TEE. This involves general purpose (GP) eFuses
-   too. We faced this limitation in a current project.
-
- - With new regulations like the EU CRA I think we need some sort of
-   secure-enclave anyway.
-
- - Making it optional cause more paths of potential errors e.g. by not
-   including the correct "secure.dtsi". Multiple paths also require more
-   maintain- and testing effort. IMHO I do think that one of the paths
-   get unmaintened at some point but we would need to keep it for
-   backward compatibility.
-
-   Having one implementation eliminates this since.
-
- - All above points assume that the ELE-FW and -HW is capable of talking
-   to both world, which is not the case. As we learned NXP doesn't have
-   a fix for the 2-MUs ELE yet and even more important there are 1-MU
-   ELE-IPs.
-
-I do see the (minimal) drawback of having +1 FW but I think this is more
-an integration problem.
-Speaking of FW files, for the new i.MX9* you already have plenty fo
-them: bootloader, TF-A, ele-fw, scu-fw (i.MX95). So your integation
-needs to handle multiple firmware files already.
-
-> Anyway, I see your point of having a single implementation for the ELE
-> API in the "right" place. But as far as I know other platforms like
-> STM32MP1 also implement both ways for the HWRNG, secure access via OPTEE
-> and non-secure access via kernel directly.
-
-I'm not a STM32MP1 expert but here you have this setup with the
-*-scmi.dtsi. So you have two code paths which needs to be maintained and
-tested. Also if one customer of yours want to use OP-TEE you need the
-integration anyway, so you (Kontron) needs to maintain multiple
-configuration as well. I don't see the added value.
-
-I think for STM32MP1 the *-scmi.dtsi support was added later because it
-required a lot effort to support it. This is not the case for the i.MX9*
-series.
-
-Regards,
-  Marco
-
-> Thanks
-> Frieder
-> 
+One question additional question: Can't we just impl Deref for
+ModuleParamAccess<T>?
