@@ -1,231 +1,140 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FC6149C4D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957E01D6AA;
+	Mon, 30 Jun 2025 10:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751279720; cv=none; b=dlFxlELlcTg73lXjod51VZJ+MOL07ZkOfPnCxkkOBUpLp7gxCAdKQevM6Bl61b08A/dgqih8r45LpnPWzUKTlaBj42AJb1O9nQn36YOK0XzsOz8H86xD/rZpGvQP05y+cvkWb/iy4b3Ql0ziB3FQjDz/PXigCpDCGTTzkfOSLGI=
+	t=1751279799; cv=none; b=ee9dJcvyABtIPikzPJKhF5Jt4rQ47i9P310Wavj+cyp/xxde4Cm5jmZpQdYlg0XRtZC5CSWM3kjlQ6x/rv5u8RTDa6oGuddjdl/VyILXZQIaUtG2xouiOXqY0fbHckIpoAE0tEio3VsEnySYRWI5aLb1AU7wTWqel1l6pFwerBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751279720; c=relaxed/simple;
-	bh=GbLLnyi1CxtxL4NZZ5A2wjiLRahn7+ZcNBqo1KMMroA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O/4/HwYiez4Bd3NnTm2d3h4IB9tQzhO41vfgngWm1rnuRM8HbdLEIVvq1iazdJ3iIzycTp+JdIl6AsWWETwR4RykgpoS71McnsRq4pCm0ZkwLmjRrSW2Hnfko1m/a7rbtiTER4LYMIV/xRxjtULT5b9OyAL6+MicujeGfpVHiYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70F191D34;
-	Mon, 30 Jun 2025 03:35:02 -0700 (PDT)
-Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54EB33F58B;
-	Mon, 30 Jun 2025 03:35:14 -0700 (PDT)
-Message-ID: <ced934c3-a1ea-4d1c-954a-613eb20a9105@arm.com>
-Date: Mon, 30 Jun 2025 11:35:12 +0100
+	s=arc-20240116; t=1751279799; c=relaxed/simple;
+	bh=TYEa5gctuVllzJIY/gmCP0l/2r/1GM9o29nN2z/wSSc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L9RZw6JCDhGs+Xo2/n0lFZ5KJh3AFBH2w0WAGbjuWkuSyVmuOkpoHe12o2Nd0+18Ij83DrMWk+onyLizDXCVKd8Zi2+gDNOcfjSxRILldjDuphmqUccMCk7rm89Ddebw4leirVrYPtks1i88eABIlsBNgkJmwMlVYKNiFDErgxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXGj0mqm; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXGj0mqm"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45348bff79fso19451715e9.2;
+        Mon, 30 Jun 2025 03:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751279796; x=1751884596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TYEa5gctuVllzJIY/gmCP0l/2r/1GM9o29nN2z/wSSc=;
+        b=EXGj0mqmD42l8ojSG0zhEIfCL+20EmXXHHAfhivowsYpqgvz7wEQHM1DCD+86wnALr
+         BE7Iu7V6n/yjCNSKnOnAs6A1O1F/E9+f/Wksde3OP9nDkyw+wospj4DYe2Av+eoQU2BG
+         CtUWQHG8pJ8BE6WF3A/3oS5rCT8r4zATVDK4Y9p84Eby8ny7NnawDU/n+178Ytc8o6vC
+         P0yoVstc2e9p2+pISJ34UIMkYaz3np+IMctWytopCTFvm9fGFSk45fZ/PXOeXoq2LmYg
+         C1i44N4Z68UBk5JMM7Q9TG23jT33Yedw/y/xmtuz7kI2SykiS/PIk4HJeoXdliRszX3L
+         M9Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751279796; x=1751884596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TYEa5gctuVllzJIY/gmCP0l/2r/1GM9o29nN2z/wSSc=;
+        b=Qh7dVU+ZDvWVCcCTNT91WJIV/OsTFZwNDmYWjEThZudBj55YMkuuryM5OvEqEKzhPt
+         XmNp9Vv80o8PFz2dRUfmuA6X9TACEHyElpRAsdfw0LqWAdbzWxyski4E3soLRFomYUaw
+         5jn+KFiBvrTR/y0QDIDksmFN7ZNKMkSJNmb0iwYM9e+JuOUCieUWxj3jUF0BTIDB672X
+         riC0w+i/3E+JjsVAWlPkQErS3HeaaJ1u8faoEAOwBEPLaL9ADfVyATfvfNwiV1lXFzEw
+         Ag1ZhGLBVs9cDzaxvDsPGjRWjzA6fGPwsqGb3h2bhn4e9XhANQi8EficPKZYpsZgHYOm
+         chsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVChgJNsjSlprCLvvagweBs6vbz0Hz7f/4MEEfB5Z5XESY8MHg7ff7+R+kFvRxlwdVx+pIcXZ5J5S7K@vger.kernel.org, AJvYcCWNQI7gCjKQI+14K+yQOeWvHvUsORcxMOCnaH1zjmKp+nRmCsiN41BEjnQ3Wn4Ra7DeNwDmGi2ooOUvG7OK@vger.kernel.org, AJvYcCWq3pa9kO2ou/HqUllyQln6zP+YwOzvuoHNUyCgz+tzzEov6y526EKdyHjyO2ySRFHHHvE7gsvaXaGJPEgL8DzoaNI=@vger.kernel.org, AJvYcCWxnBooJvj2vSILu/2z6H/XQISgyuvanGm+EzJ9EXmHlFyh1DM+yEvJL1m2nktl+EMgFTHNEBDpGv9xriu/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz380cldm7vSyFmv9LBx5k3LbVB7GtZZn2Fnx7PRrAT1j2b8lUu
+	RB/bM+IsXV6GuEaTsCeFqC9ekos2h6bSFSOC0lElOmTWBK/E6TLjGKBY3NgblhiWtHAaW+ZqJ++
+	AlAINJJYMXiHlsJfcu4N/96bz3OsTTUk=
+X-Gm-Gg: ASbGncs389BitNekYO7yi4plXEZgX1eZ4QkpcZTW7tvBteBw9qtFhdhfOqXKf3aEnKH
+	TWSXBtzou3PsHbrhj1OCophpzcyRRyurGau1YslzlXW5uI1jGqowN1S8umz+o2JPWdJs3MeWByH
+	YnzL4Q+NzCmOh55tyjOZfI47z2Djg0+JQe7ukvLy5fZHHhN/M7YLpshCqshfQKfwrAD9B05SJql
+	kMt
+X-Google-Smtp-Source: AGHT+IHzVJSs9extZB6R4mzBdKoauxBA5qwzHvS01dBh5S/+5yMN/p2KX/oPAAPczklKOfT8+30x09RxKH1pE92PQUs=
+X-Received: by 2002:a5d:5f4e:0:b0:3a4:dcb0:a4c with SMTP id
+ ffacd0b85a97d-3a8f435e1b9mr9812832f8f.12.1751279795507; Mon, 30 Jun 2025
+ 03:36:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] mm: Add batched versions of
- ptep_modify_prot_start/commit
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250628113435.46678-1-dev.jain@arm.com>
- <20250628113435.46678-3-dev.jain@arm.com>
- <5f2eb53d-5fce-411f-857b-2ac16295a9f9@arm.com>
- <e1ce9e4e-03e2-4133-bbf6-9e0533dd13b1@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <e1ce9e4e-03e2-4133-bbf6-9e0533dd13b1@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250628115715.102338-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250628115715.102338-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUrkcxr+_jcr-F76cOg+rie3c2FcrEpfrH36kKJFhF9vw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUrkcxr+_jcr-F76cOg+rie3c2FcrEpfrH36kKJFhF9vw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 30 Jun 2025 11:36:09 +0100
+X-Gm-Features: Ac12FXw9ORdx6x4Jhwr20Jn-ldjmdRU9J48DPBGMOKaO7WlJFPMxmdc61lXkOYQ
+Message-ID: <CA+V-a8tQ70vGVr6i1Wfs=ogYodQCvRpMKtsPx=VCh61xfjZ==g@mail.gmail.com>
+Subject: Re: [PATCH v13 1/5] dt-bindings: serial: renesas,rsci: Add optional
+ secondary clock input
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/06/2025 11:17, Dev Jain wrote:
-> 
-> On 30/06/25 3:40 pm, Ryan Roberts wrote:
->> On 28/06/2025 12:34, Dev Jain wrote:
->>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
->>> Architecture can override these helpers; in case not, they are implemented
->>> as a simple loop over the corresponding single pte helpers.
->>>
->>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>> ---
->>>   include/linux/pgtable.h | 83 ++++++++++++++++++++++++++++++++++++++++-
->>>   mm/mprotect.c           |  4 +-
->>>   2 files changed, 84 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>> index cf1515c163e2..662f39e7475a 100644
->>> --- a/include/linux/pgtable.h
->>> +++ b/include/linux/pgtable.h
->>> @@ -1331,7 +1331,8 @@ static inline pte_t ptep_modify_prot_start(struct
->>> vm_area_struct *vma,
->>>     /*
->>>    * Commit an update to a pte, leaving any hardware-controlled bits in
->>> - * the PTE unmodified.
->>> + * the PTE unmodified. The pte may have been "upgraded" w.r.t a/d bits compared
->>> + * to the old_pte, as in, it may have a/d bits on which were off in old_pte.
->> I find this last sentance a bit confusing. I think what you are trying to say is
->> somehthing like:
->>
->> """
->> old_pte is the value returned from ptep_modify_prot_start() but may additionally
->> have have young and/or dirty bits set where previously they were not.
->> """
-> 
-> Thanks.
-> 
->> ?
->>
->>>    */
->>>   static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
->>>                          unsigned long addr,
->>> @@ -1340,6 +1341,86 @@ static inline void ptep_modify_prot_commit(struct
->>> vm_area_struct *vma,
->>>       __ptep_modify_prot_commit(vma, addr, ptep, pte);
->>>   }
->>>   #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
->>> +
->>> +/**
->>> + * modify_prot_start_ptes - Start a pte protection read-modify-write
->>> transaction
->>> + * over a batch of ptes, which protects against asynchronous hardware
->>> + * modifications to the ptes. The intention is not to prevent the hardware from
->>> + * making pte updates, but to prevent any updates it may make from being lost.
->>> + * Please see the comment above ptep_modify_prot_start() for full description.
->>> + *
->>> + * @vma: The virtual memory area the pages are mapped into.
->>> + * @addr: Address the first page is mapped at.
->>> + * @ptep: Page table pointer for the first entry.
->>> + * @nr: Number of entries.
->>> + *
->>> + * May be overridden by the architecture; otherwise, implemented as a simple
->>> + * loop over ptep_modify_prot_start(), collecting the a/d bits from each pte
->>> + * in the batch.
->>> + *
->>> + * Note that PTE bits in the PTE batch besides the PFN can differ.
->>> + *
->>> + * Context: The caller holds the page table lock.  The PTEs map consecutive
->>> + * pages that belong to the same folio.  The PTEs are all in the same PMD.
->>> + * Since the batch is determined from folio_pte_batch, the PTEs must differ
->>> + * only in a/d bits (and the soft dirty bit; see fpb_t flags in
->>> + * mprotect_folio_pte_batch()).
->> This last sentence is confusing... You had previous said the PFN can differ, but
->> here you imply on a, d and sd bits are allowed to differ.
-> 
-> Forgot to mention the PFNs, kind of took them as implied. So mentioning the PFNs
-> also will do or do you suggest a better wording?
+Hi Geert,
 
-Perhaps:
+On Mon, Jun 30, 2025 at 9:10=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sat, 28 Jun 2025 at 13:57, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> >
+> > Update the RSCI binding to support an optional secondary clock input on
+> > the RZ/T2H SoC. At boot, the RSCI operates using the default synchronou=
+s
+> > clock (PCLKM core clock), which is enabled by the bootloader. However, =
+to
+> > support a wider range of baud rates, the hardware also requires an
+> > asynchronous external clock input. Clock selection is controlled
+> > internally by the CCR3 register in the RSCI block.
+> >
+> > Due to an incomplete understanding of the hardware, the original bindin=
+g
+> > defined only a single clock ("fck"), which is insufficient to describe =
+the
+> > full capabilities of the RSCI on RZ/T2H. This update corrects the bindi=
+ng
+> > by allowing up to three clocks and defining the `clock-names` as
+> > "operation", "bus", and optionally "sck" for the asynchronous clock inp=
+ut.
+> >
+> > This is an ABI change, as it modifies the expected number and names of
+> > clocks. However, since there are no in-kernel consumers of this binding
+> > yet, the change is considered safe and non-disruptive.
+> >
+> > Also remove the unneeded `serial0` alias from the DTS example and use
+> > the R9A09G077_CLK_PCLKM macro for core clock.
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v12->v13:
+> > - Rebased on latest linux-next.
+> > - Updated commit message to clarify the ABI change.
+>
+> Thanks for the update!
+>
+> > - Used `R9A09G077_CLK_PCLKM` macro for core clock
+>
+> Unfortunately include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
+> is not yet upstream, so you cannot use its definitions yet outside
+> renesas-clk.
+>
+Thanks for pointing that out.
 
-"""
-Context: The caller holds the page table lock.  The PTEs map consecutive
-pages that belong to the same folio.  All other PTE bits must be identical for
-all PTEs in the batch except for young and dirty bits.  The PTEs are all in the
-same PMD.
-"""
-
-You mention the soft dirty bit not needing to be the same in your current
-wording, but I don't think that is correct? soft dirty needs to be the same, right?
-
-> 
->>
->>> + */
->>> +#ifndef modify_prot_start_ptes
->>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
->>> +        unsigned long addr, pte_t *ptep, unsigned int nr)
->>> +{
->>> +    pte_t pte, tmp_pte;
->>> +
->>> +    pte = ptep_modify_prot_start(vma, addr, ptep);
->>> +    while (--nr) {
->>> +        ptep++;
->>> +        addr += PAGE_SIZE;
->>> +        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
->>> +        if (pte_dirty(tmp_pte))
->>> +            pte = pte_mkdirty(pte);
->>> +        if (pte_young(tmp_pte))
->>> +            pte = pte_mkyoung(pte);
->>> +    }
->>> +    return pte;
->>> +}
->>> +#endif
->>> +
->>> +/**
->>> + * modify_prot_commit_ptes - Commit an update to a batch of ptes, leaving any
->>> + * hardware-controlled bits in the PTE unmodified.
->>> + *
->>> + * @vma: The virtual memory area the pages are mapped into.
->>> + * @addr: Address the first page is mapped at.
->>> + * @ptep: Page table pointer for the first entry.
->>> + * @old_pte: Old page table entry (for the first entry) which is now cleared.
->>> + * @pte: New page table entry to be set.
->>> + * @nr: Number of entries.
->>> + *
->>> + * May be overridden by the architecture; otherwise, implemented as a simple
->>> + * loop over ptep_modify_prot_commit().
->>> + *
->>> + * Context: The caller holds the page table lock. The PTEs are all in the same
->>> + * PMD. On exit, the set ptes in the batch map the same folio. The pte may have
->>> + * been "upgraded" w.r.t a/d bits compared to the old_pte, as in, it may have
->>> + * a/d bits on which were off in old_pte.
->> Same comment as for ptep_modify_prot_start().
->>
->>> + */
->>> +#ifndef modify_prot_commit_ptes
->>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
->>> unsigned long addr,
->>> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
->>> +{
->>> +    int i;
->>> +
->>> +    for (i = 0; i < nr; ++i) {
->>> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
->>> +        ptep++;
->>> +        addr += PAGE_SIZE;
->>> +        old_pte = pte_next_pfn(old_pte);
->>> +        pte = pte_next_pfn(pte);
->>> +    }
->>> +}
->>> +#endif
->>> +
->>>   #endif /* CONFIG_MMU */
->>>     /*
->>> diff --git a/mm/mprotect.c b/mm/mprotect.c
->>> index af10a7fbe6b8..627b0d67cc4a 100644
->>> --- a/mm/mprotect.c
->>> +++ b/mm/mprotect.c
->>> @@ -206,7 +206,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>                       continue;
->>>               }
->>>   -            oldpte = ptep_modify_prot_start(vma, addr, pte);
->>> +            oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
->> You're calling this with nr_ptes = 0 for the prot_numa case. But the
->> implementation expects minimum nr_ptes == 1.
-> 
-> This will get fixed when I force nr_ptes = 1 in the previous patch right?
-
-Yep, just pointing it out.
-
-> 
->>
->>>               ptent = pte_modify(oldpte, newprot);
->>>                 if (uffd_wp)
->>> @@ -232,7 +232,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>>                   can_change_pte_writable(vma, addr, ptent))
->>>                   ptent = pte_mkwrite(ptent, vma);
->>>   -            ptep_modify_prot_commit(vma, addr, pte, oldpte, ptent);
->>> +            modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
->>>               if (pte_needs_flush(oldpte, ptent))
->>>                   tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
->>>               pages++;
-
+Cheers,
+Prabhakar
