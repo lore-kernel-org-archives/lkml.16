@@ -1,301 +1,76 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F8925C6E7;
-	Mon, 30 Jun 2025 15:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA28B11CA0
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751299105; cv=none; b=JN/fGcK51Qcv7cQQUwKDWT2pTFL3dOAvPh9YcFx+/8t3B5KFEWExxwGnrMB9AK7tnC+m/UEm92uuQyl2+HhkToSPLzbRisFR0SRynDnZJLjilX7NHFsF2nrlUK4Ci7+K2DpPekQ7OoVHUeslOM/W/wSz8UHZYirmiWpTs3YQVhM=
+	t=1751299367; cv=none; b=WmKKvUASZyBGBYHdRg+uUyZVn20LENFfzFEHB8T3EHezjPG2LXoYOo2Yle+MmDSnu6Nwa0CN0exHm18G9eGy+T4MU+ADfR3tHkJ3WWMk3L9KzsRxCHk9NTKIHeXEuEx7S0A8y69ZNFo+ZeF+a9zv1eCVubkHtGwykLhCTfh5D18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751299105; c=relaxed/simple;
-	bh=A/X8mgmC0q3KiGKn2DV1OLmsHK3yxfWZiHWawY6AIaI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=V0BfhcMngKPcO0AlUioK2vGybtd5gnZ1z5CKZDb3XB/FT7pUc4c3+Awk4LmX38OzyFLLxZYiKHj1aryhaCnX1Q7bpmCaDkQgwJo1f2BHsDWj8MPHr2tnI0wwSV8RYr8Pj2urkgTUCq1c+oKUM8JLo0Gx1/7w0MYrxLIqCrFrvNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OBWBd2ed; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QtPeqOr0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBWBd2ed";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QtPeqOr0"
-Date: Mon, 30 Jun 2025 15:58:21 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751299102;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k6pDrpkvSnS1nV+iX13YXNmJZPp40ZNgPTXSFU1Pvyg=;
-	b=OBWBd2edg11Mfzj2S8jKDaFBJFBJ2tf72j3LPDqWqrSOwswuBOHWbbF7f3JUvpfFYCPLh3
-	ZimGPrMy4czxNzllvrV/qcbQix2HMn6iNx52Q5RvjT6B89CK7zeyITYsIGCXLG2eyeXyd7
-	CkyzSadKfnrHTIqFMuy+V1JMVlcGtOi3ODjbuTuNbu5T8609zAskPQjtiT9kfTpvcLSiB+
-	TxM85eq75CQNavtn8VgtBu6stM9tfcrPWVmt80td1ubdctCrp6sL0v0oD5my8pxBBzUxCR
-	0XtAhA9q9KhrTTRrdT07WPtdFKpjzw55Kav7a/JytkhgM41kMEVGrR9SXONLiA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751299102;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k6pDrpkvSnS1nV+iX13YXNmJZPp40ZNgPTXSFU1Pvyg=;
-	b=QtPeqOr02axc/AcUuWxqv35uoJYq5cWmZugva10dBWmodtlK4zsenX4ntaUCR2j9BaTyyw
-	CQMLED7LkelXnlBQ==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] local_lock: Move this_cpu_ptr() notation from
- internal to main header
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250630075138.3448715-2-bigeasy@linutronix.de>
-References: <20250630075138.3448715-2-bigeasy@linutronix.de>
+	s=arc-20240116; t=1751299367; c=relaxed/simple;
+	bh=Zi+1XmdagaPSTpcVi/0p5EO5iuDuAYEqhxWFEE2ZU1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XAHGmE3yUFfc04x7cATYaXCejlohZjghyO84oEeswoP6+5QzWc4Ez688TUYlwbvr+BMrKIdBr0tYy2poAhaqQ60oF7rxiCSnjKrbq3578BQmO01fvWXzoLiRbqwyY66Uzcx6ye8RoD6QQctinKHNOHo5aJi7cxTj3ZsF+n97SJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F4F01AC1;
+	Mon, 30 Jun 2025 09:02:29 -0700 (PDT)
+Received: from [10.57.28.116] (unknown [10.57.28.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 208093F66E;
+	Mon, 30 Jun 2025 09:02:43 -0700 (PDT)
+Message-ID: <4fc84b43-77c4-45dc-8a74-9bba363054e3@arm.com>
+Date: Mon, 30 Jun 2025 17:02:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175129910125.406.16097506235858412052.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/panthor: Wait for _READY register when powering on
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>, Karunika Choo <karunika.choo@arm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250630140704.432409-1-steven.price@arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250630140704.432409-1-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the locking/core branch of tip:
+On 30/06/2025 15:07, Steven Price wrote:
+> panthor_gpu_block_power_on() takes a register offset (rdy_reg) for the
+> purpose of waiting for the power transition to complete. However, a
+> copy/paste error converting to use the new 64 register functions
+> switched it to using the pwrtrans_reg register instead. Fix the function
+> to use the correct register.
+> 
+> Fixes: 4d230aa209ed ("drm/panthor: Add 64-bit and poll register accessors")
+> Signed-off-by: Steven Price <steven.price@arm.com>
 
-Commit-ID:     7ff495e26a39f3e7a3d4058df59b5b6d6f943cab
-Gitweb:        https://git.kernel.org/tip/7ff495e26a39f3e7a3d4058df59b5b6d6f943cab
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Mon, 30 Jun 2025 09:51:38 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 30 Jun 2025 17:45:35 +02:00
+Pushed to drm-misc-next.
 
-local_lock: Move this_cpu_ptr() notation from internal to main header
+Thanks,
+Steve
 
-local_lock.h is the main header for the local_lock_t type and provides
-wrappers around internal functions prefixed with __ in
-local_lock_internal.h.
+> ---
+>  drivers/gpu/drm/panthor/panthor_gpu.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
+> index 534735518824..cb7a335e07d7 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gpu.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gpu.c
+> @@ -297,8 +297,9 @@ int panthor_gpu_block_power_on(struct panthor_device *ptdev,
+>  
+>  	gpu_write64(ptdev, pwron_reg, mask);
+>  
+> -	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val,
+> -					      !(mask & val), 100, timeout_us);
+> +	ret = gpu_read64_relaxed_poll_timeout(ptdev, rdy_reg, val,
+> +					      (mask & val) == val,
+> +					      100, timeout_us);
+>  	if (ret) {
+>  		drm_err(&ptdev->base, "timeout waiting on %s:%llx readiness",
+>  			blk_name, mask);
 
-Move the this_cpu_ptr() dereference of the variable from the internal to
-the main header. Since it is all macro implemented, this_cpu_ptr() will
-still happen within the preempt/ IRQ disabled section.
-
-This frees the internal implementation (__) to be used on local_lock_t
-types which are local variables and must not be accessed via
-this_cpu_ptr().
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/20250630075138.3448715-2-bigeasy@linutronix.de
-
----
- include/linux/local_lock.h          | 20 +++++++++----------
- include/linux/local_lock_internal.h | 30 ++++++++++++++--------------
- 2 files changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4..2ba8464 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -13,13 +13,13 @@
-  * local_lock - Acquire a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_lock(lock)		__local_lock(lock)
-+#define local_lock(lock)		__local_lock(this_cpu_ptr(lock))
- 
- /**
-  * local_lock_irq - Acquire a per CPU local lock and disable interrupts
-  * @lock:	The lock variable
-  */
--#define local_lock_irq(lock)		__local_lock_irq(lock)
-+#define local_lock_irq(lock)		__local_lock_irq(this_cpu_ptr(lock))
- 
- /**
-  * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-@@ -28,19 +28,19 @@
-  * @flags:	Storage for interrupt flags
-  */
- #define local_lock_irqsave(lock, flags)				\
--	__local_lock_irqsave(lock, flags)
-+	__local_lock_irqsave(this_cpu_ptr(lock), flags)
- 
- /**
-  * local_unlock - Release a per CPU local lock
-  * @lock:	The lock variable
-  */
--#define local_unlock(lock)		__local_unlock(lock)
-+#define local_unlock(lock)		__local_unlock(this_cpu_ptr(lock))
- 
- /**
-  * local_unlock_irq - Release a per CPU local lock and enable interrupts
-  * @lock:	The lock variable
-  */
--#define local_unlock_irq(lock)		__local_unlock_irq(lock)
-+#define local_unlock_irq(lock)		__local_unlock_irq(this_cpu_ptr(lock))
- 
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-@@ -49,7 +49,7 @@
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
--	__local_unlock_irqrestore(lock, flags)
-+	__local_unlock_irqrestore(this_cpu_ptr(lock), flags)
- 
- /**
-  * local_lock_init - Runtime initialize a lock instance
-@@ -64,7 +64,7 @@
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
--#define local_trylock(lock)		__local_trylock(lock)
-+#define local_trylock(lock)		__local_trylock(this_cpu_ptr(lock))
- 
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
-@@ -77,7 +77,7 @@
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock_irqsave(lock, flags)			\
--	__local_trylock_irqsave(lock, flags)
-+	__local_trylock_irqsave(this_cpu_ptr(lock), flags)
- 
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
- 	     local_lock(_T),
-@@ -91,10 +91,10 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
- 		    unsigned long flags)
- 
- #define local_lock_nested_bh(_lock)				\
--	__local_lock_nested_bh(_lock)
-+	__local_lock_nested_bh(this_cpu_ptr(_lock))
- 
- #define local_unlock_nested_bh(_lock)				\
--	__local_unlock_nested_bh(_lock)
-+	__local_unlock_nested_bh(this_cpu_ptr(_lock))
- 
- DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
- 	     local_lock_nested_bh(_T),
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
-index 8d5ac16..d80b530 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -99,14 +99,14 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l = (local_lock_t *)this_cpu_ptr(lock);			\
-+		l = (local_lock_t *)(lock);				\
- 		tl = (local_trylock_t *)l;				\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({				\
- 				lockdep_assert(tl->acquired == 0);	\
- 				WRITE_ONCE(tl->acquired, 1);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);			\
- 		local_lock_acquire(l);					\
- 	} while (0)
- 
-@@ -133,7 +133,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		preempt_disable();				\
--		tl = this_cpu_ptr(lock);			\
-+		tl = (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			preempt_enable();			\
- 			tl = NULL;				\
-@@ -150,7 +150,7 @@ do {								\
- 		local_trylock_t *tl;				\
- 								\
- 		local_irq_save(flags);				\
--		tl = this_cpu_ptr(lock);			\
-+		tl = (lock);					\
- 		if (READ_ONCE(tl->acquired)) {			\
- 			local_irq_restore(flags);		\
- 			tl = NULL;				\
-@@ -167,15 +167,15 @@ do {								\
- 		local_trylock_t *tl;					\
- 		local_lock_t *l;					\
- 									\
--		l = (local_lock_t *)this_cpu_ptr(lock);			\
-+		l = (local_lock_t *)(lock);				\
- 		tl = (local_trylock_t *)l;				\
- 		local_lock_release(l);					\
- 		_Generic((lock),					\
--			__percpu local_trylock_t *: ({			\
-+			local_trylock_t *: ({				\
- 				lockdep_assert(tl->acquired == 1);	\
- 				WRITE_ONCE(tl->acquired, 0);		\
- 			}),						\
--			__percpu local_lock_t *: (void)0);		\
-+			local_lock_t *: (void)0);			\
- 	} while (0)
- 
- #define __local_unlock(lock)					\
-@@ -199,11 +199,11 @@ do {								\
- #define __local_lock_nested_bh(lock)				\
- 	do {							\
- 		lockdep_assert_in_softirq();			\
--		local_lock_acquire(this_cpu_ptr(lock));	\
-+		local_lock_acquire((lock));			\
- 	} while (0)
- 
- #define __local_unlock_nested_bh(lock)				\
--	local_lock_release(this_cpu_ptr(lock))
-+	local_lock_release((lock))
- 
- #else /* !CONFIG_PREEMPT_RT */
- 
-@@ -227,7 +227,7 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock(__lock)					\
- 	do {							\
- 		migrate_disable();				\
--		spin_lock(this_cpu_ptr((__lock)));		\
-+		spin_lock((__lock));				\
- 	} while (0)
- 
- #define __local_lock_irq(lock)			__local_lock(lock)
-@@ -241,7 +241,7 @@ typedef spinlock_t local_trylock_t;
- 
- #define __local_unlock(__lock)					\
- 	do {							\
--		spin_unlock(this_cpu_ptr((__lock)));		\
-+		spin_unlock((__lock));				\
- 		migrate_enable();				\
- 	} while (0)
- 
-@@ -252,12 +252,12 @@ typedef spinlock_t local_trylock_t;
- #define __local_lock_nested_bh(lock)				\
- do {								\
- 	lockdep_assert_in_softirq_func();			\
--	spin_lock(this_cpu_ptr(lock));				\
-+	spin_lock((lock));					\
- } while (0)
- 
- #define __local_unlock_nested_bh(lock)				\
- do {								\
--	spin_unlock(this_cpu_ptr((lock)));			\
-+	spin_unlock((lock));					\
- } while (0)
- 
- #define __local_trylock(lock)					\
-@@ -268,7 +268,7 @@ do {								\
- 			__locked = 0;				\
- 		} else {					\
- 			migrate_disable();			\
--			__locked = spin_trylock(this_cpu_ptr((lock)));	\
-+			__locked = spin_trylock((lock));	\
- 			if (!__locked)				\
- 				migrate_enable();		\
- 		}						\
