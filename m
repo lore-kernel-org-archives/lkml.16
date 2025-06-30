@@ -1,101 +1,193 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F3C285C9C
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3757628EA76;
+	Mon, 30 Jun 2025 15:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751298085; cv=none; b=pw0HXsCckXgCuVFvfeleQBUv0BratzhG+1A/FiNdzfqMiTTEs4oiEvXTodOlOKQttNSyuVgKpWe+nRss1vIuTnd5pHicsTqpPQJ89SvxW3QAWKgsBo/vM69gsPajiLSMT0ILrH94aiLy7qbFW2GourWKKQ1Y7Z0EU91UE1713io=
+	t=1751298098; cv=none; b=uaLykAMtujeFllCpyzHlGe7Y7cVZotwmTOmskR1OqOieaDhYGpfI5tuC7ecvLsmPJj9MY9Z4IF1k/MV83mvtdBMjWTKy38b7AdcdXQSw6iG/Vgfty86GZXBO+4nu6ZHtwZhtki51GqGe48LO5qSedSGsiM/EcpYcx3teMni3EvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751298085; c=relaxed/simple;
-	bh=dp4M1o18jvbyo3IZF1d8XpFW6YqauxGlQ8Ta9oRK/Pk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=r1vsuLZcvyBDnlLUSOyLeeetqG3KpwG06EQDTeGRaaNFeGAasAJNT8OPfipTiHPymm4HpOxJBqQq+vI3Mnin/2bDQiYiminxSF+2MIdLQVFcXPIqmye0nfvhTiA41tEy/koT4ZNscwN26nMO+4Bv39sMSs8HysfoLpVEf3n/fEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nUSTb/jm; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751298098; c=relaxed/simple;
+	bh=U/Cox21FflLFj8VZkRclH0nSlm2+lf5+a3+6iHEqdhg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HVheJOrFAja7UPiAInm9ZWG54IPaneR3gPd1ELso3aXdiP/v/xX0ACB03zImU6zj46ONPSF5wYbMYSPj9ALKxaG1bFpVCKiJLpLQ418AudAfT5Mi6bqkoBq8qiatc3tF0pU1Gx2vvHkalAUXDWnSTvEl63ksEaZpKw8iovpRk/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjNCpwim; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nUSTb/jm"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a365a6804eso2418004f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751298082; x=1751902882; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KseiYlHId62o+/W17588ZHb2GeDakhzrku8PZZP4CGk=;
-        b=nUSTb/jm3Bw/Wa2oKHdXFMrDCQaoKTuL8TJY77eFDwfHNPGN7/gJAWvrngJQYwN118
-         z5+rzYWlmGe4jH5sFSXDXk4AlxkQHKq/hliULq1O67WNtzRj3Djj1L2y/lKuPw4mm9va
-         8WcC3oh/jlEwUvDKR2Z19bYWLBSZN5couMBdPasu3vCnNehPyXVkk7Ysq3dyb0DolHTp
-         SFPWekNMNIL1oxt6eqIGdQ7NOcN1Q++FtWSx/3pXo9Dy5KMZtNTzkcapEl2ohM1bYIN/
-         MpYOvtmnG04qqtUETmq7nsbBANTUN9+RWBiC2EPDSn9Ld867W7deSgkAwJ8zQloBMZBx
-         2khg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751298082; x=1751902882;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KseiYlHId62o+/W17588ZHb2GeDakhzrku8PZZP4CGk=;
-        b=SkPuiEt8RetdmnG7nke2ScXd3XUG6awZTV9bgr+pHVsjQDAnw/TRCNbyjHs/+zhEU5
-         8t3A5aVzztPHD02W1jA6QOUesZjaKkHE2P28HRNB+HwzHn+rSYX603FduCSxpYqlG50B
-         paGLrhpwqkZ7eIBN5Sl0s+OoEibsvDaChgTcQv3W6zNlhFLX7DEud9VRzMqFMja3YIZZ
-         ikaNY+KMWa/qhqkMuEJt0clDh0wjmnYxBU7MNTlqPyp6sh7p44u21T/y6w4L5MTKbYGV
-         ac3HnA44oL6pkt53o+uuNZFtgM6w7Qrmk38GvjUyI7W/2EupmdCbidszXfxr4tavaQc9
-         wUQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPeXbc/8DBrsfAk34Qv7Xp1F0enXkTsnqpuP2vYuzmC2w4b3ZE8fM0XuThdWdtfXfzNLIqk44cbjrA3yI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqchNbf3Tb2v7duwgtm6GkhBQpNUWxtK1HZAzbPiuEawEpIuya
-	P3FL0Wk6DQBz7IM1iKlW6jGEd22zr4VLq6JTu2ffh3p+gtRdWPfThGU6H9ibaN9oy9g=
-X-Gm-Gg: ASbGncstL91qJnHBNTxI3HxCturMt9fVx8kQNOhIRYyCDkYASshoanTu7KB7IhQ9Ysc
-	t9ikLPF3ZLU5m793ZZJYE6jkjt7Lriy/OVq2MXFuKwN3+V4xEy6ajaa7AGNUxvSekwJ6A+jRqAr
-	YFqtiwhNTyym5PD3FW/yjBGcpm8fjFqVxV1HR3YNpXYzJIwt6qObYYeM/a6EBPjFlDTkAY3iwKn
-	3uHzj7+44U/2IJJv8EGT1pee8TK1gDUL0tLDYdZuMPs9Gz23vE9nDJvvzfCLyiDhyF3PGhs0bRh
-	uOs7jpvK57D0JeurfvmA7Jo9HYMDLkCTo4yDAY7ag4rJpQXhl7CvxNS6OBxOuwYp69D9PeVSKFD
-	74wRFVQU=
-X-Google-Smtp-Source: AGHT+IFWzLOIobY7pvawU+69BL4YqZzWGXgHVpyHRsypApfibBzKSF9kGVm7OZpx/NKr+Rf9FbbFXg==
-X-Received: by 2002:a05:6000:2b08:b0:3a5:39a8:6615 with SMTP id ffacd0b85a97d-3a8fdb2a677mr7432498f8f.11.1751298081899;
-        Mon, 30 Jun 2025 08:41:21 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad01csm170270975e9.22.2025.06.30.08.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 08:41:21 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Andy Yan <andyshrk@163.com>
-Cc: quic_jesszhan@quicinc.com, mripard@kernel.org, simona@ffwll.ch, 
- tzimmermann@suse.de, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <20250618080955.691048-1-andyshrk@163.com>
-References: <20250618080955.691048-1-andyshrk@163.com>
-Subject: Re: [PATCH] drm/panel: raydium-rm67200: Add missing
- drm_display_mode flags
-Message-Id: <175129808139.2286551.9507645918020654828.b4-ty@linaro.org>
-Date: Mon, 30 Jun 2025 17:41:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjNCpwim"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA1C1C4CEEF;
+	Mon, 30 Jun 2025 15:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751298096;
+	bh=U/Cox21FflLFj8VZkRclH0nSlm2+lf5+a3+6iHEqdhg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RjNCpwimw2bncyOG4/NcCqnnn6i504PvtEG1ewWFF+WznPYjs4f31Y3JoiJ6ffReU
+	 Rb14n6OW3scOzyiAwcIfI9wezDWhJVV7CVpVa3wom2WopxH8rlyrixJX41b+dok3c7
+	 Yv5GLEDdFOgw3mOKAK5CCC92v4NYZCRWxce44qcBqM/6Rcve9rkbqkSmSEUKiEJnxt
+	 i7Cx6lqCi7n5fhr9SxaIgmBx8id6RA0e/lXRpWE1wKcEzpEW74yqk9B211QyA9UeLs
+	 eGGYb9v3QGvnLbqSVSk4W1XWyngqvJce7mwOM/aWE98VM/OVIaSSU/3ehTKOrmHGik
+	 zJ6YzUVUMOReA==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55502821bd2so2519892e87.2;
+        Mon, 30 Jun 2025 08:41:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUfOLzyWMYpuwzEfQz8RBKrV1w8/pFr63neqbWWMwVhKtrVR4dYW7bx5vu2QwBC6wDcDmaDlf3sAhqQYZ9R@vger.kernel.org, AJvYcCVjYXQKqyMGZEhlDkbKcU0ubz1l+ztPuMEv2Z+I+D/XdZxDEyv8wdVsSYF+Kl9EuLtJ59bWViE/tBdLk6s=@vger.kernel.org, AJvYcCWSbr636inK6oYHqO99cnIUqInPmvDTasmoewnc5MxJIJfF8h+7spqzWwMNn3h45Km0aVaeWswQu5CNIsY9Fw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt+bVheeWtrEPvMrnZJYmAoMIcAZYJqi2Gua1YYPgxL8HCVU+Z
+	XrIhWwMW1nQVEH312M2hw6OKs4T+HbbywcSlyvl+MY/KFJXLMfVy/Hb8K794TrthKED3Rh8l1KU
+	MxwSf56D+VYA22GW9UChmaIgZcQOjT1o=
+X-Google-Smtp-Source: AGHT+IE7MU1OSdE0HWcTbqB/Z2gZNtSZo8xi396BsJAN275lk+KqWpRFVTfKZmP9/jZXHGVo6J1z+B9oYIGiaH3L3rw=
+X-Received: by 2002:a05:6512:15a5:b0:553:2e0f:96c with SMTP id
+ 2adb3069b0e04-5550b84cdd0mr4095199e87.23.1751298095233; Mon, 30 Jun 2025
+ 08:41:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+References: <20250623092350.3261118-2-gprocida@google.com> <20250625095215.4027938-1-gprocida@google.com>
+ <CAK7LNASNVh8fDErjSbcR1TiCfy=LM-j3iYSNpqAvp8OhGmsKjQ@mail.gmail.com>
+ <CAGvU0HnzfLxGhLT3Se4wNvyzEkpTKmd8ATFFgBRBVNrOKDXcgA@mail.gmail.com>
+ <CAK7LNATp1n2c9RqNoe0oztRtLoMy8JqHF1KqSRsj5avp3vjHCQ@mail.gmail.com> <CAGvU0HkKacQKB1q9NWcqChLGoMB+1vu9UdqYc+tBRbTTc3++GQ@mail.gmail.com>
+In-Reply-To: <CAGvU0HkKacQKB1q9NWcqChLGoMB+1vu9UdqYc+tBRbTTc3++GQ@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 1 Jul 2025 00:40:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQo0CyMdsVSg4dfWjVU+uYUSMdmwgLEdpRfTVcgOTuwzg@mail.gmail.com>
+X-Gm-Features: Ac12FXyyzl9OrOby5-5Dtzs7KHIbfWmtldkF9gESl3FWHywGg2_mXLcsMMx9C-M
+Message-ID: <CAK7LNAQo0CyMdsVSg4dfWjVU+uYUSMdmwgLEdpRfTVcgOTuwzg@mail.gmail.com>
+Subject: Re: [PATCH] gendwarfksyms: order -T symtypes output by name
+To: Giuliano Procida <gprocida@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Jun 30, 2025 at 10:46=E2=80=AFPM Giuliano Procida <gprocida@google.=
+com> wrote:
+>
+> On Mon, 30 Jun 2025 at 14:24, Masahiro Yamada <masahiroy@kernel.org> wrot=
+e:
+> >
+> > On Mon, Jun 30, 2025 at 7:05=E2=80=AFPM Giuliano Procida <gprocida@goog=
+le.com> wrote:
+> > >
+> > > Hi.
+> > >
+> > > On Sun, 29 Jun 2025 at 18:51, Masahiro Yamada <masahiroy@kernel.org> =
+wrote:
+> > > >
+> > > > On Wed, Jun 25, 2025 at 6:52=E2=80=AFPM Giuliano Procida <gprocida@=
+google.com> wrote:
+> > > > >
+> > > > > When writing symtypes information, we iterate through the entire =
+hash
+> > > > > table containing type expansions. The key order varies unpredicta=
+bly
+> > > > > as new entries are added, making it harder to compare symtypes be=
+tween
+> > > > > builds.
+> > > > >
+> > > > > Resolve this by sorting the type expansions by name before output=
+.
+> > > > >
+> > > > > Signed-off-by: Giuliano Procida <gprocida@google.com>
+> > > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+> > > > > ---
+> > > > >  scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
+> > > > >  1 file changed, 26 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > [Adjusted the first line of the description. Added reviewer tags.
+> > > > >  Added missing CC to linux-modules.]
+> > > > >
+> > > > > diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksym=
+s/types.c
+> > > > > index 7bd459ea6c59..51c1471e8684 100644
+> > > > > --- a/scripts/gendwarfksyms/types.c
+> > > > > +++ b/scripts/gendwarfksyms/types.c
+> > > > > @@ -6,6 +6,8 @@
+> > > > >  #define _GNU_SOURCE
+> > > > >  #include <inttypes.h>
+> > > > >  #include <stdio.h>
+> > > > > +#include <stdlib.h>
+> > > > > +#include <string.h>
+> > > > >  #include <zlib.h>
+> > > > >
+> > > > >  #include "gendwarfksyms.h"
+> > > > > @@ -179,20 +181,41 @@ static int type_map_get(const char *name, s=
+truct type_expansion **res)
+> > > > >         return -1;
+> > > > >  }
+> > > > >
+> > > > > +static int cmp_expansion_name(const void *p1, const void *p2)
+> > > > > +{
+> > > > > +       struct type_expansion *const *e1 =3D p1;
+> > > > > +       struct type_expansion *const *e2 =3D p2;
+> > > > > +
+> > > > > +       return strcmp((*e1)->name, (*e2)->name);
+> > > > > +}
+> > > > > +
+> > > > >  static void type_map_write(FILE *file)
+> > > > >  {
+> > > > >         struct type_expansion *e;
+> > > > >         struct hlist_node *tmp;
+> > > > > +       struct type_expansion **es;
+> > > > > +       size_t count =3D 0;
+> > > > > +       size_t i =3D 0;
+> > > > >
+> > > > >         if (!file)
+> > > > >                 return;
+> > > > >
+> > > > > -       hash_for_each_safe(type_map, e, tmp, hash) {
+> > > > > -               checkp(fputs(e->name, file));
+> > > > > +       hash_for_each_safe(type_map, e, tmp, hash)
+> > > > > +               ++count;
+> > > > > +       es =3D xmalloc(count * sizeof(struct type_expansion *));
+> > > >
+> > > > Just a nit:
+> > > >
+> > > >            es =3D xmalloc(count * sizeof(*es));
+> > > >
+> > > > is better?
+> > > >
+> > > > > +       hash_for_each_safe(type_map, e, tmp, hash)
+> > > > > +               es[i++] =3D e;
+> > > > > +
+> > > > > +       qsort(es, count, sizeof(struct type_expansion *), cmp_exp=
+ansion_name);
+> > > >
+> > > > qsort(es, count, sizeof(*es), cmp_expansion_name);
+> > > >
+> > >
+> > > That's a fair point.
+> > >
+> > > However, in the gendwarfksyms code, all but one of the sizeofs uses a=
+n
+> > > explicit type name. The exception is sizeof(stats) where stats is an =
+array.
+> > >
+> > > I'll leave Sami's code as it is.
+> >
+> >
+> > This rule is clearly documented with rationale.
+> >
+> > See this:
+> > https://github.com/torvalds/linux/blob/v6.15/Documentation/process/codi=
+ng-style.rst?plain=3D1#L941
+> >
+> >
+>
+> I can follow up with a change that adjusts all occurrences. That
+> shouldn't take long at all.
 
-On Wed, 18 Jun 2025 16:09:55 +0800, Andy Yan wrote:
-> Add missing drm_display_mode DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
-> flags. Those are used by various bridges(e.g. dw-mipi-dsi) in the
-> pipeline to correctly configure its sync signals polarity.
-> 
-> Tested on rk3568/rk3576/rk3588 EVB.
-> 
-> 
-> [...]
+I expected a new patch version (I do not know whether it is v2 or v3 since
+you do not add such a prefix),
+instead of breaking the style, and fixing it in a follow-up patch.
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
 
-[1/1] drm/panel: raydium-rm67200: Add missing drm_display_mode flags
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/4dfed55bfb4b500bbc45867c1b83789cc4dbd106
 
--- 
-Neil
 
+
+
+
+--
+Best Regards
+Masahiro Yamada
