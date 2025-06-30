@@ -1,220 +1,134 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7CA25BEE8
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2792524503F
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 15:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751297364; cv=none; b=TirqSYYEcJevFLcRK273Vwyia5BJKZ9PVx4+lIiqY6Irdme0VdvJ73Jyvun8ICpiGRFLjJk9u28UtYt40krInDV05D9WjLj9RFkp1eFaGoPn4LcTHNNYMhXmya451OdMFXr5nsqx8fMBxqY9Wm5JZpLjULZx2MlorcvetK69uwM=
+	t=1751297413; cv=none; b=FQND/vpSwTonMq2gYeMI1OJ2PWyPRB5P98au0ogFpCsOGoD+oAd3YyDOa9YgTXDQUVR5d31UHhX7MtWm0p6fzBjltZC7hG/3cyx9xRJ9WtqJCixTwkf3FmSZVrro5Lmtomkvi4HSWjI593ZHqtCCPrjt5WvQCZxLU4x5WQHOntY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751297364; c=relaxed/simple;
-	bh=FI4/f7digVt5NrM9MGntnaOnvVtX0vdt0Zw4KYUO2eU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KkQElKiB7EkFSukbH7K/5hnaougSvCG1YSfewM1z7E4PqzlEUaQ8VTMN1jAZrcXwChDjzQBv5/vIG/Rn8kXMbOAEuFALbHrLJfyWLDhu0jbmd6zeLom/7rGJc/1JpRcEfsumbuQMmzKEyi5Hwk5Dvt4KBlAm38VdKV/pxNX+3iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bQLcD5jk; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1751297413; c=relaxed/simple;
+	bh=BllDOR4O1NYlxxDEccGjhAe0ikj+1xUpBu6bzDAPMFI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTeVax3Ef7Y8f5TLxn2QgnUe02gskKYdbqJY8+v4FC/O1tmxYJ9L+M40FVvrhJX6BYHY7/4oD21Q6q/sq99SGRvis9EHZPJmyv9Px7c7/8w3iUoGGvgmqKxW7lGFrfyV6U6AXCSgdbc5U9EEA40Q+zbfqTUrgYFWf0uC+EKENWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qhW26vG/; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bQLcD5jk"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-453066fad06so30625295e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:29:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qhW26vG/"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so528865ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 08:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751297361; x=1751902161; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lyhLcg43dCZkOg3r9AJzjxtQxVvDwA6brW0xDWkXp7g=;
-        b=bQLcD5jk2oXEL315oMtS346bWOtztlnHqcyCEOZv8OVyUZi9YUgSgSR62hU/TCXY3G
-         umIXSK9mFWxaE5aCNyqy9MJfxJoOVdCjts3DjZaKmB+OmBmkxsS+5GWUz4bKgAJLFymc
-         hJZDms+3i92gXUkoAwVHLr5m34yWbLzSBUXprZCUnfNyCWccPhyWk8cpNKJfuxFTE0Ns
-         OyrcTwltGPnBfbtsk3K6rn42HQoRjS8Ew2FRTjdgLXvj5Ra/eXE+MQWjCO3CuzVROcvH
-         4szlmDWDwdD9HAp8g/m/TPvDbXSlMC4o6kzACIW/k32ZSqaG9azh4ymlFzqxrgPOKUc9
-         mzvQ==
+        d=google.com; s=20230601; t=1751297410; x=1751902210; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6opsNc2co1b9mTJ74/l+IUJLN4M52h5MNn2ClhbIZEs=;
+        b=qhW26vG/Mr7tzUf/NC4FY+VqQ4ywMFyFt0L9pd3tpIz+Wyvw8wh7MyBxFsFVFXslZ5
+         Qv8rrnrBMC1B6dwdOnhmJ9Pc9FcuZcCBqzj3mdWwtvSFy6WD5E/v9j0/xLQMT3FFIPMh
+         kA6G51xet84pjsUU13J/+Vi1kgHgevaiKpj7WB/+7T6vFYnmSxbywV+nNMOFrM81K+7O
+         P/EycJVficsau8uHoDc/dXUXaF02wDdElZS8aUP0/hdg9K4mAL1qe0iu3Lkiwzf68xQM
+         67EctCmIE0NBobjSr0kP02GZNe6sxMUGubDygdAL9YKgL4uXo3Umm7Hf0CGSlfpxsydE
+         ig/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751297361; x=1751902161;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lyhLcg43dCZkOg3r9AJzjxtQxVvDwA6brW0xDWkXp7g=;
-        b=QGlkkHjw0iKpjB7Mx+w/oAwxjjjTFQDrrN/FcaoRptZe2r7Tr9PgazRVLI7Ni8ldXw
-         DFUybvSHTmu6IH1AHUDfveEHGtnGeYxfreIjN5HR3QkKyiW1yVKeGUL5JHwfUNB+y6kx
-         ZZCMGEzqiMOd62i2WgeIoTq+m33BOycorKnxJy+HCV7P9PaRttaKXSH7FOzXR75n+by5
-         uzXmbVjRFRhDhgLWmsvDOAtU9gCXkCY6P35/uRPu1QEH3dQOrLekL/4nPmGnMkm1gAZc
-         gItSjOXM4LQ47+qOnEUZoluJH6XayvvrFgT2wJa4mjDIu0umUnNzhhd3d4CuLH0AVbgJ
-         hwyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo/cy1hqbcOY3TkgsGDCmkKQRcFmhWb86OHsqBGKQzbRGmZXfejNtAyq/nh4b0Sue5Q86aGSATfT67g+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv/d+s+TkTu/e/GNZ3Gnx+ZBr+xwVLZRwV6jXXFlcMeJSA3f/M
-	3tcgiSfJjy0bRnlnaUii1X6NzNnDpOqXBVGS3bGw6h+gKhaIwB1Y9V36N/9G871SvNo=
-X-Gm-Gg: ASbGncvBsjYTsa9bntjGwcw8q5Zks+MhWuReWkxSxx49Go6gLvNdu4ocoSBEnSJ4fYG
-	Ko1ks6ePM9BPGn7n1tpnvA4uw3jpqUApq1B8pG654B1UtsG0zxqcsHoa9UgEAs5skZGiaDkydil
-	mfmi0y9ydu6ayY2qemuaoNpnZ11EhAsfuZh4lpgwpTMkueAlkQ9oj3OGsC2Po+AvLtvRyw75Usl
-	+Fwcr7gl6L4e3ALBFwFylhcvc4wRLXs8cYt2mF0Dyos0fCZ47uOUJTp4p9mpnLyetC/2AqOR5aG
-	nXR8mK7KdXw+lVDYqIyicZLzTpvGLEOVoTamQ1ffvAR6WdZDQNRUnP7yimfFmaXuMyR7yYsyYo/
-	4Xkx/VNntT5dZbuUIBgyk6zVsncTRBkeQemYFxGpcCnQUVNSkOQ==
-X-Google-Smtp-Source: AGHT+IEnqbd8jzud+AKyN7wsGShNV1AQfJKdXYzndE6kZZl0r0O6j/o8j4SrtXPzHfSflaQKjGC8rA==
-X-Received: by 2002:a05:600c:3494:b0:453:5c30:a1fd with SMTP id 5b1f17b1804b1-453a33d6fb9mr28079915e9.8.1751297360613;
-        Mon, 30 Jun 2025 08:29:20 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb? ([2a01:e0a:3d9:2080:abe8:a49c:efe7:4dfb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a72dasm138329335e9.16.2025.06.30.08.29.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 08:29:20 -0700 (PDT)
-Message-ID: <80055981-3624-4165-af0c-3b60c345e8f8@linaro.org>
-Date: Mon, 30 Jun 2025 17:29:19 +0200
+        d=1e100.net; s=20230601; t=1751297410; x=1751902210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6opsNc2co1b9mTJ74/l+IUJLN4M52h5MNn2ClhbIZEs=;
+        b=WsXZkP5PQ5oQmYZTBCDV5VaBmEPsnzL14x5NsiN/6Y8n1/jNZ3LKfIfDOHSBksv9eJ
+         yQQ4GLeCTQCkn5vkCodZfd1lwRlF8sRE1eGzmTi0r6Q59jE1Sdd1OUii0QhdZiWU3RGn
+         guFeZXQU8OyBbTuw2hrxV39glUNNAUMxe6u88rMOqoBQtCgZlqJyfmIJC1RSRh8zNOoG
+         XvjtW7j790wrOQpLAJHwTnsmPF5wy8jLaSST2FVn0gONnmeXdihiaHNNCNOfK058zMF4
+         HlMzidy/cUSXEp6uXAxR9EVNUsJOuJAOMcK9R+RMasFjAkjd7Mnp9Bqjy79I7qoZeGb6
+         w7GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPC243WtWWR3SHraCRfvlHZZIe8mhQw58X2xWS3MC+fBFsR7Kk/TH9JK+ru6cxHNUIurQbMwnDH+EB9rI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznsRLwiZ6tjA5YIw0ftf+GK/IkRla4R/S8dHSZBUMh07hQbFtj
+	j+ADQqRhvmhTjXzaGmVh27ikVb4tdazSopcaMlRKq1I4/9b9q3svws9+HLbWh0u9E2z6ZEXgXWo
+	uCRzJnCFmaiCk7kLeReFNdefpXK0Z0DDxLOAKgF/Q
+X-Gm-Gg: ASbGncuDT96FSamvAraGq+q0p7wmZRDGu0hLuNtsOe6rptc/obqmPeW4Edb5AYoOHZA
+	bn3G2RDQaGT1MA4rJpq6GeuLvgS1Pk8yQuQGtdy0Ga6GH0DxiOkqeUwCvmtDtsRJxuMj+LoNSsc
+	L7aQ1+gE14s0y+H1G/5PH2QoEVZ/OimmsSsgZfBxw+/IRwnkDP5815nkGQQH/izzHd2PlC2k4=
+X-Google-Smtp-Source: AGHT+IGQGjMzPYqvHrrPwqf1QhnlH7tNKERMIu8sSHe9FrHU+qXbliarAAJ+DGV9IkdSguiOBWpYvS4klFTzpBc++hg=
+X-Received: by 2002:a05:6e02:11:b0:3dd:b59b:8da5 with SMTP id
+ e9e14a558f8ab-3df55381c7amr8194555ab.0.1751297410001; Mon, 30 Jun 2025
+ 08:30:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: document Samsung
- S6E8AA5X01 panel driver
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-References: <20250625-panel-samsung-s6e8aa5x01-v3-0-9a1494fe6c50@disroot.org>
- <20250625-panel-samsung-s6e8aa5x01-v3-1-9a1494fe6c50@disroot.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250625-panel-samsung-s6e8aa5x01-v3-1-9a1494fe6c50@disroot.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250630125128.562895-1-colin.i.king@gmail.com>
+In-Reply-To: <20250630125128.562895-1-colin.i.king@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 30 Jun 2025 08:29:57 -0700
+X-Gm-Features: Ac12FXwzUlNEDX7sNWl994RL2RjvyOQSm7Gp0RQD_NgRL6DsWH9nOxgzUZLtCTU
+Message-ID: <CAP-5=fXUjBE318VhCkS8qrTTuho33T6kLP_SGXNt13QQZLzuiw@mail.gmail.com>
+Subject: Re: [PATCH][next] perf drm_pmu: Fix spelling mistake "bufers" -> "buffers"
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/06/2025 14:41, Kaustabh Chakraborty wrote:
-> Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document the
-> compatible and devicetree properties of this panel driver. Timings are
-> provided through the devicetree node as panels are available in
-> different sizes.
+On Mon, Jun 30, 2025 at 5:51=E2=80=AFAM Colin Ian King <colin.i.king@gmail.=
+com> wrote:
+>
+> There are spelling mistakes in some literal strings. Fix these.
+>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Wait, why ? Why not multiple compatibles ?
+Thanks Colin!
 
-Neil
+Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM
+information")
 
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
 > ---
->   .../bindings/display/panel/samsung,s6e8aa5x01.yaml | 78 ++++++++++++++++++++++
->   1 file changed, 78 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..23dae6e961ae01c99de93bf4b4a067f2953f8edf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/samsung,s6e8aa5x01.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung S6E8AA5X01 display panel controller
-> +
-> +maintainers:
-> +  - Kaustabh Chakraborty <kauschluss@disroot.org>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: samsung,s6e8aa5x01
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: core voltage supply
-> +
-> +  vci-supply:
-> +    description: voltage supply for analog circuits
-> +
-> +  reset-gpios: true
-> +  width-mm: true
-> +  height-mm: true
-> +  panel-timing: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - width-mm
-> +  - height-mm
-> +  - panel-timing
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    dsi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@0 {
-> +            compatible = "samsung,s6e8aa5x01";
-> +            reg = <0>;
-> +
-> +            vdd-supply = <&panel_vdd_reg>;
-> +            vci-supply = <&panel_vci_reg>;
-> +
-> +            reset-gpios = <&gpd3 4 GPIO_ACTIVE_HIGH>;
-> +
-> +            width-mm = <62>;
-> +            height-mm = <128>;
-> +
-> +            panel-timing {
-> +                clock-frequency = <73094400>;
-> +
-> +                hactive = <720>;
-> +                hsync-len = <2>;
-> +                hfront-porch = <62>;
-> +                hback-porch = <26>;
-> +
-> +                vactive = <1480>;
-> +                vsync-len = <2>;
-> +                vfront-porch = <12>;
-> +                vback-porch = <10>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> 
-
+>  tools/perf/util/drm_pmu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
+> index 17385a10005b..988890f37ba7 100644
+> --- a/tools/perf/util/drm_pmu.c
+> +++ b/tools/perf/util/drm_pmu.c
+> @@ -210,17 +210,17 @@ static int read_drm_pmus_cb(void *args, int fdinfo_=
+dir_fd, const char *fd_name)
+>                 }
+>                 if (starts_with(line, "drm-purgeable-")) {
+>                         add_event(&events, &num_events, line, DRM_PMU_UNI=
+T_BYTES,
+> -                                 "Size of resident and purgeable memory =
+bufers");
+> +                                 "Size of resident and purgeable memory =
+buffers");
+>                         continue;
+>                 }
+>                 if (starts_with(line, "drm-resident-")) {
+>                         add_event(&events, &num_events, line, DRM_PMU_UNI=
+T_BYTES,
+> -                                 "Size of resident memory bufers");
+> +                                 "Size of resident memory buffers");
+>                         continue;
+>                 }
+>                 if (starts_with(line, "drm-shared-")) {
+>                         add_event(&events, &num_events, line, DRM_PMU_UNI=
+T_BYTES,
+> -                                 "Size of shared memory bufers");
+> +                                 "Size of shared memory buffers");
+>                         continue;
+>                 }
+>                 if (starts_with(line, "drm-total-cycles-")) {
+> --
+> 2.50.0
+>
