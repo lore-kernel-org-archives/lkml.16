@@ -1,182 +1,222 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2089.outbound.protection.outlook.com [40.107.102.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE53292B50
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751305510; cv=fail; b=GpnvbCxns2NVipaYaHVMWbZ14NF5rBbflBJUYYyfiToXomuHdgQOZWBiTRZLt8dOD98F/Ton4ta2ihlYNg2SbW/3PrCdOHYUkoYoXu4S0mKXBZQ3Q8yVeRNXtjGpzEY3rWMhMsdoYU3hv00DMP2XRPXdLMcTMbiQBrDYnyIU/18=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751305510; c=relaxed/simple;
-	bh=vHPtuzAFmcVrIxl/lGsv8et8FdOcWloAwV53oZVW9Ak=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IFVGe+SObMrBgVj0MrP8y8RjB9y7BupVZcQbS24VSCpCB7dQHeihCAS/ao7xbBsSvtJE5p72qRNfg72YaVI855NVQm1foFvImAG/gM0wCEpIcoNUnhFOiKAsNqVsLD5O7E+rXmsUHqOp7y8fiRE05+kSaFFyM6aOdPrxg7caoaU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pKCFpwf0; arc=fail smtp.client-ip=40.107.102.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676C123ABB1;
+	Mon, 30 Jun 2025 17:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751305790; cv=none; b=CYIM0O+0WWPHCwCR+/3NUHfmgHhHg0LXcOVlSyxS5x9bez8FCvqb/vPVz2Mjb6n/kxo4sWK+Um/H2D+ksnIQRDgjO4reHEw/Hdo0Z7WJjX1Z5RCWJP/omcfm8NiU7YHR81XeZMCIrOGgrGbTh66+6trxLT1kzjn0a3RF+WK6OWk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751305790; c=relaxed/simple;
+	bh=yoi4i5n4fYavqimbjruoWqPfoDDaWyBF/Jq0f8YDWfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b+kZQWM3s/4j4YMrgMG7UUm1V3MP7RPHrLqwKe6YMvFGlotj8kbVPHU6H8J9L8ZtapWRwpLjiy9Sn0VjsyEHYxxBaGhAKw85YLUGOKhVOiz0932KmlLWJYfZkFO7SrEKxj0M/zFA9UhJLyDXau6Kn6+DCPXEh3I6hwn3VtkYgCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obBBMxy3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pKCFpwf0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OVInnYAJ/ixGPTQfhGrj3CCW2vJ6KFSeEu1l4MXn8hPPekpjW6+FRSHMBqjIu067wrRrN8FYvH0IYimOWIAl9ThqIDt44E9EQKwTTKOrLu0Mw/deCl06qP9YBd2zgIeb2IK8+PXw/nSVEMsJsA+DrlWwu4Auj3hKCmbBkvpjf3vqxQFhu1I5OWztTaec/r1XvXqprbjOrbox8t1hDUcl8XFu0lbCJK0SBoEVvtMJRgbl3mpy3J+GvHtr06lvr4xg63U7FY91/GDi3mtUP1wj8G9W2Qyd4KbULlkzIwPwbUJtWg4KSG3sLtuAfwkwjwtOUQnJq80RgLKoCxFU4eUL3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XGZZU12Fppali/PQaTt2Hr86VZBUK/wr5rOB6aYYwiI=;
- b=oWzsj+54fAK6z1+OFQXsK9tAQAXwkwzixMMMMvv5SF0F5aWjnIRXkbSeL6oKf3Yznq8UX4lsT+GjU52Ud0VHFDB0+t4mDewjW6I58xVHqPDjVJg7Cyf41hDMHGNV8B6YBMQFEqy4C9902lE3j7t7I/DKej4LchOr1vkxsUrNrzvw27iXsWFXE2C/w+KGaKxMZ5csDNUW5wrI2/KR94Z0mvDgeSrIO3EiQ6eyOjYRa8SXjSmHl9138oqWjdPYOLvdyDqQ1X1OBAozif2J8nQ2T93UB/pHo4CMSpO5HNklknAjANvg1bz3bDRxNJT/Q7gDyXT9KDMoPs6nCJumGYw9FA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XGZZU12Fppali/PQaTt2Hr86VZBUK/wr5rOB6aYYwiI=;
- b=pKCFpwf0l2Skzbb7/zQKOIZ0xSW55syqtmJ/J+7LAi0Mew1j50D/ei0vb2efCP0NaKZDTPt1vpbK+9IGCfxvQOLLbCZmbG1BdD4VxzqMvdrZwvEc5ymC/B/nv2gkZ9hmOrXoZLQFJjcacWoY6ewnivQD6SLp6nnvOKrOWXGQzr3pmR77Xhn2O2+zzpbBUtmA9yk+m8eSpeaoMATcKrUJyXANo34y4FvkmNhHdX3JTZJTylIbwu4U74FoXzRHPQ0kqDFKnbbyEtJ6rJTHXP+orcdD0O5EPmlbU9ewxzs4zxoBUNBi0Qba3JbjeCF2uOaPZmCWPnl7e5IT3Eazq0rdCg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- SA1PR12MB8094.namprd12.prod.outlook.com (2603:10b6:806:336::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
- 2025 17:45:04 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8880.029; Mon, 30 Jun 2025
- 17:45:04 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Pedro Falcato <pfalcato@suse.de>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>
-Subject: Re: [PATCH v1 3/4] mm: split folio_pte_batch() into folio_pte_batch()
- and folio_pte_batch_ext()
-Date: Mon, 30 Jun 2025 13:45:01 -0400
-X-Mailer: MailMate (2.0r6265)
-Message-ID: <F5F9F9AF-4557-45D5-97FC-8BA1143FCA2F@nvidia.com>
-In-Reply-To: <20250627115510.3273675-4-david@redhat.com>
-References: <20250627115510.3273675-1-david@redhat.com>
- <20250627115510.3273675-4-david@redhat.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR18CA0017.namprd18.prod.outlook.com
- (2603:10b6:208:23c::22) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obBBMxy3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0854C4CEE3;
+	Mon, 30 Jun 2025 17:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751305790;
+	bh=yoi4i5n4fYavqimbjruoWqPfoDDaWyBF/Jq0f8YDWfk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=obBBMxy3BYFAIbQN+AMObBhPvreutHdvFk7yTDY8A+cNTdYBk98gSFqk4GADNqSyd
+	 sMZOT50584KhZdRUf44ZW1Ln4r+VePJl3cs+r3TMEZ86ltMHeYenz76amLMVgnU1sG
+	 uUHhQM3lFDfFjdY4cSNIc2e+kqdXzmcAoA9V3KIw+OKgTUhXQzUdkXVCKCDNVLZ/Nc
+	 7lQs8RZs7Eyc2nNAck9+1lUBJojyJA6vbs05Dr4ipTZRyIUL9R4JlKDwPVuPMHWREr
+	 5J7CGBabK0eGVLp/aR6suj+69CAzzk+UZdeSln7gJV51/KAIzejM1eVpjhTQ90eFun
+	 gHic5WT98P90g==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: apparmor@lists.ubuntu.com,
+	John Johansen <john.johansen@canonical.com>,
+	linux-kernel@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH v2] apparmor: use SHA-256 library API instead of crypto_shash API
+Date: Mon, 30 Jun 2025 10:48:05 -0700
+Message-ID: <20250630174805.59010-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SA1PR12MB8094:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05a1f24a-6f62-4819-3701-08ddb7fdd880
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BTk6x/QkjTTGFx91lVqpCBtc89WZu5LFW/2ITnHL+pT9WuRSA6ViWlVQ7UZB?=
- =?us-ascii?Q?5QVKHgQz10jHSShNjqNjmpZ1lJFz8UQqZIYtqyRvIuYE1MzfPFM1dSMMoLWw?=
- =?us-ascii?Q?ZzgshtTB/xuiqcqyhET3bBwrWBFvZ3e5iOBOLg72Vhb0tk5Kz8/ZqcAFwhKr?=
- =?us-ascii?Q?xt0W++uoCdvSMfWyAW4jtgCWxGagEnbxsllng3pfQmh4U3H9PKCICXemD+AW?=
- =?us-ascii?Q?qxTCNrfDpnzE/yMSDzQA26kq3JZ7nkx8f/NsRLAWIsiDvkVcsgL4RnO5R8UW?=
- =?us-ascii?Q?Y+zhhqzJYTzjo+0s40yRYk2FkMYCAoyDvBL2UYvVO4g2UAIJ3DjTDvvGKt+q?=
- =?us-ascii?Q?8tHZtN2FJqvP0/JxtWmyqhMkfujQmd5iklRWFNJO8b2ktQjNRUdoCtmP6MhG?=
- =?us-ascii?Q?NGPZNjoXPHsDwKDcvNwTKjl8kNzy+w6RUxc29JTmq7/hCtEQcqv/uRnLfn7a?=
- =?us-ascii?Q?xHr9o8lWVs0X05ou8m1JUSnmhUbTV/wCsfVTUa4JOejqquAOi8xyInd0vk0R?=
- =?us-ascii?Q?rbgOYsdA2wI4gHIZoxBJAwg+P506PRrYJdwedoT8KjfhxVQ3vCQCmqeqKaFs?=
- =?us-ascii?Q?z2tAgC6S/Hppio1b1ZvQejOv+hZuC3bgwy1+82Q9MOKny8jbTVL9y4YMSA35?=
- =?us-ascii?Q?oHHg1v3RplF9BjJBKJoSPW+vBoMGTWxiYzRyo7Gog4dk/u9efjQdFOPXj61V?=
- =?us-ascii?Q?XAf4lnsUIjQS+sV6d6iFUXXTHTf8/7k3fNZHDN67d1jmD4G1H+JCcSmv/hCK?=
- =?us-ascii?Q?EyTJ2G2iSTVwlsQRROmQwEKKI3lE83Vm79gP0SRU26O1ffBF1duHmijEt0rl?=
- =?us-ascii?Q?kfv3u4Sfi6QhF2GztjHOfD2tPO2VFsHNC49iKKYcVeMEoHtuConR1U47zDLk?=
- =?us-ascii?Q?EkaiNEwXDK+Z9bCSXn53NKTYa2mHBDhzrK1tNHg754ykcXh0kOdnx9UOMNxC?=
- =?us-ascii?Q?uurX+WvO5+A2YFuLfmNPEmVNWB+VxEFFqPL4pxc66WQSxOFgry0F6kRxqg6U?=
- =?us-ascii?Q?wdjisYR5A8sX3/8dxe+lIoMCsOBjy3EDVsSjqCx2Ot6YBnDG0ZFBw8h+DkDo?=
- =?us-ascii?Q?Vt27dB5UgoaRPMxDMvUMg128LPqOuMFr8p4b9dNDdwhc5D+FAVo2tqMp2OF3?=
- =?us-ascii?Q?S/tn0UNUzM9zbZ9rMpkvNA9Vxn6DqTqSkE67w5U8Cxj+BlxtSZpWikvxWaqJ?=
- =?us-ascii?Q?j9jEMQzFaQRlOeoKU55rXV73ZPO4RF+cpGaYNj4+GjiGoJ085GALu/v4xS2p?=
- =?us-ascii?Q?zVAuSNCmtDgBtYEZAdD+Naqa3stzWUt+1ld7/KzM3eoeG8vV6SMnHqh+ESWm?=
- =?us-ascii?Q?Zmhx4maTE7RBomdm7rC7afmbDdZUTJVcRZ+kjitdmzk/EPi0KzzLYWYClT8C?=
- =?us-ascii?Q?sKydYbVrvai6L6g2UiNo14L/oc5qS/Y8xyBBmeQuAHosy6uBDX5Wdo4atY4M?=
- =?us-ascii?Q?Rw5gU7Ywnco=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CVX2ukRN9wmRrnm8zHr8RSNSWZ8h87lcBoaZP0PUO1jyvrC2VtX2s26wj+LB?=
- =?us-ascii?Q?wim+kwaoQRqkyRQ5DVh94h6kngnS4RLeeswIpgZpQVTH9viwlg1zO9qQTiK2?=
- =?us-ascii?Q?FtosdKJ5baZHr4OdfuZchYfxlumT35qDmh3uIJk/CMoLtcRBzztpMdk1VZGR?=
- =?us-ascii?Q?i7BAPtXa4UygnObh0KTUz8pE47n146yANGTNCXu5XSNZMIKrz1VXkJFpD+kc?=
- =?us-ascii?Q?cKGATbcmBM3VEh8ihURFZPFMKkcelC2OfFOgnFcdgqHvV3ZdXZT0njaib+TC?=
- =?us-ascii?Q?ocmvOWb2ZBECKolvCXNjDcIid21QbReZ5A/W38tixZO4IsEomKTG41GJNv+7?=
- =?us-ascii?Q?E3dGWyD32o+MX9lrvudljYXMr5D0lcmqAg+HtbYItNC/pfSEj0ijpQranLqW?=
- =?us-ascii?Q?ketqL2rVAEFJ+JU21rwdHp64/gx9M3HLV6+Q0siVUcWDVgmN70K+OLUYlQ7a?=
- =?us-ascii?Q?c8hAgu2i1oWqiHf8jAqurdhGGfjldq1MbG0k7FppZcjgw0F5NSO6ji6YPZOY?=
- =?us-ascii?Q?k0u8koUI5IKPZeIYcneezk04HlOSACMiqMPjzLUHFjQZAu5U6LzIExXwx/pF?=
- =?us-ascii?Q?hnGgijAvXyhqNh1LsIcEdTBHbgdgJtFTP7CigeaKQqq6gL6F/IimqWNAwgKW?=
- =?us-ascii?Q?UhERyZV/w4TMUuMrZTFZ3BHaGf+G5uUUihkv1nyssxhkTbFHP91PswqIwbQO?=
- =?us-ascii?Q?xez05aJ3KlrX1q0C1A7l06WlLorNEc0Df6qusLTpp1vn0Wh8ebEs8TXR9FC6?=
- =?us-ascii?Q?V1rqdJYUM39CCuBBtEqXRo+R4duvDDz9KfNj4fyt/yA4H5kSl+1JUHFSGrlY?=
- =?us-ascii?Q?WUPFonkDE+65juyQ4kihDm+hE3x7Gwa2xBf/SFFdjadxdqJ55vPyIGfBvLKt?=
- =?us-ascii?Q?TDaFZmAVWwRyB/ad2IvAea31w2c76FC7JCsKaCBZyfDoAPWr0Hj2cAN3hVFx?=
- =?us-ascii?Q?uYbwYPzbK77UzKtNoZmvjKkKbNHFf+0foe3KuqhVkOn417Y8rcJ9qyHKEti4?=
- =?us-ascii?Q?7fEqtpSHxsnZEJW+h0SuWXlNl5FjP0+nAdGJvfj5hor0oaKfQW81BEPNuxZT?=
- =?us-ascii?Q?gN/iSnwch0RaFicB9v+gnFxOjKTWkfvHey9ZxSMiXU0rMotce11PUiXjw+Id?=
- =?us-ascii?Q?Y9c8oKb81PD5UG34fLATAru+yFBm6zAsEnT9xUphRiNXBIhmQ7CHUqOWy4xQ?=
- =?us-ascii?Q?78xIcZDeEKSTZZY+jejoPNZcIOUsHo+15LJOZwilPSC+IpMmMzLsogmbAkBD?=
- =?us-ascii?Q?PZAd2yIBZJxJ8kGTnIWKfLoJBIG3BkCm1Y8SRFZuPoQ4glSxke7m+nlxD4y+?=
- =?us-ascii?Q?KyNqYGj6RK2IPH3v616ykF7eNgg7qNkn/JfR50cbVZs4d6a+84p7cPlRVBBW?=
- =?us-ascii?Q?e4pjo3D1NFiJy7zLpiViFIloUeets6lsvL36l37D81GPgv8xmwTNb7IdyOGK?=
- =?us-ascii?Q?hsoHyF8w/nASJEaDVXorJuQgyRJLPQQM/8l74OBP/yoIaAfbvjn8jCIZ6kht?=
- =?us-ascii?Q?+PY86pgOKylbuqg5H7TmTElapo/F88oJfWXE4C3ksTH5WU74uHlPxAz5y0qc?=
- =?us-ascii?Q?zUpfW78LLLwh2gdo8CVCsuUQ9M4kYujI/vj7Opwh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05a1f24a-6f62-4819-3701-08ddb7fdd880
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 17:45:04.5570
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZpzPLnbkWVEDXEU9QgfBfvrTQXCRCfjZce66X19QyAukYAf1al4gQq1BR1TkZKbS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8094
+Content-Transfer-Encoding: 8bit
 
-On 27 Jun 2025, at 7:55, David Hildenbrand wrote:
+This user of SHA-256 does not support any other algorithm, so the
+crypto_shash abstraction provides no value.  Just use the SHA-256
+library API instead, which is much simpler and easier to use.
 
-> Many users (including upcoming ones) don't really need the flags etc,
-> and can live with a function call.
->
-> So let's provide a basic, non-inlined folio_pte_batch().
->
-> In zap_present_ptes(), where we care about performance, the compiler
-> already seem to generate a call to a common inlined folio_pte_batch()
-> variant, shared with fork() code. So calling the new non-inlined variant
-> should not make a difference.
->
-> While at it, drop the "addr" parameter that is unused.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/internal.h  | 11 ++++++++---
->  mm/madvise.c   |  4 ++--
->  mm/memory.c    |  6 ++----
->  mm/mempolicy.c |  3 +--
->  mm/mlock.c     |  3 +--
->  mm/mremap.c    |  3 +--
->  mm/rmap.c      |  3 +--
->  mm/util.c      | 29 +++++++++++++++++++++++++++++
->  8 files changed, 45 insertions(+), 17 deletions(-)
->
-Nice cleanup. Reviewed-by: Zi Yan <ziy@nvidia.com>
+Acked-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
 
-Best Regards,
-Yan, Zi
+This is the slightly revised version of
+https://lore.kernel.org/r/20250428190430.850240-1-ebiggers@kernel.org/
+that I'm planning to apply to libcrypto-next for 6.17 to avoid a silent
+conflict with the sha256_state => sha256_ctx rename, as per the
+discussion in that thread.
+
+You can also get this patch and its dependencies from:
+
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git apparmor-sha256-lib-v2
+
+ security/apparmor/Kconfig  |  3 +-
+ security/apparmor/crypto.c | 85 ++++++--------------------------------
+ 2 files changed, 13 insertions(+), 75 deletions(-)
+
+diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
+index 64cc3044a42ce..1e3bd44643dac 100644
+--- a/security/apparmor/Kconfig
++++ b/security/apparmor/Kconfig
+@@ -57,12 +57,11 @@ config SECURITY_APPARMOR_INTROSPECT_POLICY
+ 	  cpu is paramount.
+ 
+ config SECURITY_APPARMOR_HASH
+ 	bool "Enable introspection of sha256 hashes for loaded profiles"
+ 	depends on SECURITY_APPARMOR_INTROSPECT_POLICY
+-	select CRYPTO
+-	select CRYPTO_SHA256
++	select CRYPTO_LIB_SHA256
+ 	default y
+ 	help
+ 	  This option selects whether introspection of loaded policy
+ 	  hashes is available to userspace via the apparmor
+ 	  filesystem. This option provides a light weight means of
+diff --git a/security/apparmor/crypto.c b/security/apparmor/crypto.c
+index aad486b2fca65..227d47c149074 100644
+--- a/security/apparmor/crypto.c
++++ b/security/apparmor/crypto.c
+@@ -9,115 +9,54 @@
+  * Fns to provide a checksum of policy that has been loaded this can be
+  * compared to userspace policy compiles to check loaded policy is what
+  * it should be.
+  */
+ 
+-#include <crypto/hash.h>
++#include <crypto/sha2.h>
+ 
+ #include "include/apparmor.h"
+ #include "include/crypto.h"
+ 
+-static unsigned int apparmor_hash_size;
+-
+-static struct crypto_shash *apparmor_tfm;
+-
+ unsigned int aa_hash_size(void)
+ {
+-	return apparmor_hash_size;
++	return SHA256_DIGEST_SIZE;
+ }
+ 
+ char *aa_calc_hash(void *data, size_t len)
+ {
+-	SHASH_DESC_ON_STACK(desc, apparmor_tfm);
+ 	char *hash;
+-	int error;
+-
+-	if (!apparmor_tfm)
+-		return NULL;
+ 
+-	hash = kzalloc(apparmor_hash_size, GFP_KERNEL);
++	hash = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
+ 	if (!hash)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	desc->tfm = apparmor_tfm;
+-
+-	error = crypto_shash_init(desc);
+-	if (error)
+-		goto fail;
+-	error = crypto_shash_update(desc, (u8 *) data, len);
+-	if (error)
+-		goto fail;
+-	error = crypto_shash_final(desc, hash);
+-	if (error)
+-		goto fail;
+-
++	sha256(data, len, hash);
+ 	return hash;
+-
+-fail:
+-	kfree(hash);
+-
+-	return ERR_PTR(error);
+ }
+ 
+ int aa_calc_profile_hash(struct aa_profile *profile, u32 version, void *start,
+ 			 size_t len)
+ {
+-	SHASH_DESC_ON_STACK(desc, apparmor_tfm);
+-	int error;
++	struct sha256_ctx sctx;
+ 	__le32 le32_version = cpu_to_le32(version);
+ 
+ 	if (!aa_g_hash_policy)
+ 		return 0;
+ 
+-	if (!apparmor_tfm)
+-		return 0;
+-
+-	profile->hash = kzalloc(apparmor_hash_size, GFP_KERNEL);
++	profile->hash = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
+ 	if (!profile->hash)
+ 		return -ENOMEM;
+ 
+-	desc->tfm = apparmor_tfm;
+-
+-	error = crypto_shash_init(desc);
+-	if (error)
+-		goto fail;
+-	error = crypto_shash_update(desc, (u8 *) &le32_version, 4);
+-	if (error)
+-		goto fail;
+-	error = crypto_shash_update(desc, (u8 *) start, len);
+-	if (error)
+-		goto fail;
+-	error = crypto_shash_final(desc, profile->hash);
+-	if (error)
+-		goto fail;
+-
++	sha256_init(&sctx);
++	sha256_update(&sctx, (u8 *)&le32_version, 4);
++	sha256_update(&sctx, (u8 *)start, len);
++	sha256_final(&sctx, profile->hash);
+ 	return 0;
+-
+-fail:
+-	kfree(profile->hash);
+-	profile->hash = NULL;
+-
+-	return error;
+ }
+ 
+ static int __init init_profile_hash(void)
+ {
+-	struct crypto_shash *tfm;
+-
+-	if (!apparmor_initialized)
+-		return 0;
+-
+-	tfm = crypto_alloc_shash("sha256", 0, 0);
+-	if (IS_ERR(tfm)) {
+-		int error = PTR_ERR(tfm);
+-		AA_ERROR("failed to setup profile sha256 hashing: %d\n", error);
+-		return error;
+-	}
+-	apparmor_tfm = tfm;
+-	apparmor_hash_size = crypto_shash_digestsize(apparmor_tfm);
+-
+-	aa_info_message("AppArmor sha256 policy hashing enabled");
+-
++	if (apparmor_initialized)
++		aa_info_message("AppArmor sha256 policy hashing enabled");
+ 	return 0;
+ }
+-
+ late_initcall(init_profile_hash);
+
+base-commit: 1f7eb3c393ab9e56b5746f5fd31796a73bdd4d48
+-- 
+2.50.0
+
