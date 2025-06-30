@@ -1,332 +1,222 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011013.outbound.protection.outlook.com [52.101.125.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F6B28CF5C;
-	Mon, 30 Jun 2025 16:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302389; cv=none; b=AxtE+u7IS4+5tpQwd5aVMLqb2xPtf5jTyDOIHAMrxeTDTBGoRRof1mKkKTpyi5DQ+aN1A9Dus/oSGyPVUct1IVdPN7UuLsYFlMFIujGgpqm03l060a9TGkSPmPalkkJ0Mn58OwlhwB/KtSNhPldgGnkgxmHzhOGDfg1B+CAKUrc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302389; c=relaxed/simple;
-	bh=ep4H5DS3MTQP8H3Wh337KJZSDRJFmcIqp3N4/7e5CoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFzO/Ii6Zi8GNVxbI/4vL9oVuZJGTHRFK2DtNlqLFHJVVqeIZbrjaQec2i21wOfdS0AMvzPAGlJMO3dAR6kWHVbqKky3DeyIG6j8c1205Q4Pq615Xqg1x5JN6qkJZvODYOZIpsDNdqgIVF+ds16SeFvKm+EjGe2npn4Qn6bpujk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eH8g4433; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6305328CF5C;
+	Mon, 30 Jun 2025 16:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751302437; cv=fail; b=DhYnIEYXCaJIRCovK1664YW/KLuLgCBLH8FMlWbDk8ix2udJ4EZSr3H2NC3pkkuWqzJkmmeMVFbTyoRVpUONeq4i9moJkOADctN4WEeugktZIG5kB67Z5/pTXVdzrfy6AVkhXQNEpXs0uVYVbPN1xacLHkvT5Y2b4zlNH/B/hFk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751302437; c=relaxed/simple;
+	bh=eXZbNoVUm1M4QGvs5iN9FMlBRZW1QFEcngMzKg5UlDI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UJ+AeisfCx2iyzRuwNyJbmmxV/ZktGQvihHRHHDz2jWQpptMtyhJsOKu/BTiXT0vyC3n5jEBWXDWhS5LktT229sNMmkulSgNUcG3VcGBBzOSv5gzD0qWExLnu6cB8kbeFRKN+HSCLgBCqrXS93zfXAtuZDRQJ8M5q1hg2oBNIrU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=hSAMY9F1; arc=fail smtp.client-ip=52.101.125.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eH8g4433"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23526264386so21071995ad.2;
-        Mon, 30 Jun 2025 09:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751302387; x=1751907187; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rhwmu3jF4Je/8Qh/5IFiLV5HdTzjZvADtchCUmoZy+s=;
-        b=eH8g4433xy2OQYhbkYSJLYLTVfZfUUF9PwYmZvJuzGgH3ldzZkoKi+7b1SoAyxWHq9
-         smD6ei1jGlYhEx9U2OBmjX8JyRDbYrac/eolmQZOGBPQ5se8UJN38DVnhGcN1qU0lFID
-         joGWmu6jUyFUNTsCusieBmYcVyj8DEgeQcPsNEC+2X9xRdmCKhBGx0UJfB4gPX+RZ0hj
-         5pBD5ApTakKU58Uc2jzYJtbrv5j0e3CEhH1vkzeV9w2AE9B5znm44RvwKQ3Yqnh5bC5T
-         ioddEQtClV3vkxVqQ8p6AdGiEjHtynu0guOlZ5RVKHU9v10xgDjf9bOecZuGwHsXsgF3
-         4gWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751302387; x=1751907187;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rhwmu3jF4Je/8Qh/5IFiLV5HdTzjZvADtchCUmoZy+s=;
-        b=oQtlQL4Gj9CbgJ+xH1tRkw8p+SMWy1srASSuJIk5Vklzxr0NliPmSJ4DX7yk8Mgl0I
-         V+MbHqFaYm+BhnWnerK7VIFG6m0f9uR4QMK3sN1dkWBgZFX7YbWLCTlkj18rzIjgzJVx
-         ElMGIQEvdI2N0mmvVHzgr6Ou6rVSoYVVKIryXgyXZhsJB1Hba/wLxQTuXQJPw7GQYN+E
-         KZjjk8brvbEehRj0ooWnsMSUCBgOWUr1DTXsEoQ0hvh0r94e4O2N9PdZaSTWzPJnAX/u
-         jfcsDjDVlc41OTSc7U0u+f7lHSlKFaN/GIQPD3zC/l7juF0VHGVwTEOZEYBzvN5PdLOU
-         liOg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1fHki83q21Z5rbn22gqgiFUwfdTKc0ULxg/vPzQaaPXz2IuiU1mOMnyM0GVn5bGXoiDdE+ButYv5LcM8j@vger.kernel.org, AJvYcCUN/hQfBxoMFetRU4ba7sr/Y9u1OrrCtPt16bNH0VMIoq14iSjW7F19sbopiFd19SkNRpSt+F6nabD/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZdr5XslLb1iXkLZiAJ7b2//Jq7wKPYTgRQo3xGUz2ZxJzYK2d
-	4CuffZ8iiICcKRBiQGUghqryXPdQ5IwPeoAiX0H7T+Dc1EmdUEl2yNK+
-X-Gm-Gg: ASbGnctzVtb2tHEk0tRg/+X7QQFNZclHaKUZ9iGGO2uvpnnf4zOrw+FyRowjDqLXO6s
-	n4DvhjhFLn8gfBp4i5Cln6U+yEy83dIFyk/rudrox2OgbkRhtgzpB4DnoPdWD0a/DHZyZISCsvU
-	1VNHscF7utfj3YmtIFsaqoiGsdpiu6oZ+dO7ttrj+kOk9NbnPE9BFBz3qdtATvx/GyqIRrlDBtS
-	HO2uM3W5/KAUvpijBucpdsZwp74Ej5p2pIT6FN6iaqNVTkKefR7JZwYV70UNGYHr0yMFv+DgfVb
-	Yy2xNz1Jq6q8Nt/76t+ICoWwWmwVEyDBIIeL6b6EGbafNgWA/PBTjMBbtdx4rA==
-X-Google-Smtp-Source: AGHT+IEmP9coDGlfmU5ZCxbp02gfgkkPWL9aLzFkh3gfnmqdK4vHzSxpJeZniUGXfUtnHdsMYRf2oA==
-X-Received: by 2002:a17:902:db10:b0:235:1706:1fe7 with SMTP id d9443c01a7336-23ac3bffb5fmr204787945ad.4.1751302386491;
-        Mon, 30 Jun 2025 09:53:06 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c94b3sm84031335ad.245.2025.06.30.09.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 09:53:06 -0700 (PDT)
-Date: Mon, 30 Jun 2025 12:53:03 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: cp0613@linux.alibaba.com
-Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, arnd@arndb.de,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux@rasmusvillemoes.dk,
-	palmer@dabbelt.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb
- extension
-Message-ID: <aGLA78usaJOnpols@yury>
-References: <aGCbRguHwFY372Ut@yury>
- <20250630120457.1941-1-cp0613@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="hSAMY9F1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VN+qByEQtxcl2CfayTpBc6dOAnW264njc+wvp6PjBItODBF6gmqA6/chNWlvedA+keSbVwBI8j9lG61RCIHx7uKcy7IRgq+83OHX7/afnZmgavshP9Mu67uix5XiYxTJn4AZepqY+rT3gzyChx4vTzh+1PRZcCg8I9oIsskwZsfDwENblOhmGzfvOF4amszpKKn51d9wTqtUfzz3k2Sc7bJ1qemJh/7qG6Yilm5DNl9IHmAxfSN3g3Eqw2899yVcOHIXrgG6MpizFGnztluw9we5IRqa320TOfoXmmMrdUlaA00LO3Yn7r9bSLPRigYPhCWvky4K6Y/dclo3Vu4x5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eXZbNoVUm1M4QGvs5iN9FMlBRZW1QFEcngMzKg5UlDI=;
+ b=Cc6FQqPtxBiqLaaVOdLgSdOAxsaJImJLWRVtuvUIriiOBeM75txNDJkANm+ITFAD/fUdPUtrJzi84hKDFybI7At3bTpgAghqU5094hHUSBEWO6xTwiPax6Bo+uYRmMujrN9xOnMW5ldiX9GvWGlww87/FibXn7LJQ1R+xUNmz7Ky/vT3sWyHOzwmhnCIhDENGxi+tW3oT7BA8cV64A2DqzpW6sgofX/rZT7dpcEtpCp5BLCdfBr3FfdxMXV++ZbOoGD1t/1mtWfWVa+dT7Z6ZIPxxoaGHy76TBT0BCVKv3MP/0/R72v7wuaUqitofQE76lrCUsmTBVxahZTU03EnnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXZbNoVUm1M4QGvs5iN9FMlBRZW1QFEcngMzKg5UlDI=;
+ b=hSAMY9F1R3/2DdUlWfmEqFZ6e2wBCrEIOAFYMlCmy42NUe2LnB5ETmEJg8RHRSxwp3dPJmzBT+3mpRZEhOrD6sMAD4sDFWANvo8TX7/BYX0NQBP1Qgf/lVugT8XpoYrZxxWDaAWRwHJ2ZF55BY8DBycrMVxgVgrUtUNdaf3ThNA=
+Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com (2603:1096:604:3a0::6)
+ by OSCPR01MB14329.jpnprd01.prod.outlook.com (2603:1096:604:3a4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Mon, 30 Jun
+ 2025 16:53:50 +0000
+Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com
+ ([fe80::40e:e798:1aea:ca82]) by OSCPR01MB14647.jpnprd01.prod.outlook.com
+ ([fe80::40e:e798:1aea:ca82%3]) with mapi id 15.20.8880.030; Mon, 30 Jun 2025
+ 16:53:50 +0000
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "mturquette@baylibre.com"
+	<mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>,
+	"richardcochran@gmail.com" <richardcochran@gmail.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Biju Das
+	<biju.das.jz@bp.renesas.com>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v3 1/3] clk: renesas: r9a09g047: Add clock and reset
+ signals for the GBETH IPs
+Thread-Topic: [PATCH v3 1/3] clk: renesas: r9a09g047: Add clock and reset
+ signals for the GBETH IPs
+Thread-Index: AQHb5BV8M9FAEV3KpkiJgsZHjocfGbQT/wsAgAfmt7A=
+Date: Mon, 30 Jun 2025 16:53:50 +0000
+Message-ID:
+ <OSCPR01MB14647BA02F34A7BA3C98D6CCFFF46A@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+References: <20250623080405.355083-1-john.madieu.xa@bp.renesas.com>
+ <20250623080405.355083-2-john.madieu.xa@bp.renesas.com>
+ <CAMuHMdU1mEfiL3e=NwSjTchpDXt1YTM3AkS7K3aR5h4FK94WCg@mail.gmail.com>
+In-Reply-To:
+ <CAMuHMdU1mEfiL3e=NwSjTchpDXt1YTM3AkS7K3aR5h4FK94WCg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSCPR01MB14647:EE_|OSCPR01MB14329:EE_
+x-ms-office365-filtering-correlation-id: 8cc1c80f-d8d3-45f7-d983-08ddb7f6b076
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?MlNkcFRyQ3Mrd0hjWTFWNDNLdnI5QitlMzFWcUlFMzM0NjF0RnI5VHV0WTEr?=
+ =?utf-8?B?MWxnWkFCSE44dDVTU0VYYVhIb1hubDZuY2swRGl4MlhDQ1J6aFgweGxxZ2d6?=
+ =?utf-8?B?akhaaDJpZFhvMG4vZVVleGNpdUVoWU4xbkc1YUVyaXB2cmtHanF2akgyMUwx?=
+ =?utf-8?B?Q0Y1TEVoSmJCcnVyOTlQK1prMEM1UFpMMUlEaG84dVpCY1VPYkZsK1lGS3hU?=
+ =?utf-8?B?dkVjb1kwMHNsL1dUSXFwSi9LZXJVa04xNFpGRmw3WmtEeW41bjFUeTN2bzBV?=
+ =?utf-8?B?c01wYTh2bUJCYUpxWUtKQ1RqY2hWc0xrOXJ5eldzM2dGelQxbkdubmJSREFV?=
+ =?utf-8?B?UlYrT1lmS3ZZelNvalZSQXVMQ25PaVpueEVTbElQZ0gwTkZFcFd4S1lJQnA2?=
+ =?utf-8?B?VDJWUGdmYk8vYy9BazRqaXFjQnBERXJxMUxwZTlBblRjbG5nbmN2QUxDU2Fr?=
+ =?utf-8?B?M1RqeE9OQXoyckVrWE9ONHFqdGl6Q2FnRzlVWUNiU2RMbmUyUEdjdE1Nem5T?=
+ =?utf-8?B?OUFQeUpqM2JwWXNxRUhNY0NTRm8wS1dBN090YzV4WnFOdHpyd3RWanNBdkxD?=
+ =?utf-8?B?ZE96UUlXY0pnSzZMTmd3MHFyd2M4L09ZYlIzMTkrQTg3UjM3eFFDbzlLdlRs?=
+ =?utf-8?B?QjlobHFOSUhPNlVtT21zdDh0QVZ2V0lCbDRwSENBem0zV0ZWbVM1Um9HeDBQ?=
+ =?utf-8?B?bEtuODF4b0dSWWVlbGRoUVB3dENMTzlQeWpQODBjcmR4NGxsd3pYdTJDT2lQ?=
+ =?utf-8?B?MU5kVExXbmpoamhoekdWcnRObGFhazBHOGZIeEdwOVg1Mk5MbEh5UWdzanlj?=
+ =?utf-8?B?TExLb1FtcXVUYjZVRkIxT1B0dmRHTXEyb21aSzZDS3lPMjFxOVhQOUk2dHVj?=
+ =?utf-8?B?VWZZR3JEWVA4Qyt5Mm9mQWlDV0dRNVpUQUp4R3lMU0xZSFVPMWw1MytwbkRS?=
+ =?utf-8?B?SXlvLy9oNU5tYVpZd0FaTzdPQkFyNnh6NVRuNnpybm1QVWhZRmpTRStENTdW?=
+ =?utf-8?B?U3NlRyt3NHp5TFZjYlRjbzhQWVd3U3pDd1RqaThSOXR4b3QxNmhPbVRIaTBo?=
+ =?utf-8?B?MWtmbjBuTWk5ZnkzbElpNUpaMkFGQ1pmVzZpQ3l6M0JvdlNkY295TUR5VUhr?=
+ =?utf-8?B?OG1yN3VIMTM4NEFQUG9MalVsUU9tQXZMWGxkaTJDYStnMlFOKy8yTDlxOERQ?=
+ =?utf-8?B?eGdEZXZKd0hoWXliRi93eTQ3cU9GMmdLOHB6dWlTS2VPbTFUOExRNWZ5Q0JE?=
+ =?utf-8?B?aVE0dHRiYjA0ZFF1RUh0TTFzOFJNL25NRDd6UGNaamJQU0pOMCtXYVNLaEky?=
+ =?utf-8?B?Z1VvNFJmY09VU2VtVzdhQWw3ckN1eVBpNnJJTlh2SUp2d3l6NjR1OUgxQkFi?=
+ =?utf-8?B?YjlncWlrMDdlQ3ZwRlUzd0JDMVFlNUFqR080UlBpdTZQQWlIOWg1NVFtOVdU?=
+ =?utf-8?B?THhGbEkrd2g4a3FwaWRLY0tpZUNpaS9jRHJpR0l5UkphWkZxMkxPWVlBMldP?=
+ =?utf-8?B?RGZ5MHBIazNwQnN4RGdaMEd1V1piait4NkhBb1h2THJJWnBLMFdqTFhxS3JM?=
+ =?utf-8?B?cUVhMEd6QWp2UWcva051azF1UWoveHI3MGMyQ0EreFV0SlFjVnptTi9KT3h0?=
+ =?utf-8?B?dzZYd3lveXJReVpWMEJUZFMrNlN2enJ3djNBdGhyNEUrZmxPOGRZSG1ESytp?=
+ =?utf-8?B?RkViYk9tbFRIWHZ2N0xSaCtJOUVCSkgvTFRLc1paTkpXbXdEbkEvcWJOV3hT?=
+ =?utf-8?B?ek5GZlEvK2kycldzM0I5allHZGNYUVUrNFpWalYrLzdrZVNXMk9xTjI2YzNl?=
+ =?utf-8?B?WXZZaS9xMGxhd1VuMlFoeTlSaDFTR1hPZVEwZk0rckhPUndYY3pRSGliZ1hv?=
+ =?utf-8?B?OUVsamt0VmhmbG5HbVBHRzMrU3dFUUw0eEVxS3VvOW1Jd2RyOE5tYTBqbERm?=
+ =?utf-8?B?ZEN2M25UY3VUWGJwejd2L093OUpiUVp6RWdESEdvbjA0UkFFcFdRN3JmZ0Iz?=
+ =?utf-8?B?Zm1RdW1PMVl3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSCPR01MB14647.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?M2dtaE9UdHZVMmJpR2ZVeDJSRW1WNGJpbG4wc0RxL0ZRc0dRTkQwV20vNVc1?=
+ =?utf-8?B?UlYrUW1mRTlGTHB5OUxmVll6QnNYQlRhODRoSDRQQjNldjM2bEtmaHJXQUVl?=
+ =?utf-8?B?NkdTMEJRVmlPTlh3ZldKTmlDOFV6YnlPNEwvb0Q1NU80THJqTzJGeUptQ2Nh?=
+ =?utf-8?B?V2g3MnladnJqVDBVcWhad1pOTjBRRTZqbG5JOENBazE2aCtwcTRrR2szMldV?=
+ =?utf-8?B?QmxTbzhpMndNdFBXSHh0aENCaDBXUTl3RWowcHBmN3Z1ai9kUHQ0dTJOV1Zt?=
+ =?utf-8?B?VzVwSUhFM21nU1R1ZVIzN3Zwckh5TXRMVzhVNDFqc0ZCSHZJM1cydGVHbi9O?=
+ =?utf-8?B?Q3pmWm5kSUQrVGxzTkNxTkdYaEQzc2xVaCt6ZTM0YWVHa3o4K1BaQ3k2L2RZ?=
+ =?utf-8?B?Y1pTWU9SZjBOcXB4d1NTM0VnWWdldVN4MXBjNW1EYVhVVUY3RXJ0Y3c4N2U0?=
+ =?utf-8?B?UGpicFdpSlc3WGR4YVoxM0duZE4yalRib2Y1ZW9KQmhkZGZMTzRoL3NjenpJ?=
+ =?utf-8?B?MmR6R3hLSStKVzRLWDFURkROLzhSbk1zU0J1OGZYRmRiQlhtWit6dUxNNkNH?=
+ =?utf-8?B?Rk1tWVNUUjNqb2VmSU5RMGd6VEVhU01NWHQrZHZydGNnb2pBSTZnM0hVek1h?=
+ =?utf-8?B?UzNxaDA4SXNvTUJReFpyTE1wU1B3YXRWOEZ5SlNFMmsvaTMyWHJOR3I2Ukpj?=
+ =?utf-8?B?MVFoMWtqMFJQSnh1SUlGOTZ6UTBtWEhSS2Vrbm0wZldCZkpSSkFkZkY0b3pw?=
+ =?utf-8?B?UDZadGRtWGhvaG9RRFJKRUFQdUxjM25iZDkwYUJZNk9CQ0lHZmJuUlJabS90?=
+ =?utf-8?B?ekU2bW0zV0YzZXZFSTdldytCWHhnRjRHelZadE1uZm1QckZ1bmZpWHp6Y3ht?=
+ =?utf-8?B?RUc1SDhjS29EYnVidWl0M2RTUm5PMEJaYWttcEJtWkRwNjJDT0hwUFVlVlhJ?=
+ =?utf-8?B?SjFrNVZlWEd3VG14VFExRG5RcEd1MjI2V3c2R3RWUnBmdEVLUlpZT0lNdW1G?=
+ =?utf-8?B?UEJpcXhMcU1oS3M3WTZXT2FMSW43ZktHZVdETEE2MDNlUkU2UURXOEc3Y1JI?=
+ =?utf-8?B?ZUpINFVBSm9mTFd2VFZtVC9QS1Ficm1JK0t5cmgyMGUyTmE2WnMrVzlnNmZm?=
+ =?utf-8?B?VFBBQ3RNbFl4WXNLWXJNUlA3cHJjSmxmSkF3NXB4ZWFkVHd3YmR2SHJvREZT?=
+ =?utf-8?B?SjA0Z1k2L0tJVWhZVm1kSjJPTjVaRVVKVWc4d3ZMVFl4b29qbUNPNjIrT1FF?=
+ =?utf-8?B?RGJLWlJYUGl2YWNqS0J6bm9pUCtNeU0wbktMVmZ0ZkI1NG5QTmNQaHJ4bDFx?=
+ =?utf-8?B?YjU0dmdsMkFZWm5ZUUh0WFBkSk5nRVB4cVZFYnNDMWVrOGlUcEg4OGQyWlRX?=
+ =?utf-8?B?V1Zscm1zeWxWdlBIejJ2Q3I4b2pVTDJBTUUwYXpwdUh3SDJiQVg4eE4yUWg1?=
+ =?utf-8?B?ZnBvSFlsYlZNdHhPRkFXTnJJeFlLTWlSZzE4V0RXS201eEN3OENtc1FkdkFU?=
+ =?utf-8?B?Y2pBMGp1ai85UEozejNoSkhRYm8xOFhraEhKK0lZdllOYjBsRmNYdi9hNmh1?=
+ =?utf-8?B?K0UrQ3B0VlRoUnhHVkhxQTc3a0Z5Q3BRTUFmZ2lBek5oaERaYnNkbGJVUk9G?=
+ =?utf-8?B?L2NFOUJSZWJvYXJjZHZmL1FHUnJYM3g1TzBGTm52b0ZOQUVibm5Zc3JMYXhW?=
+ =?utf-8?B?UVQ1Y3pCbWdlUExoaHlzeVl3UVQxRGtlS0tFS21ldU53TXdaLzFFeEl0TTZi?=
+ =?utf-8?B?b1NCQWtIZ09tZW13bEdyOHBhWkp1ZytmQ3p2cndDWWZoei9MbllwVmxOdC9E?=
+ =?utf-8?B?WmpJTnZpRkxxcXlsYmNkQ1Z6Y1FORG9aeVdUZnNGU09KMEUxc0tLS28vWmNp?=
+ =?utf-8?B?YzNnY0hIa3dwUUpucXVUZGRoQy9Ca2t0S05sOWNyaG1IWGphcFJJWi9PZTdI?=
+ =?utf-8?B?Y3hlYmhXaXBBems0VnI5ekY1S3RsSGNGK0RnYXNFczN0YVV4Z3F6WmpQNW0r?=
+ =?utf-8?B?OHdjeW5IZ0lpRkYvaUlKc1hrV0FIeCsxTXovN1ZvYm9OMnpaZ0cvc2F6N0hD?=
+ =?utf-8?B?Tldkc2xoeU5mMks2R3RySXorOEhDSlFCUE1QV0o4QUNkZUhYRXVpMzlTSS9p?=
+ =?utf-8?B?eGJvRzQ5T2NUTmZ6eHF5aWtuYmVjd0dTRSs2M0o4TzZlZ1lHUHhIOXVKM05O?=
+ =?utf-8?B?VVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250630120457.1941-1-cp0613@linux.alibaba.com>
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSCPR01MB14647.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cc1c80f-d8d3-45f7-d983-08ddb7f6b076
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2025 16:53:50.6307
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4+cPo5oEO5flDZvbezhabO2DgbAGgK2A3Z59IR0RII82Ls0+TclD7LpqeONSHvdAr9fPziCL+nS13p56gIszmcrK6aSGR98Dd75WrdJ+SEo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB14329
 
-On Mon, Jun 30, 2025 at 08:04:53PM +0800, cp0613@linux.alibaba.com wrote:
-> On Sat, 28 Jun 2025 21:48:02 -0400, yury.norov@gmail.com wrote:
-> 
-> > > > > +static inline u8 variable_ror8(u8 word, unsigned int shift)
-> > > > > +{
-> > > > > +	u32 word32 = ((u32)word << 24) | ((u32)word << 16) | ((u32)word << 8) | word;
-> > > > 
-> > > > Can you add a comment about what is happening here? Are you sure it's
-> > > > optimized out in case of the 'legacy' alternative?
-> > > 
-> > > Thank you for your review. Yes, I referred to the existing variable__fls()
-> > > implementation, which should be fine.
-> > 
-> > No, it's not fine. Because you trimmed your original email completely,
-> > so there's no way to understand what I'm asking about; and because you
-> > didn't answer my question. So I'll ask again: what exactly you are doing
-> > in the line you've trimmed out?
-> 
-> Sorry, I misunderstood your question. Now I have made up for the lost original
-> email. This is my answer. The RISC-V Zbb extension only provides 64-bit data
-> rotation instructions rol/ror and 32-bit data rotation instructions rolw/rorw.
-> Therefore, for 16-bit and 8-bit data, in order to use the rolw/rorw instruction
-> optimization, the data is cyclically spliced ​​here, and the corresponding number
-> of bits is truncated after processing to achieve the function.
-> 
-> This data preparation process does introduce additional operations. Compared with
-> genneric's implementation, I use the web tool provided by David to illustrate.
-> 
-> The two functions that need to be compared are briefly summarized as follows:
-> ```
-> unsigned char generic_ror8(unsigned char word, unsigned int shift)
-> {
-> 	return (word >> (shift & 7)) | (word << ((-shift) & 7));
-> }
-> 
-> unsigned char zbb_opt_ror8(unsigned char word, unsigned int shift)
-> {
-> 	unsigned int word32 = ((unsigned int)word << 24) | \
-> 	    ((unsigned int)word << 16) | ((unsigned int)word << 8) | word;
-> #ifdef __riscv
-> 	__asm__ volatile("nop"); // ALTERNATIVE(nop)
-> 
-> 	__asm__ volatile(
-> 		".option push\n"
-> 		".option arch,+zbb\n"
-> 		"rorw %0, %1, %2\n"
-> 		".option pop\n"
-> 		: "=r" (word32) : "r" (word32), "r" (shift) :);
-> #endif
-> 	return (unsigned char)word32;
-> }
-> ```
-> The disassembly obtained is:
-> ```
-> generic_ror8:
->     andi    a1,a1,7
->     negw    a5,a1
->     andi    a5,a5,7
->     sllw    a5,a0,a5
->     srlw    a0,a0,a1
->     or      a0,a0,a5
->     andi    a0,a0,0xff
->     ret
-> 
-> zbb_opt_ror8:
->     slli    a5,a0,8
->     add     a0,a5,a0
->     slliw   a5,a0,16
->     addw    a5,a5,a0
->     nop
->     rorw a5, a5, a1
->     andi    a0,a5,0xff
->     ret
-> ```
-> From the perspective of the total number of instructions, although zbb_opt_ror8 has
-> one more instruction, one of them is a nop, so the difference with generic_ror8 should
-> be very small, or using the solution provided by David would be better for non-x86.
-
-And what about performance?
-
-> > > I did consider it, but I did not find any toolchain that provides an
-> > > implementation similar to __builtin_ror or __builtin_rol. If there is one,
-> > > please help point it out.
-> > 
-> > This is the example of the toolchain you're looking for:
-> > 
-> >   /**
-> >    * rol64 - rotate a 64-bit value left
-> >    * @word: value to rotate
-> >    * @shift: bits to roll
-> >    */
-> >   static inline __u64 rol64(__u64 word, unsigned int shift)
-> >   {
-> >           return (word << (shift & 63)) | (word >> ((-shift) & 63));
-> >   }
-> > 
-> > What I'm asking is: please show me that compile-time rol/ror is still
-> > calculated at compile time, i.e. ror64(1234, 12) is evaluated at
-> > compile time.
-> 
-> I see what you mean, I didn't consider the case of constants being evaluated
-> at compile time, as you pointed out earlier:
-> "you wire ror/rol() to the variable_ror/rol() unconditionally, and that breaks
-> compile-time rotation if the parameter is known at compile time."
-> 
-> In the absence of compiler built-in function support, I think it can be handled
-> like this:
-> ```
-> #define rol16(word, shift) \
-> 	(__builtin_constant_p(word) && __builtin_constant_p(shift) ? \
-> 	generic_ror16(word, shift) : variable_rol16(word, shift))
-> ```
-> How do you see?
-
-That's what I meant.
- 
-> > > In addition, I did not consider it carefully before. If the rotate function
-> > > is to be genericized, all archneed to include <asm-generic/bitops/rotate.h>.
-> > > I missed this step.
-> > 
-> > Sorry, I'm lost here about what you've considered and what not. I'm OK
-> > about accelerating ror/rol, but I want to make sure that;
-> > 
-> > 1. The most trivial compile-case is actually evaluated at compile time; and
-> > 2. Any arch-specific code is well explained; and
-> > 3. legacy case optimized just as well as non-legacy.
-> 
-> 1. As in the above reply, use the generic implementation when compile-time evaluation
->    is possible。
-> 2. I will improve the comments later.
-
-I'm particularly interested in ror8/rol8 case:
-
-        u32 word32 = ((u32)word << 24) | ((u32)word << 16) | ((u32)word << 8) | word;
-
-When you expand it to 32-bit word, and want to rotate, you obviously
-need to copy lower quarterword to the higher one:
-
-        0xab >> 0xab0000ab
-
-That way generic (u8)ror32(0xab, shift) would work. But I don't understand
-why you copy the lower 8 bits to inner quarterwords. Is that a hardware
-requirement? Can you point to any arch documentation 
-
-> 3. As mentioned before, only 8-bit rotation should have no optimization effect, and
->    16-bit and above will have significant optimization.
-
-I asked you about the asm goto ("legacy") thing: you calculate that
-complex word32 _before_ evaluating the goto. So this word32 may get
-unused, and you waste cycles. I want to make sure this isn't the case.
-
-Please find attached a test for compile-time ror/rol evaluation.
-Please consider prepending your series with it.
-
-Thanks,
-Yury
-
-From 5c5be22117a2bd0a656efae0efd6ed159d4168c5 Mon Sep 17 00:00:00 2001
-From: Yury Norov <yury.norov@gmail.com>
-Date: Mon, 30 Jun 2025 12:07:47 -0400
-Subject: [PATCH] bitops: add compile-time test for ror() and rol()
-
-If parameters for the functions are passed at compile time, the compiler
-must calculate the result at compile time, as well.
-
-Now that architectures introduce accelerated implementations for bit
-rotation, we must make sure that they don't break compile-time
-evaluation.
-
-This patch adds a test for it, similarly to test_bitmap_const_eval().
-
-Tested on x86_64.
-
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
----
- lib/test_bitops.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/lib/test_bitops.c b/lib/test_bitops.c
-index 55669624bb28..aa4c06df34f7 100644
---- a/lib/test_bitops.c
-+++ b/lib/test_bitops.c
-@@ -76,6 +76,56 @@ static int __init test_fns(void)
- 	return 0;
- }
- 
-+static void __init test_bitops_const_eval(void)
-+{
-+	/*
-+	 * ror/rol operations on parameters known at compile-time must be
-+	 * optimized to compile-time constants on any supported optimization
-+	 * level (-O2, -Os) and all architectures. Otherwise, trigger a build
-+	 * bug.
-+	 */
-+
-+	u64 r64 = ror64(0x1234567890abcdefull, 24);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(r64));
-+	BUILD_BUG_ON(r64 != 0xabcdef1234567890ull);
-+
-+	u64 l64 = rol64(0x1234567890abcdefull, 24);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(l64));
-+	BUILD_BUG_ON(l64 != 0x7890abcdef123456ull);
-+
-+	u32 r32 = ror32(0x12345678, 24);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(r32));
-+	BUILD_BUG_ON(r32 != 0x34567812);
-+
-+	u32 l32 = rol32(0x12345678, 24);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(l32));
-+	BUILD_BUG_ON(l32 != 0x78123456);
-+
-+	u16 r16 = ror16(0x1234, 12);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(r16));
-+	BUILD_BUG_ON(r16 != 0x2341);
-+
-+	u16 l16 = rol16(0x1234, 12);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(l16));
-+	BUILD_BUG_ON(l16 != 0x4123);
-+
-+	u8 r8 = ror8(0x12, 6);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(r16));
-+	BUILD_BUG_ON(r8 != 0x48);
-+
-+	u8 l8 = rol8(0x12, 6);
-+
-+	BUILD_BUG_ON(!__builtin_constant_p(l16));
-+	BUILD_BUG_ON(l8 != 0x84);
-+}
-+
- static int __init test_bitops_startup(void)
- {
- 	int i, bit_set;
-@@ -121,6 +171,7 @@ static int __init test_bitops_startup(void)
- 		pr_err("ERROR: FOUND SET BIT %d\n", bit_set);
- 
- 	test_fns();
-+	test_bitops_const_eval();
- 
- 	pr_info("Completed bitops test\n");
- 
--- 
-2.43.0
-
+SGkgR2VlcnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQg
+VXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogV2VkbmVzZGF5LCBK
+dW5lIDI1LCAyMDI1IDU6MTMgUE0NCj4gVG86IEpvaG4gTWFkaWV1IDxqb2huLm1hZGlldS54YUBi
+cC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzNdIGNsazogcmVuZXNh
+czogcjlhMDlnMDQ3OiBBZGQgY2xvY2sgYW5kIHJlc2V0DQo+IHNpZ25hbHMgZm9yIHRoZSBHQkVU
+SCBJUHMNCj4gDQo+IEhpIEpvaG4sDQo+IA0KPiBPbiBNb24sIDIzIEp1biAyMDI1IGF0IDEwOjA0
+LCBKb2huIE1hZGlldSA8am9obi5tYWRpZXUueGFAYnAucmVuZXNhcy5jb20+DQo+IHdyb3RlOg0K
+PiA+IEFkZCBjbG9jayBhbmQgcmVzZXQgZW50cmllcyBmb3IgdGhlIEdpZ2FiaXQgRXRoZXJuZXQg
+SW50ZXJmYWNlcyAoR0JFVEgNCj4gPiAwLTEpIElQcyBmb3VuZCBvbiB0aGUgUlovRzNFIFNvQy4g
+VGhpcyBpbmNsdWRlcyB2YXJpb3VzIFBMTHMsDQo+ID4gZGl2aWRlcnMsIGFuZCBtdXggY2xvY2tz
+IG5lZWRlZCBieSB0aGVzZSB0d28gR0JFVEggSVBzLg0KPiA+DQo+ID4gUmV2aWV3ZWQtYnk6IEJp
+anUgRGFzIDxiaWp1LmRhcy5qekBicC5yZW5lc2FzLmNvbT4NCj4gPiBUZXN0ZWQtYnk6IEJpanUg
+RGFzIDxiaWp1LmRhcy5qekBicC5yZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb2hu
+IE1hZGlldSA8am9obi5tYWRpZXUueGFAYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4NCj4g
+PiB2MjoNCj4gPiBObyBjaGFuZ2VzIGJ1dCByZXNlbmRpbmcgd2l0aG91dCBkdC1iaW5kaW5ncyBw
+YXRjaA0KPiA+DQo+ID4gdjM6DQo+ID4gVXNlcyB1bmRlcnNjb3JlcyBpbnN0ZWFkIG9mIGRhc2hl
+cyBpbiBjbG9jayBuYW1lcw0KPiANCj4gVGhhbmtzIGZvciB0aGUgdXBkYXRlIQ0KPiANCj4gPiAt
+LS0gYS9kcml2ZXJzL2Nsay9yZW5lc2FzL3I5YTA5ZzA0Ny1jcGcuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvY2xrL3JlbmVzYXMvcjlhMDlnMDQ3LWNwZy5jDQo+IA0KPiA+ICsNCj4gPiAgLyogTXV4IGNs
+b2NrIHRhYmxlcyAqLw0KPiA+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHNtdXgyX2diZTBf
+cnhjbGtbXSA9IHsgIi5wbGxldGhfZ2JlMCIsDQo+ID4gKyJldDBfcnhjX3J4X2NsayIgfTsgc3Rh
+dGljIGNvbnN0IGNoYXIgKiBjb25zdCBzbXV4Ml9nYmUwX3R4Y2xrW10gPSB7DQo+ID4gKyIucGxs
+ZXRoX2diZTAiLCAiZXQwX3R4Y190eF9jbGsiIH07IHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QN
+Cj4gPiArc211eDJfZ2JlMV9yeGNsa1tdID0geyAiLnBsbGV0aF9nYmUxIiwgImV0MV9yeGNfcnhf
+Y2xrIiB9OyBzdGF0aWMNCj4gPiArY29uc3QgY2hhciAqIGNvbnN0IHNtdXgyX2diZTFfdHhjbGtb
+XSA9IHsgIi5wbGxldGhfZ2JlMSIsDQo+ID4gKyJldDFfdHhjX3R4X2NsayIgfTsNCj4gDQo+IEkg
+aGF2ZSB0byBhc2sgeW91IGFnYWluOiB0aGVzZSBzdGlsbCBkaWZmZXIgZnJvbSB0aGUgc2ltaWxh
+ciBuYW1lcyB1c2VkIG9uDQo+IFJaL1YySC4gSXMgdGhlcmUgYSByZWFzb24gZm9yIHRoYXQ/IFdp
+bGwgdGhhdCBjYXVzZSBpc3N1ZXMgbGF0ZXI/DQo+IE9yIGlzIHRoaXMgdG8gYmUgc29ydGVkIG91
+dCBvbmx5IHdoZW4gdGhlIFBIWSBkcml2ZXIgd2lsbCBzdGFydCBzdXBwb3J0aW5nDQo+IHRoZXNl
+IGNsb2Nrcz8NCj4gDQoNCkkndmUgZGlzY3Vzc2VkIGludGVybmFsbHksIGFuZCBuYW1lcyBtdXN0
+IG1hdGNoLiBUaGUgbmV4dCB2ZXJzaW9uIHdpbGwNCnRoZW4gaGF2ZSBhcHByb3ByaWF0ZSBuYW1l
+cy4gU29ycnkgZm9yIG5vdCBtZW50aW9uaW5nIGl0IGVhcmxpZXIuDQoNCj4gPiAgc3RhdGljIGNv
+bnN0IGNoYXIgKiBjb25zdCBzbXV4Ml94c3BpX2NsazBbXSA9IHsgIi5wbGxjbTMzX2RpdjMiLA0K
+PiA+ICIucGxsY20zM19kaXY0IiB9OyAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBzbXV4Ml94
+c3BpX2NsazFbXSA9IHsNCj4gPiAiLnNtdXgyX3hzcGlfY2xrMCIsICIucGxsY20zM19kaXY1IiB9
+Ow0KPiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICBHZWVydA0KDQpSZWdhcmRzLA0KSm9obg0KDQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2
+ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0K
+PiBtNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNh
+bCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5n
+IHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtl
+DQo+IHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9y
+dmFsZHMNCg==
