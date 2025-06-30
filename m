@@ -1,92 +1,112 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E35C9478;
-	Mon, 30 Jun 2025 23:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25D64A23;
+	Mon, 30 Jun 2025 23:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751326946; cv=none; b=G+K/oiTf3pcpNlxBj7TYKPG3Dn9V0wdmg5IoFne2XJznpS8WLw10teVj6nHecWKEwFvyQ5erkLqud9SnpEAZ9qcpI4upNzwppVTgfji+VNP3uBNHMYDfak9tL0/6TdrSbMfjuIk9dRJa8EimpXfY/ogtVdpmRxoHR5tVQxZf+90=
+	t=1751327019; cv=none; b=lykX7CmYps0kciTtJKm/sCYaj3B2EqVjahCBl2mlL0lj0ezqCjuokE5+qaBHu134JeYMAriB4LajgKpE9sS3SCMZlwK2uNjskXvspJdDMZoJk43Qn97/prXiznTBa1ykOuGGuYTbTMEfKetz2LVA4xM0SGvDkY+RVD6Yq5A/070=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751326946; c=relaxed/simple;
-	bh=rh3nlERas9TapPRz3K7+kNhZCoAnY4Uej3U2bGe2vWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IBZwYud5ZuJKH/AN0cSp+CuCacEAb1He1M1nqUrrHmfsiIfYjcnyqOA8tAiNO/v0xqb0/cd5bsB/O8EZ/R33JNPfbhUIXJO/ZNe7yzqsbDFocTzlAN3bi1naqKK153B8hw7j4odgzSa12uRJ4BV6hOmxaAKkQ04gaBo6jvBiq94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LqPLfz4S; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751327019; c=relaxed/simple;
+	bh=aco2DdN75H51T0MMThpwMbD8vBYv7H1OQdM3HV4fHBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kLeD4kvtbmp+xj5R9OQwchlu/Haf/uKWoWmcH58vxJnh+nUWOgUpq50arcNmqP+8Xn6vT6E/wXuC73AP0PH5qvVxuAZRmecooMLN/bQ62hw2IATAHoanW+bj8jsHeQVQcR67OZctlEsz4ZarPvFbXYRhTU5pok4DfqfdeFCnQ8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TJtqDsDT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqPLfz4S"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-32ca160b4bcso50464941fa.3;
-        Mon, 30 Jun 2025 16:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751326942; x=1751931742; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rh3nlERas9TapPRz3K7+kNhZCoAnY4Uej3U2bGe2vWc=;
-        b=LqPLfz4SlZ5WNu/iiMD18iwe3FvMXxA8wmyCxyPqxmXIJFNSjPVcgXUN7SkVbTwOBP
-         XZg0OvcX/W+7FzV67p8YFxHpd7ExjapCbOFNXe1FJ6dx8XLmPKfbpdK57iQ/Wpa6Lztx
-         SP6FjJnJAaK5hETo67SHXhWdG32MeYVOH/xM8n0Q69R/opq6mOjLK/iTX5b0gxjRyXGT
-         IdvmH5kw3SWcQKoE7u2MaV++Lwz4CDBwH1K4ePrmTnyfZlOk80ljfeH80CBthabZcrlC
-         yXAs1XKKaFme9J653VDS0BdliQlgMFCigp9QxG3vA3KrbuWZAO/A1AU+wLaGZapf62aF
-         ZzBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751326942; x=1751931742;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rh3nlERas9TapPRz3K7+kNhZCoAnY4Uej3U2bGe2vWc=;
-        b=knHwNrENtBRlYSF5ZcGCOzcZT5yMkEcoeE5x1EEMLIKeM51gbDB3fNDaAFyN69jUGD
-         femjqcE54ms5EgDzpVSeXp52mtTRp4ZIYZT5MFnQli+jqY/2Zu75ck+jsbY+5wEVj2g7
-         C+3QlHH54Kqcx1+Y15EOCYhfw8DjZo1c2JgFJTOqzFxDVTtRHDlQl/X3mDbWdtUqT3U6
-         /XRmvNcMOEqXmszYJU238rYIel/JcxOd5S3Al/9jfyiqJZ07ZleJWh3J6ffQ2dAHeff1
-         kamoukeUOSFbyJbsq3A5ggZMcdxGCTpetfSMthX1Mq0b/+gYKzZ/qJjoFmvz8UU8Qs3b
-         hZJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEVfrXX/Fi38MGh6vfI65Jc7W9wayD5lGEM4U0dHGcxDQPICabM753ptKYjqiL0OlDCEaTcAlzDHlg2ro=@vger.kernel.org, AJvYcCXINA0mFQFujSzqHYkj+V6oftRB6GzvF7Hz4Sk1rC9o2iVrGXlWJ1WOKuNIHa1lU65BmQxHeANP87KbrmJVOQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwESOoAt9g4/YCtnac4XJnP6xJ+4pj/MhJPi44BDFrxwfyeWGSR
-	/DpmU3+7E/qvLC0+SLgt7x7DQZhRDQjv/oWnsWOzbT5cR2jXl4mBJNWw+AoNZgk/90AV/7Nae1J
-	K9RluSqduFWDgJlIQoFQxEI6wnb4YD3E=
-X-Gm-Gg: ASbGncvMTLQ1MRs/0pfoDuzAmzgB2+nSw54Bqwe6DSQbodz/e64YLSiMDZ7+ply23uc
-	0syTh4YNypzn2r7WXoawjrhotS1e9jqE2xLDtSWeiRn9TAbh7BEFtMOlDrGl37n1BObsrWDOwmq
-	wnuBw9pVtNR2aCiB9oY38SpOWyckaFWC638FG3Kg2/f3qIlbtKlPkOuVnDrcusUfNmtuCHmL0+L
-	DAbbmSpcUNvk2g=
-X-Google-Smtp-Source: AGHT+IHKzwFuoYiGs6BLNRBsw8vLVl3ZXjxhP1rnGprP3AKMDdferKDe9NwQpCgMCX61IGef+wM83Dp+Ied0IFzrm6M=
-X-Received: by 2002:a05:651c:204e:b0:32b:78ce:be8e with SMTP id
- 38308e7fff4ca-32cdc50d4a5mr46014941fa.32.1751326942269; Mon, 30 Jun 2025
- 16:42:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TJtqDsDT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=u10gs0DubzdW/5hXp3hBwVPoHLZPvTUQwaeUKc7D4sA=; b=TJtqDsDTRLpuqtCZVqr/vfiYab
+	NA1zi2pD9/cL3K0SEezkz4hlYRj5FQVGujdaR8xP2jl8JR7EqpWju6Mj8Hq7YCaInXSLlB1rzRrUB
+	Z2GfJYEl7M6r7CSyZIO18fz/NKlWG1DzAJwkE2owz/RZsaFUxJtlqssXCVV67o3mVTVCJkqyCkhqk
+	Rk8whJ1GmFZ3a8BlQuONonviC0ujJehTV0E1dqu4x1KH2JjIsTpuLxLDYRE6MulTpC3L7oi+uWj12
+	zWdah7aWyfsI++hhE4NkGm+kshQyvkdhP7QdrTQh0bf/xObKF83VNGtLq4P+hGPfBLHRssctht7Dm
+	rG+ADK+w==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWO9t-00000006uCf-0J7F;
+	Mon, 30 Jun 2025 23:43:33 +0000
+Message-ID: <52563c74-9644-4616-ab95-f899f1c881f5@infradead.org>
+Date: Mon, 30 Jun 2025 16:43:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630221511.3325123-1-vitaly.wool@konsulko.se> <20250630221628.3325244-1-vitaly.wool@konsulko.se>
-In-Reply-To: <20250630221628.3325244-1-vitaly.wool@konsulko.se>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 30 Jun 2025 19:41:46 -0400
-X-Gm-Features: Ac12FXy9kUEqIQu19neiqOoDWD6nkOAKmaRhgRzttoGkJWGOKVJd6rL73W37dDU
-Message-ID: <CAJ-ks9me9i-zkJcZerixEcyxQK764ubL9KQ22kM6B48du_fBig@mail.gmail.com>
-Subject: Re: [PATCH v9 2/4] mm/slub: allow to set node and align in k[v]realloc
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/66] kconfig: improve xconfig and gconfig
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+ <cb9bd1e4-9424-4ed2-bdfa-49c883c60a66@infradead.org>
+ <CAK7LNARnYi7-aL1NYj3s5udeBMjNEurHx0cDwbU14Uks6FXa9Q@mail.gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CAK7LNARnYi7-aL1NYj3s5udeBMjNEurHx0cDwbU14Uks6FXa9Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 6:16=E2=80=AFPM Vitaly Wool <vitaly.wool@konsulko.s=
-e> wrote:
->
-> Reimplement k[v]realloc_node() to be able to set node and
-> alignment should a user need to do so. In order to do that while
-> retaining the maximal backward compatibility, add
-> k[v]realloc_node_align() functions and redefine the rest of API
-> using these new ones.
->
-> With that change we also provide the ability for the Rust part of
-> the kernel to set node and aligmnent in its K[v]xxx
-> [re]allocations.
->
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
 
-The typo (slub) snuck back in.
+
+On 6/30/25 8:48 AM, Masahiro Yamada wrote:
+> On Mon, Jun 30, 2025 at 3:55 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>>
+>>
+>> On 6/24/25 8:04 AM, Masahiro Yamada wrote:
+>>> [xconfig]
+>>>
+>>>  - small improvement for choice
+>>>
+>>> [gconfig]
+>>>
+>>>  - Fix memory leak
+>>>  - Lots of refactoring
+>>>  - Migrate GTK 2 to GTK 3
+>>>  - Fix all compile warnings
+>>>  - Improve usability (grey out buttons, keep the item selection, etc.)
+>>>
+>>>
+>>
+>> Hi,
+>> I have tested all 65 patches here (omitting 52).
+>> They worked well. Good job.
+>> I will test your git tree/branch Monday/Tuesday.
+>>
+>> I did notice one visual difference. The GTK+2 version of
+>> gconfig (before the patches) uses an alternating white/light gray
+>> background for the menu items while the GTK+3 version (after the
+>> patches) uses an all white background.
+>>
+>> I prefer the alternating but it may be just some collateral damage
+>> in the name of progress.  Or could be something else entirely!
+> 
+> 
+> I think
+> [PATCH 15/66] kconfig: gconf: remove gtk_tree_view_set_rules_hint() calls
+> affected this.
+> 
+
+Yes, that likely did it.
+
+> gtk_tree_view_set_rules_hint() is deprecated.
+> 
+> 
+> The comment says "just do it in a theme"
+>  https://gitlab.gnome.org/GNOME/gtk/-/blob/3.14.0/gtk/gtktreeview.c#L11875
+> 
+> But, I do not know which theme should be applied.
+
+Agreed. I didn't find any help on that subject either.
+
+Thanks.
+
+
+-- 
+~Randy
+
