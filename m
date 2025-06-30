@@ -1,113 +1,87 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF8F28C87A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C628C014;
+	Mon, 30 Jun 2025 13:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289192; cv=none; b=A0XiEB2Hs6sLex0ca+L/oROj+tJtbimxGTQeFI2XBrJvt/TyX4GVhZcNNwzC/6pKMCEpeIboCA9GTRkw/7kF8tHx2wjaUCjz7SfIoo1i0iufidu/1gFup7rJM2sgVl0WVoG92YM59NUIZ+1OjPTSz1jhT6MD3FjE/aiywHjEDIE=
+	t=1751289199; cv=none; b=rsApfvKGuyDtiSAq+LAoZWKW8wEnbM+38B8CqZ9YldKw8F/l2CU2QH0vKp4f5keGRFCjt4yqW8qF/Th9V/169fj3LeQny+auF/Reyc6B6gTL9glLUKeF214zuaSoqHSP991xH6xCp+8sWGGFOJS01NcJDNH39C2cHHM9vLCeGn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289192; c=relaxed/simple;
-	bh=sBgkn0f8/4VXlX8UWPXjVuNBjjXBIZJ/mKg68iRvsJ4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=F/tGY5kQSW+IpqRCBDIV9kqci9Kixzwp3T36Y5/f9j+wUwgBmBe7k/0hB7EF0exhPLp+z4J8SwkFX2Vo11h1LDvrv0mUpP/QsGWaGrjlZ/emA0gixi+S6kqbPYx2aGOn8CGZzNtZ2DnGwcPOcRq7O265MF13GLt/EIIhqQcD+Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=Qt/xf8jv; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1751289199; c=relaxed/simple;
+	bh=Z2f49MRAkcAIik6EDCw58iFDWFajLQ9xjmzjWBeVoqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SZH0XKwq/cf+e+hff0wDj6cZFsBLVVjhb+AwGWJVWCqYflgrfxCD1ZYTLhLVcC3A4lC3mRG+Nr91gOWwUafS+QCXEIlimB38CjPUvg6rIKFBuiAZTc1QEi4zKkH6J3h0yPgHjBoksFk2yjEUxrLlzva3kfySBKwx3lcXXLW7vyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZRIuQjZP; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="Qt/xf8jv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRIuQjZP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751289198; x=1782825198;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Z2f49MRAkcAIik6EDCw58iFDWFajLQ9xjmzjWBeVoqQ=;
+  b=ZRIuQjZPQZdybLJd+HwOF98JZ12SgHGTzvyVBpiGwzYRobKL5RWMaL5A
+   olzTMo6MBd6h+4RrMK03TxGPb/CqtN3TuGLvgoZTwaLIvGn24BLpwzX7W
+   BaaiyiYtP/pMeivDEFUm35MS7OXxL5knBkSZlLhqrtPXT6IM0V3Q9EaWn
+   i5eqQ7EC9SfZjL7rl3KU2XateLl8UrgQwA7134FAERmGMrvG+QXHKytmt
+   wI9H2nW7Mp4jC6QJEZ6IVHpGb3N70wIjXcvQjkrGk8/c+4maWJiPPDTcy
+   I8avJTCEXspVfIqnnL5ZgGULicOrsVBDRgqFuYM3hN3px0rj6KTDiwoaN
+   w==;
+X-CSE-ConnectionGUID: 2M081xrxSJWCmUZd74ig/g==
+X-CSE-MsgGUID: O06uZWULTIWOMLrfgztsiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53475783"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53475783"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:13:17 -0700
+X-CSE-ConnectionGUID: E8Oiju1TSjWVo2FwFfPkLA==
+X-CSE-MsgGUID: wV9Um+L9QVS/vJetc8RE2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="153996838"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 06:13:15 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWEJt-0000000BJYV-0Nrz;
+	Mon, 30 Jun 2025 16:13:13 +0300
+Date: Mon, 30 Jun 2025 16:13:12 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] pch_uart: Fix dma_sync_sg_for_device() nents value
+Message-ID: <aGKNaKvndRhQhwwE@smile.fi.intel.com>
+References: <20250630121021.106643-2-fourier.thomas@gmail.com>
+ <624ba0b2-afe0-4111-96b9-8b678b6472fe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751289184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TpapsnvN2qo9hhPhQHWIegeAB6bx1Q9QSQ1S7RYoiB8=;
-	b=Qt/xf8jvowFgC12MA52xjmF0ThLOYdQaLftpgkvXJadJkSgMfDayzMLNa8IjYygLdcFLhg
-	z/WC7CnjE3bpRYZ4rwLuQI1pdSLIE7CU75h+QkuZ2Y09OPbcbCc5GtizQAnuqrkjZM2hEr
-	9g+wkuXxX/kxtOJz+KRFIv+SAmTBAq9wmztrlyEapOsPglHrN1D9qrrrspbcDhnGk9nC1h
-	cuMV2maGNu/Zfo+CcABkJBAczKh13xrTz88Jfk3CvOLAU81kP1lutYYfAXHTeCV33uvS54
-	ezpbVrnGiUMKbvOfrw6k+E9+IW3i1ABrBldKqDlaXHZKXE3J7lOqibP/spxoTA==
-Content-Type: multipart/signed;
- boundary=cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Mon, 30 Jun 2025 15:12:56 +0200
-Message-Id: <DAZW78SRQQ0Y.2R1T9V72Q7AZH@cknow.org>
-Cc: <llvm@lists.linux.dev>, <oe-kbuild-all@lists.linux.dev>, "Dragan Simic"
- <dsimic@manjaro.org>, "Quentin Schulz" <quentin.schulz@cherry.de>, "Johan
- Jonker" <jbx6244@gmail.com>, <devicetree@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/8] arm64: dts: rockchip: Refactor DSI nodes on rk3399
- boards
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "kernel test robot"
- <lkp@intel.com>, "Rob Herring" <robh@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
-References: <20250627152645.740981-3-didi.debian@cknow.org>
- <202506290852.bWro2lBe-lkp@intel.com>
- <DAYXOI4WITJW.1G5DBWEQDDY1Z@cknow.org>
- <9f1ac97a-6109-40d1-bf85-f2a8e25138f0@kernel.org>
-In-Reply-To: <9f1ac97a-6109-40d1-bf85-f2a8e25138f0@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <624ba0b2-afe0-4111-96b9-8b678b6472fe@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
---cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Mon, Jun 30, 2025 at 03:01:01PM +0200, Jiri Slaby wrote:
+> On 30. 06. 25, 14:10, Thomas Fourier wrote:
+> > The dma_sync_sg_for_device() functions should be called with the same
+> > nents as the dma_map_sg(), not the value the map function returned.
+> 
+> Care to explain why do you intend to sync more than mapped? "should be
+> called" is way to vague.
 
-On Mon Jun 30, 2025 at 7:57 AM CEST, Krzysztof Kozlowski wrote:
-> On 29/06/2025 12:09, Diederik de Haas wrote:
->>=20
->> Luckily I've now found why my build script didn't catch it.
->> ```sh
->> export PATH=3D~/dev/kernel.org/dt-schema-venv/bin/:$PATH CROSS_COMPILE=
-=3Daarch64-linux-gnu- ARCH=3Darm64
->> make distclean
->> make debarm64_defconfig
->> make CHECK_DTBS=3Dy W=3D1 rockchip/px30-cobra-ltk050h3146w-a2.dtb
->> <quite-a-long-list-of-all-boards-at-least-I-thought-so>
->> ```
->>=20
->> (debarm64_defconfig is my own defconfig based on Debian's kernel config)
->>=20
->> That long list didn't have ``rockchip/rk3399-rockpro64-screen.dtbo``.
->> Is there a better/simpler way to validate all rockchip boards without
->> having to explicitly list each and every one of them?
-> make defconfig && make
->
-> or make dtbs
+It's documented as the correct use of the DMA streaming API.
+Should we go deeper and understand why?
 
-``make dtbs`` is faster then I recalled, but I do like the detail with
-``make CHECK_DTBS=3Dy W=3D1 rockchip/<board1>.dtb rockchip/<board2>.dtb``.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-If I don't specify a list of boards, then it will build them all
-including freescale/qcom/renesas/etc, while I only want the rockchip
-ones. And as my script takes 20-30 minutes, that will probably be
-several hours. Per run. And I ran it after each patch.
 
-Giving ``rockchip/*.dtb[o]`` as parameter is basically what I want, but
-I'm not aware of that being possible.
-OTOH it's (already) a script, so I will probably just do a ``find`` to
-dynamically generate the board list.
-
-Cheers,
-  Diederik
-
---cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGKNWgAKCRDXblvOeH7b
-brfvAQCxEpSIjkdmRZ7MkQ5i4THNqBXbUOtLpJCTsHAh8TEeqwD7Btya8sIXw2rg
-yTjCXv4ijLgp0OdfAo5k5i8MXuWUyQI=
-=isL+
------END PGP SIGNATURE-----
-
---cabcb7cd44803ee80fe883dca4e1018394457acca069f00ba0876c0d4cf7--
