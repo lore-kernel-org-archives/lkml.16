@@ -1,55 +1,69 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041D125B30D;
-	Mon, 30 Jun 2025 13:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C49E28A73D;
+	Mon, 30 Jun 2025 13:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290662; cv=none; b=Xq197WEJfft7DjcOraUvNDba4qSV0kvO0sZipMmwHuZpPFnJjUV7FYooQrlQWSOJyDp07+lrdPZM9orbdcZLYHMi5gxbNrv/Qx1vLKW9qbRoh4Rd4NesAdzqSZP68N8IUe7i3LxuVX6tmazlHjEvYBiXtB/OR5cUIolt7bX8hVE=
+	t=1751290681; cv=none; b=TdOZHmfUEx4YAWN3H5XCwgWHnOCU4Iud7NxBYN8A72zbxUOp4KIOAf0FqUzzL3OXsHQ6sHK0yrYLVaLWpC7zQkEmLM5dmYBaMR/ulwwGJ6E9htUgWV1rfpliyxsHsLhnsaatO6XhgYK/P9x0aEpnozZlpNNI6sPc9pVIiKKFkWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290662; c=relaxed/simple;
-	bh=O4qRLRexRAuK+5ApxruyQ2/Nu+qVASNZCX7hgb3Bh1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owIYBkKIyE7SQmq+TY56kclRKWdlC4BjsJF8FwWKKowAX+RISDkiytJMmQyyteh+XCvqQje7f5/xSg8fZOziZ1aP2myazz96sYy9CGdZb/FVlrX+FlSPsbdkbxOftEkZhZlJ0ZDlBTo2CbZlk4lYTzITrslcS3WWibtZmLgWxdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id DB46968AA6; Mon, 30 Jun 2025 15:37:34 +0200 (CEST)
-Date: Mon, 30 Jun 2025 15:37:34 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, Christoph Hellwig <hch@lst.de>,
-	Alan Stern <stern@rowland.harvard.edu>, Xu Yang <xu.yang_2@nxp.com>,
-	ezequiel@vanguardiasur.com.ar, mchehab@kernel.org,
-	hdegoede@redhat.com, gregkh@linuxfoundation.org, mingo@kernel.org,
-	tglx@linutronix.de, andriy.shevchenko@linux.intel.com,
-	viro@zeniv.linux.org.uk, thomas.weissschuh@linutronix.de,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, imx@lists.linux.dev, jun.li@nxp.com
-Subject: Re: [PATCH v2 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-Message-ID: <20250630133734.GA26768@lst.de>
-References: <20250627101939.3649295-1-xu.yang_2@nxp.com> <20250627101939.3649295-2-xu.yang_2@nxp.com> <1c4f505f-d684-4643-bf77-89d97e01a9f2@rowland.harvard.edu> <20250629233924.GC20732@pendragon.ideasonboard.com> <CANiDSCswzMouJrRn2A3EAbGzHTf88q_qQ=DC_KX7dbf_LJzqBg@mail.gmail.com> <20250630082313.GB23516@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1751290681; c=relaxed/simple;
+	bh=pil8rwdyDHVzTwX+qokMXU4HAHouwODl0NcItMy+hb4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=j+D9iW/eeglbQi9rb31bRWgKtRHDbUaTLmbixpSVzEfD/0oImh1rNOmUAO+ldCm6AKWvNMIn3A+WetosOIgRhiE4ye48fcgfm+nrR1CgTv0Ho8XBJ9UL0F2b3CrpqYCjcJDbBadzBoNZtHxOq8UaOKjviu2hpLnsE3n5lMQP5mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fm175RJH; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fm175RJH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=pil8rwdyDHVzTwX+qokMXU4HAHouwODl0NcItMy+hb4=;
+	t=1751290680; x=1752500280; b=fm175RJHmO2NmbW53IX252IcpDKPWUtkwlAE8FkHcM6zr8C
+	xw02Cx2Q0+NqipO8MZxIQPNgb3KcE3jtaQH8v+5gGLY9fZ1uGP8KprPiq/9SywwE47gn5BoA2SS6c
+	h6wtetbaaKg7m5I0LNFmY35lpyXzmSrSNB1/qdCmfzRLroOikXM5zQNIKMCVnRKdLRqtA6WPETt6P
+	PqvtlD43ut9xIuWuII7fUoBLKXskc61y5ylsH6ws09Uy/JAGMT3dZrhbsUVx0bJRacTK08lPBFvBE
+	3RVB3rQjg8Dr9uhTwLOuaqjkYGOcxKk1aBB3F+B813ux428GCusEayH3gs0EWpXw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uWEhn-00000001NDO-3pFP;
+	Mon, 30 Jun 2025 15:37:56 +0200
+Message-ID: <282d9d1264c541343462dd7982c4f5dbc029c660.camel@sipsolutions.net>
+Subject: Re: [PATCH v2] wifi: wilc1000: Handle wilc_sdio_cmd52() failure in
+ wilc_sdio_read_init()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Wentao Liang <vulab@iscas.ac.cn>, ajay.kathat@microchip.com, 
+	claudiu.beznea@tuxon.dev, kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Mon, 30 Jun 2025 15:37:55 +0200
+In-Reply-To: <20250519015415.966-1-vulab@iscas.ac.cn>
+References: <20250519015415.966-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630082313.GB23516@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-malware-bazaar: not-scanned
 
-On Mon, Jun 30, 2025 at 11:23:13AM +0300, Laurent Pinchart wrote:
-> Christoph, you mentioned
-> 
->   Right now we don't have a proper state machine for the
->   *_kernel_vmap_range, but we should probably add one once usage of this
->   grows.
-> 
-> Has there been any progress on that front ?
+On Mon, 2025-05-19 at 09:54 +0800, Wentao Liang wrote:
+> The wilc_sdio_read_init() calls wilc_sdio_cmd52() but does not check the
+> return value. This could lead to execution with potentially invalid data
+> if wilc_sdio_cmd52() fails. A proper implementation can be found in
+> wilc_sdio_read_reg().
 
-None that I'm aware off anyway.
+This seems fairly much pointless, if the caller is never going to check
+the return value anyway?
 
+> 2.42.0.windows.2
+
+Really? Did you even _build_ the changes yourself?
+
+johannes
