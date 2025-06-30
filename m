@@ -1,168 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A203723E32D
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084D22405E5;
+	Mon, 30 Jun 2025 07:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270311; cv=none; b=orZRTXOY1jt6efaXsUeaAJlZK751a64zm+Wvrhs3S5sT2TJftkwcWBluLkhaT5+RnIsbs01HH37uT7Ur5O1aMyaO5S7QyNZDOH3UVtkFAo1dmOFv0X7Q0FnBCwSZsd3GnqIGc6HcnCH05d0klHDiCv6TKvwSRlQz8BkebOJBSkU=
+	t=1751270314; cv=none; b=hD3o4s3ZloB71JqHwwNAXpNAjzGv+DyLMYiHJ1FRiFUWuL6cQlNTE7mmyHmVAc7P42xicMvgpMofcK6nKRbTy+eNAT6dUE6XnzVNws5W24iTJtnc+HnnkWBwNBVaalcgau+ijN3MHsS+kX3y3b0Hj5n/rlogMjI4NJIaZrNBqMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270311; c=relaxed/simple;
-	bh=cIWLQj7tWvL2O1cLTwZUfAKHg4ehQSOPXhaj0k60wmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQWwkxU7PXwWToojnY5B3iLwa8CAxNiTBqbTje5SnptFEg2O0ITq1xQw7eKKBNJYoIDktFKqPM4B2+SaYFpXqBYjUqnWauEIgLsFnkd9CxdlHyEctFZAR4IfD4VvxwIkN9YHdjsSSpXAyVeE8agnoEAm5X0lH7LhNCl+DiFrQOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y4XJUUPa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751270314; c=relaxed/simple;
+	bh=ZZMTRhA3Q5vK75m9Bm+TXk1PAEHuycK5wPjmcJ/x21c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tZkPHq0DgGvWs+Btlsvxt9+xbfB3ZYtyeg1XB8FP13N1Do4yy7md+hGNq8pOLzrpt4/XdxA/S6iTEPHTbZsK8jr3+xVDn3s2KaxxCh8ECa4iDXH4rqvycSiQz4KmK+7QswWxOzY0g7BMqy352hYbbXX2R7IAzWJqsShSWWNDgA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JXXodVTJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y4XJUUPa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751270308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZgEWcWVX6y9scJKOQscqFoJ6thnfYTOA+0wFODJOjNQ=;
-	b=Y4XJUUPas0e5H3XTlOJL/qmtdeANAWX9XKTit0wLMD2kLwc5Z2lxZdOhlYcvy7d7v4b3j9
-	Z9yYYDnEErncpoojo0AJK17YJN/JgophLyzcVbUxnu2/zeB4vKibmJ7wWO7DLD2u4gT4F6
-	kgWe4B3xwgGPaEF8gFma1IuvxWozp58=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-rwOg6yLBMu6i9wWdiYjvcw-1; Mon, 30 Jun 2025 03:58:21 -0400
-X-MC-Unique: rwOg6yLBMu6i9wWdiYjvcw-1
-X-Mimecast-MFC-AGG-ID: rwOg6yLBMu6i9wWdiYjvcw_1751270301
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-703d7a66d77so54359307b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:58:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751270301; x=1751875101;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZgEWcWVX6y9scJKOQscqFoJ6thnfYTOA+0wFODJOjNQ=;
-        b=eQwAirCi1V7iaX1cdSftCViXsLAUcB8peDNzupC7EsmvMYWGFu9u2PQv4joi+gEsAF
-         +UPxJU1Ji1KpDQ+eG65tvLm7EdSpHaAheZv/JdP8fvent/TZ0S4jvvuqOU+znAbAq6Aj
-         yF22wmk09RoRXpxJ8P569hK7uP/EmZQQeyUOBQ9O8WBLQfRULTPMvv1Vr3/LYUtiW5D+
-         MLYyMILu2zVn7jMvnLfP3wPuhbDVpFeSohouOG1sJB9okdQuPKDOuUdRk1wVB2wybVag
-         jnCv/diuSeVElUDFApCESvwl9NjEY0wo2Qrwp3RQyLaBc9Qzj/EhjuJDLLOTZqs2dVVQ
-         wQsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAqJz8vrxfQee6BTVKEVbemk4MMaQig/2YWzg1mwYToGVQKmxRpcTM+XV5dlqZTp/MMX5xNA/prjK7SqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJbFYgiKKBOrdtklO/81bfCyrrcrpB9LfwUfpjzwjMUw+mjDt4
-	oz4IRkIwTNUldKsyB+dcQL510htQIrrSAm4dbxxc1kqXV4zhAX/sblvpzgoXXZfA4lbb/1V0YbS
-	Dzw7+O4cA4r65VoYaLM+2l6doAQ+yFL9J9o9c/N2NXAArtwHyaR4yuxHpFFlXNBdE6QngHBwKBR
-	sdPRusxL8VoVdmceqrmXurwhJu41v7hg9w4ElEn3U39FQtarKBAIt5ww==
-X-Gm-Gg: ASbGncsaVMWkY4ibKZp4awVsuiuXVOQH1n9z+0Q2KVU+oARnvXju/Q/0avluNP8ICZU
-	4LAThq4GipW7pqy66t9uxVAr9tOWxD3IuJULoonUOTLGwWPGvHpPEF50OgThxleNo28tLmb9cYo
-	3QZu8gvA==
-X-Received: by 2002:a05:690c:388:b0:712:d7dd:e25a with SMTP id 00721157ae682-7151756eb18mr172064557b3.6.1751270300712;
-        Mon, 30 Jun 2025 00:58:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9hk4iM8gEid0K715PQkHr7wTuzImJqjNS2fyvGLxyh0PAObiNySZ92qlNHU9LEDZn5W6cNeMfqE7U/ldpN9U=
-X-Received: by 2002:a05:690c:388:b0:712:d7dd:e25a with SMTP id
- 00721157ae682-7151756eb18mr172064347b3.6.1751270300278; Mon, 30 Jun 2025
- 00:58:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JXXodVTJ"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U4ph3T015659;
+	Mon, 30 Jun 2025 07:58:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2GI5N/15siM0TnE6K77k2Bo0tTxSu+QdEjI1bUxwSYo=; b=JXXodVTJK1hctFbR
+	Q05TETF0RdiCdNTlb3yPDaDj7fvLcyfJzbvOriAmB+JvkHnsGchWiOqXfeontZDg
+	4a2odNY9jadEfDn7QM+gTEknf1qhcizITH+wAp2p6THaJ5sJTr2t32cWuGyjiqL5
+	UhaCh2xas9RxQsaB3bNu4R2QJa+GbabJa11JpJ7HTdQp+nQpyN+ppFwwPGRGoOiZ
+	oIGgHkIAM81Bujr+4u4KlrcbJgCLvf/7h/xdhFJONMxrkYzPVvYrENEmbdQZ4Tcx
+	GehoINsvg9LMciv82wfUMFJofzVwEHukCW6eaHPQIGUuXV7/PHw70OjH9nx6Esog
+	zas7uQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkwrre94-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 07:58:27 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55U7wQ3M004652
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 07:58:26 GMT
+Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 30 Jun
+ 2025 00:58:23 -0700
+Message-ID: <4b7b1406-a730-a0eb-1787-63cce6817ba0@quicinc.com>
+Date: Mon, 30 Jun 2025 13:28:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <gv5ovr6b4jsesqkrojp7xqd6ihgnxdycmohydbndligdjfrotz@bdauudix7zoq> <20250630075411.209928-1-niuxuewei.nxw@antgroup.com>
-In-Reply-To: <20250630075411.209928-1-niuxuewei.nxw@antgroup.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Mon, 30 Jun 2025 09:58:07 +0200
-X-Gm-Features: Ac12FXzM2abZAiLuWcV3HSuStmkPiQEYR_Hk5CCqlcO4nWGeNMcgQRF0jjd6Ui4
-Message-ID: <CAGxU2F41qFrcTJdk3YeQMTwd0CP8nCqTCPpOn3ezQv=tPVx_WA@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 0/3] vsock: Introduce SIOCINQ ioctl support
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: davem@davemloft.net, decui@microsoft.com, fupan.lfp@antgroup.com, 
-	jasowang@redhat.com, kvm@vger.kernel.org, leonardi@redhat.com, 
-	linux-kernel@vger.kernel.org, mst@redhat.com, netdev@vger.kernel.org, 
-	niuxuewei.nxw@antgroup.com, pabeni@redhat.com, stefanha@redhat.com, 
-	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 5/5] media: iris: configure DMA device for vb2 queue on
+ OUTPUT plane
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dikshita Agarwal
+	<quic_dikshita@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250627-video_cb-v3-0-51e18c0ffbce@quicinc.com>
+ <20250627-video_cb-v3-5-51e18c0ffbce@quicinc.com>
+ <d8a1fdd4-0056-480f-ade1-318a34d27204@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <d8a1fdd4-0056-480f-ade1-318a34d27204@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=XeCJzJ55 c=1 sm=1 tr=0 ts=686243a3 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
+ a=COk6AnOGAAAA:8 a=OXM8fBZ5ErSyUVfw0poA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=d3PnA9EDa4IxuAV0gXij:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA2NSBTYWx0ZWRfX1BzwmhAllKIG
+ sauQ7sM7Gc0vGXqNU6xC8v8Tj0rEYd5X8eJ2fXVVdK6psDhHzIuD3cN2lbwfZO4xrB+78p63i6q
+ Ub+rv6r/WX9nIx+0TxhngB4E/PhpWDhhYil03HBoDHIIvA7RbVvfpbjzS05XB+d8CBgPz67T1iA
+ zHrOhg8hWjZ7jYoh7BHbP7UcsBRNRW93pW93Wa7c7KksFEmzNd9YXDL5kJ5UFAB4cTXDAbrXuMR
+ WiYxIX4mqA3zhGsHjNyP6txlPNz2+jR2qZTsiOX2M2vN08ttlHZS7W3f/9gvyoXMU8YNxPi2Yov
+ DHuCQJDPeBntbH5qdAB7oNRSxO+iQ4XkFZKIoD0SbjwP70OMdD8ZBrH+BXODWXPuTBB0nbQ3z9/
+ jhmH+4q3MJiRlkaRTRhJiSxZBm99uGMUwY439eiVa4LNGmCvTJssYeQ4GBb/wfkxphCFkGbH
+X-Proofpoint-GUID: upn4LHC0jnaVAxEpG6vyIwUPjp3jdoDp
+X-Proofpoint-ORIG-GUID: upn4LHC0jnaVAxEpG6vyIwUPjp3jdoDp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506300065
 
-On Mon, 30 Jun 2025 at 09:54, Xuewei Niu <niuxuewei97@gmail.com> wrote:
->
-> > On Mon, Jun 30, 2025 at 03:38:24PM +0800, Xuewei Niu wrote:
-> > >Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
-> > >bytes.
-> >
-> > I think something went wrong with this version of the series, because I
-> > don't see the patch introducing support for SIOCINQ ioctl in af_vsock.c,
-> > or did I miss something?
->
-> Oh yes. Since adding a patch for hyper-v, I forgot to update the `git
-> format-patch` command...
 
-I'd suggest using some tools like b4 or git-publish for the future:
-- https://b4.docs.kernel.org/en/latest/contributor/overview.html
-- https://github.com/stefanha/git-publish
 
->
-> Please ignore this patchset and I'll resend a new one.
+On 6/27/2025 10:38 PM, Bryan O'Donoghue wrote:
+> On 27/06/2025 16:48, Vikash Garodia wrote:
+>> While setting up the vb2 queues, assign "non_pixel" device to manage
+>> OUTPUT plane buffers i.e bitstream buffers incase of decoder. It prefers
+>> the non_pixel device(np_dev) when available, falling back to core->dev
+>> otherwise.
+>>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+>>   drivers/media/platform/qcom/iris/iris_vb2.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c
+>> b/drivers/media/platform/qcom/iris/iris_vb2.c
+>> index
+>> cdf11feb590b5cb7804db3fcde7282fb1f9f1a1e..01cc337970400d48063c558c1ac039539dbcbaba 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_vb2.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_vb2.c
+>> @@ -159,6 +159,10 @@ int iris_vb2_queue_setup(struct vb2_queue *q,
+>>       *num_planes = 1;
+>>       sizes[0] = f->fmt.pix_mp.plane_fmt[0].sizeimage;
+>>   +    if (q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT ||
+>> +        q->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+>> +        q->dev = core->np_dev ? core->np_dev : core->dev;
+>> +
+>>   unlock:
+>>       mutex_unlock(&inst->lock);
+>>  
+> 
+> q->dev = core->dev;
+> 
+> if (thing || thing_else)
+>     q->dev = core->np_dev;
+when IF condition is not met, q->dev assignment would be unnecessary i.e for
+plane types other than V4L2_BUF_TYPE_VIDEO_OUTPUT. Refer [1] for the dev
+assignment to queue.
 
-Please send a v5, so it's clear this version is outdated.
+Regards,
+Vikash
 
-Thanks,
-Stefano
-
->
-> Thanks,
-> Xuewei
->
-> > >Similar with SIOCOUTQ ioctl, the information is transport-dependent.
-> > >
-> > >The first patch adds SIOCINQ ioctl support in AF_VSOCK.
-> > >
-> > >Thanks to @dexuan, the second patch is to fix the issue where hyper-v
-> > >`hvs_stream_has_data()` doesn't return the readable bytes.
-> > >
-> > >The third patch wraps the ioctl into `ioctl_int()`, which implements a
-> > >retry mechanism to prevent immediate failure.
-> > >
-> > >The last one adds two test cases to check the functionality. The changes
-> > >have been tested, and the results are as expected.
-> > >
-> > >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> > >
-> > >--
-> > >
-> > >v1->v2:
-> > >https://lore.kernel.org/lkml/20250519070649.3063874-1-niuxuewei.nxw@antgroup.com/
-> > >- Use net-next tree.
-> > >- Reuse `rx_bytes` to count unread bytes.
-> > >- Wrap ioctl syscall with an int pointer argument to implement a retry
-> > >  mechanism.
-> > >
-> > >v2->v3:
-> > >https://lore.kernel.org/netdev/20250613031152.1076725-1-niuxuewei.nxw@antgroup.com/
-> > >- Update commit messages following the guidelines
-> > >- Remove `unread_bytes` callback and reuse `vsock_stream_has_data()`
-> > >- Move the tests to the end of array
-> > >- Split the refactoring patch
-> > >- Include <sys/ioctl.h> in the util.c
-> > >
-> > >v3->v4:
-> > >https://lore.kernel.org/netdev/20250617045347.1233128-1-niuxuewei.nxw@antgroup.com/
-> > >- Hyper-v `hvs_stream_has_data()` returns the readable bytes
-> > >- Skip testing the null value for `actual` (int pointer)
-> > >- Rename `ioctl_int()` to `vsock_ioctl_int()`
-> > >- Fix a typo and a format issue in comments
-> > >- Remove the `RECEIVED` barrier.
-> > >- The return type of `vsock_ioctl_int()` has been changed to bool
-> > >
-> > >Xuewei Niu (3):
-> > >  hv_sock: Return the readable bytes in hvs_stream_has_data()
-> > >  test/vsock: Add retry mechanism to ioctl wrapper
-> > >  test/vsock: Add ioctl SIOCINQ tests
-> > >
-> > > net/vmw_vsock/hyperv_transport.c | 16 +++++--
-> > > tools/testing/vsock/util.c       | 32 +++++++++----
-> > > tools/testing/vsock/util.h       |  1 +
-> > > tools/testing/vsock/vsock_test.c | 80 ++++++++++++++++++++++++++++++++
-> > > 4 files changed, 117 insertions(+), 12 deletions(-)
-> > >
-> > >--
-> > >2.34.1
-> > >
->
-
+[1]
+https://elixir.bootlin.com/linux/v6.15.3/source/drivers/media/platform/qcom/iris/iris_vidc.c#L106
+> 
+> ---
+> bod
