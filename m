@@ -1,318 +1,167 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from techbitestudio.com (techbitestudio.com [75.119.147.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DB327726
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44DE27FD4E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 11:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=75.119.147.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284073; cv=none; b=IYYLenHneVxwdjLU9NeXr7QEfVxYMCRBLwy/XFSLyV1iN50T0yOo5TO5eRKGSCKDpY0KJ+pBH3YoQ0kFeAZs9vI2rk+kbyxb35w9gWS7N4FBiz1DYR/mnx5bkBPafFzkR/4ILhlMorqfGqhSTZponcM2NCrSkn3Re2Ecvnxiw/c=
+	t=1751284093; cv=none; b=GQ3O161zds0rAHKiFGwda3s15O9Diku+dju7KbTNMFTaWJ9dz2Qk5LPboGW96FNqEe2Mf5rGImZoxCq7MJdfMNez5W5s9DfuH29oqZ+h5c7zKQ3BVuonbCbCluneE9c4MiBfsIx4kp1B3FD1NQSaTOKTRQ720DRdEvR5/eVy+Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284073; c=relaxed/simple;
-	bh=SFbrEiZL/ftRM6JF2YIW1/evu+uKmfTeDRm8IOKGMws=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=PlBisxaS99weB+VlUnbqjKowhA7XwYiyrEEcESpyW1mI+W/0gXjNXx30PJTXB3EV8WkV6TmH4JjJVQBRjJNIdR+03yAB/g1ZtMV4d91fGNeMIUYKNpuow+w+BPs7pIgz+M62KEr65ba/VzNbYqSxJDJ5GTBU3ikNXPRTvDq1Nxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=PxfTDbWP; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1751284093; c=relaxed/simple;
+	bh=oWlv8+xHiZeDHI02Mhfb7losKROKExZfegea9sxkZVs=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=DGNnp5HayX6HfnaMXc3XJSdiC+DFpsE8NxBoOyel2smMyQmrbJoqoMWy2v9sNUAg/+vllNydgTHUwyVsr9HxI83ckQmwUCCxLszSMDxa3rFYUmM9tu4ZcaXWh1bGJiwg2uyrFSz4gAm/Eu/PM9WgMLMJl3vB7bisjMbShEievSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in; spf=pass smtp.mailfrom=kenip.in; dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b=lDH+be8k; arc=none smtp.client-ip=75.119.147.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kenip.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kenip.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="PxfTDbWP"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0b6532345so1044875566b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 04:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1751284069; x=1751888869; darn=vger.kernel.org;
-        h=cc:to:subject:from:content-language:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=SFbrEiZL/ftRM6JF2YIW1/evu+uKmfTeDRm8IOKGMws=;
-        b=PxfTDbWPqZ2HLTWA6DNG9RknFT8fcqL0XyN35P+wXaWTFVw3zenDQBlVArNCV+w4dP
-         YJaRGWf08CGKPKo9MTt+3CscAC3nHMhBud1Egs0ZKHCKLLVVEeG9wlKysXFpczFp59ff
-         7ISdfiRserycTYugg+G759trPDhfr7qfw4k3qqNRFme2JWvvZp9NlqG0A/BrL+mp0lpG
-         fFedjnfSoIMWlhLA0+9AIsSIHoU410GLpUosIqRc5/t1P+7bgQCqtjKBxRUkqVpGBnqo
-         vmy9c1IUfyK4h3T5EB1t7hKjwzVJgbi58Hj0aZpcwcR8EXQhg60XoTIc5sxBT3HA3lOw
-         1nEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751284069; x=1751888869;
-        h=cc:to:subject:from:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SFbrEiZL/ftRM6JF2YIW1/evu+uKmfTeDRm8IOKGMws=;
-        b=qRcEuBfKrEe8p5OErKKOX8YXl54no12AS8+9bFgVx9cWPz860G6zXDGErSfSqEsg9g
-         EqzSyjZBTgVJ5Ef7WXfPl1aLIA8OWQBaBlpgiMBN2//f32mufeuNVSQohOc9SxGOL9oE
-         tqG/ZrUfVmeIQnX81VwB29Mr41FDBdN+pntiFcKkcfvESTxhYebc1ezDogsLn0FHxbqh
-         TfRSmnhLSNyMgbMQcVrDmnkvVKxKcL9/smBxdYMQixKIf8E5+5nzi1Fkv02FPVdvel0x
-         t/5Gx9Lw31VpIClOU4HBlusPAE5UTTwHVV6C/0iBjHLdIhb8O/UdUcyCV3CW2X0yvXuS
-         HdUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQiNH2r1l5jq4StH2kN7MYT+Xuxup38JwLcIhN5ptLDA0opqKahTLg8NOxwq2UhpVucndHRK/4u/C74Zg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn6Uk5Kr3SmAMvcmeVeG+0xVEizLF5wcywq0bIJmZ9Xsml0S/h
-	qm7QzxJUXoWa0i0zfzImOXSO37MgKWNOYcOVvygT/Tb8rrJi0IzcE0OgLiexy4sD600=
-X-Gm-Gg: ASbGncvnZy3O1J+cCD9XTvthd/ZS3NFtrtLH7YwbUPzMPLWUxYDArhTkPQ2Yp/+pMPP
-	wllFVxWLUNVPB7RcTHQlj0EHkWansCdXWIYxuXsxSDwqoFbBY3NfDnOhgUNWgR6Gluq90MhQLQv
-	TK3duuKgixSBLZeyPV/nubb1/1+waXXwpy3wpDNKk7gbrrcIS5UoiRMefaFHqDG92caBFQlZk5H
-	kaF1IjiMFZTiWnHo1vMM3EtQovy05YmP1CtL8/Ma0yTFy5YLjyWs9WDiPtJxgZAfRWirWKoxBSP
-	gIYrZJyJxG0QRU4IyOBhZYBcdRljEHh1rpqgvRr0dx7BTNgVW4mhzJfYJn/DrretL0F1T1Kaspi
-	ik8s=
-X-Google-Smtp-Source: AGHT+IEQ9U6mOVbpcaDJlaX6UleT/djg97rF+QkhXHjE4h6drewHlaPpxKWxknS28NXT9UIQxpwiwQ==
-X-Received: by 2002:a17:907:dab:b0:ae3:249:ab73 with SMTP id a640c23a62f3a-ae30249c82dmr1418917166b.18.1751284069136;
-        Mon, 30 Jun 2025 04:47:49 -0700 (PDT)
-Received: from [10.144.229.245] ([185.254.75.26])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353c6bce2sm648327266b.123.2025.06.30.04.47.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 04:47:48 -0700 (PDT)
-Message-ID: <72fd3ae7-46da-4203-b583-3fb857e73542@9elements.com>
-Date: Mon, 30 Jun 2025 13:47:40 +0200
+	dkim=pass (1024-bit key) header.d=kenip.in header.i=@kenip.in header.b="lDH+be8k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kenip.in;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:Message-ID:References:
+	In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=OSWJYTVlCnXdQQsB1ImV3/XiHEQb6cpDYP+MEyTQhY0=; b=lDH+be8kx1p0FQFteLHIqR7HUf
+	+Pww22Huaurj7WuCMk7S/yjPTCsQXRY29jk2KSCL2E80+dHl+IePh9UYPZ7pzQrkhjj9p8HtjHwUs
+	GjplaubOO/lyDGhGKViiOr+FuC+1Q/L0jguj6Yvj9LTX6pOAuF0SJ4bA2jVt/HBk08qc=;
+Received: from localhost ([127.0.0.1] helo=kenip.in)
+	by techbitestudio.com with esmtpa (Exim 4.93)
+	(envelope-from <siddhartha@kenip.in>)
+	id 1uWCzS-0003ha-3K; Mon, 30 Jun 2025 17:18:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE
-From: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-Subject: Intel Xe SR-IOV support status
-To: intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Badal Nilawar <badal.nilawar@intel.com>,
- Michal Wajdeczko <michal.wajdeczko@intel.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0dUfIvXK6cn4vw0we0kqu0lQ"
+Date: Mon, 30 Jun 2025 17:18:02 +0530
+From: siddhartha@kenip.in
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Dev Jain <dev.jain@arm.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, mgorman@suse.de
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_mm=3A_limit_THP_alignment_=E2=80=93_?=
+ =?UTF-8?Q?performance_gain_observed_in_AI_inference_workloads?=
+In-Reply-To: <ba2c89bd-88de-48f8-abd0-b62d8b1d50b3@lucifer.local>
+References: <28338f055b3c9afa8b69ff6f05ea20ed@kenip.in>
+ <4990838b-660d-46a2-b21c-67adcba61ff9@lucifer.local>
+ <19714cae-6b73-43ec-af7a-1455196561d1@arm.com>
+ <3ee2e7fea6f263aa884e3e715632b09f@kenip.in>
+ <d8ffe547-5516-43e5-9f33-56b2698a0b4f@arm.com>
+ <ba2c89bd-88de-48f8-abd0-b62d8b1d50b3@lucifer.local>
+Message-ID: <8128c0338e5df5476ec9fd6eb3079964@kenip.in>
+X-Sender: siddhartha@kenip.in
+X-Priority: 1 (Highest)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0dUfIvXK6cn4vw0we0kqu0lQ
-Content-Type: multipart/mixed; boundary="------------Yx41X300LfZEjn1HeRKea3WL";
- protected-headers="v1"
-From: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-To: intel-xe@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Badal Nilawar <badal.nilawar@intel.com>,
- Michal Wajdeczko <michal.wajdeczko@intel.com>
-Message-ID: <72fd3ae7-46da-4203-b583-3fb857e73542@9elements.com>
-Subject: Intel Xe SR-IOV support status
+On 2025-06-30 16:24, Lorenzo Stoakes wrote:
+> +cc Vlastimil, please keep him cc'd on discussions here as the author 
+> of this
+> fix in the conversation.
+> 
+> On Mon, Jun 30, 2025 at 10:55:52AM +0530, Dev Jain wrote:
+>> 
+>> 
+>> For this workload, do you enable mTHPs on your system? My plan is to 
+>> make a
+>> similar patch for
+>> 
+>> the mTHP case and I'd be grateful if you can get me some results : )
+> 
+> I'd urge caution here.
+> 
+> The reason there was a big perf improvement is that, for certain 
+> workloads, the
+> original patch by Rik caused issues with VMA fragmentation. So rather 
+> than
+> getting adjacent VMAs that might later be khugepage'd, you'd get a 
+> bunch of VMAs
+> that were auto-aligned and thus fragmented from one another.
+> 
+> So while you got speed ups on some workloads, you got really bad perf 
+> impact on
+> some that were subject to this.
+> 
+> The observed speed up was on a very specific benchmark also. While it's 
+> a great
+> improvement, it's important to understand the context (see the original 
+> patch
+> for details [0]).
+> 
+> I do think it's worth considering changing 
+> thp_get_unmapped_area_vmflags() for
+> mTHP, as it's currently very limited (just PMD alignment) and it'd 
+> possibly be
+> sensible to change this to checking against allowed THP alignments, but 
+> I'd not
+> assume this is going to get some crazy speed up as observed here.
+> 
+> Note that any such change would probably require some refactoring in 
+> THP first
+> to make it not quite so awful.
+> 
+> I also think for Siddharta's usecase mTHP isn't really relevant is it, 
+> as intel
+> do not support mTHP currently do they?
+> 
+> Regards, Lorenzo
+> 
+> [0]: 
+> https://lore.kernel.org/all/20241024151228.101841-2-vbabka@suse.cz/T/#u
 
---------------Yx41X300LfZEjn1HeRKea3WL
-Content-Type: multipart/mixed; boundary="------------fVqvRcaPIpMicMP6STXJv5ra"
+Hi Lorenzo, Dev, All,
 
---------------fVqvRcaPIpMicMP6STXJv5ra
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Thank you for the thoughtful responses and for engaging with the 
+performance implications of the patch.
 
-SGksDQoNClN0YXJ0aW5nIHdpdGggVGlnZXIgTGFrZSwgc3VwcG9ydCBmb3IgR1ZULWcgd2Fz
-IGRpc2NvbnRpbnVlZCBpbiBmYXZvciBvZiANClNSLUlPViBmb3IgZ3JhcGhpY3MgdmlydHVh
-bGl6YXRpb25bMV0uIEN1cnJlbnRseSwgdGhlIHVwc3RyZWFtIFhlIA0KZHJpdmVycyBvbmx5
-IHN1cHBvcnQgU1ItSU9WIG9uIFBhbnRoZXIgTGFrZS4gVGhlIHRhYmxlIGJlbG93IHN1bW1h
-cml6ZXMgDQp0aGUgY3VycmVudCBzdGF0ZSBiYXNlZCBvbiB0aGUgLmhhc19zcmlvdiBmbGFn
-Lg0KDQp8IEludGVsIEdlbiB8IGRybS14ZS1uZXh0WzJdIHwgeGUtZm9yLUNJWzJdIHwgaW50
-ZWwgbHRzIGk5MTVbM10gfA0KfCAtLS0tLS0tLS0gfCAtLS0tLS0tLS0tLS0tLSB8IC0tLS0t
-LS0tLS0tLSB8IC0tLS0tLS0tLS0tLS0tLS0tIHwNCnwgVEdMICAgICAgIHwgICAgICAgICAg
-ICAgbm8gfCBubyAgICAgICAgICAgfCB2NS4xNSAgICAgICAgICAgICB8DQp8IEFETC9SUEwg
-ICB8ICAgICAgICAgICAgIG5vIHwgeWVzIChkZWJ1ZykgIHwgdjUuMTUgICAgICAgICAgICAg
-fA0KfCBNVEwgICAgICAgfCAgICAgICAgICAgICBubyB8IG5vICAgICAgICAgICB8IHY2LjEg
-ICAgICAgICAgICAgIHwNCnwgQVJMICAgICAgIHwgICAgICAgICAgICAgbm8gfCBubyAgICAg
-ICAgICAgfCBubyAgICAgICAgICAgICAgICB8DQp8IFBUTCAgICAgICB8ICAgICAgICB2Ni4x
-My4xIHwgeWVzICAgICAgICAgIHwgbm8gICAgICAgICAgICAgICAgfA0KDQpJbnRlcmVzdGlu
-Z2x5LCB0aGUgeGUvdG9waWMveGUtZm9yLUNJIHRlc3RpbmcgYnJhbmNoIG9ubHkgY292ZXJz
-IFNSLUlPViANCnRlc3Rpbmcgb24gdGhlIEFETCBwbGF0Zm9ybSBhbmQgbm90IHRoZSBNVEwg
-b3IgQVJMIHBsYXRmb3Jtcy4NCg0KSXMgdGhlcmUgYSByZWFzb24gd2h5IFNSLUlPViBoYXMg
-bm90IHlldCBiZWVuIGVuYWJsZWQgb24gdGhlIG90aGVyIA0KcGxhdGZvcm1zPyBBcmUgdGhl
-cmUgYW55IHBsYW5zIG9yIHRpbWVsaW5lIGZvciBhZGRpbmcgc3VwcG9ydCBmb3IgdGhlbT8N
-Cg0KS2luZCByZWdhcmRzLA0KTWFyY2VsbG8NCi0tLQ0KWzFdIA0KaHR0cHM6Ly93d3cuaW50
-ZWwuY29tL2NvbnRlbnQvd3d3L3VzL2VuL3N1cHBvcnQvYXJ0aWNsZXMvMDAwMDU4NTU4L2dy
-YXBoaWNzLmh0bWwNClsyXSBodHRwczovL2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvZHJtL3hl
-DQpbM10gaHR0cHM6Ly9naXRodWIuY29tL2ludGVsL2xpbnV4LWludGVsLWx0cw0KWzRdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9wYXRjaC82MDMzMTYvDQo=
---------------fVqvRcaPIpMicMP6STXJv5ra
-Content-Type: application/pgp-keys; name="OpenPGP_0xE54B6622A5EDBF61.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xE54B6622A5EDBF61.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+You're absolutely right that the observed speedup came from a specific 
+class of workloads — in this case, token-length-variable AI inference 
+pipelines based on Hugging Face Transformers and ONNX Runtime. These 
+workloads trigger highly dynamic, anonymous memory allocation patterns, 
+often in bursts aligned with model shard loading and attention map 
+resizing. In such cases, VMA fragmentation due to PMD-aligned, 
+non-PMD-sized mappings led to near-complete loss of THP utilization.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Once the alignment restriction was lifted (via Rik’s patch), we observed 
+substantial restoration of THP behavior, which is where the performance 
+gains came from. That said, I completely agree that:
 
-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3D=3D
-=3DGQYi
------END PGP PUBLIC KEY BLOCK-----
+Not all workloads benefit from this
 
---------------fVqvRcaPIpMicMP6STXJv5ra--
+Some may even regress if the underlying VMAs aren't THP-coalescible for 
+other reasons
 
---------------Yx41X300LfZEjn1HeRKea3WL--
+Still, for high-throughput inference workloads on modern Intel CPUs, 
+this behavior isn’t a corner case. The shift toward multi-model 
+concurrent serving (e.g., LLM-as-a-Service) means this dynamic 
+allocation pattern is becoming common, especially in 
+edge/latency-sensitive deployments.
 
---------------0dUfIvXK6cn4vw0we0kqu0lQ
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+🧠 On mTHP: Intel Does Support It
+Regarding mTHP — yes, Intel platforms (especially server-grade Xeon 
+processors from Cascade Lake onward) do support mapped transparent huge 
+pages, including via:
 
------BEGIN PGP SIGNATURE-----
+tmpfs-backed files
 
-iQIzBAEBCgAdFiEEB0muAN3elg6p6gWSpVqlh6ibFBIFAmhieVwACgkQpVqlh6ib
-FBIJCRAAsooZKcjJ+gs8vnGtNK/UXRgq7eDpa1q+27JW1FpYyUXMCmtEDzT3U+Uy
-xMfABZRMZjxMno5TT6AEfsu43bYknL/S0d59cdH9DF4hjgd3Hv6rsGTZGNLt4qOI
-SRh5Ek7BQgawJlaEVBgSX4LaPIwT1gcYnLEQa3O17WfE6EjJF3tKmOepA5bgM+Y1
-MJtYQqhcLAQD6w9kSctK6bKWzQeid8qQZx3CVuuU+5Jq2drWSMi9B282NMd0jfoO
-fdr/343HRbTwJLNod4+2ZMl+XYvMb12oMe61QGfVaoSZVz2Wn4FspmD/V4nmswsz
-7ia3aUCifbEoGY0AeoAJTel5ctPItWXkcE/j2wZ3Vm5mCwwVLgZTKW8oidxbo84m
-5mBQp304nNv5VwZ9kH9oEMfzc3DX6ObEUeWrwXNEJ9U6/3uTZyYxcmi6v3IsGWC0
-4s3XRaaOsYvXJmKVvAOwehAzsrHIjXhGdtrZyAN6zTG5GQ4NH6bGjyhT6s37E0Ew
-YOtmBLS9Y2olACvC7oUHC1pJb52ILZsHAlvQB/BU+HxEYSJL+c/Zr4saeZobS2X0
-SR+4/x3pzTcqIIwScIJM9wU0XyeZC5MFjdaatYUjvgIxcXXtZfzbqrsUTYDxiHTL
-r08YJGJYIMyJCOGmEUZFXR0PCorCM+XSokCeji7wZTG/wbPuGu8=
-=rPVg
------END PGP SIGNATURE-----
+madvise(MADV_HUGEPAGE) on file mappings
 
---------------0dUfIvXK6cn4vw0we0kqu0lQ--
+shmem usage with shmem_enabled in the kernel
+
+So I’d say mTHP is certainly relevant for workloads where model weights 
+or tensors are pre-cached or memory-mapped — a pattern we’re also seeing 
+as Hugging Face, ONNX, and PyTorch ecosystems move toward zero-copy 
+tensor sharing.
+
+Given that, I'd absolutely be interested in testing any mTHP-targeted 
+patch — and I’d be happy to help validate it, especially if it avoids 
+the VMA fragmentation pitfall you rightly pointed out.
+
+Thanks again for the detailed feedback, and I’ll try to replicate and 
+share further traces (from my local testbed) since I currently don’t 
+have access to the original Intel Developer Cloud logs.
+
+Best regards,
+Siddhartha Sharma
