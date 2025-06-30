@@ -1,151 +1,103 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605AC23D2B2;
-	Mon, 30 Jun 2025 11:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B69323D2B2;
+	Mon, 30 Jun 2025 11:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751281380; cv=none; b=HicFmgWxaiDTLVKXVAkL4PUmItKy2JFQ8sUEKRWx63bKBERfboC1dziBMdp8cHwf3KIAKmEl3GXTOSPJQbJG3+NHNrSJXvf44MurZZ3OoP72FsIj2ac2ZroJ+iSzRUOPAhFKoKiCXmHBwmhQv4IGMR31U214fRKnCpWqC/VLP9k=
+	t=1751281413; cv=none; b=kPqwDvIg+Q9FBuW9Kyr7iAMkpAQyn4TvJNek1Rtjr5EFi8Yz1gnaZq+p7pnTySF4FdJSyeGs1mxNXVhdodxySeuZTknoLUFevQqtsgn6UEHIn4wxG7TkTdc3TsXZN54hTu/wyxJ8/TcA4LZWofTMwJQ7y8JKb9m2SFqZSM6OxPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751281380; c=relaxed/simple;
-	bh=AlSQ9a6gEH3m835ZIvulgwzUplQSlrSnDhFVTi8drVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rc0tD4VB1exhAL4OoYgd6a5G98RsPU/ZcRl85Qs+cZf6mG9U9oLSGLVb9k9HDusCS/dMZ1An70urBJM4GU658THrN+CIS8wM6+YV22qUQKLrCsHuo6TsYNUZcLCus27b+ORLb8HW2hL1suM5KkSYDfuifQg1Lw3UgUPSdvRSHmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=tEptvDfp; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1751281413; c=relaxed/simple;
+	bh=S/kgr45aGQe7p4sUYNlgyDg5B/Jj4yai+eKw+uTD4Vc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5PKtWy/rYPYYaTrSwzwH+MuZWxvp04RpeZYvF2Ykha21nNp8Wb3FYJhRY814M9jD99JFk53TEp3CrCIXWPFvrLb83A4NMdoVEKNG2dYnn9T6Sa2+jk9q8hjbq4w/YMJ8ufg6SvMmxFD0xg07clj+nOoiwAbtNFKJi4+12pzog8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hg+vdUNO; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="tEptvDfp"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uWCHg-00APYr-PG; Mon, 30 Jun 2025 13:02:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=UiDvWzuJibTX7nYpjLjXINACy88/q5T4ttTyWRwRY/I=; b=tEptvDfpnSJ+EdNd3vDiXqDCq/
-	zZSpIX1DacMGukWX6wz7uCe5GCjuLfpbzGnN4kp/LGSp0g3FhkVLqhDRmg28PFFASI0xbnxDyC808
-	N7hzMPY5kGWHbO4SvQdEdl5nJzeu6//Oz0C5ewshu1QcdXflhfwl0gYjrLYL5j2Eq5nbSw2oTOIfw
-	LZPJKdo1F5DiEqBecTPSj51TPt7HO0qmQbkSlLph9dlvqbYLeMC3cvTxbtai4rSLwFmRcxPjGdJwK
-	bJM1PbmXbrs3JLpBkajLBu4KpThvSCnqW64KPAqn/FJ45fHDyj5SPQ03OrYHnQ+O83lRngOLSvyDp
-	4Qeb8ZAg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uWCHf-0003Hn-SX; Mon, 30 Jun 2025 13:02:48 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uWCHL-00EJVL-AU; Mon, 30 Jun 2025 13:02:27 +0200
-Message-ID: <c39f22fd-9ede-4cdd-956b-29856e9db20a@rbox.co>
-Date: Mon, 30 Jun 2025 13:02:26 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hg+vdUNO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xhkuJDoMgg4Z0i9VP/q8C7p19DtU+zyREc5m/VGNSZc=; b=hg+vdUNOrP+EUg2yPqPN7LoSz5
+	Oij6dkdPF9R/8DltEAXrn03hw/0SLf+dUn9BP8i5amOnXyEcVonXTj5bQkuQG+JbzntfrJ6zuE0oT
+	4U/ChpKiGn8/amLZ+B+OkXT0H6+S0ZwzRmULf0K/vhIQNPCE//9Vz0kGhEraN68MGoeZWLlK7+iGA
+	lDCyxgvlq0VFz79CqvdNvB3CkH6Pn3WKfhXFrrMdETPZl8Y4kFFbcbCBSpMGYmO691tMlCfD1h9AT
+	C4HW3/rNyJfuc/ORcM0TiZNHWQ4Do6wslAUVm5QvmQBZwETzHVPyoLSSWFBdta9fVOLYS58AjEA2d
+	t6RDH8Tg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uWCI9-00000006lR2-10Dk;
+	Mon, 30 Jun 2025 11:03:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0B34B300125; Mon, 30 Jun 2025 13:03:16 +0200 (CEST)
+Date: Mon, 30 Jun 2025 13:03:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v5 02/10] x86/acpi: Move acpi_wakeup_cpu() and helpers to
+ smpwakeup.c
+Message-ID: <20250630110316.GJ1613376@noisy.programming.kicks-ass.net>
+References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
+ <20250627-rneri-wakeup-mailbox-v5-2-df547b1d196e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net v2 1/3] vsock: Fix transport_{g2h,h2g} TOCTOU
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
- <20250620-vsock-transports-toctou-v2-1-02ebd20b1d03@rbox.co>
- <zdiqu6pszqwb4y5o7oqzdovfvzkbrvc6ijuxoef2iloklahyoy@njsnvn7hfwye>
- <d8d4edb2-bf14-42b2-8592-79d7b014e1a7@rbox.co>
- <owafhdinyjdnol4zwpcdqsz26nfndawl53wnosdhhgmfz6t25n@2dualdqgpq3q>
- <e97b5cae-f6ef-4221-98e1-6efd7fdc6676@rbox.co>
- <4vsrtxs3uttx6w2zyk6rxescpwvrikypiw6tvjheplht6yzonc@ch6k3xlftikw>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <4vsrtxs3uttx6w2zyk6rxescpwvrikypiw6tvjheplht6yzonc@ch6k3xlftikw>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627-rneri-wakeup-mailbox-v5-2-df547b1d196e@linux.intel.com>
 
-On 6/30/25 11:05, Stefano Garzarella wrote:
-> On Sun, Jun 29, 2025 at 11:26:12PM +0200, Michal Luczaj wrote:
->> On 6/27/25 10:02, Stefano Garzarella wrote:
->>> On Wed, Jun 25, 2025 at 11:23:30PM +0200, Michal Luczaj wrote:
->>>> On 6/25/25 10:43, Stefano Garzarella wrote:
->>>>> On Fri, Jun 20, 2025 at 09:52:43PM +0200, Michal Luczaj wrote:
->>>>>> vsock_find_cid() and vsock_dev_do_ioctl() may race with module unload.
->>>>>> transport_{g2h,h2g} may become NULL after the NULL check.
->>>>>>
->>>>>> Introduce vsock_transport_local_cid() to protect from a potential
->>>>>> null-ptr-deref.
->>>>>>
->>>>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->>>>>> RIP: 0010:vsock_find_cid+0x47/0x90
->>>>>> Call Trace:
->>>>>> __vsock_bind+0x4b2/0x720
->>>>>> vsock_bind+0x90/0xe0
->>>>>> __sys_bind+0x14d/0x1e0
->>>>>> __x64_sys_bind+0x6e/0xc0
->>>>>> do_syscall_64+0x92/0x1c0
->>>>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>>>
->>>>>> KASAN: null-ptr-deref in range [0x0000000000000118-0x000000000000011f]
->>>>>> RIP: 0010:vsock_dev_do_ioctl.isra.0+0x58/0xf0
->>>>>> Call Trace:
->>>>>> __x64_sys_ioctl+0x12d/0x190
->>>>>> do_syscall_64+0x92/0x1c0
->>>>>> entry_SYSCALL_64_after_hwframe+0x4b/0x53
->>>>>>
->>>>>> Fixes: c0cfa2d8a788 ("vsock: add multi-transports support")
->>>>>> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->>>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-...
->> Oh, and come to think of it, we don't really need that (easily contended?)
->> mutex here. Same can be done with RCU. Which should speed up vsock_bind()
->> -> __vsock_bind() -> vsock_find_cid(), right? This is what I mean, roughly:
->>
->> +static u32 vsock_registered_transport_cid(const struct vsock_transport
->> __rcu **trans_ptr)
->> +{
->> +	const struct vsock_transport *transport;
->> +	u32 cid = VMADDR_CID_ANY;
->> +
->> +	rcu_read_lock();
->> +	transport = rcu_dereference(*trans_ptr);
->> +	if (transport)
->> +		cid = transport->get_local_cid();
->> +	rcu_read_unlock();
->> +
->> +	return cid;
->> +}
->> ...
->> @@ -2713,6 +2726,7 @@ void vsock_core_unregister(const struct
->> vsock_transport *t)
->> 		transport_local = NULL;
->>
->> 	mutex_unlock(&vsock_register_mutex);
->> +	synchronize_rcu();
->> }
->>
->> I've realized I'm throwing multiple unrelated ideas/questions, so let me
->> summarise:
->> 1. Hackish macro can be used to guard against calling
->> vsock_registered_transport_cid() on a non-static variable.
->> 2. We can comment the function to add some context and avoid confusion.
-> 
-> I'd go with 2.
+On Fri, Jun 27, 2025 at 08:35:08PM -0700, Ricardo Neri wrote:
 
-All right, will do.
+> -	/*
+> -	 * Wait for the CPU to wake up.
+> -	 *
+> -	 * The CPU being woken up is essentially in a spin loop waiting to be
+> -	 * woken up. It should not take long for it wake up and acknowledge by
+> -	 * zeroing out ->command.
+> -	 *
+> -	 * ACPI specification doesn't provide any guidance on how long kernel
+> -	 * has to wait for a wake up acknowledgment. It also doesn't provide
+> -	 * a way to cancel a wake up request if it takes too long.
+> -	 *
+> -	 * In TDX environment, the VMM has control over how long it takes to
+> -	 * wake up secondary. It can postpone scheduling secondary vCPU
+> -	 * indefinitely. Giving up on wake up request and reporting error opens
+> -	 * possible attack vector for VMM: it can wake up a secondary CPU when
+> -	 * kernel doesn't expect it. Wait until positive result of the wake up
+> -	 * request.
+> -	 */
+> -	while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> -		cpu_relax();
+> -
+> -	return 0;
+> -}
 
->> 3. Instead of taking mutex in vsock_registered_transport_cid() we can use RCU.
-> 
-> Since the vsock_bind() is not in the hot path, maybe a mutex is fine.
-> WDYT?
+> +	while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> +		cpu_relax();
+> +
+> +	return 0;
+> +}
 
-I wrote a benchmark that attempts (and fails due to a non-existing CID) to
-bind() 100s of vsocks in multiple threads. `perf lock con` shows that this
-mutex is contended, and things are slowed down by 100+% compared with RCU
-approach. Which makes sense: every explicit vsock bind() across the whole
-system would need to acquire the mutex. And now we're also taking the same
-mutex in vsock_assign_transport(), i.e. during connect(). But maybe such
-stress testing is just unrealistic, I really don't know.
+So I realize this is just code movement at this point, but this will
+hard lockup the machine if the AP doesn't come up, right?
 
+IIRC we have some timeout in the regular SIPI bringup if the AP doesn't
+respond.
