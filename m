@@ -1,132 +1,186 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDC4293C52
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1D2293C52
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751304229; cv=none; b=DfI89uCFcxUD1sDSf2DeIw/nwNQqTXoSCw+Rl7+KQ8oHZXezPEwJ1OUeTpEiPHUPFUd5RkxQZ0kTJgTuydZvAAHuhTFRI5o6vu9FZQHqPdWdnhTsnxWO/No16AwoGTPRlHxKntG7a12Om3M5uEkRjyXQQCvVRu2bYaGecwoDKs8=
+	t=1751304245; cv=none; b=TgLycyMWfbZniwSDhnZTwb3WOzSNtPzdgf/UulwAK0L7hztCXGq+/SgBv0qFxs4c347s22K/v6WIdzGqFLGTi+ihfr6ybHbTjZkbkdtPF7CCcH8DCHgdH+5+UDwQwLzJhj49WPuo8ZwKNBE4Fqq7s4g/PhqA0jhGQ8akEnOfRF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751304229; c=relaxed/simple;
-	bh=+iLdMF3LWPBEWCi1/m9p2rx5jzc1sOFaLqoYEtOs55c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ys4+0Z3oRLwwZZ8DkoqD3NubD0SIZz6Dniuj5ZTQpmrmXLAgw+K4Dll8woj/klTUUKo89YHlW8vW2wE8rUvzRcNDCAvCC7c7Y6VDMEW4j6G1FKGjoWaojSe65TVxrQ5m9XH9rD9sKSeJ2/JMa+HpBd1oHABalzBgJ0Kic2K5eiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OekHvoln; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751304245; c=relaxed/simple;
+	bh=ueqwGGpg/Hdx6+MscgKsRoTQxKysqzX4M9FHcWBPNVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QD+XAN5Z+plCsbl04CvS+TUWP9oc6tcyGlK4FE2aLn/amGbrJF7Wy5E5l2/ozuOx1RLxmP6WJpbDQtFxIGdZkdaQ/6iyczlRQIA2qUQssQYtAE64l8/W1n1Xnv/BStUX+4dNCsAWdiuK7Nt368PXzn/VMEDTQ6GfdWOipGeuBG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YmXWKfoe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OekHvoln"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ae0b2ead33cso840051666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:23:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751304224; x=1751909024; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DSVonj7bfDqPq3Y3uOWrAoecetVr832ilrAPmyWsTzE=;
-        b=OekHvolnPIXBMcNjkwE401yAYYanM7nU1buv/XlHe+HRitehxMhkUiSB3GvOK5eYhh
-         lppA18pgtRBUSr8hjhPJDunztvZqB7lUdu6UyMYwisK3d5WcFndOBf1iGoHZUsSwBkEx
-         yJHezUJPXdHSOZ7EBXUzk20tmOry4vru79qTWswD0fP/T9IQx+VbrEJkMwPv+4OFfG92
-         rRjgfRlpdtpZdQ4fk8hiCEjdOruq26medHSvnyKVOV+xdYzWmwDOdeQMLIWKh1xApHLc
-         /sR8tun5mIB433b5hX3svtXR1EUs0OkndCriMR12s4tBBHr6wQQ+LOSj1ClywwG5gtDO
-         4eqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751304224; x=1751909024;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DSVonj7bfDqPq3Y3uOWrAoecetVr832ilrAPmyWsTzE=;
-        b=wNJ7VThvqKI0wjCMBO+U7NeVfaZpiIupdT1xgyoxVXZaVY5MhnwsM/cIif54BCSZ9R
-         31pf/GX8V1K1EbWp5IbXH2F0u7xEgog3C5iDoqMZPpnnxNmVSX1GlOoNS9s/bcbmCkiD
-         Z4DgGYcLq7lLfJ3+UH0bZKRDoCLEEYIWXBogx7H2jfR/b2hpGn4haR75KxnQ+KaZsqyt
-         jBChX/rAcSduvIb0KaADDJQCBE/kWC3y8pTBzy4gwJurZknGML0rtuOkKktPVFoZ+sll
-         023r/t53RQ4RB7oFGWqn8/+5Vhm86ArBN9lOHu7gTIQ83ljChluWYGGSA/10626gJb2H
-         Vw/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUr4HGi2lEnk85PmcHFIi9tpswa7W23DlY1vwS9wFOjeps0L0UmtuUCV8b9z8lSRB6sUbHvQbi5EqAg4Ws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOjfcmBJQJuhTYpVm7lSjHraimr1okjCQcE53eJ2b0kJVEpDQa
-	b892vdrfrw/SsGOtduw64zsqEsG8zn0+czcIhLxqHgJp9b9Z04HTLXXvRiEcdOmHZh8=
-X-Gm-Gg: ASbGncvi8+D8ryK987txJFqA6ufEj+2/MYNIkSoTjEwIU78osBgMioBEqQjK02DbBSm
-	tQMIaGAh0FsexJSOLTaJof5Na911clveeHCqzrRT12kN6WxYs8zNb+ohSObgHZ6cpK7a4d/LGsf
-	DKCXKdTZxB+YPoC4libYT2zX2TDptV+o1UwHbD4+YFmRjfCb5uMP6ge6NbB8fKXIZiC+ykUU8mJ
-	ASdT6GHiBURvpWYfpctsS32Tqvdfx7gXEFby99wt2WsqlD1ok3EixV4hDmqCt8Jcg4atmEAXFbf
-	GORrFPbR1ppI062V9TYv7b3OHsC6t49OnONqfQwDArB4f3c6ixSADcTq/kNRiXn3bdhrWhX4TQz
-	d4HWmFc41tjK2KVtaUHFQcuIQ7S76
-X-Google-Smtp-Source: AGHT+IGk3tSIK0h8RzI6ilmKDWkC54Zqo7CgD6HQFghtS+TAD9sYMu+ROZZeAcfJdcRUTYDyOXsQLg==
-X-Received: by 2002:a17:907:9452:b0:ae3:7070:1fc5 with SMTP id a640c23a62f3a-ae3aa2ef4f1mr41979766b.20.1751304223818;
-        Mon, 30 Jun 2025 10:23:43 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae353c015b8sm707074266b.78.2025.06.30.10.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 10:23:43 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Agustin Vega-Frias <agustinv@codeaurora.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Markus Schneider-Pargmann <msp@baylibre.com>
-Subject: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end in _driver
-Date: Mon, 30 Jun 2025 19:23:32 +0200
-Message-ID: <20250630172333.73614-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YmXWKfoe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43E83C4CEE3;
+	Mon, 30 Jun 2025 17:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751304244;
+	bh=ueqwGGpg/Hdx6+MscgKsRoTQxKysqzX4M9FHcWBPNVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YmXWKfoepfC+IOxd3fRYxk+rNtDWqofPK8oO6MXqxviQGqUYMeMJBz4pKljOhOtvZ
+	 WSQcgGIvyRKqJPSZp6Yx/TCN3Dq2gGbMMatggHAZE1oQjg7Jrq00oUrpkgcntMYLgZ
+	 jA/jXUOJjncAKGQY6TTlL5miCjg8h1z3LA3VjNqA=
+Date: Mon, 30 Jun 2025 19:24:01 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [char-misc-next v2 2/5] mei: make char device control its own
+ lifetime
+Message-ID: <2025063039-grab-reclining-1ad8@gregkh>
+References: <20250630091942.2116676-1-alexander.usyskin@intel.com>
+ <20250630091942.2116676-3-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1929; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=+iLdMF3LWPBEWCi1/m9p2rx5jzc1sOFaLqoYEtOs55c=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoYsgVMRE1+8AhqJ8vM8cILdAL+8lZlZ+NLJtbR KxuXudrQ6mJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaGLIFQAKCRCPgPtYfRL+ TuRyB/9QjdYDw/9FOLmshYPLnvs9jipUCj6EwLgewoFXBmsXypCVEOuZVozS0LFYihiEfbGcwvW h6p3TIJNDEQymk1lA21HzrqEJ4b/8pfQcR83ZDe5KCvUvRpTo2y7Rzf78YRO47ruoDDetY3dC3v MsU09jXjcSq6GXDjJ9+uUm/2T7h1oX+UL9hfDoJSKX0tft6goz4n3g9AFB7ITCkZdYeZtlSQj+C 712bv6POg6JJRvN+rYAoiWdlXVa44uaxyW97JDoOX2XFG4QP1wtrkh6xKiZxNrIKfSd/O1WvJWe pAVP4nt0lGuNkrzgR+8k1pJMdPWDYx8PsIVtF392vsu7/59j
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630091942.2116676-3-alexander.usyskin@intel.com>
 
-The modpost section mismatch checks are more lax for objects that have a
-name that ends in "_probe". This is not justified here though, so rename
-the driver struct according to the usual naming choice.
+On Mon, Jun 30, 2025 at 12:19:39PM +0300, Alexander Usyskin wrote:
+> Allocate character device dynamically and allow to
+> control its own lifetime as it may outlive mei_device
+> structure while character device closes after parent
+> device is removed from the system.
+> 
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> ---
+>  drivers/misc/mei/main.c    | 36 +++++++++++++++++++++++-------------
+>  drivers/misc/mei/mei_dev.h |  4 ++--
+>  2 files changed, 25 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+> index 95d4c1d8e4e6..5335cf39d663 100644
+> --- a/drivers/misc/mei/main.c
+> +++ b/drivers/misc/mei/main.c
+> @@ -51,7 +51,9 @@ static int mei_open(struct inode *inode, struct file *file)
+>  
+>  	int err;
+>  
+> -	dev = container_of(inode->i_cdev, struct mei_device, cdev);
+> +	dev = idr_find(&mei_idr, iminor(inode));
+> +	if (!dev)
+> +		return -ENODEV;
+>  
+>  	mutex_lock(&dev->device_lock);
+>  
+> @@ -1118,7 +1120,10 @@ void mei_set_devstate(struct mei_device *dev, enum mei_dev_state state)
+>  
+>  	dev->dev_state = state;
+>  
+> -	clsdev = class_find_device_by_devt(&mei_class, dev->cdev.dev);
+> +	if (!dev->cdev)
 
-Note that this change indeed results in modpost identifying a section
-mismatch in this driver. This is not a false positive and should be
-fixed by either converting the driver to use platform_driver_probe() or
-by dropping __init from the .probe() callback. This problem was
-introduced in commit f20cc9b00c7b ("irqchip/qcom: Add IRQ combiner
-driver").
+How can this happen?
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+> +		return;
 
-I don't know if platform_driver_probe() works here, it might happen that
-the driver is probed before the matching device appears. As I don't have
-a machine with such a device I won't create a patch fixing the issue,
-but if you have questions don't hesitate to ask.
+No error reported?
 
-Please consider this patch as a bug report and better only apply it when
-the issue is addressed to not result in build regressions.
 
-Best regards
-Uwe
+> +
+> +	clsdev = class_find_device_by_devt(&mei_class, dev->cdev->dev);
+>  	if (clsdev) {
+>  		sysfs_notify(&clsdev->kobj, NULL, "dev_state");
+>  		put_device(clsdev);
+> @@ -1223,16 +1228,21 @@ int mei_register(struct mei_device *dev, struct device *parent)
+>  
+>  	/* Fill in the data structures */
+>  	devno = MKDEV(MAJOR(mei_devt), dev->minor);
+> -	cdev_init(&dev->cdev, &mei_fops);
+> -	dev->cdev.owner = parent->driver->owner;
+> -	cdev_set_parent(&dev->cdev, &parent->kobj);
+> +	dev->cdev = cdev_alloc();
+> +	if (!dev->cdev) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +	dev->cdev->ops = &mei_fops;
+> +	dev->cdev->owner = parent->driver->owner;
+> +	cdev_set_parent(dev->cdev, &parent->kobj);
+>  
+>  	/* Add the device */
+> -	ret = cdev_add(&dev->cdev, devno, 1);
+> +	ret = cdev_add(dev->cdev, devno, 1);
 
- drivers/irqchip/qcom-irq-combiner.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Shouldn't this be cdev_device_add()?  If not, who frees the cdev when it
+is done?
 
-diff --git a/drivers/irqchip/qcom-irq-combiner.c b/drivers/irqchip/qcom-irq-combiner.c
-index 18e696dc7f4d..e92baf20c7ff 100644
---- a/drivers/irqchip/qcom-irq-combiner.c
-+++ b/drivers/irqchip/qcom-irq-combiner.c
-@@ -266,11 +266,11 @@ static const struct acpi_device_id qcom_irq_combiner_ids[] = {
- 	{ }
- };
- 
--static struct platform_driver qcom_irq_combiner_probe = {
-+static struct platform_driver qcom_irq_combiner_driver = {
- 	.driver = {
- 		.name = "qcom-irq-combiner",
- 		.acpi_match_table = ACPI_PTR(qcom_irq_combiner_ids),
- 	},
- 	.probe = combiner_probe,
- };
--builtin_platform_driver(qcom_irq_combiner_probe);
-+builtin_platform_driver(qcom_irq_combiner_driver);
+>  	if (ret) {
+>  		dev_err(parent, "unable to add device %d:%d\n",
+>  			MAJOR(mei_devt), dev->minor);
+> -		goto err_dev_add;
+> +		goto err_del_cdev;
 
-base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
--- 
-2.49.0
+The error name was correct, why change it?
 
+>  	}
+>  
+>  	clsdev = device_create_with_groups(&mei_class, parent, devno,
+> @@ -1243,16 +1253,16 @@ int mei_register(struct mei_device *dev, struct device *parent)
+>  		dev_err(parent, "unable to create device %d:%d\n",
+>  			MAJOR(mei_devt), dev->minor);
+>  		ret = PTR_ERR(clsdev);
+> -		goto err_dev_create;
+> +		goto err_del_cdev;
+>  	}
+>  
+>  	mei_dbgfs_register(dev, dev_name(clsdev));
+>  
+>  	return 0;
+>  
+> -err_dev_create:
+> -	cdev_del(&dev->cdev);
+> -err_dev_add:
+> +err_del_cdev:
+> +	cdev_del(dev->cdev);
+> +err:
+>  	mei_minor_free(dev);
+>  	return ret;
+>  }
+> @@ -1262,8 +1272,8 @@ void mei_deregister(struct mei_device *dev)
+>  {
+>  	int devno;
+>  
+> -	devno = dev->cdev.dev;
+> -	cdev_del(&dev->cdev);
+> +	devno = dev->cdev->dev;
+> +	cdev_del(dev->cdev);
+
+Was this tested?  What happens when cdev_del() is called like this?  Is
+the memory really freed?
+
+>  
+>  	mei_dbgfs_deregister(dev);
+>  
+> diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h
+> index 37d7fb15cad7..0cc943afa80a 100644
+> --- a/drivers/misc/mei/mei_dev.h
+> +++ b/drivers/misc/mei/mei_dev.h
+> @@ -471,7 +471,7 @@ struct mei_dev_timeouts {
+>   * struct mei_device -  MEI private device struct
+>   *
+>   * @dev         : device on a bus
+> - * @cdev        : character device
+> + * @cdev        : character device pointer
+>   * @minor       : minor number allocated for device
+>   *
+>   * @write_list  : write pending list
+> @@ -557,7 +557,7 @@ struct mei_dev_timeouts {
+>   */
+>  struct mei_device {
+>  	struct device *dev;
+> -	struct cdev cdev;
+> +	struct cdev *cdev;
+
+So now nothing owns the lifetime of the mei_device object?  Do things
+still work at this point in time in the patch series?
+
+thanks,
+
+greg k-h
