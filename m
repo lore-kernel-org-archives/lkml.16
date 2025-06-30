@@ -1,121 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7772E53365
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5205D125B2;
+	Mon, 30 Jun 2025 22:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751323076; cv=none; b=ZFJZLhUehZTKtQoNYqGItu648LCPBVDXfK7vhBE8zxBip36eXk5SMaKzdRCmCGm/zjc2eiUDRFR5KI6L9VlNGmI7jPcvr469KeIaPZQ2xe75UssprlgRt1BHw+uT71VF2AY/Itj9afjxUtwt6PtPe+7kDDr9DrZuBToQeGbDLn8=
+	t=1751323432; cv=none; b=UVcJbj91rwefdxyp9WmM+FxdISIXQ1pKgouB1N+Kl0sA7jKKB47+xAJFpeAH7z5iSojfaJutEcDJZ1Zt6QZPa/qlGI10RGtWuZnDH3n1ILS6a+gublIj63bO1fDE6g2qD7LJkaasew9KcUEJ4GoG4kEa/4bngWj/RVV4PeerwQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751323076; c=relaxed/simple;
-	bh=70ucvB4aUq/iqvMNuc+VM5RiPbZbdmEYZzLs1r23dvk=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Bgl0qQysYLyNZWqO/gOQhq4TvRbfQNACZW+onPYVkAbV2GGcQTnPe2+eTLIVO3yCFWlNQSQEmsJmY80RJ1/j5bXLkha6Da5678XkUyP8Po6pEjY21lPlW2D+hAWcyB5PLsNh/2iW8lWKD0R0sZw+HNQKtPRAeQ/l+NzFZ51fnSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QrU3Hb++; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751323432; c=relaxed/simple;
+	bh=ffb/hTRPmY5KeK6OrulyF3uIh0DRkKHhLxkEtemA18k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r79WHAn+7Zqh8CCJ6qr1XD2jLzfS86lg9gRMpNTebYVdDbXLhjqQCZxuV0H6+gXwD2iB1ptZZUsRSMglmpr2k/7IH00hWPsDqUab8L5839uusN3/QHBLrFKYWjS2wZmITe/uzMXV6BCLro0uqRzh3gunAQjbdGwxxS3tcxG0XDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YuxvQJxX; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QrU3Hb++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751323073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BecaxFgtj7pMRsMs9KUUG3vkYqYBX4743BMREMi+3UU=;
-	b=QrU3Hb++jpPS5YcP3YxrCmSFAjDNalb6+3P26F3WBt2JsLqwZIuEnBrj6IndoIdlrCMOAb
-	OfjyNFM5zOjOSFEjcdBm86SuA6oLuv3ycJlQ99wYWq7hlxh2i9dzn3jiFcTgJuoT2PruIm
-	q8TSeus/vdC5K9dGcoJz8v+zhGl/Kfc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-111-zSDp7qCiP--Nt3jm6LTobw-1; Mon,
- 30 Jun 2025 18:37:51 -0400
-X-MC-Unique: zSDp7qCiP--Nt3jm6LTobw-1
-X-Mimecast-MFC-AGG-ID: zSDp7qCiP--Nt3jm6LTobw_1751323070
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78AA218011EF;
-	Mon, 30 Jun 2025 22:37:50 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A6725195608F;
-	Mon, 30 Jun 2025 22:37:48 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250630180440.3eabb514@batman.local.home>
-References: <20250630180440.3eabb514@batman.local.home>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: dhowells@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-    Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-    Masami Hiramatsu <mhiramat@kernel.org>,
-    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer: Remove ring_buffer_read_prepare_sync()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YuxvQJxX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751323431; x=1782859431;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ffb/hTRPmY5KeK6OrulyF3uIh0DRkKHhLxkEtemA18k=;
+  b=YuxvQJxX04qiPvwXTetOAwkyUiT6A1TqDO5ZPhTBMPF8IFMIJeZUyJoa
+   rj73HJo+xFpsmxqN+GB9rb4bhDrF6cK0b8xFg5UpHIt90fZBycScNiZOf
+   8NmPt31vmAf3XjTAxyw29kVllboR2wMBNvunZBtF7pHsYiHOqFbRG9q3Y
+   6mLxsGd7TMq6Pv/kgcotjXkfp0d2NyqXLXfE3J/ASEHjtEOPsh6P0RZwA
+   n4FN5gXUxiCIFJUEuvjvb4IFX5FO9ZB99By1QOB+Acyc9+94Ssy5d7cIu
+   aLv6lp9v9K4esQUXjSQxmjsbJtCJBrVqndqVKz/6LrkHppWndNF1UCCtr
+   g==;
+X-CSE-ConnectionGUID: 16DktrHjR5eXmqRUY6rIjQ==
+X-CSE-MsgGUID: CVfy4fu0QAG6tjR+97r34A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53526456"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="53526456"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:43:50 -0700
+X-CSE-ConnectionGUID: fiAwSQv8QKmrmHZGKskUGw==
+X-CSE-MsgGUID: +1nCDvr8SWaVJgaf3d6gvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="177246336"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:43:48 -0700
+Date: Mon, 30 Jun 2025 15:49:47 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ricardo Neri <ricardo.neri@intel.com>,
+	Yunhong Jiang <yunhong.jiang@linux.intel.com>
+Subject: Re: [PATCH v5 03/10] dt-bindings: reserved-memory: Wakeup Mailbox
+ for Intel processors
+Message-ID: <20250630224947.GA3072@ranerica-svr.sc.intel.com>
+References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
+ <20250627-rneri-wakeup-mailbox-v5-3-df547b1d196e@linux.intel.com>
+ <CAJZ5v0h_oifyhJq4WiOzS0fcexrjeChJhVyAthfQCX=6v_GumA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2127242.1751323067.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 30 Jun 2025 23:37:47 +0100
-Message-ID: <2127243.1751323067@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0h_oifyhJq4WiOzS0fcexrjeChJhVyAthfQCX=6v_GumA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Jun 30, 2025 at 09:02:00PM +0200, Rafael J. Wysocki wrote:
+> On Sat, Jun 28, 2025 at 5:35 AM Ricardo Neri
+> <ricardo.neri-calderon@linux.intel.com> wrote:
+> >
+> > Add DeviceTree bindings to enumerate the wakeup mailbox used in platform
+> > firmware for Intel processors.
+> >
+> > x86 platforms commonly boot secondary CPUs using an INIT assert, de-assert
+> > followed by Start-Up IPI messages. The wakeup mailbox can be used when this
+> > mechanism is unavailable.
+> >
+> > The wakeup mailbox offers more control to the operating system to boot
+> > secondary CPUs than a spin-table. It allows the reuse of same wakeup vector
+> > for all CPUs while maintaining control over which CPUs to boot and when.
+> > While it is possible to achieve the same level of control using a spin-
+> > table, it would require to specify a separate `cpu-release-addr` for each
+> > secondary CPU.
+> >
+> > The operation and structure of the mailbox is described in the
+> > Multiprocessor Wakeup Structure defined in the ACPI specification. Note
+> > that this structure does not specify how to publish the mailbox to the
+> > operating system (ACPI-based platform firmware uses a separate table). No
+> > ACPI table is needed in DeviceTree-based firmware to enumerate the mailbox.
+> >
+> > Add a `compatible` property that the operating system can use to discover
+> > the mailbox. Nodes wanting to refer to the reserved memory usually define a
+> > `memory-region` property. /cpus/cpu* nodes would want to refer to the
+> > mailbox, but they do not have such property defined in the DeviceTree
+> > specification. Moreover, it would imply that there is a memory region per
+> > CPU.
+> >
+> > Co-developed-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > Signed-off-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> 
+> LGTM from the ACPI specification cross-referencing perspective, so
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> =
+Thank you Rafael!
 
-> When the ring buffer was first introduced, reading the non-consuming
-> "trace" file required disabling the writing of the ring buffer. To make
-> sure the writing was fully disabled before iterating the buffer with a
-> non-consuming read, it would set the disable flag of the buffer and then
-> call an RCU synchronization to make sure all the buffers were
-> synchronized.
-> =
-
-> The function ring_buffer_read_start() originally  would initialize the
-> iterator and call an RCU synchronization, but this was for each individu=
-al
-> per CPU buffer where this would get called many times on a machine with
-> many CPUs before the trace file could be read. The commit 72c9ddfd4c5bf
-> ("ring-buffer: Make non-consuming read less expensive with lots of cpus.=
-")
-> separated ring_buffer_read_start into ring_buffer_read_prepare(),
-> ring_buffer_read_sync() and then ring_buffer_read_start() to allow each =
-of
-> the per CPU buffers to be prepared, call the read_buffer_read_sync() onc=
-e,
-> and then the ring_buffer_read_start() for each of the CPUs which made
-> things much faster.
-> =
-
-> The commit 1039221cc278 ("ring-buffer: Do not disable recording when the=
-re
-> is an iterator") removed the requirement of disabling the recording of t=
-he
-> ring buffer in order to iterate it, but it did not remove the
-> synchronization that was happening that was required to wait for all the
-> buffers to have no more writers. It's now OK for the buffers to have
-> writers and no synchronization is needed.
-> =
-
-> Remove the synchronization and put back the interface for the ring buffe=
-r
-> iterator back before commit 72c9ddfd4c5bf was applied.
-> =
-
-> Reported-by: David Howells <dhowells@redhat.com>
-> Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there i=
-s an iterator")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Tested-by: David Howells <dhowells@redhat.com>
-
+I hope this looks good to Krzysztof and Rob too.
