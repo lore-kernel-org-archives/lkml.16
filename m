@@ -1,100 +1,90 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4BA84A2B;
-	Mon, 30 Jun 2025 10:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5707084A2B
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751280350; cv=none; b=HV2Mu6/KZGtLMBMxef13KnhjaYQQhR2juKSzfZtly3C+gbaeAlufR2ZU0jSFu3WFjkWcNR+p+VIjEXr5lKpTsAWMpekisNPbGkMMhzaoynx59zXMRorCqe+0pZFieHFqAW37XnBp9c7Gl6G7hgbMXBitvHdhlN+ZclvN8QoEr5M=
+	t=1751280358; cv=none; b=UwVsITFZItx5aeIIe8KNYJMnQLKq21VxBx7F04pxcpJlrbTF1Vf42aEPE+2PlJ98/2QhQalLIgk65WJzvf1mrNP2MYkGR6pvlyIkT1DZRlmEAkJkoCasKohydPbbAntRbt0cfIN8NuSjJ2Os+F1DoDBf3DjDAaQkWMMNkG+NhuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751280350; c=relaxed/simple;
-	bh=1qYyqEbzXKw1kYwIHnancyXtFBiFkWq5bCUGJRFKZSs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ttk2h/F+/vBYSI4JkDLwtKFI1Y2mhFPRjjpmW9LkUjS/2ZSSXJoX9yXkV1gGr9LqfiQ/Iov/lMExxttH6gti2BXujih77Ug4fdGI1WLsGQ3s4jP/E04xvKsccfE305TlfxCRoy2mGiFvDMqzd1wc+IBz3HXWwhQxk+VKH0ShudI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=c7zuP1pY; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="c7zuP1pY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RG0EfRjcxYEAjzaFRWe/5+PpKyJWNxUyLp33WTrxNYY=; t=1751280347; x=1751885147; 
-	b=c7zuP1pYpl/7jClrcP5vmlVuvuwAvu3bMz6IDSGKlYuz3IKZnnR+MFxJy0kR++jxaHNhf9PVGER
-	izaLXvEVjPjTgb9k32l9fqx111sjz0mBEM7lqohKVShLm5+4UAzcArVuF+7SvY5tJMusW5sxM3s62
-	V/DYAs8qhBb5KUrbPNiL4MH54pr0DBGNsiTBCF2ChtSCmBjYVVpqoY14KbXdXZINix8g85aCsoqEf
-	VzIr9IfsHPeCrc/yXFk/BRt7XSbwfTrjcS5Hmeo8ccwLuF2Qhaqm+TZ1k0bPRS+fE/XUr+vPJV8tm
-	o3HqJGQf8lTqCh4rAEe1KKrGNFuRIAamHrNw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1uWC1A-0000000499Z-2hFo; Mon, 30 Jun 2025 12:45:44 +0200
-Received: from p57bd96d0.dip0.t-ipconnect.de ([87.189.150.208] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1uWC1A-00000001qO8-1tjy; Mon, 30 Jun 2025 12:45:44 +0200
-Message-ID: <5375b5bb7221cf878d1f93e60e72807f66e26154.camel@physik.fu-berlin.de>
-Subject: Re: kernel/fork.c:3088:2: warning: clone3() entry point is missing,
- please fix
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-sh@vger.kernel.org, Dinh Nguyen
-	 <dinguyen@kernel.org>, Simon Schuster
-	 <schuster.simon+binutils@siemens-energy.com>, Linux-Arch
-	 <linux-arch@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
-Date: Mon, 30 Jun 2025 12:45:43 +0200
-In-Reply-To: <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
-References: <202506282120.6vRwodm3-lkp@intel.com>
-	 <2ef5bc91-f56d-4c76-b12e-2797999cba72@app.fastmail.com>
-	 <57101e901013a8e6ff44e10c93d1689490c714bf.camel@physik.fu-berlin.de>
-	 <46c6b0f6-6155-4366-9cbf-9fbbfb95ce30@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1751280358; c=relaxed/simple;
+	bh=ckfqOjrElKSUbuKeCm9a1f9djSvgw3q0SgTJaaFcTAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A5NuZFkiCES/xnc77rFjn9BlQlJnbMr4N81AeLUzcsJtsk+MTY4HRGJgDSSa4Pl3h8s7E6QgflW7ex1EONWeKQ4zEb+Hv1V/qJhiC7i5T+9+yStLdM7xivwRMTWnHYa1bIE9qIkJAArIXQ/z+RPzgkNubRo6Iw8YYgn+4xv8Bo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8E0B1F60;
+	Mon, 30 Jun 2025 03:45:40 -0700 (PDT)
+Received: from [10.1.34.165] (XHFQ2J9959.cambridge.arm.com [10.1.34.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A96E03F58B;
+	Mon, 30 Jun 2025 03:45:52 -0700 (PDT)
+Message-ID: <7eaee53b-d538-4991-addd-379a380b8ee2@arm.com>
+Date: Mon, 30 Jun 2025 11:45:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] Optimize mprotect() for large folios
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250628113435.46678-1-dev.jain@arm.com>
+ <20250629160549.da922e78d202c510a1ec68f8@linux-foundation.org>
+ <29f418be-31c4-47b0-bcac-3375f57d00e7@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <29f418be-31c4-47b0-bcac-3375f57d00e7@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Arnd,
+On 30/06/2025 04:33, Dev Jain wrote:
+> 
+> On 30/06/25 4:35 am, Andrew Morton wrote:
+>> On Sat, 28 Jun 2025 17:04:31 +0530 Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>> This patchset optimizes the mprotect() system call for large folios
+>>> by PTE-batching. No issues were observed with mm-selftests, build
+>>> tested on x86_64.
+>> um what.  Seems to claim that "selftests still compiles after I messed
+>> with stuff", which isn't very impressive ;)  Please clarify?
+> 
+> Sorry I mean to say that the mm-selftests pass.
 
-On Mon, 2025-06-30 at 12:02 +0200, Arnd Bergmann wrote:
-> Some architectures have custom calling conventions for the
-> fork/vfork/clone/clone3 syscalls, e.g. to handle copying all the
-> registers correctly when the normal syscall entry doesn't do that,
-> or to handle the changing stack correctly.
->=20
-> I see that both sparc and hexagon have a custom clone() syscall,
-> so they likely need a custom clone3() as well, while sh and
-> nios2 probably don't.
->=20
-> All four would need a custom assembler implementation in userspace
-> for each libc, in order to test the userspace calling the clone3()
-> function. For testing the kernel entry point itself, see Christian's
-> original test case[1].
+I think you're saying you both compiled and ran the mm selftests for arm64. And
+additionally you compiled for x86_64? (Just trying to help clarify).
 
-Thanks for the explanation. So, I guess as long as a proposed implementatio=
-n
-of clone3() on sh would pass Arnd's test program, it should be good for mer=
-ging?
 
-Adrian
+> 
+>>
+>>> We use the following test cases to measure performance, mprotect()'ing
+>>> the mapped memory to read-only then read-write 40 times:
+>>>
+>>> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
+>>> pte-mapping those THPs
+>>> Test case 2: Mapping 1G of memory with 64K mTHPs
+>>> Test case 3: Mapping 1G of memory with 4K pages
+>>>
+>>> Average execution time on arm64, Apple M3:
+>>> Before the patchset:
+>>> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
+>>>
+>>> After the patchset:
+>>> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.3 seconds
+>> Well that's tasty.
+>>
+>>> Observing T1/T2 and T3 before the patchset, we also remove the regression
+>>> introduced by ptep_get() on a contpte block. And, for large folios we get
+>>> an almost 74% performance improvement, albeit the trade-off being a slight
+>>> degradation in the small folio case.
+>>>
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
