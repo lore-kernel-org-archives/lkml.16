@@ -1,195 +1,109 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FFD23ABB5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D9320103A;
+	Mon, 30 Jun 2025 23:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324557; cv=none; b=WHMusFqVpU3V7M2ASbaMAw1PAJWzNc5clzgQ55LvA8XQFl7CWyrbor6pcTt+DTdH4v33vdDA+sZW2ieYYgLu48FxzlMns6Ebupj28ntBGB5nmRRK3K2vJ+R7ysStyoX3BTjpIK+uNzm3WaDJcR2a1mLDB2+sFgW2sSLcA/zosMY=
+	t=1751324615; cv=none; b=YaAbxK3IbsR9pSUX0proXvbI2i+TP0j6kgh0FuLDd8rpCQiHv0OgrOq5fPIj8f+cAav1NsZerKfVqozK413eYYLoJJg2TTSyvPXa8SHpDn9pkImuW5RkEps0nOW1vFe9rm4DlOXiocqXDApUm92MaN92HGi/FJKIbaxXpAl2SIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324557; c=relaxed/simple;
-	bh=hwtZs/WGUT3Y7iYGgULmVMdUiB+5NtljGQeMNYIR6Kw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kac2RP/fvAQGcIfqW07RA+wDIowCfdZ9mpx5PK8EaLdL/p2GSua/z1AXZHd+lYjRtmco2PjokJLBdVkL3IOSY5cFDlkf8Tgai+n7ol2hpXgCIxbj3MJq6c0o9FqK6UavA7eoQcRwi95ewj6o2O7GMulHxLry1aXcJDBeAK5NU1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BGXhKyS/; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751324615; c=relaxed/simple;
+	bh=sWv863fyXuCrnXTBpsU+O9opYOp2wtSbPC8lgNg6dbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GNwGbAZOt4yk+YxoXg2b7yc+tE6//tnT39qfVz10bJqtEchwQsioUHoUbR1MArbDdrYA71YIEmnJKr1TurYsha5H+NqvhuKS3ra/vYs45BK3ZQDCv7GTwBhOfG+9BTOyeJoQFdw92R+JV0rjwQYf9OZDk3iKNQU+UWSdmYwwlHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Rl+RTzOx; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BGXhKyS/"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60b86fc4b47so1995a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751324553; x=1751929353; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0qLMLP3Ske3Nf/leK3GVL8kkxjqArizAC4Coyy9U/9k=;
-        b=BGXhKyS/XZosubbljqIJiL42QxA4LlXCEBc2xwjP4bgj/cvk1VK8Vw6rKZ4s57er8t
-         vnj9rwoDjHm+PcNoNqVP8P5saut0QmqB4GmsMdNsDBFsXuEIvG+Z+YwpRin94Pfihcfm
-         oHYKWEcmYsCWym9xUOqZWGoMVE1CNA2PLUf7EnCUlrxO4rMKnx2I0q3rHt9vWfTwoudu
-         +xfmfBWY6+6D2bqDBlzSWAf147GjQV7YiC314YUM8+JVBF+kctXBXx35LKzsGg5j+8jV
-         vQNl5zR3Q/BKTrQPrkqilLc9avbMNEoGaCVIFodXTQarkpKeyHuPg2m/bxrd6puLYuEo
-         gzIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751324553; x=1751929353;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0qLMLP3Ske3Nf/leK3GVL8kkxjqArizAC4Coyy9U/9k=;
-        b=YhnGqF4EsaGYSZPkTrU9SCAdR2smXr4IAW2B3OP4o92apcyGAMQ/HnyTmTX24/pKk9
-         b2tGQVkazV6HVXCUUBOo5tdtZqkyiy3cxbPhPIF/ArRaet91NTcNtnCvdiU8vtf9qiPT
-         2Z9gOVepIQEVlsMK2N7KFkdRyzo1zE9w6bzXqGec3c/K4XKY0akCWr/eoMqJ6Z3mOPqZ
-         6j3b2ZovS89lMqkcIxHhc2IninMNiT+4VB2LKejMgdI2yEecalzVfbwmNpUHi4srB+kh
-         jF53YXHnye2LnDJqaPVnHhDAFJgSIvS+oU93NbxJQy7Olzrczx77P0n0l+qRUJRawNMg
-         LYQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhsNyqx9QH/sp9NhV+FMBJ2g3O0hxvCl6et2Ly1IZAzGZS4xghqZ6WPpdrVETveOTmedsPeQKV0IKdwJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGWwdH+rwto0C8xdEvSXJaqo377uwi4aRLz2mmFyLYiMKLr4YU
-	jcSkNLLxU9gboE6zurV8ZdoPdxSWYoJ1Z8pNmqHK/0YDeOzmfFLOOnNhZ4GWyrNf2MjgCkcgMyn
-	GfawGoRL6TGUQY5ToyPc0AV9E+Ie79NUnEBMxatsAvE/4aIbTQmoBUHyiRlo=
-X-Gm-Gg: ASbGncvokyDwnY5K1jZYhwEM2Q8BBU1E15eoUAlvQiBMs8KDpvQvvaUFGXiwArsXWCq
-	qKVZWEJWrnzW5NCmwWcRoXdOhQV2+iJK6mY+L8TvyUlXyzy/n9j81Tx2WLC8NtvjNZKV8cus8cm
-	sPspZUgLPcqBLuANZQhzBsBsm7YUO+mt0b6aeHpZx9mo06chtUWROiAQH/DYsCTNEsv9W2cA/Ad
-	lo8NIMMbrkJ
-X-Google-Smtp-Source: AGHT+IFS0q55gmlJO1hey+/BYI7FeaCTIrlOqFtFfHKgmIhIAMpK39dpsalABFCEMDB/+CBiks2Od8jLmmLp43XyJeE=
-X-Received: by 2002:a50:fc10:0:b0:607:30a0:12f4 with SMTP id
- 4fb4d7f45d1cf-60e38a75510mr3647a12.5.1751324552596; Mon, 30 Jun 2025 16:02:32
- -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Rl+RTzOx"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 19694838;
+	Tue,  1 Jul 2025 01:03:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1751324590;
+	bh=sWv863fyXuCrnXTBpsU+O9opYOp2wtSbPC8lgNg6dbQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rl+RTzOxv+c6CaBMiG4nfFqUhF2iKYmXe98VcGiQWiLz5mUFxi48OCiX4syKITPCh
+	 C4CiSNVute4XMfdZu14IMWcSaCEPckPaBOkKeU5NylRPgV5zB93WgCQqEIBVk+1A9M
+	 Q5TbYzSnThwSnOXjRF7qijiNoM8D3+7DsCur8T5c=
+Date: Tue, 1 Jul 2025 02:03:06 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Alice Yuan <alice.yuan@nxp.com>
+Subject: Re: [PATCH 1/5] media: nxp: isi: add support for UYVY8_2X8 and
+ YUYV8_2X8 bus codes
+Message-ID: <20250630230306.GF15184@pendragon.ideasonboard.com>
+References: <20250630-imx8qxp_pcam-v1-0-eccd38d99201@nxp.com>
+ <20250630-imx8qxp_pcam-v1-1-eccd38d99201@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615144235.1836469-1-chullee@google.com> <20250615144235.1836469-2-chullee@google.com>
- <0f09a845-fbaf-4ddf-b684-a1182f85a9ff@kernel.org>
-In-Reply-To: <0f09a845-fbaf-4ddf-b684-a1182f85a9ff@kernel.org>
-From: Daniel Lee <chullee@google.com>
-Date: Mon, 30 Jun 2025 16:02:20 -0700
-X-Gm-Features: Ac12FXyYd5KOlSBFKj1urp028eA0EYYBuMW47qdrBBYTKnM3VCqPKVInYiuw36Y
-Message-ID: <CALBjLoDVk976imbZ8-G97jD0aHE2yzL5y-covCmp7V-97aEg6g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] f2fs: Apply bio flags to direct I/O
-To: Chao Yu <chao@kernel.org>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250630-imx8qxp_pcam-v1-1-eccd38d99201@nxp.com>
 
-On Mon, Jun 16, 2025 at 5:41=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> On 6/15/25 22:42, Daniel Lee wrote:
-> > Bio flags like REQ_PRIO, REQ_META, and REQ_FUA, determined by
-> > f2fs_io_flags(), were not being applied to direct I/O (DIO) writes.
-> > This meant that DIO writes would not respect filesystem-level hints
-> > (for REQ_META/FUA) or inode-level hints (like F2FS_IOPRIO_WRITE).
-> >
-> > This patch refactors f2fs_io_flags() to use a direct inode pointer
-> > instead of deriving it from a page. The function is then called from
-> > the DIO write path, ensuring that bio flags are handled consistently
-> > for both buffered and DIO writes.
-> >
-> > Signed-off-by: Daniel Lee <chullee@google.com>
-> > ---
-> >  fs/f2fs/data.c | 10 +++++-----
-> >  fs/f2fs/f2fs.h |  1 +
-> >  fs/f2fs/file.c | 11 +++++++++++
-> >  3 files changed, 17 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > index 31e892842625..71dde494b892 100644
-> > --- a/fs/f2fs/data.c
-> > +++ b/fs/f2fs/data.c
-> > @@ -416,10 +416,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *=
-sbi, block_t blkaddr)
-> >       return 0;
-> >  }
-> >
-> > -static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
-> > +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio, struct inode *inode)
-> >  {
-> >       unsigned int temp_mask =3D GENMASK(NR_TEMP_TYPE - 1, 0);
-> > -     struct folio *fio_folio =3D page_folio(fio->page);
-> >       unsigned int fua_flag, meta_flag, io_flag;
-> >       blk_opf_t op_flags =3D 0;
-> >
-> > @@ -446,8 +445,8 @@ static blk_opf_t f2fs_io_flags(struct f2fs_io_info =
-*fio)
-> >       if (BIT(fio->temp) & fua_flag)
-> >               op_flags |=3D REQ_FUA;
-> >
-> > -     if (fio->type =3D=3D DATA &&
-> > -         F2FS_I(fio_folio->mapping->host)->ioprio_hint =3D=3D F2FS_IOP=
-RIO_WRITE)
-> > +     if (inode && fio->type =3D=3D DATA &&
-> > +         F2FS_I(inode)->ioprio_hint =3D=3D F2FS_IOPRIO_WRITE)
-> >               op_flags |=3D REQ_PRIO;
-> >
-> >       return op_flags;
-> > @@ -459,10 +458,11 @@ static struct bio *__bio_alloc(struct f2fs_io_inf=
-o *fio, int npages)
-> >       struct block_device *bdev;
-> >       sector_t sector;
-> >       struct bio *bio;
-> > +     struct inode *inode =3D fio->page ? fio->page->mapping->host : NU=
-LL;
->
-> fio->page will always be true now? We can pass fio->page->mapping->host t=
-o f2fs_io_flags()
-> directly?
->
-> Thanks,
+On Mon, Jun 30, 2025 at 06:28:17PM -0400, Frank Li wrote:
+> From: Alice Yuan <alice.yuan@nxp.com>
+> 
+> Add support for media bus codes UYVY8_2X8 and YUYV8_2X8 in the ISI pipe.
+> These formats are commonly used by sensors like ov5640, which typically
+> uses MEDIA_BUS_FMT_YUYV8_2X8.
+> 
+> Signed-off-by: Alice Yuan <alice.yuan@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/media/platform/nxp/imx8-isi/imx8-isi-pipe.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-pipe.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-pipe.c
+> index d76eb58deb096..1a4bf1ac02641 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-pipe.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-pipe.c
+> @@ -39,6 +39,16 @@ static const struct mxc_isi_bus_format_info mxc_isi_bus_formats[] = {
+>  		.output		= MEDIA_BUS_FMT_YUV8_1X24,
+>  		.pads		= BIT(MXC_ISI_PIPE_PAD_SINK),
+>  		.encoding	= MXC_ISI_ENC_YUV,
+> +	}, {
+> +		.mbus_code	= MEDIA_BUS_FMT_UYVY8_2X8,
+> +		.output		= MEDIA_BUS_FMT_YUV8_1X24,
+> +		.pads		= BIT(MXC_ISI_PIPE_PAD_SINK),
+> +		.encoding	= MXC_ISI_ENC_YUV,
+> +	}, {
+> +		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
+> +		.output		= MEDIA_BUS_FMT_YUV8_1X24,
+> +		.pads		= BIT(MXC_ISI_PIPE_PAD_SINK),
+> +		.encoding	= MXC_ISI_ENC_YUV,
 
-Thanks for the insight. Since fio->page is always non-null here, I'll
-remove the unnecessary code.
+This doesn't seem quite right. The format here corresponds to the pixel
+link interface between the ISI and its source. There's no difference in
+this patch in in register values between MEDIA_BUS_FMT_UYVY8_2X8 and
+MEDIA_BUS_FMT_UYVY8_1X16. I don't think the ISI would be able to
+automatically differentiate between receiving UYVY on a 16-bit bus with
+one clock per pixel, and receiving it on a 8-bit bus with two clocks per
+pixel. I believe you should translate MEDIA_BUS_FMT_UYVY8_2X8 to
+MEDIA_BUS_FMT_UYVY8_1X16 in the source subdev driver.
 
->
-> >
-> >       bdev =3D f2fs_target_device(sbi, fio->new_blkaddr, &sector);
-> >       bio =3D bio_alloc_bioset(bdev, npages,
-> > -                             fio->op | fio->op_flags | f2fs_io_flags(f=
-io),
-> > +                             fio->op | fio->op_flags | f2fs_io_flags(f=
-io, inode),
-> >                               GFP_NOIO, &f2fs_bioset);
-> >       bio->bi_iter.bi_sector =3D sector;
-> >       if (is_read_io(fio->op)) {
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 9333a22b9a01..3e02687c1b58 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -3972,6 +3972,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *=
-fio);
-> >  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
-> >               block_t blk_addr, sector_t *sector);
-> >  int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr=
-);
-> > +blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio, struct inode *inode)=
-;
-> >  void f2fs_set_data_blkaddr(struct dnode_of_data *dn, block_t blkaddr);
-> >  void f2fs_update_data_blkaddr(struct dnode_of_data *dn, block_t blkadd=
-r);
-> >  int f2fs_reserve_new_blocks(struct dnode_of_data *dn, blkcnt_t count);
-> > diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> > index 696131e655ed..3eb40d7bf602 100644
-> > --- a/fs/f2fs/file.c
-> > +++ b/fs/f2fs/file.c
-> > @@ -5015,6 +5015,17 @@ static void f2fs_dio_write_submit_io(const struc=
-t iomap_iter *iter,
-> >       enum log_type type =3D f2fs_rw_hint_to_seg_type(sbi, inode->i_wri=
-te_hint);
-> >       enum temp_type temp =3D f2fs_get_segment_temp(sbi, type);
-> >
-> > +     /* if fadvise set to hot, override the temperature */
-> > +     struct f2fs_io_info fio =3D {
-> > +             .sbi =3D sbi,
-> > +             .type =3D DATA,
-> > +             .op =3D REQ_OP_WRITE,
-> > +             .temp =3D file_is_hot(inode) ? HOT : temp,
-> > +             .op_flags =3D bio->bi_opf,
-> > +             .page =3D NULL,
-> > +     };
-> > +     bio->bi_opf |=3D f2fs_io_flags(&fio, inode);
-> > +
-> >       bio->bi_write_hint =3D f2fs_io_type_to_rw_hint(sbi, DATA, temp);
-> >       submit_bio(bio);
-> >  }
->
+>  	}, {
+>  		.mbus_code	= MEDIA_BUS_FMT_YUV8_1X24,
+>  		.output		= MEDIA_BUS_FMT_YUV8_1X24,
+
+-- 
+Regards,
+
+Laurent Pinchart
