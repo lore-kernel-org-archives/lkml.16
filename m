@@ -1,115 +1,124 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519D328B7DC
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98355213E6D;
+	Mon, 30 Jun 2025 13:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290102; cv=none; b=iusHf7LW0PmSMsggHw3yMLeXxVhE7H4/MfdZK6bhL7Pqh04avrt6M++T1UTYk3c5h83Ym+O7woB2DJvqGAaqf+INyY51pi8CXRNcl6bAGeOvCd6P9zDjqevh+ldaOVtFUlaRQWsPi4cr/juJ6aaLs4W4e14RMYDBVaun6V4S7h4=
+	t=1751290184; cv=none; b=Xc/afp6zIEExI+vf62ZgeRnVfLBVWbPMp5IJjobilR2lHZE1vfss0Jqkk8Tl0mrrOlJ+HZDR8WGVaIe6sJ7uo+2BGoSOqvx49aB2gqeVRwxO5pXIxR6PQ2cv+ycmpzu3ZYaGeHtA1eIBa+JcpOUeqtU2MUX8ilqJzj9BNZBNeLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290102; c=relaxed/simple;
-	bh=JOPlee8+H1wqCZ/ex4u70pd3NWavrS1JM0blGK0HgUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ICc8tthJ56LLqFRIf0EeqJwsJ1p924mNPc6zyob9eKALON9y0F6Wp4mOCdIhbQD6Izb+N8oH1G3GKkcSF7eKgpU82GMiBusu8BdIHk/SrKR/wZvI+8+UodYe0pG5fBoAixgpTD6cyAldqH04gYk4S6kiOXF6oY0F66NGSNe208U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=KHPEZGc+; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1751290184; c=relaxed/simple;
+	bh=tMGRzd3bK/I95D1NqkLcHSqiaWOSRKYJS++gRdKmVhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CpXoJ4RVs1+05BHs2KZEFccIVMmke/Xcy9yxCSHZi9HPwqmo7Zb33sHID9Aa2Wo6057hA8Vhi0muoCpQT0Ku/EWC+z2/MY1IALh+CqJkR3M5LDOKCf/6T1AnTZshDl+eVvqKbAHDUGAHP36gGwBdvZK/arpbNulzYM/LI1QMypo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6pCgFnN; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="KHPEZGc+"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60c93c23b08so3962651a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:28:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6pCgFnN"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-74264d1832eso2686273b3a.0;
+        Mon, 30 Jun 2025 06:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1751290098; x=1751894898; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JOPlee8+H1wqCZ/ex4u70pd3NWavrS1JM0blGK0HgUI=;
-        b=KHPEZGc+l3XTOiNeIK/SH4Vj3ktmjbktN86pSTlJpeSSubVlwrKT3rM2f94lb6sXVq
-         Tb1JJzsbs0v9dK+zkz9ukRyQQnIkKjZxVX430ZovDeihIu47oGVkSJG0qci/lSc/jofj
-         bnSqgi+yatHCXYVBHDKDKdJafTzKCXexyytrGoPANTNPh2iNzbqki71MrQJg7ioalQVt
-         LAO6l3nEYmP0fx4nzSbXdg1kb2P5Q/XW/HXcLxFOiEU/6T+e38B5tF1mdYQZj0ZNOPoq
-         Abj8fpg/yLm1lPTqsrhO9IwE+D8SY+7QJYPZR5R5g1x3XfjjCxLO0etvFvH80YKteyyx
-         w3Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751290098; x=1751894898;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1751290182; x=1751894982; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JOPlee8+H1wqCZ/ex4u70pd3NWavrS1JM0blGK0HgUI=;
-        b=DmXMoS16SQIaZSNttLCUsBUnGidF7KRABvY2aSGXK7phQl50bC6wfS69TYn5iRkZG/
-         D3iT++jjgJngDr0/1qS70ycWXDeWPJOxDkBrIznBChQroFleTlTB7a9kdRnbHP7UCYIK
-         J69t7KUmCwUG4ZLj2Y1AtNQU0mTWDg6ECscJIaECzDNvkN/+6CbvRVtptOSCQFkQoq2E
-         7C44i6hL5QH3fccR7uKNpMSVhQs0tEDWJZJcS9aWImF9+VOvU4uOU1OyRBiPp5OWjF0w
-         MDL2MTAOvgWfHkVA3pEjG4DhLIT6wS4dPhPCDZKUAB33dhKwVxXBk95mY4UPEftp28rg
-         Fn3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXJLxYHalFrEu2SE4ASAIpIwiKnCAcrTqFMZ2P7Ev4QUAcohyqNffdZRGH9QhrhfsCmGETLrxDXlMZh5Pg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCGHxuGffvCjrtflzcPUchRPrXYYLn43BhzzX3j3lwyqPNrf11
-	QumM2VeqkFeRuknXMNQRznQSJt3OnGgi40RzZbeM5MTHlYKaq/306qoQuMhXayEgEgQHR8roDxu
-	dnxGR9VowTMc55fAScFN+ap9JdQI6KbMZ3XS9PyY+KA==
-X-Gm-Gg: ASbGncvJFQr85YcAfWFKQQ0AOUXHnbWBlrF8HuQ7/lNa6+jFOAn0XeO+IqZuaDUaEcM
-	tXv0dLME69TcJGvVv3XIwuFbhBh9UNlfpjhT0gSazNRi5u+s/uqGkirzcK29s+63d2W1p9nP/yX
-	v7Rgq9EbqVjE5NAMLGhilvQBH1Q9QopCdAhPVafEzIDU8rkj15hkNW/ifKqfZWeYKJwKbUUQ==
-X-Google-Smtp-Source: AGHT+IHCK0fPjZVZy4IAIBdmQg4VEfs7xo5JaePIp6jIQWk4rF8khpEsxLOS+G1AlpruG5EP5fXrkymRLvSpySiCwDQ=
-X-Received: by 2002:a05:6402:5108:b0:5fe:7b09:9e27 with SMTP id
- 4fb4d7f45d1cf-60c88b55d4dmr9970788a12.12.1751290097533; Mon, 30 Jun 2025
- 06:28:17 -0700 (PDT)
+        bh=7LzTcO/m9tkAD8Gqe/zjzIYRZPiIiP4NraWiu1v8c0Q=;
+        b=L6pCgFnN6/ZZ9DN8oEn4zfHTpIslk25cnbdWNmnxDvgm2c7KLsnhQwSo0S71YTcuzH
+         GgUgcCsNBgLaZQ6YgmhA4nGyePFS8IL3sKy3edFVV97/fxFUBVsj3ZMR2UrXuuhYGDmm
+         DQkdfBOZYJoP27DyETqL8n4/14fH4zLHKou/8JJ5J+JPIsXzGHeuTfmbkEiX/DeGXbvg
+         btK2wpiCuQ0l+xNtjL4xOs2H31AS9cjvT3VoVnwHKutBvlXzZ0y3pbUnvZIGUFrr0ALQ
+         hiDB5UXwqH4AUANJYUsLnXzjqu+PaKS3IBnhF2i71AUMmUc7l8KZr0Tg/mun4lK39WMk
+         ZwYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751290182; x=1751894982;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7LzTcO/m9tkAD8Gqe/zjzIYRZPiIiP4NraWiu1v8c0Q=;
+        b=Vqeoh9WhVWYcU9UcY4qtEWhSAjRU2CmiIMIPyUN3NTcjpGiwa1AwwSgNKp6tT6SL3W
+         1L3zeerWdlK2NZ3F0eKkJjPqbGWkixJhhj2AA6eaGEgydK3/7FaP6mGYtl6IH1RUX2p4
+         CI6L5qNl+k4vsk8dd28oYl2IbykJbjZZQ65DlhT0Ri9DIaqwLKpS5fAHLwOrFQFJ9cyf
+         nEmeIEBWGKXzzShNLB0D166q2RuU5ATyGrevOh2J6Qn9K9QU+gEbx4HGvpkWBY7TsES2
+         vSpHOd1LAibNaY7FtPiQH17UUGxvsH8BK6lPlvVAIeCjU3FoCpR1bc8eHA0V+YC/M9Gx
+         VejA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6hch0MYMkBjH9zQsT5fEzXLUZeXyo48O9jpDEAuj8gWa7lp36OH2oz2cVpD/0go1KJPuHvk0w3Wzh@vger.kernel.org, AJvYcCUNDEmJneA315Uf3TlriBkTwnb4AR/UyQ1zqusVHBuDiNkmLjc52m0zCZa33o18UMlHh/Eyj+ElH+RivAWb@vger.kernel.org, AJvYcCVxnXhuGOXn0tk0YiQzY9GciobMv6iG7rLKNhDCkmNO0Yja8ze/gfYmzV+VPPuaNPYY5wwydLCd6tJ3uFOESvU=@vger.kernel.org, AJvYcCXiRFspMQB/XXpCCvdLEGetI35+gT2zWDtB08xI/XgJ64Iie6dtpbGM6/X/4qQSagQtnLTYZy9hB1AaMx34@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcxQkyPcdp9kZJ9pFMKpO6iJqcN9BLHkgN43Q2JBUJW2s/NXY9
+	+ku34oPF76WdS2ysUPsxJl3Hpi2R2nFCWp4YQf5+mxaMc2Sy57wppdl4
+X-Gm-Gg: ASbGncu5obdHDvXg8/KiqXeeMAsByE7psuDX7LF5evA5qib12VQ8T8V7B2NqORm9jyW
+	u0FzfhpMIBZYXfBvo5MeFsvWe002qW8UV50Nrnme6ciopPZMj4xVj1JB3/KbvduI4K4iIlRo0do
+	1JbX0wvoAABswMIQVc4mYOMUdJwQf4T7Buq2DIMJSZq0xCMTSPwor8hmVDEPFmDngm+B8+hemfE
+	lqtg6KlyAbeF3MQryErLS3JeR/tDURDVSlfcnHGb6lFZpXCVItKguXsRbYhexSZKToqzLwxcHpn
+	2E1DqbAEiJP6zuAeVX+CldiJvA1m23naDlMatN2llj/3T/cZFL3nyK3IJKGx6pqf8vVTS+tyZho
+	=
+X-Google-Smtp-Source: AGHT+IGvSGnok+XQLrJYo+ik4oz3Ag1fPM5VlkYA503/kIRfskW4gdLdiEAL+3hl/iMdowvVnXbgzw==
+X-Received: by 2002:a05:6a00:997:b0:730:95a6:3761 with SMTP id d2e1a72fcca58-74af6e3f46amr20055931b3a.3.1751290181725;
+        Mon, 30 Jun 2025 06:29:41 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af541e655sm9110887b3a.65.2025.06.30.06.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 06:29:40 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 30 Jun 2025 06:29:39 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: wctrl@proton.me
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 04/11] dt-bindings: watchdog: mediatek,mtk-wdt: add
+ MT6572
+Message-ID: <f56c2213-e7ef-4b91-b843-e54d8821e044@roeck-us.net>
+References: <20250626-mt6572-v2-0-f7f842196986@proton.me>
+ <20250626-mt6572-v2-4-f7f842196986@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
- <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
- <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
- <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
- <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
- <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
- <CAENh_SSduKpUtkW_=L5Gg0PYcgDCpkgX4g+7grm4kxucWmq0Ag@mail.gmail.com> <CAADnVQ+_UZ2xUaV-=mb63f+Hy2aVcfC+y9ds1X70tbZhV8W9gw@mail.gmail.com>
-In-Reply-To: <CAADnVQ+_UZ2xUaV-=mb63f+Hy2aVcfC+y9ds1X70tbZhV8W9gw@mail.gmail.com>
-From: Matt Fleming <mfleming@cloudflare.com>
-Date: Mon, 30 Jun 2025 14:28:06 +0100
-X-Gm-Features: Ac12FXx0fYS0dAUVkSwEgtfKWEJIu58_CB5GnzygkiN6a3f1tL111CFtlrAmvas
-Message-ID: <CAGis_TUNfUOD3+GdbJn1U33W8wW5pWmASxiMa5e5+5-BqJ-PKw@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Matt Fleming <matt@readmodwrite.com>, Ignat Korchagin <ignat@cloudflare.com>, 
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	kernel-team <kernel-team@cloudflare.com>, Jesper Dangaard Brouer <hawk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626-mt6572-v2-4-f7f842196986@proton.me>
 
-On Fri, 27 Jun 2025 at 20:36, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> Good. Now you see my point, right?
-> The cond_resched() doesn't fix the issue.
-> 1hr to free a trie of 100M elements is horrible.
-> Try 100M kmalloc/kfree to see that slab is not the issue.
-> trie_free() algorithm is to blame. It doesn't need to start
-> from the root for every element. Fix the root cause.
+On Thu, Jun 26, 2025 at 11:53:57AM +0300, Max Shevchenko via B4 Relay wrote:
+> From: Max Shevchenko <wctrl@proton.me>
+> 
+> Add a compatible string for watchdog on the MT6572 SoC.
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Max Shevchenko <wctrl@proton.me>
 
-It doesn't take an hour to free 100M entries, the table showed it
-takes about a minute (67 or 62 seconds).
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-I never claimed that kmalloc/kfree was at fault. I said that the loop
-in trie_free() has no preemption, and that's a problem with tries with
-millions of entries.
-
-Of course, rewriting the algorithm used in the lpm trie code would
-make this less of an issue. But this would require a major rework.
-It's not as simple as improving trie_free() alone. FWIW I tried using
-a recursive algorithm in trie_free() and the results are slightly
-better, but it still takes multiple seconds to free 10M entries (4.3s)
-and under a minute for 100M (56.7s). To fix this properly it's
-necessary to use more than two children per node to reduce the height
-of the trie. And in the meantime, anyone who uses maps with millions
-of entries is gonna have the kthread spin in a loop without
-preemption.
-
-Thanks,
-Matt
+> ---
+>  Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> index 8d2520241e37f0e8a7526cbc99d5aa0d4edc9a55..ba0bfd73ab62a86befead007d4b7d2a870b81a0c 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+> @@ -34,6 +34,7 @@ properties:
+>        - items:
+>            - enum:
+>                - mediatek,mt2701-wdt
+> +              - mediatek,mt6572-wdt
+>                - mediatek,mt6582-wdt
+>                - mediatek,mt6797-wdt
+>                - mediatek,mt7622-wdt
+> 
+> -- 
+> 2.50.0
+> 
+> 
