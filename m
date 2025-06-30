@@ -1,149 +1,94 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6A28A73A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA1B22301;
+	Mon, 30 Jun 2025 13:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289508; cv=none; b=YogVMLmtokH1BaG0SiQvAE+opFUbO9jxBTKtiKRiUS5FObF2f/zesstStBzg9Qw9JCatRnoQ3dpsRQ5gK/aVrj+GCzmbDTT1Mx7gELvzEeqSgFGrgk6/RIKzvnuvl6WkVibEHEPAjtv3o/e2e/aUs3+wgot16nwrgQJyhvyIS+w=
+	t=1751289565; cv=none; b=ZW3sEiVP7FjnI4ZQM3OdnkFigx893c0THlto/0g8qQlbjJ3fc7OCEdoKNmei3a9coeZve+CP0RbyJkQBJGS9hBnAY8fxMpa/eerot8s4lGPlcaLNWiDOBH014y3fgjqlGT/vVnuFEyQOQWPvPaPAHO+RDu7UVWj1eJWL8ZWZb68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289508; c=relaxed/simple;
-	bh=lTodMpiU5uuVCAXQ/xJnIx+Vmi4vwQ6HLDXj4qTx9vQ=;
+	s=arc-20240116; t=1751289565; c=relaxed/simple;
+	bh=BB4EhAJ5HkH6vvLgwEbYk7Jud5q2LTgGhCpMP2egKY0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XgZ9+ww/kCKQ3idRCYccbfCYbShH3uM87Z6TRak6ctLt6bmNhy7aZWyOzLutYcdeMl9GLAySXQsvYqojSZhxawa9dG5xRreUNzXEMF/wTYns/hBmGkpPUvvbhZRGWyPZdoy5OFa3+qsHFMOFt6kmIsKw2TIz3qRhwsgXqD53/9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=pRx/iQt2; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+	 To:Cc:Content-Type; b=SdXgBGUWWqFD6tTiCHxDlMLgmWZTtI2GxQXKlJFIvQt+O4TebxICvfzQzIZ/ZS2oTxX3N14Fogzpgx3xLqYPzZUPgn2jJz7h7h8aSHYsm+Vfw3iw43n/WaKcAbjo6y1EdKFKwPgm+tqEq7Vs1nPvAR3SfcNaWxL+xXs357DdRnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SU7bDU9m; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="pRx/iQt2"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0df6f5758so370319666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:18:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SU7bDU9m"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b7cf56cacso42516791fa.1;
+        Mon, 30 Jun 2025 06:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1751289505; x=1751894305; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751289562; x=1751894362; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
-        b=pRx/iQt2r9Pvyaa2L1OuB1hChLu7PshuT+14UlIp68vk5Y49Ad/UPWyyphWic5nit5
-         WLlnh9uTrgCLh6e3KLYHKpAvjIKzleg6DlI0nXbxCHiXjgbzs+8dDevv9wSnpfy+IwAA
-         //FF7oQK4EH89QibGMWK/3onxFx9XswMdCSp2MBoG4Nou3HrBgqvtPw5ZPQMWyOSZjs2
-         M4836LLojD8qCTqeEDXpPAD3gjgiNQqhbUkpxwWfBhlMS9idNOZOfdGlvJulxTdrOnE6
-         alnsshOQzru5++3lEOPFYiNd9rYd+evD3jXbSls//rZn1WttZnBlEObW2KbWYFVFttfb
-         rthQ==
+        bh=BB4EhAJ5HkH6vvLgwEbYk7Jud5q2LTgGhCpMP2egKY0=;
+        b=SU7bDU9myprdIXpFm9eyHYnllvz0eyBBRh2T9Kg977WGgis3bVYme3K+ESlhlihOwR
+         LypZXO5GawdUIvnasw1O8+j+ODXx7kDGG2JR9+twR+d2kZKkCOwFYnwdDKWI5a6Ne3Nx
+         hgbvIqrWp9B2aSKLUPfBwMgSh6e6N1/IyKLgknYoAZNCGWUkCUKQ9ACCHCCeqffFzwaa
+         zF3vbW6OFp0nvjnLiT6DO0YfqsGRty22hUdDMAJevH5afi9Jw5OFQNrm8h37qpyMjYpD
+         /7YADu7dRcFjip9GY+ESUBG8IW/aH4EYRKH6KqQNjTxyHVN3T3jkxdrkYwsCRubyi3lp
+         OcRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751289505; x=1751894305;
+        d=1e100.net; s=20230601; t=1751289562; x=1751894362;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
-        b=HVIFU01oGAg+CYeCYjcPWD37ccHVK8prp1ECuRvdy6S5TME6kAhoCiSLdvQOT5iJml
-         Ou/JJWyF/V5bi2KgOg6mPZJvvR72U2WIPGfUGlKRl1ThDtRz+5ROqHk5fqPPEF+Sle+F
-         WVO1/Hb5b035ROgfaU81NlHBYeIhjZHNFzdRorWImUFtuyLG5sQby9tvdDocZdtBAFx9
-         4iVqiNMr6TQFThrTbggXSjY2Pd/uKxV8Aa6tkQa0VSJ8UIcuZ9BnjGMdVddiuLQEEVqj
-         4gic+68+KQtWPnegP5MFiuLJFyfqKFMLiWIT0eYBRTYBKrGf/lcgKywhCQls+nnh+XSw
-         pnSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrn5XkCPgXpc2YEKHPe2EC1AjmvvHVpEFTHCfN8PUHl8LoKsq5t+KEjibJaukqp+RhNjS9ge3sldVRvQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy65sOPs6E879Xe1cNHviZMreK4RZ1n4a96ZxtaDVxUsujQkvH5
-	lYG1GycHSXr6FTmTz+Ko/RJDkSy10vtkyj+HfE24hYageNbYBBwpphmZIm2Yr2oH9wQxhG+IO9G
-	ZH4dQ/fY2JLj4XvP593Tc4usTMF3jrw60dW+ybLpyow==
-X-Gm-Gg: ASbGncuFUXwSYLxhGS/w7S3lPY4wDzElpjr4WEJUrq2pyl8iMP6rpgr5qzzAa03t7Fe
-	S5kmO7D6XAjgEDsXm0JwRICjdz2C4DeR4Mkp3Q6HBLyEgfTyfw1TTtlveXMH9kWnnr77Kyl17tk
-	1GXt7ag7583stbQM4Ym0uAyvpBYkrzDM6itHKnbPc3Gw==
-X-Google-Smtp-Source: AGHT+IEawzH6slgwqh8lMlGexpCFs5UFNCtQJR4Lc0uD06pbIw6jclmGMPNliNKtJ0yxh9f1sHZF7joTilZ8ACzkvCc=
-X-Received: by 2002:a17:907:75c8:b0:ade:36e4:ceba with SMTP id
- a640c23a62f3a-ae35018e67cmr951593466b.52.1751289505046; Mon, 30 Jun 2025
- 06:18:25 -0700 (PDT)
+        bh=BB4EhAJ5HkH6vvLgwEbYk7Jud5q2LTgGhCpMP2egKY0=;
+        b=XwUNv4mwUddykwjZob/zQSIvo3UYqldTbdXDduSQF2KhHR2Ju0ZaigEEW+ZOAlb1Ep
+         xLf+MKz2CMhs0mlpMwHrYYyVfMTbZMZ8sxzAX6NmEIqmAgpR5oS1dBDUhjc/XPqSSTP+
+         jYOugc3dr0jAZZoN80AowcmKUgvEIWNF9G2KeL5IHmd3OXnmnWwsiDfGRH1JD+RnYKag
+         WAX/dOK2b4D1Mzlcu1JOIos4O/IIbSbikHz1RxVSVBUuvXirpPkmHBZAMu+rQ5zf3rmy
+         tCdYAbE9v6QxFB5S5biSnpxfJ88pe4X+AOFnKNnddL0529qNcRnwtKHPVWi+te0cmu1o
+         tFcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYuWw3iL2D+9HeuTnmMXUoZHzLO8rKy5PrpCOhsgC2dBtDBjWUo5FwJjJ7dvTo2f4kV03/Mv6s7s+hMIE=@vger.kernel.org, AJvYcCWI+Nnig4GDv8DDcBh4eiilk7gpbQs3FKE8/kLDvApXeD35/ADnLhE9tGr6Ez7pk6cbaJq4cfXoPWjSBlDcSZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj78VTmFC6RIcOhHsCWlOtqfQlv1q4hrcd2lFi+WYo4wS6onxD
+	uX51szFtk1DwyAWglN4miyt8wwnkggRqkXOUqc9c5jny8LB+1u2zrs1L0dcpxPYkQyvaYMezK5M
+	0WAE4IFncbH/CLaIiIs0EALyUe4qaYgRl+YLG
+X-Gm-Gg: ASbGncvTZVawVVEeWCm2iPYIuUAPzHTW20ywkrdMlkiMOAr/WNF/WLWfMOdyZSVdrm/
+	VfafXY1COWOM/gwVtS2/1XPyMRcnDJ8koHIwBMsaz/clEYVV+1jTgzAUVE43GznFhZ6/z+GrXHa
+	xBLkvI1eGF9JaCIwdQfPuaYBQtB7otvzXvIbLTgKnvooxM9dsL2bGb00A=
+X-Google-Smtp-Source: AGHT+IF5pIx5wo+HF1lwVIZBpxl4HIAmuRfnrMvUSxkLMVbB+vvK+Bx0PSvGBy2Ln3N6lDEClCi1fiNUJ0y1Js12+Sk=
+X-Received: by 2002:a05:651c:4181:b0:32a:6312:bfc6 with SMTP id
+ 38308e7fff4ca-32cdc524da2mr33036691fa.35.1751289562265; Mon, 30 Jun 2025
+ 06:19:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613114148.1943267-1-robert.marko@sartura.hr>
- <20250613114148.1943267-2-robert.marko@sartura.hr> <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
-In-Reply-To: <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Mon, 30 Jun 2025 15:18:14 +0200
-X-Gm-Features: Ac12FXweyWpZVaFd_k9KiyWdnFDxPWGB4lbqdU7LoxWxkr8ipI5ijfQoLUWnGLg
-Message-ID: <CA+HBbNGWSA8QNzcN1HRosSd7qibM8G0u05cxiia6grGJJ0meoQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x SoC
-To: Daniel Machon <daniel.machon@microchip.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	andi.shyti@kernel.org, broonie@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, kernel@pengutronix.de, 
-	ore@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de
+References: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
+In-Reply-To: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 30 Jun 2025 09:18:44 -0400
+X-Gm-Features: Ac12FXwZa7u7GlLPyIvy5LFGEnAY-4b2d7cOZCJ5dVC2JmLJnzo3ar6SdKum18M
+Message-ID: <CAJ-ks9mnMRVSnsn_bpaE_XsJ9b_5+=h9FY+jCPJE35dtY849tQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/2] Clean up usage of ffi types
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 12:21=E2=80=AFPM Daniel Machon
-<daniel.machon@microchip.com> wrote:
+On Wed, Jun 25, 2025 at 8:25=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
-> > This adds support for the Microchip LAN969x ARMv8-based SoC switch fami=
-ly.
-> >
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Acked-by: Daniel Machon <daniel.machon@microchip.com>
-> > ---
-> >  arch/arm64/Kconfig.platforms | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platform=
-s
-> > index a541bb029aa4..834910f11864 100644
-> > --- a/arch/arm64/Kconfig.platforms
-> > +++ b/arch/arm64/Kconfig.platforms
-> > @@ -133,6 +133,20 @@ config ARCH_SPARX5
-> >           security through TCAM-based frame processing using versatile
-> >           content aware processor (VCAP).
-> >
-> > +config ARCH_LAN969X
-> > +       bool "Microchip LAN969X SoC family"
-> > +       select PINCTRL
-> > +       select DW_APB_TIMER_OF
+> Remove qualification of ffi types which are included in the prelude and
+> change `as` casts to target the proper ffi type alias rather than the
+> underlying primitive.
 >
-> The lan969x SoC uses the clk-lan966x driver. Would it not make sense to s=
-elect
-> it here?
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-HI Daniel,
-To me it made more sense to select individual drivers directly in the
-config, cause we need pinctrl
-etc as well and I dont think it scales selecting it directly via ARCH.
+Hello, I believe both patches in this series have been reviewed; is
+any further action required?
 
-Regards,
-Robert
->
->   +       select COMMON_CLK_LAN966X
->
-> > +       help
-> > +         This enables support for the Microchip LAN969X ARMv8-based
-> > +         SoC family of TSN-capable gigabit switches.
-> > +
-> > +         The LAN969X Ethernet switch family provides a rich set of
-> > +         switching features such as advanced TCAM-based VLAN and QoS
-> > +         processing enabling delivery of differentiated services, and
-> > +         security through TCAM-based frame processing using versatile
-> > +         content aware processor (VCAP).
-> > +
-> >  config ARCH_K3
-> >         bool "Texas Instruments Inc. K3 multicore SoC architecture"
-> >         select PM_GENERIC_DOMAINS if PM
-> > --
-> > 2.49.0
-> >
->
-> /Daniel
-
-
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+Thanks.
+Tamir
