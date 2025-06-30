@@ -1,100 +1,120 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375631DE3BA
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ACC1DE3BA;
+	Mon, 30 Jun 2025 06:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751266752; cv=none; b=Jf6MCxTlui9MLtdFu0CAYX/ggziJFpTB1lt+WVb35xqatfhk4RjpkXW9qVri+kzSr0RiSf5oKgazbm9PYA8WDXkz8IPwCB9J0uxo+QHiC+/++rd4DJBOfCRhaqaefWIFdciJgK1Bb0+OT2VBllJ+m9SaT3hXWEZZnQJ3MncTPVE=
+	t=1751266782; cv=none; b=T9ESYB6hT/bWp7jHc23qWPZ3c19sxtSwLSp4H2ZiRxELO2sYtrwTXkcmyY+3GBw0dL+4k0nQrnlBldbqW8630Vg4cFzH0t+iTysENc7+YrjlOizDm9VbZgYxwOecJIThMCUGTrFxrVl+VESSQEFE4pUgeASGusAW6szrxp9aZxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751266752; c=relaxed/simple;
-	bh=N8NcPPJxadXWse0HT/QBGjpeBDejSpL4abXtBlKXbck=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QtBfIQXVrE6y++y2UEWUbAt2y6YcUKdBXo7uBuvRvOx4xuL9eEL3hGj95ZAR2UH2qSnJyfjql8kTgER8SWnJSeUByx9SMYZRy+QzRyG1SAMIPSNWEUIpJAmBXgoviIidSp9YewUAQ0YuKW0K3ZWv3lQKWQiv1F2LD2t2cXm+CMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xe9xc3Hl; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1751266782; c=relaxed/simple;
+	bh=tilNS8Pm/XVR9WiXiow4NByoxt7NK9CXKyS2+0Ea1Jg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uRiidPFtOeIxxaHOr4XWhSxYURVVxrqQuefphKS1teqM2ifwxXj3kctfbvBMTgjjN5d5RtFrWLH3RSexzBI4YEXQr+kHHUzLeOvPySOJ2yt7AAWuy2wRXTpEsH+M6UzR8uLZKliqKKMg7uykKdVXXLwehccgVfvSGzWvoD9ILrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BS8ZQ6Zm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xe9xc3Hl"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45348bff79fso17584095e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1751266749; x=1751871549; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
-        b=xe9xc3HlPX8LXegkX0gjRzPIbtIryZyHqpA6AkhiH9JoKyElnk2aHozSII7rR97PP7
-         Z66bhK7Z0gCcsProyh8BE3SZ1y3NI52XP/Md2FajcBcQywk858GIEQwuqM7U0kah5Kru
-         N2a/ww2Nqsq6+ymbl4AITOQpi7ZwYSLPS7rAclMKAjd7Mz883MH+5+x5G3qxwSirH5g4
-         FVXmkYw6pA9M4A23vjgbfClM5oR/p87EBsk6W9vDpz41TxMwcr6GHm5YH93Z6NK43utF
-         x3PdsuFV5ZqMq7YVilgjbkL8Qba5W4lliaRWSOJdjtd9fcYRaXXJfFFe7fJSWAXjHCpS
-         HHvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751266749; x=1751871549;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rVc+xIvEP7q6mVJvo+SAFYvuaUIIBVDDa8cApMBL5oc=;
-        b=nms+WTQARTpbg5iF0TayAAvfpjQL/pOEg0dX6tH3MJzpjTLsIjKLyMFiCMPJKWM+UD
-         8fxByFInyKUMMeeCCX8nz+hpycpL1v9Vd3Iqg6TANTk2NsMZeXM66BTQciWsrhXDzizS
-         68wqQePy+2X/ILd08ftV3mYPfY1w7xC3++20tzaTWonJQqgArR2YsCryZTUk8fE3378D
-         xUGdzPo1w9kIUjpwz6ndjNzS3rlLnq2tMECyrjC+sVfhfKDZanQD3LTY8+cJRyCL6oaq
-         LPcvsc3e6so9nTtI8hKGxFODUgj+mzXtBtuWFyaWjJC5jYeSEkCg9l4GqO+dQDjOHdK2
-         JskA==
-X-Forwarded-Encrypted: i=1; AJvYcCVq9YzD2x/UfIPL95lX4V6uc1DqeedRZvA6I9k7xGf4FvMtbyUiQGtA5XpJy9h5oCkZnHwvxUNkJCDluLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7fya50lUwv6Y/L9b/wFAucN+sb8/jiZCw9YEWKjGygLkI3JvJ
-	y7JZ3kvUu8iZj0705S4FQ8GohchDHVK/fj6frOAkRFeSU4S3v67PqyzdDylngheAXRU=
-X-Gm-Gg: ASbGnctCQdQ4gFMVlK8pcpN3Z23YcirrQvD1USlwb90B1fUnNiX4g2FnFHfyThxnr5z
-	itsPPq9Cbnl+eVJ4r6b6DkiZIqWs6jgjEZ2W+Jh+Y1Ma+S7nDHBrLVe/zxzHQs8u5NwODPTJjrW
-	u9mceDQFxf7JLaYehbCSctRPjBMHrNJ0LjzXdBOBuEawYrU4klyPMtGPLx0e0R8mISJ6MsZe9ha
-	RgLWdIWZU0T7w/UK5ZLegJOftI9vdPMRsNrJ9WUsP9vDSmFVzejMlnyxSxjoWNfd/26RtQcSW6o
-	VtvAwhs+fb2VecQLTG/efB4fj77yJoG4ezjmt7agDuW+hQSn2WB0zzvb31UtSSc=
-X-Google-Smtp-Source: AGHT+IEnf1e311CHx7pGdkMuMp3hPcgdVROv8BNvfkAw7T5EXn7m4sv+gadF6ts7WpBEDZmQ9c71rw==
-X-Received: by 2002:a05:6000:2d08:b0:3a4:ec23:dba5 with SMTP id ffacd0b85a97d-3a8f435e55dmr7677203f8f.5.1751266749380;
-        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:19e3:6e9c:f7cd:ff6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c7e7481sm9686783f8f.14.2025.06.29.23.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 23:59:09 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 0/2] gpio: improve gpiod_is_equal()
-Date: Mon, 30 Jun 2025 08:58:43 +0200
-Message-ID: <175126671926.7549.9629868942672241575.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
-References: <20250620-gpiod-is-equal-improv-v1-0-a75060505d2c@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BS8ZQ6Zm"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U4phsu015659;
+	Mon, 30 Jun 2025 06:59:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RjSLa6tZeEHjkk+ST8wtwkNek3lK86a1+3qiExb/SbQ=; b=BS8ZQ6ZmH44Fz32b
+	2Rhz7jdAV0T08R0xZT5Mb5yqaGqy/gM+EeHjcpgJvKqP/qNt/YCEq2AhxbtmJHtK
+	f7+56ZksiJuRoR6tSlRpZID6AtvqYj4kO8unkwknIK/3zcBdhO7h49HK9mouCSLt
+	fdHd5OgIJ+yroyjqGevrTtrf8S0OT8XHCE+D7aqVcdt+EEX86u88aZ7JIBcbEdEC
+	OrNWJzA/2gyN8+fbyTe6zRNxgpHnGXuMQ+K7w/Isq49qVdOVxJec/b0Gbhv38/QK
+	F/nW7jmo8On2dVM4nINf3iiGWnSe8ZDIVZAS1N85gHV5+l4VaiYWmS36rllDJxpq
+	xDUvyg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkwrr95a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 06:59:31 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55U6xVYQ027050
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 06:59:31 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Sun, 29 Jun
+ 2025 23:59:28 -0700
+Message-ID: <1382320e-e5ae-47c4-be82-ab438032eac4@quicinc.com>
+Date: Mon, 30 Jun 2025 12:29:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 2/3] virtio-spi: Add virtio-spi.h
+To: Haixu Cui <quic_haixcui@quicinc.com>, <broonie@kernel.org>,
+        <virtio-dev@lists.linux.dev>, <viresh.kumar@linaro.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hdanton@sina.com>, <qiang4.zhang@linux.intel.com>,
+        <alex.bennee@linaro.org>
+CC: <quic_ztu@quicinc.com>
+References: <20250620041230.731504-1-quic_haixcui@quicinc.com>
+ <20250620041230.731504-3-quic_haixcui@quicinc.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250620041230.731504-3-quic_haixcui@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=XeCJzJ55 c=1 sm=1 tr=0 ts=686235d3 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=ULdJV8SEFFz07Y6q3E8A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA1NiBTYWx0ZWRfX3UcRJ/bjXs1w
+ 12+CIh8Uuss/UrHPe+svZWGsrz7X7n1HB8F5AOW+4GtTo9/Who5+ies/vsHNk8oS0jx7DwiaQLk
+ 6VoZlukUKrTF/LtbdTvpduC8KTdJ1tG94r/Am/zoXibRIpkMdC0e+v+D8TAmRoMPgGO46ftVvol
+ ZZoVaSDhL49mdCvHlTihJNjCPTS+JlomMYrXHhopnD6KYQrlJL8LKfYmwwyOp8Td3MuyMiS9A8H
+ TCR+UGVzpCrfGMNxEaU21AjLkPF6LxgbhACzV0HCIsg9fjlXkDwqg/+IAcB6dXgFpxFDCDphi6W
+ 1zPwSgfTUtJg/rmyr4ZSAoqQKTb5xMVfJ9YlyPcU9SJ2uZDn7JffkR7SGqTfzIKNOPfKva3JmJX
+ rXUEtqPS8xE3NNHUuYfugum9w7skZzsow/YQSA2E75QQxptIjGUsj9jZhMq0UNDofj6zb2ff
+X-Proofpoint-GUID: Ybxod_97YigMQqBDyAvlfCOK-dcKmGIS
+X-Proofpoint-ORIG-GUID: Ybxod_97YigMQqBDyAvlfCOK-dcKmGIS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=694
+ spamscore=0 impostorscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506300056
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Fri, 20 Jun 2025 14:58:00 +0200, Bartosz Golaszewski wrote:
-> This short series contains small improvements to the gpiod_is_equal()
-> GPIO descriptor comparator added last cycle.
+On 6/20/2025 9:42 AM, Haixu Cui wrote:
+> Add virtio-spi.h header for virtio SPI.
 > 
+> Signed-off-by: Haixu Cui <quic_haixcui@quicinc.com>
+> ---
+>   include/uapi/linux/virtio_spi.h | 185 ++++++++++++++++++++++++++++++++
+>   1 file changed, 185 insertions(+)
+>   create mode 100644 include/uapi/linux/virtio_spi.h
 > 
 
-Applied, thanks!
+[...]
 
-[1/2] gpio: constify arguments of gpiod_is_equal()
-      https://git.kernel.org/brgl/linux/c/08ad63bbd681ae4eeb50644564435035c38e5795
-[2/2] gpio: make gpiod_is_equal() arguments stricter
-      https://git.kernel.org/brgl/linux/c/26981e8906bb5c902e2d34874f64ecfa975d28c8
+> + * @max_cs_setup_ns: the maximum delay supported after chipselect is asserted,
+And before clock start. may also sound good, if we can write "delay 
+between CS assert to clock start"
+> + *   in ns unit, 0 means delay is not supported to introduce after chipselect is
+> + *   asserted.
+> + * @max_cs_hold_ns: the maximum delay supported before chipselect is deasserted,
+> + *   in ns unit, 0 means delay is not supported to introduce before chipselect
+> + *   is deasserted.
+> + * @max_cs_incative_ns: maximum delay supported after chipselect is deasserted,
+> + *   in ns unit, 0 means delay is not supported to introduce after chipselect is
+> + *   deasserted.
+> + */
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
