@@ -1,582 +1,189 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2075.outbound.protection.outlook.com [40.107.101.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440F3217F29;
-	Mon, 30 Jun 2025 14:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751292619; cv=none; b=gpeUJ2XA+PZj6YssdybssRbgTXJHFafTbJhC7tn7tWsGjbVcbY8k5XDAqibG/JXA17qB8ebVZn5svX7axcjJVoqx2pmFTKjCUOci7q42x8jueyXk+dfwx4qiiE2oYeYpagZpQC6C9V+gxQkjvsfH3/fKzl4n4kNJeLHZobOm0R8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751292619; c=relaxed/simple;
-	bh=5tKaFFcXoZbtpZmLS+7PNGxDUW8DmVmZp33P/mhplWM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mXcEFTaHKOf2PeVSAsQIuLV20iS5hVCxCphUidE4VZ2LX+AgXHTw6h4qv9VW6EuCOM+sEfoAO8qCYBYqPbQmveHpdyFiNaK7nehrr/mgUC1enDeVkJ77fJVoB+5XcO4w2NPrh0JRd9Ysf+6/DaHGqOrP6Ybm8oxVgKew5ZDzj7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnO1DknL; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44FD244688
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751292685; cv=fail; b=LfWwU4sfq5mbeVLsSJc+Hh8FQxim5i73zfJVFyvaQB1gMgJBIZtb4R3BplFYEbFfkVEv8DRxzqWKc5SuePMtsAmBbk1y1dccg0g2OeRfgn26I+HuUwbXH9+ctXx+3YVj1JhE+FHomLYlg6hNXsatK50zo1jCmL3pMz9XhnGZbfI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751292685; c=relaxed/simple;
+	bh=QPDPpa4kyHKNd7ORu5RiwOsSoB0th7khEpDY3dicTGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IaK0oZjT+W0WA/jkTnQrSGCaJmp2BwdtG5QsWFkYbKeNRsZ6h2DLY2kmJ2eSG46GNj3KJWrLpPF8kCmNiwDkqiVfM9yzsqzPTcbEJDhSXlCYp2DqVhFAwWhP+5jqXJMfPN/dXbaBGxPEIMC4JIHzEBT/sP2QdtKMX2zSLvcPKBk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=r/K/mVr2; arc=fail smtp.client-ip=40.107.101.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnO1DknL"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3141b84bf65so4234429a91.1;
-        Mon, 30 Jun 2025 07:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751292616; x=1751897416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=154As7BmSiUbALBUZN0p0GtUn9ct/952i1U7ZlcCLn8=;
-        b=HnO1DknLfGpsMnW7BEI31/k+cxO5JgNRcS8Ifz2DGFKgmfFz9V5c1Mn/xj2y2CMt5I
-         hr+5rsTKCjmd/ni7gIkWNrCOcHZ4eQlEe4fBnSFkoqoibIl4zVnSO0qVPZWliLQrs1Yo
-         orqweYkhHN8rzvhrm0gmjJ928XDkM6RZu+umUu1KSasTO86O7bhQlfWnDLg03zp6dG5y
-         2DYrwMq7NgECCQuikxRl9MsdQcFQP8paUfFetNArZfc2KwHcgcqk/5IUXcBxlyRMjAv8
-         fQssDeqTDouH35iUe7tkfiQjsucSrrNKIKuestBRmDk5KPsZXE7MdUMr1fTt7WgATv+r
-         6tTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751292616; x=1751897416;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=154As7BmSiUbALBUZN0p0GtUn9ct/952i1U7ZlcCLn8=;
-        b=fwocQHb2X4vKqfx81MlYUfoIqYclYDS4WN+/xrBXFXLuqutjYOgljgQLKegWAV5vk6
-         jY2cogLFUo0GjMNlXRmWrBsuNbWJ+IvVKQWW7ZgO+1i9GFcO0QGYA8eoguwK/IFdwFCu
-         4X0ng48epKpOT6AZfvxnSs38Zr7+p5C/ixFgLLHf0RaBmxBv/Y5OUbvOHUBQAOZFmUCt
-         SDduJr3Rn6eMaJG7LRlD+tA2hpyYAqlZjzWxKAE9CIJriQ64OasZKH6hpDjWNaZdToqI
-         dkfAYFHD1UdUncBqVGJg8nZGQLPybjTfyedNqFpQSKq9qx9ftFZJCzBfS9jeiqaj4i9d
-         qkwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPuR73lU4QLkKewafhrg/xHxSAMtCyu5fMgxBcATPqKBTRZTSfyD1vMLIz0lAYryosLljLPjIesQBl6W0=@vger.kernel.org, AJvYcCXp3jLq6+3ao2v4IcbRaSwql9aRlOVMhsXz/GpUzQB3Po1Hyr9rr63WO5b5vsfZcwtcuodeVYXdkfKfhQWq4NLd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk5/mYykcWbHsnohkqPZzfYZtv/YC77MTXHOqe1ZYljjDwaNvY
-	djhnIRIXHmwWTyksP3Lr4QaqxBUKrjEW7uOpxoApZq7CDkOLDqfpDaO5
-X-Gm-Gg: ASbGnctBItA8etDijKQd9It0gpq1yOyQzHLaPoqu9ABvgKBO4Pf+x05iqOVIXT4Xfdf
-	Kl1Cv0doT2//xI/9wzAyoBWoGq8L/jvGebL/jBkutsNnAQRh9Ns9UpVnbLpG3CuciZb6AvzdWLm
-	8nw7+y0rsURC3UfWwd4Fopr6bzJexKjINIdjT3BfPxCYxd8U5QAD1oqiMNyWu2tLMIYrkpbAV3z
-	A8etWUh/a/WNu20l2bOqL7Svra5YqDwHgOLJ/ek7Q6cLoUdQDiZ48NuJNir3G/pQUt2GzqMH2dr
-	Y2TqU5OZdxEAmxxcMikH2k8lZwyT9Le8oXWaJphbMkCkja4hBQMIMQ1Fy4+0iHZlD8EQdtE9Q3M
-	u+aL8XsI=
-X-Google-Smtp-Source: AGHT+IFwKYvLFuriop4wZWaL2oIKvCI+fhmxEl3/Lyg8JmXkpXEoz7SyBFFu8nXx13dxuc64yHQjXw==
-X-Received: by 2002:a17:90b:1c09:b0:311:c1ec:7d05 with SMTP id 98e67ed59e1d1-318c93274fdmr19365892a91.35.1751292616189;
-        Mon, 30 Jun 2025 07:10:16 -0700 (PDT)
-Received: from DESKTOP-GIED850.localdomain ([223.104.40.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f543791dsm13899096a91.36.2025.06.30.07.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 07:10:15 -0700 (PDT)
-From: wang lian <lianux.mm@gmail.com>
-To: david@redhat.com,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	lorenzo.stoakes@oracle.com
-Cc: lianux.mm@gmail.com,
-	Liam.Howlett@oracle.com,
-	brauner@kernel.org,
-	gkwang@linx-info.com,
-	jannh@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	p1ucky0923@gmail.com,
-	ryncsn@gmail.com,
-	shuah@kernel.org,
-	sj@kernel.org,
-	vbabka@suse.cz,
-	zijing.zhang@proton.me
-Subject: [PATCH v2] selftests/mm: Add process_madvise() tests
-Date: Mon, 30 Jun 2025 22:09:57 +0800
-Message-ID: <20250630140957.4000-1-lianux.mm@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="r/K/mVr2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dPeclP7Pfr31bvGW3jpysNXwD0RaNo1qhQD9Bc4PPrpCO2lqQ4GlE4Jpe1iOLLkEhLn0zjycvK5+mOzKKR2rXHZtm7yq1hcC4rGnjzcV5QotVVJS1kR+uhAeevVjwCggobxZm5+gJXKP9jk40EfBh17Mhq919bekH1wCrrwxUA61Kuq5xCKo1H7+dOeu+GNIEqkDrXHrFKxgqdvzPFlxuPItQdSHBXZZIUBVpOZtg57go3NoJOORLFiIPEdb6XTAwLa4+1hf4CbKscs+Ey5t0O9BrJZf4VPzuIuz000ClniLrPhfrhjRvQoTaeFFF0z3F5WSNumoov7N3Onzbfh6bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A1aqF+l0kTxijMJUHYcvxJV3QLf3zQoJXQpoIlIoXUo=;
+ b=XmZrI5XrYGwNR7EQXMWuS9IWaENceYumdDJ6rxKDGM/EY4AzkuZU8EsKDVv3oJIDmbs0TkEM1zlOnJedWB00k1RiXZS07Anh44AMyoMcVn48syjVfZlpHYtN6BzVxnWvfyaqP/Ra3fkGp2ulUbvLkPxV2lWrnnLR/ULlbVDtgTB0+yZz5qll30Rgud4aehgFZJWOvVMFTfxmJOZ4cWNji+cVtule98SpPYDS+0jQ1gMtuNyny/d3GIHDPL1oOgeMLbp/Q3z+mDHLU8QV7croT4Bkro9JSjrMU5BqjDu2vn0drlZfcPaInA2ZvT3/OZ5K55jv1fG/7K0R8aM04+ipWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A1aqF+l0kTxijMJUHYcvxJV3QLf3zQoJXQpoIlIoXUo=;
+ b=r/K/mVr2g95amAFYv0/ph546xhLRFmDObWts//hMM+tKWOde0HGt4UaIYpuxWowYJB9Rse6EtSPIUyrNiGwSYOJep52Q1LWG8vDAr//+/6S7dSYelTyoodTs6uxKzzptqEFpG7v8BmJYZ5Q/wkySOM0dtSUa8PeVPLAf+tR2GUWIMWtk1K8PC379QssZ22vr9hetC4VukMEwisVBIDMiZHuUdyKBssmAC0l9i1RnFOnDzHi8nhFM+6pSptBHgNahcgtg9mYkq8gzZXdZBeFwDh2sClYvS1IHf634UhqZxO75v5GxVE479/fd/sxzdMkgITL1xasf2RHmvd79Z+glkw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SA0PR12MB7464.namprd12.prod.outlook.com (2603:10b6:806:24b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.27; Mon, 30 Jun
+ 2025 14:11:21 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8835.027; Mon, 30 Jun 2025
+ 14:11:20 +0000
+Date: Mon, 30 Jun 2025 10:11:18 -0400
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: Re: [PATCH v5 02/14] sched/debug: Stop and start server based on if
+ it was active
+Message-ID: <20250630141118.GA2427040@joelnvbox>
+References: <aFm2NSeFE9LJS_BU@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFm2NSeFE9LJS_BU@slm.duckdns.org>
+X-ClientProxiedBy: MN2PR10CA0004.namprd10.prod.outlook.com
+ (2603:10b6:208:120::17) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SA0PR12MB7464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15e87cd4-da83-4a7e-dd8b-08ddb7dffc96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tZNfNv5wKBoyF5BDZ+cZhV4z/C7gNV9GC4pW4qCfBaoHvEUW0KHV7HzU8b4i?=
+ =?us-ascii?Q?fJ/mzpVBAIa/M35G14J1Dd+nCrHPeleOzM/6NVlS3T1YQ32+rvnVCsqVWtXp?=
+ =?us-ascii?Q?kALHWCXOtCLhVWAzp9wx6+NuByDh3pWjRWviPVqC0iXrTHF9YIcOZeog8+Gr?=
+ =?us-ascii?Q?qSS1r0nKApE283IwVM+GMxnOytD+BdmifNbnncbGwYEEzHW1gxzjCUm8MhZc?=
+ =?us-ascii?Q?FZHhAjNAQMHpWBVOZEAnAnFth/Yss7o2GAg4PaY5bcPmbWyzSduThpioo2Ek?=
+ =?us-ascii?Q?xz3gT2Mc9xB/8RzNz2jGSCjQxW92Rk7KDmgwiL9N16qcfxgseK5x8u0dfQSc?=
+ =?us-ascii?Q?q+GA9Wpa3Sl3qqBe/zkm+FXHm3x+7O/p+HTzCVIiZEWWzNUM6HfENlRXeJ/O?=
+ =?us-ascii?Q?rvSXa7lJvKkwM2G2DhU7oXhwXe8FYHp5bf6ys8Tq1ysTGhPXLNog1fE4Jxx3?=
+ =?us-ascii?Q?fconL6ULSf/3kYvoUdxcTeZFi19KD3psduSu1G+A6gtlyg2Y57Jx//fTCETy?=
+ =?us-ascii?Q?ic4Hsrx/FkpLndDL45gWS7l1/JX8Y1EPPzfobDEb95BkVFBSOOsLHC20MDeV?=
+ =?us-ascii?Q?ZONLCadJqCnO0Np5q/NYiYKLgW31QXhVmzBFVlnA313hmnnp9EIzQCV2AttY?=
+ =?us-ascii?Q?Vtsn7LxZdoF2Xu1vSWGUA4wHA9wkER9NPMyiUIZQTIz0MpJmhSFYRbbkVm3M?=
+ =?us-ascii?Q?Mvh4u7cwx2551qMcwR5DX/teiJvYkMBqdGvCA6M52YpCeKJvQDMF9h2prONn?=
+ =?us-ascii?Q?kngnEndzTpKPHnf7cyROX1RlK6EQm+G9EzDqVPtsPx0hcY6WkD4u4iHCqlEd?=
+ =?us-ascii?Q?adPcviT9ynvpwLm9CWavw44ZiE+4P6NBfmHulbgSkF+8gAn4+qT7IiEckibp?=
+ =?us-ascii?Q?GGZOg3St83nPkyJ247OujGxIBWrosYfuSVGYlBm/V0LV/y+nqM+zXykTxiHp?=
+ =?us-ascii?Q?SrD3TxfW0NDjNWMOYhG8h92bQK6AGFqOyLhakfkWSwFhABfUwUtPcePyrIy7?=
+ =?us-ascii?Q?jARMbQb/9le8ESdxF13SfWgPo7osy+c1inHLDIkErJFdbVtiQB4gVFlMKGgQ?=
+ =?us-ascii?Q?15Di6tANi8YKvQy0A8ejSgbQbbpsxTfJZoUNtrfp3qUHp8UuZjSwLUO3Hkjc?=
+ =?us-ascii?Q?SBxd07nWfBcHSd/0Twq1b8LKVsxEsOSWImW/NS2I5ojfYqTc88bYuOHEh/i/?=
+ =?us-ascii?Q?ZV9+xQpg+YIBmZo4+5rZAdZuiIgAUqnEI/zzRuxREcBMmXkG0odlpS5JnrfI?=
+ =?us-ascii?Q?46mdF1MLJkU6mOnjcRAio1+73PcmMW1lDUrEUdsSNmatu+nIwPbt4swp0PR9?=
+ =?us-ascii?Q?KALEsQgO3ThQ0IlvTMBq2dzKzD4jkmKAJMdYBsp4/lQ1k4PYNkcf+5t9c8Ln?=
+ =?us-ascii?Q?lQfcyVsKBvdQh6LKctfpfQp0BrBUBZEvZPMndXOHX+QVwceTTb92LLcXDvHG?=
+ =?us-ascii?Q?ggKtwTEsPcE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?a9V2kYqRQhYDFNP6AQMVCaQIvAApgdNtrx+IVxoRJ1QkA86b88R1NriPkmyQ?=
+ =?us-ascii?Q?vDX3WFe13KsFexBWzawChCtalUO1q5WSDUIfFvH9gabFLq7+5NnQhrIs6Zd3?=
+ =?us-ascii?Q?FIl01t5Vmoh0HzsLOPd5uxin0drg/xISWPGSC0I84wttiVQ4bMeOW3E4/0GD?=
+ =?us-ascii?Q?U/yByRbNMYsenQBzOGsbN11dOvPyJecN22prk+R+tEe+EB2q+Kod5JkFLNMg?=
+ =?us-ascii?Q?djiEkcbvoXW4DBSoykV+ZpGQpr45JiOUzcjPw+jipX+9OyQxRb8UdTbkodAA?=
+ =?us-ascii?Q?36nHpGBaEPy53K4rLCoTUF+xTU3bUl74vuVK4LUuCxtdIEAgWCf8m6b7nc77?=
+ =?us-ascii?Q?s0C2bMTb+5xNF2KGn3QpJ6ul/6Q/kaNMWB/D+7lJVX6OSxgf9NfVmqI64tss?=
+ =?us-ascii?Q?rQ1OpUpbpMu0McOIFUovLGPcZ2hCh7NGgSPJ1SdstvN14Z0IyAlkmU/kBnSg?=
+ =?us-ascii?Q?bTTROuEAHLiinRTNDhnFD+5H3b9Ekg0WRvR0EMv08bl3NWBfW+6v1xAh0QAe?=
+ =?us-ascii?Q?8CkCFOrBUTEmg+xrIEQJTtkBCR8cpGKW7O09e+5s5Ue9/zd3NTqLkoaq1IAS?=
+ =?us-ascii?Q?YRSyF2HWBV2Hmvbn8NdfqFpAXB8flNDTYVbsy9vTr0rXjYIzD063s6azaL2P?=
+ =?us-ascii?Q?DGiYbbJi2RoYetHmHC8KtFI2fegfLa15kVA0mPbwy25L8W0j3WkxMp8k4uiv?=
+ =?us-ascii?Q?SPFSj+k5P4W1fB+/MEYFdsQdforFf73vKyVieoMj4P4jSwqNCg+eCIS9ZNJe?=
+ =?us-ascii?Q?Ja3GsSWpix2hUMVEAkuooZAj0ZzRygbZoVx6XXrMI9yiIY9hwRfsOauPdXY1?=
+ =?us-ascii?Q?idJoNTwxEVZnSmp8/HtwC6XezWiU3cO1OY29vzG7Gx7wA2IVzK2ohmO7uljg?=
+ =?us-ascii?Q?n9XKPVOERCQCqxMrfRwJmdCYMN3TAfB84IXcx+SQQyJcV2mSpr+BmGQOZ46M?=
+ =?us-ascii?Q?2ViRIiHpvXd4U7pZpUZQjAZ/r1zV/0/cReTjNWL/wGkfvL1cqXSGYsKb/8fH?=
+ =?us-ascii?Q?4boibqTldddkpij/kcf93T80x7Xve+BmXSGg5CT7diporz7dJW3zLh4l2Vwf?=
+ =?us-ascii?Q?BGXl0ZMs5NBJcxdi5jQGh97pxtSVOzNIaMJpWWT2CtAFzbUUkO4CcsMMASO9?=
+ =?us-ascii?Q?3h1Eeb0j9vo5PZTyTc5YP32qyJdgQB8upIT4+hGrQfAEYl7JLU6XXTi/0Avt?=
+ =?us-ascii?Q?2QOL66FjDN3d0vkwl+IC1CNabK7pWQsYqMLtBN9e8iO/2GpciFGEwuDDHnY9?=
+ =?us-ascii?Q?dnNccubmDlgUK9PSF2n2SJAl10Sbl4DBoR9Ra27MfuWUfFR6BHHc5vsGN0pi?=
+ =?us-ascii?Q?olAkoKXac5LL+R+014LFYhfFlvsdLab51YO58x31e9Ub4huNl3seZ3JFdJ6P?=
+ =?us-ascii?Q?jUx34XevE6Ibs6Zermz45o+Ks9z+qb1CXs7YH6MZtbYkJcZfE18wH8Eb0dvB?=
+ =?us-ascii?Q?52OGwJB44jiu/dDOdX+Eauar7/7EYUNNHa7838rsh5UY3AXmVTZQTHJSXILR?=
+ =?us-ascii?Q?IB/1DuYo/f0r84lHx29UMbne1hlH7STaD9h+TdJP0Ppa7ilx4lAj+nkwoC8k?=
+ =?us-ascii?Q?vkYdJkcnq1Y94tvNaqTOHX1zfaC22YiX5AHBnKHV?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15e87cd4-da83-4a7e-dd8b-08ddb7dffc96
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2025 14:11:20.1416
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4vZSsV9RBBjlrtxwZ8GOVZXT67eR/H9w9fh7wUm+N+cAeaAMchKd4Agqq5eB+rA3ARACJL+EnVu1tsJpk160Bg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7464
 
-This patch adds tests for the process_madvise(), focusing on
-verifying behavior under various conditions including valid
-usage and error cases.
+On Mon, Jun 23, 2025 at 10:16:53 -1000, Tejun Heo wrote:
+> On Fri, Jun 20, 2025 at 04:32:17PM -0400, Joel Fernandes wrote:
+> > @@ -381,7 +382,8 @@ static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubu
+> >  		return  -EINVAL;
+> >  	}
+> >  
+> > -	if (rq->cfs.h_nr_queued) {
+> > +	if (dl_server_active(&rq->fair_server)) {
+> > +		was_active = true;
+> >  		update_rq_clock(rq);
+> >  		dl_server_stop(&rq->fair_server);
+> >  	}
+> > @@ -392,7 +394,7 @@ static ssize_t sched_fair_server_write(struct file *filp, const char __user *ubu
+> >  		printk_deferred("Fair server disabled in CPU %d, system may crash due to starvation.\n",
+> >  				cpu_of(rq));
+> >  
+> > -	if (rq->cfs.h_nr_queued)
+> > +	if (was_active)
+> 
+> This is minor but the style looks a bit odd to me. Would it make more sense
+> to put was_active in the scoped_guard block and do something like:
+> 
+>         is_active = dl_server_active(&rq->fair_server);
+>         if (is_active) {
+>                 ...
+>         }
+>         ...
+>         if (is_active)
+>                 dl_server_start(&rq->fair_server);
 
-Signed-off-by: wang lian<lianux.mm@gmail.com>
-Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
----
+I agree, I will make this change.
 
-Changelog v2:
-- Drop MADV_DONTNEED tests based on feedback
-- Focus solely on process_madvise() syscall
-- Improve error handling and structure
-- Add future-proof flag test
-- Style and comment cleanups
+> Other than that,
+> 
+> Acked-by: Tejun Heo <tj@kernel.org>
 
- tools/testing/selftests/mm/.gitignore     |   1 +
- tools/testing/selftests/mm/Makefile       |   1 +
- tools/testing/selftests/mm/process_madv.c | 414 ++++++++++++++++++++++
- tools/testing/selftests/mm/run_vmtests.sh |   5 +
- 4 files changed, 421 insertions(+)
- create mode 100644 tools/testing/selftests/mm/process_madv.c
+thanks!
 
-diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-index 911f39d634be..a8c3be02188c 100644
---- a/tools/testing/selftests/mm/.gitignore
-+++ b/tools/testing/selftests/mm/.gitignore
-@@ -42,6 +42,7 @@ memfd_secret
- hugetlb_dio
- pkey_sighandler_tests_32
- pkey_sighandler_tests_64
-+process_madv
- soft-dirty
- split_huge_page_test
- ksm_tests
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index 2352252f3914..725612e09582 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -86,6 +86,7 @@ TEST_GEN_FILES += mseal_test
- TEST_GEN_FILES += on-fault-limit
- TEST_GEN_FILES += pagemap_ioctl
- TEST_GEN_FILES += pfnmap
-+TEST_GEN_FILES += process_madv
- TEST_GEN_FILES += thuge-gen
- TEST_GEN_FILES += transhuge-stress
- TEST_GEN_FILES += uffd-stress
-diff --git a/tools/testing/selftests/mm/process_madv.c b/tools/testing/selftests/mm/process_madv.c
-new file mode 100644
-index 000000000000..73999c8e3570
---- /dev/null
-+++ b/tools/testing/selftests/mm/process_madv.c
-@@ -0,0 +1,414 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#define _GNU_SOURCE
-+#include "../kselftest_harness.h"
-+#include <errno.h>
-+#include <setjmp.h>
-+#include <signal.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+#include <sched.h>
-+#include <sys/pidfd.h>
-+#include "vm_util.h"
-+
-+#include "../pidfd/pidfd.h"
-+
-+/*
-+ * Ignore the checkpatch warning, as per the C99 standard, section 7.14.1.1:
-+ *
-+ * "If the signal occurs other than as the result of calling the abort or raise
-+ *  function, the behavior is undefined if the signal handler refers to any
-+ *  object with static storage duration other than by assigning a value to an
-+ *  object declared as volatile sig_atomic_t"
-+ */
-+static volatile sig_atomic_t signal_jump_set;
-+static sigjmp_buf signal_jmp_buf;
-+
-+/*
-+ * Ignore the checkpatch warning, we must read from x but don't want to do
-+ * anything with it in order to trigger a read page fault. We therefore must use
-+ * volatile to stop the compiler from optimising this away.
-+ */
-+#define FORCE_READ(x) (*(volatile typeof(x) *)x)
-+
-+static void handle_fatal(int c)
-+{
-+	if (!signal_jump_set)
-+		return;
-+
-+	siglongjmp(signal_jmp_buf, c);
-+}
-+
-+FIXTURE(process_madvise)
-+{
-+	int pidfd;
-+	int flag;
-+};
-+
-+static void setup_sighandler(void)
-+{
-+	struct sigaction act = {
-+		.sa_handler = &handle_fatal,
-+		.sa_flags = SA_NODEFER,
-+	};
-+
-+	sigemptyset(&act.sa_mask);
-+	if (sigaction(SIGSEGV, &act, NULL))
-+		ksft_exit_fail_perror("sigaction");
-+}
-+
-+static void teardown_sighandler(void)
-+{
-+	struct sigaction act = {
-+		.sa_handler = SIG_DFL,
-+		.sa_flags = SA_NODEFER,
-+	};
-+
-+	sigemptyset(&act.sa_mask);
-+	sigaction(SIGSEGV, &act, NULL);
-+}
-+
-+FIXTURE_SETUP(process_madvise)
-+{
-+	self->pidfd = PIDFD_SELF;
-+	self->flag = 0;
-+	setup_sighandler();
-+};
-+
-+FIXTURE_TEARDOWN_PARENT(process_madvise)
-+{
-+	teardown_sighandler();
-+}
-+
-+static ssize_t sys_process_madvise(int pidfd, const struct iovec *iovec,
-+				   size_t vlen, int advice, unsigned int flags)
-+{
-+	return syscall(__NR_process_madvise, pidfd, iovec, vlen, advice, flags);
-+}
-+
-+/*
-+ * Enable our signal catcher and try to read/write the specified buffer. The
-+ * return value indicates whether the read/write succeeds without a fatal
-+ * signal.
-+ */
-+static bool try_access_buf(char *ptr, bool write)
-+{
-+	bool failed;
-+
-+	/* Tell signal handler to jump back here on fatal signal. */
-+	signal_jump_set = true;
-+	/* If a fatal signal arose, we will jump back here and failed is set. */
-+	failed = sigsetjmp(signal_jmp_buf, 0) != 0;
-+
-+	if (!failed) {
-+		if (write)
-+			*ptr = 'x';
-+		else
-+			FORCE_READ(ptr);
-+	}
-+
-+	signal_jump_set = false;
-+	return !failed;
-+}
-+
-+/* Try and read from a buffer, return true if no fatal signal. */
-+static bool try_read_buf(char *ptr)
-+{
-+	return try_access_buf(ptr, false);
-+}
-+
-+TEST_F(process_madvise, basic)
-+{
-+	const unsigned long pagesize = (unsigned long)sysconf(_SC_PAGESIZE);
-+	const int madvise_pages = 4;
-+	char *map;
-+	ssize_t ret;
-+	struct iovec vec[madvise_pages];
-+
-+	/*
-+	 * Create a single large mapping. We will pick pages from this
-+	 * mapping to advise on. This ensures we test non-contiguous iovecs.
-+	 */
-+	map = mmap(NULL, pagesize * 10, PROT_READ | PROT_WRITE,
-+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	ASSERT_NE(map, MAP_FAILED);
-+
-+	/* Fill the entire region with a known pattern. */
-+	memset(map, 'A', pagesize * 10);
-+
-+	/*
-+	 * Setup the iovec to point to 4 non-contiguous pages
-+	 * within the mapping.
-+	 */
-+	vec[0].iov_base = &map[0 * pagesize];
-+	vec[0].iov_len = pagesize;
-+	vec[1].iov_base = &map[3 * pagesize];
-+	vec[1].iov_len = pagesize;
-+	vec[2].iov_base = &map[5 * pagesize];
-+	vec[2].iov_len = pagesize;
-+	vec[3].iov_base = &map[8 * pagesize];
-+	vec[3].iov_len = pagesize;
-+
-+	ret = sys_process_madvise(PIDFD_SELF, vec, madvise_pages, MADV_DONTNEED,
-+				  0);
-+	if (ret == -1 && errno == EPERM)
-+		ksft_exit_skip(
-+			"process_madvise() unsupported or permission denied, try running as root.\n");
-+	else if (errno == EINVAL)
-+		ksft_exit_skip(
-+			"process_madvise() unsupported or parameter invalid, please check arguments.\n");
-+
-+	/* The call should succeed and report the total bytes processed. */
-+	ASSERT_EQ(ret, madvise_pages * pagesize);
-+
-+	/* Check that advised pages are now zero. */
-+	for (int i = 0; i < madvise_pages; i++) {
-+		char *advised_page = (char *)vec[i].iov_base;
-+
-+		/* Access should be successful (kernel provides a new page). */
-+		ASSERT_TRUE(try_read_buf(advised_page));
-+		/* Content must be 0, not 'A'. */
-+		ASSERT_EQ(*advised_page, 0);
-+	}
-+
-+	/* Check that an un-advised page in between is still 'A'. */
-+	char *unadvised_page = &map[1 * pagesize];
-+
-+	ASSERT_TRUE(try_read_buf(unadvised_page));
-+	ASSERT_EQ(*unadvised_page, 'A');
-+
-+	/* Cleanup. */
-+	ASSERT_EQ(munmap(map, pagesize * 10), 0);
-+}
-+
-+static long get_smaps_anon_huge_pages(pid_t pid, void *addr)
-+{
-+	char smaps_path[64];
-+	char *line = NULL;
-+	unsigned long start, end;
-+	long anon_huge_kb;
-+	size_t len;
-+	FILE *f;
-+	bool in_vma;
-+
-+	in_vma = false;
-+	sprintf(smaps_path, "/proc/%d/smaps", pid);
-+	f = fopen(smaps_path, "r");
-+	if (!f)
-+		return -1;
-+
-+	while (getline(&line, &len, f) != -1) {
-+		/* Check if the line describes a VMA range */
-+		if (sscanf(line, "%lx-%lx", &start, &end) == 2) {
-+			if ((unsigned long)addr >= start &&
-+			    (unsigned long)addr < end)
-+				in_vma = true;
-+			else
-+				in_vma = false;
-+			continue;
-+		}
-+
-+		/* If we are in the correct VMA, look for the AnonHugePages field */
-+		if (in_vma &&
-+		    sscanf(line, "AnonHugePages: %ld kB", &anon_huge_kb) == 1)
-+			break;
-+	}
-+
-+	free(line);
-+	fclose(f);
-+
-+	return (anon_huge_kb > 0) ? (anon_huge_kb * 1024) : 0;
-+}
-+
-+/**
-+ * TEST_F(process_madvise, remote_collapse)
-+ *
-+ * This test deterministically validates process_madvise() with MADV_COLLAPSE
-+ * on a remote process, other advices are difficult to verify reliably.
-+ *
-+ * The test verifies that a memory region in a child process, initially
-+ * backed by small pages, can be collapsed into a Transparent Huge Page by a
-+ * request from the parent. The result is verified by parsing the child's
-+ * /proc/<pid>/smaps file.
-+ */
-+TEST_F(process_madvise, remote_collapse)
-+{
-+	const unsigned long pagesize = (unsigned long)sysconf(_SC_PAGESIZE);
-+	pid_t child_pid;
-+	int pidfd;
-+	long huge_page_size;
-+	int pipe_info[2];
-+	ssize_t ret;
-+	struct iovec vec;
-+
-+	struct child_info {
-+		pid_t pid;
-+		void *map_addr;
-+	} info;
-+
-+	huge_page_size = default_huge_page_size();
-+	if (huge_page_size <= 0)
-+		ksft_exit_skip("Could not determine a valid huge page size.\n");
-+
-+	ASSERT_EQ(pipe(pipe_info), 0);
-+
-+	child_pid = fork();
-+	ASSERT_NE(child_pid, -1);
-+
-+	if (child_pid == 0) {
-+		char *map;
-+		size_t map_size = 2 * huge_page_size;
-+
-+		close(pipe_info[0]);
-+
-+		map = mmap(NULL, map_size, PROT_READ | PROT_WRITE,
-+			   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+		ASSERT_NE(map, MAP_FAILED);
-+
-+		/* Fault in as small pages */
-+		for (size_t i = 0; i < map_size; i += pagesize)
-+			map[i] = 'A';
-+
-+		/* Send info and pause */
-+		info.pid = getpid();
-+		info.map_addr = map;
-+		ret = write(pipe_info[1], &info, sizeof(info));
-+		ASSERT_EQ(ret, sizeof(info));
-+		close(pipe_info[1]);
-+
-+		pause();
-+		exit(0);
-+	}
-+
-+	close(pipe_info[1]);
-+
-+	/* Receive child info */
-+	ret = read(pipe_info[0], &info, sizeof(info));
-+	if (ret <= 0) {
-+		waitpid(child_pid, NULL, 0);
-+		ksft_exit_skip("Failed to read child info from pipe.\n");
-+	}
-+	ASSERT_EQ(ret, sizeof(info));
-+	close(pipe_info[0]);
-+	child_pid = info.pid;
-+
-+	pidfd = pidfd_open(child_pid, 0);
-+	ASSERT_GE(pidfd, 0);
-+
-+	/* Baseline Check from Parent's perspective */
-+	ASSERT_EQ(get_smaps_anon_huge_pages(child_pid, info.map_addr), 0);
-+
-+	vec.iov_base = info.map_addr;
-+	vec.iov_len = huge_page_size;
-+	ret = sys_process_madvise(pidfd, &vec, 1, MADV_COLLAPSE, 0);
-+	if (ret == -1) {
-+		if (errno == EINVAL)
-+			ksft_exit_skip(
-+				"PROCESS_MADV_ADVISE is not supported.\n");
-+		else if (errno == EPERM)
-+			ksft_exit_skip(
-+				"No process_madvise() permissions, try running as root.\n");
-+		goto cleanup;
-+	}
-+	ASSERT_EQ(ret, huge_page_size);
-+
-+	ASSERT_EQ(get_smaps_anon_huge_pages(child_pid, info.map_addr),
-+		  huge_page_size);
-+
-+	ksft_test_result_pass(
-+		"MADV_COLLAPSE successfully verified via smaps.\n");
-+
-+cleanup:
-+	/* Cleanup */
-+	kill(child_pid, SIGKILL);
-+	waitpid(child_pid, NULL, 0);
-+	if (pidfd >= 0)
-+		close(pidfd);
-+}
-+
-+/*
-+ * Test process_madvise() with various invalid pidfds to ensure correct error
-+ * handling. This includes negative fds, non-pidfd fds, and pidfds for
-+ * processes that no longer exist.
-+ */
-+TEST_F(process_madvise, invalid_pidfd)
-+{
-+	struct iovec vec;
-+	pid_t child_pid;
-+	ssize_t ret;
-+	int pidfd;
-+
-+	vec.iov_base = (void *)0x1234;
-+	vec.iov_len = 4096;
-+
-+	/* Using an invalid fd number (-1) should fail with EBADF. */
-+	ret = sys_process_madvise(-1, &vec, 1, MADV_DONTNEED, 0);
-+	ASSERT_EQ(ret, -1);
-+	ASSERT_EQ(errno, EBADF);
-+
-+	/*
-+	 * Using a valid fd that is not a pidfd (e.g. stdin) should fail
-+	 * with EBADF.
-+	 */
-+	ret = sys_process_madvise(STDIN_FILENO, &vec, 1, MADV_DONTNEED, 0);
-+	ASSERT_EQ(ret, -1);
-+	ASSERT_EQ(errno, EBADF);
-+
-+	/*
-+	 * Using a pidfd for a process that has already exited should fail
-+	 * with ESRCH.
-+	 */
-+	child_pid = fork();
-+	ASSERT_NE(child_pid, -1);
-+
-+	if (child_pid == 0)
-+		exit(0);
-+
-+	pidfd = pidfd_open(child_pid, 0);
-+	ASSERT_GE(pidfd, 0);
-+
-+	/* Wait for the child to ensure it has terminated. */
-+	waitpid(child_pid, NULL, 0);
-+
-+	ret = sys_process_madvise(pidfd, &vec, 1, MADV_DONTNEED, 0);
-+	ASSERT_EQ(ret, -1);
-+	ASSERT_EQ(errno, ESRCH);
-+	close(pidfd);
-+}
-+
-+/*
-+ * Test process_madvise() with an invalid flag value. Now we only support flag=0
-+ * future we will use it support sync so reserve this test.
-+ */
-+TEST_F(process_madvise, flag)
-+{
-+	const unsigned long pagesize = (unsigned long)sysconf(_SC_PAGESIZE);
-+	unsigned int invalid_flag;
-+	struct iovec vec;
-+	char *map;
-+	ssize_t ret;
-+
-+	map = mmap(NULL, pagesize, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1,
-+		   0);
-+	ASSERT_NE(map, MAP_FAILED);
-+
-+	vec.iov_base = map;
-+	vec.iov_len = pagesize;
-+
-+	invalid_flag = 0x80000000;
-+
-+	ret = sys_process_madvise(PIDFD_SELF, &vec, 1, MADV_DONTNEED,
-+				  invalid_flag);
-+	ASSERT_EQ(ret, -1);
-+	ASSERT_EQ(errno, EINVAL);
-+
-+	/* Cleanup. */
-+	ASSERT_EQ(munmap(map, pagesize), 0);
-+}
-+
-+TEST_HARNESS_MAIN
-\ No newline at end of file
-diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index f96d43153fc0..5c28ebcf1ea9 100755
---- a/tools/testing/selftests/mm/run_vmtests.sh
-+++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -61,6 +61,8 @@ separated by spaces:
- 	ksm tests that require >=2 NUMA nodes
- - pkey
- 	memory protection key tests
-+- process_madvise
-+	test process_madvise
- - soft_dirty
- 	test soft dirty page bit semantics
- - pagemap
-@@ -424,6 +426,9 @@ CATEGORY="hmm" run_test bash ./test_hmm.sh smoke
- # MADV_GUARD_INSTALL and MADV_GUARD_REMOVE tests
- CATEGORY="madv_guard" run_test ./guard-regions
- 
-+# PROCESS_MADVISE TEST
-+CATEGORY="process_madv" run_test ./process_madv
-+
- # MADV_DONTNEED and PROCESS_DONTNEED tests
- CATEGORY="madv_dontneed" run_test ./madv_dontneed
- 
--- 
-2.43.0
+ - Joel
 
