@@ -1,107 +1,70 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE60821D599;
-	Mon, 30 Jun 2025 07:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914C220F23;
+	Mon, 30 Jun 2025 07:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751268607; cv=none; b=HfaQ3xRLi9W06L7c9aHTCxDgm8hthKjDqiCubvEUho0STigCFZJEO4vMDqohMByYhg2k3tsxvtJyysHGKegJWn/yxoDQOmQXsySGWLEHphBWl7RvseZ5qjxHwfwpwqwNQK3+UKYCci89YxiPwYYLhTv4VtY/lFNxTs54zC9oYZY=
+	t=1751268611; cv=none; b=F2MkiDsPIPEzC+OGeMFUQo8Zlb/Zfbx/6iYZ1oqbqTT3wbxpSwfcTJQ4mVf/3279AmA7fg+WpOyW30v+f/4yC++rGmhsBIwN/P2KSXz8TqEQ/aDLXGx0BrJzIrgg29ROZNt9qzXwV+odQz8zKajCYo1Atlqw6YpjKTrTAzVUfuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751268607; c=relaxed/simple;
-	bh=4icsyX1fyuJ4g4NGEg3pYYUUJOo9oPnmjKEd0Ktd9Tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qUqj1v/pflpAkl94+hQ4R9jjxTiD6JjLwCP8K5fn/Fns6o7jor5gsnlAdOBpZbr5DYs9UC4t01sNukxwb4AjMl7jQ4dws35Tpw2AqIeVkVWtAb5vlsQnC+OmhFSznBBkLaim8zVSv/EePD8tgf+iEqbqHG9dfDEHYwRdw17oMVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c93XlBE3; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1751268611; c=relaxed/simple;
+	bh=h3+BbSsRzFSbCWdeIHhuw9v25Gxev7MQWBIq8T/6F3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D8ZE+I1MA6ULzk7rLkAyWVOrmJJkC7CSVqjDyX9ppOwvojHx1EpmOEncPbikQVnRRDWOwSbNYdDJwesXV4049rFgA1OoN68qLSSdAnMWfSazDRvImulZnJgEvpbTuNeoxflkNlVGbqSi0/ky/ciBIkgoKqihz3HPS2LGGf5IGx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aa0jE+HD; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c93XlBE3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=eClNPU+xMhIHfdyfGkZDmnpHBZwwzECYZaiFVFjlBxA=; b=c93XlBE34i31RtnXjJBAaMaoeH
-	HjnKzwQLwlCmjKEk36gVPwdg2fMwEBZsLWARHj2JOXAFRQwJQV6PzQp6Y2XNiWaCl3YgvuG+5S9tl
-	7oXpvsKIUTU+7KRE7bA5cgldjxaDoiJZVSKqpITQrtowszfb9+eXVMHZOs2CoZcZ+gghkkF6PDrfA
-	exGuintC1HqzJ1TlttgQ/BpednJQ12v1fcNQeHyf3z7rwNz5wtWT0fO8o2HG7NGNSNSJThMgbToi0
-	0jouOIALMqpnn9THiee2/33RgseyGRMJcTmS1ZSzLfnFj5pPI3pT/2vZeSJ6K6BTc4+0hAft3oyi/
-	MWCnQVig==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uW8xQ-00000003B6a-1EBp;
-	Mon, 30 Jun 2025 07:29:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 98418300125; Mon, 30 Jun 2025 09:29:38 +0200 (CEST)
-Date: Mon, 30 Jun 2025 09:29:38 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Dylan Hatch <dylanbhatch@google.com>
-Subject: Re: [PATCH v3 26/64] objtool: Add section/symbol type helpers
-Message-ID: <20250630072938.GD1613200@noisy.programming.kicks-ass.net>
-References: <cover.1750980516.git.jpoimboe@kernel.org>
- <c897dc0a55a84f9992b8c766214ff38b0f597583.1750980517.git.jpoimboe@kernel.org>
- <20250627102930.GU1613200@noisy.programming.kicks-ass.net>
- <arotzpll7djck5kivv3d4bz2jpkitpejkppaaevoqk5hqddr57@aunxxyjwnrxz>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aa0jE+HD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751268607;
+	bh=h3+BbSsRzFSbCWdeIHhuw9v25Gxev7MQWBIq8T/6F3k=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=aa0jE+HDyg7qAOkBA0l+7XGeqlGtp7ZiPTI9HCT25cmM/J6GI2hCOV0v7C3yzx2Mh
+	 LktFuM+PfqaeYwQ5w5AlUmTsGn1gbfFJbW20fCLVTh0noO/PbrFR5EkTMtmvAsDv29
+	 8SY3mOGCS6KysPRAmRCSRLredMiOf+A09CotRf2oZS3dVvOk9byVdoHBL5iqep81sj
+	 pJAvSoXW+KrExpONnWGBf87BH1W7mkcGtnRSTniqmVZ6vxf0+kWoIXX4ZxAhcT7HCP
+	 r6y03zs6ta3j10t8n2mn1SkkAvxFtjNdUOqisLPQ1Oni8flReaK41SSWGE2kOal/uJ
+	 oMlQNW1iQ+gWQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D461217E0B0D;
+	Mon, 30 Jun 2025 09:30:06 +0200 (CEST)
+Message-ID: <ef28bb5d-8d5b-4505-8b00-56c9e5abd90d@collabora.com>
+Date: Mon, 30 Jun 2025 09:30:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <arotzpll7djck5kivv3d4bz2jpkitpejkppaaevoqk5hqddr57@aunxxyjwnrxz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: Add support for MT7981
+To: Aleksander Jan Bajkowski <olek2@wp.pl>, rafael@kernel.org,
+ daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, zhiyong.tao@mediatek.com, linux-pm@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250628223837.848244-1-olek2@wp.pl>
+ <20250628223837.848244-4-olek2@wp.pl>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250628223837.848244-4-olek2@wp.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 27, 2025 at 09:36:08AM -0700, Josh Poimboeuf wrote:
-> On Fri, Jun 27, 2025 at 12:29:30PM +0200, Peter Zijlstra wrote:
-> > Naming seems inconsistent, there are:
-> >
-> >   sym_has_sec(), sec_changed() and sec_size()
-> >
-> > which have the object first, but then most new ones are:
-> > 
-> >   is_foo_sym() and is_foo_sec()
-> > 
-> > which have the object last.
+Il 29/06/25 00:38, Aleksander Jan Bajkowski ha scritto:
+> The temperature sensor in the MT7981 is same as in the MT7986.
+> Add compatible string for mt7981.
 > 
-> For the "is_()" variants, I read them as:
-> 
->   "is a(n) <adjective> <noun>"
-> 
-> e.g.:
-> 
->   is_undef_sym(): "is an UNDEF symbol"
->   is_file_sym():  "is a FILE symbol"
->   is_string_sec() "is a STRING section"
-> 
-> Nerding out on English for a second, many of those adjectives can be
-> read as noun adjuncts, e.g. "chicken soup", where a noun functions as an
-> adjective.
-> 
-> If we changed those to:
-> 
->   "is <noun> <adjective>?"
-> 
-> or
-> 
->   "is <noun> a <noun>?"
-> 
-> then it doesn't always read correctly:
-> 
->   is_sym_file():   "is symbol a file?"
->   is_sec_string(): "is section a string?"
+> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
 
-English aside; things like sym_*() create a clear namespace, and
-sym_is_file() can be easily read as sym::is_file().
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 
