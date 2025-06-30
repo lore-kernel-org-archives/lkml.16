@@ -1,184 +1,148 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9A9CA4E
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A7A292B36
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 17:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751303169; cv=none; b=FVvT1sD2lyaT2R77G5O+Sn2cc6RQ1hHBJeP3JOSBAXgo1FRLfzq5FDtiparCAEddXKgb++dY8oxV9Ry5aDZnUjcbku09BhYmFkmTxTp/ZZxs6qnUET8nZQCjnCE/OXHaTUPZ8u+mzHEn2hz9DqvKLlYIN3YXjTII17+N2O6ll64=
+	t=1751303176; cv=none; b=hQsI8hHR9/wGdPgct9d9NyM88YNYk9VZ0fg6uGbYcsTp6C25O3CJzO0iJhe+f3TAvhp2joVVwlqZ9TV3VlRiwRP8JaS2G0UpDQi6hso+sSg7XD1k//hoFroG+B9vsf6JExa+2o3YTcxiR37s2oJo1xscVAdvnb8wK3JFObfMOK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751303169; c=relaxed/simple;
-	bh=CR8gZdKFvN3V5o/0UB/wpSVyF8C/fXEhqtaQb+i7Jnk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=mMizbFX1us3V3Pd+oq3YEWBYSr7PtuxytUL1ANPA7t8CC9CejIeX+7zAMMX9pH9AU7WxU8MpHAO+MFp7ou9etxO1p8X23JLN8cat4bqS+oMPSegBixRr3jRKAH9PyQktydsQzsqhY2w2v/DahszSVN3GRB7igWIXc6lNFrq4gto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KJeIxE0V; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1751303176; c=relaxed/simple;
+	bh=pjFJVY2DAp0wxsONkQePUbbOGI1/Uhq8I/8sgsXujUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BEgc1U00rgh/m+ALe5vaerGvFvlPTxlKOhxHwDjQKJcTpTYIYjdZRxmiJW3mlYC/591CRcWyAM093XHHPWynB6Nbs16yFapYosewW5MNrqNtpd6wGt45EW1ekBkCxs2dL4VFuBadG7DLN741C+seSSpUU5sMe7khh43Sz6BDPD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=N6MijQSv; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KJeIxE0V"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55UFXVIS007049;
-	Mon, 30 Jun 2025 17:06:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=edOtzD9c1u6f5O2grA/rAY
-	tBeYh4buZ7t5/yAPSQ7WU=; b=KJeIxE0VACv0OHkEx2BXLgF1Cztrm7ptIORKG9
-	XA8LTJQvzukYsXWWpxvf8pPf7QvxGbk/ks7G5ZxNHeXnUd3mRF6xrYzsS3SnQmoe
-	I0ttGXTM3MZLN6+iDbJFlXqTrQyfSXlQ50VJGy+L4FC3C7ONbz7AGbH9akIyITsN
-	JCYdpRPapNZ+WR5o5PJUCiCjDypIJmHMmV0mpvTF+Fvz7cQFW8adSIwqwHDMVHs2
-	OaEs2AJ+7Z7mXCJIl+0pL2mO+JBZ8h4Os+hEMkJLOI6zOn9UK+2rc6ECjxr2zm4m
-	l4XfNfJyRwHR+UBM0KltzicNdsuzb7jk6g8nIY475Lel7gfA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kn5j9xwv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 17:06:02 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55UH61S5000798
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 17:06:02 GMT
-Received: from hu-achillar-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 30 Jun 2025 10:06:00 -0700
-From: Aditya Chillara <quic_achillar@quicinc.com>
-Date: Mon, 30 Jun 2025 22:35:28 +0530
-Subject: [PATCH] tracing/perf: disable preemption in perf_trace calls
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="N6MijQSv"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-311da0bef4aso2433314a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 10:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1751303174; x=1751907974; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YeiZ9sUl/sPQepg8w+B0NuXnsnwAyrJ4/1H7mMXSJyg=;
+        b=N6MijQSvvIB97GiPiJkWj4Il6sau0/Rp/041DGphpZdU1TvuG2tvKLzJdSx6edj9TJ
+         lw4Z4khyoEdFBt7LAkBdgwkQi6meflwZl9x3aCvtcjs84X2UQgUHVJd4qbIN7g+qZgky
+         CoRWlcGmiImE7aknlz+iBlr0D66+iZCpml4tM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751303174; x=1751907974;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YeiZ9sUl/sPQepg8w+B0NuXnsnwAyrJ4/1H7mMXSJyg=;
+        b=CCns+hnbChxds+oNY0DFzwYn85vM6T3oPIQoRm17ixQ0ymn3X0oRclI7ZZEI3FFAxD
+         Vp7EXVhGxTyL1uAFAyyVk0swA7fJrBv7davd0LAPwmCp1pAgVIjGehk1OciyItZBfymA
+         CmIdAeq0sRUvoGSuUEFmHVCFbW8HttakL7uEw4YTq7yW12g0+1fNCoN5af6XLooapHNm
+         T+JsCixxwmZdglNZM4L8AQbTcH4EXU/CknUna1dEF7Om6S7TCkgZiNFGNPB9smwhXf9b
+         UdznwN125AA5yQy2fRySujMmaFMe0XqCofPrcTtGW6cM/Qzx7C/QQcygSKsisD1WjAGk
+         F60w==
+X-Forwarded-Encrypted: i=1; AJvYcCWa6i+az9j+H5LY4DZX3pufuQfIbTye/tuTxbk6zHfjbLpwePlZE9AE7cHxOC6xeb41qyypzp4Q/AoAf+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvPuLN41mM2pmlqT8e0hRo+AKD4hA8dF/EQxpDUJ9tQS/UIOLO
+	bQOSFBlG88hiRWUMCFASjjsoxa6LzI6854JXK9RV3cBxP9PJSDgPuMjt5pTLGr9rXA==
+X-Gm-Gg: ASbGnctQlBA6hIP5Rn83hz2nIkfewUtxp5oQ3VnIckUs+eWbTEZV0Wanra2pgg5K8nU
+	IAs4LYPbk18QrvaW/P84XB8C4/BOWOaOWOnEX+7E/4cKgMB2/v+kC3SOSEo+6xTDCqx5SnMiBl/
+	XUYoZjTGwIoxS084xh8WBsuA9GDSK5LAKfFfJtJrwH8CRQeb3+PwefG9Ks2FjjJoh1iPN0QNXSy
+	niDTHZMlXmxQD/4rvXfRfnHb4p5LXyXUCbBk5PpwgtarYA2C9TMyYGnpXLG+ztaHgpdjQcy7q8s
+	WUGSqTM262uYsNQaxfv4Aq5ZzDh5mntZC//ArboQks2IfTp41Hvg1TWqZUqYFauwzhnzLC4Ek0e
+	SRbmlIjvMDbvjTwvHrKd98vg7/g==
+X-Google-Smtp-Source: AGHT+IFY8d/sUB+A8uAwUeKsbw68IOwDG201lnCyROt+Sdl9vBBWxot2+dUbghHEvlDQYaDwEpf6dw==
+X-Received: by 2002:a17:90a:e7cc:b0:312:959:dc41 with SMTP id 98e67ed59e1d1-318c92e112bmr20333229a91.27.1751303174222;
+        Mon, 30 Jun 2025 10:06:14 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5437a26sm13396729a91.38.2025.06.30.10.06.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 10:06:13 -0700 (PDT)
+Message-ID: <0839af85-44a0-4960-a565-c036087fa3bc@broadcom.com>
+Date: Mon, 30 Jun 2025 10:06:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250630-fix-perf-trace-null-access-v1-1-8c15bf5f402c@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIANfDYmgC/x3MQQqEMAxA0atI1hNoK1b0KjKLUlMNSJVEhwHp3
- S0uH3z+DUrCpDA2Nwj9WHnPFfbTQFxDXgh5rgZnXGd8azDxHw+ShKeESJivbcMQI6ni4L1NgzV
- z6h3UwSFU63c+fUt5ADp0Ty9sAAAA
-X-Change-ID: 20250630-fix-perf-trace-null-access-9661f910df72
-To: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>
-CC: <linux-kernel@vger.kernel.org>,
-        Aditya Chillara
-	<quic_achillar@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751303160; l=4460;
- i=quic_achillar@quicinc.com; s=20250630; h=from:subject:message-id;
- bh=CR8gZdKFvN3V5o/0UB/wpSVyF8C/fXEhqtaQb+i7Jnk=;
- b=olVKXdr999NqrqzoiqAnA7Wt0bEV2vF42EsaP1v0Oi0X3Jy3l1INCZoqc/bP2DlntyoEP0g7X
- 8LqTZNXDCNDCR7AezvPbvnABEUhqfRS/5SWiziztgSESGyZd+JV34xq
-X-Developer-Key: i=quic_achillar@quicinc.com; a=ed25519;
- pk=n9YdZ9C822pphDmKHNwLKAFOJBiDCIOL/n1Mzy7/lg4=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KtJN2XWN c=1 sm=1 tr=0 ts=6862c3fa cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=hK1vuaTRqXiNnZ6ymyoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: UT2T8Cyc7TwrE_mPxAunJctOQMJGEYfV
-X-Proofpoint-GUID: UT2T8Cyc7TwrE_mPxAunJctOQMJGEYfV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDE0MSBTYWx0ZWRfX6zh9FMtRmfxL
- PHH9ybbt8HjnU2SCAxhKOY5vcnQ4A4laDBVlVcepJmB8pLgng8tj1XtMQWXWTf4lRaEfjPy3Q//
- nWWkqoohwfHePJJmBG8o1kJApXfaRN5jKZQ0j29kjkBfdWxm1LsupWnV2KEpEMk+5NcZoiaTm9D
- JBRErdN4Jbxnr99Cjicx+fyTZMcA0ZvynXjvOTJ1UsBn507EKbIhKsFltRhONtf/JqIN3P+vPxG
- w/fU6mtTbYCw729sE8KWS6b5kExZViAVM93LJjX1vgyqBE/TqJvLtxXHWtEqSexfLAzXJsDlPJ1
- elugB8+SX7etQl1t/p08WxHBj6PXZjJP+Dhs+Jzd96oxiA5AQqfNDEMzw1cqVPHnHdv5Sk2u83f
- zEU8AWglNSN9D1TEXe1InD9Q3a2V5yTGplDA8Un4G67vVgUSNAqz0D3vNL/D8i+UX6sQrP1Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_04,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- mlxscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1011 mlxlogscore=811 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300141
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v4 0/4] net: phy: bcm54811: Fix the PHY initialization
+To: =?UTF-8?Q?Kamil_Hor=C3=A1k_-_2N?= <kamilh@axis.com>,
+ florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org, andrew+netdev@lunn.ch
+References: <20250630135837.1173063-1-kamilh@axis.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250630135837.1173063-1-kamilh@axis.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-It is possible that perf_trace_sched_switch call is rescheduled causing
-NULL access in perf_trace_buf_alloc because of perf_trace_event_unreg
-called in between, leading to data abort:
+On 6/30/25 06:58, Kamil Horák - 2N wrote:
+> PATCH 1 - Add MII-Lite PHY interface mode as defined by Broadcom for
+>     their two-wire PHYs. It can be used with most Ethernet controllers
+>     under certain limitations (no half-duplex link modes etc.).
+> 
+> PATCH 2 - Add MII-Lite PHY interface type
+> 
+> PATCH 3 - Activation of MII-Lite interface mode on Broadcom bcm5481x
+>     PHYs
+> 
+> PATCH 4 - Fix the BCM54811 PHY initialization so that it conforms
+>     to the datasheet regarding a reserved bit in the LRE Control
+>     register, which must be written to zero after every device reset.
+>     Also fix the LRE Status register reading, there is another bit to
+>     be ignored on bcm54811.
+> 
+> Changes in v2:
+>    - Applied reviewers' comments
+>    - Divided into more patches (separated common and Broadcom
+>     PHY specific code)
+> 
+> Changes in v3:
+>    - Added MII-Lite documentation
+> 
+> Changes in v4:
+>    - Added missing Fixes headers
 
-[  363.202351][    T0] Unable to handle kernel paging request at virtual address ffffffba56d0a03c
-[  363.202355][    T0] Mem abort info:
-[  363.202355][    T0]   ESR = 0x0000000096000045
-[  363.202357][    T0]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  363.202359][    T0]   SET = 0, FnV = 0
-[  363.202360][    T0]   EA = 0, S1PTW = 0
-[  363.202361][    T0]   FSC = 0x05: level 1 translation fault
-[  363.202363][    T0] Data abort info:
-[  363.202364][    T0]   ISV = 0, ISS = 0x00000045, ISS2 = 0x00000000
-[  363.202365][    T0]   CM = 0, WnR = 1, TnD = 0, TagAccess = 0
-[  363.202367][    T0]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  363.202369][    T0] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000c9795000
-[  363.202371][    T0] [ffffffba56d0a03c] pgd=0000000000000000, p4d=0000000000000000, pud=0000000000000000
-[  363.202377][    T0] Internal error: Oops: 0000000096000045 [#1] PREEMPT SMP
-[  363.202383][    T0] Dumping ftrace buffer:
-[  363.202385][    T0]    (ftrace buffer empty)
-.
-.
-[  363.203036][    T0] CPU: 4 UID: 0 PID: 0 Comm: swapper/4 Tainted: G W  O \
-	6.12.23-android16-5-maybe-dirty-4k #1 6d534d25cf9b12caecb741d5004c181a6a432b53
-[  363.203042][    T0] Tainted: [W]=WARN, [O]=OOT_MODULE
-[  363.203045][    T0] pstate: 834000c5 (Nzcv daIF +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[  363.203048][    T0] pc : perf_trace_buf_alloc+0x90/0xe0
-[  363.203057][    T0] lr : perf_trace_buf_alloc+0x40/0xe0
-[  363.203060][    T0] sp : ffffffc08016bc90
-[  363.203062][    T0] x29: ffffffc08016bc90 x28: 0000000000000000 x27: ffffff88083d0000
-[  363.203066][    T0] x26: ffffffba56d0a000 x25: 00000044684e8bd8 x24: 1198f2d01457f4e4
-[  363.203070][    T0] x23: 0000000000000000 x22: ffffff88083d0000 x21: ffffffc08016bccc
-[  363.203073][    T0] x20: ffffffc08016bcd0 x19: 0000000000000044 x18: ffffffd01580bec0
-[  363.203077][    T0] x17: 00000000d2dc9ceb x16: 00000000d2dc9ceb x15: 0000000000000010
-[  363.203080][    T0] x14: 0000000000000100 x13: 0000000000000100 x12: 0000000000000100
-[  363.203083][    T0] x11: 0000000000ff0100 x10: 0000000000000001 x9 : ffffffba56d0a000
-[  363.203087][    T0] x8 : ffffffba56d0a044 x7 : 0000000000000001 x6 : 000000548fd2bf93
-[  363.203090][    T0] x5 : 00000054908be990 x4 : 0000000000000000 x3 : ffffff8808329640
-[  363.203094][    T0] x2 : ffffffc08016bccc x1 : ffffffc08016bcd0 x0 : ffffffba56d0a000
-[  363.203097][    T0] Call trace:
-[  363.203098][    T0]  perf_trace_buf_alloc+0x90/0xe0
-[  363.203102][    T0]  perf_trace_sched_switch+0x74/0x190
-[  363.203107][    T0]  __schedule+0xbb0/0xeac
-[  363.203112][    T0]  schedule_idle+0x24/0x48
-[  363.203114][    T0]  do_idle+0x214/0x25c
-[  363.203117][    T0]  cpu_startup_entry+0x34/0x3c
-[  363.203119][    T0]  secondary_start_kernel+0x130/0x150
-[  363.203124][    T0]  __secondary_switched+0xc0/0xc4
-[  363.203129][    T0] Code: f8605908 d538d089 8b080120 8b33c008 (f81f811f)
-[  363.203131][    T0] ---[ end trace 0000000000000000 ]---
-[  363.203133][    T0] Kernel panic - not syncing: Oops: Fatal exception
-[  363.203135][    T0] SMP: stopping secondary CPUs
-[  363.203276][    T0]
-[  363.203276][    T0] Total active clients count: 0
-[  363.203280][    T0] Dumping ftrace buffer:
-[  363.203281][    T0]    (ftrace buffer empty)
+Kamil, you posted your v4 less than 24 hrs after the v3, please don't do 
+that per:
 
-Fix the issue by disabling preemption in perf_trace calls.
-
-Signed-off-by: Aditya Chillara <quic_achillar@quicinc.com>
----
-Change-Id: I787347a7db4554cfd2cb74e0fc985699f1824c92
----
- include/trace/perf.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index 5800d13146c3d0cdf4eb474a3bb895dd71753de4..76994a5d8c55f4ca071070ff551a53a84fb1d95c 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -66,6 +66,8 @@ perf_trace_##call(void *__data, proto)					\
- 	int __data_size;						\
- 	int rctx;							\
- 									\
-+	guard(preempt_notrace)();		\
-+									\
- 	__data_size = trace_event_get_offsets_##call(&__data_offsets, args); \
- 									\
- 	head = this_cpu_ptr(event_call->perf_events);			\
-
----
-base-commit: 70575e77839f4c5337ce2653b39b86bb365a870e
-change-id: 20250630-fix-perf-trace-null-access-9661f910df72
-
-Best regards,
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#updating-patch-status
 -- 
-Aditya Chillara <quic_achillar@quicinc.com>
+Florian
 
