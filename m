@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B8C242D93;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3830624677B;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751320365; cv=none; b=GqdoWMt2TJS4MrkGS3W6hB+gfnd6OkIsTiG9dZNEtWGwEY8BUJ9t69yZn+mT4LhQdvTmCK72M010Ev0YaUyTYXPXQo0rDpGvAKBT/60Aql8RXCMDGyb75q/65400liAA7c8yx5FxI/fceT/Pr55wKIABJeRWxTc62TLSxzTdy1k=
+	t=1751320365; cv=none; b=WoMcEdKThPN9/B8BhyAS5/7c9Tr3zrG1ZkNW75r+I9f6etLFTCUJbORZVrY/7LtbBU7IKpCVN20+/k4D2+AjSVxicI7WxM3R3TOGrkpqbkVY0axCO2iXTfilcdwttEZ5qBUO6c+fyqZe9KX0MuRS3S/3Bu/22jmztrzCfgIBqWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751320365; c=relaxed/simple;
-	bh=klFInMyMuyuTpAHmohUw1L/ykD0tdIFslFtkTRkiwWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YpBT6USzDWqwWeyoh65/6zUqWlfjE9Uz3fsWuA5Abn3Rhhh3AaUmUj2mpBsTuZyvPicPSnImFgev8TFRNtHcsltSCi9Z84a1Jeu+tZ8sk7NTCzvGmm69tOdbjLTTKQFziyCm6hfMOTrohY1tiqUkhW55YfRIFoLTPjPCtuyjpbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nogtk7Au; arc=none smtp.client-ip=10.30.226.201
+	bh=nm/MOABnlL9MNVwqwrrw0H7SIIDrR6b8+mGPh5LEKzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dtdE3juahWBqZd8xZGpFRKWp5WTSPKFXoPl3LuUBMEdlXHEOacyQwpgkUQYrt06Ti3pDfvCLLEOf43g2RbLb/SePLnQUesqGrBkCZBpCP0xbOLgoN8mlWaR5IINRidvuO52BUReBOSj3P+MXhqT/7npxtNub7Hos4S3n3J04GKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHMrOtrt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nogtk7Au"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B25C4CEFE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHMrOtrt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51770C4CEF3;
 	Mon, 30 Jun 2025 21:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751320364;
-	bh=klFInMyMuyuTpAHmohUw1L/ykD0tdIFslFtkTRkiwWc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nogtk7AumGtIlLzpISDJom9kpWJ1jKR2T0xxAG9CyHydMJ715WhehUmAHPrOrH8i3
-	 j5fHuWn2DA0FlQZHCSca2oikq7I48SQ8R+qKinagBF5hfYPth7/XtcDHTmKsun8Mn0
-	 SNld8GOqUin+kAG9x4EY1zR0UlaJ00el/xViZ7kmcpzm+XyvXicOr9LS2u9J9MU4Ok
-	 3JdHNtcLRNUJ+pfDbcS3d8p3Y18d/cKlj6bFnUYXLDQ/wfOL5yXOKGMOW6undZQ1va
-	 o7GD5LnPqrIOxVkiaPPfs/905OEsnVzWOaZBO+TYJ6jdpcygGF1wBLMDF8RL8E+XDY
-	 R1G0tu6Ars4Ow==
+	bh=nm/MOABnlL9MNVwqwrrw0H7SIIDrR6b8+mGPh5LEKzU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XHMrOtrt5NNxYkIxv7OYrmKHPkdrOLmzvnaFBSFtVuEJMPp2GBEbIbcVA1i2O3N8J
+	 XgDAKsc2U017t9ug7RvP0unWl0gouusji22kFOv6Db6rfMoIRDUY3vdsAWlFB7OqJV
+	 Ds6dPWifH4By0Jt3uYQufq0CF4cxjn4b/ZQAcn9qNcBxR1CNrfH4vawJxVkRNHqYk5
+	 0nWfBGKDaOD5VMH81Opr/Gl0oi48vI/68jDCjDg62xDWP4YJKHYsC+ZE/Rxcv6OtNr
+	 PhmG/hYB10lBdMPk5VHdz1iNlJmUsVVNxWbOaYfyVYKS/YYZ00CF8oBIsYVf6miFO4
+	 riNFSbTENXBJQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uWMQc-00000003QX9-31Yn;
+	id 1uWMQc-00000003QWG-1QqA;
 	Mon, 30 Jun 2025 23:52:42 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Sai Vishnu M" <saivishnu725@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/15] docs: Makefile: switch to the new scripts/sphinx-pre-install.py
-Date: Mon, 30 Jun 2025 23:35:02 +0200
-Message-ID: <2528a42b09a5bc955ff506dc91500d268bcf7eca.1751318230.git.mchehab+huawei@kernel.org>
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Sai Vishnu M <saivishnu725@gmail.com>
+Subject: [PATCH 00/15] Translate sphinx-pre-install to Python
+Date: Mon, 30 Jun 2025 23:34:48 +0200
+Message-ID: <cover.1751318230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.50.0
-In-Reply-To: <cover.1751318230.git.mchehab+huawei@kernel.org>
-References: <cover.1751318230.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,83 +50,208 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that we have a better, improved Python script, use it when
-checking for documentation build dependencies.
+Hi Jon,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/Makefile                             | 14 +++++++-------
- .../{sphinx-pre-install.py => sphinx-pre-install}  |  0
- 2 files changed, 7 insertions(+), 7 deletions(-)
- rename scripts/{sphinx-pre-install.py => sphinx-pre-install} (100%)
+This series port scripts/sphinx-pre-install to Python. It started as
+a bug-compatible version with the old logic.
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index c486fe3cc5e1..b98477df5ddf 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -46,7 +46,7 @@ ifeq ($(HAVE_SPHINX),0)
- .DEFAULT:
- 	$(warning The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed and in PATH, or set the SPHINXBUILD make variable to point to the full path of the '$(SPHINXBUILD)' executable.)
- 	@echo
--	@$(srctree)/scripts/sphinx-pre-install.pl
-+	@$(srctree)/scripts/sphinx-pre-install
- 	@echo "  SKIP    Sphinx $@ target."
+Yet, while testing it with lxc and some Docker images, I opted
+to also drop legacy logic from it and to add support for some
+additional variants compatible with existing detection logic.
+
+It also fixes some issues that were present at the proposed
+install procedures that don't work anymore with new distro
+versions.
+
+I ended writing some scripts I used internally to test it.
+Such scripts compare the diff output of both the .pl and
+.py version. The differences were only blank lines for
+gentoo and some  warning reorder.
+
+The test script also ran the install procedure for system,
+venv and native Sphinx install.
+
+Since there are distros which has a default Python 3.6
+(like openSuse and RHEL8), I opted to make the script
+compatible with it. Yet, internally it requires at least
+Python 3.7(*) to support the build.
+
+The tests were done with those containers, obtained from
+lxc download templates or via podman run:
+
++--------------------|------------------------------|----------------+
+| Name               | release                      | container type |
++--------------------+------------------------------+----------------+
+| debian             | bookworm                     | lxc            |
+| ubuntu             | plucky                       | lxc            |
+| ubuntu-lts         | noble                        | lxc            |
+| almalinux          | 9                            | lxc            |
+| archlinux          | current                      | lxc            |
+| gentoo             | current                      | lxc            |
+| opensuse           | tumbleweed                   | lxc            |
+| devuan             | daedalus                     | lxc            |
+| kali               | current                      | lxc            |
+| mint               | wilma                        | lxc            |
+| fedora             | 42                           | lxc            |
+| centos             | 9-Stream                     | lxc            |
+| rockylinux         | 9                            | lxc            |
+| oracle             | 9                            | lxc            |
+| amazonlinux        | 2023                         | lxc            |
+| openeuler          | 25.03                        | lxc            |
+| springdalelinux    | 9                            | lxc            |
++--------------------+------------------------------+----------------+
+| mageia             | mageia:latest                | docker         |
+| openmandriva       | openmandriva/4.0             | docker         |
+| scientificlinux    | eurolinux/scientific-linux-7 | docker         |
+| rhel               | redhat/ubi8                  | docker         |
+| opensuse-leap      | opensuse/leap:15.6           | docker         |
++--------------------+------------------------------+----------------+
  
- else # HAVE_SPHINX
-@@ -121,7 +121,7 @@ $(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
- htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
- 
- htmldocs:
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
- 
- # If Rust support is available and .config exists, add rustdoc generated contents.
-@@ -135,7 +135,7 @@ endif
- endif
- 
- texinfodocs:
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,texinfo,$(var),texinfo,$(var)))
- 
- # Note: the 'info' Make target is generated by sphinx itself when
-@@ -147,7 +147,7 @@ linkcheckdocs:
- 	@$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,linkcheck,$(var),,$(var)))
- 
- latexdocs:
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,latex,$(var),latex,$(var)))
- 
- ifeq ($(HAVE_PDFLATEX),0)
-@@ -160,7 +160,7 @@ else # HAVE_PDFLATEX
- 
- pdfdocs: DENY_VF = XDG_CONFIG_HOME=$(FONTS_CONF_DENY_VF)
- pdfdocs: latexdocs
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	$(foreach var,$(SPHINXDIRS), \
- 	   $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" $(DENY_VF) -C $(BUILDDIR)/$(var)/latex || sh $(srctree)/scripts/check-variable-fonts.sh || exit; \
- 	   mkdir -p $(BUILDDIR)/$(var)/pdf; \
-@@ -170,11 +170,11 @@ pdfdocs: latexdocs
- endif # HAVE_PDFLATEX
- 
- epubdocs:
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,epub,$(var),epub,$(var)))
- 
- xmldocs:
--	@$(srctree)/scripts/sphinx-pre-install.pl --version-check
-+	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,xml,$(var),xml,$(var)))
- 
- endif # HAVE_SPHINX
-diff --git a/scripts/sphinx-pre-install.py b/scripts/sphinx-pre-install
-similarity index 100%
-rename from scripts/sphinx-pre-install.py
-rename to scripts/sphinx-pre-install
+It succeeded to install either with venv or system package (most
+for both) for all those OSes:
+
+Detected OS                : AlmaLinux release 9.6 (Sage Margay).
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : PASSED: Sphinx 3.4.3
+
+Detected OS                : Amazon Linux release 2023 (Amazon Linux).
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : PASSED: Sphinx 3.4.3
+
+Detected OS                : Arch Linux.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.2.3
+
+Detected OS                : CentOS Stream release 9.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : PASSED: Sphinx 3.4.3
+
+Detected OS                : Debian GNU/Linux 12.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 5.3.0
+
+Detected OS                : Devuan GNU/Linux 5.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 5.3.0
+
+Detected OS                : Fedora release 42 (Adams).
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.1.3
+
+Detected OS                : Gentoo Base System release 2.17.
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.2.3
+
+Detected OS                : Kali GNU/Linux 2025.2.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.1.3
+
+Detected OS                : Mageia 9.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.1.3
+Installing package_install : PASSED: Sphinx 6.1.3
+
+Detected OS                : Linux Mint 22.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.1.3
+Installing package_install : PASSED: Sphinx 4.3.2
+
+Detected OS                : openEuler release 25.03.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.1.3
+
+Detected OS                : OpenMandriva Lx 4.0.
+Installing venv            : WARNING: No such file or directory: 'sphinx-build'
+Installing package_install : PASSED: Sphinx 8.2.3
+
+Detected OS                : openSUSE Leap 15.6.
+Installing venv            : WARNING: No such file or directory: 'sphinx-build'
+Installing package_install : PASSED: Sphinx 7.2.6
+
+Detected OS                : openSUSE Tumbleweed.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.2.3
+
+Detected OS                : Oracle Linux Server release 9.6.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : WARNING: No such file or directory: 'sphinx-build'
+
+Detected OS                : Rocky Linux release 9.6 (Blue Onyx).
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : PASSED: Sphinx 3.4.3
+
+Detected OS                : Springdale Open Enterprise Linux release 9.2 (Parma).
+Installing venv            : PASSED: Sphinx 7.4.7
+Installing package_install : PASSED: Sphinx 3.4.3
+
+Detected OS                : Ubuntu 24.04.2 LTS.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 7.2.6
+
+Detected OS                : Ubuntu 25.04.
+Installing system_install  : PASSED
+Installing venv            : PASSED: Sphinx 8.2.3
+Installing package_install : PASSED: Sphinx 8.1.3
+
+It also properly detected RHEL 8 string:
+
+Detected OS                : Red Hat Enterprise Linux release 8.10 (Ootpa).
+Installing venv            : WARNING: No such file or directory: 'sphinx-build'
+Installing package_install : WARNING: No such file or directory: 'sphinx-build'
+
+But, at this particular docker container, no repositories had
+python3-sphinx nor python3-virtualenv, but I suspect that this
+is a problem on this particular image, as I'm almost sure we
+tested RHEL 8 in the past, so, I have hopes that this could
+still work with real RHEL, if it has Python >= 3.7.
+
+Yet, our goal is to support the latest LTS version, so
+RHEL 8 is out of scope.
+
+(*) Officially, the minimal Python version we endorse is
+3.9, as several Python scripts at the Kernel won't run
+with previous releases, but what we have for doc builds
+is currently compatible with 3.7. We may later increase
+it if you think it is a good idea. Yet, if you see the
+Sphinx version above, you'll notice that some venv installed
+7.4.7 as the latest version. It means that such distros
+still have Python <= 3.9.
+
+Mauro Carvalho Chehab (15):
+  scripts: sphinx-pre-install: fix version check for Fedora
+  scripts: sphinx-pre-install: rename it to
+    scripts/sphinx-pre-install.pl
+  scripts: sphinx-pre-install: Convert script to Python
+  scripts: sphinx-pre-install: Make it compatible with Python 3.6
+  scripts: sphinx-pre-install: run on a supported version
+  scripts: sphinx-pre-install: drop obsolete routines
+  scripts: sphinx-pre-install: drop support for old virtualenv
+  scripts: sphinx-pre-install: Address issues with OpenSUSE Leap 15.x
+  scripts: sphinx-pre-install.py fix opensuse hints
+  scripts: sphinx-pre-install.py: fix support for gentoo
+  scripts: sphinx-pre-install: Address issues with OpenSUSE Tumbleweed
+  scripts: sphinx-pre-install.py: only show portage hints once
+  scripts: sphinx-pre-install.py: cleanup rhel support
+  docs: Makefile: switch to the new scripts/sphinx-pre-install.py
+  scripts: sphinx-pre-install.pl: get rid of the old script
+
+ scripts/sphinx-pre-install | 2218 +++++++++++++++++++-----------------
+ 1 file changed, 1164 insertions(+), 1054 deletions(-)
+
 -- 
 2.50.0
+
 
