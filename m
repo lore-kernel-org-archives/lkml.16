@@ -1,173 +1,114 @@
-Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C551C19994F
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D534E1DF75D;
+	Mon, 30 Jun 2025 06:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751263328; cv=none; b=Fkl0fC5mhGF6jI65bXG6M/e6+4R2TITFrzwa6rAZhepKEL2keMFr72sYxVgfHyZv3C7uV8D9aZtgbWMCxBlA+LN5IOPPM1zp0l/WN5/JRmTM0pYDES2jHxpfTDYboBwHkmfLNoG3RKOyb68JSDtmM0l197vCcLogqE58shMc9c8=
+	t=1751263424; cv=none; b=jjK0mGN+i6PzkN5S3cLuDPfDqXJOyJ2dj4KVQ/Q9bjPM7ggY7CWtR48cnjTqyRAVk/+Mq7IiMjLaJ0YbvyhoBmUdS/cxjJKNSq86carzCmErFMMBg8+Bwx05nEDkSOV6mTF/wQ8ISHal8zVO2WNFDca6FXe7rUseJxI5oapRRRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751263328; c=relaxed/simple;
-	bh=ScDCbKztzH2ieoL0iYBisn4tcvXqoUj0at/V2ZcR/hs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F4VlKC8tQ2cjMCut1V3xk6CzAFzoCB2UF6eOMIyssJu9VaBwMGvarO4Mi6UKjsCzpUaQFIEhD/utYMLulYGty0d+eq0WIlr/+lWpWhWW837sdX2TDOx2sc6rRTizs389bvPChRh8konMY7um06lPqY5tCIw6kVT0pPsN2jfOoMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=s/oYlGrY; arc=none smtp.client-ip=188.40.203.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1751263424; c=relaxed/simple;
+	bh=f/zHXizomnK/UoSQHyO9l1UbojaOXQHKnSqbjwtbLDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=r99rAgyMgJST69M2vRjQOSiq/aE0DdpIH8ZsRZdaspRttLmPBrydLGLuyaCoRdHDjSOoNrLcRKxL3OReCDueqcTMvX/7fLSLGjepR/1ijvonHhWDPkDUAIVY6rJVWMqw9OBcvzLK5dA3P6bHKApJPfKGbw9vQ/FN0DuykB5Q828=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KoBvW6Me; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="s/oYlGrY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap4-20230908; h=Sender:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ScDCbKztzH2ieoL0iYBisn4tcvXqoUj0at/V2ZcR/hs=; b=s/oYlGrYtA50WXtmY+kFnu5Nar
-	adXXK0i8EmAqwVST3UnUSn5F42euQlOzRHLqNe2/PRTxYtnCVQsl4LZihCt7oI0Ie2dlw68zs01eh
-	rXG+QFkGZCrEhuXe05YiqyjjEmHwyq5u2TNN8ZcpVKNQ9bsiA2C5QumhyuChyp6NFIaA4cjsEEQZB
-	v6S1OYPbofD0al4q+DipoAxhS8jgM9iIkTu0gDz04eO61K9p3YFWQQYDksdAALsw9gJfhgzgctLhv
-	wetPehFqBphC9PvSJzvc/Jm2QQt10SCepgzIig5XKKli2B43UAE6CsBYqzVwPrDQuE34X4YXuy7lo
-	wDs1nhoA==;
-Received: from [178.38.100.64] (helo=[10.10.1.179])
-	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uW7aH-005wxd-3u; Mon, 30 Jun 2025 07:01:42 +0100
-Message-ID: <df7cb41da58dc80e2b293ab93fbaca6a9eab9a26.camel@codethink.co.uk>
-Subject: Re: [PATCH 0/5] sched/deadline: Fix GRUB accounting
-From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
-To: Juri Lelli <juri.lelli@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann	 <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall	 <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Valentin Schneider	 <vschneid@redhat.com>, Waiman
- Long <llong@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Luca Abeni <luca.abeni@santannapisa.it>
-Date: Mon, 30 Jun 2025 08:01:41 +0200
-In-Reply-To: <20250627115118.438797-1-juri.lelli@redhat.com>
-References: <20250627115118.438797-1-juri.lelli@redhat.com>
-Organization: Codethink
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoBvW6Me"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74b27c1481bso330694b3a.2;
+        Sun, 29 Jun 2025 23:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751263421; x=1751868221; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bse0HiUeq6JYWCg46lscalLF5Ni0rMUFc9iwtNAYDtk=;
+        b=KoBvW6MeMIzQHn81cPvVAcwKYx7IpDTzZGAF0UPxCwiuNCFRm6e8ie3tJxF+QDPExK
+         tRh8OZrx3tJIN9dKJdQKomzhXJ6MIEzGfpkqpmEIDy3G43S14BBtnR+ElXPMEVe+Eb78
+         3s1QVCbUidTooQlJx0LY8+4v1O61ufkmvzD1y8WQUWT7nseG1wPPqTttmN3xL89LOsM9
+         EKVWsicnGniXvsHYXG/y8fTV7mV4hvtfK1F/AEibBX3ljmpCATwARjovZ+T8ub7cbN/S
+         GljPaYp+r4F+G53pPGvZ/SzW9F7FAhpaq5hataRGGipMnnBPiGo5/GNUrqQkPL8qkJp6
+         /XPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751263421; x=1751868221;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bse0HiUeq6JYWCg46lscalLF5Ni0rMUFc9iwtNAYDtk=;
+        b=Q1/p+KJV0k6yMtZMKex0qKAd9xk6DSSLw9JEDzsxk9rzX2FNjDi5Bt0I4MBRoAZXAu
+         f32g9zyheLB2y5Tdyf5Xa3YmLbIzSLW+fcfh2gzHf/PlrmCRMLDtJiNN5I68/RfbqXj6
+         ZsU7a0qHz49d9V22dqBdJm5ki4U4FVQ3NxTfc87jZC2zS4itPSsscvpOOTLukbMPLGgD
+         LZzMiL4/5dqJH5nDGwECE8z8VBUp3G1ySEFC7vHmJ5Qefs970efNclJQ4a7ykd7b6INH
+         xwueDVQGaJgA+QDAJCVkMA+IqXZbs6PGvcGmfyzmA92f9lh3iNPmypubeD9+dGIpRCFW
+         BzoA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1lICVngymd9HV3/0WJjw5mvIrI7d2dFFiYee625lZ01gLiz5N0CeLR2wm/ylwG//hDM4hgdpcAnKWOfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Bwiiua7bDXg/esgKWp76fEYGHAZ3uDKWI530OGt6oWohvGQ3
+	mnqKsvVTMuNeSvcVUI/48mXyfmVp9NUMj4PK+e46PFVminYkE25w6QWGSFGl+g==
+X-Gm-Gg: ASbGncsEckvkeQALcjazoIoLqdBNQpjer4UnjGFULNa/rK8MycpJV6U5XBWsRw74AXK
+	XQVFJFhk4aUsdcstgLLJdYK7aOWy/twdWDtA8/xA+dA80oZ+DTigBeGfmawEObHT3PYkU91Bfmz
+	yCRy7pdTOcu4AX2owI8XYFhHk7PsmuEDnPCEJwndBH8urOpHmOle/yeFi2Oo/qU9mP09HjZlwtZ
+	UKcp4Lu1Gwdh2f7U2xnH4c1Wj1fGzTIEU2/2Ycd6rGaRDrrf0Zs5WCCygOga9eY+ke+8RBiLBoP
+	Q4lch2/ffHrIj/GgKn/Fix86ZbzGYXJ2AD0OMOq7y88ZlKHzMhHt7fpxA4uw1g==
+X-Google-Smtp-Source: AGHT+IFm5yoCw+BqcmmIx/EQrfxZmrjUID6nD8bqIItfY6Zwvqn3vWo5T3yKwPuH6tiYN2AHz0yuxg==
+X-Received: by 2002:a05:6a00:14cb:b0:742:aecc:c46b with SMTP id d2e1a72fcca58-74af6f4cf11mr14845678b3a.15.1751263420849;
+        Sun, 29 Jun 2025 23:03:40 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af557b3a2sm7976071b3a.104.2025.06.29.23.03.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 23:03:40 -0700 (PDT)
+Date: Sun, 29 Jun 2025 23:03:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: tca8418_keypad - switch to using module_i2c_driver()
+Message-ID: <dhb2wzrhspbjh2gbt3iny7odsrpq2bbqldq276zuxwc4bnhgbl@qkbxj6yrihqv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: marcel.ziswiler@codethink.co.uk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Juri
+With kernel supporting deferred probing there is no longer need to play
+games with different initcall levels trying to influence probe order.
 
-On Fri, 2025-06-27 at 13:51 +0200, Juri Lelli wrote:
-> Hi All,
->=20
-> This patch series addresses a significant regression observed in
-> `SCHED_DEADLINE` performance, specifically when `SCHED_FLAG_RECLAIM`
-> (Greedy Reclamation of Unused Bandwidth - GRUB) is enabled alongside
-> overrunning jobs. This issue was reported by Marcel [1].
->=20
-> Marcel's team extensive real-time scheduler (`SCHED_DEADLINE`) tests on
-> mainline Linux kernels (amd64-based Intel NUCs and aarch64-based RADXA
-> ROCK5Bs) typically show zero deadline misses for 5ms granularity tasks.
-> However, with reclaim mode enabled and the same two overrunning jobs in
-> the mix, they observed a dramatic increase in deadline misses: 43
-> million on NUC and 600 thousand on ROCK55B. This highlights a critical
-> accounting issue within `SCHED_DEADLINE` when reclaim is active.
->=20
-> This series fixes the issue by doing the following.
->=20
-> - 1/5: sched/deadline: Initialize dl_servers after SMP
-> =C2=A0 Currently, `dl-servers` are initialized too early during boot, bef=
-ore
-> =C2=A0 all CPUs are online. This results in an incorrect calculation of
-> =C2=A0 per-runqueue `DEADLINE` variables, such as `extra_bw`, which rely =
-on a
-> =C2=A0 stable CPU count. This patch moves the `dl-server` initialization =
-to a
-> =C2=A0 later stage, after SMP initialization, ensuring all CPUs are onlin=
-e and
-> =C2=A0 correct `extra_bw` values can be computed from the start.
->=20
-> - 2/5: sched/deadline: Reset extra_bw to max_bw when clearing root domain=
-s
-> =C2=A0 The `dl_clear_root_domain()` function was found to not properly ac=
-count
-> =C2=A0 for the fact that per-runqueue `extra_bw` variables retained stale
-> =C2=A0 values computed before root domain changes. This led to broken
-> =C2=A0 accounting. This patch fixes the issue by resetting `extra_bw` to
-> =C2=A0 `max_bw` before restoring `dl-server` contributions, ensuring a cl=
-ean
-> =C2=A0 state.
->=20
-> - 3/5: sched/deadline: Fix accounting after global limits change
-> =C2=A0 Changes to global `SCHED_DEADLINE` limits (handled by
-> =C2=A0 `sched_rt_handler()` logic) were found to leave stale or incorrect
-> =C2=A0 values in various accounting-related variables, including `extra_b=
-w`.
-> =C2=A0 This patch properly cleans up per-runqueue variables before implem=
-enting
-> =C2=A0 the global limit change and then rebuilds the scheduling domains. =
-This
-> =C2=A0 ensures that the accounting is correctly restored and maintained a=
-fter
-> =C2=A0 such global limit adjustments.
->=20
-> - 4/5 and 5/5 are simple drgn scripts I put together to help debugging
-> =C2=A0 this issue. I have the impression that they might be useful to hav=
-e
-> =C2=A0 around for the future.
->=20
-> Please review and test.
+Switch the driver to use standard module_i2c_driver() to register the
+driver.
 
-Over the weekend I run 312 mio. test runs on NUC and 231 mio. on ROCK55B wi=
-thout any single deadline misses.
-Therefore,
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/keyboard/tca8418_keypad.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-for the whole series:
+diff --git a/drivers/input/keyboard/tca8418_keypad.c b/drivers/input/keyboard/tca8418_keypad.c
+index 76fc19ffe21d..68c0afafee7b 100644
+--- a/drivers/input/keyboard/tca8418_keypad.c
++++ b/drivers/input/keyboard/tca8418_keypad.c
+@@ -373,18 +373,7 @@ static struct i2c_driver tca8418_keypad_driver = {
+ 	.probe		= tca8418_keypad_probe,
+ 	.id_table	= tca8418_id,
+ };
+-
+-static int __init tca8418_keypad_init(void)
+-{
+-	return i2c_add_driver(&tca8418_keypad_driver);
+-}
+-subsys_initcall(tca8418_keypad_init);
+-
+-static void __exit tca8418_keypad_exit(void)
+-{
+-	i2c_del_driver(&tca8418_keypad_driver);
+-}
+-module_exit(tca8418_keypad_exit);
++module_i2c_driver(tca8418_keypad_driver);
+ 
+ MODULE_AUTHOR("Kyle Manna <kyle.manna@fuel7.com>");
+ MODULE_DESCRIPTION("Keypad driver for TCA8418");
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-Tested-by: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk> # nuc & rock5b
 
-Thanks!
-
-> The set is also availabe at
->=20
-> git@github.com:jlelli/linux.git upstream/fix-grub-tip
->=20
-> 1 - https://lore.kernel.org/lkml/ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab=
-.camel@codethink.co.uk/
->=20
-> Thanks,
-> Juri
->=20
-> Juri Lelli (5):
-> =C2=A0 sched/deadline: Initialize dl_servers after SMP
-> =C2=A0 sched/deadline: Reset extra_bw to max_bw when clearing root domain=
-s
-> =C2=A0 sched/deadline: Fix accounting after global limits change
-> =C2=A0 tools/sched: Add root_domains_dump.py which dumps root domains inf=
-o
-> =C2=A0 tools/sched: Add dl_bw_dump.py for printing bandwidth accounting i=
-nfo
->=20
-> =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 1 +
-> =C2=A0kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +
-> =C2=A0kernel/sched/deadline.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 61 +++++++++++++++++++---------
-> =C2=A0kernel/sched/rt.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 +++
-> =C2=A0kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
-> =C2=A0tools/sched/dl_bw_dump.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- | 57 ++++++++++++++++++++++++++
-> =C2=A0tools/sched/root_domains_dump.py | 68 +++++++++++++++++++++++++++++=
-+++
-> =C2=A07 files changed, 177 insertions(+), 19 deletions(-)
-> =C2=A0create mode 100755 tools/sched/dl_bw_dump.py
-> =C2=A0create mode 100755 tools/sched/root_domains_dump.py
-
-Cheers
-
-Marcel
+-- 
+Dmitry
