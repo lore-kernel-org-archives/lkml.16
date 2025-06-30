@@ -1,102 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC970145FE0;
-	Mon, 30 Jun 2025 16:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45DA24A05D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751301027; cv=none; b=H0KLD0JMn/VzWgA424MD7yFeonCCnPPOqPX+4LRn/MqKUlIZYdDpZDkFEOvVevvjy6h1kkksmhjEhgtbWd0swQlWideJyp2VlMCVWovmLDIHKS1a2imvQOw4RCydtdeCPvHWfeX9USx3mm0SGD4ZfC2cS18ue6p78XG84NOcU6w=
+	t=1751301044; cv=none; b=qpoCPc58oujnNS3Zpp7YQtcii/V3cDGAKVGRl1inrGORxb1c6KgHGFKunhWjBXnTevuHC2OVJ/Fegpjw0/ld5Xe+ALubwSsMWLt/qiCA2v6fdQbFBwPGDoHn3R1dZjRgLtOj+IFdfmE7unhHTIIpZbiAYWY7pWX8X6OwiRgKf5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751301027; c=relaxed/simple;
-	bh=Z2eTTLeHJFplwtYGcfhlybw6T9tyxAT1gUDIZzaklQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ew0BCrNa+THiesn3h4LgQpsiIUD2YhpSzz/b+5UFNjP4NWZubXQb7HVlmaTAv1FCNY4SQ41BSKMd9mGSwz3PC2ceVTsldYtyOyn5y3JKeuqXkq/kjrdjE2NZGyLgr8nBzRgP4hVx60v0kohsB45kGG8mS8JzxXla9D6/ikEN9VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJofbUpG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751301044; c=relaxed/simple;
+	bh=t586Zow7oyJp/0l1/+706waxRLAJ+MmFrMUNSW2uTfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZRoUucMaXLUrJzqfLh6TEJcmgwXqMK7mcLwc4cHUzxz4WGnJkduuelB8hg6G0IK4tV7GlPPeo0FTsu3U64gtLp+2mzGkTlOMkw2CNoykl/ulP9WmbKgSK5TwyCeYpnZ41md2/po8JMvggx59SIQFAuhEaledJtkAIHiSPzRziPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Sm4ATIqH; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJofbUpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5552EC4CEE3;
-	Mon, 30 Jun 2025 16:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751301027;
-	bh=Z2eTTLeHJFplwtYGcfhlybw6T9tyxAT1gUDIZzaklQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AJofbUpG/q1KTmDfuNZyc4ewqPgpkFy+jSAxhDsk3Vx5T/GeRwv3VuNgsSnbcUrYL
-	 Lyk8EV8fMwoEgkeRicVcdKDtPBh7jsVV+nd5iMZZoZ4h9KUKCnk1558HF4ZEzbek8O
-	 5s6bMEqqaY3CNLMEHe/EjkGmYqYUjrcVDE8dn/oeGKv0OiRYWyYrul4Q0tmekPpakw
-	 Y+ycwtxHrXEZNG10zl+Kab3uP6Rz32Jdd+t2+obPNZMEHFuYkdtZgx/e31QfxbaxXF
-	 WaYele9/nk4aByNT6DWg71XVmJYtj19KPy04tl+ox7OtKb0aI1Gvfb37kBOLMsxRVb
-	 3B5Drv/BSmhCA==
-Date: Mon, 30 Jun 2025 09:29:48 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: John Johansen <john.johansen@canonical.com>
-Cc: apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] apparmor: use SHA-256 library API instead of
- crypto_shash API
-Message-ID: <20250630162948.GA1220@sol>
-References: <20250428190430.850240-1-ebiggers@kernel.org>
- <20250514042147.GA2073@sol>
- <4f37c07c-3a39-4c98-b9c4-13356f5a10dc@canonical.com>
- <20250612191105.GE1283@sol>
- <c80d4e69-ef03-462c-9084-e6bb56f428e6@canonical.com>
- <20250627035918.GA15797@sol>
- <540b7f72-58fa-4ee3-9b5b-6cd81c5959a7@canonical.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Sm4ATIqH"
+Message-ID: <0953f766-48bc-416f-9089-7403e938569c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751301041;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M4R8oQGNb+HE/xFlfDbpHkdOJMrhCQEK8kzkuPBr+Vw=;
+	b=Sm4ATIqHZO7EQ4eOrkwhzACDmmLcDHhu4/Bi2TrdRfOGejIcvyPP94wqzui5yH8/PEQWRJ
+	b0WuiLxErzMi5+Q3OuU7KchbcOP4nZFBD4eHHLDwLqiF4zjeyjA8Emel0lkZeOG+0APRNc
+	t1GYKUNYmAihRfsKB+4332RStm6+suE=
+Date: Tue, 1 Jul 2025 00:30:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <540b7f72-58fa-4ee3-9b5b-6cd81c5959a7@canonical.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00/11=5D_dm-pcache_=E2=80=93_persistent?=
+ =?UTF-8?Q?-memory_cache_for_block_devices?=
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
+ dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+ <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
+ <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
+ <43e84a3e-f574-4c97-9f33-35fcb3751e01@linux.dev>
+ <f0c46aba-9756-5f05-a843-51bc4898a313@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <f0c46aba-9756-5f05-a843-51bc4898a313@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 26, 2025 at 11:14:50PM -0700, John Johansen wrote:
-> On 6/26/25 20:59, Eric Biggers wrote:
-> > On Sun, Jun 22, 2025 at 02:16:07PM -0700, John Johansen wrote:
-> > > On 6/12/25 12:11, Eric Biggers wrote:
-> > > > On Sat, May 17, 2025 at 12:43:30AM -0700, John Johansen wrote:
-> > > > > On 5/13/25 21:21, Eric Biggers wrote:
-> > > > > > On Mon, Apr 28, 2025 at 12:04:30PM -0700, Eric Biggers wrote:
-> > > > > > > From: Eric Biggers <ebiggers@google.com>
-> > > > > > > 
-> > > > > > > This user of SHA-256 does not support any other algorithm, so the
-> > > > > > > crypto_shash abstraction provides no value.  Just use the SHA-256
-> > > > > > > library API instead, which is much simpler and easier to use.
-> > > > > > > 
-> > > > > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > This patch is targeting the apparmor tree for 6.16.
-> > > > > > > 
-> > > > > > >     security/apparmor/Kconfig  |  3 +-
-> > > > > > >     security/apparmor/crypto.c | 85 ++++++--------------------------------
-> > > > > > >     2 files changed, 13 insertions(+), 75 deletions(-)
-> > > > > > 
-> > > > > > Any interest in taking this patch through the apparmor or security trees?
-> > > > > > 
-> > > > > I can take it through my tree
-> > > > 
-> > > > Thanks!  I notice this isn't in v6.16-rc1.  Do you have a pull request planned?
-> > > > 
-> > > 
-> > > Hey Eric,
-> > > 
-> > > sorry I have been sick and didn't get a 6.16 pull request out. I am slowly trying
-> > > to dig my way out of the backlog, which is several weeks deeo. I might get together
-> > > a small PR of bug fixes before the 6.17 merge window but the bulk of what is in
-> > > apparmor-next will be waiting to merge in 6.17 now.
-> > 
-> > Hope you're feeling better!  Actually, would you mind if instead I took this
-> I lot, though still generally tired/low on energy
-> 
-> > patch (with your ack) through the libcrypto-next tree for 6.17?
-> > Otherwise there will be a silent merge conflict after I apply
-> > https://lore.kernel.org/r/20250625070819.1496119-11-ebiggers@kernel.org/
-> > 
-> Avoiding a merge conflict? You have my ACK and blessing I will pull it out of
-> the apparmor tree asap
 
-Thanks, let me know once you've dropped it.
+在 6/30/2025 11:45 PM, Mikulas Patocka 写道:
+>
+> On Mon, 30 Jun 2025, Dongsheng Yang wrote:
+>
+>> Hi Mikulas,
+>>
+>>      The reason why we don’t release the spinlock here is that if we do, the
+>> subtree could change.
+>>
+>> For example, in the `fixup_overlap_contained()` function, we may need to split
+>> a certain `cache_key`, and that requires allocating a new `cache_key`.
+>>
+>> If we drop the spinlock at this point and then re-acquire it after the
+>> allocation, the subtree might already have been modified, and we cannot safely
+>> continue with the split operation.
+> Yes, I understand this.
+>
+>>      In this case, we would have to restart the entire subtree search and walk.
+>> But the new walk might require more memory—or less,
+>>
+>> so it's very difficult to know in advance how much memory will be needed
+>> before acquiring the spinlock.
+>>
+>>      So allocating memory inside a spinlock is actually a more direct and
+>> feasible approach. `GFP_NOWAIT` fails too easily, maybe `GFP_ATOMIC` is more
+>> appropriate.
+> Even GFP_ATOMIC can fail. And it is not appropriate to return error and
+> corrupt data when GFP_ATOMIC fails.
+>
+>> What do you think?
+> If you need memory, you should drop the spinlock, allocate the memory
+> (with mempool_alloc(GFP_NOIO)), attach the allocated memory to "struct
+> pcache_request" and retry the request (call pcache_cache_handle_req
+> again).
+>
+> When you retry the request, there are these possibilities:
+> * you don't need the memory anymore - then, you just free it
+> * you need the amount of memory that was allocated - you just proceed
+>    while holding the spinlock
+> * you need more memory than what you allocated - you drop the spinlock,
+>    free the memory, allocate a larger memory block and retry again
 
-- Eric
+
+Yes, that was exactly my initial idea when I first came up with this 
+solution—it just seemed a bit convoluted. That’s why I wondered if using 
+GFP_ATOMIC might be a more straightforward approach.
+
+Okay, compared to simply returning an error to the upper-level user, I 
+think implementing this mechanism is well worth it.
+
+Dongsheng
+
+>
+> Mikulas
