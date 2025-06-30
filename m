@@ -1,117 +1,149 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE45B39ACF;
-	Mon, 30 Jun 2025 13:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6A28A73A
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751289496; cv=none; b=UZwk6SGd57uey7junHePXmWe6vnqtTtBvgsn2MzMx0T6FtYF7vEJ/gal2DVgQkb5WnkRjT5uMobkSnbfP5gd6iTc1b/J37QgFTR2iwvH1RwiJKGph397K7qfgt6/3g03Pd/MyighmngKgoRzFvNQU1IuuDuxhRBwsqQRRK0KSN8=
+	t=1751289508; cv=none; b=YogVMLmtokH1BaG0SiQvAE+opFUbO9jxBTKtiKRiUS5FObF2f/zesstStBzg9Qw9JCatRnoQ3dpsRQ5gK/aVrj+GCzmbDTT1Mx7gELvzEeqSgFGrgk6/RIKzvnuvl6WkVibEHEPAjtv3o/e2e/aUs3+wgot16nwrgQJyhvyIS+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751289496; c=relaxed/simple;
-	bh=LWtl4j1jLq8PqQO/Pjn8Neb7rM5FiqI9Uwfbvbrse6Q=;
+	s=arc-20240116; t=1751289508; c=relaxed/simple;
+	bh=lTodMpiU5uuVCAXQ/xJnIx+Vmi4vwQ6HLDXj4qTx9vQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IlCV2kN3uNR/klKdktA2wDHyJN7H5RA49qPprGYxIexq3BwJcLteQSiFdvBngtwKh5Ukq/8pL5Xv5FjeM8cUG9CcRsZIjLDV0FPWgdc7MzyARUMo0KCNAmPIvSOQHXXhmUx+FIlLzK5jXrU9I9oyZ+TdUS1wK6Fe4G9ueM9S61s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AE6ZrdMj; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=XgZ9+ww/kCKQ3idRCYccbfCYbShH3uM87Z6TRak6ctLt6bmNhy7aZWyOzLutYcdeMl9GLAySXQsvYqojSZhxawa9dG5xRreUNzXEMF/wTYns/hBmGkpPUvvbhZRGWyPZdoy5OFa3+qsHFMOFt6kmIsKw2TIz3qRhwsgXqD53/9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=pRx/iQt2; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AE6ZrdMj"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32b7113ed6bso19488931fa.1;
-        Mon, 30 Jun 2025 06:18:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="pRx/iQt2"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0df6f5758so370319666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751289493; x=1751894293; darn=vger.kernel.org;
+        d=sartura.hr; s=sartura; t=1751289505; x=1751894305; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UNOIh/VXRrY1ezaTWJtZc13yn8Bcesz6/VHThRKHEao=;
-        b=AE6ZrdMj8waQiU6B0q8emmyFwTsFSfkT3hCljcpfvNiFYdyDCtvxUgpsyu8cTC8IQr
-         MdtBxNPg0fdylTVn0Vk25HVSH6IySfmKSgWkHKJvGBEqdB4Wt+kvE5/W1nnvJ9ebLaCT
-         1NQ11rrqoP7rAFuWvLy2iv+2r0qC2ZU5hQW7a99JwDmNmdGvXZZTq7mbHPFYNcPPOft6
-         Rg6olpTfKZ4V/oq7XO4Lha6qHba5FWbaaWBxnKCQgUCKCIEoKaSphTgqdkJnIABIwoFD
-         TEVh+6QdVrvAOt3WdHc0OJ2QO3Baqp5bVei94ZydCHgGXsiw1kcYsc3D/RUu/bAsih8Y
-         HfAg==
+        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
+        b=pRx/iQt2r9Pvyaa2L1OuB1hChLu7PshuT+14UlIp68vk5Y49Ad/UPWyyphWic5nit5
+         WLlnh9uTrgCLh6e3KLYHKpAvjIKzleg6DlI0nXbxCHiXjgbzs+8dDevv9wSnpfy+IwAA
+         //FF7oQK4EH89QibGMWK/3onxFx9XswMdCSp2MBoG4Nou3HrBgqvtPw5ZPQMWyOSZjs2
+         M4836LLojD8qCTqeEDXpPAD3gjgiNQqhbUkpxwWfBhlMS9idNOZOfdGlvJulxTdrOnE6
+         alnsshOQzru5++3lEOPFYiNd9rYd+evD3jXbSls//rZn1WttZnBlEObW2KbWYFVFttfb
+         rthQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751289493; x=1751894293;
+        d=1e100.net; s=20230601; t=1751289505; x=1751894305;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UNOIh/VXRrY1ezaTWJtZc13yn8Bcesz6/VHThRKHEao=;
-        b=TgYQxMNqHuftJh639DefgiarU7WoXwadq+By2tuMgr0GqDejou4LUUs+P2GDpUXxfd
-         Y7hSXCS7vHIg4Q/hDywwTjeyKbS+NJZUdoJksdF346NUYLg4WCY3S+wbO8C7GVQvs0n6
-         oT1eApO0Tld8lZ2FPvwNGZdC8fuHcnAizpGWOUPVSXbIP8se+alqNDSXu/V972t3TCeF
-         M6L/rq5xV36W2lY62OEsjqYQAB375FPilhK6xfKAtKNFDnEsGyvbJyN+pLl0ACItCjEr
-         IUrGnp29VMjQOkR2AFiMfNfyg8eZtS27W/0oH4rq+jHJ0Jqy+X8Smj+HkdcbItTdU7bc
-         BQCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrMKHX7pzNYqijgtKjOnyRHYKUQK8hlU6WH9XuczmCxZUHPkiSoTyg12hfAUedwjXe/4y+nHn4Qg5WX4hB@vger.kernel.org, AJvYcCXBrsw+4MI9RmPshgI2cqeKJnXvNOEGtCz5Nk2h84J0Zfxy4n4D1ZnQev0g4+7UHzC91ZdxE2ceEj/LqqE0+c0=@vger.kernel.org, AJvYcCXhjkenW3DzBP6Pm/qn+K9X2ac5xVhFsCJYEhSNRhbx93d7daSMIHH7UDmaMm4SzV/5h/WMfTgB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwF20ZjdCtM2XHEKdgSczUc6P3+PmVaYmKjNjuA6KqwSm4kjpSC
-	O7tf8epBLISPWhXWS0q1qRQktQ+29hv2X0+b4DS3aIB0ptowFwk4C4B/lj7PAXkag9wsfBcSTsS
-	A8TIUAYiIM5JENuIwDxHDnFfzkkree2guSs5h4O5DvQ==
-X-Gm-Gg: ASbGnctO6F8AJa90/lbnPWt7QhpAMMRg/vQ/aP4BJfzdYfoOOnvzOHmWI+hQEAP4WAn
-	cyrsT23IxCSg2UgOgdSwIOsKDQIF6LfZPgvUBnXtYrm1hK0jviKjAg+eXB7lCrI7eAi1YQcs5z1
-	UyPMVaiMP69mGVNphzBstHZ0bNI+vkvNP0aQbNiDBmgg==
-X-Google-Smtp-Source: AGHT+IHhLUgvQS1IRJmj8+Otz83kPT/LLtNEeqAfUEV7kfIiVy9AOTSEytmM4leWmVTEB8xHQjE6IdmVDFlW7HLS3Vg=
-X-Received: by 2002:a2e:b5dc:0:b0:32a:7332:bf7a with SMTP id
- 38308e7fff4ca-32cdc49c5c6mr29479231fa.13.1751289492559; Mon, 30 Jun 2025
- 06:18:12 -0700 (PDT)
+        bh=x9zeJ4WnqwFH5BMqvuX+OeeKVaWRigfICDw1jtDlC48=;
+        b=HVIFU01oGAg+CYeCYjcPWD37ccHVK8prp1ECuRvdy6S5TME6kAhoCiSLdvQOT5iJml
+         Ou/JJWyF/V5bi2KgOg6mPZJvvR72U2WIPGfUGlKRl1ThDtRz+5ROqHk5fqPPEF+Sle+F
+         WVO1/Hb5b035ROgfaU81NlHBYeIhjZHNFzdRorWImUFtuyLG5sQby9tvdDocZdtBAFx9
+         4iVqiNMr6TQFThrTbggXSjY2Pd/uKxV8Aa6tkQa0VSJ8UIcuZ9BnjGMdVddiuLQEEVqj
+         4gic+68+KQtWPnegP5MFiuLJFyfqKFMLiWIT0eYBRTYBKrGf/lcgKywhCQls+nnh+XSw
+         pnSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrn5XkCPgXpc2YEKHPe2EC1AjmvvHVpEFTHCfN8PUHl8LoKsq5t+KEjibJaukqp+RhNjS9ge3sldVRvQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy65sOPs6E879Xe1cNHviZMreK4RZ1n4a96ZxtaDVxUsujQkvH5
+	lYG1GycHSXr6FTmTz+Ko/RJDkSy10vtkyj+HfE24hYageNbYBBwpphmZIm2Yr2oH9wQxhG+IO9G
+	ZH4dQ/fY2JLj4XvP593Tc4usTMF3jrw60dW+ybLpyow==
+X-Gm-Gg: ASbGncuFUXwSYLxhGS/w7S3lPY4wDzElpjr4WEJUrq2pyl8iMP6rpgr5qzzAa03t7Fe
+	S5kmO7D6XAjgEDsXm0JwRICjdz2C4DeR4Mkp3Q6HBLyEgfTyfw1TTtlveXMH9kWnnr77Kyl17tk
+	1GXt7ag7583stbQM4Ym0uAyvpBYkrzDM6itHKnbPc3Gw==
+X-Google-Smtp-Source: AGHT+IEawzH6slgwqh8lMlGexpCFs5UFNCtQJR4Lc0uD06pbIw6jclmGMPNliNKtJ0yxh9f1sHZF7joTilZ8ACzkvCc=
+X-Received: by 2002:a17:907:75c8:b0:ade:36e4:ceba with SMTP id
+ a640c23a62f3a-ae35018e67cmr951593466b.52.1751289505046; Mon, 30 Jun 2025
+ 06:18:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630075848.14857-1-ceggers@arri.de>
-In-Reply-To: <20250630075848.14857-1-ceggers@arri.de>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 30 Jun 2025 09:18:00 -0400
-X-Gm-Features: Ac12FXzbzgUbhSp5TkUkjZ7zN1R4I8Snqjim6k2-2dTDga8J_iuSbxQCjWfkEFY
-Message-ID: <CABBYNZK1u4G3ZTH_Z+aPpDkGLoLj-1PhnRCEmwHEjLjLXAD=fQ@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: HCI: fix disabling of adv instance before
- updating params
-To: Christian Eggers <ceggers@arri.de>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250613114148.1943267-1-robert.marko@sartura.hr>
+ <20250613114148.1943267-2-robert.marko@sartura.hr> <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
+In-Reply-To: <20250616102103.faoc5tqp22we67zl@DEN-DL-M70577>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Mon, 30 Jun 2025 15:18:14 +0200
+X-Gm-Features: Ac12FXweyWpZVaFd_k9KiyWdnFDxPWGB4lbqdU7LoxWxkr8ipI5ijfQoLUWnGLg
+Message-ID: <CA+HBbNGWSA8QNzcN1HRosSd7qibM8G0u05cxiia6grGJJ0meoQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/6] arm64: lan969x: Add support for Microchip LAN969x SoC
+To: Daniel Machon <daniel.machon@microchip.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, olivia@selenic.com, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
+	andi.shyti@kernel.org, broonie@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, kernel@pengutronix.de, 
+	ore@pengutronix.de, luka.perkov@sartura.hr, arnd@arndb.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christian,
+On Mon, Jun 16, 2025 at 12:21=E2=80=AFPM Daniel Machon
+<daniel.machon@microchip.com> wrote:
+>
+> > This adds support for the Microchip LAN969x ARMv8-based SoC switch fami=
+ly.
+> >
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > Acked-by: Daniel Machon <daniel.machon@microchip.com>
+> > ---
+> >  arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platform=
+s
+> > index a541bb029aa4..834910f11864 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -133,6 +133,20 @@ config ARCH_SPARX5
+> >           security through TCAM-based frame processing using versatile
+> >           content aware processor (VCAP).
+> >
+> > +config ARCH_LAN969X
+> > +       bool "Microchip LAN969X SoC family"
+> > +       select PINCTRL
+> > +       select DW_APB_TIMER_OF
+>
+> The lan969x SoC uses the clk-lan966x driver. Would it not make sense to s=
+elect
+> it here?
 
-On Mon, Jun 30, 2025 at 3:59=E2=80=AFAM Christian Eggers <ceggers@arri.de> =
-wrote:
->
-> struct adv_info::pending doesn't tell whether advertising is currently
-> enabled. This is already checked in hci_disable_ext_adv_instance_sync().
->
-> Fixes: cba6b758711c ("Bluetooth: hci_sync: Make use of hci_cmd_sync_queue=
- set 2")
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> ---
->  net/bluetooth/hci_sync.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-> index 77b3691f3423..0066627c05eb 100644
-> --- a/net/bluetooth/hci_sync.c
-> +++ b/net/bluetooth/hci_sync.c
-> @@ -1345,7 +1345,7 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev =
-*hdev, u8 instance)
->          * Command Disallowed error, so we must first disable the
->          * instance if it is active.
->          */
-> -       if (adv && !adv->pending) {
-> +       if (adv) {
->                 err =3D hci_disable_ext_adv_instance_sync(hdev, instance)=
-;
->                 if (err)
->                         return err;
-> --
-> 2.43.0
->
+HI Daniel,
+To me it made more sense to select individual drivers directly in the
+config, cause we need pinctrl
+etc as well and I dont think it scales selecting it directly via ARCH.
 
-Ive already submitted a similar fix last week:
+Regards,
+Robert
+>
+>   +       select COMMON_CLK_LAN966X
+>
+> > +       help
+> > +         This enables support for the Microchip LAN969X ARMv8-based
+> > +         SoC family of TSN-capable gigabit switches.
+> > +
+> > +         The LAN969X Ethernet switch family provides a rich set of
+> > +         switching features such as advanced TCAM-based VLAN and QoS
+> > +         processing enabling delivery of differentiated services, and
+> > +         security through TCAM-based frame processing using versatile
+> > +         content aware processor (VCAP).
+> > +
+> >  config ARCH_K3
+> >         bool "Texas Instruments Inc. K3 multicore SoC architecture"
+> >         select PM_GENERIC_DOMAINS if PM
+> > --
+> > 2.49.0
+> >
+>
+> /Daniel
 
-https://patchwork.kernel.org/project/bluetooth/patch/20250627163133.430614-=
-1-luiz.dentz@gmail.com/
+
 
 --=20
-Luiz Augusto von Dentz
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
