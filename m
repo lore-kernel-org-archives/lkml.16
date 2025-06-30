@@ -1,110 +1,136 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB0125C833;
-	Mon, 30 Jun 2025 11:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8EF25CC5B;
+	Mon, 30 Jun 2025 11:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751282748; cv=none; b=saob24GHqps3Vu5Qltkgrw4Tt0wWI/edXz9I44Xvn3AUsicUQWd4Gh/S5ClwaVX6NlJE1x2LunsmbaFrsu5PDsxtrgNFIdUcWVXf/5h9HpXHhw0ohLYfKNIesPCUMKVj8q1UexXftAtP2wO/yand10CJZxQ94B3eD+1Ka5mJ48k=
+	t=1751282749; cv=none; b=DLj8JIgBZhdu7t0ovCxAxIKXSCg3VeOl6yIrAkwnjPPjho2IQlWOSIj2Zji8pArzybyoZkrnsZl5AvZxDqrRDL15nFbmAFHqrT6ZDAz9jELqecm6ZqPPMY2T+BpK1SGdQ/SZhj+D3w/CT2QJaQxpYo1YSSuHowHoqdG1XY6TaVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751282748; c=relaxed/simple;
-	bh=D7vuJq1nll6jHkSYHUN97HFmHGVop+R8o7Ki/EsO3Wo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=niCBniPFn5D6UICst13eQ2tazDvzOUFRajOx60+oXsKqyNgee/dsflwktLK2CkqKZWvvrLw0zfqK+LiQzNvRol3CKJfjm9KWwf/GmUbABJ3sdLJgtx98atZYtjzbzsL6ZLvtgCzTAMoXXM3zPreGtPIVxIaEJx8YhX88D1MAYhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f1EQ00KU; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751282749; c=relaxed/simple;
+	bh=u3TUGTWaflV6RbwNMGOJc1lex47uG8vXxUvt9JwXxc0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SMemxfMgudBQ6DEPAn3nGgnlJFsiWcgFA3H2zytRZyOSXcEZn+VhaWRvgXbUYv2ma8CUfteiLWll5JIvgIeuu3R73zXoQsFB2ORwdILtitS1OQwRrfknDuKRDXmBvoyQCQGY3rGtgxgWSZWa8lzVfBP600V7YKeU7t8BGJUjfB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ja9mBBKR; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1EQ00KU"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so3035832a12.0;
-        Mon, 30 Jun 2025 04:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751282745; x=1751887545; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9PQIUz1gn61Y7LljRY3kDMGMzsDdkZNp8ZHbQ5TSJ0=;
-        b=f1EQ00KUwO7MJyFil2Xqt1kIzu5ci7RQuj/UL49MkRgJCke/JXFNId9mL8sq8LKsCd
-         F557PV/VriRmuXmbbf3pdZVbOtAdlo9zsFlUuoeBcxoycju4NzO8EyjL6w7JpMM53if0
-         r1kcBwVj89l5Lx4XTTgvolC2QVJX/187mRKbNxJw5Y1/2tsYJuU5mbvyGoeXmN8Xt5ZL
-         pV5ekBL0rcarimTwIiQLANCd7njDTU91O4htodXdLgEU2cJcmD6LCEmbimeHF0pQdmXy
-         mrMbdDMuHe98g2QLASOemJxxHBhrJxz2Nf4UrBwCR2XM1R/g04/PEoc2PzkF0OKX2so0
-         GEAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751282745; x=1751887545;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K9PQIUz1gn61Y7LljRY3kDMGMzsDdkZNp8ZHbQ5TSJ0=;
-        b=FsJPNO8YPioaPtz+/1cHP6LkSasXS3K73B/IWSfrncfrfcjPrd1kcXEH+9D+opeDDk
-         7FPdMFlAppdGaUygflFdyxQQnlloIIwxst80LTeUS+PT6MEP3MecH+LBwosO45ngMKfT
-         AOAJivrHmEJGHU+WDTKTXob9G9lxMcu3rFw/Qdw45wwE/Fdht6iXhOAGCYxggqo4a/tO
-         9wl6P7ckyTON1uXBZ4EshkGaHAa/HVyQSGg76YsU2JBcHRtBNRmCAYilgcvPCmUIcF8A
-         +uwTvGgsf8OFZvgztzXzhb57P0eN46rlnfPbNx86UU1KcdzaWR3WMV2hQzZf1gmtIS2Z
-         wDnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvTOM8ExEkiQOCgvFx4GZ/gOc36RrGqmM9adzBBnP8G5TG2VWFgk8RuuVgyXOWWy/d2g4d+YeRK39pEhE=@vger.kernel.org, AJvYcCVfJMEKSQj8rvJl3Y4ciEvi0h7GooLXuEpnuileR2QNXxHTvgPYICvAgA9L3tcK1VffIaX1ByDjwwmquXcD3oBu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhp4osSEvI4ztcU8d4IuGmxIFL3FMKqG7sgCa9+E6cTrbBL9ZQ
-	KD1e198SJdt45sjoQIP0JyZcSyDbgzRBlVmKzgGxNIfm5EOMLOZ5qhMAS/yOuy65R5irZY+5q7X
-	W9N+kLcKklfmojaHWcJMS6P3yjkvJPg==
-X-Gm-Gg: ASbGncsvYW4bsjJzTjOJUsVony3M5zuymatmcV+PAMu9SXHJUoSkyp+9qvMyzbRvqNU
-	JOQod4DmhXNNlEg0Rynm28UxjN7uopiT3uNCSKpPC+lILaFensWZGSn5NhI0yK562TCrLlpwgre
-	iNoaXkJyiC1NAiKWyU0NkxEHBkPBHUMsAz6j43DqfQeG4=
-X-Google-Smtp-Source: AGHT+IFlXd9TXmbgPHTA8gAIX494c7LaBmUhpPKwIlDuYwjBU0pVnyw3tgKc4C0UD+q3aEMZ5y52BjfVcoqCXZMVoHo=
-X-Received: by 2002:a17:907:9d19:b0:ae3:56af:5a78 with SMTP id
- a640c23a62f3a-ae356af5c57mr992092566b.41.1751282744846; Mon, 30 Jun 2025
- 04:25:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ja9mBBKR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751282748; x=1782818748;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=u3TUGTWaflV6RbwNMGOJc1lex47uG8vXxUvt9JwXxc0=;
+  b=ja9mBBKRcNjE1+g13ZWb342kSjG4YzmtqcQEK9S4tRc7uKcomIwTkAXP
+   CtrdxP8FQaZK62Jm9UrxzAz87XTLZK431jsNL9U/CAtxja7EM5Jgpk6u1
+   By4kadlQgvyamPjSZQEFCNIqg+RzA/P9oxmCliHHAYkUDS6Ru+8LO6NfH
+   vZEAVQchnVjzmudKSl8fueUrFW80oVF3Rkl0jdoZShqoTzNReugqaVOZD
+   vINMq9cUCERoKIVSl92ajJRfrFRvRgF+xrMMBxLKRdw7UWCOvd2UNQjuM
+   uRTgInP32+IrchMNFub+HnR4yyfO/8DbhYVwFOauh1NiWZ0Z6MJ8j3/VK
+   g==;
+X-CSE-ConnectionGUID: qhWIDnO+SHy/51kcXFNWHA==
+X-CSE-MsgGUID: dq9qDaaARBCHsUzXpDaj7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53366733"
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="53366733"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:25:47 -0700
+X-CSE-ConnectionGUID: jci0W735S6e4fSvEfuoSqA==
+X-CSE-MsgGUID: MyzQQzpZTUyCMFut/SMZrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
+   d="scan'208";a="177098810"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.65])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 04:25:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 30 Jun 2025 14:25:41 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+    platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] platform/x86:intel/pmc: Enable SSRAM support for
+ Lunar Lake
+In-Reply-To: <20250625063145.624585-2-xi.pardee@linux.intel.com>
+Message-ID: <36b3528e-9110-f027-4dff-4a3dfc38364e@linux.intel.com>
+References: <20250625063145.624585-1-xi.pardee@linux.intel.com> <20250625063145.624585-2-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250616100406.2853-1-ujwal.kundur@gmail.com>
- <20250616172618.0609127a8b1e406d4c228d24@linux-foundation.org>
- <aFGPVPDKGLOIEucg@x1.local> <aFGkVh-rs2ZqcL6g@x1.local> <DAPKLM86IC4F.1MCOR35P2D9VV@google.com>
- <CALkFLLK2-SCPZz9tOseFp4Ry77GYg+LKik0SEbjK6LuanDyyKw@mail.gmail.com> <aF1VURZrk4vGlOQL@x1.local>
-In-Reply-To: <aF1VURZrk4vGlOQL@x1.local>
-From: Ujwal Kundur <ujwal.kundur@gmail.com>
-Date: Mon, 30 Jun 2025 16:55:32 +0530
-X-Gm-Features: Ac12FXyAuAC3GXUH-C2j9o7z64av1Pj-08W1BtLlY7PXo7lq7AVWZO3NYnnnHZg
-Message-ID: <CALkFLLJ8VR73u4B5Q8q-eCZWNbzBrkVj7B2GwVexkuu6ma6FVA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-To: Peter Xu <peterx@redhat.com>
-Cc: Brendan Jackman <jackmanb@google.com>, Andrew Morton <akpm@linux-foundation.org>, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-1026149854-1751282741=:7079"
 
-> The script I mentioned in that other mail should help with this:
->
-> https://github.com/bjackman/linux/blob/github-base/.github/scripts/run_local.sh
->
-> That's my hacky attempt at a "hermetic" runner for these tests, it
-> ought to let you get the exact Kconfig, userspace, and QEMU command
-> that I used when I hit the issue.
->
-> The GitHub workflow definition shows how to get its dependencies
-> installed on a Debian-alike:
->
-> https://github.com/bjackman/linux/blob/github-base/.github/workflows/test.yaml
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for sharing this, I was able to reproduce and fix the problem.
-Turns out char *area_src_alias, area_dst_alias, area_remap were left
-uninitialized in uffd_test_ctx_init while it was working before this
-refactor because of the global nature of these variables.
-Using virtme-ng also helps me ensure that the next spin on this patch
-will work :)
+--8323328-1026149854-1751282741=:7079
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Ideally the test changes
-> should run the same before/after that series applied.  Meanwhile, no
-> conflict expected between the two, hence no worry on the order to land.
+On Tue, 24 Jun 2025, Xi Pardee wrote:
 
-Sorry, I meant to link the uffd_poison_test changes [1], I've rebased
-on top of those changes.
+> Enable Lunar Lake platforms to achieve PMC information from
+> Intel PMC SSRAM Telemetry driver and substate requirements data
+> from telemetry region.
+>=20
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/lnl.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/=
+intel/pmc/lnl.c
+> index da513c234714b..e08a77c778c2c 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -13,6 +13,10 @@
+> =20
+>  #include "core.h"
+> =20
+> +#define SOCM_LPM_REQ_GUID=090x15099748
+> +
+> +static const u8 LNL_LPM_REG_INDEX[] =3D {0, 4, 5, 6, 8, 9, 10, 11, 12, 1=
+3, 14, 15, 16, 20};
+> +
+>  static const struct pmc_bit_map lnl_ltr_show_map[] =3D {
+>  =09{"SOUTHPORT_A",=09=09CNP_PMC_LTR_SPA},
+>  =09{"SOUTHPORT_B",=09=09CNP_PMC_LTR_SPB},
+> @@ -528,6 +532,16 @@ static const struct pmc_reg_map lnl_socm_reg_map =3D=
+ {
+>  =09.lpm_live_status_offset =3D MTL_LPM_LIVE_STATUS_OFFSET,
+>  =09.s0ix_blocker_maps =3D lnl_blk_maps,
+>  =09.s0ix_blocker_offset =3D LNL_S0IX_BLOCKER_OFFSET,
+> +=09.lpm_reg_index =3D LNL_LPM_REG_INDEX,
+> +};
+> +
+> +static struct pmc_info lnl_pmc_info_list[] =3D {
+> +=09{
+> +=09=09.guid=09=3D SOCM_LPM_REQ_GUID,
+> +=09=09.devid=09=3D PMC_DEVID_LNL_SOCM,
+> +=09=09.map=09=3D &lnl_socm_reg_map,
+> +=09},
+> +=09{}
+>  };
+> =20
+>  #define LNL_NPU_PCI_DEV=09=090x643e
+> @@ -557,6 +571,8 @@ static int lnl_core_init(struct pmc_dev *pmcdev, stru=
+ct pmc_dev_info *pmc_dev_in
+>  }
+> =20
+>  struct pmc_dev_info lnl_pmc_dev =3D {
+> +=09.pci_func =3D 2,
+> +=09.regmap_list =3D lnl_pmc_info_list,
+>  =09.map =3D &lnl_socm_reg_map,
+>  =09.suspend =3D cnl_suspend,
+>  =09.resume =3D lnl_resume,
+>=20
 
-Will send a v6 soon.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-[1] https://lore.kernel.org/all/20250620150058.1729489-1-peterx@redhat.com/
+--=20
+ i.
 
-Thanks,
-Ujwal
+--8323328-1026149854-1751282741=:7079--
