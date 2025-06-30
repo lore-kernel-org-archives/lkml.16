@@ -1,79 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00F8E56A
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83BA36D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 05:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751260369; cv=none; b=nBGjdGseQPq4X0jFODWbBXWoXObfjQWzM8d3QFSPkRe9035kI9q801bXuyVs88L2XemFuK3SJSqvzkFOfOR309iTxrYIBZtK507cr6b1b9DVEny5WA1SR0QJJkW1KlV3WhHDsI6AEUupKmJS3Ycrchtm5OrAVfbCNrESY7INPuc=
+	t=1751260665; cv=none; b=GwEhg48xasBLpaWpXUztQHOOq7Wttoni+9KYaHJWXy9odfiNil0a+AMeg+PqwqICP1zU9PyXH80z+j5Lf6EVv4E26amaHN40DHLwpatfDbrIxdI/xoOHlYMb2pEXyKloCkqEkWn5it6qKyYu8+xnupKLqsBxyWn+65tZQwhpToU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751260369; c=relaxed/simple;
-	bh=TXHvDMtP4fFiFPmwe6XUctKI3tikSjkxZwf72We4moY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VSWQVziqavt9+jnQtcClY9FlW3Fsr2dSB3GjF6wzmm9NhlVA1YLYsCpA1OJkUxtAAIsJJ4oIkt7+dlzswLJhT/z8eiknFIsgK01cbfaectw0gPL7YguSX7WMithNoOee8KrVd3qZftfz28w0ZxZ0z/XAMQfIUUhMBcTuU14bLSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RL2kS+h2; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751260665; c=relaxed/simple;
+	bh=j0+utyg3WdFVd9h3Luv7yRhQ04bPtA+ySwD2/SbLX/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l26D/bXqHJDt+S11COVLQnFUn38FajxzBftVwcIUPh28DgoQSf9OWUvpknr5R4EB67wcQhuzOy+GHxrTGXsLeaqgITv1n1TW9xkBzhu8Ryt5lip4wHjkrGOJzJerImwk3zYktb+tClhrhW7W0icHCE10vYvWCEg2HM0UTGtYkDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mqxqIjYr; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RL2kS+h2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751260367; x=1782796367;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TXHvDMtP4fFiFPmwe6XUctKI3tikSjkxZwf72We4moY=;
-  b=RL2kS+h2ciXEWYXchfDQPijFrupk2LzN+dkyKreAg+KTsUwl7z+FHuTV
-   5eVhETgoO//VlE6t/a/lGKxsA5RGC/l8MRZVn6n0izkSArWRHX5LdPadX
-   PWNuAkcnU9fksHfBpxjYi16PJjKVi/Q6uyq9aUdTHCBSKRrEdiO4flJkN
-   uocVcXsNK9vAWzLkLgi/tbLi0Ele71RTyqD+SwoJQAa2n9vRcMu7lBKj4
-   jGy6FFzwqBX8tnvwywQR/om9+ytlvuyXDdfxiNqg7wDEO0gjVijX7hFoW
-   lHQEcGC/+GE/bApRtEHyKy/QPOUpMu8/PJuhsjsdiNoO5fhmR/hZrNTYL
-   Q==;
-X-CSE-ConnectionGUID: kAtVX0wySautmfnC++t+PA==
-X-CSE-MsgGUID: 6AafoAM9TJCZkZXD5txlNQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11479"; a="53568270"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="53568270"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:12:46 -0700
-X-CSE-ConnectionGUID: nlddMux1QVuWksapdiBNFw==
-X-CSE-MsgGUID: iOgeKmEOSsqCp28zWYCVLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="157378756"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2025 22:12:43 -0700
-Message-ID: <22789824-bc09-4351-a7c5-5d917ebfcdaf@linux.intel.com>
-Date: Mon, 30 Jun 2025 13:11:19 +0800
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mqxqIjYr"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c7a52e97so4222227b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 22:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1751260663; x=1751865463; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CHPtwkORxYza8f0AQe4trY9Wlzmo7dC+e4hGrz5TZ/8=;
+        b=mqxqIjYryhA+0zr9tTzyIr/Gcpvgpp/1zYKFkeUD0l7Kb8GxhEsslHPUnrHDeAdm16
+         w4DtFymjm8fm1ZQBYlRRujx4qLkDKc+krNVHFywEuyfpPgZeij5EhNdpUIqIXqgkd3cB
+         c7hazZBdvI5w2fRLfZUYnDKVd3D1XsvRz/rBz1fbvaLu7zfhysD5Nmuqs1bZ1oEUY8hg
+         LBMc6Q6NDL6VrvwpcOgqpHKj793qgZhTRCppZb22hVI79j8peejBGCgcYJNmqrB5iUo4
+         +yezLi9pCJXdX2d2aK5F9ducCt94lR1J5r2g9BQ7DPGIXZQhh2UVH+8fiklLepIjC+Lp
+         d8vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751260663; x=1751865463;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CHPtwkORxYza8f0AQe4trY9Wlzmo7dC+e4hGrz5TZ/8=;
+        b=fEZRVUiWJ4SfdUAnpOpPKdnuV8w/1VPk2NTmqt1Rhxo6E2DSW/3gPFvfM9ScQb3+m4
+         LHvdj4YqKtK4VKAsx+1C7JhPDAzp5x0H5idNTkC3iQ4lKeu8gDWTfvMEEF/6PQPWhlch
+         pLsHnXRQ4yzLQqud+adOZ/K6AhbUBbDVLqo30Ypkd8xhnb0fJyIAlqYDPWBipOIqcTdc
+         65045X9JK6ZuLkH7yiLVuJWL9nDMey+5laeAXWSMIoxMhYjNJaf7mzMOtEvms2adwZTR
+         xIrz8l8pnjVc0YvZKlhDWpg29AczrpzEq126EU0D4gFpcsSWNjsGlzUTRVqGje4VGoAy
+         ERhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjioKMe4xrO4JYicIR5MvuX5EnNGbxpHIEb4AoSHyDtTelppyw6H4iSCyG0zLRmA+0LPFkhsaU2D/feGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrj/fIy12JgBtNouzVPfYJeqCmchNCW95KQbA8tK+hGCSGo2hF
+	Et4wDIsSc09fcpVf6zjGLEycWtDjvQVo6QXJqiPGzWWP70D6OOyRJuUx/ikXdT7kiJE=
+X-Gm-Gg: ASbGncunlU8IzpEST2GYzXQpnRYF+IU1QBx0/vXtGIEymcneYF0iw2qF3BrAYee5xRV
+	m3N/33Xkn5lYSyf4JfzneFtdjjJ/KVTihVReYh55Fj4Dxwt21sb7CPzyjCzsEsmWEwI3cXBfTGP
+	HMfwmUeFMekB4IC7pDUkPCN1vGBXyM3+TkAPGeyQ1gp3p1qc1rq7T1QVmAcGo8BOWu3jYPfF6tX
+	EALDlzeG9IyHiofpzk2guuYc5tW1EgCEuGp/TZcWWYWLcr9Sc/PaJYKXUKsmeQYzWkhtuxjieuh
+	YwOGYalPVzo4EYCTLFEjwo5fQAtgR17E5z8TesxnkRM0vQCsoTMJqTHp4ju5ks/EonH5mfi4IVf
+	YPxPG
+X-Google-Smtp-Source: AGHT+IEHPxZf5K+6rB6h+G22ROpgqRBCwgyhaeWghhTRXeAPT0VUHYSFlG21O4cgJMdUdvOxbVQ28Q==
+X-Received: by 2002:a05:6a00:3e17:b0:748:33f3:8da3 with SMTP id d2e1a72fcca58-74af6f2f9d7mr18261164b3a.19.1751260663025;
+        Sun, 29 Jun 2025 22:17:43 -0700 (PDT)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af56e3ac1sm8021982b3a.145.2025.06.29.22.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Jun 2025 22:17:42 -0700 (PDT)
+Date: Mon, 30 Jun 2025 10:47:28 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 14/23] ACPI: property: Add support for cells property
+Message-ID: <aGId6M_0D0qERUu_@sunil-laptop>
+References: <20250618121358.503781-1-apatel@ventanamicro.com>
+ <20250618121358.503781-15-apatel@ventanamicro.com>
+ <aFka3y1494LIzyUA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] iommufd/vdevice: Remove struct device reference
- from struct vdevice
-To: Xu Yilun <yilun.xu@linux.intel.com>, jgg@nvidia.com, jgg@ziepe.ca,
- kevin.tian@intel.com, will@kernel.org, aneesh.kumar@kernel.org
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, joro@8bytes.org,
- robin.murphy@arm.com, shuah@kernel.org, nicolinc@nvidia.com, aik@amd.com,
- dan.j.williams@intel.com, yilun.xu@intel.com
-References: <20250627033809.1730752-1-yilun.xu@linux.intel.com>
- <20250627033809.1730752-4-yilun.xu@linux.intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20250627033809.1730752-4-yilun.xu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFka3y1494LIzyUA@smile.fi.intel.com>
 
-On 6/27/25 11:38, Xu Yilun wrote:
-> Remove struct device *dev from struct vdevice.
+On Mon, Jun 23, 2025 at 12:14:07PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 18, 2025 at 05:43:49PM +0530, Anup Patel wrote:
+> > From: Sunil V L <sunilvl@ventanamicro.com>
+> > 
+> > Currently, ACPI doesn't support cells property when
+> > fwnode_property_get_reference_args() is called. ACPI always expects
+> > the number of arguments to be passed. However, the above mentioned
+> > call being a common interface for OF and ACPI, it is better to have
+> > single calling convention which works for both. Hence, add support
+> > for cells property on the reference device to get the number of
+> > arguments dynamically.
 > 
-> The dev pointer is the Plan B for vdevice to reference the physical
-> device. As now vdev->idev is added without refcounting concern, just
-> use vdev->idev->dev when needed.
+> ...
 > 
-> Signed-off-by: Xu Yilun<yilun.xu@linux.intel.com>
+> > +static unsigned int acpi_fwnode_get_args_count(const struct acpi_device *device,
+> > +					       const char *nargs_prop)
+> > +{
+> > +	const union acpi_object *obj;
+> 
+> > +	if (!nargs_prop)
+> > +		return 0;
+> 
+> This check is implied by the call. No need to duplicate.
+> 
+> > +	if (acpi_dev_get_property(device, nargs_prop, ACPI_TYPE_INTEGER, &obj))
+> > +		return 0;
+> > +
+> > +	return obj->integer.value;
+> > +}
+> 
+> ...
+> 
+> > +			if (nargs_prop)
+> 
+> Again, if you don't won't to reassign the existing value, it's better to have
+> this data be collected in the temporary variable of the same semantics. Then
+> you will choose one when it's needed, no need to have this dup check (again!).
+> 
+Okay. Let me update in the next version.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Thanks!
+Sunil
