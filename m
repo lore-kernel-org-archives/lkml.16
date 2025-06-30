@@ -1,217 +1,185 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971AE1E7C10
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F551FAC37;
+	Mon, 30 Jun 2025 06:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751266510; cv=none; b=ATuM2+38/xy3Q8Fbwn3ctZ9ggqoBtZxTfy9Ui6Ys96IbgM6FddKxIaE6+RYAZ/UKi4AnWnwFTQwS4x5jHIZul43SfFo4hSa4a7mQUCpq/CRGvWke1orbLKlych6509k84kMKE047Iaa+yFZWr+D8V2Czl9/h2An3UVSn9GoENbk=
+	t=1751266532; cv=none; b=AXoKZxtjOQhmAqjxyq5fEOqJBQ/t0zeynG9MI/5/589HPSjdyy/b5hF378onv0B1b1glsdUlE3OJGY2OeD6pPlh32vdOEjG2ms8IVy6J+YjZ4dGhaqDUnGc67SbRVtCjGsN4oh4nymSZ1W45GY1MixPZPi66+gRg4z4wpqIIjo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751266510; c=relaxed/simple;
-	bh=W3/qUmYR6QyOvmumbF5zNgCLQg69m81T3y9dtD4rHzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3QJHcExFtL0Fz6Z1HklP5Bh6B1T23UnKZXs5M7zRj2Us/aJyWAE615OcOeoak6Ko0r9ZujB4CddVrV8g2ttLpkkyPrBfYG/xOMnQSSeEzI6t73XQKLlN2IoueZaViJrpi/PQEQArHM6v44nnRzuQAGT11dFZjXoXwXB1fIs4Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PAN2Pxpp; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1751266532; c=relaxed/simple;
+	bh=oDRy6+pnTxXZ6RV1g2T7V837UtifdG7isk6y74V3pug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HemnCgHNH/rN8Ss36CLwbZ8gaDYbQSbIhEsiEb7QhwhYTxcOytUPlUuWGwpGGFdlJreqoLBhXEDmc/fTrV5p3RApvFVLBGadWSG3R++tuitQtc5RSt9NLFRsV94AVKsmavubiEtMactS+vQ1DbNntndnSKmPblH/eaH5MJpckGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BFfXnmfR; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PAN2Pxpp"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae0d11bb2a7so595285266b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1751266507; x=1751871307; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pku19sNVP6VuOr/+3IUAfIt54nYSogJc7sn5HCCxY5g=;
-        b=PAN2PxppL7vITxOtcii9RB9Ilu8WJHoZkU2lPBh2Nizz4hxeaOf/Wl5mFCiACXOBvJ
-         6P/DOiCGc6l0dOjkXCLvYdadjLb8YblS466iKQaKFScLCMP23Csoy42STsuHsXzNuCQe
-         NeChu08ItU66iDbEE++lEMUDmVdvvpcksSrJ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751266507; x=1751871307;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pku19sNVP6VuOr/+3IUAfIt54nYSogJc7sn5HCCxY5g=;
-        b=xNo7EFbymJeKjALnxqDjQ0MFdRP2f/y2LjDAOLXE/ysSGnixlKPMlyVvtSF+4PLcwT
-         YYnukNo+KHRlbDvebEZn55Y490IvRSqxY1sOF0xDQDC9CTbpPqZnKv+HQo5DTW/9xm6S
-         xhURnl3zBe1+e/ChEpYQfstsTA4gTwbfPHVcaQ4XLKlRdBap04h0GxuEjETOz/72XVqA
-         oWIdt0Rti8FelneLZbifhFuhfS0zM1fu7gjEwFaOVAaYOfBaaDq6td0Lo2w8leJjsBAh
-         /xSutWXhwtu91HxwhyN6Vju+w3cclSL1DO4ZitZv3xC6fA9dV3dukmoQlIzpuduE0PJY
-         d5aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiBKkcxe6KH/DoQKkSNZEUDVgP2umXNMYrXjsAjsk/ZGY+kXCijVHgb5Du4YJ+HnZ8OrrIzUgum2B9jmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyteqM6aaG/AeELLtK9AebPQTk/wpwjdHSVfY/JlEoktn0npEJM
-	d3OCtMdZiwxLooY4Urm+bFSk7U4Eqg+TccesPdiMo1VHi+yo0+Ui49ny9tMqs2k6CqX5Floj+jt
-	xpldoWg==
-X-Gm-Gg: ASbGncukBbOb6W5nl140Mvll0nLiwocIIftM6eAz/7LoUQQLoLhRI7tseYviIPmZEfC
-	hHnG8tHGsW2pK51IB7T2OQdocpOYhtEUq6pTg0I7gWX3Lq9JVLclw1NPB0lZq714wqSrSz5IyB8
-	qNzXDjKrtvU6LbpaF9+CPTWXRgqEbOgJDlaQ90GQVLixj0zCAWp+QmrVfJ+7Yo6eKNrisGp45Bm
-	CYr6oIfUhL47CHcYmaDNWBiozEHPtdEoqTpI2IY/2zTRrkev124JPUC2JkJoo4kHzngQ9BBc85m
-	LlgTWYm9e1W8lzKfZTraLKcpdU/lPWTLDCABs1Y4IY1y+6rwPEbet0aF0nfCdDsiT1l8LBeSLOW
-	yAVzsHv1iORlw6/JdV0YSw2ea
-X-Google-Smtp-Source: AGHT+IG1EBJjDSZA1j0LVTIxAPAKcpUtDwdHN4heEEvSu/EQEWyq7JDqTVbVfjg/dpP/TWct2F/tGw==
-X-Received: by 2002:a17:907:9721:b0:ae0:de30:8569 with SMTP id a640c23a62f3a-ae34fd1227emr1104983666b.1.1751266506673;
-        Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b06esm623110566b.17.2025.06.29.23.55.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6cd1a6fecso4316706f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Jun 2025 23:55:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW/Rp794JjkPFWj17t4trCRvUUr1Qqvi2OuUr6diKxtgQOp4HXvHwz9BBADBJ/sPlvtvMDkf/GRyznAsAs=@vger.kernel.org
-X-Received: by 2002:a05:6512:3e2a:b0:553:3770:c912 with SMTP id
- 2adb3069b0e04-5550ba2bc7emr3296124e87.47.1751266115614; Sun, 29 Jun 2025
- 23:48:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BFfXnmfR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=JLJNqBrK8VItnnOACmsphdDR0i4rdVFTfR/cReJyqWc=; b=BFfXnmfRPWgSfEp/yk/nwToxln
+	3AHHClgrzCPOIjApa3urqh5eJ9iZr6h2mhdTelSIRYOC0M/FotOA/pw16ScDDVbGWPflIIfEECKsV
+	fVUS5qWvZThRvn9dRmQKG+FK2Y+roz9o1S9ubz1bjKEg80ZB1LJK+fwCXZGpER9yzcFQSFzIFQP8k
+	/X4SgyFWsS/f6EoN+CWus3VrIHw3yefraDc4zZWMimYK9x+2E4SfnLYSO/CG/FPg1R8D+BRQa+a2R
+	4W/Knsm9CSNE+zfgXJ6saoV65ZC1bMGPRWrvbgO/e2my6KHqTLu7NETcn9Fckj7kUo4WiJjTqkSWR
+	gCLSjjYg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uW8QI-00000006jn9-3dJp;
+	Mon, 30 Jun 2025 06:55:27 +0000
+Message-ID: <cb9bd1e4-9424-4ed2-bdfa-49c883c60a66@infradead.org>
+Date: Sun, 29 Jun 2025 23:55:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627101939.3649295-1-xu.yang_2@nxp.com> <20250627101939.3649295-2-xu.yang_2@nxp.com>
- <1c4f505f-d684-4643-bf77-89d97e01a9f2@rowland.harvard.edu> <20250629233924.GC20732@pendragon.ideasonboard.com>
-In-Reply-To: <20250629233924.GC20732@pendragon.ideasonboard.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 30 Jun 2025 08:48:23 +0200
-X-Gmail-Original-Message-ID: <CANiDSCswzMouJrRn2A3EAbGzHTf88q_qQ=DC_KX7dbf_LJzqBg@mail.gmail.com>
-X-Gm-Features: Ac12FXygHhnlFKiXR-4gqAGeNFFl6ex4EPtMW2SIZttm2I0yNPjkXicKbD_z69Y
-Message-ID: <CANiDSCswzMouJrRn2A3EAbGzHTf88q_qQ=DC_KX7dbf_LJzqBg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] usb: core: add dma-noncoherent buffer alloc and
- free API
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Christoph Hellwig <hch@lst.de>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Xu Yang <xu.yang_2@nxp.com>, 
-	ezequiel@vanguardiasur.com.ar, mchehab@kernel.org, hdegoede@redhat.com, 
-	gregkh@linuxfoundation.org, mingo@kernel.org, tglx@linutronix.de, 
-	andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk, 
-	thomas.weissschuh@linutronix.de, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, imx@lists.linux.dev, 
-	jun.li@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-
-On Mon, 30 Jun 2025 at 01:39, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Fri, Jun 27, 2025 at 10:23:36AM -0400, Alan Stern wrote:
-> > On Fri, Jun 27, 2025 at 06:19:37PM +0800, Xu Yang wrote:
-> > > This will add usb_alloc_noncoherent() and usb_free_noncoherent()
-> > > functions to support alloc and free buffer in a dma-noncoherent way.
-> > >
-> > > To explicit manage the memory ownership for the kernel and device,
-> > > this will also add usb_dma_noncoherent_sync_for_cpu/device() functions
-> > > and call it at proper time.  The management requires the user save
-> > > sg_table returned by usb_alloc_noncoherent() to urb->sgt.
-> > >
-> > > Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> > > ---
-> > >  drivers/usb/core/hcd.c | 30 ++++++++++++++++
-> > >  drivers/usb/core/usb.c | 80 ++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/usb.h    |  9 +++++
-> > >  3 files changed, 119 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> > > index c22de97432a0..5fa00d32afb8 100644
-> > > --- a/drivers/usb/core/hcd.c
-> > > +++ b/drivers/usb/core/hcd.c
-> > > @@ -1496,6 +1496,34 @@ int usb_hcd_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(usb_hcd_map_urb_for_dma);
-> > >
-> > > +static void usb_dma_noncoherent_sync_for_cpu(struct usb_hcd *hcd,
-> > > +                                        struct urb *urb)
-> > > +{
-> > > +   enum dma_data_direction dir;
-> > > +
-> > > +   if (!urb->sgt)
-> > > +           return;
-> > > +
-> > > +   dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
-> >
-> > Are the following operations really necessary if the direction is OUT?
-> > There are no bidirectional URBs, and an OUT transfer never modifies the
-> > contents of the transfer buffer so the buffer contents will be the same
-> > after the URB completes as they were when the URB was submitted.
->
-> The arch part of dma_sync_sgtable_for_cpu(DMA_TO_DEVICE) is a no-op on
-> all architectures but microblaze, mips, parisc and powerpc (at least in
-> some configurations of those architectures).
->
-> The IOMMU DMA mapping backend calls into the arch-specific code, and
-> also handles swiotlb, which is a no-op for DMA_TO_DEVICE. There's also
-> some IOMMU-related arch-specific handling for sparc.
->
-> I think dma_sync_sgtable_for_cpu() should be called for the
-> DMA_TO_DEVICE direction, to ensure proper operation in those uncommon
-> but real cases where platforms need to perform some operation. It has a
-> non-zero cost on other platforms, as the CPU will need to go through a
-> few function calls to end up in no-ops and then go back up the call
-> stack.
->
-> invalidate_kernel_vmap_range() may not be needed. I don't recall why it
-> was added. The call was introduced in
->
-> commit 20e1dbf2bbe2431072571000ed31dfef09359c08
-> Author: Ricardo Ribalda <ribalda@chromium.org>
-> Date:   Sat Mar 13 00:55:20 2021 +0100
->
->     media: uvcvideo: Use dma_alloc_noncontiguous API
->
-> Ricardo, do we need to invalidate the vmap range in the DMA_TO_DEVICE
-> case ?
-
-That change came from Christoph
-https://lore.kernel.org/linux-media/20210128150955.GA30563@lst.de/
-
-"""
-
-Given that we vmap the addresses this also needs
-flush_kernel_vmap_range / invalidate_kernel_vmap_range calls for
-VIVT architectures.
-
-"""
-
->
-> > > +   invalidate_kernel_vmap_range(urb->transfer_buffer,
-> > > +                                urb->transfer_buffer_length);
-> > > +   dma_sync_sgtable_for_cpu(hcd->self.sysdev, urb->sgt, dir);
->
-> In the DMA_FROM_DEVICE case, shouldn't the vmap range should be
-> invalidated after calling dma_sync_sgtable_for_cpu() ? Otherwise I think
-> speculative reads coming between invalidation and dma sync could result
-> in data corruption.
->
-> > > +}
-> >
-> > This entire routine should be inserted at the appropriate place in
-> > usb_hcd_unmap_urb_for_dma() instead of being standalone.
-> >
-> > > +static void usb_dma_noncoherent_sync_for_device(struct usb_hcd *hcd,
-> > > +                                           struct urb *urb)
-> > > +{
-> > > +   enum dma_data_direction dir;
-> > > +
-> > > +   if (!urb->sgt)
-> > > +           return;
-> > > +
-> > > +   dir = usb_urb_dir_in(urb) ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
-> > > +   flush_kernel_vmap_range(urb->transfer_buffer,
-> > > +                           urb->transfer_buffer_length);
-> > > +   dma_sync_sgtable_for_device(hcd->self.sysdev, urb->sgt, dir);
-> > > +}
-> >
-> > Likewise, this code belongs inside usb_hcd_map_urb_for_dma().
-> >
-> > Also, the material that this routine replaces in the uvc and stk1160
-> > drivers do not call flush_kernel_vmap_range().  Why did you add that
-> > here?  Was this omission a bug in those drivers?
-> >
-> > Alan Stern
->
-> --
-> Regards,
->
-> Laurent Pinchart
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/66] kconfig: improve xconfig and gconfig
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
+
+On 6/24/25 8:04 AM, Masahiro Yamada wrote:
+> [xconfig]
+> 
+>  - small improvement for choice
+> 
+> [gconfig]
+> 
+>  - Fix memory leak
+>  - Lots of refactoring
+>  - Migrate GTK 2 to GTK 3
+>  - Fix all compile warnings
+>  - Improve usability (grey out buttons, keep the item selection, etc.)
+> 
+> 
+
+Hi,
+I have tested all 65 patches here (omitting 52).
+They worked well. Good job.
+I will test your git tree/branch Monday/Tuesday.
+
+I did notice one visual difference. The GTK+2 version of
+gconfig (before the patches) uses an alternating white/light gray
+background for the menu items while the GTK+3 version (after the
+patches) uses an all white background.
+
+I prefer the alternating but it may be just some collateral damage
+in the name of progress.  Or could be something else entirely!
+
+Before you posted all of these gconfig patches, I was going to ask
+how many gconfig users are there?  I don't see much on the mailing
+list about gconfig from users and suggest that maybe we should just
+drop it, but if you are OK with maintaining it and updating it like
+in this patch series, so be it.
+
+I did seem to have found one gconfig user [1]. Maybe you are also
+a gconfig user.
+
+
+[1] https://lore.kernel.org/linux-kbuild/67b44d49-d23c-fab0-e165-cc84817562af@infradead.org/
+
+
+
+> 
+> Masahiro Yamada (66):
+>   kconfig: set MENU_CHANGED to choice when the selected member is
+>     changed
+>   kconfig: qconf: do not show checkbox icon for choice
+>   kconfig: qconf: show selected choice in the Value column
+>   kconfig: rename menu_get_parent_menu() to
+>     menu_get_menu_or_parent_menu()
+>   kconfig: re-add menu_get_parent_menu() that returns parent menu
+>   kconfig: gconf: make columns resizable
+>   kconfig: gconf: fix potential memory leak in renderer_edited()
+>   kconfig: gconf: always destroy dialog in on_window1_delete_event()
+>   kconfig: gconf: remove old #ifdef GTK_CHECK_VERSION
+>   kconfig: gconf: remove empty if-block
+>   kconfig: gconf: remove meaningless code in init_main_window()
+>   kconfig: gconf: remove unneeded gtk_tree_view_set_headers_visible()
+>     calls
+>   kconfig: gconf: remove gtk_tree_view_column_set_visible() calls
+>   kconfig: gconf: remove gtk_widget_realize() calls
+>   kconfig: gconf: remove gtk_tree_view_set_rules_hint() calls
+>   kconfig: gconf: remove unnecessary gtk_set_locale() call
+>   kconfig: gconf: remove internal-child="image" nodes from glade
+>   kconfig: gconf: remove parents[] array and indent variable
+>   kconfig: gconf: remove unnecessary NULL checks for tree1 and tree2
+>   kconfig: gconf: remove unneeded variable in on_split_clicked()
+>   kconfig: gconf: remove unneeded variables in
+>     on_treeview*_button_press_event()
+>   kconfig: gconf: remove unused 'color' variable
+>   kconfig: gconf: add static qualifiers to variables
+>   kconfig: gconf: move init_*() functions below
+>   kconfig: gconf: refactor view setting code
+>   kconfig: gconf: grey out button for current view
+>   kconfig: gconf: move the main window event handlers below
+>   kconfig: gconf: move button1 initialization below
+>   kconfig: gconf: add static qualifiers to event handlers
+>   kconfig: gconf: remove glade_xml_signal_autoconnect() call
+>   kconfig: gconf: make key_press_event work in left pane too
+>   kconfig: gconf: avoid hardcoding model2 in
+>     on_treeview2_cursor_changed()
+>   kconfig: gconf: avoid hardcoding model2 in renderer_edited()
+>   kconfig: gconf: avoid hardcoding model* in
+>     on_treeview*_button_press_event()
+>   kconfig: gconf: add on_save_clicked() event handler
+>   kconfig: gconf: use GtkFileChooser in on_load1_activate()
+>   kconfig: gconf: use GtkFileChooser in on_save_as1_activate()
+>   kconfig: gconf: use GdkPixbuf in replace_button_icon()
+>   kconfig: gconf: refactor replace_button_icon()
+>   kconfig: gconf: make introduction, about, license dialogs modal
+>   kconfig: gconf: remove global 'tree' variable
+>   kconfig: gconf: merge 'current' and 'browsed' global variables
+>   kconfig: gconf: preserve menu selection when switching view mode
+>   kconfig: gconf: use GtkTreeModelFilter to control row visibility
+>   kconfig: gconf: remove global 'model1' and 'model2' variables
+>   kconfig: gconf: remove init_tree_model()
+>   kconfig: gconf: inline fill_row() into set_node()
+>   kconfig: gconf: do not reconstruct tree store when a symbol is changed
+>   kconfig: gconf: inline display_list() into set_view_mode()
+>   kconfig: gconf: remove dead code in display_tree_part()
+>   kconfig: gconf: rename display_tree_part()
+>   kconfig: gconf: remove fixup_rootmenu()
+>   kconfig: gconf: use size_allocate event handler
+>   kconfig: gconf: replace GDK_space with GDK_KEY_space
+>   kconfig: gconf: replace GTK_STOCK_{OK,NO,CANCEL}
+>   kconfig: gconf: remove "tooltips" property from glade
+>   kconfig: gconf: replace "tooltip" property with "tooltip-text"
+>   kconfig: gconf: remove unnecessary default message in text view
+>   kconfig: gconf: use gtk_check_menu_item_get_active() accessor
+>   kconfig: gconf: use gtk_dialog_get_content_area() accessor
+>   kconfig: gconf: remove GtkHandleBox from glade
+>   kconfig: gconf: rename gconf.glade to gconf.ui
+>   kconfig: gconf: migrate to GTK 3
+>   kconfig: gconf: replace GtkVbox with GtkBox
+>   kconfig: gconf: replace GdkColor with GdkRGBA
+>   kconfig: gconf: show GTK version in About dialog
+> 
+>  scripts/kconfig/conf.c                    |    2 +-
+>  scripts/kconfig/gconf-cfg.sh              |   11 +-
+>  scripts/kconfig/gconf.c                   | 1828 ++++++++++-----------
+>  scripts/kconfig/{gconf.glade => gconf.ui} |  360 ++--
+>  scripts/kconfig/lkc.h                     |    1 +
+>  scripts/kconfig/menu.c                    |   20 +
+>  scripts/kconfig/qconf.cc                  |   26 +-
+>  scripts/kconfig/symbol.c                  |    4 +
+>  8 files changed, 1023 insertions(+), 1229 deletions(-)
+>  rename scripts/kconfig/{gconf.glade => gconf.ui} (57%)
+> 
 
 -- 
-Ricardo Ribalda
+~Randy
+
