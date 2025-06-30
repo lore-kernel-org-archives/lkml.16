@@ -1,203 +1,173 @@
-Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666611B87F0
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60991B87F0
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751314336; cv=none; b=eDBBkGvn++HAA7SAwUmcR+CbgftnELuRXQ6rW9MES83275l/mq38h4rUBYan5eCiz08As3Xx6Lsa/bAPerxCDuHuhQYMkV+2smuws5Vv3M+CGZN7KIUCgGie7dEmvG9bAPqOF1+CxZiHqT/wf+AnoDteba2JXnjPeQ1c3hpZInk=
+	t=1751314422; cv=none; b=hZTNj01CvIuaP4MhngMHUeGPjuKJMqdAEzFDBZFUkQQ+a8tlmV7t/WbdEqNmJMJBveocL81hGlaiEhDgc52+3RimTrUbJuWKXhJUvFLct6zHIQ6mEqWW4lD6A4xBAkT8t2+67ke3fa3SElFUCQNwpERSIyyR9QUgfSTQ8/Hjr2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751314336; c=relaxed/simple;
-	bh=yBg3GB3lhCpdzzmoDQuhGODKp6X+ylUuiDnqkO/v3S8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0l4cX/YxI9AmgcU7B4duCx0iQW4JZaRY+nw0juGjYNwUJOLGAV4Tpoe/iu8yaxyjF537KCW2dRmAiW9lgxrW6LKWhfTrdT16//7QzaA3HlHQDBfUzu6GTBUkqES1071Ke9KhcebD93hmlupbiv2DdYBPJLCJDkCApRb/GbDcBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=fail smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=cbXEB+53; arc=none smtp.client-ip=136.144.140.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=ijzerbout.nl
+	s=arc-20240116; t=1751314422; c=relaxed/simple;
+	bh=Rz5c9iymJ89RgH7VupYvYE77SNzmWUAZJfYVmptlxFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eKqy9LTKHIQ5Fo1ltLxSiDwxS50K/HWa+Amt+2mVZsLgPwSJFbMHwtGg9uobmbo69NYG+AVqaTYvvxkcpVbMQR3qBuV6Jb+MLib2kNVkO8Mg3Z8GKd5YTO/BLlSR+5Ocv9e0r6rUEyKrjCRxTEzzmvwOmLEwQgG9adawefJbpUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SUvfdSNQ; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="cbXEB+53"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
-	t=1751313953; bh=yBg3GB3lhCpdzzmoDQuhGODKp6X+ylUuiDnqkO/v3S8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cbXEB+5313Qe3bFolzb3FEF0a0/NGTgKnULUlrUZpcne1NsIM3XXmoZo/hXDGFvHk
-	 ZLLUaDDJkXprkREqmt+AbxkLuyxI/9QpHPSFwiNyfVUKrVmIY9KJ+k5RSkgZ9mpRF2
-	 vjTfcWU0Fg3qC4wMOGEdE/widwi4cyd2CgCyzEv0CrAhiXWiNbucR8lRIswaJ7ZpMY
-	 1kJqQg83xSn9CCE+Fm230hskiQcNOJKb0mANaay4JsFJyi6z4i2XOVaq085wGZkDql
-	 f4gt6FJmYNihkdlCoLBMfDJ7ZEPMdQSL9qPMhQtzc0Xlz2ngSSkOKS6OGaNi9WGk2+
-	 DrOgiuncYSG2+/hCul8lOG2AG6w/z1vTMYPsIo1jDEzLz97Wi8bMhTkax2rA6NnvHY
-	 CXL20edyECqgP5s7uFgMMG6S2k6Fc0ThjK61lwxA3iKHQLKIcY36dIPpo32MZ4yE0l
-	 wYEFizbjEQMmDIZ+Ju1Z60X96BOaKJz7WGQM2vy9fYhKV/XPF1QsCobQzr6ceOn847
-	 04MNWGrJ3ZNVV/y9/3GaINBECfINYjkkIt7gWrUDP1oQgUy1HJDXnaXQL+SEGB+Eqm
-	 uWIQyjO2A5bVGmOG6nzjcXSKoS3ZrOv47Akkg0V96etBuU2m9nZ0e3VKQwpQWcFVhw
-	 ymK8xQ2v1kImlfuhjxwH6dsY=
-Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
-	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 805C6162A20;
-	Mon, 30 Jun 2025 22:05:51 +0200 (CEST)
-Message-ID: <7c1180f4-923c-4138-b756-618cb5d597ac@ijzerbout.nl>
-Date: Mon, 30 Jun 2025 22:05:48 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUvfdSNQ"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-72c47631b4cso1878690a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751314419; x=1751919219; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Pw9uo4PLqW445+ML/2nj2YC9JrDhcP48EMZJgbllM0=;
+        b=SUvfdSNQYt2jPuYULxgAzEJ0Asfn43e5IdzPJLOD1n9sgzBLYoE7f9NvEXdGlNQ3d3
+         1w5pYQoz67Ev2el9/CJ8rTZY7bZ999YgiU3Srv6U6uYLdTMX08OqO6Hfb3czqIHEE3N6
+         WrqPiNdMnAb7NETv8zrm+NLqxELtpIeI9BuFDmWGtNtYTAK+PQhMGemfSjhLgQnvJcPt
+         KxiTzQMO56troEm2aIRj5qAm0pCyMuHzNV3gF0gfxGcAit/8JpD1iMsrSh2u6sxhy4Tz
+         PGrmkK+pMEixR/WRs29qwDucEy6/zEstJfAq6Q/UjI05qMhbbcBK8PUAKwyLmdioS+6M
+         UElQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751314419; x=1751919219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Pw9uo4PLqW445+ML/2nj2YC9JrDhcP48EMZJgbllM0=;
+        b=T6HNZMO/HQ+XQa1AJA33ldpZ8tIRF3nGUlL0lL6thc9AQubLGKY5p059Y80w0sEtKw
+         5CM59n0RucVHtJpgacNk15wEfch9+Z8/NHws/K407ylb31ECKWmIoJo9cZOAZHdXvqTZ
+         0uklygLBlaSY/B85hpjmQ1InP/xipWFLhta68tdLiO5MlZ/IYn7+QHjmdrsqp1EeVw1/
+         fHySg1EH4POwlGcZVVwrhOuKicBJw3TnsG5DLZ+7kIgA5UGPuzK0xJ1DoshNcdsmSl2R
+         999Sn1mrLH0CGFvxRVbSTUbwGTJhE4N6OwNjzeh/6QKCSB3snIObn6Uuvxw9Omzn9mBd
+         5wkw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0vVLoaqLbUXmUPkC0q57JY10POGHGG75COY+ayczaeVJ5HHJjL2UTqPPSJ1TismI0HFlrp88E1iFiKr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHTa6yVuaA1blhlXZMTjI9GGRNfzilRxROddrOPV30mbIO6iAn
+	4qzAiL3qJH5Z2+slr+Ri+48JfX818OMk1EHp31S/40pLqZMuG5RUwWY572IytRicP6Y=
+X-Gm-Gg: ASbGnct3GRas3ucC1HHJXteoIwylAeaNuqOmHWSsistYrON3hnMMonCASUWrijOnRHP
+	IDn7U23vRT5oDgYixR04qUxKM7EaEi90O8eBJtY/AR2OFgAV0ROD5DCs60aEy7J6qSUp8oLTqN3
+	WBK1zh1JeEJyHPMQtZXdLVBKJll3Kutl9iI03SrgMZRwjqUpVsguWHF20/0ySbudMGmKIzqLDbT
+	yNgmVbOlGaEN8Kxfp3lRWEh+O2VUv2Aixi+uvlTaSt2IXslzlWBxuiGNcG0rkht0ZEex68hd3Sc
+	k80XB9DTBSXzzESB1k/ktLoFtmmuE+URMaH0vNWfQuYtY27SMFZ8PN6NcHAx6L6Xib4Ug2Ogcu/
+	tDW0=
+X-Google-Smtp-Source: AGHT+IF2bHM+w0oqv+2GI5jLOgo08atfHsKBXad89kPavKIYpA3L2mvYlOwrOo1nKxkMGjuZXO2PVQ==
+X-Received: by 2002:a05:6830:6501:b0:739:fcb4:db17 with SMTP id 46e09a7af769-73afc57af58mr10984924a34.15.1751314418614;
+        Mon, 30 Jun 2025 13:13:38 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:fb67:363d:328:e253])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb0068e6sm1807151a34.17.2025.06.30.13.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 13:13:38 -0700 (PDT)
+Date: Mon, 30 Jun 2025 23:13:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Marcos Garcia <magazo2005@gmail.com>
+Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
+	karanja99erick@gmail.com, rodrigo.gobbi.7@gmail.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH staging] staging: rtl8723bs: replace magic numbers in
+ beacon init
+Message-ID: <38411a98-d907-4173-a528-8d50b337de0c@suswa.mountain>
+References: <20250630173339.3828756-1-magazo2005@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk
- in weighted interleave
-To: Joshua Hahn <joshua.hahnjy@gmail.com>, Gregory Price <gourry@gourry.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>, Byungchul Park <byungchul@sk.com>,
- David Hildenbrand <david@redhat.com>, Matthew Brost
- <matthew.brost@intel.com>, Rakie Kim <rakie.kim@sk.com>,
- Ying Huang <ying.huang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
-References: <20250626200936.3974420-1-joshua.hahnjy@gmail.com>
- <20250626200936.3974420-3-joshua.hahnjy@gmail.com>
-Content-Language: en-US
-From: Kees Bakker <kees@ijzerbout.nl>
-In-Reply-To: <20250626200936.3974420-3-joshua.hahnjy@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630173339.3828756-1-magazo2005@gmail.com>
 
-Op 26-06-2025 om 22:09 schreef Joshua Hahn:
-> Currently, alloc_pages_bulk_weighted_interleave can make up to nr_node_ids+1
-> calls to __alloc_pages_bulk. The additional allocation can happen if the
-> previous call to this function finished the weighted round robin allocation
-> partially on a node. To make up for this, the next time this function is
-> called, an extra allocation is made to finish cleanly on the node boundaries
-> before performing the weighted round-robin cycles again.
->
-> Instead of making an additional call, we can calculate how many additional
-> pages should be allocated from the first node (aka carryover) and add that
-> value to the number of pages that should be allocated as part of the current
-> round-robin cycle.
->
-> Running a quick benchmark by compiling the kernel shows a small increase
-> in performance. These experiments were run on a machine with 2 nodes, each
-> with 125GB memory and 40 CPUs.
->
-> time numactl -w 0,1 make -j$(nproc)
->
-> +----------+---------+------------+---------+
-> | Time (s) |  6.16   | With patch | % Delta |
-> +----------+---------+------------+---------+
-> | Real     |  88.374 |    88.3356 | -0.2019 |
-> | User     |  3631.7 |   3636.263 |  0.0631 |
-> | Sys      | 366.029 |    363.792 | -0.7534 |
-> +----------+---------+------------+---------+
->
-> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
->
+On Mon, Jun 30, 2025 at 07:33:39PM +0200, Marcos Garcia wrote:
+> Replace hardcoded register values in rtl8723b_InitBeaconParameters()
+> with properly named defines documenting their purpose:
+> - TBTT_PROHIBIT_DEFAULT_MS (0x6404) for 100ms interval + 4ms margin
+> - BCNTCFG_AIFS_LARGEST (0x660F) for maximum AIFS value
+> 
+> This improves maintainability while preserving the original behavior.
+> 
+> Signed-off-by: Marcos Garcia <magazo2005@gmail.com>
 > ---
->   mm/mempolicy.c | 39 ++++++++++++++++++++-------------------
->   1 file changed, 20 insertions(+), 19 deletions(-)
->
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 78ad74a0e249..0d693f96cf66 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -2569,7 +2569,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   	unsigned long node_pages, delta;
->   	u8 *weights, weight;
->   	unsigned int weight_total = 0;
-> -	unsigned long rem_pages = nr_pages;
-> +	unsigned long rem_pages = nr_pages, carryover = 0;
->   	nodemask_t nodes;
->   	int nnodes, node;
->   	int resume_node = MAX_NUMNODES - 1;
-> @@ -2594,18 +2594,12 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   	node = me->il_prev;
->   	weight = me->il_weight;
->   	if (weight && node_isset(node, nodes)) {
-> -		node_pages = min(rem_pages, weight);
-> -		nr_allocated = __alloc_pages_bulk(gfp, node, NULL, node_pages,
-> -						  page_array);
-> -		page_array += nr_allocated;
-> -		total_allocated += nr_allocated;
-> -		/* if that's all the pages, no need to interleave */
->   		if (rem_pages <= weight) {
-> -			me->il_weight -= rem_pages;
-> -			return total_allocated;
-> +			node_pages = rem_pages;
-> +			me->il_weight -= node_pages;
-> +			goto allocate;
-This is a goto into the middle of a for-loop.
-What do you think is going to happen at the end of that loop?
+>  .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 27 +++++++++----------
+>  1 file changed, 12 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> index 893cab0532ed..cc7886d75a0b 100644
+> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> @@ -1183,31 +1183,28 @@ void rtl8723b_read_chip_version(struct adapter *padapter)
+>  	ReadChipVersion8723B(padapter);
+>  }
+>  
+> +/* Beacon Configuration */
+> +#define TBTT_PROHIBIT_DEFAULT_MS	0x6404  /* 100ms interval + 4ms margin */
 
-I think (only tested with a small C program) it will go to the start of
-the loop, do the i++, check i<nnodes, and possibly do the loop again.
-Variable i is uninitialized at that point. In the loop it hits several
-uninitialized variables.
+I don't understand the units here.  How is 100 + 4 = 0x6404.
+0x6404 is 25604 in decimal...  I don't get it at all.
 
-Even if this is legal C code, it is pretty obscure.
+> +#define BCNTCFG_AIFS_LARGEST		0x660F  /* Max AIFS for beacon priority */
 
->   		}
-> -		/* Otherwise we adjust remaining pages, continue from there */
-> -		rem_pages -= weight;
-> +		carryover = weight;
->   	}
->   	/* clear active weight in case of an allocation failure */
->   	me->il_weight = 0;
-> @@ -2614,7 +2608,7 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   	/* create a local copy of node weights to operate on outside rcu */
->   	weights = kzalloc(nr_node_ids, GFP_KERNEL);
->   	if (!weights)
-> -		return total_allocated;
-> +		return 0;
->   
->   	rcu_read_lock();
->   	state = rcu_dereference(wi_state);
-> @@ -2634,16 +2628,17 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   	/*
->   	 * Calculate rounds/partial rounds to minimize __alloc_pages_bulk calls.
->   	 * Track which node weighted interleave should resume from.
-> +	 * Account for carryover. It is always allocated from the first node.
->   	 *
->   	 * if (rounds > 0) and (delta == 0), resume_node will always be
->   	 * the node following prev_node and its weight.
->   	 */
-> -	rounds = rem_pages / weight_total;
-> -	delta = rem_pages % weight_total;
-> +	rounds = (rem_pages - carryover) / weight_total;
-> +	delta = (rem_pages - carryover) % weight_total;
->   	resume_node = next_node_in(prev_node, nodes);
->   	resume_weight = weights[resume_node];
-> +	node = carryover ? prev_node : next_node_in(prev_node, nodes);
->   	for (i = 0; i < nnodes; i++) {
-> -		node = next_node_in(prev_node, nodes);
->   		weight = weights[node];
->   		/* when delta is depleted, resume from that node */
->   		if (delta && delta < weight) {
-> @@ -2651,12 +2646,14 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   			resume_weight = weight - delta;
->   		}
->   		/* Add the node's portion of the delta, if there is one */
-> -		node_pages = weight * rounds + min(delta, weight);
-> +		node_pages = weight * rounds + min(delta, weight) + carryover;
->   		delta -= min(delta, weight);
-> +		carryover = 0;
->   
->   		/* node_pages can be 0 if an allocation fails and rounds == 0 */
->   		if (!node_pages)
->   			break;
-> +allocate:
->   		nr_allocated = __alloc_pages_bulk(gfp, node, NULL, node_pages,
->   						  page_array);
->   		page_array += nr_allocated;
-> @@ -2664,10 +2661,14 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
->   		if (total_allocated == nr_pages)
->   			break;
->   		prev_node = node;
-> +		node = next_node_in(prev_node, nodes);
-> +	}
+I don't understand this comment.  This feels like ChatGPT...  It's
+got that magical feeling where every word follows the other so smoothly
+but when you think about the meaning, it's both really vague and
+slightly wrong.  What is "beacon priority"?  What other types of
+priority are there?  What type of units is this?
+
 > +
-> +	if (weights) {
-> +		me->il_prev = resume_node;
-> +		me->il_weight = resume_weight;
-> +		kfree(weights);
->   	}
-> -	me->il_prev = resume_node;
-> -	me->il_weight = resume_weight;
-> -	kfree(weights);
->   	return total_allocated;
->   }
->   
+>  void rtl8723b_InitBeaconParameters(struct adapter *padapter)
+>  {
+>  	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
+>  	u16 val16;
+>  	u8 val8 = DIS_TSF_UDT;
+>  
+> -
+> -	val16 = val8 | (val8 << 8); /*  port0 and port1 */
+> -
+> -	/*  Enable prot0 beacon function for PSTDMA */
+> -	val16 |= EN_BCN_FUNCTION;
+> -
+> +	val16 = val8 | (val8 << 8); /* port0 and port1 */
+> +	val16 |= EN_BCN_FUNCTION;   /* Enable prot0 beacon function */
+>  	rtw_write16(padapter, REG_BCN_CTRL, val16);
+>  
+> -	/*  TODO: Remove these magic number */
+> -	rtw_write16(padapter, REG_TBTT_PROHIBIT, 0x6404);/*  ms */
+> -	/*  Firmware will control REG_DRVERLYINT when power saving is enable, */
+> -	/*  so don't set this register on STA mode. */
+
+This comment was clear and useful.  Keep it.
+
+> +	/* Fixed: Replaced magic numbers with defines */
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This is kind of information about what you're fixing is supposed to
+go in the commit message.  Not the comments.
+
+
+> +	rtw_write16(padapter, REG_TBTT_PROHIBIT, TBTT_PROHIBIT_DEFAULT_MS);
+> +
+>  	if (check_fwstate(&padapter->mlmepriv, WIFI_STATION_STATE) == false)
+> -		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B); /*  5ms */
+> -	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B); /*  2ms */
+
+These comments that explained that DRIVER_EARLY_INT_TIME_8723B was 5ms
+and BCN_DMA_ATIME_INT_TIME_8723B is 2ms are kind of crap.  The define
+should have been called something like BCN_DMA_ATIME_2MS or something.
+But they were at least better than nothing.
+
+> +		rtw_write8(padapter, REG_DRVERLYINT, DRIVER_EARLY_INT_TIME_8723B);
+>  
+> -	/*  Suggested by designer timchen. Change beacon AIFS to the largest number */
+> -	/*  because test chip does not contension before sending beacon. by tynli. 2009.11.03 */
+
+This comment has a typo s/contension/contention/ and it's not clear
+if we're trying to avoid contention or if we don't need to worry about
+contention.  So it's not perfect, but it does potentially provide some
+useful clues about the code so it's better than the new comments in that
+sense.  Let's keep it until we can find a better explanation.
+
+regards,
+dan carpenter
+
+> -	rtw_write16(padapter, REG_BCNTCFG, 0x660F);
+> +	rtw_write8(padapter, REG_BCNDMATIM, BCN_DMA_ATIME_INT_TIME_8723B);
+> +	rtw_write16(padapter, REG_BCNTCFG, BCNTCFG_AIFS_LARGEST);
 
