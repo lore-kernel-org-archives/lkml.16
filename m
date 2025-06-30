@@ -1,104 +1,300 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9DB522A;
-	Mon, 30 Jun 2025 20:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751313610; cv=pass; b=cV8JKE49V34qvrBb2mZuoAiJjmmFAQD5fFf1Y5hn8Oa5W70wEO4NlLwuOm8A1AlCex7MdmYAbzRKv6NncIaigMKvz9nCOP/1Rc9zoZbLDllbmOXolxirZZD9UcsEfXjKqDmkj/oe/RyVWxwQoZPaVrq1U+Nv+lA5Vp9FblveIkQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751313610; c=relaxed/simple;
-	bh=rBUTDTzHFfwcfiT7i6BHSGVXrToMoBPF9YjK4qz9/CM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CG2+PSedvgQl13Glgb4DVLD+75/ymgz89zcAmOUJADMkX1fRWw0Nvq6jATV/IA4f5OqBk61kwG1+ho2vFo9D+EKNwIgshFYsBLoDG7HX+u403LWdxh8Udz6OYNPQ7QEjVf+mFZ0+5RAWAwbD7pKFqXLeVQJ+bcgN4XzgLs9f7Ck=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=SWLqK6Bw; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AF1DF75C
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 20:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751313799; cv=none; b=filEz64jJPS+n/zMO5Npsdkf444Psqfy0o3ENQKlE2m+VltCpHVTYsI1/OIucstl3d62EKK0ZxcE6PyjHD3pEC8K9iyc1csj8o5BvmkDQQEVXgCvmyrlyXWr2D+0Yev2c5FJbeHvYMxBqvkrA2OCZ/yb4pKjDB//Vni+yJmm7TM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751313799; c=relaxed/simple;
+	bh=tc2/CY30+WQ0GQaPSkxHMOOSP7nL34U4xOYcQqcJLKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jFmOjJOdQC8ZSXlYUF6oP9JsBLVTgOEDVuhUQlZ6Xiey+xPdUEYAVTHjBrkTwB+H/bozR06ivB4AShFpp2K9AQJ8ggFpARgvxXbsH1NUEwtuwzUWTAvzRqHmp5g8NnDJS484dVtVLBiGSr/+JEv5x32+4qnoQOQWyhsVPUurwy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wmlw2H9K; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="SWLqK6Bw"
-ARC-Seal: i=1; a=rsa-sha256; t=1751313593; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=oIyis2lLopynTJij4VlBnmivGgF3rJiq5l0M9s4Gb9dTR0a4XO7JFS0I8PWuLEbP2Vqln/JcxEJadChK7k/WpviSiUJuKuEGxCYxL52r2rC7yRYgkDRiXq0hJv/EtX7oSoRZbwkzz2GaFLdDERDZc/89zdttry8CcTzA5qV3YZw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1751313593; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rBUTDTzHFfwcfiT7i6BHSGVXrToMoBPF9YjK4qz9/CM=; 
-	b=WCPdN3ntfbZw5YLGEYsETWBGt+VZpOrJpBG0FxQY4i+t2wIHE+2h3UEshYE1Sai8dYafsxRNkzBh9LBNdSHCyOUq2/gcKir9/GJAEZz3X0AB1aujzTk1DC5ScmbIRluUXi/K7TR7rASsTQdOh4Twp/ZhwPKT34clh5rY4VyPYQE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1751313593;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=rBUTDTzHFfwcfiT7i6BHSGVXrToMoBPF9YjK4qz9/CM=;
-	b=SWLqK6BwRQHFLSqizYCw1ukwzLPYtLySRrigRfm6BKHU+S7rphQY2YZhCXRBgIEl
-	SaDeB4CiA/KP939AYQF1y+iv/PMgTpb8K8nbfrUErz8j5RGxnMEqJn465ZDEawpTg+4
-	bFjQZGfMjthNskVrx4KrB7Uv9NhqrEUY6kmN2EZc=
-Received: by mx.zohomail.com with SMTPS id 1751313591718941.3513556291028;
-	Mon, 30 Jun 2025 12:59:51 -0700 (PDT)
-Message-ID: <48f573941d64217240f4750534e17faf4af0e3f6.camel@collabora.com>
-Subject: Re: [PATCH] Input: mtk-pmic-keys: Fix null pointer dereference when
- no compatible data
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, AngeloGioacchino Del Regno
-	 <angelogioacchino.delregno@collabora.com>
-Cc: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, kernel@collabora.com,
- linux-input@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-mediatek@lists.infradead.org
-Date: Mon, 30 Jun 2025 15:59:46 -0400
-In-Reply-To: <d373gpdyqejppdysdbb4k6aat5i33epnqsebxdkjbrgfwsnqtm@43si4kmjvsmq>
-References: 
-	<20250630-mtk-pmic-keys-fix-crash-v1-1-e47351fa9d1f@collabora.com>
-	 <28111607-d5a2-4b54-964a-d010fb99193a@collabora.com>
-	 <d373gpdyqejppdysdbb4k6aat5i33epnqsebxdkjbrgfwsnqtm@43si4kmjvsmq>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wmlw2H9K"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2350b1b9129so15182075ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751313795; x=1751918595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eqa+cWKwP/5ITYlS+q2fI743OuEkJnUTonzPltQGs2Y=;
+        b=wmlw2H9KMK384nuHGpcNSqWvm644zD0V9d1nqBzmw55ISzg3LEQPNTQDZ9uXq35K2j
+         /YiWwtp4GX200shb80Dy4anbUQcaMjhD+eSljrzwvxFHfhB9ilPlOtsGUe95fFkvtH/U
+         SPgfNnn5aGAYGTrLrQVVoTzNVO14efv96zSv/kZ690FaL/Aqtpl+i5cCOhrzmifiZ8rR
+         gpmH4rnZagOkl6CkLDJ2uVIR6DC7wMP0EWRzhA+/ViEx7edwe01vcDi8ZqkL1rCD9gLf
+         KqLK1gF1lTgBSE6UlMapF0IrPlNCe/R+iK7tfu1EOq3plGUygLxa7OJ56mumQBCa+GeZ
+         6rog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751313795; x=1751918595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Eqa+cWKwP/5ITYlS+q2fI743OuEkJnUTonzPltQGs2Y=;
+        b=bZmQvQws0kiu8oEH0qYdYAhqq47Yaiw/p/1UWQIkwuVmlgsGvDO+eeRYU8HwR78mfN
+         36qEwfA2rEoL7KFsFr+wabXa3dQobKHR55siZDlVMx7T2Flov4OhRedQnshVe0XfZ9uW
+         5ue23K3exnFeim0MiX2p0CVGq4ztQ/dOMNVt0G26eEUfAsP3YlDc2syBZW+l82nJz6Ro
+         VgTRuVNwnZBHkUHLQEYBUHDGdZwNL5MTmN6k9Ea/guXJWKUbe6aarbQr84m+QQtn9uXz
+         nF4dhwkrecAvA6VEwdvqRFXSVH5HZk3x3E7TGp+0zkVJXR9nFNmT1QEgbuVwdI76uLdK
+         uV+A==
+X-Gm-Message-State: AOJu0Ywdgbh1erKCxd8zmbO3fTULFWze2lc6HManqBJPkYBICkIWJ201
+	y6l48YZG+MQAA63GOG1aob7UNZwpwdVUU26z0aD2lk7VvxcNCWoom2eJru/Uqr+4ZdkRVfknUWv
+	alh55q8gqOt07MKMzFADhPlDjRkvoSL2ROkDpVvUJ
+X-Gm-Gg: ASbGncuHpC7aUUhNpiQ7KURfudlV8t/UzXrIOiUj6umOMHttLuRaJ2dPPRuibUymQJv
+	C1GAuUM15WgBIXF/IKeYjb4+F7tB4y8nlimg0+gVZOs9K0GDLltIYFzVFzurV4Osu3djvkcIyj+
+	r6VXV6mj4f1qu2DprVaCnuHLeclaRma5ZBaDZnzGB2zup0IpSkWmNWFNp18JsgijT9Mhiy0lUdv
+	w==
+X-Google-Smtp-Source: AGHT+IF6iVcyvQjj2ld6N8UoG4ykSX9aDn1bYdC40Iledyddo74UK6tAqLO/YIb80svJEBjHYnqen4lxC/AUpi7EOf8=
+X-Received: by 2002:a17:902:e84a:b0:234:8f5d:e3a4 with SMTP id
+ d9443c01a7336-23ac3817878mr246272035ad.2.1751313794880; Mon, 30 Jun 2025
+ 13:03:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+References: <20250629214449.14462-1-aleksandr.mikhalitsyn@canonical.com> <20250629214449.14462-5-aleksandr.mikhalitsyn@canonical.com>
+In-Reply-To: <20250629214449.14462-5-aleksandr.mikhalitsyn@canonical.com>
+From: Kuniyuki Iwashima <kuniyu@google.com>
+Date: Mon, 30 Jun 2025 13:03:03 -0700
+X-Gm-Features: Ac12FXw0qkm9zmzcyDd_siUWWPQolY0UkEUyAzMbFXyy0LUDcdpbCwLpUNcaFzM
+Message-ID: <CAAVpQUD0_HcYQ-DBSFSgjdoQLAS2bjXkLhPfYpH8z+Rt17U_sQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH net-next 4/6] af_unix: stash pidfs dentry when needed
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Luca Boccassi <bluca@debian.org>, 
+	David Rheinsberg <david@readahead.eu>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-06-30 at 08:25 -0700, Dmitry Torokhov wrote:
-> On Mon, Jun 30, 2025 at 04:06:53PM +0200, AngeloGioacchino Del Regno
-> wrote:
-> > Il 30/06/25 16:03, Louis-Alexis Eyraud ha scritto:
->=20
-> [... snip ...]
->=20
-> > > @@ -316,6 +316,9 @@ static int mtk_pmic_keys_probe(struct
-> > > platform_device *pdev)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const struct of_devic=
-e_id *of_id =3D
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0of_match_device(of_mtk_pmic_keys_match_tbl,
-> > > &pdev->dev);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!of_id)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
-> >=20
-> > Please, change this to `return -ENODEV;`
->=20
-> No, this definitely should not be a "silent" error because it
-> indicates
-> there is something wrong with the kernel.
->=20
-> Stepping back, why do we even enter mtk_pmic_keys_probe() if there is
-> not a matching OF ID? Are there any other patches that are not
-> upstream?
+On Sun, Jun 29, 2025 at 2:45=E2=80=AFPM Alexander Mikhalitsyn
+<aleksandr.mikhalitsyn@canonical.com> wrote:
+>
+> We need to ensure that pidfs dentry is allocated when we meet any
+> struct pid for the first time. This will allows us to open pidfd
+> even after the task it corresponds to is reaped.
+>
+> Basically, we need to identify all places where we fill skb/scm_cookie
+> with struct pid reference for the first time and call pidfs_register_pid(=
+).
+>
+> Tricky thing here is that we have a few places where this happends
+> depending on what userspace is doing:
+> - [__scm_replace_pid()] explicitly sending an SCM_CREDENTIALS message
+>                         and specified pid in a numeric format
+> - [unix_maybe_add_creds()] enabled SO_PASSCRED/SO_PASSPIDFD but
+>                            didn't send SCM_CREDENTIALS explicitly
+> - [scm_send()] force_creds is true. Netlink case.
+>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Kuniyuki Iwashima <kuniyu@google.com>
+> Cc: Lennart Poettering <mzxreary@0pointer.de>
+> Cc: Luca Boccassi <bluca@debian.org>
+> Cc: David Rheinsberg <david@readahead.eu>
+> Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com=
+>
+> ---
+>  include/net/scm.h  | 35 ++++++++++++++++++++++++++++++-----
+>  net/unix/af_unix.c | 36 +++++++++++++++++++++++++++++++++---
+>  2 files changed, 63 insertions(+), 8 deletions(-)
+>
+> diff --git a/include/net/scm.h b/include/net/scm.h
+> index 856eb3a380f6..d1ae0704f230 100644
+> --- a/include/net/scm.h
+> +++ b/include/net/scm.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/file.h>
+>  #include <linux/security.h>
+>  #include <linux/pid.h>
+> +#include <linux/pidfs.h>
+>  #include <linux/nsproxy.h>
+>  #include <linux/sched/signal.h>
+>  #include <net/compat.h>
+> @@ -66,19 +67,37 @@ static __inline__ void unix_get_peersec_dgram(struct =
+socket *sock, struct scm_co
+>  { }
+>  #endif /* CONFIG_SECURITY_NETWORK */
+>
+> -static __inline__ void scm_set_cred(struct scm_cookie *scm,
+> -                                   struct pid *pid, kuid_t uid, kgid_t g=
+id)
+> +static __inline__ int __scm_set_cred(struct scm_cookie *scm,
+> +                                    struct pid *pid, bool pidfs_register=
+,
+> +                                    kuid_t uid, kgid_t gid)
 
-I'm guessing it's because the driver can be probed by a parent MFD
-driver, drivers/mfd/mt6397-core.c, and the compatibles defined in the
-MFD don't necessarily match the ones in the pmic-keys driver, for
-instance 'mediatek,mt6359-keys' is only listed in the MFD. Adding the
-missing compatibles to the pmic-keys driver should fix this.
+scm_set_cred() is only called from 3 places, and I think you can simply
+pass pidfd_register =3D=3D false from one of the places.
+
+while at it, please replace s/__inline__/inline/
+
+>  {
+> -       scm->pid  =3D get_pid(pid);
+> +       if (pidfs_register) {
+> +               int err;
+> +
+> +               err =3D pidfs_register_pid(pid);
+
+nit: int err =3D pidfs_...();
+
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       scm->pid =3D get_pid(pid);
+> +
+>         scm->creds.pid =3D pid_vnr(pid);
+>         scm->creds.uid =3D uid;
+>         scm->creds.gid =3D gid;
+> +       return 0;
+> +}
+> +
+> +static __inline__ void scm_set_cred(struct scm_cookie *scm,
+> +                                   struct pid *pid, kuid_t uid, kgid_t g=
+id)
+> +{
+> +       /* __scm_set_cred() can't fail when pidfs_register =3D=3D false *=
+/
+> +       (void) __scm_set_cred(scm, pid, false, uid, gid);
+
+I think this (void) style is unnecessary for recent compilers.
+
+>  }
+>
+>  static __inline__ void scm_destroy_cred(struct scm_cookie *scm)
+>  {
+>         put_pid(scm->pid);
+> -       scm->pid  =3D NULL;
+> +       scm->pid =3D NULL;
+>  }
+>
+>  static __inline__ void scm_destroy(struct scm_cookie *scm)
+> @@ -90,9 +109,15 @@ static __inline__ void scm_destroy(struct scm_cookie =
+*scm)
+>
+>  static __inline__ int __scm_replace_pid(struct scm_cookie *scm, struct p=
+id *pid)
+>  {
+> +       int err;
+> +
+>         /* drop all previous references */
+>         scm_destroy_cred(scm);
+>
+> +       err =3D pidfs_register_pid(pid);
+> +       if (err)
+> +               return err;
+> +
+>         scm->pid =3D get_pid(pid);
+>         scm->creds.pid =3D pid_vnr(pid);
+>         return 0;
+> @@ -105,7 +130,7 @@ static __inline__ int scm_send(struct socket *sock, s=
+truct msghdr *msg,
+>         scm->creds.uid =3D INVALID_UID;
+>         scm->creds.gid =3D INVALID_GID;
+>         if (forcecreds)
+> -               scm_set_cred(scm, task_tgid(current), current_uid(), curr=
+ent_gid());
+> +               __scm_set_cred(scm, task_tgid(current), true, current_uid=
+(), current_gid());
+>         unix_get_peersec_dgram(sock, scm);
+>         if (msg->msg_controllen <=3D 0)
+>                 return 0;
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index 5efe6e44abdf..1f4a5fe8a1f7 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1924,12 +1924,34 @@ static void unix_peek_fds(struct scm_cookie *scm,=
+ struct sk_buff *skb)
+>         scm->fp =3D scm_fp_dup(UNIXCB(skb).fp);
+>  }
+>
+> +static int __skb_set_pid(struct sk_buff *skb, struct pid *pid, bool pidf=
+s_register)
+
+unix_set_pid_to_skb ?
+
+> +{
+> +       if (pidfs_register) {
+> +               int err;
+> +
+> +               err =3D pidfs_register_pid(pid);
+> +               if (err)
+> +                       return err;
+> +       }
+> +
+> +       UNIXCB(skb).pid =3D get_pid(pid);
+> +       return 0;
+> +}
+> +
+>  static void unix_destruct_scm(struct sk_buff *skb)
+>  {
+>         struct scm_cookie scm;
+>
+>         memset(&scm, 0, sizeof(scm));
+> -       scm.pid  =3D UNIXCB(skb).pid;
+> +
+> +       /* Pass ownership of struct pid from skb to scm cookie.
+> +        *
+> +        * We rely on scm_destroy() -> scm_destroy_cred() to properly
+> +        * release everything.
+> +        */
+> +       scm.pid =3D UNIXCB(skb).pid;
+> +       UNIXCB(skb).pid =3D NULL;
+
+The skb is under destruction and we no longer touch it, so
+this chunk is not needed.
 
 
---=20
-Thanks,
-
-N=C3=ADcolas
+> +
+>         if (UNIXCB(skb).fp)
+>                 unix_detach_fds(&scm, skb);
+>
+> @@ -1943,7 +1965,10 @@ static int unix_scm_to_skb(struct scm_cookie *scm,=
+ struct sk_buff *skb, bool sen
+>  {
+>         int err =3D 0;
+>
+> -       UNIXCB(skb).pid =3D get_pid(scm->pid);
+> +       err =3D __skb_set_pid(skb, scm->pid, false);
+> +       if (unlikely(err))
+> +               return err;
+> +
+>         UNIXCB(skb).uid =3D scm->creds.uid;
+>         UNIXCB(skb).gid =3D scm->creds.gid;
+>         UNIXCB(skb).fp =3D NULL;
+> @@ -1976,7 +2001,12 @@ static int unix_maybe_add_creds(struct sk_buff *sk=
+b, const struct sock *sk,
+>                 return 0;
+>
+>         if (unix_may_passcred(sk) || unix_may_passcred(other)) {
+> -               UNIXCB(skb).pid =3D get_pid(task_tgid(current));
+> +               int err;
+> +
+> +               err =3D __skb_set_pid(skb, task_tgid(current), true);
+> +               if (unlikely(err))
+> +                       return err;
+> +
+>                 current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
+>         }
+>
+> --
+> 2.43.0
+>
