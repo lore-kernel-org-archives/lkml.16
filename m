@@ -1,73 +1,50 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E744285C9C
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC8F19C553;
+	Mon, 30 Jun 2025 16:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751302594; cv=none; b=hiokQedkQjNR13Kf4RbioXG4FwwyYXkhV63CI44RWevZD0hdaT7AE45cCdNmQGVua5Cr/0X5m8ya4NWC2LPBhCCp26j//rxLmtaJCmPHtNWX5MF50FSj+coCt+ecmbOJzSiF0C1D5t8OBqRcZ361gAi1pcPcS/z44hhiPS0z/zo=
+	t=1751302659; cv=none; b=mUsB37WKGIvP+WAaS8R5MB2Mr8TpZhsWNXTiqfikiucXLdQ7GIGcTjOep6ZM7kAEezNfrGEDzn/+8epgtJrOAXMEhn68jjk8MFWrKC16MQVpaL+GYodED2i5NB/JyL1GpKi7ERKobAsoPbfDBOdZZYfY9B7dzeckPjg4oOZdV2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751302594; c=relaxed/simple;
-	bh=QvWVQDEMrJPEoKCjlEPBqgdJEtzpm/ZPTWF2ZHyA28Q=;
+	s=arc-20240116; t=1751302659; c=relaxed/simple;
+	bh=BYzwfNeMyLadDmlkGi40pAN2Kw8jUSgmaBSLc8Pmba0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n3jLIp0Q2jA5PEI/T80TTMLwiLPTS+0jVLwGucS3znOAUjQn9ltkNv6k2kyIKkWtDXgGzofnNy00H4XakkAHF5ZT3OJs3lCPRvqWoi/JC7FiJ3Xt1tzLC3Aw/6YrZmIMIuMOiAlf2l2A3jQ6Xe8q87J/bZxpZTEh+Ig5z54MSUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A31KMlth; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ta8c6U8h2oP39Uz7iaC5W8Q9SJKUqsFqUAg51PucTtS9SHEa0PxLxjC4eoWadL4IjCg5iDsA1XyUqaWt/Xz5Y4iQ+ohGay35q6A8cZNsCGtqsBJAeFeWA2zHdRC3RC3qDrAlEpDUbqjbXOR7wXmxIEwQWfbnx8tZHFl/eO7aEFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/nwG1sS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A31KMlth"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so1810153a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 09:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751302592; x=1751907392; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WbkSOKv1c6+ZeTPPDtxvzHXfz9bRwbs8SlvC2AxNK4U=;
-        b=A31KMlthlEev/0WRpBmkOr83YBdBjwkcjL9k8/x/EDZDn2yzaFXv/ZSqSwICrNz8Dv
-         FTkapKhIdG8j/cf1Hy9xVaO2kGF1VX8ofPDvwj14qr/Tcpa7Zg5esiGOqFeKNgKOkvoo
-         i0ZXX1eSjvtASS8Z92lbwKM9kolIWJU9Xj1ANqeBYF0mgdBYCz5qTUj70oaR1DQfnsdx
-         ug99eO8F56K68tOkbOtWCDiyKQp/zZtKHUTCM8Xx8lP7C+AngB3/dbxHsIvEbl77z1s3
-         rkeRfB6ahTLvXqrUuhqj7ALylskY/E07RLjgZy2wE7kDDVo1xNvgS78IoDCYG0V7ARDp
-         1bHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751302592; x=1751907392;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WbkSOKv1c6+ZeTPPDtxvzHXfz9bRwbs8SlvC2AxNK4U=;
-        b=fQFGgq4AizaowwbKHIcc0RgSgBrvVw+J+w0y35zzK9EOCEWeb2SJGElMWxAgIf8VBR
-         8Xcni2s1j6x7cfwP2b5oKxiwXjj4jHfjCDpeUMrYM2WpzZZEqTRm0yrY8FIG/K7D+/a0
-         OeGD6JXGoED6DRbhjFnvXHWNqY+d/PPGL6u0cWz5wYc3gYrAoDOPq2AYahVPUTfv7nJX
-         DvSiuNWaor2+3nkrtxwKt5Z15C2HqmYYFIpr2zaSFGuSB6W3kRIvpCEYKJ8bH0zUBFqY
-         MhgPw+fjMEtwVFiHJvuYzPsitDsSqdNQuIa9g9kaHy5LiWRtOL6sip5D4RfH3KaE5E1b
-         7Kvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxXAr+E4Wr5eqd6lWJVsx6wUvjl+NlSqvGAvaEJQ7czW7y0CkyCrY3QmHprwC1/RHDmBLKmtzj21QRYg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywgx3EtGu4J/bzyVrwyjk17JZUuXupltmFBShYknmcbFEyprfFG
-	3JVdGBiLld1IlmtNodO+QQEz/qNywfQkQmcysXTaV3xJ1nvstOUgPDII/bZci0NX1pY=
-X-Gm-Gg: ASbGncvA0on4LY6pXgtQEtMEUu69CaHZPHJkdbFAZDn55O7/FRWsKXhEmShzH2Kx0Fy
-	smXTWOCqe+pYZMeCIJYsTk8lJS0Ftc51N901Is/zpBXRMX8yYEZKmRNOx1tjae1tv3G1AHNAeUo
-	ijH0fll7lz9GKFUd/DOLz2rc2yMUFviKIRX7ulPWIuEgjAU+UPhE0CllYLCSbGD3OIktKiYflrP
-	MDjtGIGLeNli9jsTRVrj0Pq4x5XYzcMeGIAhUHVn29WnuB/saIkjyqAm8Jhm5jct79bPcmBSuHE
-	DTgWCMKJdMBhw4LYpVx7soi2G8tsW+ZtzHV9EGQ6Vx01wEDi+o+6sSuaa3Lqmjyosg==
-X-Google-Smtp-Source: AGHT+IGWDgD+VJi4svWBlq3PHDkqo771atH5H1zxELbsknAHDzHX9IJdZF8QLWZ//OrPu/7q7cX3qA==
-X-Received: by 2002:a17:90a:d2ce:b0:312:1ae9:1533 with SMTP id 98e67ed59e1d1-318c911beaamr17432196a91.1.1751302592257;
-        Mon, 30 Jun 2025 09:56:32 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:3274:25ba:45cc:d85d])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c14fd6a9sm9115056a91.40.2025.06.30.09.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 09:56:31 -0700 (PDT)
-Date: Mon, 30 Jun 2025 10:56:29 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: andersson@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iuliana.prodan@nxp.com, daniel.baluta@nxp.com
-Subject: Re: [PATCH 2/2] remoteproc: imx_dsp_rproc: Add support of coredump
-Message-ID: <aGLBvXtSRlaKujqM@p14s>
-References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
- <20250618062644.3895785-3-shengjiu.wang@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/nwG1sS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DEFC4CEE3;
+	Mon, 30 Jun 2025 16:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751302657;
+	bh=BYzwfNeMyLadDmlkGi40pAN2Kw8jUSgmaBSLc8Pmba0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H/nwG1sSq5cwFP2aQ8tj8/fjmiyaJ815gZAtX3QhrLL/vQ4zRHDBv1JIjDGw0JO1v
+	 dc5A+/QkHIHbOQlQXvSrGuuWb535D7HTMg2TAUASr/X72KOK/jkLCNh/EGT0Hr+x7Q
+	 JKLHyP41eWrAAXp+OzIKs2ngnseETZAYw8DzftTBUsN5fI4MELpz+xDRTrQfngQZRu
+	 +0UzLEaW8nbIMpXFNC++A2u3LnCE9uEP4kNt2PoRYifU7o9PAJweqIXd3g+uDLaB19
+	 X+0GzakVLcf8jCY/xAZ3UdYOIrG4QBgbE6K4+P4VneMtalak03pSOnMwzNPHbxbg35
+	 G8ZrPK5r4v0Ag==
+Date: Mon, 30 Jun 2025 10:57:35 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Parav Pandit <parav@nvidia.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+	"stefanha@redhat.com" <stefanha@redhat.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH RFC] pci: report surprise removal events
+Message-ID: <aGLB_8SFF1Cw95MZ@kbusch-mbp>
+References: <11cfcb55b5302999b0e58b94018f92a379196698.1751136072.git.mst@redhat.com>
+ <aGFBW7wet9V4WENC@wunner.de>
+ <20250629132113-mutt-send-email-mst@kernel.org>
+ <aGHOzj3_MQ3x7hAD@kbusch-mbp>
+ <CY8PR12MB7195F2F2900BAEA69F5431E9DC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <aGKUqsudjfk8wCHI@kbusch-mbp>
+ <CY8PR12MB7195583E429203129577B51ADC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,54 +53,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618062644.3895785-3-shengjiu.wang@nxp.com>
+In-Reply-To: <CY8PR12MB7195583E429203129577B51ADC46A@CY8PR12MB7195.namprd12.prod.outlook.com>
 
-On Wed, Jun 18, 2025 at 02:26:44PM +0800, Shengjiu Wang wrote:
-> Add call rproc_coredump_set_elf_info() to initialize the elf info for
-> coredump, otherwise coredump will report an error "ELF class is not set".
-> 
-> Remove the DSP IRAM and DRAM segment in coredump list, because after
-> stop, DSP power is disabled, the IRAM and DRAM can't be accessed.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  drivers/remoteproc/imx_dsp_rproc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
-> index 9b9cddb224b0..9e7efb77b6e5 100644
-> --- a/drivers/remoteproc/imx_dsp_rproc.c
-> +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> @@ -738,9 +738,7 @@ static int imx_dsp_rproc_add_carveout(struct imx_dsp_rproc *priv)
->  		mem = rproc_mem_entry_init(dev, (void __force *)cpu_addr, (dma_addr_t)att->sa,
->  					   att->size, da, NULL, NULL, "dsp_mem");
->  
-> -		if (mem)
-> -			rproc_coredump_add_segment(rproc, da, att->size);
-> -		else
-> +		if (!mem)
+On Mon, Jun 30, 2025 at 01:52:26PM +0000, Parav Pandit wrote:
+> > 
+> > But I didn't suggest calling error_detected from report_error_detected.
+> > Just call it directly without device_lock. It's not very feasible to enforce a non-
+> > blocking callback, though, if speed is really a concern here.
+> Yeah, it would better to either always call a callback with or without the lock.
+> In some flows with lock and in some flows without lock would likely be
+> very bad as one cannot establish a sane locking order.
 
-Flag rproc->recovery_disabled is never set to true, meaning that since this
-driver was introduced, some kind of recovery was available.
-
-I worry that your work will introduce regression for other users.  Daniel and
-Iuliana, once again have to ask you to look at this patchset.
-
-Thanks,
-Mathieu
-
->  			return -ENOMEM;
->  
->  		rproc_add_carveout(rproc, mem);
-> @@ -1203,6 +1201,8 @@ static int imx_dsp_rproc_probe(struct platform_device *pdev)
->  		goto err_detach_domains;
->  	}
->  
-> +	rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_XTENSA);
-> +
->  	pm_runtime_enable(dev);
->  
->  	return 0;
-> -- 
-> 2.34.1
-> 
+On closer look, my suggestion without the device_lock may be racy, but
+using the device_lock prevents the notification that needs to happen.
+Hm, not as easy as I thought. :(
