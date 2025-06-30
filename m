@@ -1,122 +1,246 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40D128B4FE
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C28B25C6F3
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 13:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751290856; cv=none; b=QwJzekQ+c41QqeHwrveM85Xoc316djz+btl1S+EOsrA4IY879p8Pm/6gIGkofR+rSvvEm7GGoqboII6MAugJ3906JQP7vnf7vEVLmPqOckWGOC+FofEwYGqNwYf3nqdgDYEFxz6JaOSn/2VwI/uC5orlgddnMxJg5RRyXFmYotE=
+	t=1751290890; cv=none; b=hBm7GW+0keJ6jb/236bK9A1razgjsOCNOSGkQqCyR32VsJmvPL5wsoZb7XCLHYYmS7eYBWvr10+cwVv1ulrB+oepctQcUDUbnVGONDl7pKfgd35pAXwNmBqoxKGPKHzdBI6zLkDNyWetxrzACiBX9pE1L6pNBwKEF4ndhd4HW3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751290856; c=relaxed/simple;
-	bh=vSa4jRfkd5Fa1HqN56wto+cRhg9EBqreeTK3FR+cxdI=;
+	s=arc-20240116; t=1751290890; c=relaxed/simple;
+	bh=QZn2BEF/evNs8BvFiNzRZp8rMPW8oD3AV94A/f5+hRU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VO+XNmZ5RlmaBHPbHxSn/06MLZ4e/K6/qryDhB4GNGe1jl4B1uvmtuq3TvxE45h5BlaIHFeQmv+BgAnBdCnFXXuvSGDLddQ0YQZbEP3W5FmnKKh0DeaAC5JTBIu9Crrh1xpoxsI/Ep+hJzq+e1xnnzs/fCpwg1OqgciY2L8AuHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YbHLXzf+; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=NL3EoIxv1zDf2QDJIId1haNRBCPC/uZH09dex2tBANS3WWd7ydlmrBGaSOgjpXrVN3Dj8TWDCKUXEb7Egz3eKSRGMnpOLZmxbHhlVjhFGp+OfVtn7uH2LF237LkhVr9b5brrM6UHgxyxnfdk5svwYBYW+UNmV4njqH5Ge+iYzh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AK22ZjRM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YbHLXzf+"
-Message-ID: <7ff7c4fc-d830-41c9-ab94-a198d3d9a3b5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751290841;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AK22ZjRM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751290887;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rNJsyXEVGNn49x3NYJKu0xplp8QGZnCZzJiyec2M590=;
-	b=YbHLXzf+LJ3P74xrV/Dljtoc+77NUBVCapf1zwEUG2fx9Me3m/EiJjSvoxowdDaHbTiTV+
-	aKTTyMeNLFJ+nN8H3rYw7x51Nzwgq7L0BdsOE/ULQST6rvQhS46i7RVlHHSiQsJORqTWb/
-	5EzosU2iG/VrNqTkReP/gVAl7fxpx0E=
-Date: Mon, 30 Jun 2025 21:40:34 +0800
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0k2rxKDyTrLeAGCInolANnXu3A8lQ0DXnhu+vRzUrjA=;
+	b=AK22ZjRMII3dW+0FUCyJZOoW2sLMlFJ7OJbYclzvVtNxXL2P7i92DIJYrPFGDOaHHwZczZ
+	xko3ZLeO9yiLKLyvoyxx6mO4dvfNQCBuEK1iIyUHQpa05aUp4B2wvXNFhw0wBF2aagPgDQ
+	S4WGVHJ2t+bwaZSIFE16cgvIctFaVrg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-CmA18lHpMcWya30DIIzj8Q-1; Mon, 30 Jun 2025 09:41:25 -0400
+X-MC-Unique: CmA18lHpMcWya30DIIzj8Q-1
+X-Mimecast-MFC-AGG-ID: CmA18lHpMcWya30DIIzj8Q_1751290885
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451deff247cso26241235e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 06:41:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751290884; x=1751895684;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0k2rxKDyTrLeAGCInolANnXu3A8lQ0DXnhu+vRzUrjA=;
+        b=GYOwbJuCYY0pRWWvtp/cqrHgASf5u08P03iYmj/XWl2kpItkyylviBiwk9ByAaKB5a
+         nH7slSun8yKEHchXZc/G9kiQRqNGI0wowZux5hNt8zDCcRFAyUxcz+DRegvqA+0jP5gB
+         dls2j7wDAelzb8xUKC1hq14/1/pAOZ5IXUSe+wqkGo5LQrh4B2YtVV8uuxbJC5GyVXJv
+         7Nds7mbi9nlQFluV1UKN2I50Wh0EdpDpBoIfsc+BB6LZMqrk7LxIv4ULMrpP8F7HVb8j
+         zJFcPIPi5U26NYuK+5awAUZvZltZnQWcbpWlcR6mE8Rtkvm6UYathwT6bd+zAFsnTckV
+         VaiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ+UK/JDctSFQEuPi0ajkwTCD0pntHqqVf9+Ud+XxaVX8ocvdf/QchcZGOWMg4ME+btEuMgG/iyUeC1zQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLuKo+TpQCTS0ffjnZEVDWngGw0idnTMwIwf5k0e3OMoYeqRti
+	4sLO3zSSw8tITcVLk4doLGj2RJZIeY4QNZy4pes/vLAWFdMm0S4AbVxFFJKRk7uH/j886s2rNEB
+	WsXEjRtf+89waKfYRaI4wqo7SUEL9yU/g2A6di6K597Qe3ImkMBVSdU+eTWVoxCOCgw==
+X-Gm-Gg: ASbGncsUGPb/GbrvJDtTs/Hb/EP2yQB62f25bnnwTygLXdYJK+8EsxcvalklMRcgavj
+	DTbqVs8pIc0kPwVv6k9PRZv9F4p2ozcOL7sASBZ7WuFvoJ7i+ZfPyotGHuQqpYSKet1aFEWy7KL
+	ah8j4Dsll7V6WzZaT3VAAyzuDF05sAw1y5GdqmZZlnuM6/xB04V9dkGM1lz2gdCBrf6rmfBgv8t
+	S2A394etgbfkr8wKuQC8kZE8Tf5E/D51wUxEQtPgbhbW1j0ZY/42J7gP4tVpg1BE0ZjhTN4Ttii
+	Chont1H64ue+qyM1Emoj/ZZOeDAtcBLdww/z9/tlWzwmoYf8RYBv6+HyEkb8ybI3qjY1vul0GcN
+	a2OWIUcoWrtywSAxxrXDMJt2XEVJ843+EbRewqjwyIy0JcGkg2w==
+X-Received: by 2002:a05:600c:6212:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-45388a0371cmr160686255e9.12.1751290884462;
+        Mon, 30 Jun 2025 06:41:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrR723N0U4a8LBGYdriPUXtPEH33drejJE1WXOFzTtappaVkC0Rw6pAoF4eAVkr6seqmnUEg==
+X-Received: by 2002:a05:600c:6212:b0:43c:f3e1:a729 with SMTP id 5b1f17b1804b1-45388a0371cmr160685765e9.12.1751290883904;
+        Mon, 30 Jun 2025 06:41:23 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f40:b300:53f7:d260:aff4:7256? (p200300d82f40b30053f7d260aff47256.dip0.t-ipconnect.de. [2003:d8:2f40:b300:53f7:d260:aff4:7256])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a3a5b7fsm138954025e9.10.2025.06.30.06.41.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 06:41:23 -0700 (PDT)
+Message-ID: <498648fd-655e-47b3-8b7b-9c2ee11acc9b@redhat.com>
+Date: Mon, 30 Jun 2025 15:41:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v1_00/11=5D_dm-pcache_=E2=80=93_persistent?=
- =?UTF-8?Q?-memory_cache_for_block_devices?=
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: agk@redhat.com, snitzer@kernel.org, axboe@kernel.dk, hch@lst.de,
- dan.j.williams@intel.com, Jonathan.Cameron@Huawei.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
- <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dongsheng Yang <dongsheng.yang@linux.dev>
-In-Reply-To: <8d383dc6-819b-2c7f-bab5-2cd113ed9ece@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] mm/rmap: fix potential out-of-bounds page table
+ access during batched unmap
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, 21cnbao@gmail.com,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, ryan.roberts@arm.com,
+ v-songbaohua@oppo.com, x86@kernel.org, huang.ying.caritas@gmail.com,
+ zhengtangquan@oppo.com, riel@surriel.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, harry.yoo@oracle.com, mingzhe.yang@ly.com,
+ stable@vger.kernel.org, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>
+References: <20250630011305.23754-1-lance.yang@linux.dev>
+ <41483c78-84f2-42fc-b9ab-09823eb796c4@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <41483c78-84f2-42fc-b9ab-09823eb796c4@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
 
-
-在 6/30/2025 9:30 PM, Mikulas Patocka 写道:
->
-> On Tue, 24 Jun 2025, Dongsheng Yang wrote:
->
->> Hi Mikulas,
->> 	This is V1 for dm-pcache, please take a look.
+On 30.06.25 15:39, Lorenzo Stoakes wrote:
+> On Mon, Jun 30, 2025 at 09:13:05AM +0800, Lance Yang wrote:
+>> From: Lance Yang <lance.yang@linux.dev>
 >>
->> Code:
->>      https://github.com/DataTravelGuide/linux tags/pcache_v1
+>> As pointed out by David[1], the batched unmap logic in try_to_unmap_one()
+>> may read past the end of a PTE table when a large folio's PTE mappings
+>> are not fully contained within a single page table.
 >>
->> Changelogs from RFC-V2:
->> 	- use crc32c to replace crc32
->> 	- only retry pcache_req when cache full, add pcache_req into defer_list,
->> 	  and wait cache invalidation happen.
->> 	- new format for pcache table, it is more easily extended with
->> 	  new parameters later.
->> 	- remove __packed.
->> 	- use spin_lock_irq in req_complete_fn to replace
->> 	  spin_lock_irqsave.
->> 	- fix bug in backing_dev_bio_end with spin_lock_irqsave.
->> 	- queue_work() inside spinlock.
->> 	- introduce inline_bvecs in backing_dev_req.
->> 	- use kmalloc_array for bvecs allocation.
->> 	- calculate ->off with dm_target_offset() before use it.
-> Hi
->
-> The out-of-memory handling still doesn't seem right.
->
-> If the GFP_NOWAIT allocation doesn't succeed (which may happen anytime,
-> for example it happens when the machine is receiving network packets
-> faster than the swapper is able to swap out data), create_cache_miss_req
-> returns NULL, the caller changes it to -ENOMEM, cache_read returns
-> -ENOMEM, -ENOMEM is propagated up to end_req and end_req will set the
-> status to BLK_STS_RESOURCE. So, it may randomly fail I/Os with an error.
->
-> Properly, you should use mempools. The mempool allocation will wait until
-> some other process frees data into the mempool.
->
-> If you need to allocate memory inside a spinlock, you can't do it reliably
-> (because you can't sleep inside a spinlock and non-sleepng memory
-> allocation may fail anytime). So, in this case, you should drop the
-> spinlock, allocate the memory from a mempool with GFP_NOIO and jump back
-> to grab the spinlock - and now you holding the allocated object, so you
-> can use it while you hold the spinlock.
+>> While this scenario might be rare, an issue triggerable from userspace must
+>> be fixed regardless of its likelihood. This patch fixes the out-of-bounds
+>> access by refactoring the logic into a new helper, folio_unmap_pte_batch().
+>>
+>> The new helper correctly calculates the safe batch size by capping the scan
+>> at both the VMA and PMD boundaries. To simplify the code, it also supports
+>> partial batching (i.e., any number of pages from 1 up to the calculated
+>> safe maximum), as there is no strong reason to special-case for fully
+>> mapped folios.
+>>
+>> [1] https://lore.kernel.org/linux-mm/a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com
+>>
+>> Fixes: 354dffd29575 ("mm: support batched unmap for lazyfree large folios during reclamation")
+>> Cc: <stable@vger.kernel.org>
+>> Acked-by: Barry Song <baohua@kernel.org>
+>> Suggested-by: David Hildenbrand <david@redhat.com>
+>> Suggested-by: Barry Song <baohua@kernel.org>
+>> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> 
+> This LGTM:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+>> ---
+>> v2 -> v3:
+>>   - Tweak changelog (per Barry and David)
+>>   - Pick AB from Barry - thanks!
+>>   - https://lore.kernel.org/linux-mm/20250627062319.84936-1-lance.yang@linux.dev
+>>
+>> v1 -> v2:
+>>   - Update subject and changelog (per Barry)
+>>   - https://lore.kernel.org/linux-mm/20250627025214.30887-1-lance.yang@linux.dev
+>>
+>>   mm/rmap.c | 46 ++++++++++++++++++++++++++++------------------
+>>   1 file changed, 28 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index fb63d9256f09..1320b88fab74 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1845,23 +1845,32 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
+>>   #endif
+>>   }
+>>
+>> -/* We support batch unmapping of PTEs for lazyfree large folios */
+>> -static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+>> -			struct folio *folio, pte_t *ptep)
+>> +static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+>> +			struct page_vma_mapped_walk *pvmw,
+>> +			enum ttu_flags flags, pte_t pte)
+>>   {
+>>   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> -	int max_nr = folio_nr_pages(folio);
+>> -	pte_t pte = ptep_get(ptep);
+>> +	unsigned long end_addr, addr = pvmw->address;
+>> +	struct vm_area_struct *vma = pvmw->vma;
+>> +	unsigned int max_nr;
+>> +
+>> +	if (flags & TTU_HWPOISON)
+>> +		return 1;
+>> +	if (!folio_test_large(folio))
+>> +		return 1;
+>>
+>> +	/* We may only batch within a single VMA and a single page table. */
+>> +	end_addr = pmd_addr_end(addr, vma->vm_end);
+>> +	max_nr = (end_addr - addr) >> PAGE_SHIFT;
+>> +
+>> +	/* We only support lazyfree batching for now ... */
+>>   	if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+>> -		return false;
+>> +		return 1;
+>>   	if (pte_unused(pte))
+>> -		return false;
+>> -	if (pte_pfn(pte) != folio_pfn(folio))
+>> -		return false;
+>> +		return 1;
+>>
+>> -	return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
+>> -			       NULL, NULL) == max_nr;
+>> +	return folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
+>> +			       NULL, NULL, NULL);
+> 
+> I guess this will conflict with David's changes, but maybe in this simpler case
+> and given this was existing code a bit less? Anyway let's see.
 
+It's a fix, so this is fine to go in first. (I already rebased on top of 
+mm/mm-new where this is in)
 
-Hi Mikulas,
+Acked-by: David Hildenbrand <david@redhat.com>
 
-     Thanx for your suggestion, I will cook a GFP_NOIO version for the 
-memory allocation for pcache data path.
+-- 
+Cheers,
 
->
->
-> Another comment:
-> set_bit/clear_bit use atomic instructions which are slow. As you already
-> hold a spinlock when calling them, you don't need the atomicity, so you
-> can replace them with __set_bit and __clear_bit.
+David / dhildenb
 
-
-Good idea.
-
-
-Thanx
-
-Dongsheng
-
->
-> Mikulas
->
