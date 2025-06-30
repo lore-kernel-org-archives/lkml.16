@@ -1,168 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2898A23D28B;
-	Mon, 30 Jun 2025 08:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E83C1DE4FF;
+	Mon, 30 Jun 2025 08:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751272705; cv=none; b=s3b//GlSKo3v7LE3nUnuyNH78YdGRXuDDTuOInKIGOzFbzfDwU4zEHD/sU21kRG00tUT8IG9p0W8xmA7T1aioQOZNrc4aSoSeC6QhY5yi2WAk0lZOA8nIeRAj2Ee7JIfhemqSIstytZ9grLCcvYAxMHp10/vJEwrYl4OS7dE7IM=
+	t=1751272706; cv=none; b=V5N7VPdx5DeiuHAOyTwTl8t2vqT7e75VLV21ha9anG5ecv7KVCzSmiZ48yxXWi90rp3S7fVX9iMBkVwBLQc+69evP+668Q55wyvGsdemRET0R9jigVVHm/0bsDbwv39CsiMs+QbtmWzFzxS45atjb2jW4VHE9+795RbeBSTzq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751272705; c=relaxed/simple;
-	bh=PLIXEwxWC7QQ+4j+LLRtCwneBwdS5keVrROQQcKq2wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqQTkBLOJ/hPQI7w+Z3sk9ntdJJ+7BtiWO+R2XjRb/Zc7v5w1xOVTGBtE0sIpopmZsr8Gzenm9l3CIRQmH41K/mUTpW2t2Bljfe3onme5Q9njS+xgMQOJWAPfrgsIYGNiNBVOsUIVMwcuIazUhaF/74G6TQXogtJWsdhyaUUpkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AsPbnEVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751272706; c=relaxed/simple;
+	bh=fOKokE5xSIuSezXDL92+Q446InjaoHoc0T4fTEZ/Fd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vDHj2RtQ2Rh1bkdaIXpGfVSfv/ZHbUuA18Rx4njTjVWVEJRFyDqyJwREO6iKIxUz6as5A+O2iFIn/auwgrXEKAt7JuTyeFBcgwpRVcK9fec/grVPpcRvPCUBe1sEs/ScB/dJdWuSI7gyD2GRrGi17ApJ52C4iHihqGMIbBdav1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7OJk7zB; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AsPbnEVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378BAC4CEF2;
-	Mon, 30 Jun 2025 08:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751272704;
-	bh=PLIXEwxWC7QQ+4j+LLRtCwneBwdS5keVrROQQcKq2wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AsPbnEVeeT6DMTbgBs5s9l+FTADNSJXYPbtIqiPsS/hU/aVY9Fy9OH3DwzduKxOUM
-	 fH2aIm8nT/GLFGZEsjjqzUeb352NzzCk0HbW7W4wFuN6Vom3QjrVjRUfTAq6jqIrkp
-	 NU6VZOrUnmat+iYPFSCC/VtJctGTXtBq8qveyVuyedbHsX7mCA95Ct0zAafMKEWrL5
-	 ZZyrTXPeFtyKU9Gm1Ccq0urSRwCPu6MSLl+1JbpmqNrjulRxwRWdjMpXVQAyajs0cs
-	 3uA1vTK0rMUERie5ddq8JL6W74ggIkLnTkRFFASbjlOqZD46FVe4GZkeVOHwjHrOy8
-	 mYHlD/8S21AFg==
-Date: Mon, 30 Jun 2025 10:38:21 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Luca Weiss <luca.weiss@fairphone.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-Message-ID: <20250630-stirring-kiwi-of-adventure-8f22ba@houat>
-References: <20250623-simple-drm-fb-icc-v2-0-f69b86cd3d7d@fairphone.com>
- <20250623-simple-drm-fb-icc-v2-1-f69b86cd3d7d@fairphone.com>
- <20250627-mysterious-optimistic-bird-acaafb@krzk-bin>
- <DAX7ZB27SBPV.2Y0I09TVSF3TT@fairphone.com>
- <1129bc60-f9cb-40be-9869-8ffa3b3c9748@kernel.org>
- <8a3ad930-bfb1-4531-9d34-fdf7d437f352@redhat.com>
- <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7OJk7zB"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4e62619afso455565f8f.1;
+        Mon, 30 Jun 2025 01:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751272702; x=1751877502; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rFdfcEftPl4kbBYI2AsD040dwGd/MXL2A6FySR4WqJg=;
+        b=O7OJk7zBkH0OE2RFz5Wf2SObaxW6+bpZ+qrKwkGB9sTy37VsSrnxBC6mwMFxKaj0PB
+         Hxpvhq/j7xWmwYxlxLyOJuUCdNxSAD8CnjdTP0nNJUb5qNzliZsI4A8kO3j40rz0xxoG
+         Ta+ydBndjlzkqNArqOMUTwi4GFmUJNfxEn+NurR5buS5LigUuu/qvi6m72SJHdwJ1ug6
+         auyYfpaGlRdvJVXfLiTLMTZdTiR+cJlTS2kOmtAuMfisYhWSrVbpD2hd6ie5JQJ5py3+
+         5okFVImN9mkYRJXq/0KH0et/J0JpLAAwH5DY/GauvY10nc67KbKW7ZNEobGYa/jZs0bO
+         4FmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751272702; x=1751877502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rFdfcEftPl4kbBYI2AsD040dwGd/MXL2A6FySR4WqJg=;
+        b=ElQAv90EmpaLDSTANyYXJJRszO0DAXxJVSH0MxTXTg8IFKhc7Sf9MIFSVb6NyknzVe
+         BpfQuA0ubpkmzGcUZ7xtdYBgwKzk/ndThc7xlvpd0eAK7gNVu4muowoCAJAKtOsFt1df
+         3VYi0UrqjCLri6EaAKBYt5poDiO0e5xIgTM4Qj9t1so+PRTHsi9Ds2jGFNLlRJVsxZ/L
+         R99T8zu6UE2ECk9b5N5AbeNbOVsX613JMjg5nzPD0LYuLW1eCbCxPdS7ZOdVZrgqJ6X6
+         M3Ga5hyAPlWW4WUwOeXZkZK0MSlqbLth9CtYrU9mTnzhWGbPSbOPtg9LJ9c2Be1ZrAaX
+         z5/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUoyP+nCGtBOcYOli1R9a0IwCbcVVkhqlW++NQI30S3rRkLh87oGI0LOw+Myn6RTFn8dx1NmA+xTbJGF0w=@vger.kernel.org, AJvYcCXtL5xKZS+AEJggNBmWJpkcGcJuKX6P08rtgxBAQg+iyML3C5Ur8RLoOIB6uNXmcbtJmziHW/Fd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsHjjDymMrqVdiQ5HLo16z8H1pFhwd6sybUwPRk1HoVPyp7pWO
+	aGf8nPJdQo9LNxWvMXCxqQQJ67GobAv1xz999l75QgehYE4zxHZTWNNN
+X-Gm-Gg: ASbGncswcfxc/+VuKisQm9+R0IKzkZjEw4+htM3MG1Iz+Wm1f1ZE0EdvBID8pzL/kMp
+	q4YcKy9b9qZCuR/2dFVsIShsuQNl2qwYVTgdcnJa6Sqe3MMC/OBJ2oFt1wHwYz6Pn2GXWH1BgFn
+	vpoPI/hr0kj1xJPnkBGuUDbuL0+lM/OuavFnFWjwVJsQYdxVadDhng9Y/XSU1urNASH3xgXpJcu
+	bI+RBZ3TTEB57WLIB7iBQ7fimM29yaCuGBrCY3VYIqN8sjmh7CsWmKt7MHj0nS2OVakBaqg6/Te
+	NyeHv/4po160X/LgilUTyzODPVrlIde3CSDAN8Oty7LY3g7JWDCk3Rq90kCqiitoKXwO4+VKAOv
+	YidfMPH1umsnoQOEskkf6pp8EbQ==
+X-Google-Smtp-Source: AGHT+IEvKJqj/TVkGPGZ7v2Ha99spyvgOhQJ0B2GO5apmK6qXsAj7Vj46oKjzqw7IdEg+Na1JMjhHg==
+X-Received: by 2002:a05:600d:7:b0:43d:fa58:81d2 with SMTP id 5b1f17b1804b1-4539585f938mr22180605e9.9.1751272701911;
+        Mon, 30 Jun 2025 01:38:21 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:234c:3c9a:efe4:2b60])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c800eaasm9946144f8f.37.2025.06.30.01.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 01:38:21 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jonathan Currier <dullfire@yahoo.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] nui: Fix dma_mapping_error() check
+Date: Mon, 30 Jun 2025 10:36:43 +0200
+Message-ID: <20250630083650.47392-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="hbtofy4xtgn6gof3"
-Content-Disposition: inline
-In-Reply-To: <85521ded-734d-48e8-8f76-c57739102ded@kernel.org>
+Content-Transfer-Encoding: 8bit
 
+dma_map_XXX() functions return values DMA_MAPPING_ERROR as error values
+which is often ~0.  The error value should be tested with
+dma_mapping_error().
 
---hbtofy4xtgn6gof3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: simple-framebuffer: Add
- interconnects property
-MIME-Version: 1.0
+This patch creates a new function in niu_ops to test if the mapping
+failed.  The test is fixed in niu_rbr_add_page(), added in
+niu_start_xmit() and the successfully mapped pages are unmaped upon error.
 
-On Mon, Jun 30, 2025 at 10:24:06AM +0200, Krzysztof Kozlowski wrote:
-> On 29/06/2025 14:07, Hans de Goede wrote:
-> > Hi Krzysztof,
-> >=20
-> > On 28-Jun-25 1:49 PM, Krzysztof Kozlowski wrote:
-> >> On 27/06/2025 11:48, Luca Weiss wrote:
-> >>> Hi Krzysztof,
-> >>>
-> >>> On Fri Jun 27, 2025 at 10:08 AM CEST, Krzysztof Kozlowski wrote:
-> >>>> On Mon, Jun 23, 2025 at 08:44:45AM +0200, Luca Weiss wrote:
-> >>>>> Document the interconnects property which is a list of interconnect
-> >>>>> paths that is used by the framebuffer and therefore needs to be kept
-> >>>>> alive when the framebuffer is being used.
-> >>>>>
-> >>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> >>>>> ---
-> >>>>>  Documentation/devicetree/bindings/display/simple-framebuffer.yaml =
-| 3 +++
-> >>>>>  1 file changed, 3 insertions(+)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/display/simple-frame=
-buffer.yaml b/Documentation/devicetree/bindings/display/simple-framebuffer.=
-yaml
-> >>>>> index 296500f9da05e296dbbeec50ba5186b6b30aaffc..f0fa0ef23d91043dfb2=
-b220c654b80e2e80850cd 100644
-> >>>>> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.=
-yaml
-> >>>>> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.=
-yaml
-> >>>>> @@ -79,6 +79,9 @@ properties:
-> >>>>>    power-domains:
-> >>>>>      description: List of power domains used by the framebuffer.
-> >>>>> =20
-> >>>>> +  interconnects:
-> >>>>> +    description: List of interconnect paths used by the framebuffe=
-r.
-> >>>>> +
-> >>>>
-> >>>> maxItems: 1, or this is not a simple FB anymore. Anything which needs
-> >>>> some sort of resources in unknown way is not simple anymore. You need
-> >>>> device specific bindings.
-> >>>
-> >>> The bindings support an arbitrary number of clocks, regulators,
-> >>> power-domains. Why should I artificially limit the interconnects to o=
-nly
-> >>> one?
-> >>
-> >> And IMO they should not. Bindings are not supposed to be generic.
-> >=20
-> > The simplefb binding is a binding to allow keeping the firmware, e.g.
-> > uboot setup framebuffer alive to e.g. show a boot splash until
-> > the native display-engine drive loads. Needing display-engine
-> > specific bindings totally contradicts the whole goal of=20
->=20
-> No, it does not. DT is well designed for that through expressing
-> compatibility. I did not say you cannot have generic fallback for simple
-> use case.
->=20
-> But this (and previous patchset) grows this into generic binding ONLY
-> and that is not correct.
+Fixes: ec2deec1f352 ("niu: Fix to check for dma mapping errors.")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/net/ethernet/sun/niu.c | 31 ++++++++++++++++++++++++++++++-
+ drivers/net/ethernet/sun/niu.h |  4 ++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-Can we have a proper definition of what a correct device tree binding is
-then?
+diff --git a/drivers/net/ethernet/sun/niu.c b/drivers/net/ethernet/sun/niu.c
+index ddca8fc7883e..26119d02a94d 100644
+--- a/drivers/net/ethernet/sun/niu.c
++++ b/drivers/net/ethernet/sun/niu.c
+@@ -3336,7 +3336,7 @@ static int niu_rbr_add_page(struct niu *np, struct rx_ring_info *rp,
+ 
+ 	addr = np->ops->map_page(np->device, page, 0,
+ 				 PAGE_SIZE, DMA_FROM_DEVICE);
+-	if (!addr) {
++	if (np->ops->mapping_error(np->device, addr)) {
+ 		__free_page(page);
+ 		return -ENOMEM;
+ 	}
+@@ -6676,6 +6676,8 @@ static netdev_tx_t niu_start_xmit(struct sk_buff *skb,
+ 	len = skb_headlen(skb);
+ 	mapping = np->ops->map_single(np->device, skb->data,
+ 				      len, DMA_TO_DEVICE);
++	if (np->ops->mapping_error(np->device, mapping))
++		goto out_drop;
+ 
+ 	prod = rp->prod;
+ 
+@@ -6717,6 +6719,8 @@ static netdev_tx_t niu_start_xmit(struct sk_buff *skb,
+ 		mapping = np->ops->map_page(np->device, skb_frag_page(frag),
+ 					    skb_frag_off(frag), len,
+ 					    DMA_TO_DEVICE);
++		if (np->ops->mapping_error(np->device, mapping))
++			goto out_unmap;
+ 
+ 		rp->tx_buffs[prod].skb = NULL;
+ 		rp->tx_buffs[prod].mapping = mapping;
+@@ -6741,6 +6745,19 @@ static netdev_tx_t niu_start_xmit(struct sk_buff *skb,
+ out:
+ 	return NETDEV_TX_OK;
+ 
++out_unmap:
++	while (i--) {
++		const skb_frag_t *frag;
++
++		prod = PREVIOUS_TX(rp, prod);
++		frag = &skb_shinfo(skb)->frags[i];
++		np->ops->unmap_page(np->device, rp->tx_buffs[prod].mapping,
++				    skb_frag_size(frag), DMA_TO_DEVICE);
++	}
++
++	np->ops->unmap_single(np->device, rp->tx_buffs[rp->prod].mapping,
++			      skb_headlen(skb), DMA_TO_DEVICE);
++
+ out_drop:
+ 	rp->tx_errors++;
+ 	kfree_skb(skb);
+@@ -9644,6 +9661,11 @@ static void niu_pci_unmap_single(struct device *dev, u64 dma_address,
+ 	dma_unmap_single(dev, dma_address, size, direction);
+ }
+ 
++static int niu_pci_mapping_error(struct device *dev, u64 addr)
++{
++	return dma_mapping_error(dev, addr);
++}
++
+ static const struct niu_ops niu_pci_ops = {
+ 	.alloc_coherent	= niu_pci_alloc_coherent,
+ 	.free_coherent	= niu_pci_free_coherent,
+@@ -9651,6 +9673,7 @@ static const struct niu_ops niu_pci_ops = {
+ 	.unmap_page	= niu_pci_unmap_page,
+ 	.map_single	= niu_pci_map_single,
+ 	.unmap_single	= niu_pci_unmap_single,
++	.mapping_error	= niu_pci_mapping_error,
+ };
+ 
+ static void niu_driver_version(void)
+@@ -10019,6 +10042,11 @@ static void niu_phys_unmap_single(struct device *dev, u64 dma_address,
+ 	/* Nothing to do.  */
+ }
+ 
++static int niu_phys_mapping_error(struct device *dev, u64 dma_address)
++{
++	return false;
++}
++
+ static const struct niu_ops niu_phys_ops = {
+ 	.alloc_coherent	= niu_phys_alloc_coherent,
+ 	.free_coherent	= niu_phys_free_coherent,
+@@ -10026,6 +10054,7 @@ static const struct niu_ops niu_phys_ops = {
+ 	.unmap_page	= niu_phys_unmap_page,
+ 	.map_single	= niu_phys_map_single,
+ 	.unmap_single	= niu_phys_unmap_single,
++	.mapping_error	= niu_phys_mapping_error,
+ };
+ 
+ static int niu_of_probe(struct platform_device *op)
+diff --git a/drivers/net/ethernet/sun/niu.h b/drivers/net/ethernet/sun/niu.h
+index 04c215f91fc0..0b169c08b0f2 100644
+--- a/drivers/net/ethernet/sun/niu.h
++++ b/drivers/net/ethernet/sun/niu.h
+@@ -2879,6 +2879,9 @@ struct tx_ring_info {
+ #define NEXT_TX(tp, index) \
+ 	(((index) + 1) < (tp)->pending ? ((index) + 1) : 0)
+ 
++#define PREVIOUS_TX(tp, index) \
++	(((index) - 1) >= 0 ? ((index) - 1) : (((tp)->pending) - 1))
++
+ static inline u32 niu_tx_avail(struct tx_ring_info *tp)
+ {
+ 	return (tp->pending -
+@@ -3140,6 +3143,7 @@ struct niu_ops {
+ 			  enum dma_data_direction direction);
+ 	void (*unmap_single)(struct device *dev, u64 dma_address,
+ 			     size_t size, enum dma_data_direction direction);
++	int (*mapping_error)(struct device *dev, u64 dma_address);
+ };
+ 
+ struct niu_link_config {
+-- 
+2.43.0
 
-It's a bit surprising to have *that* discussion over a binding that is
-now well older than a decade now, and while there is definitely some
-generic bindings in ePAPR/DT spec, like the CPU ones.
-
-If you don't consider that spec to be correct DT bindings, please
-provide a definition of what that is, and / or reasonable alternatives.
-
-Also, no, a device specific binding isn't reasonable here, because we
-*don't* have a device. From a technical standpoint, the firmware creates
-the framebuffer, Linux just uses it. Just like you don't have a
-device/platform specific compatible for PSCI, SCPI, et al.
-
-And from a process standpoint, that driver is typically used years
-before we even get to writing a driver for the actual display driver.
-And since bindings are far from standard and actually pretty
-opionionated, even if we submitted a binding to use a proper binding
-without having a clear idea of what the hardware is, or what a driver
-would want, we would end up with either a broken binding, or a broken
-driver.
-
-Maxime
-
---hbtofy4xtgn6gof3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaGJM/QAKCRAnX84Zoj2+
-dp8lAX0XjiHwXCRnaTDs4vlk7Mk0E+SF7vXGwL4XES2VVQuafyI5PHmNPASOj50l
-8IbNN4EBfjVbhdmCzLalbOYCKk+4j8bq9hixo+ZfPzxdRT2Esn8tvlUHMJa/Um+T
-DOcMcoHSYA==
-=uZYT
------END PGP SIGNATURE-----
-
---hbtofy4xtgn6gof3--
