@@ -1,158 +1,135 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4109F2A1CA
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD62A28C84D
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751324471; cv=none; b=C0lxbmzxB+NctqhRXhGF71HTt0daieZLZKB0LJPFJImX2e6kZn9bj2LF1AnOFQo9VBrA0reSwPYH3Vm4fqRRRfICH55Ww8v7c4zyWhuifuprhi9JV1nfCGNL5mzWPqJ3UN7R5iGeKs1g9TeBSK69Z0W/0sGzh5f751+BNTu12Uk=
+	t=1751324512; cv=none; b=ADMJGbYj7+viIO6x5W+v2kgb07jSpJWDka0y9M+c5Z1z0ma3ejTzb3hpDRq1i7enBZDk40sl4/tBYzIIt/m9T1ao8JimZbtvNIH9i+xfdNW5dV3I2a7vZivpV39PjTI/u90plhntaCjDBrGtg8/YWpQiImIjZmO100bTJ7KtP+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751324471; c=relaxed/simple;
-	bh=P+UhLg5UvlsbFtO0lztSNSWbnFv/C84K1aZ/0ZYwqXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hoD3nqEVJi2XrdLsDs7I5qhFRihBcsO9TipCwufc+6lx7bwh6a/vIQirF1kn+5rdgF/y/5jAVFI9Dkq1RWZbgktpCVhIi5VA4KSNe48IMixLCxhFJZJHyA6YruTkYkd7g1RAN1nSkxt6sqw+2ByzsEU+orYj+rGS75b+5ZtgSfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgsmulHZ; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1751324512; c=relaxed/simple;
+	bh=Tty0qrvMwYTCfMPtmDhnbSDXZzzQiNA90N1yyqbo/wU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bvth/lWuayj4C7L+JM65O8INcum75KRM/p5s2WoFt1Xd5ob4Qj/WVnH8N7pDX1QHaRRNY+aY2JRlIipb5ovh4IERsiFtmCsaiX3UXrrnmCwrvfwdnYl2P9/WPp3f3xFC/0jB7NH2Ev4TXlcyVCrQh3lT6bj+N80zr7idWHwBKTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfimQ5HX; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgsmulHZ"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-315c1b0623cso2623187a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfimQ5HX"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e81f311a86fso3912673276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751324469; x=1751929269; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/kcwhdLYH9QDCoM+AkPn/ixYQdxBo2mfkENfGHWF2vw=;
-        b=bgsmulHZrHIszYdPHF3JasT9yFR3RrJiqr34+LT+svnlGN3cOYFhWGn4XdqtktSOsj
-         c/DSBCZ4lJlyatTlTNjgzkfZ57d9tRmLWvbKr1rr/LSJwHzEOSmdL4UQjuMK2C/rvyAv
-         Q+W0ArWfyUGjZUMTWF7eMwXjDh8vCrZyMW2waTLWsDwBsrIdEQ8wO/Vg8BNbm3jKts9X
-         s8wwD5+MuPwNlFrW+F9RVPIGc342aDGO+qQMJgz7PHOncYMGGXkmlVPAnICkYQjGzMJ3
-         Dvn6Ygj572w7RQmRE612p1a9ARHknquMnbZ1bPg7vTrBLBNEv9AmZO39Efnf9rPhxIPN
-         TfJA==
+        d=gmail.com; s=20230601; t=1751324510; x=1751929310; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vd/NZyP4j5CIAg7Amb14AGL2U5qa5YAKuUp//LRpLKU=;
+        b=RfimQ5HXV772HGrw860tc4gkRzxqaFi10Mw6Y6S0au0VjoVQYCpbvYl3MypZ2gp0zZ
+         KLJAtVqYuaGu23URjrse15aWLG+WygEZavbHzTqSjfsMTOvWVbrNKmtkufccUkus2sET
+         kcao2riUpcV889yLxIZflZEKBWz2OXLB3Y2akaSykWTsLP+smuYq362VdZGsEEbPH/5v
+         qS9SMxH8B2USJZ9l2kQV0W9NT5tFKWXeR1DloY0qKRPQo4uR1P6CpkJwJG3CDMCIRH8X
+         zF3hMO3XL3HhQpvAWX0KWR+Yofpv9FyiQEjjt7HoQYkDEEqnTjj9gbGjgsl4Clxxoit5
+         t++g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751324469; x=1751929269;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/kcwhdLYH9QDCoM+AkPn/ixYQdxBo2mfkENfGHWF2vw=;
-        b=ZjXtlPqKQJ7n4dKVVmpNrmUaz2bXMf4Bi6O2szuvx8TkO+C4SV3L7UwbX3vH1kGkfX
-         T0z/jun0kXXGQUErJFdKD06A0DRkqnfpgQge99vWXznipfWZRdtwHkt3EELwG5Z7Tk9o
-         YRWepPQdde/TCJQ5Qow4vBNlltcx0P4NZDRXY1Vizt+rDzUy4XKbpn+QGDACHiJ8bH/p
-         3sKhdF8Kywt1mqqY4TOcbyLU3EWoEpgg5t88JUTI4fDzuqKgfv5XrL5vVtjdDXwM1jaR
-         tmRJzrI0xTlY9ErHHdqBLE8KRu+O8Xzk3lRSITOTHpKj7SChW3jR6sVxnhQ857KMehSF
-         fjTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNsJYqkjm2lV/bMKXoA+bNzJPSt56LD9MrtmlR8CehDKo0il/p9Id5bwxIzakBqm1EzHoLYqlaB4wHnPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygwSBji1gUmRP6jgOq0Uqc3ht9UKbB3xbm5LK0mLfNfgvMSZbL
-	BMUi8STsULwNGGsB/dYLYS+URK7qwIm000rO+qoYESYO7zwM7WaJN2Mkaemviw==
-X-Gm-Gg: ASbGncvOKmIPSLbGaa6XLfHqm4/p6j6yvv9clVmjJtNfMrZQSkWrtQXueTOaEUCT3xV
-	RQ3hUdhxnrQugCpo6UR3Z/FaKXZbBy+pfoNNxprwGrpxoL2r6yUQoKYCgMzWKA/dUMv3PXWhxUU
-	eTkk7bXPuDPTkT/ZlVUfNQzhQ0ScL6e1afnnOv3fdMhvKyFXZ2++hWgUjxYBt/GiqaQ9WTHBroM
-	EfhC00LxD82IxcHA3+nXRXk6CJqOErDyQmOInbKvoDghNGIgspDvyMR4RIUHy0zfftbhk7QbLlx
-	hoDCVx4V7hhgvrOwF+lPyrRRP2evS9Z+Ivfmr0JuLtSV0hPQPQIrsz6rvGiz5w==
-X-Google-Smtp-Source: AGHT+IH/YP+qsLsAUJeoIl5Ftc1VJsIoDYRrAzxIfVfqHDzSeIu+OzhjwmD/bR84c4zzsWnFKLgMSw==
-X-Received: by 2002:a17:90b:5348:b0:311:f684:d3cd with SMTP id 98e67ed59e1d1-318c910a649mr27346171a91.12.1751324469281;
-        Mon, 30 Jun 2025 16:01:09 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:c92b:c666:1f8:990e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5441770sm14974126a91.48.2025.06.30.16.01.08
+        d=1e100.net; s=20230601; t=1751324510; x=1751929310;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vd/NZyP4j5CIAg7Amb14AGL2U5qa5YAKuUp//LRpLKU=;
+        b=ADycrdHIFGAv3g6uZbVXU1epPacf4qZvtVa+CaQAPrerNOHBjrjGqrzsG2ba4OKv//
+         uIL7pu70e4KduHTg1vLrDLABbxRb1yg3PkqaApp8OkIClksonecLocbzbg9LQVuNiSNL
+         NxDdN6/5Plj/1mWBySNwywz+MV+7rR6EyDjxY11EYxDj7yWmvHVmEBFkdbsAW0Ii4nOM
+         5j+BFtiPNX0+fHrOPrm/PwwuBb4Vb9fmfiFWs3HKrWqx2fvPSC8Nh1yp8dzW/hVabQNf
+         j0/cGTOS889eo17GKb4fJzw3apmGnmWb4X1qIiBMtg3D6FYYEQfNmqsVrBynncDFDyke
+         U2zA==
+X-Forwarded-Encrypted: i=1; AJvYcCUL9KGTQMvNGN5ZAL9yjkuR/MIDra5NaLQcWoPs86cTG2vNwodCxvHWY7lZVHABe6negjaNtUCyWm+H2nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1AzhaKst1JQgFNta+F0t7ZR8T3B29Dfyyl7U7rWPM2Bs4BjvL
+	9mEYAUd8niEbnAnxmC61IKcULAUa4xE4gBYhRqsuhrIqIru0PU3+iCHC
+X-Gm-Gg: ASbGnculSR4x4frBqwKxR7h/C/9lF8wb5GsakNp7xFBbdk+vPmmRS9+peDi2XwsfCET
+	UqGIkVQQqDeJGHR+nuoahsCC3M3fDVMFyf9Hi96T9PhKBi125mnaQVR3Uk7P1wIpzVC3EhCSmcQ
+	L/Oo+r/+9n6KU8tADQ/4Jce90MQzimpgjAnUdFE0yVO++G97oi567n3kO+Aiy90P36XqIDbdd/j
+	Y4DfsDNlzBfbqoytErEIXPAyavZnzYIYfQotg/74ozq+1/E7qY7rbURpjVQp7EoN2K0gphz35LB
+	qDraYMgvshJgLWVbbz9zlBD3dujDsVgb80D83pt702zIVOaeHAddKcd/WclHqg==
+X-Google-Smtp-Source: AGHT+IFpfRCMEe7rPVfxOs6jnHFhnNRIF9xkxBkqGqTqtf6voR/zjxDyFUksRp8lfHUxGj97L5OKiA==
+X-Received: by 2002:a05:690c:6601:b0:70d:ecdd:9bd1 with SMTP id 00721157ae682-715171abbc5mr204846657b3.24.1751324509568;
+        Mon, 30 Jun 2025 16:01:49 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:5f::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515cc7f10sm17386857b3.114.2025.06.30.16.01.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 16:01:08 -0700 (PDT)
-Date: Mon, 30 Jun 2025 16:01:06 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yassine Oudjana <y.oudjana@protonmail.com>, 
-	=?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>, Fabien Parent <fparent@baylibre.com>, Reported-by: 
-	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: [PATCH] MFD: mt6397: do not use generic name for keypad sub-devices
-Message-ID: <r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw>
+        Mon, 30 Jun 2025 16:01:49 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kees Bakker <kees@ijzerbout.nl>,
+	Gregory Price <gourry@gourry.net>,
+	Alistair Popple <apopple@nvidia.com>,
+	Byungchul Park <byungchul@sk.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH 2/2] mm/mempolicy: Skip extra call to __alloc_pages_bulk in weighted interleave
+Date: Mon, 30 Jun 2025 16:01:47 -0700
+Message-ID: <20250630230147.2280374-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250630153501.64160f386faa541c93344e48@linux-foundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Do not use "mtk-pmic-keys" when creating sub-device for the keypad to
-make sure the keypad driver will only bind to the sub-device if it has
-support for the variant/has matching compatible.
+On Mon, 30 Jun 2025 15:35:01 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Reported-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Fixes: 6e31bb8d3a63 ("mfd: mt6397: Add initial support for MT6328")
-Fixes: de58cee8c6b8 ("mfd: mt6397-core: Add MT6357 PMIC support")
-Fixes: 4a901e305011 ("mfd: mt6397-core: Add resources for PMIC keys for MT6359")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+> On Mon, 30 Jun 2025 13:21:14 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+> 
+> > > This is a goto into the middle of a for-loop.
+> > > What do you think is going to happen at the end of that loop?
+> > > 
+> > > I think (only tested with a small C program) it will go to the start of
+> > > the loop, do the i++, check i<nnodes, and possibly do the loop again.
+> > > Variable i is uninitialized at that point. In the loop it hits several
+> > > uninitialized variables.
+> > 
+> > >From what I can see from my code, I think the only the goto statement leads
+> > to a second iteration of the for loop is if allocation fails.
+> > But otherwise, it should be ok since we always hit
+> > 
+> > if (total_allocated == nr_pages)
+> > 	break;
+> > 
+> > within the loop. For the branch that takes the goto, we set
+> > node_pages = rem_pages, then jump to the label and allocate.
+> > So nr_allocated = node_pages, and total_allocated = 0 + nr_allocated
+> > so total_allocated = node_pages
+> > 
+> > total_allocated == node_pages == rem_pages == nr_pages, so we will break. Phew!
+> > 
+> > To cover the case where allocation fails, I think we should be breaking
+> > anyways, so I can definitely add a new check for this.
+> 
+> I do agree, that goto is a "goto too far".  That we can do a thing
+> doesn't mean we should do it!
 
-This is not tested so if someone with hardware could try it out that
-would be great. I *think* it should work...
+Haha : -)
 
- drivers/mfd/mt6397-core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> > > Even if this is legal C code, it is pretty obscure.
+> > 
+> > I agree that it not very clean. I did this to reduce the amount of repeated
+> > code there is. Even if this code works, it could definitely be written
+> > better to make it more readable and maintainable. As I noted in my second
+> > response to Gregory, I'm not planning on pursuing this version anymore,
+> > so if I decide to send a second version, I'll keep this in mind.
+> 
+> Cool, I'll drop this version from mm-unstable.
 
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index 5f8ed8988907..3e58d0764c7e 100644
---- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -136,7 +136,7 @@ static const struct mfd_cell mt6323_devs[] = {
- 		.name = "mt6323-led",
- 		.of_compatible = "mediatek,mt6323-led"
- 	}, {
--		.name = "mtk-pmic-keys",
-+		.name = "mt6323-keys",
- 		.num_resources = ARRAY_SIZE(mt6323_keys_resources),
- 		.resources = mt6323_keys_resources,
- 		.of_compatible = "mediatek,mt6323-keys"
-@@ -153,7 +153,7 @@ static const struct mfd_cell mt6328_devs[] = {
- 		.name = "mt6328-regulator",
- 		.of_compatible = "mediatek,mt6328-regulator"
- 	}, {
--		.name = "mtk-pmic-keys",
-+		.name = "mt6328-keys",
- 		.num_resources = ARRAY_SIZE(mt6328_keys_resources),
- 		.resources = mt6328_keys_resources,
- 		.of_compatible = "mediatek,mt6328-keys"
-@@ -175,7 +175,7 @@ static const struct mfd_cell mt6357_devs[] = {
- 		.name = "mt6357-sound",
- 		.of_compatible = "mediatek,mt6357-sound"
- 	}, {
--		.name = "mtk-pmic-keys",
-+		.name = "mt6357-keys",
- 		.num_resources = ARRAY_SIZE(mt6357_keys_resources),
- 		.resources = mt6357_keys_resources,
- 		.of_compatible = "mediatek,mt6357-keys"
-@@ -196,7 +196,7 @@ static const struct mfd_cell mt6331_mt6332_devs[] = {
- 		.name = "mt6332-regulator",
- 		.of_compatible = "mediatek,mt6332-regulator"
- 	}, {
--		.name = "mtk-pmic-keys",
-+		.name = "mt6331-keys",
- 		.num_resources = ARRAY_SIZE(mt6331_keys_resources),
- 		.resources = mt6331_keys_resources,
- 		.of_compatible = "mediatek,mt6331-keys"
-@@ -240,7 +240,7 @@ static const struct mfd_cell mt6359_devs[] = {
- 	},
- 	{ .name = "mt6359-sound", },
- 	{
--		.name = "mtk-pmic-keys",
-+		.name = "mt6359-keys",
- 		.num_resources = ARRAY_SIZE(mt6359_keys_resources),
- 		.resources = mt6359_keys_resources,
- 		.of_compatible = "mediatek,mt6359-keys"
-@@ -272,7 +272,7 @@ static const struct mfd_cell mt6397_devs[] = {
- 		.name = "mt6397-pinctrl",
- 		.of_compatible = "mediatek,mt6397-pinctrl",
- 	}, {
--		.name = "mtk-pmic-keys",
-+		.name = "mt6397-keys",
- 		.num_resources = ARRAY_SIZE(mt6397_keys_resources),
- 		.resources = mt6397_keys_resources,
- 		.of_compatible = "mediatek,mt6397-keys"
--- 
-2.50.0.727.gbf7dc18ff4-goog
+Sounds good Andrew, thank you always for all of your help!
+Joshua
 
-
--- 
-Dmitry
+Sent using hkml (https://github.com/sjp38/hackermail)
