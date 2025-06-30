@@ -1,69 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E922D4A0F;
-	Mon, 30 Jun 2025 22:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD654A0F
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751323547; cv=none; b=EufWFcNViV25c87E4DjeO2ROh7EYWQsffwdnvgEWldV5fkNXQ24oLxCkxAdnJ41xpt3o1ONcv64/gD8EO+pE9ubHgWPzho2wTHWLDyg/rGQQQxoP4ndVMSUv0ZUGLqa8WVPHI1fSxJBHP3sCC03zyOu9/igF26eSJ/jtjNlB2xY=
+	t=1751323620; cv=none; b=dfTvl29ximd8DTNFwD612VjSBLKLEP+7IdwFqjLBwN0IH5lW/ymYHJKegR36xG99RcOBNZg5odOzNQJw792FQ4emI212Cfh3an+MS6ohxnJ+zIBY5QiWqJotJJIj4D6aDDY+GafQmSD0EtNrSIKdrT67eRCAeN1uF20/0gOGMms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751323547; c=relaxed/simple;
-	bh=Cfj5WSreGQsw3227MrakCwF7ZLW0BlXUEIMzeuyYw6w=;
+	s=arc-20240116; t=1751323620; c=relaxed/simple;
+	bh=6j2k/yDLl7AFcEJ7cfJPNKmXl31QcHaeZXcdt96J1Fk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhXOwub+ydajz1WqmPI8N65Sr4QjmGrI+PrpxRd9w/O8HS1r9mnM0EV7ndcUhWkdq76Kje7Q71WpxMCAKdpVYpq6Fi6XcMwpoB3YALuGCWVribIuunPZqGIVkF/cm1KaaMzuQ++Kcg6FzlObS4FPL27L5TdMdfVQy5erhBQRUtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DN+y17LC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sd8sRzhcZ0BFMVJSV9bD1d0T90BumBprQRr+uq3bySnivOjG6YximqYDdrqZDCLacDw56f6/Ul/elstzK2paBwiPnzxOX+wtctjqpr0hOXjsjQKFtUr66JZcNknJvs9b9E+fz81ndlz/OG1pi4dmcl49FtW0+EsYp2wDCJ8Z0MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQ674KCs; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DN+y17LC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQ674KCs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751323546; x=1782859546;
+  t=1751323618; x=1782859618;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=Cfj5WSreGQsw3227MrakCwF7ZLW0BlXUEIMzeuyYw6w=;
-  b=DN+y17LCXZVd96wilsfFvzNkJseJDZg6GZ63FbzoWolBVs+dXCZinPZj
-   nQbkFYTuOvWcq6UTkOCK0PG7nefRSNTDuBSPe0j9pGBFaG2HymwQ6ZnOL
-   eV9tRSDZpNNPAG27e5+9QSiTqanpg3OQk0BkCzBycys8hfBkZTFdUZR6F
-   ycS0Ds5gBgavLYlr8o6hZqdVnc61b+YD1yS8e8Xv18/AGanfxWFsHvdlr
-   jch22K9ovBwbzJxIuw7O1V6HGmZNJJYrpylpgkmcCTWbXJTg79pTK7tmg
-   Q2FIABQ8ETH5reA1j40n0lz66dLswKGeT0M0WHAprTX9D3y8bOsGd9BSs
-   w==;
-X-CSE-ConnectionGUID: 4WjxRnoMTj+h8tG/8yGE6A==
-X-CSE-MsgGUID: rGK6j75qRo6Z++I4sAK6eA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="65010827"
+  bh=6j2k/yDLl7AFcEJ7cfJPNKmXl31QcHaeZXcdt96J1Fk=;
+  b=XQ674KCs2hCd+fnSIK73k+qkvsr3T6u9bKrnz4LAl6uwaGBO/CmWDkYT
+   qcsG/hG+uSmPO53+p+AH2C7a1EzQZkVFNvBOPdJYQI84eZzDH7hZSl76K
+   jAX/SLj4X9KmiyOMcUPJGvTondKag2wlAdf5Us5ySY8wMnyWfLCQqqalD
+   UCezWk8k3lEu6whdGviEWSkI4dohJWkFnvAy8W63Jeb8zguPfWf82Bgjx
+   fw2CqOfMw9su0hY3hAuZZNM6Lpzi1MGe+sBXXo/eoen5CYF3xMel4NIkT
+   l1/8wubJ0vtj5sz+h0p18j2o4QVrzxsodwmEwx/bjCGEoJZz8GLuCyqwo
+   Q==;
+X-CSE-ConnectionGUID: IkzUhMNERXmoILuVSK2YdQ==
+X-CSE-MsgGUID: ildKZAJjRPaUc6k43IJIAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="70994437"
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="65010827"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:45:45 -0700
-X-CSE-ConnectionGUID: p/i6hdoVQ5iKbuHy0pypiA==
-X-CSE-MsgGUID: l2dPfkHOTmC98iA36F7JTw==
+   d="scan'208";a="70994437"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:46:58 -0700
+X-CSE-ConnectionGUID: 4pJGDbMPRuKTEUEzHvfwWg==
+X-CSE-MsgGUID: 61U+zpsvRQaLTcAZlu0jTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
-   d="scan'208";a="159299158"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:45:45 -0700
-Date: Mon, 30 Jun 2025 15:51:44 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-hyperv@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v5 01/10] x86/acpi: Add a helper functions to setup and
- access the wakeup mailbox
-Message-ID: <20250630225144.GC3072@ranerica-svr.sc.intel.com>
-References: <20250627-rneri-wakeup-mailbox-v5-0-df547b1d196e@linux.intel.com>
- <20250627-rneri-wakeup-mailbox-v5-1-df547b1d196e@linux.intel.com>
- <CAJZ5v0i+EOthnNexMs7hm1iX+PY0rCNCHjRgB5r5pJ3tz2aw+w@mail.gmail.com>
+   d="scan'208";a="153335299"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 15:46:57 -0700
+Date: Mon, 30 Jun 2025 15:46:55 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v6 00/30] x86,fs/resctrl telemetry monitoring
+Message-ID: <aGMT35DktIVkzwjx@agluck-desk3>
+References: <20250626164941.106341-1-tony.luck@intel.com>
+ <6485574e-1405-49c1-90f9-1955ac2777ce@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,41 +68,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0i+EOthnNexMs7hm1iX+PY0rCNCHjRgB5r5pJ3tz2aw+w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6485574e-1405-49c1-90f9-1955ac2777ce@intel.com>
 
-On Mon, Jun 30, 2025 at 08:55:25PM +0200, Rafael J. Wysocki wrote:
-> s/a helper/helper/ in the subject.
-
-Ugh! I missed this since v3. I corrected it. Thanks for noticing.
-
+On Mon, Jun 30, 2025 at 10:51:50AM -0700, Reinette Chatre wrote:
 > 
-> On Sat, Jun 28, 2025 at 5:35 AM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > In preparation to move the functionality to wake secondary CPUs up out of
-> > the ACPI code, add two helper functions.
-> >
-> > The function acpi_setup_mp_wakeup_mailbox() stores the physical address of
-> > the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
-> >
-> > There is a slight change in behavior: now the APIC callback is updated
-> > before configuring CPU hotplug offline behavior. This is fine as the APIC
-> > callback continues to be updated unconditionally, regardless of the
-> > restriction on CPU offlining.
-> >
-> > The function acpi_madt_multiproc_wakeup_mailbox() returns a pointer to the
-> > mailbox. Use this helper function only in the portions of the code for
-> > which the variable acpi_mp_wake_mailbox will be out of scope once it is
-> > relocated out of the ACPI directory.
-> >
-> > The wakeup mailbox is only supported for CONFIG_X86_64 and needed only with
-> > CONFIG_SMP=y.
-> >
-> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Tony,
 > 
-> With the above nit addressed
+> On 6/26/25 9:49 AM, Tony Luck wrote:
+> > Background
+> > ----------
+> > 
+> > Telemetry features are being implemented in conjunction with the
+> > IA32_PQR_ASSOC.RMID value on each logical CPU. This is used to send
+> > counts for various events to a collector in a nearby OOBMSM device to be
+> > accumulated with counts for each <RMID, event> pair received from other
+> > CPUs. Cores send event counts when the RMID value changes, or after each
+> > 2ms elapsed time.
 > 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> To start a review of this jumbo series and find that the *first* [1]
+> (straight forward) request from previous review has not been addressed is
+> demoralizing. I was hoping that the previous version's discussions would result
+> in review feedback either addressed or discussed (never ignored). I
+> cannot imagine how requesting OOBMSM to be expanded can be invalid though.
+> 
+> Reinette
+> 
+> [1] https://lore.kernel.org/lkml/b8ddce03-65c0-4420-b30d-e43c54943667@intel.com/
 
-Thank you!
+My profound apologies for blowing it (again). I went through the comments
+to patches multiple times to try and catch all your comments. But somehow
+skipped the cover letter :-( .
+
+Here's a re-write to address comments, but also to try to provide
+a better story line starting with how the logical processors capture
+the event data, following on with aggregator processing, etc.
+
+-Tony
+
+---
+
+On Intel systems that support per-RMID telemetry monitoring each logical
+processor keeps a local count for various events. When the IA32_PQR_ASSOC.RMID
+value for the logical processor changes (or when a two millisecond counter
+expires) these event counts are transmitted to an event aggregator on
+the same package as the processor together with the current RMID value. The
+event counters are reset to zero to begin counting again.
+
+Each aggregator takes the incoming event counts and adds them to
+cumulative counts for each event for each RMID. Note that there can be
+multiple aggregators on each package with no architectural association
+between logical processors and an aggregator.
+
+All of these aggregated counters can be read by an operating system from
+the MMIO space of the Out Of Band Management Service Module (OOBMSM)
+device(s) on a system. Any counter can be read from any logical processor.
+
+Intel publishes details for each processor generation showing which
+events are counted by each logical processor and the offsets for each
+accumulated counter value within the MMIO space in XML files here:
+https://github.com/intel/Intel-PMT.
+
+For example there are two energy related telemetry events for the Clearwater
+Forest family of processors and the MMIO space looks like this:
+
+Offset	RMID	Event
+------	----	-----
+0x0000	0	core_energy
+0x0008	0	activity
+0x0010	1	core_energy
+0x0018	1	activity
+...
+0x23F0	575	core_energy
+0x23F8	575	activity
+
+In addition the XML file provides the units (Joules for core_energy,
+Farads for activity) and the type of data (fixed-point binary with
+bit 63 used as to indicate the data is valid, and the low 18 bits as a
+binary fraction).
+
+Finally, each XML file provides a 32-bit unique id (or guid) that is
+used as an index to find the correct XML description file for each
+telemetry implementation.
+
+The INTEL_PMT_DISCOVERY driver provides intel_pmt_get_regions_by_feature()
+to enumerate the aggregator instances on a platform. It provides:
+1) guid  - so resctrl can determine which events are supported
+2) mmio base address of counters
+3) package id
+
+Resctrl accumulates counts from all aggregators on a package in order
+to provide a consistent user interface across processor generations.
+
+Directory structure for the telemetry events looks like this:
+
+$ tree /sys/fs/resctrl/mon_data/
+/sys/fs/resctrl/mon_data/
+mon_data
+├── mon_PERF_PKG_00
+│   ├── activity
+│   └── core_energy
+└── mon_PERF_PKG_01
+    ├── activity
+    └── core_energy
+
+Reading the "core_energy" file from some resctrl mon_data directory shows
+the cumulative energy (in Joules) used by all tasks that ran with the RMID
+associated with that directory on a given package. Note that "core_energy"
+reports only energy consumed by CPU cores (data processing units,
+L1/L2 caches, etc.). It does not include energy used in the "uncore"
+(L3 cache, on package devices, etc.), or used by memory or I/O devices.
