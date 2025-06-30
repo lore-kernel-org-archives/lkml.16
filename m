@@ -1,210 +1,154 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F071FBCB0
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C117238C20
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269638; cv=none; b=gqka6WrQvwRG1WI05iYV0cDUW8Todd8/LJCVhDcinSOWvPSpvzzfi3okYEtw7oVSyacSQrHZEEuQPECjgV9m1BeUvX0mvLVXcGV5iZa8B4Zlrk/pHsBN5ORq2k3Gwj6G8r5OdGm0ufcmvKHCWIVDlgBuBOQFzMyhRV3RyevzDhQ=
+	t=1751269642; cv=none; b=d2TYt2NzXWlA0aoYKWa0FxtRzt2dFIJJuqmsoTRVAd7S+kQ3Du2mSTn8mb4qzoalhppjIi54JOWIDIwt34fekCp9jnH09E9aB3zvrFl0xCwLNtOgHzFr+AymFrIWai+tQH8EgaFY9YC6Ay0AvbyRPw+scM4om3mgOGVCLTyK0LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269638; c=relaxed/simple;
-	bh=N4/gemkwOOG9oZKd1jobRaruueJI6mhQQIOWpqNKuGU=;
+	s=arc-20240116; t=1751269642; c=relaxed/simple;
+	bh=3WCJLLv4RhnKEvcl21V/JHUYDcouCFwoRzhLS4CQ9mA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sgv2QcU4BlOibClDbsorHRr7y0tauEEnHLWb4jSIK9QzaGiTVEW+6zxOtQfJFSEeGhTVS2VGJ1hCaWweBjL1uGWGSxKA/aPpnhNRZ/Tg9NavRahqsZTewgFqMXkcZEsQGavm4a+NqkU9fObrB6K6IbBjdxQrlssFFO9spEWVpZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E86GuxsB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rWcxBdQD; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UrPIfwU0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=llgry64d; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=LQ1+bdV7hXbwxwLZePHeYxGWOuWwY8nLScjLPMHfMR6jWgvY0bRuCL0+Dp/XfOROLrjzsh7XrCtCSfdJ8x4T4P47OEh0NDh0FudUgLGxtEV6kFoEmZyMg2D8zWRtCBUhZjFIRVRYSlOVblL5HFgLz6QEcc1mQXuB/Lb3veMrOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eAR9HS2J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E86GuxsB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rWcxBdQD";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UrPIfwU0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="llgry64d"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9294421161;
-	Mon, 30 Jun 2025 07:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751269634; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eAR9HS2J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751269639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G0xMeV4r4NgmZRD7f2uu1EqqO6HZViLKTYU5qUxhpb0=;
-	b=E86GuxsB7Lk7XJ9Y8PYu7aK+EUoPoyOT90eSY0utaqCRk3R4gVVIC1e+GobodoRf3XRRHy
-	4dnZRBS/sRBTqEeeH71KMQqrEVRQfPdDB5bh5hENMS9yVhLBPXFL2XOK1L0/OP4myBZCcS
-	6ItaOhRn/PHkmVNmcSuwxM89SOaLgL0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751269634;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0xMeV4r4NgmZRD7f2uu1EqqO6HZViLKTYU5qUxhpb0=;
-	b=rWcxBdQDBMb9qf1WCRZzl+QVeNq8BQjPTsmtz3koGlqvFBn935oVtZ83oAEBvlxGPlmOTp
-	U3jG4iTKax8KWrDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751269633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0xMeV4r4NgmZRD7f2uu1EqqO6HZViLKTYU5qUxhpb0=;
-	b=UrPIfwU0InrHCrmdmQhEs9y3FmBDiMeQeuDBKtpTkwjXxWD77YcoANZiE1qYV1SJVHIK4P
-	67UGyw6dpPTx45EjJ9elrtRFNKDZ5QmDvDYy6YuVEN9IdJszrfioWvW6h5JwjmiYM1Gn+e
-	RNSVYoAFQuqm4zPRy4OXs/Dk1CVs7vw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751269633;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0xMeV4r4NgmZRD7f2uu1EqqO6HZViLKTYU5qUxhpb0=;
-	b=llgry64dSVfm6ADa4s4hLJMFBFdPJvnL6t2XbmnbKXBkuwjy1XhYe/UzSz+rvbqND0FilR
-	oitzWmHnZNEi4TBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7C04013983;
-	Mon, 30 Jun 2025 07:47:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id x8xCHgFBYmj8bAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 30 Jun 2025 07:47:13 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3E2F0A08D2; Mon, 30 Jun 2025 09:47:13 +0200 (CEST)
-Date: Mon, 30 Jun 2025 09:47:13 +0200
-From: Jan Kara <jack@suse.cz>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, ojaswin@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
- s_mb_last_group
-Message-ID: <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-4-libaokun1@huawei.com>
- <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
- <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
+	bh=7ktNPhfijuEzODMwYTiQC+VuJwh6IE4+mAtetQ6pS/E=;
+	b=eAR9HS2JIH/1yTCatFSoOxyUm3JbHatFgTTUJzabdGWgC+yEdaroTSZ2HwpbeZgfwb/yzR
+	i/kdlXqIW9itMHcelTvuazzCbvsj57PBACa34aI17r+bMIDdqzigHbmiY8SCvqQPE43Mad
+	1LG7N4fgzejNFAyjBjVtN2mdgN5Gh3Q=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-sedZvx-JPrmrEvS75R_8Yg-1; Mon, 30 Jun 2025 03:47:16 -0400
+X-MC-Unique: sedZvx-JPrmrEvS75R_8Yg-1
+X-Mimecast-MFC-AGG-ID: sedZvx-JPrmrEvS75R_8Yg_1751269636
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a503f28b09so2082632f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:47:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751269636; x=1751874436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7ktNPhfijuEzODMwYTiQC+VuJwh6IE4+mAtetQ6pS/E=;
+        b=Ux3tlSK2PQbmzBOdGtvjtX3arrQaiRFyy3rvZ+G1Y7FzGj/dgu69/GdrV8QFMB6Wjs
+         4Cuac63l37dG/sAsaobA1HlETSnH5vKweXNHXveDxXbNEWZ6alCSpFv6og2vcf/2GZIf
+         eZxOmSCekr6BwYe73yUwvf1TS8v+iXejnMPR5bkc0ysx9ee9YDyOf1lJbi4v+qPVJfL5
+         27tFYr5KHEVJWwbJEneDDA1Xw+tsiq3n6gGrOVNp69BNJNWQVddEXqlrHy8BtvHmBMSo
+         0AjY/Y6DSzHN+QISXsXa27fbF0oN8vZhenm3Rgn6S00Y4bLfuBSPVeXJxoQjnQ6vPgZf
+         bDRA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/xOa2utRySeh4MpMe24jyJy4P2tl9YIELgdyTUdcbo1Fik6moIlSAhS2ItRNpZUwc6Sl+BEy4GxdLg5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8vn6owDWQbVVozzP+pwIG3zz2ubHFwdf2jmg39fqZ/3hpCctT
+	qCbAnWY2bQhvaTPp8dBikthlColCSaXbuleT9sTNE2N1+57CPjr5MX5hbd/c0nMKIxqoSofw738
+	0v0MKfgjFN6GQrJSGnfrhESHcnl2uzKN62iaUuXpE84yakmxf/zoqcsYJBtu1Ys3G/A==
+X-Gm-Gg: ASbGncsFRupXpcKNmh7NbHxXbgmXbC6sFRVFc6xb/r7ebHF/TGVHFw/3DfoA0J3wMAn
+	37JQl5bhnx59P1snXXgJEo+PsLRn43iYd1DUXVHhG173aDAIKt69hdl3e+C/WrpG8B6jZ/PQGSf
+	BOQiheACAj2PQtadt9hp9nHmlS8JjpwWVvqABuLa56qMyIENqN2UVa6NcanMNCsH68A+ot3VbnI
+	YB5UEjXYF+N+BJXXd5x3i+wemRh2xsJeNhHgk8XKT+WDiO9BB49PM9iyNN0jP1ogkHvDWceqCII
+	bouOMTUDzuSWWvChsxS8BV/3npbx
+X-Received: by 2002:a05:6000:418a:b0:3a4:f70d:aff0 with SMTP id ffacd0b85a97d-3a6f312df2bmr9022658f8f.14.1751269635638;
+        Mon, 30 Jun 2025 00:47:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxPyEI4vtDCAHmMrt9Bgdg2700Ez6oVkN9Z1NlWqAtZ1aXzxk700hjPBCX6uj4jbe2vAmlKg==
+X-Received: by 2002:a05:6000:418a:b0:3a4:f70d:aff0 with SMTP id ffacd0b85a97d-3a6f312df2bmr9022638f8f.14.1751269635049;
+        Mon, 30 Jun 2025 00:47:15 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.177.127])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453814a6275sm105907065e9.1.2025.06.30.00.47.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 00:47:14 -0700 (PDT)
+Date: Mon, 30 Jun 2025 09:47:06 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Xuewei Niu <niuxuewei97@gmail.com>
+Cc: mst@redhat.com, pabeni@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, davem@davemloft.net, netdev@vger.kernel.org, stefanha@redhat.com, 
+	leonardi@redhat.com, decui@microsoft.com, virtualization@lists.linux.dev, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, fupan.lfp@antgroup.com, 
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: Re: [PATCH net-next v4 0/3] vsock: Introduce SIOCINQ ioctl support
+Message-ID: <gv5ovr6b4jsesqkrojp7xqd6ihgnxdycmohydbndligdjfrotz@bdauudix7zoq>
+References: <20250630073827.208576-1-niuxuewei.nxw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Level: 
+In-Reply-To: <20250630073827.208576-1-niuxuewei.nxw@antgroup.com>
 
-On Mon 30-06-25 11:48:20, Baokun Li wrote:
-> On 2025/6/28 2:19, Jan Kara wrote:
-> > On Mon 23-06-25 15:32:51, Baokun Li wrote:
-> > > After we optimized the block group lock, we found another lock
-> > > contention issue when running will-it-scale/fallocate2 with multiple
-> > > processes. The fallocate's block allocation and the truncate's block
-> > > release were fighting over the s_md_lock. The problem is, this lock
-> > > protects totally different things in those two processes: the list of
-> > > freed data blocks (s_freed_data_list) when releasing, and where to start
-> > > looking for new blocks (mb_last_group) when allocating.
-> > > 
-> > > Now we only need to track s_mb_last_group and no longer need to track
-> > > s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
-> > > two are consistent, and we can ensure that the s_mb_last_group read is up
-> > > to date by using smp_store_release/smp_load_acquire.
-> > > 
-> > > Besides, the s_mb_last_group data type only requires ext4_group_t
-> > > (i.e., unsigned int), rendering unsigned long superfluous.
-> > > 
-> > > Performance test data follows:
-> > > 
-> > > Test: Running will-it-scale/fallocate2 on CPU-bound containers.
-> > > Observation: Average fallocate operations per container per second.
-> > > 
-> > >                     | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
-> > >   Disk: 960GB SSD   |-------------------------|-------------------------|
-> > >                     | base  |    patched      | base  |    patched      |
-> > > -------------------|-------|-----------------|-------|-----------------|
-> > > mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
-> > > mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
-> > > 
-> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> > ...
-> > 
-> > > diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> > > index 5cdae3bda072..3f103919868b 100644
-> > > --- a/fs/ext4/mballoc.c
-> > > +++ b/fs/ext4/mballoc.c
-> > > @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
-> > >   	ac->ac_buddy_folio = e4b->bd_buddy_folio;
-> > >   	folio_get(ac->ac_buddy_folio);
-> > >   	/* store last allocated for subsequent stream allocation */
-> > > -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
-> > > -		spin_lock(&sbi->s_md_lock);
-> > > -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
-> > > -		spin_unlock(&sbi->s_md_lock);
-> > > -	}
-> > > +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
-> > > +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
-> > > +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
-> > Do you really need any kind of barrier (implied by smp_store_release())
-> > here? I mean the store to s_mb_last_group is perfectly fine to be reordered
-> > with other accesses from the thread, isn't it? As such it should be enough
-> > to have WRITE_ONCE() here...
-> 
-> WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
-> that variable reads/writes access values directly from L1/L2 cache rather
-> than registers.
+On Mon, Jun 30, 2025 at 03:38:24PM +0800, Xuewei Niu wrote:
+>Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
+>bytes.
 
-I agree READ_ONCE() / WRITE_ONCE() are about compiler optimizations - in
-particular they force the compiler to read / write the memory location
-exactly once instead of reading it potentially multiple times in different
-parts of expression and getting inconsistent values, or possibly writing
-the value say byte by byte (yes, that would be insane but not contrary to
-the C standard).
+I think something went wrong with this version of the series, because I 
+don't see the patch introducing support for SIOCINQ ioctl in af_vsock.c, 
+or did I miss something?
 
-> They do not guarantee that other CPUs see the latest values. Reading stale
-> values could lead to more useless traversals, which might incur higher
-> overhead than memory barriers. This is why we use memory barriers to ensure
-> the latest values are read.
+Thanks,
+Stefano
 
-But smp_load_acquire() / smp_store_release() have no guarantee about CPU
-seeing latest values either. They are just speculation barriers meaning
-they prevent the CPU from reordering accesses in the code after
-smp_load_acquire() to be performed before the smp_load_acquire() is
-executed and similarly with smp_store_release(). So I dare to say that
-these barries have no (positive) impact on the allocation performance and
-just complicate the code - but if you have some data that show otherwise,
-I'd be happy to be proven wrong.
+>
+>Similar with SIOCOUTQ ioctl, the information is transport-dependent.
+>
+>The first patch adds SIOCINQ ioctl support in AF_VSOCK.
+>
+>Thanks to @dexuan, the second patch is to fix the issue where hyper-v
+>`hvs_stream_has_data()` doesn't return the readable bytes.
+>
+>The third patch wraps the ioctl into `ioctl_int()`, which implements a
+>retry mechanism to prevent immediate failure.
+>
+>The last one adds two test cases to check the functionality. The changes
+>have been tested, and the results are as expected.
+>
+>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+>
+>--
+>
+>v1->v2:
+>https://lore.kernel.org/lkml/20250519070649.3063874-1-niuxuewei.nxw@antgroup.com/
+>- Use net-next tree.
+>- Reuse `rx_bytes` to count unread bytes.
+>- Wrap ioctl syscall with an int pointer argument to implement a retry
+>  mechanism.
+>
+>v2->v3:
+>https://lore.kernel.org/netdev/20250613031152.1076725-1-niuxuewei.nxw@antgroup.com/
+>- Update commit messages following the guidelines
+>- Remove `unread_bytes` callback and reuse `vsock_stream_has_data()`
+>- Move the tests to the end of array
+>- Split the refactoring patch
+>- Include <sys/ioctl.h> in the util.c
+>
+>v3->v4:
+>https://lore.kernel.org/netdev/20250617045347.1233128-1-niuxuewei.nxw@antgroup.com/
+>- Hyper-v `hvs_stream_has_data()` returns the readable bytes
+>- Skip testing the null value for `actual` (int pointer)
+>- Rename `ioctl_int()` to `vsock_ioctl_int()`
+>- Fix a typo and a format issue in comments
+>- Remove the `RECEIVED` barrier.
+>- The return type of `vsock_ioctl_int()` has been changed to bool
+>
+>Xuewei Niu (3):
+>  hv_sock: Return the readable bytes in hvs_stream_has_data()
+>  test/vsock: Add retry mechanism to ioctl wrapper
+>  test/vsock: Add ioctl SIOCINQ tests
+>
+> net/vmw_vsock/hyperv_transport.c | 16 +++++--
+> tools/testing/vsock/util.c       | 32 +++++++++----
+> tools/testing/vsock/util.h       |  1 +
+> tools/testing/vsock/vsock_test.c | 80 ++++++++++++++++++++++++++++++++
+> 4 files changed, 117 insertions(+), 12 deletions(-)
+>
+>-- 
+>2.34.1
+>
 
-> If we could guarantee that each goal is used on only one CPU, we could
-> switch to the cheaper WRITE_ONCE()/READ_ONCE().
-
-Well, neither READ_ONCE() / WRITE_ONCE() nor smp_load_acquire() /
-smp_store_release() can guarantee that.
-
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
