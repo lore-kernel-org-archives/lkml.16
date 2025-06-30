@@ -1,191 +1,118 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72619243364;
-	Mon, 30 Jun 2025 08:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F15C24337B;
+	Mon, 30 Jun 2025 08:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751270527; cv=none; b=dEEvLgaA3gmFf03KhmBqagDzjJWuSCk7KZGNnT6eJb4nLMcH7KQaGOy26mwUDT2frd8rmpMtiR7op2v6c2vsMlEPnke/5EDlSzB9xmUXQ8tgGRIj2LptAVU3YXtR5LFnofUitzgqLDoGnw4wh9tW49Msg9DVSeon/itwR0KdgAE=
+	t=1751270528; cv=none; b=SJxKyQS9Ntj8MinFJ0m2gouoB3jStVCz2p8jIanExfJjb3QBuHU0M2z5T0P62dCJ5BtMlTcN7eh3aoXWkJm4HaUGcJRAERl8qDAtKuxS1X/3GRiyS1GQx6mlrHCZ4bbf892JLqY1LxGhUhE1eOjD09KX1wHXasP8dB1EqQ4Q/w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751270527; c=relaxed/simple;
-	bh=Hk4PWTSFyJ5ZH9OUolCbF/0vk1uY9caPI/PFr4sGiCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=huGfOUv0b0aXXf5Pg4agLKZopQFNHfRN6cjaEN4+0QiLvI2ZonPzwrmXuspewct7rSHXlOjHrebsyvvvzUP9jeUl5ArvqoYy43c1uTOU3EAe2uAjUh8MKLGjlLBhGWlzdhVuxjvhCIzf6xhjdjcr/APmiNaWwb0ISFpqBWcoBuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DEX3d4oQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751270528; c=relaxed/simple;
+	bh=PGzNmxKPeKeIW9y3SLrZgxUtNxszaOvcO3mqQbh5IU4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E1D//Hdv5uQ/aWnF2/D8Tj5RO6G12m+1YBt93afXkJ9c+h0ddJQWRkOdmilQwgME33GhKXpRm5xbvcM4KGko2HxjQncrRpwqKyBUiVfJQIel9vLPyS2N3u7+vV7Y5jieQFwXLMPl5HRZZQIbP8ZbdVFo1xQkJ7U4V0nv+2zFB2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=en0cT+gI; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DEX3d4oQ"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55TEOuIC016422;
-	Mon, 30 Jun 2025 08:01:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=cEmo5W
-	Z9ENLCamzEsFC9RFxbGStIkBwOEpEwhYpQ33I=; b=DEX3d4oQpQEAilMMfEmIJv
-	InLzDjJJHvLde3IzFtfYYdmPlp2sM9Uec9yArw6abhGgBy204jeZAkrBIcaaxdU+
-	BRM2Cnx1K/HhNJVFZHlJfvl0K7fWrXekNGmJlmem0GN0ozNWkMpABSkBxhfNI7ph
-	aJmE0aZ/ZNW2EXXcSzmLO3CLGi6Xo7s+JXyrPIkteoIDYuAT3mk3m1BSgxTLQRVB
-	Ee+2xL5n/4BPzWf3AoKaqGOW7IWiZQjV2LHGWcGpzyMVvqpJt4ZP09gOAlui533x
-	tCg20DquAkCVK69Qcl7gJ09xAhZ9fnQNyYKp7RKXuIAllBVGApUos+ZMNgazG98g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5tt0c02-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 08:01:52 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55U81eSK017679;
-	Mon, 30 Jun 2025 08:01:51 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5tt0byd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 08:01:51 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55U4LgLo021095;
-	Mon, 30 Jun 2025 08:01:44 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jtqu543x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 30 Jun 2025 08:01:44 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55U81h8p50725166
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 30 Jun 2025 08:01:43 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 20C0A200E4;
-	Mon, 30 Jun 2025 08:01:43 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75425200E3;
-	Mon, 30 Jun 2025 08:01:42 +0000 (GMT)
-Received: from [9.87.132.218] (unknown [9.87.132.218])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 30 Jun 2025 08:01:42 +0000 (GMT)
-Message-ID: <898927c3-e85f-4a9a-9374-6fdb49236410@linux.ibm.com>
-Date: Mon, 30 Jun 2025 10:01:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en0cT+gI"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ecf99dd567so29262826d6.0;
+        Mon, 30 Jun 2025 01:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751270525; x=1751875325; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SXIjFbe4Vrz2bi8rFlLHVCaoVK6EIDR/YQX7SQMy1sc=;
+        b=en0cT+gID0V+xpNQhvkIQrW0PIUoc76tdYAhUEyqjPdAbLCm93HsEAfwswnTYBMg7z
+         f0DDkCtKFN1vccVkzlyBnXuQ3OYrkqhsZX7jCSAeGMCDHwmLvjEpB7lePosLPkbLyaEZ
+         fa3SD8eiz5aHCKeCz/t6nEgv8yGsnh0V4dNcmzbQjsLcvnybPlOtm2lV2z6BX1DvdzgC
+         d0kcIRzZajlYxx4FC5VujvGOPBqB8zU+So37edBt0TKWL11JBBEDK9a1U1W7fRdn1TXp
+         UVUgYMpsfJfQpwFUROu+UGVAmHez5+DSwwifSVb/wOsqkqkX4hfmFxccCs0VMJC2viL8
+         lIPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751270525; x=1751875325;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SXIjFbe4Vrz2bi8rFlLHVCaoVK6EIDR/YQX7SQMy1sc=;
+        b=iSZQumoPeZVqBxjzBVCnUMTwlxU9YxcgOEOThwzAjkG7X7sPR8sQuPIPBPmptKPYGE
+         5da2e5v/dnUqmgzSeVva3G+G/tMVQRMNITJNgcuArMs/MuInRQGmH34FML8Uuo6iskrc
+         yJQkLmJIUNTewTv99u7NVwezCn04UVcVHnYDrzNkBdTaLJn0IRnG/SRa7KQKFJfj++mw
+         B0dSDI8dAeiO58yciB1zAKHfi0EPjC8DuWjlPrEl/1F3FbU2RwuijcqYH2aHz8qkrrqL
+         llec8jAc2nc0Lg4HP3ljpO1AlHWl4BAt+96JmbZZYws3yup4PgdNQpRruRfPpUvZrphb
+         iK2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMwBvHtE8sE8RYW0Xc//T9A2rxcRd7A56HIRQ08+e17nRMebykDee0XwlLccNiWJ1oUUj72RdVwgq0mKiJ1MrpLocisA==@vger.kernel.org, AJvYcCWr9fZJTXFPvQ9zcuyBXdWkwfrXnUZ4GhTSd3P1Xcra0v3rIqXSsELXqve/WBkhqTvVFgF6QVsKnrYRmdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjltXLlnWeqXTMsJhSM9YggXVrS45XoQOCjRS/ftqne5Q8hcZe
+	qAqNF1BQVYWWyTTZQ1wHQv4zT9j6a/7sky3IHlargA0lNJEf1g9efDXX
+X-Gm-Gg: ASbGncuJRAnh3ec1Sye1fylVLodK/OytNPTpkqYV05oYsUjNm0keW2rYgXvdsdQDLoZ
+	eRqqMSbMkKi2ooeBoYCTUdv6dvNSdKV9/XZqTO0unSzs8QL/xbXuPFe79rNL7Pzfl8QRKf8orKg
+	icZ29cpQIulp6NkueIGhJEJzvrvI3FRTrzjb9DM9D9deAhTCCTyyZy7AHAFbEGJtomnu2fdPAhb
+	6HPEX9RtlvXrLEXQT91SmxM8hEev1vvDBwaQ6HQq/g8rRAvQ/doooUlcuRRXUatm1oEJy/rpj56
+	sH8rXrlUvS6s910RQ2DKNScZ7cOR0cOIv62GJOHfg/iOlQR0qcZID9oFgpGzOw==
+X-Google-Smtp-Source: AGHT+IGHPGZOCA4FHnX4CiRiQ9Vj+E9Y4C9AXAFlbtB2IYj6ZYSRwc4FUqgJ5xDJzF980IQJC+C2Eg==
+X-Received: by 2002:a05:6214:4308:b0:6fa:c453:a40d with SMTP id 6a1803df08f44-70013d52b86mr201203006d6.29.1751270525418;
+        Mon, 30 Jun 2025 01:02:05 -0700 (PDT)
+Received: from [192.168.1.26] ([181.88.247.122])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772df637sm63677026d6.79.2025.06.30.01.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 01:02:05 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Date: Mon, 30 Jun 2025 05:01:12 -0300
+Subject: [PATCH v4 5/6] Documentation: ABI: Update
+ sysfs-class-firmware-attributes documentation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf test: Add basic callgraph test to record testing
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@linaro.org>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>,
-        Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250628015553.1270748-1-irogers@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20250628015553.1270748-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: E8tYNO6g_34gN2s0vfMicyge2h8fBXHu
-X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=68624470 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=1XWaLZrsAAAA:8 a=KKAkSRfTAAAA:8 a=VnNF1IyMAAAA:8 a=_uuWfKpNdYwReMWUY6YA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 1lqPsw7z0D82yPPHre2bR6sY2ryHaFln
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjMwMDA2NCBTYWx0ZWRfX0CMrc+Zc4oO/ UVjarByEad7x9bfMSnGvHJzGGWrqVXRscIMRZ9DtBRakHKStShUelys8xS7FxejVH4zj5kfSarD e2PvFZ7+GRS5MZysZrUv/Bvsz7kpYDOVzG0lhpZRv38OYJYaOZ2xBaV7ZlH+p6IpxLD/vd56j04
- bXzConnOxZnnmAItsh7jf6eORtIKhoDAq1/KO8vjhT7kCmsrZ/WEHKqItB8FPEZYQG61hCq1LO9 vATDb0ehZ8Pe/uV4fDdHJ/rUoeuJ1OdMeT8YfMOj9Y+ULoAmwpg/RYQt41BHWWFEarq0lpib4b1 JJYqPde3JOForm9f8l3yrbjR2DG1QmlXDT8GIxH+Ge/usXtiBRF7o6IdYJP6mf7Aw0nyFgNsC+B
- GGDiQ2KM1416jBogCpgh4YPIxUHigTAdPokR5KA5KvsCFjoRpEvwBc8beh/OykqLoBkjfnqh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506300064
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250630-fw-attrs-api-v4-5-1a04952b255f@gmail.com>
+References: <20250630-fw-attrs-api-v4-0-1a04952b255f@gmail.com>
+In-Reply-To: <20250630-fw-attrs-api-v4-0-1a04952b255f@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Joshua Grisham <josh@joshuagrisham.com>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>, 
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dell.Client.Kernel@dell.com, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=756; i=kuurtb@gmail.com;
+ h=from:subject:message-id; bh=PGzNmxKPeKeIW9y3SLrZgxUtNxszaOvcO3mqQbh5IU4=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBlJLslsC/K2CFxL/spbcP2ZadWlmg358Z8O+c6UK94Sm
+ 7L81PUXHaUsDGJcDLJiiiztCYu+PYrKe+t3IPQ+zBxWJpAhDFycAjCRkzcZ/jt+ZVFtOqLy0kb6
+ vsDGqjWLXa54yE9lldS6FnbxanuVzXaGf2ZP/jPIm1/lEV40/WjTJJMXYce6HU9X/r6vcIn/y6a
+ lyQwA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
 
-On 6/28/25 03:55, Ian Rogers wrote:
-> Give some basic perf record callgraph coverage.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> v2: Pick up s390's needed "--call-graph dwarf" as spotted by James
->     Clark <james.clark@linaro.org>.
-> ---
->  tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 2022a4f739be..b1ad24fb3b33 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -12,8 +12,10 @@ shelldir=$(dirname "$0")
->  . "${shelldir}"/lib/perf_has_symbol.sh
->  
->  testsym="test_loop"
-> +testsym2="brstack"
->  
->  skip_test_missing_symbol ${testsym}
-> +skip_test_missing_symbol ${testsym2}
->  
->  err=0
->  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> @@ -359,6 +361,33 @@ test_precise_max() {
->    fi
->  }
->  
-> +test_callgraph() {
-> +  echo "Callgraph test"
-> +
-> +  case $(uname -m)
-> +  in s390x)
-> +       cmd_flags="--call-graph dwarf -e cpu-clock";;
-> +     *)
-> +       cmd_flags="-g";;
-> +  esac
-> +
-> +  if ! perf record -o "${perfdata}" $cmd_flags perf test -w brstack
-> +  then
-> +    echo "Callgraph test [Failed missing output]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  if ! perf report -i "${perfdata}" 2>&1 | grep "${testsym2}"
-> +  then
-> +    echo "Callgraph test [Failed missing symbol]"
-> +    err=1
-> +    return
-> +  fi
-> +
-> +  echo "Callgraph test [Success]"
-> +}
-> +
->  # raise the limit of file descriptors to minimum
->  if [[ $default_fd_limit -lt $min_fd_limit ]]; then
->         ulimit -Sn $min_fd_limit
-> @@ -374,6 +403,7 @@ test_uid
->  test_leader_sampling
->  test_topdown_leader_sampling
->  test_precise_max
-> +test_callgraph
->  
->  # restore the default value
->  ulimit -Sn $default_fd_limit
+Add a simple boolean type.
 
-Works ok for s390
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ Documentation/ABI/testing/sysfs-class-firmware-attributes | 1 +
+ 1 file changed, 1 insertion(+)
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 2713efa509b465a39bf014180794bf487e5b42d6..64b8d5d49716e8387fee26e3e56910862f6a4f5c 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -18,6 +18,7 @@ Description:
+ 
+ 		The following are known types:
+ 
++			- boolean
+ 			- enumeration: a set of pre-defined valid values
+ 			- integer: a range of numerical values
+ 			- string
+
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+2.50.0
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
