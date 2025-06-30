@@ -1,147 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC828BA95;
-	Mon, 30 Jun 2025 14:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D71E28B7E7
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 14:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751293013; cv=none; b=cb6akJpnzf8l7ISxu/Uxd8piE6E6/KVolRtGGIDg2YassMH0ZWiRsoqVdGy9HDjsgVUb4CKSAMNnsxqMCVC0VBALBTKdD+q4gj4GSq2J7psyjYdgEpp74mVFBdSw4D9CZbXqX/IBTPy+na6/vxshLKhu6H/zyjaoztd4k3glRB0=
+	t=1751293020; cv=none; b=AytLzygeO8Vdim7jLrgwaHAeG5kTGcKo3/qFJxCa0qsOzYHN1+1FE8k/g64oh8f7hF/E1t1g6vw62fNsF+hYE/wDnY7CXZPQA5VtSC3Qesbbl4uXckTBli1N4ZoSP873O660wWeEQiFjfW87qyRoUdSAmrYbaYHAMFc1u6r4qSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751293013; c=relaxed/simple;
-	bh=OzPYGM4z9O73qf5/x0rNrOGtpP0MsiPbpJZyM0orLTE=;
+	s=arc-20240116; t=1751293020; c=relaxed/simple;
+	bh=rqjT+nknBGF3QVxl4ssrXwHZp31NXVqo5PwlapVxCWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WkLAfGPOUv9/fcyjzWYA/UPlqrEY98D//LyGLh05g9KW7DP/kn3VqQhK8wDKM8Yl+qf5FTsk8lDujlvaeusiEfCNHuuQCmtflyeiS9UNZqOJtTZDjvAH8OLelmSrFUWDDOIuE45bX9p9m2knaxlvv4foY9YJBnx1sXuJh8kYRcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NFMFuzaO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NFMFuzaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751293011; x=1782829011;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OzPYGM4z9O73qf5/x0rNrOGtpP0MsiPbpJZyM0orLTE=;
-  b=NFMFuzaOcrhWaK9s8IOKDOkIRE5uzWVcN/lo/dlEdoGkdik9SnW21Vw6
-   /rCJ/hgubR0LVwoivhZzvRKx5Ud8dOchPLuupx0ea4gAJesxg4GeDGzo5
-   lvYEQ9zxAGN27JSokyV4x2/NPzhWxe4RX3EMNjnwGgqgEoFLMCQmNdO9W
-   xwKDrjBEnbrJ9ZIhCRVGzolCma2rertwmMN+rpOidGtmKIY0VGhuJ0afu
-   9W8ndSKAEpJh8ova5waKAfBlgNCG5foRO5wURAaT8IqHlMEtSit6B0IA6
-   THS9cryIx1F0fWn03KRoi2Zf2X0jLfp5zPe24CABWEnHmPJwCkRMBaxF2
-   Q==;
-X-CSE-ConnectionGUID: WO6ex5tEQ4eNpwidPok5wA==
-X-CSE-MsgGUID: w4OQGq97S0qKcqZGx4md5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="70953170"
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="70953170"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:16:51 -0700
-X-CSE-ConnectionGUID: 58+RhZqhRG+b0WD5ZFiBsw==
-X-CSE-MsgGUID: YYmDo1P1T2mvWYNOXes65w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,277,1744095600"; 
-   d="scan'208";a="184493720"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa002.jf.intel.com with SMTP; 30 Jun 2025 07:16:45 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 30 Jun 2025 17:16:44 +0300
-Date: Mon, 30 Jun 2025 17:16:44 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] i2c: designware: Add quirk for Intel Xe
-Message-ID: <aGKcTCSL4QMkx86I@kuha.fi.intel.com>
-References: <20250627135314.873972-1-heikki.krogerus@linux.intel.com>
- <20250627135314.873972-2-heikki.krogerus@linux.intel.com>
- <aF6nEOVhLURyf616@smile.fi.intel.com>
- <aF8N0dYk_WAJjvVu@intel.com>
- <aGI9C6MR8qhe0MHR@smile.fi.intel.com>
- <aGJGWFOpccaNzpni@kuha.fi.intel.com>
- <aGJg0FZK__xYGP7C@smile.fi.intel.com>
- <aGJ8GZXEzJo1IVXM@kuha.fi.intel.com>
- <aGKOSIfS2kTqeHLt@smile.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iIhVedV2cOs1fAEEX3PfpRLt0hrhYZbq0BZf4u4SEQ4Qcl6Vv9jZicMc+hfdqbJD0Ap3D3XvS8tNyB1pXAgPImkeerF3Jepi+bwhF7pm+IBWuhMASaOAArjfYgUwna7vlEdM1q1EAbfvqskOMjpYi1S72VWFI6EoRx7xGzAndD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8331D34
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:16:41 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5AC6B3F66E
+	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:16:57 -0700 (PDT)
+Date: Mon, 30 Jun 2025 15:16:52 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>,
+	Karunika Choo <karunika.choo@arm.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: Wait for _READY register when powering on
+Message-ID: <aGKcVPWVh5d0C9oQ@e110455-lin.cambridge.arm.com>
+References: <20250630140704.432409-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aGKOSIfS2kTqeHLt@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250630140704.432409-1-steven.price@arm.com>
 
-On Mon, Jun 30, 2025 at 04:16:56PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 30, 2025 at 02:59:21PM +0300, Heikki Krogerus wrote:
-> > On Mon, Jun 30, 2025 at 01:02:56PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jun 30, 2025 at 11:10:00AM +0300, Heikki Krogerus wrote:
-> > > > On Mon, Jun 30, 2025 at 10:30:19AM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, Jun 27, 2025 at 05:32:01PM -0400, Rodrigo Vivi wrote:
-> > > > > > On Fri, Jun 27, 2025 at 05:13:36PM +0300, Andy Shevchenko wrote:
-> > > > > > > On Fri, Jun 27, 2025 at 04:53:11PM +0300, Heikki Krogerus wrote:
-> 
-> ...
-> 
-> > > > > > > >  static int dw_i2c_plat_probe(struct platform_device *pdev)
-> > > > > > > >  {
-> > > > > > > > +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
-> > > > > > > 
-> > > > > > > > -	dev->flags = (uintptr_t)device_get_match_data(device);
-> > > > > > > >  	if (device_property_present(device, "wx,i2c-snps-model"))
-> > > > > > > > -		dev->flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> > > > > > > > +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> > > > > > > >  
-> > > > > > > >  	dev->dev = device;
-> > > > > > > >  	dev->irq = irq;
-> > > > > > > > +	dev->flags = flags;
-> > > > > > > 
-> > > > > > > Maybe I'm missing something, but why do we need these (above) changes?
-> > > > > > 
-> > > > > > in between, it is introduced a new one:
-> > > > > > flags |= ACCESS_POLLING;
-> > > > > > 
-> > > > > > So, the initialization moved up, before the ACCESS_POLLING, and
-> > > > > > it let the assignment to the last, along with the group.
-> > > > > 
-> > > > > I still don't get. The cited code is complete equivalent.
-> > > > 
-> > > > This was requested by Jarkko.
-> > > 
-> > > Okay, but why? Sounds to me like unneeded churn. Can't we do this later when
-> > > required?
-> > 
-> > You need to ask why from Jarkko - I did not really question him on
-> > this one. Unfortunately his on vacation at the moment.
-> 
-> Yeah :-(
-> 
-> > I can drop this, but then I'll have to drop also Jarkko's ACK.
-> 
-> I can give mine if it helps. The code as far as I can see is 100% equivalent.
-> 
-> > I think we already agreed that this function, and probable the entire
-> > file, need to be refactored a bit, so would you mind much if we just
-> > went ahead with this as it is?
-> > 
-> > I'm asking that also because I don't have means or time to test this
-> > anymore before I start my vacation.
-> 
-> I see, then we may ask Andi and Wolfram on this. I slightly prefer to have
-> no additional churn added without a good reason.
+On Mon, Jun 30, 2025 at 03:07:02PM +0100, Steven Price wrote:
+> panthor_gpu_block_power_on() takes a register offset (rdy_reg) for the
+> purpose of waiting for the power transition to complete. However, a
+> copy/paste error converting to use the new 64 register functions
+> switched it to using the pwrtrans_reg register instead. Fix the function
+> to use the correct register.
 
-OK. I'll fix this.
+Good catch!
 
-thanks,
+> 
+> Fixes: 4d230aa209ed ("drm/panthor: Add 64-bit and poll register accessors")
+> Signed-off-by: Steven Price <steven.price@arm.com>
+
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+
+Best regards,
+Liviu
+
+> ---
+>  drivers/gpu/drm/panthor/panthor_gpu.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
+> index 534735518824..cb7a335e07d7 100644
+> --- a/drivers/gpu/drm/panthor/panthor_gpu.c
+> +++ b/drivers/gpu/drm/panthor/panthor_gpu.c
+> @@ -297,8 +297,9 @@ int panthor_gpu_block_power_on(struct panthor_device *ptdev,
+>  
+>  	gpu_write64(ptdev, pwron_reg, mask);
+>  
+> -	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val,
+> -					      !(mask & val), 100, timeout_us);
+> +	ret = gpu_read64_relaxed_poll_timeout(ptdev, rdy_reg, val,
+> +					      (mask & val) == val,
+> +					      100, timeout_us);
+>  	if (ret) {
+>  		drm_err(&ptdev->base, "timeout waiting on %s:%llx readiness",
+>  			blk_name, mask);
+> -- 
+> 2.39.5
+> 
 
 -- 
-heikki
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
