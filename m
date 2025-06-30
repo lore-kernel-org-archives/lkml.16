@@ -1,194 +1,109 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B5518E20
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 07:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B197E1E7C10;
+	Mon, 30 Jun 2025 07:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751269730; cv=none; b=IxTfl9MplDXORCgC4/g+WQYFFSJS3bxL4aXkeoPWHVKl+wnAvIOR/CKaJECdjRThP5Gh+5+OmbqfRdzXfw5kA2pSl2GYyUnmUzfXrbZE4dzfE6NhO8SrsJiIFsXcECased0jISNTFg+BXx6Jjh93/o8zANHUkuwjp9lEUhKNJMA=
+	t=1751269744; cv=none; b=dsHV8HSBfUI50s/24T4M1fxQ71ELGivvqj/GJdtEBJzH5yYPPqX9PtOWd7s0+MhpGSQ6jYEnBsYV66ZFJfhvviJYSCnwACgvhOadQ42UbrqnhftSCaVKEnfx15y4SNwLWzk2UL45ueaDyP51jHCFW7J980dpEXhAdqaPlDWKX4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751269730; c=relaxed/simple;
-	bh=qf8NaywLRmWMHaEJuLsltQXouTMmM7A/UAbuopsgvUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HeCX0o8FkfotnextPcBpdrMPKjsBGgVaYPNGd0nJoq5NotdjtQd7aYA1YLxaPhuxfUMYUPC8WfbmF0qdRfmUfMLGnkt6lzxuLIP2/Tkdc9RMH00nh5kZmIos0eDrBlJqd0a+HIFMnWiR+T9HMn90n39gPwPy/DIEsQbwWRY7pgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=G68ILadV; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
+	s=arc-20240116; t=1751269744; c=relaxed/simple;
+	bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=S7b1cKhpBaXGNSFiNJ20lU9IHVomQCkcjhKb+a0Hr8PmIHUIcK9w3RZMtWSgESZjM2dqbDDMImbwbOykKluvFiELkgIc8lwVXwDDxdzQmcVwlok+cqBAWQUcI40z7BVyvrgk4uFz9KI0TnRc7Jte1VPjpOhW9lNPaQ2VI0h86lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SNxOXlQZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a/d4+f4m; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="G68ILadV"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so8289845a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 00:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mandelbit.com; s=google; t=1751269727; x=1751874527; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tZ+BSaUYjMYZPFRc5ahI5f+VB6TZxnMY7+aM/BHB0gk=;
-        b=G68ILadVVZwyr8ugTC0v7wFBWa/DeA6lLn6W1yFZvySa5nJebBnTJnMtGqUCqytDtJ
-         y0nO5dNZ6CFAzLmez2Thsh6Xx6VvUEE0MUdwDwrYkUQYCv5b0gximxXfnCsI28U/6+g1
-         gnp0sml0albInrW9cB0UvHSHJT3YhXkSp0rEX3thEYTFNk0XEOeS/DeUgVLmx4jJi12h
-         pRQrkPfwb5xpMl3iVdDeFKeA+qbOQaAG2RM6Fm7SfhORZuc9NE4pe/h42LD9rcVsy5Jw
-         jWxPFiVun5aRzOs6iGdYPGx++f17kmtZNB3b6d3EmClXjvHImydMUmda4QzpoOtkVXtD
-         71JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751269727; x=1751874527;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tZ+BSaUYjMYZPFRc5ahI5f+VB6TZxnMY7+aM/BHB0gk=;
-        b=VC3rbnhl3V/Yxa379DcuJ9IbyD++XN3IWnLoUPQBhtJcmZ67kf9nNqHa5jUbzdymp6
-         yHI9g+O25XtRnsRFlSEJCJER+P9pAuu3niboweRoYKy2eNMz0yZ35552qYxUSvzxqZUA
-         ll6FtAwVAcOf8QT+VV+BeE2nsjEBGv0tWxXFz8q+FprDm0WzyhV9Yx6Q1SxD96gBVT1D
-         tkVKJc8nY1wmJIV1wc38PmIaSnj7zj0D6BZZ97hM2dS2pBf+qHiZiS3YuolvoAd6nUVY
-         XEqTBMmJTVcVS9r+RQmXBByFddmVoHQBBksgXWOXjv5DBjvyZwfLP8bxxkOTtSWaUTHq
-         bi4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVZF8uLnoT2jD0MO98RzNsQPquUlnBLUn5b3MPKCeoCYYdlc8oDteZsTET5JILTpsr9+pYsWp23iNk2KSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCWtv1FrbgNQHMg5IsdZsZ3DkaWCKGt5jlvyJpuEd7EeeEFnMo
-	PtHhnztBbEppBue7QC33ezzwYJJixDa3ggHJGRwvsjw643fswesKcsGVEUaJNU2k0o8=
-X-Gm-Gg: ASbGncsDKRiMpaDv3fiDXMymx22fuvXD5wUYvIzdH3Sf2Am6K4AmUmztuHv9VtB79VL
-	FbtEwrZJbuffCeycN0EYh/OSYNgRIBLlyGZmuRiXPG2rjS8v96dbTTkuBwiamsn3v0BqVTn+a8V
-	D2jl/eKleKgK0q8ETuEFDS6Q5EUSWDLD5MDvXvQfXLiWJZB3hMw9aBogb7onvz1qSm8s5ZCAVsd
-	rogbQF6BmJ90OhyMdesPLlGx6TicpIOQpJdFmoVKoNl/mAtple5Nj9NOu+H8zbxMs4lxXLARXUi
-	CWfd5tbk7wHpm+YW4Lzn0sJ2XjWIIvos9EGpU3icU12Ydj8UF7wCGJY1K2rCnCNbiQVykbcw9v1
-	sL9DVZ2R7cPAmDo6Cu1ZNd4Cy
-X-Google-Smtp-Source: AGHT+IFG8mxwherCyB+H+Ce/MDetYKrbqKrvuEJkbWn3WcmopojqghsC9D4gNWRWL3XhXfmKmOCezQ==
-X-Received: by 2002:a17:907:8691:b0:ae0:ade2:606b with SMTP id a640c23a62f3a-ae34fd8ecebmr1192187566b.19.1751269726337;
-        Mon, 30 Jun 2025 00:48:46 -0700 (PDT)
-Received: from ?IPV6:2001:67c:2fbc:1:f5fc:eb97:a20:8b31? ([2001:67c:2fbc:1:f5fc:eb97:a20:8b31])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b1c4sm623062966b.31.2025.06.30.00.48.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 00:48:45 -0700 (PDT)
-Message-ID: <1c6f4024-be8a-4734-a724-f12b85a52ed7@mandelbit.com>
-Date: Mon, 30 Jun 2025 09:48:44 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SNxOXlQZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a/d4+f4m"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6D01E1D00161;
+	Mon, 30 Jun 2025 03:49:00 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 30 Jun 2025 03:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751269740;
+	 x=1751356140; bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=; b=
+	SNxOXlQZyL9Oq2I4GRpokV8scZvw8Z38mDYuhwKSD99bLH7i0Pueqw86g8BW410b
+	YIeN59Aa6Op9VWU9QbiRMEpTl/Rbz7svK7a0DqS4eJgl8xVSEj60lh+daJEVo19i
+	+d5DFxiCxVn98MWLneFfWiUaoN0mIyk8A7bVSY2a01e7IuftxljMX49qWMvNpZUk
+	oeLtWASOC4q17oNfrzUoAEkSaZgO0aGu9dQuUxzL4tssLyvaxeGIP+TY2CAx7fIa
+	JQjac1mKzK8Qh7IUdTXiCn/AEIaSC/ekHxEXcuxxsn6/TCRN/xJbDmazBMcDI5T2
+	YKCt9oeri3Bx+OCfkGQQAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751269740; x=
+	1751356140; bh=2ZqCOQCDU4e20dlPkgw2JsI4HO3iLuuInFCI+rMWS6s=; b=a
+	/d4+f4mnM79Y5T+pzVKY9v7swzfASLL1RhmWw/fmy99YfsLOdqecBMd2StFIfbr2
+	fkmAqFDMZyi3bA6B9a4C+J7B7kNGRH6BvpRjoLFYCrr53VNjqDkVp2Bsb5KaClsp
+	eyr/jPYmXchvIjU5USKUws6lFizcsnUp1ruC94dVyM5VBCMcY3QDjDAgnBrV7+D0
+	Fhri/sbpMIOdT/kCoQctNStsJ+An9ahL56aAg5V3D2/f5T6ka0sXkoxTIpTzW0Vb
+	Tbl84RB6qhy/3F1r8WempqEXkmlwTmTfpeg2NxubtU/HmPh6YWiWuznoSsCuXUp3
+	9/Sa8ZPhomPBKtEGUjKIg==
+X-ME-Sender: <xms:a0FiaGTNjN3ACZ9D22CF-KPIfVnbRFg0yOTF158rjy905thge8t70g>
+    <xme:a0FiaLxnoS1FK-x8eTLoWBlkXNXr7U0ZwOLjjvCvZIIAY__MvfEjcWhIOnVBM-dvD
+    KxD2Bs7a8h08-4nyHE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduuddugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepjhhprghnihhssegsrgihlhhisghrvgdrtghomhdprhgtphhtthhope
+    hlghhirhgufihoohgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivges
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
+X-ME-Proxy: <xmx:a0FiaD1rnBFWt5xL9tPWpOAN7t2DBqECvzHvLM_dmWOU02HPAeaWBg>
+    <xmx:a0FiaCDjEQ_mpBPR5EYgnc4qf72UqASCVQhcio_pLTBs3LLgIx2Kuw>
+    <xmx:a0FiaPg4cNpmsoDZO7RGwQ6CcT7Xf7pyP_yNHFsdJmQ06AdtgBTIUQ>
+    <xmx:a0FiaOqtfepci8NWB5LSgfmMmys_s6N4UVyKH-tVMMWnTqbkw6eP5g>
+    <xmx:bEFiaAei7bwcu6KxSqfZASuYasaVExh6rkRioyW2b6qStGYue-yvhl7B>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D3B23700068; Mon, 30 Jun 2025 03:48:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: stm32: fix NULL check on pointer-to-pointer variable
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- linux-spi@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown
- <broonie@kernel.org>, Alain Volmat <alain.volmat@foss.st.com>
-References: <20250628000227.22895-1-antonio@mandelbit.com>
- <1f49b8f3-44c9-43f3-a3bf-b931fb0726f4@foss.st.com>
-Content-Language: en-US
-From: Antonio Quartulli <antonio@mandelbit.com>
-Autocrypt: addr=antonio@mandelbit.com; keydata=
- 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
-Organization: Mandelbit SRL
-In-Reply-To: <1f49b8f3-44c9-43f3-a3bf-b931fb0726f4@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T53991f9249d0193f
+Date: Mon, 30 Jun 2025 09:48:05 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Michael Walle" <mwalle@kernel.org>, "Lee Jones" <lee@kernel.org>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Julien Panis" <jpanis@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Message-Id: <c07229ed-d4b8-4e5f-a518-ea9d703fa617@app.fastmail.com>
+In-Reply-To: <20250613114518.1772109-3-mwalle@kernel.org>
+References: <20250613114518.1772109-1-mwalle@kernel.org>
+ <20250613114518.1772109-3-mwalle@kernel.org>
+Subject: Re: [PATCH v2 2/7] misc: tps6594-pfsm: Add TI TPS652G1 PMIC PFSM
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Clement,
+On Fri, Jun 13, 2025, at 13:45, Michael Walle wrote:
+> The TPS652G1 is a stripped down TPS65224, but the PFSM is the same.
+> Thus, handle it the same way as the TPS65224 in the driver.
+>
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> ---
 
-On 30/06/2025 09:34, Clement LE GOFFIC wrote:
-> Hi Antonio,
-> 
-> On 6/28/25 02:02, Antonio Quartulli wrote:
->> In stm32_spi_prepare_rx_dma_mdma_chaining() both rx_dma_desc
->> and rx_mdma_desc are passed as pointer-to-pointer arguments.
->>
->> The goal is to pass back to the caller the value returned
->> by dmaengine_prep_slave_sg(), when it is not NULL.
->>
->> However, the NULL check on the result is erroneously
->> performed without dereferencing the pointer.
->>
->> Add the proper dereference operator to both checks.
->>
->> Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to 
->> enhance DDR use")
->> Addresses-Coverity-ID: 1644715 ("Null pointer dereferences 
->> (REVERSE_INULL)")
->> Signed-off-by: Antonio Quartulli <antonio@mandelbit.com>
->> ---
->>   drivers/spi/spi-stm32.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
->> index 3d20f09f1ae7..e9fa17e52fb0 100644
->> --- a/drivers/spi/spi-stm32.c
->> +++ b/drivers/spi/spi-stm32.c
->> @@ -1529,7 +1529,7 @@ static int 
->> stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
->>                              DMA_PREP_INTERRUPT);
->>       sg_free_table(&dma_sgt);
->> -    if (!rx_dma_desc)
->> +    if (!*rx_dma_desc)
->>           return -EINVAL;
->>       /* Prepare MDMA slave_sg transfer MEM_TO_MEM (SRAM>DDR) */
->> @@ -1563,8 +1563,8 @@ static int 
->> stm32_spi_prepare_rx_dma_mdma_chaining(struct stm32_spi *spi,
->>                           DMA_PREP_INTERRUPT);
->>       sg_free_table(&mdma_sgt);
->> -    if (!rx_mdma_desc) {
->> -        rx_dma_desc = NULL;
->> +    if (!*rx_mdma_desc) {
->> +        *rx_dma_desc = NULL;
->>           return -EINVAL;
->>       }
-> 
-> Good catch for both pointers !
-> 
-> For readability, I would suggest to define two dma_async_tx_descriptor 
-> ptr at the beginning of the function such as :
->      struct dma_async_tx_descriptor *_mdma_desc = *rx_mdma_desc;
->      struct dma_async_tx_descriptor *_dma_desc = *rx_dma_desc;
-> 
-> And then use them all along the function even in the assignation.
-> 
-
-Thanks for the comment.
-Will send v2!
-
-Regards,
-
-
--- 
-Antonio Quartulli
-
-CEO and Co-Founder
-Mandelbit Srl
-https://www.mandelbit.com
-
+Acked-by: Arnd Bergmann <arnd@arndb.de> # drivers/misc/
