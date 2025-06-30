@@ -1,117 +1,102 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CA023ABB5
-	for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4329478;
+	Mon, 30 Jun 2025 23:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751326677; cv=none; b=jf7haLIu9Rkfj6dxoBUgWuNe4X1o7O1FW2ZrY3gn/RQJKpCQQM9O0psGKV/BQopWeJTCDcX1m/K8pSELZTUY/FChrr0KIV70kWq8/D0ehteMwK+svI7/biU6Cr1EeKKDek+NQUHtcV3bZQN4R8ZTgTqi9AdOOekNaSViS+pOWrY=
+	t=1751326801; cv=none; b=BHo9U+wCTVcZr61pWyS7Ugz/BSEjPu3y+6GjHUKywN/003Ots5W/brYj0eYQf6GVUlzcmVz97F4axljJlwfcI5/q18+15MvUbVU/nb+sgZXmpASSi++KynVl0xMUWmgF6R9I5/zA4wv0a3uamj6kQga87xn/dPMbEtm+OeGPD/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751326677; c=relaxed/simple;
-	bh=dK9sbnxD4m/YDHS9yUBeAQqhLNLLq7vDwIrf+SMPlpw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=s+B84hWF69m74w7odotumeZid5YjbUtTfwBnNgKv5kcpesUOrtJ2F2sVN6GmXvyLMuA/J+dM+WG27tt8NY/Ss3HFneHVPPn1OkUE2qN+gnHCJtrYXWlf17laLWeEo34FwcZl9FV7/HfC0oTNDek4nHiU5dyUnzb/He4fcHnVSlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so24730115ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 16:37:55 -0700 (PDT)
+	s=arc-20240116; t=1751326801; c=relaxed/simple;
+	bh=CYre7OL2mRvivFFml9SLwffbKKDDylW5Otv7Fe/ZbrU=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PoqtgOI3hlDRnd6x66tJ0ehur/+Pc/VIF+507vO+wDRahO6zjySHRBbo24lDNbqQylti2xPtAhLMbAIuY7ZpHDQtzl39TFlH8owrQR2li3nFDEs0P1oRf6yAXloe/zgtpNwL94m8Uau6OQ1u1OJMQMALsCURMyws5OsWybqU7WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdV9DK6M; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdV9DK6M"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so5665863b3a.0;
+        Mon, 30 Jun 2025 16:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751326799; x=1751931599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CYre7OL2mRvivFFml9SLwffbKKDDylW5Otv7Fe/ZbrU=;
+        b=LdV9DK6Mqxkb8vDCAPQxNG/SNnce3idnJVwagDqmPP4n+LSxwtVg52B54juzP+v7nG
+         Ok0AupfBn50pIcmaQLw8hIhk9sCa653bIEHi22I+nXeW0BTTOgu3hPqe9Sc3hY+U2xVH
+         e7RiYUuIEPWQd9TCFbaW2yRqxyqjp+/Lrr7BvyFkcp/BnuLoi/ZUouzH5cUsbHOWluPo
+         LAu9YRf9wK+NQT0zdrNbBkfi2feBmmmTHo214prBmsubxT20tHkPXEO56/zwww23AR31
+         2H53lEyuIOrYo46jxxlM9VDhccyo/KBswpXvodik7HOGanAXbP9raqHA/XYZk3F+Six/
+         yyfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751326674; x=1751931474;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pl5M05gS9CLz4rjryE7j3rB3/YkMxfSRM7TQPjreLoo=;
-        b=rR2MsR3O/oUnwsqTQ+c/8ddhVVObzaTyB8Lm5uxdbd6LXEA6OpuIYtDMEwV7cGZpdJ
-         r8pnAabRS70VEi1x70IhIMyVr9kVZfCxJIoEM0+yzZPdTqTZUWDgrRX7pm7IhgBdt+za
-         n92KQVkg9F+6M3B/DTgKo3de2tDNZtloHxHaYBOyvKFAFfDGipBb76GunOQ7+9q3Wtl3
-         qs9rCFBEaC5YQwxjWpkk/aVjcGCKMTNE3XPS0IhKbpBrtWAESHMenalB4YRoOj3GCYxY
-         nba8W+MWz9VooNXiNa5JEe8AZcPzhw7DJ1vFPaElkj7GyRep68/7PchEutkIVu7gN4WI
-         BSHg==
-X-Gm-Message-State: AOJu0Yzj6YgUrIPfEjQgsE+xip/syyu4eyzN7QDKD51qcHtQn8WGYJEf
-	BJfesWyqXvPCbribDT35ZdWLtpu1zA+Oh6qKaNwG+1C7G1yklnlFm2tCnMzLvZGriExFioyRVIw
-	ce3eIkVAOlmx6UjE6SBTtnt0HervfBZkHtB10dIvvRHc3tlvsdo89Tl25z9c=
-X-Google-Smtp-Source: AGHT+IGJI/PQ74KjA6osRzV/UuB2RhxUeuNhdAT1HTd8SDL9pIRX5wLp9f99xcN6uOWFQytzl5WfRSU4cryugT7lyQ8WIjbJNn0r
+        d=1e100.net; s=20230601; t=1751326799; x=1751931599;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CYre7OL2mRvivFFml9SLwffbKKDDylW5Otv7Fe/ZbrU=;
+        b=GZsBaqYCuo/rLwLmsO8yVQKvwTkSRMzTRTnKL7F3ZaYAvCkekWT4jeFWpf1dDNTMmK
+         auTFEvUngl8lgHa6+2/seMSvszPBNiZy7LNUxxscpIuAnq+HiEx7C7AZiMO5Rx0A8w31
+         YXSE+CK4qPed98Ec9X5wany1P61uMoGmh8V02smYDGU6zAVhQ3wX+fSDIahx8bjFZ+qs
+         3UMhHt3KE8UEHZ+wD/0DiIfEvrd8VB61ZWKUMv26pD1b7O1iJoXkXZGzVjEexVlevP9n
+         IRq8hzSxCDgCrCbw9NxkVeiXLYjpHGCFE2uM8v7HLDBBxJoKniJCVcPXlGvr+s9+D7jJ
+         T3lw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8uoF23S6KE4dbIG86CFmHpGzNKa3/daDjgFhRwPueVvFBxXd+L2I0b66MHXFH5SIay9eN8OC/1Lc/zxVTW7M=@vger.kernel.org, AJvYcCWky4znBrtWscLl8WorkcMgpLr7sZpE+BgEZxkgoKctqeejTjscPk0FgXcctTmPQTcwl6ajI096OWy0Fq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywusgjjw5jEIvAoVRrWKIfwLW6mgnpWmvcqzZotxS8c1mRmC8p9
+	U25UfscNLw3qVOf1TaDLtauOwPPxwcFXWJor5e8LWjzA3mBPAMcRa3Nc
+X-Gm-Gg: ASbGncseWxvTwCOmQTgmiQ6CD604zcuLSUlhtH3F2Tw50yNdXCEbF+dbLYDAHgdIP8J
+	UZK77o2r+xoL4x+zlMtdR+fcBWRBOLhwwiSUBCYp4S162DBy2n3PRHIklIM255uG4Pv6L4Va8Ln
+	EKR/ImUiEn3lQF+KWv0nq36Js4o3JtHD4n29fLe2NetVGqvruGrClpEmYs+1AeDlzYmSf8OVXXz
+	5MjoB9dosDQyB1gnJlKmIHXvyySG0rABx5TvjN/gbcWPAVM2Nf+GkGW9DV3w2bir54VcqJaJfoD
+	OInjRNM10zBXqWRoDWe0zt8vS5A2JeXrfnlixA6VrUuwV5pFk9bf0yLzCkIXqCE/uSQq7KAYxFB
+	POoKdtDg+qP36m4wlieiNsHQ4hhRfPj8I0jYmhMEnGGW+wZZiO9U=
+X-Google-Smtp-Source: AGHT+IEeXmH+JJybTRW5p9il5o29FFDX0lq8gJv9ny+NPMnLdkd1UgA+uKN238FefGwfCoeL/Xh0OQ==
+X-Received: by 2002:a05:6a00:3315:b0:74b:b11:edd5 with SMTP id d2e1a72fcca58-74b0b11f1e8mr16616776b3a.3.1751326798566;
+        Mon, 30 Jun 2025 16:39:58 -0700 (PDT)
+Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b389sm10305688b3a.35.2025.06.30.16.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 16:39:58 -0700 (PDT)
+Date: Tue, 01 Jul 2025 08:39:40 +0900 (JST)
+Message-Id: <20250701.083940.2222161064880631447.fujita.tomonori@gmail.com>
+To: aliceryhl@google.com, a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, ojeda@kernel.org,
+ boqun.feng@gmail.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com,
+ dakr@kernel.org, frederic@kernel.org, gary@garyguo.net,
+ jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org,
+ lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org,
+ tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH v1] rust: time: make ClockSource unsafe trait
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <CAH5fLgirsNn9WwEUgFaY2z9+9gG3SWssCoNSzpE56F=sS02kEw@mail.gmail.com>
+References: <20250630131011.405219-1-fujita.tomonori@gmail.com>
+	<CAH5fLgirsNn9WwEUgFaY2z9+9gG3SWssCoNSzpE56F=sS02kEw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:248e:b0:3df:29c5:2976 with SMTP id
- e9e14a558f8ab-3df4ab85a5amr156806005ab.14.1751326674591; Mon, 30 Jun 2025
- 16:37:54 -0700 (PDT)
-Date: Mon, 30 Jun 2025 16:37:54 -0700
-In-Reply-To: <68610b72.a70a0220.2f4de1.0019.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68631fd2.a70a0220.3b7e22.138c.GAE@google.com>
-Subject: Re: [syzbot] Private message regarding: [syzbot] [ntfs3?] WARNING in ni_rename
-From: syzbot <syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: base64
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
-
-***
-
-Subject: Private message regarding: [syzbot] [ntfs3?] WARNING in ni_rename
-Author: kapoorarnav43@gmail.com
-
-#syz test: 
-git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-
-From 00325fe8a9658ef0d9e0082dd98c09adc01875fa Mon Sep 17 00:00:00 2001
-From: Arnav Kapoor <kapoor...@gmail.com>
-Date: Sun, 29 Jun 2025 15:29:27 +0530
-Subject: [PATCH] ntfs3: log warning instead of WARN_ON in ni_rename cleanup 
-failure
-
-If ni_remove_name fails and undoing ni_add_name also fails,
-replace WARN_ON with a ntfs_warn log and mark the inode bad.
-This keeps the error visible without triggering a kernel warning.
-
-Reported-by: syzbot+b0373017f711c06ada64@syzkaller.appspotmail.com
-Signed-off-by: Arnav Kapoor <kapoor...@gmail.com>
----
- fs/ntfs3/frecord.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ntfs3/frecord.c b/fs/ntfs3/frecord.c
-index b7a83200f2cc..xxxxxxxxxxxx 100644
---- a/fs/ntfs3/frecord.c
-+++ b/fs/ntfs3/frecord.c
-@@ -3029,11 +3029,11 @@ int ni_rename(...)
- if (err && ni_remove_name(new_dir_ni, ni, new_de, &de2, &undo)) {
-     ntfs_err(sb, "ni_rename: failed to clean up after add_name failure");
-     *is_bad = true;
--    WARN_ON(err);
-+    ntfs_warn(sb, "ni_rename: incomplete rename cleanup, marking bad");
- }
- 
- /*
--- 
-2.43.0
-
-
-On Monday, 30 June 2025 at 20:02:07 UTC+5:30 syzbot wrote:
-
-Hello, 
-
-syzbot tried to test the proposed patch but the build/boot failed: 
-
-failed to apply patch: 
-checking file fs/ntfs3/frecord.c 
-patch: **** unexpected end of file in patch 
-
-
-
-Tested on: 
-
-commit: 1343433e Add linux-next specific files for 20250630 
-git tree: linux-next 
-kernel config: https://syzkaller.appspot.com/x/.config?x=a3d8d413c6928dae 
-dashboard link: https://syzkaller.appspot.com/bug?extid=b0373017f711c06ada64 
-compiler: 
-patch: https://syzkaller.appspot.com/x/patch.diff?x=1362988c580000 
-
+T24gTW9uLCAzMCBKdW4gMjAyNSAxNTozMzozMSArMDIwMA0KQWxpY2UgUnlobCA8YWxpY2VyeWhs
+QGdvb2dsZS5jb20+IHdyb3RlOg0KDQo+IE9uIE1vbiwgSnVuIDMwLCAyMDI1IGF0IDM6MTDigK9Q
+TSBGVUpJVEEgVG9tb25vcmkNCj4gPGZ1aml0YS50b21vbm9yaUBnbWFpbC5jb20+IHdyb3RlOg0K
+Pj4NCj4+IE1hcmsgdGhlIENsb2NrU291cmNlIHRyYWl0IGFzIHVuc2FmZSBhbmQgZG9jdW1lbnQg
+aXRzIHNhZmV0eQ0KPj4gcmVxdWlyZW1lbnRzLiBTcGVjaWZpY2FsbHksIGltcGxlbWVudGVycyBt
+dXN0IGd1YXJhbnRlZSB0aGF0IHRoZWlyDQo+PiBga3RpbWVfZ2V0KClgIGltcGxlbWVudGF0aW9u
+IHJldHVybnMgYSB2YWx1ZSBpbiB0aGUgaW5jbHVzaXZlIHJhbmdlDQo+PiBbMCwgS1RJTUVfTUFY
+XS4NCj4+DQo+PiBVcGRhdGUgYWxsIGV4aXN0aW5nIGltcGxlbWVudGF0aW9ucyB0byB1c2UgYHVu
+c2FmZSBpbXBsYCB3aXRoDQo+PiBjb3JyZXNwb25kaW5nIHNhZmV0eSBjb21tZW50cy4NCj4+DQo+
+PiBOb3RlIHRoYXQgdGhlcmUgY291bGQgYmUgcG90ZW50aWFsIHVzZXJzIG9mIGEgY3VzdG9taXpl
+ZCBjbG9jayBzb3VyY2UgWzFdDQo+PiBzbyB3ZSBkb24ndCBzZWFsIHRoZSB0cmFpdC4NCj4+DQo+
+PiBMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9ydXN0LWZvci1saW51eC9aOXhiMXIxeDV0
+T3pBSVpUQGJvcXVuLWFyY2hsaW51eC8gWzFdDQo+PiBTdWdnZXN0ZWQtYnk6IEJvcXVuIEZlbmcg
+PGJvcXVuLmZlbmdAZ21haWwuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogRlVKSVRBIFRvbW9ub3Jp
+IDxmdWppdGEudG9tb25vcmlAZ21haWwuY29tPg0KPiANCj4gTEdUTToNCj4gUmV2aWV3ZWQtYnk6
+IEFsaWNlIFJ5aGwgPGFsaWNlcnlobEBnb29nbGUuY29tPg0KDQpUaGFua3MhDQoNCj4gVGhvdWdo
+IHlvdSdyZSBtaXNzaW5nIGBgIGFyb3VuZCBbMDsgS1RJTUVfTUFYXSBpbiBzb21lIHBsYWNlcywg
+d2hpY2gNCj4gbWF5IGJlIHdvcnRoIGFkZGluZy4NCg0KQW5kcmVhcywgd291bGQgeW91IGxpa2Ug
+bWUgdG8gc2VuZCB2MiB3aXRoIHRoZSBhYm92ZSBjaGFuZ2VzPw0KDQo=
