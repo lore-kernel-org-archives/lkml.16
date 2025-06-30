@@ -1,163 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A210F17C220;
-	Mon, 30 Jun 2025 08:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2A221FF55;
+	Mon, 30 Jun 2025 08:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751271683; cv=none; b=flF9Fhk6qGGJedAKwr0Me6pyfZDixbbDaEvwD1xSW/+4YmkB14ZJVrUtlUgYg5KNseyg+Bc/0VCwzWGRdAIrwXWMb7rb4c5ew7/gqKEFvXorgPUkhBclQNhqDokaf4kd307mwJuTIA6btwdJzjGn4U61cUMhrFDo4iHQJbeQtA0=
+	t=1751271712; cv=none; b=Wk//RLuDbLOGzxrNpOKca+FmNATz0MX9LW/Sm2AFa/RonVz4eGPr3xOCxl8MykTVXfF7YQnI8K1o24N/IIGcxqyoj+OkilW/OZjAczrg5iY4XkrViZ7nkgZEKZ7gN9vfSJ5fWc00EO1iNfM5VXAZRqDuL5yLK+K79sVzi92xeOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751271683; c=relaxed/simple;
-	bh=A5KG76MjVqQz4FQ5pKlatgGt40T2Lao+QWmOmHaiFAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FggsAYSpamCCa8YlyiJV3EWa1c73RDiyoSwVQYYmWfvNQQgePMUI/famcYg7wys4A5sTxzDnN52EMFS78WMEK/oOTowY/kmEjWpfK99o2r9pwoQlYYDoBi3nVRDuGe+bCgTs5zmUje/duIwsP1QDu+HWtbCx+pZN0hA+qlcw2ZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1wbi9pO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751271712; c=relaxed/simple;
+	bh=bO0wNSTcJpD6QAr1bsa0anydA+/iZo70P2ARQ4NvovE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=gBxXVwAjRJqmzX1o4QN7eFJL82Y4JnslqEngZwJwrAACcmaoZaFWNuMqXYCWZvp4KNQLHEPqQ+nQiZF8sOPHEAh9kisvhY9QmYurLbWYj1GUqXMdbNcBF1qY4t4kLmgUabXqiDrwy5IKWKdnFmqJ/frF7srK/zQIdZW8lhaVA/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6yrs2Wn+; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1wbi9pO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ADD8C4CEE3;
-	Mon, 30 Jun 2025 08:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751271683;
-	bh=A5KG76MjVqQz4FQ5pKlatgGt40T2Lao+QWmOmHaiFAQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J1wbi9pO9A+MYQ9kNQkKAxOjCi/B89Bc1Fb1ilE6hwaXkh3dwmfZ3oFiZxIeUWbON
-	 gf52/2T6gAeg2pDHbsNglkbvmew1uex2kismgr7xFbTPee3WHP+42PfnTYNZw7ArT/
-	 MS/nas+5orQH0B5ogMi3IZstz/FDl/+XcAYmmCFmLUsc/5O35S1YXnxGaWS1gleQkb
-	 qp6WSacH36DrqgzNse7AIQ/4b3hi0ix970fCN6L0DznRy7n5Z4/+kHc/Hrq0oBs6UZ
-	 qIuRJKfHaI0/4XAsXpNMsGDWd+13hECI5F4r73CcdnwQcw3mqHSoVF+F0PYlHRp1Zm
-	 qFyx6/R4cH/vw==
-Message-ID: <d24b2a88-fda7-4a8a-bb5b-73d8a928ff89@kernel.org>
-Date: Mon, 30 Jun 2025 10:21:13 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6yrs2Wn+"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55U7peFA026641;
+	Mon, 30 Jun 2025 10:21:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=IpPSj43m1cefXVsku8pwgV
+	hOCIYnHfCUw3HEbomrVW0=; b=6yrs2Wn+1eiPM/Wk0jH/GOVMrh9S63bUTG2ds+
+	xCMDGGXmYgD9ds9POLQ8Yw4gQ28ugSurkbOV9sS3O6kc0EnV03Ne7R7G5o4+I3Yk
+	J3ujCzgnWaRa3BE5R6MARkC0rY59SFPystbaVy2sDP15B8VaEVHM8fnIXipgN6aH
+	lKsC8T5px89cq/uPBu1Sk8xziHK4XEcc94V9CU7ipiB0MdeT66zCBHBPBsv4GcIt
+	xsLsExjaf3iH33nZTjHIrdd1FZziAVQCBoU8ShedLcLimJTBTwaKGgiiv+wESMYy
+	5+asimpNUK8W9VoqyU/vcd45xnT9ck2LZxhG5aktWzfKza4Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47jubnkrwt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Jun 2025 10:21:40 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 28D1A40045;
+	Mon, 30 Jun 2025 10:20:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BC2F34A24F6;
+	Mon, 30 Jun 2025 10:20:16 +0200 (CEST)
+Received: from localhost (10.252.20.7) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 30 Jun
+ 2025 10:20:16 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Date: Mon, 30 Jun 2025 10:20:13 +0200
+Subject: [PATCH] spi: stm32: fix sram pool free in probe error path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
- codec
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
- Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
- <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
- <wcmalvywoginosy5pp7wskgdzjbwbydividmk4dtwguoltiobf@muw5lzkvgu5c>
- <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250630-spi-fix-v1-1-2e671c006e15@foss.st.com>
+X-B4-Tracking: v=1; b=H4sIALxIYmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM2MD3eKCTN20zApdCzMDE0OzpLQkS7MUJaDqgqJUoDDYpOjY2loA4dS
+ aHFkAAAA=
+X-Change-ID: 20250630-spi-fix-860416bfb96d
+To: Alain Volmat <alain.volmat@foss.st.com>, Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-spi@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Dan
+ Carpenter <dan.carpenter@linaro.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-30_01,2025-06-27_01,2025-03-28_01
 
-On 28/06/2025 18:41, Alexey Klimov wrote:
-> 
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>> +
->>> +            audio-codec@f000 {
->>> +                compatible = "qcom,pm4125-codec";
->>> +                reg = <0xf000>;
->>> +                vdd-io-supply = <&pm4125_l15>;
->>> +                vdd-cp-supply = <&pm4125_s4>;
->>> +                vdd-pa-vpos-supply = <&pm4125_s4>;
->>> +                vdd-mic-bias-supply = <&pm4125_l22>;
->>> +                qcom,micbias1-microvolt = <1800000>;
->>> +                qcom,micbias2-microvolt = <1800000>;
->>> +                qcom,micbias3-microvolt = <1800000>;
->>> +                qcom,rx-device = <&pm4125_rx>;
->>> +                qcom,tx-device = <&pm4125_tx>;
->>> +                #sound-dai-cells = <1>;
->>> +            };
->>> +        };
->>> +    };
->>> +
->>> +    /* ... */
->>> +
->>> +    soundwire@a610000 {
->>
->> Drop this and next one.
-> 
-> The audio-codec node supposed to have qcom,{rx,tx}-device properties.
-> If I'll drop it then the example doesn't compile well unless I am missing
-> something?
+Add a test to check whether the sram_pool is NULL before freeing it.
 
-What did you drop and what did I ask to drop?
+Fixes: d17dd2f1d8a1 ("spi: stm32: use STM32 DMA with STM32 MDMA to enhance DDR use")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+---
+ drivers/spi/spi-stm32.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
-> For example when I removed soundwire tx node completely and dropped
-> qcom,tx-device then:
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 3d20f09f1ae7..858470a2cab5 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -2486,7 +2486,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
+ 	if (spi->mdma_rx)
+ 		dma_release_channel(spi->mdma_rx);
+ err_pool_free:
+-	gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf, spi->sram_rx_buf_size);
++	if (spi->sram_pool)
++		gen_pool_free(spi->sram_pool, (unsigned long)spi->sram_rx_buf,
++			      spi->sram_rx_buf_size);
+ err_dma_release:
+ 	if (spi->dma_tx)
+ 		dma_release_channel(spi->dma_tx);
 
-I did not ask to drop qcom,tx-device.
+---
+base-commit: 045719b1d0aab98e6abdd7715e8587b997d1cefa
+change-id: 20250630-spi-fix-860416bfb96d
 
-...
-
-> 
->>> +  The audio codec IC found on Qualcomm PM4125/PM2250 PMICs.
->>> +  It has RX and TX Soundwire slave devices. This bindings is for the
->>> +  slave devices.
->>
->> Last sentence is redundant and makes no sense. Codec has only slave
->> devices, so how this can be anything else than for slave devices?
-> 
-> This came from other similar files that describe bindings for child codec nodes
-> of soundwire nodes. For example from qcom,wcd937x-sdw.yaml.
-> Should this be rephrased to "This bindings is for the soundwire slave devices." ?
-
-You just pasted the same, so I don't get how you want to rephrase into
-the same sentence.
-
-> 
 Best regards,
-Krzysztof
+-- 
+Clément Le Goffic <clement.legoffic@foss.st.com>
+
