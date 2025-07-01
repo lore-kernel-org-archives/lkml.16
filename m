@@ -1,100 +1,283 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FD4273D7F;
-	Tue,  1 Jul 2025 12:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F9A273D9F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373580; cv=none; b=QBxHC/06ACjqKMGyJa0npvkI1RFId8us7/PxH3yfuJQ1EyecVucuriInO7HN4gXmMfqB8Uo/gVjCFrpZlGGUUZg6wKOQ826/Q6tfYnfQKi5wt8IPdYRjzd1m5Lxo4QNd+dPQYkQ6yPuBQ3xVraAb+fNSbOKSvv8zBauKathSTBg=
+	t=1751373596; cv=none; b=ucyvK4tzllWwqdnLNU9tM8gDcdTjnt/bJ1qbgkwQDabhvychGSQjQ88AWN89wNnJOPNuMJ1AsfxBaSB90wJOZWWLCnNoonHGGiiavf6x1yaslD1O6bANNWWEwkoyqmrWGMvPT7D+ikv8bOwGuUrzfwyshKuHy5MLX4eWthnArD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373580; c=relaxed/simple;
-	bh=WnkpxqJlREwalU2kiyF/pRQ2yr/YG9Wcammx70WmMJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEH4HUYNxPUxbihz1ukavGCxhxvP+F9+ZWI5/Ls8Hw28GxNaDn9S6eTamFFyLluCEfoNUdadXxvzsgkrwi8mIIZZflLAjYBjZwgVYbDkk+S7nF0EJaT8Af1u1cerYGjktm765B/70jXgBIvpJp/NmRScAXd1vj6QbLeq8xro86Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-87ed3b792a2so611806241.3;
-        Tue, 01 Jul 2025 05:39:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751373575; x=1751978375;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Huq13UwLgaodxR/+WGRy3SjFc14hPFMLTnsMQNvPPbo=;
-        b=tpv48sdaMToThFGW7N/aD/soq2jue6oSP2e8Ogpmb+b3OdJ4jowf7/ah9ws+VmD5vk
-         9hqesiKY7hQLVZRgq0RL/FRaWRJsj6rD0Lj2xPR+P0kZE+mQG37QRwM5Av6W8ONWPPUX
-         McF6LbKRuxtmqnWWW8LeIHUCXSkjLzz/+O0YR2LItCCy2fMI7NEwmCpNjunPW6asbQBU
-         SmB3tZ3lHuTNU3kaC9rnoxD6mX0w/2NUHtl3AoxRl8jJO9TcPGXPfAbW+8RiZqsshJHS
-         kzg+r6s3lqZKhlUGotFa+NkMhgWq4Mfob/VtTLjAgZTpCtm0zecO/qoPFbL8xsbDj8o6
-         7Uzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUA/uRxgLhvZexZRnyx/R19ypC57fBIILzx7skZF/t/yNikwvIoNo9GxXICSqgiGk+2rqugVNUxzeHs@vger.kernel.org, AJvYcCVcBqPQD9nsr+yh6cmIE9TFru243zdXBBeec/2tmCD63F48lD3PwglH/nlQG7AMi/Lb/SQMkq5/Yo9bidhC+2BMO9s=@vger.kernel.org, AJvYcCWP8cTOIVRv3CUHuIG7My1AmGz4ML+sIsiW0mc+l18NqeBaH+feQNFMchZBsQhMRGwVjvsm64OfzVmq@vger.kernel.org, AJvYcCXHttzRxddQe0ilhGN3+vC8HoC3Qt+YsAp8h4VkIbkCEWGx+pNPxKuwp/ZxLnyitFtum+FHrDSPhBleq26W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/sfuBIM1BlJAVR/dKt4Xr5aBo7JuUFZMdXcHlEQWDHE8jm1VI
-	5h2pLNCAkZp3jvsp5pqjEgGl0SdffZuEkJ6RTE3YHvzoK9GP/jXFCsajgv2if/bM
-X-Gm-Gg: ASbGnct7EWgcj+qtYIhGWJxCml5OqjU9++9sjxX3O2uiTPkP8WsmM4cd0MWZyTGLaB7
-	MHzgw/LjzHA7ppRhrzmGn2coXv44v9e7Wj/vTWpUWVoiYnIgXRMBjVM9elwMv9vNTC/rrhaIVmq
-	nLQS/uwE6rOF4rNEBVSPoD1sCmVWB0Dq9w4dyDa7M/6H+Gbx5SxfBmZy09ycbq9dDhaQezNE904
-	82/i25/5Cfyo8cH27ZXEcyz3MU+9638W5MSM6JQ9BmGNo+clJ6gbhu6bp0cWIJfaYOt/gQHF1Py
-	cjXJCUpuCM95t7uh5btPgWDo2Wo55NB/e+EJBxGwyZcO81VrKuEkRabZuATfATz7XUNXcCk7YXT
-	DyyT5Rk03WJ7iZeutejJ5OOAx
-X-Google-Smtp-Source: AGHT+IHjGZa0E1BPx1jrfqHgd/qEgd9WCYq+X3AEAG+9cOQ50ZcRgAChVL4/O3Bi8llhgZgUfCWAEA==
-X-Received: by 2002:a05:6102:5717:b0:4e9:c773:dca1 with SMTP id ada2fe7eead31-4ee4f6d96fbmr11775196137.11.1751373574973;
-        Tue, 01 Jul 2025 05:39:34 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4efb032beebsm1092206137.14.2025.07.01.05.39.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:39:34 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-87f1b3a3e7bso709317241.1;
-        Tue, 01 Jul 2025 05:39:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSv1azqxtOTbOurwBM1agK1LBzBbfBgsUqUz/sJPNJJS0rWQku+c0c/ulv7zhovjFO9MnAW0fcvdLf0Rjb0kGSVjc=@vger.kernel.org, AJvYcCUmQLwZw5DhBpmsYCtua2PEKdGi4y28tGqXCP63HrndejCFRnuUS3X85wbC3ZVjxSGYd7l5nVRZcC90@vger.kernel.org, AJvYcCVz7+GRGWhpFDmCcjDFxcZh5d8YECte0PrLP7nx0l/wePMIhyc6wJYTeQRyQ0sRa1QnQEwib+Jmzl/S@vger.kernel.org, AJvYcCXu394nIbP7SDru4MO6jZWLPhVNPP6tyZgt8NCMP35x5Mq7W29Tw5B9LpsTjI6Gns5y8tbHgqJo/sDzPJ4s@vger.kernel.org
-X-Received: by 2002:a05:6102:e0b:b0:4e5:8c2a:fbee with SMTP id
- ada2fe7eead31-4ee4f7aca08mr10949101137.15.1751373574281; Tue, 01 Jul 2025
- 05:39:34 -0700 (PDT)
+	s=arc-20240116; t=1751373596; c=relaxed/simple;
+	bh=4Rw9z24taiz8OuFxzSd2zDtbEuHpv6snnXvhuHKLGFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kr0KalYT+DpTuEO+MjvGdH+WVYyc3ZkQWsCvU0zZin7Je0KRiJtfmji4+yZPVkTmQun4gEjdyJLnHXyDWx0+jil7QBHCjZt//Z5JwRS/Uhaawtfy4uf/c4nmEUx+Y/fCD/52BthMw/rB7toN6esoCN4lFKw1mlPmhW2H8+qP6DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=B/jRYJtV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ykog9zq+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=B/jRYJtV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ykog9zq+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="B/jRYJtV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ykog9zq+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="B/jRYJtV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ykog9zq+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3672C211FE;
+	Tue,  1 Jul 2025 12:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751373591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0A2LB0xCjDUw81DCPIf/r205tCBiwgHOaWXbDEPN/jw=;
+	b=B/jRYJtV7DzYWT6gSwVW/R7sqZ6WSF3gljAxfNzlbMlqNFzy471ROL8TfG38zLrTQ38aTQ
+	T/7PM+lbx6VtuPfqw/2JrDxZPzQ2nW8Z674Ct1aAoNDuI9rG0E+i4XXdoBHkT4So1z8pIZ
+	qG8OWYxJ7ZVf+TGGBkKqABSM6m9/Uuo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751373591;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0A2LB0xCjDUw81DCPIf/r205tCBiwgHOaWXbDEPN/jw=;
+	b=ykog9zq+Ax195xghNYdYOOfwuN5oDHOh1JOc6ki9fHGseEfQ76uIUKIHjgPNT6KeiP61Gh
+	N+8OnYpHTQnlnpBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1751373591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0A2LB0xCjDUw81DCPIf/r205tCBiwgHOaWXbDEPN/jw=;
+	b=B/jRYJtV7DzYWT6gSwVW/R7sqZ6WSF3gljAxfNzlbMlqNFzy471ROL8TfG38zLrTQ38aTQ
+	T/7PM+lbx6VtuPfqw/2JrDxZPzQ2nW8Z674Ct1aAoNDuI9rG0E+i4XXdoBHkT4So1z8pIZ
+	qG8OWYxJ7ZVf+TGGBkKqABSM6m9/Uuo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1751373591;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0A2LB0xCjDUw81DCPIf/r205tCBiwgHOaWXbDEPN/jw=;
+	b=ykog9zq+Ax195xghNYdYOOfwuN5oDHOh1JOc6ki9fHGseEfQ76uIUKIHjgPNT6KeiP61Gh
+	N+8OnYpHTQnlnpBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1822F1364B;
+	Tue,  1 Jul 2025 12:39:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id y6/iBRfXY2hebAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Jul 2025 12:39:51 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A3625A0A23; Tue,  1 Jul 2025 14:39:50 +0200 (CEST)
+Date: Tue, 1 Jul 2025 14:39:50 +0200
+From: Jan Kara <jack@suse.cz>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Casey Schaufler <casey@schaufler-ca.com>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 2/6] lsm: introduce new hooks for setting/getting
+ inode fsxattr
+Message-ID: <6ab5frkvjgp2rvprv7mdphnsonixlcdlbbkrsviwenux24oxzg@h3rzd5moaecc>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-2-c4e3bc35227b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627204237.214635-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250627204237.214635-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250627204237.214635-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 14:39:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUF2D1Sg633KBeU5rEVdFM2dqK123dxwaPxEd2ewZaD=g@mail.gmail.com>
-X-Gm-Features: Ac12FXwynkEynYzjgUPYUL-ZzZT87-jvZI3n0Ds_faNnK3-Hl5yU80S6Svta75g
-Message-ID: <CAMuHMdUF2D1Sg633KBeU5rEVdFM2dqK123dxwaPxEd2ewZaD=g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] clk: renesas: r9a09g057: Add support for xspi mux
- and divider
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630-xattrat-syscall-v6-2-c4e3bc35227b@kernel.org>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,arndb.de,schaufler-ca.com,kernel.org,suse.cz,paul-moore.com,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,suse.cz:email]
+X-Spam-Level: 
 
-On Fri, 27 Jun 2025 at 22:42, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The mux smux2_xspi_clk{0,1} used for selecting spi and spix2 clocks and
-> pllcm33_xspi divider to select different clock rates. Add support for
-> both.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon 30-06-25 18:20:12, Andrey Albershteyn wrote:
+> Introduce new hooks for setting and getting filesystem extended
+> attributes on inode (FS_IOC_FSGETXATTR).
+> 
+> Cc: selinux@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> 
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.17.
+Looks good. Feel free to add:
 
-Gr{oetje,eeting}s,
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-                        Geert
+									Honza
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  fs/file_attr.c                | 19 ++++++++++++++++---
+>  include/linux/lsm_hook_defs.h |  2 ++
+>  include/linux/security.h      | 16 ++++++++++++++++
+>  security/security.c           | 30 ++++++++++++++++++++++++++++++
+>  4 files changed, 64 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index 2910b7047721..be62d97cc444 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
+>  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  {
+>  	struct inode *inode = d_inode(dentry);
+> +	int error;
+>  
+>  	if (!inode->i_op->fileattr_get)
+>  		return -ENOIOCTLCMD;
+>  
+> +	error = security_inode_file_getattr(dentry, fa);
+> +	if (error)
+> +		return error;
+> +
+>  	return inode->i_op->fileattr_get(dentry, fa);
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_get);
+> @@ -242,12 +247,20 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		} else {
+>  			fa->flags |= old_ma.flags & ~FS_COMMON_FL;
+>  		}
+> +
+>  		err = fileattr_set_prepare(inode, &old_ma, fa);
+> -		if (!err)
+> -			err = inode->i_op->fileattr_set(idmap, dentry, fa);
+> +		if (err)
+> +			goto out;
+> +		err = security_inode_file_setattr(dentry, fa);
+> +		if (err)
+> +			goto out;
+> +		err = inode->i_op->fileattr_set(idmap, dentry, fa);
+> +		if (err)
+> +			goto out;
+>  	}
+> +
+> +out:
+>  	inode_unlock(inode);
+> -
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_set);
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index bf3bbac4e02a..9600a4350e79 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -157,6 +157,8 @@ LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *name)
+>  LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
+>  	 const char *name)
+> +LSM_HOOK(int, 0, inode_file_setattr, struct dentry *dentry, struct fileattr *fa)
+> +LSM_HOOK(int, 0, inode_file_getattr, struct dentry *dentry, struct fileattr *fa)
+>  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
+>  LSM_HOOK(void, LSM_RET_VOID, inode_post_set_acl, struct dentry *dentry,
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index dba349629229..9ed0d0e0c81f 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -451,6 +451,10 @@ int security_inode_listxattr(struct dentry *dentry);
+>  int security_inode_removexattr(struct mnt_idmap *idmap,
+>  			       struct dentry *dentry, const char *name);
+>  void security_inode_post_removexattr(struct dentry *dentry, const char *name);
+> +int security_inode_file_setattr(struct dentry *dentry,
+> +			      struct fileattr *fa);
+> +int security_inode_file_getattr(struct dentry *dentry,
+> +			      struct fileattr *fa);
+>  int security_inode_need_killpriv(struct dentry *dentry);
+>  int security_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry);
+>  int security_inode_getsecurity(struct mnt_idmap *idmap,
+> @@ -1052,6 +1056,18 @@ static inline void security_inode_post_removexattr(struct dentry *dentry,
+>  						   const char *name)
+>  { }
+>  
+> +static inline int security_inode_file_setattr(struct dentry *dentry,
+> +					      struct fileattr *fa)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int security_inode_file_getattr(struct dentry *dentry,
+> +					      struct fileattr *fa)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int security_inode_need_killpriv(struct dentry *dentry)
+>  {
+>  	return cap_inode_need_killpriv(dentry);
+> diff --git a/security/security.c b/security/security.c
+> index 596d41818577..711b4de40b8d 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2622,6 +2622,36 @@ void security_inode_post_removexattr(struct dentry *dentry, const char *name)
+>  	call_void_hook(inode_post_removexattr, dentry, name);
+>  }
+>  
+> +/**
+> + * security_inode_file_setattr() - check if setting fsxattr is allowed
+> + * @dentry: file to set filesystem extended attributes on
+> + * @fa: extended attributes to set on the inode
+> + *
+> + * Called when file_setattr() syscall or FS_IOC_FSSETXATTR ioctl() is called on
+> + * inode
+> + *
+> + * Return: Returns 0 if permission is granted.
+> + */
+> +int security_inode_file_setattr(struct dentry *dentry, struct fileattr *fa)
+> +{
+> +	return call_int_hook(inode_file_setattr, dentry, fa);
+> +}
+> +
+> +/**
+> + * security_inode_file_getattr() - check if retrieving fsxattr is allowed
+> + * @dentry: file to retrieve filesystem extended attributes from
+> + * @fa: extended attributes to get
+> + *
+> + * Called when file_getattr() syscall or FS_IOC_FSGETXATTR ioctl() is called on
+> + * inode
+> + *
+> + * Return: Returns 0 if permission is granted.
+> + */
+> +int security_inode_file_getattr(struct dentry *dentry, struct fileattr *fa)
+> +{
+> +	return call_int_hook(inode_file_getattr, dentry, fa);
+> +}
+> +
+>  /**
+>   * security_inode_need_killpriv() - Check if security_inode_killpriv() required
+>   * @dentry: associated dentry
+> 
+> -- 
+> 2.47.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
