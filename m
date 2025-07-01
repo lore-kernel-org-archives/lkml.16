@@ -1,150 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08BC27A916;
-	Tue,  1 Jul 2025 15:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B1227C844
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383659; cv=none; b=erdn0XUP1xNOkUJWUmBz3dANuhhdE5wdBvYb3TkDXrAEf28WaW3gXrCzTT64zaT0CWB+7JuxIHMVDmEPeWaYI3VqjMtaSNYhUje2WuJaxGAsW4Ee3euOwjXXWlvCSjShUEKP8viQO7K/rDkFvYakD6dAeWFk5pijhcGEiRKIVOw=
+	t=1751383662; cv=none; b=YrbozNStlQkht+r/8Lnam/dUKOvm4C1AG/r4bV4jEBomA+WORADj0GotHxLUL+NZlp3E2RhKf/YVuRpdMPyJ00p7QDfXJLqjrjvbCahaQIcwOcMa0gyTYtPqi9uyh18TtbBrP4zvw5Kedfq+/ULNYx6+rT45/dCqSTolgRHwLMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383659; c=relaxed/simple;
-	bh=deOOm4QcL7MGMhnnJDbv+UDHPY3BMHSo/frXEHKF5X8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=iyAtST2dbQBD/IT7fLoQbzDi1ta07RoVYL9Q069ceoK2IEnmj/129EwKLAPubtZT1nAE86vU0709wKxH+yWol7KTZWOuRogJlVU0LqDw4bGdWMDDbP9lkhFtRZU1NbgGbkU7l2t9N/z8T1nM+WmivR7rPVyIRnlKw2AlyFxQdzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rghLY/8B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751383662; c=relaxed/simple;
+	bh=9liZjkpuVRzepUk67tgGkXDJwUW2A930piJLEnM5Yb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a6wqV9A5aLyZYffW0kteIUtqQQumEHORNrcRNa5fH4xqknNDQZWpswugw5oLRNkk2VK3q0HCX+8ZKxB/FlS/yOXv6gZIEymmKJ8WDh05tCFu5GuEvaCOrzqoTDziLfUOxYUEAHYSpjNa8jrqQCLirnfuvu7epuHenUh9kgk0F2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PI8GWmn5; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rghLY/8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0580C4CEEB;
-	Tue,  1 Jul 2025 15:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751383657;
-	bh=deOOm4QcL7MGMhnnJDbv+UDHPY3BMHSo/frXEHKF5X8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rghLY/8BHAu53z3akbUfh1aMAkBQZxgMkqEvR+OZUhnTPwkM2hecE5v0hMasdd3TL
-	 eet2X0VTNfi6/WccpbmNCHrQuWr7bB3gYn45raboZMyykkrF4onzn6PzPagia78UXJ
-	 2nYcMg3k2RuhNokxkghYCwqxUV+kpT4WsXxIV/3blGBRYEDVFnAhl9BqTFyQXXpKQi
-	 vV6bXV6C98xDztwRuqaWfxBgH7ceFnEtjEtHiwLvKSG5UNGuzS1FcHcBLcvGej5sDC
-	 7/3nVq+QTD22caCiCd6v9VqGgOieyKTbK2GMrXFZK0gH77KtRIAj/lJzQhEne3N1jw
-	 a9bLXzseQ/LmA==
-Date: Tue, 01 Jul 2025 10:27:36 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PI8GWmn5"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74ad4533ac5so5850635b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751383660; x=1751988460; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/0SAjT3Kg+X8y37BzmTeLChqfzpi9tbPWxRH4vKr8Jw=;
+        b=PI8GWmn5eqsF0sqYaS1H5j5Eh6sazutwh+zHiCvV5IxX2JaEdV/S56d3oKPpvXYwpG
+         8zId9xgnxWDzxlxZnXQoEU7Ttx2VxYoFVcz4gyU3AJsiVM/O1VSCTUpL2GyQHLsuSqpv
+         fKyWgkJUzv9+w9hm07d/Rd6psM/A84WXKvAxlvScNWnveGgblUlcJJMsESOGOrlAVZ1V
+         FsdS6pppj36odKEKXKXzXNJGdYAJEwv98OcD4eajxmTNpwyWzdXRFv98U36bNGWpe3fb
+         v9esS2ns9+nO3soGWc48s87qjAdkh2J8nYd70/VztNAURCmXhM/IPTKjAlf975bnD63z
+         IITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751383660; x=1751988460;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/0SAjT3Kg+X8y37BzmTeLChqfzpi9tbPWxRH4vKr8Jw=;
+        b=gWPYoBEtGkLgQ9Bwreumq5aas1bcSn+OTHNtpKmP8sLBxjv+7vxIiKRo4685KNZzE8
+         UZEpOnpRxBoqTWh05vVNE86PAXwgYfLq+ffSU8DOhrmOvV6uQpfdQgG6C9zXi+w/bcGC
+         nSPVaeSc7/pUVrWN7iz2WY8elAGrZn4QfLjD5WbOqzrPfB36YPyeEZbCheDGJjOpPsLh
+         oIDRf4iBGfMkeBlBWPe2UeFYXAdFxof95UbN41isSrQ6Gcf27j+6/EZ6R17mwefzyMjC
+         1EBCTSS0mZoDFdMi5777ThkBZ8BDG5O8WvoSoN8/3OSW1w3p3yvz1hWY0JPVa0aCDs/w
+         7Kig==
+X-Forwarded-Encrypted: i=1; AJvYcCUx+BZq+/lsr+eMRzYi5xLabXKscPJdD3HFgfBFyqdIqAc8cXRkXus3OruwWalTa14YfeUV8wYS5h9BtIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymKdt1b0/mo3Bb+IKKujXpdaQTcccx5o2vZ1JUOTc033cJSPz1
+	ADxKWIte8XJa4bifHwZQGAbOCMoqRg1B3dEt7+mBdGwMGE2KTwZ+CSfHGtrczKDoPA4=
+X-Gm-Gg: ASbGncuMA7BhPkIp8qkycaS2otMJne05We/dCtJadngZ7aCMZ43pKOo81eJ08ZaRlvb
+	uQKXeBEpf+yTXJdIMtPUQButIiC6yWGnkswOOBaCN63W0jh6wrEW2gc6Txpgxac0xLrNrjRkcMZ
+	f5tPlTpG44kSLL4Mhix9wOysgFzTYSMn54Ix9Zj1N7oI9zoqCaLjZRs8B5zcygRMut6LWd0WNmL
+	7zDvhPq6fZYR4JmM2OuDFnTalKm2hNvKZA8kyvWxp3RKtp8kvp+7iJbzhipMh9sAGDP/r/eDKpn
+	RjwzY/Sc4Byt2UbpKHiZ+QquqIENojX5kVwqUkwBEU2NAvspgYgCUnORvoNKBA1S6w==
+X-Google-Smtp-Source: AGHT+IHwXE6TtTbogZXGrSWNeH17X1Eg9b1iMZBmFtEaqZg3w/0LyLCHYU1l4YImcwX/ylYXOnxCQw==
+X-Received: by 2002:a05:6a20:914d:b0:220:8ccc:2feb with SMTP id adf61e73a8af0-222c99ba442mr6683521637.12.1751383656024;
+        Tue, 01 Jul 2025 08:27:36 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:94b9:2bc2:7ead:7a72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af57ef4dbsm12287004b3a.160.2025.07.01.08.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 08:27:35 -0700 (PDT)
+Date: Tue, 1 Jul 2025 09:27:33 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, iuliana.prodan@nxp.com,
+	daniel.baluta@nxp.com
+Subject: Re: [PATCH 2/2] remoteproc: imx_dsp_rproc: Add support of coredump
+Message-ID: <aGP-ZVuhBdd1GPLe@p14s>
+References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
+ <20250618062644.3895785-3-shengjiu.wang@nxp.com>
+ <aGLBvXtSRlaKujqM@p14s>
+ <CAA+D8AO4o7dqTyL4aZ+H5VnroTQUNAHM-io5rvJ2r_sasPYs9g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-watchdog@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Jiri Slaby <jirislaby@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- linux-mediatek@lists.infradead.org, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org, 
- Guenter Roeck <linux@roeck-us.net>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-serial@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Max Shevchenko <wctrl@proton.me>
-In-Reply-To: <20250701-mt6572-v3-0-8937cfa33f95@proton.me>
-References: <20250701-mt6572-v3-0-8937cfa33f95@proton.me>
-Message-Id: <175138000372.1627755.5505703571113478205.robh@kernel.org>
-Subject: Re: [PATCH v3 00/11] ARM: Add support for MediaTek MT6572 SoC
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA+D8AO4o7dqTyL4aZ+H5VnroTQUNAHM-io5rvJ2r_sasPYs9g@mail.gmail.com>
 
-
-On Tue, 01 Jul 2025 09:06:54 +0300, Max Shevchenko wrote:
-> This series of patches adds support for the MT6572 SoC and
-> the JTY D101 tablet and Lenovo A369i smartphone based on it.
+On Tue, Jul 01, 2025 at 10:28:33AM +0800, Shengjiu Wang wrote:
+> On Tue, Jul 1, 2025 at 1:05 AM Mathieu Poirier
+> <mathieu.poirier@linaro.org> wrote:
+> >
+> > On Wed, Jun 18, 2025 at 02:26:44PM +0800, Shengjiu Wang wrote:
+> > > Add call rproc_coredump_set_elf_info() to initialize the elf info for
+> > > coredump, otherwise coredump will report an error "ELF class is not set".
+> > >
+> > > Remove the DSP IRAM and DRAM segment in coredump list, because after
+> > > stop, DSP power is disabled, the IRAM and DRAM can't be accessed.
+> > >
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > ---
+> > >  drivers/remoteproc/imx_dsp_rproc.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
+> > > index 9b9cddb224b0..9e7efb77b6e5 100644
+> > > --- a/drivers/remoteproc/imx_dsp_rproc.c
+> > > +++ b/drivers/remoteproc/imx_dsp_rproc.c
+> > > @@ -738,9 +738,7 @@ static int imx_dsp_rproc_add_carveout(struct imx_dsp_rproc *priv)
+> > >               mem = rproc_mem_entry_init(dev, (void __force *)cpu_addr, (dma_addr_t)att->sa,
+> > >                                          att->size, da, NULL, NULL, "dsp_mem");
+> > >
+> > > -             if (mem)
+> > > -                     rproc_coredump_add_segment(rproc, da, att->size);
+> > > -             else
+> > > +             if (!mem)
+> >
+> > Flag rproc->recovery_disabled is never set to true, meaning that since this
+> > driver was introduced, some kind of recovery was available.
 > 
-> Signed-off-by: Max Shevchenko <wctrl@proton.me>
-> ---
-> Changes in v3:
-> - Remove the compatible property from the SoC devicetree
-> - Link to v2: https://lore.kernel.org/r/20250626-mt6572-v2-0-f7f842196986@proton.me
+> Actually since this driver was introduced, the recovery can't work.
+> We didn't test the recovery function before. sorry for the mistake.
+
+Let me see if I get this right:
+
+(1) Almost 5 years ago you sent me a driver with code you did not test.
+(2) It took all this time to realize and fix the problem.
+(3) I should trust that, this time, you have tested your code.
+
+Did I understand all that correctly? 
+
 > 
-> Changes in v2:
-> - Drop the status property for the board devicetrees
-> - Add an soc node for the MT6572 and reorder the nodes and properties
-> - Change the commit title to a more descriptive one
-> - Change the cover title to the correct one
-> - Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f042@proton.me
-> 
-> ---
-> Max Shevchenko (11):
->       dt-bindings: serial: mediatek,uart: add MT6572
->       dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
->       dt-bindings: timer: mediatek: add MT6572
->       dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
->       dt-bindings: vendor-prefixes: add JTY
->       dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
->       ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
->       ARM: mediatek: add MT6572 smp bring up code
->       ARM: dts: mediatek: add basic support for MT6572 SoC
->       ARM: dts: mediatek: add basic support for JTY D101 board
->       ARM: dts: mediatek: add basic support for Lenovo A369i board
-> 
->  .../devicetree/bindings/arm/mediatek.yaml          |   5 +
->  .../mediatek,mt6577-sysirq.yaml                    |   1 +
->  .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
->  .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
->  arch/arm/boot/dts/mediatek/Makefile                |   2 +
->  arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
->  arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
->  arch/arm/boot/dts/mediatek/mt6572.dtsi             | 108 +++++++++++++++++++++
->  arch/arm/mach-mediatek/Kconfig                     |   4 +
->  arch/arm/mach-mediatek/mediatek.c                  |   1 +
->  arch/arm/mach-mediatek/platsmp.c                   |   7 ++
->  13 files changed, 250 insertions(+)
-> ---
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> change-id: 20250619-mt6572-ef78a3d45168
-> 
-> Best regards,
-> --
-> Max Shevchenko <wctrl@proton.me>
-> 
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/mediatek/' for 20250701-mt6572-v3-0-8937cfa33f95@proton.me:
-
-arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 536870912]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1073741824]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm/boot/dts/mediatek/mt7623n-bananapi-bpi-r2.dtb: pcie@1,0: 'device_type' is a required property
-	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
-arch/arm/boot/dts/mediatek/mt7623a-rfb-nand.dtb: ethernet@1b100000 (mediatek,mt7623-eth): clocks: [[16, 110], [48, 2], [48, 4], [48, 3], [3, 8]] is too long
-	from schema $id: http://devicetree.org/schemas/net/mediatek,net.yaml#
-
-
-
-
-
+> >
+> > I worry that your work will introduce regression for other users.  Daniel and
+> > Iuliana, once again have to ask you to look at this patchset.
+> >
+> > Thanks,
+> > Mathieu
+> >
+> > >                       return -ENOMEM;
+> > >
+> > >               rproc_add_carveout(rproc, mem);
+> > > @@ -1203,6 +1201,8 @@ static int imx_dsp_rproc_probe(struct platform_device *pdev)
+> > >               goto err_detach_domains;
+> > >       }
+> > >
+> > > +     rproc_coredump_set_elf_info(rproc, ELFCLASS32, EM_XTENSA);
+> > > +
+> > >       pm_runtime_enable(dev);
+> > >
+> > >       return 0;
+> > > --
+> > > 2.34.1
+> > >
+> >
