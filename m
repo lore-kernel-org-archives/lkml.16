@@ -1,188 +1,230 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCCF27E079
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A32D273818;
+	Tue,  1 Jul 2025 16:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385842; cv=none; b=aTRqffQFzWzKksjQojl9GvXR3Uli5avKZZBQ0Jv+zZu5HYPVaWJL7rI6BLW9lJYa8jT5ai71UIY41cbgApS1Rlnen43u3kWWbtQ2JNa0XgLBfYz2efKmvtrwP4LRDVTki4JNKBB2EodOPx0zIrQVt5ViOuX4EODZyNOkJsgfObw=
+	t=1751386044; cv=none; b=HYdjzJIZ4MUpSZ3P4VXHe8xLOSv+N4rK4acXs4cQjcNxjLXJC/vFcOGdjXjVs7VTXxyfkKVb4TPVr+MlMU741OfbbgmEmpLgJrsgeAiZEOYepsxo7WWAVZi7WCJv6FWvWv9gFwCY6PjnpbcLKR9IShhwdqpiqZ3L63kkDR2tBoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385842; c=relaxed/simple;
-	bh=WRhvlRstgimRJH/V/lHUEiuKmwZMzsQ2k2rmu/AGceo=;
+	s=arc-20240116; t=1751386044; c=relaxed/simple;
+	bh=HsjIkpBxBstl9Atcqae/pq36VptWvAxCi7tw7cCSpjI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GV5V/x4QbS/yLGSkcADpkwVEVe9Jbmmv6XaWOP8WlzD9B6b8h0LHN2w+JLujjt1V2/h2qeOeqWQy8yWW5POmvBeLzj+ImmDxYQXkwFBCGojsfGqpg6eqAZ2VVbPW9O3nJ9Mt8x8EJX4fbpQ8hkeFVS04b5TVJNVNh1Yd+pJz9Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KZBSbzln; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=RSGVPVTioWy8qafhYYcz36Lfj6FZ83KUtJte1oF0stN2ZqrUhHk81odFBI8sCaI62e0VcZP3TPWONRDxhi/nV1Gpys8SZ4BPx2uwsdY7e+YLSg4ehY4r8T6NFSto+P+gGyBJ/QuuNEBlSJ5FdMIvN6ya8t/9Q4HcU2CLID2iRJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYr3iXr5; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KZBSbzln"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3de210e6076so136155ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:03:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYr3iXr5"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-31306794b30so762810a91.2;
+        Tue, 01 Jul 2025 09:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751385838; x=1751990638; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751386042; x=1751990842; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=baDjOCm/nT6gOahf8avhA5A45L9PnVfcldowdK0zHtM=;
-        b=KZBSbzlnMZwc8PpEJqbz4FnkP8coQDoy3a945heiDN3Kmt0RjbGdM9Uejssz+4xeEq
-         uQ+16tlw0RsljGZiq1GAhgdFxBHYtxXKkqV0Da4ArQ5IxD0kwZ0xkrWViI/SpannFs5I
-         BGUCWgbLeIlD4DcW8cYUSPSo5anCDP0+FNuur8zg1nGyH3KRU9rHyupsFtf2Q5hMpH+2
-         NlhKX3LIx/zuWrSrn/zg5nDxDc14Kwi30k0gI9sXj+BZ6dWCasiQYEcVo8paYR53aNN3
-         r/tjm84B4r6yLT7dImHmql6S6yE8KGn5yprSZ0t5XZIj/vaq6ETw8kGrugs+D24yvRGo
-         E00Q==
+        bh=6s5/kLm6bcjzmUmo8TOBM6JrD/Wu1K8ZqjA08OXVfrw=;
+        b=NYr3iXr5+WAt7n7QhC9vd1xzdqDorGcsifypy3pM8HTHJRMFS+LD0NrdvAmZswnW2L
+         DOZcDtlkLizNMOF5cklkAxnwXMmVAPq8OyV2qqAyHPR7j7Z4J7Oo5ssM7ThzT5sMeXU+
+         ID5Va+Yr+IejoEqs9UQHQGEdhLXvm7m8J/oy4SKcLbZZKMwY/T1g77sH1cROHJID2uAm
+         7iraDmJhkouQWlcNXAbtoN2LcicBd9haoEO0wIklcU0w5zuIE93KvD0bpgnG9F256Blp
+         6Jb4aJerl34pazuSz/NIucRF48ypBQu/by8QVa9KZEHrC+p5V5Ygj+qLRLEbM9wBLqNJ
+         LDww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751385838; x=1751990638;
+        d=1e100.net; s=20230601; t=1751386042; x=1751990842;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=baDjOCm/nT6gOahf8avhA5A45L9PnVfcldowdK0zHtM=;
-        b=QKctuv/KXe5ss6gHN3vAIVxkkMt04UttfWBvBJuEHYrk4WQAYXLB0JudGyISK2ahfe
-         SV+aNgQL4selP1UXMn77gLQ6au8HynHj2XDQitBVc28rJX/o/9lNe2b9LAQWlXReyAyb
-         WMVH2viy7ffTbvoH7taLONOks4nAjGoEPNBTC0Ag5fCBl3nyinJkbFel9wnAF7ppRi9h
-         l4e2PYyVQzthcdfRegT6QxnqiPF8+w45P8OuOahnIir+uiQPAz6dFrdamUuna+E2pgcm
-         UsX5yRd2PO26equvDPCvsfKt7BXC5YiJqpkWpKBV5cS4rWNf+OIkeDvahLoJ10ColqeV
-         2S6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVOOpCUfqIoFDZbXYuKeM4Dzj+CBLPySxROMK1BiXHzlpNX1sB2TP2IeyBjfJMXEBdzmK2JBKuTOFvSDus=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3Xi5YReBUSmIZEOOd4LxZ83bEuVn9RkXQ0rxOBVcE8nJYP6zd
-	1NXQdEROqGHvZmJ+ZunmDj7Y58hZS/tmGz9kpSYq7mglCENThKDZyvFUvjbIjUw734ww+ZdG1Oi
-	4nltRLMHD2/YoBvKiB3+V93glcKFjoyZ+4ZyJsumC
-X-Gm-Gg: ASbGnct2Wn8JhIxGmUFTrXRKge6jBxNqDAZd/NUO2nP+OMb93XUV1IN9Gq84W91KDXj
-	jZ+hbclJXyI1mzJCKFrFOvNjvvp3aELWQeQnJkXBhaSRj6iQzchQVdJSKppQQpRq61odBmIlSQT
-	RNLQGIqkZQeM7xxD849flVlKp3OQV0AEc6uPeMjf5VOTioCQRJM69ehtDiTDQlxyphqawWezk=
-X-Google-Smtp-Source: AGHT+IGdX2Lmjq2vQReUB2kT8IaRnj16P+CcAtfKHBSjM2HMi4V24+oShE9JaPZIwZMXM1Oru5v0Q6uyMskHMTJtJVA=
-X-Received: by 2002:a05:6e02:1909:b0:3ce:7852:1e9 with SMTP id
- e9e14a558f8ab-3e04a04a53bmr2485065ab.17.1751385838021; Tue, 01 Jul 2025
- 09:03:58 -0700 (PDT)
+        bh=6s5/kLm6bcjzmUmo8TOBM6JrD/Wu1K8ZqjA08OXVfrw=;
+        b=RyLSVf8FimJzC2dBZvgP53YVuZdE/OuGK7FDpPiQRHdRwxVU5loVwQ/DMLKwB3TN9h
+         q7ry3aW4T4MCWJBZDuAm2b6CCJAsANmC9y5bngWB7mPY3aM1L6CeySAFJFyoPkJ1Ibsf
+         85klH4cftlzmTAbFE7+VL79JvNvP0QVtIfu7AAhDdAXbyDaP89Shtr2KeVaboA7/F0+c
+         NFnwe/4JjGXHC5/N00IMkXn44EulnDBwhTerUOty3qg6/2z3a/yMxYZFJednzEQJLRtw
+         HRTRB7FqWIx1N42beGxcjaEif/hVjp729mY9VWK+vjiew4TsfRYt78j5eczuSCAwhNI2
+         HNZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Ly+oARt8lTlMvN6wCkKsLoYZqJ+1q0JtYrbuFHyFrrpCzneIDSPW2UPAyCioLyXVK8c4abq0RjzAlZA=@vger.kernel.org, AJvYcCWEsM1OLOD/Ro3IaG1cx4M/HtXgPPpRdbdiK+0Zw2eyGehNsYKriywB6TvkjXzLrdTrnrJClpecjtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF7MGGDwTpCPPhSHis24FqikIVOZMhFfssseWuxyXMi3+dix6G
+	CFmDKJcBlefaeiERu6NbMut0vwRsQzUlW2wd7MbSWUSYHQHVuG3K7waLdnOmiwzM8VZhRR795b0
+	ARlRe++JHqv7wanH4cnJj+vxiDCuOXNpJDw==
+X-Gm-Gg: ASbGncv2nTrOXULqOhIYWeZMbwN/VarnldpH1f1CwzXpGrAvkCcJMCHkxrVfDVg2xRC
+	KYk3gdrVKdQ6a5OogbzVE6K6VVghKDr1hefc3fcOZRWLu5pj/0dkJnqsSQtFe2LLgbGEcsI+1NO
+	H+/puEvSoAE7eSUGaYxFneW4KpU0hDkCfw6u/64mu/EboG
+X-Google-Smtp-Source: AGHT+IFQJNo7HwID/TeXlAbTPbbNefXtXxAG2rRd8AEgaEOCEY9ozjNHRKWsTXfzbsIfuCVK/y+uC5IX0mQc9ZwS12g=
+X-Received: by 2002:a17:90b:180e:b0:310:8d54:3209 with SMTP id
+ 98e67ed59e1d1-31a800bba6bmr1931961a91.2.1751386042181; Tue, 01 Jul 2025
+ 09:07:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250630233246.1063977-1-namhyung@kernel.org> <20250630233246.1063977-3-namhyung@kernel.org>
-In-Reply-To: <20250630233246.1063977-3-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 1 Jul 2025 09:03:46 -0700
-X-Gm-Features: Ac12FXxKve0mTKaIaR8Fz9fcmOOeE41kLlfOheQzmk_DY4euDiu032KUdGHySiA
-Message-ID: <CAP-5=fXdzL1ZQQCFFU0crNpT7wiW4gtfbN1=p89BnmzWBU4mHw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf tools: Fix use-after-free in help_unknown_cmd()
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20250630104116.3050306-1-guoqing.zhang@amd.com>
+ <20250630104116.3050306-4-guoqing.zhang@amd.com> <8806781b-90d1-4b99-a798-dd1d29d4c8c0@amd.com>
+ <8eb1700d-4d60-4a1e-9d09-718f65baaf1e@amd.com> <019a15d5-142f-4761-9408-58c103d3922b@amd.com>
+In-Reply-To: <019a15d5-142f-4761-9408-58c103d3922b@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 1 Jul 2025 12:07:10 -0400
+X-Gm-Features: Ac12FXwdbdy8HjwfCgq96-OHQZyxxU6ldvjvewIOGImA43uESTZlF3tB4NQ9pb0
+Message-ID: <CADnq5_PHfNTbLL7Xmb9HFgtZemDVaLSqbrONWWEf9hjwk1rF1Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm/amdgpu: skip kfd resume_process for dev_pm_ops.thaw()
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: "Zhang, GuoQing (Sam)" <GuoQing.Zhang@amd.com>, "rafael@kernel.org" <rafael@kernel.org>, 
+	"len.brown@intel.com" <len.brown@intel.com>, "pavel@kernel.org" <pavel@kernel.org>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>, "Lazar, Lijo" <Lijo.Lazar@amd.com>, 
+	"Zhao, Victor" <Victor.Zhao@amd.com>, "Chang, HaiJun" <HaiJun.Chang@amd.com>, 
+	"Ma, Qing (Mark)" <Qing.Ma@amd.com>, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 4:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Tue, Jul 1, 2025 at 4:32=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
+ig@amd.com> wrote:
 >
-> Currently perf aborts when it finds an invalid command.  I guess it
-> depends on the environment as I have some custom commands in the path.
+> On 01.07.25 10:03, Zhang, GuoQing (Sam) wrote:
+> >
+> > thaw() is called before writing the hiberation image to swap disk. See
+> > the doc here.
+> > https://github.com/torvalds/linux/blob/v6.14/Documentation/driver-api/p=
+m/devices.rst?plain=3D1#L552 <https://github.com/torvalds/linux/blob/v6.14/=
+Documentation/driver-api/pm/devices.rst?plain=3D1#L552>
+> >
+> > And amdgpu implemented thaw() callback by calling amdgpu_device_resume(=
+).
+> > https://github.com/torvalds/linux/blob/v6.14/drivers/gpu/drm/amd/amdgpu=
+/amdgpu_drv.c#L2572 <https://github.com/torvalds/linux/blob/v6.14/drivers/g=
+pu/drm/amd/amdgpu/amdgpu_drv.c#L2572>
+> >
+> > This patch is skip amdgpu_amdkfd_resume_process() call in thaw() during
+> > hibernation. it is not skipped in restore() during resume from
+> > hibernation when system boot again.
+> >
+> >
+> > I just found the following kernel doc. Thaw() is intended to resume the
+> > storage device for saving the hibernation image.
 >
->   $ perf bad-command
->   perf: 'bad-command' is not a perf-command. See 'perf --help'.
->   Aborted (core dumped)
+> Ah, that makes much more sense.
 >
-> It's because the exclude_cmds() in libsubcmd has a use-after-free when
-> it removes some entries.  After copying one to another entry, it keeps
-> the pointer in the both position.  And the next copy operation will free
-> the later one but it's the same entry in the previous one.
+> > Our GPU is not involved
+> > in it, it is not necessary to resume our GPU in thaw().
+> > https://github.com/torvalds/linux/blob/v6.14/Documentation/power/pci.rs=
+t?plain=3D1#L588 <https://github.com/torvalds/linux/blob/v6.14/Documentatio=
+n/power/pci.rst?plain=3D1#L588>
+> >
+> > So another implementation is to remove the amdgpu_device_resume() call
+> > in amdgpu_pmops_thaw(), and skip amdgpu_device_ip_suspend() call in
+> > amdgpu_pci_shutdown()for hibernation.
+> > Initial tests show it's working fine for hibernation successful case.
+> > Should I switch to this implementation?
 >
-> For example, let's say cmds =3D { A, B, C, D, E } and excludes =3D { B, E=
- }.
+> No idea. Alex and the KFD guys need to take a look at that.
 >
->   ci  cj  ei   cmds-name  excludes
->   -----------+--------------------
->    0   0   0 |     A         B       :    cmp < 0, ci =3D=3D cj
->    1   1   0 |     B         B       :    cmp =3D=3D 0
->    2   1   1 |     C         E       :    cmp < 0, ci !=3D cj
+> > But thaw() is also called to restore the GPU when hibernation is aborte=
+d
+> > due to some error in hibernation image creation stage. In this case,
+> > amdgpu_device_resume() is needed in thaw().
+> >
+> > So I need a method to check if hibernation is aborted or not to
+> > conditionally skip amdgpu_device_resume() in thaw(). Currently I don't
+> > know how to do this.
 >
-> At this point, it frees cmds->names[1] and cmds->names[1] is assigned to
-> cmds->names[2].
+> Yeah that approach here looks fishy to me, but I don't know how to proper=
+ly fix it either.
 >
->    3   2   1 |     D         E       :    cmp < 0, ci !=3D cj
->
-> Now it frees cmds->names[2] but it's the same as cmds->names[1].  So
-> accessing cmds->names[1] will be invalid.
->
-> This makes the subcmd tests succeed.
->
->   $ perf test subcmd
->    69: libsubcmd help tests                                            :
->    69.1: Load subcmd names                                             : =
-Ok
->    69.2: Uniquify subcmd names                                         : =
-Ok
->    69.3: Exclude duplicate subcmd names                                : =
-Ok
->
-> Fixes: 657a3efee43a ("libsubcmd: Avoid SEGV/use-after-free when commands =
-aren't excluded")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> @Alex any idea?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Yeah, I'm not sure how to handle that.  I don't see a way to avoid
+having all of the callbacks.  We could ideally skip some of the steps.
+Maybe we could optimize the freeze and thaw routines if we had some
+hint from the pm core about why we were getting called.  E.g., thaw
+after a failed hibernation restore.
 
-Fwiw, it seems a shame we're doing this and the code in git is drifting apa=
-rt:
+Alex
 
-https://github.com/git/git/blob/83014dc05f6fc9275c0a02886cb428805abaf9e5/he=
-lp.c#L204
-
-Thanks,
-Ian
-
-
-
-
-> ---
->  tools/lib/subcmd/help.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
 >
-> diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-> index 8561b0f01a247690..9ef569492560efd7 100644
-> --- a/tools/lib/subcmd/help.c
-> +++ b/tools/lib/subcmd/help.c
-> @@ -9,6 +9,7 @@
->  #include <sys/stat.h>
->  #include <unistd.h>
->  #include <dirent.h>
-> +#include <assert.h>
->  #include "subcmd-util.h"
->  #include "help.h"
->  #include "exec-cmd.h"
-> @@ -82,10 +83,11 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdna=
-mes *excludes)
->                                 ci++;
->                                 cj++;
->                         } else {
-> -                               zfree(&cmds->names[cj]);
-> -                               cmds->names[cj++] =3D cmds->names[ci++];
-> +                               cmds->names[cj++] =3D cmds->names[ci];
-> +                               cmds->names[ci++] =3D NULL;
->                         }
->                 } else if (cmp =3D=3D 0) {
-> +                       zfree(&cmds->names[ci]);
->                         ci++;
->                         ei++;
->                 } else if (cmp > 0) {
-> @@ -94,12 +96,12 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdna=
-mes *excludes)
->         }
->         if (ci !=3D cj) {
->                 while (ci < cmds->cnt) {
-> -                       zfree(&cmds->names[cj]);
-> -                       cmds->names[cj++] =3D cmds->names[ci++];
-> +                       cmds->names[cj++] =3D cmds->names[ci];
-> +                       cmds->names[ci++] =3D NULL;
->                 }
->         }
->         for (ci =3D cj; ci < cmds->cnt; ci++)
-> -               zfree(&cmds->names[ci]);
-> +               assert(cmds->names[ci] =3D=3D NULL);
->         cmds->cnt =3D cj;
->  }
+> Regards,
+> Christian.
 >
-> --
-> 2.50.0.727.gbf7dc18ff4-goog
+> >
+> >
+> > Regards
+> > Sam
+> >
+> >
+> > On 2025/6/30 19:58, Christian K=C3=B6nig wrote:
+> >> On 30.06.25 12:41, Samuel Zhang wrote:
+> >>> The hibernation successful workflow:
+> >>> - prepare: evict VRAM and swapout GTT BOs
+> >>> - freeze
+> >>> - create the hibernation image in system memory
+> >>> - thaw: swapin and restore BOs
+> >> Why should a thaw happen here in between?
+> >>
+> >>> - complete
+> >>> - write hibernation image to disk
+> >>> - amdgpu_pci_shutdown
+> >>> - goto S5, turn off the system.
+> >>>
+> >>> During prepare stage of hibernation, VRAM and GTT BOs will be swapout=
+ to
+> >>> shmem. Then in thaw stage, all BOs will be swapin and restored.
+> >> That's not correct. This is done by the application starting again and=
+ not during thaw.
+> >>
+> >>> On server with 192GB VRAM * 8 dGPUs and 1.7TB system memory,
+> >>> the swapin and restore BOs takes too long (50 minutes) and it is not
+> >>> necessary since the follow-up stages does not use GPU.
+> >>>
+> >>> This patch is to skip BOs restore during thaw to reduce the hibernati=
+on
+> >>> time.
+> >> As far as I can see that doesn't make sense. The KFD processes need to=
+ be resumed here and that can't be skipped.
+> >>
+> >> Regards,
+> >> Christian.
+> >>
+> >>> Signed-off-by: Samuel Zhang <guoqing.zhang@amd.com>
+> >>> ---
+> >>>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
+> >>>   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    | 2 ++
+> >>>   2 files changed, 3 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu=
+/drm/amd/amdgpu/amdgpu_device.c
+> >>> index a8f4697deb1b..b550d07190a2 100644
+> >>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> >>> @@ -5328,7 +5328,7 @@ int amdgpu_device_resume(struct drm_device *dev=
+, bool notify_clients)
+> >>>               amdgpu_virt_init_data_exchange(adev);
+> >>>               amdgpu_virt_release_full_gpu(adev, true);
+> >>>
+> >>> -            if (!adev->in_s0ix && !r && !adev->in_runpm)
+> >>> +            if (!adev->in_s0ix && !r && !adev->in_runpm && !adev->in=
+_s4)
+> >>>                       r =3D amdgpu_amdkfd_resume_process(adev);
+> >>>       }
+> >>>
+> >>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/dr=
+m/amd/amdgpu/amdgpu_drv.c
+> >>> index 571b70da4562..23b76e8ac2fd 100644
+> >>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> >>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> >>> @@ -2734,7 +2734,9 @@ static int amdgpu_pmops_poweroff(struct device =
+*dev)
+> >>>   static int amdgpu_pmops_restore(struct device *dev)
+> >>>   {
+> >>>       struct drm_device *drm_dev =3D dev_get_drvdata(dev);
+> >>> +    struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
+> >>>
+> >>> +    adev->in_s4 =3D false;
+> >>>       return amdgpu_device_resume(drm_dev, true);
+> >>>   }
+> >>>
+> >
 >
