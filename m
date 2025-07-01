@@ -1,82 +1,61 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1900220F23
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335D1E9B1C;
+	Tue,  1 Jul 2025 20:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751400229; cv=none; b=ZTU/iAu6wUKUo6OOyvPY7rYcxrDcSBOXOweMVuYzCLnoJsKP+YTHL9Y897zwWAn7gaVUlZ2MBMKfzpTyxtYmV8klW1KGLC2AyzLAe31zpf3bCjhOiSL5uPyokTGi0o9mjXDhCe2H2+0QzsqdS2OzIrA7sEeXTxUhcE+KEg9yZZQ=
+	t=1751400361; cv=none; b=fpZvJstSmzluOAJ6W6kg/253P64/8b0GMNCdVJ9JfsdC/ODHzRuRFkgkib5bjiiKk5XCBSQoSXBmTTrbztyTs/z4mc0Xd0ByJQ6nKzFsv6c0iqKOcZyWHErsyzTSd26ix8D5Noa3w5PddUQ93+toxa7SsKzIlFvxmh6APEq1V9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751400229; c=relaxed/simple;
-	bh=58rJfG6CwvkRx2KRC7Bb3Gpy0xeB+CUY4kcxFJRCUYo=;
+	s=arc-20240116; t=1751400361; c=relaxed/simple;
+	bh=EgCnSjkxf4u1frTm53+gSUO8YuhHv0iXVp3vsJ/h0RU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GRWXKJ6kSSZnwh5KlH+SXiFTwcqwIE22hb7j0WZ5vpgrr1LuMbWh+4zkOZgtYIO+UabFwyQAdIEN5HGx0PqQYblPO6rk3SetGfILAI6lBTC6yYp/Ywyn0b8z0v1aLYWIC87xfKcw6TGaRGksycNDolRjlRgrNZVdtEOJVmqZO3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VWxZZ2sm; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIwX/SAHs5trYQrzpSAJRowld0cWTb1xblBkbJtMIXQTNr19/kHlDirXBToumoxWep6tcHZjHIIDjirSeJt7Ge+59KmEf0ET0InbLoQW6m72MlmRg77FGU9PCNVdW4Y0i/dhjiAmcsODoWQRsSWVI+JTh9/lGgb9YmuO3YOhHzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiCcDC/L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VWxZZ2sm"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235e389599fso317255ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 13:03:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751400226; x=1752005026; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bktMfbMPWDOoqz4tBJCnWTjUNN8jSJQyh7h6qa9T1Cs=;
-        b=VWxZZ2smbJup4TKCuT5YnV8iiDV24Ni3CKAxCo87z4Dp2oJy9Vx1NL1MHZs1xgcvrF
-         XLoahWiVdlwepNu3eNOcwu0Chia0pPuVqXpLQknqewO/3AIBtFU6lWe7DXDPwBW/GN3j
-         W9622Eid9kn9kztEQcX+mS1Ake3GUa06i3gqjeGTGcZnoJsC4Kzpj+SZI0czHSC9BjWa
-         g7kafS2tZIKS/4oFNuBmpOsABl8LJxD7snb+1YnrZm1o87qvGMfgfvLPZSxx00DGJfht
-         qVCEQ0mdPvMQBZRSRHDxbwOVXaGA4pj3/lC2Bgu4poYKjApXlSjPYK85uZgB3WBq23F/
-         m7Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751400226; x=1752005026;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bktMfbMPWDOoqz4tBJCnWTjUNN8jSJQyh7h6qa9T1Cs=;
-        b=NVBJLmhQwu+dXUNhv/86ifq4hpmi/HZFM+KGg+1EnQna1MZX9UQBVau+K73+kGKyjO
-         TDPQfsoOEzSw+qhvgzS4luPs0xLKpBsmQYv7bGmMZXmeaLihO7+gBEPmuzwBp3WpXfT+
-         +w6HsQw+9XevqxEt7IlhkBdxHm4/rumDSDiHuYhjKVRBCsHLXWJVg5kzQuJFrhoJK3t1
-         5WHa4p2pSrYKoB3Wgg52p6YGPspVyHLNNrV5mY/qQUEbBV8P37G8yfUGq3UGf9ulkgbu
-         zJKn1qAUAXnXsN02lTyHJyubtLzfG03+j2valRI+6ztXOJsxZPsKRQRbzaGwSjTcbSfc
-         D4LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhi+mBZ5SlK6+vM5Q6ZlFhOhFkio9gNJ5mnkE3j0Fo4gR6oc4hBarv5AwLb0v7BqapHEXXpjWVaTH+wfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDmoRV294LllWbN9zrrHmtIq86fRVFvzDWWdOySmNR56rhuZ35
-	CCl4WXtoTmWogejBlJuRTylv/JMucx8Lhcwu8A/r+B2acFk9sJGZQeJG5XpZ1j/mhQ==
-X-Gm-Gg: ASbGnctw7M3KwW21h6lA66op2xiO2L0uEMq9DrxmQeZ81MhoeEL+LwBB+WL2FHdHtRh
-	AvBVUIaWiXNWTV6PCDWTqkj30YQIXLFNHWkib6cX53tMNXdpXeyS/0BdBFtKwkSrbXXpCrdXtki
-	/q/3BKEnoiK1p0NRQLMwRba0AVAGfbOJc0tPRcTnWtgPuG4L5jLcRLph3qifLWQYO49TuVJVTsP
-	Y4fd1zGsiDQAbHUgpjYN8xPBnH/dd6qxGPpRpP6Qt1VbQR9W2X6IfT7MVZ1d5An4NnDL1hyPWJV
-	CCvEdzgpwf9dnr7qTH3o3A0fiFd2UXKOz9e4DH/oVE5/wOXB1TTY6eWLAfrIAc03CUALYnVpdNJ
-	uj8BYbwpahigj2RanJhmQ
-X-Google-Smtp-Source: AGHT+IH8wLGT2ZcmFXbUpUVEBUVQ8i42Tf/vT9/rYGPbC+3uemlbkYYLsI4PH85g9JH5U3HDbnRtDg==
-X-Received: by 2002:a17:903:46cf:b0:234:afcf:d9e2 with SMTP id d9443c01a7336-23c6010bde4mr3665345ad.17.1751400225511;
-        Tue, 01 Jul 2025 13:03:45 -0700 (PDT)
-Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bb7dsm112415425ad.90.2025.07.01.13.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 13:03:44 -0700 (PDT)
-Date: Tue, 1 Jul 2025 20:03:35 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v7 27/28] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aGQ_F7Qx3scbbA-J@google.com>
-References: <cover.1750966133.git.nicolinc@nvidia.com>
- <539ee2ec112162abdba511574e2205a77b425059.1750966133.git.nicolinc@nvidia.com>
- <aGQGm1-i4M75b9Qp@google.com>
- <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiCcDC/L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C334C4CEEB;
+	Tue,  1 Jul 2025 20:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751400360;
+	bh=EgCnSjkxf4u1frTm53+gSUO8YuhHv0iXVp3vsJ/h0RU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hiCcDC/LMjF4xusnlzOHKMvbFAnZ5glKwkSnQD38zFYwoP5d+j+D65q8v1QxTBjvE
+	 ovSjwtxKoO4AAnJsBdOZPxQiw36jM7qV9i2fUs0QZEzDhhKzmDwgikxzZTEZYJBkEE
+	 nSylKd5/ukuQiI05UAv7aJpTx2aY5a+LRhVyiHzmmOzphhvJZFo0CANwewdpdDAn7p
+	 d2uGSWQT3bzxAPl9WZ8G8S4iFkbpDrV8OvKzUT1Jhmw7AM5Vkpaa9nmQCrcYJuWgDA
+	 dXnKlAn+RqRmebG9V1oOD6N0rXgmAjgfkugQ+voiTz9QQH+piz4p0iiZC+M2yP3SRf
+	 uugx2/WRLqaZQ==
+Date: Tue, 1 Jul 2025 13:05:58 -0700
+From: Drew Fustini <fustini@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v6 0/8] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+Message-ID: <aGQ/ph1dGIJcnyZu@x1>
+References: <CGME20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939@eucas1p1.samsung.com>
+ <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,194 +64,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aGQ6KCI9OZEwHdxS@Asurada-Nvidia>
+In-Reply-To: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
 
-On Tue, Jul 01, 2025 at 12:42:32PM -0700, Nicolin Chen wrote:
-> On Tue, Jul 01, 2025 at 04:02:35PM +0000, Pranjal Shrivastava wrote:
-> > On Thu, Jun 26, 2025 at 12:34:58PM -0700, Nicolin Chen wrote:
-> > >  /**
-> > >   * enum iommu_hw_info_type - IOMMU Hardware Info Types
-> > >   * @IOMMU_HW_INFO_TYPE_NONE: Output by the drivers that do not report hardware
-> > > @@ -598,12 +619,15 @@ struct iommu_hw_info_arm_smmuv3 {
-> > >   * @IOMMU_HW_INFO_TYPE_DEFAULT: Input to request for a default type
-> > >   * @IOMMU_HW_INFO_TYPE_INTEL_VTD: Intel VT-d iommu info type
-> > >   * @IOMMU_HW_INFO_TYPE_ARM_SMMUV3: ARM SMMUv3 iommu info type
-> > > + * @IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV (extension for ARM
-> > > + *                                     SMMUv3) info type
-> > 
-> > I know that the goal here is to mention that Tegra241 CMDQV is an
-> > extension for Arm SMMUv3, but this comment could be misunderstood as the
-> > "type" being an extension to IOMMU_HW_INFO_TYPE_ARM_SMMUV3. How about we
-> 
-> IOMMU_HW_INFO_TYPE_TEGRA241_CMDQV only reports CMDQV structure.
-> VMM still needs to poll the IOMMU_HW_INFO_TYPE_ARM_SMMUV3. It's
-> basically working as "type being an extension".
-> 
+On Tue, Jul 01, 2025 at 06:01:37PM +0200, Michal Wilczynski wrote:
+> This patch series introduces Rust support for the T-HEAD TH1520 PWM
+> controller and demonstrates its use for fan control on the Sipeed Lichee
+> Pi 4A board.
+[snip]
+> [2] - https://github.com/mwilczy/linux/commits/rust-next-pwm-working-fan-for-sending-v10/
 
-Ohh okay, I see.. I thought we were describing the HW.
+I've tested this branch, which is now based on next-20250701, and the fan
+is working correctly.
 
-> > Sorry to be nit-picky here, I know that the code is clear, but I've seen
-> > people don't care to read more than the uapi descriptions. Maybe we
-> > could re-write this comment, here and everywhere else?
-> 
-> I can change this thought:
-> 
-> + * @IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV (extension for ARM
-> + *                                    SMMUv3) enabled ARM SMMUv3 type
-> 
-
-Yes, that helps, thanks!
-
-> > > +/**
-> > > + * struct tegra241_vintf_sid - Virtual Interface Stream ID Replacement
-> > > + * @core: Embedded iommufd_vdevice structure, holding virtual Stream ID
-> > > + * @vintf: Parent VINTF pointer
-> > > + * @sid: Physical Stream ID
-> > > + * @idx: Replacement index in the VINTF
-> > > + */
-> > > +struct tegra241_vintf_sid {
-> > > +	struct iommufd_vdevice core;
-> > > +	struct tegra241_vintf *vintf;
-> > > +	u32 sid;
-> > > +	u8 idx;
-> > >  };
-> > 
-> > AFAIU, This seems to be a handle for sid -> vintf mapping.. it yes, then
-> > I'm not sure if "Virtual Interface Stream ID Replacement" clarifies that?
-> 
-> No. It's for vSID to pSID mappings. I had it explained in commit log:
-> 
-
-I get that, it's for vSID -> pSID mapping which also "happens to" point
-to the vintf.. all I wanted to say was that the description is unclear..
-We could've described it as "Vintf SID map" or something, but I guess
-it's fine the way it is too.. your call.
-
-> For ATC invalidation commands that hold an SID, it requires all devices to
-> register their virtual SIDs to the SID_MATCH registers and their physical
-> SIDs to the pairing SID_REPLACE registers, so that HW can use those as a
-> lookup table to replace those virtual SIDs with the correct physical SIDs.
-> Thus, implement the driver-allocated vDEVICE op with a tegra241_vintf_sid
-> structure to allocate SID_REPLACE and to program the SIDs accordingly.
-> 
-> > > @@ -351,6 +394,29 @@ tegra241_cmdqv_get_cmdq(struct arm_smmu_device *smmu,
-> > >  
-> > >  /* HW Reset Functions */
-> > >  
-> > > +/*
-> > > + * When a guest-owned VCMDQ is disabled, if the guest did not enqueue a CMD_SYNC
-> > > + * following an ATC_INV command at the end of the guest queue while this ATC_INV
-> > > + * is timed out, the TIMEOUT will not be reported until this VCMDQ gets assigned
-> > > + * to the next VM, which will be a false alarm potentially causing some unwanted
-> > > + * behavior in the new VM. Thus, a guest-owned VCMDQ must flush the TIMEOUT when
-> > > + * it gets disabled. This can be done by just issuing a CMD_SYNC to SMMU CMDQ.
-> > > + */
-> > > +static void tegra241_vcmdq_hw_flush_timeout(struct tegra241_vcmdq *vcmdq)
-> > > +{
-> > > +	struct arm_smmu_device *smmu = &vcmdq->cmdqv->smmu;
-> > > +	u64 cmd_sync[CMDQ_ENT_DWORDS] = {};
-> > > +
-> > > +	cmd_sync[0] = FIELD_PREP(CMDQ_0_OP, CMDQ_OP_CMD_SYNC) |
-> > > +		      FIELD_PREP(CMDQ_SYNC_0_CS, CMDQ_SYNC_0_CS_NONE);
-> > > +
-> > > +	/*
-> > > +	 * It does not hurt to insert another CMD_SYNC, taking advantage of the
-> > > +	 * arm_smmu_cmdq_issue_cmdlist() that waits for the CMD_SYNC completion.
-> > > +	 */
-> > > +	arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, cmd_sync, 1, true);
-> > > +}
-> > 
-> > If I'm getting this right, it issues a CMD_SYNC to the Host's CMDQ i.e.
-> > the non-CMDQV CMDQ, the main CMDQ of the SMMUv3? (i.e. the CMDQ present
-> > without the Tegra241 CMDQV extension?)
-> >
-> > so.. basically on every VM switch, there would be an additional CMD_SYNC
-> > issued to the non-CMDQV CMDQ to flush the TIMEOUT and we'll poll for
-> > it's completion?
-> 
-> The main CMDQ exists regardless whether CMDQV extension is there or
-> not. The CMD_SYNC can be issued to any (v)CMDQ. The smmu->cmdq is
-> just the easiest one to use here.
-> 
-
-I see. Thanks!
-
-> > > @@ -380,6 +448,12 @@ static void tegra241_vcmdq_hw_deinit(struct tegra241_vcmdq *vcmdq)
-> > >  	dev_dbg(vcmdq->cmdqv->dev, "%sdeinited\n", h);
-> > >  }
-> > >  
-> > > +/* This function is for LVCMDQ, so @vcmdq must be mapped prior */
-> > > +static void _tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
-> > > +{
-> > > +	writeq_relaxed(vcmdq->cmdq.q.q_base, REG_VCMDQ_PAGE1(vcmdq, BASE));
-> > > +}
-> > > +
-> > 
-> > Not sure why we broke this off to a function, will there be more stuff
-> > here or is this just to use it in tegra241_vcmdq_hw_init_user as well?
-> 
-> I can take it off.
-> 
-
-Nah, that's okay, I was just curious.
-
-> > > @@ -429,6 +504,10 @@ static void tegra241_vintf_hw_deinit(struct tegra241_vintf *vintf)
-> > >  		}
-> > >  	}
-> > >  	vintf_write_config(vintf, 0);
-> > > +	for (sidx = 0; sidx < vintf->cmdqv->num_sids_per_vintf; sidx++) {
-> > > +		writel(0, REG_VINTF(vintf, SID_MATCH(sidx)));
-> > > +		writel(0, REG_VINTF(vintf, SID_REPLACE(sidx)));
-> > > +	}
-> > >  }
-> > 
-> > I'm assuming we call the de-init while switching VMs and hence we need
-> > to clear these to avoid spurious SID replacements in the new VM? Or do
-> > they not reset to 0 when the HW is reset?
-> 
-> The driver does not reset HW when tearing down a VM, but only sets
-> VINTF's enable bit to 0. So, it should just set other configuration
-> bits to 0 as well.
-> 
-> > > +static struct iommufd_viommu_ops tegra241_cmdqv_viommu_ops = {
-> > > +	.destroy = tegra241_cmdqv_destroy_vintf_user,
-> > > +	.alloc_domain_nested = arm_vsmmu_alloc_domain_nested,
-> > > +	.cache_invalidate = arm_vsmmu_cache_invalidate,
-> > 
-> > I see that we currently use the main cmdq to issue these cache
-> > invalidations (there's a FIXME in arm_vsmmu_cache_invalidate). I was
-> > hoping for this series to change that but I'm assuming there's another
-> > series coming for that?
-> > 
-> > Meanwhile, I guess it'd be good to call that out for folks who have
-> > Grace and start trying out this feature.. I'm assuming they won't see
-> > as much perf improvement with this series alone since we're still using
-> > the main CMDQ in the upstream code?
-> 
-> VCMDQ only accelerates invalidation commands.
-> 
-
-I get that.. but I see we're using `arm_vsmmu_cache_invalidate` here
-from arm-smmu-v3-iommufd.c which seems to issue all commands to
-smmu->cmdq as of now (the code has a FIXME as well), per the code:
-
-	/* FIXME always uses the main cmdq rather than trying to group by type */
-        ret = arm_smmu_cmdq_issue_cmdlist(smmu, &smmu->cmdq, last->cmd,
-					  cur - last, true);
-
-I was hoping this FIXME to be addressed in this series..
-
-> That is for non-invalidation commands that VCMDQ doesn't support,
-> so they still have to go in the standard nesting pathway.
-> 
-> Let's add a line:
-> 	/* for non-invalidation commands use */
-
-Umm.. I was talking about the cache_invalidate op? I think there's some
-misunderstanding here? What am I missing?
-
-> 
-> Nicolin
-
-Thanks
-Praan
+Tested-by: Drew Fustini <fustini@kernel.org>
