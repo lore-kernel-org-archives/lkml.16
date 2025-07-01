@@ -1,88 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3772726FDAC;
-	Tue,  1 Jul 2025 14:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6504527817D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381628; cv=none; b=o5Xm7QNovY3HkfrvL9u/Q4yA7ZtbYX7OwesVrShs09mae+04zocjRPVl4doWxQW3xP7r6ADxJpTahnpjB3w4M1/ja/eln+5xtW09zZAveX6A2DzGuqfci78p+MWJHJyfmFkExYRlmmsTlDJMu2UqcykGWXdE99KmfTV7yzPnHW4=
+	t=1751381632; cv=none; b=YmkM4drI9o7UNkET8HXH+RdSZCa45ccIGMmywCQ+1XyCD/yqWjS1zu9gdVwo+yiS6QDix9ULf0rvU879ugyDn7tVdkOr1L2WaIACCfx+paphRXsu1GOC7siXMR/GVHsGbTfKQH268z+rotVvqBbhk+vOoh1Guz5bfdNAtMDDy0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381628; c=relaxed/simple;
-	bh=8+Wv0OlytKZIaT42+LGdm7t+KCuQk6vUKLUTvIlXl9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tkxn4xg15u5izrcZCvC/3YGs51aWi3ONtR6qURNw/RO36E97I9gr9wdnu9YZWL49aNUl2Gj39w63HCDW5MQ2YHmdq+iXSc32r2p70jPmnuw599G3sIi7+GRvtNwRGUPjMhFoqDnRR/zAriNFXMUIextqqgxcCXt70UlO+Fv92YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pM+J/P2o; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pM+J/P2o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9637BC4CEEB;
-	Tue,  1 Jul 2025 14:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751381627;
-	bh=8+Wv0OlytKZIaT42+LGdm7t+KCuQk6vUKLUTvIlXl9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pM+J/P2obW+0ZPc8hQTckt/NwIfT9aKfSAWixJVSseNuAycRxhqRmIw03BTm8Fa+l
-	 uiu/DrXT3x5xeRSLvzx2z/1fKcWBS1CG1YLyE4SiFonAvgSwM9TtIPl9x2R1kk1Vxr
-	 6Jc0coJEQtWzNCqk9bIcJxjpPSpz1cjS1VLnvahUjPM4hAMy2iQixNAfjTFRDJkMxp
-	 ZNB5PQi30aDp6hIlOT9KG6ZuXZ0yRPTZKrTaxf5YYSIsQxIDETVsx7xOgiFD/h5Tg2
-	 OVlNEysBlIIonXWXuGNKr8Cq4eD08+1Teo/WI4qmS+pFLcPd4zWtNynsMSsmGrhnBZ
-	 uMr55K83KzXWw==
-Date: Tue, 1 Jul 2025 07:53:47 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH 0/6] xfs: cleanup key comparing routines
-Message-ID: <20250701145347.GC10009@frogsfrogsfrogs>
-References: <20250612102455.63024-1-pchelkin@ispras.ru>
+	s=arc-20240116; t=1751381632; c=relaxed/simple;
+	bh=Nq6752uZqNFDKOOcflMmgGb6G8qBK0diZ4EiOD+Inqs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XWts/1B36+xW3kwR8SN1SGFcXnQ7msYHUBT4viCyyZGd5npZYpexH5jmyHKTYZDQPUxVHGigQr0PUDHF9/6Mv5FP0K5Q1CmM5UedQrWcaYXNNwRf4ss6+JC1tV0TTnMZKvePNsczBapS1XvFlwXksTQ+ESC5mjlPJhptZAvpvmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7814D12FC;
+	Tue,  1 Jul 2025 07:53:34 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB01F3F66E;
+	Tue,  1 Jul 2025 07:53:47 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 00/28] CoreSight: Address CPU Power Management Issues
+Date: Tue, 01 Jul 2025 15:53:25 +0100
+Message-Id: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612102455.63024-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGX2Y2gC/x2MWwqAIBAArxL7naD27ioRYrXWfmiiIIF096TPY
+ ZjJEDEQRpirDAETRbpdAVlXsF/ancjoKAySy473QjAdrNqj8lYZelRqmGk1ymnbhmMUUDIfsJh
+ /uazv+wHSdx1VYgAAAA==
+X-Change-ID: 20250611-arm_cs_pm_fix_v3-f4ae29bb7d81
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+ Levi Yun <yeoreum.yun@arm.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Yabin Cui <yabinc@google.com>, Keita Morisaki <keyz@google.com>, 
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=6135;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=Nq6752uZqNFDKOOcflMmgGb6G8qBK0diZ4EiOD+Inqs=;
+ b=m/RXraSsJy6Hl7VyJiDPntiCYLZ9JLMNk1Td7nr3SZFSEzN/n59pzpPI2QXZeZcyBC7P4uCit
+ Iu0tSsNimfvBw6IsBK24gLeqVCj8rXm/bobTx84vQNmLowuupQkeo0q
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Thu, Jun 12, 2025 at 01:24:44PM +0300, Fedor Pchelkin wrote:
-> Key comparing routines are currently opencoded with extra casts and
-> subtractions which is error prone and can be replaced with a neat
-> cmp_int() helper which is now in a generic header file.
-> 
-> Started from:
-> https://lore.kernel.org/linux-xfs/20250426134232.128864-1-pchelkin@ispras.ru/T/#u
-> 
-> Thanks Darrick for suggestion!
+This series addresses CPU power management issues in the CoreSight
+drivers. For easier review, the patches are organized into two
+categories:
 
-For patches 1-5,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+o Patches 01 ~ 10 focus on CPU power management within the ETM drivers.
+  These patches fix SMP-safe access to the mode, correct context
+  synchronization, and refactor the CPU suspend/resume flows.
 
---D
+o Patches 11 ~ 28 extend CPU power management to cover activated paths,
+  including helpers, links, and sinks. These changes move CPU PM and
+  hotplug notifiers from the ETMv4 driver into the CoreSight core layer.
 
-> 
-> Fedor Pchelkin (6):
->   xfs: rename diff_two_keys routines
->   xfs: rename key_diff routines
->   xfs: refactor cmp_two_keys routines to take advantage of cmp_int()
->   xfs: refactor cmp_key_with_cur routines to take advantage of cmp_int()
->   xfs: use a proper variable name and type for storing a comparison
->     result
->   xfs: refactor xfs_btree_diff_two_ptrs() to take advantage of cmp_int()
-> 
->  fs/xfs/libxfs/xfs_alloc_btree.c      | 52 +++++++++------------
->  fs/xfs/libxfs/xfs_bmap_btree.c       | 32 +++++--------
->  fs/xfs/libxfs/xfs_btree.c            | 31 ++++++-------
->  fs/xfs/libxfs/xfs_btree.h            | 41 +++++++++--------
->  fs/xfs/libxfs/xfs_ialloc_btree.c     | 24 +++++-----
->  fs/xfs/libxfs/xfs_refcount_btree.c   | 18 ++++----
->  fs/xfs/libxfs/xfs_rmap_btree.c       | 67 ++++++++++------------------
->  fs/xfs/libxfs/xfs_rtrefcount_btree.c | 18 ++++----
->  fs/xfs/libxfs/xfs_rtrmap_btree.c     | 67 ++++++++++------------------
->  fs/xfs/scrub/rcbag_btree.c           | 38 +++++-----------
->  10 files changed, 156 insertions(+), 232 deletions(-)
-> 
-> -- 
-> 2.49.0
-> 
-> 
+Summary of Changes:
+
+- Patches 01 ~ 03: Fix device mode access in the SMP mode.
+- Patch 04       : A minor fix for polling bit.
+- Patches 05 ~ 07: Improve the context synchronization based on the ETM
+		   specification (IHI0064H.b) and Arm ARM (ARM DDI 0487
+		   L.a).
+- Patches 08 ~ 10: Refactor the context save/restore flow in the ETMv4
+		   driver, in the end, the CPU PM callbacks reuse the
+		   normal enabling and disabling flows.
+- Patches 11 ~ 17: Move CPU PM code from ETMv4 driver to the core layer.
+- Patches 18 ~ 25: Enhance device mode handling in the CTI driver,
+		   distinguishes debug mode from trace modes (Perf or
+		   SysFS mode). Extend support activated paths during
+		   CPU idle. Support save and restore context for
+		   per-CPU sink (TRBE).
+- Patches 26 ~ 28: Move CPU hotplug notifier from the ETMv4 driver to
+		   the core layer. The full path is now managed in CPU
+		   hotplug.
+
+Verification:
+
+This series has been verified on the following platforms:
+- Hikey960, Juno-r0 and Juno-r2:
+  Note that the firmware on Hikey960 and Juno-r0 is unstable. While no
+  CoreSight failures were observed, but the CPU hotplug or CPU idle
+  itself may fail intermittently.
+  Juno-r2 is much stable and can pass 24+ hours stress test.
+- FVP RevC: Verified TRBE changes.
+
+Stress test script:
+
+  #!/usr/bin/bash
+
+  echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
+
+  while true; do
+          echo 0 > /sys/devices/system/cpu/cpu2/online;
+          echo 1 > /sys/devices/system/cpu/cpu2/online;
+  done &
+
+  while true; do
+          echo 1 > /sys/bus/coresight/devices/etm2/enable_source;
+          echo 0 > /sys/bus/coresight/devices/etm2/enable_source;
+  done &
+
+---
+Changes in v2:
+- Refactored ETMv4 suspend and resume for reusing the normal enabling
+  and disabling flows (James).
+- Used a per-CPU structure to maintain path pointers (James).
+- Supported helpers in CPU PM flows (James).
+- Fixed the SMP-safe access to device mode.
+- Fixed the context synchronization in ETMv4x driver.
+- Link to v1: https://lore.kernel.org/linux-arm-kernel/20250516160742.1200904-1-leo.yan@arm.com/
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+
+---
+Leo Yan (27):
+      coresight: Change device mode to atomic type
+      coresight: etm4x: Always set tracer's device mode on target CPU
+      coresight: etm3x: Always set tracer's device mode on target CPU
+      coresight: etm4x: Correct polling IDLE bit
+      coresight: etm4x: Ensure context synchronization is not ignored
+      coresight: etm4x: Add context synchronization before enabling trace
+      coresight: etm4x: Properly control filter in CPU idle with FEAT_TRF
+      coresight: etm4x: Remove the state_needs_restore flag
+      coresight: etm4x: Add flag to control single-shot restart
+      coresight: etm4x: Reuse normal enable and disable logic in CPU idle
+      coresight: Populate CPU ID into the coresight_device structure
+      coresight: sysfs: Validate CPU online status for per-CPU sources
+      coresight: Set per CPU source pointer
+      coresight: Register CPU PM notifier in core layer
+      coresight: etm4x: Hook CPU PM callbacks
+      coresight: Add callback to determine if context save/restore is needed
+      coresight: etm4x: Remove redundant condition checks in save and restore
+      coresight: cti: Fix race condition by using device mode
+      coresight: cti: Introduce CS_MODE_DEBUG mode
+      coresight: cti: Properly handle modes in CPU PM notifiers
+      coresight: Add per-CPU path pointer
+      coresight: Add 'in_idle' argument to path enable/disable functions
+      coresight: Control path during CPU idle
+      coresight: Add PM callbacks for percpu sink
+      coresight: Take hotplug lock in enable_source_store() for Sysfs mode
+      coresight: Move CPU hotplug callbacks to core layer
+      coresight: Manage activated path during CPU hotplug
+
+Yabin Cui (1):
+      coresight: trbe: Save and restore state across CPU low power state
+
+ drivers/hwtracing/coresight/coresight-catu.c       |   1 +
+ drivers/hwtracing/coresight/coresight-core.c       | 337 ++++++++++++--
+ drivers/hwtracing/coresight/coresight-ctcu-core.c  |   1 +
+ drivers/hwtracing/coresight/coresight-cti-core.c   |  40 +-
+ drivers/hwtracing/coresight/coresight-cti-sysfs.c  |   2 +-
+ drivers/hwtracing/coresight/coresight-dummy.c      |   1 +
+ drivers/hwtracing/coresight/coresight-etb10.c      |   1 +
+ drivers/hwtracing/coresight/coresight-etm3x-core.c |  61 ++-
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 488 ++++++---------------
+ drivers/hwtracing/coresight/coresight-etm4x.h      |  62 ---
+ drivers/hwtracing/coresight/coresight-funnel.c     |   1 +
+ drivers/hwtracing/coresight/coresight-replicator.c |   1 +
+ drivers/hwtracing/coresight/coresight-stm.c        |   1 +
+ drivers/hwtracing/coresight/coresight-sysfs.c      |  10 +
+ drivers/hwtracing/coresight/coresight-tmc-core.c   |   1 +
+ drivers/hwtracing/coresight/coresight-tpda.c       |   1 +
+ drivers/hwtracing/coresight/coresight-tpdm.c       |   1 +
+ drivers/hwtracing/coresight/coresight-tpiu.c       |   1 +
+ drivers/hwtracing/coresight/coresight-trbe.c       |  85 ++++
+ drivers/hwtracing/coresight/ultrasoc-smb.c         |   1 +
+ include/linux/coresight.h                          |  55 ++-
+ 21 files changed, 665 insertions(+), 487 deletions(-)
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250611-arm_cs_pm_fix_v3-f4ae29bb7d81
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
