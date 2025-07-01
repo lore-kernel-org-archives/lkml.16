@@ -1,81 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81E7306DB6;
-	Tue,  1 Jul 2025 21:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE3A306DCA;
+	Tue,  1 Jul 2025 21:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403662; cv=none; b=cSftfnX9WH+rMQKYfjclbTqabu4Dz7QRtzKfQuA0z6ORuVo10S+0lQy7mAllkTkaxpQu4QivTN5c4oCC97JiqvpHS4EX+cmnG0PdMMbJgVgOUny4k+WMHpWf+yCW0AhCpHIqlRJa3DJiykmxk71SS2JQ52SoZUNbeyRhjmoKzbI=
+	t=1751403662; cv=none; b=GSy21A3SUiH7pxAb184+ZicohYbRcAxbF+8AXN9sdUMxmlLbihRVuPPwYpn67i4+Pmn1iMQKtJo+P4KWytO9/doDmWfQeXlYg8sGV/APi6paQTQukjnR6gj6x/KyFBzFlxrGgniK2+MtDo2oVNfzHobWvoK0GhNisWErgwTMDfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751403662; c=relaxed/simple;
-	bh=oSS2LJJZFgcvUTA+VwZdl39/DpWdDxUKpuXqpV9MOuA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dRUmm5bncNZcu+eYVg5ez5f8N8bftcs6ExE2od9MV0sVGusho8puBnMJzRlls240gsNMm+pAPpPCGsuwVVfMDVwYTkjYPZhdi30i8VSjMSBOmcMxzRE9BH2Zew2eLe0LSLHVqGOnve0ELuZdie0tqlYz04yPPlERO6HyBfyzMeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9ZICJfb; arc=none smtp.client-ip=10.30.226.201
+	bh=KxNo7MC9iL3A0G0AkoA1BW65gW/zw4LvgAtZBo2U6AM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXswJvTxt7xISTPA3MJyxz0KnASFqSO08g9uHqFJxT1U0JWyGIguIEZ+gf7/vt+LAHEUAvvpVrXvWpYC/cLQWK2NmE6MCloIFRQ0N4+rk7mzVIXwWhDboN35SV1qv5VzpJquh/pml1j1l5214DZEJzM8eXFQ+6h9B6qRTwC20V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gv3z6fjb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9ZICJfb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CB98C4CEF8;
-	Tue,  1 Jul 2025 21:01:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gv3z6fjb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37B9C4CEF5;
+	Tue,  1 Jul 2025 21:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751403661;
-	bh=oSS2LJJZFgcvUTA+VwZdl39/DpWdDxUKpuXqpV9MOuA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=I9ZICJfbVwuavk48xtA0CpDW9YAvn01CyKx5+b0tBsvvCP4lnjLFMV4dIMrY0sfFf
-	 B1Rc71tuvRrxw9d09s9InOyVRmoi5A27h6X6ak2KQA4NPuyUC18F5EwtjSeb89kO8X
-	 TgjYTjtZBq7nniBHWzBf5/c2Mdl4uqS1AfSr5xPwuZ2ZzLra0xegd2qIGRPlwguxLu
-	 u4zk+Ypt9bnqmYYtGJ3Qv5Vf07unPTMN1yAbD47fdD7f0EOF6C6h1PBUOiZaXftmAp
-	 1g0ylvTLaJ4dpUiy+RMgbsHDMZOFaOit8RxfjKPDOgju0SAvkb14ak8ec2RfGO6W8H
-	 E4dDBDFGYsr0g==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Tue, 01 Jul 2025 16:00:44 -0500
-Subject: [PATCH 5/6] dt-bindings: hwmon: pmbus: ti,ucd90320: Add missing
- compatibles
+	s=k20201202; t=1751403662;
+	bh=KxNo7MC9iL3A0G0AkoA1BW65gW/zw4LvgAtZBo2U6AM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gv3z6fjbqba15oqwRlg4HTHo/E6gMJCSHGUj2KvcDZ+/SHoTsjxAHsANNmtHzNz0j
+	 z6zwAvM5Wkzt1tV/k9PNX3BYm/GdVqh3OkA8EPH7QBRwfn+o4QaOPf2s96HMJtwqu9
+	 gqFoITlilEaPpY7g4b+InUW2ikQFTUmrtJ0+9FzXEidhH8GIlOxjcmyL/iX8/jkDNv
+	 GoAoZzLspR0OvKwV6/7yY4T++V+NGSscI8LgbSB+qYkB4jv/VjXHdzyk8vhfz/yTKM
+	 SjVvUFngMePnvAYa71Xd1L4DIKVoefDbw0+1rAcCKS6OC4xpGrfu8shp2E8nq9N7If
+	 8cCCvGYUDGqAg==
+Date: Tue, 1 Jul 2025 17:00:58 -0400
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Ben Copeland <ben.copeland@linaro.org>, linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
+	sagi@grimberg.me, iommu@lists.linux.dev,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
+ after 06cae0e3f61c
+Message-ID: <aGRMilWhgF4z0WOf@kbusch-mbp>
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de>
+ <aGLyswGYD6Zai_sI@kbusch-mbp>
+ <20250701132936.GA18807@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-dt-hwmon-compatibles-v1-5-ad99e65cf11b@kernel.org>
-References: <20250701-dt-hwmon-compatibles-v1-0-ad99e65cf11b@kernel.org>
-In-Reply-To: <20250701-dt-hwmon-compatibles-v1-0-ad99e65cf11b@kernel.org>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- Frank Li <Frank.Li@nxp.com>, Jim Wright <wrightj@linux.vnet.ibm.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701132936.GA18807@lst.de>
 
-Add several compatibles already in use to the ti,ucd90320 binding.
+On Tue, Jul 01, 2025 at 03:29:36PM +0200, Christoph Hellwig wrote:
+> Yes, that's broken, and I remember fixing it before.  A little digging
+> shows that my fixes disappeared between the oct 30 version of Leon's
+> dma-split branch and the latest one somewhere.  Below is what should
+> restore it, but at least when forcing my Intel IOMMU down this path it
+> still has issues with VPTEs already set.  So maybe Bob should not try
+> it quite yet.  I'll try to get to it, but my availability today and
+> tomorrow is a bit limited.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Let's say we're using ARM64 SMMU configured with 64k granularity like I
+showed earlier.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
-index f8bea1c0e94a..8f9ce00079df 100644
---- a/Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/pmbus/ti,ucd90320.yaml
-@@ -23,7 +23,13 @@ description: |
- properties:
-   compatible:
-     enum:
-+      - ti,ucd9000
-+      - ti,ucd9090
-+      - ti,ucd90120
-+      - ti,ucd90124
-+      - ti,ucd90160
-       - ti,ucd90320
-+      - ti,ucd90910
- 
-   reg:
-     maxItems: 1
+Now let's send a read command with 128k transfer, and let's assume the
+payload is two 64k aligned physical segments, so we have 2 bvecs.
 
--- 
-2.47.2
+Since nvme's virtual boundary is smaller than the iommu's granule, we
+won't attempt to coalesce. We instead iommu map each bvec segment
+individually.
 
+And let's say each segment just so happens to get consecutive IOVA's.
+The mapping side had done each segment individually, but your proposal
+here will assume the contiguous dma_addr ranges were done as a single
+larger mapping. Is that okay?
+
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 38be1505dbd9..02bb5cf5db1a 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -678,40 +678,55 @@ static void nvme_free_prps(struct request *req)
+>  	enum dma_data_direction dir = rq_dma_dir(req);
+>  	int length = iod->total_len;
+>  	dma_addr_t dma_addr;
+> -	int i, desc;
+> +	int prp_len, i, desc;
+>  	__le64 *prp_list;
+> +	dma_addr_t dma_start;
+>  	u32 dma_len;
+>  
+>  	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp1);
+> -	dma_len = min_t(u32, length,
+> -		NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
+> -	length -= dma_len;
+> +	prp_len = NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1));
+> +	prp_len = min(length, prp_len);
+> +	length -= prp_len;
+>  	if (!length) {
+> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+> +		dma_unmap_page(dma_dev, dma_addr, prp_len, dir);
+>  		return;
+>  	}
+>  
+> +	dma_start = dma_addr;
+> +	dma_len = prp_len;
+> +	dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
+> +
+>  	if (length <= NVME_CTRL_PAGE_SIZE) {
+> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+> -		dma_addr = le64_to_cpu(iod->cmd.common.dptr.prp2);
+> -		dma_unmap_page(dma_dev, dma_addr, length, dir);
+> -		return;
+> +		if (dma_addr != dma_start + dma_len) {
+> +			dma_unmap_page(dma_dev, dma_start, dma_len, dir);
+> +			dma_start = dma_addr;
+> +			dma_len = 0;
+> +		}
+> +		dma_len += length;
+> +		goto done;
+>  	}
+>  
+>  	i = 0;
+>  	desc = 0;
+>  	prp_list = iod->descriptors[desc];
+>  	do {
+> -		dma_unmap_page(dma_dev, dma_addr, dma_len, dir);
+>  		if (i == NVME_CTRL_PAGE_SIZE >> 3) {
+>  			prp_list = iod->descriptors[++desc];
+>  			i = 0;
+>  		}
+>  
+>  		dma_addr = le64_to_cpu(prp_list[i++]);
+> -		dma_len = min(length, NVME_CTRL_PAGE_SIZE);
+> -		length -= dma_len;
+> +		if (dma_addr != dma_start + dma_len) {
+> +			dma_unmap_page(dma_dev, dma_start, dma_len, dir);
+> +			dma_start = dma_addr;
+> +			dma_len = 0;
+> +		}
+> +		prp_len = min(length, NVME_CTRL_PAGE_SIZE);
+> +		dma_len += prp_len;
+> +		length -= prp_len;
+>  	} while (length);
+> +done:
+> +	dma_unmap_page(dma_dev, dma_start, dma_len, dir);
+>  }
+>  
+>  static void nvme_free_sgls(struct request *req)
