@@ -1,101 +1,338 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60A01E833C;
-	Tue,  1 Jul 2025 08:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569EF1EC01D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359580; cv=none; b=L21nMRbN3JUKtTe8fwilViofv1B3TpgVv7NGvweGZKpFfmh6DgSwTg5QbrVapPXVBMEOA7Ahw3vNn+c0PaMRFHgU2k+8pM7RH/TJ9iMHgpTd8xixEE8/0Jr1pEv0d/vI2kaRPOP4OwJoNaGhpHqYbxgYd/34OAkO5lVCwjC/RjY=
+	t=1751359581; cv=none; b=QHqucCozIVN4YtHzXi83uhFOiEbyvylu6O/u3AhtA09CYwE9ZRcriDUsfJUQ/oa4vGlc1EJM7P5BMbMouKXAvY3PpbSLgZk7pdufE6BWWEDSevFJizl4yRoGkXfmH/LcrW5hX5dsUMy5Pm6cb+2Pr3kauS5xaScPgnFx1Vsqy/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359580; c=relaxed/simple;
-	bh=adu+8i0sSmJ/HE3ZQgmBuKqQJ13BpqfiMhweYdrG56Y=;
+	s=arc-20240116; t=1751359581; c=relaxed/simple;
+	bh=XjhOVSl6ZeX/9qAW20Mw3SmTcJvvUzniC0v+3sHW62I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fWsK113Pr/diFx8T/hwqADkv8lSE4JNHkNTwaTpE+aTMdKg2+Zr9xDXNeKJvG4Zsgva5EB38cy30JdtcZq4jcainv+rPwQy7xsnSvSbCVluWODEdl0tAl3YZAF6Wia7aCSDHRhEJos20kEzDf/L29qMbXzLsi6l4R/r+58SHWaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ao0bvY5m; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=sa3KmbFl/vFtw5gZRGxfi/YcKm/EcOgQ8oqZ04FDhR2VCQQfV9qwid+m4IwDIGiczeMjCMHs/PWeZXDDGX9didm103hpMd7C86HfenfLG3c3JEEjg1eEVeW2jJivsm7dVBySkq+NAW9Xh1FQ9Y6lSkH3LbSyF+7K5C40pynmyTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=GOII8MX7; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ao0bvY5m"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34dde96cbfso424939a12.2;
-        Tue, 01 Jul 2025 01:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751359578; x=1751964378; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c/v0xD6UvnMJc03nf121OpAGHnJPH1i49Y2f3p3BdBU=;
-        b=Ao0bvY5mlnsQv9k1okNkEF+WiKH4BP96wrWJOe/D0HZQQegu5AWWszpSoVuUZGbuCg
-         3XK128wsSGefs6ga1ZtZl/VxDYI9L6Dx5L5jNCNUba2BRyYtlOXowfWHK7JS3RvlWAdp
-         xxxGOmoFXT+hEjhR/v4/C5s8bIDbP1pU0kp/BbRtyU3si6Cd4tNWgum5t7vmRqr592lM
-         LfK574d78SoK+xnGdS9vOF+NsPj+/oL2oVfipVsbu7x9PUtTqRfpsmaiCU/b8XO9cfwi
-         v4tFsxU4pFK4MmC2BSZ3dwoa7J8mbZSMdCloaIG3+yMNkVptERPNzTp5d7hU1ymAxVIJ
-         6/Kw==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="GOII8MX7"
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com [209.85.217.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 8FB213F26A
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1751359577;
+	bh=3yZF0YBU8zea1BjIE7DIlZeylxXI2Bym2PIOgK7zI/4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=GOII8MX7zl2L/LiCYXCFUrNrGlmCw0S81RqaH+UQ1XpX3aGcptI9Lnc7WEQM3NH9x
+	 U9M7a2KN+X9Zw/Drc1mXX7kUbvCOXZWw+qUtHB43BSJqPmTrCS3kANRUvRnWMz6rgU
+	 WxBngG3SLCAlJbK2ECJYYPoPgmhWwQg4nvKS3tzbSznjag0PmECj8qo8u2od7w+t8t
+	 HwrB9oeoH8MuQqyQUMSjgsgeFby3FH/ExwNIk4qrVjxkzbroB6l8XptVwJG54iRN3o
+	 hr935cyyJpcmwmRVnA2eqo8laYmaLl7nm921pqRuBEV+V6k+135QAZXdyzYkgVcBEJ
+	 5uHtvJGFpiUMg==
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-4e98e10c2d5so4727239137.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:46:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751359578; x=1751964378;
+        d=1e100.net; s=20230601; t=1751359576; x=1751964376;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c/v0xD6UvnMJc03nf121OpAGHnJPH1i49Y2f3p3BdBU=;
-        b=L4oey5quoH0Kelpb6SDB2cUdduo40MZjy+Fbz6qBPXz3Tr23D5MXfQSilZP20J6DgO
-         L+JaSjqPGYOfhZ61oX1UyeCoHT2YzgB9L4MWEcjASRR9ZnHK2MEPK1Tgh+fScjIf+A5y
-         A3siyNNc6xZrZdeUOAS3bB0kGvXiP9gOdjbuEp9xaeXZFNYQFei2WRgdHK3zHFTuTtZ7
-         wquxRCj9jDtsjQWFTRC7YQeZklHfAkpj/Htp+18fs0vVN9FfTvZGRGgACiqn5a9cssnH
-         cWylYkN4+RCB1/KW68WmUVrEr+mrPRSk84XNdVxgbWgLmN2q6DUWD2n1sjlI7C6z2Acp
-         qidA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnTr/YZUFn2yDhVDyThtf6efQ+c+bsK6g7+JNBJd3teCxw19IZZsExilBtbaOQehWBjYJGJwthacg=@vger.kernel.org, AJvYcCVjSFfJU8QaP2vU/YDoUwZAl/S8jyPpNxAtsiKGjiLeLnzkUo84qGnXMEgJQgHNGvbtbDQi67KZo8UWqP5Nij9x@vger.kernel.org, AJvYcCX7OysUKFe8KCtk7SOT58hSsQnA1cK5ebP21ARh+9i7mViCv98fldgktWr3P1RyREr3SlU3mz0dgTyg2ZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy9L+Q1p5UVNiLZgdh/8HzI3lB9qZKLp94BJ/xjxLvTDvIY+4N
-	ledZEwzBVtJkhfjg3EfGSf/FHrHltOz+z58hX100rvjZ/P6C8JZb47Gk5AhXo1+wCJ83RyQoY3P
-	8gNC2PipJg6JlwqadzWvgXf6Q6xc0IbY=
-X-Gm-Gg: ASbGncuVZYgZFXuqXNp4boF8HItXJ4p+k+qrlweXgF26l9j08yQhq3cBxrJJTXyWKI1
-	+AU86nmLqI5TFXE1xjXL+w7Clscp/3EdKxUvZ3C4XSRkQqNdxtRhK0NhIcD7i4Q6UReQjg8vqy2
-	6WYowgYo+4PEDLLKkfdKPhZ0f2oU9ibzUAvBpqYIlLaiY=
-X-Google-Smtp-Source: AGHT+IGayysUot5FJmNyS1+LhAXkSuEABGqTts/x9kFQq2v3uECf9Pjd6BFyweSkXtMkC4KdiSu54T+GD3+7VQpgqcQ=
-X-Received: by 2002:a17:90b:3c91:b0:312:1ae9:1537 with SMTP id
- 98e67ed59e1d1-319420d6defmr1484022a91.0.1751359577749; Tue, 01 Jul 2025
- 01:46:17 -0700 (PDT)
+        bh=3yZF0YBU8zea1BjIE7DIlZeylxXI2Bym2PIOgK7zI/4=;
+        b=IOTVtgyJJgCFR8FicNAkEk6/Eg+Oi4CSg67r5VCCgZ1yVxg9kPcAsH6IfVaZ9+0OUT
+         DofTN8av+nu3FCZf/wjXSp3LIu7uM+jDTXCZ9xPQAKaxf1dQEfZA3TcZeyzHwgCxiwkC
+         JhrJjBcSEWHodaA80CCtABeSxGkbNVordPnvpD4QFrapGOUJJG3ZVUtmZiIzubjWM6oi
+         E3u4GStvWO87+AGMlQw/iWyTLuD4d/8XAih5YvBr/2f96aUVuwvOFsa/ALsXu0hXqFnQ
+         24NXsU0ImWdPPvk8gf4KVi1CXci4IdfFw6Hj+2enPgghMyeI3vzn8hVwbxci7puJUJax
+         Hcfw==
+X-Gm-Message-State: AOJu0Yy4acDHUnljzc7IenpRHk+Xy9nSrp8qGzzBaoGv8LOd3+Ya/HiO
+	2kJSZHf5DXZA2lbNVmmDrmFdaPV0Rm0Nc+lVGkhxEHz32ySHlT8uZMbuTdrh7lUoUhANFu81Yz9
+	D8u3+V9wokRTq3y6pO9WfIM598hADAAcIjX75+CeUvdGJwYpziy6BBkGPdP0IUiqdnmH2+K8l2m
+	/l4eul0c9EOCXjUc40gJtgqI0kBMVr/IOhuHclnfL/uTy13x+yokQuy/Hr
+X-Gm-Gg: ASbGncvJ55UOSQa+Fkj8opehBlJsX0K9Rze1ReraiOBFxATP+NOMaP3Fb9m0MQALWZG
+	mem/Y4GzUqMxkavWEX8rUJ9SFKSVH5uBECVKoT6gwOjOIbYDUOpRTfMQn/NIni6F5naszxxKYsT
+	SNY+OK
+X-Received: by 2002:a05:6102:688f:b0:4e7:dbd2:4605 with SMTP id ada2fe7eead31-4ee4f86445cmr9997036137.24.1751359576315;
+        Tue, 01 Jul 2025 01:46:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9V8ciXaSmJI5TDipy6/UF9+JidVBFUeo9JMVaJfVoPueCHJ2kt2SYc0d07Q2iKJ9esvtoBNWRLiyKnA/AVCc=
+X-Received: by 2002:a05:6102:688f:b0:4e7:dbd2:4605 with SMTP id
+ ada2fe7eead31-4ee4f86445cmr9997022137.24.1751359575907; Tue, 01 Jul 2025
+ 01:46:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701053557.20859-1-work@onurozkan.dev> <20250701053557.20859-7-work@onurozkan.dev>
-In-Reply-To: <20250701053557.20859-7-work@onurozkan.dev>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 1 Jul 2025 10:46:04 +0200
-X-Gm-Features: Ac12FXzHDv1UinEBt9Y-8t0CdxgdsylkUNnz7RlsW1aWZL7FWxUuIV4iYhqdPNA
-Message-ID: <CANiq72=NBhCeENQ7x94viBEmSx+N8ET0if91y=N93pXFoGKdDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] rust: remove `#[allow(clippy::non_send_fields_in_send_ty)]`
-To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, airlied@gmail.com, simona@ffwll.ch, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	rafael@kernel.org, viresh.kumar@linaro.org, gregkh@linuxfoundation.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	davidgow@google.com, nm@ti.com
+References: <20250629214449.14462-1-aleksandr.mikhalitsyn@canonical.com>
+ <20250629214449.14462-5-aleksandr.mikhalitsyn@canonical.com> <CAAVpQUD0_HcYQ-DBSFSgjdoQLAS2bjXkLhPfYpH8z+Rt17U_sQ@mail.gmail.com>
+In-Reply-To: <CAAVpQUD0_HcYQ-DBSFSgjdoQLAS2bjXkLhPfYpH8z+Rt17U_sQ@mail.gmail.com>
+From: Aleksandr Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Date: Tue, 1 Jul 2025 10:46:03 +0200
+X-Gm-Features: Ac12FXwEZuOzRZgPNSo_QmJ6EjZc-NaJDt48kDde4Xlqt7W7HO8Vo8BjyAD36zY
+Message-ID: <CAEivzxd3iUuM5iVCWEGweWpjhyhJ9TJHbHHeGYrL=EfPFprngw@mail.gmail.com>
+Subject: Re: [RESEND PATCH net-next 4/6] af_unix: stash pidfs dentry when needed
+To: Kuniyuki Iwashima <kuniyu@google.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Leon Romanovsky <leon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, 
+	Lennart Poettering <mzxreary@0pointer.de>, Luca Boccassi <bluca@debian.org>, 
+	David Rheinsberg <david@readahead.eu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 1, 2025 at 7:36=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.dev>=
- wrote:
+On Mon, Jun 30, 2025 at 10:03=E2=80=AFPM Kuniyuki Iwashima <kuniyu@google.c=
+om> wrote:
 >
-> Just like how we did in [1], we no longer need this lint
-> as it's no longer part of Clippy's `suspicious` lint group.
+> On Sun, Jun 29, 2025 at 2:45=E2=80=AFPM Alexander Mikhalitsyn
+> <aleksandr.mikhalitsyn@canonical.com> wrote:
+> >
+> > We need to ensure that pidfs dentry is allocated when we meet any
+> > struct pid for the first time. This will allows us to open pidfd
+> > even after the task it corresponds to is reaped.
+> >
+> > Basically, we need to identify all places where we fill skb/scm_cookie
+> > with struct pid reference for the first time and call pidfs_register_pi=
+d().
+> >
+> > Tricky thing here is that we have a few places where this happends
+> > depending on what userspace is doing:
+> > - [__scm_replace_pid()] explicitly sending an SCM_CREDENTIALS message
+> >                         and specified pid in a numeric format
+> > - [unix_maybe_add_creds()] enabled SO_PASSCRED/SO_PASSPIDFD but
+> >                            didn't send SCM_CREDENTIALS explicitly
+> > - [scm_send()] force_creds is true. Netlink case.
+> >
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: Simon Horman <horms@kernel.org>
+> > Cc: Leon Romanovsky <leon@kernel.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Kuniyuki Iwashima <kuniyu@google.com>
+> > Cc: Lennart Poettering <mzxreary@0pointer.de>
+> > Cc: Luca Boccassi <bluca@debian.org>
+> > Cc: David Rheinsberg <david@readahead.eu>
+> > Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.c=
+om>
+> > ---
+> >  include/net/scm.h  | 35 ++++++++++++++++++++++++++++++-----
+> >  net/unix/af_unix.c | 36 +++++++++++++++++++++++++++++++++---
+> >  2 files changed, 63 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/include/net/scm.h b/include/net/scm.h
+> > index 856eb3a380f6..d1ae0704f230 100644
+> > --- a/include/net/scm.h
+> > +++ b/include/net/scm.h
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/file.h>
+> >  #include <linux/security.h>
+> >  #include <linux/pid.h>
+> > +#include <linux/pidfs.h>
+> >  #include <linux/nsproxy.h>
+> >  #include <linux/sched/signal.h>
+> >  #include <net/compat.h>
+> > @@ -66,19 +67,37 @@ static __inline__ void unix_get_peersec_dgram(struc=
+t socket *sock, struct scm_co
+> >  { }
+> >  #endif /* CONFIG_SECURITY_NETWORK */
+> >
+> > -static __inline__ void scm_set_cred(struct scm_cookie *scm,
+> > -                                   struct pid *pid, kuid_t uid, kgid_t=
+ gid)
+> > +static __inline__ int __scm_set_cred(struct scm_cookie *scm,
+> > +                                    struct pid *pid, bool pidfs_regist=
+er,
+> > +                                    kuid_t uid, kgid_t gid)
 >
-> Link: https://github.com/torvalds/linux/commit/5e7c9b84ad08cc7a41b2ddbbba=
-ccb60057da3860 [1]
+> scm_set_cred() is only called from 3 places, and I think you can simply
+> pass pidfd_register =3D=3D false from one of the places.
 
-Normally this format is used:
+Hi Kuniyuki,
 
-    ... did in commit 5e7c9b84ad08 ("rust: sync: remove unneeded
-`#[allow(clippy::non_send_fields_in_send_ty)]`"), we no longer ...
+Thanks for such a fast review! ;-)
 
-Maintainers may want to fix this when they apply the patch, so I
-wouldn't send a new version just for this (but if you do, then please
-reword it).
+I've just sent a -v2 with all fixes you've suggested:
+https://lore.kernel.org/netdev/20250701083922.97928-1-aleksandr.mikhalitsyn=
+@canonical.com/#r
 
-Cheers,
-Miguel
+Kind regards,
+Alex
+
+>
+> while at it, please replace s/__inline__/inline/
+
+Have done ;)
+
+>
+> >  {
+> > -       scm->pid  =3D get_pid(pid);
+> > +       if (pidfs_register) {
+> > +               int err;
+> > +
+> > +               err =3D pidfs_register_pid(pid);
+>
+> nit: int err =3D pidfs_...();
+
+Fixed!
+
+>
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> > +
+> > +       scm->pid =3D get_pid(pid);
+> > +
+> >         scm->creds.pid =3D pid_vnr(pid);
+> >         scm->creds.uid =3D uid;
+> >         scm->creds.gid =3D gid;
+> > +       return 0;
+> > +}
+> > +
+> > +static __inline__ void scm_set_cred(struct scm_cookie *scm,
+> > +                                   struct pid *pid, kuid_t uid, kgid_t=
+ gid)
+> > +{
+> > +       /* __scm_set_cred() can't fail when pidfs_register =3D=3D false=
+ */
+> > +       (void) __scm_set_cred(scm, pid, false, uid, gid);
+>
+> I think this (void) style is unnecessary for recent compilers.
+
++
+
+>
+> >  }
+> >
+> >  static __inline__ void scm_destroy_cred(struct scm_cookie *scm)
+> >  {
+> >         put_pid(scm->pid);
+> > -       scm->pid  =3D NULL;
+> > +       scm->pid =3D NULL;
+> >  }
+> >
+> >  static __inline__ void scm_destroy(struct scm_cookie *scm)
+> > @@ -90,9 +109,15 @@ static __inline__ void scm_destroy(struct scm_cooki=
+e *scm)
+> >
+> >  static __inline__ int __scm_replace_pid(struct scm_cookie *scm, struct=
+ pid *pid)
+> >  {
+> > +       int err;
+> > +
+> >         /* drop all previous references */
+> >         scm_destroy_cred(scm);
+> >
+> > +       err =3D pidfs_register_pid(pid);
+> > +       if (err)
+> > +               return err;
+> > +
+> >         scm->pid =3D get_pid(pid);
+> >         scm->creds.pid =3D pid_vnr(pid);
+> >         return 0;
+> > @@ -105,7 +130,7 @@ static __inline__ int scm_send(struct socket *sock,=
+ struct msghdr *msg,
+> >         scm->creds.uid =3D INVALID_UID;
+> >         scm->creds.gid =3D INVALID_GID;
+> >         if (forcecreds)
+> > -               scm_set_cred(scm, task_tgid(current), current_uid(), cu=
+rrent_gid());
+> > +               __scm_set_cred(scm, task_tgid(current), true, current_u=
+id(), current_gid());
+> >         unix_get_peersec_dgram(sock, scm);
+> >         if (msg->msg_controllen <=3D 0)
+> >                 return 0;
+> > diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> > index 5efe6e44abdf..1f4a5fe8a1f7 100644
+> > --- a/net/unix/af_unix.c
+> > +++ b/net/unix/af_unix.c
+> > @@ -1924,12 +1924,34 @@ static void unix_peek_fds(struct scm_cookie *sc=
+m, struct sk_buff *skb)
+> >         scm->fp =3D scm_fp_dup(UNIXCB(skb).fp);
+> >  }
+> >
+> > +static int __skb_set_pid(struct sk_buff *skb, struct pid *pid, bool pi=
+dfs_register)
+>
+> unix_set_pid_to_skb ?
+
++
+
+>
+> > +{
+> > +       if (pidfs_register) {
+> > +               int err;
+> > +
+> > +               err =3D pidfs_register_pid(pid);
+> > +               if (err)
+> > +                       return err;
+> > +       }
+> > +
+> > +       UNIXCB(skb).pid =3D get_pid(pid);
+> > +       return 0;
+> > +}
+> > +
+> >  static void unix_destruct_scm(struct sk_buff *skb)
+> >  {
+> >         struct scm_cookie scm;
+> >
+> >         memset(&scm, 0, sizeof(scm));
+> > -       scm.pid  =3D UNIXCB(skb).pid;
+> > +
+> > +       /* Pass ownership of struct pid from skb to scm cookie.
+> > +        *
+> > +        * We rely on scm_destroy() -> scm_destroy_cred() to properly
+> > +        * release everything.
+> > +        */
+> > +       scm.pid =3D UNIXCB(skb).pid;
+> > +       UNIXCB(skb).pid =3D NULL;
+>
+> The skb is under destruction and we no longer touch it, so
+> this chunk is not needed.
+>
+
++
+
+>
+> > +
+> >         if (UNIXCB(skb).fp)
+> >                 unix_detach_fds(&scm, skb);
+> >
+> > @@ -1943,7 +1965,10 @@ static int unix_scm_to_skb(struct scm_cookie *sc=
+m, struct sk_buff *skb, bool sen
+> >  {
+> >         int err =3D 0;
+> >
+> > -       UNIXCB(skb).pid =3D get_pid(scm->pid);
+> > +       err =3D __skb_set_pid(skb, scm->pid, false);
+> > +       if (unlikely(err))
+> > +               return err;
+> > +
+> >         UNIXCB(skb).uid =3D scm->creds.uid;
+> >         UNIXCB(skb).gid =3D scm->creds.gid;
+> >         UNIXCB(skb).fp =3D NULL;
+> > @@ -1976,7 +2001,12 @@ static int unix_maybe_add_creds(struct sk_buff *=
+skb, const struct sock *sk,
+> >                 return 0;
+> >
+> >         if (unix_may_passcred(sk) || unix_may_passcred(other)) {
+> > -               UNIXCB(skb).pid =3D get_pid(task_tgid(current));
+> > +               int err;
+> > +
+> > +               err =3D __skb_set_pid(skb, task_tgid(current), true);
+> > +               if (unlikely(err))
+> > +                       return err;
+> > +
+> >                 current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
+> >         }
+> >
+> > --
+> > 2.43.0
+> >
