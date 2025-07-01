@@ -1,104 +1,152 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2700D274FFC;
-	Tue,  1 Jul 2025 15:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6141DE8A8;
+	Tue,  1 Jul 2025 15:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382682; cv=none; b=cZe73AqvMbWN+NcxZIIOuQBM3mxdS+C61w78/njgfvaODsghRVQUugrp4aw55rwGzPaSyHtkJth09MFmaZ8RFHHvB3YUIu1LiHD4N0HegH0WIlxhOqUAmb6Pi70fMXOOt5FHWvjgfYq824ZBs6Xl5sJkYRHE5p9UlAvkXWvY0sY=
+	t=1751382720; cv=none; b=tG6m8ljn4fhApo5lCeIrilgcVLnii9jYNIP/nFT/2CIYmgu+Sdew2rqhgrTrKFkoqMbI5pycdIYw22OWPgK/kEmjqrIa+423BhrvmRzMn6LWMyv2kNR98Bb0fDCq51/rQY1usABt6t+3E2+ILbW2VMhUFZhFQoxGLK1rVP6K0UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382682; c=relaxed/simple;
-	bh=KvHzbQBF3t9IIa1Dm96UqwW36rTTPbMjfkHV0obqDPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNZhL3RF0eIlOhzO7rUQIUoT3C7p1Qu9FmIUfbn+D451mUsayfH/5DDA6b+inUxJ/BH7p3qP03aHdBtJOHkfv2KsLA+JvWBlRpX1Iz3sPsJhuk1J/OBEliMos4lLsBR76q7rf7qyOuIg0Yqo475dABvVq4NBF3BkM4/Q2IJ0kZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PFNf1yhk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfEXy7IG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751382720; c=relaxed/simple;
+	bh=2t09DdntsxPr884QtHlaLbUrt+UbNTAKyIRNYDWRI+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o75JrmH8LVNfoho5kTCvNSTXPS1fJ1HVaM6jjVSe1nA3k0aZ5uKh1LHfhRtgEwzpqoRS3uEa+SNn5BmBKWaAbHL+HbIJ4DddPCGhBI6EMf1cSzUBMXboUDhhjkjDb8/+Vr2hQ/p9Bp0bQJDvZ1Z58HtYHlUNkD9swxybeiGS0/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CD6290p4; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PFNf1yhk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfEXy7IG"
-Date: Tue, 1 Jul 2025 17:11:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751382678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mkUl5eomB04clLZcTBjBu9b5U/FIO02anfxFQvMAsDk=;
-	b=PFNf1yhkVqIBQZIQgTxjcFrlubE9zSw+f/VSBQWpa/8NryfmX0x7I+FoedFqNOnfVU7hXE
-	SFsaH7wBqPULuRJyx2pznZGOt/Svy7IZxldDcpqIop++8jitChdkjCX0HARyxHsVICcoz8
-	Z81FowSsmp91Ro5Sw3h0J5a7aemgcYiUXyL0LK1aPlMMa+y3hcTJuzNwb9Ojglfx2oBhza
-	pfURcvMxVHHZjBaxaTX9A20qBLwSaFKOj6zdbv9xgtX+LsbeJhLaZEObgEp0VQCQFeGRVy
-	Rzd+JznMDpsL0xLlw1BOjtTE1iLXnRha2jy+FhOrfN1gN/OUDx/fIiBtjcs66w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751382678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mkUl5eomB04clLZcTBjBu9b5U/FIO02anfxFQvMAsDk=;
-	b=PfEXy7IG+leY0Mbon/CGRgebiyCjW3gGVboL8/0GdapwzwXZ2j5T/IkdWTFZ9pmRTI6gq+
-	FFWcPD+KIlMUWgDw==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250701151114.OJQTlRCY@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
- <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
- <20250630203401.1a11e58f@gandalf.local.home>
- <20250701051757.mBjQVdoo@linutronix.de>
- <20250701110218.5e742850@batman.local.home>
- <20250701110551.5c2dc2ee@batman.local.home>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CD6290p4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751382715;
+	bh=2t09DdntsxPr884QtHlaLbUrt+UbNTAKyIRNYDWRI+Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CD6290p49urWFIL34YNzHQ7Dcn6fAVDEGKnHOFbpH5Gj01+dud4SZLW3UW/YD8wBA
+	 yhO4cIZ8JZzbQTYlHzVN87bKgG/WzzW44nCRaDsjMKj86xdZEuhXdGSDU0+YVYZ2Nd
+	 0mJes2KwwqOvxMe9mNx7tunqpTHjiggUjAx9IfHn8AcBUZJ3ZztLtsVEvGQR7YttLv
+	 MQs09TXp+z3+cp8YHhaSjBzD2Z7VFu8K29HfMyTvIkPSZlPCD4/zbh8SMHbBtCrGRe
+	 UP44OU5dDlPNy9b49bixcmKcAjZuV1ImXWCdpgZlYEeSapUInJ/+l0uVvsw6BkKFwd
+	 tIq84wRxarvaw==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D2B4017E0630;
+	Tue,  1 Jul 2025 17:11:54 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: krzk@kernel.org
+Cc: robh@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	ulf.hansson@linaro.org,
+	arnd@arndb.de,
+	m.wilczynski@samsung.com,
+	nm@ti.com,
+	khilman@baylibre.com,
+	kabel@kernel.org,
+	quic_hyiwei@quicinc.com,
+	pjp@fedoraproject.org,
+	tudor.ambarus@linaro.org,
+	drew@pdp7.com,
+	u.kleine-koenig@baylibre.com,
+	gregkh@linuxfoundation.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	laura.nao@collabora.com,
+	kernel@collabora.com
+Subject: [RFC PATCH 0/3] MediaTek Hardware Voter driver
+Date: Tue,  1 Jul 2025 17:11:46 +0200
+Message-ID: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701110551.5c2dc2ee@batman.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 11:05:51AM -0400, Steven Rostedt wrote:
-> On Tue, 1 Jul 2025 11:02:18 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Tue, 1 Jul 2025 07:17:57 +0200
-> > Nam Cao <namcao@linutronix.de> wrote:
-> > 
-> > > > > +	switch (state) {
-> > > > > +	case S0:
-> > > > > +		if (val3)
-> > > > > +			__set_bit(S0, next);
-> > > > > +		if (val11 && val13)
-> > > > > +			__set_bit(S1, next);
-> > > > > +		if (val11 && val14)
-> > > > > +			__set_bit(S4, next);
-> > > > > +		if (val5)
-> > > > > +			__set_bit(S5, next);
-> > > > > +		break;    
-> > > > 
-> > > > What's with all the magic numbers?
-> > > > 
-> > > > Can we turn these into enums so they have some meaning for us humans?    
-> > > 
-> > > I'm not sure what you mean, we can't use enums as variables.  
-> > 
-> > Bah, never mind. My eyes are getting bad and I need to increase my font
-> > size, as all the S0, S1, S2 looked to me like 50, 51, 52, and I was
-> > wondering what are all these numbers in the fifties??? :-p
+This RFC comes after public discussion [1] with krzk about how the
+MediaTek Hardware Voter mechanism was used in the clock driver.
 
-Oh..
+The logic with this implementation instead is to never write to
+the HW Voter registers from external drivers, but to register a
+driver to handle the voting with internal functions...
 
-> Even with my bad eyesight, these state transitions are generated from
-> scripts? If so, can they inject comments that state why they generated
-> this?
-> 
-> There's nothing in the code that even states that this was generated
-> (if they were).
+...as you can see, I've modeled the power controller to be child
+of the HWV, but the clock controller still gets a handle with the
+mediatek,hardware-voter property.
 
-Yeah this entire file is generated from the LTL specification. I will add a
-comment.
+The intention for usage of that property now is to get a handle
+to the mtk-hardware-voter driver, and call its clock en/dis vote
+mtk_hardware_voter_clk_enable() function, which executes a HWV
+version-specific callback doing the necessary register programming
+for the available HWV version.
 
-Nam
+I thought about registering the clocks in the HWV and then get
+them assigned with something like
+
+	clocks = <&hw_voter CLOCK_HW_IP CLOCK>;
+
+...but I opted for not doing that because the implementation looks
+a bit messy as, on MediaTek SoCs, there are multiple clock controllers
+located in different IPs, each of them having multiple sets of HWV
+registers (from 2 to 8 sets of registers, which are not contiguous
+and can't be calculated with offsets), for a total of, well, didn't
+really count, but it's more than 80 registers.
+
+Also, all of the mux-gate clocks need to be voted in HWV and after
+enablement the "FENC" needs to be brought up with direct MMIO writes
+to the clock controller iospace.
+(so: enable in HWV -> write FENC enable in clock controller)
+
+For CLOCK_HW_IP in the example, that'd be one of:
+vlpckgen, topckgen, imp-iic-wrap-{w,n,s,e,c},mminfra,dispsys0,dispsys1,
+ovlsys0,ovlsys1,vencsys,vdecsys (each having dozens of voted clocks).
+
+I'm not sure if I'm forgetting any information but in case just ask....
+
+Ah, "just in case"! ... I've pushed a branch here [2] that contains
+the same changes that I'm sending as RFC. Perhaps someone will find
+that easier to browse.
+
+Please don't mind about some commits that are not really "presentable"
+in that branch (as in, there's some dirty code around) - some stuff is
+quite a bit WIP (and some other is quite a bit incomplete).
+
+Also, being this a RFC ... this wasn't tested, it may work or may not,
+but that being actually working is out of scope right now, I just want
+to understand if I'm walking in the right direction :-)
+
+Cheers!
+Angelo
+
+[1]: https://lore.kernel.org/all/20250627-ingenious-tourmaline-wapiti-fa7676@krzk-bin/
+[2]: https://gitlab.collabora.com/mediatek/aiot/linux/-/commits/mediatek-hwvoter-temp
+
+AngeloGioacchino Del Regno (3):
+  firmware: Move MediaTek ADSP IPC driver to mediatek folder
+  dt-bindings: firmware: Document the MediaTek Hardware Voter (HWV)
+  firmware: mediatek: Add MediaTek Hardware Voter MCU driver
+
+ .../mediatek,mt6991-hardware-voter.yaml       |  70 +++
+ drivers/firmware/Kconfig                      |  10 +-
+ drivers/firmware/Makefile                     |   2 +-
+ drivers/firmware/mediatek/Kconfig             |  23 +
+ drivers/firmware/mediatek/Makefile            |   4 +
+ .../firmware/{ => mediatek}/mtk-adsp-ipc.c    |   0
+ .../firmware/mediatek/mtk-hardware-voter.c    | 430 ++++++++++++++++++
+ .../firmware/mediatek/mtk-hardware-voter.h    |  34 ++
+ 8 files changed, 563 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml
+ create mode 100644 drivers/firmware/mediatek/Kconfig
+ create mode 100644 drivers/firmware/mediatek/Makefile
+ rename drivers/firmware/{ => mediatek}/mtk-adsp-ipc.c (100%)
+ create mode 100644 drivers/firmware/mediatek/mtk-hardware-voter.c
+ create mode 100644 include/linux/firmware/mediatek/mtk-hardware-voter.h
+
+-- 
+2.49.0
+
