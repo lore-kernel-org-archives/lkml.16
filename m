@@ -1,121 +1,70 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2D222759C;
-	Tue,  1 Jul 2025 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D272741DA;
+	Tue,  1 Jul 2025 14:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379854; cv=none; b=IxwtWZrNHY/K5/lf2h77tJJ7vLQRqjJFUdaAxM/i9e6KFuuu4O3xkgPEfTBE+MfwGGPEZCdtFHWNoar+qe+G9ISTHBLvylTPQsAarRVQB3n6bPxoP+jV/XPSItqVpsRwGhy0eKE2pFYOrVZUu223JeBj9FV+47Lvw7KZtM9Oc8k=
+	t=1751379952; cv=none; b=AREH4bu5PQAbJJSj2rNH8ydEm062/agD9CvAHYmXplQnUp+oK42h2z6qkgEjjL9nHyGHei6SOGQi/+buvBRfZ+sTmVIp+yZwtcCjg/hjfsnBnKPVJidOLBQ5qvLzA7fp4DfNXRlD2WWp5mfEViDfx5cycHhIpUX9kDV1DBBxZRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379854; c=relaxed/simple;
-	bh=u8jo3wPwcr0SV5rAGgSDsWJrWtE0o0znfRHq8ZvN4dw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FYEYGTWGDf+FOZgPHkiRppJKwaCANusgURBRSeP/Z2aQGoCdI3zgX9Uyl+m3/AE8XixBV54b4WGB0AEHx3S3LOrI6dTB3oUGGSNIXjl42K2AfGDP94HIzLac8yO/sHNBSZOS2E7mk/aBkBcnpMN0XvXN/6Y4TcyFNLI7HaI80oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E4A9zjCc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kR72CZU6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751379952; c=relaxed/simple;
+	bh=fF2bUOzQpSBOFHuNq6Eq1S5hjtfwAl2FI5HwXhvyjlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTfYfZNlQ6uu4fKj4dXCEMm1IujIQdyicf9/q8TcTEbUzUYhGT4kC76EXicF6zgBabGE19Bk5hMiv9s1z6du+8FHM/LpdiwFYuClWOubLSyflv0IemWy+y+EwLPJ+EZBRE0T511ZyYyzuqDtadQa/U3VOen4RSPA+3cQlwzbwck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=WHijCkm8; arc=none smtp.client-ip=220.197.32.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E4A9zjCc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kR72CZU6"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751379850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yrhIzJY6j2GCP1j8YoMALxbdfE6AuNqMmruju79XP2A=;
-	b=E4A9zjCcH4eONXmYKdpyUKiuy5Dvb5R7iLfUkY0WeKjzJTfWN/G+nPyx9lnF1XNzWAlOOL
-	nkt2uPio8x7xkPkGSnoT5XA4q6rkIIJWI51X/crzEStgHKWdY6EXxVuvBD0obldqQPEsJr
-	y19XgfshrTA2tdlSRIo/YqEeydehmVZCt2jQfGuVcSFcxJ4cp04piYqnXMpZRrzQ4cVr4M
-	SNfY5YGhcXvtis++EvdUUB+IPs0c6fRF4CA2Vlkqf/Y0JIYuf12PAgabmOwCd6WHKWJreW
-	bhKkcHWgQbu43Y2IcNLCUOS2tPCxNmJ3zkyhZvEbKYgKoCjVxA0HbUtVjX0twQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751379850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yrhIzJY6j2GCP1j8YoMALxbdfE6AuNqMmruju79XP2A=;
-	b=kR72CZU6E90JaYfqUdECtEWs1GmTpnbAMrv8ueJycdhm55zP7RKt8aCXJR5LS4GCwEapIk
-	vtSEo6MfmBUsGiBg==
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Agustin Vega-Frias <agustinv@codeaurora.org>, Marc Zyngier
- <maz@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Markus Schneider-Pargmann
- <msp@baylibre.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] irqchip/qcom-irq-combiner: Rename driver struct to end
- in _driver
-In-Reply-To: <53ugz6qg3rfgpcokrre6sqfr73tdjwiz67dvgvlnbiu6kkyc5u@bapjxdheqrzt>
-References: <20250630172333.73614-2-u.kleine-koenig@baylibre.com>
- <87ldp9m7la.ffs@tglx>
- <gbjim7wxszmwfvm523bgyfxf5mk5773pafdxnf2wf4mgaebsmz@qfeejv4ilwxv>
- <877c0smgip.ffs@tglx>
- <53ugz6qg3rfgpcokrre6sqfr73tdjwiz67dvgvlnbiu6kkyc5u@bapjxdheqrzt>
-Date: Tue, 01 Jul 2025 16:24:09 +0200
-Message-ID: <87o6u4kn06.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="WHijCkm8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=kwmVPhn9mAUb/E0fy/YUOcKm0G2pKmKkb3h1UWnAPoY=;
+	b=WHijCkm8X4zEyATUdjLnTIncBkFZDH6Y7W6eZQ0HQA133zLDcNxiMRqcKXZft8
+	fK3Rc89t7WyZZioVYcCqfZyk19N0o+y7PP3aZKH3ZhpF1NJfZqYbDr0hteJzP9H5
+	z+RbOs/Nj+8/j6hnTmb+DPOFF8u+xkcY8AYtMANALs/0M=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDnx6S_72No6tsBAA--.4315S3;
+	Tue, 01 Jul 2025 22:25:05 +0800 (CST)
+Date: Tue, 1 Jul 2025 22:25:03 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/6] imx8mp: add support for the IMX AIPSTZ bridge
+Message-ID: <aGPvv+PNpm6xwsmC@dragon>
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+X-CM-TRANSID:Mc8vCgDnx6S_72No6tsBAA--.4315S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUrcTmDUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAQR9ZWhj6tENkwAAsz
 
-On Tue, Jul 01 2025 at 15:58, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Jul 01, 2025 at 11:01:18AM +0200, Thomas Gleixner wrote:
->> > Anyhow, I agree that depending on the name is unfortunate, maybe we can
->> > come up with something more clever?
->>=20
->> That's what I was referring to. Doing checks based on struct names is a
->> bad idea. Having distinct '...driver_probe(name)' and ...driver(name)'
->> macros to distinguish the functionality is the proper thing to do and
->> way simpler to analyse than names.
->
-> A driver struct should have no reference to .init.text (i.e. no callback
-> to a function marked with __init) no matter if it is registered using
-> module_platform_driver_probe() or module_platform_driver().
+On Tue, Jun 10, 2025 at 12:01:46PM -0400, Laurentiu Mihalcea wrote:
+> Laurentiu Mihalcea (6):
+>   dt-bindings: bus: document the IMX AIPSTZ bridge
+>   dt-bindings: dsp: fsl,dsp: document 'access-controllers' property
+>   bus: add driver for IMX AIPSTZ bridge
+>   arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+>   arm64: dts: imx8mp: add aipstz-related definitions
+>   arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
 
-I came from this wording in your change log:
+Applied all, thanks!
 
- "The modpost section mismatch checks are more lax for objects that have a
-  name that ends in "_probe". This is not justified here...."
-
-That's the underlying problem. Using object names for deciding which
-check rule to use is error prone and wrong to begin with. That what I
-was referring to and there are obviously different rules for these
-section checks, otherwise with your rename there would be no
-difference, no?
-
-I'm not talking about what this driver should do or not in it's
-callbacks, that's a different problem, independent of this discussion.
-
-I'm just horrified by the idea that such issues go unnoticed
-because of a object name ending in _foo.
-
-> But even if the requirements for those were different, how do you
-> signal in the binary if the driver was registered using the normal
-> (i.e platform_driver_register()) or the platform_driver_probe() way?
-> Or do you want to check the source file?
-
-No. We have a lot of magic already which puts annotations into sections
-so that tools of all sorts can extract them for post processsing and not
-make magic assumptions about names or their endings.
-
-It's clearly simpler to do analyis based on:
-
-     magic_driver_allowed_to_do_stupid_stuff($name);
-
-than on
-
-     default_driver_whatever($name);
-
-both for tools when the magic macros emits section data and for humans
-to grep, no?
-
-Thanks,
-
-        tglx
