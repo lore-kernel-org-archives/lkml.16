@@ -1,37 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6141DE8A8;
-	Tue,  1 Jul 2025 15:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE16274FFC;
+	Tue,  1 Jul 2025 15:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382720; cv=none; b=tG6m8ljn4fhApo5lCeIrilgcVLnii9jYNIP/nFT/2CIYmgu+Sdew2rqhgrTrKFkoqMbI5pycdIYw22OWPgK/kEmjqrIa+423BhrvmRzMn6LWMyv2kNR98Bb0fDCq51/rQY1usABt6t+3E2+ILbW2VMhUFZhFQoxGLK1rVP6K0UY=
+	t=1751382721; cv=none; b=n4opsRk80moRRpGBub/ne3VM2928WQNrTwocwRogWwLm7oGxMQibb8cvURi0Io0PPTntu+qRtgKWbeo6tVx9qkUomB6uwXGdZhKIcBB4o0L8bbLa9oNxQdxyTw2znE7X/YfN6f4M017Gh6l0SgXwZ40pMcZT8/C1Jouk4vohINo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382720; c=relaxed/simple;
-	bh=2t09DdntsxPr884QtHlaLbUrt+UbNTAKyIRNYDWRI+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o75JrmH8LVNfoho5kTCvNSTXPS1fJ1HVaM6jjVSe1nA3k0aZ5uKh1LHfhRtgEwzpqoRS3uEa+SNn5BmBKWaAbHL+HbIJ4DddPCGhBI6EMf1cSzUBMXboUDhhjkjDb8/+Vr2hQ/p9Bp0bQJDvZ1Z58HtYHlUNkD9swxybeiGS0/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CD6290p4; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1751382721; c=relaxed/simple;
+	bh=2sjI2nv7EsmNbdyc0263SSE5zjLb+Nwf++I7IE3w9Pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XiUNXWwE73NkrKTVdKc8HYsLtgRY+htVXrFueObADoNFwbR6JZiyAoMTdzZrD+6IWxJqrObuXzvOje36yyU95AgUaeNngHrzjEWEg/ui++CqtS0nwfAeDftcls67GqMgEZsVjUAxsSR6So6QH2vlJ4WocoFc3vwsu/hjSGRhGG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kjIRRtzY; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CD6290p4"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kjIRRtzY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751382715;
-	bh=2t09DdntsxPr884QtHlaLbUrt+UbNTAKyIRNYDWRI+Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CD6290p49urWFIL34YNzHQ7Dcn6fAVDEGKnHOFbpH5Gj01+dud4SZLW3UW/YD8wBA
-	 yhO4cIZ8JZzbQTYlHzVN87bKgG/WzzW44nCRaDsjMKj86xdZEuhXdGSDU0+YVYZ2Nd
-	 0mJes2KwwqOvxMe9mNx7tunqpTHjiggUjAx9IfHn8AcBUZJ3ZztLtsVEvGQR7YttLv
-	 MQs09TXp+z3+cp8YHhaSjBzD2Z7VFu8K29HfMyTvIkPSZlPCD4/zbh8SMHbBtCrGRe
-	 UP44OU5dDlPNy9b49bixcmKcAjZuV1ImXWCdpgZlYEeSapUInJ/+l0uVvsw6BkKFwd
-	 tIq84wRxarvaw==
+	s=mail; t=1751382717;
+	bh=2sjI2nv7EsmNbdyc0263SSE5zjLb+Nwf++I7IE3w9Pk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kjIRRtzY2tQtxrqxWKs1QaZmrl9HVSRfD+utS5t8Z4NDSkrhx+WxCfFCTOBc0yx6q
+	 72k/8vM8yRbFO7bXPrm/3hsBe/7C0FlXHgb9k3xNPnurZJrf9aVoc0Z1lsZaQyjyPV
+	 YluqLLmzhyd7MAXKHO1mOe9wA9BNZLElbBKIJiu9w7PC2ALVix+sSCaH38M2TB6b7c
+	 XP8UCooJVe7VyGxdvSLFOHU9yGOekt87lHhRlF8w1ucuQBxChRWqlJswp5/IEhd9GT
+	 IpGCLpRNhusaJ3Ey8oV6j6ozCkp/yimvT8e2tQxxwdIVABqsV333SgyxoJvZfK5tUR
+	 BiHIeX5vURrgA==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D2B4017E0630;
-	Tue,  1 Jul 2025 17:11:54 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 20CAA17E0921;
+	Tue,  1 Jul 2025 17:11:56 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: krzk@kernel.org
 Cc: robh@kernel.org,
@@ -56,10 +57,12 @@ Cc: robh@kernel.org,
 	linux-mediatek@lists.infradead.org,
 	laura.nao@collabora.com,
 	kernel@collabora.com
-Subject: [RFC PATCH 0/3] MediaTek Hardware Voter driver
-Date: Tue,  1 Jul 2025 17:11:46 +0200
-Message-ID: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
+Subject: [RFC PATCH 1/3] firmware: Move MediaTek ADSP IPC driver to mediatek folder
+Date: Tue,  1 Jul 2025 17:11:47 +0200
+Message-ID: <20250701151149.136365-2-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
+References: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,85 +71,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This RFC comes after public discussion [1] with krzk about how the
-MediaTek Hardware Voter mechanism was used in the clock driver.
+In preparation for adding more MediaTek firmware drivers, create a
+new `mediatek` folder and move the mtk-adsp-ipc driver into it.
 
-The logic with this implementation instead is to never write to
-the HW Voter registers from external drivers, but to register a
-driver to handle the voting with internal functions...
+Also move the Kconfig and Makefile entries to the new ones in the
+folder.
 
-...as you can see, I've modeled the power controller to be child
-of the HWV, but the clock controller still gets a handle with the
-mediatek,hardware-voter property.
-
-The intention for usage of that property now is to get a handle
-to the mtk-hardware-voter driver, and call its clock en/dis vote
-mtk_hardware_voter_clk_enable() function, which executes a HWV
-version-specific callback doing the necessary register programming
-for the available HWV version.
-
-I thought about registering the clocks in the HWV and then get
-them assigned with something like
-
-	clocks = <&hw_voter CLOCK_HW_IP CLOCK>;
-
-...but I opted for not doing that because the implementation looks
-a bit messy as, on MediaTek SoCs, there are multiple clock controllers
-located in different IPs, each of them having multiple sets of HWV
-registers (from 2 to 8 sets of registers, which are not contiguous
-and can't be calculated with offsets), for a total of, well, didn't
-really count, but it's more than 80 registers.
-
-Also, all of the mux-gate clocks need to be voted in HWV and after
-enablement the "FENC" needs to be brought up with direct MMIO writes
-to the clock controller iospace.
-(so: enable in HWV -> write FENC enable in clock controller)
-
-For CLOCK_HW_IP in the example, that'd be one of:
-vlpckgen, topckgen, imp-iic-wrap-{w,n,s,e,c},mminfra,dispsys0,dispsys1,
-ovlsys0,ovlsys1,vencsys,vdecsys (each having dozens of voted clocks).
-
-I'm not sure if I'm forgetting any information but in case just ask....
-
-Ah, "just in case"! ... I've pushed a branch here [2] that contains
-the same changes that I'm sending as RFC. Perhaps someone will find
-that easier to browse.
-
-Please don't mind about some commits that are not really "presentable"
-in that branch (as in, there's some dirty code around) - some stuff is
-quite a bit WIP (and some other is quite a bit incomplete).
-
-Also, being this a RFC ... this wasn't tested, it may work or may not,
-but that being actually working is out of scope right now, I just want
-to understand if I'm walking in the right direction :-)
-
-Cheers!
-Angelo
-
-[1]: https://lore.kernel.org/all/20250627-ingenious-tourmaline-wapiti-fa7676@krzk-bin/
-[2]: https://gitlab.collabora.com/mediatek/aiot/linux/-/commits/mediatek-hwvoter-temp
-
-AngeloGioacchino Del Regno (3):
-  firmware: Move MediaTek ADSP IPC driver to mediatek folder
-  dt-bindings: firmware: Document the MediaTek Hardware Voter (HWV)
-  firmware: mediatek: Add MediaTek Hardware Voter MCU driver
-
- .../mediatek,mt6991-hardware-voter.yaml       |  70 +++
- drivers/firmware/Kconfig                      |  10 +-
- drivers/firmware/Makefile                     |   2 +-
- drivers/firmware/mediatek/Kconfig             |  23 +
- drivers/firmware/mediatek/Makefile            |   4 +
- .../firmware/{ => mediatek}/mtk-adsp-ipc.c    |   0
- .../firmware/mediatek/mtk-hardware-voter.c    | 430 ++++++++++++++++++
- .../firmware/mediatek/mtk-hardware-voter.h    |  34 ++
- 8 files changed, 563 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/firmware/Kconfig                       | 10 +---------
+ drivers/firmware/Makefile                      |  2 +-
+ drivers/firmware/mediatek/Kconfig              | 14 ++++++++++++++
+ drivers/firmware/mediatek/Makefile             |  3 +++
+ drivers/firmware/{ => mediatek}/mtk-adsp-ipc.c |  0
+ 5 files changed, 19 insertions(+), 10 deletions(-)
  create mode 100644 drivers/firmware/mediatek/Kconfig
  create mode 100644 drivers/firmware/mediatek/Makefile
  rename drivers/firmware/{ => mediatek}/mtk-adsp-ipc.c (100%)
- create mode 100644 drivers/firmware/mediatek/mtk-hardware-voter.c
- create mode 100644 include/linux/firmware/mediatek/mtk-hardware-voter.h
 
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index bbd2155d8483..f35648686f91 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -169,15 +169,6 @@ config INTEL_STRATIX10_RSU
+ 
+ 	  Say Y here if you want Intel RSU support.
+ 
+-config MTK_ADSP_IPC
+-	tristate "MTK ADSP IPC Protocol driver"
+-	depends on MTK_ADSP_MBOX
+-	help
+-	  Say yes here to add support for the MediaTek ADSP IPC
+-	  between host AP (Linux) and the firmware running on ADSP.
+-	  ADSP exists on some mtk processors.
+-	  Client might use shared memory to exchange information with ADSP.
+-
+ config SYSFB
+ 	bool
+ 	select BOOT_VESA_SUPPORT
+@@ -290,6 +281,7 @@ source "drivers/firmware/cirrus/Kconfig"
+ source "drivers/firmware/google/Kconfig"
+ source "drivers/firmware/efi/Kconfig"
+ source "drivers/firmware/imx/Kconfig"
++source "drivers/firmware/mediatek/Kconfig"
+ source "drivers/firmware/meson/Kconfig"
+ source "drivers/firmware/microchip/Kconfig"
+ source "drivers/firmware/psci/Kconfig"
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 4ddec2820c96..5bb382344906 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -13,7 +13,6 @@ obj-$(CONFIG_INTEL_STRATIX10_RSU)     += stratix10-rsu.o
+ obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
+ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
+ obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
+-obj-$(CONFIG_MTK_ADSP_IPC)	+= mtk-adsp-ipc.o
+ obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
+ obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
+ obj-$(CONFIG_SYSFB)		+= sysfb.o
+@@ -27,6 +26,7 @@ obj-y				+= arm_ffa/
+ obj-y				+= arm_scmi/
+ obj-y				+= broadcom/
+ obj-y				+= cirrus/
++obj-y				+= mediatek/
+ obj-y				+= meson/
+ obj-y				+= microchip/
+ obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
+diff --git a/drivers/firmware/mediatek/Kconfig b/drivers/firmware/mediatek/Kconfig
+new file mode 100644
+index 000000000000..f6f16e71fbda
+--- /dev/null
++++ b/drivers/firmware/mediatek/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++menu "MediaTek firmware drivers"
++
++config MTK_ADSP_IPC
++	tristate "MTK ADSP IPC Protocol driver"
++	depends on MTK_ADSP_MBOX
++	help
++	  Say yes here to add support for the MediaTek ADSP IPC
++	  between host AP (Linux) and the firmware running on ADSP.
++	  ADSP exists on some mtk processors.
++	  Client might use shared memory to exchange information with ADSP.
++
++endmenu
+diff --git a/drivers/firmware/mediatek/Makefile b/drivers/firmware/mediatek/Makefile
+new file mode 100644
+index 000000000000..3c0d9d67d646
+--- /dev/null
++++ b/drivers/firmware/mediatek/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_MTK_ADSP_IPC)		+= mtk-adsp-ipc.o
+diff --git a/drivers/firmware/mtk-adsp-ipc.c b/drivers/firmware/mediatek/mtk-adsp-ipc.c
+similarity index 100%
+rename from drivers/firmware/mtk-adsp-ipc.c
+rename to drivers/firmware/mediatek/mtk-adsp-ipc.c
 -- 
 2.49.0
 
