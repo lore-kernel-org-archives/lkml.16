@@ -1,164 +1,114 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B00C1D5CC6;
-	Tue,  1 Jul 2025 15:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35E27702D
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383962; cv=none; b=MUO7Fc6DISJIsHtxPnI0QAwQSC03lfmNAWa/urtNyups5tb1v+CNjCpxrt4yUTP+gDnuFBhgcPBZoAjflwgVs4OfF+4yolrigveFGTpmLdM64VoSkPzFJW8I7zHD7hz4x6tap3Q68WEA52kCZZ8mzY6sWTRvoqootyblpIPUSUQ=
+	t=1751383981; cv=none; b=PhmGqUq7HSIey63EMJVRaUzCX69NY8NkDkLWj/JkV3pzZCTNCjgvBQ9cUxY2brVnzQbvQaGMk0t9iER/+HJcI5+1wcCer+WosU56CoQyCICFZ6xU/O7LuyNnZwov9QVv+TcRTc0Fuc/Siym2+Q1pQXWDs9sDH1C/IIUCOWa2Mp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383962; c=relaxed/simple;
-	bh=+SSFv0hwrDzIL/TT/dGM60enfkAii5FwDqdxefO91yY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a3vTznd6UOjeU5FiLEu0/8aRgiAyahP9Q6HnzCk/PwV9a3qi7t2HqHYMY6s/e/Askwl/XjEcwpe7TMdRPTt2C3YQsJ8USj7nezfer3U3B5Wniuye6O5+xATPjbWoSqGN2EYRMI00UUcac2y+x2OUkFP9777HZzggwOWeA5dwhvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HfYb6PGW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751383981; c=relaxed/simple;
+	bh=PjPyvNgy9hm7ONMITzr0T6sHroPPo9twpkI/M+XTD8s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W1osVQVNftsRN/LmODzhEq2tZHGpLsKuVW18yTZyF6j1ehJa6TmzCKMpvruzpA/IMEYHt2xBlP90BRj08XZRb/bciHeGvXpEEOiIS7DdYA1zCQ/csF2WSr2xcA5ZMg02VWjPyKHYEet4VMzgndNQwivCNudQdL7eJ0ZvXWc9db4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vlJtrpnG; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HfYb6PGW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751383958;
-	bh=+SSFv0hwrDzIL/TT/dGM60enfkAii5FwDqdxefO91yY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HfYb6PGWldbXX1aRGd+H5pCPI32KVnpcDanYeWZMC81I/jN5ytDsWRV0QksB5Hd4/
-	 vEMqWef8J5FWfY3cbCrXDKtLMON6urTZAYuX5bYXkRLpp5aJwQWxiSdaYxeFEIL8DN
-	 v+nJiUMMJLAh3kudkqHU+mZXVfCGt4+c+0tGY9E6Q5zokoGApTAzr+wf88NIfGrwOD
-	 jvitwM0jIPqotjIhd7m7XKkEpZ2BzGe54aug9AQKTEJT6XucaCStDteDTq+xlPQo96
-	 mdF3aKM5lV2klIMwyhAy/waH9tFiXIyYobQW9+MFkXqFovdIcrbXPDRoJfuzp8g5h+
-	 W/wQHIwVg42zA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8386B17E03A5;
-	Tue,  1 Jul 2025 17:32:37 +0200 (CEST)
-Message-ID: <c7f00050-dc56-4ac7-b89d-5f315cef2aa5@collabora.com>
-Date: Tue, 1 Jul 2025 17:32:36 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vlJtrpnG"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d6ade159so24104575e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751383978; x=1751988778; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Wjl7TqtpfpT/cVhyOMYZ+YoZwvVH3I5MuberAw7nso=;
+        b=vlJtrpnGprK+8FqwiyMFA3wNglLVTPh71rhca3xouR7RStj+Wofo/fTVgO6wdkri7D
+         nkFIcAgacqC38vbzFgYqX6823OdYWznW1C4ST0FH4eoRNTZkIMOB1q85Zo746mPJFyOZ
+         QLBTPxgTuQ3/WzMIbKkc9f/DijcDJTAbdTTH8JnG7lzGLpG7idGRQYwYfPpQXzkMk+vg
+         RG8Uz2sW6EUVYxmlIG+Ju/YeCqRQYVtaaEYUoSNxDR4KW7Qwf+5JauCtomM9BCXoXdKl
+         unxu1+X803L4AOyUpJj6b91fLEkxm/Mg0aijCbkLbfJ8VZdw4FyDVY1waWvdYhzSSqhW
+         RGbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751383978; x=1751988778;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7Wjl7TqtpfpT/cVhyOMYZ+YoZwvVH3I5MuberAw7nso=;
+        b=gN8t373NXzV8XgcaDlOF4bcypnjLdTDSyNlBICIMPKYpJLL9cWQH6GwhBMDkIou4r7
+         jJWCYLQSYuUrdPlNWvPC0O6yeinlWVwrS7L67SDjsNlgp6VYn0xWQx7tB+ZxQRniGn6r
+         dwyiNSOs8odRc1i0EJCde9tWtU+kd0+29JiOJruXeSjb6e5542nrPenX2uWbqyzYUaf0
+         BUDs+RFS7iOKcSLDP5yjl3eThLDHmkzKmPEcU75ewfyIcgWmQoI8r/ZSypihc6btcpwm
+         2JRflxDfwoDcnNMyC0sMxqJKYAVU8dzvdcCtFmiK3HVHBSMtzWOSmwDN3L8VJnqbU39S
+         P+UA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3HP4bWLvA4SzQboow8qL/hJGdnIwr01Idb8KepivAztL7HAn0dtu5A4cxLBByMutMlQ3Cn+9BIAVYTC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC6rDqXSqXGj3mkecv5BAAlQo94dI65DmQFszh0ft84dEt8YUK
+	GqvPeSx9jN2vV5dgaOr9t4zzrnRHTPuupm5xk3c5BuEqNTckYdaEU8BHhlo6DPp9m+I=
+X-Gm-Gg: ASbGnctUdgimOi881T8E2u6oMiapOhCmXZZhlt+6AZo8oyYAOyqtXGXLtEwbD7kktrs
+	yz5gAMMiEcTHbE57RcYIeURiugeWNf38TfB3fGoWWncUZNlGaeRk1Sqff2KlMAYGdA4qNvLFzUL
+	MJDoTzduFKVIrWD0hn77O0+O5RnW5wlRQeMXxqPe51Tw2wdQZtlqIa7/DEpdoEs3eeftFTtwBZf
+	24Bg//55TOQa+9M2oDU9eZlGEdo8GOroQiwINShX8SPFi9wdBq2ZwAwfSXp1xgzguHAWBQkYoU0
+	TvlskzFqtlTNBLtxv7wqE0z/ept6kiRR7w8iPCGAw5FFuA3Xmb8qvjk4Ds2FWz31hBEokKgKo8c
+	+NVbGsA==
+X-Google-Smtp-Source: AGHT+IFfPvs67/UJpu/9kyB3q+XqucTe78Apo5J0t9CmwCnnIvnAeglojVve+6TRV6p2yD+cqIsekg==
+X-Received: by 2002:a05:600c:5250:b0:448:e8c0:c778 with SMTP id 5b1f17b1804b1-4538ee61eedmr160326185e9.22.1751383978328;
+        Tue, 01 Jul 2025 08:32:58 -0700 (PDT)
+Received: from ho-tower-lan.lan ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b5a3sm13435002f8f.40.2025.07.01.08.32.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 08:32:57 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 0/3] perf: arm_spe: Add support for SPE VM interface
+Date: Tue, 01 Jul 2025 16:31:56 +0100
+Message-Id: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] ARM: Add support for MediaTek MT6572 SoC
-To: Rob Herring <robh@kernel.org>, Max Shevchenko <wctrl@proton.me>
-Cc: linux-watchdog@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jiri Slaby <jirislaby@kernel.org>, Russell King <linux@armlinux.org.uk>,
- devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-mediatek@lists.infradead.org,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang
- <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org,
- Guenter Roeck <linux@roeck-us.net>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
-References: <20250701-mt6572-v3-0-8937cfa33f95@proton.me>
- <175138000372.1627755.5505703571113478205.robh@kernel.org>
- <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGz/Y2gC/x3MQQqDQAxG4atI1g2MsVrtVcTFqL82gqNMRAri3
+ Tt0+S3eu8gQFUbv7KKIU023kJA/Mho+PsxgHZNJnJSucg0vfoWx7eBzZQ0H4uQHsPT9M4cUtXs
+ JpXiPmPT7H7fdff8ADND5UmgAAAA=
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Alexandru Elisei <Alexandru.Elisei@arm.com>, 
+ Anshuman Khandual <Anshuman.Khandual@arm.com>, 
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>, 
+ Robin Murphy <Robin.Murphy@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-Il 01/07/25 17:30, Rob Herring ha scritto:
-> On Tue, Jul 1, 2025 at 10:27 AM Rob Herring (Arm) <robh@kernel.org> wrote:
->>
->>
->> On Tue, 01 Jul 2025 09:06:54 +0300, Max Shevchenko wrote:
->>> This series of patches adds support for the MT6572 SoC and
->>> the JTY D101 tablet and Lenovo A369i smartphone based on it.
->>>
->>> Signed-off-by: Max Shevchenko <wctrl@proton.me>
->>> ---
->>> Changes in v3:
->>> - Remove the compatible property from the SoC devicetree
->>> - Link to v2: https://lore.kernel.org/r/20250626-mt6572-v2-0-f7f842196986@proton.me
->>>
->>> Changes in v2:
->>> - Drop the status property for the board devicetrees
->>> - Add an soc node for the MT6572 and reorder the nodes and properties
->>> - Change the commit title to a more descriptive one
->>> - Change the cover title to the correct one
->>> - Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f042@proton.me
->>>
->>> ---
->>> Max Shevchenko (11):
->>>        dt-bindings: serial: mediatek,uart: add MT6572
->>>        dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT6572
->>>        dt-bindings: timer: mediatek: add MT6572
->>>        dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
->>>        dt-bindings: vendor-prefixes: add JTY
->>>        dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
->>>        ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
->>>        ARM: mediatek: add MT6572 smp bring up code
->>>        ARM: dts: mediatek: add basic support for MT6572 SoC
->>>        ARM: dts: mediatek: add basic support for JTY D101 board
->>>        ARM: dts: mediatek: add basic support for Lenovo A369i board
->>>
->>>   .../devicetree/bindings/arm/mediatek.yaml          |   5 +
->>>   .../mediatek,mt6577-sysirq.yaml                    |   1 +
->>>   .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
->>>   .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
->>>   .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->>>   .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
->>>   arch/arm/boot/dts/mediatek/Makefile                |   2 +
->>>   arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
->>>   arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
->>>   arch/arm/boot/dts/mediatek/mt6572.dtsi             | 108 +++++++++++++++++++++
->>>   arch/arm/mach-mediatek/Kconfig                     |   4 +
->>>   arch/arm/mach-mediatek/mediatek.c                  |   1 +
->>>   arch/arm/mach-mediatek/platsmp.c                   |   7 ++
->>>   13 files changed, 250 insertions(+)
->>> ---
->>> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
->>> change-id: 20250619-mt6572-ef78a3d45168
->>>
->>> Best regards,
->>> --
->>> Max Shevchenko <wctrl@proton.me>
->>>
->>>
->>>
->>
->>
->> My bot found new DTB warnings on the .dts files added or changed in this
->> series.
->>
->> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
->> are fixed by another series. Ultimately, it is up to the platform
->> maintainer whether these warnings are acceptable or not. No need to reply
->> unless the platform maintainer has comments.
->>
->> If you already ran DT checks and didn't see these error(s), then
->> make sure dt-schema is up to date:
->>
->>    pip3 install dtschema --upgrade
->>
->>
->> This patch series was applied (using b4) to base:
->>   Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
->>
->> If this is not the correct base, please add 'base-commit' tag
->> (or use b4 which does this automatically)
->>
->> New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/mediatek/' for 20250701-mt6572-v3-0-8937cfa33f95@proton.me:
->>
->> arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 536870912]]}
->>          from schema $id: http://devicetree.org/schemas/root-node.yaml#
->> arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1073741824]]}
->>          from schema $id: http://devicetree.org/schemas/root-node.yaml#
-> 
-> 'memory' node without a unit-address has long been deprecated. Please
-> don't add more cases.
-> 
+SPE can be used from within a guest as long as the driver adheres to the
+new VM interface spec [1]. Because the driver should behave correctly
+whether it's running in a guest or not, the first patches are marked as
+a fix. Furthermore, in future versions of the architecture the PE will
+be allowed to behave in the same way.
 
-Agreed.
+The last patch adds new behavior to make it easier for guests to be
+able to reserve large buffers. It's not strictly necessary, so it's not
+marked as a fix.
 
-Cheers,
-Angelo
+[1]: https://developer.arm.com/documentation/den0154/latest/
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+James Clark (3):
+      perf: arm_spe: Add barrier before enabling profiling buffer
+      perf: arm_spe: Disable buffer before writing to PMBPTR_EL1 or PMBSR_EL1
+      perf: arm_spe: Add support for SPE VM interface
+
+ arch/arm64/include/asm/sysreg.h |  1 +
+ arch/arm64/tools/sysreg         |  6 ++++-
+ drivers/perf/arm_spe_pmu.c      | 60 ++++++++++++++++++++++++++++++++---------
+ 3 files changed, 54 insertions(+), 13 deletions(-)
+---
+base-commit: d0b3b7b22dfa1f4b515fd3a295b3fd958f9e81af
+change-id: 20250609-james-spe-vm-interface-2bb41e238072
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
