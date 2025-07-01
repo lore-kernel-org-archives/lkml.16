@@ -1,389 +1,182 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F2F272E57
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B4D1DED52
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368341; cv=none; b=oM2FO27POT+UxnL6xd/aCag5VyQhO+dtl5VOvvgJ231uJ7PhPjcBJW7O2fjs5Wnc5zYI80wwxxPnTxCYz3f3IxV5Yrz1SuZ1rS8HUKyQPhACYI3vJYGNxn62fIT0PURk85ueG/ZkJIrrmX3NUv2mk039LIdLkIv+y9BvEVh0bC8=
+	t=1751368410; cv=none; b=d2TXee8K5mCf/cnIj0x1ohEStksL8tcVUjFWwhEctPF4LdTL0Cf+CFR0FvNcHm/Smc+5goAYf9+M//IGQnUzu5T7BxG5GVP+tOcxsJp8eRU9iD9wAgEUx4aekGYo9W6ucHFB8ERWaBiYlJKQlVzGk6L4sTc/ddDWEg4XYkdEqyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368341; c=relaxed/simple;
-	bh=ZFoqmRko2SSCUSy3qOHGmg6pxl9wBXG2wcGKwxLpJuo=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=mBBD3S4DE2J4oL3rAdh8CgT+vsL1ekay4zvHBACv7IClzjzdaYluBzO1tIXDw/LyXcdVF1HGE9LMpsaFOLlwKg46/l9f4K3ikBFtfz8a6MW6OOEm/8TpGHMzWgkfMYNvy7Zi6ZWF9JDa+dgYm8V33XOxNbRMB278o5mnwiq4gAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eGZUWY1F; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751368410; c=relaxed/simple;
+	bh=FeqVp2yCUZ3ij1peE3WeZz1cWGh+QgySUCT2N/2Xbjo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VOG8vWbL5IVQUJtryMzPw/JWPgs6kD7pVwc93b0NBT4aIfUDDRpGXbk9hOCsF/3rdQaQbNHIzG73LdFKTCHY/y9Neep3HSk79WW9Ac2NvjdfITaXWmW/+A6UJg9eJwMGLLCBcI1MUBPnYnJIXqiW4XXDdkkI7DH92trMWDFbL6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=li9eqiCg; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eGZUWY1F"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250701111217epoutp01493d18a7849437119904c6986ea82c61~OHDle2poc0787307873epoutp01j
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:12:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250701111217epoutp01493d18a7849437119904c6986ea82c61~OHDle2poc0787307873epoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751368337;
-	bh=Qc61XCsNX7jtimwS9YLE7scWnHViXc1VdS+/vuEdXPw=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=eGZUWY1FH10LHOKEaHWnA2ArhG8hxMqRxS3t2Rl0pmkRmzWR9Fl/DHvJUwunnVMhh
-	 /O+CiKNV5TSOz8Hs5vPVKxjOYH5/s9ZldynzSQzHS2Nynp+qu7L3753yBJaobVBJCb
-	 Cm2WR34A6u2zt5ybvtUQ7lL3iDb9WSU1dcX0F6dk=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250701111216epcas5p44af4c4950cc453b245daaed1a704e14a~OHDknjMtz1299912999epcas5p4L;
-	Tue,  1 Jul 2025 11:12:16 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4bWgNG6YX0z3hhTD; Tue,  1 Jul
-	2025 11:12:14 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250701111110epcas5p2938ed510e75510ab0ca7da2c350ba777~OHCm3_haD2693926939epcas5p2p;
-	Tue,  1 Jul 2025 11:11:10 +0000 (GMT)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250701111107epsmtip15232f3d8aeb2f97b46647ad34d93693e~OHCkOEa5k1910819108epsmtip1K;
-	Tue,  1 Jul 2025 11:11:07 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Rob Herring'" <robh@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-fsd@tesla.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
-	<vkoul@kernel.org>, <kishon@kernel.org>, <arnd@arndb.de>,
-	<m.szyprowski@samsung.com>, <jh80.chung@samsung.com>,
-	<pankaj.dubey@samsung.com>
-In-Reply-To: <20250627211236.GA147018-robh@kernel.org>
-Subject: RE: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for
- Tesla FSD SoC
-Date: Tue, 1 Jul 2025 16:41:06 +0530
-Message-ID: <02b001dbea78$d991d5b0$8cb58110$@samsung.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="li9eqiCg"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553b82f3767so3591838e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751368407; x=1751973207; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bGjQ61S1++mVkf3/jYVKvuXkIa1IOFszhbgMmRDC9tQ=;
+        b=li9eqiCgH9LxeSIz1EwaVdkA6DiCz8HcgNLroR1mtLkcCpyH0q3bTkwjCGpf2etIh6
+         Wt0wLSZbYWXWq3wNjvR7T+7tAf14asIqRPvj1Z9CeIOEAbnUzhpGkxdndf7xQshM6n7b
+         7YDWBCa2nmaMFipFUkVHdoe08XACcCH0XJh1Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751368407; x=1751973207;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bGjQ61S1++mVkf3/jYVKvuXkIa1IOFszhbgMmRDC9tQ=;
+        b=GUh0NwLtodEa1XX240JqIjwLJl4ezGoNAkkBBTX+YG8ZFmIseAukUFyYqmyaw+n0Sw
+         WUa+qFhY1lkI92/WRxgmIDkwJGpq8m3HHP8wkCqugj6V56biljs1G0looCvOx6AUc5kH
+         gdI+cCCwK6Ra9EEo/bYrBZbWUmgY1RTu0cqNvnZNWQQddiblXH1ildAo2MLO8lNxAYpe
+         VlcZLM2Fe02WudG/+g1J7sj84+wYl7EjeT/huQT39/T5qY6B1k3UlOp0seCXkRaAnhQq
+         v7+SO4Fd9L2UdtJSPbON7mU4n483cD31dh2OQ74RH3N+mmCumrerisjdIrqmIP/hXA28
+         NeNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUO5xGKYAbV9Cl2xNdv+31/Fe/DYxKaKzLcbDbWxKKoxEOTekj2EN0JRHWGl8r1Y2QMhMNLWrpWg+Yawss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVE8CJF04vhVUPo4xtUrqTOZFpRn41a8XGemBAyAmVdpgWRH++
+	HmEAi8ShPdEVBCAcKG/cyomLmGnlovtB3BFi9V1chFKd7U2UdHv4JIvLlMl9IqzgbZ5Cd3ICaCu
+	+gXWdTg==
+X-Gm-Gg: ASbGncuTyPuxp0RA7TsKiFxzfF3/O5XHmQYM8x4XZrblFnfNNu4cPkL5RFKcQ+3rttx
+	BD4u6rqwq+DyS1Ip7jqgE3lvRm/1wyBpuhWZiHgr3yZgc0sYeUL/ib462ml+FDlN+JQYNSMERXJ
+	BLTOpYTHRd3FaiAEpwtqlGSlV/zb6LUta27kXtA1LFxDzQ80jUFw8Y9YtG1q7KKaXINNlSWj3zJ
+	CUKtxw9cZGjagKWXUzL+9NtXtAOVaoUgcAW6oVzgfAvK9L0P1Smp3NVeAMZICOp6aA6kxdGBby9
+	X8agppRwmhq1/nkbVNSXomM1mdo6gOCckgYje9PooWhDTnzGLrcS0yHNvJP1+lhzGiACcGjdgSf
+	fNHc3K1wg3Ta35xkAbnKeH/cy
+X-Google-Smtp-Source: AGHT+IGy9koaLnCNLnxmgHw3F41oz8FBNf/QTftto29HT7G1xcneOphMenvvBsuMhT3Qj9c2bSKZbg==
+X-Received: by 2002:a05:6512:224b:b0:553:cf38:5ea1 with SMTP id 2adb3069b0e04-5550b87b62cmr5806274e87.15.1751368406489;
+        Tue, 01 Jul 2025 04:13:26 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b2b8e17sm1781621e87.107.2025.07.01.04.13.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 04:13:24 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54b10594812so3694134e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:13:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWPkxNLhtU2WUCGAjnwZ39EufXVXCgUTBtE+alQqw07m5PPtS2v2INfM7H341OOb29dKpQJ/XucwXlMJHE=@vger.kernel.org
+X-Received: by 2002:a05:6512:224b:b0:553:cf38:5ea1 with SMTP id
+ 2adb3069b0e04-5550b87b62cmr5806214e87.15.1751368403239; Tue, 01 Jul 2025
+ 04:13:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFUClgbainc6hQuKSBO0V8ttZVgkwK41mGpAfhwG8gB/KC3xLT3bJYA
-Content-Language: en-in
-X-CMS-MailID: 20250701111110epcas5p2938ed510e75510ab0ca7da2c350ba777
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250625165315epcas5p19f081c8a0e2e7dc87698577cc2d460ca
-References: <20250625165229.3458-1-shradha.t@samsung.com>
-	<CGME20250625165315epcas5p19f081c8a0e2e7dc87698577cc2d460ca@epcas5p1.samsung.com>
-	<20250625165229.3458-7-shradha.t@samsung.com>
-	<20250627211236.GA147018-robh@kernel.org>
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-10-5710f9d030aa@chromium.org> <20250629181246.GE6260@pendragon.ideasonboard.com>
+In-Reply-To: <20250629181246.GE6260@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 1 Jul 2025 13:13:10 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsu0RT4dcGyBJRutP=9HTe+niUoohxTZE=qJ8O_9ez=+A@mail.gmail.com>
+X-Gm-Features: Ac12FXyUB7J2CzeHXupatytT-Rncr6S6tZS3kWRK4b67_iOG9R3ef-6_Er_0YxQ
+Message-ID: <CANiDSCsu0RT4dcGyBJRutP=9HTe+niUoohxTZE=qJ8O_9ez=+A@mail.gmail.com>
+Subject: Re: [PATCH v2 10/12] media: uvcvideo: Add get_* functions to uvc_entity
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Laurent
 
+On Sun, 29 Jun 2025 at 20:13, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Thu, Jun 05, 2025 at 05:53:03PM +0000, Ricardo Ribalda wrote:
+> > Virtual entities need to provide more values than get_cur and get_cur
+>
+> I think you meant "get_info and get_cur".
+>
+> > for their controls. Add support for get_def, get_min, get_max and
+> > get_res.
+>
+> Do they ? The UVC specification defines controls that don't list
+> GET_DEF, GET_MIN, GET_MAX and GET_RES as mandatory requests. Can't we do
+> the same for the software controls ? This patch is meant to support the
+> UVC_SWENTITY_ORIENTATION and UVC_SWENTITY_ROTATION control in the next
+> patch, and those are read-only controls. Aren't GET_INFO and GET_CUR
+> enough ?
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: 28 June 2025 02:43
-> To: Shradha Todi <shradha.t@samsung.com>
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
-> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
-> bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
-> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de;
-> m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
-> Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla FSD SoC
-> 
-> On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
-> > Document the PCIe controller device tree bindings for Tesla FSD
-> > SoC for both RC and EP.
-> 
-> Drop 'bindings support for ' in the subject.
-> 
+V4L2_CID_CAMERA_ROTATION has the type UVC_CTRL_DATA_TYPE_UNSIGNED,
+that time requires get_min and get_max.
+We can create a new type UVC_CTRL_DATA_TYPE_UNSIGNED_READ_ONLY that
+fakes min, max and res, but I think that it is cleaner this approach.
+
+>
 > >
-> > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> > This is a preparation patch.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > > ---
-> >  .../bindings/pci/samsung,exynos-pcie.yaml     | 121 ++++++++++++------
-> 
-> I think this should be its own schema file. There's not much shared.
-> 
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 12 ++++++++++++
+> >  drivers/media/usb/uvc/uvcvideo.h |  8 ++++++++
+> >  2 files changed, 20 insertions(+)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 21ec7b978bc7aca21db7cb8fd5d135d876f3330c..59be62ae24a4219fa9d7aacf2ae7382c95362178 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -596,6 +596,18 @@ static int uvc_ctrl_query_entity(struct uvc_device *dev,
+> >       if (query == UVC_GET_CUR && ctrl->entity->get_cur)
+> >               return ctrl->entity->get_cur(dev, ctrl->entity,
+> >                                            ctrl->info.selector, data, len);
+> > +     if (query == UVC_GET_DEF && ctrl->entity->get_def)
+> > +             return ctrl->entity->get_def(dev, ctrl->entity,
+> > +                                          ctrl->info.selector, data, len);
+> > +     if (query == UVC_GET_MIN && ctrl->entity->get_min)
+> > +             return ctrl->entity->get_min(dev, ctrl->entity,
+> > +                                          ctrl->info.selector, data, len);
+> > +     if (query == UVC_GET_MAX && ctrl->entity->get_max)
+> > +             return ctrl->entity->get_max(dev, ctrl->entity,
+> > +                                          ctrl->info.selector, data, len);
+> > +     if (query == UVC_GET_RES && ctrl->entity->get_res)
+> > +             return ctrl->entity->get_res(dev, ctrl->entity,
+> > +                                          ctrl->info.selector, data, len);
+> >       if (query == UVC_GET_INFO && ctrl->entity->get_info)
+> >               return ctrl->entity->get_info(dev, ctrl->entity,
+> >                                             ctrl->info.selector, data);
+> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > index a931750bdea25b9062dcc7644bf5f2ed89c1cb4c..d6da8ed3ad4cf3377df49923e051fe04d83d2e38 100644
+> > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > @@ -261,6 +261,14 @@ struct uvc_entity {
+> >                       u8 cs, u8 *caps);
+> >       int (*get_cur)(struct uvc_device *dev, struct uvc_entity *entity,
+> >                      u8 cs, void *data, u16 size);
+> > +     int (*get_def)(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                    u8 cs, void *data, u16 size);
+> > +     int (*get_min)(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                    u8 cs, void *data, u16 size);
+> > +     int (*get_max)(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                    u8 cs, void *data, u16 size);
+> > +     int (*get_res)(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                    u8 cs, void *data, u16 size);
+> >
+> >       unsigned int ncontrols;
+> >       struct uvc_control *controls;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
-Will make 2 new bindings - samsung,exynos-pcie-common.yaml and
-tesla,fsd-pcie.yaml
-Does that sound okay?
 
-> >  .../bindings/pci/tesla,fsd-pcie-ep.yaml       |  91 +++++++++++++
-> >  2 files changed, 176 insertions(+), 36 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> > index f20ed7e709f7..595156759b06 100644
-> > --- a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> > @@ -11,16 +11,15 @@ maintainers:
-> >    - Jaehoon Chung <jh80.chung@samsung.com>
-> >
-> >  description: |+
-> > -  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
-> > +  Samsung SoCs PCIe host controller is based on the Synopsys DesignWare
-> >    PCIe IP and thus inherits all the common properties defined in
-> >    snps,dw-pcie.yaml.
-> >
-> > -allOf:
-> > -  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> > -
-> >  properties:
-> >    compatible:
-> > -    const: samsung,exynos5433-pcie
-> > +    enum:
-> > +      - samsung,exynos5433-pcie
-> > +      - tesla,fsd-pcie
-> >
-> >    reg:
-> >      items:
-> > @@ -37,52 +36,102 @@ properties:
-> >    interrupts:
-> >      maxItems: 1
-> >
-> > -  clocks:
-> > -    items:
-> > -      - description: PCIe bridge clock
-> > -      - description: PCIe bus clock
-> > -
-> > -  clock-names:
-> > -    items:
-> > -      - const: pcie
-> > -      - const: pcie_bus
-> > -
-> >    phys:
-> >      maxItems: 1
-> >
-> > -  vdd10-supply:
-> > -    description:
-> > -      Phandle to a regulator that provides 1.0V power to the PCIe block.
-> > -
-> > -  vdd18-supply:
-> > -    description:
-> > -      Phandle to a regulator that provides 1.8V power to the PCIe block.
-> > -
-> > -  num-lanes:
-> > -    const: 1
-> > -
-> > -  num-viewport:
-> > -    const: 3
-> > -
-> >  required:
-> >    - reg
-> >    - reg-names
-> >    - interrupts
-> >    - "#address-cells"
-> >    - "#size-cells"
-> > -  - "#interrupt-cells"
-> > -  - interrupt-map
-> > -  - interrupt-map-mask
-> >    - ranges
-> > -  - bus-range
-> >    - device_type
-> >    - num-lanes
-> > -  - num-viewport
-> >    - clocks
-> >    - clock-names
-> >    - phys
-> > -  - vdd10-supply
-> > -  - vdd18-supply
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - tesla,fsd-pcie
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          maxItems: 4
-> > +
-> > +        clock-names:
-> > +          items:
-> > +            - const: aux
-> > +            - const: dbi
-> > +            - const: mstr
-> > +            - const: slv
-> > +
-> > +        samsung,syscon-pcie:
-> > +          $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +          description: phandle for system control registers, used to
-> > +                       control signals at system level
-> > +
-> > +        num-lanes:
-> > +          maximum: 4
-> > +
-> > +      required:
-> > +        - samsung,syscon-pcie
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - samsung,exynos5433-pcie
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: pcie bridge clock
-> > +            - description: pcie bus clock
-> > +
-> > +        clock-names:
-> > +          items:
-> > +            - const: pcie
-> > +            - const: pcie_bus
-> > +
-> > +        vdd10-supply:
-> > +          description:
-> > +            phandle to a regulator that provides 1.0v power to the pcie block.
-> > +
-> > +        vdd18-supply:
-> > +          description:
-> > +            phandle to a regulator that provides 1.8v power to the pcie block.
-> > +
-> > +        num-lanes:
-> > +          const: 1
-> > +
-> > +        num-viewport:
-> > +          const: 3
-> > +
-> > +        assigned-clocks:
-> > +          maxItems: 2
-> > +
-> > +        assigned-clock-parents:
-> > +          maxItems: 2
-> > +
-> > +        assigned-clock-rates:
-> > +          maxItems: 2
-> > +
-> > +      required:
-> > +        - "#interrupt-cells"
-> > +        - interrupt-map
-> > +        - interrupt-map-mask
-> > +        - bus-range
-> > +        - num-viewport
-> > +        - vdd10-supply
-> > +        - vdd18-supply
-> >
-> >  unevaluatedProperties: false
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-> b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-> > new file mode 100644
-> > index 000000000000..f85615a0225d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
-> > @@ -0,0 +1,91 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: https://protect2.fireeye.com/v1/url?k=48166268-299d775e-4817e927-74fe485fffe0-
-> 300a108993374478&q=1&e=3e3a0fc6-8338-4fe3-b352-
-> 2e510a3c6aaa&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fpci%2Ftesla%2Cfsd-pcie-ep.yaml%23
-> > +$schema: https://protect2.fireeye.com/v1/url?k=60c79c47-014c8971-60c61708-74fe485fffe0-
-> 2608e7d54b39a025&q=1&e=3e3a0fc6-8338-4fe3-b352-
-> 2e510a3c6aaa&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23
-> > +
-> > +title: Samsung SoC series PCIe Endpoint Controller
-> > +
-> > +maintainers:
-> > +  - Shradha Todi <shradha.t@samsung.com>
-> > +
-> > +description: |+
-> 
-> Don't need '|+'
-> 
-> > +  Samsung SoCs PCIe endpoint controller is based on the Synopsys DesignWare
-> > +  PCIe IP and thus inherits all the common properties defined in
-> > +  snps,dw-pcie-ep.yaml.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: tesla,fsd-pcie-ep
-> > +
-> > +  reg:
-> > +    maxItems: 4
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: elbi
-> > +      - const: dbi
-> > +      - const: dbi2
-> > +      - const: addr_space
-> > +
-> > +  clocks:
-> > +    maxItems: 4
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: aux
-> > +      - const: dbi
-> > +      - const: mstr
-> > +      - const: slv
-> > +
-> > +  num-lanes:
-> > +    maximum: 4
-> > +
-> > +  samsung,syscon-pcie:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    description: phandle for system control registers, used to
-> > +                 control signals at system level
-> > +
-> > +  phys:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - clocks
-> > +  - clock-names
-> > +  - num-lanes
-> > +  - samsung,syscon-pcie
-> > +  - phys
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/fsd-clk.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    bus {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +        pcieep0: pcie-ep@16a00000 {
-> > +            compatible = "tesla,fsd-pcie-ep";
-> > +            reg = <0x0 0x168b0000 0x0 0x1000>,
-> > +                  <0x0 0x16a00000 0x0 0x2000>,
-> > +                  <0x0 0x16a01000 0x0 0x80>,
-> > +                  <0x0 0x17000000 0x0 0xff0000>;
-> > +            reg-names = "elbi", "dbi", "dbi2", "addr_space";
-> > +            clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
-> > +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
-> > +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
-> > +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
-> > +            clock-names = "aux", "dbi", "mstr", "slv";
-> > +            num-lanes = <4>;
-> > +            samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
-> > +            phys = <&pciephy1>;
-> > +        };
-> > +    };
-> > +...
-> > --
-> > 2.49.0
-> >
 
+-- 
+Ricardo Ribalda
