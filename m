@@ -1,33 +1,56 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85FBF9D9;
-	Tue,  1 Jul 2025 23:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED44A2857FC;
+	Tue,  1 Jul 2025 23:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751413460; cv=none; b=oIO590GBjgk9mPjBIo41P5lWV5453XcKYyEJ4kjT/f5DZCEdmJSt/zc/EwwnhpBZ8mFt57D+LLgPa7nzWL2IPFR33KpwDecHzVJEiHz6XMpuY+zN3gYIOUx2vl0p7OtbQu8Yi5KSBuNN4ijmTFZzvAq1Do7JF+7P+DT100CLpV4=
+	t=1751413512; cv=none; b=kMFz0r/AFqn3uTEA7JIUTI7JMhdrBGX0suOaTRP8NEARtaF9GkkKxCWblOlqP6U3hba7rhhXE0uyltmy0kqr/7PAACPbZZuIsRwbeQqsDzy3WsRZnzzErDl2JY/UnXpj/dbX2qHIzVLDx3uiDgiggKJR5yp2fvKfxZurKTWaIDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751413460; c=relaxed/simple;
-	bh=c0lJLhW9sGJUTVi90BSg3VA0i1FvdVw1WWGoWae/x80=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IAti7Kjh53JZZUd/CRclc3n85tVva98Hb7rZyUYXDcOdrsv12ypr9jU50VyV6bWlIt7qFxXPEQ1aiMqWkREs4T5fKq3n5I++gwDoz5hwPQZZZhRBvI2nGIiuvtGfw8G5OMvV/mqlCtN1UoWNboDiAXcHaCDCdHHCfAhrM8JTtdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 58CA5805C8;
-	Tue,  1 Jul 2025 23:44:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id AE5562F;
-	Tue,  1 Jul 2025 23:44:13 +0000 (UTC)
-Date: Tue, 1 Jul 2025 19:44:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2] fgraph: Keep track of when fgraph_ops are registered or
- not
-Message-ID: <20250701194451.22e34724@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751413512; c=relaxed/simple;
+	bh=Gi4HgI/fcGLhn4scOdNk/B+Txx51RJ5SF8pfQNLBedw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O6UYrg3eWuRDDWX4pQMgpcT22PEmDWD1yrwoz0Dua3/v5Ra8An9rgn8QLI4k/zAtPnv3lb8nfoYlHqnmd3XbYwdoiDMQS8FobBRjBCUjNB8f0S3zbB/fjiHZ9whitN932bPjJTBlI9aY+wsYC6l1+CzOMQ+VpqHqAcGRNg9x4IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4lQxpEO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4lQxpEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E77C4CEEB;
+	Tue,  1 Jul 2025 23:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751413510;
+	bh=Gi4HgI/fcGLhn4scOdNk/B+Txx51RJ5SF8pfQNLBedw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=m4lQxpEOa6oeH3or8pRm4zhWDl23ESs4tyFmiPZeaDetKINeN+eEk2eHLQdKKrLdl
+	 fHt3OL4c60fYb4talT9acSdKCIoQ7+d5bfrOmrJQRKdbvrDM/vzJUQePmF58cmi3cB
+	 HeEZMjE5iw3bGKUVDNjOQdjO9Cyzyt6wMpIMDj457sttmG6AzAx2+9zZxb8UbHKGzZ
+	 ltLDJYyoIDitJr4JezQ7llkVUWyLR6GMgVOE4ZyTJPPz91aCJHQpE4+ufoE4Zb51G5
+	 nQXIl31TEEH6Y9NQHwbgi1dw0wfnhawjUF5Ls0OMryT1Ld7buBh1ycR2ZnztSPWC7+
+	 gyDok0gSbcVuQ==
+Date: Tue, 1 Jul 2025 16:45:08 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com,
+ hannes@cmpxchg.org, ziy@nvidia.com, jackmanb@google.com
+Subject: Re: [PATCH net-next v7 1/7] netmem: introduce struct netmem_desc
+ mirroring struct page
+Message-ID: <20250701164508.0738f00f@kernel.org>
+In-Reply-To: <aGHNmKRng9H6kTqz@hyeyoo>
+References: <20250625043350.7939-1-byungchul@sk.com>
+	<20250625043350.7939-2-byungchul@sk.com>
+	<20250626174904.4a6125c9@kernel.org>
+	<20250627035405.GA4276@system.software.com>
+	<20250627173730.15b25a8c@kernel.org>
+	<aGHNmKRng9H6kTqz@hyeyoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,78 +59,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 34rgiku93yqq3ynf74xe73cb6g5f1m7m
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: AE5562F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+fUqFofNwisz3PsArUK+9V/cE8qGI00+Q=
-X-HE-Tag: 1751413453-248680
-X-HE-Meta: U2FsdGVkX181FSfaV+QlZ8xjKJU6V0UBmycvD0dX+k9HsUc+G9XrvG6I+Z1vgq4TliqXn4DQxsuSRCG8abbiLeSrGIVSvvULpBvbMX3GO7sHtlsloUV5Q8AiCzUTQtdWK3puhaMOeA/l04Zri8KyI6az5cWQJYGy+LmbgiyYhW1WDN+CwG9zQqH/aiopKXFpQq35Y2tx6lhi/O4kNIrB6Nq7Wu44TCq/kgTfqjuIrexLMzBHVo1WF+CdlBeYdPS6o5otTL3Jt6mDuTvr9L0EFCZ5qEHKu3mD0CUvBbb1/31y9WuUX371wCfaepqFZ9vnYJ7zpiQQ21uFcZzU8LxlfCwGM9dg3RG4lw+85R5pZ5haO7IrZsmp8Z8g0zWs4ZE3k7BRS5QHRLB7MxbJTgu57lkgqNu0f0CdYKB60BXyojVb2jbtGRHSjQ==
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, 30 Jun 2025 08:34:48 +0900 Harry Yoo wrote:
+> > Ugh, you keep explaining the mechanics to me. Our goal here is not
+> > just to move fields around and make it still compile :/
+> > 
+> > Let me ask you this way: you said "netmem_desc" will be allocated
+> > thru slab "shortly". How will calling the equivalent of page_address()
+> > on netmem_desc work at that stage? Feel free to refer me to the existing
+> > docs if its covered..  
+> 
+> https://kernelnewbies.org/MatthewWilcox/Memdescs/Path
+> https://kernelnewbies.org/MatthewWilcox/Memdescs
+> 
+> May not be the exact document you're looking for,
+> but with this article I can imagine:
+> 
+> - The ultimate goal is to shrink struct page to eventually from 64 bytes
+>   to 8 bytes, by allocating only the minimum required metadata per 4k page
+>   statically and moving the rest of metadata to dynamically-allocated
+>   descriptors (netmem_desc, anon, file, ptdesc, zpdesc, etc.) using slab
+>   at page allocation time.
+> 
+> - We can't achieve that goal just yet, because several subsystems
+>   still use struct page fields for their own purposes.
+> 
+>   To achieve that, each of these subsystems needs to define
+>   its own descriptor, which, for now, overlays struct page, and should be
+>   converted to use the new descriptor.
+> 
+>   Eventually, these descriptors will be allocated using slab.
+> 
+> - For CPU-readable buffers, page->memdesc will point to a netmem_desc,
+>   with a lower bit set indicating that it's a netmem_desc rather than
+>   other type. Networking code will need to cast it to (netmem_desc *)
+>   and dereference it to access networking specific fields.
+> 
+> - The struct page array (vmemmap) will still be statically allocated
+>   at boot time (or during memory hotplug time).
+>   So no change in how page_address() works.
+> 
+> net_iovs will continue to be not associated with struct pages,
+> as the buffers don't have corresponding struct pages.
+> net_iovs are already allocated using slab.
 
-Add a warning if unregister_ftrace_graph() is called without ever
-registering it, or if register_ftrace_graph() is called twice. This can
-detect errors when they happen and not later when there's a side effect:
+Thanks a lot, this clarifies things for me.
 
-Link: https://lore.kernel.org/all/20250617120830.24fbdd62@gandalf.local.home/
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250618073117.024efb2e@gandalf.local.home
-
-- Just zero out the FL_GRAPH flag instead of all flags (Masami Hiramatsu)
-
- kernel/trace/fgraph.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index c5b207992fb4..f4d200f0c610 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1325,6 +1325,10 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	int ret = 0;
- 	int i = -1;
- 
-+	if (WARN_ONCE(gops->ops.flags & FTRACE_OPS_FL_GRAPH,
-+		      "function graph ops registered again"))
-+		return -EBUSY;
-+
- 	guard(mutex)(&ftrace_lock);
- 
- 	if (!fgraph_stack_cachep) {
-@@ -1401,17 +1405,21 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
- 
-+	if (WARN_ONCE(!(gops->ops.flags & FTRACE_OPS_FL_GRAPH),
-+		      "function graph ops unregistered without registering"))
-+		return;
-+
- 	guard(mutex)(&ftrace_lock);
- 
- 	if (unlikely(!ftrace_graph_active))
--		return;
-+		goto out;
- 
- 	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE ||
- 		     fgraph_array[gops->idx] != gops))
--		return;
-+		goto out;
- 
- 	if (fgraph_lru_release_index(gops->idx) < 0)
--		return;
-+		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
- 
-@@ -1434,4 +1442,6 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
- 	}
- 	gops->saved_func = NULL;
-+ out:
-+	gops->ops.flags &= ~FTRACE_OPS_FL_GRAPH;
- }
--- 
-2.47.2
-
+Unfortunately, I still think that it's hard to judge patches 1 and 7 
+in context limited to this series, so let's proceed to reposting just
+the "middle 5" patches.
