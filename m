@@ -1,92 +1,168 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88573279DC6
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA9626F44C;
+	Tue,  1 Jul 2025 15:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383813; cv=none; b=fnWCtyxRuV5UcvSbcx+H2noR7PrkktvHEWqUhJnAUxQPaKjiqzJ7cYo42VvBDyxY9b4p2vCxSUzKqvV4hKtK4qQ8mWLgqH5BSKzZoLcF5mChpn9lLgqqNO9XheZAO/EeMqBMfZQ3sXqXgrfqQjpcx9IMEgkS2SQco3OO2Hq2TNw=
+	t=1751383841; cv=none; b=UXPThG2otth7OJbCLSeEZqMrVijCz/nYcb48ABfvcNu5bHeAsZWfNv1LV2ZMS1QPX1En46cJ3fXhgE0wFnM3MloE9KEZiBK1rxONnajJ363agyLAY5xd6RiZWpzDHa4oRaArXB9pTWn8xj6U1NCB7p/7qn8CKqoCMomie7xPBfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383813; c=relaxed/simple;
-	bh=BE+7U6Fwy6+8VckRpmG8hpzu9KcLW2wkEdjhtOqUbFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c4p48wKjPRtC/KcAX1QHnEN3LHJuNi0NnQohJFK7mZtfLh/XK4dKZAzVU6094R+6RO1r23ny9KaYpHKz+LWEI4LcofulQWB9ChqCzj1mxGO4qeEgR3knT7fVN+AN8L3iGRNTUBxMrZh82ohV1ePGsX0zq5Ka2FcXlsHcKEARG7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VX3avmnd; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1751383841; c=relaxed/simple;
+	bh=esq6GOU0YhrPGSWvYux2e5iZTTVZJjFx3fEwhZQPgKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AnBD+Xb3nG3KHaG3km2iGWS3n4S6RxC6DNLeB3YfHmUHnL8TBwUPoN420EgEotYDJEgfzHy6Hr5WmosoFGh2N8mpln6+NZP5EEq/ylXCvTGBwoyXiVLOmZxrcUSd1gUrmuvR7FXAMbnQ+IPttqOIWW6ycChei98rOeGX7FCPfFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZqKObUsA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VX3avmnd"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4CF1340E0213;
-	Tue,  1 Jul 2025 15:30:09 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id yWKuWzBBavnP; Tue,  1 Jul 2025 15:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751383806; bh=uszi8/buQOTLRi/2mujTfuC1qyXlMsMpvJpL7B+ioXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VX3avmndXilxV5K9nYT7/pdWDmce1wt1advUtYOpz+vIvC2mYmOxvCG1FMvHf+bDB
-	 od5Bopd+AJPHDIIaPeJ/sgY1Kh2S/bxoWYes4jpemE8uifzCxLaxhSGEu4smrlwTPq
-	 8REPcesLvoiBBIY6+6jloWDlHwGoJ5KuNI8Sog3p5QsDyvYnMszJ1BsqC0p0SyAF2m
-	 xmyoSCw3Q695bcJTOa8R3m8qWjJKPQNIZjvzzsSQILVp4CSylHYM4iXE4yDaoWK7IF
-	 WBmas+S9mbonA6JeZ2hPXKSdHBPsBcYmU5iX/HCqE0TYHApGtmf4v/Y1MosZ0K9C8B
-	 QP0iC65EtMu7aZ6r2Yqh3+PNvj8DLUH64bXL4WD7GMhV50A8+sbj/lLTLMSSISoN28
-	 CRpIPAAgX88rysSZPIFHHeuukOPe6JwoAqYLTxU7fH5iqWapQLnhDW43bY4wzq9z1A
-	 noqsUBi2+bZIxi7FHWB16guI5JrbOL73oz7JMtcxVlckr+Gvsi3V3NwpE8C/A7KIui
-	 FVNCP6YSWnNvjmGlZeEWKCSbZ6HgAhbQ3UgLIRUOhxvXUG7zuVPLBpRtCDil54HtNI
-	 2GTt/XZBjdtokk96F+dzdNCVTsvYA4DttiPR2Itrw0MsOazEB80vbc1cxr1RGp7Wfg
-	 VX8ooSXsnusDdmeROSsFlV+w=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0D9C540E020E;
-	Tue,  1 Jul 2025 15:29:58 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:29:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, Nikunj A Dadhania <nikunj@amd.com>,
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip:x86/urgent 1/1] arch/x86/coco/sev/core.c:2170:30: warning:
- variable 'dummy' set but not used
-Message-ID: <20250701152953.GCaGP-8bWPmRWI10Ec@fat_crate.local>
-References: <202507010218.3O5Ge0Xt-lkp@intel.com>
- <20250630192726.GBaGLlHl84xIopx4Pt@fat_crate.local>
- <20250701150644.GA3563357@ax162>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZqKObUsA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAB0C4CEEF;
+	Tue,  1 Jul 2025 15:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751383840;
+	bh=esq6GOU0YhrPGSWvYux2e5iZTTVZJjFx3fEwhZQPgKE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZqKObUsA0XqJSdOTV38SUPg0qehNPYEJw21E8pe0ZtkEhIAN2gTubJDa34IPE44Zu
+	 DgCYMxp1EQWaoDr6GCINznEm5mUb8XKTPUmZ3umEARYYWDwHJf/wP2q1iPUxF5+P2E
+	 ZZyj0wi4AIugFmUoWzVWBJhvJjXSAojpt12nLvqAGeqRHae4yOWfbgSPvxdgdjfCOI
+	 A2xHOk3VuKafVFC+csJbujA1ZguLjcUL/ZQd/LMLlJf7lVVTm9qmPKN1nkVFoS5Fmb
+	 i6lz/uIS0yU1mdm/LzUr7flUnT/o2kmORh91MAitE4tmwZ84TPgNjBfKIlYb4UjL29
+	 dcl4pPn2dC+Ug==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad56cbc7b07so596580466b.0;
+        Tue, 01 Jul 2025 08:30:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8ps7vwtvPMQ1MFERqgycbbasnxE+B41INc1ZDCGHX0m6gW2xgGAke9KELBUX3PUFNBs0A91gImfb9@vger.kernel.org, AJvYcCV4VVg2dHMT4Bm0nITjoEM9IW1d9gbpRLzL5OcBQ4sbQbERJE669y976ByCGQt7M1XMx+wftrzQnsWBWuTo@vger.kernel.org, AJvYcCXZ/H+Yh4Vmpzo4/Pvcpx4rBNlqTswr8/CFveGOAnNPc6flyGrEg7BWSLzaRAQnvQeUe5exQNYECErl/Xkt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh7v1ntb+ZST1QU2wMLJMQZkpeNW9nMJ4+WeQ5ys8W/SYYYThG
+	w+iI52gEB8U3jUjVfoUR6XXLeuJFZxEmQ96haIbNPPC6aDeue67H/UmFoSBmQLDbmpqCnianuAH
+	skT/Zdzc63oju9L4RKjFTj5eQblwNLQ==
+X-Google-Smtp-Source: AGHT+IGEOJ71QMmhygwwyoNyQvTUaSHGrectnbPhXO6fiW5U06Zpksqy5ktwiQlQijy6IeTYO+AYO14xuNYbA79IbCw=
+X-Received: by 2002:a17:907:d86a:b0:ae3:6390:6acc with SMTP id
+ a640c23a62f3a-ae363906fc2mr1532109666b.27.1751383839032; Tue, 01 Jul 2025
+ 08:30:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250701150644.GA3563357@ax162>
+References: <20250701-mt6572-v3-0-8937cfa33f95@proton.me> <175138000372.1627755.5505703571113478205.robh@kernel.org>
+In-Reply-To: <175138000372.1627755.5505703571113478205.robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 1 Jul 2025 10:30:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzzE6a683eHMTyQ3BNDvQ78bAbSIDWu96D3LpnH4E2Ei9VCbyAZ1NSVMV0
+Message-ID: <CAL_JsqLSa+1MYR6f6NcApGFdjCL0dDXSzpntVHCPGmKgytVfdQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/11] ARM: Add support for MediaTek MT6572 SoC
+To: Max Shevchenko <wctrl@proton.me>
+Cc: linux-watchdog@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mediatek@lists.infradead.org, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org, 
+	Guenter Roeck <linux@roeck-us.net>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 01, 2025 at 08:06:44AM -0700, Nathan Chancellor wrote:
-> Citation needed. This reproduces with Clang 15 (earliest supported on
-> x86 now), Clang 19, and GCC 15 for me. Were you missing W=1?
+On Tue, Jul 1, 2025 at 10:27=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
+>
+>
+> On Tue, 01 Jul 2025 09:06:54 +0300, Max Shevchenko wrote:
+> > This series of patches adds support for the MT6572 SoC and
+> > the JTY D101 tablet and Lenovo A369i smartphone based on it.
+> >
+> > Signed-off-by: Max Shevchenko <wctrl@proton.me>
+> > ---
+> > Changes in v3:
+> > - Remove the compatible property from the SoC devicetree
+> > - Link to v2: https://lore.kernel.org/r/20250626-mt6572-v2-0-f7f8421969=
+86@proton.me
+> >
+> > Changes in v2:
+> > - Drop the status property for the board devicetrees
+> > - Add an soc node for the MT6572 and reorder the nodes and properties
+> > - Change the commit title to a more descriptive one
+> > - Change the cover title to the correct one
+> > - Link to v1: https://lore.kernel.org/r/20250620-mt6572-v1-0-e2d47820f0=
+42@proton.me
+> >
+> > ---
+> > Max Shevchenko (11):
+> >       dt-bindings: serial: mediatek,uart: add MT6572
+> >       dt-bindings: interrupt-controller: mediatek,mt6577-sysirq: add MT=
+6572
+> >       dt-bindings: timer: mediatek: add MT6572
+> >       dt-bindings: watchdog: mediatek,mtk-wdt: add MT6572
+> >       dt-bindings: vendor-prefixes: add JTY
+> >       dt-bindings: arm: mediatek: add boards based on the MT6572 SoC
+> >       ARM: mediatek: add board_dt_compat entry for the MT6572 SoC
+> >       ARM: mediatek: add MT6572 smp bring up code
+> >       ARM: dts: mediatek: add basic support for MT6572 SoC
+> >       ARM: dts: mediatek: add basic support for JTY D101 board
+> >       ARM: dts: mediatek: add basic support for Lenovo A369i board
+> >
+> >  .../devicetree/bindings/arm/mediatek.yaml          |   5 +
+> >  .../mediatek,mt6577-sysirq.yaml                    |   1 +
+> >  .../devicetree/bindings/serial/mediatek,uart.yaml  |   1 +
+> >  .../devicetree/bindings/timer/mediatek,timer.yaml  |   1 +
+> >  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+> >  .../bindings/watchdog/mediatek,mtk-wdt.yaml        |   1 +
+> >  arch/arm/boot/dts/mediatek/Makefile                |   2 +
+> >  arch/arm/boot/dts/mediatek/mt6572-jty-d101.dts     |  61 ++++++++++++
+> >  arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts |  56 +++++++++++
+> >  arch/arm/boot/dts/mediatek/mt6572.dtsi             | 108 +++++++++++++=
+++++++++
+> >  arch/arm/mach-mediatek/Kconfig                     |   4 +
+> >  arch/arm/mach-mediatek/mediatek.c                  |   1 +
+> >  arch/arm/mach-mediatek/platsmp.c                   |   7 ++
+> >  13 files changed, 250 insertions(+)
+> > ---
+> > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+> > change-id: 20250619-mt6572-ef78a3d45168
+> >
+> > Best regards,
+> > --
+> > Max Shevchenko <wctrl@proton.me>
+> >
+> >
+> >
+>
+>
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+>
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+>
+>   pip3 install dtschema --upgrade
+>
+>
+> This patch series was applied (using b4) to base:
+>  Base: using specified base-commit 0ff41df1cb268fc69e703a08a57ee14ae967d0=
+ca
+>
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+>
+> New warnings running 'make CHECK_DTBS=3Dy for arch/arm/boot/dts/mediatek/=
+' for 20250701-mt6572-v3-0-8937cfa33f95@proton.me:
+>
+> arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dtb: / (lenovo,a369i): mem=
+ory: False schema does not allow {'device_type': ['memory'], 'reg': [[21474=
+83648, 536870912]]}
+>         from schema $id: http://devicetree.org/schemas/root-node.yaml#
+> arch/arm/boot/dts/mediatek/mt6572-jty-d101.dtb: / (jty,d101): memory: Fal=
+se schema does not allow {'device_type': ['memory'], 'reg': [[2147483648, 1=
+073741824]]}
+>         from schema $id: http://devicetree.org/schemas/root-node.yaml#
 
-Nope.
+'memory' node without a unit-address has long been deprecated. Please
+don't add more cases.
 
-$ git checkout -b test 4a35d2b5254af89595fd90dae9ee0c8f990a148d
-Switched to a new branch 'test'
-$ make CC=clang-19 HOSTCC=clang-19 W=1 arch/x86/coco/sev/core.o
-...
-  LINK    /mnt/kernel/kernel/linux/tools/objtool/objtool
-  CC      arch/x86/coco/sev/core.o
-$ clang-19 --version
-Debian clang version 19.1.7 (1+b1)
-Target: x86_64-pc-linux-gnu
-Thread model: posix
-InstalledDir: /usr/lib/llvm-19/bin
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Rob
