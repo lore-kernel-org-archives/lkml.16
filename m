@@ -1,43 +1,48 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A146B14A60C;
-	Tue,  1 Jul 2025 13:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0340D14A60C;
+	Tue,  1 Jul 2025 13:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374910; cv=none; b=DMRBr2aR/7Q6vI01hXUe8jsGjFnOeIGWK3K+vqUSvbrrd9k/DEYA8+2QHRRPuZCcpRYNh0k0NV93yj9KZC7jzPoIV3SKiISeveUow2mcaNOzTtPIScl9be3IZ7fFMomVxKgik6pdy/tkJSwOzCeFeQdrCG2B/u3DSfrwvHHu79c=
+	t=1751374936; cv=none; b=Y/FZqAEnH5RsXGx5HifknNSYlNcRC4Iaj8qNuiQquBKuQ08BJWzRUtg2J1B73xevADruzJ8AX+sZQmz5Oc/mNqVeM27iLun//eDs3zb2SUy5LIJWERKK3mnlaxB/Kb8+oYxXvUzoPLdMqzsKNAqtzKyorKUPECBYcmKEq8CpA5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374910; c=relaxed/simple;
-	bh=79gwy6F162XlYXbiRy31Ddi31QrxrM7O6owWgaoMte4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WcrRLI0R3QGGmEnQrUV3nL598lXFqcHni79YZ3syrx9HTfwkoNXiXKkLhgE35DqVlTsRemThtehb6IvedWA1b3CS8xP2dnoU7lk56ecaOfcXCbmYJwWCUaQKgTvvsDtsdIogQjQs7yn3cqp72yTZ5J9oE7X4Pp05b0FHSCBc5JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bWjqc606Lz27j0S;
-	Tue,  1 Jul 2025 21:02:36 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8ADC8140203;
-	Tue,  1 Jul 2025 21:01:40 +0800 (CST)
-Received: from localhost.localdomain (10.90.31.46) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Jul 2025 21:01:39 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<shaojijie@huawei.com>
-Subject: [PATCH v4 net-next 2/3] net: hibmcge: adjust the burst len configuration of the MAC controller to improve TX performance.
-Date: Tue, 1 Jul 2025 20:54:45 +0800
-Message-ID: <20250701125446.720176-3-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250701125446.720176-1-shaojijie@huawei.com>
-References: <20250701125446.720176-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1751374936; c=relaxed/simple;
+	bh=/MElPujMYO4YKGVegoRk4j5UOBm6/EvudL5Mm9Ww77I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S3GBS2a8N5Uur/F6mQS0CvRotVZ6vyVyduBkmwwku6vM751OJnlrdUGa9J87OPQ7t/77WBr98YXDYIyiyAWYviXkuR2meEY8R7Q1S+SjkyCBZ8NN4nUSt8kiYW6XfqqbIY+bvulaAtV1f7XLVXkkI7zBGzJHxIhNQL8F026Zq90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LsziNonm; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LsziNonm"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751374925; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=wQkIck5POixK9EE+T2WkLOuw56coDGeHxNs8KT6qVBc=;
+	b=LsziNonmopB9V0ipGXDBk9S2/y5wp7AdSPnI27qf7gIHoZuhmmnbjyAVQbzPNQCL0m1iuClvS5BVcCbYJqIFCl5Bj7uaXmiKEYrgJtVVEIf8Mw/mdHD+wpvn629TMoGtPoixhhDTFHXrJaFtUNG2t2Ip9mS+y54XtAVlK6GHSm4=
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WgR.XGA_1751374918 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 01 Jul 2025 21:02:04 +0800
+From: cp0613@linux.alibaba.com
+To: david.laight.linux@gmail.com
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	cp0613@linux.alibaba.com,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux@rasmusvillemoes.dk,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	yury.norov@gmail.com
+Subject: Re: [PATCH 2/2] bitops: rotate: Add riscv implementation using Zbb extension
+Date: Tue,  1 Jul 2025 21:01:49 +0800
+Message-ID: <20250701130149.968-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250630183534.160b9823@pumpkin>
+References: <20250630183534.160b9823@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,59 +50,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemk100013.china.huawei.com (7.202.194.61)
 
-Adjust the burst len configuration of the MAC controller
-to improve TX performance.
+On Mon, 30 Jun 2025 18:35:34 +0100, david.laight.linux@gmail.com wrote:
 
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c  | 8 ++++++++
- drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h | 2 ++
- 2 files changed, 10 insertions(+)
+> > On Sun, 29 Jun 2025 11:38:40 +0100, david.laight.linux@gmail.com wrote:
+> > 
+> > > > It can be found that the zbb optimized implementation uses fewer instructions,
+> > > > even for 16-bit and 8-bit data.  
+> > > 
+> > > Far too many register spills to stack.
+> > > I think you've forgotten to specify -O2  
+> > 
+> > Yes, I extracted it from the vmlinux disassembly, without compiling with -O2, and
+> > I used the web tool you provided as follows:
+> > ```
+> > unsigned int generic_ror32(unsigned int word, unsigned int shift)
+> > {
+> > 	return (word >> (shift & 31)) | (word << ((-shift) & 31));
+> > }
+> > 
+> > unsigned int zbb_opt_ror32(unsigned int word, unsigned int shift)
+> > {
+> > #ifdef __riscv
+> > 	__asm__ volatile("nop"); // ALTERNATIVE(nop)
+> > 
+> > 	__asm__ volatile(
+> > 		".option push\n"
+> > 		".option arch,+zbb\n"
+> > 		"rorw %0, %1, %2\n"
+> > 		".option pop\n"
+> > 		: "=r" (word) : "r" (word), "r" (shift) :);
+> > #endif
+> > 	return word;
+> > }
+> > 
+> > unsigned short generic_ror16(unsigned short word, unsigned int shift)
+> > {
+> > 	return (word >> (shift & 15)) | (word << ((-shift) & 15));
+> > }
+> > 
+> > unsigned short zbb_opt_ror16(unsigned short word, unsigned int shift)
+> > {
+> > 	unsigned int word32 = ((unsigned int)word << 16) | word;
+> > #ifdef __riscv
+> > 	__asm__ volatile("nop"); // ALTERNATIVE(nop)
+> > 
+> > 	__asm__ volatile(
+> > 		".option push\n"
+> > 		".option arch,+zbb\n"
+> > 		"rorw %0, %1, %2\n"
+> > 		".option pop\n"
+> > 		: "=r" (word32) : "r" (word32), "r" (shift) :);
+> > #endif
+> > 	return (unsigned short)word;
+> > }
+> > ```
+> > The disassembly obtained is:
+> > ```
+> > generic_ror32:
+> >     andi    a1,a1,31
+> 
+> The compiler shouldn't be generating that mask.
+> After all it knows the negated value doesn't need the same mask.
+> (I'd guess the cpu just ignores the high bits of the shift - most do.)
+> 
+> >     negw    a5,a1
+> >     sllw    a5,a0,a5
+> >     srlw    a0,a0,a1
+> >     or      a0,a5,a0
+> >     ret
+> > 
+> > zbb_opt_ror32:
+> >     nop
+> >     rorw a0, a0, a1
+> >     sext.w  a0,a0
+> 
+> Is that a sign extend?
+> Why is it there?
+> If it is related to the (broken) 'feature' of riscv-64 that 32bit results
+> are sign extended, why isn't there one in the example above.
+> 
+> You also need to consider the code for non-zbb cpu.
+> 
+> >     ret
+> > 
+> > generic_ror16:
+> >     andi    a1,a1,15
+> >     negw    a5,a1
+> >     andi    a5,a5,15
+> >     sllw    a5,a0,a5
+> >     srlw    a0,a0,a1
+> >     or      a0,a0,a5
+> >     slli    a0,a0,48
+> >     srli    a0,a0,48
+> 
+> The last two instructions mask the result with 0xffff.
+> If that is necessary it is missing from the zbb version below.
+> 
+> >     ret
+> > 
+> > zbb_opt_ror16:
+> >     slliw   a5,a0,16
+> >     addw    a5,a5,a0
+> 
+> At this point you can just do a 'shift right' on all cpu.
+> For rol16 you can do a variable shift left and a 16 bit
+> shift right on all cpu.
+> If the zbb version ends up with a nop (as below) then it is
+> likely to be much the same speed.
+> 
+> 	David
+> 
+> >     nop
+> >     rorw a5, a5, a1
+> >     ret
+> > ```
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-index 9b65eef62b3f..6e5602591554 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
-@@ -168,6 +168,11 @@ static void hbg_hw_set_mac_max_frame_len(struct hbg_priv *priv,
- 
- void hbg_hw_set_mtu(struct hbg_priv *priv, u16 mtu)
- {
-+	/* burst_len BIT(29) set to 1 can improve the TX performance.
-+	 * But packet drop occurs when mtu > 2000.
-+	 * So, BIT(29) reset to 0 when mtu > 2000.
-+	 */
-+	u32 burst_len_bit = (mtu > 2000) ? 0 : 1;
- 	u32 frame_len;
- 
- 	frame_len = mtu + VLAN_HLEN * priv->dev_specs.vlan_layers +
-@@ -175,6 +180,9 @@ void hbg_hw_set_mtu(struct hbg_priv *priv, u16 mtu)
- 
- 	hbg_hw_set_pcu_max_frame_len(priv, frame_len);
- 	hbg_hw_set_mac_max_frame_len(priv, frame_len);
-+
-+	hbg_reg_write_field(priv, HBG_REG_BRUST_LENGTH_ADDR,
-+			    HBG_REG_BRUST_LENGTH_B, burst_len_bit);
- }
- 
- void hbg_hw_mac_enable(struct hbg_priv *priv, u32 enable)
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-index a6e7f5e62b48..d40880beb2f8 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
-@@ -185,6 +185,8 @@
- #define HBG_REG_TX_CFF_ADDR_2_ADDR		(HBG_REG_SGMII_BASE + 0x0490)
- #define HBG_REG_TX_CFF_ADDR_3_ADDR		(HBG_REG_SGMII_BASE + 0x0494)
- #define HBG_REG_RX_CFF_ADDR_ADDR		(HBG_REG_SGMII_BASE + 0x04A0)
-+#define HBG_REG_BRUST_LENGTH_ADDR		(HBG_REG_SGMII_BASE + 0x04C4)
-+#define HBG_REG_BRUST_LENGTH_B			BIT(29)
- #define HBG_REG_RX_BUF_SIZE_ADDR		(HBG_REG_SGMII_BASE + 0x04E4)
- #define HBG_REG_RX_BUF_SIZE_M			GENMASK(15, 0)
- #define HBG_REG_BUS_CTRL_ADDR			(HBG_REG_SGMII_BASE + 0x04E8)
--- 
-2.33.0
-
+Sorry, please allow me to reply in a unified way. I did not check the rationality
+of the above assembly, but only used the web tool you provided before to generate
+it. In fact, I think it is more in line with the actual situation to disassemble
+it from vmlinux. In addition, the code is simplified here, and the complete
+implementation takes into account the processor that does not support or has not
+enabled zbb.
