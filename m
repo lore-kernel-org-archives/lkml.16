@@ -1,66 +1,65 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EE8306DCD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53C5309DA0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751405986; cv=none; b=EYugn4iwQ1NvMvhSk5iZVUId58xEmHkY25tOyLUGifcorkHO1vRhd29z+7qmejzOxC7j6Rr2um2fi73ZDGVzGna+g2DksS4+dEQuvpct2rW3OVZ87/NlBOZ3xh4+Z3bni15b858+Y67jQmqkehO0tzW4Vl4EOgpLtc46vvDUqzY=
+	t=1751405987; cv=none; b=rvXCj2+0Maq6Fgj+Gha84McyhA8kZ5rIagYg/wixxw+W+RJxAoKm/EnBecE0g7TKJFH0YnLyD/ZDA8Eg5hwaW1NVkjg21bq1OHCxY5crgM3Lc4Rt0MWs1Cm2ytidkJD5gXE+EVXriYUudtxhrbN9z5MkC9oGSEYIVah72prGBoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751405986; c=relaxed/simple;
-	bh=J8Mp/XPieqvBImE5UKsEDCopSlfxADmRzvJ27VGC3to=;
+	s=arc-20240116; t=1751405987; c=relaxed/simple;
+	bh=x4deODr2J/B/ZfZk3+/1/BV8bYxvy5G2y6ggy6cAeUc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MChLEWYFOD2VUZBvCjg4fTmp6qHCZwevsvsDSKmKKEvHQjV40Ok/5eBG6c0zaKMVxAo4rMSVBke9FkoOylUnbX7o0oF4z4+hPBlKbND3nLpoK2wCtL4GdAw+IfxXhxvrtly+gFNr2yv25ZO+1VxSpz6on9SGTqAg4K8QzzhSnCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RgDDy1pE; arc=none smtp.client-ip=209.85.161.48
+	 In-Reply-To:To:Cc; b=bwk9TAEenGN1/q+GgMYZIULrVtUMnDvCLZZTLA/4NQWxj1Ot55mC46IP1E8R1I0bylho+9y3+dyQyjedhQriuZQo6Acv50xNpzT0igdc9fkdcFzRzBCknuTWnwpaMNVh2lqtrNWsFL469uksMYXx9dNbipTDnOaiwvV5l5L+UgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uzFV2QfR; arc=none smtp.client-ip=209.85.161.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RgDDy1pE"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-60d63174f05so850355eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:39:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uzFV2QfR"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-610cbca60cdso2398668eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751405980; x=1752010780; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751405983; x=1752010783; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QA48/5Xq3MiyH1lT5lzBGW2kqD0bctYSg21SbvtHeng=;
-        b=RgDDy1pEA0/sNq5ETJ+u+fYABgwppk69wcTsTlvEOhHUluMXtY8paxy9oiAygi/n2R
-         P4IOmzCX54u7MXtw9MT6UErxdoN+vzwatGy96xKC4fMrDe349Rg2dokr5NqcEP4zVIPj
-         5DzQUSC9Stmjz4/pyAMObja1VGfKzEaVGNjPwkvghBDeozCRI2lpJf+yMzrVbYoY9fX9
-         yW1x3DHaxpHKghbNEJQRZ9HtPLCWgTOUkQSPBYCQW3pBeg2N6qhzXlweKA/mLrHCz2Ij
-         xXVKugiULLRWWP/fD9HZ96biTwgdf7jMPV8b554VTUnXXmQ6KcRrMKIuJ0FeM7hSVENu
-         lU8w==
+        bh=suln3ZPyOtbgf+467Jl0jyyrQzWY3/ACSgQiyK4V5QE=;
+        b=uzFV2QfR/9O4bbbkOJxLfJ4apFXo+I2UDKekRLkUk2CR62s4ds7TvNdaFJaNr15UV9
+         as/jpcwB9qphSeaOpw+0nyZirN0iBZ/+21NSkzFTlY9vKyriqkDIsTTGUn76ST45j+PL
+         U4F8fyclyDjm/uQeJ5aOMvZB1eegv4aE+CaF3hSJPBypZkguCgesL/zAd027ZMb+LYij
+         qUb/Fdbts06kGmSjvYCwBQeIbF+HLGlCkkYpU2RInFkQcZCCL/lPEjk7ZViE3OA+FeMH
+         dGFz25q0NMAiRxEp4JxBUjleM5GP32g4p/+s5aLh7lnHZQFOd6lR4A8oFEkWLs7Gl8d3
+         QWfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751405980; x=1752010780;
+        d=1e100.net; s=20230601; t=1751405983; x=1752010783;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QA48/5Xq3MiyH1lT5lzBGW2kqD0bctYSg21SbvtHeng=;
-        b=PWIcAF/DEwLVecaXZ0eADlJYNmsKQWijFHLNjqxqezOQqKIkr1SY+NvS3JoisQvCHT
-         MOcljRdjkFXj03G9MS74kwMkOiXPS3/nQRexvJlhmh5nMKZTkG5jZABgL5V7/oF8FKjP
-         H8huH6YhoUCp+CBldELUYZxzJONmQ4n2p/yYU6a6X+HyegCbsjdHIkZ+S/tUDdfWTKd8
-         Vf2C5It/zYXG2Wz46NoC1HBC/k+/hQmXf22iyaVIzrbV/Dsfeb21I1yW10XIyP5CU1le
-         Mh47PS9CW0YkUiNkeS1ZbWGTJzqtBn8sKCgnpZEjmENE3ub2Cr+v0V0LUrSSGbIyqu+T
-         ilmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7TmmrGQtnDGtPKGz85XlGaoqeru/eEilNeRLzp4ioHluWYyx03Rbq6y6mWTWaCntJ1mEMGSc6Lr5RSBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBcFgmtQXBxOGw2wbPdtnk1iK1uJ/ynR3Y1R+lu1DXTUso6Wqo
-	CUcm0OGst3lpAeYg0jZ65hPKd/TtQEKCfw+nPNcUP70GOdVg997LkGsjuwZdf3jfnFM=
-X-Gm-Gg: ASbGncuqtMSUVasblrEj5yRqaiwQpxYlCbujhaRHyfn561EoiXth+Y6EGAag/TS2GeJ
-	eZH9qG9dWrxfOTFLXMRzYnM2JZxc0CB0oJem3GW+iy55H6YavGeWlsnh8AE5QJ6S0counXJYHMP
-	SeQuK+0XvFKfh1D3LG4rFqhjIA6xPeOntc3Wq0DNzTRfhKoT2bN53sygvB/pOY4JtAnn8BD4QrH
-	0G/qEIswNL/7QqW/kEzQkUZV8snJ7UwAIKQv5Z2vL0dahEvWUvEk1I7DAte6ELn/x96nssIMK4t
-	MKjJRwCv7Fpd2eu1+XCdLKSzUDLm874a4DUNM69pygZj8m9p5hHcADwJMUwb7KSYxgsD
-X-Google-Smtp-Source: AGHT+IG0GdL5pmOi1RDALjt7tJvWKe7lV2Iel7oaQwpb/7DIn4IUOJRxmVkuDvZ98ZgmpO7wyZ5AbQ==
-X-Received: by 2002:a05:6808:201e:b0:40b:4208:8602 with SMTP id 5614622812f47-40b8853f92bmr279298b6e.4.1751405979908;
-        Tue, 01 Jul 2025 14:39:39 -0700 (PDT)
+        bh=suln3ZPyOtbgf+467Jl0jyyrQzWY3/ACSgQiyK4V5QE=;
+        b=aX1oVpcanXmwJ7VTY9c9S8eHLL14OwCiBwpur6riY5SkG2HXJYYG5zqrgYzaFkTsxV
+         EYmtZkDHnKFrmw0nU8eLe1nBvC2XWjJN0P+HX9kTDuDjdau/TpXr4Li5k2kViEC+/mNB
+         xL3KmJLn3WVj2ocAHNC9bQFP5cl6h2a6JFwES6l9TBMTwsR8jcC2qutpuvRTnfittMR0
+         FIX0brB3H3CCHSYeEXSoBg0xU3EzEU7VqiLjpDGNk+gJcOKtSLYrOtbk77IPW3cZwfmx
+         9Q7vXiN1IVSuaIuMyT9cshJLoRNUIMNX2YO/tuz05sqpqUgU7nydFxQPXm8WKbj5ewr6
+         bNig==
+X-Forwarded-Encrypted: i=1; AJvYcCXDrtc3swxArrS1l61tmAAOlpTwaG+fa38WfgiAh9P+osy9viNgT6w0Ic4J3Y4rJ3bjmhrKY2WkQwTRvAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbVkEqeR/Qs11ihxPjZPS0qVSsy5LDhEPPzVK6x8ClyR63r9nS
+	cXz+kOMGg0fnDSm9jua69u0KQHXwc1yYWTn0aZAwICCB1raVgF5DZFr+j+Bn/2hCCW0=
+X-Gm-Gg: ASbGncuI+HOngCZ6hP4XUc/mu7IfZLWmJz0CuOtQA/UrT8mS8BlbOKXrEngSaGHdVrn
+	yscnPV0vVEQWTM8iF/hKzRtEHp3Q0v8zQ2D2SV9cNkEy8NHEQnj4xbgDf/MLJ5ePUW/LA5NSVfw
+	d9UhwPMfOLRfBdK7VOXEECXMUClHhBc5an7aiz6N8mx5u4Dg6TTZHG+BsuZ1UQnkyJvcAHJsJdx
+	RbslKEhdp2WGevbV5+hFUkTyBePZxCAm2/80GgyzgtWnqQpgtq5e+HTgosmU0wv+TElhsgCCqah
+	4hCtjLTZSqjGNTOTyzEvxpsTGtgkU/rEeygABV9/VvRgr4kR/bQ8xGsAsBRgyvxRqOPr
+X-Google-Smtp-Source: AGHT+IF6kRQojTr3O2i9DG8mL7DMuXbV8rMwlD9TonhoHxqzG4+HoL+1QVcxeETXqNSATHlBkNqfyw==
+X-Received: by 2002:a05:6808:1a0e:b0:409:f8e:7274 with SMTP id 5614622812f47-40b88e07cbamr163963b6e.18.1751405983560;
+        Tue, 01 Jul 2025 14:39:43 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:70a7:ca49:a250:f1d5])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b3243deeesm2288335b6e.48.2025.07.01.14.39.39
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b3243deeesm2288335b6e.48.2025.07.01.14.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 14:39:39 -0700 (PDT)
+        Tue, 01 Jul 2025 14:39:43 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 01 Jul 2025 16:37:57 -0500
-Subject: [PATCH v3 09/12] dt-bindings: trigger-source: add ADI Util
- Sigma-Delta SPI
+Date: Tue, 01 Jul 2025 16:38:00 -0500
+Subject: [PATCH v3 12/12] iio: adc: ad7173: add SPI offload support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-9-42abb83e3dac@baylibre.com>
+Message-Id: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-12-42abb83e3dac@baylibre.com>
 References: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
 In-Reply-To: <20250701-iio-adc-ad7173-add-spi-offload-support-v3-0-42abb83e3dac@baylibre.com>
 To: Michael Hennerich <Michael.Hennerich@analog.com>, 
@@ -82,101 +81,74 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-spi@vger.kernel.org, 
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2743; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=J8Mp/XPieqvBImE5UKsEDCopSlfxADmRzvJ27VGC3to=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoZFV2RAg9UrWh2byim6y6XgK83pSq+w/TiGjkQ
- V/GFAyMNmGJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGRVdgAKCRDCzCAB/wGP
- wKCOB/9rEGilC2YevdybZ7IkreRYSNSwY+d1Z8BVD8GqtCz1NIQ5ptA04PMD5FN74ka2cAWiNXl
- YZM1UTFi/JjaOAOxXaUtOQtuj0yv0Ukzcj0pWmfJBUbmPwZvwoiMi5g3r3Wif9QTtZi371jLzFJ
- UgnUluQ1myrVGl8uxd9FFIh0EG5cytSoAyr3S2MI9B5T5Cd/3GMu5tosDRn6vL9NjYzZchYqgVL
- PScjjENLODQKiwDvz3RFc6bZ0bokJI/OYdIvzDLr2JeeboXbvCWeb0T/+5BqEY+ZhVAimfjU12+
- y+PYY7O8zNaCfkOm9hMHZ0kwLlTdEsbimaRuq9rCT4RACRat
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2110; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=x4deODr2J/B/ZfZk3+/1/BV8bYxvy5G2y6ggy6cAeUc=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoZFWKFauMI32n+rVJ4X53stwAqiiUvPd+u9cFp
+ uvVIaRAIL+JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaGRVigAKCRDCzCAB/wGP
+ wE4UCACbCLWfN9b147eeF/3FnSESrviOzb6Fu37NJlnlvMpDCeG1q6ArK8xrmF+fw25/vektB7i
+ h24Bm6GTgyEVq+Q0MOPABO9fDJL2uSWaRuVrRrqVr/I9AbRWr5dIfxqQJGtMT/VYQwGAMcVp3h3
+ BKUeRv4tRjoETflevaU6psSJMOPzxt3XW7qTSYHuoYAZgWKFvqj9OJqtXTPaBmFuhtx83Jf7WCm
+ sjQKKjGVOsn+yZ7Rzlpy34BGCYtFC/SsI1QHMxSe2idYDvGQZlJE5f7SFF9BNCb0VPGmd9A3Rah
+ SAjh5D/znRiJRVMB4W6hFq60UKW28JwAD9k7EOd0B3ZEBd/b
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Add new binding for the ADI Util Sigma-Delta SPI FPGA IP Core.
+Enable SPI offload support for the AD7173 ADC driver.
 
-This is used to trigger a SPI offload based on a RDY signal from the
-ADC while masking out other signals on the same line.
+The scan_type used for SPI offload is assuming that we are using the
+ad411x_ad717x HDL project [1] which always stores data words in 32-bits.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Link: https://analogdevicesinc.github.io/hdl/projects/ad411x_ad717x/index.html [1]
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- .../trigger-source/adi,util-sigma-delta-spi.yaml   | 49 ++++++++++++++++++++++
- MAINTAINERS                                        |  5 +++
- 2 files changed, 54 insertions(+)
+ drivers/iio/adc/ad7173.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml b/Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..ea466179551cb0d8f8e1cf01f91101b88734da88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (c) 2025 Analog Devices, Inc.
-+# Copyright (c) 2025 BayLibre, SAS
-+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/trigger-source/adi,util-sigma-delta-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices Util Sigma-Delta SPI IP Core
-+
-+maintainers:
-+  - David Lechner <dlechner@baylibre.com>
-+
-+description:
-+  The Util Sigma-Delta SPI is an FPGA IP core from Analog Devices that provides
-+  a SPI offload trigger from the RDY signal of the combined DOUT/RDY pin of
-+  the sigma-delta family of ADCs.
-+  https://analogdevicesinc.github.io/hdl/library/util_sigma_delta_spi/index.html
-+
-+properties:
-+  compatible:
-+    const: adi,util-sigma-delta-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#trigger-source-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#trigger-source-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    trigger@40000 {
-+        reg = <0x40000 0x1000>;
-+        compatible = "adi,util-sigma-delta-spi";
-+        clocks = <&clk 0>;
-+        #trigger-source-cells = <0>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea082c6be8acd5081d95bbada99ae47793f206e5..60ba572be7f5b48c0ab1d0d9724e19e335e8761b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25176,6 +25176,11 @@ W:	https://github.com/srcres258/linux-doc
- T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
- F:	Documentation/translations/zh_TW/
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 010339c2b7044da4b36dc894a38a145c2fcccd6a..580d4bf3366b193fa0f13d0a28886d390e1295b8 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -748,6 +748,7 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_4_slots = {
+ 	.set_mode = ad7173_set_mode,
+ 	.has_registers = true,
+ 	.has_named_irqs = true,
++	.supports_spi_offload = true,
+ 	.addr_shift = 0,
+ 	.read_mask = BIT(6),
+ 	.status_ch_mask = GENMASK(3, 0),
+@@ -764,6 +765,7 @@ static const struct ad_sigma_delta_info ad7173_sigma_delta_info_8_slots = {
+ 	.set_mode = ad7173_set_mode,
+ 	.has_registers = true,
+ 	.has_named_irqs = true,
++	.supports_spi_offload = true,
+ 	.addr_shift = 0,
+ 	.read_mask = BIT(6),
+ 	.status_ch_mask = GENMASK(3, 0),
+@@ -1585,6 +1587,11 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+ 		if (st->info->data_reg_only_16bit)
+ 			chan_arr[chan_index].scan_type = ad4113_scan_type;
  
-+TRIGGER SOURCE - ADI UTIL SIGMA DELTA SPI
-+M:	David Lechner <dlechner@baylibre.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/trigger-source/adi,util-sigma-delta-spi.yaml
++		if (ad_sigma_delta_has_spi_offload(&st->sd)) {
++			chan_arr[chan_index].scan_type.storagebits = 32;
++			chan_arr[chan_index].scan_type.endianness = IIO_CPU;
++		}
 +
- TRIGGER SOURCE - PWM
- M:	David Lechner <dlechner@baylibre.com>
- S:	Maintained
+ 		chan_index++;
+ 	}
+ 
+@@ -1675,6 +1682,12 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+ 		if (st->info->data_reg_only_16bit)
+ 			chan_arr[chan_index].scan_type = ad4113_scan_type;
+ 
++		/* Assuming SPI offload is ad411x_ad717x HDL project. */
++		if (ad_sigma_delta_has_spi_offload(&st->sd)) {
++			chan_arr[chan_index].scan_type.storagebits = 32;
++			chan_arr[chan_index].scan_type.endianness = IIO_CPU;
++		}
++
+ 		chan_index++;
+ 	}
+ 	return 0;
 
 -- 
 2.43.0
