@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E88C27FD5B;
-	Tue,  1 Jul 2025 19:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B6128136E;
+	Tue,  1 Jul 2025 19:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751399005; cv=none; b=dQhFCPGIZahqqFMNd71y4KTT4/OP2OryFvv2WUp5j3iZxTaaIheGq68Q768S/6vvsakHta3eqxv1n/83Mdk9394h8ZTvXLdqCy7n1q3jXuMzY5MnJL82cRiSiewgPccbLDLOu3Ow0koPrRtqR5G5Eg2roS7LzM91VcY6xq5fIgM=
+	t=1751399038; cv=none; b=kELBfqLkr9OfKPw2BL4QesAbH8ubSVJ2xvr4es29WARr8B6UmMDwj0nUeFx8Nu8QUyksrXMgz8Mfhd8aa36hiDA4kvBrQ36XD8UD1EFO7u+MuKuWN/vjmyOZp8rM44E24OEm0EF5YobejCJRRVA1QeLwmX3mrytnDojLutzQFII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751399005; c=relaxed/simple;
-	bh=icZlz7R3vFdcA2pibeP+QCTT5PR2YOh1fqsef7gF+y4=;
+	s=arc-20240116; t=1751399038; c=relaxed/simple;
+	bh=YHWVpqomr7XSftU5O/rbq46bOk35329T72HjY7oYZWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYwec1okWwQGY/4AfIOYxAwUhMraiGu3qcm6KuUyfK2x99JQp7nK4oQV9bIHWNgIIhrthbNDMkq5iIVBPCgQrH31iQOqGS3kYiOmTJHHWeulCRRrbEmXDgJm6saOGia47GQBPioqWw7V/YO+DexaBtCUh5t9a1nDGNUco9+OLQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJO3hgps; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gst5SA6310ELUSMfGTreK03mpAdsKQl8mlZP/mFadTo0rcZt0xZsDP5CGqa4MB1hC6v4O8qRFU4j8bc4ekFu+bsCdDTka2E2QWmOYITatjKhZpxBLMYKytHcIzaPFjoTOHpIS6O2ytCcpRTQ5AE9jQ0l4grvS4p2x9akoa1sk7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQDXDVy3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJO3hgps"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F3FC4CEEB;
-	Tue,  1 Jul 2025 19:43:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQDXDVy3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CF6C4CEEB;
+	Tue,  1 Jul 2025 19:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751399004;
-	bh=icZlz7R3vFdcA2pibeP+QCTT5PR2YOh1fqsef7gF+y4=;
+	s=k20201202; t=1751399037;
+	bh=YHWVpqomr7XSftU5O/rbq46bOk35329T72HjY7oYZWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AJO3hgps6FUm7R0t9OL9DPJi5Ez5Q93dfx8OdoJkNwHqI7BasTJ364lgeCqvlgwp6
-	 gfFbNHUdrsnbwspX0G2YIESwpVbouSN1GQHE+NmZh4v12mXE/EwT3WJNdpWPpj635X
-	 lzqyHCFzpuhgydcgQHaAc/QT2b+MUdo4h/zVuAbiqYNRrX1XFTeqRsJwj1FslIQDQa
-	 7cwb8JpoHw0yOMc91FbxCFm2ZU66jTOj92hPjE6gDSQKxOdp8Gl5VyQFKT/1c65IXk
-	 njyJbefEuBJbtO1cIqLY4Nv7KOOzPp2SDkrOnwfvBesdf4neC0OyCTybxRpP55q8XV
-	 UTsJde//14HSQ==
-Date: Tue, 1 Jul 2025 20:43:21 +0100
-From: Simon Horman <horms@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jiri Pirko <jiri@resnulli.us>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ido Schimmel <idosch@mellanox.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net] lib: test_objagg: Set error message in
- check_expect_hints_stats()
-Message-ID: <20250701194321.GB41770@horms.kernel.org>
-References: <8548f423-2e3b-4bb7-b816-5041de2762aa@sabinyo.mountain>
+	b=rQDXDVy3ZKakm5WAJdfVIKx08TcO85H8tT3HOcSYLKPL/qca/hS3RR704o7q5AXVi
+	 yIejjXkd9c6G/Po6Ka+wrYFvmR9JrnqjRiX/oSD2gu8669fK24/94LnPDLnuCqcgY6
+	 9jGc9dmCmuXNLHJygKpop1tr8B5JB5Z9PChrYFN2RsxRoxXAW6RZmTWZ+otI07EI9B
+	 nmBW5rth4IJH7a7/zS5fOmoP6FvwYCbgr3cul9J9vf7iiqEVy12qbkggnZjTygInPJ
+	 dbstu3lXbKNH3EcKeFsomP9Zp1KtGkw+lhixVgoVSssHCLoKrEiu34tqb732+rU77x
+	 oGIvZLs6wgmdA==
+Date: Tue, 1 Jul 2025 15:43:54 -0400
+From: Keith Busch <kbusch@kernel.org>
+To: Ben Copeland <ben.copeland@linaro.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, axboe@kernel.dk,
+	sagi@grimberg.me, iommu@lists.linux.dev
+Subject: Re: next-20250627: IOMMU DMA warning during NVMe I/O completion
+ after 06cae0e3f61c
+Message-ID: <aGQ6eiL22KIMjSGo@kbusch-mbp>
+References: <CAL0q8a6pOBZbWYdwKzC1U-PuH4rgf2miv0jcF=fWVZt_dUZHmw@mail.gmail.com>
+ <20250630133343.GA26040@lst.de>
+ <CAL0q8a7sE4a00ehKrkyepA_xA3Z2HiGv0LazvYe=2NciTkkPFQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,22 +48,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8548f423-2e3b-4bb7-b816-5041de2762aa@sabinyo.mountain>
+In-Reply-To: <CAL0q8a7sE4a00ehKrkyepA_xA3Z2HiGv0LazvYe=2NciTkkPFQ@mail.gmail.com>
 
-On Mon, Jun 30, 2025 at 02:36:40PM -0500, Dan Carpenter wrote:
-> Smatch complains that the error message isn't set in the caller:
+On Mon, Jun 30, 2025 at 08:51:01PM +0100, Ben Copeland wrote:
 > 
->     lib/test_objagg.c:923 test_hints_case2()
->     error: uninitialized symbol 'errmsg'.
-> 
-> This static checker warning only showed up after a recent refactoring
-> but the bug dates back to when the code was originally added.  This
-> likely doesn't affect anything in real life.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/r/202506281403.DsuyHFTZ-lkp@intel.com/
-> Fixes: 0a020d416d0a ("lib: introduce initial implementation of object aggregation manager")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> [    1.083447] arm-smmu-v3 arm-smmu-v3.16.auto: option mask 0x0
+> [    1.083460] arm-smmu-v3 arm-smmu-v3.16.auto: IDR0.HTTU features(0x600000) overridden by FW configuration (0x0)
+> [    1.083463] arm-smmu-v3 arm-smmu-v3.16.auto: ias 48-bit, oas 48-bit (features 0x0094dfef)
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Neat, I have machine with the same. The iommu granularity appears to be
+able to take on various values, so let's see what the iommu group's
+pgsize_bitmap is on mine with some bpf and drgn magic:
 
+  # bpftrace -e 'kfunc:iommu_group_show_type { printf("iommu_group: 0x%lx\n", args->group); }' &
+  # cat /sys/kernel/iommu_groups/0/type
+  iommu_group: 0xffff0000b54d0600
+
+  # drgn
+  >>> hex(Object(prog, "struct iommu_group *", 0xffff0000b54d0600).default_domain.pgsize_bitmap)
+  '0x20010000'
+
+So 64k is the minimum iommu granularity in its current configuration.
+Definitely too big to guarantee coalescing nvme segments, so if yours is
+similarly configured, that explains why it takes the path you're taking.
