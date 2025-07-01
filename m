@@ -1,61 +1,82 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F2226FDBF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D8E242D8C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751367450; cv=none; b=S7/Wwz8w5aJ4idhXq9FzO2BuwmXBCYXVXRP/TNLE7Pwd/QcQefeK2rE/xyzujkSgucb4Rod+DkstkFAn2TcozmHaDL7824/NBT1mR3iRBOmR7P0Y+0LA1UOKv9TtHt5df9zDrTywyEXxiUJywD8W0xfnxkfCoP2LgvogRJCRi/4=
+	t=1751367483; cv=none; b=BQSp3DFNR7Xs5wqfjgguoNpI5gN7m6Jo3lSaIvX9+VGmA+D8eRJDgg6epqPWJvdwkbzJPI0Dx59KjHYK6yWKvG2sOBrV7TxtWB1zqmYI0wqAz2PUCqRbPUnqGo9pBRtDGmWeTdlb/vlKzcygEAFGbWCZEEh9GHZq1I5shSVd1rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751367450; c=relaxed/simple;
-	bh=ftv7pVuinJ5d4nOxRWwwJVUCVuiqM8xxyJRty2MSDrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mv/XPIJBIbxnAjTYV+jL6Ihl1UlNPOwGEKko08LdMu3AT9cMiUUcPxGbgn4Z9VCTunqapqSXKK+5S6ELGS+3hk3g2UkMlrVoOeEZxpwqM9VPcJh2vukn3N/eyeucxujaVokCq6ugQML0xYTFH2ONmHzD031Dk+F1cnNz5hFhls0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=df7cb.de; spf=pass smtp.mailfrom=df7cb.de; dkim=pass (2048-bit key) header.d=df7cb.de header.i=@df7cb.de header.b=UuhjCDFh; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=df7cb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=df7cb.de
+	s=arc-20240116; t=1751367483; c=relaxed/simple;
+	bh=69skJtRKFUn7zDpOwVUIh2uP80P8co6NUJyIRIhpXI0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jUFANGPtPSNAPYsxgiP8bJUHwLXZcrLgk3x6f7nI8fHl3d4ljhXBHGx17yFz7lfPtD2WPhSdUV9Kd0fKiyHLhE1QvdlsZRW9hmlfH+Y1ZWurXwOEDjmJGk6cwtAL/yNqqZvIKPE2xxTcwqI7k6wl205irfwDKeF4BUC+TEPu8Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gNC++AjB; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=df7cb.de header.i=@df7cb.de header.b="UuhjCDFh"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bWg323FfFz9sml;
-	Tue,  1 Jul 2025 12:57:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=df7cb.de; s=MBO0001;
-	t=1751367438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftv7pVuinJ5d4nOxRWwwJVUCVuiqM8xxyJRty2MSDrk=;
-	b=UuhjCDFhzARZCR2l+YpJjzqtRaGmBIMazZPk9dgEFaActkSwXNt5u3X6FesD3Tw8cyVai1
-	/DwYVuzPmN62e+9SJLOhpBTlDKEUCKTbhGt/yRvlNshUDUTO5Bb49g34+PyzediMGyxLxC
-	Swk1YuCt4f8xGpbwT2MQKSHCBbdCSLn6+DdLwY2dQfoOjaomY3DbAj8BbaCPqkphWKj7Z0
-	gD3eK3WmezPDZhebqOu6qzDnkwtG1vsECV32UPD1qaCMwh/6+hPEZUlU654GH3/6AWbbJi
-	hXNpm1GIQLJ0AuYux3wWw3mhpMtkXqdiX5v4tp32Ayt62TxPfE4TWBzz9O+pYA==
-Date: Tue, 1 Jul 2025 12:57:17 +0200
-From: Christoph Berg <cb@df7cb.de>
-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: mm: Added modern version of shell quote and a
- stranza for required command check
-Message-ID: <aGO_Ddv1ALTejqK2@msg.df7cb.de>
-References: <20250701094603.23933-1-unixbhaskar@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gNC++AjB"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4eeed54c2so2368940f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751367481; x=1751972281; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+4pmXumBMClvdmoqj3ckb+e8tnZlkJ8riF+IbGt1/2Y=;
+        b=gNC++AjBDRTU8vWbHK1bvP+9xNR1MBDe+6oLJmUXyPTL+olnvdTxDAb1TAxU5OgG1/
+         zDKELBL2UasyHzJsgsX9BqRMSIxPHxgxKYAjynYVylw2dG4GPRvHs7itffd2DnhjpjCp
+         QFoBpD1iB9pkFPXQQ5dtLxYKfN5Do66Y8cTaWfuP0ZaA2sIsVbeyZqpH95in0NvbYbYz
+         oNazhGc33pFYQuxp9CHLPjb/+FCCqJ9K6ErpxHyHAGKeyeGd/mG5im6RlBBknb3iRNfE
+         4Vsn7L4FA4eMQ5LjbUEBgeUCG8BZ4gW0sP5NBUAe6EdLyf0Vvps0xXl9bByfym5eCepf
+         mSiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751367481; x=1751972281;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+4pmXumBMClvdmoqj3ckb+e8tnZlkJ8riF+IbGt1/2Y=;
+        b=oXHsLnsQVC3KmGke7EKxsjHrXRvA+bYzBHW84ILn19pN9SrQv2nSh3JZ+uF14HuZ8D
+         IRacNUfymbxBd/xAYKj8EBSxFH+btJorc7WZVe+T47duADPTCgxiDEqDthdZ3qhlJ4Xl
+         CCLWKPc2WxzMvThNpYh1AEVeDdlxqNKN4yUC/aRsnEZfcWpbA+GNV6V5s2OCNKrWo/B0
+         nxUdmKK7cFBYOx+WC/FaT1ImVodxyMXtWHNv1wEs78qWOGP5uj4iDawMf72fjFTYSrly
+         2XsQ03VTCsUeZ84YoTPUMpiHDYARAtgM/Y9DSdxPDJyb0AT6ribJbB+c3nI4mC2z8PXz
+         TeGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTBWF5daNLPiXMFA4HVBcOS/88Ayoe2km3LcBHKaZJuNY7CARHszMttvVCUh9D22v0oQm3rPvIaklmO3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxPJdfL79Ed+d0yTXlf4FPxmXX9VI+Q2JfKyrz9RSfNxx51j4X
+	zoifGzNRP7UGVtZ1ld4s3Zkke8BtcCwmTv9Ow3i1QxLmu+hAfcraDImVdyvoGNai1sEyRcusBRJ
+	/BvQjrMkdvSuf9oeiPw==
+X-Google-Smtp-Source: AGHT+IHVJRVexX67i++8eKSxECLv2YKxZWXGbP3lemNbo7XVNq6X7mdBDqKPr9CZGLFA4uVb+aCZ/DJFXDtvSzw=
+X-Received: from wmth7.prod.google.com ([2002:a05:600c:8b67:b0:453:910:1a18])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2905:b0:3a4:de02:208 with SMTP id ffacd0b85a97d-3a8fda34e30mr15196967f8f.25.1751367480898;
+ Tue, 01 Jul 2025 03:58:00 -0700 (PDT)
+Date: Tue, 1 Jul 2025 10:57:59 +0000
+In-Reply-To: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701094603.23933-1-unixbhaskar@gmail.com>
+Mime-Version: 1.0
+References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
+Message-ID: <aGO_N9fjmUGZ5JVx@google.com>
+Subject: Re: [PATCH v8 0/6] rust: DebugFS Bindings
+From: Alice Ryhl <aliceryhl@google.com>
+To: Matthew Maurer <mmaurer@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
+Content-Type: text/plain; charset="utf-8"
 
-> -gnuplot -p << EOF
-> +$(command -v gnuplot) -p << EOF
+On Fri, Jun 27, 2025 at 11:18:23PM +0000, Matthew Maurer wrote:
+> This series provides safe DebugFS bindings for Rust, with a sample
+> module using them.
+> 
+> Signed-off-by: Matthew Maurer <mmaurer@google.com>
 
-Why would you delegate PATH searching to `command -v` when you can
-just invoke the command directly?
+Looks good to me!
 
-Christoph
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
