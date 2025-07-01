@@ -1,102 +1,210 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B99F21D5BC;
-	Tue,  1 Jul 2025 12:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BFF2741DF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374456; cv=none; b=JghcinEAuZsswJvYx4Be8RVlSkwZ7TonxTfYLo7wEom/jGtmnha/pEJvHWc4/WxljIAR/ccznAa7ga5zWVUqakdK4cAlLKwKxY0brC3N7lAhqSyhIyzld4qPLMsmhvRHc0+WjwNnY4nNerVJn+Qh2dw/+xl3UJNMxC6PCPqLa5M=
+	t=1751374459; cv=none; b=b5TAWpUGp+vv9OElyp2uxPxX5moHcwIE7Nwnbb8BQ1iJlvVdhBw4XizbmHEoXvsc0OA9QPZss9Qv61382p9gnKDw+laBZhybnmx5zziJlrPQE822whAfXmcuQLKbeR5sQXov6DuYlRNsKZk+lFNvRIihBsPvbz+thEERAdPoysY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374456; c=relaxed/simple;
-	bh=Dm4yxBSfVhY6e3BMkI0DCmsCmNv16N07mzalzA335AU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CI6xlAKHU0xWWk9VHmU5EL6SFwyEzSiy9z1ErfABeQWWYJiCPQtuH0Q7AG59P4c5oa4MAY/wBy1/RaAjniycmu5URVxG0JfTCfJoIthyOT/Ur8wp3BYRjUPRRNLurcD0Tj31NJVS43XCFIW/8JIpY77uh52Ka7oqKjesiaZcB+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWjZb5wpBz6L4vL;
-	Tue,  1 Jul 2025 20:51:19 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 369E614038F;
-	Tue,  1 Jul 2025 20:54:10 +0800 (CST)
-Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
- 2025 14:54:09 +0200
-Date: Tue, 1 Jul 2025 13:54:08 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl: make cxl_bus_type constant
-Message-ID: <20250701135408.00003144@huawei.com>
-In-Reply-To: <2025070138-vigorous-negative-eae7@gregkh>
-References: <2025070138-vigorous-negative-eae7@gregkh>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1751374459; c=relaxed/simple;
+	bh=3gJtS77mHK7VTcYFcjrd5hF6WARIXk6d2X2+wZ3Hta4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IU20O83KXUuVjoOcPIbmPMOvaE7HX92SnP3zXpt4IY6aYwvzRInWcrnV7Hh6jtfPV3evxyQeo7dG4po8C4S44GRPPS8u1zaiNVgCuAruyoNxwcH5wv1p44mLm28vRwDw8l6PIkOHPz3OWs01wBjHVeYVb0UiyR8mZXFOuXonrlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d4Ru7rwo; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4Ru7rwo"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235e389599fso210995ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751374456; x=1751979256; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/L74aNTJbvTixP9x7JPOzIa2qX6+0XWisdXXC8NLNbk=;
+        b=d4Ru7rwoQzfB3csNgghl+4OAHNVE8nwC/hAydeK7QGvo5WMiXQI3SSloC1IqOaWsLC
+         YFc800xNEqvT0W1CmcvLe4ynmK6gDN2P2g0UrDDnWGOBSayFqeMNe/NC/nFdbkD9ptqS
+         0MbOagxwj2+1T4l/RYc8KJyzsNlX1WVKeT6z/cBy+tdmOH3bQHuviNAb+tK+VFuwMhST
+         xuimo4dGxLNb8OwJhQIkQDS8xsz+AEZq2ydUeJYjk9EpmkNgl/HZfQmGF8a0LUoLITRc
+         5J3qH+Apx1jJGDbe0iqKl0UlZzRQ13w121sPIGh2fN6BKiW/rKvm11lONNbu83egHwvE
+         cGbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751374456; x=1751979256;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/L74aNTJbvTixP9x7JPOzIa2qX6+0XWisdXXC8NLNbk=;
+        b=LmH9e+ULUxEKczrb8GIWI17kPMhMzt/zO6pa+pXTELaxZzjWeO9NWGQrJUAYIfOKCt
+         TKvKnsEJZ6Vt85xwMTwNiA5/A6UyEprDyJZqe1c/mduCoUErg1irzYnzrBdQJ4zV5KHp
+         jaAMhSEcKTGMfTrsKdx5N6j7azFTCWvKJzIutjT0auHDWLtFfzmLid2bNtrdocB2Rn7b
+         wnsCZoqplnpzyaL5TE1kcLTtDurqMP9NffIw/ufeRiDAPDs5w0d9cb9IHzJ2rbTvZ7Z7
+         mhDAJU4wc2Gf5okg/SUJtNtUpoGN/ipNg42UYtPXCvIg+WnNJ4Gju+/KTrjcrUzh3EvN
+         e37Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVN/2PONgJwF9/gH4MC2IUOGQ24iZITieZKovpWSha65ztVOQTC+ykfkQD0OzaOhhpMu7NTq5soB/M+CgY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7ZiZ971O+QqwbeaXPL+OTgHimZakKsUSDcbMs63k7SqD3/Bdr
+	Jc7+t3WPCgKVxwPVtQL9Q/av9i7LYFzLLUWUp9NpaMHGx8F/kdr/HipTGV8OuQku1g==
+X-Gm-Gg: ASbGncuzpPXVQKeNHvWjyclA9fjea0kE+c1oCsNtvwh1ImXy0fnf2hhe/f2krdUQX4J
+	zytpoIFeJLpuxaOXLGCU2leBzBNDf8FIiO8w9dqeSFPnggZ3pP/pzEGUwkP3NJCXx6kvmolTTgB
+	ZYl7EGxo5TwjSluLemkg1WEit9AKScRWanvuy/RH5qzxp6wL0LNQp8GbsNySJntKmW54PpTUPBJ
+	SyLMInT3/wqKLoVHuLIQr945xWo8z64ia+AFmoNd1hSFkUYSKO1JLpZHnAgu/878n7YiYKOFTWY
+	GhC5JzrVycevlZ5LGpLsZHvILNYF3uf2q5A3Otu1L+97JBOwlAJprvNAXamlJnjKCiGL3cDvaOI
+	UrQgJbSTz/KELDDdR9+3S
+X-Google-Smtp-Source: AGHT+IFmb6IkHO5vc0UO9aOVGDXMpB2kmzp4LmZ2sU6rPiqzBx0SBn3BZ18jaHfT4NmGETFHxk/nSg==
+X-Received: by 2002:a17:902:f688:b0:231:ed22:e230 with SMTP id d9443c01a7336-23c6010f25amr2110315ad.15.1751374455431;
+        Tue, 01 Jul 2025 05:54:15 -0700 (PDT)
+Received: from google.com (232.98.126.34.bc.googleusercontent.com. [34.126.98.232])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b7a47sm108535025ad.166.2025.07.01.05.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 05:54:13 -0700 (PDT)
+Date: Tue, 1 Jul 2025 12:54:05 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v7 19/28] iommu: Allow an input type in hw_info op
+Message-ID: <aGPabX6M2REffzjY@google.com>
+References: <cover.1750966133.git.nicolinc@nvidia.com>
+ <d8c395d6956045fd1fa1349538d29e3b6f9fada8.1750966133.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8c395d6956045fd1fa1349538d29e3b6f9fada8.1750966133.git.nicolinc@nvidia.com>
 
-On Tue,  1 Jul 2025 14:07:39 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> Now that the driver core can properly handle constant struct bus_type,
-> move the cxl_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
+On Thu, Jun 26, 2025 at 12:34:50PM -0700, Nicolin Chen wrote:
+> The hw_info uAPI will support a bidirectional data_type field that can be
+> used as an input field for user space to request for a specific info data.
 > 
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
+> To prepare for the uAPI update, change the iommu layer first:
+>  - Add a new IOMMU_HW_INFO_TYPE_DEFAULT as an input, for which driver can
+>    output its only (or firstly) supported type
+>  - Update the kdoc accordingly
+>  - Roll out the type validation in the existing drivers
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 > ---
-> v2: fix up the subject line to be correct
+>  include/linux/iommu.h                               | 3 ++-
+>  include/uapi/linux/iommufd.h                        | 4 +++-
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 4 ++++
+>  drivers/iommu/intel/iommu.c                         | 4 ++++
+>  drivers/iommu/iommufd/device.c                      | 3 +++
+>  drivers/iommu/iommufd/selftest.c                    | 4 ++++
+>  6 files changed, 20 insertions(+), 2 deletions(-)
 > 
->  drivers/cxl/core/port.c | 2 +-
->  drivers/cxl/cxl.h       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index eb46c6764d20..0696f7fcef56 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -2293,7 +2293,7 @@ static const struct attribute_group *cxl_bus_attribute_groups[] = {
->  	NULL,
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index e06a0fbe4bc7..e8b59ef54e48 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -603,7 +603,8 @@ __iommu_copy_struct_to_user(const struct iommu_user_data *dst_data,
+>   * @capable: check capability
+>   * @hw_info: report iommu hardware information. The data buffer returned by this
+>   *           op is allocated in the iommu driver and freed by the caller after
+> - *           use.
+> + *           use. @type can input a requested type and output a supported type.
+> + *           Driver should reject an unsupported data @type input
+>   * @domain_alloc: Do not use in new drivers
+>   * @domain_alloc_identity: allocate an IDENTITY domain. Drivers should prefer to
+>   *                         use identity_domain instead. This should only be used
+> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+> index f091ea072c5f..6ad361ff9b06 100644
+> --- a/include/uapi/linux/iommufd.h
+> +++ b/include/uapi/linux/iommufd.h
+> @@ -593,13 +593,15 @@ struct iommu_hw_info_arm_smmuv3 {
+>  
+>  /**
+>   * enum iommu_hw_info_type - IOMMU Hardware Info Types
+> - * @IOMMU_HW_INFO_TYPE_NONE: Used by the drivers that do not report hardware
+> + * @IOMMU_HW_INFO_TYPE_NONE: Output by the drivers that do not report hardware
+>   *                           info
+> + * @IOMMU_HW_INFO_TYPE_DEFAULT: Input to request for a default type
+>   * @IOMMU_HW_INFO_TYPE_INTEL_VTD: Intel VT-d iommu info type
+>   * @IOMMU_HW_INFO_TYPE_ARM_SMMUV3: ARM SMMUv3 iommu info type
+>   */
+>  enum iommu_hw_info_type {
+>  	IOMMU_HW_INFO_TYPE_NONE = 0,
+> +	IOMMU_HW_INFO_TYPE_DEFAULT = 0,
+>  	IOMMU_HW_INFO_TYPE_INTEL_VTD = 1,
+>  	IOMMU_HW_INFO_TYPE_ARM_SMMUV3 = 2,
 >  };
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> index 170d69162848..eb9fe1f6311a 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> @@ -15,6 +15,10 @@ void *arm_smmu_hw_info(struct device *dev, u32 *length,
+>  	u32 __iomem *base_idr;
+>  	unsigned int i;
 >  
-> -struct bus_type cxl_bus_type = {
-> +const struct bus_type cxl_bus_type = {
->  	.name = "cxl",
->  	.uevent = cxl_bus_uevent,
->  	.match = cxl_bus_match,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3f1695c96abc..e7b66ca1d423 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -815,7 +815,7 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
+> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
+> +	    *type != IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +
+>  	info = kzalloc(sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+>  		return ERR_PTR(-ENOMEM);
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 850f1a6f548c..5f75faffca15 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4098,6 +4098,10 @@ static void *intel_iommu_hw_info(struct device *dev, u32 *length,
+>  	struct intel_iommu *iommu = info->iommu;
+>  	struct iommu_hw_info_vtd *vtd;
 >  
->  bool is_cxl_region(struct device *dev);
+> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
+> +	    *type != IOMMU_HW_INFO_TYPE_INTEL_VTD)
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +
+>  	vtd = kzalloc(sizeof(*vtd), GFP_KERNEL);
+>  	if (!vtd)
+>  		return ERR_PTR(-ENOMEM);
+> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+> index 8f078fda795a..64a51993e6a1 100644
+> --- a/drivers/iommu/iommufd/device.c
+> +++ b/drivers/iommu/iommufd/device.c
+> @@ -1519,6 +1519,9 @@ int iommufd_get_hw_info(struct iommufd_ucmd *ucmd)
+>  	    cmd->__reserved[2])
+>  		return -EOPNOTSUPP;
 >  
-> -extern struct bus_type cxl_bus_type;
-> +extern const struct bus_type cxl_bus_type;
+> +	/* Clear the type field since drivers don't support a random input */
+> +	cmd->out_data_type = IOMMU_HW_INFO_TYPE_DEFAULT;
+> +
+>  	idev = iommufd_get_device(ucmd, cmd->dev_id);
+>  	if (IS_ERR(idev))
+>  		return PTR_ERR(idev);
+> diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
+> index 8b2c44b32530..a5dc36219a90 100644
+> --- a/drivers/iommu/iommufd/selftest.c
+> +++ b/drivers/iommu/iommufd/selftest.c
+> @@ -310,6 +310,10 @@ static void *mock_domain_hw_info(struct device *dev, u32 *length,
+>  {
+>  	struct iommu_test_hw_info *info;
 >  
->  struct cxl_driver {
->  	const char *name;
+> +	if (*type != IOMMU_HW_INFO_TYPE_DEFAULT &&
+> +	    *type != IOMMU_HW_INFO_TYPE_SELFTEST)
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +
+>  	info = kzalloc(sizeof(*info), GFP_KERNEL);
+>  	if (!info)
+>  		return ERR_PTR(-ENOMEM);
 
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
+
+> -- 
+> 2.43.0
+> 
