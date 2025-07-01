@@ -1,203 +1,110 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526C1237707
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B479122259D;
+	Tue,  1 Jul 2025 08:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359949; cv=none; b=aVGSbQF/9Lo5MensNCCuzgA1rXwXH1wwjrtyEtb7dSB+gt+JuA28PFU8Bz6QNluF/IJABk7C1v/1U8n9UGFKyyZJpcTk4vA3ShYOcAl+e4Oohe8L6lYcq/aUHxtHBzmKNK90dqxP4aFD1Zf6s0Ko1cPwt4xc75bqHuam/lk1Txo=
+	t=1751360061; cv=none; b=lnnCjKJZbHT4BuvrhKR3cDywyCfFT1+koYViEv7cQi+CRZrtezCVttrheZsImzl2k2XwaHowQcztwY21Si69JXA9aj0TWPZsGLs05Wsu4pawiaGv0sdOI4vs+DwyZGdlJ0iE6d9KqjA+kdJYK8Crpz3BV+c8uoSPZZfkNIWYlSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359949; c=relaxed/simple;
-	bh=65oAe0qpLcRgjSC486bat76EyBiBDhhxgd5LMUbXjzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=XQkZBwWnOC5KkOhylZb9b6Y+BaYUcYLM/d0p8gRikCCnsXLBPHkeTUhfwQMGb8XcR2ejWMA8r0JBIb2OuXDDRBzvEc2FwJeWrPMuDpoAbsyxWQ9SyixdKpQJVRVPty9Rxz/lU1L2WocNNOzX64tvadqfxKDCQwfwx7kQ7ikdopI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WypqO/7x; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751360061; c=relaxed/simple;
+	bh=Of/4Ddg4QIiyWclus1L5TZgKqEq9vPKIUPcZ8Gmo9Vc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gh3iP8qgeVfydwd9bcM7Tubuv1oQ230vf+2QbK6EwMRINXTXxGYlWuJu6GCa3suLkp/oN8GrO9u163t4zOZTtnJ4FuFLiJPE9noRyf3gsj8uy2+MqAj9L1fRVSW7oewLkCPruH5I8bBftdcMkZJmDVHxI4D4+1tjQJnsOo+I7gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XanD8PGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WypqO/7x"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250701085225euoutp02397ac8788677ba138dea96b5bce64406~OFJdosSnw2207322073euoutp02U
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:52:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250701085225euoutp02397ac8788677ba138dea96b5bce64406~OFJdosSnw2207322073euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751359945;
-	bh=jiMSvhTO3EuRijPHPyzHEcK75GqOsBl3jGoGvHtO4dI=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=WypqO/7xv2nYZLsiGJH8BavQ4NJdGsvs1gBin449bTfoI3/D/riZ4tdaL1LmVCelv
-	 MQRrGSri6TEYSs2Dw0U3Vt87LLLvD8t+tf97Csp7yNfa2beJS4IDoUSKwqaEh06DYa
-	 prdQ5MEet3kM3WhtWTerMV5Q3nq0jehFZFa+cVb8=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250701085224eucas1p2d74efed39332d4ddb82e9881a6f586a3~OFJdDOVz31375613756eucas1p2O;
-	Tue,  1 Jul 2025 08:52:24 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250701085223eusmtip207386da0b4d9ddd9eea052e444116d0c~OFJb4_9xu1783617836eusmtip2a;
-	Tue,  1 Jul 2025 08:52:23 +0000 (GMT)
-Message-ID: <425fe73f-8cb2-4238-9e15-55403ed9daf6@samsung.com>
-Date: Tue, 1 Jul 2025 10:52:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XanD8PGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870C4C4CEEB;
+	Tue,  1 Jul 2025 08:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751360061;
+	bh=Of/4Ddg4QIiyWclus1L5TZgKqEq9vPKIUPcZ8Gmo9Vc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=XanD8PGhrgq8EDkq5uz9JGplQXsgEYGCgSA153V++XcSjO5W3Ud7qs5v2Ioffqs2T
+	 q2fcw1Vt5vJob3XKmMKf91HJ7JaIWCPemvA4/iMcWPwRplRo+CSsjtsIoK4tew1CKi
+	 pEDuJLhhbgllBfaRTExbAfulgBM04tVJBy5XE1i5L8Nq8r0lwP2opgkzEG2Y0MDKt1
+	 xkPKdDXLQI7VcEWyokW2mId7lJt9ogEbnx5VREL8h15S75AN8YtJtRmGUMBsicMVsm
+	 LmWzGBgchJw4pxS4t4KC0P79C8KDEwsTAlp8UmK3X6U/9iFzGkiIIhgdvvbaHx7d/I
+	 JBQQa2na59YxA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alan Stern" <stern@rowland.harvard.edu>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>,  <linux-kernel@vger.kernel.org>,
+  <rust-for-linux@vger.kernel.org>,  <lkmm@lists.linux.dev>,
+  <linux-arch@vger.kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex
+ Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin" <lossin@kernel.org>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Will Deacon" <will@kernel.org>,
+  "Peter Zijlstra" <peterz@infradead.org>,  "Mark Rutland"
+ <mark.rutland@arm.com>,  "Wedson Almeida Filho" <wedsonaf@gmail.com>,
+  "Viresh Kumar" <viresh.kumar@linaro.org>,  "Lyude Paul"
+ <lyude@redhat.com>,  "Ingo Molnar" <mingo@kernel.org>,  "Mitchell Levy"
+ <levymitchell0@gmail.com>,  "Paul E. McKenney" <paulmck@kernel.org>,
+  "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Linus Torvalds"
+ <torvalds@linux-foundation.org>,  "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v5 04/10] rust: sync: atomic: Add generic atomics
+In-Reply-To: <7eea6ee3-4a9e-4eb5-b412-2ece02b33c6c@rowland.harvard.edu> (Alan
+	Stern's message of "Mon, 30 Jun 2025 10:44:41 -0400")
+References: <20250618164934.19817-1-boqun.feng@gmail.com>
+	<8ISRnKRw28Na4so9GDfdv0gd40nmTGOwD7hFx507xGgJ64p9s8qECsOkboryQH02IQJ4ObvqAwcLUZCKt1QwZQ==@protonmail.internalid>
+	<20250618164934.19817-5-boqun.feng@gmail.com> <8734bm1yxk.fsf@kernel.org>
+	<jJqJwkURyr0NjkFdJaF6oYbPGY4LEzZs_sfY9jlmqoK1B9iE8VjqbfINHilEHxKfmpc9co7DmsS142ZWsBQ8tw==@protonmail.internalid>
+	<aF6yRIixTPx5YZbA@Mac.home> <87jz4tzhcs.fsf@kernel.org>
+	<Xfm2JGPb6LBj7GAjuEFddz5UvwY_vFr3r-253ujBCBa4galferuILoEDKNSQcfOL-lFi65L-rTnBWAxxCE4cyg==@protonmail.internalid>
+	<7eea6ee3-4a9e-4eb5-b412-2ece02b33c6c@rowland.harvard.edu>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 01 Jul 2025 10:54:09 +0200
+Message-ID: <875xgcxpe6.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini
-	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <ayp32pdwvpko3zuatgt2jgtfxgcmrmc5aujkx6twjchmyazpz7@yeo3kxgxnpda>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250701085224eucas1p2d74efed39332d4ddb82e9881a6f586a3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
-	<CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
-	<20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
-	<q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
-	<c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
-	<ayp32pdwvpko3zuatgt2jgtfxgcmrmc5aujkx6twjchmyazpz7@yeo3kxgxnpda>
+Content-Type: text/plain
 
+"Alan Stern" <stern@rowland.harvard.edu> writes:
 
-
-On 6/29/25 11:23, Uwe Kleine-König wrote:
-> Hello Michal,
-> 
-> On Sat, Jun 28, 2025 at 04:38:15PM +0200, Michal Wilczynski wrote:
->> On 6/27/25 17:10, Uwe Kleine-König wrote:
->>> On Mon, Jun 23, 2025 at 08:08:49PM +0200, Michal Wilczynski wrote:
->>>> +/// From C: `#define WFHWSIZE 20`
->>>> +pub const WFHW_MAX_SIZE: usize = 20;
->>>
->>> Can we somehow enforce that this doesn't diverge if the C define is
->>> increased?
+> On Mon, Jun 30, 2025 at 11:52:35AM +0200, Andreas Hindborg wrote:
+>> "Boqun Feng" <boqun.feng@gmail.com> writes:
+>> > Well, a non-atomic read vs an atomic read is not a data race (for both
+>> > Rust memory model and LKMM), so your proposal is overly restricted.
 >>
->> You are absolutely right. The hardcoded value is a maintenance risk. The
->> #define is in core.c, so bindgen cannot see it.
+>> OK, my mistake then. I thought mixing marked and plain accesses would be
+>> considered a race. I got hat from
+>> `tools/memory-model/Documentation/explanation.txt`:
 >>
->> I can address this by submitting a patch to move the #define WFHWSIZE to
->> include/linux/pwm.h. This will make it part of the public API, allow
->> bindgen to generate a binding for it, and ensure the Rust code can never
->> diverge. Is this fine ?
-> 
-> I wonder if that is the opportunity to create a file
-> include/linux/pwm-provider.h. In that file we could collect all the bits
-> that are only relevant for drivers (pwm_ops, pwm_chip, pwmchip_parent,
-> pwmchip_alloc ...). (Some inline functions depend on some of these, so
-> some might have to stay in pwm.h)
-> 
-> I can address that in parallel, don't add this quest to your series. So
-> yes, move WFHWSIZE to include/linux/pwm.h (and rename it to PWM_WFHWSIZE
-> to not pollute the global namespace).
->  
->>> Please don't expose these non-atomic callbacks. pwm_disable() would be
->>> fine.
->>>
->>> Otherwise I'd prefer if pwm_set_waveform_might_sleep() is the API
->>> exposed to/by Rust.
+>>     A "data race"
+>>     occurs when there are two memory accesses such that:
 >>
+>>     1.	they access the same location,
 >>
->> OK, I'll remove all the setters from the State, while will keep the
->> getters, as they would be useful in apply callbacks.
-> 
-> How so? They might be useful for consumers, but my preferred idiom for
-> them is that they know at each point in time what they want completely
-> and don't make that dependant on the previou setting.
-
-Oh, this is not just to check the previous state, let me bring my
-implementation of apply from the v1 of the series:
-
-impl pwm::PwmOps for Th1520PwmChipData {
-    // This driver implements get_state
-   fn apply(
-        pwm_chip_ref: &mut pwm::Chip,
-        pwm_dev: &mut pwm::Device,
-        target_state: &pwm::State,
-    ) -> Result {
-        let data: &Th1520PwmChipData = pwm_chip_ref.get_drvdata().ok_or(EINVAL)?;
-        let hwpwm = pwm_dev.hwpwm();
-
-        if !target_state.enabled() {
-            if pwm_dev.state().enabled() {
-                data._disable(hwpwm)?;
-            }
-
-            return Ok(());
-        }
-
-        // Configure period, duty, and polarity.
-        // This function also latches period/duty with CFG_UPDATE.
-        // It returns the control value that was written with CFG_UPDATE set.
-        let ctrl_val_after_config = data._config(
-            hwpwm,
-            target_state.duty_cycle(),
-            target_state.period(),
-            target_state.polarity(),
-        )?;
-
-        // Enable by setting START bit if it wasn't enabled before this apply call
-        if !pwm_dev.state().enabled() {
-            data._enable(hwpwm, ctrl_val_after_config)?;
-        }
-
-        Ok(())
-    }
-}
-
-So the target state values are also accessed by those getters, not just
-previous state.
-
-> 
->> Will implement additional functions for Device i.e set_waveform,
->> round_waveform and get_waveform, and the new enum to expose the result
->> of the round_waveform more idiomatically.
+>>     2.	at least one of them is a store,
 >>
->> /// Describes the outcome of a `round_waveform` operation.
->> #[derive(Debug, Clone, Copy, PartialEq, Eq)]
->> pub enum RoundingOutcome {
->>     /// The requested waveform was achievable exactly or by rounding values down.
->>     ExactOrRoundedDown,
+>>     3.	at least one of them is plain,
 >>
->>     /// The requested waveform could only be achieved by rounding up.
->>     RoundedUp,
->> }
-> 
-> Sounds good. Hoever I have some doubts about the C semantic here, too.
-> Is it really helpful to provide that info? A user of that return value
-> has to check anyhow which parameter got rounded up. If you have an
-> opinion here, please share.
+>>     4.	they occur on different CPUs (or in different threads on the
+>>       same CPU), and
+>>
+>>     5.	they execute concurrently.
+>>
+>> I did not study all that documentation, so I might be missing a point or
+>> two.
+>
+> You missed point 2 above: at least one of the accesses has to be a
+> store.  When you're looking at a non-atomic read vs. an atomic read,
+> both of them are loads and so it isn't a data race.
 
-FWIW; In my opinion, it is helpful.
+Ah, right. I was missing the entire point made by Boqun. Thanks for
+clarifying.
 
-The 1 (rounded up) vs. 0 (rounded down/exact) return value provides a
-simple summary flag for the most common validation case: ensuring a
-strict requirement, like a minimum frequency, is not violated by
-rounding.
+Since what constitutes a race might not be immediately clear to users
+(like me), can we include the section above in the safety comment,
+rather than deferring to LKMM docs?
 
->  
-> Best regards
-> Uwe
 
 Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+Andreas Hindborg
+
+
