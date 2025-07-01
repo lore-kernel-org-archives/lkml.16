@@ -1,129 +1,119 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C486327E1D0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A11B27EFE1
 	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388307; cv=none; b=gq09XQkPNJJms719jNXbYnvUql5C9uHbJW+xCn5Y8xDVRSMwrSB2g3DHiz0hYbQNsMdcNZuF+0n1CIUreQuV1X2eUTbSN3isx8gP+LbSusgFwS/our76zvQSjS/w8Z3gUlDvjrATgI8UWX1xgnIDep+ODc047ECAlr0n9ukWd6M=
+	t=1751388310; cv=none; b=Oz+WGDjEYOkT77h2L6DSOLsVTi6kQ1Jhj+33aW5JdTeB+k/H6m423SMWoIdocwoGI57aY/qEGWSmq/GC+73Z5YGHycgeZ1gY0LL/82dr8nvpjmguKHd8fclhnUx43Tr5W0PioFnf5EMKhhzunJqTsGt8yPmPcatKnz40Byd28fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388307; c=relaxed/simple;
-	bh=bH8UpUP29svtEV9nHFedwW7yl9IehZ+zkvLo0Bhrpac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChmkTfghA1rzOIP8Wk/tjWjXV1seRbMBJUKzz18tWiGPXydTVJgHkNTTKvop8AL7iMkcg0xr5jLNuBMh6dlY+cP0RnNsSaSnm/jAu4Wx4OwbvRP4f+96HMQbGozzwY5D1Xqky54Hc1fgVxFLd1+vRsQa5QTp/iOFVEapIjBP4w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i8tVKDJT; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751388310; c=relaxed/simple;
+	bh=GSh1yLctr/h7mt17iCABMV7donflOQ990q9vmjYKMeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p0k7vuf63VxATJraNBHv5uaK+PhNSh8ZhLVB9GtjZqRXbQOXdU3KwudOj2ljy3qUU/gJnZZlkSiQNLC4vigytLTfcryLX5lzQ4wnUDxYBnHmYho4Xw1XaE6e0xIF88bdQIVmNq3h7uDE0f25hEGLzoJKEQmtBzkjjfnU16J6uJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wzp5qGce; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8tVKDJT"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d6ade159so24746395e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751388304; x=1751993104; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4hKOgFRyrKvN6yRkfPdIZSR+Sh9Aho8zTiYbOui/IAA=;
-        b=i8tVKDJTrieQAi+6apLkCiObx6SWy+HECXiugvzOVJW2RBI8T7arL2kmBGfd6P/hLr
-         uAXIZkSUItEvO5FeoGYaB2l4t3qfiz06K6CI8wcMyXR3knfo8JtSH5nwK+HscYSk0c39
-         /pFRKS0H2zHd1XWjVytL96ra3NT5bjNanlrftW6lJgaxFX8tV3vufj65Yh0BMtUybcLv
-         Ux0zOlZGDFreCfupopK8NPYCSpTFfVpVOC0gSFTg54gTqCOM7yl1OszRUFXQs5kaeidO
-         tJEqSZZ/eCINhGFYtOYF/PJq+oiHYA4ZZlTLwHoTmajgwbskZXUqI1Vsk9ONbtrMq6xa
-         Er2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751388304; x=1751993104;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4hKOgFRyrKvN6yRkfPdIZSR+Sh9Aho8zTiYbOui/IAA=;
-        b=JIhgOwDxn0xClUVjxlMGfgFNb9OZE1duARp8oCdh+OYQ6N9wABgbAy5lPa17rXKb/n
-         5I2jSF2szE8b7ZNNFVBS3CZK8+kMTuRddOKEOGwPFmiXQTO//Xj0BwmwYHv/HaTNXsyg
-         e3eIPq1iqSBsjaNEMuqlDzFpehOn9WUESq+lwJu2PdXG/oBp/gfTi2nOCsTtvClb5853
-         xYfA4xfsDfWA9YYa2w+MAmH5v7gMs1ACdwm2ByVReuDGNfueS4vdXfvT+/peVwWIpWQn
-         O3O9BNCa6jS8sNqHDumiGCLbisbS3O6dtCfAa96wLvRUONtmGimISPAF4mfhdC7OiYhq
-         kj9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUt3lcS0vk7FJd4VInmgBC8BkHxedy0aCNAkh4POTKAQ0ojH39jZcbgCEkilOY6Kg+1eZ6jxIAaLt9KoA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWBp4t8WWm+f4a3IBOLu3LmiMUMUUdHRHhujmLwYAiqBaKApTq
-	bOphIRTSPNDzuPeYBDdDYfhmeg3fjZDqvql18ISUrMk2iNxq1mZw0uXJ
-X-Gm-Gg: ASbGnctDQVQsYmWUkG7fcS5yj+fkz7q+fLHxbmpCkrNws8ZmquQiySsbX/SG+cjiYRb
-	jUixcf55snuezonVbLbD9EBPuw9+dZ890KTkxQDy29715Rnx9+aCpBvphEfBzLz520/qm81/0w7
-	yQWlvnAQ4uK5QS58Y/W/f9faUMT0UHh3IsO425L5okePKFzuxoXJvkN9xGaYXfxvXyf9imjaYxA
-	1RX/nXHQEsLXT3QPyv4nGfgMGTFHEx99m4shHdx6wlCFR8qCvJSBnh9QTZpSoGb3xYNZ8hSD38y
-	h13NeLy5SskGEcjxE4BANe5iDtpge4oLBVxEDWcS1EDqQAAkJO9ful3RiPM=
-X-Google-Smtp-Source: AGHT+IG1z6GBA6ZOBEYtIe0WmFkvvXf7ObumyBaaSDScfclwPT6cObKXoKOx+J5NUqkR/o4xYrlWKQ==
-X-Received: by 2002:a05:6000:4615:b0:3a4:eed9:755d with SMTP id ffacd0b85a97d-3a8f577fe74mr14565833f8f.3.1751388303734;
-        Tue, 01 Jul 2025 09:45:03 -0700 (PDT)
-Received: from fedora ([94.73.34.56])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3ac6ee0d0b9sm8077315f8f.18.2025.07.01.09.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:45:03 -0700 (PDT)
-Date: Tue, 1 Jul 2025 18:45:01 +0200
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Michel =?iso-8859-1?Q?D=E4nzer?= <michel.daenzer@mailbox.org>
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	lumag@kernel.org, cristian.ciocaltea@collabora.com,
-	gcarlos@disroot.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/tests: Fix endian warning
-Message-ID: <aGQQjTUrG8-p8qAC@fedora>
-References: <20250630090054.353246-1-jose.exposito89@gmail.com>
- <6c2e44cc-c01a-4331-b139-152ccdbd0401@mailbox.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wzp5qGce"
+Message-ID: <34647b2e-3d9d-42db-9851-34ad8621af02@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751388303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hdTOqogTp5JqM4b0+vAKcrKmgEFcq8WvFyC5EnR/3bg=;
+	b=Wzp5qGceGGl95r7D/0lKItVPsPO6qNrVY7lEmWjLAGnLkqaIy2i+/rkJvKWAmC7S0fs0w0
+	yTIWAk7S2uKU5znFYHxgjaUy2KY+6aBQepouQEfpE4CtempkqY8gkBezWqdM0GPVlkJYWK
+	sD7ARAAqL74oHVw5FGR3QlI77hxl8ig=
+Date: Tue, 1 Jul 2025 12:44:55 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH net-next v2 13/18] net: macb: avoid double endianness swap
+ in macb_set_hwaddr()
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+ Harini Katakam <harini.katakam@xilinx.com>,
+ Rafal Ozieblo <rafalo@cadence.com>,
+ Haavard Skinnemoen <hskinnemoen@atmel.com>, Jeff Garzik <jeff@garzik.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mips@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+ <20250627-macb-v2-13-ff8207d0bb77@bootlin.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250627-macb-v2-13-ff8207d0bb77@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6c2e44cc-c01a-4331-b139-152ccdbd0401@mailbox.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hey Michel,
-
-Thanks for looking into this.
-
-On Tue, Jul 01, 2025 at 10:22:13AM +0200, Michel Dänzer wrote:
-> On 30.06.25 11:00, José Expósito wrote:
-> > When compiling with sparse enabled, this warning is thrown:
-> > 
-> >   warning: incorrect type in argument 2 (different base types)
-> >      expected restricted __le32 const [usertype] *buf
-> >      got unsigned int [usertype] *[assigned] buf
-> > 
-> > Add a cast to fix it.
-> > 
-> > Fixes: 453114319699 ("drm/format-helper: Add KUnit tests for drm_fb_xrgb8888_to_xrgb2101010()")
-> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > ---
-> >  drivers/gpu/drm/tests/drm_format_helper_test.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/tests/drm_format_helper_test.c b/drivers/gpu/drm/tests/drm_format_helper_test.c
-> > index 7299fa8971ce..86829e1cb7f0 100644
-> > --- a/drivers/gpu/drm/tests/drm_format_helper_test.c
-> > +++ b/drivers/gpu/drm/tests/drm_format_helper_test.c
-> > @@ -1033,7 +1033,7 @@ static void drm_test_fb_xrgb8888_to_xrgb2101010(struct kunit *test)
-> >  		NULL : &result->dst_pitch;
-> >  
-> >  	drm_fb_xrgb8888_to_xrgb2101010(&dst, dst_pitch, &src, &fb, &params->clip, &fmtcnv_state);
-> > -	buf = le32buf_to_cpu(test, buf, dst_size / sizeof(u32));
-> > +	buf = le32buf_to_cpu(test, (__force const __le32 *)buf, dst_size / sizeof(u32));
-> >  	KUNIT_EXPECT_MEMEQ(test, buf, result->expected, dst_size);
-> >  
-> >  	buf = dst.vaddr; /* restore original value of buf */
+On 6/27/25 05:08, ThÃ©o Lebrun wrote:
+> writel() does a CPU->LE conversion. Drop manual cpu_to_le*() calls.
 > 
-> It might be cleaner to use two separate variables instead of using "buf" as both little endian and host byte order. (Same for patch 2)
-
-Yes, however, the same pattern is repeated 10 times in this file.
-
-What do you think about fixing it in a follow up? I don't think it
-should block fixing the KUnit tests.
-
-Jose
-
+> On little-endian system:
+>  - cpu_to_le32() is a no-op (LE->LE),
+>  - writel() is a no-op (LE->LE),
+>  - dev_addr will therefore not be swapped and written as-is.
 > 
-> -- 
-> Earthling Michel Dänzer       \        GNOME / Xwayland / Mesa developer
-> https://redhat.com             \               Libre software enthusiast
+> On big-endian system:
+>  - cpu_to_le32() is a swap (BE->LE),
+>  - writel() is a swap (BE->LE),
+>  - dev_addr will therefore be swapped twice and written as a BE value.
+> 
+> This was found using sparse:
+>    âŸ© make C=2 drivers/net/ethernet/cadence/macb_main.o
+>    warning: incorrect type in assignment (different base types)
+>       expected unsigned int [usertype] bottom
+>       got restricted __le32 [usertype]
+>    warning: incorrect type in assignment (different base types)
+>       expected unsigned short [usertype] top
+>       got restricted __le16 [usertype]
+>    ...
+> 
+> Fixes: 89e5785fc8a6 ("[PATCH] Atmel MACB ethernet driver")
+> Signed-off-by: ThÃ©o Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  drivers/net/ethernet/cadence/macb_main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index 578e72c7727d4f578478ff2b3d0a6316327271b1..34223dad2d01ae4bcefc0823c868a67f59435638 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -265,9 +265,9 @@ static void macb_set_hwaddr(struct macb *bp)
+>  	u32 bottom;
+>  	u16 top;
+>  
+> -	bottom = cpu_to_le32(*((u32 *)bp->dev->dev_addr));
+> +	bottom = *((u32 *)bp->dev->dev_addr);
+>  	macb_or_gem_writel(bp, SA1B, bottom);
+> -	top = cpu_to_le16(*((u16 *)(bp->dev->dev_addr + 4)));
+> +	top = *((u16 *)(bp->dev->dev_addr + 4));>  	macb_or_gem_writel(bp, SA1T, top);
+>  
+>  	if (gem_has_ptp(bp)) {
+> 
+
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
