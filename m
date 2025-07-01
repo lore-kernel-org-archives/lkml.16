@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7A258CE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D244259CB6;
 	Tue,  1 Jul 2025 06:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751350019; cv=none; b=nj8LW0xcjEs7EYrpd8AK0bgZhRv6old5YAy54ur09KR9M5bAFG2Lf/o8BUDhpnZdAWWohBA9QkYkLYK0EUjySS1T+389PJl55p5t4gT17hxaeoL1uMAayStaBSyFF//r+rTCz89fKZp012nr/O+odSV1nta3HwUW7Z7JF7LupM8=
+	t=1751350019; cv=none; b=mob5yJv/JB8nzAkofmDVItwDjxEpdb46VTHO6wcUMw/Ms1gQjgbWtT70TfIWXCIy4U8ca4cdO65SW0lsX0h/aFzrmh8fR7K68zcJZfbbkPfbTS7/svHD76js6ypJOmrBbFzWGG4f0HN3bNG99V9rhGHE7dNaj6t+E/wzp/ucIgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751350019; c=relaxed/simple;
-	bh=AUPv/TDoKd6ieMqlLaY3QqCSEU6AU3dk77+aCznD0MM=;
+	bh=5Pav8V9VB0A2Evtx5YnrsDuOOf1sUe6+PqhJkZFypT4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tlAQPvlspAI/OPlRY0eXuQVtuRJMPBEmqKb3XfbsUfLSde7ClUNl4xWPFPkAKDVNO8HPQzJDSUG/+d0usU4NUlrr46lZ+iJmGIW/KowHnr9I6bkTtgjVOnj8qVX4qgonZcgnBqIGFx95j8DEvvvqTWT5ym8yEGpcrklTWK8PIIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hdv65AWu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=p9j0HObrvO8ygvwbeZBOcuJgF7iwABvEFI8LTJLgd0pUuaQjA2SxI9FCA8wQ4Hge/RNQQ9ma/uHah322sjP1LfrX75gE0vn9lhM6PvTvfV1jwQorSdYuu8ZQ/yaw7FnPXMryan1l57iYRBKB9HDLc3aNvXWjeBp4d1dcIvikQ5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVh8fn3T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hdv65AWu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1D449C4AF15;
-	Tue,  1 Jul 2025 06:06:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVh8fn3T"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0FF4C4CEFC;
+	Tue,  1 Jul 2025 06:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751350019;
-	bh=AUPv/TDoKd6ieMqlLaY3QqCSEU6AU3dk77+aCznD0MM=;
+	s=k20201202; t=1751350018;
+	bh=5Pav8V9VB0A2Evtx5YnrsDuOOf1sUe6+PqhJkZFypT4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Hdv65AWu04h6Y+USEVMjghPvOQN02pbP1+0CfOVD0eJ4F6lm2xh+1pyARpHMdi3Kc
-	 BRmc8JrRIp7QNtdqsB5w0Rr/i81WVqrJas0Wcc32MlMeJfESAuoFSjnE545HiJkmQN
-	 hTP9+iL78qgB/Pjgl6+gjl8SsKklixEXE6vSGcudhZP6m75OwR9vsJI4eKptuDiXg1
-	 hU1tTUabAMOEaZx6Ir8bkbAQTO5Nbf0sF3CqtcnuvnQ3SZQVbds7eB73VE9C9XdL+y
-	 uCXlitWi7eiDCweOUWbH50tq3DCTp8iOMlHDBFIC1oSmG7wRPTnXrrYbjo0BXwm3qc
-	 wltqAa9uaj9eg==
+	b=ZVh8fn3T4zW6iHuT8wRYnefd9cyhL7yiljwZDUoJv0xsJ+4Q0cvkb2xcM9K3mgoEw
+	 YlkT3HP7nlPpIK0qf6oLJl6sMZgtSpmmJd+mlc8MHU6DoE3UNEp/MFmDIiFV0zVt/9
+	 AVSP8EVfpOEFtpn42rK6UP/y8Ty0a+mF7ipxyWqE3jwuVUQEfN4/WczpoIImig9YI6
+	 9sFkSdfIWXRlnM73XyYNcrc3Won3W4yJteQYZR+Dl2qIGF7Ehr7JN9v+FDrZ7KIRak
+	 ibFwQOkSOu3C9Bhle0nnzso7l+dDsr5g7Q3ij7/BWbQG1KuU3yPjydnpTvyiIDulyX
+	 ZOWo5DE8jUmig==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1631AC8302F;
-	Tue,  1 Jul 2025 06:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D62C7EE30;
+	Tue,  1 Jul 2025 06:06:58 +0000 (UTC)
 From: Max Shevchenko via B4 Relay <devnull+wctrl.proton.me@kernel.org>
-Date: Tue, 01 Jul 2025 09:07:05 +0300
-Subject: [PATCH v3 11/11] ARM: dts: mediatek: add basic support for Lenovo
- A369i board
+Date: Tue, 01 Jul 2025 09:07:00 +0300
+Subject: [PATCH v3 06/11] dt-bindings: arm: mediatek: add boards based on
+ the MT6572 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-mt6572-v3-11-8937cfa33f95@proton.me>
+Message-Id: <20250701-mt6572-v3-6-8937cfa33f95@proton.me>
 References: <20250701-mt6572-v3-0-8937cfa33f95@proton.me>
 In-Reply-To: <20250701-mt6572-v3-0-8937cfa33f95@proton.me>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -60,11 +60,11 @@ Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
  linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org, 
  Max Shevchenko <wctrl@proton.me>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751350015; l=2277;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751350015; l=1042;
  i=wctrl@proton.me; s=20250603; h=from:subject:message-id;
- bh=4u8PvwUsCoKzaBq7UBptniJ7BDz8n6fIUr+Q5q3mwbA=;
- b=Uzj5mcLQClajwlRJViaDK/g+mUwo+Ycev+dFwwINpM/yRdOPnJlTia8HWmEl+Cj5f5xt1nV4c
- OpIhwLTD21ZDdZUG46gR9BxG/ZM5Ene4w7zv/531j6oYrzLjCyuMgys
+ bh=aasPAy4R2Eyq141uUK+jisQoQdVg2nuqlXN6Ma5cC9E=;
+ b=fZeS3RZRC3LKqShMbyogasQH0ojFa++T6EM2RautMix1AyZiphvIcq1+Yvo4Jzz42x7uZeH9h
+ 8Tq65Nc76eSDGFAMAh62Gn1En1ctyXy9CsTxPjhmctYHB76qjRvVkVO
 X-Developer-Key: i=wctrl@proton.me; a=ed25519;
  pk=JXUx3mL/OrnRvbK57HXgugBjEBKq4QgDKJqp7BALm74=
 X-Endpoint-Received: by B4 Relay for wctrl@proton.me/20250603 with
@@ -74,90 +74,31 @@ Reply-To: wctrl@proton.me
 
 From: Max Shevchenko <wctrl@proton.me>
 
-This smartphone uses a MediaTek MT6572 system-on-chip with 512MB of RAM.
-It can currently boot into initramfs with a working UART and
-Simple Framebuffer using already initialized panel by the bootloader.
+Add entries for the JTY D101 tablet and the Lenovo A369i smartphone.
 
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Max Shevchenko <wctrl@proton.me>
 ---
- arch/arm/boot/dts/mediatek/Makefile                |  1 +
- arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts | 56 ++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mediatek/Makefile b/arch/arm/boot/dts/mediatek/Makefile
-index cb869a1aaec21a1d99f7f2a829b84672a3f52726..e48de3efeb3b9ab00108cc28afa8da525d0ec14a 100644
---- a/arch/arm/boot/dts/mediatek/Makefile
-+++ b/arch/arm/boot/dts/mediatek/Makefile
-@@ -2,6 +2,7 @@
- dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt2701-evb.dtb \
- 	mt6572-jty-d101.dtb \
-+	mt6572-lenovo-a369i.dtb \
- 	mt6580-evbp1.dtb \
- 	mt6582-prestigio-pmt5008-3g.dtb \
- 	mt6589-aquaris5.dtb \
-diff --git a/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts b/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..523e93647fdcf564404b720abe35ec7322cffa1e
---- /dev/null
-+++ b/arch/arm/boot/dts/mediatek/mt6572-lenovo-a369i.dts
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025 Max Shevchenko <wctrl@proton.me>
-+ */
-+
-+/dts-v1/;
-+#include "mt6572.dtsi"
-+
-+/ {
-+	model = "Lenovo A369i";
-+	compatible = "lenovo,a369i", "mediatek,mt6572";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		stdout-path = "serial0:921600n8";
-+
-+		framebuffer: framebuffer@9fa00000 {
-+			compatible = "simple-framebuffer";
-+			memory-region = <&framebuffer_reserved>;
-+			width = <480>;
-+			height = <800>;
-+			stride = <(480 * 2)>;
-+			format = "r5g6b5";
-+		};
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		connsys@80000000 {
-+			reg = <0x80000000 0x100000>;
-+			no-map;
-+		};
-+
-+		framebuffer_reserved: framebuffer@9fa00000 {
-+			reg = <0x9fa00000 0x600000>;
-+			no-map;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+index 108ae5e0185d93976556a03768595961961bcc33..d5cb133b8a75fb5325f201f10c83bbe434a1da89 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.yaml
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -27,6 +27,11 @@ properties:
+           - enum:
+               - mediatek,mt2712-evb
+           - const: mediatek,mt2712
++      - items:
++          - enum:
++              - jty,d101
++              - lenovo,a369i
++          - const: mediatek,mt6572
+       - items:
+           - enum:
+               - mediatek,mt6580-evbp1
 
 -- 
 2.50.0
