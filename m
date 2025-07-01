@@ -1,162 +1,264 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71725C838
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EA025D1E6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751356129; cv=none; b=HZTcOreFVdX3d4YC/v6N+aq+yl5sbVBe9IeoBq02rHsGf7G2ovmFgJHv8dj42KO130aV4OP1WCYQ/L478scn9Tj/VaZXQDC621fw4gssm5xEqrN4c3yJqzGPrTil+najTC7KoLdWDc8/vstPUI2x0niRSsm98C8HtGLZhzxzzAg=
+	t=1751356212; cv=none; b=bYVMZoAFxIcrw+eV+WbiavWsw6dTAfeQCF18hHl+Y+IQujp9uqIDZyG2Vg0qJIEiUrcsHgkkJcDFbBswWh/86Qe5JtYFWyKg3ShzJetUIWAKRQOTELyadpGRyJ7oY41877UtGJ50MDXhvngYDCcKAMXwYbuDfmKd+eT7c2TIQzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751356129; c=relaxed/simple;
-	bh=yfyVRPQTE8JqiDbaOUKxGFIbx1q4UehpJFGONWIiHbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e8PjqG/ZQN8786n8z68PXeB0axaa89Vt4E1KW/u6aO05InlAGJ462snkf/DtykvrwuYr+/tWB72ZAkn8WfUFUi3Asv17dlB9vxDRG0luEMLaJ4nPgXSZNS4h9RnAYWpDEY3AFMzJsO8wRVfNx11pmzFMSNdsVC2kurtmDlcBarA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=D+e37poZ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1751356212; c=relaxed/simple;
+	bh=40HJ61IlZ4oeOAOWTEBZB/uoEVqaZ3mQ7wDobABmmsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dkEiMTdQV/C28kg8jbqAVqi23wWwZFaiP1A/6Y3enlC4+5UeUfCyDutsoxHeVJ5JZju5fovUF08B/omWcF8rCG9wH27fbT9uJmKlI9ngP+xaAHM6jhD3QPL+I48IDK2myGw8MF9gB5G+TjkffH7I1Ksy8nFUQHN5qcI2OYQapSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqPdv6ci; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="D+e37poZ"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31c6c9959cso3694150a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1751356127; x=1751960927; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vEpFKt7YYcFzTPMsl+PrVIXjmxXbTAxWQl834MFcBTI=;
-        b=D+e37poZ7ObDomrskbXZhXkWIiOk1YSqbJLLoZ2ZmKkJ2+ovir9J2RiyiV3TqHddtd
-         vmQLpXJc0n3GLEqbiupHurA/VHHeXngP7cd59gKljSQBXjxB7g50eakFOL6XfXyIu0Hh
-         Fv0ZXr2HPu6s/MYd1HF0eptn/qzHy5Zf6PZIRqMsAn8dffPsz3tbs925t/q0+Qi28kyP
-         To/9yTKvAxmaQoydpoytGqEL6TcAN2VZdJX2USXRU1cIqTvZ4Z+NgfxkxFjO8Mp6P4eQ
-         AQo7bdpHgopBAhiMsH8P31FixnWEhJrIpNyx1k9ZdKZ87fvr1RdLwJMYtcNwX0mUzuLZ
-         R0Ug==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqPdv6ci"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751356208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UrfeDL2USMWBF7Hfk0LG3gqMbltvMY7Jsuk0qzV7YpU=;
+	b=NqPdv6ciNUh3s2l4whvTx5eL0w7IGpzMjy9EYWDIhjvJCMJhwhY5DNLHukip5n0ip8v7jb
+	H4OHu3+9Yzt2MwxTl1B2MN8WET+/zY1E9zDec429lf+Rcwsh6x7ThsHMSwkm2RHE38mfLq
+	rDg0XKyLRkCdpvUF5rj6HSmBnBMjJRM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-632-Sv-BbXjcNi-MkhkGT0XlBQ-1; Tue, 01 Jul 2025 03:50:07 -0400
+X-MC-Unique: Sv-BbXjcNi-MkhkGT0XlBQ-1
+X-Mimecast-MFC-AGG-ID: Sv-BbXjcNi-MkhkGT0XlBQ_1751356206
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-453018b4ddeso30344425e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:50:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751356127; x=1751960927;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vEpFKt7YYcFzTPMsl+PrVIXjmxXbTAxWQl834MFcBTI=;
-        b=C3px4xh+IXEEOF5fNKaeuZ7MQj3IcTgWhBDEGj5t4Cl0dDrWM9qGzM+GkRZffqOs/u
-         OiHTP5W1luiVOuvJXimkXixlEhBwpu7xWaxfBp7/Yz0dDCdo2c0g/A0RM1cAg9h5wE7z
-         nu0x8s4ua39IvNmzmXqXt8VP3uOZfHoH0hpJsNqJGmzmddnLxAPWhqVxqcvK3B3WC62l
-         F8vF9XaJZsEuUkGVbmCwSEdPesQvY9T6VzBecfTg6b29epoCm0s8RGGRMexVIbkmF6YH
-         u75/53OgisnBAw1dfdRtjzLyivUE2+VaysbGomAMeia53t94WGvr6/s7p6onOWJnSlhT
-         a7gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIO9tysm7d/+CpdhI9SzhjiK2v1g+H1qsfNziUdqNk9YWywL1ao9nm8CUZH7i4joNpgIzr44Rpj2tj4SA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJywTBdw0MLM2iw13eKUTDVfyE0fhAUMz9+gS4MJZsWXJm00IF
-	hAdCwEak320DuyT1Bnq5SC1g1GgYfArxWu8STQlpshs7NvyPxWYxB1eLiIn5wMw6J07M2UhrxjV
-	yrhkV70Q=
-X-Gm-Gg: ASbGncuaNTVGkf7mtD4cWi3zpif/rJxkuiCXKyGuYaLMDT989AL1IpvNgrtZC4L7J+X
-	F+T71XkodPWLp5tEUIuvvQw5iUIGw1z9ar9CmbhtAXnMlYqznHTsUq/In7iLbLEWW65ZoFtlE71
-	Dh1oldTZozQq35UNPM7R1IBhWXRSFoCT220/aSjo8XqYxbq2K0KQD1KTsZO9VLDNb2K7SgGiN6p
-	b1ypnaM8sCuXMiY85NLNVIrYi1/rheqwCeQEh0uxP4nrh8HDyTS9OW70qkKyaCyq/WqVQu75CJW
-	3YtcVapgjCMceMa95HOXVlLOmSJ/HXCuf0H4uiYuNTbbT7XOmnRxBMLsrSamUOXm4xP2MFAfLgF
-	CO9SR
-X-Google-Smtp-Source: AGHT+IEkSOMFIWuHzTsl3h9jkYp4/Xk30pqD6Wb6IEepi4SrOE2ToSdyXBQqLIMA/PtSl0WH+SMRvA==
-X-Received: by 2002:a17:90b:2dd0:b0:312:db8:dbd1 with SMTP id 98e67ed59e1d1-318c8ff231fmr21355546a91.5.1751356127275;
-        Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
-Received: from [10.74.31.243] ([203.208.189.6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c13a16besm10785331a91.14.2025.07.01.00.48.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
-Message-ID: <f1f68fbd-e2cf-40c5-a6b8-533cb3ec798f@bytedance.com>
-Date: Tue, 1 Jul 2025 15:48:41 +0800
+        d=1e100.net; s=20230601; t=1751356206; x=1751961006;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UrfeDL2USMWBF7Hfk0LG3gqMbltvMY7Jsuk0qzV7YpU=;
+        b=VE3v0DgOEjIogQ6xHFBtmI2a7yX5zFZT/wT/fqdrjxwLzrtGtca7S+lE5FLcZe3MTB
+         GPi2uk0kXHCn0tZPqNIfdMSW/QXLn4c2lzSeSNVe5jm9Ec5aSbFWJa6tNbf08sk+6BKs
+         t+oDA2fmloQO/4k+GT2FfNl6IpclpCANYY6H6Sj1EATBlzucxcGpokgFCqoresW5k5/S
+         TxHLhfnaiYH1hb8/uB+bx5rWEfhrF+zws6ALqUtoVtnaTGzQ0AH0XLn0dyfvL+/adw09
+         N7ijmIP1ceOvhAtn8EpMlTg7drDNJsylE374R23+27XJX0dk+wUPNB7ggsQUTYxDddpP
+         Tw4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ipNM2qOUzpJMbvJj3c0bub0YOiWgR2njYpyF87WU6TFLXDGLVDoIQsZ3GDTFDZheRwCsXeL/CQfgRuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9Bmt44tazPVjc2/oo0irGbYWVuzMXHzbi0NnO9TULyz1ep73Q
+	/SPNrL3+FzkjWWCAI1DrRsfNq5uMOcfWxbi5cEaxwdk7LoT/woUBiDb0EtF9BRBZSY9RpGob/HS
+	59to4SJweTgGoll4Dw5sGRDGB+OTQ4ukcuWZj8riNKCWib7m7r573hMLyc/HUJRmmQw==
+X-Gm-Gg: ASbGncsHrKkIZ5OdKhWtiSLuYkWEeFxrXd6KvTwuqiv1apzU/slIDGlEhn0XUntgE+6
+	roIny+/MPuErhg1orNl9QAeE0rrPMAOkjkwuSCrw0mz93cvhKmSDTI/uWXPGFf6RQLiAmuotB9E
+	NZyW+/CLfNLvUfkeq1cd9wplKZOFguREykcU8ySBxhTXYBqeF3/2+6hso/46FTrbGGhOoFUKSLA
+	OwccU08Ccb2tcieGDsyLIa+7nBCUXygX1f/oesxFRzkSO67vC0bFZApZLY1XX9RUanNE6t0joA/
+	WR6V3EgytRmtany6
+X-Received: by 2002:a05:600c:1e0d:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-4538edeb1e3mr186231995e9.0.1751356205992;
+        Tue, 01 Jul 2025 00:50:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGNEap5hfehObObyasCyQhPEbo2n4At1g+WsLQ4hkN8qo9UeYJIf1N5Pojy/Kj0YHenVGSRhg==
+X-Received: by 2002:a05:600c:1e0d:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-4538edeb1e3mr186231595e9.0.1751356205538;
+        Tue, 01 Jul 2025 00:50:05 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234be76sm187329465e9.15.2025.07.01.00.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 00:50:05 -0700 (PDT)
+Date: Tue, 1 Jul 2025 03:50:02 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	hch@infradead.org, xieyongji@bytedance.com
+Subject: Re: [PATCH 9/9] vduse: switch to use virtio map API instead of DMA
+ API
+Message-ID: <20250701034754-mutt-send-email-mst@kernel.org>
+References: <20250701011401.74851-1-jasowang@redhat.com>
+ <20250701011401.74851-10-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH net] virtio-net: fix a rtnl_lock() deadlock
- during probing
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250630095109.214013-1-zuozhijie@bytedance.com>
- <20250630103240-mutt-send-email-mst@kernel.org>
- <20250630105328-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-From: Zigit Zo <zuozhijie@bytedance.com>
-In-Reply-To: <20250630105328-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701011401.74851-10-jasowang@redhat.com>
 
-On 6/30/25 10:54 PM, Michael S. Tsirkin wrote:
-> On Mon, Jun 30, 2025 at 10:50:55AM -0400, Michael S. Tsirkin wrote:
->> On Mon, Jun 30, 2025 at 05:51:09PM +0800, Zigit Zo wrote:
->>> This bug happens if the VMM sends a VIRTIO_NET_S_ANNOUNCE request while
->>> the virtio-net driver is still probing with rtnl_lock() hold, this will
->>> cause a recursive mutex in netdev_notify_peers().
->>>
->>> Fix it by skip acking the annouce in virtnet_config_changed_work() when
->>> probing. The annouce will still get done when ndo_open() enables the
->>> virtio_config_driver_enable().
->>
->> I am not so sure it will be - while driver is not loaded, device does
->> not have to send interrupts, and there's no rule I'm aware of that says
->> we'll get one after DRIVER_OK.
-
-Yep, at first we're thinking that when the VIRTIO_NET_S_ANNOUNCE flag set,
-we can always assure an interrupt has fired by VMM, to notify the driver
-to do the announcement.
-
-But later we realized that the S_ANNOUNCE flag can be sent before the
-driver's probing, and for QEMU seems to set the status flag regardless of
-whether driver is ready, so the problem you're talking still may happens.
->> How about, we instead just schedule the work to do it later?I'm not sure if scheduling the work later will break df28de7b0050, the work
-was being scheduled before that commit, and we have no much idea of why that
-commit removes the schedule_work, we just keep it for safe...
-
-Then, for plan A, we change the check_announce to schedule_announce, and if
-that's true, we do another schedule_work to call virtnet_config_changed_work
-again to finish the announcement, like
-
-	if (v & VIRTIO_NET_S_ANNOUNCE) {
-		if (unlikely(schedule_announce))
-			schedule_work(&vi->config_work);
-		else {
-			netdev_notify_peers(vi->dev);
-			virtnet_ack_link_announce(vi);
-		}
-	}
-
->>
->> Also, there is another bug here.
->> If ndo_open did not run, we actually should not send any announcements.
->>
->> Do we care if carrier on is set on probe or on open?
->> If not, let's just defer this to ndo_open?
+On Tue, Jul 01, 2025 at 09:14:01AM +0800, Jason Wang wrote:
+> Lacking the support of device specific mapping supported in virtio,
+> VDUSE must trick the DMA API in order to make virtio-vdpa transport
+> work. This is done by advertising vDPA device as dma device with a
+> VDUSE specific dma_ops even if it doesn't do DMA at all.
 > 
-> Hmm yes I think we do, device is visible to userspace is it not?
+> This will be fixed by this patch. Thanks to the new mapping operations
+> support by virtio and vDPA. VDUSE can simply switch to advertise its
+> specific mappings operations to virtio via virtio-vdpa then DMA API is
+> not needed for VDUSE any more.
 > 
-> Hmm.  We can keep the announce bit set in vi->status and on open, check
-> it and then schedule a work to do the announcement.
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
 
-Okay, so there's a plan B, we save the bit and re-check it in ndo_open, like
+so what exactly is the issue fixed by all this pile of code?
+I just don't really see it. yes the existing thing is a hack
+but at least it is isolated within vduse which let's be
+frank is not it's only issue.
 
-	/* __virtnet_config_changed_work() */
-	if (v & VIRTIO_NET_S_ANNOUNCE) {
-		vi->status |= VIRTIO_NET_S_ANNOUNCE;
-		if (unlikely(!check_announce))
-			goto check_link;
 
-		netdev_notify_peers(vi->dev);
-		virtnet_ack_link_announce(vi);
-		vi->status &= ~VIRTIO_NET_S_ANNOUNCE;
-	}
+> ---
+>  drivers/vdpa/vdpa_user/iova_domain.c |  2 +-
+>  drivers/vdpa/vdpa_user/iova_domain.h |  2 +-
+>  drivers/vdpa/vdpa_user/vduse_dev.c   | 31 ++++++++++++++++------------
+>  3 files changed, 20 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/vdpa/vdpa_user/iova_domain.c b/drivers/vdpa/vdpa_user/iova_domain.c
+> index 019f3305c0ac..8ea311692545 100644
+> --- a/drivers/vdpa/vdpa_user/iova_domain.c
+> +++ b/drivers/vdpa/vdpa_user/iova_domain.c
+> @@ -447,7 +447,7 @@ void vduse_domain_unmap_page(struct vduse_iova_domain *domain,
+>  
+>  void *vduse_domain_alloc_coherent(struct vduse_iova_domain *domain,
+>  				  size_t size, dma_addr_t *dma_addr,
+> -				  gfp_t flag, unsigned long attrs)
+> +				  gfp_t flag)
+>  {
+>  	struct iova_domain *iovad = &domain->consistent_iovad;
+>  	unsigned long limit = domain->iova_limit;
+> diff --git a/drivers/vdpa/vdpa_user/iova_domain.h b/drivers/vdpa/vdpa_user/iova_domain.h
+> index 846572b95c23..a2316571671f 100644
+> --- a/drivers/vdpa/vdpa_user/iova_domain.h
+> +++ b/drivers/vdpa/vdpa_user/iova_domain.h
+> @@ -64,7 +64,7 @@ void vduse_domain_unmap_page(struct vduse_iova_domain *domain,
+>  
+>  void *vduse_domain_alloc_coherent(struct vduse_iova_domain *domain,
+>  				  size_t size, dma_addr_t *dma_addr,
+> -				  gfp_t flag, unsigned long attrs);
+> +				  gfp_t flag);
+>  
+>  void vduse_domain_free_coherent(struct vduse_iova_domain *domain, size_t size,
+>  				void *vaddr, dma_addr_t dma_addr,
+> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
+> index 64bc39722007..f86d7111e103 100644
+> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> @@ -814,51 +814,55 @@ static const struct vdpa_config_ops vduse_vdpa_config_ops = {
+>  	.free			= vduse_vdpa_free,
+>  };
+>  
+> -static void vduse_dev_sync_single_for_device(struct device *dev,
+> +static void vduse_dev_sync_single_for_device(void *token,
+>  					     dma_addr_t dma_addr, size_t size,
+>  					     enum dma_data_direction dir)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	vduse_domain_sync_single_for_device(domain, dma_addr, size, dir);
+>  }
+>  
+> -static void vduse_dev_sync_single_for_cpu(struct device *dev,
+> +static void vduse_dev_sync_single_for_cpu(void *token,
+>  					     dma_addr_t dma_addr, size_t size,
+>  					     enum dma_data_direction dir)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	vduse_domain_sync_single_for_cpu(domain, dma_addr, size, dir);
+>  }
+>  
+> -static dma_addr_t vduse_dev_map_page(struct device *dev, struct page *page,
+> +static dma_addr_t vduse_dev_map_page(void *token, struct page *page,
+>  				     unsigned long offset, size_t size,
+>  				     enum dma_data_direction dir,
+>  				     unsigned long attrs)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	return vduse_domain_map_page(domain, page, offset, size, dir, attrs);
+>  }
+>  
+> -static void vduse_dev_unmap_page(struct device *dev, dma_addr_t dma_addr,
+> +static void vduse_dev_unmap_page(void *token, dma_addr_t dma_addr,
+>  				size_t size, enum dma_data_direction dir,
+>  				unsigned long attrs)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	return vduse_domain_unmap_page(domain, dma_addr, size, dir, attrs);
+>  }
+>  
+> -static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
+> -					dma_addr_t *dma_addr, gfp_t flag,
+> -					unsigned long attrs)
+> +static void *vduse_dev_alloc_coherent(void *token, size_t size,
+> +				      dma_addr_t *dma_addr, gfp_t flag)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  	unsigned long iova;
+> @@ -866,7 +870,7 @@ static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
+>  
+>  	*dma_addr = DMA_MAPPING_ERROR;
+>  	addr = vduse_domain_alloc_coherent(domain, size,
+> -				(dma_addr_t *)&iova, flag, attrs);
+> +					   (dma_addr_t *)&iova, flag);
+>  	if (!addr)
+>  		return NULL;
+>  
+> @@ -875,25 +879,27 @@ static void *vduse_dev_alloc_coherent(struct device *dev, size_t size,
+>  	return addr;
+>  }
+>  
+> -static void vduse_dev_free_coherent(struct device *dev, size_t size,
+> +static void vduse_dev_free_coherent(void *token, size_t size,
+>  					void *vaddr, dma_addr_t dma_addr,
+>  					unsigned long attrs)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	vduse_domain_free_coherent(domain, size, vaddr, dma_addr, attrs);
+>  }
+>  
+> -static size_t vduse_dev_max_mapping_size(struct device *dev)
+> +static size_t vduse_dev_max_mapping_size(void *token)
+>  {
+> +	struct device *dev = token;
+>  	struct vduse_dev *vdev = dev_to_vduse(dev);
+>  	struct vduse_iova_domain *domain = vdev->domain;
+>  
+>  	return domain->bounce_size;
+>  }
+>  
+> -static const struct dma_map_ops vduse_dev_dma_ops = {
+> +static const struct virtio_map_ops vduse_map_ops = {
+>  	.sync_single_for_device = vduse_dev_sync_single_for_device,
+>  	.sync_single_for_cpu = vduse_dev_sync_single_for_cpu,
+>  	.map_page = vduse_dev_map_page,
+> @@ -2009,7 +2015,7 @@ static int vduse_dev_init_vdpa(struct vduse_dev *dev, const char *name)
+>  		return -EEXIST;
+>  
+>  	vdev = vdpa_alloc_device(struct vduse_vdpa, vdpa, dev->dev,
+> -				 &vduse_vdpa_config_ops, NULL,
+> +				 &vduse_vdpa_config_ops, &vduse_map_ops,
+>  				 1, 1, name, true);
+>  	if (IS_ERR(vdev))
+>  		return PTR_ERR(vdev);
+> @@ -2022,7 +2028,6 @@ static int vduse_dev_init_vdpa(struct vduse_dev *dev, const char *name)
+>  		put_device(&vdev->vdpa.dev);
+>  		return ret;
+>  	}
+> -	set_dma_ops(&vdev->vdpa.dev, &vduse_dev_dma_ops);
+>  	vdev->vdpa.map_token = &vdev->vdpa.dev;
+>  	vdev->vdpa.mdev = &vduse_mgmt->mgmt_dev;
+>  
+> -- 
+> 2.34.1
 
-	/* virtnet_open() */
-	if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
-		if (vi->status & VIRTIO_NET_S_LINK_UP)
-			netif_carrier_on(vi->dev);
-		if
-		if (vi->status & VIRTIO_NET_S_ANNOUNCE)
-			schedule_work(&vi->config_work);
-		virtio_config_driver_enable(vi->vdev);
-	}
-
-This is a dirty demo, any ideas are welcomed :)
-
-(I think in virtnet_open() we can make the S_LINK_UP being scheduled as well?)
