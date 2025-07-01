@@ -1,107 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E762798FA;
-	Tue,  1 Jul 2025 16:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB12279359;
+	Tue,  1 Jul 2025 16:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751389056; cv=none; b=WnQfVeUNhyKxa+pg8tMa+DLt/o/7mQM/GjQrVZb0zeNthwqhAeK27xESBeO+6gEYBxwYJTIAvbo3bLwSM2dmlJXh6TTGoMUDtja8ltI1prWA8p2OWS7IYvICVqIPzmAlJXA6JLYJDCylLXb5D1GTOKqZOcAZgvnbWSpR/cSrlxU=
+	t=1751389088; cv=none; b=u/VfC34pq1OxT1RwCcdfXGAToD/MjZWLI7pcAyKpWMb0twYEFDli9RSfUdmbx7dHXk0C7CLK+JxhsH4l5fS8Tc7g5W8/JJ8Zy5xFvPIFCKdnlCnLQ7EtZKHgVFhoeQyPv4IpaIVtY+yzd0VWMt7aGWWLd1SWTJBYgAUdX7//efQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751389056; c=relaxed/simple;
-	bh=yt/kc/jTaSiC0j9rC9eyESiUppBPRZhs+YZzLBzzs2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uGORp0qhAiRfn661sM9dgmnobVe6ppZ48we8mU5kbfkn5eoVPhGumAXhmdiCdx79imOPAddOyXYJrsG7fDCu7KSN5IJ5QyYQFn8eXrJlb/jbYx7mjsFjmVvYGm19wBf51cX3Bsuq61qcuc4gWR2j6f7oy5UaW12hog2DAdOtzJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3cAUR1c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751389088; c=relaxed/simple;
+	bh=7tKU8mbeBFPiVXyw6Vc2kkpcWX8Ozxa1iNVQlgBGIy4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QiQztsOhSDG3AMWRYaVEsvwrXuEifZyk8VfbMKunUfSxTMbp75kGRP4c+l15uHpkYff20z3IUwObA39MOIQ65AIEzcOC+W4IMNUCIqlO63LPR0E1M5m2bBv810a+sMaOWs6AaLzJmCnXbfZp8Ym+GHNEXAzA/2FSmKIhkL8NZ8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyzMTYrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3cAUR1c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3601C4CEEB;
-	Tue,  1 Jul 2025 16:57:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyzMTYrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4479C4CEF3;
+	Tue,  1 Jul 2025 16:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751389056;
-	bh=yt/kc/jTaSiC0j9rC9eyESiUppBPRZhs+YZzLBzzs2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=k3cAUR1cwKTtg4sD128wLSlwJY88qu3T8AwGwte1udkUcUr3rKs7T6494qFObHT3B
-	 JTrodUx32RfXmXcNfG9GLlbH7Hv0sRG4CaLCPx0sd/i9FgvVUS06xnNt78wV/DcoOW
-	 YZD84F4eISrgrOurB154lqR8dX8fNxi3VqtMT67f+pxlua1FKRWSDMH5Zi5BQELAKU
-	 jRdwCi+sEZLy4Ds/xihdLxowlVRqTOkn6NUD+ZIuAz1phRiYvAx5s724BmTAiRVJeP
-	 QUQt/PRY4OOWRarBMjZsbQ/3HCYM0A0EbeQBGSiU75BNmWLRI8XMP2GnoUsfYoNV3c
-	 N7xUf38+SJ8iQ==
-Date: Tue, 1 Jul 2025 11:57:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	s=k20201202; t=1751389087;
+	bh=7tKU8mbeBFPiVXyw6Vc2kkpcWX8Ozxa1iNVQlgBGIy4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fyzMTYrMKeOY/Rxhzjg2PDRq6aztluP+y0Ql8VFL/+j1tiT0ctqzCRo0kXDDxoQ5K
+	 RsbbHb8yL4beSJwz8soyMOOH96pEJS9s0sWMudZfl3R+I8HvW6/szuI9WrjJf4DSyr
+	 NdN6umVIGzokkIjlCuSTz69IXSJfWiYYvU+57pTBduYxfHuqcmrNQ3W5mHBjW+M5iN
+	 Wj6aKkhl0CZotUj9xKw+dqzaHgkrI2wa4wczL1ThsHjKBkGRBd9moCqLs6Mt+SAfPn
+	 0wufODKQphu+2Rox+7jByDp8ObFJrXo22eKAS7W27MFSJw46y2cdp1ousLYcFcMPeP
+	 tp/+lVv6+Ko+w==
+Received: by wens.tw (Postfix, from userid 1000)
+	id A92CF5FDF8; Wed,  2 Jul 2025 00:58:05 +0800 (CST)
+From: Chen-Yu Tsai <wens@kernel.org>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej@kernel.org>,
+	Samuel Holland <samuel@sholland.org>
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-fsd@tesla.com, mani@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
-	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
-	jh80.chung@samsung.com, pankaj.dubey@samsung.com
-Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
-Message-ID: <20250701165734.GA1839534@bhelgaas>
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH RFT net-next 0/10] net: stmmac: Add support for Allwinner A523 GMAC200
+Date: Wed,  2 Jul 2025 00:57:46 +0800
+Message-Id: <20250701165756.258356-1-wens@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02b101dbea79$d7e086c0$87a19440$@samsung.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 04:48:13PM +0530, Shradha Todi wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 28 June 2025 01:01
-> > To: Shradha Todi <shradha.t@samsung.com>
-> > Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> linux-
-> > samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
-> > fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
-> > robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org;
-> > conor+dt@kernel.org; alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org;
-> > arnd@arndb.de; m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
-> > Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
+From: Chen-Yu Tsai <wens@csie.org>
 
-Would be good if your mailer could support the usual quote mechanism,
-e.g. the "On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi
-wrote:" line below.  No need for all the header duplication above.
+Hi everyone,
 
-> > On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi wrote:
-> > > Add host and endpoint controller driver support for FSD SoC.
+This series adds support for the second Ethernet controller found on the
+Allwinner A523 SoC family. This controller, dubbed GMAC200, is a DWMAC4
+core with an integration layer around it. The integration layer is
+similar to older Allwinner generations, but with an extra memory bus
+gate and separate power domain.
 
-> > This would be a little nicer if you added soc_variant and device_mode
-> > and the code that sets and tests them for exynos_5433 first in a
-> > separate patch.  Then it would be more obvious that the new FSD parts
-> > don't affect exynos_5433 since this patch would only be *adding*
-> > FSD-specific things.
-> 
-> Sure,  I have no issues in splitting the patches further. Though
-> unfortunately, I or anyone I know does not possess a board which has
-> Exynos 5433 chipset.  Therefore, I'm unable to verify these changes
-> for Exynos chipset. I took care to not disturb the exynos flow
-> functionally but would be great if someone could test this and
-> confirm that it works well on Exynos 5433 after the changes.
+The series stacks on top of three other series inflight:
 
-Yeah, that's a common situation, and there's no problem with adding
-this functionality.  But in the unlikely event there's a mistake that
-relates to Exynos 5433, it will be easier for someone with that board
-to analyze the problem if the changes that affect exynos_5433 are
-split out into a patch that doesn't include any FSD-related changes.
+  - Orangepi 4A series
+    https://lore.kernel.org/all/20250628161608.3072968-1-wens@kernel.org/
+  - A523 power controller support series
+    https://lore.kernel.org/all/20250627152918.2606728-1-wens@kernel.org/
+  - Rename emac0 to gmac0 for A523 series
+    https://lore.kernel.org/all/20250628054438.2864220-1-wens@kernel.org/
 
-> > >  static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
-> > >  	.dwc_ops		= &exynos_dw_pcie_ops,
-> > >  	.pci_ops		= &exynos_pci_ops,
-> > >  	.host_ops		= &exynos_pcie_host_ops,
-> > >  	.res_ops		= &exynos_res_ops_data,
-> > > +	.soc_variant		= EXYNOS_5433,
-> > > +	.device_mode		= DW_PCIE_RC_TYPE,
-> > >  };
-> > 
-> > >  static const struct of_device_id exynos_pcie_of_match[] = {
-> > > @@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
-> > >  		.compatible = "samsung,exynos5433-pcie",
-> > >  		.data = (void *) &exynos_5433_pcie_rc_pdata,
-> > >  	},
-> 
+Patch 1 adds a new compatible string combo to the existing Allwinner
+EMAC binding.
+
+Patch 2 adds a new driver for this core and integration combo.
+
+Patch 3 extends the sunxi SRAM driver to allow access to the clock delay
+controls for the second Ethernet controller.
+
+Patch 4 registers the special regmap for the clock delay controls as a
+syscon. This allows the new network driver to use the syscon interface,
+instead of the following dance which the existing dwmac-sun8i driver
+does:
+
+    of_parse_phandle();
+    of_find_device_by_node();
+    dev_get_regmap();
+
+With this change in place we can also drop the above from the
+dwmac-sun8i driver.
+
+Patch 5 adds a device node and pinmux settings for the GMAC200.
+
+Patches 6 and 8 add missing Ethernet PHY reset settings for the
+already enabled controller.
+
+Patches 7, 9, and 10 enable the GMAC200 on three boards. I only
+have the Orangepi 4A, so I am asking for people to help test the
+two other boards. The RX/TX clock delay settings were taken from
+their respective BSPs, though those numbers don't always work, as
+is was the case for the Orangepi 4A.
+
+
+Please have a look and help test.
+
+Patches 1 and 2 should go through net-next, and I will take all the
+other patches through the sunxi tree.
+
+
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (10):
+  dt-bindings: net: sun8i-emac: Add A523 GMAC200 compatible
+  net: stmmac: Add support for Allwinner A523 GMAC200
+  soc: sunxi: sram: add entry for a523
+  soc: sunxi: sram: register regmap as syscon
+  arm64: dts: allwinner: a523: Add GMAC200 ethernet controller
+  arm64: dts: allwinner: a527: cubie-a5e: Add ethernet PHY reset setting
+  arm64: dts: allwinner: a527: cubie-a5e: Enable second Ethernet port
+  arm64: dts: allwinner: t527: avaota-a1: Add ethernet PHY reset setting
+  arm64: dts: allwinner: t527: avaota-a1: enable second Ethernet port
+  arm64: dts: allwinner: t527: orangepi-4a: Enable Ethernet port
+
+ .../net/allwinner,sun8i-a83t-emac.yaml        |  68 +++++++-
+ .../arm64/boot/dts/allwinner/sun55i-a523.dtsi |  55 ++++++
+ .../dts/allwinner/sun55i-a527-cubie-a5e.dts   |  29 +++-
+ .../dts/allwinner/sun55i-t527-avaota-a1.dts   |  29 +++-
+ .../dts/allwinner/sun55i-t527-orangepi-4a.dts |  23 +++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  12 ++
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../ethernet/stmicro/stmmac/dwmac-sun55i.c    | 161 ++++++++++++++++++
+ drivers/soc/sunxi/sunxi_sram.c                |  14 ++
+ 9 files changed, 386 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sun55i.c
+
+-- 
+2.39.5
+
