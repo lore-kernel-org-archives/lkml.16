@@ -1,96 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ACE273800;
-	Tue,  1 Jul 2025 11:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3242273816;
+	Tue,  1 Jul 2025 11:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370800; cv=none; b=XvX9ORFtct6Z4Gz5R79+Qnzp3buxFp4RS4hNKLOILtIObkTw4nVUb9pF/zlnfp2BBPWcC7d/jjx5CRDMoGBxiKfwusOF/mdXYf3dNNyhf+Zm/E4FeLsvWD3N4Zb35r8Qumcy65gQ+TkxSwvBx7iN5gYcCUBSMt7ksTNN1gvieH4=
+	t=1751370808; cv=none; b=YHlt6w5LCGuUAMFHZ6s8acR1Z+XcII8SPd20DNIvCNnR0ETJpU7+kSbGUSUH8SoQvjus5axly679PVgpJFvxhbluf3C+XVMcULNUTQk8D92VgB8RkajgTL3QNJE83ApE1ZC+of+3pDkTplUruTL1OxIzLg6cqdrM3IMZGa0E4eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370800; c=relaxed/simple;
-	bh=eE+BK5pQFeUbxS+pqZWzB1zy4OWxCla1bWV9WxkErEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EsO+rXOFeBPemiMnaq4Lv/+zvqROl+ZWmgEQkTziktQhc3h13ZdrS69xC7ZO9K6RxwPr9UvA+IjYZEkxwl4peczVDgUCjmJrILsh17woPh2Y7jXkRPo8Z5l31KHVwtyS4rpAWkHSBPLTaaw8WRgAFcPeoPJbe/Dgc/UPU3+hsqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vAeXxLhG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vAeXxLhG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA202C4CEEB;
-	Tue,  1 Jul 2025 11:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751370800;
-	bh=eE+BK5pQFeUbxS+pqZWzB1zy4OWxCla1bWV9WxkErEk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=vAeXxLhG8c1rAaiyrkTMYUSvl12q8Vnrba6Ri5+WoYJ245Jfe29MrCosFjJhzcpy6
-	 vksertx7EC6/itMQaHaowpqxTk+Y1BJriSTQ/S7efv92nPH2g3JBo/G2inCWhlEIFV
-	 DuXWMaAB/JFrrA+LltuXYwF2T1FdzknwZZ1thOzs=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl: make cdx_bus_type constant
-Date: Tue,  1 Jul 2025 13:53:13 +0200
-Message-ID: <2025070112-whoops-grove-c355@gregkh>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751370808; c=relaxed/simple;
+	bh=C1e0NPrMRKSal2Xyocx28xd/iI/iJcEEAFn8lphPZaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=juV8LFuwGMyeDI9LYs4xfn8JoJ+e4GkqhdxHiMDMynaqrPyRDjvD+FkXUXI8Ro++T5CXGQqtKJBGlUJict2Sfjf434JbygjdkNtx82usPmCHj6tHFzuGWtno8+KPHBjE6QmBG+nZvymnprOoFpxIQIP+Whd/2424lvuFYsLG8tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E77BC4CEEB;
+	Tue,  1 Jul 2025 11:53:26 +0000 (UTC)
+Date: Tue, 1 Jul 2025 12:53:23 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Li Chen <me@linux.beauty>, "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>, Will Deacon <will@kernel.org>,
+	Len Brown <lenb@kernel.org>, Liu Wei <liuwei09@cestc.cn>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ACPI: Return -ENODEV from acpi_parse_spcr() when
+ SPCR support is disabled
+Message-ID: <aGPMM9Nw2-99sWRL@arm.com>
+References: <20250620131309.126555-1-me@linux.beauty>
+ <20250620131309.126555-2-me@linux.beauty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1576; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=eE+BK5pQFeUbxS+pqZWzB1zy4OWxCla1bWV9WxkErEk=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJZzSOmzxbuGfBtPjfsj72F0VX9zmeXpD3U2htjxLr/ 0elM4ySOmJZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAia6IYFkwWfLhLY+er6v8n p7w6n/Lz4eaI/1oM8wwNXovs/H722S7bJf1nm+X6PrikfgIA
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620131309.126555-2-me@linux.beauty>
 
-Now that the driver core can properly handle constant struct bus_type,
-move the cxl_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+On Fri, Jun 20, 2025 at 09:13:07PM +0800, Li Chen wrote:
+> From: Li Chen <chenl311@chinatelecom.cn>
+> 
+> If CONFIG_ACPI_SPCR_TABLE is disabled, acpi_parse_spcr()
+> currently returns 0, which may incorrectly suggest that
+> SPCR parsing was successful. This patch changes the behavior
+> to return -ENODEV to clearly indicate that SPCR support
+> is not available.
+> 
+> This prepares the codebase for future changes that depend
+> on acpi_parse_spcr() failure detection, such as suppressing
+> misleading console messages.
+> 
+> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
+> ---
+>  include/linux/acpi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index f102c0fe34318..71e692f952905 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1503,7 +1503,7 @@ int acpi_parse_spcr(bool enable_earlycon, bool enable_console);
+>  #else
+>  static inline int acpi_parse_spcr(bool enable_earlycon, bool enable_console)
+>  {
+> -	return 0;
+> +	return -ENODEV;
+>  }
+>  #endif
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/cxl/core/port.c | 2 +-
- drivers/cxl/cxl.h       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Rafael, are you ok with this patch going via the arm64 tree?
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index eb46c6764d20..0696f7fcef56 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2293,7 +2293,7 @@ static const struct attribute_group *cxl_bus_attribute_groups[] = {
- 	NULL,
- };
- 
--struct bus_type cxl_bus_type = {
-+const struct bus_type cxl_bus_type = {
- 	.name = "cxl",
- 	.uevent = cxl_bus_uevent,
- 	.match = cxl_bus_match,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 3f1695c96abc..e7b66ca1d423 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -815,7 +815,7 @@ int cxl_dvsec_rr_decode(struct cxl_dev_state *cxlds,
- 
- bool is_cxl_region(struct device *dev);
- 
--extern struct bus_type cxl_bus_type;
-+extern const struct bus_type cxl_bus_type;
- 
- struct cxl_driver {
- 	const char *name;
+Thanks.
+
 -- 
-2.50.0
-
+Catalin
