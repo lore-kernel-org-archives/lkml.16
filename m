@@ -1,83 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676551F4285;
-	Tue,  1 Jul 2025 17:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9624027978C;
+	Tue,  1 Jul 2025 17:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751390085; cv=none; b=rpHLqhlvl0kbGuNjq+LjIDHCkU1kvkNcS2Brh4xa1XmCZQRRKiJYwQ8+bUk4Pipl5npvRvArU3gk0/kEdaBT0QDQFB5tcS6AAf2VS1TV5/t8ZcXCeS2YD7ZjRBOI5OZ4XyXnTMRvKL/L6a+INfcZ5FVleM2RxmJr8X7sdoq6Pyw=
+	t=1751390206; cv=none; b=P6SGfrNw8qbfOOhQ5s4uVzHSJdpNWo4sqdZ5C9pxTDSRBqIrGsITWxzg7FFqh9r7wwxgzOFK5iDGHk8SuigqzoKz/lDHL2lYiB/Mjvf0Yw6bTfcZI626ZCRA1O9YVelWJS6Dept5fO7lkbCGRV6HEUuy4yDYe5NRFfRl9VZyS7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751390085; c=relaxed/simple;
-	bh=/nYOnOIIbrOV+84hpe4LR2uNAOY0fYnhNLgViKHOwaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDwQdUhbM/DOjSQNwGjKvFKLlrfv4hmITDnNvoEal1nbfShcTeXMm+GK+bNeD2+dGF9YG1jwSMy+bAkc0Ii3DN8WQeFKQHpXKyuESqLjlnPL80I09kmn9jKUQuoqCLUoJW7depxCSG7Fxpv5mMdgo3+MjPY8+a+Scd26k2+B8Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opSQbVh6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751390206; c=relaxed/simple;
+	bh=IHpoblBzuvpr+bD38aHPPj2yibJOlQN5z3Zq9NJFVjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Vl7mI72TsT6BYGOIIBEPInlLxpVX+BZ2+9Uxbb57s4+KDWFL5zXxFcNSQ5uuFwWV7fjccLI9aUdUjDSzs5YozqgJagC94J4DkkvQdRbKae6XLEhwKl7XJbf1AqohKqTs63X/zKveRdrTcEthWodUd4/VsVR4OC3qqegRYGNFUDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+7aGu9g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opSQbVh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6540DC4CEEB;
-	Tue,  1 Jul 2025 17:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+7aGu9g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B0BC4CEEB;
+	Tue,  1 Jul 2025 17:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751390084;
-	bh=/nYOnOIIbrOV+84hpe4LR2uNAOY0fYnhNLgViKHOwaA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=opSQbVh63+1AG4gEDXtVjLecX5Ff/0yV6Pvs8ObQge9FVL2sDvLA4exzHD6w5Eiq4
-	 oA0sEuYIT1FPtZzwuCIL/MFW3oLhmvSZ29YQ15I5N3swOVr5tDG9eGfOmNpTLw4Wjb
-	 4/3FEXeATUtsv4d46vz5q9LkVVeArZBZuL4S68yVmPKAsVanB0nLbZIBQSQjmIr5HO
-	 PDl2Ag2K+yWjOZd08MnNcHXmJdxFT3ymSUawNTxpeSt4mmq27oaOliI690M5kSMjHp
-	 YU8hkAsAYkTjkXzWp3t20A9YIb0Cl+20RQu6g2QaOFNrW/kOb1Qqv1fDcfAIKk5H/1
-	 JcOO8Yn5xhjOQ==
-Message-ID: <aeb45ff9-73a7-427b-8cca-cc9646b65b9b@kernel.org>
-Date: Tue, 1 Jul 2025 19:14:37 +0200
+	s=k20201202; t=1751390206;
+	bh=IHpoblBzuvpr+bD38aHPPj2yibJOlQN5z3Zq9NJFVjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=R+7aGu9gGq1zndHEsz0rJcIVhpQTD5rgNkasa2YilgAe4wwaMjiKujUoB0kF5k6uH
+	 SNweTnElvr0PTCLs3uObcEfiPJsP7l9DKaNUF0+/m9pkCZ8hTKeEFST3A9GL0cLK/h
+	 Gq7XfGmJGwj+MMzr0Z8oPYDhwyn0zFAqChFKUIsz0FxR+vd4YB5G0WceGNuYs+lmRb
+	 tBr9M+RziKoYiayXRcNIyx97ZbuzBgz6ULScHWmhVSEJh9zVlnJInmO3Cy5QHAQjxr
+	 G1C68U3c/AvPcV3W0D2QsKOYHB5UuVGOBqnH3fLx+XM/jBzu3HHBUzcXun0wo8OAq1
+	 5dlyOmRNwjuwg==
+Date: Tue, 1 Jul 2025 12:16:44 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-fsd@tesla.com, mani@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
+	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
+	jh80.chung@samsung.com, pankaj.dubey@samsung.com
+Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for
+ Tesla FSD SoC
+Message-ID: <20250701171644.GA1839997@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] rust: pwm: Add core 'Device' and 'Chip' object
- wrappers
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Drew Fustini <fustini@kernel.org>,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
- <CGME20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646@eucas1p1.samsung.com>
- <20250701-rust-next-pwm-working-fan-for-sending-v6-3-2710932f6f6b@samsung.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250701-rust-next-pwm-working-fan-for-sending-v6-3-2710932f6f6b@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02b201dbea7b$fbaf5390$f30dfab0$@samsung.com>
 
-On 7/1/25 6:01 PM, Michal Wilczynski wrote:
-> +    /// Returns a reference to the parent device of this PWM chip's device.
-> +    pub fn parent_device(&self) -> Option<&device::Device> {
-> +        self.device().parent()
-> +    }
+On Tue, Jul 01, 2025 at 05:03:31PM +0530, Shradha Todi wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 27 June 2025 22:00
 
-I know what you use this for, i.e. to provide a &Device<Bound> reference in your
-class device callbacks -- that's great!
+> > On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
+> > > Document the PCIe controller device tree bindings for Tesla FSD
+> > > SoC for both RC and EP.
 
-But please don't expose this to the public. I think what you want instead is a
-private unsafe method that returns you the &Device<Bound> directly, since you
-also know that you set a valid parent device, hence no need to mess with the
-Option as well.
+> > > +++ b/Documentation/devicetree/bindings/pci/tesla,fsd-pcie-ep.yaml
+> > 
+> > I'm not sure about the "tesla,fsd-pcie-ep.yaml" filename.  I see that
+> > it currently only describes a tesla endpoint, but it seems like maybe
+> > this should be parallel to the "samsung,exynos-pcie.yaml" host
+> > controller binding.
+> 
+> Actually there is no support for Exynos5433 in EP mode. Initially I
+> named the binding file "samsung,exynos-pcie-ep.yaml" to make it
+> parallel to the host controller bindings. But I received a comment
+> that file names should match the compatible strings which makes
+> sense so I changed it to this.
 
-And again, sorry for not catching it right away.
+Certainly makes sense to match the compatible strings, although
+samsung,exynos-pcie.yaml now includes both:
 
-- Danilo
+  samsung,exynos5433-pcie
+  tesla,fsd-pcie
+
+Exynos5433 may not support EP mode, but I assume the underlying IP for
+the Tesla FSD in EP mode is still Samsung, and I assume some Exynos
+device may someday support EP mode.
+
+But I see Krzysztof's suggestion that the filename match compatible
+and also Rob's observation that there's not much shared between
+samsung,exynos5433-pcie and tesla,fsd-pcie.
+
+Maybe that means both the RC and EP bindings should be named
+"tesla,fsd..."  It seems a little weird that the same hardware would
+be named described by either "samsung-exynos" or "tesla,fsd" just
+depending on a mode switch.
+
+Bjorn
