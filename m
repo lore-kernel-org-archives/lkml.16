@@ -1,33 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3B126C387;
-	Tue,  1 Jul 2025 09:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AED1FDD
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360545; cv=none; b=HcFDG/Khu8ynQZVZF2r6G5hLw94lX74dae6XnOzgN6fOyH6eZdyljnPqNoAD0+gM49IcCfFacMXLehs5oToU56e9B4yXld0XcckSRjTN8FchalSVUos9skpiPI0Nttk67/AXBa3LP/JrCRiWoRuyv7vnCwYhnX/yVIzT2bslg2c=
+	t=1751360579; cv=none; b=kch/xNaKxsImWliezv3v4aJ0e8OVjJ34kLaHZYLgATlci1oUd3vJXETlRUigI5QTy4CmZBA07UYhW0jLNaGz5k6AS4spShjV/Sd5L3w+Ks6GtE3BSRACmTJj4iEYRpc7feV3z4Il7qjSnbto+zkBVrTFq9a0kXPe8C0wuJ7ESxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360545; c=relaxed/simple;
-	bh=fNNpa0ael/yyn/lAFZw/C3Tbk3Ifo/DKFoC6QqBiGOA=;
+	s=arc-20240116; t=1751360579; c=relaxed/simple;
+	bh=1CRUAXr5GBbRdmumb0+cV0Od7MCxxqW2fhnqqDHHk8w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EslLxF7D9y709f4ukcBJ5WRQLUA8XpCw4Yb8d3zcKhApOSlPnJnQ8NR4gc9HHXuM7zXpvRI+jsMdGqhy93wjfD/Qu2vWcK84oibTIE4WoPB3915y6i7W9c4pHtL6EpByW5LerQqNjYfwmg2Vq2LE533NfZkJVyxm9EjaQS9WAec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLF2Nx34; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XxDYgVOJqxcs4ejrNr5V4VIZ4Er5seu+PNeZstB8+OhhrpzInGUcJ5eoLwlU3BqVsEnN2AvrCx8/w62jeNWxLtz/7SU3zm9mrJSKUjI3x0yFNlNGMsWwYiwQ8zzntQ7ERB64E84ZtkWBIzoFolevVU0ELC3sDAm1EBSpgJtVkcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q+gHXcV8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLF2Nx34"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A1DC4CEEB;
-	Tue,  1 Jul 2025 09:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751360544;
-	bh=fNNpa0ael/yyn/lAFZw/C3Tbk3Ifo/DKFoC6QqBiGOA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RLF2Nx3473mixxNLPhwRcO1lsCC2nPzi2nrGCFyeMdTw6QciX7oVRB7jfMfZiEGEA
-	 32cq4UDr581F2qsrQGH1tCN3fxgWtQYHuHdumKPL4FfMg8P/KS2ISTiMgRph7WI1pO
-	 z++LPmRrR/vqQy7T6bOb3SSZ6ksLKydLap5KW2Nk4Bw/Qu0cbaQQib+cyo4zXvkCUS
-	 cOJ07bMKc0oJ1dRJjbYiPMA63zgEVCkkrAmBxhloiPGhm9oUWOg7Ji9w+OoxRuo0oz
-	 QfdqJSZtu7CqMPlLcOQzOUWBB+WkEOjZOcZnvv9p4+3KegeULSuVDTDtC+aw6FOEFT
-	 Q1UttI+47DktQ==
-Message-ID: <d3d73135-15d8-487d-a55a-44f1f98db930@kernel.org>
-Date: Tue, 1 Jul 2025 11:02:15 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q+gHXcV8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751360576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odFmyP7U2sVYXt+ILmpIyMRKTHdQ4Z+Ben4YpGt3RBA=;
+	b=Q+gHXcV88/pQIu1kcI4uU1ZtbqLwG6jQDQw7WkWsAtQgFx6Ftg1WbMqueMTf7Kw2EiSOJM
+	1kCyrQKFST4ByxR6QRkZOQMc9SWFVpBuzrkpF269h/VjfptgJJi3KwXYwcK6+8+HWOyEdo
+	ikpEsIXlJUHIO56Q54iyNKaMUFQ0f0c=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-LBLGkF0fPuaxYgpmrL4SWA-1; Tue, 01 Jul 2025 05:02:55 -0400
+X-MC-Unique: LBLGkF0fPuaxYgpmrL4SWA-1
+X-Mimecast-MFC-AGG-ID: LBLGkF0fPuaxYgpmrL4SWA_1751360574
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6d1394b07so3450810f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:02:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751360574; x=1751965374;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=odFmyP7U2sVYXt+ILmpIyMRKTHdQ4Z+Ben4YpGt3RBA=;
+        b=YhFWvuKG2rJQn9KJOkZW2K2rwI5uPYorNuqHBrcJLK9C7+Ww79NM8PfdH2ns7oi/NQ
+         i6HMoyRDEIS4UrkQKm1NIrhOJlMAmEyuqT3ihKya7pSXpBxPPpy0DN6Rx76taI4YRK8M
+         4Zea1olQVLB7u16qhQXq3y10Ndn+i6DcGSs9z0hGZjuPzWj/0mUWkGvD5gvvd3l4W65v
+         6xXlHBbWd0+rbDG9oxuN+LgOPeHCT1tO/lOzm1UxtEPAu4hQqWsiMy2IGSBMukQHL4i8
+         WFxpNOZr3p3SZY8CXJQUxQIVvBJflz04MC2ngSbBXsOmCXmCjjIPscJjQKgJRcwOGNZv
+         qhGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHjHHfBLKV533cEoPdpYLasTY0ZmHEYsNzr91Ubkjc3rCPVc1zIKbCElo31D+cfB/rlqKPicFpG1PoHkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMQEcBrwQcWTaYwU9vq5PuSC12ZNBSCAzXkHajVZZJceJlWdEo
+	wr8Qirq8NXXxQt38umxiglcXlj1xFrc5FKf1xWAvMPPNKoTuUhBRQUHy4fQN/kkFtMMIXet5Q18
+	MjqJgPxDuR1S7uQrirA1EAbRROaC8Owzdz6WW/J8acX33up2za1xzQwYGxZdXaoWqJw==
+X-Gm-Gg: ASbGnctrsiTlWVV3adkuO9bcQkKoR6qKntLJ2t8wX0AHq0vVuB0vAs7Mm7weQ8LCdqD
+	otze9Vg0znVEbFZFfw9tPzk8KZOd3oUlKa0+q84ewz0TzcM9/yhRKhVUVAnlMJZdQnw070j1I6g
+	zT5gUvuJoB/ObZLoEkmK0VV8AkUIMmb5yyUj1/KRZg3ARvkLrkNeqpTyktEJeodSOuEzi6z+Nx0
+	tcIzz3zJFLGv3zR7m5dXpla6KxWaRWU2IdE/09lEEOzm6qH55Wy+KBEFnrL0ITBe5b/baRSIN5S
+	y6lY/QT6Em8pqKNOkEjogKQwP9BadY9auQe5tTViFbJfv/lkL44tO3Fbh0Kx8zi6lh0bkQ==
+X-Received: by 2002:adf:f6d1:0:b0:3a5:52cc:5e29 with SMTP id ffacd0b85a97d-3a90d0d7317mr11929796f8f.7.1751360573695;
+        Tue, 01 Jul 2025 02:02:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYRKtwQ5aZnc0XqPhfEJjz3LC5qLMurZ/9vUE7Xlx2VhB/BrreyXJkwS9hDRJ79YaRjeUeIA==
+X-Received: by 2002:adf:f6d1:0:b0:3a5:52cc:5e29 with SMTP id ffacd0b85a97d-3a90d0d7317mr11929762f8f.7.1751360573210;
+        Tue, 01 Jul 2025 02:02:53 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:247b:5810:4909:7796:7ec9:5af2? ([2a0d:3344:247b:5810:4909:7796:7ec9:5af2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a4064b1sm161825945e9.29.2025.07.01.02.02.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 02:02:52 -0700 (PDT)
+Message-ID: <c405f957-0f88-4c88-98d7-3a27e5230fc8@redhat.com>
+Date: Tue, 1 Jul 2025 11:02:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,108 +73,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/8] riscv: dts: spacemit: Enable PDMA0 on Banana Pi F3
- and Milkv Jupiter
-To: Guodong Xu <guodong@riscstar.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Alex Elder <elder@riscstar.com>,
- Vivian Wang <wangruikang@iscas.ac.cn>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-References: <20250701-working_dma_0701_v2-v2-0-ab6ee9171d26@riscstar.com>
- <20250701-working_dma_0701_v2-v2-7-ab6ee9171d26@riscstar.com>
- <ebc16dbe-2405-4956-91a0-bcce9f199326@kernel.org>
- <CAH1PCMa2dB1fefzGgo-kKfgAdou_KaDSvTDsvYPjsGKODHETCA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next v2 0/9] net: Remove unused function parameters in
+ skbuff.c
+To: Michal Luczaj <mhal@rbox.co>, Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-s390@vger.kernel.org
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+ <20250630181847.525a0ad6@kernel.org>
+ <beea4b9f-657f-4f98-a853-e40a503e2274@rbox.co>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAH1PCMa2dB1fefzGgo-kKfgAdou_KaDSvTDsvYPjsGKODHETCA@mail.gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <beea4b9f-657f-4f98-a853-e40a503e2274@rbox.co>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 01/07/2025 10:48, Guodong Xu wrote:
-> On Tue, Jul 1, 2025 at 3:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 01/07/2025 07:37, Guodong Xu wrote:
->>> Enable the PDMA0 on the SpacemiT K1-based Banana Pi F3 and Milkv Jupiter
->>> boards by setting its status to "okay".
+On 7/1/25 9:27 AM, Michal Luczaj wrote:
+> On 7/1/25 03:18, Jakub Kicinski wrote:
+>> On Thu, 26 Jun 2025 10:33:33 +0200 Michal Luczaj wrote:
+>>> Couple of cleanup patches to get rid of unused function parameters around
+>>> skbuff.c, plus little things spotted along the way.
 >>>
->>> Signed-off-by: Guodong Xu <guodong@riscstar.com>
->>> ---
->>> v2: added pdma0 enablement on Milkv Jupiter
->>> ---
->>>  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts   | 4 ++++
->>>  arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts | 4 ++++
->>>  2 files changed, 8 insertions(+)
->>>
->>> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
->>> index fe22c747c5012fe56d42ac8a7efdbbdb694f31b6..39133450e07f2cb9cb2247dc0284851f8c55031b 100644
->>> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
->>> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
->>> @@ -45,3 +45,7 @@ &uart0 {
->>>       pinctrl-0 = <&uart0_2_cfg>;
->>>       status = "okay";
->>>  };
->>> +
->>> +&pdma0 {
+>>> Offshoot of my question in [1], but way more contained. Found by adding
+>>> "-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+>>> skbuff.c warnings.
 >>
->>
->> Does not look like placed according to DTS coding style. What sort of
->> ordering Spacemit follows?
->>
+>> I feel a little ambivalent about the removal of the flags arguments.
+>> I understand that they are unused now, but theoretically the operation
+>> as a whole has flags so it's not crazy to pass them along.. Dunno.
 > 
-> Agreed. We should establish a consistent ordering rule for SpacemiT board
+> I suspect you can say the same about @gfp. Even though they've both became
+> irrelevant for the functions that define them. But I understand your
+> hesitation. Should I post v3 without this/these changes?
 
+Yes please, I think it would make the series less controversial.
 
-Isn't there a style already? Or what is the style for Risc-v arch?
+Also I feel like the gfp flag removal is less controversial, as is IMHO
+reasonable that skb_splice_from_iter() would not allocate any memory.
 
-Best regards,
-Krzysztof
+Thanks,
+
+Paolo
+
