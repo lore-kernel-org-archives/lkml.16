@@ -1,118 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CDD209F2E;
-	Tue,  1 Jul 2025 08:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2F172602;
+	Tue,  1 Jul 2025 08:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358808; cv=none; b=FHVO3CXfB1Vfb0WnSYaoMz13psv4zaLV9xiXpQN7BL+PNZ02p+TGar/v1Z4SVpzzAJqUe5urxhjne4V8OCLa8P1z3p/Nk35nwmwUadxMjl5LaTr0vnbAwBV39L9mV00q8DVObMH1/QgFMPrdA5ZhDSPxVLvuo1CZVHULa196jLQ=
+	t=1751358819; cv=none; b=tZg/GP4ZEAtxU2hktoP669y/sfK9MVh24K6qRu0jzWi9CAHEVMpO70cuXks8dGrxcs2DbuEYpB91A5Cj/ckYkqKMibpq0gcPLp+oA2KLtWNfewaxBKjCGHCctC8bB7ZH3JZAQByttcxlGlf+xPMz3gtkr208XMqAjW0MjhW1t0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358808; c=relaxed/simple;
-	bh=p+7U2XjHILtKEpkyEx7gdu8jsq+2qpdmfAyg3OdlsKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kG2GnUUaUW8ISJKUFPztTsEdLGy1TST3pA0EO8P3iJ5YmPlNsyjBhRYfGvlpU1CX8F7fbagwQmPk//f0lWy47sEeJ1eQzUYBAjyG8cFxWERBPVOj0MQSiF6YYgSQ2vmJtKNNGtYN/sC8UXH/8SGoA1oG58FJFLBtKjMzVNT4gU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WETNdBWg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751358819; c=relaxed/simple;
+	bh=TwVj/zN+QrMTevzg4950xW7dqK4GoQ4YRfxr5UmUR3I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L6muRnRbRzQX7lI+l0ypBE7QPM5/SCBXj7oVL6hJzmuegQrA0Dmw8sI7UGm8QNDx/eRhl1k63/3E0ZqUdZgfEKfjzVTk7GCWGe1hCWrxOmRUfKRqKyqcfT1o81TUsW6v3u526QE99J3b2H1OGtiuBnYNV7tj9EURoyDUVkcPRF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clyt4tg2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WETNdBWg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D052C4CEEB;
-	Tue,  1 Jul 2025 08:33:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clyt4tg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7B0C4CEEB;
+	Tue,  1 Jul 2025 08:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751358807;
-	bh=p+7U2XjHILtKEpkyEx7gdu8jsq+2qpdmfAyg3OdlsKI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WETNdBWg2lUJNGP3bvrNM1wMx7uZsoaP9RwyDCrtSWeQsWoVXIJpdy46SIe3+MuVl
-	 YT8pyZyDr489WxEudPqyqciKWjyBFK9wl9hUm0pd7exNzWDhkoAsGE7rV2cBu05TCL
-	 VY6woqJY4+xW1J6RIXmX8AWg3KB5WKhgSoxwKTL4sLZvx1sFwS6BMDoqUF5d+X05gQ
-	 Gpa6SZdYYJD+saY0hD9uXUclEvjmihcbTPgpByhNyrK1DiGUvLdwGqKfLDiJ7NUUHh
-	 ipaKfFw0MK62ae7cbsH7s9VhWkb8HRcgJQjLdE+Gpjs6HPzLGLn1uPy4IjGTzHLVq1
-	 GeEoZt3U+ehsw==
-Message-ID: <0f77f41d-589f-48da-a013-48f48f1dbbff@kernel.org>
-Date: Tue, 1 Jul 2025 10:33:21 +0200
+	s=k20201202; t=1751358819;
+	bh=TwVj/zN+QrMTevzg4950xW7dqK4GoQ4YRfxr5UmUR3I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=clyt4tg2JL9W3oAXwQtEPB0sIRKcq2cLZWvoPT3ehMRudf5w4bJghFW59PlQUVIa5
+	 pBHCd8bZoDxdFy1EvArtcgUmF8pBYGbXh6d9sV5/H4xNTe88pQRLQawAgt1ZZ7g4ui
+	 VZ67mMY+MhkySqiNj/u065RMcy8gCwm1cVVOpfXoX80HH5Usns3wWsdGNzCD+qJqSn
+	 DhyrbHL+x+8YWtK5nttaXF9Ybm5AHZX/B4yxsFJovS2+Kl6zuauIGkfnHQL0ViLG+z
+	 bOx4qN1Csd+Ci+a+tY9TzKvJ+pQFJsEBNyDO9W2nOLKpeUVPOjS0VYCnp2AWGZng9q
+	 IcWthVVyhn57g==
+From: Christian Brauner <brauner@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	seanjc@google.com,
+	vbabka@suse.cz,
+	willy@infradead.org,
+	pbonzini@redhat.com,
+	tabba@google.com,
+	afranji@google.com,
+	ackerleytng@google.com,
+	jack@suse.cz,
+	hch@infradead.org,
+	cgzones@googlemail.com,
+	ira.weiny@intel.com,
+	roypat@amazon.co.uk,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	david@redhat.com,
+	akpm@linux-foundation.org,
+	paul@paul-moore.com,
+	rppt@kernel.org,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH V3] fs: generalize anon_inode_make_secure_inode() and fix secretmem LSM bypass
+Date: Tue,  1 Jul 2025 10:33:25 +0200
+Message-ID: <20250701-liberal-geklebt-4c929903fc02@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250626191425.9645-5-shivankg@amd.com>
+References: <20250626191425.9645-5-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/3] dt-bindings: i3c: Add support for Qualcomm I3C
- controller
-To: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>,
- alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
- linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank.Li@nxp.com,
- wsa+renesas@sang-engineering.com, alok.a.tiwari@oracle.com
-Cc: andersson@kernel.org, konradybcio@kernel.org
-References: <20250701071852.2107800-1-mukesh.savaliya@oss.qualcomm.com>
- <20250701071852.2107800-2-mukesh.savaliya@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250701071852.2107800-2-mukesh.savaliya@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1243; i=brauner@kernel.org; h=from:subject:message-id; bh=TwVj/zN+QrMTevzg4950xW7dqK4GoQ4YRfxr5UmUR3I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQkz4369uyfx9MFk40U1jtLFLQGXDktILn382QexrUt+ 6Z8fHXeraOUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAi0/sZ/vB9eqQQbS76p7Hh 2OF7aXq72v9busjsjbgRf37LZf7ghV6MDLc2H53dIzkz6VTth6A7O9quq2T9vSLe2cGg1n7ctTp gCh8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 01/07/2025 09:18, Mukesh Kumar Savaliya wrote:
-> Add device tree bindings for the Qualcomm I3C controller. This includes
-> the necessary documentation and properties required to describe the
-> hardware in the device tree.
+On Thu, 26 Jun 2025 19:14:29 +0000, Shivank Garg wrote:
+> Extend anon_inode_make_secure_inode() to take superblock parameter and
+> make it available via fs.h. This allows other subsystems to create
+> anonymous inodes with proper security context.
 > 
-> Signed-off-by: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/i3c/qcom,geni-i3c.yaml           | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
+> Use this function in secretmem to fix a security regression, where
+> S_PRIVATE flag wasn't cleared after alloc_anon_inode(), causing
+> LSM/SELinux checks to be skipped.
 > 
+> [...]
 
-It's v6, you really should have started testing your changes by that
-time. :/
+Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.17.misc branch should appear in linux-next soon.
 
-Nothing in the changelog explains the change made here, so you just
-sneaked something which did not work.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Best regards,
-Krzysztof
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.17.misc
+
+[1/1] fs: generalize anon_inode_make_secure_inode() and fix secretmem LSM bypass
+      https://git.kernel.org/vfs/vfs/c/4dc65f072c2b
