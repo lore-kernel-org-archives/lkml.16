@@ -1,293 +1,162 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010018.outbound.protection.outlook.com [52.101.84.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116D91F428F;
-	Tue,  1 Jul 2025 07:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751356053; cv=fail; b=JMtEXIKrDwcH7HCDSSXsNkR/S+JbnEDQebZoMI+71SjlZdMibDfowwq1vL13tNe8KoT1KT6ZfGEhgjUfcJt/FNC9pjc2K8bq8M6jZawsjL1rMSo5iqI+S5FbJ6SEl3A0jcIIeojEASuBXBxhAXg+LTzXheAHOuOzNmdjM42MKjY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751356053; c=relaxed/simple;
-	bh=dPguFGq/zQM8VkjCYlHxBWvZJAOspjpKQG6qVitFaRM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZuCmDNeqD87VvY/8oQudt0vhqOiVnLFkB4avXvnIQ0AnVrwgq6jzCIH6pUctSgL+H63DD4ewKCcmZlUk4e4SUU2uGSa9zQfC4huIz/QSbz8yhNdILqZU+C+F2r7sbCdm4xf7zeJJ8+krXGltnMnumy9EcSC0pfCG5qHw1cLyRHk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XkQ9pB6n; arc=fail smtp.client-ip=52.101.84.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A71725C838
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751356129; cv=none; b=HZTcOreFVdX3d4YC/v6N+aq+yl5sbVBe9IeoBq02rHsGf7G2ovmFgJHv8dj42KO130aV4OP1WCYQ/L478scn9Tj/VaZXQDC621fw4gssm5xEqrN4c3yJqzGPrTil+najTC7KoLdWDc8/vstPUI2x0niRSsm98C8HtGLZhzxzzAg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751356129; c=relaxed/simple;
+	bh=yfyVRPQTE8JqiDbaOUKxGFIbx1q4UehpJFGONWIiHbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e8PjqG/ZQN8786n8z68PXeB0axaa89Vt4E1KW/u6aO05InlAGJ462snkf/DtykvrwuYr+/tWB72ZAkn8WfUFUi3Asv17dlB9vxDRG0luEMLaJ4nPgXSZNS4h9RnAYWpDEY3AFMzJsO8wRVfNx11pmzFMSNdsVC2kurtmDlcBarA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=D+e37poZ; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XkQ9pB6n"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E95w5lgo/z5DJ2d4ZW772fS8IQOspXzzKl4V9KDXcq+uZP4ZDyy6lS6T5ZjIZQFg1qzDc44luPH3SWLFELi3en6//mzZjzBilJ9zlVeYnAfSr0xIZEu89DN9+oFC2h9i+ANlHEVzVCYkg0HTkdFEhqTJEVquPxW1uw9H98i1HkDzAYlBzGqkW8LI8zCi2DBS5eY5sTIFnkmsfEOhb4gaebboCN+OCY4hwPEPBRKMtwS0uMkuUl/h7w/I2LDT0D1mZY4K2K9zrJSUW717XzjFWV0cO7rVz/iUyUKk2jFbc9Yg35Pvlh6dtc3+UxAgfkJTRiPv9BzkJB0hOyPorljFPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dPguFGq/zQM8VkjCYlHxBWvZJAOspjpKQG6qVitFaRM=;
- b=XoYJD6dnJNtKDjlCtoEqOr7bbcjaK1ukqVo+jat+x2R20TrfV8W8XJcr7Qoxz3FqMl6ZvHDNhJoR8+DNnBkDCa6og30GfhNvjuDrZGw5KVyNdS9uUdDwo4uiE5NVB4bs80PCVSimG2oGY0l90M7uDoSoV8WtEjZUXmSDbqteGQcgv3vq0BvLT/+HmtOWnPdddZe12LjmmwH3HMHEMvxz9kGvZ7HZbOVgq0Ij9zytChYuxvwMk/9C2Y4vXXni0rn6iFk+SeUmSPSEAveRdbUS3SJziFsicibXK7BDQtCH0qzWrc5VTd/YiaHHdKdHzWREhuUyWGlAsB1UreiGyN6sNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dPguFGq/zQM8VkjCYlHxBWvZJAOspjpKQG6qVitFaRM=;
- b=XkQ9pB6nyXB3J64+xPGKmZtdYXufuPg5eRThb0GzhuYjZN4pWEQZByHamstEezibYDQMU6G20aLTkcf54RPR58kjwAUyPBrrn06Fhc/FqkCRvhIm9zGNmUIBHtnm+f2pQXMTAq2u1LQqNoNLkCfklbHbrQulDmt+ZF84My9DR4vLA+prjIYxnacb4obw6RFSNOXbWIBwd0aW42gCu2Ss+K2TmnKiwaXZGb4jT3gDgAxbQ5s8UZnh7/I8WeV2MNrOgi6kDcfOZtFzsZDMMfFbdRp6kK5VZJqXJlDDC8qyKrqdKXyA/JFYioRDD0UkZRQwgUaw4dBfMAeNTL0xF7EQiA==
-Received: from DU2PR04MB8567.eurprd04.prod.outlook.com (2603:10a6:10:2d6::21)
- by AS8PR04MB8198.eurprd04.prod.outlook.com (2603:10a6:20b:3b0::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.31; Tue, 1 Jul
- 2025 07:47:27 +0000
-Received: from DU2PR04MB8567.eurprd04.prod.outlook.com
- ([fe80::4db:3dc0:c292:493a]) by DU2PR04MB8567.eurprd04.prod.outlook.com
- ([fe80::4db:3dc0:c292:493a%4]) with mapi id 15.20.8880.029; Tue, 1 Jul 2025
- 07:47:27 +0000
-From: Luke Wang <ziniu.wang_1@nxp.com>
-To: Bough Chen <haibo.chen@nxp.com>, Pratyush Yadav <pratyush@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Tudor Ambarus <tudor.ambarus@linaro.org>, "broonie@kernel.org"
-	<broonie@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org"
-	<linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org"
-	<linux-spi@vger.kernel.org>, "michael@walle.cc" <michael@walle.cc>,
-	"p.yadav@ti.com" <p.yadav@ti.com>, "richard@nod.at" <richard@nod.at>,
-	"vigneshr@ti.com" <vigneshr@ti.com>, Han Xu <han.xu@nxp.com>
-Subject: RE: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/address
- writes in 8D-8D-8D mode
-Thread-Topic: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/address
- writes in 8D-8D-8D mode
-Thread-Index: AQHbwy5mvui/ziUulEqwZziZN8AwGrQdKY1A
-Date: Tue, 1 Jul 2025 07:47:27 +0000
-Message-ID:
- <DU2PR04MB8567950B89B1F4F1F97FCD43ED41A@DU2PR04MB8567.eurprd04.prod.outlook.com>
-References:
- <DU2PR04MB85678048FE8B475B1E323E0AED802@DU2PR04MB8567.eurprd04.prod.outlook.com>
-	<10b40148-b949-442d-9d43-0db09517269a@linaro.org>
-	<mafs0zffo3gea.fsf@kernel.org> <87cycep8go.fsf@bootlin.com>
- <mafs0wmam6ukq.fsf@kernel.org>
- <DU0PR04MB9496B734F6BA84ABAE051D439097A@DU0PR04MB9496.eurprd04.prod.outlook.com>
-In-Reply-To:
- <DU0PR04MB9496B734F6BA84ABAE051D439097A@DU0PR04MB9496.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU2PR04MB8567:EE_|AS8PR04MB8198:EE_
-x-ms-office365-filtering-correlation-id: b2ac6c87-e924-45d0-a535-08ddb87386a8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|19092799006|376014|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?iso-2022-jp?B?U3o2T0d3eXhBWXlIa3pBWkp1THdkTWhBdDhHL1c1eGVGb3BDWjdTVXZs?=
- =?iso-2022-jp?B?cUpGR3R5ZngzYW5vSVhNTmRWemVodG9WVGs0K3VmL09nTFlZM0JZWlZV?=
- =?iso-2022-jp?B?YkkwYkJHQ2dMQnhoUnVLb28yVnFOQlNEcWloeUtUNW5qWkwzVGdUM1FJ?=
- =?iso-2022-jp?B?eXRpeUFOeHJibnlQb090Q2dNNkdXV3Y5NjdCR0NVMzNnaHZpbXNiMXdZ?=
- =?iso-2022-jp?B?aklZb1VDMlB0UnBobnJ4Y25ObTBYa0JYUW9wT0ZkZVVBWm1ialJzVUR1?=
- =?iso-2022-jp?B?SW9odVJPSXpyd1VpaVE2TVFWUnVZTUhOdUgyS1hSamRHNVFiTXVScVdR?=
- =?iso-2022-jp?B?Y0lCYVVWQWM0TmRTUlc3MnYyU2VCbW9lWk9wdHgwRUxGVHpTVC81Q2F6?=
- =?iso-2022-jp?B?WXc3MTNkNGp6TXhZbHkwYTgzTmNKT3VOcTBKbmZKR1Z5dllFcjZkWEJm?=
- =?iso-2022-jp?B?OU5ja3dJRWpaMlZrd2dCYlRGU2laQ0RBKzFNd0FyK25kc3pKU3FuVDZB?=
- =?iso-2022-jp?B?c00vMit1K1hPNmI0NUE2WnM3N3M4UkVVeEVRd2hMM2EwWEJKajl2bnd4?=
- =?iso-2022-jp?B?ZlVMNXYyY0NSOWp5bU15cklVaTFOSDZqaGdHMW03TGE5RUZ2a3JoZmVw?=
- =?iso-2022-jp?B?WlBsL1ZsQmxnb0hEZ00ycStLcEFQckdwV3hFUzlQZUxNeWlhT21CaDJJ?=
- =?iso-2022-jp?B?a1FaaUkrZGNyeXRIbXl1YVVuT1UxZ1R0Z1pPWk9Ldmh3VmkxQXlKMTJ1?=
- =?iso-2022-jp?B?T2VlM0h0TFo2WklidE1YUUJmeUpKQ2VpRk9IZzR4UWFreVZSUkZJNm9i?=
- =?iso-2022-jp?B?VlFyeEV5aEkySFZBNnJHVmdsT04yd2wvZXkyYlhVMFJrazhBRkVzTTNv?=
- =?iso-2022-jp?B?YWZEcEZPcHcxdVJoY2V3aEFhUjJFNFh4WW1lRjZwbTBoSG5UdGZCWmw4?=
- =?iso-2022-jp?B?SmN5R1pWK2p2QjQ4OEJuTVhxRVhNNWk0VFgyc1UvVXBJeGlYOThiUWg1?=
- =?iso-2022-jp?B?R1EwS0lTeFNpSHNPNmVNcUxEMEVFeDZXLyt0L1NsazdwRzI4eVpaYmxo?=
- =?iso-2022-jp?B?YlIwSlpHbk1KOGVZSGxqMDFzVjRySTZPMTJEQ0xqRlplWncvdjA3ektz?=
- =?iso-2022-jp?B?N0x2WVQ3Tzk5STQ3NGVobGdSTGNRWlpyVDZ6QWNtbm1xZWhOTXArMHB5?=
- =?iso-2022-jp?B?SThreDZhWkZIT0VzNzFubGJXTCthLzdjeFpDVzhONkFIMFlkdFA3UVgv?=
- =?iso-2022-jp?B?ZW4rb094T1NKMFNrR0NBTWwyTmlRMWYzODFReUcwNjBRakMreTNxeE9F?=
- =?iso-2022-jp?B?N0xNVVJDVnlFZDhkb1VaWloyR1c3RVQ4bnVEUGlrTXRQVUI0dmhKb0dx?=
- =?iso-2022-jp?B?TGxlK0pzNjVZNE1VdUFkTWY3VGlDOEhJeVE1dEZacGViUnM2elowTXNX?=
- =?iso-2022-jp?B?dkxqdjErL3pTRlJ2cFp0cFNYdkhUbXVtb0FWZ01GWGtEQXRicmF1Unpy?=
- =?iso-2022-jp?B?TndtQjh4ejFGcU1PT1pubWdZN0F1VnI0NXM0YU5zS1FtYzBQRldOdU93?=
- =?iso-2022-jp?B?OUI4enhCNk5iem9OWkEvalQvWm1IbkxGZTVqTDZSRjlwZmlXOEJvOHlw?=
- =?iso-2022-jp?B?L2NFQ0pBbDhhN2g1TTFTa3c2UXdEWHdRUHo3NFlYVmd5czBQR29ObWww?=
- =?iso-2022-jp?B?UWYrZjQweXd3YjZzTUhMbUZuc2VWTVpSUExGdnZlenlaa3MwUTI3STF6?=
- =?iso-2022-jp?B?ZU1Wc1owN1FTcmw3eFVaRG04VXVaU3kwbnRPTENZMVA0NHlmM1ZrM3pX?=
- =?iso-2022-jp?B?TlR6bWdJWFBIUTBoNGxVdXBxWGxPdFlEVzFmTWJMMi8rZkpXUGVYN3Bu?=
- =?iso-2022-jp?B?RElpWU1Dcm1uVUNRa001U0FsRjhWSWpualB3dEpGa2lDWkVYeER1djFS?=
- =?iso-2022-jp?B?Sm1WdkxFb3BmUkl1T2l2UG9TMC9lK1REVVJxTlN3UFUyaUxsb1ZHWTBh?=
- =?iso-2022-jp?B?ZnIyWmZVMUpKWVN0SG5aMzBSdWZ1aWJtZGxOamF0d1M3cG5PZUJQZVVB?=
- =?iso-2022-jp?B?RnlvS1pUNndrQ0trNEVDRlVENmRGMGphcXJDL0QzSlhkaDdaekh3MnBP?=
- =?iso-2022-jp?B?QzhETmd1cWtheGR1N1o3aE9IcW85VFJRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8567.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(19092799006)(376014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?MmlPYUpHZG42eEkwdFp2L3BPZzk4cGpNRlBvMkJPUTh6eGNiNlJQMU5K?=
- =?iso-2022-jp?B?eEM2SFY1RVpDVkkvWmpiYWRLSi9zbUJsUW5aaEJRemc3Nlp1TGZmZ3oy?=
- =?iso-2022-jp?B?bEk1dFBDVWU5cUtxYll0b3dOOFlIOVdoL2N0M05USXdCZU45bk1aUlRJ?=
- =?iso-2022-jp?B?bzdJNmg2dXlIU09jOGl6MkE2bmdIYmhUak1pS0s2L3dwdzZLbVd2dWJC?=
- =?iso-2022-jp?B?dVFqQVBVOEZVT0plMVpmcXpLMmg0ZDVkZExSQkJBNll1NUJZc3o0UGlz?=
- =?iso-2022-jp?B?aXhTeFBxNlVMeU4vZXN1WlJIMVFaL1hCbS9yNm00aHg2UjFKOVR2bUph?=
- =?iso-2022-jp?B?b3lMK2M2UjN3dSs5cHoxMFBVL2hlUVhLT3hacnVEL1QwNUF4VXQyZ3pr?=
- =?iso-2022-jp?B?Tng0KzhtcmVZYkxNSEg3Si9HVWQxcVg2WGtoYXBQUEVOMzBQZWRuaFBv?=
- =?iso-2022-jp?B?QkJ5OXBWUzZtZlhJZUE1Qlc4UmdRM2toYzhBOHJlVk1iZmVhUG1GU0xv?=
- =?iso-2022-jp?B?K0E5bms5TTNMR0YxUzFrZS8rRlVBNVAweHl0b1pTeDBIdjEwUmp2cVJy?=
- =?iso-2022-jp?B?SmpRWHVoU2o3MDRDM21vN2RIa2t4V3ZIRHh6bG5udzRqditCcmR1aGZn?=
- =?iso-2022-jp?B?aFVlK3J3U0E1Y041VmRZWTRlTG5idUhmaWdnODhqNkNKTHdzc3BBRk1E?=
- =?iso-2022-jp?B?QUxFTGRkTUd4QWZWRVZ6bEMzMW55bmx5RGIzazBmNDdBSTJiVFEwWVpw?=
- =?iso-2022-jp?B?TUFZU1ZoTVpvUkY3WWtBQnV0SlJNeVRDUWhNSmRqRGFoQ2kxNWtVTm56?=
- =?iso-2022-jp?B?WTB1Z0RQNW8wbVZEWlpBSUJZMnBNWmxBakkxMWRjTVFJN1B5ZnNrdG01?=
- =?iso-2022-jp?B?cnFhNWVQNXhSdlFNS0ZIU1dEZFhQK0xNcE84T2tRc09iTDhScmdLL1B0?=
- =?iso-2022-jp?B?UTNXcld6UmlhYnlIbXdxdEk5TXBKSHh2VXlla1EzZHFJT3V6RkdHSDdm?=
- =?iso-2022-jp?B?RmUrTnArakN3bS9LTmJKczdPTUVZNjFacTZGcTk4K01oQitRaHpHTlNL?=
- =?iso-2022-jp?B?cU52NlhIV0tYSGxXOWF3SUxRU3NOdll0WVJSQ1ZuU01EeTZJdmd5SW40?=
- =?iso-2022-jp?B?WG1DTHplRGVtQnhXdU1yKzRwU2FRRHIyNzB4bjMyQzJPUVpQYzk0QlpP?=
- =?iso-2022-jp?B?ZVJNd3l3bXBTZSt3WEhGVVQwdlBDOHg3em5IRjRlNWNPWWwrdCtaZ1Q4?=
- =?iso-2022-jp?B?L0dSalFKSWtzbEM5bHV2a1FkQjhjNU9RMlUxbHMwK3JaaTdCb3NCbFdT?=
- =?iso-2022-jp?B?NFovclZuVFI0a0JNUGU5eE9ETm54aE1KcXdtVjh5SnBvR2dobWtuRWdm?=
- =?iso-2022-jp?B?K3hhUTBWZFZRVzZVdURCbC9VN1Z6bDJiSXNVakNLRHNOdzVrbnFoNUU3?=
- =?iso-2022-jp?B?R2NIT0xXbktCSE9WQit3RkxnZTQ4ZDNDL3lJSnlhVDhjaGIwTTg1enZR?=
- =?iso-2022-jp?B?c0xrcmpLeGxWbHo3S2dNdGJqbEpsZ3ZpZk9NQU9Da2xEa2tYYzF4c21D?=
- =?iso-2022-jp?B?RndyKzZRN1ZwbVlSdzRSd2U0aGhQWU1hbWpxUjhhd3V6cXZ6L2RMOXUw?=
- =?iso-2022-jp?B?V2xqR0ZKY0ZOMjUyclh0b0Nnb0EvdUlta3hVbzVQVGZPcjBFTUNtdVZj?=
- =?iso-2022-jp?B?dUZ1R3psUEdaN05MbzJoMHFrTHZ1eWlYMG1jWWdxSFlnMy9tcStvT28w?=
- =?iso-2022-jp?B?alJJVzZWa0JKTkdCcHgwamsyS2tYT2xURzQ1MG94a3FzNmtQbXNQeUNW?=
- =?iso-2022-jp?B?Q0JCWUYwVEEzNHJnaXhrb3laRkd6L3JNS2czc0JJWUJIVmhyWUtPanZ2?=
- =?iso-2022-jp?B?d1dWNHpTNzRoakgydkRCWXdXS3RtUTNBZVlMc3pJbUtkeGI1aHEydTdN?=
- =?iso-2022-jp?B?N0xydzhrQWUwS3RtUXYreVphOHdJZHFHcFFCZkNVQXFES3ZsYU1zUURI?=
- =?iso-2022-jp?B?ZDh2UGx5b3FHcDMwTEtQSGo5M3lJSGNjQVNnZ2ovLzkrYXArNnhtUkV6?=
- =?iso-2022-jp?B?ZHhkOHk3ckdTS2FqUjBVMWI3aXBNaGMxbjN0OHdZTk0wOTBQTnJBY1Yr?=
- =?iso-2022-jp?B?NVdObnNmRTZvSmVHZUEveGlHdkVDcUN2eGxNaUQyQWY3cHpocnBFVlJo?=
- =?iso-2022-jp?B?ejBHamdHOVJLakZGcStKbWtEWU04YkoyZi8wZVZZTW1FT1Y5Y3BmNlow?=
- =?iso-2022-jp?B?SWFlZmxzdWVSbXZZeFhERTBNblR4ZUNxeHlKeWdVN0ExRVQvVE1tNW5h?=
- =?iso-2022-jp?B?YzFxSg==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="D+e37poZ"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31c6c9959cso3694150a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1751356127; x=1751960927; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vEpFKt7YYcFzTPMsl+PrVIXjmxXbTAxWQl834MFcBTI=;
+        b=D+e37poZ7ObDomrskbXZhXkWIiOk1YSqbJLLoZ2ZmKkJ2+ovir9J2RiyiV3TqHddtd
+         vmQLpXJc0n3GLEqbiupHurA/VHHeXngP7cd59gKljSQBXjxB7g50eakFOL6XfXyIu0Hh
+         Fv0ZXr2HPu6s/MYd1HF0eptn/qzHy5Zf6PZIRqMsAn8dffPsz3tbs925t/q0+Qi28kyP
+         To/9yTKvAxmaQoydpoytGqEL6TcAN2VZdJX2USXRU1cIqTvZ4Z+NgfxkxFjO8Mp6P4eQ
+         AQo7bdpHgopBAhiMsH8P31FixnWEhJrIpNyx1k9ZdKZ87fvr1RdLwJMYtcNwX0mUzuLZ
+         R0Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751356127; x=1751960927;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vEpFKt7YYcFzTPMsl+PrVIXjmxXbTAxWQl834MFcBTI=;
+        b=C3px4xh+IXEEOF5fNKaeuZ7MQj3IcTgWhBDEGj5t4Cl0dDrWM9qGzM+GkRZffqOs/u
+         OiHTP5W1luiVOuvJXimkXixlEhBwpu7xWaxfBp7/Yz0dDCdo2c0g/A0RM1cAg9h5wE7z
+         nu0x8s4ua39IvNmzmXqXt8VP3uOZfHoH0hpJsNqJGmzmddnLxAPWhqVxqcvK3B3WC62l
+         F8vF9XaJZsEuUkGVbmCwSEdPesQvY9T6VzBecfTg6b29epoCm0s8RGGRMexVIbkmF6YH
+         u75/53OgisnBAw1dfdRtjzLyivUE2+VaysbGomAMeia53t94WGvr6/s7p6onOWJnSlhT
+         a7gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIO9tysm7d/+CpdhI9SzhjiK2v1g+H1qsfNziUdqNk9YWywL1ao9nm8CUZH7i4joNpgIzr44Rpj2tj4SA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJywTBdw0MLM2iw13eKUTDVfyE0fhAUMz9+gS4MJZsWXJm00IF
+	hAdCwEak320DuyT1Bnq5SC1g1GgYfArxWu8STQlpshs7NvyPxWYxB1eLiIn5wMw6J07M2UhrxjV
+	yrhkV70Q=
+X-Gm-Gg: ASbGncuaNTVGkf7mtD4cWi3zpif/rJxkuiCXKyGuYaLMDT989AL1IpvNgrtZC4L7J+X
+	F+T71XkodPWLp5tEUIuvvQw5iUIGw1z9ar9CmbhtAXnMlYqznHTsUq/In7iLbLEWW65ZoFtlE71
+	Dh1oldTZozQq35UNPM7R1IBhWXRSFoCT220/aSjo8XqYxbq2K0KQD1KTsZO9VLDNb2K7SgGiN6p
+	b1ypnaM8sCuXMiY85NLNVIrYi1/rheqwCeQEh0uxP4nrh8HDyTS9OW70qkKyaCyq/WqVQu75CJW
+	3YtcVapgjCMceMa95HOXVlLOmSJ/HXCuf0H4uiYuNTbbT7XOmnRxBMLsrSamUOXm4xP2MFAfLgF
+	CO9SR
+X-Google-Smtp-Source: AGHT+IEkSOMFIWuHzTsl3h9jkYp4/Xk30pqD6Wb6IEepi4SrOE2ToSdyXBQqLIMA/PtSl0WH+SMRvA==
+X-Received: by 2002:a17:90b:2dd0:b0:312:db8:dbd1 with SMTP id 98e67ed59e1d1-318c8ff231fmr21355546a91.5.1751356127275;
+        Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
+Received: from [10.74.31.243] ([203.208.189.6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-318c13a16besm10785331a91.14.2025.07.01.00.48.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 00:48:47 -0700 (PDT)
+Message-ID: <f1f68fbd-e2cf-40c5-a6b8-533cb3ec798f@bytedance.com>
+Date: Tue, 1 Jul 2025 15:48:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8567.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2ac6c87-e924-45d0-a535-08ddb87386a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2025 07:47:27.5837
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: a+2NVUp9QAZ4SOzHHNlL434JjdAcy3QAItgZDeDGy2nFsp64sKuPiYGBQsSFWxI3OM0Qwt949UoZ2zQs1HmoSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8198
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] Re: [PATCH net] virtio-net: fix a rtnl_lock() deadlock
+ during probing
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250630095109.214013-1-zuozhijie@bytedance.com>
+ <20250630103240-mutt-send-email-mst@kernel.org>
+ <20250630105328-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+From: Zigit Zo <zuozhijie@bytedance.com>
+In-Reply-To: <20250630105328-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 6/30/25 10:54 PM, Michael S. Tsirkin wrote:
+> On Mon, Jun 30, 2025 at 10:50:55AM -0400, Michael S. Tsirkin wrote:
+>> On Mon, Jun 30, 2025 at 05:51:09PM +0800, Zigit Zo wrote:
+>>> This bug happens if the VMM sends a VIRTIO_NET_S_ANNOUNCE request while
+>>> the virtio-net driver is still probing with rtnl_lock() hold, this will
+>>> cause a recursive mutex in netdev_notify_peers().
+>>>
+>>> Fix it by skip acking the annouce in virtnet_config_changed_work() when
+>>> probing. The annouce will still get done when ndo_open() enables the
+>>> virtio_config_driver_enable().
+>>
+>> I am not so sure it will be - while driver is not loaded, device does
+>> not have to send interrupts, and there's no rule I'm aware of that says
+>> we'll get one after DRIVER_OK.
 
+Yep, at first we're thinking that when the VIRTIO_NET_S_ANNOUNCE flag set,
+we can always assure an interrupt has fired by VMM, to notify the driver
+to do the announcement.
 
-> -----Original Message-----
-> From: Bough Chen <haibo.chen@nxp.com>
-> Sent: Monday, May 12, 2025 7:10 PM
-> To: Pratyush Yadav <pratyush@kernel.org>; Miquel Raynal
-> <miquel.raynal@bootlin.com>
-> Cc: Tudor Ambarus <tudor.ambarus@linaro.org>; Luke Wang
-> <ziniu.wang_1@nxp.com>; broonie@kernel.org; linux-
-> kernel@vger.kernel.org; linux-mtd@lists.infradead.org; linux-
-> spi@vger.kernel.org; michael@walle.cc; p.yadav@ti.com; richard@nod.at;
-> vigneshr@ti.com; Han Xu <han.xu@nxp.com>
-> Subject: RE: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/address
-> writes in 8D-8D-8D mode
->=20
-> > -----Original Message-----
-> > From: Pratyush Yadav <pratyush@kernel.org>
-> > Sent: 2025=1B$BG/=1B(B5=1B$B7n=1B(B12=1B$BF|=1B(B 17:35
-> > To: Miquel Raynal <miquel.raynal@bootlin.com>
-> > Cc: Pratyush Yadav <pratyush@kernel.org>; Tudor Ambarus
-> > <tudor.ambarus@linaro.org>; Luke Wang <ziniu.wang_1@nxp.com>;
-> > broonie@kernel.org; linux-kernel@vger.kernel.org;
-> > linux-mtd@lists.infradead.org; linux-spi@vger.kernel.org; michael@walle=
-.cc;
-> > p.yadav@ti.com; richard@nod.at; vigneshr@ti.com; Bough Chen
-> > <haibo.chen@nxp.com>; Han Xu <han.xu@nxp.com>
-> > Subject: Re: [PATCH v2 6/6] mtd: spi-nor: core: avoid odd length/addres=
-s
-> writes
-> > in 8D-8D-8D mode
-> >
-> > [Some people who received this message don't often get email from
-> > pratyush@kernel.org. Learn why this is important at
-> > https://aka.ms/LearnAboutSenderIdentification ]
-> >
-> > On Mon, May 12 2025, Miquel Raynal wrote:
-> >
-> > > Hello,
-> > >
-> > > On 07/05/2025 at 09:43:25 GMT, Pratyush Yadav <pratyush@kernel.org>
-> > wrote:
-> > >
-> > >> Hi Luke,
-> > >>
-> > >> On Tue, Apr 29 2025, Tudor Ambarus wrote:
-> > >>
-> > >>> On 4/29/25 10:03 AM, Luke Wang wrote:
-> > >>>> Hi Pratyush,
-> > >>>>
-> > >>>> I'm following up on this patch series [1] Avoid odd length/address
-> > >>>> read/ writes in 8D-8D-8D mode. While some of the series has been
-> > >>>> merged, the patch 4-6 remains unmerged.
-> > >>>>
-> > >>>> In fact, we also encountered similar read/write issue of odd
-> > >>>> address/ length with NXP FSPI controller (spi-nxp-fspi.c).
-> > >>>> Currently, we handled the odd address/length in the controller
-> > >>>> driver, but I think this should be a common issue in the octal dtr
-> > >>>> mode. Was there a technical reason for not merging the core layer
-> > solution?
-> > >>>
-> > >>> I guess I stumbled on those small comments and did not consider the
-> > >>> greater benefit of taking the patches. No one cared and we forgot
-> > >>> about it. Please address the comments and resubmit.
-> > >>
-> > >> Yes, it should have been a simple next revision from me but
-> > >> apparently it fell through the cracks. I do strongly agree that this
-> > >> should be done in SPI NOR, and not in controller drivers. So it woul=
-d
-> > >> be great if you can respin the remaining patches of the series.
-> > >
-> > > The fact is that we will have octal DTR support in SPI NAND as well a=
-t
-> > > some point, hence a common solution would be welcome as we will likel=
-y
-> > > face similar problems when performing these unaligned accesses. I
-> > > don't know how feasible it is yet, but if we have a fix for SPI NOR,
-> > > we will need something similar for SPI NAND.
-> >
-> > The common solution would then probably be in SPI MEM? Since you need
-> to
-> > make sure you don't do an out of bounds read, you need to know the size
-> of the
-> > flash at least. That is recorded in the dirmap operations, so perhaps w=
-e can
-> have
-> > this logic in spi_mem_dirmap_{read,write}()? Haven't thought too deeply=
- so
-> not
-> > sure if it would end up being a good idea.
->=20
-> Seems reasonable, I will have a try.
->=20
+But later we realized that the S_ANNOUNCE flag can be sent before the
+driver's probing, and for QEMU seems to set the status flag regardless of
+whether driver is ready, so the problem you're talking still may happens.
+>> How about, we instead just schedule the work to do it later?I'm not sure if scheduling the work later will break df28de7b0050, the work
+was being scheduled before that commit, and we have no much idea of why that
+commit removes the schedule_work, we just keep it for safe...
 
-Sorry for delayed response.
+Then, for plan A, we change the check_announce to schedule_announce, and if
+that's true, we do another schedule_work to call virtnet_config_changed_work
+again to finish the announcement, like
 
-After reviewing the SPI NAND driver, I noticed that the addr and len alignm=
-ent has already been implemented in spinand_read_from_cache_op() and spinan=
-d_write_to_cache_op() functions.
+	if (v & VIRTIO_NET_S_ANNOUNCE) {
+		if (unlikely(schedule_announce))
+			schedule_work(&vi->config_work);
+		else {
+			netdev_notify_peers(vi->dev);
+			virtnet_ack_link_announce(vi);
+		}
+	}
 
-Additionally, using 0xff padding in spi_mem_dirmap_write() might not be sui=
-table for non-flash memory devices.
+>>
+>> Also, there is another bug here.
+>> If ndo_open did not run, we actually should not send any announcements.
+>>
+>> Do we care if carrier on is set on probe or on open?
+>> If not, let's just defer this to ndo_open?
+> 
+> Hmm yes I think we do, device is visible to userspace is it not?
+> 
+> Hmm.  We can keep the announce bit set in vi->status and on open, check
+> it and then schedule a work to do the announcement.
 
-I can respin the remaining patches of the series if you agree.
+Okay, so there's a plan B, we save the bit and re-check it in ndo_open, like
 
-Regards,
-Luke Wang
+	/* __virtnet_config_changed_work() */
+	if (v & VIRTIO_NET_S_ANNOUNCE) {
+		vi->status |= VIRTIO_NET_S_ANNOUNCE;
+		if (unlikely(!check_announce))
+			goto check_link;
 
-> Regards
-> Haibo Chen
-> >
-> > --
-> > Regards,
-> > Pratyush Yadav
+		netdev_notify_peers(vi->dev);
+		virtnet_ack_link_announce(vi);
+		vi->status &= ~VIRTIO_NET_S_ANNOUNCE;
+	}
+
+	/* virtnet_open() */
+	if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
+		if (vi->status & VIRTIO_NET_S_LINK_UP)
+			netif_carrier_on(vi->dev);
+		if
+		if (vi->status & VIRTIO_NET_S_ANNOUNCE)
+			schedule_work(&vi->config_work);
+		virtio_config_driver_enable(vi->vdev);
+	}
+
+This is a dirty demo, any ideas are welcomed :)
+
+(I think in virtnet_open() we can make the S_LINK_UP being scheduled as well?)
