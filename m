@@ -1,32 +1,32 @@
 Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA62275B06;
-	Tue,  1 Jul 2025 11:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDE2275B05;
+	Tue,  1 Jul 2025 11:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370635; cv=none; b=e89ut/U2CnDM7Kh/+NiJkcmhFrm8QOJvcW2UAe05CJBu+9M2sGEuuy1nmJ6rSRrwTvFMLhhqfIuorQeFW5avK1KwxkO7F58pNUg9xyMZW4AHBORgAKP4Tiwp2qX2mxWNt8DFiVspWg4UC/qksjEV2FDcjSlckIDUP6PBQHpL8B0=
+	t=1751370637; cv=none; b=dUTMsT170nbYHhu5BKYg8YAWk0OdU4hZ0ws0x8AzFv+HBSnE8OK5tTbQ0cM9RRsmqrG4ynIGZCwKd4+z72tXt2hO9QWVEZgOSEk78NtTIGwbpWr19lBaH/5YTqwX55LgWxjIJuX4AfW4/vxVES6vo+J7PXvEiVyjSpAB0prwiEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370635; c=relaxed/simple;
-	bh=jos2N4jPYZSZdtS4t+7swJh70kK7Mgj95Vaq8bzKLfc=;
+	s=arc-20240116; t=1751370637; c=relaxed/simple;
+	bh=E/65hZ+SNIgb1ImByuu30DNKnij4Q/LtYvxJcZmBWNY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JxEpR57U+JHu9wHOQaRECKD6IZAdHg7oS71vYmJUOuE+0O+piKeX9wZ9TRuy/ZZ+C5TvN3KldoqrdR40oFo4nqSPdne6C2Frgr1dtBpF4MpC9UX1ji6nNbMV/QmwFTXaJhbjV45uw+36x4RaFFnxcuk493NBDrOF/vMBVNK5lq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=QHFS9BvC; arc=none smtp.client-ip=89.58.32.78
+	 MIME-Version; b=TgMab5TAN7DHXRFc1FdzJsNmh3Tb/2axscovunnZvwhum6FhQjWKRxXJgNZ3TMQbPc/ydpHLCgM+jAOUcp/FWrEJiUL5ZoNVWDMG7S4BbYcfdByZFyFR9F7u4GTlpkvvZZjAdoT5D2WhXvdORn3yeRqor8QJuI7Vu9GuajxoajM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=HHtachaT; arc=none smtp.client-ip=89.58.32.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="QHFS9BvC"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C7B9D103972A9;
-	Tue,  1 Jul 2025 13:50:23 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="HHtachaT"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BD531103972AC;
+	Tue,  1 Jul 2025 13:50:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1751370625; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1751370632; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=P6GW9qgBuo4yZqE7BJ8SsLe74Zc4+WBZC4gedVEpYg0=;
-	b=QHFS9BvCNUHMoXKHwgfbIe9VOS78vXXrKjG8eAqwbQf4Z+XPauNxYTaK9k04n+iiaOMZ2E
-	iwSAxqcJvS0eBlhVGZ3i2m2zM/PAdzvk64sxfvxMaXT2PQ1lKcYOq49nHTjkIVZD8AOTbv
-	lL5R7RA+6DjCfbq30hCC10X2JOYlx6pXv/VxecEjkXc2esr+Wrt6LULfRkgmYjqrNKgAgP
-	fnsxX91fnv1eoYgEi9/HhQiUq6MaxKdx6Toqj5msFu5nXMK8mVH9uqEtLwtHH8+ieEhD2X
-	8pIkESkxOBOEwE2soAY6ESXlQNX/SvpfvZEbxnaRwvpi1usi879tYtlzGE5NMQ==
+	bh=9567OdfKlOToPSXLumSypH1vOnny/nRSH8gqy/1+YSg=;
+	b=HHtachaTFk0TOVLU10ewMi2SJNrdlGjKCQAmjZPs6fPRADkubcZS5V2QYy7uIgFLAO/bUU
+	CpcOhffFiQDz+hD4G4NRcwHp0i1YtQth0poA37fsLhuoHnGkR4xZgCphfIg9b5MUudovnQ
+	dhtLyzIa03vL75FxK1Nm6UKlXYoBEcvuUY0b8l4N8dyGYzZfQXBVnRR+jKsVrEkzUUo56x
+	nX0SyGMgoTqB0VgOj8WlkfxXSQks2Leak3CQfev+jFKRbrywHjPxcNj2dqBn9+Qly4Tgzl
+	tBHzsKkK5CY6qgm9MZ/CqAGe/qdk3CcW4hl3PcCqGVejHWDxNynaPB+1pWLpmg==
 From: Lukasz Majewski <lukma@denx.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	davem@davemloft.net,
@@ -48,11 +48,10 @@ Cc: Sascha Hauer <s.hauer@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [net-next v14 02/12] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2 switch description
-Date: Tue,  1 Jul 2025 13:49:47 +0200
-Message-Id: <20250701114957.2492486-3-lukma@denx.de>
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next v14 05/12] net: mtip: Add buffers management functions to the L2 switch driver
+Date: Tue,  1 Jul 2025 13:49:50 +0200
+Message-Id: <20250701114957.2492486-6-lukma@denx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250701114957.2492486-1-lukma@denx.de>
 References: <20250701114957.2492486-1-lukma@denx.de>
@@ -65,82 +64,119 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The current range of 'reg' property is too small to allow full control
-of the L2 switch on imx287.
-
-As this IP block also uses ENET-MAC blocks for its operation, the address
-range for it must be included as well.
-
-Moreover, some SoC common properties (like compatible, clocks, interrupts
-numbers) have been moved to this node.
+This patch provides buffers management funcions' content for MTIP
+L2 switch.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-
 ---
-Changes for v2:
-- adding extra properties (like compatible, clocks, interupts)
-
-Changes for v3:
-- None
-
-Changes for v4:
-- Rename imx287 with imx28 (as the former is not used in kernel anymore)
-
-Changes for v5:
-- None
-
-Changes for v6:
-- Add interrupt-names property
-
-Changes for v7:
-- Change switch interrupt name from 'mtipl2sw' to 'enet_switch'
-
-Changes for v8:
-- None
-
-Changes for v9:
-- None
-
-Changes for v10:
-- None
-
-Changes for v11:
-- None
-
-Changes for v12:
-- None
-
-Changes for v13:
-- None
-
 Changes for v14:
-- None
+- New patch - created by excluding some code from large (i.e. v13
+  and earlier) MTIP driver
 ---
- arch/arm/boot/dts/nxp/mxs/imx28.dtsi | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-index bbea8b77386f..8aff2e87980e 100644
---- a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-+++ b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-@@ -1321,8 +1321,13 @@ mac1: ethernet@800f4000 {
- 			status = "disabled";
- 		};
+diff --git a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
+index 389aa8a20cd4..555d25a8cde0 100644
+--- a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
++++ b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
+@@ -882,11 +882,96 @@ static void mtip_get_drvinfo(struct net_device *dev,
  
--		eth_switch: switch@800f8000 {
--			reg = <0x800f8000 0x8000>;
-+		eth_switch: switch@800f0000 {
-+			compatible = "nxp,imx28-mtip-switch";
-+			reg = <0x800f0000 0x20000>;
-+			interrupts = <100>, <101>, <102>;
-+			interrupt-names = "enet_switch", "enet0", "enet1";
-+			clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-+			clock-names = "ipg", "ahb", "enet_out", "ptp";
- 			status = "disabled";
- 		};
- 	};
+ static void mtip_free_buffers(struct net_device *dev)
+ {
++	struct mtip_ndev_priv *priv = netdev_priv(dev);
++	struct switch_enet_private *fep = priv->fep;
++	int i;
++
++	for (i = 0; i < RX_RING_SIZE; i++) {
++		page_pool_put_full_page(fep->page_pool,
++					fep->page[i], false);
++		fep->page[i] = NULL;
++	}
++
++	page_pool_destroy(fep->page_pool);
++	fep->page_pool = NULL;
++
++	for (i = 0; i < TX_RING_SIZE; i++)
++		kfree(fep->tx_bounce[i]);
++}
++
++static int mtip_create_page_pool(struct switch_enet_private *fep, int size)
++{
++	struct page_pool_params pp_params = {
++		.order = 0,
++		.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
++		.pool_size = size,
++		.nid = dev_to_node(&fep->pdev->dev),
++		.dev = &fep->pdev->dev,
++		.dma_dir = DMA_FROM_DEVICE,
++		.offset = 0,
++		.max_len = MTIP_SWITCH_RX_FRSIZE,
++	};
++	int ret = 0;
++
++	fep->page_pool = page_pool_create(&pp_params);
++	if (IS_ERR(fep->page_pool)) {
++		ret = PTR_ERR(fep->page_pool);
++		fep->page_pool = NULL;
++	}
++
++	return ret;
+ }
+ 
+ static int mtip_alloc_buffers(struct net_device *dev)
+ {
++	struct mtip_ndev_priv *priv = netdev_priv(dev);
++	struct switch_enet_private *fep = priv->fep;
++	struct cbd_t *bdp;
++	struct page *page;
++	int i, ret;
++
++	ret = mtip_create_page_pool(fep, RX_RING_SIZE);
++	if (ret < 0) {
++		dev_err(&fep->pdev->dev, "Failed to create page pool\n");
++		return ret;
++	}
++
++	bdp = fep->rx_bd_base;
++	for (i = 0; i < RX_RING_SIZE; i++) {
++		page = page_pool_dev_alloc_pages(fep->page_pool);
++		if (!page) {
++			dev_err(&fep->pdev->dev,
++				"Failed to allocate page for rx buffer\n");
++			goto err;
++		}
++
++		bdp->cbd_bufaddr = page_pool_get_dma_addr(page);
++		fep->page[i] = page;
++
++		bdp->cbd_sc = BD_ENET_RX_EMPTY;
++		bdp++;
++	}
++
++	mtip_set_last_buf_to_wrap(bdp);
++
++	bdp = fep->tx_bd_base;
++	for (i = 0; i < TX_RING_SIZE; i++) {
++		fep->tx_bounce[i] = kmalloc(MTIP_SWITCH_TX_FRSIZE, GFP_KERNEL);
++		if (!fep->tx_bounce[i])
++			goto err;
++
++		bdp->cbd_sc = 0;
++		bdp->cbd_bufaddr = 0;
++		bdp++;
++	}
++
++	mtip_set_last_buf_to_wrap(bdp);
++
+ 	return 0;
++
++ err:
++	mtip_free_buffers(dev);
++	return -ENOMEM;
+ }
+ 
+ static int mtip_rx_napi(struct napi_struct *napi, int budget)
 -- 
 2.39.5
 
