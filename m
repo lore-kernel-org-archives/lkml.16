@@ -1,97 +1,154 @@
-Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9964221F12
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A611F239B;
+	Tue,  1 Jul 2025 09:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751363150; cv=none; b=SOnbGUtTvgm9ZsYNKyxGEHjQ1X4EFZpFESqfyRN4O+1b119lr5oLjziTo3Bwx8xmT3lZB6T8totum9vLfGVQEsy5pzCpgXmv3e0Vrs5vs/8RbJlnWGZm7QHK4dnFb8BHxvogL/9FdQtY1jBjAdSgRN5y0d/CAI+xQ34Iqw6fI2M=
+	t=1751363165; cv=none; b=lMmlBH1ou5ir4wmMQdZd1bSCUqqGx1r1lRarVshuThLZ7BNJuUWMIjKfUfNMJM8mUlVhIpPxXi/ukkAGcpKNNgIS+rykiaUJLzIDNfaibtQd6v07NOGiwiA/wEX4zZDzqDsYGy50iok3MRVhUdpR3nbKv4av9u7iGCtIXjRggko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751363150; c=relaxed/simple;
-	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LPksNCapob9L/jlbeHhq8n4VpQUI0Mev19OVUWSyW7GVTalbhINmNUSD50PUAUlvj1eT8lAYLWst20p6xMNRvISW3j7p4YiEarpVSFXldXRJ7stiHc1GZgKWfBHPCDIR+7zuSFe2eV4IyvuvEzXFgTCcupc+Jf4FhDUeL0gFovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=DU5BuadJ; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=jDp8C9ny; arc=none smtp.client-ip=46.30.211.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1751363165; c=relaxed/simple;
+	bh=MzK+tBHEvikT/y3icY0EOlfB0eIQiJbDL/vPnBH5ZC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hg8WMj3CxI/QUu1tk/MG3W1XQoKhqHJUJdt883WFS73IvZDKt/roYpWnpem/mIP/LOkTfBUmMcXSKWAzjCYFHn73OgtBxN7NWLpC5aeGjwL7scllAiWDmx/G7TKbKurFayYZ4CoNk7mTO7IU2dK8ppMDDrRt6ahIN/3Aev4K7nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6nkgnRV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="DU5BuadJ";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="jDp8C9ny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751363144; x=1751967944;
-	d=konsulko.se; s=rsa1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
-	b=DU5BuadJ8RYFEdu/uevam2G6DqQZQnnf7tFi5jbIkVmFHyh87z4UqCXHLZtEn8mJEQA0sg0BB0abD
-	 +AGHpR1PHt390/AKC9kp2+SOe/DQLtVK2A8CqfFPUslOQbQzUiCc2iCWlQdINdKwGwqsui9RlEBOUn
-	 d0cPz8ZlP5zlDMpSKDfy03fHszIiSnKVa4qzsBmJriag4ycrmQYOPhF7IfQSDkgPL9GQUWKvKXGpOf
-	 5LW9Io81nXAzcxWxJonGeZlbgUhRMfq3viGftxXr9D0PJFQHw8bryyhaeGXGpT/c+LZyk73AeJu8IT
-	 /XBLMS/MNgVyQXny/9YcEInQZcuTXAQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751363144; x=1751967944;
-	d=konsulko.se; s=ed1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
-	b=jDp8C9nyUrGztV4nz223BpyGLbeqrMQor86FZHrvNtq1Onl3ZCiuOtWDgmvXZKZAho4OduZQLCSQ/
-	 BGSsLAQCA==
-X-HalOne-ID: 272f01c6-5660-11f0-8f4d-e90f2b8e16ca
-Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
-	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 272f01c6-5660-11f0-8f4d-e90f2b8e16ca;
-	Tue, 01 Jul 2025 09:45:43 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6nkgnRV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFE54C4CEEB;
+	Tue,  1 Jul 2025 09:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751363164;
+	bh=MzK+tBHEvikT/y3icY0EOlfB0eIQiJbDL/vPnBH5ZC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r6nkgnRVrxpsEhrSynq7t3OUsleGE7pItMeHT0asVMWR32cxKjoPirQimg891wiwo
+	 63X/x1ovRlUxKJwCM5gmW/Qa1un4NcmGdRIf4PCMIoHuWo4ka0elgPeRcbwj/3tvRi
+	 5FzH0zsYYHdYMHZlHdo9WXkGEFt4OgRZz8I7ES/LZrE5oPAs0/CQMHYyj9N7Rg04E8
+	 nMsYPJIWcTI3uufeSdpWajM3LuDSM5/4ii7CE6CvoeocVIqn8pDb5hfJd/cF5ScJaR
+	 SaTpNfQvPcGDSv1Lpk9JDq9ncLBQr7kJx3kIF0UGrv2VTvvJMmodN8NTI5av8qdTy3
+	 lyjMHJA+sbX0Q==
+Date: Tue, 1 Jul 2025 11:45:58 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Sascha Bischoff <Sascha.Bischoff@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, nd <nd@arm.com>,
+	"maz@kernel.org" <maz@kernel.org>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+	Joey Gouly <Joey.Gouly@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	Timothy Hayes <Timothy.Hayes@arm.com>
+Subject: Re: [PATCH v2 2/5] irqchip/gic-v5: Populate struct gic_kvm_info
+Message-ID: <aGOuVhED/SSnzwWU@lpieralisi>
+References: <20250627100847.1022515-1-sascha.bischoff@arm.com>
+ <20250627100847.1022515-3-sascha.bischoff@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH v9 2/4] mm/slub: allow to set node and align in
- k[v]realloc
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <CAJ-ks9me9i-zkJcZerixEcyxQK764ubL9KQ22kM6B48du_fBig@mail.gmail.com>
-Date: Tue, 1 Jul 2025 11:45:33 +0200
-Cc: linux-mm@kvack.org,
- akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org,
- Uladzislau Rezki <urezki@gmail.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5B3F6032-1971-439F-8A4B-344B6136A4A2@konsulko.se>
-References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
- <20250630221628.3325244-1-vitaly.wool@konsulko.se>
- <CAJ-ks9me9i-zkJcZerixEcyxQK764ubL9KQ22kM6B48du_fBig@mail.gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.200.121)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627100847.1022515-3-sascha.bischoff@arm.com>
 
+On Fri, Jun 27, 2025 at 10:09:01AM +0000, Sascha Bischoff wrote:
+> Populate the gic_kvm_info struct based on support for
+> FEAT_GCIE_LEGACY.  The struct is used by KVM to probe for a compatible
+> GIC.
+> 
+> Co-authored-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> ---
+>  drivers/irqchip/irq-gic-v5.c          | 33 +++++++++++++++++++++++++++
+>  include/linux/irqchip/arm-vgic-info.h |  4 ++++
+>  2 files changed, 37 insertions(+)
 
+Reviewed-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 
-> On Jul 1, 2025, at 1:41=E2=80=AFAM, Tamir Duberstein =
-<tamird@gmail.com> wrote:
->=20
-> On Mon, Jun 30, 2025 at 6:16=E2=80=AFPM Vitaly Wool =
-<vitaly.wool@konsulko.se> wrote:
->>=20
->> Reimplement k[v]realloc_node() to be able to set node and
->> alignment should a user need to do so. In order to do that while
->> retaining the maximal backward compatibility, add
->> k[v]realloc_node_align() functions and redefine the rest of API
->> using these new ones.
->>=20
->> With that change we also provide the ability for the Rust part of
->> the kernel to set node and aligmnent in its K[v]xxx
->> [re]allocations.
->>=20
->> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
->=20
-> The typo (slub) snuck back in.
-
-Bummer. ;)
-
-Thanks for pointing that out. I=E2=80=99ll fix it in the anniversary =
-patchset, hopefully this will be the only thing to fix.
-
-~Vitaly=
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> index 6b42c4af5c79..9ba43ec9318b 100644
+> --- a/drivers/irqchip/irq-gic-v5.c
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -13,6 +13,7 @@
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic-v5.h>
+> +#include <linux/irqchip/arm-vgic-info.h>
+>  
+>  #include <asm/cpufeature.h>
+>  #include <asm/exception.h>
+> @@ -1049,6 +1050,36 @@ static void gicv5_set_cpuif_idbits(void)
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_KVM
+> +static struct gic_kvm_info gic_v5_kvm_info __initdata;
+> +
+> +static bool __init gicv5_cpuif_has_gcie_legacy(void)
+> +{
+> +	u64 idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
+> +	return !!FIELD_GET(ICC_IDR0_EL1_GCIE_LEGACY, idr0);
+> +}
+> +
+> +static void __init gic_of_setup_kvm_info(struct device_node *node)
+> +{
+> +	gic_v5_kvm_info.type = GIC_V5;
+> +	gic_v5_kvm_info.has_gcie_v3_compat = gicv5_cpuif_has_gcie_legacy();
+> +
+> +	/* GIC Virtual CPU interface maintenance interrupt */
+> +	gic_v5_kvm_info.no_maint_irq_mask = false;
+> +	gic_v5_kvm_info.maint_irq = irq_of_parse_and_map(node, 0);
+> +	if (!gic_v5_kvm_info.maint_irq) {
+> +		pr_warn("cannot find GICv5 virtual CPU interface maintenance interrupt\n");
+> +		return;
+> +	}
+> +
+> +	vgic_set_kvm_info(&gic_v5_kvm_info);
+> +}
+> +#else
+> +static inline void __init gic_of_setup_kvm_info(struct device_node *node)
+> +{
+> +}
+> +#endif // CONFIG_KVM
+> +
+>  static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+>  {
+>  	int ret = gicv5_irs_of_probe(node);
+> @@ -1081,6 +1112,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+>  
+>  	gicv5_irs_its_probe();
+>  
+> +	gic_of_setup_kvm_info(node);
+> +
+>  	return 0;
+>  
+>  out_int:
+> diff --git a/include/linux/irqchip/arm-vgic-info.h b/include/linux/irqchip/arm-vgic-info.h
+> index a75b2c7de69d..ca1713fac6e3 100644
+> --- a/include/linux/irqchip/arm-vgic-info.h
+> +++ b/include/linux/irqchip/arm-vgic-info.h
+> @@ -15,6 +15,8 @@ enum gic_type {
+>  	GIC_V2,
+>  	/* Full GICv3, optionally with v2 compat */
+>  	GIC_V3,
+> +	/* Full GICv5, optionally with v3 compat */
+> +	GIC_V5,
+>  };
+>  
+>  struct gic_kvm_info {
+> @@ -34,6 +36,8 @@ struct gic_kvm_info {
+>  	bool		has_v4_1;
+>  	/* Deactivation impared, subpar stuff */
+>  	bool		no_hw_deactivation;
+> +	/* v3 compat support (GICv5 hosts, only) */
+> +	bool		has_gcie_v3_compat;
+>  };
+>  
+>  #ifdef CONFIG_KVM
+> -- 
+> 2.34.1
