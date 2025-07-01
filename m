@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6504527817D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA419277CA4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751381632; cv=none; b=YmkM4drI9o7UNkET8HXH+RdSZCa45ccIGMmywCQ+1XyCD/yqWjS1zu9gdVwo+yiS6QDix9ULf0rvU879ugyDn7tVdkOr1L2WaIACCfx+paphRXsu1GOC7siXMR/GVHsGbTfKQH268z+rotVvqBbhk+vOoh1Guz5bfdNAtMDDy0I=
+	t=1751381634; cv=none; b=m/KXpcIox3rJzCAPm5/kLvyCUm37YRuxMz5J/g5sP5R9Zzz+QARguPwhXO+lkFZDnZhVOcdxGOAOyYD98OpbszU6nZzARIMP4Y7ZPCFbAFWRkF3yx744stg+4DjFBTwodkiPhFmGjGt2jknNoWQlTp4wQY+90H3ijA6E3M9SzSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751381632; c=relaxed/simple;
-	bh=Nq6752uZqNFDKOOcflMmgGb6G8qBK0diZ4EiOD+Inqs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XWts/1B36+xW3kwR8SN1SGFcXnQ7msYHUBT4viCyyZGd5npZYpexH5jmyHKTYZDQPUxVHGigQr0PUDHF9/6Mv5FP0K5Q1CmM5UedQrWcaYXNNwRf4ss6+JC1tV0TTnMZKvePNsczBapS1XvFlwXksTQ+ESC5mjlPJhptZAvpvmM=
+	s=arc-20240116; t=1751381634; c=relaxed/simple;
+	bh=xHj8VpMyNgGZKJjTVl7tHeMB6vi0clNQ6rHiVOCFt18=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MYqxOYXTMfkIbGVxhys3NmjSIZfBjOCx/ZzOFWHGj5wAndgoVB5G8E8FSOKvVfzAFrgKGFXA6y6N9vKOSMKr9x2MssLSZcGcTbZl4utdUfW/uQ8cdjBwywKiFuZ/xiyV0l4C2QwUYkxE3RU3qtklhjWgDwcrlMWuz66ZEVkZzWE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7814D12FC;
-	Tue,  1 Jul 2025 07:53:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCEF6236D;
+	Tue,  1 Jul 2025 07:53:36 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB01F3F66E;
-	Tue,  1 Jul 2025 07:53:47 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DB683F66E;
+	Tue,  1 Jul 2025 07:53:49 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 00/28] CoreSight: Address CPU Power Management Issues
-Date: Tue, 01 Jul 2025 15:53:25 +0100
-Message-Id: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
+Date: Tue, 01 Jul 2025 15:53:26 +0100
+Subject: [PATCH v2 01/28] coresight: Change device mode to atomic type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,10 +29,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGX2Y2gC/x2MWwqAIBAArxL7naD27ioRYrXWfmiiIIF096TPY
- ZjJEDEQRpirDAETRbpdAVlXsF/ancjoKAySy473QjAdrNqj8lYZelRqmGk1ymnbhmMUUDIfsJh
- /uazv+wHSdx1VYgAAAA==
-X-Change-ID: 20250611-arm_cs_pm_fix_v3-f4ae29bb7d81
+Message-Id: <20250701-arm_cs_pm_fix_v3-v2-1-23ebb864fcc1@arm.com>
+References: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
+In-Reply-To: <20250701-arm_cs_pm_fix_v3-v2-0-23ebb864fcc1@arm.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
  Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
  Levi Yun <yeoreum.yun@arm.com>, 
@@ -43,144 +42,89 @@ To: Suzuki K Poulose <suzuki.poulose@arm.com>,
 Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=6135;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751381627; l=3351;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=Nq6752uZqNFDKOOcflMmgGb6G8qBK0diZ4EiOD+Inqs=;
- b=m/RXraSsJy6Hl7VyJiDPntiCYLZ9JLMNk1Td7nr3SZFSEzN/n59pzpPI2QXZeZcyBC7P4uCit
- Iu0tSsNimfvBw6IsBK24gLeqVCj8rXm/bobTx84vQNmLowuupQkeo0q
+ bh=xHj8VpMyNgGZKJjTVl7tHeMB6vi0clNQ6rHiVOCFt18=;
+ b=WeDAwQGUCWVxvDF3qX3ZM+cZ5MT4bdoKZiIMzHifUhXkdA/NyWH4lEuqMgd8esL2YFs0hm6Uk
+ AsQATQ2DENXC87csZiEx2JCybRt4fPG9o6NeXfaeeLqlW/0YpDUEn9N
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This series addresses CPU power management issues in the CoreSight
-drivers. For easier review, the patches are organized into two
-categories:
+The device mode is defined as local type. This type cannot promise
+SMP-safe access.
 
-o Patches 01 ~ 10 focus on CPU power management within the ETM drivers.
-  These patches fix SMP-safe access to the mode, correct context
-  synchronization, and refactor the CPU suspend/resume flows.
+Change to atomic type and impose relax ordering, which ensures the
+SMP-safe synchronisation and the ordering between the mode setting and
+relevant operations.
 
-o Patches 11 ~ 28 extend CPU power management to cover activated paths,
-  including helpers, links, and sinks. These changes move CPU PM and
-  hotplug notifiers from the ETMv4 driver into the CoreSight core layer.
-
-Summary of Changes:
-
-- Patches 01 ~ 03: Fix device mode access in the SMP mode.
-- Patch 04       : A minor fix for polling bit.
-- Patches 05 ~ 07: Improve the context synchronization based on the ETM
-		   specification (IHI0064H.b) and Arm ARM (ARM DDI 0487
-		   L.a).
-- Patches 08 ~ 10: Refactor the context save/restore flow in the ETMv4
-		   driver, in the end, the CPU PM callbacks reuse the
-		   normal enabling and disabling flows.
-- Patches 11 ~ 17: Move CPU PM code from ETMv4 driver to the core layer.
-- Patches 18 ~ 25: Enhance device mode handling in the CTI driver,
-		   distinguishes debug mode from trace modes (Perf or
-		   SysFS mode). Extend support activated paths during
-		   CPU idle. Support save and restore context for
-		   per-CPU sink (TRBE).
-- Patches 26 ~ 28: Move CPU hotplug notifier from the ETMv4 driver to
-		   the core layer. The full path is now managed in CPU
-		   hotplug.
-
-Verification:
-
-This series has been verified on the following platforms:
-- Hikey960, Juno-r0 and Juno-r2:
-  Note that the firmware on Hikey960 and Juno-r0 is unstable. While no
-  CoreSight failures were observed, but the CPU hotplug or CPU idle
-  itself may fail intermittently.
-  Juno-r2 is much stable and can pass 24+ hours stress test.
-- FVP RevC: Verified TRBE changes.
-
-Stress test script:
-
-  #!/usr/bin/bash
-
-  echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
-
-  while true; do
-          echo 0 > /sys/devices/system/cpu/cpu2/online;
-          echo 1 > /sys/devices/system/cpu/cpu2/online;
-  done &
-
-  while true; do
-          echo 1 > /sys/bus/coresight/devices/etm2/enable_source;
-          echo 0 > /sys/bus/coresight/devices/etm2/enable_source;
-  done &
-
----
-Changes in v2:
-- Refactored ETMv4 suspend and resume for reusing the normal enabling
-  and disabling flows (James).
-- Used a per-CPU structure to maintain path pointers (James).
-- Supported helpers in CPU PM flows (James).
-- Fixed the SMP-safe access to device mode.
-- Fixed the context synchronization in ETMv4x driver.
-- Link to v1: https://lore.kernel.org/linux-arm-kernel/20250516160742.1200904-1-leo.yan@arm.com/
-
+Fixes: 22fd532eaa0c ("coresight: etm3x: adding operation mode for etm_enable()")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
-
 ---
-Leo Yan (27):
-      coresight: Change device mode to atomic type
-      coresight: etm4x: Always set tracer's device mode on target CPU
-      coresight: etm3x: Always set tracer's device mode on target CPU
-      coresight: etm4x: Correct polling IDLE bit
-      coresight: etm4x: Ensure context synchronization is not ignored
-      coresight: etm4x: Add context synchronization before enabling trace
-      coresight: etm4x: Properly control filter in CPU idle with FEAT_TRF
-      coresight: etm4x: Remove the state_needs_restore flag
-      coresight: etm4x: Add flag to control single-shot restart
-      coresight: etm4x: Reuse normal enable and disable logic in CPU idle
-      coresight: Populate CPU ID into the coresight_device structure
-      coresight: sysfs: Validate CPU online status for per-CPU sources
-      coresight: Set per CPU source pointer
-      coresight: Register CPU PM notifier in core layer
-      coresight: etm4x: Hook CPU PM callbacks
-      coresight: Add callback to determine if context save/restore is needed
-      coresight: etm4x: Remove redundant condition checks in save and restore
-      coresight: cti: Fix race condition by using device mode
-      coresight: cti: Introduce CS_MODE_DEBUG mode
-      coresight: cti: Properly handle modes in CPU PM notifiers
-      coresight: Add per-CPU path pointer
-      coresight: Add 'in_idle' argument to path enable/disable functions
-      coresight: Control path during CPU idle
-      coresight: Add PM callbacks for percpu sink
-      coresight: Take hotplug lock in enable_source_store() for Sysfs mode
-      coresight: Move CPU hotplug callbacks to core layer
-      coresight: Manage activated path during CPU hotplug
+ include/linux/coresight.h | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-Yabin Cui (1):
-      coresight: trbe: Save and restore state across CPU low power state
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 4ac65c68bbf44b98db22c3dad2d83a224ce5278e..5fd3d08824e5a91a197aa01daf0fc392392f3e55 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -251,15 +251,11 @@ struct coresight_trace_id_map {
+  *		by @coresight_ops.
+  * @access:	Device i/o access abstraction for this device.
+  * @dev:	The device entity associated to this component.
+- * @mode:	This tracer's mode, i.e sysFS, Perf or disabled. This is
+- *		actually an 'enum cs_mode', but is stored in an atomic type.
+- *		This is always accessed through local_read() and local_set(),
+- *		but wherever it's done from within the Coresight device's lock,
+- *		a non-atomic read would also work. This is the main point of
+- *		synchronisation between code happening inside the sysfs mode's
+- *		coresight_mutex and outside when running in Perf mode. A compare
+- *		and exchange swap is done to atomically claim one mode or the
+- *		other.
++ * @mode:	The device mode, i.e sysFS, Perf or disabled. This is actually
++ *		an 'enum cs_mode' but stored in an atomic type. Access is always
++ *		through atomic APIs, ensuring SMP-safe synchronisation between
++ *		racing from sysFS and Perf mode. A compare-and-exchange
++ *		operation is done to atomically claim one mode or the other.
+  * @refcnt:	keep track of what is in use. Only access this outside of the
+  *		device's spinlock when the coresight_mutex held and mode ==
+  *		CS_MODE_SYSFS. Otherwise it must be accessed from inside the
+@@ -288,7 +284,7 @@ struct coresight_device {
+ 	const struct coresight_ops *ops;
+ 	struct csdev_access access;
+ 	struct device dev;
+-	local_t	mode;
++	atomic_t mode;
+ 	int refcnt;
+ 	bool orphan;
+ 	/* sink specific fields */
+@@ -650,13 +646,14 @@ static inline bool coresight_is_percpu_sink(struct coresight_device *csdev)
+ static inline bool coresight_take_mode(struct coresight_device *csdev,
+ 				       enum cs_mode new_mode)
+ {
+-	return local_cmpxchg(&csdev->mode, CS_MODE_DISABLED, new_mode) ==
+-	       CS_MODE_DISABLED;
++	int curr = CS_MODE_DISABLED;
++
++	return atomic_try_cmpxchg_acquire(&csdev->mode, &curr, new_mode);
+ }
+ 
+ static inline enum cs_mode coresight_get_mode(struct coresight_device *csdev)
+ {
+-	return local_read(&csdev->mode);
++	return atomic_read_acquire(&csdev->mode);
+ }
+ 
+ static inline void coresight_set_mode(struct coresight_device *csdev,
+@@ -672,7 +669,7 @@ static inline void coresight_set_mode(struct coresight_device *csdev,
+ 	WARN(new_mode != CS_MODE_DISABLED && current_mode != CS_MODE_DISABLED &&
+ 	     current_mode != new_mode, "Device already in use\n");
+ 
+-	local_set(&csdev->mode, new_mode);
++	atomic_set_release(&csdev->mode, new_mode);
+ }
+ 
+ struct coresight_device *coresight_register(struct coresight_desc *desc);
 
- drivers/hwtracing/coresight/coresight-catu.c       |   1 +
- drivers/hwtracing/coresight/coresight-core.c       | 337 ++++++++++++--
- drivers/hwtracing/coresight/coresight-ctcu-core.c  |   1 +
- drivers/hwtracing/coresight/coresight-cti-core.c   |  40 +-
- drivers/hwtracing/coresight/coresight-cti-sysfs.c  |   2 +-
- drivers/hwtracing/coresight/coresight-dummy.c      |   1 +
- drivers/hwtracing/coresight/coresight-etb10.c      |   1 +
- drivers/hwtracing/coresight/coresight-etm3x-core.c |  61 ++-
- drivers/hwtracing/coresight/coresight-etm4x-core.c | 488 ++++++---------------
- drivers/hwtracing/coresight/coresight-etm4x.h      |  62 ---
- drivers/hwtracing/coresight/coresight-funnel.c     |   1 +
- drivers/hwtracing/coresight/coresight-replicator.c |   1 +
- drivers/hwtracing/coresight/coresight-stm.c        |   1 +
- drivers/hwtracing/coresight/coresight-sysfs.c      |  10 +
- drivers/hwtracing/coresight/coresight-tmc-core.c   |   1 +
- drivers/hwtracing/coresight/coresight-tpda.c       |   1 +
- drivers/hwtracing/coresight/coresight-tpdm.c       |   1 +
- drivers/hwtracing/coresight/coresight-tpiu.c       |   1 +
- drivers/hwtracing/coresight/coresight-trbe.c       |  85 ++++
- drivers/hwtracing/coresight/ultrasoc-smb.c         |   1 +
- include/linux/coresight.h                          |  55 ++-
- 21 files changed, 665 insertions(+), 487 deletions(-)
----
-base-commit: 66701750d5565c574af42bef0b789ce0203e3071
-change-id: 20250611-arm_cs_pm_fix_v3-f4ae29bb7d81
-
-Best regards,
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
