@@ -1,111 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B826FA59;
-	Tue,  1 Jul 2025 13:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542C5275AFF
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378089; cv=none; b=AbKgh54cfIO2FigyF6S41ZNk0YgkcQAn6xlK9KnonolOazPWixg87BHuVZEhcc/cmAroqjNeaLSh0TgZdtoIohqJDHi6xA/ma9erI9eous/UVxR1f4PSq+3702rxTIz9N+v4TYzVebI96KPdEC+fmXkDIvr+lXX6ZfppBN5MWZ4=
+	t=1751378091; cv=none; b=nKXHQCyu9sCkqS7qE7CYVHx3llEucKvc+IwjlBsXSZHiXU+PO+2bZ5BYIv8JBQ9PThIR3N3yo2yrkopq5CVORhSf1HDy1mnoAXWNL/r8MYfSyPBDLdt1asrATcwTWDEnJ7OGUbrUaorksgcWepKnewS05iliciCE8HEvratql2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378089; c=relaxed/simple;
-	bh=ZL/u65dIbxosbqEkEvyApJed1MUepl7ko0Ds7XvleG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rjntNQU9euv0NrL28dKZfdT2veA0jtOMUPV1aHn3h+lziv//ckk+ZG5903Tnd6qukqKBOPlny7Tgikt4IjW89G/CWo33TrAxXoH9cVsXH3Qb48TLGNxspS7VBcr17GcEqPH2l1AszUi2ROGC4fufemA9tkWxcyeLMtSS8sfXn94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nsz8DVWj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751378091; c=relaxed/simple;
+	bh=OZa4yKRHVDO+7SZUwMFN1ZqXJzB6v61X3RuYjqeq4EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H4PHapo+Ls1dFnB9m4WNSZdQ19lx3bwfm6Zb4xyS39m4lP/LnLSYBeZvh52aI9cADLXV8BdauzNKhW0HyJg+jOTg+FIcyeO+cCJNKkDHXvBU0Omt3pruRIMFSjnzrdDIoM+pjL8pcA7NmpCFSWL2Ik2BDx3uWFz5QhaGNdv7HCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qW7LzJ++; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p10Zy082; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qW7LzJ++; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=p10Zy082; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsz8DVWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C603BC4CEEB;
-	Tue,  1 Jul 2025 13:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751378089;
-	bh=ZL/u65dIbxosbqEkEvyApJed1MUepl7ko0Ds7XvleG0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nsz8DVWjSFKbqjow7W6o1m10uyyNr8ckimVR/Zp/X3duRAgeYnFGLj+WfAClnWxFm
-	 bivyyT/qnOjyP4sfFsEEegvR7vcg7k8VOHxXiXYV3ssXDXte+YtRAqwP3tD6IfK8MS
-	 Mrt1JLhH2zajYEsV3n9jQ/4LmmD47quFngMft/WipvTT8ZUitgvwd0bnVB0lTeK4h4
-	 P+txvfbJ2FmzsVDKS5hQTsRovvNqYRALDXS+kMQwGM3ejlPp5Y20KuJY7WHjuJpoUj
-	 r+V33xOBw6QSqwDWvcl7BFjSM7qftWk/NxdXJmp6z+60potRDTENv2VeDHqeNBKNsY
-	 HXHg6odR75Mgg==
-Message-ID: <836dc6b6-2821-47fc-8f24-0838f979af76@kernel.org>
-Date: Tue, 1 Jul 2025 15:54:45 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qW7LzJ++";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p10Zy082";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qW7LzJ++";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="p10Zy082"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 96C8D1F393;
+	Tue,  1 Jul 2025 13:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751378088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OZa4yKRHVDO+7SZUwMFN1ZqXJzB6v61X3RuYjqeq4EI=;
+	b=qW7LzJ++TZAzgZzJJ8dmmAQ3FyyHzXkr28sOR7UKjG+7dWpaaMSxDYuzxYJ90697etJ2fs
+	oqLVJPIJNNtOoXor5lYq0cqHsB6quP7YUwFrJICByatLKoRqvjSGs/sO9tD6aU7VWRcV+u
+	mmXFtKYwwysFM+lKd3sIE2zEFo1bSOQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751378088;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OZa4yKRHVDO+7SZUwMFN1ZqXJzB6v61X3RuYjqeq4EI=;
+	b=p10Zy082goSNDSHYdjSff+NcvPSNoCEK4P0Pp5IS1mnYA/UxSuvlPWc9Ynakx8tMU51g6B
+	1AmCwGgHFnVN82AA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751378088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OZa4yKRHVDO+7SZUwMFN1ZqXJzB6v61X3RuYjqeq4EI=;
+	b=qW7LzJ++TZAzgZzJJ8dmmAQ3FyyHzXkr28sOR7UKjG+7dWpaaMSxDYuzxYJ90697etJ2fs
+	oqLVJPIJNNtOoXor5lYq0cqHsB6quP7YUwFrJICByatLKoRqvjSGs/sO9tD6aU7VWRcV+u
+	mmXFtKYwwysFM+lKd3sIE2zEFo1bSOQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751378088;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OZa4yKRHVDO+7SZUwMFN1ZqXJzB6v61X3RuYjqeq4EI=;
+	b=p10Zy082goSNDSHYdjSff+NcvPSNoCEK4P0Pp5IS1mnYA/UxSuvlPWc9Ynakx8tMU51g6B
+	1AmCwGgHFnVN82AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 740281364B;
+	Tue,  1 Jul 2025 13:54:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OMToGajoY2i3BQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 01 Jul 2025 13:54:48 +0000
+Date: Tue, 1 Jul 2025 15:54:43 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: Christoph Hellwig <hch@infradead.org>, 
+	John Garry <john.g.garry@oracle.com>, Daniel Wagner <wagi@kernel.org>, "Sean A." <sean@ashe.io>, 
+	"James.Bottomley@hansenpartnership.com" <James.Bottomley@hansenpartnership.com>, "kashyap.desai@broadcom.com" <kashyap.desai@broadcom.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, 
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>, 
+	"mpi3mr-linuxdrv.pdl@broadcom.com" <mpi3mr-linuxdrv.pdl@broadcom.com>, "sreekanth.reddy@broadcom.com" <sreekanth.reddy@broadcom.com>, 
+	"sumit.saxena@broadcom.com" <sumit.saxena@broadcom.com>
+Subject: Re: [RFC PATCH v2 1/1] scsi: mpi3mr: Introduce smp_affinity_enable
+ module parameter
+Message-ID: <c4c82ac2-c9f9-4bef-8f6f-a6cc9a2a0545@flourine.local>
+References: <1xjYfSjJndOlG0Uro2jPuAmIrfqi5AVbfpFeWh7RfLfzqqH9u8ePoqgaP32ElXrGyOB47UvesV_Y2ypmM3cZtWit2EPnV3aj6i9w_DMo1eI=@ashe.io>
+ <077ffc15-f949-41d4-a13b-4949990ba830@oracle.com>
+ <aFjjf3qbuEOeWUjt@infradead.org>
+ <0233e47b-894f-49e0-822c-bc1436352c98@flourine.local>
+ <itze7fhv7yx6j4l4ammx2znkknr2v6iducahcsxdjpfbasdsz5@nz4hvmv3s234>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Fix premature setting of
- HMM_BO_DEVICE_INITED flag
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, andy@kernel.org,
- hdegoede@redhat.com, mchehab@kernel.org, sakari.ailus@linux.intel.com,
- gregkh@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-staging@lists.linux.dev, skhan@linuxfoundation.com,
- dan.carpenter@linaro.org
-References: <20250628052536.43737-1-abdelrahmanfekry375@gmail.com>
- <CAHp75Vcy3dHRu8Wb2KZ=xK7adz=-P-iuRTeR8vOWzHzZL9uFeg@mail.gmail.com>
- <CAGn2d8OMRaeozOMxj1Ry8i9T3sJ5J1QqA_Jpk7wYO8KiUbpKBA@mail.gmail.com>
- <aGPYZhK65LaD0wVO@smile.fi.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <aGPYZhK65LaD0wVO@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <itze7fhv7yx6j4l4ammx2znkknr2v6iducahcsxdjpfbasdsz5@nz4hvmv3s234>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Hi,
+On Wed, Jun 25, 2025 at 09:03:42AM -0400, Aaron Tomlin wrote:
+> Understood. I agree, common functionality is indeed preferred.
+> Daniel, I look forward to your submission.
 
-On 1-Jul-25 2:45 PM, Andy Shevchenko wrote:
-> On Tue, Jul 01, 2025 at 02:58:43PM +0300, Abdelrahman Fekry wrote:
->> Hello Andy,
->> On Sat, Jun 28, 2025 at 10:52 PM Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->>> On Sat, Jun 28, 2025 at 8:26 AM Abdelrahman Fekry
->>> <abdelrahmanfekry375@gmail.com> wrote:
-> 
->>>> The HMM_BO_DEVICE_INITED flag was being set in hmm_bo_device_init()
->>>> before key initialization steps like kmem_cache_create(),
->>>> kmem_cache_alloc(), and __bo_init().
->>>>
->>>> This means that if any of these steps fail, the flag remains set,
->>>> misleading other parts of the driver (e.g. hmm_bo_alloc())
->>>> into thinking the device is initialized. This could lead
->>>> to undefined behavior or invalid memory use.
->>>
->>> Nice. Can you make some fault injection (temporary by modifying the
->>> code to always fail, for example) and actually prove this in practice?
->>> If so, the few (important) lines from the given Oops would be nice to
->>> have here.
-> 
->> I have been trying to test it without having any intel atomisp
->> hardware and failed continuously, do you have any tips or maybe some
->> resources on how i can test this driver.
-> 
-> So, the easiest way as I can see it is to ask people who possess the HW to
-> test, but you need to provide a testing patch (which can be applied on top
-> of this one, for example).
+Sorry for the delay. I found a few bugs in the new cpu queue mapping
+code and it took a while to debug and fix them all. I should have it
+ready to post by tomorrow. Currently, my brain overheating due to summer
+:)
 
-I don't think it is worth testing the error path here,
-the old code is obviously wrong.
-
-What is interesting here is to see if the extra call to hmm_init()
-in __hmm_alloc() is necessary at all.
-
-And obviously hmm_init() needs to propagate the error return
-from hmm_bo_init() right away instead of continuing if nothing
-was wrong and then only returning the error at the end.
-
-So it seems that there plenty of cleanup to do around this
-without needing error injection to test all paths.
-
-Actually I'm pretty sure that there will be quite a few
-error-handling paths with bugs in the atomisp code given
-its overall quality. But lets clean things up first, that
-should make addressing any such cases easier.
-
-Regards,
-
-Hans
-
+FWIW, the last standing issue is that the qla2xxx driver allocates
+queues for scsi and reuses a subset of these queues for nvme. So the irq
+allocating is done for the scsi queues, e.g 16 queues, but the nvme code
+limits it to 8 queues. Currently, there is a disconnect between the irq
+mapping and the cpu mapping code. The solution here is to use the
+irq_get_affinity function instead creating a new map based only on the
+housekeeping cpumask.
