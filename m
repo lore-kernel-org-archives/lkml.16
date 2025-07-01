@@ -1,43 +1,44 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD25266560;
-	Tue,  1 Jul 2025 20:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DBB302051;
+	Tue,  1 Jul 2025 20:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403479; cv=none; b=Q1p1piSGDaN/qaXoFcgMJEevZImdDAJjgG4gZ+QRdKWGJ2MHmZWbwVPlTZJpb/PtIjyCwijqbUovw0XQzfwsEMDeldxS6hb+f/ipfHy3lsr6++awpdj/239szhzzylcXHu6OoONAgqooV5H7PxSVwHRx56KZpyn99WYddm7RU2E=
+	t=1751403480; cv=none; b=BLADO9GI7SzLpcKjoMkLYzmZrSI8w4YqQOorfjWqxd2zywo/mkeRkOxi5ix2In8dE3oy+eYmqSASKO/DdgAqUUfGv/cFI2PxtnoRLwUjH51SB2hP9DxIvMWGCpVhpuXcKzTtPQ/0Scx9WxgIi+gGsfoQySMdUf9KGXzWiNXHqso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751403479; c=relaxed/simple;
-	bh=Eaksr4HhPMjQmwPjPOOAjOOvNz7adjAjvNRO1mGvo5c=;
+	s=arc-20240116; t=1751403480; c=relaxed/simple;
+	bh=2uNWUnFz6VFj3YbuiVsJTLsLGYdeiVzhjNfgs8ldzqM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BanzwLeXIgzKPdTsqoOuLR1VJ+57wx22Y1r1QZHXGDOk50gWryvLZgPnbesXM9xeNaeUDAZDMzdETo6YTnhtnkOcfh/kScW67gB987GBcag3AqegWyrT/KmSVYPFU1j/HFuoNxKCppOzNgQ00ol0G99b4bdtP97x0RkfQJaDNT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=IX7J0deq; arc=none smtp.client-ip=45.79.88.28
+	 MIME-Version; b=k7IvCbN+dYX+0k0271NHNcecNx+eWyZYJvrH5A4UnJdDTiFe+b/DXIL6p3kT87aue7F1MQHgu130vkfjF97ClKUDSh5nwgAhHRL0IUHuHzcvnD4kXmkJOKOCsOGbNV+NTkQJP7M5gdLLnU0Wwu2E71DmA1jbN+4I/9UfF+aNbUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ilk0K6r7; arc=none smtp.client-ip=45.79.88.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="IX7J0deq"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BF84540AD0
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ilk0K6r7"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 023AB40AD6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751403472; bh=uKLzQw6LskeWU3LFVrkmzDlvEIcpVXbA+0YqM4MUzu8=;
+	t=1751403474; bh=YaUJIiz2jpRN3BaARWqJEEaOxa+M9/8H2AtGoGu2KV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IX7J0deq62csjiUS+s4DmMe0Y9GFwQ0BurnEWF9KlHflSqAkYBwB2qw/txy/Uv+5n
-	 ji5jNokHj09mWoT+OvrWgvFT7p27TFcbf3kmMq6ll03wcYSCX72GJ1s7m9lmkSokn5
-	 TMJCSYYEZOP5+BNV/UruaemBzmM+il/lvEXxwaIPP7TuEmXMHb1nI7XNzM//7V5vI0
-	 CCJ8KOLZvv+Dc3O/xKrVqoY0eWOfCY2Q3bCNhnUIBCdxsN9ObRz3d3xl1dlkBcMldG
-	 6diUfO7e1/2UU+2KktN8xOO3mK8ROzNgCDjw6nWSzlHEcIIWT4vje/YdCyvrLf2Ec7
-	 qGSK17+FJrwoA==
+	b=ilk0K6r7pd9RnvOO11jgE8rhVhtW4W4tHloJFxkBitcoeiWMNrocD4oK0IPPF8iZo
+	 s4n2PfhvzrPDc/RvMZE6G7n0c9A/0+LHCYXUHiiFwj8OTNzUAnYykW+ZZuKaU6gSwD
+	 QjhH90hyAIkERwHFu5zDEf0cKy6NQj+iLm7yKcnNxwBc5JS6JGRxE03SWJUJ8ZZ1QW
+	 ZOzdlRMPN8uXCG0TjvT2xMhYdtoJQT6DGLfOCpxdG8knV3PWrVoX3bBOxu1ZLBX6lb
+	 UJr9u+nKazIM6pwb2Kb+6xdxsOOd3b8EP4Zz6AvEM76oQ5GMX0E+Dogq/PnquqEscM
+	 +2wGOD20UuMKw==
 Received: from trenco.lwn.net (unknown [IPv6:2601:280:4600:2da9::1fe])
-	by ms.lwn.net (Postfix) with ESMTPA id BF84540AD0;
-	Tue,  1 Jul 2025 20:57:51 +0000 (UTC)
+	by ms.lwn.net (Postfix) with ESMTPA id 023AB40AD6;
+	Tue,  1 Jul 2025 20:57:53 +0000 (UTC)
 From: Jonathan Corbet <corbet@lwn.net>
 To: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Akira Yokosawa <akiyks@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 2/7] docs: kdoc: micro-optimize KernRe
-Date: Tue,  1 Jul 2025 14:57:25 -0600
-Message-ID: <20250701205730.146687-3-corbet@lwn.net>
+	Jonathan Corbet <corbet@lwn.net>,
+	Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 6/7] docs: kdoc: Remove a Python 2 comment
+Date: Tue,  1 Jul 2025 14:57:29 -0600
+Message-ID: <20250701205730.146687-7-corbet@lwn.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250701205730.146687-1-corbet@lwn.net>
 References: <20250701205730.146687-1-corbet@lwn.net>
@@ -49,33 +50,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch KernRe::add_regex() to a try..except block to avoid looking up each
-regex twice.
+We no longer support Python 2 in the docs build chain at all, so we
+certainly do not need to admonish folks to keep this file working with it.
 
+Cc: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- scripts/lib/kdoc/kdoc_re.py | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/sphinx/kerneldoc.py | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
-index e81695b273bf..a467cd2f160b 100644
---- a/scripts/lib/kdoc/kdoc_re.py
-+++ b/scripts/lib/kdoc/kdoc_re.py
-@@ -29,12 +29,10 @@ class KernRe:
-         """
-         Adds a new regex or re-use it from the cache.
-         """
--
--        if string in re_cache:
-+        try:
-             self.regex = re_cache[string]
--        else:
-+        except KeyError:
-             self.regex = re.compile(string, flags=flags)
--
-             if self.cache:
-                 re_cache[string] = self.regex
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index 51a2793dc8e2..2586b4d4e494 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -25,8 +25,6 @@
+ # Authors:
+ #    Jani Nikula <jani.nikula@intel.com>
+ #
+-# Please make sure this works on both python2 and python3.
+-#
  
+ import codecs
+ import os
 -- 
 2.49.0
 
