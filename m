@@ -1,45 +1,84 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ADF2749CA;
-	Tue,  1 Jul 2025 13:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6214726FA52
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378142; cv=none; b=qTsVovkP4+FgUSpiytG87Rgixi6ri3K/GUDAxbz4pRvUS5jXhmGiIt+GJtY1Ooq6Muy6qdsFeOBCZrRwZ4Q3OEtVeOF04xtbJbTiw1hiu5E/1UF3fv+6JEJdTm5OqeW/kY1/NLmEYve8/ndWV8znPQdQ6RrA7RPzbpMFuLSHe+U=
+	t=1751378190; cv=none; b=RdhKfl/lC/75NROBXuz4aWgZ/7ZrM+CyvWalyphRiJrZpKAV2jTATX2ny0qUE/QD1JBKOxr3Emwl8kqGcmfSz4wC+6t4EVMvi6SiNmmK+LjE6jucskOQXaXrmiLU9dJ5gXIKuBrA9BGw+iELw5GDkxxIB993AORR1GhkiMqenkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378142; c=relaxed/simple;
-	bh=j8DqhOjO/y33zK4keb4QH8Ti7vNpk1R1IA2kSO2tRI8=;
+	s=arc-20240116; t=1751378190; c=relaxed/simple;
+	bh=UWhsln1pLMKFmXk0W3gFkWNd8GKHXlBzD8To1NFTKU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g644Ez2tsDvQ4ve9p70PUBnS97sXCY/WIutNmYLPzuECqQtauB35PAzicp+4kd/bTKVtcDeN+fQZFnaxN2Sv9KNABH9+aQ2pEr3g/nwYxqemsEMCDxfex7OIl1jigBGGFqKCSKqat8Kw3urDlCLbUchvrJ5vQJSP6UzJJT53vvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=mdMixECc; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQkgTK0nrHzLjC7pVGsxm0tHAAv/VKKzdLxJ2NTUJsCOQpt2iYsfLqFbxvf1b8VZWPFVN7z9QwyQlGFe3+8fqwLK7m/PYtdJi5KjehW3wsatenWQQtbxN6jUVrpsRHv6QFq8cjA500yxZ2iPn7jbDNIgLjvC43zY2HXWDFd4Enc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CUDcXOmg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AOmsOwSh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CUDcXOmg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AOmsOwSh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="mdMixECc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=GwNQqB8pBJVwu+Xy+ljesQ25T/+91BIQflo1XREJg40=;
-	b=mdMixECcLagBJQzyNSbxLKjgirGpbSIPT6x2HT/8O2EpMR17+Byz+sqe1JLTY/
-	lAyKizyHyoNHO6ZomxZOwgR0m7sC3MaPg6bzzo5wsuHifiunl0uJc0qhK6mQbKVj
-	FNT0NPsUI02xkLVZyWysdE1D8qNIn5MN7Rv9Ej2+tE2qo=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDnL6eS6GNopYgBAA--.3609S3;
-	Tue, 01 Jul 2025 21:54:28 +0800 (CST)
-Date: Tue, 1 Jul 2025 21:54:26 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	othacehe@gnu.org, andrew@lunn.ch, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] arm64: dts: freescale: imx93-var-som: update eqos
- support for MaxLinear PHY
-Message-ID: <aGPokie6sW/FCjWc@dragon>
-References: <20250605085904.12199-1-stefano.radaelli21@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CUDcXOmg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AOmsOwSh";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CUDcXOmg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AOmsOwSh"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8C5D31F393;
+	Tue,  1 Jul 2025 13:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751378186; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROC8HmBFbxGZQBMqFQ9KZzycONwJ6vs9Fkm9qaOkXpI=;
+	b=CUDcXOmg0sh8kmDx95BJcBp6s7zLx+u5f2gJQDpOYbC8b/n+k6VSCXftWUBvVn+695thJM
+	xy6lwXis0XFZs12Vtnt6uz7ddx1qcmm4jJakywfSJlhXCK8lQgcZCPZmMV10+jBFTq+ZMq
+	eOXA/AgmStqmPfhD34wXpOx0ebpE9VM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751378186;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROC8HmBFbxGZQBMqFQ9KZzycONwJ6vs9Fkm9qaOkXpI=;
+	b=AOmsOwShFmnkcYXl/MpEDk4LK0FXRslwOoxwH0T9woVoeGx3IIMrr542+qzIDqBGnyoX7C
+	LrsP28t0cYpQEkCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1751378186; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROC8HmBFbxGZQBMqFQ9KZzycONwJ6vs9Fkm9qaOkXpI=;
+	b=CUDcXOmg0sh8kmDx95BJcBp6s7zLx+u5f2gJQDpOYbC8b/n+k6VSCXftWUBvVn+695thJM
+	xy6lwXis0XFZs12Vtnt6uz7ddx1qcmm4jJakywfSJlhXCK8lQgcZCPZmMV10+jBFTq+ZMq
+	eOXA/AgmStqmPfhD34wXpOx0ebpE9VM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1751378186;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROC8HmBFbxGZQBMqFQ9KZzycONwJ6vs9Fkm9qaOkXpI=;
+	b=AOmsOwShFmnkcYXl/MpEDk4LK0FXRslwOoxwH0T9woVoeGx3IIMrr542+qzIDqBGnyoX7C
+	LrsP28t0cYpQEkCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30CFD1364B;
+	Tue,  1 Jul 2025 13:56:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id B/c/CQrpY2hOBgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 01 Jul 2025 13:56:26 +0000
+Date: Tue, 1 Jul 2025 15:56:20 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/hugetlb: Use str_plural() in report_hugepages()
+Message-ID: <aGPpBDaBjl3c2dWu@localhost.localdomain>
+References: <20250630171826.114008-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,146 +87,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605085904.12199-1-stefano.radaelli21@gmail.com>
-X-CM-TRANSID:Mc8vCgDnL6eS6GNopYgBAA--.3609S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZFW3tryfuF4DJF4ruw4Uurg_yoWrKF48pa
-	yfurWIqrZ3t34fK3yxWa13CF1jya15Ar9rur15trW093WxCF9rtr1Skws8Xr4DCrW8Aw13
-	Xryq9F13C3Z293DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYyIUUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNBdSt2hj6JeipQAA31
+In-Reply-To: <20250630171826.114008-2-thorsten.blum@linux.dev>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,linux.dev:email]
+X-Spam-Level: 
 
-On Thu, Jun 05, 2025 at 10:59:04AM +0200, Stefano Radaelli wrote:
-> Variscite has updated the Ethernet PHY on the VAR-SOM-MX93 from the
-> ADIN1300BCPZ to the MaxLinear MXL86110, as documented in the
-> August 2023 revision changelog.
-> Link: https://variwiki.com/index.php?title=VAR-SOM-MX93_rev_changelog
+On Mon, Jun 30, 2025 at 07:18:26PM +0200, Thorsten Blum wrote:
+> Use the string choice helper function str_plural() to simplify the code
+> and to fix the following Coccinelle/coccicheck warning reported by
+> string_choices.cocci:
 > 
-> Update the device tree accordingly:
-> - Drop the regulator node used to power the previously PHY.
-> - Add support for the reset line using GPIO1_IO07 with proper timings.
-> - Configure the PHY LEDs via the LED subsystem under /sys/class/leds/,
->   leveraging the support implemented in the mxl86110 PHY driver
->   (drivers/net/phy/mxl-86110.c).
->   Two LEDs are defined to match the LED configuration on the Variscite
->   VAR-SOM Carrier Boards:
->     * LED@0: Yellow, netdev trigger.
->     * LED@1: Green, netdev trigger.
-> - Adjust the RGMII clock pad control settings to match the updated PHY
->   requirements.
+>   opportunity for str_plural(nrinvalid)
 > 
-> These changes ensure proper PHY initialization and LED status indication
-> for the new MaxLinear MXL86110, improving board compatibility with the
-> latest hardware revision.
-> 
-> Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
-> ---
-> v3:
->   - Add "PATCH" to subject line.
->   - Fix wrong reference to previous PHY in commit message.
-> 
-> v2: https://lore.kernel.org/imx/20250604153510.55689-1-stefano.radaelli21@gmail.com/
->   - Clarified the use of 'rgmii' mode by adding a comment in the DT,
->     explaining that hardware delays are already implemented on the SOM PCB.
-> 
-> v1: https://lore.kernel.org/imx/20250603221416.74523-1-stefano.radaelli21@gmail.com/
-> 
->  .../boot/dts/freescale/imx93-var-som.dtsi     | 45 ++++++++++++-------
->  1 file changed, 30 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
-> index 783938245e4f..cea8d792328c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
-> @@ -19,26 +19,19 @@ mmc_pwrseq: mmc-pwrseq {
->  		reset-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>,	/* WIFI_RESET */
->  			      <&gpio3 7 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
->  	};
-> -
-> -	reg_eqos_phy: regulator-eqos-phy {
-> -		compatible = "regulator-fixed";
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_reg_eqos_phy>;
-> -		regulator-name = "eth_phy_pwr";
-> -		regulator-min-microvolt = <3300000>;
-> -		regulator-max-microvolt = <3300000>;
-> -		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
-> -		enable-active-high;
-> -		startup-delay-us = <100000>;
-> -		regulator-always-on;
-> -	};
->  };
->  
->  &eqos {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_eqos>;
-> +	/*
-> +	 * The required RGMII TX and RX 2ns delays are implemented directly
-> +	 * in hardware via passive delay elements on the SOM PCB.
-> +	 * No delay configuration is needed in software via PHY driver.
-> +	 */
->  	phy-mode = "rgmii";
->  	phy-handle = <&ethphy0>;
-> +	snps,clk-csr = <5>;
->  	status = "okay";
->  
->  	mdio {
-> @@ -51,6 +44,27 @@ ethphy0: ethernet-phy@0 {
->  			compatible = "ethernet-phy-ieee802.3-c22";
->  			reg = <0>;
->  			eee-broken-1000t;
-> +			reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
-> +			reset-assert-us = <10000>;
-> +			reset-deassert-us = <100000>;
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Missing a newline between property list and child node.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-I fixed it up and applied the patch.
 
-Shawn
-
-> +			leds {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				led@0 {
-> +					reg = <0>;
-> +					color = <LED_COLOR_ID_YELLOW>;
-> +					function = LED_FUNCTION_LAN;
-> +					linux,default-trigger = "netdev";
-> +				};
-> +
-> +				led@1 {
-> +					reg = <1>;
-> +					color = <LED_COLOR_ID_GREEN>;
-> +					function = LED_FUNCTION_LAN;
-> +					linux,default-trigger = "netdev";
-> +				};
-> +			};
->  		};
->  	};
->  };
-> @@ -75,14 +89,15 @@ MX93_PAD_ENET1_RD0__ENET_QOS_RGMII_RD0			0x57e
->  			MX93_PAD_ENET1_RD1__ENET_QOS_RGMII_RD1			0x57e
->  			MX93_PAD_ENET1_RD2__ENET_QOS_RGMII_RD2			0x57e
->  			MX93_PAD_ENET1_RD3__ENET_QOS_RGMII_RD3			0x57e
-> -			MX93_PAD_ENET1_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x5fe
-> +			MX93_PAD_ENET1_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK	0x58e
->  			MX93_PAD_ENET1_RX_CTL__ENET_QOS_RGMII_RX_CTL		0x57e
->  			MX93_PAD_ENET1_TD0__ENET_QOS_RGMII_TD0			0x57e
->  			MX93_PAD_ENET1_TD1__ENET_QOS_RGMII_TD1			0x57e
->  			MX93_PAD_ENET1_TD2__ENET_QOS_RGMII_TD2			0x57e
->  			MX93_PAD_ENET1_TD3__ENET_QOS_RGMII_TD3			0x57e
-> -			MX93_PAD_ENET1_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x5fe
-> +			MX93_PAD_ENET1_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK	0x58e
->  			MX93_PAD_ENET1_TX_CTL__ENET_QOS_RGMII_TX_CTL		0x57e
-> +			MX93_PAD_UART2_TXD__GPIO1_IO07				0x51e
->  		>;
->  	};
->  
-> 
-> base-commit: a9dfb7db96f7bc1f30feae673aab7fdbfbc94e9c
-> prerequisite-patch-id: 2335ebcc90360b008c840e7edf7e34a595880edf
-> -- 
-> 2.43.0
-> 
-
+-- 
+Oscar Salvador
+SUSE Labs
