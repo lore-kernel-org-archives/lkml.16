@@ -1,747 +1,243 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38927272818
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751361152; cv=none; b=Zf37OW0O3XGKEvPnjBYa+tSETd8NoY0w9fa0Wg1BPbOL9nZABxoyhXkup+N/EOz6lbyQg2cVlXBRZplv2sHTMA6q5VctOAd51zm9nRJnztO641GZqOHm3T3IkpjxZh0gPbGZ3WROtpfmO8aQFboAQVEs2TZVrmsovEopyuOtbBw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751361152; c=relaxed/simple;
-	bh=yHKDJoD7laWufs1kIc14KN/Zp/spSV8pLZwN0NdHLNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tZ7A7Kg7Z0kQd63aHU1o7VnZrhM5yh5JqHgBUGnVDbhNcAqftSHbO7Kr71kAYBHj4jKHCiUsDNXPwfQAC+9VqilES5Xc/brqFkCg/c5ZF4I9bH1k5CydPLXZ1oU8alvMriIMNOQQKuGB21IIUMwCq/4/QszS+xvhKOSsk2egbYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=T0TUCdNy; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C798B22259D;
+	Tue,  1 Jul 2025 09:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751361172; cv=fail; b=JT45Okerxz9xtnJ4OQCpe+0dJqq/OoBrYgq/eA8Lb1x6TQbu07/4P6rKgCY/rEk+9lwcfwW8tBH9PDGqbFaLtLo4AYs9VjUqyLCyPFmTZPP4OGVz0L7JCk9UchNKiUlpAysGYRB38WOV7G+brCdme4hGzQr1yf2ANpjv4Zu7vdw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751361172; c=relaxed/simple;
+	bh=W7wjk5wvqJjNDeB8irGYq3Hq/arci5vGROxglIaJhzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GXfD1t+rRFsRBWAV5zDlA3zF+NRfSyqyvhagQ6J4Ri1FhjPcu9I2wq2mxF6y+NqKRgui+3zvlVcbCi0hePhC99Yn0b1FUUPdzt2I1hWtkHMCNkUZLUY3HyJFBCLbMCYPdg3ORn6gP5YFLSKSil0YBGgFcUo7PzUFa0gUnfnNtpg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nTpAa5xj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=U43WDwja; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="T0TUCdNy"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-747fc7506d4so2636978b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 02:12:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nTpAa5xj";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="U43WDwja"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5611N2nl024121;
+	Tue, 1 Jul 2025 09:11:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=W7wjk5wvqJjNDeB8ir
+	GYq3Hq/arci5vGROxglIaJhzg=; b=nTpAa5xjg55eVwK2SDlq/d4zYRzuPfhhfE
+	pUOtL755xVwPNwARiep6k5i9bLlDGWQnCRcYdDjfUY+5auZ3v/CPkK1aeCHQFuOt
+	HNkaJw+cYbA9hDgeoZzSQeIGgYwt3WtYbGymkJYsWBBAbXP852FxWovl8sLXVSke
+	73QvEY7Mk/CnNuVscoMPrV5uuf7Zzpf3nvcHmPIBcSjk+Vw6yEW/twax/C3pBZx3
+	MotkLWos5rQlKdWs0Qt0T9zknDL5n5UI224kkynnBTTGKIjQ38vaZTF3M6LCbLL3
+	dSMXikfE/Vwm5OXSHD8DY1AYr2Oaoq9pxwCYbxWkFvqVDMsdHlLg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j8ef4c8a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 01 Jul 2025 09:11:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5617Le3G025830;
+	Tue, 1 Jul 2025 09:11:06 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u9g6qs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 01 Jul 2025 09:11:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Us2PkcMYOnHIj5nRh9L6wYLK63hvyjIU3FdnY25VK048NWc8hyNixib7WrUyxgNJuSRuRxx6NFntugO6IGhlqcVEC2e6AS2evYmSMC7B1ulfXgQOxv6bY2YVOG+IZAyovYTnwwcwUETftC1zP8MW5Tt0Ou82h3+psmxxC92PRlLFL1ExcKoCwmnxyuVOr+OIsNiZFwhXTwDtNTm8HYsVwjWqJ2aVbE3cIgvfp+VEb6rsyYAzD9qg2DcSdsDXHKqvJgYHjlIi5xSdw1V+BbWhvMdShUWDnM5PRNHWNBnFYLABBQ6CkIaRjIB6eRFcsHRU+6V87JYxp5iMjAceShNWQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W7wjk5wvqJjNDeB8irGYq3Hq/arci5vGROxglIaJhzg=;
+ b=K146/BGUA/MdJB0DuxN1/n0NYLpHdwMpBWYekqXHJWmbn0nUcqybTHjQrRlOZlML3pE2pTG/FWgU8pk+d8+ipcr+m/KbMUNUDK4Elb4x9bP9RB8JdVqzCI9phlE3E8rljSyBJyaKjbKoRu/MaUrnwZiwwExTKllvGkSU1deRkcf+i3EbdEjjlUWAJHkZGk9r+sR3EbC6ssGXGdTA4A4nmCXldkcr5G+rkumN6X4baDyQApaWuIykKmUzUyqHUU4FUhQDBxsC0nci/D98N2MD0CmccaLRsdKe1FG9BpA1+YvlW+uGa7hrKn5w0auYGyXPfutHCgV0tz0xUKNpH48pkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1751361149; x=1751965949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gPXzUgP2yhw1ayDkGwHNnqS4B/QCSTyOWqjyZ1UF5ww=;
-        b=T0TUCdNyfm/70h1P0GQfYm/He70/EqmYy8C1zqnHRM0/qCZ/ZjFVSQCZO0kTAQYGue
-         C3WQ06QSOytVfZ0YWs2NNggiOqwtyQMDfZrPy1racTXF0EKH28Cg5kkkxIBX4J7VRxBm
-         FP1XmAP5bFqyCRbEt1j/lBHCuTM0vw4ZaqtiY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751361149; x=1751965949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gPXzUgP2yhw1ayDkGwHNnqS4B/QCSTyOWqjyZ1UF5ww=;
-        b=Xv5upjAJdfsckyb89EgwJ/6DsTRn/K5VXpDW+gvp/HnCMzWucP1SQpaym2eT2TYKwB
-         p2zMx+lTBE/f5kWQTvnDNv8yeFX1dAdk7pgfdh2IFDhVK3hcO6GoHU1MUWP+AYVxL49a
-         AIy/+hbc7mKQBSq4qw8srHwdyk66gUXRrUUt4hbwM+1HTK4gIhsHuAG02iPjZdr2EhQs
-         IUq6qcc/IwbD9OfDZrnLbVDNKZ0+bCSwZr/UiTSP5r2YT+XxI5rRnz9s3jKI67abm+Ai
-         1XWadX1qxnkTBMliJDxr3bk9N6UBzhlRqb/bi21bg4IolV1qCRGacQAX/sUccx86/ynn
-         fbgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxshtOC0GWBpRoWHsZ5UMZq8q48gwW2WlxDP3JFYg34z99r3o7QtOx5zkkCuFUu/i51wwsorQZV+9Ok88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBLmrjlakOkrOWoKIpQNokzQyviL4t0US2U1RwwGhm1i7Ln9CC
-	EvauUc5MuJBM9tiQAAe6Ve/pRZf/ptF11zdXMYds9WvG2PRuTfneJLqmFMi5f4DaiQ==
-X-Gm-Gg: ASbGncvnRgM4IdRDofowwy7ebP6Uom7WcizED1EGyiAH87x2bqYF+sgyqXIY2TqTduy
-	jfG7qzlPRn3GUENz4YW99eoRMTuAE4qPdMriVLvqiX6rTvu/tghkDJeUq4a/QOgP0sFHkoTEOrn
-	/zNk+TVJ8WBfplU16MT3AzKN8zfidbWBpzQ6u8qJFdJ4AVl4DpuMPnsGsp2rr7X3D94f0idxlZF
-	PcwwnDzTQiwOOuGQx0dEcktpJcWVoHZkusmcSBcm/WNACh4nRDFlueQAsUhzItbi/ZxTjvNmSkM
-	/zbMhTJItZp5bXusKM+sgqMjh0c4/5q9MsXg2NcB1S7DeRmd6TqD00w4IfkKkKiP+z0ITgGe1KJ
-	EuduITdKrZ7xrCS51jYkTOy3p5uKKrnug7usxRWs=
-X-Google-Smtp-Source: AGHT+IEDcE4RLNQAWy6wq7+wguO/7/Ck2/SP9eTCWAzVaV1zsDTPAJC4yUUzFNzrHGQJ7+x/8ECTKw==
-X-Received: by 2002:a05:6a21:7316:b0:220:82c7:309c with SMTP id adf61e73a8af0-220a129c4a9mr28272547637.7.1751361149297;
-        Tue, 01 Jul 2025 02:12:29 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.203.250])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e30201c1sm8893603a12.22.2025.07.01.02.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 02:12:28 -0700 (PDT)
-From: Vikas Gupta <vikas.gupta@broadcom.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>,
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Subject: [net-next, v3 10/10] bng_en: Add a network device
-Date: Tue,  1 Jul 2025 14:35:08 +0000
-Message-ID: <20250701143511.280702-11-vikas.gupta@broadcom.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250701143511.280702-1-vikas.gupta@broadcom.com>
-References: <20250701143511.280702-1-vikas.gupta@broadcom.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W7wjk5wvqJjNDeB8irGYq3Hq/arci5vGROxglIaJhzg=;
+ b=U43WDwjaXg0xtilU5WWSb6UMhhPNpRkbRIVCkqlhiKBVTu1dCUGnXUcu0bJLqoAs31Ui5Zl0loWQwi5bCBvT4LaYWb2j21nyQbcmcouZXmKSlcuoOeKw5lLSbQ+tAuI59Bga8yb3If4yGJ1A6GrGe9PUYeGkQiC8bWmZGJiY4As=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by SJ0PR10MB5803.namprd10.prod.outlook.com (2603:10b6:a03:427::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Tue, 1 Jul
+ 2025 09:11:02 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
+ 09:11:02 +0000
+Date: Tue, 1 Jul 2025 10:11:00 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+        Ying Huang <ying.huang@linux.alibaba.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+        Xu Xin <xu.xin16@zte.com.cn>,
+        Chengming Zhou <chengming.zhou@linux.dev>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+        Harry Yoo <harry.yoo@oracle.com>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH v1 07/29] mm/migrate: rename isolate_movable_page() to
+ isolate_movable_ops_page()
+Message-ID: <09fb264f-db0c-4015-a74d-6a036b0b4fe3@lucifer.local>
+References: <20250630130011.330477-1-david@redhat.com>
+ <20250630130011.330477-8-david@redhat.com>
+ <a014bf06-f544-4d24-8850-052f7ead738b@lucifer.local>
+ <872810e0-3570-47ff-8f91-3cc97a8870a1@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <872810e0-3570-47ff-8f91-3cc97a8870a1@redhat.com>
+X-ClientProxiedBy: LO6P123CA0018.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:313::11) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB5803:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ab87d41-c263-4357-90a1-08ddb87f339a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Fb5UNrhyU8Mg1YO5UqUIUmC5Yuc7XqZYg+AbJeUsJkTxB+WMY9blcfOY0F3r?=
+ =?us-ascii?Q?GZKqWKr7EeQieKuyQMWuD+zEptaio+sFYxREmnxZAFofYRyOJC4P2DEPib74?=
+ =?us-ascii?Q?nzouHpl0JgNRsCyO5rKHEIoIynSyg1ZvCNUSZexXla4JCsKXyxiWtifo7X+S?=
+ =?us-ascii?Q?7avZW4ZMJx0ajIkrzo+Dbip9fklXAzgxFs9VGYRDLESwUSR9lpHVomxHt7O4?=
+ =?us-ascii?Q?NO8PgrGoG0MRYuWDoiTIJqsrM94W/9MT5ScLuN60w8eDXkONzhGaSdcsXrNN?=
+ =?us-ascii?Q?3UkHdaHEV23UOdLykK0fAX0sr4zpClVQXdQhXIrcSdepS9tzCg0/bz1bbweY?=
+ =?us-ascii?Q?ObvbueaoLx9HS3BkIJA4NbBKBMcQCHl2NjhpwOvmCjr2KRPXo23sZFC/NSk8?=
+ =?us-ascii?Q?0Zs/hgoa1Y0HL9MXE00JuwvWV7E1UFdrcGanSVIP1K7skMdWYz14fXqderQR?=
+ =?us-ascii?Q?yIr2GvOy1aOQmfGJPIl5O87RGAhlIpe0mbBzJX+CoCaiGzdwkdFFlbl+wwGF?=
+ =?us-ascii?Q?mbdQiMpGaZgIfWFry4qKGvItXYCdZkftpGdVYNxwsS7Rch4P8OauFuuXIDRH?=
+ =?us-ascii?Q?LPK505BBydGhCXmb3yw7wAMsyx3RwbEqysc7+yny4H6FUoB6nU9V+hBmVw2u?=
+ =?us-ascii?Q?Pl7a7GGBRw3BJLZ5n2uQkZc+G2Yzo0/7IFvoz1Y99AfziJ2Ot7ODVbOUfwFH?=
+ =?us-ascii?Q?HV7VA0Wau+r8OcYorEatn6xr2TflkJ2wawswN5TK9eD19GQzez7voA69qQV1?=
+ =?us-ascii?Q?l5Ebn+nVGaEF64rvD7GdxzfBt+NUxqhP+EJLO1n0HHrqvD7F+E/hzz+vvK/d?=
+ =?us-ascii?Q?Z6JVCfX0hniepCvUW7PI2LzKD3QdrArW11LJdfBXYtQNkkub4fQFG7FZPaIg?=
+ =?us-ascii?Q?I+haca9YHqvAMfjeYpLMWoMvun78in/4EAaKQV8lgTMTggvBSCFA5AFpPLw6?=
+ =?us-ascii?Q?8r7nIDOBKB04D5Ts0VYkmFDk//u+xHpzNJGAUZIC/J1osfGQb6F/gZAJv04T?=
+ =?us-ascii?Q?56iveLNO9feKrqsnB771+H0bsMhq8srHw+vt8WKk7kJai1SeW/UpWRBDUlxb?=
+ =?us-ascii?Q?mFgpd+ZuV5fqHIhcKh9IfZx6od5j1hJfcs9lsukqTW4w0wKdyMgHfhZA+hpK?=
+ =?us-ascii?Q?XWkUV7zzIspTl2cww1lEwG/ctCwelxDOMWHS6bZhR4fL9rKCvxQFntFUgOzX?=
+ =?us-ascii?Q?2XWqJZipZjfcFfJ5Ohrt7kcjFeAlbJuuWdJHPD549osY07OvLWIsWcPmWZzF?=
+ =?us-ascii?Q?TwwMT484ei1hy6ocArbCEVGxkZa1XfD4PKOa3woHrNX60EZHNqYyGF1J+7US?=
+ =?us-ascii?Q?WzJ1hBD7DO6V0XxMd4RjBP6O3roCPXZtVHOYFgvxLq7qUMVB4LEzLyLQ0um2?=
+ =?us-ascii?Q?Yg1X3jwy/pf4LKFpbxsho0ExA/Zkc0kZh0X1Pxzrmx3b8wgbH1B3xO5BxwOL?=
+ =?us-ascii?Q?YDB4n6yLVmk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?G7Rgr9ndh94hKhvEZ6Hv4hFfKLfLId8288ONscc0VM1VrXd2rtyHkpN4MDKP?=
+ =?us-ascii?Q?pK2UoAFc2AskEmnB3MHaE9TqEph80jZ4KbAieer/nzKv7nB4Ew1MAfDboLVt?=
+ =?us-ascii?Q?ZPZuw+2xCNxufAPCpmvmBXjlQxgVub/O/3mUrdx1Dm63xOumuwEeLvgoxAIs?=
+ =?us-ascii?Q?h6+2Mz6JejmVq75zjaN7oGf9G1Pc3lRm3Z+9KJhQHKfk+J5vitw32bxMAlZR?=
+ =?us-ascii?Q?rdrPaepySKhHmGEESVjSItRwOWJqGCEAR/c1GSQFgbquk1xw75jw58TO2Rmw?=
+ =?us-ascii?Q?1zHuG39f7wf+qHY9hK7iluMuD8es2uq2jHoIJ8wBezoF+abmgg60RCbWfUbu?=
+ =?us-ascii?Q?8dyqAzR4oG+lQ77KgqYU5lT89T4UcQ7zi4tPjG/fUWLmwFBDZtXsj6c3Pyxe?=
+ =?us-ascii?Q?vSNdp6aFFk291fQVfAa3ks2ZtF+tKoA4/KXOxlD2gQbU07PU/8aRT6suiVxh?=
+ =?us-ascii?Q?jyzF/aDxRLecrc5u6MXyVVnlGsp47PUpmKIHja6sxoMm5upRqmqsTThBH6FZ?=
+ =?us-ascii?Q?4Nip4f0cjgbaSIkWTJ9CV8/5q9IzD+89VOPyTysVyTcQ0B6nxYFXv7orNaWU?=
+ =?us-ascii?Q?7vJUxxUjG1kTmtq0ISUMRCi8mw7gvH++VLBxHKzw73aRdqOAYwOL/Nu6Rq26?=
+ =?us-ascii?Q?y+qX3o0Y2Y7fdAm46vVMXh9YHGK+pfMqtGJM4HGePi0E3i7MjbPHV5hZi2bf?=
+ =?us-ascii?Q?okiA3bbd9BbIAZ+HiluCunhacHtRmdwJiObUcNRpQhoEWQX/UtX2Qc+DIocv?=
+ =?us-ascii?Q?dWoQZj0pNUvTfUT2bzTtZ1YEQTvp1Dpyohxli+m1HwZYYLHMuPqIDxDeliMI?=
+ =?us-ascii?Q?+Yot8w1z6WjV6LIk4X0Va2JMF6+UCm98eZtjesuCwSEpaW91jfMbZdVw5F8Q?=
+ =?us-ascii?Q?+sJAOGaY8lQ8F2QStdylSVbB98iaPVg3Q355L9pr8CHRA3Pb2vsmchFDzl32?=
+ =?us-ascii?Q?vThCV8Io/69lBJIxPbWzfgFdZBJnS++na8rfQP+19FXN9wTmTNQ7ZBMe3oDb?=
+ =?us-ascii?Q?kiJskihbnwO91ia06vsYtEKPDF0a1xoF7v2ie26aY7jhHX/7f6wlO7I3I/zT?=
+ =?us-ascii?Q?aQ1VqRY8szqjON+liOhPYL1oP0v3bAZVcEniRxiKoI6w+LjjQIoMAO+fdjvS?=
+ =?us-ascii?Q?bmx/IGtUlUg5iEZwRSuLyU3aYiaBWg3b/kEsomIHh2UH+1Vy7KYmi0KmHmY9?=
+ =?us-ascii?Q?+CNC6wvQdQGteTxc8rWZ/0NmUj70WwkyeZbglaP/pRoMP09/yZU7EcJLJ4q+?=
+ =?us-ascii?Q?MyeTDnBUJjlQDW8aI9ALx9HVGFsUSpFd98vrb7RWZoppQk6Pdh1VeZo4p+PG?=
+ =?us-ascii?Q?naLNzCAhEYFSIMSoBWnF4rGYlC5f47Aq4fHTD+0yb/HzNVwK882vqpyNoFXm?=
+ =?us-ascii?Q?sA6xvdDTCgrVnG6FockLNWaeMyE8eJXAUYxlasdGttSOOWKGbjDdeHxdc+xx?=
+ =?us-ascii?Q?i3Yl1JF7cxJWqaok3jBg/wlKXz7lc+Oiiq/DGwHZ0gRWPcK0PARKB88W4IdW?=
+ =?us-ascii?Q?768AV/c0oKAWmj15Jxni8sclZ1655/U6ykevqilc/B1qlAkm2h67T8JqVDLO?=
+ =?us-ascii?Q?YhNy6923qcW5jUw4uEhiDiCx7RSe7jxvZDTkTtfjz4VFHLtW6zpBBEVrVIXf?=
+ =?us-ascii?Q?6w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	qbREieThgAyGQPWbfxzW344PfaGSaiiNk8x+Ri/GRvhf8d06v9eQtYnoHxAfBEny1FfEycw3mIkiUxGB/BaB282KbJPeP/BjvXmO7FkZftt9uEsblnMmc90jnTISWTB9/AF9EqsRreaBoGPywKR/a+Sv1YVMh1CidRBj2Z509jxxG+wFXkX0J2G1QeWpKGLJQgOSfRWAHi8JrMD+vg80mhjeSaNd7Q9/Vsca5masatEYrZHi16x2lvt20Htb8xBYr/oYg91Nj4eNfOrVVXLyo0zzKq8ceWkV2OS03qv6V3jWnO81mU8htE6V5hZOgOGAzMP6o077ooEkH29W8yNH7RuPw8m8zGvyCbcl/3dIykzn0vMJg9s0Svmjaqf/nO+XXyfZoCrtJmaZqeNZGD/vr/cb0dUvfSuIJffmipQ1idZ1S/wD+gf5O/7tjd26L84XDne0RWiv0IyJpOs0Klj8Evk+WOzKkgZiF3M/pe8RcvOeNEwrriel9FDOnPRTQvWpgFt3p/8q2R4+djJOgIGufOphaqivnXghpzncjzymOalUu/c9h3egU/Fp26GZaO4MwIsvteE9zSpJBT/St9c4x2VBXrFd/szl8YixdfvAL0E=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ab87d41-c263-4357-90a1-08ddb87f339a
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 09:11:02.3404
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1+fZLi74XXn1pZbDf0PXLSy8/C/5pDqhB/mDLuKiPFqgBiGmzFQksInKJxDYKshTRXnGlTfpCplYLnNr8/lOW9GfIwyk6bQB6j8T7aDXQCk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5803
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2507010053
+X-Proofpoint-GUID: 1SB6zGOx5fe5pRBCuSYg44CzUm4diIXU
+X-Proofpoint-ORIG-GUID: 1SB6zGOx5fe5pRBCuSYg44CzUm4diIXU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA1NCBTYWx0ZWRfXz9qORWmh+FFL bIhJs+wzTDSRPuHiQy93Ag6GPDqTuqACKks5mve8oCInsc8/CNUSrUWIuqgux/XBJ4/+z88IlSn rxEHotJ6vBnZwl8+9mACYxzrviKQDq0X7ou6dR8xdiAb+4WlkVlbujEDwtiDOfA/Uk25E6kkZx6
+ fRC9Maypqb3r/F9856CHFFbb4yjMkJANiHH3vta+a+R0CjE7Rp5l5Sxlh0LDx9zuXPbU348h+FQ 4wC/FksljRt+VZNyk0TxVAWwe5gKzYvTWwWaq0l04XJPXhKyEj0lTeeL4ZZX+UIRWKayyVAm70q iWeaAfIH65UihkslcfgFYo+nqeJzohFXqzA0bg+ROAjUAWi4oSse+zo7XH6CTzgNhYvHNNCnBQ2
+ zpAZX2SkJ0vR+b07MlPe9Zx62Vr8/mI2gyEQABfpSvpWZmyOEl/3NA1n7OZRTbfgbKXU3lZB
+X-Authority-Analysis: v=2.4 cv=ONgn3TaB c=1 sm=1 tr=0 ts=6863a62c cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=muCX1xIpbn2whLXREDgA:9 a=CjuIK1q_8ugA:10
 
-Add a network device with netdev features enabled.
-Some features are enabled based on the capabilities
-advertised by the firmware. Add the skeleton of minimal
-netdev operations. Additionally, initialize the parameters
-for rings (TX/RX/Completion).
+On Tue, Jul 01, 2025 at 10:29:54AM +0200, David Hildenbrand wrote:
+> > I wonder, in the wonderful future where PageXXX() always refers to a page, can
+> > we use something less horrible than these macros?
+>
+> Good question. It all interacts with how we believe compound pages will work
+> / look like in the future.
 
-Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
-Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
----
- drivers/net/ethernet/broadcom/bnge/Makefile   |   4 +-
- drivers/net/ethernet/broadcom/bnge/bnge.h     |  12 +
- .../net/ethernet/broadcom/bnge/bnge_core.c    |   9 +
- .../net/ethernet/broadcom/bnge/bnge_ethtool.c |  33 +++
- .../net/ethernet/broadcom/bnge/bnge_ethtool.h |   9 +
- .../net/ethernet/broadcom/bnge/bnge_netdev.c  | 268 ++++++++++++++++++
- .../net/ethernet/broadcom/bnge/bnge_netdev.h  | 206 ++++++++++++++
- .../net/ethernet/broadcom/bnge/bnge_resc.h    |   3 +
- 8 files changed, 543 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
- create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
+Indeed.
 
-diff --git a/drivers/net/ethernet/broadcom/bnge/Makefile b/drivers/net/ethernet/broadcom/bnge/Makefile
-index 10df05b6695e..6142d9c57f49 100644
---- a/drivers/net/ethernet/broadcom/bnge/Makefile
-+++ b/drivers/net/ethernet/broadcom/bnge/Makefile
-@@ -7,4 +7,6 @@ bng_en-y := bnge_core.o \
- 	    bnge_hwrm.o \
- 	    bnge_hwrm_lib.o \
- 	    bnge_rmem.o \
--	    bnge_resc.o
-+	    bnge_resc.o \
-+	    bnge_netdev.o \
-+	    bnge_ethtool.o
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
-index cef66c1e9006..a1795302c15a 100644
---- a/drivers/net/ethernet/broadcom/bnge/bnge.h
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
-@@ -65,6 +65,7 @@ enum {
- 	BNGE_EN_ROCE_V2					= BIT_ULL(1),
- 	BNGE_EN_STRIP_VLAN				= BIT_ULL(2),
- 	BNGE_EN_SHARED_CHNL				= BIT_ULL(3),
-+	BNGE_EN_UDP_GSO_SUPP				= BIT_ULL(4),
- };
- 
- #define BNGE_EN_ROCE		(BNGE_EN_ROCE_V1 | BNGE_EN_ROCE_V2)
-@@ -89,6 +90,7 @@ struct bnge_queue_info {
- struct bnge_dev {
- 	struct device	*dev;
- 	struct pci_dev	*pdev;
-+	struct net_device	*netdev;
- 	u64	dsn;
- #define BNGE_VPD_FLD_LEN	32
- 	char		board_partno[BNGE_VPD_FLD_LEN];
-@@ -198,6 +200,16 @@ static inline bool bnge_is_roce_en(struct bnge_dev *bd)
- 
- static inline bool bnge_is_agg_reqd(struct bnge_dev *bd)
- {
-+	if (bd->netdev) {
-+		struct bnge_net *bn = netdev_priv(bd->netdev);
-+
-+		if (bn->priv_flags & BNGE_NET_EN_TPA ||
-+		    bn->priv_flags & BNGE_NET_EN_JUMBO)
-+			return true;
-+		else
-+			return false;
-+	}
-+
- 	return true;
- }
- 
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_core.c b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-index 24babc8b9d35..68da656f2894 100644
---- a/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_core.c
-@@ -302,10 +302,17 @@ static int bnge_probe_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_config_uninit;
- 	}
- 
-+	rc = bnge_netdev_alloc(bd, max_irqs);
-+	if (rc)
-+		goto err_free_irq;
-+
- 	pci_save_state(pdev);
- 
- 	return 0;
- 
-+err_free_irq:
-+	bnge_free_irqs(bd);
-+
- err_config_uninit:
- 	bnge_net_uninit_dflt_config(bd);
- 
-@@ -331,6 +338,8 @@ static void bnge_remove_one(struct pci_dev *pdev)
- {
- 	struct bnge_dev *bd = pci_get_drvdata(pdev);
- 
-+	bnge_netdev_free(bd);
-+
- 	bnge_free_irqs(bd);
- 
- 	bnge_net_uninit_dflt_config(bd);
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c b/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
-new file mode 100644
-index 000000000000..569371c1b4f2
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2025 Broadcom.
-+
-+#include <linux/unaligned.h>
-+#include <linux/pci.h>
-+#include <linux/types.h>
-+#include <net/devlink.h>
-+#include <linux/ethtool.h>
-+#include <linux/etherdevice.h>
-+#include <linux/ethtool_netlink.h>
-+
-+#include "bnge.h"
-+#include "bnge_ethtool.h"
-+
-+static void bnge_get_drvinfo(struct net_device *dev,
-+			     struct ethtool_drvinfo *info)
-+{
-+	struct bnge_net *bn = netdev_priv(dev);
-+	struct bnge_dev *bd = bn->bd;
-+
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->fw_version, bd->fw_ver_str, sizeof(info->fw_version));
-+	strscpy(info->bus_info, pci_name(bd->pdev), sizeof(info->bus_info));
-+}
-+
-+static const struct ethtool_ops bnge_ethtool_ops = {
-+	.get_drvinfo		= bnge_get_drvinfo,
-+};
-+
-+void bnge_set_ethtool_ops(struct net_device *dev)
-+{
-+	dev->ethtool_ops = &bnge_ethtool_ops;
-+}
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h b/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
-new file mode 100644
-index 000000000000..21e96a0976d5
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2025 Broadcom */
-+
-+#ifndef _BNGE_ETHTOOL_H_
-+#define _BNGE_ETHTOOL_H_
-+
-+void bnge_set_ethtool_ops(struct net_device *dev);
-+
-+#endif /* _BNGE_ETHTOOL_H_ */
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_netdev.c b/drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
-new file mode 100644
-index 000000000000..02254934f3d0
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
-@@ -0,0 +1,268 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2025 Broadcom.
-+
-+#include <asm/byteorder.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmapool.h>
-+#include <linux/delay.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/pci.h>
-+#include <linux/netdevice.h>
-+#include <linux/etherdevice.h>
-+#include <linux/if.h>
-+#include <net/ip.h>
-+#include <linux/skbuff.h>
-+
-+#include "bnge.h"
-+#include "bnge_hwrm_lib.h"
-+#include "bnge_ethtool.h"
-+
-+static netdev_tx_t bnge_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+{
-+	dev_kfree_skb_any(skb);
-+
-+	return NETDEV_TX_OK;
-+}
-+
-+static int bnge_open(struct net_device *dev)
-+{
-+	return 0;
-+}
-+
-+static int bnge_close(struct net_device *dev)
-+{
-+	return 0;
-+}
-+
-+static const struct net_device_ops bnge_netdev_ops = {
-+	.ndo_open		= bnge_open,
-+	.ndo_stop		= bnge_close,
-+	.ndo_start_xmit		= bnge_start_xmit,
-+};
-+
-+static void bnge_init_mac_addr(struct bnge_dev *bd)
-+{
-+	eth_hw_addr_set(bd->netdev, bd->pf.mac_addr);
-+}
-+
-+static void bnge_set_tpa_flags(struct bnge_dev *bd)
-+{
-+	struct bnge_net *bn = netdev_priv(bd->netdev);
-+
-+	bn->priv_flags &= ~BNGE_NET_EN_TPA;
-+
-+	if (bd->netdev->features & NETIF_F_LRO)
-+		bn->priv_flags |= BNGE_NET_EN_LRO;
-+	else if (bd->netdev->features & NETIF_F_GRO_HW)
-+		bn->priv_flags |= BNGE_NET_EN_GRO;
-+}
-+
-+static void bnge_init_l2_fltr_tbl(struct bnge_net *bn)
-+{
-+	int i;
-+
-+	for (i = 0; i < BNGE_L2_FLTR_HASH_SIZE; i++)
-+		INIT_HLIST_HEAD(&bn->l2_fltr_hash_tbl[i]);
-+	get_random_bytes(&bn->hash_seed, sizeof(bn->hash_seed));
-+}
-+
-+void bnge_set_ring_params(struct bnge_dev *bd)
-+{
-+	struct bnge_net *bn = netdev_priv(bd->netdev);
-+	u32 ring_size, rx_size, rx_space, max_rx_cmpl;
-+	u32 agg_factor = 0, agg_ring_size = 0;
-+
-+	/* 8 for CRC and VLAN */
-+	rx_size = SKB_DATA_ALIGN(bn->netdev->mtu + ETH_HLEN + NET_IP_ALIGN + 8);
-+
-+	rx_space = rx_size + ALIGN(NET_SKB_PAD, 8) +
-+		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-+
-+	bn->rx_copy_thresh = BNGE_RX_COPY_THRESH;
-+	ring_size = bn->rx_ring_size;
-+	bn->rx_agg_ring_size = 0;
-+	bn->rx_agg_nr_pages = 0;
-+
-+	if (bn->priv_flags & BNGE_NET_EN_TPA)
-+		agg_factor = min_t(u32, 4, 65536 / BNGE_RX_PAGE_SIZE);
-+
-+	bn->priv_flags &= ~BNGE_NET_EN_JUMBO;
-+	if (rx_space > PAGE_SIZE) {
-+		u32 jumbo_factor;
-+
-+		bn->priv_flags |= BNGE_NET_EN_JUMBO;
-+		jumbo_factor = PAGE_ALIGN(bn->netdev->mtu - 40) >> PAGE_SHIFT;
-+		if (jumbo_factor > agg_factor)
-+			agg_factor = jumbo_factor;
-+	}
-+	if (agg_factor) {
-+		if (ring_size > BNGE_MAX_RX_DESC_CNT_JUM_ENA) {
-+			ring_size = BNGE_MAX_RX_DESC_CNT_JUM_ENA;
-+			netdev_warn(bn->netdev, "RX ring size reduced from %d to %d due to jumbo ring\n",
-+				    bn->rx_ring_size, ring_size);
-+			bn->rx_ring_size = ring_size;
-+		}
-+		agg_ring_size = ring_size * agg_factor;
-+
-+		bn->rx_agg_nr_pages = bnge_adjust_pow_two(agg_ring_size,
-+							  RX_DESC_CNT);
-+		if (bn->rx_agg_nr_pages > MAX_RX_AGG_PAGES) {
-+			u32 tmp = agg_ring_size;
-+
-+			bn->rx_agg_nr_pages = MAX_RX_AGG_PAGES;
-+			agg_ring_size = MAX_RX_AGG_PAGES * RX_DESC_CNT - 1;
-+			netdev_warn(bn->netdev, "RX agg ring size %d reduced to %d.\n",
-+				    tmp, agg_ring_size);
-+		}
-+		bn->rx_agg_ring_size = agg_ring_size;
-+		bn->rx_agg_ring_mask = (bn->rx_agg_nr_pages * RX_DESC_CNT) - 1;
-+
-+		rx_size = SKB_DATA_ALIGN(BNGE_RX_COPY_THRESH + NET_IP_ALIGN);
-+		rx_space = rx_size + NET_SKB_PAD +
-+			SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-+	}
-+
-+	bn->rx_buf_use_size = rx_size;
-+	bn->rx_buf_size = rx_space;
-+
-+	bn->rx_nr_pages = bnge_adjust_pow_two(ring_size, RX_DESC_CNT);
-+	bn->rx_ring_mask = (bn->rx_nr_pages * RX_DESC_CNT) - 1;
-+
-+	ring_size = bn->tx_ring_size;
-+	bn->tx_nr_pages = bnge_adjust_pow_two(ring_size, TX_DESC_CNT);
-+	bn->tx_ring_mask = (bn->tx_nr_pages * TX_DESC_CNT) - 1;
-+
-+	max_rx_cmpl = bn->rx_ring_size;
-+
-+	if (bn->priv_flags & BNGE_NET_EN_TPA)
-+		max_rx_cmpl += bd->max_tpa_v2;
-+	ring_size = max_rx_cmpl * 2 + agg_ring_size + bn->tx_ring_size;
-+	bn->cp_ring_size = ring_size;
-+
-+	bn->cp_nr_pages = bnge_adjust_pow_two(ring_size, CP_DESC_CNT);
-+	if (bn->cp_nr_pages > MAX_CP_PAGES) {
-+		bn->cp_nr_pages = MAX_CP_PAGES;
-+		bn->cp_ring_size = MAX_CP_PAGES * CP_DESC_CNT - 1;
-+		netdev_warn(bn->netdev, "completion ring size %d reduced to %d.\n",
-+			    ring_size, bn->cp_ring_size);
-+	}
-+	bn->cp_bit = bn->cp_nr_pages * CP_DESC_CNT;
-+	bn->cp_ring_mask = bn->cp_bit - 1;
-+}
-+
-+int bnge_netdev_alloc(struct bnge_dev *bd, int max_irqs)
-+{
-+	struct net_device *netdev;
-+	struct bnge_net *bn;
-+	int rc;
-+
-+	netdev = alloc_etherdev_mqs(sizeof(*bn), max_irqs * BNGE_MAX_QUEUE,
-+				    max_irqs);
-+	if (!netdev)
-+		return -ENOMEM;
-+
-+	SET_NETDEV_DEV(netdev, bd->dev);
-+	bd->netdev = netdev;
-+
-+	netdev->netdev_ops = &bnge_netdev_ops;
-+
-+	bnge_set_ethtool_ops(netdev);
-+
-+	bn = netdev_priv(netdev);
-+	bn->netdev = netdev;
-+	bn->bd = bd;
-+
-+	netdev->min_mtu = ETH_ZLEN;
-+	netdev->max_mtu = bd->max_mtu;
-+
-+	netdev->hw_features = NETIF_F_IP_CSUM |
-+			      NETIF_F_IPV6_CSUM |
-+			      NETIF_F_SG |
-+			      NETIF_F_TSO |
-+			      NETIF_F_TSO6 |
-+			      NETIF_F_GSO_UDP_TUNNEL |
-+			      NETIF_F_GSO_GRE |
-+			      NETIF_F_GSO_IPXIP4 |
-+			      NETIF_F_GSO_UDP_TUNNEL_CSUM |
-+			      NETIF_F_GSO_GRE_CSUM |
-+			      NETIF_F_GSO_PARTIAL |
-+			      NETIF_F_RXHASH |
-+			      NETIF_F_RXCSUM |
-+			      NETIF_F_GRO;
-+
-+	if (bd->flags & BNGE_EN_UDP_GSO_SUPP)
-+		netdev->hw_features |= NETIF_F_GSO_UDP_L4;
-+
-+	if (BNGE_SUPPORTS_TPA(bd))
-+		netdev->hw_features |= NETIF_F_LRO;
-+
-+	netdev->hw_enc_features = NETIF_F_IP_CSUM |
-+				  NETIF_F_IPV6_CSUM |
-+				  NETIF_F_SG |
-+				  NETIF_F_TSO |
-+				  NETIF_F_TSO6 |
-+				  NETIF_F_GSO_UDP_TUNNEL |
-+				  NETIF_F_GSO_GRE |
-+				  NETIF_F_GSO_UDP_TUNNEL_CSUM |
-+				  NETIF_F_GSO_GRE_CSUM |
-+				  NETIF_F_GSO_IPXIP4 |
-+				  NETIF_F_GSO_PARTIAL;
-+
-+	if (bd->flags & BNGE_EN_UDP_GSO_SUPP)
-+		netdev->hw_enc_features |= NETIF_F_GSO_UDP_L4;
-+
-+	netdev->gso_partial_features = NETIF_F_GSO_UDP_TUNNEL_CSUM |
-+				       NETIF_F_GSO_GRE_CSUM;
-+
-+	netdev->vlan_features = netdev->hw_features | NETIF_F_HIGHDMA;
-+	if (bd->fw_cap & BNGE_FW_CAP_VLAN_RX_STRIP)
-+		netdev->hw_features |= BNGE_HW_FEATURE_VLAN_ALL_RX;
-+	if (bd->fw_cap & BNGE_FW_CAP_VLAN_TX_INSERT)
-+		netdev->hw_features |= BNGE_HW_FEATURE_VLAN_ALL_TX;
-+
-+	if (BNGE_SUPPORTS_TPA(bd))
-+		netdev->hw_features |= NETIF_F_GRO_HW;
-+
-+	netdev->features |= netdev->hw_features | NETIF_F_HIGHDMA;
-+
-+	if (netdev->features & NETIF_F_GRO_HW)
-+		netdev->features &= ~NETIF_F_LRO;
-+
-+	netdev->priv_flags |= IFF_UNICAST_FLT;
-+
-+	netif_set_tso_max_size(netdev, GSO_MAX_SIZE);
-+	if (bd->tso_max_segs)
-+		netif_set_tso_max_segs(netdev, bd->tso_max_segs);
-+
-+	bn->rx_ring_size = BNGE_DEFAULT_RX_RING_SIZE;
-+	bn->tx_ring_size = BNGE_DEFAULT_TX_RING_SIZE;
-+
-+	bnge_set_tpa_flags(bd);
-+	bnge_set_ring_params(bd);
-+
-+	bnge_init_l2_fltr_tbl(bn);
-+	bnge_init_mac_addr(bd);
-+
-+	rc = register_netdev(netdev);
-+	if (rc) {
-+		dev_err(bd->dev, "Register netdev failed rc: %d\n", rc);
-+		goto err_netdev;
-+	}
-+
-+	return 0;
-+
-+err_netdev:
-+	free_netdev(netdev);
-+	return rc;
-+}
-+
-+void bnge_netdev_free(struct bnge_dev *bd)
-+{
-+	struct net_device *netdev = bd->netdev;
-+
-+	unregister_netdev(netdev);
-+	free_netdev(netdev);
-+	bd->netdev = NULL;
-+}
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_netdev.h b/drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
-new file mode 100644
-index 000000000000..96b77e44b552
---- /dev/null
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
-@@ -0,0 +1,206 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2025 Broadcom */
-+
-+#ifndef _BNGE_NETDEV_H_
-+#define _BNGE_NETDEV_H_
-+
-+#include "../bnxt/bnxt_hsi.h"
-+
-+struct tx_bd {
-+	__le32 tx_bd_len_flags_type;
-+	#define TX_BD_TYPE					(0x3f << 0)
-+	#define TX_BD_TYPE_SHORT_TX_BD				(0x00 << 0)
-+	#define TX_BD_TYPE_LONG_TX_BD				(0x10 << 0)
-+	#define TX_BD_FLAGS_PACKET_END				(1 << 6)
-+	#define TX_BD_FLAGS_NO_CMPL				(1 << 7)
-+	#define TX_BD_FLAGS_BD_CNT				(0x1f << 8)
-+	#define TX_BD_FLAGS_BD_CNT_SHIFT			8
-+	#define TX_BD_FLAGS_LHINT				(3 << 13)
-+	#define TX_BD_FLAGS_LHINT_SHIFT				13
-+	#define TX_BD_FLAGS_LHINT_512_AND_SMALLER		(0 << 13)
-+	#define TX_BD_FLAGS_LHINT_512_TO_1023			(1 << 13)
-+	#define TX_BD_FLAGS_LHINT_1024_TO_2047			(2 << 13)
-+	#define TX_BD_FLAGS_LHINT_2048_AND_LARGER		(3 << 13)
-+	#define TX_BD_FLAGS_COAL_NOW				(1 << 15)
-+	#define TX_BD_LEN					(0xffff << 16)
-+	#define TX_BD_LEN_SHIFT					16
-+	u32 tx_bd_opaque;
-+	__le64 tx_bd_haddr;
-+} __packed;
-+
-+struct rx_bd {
-+	__le32 rx_bd_len_flags_type;
-+	#define RX_BD_TYPE					(0x3f << 0)
-+	#define RX_BD_TYPE_RX_PACKET_BD				0x4
-+	#define RX_BD_TYPE_RX_BUFFER_BD				0x5
-+	#define RX_BD_TYPE_RX_AGG_BD				0x6
-+	#define RX_BD_TYPE_16B_BD_SIZE				(0 << 4)
-+	#define RX_BD_TYPE_32B_BD_SIZE				(1 << 4)
-+	#define RX_BD_TYPE_48B_BD_SIZE				(2 << 4)
-+	#define RX_BD_TYPE_64B_BD_SIZE				(3 << 4)
-+	#define RX_BD_FLAGS_SOP					(1 << 6)
-+	#define RX_BD_FLAGS_EOP					(1 << 7)
-+	#define RX_BD_FLAGS_BUFFERS				(3 << 8)
-+	#define RX_BD_FLAGS_1_BUFFER_PACKET			(0 << 8)
-+	#define RX_BD_FLAGS_2_BUFFER_PACKET			(1 << 8)
-+	#define RX_BD_FLAGS_3_BUFFER_PACKET			(2 << 8)
-+	#define RX_BD_FLAGS_4_BUFFER_PACKET			(3 << 8)
-+	#define RX_BD_LEN					(0xffff << 16)
-+	#define RX_BD_LEN_SHIFT					16
-+	u32 rx_bd_opaque;
-+	__le64 rx_bd_haddr;
-+};
-+
-+struct tx_cmp {
-+	__le32 tx_cmp_flags_type;
-+	#define CMP_TYPE					(0x3f << 0)
-+	#define CMP_TYPE_TX_L2_CMP				0
-+	#define CMP_TYPE_TX_L2_COAL_CMP				2
-+	#define CMP_TYPE_TX_L2_PKT_TS_CMP			4
-+	#define CMP_TYPE_RX_L2_CMP				17
-+	#define CMP_TYPE_RX_AGG_CMP				18
-+	#define CMP_TYPE_RX_L2_TPA_START_CMP			19
-+	#define CMP_TYPE_RX_L2_TPA_END_CMP			21
-+	#define CMP_TYPE_RX_TPA_AGG_CMP				22
-+	#define CMP_TYPE_RX_L2_V3_CMP				23
-+	#define CMP_TYPE_RX_L2_TPA_START_V3_CMP			25
-+	#define CMP_TYPE_STATUS_CMP				32
-+	#define CMP_TYPE_REMOTE_DRIVER_REQ			34
-+	#define CMP_TYPE_REMOTE_DRIVER_RESP			36
-+	#define CMP_TYPE_ERROR_STATUS				48
-+	#define CMPL_BASE_TYPE_STAT_EJECT			0x1aUL
-+	#define CMPL_BASE_TYPE_HWRM_DONE			0x20UL
-+	#define CMPL_BASE_TYPE_HWRM_FWD_REQ			0x22UL
-+	#define CMPL_BASE_TYPE_HWRM_FWD_RESP			0x24UL
-+	#define CMPL_BASE_TYPE_HWRM_ASYNC_EVENT			0x2eUL
-+	#define TX_CMP_FLAGS_ERROR				(1 << 6)
-+	#define TX_CMP_FLAGS_PUSH				(1 << 7)
-+	u32 tx_cmp_opaque;
-+	__le32 tx_cmp_errors_v;
-+	#define TX_CMP_V					(1 << 0)
-+	#define TX_CMP_ERRORS_BUFFER_ERROR			(7 << 1)
-+	#define TX_CMP_ERRORS_BUFFER_ERROR_NO_ERROR		0
-+	#define TX_CMP_ERRORS_BUFFER_ERROR_BAD_FORMAT		2
-+	#define TX_CMP_ERRORS_BUFFER_ERROR_INVALID_STAG		4
-+	#define TX_CMP_ERRORS_BUFFER_ERROR_STAG_BOUNDS		5
-+	#define TX_CMP_ERRORS_ZERO_LENGTH_PKT			(1 << 4)
-+	#define TX_CMP_ERRORS_EXCESSIVE_BD_LEN			(1 << 5)
-+	#define TX_CMP_ERRORS_DMA_ERROR				(1 << 6)
-+	#define TX_CMP_ERRORS_HINT_TOO_SHORT			(1 << 7)
-+	__le32 sq_cons_idx;
-+	#define TX_CMP_SQ_CONS_IDX_MASK				0x00ffffff
-+};
-+
-+struct bnge_sw_tx_bd {
-+	struct sk_buff		*skb;
-+	DEFINE_DMA_UNMAP_ADDR(mapping);
-+	DEFINE_DMA_UNMAP_LEN(len);
-+	struct page		*page;
-+	u8			is_ts_pkt;
-+	u8			is_push;
-+	u8			action;
-+	unsigned short		nr_frags;
-+	union {
-+		u16		rx_prod;
-+		u16		txts_prod;
-+	};
-+};
-+
-+struct bnge_sw_rx_bd {
-+	void			*data;
-+	u8			*data_ptr;
-+	dma_addr_t		mapping;
-+};
-+
-+struct bnge_sw_rx_agg_bd {
-+	struct page		*page;
-+	unsigned int		offset;
-+	dma_addr_t		mapping;
-+};
-+
-+#define BNGE_RX_COPY_THRESH     256
-+
-+#define BNGE_HW_FEATURE_VLAN_ALL_RX	\
-+		(NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)
-+#define BNGE_HW_FEATURE_VLAN_ALL_TX	\
-+		(NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX)
-+
-+enum {
-+	BNGE_NET_EN_GRO		= BIT(0),
-+	BNGE_NET_EN_LRO		= BIT(1),
-+	BNGE_NET_EN_JUMBO	= BIT(2),
-+};
-+
-+#define BNGE_NET_EN_TPA		(BNGE_NET_EN_GRO | BNGE_NET_EN_LRO)
-+
-+struct bnge_net {
-+	struct bnge_dev		*bd;
-+	struct net_device	*netdev;
-+
-+	u32			priv_flags;
-+
-+	u32			rx_ring_size;
-+	u32			rx_buf_size;
-+	u32			rx_buf_use_size; /* usable size */
-+	u32			rx_agg_ring_size;
-+	u32			rx_copy_thresh;
-+	u32			rx_ring_mask;
-+	u32			rx_agg_ring_mask;
-+	u16			rx_nr_pages;
-+	u16			rx_agg_nr_pages;
-+
-+	u32			tx_ring_size;
-+	u32			tx_ring_mask;
-+	u16			tx_nr_pages;
-+
-+	/* NQs and Completion rings */
-+	u32			cp_ring_size;
-+	u32			cp_ring_mask;
-+	u32			cp_bit;
-+	u16			cp_nr_pages;
-+
-+#define BNGE_L2_FLTR_HASH_SIZE	32
-+#define BNGE_L2_FLTR_HASH_MASK	(BNGE_L2_FLTR_HASH_SIZE - 1)
-+	struct hlist_head	l2_fltr_hash_tbl[BNGE_L2_FLTR_HASH_SIZE];
-+	u32			hash_seed;
-+	u64			toeplitz_prefix;
-+};
-+
-+#define BNGE_DEFAULT_RX_RING_SIZE	511
-+#define BNGE_DEFAULT_TX_RING_SIZE	511
-+
-+int bnge_netdev_alloc(struct bnge_dev *bd, int max_irqs);
-+void bnge_netdev_free(struct bnge_dev *bd);
-+void bnge_set_ring_params(struct bnge_dev *bd);
-+
-+#if (BNGE_PAGE_SHIFT == 16)
-+#define MAX_RX_PAGES_AGG_ENA	1
-+#define MAX_RX_PAGES		4
-+#define MAX_RX_AGG_PAGES	4
-+#define MAX_TX_PAGES		1
-+#define MAX_CP_PAGES		16
-+#else
-+#define MAX_RX_PAGES_AGG_ENA	8
-+#define MAX_RX_PAGES		32
-+#define MAX_RX_AGG_PAGES	32
-+#define MAX_TX_PAGES		8
-+#define MAX_CP_PAGES		128
-+#endif
-+
-+#define BNGE_RX_PAGE_SIZE		(1 << BNGE_RX_PAGE_SHIFT)
-+
-+#define RX_DESC_CNT			(BNGE_PAGE_SIZE / sizeof(struct rx_bd))
-+#define TX_DESC_CNT			(BNGE_PAGE_SIZE / sizeof(struct tx_bd))
-+#define CP_DESC_CNT			(BNGE_PAGE_SIZE / sizeof(struct tx_cmp))
-+#define SW_RXBD_RING_SIZE		(sizeof(struct bnge_sw_rx_bd) * RX_DESC_CNT)
-+#define HW_RXBD_RING_SIZE		(sizeof(struct rx_bd) * RX_DESC_CNT)
-+#define SW_RXBD_AGG_RING_SIZE		(sizeof(struct bnge_sw_rx_agg_bd) * RX_DESC_CNT)
-+#define SW_TXBD_RING_SIZE		(sizeof(struct bnge_sw_tx_bd) * TX_DESC_CNT)
-+#define HW_TXBD_RING_SIZE		(sizeof(struct tx_bd) * TX_DESC_CNT)
-+#define HW_CMPD_RING_SIZE		(sizeof(struct tx_cmp) * CP_DESC_CNT)
-+#define BNGE_MAX_RX_DESC_CNT		(RX_DESC_CNT * MAX_RX_PAGES - 1)
-+#define BNGE_MAX_RX_DESC_CNT_JUM_ENA	(RX_DESC_CNT * MAX_RX_PAGES_AGG_ENA - 1)
-+#define BNGE_MAX_RX_JUM_DESC_CNT	(RX_DESC_CNT * MAX_RX_AGG_PAGES - 1)
-+#define BNGE_MAX_TX_DESC_CNT		(TX_DESC_CNT * MAX_TX_PAGES - 1)
-+
-+#endif /* _BNGE_NETDEV_H_ */
-diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_resc.h b/drivers/net/ethernet/broadcom/bnge/bnge_resc.h
-index b39fd1a7a81b..54ef1c7d8822 100644
---- a/drivers/net/ethernet/broadcom/bnge/bnge_resc.h
-+++ b/drivers/net/ethernet/broadcom/bnge/bnge_resc.h
-@@ -4,6 +4,9 @@
- #ifndef _BNGE_RESC_H_
- #define _BNGE_RESC_H_
- 
-+#include "bnge_netdev.h"
-+#include "bnge_rmem.h"
-+
- struct bnge_hw_resc {
- 	u16	min_rsscos_ctxs;
- 	u16	max_rsscos_ctxs;
--- 
-2.47.1
+>
+> Doing a change from PageXXX() to page_test_XXX() might be reasonable change
+> in the future. But, I mean, there are more important things to clean up that
+> that :)
 
+Yeah one for the future, and not exactly high priority :)
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
