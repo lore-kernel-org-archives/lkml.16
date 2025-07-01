@@ -1,111 +1,122 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0059A270548
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450CC275AEC
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384424; cv=none; b=npVvYckZXaUhISwGFG6Tml5MP6HMBXoWBQwtWLxj/BKXb7AgTypc6hYdIuEv6bRGFIv+HzBqe4BQzONwpc0NOPYQDrGMgcSRQ5xqcvueN3b53Q861ZenSMNv3kcM4qEi99dVrciT/xEopXF9o54lhWDJpD4TvjEN1r6nVK1ns8c=
+	t=1751384495; cv=none; b=oXiepevFbz7V448KlD51aPZnyEk63sWT1hF8HdA2t+V+kjypr8bTmo21tE1AFPunW7LnPNI5e15WyF9UswdUcDM/vI4F6a53alVwU+DDZQgOPHHeKI+zOMlDUZR63OxcFo3++tsl4jBaZRgn4pjrAq7rpbR1AOMaMUuAkqD76Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384424; c=relaxed/simple;
-	bh=/7vfJ4ag6ZewhYkEmPZw35EEArCVesg3SRNuB5E6xFk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RVaxNly4/wnYAnUXmJZu4OMY4z/BKTY0mAx12bPpXlqDJmlklAo7vupabtz/3trKNDkhCfzoymy6f9xPsAOtV3yuadL8znuVdBm2dCzBppJFGdjS2QvMW4QOnpxdTF/Y5+LgWVJiO1mAzDhJv/0feWAndxdyr/X/lXFNnJHmQPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEhQBkXv; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751384495; c=relaxed/simple;
+	bh=vssQDmpqsqtEsVZ+J0Rxu/Bc2+tTBwvSxd1dgCxlXZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=huafCYeavzyi6cZOanLqWD+i1LWWiG9U4TIqDRuZubwnIlTQrYcL/GwBLh9UptqCUvYIOrt2pRnew5sOXujQfwiWzo6UH/CqLIe6qfoF79krm4QnI6AVrKDAVcYGmEVrum1WIST8fAjosIWykxFtCerpPItXE3745kIXjNo7Lh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zetier.com; spf=pass smtp.mailfrom=zetier.com; dkim=pass (2048-bit key) header.d=zetier.com header.i=@zetier.com header.b=Beb2niim; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zetier.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zetier.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEhQBkXv"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ae0dffaa8b2so991359166b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:40:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zetier.com header.i=@zetier.com header.b="Beb2niim"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso3297533b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:41:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751384421; x=1751989221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/7vfJ4ag6ZewhYkEmPZw35EEArCVesg3SRNuB5E6xFk=;
-        b=DEhQBkXv/IqGKQXoMjUlCgDLs7Svkb3FbtSie1836jUDqY63JhuK2SKrkpaWv4nLUz
-         /Ac5q3egGTI+lj1EO7XU+3+9XkB4mXG+kwsl217sI9OL4yssCaVuBTU+4f8+pBKj9dJn
-         0W5J9IcG4maImiHAhvUjYTVs5die8qS4cXeNCWm7wnpWbU639EvcfXtOaNpG0SB4791m
-         Ekp7BJCyjD1br2vNyrM4WeH7+yuuZxeg446iZr14r54wtlNaNC1iuPKEmV7P1VhFS1G+
-         HbOE/NtwpOFHAktpRmla96etEhh5hr7pTBX6ud8Gq8g2oCUfH55W6nFLjr/uCzdLmpn7
-         NRBg==
+        d=zetier.com; s=gm; t=1751384493; x=1751989293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=59de6pmFOQy/rScsXfRhVQYqTrbVpesPpP5fOBkEBh8=;
+        b=Beb2niimVluHZ09GrFiQXJ99dprdGuW82OxY4ID53EcM4S4SkLtL8Y/kafSu1WjAir
+         sTttOBlxOW9i4Re8i8k0bgdm1OELc8LFMrOQVBjj+H+hFNgNmxuIXSBp35pDLNSUzOjz
+         sHe5WOzapa5jGF7zJJgWGqJE5SCoHB2MGPkIr/bCwEZ4bbug8FrXrB/RZ8ndsiWN4TXz
+         W3JoGOhkbg/37W2mDGUFfZCCgh1DT9PQQwW2+QvTwSDlUa3VI/Fqj4OTXuvKOTYmejyU
+         K1xdsqH75/Wu2JQP//d/iv7BR8oKHbqXJyZa/5CjoDJRygf9Bvl1iX58qYVPs0XVz5nv
+         Za6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751384421; x=1751989221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/7vfJ4ag6ZewhYkEmPZw35EEArCVesg3SRNuB5E6xFk=;
-        b=ZlYkbZbcJZWfWfZ0aROQsphM1DjFRwNxcMANl1OTxoV8c2OmecgieD/oelsW0G7N+F
-         li/S61reW5YOu6QLK5Bt3OfbubruZwKF/LV+dIKZNEw2Mz4qkk3dgEpg91HeXR2KhuLV
-         u51yxqe36TWqhwC5dHrA1ANX9/nRPv/G9dFr4Vy9LO2hExX1RIoYcNJTQm3rn8tZ+Alq
-         Zn9UTL4UGgEOhzOUYOFFvZMkeGbEX2DHBz3I+Mix5Y7Bi+UEeS04oMEVl9cUvwptL9Oc
-         gqGQu/cfODFtvwuBQendDAa7VQ0jpHdRQttGNQnf8XPkZmCbLhJWQ51erQz6H830DLCs
-         1iIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIWYFDs7mcKmQhQ3Mcs3bBhC5dyZO+CiI38S2yYFJQuGoDaCP13cIXUTEGlkpEwaVLuZRjZZqRMwKiuvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxcdkj5YD99fCjmlYMQ3bTV5Ov8v6xUhbX0/wKZN5B3tObKHHnL
-	G27y/eMN7GC+Sz8HIy+o4LSBPOnwcYTl/CU9kxFqqM9mPdy8eeD2JYqpV8gpIK/T58YuilKITge
-	tMQYKn0+JypNe/Pt4dcwx6c33M+jSk3o=
-X-Gm-Gg: ASbGnctsYz8bVgHZ+tiHqMVNoc7Ix+NA1W9p8h4vc/mo72TVIv9LFdmGS4+7kkyDWLO
-	fzXUmXj98pqICuA0S9HQJ0b2Wsslr6faE3shgNn3GUZ5Fms3l2JmqYYjg83th1olxTf6odL6YvL
-	Rzh+0nSiigb3WQainu3dF+gqAqVfVvbp6Ix0SYr0M=
-X-Google-Smtp-Source: AGHT+IEeSarDYRbMce0QhHKbDHu/z47KA58d+tnKdcjgX34ocx6jVrPQA6V7BqorwKG+TvgDjiYRcVPrvLbIxErM0aM=
-X-Received: by 2002:a17:907:d24:b0:ae0:a1c2:262e with SMTP id
- a640c23a62f3a-ae35018f138mr1612284866b.50.1751384420936; Tue, 01 Jul 2025
- 08:40:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751384493; x=1751989293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=59de6pmFOQy/rScsXfRhVQYqTrbVpesPpP5fOBkEBh8=;
+        b=KSftyZv/Hn+EO8T8MALwX4/yLPNK1rj/JT4Byu6lcvL+CFwTGYRxnY2gipNgYWi7AN
+         w/hZqcGV700RJLEfuj5iLvFmfnqHTnZ7PBxCafDOeM554T1S7oMHnvSTk/tL/uxW1h6u
+         wgXojOFQ66VRwyoJvAj9KeIWerCzqoxbJsFqPiuKHvwf+zPIc5FRKxs68xEC/bAgLots
+         LMWheAJr7FuAuQubERqGKc5Buiih7bE/jvGWDW5bTpK0U+rRxHW5TdBsWlJyHzixHEFm
+         FQ1jWj2+R1+h8DX1ElYrqf1/9OFJfG+fnvWu7D4IHa9Qy7P4AA/xu0JR9O6RI8XxbKli
+         sxdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYB2ISpVteNiwGQdA+oWlXviB7cgiMXBgEwgrD8CMqkRp1XCCy4gw0dXbzmSIRSQrFuRGBMxUthDeq5VA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRWu4J9iYv+czaM/k3J7EvgqHTSTOW/Liaedrlq6WzYo1N+qui
+	zBOJVRnz3SWfRRjqFUE3izsjZu6W5tDC/8uG5yVfo93pLlLXwHDMXs9cfBGQ0KjS0g==
+X-Gm-Gg: ASbGncvESbxod4icRnIjnUkmfrNXzBmrx75lDaIhmdeVMeIsQg+xnuZMdkkV94ipBDK
+	RWiv6/drNTO9Kr8YN3bzKnOJySO5RLX1wYjB+7UV+Uqxwn1cyr2JOJ14aEFI2o4fC4KiRu2SzZX
+	HgJ4GpoKPqJWmEzfBIg3D8OJ6eoclv4KhNybgIEejunRu0GoaznRmsUFa3OLFqsh1yQA63zv42W
+	ksvwirtCRFpuMhOikJ1+kdgeDqeqerJ37JsHNGZOnbtOXgf6+bL9t4TXKakA+3yv90/0rKzV7zi
+	RfJNMz3nVbIG0qB/ZMw4WcatSGItKTBMVYtR9+28fF6+PMjKwka+w6xdJqfzu01ZxtcngngcoR0
+	UR+OQwlxwk/H8MeMC0eqQAIP1erg6QJIGVDi/xJ2q51gk3N7l7FgZzGWEq8k3BsgSkI3+0wY=
+X-Google-Smtp-Source: AGHT+IEclQh5sNqNxGCJ9QcJrals8daG9Os0Vgw+JP1Dhlzs2OqOepPslgK8FbWpG+V5py//MrkbPw==
+X-Received: by 2002:a05:6a00:2447:b0:742:a0cf:7753 with SMTP id d2e1a72fcca58-74af6e892d6mr27354642b3a.3.1751384493356;
+        Tue, 01 Jul 2025 08:41:33 -0700 (PDT)
+Received: from system.mynetworksettings.com (pool-71-126-161-43.washdc.fios.verizon.net. [71.126.161.43])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5806b52sm12574910b3a.169.2025.07.01.08.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 08:41:32 -0700 (PDT)
+From: Drew Hamilton <drew.hamilton@zetier.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bin Liu <b-liu@ti.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Drew Hamilton <drew.hamilton@zetier.com>,
+	stable@vger.kernel.org,
+	Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+Subject: [PATCH v2] usb: musb: fix gadget state on disconnect
+Date: Tue,  1 Jul 2025 11:41:26 -0400
+Message-Id: <20250701154126.8543-1-drew.hamilton@zetier.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4990838b-660d-46a2-b21c-67adcba61ff9@lucifer.local>
- <19714cae-6b73-43ec-af7a-1455196561d1@arm.com> <3ee2e7fea6f263aa884e3e715632b09f@kenip.in>
- <d8ffe547-5516-43e5-9f33-56b2698a0b4f@arm.com> <ba2c89bd-88de-48f8-abd0-b62d8b1d50b3@lucifer.local>
- <5816677a-705e-4a8f-b598-d74ff6198a02@arm.com> <ee92d6a9-529a-4ac5-b3d0-0ff4e9085786@lucifer.local>
- <e7152150-2f3e-4ad7-a6c5-f4b77e5c0e05@arm.com> <f746d3aa-17e7-4b42-9e08-97cdb2cad89b@lucifer.local>
- <80b849d4-faf3-47a9-8b8c-e8053299cfb2@arm.com> <2e99712b-8dac-4762-9fc5-fe3ef569b65e@lucifer.local>
- <afe95bb0-185b-4c4a-ae41-e02457422cc3@arm.com> <787639a1e6a27c0f3b0e3ae658e1b8e7@kenip.in>
-In-Reply-To: <787639a1e6a27c0f3b0e3ae658e1b8e7@kenip.in>
-From: Yang Shi <shy828301@gmail.com>
-Date: Tue, 1 Jul 2025 08:40:09 -0700
-X-Gm-Features: Ac12FXypL29YHg7f5sZW2FS0OrnA3vIxjvc47EWIlo06o3rh-Y54uGzeWKKVbTg
-Message-ID: <CAHbLzkp-Nj3vmAWqJw_GZZ6oMmH5Bwv5eObvF+a3VHWa6p=q8w@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_mm=3A_limit_THP_alignment_=E2=80=93_performance_?=
-	=?UTF-8?Q?gain_observed_in_AI_inference_workloads?=
-To: siddhartha@kenip.in
-Cc: Dev Jain <dev.jain@arm.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, mgorman@suse.de, 
-	Vlastimil Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
->
-> =F0=9F=A4=96 3. How does this impact AI workloads like Hugging Face Trans=
-formers?
-> Tokenization and dynamic batching create non-deterministic memory
-> allocation patterns:
->
-> Models like BERT and T5 dynamically allocate intermediate buffers per
-> token-length, batch size, and attention window.
->
-> Hugging Face + ONNX Runtime uses multiple small-ish anonymous mmap()s,
-> often 512KB=E2=80=931.8MB.
+When unplugging the USB cable or disconnecting a gadget in usb peripheral mode with
+echo "" > /sys/kernel/config/usb_gadget/<your_gadget>/UDC,
+/sys/class/udc/musb-hdrc.0/state does not change from USB_STATE_CONFIGURED.
 
-If I remember correctly, Rik's patch should just force PMD alignment
-when the allocation size is greater than PMD size. Such VMA
-fragmentation should be caused by allocations greater than 2M but not
-PMD aligned, so they create 2M PMD + a bunch of 4K PTEs. Less than 2M
-allocations should be right next to each other and mergeable. Did I
-miss something?
+Testing on dwc2/3 shows they both update the state to USB_STATE_NOTATTACHED.
 
-Thanks,
-Yang
+Add calls to usb_gadget_set_state in musb_g_disconnect and musb_gadget_stop
+to fix both cases.
 
+Fixes: 49401f4169c0 ("usb: gadget: introduce gadget state tracking")
+Cc: stable@vger.kernel.org
+Co-authored-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+Signed-off-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+Signed-off-by: Drew Hamilton <drew.hamilton@zetier.com>
+---
+Changes in v2:
+- Cleaned up changelog and added Fixes and Cc tags
+---
+ drivers/usb/musb/musb_gadget.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
-> These allocations come in bursts =E2=80=94 but due to forced alignment, t=
-he
-> kernel was placing them with artificial gaps, defeating THP eligibility
-> entirely.
->
+diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
+index 6869c58367f2..caf4d4cd4b75 100644
+--- a/drivers/usb/musb/musb_gadget.c
++++ b/drivers/usb/musb/musb_gadget.c
+@@ -1913,6 +1913,7 @@ static int musb_gadget_stop(struct usb_gadget *g)
+ 	 * gadget driver here and have everything work;
+ 	 * that currently misbehaves.
+ 	 */
++	usb_gadget_set_state(g, USB_STATE_NOTATTACHED);
+ 
+ 	/* Force check of devctl register for PM runtime */
+ 	pm_runtime_mark_last_busy(musb->controller);
+@@ -2019,6 +2020,7 @@ void musb_g_disconnect(struct musb *musb)
+ 	case OTG_STATE_B_PERIPHERAL:
+ 	case OTG_STATE_B_IDLE:
+ 		musb_set_state(musb, OTG_STATE_B_IDLE);
++		usb_gadget_set_state(&musb->g, USB_STATE_NOTATTACHED);
+ 		break;
+ 	case OTG_STATE_B_SRP_INIT:
+ 		break;
+-- 
+2.34.1
+
