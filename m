@@ -1,261 +1,129 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9F2272E72
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEDC2737E4;
+	Tue,  1 Jul 2025 11:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370028; cv=none; b=YKw6GpSzSMKLBmSRCa2twU2/W4b80hFAm6IM2j4LQNRpwgQr8DfmQUPRYFx/ET5+BMW28L8NqFZYkB1PHG7eqf7kXgyDOhYt6++bDO5+GKT7p+j35gPQ84Eum9I2a+ws0tg07fzMkD7az3jnw+hc925Bf9AsD7ogU3bUVTaS3lE=
+	t=1751370042; cv=none; b=lB4T6lUBQZzHza8QrZQOHU6OgmLrQtDovDgLvDtx9lJ9sEE0Mt5snFsc8agxuRk4ugbGuwMhSm2bHsvKlLZsFtdrsk7y2XtHoPwWm6laNfMvfzXivkAdlE0VLvBLdf2tGm6AKi9gCxu1YGgB+RTqnY7vD7PDp4uVV0bLZnlm3dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370028; c=relaxed/simple;
-	bh=bmyf4y1leYdUxCjaeGu9XhIqWb7rxoQsjyZU977/cbQ=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=QP2l5tewmMF3HGDaGzGzpsBnx/buQmTcNI4ycnGJXrAiflKrEBM1tysPyskvXpA9X7l1hIM/Poc4W71igeFn1FZhqEGTf74OvQJdTo3uYqfnEU2lgbHnp4gR//wlUbDRvJrx2kT6HKRTyTmgWnSVhuYfCRRllslkqk/m7EA4UOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=I7kS7w0g; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751370042; c=relaxed/simple;
+	bh=6moDTEAqfj09soYGb51b0EQaMHRpv2YEEHH6GZ5pyk4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=CktQ+MrrxE2HVpqEFplgUXToxsYq/s+qETsk0DyWYJmc23mrPqopDGZ8VtENPCxMDPmp1NtcSKRSUqFF3NpnMySP5gteqZPDVBQekGrr/PooMkK47MUU1sfzGGxNQdbb9RJlWDVcVk2c5tqHSGxpEBZ2oqo7lKk164NnyaBJ3Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eAw3+99z; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I7kS7w0g"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250701114018epoutp045738281bdefc06ab05c4dcc17c8d21bf~OHcDIwBy70990609906epoutp044
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:40:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250701114018epoutp045738281bdefc06ab05c4dcc17c8d21bf~OHcDIwBy70990609906epoutp044
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751370018;
-	bh=Y44ZngC9p0NB3MezaOSDWgPGnmy1iJ9G/uwh0PVGesk=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=I7kS7w0grMn5BAv46zf20bUn4NnfACk2WhCR/jx2e72sS0SwyTHMXx86hVBBbYp/H
-	 l0NTvmOnEYjhAtmsDNLHWDpObx7gZY0qLp0DY01Ile98SxPYePSo1468WdCgC5UmYA
-	 Kr08AfPXd8ybJLREfw6Dym14N5osZoGoPuU8EH7c=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250701114018epcas5p3da61799c0a1f1b9952e9ee147a22346d~OHcCiPWjL2271522715epcas5p3i;
-	Tue,  1 Jul 2025 11:40:18 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bWh0c3prVz6B9m5; Tue,  1 Jul
-	2025 11:40:16 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250701111817epcas5p1aa3bcea4074a614451ae5e586fe81ff6~OHI0Oe2Uy0185401854epcas5p1z;
-	Tue,  1 Jul 2025 11:18:17 +0000 (GMT)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250701111814epsmtip20da990c40862028a8a169bea64463967~OHIxcFNzu2999529995epsmtip2C;
-	Tue,  1 Jul 2025 11:18:14 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Bjorn Helgaas'" <helgaas@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-fsd@tesla.com>, <mani@kernel.org>, <lpieralisi@kernel.org>,
-	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-	<jingoohan1@gmail.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<alim.akhtar@samsung.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
-	<arnd@arndb.de>, <m.szyprowski@samsung.com>, <jh80.chung@samsung.com>,
-	<pankaj.dubey@samsung.com>
-In-Reply-To: <20250627193046.GA1673824@bhelgaas>
-Subject: RE: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
-Date: Tue, 1 Jul 2025 16:48:13 +0530
-Message-ID: <02b101dbea79$d7e086c0$87a19440$@samsung.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eAw3+99z"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 561AiHlB029319;
+	Tue, 1 Jul 2025 11:40:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=BtrOrgQ/TVBGd/VArg88VP
+	LE3pJuXwrGYmenI+BfVvA=; b=eAw3+99z8NBZWoLioa9jHIS4bJLQtOfYbLBk4A
+	BlfwyiiabOa856LqdorU5Bfyq+TeRUD8UzeYSdeenCLBxRU2hg9UrDMDhmwOsbbg
+	IoYt5/EPBQmZBJY59fq4dAPkxezhL2EUOkmYubktR7VyuTDBhmaxt6HncMX3Ck7p
+	2EOtUx+pCZDgC06APwqDEAN7EQ/fWSsY09nWCcjO0AsYjPny7Vhd6Gp90NJs3Kr0
+	vXHLPaQbp+KLjj5WR/xmT+fJqc16Pd/WOhPuJfEpLVEIE4lzm7s0LecR7rHlxbgf
+	+ybLE02yyD889D6PJD9kBQ+2h3ylul7Q6IDlQkex2CkI+NMA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47j95j0h5w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 11:40:32 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561BeWEX010811
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 11:40:32 GMT
+Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 1 Jul 2025 04:40:27 -0700
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Subject: [PATCH v2 0/2] Add video clock controller DT support for sc8180x
+Date: Tue, 1 Jul 2025 17:10:17 +0530
+Message-ID: <20250701-sc8180x-videocc-dt-v2-0-b05db66cc1f6@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGhrL3pBtmKB+eUT+UdId2XMSsQswHJrC1DtINLLcA=
-Content-Language: en-in
-X-CMS-MailID: 20250701111817epcas5p1aa3bcea4074a614451ae5e586fe81ff6
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250627193052epcas5p1cf3fc43c6a3c2e5ed9ad68ceac9c34bd
-References: <CGME20250627193052epcas5p1cf3fc43c6a3c2e5ed9ad68ceac9c34bd@epcas5p1.samsung.com>
-	<20250627193046.GA1673824@bhelgaas>
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACHJY2gC/32NQQ6CMBBFr0K6dsxMQURX3sOwMNNBZiHVFhsM6
+ d2tHMDle8l/fzVRgko052o1QZJG9VMBu6sMj7fpLqCusLFoD9jaGiJ31OECSZ14ZnAzNMI147G
+ loXOmDJ9BBl226LUvPGqcffhsH4l+9m8uERCcnCVkarBFvLzeyjrxnv3D9DnnL159cmy2AAAA
+X-Change-ID: 20250623-sc8180x-videocc-dt-4ec3c0761f8d
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh
+ Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3MiBTYWx0ZWRfX1HSzi/ScT/kV
+ w70xG2LSAD3gnPzmGwJf6yuUSHBIdPJNSwRSu15+Ki3Y4XsPSJ23b6Vm+mHKp3mhI4SA9+ZXfxZ
+ xThymwt1uCToZMvhFZ5B+gUKb+jPofKT8Szdj7eB77d5UC7qf0YYgWbK8VmggaZZO8kBgymG9hF
+ ZPiy0so4oZ0wsuGBsaHJzY8AAcqxN/6iZo97eagm2tpBrHMcdxkfZE/xuQ7dr2ILnIEsJQtJ3iU
+ CasMbCxBV9N/tO5OV1p56NjOcmrmjRVHJJSRVVzs2I+78JyFZ56DcM01CkqAJvSgpbGG0eGWI6U
+ Qiys/BEgPLJrodS0o3hQV/DbjPHY1g4KI2D5n8HUBoYQLh8UFUEVYOu283vPdQlYwasV8ze3xsJ
+ dESrH9lKGrPFc5hhlCdotNqlRFMdrRTcTaZNppoBJlX/dJERfcMUiam2UueAkbHyM/ur9pWA
+X-Proofpoint-ORIG-GUID: qMhYgQ1511n-EYYlLJlA7xw4WcZVIqrl
+X-Authority-Analysis: v=2.4 cv=EuHSrTcA c=1 sm=1 tr=0 ts=6863c930 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=NFWEofW9e4JWmly9Js0A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qMhYgQ1511n-EYYlLJlA7xw4WcZVIqrl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 mlxlogscore=816 malwarescore=0 mlxscore=0 phishscore=0
+ spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010072
 
+Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+---
+Changes in v2:
+- Introduce new compatible for sc8180x videocc and use sm8150 as
+  fallback. 
+- Add new patch to update the bindings accordingly.
+- Link to v1: https://lore.kernel.org/r/20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com
 
+---
+Satya Priya Kakitapalli (2):
+      dt-bindings: clock: qcom,videocc: Add sc8180x compatible
+      arm64: dts: qcom: sc8180x: Add video clock controller node
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: 28 June 2025 01:01
-> To: Shradha Todi <shradha.t@samsung.com>
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
-> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
-> robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org;
-> conor+dt@kernel.org; alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org;
-> arnd@arndb.de; m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
-> Subject: Re: [PATCH v2 09/10] PCI: exynos: Add support for Tesla FSD SoC
-> 
-> On Wed, Jun 25, 2025 at 10:22:28PM +0530, Shradha Todi wrote:
-> > Add host and endpoint controller driver support for FSD SoC.
-> 
-> > +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> > @@ -20,6 +20,8 @@
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/module.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/syscon.h>
-> 
-> The trend is to sort these alphabetically.  The last couple additions
-> didn't observe this, but maybe these new ones could go a little
-> farther up and make it more sorted rather than less?
-> 
-> > +#define FSD_PCIE_CXPL_DEBUG_00_31		0x2C8
-> 
-> Existing #defines use lower-case hex; please follow suit.
-> 
-> > +/* to store different SoC variants of Samsung */
-> > +enum samsung_pcie_variants {
-> > +	FSD,
-> > +	EXYNOS_5433,
-> > +};
-> 
-> >  struct samsung_pcie_pdata {
-> >  	struct pci_ops				*pci_ops;
-> >  	const struct dw_pcie_ops		*dwc_ops;
-> >  	const struct dw_pcie_host_ops		*host_ops;
-> > +	const struct dw_pcie_ep_ops		*ep_ops;
-> >  	const struct samsung_res_ops		*res_ops;
-> > +	unsigned int				soc_variant;
-> > +	enum dw_pcie_device_mode		device_mode;
-> >  };
-> 
-> > +static u32 fsd_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-> > +				u32 reg, size_t size)
-> > +{
-> > +	void __iomem *addr;
-> > +	u32 val;
-> > +
-> > +	addr = fsd_atu_setting(pci, base);
-> > +
-> > +	dw_pcie_read(addr + reg, size, &val);
-> > +
-> > +	return val;
-> 
-> Remove blank lines to match style of fsd_pcie_write_dbi2().
-> 
-> > +}
-> > +
-> > +static void fsd_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-> > +				u32 reg, size_t size, u32 val)
-> > +{
-> > +	void __iomem *addr;
-> > +
-> > +	addr = fsd_atu_setting(pci, base);
-> > +
-> > +	dw_pcie_write(addr + reg, size, val);
-> 
-> Ditto.
-> 
-> > +}
-> > +
-> > +static void fsd_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base,
-> > +				u32 reg, size_t size, u32 val)
-> > +{
-> > +	struct exynos_pcie *ep = to_exynos_pcie(pci);
-> > +
-> > +	fsd_atu_setting(pci, base);
-> > +	dw_pcie_write(pci->dbi_base + reg, size, val);
-> > +	regmap_write(ep->sysreg, ep->sysreg_offset, ADDR_TYPE_DBI);
-> > +}
-> 
-> > +static int fsd_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > +				 unsigned int type, u16 interrupt_num)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > +
-> > +	switch (type) {
-> > +	case PCI_IRQ_INTX:
-> > +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> > +	case PCI_IRQ_MSIX:
-> > +		dev_err(pci->dev, "EP does not support MSIX\n");
-> 
-> s/MSIX/MSI-X/ to match spec usage.
-> 
+ .../devicetree/bindings/clock/qcom,videocc.yaml       | 19 ++++++++++++-------
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi                 | 15 +++++++++++++++
+ 2 files changed, 27 insertions(+), 7 deletions(-)
+---
+base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
+change-id: 20250623-sc8180x-videocc-dt-4ec3c0761f8d
 
-Thanks for the review! Will take care of all mentioned changes in next version
-
-> > @@ -373,13 +617,43 @@ static int exynos_pcie_probe(struct platform_device *pdev)
-> >  		return ret;
-> >
-> >  	platform_set_drvdata(pdev, ep);
-> > -	ret = samsung_irq_init(ep, pdev);
-> > -	if (ret)
-> > -		goto fail_regulator;
-> > -	ep->pci.pp.ops = pdata->host_ops;
-> > -	ret = dw_pcie_host_init(&ep->pci.pp);
-> > -	if (ret < 0)
-> > +
-> > +	if (pdata->res_ops->set_device_mode)
-> > +		pdata->res_ops->set_device_mode(ep);
-> > +
-> > +	switch (ep->pdata->device_mode) {
-> > +	case DW_PCIE_RC_TYPE:
-> > +		ret = samsung_irq_init(ep, pdev);
-> > +		if (ret)
-> > +			goto fail_regulator;
-> > +
-> > +		ep->pci.pp.ops = pdata->host_ops;
-> > +
-> > +		ret = dw_pcie_host_init(&ep->pci.pp);
-> > +		if (ret < 0)
-> > +			goto fail_phy_init;
-> > +
-> > +		break;
-> > +	case DW_PCIE_EP_TYPE:
-> > +		phy_init(ep->phy);
-> > +
-> > +		ep->pci.ep.ops = pdata->ep_ops;
-> > +
-> > +		ret = dw_pcie_ep_init(&ep->pci.ep);
-> > +		if (ret < 0)
-> > +			goto fail_phy_init;
-> > +
-> > +		ret = dw_pcie_ep_init_registers(&ep->pci.ep);
-> > +		if (ret)
-> > +			goto fail_phy_init;
-> > +
-> > +		pci_epc_init_notify(ep->pci.ep.epc);
-> > +
-> > +		break;
-> > +	default:
-> > +		dev_err(dev, "invalid device type\n");
-> >  		goto fail_phy_init;
-> > +	}
-> 
-> This would be a little nicer if you added soc_variant and device_mode
-> and the code that sets and tests them for exynos_5433 first in a
-> separate patch.  Then it would be more obvious that the new FSD parts
-> don't affect exynos_5433 since this patch would only be *adding*
-> FSD-specific things.
-> 
-
-Sure,  I have no issues in splitting the patches further. Though unfortunately,
-I or anyone I know does not possess a board which has Exynos 5433 chipset.
-Therefore, I'm unable to verify these changes for Exynos chipset. I took care
-to not disturb the exynos flow functionally but would be great if someone
-could test this and confirm that it works well on Exynos 5433 after the changes.
-
-> >  static const struct samsung_pcie_pdata exynos_5433_pcie_rc_pdata = {
-> >  	.dwc_ops		= &exynos_dw_pcie_ops,
-> >  	.pci_ops		= &exynos_pci_ops,
-> >  	.host_ops		= &exynos_pcie_host_ops,
-> >  	.res_ops		= &exynos_res_ops_data,
-> > +	.soc_variant		= EXYNOS_5433,
-> > +	.device_mode		= DW_PCIE_RC_TYPE,
-> >  };
-> 
-> >  static const struct of_device_id exynos_pcie_of_match[] = {
-> > @@ -449,6 +756,14 @@ static const struct of_device_id exynos_pcie_of_match[] = {
-> >  		.compatible = "samsung,exynos5433-pcie",
-> >  		.data = (void *) &exynos_5433_pcie_rc_pdata,
-> >  	},
+Best regards,
+-- 
+Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
 
