@@ -1,57 +1,75 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172E2638A1;
-	Tue,  1 Jul 2025 21:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9409523B60B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403826; cv=none; b=omDfz15TI+3kJj65NnBBeOBgumRBruBKPy0sIY2Twoh44JQdM0Wl0G2nmxHl8Le5oS+VYmf/MLR09pSXB9PWz6/OZhQ2r0UZg9/dc7o+/3xGAONiHFDrDWHBB3gfGOmme5mCL5vB/SZAIuLjFIlkjuEc/mClifCrfJjDRD3Q55k=
+	t=1751403848; cv=none; b=sfbXpsUcKR4uhphrRFWUs80Q1+WMxlVYEnvaPQLEklFrFtTFOp9+QW3Fr4zk7lPe661m45+EaaYWfrav6s1MNE/XeoxT8VU+8e9Z7+Tt/fkjF+vKH3gPDcVL62R2okXpZNw8ISw1bDEy5hu+uTymHLYPPwdKszeLLYWoZNIin+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751403826; c=relaxed/simple;
-	bh=jy8MSQgUdDYILNyNwRBueO/xU4Yp29YbIn8zxzsO5aE=;
+	s=arc-20240116; t=1751403848; c=relaxed/simple;
+	bh=8FCqo8HglwUC7lV2qsEc0sMIhpTVdmCKgwRAnut7D8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYUL9NfWq5JBikz5tHWrKk1s7ZrmGHDPbH8/kBGs7tntTDDLa0mPyjTgRFEHFh1GPdVm2Q8FJQSv/8IbIaHkO8E6OxAEZCqz4k8c33n9UBrfOfjxpZMctUpWYBDbmz9FacqHWz+0U+g5vU/yvz2r4VU8gPOKJtf2sf4L9Um72Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Othi/RQH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fTuI8mku; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVGWkFEA4Yb+tYTu0eL7KA0KbeHxkJqwBClsexfcZzVDNdnXjuT+qJ3V/ygPW8DrUZV8YgVnrcY2cHNAU8SHymVffaJsEczUH4qa9dILLQrw+tmOSnxx3Qn/Se1l1a0IQzP00voMchFwhohHtNSIba6K/Qd4NZNJspa4E0rSSe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UNkXuVMq; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Othi/RQH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fTuI8mku"
-Date: Tue, 1 Jul 2025 23:03:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751403823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1h40M3VjawR1ifryGour9mmf6PVYa6xTSb2ajwg4Xbo=;
-	b=Othi/RQHcWCD3+MaatleVqEYHCn5jQDeLzIVcWHsa9CLfvlHpOCvEuvjdwNHbCEPiZ0sct
-	UtMNoM0jnRRf02yMVWWuKyXdU3DSUuZoaRTbohuF6mXXgrz4q72mX4JJDNQIN6CaEH8Fhe
-	i5Ao23SLfH09dAfp7DaSqC80XYatOJlBFtL7IRKK0xy4hnRrWk43fEnYnTkSmjCD+8SbyR
-	JY25Cb9Dx2Ho+6X616QNDIvJVThJhBBW/txbm7c1+K0gXkruEZjvwhHNMIwEDm8FZ9EwpU
-	BNhFmU/2yKmFtHZTdchXNWrVbgOEpCTL7A1lYJ8vgNHVfFxLvQA1kuh88atb5A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751403823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1h40M3VjawR1ifryGour9mmf6PVYa6xTSb2ajwg4Xbo=;
-	b=fTuI8mkuneuxKcK4iHXJoxU8+0R9pmaGykkY1JKclwi2Y2oynC9iF5yYuHu72cmlSRXZK8
-	7gdwGDc5kO5xmUAA==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250701210338.BooVbo54@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
- <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
- <20250630203401.1a11e58f@gandalf.local.home>
- <20250701051757.mBjQVdoo@linutronix.de>
- <20250701110218.5e742850@batman.local.home>
- <20250701110551.5c2dc2ee@batman.local.home>
- <20250701151114.OJQTlRCY@linutronix.de>
- <20250701111704.00456667@batman.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNkXuVMq"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747e41d5469so4184811b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751403846; x=1752008646; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u8haZuXHqwNt+r6E2/YPONG0WE5U91vsPV7q00D+974=;
+        b=UNkXuVMqiVGP3iHqsA7Ib563jCcB+Yzqf6NvSCA+gRGnant4hzND0vGtGB0LhM5YJp
+         6fmQbmOuqVFaI0Evzgwkv+xkf1BIvZMu2iJPqXUC3qHUkUN5C0Ybs9qNKW0CcdBAEba1
+         GDZow9TfahJpj+wFWNeyO2ighYmHSIqxJQVZfEAe4oGYEwZOZgSRO5IhlwbcFqpz9K/O
+         QPfRV5LE6jVGGfhURhliXzNV/tFOJhxa/8+LkAWhiHocFDTbYuZCdf2/kUreD/aTo6yC
+         XKn2KCxl8NbMHNNBWpxTh2BOj6V0lMX2dkQn4Xwp3ZOEnKp2weW8XqmtGD6ADmUNiift
+         jEzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751403846; x=1752008646;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u8haZuXHqwNt+r6E2/YPONG0WE5U91vsPV7q00D+974=;
+        b=X4DkQbKpmkrtF6KYQQ/hbiN3v14gyeqgC0SCy74vslUTMKJnYJwsn73A/0DrefdnW/
+         Drg93nG5COY6mlNuf9kfTUkWswpcAEQvySrRD/tmjxdS+YCdupgbYy2++gOw6Aubexsz
+         cDg0a6PG6qZA4OFjej7Rmj/uPIXAao4bvTI6RSA8LAUP8GLSg3AvxmL2da3Q34qpdk2/
+         sNC0EmewE0pOijbutzaxbC+RGyQAuxpuCjn8JLsOkODtZDfemBgMQXEdTJzPhr3f7VMM
+         D2PLViLzslj0e6rzf2E7WevzHHClRdyQLgHoNKQp/LfaDRqp+VtcaKEyHF9cscYs8V28
+         tQTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeTl9LaeQudkKlbi0Rut+WCU7y2iKuMxh8BSfCAQP16ANgV2t3V2p0tXtf0HPc17ptEu7Snj9Pey0EBOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFiJWoDt677dWOciBwshcCm0Vfn8gGDNh1cvzP6F6V5a8JmeGA
+	3U86XDCfFYUdaSGRIWlx3CXHpels8ufc5ifmx3/r2STqNNkCqJ4HPY2v
+X-Gm-Gg: ASbGnct+yO/UW8WpcEELEBFwznxCy3UpHM9h1LnVZWwCk9vF/C931TMwnQQpxcuasT1
+	xhxg3+uXvwn1Z08X4h4ltKPEnUD7DuGUZ1YBoSPOgcgdAucThm+lONqvucAZkNGfxWwUbqC/BEy
+	9WKfKKH4eW0HT8iwnI2uCmAXKimfgG6FlUs/OIcyunt5GtEVTm3zYpYTPI6yoTNLAicOBKa1Csc
+	pOz1heH+qeq0GzZH6Arsr5EYEPqeByUIPXQlpNheLTPnpoOS/trS+7vRfrT5ARW7IS4NlD1sJUZ
+	eZiHw6BiZQZ2uuWHexDsaH1xHkPJZFgVNtcArgAKvjNzUNeXEs4Ofocjk8HLZaEJFiwZkbix3w=
+	=
+X-Google-Smtp-Source: AGHT+IFGG15vn4olJHlquF7uHoRYBkOkcoz/0VL4VevfvrjtjKRPxqONxSTucdBuX4zgx/REtRNYGw==
+X-Received: by 2002:a05:6a00:2349:b0:74a:e29c:287d with SMTP id d2e1a72fcca58-74b5149d55dmr272257b3a.11.1751403845652;
+        Tue, 01 Jul 2025 14:04:05 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:7bb0:b5bc:35bb:1cb4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5573e71sm13467887b3a.98.2025.07.01.14.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 14:04:05 -0700 (PDT)
+Date: Tue, 1 Jul 2025 14:04:02 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yassine Oudjana <y.oudjana@protonmail.com>, 
+	=?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>, Fabien Parent <fparent@baylibre.com>, Reported-by: 
+	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org;
+Subject: Re: [PATCH] MFD: mt6397: do not use generic name for keypad
+ sub-devices
+Message-ID: <vhbngoyykm3n2rqcxoabkimt5mzamsqy4talluzy2gt3ddtbfg@4ouxfz57s5uz>
+References: <r4k3pgd3ew3ypne7ernxuzwgniiyvzosbce4cfajbcu7equblt@yato35tjb3lw>
+ <20250701105811.GI10134@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,33 +78,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250701111704.00456667@batman.local.home>
+In-Reply-To: <20250701105811.GI10134@google.com>
 
-On Tue, Jul 01, 2025 at 11:17:04AM -0400, Steven Rostedt wrote:
-> On Tue, 1 Jul 2025 17:11:14 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
+On Tue, Jul 01, 2025 at 11:58:11AM +0100, Lee Jones wrote:
+> On Mon, 30 Jun 2025, Dmitry Torokhov wrote:
 > 
-> > > There's nothing in the code that even states that this was generated
-> > > (if they were).  
+> > Do not use "mtk-pmic-keys" when creating sub-device for the keypad to
+> > make sure the keypad driver will only bind to the sub-device if it has
+> > support for the variant/has matching compatible.
 > > 
-> > Yeah this entire file is generated from the LTL specification. I will add a
-> > comment.
+> > Reported-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+> > Fixes: 6e31bb8d3a63 ("mfd: mt6397: Add initial support for MT6328")
+> > Fixes: de58cee8c6b8 ("mfd: mt6397-core: Add MT6357 PMIC support")
+> > Fixes: 4a901e305011 ("mfd: mt6397-core: Add resources for PMIC keys for MT6359")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> > 
+> > This is not tested so if someone with hardware could try it out that
+> > would be great. I *think* it should work...
 > 
-> Yeah, generated code needs a big comment at the top of the file on what
-> generated it.
+> My suspicion is that this will not work.  Providing compatible strings
+> here is only for device to node matching.  I do not believe the drivers
+> will probe using them.
 
-Sure.
+Actually it should. If we check the drivers for "mt6323-rtc" you will
+see that MFD core defines a sub-device with this name and similar
+compatible, but the RTC platform driver only lists compatible:
 
-> Bonus points if it shows how it was generated so that people will know
-> how to regenerate it.
+dtor@dtor-ws:~/kernel/work $ git grep mt6323-rtc -- drivers/
+drivers/mfd/mt6397-core.c:              .name = "mt6323-rtc",
+drivers/mfd/mt6397-core.c:              .of_compatible = "mediatek,mt6323-rtc",
+drivers/rtc/rtc-mt6397.c:       { .compatible = "mediatek,mt6323-rtc", .data = &mt6397_rtc_data },
 
-If it's okay, not in this series. It requires changes to the RV core
-script, and I prefer not touching things which are not LTL-specific for
-now, unless necessary. The DA monitors and the containers do not have it as
-well.
+Driver name that is defined in drivers/rtc/rtc-mt6397.c is "mt6397-rtc"
+not "mt6323-rtc". 
 
-Let me stash it into my TODO list of RV cleanups. I will add this for LTL,
-deterministic automaton and container in one go.
+And if we look into MFD core we can see how it works: mfd_add_device()
+scans the main (parent) device tree node children, locates devices with
+matching compatibles, and calls mfd_match_of_node_to_dev() for them. The
+latter essentially copies/assigns device tree node to the platform
+device that is being created, compatibles and all. From that point
+normal binding rules will work and they take into account OF
+compatibles; we no longer need to have matching platform driver name to
+match.
 
-Best regards,
-Nam
+Thanks.
+
+-- 
+Dmitry
