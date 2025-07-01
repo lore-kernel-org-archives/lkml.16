@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E927584C
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DBF2737F3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751372731; cv=none; b=txu1c3rOsvyYvNZzI5rJjcxc507xyM3Ji0TcMzOzozksrBH8kA3clV+nf3etIDAoVCggtj3QvBm/s7KETSkYyeqcAtw+X3r4nI6XLHAyBHYlPSk70WXcz4sdCB4fICn1Ia5JKR2Ep7VpX8VqyESYcxR+mIsjkzfHv3/MtxAqxN8=
+	t=1751372835; cv=none; b=dw1ahsWt6HlP/gRUieHQ3W3mmTdrDf5+4dDCiuoQqTxAugxGGOGtIqLtdXYYC/WveqKCxZZCV7w+A0yMpmIHXezPfAaCRo5wbsdCU4w//aVY3g+TscpTts+8Zkf8RPwVkWFh+1TaXY6wrZW6teV4lGB3umUPyldR0jKiof4yfDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751372731; c=relaxed/simple;
-	bh=z/CCrJhSfJ+0N7wRoqbjcqIKdxPJ8urhIm9XK/idS34=;
+	s=arc-20240116; t=1751372835; c=relaxed/simple;
+	bh=j8plwK2r2sG78eupDPTV2+LjtVXteF6QvQSBw1+y/1g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jk3MbbvUhxQLRmyB4dBOCwhU4FB0y3xNLBSGEwPXeRMoZfWdTHPtFd19Ma4LjnPaTg9KB40ivqpDRG7C1RlDugrRLe9raQiG6uH+r7bhDl5KjixWPk/3sESPUW0DH3rhQm+BS21avtl57NCzH/cDksp6r8k0vj1DoPq/UOxenbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XmkRPQAQ; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=BNm22/YuSIV3gshx8OnArcBvPM588oadwMhOFX+9nmTS4qCOyCvgvOWMcih9qPaEGSIq/q3dMefBNtGhv6c0WJ0xJoncMeqqQLF1KoCslIh+xyyG4I3oq1GvTywhfq4fd1N2TW3XeFlSwrpQNpOts0HNnBtGo7bpzCK+kDDuhcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DZSM1svf; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmkRPQAQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZSM1svf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751372729;
+	s=mimecast20190719; t=1751372832;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tj8pB/rMHLZ+6PtFNz+xS6WiL3VVVwDceOqfATE3uy4=;
-	b=XmkRPQAQiSFFQCQy7/73MhS29tiJF4wiKNa0goqfy+g2HwZPOUUDa+PGEsYFUerhAOcl1J
-	OIjkNgZWtJbC+bFYg4TreWSG/2URLzgf4cU4jMo/MGFQ3mQ0ORTOO1PEYQGCE+cxzv56Ek
-	4+/k4DjMZkZLNvXB0P1bJql1I5KwkKY=
+	bh=FEHfRalLuIEVVtsEsS9C6ifi6aMXwZRzg5zr/B5tJXU=;
+	b=DZSM1svfSDVH1GmauixsmIG71lO3i9URo3C2PtO/2xD41hxo++zlPvnRdCAWLtpQId8/zb
+	Okei86u1S+UnQonOYimGPNMhrbB5sxjd0VnzDQM+x4GFQbVPFMu7VgRIow+F0BN9nLh6fG
+	ts+bLM0HEYs86Da9tPjSu1GT81V4+mQ=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-468-W-lCawKyP6ig2DpQ-jHEuw-1; Tue, 01 Jul 2025 08:25:27 -0400
-X-MC-Unique: W-lCawKyP6ig2DpQ-jHEuw-1
-X-Mimecast-MFC-AGG-ID: W-lCawKyP6ig2DpQ-jHEuw_1751372726
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4538a2f4212so25727875e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:25:27 -0700 (PDT)
+ us-mta-8-w6pl40GJPkOUFuPIs9ZvPA-1; Tue, 01 Jul 2025 08:27:11 -0400
+X-MC-Unique: w6pl40GJPkOUFuPIs9ZvPA-1
+X-Mimecast-MFC-AGG-ID: w6pl40GJPkOUFuPIs9ZvPA_1751372830
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-453018b4ddeso32180835e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 05:27:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751372726; x=1751977526;
+        d=1e100.net; s=20230601; t=1751372830; x=1751977630;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=tj8pB/rMHLZ+6PtFNz+xS6WiL3VVVwDceOqfATE3uy4=;
-        b=k2jpsUhAJPdrDM31IyzMwbZ2CeLKQuISko73qJUo4+ImVh000py0YgGQvVE8zaxjmT
-         C1lGQFy4bHvjcdcmjJnCm/OJfajNlWoc/jblWp/yNuC4vTZjXANXlHHkcqmfycOX2fn3
-         sU5Z9L5irl6KRM3GfJL/diVREub5aT+KJeGJaCb3BXOnP8DuDmXMxz1lBg43Wbe64zd1
-         vNGBln0N9Jc9d2b4XtyviIs4sjjkpUjhI4aA729QSublEDr1fB472Q/B6T6EkVPTrD9k
-         H8GpO5Vq5+9qt6xFLDH7Dl0WIgtBZhS6XTUZD3RhsVp0MhJc9Po+psA3/AtMpv6t75Ko
-         P7fw==
-X-Gm-Message-State: AOJu0YwW4AJIrwDWse41r4L89mtL5jCAJSMECc9FpCGuVqXF2owAgCJU
-	84GG589hG969L5+I5FoQvxMY7hUmhs2G7HaFSLILl7KZs+0oNlaMbFDl9GL+KSVO81QdIKR1EhZ
-	S4KWoTuXR5/JDT117KHzh/13B7Vf8ceSWrgMyhcx63QbFSiKpNfVyzBIwO6uJ8dddpw==
-X-Gm-Gg: ASbGncvScVFI2HKdpAun3+39c4H/AaKQk6BHzIiBblrK8/pa35xLr633mX6loh9qudw
-	rWDp7qO/fqQRmeE1GAW0UEp1EXvekB4EVlTrORUtEA12eb9lCRteC7WnH4WvEXHlsfCC1y7AZrW
-	FNG20QpODswjqhAA8cW6c0mA5wxTEkHwu2ZOeH3wmAnAwuSo6/Z78XEUaNvtt1ZbBdqo/SqycFx
-	fJVE1YFKTVriqGDaU0MJxGNX1C3VBm1vaoSyo+n/675ZJVc8DOaKj+FdP8c8+mBWu+2gl/CUlvf
-	Oa11SjRuJJFI8R99Q6KbvUrLdInX6lka+looQ3/lFLEu24bHqttfrFE4HyyALIZe9LqNPV9EfNf
-	vkNOcowr6hNwk0poy4vYdPO+L/MDMz/tKlRdjpoZcp4KlFshqKw==
-X-Received: by 2002:a05:600c:198a:b0:442:ccf9:e6f2 with SMTP id 5b1f17b1804b1-4538ee7df15mr201513465e9.16.1751372726406;
-        Tue, 01 Jul 2025 05:25:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGtxNR73SFMqIoSFe5cIm5GNMerZkIb6R08bnmv81T1e6WZOFEwjwh+c20OjBL0zx8GNPpXsA==
-X-Received: by 2002:a05:600c:198a:b0:442:ccf9:e6f2 with SMTP id 5b1f17b1804b1-4538ee7df15mr201512785e9.16.1751372725799;
-        Tue, 01 Jul 2025 05:25:25 -0700 (PDT)
+        bh=FEHfRalLuIEVVtsEsS9C6ifi6aMXwZRzg5zr/B5tJXU=;
+        b=NV/mzqLhAkUoC7EO1aKzLFJtsvdtZjoW/Qq9L4nreo+8lO4D2DtNLepRALwQggEHC7
+         3Jsg9dLSIF0WrEtY+wrlSUADFaenAGQBewEm3uWGUQMK1VdKncG/oqZeuuoL5zXI+rU1
+         UUilTWlKN/DSlNMoqkipWpP59F0f+qC9MVLAgNP8WmuIRIvfw9jEyXZRAwXr9pxsNepF
+         i6XTuPixH59ZPB7CCdR43fhw0Ty+IkaTKDb+SIQk/CY0P13dqlh6rSd7hqMtimxtX7xv
+         ybQVNz0T8T4JzAS9h06eQtOShJ820kBdYLsgq4k+Gh0/ymY8HXX2p6YXZD+W3D835bwk
+         VpOw==
+X-Gm-Message-State: AOJu0Yz48loI1AXSonsSAmiXs16o/XQddnx80HJNcRnPuIQhsT6DJBqN
+	cg3SbJeojUsMBEg31HBa6RTp/mQeTxy/OFpWY7/HI24p0rBM8ag0Mt4rOp0kgfMtNf3VNHFurQ7
+	82tKrFbam8B8RFECdOynlVJrj0KOtVTcxYRSFcxHU90pkaY05yCEPbHYDy0zELSolIQ==
+X-Gm-Gg: ASbGncugD6aIPXvqgcYr601ONJamS2r1da0atcL/dezaWuM5fCb3gGhE6hDvYHzxrP/
+	4tCDxmT+que9gmPnaurCI+IKMxhj94r/a5wyuEeKiT1zlOaayllF4yrP3EyQkJtbmaxwf3aaVnE
+	WGK5j1YsMLrQVe+BkqFWYRj0rRAPTc7xO+VdcCIRnSTRTbrd3XgvZBvp1ipLjFIsRDS4bOe/Htk
+	aXchjF9omKVCIh1/Ks87oX+fuWEAIzHw/5p1K8i9+ImESolGUmp/F2xlo9vMzTi4hnMsLEuzUfi
+	uj/tB3MZYQu791V6XU73NHX656mvE9Y12mFt58DefZil19BuuJv+4/oe11W8S6aJuQhCBEiH+TG
+	MPBCfXMXR6VMx4AgX7J4tuBlJAjbmKOh4sXmfHd5M2Oex59HCDg==
+X-Received: by 2002:a05:600c:4fce:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-45390259d15mr148237245e9.6.1751372829998;
+        Tue, 01 Jul 2025 05:27:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSJU2Sf5R53h48rrobFaZHNRWjQKFRP9ItDNhMojifotwoNth3ly8lc9eWoZidBApRccIuBQ==
+X-Received: by 2002:a05:600c:4fce:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-45390259d15mr148236605e9.6.1751372829433;
+        Tue, 01 Jul 2025 05:27:09 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a43325asm162371015e9.16.2025.07.01.05.25.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a421434sm166408505e9.37.2025.07.01.05.27.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:25:25 -0700 (PDT)
-Message-ID: <e29af2bf-34c7-4d26-a5d7-f061d2642bd5@redhat.com>
-Date: Tue, 1 Jul 2025 14:25:22 +0200
+        Tue, 01 Jul 2025 05:27:08 -0700 (PDT)
+Message-ID: <04e99b47-055f-4555-be11-76afb2065b0c@redhat.com>
+Date: Tue, 1 Jul 2025 14:27:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,7 +74,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 14/29] mm/migrate: remove __ClearPageMovable()
+Subject: Re: [PATCH v1 15/29] mm/migration: remove PageMovable()
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -110,8 +110,8 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
  Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
  Shakeel Butt <shakeel.butt@linux.dev>
 References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-15-david@redhat.com>
- <24d2b984-857d-4a11-b016-dc0227d81c88@lucifer.local>
+ <20250630130011.330477-16-david@redhat.com>
+ <38e19e3a-e46b-4a50-8a34-dc04fc4a3c3c@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -159,23 +159,24 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <24d2b984-857d-4a11-b016-dc0227d81c88@lucifer.local>
+In-Reply-To: <38e19e3a-e46b-4a50-8a34-dc04fc4a3c3c@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 01.07.25 12:43, Lorenzo Stoakes wrote:
-> On Mon, Jun 30, 2025 at 02:59:55PM +0200, David Hildenbrand wrote:
->> Unused, let's remove it.
->>
->> The Chinese docs in Documentation/translations/zh_CN/mm/page_migration.rst
->> still mention it, but that whole docs is destined to get outdated and
->> updated by somebody that actually speaks that language.
+On 01.07.25 12:50, Lorenzo Stoakes wrote:
+> On Mon, Jun 30, 2025 at 02:59:56PM +0200, David Hildenbrand wrote:
+>> As __ClearPageMovable() is gone that would have only made
+>> PageMovable()==false but still __PageMovable()==true, now
+>> PageMovable() == __PageMovable().
 > 
-> Yeah I've noticed these getting out of sync before, perhaps somebody fluent in
-> Simplified Chinese can assist at some point :) mine is rather rusty...
+> I think this could be rephrased to be clearer, something like:
+> 
+> 	Previously, if __ClearPageMovable() were invoked on a page, this would
+> 	cause __PageMovable() to return false, but due to the continued
+> 	existance of page movable ops, PageMovable() would have returned true.
+> 
 
-I already saw doc updates for this. Obviously, I can't review them in 
-any way, but people seem to be active updating them.
+"existence", yes will use that, thanks!
 
 -- 
 Cheers,
