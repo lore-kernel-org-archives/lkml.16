@@ -1,83 +1,76 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AF2C859;
-	Tue,  1 Jul 2025 15:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1BF2797A3;
+	Tue,  1 Jul 2025 15:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382145; cv=none; b=WgsaxBRlDjVXnOnwd3lxXZTaqaY/aMjIxvggFcdqm0UyOmeLVFuIz3ibmCnWAa+fp067f5KR+2aAjmdvzrfEglaJ3wDWteM2pIEcLJGyMbjF7ui00JmPvP/jpPrtDAqiG0HZy1U25zRBeXl5V1OVu5Axn4YX0Xv+GdGUU2x5PzQ=
+	t=1751382225; cv=none; b=lGFgZQsPRUj3G9nqNVK1gLQm56mu1Jkf5LJtb5MH568CrOeICDIRbpXd8+IZtdtk/UcvEoFmaSr1SdTO/KBTU6tvDHgeu573PXEJPrGkWM0ow+MCOFzV8+JqJpEo+jbGagywJmUXutA8HGQuIuSd33fOWaWpfhwKnA/mjKmAom0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382145; c=relaxed/simple;
-	bh=G6NyVvCMpDwrHrhGlAOQBEVHpEsXrfpUa1OzCDHI4Mo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bg0R/vhdFgMKtnEX/t391KDde8oOwX9TYN5a/0tURl1HOE/6KyqS9TawXTHo1WHCx2rhNK67Zh9PQ/16GocSMZAcL66C4cYWkaOaIkZ2tllln4GXtyxwDgRQot1PYT8zRU9W5wsX8UuAa42fu9p9rb3TkPkW2w8XzmQD2+vt/hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id A2781123A9F;
-	Tue,  1 Jul 2025 15:02:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id C3A6D20028;
-	Tue,  1 Jul 2025 15:02:19 +0000 (UTC)
-Date: Tue, 1 Jul 2025 11:02:18 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250701110218.5e742850@batman.local.home>
-In-Reply-To: <20250701051757.mBjQVdoo@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
-	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
-	<20250630203401.1a11e58f@gandalf.local.home>
-	<20250701051757.mBjQVdoo@linutronix.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751382225; c=relaxed/simple;
+	bh=wvgk5dwecM5rZFQD0mJEqNcqe43fEIoyqLJ+pQIsxGo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oeTXKSqf1O+6ZLHbUqGY6EQCzHomJmR1XfyrheH/hfLo/v902z01ea0M38YlCuUbrxn3/vI25YpQgGLhEe9cIuZ+xRZZfchmRm3YiC6kxQvFAXD07eIsLSGy5kLI2tasp26oKNAMgIr7jrSlUAND5C4ChKkuzT4zlhOA2Tsxd3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWmVH3n9Kz6M4rX;
+	Tue,  1 Jul 2025 23:02:47 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id C04B614027A;
+	Tue,  1 Jul 2025 23:03:41 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 17:03:41 +0200
+Date: Tue, 1 Jul 2025 16:03:39 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Nathan Chancellor <nathan@kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl: Include range.h in cxl.h
+Message-ID: <20250701160339.000042f5@huawei.com>
+In-Reply-To: <20250701-cxl-fix-struct-range-error-v1-1-1f199bddc7c9@kernel.org>
+References: <20250701-cxl-fix-struct-range-error-v1-1-1f199bddc7c9@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C3A6D20028
-X-Stat-Signature: 8enwi1j9we1ng67py8fs5a34655cr4yz
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX190W3pl/bSRk4MqQbpALJ5/VZP/8RSTUJ4=
-X-HE-Tag: 1751382139-232240
-X-HE-Meta: U2FsdGVkX1/6r20odEW1bufvkOnez5JoETbUAO/3FjkspZjZRucG5mto2yJ4CYLpz1yZ7GXYNbjavRah6PJqDfWKSmxbeplwXoMVhqzeslrHaKzV0sBTtHqQJ9jtzQk6l6/lz9YeqE722pqrrx13msjUBrjJfDQnXwxRyqa00HJ3PedVHTqvK5ANxkUs4GdazfC6B9yXWjlwFyWO3B6YwW/k9pw5Qtefr/SNcJZFyOA9/wqyejS33CxMTKjVMcUMqTSjNMuBj9kfNrjXOyul37xpgzmX6tKOLrDRHiyrojUYL5O381fwv7xFDgm+oIcf
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 1 Jul 2025 07:17:57 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+On Tue, 01 Jul 2025 07:33:31 -0700
+Nathan Chancellor <nathan@kernel.org> wrote:
 
-> > > +	switch (state) {
-> > > +	case S0:
-> > > +		if (val3)
-> > > +			__set_bit(S0, next);
-> > > +		if (val11 && val13)
-> > > +			__set_bit(S1, next);
-> > > +		if (val11 && val14)
-> > > +			__set_bit(S4, next);
-> > > +		if (val5)
-> > > +			__set_bit(S5, next);
-> > > +		break;  
-> > 
-> > What's with all the magic numbers?
-> > 
-> > Can we turn these into enums so they have some meaning for us humans?  
+> After commit aefeb286b960 ("libnvdimm: Don't use "proxy" headers"),
+> range.h may not be implicitly included, resulting in a build error:
 > 
-> I'm not sure what you mean, we can't use enums as variables.
-
-Bah, never mind. My eyes are getting bad and I need to increase my font
-size, as all the S0, S1, S2 looked to me like 50, 51, 52, and I was
-wondering what are all these numbers in the fifties??? :-p
-
-[ Note, it is a beautiful day and on nice days like this I go outside
-  to work using my laptop, which has a much smaller screen than my
-  desktop. I was reviewing your patches on my laptop where these looked
-  like numbers and not something that started with an 'S'!
-]
-
--- Steve
+>   In file included from drivers/cxl/core/features.c:8:
+>   drivers/cxl/cxl.h:365:22: error: field 'hpa_range' has incomplete type
+>     365 |         struct range hpa_range;
+>         |                      ^~~~~~~~~
+>   drivers/cxl/cxl.h:562:22: error: field 'hpa_range' has incomplete type
+>     562 |         struct range hpa_range;
+>         |                      ^~~~~~~~~
+>   drivers/cxl/cxl.h:570:22: error: field 'hpa_range' has incomplete type
+>     570 |         struct range hpa_range;
+>         |                      ^~~~~~~~~
+>   drivers/cxl/cxl.h:803:22: error: array type has incomplete element type 'struct range'
+>     803 |         struct range dvsec_range[2];
+>         |                      ^~~~~~~~~~~
+> 
+> Include range.h in cxl.h explicitly to clear up the errors.
+> 
+> Fixes: aefeb286b960 ("libnvdimm: Don't use "proxy" headers")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
