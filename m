@@ -1,83 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867BC29550F;
-	Tue,  1 Jul 2025 20:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017A5281355;
+	Tue,  1 Jul 2025 20:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751402073; cv=none; b=NJucAOmttOMl8PlH2u9iwmy5FrX3mEYz3A34YpqRR7yErReca8AbspuU4Hqk+gHmrCRCST4X9HhgwHUR43w2xN8h5c2KeIHaHAj9Qptbp2zMwfE40yqmBY6mm5m1bazKIfvLbM5QPlJFfwWUTv/9CwBPCMxP5RV9XOxTMsDkZ2E=
+	t=1751402129; cv=none; b=PYBep3KpWxbjIWMfwakAbsvELh2T0Ke5ukdVJAQa7p7LZ3xzJpd2eW+cWL0+lIq94WmI1hbNBYD5VMWMFNs7NMR0Y+j4JqqqvlZVh1bZjA1V9mfvKruDjeUAn0BoTGHITTrJ4wDyDhaRr4xTH8C2ywC54GQH27mCj7o/+UE4UcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751402073; c=relaxed/simple;
-	bh=XB3O/2+mTdiweRtrIksCZupGiwYiomIq/E0DOY5On8M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GvniLd2REcjV94vxCL1sBGwYc0kpPdtUEE8K/6LKAJi+1H4soVGsIDrJMUGrZlw9hwBe5b+YotgteESRn6ctw9R2OvrTVQ6kmzxd2GFPywsG9irfLkwydfM+e8yZWZE9LMLu3N/d0CWDydhYEeCeGhZ7qvWeWxG97DVOfb83lyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FD8j6nH7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B47OIQT3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751402129; c=relaxed/simple;
+	bh=I6JQFok9D5wKOjJaufxumgrPJ4Vt5SFOzuUQhLx/Q5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jn9hZaKUfIoKOqZl0atUn6FdU5mkvqj4cHaGKCi51KMum0AOMr8/8esf0RMenixqCNHax0+W+K7dYXVigaiaX8mFOWyDI7hYx8FQ7WnHeba9n6X5zSwjl+2XZRq8hesCteivltjADr+NwZdB7XuVGFiWjZJlx8XtMvJq1z5YPxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoNLWaQV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FD8j6nH7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B47OIQT3"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751402069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XB3O/2+mTdiweRtrIksCZupGiwYiomIq/E0DOY5On8M=;
-	b=FD8j6nH7eJFub0RWs30lnYscQleG9xPZqi8IkN+BoYltCzfj3KyHTzRMGPhoVj+qJZ244L
-	OpUfglb60MkBcL7NFWILd3sdeA1ZsNGPtb2tkrektd1wckG7jNVjNKqI5mRwW7/TVstZvA
-	0jT/8lMX3FLyqAnLEMSWl1l4zNhLIDNyQz6mhYN1zMIfvrHO+dGMjTV5Il4uQ7ytL26/pN
-	crauwKTuxDGpOQ/DjC54TQUoL3f5pVIRcAwZFYbEkSMBEuHCXDKQ97wc/STDMsoK4JM3tj
-	J/vqj9Wjxx8cboo9iOwNNdTWlDLI4XxlKnM7CaQY3F66G5fi3aG7U7PKwUEWXQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751402069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XB3O/2+mTdiweRtrIksCZupGiwYiomIq/E0DOY5On8M=;
-	b=B47OIQT3m0Pz2PEw/LqhuVcGQpth+G9gvEJxgLM9oZ1ibmHQr+RpsSHLWFAQ/tZxwvPs9C
-	rn3NL7vO01sPO6Bw==
-To: Terry Tritton <terry.tritton@linaro.org>, Shuah Khan <shuah@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>
-Cc: ttritton@google.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Terry Tritton <terry.tritton@linaro.org>,
- Wei Gao <wegao@suse.com>
-Subject: Re: [PATCH v2] selftests/futex: Convert 32bit timespec struct to
- 64bit version for 32bit compatibility mode
-In-Reply-To: <20250701142313.9880-1-terry.tritton@linaro.org>
-References: <20250701142313.9880-1-terry.tritton@linaro.org>
-Date: Tue, 01 Jul 2025 22:34:28 +0200
-Message-ID: <87ikkblkff.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoNLWaQV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECCDC4CEEE;
+	Tue,  1 Jul 2025 20:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751402128;
+	bh=I6JQFok9D5wKOjJaufxumgrPJ4Vt5SFOzuUQhLx/Q5c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DoNLWaQVMb95RqC3gJrE41oKtcZ1/5qtyH27rYyX5KkC8SwX0jmwxkPmHYFqJocdw
+	 CfD4bjdVniIKo5XCFTyl0d0gX7TsUV91+cxje7kuDMsqUeunAsxQoXDCtLtqRz7GQL
+	 0VYb/LgMWLogj/LdfVPJ6QpHJ2Y+Yn+ppX79dMODS0muPEXzogWTNlABnng6JLMUD8
+	 wEy1xTqWfLprk5Uzhx8SSeTfBpHlpphyu0ACkhroJldDlgvPFGCRg8AthdLs5pEBXK
+	 qYokL8ZKCtgvl5B6Gp58NSI4uR8j4Bq/hEn92faFgxvxWgzbjwBasUOmJUFav4Lzk1
+	 XZ4KkiqLpdX2w==
+Date: Tue, 1 Jul 2025 15:35:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
+ CONFIG_PCI_PWRCTRL is enabled
+Message-ID: <20250701203526.GA1849466@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
 
-On Tue, Jul 01 2025 at 15:23, Terry Tritton wrote:
-> Futex_waitv can not accept old_timespec32 struct, so userspace should
-> convert it from 32bit to 64bit before syscall in 32bit compatible mode.
->
-> This fix is based off [1]
->
-> Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
->
-> Signed-off-by: Wei Gao <wegao@suse.com>
-> Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+[+cc Bart]
 
-This is still wrong.
+On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
+> If devicetree describes power supplies related to a PCI device, we
+> previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
+> not enabled.
+> 
+> When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
+> pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
+> core will rescan the bus after turning on the power. However, if
+> CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
 
-If it is based on someone else work, then you need to attribute it
-Originally-by and omit the Signed-off-by of the original author.
+Separate from this patch, can we refine the comment in
+pci_scan_device() to explain *why* we should skip scanning if a
+pwrctrl device was created?  The current comment leaves me with two
+questions:
 
-If you just picked it up and adopted it to a later kernel version then
-you need to add 'From: Original Author' and preserve his Signed-off-by.
+  1) How do we know the pwrctrl device is currently off?  If it is
+     already on, why should we defer enumerating the device?
 
-If you collaborated with him, then you want to use Co-developed-by.
+  2) If the pwrctrl device is currently off, won't the Vendor ID read
+     just fail like it does for every other non-existent device?  If
+     so, why can't we just let that happen?
 
-All of this is documented in Documentation/process/
+This behavior is from 2489eeb777af ("PCI/pwrctrl: Skip scanning for
+the device further if pwrctrl device is created"), which just says
+"there's no need to continue scanning."  Prior to 2489eeb777af, it
+looks like we *did* what try to enumerate the device even if a pwrctrl
+device was created, and 2489eeb777af doesn't mention a bug fix, so I
+assume it's just an optimization.
 
+Bjorn
