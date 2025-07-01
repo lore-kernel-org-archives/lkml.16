@@ -1,129 +1,85 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D609926FA50
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048BE265CC8;
+	Tue,  1 Jul 2025 22:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751409844; cv=none; b=kC5iy/AacNrdDqM/rWKbCOeSiNHrJEsPip4L7VOO2W6jxih8zxbacixfAjhk/uLz9zThDaXJHAB3Zm6Lui2EJmfuTORhoknEqYYDM8tFdQGxGw+6KxVBlbl3AXd4ZiwZKVzoNkmHzuR2kC3ziIO3hVlUSKEX2xYBYeDgdJSCbq8=
+	t=1751410164; cv=none; b=acMI4S1OnOfclM5AI0cM6JVReEwuqVRIHqzbBCKY2neErVbbd1zuSyDF8S7wiyyoMXnmp8tAX5ocLQ1uoOYtFLz3Mm7zvCyJ6wKejSLXLib62Z6eOW6E2pJoS7w1ESPP94o6469XYGE0IrBHKh84W7c6RMfp0fxbwh6QM5VLz2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751409844; c=relaxed/simple;
-	bh=7sr/j6pKRahXta2Ds3J7bgr68QpT8C6nQo/PyJxSPSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tDwO1HzPbxbNGkLIjsaxcJsEEOlkkbseirwXOYnXEIqMPkwpfY3YSOUHM1lt3r+YKq1IWtdJqIx+1aOcubhPbAn7Tmhv5TJcoeBHYkqX08Wi+uuh75OKwc/yt+JY795RyXil0inTaBTPQFxlu0PTWyUtcs2JWY7zbLDxdfvIqK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQXI+N5U; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751410164; c=relaxed/simple;
+	bh=yyNQz6Ao1JLzZXSuzYM28IyyWEtJcCrYhLFLzGGHcF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uAX9Slg4ShmLyDs225mQVH0g9pF7EXo9+sgTUpEvY0FOVqGN8l4OtBxyEJbyeoRx/WJdUO8Nvu59u/RK+CO5a/fuVdqYfpPheptDKu0ld3XeS9eO7nfg/d8n8ncIiIe0udW1q/TeyhItq0eVhwfI412O2BGs4feT4aAekkHxudM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQ24SAVX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQXI+N5U"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-711a3dda147so67660267b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751409842; x=1752014642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u4FeRd9wXeQwX3S1+5R3UHzHnQcV70Su/Q1eyBq9q7c=;
-        b=JQXI+N5UUu9vz5/fFlyV5Gfe247vDrXCqh5Nx4mvrAEVJzxqpUGDZh6QqcMWziOAyS
-         1pkUIBLUO8C3lFpLMSm6Yg3ZoYXAw5eZ0V4dctAWxgVBJavN1d4uR7smnYlYvhwsF7As
-         AZqIZOwi/gxoKbAiiMX+GROz7dh3RUCGCZ9J9uGs6uOn5QBnwT1bVpRymbV41OykK8xU
-         CekVTalPW/Tk/YBmo3O6K7HwSecC5I/BXoaQ9gbgtp+V2XGLJQoxIiAHbqXwQnaSRjUT
-         z53tJOwdW+j/AuE5oIcgMZH8fJU0HUkCOIQr/wUp7XGWP5eDlGJDTjzARkXZDmXIfc4I
-         RXnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751409842; x=1752014642;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u4FeRd9wXeQwX3S1+5R3UHzHnQcV70Su/Q1eyBq9q7c=;
-        b=ZStFkvh1w6qdz/+bjHjNGT4WBK+hOZqE0YoSNBZAZqN36s3IzGxh8x3IeSXPxJ0rQ6
-         1tGTP8CTdVZLAe6kkwrw5jz8xfUZzerADLp9IJI46hybp/JzL3PfoPRhg1Zc5USJSA65
-         jC4NO1zz/jw6+EPVe0s/DBlR4IwFXrgTdE+BYo9DgdWjAEPFimHDmGseS6wANFBa5VP2
-         6yBDk4ClIA1OJ/2q7Wnxq4CZBahJciFncMZuv2agKQQlGYt7F7xggxvjNP1o1Jz/szh2
-         3p7nDbHVJdYNzeGIvT+2dRs3HKiXSYT1nEVyuKbtMDFNPUroIr3xHOlcx9xMJhM0uJsF
-         ueSA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5JRI9cMkuAEqScLsk81Apf1qrRvfVpEJRPubc+91TNqJsBaBLjIlpyq+lV80z38/KD1VtVcuvNrG354I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuqucduX6NuLy2mGSmlJRDC+ISzVo4MUufomeqJPBw3+a9iHOY
-	N7CYnPyBRgNb2ogOk240vKh4Mu49G4mo6GljUVwOThpeTv9qbuw+PjXt
-X-Gm-Gg: ASbGncv8Ra1Yi+62CohtDQuXN/5ET+lGxt0Giz1h2v79eWrJOzuEVAxdFWNDnpfMZ4x
-	nc/PWWbTBaOJGb+ImbptbFHYUxz5KfLBbqCidP9mUaNAI2P50i8Y4JJryCcFBWaY7XkpFjen7zm
-	5OPi0kOUpfjwOhPWOFrlwhalHsAcVc6bYsEFrXnizN3dufHCvNg/l5OP1Cuvbhqta1rsyF3MCcu
-	ZiyktxIcPYxaya5tkGoij48LSIX7yxUsyt9q+RPRhn8vbBE5gdQZ7PtFaqXPuKh5oXHBFrpodaC
-	MZSl5fR6CDeOmdOcRpoLBH4CHNIqUNctsZl742nvKsW3L+QrLgLKfeZ29UrKJWMGbdYcydGD5EJ
-	s34BXgauYybIJQughxg==
-X-Google-Smtp-Source: AGHT+IHBPTQW25dLkI4nDbmWAJnJmoVAk9KwGoxI3zHd26yMzfgQe/ATjFFJf6m4R4d7cp8PptyOOQ==
-X-Received: by 2002:a05:690c:6f83:b0:714:256:7917 with SMTP id 00721157ae682-7164d527940mr7001437b3.26.1751409841578;
-        Tue, 01 Jul 2025 15:44:01 -0700 (PDT)
-Received: from bijan-laptop.attlocal.net ([2600:1700:680e:c000:bdbc:6e11:c9be:13a3])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-71515c0464asm22189517b3.42.2025.07.01.15.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 15:44:01 -0700 (PDT)
-From: Bijan Tabatabai <bijan311@gmail.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Bijan Tabatabai <bijan311@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ24SAVX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 721A2C4CEEB;
+	Tue,  1 Jul 2025 22:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751410163;
+	bh=yyNQz6Ao1JLzZXSuzYM28IyyWEtJcCrYhLFLzGGHcF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nQ24SAVXTTD+kWT+I6Bga/CXbcm8CUvXq9UEhRI1Czx1KAfXSU24E2AiZubg9i75K
+	 OmDZlrx5LTNbHEWb6Vk+yPtUjDp6wLpO1FiMq+Dx+s6Du6mdjGQ01N0zps50Eoe2Aa
+	 zDciXesua9KZ+cgnELFNmlaMPkVar8yKJK40ucWahFsBTGIcQcrDN3Qg+UuONaMCk6
+	 kaXbgyEiRkXeL1EvPMTqNjQwUzcasnaw1LCIjLo4+HRw0BqbUhO+xzYT2V81xDkh2K
+	 C8mMYG8oBSSvTrDQLQ5egF847IDuOU/ULq9W9p3WoKbCOOCbkJDfQDTIwHyntMt9VR
+	 vIgf4/mWxSqWA==
+Date: Tue, 1 Jul 2025 15:49:23 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Bijan Tabatabai <bijantabatab@micron.com>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/4] mm/damon: add struct damos_migrate_dest
-Date: Tue,  1 Jul 2025 17:43:30 -0500
-Message-ID: <20250701224353.9062-1-bijan311@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250621173131.23917-2-sj@kernel.org>
-References: 
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <202507011547.D291476BE1@keescook>
+References: <20250701005321.942306427@goodmis.org>
+ <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
+ <20250630224539.3ccf38b0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630224539.3ccf38b0@gandalf.local.home>
 
-On Sat, 21 Jun 2025 10:31:28 -0700 SeongJae Park <sj@kernel.org> wrote:
-
-> Introduce a new struct, namely damos_migrate_dest, for specifying
-> multiple DAMOS' migration destination nodes and their weights.
+On Mon, Jun 30, 2025 at 10:45:39PM -0400, Steven Rostedt wrote:
+> On Mon, 30 Jun 2025 19:06:12 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
 > 
-> Signed-off-by: SeongJae Park <sj@kernel.org>
-> ---
->  include/linux/damon.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> index bb58e36f019e..d60addd0b7c8 100644
-> --- a/include/linux/damon.h
-> +++ b/include/linux/damon.h
-> @@ -447,6 +447,22 @@ struct damos_access_pattern {
->  	unsigned int max_age_region;
->  };
->  
-> +/**
-> + * struct damos_migrate_dest - Migration destination nodes and their weights.
+> > On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >
+> > > This is the first patch series of a set that will make it possible to be able
+> > > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
+> > > doing this.  
+> > 
+> > You have a '[1]' to indicate there's a link to what SFrames are.
+> [...]
+>   [1] https://sourceware.org/binutils/wiki/sframe
 
-Nit: Can this be renamed to damos_migrate_dests?
-I think plural fits better because it stores a list of destinations.
+Okay, I've read the cover letter and this wiki page, but I am dense: why
+does the _kernel_ want to do this? Shouldn't it only be userspace that
+cares about userspace unwinding? I don't use perf, ftrace, and ebpf
+enough to make this obvious to me, I guess. ;)
 
-Thanks,
-Bijan
-
-> + * @node_id_arr:	Array of migration destination node ids.
-> + * @weight_arr:		Array of migration weights for @node_id_arr.
-> + * @nr_dests:		Length of the @node_id_arr and @weight_arr arrays.
-> + *
-> + * @node_id_arr is an array of the ids of migration destination nodes.
-> + * @weight_arr is an array of the weights for those.  The weights in
-> + * @weight_arr are for nodes in @node_id_arr of same array index.
-> + */
-> +struct damos_migrate_dest {
-> +	unsigned int *node_id_arr;
-> +	unsigned int *weight_arr;
-> +	size_t nr_dests;
-> +};
-> +
->  /**
->   * struct damos - Represents a Data Access Monitoring-based Operation Scheme.
->   * @pattern:		Access pattern of target regions.
-> -- 
-> 2.39.5
+-- 
+Kees Cook
