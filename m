@@ -1,39 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2CA2701C8
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A811E98EF;
+	Tue,  1 Jul 2025 22:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751408136; cv=none; b=sVnstq4EG/yeOsVdWNR9H9LmzFxvscCuBvSFGupdWSJlYdBruQSTB3mZpClPmmWU2GNbnxZdvIF0BxgCK+Djc/80i6E1vTO+uRKF2uf4VmbptC8KjwESQHy4x+22XrnA6R/sVqJBIfsqXwCYgh702j9q9AoaDIyWAgGcbs4wmWQ=
+	t=1751408144; cv=none; b=LvYzeLtyoIvMW2bVGKa5h3DCxL3unfxWwA0U0GkVVwIqEzxGnk5grv6S03+5Ev32YZIVw82EyYiz9wOuZ2/+AdIeALbwvi+oWbj6bNgG2ID2MkMYAjLnjIPzEULLIXBJH342rNwkrWd7hfRo42kBNhoCCx1nlTK4CLBL/bXYz4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751408136; c=relaxed/simple;
-	bh=C9a0il84uYW5ht1bXX+I3Q0LXw2YR4MlHOgHjsE/xUw=;
+	s=arc-20240116; t=1751408144; c=relaxed/simple;
+	bh=om0fQDtjhAjEN0F2R3PcJkGfAKXzLObNEQ/Y+tVNkbA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gTCdRTiouXXa8QJWtkH64s6F2+7hYZZTaUBytyjxrbcQepuk9fKlUCAiWJR7vFXwDrTmU33NsLHrCsqkVmB9Ofo43DZbELD9GNevjsrcMT0nNjoOUn9Bad9+Z6qHa16PPykvhQbUz7xNf3qVjriRUORTm9aQ3uBbSehzT7+dK3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igx4LrXr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jNFJvtjWsPswdJsC1iG0/TnFt4rZYqMZPD6PQ9VhRmI6sY+FRzzbTLR+4UEE3t5zfypnpVT8XIv7eBcSeLIfW3poXfwsZrS6aFli7BSkKpqLuuUnYUgIHo8LJlYnufMdfGd6K+gBhMxylzHZ0ZAVwN+R1kaA2cRBOJfkf66WKkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxM4hLbd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igx4LrXr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F50C4CEEE;
-	Tue,  1 Jul 2025 22:15:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxM4hLbd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C70DCC4CEEB;
+	Tue,  1 Jul 2025 22:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751408136;
-	bh=C9a0il84uYW5ht1bXX+I3Q0LXw2YR4MlHOgHjsE/xUw=;
+	s=k20201202; t=1751408143;
+	bh=om0fQDtjhAjEN0F2R3PcJkGfAKXzLObNEQ/Y+tVNkbA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=igx4LrXrFktDsRiZhk/fP7YXXI+b1Ps63hv8rQA6El5aL7LmOjxtuZAPHoqAOHyku
-	 ZNAq5S5kRrIyiDGeEOhBeRd12wR/ccsXDd14cLB/5fezttUacpo3XzYKZZPfIkmAps
-	 mp0tN0iy4mTsHO582UyegvBdu1XxcAGphMVAXb87CjLoWP08C5/Dtud9WHdBGptBQ5
-	 I+ZVoFGUSIE61QvPW75NYAHNKyio4nf7YIVlE1k0gxYw4ubuZFpThF8paUddVoof8D
-	 coFBNrcPctRenARfGX7C9fr6EuB8yejaeCrxET9oiNzBXc4QP2L0feRGF4tnQKp/CH
-	 N0J2dlrO4wteA==
+	b=VxM4hLbdRT2JwAiGwjLVCV96RoYnb5PaCzoxjy3ovonGASbUuhStsrk6lwdlvawq7
+	 MviA9f6c6l+5Am/yO7UILWod6+YC6guAhjXGZMonuESE7qvJFEb5CGujTTI22368e1
+	 aL4r4Wnfv1Ar/SseKlHkgWiOr1L+bGSWMQIuYl4wWBpkeIWclaJ+LUuAqCjXSA0dTO
+	 GyL8dLWYUNi1ATFHTUvTuqSioYVZ8jBxj7wHsBY4VcYeGDwbsxh2KE8uOpsOIbpjL7
+	 UOMzKzirjVrRelOSnC/k+3nCXAjwk8kBFJ43Gim53RcH+m/BuJ+HrxwRX/qqLkXxve
+	 XY8XNV03Ttwpg==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jisheng Zhang <jszhang@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20250629095918.912-1-jszhang@kernel.org>
-References: <20250629095918.912-1-jszhang@kernel.org>
-Subject: Re: [PATCH] regulator: mp886x: Fix ID table driver_data
-Message-Id: <175140813516.710029.16472663103165745401.b4-ty@kernel.org>
-Date: Tue, 01 Jul 2025 23:15:35 +0100
+To: Alain Volmat <alain.volmat@foss.st.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Cc: linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+In-Reply-To: <20250630-spi-fix-v1-1-2e671c006e15@foss.st.com>
+References: <20250630-spi-fix-v1-1-2e671c006e15@foss.st.com>
+Subject: Re: [PATCH] spi: stm32: fix sram pool free in probe error path
+Message-Id: <175140814155.710092.6699776738839101023.b4-ty@kernel.org>
+Date: Tue, 01 Jul 2025 23:15:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,25 +46,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev-cff91
 
-On Sun, 29 Jun 2025 17:59:18 +0800, Jisheng Zhang wrote:
-> Currently, the driver_data of the i2c ID table is wrong, so it won't
-> work if any mp886x user makes use of the ID table. Fortunately, there's
-> no such user in upstream source code, we can fix the issue by using
-> different ID table entry for mp8867 and mp8869.
+On Mon, 30 Jun 2025 10:20:13 +0200, Clément Le Goffic wrote:
+> Add a test to check whether the sram_pool is NULL before freeing it.
 > 
 > 
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: mp886x: Fix ID table driver_data
-      commit: 6729c134ccc0d37d865c342e466b90df29081f1a
+[1/1] spi: stm32: fix sram pool free in probe error path
+      commit: f4d8438e6a402ad40cf4ccb6e2d2417d9ed47821
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
