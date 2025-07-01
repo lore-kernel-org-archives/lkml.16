@@ -1,323 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419BF27FB03;
-	Tue,  1 Jul 2025 17:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751391297; cv=none; b=Uis+rwPCaSI2F+GtVbWIqkHVD5vlhhmZGDlNzEqI0w1gj6dHm4UQ5b44kU7dnDG7orDkeD8b43ajxqbxh2e+cNvoF6NlNJowD6kLEoljqL1dDb/1lExUFEgZFqk695+HG/ZzQ7zT+xjvggIhOSa7/PCHyhXmRiXFS7z5OyIp/Nk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751391297; c=relaxed/simple;
-	bh=LiaSO/EgMxLm3lfnQVthr0wHsq+1QaRg5jN7d8fK5w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGnTTHKTyzbedcEcrb9A7zZ09zvEr0VBnRxvlfw+PWd8OS6k5NTU7G5M86hOTaCM4kbMdZcEWD3I0mg/0RI4TfuFZuqynaOJVb/3rVlEK0Kvx6n3no/VaFg/U6Uu/KWt4bHEhMUFwN9YC5cMC9cPT/79XUoaRW2ce9EcVXn5eMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjJ2p5NL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC12279DC2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751391307; cv=fail; b=SkIv6uaKONTFb7aIN7wQYy99iZnC+5cU389Zou4U4GPs6VbKvpg+iHsJzCz+BNIj66Kdjejx4f9zsjpXBR7/ATV95+tyZCwf0/fQyXDaQr/hQ2/UfQ6Ayovq0cMGtcghRiEjbNyqtb0YnAsOJeNqNdRnrsnKR8wX161Cw4+EX3k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751391307; c=relaxed/simple;
+	bh=WgJ79Eegaj5Q7Re+1drlxfIDedsO/idu8C+ZEWUEXbg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=meMrY6JlPaoiJMjJFJzVg0aRod/RDeU0EcHHoAWYjtWYSZca5K2JLBJXmXdGV6BCSGdxEqJqNCO8UxOINn1ljKB41TKxxaJwLSCcxzj/kVcQfXJ7aW2oiK3wKX8F3cOu8uTyy9YK6UPeezf1vmT0JIbi7Y34N+7Ykon+26WiGBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiaXgZ0P; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjJ2p5NL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0AC2C4CEEB;
-	Tue,  1 Jul 2025 17:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751391296;
-	bh=LiaSO/EgMxLm3lfnQVthr0wHsq+1QaRg5jN7d8fK5w8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FjJ2p5NLU5BPLzUoVfF5mHhttWtKXI5cStAFbKI111+ICQXOH2J3axUMQWecrnVCM
-	 nGnURwBvb2pklRC2HkGIDcdDYfvfJW9ByU/CctFUoQqTSv18HNxrJfX4FdK8Vp+Ioj
-	 DEhmvSwKGtKkvDh2s0sNtDBcdZHF5b4fxleB+1mm2iwhaSPFOi20UOCCaLQzMVnR3r
-	 Ey5hCZllloT2LOuuOOLCLG8ZKnqPnFND1agP3lgm3UoXbkyzuCExaFpwxPonpOFlnV
-	 XkATHdsbQ0y15Z8ilMnv2aD0wg8qPWv57Ch8lWjcmgF44bVwGSuT9KzttqgP0MS+57
-	 tBkM7FR5fUw7w==
-Date: Tue, 1 Jul 2025 18:34:19 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
- Michael.Hennerich@analog.com, bagasdotme@gmail.com,
- linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] iio: accel: adxl313: add activity sensing
-Message-ID: <20250701183419.6e31af13@jic23-huawei>
-In-Reply-To: <CAFXKEHaYdwvi64+yBEiYuv62Vaa8exYFji2gBXQciJ=CWdhbsw@mail.gmail.com>
-References: <20250622122937.156930-1-l.rubusch@gmail.com>
-	<20250622122937.156930-5-l.rubusch@gmail.com>
-	<20250628182706.2af83c1c@jic23-huawei>
-	<CAFXKEHaYdwvi64+yBEiYuv62Vaa8exYFji2gBXQciJ=CWdhbsw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiaXgZ0P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751391306; x=1782927306;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=WgJ79Eegaj5Q7Re+1drlxfIDedsO/idu8C+ZEWUEXbg=;
+  b=fiaXgZ0PuGqksAmIXGJcdZqzo3L24tX/QtEaLbrIxtwgDqY9MR4SN5Om
+   Nk2B8o20wg1FT7olTq9v9bCU7W7C3+G1e9uGQViokwOw37kspY9XPCMS9
+   O62fL5t6iENFymywu5u7UXs9nta3DdHarzzaPYdGiGxGNW4fMTSh+m6vR
+   hqtE4dmLsnEl1OK5JjP8KbdqfZNokgZrLZ3m7dBnB9G25+eFMC91p1wsv
+   UXo61d9ZpB8xwEQuL5vl645IXbWzBex/rAfrnR5l1VTpHInikoBnJTgJK
+   EVePETXLXm4CshxGJ0e3Y0QnbYZSpCR3I1SRiB31vRLDhFdWiGObQWhZB
+   A==;
+X-CSE-ConnectionGUID: ewTcZ+5YStK5BUUCHbDqjw==
+X-CSE-MsgGUID: pPdDX/ztQZuCy1xr9kKkTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53812946"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53812946"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 10:35:05 -0700
+X-CSE-ConnectionGUID: PBrQ/mpOSqub/1HoEijRtw==
+X-CSE-MsgGUID: o25a6tDHSKaW3tO5Yd1elQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="159548223"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 10:35:04 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 1 Jul 2025 10:35:03 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 1 Jul 2025 10:35:03 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.55) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 1 Jul 2025 10:35:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BoL3VaOzoUSpN5OFYCzbO2D/Oy4Fe9cS5RNL2XlfaqivUgonibwSilOCsxvc4qQ4lQdqR3pgX7+B+33TQY1BXuIsWTBL0qCzbF94q4raAwnYRP4AOyRkVWKY3pHuXnrarUJE8tG9vIUPIr2sZyHLaDg7AKpS8TxJNHSHNijnNnLYlk15we76OycDcSAjV1hP/sJSPqf9KwDJVUC4BFiZaal/FUI0+frMEsX9fKTzolIDRm3SKjjX3oR5kjm5H1o2Qsm6N/UEdh5Q/k1Q/SykEWMfwab9hWvfkFNIT298CuynT8GgfNQt2ke8uBQfaouuayFhBwa6roAZXogs/AU2UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rFaOhKEnPyiBZsI8QsJX9LB0fZCcszqligshbHfa0uo=;
+ b=T+shsnQdC+9P7IgZyN26FNNMZgEXwwgrdSjUolhZ0NNLE+19RkGMikoYxIfF62jlJYN4IVpmMgst02/JxezNB8PTDdiGjQ0wlBjdQ8GhLiZ5okDknRkSSyHaENzPZ4OqNa6iI0Dvi8h19Gmmm4CE7lVXpx91SMj8ZF5d+koAM7w0hogF9BJ8iDk/Zg8f3FLmONerwo5ntsRiWXEQ/ho6ZTZemblrIc2EutlDOr7ohxSM9McR1oNozrjB9UFMaGdmTD7MAh1o/3/jAXo3tvpwRBIkz9ID+Nk2vAcjkeZFdsz5O+SmNBEnIzMb+7ktDPgAO7WgTgRSy4Qyvd2FNJEwSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
+ by CY8PR11MB7033.namprd11.prod.outlook.com (2603:10b6:930:53::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.22; Tue, 1 Jul
+ 2025 17:35:02 +0000
+Received: from CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
+ ([fe80::76d2:8036:2c6b:7563%5]) with mapi id 15.20.8880.015; Tue, 1 Jul 2025
+ 17:35:02 +0000
+Date: Tue, 1 Jul 2025 13:34:57 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: "Nilawar, Badal" <badal.nilawar@intel.com>
+CC: Greg KH <gregkh@linuxfoundation.org>, "Usyskin, Alexander"
+	<alexander.usyskin@intel.com>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<anshuman.gupta@intel.com>, <daniele.ceraolospurio@intel.com>
+Subject: Re: [PATCH v4 02/10] mei: late_bind: add late binding component
+ driver
+Message-ID: <aGQcQbiqDxKplFZO@intel.com>
+References: <20250625170015.33912-1-badal.nilawar@intel.com>
+ <20250625170015.33912-3-badal.nilawar@intel.com>
+ <2025062834-scraggly-barracuda-7ea6@gregkh>
+ <205cc43a-4254-4d27-9b4f-139006e871e4@intel.com>
+ <2025070140-dad-jaywalker-0774@gregkh>
+ <eab7307a-d6a2-402b-945b-674e9c5f608b@intel.com>
+ <c48b565e-73c9-4222-83b6-dc3597427db6@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c48b565e-73c9-4222-83b6-dc3597427db6@intel.com>
+X-ClientProxiedBy: BYAPR02CA0017.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::30) To CYYPR11MB8430.namprd11.prod.outlook.com
+ (2603:10b6:930:c6::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|CY8PR11MB7033:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51fbf011-c546-4ec7-b0e5-08ddb8c59bc0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?K0kUrKykv3/83M2jImgDMSonnwBm4rvSq6rOS0QDy1PlzeWZ6PQo4tW+xc?=
+ =?iso-8859-1?Q?Ln5SyMeOQg1U/BU62oBidrCutcy5DhIHjNPbeLtMjnCo5WXm/+bxyWu7Av?=
+ =?iso-8859-1?Q?FvZeILevjORopb2WbjfnkvXwr3RbDHxeqIIXBZFSomjHa8bQO/nEGAiF6F?=
+ =?iso-8859-1?Q?I7hLFyFn3xb4ba1CzdYJMOWVkx3MDeiDtAhF4QZKReWD5wBsnfLSMbYMh2?=
+ =?iso-8859-1?Q?7m4XPA/SGC6PEkwxl0opuIZfbCdu5qnqw6iHNG4XykN97+QCFGl8He9+f1?=
+ =?iso-8859-1?Q?d//6OXBXQoRA8pH5oAevkC2y1Oit2UKTI5ssj07TX1s383WRqp/TSpCiYs?=
+ =?iso-8859-1?Q?HwzfSgOk3DT73MMgo4g2jzUFHPxCx7iumV6FiwAkoeFmX/Ok9f2PzhaGHV?=
+ =?iso-8859-1?Q?kwThUMEGEw6IJMNRxpLZNBu/td2dGH68BtLRIBNDPrN4sndvV6/MiGQFlB?=
+ =?iso-8859-1?Q?wDFXM7bXDzd9HC9asr707bBnO25l5VKP/8IPOV2rprFSHr+pjGfJjOIOfl?=
+ =?iso-8859-1?Q?BApjf5Vj9Mhs9zpPb1kxqgQMHAgl0MOtfnVYLm4mVCKGLq/dovvApNfw9C?=
+ =?iso-8859-1?Q?WAVt87imgWdLQnWvIUM6pKhCieR+ZF41pKAUJG4STtlWzHqdi3pxKH5IfC?=
+ =?iso-8859-1?Q?AuG31MHksH5uBLpkUR/mM3BEKf7iS4IBDdzkUbNyG6WI3kNcw96bn2Yq5v?=
+ =?iso-8859-1?Q?PgUuBv975JhwXGipMOxkT3cF/H7DrZDWH625i8fCzlKMBFr1u6tMqgp/OC?=
+ =?iso-8859-1?Q?Us/SpCORcaXLbQwUiSAG5+hBgcLk9B+FvPdIxfOjh50uUXQ455YR1HMXMq?=
+ =?iso-8859-1?Q?Gt++89mCpZv+5xjBkkMgT5llmVD0/LaInOBtnw5xXMwUq+FV35MzgEidSY?=
+ =?iso-8859-1?Q?WW6QtEEcIYip7dpLVlxxKkXjfWTF5JwMINOFiW5DnOj1NCsgkL/A/l81JV?=
+ =?iso-8859-1?Q?0X9xP4Zk4FAGdIZSQ5yTCpH6G1v1t3hZtU2wCiw5CG8JzIrSRURThzi4VD?=
+ =?iso-8859-1?Q?ft2iJ7EYh7UaH3JdoWBpF8yB/Xz3UuxenLns6vaNTs2UHgZwka6KycKRS/?=
+ =?iso-8859-1?Q?pNVYd09wvy7MPpe7atv+pqAyxoh1NUI6y3Nu8DnPwX1ph5NnsNMBDPehnH?=
+ =?iso-8859-1?Q?NBGJHuwKB+NK0KLXSpcb7NDhnMOGcKmK06IBPHDA8c3G52RIAbPhr/6mYS?=
+ =?iso-8859-1?Q?IY1CeCQEiw6whwQm3oa7u2rytzd07izQY+aLTFTc6AOJ7HFgV+CjWAmDtc?=
+ =?iso-8859-1?Q?ct0mDJ9xAplP2cy0AHVTqBue0SjAsat13EFo0Bp4OV4mhpb/ZHItkvp3wo?=
+ =?iso-8859-1?Q?Hg7mxZrwM+gAlguIYeRUULDZqfOrTLALnq+hMW2wYKTHSK78/WPfL7J9oR?=
+ =?iso-8859-1?Q?ZqznIiL9A04gOgaEWJ7z0R50KLpw5gyLiuqJUutci1tIgMXeBS9jwzYzBW?=
+ =?iso-8859-1?Q?Amyb9LkodQub4aq15huG3TwbYgK5gJmYUqHHthNZi9M6c7ezYcbV7tbOpm?=
+ =?iso-8859-1?Q?o=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?ZJIM9MicyZEYX/whNvRzGxOpEGenelduSfaQSIskOSLRDZa47hLuCW4ID8?=
+ =?iso-8859-1?Q?N+mr6YdV03z8ERPBaeufA7T1gBblAxf1cT2EoCDOhFlTRwb4RloSMZVnGs?=
+ =?iso-8859-1?Q?IqhN+OzA6twLoK47gq1k1Bn184ZXIO54xVEJA9vH1stwL9JiOZqy0lTO4/?=
+ =?iso-8859-1?Q?dV1499WhfAaUk2UXIUK3x1krPDYFEBKhBcuhN4B+bOcvll9y1qAPwqYVx+?=
+ =?iso-8859-1?Q?0bAgGEdbkfywVzLQPN4DB9CEXg1vhcPwYB68KrOb9RFPv9ys7dqpvsEcXU?=
+ =?iso-8859-1?Q?Fj6Ai9UAHZLS3DDmSChFBxDf7PnflkImW9kYb+uV7Pg4uIRawBlt1Kuyup?=
+ =?iso-8859-1?Q?OlucNqtuhdhEky7Kr5XxNGz3HOsObKSpDURac3pxKCHt1ON4+wK3J3kG44?=
+ =?iso-8859-1?Q?M+DmFVjn3pwL6jRr42FFS/HkQOn0/RMVvipSiEkDKKKyM5zL5nrJETnOZh?=
+ =?iso-8859-1?Q?jk4Jd8uqXBFuoBNKzsjYVi7Ua9GafWuw0hFUFNhTIfsO3pJlAKyfOHJ0oX?=
+ =?iso-8859-1?Q?M8M2ui8HYKfL/Pmb0GwDckqzBNtUfhuFszLFoCWKwUCgbIGXjEClkS0mI9?=
+ =?iso-8859-1?Q?jBw0c+cpGNkpwejzzKYNZWsd+V7gA5+t+//3OYsQJWqJU27Tucb68qfLqw?=
+ =?iso-8859-1?Q?wmDY4fOZqwck04GteVXqMeADjhYYw+7ZRt+5tVSlEBlWxZmb2fIjXTyjxU?=
+ =?iso-8859-1?Q?3d2+G5d/3qTWs1jUqyMMYq8kr3kSOF0Cj5K0QD6KrkaFuV0rVTtvtBo3Fl?=
+ =?iso-8859-1?Q?l5x3u/5/AsbO8IrkEMK+YHzOtIpseJHvQW0gU75C7nYl4eNboH/wcQQsyb?=
+ =?iso-8859-1?Q?qVAq9QzNS0YoPCypLdY7SfUagIH7HB3NcCplEFi0mHENM7svKrZ/9U4KID?=
+ =?iso-8859-1?Q?j59bK/tMWD9PDsrvt+3HcpcwM51PxJP0II0Vd5qtgCJJONRA5iVKgDZ+aH?=
+ =?iso-8859-1?Q?qZ4NbPGUSLG56k76c6N4GkDxI525FMLYiUTrqdkCyK6muSa4m1ZnN4cpj0?=
+ =?iso-8859-1?Q?RhJqaXfJxvtDxz7FwiOf42OqOLzYS1UFcjjeS747U6+xGmuJ4g7g2fkVBE?=
+ =?iso-8859-1?Q?WpTawVWLMpI/hvJM2Qq2LFARY4B3itumHY3Hi4j1mopuwffuj6aoTr/v/R?=
+ =?iso-8859-1?Q?iY+Q87b0Ficqy+quERaxXMAJvXMMqPUENFgEW7swP633LyW3J4OOb+/+Pq?=
+ =?iso-8859-1?Q?G7+MwyzL+rQIEM7912YzLxk6GWmzqjpaXEwARsHoVSm3DBh/X9kb1aC6h5?=
+ =?iso-8859-1?Q?lNLFyGe4jI7c29xWydNjoBf9eP1ml54r+q4rThjUUkjoUw/rMe8x6C5JXN?=
+ =?iso-8859-1?Q?20hfgnxIGEkxtSmvswsj1RTf8Rw+uhDq86YF+JMWO0iCPKY1CdXW0huDmR?=
+ =?iso-8859-1?Q?WlDLaz84Fe6Aw0MEPtHiH/zBHlicL/NF/ARHaTEsocEOuJDOB2GqI3d67Y?=
+ =?iso-8859-1?Q?58rEDZIukPXN3r7rU2iKv5Y6G3WNEsjy4MSQD0ODVV+oEhFooARaQ1Yaf9?=
+ =?iso-8859-1?Q?8xy9lTusrIndCg36FAKL2oH3iFFY1U80s1QIfyIevcPozS+iGe9WZO+Sqz?=
+ =?iso-8859-1?Q?vgaPNK2mwWR/GElwB7kbbEsNZFMr2k1m8DjScshDYTHJIPvU0RM/yrD1wo?=
+ =?iso-8859-1?Q?XSLLHdY2EIsB3zArq7UTCUB5+LeczrtOW25F+JY0C9W8FZSwM02Qbw9g?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51fbf011-c546-4ec7-b0e5-08ddb8c59bc0
+X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 17:35:02.0095
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vFze8NhRtX+aflaf3aXhXx4zviEFs0P7jxbQN9Awer1HsCBdt7asUSYl/QLvNjj7x6YEDSA3OeXXPwzJAOngug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7033
+X-OriginatorOrg: intel.com
 
-On Tue, 1 Jul 2025 00:32:57 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Tue, Jul 01, 2025 at 10:11:54PM +0530, Nilawar, Badal wrote:
+> 
+> On 01-07-2025 18:04, Nilawar, Badal wrote:
+> > 
+> > On 01-07-2025 15:15, Greg KH wrote:
+> > > On Tue, Jul 01, 2025 at 02:02:15PM +0530, Nilawar, Badal wrote:
+> > > > On 28-06-2025 17:48, Greg KH wrote:
+> > > > > > + * @payload_size: size of the payload data in bytes
+> > > > > > + * @payload: data to be sent to the firmware
+> > > > > > + */
+> > > > > > +struct csc_heci_late_bind_req {
+> > > > > > +    struct mkhi_msg_hdr header;
+> > > > > > +    u32 type;
+> > > > > > +    u32 flags;
+> > > > > What is the endian of these fields?  And as this crosses the
+> > > > > kernel/hardware boundry, shouldn't these be __u32?
+> > > > endian of these fields is little endian, all the headers are
+> > > > little endian.
+> > > > I will add comment at top.
+> > > No, use the proper types if this is little endian.  Don't rely on a
+> > > comment to catch things when it goes wrong.
+> > > 
+> > > > On __u32 I doubt we need to do it as csc send copy it to
+> > > > internal buffer.
+> > > If this crosses the kernel boundry, it needs to use the proper type.
+> > 
+> > Understood. I will proceed with using __le32 in this context, provided
+> > that Sasha agrees.
+> 
+> I believe __le{32, 16} is used only when the byte order is fixed and matches
+> the host system's native endianness. Since the CSC controller is
+> little-endian, is it necessary to specify the endianness here?
+> If it is mandatory to use the __le{32, 16} endian type, then is there need
+> to convert endianness using cpu_to_le and le_to_cpu?
 
-> On Sat, Jun 28, 2025 at 7:27=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Sun, 22 Jun 2025 12:29:33 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add support for configuring an activity detection threshold. Extend t=
-he
-> > > interrupt handler to process activity-related interrupts, and provide
-> > > functions to set the threshold as well as to enable or disable activi=
-ty
-> > > sensing. Additionally, introduce a virtual channel that represents the
-> > > logical AND of the x, y, and z axes in the IIO channel.
-> > >
-> > > This patch serves as a preparatory step; some definitions and functio=
-ns
-> > > introduced here are intended to be extended later to support inactivi=
-ty
-> > > detection.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> > Hi Lothar.
-> >
-> > I think this is suffering from function naming evolution and we need
-> > to rethink (slightly) what we ended up with.  See inline.
-> > I walked into the same trap recently so was on the look out for it.
-> > =20
-> > > ---
-> > >  drivers/iio/accel/adxl313_core.c | 326 +++++++++++++++++++++++++++++=
-++
-> > >  1 file changed, 326 insertions(+)
-> > >
-> > > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adx=
-l313_core.c
-> > > index ac4cc16399fc..d2c625f27555 100644
-> > > --- a/drivers/iio/accel/adxl313_core.c
-> > > +++ b/drivers/iio/accel/adxl313_core.c
-> > > @@ -13,8 +13,10 @@ =20
-> > =20
-> > > +
-> > > +static int _adxl313_read_mag_value(struct adxl313_data *data,
-> > > +                                enum iio_event_direction dir,
-> > > +                                enum adxl313_activity_type type_act,
-> > > +                                int *val, int *val2)
-> > > +{
-> > > +     unsigned int threshold;
-> > > +     int ret;
-> > > +
-> > > +     switch (dir) {
-> > > +     case IIO_EV_DIR_RISING:
-> > > +             ret =3D regmap_read(data->regmap,
-> > > +                               adxl313_act_thresh_reg[type_act],
-> > > +                               &threshold);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             *val =3D threshold * 15625;
-> > > +             *val2 =3D MICRO;
-> > > +             return IIO_VAL_FRACTIONAL;
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int _adxl313_write_mag_value(struct adxl313_data *data,
-> > > +                                 enum iio_event_direction dir,
-> > > +                                 enum adxl313_activity_type type_act,
-> > > +                                 int val, int val2)
-> > > +{
-> > > +     unsigned int regval;
-> > > +
-> > > +     /* Scale factor 15.625 mg/LSB */
-> > > +     regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
-> > > +     switch (dir) {
-> > > +     case IIO_EV_DIR_RISING:
-> > > +             return regmap_write(data->regmap,
-> > > +                                 adxl313_act_thresh_reg[type_act],
-> > > +                                 regval);
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int adxl313_read_mag_value(struct adxl313_data *data,
-> > > +                               enum iio_event_direction dir,
-> > > +                               enum iio_event_info info,
-> > > +                               enum adxl313_activity_type type_act,
-> > > +                               int *val, int *val2)
-> > > +{
-> > > +     switch (info) {
-> > > +     case IIO_EV_INFO_VALUE:
-> > > +             return _adxl313_read_mag_value(data, dir, =20
-> >
-> > Same issue as below for read functions.
-> > =20
-> > > +                                            type_act,
-> > > +                                            val, val2);
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int adxl313_write_mag_value(struct adxl313_data *data, =20
-> >
-> > This has me a little confused. It's called
-> > adxl313_write_mag_value() which seems pretty specific but
-> > then calls another level of _adxl313_write_mag_value.
-> >
-> > In the next patch (assuming diff isn't leading me astray) we have
-> >
-> > @@ -600,13 +687,17 @@ static int adxl313_write_mag_value(struct adxl313=
-_data *data,
-> >                                    enum iio_event_direction dir,
-> >                                    enum iio_event_info info,
-> >                                    enum adxl313_activity_type type_act,
-> > +                                  enum adxl313_activity_type type_inac=
-t,
-> >                                    int val, int val2)
-> >  {
-> >         switch (info) {
-> >         case IIO_EV_INFO_VALUE:
-> >                 return _adxl313_write_mag_value(data, dir,
-> >                                                 type_act,
-> > +                                               type_inact,
-> >                                                 val, val2);
-> > +       case IIO_EV_INFO_PERIOD:
-> > +               return adxl313_set_inact_time_s(data, val);
-> >         default:
-> >                 return -EINVAL;
-> >         }
-> >
-> >
-> > Which is adding PERIOD to something called write_mag_value()
-> >
-> > Whilst I can see why you ended up with naming as:
-> >
-> > adxl313_write_mag_value() as the magnitude event specific part of
-> > adxl13_event_write_value()
-> >
-> > and indeed
-> >
-> > _adxl313_write_mag_value() as the thing that writes IIO_EV_INFO_VALUE
-> > value (i.e. the threshold) for the magnitude events.
-> >
-> > Last time I hit a similar naming stack, I spinkled in some _info
-> >
-> > So have the inner one called something slightly more specific like
-> >
-> > adxl313_write_mag_info_value()
-> >
-> > =20
-> > > +                                enum iio_event_direction dir,
-> > > +                                enum iio_event_info info,
-> > > +                                enum adxl313_activity_type type_act,
-> > > +                                int val, int val2)
-> > > +{
-> > > +     switch (info) {
-> > > +     case IIO_EV_INFO_VALUE:
-> > > +             return _adxl313_write_mag_value(data, dir,
-> > > +                                             type_act,
-> > > +                                             val, val2);
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int adxl313_read_event_value(struct iio_dev *indio_dev,
-> > > +                                 const struct iio_chan_spec *chan,
-> > > +                                 enum iio_event_type type,
-> > > +                                 enum iio_event_direction dir,
-> > > +                                 enum iio_event_info info,
-> > > +                                 int *val, int *val2)
-> > > +{
-> > > +     struct adxl313_data *data =3D iio_priv(indio_dev);
-> > > +
-> > > +     switch (type) {
-> > > +     case IIO_EV_TYPE_MAG:
-> > > +             return adxl313_read_mag_value(data, dir, info,
-> > > +                                           ADXL313_ACTIVITY,
-> > > +                                           val, val2);
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int adxl313_write_event_value(struct iio_dev *indio_dev,
-> > > +                                  const struct iio_chan_spec *chan,
-> > > +                                  enum iio_event_type type,
-> > > +                                  enum iio_event_direction dir,
-> > > +                                  enum iio_event_info info,
-> > > +                                  int val, int val2)
-> > > +{
-> > > +     struct adxl313_data *data =3D iio_priv(indio_dev);
-> > > +
-> > > +     switch (type) {
-> > > +     case IIO_EV_TYPE_MAG:
-> > > +             return adxl313_write_mag_value(data, dir, info,
-> > > +                                            ADXL313_ACTIVITY,
-> > > +                                            val, val2);
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > + =20
-> >
-> > Otherwise LGTM
-> > =20
->=20
-> Hi, I'm about to wrap this up for the final version (let's see...).
->=20
-> I understand that three levels of switch/case are not good. Instead
-> here I did a particular function/helper per switch/case level.
-> Finally, I ended up with, e.g.
->=20
-> adxl313_write_event_value()  // calls
->   \-> adxl313_write_mag_value()  // calls
->          \-> _adxl313_write_mag_value()
->=20
-> Personally, I think, why not just having the following calls hierarchy:
->=20
-> adxl313_write_event_value()  // calls
->   \-> adxl313_write_mag_value()
->=20
-> First question: Regarding the adxl345 driver, with a little higher
-> level of complexity, I adopted such a solution keeping still 2 levels
-> of switch case inside the helper. Would this be ok for the ADXL313,
-> too? I mean, having just one helper, but that one containing one level
-> of nested switch case inside a switch/case?
+I honestly don't believe that specifying endianness here is **needed**.
+I mean, it might be future safe to use the __le32 and
+flags = cpu_to_le32(1 << 0) just in case someone decide to port all the
+GPU code to run in big-endian CPU. Very unlikely I'd say, and much more cases
+to resolve before we get to this gpu use case here I'm afraid.
 
-I think a bit of nesting is fine but it depends on whether we end
-up with conditionals etc in the inner most nest.  If that's going
-on or the code is otherwise complex then breaking it up into single
-layers makes sense.
+Weel, unless this mei here can be used outside of GPU context?!
 
->=20
->=20
-> Another question about the naming of the helper. As you saw, I went
-> "creative" and used the commonly used name for such functions
-> replacing "_event_" by "_mag_". I see this can be confusing, but also
-> it might make clear where the (only locally used) helper belongs to.
->=20
-> I understand names with leading '_' are not likely to be a decent
-> choice here. But in general in case of adxl313_write_mag_value() -like
-> names. What would be a better name for it, or would it be ok?
+> 
+> > 
+> > > 
+> > > > > > +{
+> > > > > > +    struct mei_cl_device *cldev;
+> > > > > > +    struct csc_heci_late_bind_req *req = NULL;
+> > > > > > +    struct csc_heci_late_bind_rsp rsp;
+> > > > > > +    size_t req_size;
+> > > > > > +    ssize_t ret;
+> > > > > > +
+> > > > > > +    if (!dev || !payload || !payload_size)
+> > > > > > +        return -EINVAL;
+> > > > > How can any of these ever happen as you control the callers of this
+> > > > > function?
+> > > > I will add WARN here.
+> > > So you will end up crashing the machine and getting a CVE assigned for
+> > > it?
+> > > 
+> > > Please no.  If it can't happen, then don't check for it.  If it can
+> > > happen, great, handle it properly.  Don't just give up and cause a
+> > > system to reboot, that's a horrible way to write kernel code.
 
-mag_value was fine, it was only when you then use the same *write_mag_value
-postfix to mean the IIO_EV_INFO_VALUE of the outer *write_mag_value
-that things got problematic.  Hence suggestion to use
-write_mag_info_value postfix for that inner most call. For the outer calls
-the write_mag_value() postfix was fine.
+I agree here that the WARN is not a good way to handle that.
+We either don't check (remove it) or handle properly (keep as is).
 
->=20
-> By the answers given to the above, and if you don't object I would
-> like to prepare the single level of helper approach (then having one
-> nested switch/case) and keep just the adxl313_*_mag_value() or
-> ..._config() functions. Let me know what you think.
+With the context of where this driver is used I'd say it can't happen.
+Since xe is properly setting it right now and I don't believe we have
+other usages of this mei driver here.
 
-The nesting comments were from Andy (IIRC), so perhaps he can offer
-some feedback on what he feels is reasonable.
+But if there's a chance of this getting used outside of xe, then
+we need to keep the check...
 
-Thanks,
+But if you keep the check, then also use __lb32() because we need
+some consistency in the reasoning, one way or the other.
 
-Jonathan
-
->=20
-> > Jonathan =20
->=20
-
+> > 
+> > Fine, will drop the idea of WARN here.
+> > 
+> > Thanks,
+> > Badal
+> > 
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
