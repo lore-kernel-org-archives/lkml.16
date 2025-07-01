@@ -1,134 +1,172 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C061E1308;
-	Tue,  1 Jul 2025 18:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BCB26B2AA;
+	Tue,  1 Jul 2025 18:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751395329; cv=none; b=HFpU9UOqAaCmAPNN9lGr+81pSVYOgkFNMwKk9Ucx2LdlWDMe1Z80n2msx4GCUYJKMEfZ5PWG0gWXpFCDyumRtw1kFqANkQlyNILaCl9c3wXVJ8qz9rqLDfTA4JvyKdybue79XOg5bo9N/I/gsEm0KbAOXhb4+wH9A+IqHdU0R0w=
+	t=1751395399; cv=none; b=IXlp2suVySceBuVOZTuIFDDLopQMuRtERCDwnYMWPOs2lVgsAdlZbDF/D1fiSoOXiKzeL/328de9eaD/JSylIqSFisMAH2+uluNGaa8pd0hSlMScySIijyMySVAEM5HZLzQtGGpcjerPReqp4SKEps4qqXNr1Elm8UBPhZ2gXeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751395329; c=relaxed/simple;
-	bh=hTAKzDSpqOWH6oNEG3mvFlGYvEadh1l19viyvjMn+f0=;
+	s=arc-20240116; t=1751395399; c=relaxed/simple;
+	bh=st9TTbuw9eE4bbi3qT1g6AMOzooHD90mIKVljY6K6Ws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CS9L3iA0/ZxYrwkvQAEbYZ9R+Ski7ZkLfdSrrFNEmnI2T/R2YGf0td5mgHD7I8i41YvwRJi3nAuoBFFjGrCjkuqsOGpLRwAbDsBh0UWBx+LxxRacIN+mHaMRMkZnJiuzXsN3sfGnOVEUeU8ywR6PU6zJMUIpGQPA3y8Zkbssn1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GuXyeAzV; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xrj90GZnDPCXULHKoFrawPWeWHOFoAiS0ShePyPyf4de7+gMo62yDsv53+HSWy5RqdWF/8zImNOvaGN0pjR8ZbDhh0u1Pour27skYIV7uwUwhJODQO6/76o7YrSlOCfoiYo+/8KrJGTEt7WF/5oSmZIxcV6PECXOrr8u6TbtwjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwD/gItj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GuXyeAzV"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id EAA397E0;
-	Tue,  1 Jul 2025 20:41:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1751395298;
-	bh=hTAKzDSpqOWH6oNEG3mvFlGYvEadh1l19viyvjMn+f0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwD/gItj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D482C4CEEB;
+	Tue,  1 Jul 2025 18:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751395398;
+	bh=st9TTbuw9eE4bbi3qT1g6AMOzooHD90mIKVljY6K6Ws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GuXyeAzVKf3P1IdPNwV8CpzzersBhulaJMIFMkaQt5M5OtfxfpgIbW2mXRtd17BAy
-	 mP9RcT4H4Ia5BJHh5q8xzCLBpax1aOPVkccanh8vNAE3Kab6GKNAmjIllSwp3JqTlU
-	 6W8jUuWL5rZgdsVJNaorS55jMGMnVHMi4LjFSY7c=
-Date: Tue, 1 Jul 2025 21:41:34 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Desnes Nunes <desnesn@redhat.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, hansg@kernel.org,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: uvcvideo: avoid variable shadowing in
- uvc_ctrl_cleanup_fh
-Message-ID: <20250701184134.GC1936@pendragon.ideasonboard.com>
-References: <20250701145240.105959-1-desnesn@redhat.com>
- <CANiDSCs_Pz-wgnYNVA7Zt4RhtgN256i32aCw0mE4XFv3b49ygw@mail.gmail.com>
- <CACaw+ex_T5xS9rw1651TV_z1myXxPGmtpeEB4HWA7S0xU+C9GQ@mail.gmail.com>
+	b=rwD/gItjO9VtgQ/NtPziOW0nlPHce6+cQCI6BETvirK97/569slxDBoLwPrmlHiyD
+	 3GEUQWu/YtQnFnlKA70YMQTJGlftUZ9F1hDLKgBnoMPhukTk+vuAHfVlCeDE2v5FE/
+	 B13zoC1G3sbXaoXYkUcU9h2HQymrp5p7f2RKI4skNIBhr61v5z5e3BqeCv/8YCrXYr
+	 CcXgUY9DTsT2nptAmNFa59NZrIpIYjMXG7wkp1TidihNkPlioxxS7ke1/Zo/QmotRw
+	 +GY3q5aDxzq6zskgcjb039RAcpVjPTYyfYKaIKlYmomEegyMbwxcYZ7s5upU2j3j5o
+	 s+dL2Bv19GK6A==
+Date: Tue, 1 Jul 2025 11:43:17 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, selinux@vger.kernel.org,
+	Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v6 6/6] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250701184317.GQ10009@frogsfrogsfrogs>
+References: <20250630-xattrat-syscall-v6-0-c4e3bc35227b@kernel.org>
+ <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACaw+ex_T5xS9rw1651TV_z1myXxPGmtpeEB4HWA7S0xU+C9GQ@mail.gmail.com>
+In-Reply-To: <20250630-xattrat-syscall-v6-6-c4e3bc35227b@kernel.org>
 
-On Tue, Jul 01, 2025 at 02:20:53PM -0300, Desnes Nunes wrote:
-> On Tue, Jul 1, 2025 at 1:48 PM Ricardo Ribalda <ribalda@chromium.org> wrote:
-> > On Tue, 1 Jul 2025 at 16:59, Desnes Nunes <desnesn@redhat.com> wrote:
-> > >
-> > > This avoids a variable loop shadowing occurring between the local loop
-> > > iterating through the uvc_entity's controls and the global one going
-> > > through the pending async controls of the file handle
-> > >
-> > > Fixes: 10acb9101355 ("media: uvcvideo: Increase/decrease the PM counter per IOCTL")
-> > If you add a fixes you need to add
-> > Cc: stable@kernel.org
+On Mon, Jun 30, 2025 at 06:20:16PM +0200, Andrey Albershteyn wrote:
+> From: Andrey Albershteyn <aalbersh@redhat.com>
 > 
-> Thanks for letting me know
+> Introduce file_getattr() and file_setattr() syscalls to manipulate inode
+> extended attributes. The syscalls takes pair of file descriptor and
+> pathname. Then it operates on inode opened accroding to openat()
+> semantics. The struct fsx_fileattr is passed to obtain/change extended
+> attributes.
 > 
-> > Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > Signed-off-by: Desnes Nunes <desnesn@redhat.com>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_ctrl.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > index 44b6513c5264..91cc874da798 100644
-> > > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > @@ -3260,7 +3260,6 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
-> > >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> > >  {
-> > >         struct uvc_entity *entity;
-> > > -       int i;
-> > >
-> > >         guard(mutex)(&handle->chain->ctrl_mutex);
-> > >
-> > > @@ -3278,7 +3277,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> > >         if (!WARN_ON(handle->pending_async_ctrls))
-> > >                 return;
-> > >
-> > > -       for (i = 0; i < handle->pending_async_ctrls; i++)
-> >
-> > nitpick: I would have called the variable i, not j.  For me j usually
-> > means nested loop. But up to you
+> This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
+> that file don't need to be open as we can reference it with a path
+> instead of fd. By having this we can manipulated inode extended
+> attributes not only on regular files but also on special ones. This
+> is not possible with FS_IOC_FSSETXATTR ioctl as with special files
+> we can not call ioctl() directly on the filesystem inode using fd.
 > 
-> Noted - I used a different variable name because I wanted to
-> differentiate the loops.
-
-Variable declaration in the loop statement is relatively new in the
-kernel, so there's no consensus yet (to my knowledge) on clear coding
-styles, but I would have simply used the same variable name in both
-loops, with two separate declarations:
-
-diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index 303b7509ec47..6b9486749c3f 100644
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -3299,7 +3299,6 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
- void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
- {
- 	struct uvc_entity *entity;
--	int i;
-
- 	guard(mutex)(&handle->chain->ctrl_mutex);
-
-@@ -3317,7 +3316,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
- 	if (!WARN_ON(handle->pending_async_ctrls))
- 		return;
-
--	for (i = 0; i < handle->pending_async_ctrls; i++)
-+	for (unsigned int i = 0; i < handle->pending_async_ctrls; i++)
- 		uvc_pm_put(handle->stream->dev);
- }
-
-Is there a downside to this ?
-
-> > I am also not against your first version with a different commit message.
+> This patch adds two new syscalls which allows userspace to get/set
+> extended inode attributes on special files by using parent directory
+> and a path - *at() like syscall.
 > 
-> Third time's a charm then!
-> 
-> Will send a v2 with the first version having this commit message.
-> 
-> Thanks for the review Ricardo,
+> CC: linux-api@vger.kernel.org
+> CC: linux-fsdevel@vger.kernel.org
+> CC: linux-xfs@vger.kernel.org
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
--- 
-Regards,
+<snip syscall table>
 
-Laurent Pinchart
+> diff --git a/fs/file_attr.c b/fs/file_attr.c
+> index 62f08872d4ad..fda9d847eee5 100644
+> --- a/fs/file_attr.c
+> +++ b/fs/file_attr.c
+> @@ -3,6 +3,10 @@
+>  #include <linux/security.h>
+>  #include <linux/fscrypt.h>
+>  #include <linux/fileattr.h>
+> +#include <linux/syscalls.h>
+> +#include <linux/namei.h>
+> +
+> +#include "internal.h"
+>  
+>  /**
+>   * fileattr_fill_xflags - initialize fileattr with xflags
+> @@ -89,6 +93,19 @@ int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_get);
+>  
+> +static void fileattr_to_fsx_fileattr(const struct fileattr *fa,
+> +				     struct fsx_fileattr *fsx)
+
+Er... "fsx_fileattr" is the struct that the system call uses?
+
+That's a little confusing considering that xfs already has a
+xfs_fill_fsxattr function that actually fills a struct fileattr.
+That could be renamed xfs_fill_fileattr.
+
+I dunno.  There's a part of me that would really rather that the
+file_getattr and file_setattr syscalls operate on a struct file_attr.
+
+More whining/bikeshedding to come.
+
+<snip stuff that looks ok to me>
+
+<<well, I still dislike the CLASS(fd, fd)(fd) syntax...>>
+
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index 0098b0ce8ccb..0784f2033ba4 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -148,6 +148,24 @@ struct fsxattr {
+>  	unsigned char	fsx_pad[8];
+>  };
+>  
+> +/*
+> + * Variable size structure for file_[sg]et_attr().
+> + *
+> + * Note. This is alternative to the structure 'struct fileattr'/'struct fsxattr'.
+> + * As this structure is passed to/from userspace with its size, this can
+> + * be versioned based on the size.
+> + */
+> +struct fsx_fileattr {
+> +	__u32	fsx_xflags;	/* xflags field value (get/set) */
+
+Should this to be __u64 from the start?  Seeing as (a) this struct is
+not already a multiple of 8 bytes and (b) it's likely that we'll have to
+add a u64 field at some point.  That would also address brauner's
+comment about padding.
+
+--D
+
+> +	__u32	fsx_extsize;	/* extsize field value (get/set)*/
+> +	__u32	fsx_nextents;	/* nextents field value (get)   */
+> +	__u32	fsx_projid;	/* project identifier (get/set) */
+> +	__u32	fsx_cowextsize;	/* CoW extsize field value (get/set) */
+> +};
+> +
+> +#define FSX_FILEATTR_SIZE_VER0 20
+> +#define FSX_FILEATTR_SIZE_LATEST FSX_FILEATTR_SIZE_VER0
+> +
+>  /*
+>   * Flags for the fsx_xflags field
+>   */
+> diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+> index 580b4e246aec..d1ae5e92c615 100644
+> --- a/scripts/syscall.tbl
+> +++ b/scripts/syscall.tbl
+> @@ -408,3 +408,5 @@
+>  465	common	listxattrat			sys_listxattrat
+>  466	common	removexattrat			sys_removexattrat
+>  467	common	open_tree_attr			sys_open_tree_attr
+> +468	common	file_getattr			sys_file_getattr
+> +469	common	file_setattr			sys_file_setattr
+> 
+> -- 
+> 2.47.2
+> 
+> 
