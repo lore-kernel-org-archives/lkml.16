@@ -1,80 +1,62 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AD9F9D9;
-	Tue,  1 Jul 2025 10:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B835201004
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751365104; cv=none; b=eb5Zrfuq3iuT5gVrsnBi8xgMbL2LYe+Tmlj/XG3uj99/1cwmnsdR00MZZHWXlFeqNi6v7sINyc7u6TDfpq8aDQRKRwUsU5KC3FOC1M6kV7E4ACPIwazvTrdKKO6JhvPTY13s588c/rjo/3XDHYfsayyoVP2J6K1GCtOhn9RvVr8=
+	t=1751365145; cv=none; b=pFh4QnL2xNofSiBP8xqFEkfJ1TuEHKFqDSZsPfRKlUqHyi4itWmEWvgZShZggDDvsvyqM7rluo/LgiA4fmvOVHqxNfWvNjvqa2n/ldfafVSCyh2UIGa/+m7zQpl5KYIkKAxl1GaLOp3H13eivgQStAKGpHsFhFXt00pBfxB1Ipk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751365104; c=relaxed/simple;
-	bh=tDMifouIIip/tg9fh46Bk6xjkcaA79k1SoUewmzsplE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cs7Hb5b1a3LpgVtFTP9qGDrVOhDthregWIWhr1qxGN81/fI8XkiYqU9d1Nr4T3QpNg7GTOK8x4GFJaWCKpgryPu17TN4ikMlQ0Nkowh7/oxzB/BRj9/3LE4SL4Zn56Ch5hQ4GKs+l/PN9s3Vj9nIpBe09SH+1RmOIbEUab7i2JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=OzOsME4S; arc=none smtp.client-ip=220.197.32.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="OzOsME4S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=FwWG8EAzKyju2ovmVpNM1zaGxigyV87GlRZT34i7jEc=;
-	b=OzOsME4SUejXZXRUHNAw9BNQri32GIpRd25+TV67NIkjLVWPxv2SsomPyDSX5K
-	kxpPjUpQ3gNiXJq4E3SiFu0uSZ87pSKW1hYC+4Pkqs2mXXehwACEJR+etDRdImSv
-	2kRllq8jQpqTEYVNx/B1Ep8yhX7SJQe/UKsPL4qXLf82A=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD3v1pitWNoVEw9AA--.20470S3;
-	Tue, 01 Jul 2025 18:16:05 +0800 (CST)
-Date: Tue, 1 Jul 2025 18:16:02 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, michael@amarulasolutions.com,
-	linux-amarula@amarulasolutions.com, Frank Li <Frank.Li@nxp.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Heiko Schocher <hs@denx.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Marek Vasut <marex@denx.de>,
-	Markus Niebel <Markus.Niebel@tq-group.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Max Merchel <Max.Merchel@ew.tq-group.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Primoz Fiser <primoz.fiser@norik.com>,
-	Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, Tim Harvey <tharvey@gateworks.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 0/5] Support i.MX28 Amarula rmm board
-Message-ID: <aGO1YiHpGb0EmWbv@dragon>
-References: <20250620080626.3580397-1-dario.binacchi@amarulasolutions.com>
+	s=arc-20240116; t=1751365145; c=relaxed/simple;
+	bh=+tc413pWG4zccgyt/pWIypdP+pHDD1DD5A+0A/K6d1Y=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=IG6OQyTeo/5HcvBG/jcJ8BGIu0XHq5pLJ9Sl5ekQZ0dZoZwO8l+9mDT3vAqwRb9PXoKcqE3b4cjMaDaSczlsMYILZbz93sYmExbnrTyRJCYZY/8i++iD+LaumY9jKd9QfydOVYq1FCJg7dcAjtGLldsMXnX4jpPf5FUCHO2I9Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-8760733a107so523937539f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:19:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751365143; x=1751969943;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+tc413pWG4zccgyt/pWIypdP+pHDD1DD5A+0A/K6d1Y=;
+        b=nyao5oa3afF0TJFKxGQB7QwgP+d4jfu05QPM66C5q3fJYggmqEvm5jgOwdcuKZeviy
+         fLMgOf0m9cCvEyUs6+NmiNG8G1WEWDqB3RrccvMGODqJq0+Ete2egFGwADu3NSgnYbfz
+         FpjbZhekpveO7v4IfHVnulsGop5LAXfzTMWwWpFURJHjaNxt/LMg62z9TI6zujGI9AUN
+         Kh9wMLa4X0k5pMoy7bddzMKFhgtqkHmQMz8ex6J2WfUhurk6r3nGfC3+/W5M9hBZ9VIo
+         wq9d4EZCmGU0vhePHxEPao0ZPeqZ/UaTIU/9uR8g/FTXzEUZ1GRCWyjnjIiXWFe/uwET
+         6KsQ==
+X-Gm-Message-State: AOJu0YxqAjqNJSmxvxGWn9U7ORFCcgCHmynLJHoqQ+3AURX300bqOeQK
+	egomSuKbDejwSWRqb1neFHIxAvlEubitTxfowbeNrUUwcMJQ5v38OJeFVq0sVb2NJM7l/zutLT4
+	jfUQGwJ1ip9UJpan4Bs8Y8jRLSaRHt7NEhvqGwzZv1bvo8AaIKbGo5qi8Cfg=
+X-Google-Smtp-Source: AGHT+IE9knGQ+CQQP4mvycdEBq4BUs5hKF/7bRL0JwR7+tKHRW25/npt0iPCmeQ1+00ISy+2EtJ8q4R+Yb5FVz1J0fddK4inu4CD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620080626.3580397-1-dario.binacchi@amarulasolutions.com>
-X-CM-TRANSID:Mc8vCgD3v1pitWNoVEw9AA--.20470S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU8uc_UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIgV53mhjtWUsrgAA3Z
+X-Received: by 2002:a6b:f411:0:b0:86c:f2ea:d8d3 with SMTP id
+ ca18e2360f4ac-87688349035mr1297837239f.10.1751365143319; Tue, 01 Jul 2025
+ 03:19:03 -0700 (PDT)
+Date: Tue, 01 Jul 2025 03:19:03 -0700
+In-Reply-To: <6862c942.a70a0220.2f4de1.002c.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6863b617.a70a0220.3b7e22.193a.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 66701750d5565c574af42bef0b789ce0203e3071
+From: syzbot <syzbot+5322c5c260eb44d209ed@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 20, 2025 at 10:06:16AM +0200, Dario Binacchi wrote:
-> Dario Binacchi (5):
->   ARM: dts: imx28: add pwm7 muxing options
->   dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
->   ARM: dts: mxs: support i.MX28 Amarula rmm board
->   ARM: mxs_defconfig: Cleanup mxs_defconfig
->   ARM: mxs_defconfig: select new drivers used by imx28-amarula-rmm
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Applied all, thanks!
+***
 
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 66701750d5565c574af42bef0b789ce0203e3071
+Author: dmantipov@yandex.ru
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 66701750d5565c574af42bef0b789ce0203e3071
