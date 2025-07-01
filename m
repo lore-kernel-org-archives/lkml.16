@@ -1,189 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B638E266560;
-	Tue,  1 Jul 2025 20:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BED52FE33C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 20:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403383; cv=none; b=XwucOHVMfJXGSjNhUMPIBJJUJgGxpgQDOH2cIBwUb3hjGI91N64EwQkWUqSSRpRHxGoJxa8GfD0ZOJeKK7EsXwc1DQK/p4B+yXcL68ITuiIO+88fLkXZU/Pow0dqmbxyQaFp4qSb3FeCgDyKDOp8/HqN/GjEe8s1Zheku1eZ81E=
+	t=1751403410; cv=none; b=I5HToisKsZ5beuAKgOHXAKYyJXRkhV9Nh3h7GavyDcI1SKo8NcmqmW/BMo1c21jUFasp1ElGai/8AU8h6Qy6r3WI58o/fpIVz5+hNUDpl8nS8Cpc83nyZJvUY3/fBbWwqx+DS82+S2FroSPZW7QtHdGnkv1fKvt9bmUNWhbBNPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751403383; c=relaxed/simple;
-	bh=y5wwDYXuc6Vw2z4nsQx8Z6oOr8liqV38GCIpo1HQsuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dXtKeeKUJRJRfLrmf0tVzFCrx5oN0AiVThMNrh9dzVDF/pUQhStDGBsjQThCNd/LYenUAYQW/ZkNcx2eEPnEzyVl9apM7Kl1oEOu48ZDiCR7t1ePMIQMIGl3U4lPNYhTLkg0VfXrR13L+l9j9BX53Ca9p+pZZ4O65U67hPQHKV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbWFsTLK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751403410; c=relaxed/simple;
+	bh=xs1k1IKAt2QUNwG4AyLQYMUY9rKaJpNgz35MNxAhIfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FBmv/b3oGygaea8efa5TaB6Shi5ThJZDIicUYPBTv7xsHB4ebiIMdY9BdJJLf19NaG5G53HwSSVgEmJof1vvI/Jnyvf3u4JvW/I3mMsuVuXpx/XPJ3pOl4YaOW8MofeCtkKu5AtGJIR8B3JAOPvScd3pyT6RgHDEQc30RzdxC3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=YRnCJaCr; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbWFsTLK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DD7C4CEEB;
-	Tue,  1 Jul 2025 20:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751403383;
-	bh=y5wwDYXuc6Vw2z4nsQx8Z6oOr8liqV38GCIpo1HQsuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kbWFsTLKXGAe7ycsuFsAOLYv4wrMjHzmUmFG01DNYp/nlLcmt9NwIr7BEvSl2HEgC
-	 VO65bTmvJdPY3be1brPOWRSF6GfBXTWGPqHKyZaW/zwCUPF3lsBEaaKhEWckMaD8qv
-	 awxor2r1H6LZ+Hbp8Qc3iNk2KFfuuTyXFB2NK7drHSj2AU1U6z+4TNEUSm4xeWVnti
-	 JoaNmme0FQ4yoLnShN25h9yzcS1ymUQhPy/sfgDo4/INQsCHFYmgK/yMaibr2WizS1
-	 5pCwqTXkJ8Pv4qokQH/iuCz/4MwRX1r1qN4VIRo5ZFksgD0NjTSir+PvUKlgq8rpQk
-	 QRFy6MP+oSqRQ==
-Date: Tue, 1 Jul 2025 15:56:20 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mukesh Kumar Savaliya <mukesh.savaliya@oss.qualcomm.com>
-Cc: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Frank.Li@nxp.com, wsa+renesas@sang-engineering.com, alok.a.tiwari@oracle.com, 
-	konradybcio@kernel.org
-Subject: Re: [PATCH v6 2/3] i3c: master: Add Qualcomm I3C controller driver
-Message-ID: <h4c5oybkuxf2wmja2osm73ntpolx2ap3csskipbuyoks6xtdsi@5ihhj6ztn7mq>
-References: <20250701071852.2107800-1-mukesh.savaliya@oss.qualcomm.com>
- <20250701071852.2107800-3-mukesh.savaliya@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="YRnCJaCr"
+Received: from wse-pc.fritz.box (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 4C31D2FC022C;
+	Tue,  1 Jul 2025 22:56:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1751403398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oiDQGr9MkOCts7ZkE3xY4x9skLNvAEcRqxFvVngRJEo=;
+	b=YRnCJaCrDEE3QOlZP/VEVkYCmhAdqZXmT9XgOPcrduoyeid8qoE9ktRHx/VjNIL6z/Tjlv
+	xSUheyXdHre0/ulWgKsoBk4q+5seNn/tznKNTb4Zkdq40nCzFm018QbgnimK4LXdn3LM/F
+	jLmc2gPCjvi5raV+SAxEu8ypZBpWHtI=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Georg Gottleuber <ggo@tuxedocomputers.com>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme-pci: Add TUXEDO IBS Gen8 to Samsung sleep quirk
+Date: Tue,  1 Jul 2025 22:55:49 +0200
+Message-ID: <20250701205630.64031-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701071852.2107800-3-mukesh.savaliya@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 01, 2025 at 12:48:51PM +0530, Mukesh Kumar Savaliya wrote:
-> Add support for the Qualcomm I3C controller driver, which implements
-> I3C master functionality as defined in the MIPI Alliance Specification
-> for I3C, Version 1.0.
-> 
-> This driver supports master role in SDR mode.
-> 
-> Unlike some other I3C master controllers, this implementation
-> does not support In-Band Interrupts (IBI) and Hot-join requests.
+From: Georg Gottleuber <ggo@tuxedocomputers.com>
 
-I believe the capitalization of the last feature is "Hot-Join"
+On the TUXEDO InfinityBook S Gen8, a Samsung 990 Evo NVMe leads to
+a high power consumption in s2idle sleep (3.5 watts).
 
-It's not entirely clear from this sentence if it's the controller or the
-driver that doesn't support these features. Please update to make it
-clear.
+This patch applies 'Force No Simple Suspend' quirk to achieve a sleep with
+a lower power consumption, typically around 1 watts.
 
-[..]
-> diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
-> index 3e97960160bc..0e3ad9d96424 100644
-> --- a/drivers/i3c/master/Makefile
-> +++ b/drivers/i3c/master/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
-> +obj-$(CONFIG_I3C_QCOM_GENI)		+= i3c-qcom-geni.o
->  obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
->  obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
->  obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c-master.o
-> diff --git a/drivers/i3c/master/i3c-qcom-geni.c b/drivers/i3c/master/i3c-qcom-geni.c
-[..]
-> +
-> +struct geni_i3c_i2c_dev_data {
-> +	u32 ibi_keeping;  /* Plan to save IBI information, keep as dummy for now */
+Signed-off-by: Georg Gottleuber <ggo@tuxedocomputers.com>
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/nvme/host/pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Commit message says that QUP doesn't support IBI, so what is this?
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 8ff12e415cb5d..d677080e67d33 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3198,10 +3198,12 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ 		 * Exclude Samsung 990 Evo from NVME_QUIRK_SIMPLE_SUSPEND
+ 		 * because of high power consumption (> 2 Watt) in s2idle
+ 		 * sleep. Only some boards with Intel CPU are affected.
++		 * (Note for testing: Samsung 990 Evo Plus has same PCI ID)
+ 		 */
+ 		if (dmi_match(DMI_BOARD_NAME, "DN50Z-140HC-YD") ||
+ 		    dmi_match(DMI_BOARD_NAME, "GMxPXxx") ||
+ 		    dmi_match(DMI_BOARD_NAME, "GXxMRXx") ||
++		    dmi_match(DMI_BOARD_NAME, "NS5X_NS7XAU") ||
+ 		    dmi_match(DMI_BOARD_NAME, "PH4PG31") ||
+ 		    dmi_match(DMI_BOARD_NAME, "PH4PRX1_PH6PRX1") ||
+ 		    dmi_match(DMI_BOARD_NAME, "PH6PG01_PH6PG71"))
+-- 
+2.43.0
 
-Also, why "keep as dummy"?
-
-> +};
-> +
-[..]
-> +static void qcom_geni_i3c_conf(struct geni_i3c_dev *gi3c, enum i3c_bus_phase bus_phase)
-> +{
-> +	const struct geni_i3c_clk_settings *clk_idx = gi3c->clk_cfg;
-> +	unsigned long freq;
-> +	u32 val, dfs_idx;
-> +	int ret;
-> +
-> +	if (bus_phase == OPEN_DRAIN_MODE)
-> +		clk_idx = gi3c->clk_od_cfg;
-> +
-> +	ret = geni_se_clk_freq_match(&gi3c->se, clk_idx->clk_src_freq,
-> +				     &dfs_idx, &freq, false);
-> +	if (ret)
-> +		dfs_idx = 0;
-> +
-> +	writel_relaxed(dfs_idx, gi3c->se.base + SE_GENI_CLK_SEL);
-> +
-> +	val = FIELD_PREP(CLK_DIV_VALUE_MASK, clk_idx->clk_div);
-> +	val |= SER_CLK_EN;
-> +	writel_relaxed(val, gi3c->se.base + GENI_SER_M_CLK_CFG);
-> +
-> +	val = FIELD_PREP(I2C_SCL_HIGH_COUNTER_MASK, clk_idx->i2c_t_high_cnt);
-> +	val |= FIELD_PREP(I2C_SCL_LOW_COUNTER_MASK, clk_idx->i2c_t_low_cnt);
-> +	val |= FIELD_PREP(I2C_SCL_CYCLE_COUNTER_MASK, clk_idx->i2c_t_cycle_cnt);
-> +	writel_relaxed(val, gi3c->se.base + SE_I2C_SCL_COUNTERS);
-> +
-> +	writel_relaxed(clk_idx->i3c_t_cycle_cnt, gi3c->se.base + SE_I3C_SCL_CYCLE);
-> +	writel_relaxed(clk_idx->i3c_t_high_cnt, gi3c->se.base + SE_I3C_SCL_HIGH);
-> +
-> +	writel_relaxed(M_IBI_IRQ_IGNORE, gi3c->se.base + SE_GENI_HW_IRQ_IGNORE_ON_ACTIVE);
-> +
-> +	val = M_IBI_IRQ_PARAM_STOP_STALL | M_IBI_IRQ_PARAM_7E;
-> +	writel_relaxed(val, gi3c->se.base + SE_GENI_HW_IRQ_CMD_PARAM_0);
-> +
-> +	writel_relaxed(M_IBI_IRQ_EN, gi3c->se.base + SE_GENI_HW_IRQ_EN);
-
-Don't you want a non-relaxed write here, to clarify that the ordering of
-this write and the previous are significant?
-
-
-As above, the commit message says the controller doesn't do IBI, so why
-are we enabling IBI interrupts? (Just guessing based on the IRQ names)
-
-> +}
-> +
-[..]
-> +static int geni_i3c_master_attach_i2c_dev(struct i2c_dev_desc *dev)
-> +{
-> +	struct geni_i3c_i2c_dev_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	i2c_dev_set_master_data(dev, data);
-
-As far as I can tell, the master_data is private to the controller
-driver, and the only thing I can find you do with it to free it again on
-detach.
-
-Am I missing something or can these 4 optional functions be removed?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void geni_i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
-> +{
-> +	struct geni_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
-> +
-> +	i2c_dev_set_master_data(dev, NULL);
-> +	kfree(data);
-> +}
-> +
-> +static int geni_i3c_master_attach_i3c_dev(struct i3c_dev_desc *dev)
-> +{
-> +	struct geni_i3c_i2c_dev_data *data;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	i3c_dev_set_master_data(dev, data);
-> +
-> +	return 0;
-> +}
-> +
-> +static void geni_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
-> +{
-> +	struct geni_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-> +
-> +	i3c_dev_set_master_data(dev, NULL);
-> +	kfree(data);
-> +}
-> +
-
-Regards,
-Bjorn
