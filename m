@@ -1,245 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603BD26AAA9;
-	Tue,  1 Jul 2025 21:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADDB1C84C5;
+	Tue,  1 Jul 2025 21:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751405250; cv=none; b=i+VbApJF609I1js+zgfEyZ4psPIOGzKBVz6wiDJi2dKIah08ksfOulaKy4NNHpoID+xSjvxXQ2CYhiOOZMep2lTM8+r5L4gSydO44G43SmurZwdyIDquAt/36esU+3Bpo1Bm+gUAYtxvKYLvDgneYIPg+p1ErKXT/9YAG4nUGd0=
+	t=1751405339; cv=none; b=DLfROeYkZ6kHGXTQUHb9mvZZ0gz/OQO8mkjPCDAk5JRSuxwV8ptnEta4sOVptzTyKM52ZC3TBnvZBUFVLSazL27Vanx26e1KPiXPQVHPEBkpGGz9SbyVrbhpEOP2EPKnYSdklf2GH6FwOzkcTLaHxS/LrK0rwNHzhL5PnpVd8Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751405250; c=relaxed/simple;
-	bh=fKYoRb3/up9s3+dJqQkQ4Y2pMAEaBtfOTKyKwxmjQXA=;
+	s=arc-20240116; t=1751405339; c=relaxed/simple;
+	bh=/jVcLgbFbY496RecZHjcYFJ5MP92f9ISj2CZ1yQpfCk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IskExYHyKndm9Ck8l09zeQzetzlQIylvS06eIcLh4BrulWcyHa5CAAFa42xRt2OyQt4K776YKDJi86MxrAmPmlkbEZ0APyNnDy77DxF7yt17Sidcl2jz5I9HJ47Q5R1fPBXNRqVScKOup9v1VbXxS6mjNzC376C9FMSPTvTRtac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPBiiAXB; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=bXhbVds9abz95gUsd9SAOiMSKiV4JyqwL1Qh4LKuKAAHEhxcY/NDxorjb2PKyK/P9Jin9a/uzEFRfxiNXwPcRQh1GD3eqa1GzBpAsR5HIA+AkCS2OJaTBKupgjEzwVUo33RM657MS8yVtV+wC8StrYPZAt10I0kaZh34MPzpxzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EnRfXEjV; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPBiiAXB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751405248; x=1782941248;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fKYoRb3/up9s3+dJqQkQ4Y2pMAEaBtfOTKyKwxmjQXA=;
-  b=dPBiiAXB0sXw7LC9otw43ZaqadRRpuNN92esHnMlX90VOQmhwpSb9rFy
-   hsI13AFtN62bBaWwU5M/LEJA/MB0EpPoqaifXUGFF5Z7vOYEpI7ifmM1F
-   ggr6myKOrs8ME63hKE2TXQwZq5KyqG/8pq40XuZAWdt9dX84CDdbex1jH
-   Izs5Xz9yMqlVAvM39VZM0L0m7lULc/pLCtmFXQFrHWnX3v9x3XZswbGrv
-   6CRfvloyvFzKcVe/BcxqVXjnpu9dJi+6ZylOpji3KnFpIRYuK4jd4i34u
-   KjmB8eqL8TprtSPdv7WT49XOGhhvYCLJpNXgMJnxqI1VGhvt+93xFenzV
-   w==;
-X-CSE-ConnectionGUID: wUZkVYdXQqKXnXwjcYLe/w==
-X-CSE-MsgGUID: K2JWQnUCSSWrzC+2Z8bazg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="65144189"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="65144189"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 14:27:27 -0700
-X-CSE-ConnectionGUID: ypuy8n05RYa+d1GZovK2og==
-X-CSE-MsgGUID: 4Q2YzwxbT+CpUf6ooi8w8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="159594602"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.109.179]) ([10.125.109.179])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 14:27:25 -0700
-Message-ID: <5752a35b-2dc8-4f20-b6ad-148eac9f7953@intel.com>
-Date: Tue, 1 Jul 2025 14:27:24 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EnRfXEjV"
+Message-ID: <646c1c27-b940-4ece-aa0f-dbeea8aa7de3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751405324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sngN7YcO9+y3E2gnnJ9PKRXKEzOYBz6zNjasxjsvxhs=;
+	b=EnRfXEjVSZSFqcEn8DhHCyH84Dc3RopQfQ7PTpE57WL3UpYf+VFli49oUOTqsqiETUvs98
+	UFdgMKr6Gftx/Zm2eMsPjkzAVUGDf5T94ECSQgfokDgutuqkk7JaseJ1V3Ru924Jzl24Tm
+	zbpK5LD7QuKUkJbXn0B+4VOwUxNaZtE=
+Date: Tue, 1 Jul 2025 14:28:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 03/17] PCI/AER: Report CXL or PCIe bus error type in
- trace logging
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, shiju.jose@huawei.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, dan.carpenter@linaro.org,
- PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250626224252.1415009-1-terry.bowman@amd.com>
- <20250626224252.1415009-4-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250626224252.1415009-4-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] bpf: turn off sanitizer in do_misc_fixups for old clang
+Content-Language: en-GB
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Arnd Bergmann <arnd@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Luis Gerhorst <luis.gerhorst@fau.de>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, clang-built-linux <llvm@lists.linux.dev>
+References: <20250620113846.3950478-1-arnd@kernel.org>
+ <CAADnVQKAT3UPzcpzkJ6_-powz4YTiDAku4-a+++hrhYdJUnLiw@mail.gmail.com>
+ <361eb614-e145-49dc-aa32-12f313f61b96@linux.dev>
+ <CAEf4BzahSLGiW_F4LtG1tMAb0O1b6D-kO0AcrU2O+nLKVbkvZA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <CAEf4BzahSLGiW_F4LtG1tMAb0O1b6D-kO0AcrU2O+nLKVbkvZA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
 
-On 6/26/25 3:42 PM, Terry Bowman wrote:
-> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
-> Type' for CXL device errors.
-> 
-> This requires the AER can identify and distinguish between PCIe errors and
-> CXL errors.
-> 
-> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
-> aer_get_device_error_info() and pci_print_aer().
-> 
-> Update the aer_event trace routine to accept a bus type string parameter.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/pci/pci.h       |  6 ++++++
->  drivers/pci/pcie/aer.c  | 21 +++++++++++++++------
->  include/ras/ras_event.h |  9 ++++++---
->  3 files changed, 27 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..a0d1e59b5666 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -608,6 +608,7 @@ struct aer_err_info {
->  	int ratelimit_print[AER_MAX_MULTI_ERR_DEVICES];
->  	int error_dev_num;
->  	const char *level;		/* printk level */
-> +	bool is_cxl;
->  
->  	unsigned int id:16;
->  
-> @@ -628,6 +629,11 @@ struct aer_err_info {
->  int aer_get_device_error_info(struct aer_err_info *info, int i);
->  void aer_print_error(struct aer_err_info *info, int i);
->  
-> +static inline const char *aer_err_bus(struct aer_err_info *info)
-> +{
-> +	return info->is_cxl ? "CXL" : "PCIe";
-> +}
-> +
->  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
->  		      unsigned int tlp_len, bool flit,
->  		      struct pcie_tlp_log *log);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 70ac66188367..a2df9456595a 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -837,6 +837,7 @@ void aer_print_error(struct aer_err_info *info, int i)
->  	struct pci_dev *dev;
->  	int layer, agent, id;
->  	const char *level = info->level;
-> +	const char *bus_type = aer_err_bus(info);
->  
->  	if (WARN_ON_ONCE(i >= AER_MAX_MULTI_ERR_DEVICES))
->  		return;
-> @@ -845,23 +846,23 @@ void aer_print_error(struct aer_err_info *info, int i)
->  	id = pci_dev_id(dev);
->  
->  	pci_dev_aer_stats_incr(dev, info);
-> -	trace_aer_event(pci_name(dev), (info->status & ~info->mask),
-> +	trace_aer_event(pci_name(dev), bus_type, (info->status & ~info->mask),
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  
->  	if (!info->ratelimit_print[i])
->  		return;
->  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +			bus_type, aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
->  
->  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
->  	agent = AER_GET_AGENT(info->severity, info->status);
->  
-> -	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> +	aer_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
-> +		   bus_type, aer_error_severity_string[info->severity],
->  		   aer_error_layer[layer], aer_agent_string[agent]);
->  
->  	aer_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> @@ -895,6 +896,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		   struct aer_capability_regs *aer)
->  {
-> +	const char *bus_type;
->  	int layer, agent, tlp_header_valid = 0;
->  	u32 status, mask;
->  	struct aer_err_info info = {
-> @@ -915,9 +917,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  
->  	info.status = status;
->  	info.mask = mask;
-> +	info.is_cxl = pcie_is_cxl(dev);
-> +
-> +	bus_type = aer_err_bus(&info);
->  
->  	pci_dev_aer_stats_incr(dev, &info);
-> -	trace_aer_event(pci_name(dev), (status & ~mask),
-> +	trace_aer_event(pci_name(dev), bus_type, (status & ~mask),
->  			aer_severity, tlp_header_valid, &aer->header_log);
->  
->  	if (!aer_ratelimit(dev, info.severity))
-> @@ -939,6 +944,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  	if (tlp_header_valid)
->  		pcie_print_tlp_log(dev, &aer->header_log, info.level,
->  				   dev_fmt("  "));
-> +
-> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
-> +			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->  
-> @@ -1371,6 +1379,7 @@ int aer_get_device_error_info(struct aer_err_info *info, int i)
->  	/* Must reset in this function */
->  	info->status = 0;
->  	info->tlp_header_valid = 0;
-> +	info->is_cxl = pcie_is_cxl(dev);
->  
->  	/* The device might not support AER */
->  	if (!aer)
-> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-> index 14c9f943d53f..080829d59c36 100644
-> --- a/include/ras/ras_event.h
-> +++ b/include/ras/ras_event.h
-> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
->  
->  TRACE_EVENT(aer_event,
->  	TP_PROTO(const char *dev_name,
-> +		 const char *bus_type,
->  		 const u32 status,
->  		 const u8 severity,
->  		 const u8 tlp_header_valid,
->  		 struct pcie_tlp_log *tlp),
->  
-> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
->  
->  	TP_STRUCT__entry(
->  		__string(	dev_name,	dev_name	)
-> +		__string(	bus_type,	bus_type	)
->  		__field(	u32,		status		)
->  		__field(	u8,		severity	)
->  		__field(	u8, 		tlp_header_valid)
-> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
->  
->  	TP_fast_assign(
->  		__assign_str(dev_name);
-> +		__assign_str(bus_type);
->  		__entry->status		= status;
->  		__entry->severity	= severity;
->  		__entry->tlp_header_valid = tlp_header_valid;
-> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
->  		}
->  	),
->  
-> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-> -		__get_str(dev_name),
-> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
-> +		__get_str(dev_name), __get_str(bus_type),
->  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
->  			__entry->severity == AER_FATAL ?
->  			"Fatal" : "Uncorrected, non-fatal",
+On 7/1/25 1:45 PM, Andrii Nakryiko wrote:
+> On Tue, Jul 1, 2025 at 1:03 PM Yonghong Song <yonghong.song@linux.dev> wrote:
+>>
+>>
+>> On 6/23/25 2:32 PM, Alexei Starovoitov wrote:
+>>> On Fri, Jun 20, 2025 at 4:38 AM Arnd Bergmann <arnd@kernel.org> wrote:
+>>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>>
+>>>> clang versions before version 18 manage to badly optimize the bpf
+>>>> verifier, with lots of variable spills leading to excessive stack
+>>>> usage in addition to likely rather slow code:
+>>>>
+>>>> kernel/bpf/verifier.c:23936:5: error: stack frame size (2096) exceeds limit (1280) in 'bpf_check' [-Werror,-Wframe-larger-than]
+>>>> kernel/bpf/verifier.c:21563:12: error: stack frame size (1984) exceeds limit (1280) in 'do_misc_fixups' [-Werror,-Wframe-larger-than]
+>>>>
+>>>> Turn off the sanitizer in the two functions that suffer the most from
+>>>> this when using one of the affected clang version.
+>>>>
+>>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>>> ---
+>>>>    kernel/bpf/verifier.c | 11 +++++++++--
+>>>>    1 file changed, 9 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>>>> index 2fa797a6d6a2..7724c7a56d79 100644
+>>>> --- a/kernel/bpf/verifier.c
+>>>> +++ b/kernel/bpf/verifier.c
+>>>> @@ -19810,7 +19810,14 @@ static int do_check_insn(struct bpf_verifier_env *env, bool *do_print_state)
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> -static int do_check(struct bpf_verifier_env *env)
+>>>> +#if defined(CONFIG_CC_IS_CLANG) && CONFIG_CLANG_VERSION < 180100
+>>>> +/* old clang versions cause excessive stack usage here */
+>>>> +#define __workaround_kasan  __disable_sanitizer_instrumentation
+>>>> +#else
+>>>> +#define __workaround_kasan
+>>>> +#endif
+>>>> +
+>>>> +static __workaround_kasan int do_check(struct bpf_verifier_env *env)
+>>> This looks too hacky for a workaround.
+>>> Let's figure out what's causing such excessive stack usage and fix it.
+>>> We did some of this work in
+>>> commit 6f606ffd6dd7 ("bpf: Move insn_buf[16] to bpf_verifier_env")
+>>> and similar.
+>>> Looks like it wasn't enough or more stack usage crept in since then.
+>>>
+>>> Also make sure you're using the latest bpf-next.
+>>> A bunch of code was moved out of do_check().
+>>> So I bet the current bpf-next/master doesn't have a problem
+>>> with this particular function.
+>>> In my kasan build do_check() is now fully inlined.
+>>> do_check_common() is not and it's using 512 bytes of stack.
+>>>
+>>>>    {
+>>>>           bool pop_log = !(env->log.level & BPF_LOG_LEVEL2);
+>>>>           struct bpf_verifier_state *state = env->cur_state;
+>>>> @@ -21817,7 +21824,7 @@ static int add_hidden_subprog(struct bpf_verifier_env *env, struct bpf_insn *pat
+>>>>    /* Do various post-verification rewrites in a single program pass.
+>>>>     * These rewrites simplify JIT and interpreter implementations.
+>>>>     */
+>>>> -static int do_misc_fixups(struct bpf_verifier_env *env)
+>>>> +static __workaround_kasan int do_misc_fixups(struct bpf_verifier_env *env)
+>>> This one is using 832 byte of stack with kasan.
+>>> Which is indeed high.
+>>> Big chunk seems to be coming from chk_and_sdiv[] and chk_and_smod[].
+>>>
+>>> Yonghong,
+>>> looks like you contributed that piece of code.
+>>> Pls see how to reduce stack size here.
+>>> Daniel used this pattern in earlier commits. Looks like
+>>> we took it too far.
+>> With llvm17, I got the following error:
+>>
+>> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:24491:5: error: stack frame size (2552) exceeds limit (1280) in 'bpf_check' [-
+>> Werror,-Wframe-larger-than]
+>>    24491 | int bpf_check(struct bpf_prog **prog, union bpf_attr *attr, bpfptr_t uattr, __u32 uattr_size)
+>>          |     ^
+>> /home/yhs/work/bpf-next/kernel/bpf/verifier.c:19921:12: error: stack frame size (1368) exceeds limit (1280) in 'do_check' [-
+>> Werror,-Wframe-larger-than]
+>>    19921 | static int do_check(struct bpf_verifier_env *env)
+>>          |            ^
+>> 2 errors generated.
+>>
+>> I checked IR and found the following memory allocations which may contribute
+>> excessive stack usage:
+>>
+>> attr.coerce1, i32 noundef %uattr_size) local_unnamed_addr #0 align 16 !dbg !19800 {
+>> entry:
+>>     %zext_patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19854
+>>     %rnd_hi32_patch.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19855
+>>     %cnt.i = alloca i32, align 4, !DIAssignID !19856
+>>     %patch.i766 = alloca [3 x %struct.bpf_insn], align 16, !DIAssignID !19857
+>>     %chk_and_sdiv.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19858
+>>     %chk_and_smod.i = alloca [1 x %struct.bpf_insn], align 4, !DIAssignID !19859
+>>     %chk_and_div.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19860
+>>     %chk_and_mod.i = alloca [4 x %struct.bpf_insn], align 16, !DIAssignID !19861
+>>     %chk_and_sdiv343.i = alloca [8 x %struct.bpf_insn], align 16, !DIAssignID !19862
+>>     %chk_and_smod472.i = alloca [9 x %struct.bpf_insn], align 16, !DIAssignID !19863
+>>     %desc.i = alloca %struct.bpf_jit_poke_descriptor, align 8, !DIAssignID !19864
+>>     %target_size.i = alloca i32, align 4, !DIAssignID !19865
+>>     %patch.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19866
+>>     %patch355.i = alloca [2 x %struct.bpf_insn], align 16, !DIAssignID !19867
+>>     %ja.i = alloca %struct.bpf_insn, align 8, !DIAssignID !19868
+>>     %ret_insn.i.i = alloca [8 x i32], align 16, !DIAssignID !19869
+>>     %ret_prog.i.i = alloca [8 x i32], align 16, !DIAssignID !19870
+>>     %fd.i = alloca i32, align 4, !DIAssignID !19871
+>>     %log_true_size = alloca i32, align 4, !DIAssignID !19872
+>> ...
+>>
+>> So yes, chk_and_{div,mod,sdiv,smod} consumes quite some stack and
+>> can be coverted to runtime allocation but that is not enough for 1280
+>> stack limit, we need to do more conversion from stack to memory
+>> allocation. Will try to have uniform way to convert
+>> 'alloca [<num> x %struct.bpf_insn]' to runtime allocation.
+>>
+> Do we need to go all the way to dynamic allocation? See env->insns_buf
+> (which some parts of this function are already using for constructing
+> instruction patch), let's just converge on that? It pre-allocates
+> space for 32 instructions, should be sufficient for all the use cases,
+> no?
+
+Make sense. This is much better. Thanks!
 
