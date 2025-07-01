@@ -1,75 +1,143 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BDA26A0E0;
-	Tue,  1 Jul 2025 19:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D567242D93;
+	Tue,  1 Jul 2025 19:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397088; cv=none; b=oyFcnSgB7WV+AR5ipZkQi1WDWO33EsqXAeDnYm0TgteP25BxStmzs6MCLnO4j3SPaKlBrdUKiVWe9tcJOAvtnQn4u4VX4lgSJ8Zxd8Qf0n7BDnhAT9Vw2TNUjsLW+mEB9PFimSUri5J4CVYKBXthDixqwXEnlKng8nHfYuTfqrg=
+	t=1751397246; cv=none; b=pZK1y4SjFuSf3LN5IbLfMLFuZGYiLn8RG0gnwRwLExwLea5Hl0tPlbsk3d4luPL1B8oPOrw5EbFpwl7GxARbaBRreajfK2nGZOz6vWAet6M86QiNjvTaQ7mpr458AlzG/PpmJypDo7gvB2f3Avr/Ij0E1nFHbOjokZBSjkc5fjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397088; c=relaxed/simple;
-	bh=z4f+eQJG65IF7q83wr7qPgXhTWfnXVrZOVU35IJNU9s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Q9FTDsgmXCEmdfr1Kk6HEh1EQD4XPaVABvHI83P++7HqcWswtKXOHEk9MV3uZD6Gyi3Zm2dZ4Xn7d0ZmV9YrVCV7D8VDLYitHjB0WXHrYvOzzwXuBpS/omB/zb22agTSjvayoMQfdevSUyLvIReRsMeC2Bw3q2eycoOp4KdGIEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=jTir4Ovy; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1751397246; c=relaxed/simple;
+	bh=4Rr5RDJD2k8VW/HH+xcrwUxWOxdEDKOztvVdojYX7xs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QSRn+zjbhSovRfscyNMbhPeOS1uvVfjH9eMdbx4C2tPZF0YD9udqXbu68L+ghS9zCgxPUp6+bq/WcK/3LqvQbAvW46CfYD7/it0Ni4QnFHn78gcEe+HZAVCrM2XulfAsJjfKFrXFMAJaiCmCnI0vG/zUm3wcFwaNuq7SJ9V4ipU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5yO2nmN; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="jTir4Ovy"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 04AFF406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1751397086; bh=2BeC9ePAMZTy0IbNm56dxbKdnRGE6FcrpsbWIQptkVE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=jTir4OvyjsfDadhSD6P98fYu6lq7wOw56wodpA0Zjv1GwAFMmh1hPAOeRNCW6JbfI
-	 UPgzwMJ6uNRWYFy1KxImyw/Xz4S28LH6cB7YRY+YkAvX/bZ62BoseuEeqOdE0zBogg
-	 9UnZEnuro/h4/qe5eDM9N9hcRdoiUrE5rC1eyx7TFCdlela6bWWJ+N+TzqJFkImuxc
-	 E2+sYXlhsnGZinv3xaiE7diwDuWJ7TAwf/hmAkOqHEcz5IIZV0oO0uy3Mb3bkMGLgq
-	 6wmkqKASqKUBFc2NNHW1wu+DoiBTf5rI/yPDuE5EJnRVxtdaOVL2CmpUYWkM0we5kL
-	 gbQNgV8BdjjLw==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 04AFF406FC;
-	Tue,  1 Jul 2025 19:11:25 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Documentation
- <linux-doc@vger.kernel.org>, Linux ext4 <linux-ext4@vger.kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, "Ritesh Harjani (IBM)"
- <ritesh.list@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, Bagas
- Sanjaya <bagasdotme@gmail.com>
-Subject: Re: [PATCH 0/5] ext4 docs toctree reorganization
-In-Reply-To: <20250620105643.25141-2-bagasdotme@gmail.com>
-References: <20250620105643.25141-2-bagasdotme@gmail.com>
-Date: Tue, 01 Jul 2025 13:11:25 -0600
-Message-ID: <87y0t7rajm.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5yO2nmN"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so3839158f8f.2;
+        Tue, 01 Jul 2025 12:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751397243; x=1752002043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GRAT6iMVdZZIF+G8MBWdHZBgavvJ5RJLj6iKsHMAdfE=;
+        b=i5yO2nmNz6SvS4+aRgCTpJGKeDnPrcSi1zHODSfRTngXTTJDPUzbOydk3Lci/67djT
+         5TB/alS4+L4k3VKCHSbNB5iZzb1AdQzM72KPTY2EiVPEK8NP4iG+LqstN+jo2MA1Yxq9
+         43h5dHqsPCBDh26GVD4gUzSOE2lDPARQ5TFcwvTbwSlZwcD8dkMxmDw8e0NOwAdD7dfo
+         xeq9OrO9ipVhhndALe6tWb5cyIRebGhlKBuXLGFHXP4t+RqmOL9I42uoCu9fhiy0WqQv
+         LO1dH5Daf1KgNIya0hAHEOn69OzGN3bdccg0Q72nPzLWUxOLk9Pqag1YCyNOrAjE6h/l
+         8u3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751397243; x=1752002043;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GRAT6iMVdZZIF+G8MBWdHZBgavvJ5RJLj6iKsHMAdfE=;
+        b=rxZJT3g/zGiW4yeqwKXdPl+A/7QKwtL1QfQZxCcnftzVgXI2zFBq43GXNOS4cSTEBg
+         ggDcvsK8Pv5DItSGUFoGFOsOc9AKmadv2QpRR+VeSCRnzGKqdnwnqmsU4d6oUKUIfIY9
+         RpjPzY6sEna0eZvE7B+GcLXHuZHhTvLAlnbHkQaeSLhIVZuzRbxnJX1EVXAwtN4eXsSc
+         WcxMgteIvvjK9nUdVLfDvwvQhPY7D7apj6JEDP7D7m6nfUrg7/Mzh2VkwCKYme7rHM5F
+         2icYriLE7bs5k2xKHkoY8AA1fVFPybaxGsNEwPJSx6svYFrTq8AqyR3VTWoRpac1aPHl
+         0gcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKUOdu9EohXj5wZXBUiPIhn19brQT/tNg5UjMxGh9ZdW2oGoSzDINKyj5qMjUkGfnlEgqQLI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJNje1dtYN3rx6m9+vo0lx2vk/G6BV5xl0tE9W+1YhXDyxadUw
+	2j16YWuSH25MAoDOc9F1jbZ7cXQX7CS6j+BkynVUbYFEuACHjLlHgyoh
+X-Gm-Gg: ASbGncsM5FdINYwDQ9M6kN3HqdM3qMs0NKUrHETcr9XG7gjWH2g3KiZODJ8q2u5NaTl
+	t4/1HRKcYeCZBT9fwLqzsgPlSTdoiz7FsvYVUdTcZOJg7qmmIAnfwpZIuJjpXDJWNZRmEOvPhDk
+	MjYGmvy1wBHcMVowBN/7aksaKBNZCdS/eCXQMIVOAITMCyKpBJi1O4OZ4QAnUFb35RBDXSnJyh+
+	tVKz9wyvPOGW5LIE7yaSZ9sB2dGnwZa6uhZGoFLL9EK+VYm1rm/VvX/gKTpOQh7AjuQfJldyz9n
+	Y1Ki5oiCXdRV82UmVmAK53oZrCT6m+MIkxK6UUg0CL0JT6347J9yaEXVxtJIGBdyskpOkge3jRg
+	abJmPY1MRWTjEcgG5JQ==
+X-Google-Smtp-Source: AGHT+IEKI/YCYtufBuGYyN654gnbiKtO4OJiT+a1rYiFQFL//Efs4Zhe4rDt90TqgDTijo7rz+z8LA==
+X-Received: by 2002:a5d:5f4b:0:b0:3a5:2848:2e78 with SMTP id ffacd0b85a97d-3a8ffbd4cffmr17167671f8f.28.1751397242504;
+        Tue, 01 Jul 2025 12:14:02 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad20bsm204864645e9.20.2025.07.01.12.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 12:14:02 -0700 (PDT)
+Date: Tue, 1 Jul 2025 20:14:00 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, Steven
+ Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella
+ <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+ <jasowang@redhat.com>, Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+ netdev@vger.kernel.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH v2 4/8] vsock/virtio: Resize receive buffers so that
+ each SKB fits in a page
+Message-ID: <20250701201400.52442b0e@pumpkin>
+In-Reply-To: <20250701164507.14883-5-will@kernel.org>
+References: <20250701164507.14883-1-will@kernel.org>
+	<20250701164507.14883-5-will@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+On Tue,  1 Jul 2025 17:45:03 +0100
+Will Deacon <will@kernel.org> wrote:
 
-> Hi Jon, hi Ted,
->
-> While discussing on my previous ext4 docs reorganization attempt
-> by merging contents [1], Jon suggested that considering current docs
-> file structure, a proper toctree would be ideal [2]. So, here's
-> the patchset that does exactly that.
->
-> Actual conversion to toctree structure is in [1/5], while the rest
-> is cleanups to make the resulting toctree nicer.
->
-> This patchset is based on docs-next tree.
+> When allocating receive buffers for the vsock virtio RX virtqueue, an
+> SKB is allocated with a 4140 data payload (the 44-byte packet header +
+> VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE). Even when factoring in the SKB
+> overhead, the resulting 8KiB allocation thanks to the rounding in
+> kmalloc_reserve() is wasteful (~3700 unusable bytes) and results in a
+> higher-order page allocation for the sake of a few hundred bytes of
+> packet data.
+> 
+> Limit the vsock virtio RX buffers to a page per SKB, resulting in much
+> better memory utilisation and removing the need to allocate higher-order
+> pages entirely.
+> 
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  include/linux/virtio_vsock.h     | 1 -
+>  net/vmw_vsock/virtio_transport.c | 7 ++++++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> index eb6980aa19fd..1b5731186095 100644
+> --- a/include/linux/virtio_vsock.h
+> +++ b/include/linux/virtio_vsock.h
+> @@ -109,7 +109,6 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
+>  	return (size_t)(skb_end_pointer(skb) - skb->head);
+>  }
+>  
+> -#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
+>  #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
+>  #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
+>  
+> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> index 488e6ddc6ffa..3daba06ed499 100644
+> --- a/net/vmw_vsock/virtio_transport.c
+> +++ b/net/vmw_vsock/virtio_transport.c
+> @@ -307,7 +307,12 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>  
+>  static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+>  {
+> -	int total_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM;
+> +	/* Dimension the SKB so that the entire thing fits exactly into
+> +	 * a single page. This avoids wasting memory due to alloc_skb()
+> +	 * rounding up to the next page order and also means that we
+> +	 * don't leave higher-order pages sitting around in the RX queue.
+> +	 */
+> +	int total_len = SKB_WITH_OVERHEAD(PAGE_SIZE);
 
-So to me this seems like an improvement.  I'm happy to take it, though
-would prefer an ack from ext4land if possible.
+Should that be an explicit 4096?
+Otherwise it is very wasteful of memory on systems with large pages.
 
-Thanks,
+	David
 
-jon
+>  	struct scatterlist pkt, *p;
+>  	struct virtqueue *vq;
+>  	struct sk_buff *skb;
+
