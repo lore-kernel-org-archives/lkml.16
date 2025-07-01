@@ -1,91 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3A275B10;
-	Tue,  1 Jul 2025 14:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DCC26A09B;
+	Tue,  1 Jul 2025 14:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751380587; cv=none; b=UcLrFhjH3e6MWF0QolyonTOA+OKO2nSJN3jpJ4Xn6r5xaPAOmdCbcqbvwfGSK1MNU9XtSQlXCJ1E/oANLk33ZEQ8Sxny8ZKHbHtFG/1rXQQLq+y77MuSc71AaJzKBSUW+FHBLFQQ5cH9fwf7FQTUcUDq3YAX5itFqBQGY4gmaAo=
+	t=1751380625; cv=none; b=CqOAnQ5ufryzO6pl9RKsVLLYx8rutfqFqr6nogPxCl+r1FsiTUE4N4g8ajRP9+Rzjp2nR2DWS/AaTXx6DFfwWbQo6xRAleBsNt0cIm/rNeln87AGD0qOlW/2K4zjZk1CjEzH+u2XFXMhDSRUvLiHpkLShT1aYYfZJCcgz47r4+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751380587; c=relaxed/simple;
-	bh=knAEIJ1EdW+gJR4GF/o6jjsjDFjRhovxO/cp/ga8z50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgGh/zoKkBWX6zoXRtuQ7zgr9GvDlTFvNApWbXjeN8LgLt4y86qcxyjfw8ntBqcnpNaekhslsHgkjO8jzITgGnmFXqsrllhvikFjkMKg5qMMaIOcv7czP0LZdvpDhtvTE3gAo7Y2CXZnYfnq2zB+u/Yc1boe/tgPeATPKBLO4hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dk3Arslw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751380625; c=relaxed/simple;
+	bh=kGFWc3Xfs0UPbtTI9rxcdylNar0cECcgtKLOQFQAsXg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nvJm/TegkIOc+KgdoyXMk/tUE8qu/s2r6vEjQ4a4fGBuJm+lhHb3HoYcUw9dXBqfCDqkEekdz9SotD72vNWRFbGljdFrDjpyDST0I61cjB1HlWtW0Nz5wfbM0Cupbw36ScwUI21HYz+xBVbFoUmf2l+HEmjV/suY9IR5Eoa6FrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YjeaziPx; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=edOjc+BM reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dk3Arslw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57B0C4CEEB;
-	Tue,  1 Jul 2025 14:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751380586;
-	bh=knAEIJ1EdW+gJR4GF/o6jjsjDFjRhovxO/cp/ga8z50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dk3ArslwgCTJqYLms5PVFOva7jSixaKKq1KGvJAVJJMjcnbVxoAHChUhaTd2+J0tm
-	 wk2JFTd+73p/1Rdy63TYN3cCbNdIrrjfvy9Ozzv9tdB7QKZUTRJLuineHlvOhiiSxG
-	 g+/J3fCtk3RFYYEBGM4iifeo5H1ukvZt9N+HhW79WeDHl/jZwzq+MzgstG7uLifes7
-	 wSGEhkz7FsdIyAomgCMwt3JvFF/VjCXi0nbJfY19Kd9cRd2d7f57qbzJb6TV6XLIXx
-	 1RnUm7W/zZoezyG6MHIZaUMcbZGb1C7prgUGWwrwS+RkvqAmA0VKi9hkdQTiju8+L3
-	 5P2DEa+l8UxvA==
-Date: Tue, 1 Jul 2025 15:36:21 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: James Clark <james.clark@linaro.org>,
-	Vladimir Oltean <olteanv@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Larisa Grigore <larisa.grigore@nxp.com>,
-	Frank Li <Frank.li@nxp.com>, Christoph Hellwig <hch@lst.de>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] spi: spi-fsl-dspi: Target mode improvements
-Message-ID: <3c3c912c-1f33-4f63-9a37-fe4db5d23527@sirena.org.uk>
-References: <20250627-james-nxp-spi-dma-v4-0-178dba20c120@linaro.org>
- <20250630152612.npdobwbcezl5nlym@skbuf>
- <c9bf945b-9fc6-4829-addf-2fb7a7d4eb36@linaro.org>
- <20250701135747.mns6emamtmxwgpyu@skbuf>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YjeaziPx";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="edOjc+BM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1751380621; x=1782916621;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=wNBtjKUlLDWI5QCJIIlgd/qmQpzHJefgRv3LMnnIJ9A=;
+  b=YjeaziPx0FqLlAeAg2WcLDZbPtjdahLaM/rau/DZexYMGG6BIQyKl6WI
+   YA0glSAv16PS0JX5JoAz8KSdQbrzxqZq1VIzBJNuJX+KwVyKPY3l03QAI
+   IAxl66AOvgZVN1Z45cPWtNTtuC2VRz46lpISVLwNUqSDZx7mST9fWKVtn
+   cQuV0hbazqL93+jEP+2v4GUy8zsZpeTOpuZ79FlzgOq4yZFINoxLTAwBf
+   j7a0CBu7QR0MQ0DUzNSdMQL2vlvaUP6eCCeCCNCwLfMiKe+8Sk1hXvb16
+   7k/a2Lg1aFcs46U2ZO9sXsi8gbhlXXT917152pmkF8V1hNQhrm/ONU8tw
+   A==;
+X-CSE-ConnectionGUID: I6shCYzBT6uk0MqV6WbtMQ==
+X-CSE-MsgGUID: A/nYcXl1T4uoaw/aimzoLQ==
+X-IronPort-AV: E=Sophos;i="6.16,279,1744063200"; 
+   d="scan'208";a="44959539"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 01 Jul 2025 16:36:58 +0200
+X-CheckPoint: {6863F28A-A-F34124BF-F8CE6E96}
+X-MAIL-CPID: 3118CC2C005CAAB61C6EE39A9FF496E3_4
+X-Control-Analysis: str=0001.0A00639F.6863F29D.004E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DC32E16B4AE;
+	Tue,  1 Jul 2025 16:36:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1751380614;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wNBtjKUlLDWI5QCJIIlgd/qmQpzHJefgRv3LMnnIJ9A=;
+	b=edOjc+BMIrQqdr6ui8S58aMjdBWOGa1mfh5XPg45NFJkbNCh+hXcD6JKCDoxEZPkIDuXnf
+	f0fdy6Vk/uOLpxzlFjMtJl6mQ0H56LYYKcXl9rSDdKj24ssu4yuhItcacrmXjhhGweZrmf
+	T+qxaLKCHNwN+x01XADJHyyMu8QuD6tOfhYMiACHbDwXjgCvuWERgwFoI19ZE9fJV2hUio
+	NTdesBkxJtGCuhNtBpwGMFmLVvrWIEPBGLdSuyvqSGTsECHhTrCL0n0LgTyLetFcDOrzAF
+	AHsR0w2t9G02buwnh6MuBY11bLfw+KDo6glzSAS1y0+MPvVKOtmM3VTRU7qW5w==
+Message-ID: <f44c7074337b79df9ad67f62acbc268acc344a23.camel@ew.tq-group.com>
+Subject: Re: [PATCH v2] arm64: Kconfig.platforms: remove useless select for
+ ARCH_K3
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nishanth
+ Menon <nm@ti.com>,  linux@ew.tq-group.com
+Date: Tue, 01 Jul 2025 16:36:52 +0200
+In-Reply-To: <20250519-kconfig-v2-1-56c1a0137a0f@baylibre.com>
+References: <20250519-kconfig-v2-1-56c1a0137a0f@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pB5bWIeihD2yWORs"
-Content-Disposition: inline
-In-Reply-To: <20250701135747.mns6emamtmxwgpyu@skbuf>
-X-Cookie: No shirt, no shoes, no service.
+X-Last-TLS-Session-Version: TLSv1.3
+
+On Mon, 2025-05-19 at 10:20 +0200, Guillaume La Roque wrote:
+>=20
+> After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
+> select on ARCH_K3 are not needed anymore.
+> Select MAILBOX by default is not needed anymore[3],
+> PM_GENERIC_DOMAIN if PM was enabled by default so not needed.
+
+Hi,
+
+what selects PM_GENERIC_DOMAIN in your configuration? linux-next fails to b=
+oot
+on our AM62x-based TQMa62xx if I don't (partially) revert this patch - I ha=
+ve=20
+not found a way to enable PM_GENERIC_DOMAIN and TI_SCI_PM_DOMAINS without
+enabling other unneeded features to pull it in.
+
+Best,
+Matthias
 
 
---pB5bWIeihD2yWORs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>=20
+> Remove it and give possibility to enable this driver in modules.
+>=20
+> [1] https://lore.kernel.org/all/20180828005311.8529-1-nm@ti.com/
+> [2] https://lore.kernel.org/all/20250220-ti-firmware-v2-1-ff26883c6ce9@ba=
+ylibre.com/
+> [3] https://lore.kernel.org/all/20250507135213.g6li6ufp3cosxoys@stinging/
+>=20
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+> Changes in v2:
+> - Remove some other config after comment from Nishanth.=20
+> - Link to v1: https://lore.kernel.org/r/20250504-kconfig-v1-1-ab0216f4fa9=
+8@baylibre.com
+> ---
+>  arch/arm64/Kconfig.platforms | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 8b76821f190f..bf9e3d76b4c0 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -135,11 +135,7 @@ config ARCH_SPARX5
+> =20
+>  config ARCH_K3
+>  	bool "Texas Instruments Inc. K3 multicore SoC architecture"
+> -	select PM_GENERIC_DOMAINS if PM
+> -	select MAILBOX
+>  	select SOC_TI
+> -	select TI_MESSAGE_MANAGER
+> -	select TI_SCI_PROTOCOL
+>  	select TI_K3_SOCINFO
+>  	help
+>  	  This enables support for Texas Instruments' K3 multicore SoC
+>=20
+> ---
+> base-commit: e8ab83e34bdc458b5cd77f201e4ed04807978fb1
+> change-id: 20250504-kconfig-68f139fbf337
+>=20
+> Best regards,
 
-On Tue, Jul 01, 2025 at 04:57:47PM +0300, Vladimir Oltean wrote:
-
-> Here, the synchronization offsets in DMA mode are an order of magnitude
-> worse, so yeah, initial enthusiasm definitely curbed now.
-
-> For me, what matters is not the latency itself, but the ability to
-> cross-timestamp one byte within the SPI transfer with high granularity,
-> and for the uncertainty of that timestamp to be as small and constant as
-> possible.
-
-This is sounding like a copybreak type situation with the mode selected
-depending on how big the transfer is, that's a very common pattern.
-I've not looked how easy it is to flip this hardware between modes
-though.
-
---pB5bWIeihD2yWORs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhj8mUACgkQJNaLcl1U
-h9Dsrgf8DDdJVCD+apYpWWERyI2gIDN7hQ/G1PHciKDWW9shSoYckXawcPyTf+ON
-aUic2yaxhlo4XEADeuppzmZPzUeInBsJYmT1UAjRxsjURR8bHRWQ4Q4sfupTPFCh
-VWqY77QvVJiaNEk3SfqHnuRUEKoErx67R/M6iHJsWwVjYOMvCqdkwA1RBfs/bp2t
-91evPhxK3AIhRsX2RnsWcvhdHTzMI//F+L4aHOidShHlPTLtXVON+oga2YPJe39k
-8J+Ityf0aj8lbL1xKxVFFNCX0kUtDh1zxa4bZ2JubBeMlei1BwxGziedWAfcid+I
-LTmj58WZ6YssnOt8RZ5oLvbw56AXzw==
-=EMMl
------END PGP SIGNATURE-----
-
---pB5bWIeihD2yWORs--
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
