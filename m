@@ -1,119 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB06242D9B;
-	Tue,  1 Jul 2025 13:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C34148FE6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377823; cv=none; b=E5gIZtwaAtItw/eyTHDqZPuG2pDOGkjVW78xF8nCPrM/UzWsH8K0mxvRX+RqxV7jIhDzWN1AadFFYBxJS5ry5hGLNPzJEsZbTwFO66qtialsdaMUiIbforQI8CJltTSPFmExnfP61dOeW+iahi22BPtYKNd7jYN/Xz8w3JHTlRs=
+	t=1751377974; cv=none; b=V2kb37BjdWk/PzuYR3ansk7XdfxxyPq+r0jSbhmnqXW8+u6zOmzxKoyeB0BrdM/1hT9uE2pLO+dVtqO9Gn9ovOEYzEEQjvRVogf7Cy6cWIjykOfLttsIQsaYF7sGfIsLW3ZD9M1sGNWcJ/AT0OpO3OxxoCd0MV2TFhysYkL0iTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377823; c=relaxed/simple;
-	bh=RFvF9KCP9IGby3aofIlAsOtLhVx+o/OGg9eljFscdY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfAgz2VwdFE5ZaPoQ3LN3OrngdbRimcrRFxBCeSx4jhnR/le0VmJ6dLehRovYV0Up6q0yWaknB/PRSEC2AWvmcFvV8qxyXeWB2rTzw7U3V/vZLZlEDPqj2GJygjBXNQU+WZJ2qHUjegzTlY47hBOpoBLCXAgk1FL5Q9tXbeGERc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=am5HClE2; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1751377974; c=relaxed/simple;
+	bh=xOqytmxf6YBdT5xb94xf+MyiTuVkQdFOd5VE4UTac+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eEVpeqfbaKvRvtdWd3k0lmxl6CBNro3L/nf2TDaTeBhCKq/1ciDd7yZiBJ0pJrZmMbpRdb3i+9wnpIcIY7KkSfjlDK9A+davxj78YWTnbIuc4/VGxzljmQMbiNhEvchu8F7+YGWCXmAcFFN1J/p1OlRX4xE0ZAHduCFns7ZFGbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LSLLYyNu; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="am5HClE2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751377822; x=1782913822;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RFvF9KCP9IGby3aofIlAsOtLhVx+o/OGg9eljFscdY8=;
-  b=am5HClE2CGri4t7Gbckko4xs/Ia1FFWaQBUaI6IVFzOxY/w3bvp7njR4
-   89aL2sUdRXYVxtAPSzdE0zX/ZNqZk7V8mv2jSMN1yH0Qi3xyKpG1tyfoH
-   /7u75I7PvGC6WH4NuLJXaNaHxuQwScXBT/jVjyhMxDs1GbnzcqwKoZsBz
-   H5bdMefFTr51ZREXGXbbxYAQRLlXqkHnNe7zDoWfyAXfqECZfjn3GhlzY
-   wl7qhgapkqHXXBAsUuZIy3bhkVBeWUgAest1qticlu3XC9FqhrrIqH24P
-   rPtHEjHXpopvMzd/epOwbsHMTsEtlEinc+fRPlFDhb3dJJsglD/yisjEM
-   Q==;
-X-CSE-ConnectionGUID: acZKFMktQpeRYp6FjxzeGw==
-X-CSE-MsgGUID: KpkVs5aqTASIdJViiFaSDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53580113"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="53580113"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:50:21 -0700
-X-CSE-ConnectionGUID: WK+qwPOzTcaVSaXuAyLtSQ==
-X-CSE-MsgGUID: h5jLGJhYQ3SqfnGfjSzXIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="153187653"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:50:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uWbNG-0000000Bby5-05AH;
-	Tue, 01 Jul 2025 16:50:14 +0300
-Date: Tue, 1 Jul 2025 16:50:13 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] i2c: designware: Use polling by default when
- there is no irq resource
-Message-ID: <aGPnlWbWn8NyTNFM@smile.fi.intel.com>
-References: <20250701122252.2590230-1-heikki.krogerus@linux.intel.com>
- <20250701122252.2590230-2-heikki.krogerus@linux.intel.com>
- <aGPXwll6Hh2cZfnp@smile.fi.intel.com>
- <aGParHQ3GSdAA8rL@kuha.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LSLLYyNu"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 561DqRDe3641037;
+	Tue, 1 Jul 2025 08:52:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1751377947;
+	bh=FTF/AEIXXqhNtk5GjBm/k+4avWMMlLyOk1QXMjnzEzw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=LSLLYyNuy85WTCdydaSVQob0q35nEjejDPwacsHg1QZYspq75ShyOIWbxaCZB77gp
+	 vdZBNkkkYyn4B2dKah4I68tzykGmxL8wrzsXuWoYcBZ1ytAQHfF87zDjlXUnj2jXRz
+	 vHvkcBtjJ4EBBUOna4COPqqL3fVvXPC9dDXzhfKc=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 561DqQUW274646
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 1 Jul 2025 08:52:26 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 1
+ Jul 2025 08:52:26 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 1 Jul 2025 08:52:26 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 561DqLhA1660820;
+	Tue, 1 Jul 2025 08:52:23 -0500
+Message-ID: <5ed30153-53e0-4f1f-9c45-2f2530b9034e@ti.com>
+Date: Tue, 1 Jul 2025 19:22:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aGParHQ3GSdAA8rL@kuha.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] drm/tidss: oldi: Add atomic_check hook for oldi
+ bridge
+To: Jayesh Choudhary <j-choudhary@ti.com>, <jyri.sarha@iki.fi>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ideasonboard.com>, <mwalle@kernel.org>
+CC: <airlied@gmail.com>, <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>
+References: <20250701095541.190422-1-j-choudhary@ti.com>
+ <20250701095541.190422-4-j-choudhary@ti.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <20250701095541.190422-4-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Jul 01, 2025 at 03:55:08PM +0300, Heikki Krogerus wrote:
-> On Tue, Jul 01, 2025 at 03:42:42PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jul 01, 2025 at 03:22:48PM +0300, Heikki Krogerus wrote:
-
-...
-
-> > > +	u32 flags = (uintptr_t)device_get_match_data(&pdev->dev);
-> > 
-> > > +	irq = platform_get_irq_optional(pdev, 0);
-> > > +	if (irq == -ENXIO)
-> > > +		flags |= ACCESS_POLLING;
-> > > +	else if (irq < 0)
-> > >  		return irq;
-> > 
-> > >  	if (device_property_present(device, "wx,i2c-snps-model"))
-> > > +		flags = MODEL_WANGXUN_SP | ACCESS_POLLING;
-> > 
-> > Now I'm a bit puzzled why do we need to add this flag explicitly here?
-> > Does Wnagxun provides an IRQ and chooses at the same time to poll?
-> > Shouldn't this patch rather fix that?
+On 01/07/25 15:25, Jayesh Choudhary wrote:
+> Since OLDI consumes DSS VP clock directly as serial clock, certain
+> checks cannot be performed in tidss driver which should be checked
+> in oldi driver. Add check for mode clock and set the curr_max_pclk
+> field for tidss in case the VP is OLDI.
 > 
-> No. I do not want to touch the behavior here. The flags were
-> overwritten and continue to be overwritten.
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>   drivers/gpu/drm/tidss/tidss_oldi.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
 > 
-> I will propose an improvement for that together with some other
-> modifications to this file later, but those are out side the scope of
-> this series.
+> diff --git a/drivers/gpu/drm/tidss/tidss_oldi.c b/drivers/gpu/drm/tidss/tidss_oldi.c
+> index 63e07c8edeaa..a1f5fb39b32c 100644
+> --- a/drivers/gpu/drm/tidss/tidss_oldi.c
+> +++ b/drivers/gpu/drm/tidss/tidss_oldi.c
+> @@ -309,6 +309,29 @@ static u32 *tidss_oldi_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
+>   	return input_fmts;
+>   }
+>   
+> +static int tidss_oldi_bridge_atomic_check(struct drm_bridge *bridge,
+> +					  struct drm_bridge_state *bridge_state,
+> +					  struct drm_crtc_state *crtc_state,
+> +					  struct drm_connector_state *conn_state)
+> +{
+> +	struct tidss_oldi *oldi = drm_bridge_to_tidss_oldi(bridge);
+> +	struct drm_display_mode *adjusted_mode;
+> +	unsigned long round_clock;
+> +
+> +	adjusted_mode = &crtc_state->adjusted_mode;
+> +
+> +	if (adjusted_mode->clock > oldi->tidss->curr_max_pclk[oldi->parent_vp]) {
+> +		round_clock = clk_round_rate(oldi->serial, adjusted_mode->clock * 7 * 1000);
+> +
+> +		if (dispc_pclk_diff(adjusted_mode->clock * 7 * 1000, round_clock) > 5)
+> +			return -EINVAL;
+> +
+> +		oldi->tidss->curr_max_pclk[oldi->parent_vp] = round_clock;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct drm_bridge_funcs tidss_oldi_bridge_funcs = {
+>   	.attach	= tidss_oldi_bridge_attach,
+>   	.atomic_pre_enable = tidss_oldi_atomic_pre_enable,
+> @@ -317,6 +340,7 @@ static const struct drm_bridge_funcs tidss_oldi_bridge_funcs = {
+>   	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+>   	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+>   	.atomic_reset = drm_atomic_helper_bridge_reset,
+> +	.atomic_check = tidss_oldi_bridge_atomic_check,
 
-Sure.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Nitpick: looks like some mismatch in naming convention.
+We don't use bridge for other atomic calls for e.g. 
+tidss_oldi_atomic_pre_enable, tidss_oldi_atomic_post_disable so maybe 
+change those too ?
 
+With suggested change,
 
+Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
+
+Regards
+Devarsh
+
+>   };
+>   
+>   static int get_oldi_mode(struct device_node *oldi_tx, int *companion_instance)
