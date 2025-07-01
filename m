@@ -1,107 +1,234 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AE526E6F1;
-	Tue,  1 Jul 2025 13:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD881537DA;
+	Tue,  1 Jul 2025 13:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375637; cv=none; b=JeZ7QzKVL4OSCik9e+h2B+XXusxXrAcN5ehjwqMQugVQQ2wPZatT4z/Y0+resggRCNcpgUnrTSzCnBWujSSkV4ByxHsoUhwj+miYjud+3LjwjAPT85TYwwnOEIwwC1/R6ZBjVcb19UNjynEiYd6I8CHCRWN6R0iZgJBtqOQ4iLA=
+	t=1751375832; cv=none; b=pMXondlQzXdT6HcahpBaX6iwcE3dEynF3YEJoxuyFz++PY5rMz96NOH/D7yXeUBqS5fr7icifUG/OyEMBNJQfwZ1M4v1nNI2rxTfEzOZgImNE7FJSc4/MtdTlWksh+H59js9960nJ1w9cWeF0uNtwV3Hjj25kLTEFZVViz8jAbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375637; c=relaxed/simple;
-	bh=kt4fZzanv5xynkKpz7PiMUXYLDom31BolNA3hRXpcw0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=aoZDBBBuWD+V4YuNhKxFJoe0Ki2NVKNjAUozTT/g+0FpN3b8eMBF+Vk78msk2Tx8ORXWkkp4A21kmIw2Eh+rd92TkNiFob1mn+9G6IMb99ybs7NBAUQWqQfcs8iy2HjWXMt7Z+WKrHyRhkaOSOQDkO71qonMyZHV61JhhW0nQZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dRk5eqrY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fSf6Ko16; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dRk5eqrY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fSf6Ko16"
-Date: Tue, 01 Jul 2025 13:13:53 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751375634;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXWlzwR4gtdD31vgnLVfx/H2PcB8dGQ408FdavLjdhM=;
-	b=dRk5eqrYGvHsfOgr9foXY8E/1CiZbAYK3adQ5qnykV92okxghp2LVWnamRbcwVKqlnHFwe
-	OTLXSRIfjashiwU6R/eXap5E8fRD1gRghiV6YhHYvyWEu1rxrst5nOHw1pjnE0dX7Cs8/C
-	z1Bkwnp8/EywEO5nP4G8RO8RiNzPEzEP7coR77IgJw8ODC8glMbqnVXNWT4PYHWDXsBVut
-	pXLRxC80KXTxRgHQ6zcU6eLWlQ0EbnoDc9ov2mCrk5BQU0XVoKf6a3M1vHFzikXPvKJQEg
-	6YJbjArAWG92vIaliEzKr8H6biCIV95sDe42jPp7/Zm8uFXnI8QWOBkb+eEKIA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751375634;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hXWlzwR4gtdD31vgnLVfx/H2PcB8dGQ408FdavLjdhM=;
-	b=fSf6Ko16etUPKABLO3SiX4QscpPprjAnJBPY5rVeSsx4wRCEemhcAwgKG4m95PUYHOoa56
-	gozenT7Hw1ZDmzCA==
-From: "tip-bot2 for Heiko Carstens" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool: Add missing endian conversion to
- read_annotate()
-Cc: Heiko Carstens <hca@linux.ibm.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250630131230.4130185-1-hca@linux.ibm.com>
-References: <20250630131230.4130185-1-hca@linux.ibm.com>
+	s=arc-20240116; t=1751375832; c=relaxed/simple;
+	bh=clF/opN+ntpR2Ve2PNZbytjYZSh0addA+ndqVcX3MDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lsvPoZ31b2r50zBasGnHhJn/NWmhU85xY7NGf60CFRDzoy+qOLlC5s3M8LMWvwliDo1bEii+LIKsdJg/xahCIUikJTkNr48CGNuAR/W/G+HHMVomI5gU7gT2ju8S+jXEGsIpmvhfGO7KNhYleM46nb0nT1Csa/e3rsbr8Ps7jR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bWk5S6F5Xz13Mh9;
+	Tue,  1 Jul 2025 21:14:36 +0800 (CST)
+Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
+	by mail.maildlp.com (Postfix) with ESMTPS id 834261402C1;
+	Tue,  1 Jul 2025 21:17:05 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
+ (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 1 Jul
+ 2025 21:17:04 +0800
+Message-ID: <d9a5775e-afde-49ec-9c20-7613c4ea0cab@huawei.com>
+Date: Tue, 1 Jul 2025 21:17:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175137563313.406.6298042704364318030.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
+ s_mb_last_group
+To: Jan Kara <jack@suse.cz>
+CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, Baokun Li
+	<libaokun1@huawei.com>
+References: <20250623073304.3275702-1-libaokun1@huawei.com>
+ <20250623073304.3275702-4-libaokun1@huawei.com>
+ <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
+ <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
+ <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
+ <db4b9d71-c34d-4315-a87d-2edf3bbaff2d@huawei.com>
+ <e2dgjtqvqjapir5xizb5ixkilhzr7fm7m7ymxzk6ixzdbwxjjs@24n4nzolye77>
+ <272e8673-36a9-4fef-a9f1-5be29a57c2dc@huawei.com>
+ <kvgztznp6z2gwuujrw5vtklfbmq3arjg54bpiufmxdwmuwjliw@og7qkacbdtax>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <kvgztznp6z2gwuujrw5vtklfbmq3arjg54bpiufmxdwmuwjliw@og7qkacbdtax>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500013.china.huawei.com (7.185.36.188)
 
-The following commit has been merged into the objtool/urgent branch of tip:
+On 2025/7/1 20:21, Jan Kara wrote:
+> On Tue 01-07-25 10:39:53, Baokun Li wrote:
+>> On 2025/7/1 0:32, Jan Kara wrote:
+>>> On Mon 30-06-25 17:21:48, Baokun Li wrote:
+>>>> On 2025/6/30 15:47, Jan Kara wrote:
+>>>>> On Mon 30-06-25 11:48:20, Baokun Li wrote:
+>>>>>> On 2025/6/28 2:19, Jan Kara wrote:
+>>>>>>> On Mon 23-06-25 15:32:51, Baokun Li wrote:
+>>>>>>>> After we optimized the block group lock, we found another lock
+>>>>>>>> contention issue when running will-it-scale/fallocate2 with multiple
+>>>>>>>> processes. The fallocate's block allocation and the truncate's block
+>>>>>>>> release were fighting over the s_md_lock. The problem is, this lock
+>>>>>>>> protects totally different things in those two processes: the list of
+>>>>>>>> freed data blocks (s_freed_data_list) when releasing, and where to start
+>>>>>>>> looking for new blocks (mb_last_group) when allocating.
+>>>>>>>>
+>>>>>>>> Now we only need to track s_mb_last_group and no longer need to track
+>>>>>>>> s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
+>>>>>>>> two are consistent, and we can ensure that the s_mb_last_group read is up
+>>>>>>>> to date by using smp_store_release/smp_load_acquire.
+>>>>>>>>
+>>>>>>>> Besides, the s_mb_last_group data type only requires ext4_group_t
+>>>>>>>> (i.e., unsigned int), rendering unsigned long superfluous.
+>>>>>>>>
+>>>>>>>> Performance test data follows:
+>>>>>>>>
+>>>>>>>> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
+>>>>>>>> Observation: Average fallocate operations per container per second.
+>>>>>>>>
+>>>>>>>>                        | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
+>>>>>>>>      Disk: 960GB SSD   |-------------------------|-------------------------|
+>>>>>>>>                        | base  |    patched      | base  |    patched      |
+>>>>>>>> -------------------|-------|-----------------|-------|-----------------|
+>>>>>>>> mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
+>>>>>>>> mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
+>>>>>>>>
+>>>>>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>>>>>>> ...
+>>>>>>>
+>>>>>>>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+>>>>>>>> index 5cdae3bda072..3f103919868b 100644
+>>>>>>>> --- a/fs/ext4/mballoc.c
+>>>>>>>> +++ b/fs/ext4/mballoc.c
+>>>>>>>> @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+>>>>>>>>      	ac->ac_buddy_folio = e4b->bd_buddy_folio;
+>>>>>>>>      	folio_get(ac->ac_buddy_folio);
+>>>>>>>>      	/* store last allocated for subsequent stream allocation */
+>>>>>>>> -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+>>>>>>>> -		spin_lock(&sbi->s_md_lock);
+>>>>>>>> -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+>>>>>>>> -		spin_unlock(&sbi->s_md_lock);
+>>>>>>>> -	}
+>>>>>>>> +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
+>>>>>>>> +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
+>>>>>>>> +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
+>>>>>>> Do you really need any kind of barrier (implied by smp_store_release())
+>>>>>>> here? I mean the store to s_mb_last_group is perfectly fine to be reordered
+>>>>>>> with other accesses from the thread, isn't it? As such it should be enough
+>>>>>>> to have WRITE_ONCE() here...
+>>>>>> WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
+>>>>>> that variable reads/writes access values directly from L1/L2 cache rather
+>>>>>> than registers.
+>>>>> I agree READ_ONCE() / WRITE_ONCE() are about compiler optimizations - in
+>>>>> particular they force the compiler to read / write the memory location
+>>>>> exactly once instead of reading it potentially multiple times in different
+>>>>> parts of expression and getting inconsistent values, or possibly writing
+>>>>> the value say byte by byte (yes, that would be insane but not contrary to
+>>>>> the C standard).
+>>>> READ_ONCE() and WRITE_ONCE() rely on the volatile keyword, which serves
+>>>> two main purposes:
+>>>>
+>>>> 1. It tells the compiler that the variable's value can change unexpectedly,
+>>>>      preventing the compiler from making incorrect optimizations based on
+>>>>      assumptions about its stability.
+>>>>
+>>>> 2. It ensures the CPU directly reads from or writes to the variable's
+>>>>      memory address. This means the value will be fetched from cache (L1/L2)
+>>>>      if available, or from main memory otherwise, rather than using a stale
+>>>>      value from a CPU register.
+>>> Yes, we agree on this.
+>>>
+>>>>>> They do not guarantee that other CPUs see the latest values. Reading stale
+>>>>>> values could lead to more useless traversals, which might incur higher
+>>>>>> overhead than memory barriers. This is why we use memory barriers to ensure
+>>>>>> the latest values are read.
+>>>>> But smp_load_acquire() / smp_store_release() have no guarantee about CPU
+>>>>> seeing latest values either. They are just speculation barriers meaning
+>>>>> they prevent the CPU from reordering accesses in the code after
+>>>>> smp_load_acquire() to be performed before the smp_load_acquire() is
+>>>>> executed and similarly with smp_store_release(). So I dare to say that
+>>>>> these barries have no (positive) impact on the allocation performance and
+>>>>> just complicate the code - but if you have some data that show otherwise,
+>>>>> I'd be happy to be proven wrong.
+>>>> smp_load_acquire() / smp_store_release() guarantee that CPUs read the
+>>>> latest data.
+>>>>
+>>>> For example, imagine a variable a = 0, with both CPU0 and CPU1 having
+>>>> a=0 in their caches.
+>>>>
+>>>> Without a memory barrier:
+>>>> When CPU0 executes WRITE_ONCE(a, 1), a=1 is written to the store buffer,
+>>>> an RFO is broadcast, and CPU0 continues other tasks. After receiving ACKs,
+>>>> a=1 is written to main memory and becomes visible to other CPUs.
+>>>> Then, if CPU1 executes READ_ONCE(a), it receives the RFO and adds it to
+>>>> its invalidation queue. However, it might not process it immediately;
+>>>> instead, it could perform the read first, potentially still reading a=0
+>>>> from its cache.
+>>>>
+>>>> With a memory barrier:
+>>>> When CPU0 executes smp_store_release(&a, 1), a=1 is not only written to
+>>>> the store buffer, but data in the store buffer is also written to main
+>>>> memory. An RFO is then broadcast, and CPU0 waits for ACKs from all CPUs.
+>>>>
+>>>> When CPU1 executes smp_load_acquire(a), it receives the RFO and adds it
+>>>> to its invalidation queue. Here, the invalidation queue is flushed, which
+>>>> invalidates a in CPU1's cache. CPU1 then replies with an ACK, and when it
+>>>> performs the read, its cache is invalid, so it reads the latest a=1 from
+>>>> main memory.
+>>> Well, here I think you assume way more about the CPU architecture than is
+>>> generally true (and I didn't find what you write above guaranteed neither
+>>> by x86 nor by arm64 CPU documentation). Generally I'm following the
+>>> guarantees as defined by Documentation/memory-barriers.txt and there you
+>>> can argue only about order of effects as observed by different CPUs but not
+>>> really about when content is fetched to / from CPU caches.
+>> Explaining why smp_load_acquire() and smp_store_release() guarantee the
+>> latest data is read truly requires delving into their underlying
+>> implementation details.
+>>
+>> I suggest you Google "why memory barriers are needed." You might find
+>> introductions to concepts like 'Total Store Order', 'Weak Memory Ordering',
+>> MESI, store buffers, and invalidate queue, along with the stories behind
+>> them.
+> Yes, I know these things. Not that I'd be really an expert in them but I'd
+> call myself familiar enough :). But that is kind of besides the point here.
+> What I want to point out it that if you have code like:
+>
+>    some access A
+>    grp = smp_load_acquire(&sbi->s_mb_last_group)
+>    some more accesses
+>
+> then the CPU is fully within it's right to execute them as:
+>
+>    grp = smp_load_acquire(&sbi->s_mb_last_group)
+>    some access A
+>    some more accesses
+>
+> Now your *particular implementation* of the ARM64 CPU model may never do
+> that similarly as no x86 CPU currently does it but some other CPU
+> implementation may (e.g. Alpha CPU probably would, as much as that's
+> irrevelent these days :). So using smp_load_acquire() is at best a
+> heuristics that may happen to help using more fresh value for some CPU
+> models but it isn't guaranteed to help for all architectures and all CPU
+> models Linux supports.
+Yes, it's true that the underlying implementation of
+smp_load_acquire() can differ somewhat across various
+processor architectures.
+>
+> So can you do me a favor please and do a performance comparison of using
+> READ_ONCE / WRITE_ONCE vs using smp_load_acquire / smp_store_release on
+> your Arm64 server for streaming goal management? If smp_load_acquire /
+> smp_store_release indeed bring any performance benefit for your servers, we
+> can just stick a comment there explaining why they are used. If they bring
+> no measurable benefit I'd put READ_ONCE / WRITE_ONCE there for code
+> simplicity. Do you agree?
+>
+> 								Honza
 
-Commit-ID:     ccdd09e0fc0d5ce6dfc8360f0c88da9a5045b6ea
-Gitweb:        https://git.kernel.org/tip/ccdd09e0fc0d5ce6dfc8360f0c88da9a5045b6ea
-Author:        Heiko Carstens <hca@linux.ibm.com>
-AuthorDate:    Mon, 30 Jun 2025 15:12:30 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 01 Jul 2025 15:02:04 +02:00
+Okay, no problem. I'll get an ARM server from the resource pool to test
+the difference between the two. If there's no difference, replacing them
+with READ_ONCE/WRITE_ONCE would be acceptable.
 
-objtool: Add missing endian conversion to read_annotate()
 
-Trying to compile an x86 kernel on big endian results in this error:
+Cheers,
+Baokun
 
-net/ipv4/netfilter/iptable_nat.o: warning: objtool: iptable_nat_table_init+0x150: Unknown annotation type: 50331648
-make[5]: *** [scripts/Makefile.build:287: net/ipv4/netfilter/iptable_nat.o] Error 255
-
-Reason is a missing endian conversion in read_annotate().
-Add the missing conversion to fix this.
-
-Fixes: 2116b349e29a ("objtool: Generic annotation infrastructure")
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250630131230.4130185-1-hca@linux.ibm.com
----
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f23bdda..d967ac0 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2318,6 +2318,7 @@ static int read_annotate(struct objtool_file *file,
- 
- 	for_each_reloc(sec->rsec, reloc) {
- 		type = *(u32 *)(sec->data->d_buf + (reloc_idx(reloc) * sec->sh.sh_entsize) + 4);
-+		type = bswap_if_needed(file->elf, type);
- 
- 		offset = reloc->sym->offset + reloc_addend(reloc);
- 		insn = find_insn(file, reloc->sym->sec, offset);
