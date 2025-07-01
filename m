@@ -1,82 +1,99 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859218C12;
-	Tue,  1 Jul 2025 02:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86DF72600
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751335388; cv=none; b=SDzyMj7lxQIK2dQ6VjYU5wUHWfmjnmH6sX7ygtzg/argkPmB/xW+bKsQEWNH9ntdf5X3Y/FeokwmJGLN39ZHEiotweKUl63OIvs5fOt0oUtxhgYs24N4HaGoKVKo8aU+oI9eqgQx3uduiwHJGmMhaHUOqGZSujTulgc6UV+FAa4=
+	t=1751335594; cv=none; b=QOL/QutYO9BRpRYJyTkOjJLW1wMWj6yPZ31f5syfu1VgXNqk70ZqX/587ID8iApDGPNYO1OIICKMyKxKZt1UcMV6JfkYBPCutea4vYSbQSli/rf+oV1ODEpfVT5YVRmbZP/LNNOHJA2FlfeCDZ8lTtrRVO6lmIFQpIPRxINHsdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751335388; c=relaxed/simple;
-	bh=N9azdm4DxVdewLUb+pWeRsyf3KqubtqYELLkbK3M4Mc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rUO/G5VlMTWKvzgLqrVa3ZBhI0sHNTGqdHltJufDMYJ7Zg3m7dDvxp39inhducDyOWtJBxKe+syfoDDF4bTOdW9U0OY8GTjlEXOrGA+F608Rpx+FzFpfGPlBSez3r7cw3lj3rSIhmw1rD98bD3h8WYNZL+WODncIt940xqORW4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bWRBb3q9JzKHMwB;
-	Tue,  1 Jul 2025 10:03:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E45301A1024;
-	Tue,  1 Jul 2025 10:03:01 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP2 (Coremail) with SMTP id Syh0CgBHfArTQWNosTYVAQ--.33413S3;
-	Tue, 01 Jul 2025 10:03:01 +0800 (CST)
-Subject: Re: [PATCH 16/23] md/md-llbitmap: implement bit state machine
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-17-yukuai1@huaweicloud.com>
- <c76f44c0-fc61-41da-a16b-5a3510141487@redhat.com>
- <cf6d7be1-af73-216c-b2ab-b34a8890450d@huaweicloud.com>
- <CALTww2-RT64+twHo3=Djpuj81jArmePQShGynDrRtYab3c1i2w@mail.gmail.com>
- <93166d88-710f-c416-b009-5d57f870b152@huaweicloud.com>
- <CALTww2820X=HU3Zuu+z19oCaPL+oQ4bMNostoAgfDk1-3nB3aQ@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <ede16ca4-96ef-e8e6-45fd-1c88cddc7f4a@huaweicloud.com>
-Date: Tue, 1 Jul 2025 10:02:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1751335594; c=relaxed/simple;
+	bh=XrwXszs+4CKh3uvk7NsR2H8vx1ReZK1MCq5Q7S9Pyfo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DGf9jWTLCj7xbtsMtKyPoZ5FTMvXP155mENPEwhnNn6HiGweX0x6oPifIPq/VQNOQmT4eVbUTzqIOxfYVFttEA/B3kBWtlnRqNEyYEKaoL5b4q+6tFajMhvUwmLABYrZnOZUVhu1jnyV4T3SIRKAxS6BEZWw6ariYYN1wUltuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FoUNe/L7; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FoUNe/L7"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so4732564a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751335591; x=1751940391; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fN4lVWlc90R79Gu5dER97dXUSpIGy23I1H05DCfQFHA=;
+        b=FoUNe/L77KQY/JcKHutwuE216lXD2ALSlzoZv6xF1E8HCibUylC1YE+eiHLxZDZbG9
+         siEPqcZ+vhBXNfwS4SKR3NrIMi6uAdsWKzzj8NO/7p/D9Dx8HzmeJRFvZsCoTUpZQSIc
+         I2dPxkMe9tvrpttFpJfQtKJj9VGcBB6NjZ0yA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751335591; x=1751940391;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fN4lVWlc90R79Gu5dER97dXUSpIGy23I1H05DCfQFHA=;
+        b=FRfH59egzYKTfUjz5N0G4RbLkVANgQiOKDUlUOI9dXTHuKG2ka5YmfZ5WhPTSGEzjY
+         l93yCF3HN+gIyZ2gwL936NsKIauk/tiVDgkPU615sC/yW8aWaaUI1TlUsP9zn+wm6D14
+         QeNwyBKeTt1dE5AcZQuApqGDGDrCFCWqNG19mFg3yOqDg21FF5YPJkwj1A/N/28kHV6n
+         O6lW+dVb4s5o3GozrY3djfj78qLv/evNL8ETZFrjDuzBrOdF4Xw+G6BedyXOMTG+UbbP
+         n4XnPqG5md7n7QE3ATy6R3cZqTiNuTmYGxV5SrJ3FKno1h9QyiDnXLmCF1cf8dR/SXKs
+         rsdw==
+X-Gm-Message-State: AOJu0YzqQeCWf5o89LF1dr8SRmqZ+vtZl6Zm/ga1HfFZMKhk2SVEAgPM
+	YYic38ELxAuDhmq0WUphX8KuvebF58xtT4qeqGiil+I/0tfT3SrvxJQ+3b88Ys/q6RHsiXj8VKj
+	EZKdRKtA=
+X-Gm-Gg: ASbGncsCBnfnew3sfzltyk3MA3Q49i4ftJ6OolBjtz01KD1W1tZi7MdsGHPqMlUGr+p
+	/CMO0/JHkCwcTN+cum/g1IHxBDx4ehp7Jve5tHMlDvcWUBn5DoZ465sBZismxR4EaewvAjPbV8q
+	R2xneAi79kEBsDZnt8kFpM3s+9yo/UnLP4WvRbWj/Z2plvwr5HDbjL29EROGoke81zz7eTg5L+o
+	dHoJWdViebWEw/xmf+o1fxjIWk/VjGA0y76HhSPYG4pr5I4Uf6Gg2rox94iexDifx6/bYbuz1TZ
+	2x1720jsaSikCvU9Utzz3oIPnSmkZt66aCVoCKqGnR19D0uBkLKYG+idgXPOGMLsF4VwMez68w0
+	3dIS0ZwVly/OkGv4WWrG4CqJsK0IOBPMvD7Lc
+X-Google-Smtp-Source: AGHT+IEoR5JKP7qSU2EBjXlqcX7l2iiGuwCzNS0R8WAGQGpDFC5/FFD5Yp3O3Epstcs0Yl+tkecPcA==
+X-Received: by 2002:a05:6402:3553:b0:601:ad95:ca6d with SMTP id 4fb4d7f45d1cf-60c88db5a47mr13621085a12.8.1751335590813;
+        Mon, 30 Jun 2025 19:06:30 -0700 (PDT)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c831aa9d0sm6929666a12.46.2025.06.30.19.06.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 19:06:29 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso4655356a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:06:29 -0700 (PDT)
+X-Received: by 2002:a05:6402:50cf:b0:607:2d8a:9b2a with SMTP id
+ 4fb4d7f45d1cf-60c88ed9d2bmr13448124a12.31.1751335588910; Mon, 30 Jun 2025
+ 19:06:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww2820X=HU3Zuu+z19oCaPL+oQ4bMNostoAgfDk1-3nB3aQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBHfArTQWNosTYVAQ--.33413S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
-	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
-	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
-	oOJ5UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20250701005321.942306427@goodmis.org>
+In-Reply-To: <20250701005321.942306427@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 30 Jun 2025 19:06:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
+X-Gm-Features: Ac12FXyRoMfhGWW7-qb33RWCFdUsK39k_kEcOT1weCLo6TBUE8tUjRhvy0zUkHM
+Message-ID: <CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
+Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding infrastructure
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> This is the first patch series of a set that will make it possible to be able
+> to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
+> doing this.
 
-在 2025/07/01 9:55, Xiao Ni 写道:
-> If there is a filesystem and the write io returns. The discard must
-> see the memory changes without any memory barrier apis?
+You have a '[1]' to indicate there's a link to what SFrames are.
 
-It's the filesystem itself should manage free blocks, and gurantee
-discard can only be issued to free blocks that is not used at all.
+But no such link actually exists in this email. Hmm?
 
-Thanks,
-Kuai
-
+           Linus
