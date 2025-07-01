@@ -1,92 +1,136 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735C772627;
-	Tue,  1 Jul 2025 07:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B0928F1
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751354892; cv=none; b=NO7CBtgCQqj9PjnTDT7GLIYv4N11pnRiGV21ge4gC56UNbdGevtFB0fjbL0QjvOewiJZ8mnhhy/eTt/g3iRIVPaTH9upS1c9PCPCx4vC85FJtBt1DsrIDgtsPB/l3xgoyXvR0STC59BMDxblI65JL7sPqMZ1ul96+C0LqHPfLQI=
+	t=1751355075; cv=none; b=MB6cLZd9yXi5A9uBoMzT9sQFzZKYI25F1SQDZAHMQ3pBWjAomH0Jgt3Ap7/CVa3AyXSN7ZnCtJEUV0eOCh9llVwzIoJUZJjQJbu7PAYgEl7y5PxPEzDuKgmXr7hIoCEJRd7+ESa0LYtv3Q8be+Dn67racgwI2WVlW+petRmmhU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751354892; c=relaxed/simple;
-	bh=YDEbnGhuOWLsVA+sCNJxV/TpybCXlMAB4+pgRB4AFgQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VoLulGQ7m6deCn8WSj1nKxct2k+BnPCjJWmcwivO8C+54LHZwLpX5d8MygqIyKl7aaSCv0wQ/wdr+XzFTRDkhuwkJ+1JXdWja5QA58K3FLMjJpMdKQg7hq4OkRqKJtRA8BJJm76xoYFPMlEYazk55C7mkVCTqDA1hEEGr3G8o5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=GfhxbFUk; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1751355075; c=relaxed/simple;
+	bh=UEJCp0kLrVN60JijFimfY4cx5ReWcbWGz2tn84YNl9o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HrDNTrQCznKseQm6/o7xPKw34o0lwGUlP/f9243RwmBRx2icjztTBRK8xA1ELDn2FfKqXK5XQEUrsoDBA6eSZfFG01lOzZX2Tbjo6Ns3MdLE3CVh4nQxQ2cFF3wf5fUC/ivP6nqR9xD4F9G6EXJW3zJ7/UtFztyI7lYQQjesyWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VJiOoAxv; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="GfhxbFUk"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uWVOt-00DBu9-Kt; Tue, 01 Jul 2025 09:27:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=Rkdk2rPksLpTTEM7JfKIBHo3x2rKNHPrlN3G2XHmJyE=; b=GfhxbFUkoy8GS/INc8QHy3peIx
-	zAk3bRrn5f22LX1XhffCbRVtSG+IYOYUXmC1eqG8GcYmhckSwbJ6DPzJVW2/NkXn6DVcg571sDI8W
-	SBaiZX9KdVOX2NxHUQvl+wMDViHZz+OPBtof82UPBLiSEM906u4K3k6c1hYe96ZxN3+JUQszHcP30
-	j7791qWTu0J4Msgw5d5I38wcYToDoRC4UNlZx+N+vEju0IE6ooDRvIDj1jqHLXZ0yOUpE4D9BC9kb
-	7m3+oUF+k2A1/XqBip9cjSX6OsFA5oEZIEudkXa+7eB/myI6rAi/i8cQTYcTNp3/as9IzM1JwI7rp
-	7p/Am+Xw==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uWVOs-0000QG-4G; Tue, 01 Jul 2025 09:27:30 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uWVOZ-001vyL-CH; Tue, 01 Jul 2025 09:27:11 +0200
-Message-ID: <beea4b9f-657f-4f98-a853-e40a503e2274@rbox.co>
-Date: Tue, 1 Jul 2025 09:27:09 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VJiOoAxv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1751355065;
+	bh=UEJCp0kLrVN60JijFimfY4cx5ReWcbWGz2tn84YNl9o=;
+	h=From:Date:Subject:To:Cc:From;
+	b=VJiOoAxvI4d6W5/5+ZhHQ/ernRfdMMl2DaI1jos8owUcBcjPsZwg9kLwsbJzujNbg
+	 OgchCqqWdUBrQALiSqnC2iode9QtODK8isPC9f5cf9nwOd+VsjTFjvQWXyak9os19N
+	 JwktkrHuxFrADF21STGu0v+kNwoqVEYzmyp65HXKcnPSnqXymBIU7lunzYhoBq5D4I
+	 Cjb13lDcn1o+Hs53HbnoFiFLxusMEL+5Lv9+J0o1+7V2Js/433DSYarEhgDaqDIBLR
+	 hEyrinptgSfMLmS3yti1R8jWLWDiQyhVofs7vxC9ZmiZlhAiWjvL8G5/0JoaJgEhkh
+	 /FvG2KYC5KynQ==
+Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laeyraud)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 82E7717E0342;
+	Tue,  1 Jul 2025 09:31:04 +0200 (CEST)
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Date: Tue, 01 Jul 2025 09:30:40 +0200
+Subject: [PATCH] drm/mediatek: dsi: Fix DSI host and panel bridge
+ pre-enable order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net-next v2 0/9] net: Remove unused function parameters in
- skbuff.c
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>,
- Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Wenjia Zhang <wenjia@linux.ibm.com>,
- Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>,
- Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
- <20250630181847.525a0ad6@kernel.org>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <20250630181847.525a0ad6@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250701-mediatek-drm-fix-dsi-panel-init-v1-1-7af4adb9fdeb@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAJ+OY2gC/zWNQQqDMBBFrxJm3YGo0YVXKS7GZGyHNtEmsQji3
+ RsqLt/n894OiaNwgl7tEPkrSeZQoLopsE8KD0ZxhaHWdau7RqNnJ5T5hS56nGRDlwQXCvxGCZK
+ xIjO2jbFGUwfFskQur3/hPpwc+bOWUD5HGCkx2tl7yb0KvGW8YjAcxw/h6vdiogAAAA==
+X-Change-ID: 20250630-mediatek-drm-fix-dsi-panel-init-1a4b534c40a6
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Aradhya Bhatia <a-bhatia1@ti.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751355064; l=2696;
+ i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
+ bh=UEJCp0kLrVN60JijFimfY4cx5ReWcbWGz2tn84YNl9o=;
+ b=OeqpFOdg0cEKjdsvCTKe8qTt2Imn73FY6gR8H8q+YymCd96FwzBIHhaQFOKIpSqxKMq4JJF0o
+ o1MhvzJiSwvDRRZOMy96lZNGYutb40j6mRzmLUdoIpxYeK82akXmJy9
+X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
+ pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
 
-On 7/1/25 03:18, Jakub Kicinski wrote:
-> On Thu, 26 Jun 2025 10:33:33 +0200 Michal Luczaj wrote:
->> Couple of cleanup patches to get rid of unused function parameters around
->> skbuff.c, plus little things spotted along the way.
->>
->> Offshoot of my question in [1], but way more contained. Found by adding
->> "-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
->> skbuff.c warnings.
-> 
-> I feel a little ambivalent about the removal of the flags arguments.
-> I understand that they are unused now, but theoretically the operation
-> as a whole has flags so it's not crazy to pass them along.. Dunno.
+Since commit c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain
+pre-enable and post-disable"), the bridge pre_enable callbacks are now
+called before crtc enable, and the bridge post_disable callbacks after
+the crtc disable.
+In the mediatek-drm driver, this change leads to transfer errors on
+mtk_dsi_host_transfer callback processing during the panel bridge
+pre-enable sequence because the DSI host bridge pre_enable and CRTC
+enable sequences, that are enabling the required clocks and PHY using
+mtk_dsi_poweron function, are called after.
 
-I suspect you can say the same about @gfp. Even though they've both became
-irrelevant for the functions that define them. But I understand your
-hesitation. Should I post v3 without this/these changes?
+So, in order to fix this call order issue, request the DSI host bridge
+be pre-enabled before panel bridge by setting pre_enable_prev_first
+flag on DSI device bridge in the mtk_dsi_host_attach function.
 
-What's netdev's stance on using __always_unused in such cases?
+Fixes: c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
+Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+---
+This patch fixes an issue that can be observed on boards such as
+MediatekGenio 1200-EVK or 350-EVK with a kernel based on linux-next
+(tag: next-20250635) since commit c9b1150a68d9 ("drm/atomic-helper:
+Re-order bridge chain pre-enable and post-disable"). 
+In boot logs, there are multiples errors such as IRQ timeouts and
+panel init errors, leading the DSI panel not being enabled: 
 
-Thanks,
-Michal
+Example on Genio 1200-EVK:
+```
+[drm] Wait DSI IRQ(0x00000002) Timeout
+panel-himax-hx8279 1c008000.dsi.0: sending generic data b0 05 failed:
+  -62
+[drm] Wait DSI IRQ(0x00000008) Timeout
+[drm:mtk_dsi_host_transfer [mediatek_drm]] *ERROR* failed to switch cmd
+ mode
+panel-himax-hx8279 1c008000.dsi.0: sending DCS SET_DISPLAY_ON failed:
+  -62
+```
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index d7726091819c4762698b41060b3d4d8d27940238..0e2bcd5f67b767d92f2697a5b8183f67ee178a38 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -1002,6 +1002,12 @@ static int mtk_dsi_host_attach(struct mipi_dsi_host *host,
+ 			return PTR_ERR(dsi->next_bridge);
+ 	}
+ 
++	/*
++	 * set flag to request the DSI host bridge be pre-enabled before device bridge
++	 * in the chain, so the DSI host is ready when the device bridge is pre-enabled
++	 */
++	dsi->next_bridge->pre_enable_prev_first = true;
++
+ 	drm_bridge_add(&dsi->bridge);
+ 
+ 	ret = component_add(host->dev, &mtk_dsi_component_ops);
+
+---
+base-commit: c6a68d8f7b81a6ce8962885408cc2d0c1f8b9470
+change-id: 20250630-mediatek-drm-fix-dsi-panel-init-1a4b534c40a6
+
+Best regards,
+-- 
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
