@@ -1,109 +1,161 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE6927932F;
-	Tue,  1 Jul 2025 15:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C641946AA
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384884; cv=none; b=hDPiIYXVAiLeXELe+QWPGy7HAeKytH867R9BOyFtL9cbNgtpdy349e7cYvA+MAxwBuSVlHgZyN7i0tBuBDKkA50R6xNJNSdlrsTs/4ZbNYGb9TMKiTt/1MAhGWYYrUZZgxVhwOQsOjmx5KvkIjVCYxAeF/jCAlXA27jUZC6WGLk=
+	t=1751384945; cv=none; b=HpkNgeaRb4PxtVwcGLyTLvU+BPbIYszHJl6Yph6g3pCGPUyLkjjZtVxaeW9Df0qU2JngANBasDSIz04Vu0Q8v4qpLACLlz022KjGtv11zNIDxdP0ArFHK6TsJWYzBOxwrEyCk629zseaBRrm+ANjV/XHEvReEZh4JDZYepLJ7dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384884; c=relaxed/simple;
-	bh=BYKUkuKuZok2k151Lq0Rk/kgOX2cVc1bCNA0dzoEqSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qHgXjO/mqDo9dxQS6dwxTog8BOFbklAFa/pCGt+PM0CVjxWvRt11tz7kX/VLtEfIWPHrWO+T2Jy9WKU96sFehydNG52A6Ui+fXV4BuPZl26thJWeKKhcIZTokk7CScHoyzeg/whmPdg+kIE2mVQdZkQgRgWAu32jyEDtxjuhGLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YdTGdhLu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YdTGdhLu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EB08940E020E;
-	Tue,  1 Jul 2025 15:47:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id iroTVB6vc-os; Tue,  1 Jul 2025 15:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1751384874; bh=+/ExG4tE06IMdPfzSSj3t7/LJHzcBw9WIOBAEswCrHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YdTGdhLu96e0XrGyrWDJsSFPX/yHy21ZxhVMxDl+bQAzcDZyBAJMO9plL+P2K0iCk
-	 zGdHup6lJWyoohMqzuMgWbsqvdXwMSfgUfY5+Qy1utVIwq2luLejnG0QvrfxGpuV0J
-	 PgJ62jRNVfqX/CrwIurrUHy80b/nAna3g0z1ZVwhgVNRTsylcGiAkT5Sp1cUQ8hG6b
-	 GvQcakz7AGJQ0B7ogAw0ha8Mov+7+bZrBkYvhAdmu+ybaJ6ZZmCXTqVkCN8AVTlnZP
-	 hA7+7RaycoBlaM9pwfGUyNPOKjBJLJ2n7vLT/KLu7vjmgnP7B9kD4W89zA8w28Uvyt
-	 WtcOL1hRUQFQBWPxB0gFQiE4CCTDzXYvr8fFjxXt5CIB+0veSOEfFl39nN80xTIbPu
-	 kbEWVgzcOkzpFIX1rbzmnbnJBvZgmcPMls8YQ9ozoUPlDn7XSrhF7O5noB4l9FCKhS
-	 EQO3ygd/YDxH1QF2m4MFlbGXlFv7w10cYpfLb4FMYHcglwR/e2KohbOJO8H1gYROhJ
-	 2Q4JXVuqeSQVQQO6IxTDQRFF2GyiksHoDwbRqreAzbzEYyZyaLvWpjukcFUmiEA+BS
-	 Jv4buF1yG5UzFw6NAD9P+TdKG2mU46aClhEvZjQqL3UJw07ksqTjFu7wROULoCjOBQ
-	 b3mspAYQXofvqKS/6RN5J+VY=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7113040E01FC;
-	Tue,  1 Jul 2025 15:47:32 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:47:26 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com,
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com,
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
-	pbonzini@redhat.com, kvm@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
-	naveen.rao@amd.com, francescolavra.fl@gmail.com,
-	tiala@microsoft.com
-Subject: Re: [RFC PATCH v7 05/37] KVM: lapic: Change lapic regs base address
- to void pointer
-Message-ID: <20250701154726.GJaGQDDjGGDNpuqhFF@fat_crate.local>
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
- <20250610175424.209796-6-Neeraj.Upadhyay@amd.com>
+	s=arc-20240116; t=1751384945; c=relaxed/simple;
+	bh=yfxBUhmxm461rC9xXB26tOVK7O/g0vIMPXA+7y8WubM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=npzckHg9mgrnmPHlr5nJceRO5E8jqxi/r/5lIva/j/rxiSOIa5TZFB5PVMCihjAuSK1o68X6okRbznMcYeq3yokFBOSLh1W4TyTqNWezF+0XihFZUFzEuSI+FU1YQ3eIIxYngkkGMse/6etFJj9TcqwU1dTyTvC1nCv8a1hgsZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9475B1595;
+	Tue,  1 Jul 2025 08:48:46 -0700 (PDT)
+Received: from [10.1.30.206] (e137867.arm.com [10.1.30.206])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C85D3F66E;
+	Tue,  1 Jul 2025 08:48:59 -0700 (PDT)
+Message-ID: <599c677a-ace0-41fe-b264-51de0fa7badf@arm.com>
+Date: Tue, 1 Jul 2025 16:48:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250610175424.209796-6-Neeraj.Upadhyay@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: mtd: rawnand: atmel: ECC error after update to kernel 6.6
+To: Zixun LI <admin@hifiphile.com>
+References: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
+From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Cc: Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Richard Weinberger <richard@nod.at>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ SoC support' <linux-arm-kernel@lists.infradead.org>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+Organization: Arm Ltd.
+In-Reply-To: <CA+GyqebQnWQ3fj4Lrb4-hvzRpphuqw+jh4B9En1j2NDTNFumvQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 11:23:52PM +0530, Neeraj Upadhyay wrote:
-> Change lapic regs base address from "char *" to "void *" in KVM
-> lapic's set/reg helper functions. Pointer arithmetic for "void *"
-> and "char *" operate identically. With "void *" there is less
-> of a chance of doing the wrong thing, e.g. neglecting to cast and
-> reading a byte instead of the desired apic reg size.
+Hi,
 
-Please go through your commit messages and do
+I'm not really involved in this part of the kernel or drivers,
+but I took some time to look into it. Hopefully I'm not completely
+missing something !
 
-s/apic/APIC/g
+On 30/06/2025 15:38, Zixun LI wrote:
+> Hi,
+>
+> After updating our SAM9G25 device from kernel 3.16 to 6.6, we have
+> encountered UBIFS failures with ECC errors
+>
+> [...]
+>
+> After some diagnostics, I used devmem2 to compare SMC and PMECC
+> registers between the two kernels. All values match except for the
+> PMECC_CLK register, which is 2 in kernel 3.16 [1] and 0 in kernel 6.6
+> [2]. It appears the clock setting is missing since the kernel 4.14
+> refactor.
+>
+> According to the SAM9G25 datasheet this field must be programmed with 2.
+>
+> Manually setting PMECC_CLK to 2 (devmem2 0xffffe010 w 2) resolves the
+> nandtest issue.
+>
+> Is the clock setting moved to elsewhere after the refactor ?
 
-s/reg/register/g in human-readable text. I know this is talking about code but
-still - writing a commit message which reads like code is yucky.
+As far as I can tell, the setting of the *PMECC_CLK* was lost in
+f88fc122cc34 (mtd: nand: Cleanup/rework the atmel_nand driver),
+which was merged for 4.12.
 
-And all those abbreviations. You have a mish-mash of all lower letters and all
-caps and it reads weird.
+The register offset and values are  part of the defines it introduces
+but are unused, so they might have been forgotten.
+I couldn't find another place where this was done, and I think it would
+make sense for it to be done here still.
 
-Next patch too:
+The tricky part is that now the driver handles other PMECCs that do not have
+this register at all in their datasheets :
+  - SAMA5D2 series[3], page 713, 36.20 Register summary :
+      0x80 (0x10 offset) is marked reserved,
+  - SAMA5D4 series[4], page 512, Table 30-20 :
+      0x080 (0x10 offset) is marked reserved,
 
-"... for use in Secure AVIC apic driver..." why not "APIC" as a real
-abbreviation too?
+So I think it's best not to add this write back for all cases.
 
-"... to signify that it is part of apic api."
+I also checked, as some other SoCs' PMECCs are marked compatible with
+the one used in your SAM9G25 (`atmel,at91sam9g45-pmecc`) :
+  - SAM9x60 series[5], page 256, 21.6 Register Summary :
+      0x10 offset has PMECC_CLK present, recommends setting to 2 at 133MHz,
+  - SAM9x7 series[6], page 263, 21.6 Register Summary :
+      0x10 offset has PMECC_CLK present, reccomends setting to 2 at 133MHz.
 
-... as part of the APIC API.
+So it should be safe to write 2 to this register for all those matching
+this /compatible/ string.
 
-And so on.
+The datasheet itself is not clear as to what to do for other MCK frequencies,
+though as 133MHz is the highest supported frequency and it worked before,
+hopefully it just means a cycle or two of useless delay at worse,
+but at least it keeps it simple.
 
-Thx.
+I've written a small patch below that I think should fix the issue, but again
+I don't know if that's upstreamable as-is.
 
--- 
-Regards/Gruss,
-    Boris.
+> Best regards,
+> Zixun LI
+>
+> [1] https://github.com/torvalds/linux/blob/19583ca584d6f574384e17fe7613dfaeadcdc4a6/drivers/mtd/nand/atmel_nand.c#L1058
+> [2] https://github.com/torvalds/linux/blob/ffc253263a1375a65fa6c9f62a893e9767fbebfa/drivers/mtd/nand/raw/atmel/pmecc.c#L772
+>
+Hopefully that can help !
+Best regards,
+Ada
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+[3]: https://ww1.microchip.com/downloads/en/DeviceDoc/SAMA5D2-Series-Data-Sheet-DS60001476C.pdf
+[4]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAMA5D4-Series-Data-Sheet-DS60001525.pdf
+[5]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAM9X60-Data-Sheet-DS60001579.pdf
+[6]: https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductDocuments/DataSheets/SAM9X7-Series-Data-Sheet-DS60001813.pdf
+
+------------------------ >8 ------------------------
+
+diff --git a/drivers/mtd/nand/raw/atmel/pmecc.c b/drivers/mtd/nand/raw/atmel/pmecc.c
+index 3c7dee1be21d..cd96b44f3f30 100644
+--- a/drivers/mtd/nand/raw/atmel/pmecc.c
++++ b/drivers/mtd/nand/raw/atmel/pmecc.c
+@@ -143,6 +143,7 @@ struct atmel_pmecc_caps {
+  	int nstrengths;
+  	int el_offset;
+  	bool correct_erased_chunks;
++	bool need_clk_config;
+  };
+  
+  struct atmel_pmecc {
+@@ -787,6 +788,9 @@ int atmel_pmecc_enable(struct atmel_pmecc_user *user, int op)
+  	writel(PMECC_CTRL_ENABLE, pmecc->regs.base + ATMEL_PMECC_CTRL);
+  	writel(PMECC_CTRL_DATA, pmecc->regs.base + ATMEL_PMECC_CTRL);
+  
++	if (pmecc->caps->need_clk_config)
++		writel(PMECC_CLK_133MHZ, pmecc->regs.base + ATMEL_PMECC_CLK);
++
+  	return 0;
+  }
+  EXPORT_SYMBOL_GPL(atmel_pmecc_enable);
+@@ -896,6 +900,7 @@ static struct atmel_pmecc_caps at91sam9g45_caps = {
+  	.strengths = atmel_pmecc_strengths,
+  	.nstrengths = 5,
+  	.el_offset = 0x8c,
++	.need_clk_config = true,
+  };
+  
+  static struct atmel_pmecc_caps sama5d4_caps = {
+
