@@ -1,116 +1,167 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CD265CC8;
-	Tue,  1 Jul 2025 23:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A612609D6
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 23:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751412351; cv=none; b=mjeNDwcwU8JXr4PPUbX2XbaM1jY3TdSC3fXluZ0Sn+Gwcg1Q4DIlbtDbhsbY24zMfeveqi8omgBE2QDO+z+fAc5kN4WSGieKWDGohxBDFvYnCXMn8WwcGSNx9FrUaWLdVP6vp89bEVWGqC4DSqq0y1SuKb8KbBt8OwN8V3TG47I=
+	t=1751412617; cv=none; b=BTHGoT3q1VLLJKXAEGUl3BImnZc5OcvfxM6qlpAsODNedmyaRfrGZYmcOhkTOH3TGO9xhrZa67d0MT6APsFpLfwcULl4+jPxz8ztJ6DAWkN94JMJJfJ1fw0zMMhTxHFTFVLoVYlOlj33xwnRwXjKj4B+sM8UUlNgDlP7JiT6IYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751412351; c=relaxed/simple;
-	bh=5LAi1AOn7t8Tm+vFBUGNdaWr1EwOHiTYD0dfTqMEO+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HS/PW0oCkqeT1VusB6ZeED8+QoVK6ISxJSrWwhMuJTkK9a2rLOsjPXPpQGtvtA044BrlBZTs5SlXdVGqF2jhD1yJDVv3wrKU5WM0ZmSZ38GR7ImJrUjMem83F20aLHHzgs/+MFUF/V6N1C6/fKqZLNuRJ2n3dUbQezmnNd9tqE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id B0854140698;
-	Tue,  1 Jul 2025 23:25:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5611220024;
-	Tue,  1 Jul 2025 23:25:41 +0000 (UTC)
-Date: Tue, 1 Jul 2025 19:26:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250701192619.20eb2a58@gandalf.local.home>
-In-Reply-To: <202507011547.D291476BE1@keescook>
-References: <20250701005321.942306427@goodmis.org>
-	<CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
-	<20250630224539.3ccf38b0@gandalf.local.home>
-	<202507011547.D291476BE1@keescook>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751412617; c=relaxed/simple;
+	bh=zRVKdNBo3oYtirxhyyChLEgwk1WbbXOs6Ro55DSo9TU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=aDQrGOoSXs6LqaKHH0EXK8WEmi30uCsx0s6N3qcdE6xxBcKElJd5gRVTJUgIZWPXZ8Yn46TrUSe9g8xvwtlkwerq5lXrmBuVHPjlgMHHV8F1rF8OhhUvHIcau53mxo/VoXO15rtkwLt1fH5sHEwbl1MXTLsCEd16VXDGxOWMsV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L6LB1v0F; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L6LB1v0F"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4537edf2c3cso61697565e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 16:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1751412614; x=1752017414; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oxkUs9RFusjv08S72yLrh5Wg1MHFO9VcHZyNeP7ykBI=;
+        b=L6LB1v0Fyc0x7c52HaIjxJtK5WyOscysreC0zqmWS2UbMBM7yEPzy5MZDSGRtos00F
+         JekQ3y42bvNfK2GZOgYSz0nwd1oiY6MqrIfuENZP/Q27J49GTXZ20r/fB0fYtKpVwps6
+         7khnldEXzfeBrw1cHW8I1ACewuVCLLACagqTRUBPgATbzIgJjw15iaeeEHyNftoq1+0S
+         nfIO75fZYAryeoXAfSnFrBGzht6XZsWGvWZNVGWy813+FSCbD8trYVq5/pEt59NIYnmf
+         TTy39mSGbbDawZmc3/QLHcW6E24kMlLeeQCUCWEY6bmUzd+VR8gEu0fpMWtI8rAF7OKO
+         WuGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751412614; x=1752017414;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oxkUs9RFusjv08S72yLrh5Wg1MHFO9VcHZyNeP7ykBI=;
+        b=oFWUATck37DYzUIo0VndXYqsV9IEymVx/rRLW1eM3syniiTJqWlWApv9Sz+Heh48cV
+         /Ozh8aGE7j8t070j/WchHZ6gSa9O6uoInMxapV0A+nLMVrl6qGQAUt/xFfHDVEp0cuhm
+         Xk8DTgIVNz760Z81/UbfReEcvcl1Ac5FLHLLgM5g3RodaJiGDC6TARiQ5VmtSg+6hclc
+         DVCOIjVRv6MTUEzmltZRp5BI1Dl2vvOobFc/yEkiAD4te1WPInq4FZXL11axXCXOVJ3l
+         n9CWAu5BgG9Sr7gsTAoIS5wl5/c5uW+vyXnss/1Fd/xiUwuWSeJy0OqYG9I0JonPywI0
+         Gkiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWwZajK39Y7ahUO7+Gn9/tWyv9FQxwKdXjcr1QQqjFbIgUL0bmicQ0pcINKoIjjZTqG23GyyxNAyUcFIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxgf01d6MLqy2DmZXnu6JF9nkBh0MVmG9VdJ7OQAftS+sRCdxXe
+	0MR6mqv3mn6sHBmNAEHRLavV0di4Vgv98tJQT7pQs4pV+oG2mxKlUpaaIVnscke/aQo=
+X-Gm-Gg: ASbGnctxMOpd+eQp8gptNKycYoEAljmCDyZli/zY5mnCqyjs0IUiKh3Gw02CtNs3HL2
+	ViZc/TgyR2ipux8eqCIPE78yRIOkn5TvgpQIURuiNrgeQSZgMmcEv5pSbRbnjEcU/wstv2CGKcl
+	uEM9AqaAca8v4t0pJW7w3zpBsLgGmUE0Ryzk6gHCs5Zle7Luta4zbFSrg6vdZ+FgaZ0Vh1qN9MY
+	2sbofJS/JqOC+6g4GKnVAveyDLEmYEr66Z/sWg7MWcnX8eAYmERwRxSCrLs5m18FGt1Psngi1RI
+	Swnsn1fcwtpUGL/RaFwAplKJx7RtYzWbnK6NOqvleMwaMTB2GdqK7e0tfcMxYXfrMxlV
+X-Google-Smtp-Source: AGHT+IGWh47dzU/qedhk5q4wmllU/1FOhqD8rZdFeCpoKzh5IjU9RGIxJ/oggHk3EfGT1VRySLysbQ==
+X-Received: by 2002:a05:600c:6205:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-454a36deea0mr9755065e9.4.1751412613725;
+        Tue, 01 Jul 2025 16:30:13 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:4dad:b69a:9c81:2e57])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453b35349f0sm25469415e9.1.2025.07.01.16.30.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 16:30:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tryfq3spsju364iez3ck1zrf7mt7enjs
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 5611220024
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Quzu2eU2osAE3RdCKzkTyOA2Ps8IYTmg=
-X-HE-Tag: 1751412341-261051
-X-HE-Meta: U2FsdGVkX1+pOpssR8artnZXR620RStoUESbyBTmV1nqsXqVd+7Cd+0dbSMwBZAlLzhIXluPkWuMp8vrnXp3LYszOvRajvAfz0Q97/lv+SON7IClC5Jsp695rmInoxhUw95MPkUKs62z2nQ/A68+X3hApa63qFHuFL1oYBk/WvGB1zws/FqOI3mnpDnq/4yzFiMIof+xzwQuB/uL6jo9mZU1xBiSZlF88+f1yhv0e5tCwpdKQbkw84W8VYm927Xkm71XdiPrggYXWn0MFfqobVM475TwdaXgjHXh8Z5Pgd47rfQkwu/6wT/+FvSL0nCvtB+XffwFXsxVVTHpjMpLAqzIruUZHg3tV71CWG+neISVTgWokbHm+v2ExpYk98Af+KeX99+gmbG9gj9PcEGRXf+ZwVgH3NjswkOUSksJ4g9zQesrHaNSK7b72AE++39X4cLXnc9kLFpqV5UsHtLXBaMZDJufUogIOY6Ag+9uxdlK2RngOwi5jDn1leQHGMZxckrrW7U9/mk=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 02 Jul 2025 00:30:12 +0100
+Message-Id: <DB13YER95DCW.1IBRJ65LED5GX@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: sound: add bindings for pm4125 audio
+ codec
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Stephen Boyd" <sboyd@kernel.org>, "Lee
+ Jones" <lee@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai"
+ <tiwai@suse.com>, <linux-arm-msm@vger.kernel.org>,
+ <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@oss.qualcomm.com>, "Srinivas Kandagatla"
+ <srinivas.kandagatla@oss.qualcomm.com>
+X-Mailer: aerc 0.20.0
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+ <20250626-pm4125_audio_codec_v1-v1-1-e52933c429a0@linaro.org>
+ <wcmalvywoginosy5pp7wskgdzjbwbydividmk4dtwguoltiobf@muw5lzkvgu5c>
+ <DAYBDV1I7HH0.1GG9U3LI5NQ97@linaro.org>
+ <d24b2a88-fda7-4a8a-bb5b-73d8a928ff89@kernel.org>
+In-Reply-To: <d24b2a88-fda7-4a8a-bb5b-73d8a928ff89@kernel.org>
 
-On Tue, 1 Jul 2025 15:49:23 -0700
-Kees Cook <kees@kernel.org> wrote:
+On Mon Jun 30, 2025 at 9:21 AM BST, Krzysztof Kozlowski wrote:
+> On 28/06/2025 18:41, Alexey Klimov wrote:
+>>=20
+>>>> +            #address-cells =3D <1>;
+>>>> +            #size-cells =3D <0>;
+>>>> +
+>>>> +            audio-codec@f000 {
+>>>> +                compatible =3D "qcom,pm4125-codec";
+>>>> +                reg =3D <0xf000>;
+>>>> +                vdd-io-supply =3D <&pm4125_l15>;
+>>>> +                vdd-cp-supply =3D <&pm4125_s4>;
+>>>> +                vdd-pa-vpos-supply =3D <&pm4125_s4>;
+>>>> +                vdd-mic-bias-supply =3D <&pm4125_l22>;
+>>>> +                qcom,micbias1-microvolt =3D <1800000>;
+>>>> +                qcom,micbias2-microvolt =3D <1800000>;
+>>>> +                qcom,micbias3-microvolt =3D <1800000>;
+>>>> +                qcom,rx-device =3D <&pm4125_rx>;
+>>>> +                qcom,tx-device =3D <&pm4125_tx>;
+>>>> +                #sound-dai-cells =3D <1>;
+>>>> +            };
+>>>> +        };
+>>>> +    };
+>>>> +
+>>>> +    /* ... */
+>>>> +
+>>>> +    soundwire@a610000 {
+>>>
+>>> Drop this and next one.
+>>=20
+>> The audio-codec node supposed to have qcom,{rx,tx}-device properties.
+>> If I'll drop it then the example doesn't compile well unless I am missin=
+g
+>> something?
+>
+> What did you drop and what did I ask to drop?
+>
+>>=20
+>> For example when I removed soundwire tx node completely and dropped
+>> qcom,tx-device then:
+>
+> I did not ask to drop qcom,tx-device.
 
-> On Mon, Jun 30, 2025 at 10:45:39PM -0400, Steven Rostedt wrote:
-> > On Mon, 30 Jun 2025 19:06:12 -0700
-> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> >   
-> > > On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:  
-> > > >
-> > > > This is the first patch series of a set that will make it possible to be able
-> > > > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
-> > > > doing this.    
-> > > 
-> > > You have a '[1]' to indicate there's a link to what SFrames are.  
-> > [...]
-> >   [1] https://sourceware.org/binutils/wiki/sframe  
-> 
-> Okay, I've read the cover letter and this wiki page, but I am dense: why
-> does the _kernel_ want to do this? Shouldn't it only be userspace that
-> cares about userspace unwinding? I don't use perf, ftrace, and ebpf
-> enough to make this obvious to me, I guess. ;)
-> 
+Dmitry already explained. Ok.
 
-It's how perf does profiling. It needs to walk the user space stack to see
-what functions are being called. Ftrace can do the same thing, but is not
-as used because it doesn't have the tooling (yet) to figure out what the
-user space addresses mean (but I'm working on fixing that).
+> ...
+>
+>>=20
+>>>> +  The audio codec IC found on Qualcomm PM4125/PM2250 PMICs.
+>>>> +  It has RX and TX Soundwire slave devices. This bindings is for the
+>>>> +  slave devices.
+>>>
+>>> Last sentence is redundant and makes no sense. Codec has only slave
+>>> devices, so how this can be anything else than for slave devices?
+>>=20
+>> This came from other similar files that describe bindings for child code=
+c nodes
+>> of soundwire nodes. For example from qcom,wcd937x-sdw.yaml.
+>> Should this be rephrased to "This bindings is for the soundwire slave de=
+vices." ?
+>
+> You just pasted the same, so I don't get how you want to rephrase into
+> the same sentence.
 
-And BPF has commands that it can do, but I don't know BPF enough to comment.
+Not really.
+Original sentence: "This bindings is for the slave devices."
+Sentence from my email: "This bindings is for the soundwire slave devices."
 
-The big user is perf with profiling. It currently uses frame pointers, but
-because of the way frame pointers are set up, it misses a lot of the leaf
-functions when the interrupt triggers (which sframes does not have that
-problem). Also, if frame pointers is not configured, perf may just copy
-thousands of bytes of the user space stack into the kernel ring buffer and
-then parse it later (this isn't used often due to the overhead).
+The difference is 1 word.
+If it doesn't work, then maybe any suggestions?
 
-Then there's s390 that doesn't have frame pointers and only has the copy of
-thousands of bytes to do any meaningful user space profiling.
+Maybe "This bindings is for audio codec node that must be a child node of t=
+he
+associated soundwire master node."?
 
-Note, this has been a long standing issue where in 2022, we had a BOF on
-this, looking for something like ORC in user space as it would solve lots
-of our issues. Then December of that same year, we heard about SFrames.
-
-At Kernel Recipes in 2023, Brendan Gregg during his talk was saying that
-there needs to be a better way to do profiling of user space from the
-kernel without frame pointers. I mentioned SFrames and he was quite excited
-to hear about it. That's also when Josh, who was in the attendance, asked
-if he could do the implementation of it in the kernel!
-
-Anyway, yeah, it's something that has a ton of interest, as it's the way
-for tools like perf to give nice graphs of where user space bottlenecks
-exist.
-
--- Steve
+Best regards,
+Alexey
