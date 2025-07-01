@@ -1,222 +1,95 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2043.outbound.protection.outlook.com [40.107.220.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C832749F8;
-	Tue,  1 Jul 2025 12:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751373603; cv=fail; b=GnoFe8Peyj+xy2QjP9v93xBl5AhKmu2DJGbs3/KEV4iyNNA4YMhZrtDAK1yOKZq3g2wCXJn26trDdU5HaKzxabr0F4jjTwYROtfH/YaaK+k+/AAr/yJyJEug0HWsDErC2l+L1QaHPGLlVcqJGzwxM0KT2r5m18dqE0EHVrHzT9E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751373603; c=relaxed/simple;
-	bh=1XChm4KYQ8Jc9JUrxUUMwt5s/VgKOBPSuRLnunKCoeY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UwVDOb079Ai4FM/gvbkJrfeNr4A8lzv99gLYT/tNmo84hbsDVbGewoKnuHXx2hVQAvbK4CF43H1oFHP7YSMSYxOX6yk11Ap9r2MAziUqCYHp2RxZS+DedvGdD7HKKRtfuLwSgphbiGwroWVzo6BPX+gUFvdKOf3eajGLNWF2AaU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B4nkj+M6; arc=fail smtp.client-ip=40.107.220.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B4nkj+M6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=smmuwMngF2+JBuLnWW0DkelBb8ld34LlJvVZn7lycJGnSCSq62lnsmLmiQ0S4cZCUSNOzBCy433dMgbEsVg6/h8YL0fYthMSpSZM5+suQeM8g0YBnmRtaMm7ZbIxTLJI1mieoC37VC6QgBjTEJrvACfqw4m5Y7seUaC6MusdtFT0VZYHCNRB778XzkG8kdPkJvS4iHRWI2hY4aBd91IPrCg9P6/0Id3mQ+iNCJFx84rMvWLCUz3rMFI16sOIXhd6qk93pmT98q7apCarXoadT2jWB7lAAB7amq2s/4kNxrl6oe6SgqIpaduj2gcCTQ+MVv1IoOwUODitEp3syoHFsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z8YyMNEML0TMeQJHvU6/NoZV3PA2jwoUEU1p/KWM3mE=;
- b=DQp2PumqSD7JTCOVwA5XaUpOOirRMhNfvZGONDu6aasAzIsFp17IiSzuSrlPARI5T1/2buSGwRlMxaeUU2AdfERRlcbNG3yMSlTV4+RYKnJ/mKQeUwsyzndJeV+/h/0yM2jFv00PgF0aYiPW6zN0gOSRY0qMduQFsnbwMOvD1KszhJXTl5lR2owoOsj2OYWhOlTo8zGLgH6aa+QvtbsQ+q87qFUIchCmZPSARhNPELyF6zTsUNNage+b31WczG6qR2kXZCLxajSIUkCtum5EKyWo2eKtU68y0DCjFgUsPYZE47dfLgDkPwr//8imMyOLwlniQi0OHtQCAp+6f5mDvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z8YyMNEML0TMeQJHvU6/NoZV3PA2jwoUEU1p/KWM3mE=;
- b=B4nkj+M6HBMeDXTidMGQXLzyrsI2jeXpn/p0WHjmgjPvQszLWQCtBL94suF/fPwtIpsOATNxhTsS3lSZkQfyBQGtFjFv2wPfcE34CcQPvJbyb3Yw5XZLfcdXu1El34tPGNTYmsSMgSlz6PTrrTeaqvvy7C6lXipkTWv8DRCu9Ts=
-Received: from MW4PR04CA0100.namprd04.prod.outlook.com (2603:10b6:303:83::15)
- by CH2PR12MB9518.namprd12.prod.outlook.com (2603:10b6:610:27e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.26; Tue, 1 Jul
- 2025 12:39:55 +0000
-Received: from SJ1PEPF00001CE4.namprd03.prod.outlook.com
- (2603:10b6:303:83:cafe::fc) by MW4PR04CA0100.outlook.office365.com
- (2603:10b6:303:83::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8901.19 via Frontend Transport; Tue,
- 1 Jul 2025 12:39:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE4.mail.protection.outlook.com (10.167.242.20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8901.15 via Frontend Transport; Tue, 1 Jul 2025 12:39:55 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 1 Jul
- 2025 07:39:53 -0500
-Received: from xsjarunbala50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 1 Jul 2025 07:39:52 -0500
-From: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-To: <michal.simek@amd.com>, <linus.walleij@linaro.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <git@amd.com>
-CC: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-Subject: [PATCH 2/3] drivers: firmware: xilinx: Add unique family code for all platforms
-Date: Tue, 1 Jul 2025 05:38:50 -0700
-Message-ID: <20250701123851.1314531-3-jay.buddhabhatti@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250701123851.1314531-1-jay.buddhabhatti@amd.com>
-References: <20250701123851.1314531-1-jay.buddhabhatti@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFAC273D71;
+	Tue,  1 Jul 2025 12:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751373619; cv=none; b=rd6DloN3lLr/6JFO6J3D48tC3PN1Oug2rUHYUC28COOgHv09HCkryQx6+JsZJguU8sgXS3Me4dZFC3m+QWo0V+jlG9K/ZBECDqfsluAsxJWyGGTGiFPLWZWNXNhffKOqpdZxC0cz4UaAzpopnrmBwBmsosGBwAoJEv42xdXCvrs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751373619; c=relaxed/simple;
+	bh=M65puCm4vW9nJWFshqQYMEIAY3sSiI/i+1OCms03Cgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raHXL1JzPuwjlztMVBQgRzdDxFwbupmDx5LjEpdWsjvKryXDMU4EFjp5fNsk5pPVQNY5uQjm1O0B1uWt1+dyA5Qc8S4xeN8E0UVu6bMEb4+gt0tQcf04ib9EnyF8uJb6jIZQggFXxqCPjEOwa7KqCUhH3UURM0pwjchR9O87Wbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-5316a5e4c6cso1785107e0c.1;
+        Tue, 01 Jul 2025 05:40:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751373617; x=1751978417;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u7Eejxj1soWFWlrepxnm7X8hD9dfehl8KgAO32kH8B4=;
+        b=PxTH3hJ9MAqV7qRCO+Aqf1jF6G3KZVd+TLmfE3gmS5gln3+ZHchZZFH4j9LnRLHzvM
+         hvL+G2a1/YPOJA+6cFSDjd2rtFe5QlcU2804WgKwvikTFI8I+DFePM+kpFZrXUuKbwSY
+         im1r4LdyZBR3Bz1FsxWDlLxTRvo0LDgw5cwy8OmudRzmS2Uq17RN/OWUFnWrbK9gPW9w
+         rQvRMJVctGfpi60HDsdAa+1DD9/5Ig4aUiVvu7Kwt1lNCH8jvXQmLa8Erv2h6PnZ7wfR
+         wGaRJnVNLdn0fxuxOikUZkttndDqnn56FR9s+A3a9J/6+aRAMMbrI+dQUOR2hmZCdgct
+         kc3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4VpRFob0q3oJ1X45J5lUBi9c9PeYxYPZyVSgJ+ztFdrRfxQ5KCvdU3GVe1ebTKQKhuurmn6VTRUgp@vger.kernel.org, AJvYcCVkEXuml6ugIighniyvUERfmhwbqF/2he7mMOZUGLdRPrk37Sn5A3HX2mEdRaEWxjhCiQUyz3L/zv92EgX/Zfi96TY=@vger.kernel.org, AJvYcCXDxDalV5Xh723k+97GcDCSkD2DfPYHQCyV4fz/LgYoQoATgY6qsS1qAtX56mQaIjv39l7rq+s5rXPt@vger.kernel.org, AJvYcCXH2yc6G5JukzTUIA79UczgHpyl8x2YQGfUNtEk9XIG9Oso3FnxqMHwnLqN/DBYkAAgs5jyvTcuJuutC9Y+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/FP8TkJ4SFnDnqOii0/CllfOjHPIv+VQGDcAj3TLPkJLb9Q3Y
+	EojBMYDKnCj/Ko2mJ3B6zB+Qc4bj7AprzRhmkFs0Ukk3EF1JVK/9IjSl38QYx3Jf
+X-Gm-Gg: ASbGnctSLkEfphWQ4CzwQSGycwbTt1rZVTYmOLwG6118C1P/QzvIb8qOS91cw8aRqDp
+	p7L1GgRM1t3TmNCqcFs3AefjW/f4jPt9mOy9fFEW5CGSEX09AZ+zBFQK5ljwi39f45CSYL4vfzL
+	DckZewKgPQhW4ZkrCnMfbdm6NkDRr4TgiG3+n0wN31Rqs06I6M2bxCup1dAEKXo9CH+MWndxTlh
+	p2F8nSB/4wHkXbJMfCMplC6M1wIJEwCbj3+/wYSmFkXrBMF4aumfND6/ry1eN9+Qywj1DYU8iM1
+	Aa0iLs00KvNIwtWBgjUY6Syn2IBEIwmuXpILwrEqb5YzNes5t7lfH3yxTBi4uHuQIn3NUT/MnaM
+	XssIBgbOwIxQMaE/5ubDgf+6c
+X-Google-Smtp-Source: AGHT+IElUihhd/l1UvwK44xLVEWPTLcS98iUqgMaDfEHJXA6Xzj5BgdBrVLg71OLkGe3yGcpwKsAPw==
+X-Received: by 2002:a05:6122:2a0d:b0:52f:4680:1c75 with SMTP id 71dfb90a1353d-5330bfbe382mr11091775e0c.6.1751373616746;
+        Tue, 01 Jul 2025 05:40:16 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-533091bb679sm1687507e0c.25.2025.07.01.05.40.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 05:40:16 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e770bb7b45so1582988137.0;
+        Tue, 01 Jul 2025 05:40:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7Gk6yySeIW2wTdNfCktijFVHubYjmMRFo1TMZBpdqWKd91oPtsaxQQcJY7O8+55kDagNlwrljNmmTk4UhNQ/FTjY=@vger.kernel.org, AJvYcCV7Mo7KwH1FZC2v9N89ywLOxAX7IOxorYnQC2a6RZUWAZy6WygTzdhckGlm8SXOT0VBM2c2u5eLJyz4@vger.kernel.org, AJvYcCW3p3dVONkN8JWiedZruNVZvSSsWv8FACmgLKQkswcfe1uXpweaQzhnXOKUGE9EZi3LBRC+BiIwFI7/Cnrc@vger.kernel.org, AJvYcCXOxxh0X1xZ2aygMhhRr6BI37ly5+eEQC1M951w+mhSYHtJeKh4VBduaDWSEvTu82cXL5nOSXuBFlOH@vger.kernel.org
+X-Received: by 2002:a05:6102:1625:b0:4e5:ac0f:582c with SMTP id
+ ada2fe7eead31-4ee4f71513dmr9550102137.13.1751373615728; Tue, 01 Jul 2025
+ 05:40:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: jay.buddhabhatti@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE4:EE_|CH2PR12MB9518:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7270580-fda8-4a12-a256-08ddb89c61f5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dFI1drr78/8dTlBfJFo1P+OHK5cylfXeqwyfmbd0JiwgVnJ/XD3ulaTfcGVd?=
- =?us-ascii?Q?ZIwsUdugTH4CnzBwM5G6+3KOIrU5OlFS0SxLmVFLJAwsHf7WawwWovFpTX0T?=
- =?us-ascii?Q?v6VVI+VQxZe+1toynvMlttqlt+8ogix6bsn5Ta/zChGExTa3lhZGHnFv0zQV?=
- =?us-ascii?Q?RbtKvDnRYS+ydIHcMKoXMNwzHh97BKqClWTkY56nxznzrX9DmnWx6pf9LjhX?=
- =?us-ascii?Q?1QnDnB2Ug51O7HddwkUnPxs0uRWP8G4pkfAKd4AxNZK11n1aGv8rl/gs5FxL?=
- =?us-ascii?Q?DChlnZoyjnKIwiiRcAKcrvSnCZj2EkHOp5QXuyu2dj9+fd723g9ERiYQVuyW?=
- =?us-ascii?Q?iNCckHdQXd6/mSAmmonCHElTmxTrkqe1wmDohh2GjD9n4kOp4VA4xbctf3Eb?=
- =?us-ascii?Q?f6X5/wWJUla/FqBzg7y7jC0qZfRCwg9ARY8VUCFe4GZTn9yhkCY3zvY+lcpV?=
- =?us-ascii?Q?qpqu3ezu8m1mkr630luMm3sE1OZuHmlKr7JyR0KnAS36AzEK2JsO8ll8ZMvl?=
- =?us-ascii?Q?Sqc3OBRdyWxCnv5FatcAJYKuF9m6y9Pny+C8e+qSW4oVndqIMfYLa2eIkw8z?=
- =?us-ascii?Q?H9K9EgpzjI0Q64/knoPEmXNQYNAQRjQxJxFJgsQytJ/RTPtd0C3Mi6tYKQTG?=
- =?us-ascii?Q?YE+qObY9qbHgxzml24JEJQ5FJqjyotTJIqkqFtTtAamo1KsaAI2+OdeSdJ0G?=
- =?us-ascii?Q?yzGmQCOgzMgARLHDhSBhTWB3cq8ghvUR7GUQe6/L1Rvf+in2S1Q01vIAAOQx?=
- =?us-ascii?Q?eWcIBCzld4rz9iEWPYIK/x11YUsj6s4/uPPwyHdcrd8X+eE0SNWRcaYxt3Ik?=
- =?us-ascii?Q?X7NmV05PxklvHbnwyjCiTfwb+RhqedeZk3+UyDaRkC06fHijWXrc4APj7w+2?=
- =?us-ascii?Q?3H7MizgwSTD+B6R8h/zUy9ZX9Z3uRNCC0VyLntIMRmvA7zBwmTeoNhuU9SW2?=
- =?us-ascii?Q?FxBK9ebXahsS+htPlIwz6+2fMPVi4cqOrUMXw70JCMiNEq5Lgtq7aqXXJ5rW?=
- =?us-ascii?Q?mLCbSHmpXM4r1cdkmio3zTSahTLqqp9mhao1miqo47lbRC5N++mS+oCCJmqE?=
- =?us-ascii?Q?oyJF4QKsu7LrnP0Q5JtP49Q0yNNI0soXo7RMekPp72ac2YsuzI8Dhc/ZmUba?=
- =?us-ascii?Q?NVSRkfUrlSc0Wi5d6VdelYCwIAJY8vAvLNeHKq0R0Kd9onh7P5Vis+ngwEot?=
- =?us-ascii?Q?Uh0mugsgnJQbnii1PKwbinQbrnKjj8LyLcYSr/99TQ0yeM+GTkIbmvVyi028?=
- =?us-ascii?Q?V5beAJRhk1+x90rbgEW57NLp0yEY3Tb7Woc0nT13J+ehcGCuSw1hFAbkKZ1s?=
- =?us-ascii?Q?QPd5aCe4SlWOxS7q+qnnOw53EP7mlZ2IkJ/WQmBxd7Ww7I1xnzTyK+XDGXgL?=
- =?us-ascii?Q?IlJgFw6NCzYnsbUL7J1THYugDNpA34VGXQM82QIamhSbdcBtPSSWGnRUtUx2?=
- =?us-ascii?Q?rJHKUXXaGf45d5QJ46kq3qJdFBqhrOJH2SpWTVyEN+AAOc5eWyHYwice9wOx?=
- =?us-ascii?Q?oR676e1Ss0T/ke1GwP5LR1MWekkOum3A/M46?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 12:39:55.3025
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7270580-fda8-4a12-a256-08ddb89c61f5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE4.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9518
+References: <20250627204237.214635-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250627204237.214635-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250627204237.214635-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Jul 2025 14:40:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWVj8OSF80ZEsif4YYK=hfLHuoYdMAQggvHF2kJMz6gJw@mail.gmail.com>
+X-Gm-Features: Ac12FXzp6fbGek5ncRjYkPAHBXcBxz_f2CFRMhvhRMJx3Kgssmhd54oehTr-jTI
+Message-ID: <CAMuHMdWVj8OSF80ZEsif4YYK=hfLHuoYdMAQggvHF2kJMz6gJw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] clk: renesas: r9a09g056: Add XSPI clock/reset
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The family code is currently derived from the PMC_TAP_IDCODE register
-value, but there are issues where Versal, Versal NET, and future
-platforms share the same family code. Additionally for some platforms
-have identical subfamily code, making it challenging to differentiate
-between platforms based on the family and subfamily codes. To resolve
-this, a new family code member is added to the platform data, initialized
-with unique values. This change enables better platform distinction via
-the compatible string.
+On Fri, 27 Jun 2025 at 22:42, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add XSPI clock and reset entries.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 32 +++++++++++++++++++++++++---
- include/linux/firmware/xlnx-zynqmp.h |  5 +++++
- 2 files changed, 34 insertions(+), 3 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 89e0eef219ff..2fb1c29314b7 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -71,6 +71,15 @@ struct pm_api_feature_data {
- 	struct hlist_node hentry;
- };
- 
-+struct platform_fw_data {
-+	/*
-+	 * Family code for platform.
-+	 */
-+	const u32 family_code;
-+};
-+
-+static struct platform_fw_data *active_platform_fw_data;
-+
- static const struct mfd_cell firmware_devs[] = {
- 	{
- 		.name = "zynqmp_power_controller",
-@@ -2013,6 +2022,11 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	/* Get platform-specific firmware data from device tree match */
-+	active_platform_fw_data = (struct platform_fw_data *)device_get_match_data(dev);
-+	if (!active_platform_fw_data)
-+		return -EINVAL;
-+
- 	/* Get SiP SVC version number */
- 	ret = zynqmp_pm_get_sip_svc_version(&sip_svc_version);
- 	if (ret)
-@@ -2100,10 +2114,22 @@ static void zynqmp_firmware_remove(struct platform_device *pdev)
- 	platform_device_unregister(em_dev);
- }
- 
-+static const struct platform_fw_data platform_fw_data_versal = {
-+	.family_code = PM_VERSAL_FAMILY_CODE,
-+};
-+
-+static const struct platform_fw_data platform_fw_data_versal_net = {
-+	.family_code = PM_VERSAL_NET_FAMILY_CODE,
-+};
-+
-+static const struct platform_fw_data platform_fw_data_zynqmp = {
-+	.family_code = PM_ZYNQMP_FAMILY_CODE,
-+};
-+
- static const struct of_device_id zynqmp_firmware_of_match[] = {
--	{.compatible = "xlnx,zynqmp-firmware"},
--	{.compatible = "xlnx,versal-firmware"},
--	{.compatible = "xlnx,versal-net-firmware"},
-+	{.compatible = "xlnx,zynqmp-firmware", .data = &platform_fw_data_zynqmp},
-+	{.compatible = "xlnx,versal-firmware", .data = &platform_fw_data_versal},
-+	{.compatible = "xlnx,versal-net-firmware", .data = &platform_fw_data_versal_net},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, zynqmp_firmware_of_match);
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 6d4dbc196b93..f112cd211c5e 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -54,6 +54,11 @@
- #define ZYNQMP_FAMILY_CODE 0x23
- #define VERSAL_FAMILY_CODE 0x26
- 
-+/* Family codes */
-+#define PM_ZYNQMP_FAMILY_CODE 0x1 /* ZynqMP family code */
-+#define PM_VERSAL_FAMILY_CODE 0x2 /* Versal family code */
-+#define PM_VERSAL_NET_FAMILY_CODE 0x3 /* Versal NET family code */
-+
- /* When all subfamily of platform need to support */
- #define ALL_SUB_FAMILY_CODE		0x00
- #define VERSAL_SUB_FAMILY_CODE		0x01
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.34.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
