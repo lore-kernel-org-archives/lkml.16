@@ -1,130 +1,148 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2624326B778;
-	Tue,  1 Jul 2025 23:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AAB72621;
+	Tue,  1 Jul 2025 23:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751411246; cv=none; b=D+7crq3HOQdVbzKU/R97M76xYL8Vok5lv2AfjC5hPazUhaW83q98QsxgR4ZMU94M8DQ9aEWmVkQOL2uz82gL0SoIBudbCFO2ISM7jJPQxogLdVwnThX0/7JVbcoJB9JeDB6g+3sIvrBxk5xvUWxeuRCEer7/sHYMKfkHahYQZRw=
+	t=1751411424; cv=none; b=nahrifL6VzLqOPuyXjMH3C+Pn3y3rIE9CFVCjUsMLFCgg0rD3FUqWzHpEZ0soWBWnQrODDLWuT8L/J65ewkpDqXcG0DSdr/rU1Jt9VcDXggmSx2AwNcb3YTMu52QSGuvdLtYfHPSwTyBtY4bstTqOkWa7OPeS2DuvdCB7kACROM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751411246; c=relaxed/simple;
-	bh=bnXTIZnt58zVSPw/pEjUapov8qNztfK+SHcFgBsY7Cs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=faxqtn2NxT5mb7x/IcKYUr2m9P3vrDmX+JiCPIT51jtSyekpO+zh6uIW/ysXWOTaLlSOhIgqSlr+ZlyyO/IT1tjXN3bNtbbfFqXy1zJR/yTfRlJYLByXl553VOBUl0IdyFEO+Q1+IoJNOrW0Sk1Cm55YCAlUN/IZd8g4wAzotsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nonsCkF8; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751411424; c=relaxed/simple;
+	bh=naGHMXzQ/kIRT32JeTN6yjSS9bm0M5nO1occevccuJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOwOwFzr8Wy0EiDV2LSy2kXH8htfeRqZy134bEN4yJNlUJcDbuyFqb7rGJYKOSV0sd5UMdJRO+2UUtsp7CQDOsbOdPArn39XDDvka9/LERKAwtqxR7Fj9gsILFaNJUMbSBFYcVWm0voysX7FlngbJKteZ8jVkxfPXC6UpvjWJSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNZpQXf/; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nonsCkF8"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70b4e497d96so40429707b3.2;
-        Tue, 01 Jul 2025 16:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751411244; x=1752016044; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WMvtvKjN1VkA8wKzZDJDW7JlV40jKbOqdJBCEdXm5u4=;
-        b=nonsCkF8GwHLXcb4KP4v6S6+HBSbOG0xfal1IUIxrBJC6VzzrPVS9eT7tQA3my/bVU
-         jGWoBwjru4OTNiGjWzprydjCfEcGEECyByma63Rq52O6nhVmDdGdeCxk91DyRMKkGMrS
-         qm3ed1YYjyhBLJ/hLYJlYl7ON7OUNP4zXIYDZfWg+wqbTb+4Z9s/Xxq3FpSMhLf6q3db
-         JZ9BBJZHC1SOq2rP9ZFQI30tmVRRrnsk1Rd37y5WpQVknkBMiR1XGqj10DL5BEreR5FZ
-         SZ+NpE7TyIuB7scqAanC3NaFrppwdz+bBd1i/nXNBLW08kOyQbAeypKV+5fzdj4yS/+J
-         WZXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751411244; x=1752016044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WMvtvKjN1VkA8wKzZDJDW7JlV40jKbOqdJBCEdXm5u4=;
-        b=iW+lTVYr8QthGva9VnhwhsuMs4f6918l488l6t10ifqczu7AZKU63rciOldNyqVp9a
-         rqw1dUZMrFYS2CwALOItu6LZeUF16VYbF0dw9aIAxFbTztM3qSRgkLGlmiuwO0C3mtCS
-         8HiOpt1LJnfib5RDolFr+6cqiPko8r/YmkSIYYgwc//xCrs08+gft5+kNWd929fTZEtn
-         zrISrrYb7C3JTC45ZXOWkjwWqVenGzReIpYDFf2DNQbtpvZelJy1+GmC6r8yMquS6sVi
-         hTJzw1fO4hVVx7vN1NmEGP5b7ey7VsraMddDrYSwwPf0xP7BKEVRf6wWhHkCH7hwHPPI
-         VaiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaKV1rAJ9a+ewXanj32Xv5LCsErThMv5ClHItB5yuYfrIokRlf13f6Q95k+aV45w/flvVGd+09SuaY@vger.kernel.org, AJvYcCXQKKG83ZGswe/NbMJk61R5pxRDZE11de3iFQJOiY3qKPujL6DFqUedytZsYWT26nFgWLyEvTZWDVODp40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzo/uflX2z8eakzfnSHMmkWtsu1EaotAKndp00asu1wu0sU9xm
-	/H6iPQzf8XyumHXD7gvVFUH4HMy4NlxPp2wLicyXnuoYxadKGr9rdJhhHDW6/Jmt4czgzpI7nR6
-	hp+dGQ8tlGkCQqNSuCEEu7CQW4wZ/hO+a11uL
-X-Gm-Gg: ASbGncs+BEahjZseOHVlV1/sgHFu4bXbEA7H4ucXzX7y9zlfvu/2gnxaRW4nambyw6A
-	YT05qEBz9DRFk7fBo3gWb6eM3r5epNM/0RwqATNquVlq/hDx3xF+4cSia8tSxQk0VEGl3qmSyW7
-	xLCzkpgR9NItl99j0IK6OV+wLyMYzs1kAMaQARfPLMBj4=
-X-Google-Smtp-Source: AGHT+IEGaS/WiSVuPkrKC2Aspd+RJF5lL9pe4j8I9V0Wl3UrVrluyjV+862CCo8SBEYbP/Uk69mRFgePhEm5E20ZcXY=
-X-Received: by 2002:a05:690c:601:b0:712:c295:d013 with SMTP id
- 00721157ae682-7164d4cdc31mr7795347b3.34.1751411244062; Tue, 01 Jul 2025
- 16:07:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNZpQXf/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751411423; x=1782947423;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=naGHMXzQ/kIRT32JeTN6yjSS9bm0M5nO1occevccuJY=;
+  b=iNZpQXf/2GjC4h0Da7L9mPZxtpNdTMTUpNsOO3P8b7vYngGc9hGeo9Zg
+   4MaLlzVcxXIJeVk/7m7eDlqpGTRK1AeRFXVsfZSXMqCA2I9sModCbp1Cu
+   2MEHQxNWI+XPPI0Z/6zwWwSLt4rtBuNMce0qda4J3uls3VslJo8zIiAh7
+   XIKnKoJAVa/P0dc6jKt+ikgw8xN4WM5MN9SaIzpsBqqbXiM1+MMd/R8sZ
+   KuYK+RUb2/T/Hew1KOK5lahzUj3tU+hCJbRkvj4PtMtUUMvpeNCJrTEuI
+   ruOkTH470650nsa5GqcboM9Z3HM5rz9dIqf1w6leY94nQV/IRDjbTtjYn
+   g==;
+X-CSE-ConnectionGUID: HwztcWDVRZqfyA2tkunnxQ==
+X-CSE-MsgGUID: JkvEn4VnRlyNgRAU3bLDDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57471510"
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="57471510"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 16:10:22 -0700
+X-CSE-ConnectionGUID: Br57HNovTYuM8kGhEOdgPA==
+X-CSE-MsgGUID: bhcgugsqQIWSMjgtQIXbvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
+   d="scan'208";a="154060598"
+Received: from tslove-mobl4.amr.corp.intel.com (HELO [10.125.109.169]) ([10.125.109.169])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 16:10:21 -0700
+Message-ID: <841a200e-bcf0-4488-acbd-c00396a9ccd2@intel.com>
+Date: Tue, 1 Jul 2025 16:10:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626112442.9791-1-edson.drosdeck@gmail.com> <81d519f5-caac-4fd8-8491-3580ce1b6060@intel.com>
-In-Reply-To: <81d519f5-caac-4fd8-8491-3580ce1b6060@intel.com>
-From: edson drosdeck <edson.drosdeck@gmail.com>
-Date: Tue, 1 Jul 2025 20:07:13 -0300
-X-Gm-Features: Ac12FXyhcrJppyQrjbVm1J80uP3O7bfD9uEOLb3JAKhyqWDSYc7tA0G2wVJMA-E
-Message-ID: <CAMSsBRyvdvxgAQMkoB3UTZUs8MDEdPEVcKh2fFto6TFz-hUeiA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci: Quirk for broken command queuing on Intel
- GLK-based Positivo models
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv8 04/17] x86/cpu: Defer CR pinning setup until after EFI
+ initialization
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ard Biesheuvel <ardb@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Xiongwei Song <xiongwei.song@windriver.com>, Xin Li <xin3.li@intel.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>,
+ Brijesh Singh <brijesh.singh@amd.com>, Michael Roth <michael.roth@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Sohil Mehta <sohil.mehta@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Sandipan Das <sandipan.das@amd.com>,
+ Breno Leitao <leitao@debian.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Alexei Starovoitov <ast@kernel.org>,
+ Hou Tao <houtao1@huawei.com>, Juergen Gross <jgross@suse.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>, Kees Cook <kees@kernel.org>,
+ Eric Biggers <ebiggers@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yuntao Wang <ytcoode@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Tejun Heo <tj@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>,
+ Huang Shijie <shijie@os.amperecomputing.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+References: <20250701095849.2360685-1-kirill.shutemov@linux.intel.com>
+ <20250701095849.2360685-5-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250701095849.2360685-5-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thanks for the feedback!
+On 7/1/25 02:58, Kirill A. Shutemov wrote:
+> Move CR pinning setup behind the EFI initialization.
 
-Just to confirm: should I resend this as v2 with the corrected subject line=
-?
+I kinda grumble about these one-off solutions. Could we just do this
+once and for all and defer CR pinning as long as possible? For instance,
+could we do it in a late_initcall()?
 
-Best regards,
-Edson Juliano Drosdeck
-
-
-Em qui., 26 de jun. de 2025 =C3=A0s 11:05, Adrian Hunter
-<adrian.hunter@intel.com> escreveu:
->
-> On 26/06/2025 14:24, Edson Juliano Drosdeck wrote:
-> > Disable command queuing on Intel GLK-based Positivo models.
-> >
-> > Without this quirk, CQE (Command Queuing Engine) causes instability
-> > or I/O errors during operation. Disabling it ensures stable
-> > operation on affected devices.
-> >
-> > Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
->
-> Subject would normally begin "mmc: sdhci-pci:" instead of "mmc: sdhci:"
->
-> Otherwise:
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->
-> Also I guess:
->
-> Fixes: bedf9fc01ff1 ("mmc: sdhci: Workaround broken command queuing on In=
-tel GLK")
-> Cc: stable@vger.kernel.org
->
-> > ---
-> >  drivers/mmc/host/sdhci-pci-core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci=
--pci-core.c
-> > index 13a84b9309e0..e3877a1c72a9 100644
-> > --- a/drivers/mmc/host/sdhci-pci-core.c
-> > +++ b/drivers/mmc/host/sdhci-pci-core.c
-> > @@ -913,7 +913,8 @@ static bool glk_broken_cqhci(struct sdhci_pci_slot =
-*slot)
-> >  {
-> >       return slot->chip->pdev->device =3D=3D PCI_DEVICE_ID_INTEL_GLK_EM=
-MC &&
-> >              (dmi_match(DMI_BIOS_VENDOR, "LENOVO") ||
-> > -             dmi_match(DMI_SYS_VENDOR, "IRBIS"));
-> > +             dmi_match(DMI_SYS_VENDOR, "IRBIS") ||
-> > +             dmi_match(DMI_SYS_VENDOR, "Positivo Tecnologia SA"));
-> >  }
-> >
-> >  static bool jsl_broken_hs400es(struct sdhci_pci_slot *slot)
->
+Do we need pinning before userspace comes up?
