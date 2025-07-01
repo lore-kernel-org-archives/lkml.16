@@ -1,67 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F020277CBA;
-	Tue,  1 Jul 2025 19:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BDA26A0E0;
+	Tue,  1 Jul 2025 19:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751396962; cv=none; b=dD25nrPVulqfVBegRjgI4eQO3s1AN8Wtr4ywq6EF3pIBUpq/Rqqpn3gj2ADyEyfPsLEhZmB3LWNx2Yzu5+H3RxxyHPEixBO4DmAeJNeO1pgtO8gpzAhrMLTXaLRpLTaRlacxLajkRWzC4ydM/GeMWQL0ZgXnpcH4xFu0nxlhUuo=
+	t=1751397088; cv=none; b=oyFcnSgB7WV+AR5ipZkQi1WDWO33EsqXAeDnYm0TgteP25BxStmzs6MCLnO4j3SPaKlBrdUKiVWe9tcJOAvtnQn4u4VX4lgSJ8Zxd8Qf0n7BDnhAT9Vw2TNUjsLW+mEB9PFimSUri5J4CVYKBXthDixqwXEnlKng8nHfYuTfqrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751396962; c=relaxed/simple;
-	bh=GIDM07D74e88J5iKzzjQjxabKCpfk+BcWb9tNgQsLUM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TB1cqAJptazUM1udLkRNtGS9mQw4micCxYqw7Me9dkMKC+xij96yZThve/LdST+p+OO1HJ7EXrYZGBZ11vlTujmpzaB+SE8mP1Nrysw27J30FeTtlD/NoRr43Zyc/gdbXwdtRTMTl9YuJIW1ugr/UJt2vVvYev1H5Hrdn5Oj/kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GZa0mg3h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751397088; c=relaxed/simple;
+	bh=z4f+eQJG65IF7q83wr7qPgXhTWfnXVrZOVU35IJNU9s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q9FTDsgmXCEmdfr1Kk6HEh1EQD4XPaVABvHI83P++7HqcWswtKXOHEk9MV3uZD6Gyi3Zm2dZ4Xn7d0ZmV9YrVCV7D8VDLYitHjB0WXHrYvOzzwXuBpS/omB/zb22agTSjvayoMQfdevSUyLvIReRsMeC2Bw3q2eycoOp4KdGIEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=jTir4Ovy; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GZa0mg3h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5955BC4CEF1;
-	Tue,  1 Jul 2025 19:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751396961;
-	bh=GIDM07D74e88J5iKzzjQjxabKCpfk+BcWb9tNgQsLUM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GZa0mg3hI39Ery9ChDXGj/+uw+L0iw4iNlMP6kQ0ymtqJ3t1OCZLx6TANzt+G+hFy
-	 1H78KJtC5r5JcINGoqnlFA40ruqom5hpo+8dWzG0RcXsWUlD2WAIDo5Gkq2/qTjJKC
-	 Rce9UXZ4PTNsYeO107+n7wNaT2uIoaRCqQq1hS/k=
-Date: Tue, 1 Jul 2025 12:09:20 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Luis Henriques <luis@igalia.com>
-Cc: "Achill Gilgenast" <fossdd@pwned.life>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "Shuah Khan" <skhan@linuxfoundation.org>,
- <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <stable@vger.kernel.org>
-Subject: Re: [RESEND PATCH v2] kallsyms: fix build without execinfo
-Message-Id: <20250701120920.49cd122526b3032a4db1e218@linux-foundation.org>
-In-Reply-To: <87ecuz51eg.fsf@igalia.com>
-References: <20250622014608.448718-1-fossdd@pwned.life>
-	<20250622113602.48092b368afc5f1729b45cb6@linux-foundation.org>
-	<DATW4DAU81FO.388H7H1WSUKAB@pwned.life>
-	<DB0OSTC6N4TL.2NK75K2CWE9JV@pwned.life>
-	<87ecuz51eg.fsf@igalia.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="jTir4Ovy"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 04AFF406FC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1751397086; bh=2BeC9ePAMZTy0IbNm56dxbKdnRGE6FcrpsbWIQptkVE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jTir4OvyjsfDadhSD6P98fYu6lq7wOw56wodpA0Zjv1GwAFMmh1hPAOeRNCW6JbfI
+	 UPgzwMJ6uNRWYFy1KxImyw/Xz4S28LH6cB7YRY+YkAvX/bZ62BoseuEeqOdE0zBogg
+	 9UnZEnuro/h4/qe5eDM9N9hcRdoiUrE5rC1eyx7TFCdlela6bWWJ+N+TzqJFkImuxc
+	 E2+sYXlhsnGZinv3xaiE7diwDuWJ7TAwf/hmAkOqHEcz5IIZV0oO0uy3Mb3bkMGLgq
+	 6wmkqKASqKUBFc2NNHW1wu+DoiBTf5rI/yPDuE5EJnRVxtdaOVL2CmpUYWkM0we5kL
+	 gbQNgV8BdjjLw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 04AFF406FC;
+	Tue,  1 Jul 2025 19:11:25 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>, Linux ext4 <linux-ext4@vger.kernel.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, "Ritesh Harjani (IBM)"
+ <ritesh.list@gmail.com>, "Darrick J. Wong" <djwong@kernel.org>, Bagas
+ Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [PATCH 0/5] ext4 docs toctree reorganization
+In-Reply-To: <20250620105643.25141-2-bagasdotme@gmail.com>
+References: <20250620105643.25141-2-bagasdotme@gmail.com>
+Date: Tue, 01 Jul 2025 13:11:25 -0600
+Message-ID: <87y0t7rajm.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, 01 Jul 2025 17:19:51 +0100 Luis Henriques <luis@igalia.com> wrote:
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
-> >> No, since backtrace_symbols is provided by execinfo.h.
-> >
-> > Is there some status on it? I saw you picked it in mm-hotfixes-unstable,
-> > but it got dropped out again.
-> >
-> > Is there something I can do to push it?
-> 
-> FWIW I can confirm this is indeed a regression.  And specially annoying
-> because it has been backported into stable kernels (even if having kunit
-> tests backported sounds odd to me).
-> 
-> It would be great to have this fixed, or reverted.
+> Hi Jon, hi Ted,
+>
+> While discussing on my previous ext4 docs reorganization attempt
+> by merging contents [1], Jon suggested that considering current docs
+> file structure, a proper toctree would be ideal [2]. So, here's
+> the patchset that does exactly that.
+>
+> Actual conversion to toctree structure is in [1/5], while the rest
+> is cleanups to make the resulting toctree nicer.
+>
+> This patchset is based on docs-next tree.
 
-OK, thanks for the reminder, I restored this.
+So to me this seems like an improvement.  I'm happy to take it, though
+would prefer an ack from ext4land if possible.
+
+Thanks,
+
+jon
