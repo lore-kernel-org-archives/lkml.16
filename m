@@ -1,142 +1,123 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4FC130A73
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0491B130A73;
+	Tue,  1 Jul 2025 09:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362506; cv=none; b=Meefh7DMbOMVYtSGJ97HnCXvgT24n7c/6MQKiOvbi19/iMFWm2ooN38jQwVDKL+0y1xaICo14ns1W7nFz+JplDue2GD9eUjSIDQ8gK1UQwbCM3mH6Nf+rYINOVSUb3zQRYB5PsfcXSq0ZgY/ZmgJyjYrCLUZ6VqNeR/FeDv0Jss=
+	t=1751362549; cv=none; b=sPqFAX18wSIqjexCAA3qars4pZ6f+KaTRP3Gq8FiRE5BFbQKtyjcIq9+qR2pjbz3AJqkaA7Fa+jFAoP9Cvx7sTt1Y9JOLaUPzYDHi6e8Rs1ViDWcCYRXkEZLRxtve3C3Et9IaGNoXNvo+ZotpYTuGWVpyxIoaDwL2QZ0if5+EwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362506; c=relaxed/simple;
-	bh=Iz7TndBO+sTa5OfyTf6Cc5utFDcx+HTwube/qfPfbtQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kTKg1+8mQyKzJDzF0IZqlXSveJyoM8xm3I2rs1IiR60MpwLLXSG+hhGanDU+DfjegcFYCz2o3o0UnHZgHUfuwAQXSoNV6pnfi04ALCyi0gA68Q4gKjECbt+o2iEfCxkpYhIFJPoa1Zn/9DS7izyyf2H1W4+BBuW6V7iVsKKRPLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 8f78db2a565e11f0b29709d653e92f7d-20250701
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:bda8d99c-c8c0-4cf5-bf18-ce47b1485f9d,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-30
-X-CID-META: VersionHash:6493067,CLOUDID:5d3c4b2b9fd8c50812528642bfb70764,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 8f78db2a565e11f0b29709d653e92f7d-20250701
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 273673689; Tue, 01 Jul 2025 17:34:18 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 43B7EE008FA2;
-	Tue,  1 Jul 2025 17:34:17 +0800 (CST)
-X-ns-mid: postfix-6863AB98-679317848
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id E2086E008FA1;
-	Tue,  1 Jul 2025 17:34:11 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: xuewen.yan@unisoc.com,
-	vincent.guittot@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com
-Cc: rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	hongyan.xia2@arm.com,
-	linux-kernel@vger.kernel.org,
-	ke.wang@unisoc.com,
-	di.shen@unisoc.com,
-	xuewen.yan94@gmail.com,
-	kprateek.nayak@amd.com,
-	kuyo.chang@mediatek.com,
-	juju.sung@mediatek.com,
-	qyousef@layalina.io,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] sched/uclamp: Skip uclamp_rq_dec() for non-final dequeue of delayed tasks
-Date: Tue,  1 Jul 2025 17:34:07 +0800
-Message-Id: <20250701093407.211500-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1751362549; c=relaxed/simple;
+	bh=4/yZRVhckkkdnIhk42y14ft4PKjDzeXsk8J1u4zFlxA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kCzYOE7TobAaZ2sngCM73WjPDKF+wbUruYIpUC92tiMRLv4wljjVNT8xS7AZZ922sVSE4avwLLZ5Pbrrug8b3AcIV54rOb2fUeDhq1YtPVTQswk2A7K9+JP6MpsbW1Ashw3jitmWdiTOF8dUQc/37enVh02BKIE/oXXsmI2HaYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e8088896b7so4236319137.1;
+        Tue, 01 Jul 2025 02:35:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751362544; x=1751967344;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UkC7eZA+uDX58TZWGGsjh/Z3xk06FWPrdqdvUqT03SQ=;
+        b=ZaYzJ5kQJVNwxiUVxUKEzrWJgxUDy7LqEZAzzU3sxvi2k8wZbu5545+4+TgZUfjvik
+         krh9vBuwBMk3R3w4SuKYrGQZiK/H2jRJZPlpzBLRijm9XmIrkBg/xQyhZMzsxJm2e0Z6
+         7leFOeMp/FgAGuhFhFWW6poHSYjm4s5M0UB095hwusu2zXCPGVFrm3E6kUTiv3zpk+0S
+         T5g7a2KJzMZYQXTIe/Bpq63vYip4EvDmS08H9lWCHkAnE3OpcQrxnXS41Vf6PJ/fxoLj
+         +fVLE92j7XUH9tphECH/UPK+6wQnAT5i8hWzn0xkRZZX8HIoQBbvzeXUEz0WoVGroHcx
+         4MAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTiINld3MnAEzx9XPwMncMmNTRgSLp7Rum9MFhftkIln4Zex13K/RRyy4+EidDq4P20f5yItWKy4Oy07ouKLucAmI=@vger.kernel.org, AJvYcCVw4LuD0ym/ML5ZlcwS6QOLMGgMqZzvX6NK4i39kf/0Hs23CGRfniZM+/W4cjBArQJ4XTCoHp+vWd9jrTJ9yhAVpAQ=@vger.kernel.org, AJvYcCVzwnqDRsoCUAxqc6DFcy2DeTYwshY9Y5ustBwtRJGMk3aNef0F8C16BVh2TEIIL591WcXRIUMeP80=@vger.kernel.org, AJvYcCXqjAvZNQ72KkJaGKdftz/lk1ItXvE2u+BQI2cngbS2u6T/XF6tUzt1wGELyzMLRX0j/FKxMDKsU8MjdSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAUlEPZbSQbEr2d/Ut5iN2/tzJdJx0SHJ3G/xxPS3OPYpC2a3t
+	QZjZUoPkIe/ZF6m/lKwdrqqxTuSFLv4aZUdKpdrIh55xJVGEi+oUqAdqsy8eyS3N
+X-Gm-Gg: ASbGncsRLE56fAd0ALgklIrSCiePCRphnCkuVRCOv1I+fZlnXe+/EbwgQLf7p7bG8BT
+	3n9+cBBUDMFI855s8XayxscRWJT8cQuVQgmYEGpL0T7/kKboIw6JoV31y5lfIclcghzvDOVGj3o
+	HIFsf9sKD1NkKVTfIaqi/aoufqQ0yus4O6Dqc26mJSBWJfVbwAGqrnB2Xx8tVXTKZ6ZZRssTItp
+	Er927C5DpUFYhSsyDd2xzNbSKqtGLEThHvifDvDRcCnVlDJkGJgTstnCu6pFtKgqIZGuRVztCqz
+	ETmUD06t6UkLUzjTRvQ2ebu6BGHI7n+GH2Qqqjpvrz6Tq4Mo6dWMxiKaHEkc5Tfw/LFmIthVSMY
+	3BkfJeVHbg6qwwul1ayW2frjryj5m
+X-Google-Smtp-Source: AGHT+IHN0HIvXUUXf6jV1T2+PNT+34EOQs+EDUxlGDFe64weAado3IEqoGBw3DS+TSkmuNovDGFDKA==
+X-Received: by 2002:a05:6102:548f:b0:4ec:e1fa:ed7b with SMTP id ada2fe7eead31-4f143bec2fdmr1604920137.9.1751362539179;
+        Tue, 01 Jul 2025 02:35:39 -0700 (PDT)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ee4cbbad44sm1463629137.24.2025.07.01.02.35.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 02:35:38 -0700 (PDT)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5315ebfd92cso3354139e0c.0;
+        Tue, 01 Jul 2025 02:35:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkK8gWl0ez8IEUuAM6L9k6hdXryAQ3cdS3wUR4WxeoN4TyJpww9nhpOS9zQThaBMDEMfB+nnNrpTNUruo=@vger.kernel.org, AJvYcCUrN+PVrwZvFdiAY3LYuEsaagXEg6MNSDaBivjld2193yiuIN7cyXJ3KaBmiwJ/hYj/p5KBC1wjrZ/MlDK4X+NvXdQ=@vger.kernel.org, AJvYcCWMVK9fdFJQ6K+r1IO8S6/h4OK7XB2EBOaaLxtuZHDwPJK5wJCmEO/JTZkn1hbTUjIlYuIZ5KRxt16aHYA6jzgnHaE=@vger.kernel.org, AJvYcCWmXnjbOQ4i9bQXoD2im1dxD0xnQqYFAz0ENRNRD6QZl4s414xK6wvaCHqLxHaASxhifAWjPmR/2Rs=@vger.kernel.org
+X-Received: by 2002:a05:6122:811b:20b0:531:bb45:18b1 with SMTP id
+ 71dfb90a1353d-53425617336mr1027771e0c.7.1751362537889; Tue, 01 Jul 2025
+ 02:35:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20250620160834242DDgecL4HF8b1OBLiZnnrl@zte.com.cn>
+In-Reply-To: <20250620160834242DDgecL4HF8b1OBLiZnnrl@zte.com.cn>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 1 Jul 2025 11:35:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVEkq_W99XuKA9KJW5Bm156ZBZowH2gmg2iY27y2fDFug@mail.gmail.com>
+X-Gm-Features: Ac12FXxtXuRYLmTpc7TJbisFnd7Fe3xZafLHlyEUkNhw-qkfFhNc1GHH1T18Cpo
+Message-ID: <CAMuHMdVEkq_W99XuKA9KJW5Bm156ZBZowH2gmg2iY27y2fDFug@mail.gmail.com>
+Subject: Re: [PATCH v3] pmdomain: Use str_enable_disable() and str_on_off() helpers
+To: shao.mingyin@zte.com.cn
+Cc: geert+renesas@glider.be, changhuang.liang@starfivetech.com, 
+	magnus.damm@gmail.com, heiko@sntech.de, alim.akhtar@samsung.com, 
+	walker.chen@starfivetech.com, sebastian.reichel@collabora.com, 
+	detlev.casanova@collabora.com, finley.xiao@rock-chips.com, 
+	shawn.lin@rock-chips.com, pgwipeout@gmail.com, linux-pm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, yang.yang29@zte.com.cn, 
+	xu.xin16@zte.com.cn, yang.tao172@zte.com.cn, ye.xingchen@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
 
-Currently, uclamp_rq_inc() skips updating the clamp aggregation for
-delayed tasks unless ENQUEUE_DELAYED is set, to ensure we only track the
-real enqueue of a task that was previously marked as sched_delayed.
+Hi Shao,
 
-However, the corresponding uclamp_rq_dec() path only checks
-sched_delayed, and misses the DEQUEUE_DELAYED flag. As a result, we may
-skip dec for a delayed task that is now being truly dequeued, leading to
-uclamp aggregation mismatch.
+On Fri, 20 Jun 2025 at 10:09, <shao.mingyin@zte.com.cn> wrote:
+> From: Shao Mingyin <shao.mingyin@zte.com.cn>
+>
+> Use str_enable_disable() and str_on_off() helper instead of open
+> coding the same.
+>
+> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+> Reviewed-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> ---
+> v3:
+> preserve the original patch format to avoid whitespace-damaged
+>  drivers/pmdomain/renesas/rcar-gen4-sysc.c    | 3 ++-
+>  drivers/pmdomain/renesas/rcar-sysc.c         | 3 ++-
+>  drivers/pmdomain/rockchip/pm-domains.c       | 3 ++-
+>  drivers/pmdomain/samsung/exynos-pm-domains.c | 6 +++---
+>  drivers/pmdomain/starfive/jh71xx-pmu.c       | 7 ++++---
+>  5 files changed, 13 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+> index e001b5c25bed..c8aa7538e95f 100644
+> --- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+> +++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/types.h>
+> +#include <linux/string_choices.h>
 
-This patch makes uclamp_rq_dec() consistent with uclamp_rq_inc() by
-checking both sched_delayed and DEQUEUE_DELAYED, ensuring correct
-accounting symmetry.
+Please insert new includes alphabetically, like in Krzysztof's original [1],
+for which I already provided my Rb-tag.
 
-Fixes: 90ca9410dab2 ("sched/uclamp: Align uclamp and util_est and call be=
-fore freq update")
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
----
- kernel/sched/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+[1] https://lore.kernel.org/all/CAMuHMdXJ57mATWW4AnBedn+D7TQ4PadkJ642daquFtAo=wZFrQ@mail.gmail.com/
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a3..99f1542cff7d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1781,7 +1781,7 @@ static inline void uclamp_rq_inc(struct rq *rq, str=
-uct task_struct *p, int flags
- 		rq->uclamp_flags &=3D ~UCLAMP_FLAG_IDLE;
- }
-=20
--static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
-+static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
-nt flags)
- {
- 	enum uclamp_id clamp_id;
-=20
-@@ -1797,7 +1797,8 @@ static inline void uclamp_rq_dec(struct rq *rq, str=
-uct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
-=20
--	if (p->se.sched_delayed)
-+	/* Skip dec if this is a delayed task not being truly dequeued */
-+	if (p->se.sched_delayed && !(flags & DEQUEUE_DELAYED))
- 		return;
-=20
- 	for_each_clamp_id(clamp_id)
-@@ -2039,7 +2040,7 @@ static void __init init_uclamp(void)
-=20
- #else /* !CONFIG_UCLAMP_TASK */
- static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, i=
-nt flags) { }
--static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) {=
- }
-+static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p, i=
-nt flags) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
- static inline void init_uclamp(void) { }
-@@ -2112,7 +2113,7 @@ inline bool dequeue_task(struct rq *rq, struct task=
-_struct *p, int flags)
- 	 * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
- 	 * and mark the task ->sched_delayed.
- 	 */
--	uclamp_rq_dec(rq, p);
-+	uclamp_rq_dec(rq, p, flags);
- 	return p->sched_class->dequeue_task(rq, p, flags);
- }
-=20
---=20
-2.25.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
