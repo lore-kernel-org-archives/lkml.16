@@ -1,44 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D771D79A5;
-	Tue,  1 Jul 2025 14:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3DB1D79A5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:28:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751380120; cv=none; b=gg2fGzQ553JqDpQshkihozH8TxvuG6BYJ+7U1oD6mLHQ1RAdefZh//PlK5zt/NQvlqi2pVHfLtkeMHMyZPyM1821M9tpOu/WeMv05qwDvLfS9IuLvaZVtfgVq+Nj4qNP+kVbsIfj4VHYMSXw93bOhe9Xor+ycI/yNRD5RTSTrFM=
+	t=1751380130; cv=none; b=celpo+1+nNWgEtp3cIvaBGkwrXI9U3FKi1ajn3twrk2zGAj60BbKl34g6w+n7mxmRj8/Dv8mjj70SZeGcDz9/W3UxHurMGEkaUoe7G4/JilE/wkfKrqSpeiNTTekiPO5aSY2UbM3dp2x7ZeObPs0RN4GLb3IMCiGN+24JPdmE1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751380120; c=relaxed/simple;
-	bh=c8FcvF0sDojKq6CEwx9YZeroWQkF9ybiQlGtLOpU4aQ=;
+	s=arc-20240116; t=1751380130; c=relaxed/simple;
+	bh=K427iT1HGc8zDoadE5DGLiLL2or8Wi/lmQxJ08Jt14w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P4YyV0gr0v20GmsPTrGqHToE96LnqWqQv/Y3C1zOmiScBG2VUGwHEFcoIcmFrYBpjWF7TMl2zEfAR0O7f4ehuLqmZLxTLwDVEApvqfgIN8+ema6Z0RQ+UTDbcsFaZUFTUv6z4ywSh4tcqoIJokeT3ikD+YwFWIpzkRMhRmtw8Jc=
+	 MIME-Version:Content-Type; b=OstGp2FFm+bFb4Zm4YS7MHyBMCULWozgia6c4BTBj30LSyXinjhMvLqc9skkbDxN5KL/PeMZd4BFqSfUa/KymOdoZ5Q9KUkLwyK4d+GYfK4RP9rQZ8A3KOy5Xjcg3SNjBB5r3ziXjOoPAkhKwzzqaooXjKG9efqsVfW+Yf0fVPQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D993C4CEEB;
-	Tue,  1 Jul 2025 14:28:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D76C4CEED;
+	Tue,  1 Jul 2025 14:28:49 +0000 (UTC)
 From: Catalin Marinas <catalin.marinas@arm.com>
-To: live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
-	Song Liu <song@kernel.org>
-Cc: Will Deacon <will@kernel.org>,
-	jpoimboe@kernel.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com,
-	dylanbhatch@google.com,
-	fj6611ie@aa.jp.fujitsu.com,
-	mark.rutland@arm.com,
-	kernel-team@meta.com,
-	Suraj Jitindar Singh <surajjs@amazon.com>,
-	Torsten Duwe <duwe@suse.de>,
-	Breno Leitao <leitao@debian.org>,
-	Andrea della Porta <andrea.porta@suse.com>
-Subject: Re: [PATCH v5] arm64: Implement HAVE_LIVEPATCH
-Date: Tue,  1 Jul 2025 15:28:34 +0100
-Message-Id: <175138010917.1964100.18246912177187578815.b4-ty@arm.com>
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: pi: use 'targets' instead of extra-y in Makefile
+Date: Tue,  1 Jul 2025 15:28:47 +0100
+Message-Id: <175138012160.1964245.3629792221898551115.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250630174502.842486-1-song@kernel.org>
-References: <20250630174502.842486-1-song@kernel.org>
+In-Reply-To: <20250602180937.528459-1-masahiroy@kernel.org>
+References: <20250602180937.528459-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,20 +34,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 30 Jun 2025 10:45:02 -0700, Song Liu wrote:
-> Allocate a task flag used to represent the patch pending state for the
-> task. When a livepatch is being loaded or unloaded, the livepatch code
-> uses this flag to select the proper version of a being patched kernel
-> functions to use for current task.
+On Tue, 03 Jun 2025 03:09:35 +0900, Masahiro Yamada wrote:
+> %.pi.o files are built as prerequisites of other objects.
+> There is no need to use extra-y, which is planned for deprecation.
 > 
-> In arch/arm64/Kconfig, select HAVE_LIVEPATCH and include proper Kconfig.
 > 
-> [...]
 
-Applied to arm64 (for-next/livepatch), thanks!
+Applied to arm64 (for-next/misc), thanks!
 
-[1/1] arm64: Implement HAVE_LIVEPATCH
-      https://git.kernel.org/arm64/c/fd1e0fd71f65
+[1/1] arm64: pi: use 'targets' instead of extra-y in Makefile
+      https://git.kernel.org/arm64/c/6853acd39998
 
 -- 
 Catalin
