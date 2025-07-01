@@ -1,174 +1,176 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D286246BC5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 22:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8111CA81;
+	Tue,  1 Jul 2025 22:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407745; cv=none; b=B357f/HzYXjC8H0KxGYYv/Gzd5WanWQWLr3AKWbLbr+p7I3QxG4/qQe6Q9V2di6WEuGXmDsmdf76isiqfF+tRVSlB4qUNVnXLsyoajqkMb9ZjS7t/WkbfEtyJ1/WzSRJADxyJgCpKRqhCzvKql/Ag7rxTuvBSt344h9l0LK16lA=
+	t=1751407887; cv=none; b=Ysv/RhKwFZa49A+oUujGt9m8NVKCMIMnN2NgYHwbyDECFdpLrjbV27ZCeTvnGgoks1fqZr4RxZvJWGq8OxNb4B5gf8NCL0eFucxrr1qFVAXgwKAs/V5IcYhDM2VdajZlkjnb6OaTCoJ+3yd4/wszQOrI0Df35tFAIU1lX3H3yd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407745; c=relaxed/simple;
-	bh=6EqsWkpkeYfydp6o8pmzcX4O+MzJ5OGrnXS/xdaYoGU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fVQtwgPXDcKTo5M/28tT8fzrlcIfWIf7IWFSsDiij74J+8iyQ23YBjRLfyraEsnbZaucol2Pp/6Y3WojLXf84bQR3FIc89YZUu0T81kEOuALH5KvMxlwIRwe+LjZcaiw1amYBFiXtNGy7b8DaDp9nicxFNg+L1HOGo0+Bfv7Mg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vDMwRX4G; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vDMwRX4G"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74858256d38so3632030b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 15:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751407743; x=1752012543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yrLKmv2Vy7uxFt0iwPk+GWdFZVpcjh098B891Lvn1Lc=;
-        b=vDMwRX4G2p4tR7V1F/DQO/GL9SEcwB3IbAPIsA4G3I/0cWb+Srtkv8dqscUon075lm
-         SKGbI8FYGk85zdW3oymPLn8BOjJpLMHmKtDwqkc0jdkSUFVi84GO3yBdDpkDLJbTRUcK
-         hfQV+uLh8aniyU615Dd5D9HmqbcvWEEULFbr3pbgOpfquVjtnTmRKN5S8xfUv3TF9YYp
-         s5OdScC1VdFENX9tltb++g7dnD5QfNgdacLYR8w50n/GfHxbQxdMdVGTBp7OtmDjsI3i
-         QNoG8Qd/cwajvhbMYrqXFimPS71jqfo2FA2YbTGjYU2hzowwWqc3lH1OFPLulDyy1pI5
-         gywQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751407743; x=1752012543;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yrLKmv2Vy7uxFt0iwPk+GWdFZVpcjh098B891Lvn1Lc=;
-        b=XsdS7Nn1Cn0izGEOgT9L9/6mMCD4JqIOU+L65Z0AQKI5R2rc16wXa0kNiP9kd4QTOP
-         v+hMXR6sNnWHilrSQoCFrdyFr8ZzlXnNECe00j2DzIJicxvRcYkRtOqDj6fVG5bTldLT
-         p0hoBBMNB+Meggf+5flIE+2bosYh5Gua1UXeKmnF0HzJKRghZGKr6QQVN4jPNBrs9ZIb
-         4T8LZNUOmiolcxxx6s/WBc1CoK6D+fk/1Dsj+USuiwuphC0Hb7PGur03ts80Nyi5VMPX
-         Q7bASJiAo+1C0dc6gTtG8bO2dAcFaJdxzlR1gDVE76mW5qAlA1l7EQbfOMsr7Lx7Gep8
-         Fl3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVVMG29WDuScz6H0nFKaVW6F0YaqhvnbUDL1v3qVRs86IZOmR4T7e0YDeJnoRPEnexxrIHC8nrZDFCO3fk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzjXkI2SX5c3LVLuUNR06EK05d5BFNQ1B1dKo90wg/fpuqv+QP
-	79y7KXa7XQbwKblhKpweMLy+GlshP/yDXeKTpw4ypjS7aAMA2esmx5VfCtVf4D/08cB/etEACMO
-	PBKSObJxKzwtMcHeEaAkaDINMdw==
-X-Google-Smtp-Source: AGHT+IEe+r8Ltcv+81mNHFMOPEijls9stGq5miDhJ0WBatB0rMdu1zOeKhl/PXPmMqvALg7A2CkCRNJxJK/Vn6Jeag==
-X-Received: from pfbbw26.prod.google.com ([2002:a05:6a00:409a:b0:748:2476:b25f])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:23c3:b0:742:a91d:b2f6 with SMTP id d2e1a72fcca58-74b50f2a035mr633828b3a.13.1751407742749;
- Tue, 01 Jul 2025 15:09:02 -0700 (PDT)
-Date: Tue, 01 Jul 2025 15:09:01 -0700
-In-Reply-To: <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
+	s=arc-20240116; t=1751407887; c=relaxed/simple;
+	bh=fwzeZnsPwoY03IrV93gOz4MH43a/7r1n5nJHBDXSrJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n4t/+GrAfGXOSPnvSjVGKwsOUT3MwNDoXvpBkkbfi9NTW8r8fupSFhWsB7DZDoFJ8NkKMOcDZMVe+Y7cawD/PnqPDMaOJfsZJo64F4K1LfKCYZpm060o496umg4XN4nnN5RVXmCpIllpp9nvmZJKyhbcwJmI6Xj93rGOtsYpikA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id EBA4B16066C;
+	Tue,  1 Jul 2025 22:11:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 0F8F560016;
+	Tue,  1 Jul 2025 22:11:20 +0000 (UTC)
+Date: Tue, 1 Jul 2025 18:11:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ acarmina@redhat.com, chuck.wolber@boeing.com
+Subject: Re: [RFC PATCH 2/2] tracing: add testable specifications for
+ event_enable_write/read
+Message-ID: <20250701181119.7b0bc5d6@batman.local.home>
+In-Reply-To: <20250612104349.5047-3-gpaoloni@redhat.com>
+References: <20250612104349.5047-1-gpaoloni@redhat.com>
+	<20250612104349.5047-3-gpaoloni@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
- <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
- <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <CAGtprH-csoPxG0hCexCUg_n4hQpsss83inRUMPRqJSFdBN0yTQ@mail.gmail.com>
- <aGN6GIFxh57ElHPA@yzhao56-desk.sh.intel.com>
-Message-ID: <diqzms9n4l8i.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>, Vishal Annapurve <vannapurve@google.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: w6jcuxx8rb699hp9p9dhyz3a3uiqfsdo
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 0F8F560016
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX189n404bB2lDgycaIoKc0jEy6ui6CG92Vw=
+X-HE-Tag: 1751407880-615471
+X-HE-Meta: U2FsdGVkX18q2sKeAnqXOYlQBfW7JoKiB6kNFFT04Zt8cTzVabZJNeN6WPdRX+prZ6dtXnZwk/gSMiCn9awSITF6QE13oPjhfcKrEIWYs0OZXeNdmkBPV+sNlAK1SWM45LTAkkAH6kaVi0xhlqaF8AkPVmamELB7ZvrJT10RKnqcnGcc721UnnFM7TcqrttjwAhQYNF4MeEhR5qdz8ZZoF7SmTrVjerwNJtuaI74EKu9C+7iHPPxUVjwKbHW6X3uYCc8FERlpEyf+JiFRYxMyic4eQcKqog8nTT/n8k+Xdm+dRLZlt934wA763BxkLpmgeQze+ZKzPrUeB5nqirBlufGCeEWjlC2
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On Thu, 12 Jun 2025 12:43:49 +0200
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-> On Mon, Jun 30, 2025 at 10:22:26PM -0700, Vishal Annapurve wrote:
->> On Mon, Jun 30, 2025 at 10:04=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com>=
- wrote:
->> >
->> > On Tue, Jul 01, 2025 at 05:45:54AM +0800, Edgecombe, Rick P wrote:
->> > > On Mon, 2025-06-30 at 12:25 -0700, Ackerley Tng wrote:
->> > > > > So for this we can do something similar. Have the arch/x86 side =
-of TDX grow
->> > > > > a
->> > > > > new tdx_buggy_shutdown(). Have it do an all-cpu IPI to kick CPUs=
- out of
->> > > > > SEAMMODE, wbivnd, and set a "no more seamcalls" bool. Then any S=
-EAMCALLs
->> > > > > after
->> > > > > that will return a TDX_BUGGY_SHUTDOWN error, or similar. All TDs=
- in the
->> > > > > system
->> > > > > die. Zap/cleanup paths return success in the buggy shutdown case=
-.
->> > > > >
->> > > >
->> > > > Do you mean that on unmap/split failure:
->> > >
->> > > Maybe Yan can clarify here. I thought the HWpoison scenario was abou=
-t TDX module
->> > My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() =
-was hit in
->> > TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged=
- on and
->> > about to tear down.
->> >
->> > So, it could be due to KVM or TDX module bugs, which retries can't hel=
-p.
->> >
->> > > bugs. Not TDX busy errors, demote failures, etc. If there are "norma=
-l" failures,
->> > > like the ones that can be fixed with retries, then I think HWPoison =
-is not a
->> > > good option though.
->> > >
->> > > >  there is a way to make 100%
->> > > > sure all memory becomes re-usable by the rest of the host, using
->> > > > tdx_buggy_shutdown(), wbinvd, etc?
->> >
->> > Not sure about this approach. When TDX module is buggy and the page is=
- still
->> > accessible to guest as private pages, even with no-more SEAMCALLs flag=
-, is it
->> > safe enough for guest_memfd/hugetlb to re-assign the page to allow sim=
-ultaneous
->> > access in shared memory with potential private access from TD or TDX m=
-odule?
->>=20
->> If no more seamcalls are allowed and all cpus are made to exit SEAM
->> mode then how can there be potential private access from TD or TDX
->> module?
-> Not sure. As Kirill said "TDX module has creative ways to corrupt it"
-> https://lore.kernel.org/all/zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7i=
-uk2rt@qaaolzwsy6ki/.
->
-> Or, could TDX just set a page flag, like what for XEN
->
->         /* XEN */
->         /* Pinned in Xen as a read-only pagetable page. */
->         PG_pinned =3D PG_owner_priv_1,
->
-> e.g.
-> 	PG_tdx_firmware_access =3D PG_owner_priv_1,
->
-> Then, guest_memfd checks this flag on every zap and replace it with PG_hw=
-poison
-> on behalf of TDX?
+> This patch implements the documentation of event_enable_write and
+> event_enable_read in the form of testable function's expectations.
+> 
+> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+> ---
+>  kernel/trace/trace_events.c | 72 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 5e84ef01d0c8..eb3c5e6e557d 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -1771,6 +1771,46 @@ static void p_stop(struct seq_file *m, void *p)
+>  	mutex_unlock(&event_mutex);
+>  }
+>  
+> +/**
+> + * event_enable_read - read from a trace event file to retrieve its status.
+> + * @filp: file pointer associated with the target trace event;
+> + * @ubuf: user space buffer where the event status is copied to;
+> + * @cnt: number of bytes to be copied to the user space buffer;
 
-I think this question probably arose because of a misunderstanding I
-might have caused. I meant to set the HWpoison flag from the kernel, not
-from within the TDX module. Please see [1].
+Why is the above ending with semicolons?
 
-In addition, if the TDX module (now referring specifically to the TDX
-module and not the kernel) sets page flags, that won't work with
-vmemmap-optimized folios. Setting a page flag on a vmemmap-optimized
-folio will be setting the flag on a few pages.
+> + * @ppos: the current position in the buffer.
+> + *
+> + * This is a way for user space executables to retrieve the status of a
+> + * specific event
+> + *
+> + * Function's expectations:
+> + * - This function shall lock the global event_mutex before performing any
+> + *   operation on the target event file and unlock it after all operations on
+> + *   the target event file have completed;
+> + * - This function shall retrieve the status flags from the file associated
+> + *   with the target event;
+> + * - This function shall format the string to report the event status to user
+> + *   space:
+> + *   - The first character of the string to be copied to user space shall be
+> + *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
+> + *     set, else it shall be set to "0";
+> + *   - The second character of the string to be copied to user space shall be
+> + *     set to "*" if either the soft_disabled flag or the soft_mode flag is
+> + *     set, else it shall be set to "\n";
+> + *   - The third character of the string to be copied to user space shall b
+> + *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
+> + *     set, else it shall be set to "0";
+> + *   - Any other character in the string to be copied to user space shall be
+> + *     set to "0";
 
-[1] https://lore.kernel.org/all/diqzplej4llh.fsf@ackerleytng-ctop.c.googler=
-s.com/
+The above could use some new lines. Like between each bullet. My
+eyesight isn't as good anymore and I find reading gobs of text more
+difficult. Newlines give my eyes a break.
+
+I know this is being written so that a tool could parse it, but also
+needs to be parsed by aging developers. ;-)
+
+> + * - This function shall check if the requested cnt bytes are equal or greater
+> + *   than the length of the string to be copied to user space (else a
+> + *   corrupted event status could be reported);
+> + * - This function shall invoke simple_read_from_buffer() to perform the copy
+> + *   of the kernel space string to ubuf.
+
+Hmm, and it is also verbose. This is a relatively simple function, and
+it caused quite a bit of requirements. I wonder if it could be
+shortened a bit. Otherwise more complex and larger functions are going
+to be overwhelming and likely not acceptable. And those are the
+functions that I think this will benefit the most!
+
+> + *
+> + * Returns the number of copied bytes on success, -ENODEV if the event file
+> + * cannot be retrieved from the input filp, -EINVAL if cnt is less than the
+> + * length of the string to be copied to ubuf, any error returned by
+> + * simple_read_from_buffer
+
+Returns should be formatted better where each return value is on a
+separate line.
+
+-- Steve
+
+> + */
+>  static ssize_t
+>  event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+>  		  loff_t *ppos)
+> @@ -1808,6 +1848,38 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
+>  }
+>  
+> +/**
+> + * event_enable_write - write to a trace event file to enable/disable it.
+> + * @filp: file pointer associated with the target trace event;
+> + * @ubuf: user space buffer where the enable/disable value is copied from;
+> + * @cnt: number of bytes to be copied from the user space buffer;
+> + * @ppos: the current position in the buffer.
+> + *
+> + * This is a way for user space executables to enable or disable event
+> + * recording.
+> + *
+> + * Function's expectations:
+> + * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
+> + *   space buffer (or the whole input ubuf if cnt is larger than ubuf size)
+> + *   and shall convert the string within the kernel space buffer into a decimal
+> + *   base format number;
+> + * - This function shall lock the global event_mutex before performing any
+> + *   operation on the target event file and unlock it after all operations on
+> + *   the target event file have completed;
+> + * - This function shall check the size of the per-cpu ring-buffers used for
+> + *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
+> + *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
+> + *   TRACE_BUF_SIZE_DEFAULT are not allowed);
+> + * - This function shall invoke ftrace_event_enable_disable to enable or
+> + *   disable the target trace event according to the value read from user space
+> + *   (0 - disable, 1 - enable);
+> + *
+> + * Returns 0 on success, any error returned by kstrtoul_from_user, -ENODEV if
+> + * the event file cannot be retrieved from the input filp, any error returned by
+> + * tracing_update_buffers, any error returned by ftrace_event_enable_disable,
+> + * -EINVAL if the value copied from the user space ubuf is different from 0 or
+> + *  1.
+> + */
+>  static ssize_t
+>  event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+>  		   loff_t *ppos)
+
