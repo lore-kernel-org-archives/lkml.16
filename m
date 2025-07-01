@@ -1,78 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEBC2FEE29;
-	Tue,  1 Jul 2025 20:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B24D3D69;
+	Tue,  1 Jul 2025 21:00:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751403583; cv=none; b=p6KDhPDfc9QghteNBydv/MQKc6xsMbi5aS6z5VhBVHx76AigkPGV4w73Dvgr9pnKDAnHv37Zp+se+Pmho3C6ZCTOcfFGOHwfP5zQ57sCm5/IhGwVy/XnFwNXKBc7yWFtCl+sdiTYYSBrvWJS8xkIgnjLyiHde/1K7X2p1O8IuOc=
+	t=1751403657; cv=none; b=jvNfEU8pJsW+Fc1Lt/RtOzpqrTVZzCOWHv1ejof1pTDRlppIELCU4s83O2NtLJI3gd7LlrfBmORPqSKWNnrcqXZn0xAktoZCWQBJ5f9fyI0DSnR+UI0o98vCgRgysP5G6CvvCiZadwZqyJ8zplsHLB1DCD57WkShZwJ2J+FtDxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751403583; c=relaxed/simple;
-	bh=LdFKXc5zIIFbkF6UTCMWqKAWCcBGTFsXoiLEfjtzXHo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=i4NQafJ4jRvB8+M5T15JAzP1L9XFcm2s0mPGQAgQQSo1IVnNScsawQhXaOjHgApYK9q0Iqaaz/CXjBcBYEPjMbFmwuZ1TfcRCD9VXyAzm8jcdm024mZsEgD/99Bst4ABvwA+58wonXgBUB0Gek4XM2CLp8QF2SLjhvJi5FODr+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2nPHEoj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751403657; c=relaxed/simple;
+	bh=kwMk5TprZKCx1JDhnDxWSf8SIXmrXdGYvZd4f7l/slU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WZ1nd7NRou7AyafTWz4NJUU5YV16cNdMUd5cAcriXgPD/gLevhiN+NRo6o5EY6FyuR3p9npw3S6h/V9xcn/cGXadY1KgJBA+KBFmlzga9aNOrGaYu3xHXxb02HMXS1vflPO3gX6iG8fctLidPjZ/EHlPEhHNRepEwBmH6uq5e3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZDnsL7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2nPHEoj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F51C4CEEB;
-	Tue,  1 Jul 2025 20:59:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZDnsL7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68505C4CEEB;
+	Tue,  1 Jul 2025 21:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751403582;
-	bh=LdFKXc5zIIFbkF6UTCMWqKAWCcBGTFsXoiLEfjtzXHo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Z2nPHEojQXwfwmA0KzYM9JkdBM/1gIys9m39NasT6EhWLuizYi1BUGm1BCuYEpz9x
-	 hBK+Qg/XGY82eXc/A8dRYMhUewbO1Xz8usDydaK0ZtZY9anTWLu0c/79vnShCUvag6
-	 VV0bjyPCP4m9MoHwD9wFHhr9x9xJ942ARSKNe0jSp4+CYtXPIj09mzqk/B3+mO4TFS
-	 bolrVmZPW4msfAglG/WXTqNAzMLg+0sbc3xkYa+Q6BjWahBvVeiRrShCxQvGSV+v2l
-	 hufPmmV8/q//wkcuQXgimLhVnaekeGfQTAxpwMISP5lmaNyZOxD7i+oTcykXifDkOm
-	 zEjsBm+KQtv4w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DD5383B273;
-	Tue,  1 Jul 2025 21:00:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1751403656;
+	bh=kwMk5TprZKCx1JDhnDxWSf8SIXmrXdGYvZd4f7l/slU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LZDnsL7cKhhPCLAz+ZG4gjmlbUDH5LsuCyjrAfdX2O3b8fjodzObXRzM/MJPekt62
+	 nTeDu4i+FVUlGYoHIpM+ZHULwIuB9lzHnYPtr661Tb8UNG+yy8pU1UICcZyhMLr7rQ
+	 5wIG8EtG3E+OHk78tJXs/KvGVH9xAKTnMCMXa6RG8F8+pBwCNQi9MVyJfo/lnTAiG1
+	 3unsPdqMZIJc15yoz+zLXDwuX+wk5DQLV2eZTL2LIq9qtdmigzntdzUTkL4ACNz0wD
+	 152L6feSP7TQKIA5Ea+1xxShzy1Qi6tu2b+WpzQdQ8Ceg622ANuqhdXNW/OLqVv/oW
+	 NqSNHDCBf1Kag==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH 0/6] dt-bindings: hwmon: Add undocumented compatibles
+Date: Tue, 01 Jul 2025 16:00:39 -0500
+Message-Id: <20250701-dt-hwmon-compatibles-v1-0-ad99e65cf11b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] selftests/bpf: don't call fsopen() as privileged
- user
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175140360726.116693.10341336783596879643.git-patchwork-notify@kernel.org>
-Date: Tue, 01 Jul 2025 21:00:07 +0000
-References: <20250701183123.31781-1-technoboy85@gmail.com>
-In-Reply-To: <20250701183123.31781-1-technoboy85@gmail.com>
-To: Matteo Croce <technoboy85@gmail.com>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, andrii@kernel.org,
- brauner@kernel.org, song@kernel.org, linux-kernel@vger.kernel.org,
- teknoraver@meta.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHdMZGgC/x3MQQqAIBBA0avErBsYhSi6SrRIm3IgNTQqiO6et
+ HyL/x/InIQz9NUDiU/JEkOBqiuwbgoro8zFoEk31JLC+UB3+RjQRr9Ph5iNM5JlMlYbs6gOSro
+ nXuT+t8P4vh/2VN1mZgAAAA==
+X-Change-ID: 20250701-dt-hwmon-compatibles-0ce0bc2bbf18
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
+ Frank Li <Frank.Li@nxp.com>, Jim Wright <wrightj@linux.vnet.ibm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-Hello:
+This series adds some undocumented compatibles which are already in use 
+in drivers. They were found running 'make dt_compatible_check'.
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+Please take via the hwmon tree except the last trivial-devices patch as 
+it has a minor conflict with my tree otherwise.
 
-On Tue,  1 Jul 2025 20:31:23 +0200 you wrote:
-> From: Matteo Croce <teknoraver@meta.com>
-> 
-> In the BPF token example, the fsopen() syscall is called as privileged
-> user. This is unneeded because fsopen() can be called also as
-> unprivileged user from the user namespace.
-> As the `fs_fd` file descriptor which was sent back and fort is still the
-> same, keep it open instead of cloning and closing it twice via SCM_RIGHTS.
-> 
-> [...]
+Rob
 
-Here is the summary with links:
-  - [bpf-next] selftests/bpf: don't call fsopen() as privileged user
-    https://git.kernel.org/bpf/bpf-next/c/212ec9229567
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Rob Herring (Arm) (6):
+      dt-bindings: hwmon: national,lm90: Add missing Dallas max6654 and onsemi nct72, nct214, and nct218
+      dt-bindings: hwmon: ti,lm87: Add adi,adm1024 compatible
+      dt-bindings: hwmon: lltc,ltc2978: Add lltc,ltc713 compatible
+      dt-bindings: hwmon: maxim,max20730: Add maxim,max20710 compatible
+      dt-bindings: hwmon: pmbus: ti,ucd90320: Add missing compatibles
+      dt-bindings: trivial-devices: Add undocumented hwmon devices
 
-You are awesome, thank you!
+ .../devicetree/bindings/hwmon/lltc,ltc2978.yaml    |  2 +
+ .../devicetree/bindings/hwmon/maxim,max20730.yaml  |  1 +
+ .../devicetree/bindings/hwmon/national,lm90.yaml   |  8 ++++
+ .../bindings/hwmon/pmbus/ti,ucd90320.yaml          |  6 +++
+ .../devicetree/bindings/hwmon/ti,lm87.yaml         |  4 +-
+ .../devicetree/bindings/trivial-devices.yaml       | 50 ++++++++++++++++++++++
+ 6 files changed, 70 insertions(+), 1 deletion(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250701-dt-hwmon-compatibles-0ce0bc2bbf18
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Rob Herring (Arm) <robh@kernel.org>
 
