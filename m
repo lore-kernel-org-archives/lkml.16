@@ -1,80 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017A5281355;
-	Tue,  1 Jul 2025 20:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221142EE27B;
+	Tue,  1 Jul 2025 20:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751402129; cv=none; b=PYBep3KpWxbjIWMfwakAbsvELh2T0Ke5ukdVJAQa7p7LZ3xzJpd2eW+cWL0+lIq94WmI1hbNBYD5VMWMFNs7NMR0Y+j4JqqqvlZVh1bZjA1V9mfvKruDjeUAn0BoTGHITTrJ4wDyDhaRr4xTH8C2ywC54GQH27mCj7o/+UE4UcI=
+	t=1751402133; cv=none; b=kz86YRwlCh1Kej1H+W2f2TeoAMRDiGHtd65eqPP7BrMozLxJ6avVj7wrWkuNXpXHQnd1t5U++ObQoJI3kl1peE7+OV4SiwHA5KpN4LoYh1vlwJ8askOPze39ESGiHRY00fvpn/JkykFuSJ08q+gzZ0v7W0gLAYUgNnRycU9RpUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751402129; c=relaxed/simple;
-	bh=I6JQFok9D5wKOjJaufxumgrPJ4Vt5SFOzuUQhLx/Q5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jn9hZaKUfIoKOqZl0atUn6FdU5mkvqj4cHaGKCi51KMum0AOMr8/8esf0RMenixqCNHax0+W+K7dYXVigaiaX8mFOWyDI7hYx8FQ7WnHeba9n6X5zSwjl+2XZRq8hesCteivltjADr+NwZdB7XuVGFiWjZJlx8XtMvJq1z5YPxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoNLWaQV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoNLWaQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECCDC4CEEE;
-	Tue,  1 Jul 2025 20:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751402128;
-	bh=I6JQFok9D5wKOjJaufxumgrPJ4Vt5SFOzuUQhLx/Q5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DoNLWaQVMb95RqC3gJrE41oKtcZ1/5qtyH27rYyX5KkC8SwX0jmwxkPmHYFqJocdw
-	 CfD4bjdVniIKo5XCFTyl0d0gX7TsUV91+cxje7kuDMsqUeunAsxQoXDCtLtqRz7GQL
-	 0VYb/LgMWLogj/LdfVPJ6QpHJ2Y+Yn+ppX79dMODS0muPEXzogWTNlABnng6JLMUD8
-	 wEy1xTqWfLprk5Uzhx8SSeTfBpHlpphyu0ACkhroJldDlgvPFGCRg8AthdLs5pEBXK
-	 qYokL8ZKCtgvl5B6Gp58NSI4uR8j4Bq/hEn92faFgxvxWgzbjwBasUOmJUFav4Lzk1
-	 XZ4KkiqLpdX2w==
-Date: Tue, 1 Jul 2025 15:35:26 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2] PCI/pwrctrl: Skip creating pwrctrl device unless
- CONFIG_PCI_PWRCTRL is enabled
-Message-ID: <20250701203526.GA1849466@bhelgaas>
+	s=arc-20240116; t=1751402133; c=relaxed/simple;
+	bh=aFFF1mLuYBw2ufmFNwubdrwFdnLPXZHdYb0mk4i6WbE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:Content-Type; b=eCrlnaJ055TP9Ui2JtoS6zeP9HhrhzK11hqr+NT+xZ9XGihGInbPyrtmQ04JO88avYv7LCntF49L6w1YcQhc9nm3dtPm6UI5Ug/bh6QfmEM6mlZ4A0zUi/YJHUnvVqqm1MZkTtUkD2oCdelAQCxQFKT5G65WVGcJjhgFNpZZr/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.131.62) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 1 Jul
+ 2025 23:35:07 +0300
+Message-ID: <f769ad67-fc6b-4101-8bdc-8b41eba73a21@omp.ru>
+Date: Tue, 1 Jul 2025 23:35:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250701064731.52901-1-manivannan.sadhasivam@linaro.org>
+User-Agent: Mozilla Thunderbird
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH v2] NFSv4: prevent integer overflow while calling
+ nfs4_set_lease_period()
+To: <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>
+Content-Language: en-US
+CC: <linux-kernel@vger.kernel.org>
+Organization: Open Mobile Platform
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 07/01/2025 20:22:13
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 194471 [Jul 01 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 62 0.3.62
+ e2af3448995f5f8a7fe71abf21bb23519d0f38c3
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.131.62 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.131.62 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.131.62
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 07/01/2025 20:24:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 7/1/2025 6:30:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-[+cc Bart]
+The nfs_client::cl_lease_time field (as well as the jiffies variable it's
+used with) is declared as *unsigned long*, which is 32-bit type on 32-bit
+arches and 64-bit type on 64-bit arches. When nfs4_set_lease_period() that
+sets nfs_client::cl_lease_time is called, 32-bit nfs_fsinfo::lease_time
+field is multiplied by HZ -- that might overflow before being implicitly
+cast to *unsigned long*. Actually, there's no need to multiply by HZ at all
+the call sites of nfs4_set_lease_period() -- it makes more sense to do that
+once, inside that function, calling check_mul_overflow() and capping result
+at ULONG_MAX on actual overflow...
 
-On Tue, Jul 01, 2025 at 12:17:31PM +0530, Manivannan Sadhasivam wrote:
-> If devicetree describes power supplies related to a PCI device, we
-> previously created a pwrctrl device even if CONFIG_PCI_PWRCTL was
-> not enabled.
-> 
-> When pci_pwrctrl_create_device() creates and returns a pwrctrl device,
-> pci_scan_device() doesn't enumerate the PCI device. It assumes the pwrctrl
-> core will rescan the bus after turning on the power. However, if
-> CONFIG_PCI_PWRCTL is not enabled, the rescan never happens.
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
-Separate from this patch, can we refine the comment in
-pci_scan_device() to explain *why* we should skip scanning if a
-pwrctrl device was created?  The current comment leaves me with two
-questions:
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: stable@vger.kernel.org
 
-  1) How do we know the pwrctrl device is currently off?  If it is
-     already on, why should we defer enumerating the device?
+---
+The patch is against the master branch of Trond Myklebust's linux-nfs.git repo.
 
-  2) If the pwrctrl device is currently off, won't the Vendor ID read
-     just fail like it does for every other non-existent device?  If
-     so, why can't we just let that happen?
+Changes in version 2:
+- made use of check_mul_overflow() instead of mul_u32_u32();
+- capped the multiplication result at ULONG_MAX instead of returning -ERANGE,
+  keeping nfs4_set_lease_period() *void*;
+- rewrote the patch description accordingly.
 
-This behavior is from 2489eeb777af ("PCI/pwrctrl: Skip scanning for
-the device further if pwrctrl device is created"), which just says
-"there's no need to continue scanning."  Prior to 2489eeb777af, it
-looks like we *did* what try to enumerate the device even if a pwrctrl
-device was created, and 2489eeb777af doesn't mention a bug fix, so I
-assume it's just an optimization.
+ fs/nfs/nfs4_fs.h    |    3 +--
+ fs/nfs/nfs4proc.c   |    2 +-
+ fs/nfs/nfs4renewd.c |   10 +++++++---
+ fs/nfs/nfs4state.c  |    2 +-
+ 4 files changed, 10 insertions(+), 7 deletions(-)
 
-Bjorn
+Index: linux-nfs/fs/nfs/nfs4_fs.h
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4_fs.h
++++ linux-nfs/fs/nfs/nfs4_fs.h
+@@ -463,8 +463,7 @@ struct nfs_client *nfs4_alloc_client(con
+ extern void nfs4_schedule_state_renewal(struct nfs_client *);
+ extern void nfs4_kill_renewd(struct nfs_client *);
+ extern void nfs4_renew_state(struct work_struct *);
+-extern void nfs4_set_lease_period(struct nfs_client *clp, unsigned long lease);
+-
++extern void nfs4_set_lease_period(struct nfs_client *clp, u32 period);
+ 
+ /* nfs4state.c */
+ extern const nfs4_stateid current_stateid;
+Index: linux-nfs/fs/nfs/nfs4proc.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4proc.c
++++ linux-nfs/fs/nfs/nfs4proc.c
+@@ -5476,7 +5476,7 @@ static int nfs4_do_fsinfo(struct nfs_ser
+ 		err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+ 		trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+ 		if (err == 0) {
+-			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time * HZ);
++			nfs4_set_lease_period(server->nfs_client, fsinfo->lease_time);
+ 			break;
+ 		}
+ 		err = nfs4_handle_exception(server, err, &exception);
+Index: linux-nfs/fs/nfs/nfs4renewd.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4renewd.c
++++ linux-nfs/fs/nfs/nfs4renewd.c
+@@ -137,11 +137,15 @@ nfs4_kill_renewd(struct nfs_client *clp)
+  * nfs4_set_lease_period - Sets the lease period on a nfs_client
+  *
+  * @clp: pointer to nfs_client
+- * @lease: new value for lease period
++ * @period: new value for lease period (in seconds)
+  */
+-void nfs4_set_lease_period(struct nfs_client *clp,
+-		unsigned long lease)
++void nfs4_set_lease_period(struct nfs_client *clp, u32 period)
+ {
++	unsigned long lease;
++
++	if (check_mul_overflow(period, HZ, &lease))
++		lease = ULONG_MAX;
++
+ 	spin_lock(&clp->cl_lock);
+ 	clp->cl_lease_time = lease;
+ 	spin_unlock(&clp->cl_lock);
+Index: linux-nfs/fs/nfs/nfs4state.c
+===================================================================
+--- linux-nfs.orig/fs/nfs/nfs4state.c
++++ linux-nfs/fs/nfs/nfs4state.c
+@@ -103,7 +103,7 @@ static int nfs4_setup_state_renewal(stru
+ 
+ 	status = nfs4_proc_get_lease_time(clp, &fsinfo);
+ 	if (status == 0) {
+-		nfs4_set_lease_period(clp, fsinfo.lease_time * HZ);
++		nfs4_set_lease_period(clp, fsinfo.lease_time);
+ 		nfs4_schedule_state_renewal(clp);
+ 	}
+ 
