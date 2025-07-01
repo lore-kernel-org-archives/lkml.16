@@ -1,255 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0F01FDD
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEEA26B772
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751358882; cv=none; b=RhQnNSLjJ0sHK3MYKpnoSmPhPYejKsswx7eExl9OgXp8+O2wwDafOAhAubdbisty63VQYLV11WCZI3on0rWY0StG7dRh0SE04UfKJYZWKx8aSNM7rV7v1yp1cu6Y5/DM6faJkEsIRyqeLpOGUJzfCNZRWZKvbHh9Py3wxVHItm8=
+	t=1751358886; cv=none; b=CsbNBvmwquOGHKURhH1HgcNTsnOfaA17MgfHK8Gu6+DwUf41EZfahykBZ3fL+5JblqQSdXOaNxvglc3qOZqjxz4QCw7kyXNil81oSQPTwf19HJX+9CAjhBdrdeMrEBZDGcxortHxzTlYlVPn1x1tusWQbaGPLp6KvPfA+dVqs5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751358882; c=relaxed/simple;
-	bh=lbS24cMJ3Oc3OQhNt/DSzGyRJOx2dd6GD9LmhgcNCIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ir1AlOf1Bi9UwVtVOnrpLtS9fU9jg+JBmLAkzJ+cVurMbq8tZqE1WuiC4fhmqESZtLlJ13eZBjwK5LVNo6nRUt6BXf8U1T74JOIFyJYhXWBojtLVCH5MC07JTsVYyOStW1tVfDlwcQ0V94WwVqKpqTi+KFnNKj5VB72PmjcyZdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TrvU4jE2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TrvU4jE2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751358880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=XqmCuun4O9S0uzldpDEz2Hy5OKYqaKQE+fhycCpdDZQ=;
-	b=TrvU4jE2sSNKwHtHjRFHdxMtnaGP48GvZwVsdTSdKlku5B+Mwbt4QUvtK+WmrEgXtZA8lp
-	pvm4Ra9r2B9oQZfPUXfWvooSgSk3lxfqTzn+hYPbw89s10+kfthyA+DHKynL6AiT15HCLb
-	2DCz+0WPbK6viRfodCkNKgrKZ6sgjEs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-536-QOmFTm9oNf6F-_rcUfC3dA-1; Tue, 01 Jul 2025 04:34:39 -0400
-X-MC-Unique: QOmFTm9oNf6F-_rcUfC3dA-1
-X-Mimecast-MFC-AGG-ID: QOmFTm9oNf6F-_rcUfC3dA_1751358877
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f6ff23ccso3582948f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:34:38 -0700 (PDT)
+	s=arc-20240116; t=1751358886; c=relaxed/simple;
+	bh=tePumcfgYM4yfA1zn/OepsW4Fes5VB99oPMwomROmQQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=dFvteH5fIWk8p5xejgAeIMCN5aZv4ix/Q0/Cbj+TwD64ahfi2mAna41OTvj2ofqy+cs2IX+sgepV0rN1Zt4M9ImTCo01kxmbNfoviFqeJ+8F4tPA/tTowbQOOBKrQ4y05M+iAyIq6SxZl2/oqWC9f8sBDYvg8lwP/iTuXyVyOMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86a5def8869so469646839f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:34:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751358877; x=1751963677;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XqmCuun4O9S0uzldpDEz2Hy5OKYqaKQE+fhycCpdDZQ=;
-        b=USmbF45HRDHQ9zJe5wihu4Kuhb2qIZhNNp2W9JQzKCftZoBPOlfYBuDK/jJh0W8/H2
-         mIRIldVPgraqQflO836c2gdHD/MvhH7WyOUxYBrdiQ967lusHwPqJDUyRxGti5UFiXvS
-         qQjnT2N7ffZ0lbhobVytVFjRwYaWr86FaxOwaWSYCQuhJq68s1yM9o0kz6fABID7ps3o
-         sUyvTGUYkQ/J1WZApO2PxrxLsZ/WGXW2g7yFX4cjLCS+rlusABpdrnCcgcBU9BXee1xi
-         GrkE0JOubrfo65nNlQkkHGhuOJ0MIyvHszfMU6Qn28NsJIEHG8eXuwz+xffc87SgLf65
-         WhXQ==
-X-Gm-Message-State: AOJu0YwJdvK9aD5u/qcE3Mbrh99TU2FJ9XngcMI2ipQbUxTBMCRG2C03
-	KJPbFWPpkaUtH85YCNrHxJZ/3Kb6zxHurJ/NUYkSMApCtb20/biTkOZL5B62JV7b9N0eTdL86/+
-	TOlxLbyhhICL2pGyMtX2rBg7xNpvwypWXGnFf84R2FXh4LBQ/mvDiVzBCPi48iKT7aQ==
-X-Gm-Gg: ASbGnctv2HutRgO/QJsS9oUxCI0GESOPNjkN24ItTJlc91Id9yig6HMGM9MejYqOhum
-	gB5wvm2PY4b3d7YbXFfKxZacEu3OviaC09+QNnL01gKY91bp42Z/uCgIZBYc7nluG2n0/zsRrca
-	TeihoWT3L0sDHBSgm8CJ0aV8pCDHRxgBKjLfMtGfN1g7xqgp04dHbc8ENj6UJOKLx8m/piMZdUV
-	aTXqOrqrmWVnNLTcyoo5WGozihXe7mrOWhFKCUwTaS1iZtblRCMb4+cjWbqKhfl/3n32F01vRaP
-	EqnuffLQvBqHN6JQjaoBAr2ROcC373ILm6zXE1EJHp3VJtHrTw9xknBsx8V7VT2YPvLLc8hLGt8
-	V0DILFjsY2phC+exg0hHeb3YDFfqFGRrqkyipsAi+FE5ntGkruA==
-X-Received: by 2002:a5d:60c4:0:b0:3a4:d898:3e2d with SMTP id ffacd0b85a97d-3a90d69c269mr11346916f8f.24.1751358877361;
-        Tue, 01 Jul 2025 01:34:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEF8cObrwLhR7FvJoCAh0zan/cCbAjnhUquLcc9ptC1Omlee0lmAh8jtPfZiWWwygYZe4cdqg==
-X-Received: by 2002:a5d:60c4:0:b0:3a4:d898:3e2d with SMTP id ffacd0b85a97d-3a90d69c269mr11346880f8f.24.1751358876846;
-        Tue, 01 Jul 2025 01:34:36 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f18:7500:202e:b0f1:76d6:f9af? (p200300d82f187500202eb0f176d6f9af.dip0.t-ipconnect.de. [2003:d8:2f18:7500:202e:b0f1:76d6:f9af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e5f943sm12511942f8f.101.2025.07.01.01.34.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 01:34:35 -0700 (PDT)
-Message-ID: <84e1eeeb-c78f-4735-a6d2-4bb15ea1fbce@redhat.com>
-Date: Tue, 1 Jul 2025 10:34:33 +0200
+        d=1e100.net; s=20230601; t=1751358884; x=1751963684;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/RpZV1Tkb3Ci7/HwJluY5QW3M0f7S/ytspF8Tb+Pss=;
+        b=NtxSEyEKwUIoC4CrgXj4AlwTo5L3zcclH6BBVBaCTZBTq7ISAEx+br6dzDSVt5aXZT
+         A659cq0mGUM3//VOe8LVgWfd1BCD9/bu9lF5Tog0TyzGGUrkuYTFGOqSQw+o+qs/b2IK
+         NKDp+5aOs4K1W92CDQEXqhDFmS+82gdFSivF8+1iJ5xUoedAYUCwS9zeIsj55ICWBMbs
+         Ze0ogRQ7Hb1YP6p4siPD/1PKhV2JFPqlj1PsE89h69jnbP56NQLhnidRBXCchUgHuyiY
+         MiSW2+9koYBgdLmfUw96gIMA15w0jneMjWnmhiS6y7C6TqqfcD40bzeBEJwIkbSlqLLO
+         DRnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFFME8+HAVjiU51KOBhdTPLWVkGKEfrkbhXCtbsmGRfJysBpW6i5qfMei4MDLj6PMlC3gDt8ZQVaT4PP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyobd9H+DreFJOnfv3sq0Thh+LBapPCTdUXo8vZScSr/eJowckR
+	o1ahQuyKT52ys5fkwHYjV4vV0DzVFfd9KvpHi6Z71jzE9BykKegSNw6Y6T7TDmFh7p8TL6Rfx9U
+	8afaKpKVZW9ERG20MG3ReYrAfjBonDpzDn/8tlrVDh5xXk0gyLO+u9s8cD10=
+X-Google-Smtp-Source: AGHT+IHb+E+e0leBAbi1q+D8Aa3gv08f1YWG9uYDktjngdyqIf2V7FSezpr5bV7XhVEvAkeoPB6pVb11n/m3ecz01m0bjSke9USB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/29] mm/page_alloc: let page freeing clear any set
- page type
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin
- <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-5-david@redhat.com>
- <8c5392d6-372c-4d5d-8446-6af48fba4548@lucifer.local>
- <d4d8b891-008d-4cbc-950f-2e44c4445904@redhat.com>
- <06e260cf-9b63-4d7c-809c-a9f2cda58939@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <06e260cf-9b63-4d7c-809c-a9f2cda58939@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:6d83:b0:861:d8ca:3587 with SMTP id
+ ca18e2360f4ac-876882a82acmr2241987739f.4.1751358884145; Tue, 01 Jul 2025
+ 01:34:44 -0700 (PDT)
+Date: Tue, 01 Jul 2025 01:34:44 -0700
+In-Reply-To: <a0abb368-1871-49e9-8f6b-ff78f543c808@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68639da4.a70a0220.3b7e22.189f.GAE@google.com>
+Subject: Re: [syzbot] [f2fs?] kernel BUG in do_write_page
+From: syzbot <syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com>
+To: chao@kernel.org
+Cc: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 01.07.25 10:27, Lorenzo Stoakes wrote:
-> On Tue, Jul 01, 2025 at 10:17:13AM +0200, David Hildenbrand wrote:
->> On 30.06.25 17:27, Lorenzo Stoakes wrote:
->>> On Mon, Jun 30, 2025 at 02:59:45PM +0200, David Hildenbrand wrote:
->>>> Currently, any user of page types must clear that type before freeing
->>>> a page back to the buddy, otherwise we'll run into mapcount related
->>>> sanity checks (because the page type currently overlays the page
->>>> mapcount).
->>>>
->>>> Let's allow for not clearing the page type by page type users by letting
->>>> the buddy handle it instead.
->>>>
->>>> We'll focus on having a page type set on the first page of a larger
->>>> allocation only.
->>>>
->>>> With this change, we can reliably identify typed folios even though
->>>> they might be in the process of getting freed, which will come in handy
->>>> in migration code (at least in the transition phase).
->>>>
->>>> In the future we might want to warn on some page types. Instead of
->>>> having an "allow list", let's rather wait until we know about once that
->>>> should go on such a "disallow list".
->>>
->>> Is the idea here to get this to show up on folio dumps or?
->>
->> As part of the netmem_desc series, there was a discussion about removing the
->> mystical PP checks -- page_pool_page_is_pp() in page_alloc.c and replacing
->> them by a proper page type check.
->>
->> In that case, we would probably want to warn in case we get such a netmem
->> page unexpectedly freed.
->>
->> But, that page type does not exist yet in code, so the sanity check must be
->> added once introduced.
-> 
-> OK, and I realise that the UINT_MAX thing is a convention for how a reset
-> page_type looks anyway now.
-> 
->>
->>>
->>>>
->>>> Reviewed-by: Zi Yan <ziy@nvidia.com>
->>>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>    mm/page_alloc.c | 3 +++
->>>>    1 file changed, 3 insertions(+)
->>>>
->>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->>>> index 858bc17653af9..44e56d31cfeb1 100644
->>>> --- a/mm/page_alloc.c
->>>> +++ b/mm/page_alloc.c
->>>> @@ -1380,6 +1380,9 @@ __always_inline bool free_pages_prepare(struct page *page,
->>>>    			mod_mthp_stat(order, MTHP_STAT_NR_ANON, -1);
->>>>    		page->mapping = NULL;
->>>>    	}
->>>> +	if (unlikely(page_has_type(page)))
->>>> +		page->page_type = UINT_MAX;
->>>
->>> Feels like this could do with a comment!
->>
->> /* Reset the page_type -> _mapcount to -1 */
-> 
-> Hm this feels like saying 'the reason we set it to -1 is to set it to -1' :P
+> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/common
 
-Bingo! Guess why I didn't add a comment in the first place :P
+This crash does not have a reproducer. I cannot test it.
 
-> 
-> I'd be fine with something simple like
-> 
-> /* Set page_type to reset value */
-
-"Reset the page_type (which overlays _mapcount)"
-
-?
-
- > > But... Can't we just put a #define somewhere here to make life 
-easy? Like:
-
-Given that Willy will change all that soon, I'm not in favor of doing 
-that in this series.
-
--- 
-Cheers,
-
-David / dhildenb
-
+>
+> On 7/1/25 15:58, syzbot wrote:
+>> Hello,
+>> 
+>> syzbot found the following issue on:
+>> 
+>> HEAD commit:    2aeda9592360 Add linux-next specific files for 20250627
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=152363d4580000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=7f5c1d958b70bf47
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=9201a61c060513d4be38
+>> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+>> 
+>> Unfortunately, I don't have any reproducer for this issue yet.
+>> 
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/d532560074a3/disk-2aeda959.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/483001f76864/vmlinux-2aeda959.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/8f233cdc1c77/bzImage-2aeda959.xz
+>> 
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+9201a61c060513d4be38@syzkaller.appspotmail.com
+>> 
+>> F2FS-fs (loop9): inject invalid blkaddr in f2fs_is_valid_blkaddr of do_write_page+0x277/0xb10 fs/f2fs/segment.c:3956
+>> ------------[ cut here ]------------
+>> kernel BUG at fs/f2fs/segment.c:3957!
+>> Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+>> CPU: 0 UID: 0 PID: 10538 Comm: syz-executor Not tainted 6.16.0-rc3-next-20250627-syzkaller #0 PREEMPT(full) 
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+>> RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
+>> Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
+>> RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
+>> RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
+>> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+>> RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
+>> R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
+>> R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
+>> FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007f2ce7b71d60 CR3: 0000000031b0e000 CR4: 00000000003526f0
+>> Call Trace:
+>>  <TASK>
+>>  f2fs_outplace_write_data+0x11a/0x220 fs/f2fs/segment.c:4017
+>>  f2fs_do_write_data_page+0x12ea/0x1a40 fs/f2fs/data.c:2752
+>>  f2fs_write_single_data_page+0xa68/0x1680 fs/f2fs/data.c:2851
+>>  f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
+>>  __f2fs_write_data_pages fs/f2fs/data.c:3282 [inline]
+>>  f2fs_write_data_pages+0x195b/0x3000 fs/f2fs/data.c:3309
+>>  do_writepages+0x32b/0x550 mm/page-writeback.c:2636
+>>  filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
+>>  __filemap_fdatawrite_range mm/filemap.c:419 [inline]
+>>  __filemap_fdatawrite mm/filemap.c:425 [inline]
+>>  filemap_fdatawrite+0x199/0x240 mm/filemap.c:430
+>>  f2fs_sync_dirty_inodes+0x31f/0x830 fs/f2fs/checkpoint.c:1108
+>>  block_operations fs/f2fs/checkpoint.c:1247 [inline]
+>>  f2fs_write_checkpoint+0x95a/0x1df0 fs/f2fs/checkpoint.c:1638
+>>  kill_f2fs_super+0x2c3/0x6c0 fs/f2fs/super.c:5081
+>>  deactivate_locked_super+0xb9/0x130 fs/super.c:474
+>>  cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
+>>  task_work_run+0x1d4/0x260 kernel/task_work.c:227
+>>  resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>>  exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:114
+>>  exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
+>>  syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
+>>  syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
+>>  do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
+>>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> RIP: 0033:0x7f85f3d8fc57
+>> Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
+>> RSP: 002b:00007ffc395e64c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+>> RAX: 0000000000000000 RBX: 00007f85f3e10925 RCX: 00007f85f3d8fc57
+>> RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffc395e6580
+>> RBP: 00007ffc395e6580 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffc395e7610
+>> R13: 00007f85f3e10925 R14: 00000000000c355a R15: 00007ffc395e7650
+>>  </TASK>
+>> Modules linked in:
+>> ---[ end trace 0000000000000000 ]---
+>> RIP: 0010:do_write_page+0xa44/0xb10 fs/f2fs/segment.c:3956
+>> Code: 82 7f ad fd 49 89 ed 48 89 e8 48 25 ff 0f 00 00 74 1a e8 8f 7a ad fd e9 9f 00 00 00 e8 85 7a ad fd 90 0f 0b e8 7d 7a ad fd 90 <0f> 0b 4d 89 ee 4c 89 ef be 08 00 00 00 e8 7a 7c 11 fe 49 c1 ee 03
+>> RSP: 0018:ffffc90004f2ec58 EFLAGS: 00010293
+>> RAX: ffffffff841257e3 RBX: ffffc90004f2ef40 RCX: ffff88802f493c00
+>> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+>> RBP: ffffc90004f2ef5c R08: 0000000000000003 R09: 0000000000000004
+>> R10: dffffc0000000000 R11: fffffbfff1bfa428 R12: ffff888042d28000
+>> R13: 1ffff920009e5deb R14: dffffc0000000000 R15: ffffc90004f2ef5c
+>> FS:  000055555f3a1500(0000) GS:ffff888125c1e000(0000) knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 00007ff1d4e5ef40 CR3: 0000000031b0e000 CR4: 00000000003526f0
+>> 
+>> 
+>> ---
+>> This report is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> 
+>> syzbot will keep track of this issue. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>> 
+>> If the report is already addressed, let syzbot know by replying with:
+>> #syz fix: exact-commit-title
+>> 
+>> If you want to overwrite report's subsystems, reply with:
+>> #syz set subsystems: new-subsystem
+>> (See the list of subsystem names on the web dashboard)
+>> 
+>> If the report is a duplicate of another one, reply with:
+>> #syz dup: exact-subject-of-another-report
+>> 
+>> If you want to undo deduplication, reply with:
+>> #syz undup
+>
