@@ -1,102 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F0D29D0D;
-	Tue,  1 Jul 2025 13:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8977614A60C;
+	Tue,  1 Jul 2025 13:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751374970; cv=none; b=SWjKPdM9FdTz21kY+pyV0isG4ynISPyrn5/WfTDWFt5Y2dqXfE7HeyYM2UCcVqV328C+Ln1dWcppL2jV1qNVu9I/QXYs1IVmRYU682L02BztlQA9/vuYr7YPv9UT1kgPt+m0gXUgzmR1LR9/ZYv+cioNX+fIuf0I3Mh/FXG1tAY=
+	t=1751375004; cv=none; b=uEm+uYhgPWOhnswjsUYUtWzQlReIeM5KpZPoiOZXWtL+s5ZqBesloZ/Cm9poNh+llTq33GNnUQqHswtn0iYIGzwSFkdtHO6sU02+ZI7XSQAIxZga8EQyILv76rlzpbCw24+R1nE6zfXeIum5/IOiqHpoOlyMYmfVN9ecm5ix6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751374970; c=relaxed/simple;
-	bh=F/84wrFwoijHU+FufPitkE6z85i1QdM2oq4GmNNuc+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tqU1fvTr0Tfy6zjLw9a+nQEYd7odvZBTaxmzUYQIGE5EFD+UZ3TUdVPAvXwjo+tVzE5PSlJP4sQedRb3hYPZVyC6LZqhwklKiWoE+7xl8jTqWsTNVtWfLxBO5LqN4s4rPbtHTUfiPHkfrSAluvTIZDXHwPM2UJL6v9Pc4bVQcFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhMQ2Yq+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751375004; c=relaxed/simple;
+	bh=6X6qPun53xDchjpSRE9dYfr31uAuoiS5oedrX2u7uZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=epkEIi78ktLIBbbuglP8GCXndHUCROogCGk2aP6MLnZ0egE41E3SfCs146Sj/kKgMLcyntORS+kLSaPUNcX7EUd92/9o7wzfe+ljKTF4kzVPMVYE62wYeGpn303Qe9ihLyb+24fMNV72MePsiOh1PGHuWik9GaAX5fHRXyL7gSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NH/OonXS; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhMQ2Yq+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221F4C4CEEB;
-	Tue,  1 Jul 2025 13:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751374970;
-	bh=F/84wrFwoijHU+FufPitkE6z85i1QdM2oq4GmNNuc+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uhMQ2Yq+o7XnI05VtPbOaoIlF3tDHhi+binHqry62SGJq8NNmJHGvv9m+EdyYwzR7
-	 IahUmrjXhg248tMGQ1OHGRC7N7VmNU/V2007UfApE+MA2EhRPpuKXR7Rt4liEV4c4P
-	 JNM702/9rWgab8vLg0hezsMOojEIWvRh55CFXymv+IQrcF3r9J6gW8d+qWTmCjYoov
-	 CcXo4C8TxxvPo2Pj0jDPhts3Q8BLjsPMFb100lhTASoBrbgdt1LXD3v3PvbNnPA0ax
-	 zgnbXP6KsUZkj98sG0EGz7rXlMJA3DTLO+jbei3nFlFViaQcXohJJP68WqNxEf6uGT
-	 8Ls51CrVOOhfg==
-Date: Tue, 1 Jul 2025 14:02:43 +0100
-From: Simon Horman <horms@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
-	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?utf-8?Q?Nicol=C3=B2?= Veronese <nicveronese@gmail.com>,
-	mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH net-next v7 04/15] net: phy: Introduce PHY ports
- representation
-Message-ID: <20250701130243.GA130037@horms.kernel.org>
-References: <20250630143315.250879-1-maxime.chevallier@bootlin.com>
- <20250630143315.250879-5-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH/OonXS"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4757425a12.2;
+        Tue, 01 Jul 2025 06:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751375003; x=1751979803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zVcI3obUDlDvlugturYa2IMjNszU4+SQTl5pW6Uiz2o=;
+        b=NH/OonXSkIORC4dKX+4DQ5lHzu2d37Y7M9aKaFLWSzdjLAnL52yrywes1sZ3xULexs
+         w+u0iX1YkBaf75DdDPp+ruPa5ePfxMBVUN97AQYQ+zwrhyKju7AR8w80zOsE/2qjifPU
+         TkJKPGctGNmB77584yC2+heOuRk+BJ+WhGfU2VvrGI/037omkrUzIHT8Q00Nw0Rfnu/X
+         URpOyQek1bowZZ3GgS1WcZbtUGDJkRSa08Ah9QAFx9UdV5nYBK9JF/Jah4SQJbiy9rfz
+         PtHzhtECeIPjLhwqctNpUY2rleBAnWBuXYRUFPZYjSexQocHM+BCEnuE0Oe2v6UZowUg
+         hgrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751375003; x=1751979803;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zVcI3obUDlDvlugturYa2IMjNszU4+SQTl5pW6Uiz2o=;
+        b=kL/O4V/XN0VMtizAC/avdOmNEhZ0wb+GY0WtmCcvAIyZMD/S1TFWBOraGtPXKlH+ni
+         Gfpq7tgksYcDVLBa7YckWKXIW3S6/Gfdtd5ojCOp6vJCC5Ipzrp50nKwavrVxZZaYIFK
+         J8aLpmMqJBjyzMjlckzCi11h+/FYHq1ZzJ/rAH2vXKm7vFrgVS/qApIal5/zxiGeVrN2
+         jC0KXycP/75UX2HowNI1wouTtmp77BcByUDRqpmH3b28c51T74k2q5DSycZVOD4wUPSR
+         pwJ+8yudNXRuThkgrIgvahUEtGZxOWPKMcoENWGkll0PdBqyVPpY0JyGzf1/iuRrsxdr
+         hDxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcL298f/ZsakDB8vwGUOqzK48UhZIb8sKucILcgEUpX+x36ul/iPVMEemYuqBcByP9JYtVqX/VkS7rJnwJ4hrM@vger.kernel.org, AJvYcCVuietod7mWi1CJf6iCozoJs3YpFZBiYWVv9SR072eP2G/JlRS9AOIDVUjJQyR9DMHPWBUryVcV1KGh5lU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw+CaILGZEOv4VRbymv2dPOXc6z7haQ3esruEDESkD1+9P3ZEI
+	kV+rkqIwec6huJoobpHCn27kC7cxi0m8MKGg2PwwJx1/SBRCTO42qcnO
+X-Gm-Gg: ASbGnctNe8Va6r43Y8hfyIOZAOAUL8uL03h/TvSI20IuDKmaffNvEifgeXXrrbVqTSV
+	NrlYRgA/VqLzCs6We5y9kTbGJAEn5p0hN5BMpPZSQa4FW8LSN6dppbw1SH1rPTy5eM1OkGZqUr9
+	GNl+nuusOPgvXFEJefAIdIXN5HvkrfJBuQU3zMocvSPl3b7K97we1kA9ueurnWmK9fYyks8Lurb
+	VoJozzG8F9L2ogWL5nU1fEmy0njxFy+ojjFco0VJZUPLoaCjFsql8YzWWdYVwHK2Tm5hw7ANMb1
+	z+rIKIzSuJ7ICQOwtSk1PeBg6R3tC5un9gL3Z5Fazc17U4/zmiXi6YtBr+ag2+2+L27DsSkMlge
+	7I4u7WT2X
+X-Google-Smtp-Source: AGHT+IE+/HLkERC531DcUcGWUU8RN4AfiK2M9TcfBl036ejse4qyXmt/cJy2Sc4qf7ES0RShO+2zKw==
+X-Received: by 2002:a17:90a:da8f:b0:313:176b:7384 with SMTP id 98e67ed59e1d1-318c8ed841fmr27266065a91.11.1751375002666;
+        Tue, 01 Jul 2025 06:03:22 -0700 (PDT)
+Received: from DESKTOP-GIED850.localdomain ([114.247.113.191])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b49sm107917975ad.22.2025.07.01.06.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 06:03:22 -0700 (PDT)
+From: wang lian <lianux.mm@gmail.com>
+To: sj@kernel.org
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	brauner@kernel.org,
+	david@redhat.com,
+	gkwang@linx-info.com,
+	jannh@google.com,
+	lianux.mm@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	p1ucky0923@gmail.com,
+	ryncsn@gmail.com,
+	shuah@kernel.org,
+	vbabka@suse.cz,
+	zijing.zhang@proton.me
+Subject: Re: [PATCH v2] selftests/mm: Add process_madvise() tests
+Date: Tue,  1 Jul 2025 21:03:20 +0800
+Message-ID: <20250701130320.3790-1-lianux.mm@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250701030614.68902-1-sj@kernel.org>
+References: <20250701030614.68902-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630143315.250879-5-maxime.chevallier@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 30, 2025 at 04:33:03PM +0200, Maxime Chevallier wrote:
+Hi SeongJae Park,
 
-...
+Thank you very much for your thorough review and encouraging feedback!
 
-> +/**
-> + * phy_port_get_type() - get the PORT_* attribut for that port.
-> + * @port: The port we want the information from
-> + *
-> + * Returns: A PORT_XXX value.
-> + */
-> +int phy_port_get_type(struct phy_port *port)
-> +{
-> +	if (port->mediums & ETHTOOL_LINK_MEDIUM_BASET)
+I will address all of these in the next version.
 
-Hi Maxime,
+Thanks again for your time and valuable input!
 
-Should this be:
-
-	if (port->mediums & BIT(ETHTOOL_LINK_MEDIUM_BASET))
-
-Flagged by Smatch (because ETHTOOL_LINK_MEDIUM_BASET is 0,
-so as-is the condition is always false).
-
-> +		return PORT_TP;
-> +
-> +	if (phy_port_is_fiber(port))
-> +		return PORT_FIBRE;
-> +
-> +	return PORT_OTHER;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_port_get_type);
-
-...
+Best regards,  
+Wang Lian
