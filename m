@@ -1,234 +1,190 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD881537DA;
-	Tue,  1 Jul 2025 13:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490926FA52;
+	Tue,  1 Jul 2025 13:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751375832; cv=none; b=pMXondlQzXdT6HcahpBaX6iwcE3dEynF3YEJoxuyFz++PY5rMz96NOH/D7yXeUBqS5fr7icifUG/OyEMBNJQfwZ1M4v1nNI2rxTfEzOZgImNE7FJSc4/MtdTlWksh+H59js9960nJ1w9cWeF0uNtwV3Hjj25kLTEFZVViz8jAbs=
+	t=1751375875; cv=none; b=sMUek0JSefw4Fe9PyeXoB1vSB1NkykePv7Pt+F53WV62pbCnuwmSDnGzeaLFPyymM74I6r4l///uyKkvHcLrz5x3EFgYG3A1qn6gDf3RaQdyz6nlFc6hGVXprvg5LzBJc9nCy79xFbU6prNbxebvMQG0UyKxz0piMyqbW/s9B7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751375832; c=relaxed/simple;
-	bh=clF/opN+ntpR2Ve2PNZbytjYZSh0addA+ndqVcX3MDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lsvPoZ31b2r50zBasGnHhJn/NWmhU85xY7NGf60CFRDzoy+qOLlC5s3M8LMWvwliDo1bEii+LIKsdJg/xahCIUikJTkNr48CGNuAR/W/G+HHMVomI5gU7gT2ju8S+jXEGsIpmvhfGO7KNhYleM46nb0nT1Csa/e3rsbr8Ps7jR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1751375875; c=relaxed/simple;
+	bh=r/NN+uPVPVDTHVFIhfUSaYzHUAeqofpBGcQ+MIV4XdM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FEN3b+k4y4RBn2MxF+RFFf6z0kIIlzEtqYiqP62p0xrCGWBwx39Yfjnke9kQBXnRrQvSvS/rQORVilXaBQEFPQZ3oIzm8oqJnlf26WnexOtv+jD8l4DlKTonKJ+GfvaOcMeFp2+vF3ZCWWRC/AH8SgWRkSxrUNDqMikgZjXf80w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bWk5S6F5Xz13Mh9;
-	Tue,  1 Jul 2025 21:14:36 +0800 (CST)
-Received: from dggpemf500013.china.huawei.com (unknown [7.185.36.188])
-	by mail.maildlp.com (Postfix) with ESMTPS id 834261402C1;
-	Tue,  1 Jul 2025 21:17:05 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.71) by dggpemf500013.china.huawei.com
- (7.185.36.188) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 1 Jul
- 2025 21:17:04 +0800
-Message-ID: <d9a5775e-afde-49ec-9c20-7613c4ea0cab@huawei.com>
-Date: Tue, 1 Jul 2025 21:17:03 +0800
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWk5v1p8Bz6L57K;
+	Tue,  1 Jul 2025 21:14:59 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A81EA14038F;
+	Tue,  1 Jul 2025 21:17:49 +0800 (CST)
+Received: from localhost (10.122.19.247) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 15:17:49 +0200
+Date: Tue, 1 Jul 2025 14:17:47 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+CC: <linux-cxl@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] cxl: docs/driver-api/conventions resolve conflicts
+ btw CFMWS, LMH, ED
+Message-ID: <20250701141747.00003bf7@huawei.com>
+In-Reply-To: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
+References: <20250623152923.1048525-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/16] ext4: remove unnecessary s_md_lock on update
- s_mb_last_group
-To: Jan Kara <jack@suse.cz>
-CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
-	<ojaswin@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, Baokun Li
-	<libaokun1@huawei.com>
-References: <20250623073304.3275702-1-libaokun1@huawei.com>
- <20250623073304.3275702-4-libaokun1@huawei.com>
- <xlzlyqudvp7a6ufdvc4rgsoe7ty425rrexuxgfbgwxoazfjd25@6eqbh66w7ayr>
- <1c2d7881-94bb-46ff-9cf6-ef1fbffc13e5@huawei.com>
- <mfybwoygcycblgaln2j4et4zmyzli2zibcgvixysanugjjhhh5@xyzoc4juy4wv>
- <db4b9d71-c34d-4315-a87d-2edf3bbaff2d@huawei.com>
- <e2dgjtqvqjapir5xizb5ixkilhzr7fm7m7ymxzk6ixzdbwxjjs@24n4nzolye77>
- <272e8673-36a9-4fef-a9f1-5be29a57c2dc@huawei.com>
- <kvgztznp6z2gwuujrw5vtklfbmq3arjg54bpiufmxdwmuwjliw@og7qkacbdtax>
-Content-Language: en-US
-From: Baokun Li <libaokun1@huawei.com>
-In-Reply-To: <kvgztznp6z2gwuujrw5vtklfbmq3arjg54bpiufmxdwmuwjliw@og7qkacbdtax>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500013.china.huawei.com (7.185.36.188)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 2025/7/1 20:21, Jan Kara wrote:
-> On Tue 01-07-25 10:39:53, Baokun Li wrote:
->> On 2025/7/1 0:32, Jan Kara wrote:
->>> On Mon 30-06-25 17:21:48, Baokun Li wrote:
->>>> On 2025/6/30 15:47, Jan Kara wrote:
->>>>> On Mon 30-06-25 11:48:20, Baokun Li wrote:
->>>>>> On 2025/6/28 2:19, Jan Kara wrote:
->>>>>>> On Mon 23-06-25 15:32:51, Baokun Li wrote:
->>>>>>>> After we optimized the block group lock, we found another lock
->>>>>>>> contention issue when running will-it-scale/fallocate2 with multiple
->>>>>>>> processes. The fallocate's block allocation and the truncate's block
->>>>>>>> release were fighting over the s_md_lock. The problem is, this lock
->>>>>>>> protects totally different things in those two processes: the list of
->>>>>>>> freed data blocks (s_freed_data_list) when releasing, and where to start
->>>>>>>> looking for new blocks (mb_last_group) when allocating.
->>>>>>>>
->>>>>>>> Now we only need to track s_mb_last_group and no longer need to track
->>>>>>>> s_mb_last_start, so we don't need the s_md_lock lock to ensure that the
->>>>>>>> two are consistent, and we can ensure that the s_mb_last_group read is up
->>>>>>>> to date by using smp_store_release/smp_load_acquire.
->>>>>>>>
->>>>>>>> Besides, the s_mb_last_group data type only requires ext4_group_t
->>>>>>>> (i.e., unsigned int), rendering unsigned long superfluous.
->>>>>>>>
->>>>>>>> Performance test data follows:
->>>>>>>>
->>>>>>>> Test: Running will-it-scale/fallocate2 on CPU-bound containers.
->>>>>>>> Observation: Average fallocate operations per container per second.
->>>>>>>>
->>>>>>>>                        | Kunpeng 920 / 512GB -P80|  AMD 9654 / 1536GB -P96 |
->>>>>>>>      Disk: 960GB SSD   |-------------------------|-------------------------|
->>>>>>>>                        | base  |    patched      | base  |    patched      |
->>>>>>>> -------------------|-------|-----------------|-------|-----------------|
->>>>>>>> mb_optimize_scan=0 | 4821  | 7612  (+57.8%)  | 15371 | 21647 (+40.8%)  |
->>>>>>>> mb_optimize_scan=1 | 4784  | 7568  (+58.1%)  | 6101  | 9117  (+49.4%)  |
->>>>>>>>
->>>>>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>>>>>> ...
->>>>>>>
->>>>>>>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
->>>>>>>> index 5cdae3bda072..3f103919868b 100644
->>>>>>>> --- a/fs/ext4/mballoc.c
->>>>>>>> +++ b/fs/ext4/mballoc.c
->>>>>>>> @@ -2168,11 +2168,9 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
->>>>>>>>      	ac->ac_buddy_folio = e4b->bd_buddy_folio;
->>>>>>>>      	folio_get(ac->ac_buddy_folio);
->>>>>>>>      	/* store last allocated for subsequent stream allocation */
->>>>>>>> -	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
->>>>>>>> -		spin_lock(&sbi->s_md_lock);
->>>>>>>> -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
->>>>>>>> -		spin_unlock(&sbi->s_md_lock);
->>>>>>>> -	}
->>>>>>>> +	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC)
->>>>>>>> +		/* pairs with smp_load_acquire in ext4_mb_regular_allocator() */
->>>>>>>> +		smp_store_release(&sbi->s_mb_last_group, ac->ac_f_ex.fe_group);
->>>>>>> Do you really need any kind of barrier (implied by smp_store_release())
->>>>>>> here? I mean the store to s_mb_last_group is perfectly fine to be reordered
->>>>>>> with other accesses from the thread, isn't it? As such it should be enough
->>>>>>> to have WRITE_ONCE() here...
->>>>>> WRITE_ONCE()/READ_ONCE() primarily prevent compiler reordering and ensure
->>>>>> that variable reads/writes access values directly from L1/L2 cache rather
->>>>>> than registers.
->>>>> I agree READ_ONCE() / WRITE_ONCE() are about compiler optimizations - in
->>>>> particular they force the compiler to read / write the memory location
->>>>> exactly once instead of reading it potentially multiple times in different
->>>>> parts of expression and getting inconsistent values, or possibly writing
->>>>> the value say byte by byte (yes, that would be insane but not contrary to
->>>>> the C standard).
->>>> READ_ONCE() and WRITE_ONCE() rely on the volatile keyword, which serves
->>>> two main purposes:
->>>>
->>>> 1. It tells the compiler that the variable's value can change unexpectedly,
->>>>      preventing the compiler from making incorrect optimizations based on
->>>>      assumptions about its stability.
->>>>
->>>> 2. It ensures the CPU directly reads from or writes to the variable's
->>>>      memory address. This means the value will be fetched from cache (L1/L2)
->>>>      if available, or from main memory otherwise, rather than using a stale
->>>>      value from a CPU register.
->>> Yes, we agree on this.
->>>
->>>>>> They do not guarantee that other CPUs see the latest values. Reading stale
->>>>>> values could lead to more useless traversals, which might incur higher
->>>>>> overhead than memory barriers. This is why we use memory barriers to ensure
->>>>>> the latest values are read.
->>>>> But smp_load_acquire() / smp_store_release() have no guarantee about CPU
->>>>> seeing latest values either. They are just speculation barriers meaning
->>>>> they prevent the CPU from reordering accesses in the code after
->>>>> smp_load_acquire() to be performed before the smp_load_acquire() is
->>>>> executed and similarly with smp_store_release(). So I dare to say that
->>>>> these barries have no (positive) impact on the allocation performance and
->>>>> just complicate the code - but if you have some data that show otherwise,
->>>>> I'd be happy to be proven wrong.
->>>> smp_load_acquire() / smp_store_release() guarantee that CPUs read the
->>>> latest data.
->>>>
->>>> For example, imagine a variable a = 0, with both CPU0 and CPU1 having
->>>> a=0 in their caches.
->>>>
->>>> Without a memory barrier:
->>>> When CPU0 executes WRITE_ONCE(a, 1), a=1 is written to the store buffer,
->>>> an RFO is broadcast, and CPU0 continues other tasks. After receiving ACKs,
->>>> a=1 is written to main memory and becomes visible to other CPUs.
->>>> Then, if CPU1 executes READ_ONCE(a), it receives the RFO and adds it to
->>>> its invalidation queue. However, it might not process it immediately;
->>>> instead, it could perform the read first, potentially still reading a=0
->>>> from its cache.
->>>>
->>>> With a memory barrier:
->>>> When CPU0 executes smp_store_release(&a, 1), a=1 is not only written to
->>>> the store buffer, but data in the store buffer is also written to main
->>>> memory. An RFO is then broadcast, and CPU0 waits for ACKs from all CPUs.
->>>>
->>>> When CPU1 executes smp_load_acquire(a), it receives the RFO and adds it
->>>> to its invalidation queue. Here, the invalidation queue is flushed, which
->>>> invalidates a in CPU1's cache. CPU1 then replies with an ACK, and when it
->>>> performs the read, its cache is invalid, so it reads the latest a=1 from
->>>> main memory.
->>> Well, here I think you assume way more about the CPU architecture than is
->>> generally true (and I didn't find what you write above guaranteed neither
->>> by x86 nor by arm64 CPU documentation). Generally I'm following the
->>> guarantees as defined by Documentation/memory-barriers.txt and there you
->>> can argue only about order of effects as observed by different CPUs but not
->>> really about when content is fetched to / from CPU caches.
->> Explaining why smp_load_acquire() and smp_store_release() guarantee the
->> latest data is read truly requires delving into their underlying
->> implementation details.
->>
->> I suggest you Google "why memory barriers are needed." You might find
->> introductions to concepts like 'Total Store Order', 'Weak Memory Ordering',
->> MESI, store buffers, and invalidate queue, along with the stories behind
->> them.
-> Yes, I know these things. Not that I'd be really an expert in them but I'd
-> call myself familiar enough :). But that is kind of besides the point here.
-> What I want to point out it that if you have code like:
->
->    some access A
->    grp = smp_load_acquire(&sbi->s_mb_last_group)
->    some more accesses
->
-> then the CPU is fully within it's right to execute them as:
->
->    grp = smp_load_acquire(&sbi->s_mb_last_group)
->    some access A
->    some more accesses
->
-> Now your *particular implementation* of the ARM64 CPU model may never do
-> that similarly as no x86 CPU currently does it but some other CPU
-> implementation may (e.g. Alpha CPU probably would, as much as that's
-> irrevelent these days :). So using smp_load_acquire() is at best a
-> heuristics that may happen to help using more fresh value for some CPU
-> models but it isn't guaranteed to help for all architectures and all CPU
-> models Linux supports.
-Yes, it's true that the underlying implementation of
-smp_load_acquire() can differ somewhat across various
-processor architectures.
->
-> So can you do me a favor please and do a performance comparison of using
-> READ_ONCE / WRITE_ONCE vs using smp_load_acquire / smp_store_release on
-> your Arm64 server for streaming goal management? If smp_load_acquire /
-> smp_store_release indeed bring any performance benefit for your servers, we
-> can just stick a comment there explaining why they are used. If they bring
-> no measurable benefit I'd put READ_ONCE / WRITE_ONCE there for code
-> simplicity. Do you agree?
->
-> 								Honza
+On Mon, 23 Jun 2025 17:29:02 +0200
+"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
 
-Okay, no problem. I'll get an ARM server from the resource pool to test
-the difference between the two. If there's no difference, replacing them
-with READ_ONCE/WRITE_ONCE would be acceptable.
+> Add documentation on how to resolve conflicts between CXL Fixed Memory
+> Windows, Platform Memory Holes, and Endpoint Decoders.
+>=20
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.co=
+m>
+> ---
+>=20
+> v2 -> v3: Rework a few phrases for better clarity.
+> 	  Fix grammar and syntactic errors (Randy, Alok).
+> 	  Fix semantic errors ("size does not comply", Alok).
+> 	  Fix technical errors ("decoder's total memory?", Alok).
+> 	 =20
+> v1 -> v2: Rewrite "Summary of the Change" section, 3r paragraph.
+>=20
+>  Documentation/driver-api/cxl/conventions.rst | 85 ++++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>=20
+> diff --git a/Documentation/driver-api/cxl/conventions.rst b/Documentation=
+/driver-api/cxl/conventions.rst
+> index da347a81a237..d6c8f4cf2f5b 100644
+> --- a/Documentation/driver-api/cxl/conventions.rst
+> +++ b/Documentation/driver-api/cxl/conventions.rst
+> @@ -45,3 +45,88 @@ Detailed Description of the Change
+>  ----------------------------------
+> =20
+>  <Propose spec language that corrects the conflict.>
+> +
+> +
+> +Resolve conflict between CFMWS, Platform Memory Holes, and Endpoint Deco=
+ders
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> +
+> +Document
+> +--------
+> +
+> +CXL Revision 3.2, Version 1.0
+> +
+> +License
+> +-------
+> +
+> +SPDX-License Identifier: CC-BY-4.0
+> +
+> +Creator/Contributors
+> +--------------------
+> +
+> +Fabio M. De Francesco, Intel
+> +Dan J. Williams, Intel
+> +Mahesh Natu, Intel
+> +
+> +Summary of the Change
+> +---------------------
+> +
+> +According to the current CXL Specifications (Revision 3.2, Version 1.0)
+> +the CXL Fixed Memory Window Structure (CFMWS) describes zero or more Host
+> +Physical Address (HPA) windows that are associated with each CXL Host
+> +Bridge. Each window represents a contiguous HPA range that may be
+> +interleaved across one or more targets, some of which are CXL Host Bridg=
+es.
+> +Associated with each window is a set of restrictions that govern its usa=
+ge.
+> +It is the OSPM=E2=80=99s responsibility to utilize each window for the s=
+pecified
+> +use.
+> +
+> +Table 9-22 states the Window Size field contains the total number of
+> +consecutive bytes of HPA this window represents and this value shall be a
+> +multiple of Number of Interleave Ways * 256 MB.
+> +
+> +Platform Firmware (BIOS) might reserve part of physical addresses below
+> +4 GB (e.g., the Low Memory Hole that describes PCIe memory space for MMIO
+> +or a requirement for the greater than 8 way interleave CXL regions start=
+ing
+> +at address 0). In that case the Window Size value cannot be anymore
+> +constrained to the NIW * 256 MB above-mentioned rule.
+
+I'm not following argument for large interleave at address 0 being a problem
+(if we ignore the low memory hole and similar as a separate issue).  Even
+if it is the interaction with the low memory hole, is 12 way interleave
+of 256MiB devices a problem?  Fills up to 3GiB.
 
 
-Cheers,
-Baokun
+> +
+> +On those systems, BIOS publishes CFMWS which communicate the active Syst=
+em
+> +Physical Address (SPA) ranges that map to a subset of the Host Physical
+> +Address (HPA) ranges. The SPA range trims out the hole, and capacity in =
+the
+> +endpoint is lost with no SPA to map to CXL HPA in that hole.
+> +
+> +The description of the Window Size field in table 9-22 needs to take that
+> +special case into account.
+> +
+> +Note that the Endpoint Decoders HPA range sizes have to comply with the
+> +alignment constraints and so a part of their memory capacity might not be
+> +accessible if their size exceeds the matching CFMWS range's.
+> +
+> +Benefits of the Change
+> +----------------------
+> +
+> +Without this change, the OSPM wouldn't match Endpoint Decoders with CFMWS
+> +whose Window Size don't fit the alignment constraints and so the memdev
+> +capacity would be lost. This change allows the OSPM to match Endpoint
+> +Decoders whose HPA range size exceeds the matching CFMWS and create
+> +regions that at least utilize a part of the memory devices total capacit=
+y.
+> +
+> +References
+> +----------
+> +
+> +Compute Express Link Specification Revision 3.2, Version 1.0
+> +<https://www.computeexpresslink.org/>
+> +
+> +Detailed Description of the Change
+> +----------------------------------
+> +
+> +The current description of a CFMWS Window Size (Table 9-22) is replaced
+> +with:
+> +
+> +"The total number of consecutive bytes of HPA this window represents. Th=
+is
+> +value shall be a multiple of NIW*256 MB. On platforms that reserve physi=
+cal
+> +addresses below 4 GB for special use (e.g., the Low Memory Hole for PCIe
+> +MMIO on x86), an instance of CFMWS whose Base HPA is 0 might have a wind=
+ow
+> +size that doesn't align with the NIW*256 MB constraint; note that the
+> +matching Endpoint Decoders HPA range size must still align to the
+> +above-mentioned rule and so the memory capacity that might exceed the CF=
+MWS
+> +window size will not be accessible.".
+>=20
+> base-commit: a021802c18c4c30dff3db9bd355cacb68521f1aa
 
