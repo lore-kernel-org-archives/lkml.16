@@ -1,46 +1,73 @@
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDEC25B1CE
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3C8244695;
+	Tue,  1 Jul 2025 11:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751369712; cv=none; b=VV3lDrsYk5qT3dbTQo9jmxLfj3zxh7jTSp2VqGkiBO43tusIt0YdL3+kcBTkdorxonTIADCQ12h+BOu54fGdHK0kvj0Pws2rshlz0vN1h4MNXQQWIE/tBwcEuiQ3Gj4Tk9HkUyRmVLN/EineiHOolzy9PxlS67yglsb9QoRADXM=
+	t=1751369814; cv=none; b=hK1gQUrNgrwCEcrLNuvd4GmoiZZTxgO2KeEk2XjWWx0HukSQkxxc2rrhDx2SvTFPGTZINiPhnZJZ7oYMeEi2UHRF/ONOplNQC8M7pwTzmXrbgzlSwYnKg9xRr/T7GiaXtAatuVyO0upcPZwmCy1CGNjlVwP2T7QK297Cmjz4zLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751369712; c=relaxed/simple;
-	bh=toy7KDrxRKaBrKEHAnZbNH7DtmKUMTVQeK+rdhzUSuo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OeKR4WI5xbezrjJO27dz2N6eoVmPjJhG2rOmpE+3p+8siewqx28W9mUfa1ZF0YvmVSIuZZVRtGUCrQmAW9JiC+M7tolh9AUh6lsY381CCAO70nef+Wr+v0eK5D5MMQ4Pio9rMq8TqylAQNulcBCv7aG4vSvS2CaTuP1lcqzVZDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=NlTMdQLJ; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1751369814; c=relaxed/simple;
+	bh=zIwmF8IC5QDpQEdWGzxI+Z2zWLEnRkubt4JpDQ+iYU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UGgCikSN04V/OaaXA2T+FYhd5VOjroleBKjxhfDvi7UI7Er2nVuD3kui80i9Sh/NNG6y+9O7Yggj4cMiYaf4uJC1x8KMaSmwEMS1P+ICbkm86PRxvAZg/z7xo/U5YFnTZ8wRDtI76C+Wq4B9o3+jeIc4aDq6C6fPVFylqp2hO8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lt91GVmH; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="NlTMdQLJ"
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250701105441ebbc6e3793791ffcb9
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 01 Jul 2025 12:54:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=alexander.sverdlin@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=pKdITuxJaA8EUNftYYb9o+8QYm/n/GOV6BYJNqWHBdI=;
- b=NlTMdQLJsQKRO+x5KTq2hOtxXWNHIw353VOH8ecekqR3fqCkYXcy1GzkN9+2Xg9zIpPkNS
- sIRAboDhQrWMSj8jSueadSK4W+XMLHWoccNhJf+HoWpcXJjQQOnEB5m2EceC8fcDC62X3BtH
- kvzdFOmQUmHRD/2kVxsxPE6dhP3BdwfiGnGcGG976L4ED6bZJHdwd7D4KzCw1cYZz5AKsuR/
- Bo7Y2cGuwVUKQVGThkbxmxByWBd1p+EZr0DYDF6AajBbXL6eq8keZCa1AbFRUKdDyHKK6/dx
- RI578UZhJNo0TpgPfkvGI0xYWezdfGKm1q2MS8tWtcizhHKizrbVHTzw==;
-From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
-To: devicetree@vger.kernel.org
-Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: ti: k3-pinctrl: Enable Schmitt Trigger by default
-Date: Tue,  1 Jul 2025 12:54:35 +0200
-Message-ID: <20250701105437.3539924-1-alexander.sverdlin@siemens.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lt91GVmH"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4eb4dfd8eso858708f8f.2;
+        Tue, 01 Jul 2025 04:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751369811; x=1751974611; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PoKs7u+y/vYoT+pBIVA9Awsc2GEH+2XOxBHoVC0v/yA=;
+        b=Lt91GVmHPQ6bleyqzjI/GAfZkdU8rIvcQ9h71zhyYQ5y9H9eBx66fDHo64DE7CQHPX
+         0r8o4IWiz1pt8yqqxpFuU6KmWfgHVNgA1fooXxCP6dz7xuhBtqEfAPeKxB+ChUAfblFV
+         IaMbcCSw4UtCj8w/cmCDoeYJp8mSTIGxKbHNxflKfp6eIhWdatNW0GWj+HiHY9aCPONL
+         QX3zSmSlDbRAHDI4n20O+l1a4dnUmYxdImEAntTuxb5UYFs9wcTm+URCRM1RZAA+y2J5
+         UJQnPHbEBw0IJHziFwXHrBiCJSjQ90xKFOQ+Y4EEJyTjPBoT0O3hc3ig6fxTBurtdyqj
+         Kbuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751369811; x=1751974611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PoKs7u+y/vYoT+pBIVA9Awsc2GEH+2XOxBHoVC0v/yA=;
+        b=hOPKqYKfZMYpWfY6JujiqjCr6wB2k7IGfYwbKyY5yp38/NSw09iaIWigSoKmWmEpsL
+         Du122FYfyezA11gi4ix3dASWdrRtoK0dEt1fl4qP5yirWwVHuBuMJN7a1L4P12zq/1Kg
+         6/LtegwuOpQhAo3+xuI5V6BPjjrKgWd26Va7UIdL8oohAXyylPmMb0mStA6faglryxhe
+         e0YaDsul11SqNFA7dLWTbtaQCzVwPEXetKhfyPrf5o+hHWlFK/ZRPf0xrdfa2mEBXlB+
+         oo+eTp4wPo/r41sEK1zh4fNWGpFgPTDm81DI242tJEME0KPF/MsWHVekcctulRvob2Vw
+         ixIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMVvkqpaLg++i4ydFNg1XYfNMztsrch9qgffjXFOcA0/3CNPhRqizJwsYAlTtq91KaqY80+YEdVyfLF9U=@vger.kernel.org, AJvYcCWVzXn2LXRLe3oxCdbZLBupOBh5PKbhjbdX+K/5+sczZ6fnxllICOO0w0tispZEO3c9+346rNo31HCun3yr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4kDo2E/blkORSsGI2YJXnKWPx6+1Ne+/TCgpQGJJTNDJm8T9f
+	9GC4TwFU10bhGU6QvNt3zQ2jrQ2il6EuMLXc94poSMU1cdB40mOXArws
+X-Gm-Gg: ASbGncvIwctVNTSiF96WBYEoOEU0jyeocisZueuiOckmLKzo8p0iz0NWBBKte70MJ/I
+	lCic7yR9T1aB9CEfmgSIy/6wUwZWoXP4nh/FU0sUxByVN44eWwqTOQ+0lNOzqq5u8jIaHk4Ktp/
+	Z1veCLFT+iM7RTeO+drsAfOQB1E1sC02fT4bTrTQSnYVheQkTmrhxiK0CKqbxXUtYeAgRPkgaPp
+	t7i9ZFx853fc90vIM9gQTf7cUBxeVWuec0UNI79hBf5ynW+ectrNWis0QMYkDTepx8zQFzyGuc6
+	ec+tOkrVfqCYflKOBI+QfhDOUvcRetshxbQlqkQYy9S+c5219ucuHvhVTHoqD7tKONMy5PKufyy
+	ZYfvU/OpeDx89L3Q=
+X-Google-Smtp-Source: AGHT+IEUXGzqVCkn9/q0+V5Gd7PV3Ux28qnB0lnP5oyWUHZJ7yoMOCaj88wRpIdcD4Oh1oVTvhci1g==
+X-Received: by 2002:a05:6000:400b:b0:3a4:eb9c:7cbc with SMTP id ffacd0b85a97d-3af26441250mr846713f8f.15.1751369810431;
+        Tue, 01 Jul 2025 04:36:50 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:a723:4386:e2f6:bd22])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a88c7e9d1csm13194021f8f.13.2025.07.01.04.36.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 04:36:50 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v3] pch_uart: Fix dma_sync_sg_for_device() nents value
+Date: Tue,  1 Jul 2025 13:34:52 +0200
+Message-ID: <20250701113452.18590-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,71 +75,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+The dma_sync_sg_for_device() functions should be called with the same
+nents as the dma_map_sg(), not the value the map function returned
+according to the documentation in Documentation/core-api/dma-api.rst:450:
+	With the sync_sg API, all the parameters must be the same
+	as those passed into the sg mapping API.
 
-Switch Schmitt Trigger functions for PIN_INPUT* macros by default. This is
-HW PoR configuration, the slew rate requirements without ST enabled are
-pretty tough for these devices. We've noticed spurious GPIO interrupts even
-with noise-free edges but not meeting slew rate requirements (3.3E+6 V/s
-for 3.3v LVCMOS).
 
-It's not obvious why one might want to disable the PoR-enabled ST on any
-pin. Just enable it by default. As it's not possible to provide OR-able
-macros to disable the ST, shall anyone require it, provide a set of
-new macros with _NOST suffix.
-
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
 ---
-This patch could be considered a v2 of [1] but the subject has been changed.
 
-[1] Link: https://lore.kernel.org/all/20250627131332.2806026-1-alexander.sverdlin@siemens.com/
+v2 -> v3:
 
- arch/arm64/boot/dts/ti/k3-pinctrl.h | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+- Adding reference to documentation
 
-diff --git a/arch/arm64/boot/dts/ti/k3-pinctrl.h b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-index cac7cccc11121..38590188dd51c 100644
---- a/arch/arm64/boot/dts/ti/k3-pinctrl.h
-+++ b/arch/arm64/boot/dts/ti/k3-pinctrl.h
-@@ -8,6 +8,7 @@
- #ifndef DTS_ARM64_TI_K3_PINCTRL_H
- #define DTS_ARM64_TI_K3_PINCTRL_H
- 
-+#define ST_EN_SHIFT		(14)
- #define PULLUDEN_SHIFT		(16)
- #define PULLTYPESEL_SHIFT	(17)
- #define RXACTIVE_SHIFT		(18)
-@@ -19,6 +20,10 @@
- #define DS_PULLUD_EN_SHIFT	(27)
- #define DS_PULLTYPE_SEL_SHIFT	(28)
- 
-+/* Schmitt trigger configuration */
-+#define ST_DISABLE		(0 << ST_EN_SHIFT)
-+#define ST_ENABLE		(1 << ST_EN_SHIFT)
-+
- #define PULL_DISABLE		(1 << PULLUDEN_SHIFT)
- #define PULL_ENABLE		(0 << PULLUDEN_SHIFT)
- 
-@@ -32,9 +37,13 @@
- #define PIN_OUTPUT		(INPUT_DISABLE | PULL_DISABLE)
- #define PIN_OUTPUT_PULLUP	(INPUT_DISABLE | PULL_UP)
- #define PIN_OUTPUT_PULLDOWN	(INPUT_DISABLE | PULL_DOWN)
--#define PIN_INPUT		(INPUT_EN | PULL_DISABLE)
--#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
--#define PIN_INPUT_PULLDOWN	(INPUT_EN | PULL_DOWN)
-+#define PIN_INPUT		(INPUT_EN | ST_ENABLE | PULL_DISABLE)
-+#define PIN_INPUT_PULLUP	(INPUT_EN | ST_ENABLE | PULL_UP)
-+#define PIN_INPUT_PULLDOWN	(INPUT_EN | ST_ENABLE | PULL_DOWN)
-+/* Input configurations with Schmitt Trigger disabled */
-+#define PIN_INPUT_NOST		(INPUT_EN | PULL_DISABLE)
-+#define PIN_INPUT_PULLUP_NOST	(INPUT_EN | PULL_UP)
-+#define PIN_INPUT_PULLDOWN_NOST	(INPUT_EN | PULL_DOWN)
- 
- #define PIN_DEBOUNCE_DISABLE	(0 << DEBOUNCE_SHIFT)
- #define PIN_DEBOUNCE_CONF1	(1 << DEBOUNCE_SHIFT)
+v1 -> v2:
+
+- Fixing value
+
+ drivers/tty/serial/pch_uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
+index 508e8c6f01d4..884fefbfd5a1 100644
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -954,7 +954,7 @@ static unsigned int dma_handle_tx(struct eg20t_port *priv)
+ 			__func__);
+ 		return 0;
+ 	}
+-	dma_sync_sg_for_device(port->dev, priv->sg_tx_p, nent, DMA_TO_DEVICE);
++	dma_sync_sg_for_device(port->dev, priv->sg_tx_p, num, DMA_TO_DEVICE);
+ 	priv->desc_tx = desc;
+ 	desc->callback = pch_dma_tx_complete;
+ 	desc->callback_param = priv;
 -- 
-2.50.0
+2.43.0
 
