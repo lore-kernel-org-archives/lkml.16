@@ -1,129 +1,101 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jpms-ob01-os7.noc.sony.co.jp (jpms-ob01-os7.noc.sony.co.jp [211.125.139.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA48C13C3F2;
-	Tue,  1 Jul 2025 14:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C80A275108;
+	Tue,  1 Jul 2025 14:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.139.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379265; cv=none; b=aj/tjaVf4DRXWO6ajl90L+MN6gv7UWaUWN7J2gWG2/7z7STk/PA01umqiB3WheVlsDdFS6cZjRU8qTVDc1eyEtbM4SJI9gLv+kBDB731j2O1moSKmzRFuiXHMVWPjwl3jLAbTAu4ygZMjP9erwEVauYsDhuVuMZo9Qynj7p54Nc=
+	t=1751379271; cv=none; b=tZsKxnVBDC31ONQ6IKSih6NdKkRCrhqZj6v56Y1SNv2CyTo2V6NMhWGoMYm4j8sSeQ3wXhULRLMrwHkPj5hGFaD+L0htD8YdnIv7quutSDuwMI17uc5NTJ8KDkTyeKMQ+GO6vUHO9cs3K3skHPI5C8ZVxhZyCYVAa16vyRWZ/ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379265; c=relaxed/simple;
-	bh=8ETo8H9n7F/2G/4Ja2z58kxRn+BOSZ78QHcn7HYjt/w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aio0nGO3IDuMpogn258l1KrkmgBg0W1viBBsCXFTDZ7NLSUGhA871YRCYrav4Csfr5TlPMzZQJSA1/Lnr7NPjzaxXdPH+KLrcS5TT4UWljH3z5fPUFE9RWu6zfF3BBRxIV2Wal8zxuL5Ilh4VutQRRNmxYJ7LmBJHEeaeR9ibsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bBljitUU; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751379271; c=relaxed/simple;
+	bh=smrHCjS0lhHMzmYuBaUKg6EvwfHNRIvCFgnZSletBGs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TjoObVqFyjDMtEATBSvr3bUZsuHDtq2qxjFvxuPqQ6FtFFnRc9Ia6m/F6FyBRVccTpnADaZIFF6u2lD+MVBuxO/arKTQ0QTWI9OZ1ZIEnjp5ibzj4qaNr9LonshQPne/KPHg65/Vo87hLwRBPkq+i3xoko7kIUCin128Q5+zHWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=fail smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=ljnSiiB8; arc=none smtp.client-ip=211.125.139.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBljitUU"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2349f096605so37727835ad.3;
-        Tue, 01 Jul 2025 07:14:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="ljnSiiB8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751379263; x=1751984063; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cGOa1cF1iUH0+69hZgkZqAynW/NiPDvEYRmh1fAZi7Q=;
-        b=bBljitUUNW9QxfrqIbp0/K2vrVyjm7hfegAdSK9c95RKC07e9zLBoWef5ZR6U0FSJO
-         AJUY6L5bPxPmMmR61/6PZMjaNttOPs/9iY1qJV+e25Aryl4bz/bR/lMe4mJenF8DbHaQ
-         fmAR8OlK0aqosQXFepkDViY9z9kQE5PpcxTkwkRhinnCzQ8tLnb9Pzqj++1olKlfqZ6p
-         v1r+0CJcs2bsAPlie/Dn3P0MsxvFi25StK5HTzfpn4sZ5BYtQRDquxLjKWMMCHd/Rdzj
-         gtg11o7ulIQ9FtBuyB8+qogWnBlIyDUHmNzTTn8sfrEuy2cooDvqIA/on3EKWTOGw/DJ
-         HMjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751379263; x=1751984063;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cGOa1cF1iUH0+69hZgkZqAynW/NiPDvEYRmh1fAZi7Q=;
-        b=wkNDtWn281Nz9OC0R4ACekyYszz+WnGbnQPNGgQXyZNjBMS7gvTfUpTIqMUnEfK1f8
-         9DE7SybkGIKm3mV0OEEnVGyRHjz22W3arMV7sPw/coSHS5WNSbIPek/kTYMCxvxVptSP
-         l09MiBJ/5J6Hhk9AZ/fx8lfxt2bsjVYxSpi88cl7t10ZmL+PufbODUyJ1XCPZLseUjKg
-         BRywkq64i+DmEWijt9JehH5tk6mY9j7GHi3jyw4TISxfDORVPftQOt/siz+jYei/LMMt
-         xnAEW9DBEZvlEvfZsavgjJywPLHdGBLo9U/WXicHuGQJtpRoWud06deBcCZQpfLqm3Nd
-         CV4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUakNZowJRVlcO9UBhQAz824LkVWPWI+taBTe/CAh8/RB7vLf1tdCRh2fjeckTRY4UDjwJd6t8XSvuzoYh4Op8=@vger.kernel.org, AJvYcCV3YGcG2K2X6YAawWprr1rsS+dObrh4HZoyKF0H8adP6u6l5Y1+l2R2gsTfWC9T4SW0SUX9jQy2njL5@vger.kernel.org, AJvYcCVKItcc5uqSqVuvLh2HshrDTEdfQUBBbYF0olgQuD/86UmrF/X/2tLITcrRN94S+OIL63J5cuVc@vger.kernel.org, AJvYcCX3H022YrHGxBmev1O/FyXVqht4TOOQrrcOTCBdqqPsQeb3tCzCKZAv7lM7QSBmYPGpiK3NwP44iyGr@vger.kernel.org, AJvYcCXayJOiZVE/ty65gk7g0pxf3V6yjLue20zo4Ls6IGQLPXU3G/H2sW//bDrmDKOzwz5sZS/y4Rek8d4NVoHS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy49vakbKpNQI8HroSKSp4ZKG5KjeR+ierLZJLzIc4jf+SqGgLZ
-	cZrKvku3sKyeZmnOz5fliJ1lL/W+KcT1FaLCLYRFw83/oYs9Y/MEMZuZ
-X-Gm-Gg: ASbGncti3wNzPa6ZIJWcShJUnpPRS/TcmowU5fz5JAosZ4MYVeu1GksyslK7cPu1zyR
-	CkwnottBltBRYStrzcGB9vYo6ai0PKcmRQJihJlPeTuui2HiqrqMAgHJDiVwgDEWjBMA/dGm2PZ
-	pWO/3Yij7c7msdMQdyrBvwweakKt5LiZpDuXenhiBb5qt6N349TTFyk39ddPYqF6oYzyzCwuEL+
-	m1uAprj9kZMhfoA6tuqvk4rutNBjCVN8cFZoi18XTgCQlv9GWMtym78uQNPQC0FHB6VcvRpndcZ
-	zjrQUkysLrHRw7zPSQsqf9crMKFgh7uU6bF9fl0uYw7urEkpNwZap0+7dEdw7XVdnXszyg7emDr
-	DJuT1a5UWaHpky7QhY/1rmiw8gjSFrZfDd8Y=
-X-Google-Smtp-Source: AGHT+IGXEWlJgT1GJH4Lu3G7lkA9vOpM3RPD4pkXk4Jh5ip6sI+bOgT/C1FpaAIQB/cVKubhZC0uDw==
-X-Received: by 2002:a17:902:d4c5:b0:234:e655:a632 with SMTP id d9443c01a7336-23ac4883265mr257175855ad.51.1751379262756;
-        Tue, 01 Jul 2025 07:14:22 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3b8324sm107240885ad.178.2025.07.01.07.14.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 07:14:22 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: alex.gaynor@gmail.com,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	saravanak@google.com
-Cc: a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	david.m.ertman@intel.com,
-	devicetree@vger.kernel.org,
-	gary@garyguo.net,
-	ira.weiny@intel.com,
-	kwilczynski@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lossin@kernel.org,
-	netdev@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: [PATCH v2 0/3] rust: Build PHY device tables by using module_device_table macro
-Date: Tue,  1 Jul 2025 23:12:49 +0900
-Message-ID: <20250701141252.600113-1-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
+  d=sony.com; s=s1jp; t=1751379269; x=1782915269;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=1iIPpxIgmlkOMy8+JW+qYAUCVTUKOXEYoeF8gab8xO0=;
+  b=ljnSiiB8b4MYMHC5/aq1LyxX87ho9c4OeTbU3hYsCYvPBMd0wbctpmx9
+   WLFMz0laMUiehGhgXH0mm37CYPJjXbceRLyKGPyuyGJJwWgqJHmp2/Iog
+   RCoSM5h9zxcWQuls2IdvkxbncY1kjCLG3Zf5giViD0HWcVBDcayds1p83
+   +Z5Rn+TpTV1c+cQ+ZM5IX6IGG1pwUOOeDs/qS7K7UJCkXKwfFLEtYtXPl
+   98oUDOHBjH46DLlziBpUYg40un41y0G8s85XM9kp7HQFP77TJkyVNTmQz
+   OF8dwdMx67v0240QieKIWeJ2gbZYiZucYL7CJqaalZ+xG3Tp2GBuxPU9t
+   Q==;
+Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
+  by jpms-ob01-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 23:14:22 +0900
+X-IronPort-AV: E=Sophos;i="6.16,279,1744038000"; 
+   d="scan'208";a="3310507"
+Received: from unknown (HELO [127.0.1.1]) ([IPv6:2001:cf8:1:573:0:dddd:eb3e:119e])
+  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP; 01 Jul 2025 23:14:22 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+Subject: [PATCH 0/2] selftests/cgroup: better bound for cpu.max tests
+Date: Tue, 01 Jul 2025 23:13:54 +0900
+Message-Id: <20250701-kselftest-cgroup-fix-cpu-max-v1-0-049507ad6832@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACLtY2gC/x3M2wpAQBCA4VfRXJtiymG9ilywBpPTtoOUvLvN5
+ ddf/wPKXlihih7wfInKvgWkcQR2areRUfpgoISyhKjAWXkZDtYD7ej30+EgN1p34tremOV5agy
+ VbEwHYeE8h/zv6+Z9P+oi6l9uAAAA
+X-Change-ID: 20250227-kselftest-cgroup-fix-cpu-max-56619928e99b
+To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+ =?utf-8?q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>, 
+ Shashank Balaji <shashank.mahadasyam@sony.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1313;
+ i=shashank.mahadasyam@sony.com; h=from:subject:message-id;
+ bh=smrHCjS0lhHMzmYuBaUKg6EvwfHNRIvCFgnZSletBGs=;
+ b=owGbwMvMwCV2mPH4Ij++H1mMp9WSGDKS31r+P5fo1cPIYmjOLu6z4LQDc+HHj1kHy5eU1nZ1r
+ zFx2dHYUcrCIMbFICumyPJOZt2Fg1aWTV+PM3yDmcPKBDKEgYtTACbi0MLwv3aCd8fnicaha4PC
+ v+0OOa3Uo6Bzy2iqROkiZgPunIWTChgZpjuUuEv4XDN0Orzm2oUfaSYFCnPkX5TWfTJg+/hnzbQ
+ XvAA=
+X-Developer-Key: i=shashank.mahadasyam@sony.com; a=openpgp;
+ fpr=EE1CAED0C13A3982F5C700F6C301C7A24E0EF86A
 
-Build PHY device tables by using module_device_table macro.
+cpu.max selftests (both the normal one and the nested one) test the
+working of throttling by setting up cpu.max, running a cpu hog process
+for a specified duration, and comparing usage_usec as reported by
+cpu.stat with the duration of the cpu hog: they should be far enough.
 
-The PHY abstractions have been generating their own device tables
-manually instead of using the module_device_table macro provided by
-the device_id crate. However, the format of device tables occasionally
-changes [1] [2], requiring updates to both the device_id crate and the custom
-format used by the PHY abstractions, which is cumbersome to maintain.
+Currently, this is done by using values_close, which has two problems:
 
-[1]: https://lore.kernel.org/lkml/20241119235705.1576946-14-masahiroy@kernel.org/
-[2]: https://lore.kernel.org/lkml/6e2f70b07a710e761eb68d089d96cee7b27bb2d5.1750511018.git.legion@kernel.org/
+1. Semantic: values_close is used with an error percentage of 95%, which
+   one will not expect on seeing "values close". The intent it's
+actually going for is "values far".
 
-v2:
-- Split off index-related parts of RawDeviceId into RawDeviceIdIndex
-v1: https://lore.kernel.org/lkml/20250623060951.118564-1-fujita.tomonori@gmail.com/
+2. Accuracy: the tests can pass even if usage_usec is upto around double
+   the expected amount. That's too high of a margin for usage_usec.
 
-FUJITA Tomonori (3):
-  rust: device_id: split out index support into a separate trait
-  rust: net::phy represent DeviceId as transparent wrapper over
-    mdio_device_id
-  rust: net::phy Change module_phy_driver macro to use
-    module_device_table macro
+Overall, this patchset improves the readability and accuracy of the
+cpu.max tests.
 
- rust/kernel/auxiliary.rs |   7 ++-
- rust/kernel/device_id.rs |  80 +++++++++++++++++++++++-------
- rust/kernel/net/phy.rs   | 104 +++++++++++++++++++--------------------
- rust/kernel/of.rs        |  11 ++++-
- rust/kernel/pci.rs       |   7 ++-
- 5 files changed, 132 insertions(+), 77 deletions(-)
+Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+---
+Shashank Balaji (2):
+      selftests/cgroup: rename `expected` to `duration` in cpu.max tests
+      selftests/cgroup: better bound in cpu.max tests
 
+ tools/testing/selftests/cgroup/test_cpu.c | 42 ++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
+---
+base-commit: 66701750d5565c574af42bef0b789ce0203e3071
+change-id: 20250227-kselftest-cgroup-fix-cpu-max-56619928e99b
 
-base-commit: 769e324b66b0d92d04f315d0c45a0f72737c7494
+Best regards,
 -- 
-2.43.0
+Shashank Balaji <shashank.mahadasyam@sony.com>
 
