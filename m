@@ -1,141 +1,85 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CE92749E2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C32459C7;
+	Tue,  1 Jul 2025 13:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378009; cv=none; b=a+SKogxuE/1sop1LndGU18q6Zn7IRmo5jDzNZGbObkkpJQrF2CDMIJ5IQdTtxjdOb0fAm4KJMJi05GPdQyr5IHKdnO+kEh2gaZtkk3oY3xq9HXnZii5D2SPnoOllR/xe2fEfeINdD5Dpd04JYhhCRTHnrvd3LlprKbcRriXbT5s=
+	t=1751378036; cv=none; b=IKtVkRLL/3XnLeRxWFLiYS2ik4r4n0L2DCXpojcan0Gv9h7sEfWQRRlI22tj4AkWOnG4tPFo7Pd3l/d3BGI8mSXpCw99dPXyrAhSAvr3av12t0tNmT87SqNsE+O4vAZDQDm6chNZTzKalC4ZcbmeazUknqCngTdkBdC2KCAa/KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378009; c=relaxed/simple;
-	bh=V81NFUMfJ+mUE+a8e02h/KVMMTf6ar5ykGTXcYIsHTU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2VK2FGRALIS7go8ZVvt8O/2OKDj8Qj8bvdwh/4lQBBGNhskEUL+KjLlv/a96HpjtU8jyVu0FKWzfx3J+evl/SkJ+mtMHdajG3f3uZaKv6JC++Cs0Mb1YzhUnSGfuN0WnBDK7Rd3mGNv9b+2ZVx6i4VzM72yGnB5eMngRoiSw24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PBr2kME3; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1751378036; c=relaxed/simple;
+	bh=w3O6JX+TFxgUQvh9AQY+xLMJfuINSkF/pchzYSsDsm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGKWZMgW+JphHRiOy0y5pW2kc0mB9MSJPUMwE83V41SU94yzgenR0hLc6BnqOjjzxJU7yRE8ZVRWfNaIM2osy8yWqfgUL8q1/z14cpfKYtVu3b06QX4xg7oYzxCLrvsPxf69hSFMyaRRm2qnBVDDaO084jQKPyZOiFQAX05UGvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVnWrVc4; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PBr2kME3"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2f39532bd11so547560fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 06:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751378005; x=1751982805; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sxytrCpc62k1MJCjbRCCIhFdchEXxF2W+J08NfrIMAI=;
-        b=PBr2kME3NMJsg8+kdTd29vHKOtATAxn8AVUBTpQxC6AxQxdXoOmycJqMtfn1TvwpGz
-         uekCSipvNeLmKodLwRP0x/2UFVAUPLAf6mt/QsvAxLJER1Wv1O1C0tOoRapWzczum3VF
-         kXNthUMK9fT/rrIHOHF9F8PVIcHTjWKCYYJNqfY0vRWFIP9a0KjKWdoj6o5jLzJX4QhE
-         CoVWX50DH9lrOSZVo95yvwEw2HBRROK7Da3AOM+gd/4szWgyVPmKLUUYb6bt5jT7W1rV
-         SKOD+8HXdlWwocaHn77Y8LHugJ+mDnLrTZ5StnsrZN3za/puUl6AzYNhh8PXJCin0Jv7
-         v7Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751378005; x=1751982805;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sxytrCpc62k1MJCjbRCCIhFdchEXxF2W+J08NfrIMAI=;
-        b=dxoAILr9Fm0vhgANoc8z38gOPZmhdIhGZnjCb3NttsoxtSxbvvRWSkXDcmod2BXiuF
-         I9NYbYJWnoo9vMcxIx0PHTqyG96Vzhrp9NlJnwERmYBXZ50xGfInxwAeJmf5mJjael2F
-         NlwCox2IOmJknVUSFV5XcgRVemYpDeTQ3Nv/PwXaSmCuyYYHobBCfIXh2IPhXk4/Gqea
-         l4YQUo2XS3pZOl4yr+ubW/pIvEHA3PPhgX1jY1NR7nZvuJMAWYYqge/U7z5iW9B0P9bn
-         oLY0EfYssyWy6nlqCyWnYw2am/i2g8rSN0o7Kx5k84MRCitKY9ss1AcHJzjyDuIxlj7+
-         bUng==
-X-Forwarded-Encrypted: i=1; AJvYcCXZl6NebABXP8IBwVGYlcab42eMzjMunyfRIrWmiCX73ILc7bv0PAT/aF6fddYvl0yydEdh36jalqvWKck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCvgr6DablYL6nLRdsi1F1/dUTYJcNnt8hW+KEatGa1cvWfnaJ
-	SAPzKhOdrzQnc8LvzyYXPt4HL79F6iDrRzhPrOuWC93PpZnkjQ1jIptD5H/q4lPb9d8=
-X-Gm-Gg: ASbGncu116VjYrsblM7RgkEJBfEuMK0OeJRlDpUv0/w0qji638NClSh7e4utAB+GM+O
-	/rhUWuJPR45N5Xeke8bcBu1af+hDuaT/VvKv7pX3LH0CJwQLCRgVJWaMotzYvBjaI45oQ3hdHxj
-	MvCGEz+DnNzhvpTcds8ZRI4cBcZpTmuUoxgwVhWDT8irBacGAWImWIVFuIOmI/O+CyahGvQ+Sjq
-	A/tuZZWEMZLRKZ+YdhNYp47mPeud3vC8ExrfqSY0HtCfQx3+zcQWN0ZgpkvxAcu5LhJK6CvPnyn
-	znhC84lUPzbwiBNyZNYukQvOH1CjzBdzH7MPHDYfMnk3RMufu0vYaUxkiBUz1Gt2CdG1kCM2zx8
-	YVoWVztfCcRrJ3+ilVNB4ykXza2J0STvyLv+nqQU=
-X-Google-Smtp-Source: AGHT+IEeLp6iDhItR5Y2D19m+ylI47glnT/8a7E8Ytbkuo8eMEH+v17nazXRudRC6L4a35mzZvpHEQ==
-X-Received: by 2002:a05:6870:455:b0:2d6:2a40:fbe7 with SMTP id 586e51a60fabf-2efed4305a2mr12022011fac.6.1751378004996;
-        Tue, 01 Jul 2025 06:53:24 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:86fc:b3bf:2a91:5479? ([2600:8803:e7e4:1d00:86fc:b3bf:2a91:5479])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73afb00c48asm2120701a34.27.2025.07.01.06.53.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 06:53:24 -0700 (PDT)
-Message-ID: <ca2c719b-6798-4bb0-ab73-98d1fc5adcb1@baylibre.com>
-Date: Tue, 1 Jul 2025 08:53:23 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVnWrVc4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751378035; x=1782914035;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=w3O6JX+TFxgUQvh9AQY+xLMJfuINSkF/pchzYSsDsm4=;
+  b=JVnWrVc4Sdg6EuEXewWhX66nVQBw4yf0Npr3eospz/L4pOlQmmuy9mNM
+   6DViAW7/FafB4umssOy87J3xTZuBXIMAFU2vBEnC8QUZTS1xwOkXJJDZK
+   zObekoEsw/LsQq/nZ6F0FdahlAlwnxdmFSfZmcMXhxPfo8psUsWrzitwR
+   Mjl+HM1sNI0HTkFfam+gcAsB7/ev8/B+T/aTwJQA2+G9lHLeZYNv15hdB
+   gqtCDku3fUhKfI7bEtFbbwfn96HJdMtxf60kwpZKGfOT+vReo5ZBDLsUQ
+   ju6jcNTMZyn/XcaWkYLOjT4a+PGrP8JtQ5g5pZlKsOepSlc/16kFaIIJv
+   A==;
+X-CSE-ConnectionGUID: 9/x2d6VJQDWN/fIqY9P4WQ==
+X-CSE-MsgGUID: +0/1kwUkRDaZIRnEoNcazA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="57421218"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="57421218"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:53:54 -0700
+X-CSE-ConnectionGUID: gbz6/TwyQreIlfdtoHgxDQ==
+X-CSE-MsgGUID: jcOZJOwzQwabrl2Jj/NP8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="158057304"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 06:53:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWbQj-0000000Bc1W-2mr5;
+	Tue, 01 Jul 2025 16:53:49 +0300
+Date: Tue, 1 Jul 2025 16:53:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v3] pch_uart: Fix dma_sync_sg_for_device() nents value
+Message-ID: <aGPobZ6reAWrRtV0@smile.fi.intel.com>
+References: <20250701113452.18590-2-fourier.thomas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] iio: accel: adxl313: add buffered FIFO watermark
- with interrupt handling
-To: Lothar Rubusch <l.rubusch@gmail.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
- lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com,
- bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250622122937.156930-1-l.rubusch@gmail.com>
- <20250622122937.156930-4-l.rubusch@gmail.com>
- <20250628181643.0ce0ed51@jic23-huawei>
- <CAFXKEHYS2rRYtPShU-yyEetQQoo+EbCscjUUGcWdWJQA2UwiYA@mail.gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <CAFXKEHYS2rRYtPShU-yyEetQQoo+EbCscjUUGcWdWJQA2UwiYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250701113452.18590-2-fourier.thomas@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 7/1/25 2:23 AM, Lothar Rubusch wrote:
-> On Sat, Jun 28, 2025 at 7:16 PM Jonathan Cameron <jic23@kernel.org> wrote:
->>
->> On Sun, 22 Jun 2025 12:29:32 +0000
->> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->>
->>> Cover the following tasks:
->>> - Add scan_mask and scan_index to the IIO channel configuration. The
->>> scan_index sets up buffer usage. According to the datasheet, the ADXL313
->>> uses a 13-bit wide data field in full-resolution mode. Set the
->>> signedness, number of storage bits, and endianness accordingly.
->>>
->>> - Parse the devicetree for an optional interrupt line and configure the
->>> interrupt mapping based on its presence. If no interrupt line is
->>> specified, keep the FIFO in bypass mode as currently implemented.
->>>
->>> - Set up the interrupt handler. Add register access to detect and
->>> evaluate interrupts. Implement functions to clear status registers and
->>> reset the FIFO.
->>>
->>> - Implement FIFO watermark configuration and handling. Allow the
->>> watermark level to be set, evaluate the corresponding interrupt, read
->>> the FIFO contents, and push the data to the IIO channel.
->>>
->>> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
->> Hi Lothar,
->>
-> 
-> Hi Jonathan, there's still one thing about this patch [PATCH v6 3/8],
-> I wanted to address:
-> 
->         struct mutex    lock; /* lock to protect transf_buf */
-> +       u8 watermark;
->         __le16          transf_buf __aligned(IIO_DMA_MINALIGN);
-> +       __le16          fifo_buf[ADXL313_NUM_AXIS * ADXL313_FIFO_SIZE + 1];
->  };
-> 
-> Is this correct usage of the IIO_DMA_MINALIGN? My intention here is to
-> have transf_buf and fifo_buf[...] aligned with the IIO_DMA_MINALIGN.
-> 
-> Sorry, I should have asked this earlier. I saw the sensor operating,
-> but I'm unsure if perhaps DMA usage is setup correctly. Perhaps you
-> could drop me a line of feedback here?
-> 
-> Best,
-> L
+On Tue, Jul 01, 2025 at 01:34:52PM +0200, Thomas Fourier wrote:
+> The dma_sync_sg_for_device() functions should be called with the same
+> nents as the dma_map_sg(), not the value the map function returned
+> according to the documentation in Documentation/core-api/dma-api.rst:450:
+> 	With the sync_sg API, all the parameters must be the same
+> 	as those passed into the sg mapping API.
 
-Assuming that transf_bus and fifo_buf aren't used at the same time,
-which seems unlikely, this looks correct.
+Good enough to me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-As an example of what could be problematic would be if the driver
-wrote to transf_buf while fifo_buf was being used for a SPI DMA
-read. Then, when the DMA operation was done, it could write over
-transf_buf with the old value from when the DMA operation started
-because it was in the same memory cache line as fifo_buf.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
