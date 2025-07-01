@@ -1,99 +1,94 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9291DC994;
-	Tue,  1 Jul 2025 02:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE9278F5D;
+	Tue,  1 Jul 2025 02:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751338491; cv=none; b=Wpty+U4J0ulAnEfftaUMahzX7jBORKHi0DFFr2Cm5NxOIsOTTmdagOJda2FbgjfKxoK1nYyqP3+5Bmua2Y0erj3bemPkovnLR/iJcb8LHbunZy8A4FHB7GFAREkHcLeO2v6ZyxLB5QdoUa3gcux0wcKh4JB/DLn6dszKnmv1Lgk=
+	t=1751338538; cv=none; b=WFxHFoGBS4i6+K7iC0j7GZuRyzChPUquM8TZ/MWvjkgqGlMtjWjrY82gFINJmuPD6IoZ23IfEmY6fqGICNdhc3JneJW4Y/IxykECSFpHNkYmKwQdZIDw4xXynRcmR5ciKI4L6Sq9m/6gD/XhDWqj1LoQjs9iDqyXmIW9mJXEgT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751338491; c=relaxed/simple;
-	bh=eQYqZanp1+0cz4tdDGtBDDBURJ7rHoHHwXTXqhHkC+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PhUU1WQpCL0gcUebqxmvvXmfI48r/H07reJ4RUcMVIudBXV6xF4X648PBO1B8kka7LzhxdLNkEjl0JSqm0HZ1eWvB1B0af4ytAeAmBA4JJB/9EfFxdFAuxG+qrS4WP30UPFn80kYW/BVeqqHhzYcNmehnnbm2sNK1Hi2e2dQnSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FpuHPM3r; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FpuHPM3r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1751338485;
-	bh=8H83yHfRrbf5zi697ri7SFzbYByjJS69qvdoGlr+Nq0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FpuHPM3rvYswBkPOfqFlopaAvtSTld3Ek60bbB2fy9MT5jYzX47k1XtTD/tsKNg1L
-	 nnxcFoEcqdWXGwU5IX+PzCYscxKSFAd7XXvNVCC0PLE3jnaj4EGWOcuYgH8KS/k3jy
-	 ADRatq8um6T6vNh6XHO5UdvuxqzCLxn6517XnI0CEwv0DvKPSsIiisaxKhrSu5vLZJ
-	 i0D5uowaiYPH/bjRoMPz+rFZ/oP/nlgNOHN7YDX7T72jXJK8aJmnaqCS/oajeC2OJR
-	 zSFL4vpQ2qerodtrR43IsrBxGtI6fiLO0rfAYCXgixEVJPcDk++Q4XTDV2fbXt7nNq
-	 lmsa5HozSV0rw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bWSLD5blTz4xQW;
-	Tue,  1 Jul 2025 12:54:44 +1000 (AEST)
-Date: Tue, 1 Jul 2025 12:54:43 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Intel Graphics
- <intel-gfx@lists.freedesktop.org>, DRI <dri-devel@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the drm-misc tree with Linus' tree
-Message-ID: <20250701125443.5ba945e2@canb.auug.org.au>
+	s=arc-20240116; t=1751338538; c=relaxed/simple;
+	bh=j8mvDC9ShxcbStXL1aZdO5mHCD7KxGG/dV5WZmv+KBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XR4EAQJ9iGXD13FThN5DpFlZ6UscOCb2a4E13y9rqvbsZiR02SsKiskPksoav97MWXiR4y9UUABdYtoJvXIOVzI9dnbS4fEaA3VsfJktvCk7VVqJXtaAlJWGA8M3BPYnyKPDWl55IIam4c1d5YlOmCa9LBWVk3+PWmZY+dzDfuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id B9C931D3506;
+	Tue,  1 Jul 2025 02:55:31 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 8C86E6000B;
+	Tue,  1 Jul 2025 02:55:27 +0000 (UTC)
+Date: Mon, 30 Jun 2025 22:56:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
+Message-ID: <20250630225603.72c84e67@gandalf.local.home>
+In-Reply-To: <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+References: <20250701005321.942306427@goodmis.org>
+	<20250701005450.888492528@goodmis.org>
+	<CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yktaNDk/jMXm7v/uSa6bko+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/yktaNDk/jMXm7v/uSa6bko+
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: uxdqmqi3mkftdm3kkxodbidb8rjbd1u8
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 8C86E6000B
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/DhGnpR+zUD75ZuNKjF+V9XwX8hjqOjNg=
+X-HE-Tag: 1751338527-525059
+X-HE-Meta: U2FsdGVkX1+5SmoCvb2Vcbzey9cRTVgntfEmEbwJO9W59eah++685e1pnXPH9dzoRae6PmUVDEstvcGyXEOIxd6Pdy2gLOm1ySSusqHIzqmjO16HiYhIKII8crc+9TbhKYYcoOHq8bAERyk7LNkWQaMvk/q5YuAty0OBvTJqKfbQGF6uypUOpvBtnJSKGcJ2/g3DnFAwT5yPHQ6fdWlUAlLsrp/FDH4aYWWNF/E9ioCgBMPTjvQsLP+BmzHFoenovpj1sQANw/LTXcRBAKnl1SB8psqy3esHh1ecNPuMa7wGIxFXkcDoIWyfYPD2vUAr+WWYG+IzQ/JPWlPK/b2Kq5NnVNLWl1irf2tI50g7qb0w99RyAf3WHnVCGb90Hjbs4JlXoVOt7nXsU+xeGcZZpXYtB+bhyg8FLFXTAB/89uVrkt3itqFTNsQa4bmjVxuv
 
-Hi all,
+On Mon, 30 Jun 2025 19:10:09 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+> On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > +       /* stack going in wrong direction? */
+> > +       if (cfa <= state->sp)
+> > +               goto done;  
+> 
+> I suspect this should do a lot more testing.
 
-  drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+Sure.
 
-between commit:
+> 
+> > +       /* Find the Return Address (RA) */
+> > +       if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
+> > +               goto done;
+> > +
+> > +       if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
+> > +               goto done;  
+> 
+> .. and this should check the frame for validity too.  At a minimum it
+> should be properly aligned, but things like "it had better be above
+> the current frame" to avoid having some loop would seem to be a good
+> idea.
 
-  ebe43542702c ("drm/amdgpu: switch job hw_fence to amdgpu_fence")
+Makes sense.
 
-from Linus' tree and commit:
+> 
+> Maybe even check that it's the same vma?
 
-  d0c35c84dcfa ("drm/amdgpu: remove job parameter from amdgpu_fence_emit()")
+Hmm, I call on to Jens Remus and ask if s390 can do anything whacky here?
+Where something that isn't allowed on other architectures may be allowed
+there? I know s390 has some strange type of stack usage.
 
-from the drm-misc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yktaNDk/jMXm7v/uSa6bko+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhjTfMACgkQAVBC80lX
-0GyIhgf6AkxBodfHE5vqHrdf1UpY3jtfgk1lGuFf3BnmSSMP7yIUT+zGAcDrl1L3
-DBr2pJiI8IaTwXY+pn3FWWXiWHVn69p3zClg5Ul211R/r7BJiLVRB/E9zeqVrC8x
-sSeGb/4RNAa9PkeoX2/NpZgcNzD4WMI2vk01pJFV4NFcmqA/qKIrUCK/GvCLZUmm
-oadi9e80ZnP9i8myjKmLbTRfaFAOArrVrVwSatb96snQsp7SimsKlLg3EMPg+Ev8
-1UP5AcJWJqITcGubf1JhebrlB18QkfjKzbgPx0Lqz9+/6DpKLw7inYoF/PB4uIhM
-BiHgxlVnhAWQs/tBGQqdjTUxM7UrMw==
-=pSo5
------END PGP SIGNATURE-----
-
---Sig_/yktaNDk/jMXm7v/uSa6bko+--
+-- Steve
