@@ -1,143 +1,107 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D567242D93;
-	Tue,  1 Jul 2025 19:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC66242D93;
+	Tue,  1 Jul 2025 19:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751397246; cv=none; b=pZK1y4SjFuSf3LN5IbLfMLFuZGYiLn8RG0gnwRwLExwLea5Hl0tPlbsk3d4luPL1B8oPOrw5EbFpwl7GxARbaBRreajfK2nGZOz6vWAet6M86QiNjvTaQ7mpr458AlzG/PpmJypDo7gvB2f3Avr/Ij0E1nFHbOjokZBSjkc5fjU=
+	t=1751397254; cv=none; b=r3NahVOAt6s/DO4sXsxgTFIt6YfyLgI041y/UT/vyuB42BvY+/vqZ5LvdPxrZA8yMsPiNeHFzvITH5Ly7dkoiEtmm5Bv3YV/QFM2nPSuytNM5PryvRbhga3J3+/6MrOulGbtdWEZQQzz+XTcMgQDqsOZ3ziFNywHja1DKiEBPg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751397246; c=relaxed/simple;
-	bh=4Rr5RDJD2k8VW/HH+xcrwUxWOxdEDKOztvVdojYX7xs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QSRn+zjbhSovRfscyNMbhPeOS1uvVfjH9eMdbx4C2tPZF0YD9udqXbu68L+ghS9zCgxPUp6+bq/WcK/3LqvQbAvW46CfYD7/it0Ni4QnFHn78gcEe+HZAVCrM2XulfAsJjfKFrXFMAJaiCmCnI0vG/zUm3wcFwaNuq7SJ9V4ipU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i5yO2nmN; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751397254; c=relaxed/simple;
+	bh=XYN3mzgdO/2luMn1U6HxRQ5T0E1xv80oyWqd6OuQ5Ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeBRJKGmdcRhc7o15Ir0dNUMJQhb6IIL8ucgL1xUfYFOJVkKQ38StICaNaPdUO1LIbwQ1kYLb9Ok7T16Qu3z6iLe0jUqinCY+2qLawbXq68PnM0mT3Bu2ZQ8suw+CieksYVi2OCxx9pGKCtwRV75KyRX0mARCNXOXeCpunGkuXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sd7m0wAM; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5yO2nmN"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so3839158f8f.2;
-        Tue, 01 Jul 2025 12:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751397243; x=1752002043; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GRAT6iMVdZZIF+G8MBWdHZBgavvJ5RJLj6iKsHMAdfE=;
-        b=i5yO2nmNz6SvS4+aRgCTpJGKeDnPrcSi1zHODSfRTngXTTJDPUzbOydk3Lci/67djT
-         5TB/alS4+L4k3VKCHSbNB5iZzb1AdQzM72KPTY2EiVPEK8NP4iG+LqstN+jo2MA1Yxq9
-         43h5dHqsPCBDh26GVD4gUzSOE2lDPARQ5TFcwvTbwSlZwcD8dkMxmDw8e0NOwAdD7dfo
-         xeq9OrO9ipVhhndALe6tWb5cyIRebGhlKBuXLGFHXP4t+RqmOL9I42uoCu9fhiy0WqQv
-         LO1dH5Daf1KgNIya0hAHEOn69OzGN3bdccg0Q72nPzLWUxOLk9Pqag1YCyNOrAjE6h/l
-         8u3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751397243; x=1752002043;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GRAT6iMVdZZIF+G8MBWdHZBgavvJ5RJLj6iKsHMAdfE=;
-        b=rxZJT3g/zGiW4yeqwKXdPl+A/7QKwtL1QfQZxCcnftzVgXI2zFBq43GXNOS4cSTEBg
-         ggDcvsK8Pv5DItSGUFoGFOsOc9AKmadv2QpRR+VeSCRnzGKqdnwnqmsU4d6oUKUIfIY9
-         RpjPzY6sEna0eZvE7B+GcLXHuZHhTvLAlnbHkQaeSLhIVZuzRbxnJX1EVXAwtN4eXsSc
-         WcxMgteIvvjK9nUdVLfDvwvQhPY7D7apj6JEDP7D7m6nfUrg7/Mzh2VkwCKYme7rHM5F
-         2icYriLE7bs5k2xKHkoY8AA1fVFPybaxGsNEwPJSx6svYFrTq8AqyR3VTWoRpac1aPHl
-         0gcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKUOdu9EohXj5wZXBUiPIhn19brQT/tNg5UjMxGh9ZdW2oGoSzDINKyj5qMjUkGfnlEgqQLI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJNje1dtYN3rx6m9+vo0lx2vk/G6BV5xl0tE9W+1YhXDyxadUw
-	2j16YWuSH25MAoDOc9F1jbZ7cXQX7CS6j+BkynVUbYFEuACHjLlHgyoh
-X-Gm-Gg: ASbGncsM5FdINYwDQ9M6kN3HqdM3qMs0NKUrHETcr9XG7gjWH2g3KiZODJ8q2u5NaTl
-	t4/1HRKcYeCZBT9fwLqzsgPlSTdoiz7FsvYVUdTcZOJg7qmmIAnfwpZIuJjpXDJWNZRmEOvPhDk
-	MjYGmvy1wBHcMVowBN/7aksaKBNZCdS/eCXQMIVOAITMCyKpBJi1O4OZ4QAnUFb35RBDXSnJyh+
-	tVKz9wyvPOGW5LIE7yaSZ9sB2dGnwZa6uhZGoFLL9EK+VYm1rm/VvX/gKTpOQh7AjuQfJldyz9n
-	Y1Ki5oiCXdRV82UmVmAK53oZrCT6m+MIkxK6UUg0CL0JT6347J9yaEXVxtJIGBdyskpOkge3jRg
-	abJmPY1MRWTjEcgG5JQ==
-X-Google-Smtp-Source: AGHT+IEKI/YCYtufBuGYyN654gnbiKtO4OJiT+a1rYiFQFL//Efs4Zhe4rDt90TqgDTijo7rz+z8LA==
-X-Received: by 2002:a5d:5f4b:0:b0:3a5:2848:2e78 with SMTP id ffacd0b85a97d-3a8ffbd4cffmr17167671f8f.28.1751397242504;
-        Tue, 01 Jul 2025 12:14:02 -0700 (PDT)
-Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad20bsm204864645e9.20.2025.07.01.12.14.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 12:14:02 -0700 (PDT)
-Date: Tue, 1 Jul 2025 20:14:00 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Keir Fraser <keirf@google.com>, Steven
- Moreland <smoreland@google.com>, Frederick Mayle <fmayle@google.com>,
- Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella
- <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
- <jasowang@redhat.com>, Eugenio =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>,
- netdev@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v2 4/8] vsock/virtio: Resize receive buffers so that
- each SKB fits in a page
-Message-ID: <20250701201400.52442b0e@pumpkin>
-In-Reply-To: <20250701164507.14883-5-will@kernel.org>
-References: <20250701164507.14883-1-will@kernel.org>
-	<20250701164507.14883-5-will@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sd7m0wAM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751397253; x=1782933253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XYN3mzgdO/2luMn1U6HxRQ5T0E1xv80oyWqd6OuQ5Ek=;
+  b=Sd7m0wAMGl8XCGE+ReVTZ6NVdqtn19obgX4s0vUSdxYDz69U5Tqyjw4I
+   zmhHi2niG0VY7QcTx384WaRSBnaBj5CqDC/FK67LoQHAL3WQhaUq2xi/c
+   BpaR4pzYvQLu3tHPK5OuTw6acjGPkjVs3iy9iwnuexVmfHmembd7ypsa/
+   BYnW5nWBTU2s1l7n1/lCoUOtnODJRApLHQedsUgajTQZT9Jm311KN9VWZ
+   Yr/krTE7taaTXHMWsRCCkl+7Wzg9MYbWKzy906JU7SfUDeMYexgKdS3YX
+   2r4GlcfV5alXqaGJLs+2IjgAgX1XeU+Zdr7h0sqfMkyCnRJEjv49dNBFU
+   A==;
+X-CSE-ConnectionGUID: zV1tJXXiQQC/1geGC2yrMw==
+X-CSE-MsgGUID: +SwTfH2yRuyo0B+c0byktw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53613005"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="53613005"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 12:14:12 -0700
+X-CSE-ConnectionGUID: PkObRcHOTyWoGiQUDQ9+rA==
+X-CSE-MsgGUID: YodDBZ8cRDunpR6tiykgIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="154392091"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 12:14:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWgQh-0000000Bfu8-0qFJ;
+	Tue, 01 Jul 2025 22:14:07 +0300
+Date: Tue, 1 Jul 2025 22:14:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl: Include range.h in cxl.h
+Message-ID: <aGQzfh-36CnS_Jxg@smile.fi.intel.com>
+References: <20250701-cxl-fix-struct-range-error-v1-1-1f199bddc7c9@kernel.org>
+ <6863fcb649c0d_2ff1fe29428@iweiny-mobl.notmuch>
+ <20250701153820.GA3922159@ax162>
+ <6864095bc5ecd_30815d2948c@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6864095bc5ecd_30815d2948c@iweiny-mobl.notmuch>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue,  1 Jul 2025 17:45:03 +0100
-Will Deacon <will@kernel.org> wrote:
-
-> When allocating receive buffers for the vsock virtio RX virtqueue, an
-> SKB is allocated with a 4140 data payload (the 44-byte packet header +
-> VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE). Even when factoring in the SKB
-> overhead, the resulting 8KiB allocation thanks to the rounding in
-> kmalloc_reserve() is wasteful (~3700 unusable bytes) and results in a
-> higher-order page allocation for the sake of a few hundred bytes of
-> packet data.
+On Tue, Jul 01, 2025 at 11:14:19AM -0500, Ira Weiny wrote:
+> Nathan Chancellor wrote:
+> > On Tue, Jul 01, 2025 at 10:20:22AM -0500, Ira Weiny wrote:
+> > > Nathan Chancellor wrote:
+> > > > After commit aefeb286b960 ("libnvdimm: Don't use "proxy" headers"),
+> > > > range.h may not be implicitly included, resulting in a build error:
+> > > 
+> > > That said, I'm not seeing this issue.  What config caught this?
+> > 
+> > Fedora's aarch64 configuration [1] is where I initially noticed this.
+> > Fedora's rpm site seems to be under the weather for me but I have it
+> > mirrored [2] for my own test setup.
 > 
-> Limit the vsock virtio RX buffers to a page per SKB, resulting in much
-> better memory utilisation and removing the need to allocate higher-order
-> pages entirely.
+> Ah, I suspected it was a non-x86 build.
 > 
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  include/linux/virtio_vsock.h     | 1 -
->  net/vmw_vsock/virtio_transport.c | 7 ++++++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> index eb6980aa19fd..1b5731186095 100644
-> --- a/include/linux/virtio_vsock.h
-> +++ b/include/linux/virtio_vsock.h
-> @@ -109,7 +109,6 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
->  	return (size_t)(skb_end_pointer(skb) - skb->head);
->  }
->  
-> -#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
->  #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
->  #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
->  
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index 488e6ddc6ffa..3daba06ed499 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -307,7 +307,12 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
->  
->  static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
->  {
-> -	int total_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE + VIRTIO_VSOCK_SKB_HEADROOM;
-> +	/* Dimension the SKB so that the entire thing fits exactly into
-> +	 * a single page. This avoids wasting memory due to alloc_skb()
-> +	 * rounding up to the next page order and also means that we
-> +	 * don't leave higher-order pages sitting around in the RX queue.
-> +	 */
-> +	int total_len = SKB_WITH_OVERHEAD(PAGE_SIZE);
+> Dave, I'll pull this in right now.
 
-Should that be an explicit 4096?
-Otherwise it is very wasteful of memory on systems with large pages.
+Thanks, I haven't seen issues and 0-day haven't given any (bad) report so far.
 
-	David
+> > [1]: https://src.fedoraproject.org/rpms/kernel/raw/rawhide/f/kernel-aarch64-fedora.config
+> > [2]: https://github.com/nathanchance/llvm-kernel-testing/raw/refs/heads/main/configs/fedora/aarch64.config
 
->  	struct scatterlist pkt, *p;
->  	struct virtqueue *vq;
->  	struct sk_buff *skb;
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
