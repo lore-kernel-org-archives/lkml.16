@@ -1,125 +1,100 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBEF1EA6F;
-	Tue,  1 Jul 2025 07:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C861EA6F
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751354645; cv=none; b=KeLci6bZisVbAw+1y2zzDo9AoExAL5h5m3y2t1ho/IygbbGKe1QvSYh/YIMmRsAKJkaz51XPCP95tmaVG0IBgg/n+AknXPh3wUQZCsHTWUkp4k4vP9mQAyZ7cgFG6R7KYgz+0ZUgEx3o9gb+qIrJo4S/8h9m2HxE2BSfKwampyE=
+	t=1751354674; cv=none; b=bcaRBDlWdqOS/nN/d0MgKKHMr9/onD0vGcq0sUSp4I1EkLNuGfHMw2dteOLLqoP0c3KPBHzbN9st9PUmBU8a2SjhBEnygKHOhx6LexD3ayMtlhbsdRzNIwKb9n3eH2vB1e50Hf+XYNyrLDagt/gLxhSr6PzLpEjdE5Uxx8CnAho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751354645; c=relaxed/simple;
-	bh=HjDtuauV+NnY+Z2hB3G2b2MUF68nvfulxc5469nqt+c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHx7rgBSaKJD2f699hGK56l//ztySEYWRs8TlnAMTVkfCwTPhDvftVIU2SVBng7H1nx5uXIs3VPhwjfJ+HLF0k6tC6wMl2de4A4ML3Edy19Yw3VcuvGkGourLAhUvDHTl9AtKff7aY7G5MYI/RBfVUNumci8qk+ru0xqyxkjhXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAO8BAaH; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAO8BAaH"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7152d8c5602so934697b3.3;
-        Tue, 01 Jul 2025 00:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751354642; x=1751959442; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PD1ojVs/o5EGP3bpZItqlANn0Caes40vz6lO01Z9vf8=;
-        b=RAO8BAaHaTlSr5M/pNuP3SltTOw10ueLiGEAaNQ4I1TP5XUnLPx/ZLDDZfusxCKKRv
-         gMktOxmn724RywcqbIY4Ycfv+brYn6Hxib/ILeSt7xOyYcR7PL0TWz8Q8hIeZYUHYdR5
-         J+YLxxul/NbwB8I8IxQpGx0W7sNc7VKka/I5XcUShPelPTl3zvJUKRyK4/RQhAm7+Uj8
-         lOP9cXnX8BsRTzyFhDreTsesiQH5vD0x7kZc1NUd/NW8y1Vw0vSGXBvg6RrqU/lp8ku3
-         vAC7eoOFzjqwA6vhJSs3Xgo4P0yee3amOEL6AJUUh4OS2f0ReT0IEcdb1LKgxHareOVH
-         6faQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751354642; x=1751959442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PD1ojVs/o5EGP3bpZItqlANn0Caes40vz6lO01Z9vf8=;
-        b=I798922YRrUAob9lw/cWdqAhOZrOwEI6OFHCH3T+djCIK9dkcUpvwS+YkY/SnqppkV
-         gtBhrgE3wX4KqLQcryoPBCC5NOTNLxtv1tXUtqRdxeV7d+aaZbeR6nAUlpG43aGET1ID
-         Z2Mod+3iBnQHxIVEt89zvorp3WJo9EVFS5JmtWP0VIZfmB3lzAuDE7cWQUyc6F2nUBND
-         tel3dWM2DCWqnYTAt73HKjBXvBojOva0aQS9s7URF7DhSA0WZVaotZfPiVYKAUvhLQ03
-         43EkL4leU42IffHVUaIL4RG3PVqjIIC/JP+GLzXFnChmXkiqhS1z75gh9zSkTNCN07Xw
-         8teQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyTB8VWvqdT0nsHsDJ40h/xVgs6g+wrIyRrVa2PrqEOI6MII6v24qOot+NXjTxZrryIHtuBeqCzMJB0O6d@vger.kernel.org, AJvYcCW6FcDrfcpoHQPwbArdIa7O02lyqx98l3PX8WCmCF3xUvNUcBgdTAOMh6wtwsRqhlxrR5h5DPOpwe4l@vger.kernel.org, AJvYcCWzABLWIdbZza11WyGWGBg3RCGXCAOAsWPZXpMhznS8nhBWukw9q3anDWiPVAIZE9cXd9h5wI/XQjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP8mqfLSSyPqPrM1hHf4114ZGpsMJGmUGPVy5+8SvOCctQlM8i
-	vdRYcR/2+4A0OsJWrE61ve8Z7eU54ut1JxRi/H4LiaRgMwIpXTfmaqIhj5RKnincXZFjYy/LK/1
-	AThKeJhGU8qcwmI5LJ03vaqsKBbwu2YU=
-X-Gm-Gg: ASbGnctPxBmlrRBcpufvMzyf7e/pEo5d18+dA/M9syQcpF2OKraNNgRrJhiQxbUQ5kC
-	/lbw7SmbHdt63EoKSnnw6+tQb1thwK1rY61BNgxlOItQyaOqFi8+Mm4kEW5o2pykftVbeaR1gJL
-	yytrRTsIUtjXAgo5Eh5ZNQLyxxQRT+DvIvQmhoxzEZwiU=
-X-Google-Smtp-Source: AGHT+IF9Zs+xVGv7NWWeAGJEQldTJ/+ArWtLpje4jFNAtPBQW1QmDtdZ/TG5sZniRJkBIdKlz8QjDtHJ1iVcsohX168=
-X-Received: by 2002:a05:690c:dc6:b0:70f:7bea:5dd with SMTP id
- 00721157ae682-7163f7a475bmr13322897b3.9.1751354642320; Tue, 01 Jul 2025
- 00:24:02 -0700 (PDT)
+	s=arc-20240116; t=1751354674; c=relaxed/simple;
+	bh=72cCJmRvHK5W1WFDvPIAcW10EaQY7NbAPNugEEW4StQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oKYJXD6Dz1CcOp2Oet34wRjFM8HaTP4b5mpp+WqR7wUPrDLK0mDUKDje5hgYp7DT1am0kLsWokUMNigIx7vaEOX8wXLL8bThspZsI3uLI7lJzETxPeosz0wm/E1KA8sXw767l2JWiel4ADzEM1nOq4bHWJxyLGB6wc9we8xiDKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bWZKP1F2czYQvWc
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:24:25 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 0E9D61A0FA8
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:24:24 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHaCUljWNoBbgrAQ--.17981S4;
+	Tue, 01 Jul 2025 15:24:23 +0800 (CST)
+From: Zheng Qixing <zhengqixing@huaweicloud.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	houtao1@huawei.com,
+	zhengqixing@huawei.com
+Subject: [PATCH] nvme: fix inconsistent RCU list manipulation in nvme_ns_add_to_ctrl_list()
+Date: Tue,  1 Jul 2025 15:17:17 +0800
+Message-Id: <20250701071717.2619384-1-zhengqixing@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250622122937.156930-1-l.rubusch@gmail.com> <20250622122937.156930-4-l.rubusch@gmail.com>
- <20250628181643.0ce0ed51@jic23-huawei>
-In-Reply-To: <20250628181643.0ce0ed51@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Tue, 1 Jul 2025 09:23:26 +0200
-X-Gm-Features: Ac12FXyuIYmL7BOfvP9uigNF6Ur5ogoR_YGPM0_xQgtI48zhiu_X1NSTPSUUk-w
-Message-ID: <CAFXKEHYS2rRYtPShU-yyEetQQoo+EbCscjUUGcWdWJQA2UwiYA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/8] iio: accel: adxl313: add buffered FIFO watermark
- with interrupt handling
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgAHaCUljWNoBbgrAQ--.17981S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7GryDXr15Cry7Zr15tw15CFg_yoW8JrWUpF
+	4fur9rCrsrCr4kG34UXr429343Cwn5XFyUAr93K3ZxZryFgFWjvrnxK3WavF15Jr18Zryr
+	ZF40gr47Krs8ZwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU17KsUUUUUU==
+X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-On Sat, Jun 28, 2025 at 7:16=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Sun, 22 Jun 2025 12:29:32 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Cover the following tasks:
-> > - Add scan_mask and scan_index to the IIO channel configuration. The
-> > scan_index sets up buffer usage. According to the datasheet, the ADXL31=
-3
-> > uses a 13-bit wide data field in full-resolution mode. Set the
-> > signedness, number of storage bits, and endianness accordingly.
-> >
-> > - Parse the devicetree for an optional interrupt line and configure the
-> > interrupt mapping based on its presence. If no interrupt line is
-> > specified, keep the FIFO in bypass mode as currently implemented.
-> >
-> > - Set up the interrupt handler. Add register access to detect and
-> > evaluate interrupts. Implement functions to clear status registers and
-> > reset the FIFO.
-> >
-> > - Implement FIFO watermark configuration and handling. Allow the
-> > watermark level to be set, evaluate the corresponding interrupt, read
-> > the FIFO contents, and push the data to the IIO channel.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> Hi Lothar,
->
+From: Zheng Qixing <zhengqixing@huawei.com>
 
-Hi Jonathan, there's still one thing about this patch [PATCH v6 3/8],
-I wanted to address:
+When inserting a namespace into the controller's namespace list,
+the function uses list_add_rcu() when the namespace is inserted
+in the middle of the list, but falls back to a regular list_add()
+when adding at the head of the list.
 
-        struct mutex    lock; /* lock to protect transf_buf */
-+       u8 watermark;
-        __le16          transf_buf __aligned(IIO_DMA_MINALIGN);
-+       __le16          fifo_buf[ADXL313_NUM_AXIS * ADXL313_FIFO_SIZE + 1];
- };
+This inconsistency could lead to race conditions during concurrent
+access, as users might observe a partially updated list. Fix this
+by consistently using list_add_rcu() in both code paths to ensure
+proper RCU protection throughout the entire function.
 
-Is this correct usage of the IIO_DMA_MINALIGN? My intention here is to
-have transf_buf and fifo_buf[...] aligned with the IIO_DMA_MINALIGN.
+Fixes: be647e2c76b2 ("nvme: use srcu for iterating namespace list")
+Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+---
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry, I should have asked this earlier. I saw the sensor operating,
-but I'm unsure if perhaps DMA usage is setup correctly. Perhaps you
-could drop me a line of feedback here?
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e533d791955d..475115edbbe9 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -4077,7 +4077,7 @@ static void nvme_ns_add_to_ctrl_list(struct nvme_ns *ns)
+ 			return;
+ 		}
+ 	}
+-	list_add(&ns->list, &ns->ctrl->namespaces);
++	list_add_rcu(&ns->list, &ns->ctrl->namespaces);
+ }
+ 
+ static void nvme_alloc_ns(struct nvme_ctrl *ctrl, struct nvme_ns_info *info)
+-- 
+2.39.2
 
-Best,
-L
