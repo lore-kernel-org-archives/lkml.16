@@ -1,83 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423F126FDA9;
-	Tue,  1 Jul 2025 10:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2ED2701B3
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751366982; cv=none; b=lERmfJXHiG+guPjq+SorfP6BqWoP/qeaL7hJPvwVZCpVXkZJjdeI5yZuyybCKrljVxzRD45EYmSmG1BWe8x6KXuUO0VzIdxUjwGjVGgxF07rgNspP+H3sbcNzNagZ50BNWXj+eHJOKRobVjJAnWzrcIcZZl+lusw/Mehob4lPtU=
+	t=1751366994; cv=none; b=hrwcDNEDd/mc30jacXXde/MAGIKZp68RWqz+DZSSBLzchwwdnWECtnD3uQi/NCBpli/Le72ZhbIMOvsFpHDEaihpBnsFjweo2FmO2rvqCC+4fDQzwYe549SJD9S9DGHglIxwfG5SPUYK3Q/QuLAaziR84jy03eVtnTF6SGiuKfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751366982; c=relaxed/simple;
-	bh=K72GTE7UBORgAxUCCriBJHYOJ+/xnWxxgAX8Kp6b374=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gVZhdsxBxkEBRj5roUDU8REPqNvknL2C722Ax8oszaijY6pe3WJCsHPQZnFqd6TLxU2+uUvb2E795dUKObqb3+vp58OzEU2ikcfAueBb2/1AizaE8dl1fpFj1JMU9Fcds7Ybbm0akcK/M8wGbCR1br1pFqSF62C4oqSLCdc5kXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgL/bBOb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751366994; c=relaxed/simple;
+	bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jFSEo3R8KJXzGcUx7sNuiZOTo7ixac7QWHOgcrtUumpqK5NSfqarugKGEDqFPlDWVacHHRIuIzdUnGKOiYyFtNZvkn8urizsNSE09cYrxFTYPZcEVsyr0jAAOnX+f4Q0JWi9MFUmHw+PhTibZCnD15KiDC5cbPvFYgyz14g+G/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p8o6kBRj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgL/bBOb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38BDC4CEEB;
-	Tue,  1 Jul 2025 10:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751366981;
-	bh=K72GTE7UBORgAxUCCriBJHYOJ+/xnWxxgAX8Kp6b374=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=dgL/bBObBmCeQLd6NcVrjT7ixPxxPTuxFeUsg3mSuYSdLEUbLk/hEhRUtrgVsaHb6
-	 prYMs6cUfcm1yLA3dvfEDSVqEEBgHJz26/HzlPLka9191yt7fClSQVhmqxFQqpk/zJ
-	 nZgVqAi9SQfvO3j5/tJtj53uffUFg3sVL2Y5PF9wO5uRYMvUlYDs4RDvWdoHK4K1y9
-	 Cz3g+vF9QoX+BmUJKlpxKKHy14VFcym+driJN9fqxNIFFHpL7jb+hOwjIuWUlv96Ux
-	 N9KVBMHMVCAngjuSUSCaQ3caSA8U7YB6b8ctP1lG/sh6zmJ2ylQbgoi8aymM5y8OF8
-	 s61WIn15XIzJg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF7B38111CE;
-	Tue,  1 Jul 2025 10:50:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p8o6kBRj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5D9C4CEEE;
+	Tue,  1 Jul 2025 10:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751366993;
+	bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=p8o6kBRjvT/CsthagHt2+YonQbhuyV62p/Vtd00HQRTefy1F8pXr8k2y5QDUHacfH
+	 Pyqioei8ykiaTwZ+C6/qCg52AG+X7i7rLI+hsOxEWm4o/bpmLQUp4EYzZRjycLsYTw
+	 jFeMxbz+83SNoUiW84zoZOSJGsrqoOdccliTexTg=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	Lyude Paul <lyude@redhat.com>
+Subject: [PATCH v5] drm/vkms: convert to use faux_device
+Date: Tue,  1 Jul 2025 12:49:48 +0200
+Message-ID: <2025070147-antics-pleat-edd2@gregkh>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4473; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=rfmh8mLv26aS8gI+IYRKA9NzVJaudp50BtCKlSVDjfs=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJe71P2ip++1VzRr+PQc1gxZ5pNw4//bJ+S2cdn6dlU /6m8Bb5jlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZiIxESGBWsthGSSLVamF4bq pV/KXNJ7RXHfMoZZzE+nXp/pOiXKIFpg2qI1yzQOGAS/AQA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 1/1] net: usb: lan78xx: fix possible NULL
- pointer
- dereference in lan78xx_phy_init()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175136700676.4114988.13242683891063263726.git-patchwork-notify@kernel.org>
-Date: Tue, 01 Jul 2025 10:50:06 +0000
-References: <20250626103731.3986545-1-o.rempel@pengutronix.de>
-In-Reply-To: <20250626103731.3986545-1-o.rempel@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, woojung.huh@microchip.com, andrew+netdev@lunn.ch,
- rmk+kernel@armlinux.org.uk, Thangaraj.S@microchip.com,
- Rengarajan.S@microchip.com, dan.carpenter@linaro.org, kernel@pengutronix.de,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com, phil@raspberrypi.org,
- maxime.chevallier@bootlin.com, horms@kernel.org
 
-Hello:
+The vkms driver does not need to create a platform device, as there is
+no real platform resources associated it,  it only did so because it was
+simple to do that in order to get a device to use for resource
+management of drm resources.  Change the driver to use the faux device
+instead as this is NOT a real platform device.
 
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Melissa Wen <melissa.srw@gmail.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v5: - rebased against 6.16-rc4
+    - added reviewed-by and tested-by lines
+    - was somehow dropped from drm trees, resending to make sure it
+      isn't lost
 
-On Thu, 26 Jun 2025 12:37:31 +0200 you wrote:
-> If no PHY device is found (e.g., for LAN7801 in fixed-link mode),
-> lan78xx_phy_init() may proceed to dereference a NULL phydev pointer,
-> leading to a crash.
-> 
-> Update the logic to perform MAC configuration first, then check for the presence
-> of a PHY. For the fixed-link case, set up the fixed link and return early,
-> bypassing any code that assumes a valid phydev pointer.
-> 
-> [...]
+v4: - first version of the patch, was part of a larger patch series that
+      has been mostly all applied to the tree.
 
-Here is the summary with links:
-  - [net-next,v1,1/1] net: usb: lan78xx: fix possible NULL pointer dereference in lan78xx_phy_init()
-    https://git.kernel.org/netdev/net-next/c/c22f056e49d9
+ drivers/gpu/drm/vkms/vkms_drv.c | 28 ++++++++++++++--------------
+ drivers/gpu/drm/vkms/vkms_drv.h |  4 ++--
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-You are awesome, thank you!
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index a24d1655f7b8..e8472d9b6e3b 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -10,7 +10,7 @@
+  */
+ 
+ #include <linux/module.h>
+-#include <linux/platform_device.h>
++#include <linux/device/faux.h>
+ #include <linux/dma-mapping.h>
+ 
+ #include <drm/clients/drm_client_setup.h>
+@@ -149,27 +149,27 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
+ static int vkms_create(struct vkms_config *config)
+ {
+ 	int ret;
+-	struct platform_device *pdev;
++	struct faux_device *fdev;
+ 	struct vkms_device *vkms_device;
+ 	const char *dev_name;
+ 
+ 	dev_name = vkms_config_get_device_name(config);
+-	pdev = platform_device_register_simple(dev_name, -1, NULL, 0);
+-	if (IS_ERR(pdev))
+-		return PTR_ERR(pdev);
++	fdev = faux_device_create(dev_name, NULL, NULL);
++	if (!fdev)
++		return -ENODEV;
+ 
+-	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
++	if (!devres_open_group(&fdev->dev, NULL, GFP_KERNEL)) {
+ 		ret = -ENOMEM;
+ 		goto out_unregister;
+ 	}
+ 
+-	vkms_device = devm_drm_dev_alloc(&pdev->dev, &vkms_driver,
++	vkms_device = devm_drm_dev_alloc(&fdev->dev, &vkms_driver,
+ 					 struct vkms_device, drm);
+ 	if (IS_ERR(vkms_device)) {
+ 		ret = PTR_ERR(vkms_device);
+ 		goto out_devres;
+ 	}
+-	vkms_device->platform = pdev;
++	vkms_device->faux_dev = fdev;
+ 	vkms_device->config = config;
+ 	config->dev = vkms_device;
+ 
+@@ -203,9 +203,9 @@ static int vkms_create(struct vkms_config *config)
+ 	return 0;
+ 
+ out_devres:
+-	devres_release_group(&pdev->dev, NULL);
++	devres_release_group(&fdev->dev, NULL);
+ out_unregister:
+-	platform_device_unregister(pdev);
++	faux_device_destroy(fdev);
+ 	return ret;
+ }
+ 
+@@ -231,19 +231,19 @@ static int __init vkms_init(void)
+ 
+ static void vkms_destroy(struct vkms_config *config)
+ {
+-	struct platform_device *pdev;
++	struct faux_device *fdev;
+ 
+ 	if (!config->dev) {
+ 		DRM_INFO("vkms_device is NULL.\n");
+ 		return;
+ 	}
+ 
+-	pdev = config->dev->platform;
++	fdev = config->dev->faux_dev;
+ 
+ 	drm_dev_unregister(&config->dev->drm);
+ 	drm_atomic_helper_shutdown(&config->dev->drm);
+-	devres_release_group(&pdev->dev, NULL);
+-	platform_device_unregister(pdev);
++	devres_release_group(&fdev->dev, NULL);
++	faux_device_destroy(fdev);
+ 
+ 	config->dev = NULL;
+ }
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index a74a7fc3a056..5a46016e1890 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -197,13 +197,13 @@ struct vkms_config;
+  * struct vkms_device - Description of a VKMS device
+  *
+  * @drm - Base device in DRM
+- * @platform - Associated platform device
++ * @faux_dev - Associated faux device
+  * @output - Configuration and sub-components of the VKMS device
+  * @config: Configuration used in this VKMS device
+  */
+ struct vkms_device {
+ 	struct drm_device drm;
+-	struct platform_device *platform;
++	struct faux_device *faux_dev;
+ 	const struct vkms_config *config;
+ };
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.50.0
 
