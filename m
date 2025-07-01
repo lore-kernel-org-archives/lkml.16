@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE16274FFC;
-	Tue,  1 Jul 2025 15:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A4727604B;
+	Tue,  1 Jul 2025 15:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751382721; cv=none; b=n4opsRk80moRRpGBub/ne3VM2928WQNrTwocwRogWwLm7oGxMQibb8cvURi0Io0PPTntu+qRtgKWbeo6tVx9qkUomB6uwXGdZhKIcBB4o0L8bbLa9oNxQdxyTw2znE7X/YfN6f4M017Gh6l0SgXwZ40pMcZT8/C1Jouk4vohINo=
+	t=1751382722; cv=none; b=g0KgyeFXH6CTqDh1VPfPuKnlwkSl934j9byEcJbHwAgRv/yFL64+T81XPuHP2ZORZJZX9it4x7I2TiinWJugs/ChUG/nf0WCZd4FHeyED8tnSu7ZIFg5nCmayg1Mmcbid4DdvE6p7IILq3+JvA8giWXDzv4PBcMh+Ba1UXLmrk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751382721; c=relaxed/simple;
-	bh=2sjI2nv7EsmNbdyc0263SSE5zjLb+Nwf++I7IE3w9Pk=;
+	s=arc-20240116; t=1751382722; c=relaxed/simple;
+	bh=6txTiD2AyRmqoHCYxbM4ZdaNUVF5YvLjBexLwl7V0VY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XiUNXWwE73NkrKTVdKc8HYsLtgRY+htVXrFueObADoNFwbR6JZiyAoMTdzZrD+6IWxJqrObuXzvOje36yyU95AgUaeNngHrzjEWEg/ui++CqtS0nwfAeDftcls67GqMgEZsVjUAxsSR6So6QH2vlJ4WocoFc3vwsu/hjSGRhGG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kjIRRtzY; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=P0KQNm09zw25Ep7uKB8KYlqQlnyqc0G3ZeAUanodk+ORdHboJlz58gxVzaeM/2wpDnYZ7rAc37Wre8+vpIzVQ+B/cAA9B5XOtsBbCCP831b8QmFoXZQe4kSfbYLLTZmL7Sih/H/3sQIGlGdyIpBXPBzWETgUoHC+wu4X3QC8kxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NSrmJhYm; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kjIRRtzY"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NSrmJhYm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751382717;
-	bh=2sjI2nv7EsmNbdyc0263SSE5zjLb+Nwf++I7IE3w9Pk=;
+	s=mail; t=1751382718;
+	bh=6txTiD2AyRmqoHCYxbM4ZdaNUVF5YvLjBexLwl7V0VY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kjIRRtzY2tQtxrqxWKs1QaZmrl9HVSRfD+utS5t8Z4NDSkrhx+WxCfFCTOBc0yx6q
-	 72k/8vM8yRbFO7bXPrm/3hsBe/7C0FlXHgb9k3xNPnurZJrf9aVoc0Z1lsZaQyjyPV
-	 YluqLLmzhyd7MAXKHO1mOe9wA9BNZLElbBKIJiu9w7PC2ALVix+sSCaH38M2TB6b7c
-	 XP8UCooJVe7VyGxdvSLFOHU9yGOekt87lHhRlF8w1ucuQBxChRWqlJswp5/IEhd9GT
-	 IpGCLpRNhusaJ3Ey8oV6j6ozCkp/yimvT8e2tQxxwdIVABqsV333SgyxoJvZfK5tUR
-	 BiHIeX5vURrgA==
+	b=NSrmJhYmpSjO8ICnCSznoFE0fP08fy0Myz3r6LBMqvtOqhke1eUYtn6+RGOHww5Hb
+	 MhkFecnO1JRvmfcKPzk7Qhgpll6jY/DSlsSj51cGLDL74JAJZ42c3LaacIBzjRBt3d
+	 2jkjqVIqAby4yGSzikc2WgK/TmyrJw7bTQ/Iqw/JxTOoRNixErkGfC7/JlvBKfgwhK
+	 Ryiv3b3aR3vW8wotuoIltmY2DKiVHbaU0KCt6aq5v9istkArIQWKZrtZ+XNL/3BHPJ
+	 qKQ5f1elYeB2u1Pgz+XrT8WRSiR4Nrv43TeFW1mc+P71pBhnDxthnQwQVL4lcRSCGT
+	 NuWUJDMbzzDhA==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 20CAA17E0921;
-	Tue,  1 Jul 2025 17:11:56 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 616C017E0676;
+	Tue,  1 Jul 2025 17:11:57 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: krzk@kernel.org
 Cc: robh@kernel.org,
@@ -57,9 +57,9 @@ Cc: robh@kernel.org,
 	linux-mediatek@lists.infradead.org,
 	laura.nao@collabora.com,
 	kernel@collabora.com
-Subject: [RFC PATCH 1/3] firmware: Move MediaTek ADSP IPC driver to mediatek folder
-Date: Tue,  1 Jul 2025 17:11:47 +0200
-Message-ID: <20250701151149.136365-2-angelogioacchino.delregno@collabora.com>
+Subject: [RFC PATCH 2/3] dt-bindings: firmware: Document the MediaTek Hardware Voter (HWV)
+Date: Tue,  1 Jul 2025 17:11:48 +0200
+Message-ID: <20250701151149.136365-3-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
 References: <20250701151149.136365-1-angelogioacchino.delregno@collabora.com>
@@ -71,105 +71,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for adding more MediaTek firmware drivers, create a
-new `mediatek` folder and move the mtk-adsp-ipc driver into it.
-
-Also move the Kconfig and Makefile entries to the new ones in the
-folder.
+Add documentation for the new MediaTek Hardware Voter, found in
+MediaTek SoCs like the MT8196 Kompanio Ultra for Chromebooks and
+the MT6991 Dimensity 9400 for Smartphones.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/firmware/Kconfig                       | 10 +---------
- drivers/firmware/Makefile                      |  2 +-
- drivers/firmware/mediatek/Kconfig              | 14 ++++++++++++++
- drivers/firmware/mediatek/Makefile             |  3 +++
- drivers/firmware/{ => mediatek}/mtk-adsp-ipc.c |  0
- 5 files changed, 19 insertions(+), 10 deletions(-)
- create mode 100644 drivers/firmware/mediatek/Kconfig
- create mode 100644 drivers/firmware/mediatek/Makefile
- rename drivers/firmware/{ => mediatek}/mtk-adsp-ipc.c (100%)
+ .../mediatek,mt6991-hardware-voter.yaml       | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index bbd2155d8483..f35648686f91 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -169,15 +169,6 @@ config INTEL_STRATIX10_RSU
- 
- 	  Say Y here if you want Intel RSU support.
- 
--config MTK_ADSP_IPC
--	tristate "MTK ADSP IPC Protocol driver"
--	depends on MTK_ADSP_MBOX
--	help
--	  Say yes here to add support for the MediaTek ADSP IPC
--	  between host AP (Linux) and the firmware running on ADSP.
--	  ADSP exists on some mtk processors.
--	  Client might use shared memory to exchange information with ADSP.
--
- config SYSFB
- 	bool
- 	select BOOT_VESA_SUPPORT
-@@ -290,6 +281,7 @@ source "drivers/firmware/cirrus/Kconfig"
- source "drivers/firmware/google/Kconfig"
- source "drivers/firmware/efi/Kconfig"
- source "drivers/firmware/imx/Kconfig"
-+source "drivers/firmware/mediatek/Kconfig"
- source "drivers/firmware/meson/Kconfig"
- source "drivers/firmware/microchip/Kconfig"
- source "drivers/firmware/psci/Kconfig"
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 4ddec2820c96..5bb382344906 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -13,7 +13,6 @@ obj-$(CONFIG_INTEL_STRATIX10_RSU)     += stratix10-rsu.o
- obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
- obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
--obj-$(CONFIG_MTK_ADSP_IPC)	+= mtk-adsp-ipc.o
- obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
- obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
- obj-$(CONFIG_SYSFB)		+= sysfb.o
-@@ -27,6 +26,7 @@ obj-y				+= arm_ffa/
- obj-y				+= arm_scmi/
- obj-y				+= broadcom/
- obj-y				+= cirrus/
-+obj-y				+= mediatek/
- obj-y				+= meson/
- obj-y				+= microchip/
- obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
-diff --git a/drivers/firmware/mediatek/Kconfig b/drivers/firmware/mediatek/Kconfig
+diff --git a/Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml b/Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml
 new file mode 100644
-index 000000000000..f6f16e71fbda
+index 000000000000..173b74c23a91
 --- /dev/null
-+++ b/drivers/firmware/mediatek/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++++ b/Documentation/devicetree/bindings/firmware/mediatek,mt6991-hardware-voter.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2025 Collabora Ltd
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/mediatek,mt6991-hardware-voter.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+menu "MediaTek firmware drivers"
++title: MediaTek Hardware Voter (HWV)
 +
-+config MTK_ADSP_IPC
-+	tristate "MTK ADSP IPC Protocol driver"
-+	depends on MTK_ADSP_MBOX
-+	help
-+	  Say yes here to add support for the MediaTek ADSP IPC
-+	  between host AP (Linux) and the firmware running on ADSP.
-+	  ADSP exists on some mtk processors.
-+	  Client might use shared memory to exchange information with ADSP.
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 +
-+endmenu
-diff --git a/drivers/firmware/mediatek/Makefile b/drivers/firmware/mediatek/Makefile
-new file mode 100644
-index 000000000000..3c0d9d67d646
---- /dev/null
-+++ b/drivers/firmware/mediatek/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++description:
++  The MediaTek Hardware Voter (HWV) is a SoC-internal fixed-function MCU
++  used to collect votes from both the Application Processor and from the
++  various other remote processors present in the SoC, and transparently
++  turn on or off various hardware resources (for example, power domains
++  or system clocks) based on aggregation of votes done in the HWV MCU's
++  internal state machine, therefore guaranteeing synchronization of the
++  hardware resource requests between all components of the SoC and hence
++  avoiding, for example, unclocked or unpowered access to the hardware.
 +
-+obj-$(CONFIG_MTK_ADSP_IPC)		+= mtk-adsp-ipc.o
-diff --git a/drivers/firmware/mtk-adsp-ipc.c b/drivers/firmware/mediatek/mtk-adsp-ipc.c
-similarity index 100%
-rename from drivers/firmware/mtk-adsp-ipc.c
-rename to drivers/firmware/mediatek/mtk-adsp-ipc.c
++properties:
++  $nodename:
++    pattern: "^system-controller@[0-9a-f]+$"
++
++  compatible:
++    const: mediatek,mt6991-hardware-voter
++
++  reg:
++    items:
++      - description: Address and size of the Hardware Voter MMIO
++
++  power-controller:
++    $ref: /schemas/power/mediatek,power-controller.yaml
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: true
++
++examples:
++ - |
++   scp_hwv: system-controller@14500000 {
++     compatible = "mediatek,mt6991-hardware-voter";
++     reg = <0 0x14500000 0 0x3000>;
++
++     power-controller {
++       compatible = "mediatek,mt8196-hwv-scp-power-controller";
++       #address-cells = <1>;
++       #size-cells = <0>;
++       #power-domain-cells = <1>;
++     };
++   };
++
++   /*
++    * For RFC patch only, this will be removed at patch v1
++    * Note 1: Clock controllers have more than 90 registers in HWV
++    * Note 2: The HWV integrates the power controller, so that's why
++    *         that is a child node of HWV, but the clock controllers
++    *         are completely separated (in hardware) from the HWV's
++    *         physical location (other than address space)... so it
++    *         would be wrong to place those as children of HWV I think.
++    */
++   clock-controller@16640000 {
++     comaptible = "mediatek,mt8196-pericfg-ao";
++     mediatek,hardware-voter = <&scp_hwv>;
++     #clock-cells = <1>;
++   };
 -- 
 2.49.0
 
