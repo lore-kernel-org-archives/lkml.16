@@ -1,119 +1,155 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBBF13C3F2
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 14:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E70DF49;
+	Tue,  1 Jul 2025 14:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751379754; cv=none; b=EIRYndDbnKSUNkIXn/bTzVQuWnREp32c4FGU0k8pt8nQ//RHFjHUwGWRriX1tfU/lOT+DZR/xSIRJmn5TqGbnkHFBRd6Ivl7VAGfQNB/BR//IN2s/hxWA4W3Rt1Yy1C/zdJnyaWPEARZgHYrZUQE3HowANMsW3VkOC64Jbxse9g=
+	t=1751379785; cv=none; b=EDUniGrPUmX/f6u/CCX2Qa/VV2nT4W8G62+wDo8YXVGB7ekr4v8Ek3obfIpedb2Fw0dLzMB/FlmTaEeLCiRLAulem5Hy8oHN4BtRW6nmcEy/Yo/U3/3StpeUo/PBoN8sZd9sBv0GINjW6fX1YamS6MALXIyZSdlWDaxx6hUTx1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751379754; c=relaxed/simple;
-	bh=8SNUHHsLZlbYQEbttYrEHI1FQBZFRL7HmeQ/RQy+dws=;
+	s=arc-20240116; t=1751379785; c=relaxed/simple;
+	bh=19HqR+S7DS9HWEs5GXmKKrr14rS+lQ2AvqDBzeElGvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CtiLI2c26d2LP4bVofaul3nhShXwZB0ZE6MS4BJhZ//zwpUK1aGwgURxWcYzBBvYPN0UdiIonRhV8GihhVdE6DzdfFxgK/9GgrW89seVpkkG3BIYksodwvjHubV+YRxlF4+MI8FdHIfMrCs/viH3edSLsA4eqcs1BP8va3by5xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ulj1MEd8; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTlBZX6fBmdsGAIpCY7yMfy72jSRoBLl3ez130dIAWscSbRTidWRSTG1Rfp99/ceXWKdbZugVKvFuGwwU0vJExTOBh4hPbI7Zt8NvwA1PbklVK8utawsfsBJlXin0oASpgFg7pbwdDGXk3w9aakxA0XYUY3SQIK3ddMupKSL4d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cvrmez41; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ulj1MEd8"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-60eefb805a4so612457eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 07:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751379752; x=1751984552; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=k8x0R9yhBqb5Y1VdS7ojeB/NMJonErKKyGe0msuTxWs=;
-        b=Ulj1MEd8NodvkIiE2JaJkeoIM3ADNVilqidh0+V3y1F7GAVN/Yq9qQAwQ+30JyOiQk
-         jYM1xS8Ry+xcCrnn5ROBM2swzKKvj33ZptwUhaXCIofnTGfJQ+OAA5V+K2gqDgcap6ZL
-         klEJwyAHkdb/VTwKAJLH+MjUzkXf/uuQBJIwZQOpUn53WqZhB/WpqsHUbUeZ3PfgmmhO
-         YcbErjdGBrTwDppUGOVrr4TUV0IKQJhpvmhRuBqWmqesbQGhcZe0xe6WKynkODkcwGne
-         IGJYkzfT8CgopP7WFP0ZEPxA4sm+B4NUnXGIa7OcEILq2K/jzAw79FrNG29zBRPdi6Tq
-         sb2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751379752; x=1751984552;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k8x0R9yhBqb5Y1VdS7ojeB/NMJonErKKyGe0msuTxWs=;
-        b=hAp4ZQrzXmHRde1qBmBdbDok3Mxbgi32Ej0SZh+/oFvOkkT+jW5fmD7EMNIAHpcMil
-         19rg0HsJ6kIsB8OydIicQZ/Zs1KtBqLjMsQvo7ilQe/lUCh9nzX3ItpdpTVnD+8kHqqz
-         VDmbkbJh/OacupL3RmaXbJDN8U8f0FompGktsqNX2vZBhRriqtiVzMeRlWZsK+CwOk/z
-         BYNqkrNw66i1j9sbl4RJNYWoKv6N4mD16jYluFZAml1UYjcFkifM8gfL+Kn0CCs0a1mh
-         EODW91S1Dv+UG78VkXzSDDpk3llysOUeTKEyCIgKyMH560rQ29InXJorQhbjy/FzRo8d
-         r3tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBLWp7r446nswpy31SFoQZEhvzpPXL5uHIliA/uDxuaboF2n6JqewB1obm9YzdxSkiDWaJrgIXD2LBHKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlqfhbUlkO8pkxbMr5CXjqWdS3xUorafdvVHn4HqRS7812PXh0
-	I1zAL9eSzhblyasyJAwFxaIviOPUkmJDp2o6kuWmACyshbdfHGVo9F0afA6zEsvYm1M=
-X-Gm-Gg: ASbGnctTGxr7lqML2je1yG1cHlLexnrjb9zqJ6yAW5tN8WvvzgVX2gQU1V8pW68N4Cb
-	N87cd4xubGXWDKHBZTS9O4sIdZ4ivIN3lqlOowwvKbYiwh+GA6bda1WaZRID+mIGJtKOgnU9m3D
-	0ff9Mus/puWMQk8OT94CWdgEl0GPWRLx3eGAjEeZLI/b2qx/5SZXHMykaBOjYKz9BTIOHhci8Za
-	mFkbqQr2YgQ4WozRXul5VJtnf4tWH/941UzMqgyGwFyvmcVG9cX76RMWktIPkA3TOSmVwqRZayW
-	ociQSai9xH7NUwD2NNqWfgunM8Ko6LQBq8u6ugbt48hCmbZaqu2zW/ZsDt31fjE02V9ftA==
-X-Google-Smtp-Source: AGHT+IEpvP/IKG4XnE3h2afzTDYxxLm0xCTQLhlMLnl5t9v8LU08VB6RFSQVJksDddfCJibRGqTUbQ==
-X-Received: by 2002:a05:6820:189a:b0:60d:63fe:2472 with SMTP id 006d021491bc7-611b901bd7bmr12009783eaf.1.1751379752307;
-        Tue, 01 Jul 2025 07:22:32 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:8ebc:82eb:65f7:565e])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-611b8474de3sm1394279eaf.3.2025.07.01.07.22.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 07:22:31 -0700 (PDT)
-Date: Tue, 1 Jul 2025 17:22:30 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Abdun Nihaal <abdun.nihaal@gmail.com>, andy@kernel.org,
-	lorenzo.stoakes@oracle.com, tzimmermann@suse.de,
-	riyandhiman14@gmail.com, willy@infradead.org, notro@tronnes.org,
-	thomas.petazzoni@free-electrons.com,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v3 2/2] staging: fbtft: cleanup error handling in
- fbtft_framebuffer_alloc()
-Message-ID: <89390196-a23d-4410-a8ff-b068f1795653@suswa.mountain>
-References: <cover.1751207100.git.abdun.nihaal@gmail.com>
- <4e062d040806dc29d6124ac0309e741c63f13ac0.1751207100.git.abdun.nihaal@gmail.com>
- <2025063022-chump-pointless-6580@gregkh>
- <ezkfonpaubsmw6gr4tutgnjmbhvsuwkhaiya7xozl2szfqi4f3@zmde3sfybyzi>
- <2025070128-amplifier-hyphen-cb09@gregkh>
- <CAHp75Vev8r7KZ79=CoUtt0wbx0x3O0ZckesWtQrxs-MBpiBz_Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cvrmez41"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D87C4CEEB;
+	Tue,  1 Jul 2025 14:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751379785;
+	bh=19HqR+S7DS9HWEs5GXmKKrr14rS+lQ2AvqDBzeElGvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cvrmez41qnkAH4K2wnjByJW22VMfh7vqEHdljJD1cnJpJfew8eYrvMAgzrBGpSvpH
+	 cM9Ydck+E//ShuSKBu9pruEb9+H7QhUtBsB+dBl00FOjh8bbASF60fmybGfWR7FxBj
+	 HQYxQCSgCK6YaYZd6w1Vol4LS2EUfzHuwC4tSXYrc51/SFur1rKPW33Z4cHVNWEj7q
+	 e+jAKAZueqk9uhdMRJnwBD5kTHxPyl4mZMCWExP1F1zfKNTcrZTy7GGwZ/d2+FERwD
+	 yw8slrHclpblB1giCbUxLFGXiIGFxFV3gFAlraKiWIlPAsonBtEjIalBykzv7RYDo6
+	 uaN25wCemp11Q==
+Date: Tue, 1 Jul 2025 10:23:03 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-api@vger.kernel.org,
+	workflows@vger.kernel.org, tools@kernel.org
+Subject: Re: [RFC v2 01/22] kernel/api: introduce kernel API specification
+ framework
+Message-ID: <aGPvR-Mj6aR4Y8B5@lappy>
+References: <20250624180742.5795-1-sashal@kernel.org>
+ <20250624180742.5795-2-sashal@kernel.org>
+ <874ivxuht8.fsf@trenco.lwn.net>
+ <20250701002058.1cae5a7e@foz.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vev8r7KZ79=CoUtt0wbx0x3O0ZckesWtQrxs-MBpiBz_Q@mail.gmail.com>
+In-Reply-To: <20250701002058.1cae5a7e@foz.lan>
 
-On Tue, Jul 01, 2025 at 10:03:50AM +0300, Andy Shevchenko wrote:
-> On Tue, Jul 1, 2025 at 8:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Jul 01, 2025 at 12:47:22AM +0530, Abdun Nihaal wrote:
-> > > On Mon, Jun 30, 2025 at 07:16:38PM +0200, Greg KH wrote:
-> > > > This patch does not apply to my tree, can you rebase and resend?
-> > >
-> > > I think you have added both the V1 patch and this current V3 patchset to
-> > > your tree, that's why this patch does not apply.
-> > >
-> > > Commit eb2cb7dab60f ("staging: fbtft: fix potential memory leak in fbtft_framebuffer_alloc()")
-> > > on staging-testing is an older version of this patchset, and so it has to be dropped.
-> >
-> > I can't "drop" patches as my tree can not be rebased.  Can you send a
-> > fix-up patch instead, OR a revert?
-> 
-> I think the cleaner solution will be revert and v3 patches together as
-> v4. Abdun, can you do that?
-> 
+On Tue, Jul 01, 2025 at 12:20:58AM +0200, Mauro Carvalho Chehab wrote:
+>Em Mon, 30 Jun 2025 13:53:55 -0600
+>Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> Sasha Levin <sashal@kernel.org> writes:
+>>
+>> > Add a comprehensive framework for formally documenting kernel APIs with
+>> > inline specifications. This framework provides:
+>> >
+>> > - Structured API documentation with parameter specifications, return
+>> >   values, error conditions, and execution context requirements
+>> > - Runtime validation capabilities for debugging (CONFIG_KAPI_RUNTIME_CHECKS)
+>> > - Export of specifications via debugfs for tooling integration
+>> > - Support for both internal kernel APIs and system calls
+>> >
+>> > The framework stores specifications in a dedicated ELF section and
+>> > provides infrastructure for:
+>> > - Compile-time validation of specifications
+>> > - Runtime querying of API documentation
+>> > - Machine-readable export formats
+>> > - Integration with existing SYSCALL_DEFINE macros
+>> >
+>> > This commit introduces the core infrastructure without modifying any
+>> > existing APIs. Subsequent patches will add specifications to individual
+>> > subsystems.
+>> >
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> > ---
+>> >  Documentation/admin-guide/kernel-api-spec.rst |  507 ++++++
+>>
+>> You need to add that file to index.rst in that directory or it won't be
+>> pulled into the docs build.
+>>
+>> Wouldn't it be nice to integrate all this stuff with out existing
+>> kerneldoc mechanism...? :)
+>
+>+1
+>
+>Having two different mechanisms (kapi and kerneldoc) makes a lot harder
+>to maintain kAPI.
 
-I'm reading my email in the wrong order today.  I thought Abdun came
-up with the revert idea on his own instead of you and Greg suggesting
-it...
+I hated the idea of not reusing kerneldoc.
 
-This isn't a case where we revert.  The patch we applied was acceptable
-quality and it worked fine.  Just do the additional cleanup on the top.
+My concern with kerneldoc was that I can't manipulate the
+information it stores in the context of a kernel build. So for example,
+I wasn't sure how I can expose information stored within kerneldoc via
+debugfs on a running system (or how I can store it within the vmlinux
+for later extraction from the binary built kernel).
 
-regards,
-dan carpenter
+I did some research based on your proposal, and I think I was incorrect
+with the assumption above. I suppose we could do something like the
+following:
 
+1. Add new section patterns to doc_sect regex in to include API
+specification sections: api-type, api-version, param-type, param-flags,
+param-constraint, error-code, capability, signal, lock-req, since...
+  
+2. Create new output module (scripts/lib/kdoc/kdoc_apispec.py?) to
+generate C macro invocations from parsed data.
+
+Which will generate output like:
+
+    DEFINE_KERNEL_API_SPEC(function_name)
+        KAPI_DESCRIPTION("...") 
+        KAPI_PARAM(0, "name", "type", "desc")
+            KAPI_PARAM_TYPE(KAPI_TYPE_INT)
+            KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
+        KAPI_PARAM_END
+    KAPI_END_SPEC 
+
+3. And then via makefile we can: 
+    - Generate API specs from kerneldoc comments
+    - Include generated specs conditionally based on CONFIG_KERNEL_API_SPEC
+
+Allowing us to just have these in the relevant source files:
+    #ifdef CONFIG_KERNEL_API_SPEC
+    #include "socket.apispec.h"
+    #endif
+
+
+In theory, all of that will let us have something like the following in
+kerneldoc:
+
+- @api-type: syscall
+- @api-version: 1
+- @context-flags: KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE
+- @param-type: family, KAPI_TYPE_INT
+- @param-flags: family, KAPI_PARAM_IN
+- @param-range: family, 0, 45
+- @param-mask: type, SOCK_TYPE_MASK | SOCK_CLOEXEC | SOCK_NONBLOCK
+- @error-code: -EAFNOSUPPORT, "Address family not supported"
+- @error-condition: -EAFNOSUPPORT, "family < 0 || family >= NPROTO"
+- @capability: CAP_NET_RAW, KAPI_CAP_GRANT_PERMISSION
+- @capability-allows: CAP_NET_RAW, "Create SOCK_RAW sockets"
+- @since: 2.0
+- @return-type: KAPI_TYPE_FD
+- @return-check: KAPI_RETURN_ERROR_CHECK
+
+How does it sound? I'm pretty excited about the possiblity to align this
+with kerneldoc. Please poke holes in the plan :)
+
+-- 
+Thanks,
+Sasha
