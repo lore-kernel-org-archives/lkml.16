@@ -1,67 +1,65 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BE72797AC
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7022A27A124
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 15:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383983; cv=none; b=iJNw8y+ee4sFy4M4hG4etUSxDhjyEMoPAvbupugO/mnAPRbWUzjSEMW/IMN2Gy66efg/D5By+FRbgdNhe5G5zd9Ic4cG+po9ot2hGOwXKU4M/Is9XnHRyKgsPgQLgWYb6r4Zdii8urio4npzWj1Gmawd7/RpngQudV1MfbQ+seY=
+	t=1751383985; cv=none; b=hF8I3FszeQCcG0BZ3pf9H8l7dXWRW5TitWHuws+SxqqE+DUHPWTL961mKS2xOjVox5c5XMOPr2lvs1jSOzjvNi48lV+9Yef2fQMbzVtrzuPry4tTqTVdooOA2FI67+x2u/7dbbBoVweTHvDuKKYUhBGpCPYeRxKcZgQdwN8PV7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383983; c=relaxed/simple;
-	bh=aVg2cJv9wSlB+Ifm0onjtL26hKkRkwYqLwa+gwkEP7k=;
+	s=arc-20240116; t=1751383985; c=relaxed/simple;
+	bh=M/PRojLQRqIlDBhV5W9w+wqo0IQL6dvXbm4tDkWhbz0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AuRJ6tvw1XHZskpJ72m7vrGT5Siq4MqtUCUCjpvI44DWz5+4+Qk0tMvCfi7Zs8g+W1ecoaelYM+knhES/O1So2DXumPdksbeyMrNHS/r9wyUWre3NACFPf2onC+sy2Ni8ffUStBdYYbycBs9qKYPW59Hi3JRMX0I1WI0XIpWtXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CRBQhG4l; arc=none smtp.client-ip=209.85.221.50
+	 In-Reply-To:To:Cc; b=lga8nlMr2/MrGciO6cXaupk/RaVenIyJIS/wl3VIl44joHp59WZUiRUaity+eHX0c8yCGAjtpD0KPl9edt+XF/Z4cJrSOnsuN3poCJxSaTasvLBokvT7Cgc8pdxYJWOPPPmiy/WTJq5uJ9HBNIPvoF5zrl5+wl0ER4LjtK4WL68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ouB8tePV; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CRBQhG4l"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a510432236so2557665f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:33:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ouB8tePV"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-453066fad06so39635725e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 08:33:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751383980; x=1751988780; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1751383982; x=1751988782; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GrLv8E2JzJaKuEQhctmJvd3DUiMTxFOf1wZ25rSjEVo=;
-        b=CRBQhG4le6OV98QI1qnk/dC002sRE6g1S75Pn5yjgVWeBTLp1QIx6TzR6cJVMu+9/L
-         rn37WdQW7MxRcnSVrkXE2PnjMNznfMkF6EXiQVXiZIKnfYQN8gm3MU631oyHo4FoxnV+
-         u21lXp/CAHwudss8SuXxxjkzSW4orIJVNDsP6mcvuVgiwjLFBwm2Ks+MxNDj9/LASofI
-         omgB5tkV51ipO5jgbLFxR8tXAON8+YyUVK86chVXTdERH5MCW7rECpPYgRQLhqtwP/El
-         8jvC+RvI6RGW/XkgXibCdMFn6KSfoaDXBlxUHwmi/NPFaz9ta0SzFo574XowZjH/s21n
-         jHIw==
+        bh=vyyFEki2WqLFGTJNxhVqg6BOlJH2bPcjpIbwwiG1+ts=;
+        b=ouB8tePVKF4OH1IqUKVdCCSxM337dFyySH66QsBaIwQ6tNS/4vpIEGDXT45zFBy/I6
+         f2w6uynFARbLQG3KjlD7MNEtSSGKvRKfk6Z/R7h1OP0kxYKRfoHCpGDYRLKcyJDyRZ0O
+         3V+WXAUbJMxqMdqDJd+8m/1+l1UBFfY74NbxxNEPaELvF2A1YmUkiZLPv/h077LH0M8a
+         mPVxbLFSKihUqYDH/qDMf6IA1QP1WROwuh/jTNWBgtONlQnWu/WJGqDSxS81mMo2SSiB
+         7s7kGpgIKGIRlWuT1ptqXsI4ka78PkLb5QbKLZhIS5OuO8VGM1dMttENY5oFEz8GNWoE
+         b6BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751383980; x=1751988780;
+        d=1e100.net; s=20230601; t=1751383982; x=1751988782;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GrLv8E2JzJaKuEQhctmJvd3DUiMTxFOf1wZ25rSjEVo=;
-        b=VDF8qxmZfatt59gfK2Jun7XiB0HIznsLyJIuXh2c5gp+b1/cchClviOSje2u025XGC
-         qehj8XSfGZWEv1gAn/msHCvfHAaVd4Aml5+AKZkrgOP7Njesj8v5C5sp0pvrFUZe8VgC
-         5f4w+B31/MXCpRQs7AaBxBvA9odTImym9bq+ub6l9h5mjK+xa/XAMTCYmIMLGGf18Nn1
-         Yy3b5r5aTny+zmLNXVjEwuHIJznWblTuuCv8OxcOHlcg/0TAjZxZoiihW95nxchGRVJn
-         4hf0/uHVmaVHKrEuXGdZ094tqoiog6WINcEeajT+Yo7O57hjKlWjo5XKq18XVrwnL8oI
-         hsKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXhXrSsROcg57mp5L5p4MXibOM9r2E8N5fIROPVx1+2uRa4wPRra7Sx1qurwRsAS/zvs8j1zZCwRv5RlHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5Lz0LwEnpIAam6aBHbaPpJNmVmMEidsjQnZSbK24UODTzXNIe
-	ZZulzTV3Enre+RUCmoomVPQyRKwakkdlyvE3T+qGsgVFJMINxWK/yvqrhxe76ctAjhs=
-X-Gm-Gg: ASbGnctH4SdNIQ6MbtVSOXYiZlQh2kWTWXF7iq4NYDBllBHMadibVhxdsPZaO3OQT+Z
-	1nglB+VhDTC20cFA/Vk9elFsiT+H8h9WtQ1pPw9r+92qbYGg+w+m0G1sfxG8McIn0CXOLxXujR1
-	g6Za2ybcrW7yQmTIsywl/ns/ZMiYpgtID4bs6hcY1bZUu9EofPIF7qjp2eNPhyq355tBsQcQ2Wn
-	pAv6V4iqj4QuaxO8ERTeTIrfn1eq7v1foWmB7VAk0M3CrvURiz2SAIMtZGr4jcBMDgpXp0+ANjC
-	lLx6HqxHvszoaXJ0wYsHXzz2kIb35v7CRF8XT+ncyYP/8u2icxmrcfBx++0ZGppEXXaHCaptM9l
-	OEUQ6yQ==
-X-Google-Smtp-Source: AGHT+IGhfDvVLxXK0g4NeIbM0C+Rf8R4M1m1N7M8/7K4QfeNkwE1w4jj6lEbfgM0B+KT2OK6Dd4PJA==
-X-Received: by 2002:adf:9dce:0:b0:3a4:d6ed:8e00 with SMTP id ffacd0b85a97d-3a8fdeffa19mr14766121f8f.33.1751383980385;
-        Tue, 01 Jul 2025 08:33:00 -0700 (PDT)
+        bh=vyyFEki2WqLFGTJNxhVqg6BOlJH2bPcjpIbwwiG1+ts=;
+        b=ovk0I6YfA2giZtkSFkckga89QTaF1HByWEwJiJ+LEOfnJmpcIYMvP7SSkR1Bltvq8W
+         E6i0rbFWCcKg/vvwLPpMoJvi17GXb+gteLXEfueEbzGGrJ4hsNkwwJPs5LYDO6KZQ3VM
+         yTi2sfNRMf9y8uTlvmmfZ7VlNuljiuDBOgrK34xXlCVLwwNyNjFiXf9wEF0+7XhaL8wd
+         y3IsZo3HsQcNdLGbCSXQusNuJPdT4HDBrO5WYdndVVudS99tEq7+ScJOV0I1X5p9AUT6
+         msCZ7JOBLM3prbX5ILN8evTl518ACXjlmUffnlnT9bLVCXUmcGOP8dQ742wDiHMNFqkz
+         lJ2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXOpSblTJ+Y1IeU2+E62HNFlsozEIOlXxldZuPvLB22mDwfjL58S25TesKER2k2YFdxC2o+JD4bgI28wlg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8xOOg22iNnKdkIvqN9kiuQM/rw9GBs47rjZOuHudOIvn5AXog
+	M9PmJkSVhGGHuxpCbNJVhmMDhH6JlohuNvc+IzJIUj7UiR4b336ZW2ksBiTmFSJzON8=
+X-Gm-Gg: ASbGncviEZikM36/RTvvAeZPV4hgTrzsrmYwF0Ws5hKcHIYQP+Y9RzJ46WaoV0VHSp2
+	cvIBNrHbHm44NJpO13zCd0fFL6fWxyu49RgsdgbBfZzd2erW7PnbKjs1WF668ZQ6wFPkb5FJVTG
+	gkeOQLyYwNW8P+vyiijwsPG679zPQqlpNFZex+nDCCR+q3tyuhZuO8YjSsEJCouseY6Dg3mfehD
+	PgVYL9LqfYmbr3hFJojCabLbbDeoRTf2VfN6vo0B81EtKSS24dKzojibiPz2Sf+eD0938+HRSJm
+	NmHCtc+FTVtAelg2TmKj/EBWX5+beBbcPsvSSoIW/8frCGdBACXNKpRj/OEVPezjHQRuS8M=
+X-Google-Smtp-Source: AGHT+IHRSBNBwwc+SffZeGA8Ju+5Y/kf7iR6/4sPiOrk5WPd20gCoDRBdDhmJvz8jb8uT7zF55j0eQ==
+X-Received: by 2002:a05:600c:198d:b0:453:b44:eb71 with SMTP id 5b1f17b1804b1-4538f2148b1mr164983525e9.19.1751383981587;
+        Tue, 01 Jul 2025 08:33:01 -0700 (PDT)
 Received: from ho-tower-lan.lan ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b5a3sm13435002f8f.40.2025.07.01.08.32.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b5a3sm13435002f8f.40.2025.07.01.08.33.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 08:33:00 -0700 (PDT)
+        Tue, 01 Jul 2025 08:33:01 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 01 Jul 2025 16:31:58 +0100
-Subject: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
- PMBPTR_EL1 or PMBSR_EL1
+Date: Tue, 01 Jul 2025 16:31:59 +0100
+Subject: [PATCH 3/3] perf: arm_spe: Add support for SPE VM interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
+Message-Id: <20250701-james-spe-vm-interface-v1-3-52a2cd223d00@linaro.org>
 References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
 In-Reply-To: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -83,92 +81,146 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-DEN0154 states that writes to PMBPTR_EL1 or PMBSR_EL1 must be done while
-the buffer is disabled (PMBLIMITR_EL1.E == 0). Re-arrange the interrupt
-handler to always disable the buffer for non-spurious interrupts before
-doing either.
+DEN0154 describes the new SPE VM interface, which allows the hypervisor
+to define a max buffer size hint and to raise a new buffer management
+error for exceeding it.
 
-Most of arm_spe_pmu_disable_and_drain_local() is now always done, so for
-faults the only thing left to do is clear PMSCR_EL1.
+Report the size as a capability to userspace, and prevent larger buffers
+from being allocated in the driver. Although it's a only a hint and
+smaller buffers may also be disallowed in some scenarios, a larger
+buffer is never expected to work so we can fail early. Failures after
+arm_spe_pmu_setup_aux() have to happen asynchronously through the buffer
+management event.
 
-Elaborate the comment in arm_spe_pmu_disable_and_drain_local() to
-explain the ramifications of not doing it in the right order.
-
-Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- drivers/perf/arm_spe_pmu.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/sysreg.h |  1 +
+ arch/arm64/tools/sysreg         |  6 +++++-
+ drivers/perf/arm_spe_pmu.c      | 26 ++++++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index f1bb0d10c39a..9c48a7119aa7 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -367,6 +367,7 @@
+ #define PMBSR_EL1_BUF_BSC_MASK		PMBSR_EL1_MSS_MASK
+ 
+ #define PMBSR_EL1_BUF_BSC_FULL		0x1UL
++#define PMBSR_EL1_BUF_BSC_SIZE		0x4UL
+ 
+ /*** End of Statistical Profiling Extension ***/
+ 
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index 8a8cf6874298..d6bb1736f554 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -2976,7 +2976,11 @@ Field	7:0	Attr
+ EndSysreg
+ 
+ Sysreg	PMBIDR_EL1	3	0	9	10	7
+-Res0	63:12
++Res0	63:48
++Field	47:46	MaxBuffSize_RES
++Field	45:41	MaxBuffSize_E
++Field	40:32	MaxBuffSize_M
++Res0	31:12
+ Enum	11:8	EA
+ 	0b0000	NotDescribed
+ 	0b0001	Ignored
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 6235ca7ecd48..5829947c8871 100644
+index 5829947c8871..23f18dc2890c 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -559,7 +559,12 @@ static void arm_spe_perf_aux_output_end(struct perf_output_handle *handle)
+@@ -92,6 +92,7 @@ struct arm_spe_pmu {
+ 	u16					max_record_sz;
+ 	u16					align;
+ 	struct perf_output_handle __percpu	*handle;
++	u64					max_buff_size;
+ };
  
- static void arm_spe_pmu_disable_and_drain_local(void)
- {
--	/* Disable profiling at EL0 and EL1 */
-+	/*
-+	 * To prevent the CONSTRAINED UNPREDICTABLE behavior of either writing
-+	 * to memory after the buffer is disabled, or SPE reporting an access
-+	 * not allowed event, we must disable sampling before draining the
-+	 * buffer.
-+	 */
- 	write_sysreg_s(0, SYS_PMSCR_EL1);
- 	isb();
+ #define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
+@@ -115,6 +116,7 @@ enum arm_spe_pmu_capabilities {
+ 	SPE_PMU_CAP_FEAT_MAX,
+ 	SPE_PMU_CAP_CNT_SZ = SPE_PMU_CAP_FEAT_MAX,
+ 	SPE_PMU_CAP_MIN_IVAL,
++	SPE_PMU_CAP_MAX_BUFF_SIZE,
+ };
  
-@@ -661,16 +666,24 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
- 	 */
- 	irq_work_run();
- 
-+	/*
-+	 * arm_spe_pmu_buf_get_fault_act() already drained, and PMBSR_EL1.S == 1
-+	 * means that StatisticalProfilingEnabled() == false. So now we can
-+	 * safely disable the buffer.
-+	 */
-+	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
-+	isb();
-+
-+	/* Status can be cleared now that PMBLIMITR_EL1.E == 0 */
-+	write_sysreg_s(0, SYS_PMBSR_EL1);
-+
- 	switch (act) {
- 	case SPE_PMU_BUF_FAULT_ACT_FATAL:
- 		/*
--		 * If a fatal exception occurred then leaving the profiling
--		 * buffer enabled is a recipe waiting to happen. Since
--		 * fatal faults don't always imply truncation, make sure
--		 * that the profiling buffer is disabled explicitly before
--		 * clearing the syndrome register.
-+		 * To complete the full disable sequence, also disable profiling
-+		 * at EL0 and EL1, we don't want to continue at all anymore.
- 		 */
--		arm_spe_pmu_disable_and_drain_local();
-+		write_sysreg_s(0, SYS_PMSCR_EL1);
- 		break;
- 	case SPE_PMU_BUF_FAULT_ACT_OK:
- 		/*
-@@ -679,18 +692,14 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
- 		 * PMBPTR might be misaligned, but we'll burn that bridge
- 		 * when we get to it.
- 		 */
--		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
-+		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
- 			arm_spe_perf_aux_output_begin(handle, event);
--			isb();
--		}
- 		break;
- 	case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
- 		/* We've seen you before, but GCC has the memory of a sieve. */
- 		break;
+ static int arm_spe_pmu_feat_caps[SPE_PMU_CAP_FEAT_MAX] = {
+@@ -132,6 +134,8 @@ static u32 arm_spe_pmu_cap_get(struct arm_spe_pmu *spe_pmu, int cap)
+ 		return spe_pmu->counter_sz;
+ 	case SPE_PMU_CAP_MIN_IVAL:
+ 		return spe_pmu->min_period;
++	case SPE_PMU_CAP_MAX_BUFF_SIZE:
++		return spe_pmu->max_buff_size;
+ 	default:
+ 		WARN(1, "unknown cap %d\n", cap);
  	}
+@@ -164,6 +168,7 @@ static struct attribute *arm_spe_pmu_cap_attr[] = {
+ 	SPE_CAP_EXT_ATTR_ENTRY(ernd, SPE_PMU_CAP_ERND),
+ 	SPE_CAP_EXT_ATTR_ENTRY(count_size, SPE_PMU_CAP_CNT_SZ),
+ 	SPE_CAP_EXT_ATTR_ENTRY(min_interval, SPE_PMU_CAP_MIN_IVAL),
++	SPE_CAP_EXT_ATTR_ENTRY(max_buff_size, SPE_PMU_CAP_MAX_BUFF_SIZE),
+ 	NULL,
+ };
  
--	/* The buffer pointers are now sane, so resume profiling. */
--	write_sysreg_s(0, SYS_PMBSR_EL1);
- 	return IRQ_HANDLED;
+@@ -631,6 +636,9 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
+ 	case PMBSR_EL1_BUF_BSC_FULL:
+ 		ret = SPE_PMU_BUF_FAULT_ACT_OK;
+ 		goto out_stop;
++	case PMBSR_EL1_BUF_BSC_SIZE:
++		err_str = "Buffer size too large";
++		goto out_err;
+ 	default:
+ 		err_str = "Unknown buffer status code";
+ 	}
+@@ -896,6 +904,7 @@ static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
+ 	int i, cpu = event->cpu;
+ 	struct page **pglist;
+ 	struct arm_spe_pmu_buf *buf;
++	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
+ 
+ 	/* We need at least two pages for this to work. */
+ 	if (nr_pages < 2)
+@@ -910,6 +919,10 @@ static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
+ 	if (snapshot && (nr_pages & 1))
+ 		return NULL;
+ 
++	if (spe_pmu->max_buff_size &&
++	    nr_pages * PAGE_SIZE > spe_pmu->max_buff_size)
++		return NULL;
++
+ 	if (cpu == -1)
+ 		cpu = raw_smp_processor_id();
+ 
+@@ -999,6 +1012,17 @@ static void arm_spe_pmu_perf_destroy(struct arm_spe_pmu *spe_pmu)
+ 	perf_pmu_unregister(&spe_pmu->pmu);
  }
  
++static u64 arm_spe_decode_buf_size(u64 pmbidr)
++{
++	u64 mantissa = FIELD_GET(PMBIDR_EL1_MaxBuffSize_M, pmbidr);
++	u8 exp = FIELD_GET(PMBIDR_EL1_MaxBuffSize_E, pmbidr);
++
++	if (exp == 0)
++		return mantissa << 12;
++
++	return (mantissa | 0b1000000000) << (exp + 11);
++}
++
+ static void __arm_spe_pmu_dev_probe(void *info)
+ {
+ 	int fld;
+@@ -1033,6 +1057,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 		return;
+ 	}
+ 
++	spe_pmu->max_buff_size = arm_spe_decode_buf_size(reg);
++
+ 	/* It's now safe to read PMSIDR and figure out what we've got */
+ 	reg = read_sysreg_s(SYS_PMSIDR_EL1);
+ 	if (FIELD_GET(PMSIDR_EL1_FE, reg))
 
 -- 
 2.34.1
