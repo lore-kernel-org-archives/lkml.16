@@ -1,131 +1,78 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F44202995
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDFC202995;
+	Tue,  1 Jul 2025 08:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751357974; cv=none; b=oDFcdWcGnt9XZ/GuOXN079nTV19Mhft4A9+40o57w1W69nV7abKzLEePqNebiW+ewzy5HBoOfHr5RcENEZWYGj1jlZK0Zr5o+CJwatgbwVjJuDtD6kNzHbJA7C2OMMRffYATYo3qCd8Ljww9+cb+7p6PxFTi7u3d2PaQiwqs9Yk=
+	t=1751357987; cv=none; b=OlVgKB2vndmcq7y2KDtB/9zGDUM5S0P/0iCAz1v2MLXUZl74KgHlGetCWQWBBiQJTuAuQQdi3LpvHx0MmISe5695lXdz4Qaz6lSJqLWTdl6DO4j6Rp20hSgah4MdBfeUg/U+VWavH3PMJTiGtClLveHRwzlCdRTFHF3PLMe06TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751357974; c=relaxed/simple;
-	bh=y0AZawpjHW7SFgMPWSFOKe+kD46e6DMDPvzNjsfdVTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nop8F6KXq91UU0jrqg3YrsmEBAQv6ZSXpUX3dbbSWghMi7xibhhB12EyVEGZC4Nz5XwmsInDh5XfWFaQLS1Uan8YltjEOdMTYv0agqdCopS/ucKRFLo9nktJioEtbtmHC2/3ZojiCS3t6zrl7kyYeLJoMZnJbvi72OzlnaIIAgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TvqyMYMO; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1751357987; c=relaxed/simple;
+	bh=noDPpUqNBlR3C1l21VfaQdGGoXDiw11U2/HL+tU819c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnMvziQkhejnj7S+frqb/pbS/1w1davMf6w3NkVMuEoVBLFTQQazSvAPE4yZrRkZC8KDiWrSZXrSaePwplGIz5qWhoJsqNosiYbawNYNSUNmI3j1avmpiTwxnwccSscE1Qy/g0Ue+iet3s4dPVQiN8P6PdT3jPwZVVpgLTXyBJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xa+mrao6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TvqyMYMO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1751357970;
-	bh=y0AZawpjHW7SFgMPWSFOKe+kD46e6DMDPvzNjsfdVTA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TvqyMYMOeFtk9c5luFAIOTQYoymrZh6POrfEkdvkrEea2RLvse4H9cNe81W7o8mG3
-	 7iWlKv3dvcvWSWvHnEa99BG8T+DSnOpTNtrUcpObdWi+0MHVjjgQfNu3RWbrCm9B20
-	 HiArf3fZ1rUANUhmwr8l3z1HW8rT1m1rlHz3Mel96+L2JqarpETFhwNQYUftllA85l
-	 qVZQBOG/X5kl3KQGWhpO98cqAD6G7adIMhA+KGgp1NDQIgeVOiju6gCK4GsBNXDSo3
-	 SeXkEbbeS0mypsAZKSMlfN8DmORL8AS1HpjwFoqeFXPQvK85jr4JCx4QFrwxTUWI6Z
-	 pxNOUOpqfBdRQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 66C8117E0342;
-	Tue,  1 Jul 2025 10:19:29 +0200 (CEST)
-Message-ID: <27b09cde-2da2-49cf-b872-31adf7b5c4e6@collabora.com>
-Date: Tue, 1 Jul 2025 10:19:28 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xa+mrao6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F7DC4CEEB;
+	Tue,  1 Jul 2025 08:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751357987;
+	bh=noDPpUqNBlR3C1l21VfaQdGGoXDiw11U2/HL+tU819c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xa+mrao6L0WNrIkAf7cSiPnL+A0XZrn96x1cTOaBOzHD5akO255zfXAJYH/HCP5nW
+	 4tX+mCvc/HL9m/CfiK9p0ZcqpP6wLKg/MgvLFEdZmcfxizOLmLNJK3OKM1klOZ+/11
+	 p7/yYB3jnApoK8yp2NoEa2jrQ8bREGd9n/E4z+kPVH4FtIZZvCVtBbz2YqlQlmkTPq
+	 R3G+UXVUUECJI/tyNQgmCBgoMa17+Esa/eZnTLS0uWQi4XuvvvlwA/JHKc2Goa/Gk8
+	 Fyar7I34ltkPlyO6CjGZiVT0fvKw50OBTPq1GFIVFkPE8IuB1w7aSRWu5uo6l7oO0A
+	 3YLh26PiUW5IQ==
+Date: Tue, 1 Jul 2025 10:19:43 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Samuel Holland <samuel.holland@sifive.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Cyrille Pitchen <cyrille.pitchen@atmel.com>, Harini Katakam <harini.katakam@xilinx.com>, 
+	Rafal Ozieblo <rafalo@cadence.com>, Haavard Skinnemoen <hskinnemoen@atmel.com>, 
+	Jeff Garzik <jeff@garzik.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH net-next v2 03/18] dt-bindings: net: cdns,macb: allow
+ tsu_clk without tx_clk
+Message-ID: <20250701-spotted-crimson-puffin-dffabd@krzk-bin>
+References: <20250627-macb-v2-0-ff8207d0bb77@bootlin.com>
+ <20250627-macb-v2-3-ff8207d0bb77@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mediatek: dsi: Fix DSI host and panel bridge
- pre-enable order
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- Aradhya Bhatia <a-bhatia1@ti.com>, Thomas Zimmermann <tzimmermann@suse.de>,
- Dmitry Baryshkov <lumag@kernel.org>, Maxime Ripard <mripard@kernel.org>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250701-mediatek-drm-fix-dsi-panel-init-v1-1-7af4adb9fdeb@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250701-mediatek-drm-fix-dsi-panel-init-v1-1-7af4adb9fdeb@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250627-macb-v2-3-ff8207d0bb77@bootlin.com>
 
-Il 01/07/25 09:30, Louis-Alexis Eyraud ha scritto:
-> Since commit c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain
-> pre-enable and post-disable"), the bridge pre_enable callbacks are now
-> called before crtc enable, and the bridge post_disable callbacks after
-> the crtc disable.
-> In the mediatek-drm driver, this change leads to transfer errors on
-> mtk_dsi_host_transfer callback processing during the panel bridge
-> pre-enable sequence because the DSI host bridge pre_enable and CRTC
-> enable sequences, that are enabling the required clocks and PHY using
-> mtk_dsi_poweron function, are called after.
-> 
-> So, in order to fix this call order issue, request the DSI host bridge
-> be pre-enabled before panel bridge by setting pre_enable_prev_first
-> flag on DSI device bridge in the mtk_dsi_host_attach function.
-> 
-> Fixes: c9b1150a68d9 ("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+On Fri, Jun 27, 2025 at 11:08:49AM +0200, Th=C3=A9o Lebrun wrote:
+> Allow providing tsu_clk without a tx_clk as both are optional.
+>=20
+> This is about relaxing unneeded constraints. It so happened that in the
+> past HW that needed a tsu_clk always needed a tx_clk.
+>=20
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 > ---
-> This patch fixes an issue that can be observed on boards such as
-> MediatekGenio 1200-EVK or 350-EVK with a kernel based on linux-next
-> (tag: next-20250635) since commit c9b1150a68d9 ("drm/atomic-helper:
-> Re-order bridge chain pre-enable and post-disable").
-> In boot logs, there are multiples errors such as IRQ timeouts and
-> panel init errors, leading the DSI panel not being enabled:
-> 
-> Example on Genio 1200-EVK:
-> ```
-> [drm] Wait DSI IRQ(0x00000002) Timeout
-> panel-himax-hx8279 1c008000.dsi.0: sending generic data b0 05 failed:
->    -62
-> [drm] Wait DSI IRQ(0x00000008) Timeout
-> [drm:mtk_dsi_host_transfer [mediatek_drm]] *ERROR* failed to switch cmd
->   mode
-> panel-himax-hx8279 1c008000.dsi.0: sending DCS SET_DISPLAY_ON failed:
->    -62
-> ```
-> ---
->   drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> index d7726091819c4762698b41060b3d4d8d27940238..0e2bcd5f67b767d92f2697a5b8183f67ee178a38 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1002,6 +1002,12 @@ static int mtk_dsi_host_attach(struct mipi_dsi_host *host,
->   			return PTR_ERR(dsi->next_bridge);
->   	}
->   
-> +	/*
-> +	 * set flag to request the DSI host bridge be pre-enabled before device bridge
-> +	 * in the chain, so the DSI host is ready when the device bridge is pre-enabled
-> +	 */
-> +	dsi->next_bridge->pre_enable_prev_first = true;
-> +
->   	drm_bridge_add(&dsi->bridge);
->   
->   	ret = component_add(host->dev, &mtk_dsi_component_ops);
-> 
-> ---
-> base-commit: c6a68d8f7b81a6ce8962885408cc2d0c1f8b9470
-> change-id: 20250630-mediatek-drm-fix-dsi-panel-init-1a4b534c40a6
-> 
-> Best regards,
+>  Documentation/devicetree/bindings/net/cdns,macb.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
