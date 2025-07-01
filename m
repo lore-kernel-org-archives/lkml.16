@@ -1,117 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CED027933C;
-	Tue,  1 Jul 2025 14:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C1726E6F1;
+	Tue,  1 Jul 2025 14:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378738; cv=none; b=LCnNsvI1MQKeV03CFai6molHHz0Ls26YvaTvvngABE6/dnMcxMvxEuUo1PoBtnlrYTr7oBb5YLXgfR1cErNW69pF0zu4gEAZTAfTsqrXWEbWb1MSEmzrCHsFFVCXDxzTAIKoVfwBtbVV5S7YiZQiVhlAHPpGOygOAvwnUf+dq7Y=
+	t=1751378848; cv=none; b=Br9RMxcqWxN0gNllgtfoSiE/+bLMAsv50x3X880i1uoCt2IqWjNzqCUJh5qkZ+fWAtnLaDiPN3TaNuxgRAMyGC2+Un6zfluFgKW2wh1hAysAOfOmzl7GEMSkREssc1htgufd6O7JRGaG/4UiOWsT5L/WMzdh6O3Hm+REt+PvUuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378738; c=relaxed/simple;
-	bh=jqbR7/NyDmIF13xvO+mFNOe/6ZhXOEw8ed4ZA0zowqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H62ow41cvH1bTFJnLcthz70VymQynIMHbC5KSOgnq4wtPj73rYiPG4ADvbELLKIwR2aPjyZ3oXmzrHVo+33dNXEBm75X3RylnAymZNUfRS4LX4yFNSY6zu1AlnjJPwUyGnjjcHK/Aqf15OHuLW+aMyrA+5GkVSEpMH9N0zFT0Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FXP8Ee1T; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FXP8Ee1T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751378736; x=1782914736;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jqbR7/NyDmIF13xvO+mFNOe/6ZhXOEw8ed4ZA0zowqQ=;
-  b=FXP8Ee1TLzPllFma17UaLcKHTmb9I5i4oZB2BGtbAPF76nBtn/Gzsx0d
-   mbMTNwwbfK2IMqKR2m+dLEloJEIB39DUFiz+IBLVAsFTmuZ6gPy625FQr
-   ztz2uTLtL1gLXg9RG6AdUIAaKzpvtvramdeCbGccvXYQA5oVNE66zD1Ua
-   lVCWb1HAcDZ+5o7U3H5tNoc7XgLtAgrpcBMjD4ZK+kNqvXCwCL2dX7Ema
-   F4vpIwd0b2O+KGY8Md66zKahHsA5oqumWiuYouHhz5R/d7uOA/u7wwKZX
-   zpmnzn+EBJSnmvHKRdp+2/L7M26IHbel7zJ7SnRNUDuOmVyuax5/ynxn3
-   g==;
-X-CSE-ConnectionGUID: Aj2OjS9EQhqrsyxYyhOhew==
-X-CSE-MsgGUID: Rloer8fHTfGooRGxgsKNCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="53605232"
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="53605232"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 07:05:17 -0700
-X-CSE-ConnectionGUID: LZHszaDtS4WELO/lcmv3iw==
-X-CSE-MsgGUID: WodDSK+ESXC/NyEOSbZLSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
-   d="scan'208";a="154507854"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 07:05:14 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uWbbj-0000000BcA1-0rlF;
-	Tue, 01 Jul 2025 17:05:11 +0300
-Date: Tue, 1 Jul 2025 17:05:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Kent Gibson <warthog618@gmail.com>,
-	Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-	Marek Vasut <marex@denx.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 00/10] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-Message-ID: <aGPrFnDxG4W7S9Ym@smile.fi.intel.com>
-References: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
+	s=arc-20240116; t=1751378848; c=relaxed/simple;
+	bh=UPnoahqZpQxa6C4f25PSY/O5uLDsByabLi7HuBuSwEY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TEOPpKXa+R0NWHzc4bQoo3xcYvZ51aiTHydytUoi+VOLQDGLJKlmyOupf4y1OY9PoTprdt18+OevDav87DBynfQFrGhdKkPuVkqyAuwZFoXctoZFpedhsVOJEsJOFlmTi1tVkFMhJIr740pvPyD79V/eAwKFBS+24lKnvY4jWkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bWlFJ6Bylz6M4jF;
+	Tue,  1 Jul 2025 22:06:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 13A511402EA;
+	Tue,  1 Jul 2025 22:07:23 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 1 Jul
+ 2025 16:07:22 +0200
+Date: Tue, 1 Jul 2025 15:07:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Dongsheng Yang <dongsheng.yang@linux.dev>
+CC: <mpatocka@redhat.com>, <agk@redhat.com>, <snitzer@kernel.org>,
+	<axboe@kernel.dk>, <hch@lst.de>, <dan.j.williams@intel.com>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<dm-devel@lists.linux.dev>
+Subject: Re: [PATCH v1 03/11] dm-pcache: add cache device
+Message-ID: <20250701150721.00003e67@huawei.com>
+In-Reply-To: <20250624073359.2041340-4-dongsheng.yang@linux.dev>
+References: <20250624073359.2041340-1-dongsheng.yang@linux.dev>
+	<20250624073359.2041340-4-dongsheng.yang@linux.dev>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630-gpio-sysfs-chip-export-v3-0-b997be9b7137@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Jun 30, 2025 at 02:37:07PM +0200, Bartosz Golaszewski wrote:
-> Following our discussion[1], here's a proposal for extending the sysfs
-> interface with attributes not referring to GPIO lines by their global
-> numbers in a backward compatible way.
-> 
-> Long story short: there is now a new class device for each GPIO chip.
-> It's called chipX where X is the ID of the device as per the driver
-> model and it lives next to the old gpiochipABC where ABC is the GPIO
-> base. Each new chip class device has a pair of export/unexport
-> attributes which work similarly to the global ones under /sys/class/gpio
-> but take hardware offsets within the chip as input, instead of the
-> global numbers. Finally, each exported line appears at the same time as
-> the global /sys/class/gpio/gpioABC as well as per-chip
-> /sys/class/gpio/chipX/gpioY sysfs group.
-> 
-> The series contains the implementation of a parallel GPIO chip entry not
-> containing the base GPIO number in the name and the corresponding sysfs
-> attribute group for each exported line that lives under the new chip
-> class device as well as a way to allow to compile out the legacy parts
-> leaving only the new elements of the sysfs ABI.
-> 
-> This series passes the compatibility tests I wrote while working on the
-> user-space compatibility layer for sysfs[2].
+On Tue, 24 Jun 2025 07:33:50 +0000
+Dongsheng Yang <dongsheng.yang@linux.dev> wrote:
 
-It seems I never expressed my overall opinion about this. I think the poking
-sysfs and making it working with a new schema won't solve the issues that
-character device was developed to target. If so, doing this just brings yet
-another broken interface. I would be happy to be mistaken!
+> Add cache_dev.{c,h} to manage the persistent-memory device that stores
+> all pcache metadata and data segments.  Splitting this logic out keeps
+> the main dm-pcache code focused on policy while cache_dev handles the
+> low-level interaction with the DAX block device.
+>=20
+> * DAX mapping
+>   - Opens the underlying device via dm_get_device().
+>   - Uses dax_direct_access() to obtain a direct linear mapping; falls
+>     back to vmap() when the range is fragmented.
+>=20
+> * On-disk layout
+>   =E2=94=8C=E2=94=80 4 KB =E2=94=80=E2=94=90  super-block (SB)
+>   =E2=94=9C=E2=94=80 4 KB =E2=94=80=E2=94=A4  cache_info[0]
+>   =E2=94=9C=E2=94=80 4 KB =E2=94=80=E2=94=A4  cache_info[1]
+>   =E2=94=9C=E2=94=80 4 KB =E2=94=80=E2=94=A4  cache_ctrl
+>   =E2=94=94=E2=94=80 ...  =E2=94=80=E2=94=98  segments
+>   Constants and macros in the header expose offsets and sizes.
+>=20
+> * Super-block handling
+>   - sb_read(), sb_validate(), sb_init() verify magic, CRC32 and host
+>     endianness (flag *PCACHE_SB_F_BIGENDIAN*).
+>   - Formatting zeroes the metadata replicas and initialises the segment
+>     bitmap when the SB is blank.
+>=20
+> * Segment allocator
+>   - Bitmap protected by seg_lock; find_next_zero_bit() yields the next
+>     free 16 MB segment.
+>=20
+> * Lifecycle helpers
+>   - cache_dev_start()/stop() encapsulate init/exit and are invoked by
+>     dm-pcache core.
+>   - Gracefully handles errors: CRC mismatch, wrong endianness, device
+>     too small (< 512 MB), or failed DAX mapping.
+>=20
+> Signed-off-by: Dongsheng Yang <dongsheng.yang@linux.dev>
+> ---
+>  drivers/md/dm-pcache/cache_dev.c | 299 +++++++++++++++++++++++++++++++
+>  drivers/md/dm-pcache/cache_dev.h |  70 ++++++++
+>  2 files changed, 369 insertions(+)
+>  create mode 100644 drivers/md/dm-pcache/cache_dev.c
+>  create mode 100644 drivers/md/dm-pcache/cache_dev.h
+>=20
+> diff --git a/drivers/md/dm-pcache/cache_dev.c b/drivers/md/dm-pcache/cach=
+e_dev.c
+> new file mode 100644
+> index 000000000000..4dcebc9c167e
+> --- /dev/null
+> +++ b/drivers/md/dm-pcache/cache_dev.c
+> @@ -0,0 +1,299 @@
 
-If I am mistaken, I would like to see a summary here that explains that clearly
-that the new sysfs approach does not inherit design flaws of the original
-implementation.
+> +static int build_vmap(struct dax_device *dax_dev, long total_pages, void=
+ **vaddr)
+> +{
+> +	struct page **pages;
+> +	long i =3D 0, chunk;
+> +	pfn_t pfn;
+> +	int ret;
+> +
+> +	pages =3D vmalloc_array(total_pages, sizeof(struct page *));
 
-> [1] https://lore.kernel.org/all/CAMRc=McUCeZcU6co1aN54rTudo+JfPjjForu4iKQ5npwXk6GXA@mail.gmail.com/
-> [2] https://github.com/brgl/gpio-sysfs-compat-tests
+Perhaps if DM allows it, use __free() here to avoid need to manually clean =
+it up and
+allow early returns on errors.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +	if (!pages)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +		chunk =3D dax_direct_access(dax_dev, i, total_pages - i,
+> +					  DAX_ACCESS, NULL, &pfn);
+> +		if (chunk <=3D 0) {
+> +			ret =3D chunk ? chunk : -EINVAL;
+> +			goto out_free;
+> +		}
+> +
+> +		if (!pfn_t_has_page(pfn)) {
+> +			ret =3D -EOPNOTSUPP;
+> +			goto out_free;
+> +		}
+> +
+> +		while (chunk-- && i < total_pages) {
+> +			pages[i++] =3D pfn_t_to_page(pfn);
+> +			pfn.val++;
+> +			if (!(i & 15))
+> +				cond_resched();
+> +		}
+> +	} while (i < total_pages);
+> +
+> +	*vaddr =3D vmap(pages, total_pages, VM_MAP, PAGE_KERNEL);
+> +	if (!*vaddr)
+> +		ret =3D -ENOMEM;
+> +out_free:
+> +	vfree(pages);
+> +	return ret;
+> +}
+> +
+> +static int cache_dev_dax_init(struct pcache_cache_dev *cache_dev)
+> +{
+> +	struct dm_pcache	*pcache =3D CACHE_DEV_TO_PCACHE(cache_dev);
+> +	struct dax_device	*dax_dev;
+> +	long			total_pages, mapped_pages;
+> +	u64			bdev_size;
+> +	void			*vaddr;
+> +	int			ret;
+> +	int			id;
+
+combine ret and id on one line.
+
+> +	pfn_t			pfn;
+> +
+> +	dax_dev	=3D cache_dev->dm_dev->dax_dev;
+> +	/* total size check */
+> +	bdev_size =3D bdev_nr_bytes(cache_dev->dm_dev->bdev);
+> +	if (bdev_size < PCACHE_CACHE_DEV_SIZE_MIN) {
+> +		pcache_dev_err(pcache, "dax device is too small, required at least %ll=
+u",
+> +				PCACHE_CACHE_DEV_SIZE_MIN);
+> +		ret =3D -ENOSPC;
+> +		goto out;
+		return -ENOSPC;
 
 
+
+
+> +int cache_dev_start(struct dm_pcache *pcache)
+> +{
+> +	struct pcache_cache_dev *cache_dev =3D &pcache->cache_dev;
+> +	struct pcache_sb sb;
+> +	bool format =3D false;
+> +	int ret;
+> +
+> +	mutex_init(&cache_dev->seg_lock);
+> +
+> +	ret =3D cache_dev_dax_init(cache_dev);
+> +	if (ret) {
+> +		pcache_dev_err(pcache, "failed to init cache_dev %s via dax way: %d.",
+> +			       cache_dev->dm_dev->name, ret);
+> +		goto err;
+> +	}
+> +
+> +	ret =3D sb_read(cache_dev, &sb);
+> +	if (ret)
+> +		goto dax_release;
+> +
+> +	if (le64_to_cpu(sb.magic) =3D=3D 0) {
+> +		format =3D true;
+> +		ret =3D sb_init(cache_dev, &sb);
+> +		if (ret < 0)
+> +			goto dax_release;
+> +	}
+> +
+> +	ret =3D sb_validate(cache_dev, &sb);
+> +	if (ret)
+> +		goto dax_release;
+> +
+> +	cache_dev->sb_flags =3D le32_to_cpu(sb.flags);
+> +	ret =3D cache_dev_init(cache_dev, sb.seg_num);
+> +	if (ret)
+> +		goto dax_release;
+> +
+> +	if (format)
+> +		sb_write(cache_dev, &sb);
+> +
+> +	return 0;
+> +
+> +dax_release:
+> +	cache_dev_dax_exit(cache_dev);
+> +err:
+
+In these cases just return instead of going to the label. It gives
+generally more readable code.
+
+> +	return ret;
+> +}
+> +
+> +int cache_dev_get_empty_segment_id(struct pcache_cache_dev *cache_dev, u=
+32 *seg_id)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&cache_dev->seg_lock);
+
+If DM is fine with guard() use it here.
+
+> +	*seg_id =3D find_next_zero_bit(cache_dev->seg_bitmap, cache_dev->seg_nu=
+m, 0);
+> +	if (*seg_id =3D=3D cache_dev->seg_num) {
+> +		ret =3D -ENOSPC;
+> +		goto unlock;
+> +	}
+> +
+> +	set_bit(*seg_id, cache_dev->seg_bitmap);
+> +	ret =3D 0;
+> +unlock:
+> +	mutex_unlock(&cache_dev->seg_lock);
+> +	return ret;
+> +}
