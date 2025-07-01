@@ -1,130 +1,78 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1713926AA8F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 08:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BC826AAA7;
+	Tue,  1 Jul 2025 08:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751357785; cv=none; b=OHWTz1aH41skjH9rYtAblFrnuWgzNH7cxPYV+0RIVWCSwTDrBRobq5UyDQfCAXHihlpJKrhW+IUBBrexTmbyVS+Uz/GfwXX6ac1iORyXAbsKh3xG0LRI1wWP3I4JoLcdosRMt7W9wdbb55LIi2tBQB1s+JSkqdeHf48gRwnEQYA=
+	t=1751357785; cv=none; b=maMOWOZpJUM70DuHsJzEzxxpiJgVdoQOWNfO8TSM2CmQS1sZFMc4TVe8VczPRQX+v6kwRD5CbCAehtruT1lmslA/s/A9vgQB66XPN68v812+cwHJSU3FVLZ1zcsCTaWxvVPG9gYhgVQM2Qedlp5J1PCRv75oocAF26Mz6sbdZJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751357785; c=relaxed/simple;
-	bh=cqO9Gh6Ed5X3G7nZke8eswDnt3HZEzQjQs+HR2ju8nM=;
+	bh=yqRhPYUfqvfd5430wEfH350b2uQ3CQ1Qmr1zftDuApU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VYLTKhphVJa2ml5gyG/JNL+ggbLmxDC9RpE5taKk1CLfyKZmEde8/gYvO4kbTAs9JigAzdgOrOooQNzw2t7XClb6nysBYZMNh8DY8zQBjgJEkRVHgkTNW8bgkPUnZuLgIdiKS8DbuhUeQFNKQKbfjMYjwvRgL28Xj0HpujdIXm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IdpTj6EO; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmaXtC5Q4u5QYgy9erb1IzuX18RVoqO3Og3ppxbwZkI3cK0D8blhCUQ2aBx1EqXRNBZY0gUwHwiMSTjxrE5AvK062MWL/ypUb+nqh7i6SKpFPLM3tN9sTuDjPI4RZGBuBAISeyv0y3pJQ3JlAcZRZtSQu/2HmvQVU5VvZM1WoSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M4J+j0Nr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IdpTj6EO"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso25009245e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 01:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1751357781; x=1751962581; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqO9Gh6Ed5X3G7nZke8eswDnt3HZEzQjQs+HR2ju8nM=;
-        b=IdpTj6EO7dKRaeIX2pPDPl1m7V63kT+mGhavqnE5OiJq5fSjwPkLm15QAVQ0m8ZnYQ
-         2SCyrbTT3GLraVq9Qa+E1pf5Mvy92xqwx3nYbZTJYm2r9V3pAlqMoz+h+vBhGD4G4F2U
-         RzTy9EcZJLZRjMEkCLlUQLoJ+5APlyCf+WiTZ27zNXqRx3DA1LNagxnZVvjJqngudft+
-         zpnU/JxICN0k3Z4umEgUnGWpm319AfUn/JyJ0fquAgWxrwuAKeMnxbVfI07LWqR5pUn2
-         Mh9U2NgAwQ2tpes7J4Fy6XL4dqcKS4tqxjtIS4L9tsfW6UyJONSwFHrUStYbWBgsvxLP
-         Q1pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751357781; x=1751962581;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cqO9Gh6Ed5X3G7nZke8eswDnt3HZEzQjQs+HR2ju8nM=;
-        b=kggUrnJOK57NJko25iQ+AqbSwUmL61y+UypAkUkTAuCGgABxBen+T/jqerAOkxz1Lv
-         VTBr7hSNGoHwFFWaJzsLF8eUHC37YlDbk5B8bOP8tLk5cavrZzpX6hpSAVIvrC+DEU1L
-         ZHmjKER3VWZlHksDV+YNroUXxEE7FpPV522q4N6c03X2nBkCv5Ahtp1hDSMXxbQDQE/V
-         yZFpVRA3fBRnpKDov3lALU/Ooo98JIDcHe6oEbc9Ovhz5zvczPxOLM18naFlL0sn4hUW
-         oav+a3Z5/5qLefuPduwQdH6CrweeY+bBgjLgFero2/drBWpKEP5ALcjdptvCBuU2zTnG
-         QXSg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+wYLMj4NowYWlz70aS0McrD1XTEegbeCt+HBZ+MCMNaoCSXJV8FLxGowuf+T1hYjU/hQTx524HB0zcFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDJFmagIo7bBiN0xESp0BLvX00CdlW6wQea6Yg2iqQjOHzvC23
-	fQB8s+XX8S/XL3XKZ9UGORR7M6+Y9LtLr3zh1hJQYVawFS4NAbrejr6c+o3oEaB9AyAvQebYyXa
-	J8MxX
-X-Gm-Gg: ASbGncsdIc3/cryleqDfLARa0qidrspr5q2Z/vDsamC7M3eqZG9jt8rCG2N2C6GMDCP
-	/KEdI78qtQaM07nbExmgz3W0pFOaoyrfew7tH5cGND2bxgYP3MF6DtS/idnRMPhSWWO9MkiilR6
-	n+s1Kwx3/EMbruNJZ+PQ6XofRg3jcrhuM9vVnzAnLh+xLCAhFCvGu+7lnD53DFFX4iQaqUBeRP1
-	Ng/wFjzi/tnOEHJp/gcroH/Vm4s+0/YsBLbdnwa21kdXLmSnj9XeP3zjxzfNpc3KIFtEdQZsXQK
-	ZVfbEUU3A15vENxQGu/V7Iytnt5UBaECOHwA2oAvXC7H5dlpcH08FQ/QLsMKm07/GdV2bT1qQcs
-	=
-X-Google-Smtp-Source: AGHT+IF/N5/hf0d2fwMzP5+TqXu5cETtfyyVL5Bb81xxCyv/IqnZpdoVIHLqUV7ToAyh1pCxOCMXgA==
-X-Received: by 2002:a05:600c:a087:b0:453:a88:d509 with SMTP id 5b1f17b1804b1-4538ee42c26mr214486335e9.10.1751357781237;
-        Tue, 01 Jul 2025 01:16:21 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538a406ab6sm159969645e9.30.2025.07.01.01.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 01:16:20 -0700 (PDT)
-Date: Tue, 1 Jul 2025 10:16:18 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Tejun Heo <tj@kernel.org>, Waiman Long <llong@redhat.com>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
- cpuset.mems setting option
-Message-ID: <p5dssax5ac6ndongdhp4bvnmy3gz4pswdxoogbmy66bhk5zqzg@bfurmve7htwi>
-References: <aC90-jGtD_tJiP5K@slm.duckdns.org>
- <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
- <aDCnnd46qjAvoxZq@slm.duckdns.org>
- <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
- <x7wdhodqgp2qcwnwutuuedhe6iuzj2dqzhazallamsyzdxsf7k@n2tcicd4ai3u>
- <CACSyD1My_UJxhDHNjvRmTyNKHcxjhQr0_SH=wXrOFd+dYa0h4A@mail.gmail.com>
- <pkzbpeu7w6jc6tzijldiqutv4maft2nyfjsbmobpjfr5kkn27j@e6bflvg7mewi>
- <CACSyD1MhCaAzycSUSQfirLaLp22mcabVr3jfaRbJqFRkX2VoFw@mail.gmail.com>
- <jtjtb7sn7kxl7rw7tfdo2sn73rlre4w3iuvbk5hrolyimq7ixx@mo4k6r663tx2>
- <CACSyD1PhM=U1bxqYeZXHojSRWWPB3Y7j30jLLykjRzLuQQzn2Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M4J+j0Nr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB510C4CEEE;
+	Tue,  1 Jul 2025 08:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1751357785;
+	bh=yqRhPYUfqvfd5430wEfH350b2uQ3CQ1Qmr1zftDuApU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M4J+j0NrqpKdl/nrKXBtP7KjJdeLGs5N2Qnf189uh+KV6vNK81l2DH6rvNF2Zegtw
+	 9SxU9BBPmmqDn/oFr//QPbMJb9U5lzyRrUjleK45XOPrRhXu+AK0P2itv50NexEq7h
+	 k71v9Xncgefq91L1jewN0faLZhrUX8DJsLADb4hM=
+Date: Tue, 1 Jul 2025 10:16:21 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Marcos Garcia <magazo2005@gmail.com>
+Cc: philipp.g.hortmann@gmail.com, dan.carpenter@linaro.org,
+	karanja99erick@gmail.com, rodrigo.gobbi.7@gmail.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH staging] staging: rtl8723bs: replace magic numbers in
+ rtl8723b_InitBeaconParameters()
+Message-ID: <2025070110-unroll-hurried-ac37@gregkh>
+References: <20250701074243.1300186-1-magazo2005@gmail.com>
+ <2025070117-poise-busily-bd0d@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ghzklq2pmnvye4ii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACSyD1PhM=U1bxqYeZXHojSRWWPB3Y7j30jLLykjRzLuQQzn2Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025070117-poise-busily-bd0d@gregkh>
 
+On Tue, Jul 01, 2025 at 10:02:54AM +0200, Greg KH wrote:
+> On Tue, Jul 01, 2025 at 09:40:49AM +0200, Marcos Garcia wrote:
+> > 
+> > 
+> > Replace hardcoded values in rtl8723b_InitBeaconParameters() with defined constants
+> > TBTT_PROHIBIT_VENDOR_DEFAULT (0x6404) and BCNTCFG_AIFS_MAX (0x660F) for clarity and
+> > maintainability, addressing the TODO comment in the code.
+> > 
+> > The values were sourced from the following documentation:
+> > - REG_TBTT_PROHIBIT (Offset 0x0540): Bits [15:8] = 0x64 (100ms prohibit time, 1ms units),
+> >   Bits [7:0] = 0x04 (2ms margin, 0.5ms units), as per RTL8723BS Datasheet v1.5,
+> >   Section 7.3.1.5 and RTL8723BS Programming Guide, p. 112.
+> > - REG_BCNTCFG (Offset 0x0510): 0x660F sets max AIFS (0x0F) to prioritize beacon
+> >   transmission, as per RTL8723BS Datasheet v1.5, Section 7.3.1.3.
+> > 
+> > Hi Dan,
+> > 
+> > Thank you for your detailed feedback — I truly appreciate it. I tried to contact you
+> > earlier, but it seems my email didn't reach you. This is my first kernel contribution,
+> > and I started by addressing TODO comments, thinking they were straightforward. I now
+> > realize even these changes require deep hardware understanding. I used AI to assist with
+> > parts of the commit message, but I didn't review it thoroughly enough, and I take full
+> > responsibility for the vague comments. I could only find limited references to these
+> > values, and the documentation seems restricted. I apologize for any oversight and
+> > promise to research more carefully in the future. Thank you for your guidance.
+> 
+> None of this needs to be in the changelog text, please read the
+> documentation for how to properly submit patches, especially second
+> version of patches.
 
---ghzklq2pmnvye4ii
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
- cpuset.mems setting option
-MIME-Version: 1.0
-
-On Tue, Jun 24, 2025 at 04:11:01PM +0800, Zhongkun He <hezhongkun.hzk@bytedance.com> wrote:
-> The cond_resched() is already there, please have a look in
-> migrate_pages_batch().
-
-Thanks, this is enlightening.
-
-> The issue(contention ) lies in the fact that, during page migration, the PTE
-> is replaced with a migration_entry(). If a task attempts to access such a page,
-> it will be blocked in migration_entry_wait() until the migration completes.
-> When a large number of hot pages are involved, this can cause significant
-> service disruption due to prolonged blocking.
-
-migration_entry_wait() waits only for a single page (folio?) to be
-migrated. How can the number of pages affect the disruption? Or do you
-mean that these individual waits add up and the service is generally
-slowed down by that? If the migration was spread out over longer time,
-the cummulative slowdown would be the same.
-
-Thanks,
-Michal
-
---ghzklq2pmnvye4ii
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaGOZUAAKCRB+PQLnlNv4
-CLqrAP93FjIrFWvD3uXoAQYwirGWulGtE68jLEXl0TFfgWAk0gD/cmzZCwsHU4Qh
-EqqezNCBFMoHnUOeL0+hkfekbIN5wQg=
-=dVmN
------END PGP SIGNATURE-----
-
---ghzklq2pmnvye4ii--
+Make that the third version of this patch.
