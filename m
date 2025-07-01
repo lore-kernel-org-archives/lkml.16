@@ -1,83 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E286C271476;
-	Tue,  1 Jul 2025 11:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5BD1A29A;
+	Tue,  1 Jul 2025 11:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751370190; cv=none; b=jGMX5FniEl0f5Z8Eecg893As6VWJzSYYejJHkZrcolUxSWLgUrhcSOtgZ2eemSmdcFkOayq7KbqatnpQf0qUGU6h1sczBW4WkMxRobCHeK9MSuWSOg2/F9623WFUaXxaCgcpPHPrrOHLsK1dP/6WbkSheeyUNTRqr7OkKE/Jvrk=
+	t=1751370255; cv=none; b=aIRg1/NafgxPqBB8l7JvYG7VtWo+hkRtuUNKDWkkMkzvsRHYCF6f+dNl78Pp8Acyx+byNQLUzWX3E9BpzmKQ/0XLcf3Gt6QYlD4YFmZipwh9YCNAjtYxj8b3jIUPvGuMBaewtkWiOrwtkqBvnYMupzMeb/IaO9H8IN3ojpEEdjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751370190; c=relaxed/simple;
-	bh=VztepSZjn9XnwkHDE3OcBc8llwcmcqz5id0pDHPNIAs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tbKIqkWjVqfgz9/pf7qVxTZOUMS5kNIcKyJt0TGjXy/v7xsudsBasRUOb0R38aXlVM2t6VcsnEBZTpv0sU2o87PU+uQEFX+RwWzXmBWrogNc1NaQoPUlBpxYKGp3251ZylVr2BtM5ohstHyiDATS3rK/6IzyRZyjzfBxlKvJhfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwBRfav/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751370255; c=relaxed/simple;
+	bh=3W3vz6KPse/FZf4/O+7bTK70CyiE8f9Poxe2UbwtLRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bjPMWVJek5pcEl1yPC0YEd/uXuYeAZAZfiMDV38YhTETSwMoJWp0I5YrKPb5DyRvSP9Bd5+Ojyd7dyqJj0CFvhSsRF+p5xM7Vr6sV5OGiDyrDN+KRaqgYK/y80d2yjkA5/7/X3SB2pwYJ8ev6PF5jmDSWFg6APeD6gIQgPee6+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAoNNpUO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwBRfav/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 603BAC4CEEB;
-	Tue,  1 Jul 2025 11:43:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAoNNpUO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEBA1C4CEEB;
+	Tue,  1 Jul 2025 11:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751370189;
-	bh=VztepSZjn9XnwkHDE3OcBc8llwcmcqz5id0pDHPNIAs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cwBRfav/EmxY7DnBZz6tIESBgy+RoO/M67X3HYsvfKWf6M5g2AYHf1K/YZLhJtrke
-	 LOypgFFcz+f9K62282QY2ahxqv0gT9zYqwhm+NLX5HHBjuN7eiS7ZljMKaiGp/q5Vq
-	 6le0EMyl66UP0juF7joX5GuADBod2Jh9qs3XmyVyVcFKtu8tk9CIMMPI9CkleGMsbo
-	 1ADQ1Th6qOWZ88vBCgKWLrZP4I/FwZJUELnaa2KxMV8eg+TJbM/KwbgeCKRLsyPXSz
-	 xyf5sXv/q86VWNNgRaEKYCXU9g8Q033Q7a8lL7mLntnt/NlVlf5BoyPcJwXIWO32pp
-	 z8ni45evhyPcg==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	linux-cifs@vger.kernel.org,
-	netfs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Steve French <sfrench@samba.org>
-Subject: Re: [PATCH] netfs: Fix i_size updating
-Date: Tue,  1 Jul 2025 13:42:58 +0200
-Message-ID: <20250701-quert-tanzmusik-9be58de64106@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <1576470.1750941177@warthog.procyon.org.uk>
-References: <1576470.1750941177@warthog.procyon.org.uk>
+	s=k20201202; t=1751370254;
+	bh=3W3vz6KPse/FZf4/O+7bTK70CyiE8f9Poxe2UbwtLRM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UAoNNpUOWmcTYsGKU6I7lRTt3C569aeV0uxR50NAAOTSLhbFWEHoyQxc6ZjlKomu1
+	 /+3nbOn+yzUDV7+WFeFm4mUlH9IGBLC3GGOou6TtxoftasUQNGhDK5FQOtA6PI9aWF
+	 /yFSwbwb6EaWOkgU8WAoQFdDOAy0flmnR8v3GcU3/uivUflZ6bFmBqFSqJ0d+taXGg
+	 a7ye7SSqWAb1sppD+1Po+GMUsX+uWD3Zg1yo0Cak5ew7PwaTy3mVkFdlW/Opnd2vo1
+	 P8OWQhRRHF/a1hch5IOkTNWx3av5Y/ew0eQCWINNGevwTIv79tOZVsunDz2GMGka2l
+	 qBjG8EFsVAW5Q==
+Message-ID: <587072c7-6614-4b4e-96f5-c3defe56c73b@kernel.org>
+Date: Tue, 1 Jul 2025 13:44:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1255; i=brauner@kernel.org; h=from:subject:message-id; bh=VztepSZjn9XnwkHDE3OcBc8llwcmcqz5id0pDHPNIAs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQknzxhJj/D39VYe3aaxSellqbPL0WCg79WtvxvmLvD6 djUPxLTOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbyt4Lhf02sLoey7cysqeoH TyxZlrWw16fTUzi89vdE2SOrbk77mcbwP/WvTp9z5Iv32jp3Jp5e+cx8sfWXxc+D7KJda9Mcbk+ YwQ0A
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: qcom,videocc: Add sc8180x
+ compatible
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250701-sc8180x-videocc-dt-v2-0-b05db66cc1f6@quicinc.com>
+ <20250701-sc8180x-videocc-dt-v2-1-b05db66cc1f6@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250701-sc8180x-videocc-dt-v2-1-b05db66cc1f6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 26 Jun 2025 13:32:57 +0100, David Howells wrote:
-> Fix the updating of i_size, particularly in regard to the completion of DIO
-> writes and especially async DIO writes by using a lock.
+On 01/07/2025 13:40, Satya Priya Kakitapalli wrote:
+> The sc8180x video clock controller block is identical to that
+> of sm8150. Add a new compatible string for sc8180x videocc and
+> use sm8150 as fallback.
 > 
-> The bug is triggered occasionally by the generic/207 xfstest as it chucks a
-> bunch of AIO DIO writes at the filesystem and then checks that fstat()
-> returns a reasonable st_size as each completes.
-> 
-> [...]
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+>  .../devicetree/bindings/clock/qcom,videocc.yaml       | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Never tested. Please don't send untested patches.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] netfs: Fix i_size updating
-      https://git.kernel.org/vfs/vfs/c/9754a8f2d5b5
-[1/1] netfs: Merge i_size update functions
-      https://git.kernel.org/vfs/vfs/c/871cb1a5a294
+Best regards,
+Krzysztof
