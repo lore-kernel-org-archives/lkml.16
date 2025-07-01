@@ -1,215 +1,298 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88612727F7;
-	Tue,  1 Jul 2025 11:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E527C272E41
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751369140; cv=none; b=I4GDaTMbkHHv2EsRrNgG82Ry6qgkDM2l4lis8WWYXDxHQbaK4QUOPLiT9YZVk3vIEqJz1hY+u6N0b7c0rWaf49qALGIhyAN3tu50eL8Jalf3sZJMObCD6i8MO8OlWlHDM64uFvogcOcdAT+puwbz0tBldk/sIR1ciWBCiojwV3E=
+	t=1751369230; cv=none; b=fh/EkC+tVIRwDjjW7KT99kp1Gzoy0ORgDTY/Z7zAtQjX4n4QcTAm0Rw359YOlN5uCUzmepoSsAnXpY5Or79r4l5+RPUQumaGKcHRlnc2kcmWvjimO3Rv8hdYUZHOThDVkvwtrEAwVo+SvujXyesMy3NGCKAp5edB3OQQjzvpRyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751369140; c=relaxed/simple;
-	bh=sovRK5k6yrNB91o3/eBq3umT71d/FWg4mdRWQDzlGIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lu8fnNAT/HG8DjY1c59/vyG2+dgirX71pXtXpV9VAnzOhYbYJHPK56Tj4afogpYiuCBlCq3OcnogK3tGXhD9d1rf/xMQ1YTfh0n8k9qwfpRw//DTkLF9ca0c2eifh73lBgZFEBk1d+wa9cXVG0pHWrNIL6oobypZZHsOKc8vkfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=styklcjF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751369230; c=relaxed/simple;
+	bh=ESXaDOI0ClJQb3/rnUaSslnZdyZvIXDxHVvhpQGw5jQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MvtQW6NuPyChG9bhqhoAt8rDJsQOic8Cjgund3MUUi/PMbFEZX9ZKQen8ROKzbJPRBm+zez3zQRU7po5hmUAye79bl4mCQEEmua1zD6Dnob76sU/H2kakUwLWfCjqRT3H9hIkdbMI8nOo3kIkH0KzNN6NmuEe0ZFViWaVmDRfHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Pl67WSnR; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="styklcjF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A53FC4CEEB;
-	Tue,  1 Jul 2025 11:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751369136;
-	bh=sovRK5k6yrNB91o3/eBq3umT71d/FWg4mdRWQDzlGIw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=styklcjFdeCJ4cEf3lkqdklnTvXtjNNTjot7MDbObFP8sNyNa0qJL7LuUWpk7y1ox
-	 1UbWpnex5HX3cxe/iYSghFdohWRl+jaFdML1GLNSysNCil0oealErPlXH0mkJm1Z2K
-	 fRkbz5HNmJh9XQGzGUN3BhFOPSRPPinexUMkWocsGo3nw9VN0HpCv1qvqHripjliQ1
-	 HnZQf77naJCwGFTtuAcwycKlliBrYw6tRIg2IafYaK8pp8eGRhPAYX9pzf4knEeacf
-	 6cqN8vKGQiUgiOaa/o0qHi4Xxt1qCSg8K0Doelyc2ll3TP1BGrS4FUOwhaTN0ywKvD
-	 NShq04PXss2Lg==
-Message-ID: <f877b3d7-d770-4424-9813-da748775f456@kernel.org>
-Date: Tue, 1 Jul 2025 13:25:27 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pl67WSnR"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-55516abe02cso2730298e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1751369227; x=1751974027; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOpbhHFXTgJjd1mQ2k57iBzGNrGLgGW/xPskwW5clgI=;
+        b=Pl67WSnR43+g8je/qLv8BWNkYs1cXpsCI6jaZBqHsJ4OWgAvFTIonNN4h/mgzlu71y
+         U14pNd5x4RIaIihYz9TNejuL+k3Y2h2PYUY+k+zj2fJuVRmHxUtup/03kbswdqaK8oZ3
+         Ph2kKJ6Hxeqpi2qMCAVfsRY8ymKxho7inP4P8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751369227; x=1751974027;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOpbhHFXTgJjd1mQ2k57iBzGNrGLgGW/xPskwW5clgI=;
+        b=tYBoy+YvwpQduSVj7TG1k6q/XqBXXtv27cPkXBMy0qniUgET7oSmSrwZw9rTo6Mqq0
+         53KdtnZ5j4BY3PjyECx7ElA+4leP9FPv595lycACws4iwTDL7KGbK10F9WEjOnYADLuz
+         sS6lMc+6iDERzY5nfeWlYrR/rFH+HeohfqrECBpd6HQkerMuK4+OCkDv5Z5f9GI5jGb7
+         2L4GUf9ZqG55ry7x/+dpFs/7Ee7FFfC0XYh+jcOrTokf4/DalDZgGlideZMfpM4nJVXE
+         n9MJWHIrAJJkInku3bvW9VDFDVOopezXSp7IM1qzp4o1oL0dTkKC346tmhlnydYXv27i
+         Qk8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVKEOJ20JF0GXl2b8XERiTS9Yz5LkpFCfHsYj9AWWE1hiGA+L7F36WGKddZRXu2ocJPsalJu04kevUJKV4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Dv/TMhiqIYN290DunX2jliGJ4G15m+XAbQATG7fF0Z5FBVgL
+	DZzQ0DTCXpSTvdtE5dSH9NyC1ffSqBIwlgrgLih7m/DDNlG0OYGqietil6A4ZPiSX30rEaagLrE
+	oKVZGcg==
+X-Gm-Gg: ASbGnct2rOZvMqLlUlbd2KhmR12L9pn0aMUh7RuyOJY3YINf/KuDb5cQX5f3E57DtbB
+	RCjpZyCBOFHHUwT9VT0gElpxjkL3Of+wuextP3a1+Hh4C9ZuoXg+idR9Pi1DXnWjp+/3SeMY4mi
+	RFdGJ/Zecy6IQddS1ciucH0llvW2FKp3VeFd+CUPu8TYKwXv4X/jWLwPDijRWNXRtgBElEcE5nM
+	9/t+THZJDX+7u2AtJRjvcjaHIZS11pU2l4Ys68cxm//0rVBid0B/LotbvcRDpEtQXXFCLAMt6kK
+	wEox/s7i60+jF5QDQbqyRKnKWRjeOYMiWmLzNKGWpJn8p0VDwthLgJKAgEvJPD/sZqlkgyfdJ6P
+	zV5kBb4azcLIsvEdv6nCfSBhj
+X-Google-Smtp-Source: AGHT+IGLyo71PJe7ayMSY24kno/W/0KIN+PDlM/T4MejCapfN0hCJ2bNakQul7XhMc6NEWsRgQZ24A==
+X-Received: by 2002:a05:6512:3f24:b0:553:2159:8716 with SMTP id 2adb3069b0e04-556235309fdmr615324e87.26.1751369226571;
+        Tue, 01 Jul 2025 04:27:06 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24d130sm1808978e87.54.2025.07.01.04.27.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Jul 2025 04:27:05 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55516abe02cso2730273e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:27:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVpmWhW4Ml3kyzGMBicICPEgzZvgvzSpKp4flwqXr2tWn1U1zISnzsDTk38GdqbyTWetB+tqGppRlZJMrE=@vger.kernel.org
+X-Received: by 2002:a05:6512:3996:b0:553:2a16:2503 with SMTP id
+ 2adb3069b0e04-5562351cd2bmr643670e87.22.1751369224941; Tue, 01 Jul 2025
+ 04:27:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/10] dt-bindings: phy: Add PHY bindings support for
- FSD SoC
-To: Shradha Todi <shradha.t@samsung.com>, 'Rob Herring' <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-fsd@tesla.com, mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
- bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
- kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
- jh80.chung@samsung.com, pankaj.dubey@samsung.com
-References: <20250625165229.3458-1-shradha.t@samsung.com>
- <CGME20250625165319epcas5p3721c19f6e6b482438c62dd1ef784de03@epcas5p3.samsung.com>
- <20250625165229.3458-8-shradha.t@samsung.com>
- <20250627211721.GA153863-robh@kernel.org>
- <02af01dbea78$24f01310$6ed03930$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <02af01dbea78$24f01310$6ed03930$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-11-5710f9d030aa@chromium.org> <20250629181440.GO24912@pendragon.ideasonboard.com>
+In-Reply-To: <20250629181440.GO24912@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 1 Jul 2025 13:26:51 +0200
+X-Gmail-Original-Message-ID: <CANiDSCvSP-NXpefOiKnGf53eUWKVf7iJqtXPEPN9e-Gaxt0k7A@mail.gmail.com>
+X-Gm-Features: Ac12FXzX2o2y2l8S2fLY5YNiZDeM3lsThn02nyBQ6azDUzOojOVrPSfT9VAdjyY
+Message-ID: <CANiDSCvSP-NXpefOiKnGf53eUWKVf7iJqtXPEPN9e-Gaxt0k7A@mail.gmail.com>
+Subject: Re: [PATCH v2 11/12] media: uvcvideo: Add support for V4L2_CID_CAMERA_ROTATION
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 01/07/2025 13:06, Shradha Todi wrote:
-> 
-> 
->> -----Original Message-----
->> From: Rob Herring <robh@kernel.org>
->> Sent: 28 June 2025 02:47
->> To: Shradha Todi <shradha.t@samsung.com>
->> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> linux-
->> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
->> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
->> bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
->> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de;
->> m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
->> Subject: Re: [PATCH v2 07/10] dt-bindings: phy: Add PHY bindings support for FSD SoC
->>
->> On Wed, Jun 25, 2025 at 10:22:26PM +0530, Shradha Todi wrote:
->>> Document PHY device tree bindings for Tesla FSD SoCs.
->>>
->>> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
->>> ---
->>>  .../bindings/phy/samsung,exynos-pcie-phy.yaml | 25 +++++++++++++++++--
->>>  1 file changed, 23 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
->> b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
->>> index 41df8bb08ff7..4dc20156cdde 100644
->>> --- a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
->>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
->>> @@ -15,10 +15,13 @@ properties:
->>>      const: 0
->>>
->>>    compatible:
->>> -    const: samsung,exynos5433-pcie-phy
->>> +    enum:
->>> +      - samsung,exynos5433-pcie-phy
->>> +      - tesla,fsd-pcie-phy
->>>
->>>    reg:
->>> -    maxItems: 1
->>> +    minItems: 1
->>> +    maxItems: 2
->>>
->>>    samsung,pmu-syscon:
->>>      $ref: /schemas/types.yaml#/definitions/phandle
->>> @@ -30,6 +33,24 @@ properties:
->>>      description: phandle for FSYS sysreg interface, used to control
->>>                   sysreg registers bits for PCIe PHY
->>>
->>> +allOf:
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - tesla,fsd-pcie-phy
->>> +    then:
->>> +      description:
->>> +        The PHY controller nodes are represented in the aliases node
->>> +        using the following format 'pciephy{n}'. Depending on whether
->>> +        n is 0 or 1, the phy init sequence is chosen.
->>
->> What? Don't make up your own aliases.
->>
->> If the PHY instances are different, then maybe you need a different
->> compatible. If this is just selecting the PHY mode, you can do that in
->> PHY cells as the mode depends on the consumer.
->>
-> 
-> FSD PCIe has 2 instances of PHY. Both are the same HW Samsung
-> PHYs (Therefore share the same register offsets). But the PHY used here
+On Sun, 29 Jun 2025 at 20:15, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> On Thu, Jun 05, 2025 at 05:53:04PM +0000, Ricardo Ribalda wrote:
+> > Fetch the rotation from the fwnode and map it into a control.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_ctrl.c     | 22 +++++++++++++--
+> >  drivers/media/usb/uvc/uvc_swentity.c | 55 ++++++++++++++++++++++++++++++++----
+> >  drivers/media/usb/uvc/uvcvideo.h     |  5 ++++
+> >  3 files changed, 74 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 59be62ae24a4219fa9d7aacf2ae7382c95362178..5788f0c0f6604da06a7bca1b9999d0957817e75e 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -378,11 +378,18 @@ static const struct uvc_control_info uvc_ctrls[] = {
+> >       },
+> >       {
+> >               .entity         = UVC_GUID_SWENTITY,
+> > -             .selector       = 0,
+> > -             .index          = 0,
+> > +             .selector       = UVC_SWENTITY_ORIENTATION,
+> > +             .index          = UVC_SWENTITY_ORIENTATION,
+> >               .size           = 1,
+> >               .flags          = UVC_CTRL_FLAG_GET_CUR,
+> >       },
+> > +     {
+> > +             .entity         = UVC_GUID_SWENTITY,
+> > +             .selector       = UVC_SWENTITY_ROTATION,
+> > +             .index          = UVC_SWENTITY_ROTATION,
+> > +             .size           = 2,
+> > +             .flags          = UVC_CTRL_FLAG_GET_RANGE,
+> > +     },
+> >  };
+> >
+> >  static const u32 uvc_control_classes[] = {
+> > @@ -1025,7 +1032,7 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
+> >       {
+> >               .id             = V4L2_CID_CAMERA_ORIENTATION,
+> >               .entity         = UVC_GUID_SWENTITY,
+> > -             .selector       = 0,
+> > +             .selector       = UVC_SWENTITY_ORIENTATION,
+> >               .size           = 8,
+> >               .offset         = 0,
+> >               .v4l2_type      = V4L2_CTRL_TYPE_MENU,
+> > @@ -1033,6 +1040,15 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
+> >               .menu_mask      = GENMASK(V4L2_CAMERA_ORIENTATION_EXTERNAL,
+> >                                         V4L2_CAMERA_ORIENTATION_FRONT),
+> >       },
+> > +     {
+> > +             .id             = V4L2_CID_CAMERA_SENSOR_ROTATION,
+> > +             .entity         = UVC_GUID_SWENTITY,
+> > +             .selector       = UVC_SWENTITY_ROTATION,
+> > +             .size           = 16,
+> > +             .offset         = 0,
+> > +             .v4l2_type      = V4L2_CTRL_TYPE_INTEGER,
+> > +             .data_type      = UVC_CTRL_DATA_TYPE_UNSIGNED,
+> > +     },
+> >  };
+> >
+> >  /* ------------------------------------------------------------------------
+> > diff --git a/drivers/media/usb/uvc/uvc_swentity.c b/drivers/media/usb/uvc/uvc_swentity.c
+> > index 702a2c26e029a0655dade177ed2a9b88d7a4136d..60f3166addbeb7d2e431d107b23034d2d11a1812 100644
+> > --- a/drivers/media/usb/uvc/uvc_swentity.c
+> > +++ b/drivers/media/usb/uvc/uvc_swentity.c
+> > @@ -10,10 +10,11 @@
+> >  #include <media/v4l2-fwnode.h>
+> >  #include "uvcvideo.h"
+> >
+> > -static int uvc_swentity_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
+> > -                             u8 cs, void *data, u16 size)
+> > +static int uvc_swentity_get_orientation(struct uvc_device *dev,
+> > +                                     struct uvc_entity *entity, u8 cs,
+> > +                                     void *data, u16 size)
+> >  {
+> > -     if (size < 1)
+> > +     if (cs != UVC_SWENTITY_ORIENTATION || size != 1)
+> >               return -EINVAL;
+> >
+> >       switch (entity->swentity.props.orientation) {
+> > @@ -30,6 +31,31 @@ static int uvc_swentity_get_cur(struct uvc_device *dev, struct uvc_entity *entit
+> >       return 0;
+> >  }
+> >
+> > +static int uvc_swentity_get_rotation(struct uvc_device *dev,
+> > +                                  struct uvc_entity *entity, u8 cs, void *data,
+> > +                                  u16 size)
+> > +{
+> > +     if (cs != UVC_SWENTITY_ROTATION || size != 2)
+> > +             return -EINVAL;
+> > +
+> > +     ((u8 *)data)[0] = entity->swentity.props.rotation;
+> > +     ((u8 *)data)[1] = entity->swentity.props.rotation >> 8;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int uvc_swentity_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                             u8 cs, void *data, u16 size)
+> > +{
+> > +     switch (cs) {
+> > +     case UVC_SWENTITY_ORIENTATION:
+> > +             return uvc_swentity_get_orientation(dev, entity, cs, data, size);
+> > +     case UVC_SWENTITY_ROTATION:
+> > +             return uvc_swentity_get_rotation(dev, entity, cs, data, size);
+> > +     }
+> > +     return -EINVAL;
+> > +}
+> > +
+> >  static int uvc_swentity_get_info(struct uvc_device *dev,
+> >                                struct uvc_entity *entity, u8 cs, u8 *caps)
+> >  {
+> > @@ -37,11 +63,22 @@ static int uvc_swentity_get_info(struct uvc_device *dev,
+> >       return 0;
+> >  }
+> >
+> > +static int uvc_swentity_get_res(struct uvc_device *dev, struct uvc_entity *entity,
+> > +                             u8 cs, void *res, u16 size)
+> > +{
+> > +     if (size == 0)
+> > +             return -EINVAL;
+>
+> The get_cur functions return an error if the size doesn't match the
+> expected size. I think you can return -EINVAL if size != 1.
+>
+> > +     ((u8 *)res)[0] = 1;
+> > +     memset(res + 1, 0, size - 1);
+>
+> And drop the memset.
+>
+> > +     return 0;
+> > +}
+> > +
+> >  int uvc_swentity_init(struct uvc_device *dev)
+> >  {
+> >       static const u8 uvc_swentity_guid[] = UVC_GUID_SWENTITY;
+> >       struct v4l2_fwnode_device_properties props;
+> >       struct uvc_entity *unit;
+> > +     u8 controls = 0;
+> >       int ret;
+> >
+> >       ret = v4l2_fwnode_device_parse(&dev->udev->dev, &props);
+> > @@ -49,7 +86,11 @@ int uvc_swentity_init(struct uvc_device *dev)
+> >               return dev_err_probe(&dev->intf->dev, ret,
+> >                                    "Can't parse fwnode\n");
+> >
+> > -     if (props.orientation == V4L2_FWNODE_PROPERTY_UNSET)
+> > +     if (props.orientation != V4L2_FWNODE_PROPERTY_UNSET)
+> > +             controls |= BIT(UVC_SWENTITY_ORIENTATION);
+> > +     if (props.rotation != V4L2_FWNODE_PROPERTY_UNSET)
+> > +             controls |= BIT(UVC_SWENTITY_ROTATION);
+> > +     if (!controls)
+> >               return 0;
+> >
+> >       unit = uvc_alloc_entity(UVC_SWENTITY_UNIT, UVC_SWENTITY_UNIT_ID, 0, 1);
+> > @@ -60,9 +101,13 @@ int uvc_swentity_init(struct uvc_device *dev)
+> >       unit->swentity.props = props;
+> >       unit->swentity.bControlSize = 1;
+> >       unit->swentity.bmControls = (u8 *)unit + sizeof(*unit);
+> > -     unit->swentity.bmControls[0] = 1;
+> > +     unit->swentity.bmControls[0] = controls;
+> >       unit->get_cur = uvc_swentity_get_cur;
+> >       unit->get_info = uvc_swentity_get_info;
+> > +     unit->get_res = uvc_swentity_get_res;
+> > +     unit->get_def = uvc_swentity_get_rotation;
+> > +     unit->get_min = uvc_swentity_get_rotation;
+> > +     unit->get_max = uvc_swentity_get_rotation;
+>
+> Why do you support GET_DEF, GET_MIN and GET_MAX for rotation only ?
 
-So same?
+Orientation has enum type. It does not require min or max.
 
-> does not support auto adaptation so we need to tune the PHYs
-> according to the use case (considering channel loss, etc). This is why we
+For get_def I could use get_cur, but 0 is as good as any other value
+within range.
 
-So not same? Decide. Either it is same or not, cannot be both.
-
-If you mean that some wiring is different on the board, then how does it
-differ in soc thus how it is per-soc property? If these are use-cases,
-then how is even suitable for DT?
-
-I use your Tesla FSD differently and then I exchange DTSI and compatibles?
-
-You are no describing real problem and both binding and your
-explanations are vague and imprecise. Binding tells nothing about it, so
-it is example of skipping important decisions.
-
-> have 2 different SW PHY initialization sequence depending on the instance
-> number. Do you think having different compatible (something like
-> tesla,fsd-pcie-phy0 and tesla,fsd-pcie-phy1) and having phy ID as platform data
-> is okay in this case? I actually took reference from files like:
-
-And in different use case on same soc you are going to reverse
-compatibles or instance IDs?
-
-> drivers/usb/phy/phy-am335x-control.c
-
-So you took 15 years old hardware, code and binding as an example.
-
-No, don't do that ever.
-
-Anyway, poor choices even in newer code should not drive your design.
-Design it properly, describe the hardware.
-
-> drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-> who use alias to differentiate between register offsets for instances.
+>
+> >       strscpy(unit->name, "SWENTITY", sizeof(unit->name));
+> >
+> >       list_add_tail(&unit->list, &dev->entities);
+> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > index d6da8ed3ad4cf3377df49923e051fe04d83d2e38..7cca0dc75d11f6a13bc4f09676a5a00e80cb38f7 100644
+> > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > @@ -45,6 +45,11 @@
+> >  #define UVC_SWENTITY_UNIT            0x7ffd
+> >  #define UVC_SWENTITY_UNIT_ID         0x101
+> >
+> > +enum {
+> > +     UVC_SWENTITY_ORIENTATION,
+> > +     UVC_SWENTITY_ROTATION
+> > +};
+> > +
+> >  /* ------------------------------------------------------------------------
+> >   * Driver specific constants.
+> >   */
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
 
 
-Best regards,
-Krzysztof
+-- 
+Ricardo Ribalda
