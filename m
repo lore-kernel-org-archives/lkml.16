@@ -1,94 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A432326F44D
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 23:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33AF2192F4;
+	Tue,  1 Jul 2025 23:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751413827; cv=none; b=CM82+MC8Z+0UMgvbY/9ADp+L5F99Ff5IPAVcZ5g50WeGJwkrwVKH6om/qU0Zh4pf0heLZMPz6LFN1nC4lxAXhLNC5KxFvLalitb/XTLo7U4z0DXz7CQP6x6U2sDwN1YG5/NnxrxkNzhlO2PUl0/GkqUSMpv+NZjtvZMuhrThtBw=
+	t=1751413930; cv=none; b=a+SxPIJTfojyXMknuphFHE5qfMlsFCWqBN67rPhN3BVkqgnjT+MZgM2Hn6Dfpiv8DApERVMRB9EWWzTENMnJGKNDf9k6NcHl9/p1GES+k8TEobn+l8kGoaUZZWP90In22ZZvxOley9TGKRYZ4TEQpmtVI82lt2BR9wII9pDiyq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751413827; c=relaxed/simple;
-	bh=vEmI+3e4otyTIV4MW5bsHtTUE+hSpnKJ0yNOf1M+uLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HKW/71yQaJlONkE0cnb1yk5UYQ4h7CveroEcSURa6EATRKbaY9g0AEdOHUtGhu/+nEIsvalYi9FyovRQMKYO7JQAZMVmgzrM3zHwA6d1jC7CTFPWrAW67+yiY2nXPmZRWqu+rkF3JnrW+Km010EK/IoeRQCBWuoUblASVUNoONs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVVBvp99; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1751413930; c=relaxed/simple;
+	bh=+uG+vjDFrpA/LC1O/R/RAZPKUIfakduvGLBMULSE3rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oZguOi+lAZIa9UczhwN/3y5yd+2P/apr1uOkw1qNxKFrkPHSQl3EzcerRU6RiKEzNZ+MaEd3WRDe1tKLVif/kOpFRtC3+Gj+AC0ZF8T21ia1x5nkqJFvYZrnJLW3ai9Yi1v9G0uiyjP1cN2pVtnGD/S0PkyN3E1HVQs/j4XXOEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNhSx3eI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVVBvp99"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751413824; x=1782949824;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=vEmI+3e4otyTIV4MW5bsHtTUE+hSpnKJ0yNOf1M+uLQ=;
-  b=mVVBvp991oUDZPhANwL+AiUV7mkw/ed5a9iMMS06LC/B7bw07mznfzXZ
-   Kcqt8R1TND+O6m065ozTZzsNfkaVMC8VWZLmWWfuXokWzCMdk+Plvy5qH
-   0ILxH79alSOXq1lU1iVEZxeuYrOrLcxseKnK8UiW4rw1wE24wInYZk1cv
-   Ix+90jdMqCg73lK+D0m5+JKQQZQ9pIfl/GF7Yv3EVZrzPqpN1icvNuGWQ
-   pnw08sPScAznzzWlvqyrGGmkPBD+6Ro/8tkdG5RWDFLl2CjItQa+eEoFQ
-   4MzDNlNqMTsZf854GODfrAt5Fs2zERp5M4FPpdBeQMYZX+TcLGnC6Hjq/
-   g==;
-X-CSE-ConnectionGUID: Vx8BYgHVRYqWYtcMyZf3/w==
-X-CSE-MsgGUID: cJJTJ7rGSoGZ1J+SgkUqtQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="64745396"
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="64745396"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 16:50:24 -0700
-X-CSE-ConnectionGUID: LXneMHXuQQa8XKipxfQLOw==
-X-CSE-MsgGUID: 1FoZk84MQWy+lzlFRK4foQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,280,1744095600"; 
-   d="scan'208";a="153375860"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 01 Jul 2025 16:50:23 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uWkk0-000anC-1X;
-	Tue, 01 Jul 2025 23:50:20 +0000
-Date: Wed, 2 Jul 2025 07:49:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Caleb James DeLisle <cjd@cjdns.fr>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: kismet: WARNING: unmet direct dependencies detected for SERIAL_8250
- when selected by ECONET
-Message-ID: <202507020730.rBEjwuJQ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNhSx3eI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9BDC4CEEB;
+	Tue,  1 Jul 2025 23:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751413929;
+	bh=+uG+vjDFrpA/LC1O/R/RAZPKUIfakduvGLBMULSE3rU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eNhSx3eImVJzNJpQRWlN1v90JVow5O0ge9WJVC+Q+ixzJOpv3nlGNngnD/+5cMedN
+	 4HFP6fhfS/RTqSLw7NrEltAC09f9WHi7egLRHZc/VK9ML2fNBUhwKCXNAHWPlbMuPK
+	 hsaeEiKCxZpnKuyBRXJBGRZAikqONXyupBJjuWznJpzZDkIZo54syOvRJ8gNLIqfND
+	 SuQZPpRVAx7K8dfjJfHyJiwDxfFrWuGSbNpKfKQ5pEt9zjHnRYjHJKu2nCOabz0+2g
+	 d/8M+wvy9tNshMhxP4cxF+TVNJF8Gs6MC2KhlbjO465SS8Fgtd7hrbQwj1qjiInuRX
+	 KcLv6HaIz29MQ==
+Date: Tue, 1 Jul 2025 16:52:08 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Michal Luczaj <mhal@rbox.co>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>, Neal
+ Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
+ David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>, John
+ Fastabend <john.fastabend@gmail.com>, Ayush Sawal
+ <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Wenjia
+ Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
+ <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
+ <guwen@linux.alibaba.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-s390@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/9] net: Remove unused function parameters
+ in skbuff.c
+Message-ID: <20250701165208.2e3443a0@kernel.org>
+In-Reply-To: <c405f957-0f88-4c88-98d7-3a27e5230fc8@redhat.com>
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+	<20250630181847.525a0ad6@kernel.org>
+	<beea4b9f-657f-4f98-a853-e40a503e2274@rbox.co>
+	<c405f957-0f88-4c88-98d7-3a27e5230fc8@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   66701750d5565c574af42bef0b789ce0203e3071
-commit: 79ee1d20e37cd553cc961962fca8107e69a0c293 mips: econet: Fix incorrect Kconfig dependencies
-date:   5 weeks ago
-config: mips-kismet-CONFIG_SERIAL_8250-CONFIG_ECONET-0-0 (https://download.01.org/0day-ci/archive/20250702/202507020730.rBEjwuJQ-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250702/202507020730.rBEjwuJQ-lkp@intel.com/reproduce)
+On Tue, 1 Jul 2025 11:02:50 +0200 Paolo Abeni wrote:
+> >> I feel a little ambivalent about the removal of the flags arguments.
+> >> I understand that they are unused now, but theoretically the operation
+> >> as a whole has flags so it's not crazy to pass them along.. Dunno.  
+> > 
+> > I suspect you can say the same about @gfp. Even though they've both became
+> > irrelevant for the functions that define them. But I understand your
+> > hesitation. Should I post v3 without this/these changes?  
+> 
+> Yes please, I think it would make the series less controversial.
+> 
+> Also I feel like the gfp flag removal is less controversial, as is IMHO
+> reasonable that skb_splice_from_iter() would not allocate any memory.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507020730.rBEjwuJQ-lkp@intel.com/
++1, FWIW, gfp flags are more as need be the callee.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for SERIAL_8250 when selected by ECONET
-   WARNING: unmet direct dependencies detected for SERIAL_8250
-     Depends on [n]: TTY [=n] && HAS_IOMEM [=y] && !S390
-     Selected by [y]:
-     - ECONET [=y]
-   
-   WARNING: unmet direct dependencies detected for SERIAL_OF_PLATFORM
-     Depends on [n]: TTY [=n] && HAS_IOMEM [=y] && SERIAL_8250 [=y] && OF [=y]
-     Selected by [y]:
-     - ECONET [=y]
+> > What's netdev's stance on using __always_unused in such cases?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Subjectively, I find the unused argument warnings in the kernel
+to usually be counter-productive. If a maintainer of a piece of code
+wants to clean them up -- perfectly fine. But taking cleanup patches
+and annotating with __always_unused doesn't see very productive.
