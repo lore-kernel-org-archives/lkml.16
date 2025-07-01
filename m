@@ -1,574 +1,266 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2065.outbound.protection.outlook.com [40.107.101.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF081E4A4;
-	Tue,  1 Jul 2025 01:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751331768; cv=none; b=meszxTh5aAaOh6Z3D90yDmleZVhz6wPHlYDSq7OHGjNq9wbBFMztsy14y+SP/QHM6x0/mMqCvkKRUuirSCtYsJqCrQZMe+ZikTP2wV2Nvzfl+FEF7gNnGAnN6CxVZJQESowjRZy8Tfyjb3G1vm97D/OQN9fWLK9dhiafwB5Eaa8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751331768; c=relaxed/simple;
-	bh=S5gzdYryCxi0ZpsxScrMI1W56iDeiiMUcuBN3/v73Tw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bTIXnfGNOs75aO8onlzL9AsKZpeOSFvGLCbd/K6xxtc6wQ5B/TgqrdMxI2fS27waqsFnPoWRn5w2wtNfsJxjqHiuXrohodnStEAw5LKaqjQmipNUIEBc85GesTyI8dP+uEpeL46DceWw8M6Ib3tc9q9qKAamVbyWABoEtbUzdfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7/Kodlq; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A481E4A4
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 01:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751331809; cv=fail; b=nmaraslU4+HU5KdPRBKKbc8jndMbJa9m3KX2QaeR8emZC/4enP4xeLug16wJS4xwZ7pvM3xMo+uiyPU/60Gb6Y2qToLPxiUSlaHjR1OxoYGUQFEwXQy+OMeSpFrJWqVXwfvb4Nnj+rLncCsyFwYFZRFPxhWeT0vyHIg8DUNhqMk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751331809; c=relaxed/simple;
+	bh=2h6sOdoEjalrFQ0GkHXBp2e3UUan3z32TFixfLOoG2g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Czu8S8/HwepX/eOo0J5sdU0ktR1+aFcPqvOoprxm0oXdC3YADOTiovvlFrTxHywLtpzCZA0xB9JFr8afdo3MSZDCfc1pE464Kf7ehqbtHsF1Bf5Ij5TqTyM9nErmyEKql8LPc396lCivCtzSQkO760PYgeSRgbEfawrx9xoZIXM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hxkbgezk; arc=fail smtp.client-ip=40.107.101.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7/Kodlq"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fafb6899c2so56049856d6.0;
-        Mon, 30 Jun 2025 18:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751331765; x=1751936565; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ag+jMLkZcqkX977kFPeDpR6Cz2Zqrt9MproaNG5rNzQ=;
-        b=B7/KodlqPhFN0PlXiNc7F+IA6MYnT99pwmM/mOuS1bV8Zud1G2mruplElwUBvBPzYW
-         sMwTFjwq/0L2tvsakFeXGAMUBiDV7yhPgY93Bbf+sOTCIQKACAi1VCfF47JvZU2Udh1Q
-         hgRyQd/DI/7yKqi3z3KSHcdscf4p0eEnEZZdPbGiLZVcSQVFlGjEP58zqF+F0kDteLEr
-         WBFv1+DsaTu20Vc3R+XvRCsORqlKdtTeVzjfbVBz6nhbmrDvReLL8nUUMu/HZPyoz99i
-         h3RsPN6Kwil7PtDOeaT5R4vkZIFzeXRnD93HLzzGRw4GTikEGQ2Ne6XuMWuYSP0MvgzU
-         +CKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751331765; x=1751936565;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ag+jMLkZcqkX977kFPeDpR6Cz2Zqrt9MproaNG5rNzQ=;
-        b=jfx/NBDt9HyHYPrzbwQFhpzd7/ADmvVmhlbMu2gltlsecsYiaCjPX8W7EVfK/oDzFT
-         D74HNM/1rw1ystORXnDt3kpLEDQUAK44Y/5xmOoa0kCpBd4rWrZEy8wW0GdgpqxdmAMD
-         +K/EmhFE7ml0IZL4A6PLKCHpMEHHxH4TvE7OKQoS7YSqjysHW+BocmnMVMyfECBUg0Na
-         O6Uv1GEV62UHOGWkgdoioVv0jLfZPoTubZ9WCHRkvA/8ieuT2qkaX51+MbHk2k2y72qw
-         p/CNzX03JCgKD5hJ1WYqVC9kNmtLoljvve65sNFzvSlaigu5AeZqFbCs5i3/jFGnu4pI
-         +4Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCX62QHNC9IJ8uIo+JaaighAfYoLF2KPJWiMAXgvrAJGrdysqRl4MVluhrkLsiF/grnap0GY/Q9B0OoHlQ==@vger.kernel.org, AJvYcCXYsD55w5U/GCYqfl7ortHHgS9ozYm6UeHhqviC/D74+Z8HS5LEhEjUl4fljB5hB+A/LnJMwvsVsJuc@vger.kernel.org, AJvYcCXrS4AItL1EF1aGCOWEmXvweqlb+HxOaerRhBYSIM4RpHZAoqTcZfx6qzqdA29FEbomlsveqh46HzUkRlP/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC564NYkvvgGsQwmBx9/345LUtvKn/RUdFnJaOp3C8o1hhk/7h
-	nHDKVwoXE0IWE+I2QPrm5Mhwt2+gU0+UtWqeIgBpW+cm1Unus/kcmHjT
-X-Gm-Gg: ASbGncu6jSA9CcIfufuG1xsjzJKucsZrzRTXY9uHhmyy8CJvuyy0LEJh3HBaAJWfyQ2
-	2H5i3QGKHScenGjcFZA3OXKODRjWU2Iju0gwW++BN9vYm8CMPSZZhIfsNT9jTmV/Bke5Z78qvKi
-	t9rS8/HnHXsckN5FMo6X3jqrDxvfgEFqC0Jx24c6FvXSWDcuA9bgoIxVu72gsNsPa/8YLYuh20G
-	mnkMeu3JRp6WVRbDiqlj9ladLbyAenFjlDtUZrDGnnpWDqbo2xlaV8wJQiFumYvNpTfRwAUZNLY
-	RjpfW20S8SZ0PWJDgrj/0YpKQ2u6dHT5gFIV+f6hskYWNpwRHTsKzXtSw3GyyxPZnvDlszeZM70
-	sXd7PaOLsWKLSzFBZL/K8FluWDSAckx0XCOs/rHFuGJ3g
-X-Google-Smtp-Source: AGHT+IH3vIbRVpmc5Uq2SsXqSS9QLf/EaGxWQTCOTHt7kOE1MvyuwlYisQ/IDTDBnjrMdqeRyF4scw==
-X-Received: by 2002:ad4:5de9:0:b0:6fa:fdb3:5879 with SMTP id 6a1803df08f44-7010a95a8bfmr26503746d6.1.1751331765014;
-        Mon, 30 Jun 2025 18:02:45 -0700 (PDT)
-Received: from [127.0.0.1] (modemcable197.17-162-184.mc.videotron.ca. [184.162.17.197])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e7301sm76114726d6.62.2025.06.30.18.02.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jun 2025 18:02:44 -0700 (PDT)
-Date: Mon, 30 Jun 2025 21:02:41 -0400
-From: =?ISO-8859-1?Q?Jean-Fran=E7ois_Lessard?= <jefflessard3@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-CC: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
- Boris Gjenero <boris.gjenero@gmail.com>,
- Christian Hewitt <christianshewitt@gmail.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Paolo Sabatino <paolo.sabatino@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_7/8=5D_auxdisplay=3A_Add_Titanmec?=
- =?US-ASCII?Q?_TM16xx_7-segment_display_controllers_driver?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
-References: <20250629130002.49842-1-jefflessard3@gmail.com> <20250629131830.50034-1-jefflessard3@gmail.com> <47d24e31-1c6f-4299-aeaf-669c474c4459@kernel.org>
-Message-ID: <E66BF0B3-C061-4D5E-A929-8E940F3336ED@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hxkbgezk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yXprk6cy8LkyYplWciu0byZgFMRHI4jMe7iKmnSd036696Me0vOdqdeQgnxUgjcBkJMu7sbsdYLE7pDe1kSr9YMygsUumoYiF3k7PYuoU3b1e28xYX9GtXtYBWZNB6BYZDQMGS6iI+Zi7JKWG/9y0EQVVvTIwGNLehHxXcmYlSDSeyJN9TYZi6lt6yMWZyGmHSCjUzp+OA6Nj8HCm2QCd3anvG5lR63eAtoac2D0H6NZN4rk8kh06dXVwToPvUpTxy9w+HGVhzN5CpWxRk/tiaVIB3t3mSDQBCtkQam32+VRZtlcqOobCXdbh5nB/lKGJ6Rz5sTxU7gGQgHb+/bIfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2h6sOdoEjalrFQ0GkHXBp2e3UUan3z32TFixfLOoG2g=;
+ b=rGwVacCoqYZ1bZXiGo4eaLvn2YvzBWUPU5BXtgcC0UsxSst7khZ8Hao0zCBTgYhw5fpsH/vIEp8/gJX96vTTWG8iTT8pVbSMehCQfoXmBZvr4DSjqLDl2aKTnUcBjt6FRVWx+Ue/ETGloMKJl2o5WNc4+ujvzRcjS+87gQXvnsS/07/asTcc3ykPMaavQjoI0S8GhjDdui/DA7p4szd+SCLQXRfMD75CW/dnGjquq1Rc5v29gRju5JBipJthcMQpumUN69tdNz8h4AqtmNCCQQWaX7hy5WYY+8zXKHsR1aoygIiIV7XUDy0fU19QBDP4TFf+mmPmEpo4QCUXOZoUWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2h6sOdoEjalrFQ0GkHXBp2e3UUan3z32TFixfLOoG2g=;
+ b=hxkbgezk62ia0ft9tuGhVVPrWX7aJVoP6VJLeFjW9EqyXcfUZ0FsAQPC/yOmBbZeiLTrAYBcBk8+Q+0ZsJvLooM95NrfhskUtA2+pDr/3cjj3RJxItKSryRZ2BeQ57jCa9fdsYbT9LJobBM7kDuVpFgYBzBI55SOIs3JNrwicys=
+Received: from MW4PR12MB7165.namprd12.prod.outlook.com (2603:10b6:303:21b::14)
+ by PH7PR12MB5733.namprd12.prod.outlook.com (2603:10b6:510:1e0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.29; Tue, 1 Jul
+ 2025 01:03:24 +0000
+Received: from MW4PR12MB7165.namprd12.prod.outlook.com
+ ([fe80::a32f:9b78:fc2e:6076]) by MW4PR12MB7165.namprd12.prod.outlook.com
+ ([fe80::a32f:9b78:fc2e:6076%7]) with mapi id 15.20.8835.027; Tue, 1 Jul 2025
+ 01:03:24 +0000
+From: "Klymenko, Anatoliy" <Anatoliy.Klymenko@amd.com>
+To: Mike Looijmans <mike.looijmans@topic.nl>, Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, David
+ Airlie <airlied@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>, Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
+Thread-Topic: [PATCH] drm: xlnx: zynqmp_dp: Support DRM_FORMAT_XRGB8888
+Thread-Index: AQHb53L5eS0Zbjv6x0+FvyDSoajsQrQXUQ+AgAQK6QCAAAUPgIAAbGUAgACob4A=
+Date: Tue, 1 Jul 2025 01:03:24 +0000
+Message-ID:
+ <MW4PR12MB7165259AD14396697AE2A0D1E641A@MW4PR12MB7165.namprd12.prod.outlook.com>
+References:
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.fb98a918-329e-4536-a0a5-a99b22ba0120@emailsignatures365.codetwo.com>
+ <20250627145058.6880-1-mike.looijmans@topic.nl>
+ <20250627181911.GF24912@pendragon.ideasonboard.com>
+ <42af6260-c8af-42e1-a9bb-adfaaabf0190@topic.nl>
+ <20250630082123.GA23516@pendragon.ideasonboard.com>
+ <21227b4e-d345-4e12-bbfb-b2ab5330d0d2@topic.nl>
+In-Reply-To: <21227b4e-d345-4e12-bbfb-b2ab5330d0d2@topic.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-07-01T00:52:11.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR12MB7165:EE_|PH7PR12MB5733:EE_
+x-ms-office365-filtering-correlation-id: 03d37d33-7209-42f7-51a8-08ddb83b147b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aE81UTNOcC9wemFrODNTMGtWTTFETW9ibTJTeFVldjhFaGJFamNoZG9vRWZs?=
+ =?utf-8?B?R0xGVlBtaWpQdDVyRUVrQjJOWi9UVFFMVy91YTRrTXpXT0c1eVRVNmFIaXU4?=
+ =?utf-8?B?Smd3Q2YwSC9IYVFXYklSbzZBdERxaHZSMDdVL0dveU1Lb3krYkVwUmRVS1U3?=
+ =?utf-8?B?VmFhdG5jcWxhWHZSbGx2QjBWWjFTcjlSaXR3VWRIakNXZ3hkd2NPSytwRkpm?=
+ =?utf-8?B?clUxV2xLVkszcHdIaVkzSVVTU3YwYXZBQlpSTUUwRVVMYWdBYW5pa244RVhm?=
+ =?utf-8?B?cy80YUJ4M0hsRjdMNStDYTc4N3ZzR0VtWGRUaHZlK0NsbXJLWXdPOUhqcWt3?=
+ =?utf-8?B?cnFDQ3FBaEZxb0tXTnFTS1VnblVKeng1b2Y0STljNkQ1UDZsd3VQdDNpOGd0?=
+ =?utf-8?B?MTJUSHduSDA1RUdLcmU2WmY4aXpkdVZJNUhTV2xCZWxUYWFCTDBIeHIzeDZT?=
+ =?utf-8?B?VVlTUzYySzFvZ3JTK1VaelRMck02cnFPSkIvRWFiL1BsWlJuWC9EQmQyWU9F?=
+ =?utf-8?B?VFRaZFViTnB0MzJiY3h3aDZyRW9RYUdoUlV3YytJWnM5NmtycjFvdE9abnVs?=
+ =?utf-8?B?QXFSTEpSRUN1aGt6RktiS2pRdTJtcHIvYjVJK2R4bThLU1REK0p4Rm0yTC94?=
+ =?utf-8?B?N3Ixbm5FOE9ObHgvKzk2TFZ1T0t2WER1cUx0RjEvTWFMOTBDU20zdVlIMi9H?=
+ =?utf-8?B?OXpRd2JMc09pTzhNUjhHSXd3OUV3UWMzdkYzbnFQYlFqUE1qZFNZdDg5L21F?=
+ =?utf-8?B?ek4yT0o4TnNkaDlscFArbnVBUnpuelhnY1Vya1Zkdy9STEhFbmlVdElHS1hE?=
+ =?utf-8?B?QnBFSEsvNEUwMEQ3ZUt5c0huNmpjWjRIWVByV2hyWnlnL2JwWE9YdmFMQ1N3?=
+ =?utf-8?B?b0ZaL012K2JkZGk4aWdJUlFIa21oeVBEb0JVcWtkN1RnMW1yNDRyUzY1M0kx?=
+ =?utf-8?B?M1FoSllSV2x2cjVISitTWWxobGsrTkI0UWZiL2ZzekR3QjRuRzlQYnY4WXRo?=
+ =?utf-8?B?ZDJ1NGRuSXJZbldLbkY1NjJOUlA4aUI4TE5nQm44QVVOTnNsSXVoV293SmpD?=
+ =?utf-8?B?OGpkNjVaT0ZKZUdnY3ptVFlWV1U0c0J2dVZyWVdBd3RkeC9UdTN5T1RuVHlF?=
+ =?utf-8?B?cXJTcVFSMUpobllXVHFERU03K2taQThudUkycHJnL3JJeVFUT3RPTkVBaE1M?=
+ =?utf-8?B?UEpDYm9MS2dDS2RwelZjTXJPYlZwRzZJZHZnQXNMWFpCVVdtQ0Y5TEZnSTVv?=
+ =?utf-8?B?SFFTNytleFdPYkZQL2tSZ2pNRE9JVHR5b1ZBME14RTJydTYyQy84OXAzYTJy?=
+ =?utf-8?B?WGRNc0JQZ2NoQjJVZDJ6OVdyTGFKYjRzYWtNanJ0cmg1RVlFTUUzUHhhSFBk?=
+ =?utf-8?B?UU5rVFFXSWZkYldVVTA0Vkw5aW8xdHd4SnFTTHlUaGRMWjgyYXhJN1ZlRElX?=
+ =?utf-8?B?N0d1a0ZNcXFVa0FybG4yOUEyUUZSNEFRZ0xncnVMUE5kaUdhTnNVQmxVL05V?=
+ =?utf-8?B?b1NMbUxKQ2xlbDNtMy82ZGgzQ1hML3ZpSUZpdEkyT1NJcEFSWHgxcldmemVJ?=
+ =?utf-8?B?Mi9SRzBwc3RXYkFqTjZDK2lxaGhXTld3bHdCbmpML3hTa2FwVHI4U2hPSys4?=
+ =?utf-8?B?aExpbUN0VG02VWJoeitXeUpuL0pvd2Uzcy9lbEp5bUo3Ty9JTGgxaU1NZ243?=
+ =?utf-8?B?RVc1UklCNGM2eVhnTDd3SzVCTUJSN0dMMW9QS0xORzc2WVpIOXhPRUhtbUZp?=
+ =?utf-8?B?R2QxQXE2Ny8yK3pvVU4rajRBQ3ptRDJUM3JnUzk3V0dzeEdIbHFuUnk1bXdL?=
+ =?utf-8?B?bExURStRMWZmWHdVQzBnT1VTZUFNTFpFamNQOGppMHFJYW5McDRIbXVYb3lB?=
+ =?utf-8?B?Q0lia0FyWGlHV2xnR2MzUFVycmNyMXVpc3BkWmN1bEIvaW5RUkFCOXZBR1E3?=
+ =?utf-8?Q?1igRR73LzZE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB7165.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UGdWaXY5VExWK2RFSHZOc1h4VzFFUDd1YTU2SE45Nm4ySzM4RVJXSVl6V25U?=
+ =?utf-8?B?T25qQzN5RXF2TUtFWXNlK21EcThFUFlyWllmM1Y4Z3V5YS9pZlZYVnJTTXRN?=
+ =?utf-8?B?cjlvVHNJYSs5VnRTS0tEa3pneThndlFPZTZIMk5aSm5oR09yQTduTmJEdHNF?=
+ =?utf-8?B?TUc1TEpKN0xXTE53SUZnMUw0WCtEUlZxU015ZDg5bC9PQ3hXc2pONG5NZGZh?=
+ =?utf-8?B?UU42UzVrWXVyR2w2WmMxcWFUeWJHQWk0eXBLSitRbmVib2FMU0ovUjlFZ0lF?=
+ =?utf-8?B?T2krcithd0pCVklTT0xDNjdoRzNGeUhYSGdPOTZlWEh2YWRvQktnTUpPSlEr?=
+ =?utf-8?B?aW5oUTI5azZGcnVkM3BEZ2FBVmpHdFJ6TWl2bGVTMmtxSUpwTUdmTEhnWEFy?=
+ =?utf-8?B?YkZUUDY5THhWSlhXNVlqQWVtSlMzUjRQcHlNU1JIVWNJVXdud3llcTROR3hP?=
+ =?utf-8?B?TkRpZHNmdFo4YmFPeXkzMFovZmtTaXlGWlRTZDh6MTN2WTI0aVFxWEIyTXZr?=
+ =?utf-8?B?Q0RpUFVoZHNidGVORnJWQnIxSnRRNFBzdERTcENvNy91RWxpVFdWRkl5Wmhx?=
+ =?utf-8?B?RDFnWEl0dTRIamhGa3lWZjNuZ2RkeXpjb1l2elhlSmlLOXFRaHZsd3FXWURL?=
+ =?utf-8?B?bUJPTkh6NmlUR3JtU0dNZ0xNUFZuR3BFNUwvNGhlSmxVa1ZOanFFTk9KS3Bs?=
+ =?utf-8?B?bU5zK3pFRnlCelcvWmZFeENFaGpzTW9hWC9GZTllSWdJNkkvVi84emV2Q0Zk?=
+ =?utf-8?B?S21CcHg0MFNvSkRuRmRrSGVsRnc1dXVmb1hSTFUxUHFoY2tibFJKUDV2UDEx?=
+ =?utf-8?B?RHBxSnBsSlc3V1ZnY1N4d1l0N0NGdU1KVTlhN1FOK2podXpBbzM2Z1VaM3FZ?=
+ =?utf-8?B?SVZVdFlNaURHcTFhdHEwYTdob0NOQzN4ekFGZGNqTHA0dXZxTmM4V21hdlNN?=
+ =?utf-8?B?WG5jVXBFVXllaTNBKzFWZGQyNkNyTzVVOXJwYmZpdVJKMnpRMjlEei9uTmJV?=
+ =?utf-8?B?d2k2K2pGaHpDb1orc3hBYUh0Y0gyWGJTWk5TNkhFZFV2RHZ4UWhvMENENENl?=
+ =?utf-8?B?bmxtT3RuUUI2R0k4d0F1T28yaHpUR1I3Z21aSFpTTE5FYTAzcFNxeVg5MFF4?=
+ =?utf-8?B?bEM3aVhiMjdRcmdUdDR0V3YrdlRBeEdqOFJubmhqUGoyVXp1UTl4TGhyWXl6?=
+ =?utf-8?B?SXJORGZMTTJMQVZYeFF5eXVwbFlHR08rWi83Vjh2SVlxZHkyK1ErOHZCUUZC?=
+ =?utf-8?B?N0JFOGMwRHUxQ1NUZDl0d2FJeTFXelAwY21KMzJEYThZM3k2NEVnc2huT1Nh?=
+ =?utf-8?B?VHVDS3FIZG5FVGNuWEtzc25UbFVGWkR3K2lDYkVyUkpZdFpZdS9NKzNyS29N?=
+ =?utf-8?B?NldXV2QvWDU4RFJCRWRiY0hZeFdOVkNUdXBNVW1jQTJnKzVHeVd5bVREcS9H?=
+ =?utf-8?B?cEtkU1BneW9ZY0haaHU0d0RQTDJ5MGZQT3pYcy9NOTRVNEJkUHBObUtGSWZ6?=
+ =?utf-8?B?aGZCQUZIZXVKK3dkVW9wVTB0TXpjWm1CbmF0MjdwV0lrbDNiNnVqbEdiVFZ3?=
+ =?utf-8?B?SWJ6Vjc2ZXAzWUt4UEg0ZnBiWnVYZ3A3dzVtSTVDdEFLcEk3L3I0UjJybjJJ?=
+ =?utf-8?B?bzJtUHExN3dSakdsNWZnZ2Y5MllBZzFmUEc1THlRK0YyZU1KNFFxTFFyZElq?=
+ =?utf-8?B?VHNmWC9ZYnVBN1RVNmdFRUZnS3dFd0dKWmVZbGhrTVZ6MVp0b0ltMmN4SHFS?=
+ =?utf-8?B?Vy95TGxWenV4QlBMUzFCczBHcFJvWnFTdEFTVHFmOXFFQ01jR3hyTlcvQ2JF?=
+ =?utf-8?B?OTY2bkR4VnYxbmtIZzRXN2s0b2FEZVFnd1RNNGlzdjZVRXhXY0dId3pORlBN?=
+ =?utf-8?B?ektaU3NBVDhsS0VvZXBxcytHZ240WGc0ZUd2WUlaMGYxcnYxcjJnWEdGbWUz?=
+ =?utf-8?B?S1BQRXJEaVZqMFc4bVpSMmRVdjFHb1gycjBRSnp6a3BRSzBPS0NRU09KSG9p?=
+ =?utf-8?B?Nk1RZWZtemFwaDF0aWF1U0xKcFNGYXBPY2Y2SFAzTTNUeHF0QlhLSHA4YVZy?=
+ =?utf-8?B?ZmhHMS9SRXdUdGJ0c3orZ1pFdDNXOUdmRWZkUDJsRi8vc2loT2IyTkllellq?=
+ =?utf-8?Q?5A08=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB7165.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03d37d33-7209-42f7-51a8-08ddb83b147b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2025 01:03:24.2227
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lvv9gQinkFdyYaqnIvtw155J240pH1zaeDAIkdtlT0knc8BXHdQW+iZSaJoX1TZ2hH6R5bezTpcl2FC1GLTQ3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5733
 
-Le 30 juin 2025 02 h 12 min 16 s HAE, Krzysztof Kozlowski <krzk@kernel=2Eor=
-g> a =C3=A9crit=C2=A0:
->On 29/06/2025 15:18, Jean-Fran=C3=A7ois Lessard wrote:
->> This patch introduces a new auxiliary display driver for TM16XX family =
-LED controllers and compatible chips:
->
->Please do not use "This commit/patch/change", but imperative mood=2E See
->longer explanation here:
->https://elixir=2Ebootlin=2Ecom/linux/v5=2E17=2E1/source/Documentation/pro=
-cess/submitting-patches=2Erst#L95
->
-
-Well noted=2E
-
->Please wrap commit message according to Linux coding style / submission
->process (neither too early nor over the limit):
->https://elixir=2Ebootlin=2Ecom/linux/v6=2E4-rc1/source/Documentation/proc=
-ess/submitting-patches=2Erst#L597
->
-
-Well noted=2E
-
->
->> - Shenzhen Titan Micro Electronics: TM1618, TM1620, TM1628, TM1650
->> - Fuzhou Fuda Hisi Microelectronics: FD620, FD628, FD650, FD655, FD6551
->> - Wuxi i-Core Electronics: AiP650, AiP1618, AiP1628
->> - Princeton Technology: PT6964
->> - Shenzhen Winrise Technology: HBS658
->>=20
->
->
->=2E=2E=2E
->
->> + * tm16xx_parse_dt - Parse device tree data
->> + * @dev: Pointer to device structure
->> + * @display: Pointer to tm16xx_display structure
->> + *
->> + * Return: 0 on success, negative error code on failure
->> + */
->> +static int tm16xx_parse_dt(struct device *dev, struct tm16xx_display *=
-display)
->> +{
->> +	struct fwnode_handle *child;
->> +	int ret, i, max_grid =3D 0;
->> +	u8 *digits;
->> +
->> +	display->transpose_display_data =3D
->> +		device_property_read_bool(dev, "titanmec,transposed");
->
->Wrong wrapping=2E
->
->> +
->> +	ret =3D device_property_count_u8(dev, "titanmec,digits");
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to count 'titanmec,digits' property: %d\n", ret=
-);
->> +		return ret;
->> +	}
->> +
->> +	display->num_digits =3D ret;
->> +	dev_dbg(dev, "Number of digits: %d\n", display->num_digits);
->> +
->> +	digits =3D devm_kcalloc(dev, display->num_digits, sizeof(*digits), GF=
-P_KERNEL);
->> +	if (!digits)
->> +		return -ENOMEM;
->> +
->> +	ret =3D device_property_read_u8_array(dev, "titanmec,digits", digits,
->> +					    display->num_digits);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to read 'titanmec,digits' property: %d\n", ret)=
-;
->> +		return ret;
->> +	}
->> +
->> +	display->digits =3D devm_kcalloc(dev, display->num_digits, sizeof(*di=
-splay->digits),
->> +				       GFP_KERNEL);
->> +	if (!display->digits)
->> +		return -ENOMEM;
->> +
->> +	for (i =3D 0; i < display->num_digits; i++) {
->> +		if (digits[i] >=3D display->controller->max_grids) {
->> +			dev_err(dev, "Digit grid %d exceeds controller max_grids %d\n",
->> +				digits[i], display->controller->max_grids);
->> +			return -EINVAL;
->> +		}
->> +
->> +		display->digits[i]=2Egrid =3D digits[i];
->> +		max_grid =3D umax(max_grid, digits[i]);
->> +	}
->> +
->> +	devm_kfree(dev, digits);
->> +
->> +	ret =3D device_property_read_u8_array(dev, "titanmec,segment-mapping"=
-,
->> +					    display->segment_mapping, DIGIT_SEGMENTS);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to read 'titanmec,segment-mapping' property: %d=
-\n",
->> +			ret);
->> +		return ret;
->> +	}
->> +
->> +	display->digit_bitmask =3D 0;
->> +	for (i =3D 0; i < DIGIT_SEGMENTS; i++) {
->> +		if (display->segment_mapping[i] < MIN_SEGMENT ||
->> +		    display->segment_mapping[i] > MAX_SEGMENT) {
->> +			dev_err(dev,
->> +				"Invalid 'titanmec,segment-mapping' value: %d (must be between %d =
-and %d)\n",
->> +				display->segment_mapping[i], MIN_SEGMENT, MAX_SEGMENT);
->> +			return -EINVAL;
->> +		}
->> +
->> +		display->digit_bitmask |=3D BIT(display->segment_mapping[i]);
->> +	}
->> +
->> +	display->num_leds =3D 0;
->> +	device_for_each_child_node(dev, child) {
->> +		u32 reg[2];
->> +
->> +		ret =3D fwnode_property_read_u32_array(child, "reg", reg, 2);
->> +		if (ret < 0) {
->> +			dev_err(dev, "Failed to read 'reg' property of led node: %d\n",
->> +				ret);
->> +			fwnode_handle_put(child);
->> +			return ret;
->> +		}
->> +
->> +		if (reg[0] >=3D display->controller->max_grids) {
->> +			dev_err(dev, "LED grid %d exceeds controller max_grids %d\n",
->> +				reg[0], display->controller->max_grids);
->> +			fwnode_handle_put(child);
->> +			return -EINVAL;
->> +		}
->> +
->> +		if (reg[1] < MIN_SEGMENT || reg[1] > MAX_SEGMENT) {
->> +			dev_err(dev,
->> +				"LED segment %d is invalid (must be between %d and %d)\n",
->> +				reg[1], MIN_SEGMENT, MAX_SEGMENT);
->> +			fwnode_handle_put(child);
->> +			return -EINVAL;
->> +		}
->> +
->> +		max_grid =3D umax(max_grid, reg[0]);
->> +		display->num_leds++;
->> +	}
->> +
->> +	dev_dbg(dev, "Number of LEDs: %d\n", display->num_leds);
->> +
->> +	display->display_data_len =3D max_grid + 1;
->> +	dev_dbg(dev, "Number of display grids: %zu\n", display->display_data_=
-len);
->> +
->> +	display->display_data =3D devm_kcalloc(dev, display->display_data_len=
-,
->> +					     sizeof(*display->display_data), GFP_KERNEL);
->> +	if (!display->display_data)
->> +		return -ENOMEM;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * tm16xx_probe - Probe function for tm16xx devices
->> + * @display: Pointer to tm16xx_display structure
->> + *
->> + * Return: 0 on success, negative error code on failure
->> + */
->> +static int tm16xx_probe(struct tm16xx_display *display)
->> +{
->> +	struct device *dev =3D display->dev;
->> +	struct fwnode_handle *child;
->> +	int ret, i;
->> +
->> +	ret =3D tm16xx_parse_dt(dev, display);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	mutex_init(&display->lock);
->> +	INIT_WORK(&display->flush_init, tm16xx_display_flush_init);
->> +
->> +	/* Initialize work structure with appropriate flush function */
->> +	if (display->transpose_display_data) {
->> +		INIT_WORK(&display->flush_display, tm16xx_display_flush_data_transpo=
-sed);
->> +		dev_info(display->dev, "Operating in transposed mode\n");
->> +	} else {
->> +		INIT_WORK(&display->flush_display, tm16xx_display_flush_data);
->> +	}
->> +
->> +	display->main_led=2Ename =3D TM16XX_DEVICE_NAME;
->> +	display->main_led=2Ebrightness =3D display->controller->max_brightnes=
-s;
->> +	display->main_led=2Emax_brightness =3D display->controller->max_brigh=
-tness;
->> +	display->main_led=2Ebrightness_set =3D tm16xx_brightness_set;
->> +	display->main_led=2Egroups =3D tm16xx_main_led_groups;
->> +	display->main_led=2Eflags =3D LED_RETAIN_AT_SHUTDOWN | LED_CORE_SUSPE=
-NDRESUME;
->> +
->> +	ret =3D devm_led_classdev_register(dev, &display->main_led);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to register main LED: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	display->leds =3D
->> +		devm_kcalloc(dev, display->num_leds, sizeof(*display->leds), GFP_KER=
-NEL);
->
->Wrong wrapping=2E Use kernel style, not clang style=2E
->
-
-Well noted=2E Will drop all usage of clang-format and use kernel style onl=
-y=2E
-
->
->> +	if (!display->leds)
->> +		return -ENOMEM;
->> +
->> +	i =3D 0;
->> +	device_for_each_child_node(dev, child) {
->> +		struct tm16xx_led *led =3D &display->leds[i];
->> +		struct led_init_data led_init =3D {
->> +			=2Efwnode =3D child,
->> +			=2Edevicename =3D display->main_led=2Ename,
->> +			=2Edevname_mandatory =3D true,
->> +		};
->> +		u32 reg[2];
->> +
->> +		ret =3D fwnode_property_read_u32_array(child, "reg", reg, 2);
->> +		if (ret < 0) {
->> +			fwnode_handle_put(child);
->> +			dev_err(dev, "Failed to read LED reg property: %d\n", ret);
->> +			return ret;
->> +		}
->> +
->> +		led->grid =3D reg[0];
->> +		led->segment =3D reg[1];
->> +
->> +		led->cdev=2Emax_brightness =3D 1;
->> +		led->cdev=2Ebrightness_set =3D tm16xx_led_set;
->> +		led->cdev=2Eflags =3D LED_RETAIN_AT_SHUTDOWN | LED_CORE_SUSPENDRESUM=
-E;
->> +
->> +		ret =3D devm_led_classdev_register_ext(dev, &led->cdev, &led_init);
->> +		if (ret < 0) {
->> +			fwnode_handle_put(child);
->> +			dev_err(dev, "Failed to register LED %s: %d\n", led->cdev=2Ename,
->> +				ret);
->> +			return ret;
->> +		}
->> +
->> +		i++;
->> +	}
->> +
->> +	ret =3D tm16xx_display_init(display);
->> +	if (ret < 0) {
->> +		dev_err(display->dev, "Failed to initialize display: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	dev_info(display->dev, "Display initialized successfully\n");
->
->Drop, drivers should be silent on success=2E See coding style=2E
->
-
-Well noted=2E
-
->> +	return 0;
->> +}
->> +
->> +/* SPI specific code */
->> +static int tm16xx_spi_probe(struct spi_device *spi)
->> +{
->> +	const struct tm16xx_controller *controller;
->> +	struct tm16xx_display *display;
->> +	int ret;
->> +
->> +	controller =3D of_device_get_match_data(&spi->dev);
->> +	if (!controller)
->> +		return -EINVAL;
->> +
->> +	display =3D devm_kzalloc(&spi->dev, sizeof(*display), GFP_KERNEL);
->> +	if (!display)
->> +		return -ENOMEM;
->> +
->> +	display->client=2Espi =3D spi;
->> +	display->dev =3D &spi->dev;
->> +	display->controller =3D controller;
->> +
->> +	spi_set_drvdata(spi, display);
->> +
->> +	ret =3D tm16xx_probe(display);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static void tm16xx_spi_remove(struct spi_device *spi)
->> +{
->> +	struct tm16xx_display *display =3D spi_get_drvdata(spi);
->> +
->> +	tm16xx_display_remove(display);
->> +}
->> +
->> +// clang-format off
->
->Drop
->
->> +static const struct of_device_id tm16xx_spi_of_match[] =3D {
->> +	{ =2Ecompatible =3D "titanmec,tm1618", =2Edata =3D &tm1618_controller=
- },
->> +	{ =2Ecompatible =3D "titanmec,tm1620", =2Edata =3D &tm1628_controller=
- },
->> +	{ =2Ecompatible =3D "titanmec,tm1628", =2Edata =3D &tm1628_controller=
- },
->> +	{ =2Ecompatible =3D "fdhisi,fd620", =2Edata =3D &tm1628_controller },
->> +	{ =2Ecompatible =3D "fdhisi,fd628", =2Edata =3D &tm1628_controller },
->> +	{ =2Ecompatible =3D "icore,aip1618", =2Edata =3D &tm1618_controller }=
-,
->> +	{ =2Ecompatible =3D "icore,aip1628", =2Edata =3D &tm1628_controller }=
-,
->> +	{ =2Ecompatible =3D "princeton,pt6964", =2Edata =3D &tm1628_controlle=
-r },
->> +	{ =2Ecompatible =3D "winrise,hbs658", =2Edata =3D &hbs658_controller =
-},
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, tm16xx_spi_of_match);
->> +
->> +static const struct spi_device_id tm16xx_spi_id[] =3D {
->> +	{ "tm1618", 0 },
->> +	{ "tm1620", 0 },
->> +	{ "tm1628", 0 },
->> +	{ "fd620", 0 },
->> +	{ "fd628", 0 },
->> +	{ "aip1618", 0 },
->> +	{ "aip1628", 0 },
->> +	{ "pt6964", 0 },
->> +	{ "hbs658", 0 },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(spi, tm16xx_spi_id);
->> +// clang-format on
->
->Drop
->
->> +
->> +static struct spi_driver tm16xx_spi_driver =3D {
->> +	=2Edriver =3D {
->> +		=2Ename =3D TM16XX_DRIVER_NAME,
->> +		=2Eof_match_table =3D tm16xx_spi_of_match,
->> +	},
->> +	=2Eprobe =3D tm16xx_spi_probe,
->> +	=2Eremove =3D tm16xx_spi_remove,
->> +	=2Eshutdown =3D tm16xx_spi_remove,
->> +	=2Eid_table =3D tm16xx_spi_id,
->> +};
->> +
->> +/* I2C specific code */
->> +static int tm16xx_i2c_probe(struct i2c_client *client)
->> +{
->> +	const struct tm16xx_controller *controller;
->> +	struct tm16xx_display *display;
->> +	int ret;
->> +
->> +	controller =3D of_device_get_match_data(&client->dev);
->> +	if (!controller)
->> +		return -EINVAL;
->> +
->> +	display =3D devm_kzalloc(&client->dev, sizeof(*display), GFP_KERNEL);
->> +	if (!display)
->> +		return -ENOMEM;
->> +
->> +	display->client=2Ei2c =3D client;
->> +	display->dev =3D &client->dev;
->> +	display->controller =3D controller;
->> +
->> +	i2c_set_clientdata(client, display);
->> +
->> +	ret =3D tm16xx_probe(display);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static void tm16xx_i2c_remove(struct i2c_client *client)
->> +{
->> +	struct tm16xx_display *display =3D i2c_get_clientdata(client);
->> +
->> +	tm16xx_display_remove(display);
->> +}
->> +
->> +// clang-format off
->
->Drop
->
->> +static const struct of_device_id tm16xx_i2c_of_match[] =3D {
->> +	{ =2Ecompatible =3D "titanmec,tm1650", =2Edata =3D &tm1650_controller=
- },
->> +	{ =2Ecompatible =3D "icore,aip650", =2Edata =3D &tm1650_controller },
->> +	{ =2Ecompatible =3D "fdhisi,fd650", =2Edata =3D &tm1650_controller },
->> +	{ =2Ecompatible =3D "fdhisi,fd6551", =2Edata =3D &fd6551_controller }=
-,
->> +	{ =2Ecompatible =3D "fdhisi,fd655", =2Edata =3D &fd655_controller },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, tm16xx_i2c_of_match);
->> +
->> +static const struct i2c_device_id tm16xx_i2c_id[] =3D {
->> +	{ "tm1650", 0 },
->> +	{ "aip650", 0 },
->> +	{ "fd650", 0 },
->> +	{ "fd6551", 0 },
->> +	{ "fd655", 0 },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(i2c, tm16xx_i2c_id);
->> +// clang-format on
->
->Drop=2E
->
->> +
->> +static struct i2c_driver tm16xx_i2c_driver =3D {
->> +	=2Edriver =3D {
->> +		=2Ename =3D TM16XX_DRIVER_NAME,
->> +		=2Eof_match_table =3D tm16xx_i2c_of_match,
->> +	},
->> +	=2Eprobe =3D tm16xx_i2c_probe,
->> +	=2Eremove =3D tm16xx_i2c_remove,
->> +	=2Eshutdown =3D tm16xx_i2c_remove,
->> +	=2Eid_table =3D tm16xx_i2c_id,
->> +};
->> +
->> +static int __init tm16xx_init(void)
->> +{
->> +	int ret;
->> +
->> +	ret =3D spi_register_driver(&tm16xx_spi_driver);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D i2c_add_driver(&tm16xx_i2c_driver);
->> +	if (ret) {
->> +		spi_unregister_driver(&tm16xx_spi_driver);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static void __exit tm16xx_exit(void)
->> +{
->> +	i2c_del_driver(&tm16xx_i2c_driver);
->> +	spi_unregister_driver(&tm16xx_spi_driver);
->> +}
->> +
->> +module_init(tm16xx_init);
->> +module_exit(tm16xx_exit);
->
->
->> +
->> +MODULE_AUTHOR("Jean-Fran=C3=A7ois Lessard");
->> +MODULE_DESCRIPTION("TM16XX Compatible LED Display Controllers");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("spi:tm16xx");
->> +MODULE_ALIAS("i2c:tm16xx");
->
->Drop these two=2E
->
-
-Well noted=2E
-
->
->
->Best regards,
->Krzysztof
-
-Jean-Fran=C3=A7ois Lessard
+W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
+Cg0KSGkgTWlrZSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBkcmkt
+ZGV2ZWwgPGRyaS1kZXZlbC1ib3VuY2VzQGxpc3RzLmZyZWVkZXNrdG9wLm9yZz4gT24gQmVoYWxm
+IE9mIE1pa2UNCj4gTG9vaWptYW5zDQo+IFNlbnQ6IE1vbmRheSwgSnVuZSAzMCwgMjAyNSA3OjQ5
+IEFNDQo+IFRvOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb20+DQo+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBEYXZpZCBBaXJs
+aWUgPGFpcmxpZWRAZ21haWwuY29tPjsgTWFhcnRlbg0KPiBMYW5raG9yc3QgPG1hYXJ0ZW4ubGFu
+a2hvcnN0QGxpbnV4LmludGVsLmNvbT47IE1heGltZSBSaXBhcmQNCj4gPG1yaXBhcmRAa2VybmVs
+Lm9yZz47IFNpbWVrLCBNaWNoYWwgPG1pY2hhbC5zaW1la0BhbWQuY29tPjsgU2ltb25hDQo+IFZl
+dHRlciA8c2ltb25hQGZmd2xsLmNoPjsgVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1
+c2UuZGU+Ow0KPiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNv
+bT47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gZHJtOiB4bG54OiB6eW5x
+bXBfZHA6IFN1cHBvcnQNCj4gRFJNX0ZPUk1BVF9YUkdCODg4OA0KPg0KPiBDYXV0aW9uOiBUaGlz
+IG1lc3NhZ2Ugb3JpZ2luYXRlZCBmcm9tIGFuIEV4dGVybmFsIFNvdXJjZS4gVXNlIHByb3BlciBj
+YXV0aW9uDQo+IHdoZW4gb3BlbmluZyBhdHRhY2htZW50cywgY2xpY2tpbmcgbGlua3MsIG9yIHJl
+c3BvbmRpbmcuDQo+DQo+DQo+IE9uIDMwLTA2LTIwMjUgMTA6MjEsIExhdXJlbnQgUGluY2hhcnQg
+d3JvdGU6DQo+ID4gT24gTW9uLCBKdW4gMzAsIDIwMjUgYXQgMTA6MDM6MTZBTSArMDIwMCwgTWlr
+ZSBMb29pam1hbnMgd3JvdGU6DQo+ID4+IE9uIDI3LTA2LTIwMjUgMjA6MTksIExhdXJlbnQgUGlu
+Y2hhcnQgd3JvdGU6DQo+ID4+PiBPbiBGcmksIEp1biAyNywgMjAyNSBhdCAwNDo1MDo0NlBNICsw
+MjAwLCBNaWtlIExvb2lqbWFucyB3cm90ZToNCj4gPj4+PiBYUkdCODg4OCBpcyB0aGUgZGVmYXVs
+dCBtb2RlIHRoYXQgWG9yZyB3aWxsIHdhbnQgdG8gdXNlLiBBZGQgc3VwcG9ydA0KPiA+Pj4+IGZv
+ciB0aGlzIHRvIHRoZSBaeW5xbXAgRGlzcGxheVBvcnQgZHJpdmVyLCBzbyB0aGF0IGFwcGxpY2F0
+aW9ucyBjYW4gdXNlDQo+ID4+Pj4gMzItYml0IGZyYW1lYnVmZmVycy4gVGhpcyBzb2x2ZXMgdGhh
+dCB0aGUgWCBzZXJ2ZXIgd291bGQgZmFpbCB0byBzdGFydA0KPiA+Pj4+IHVubGVzcyBvbmUgcHJv
+dmlkZWQgYW4geG9yZy5jb25mIHRoYXQgc2V0cyBEZWZhdWx0RGVwdGggdG8gMTYuDQo+ID4+Pj4N
+Cj4gPj4+PiBTaWduZWQtb2ZmLWJ5OiBNaWtlIExvb2lqbWFucyA8bWlrZS5sb29pam1hbnNAdG9w
+aWMubmw+DQo+ID4+Pj4gLS0tDQo+ID4+Pj4NCj4gPj4+PiAgICBkcml2ZXJzL2dwdS9kcm0veGxu
+eC96eW5xbXBfZGlzcC5jIHwgNSArKysrKw0KPiA+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
+c2VydGlvbnMoKykNCj4gPj4+Pg0KPiA+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+eGxueC96eW5xbXBfZGlzcC5jDQo+IGIvZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rpc3Au
+Yw0KPiA+Pj4+IGluZGV4IDgwZDFlNDk5YTE4ZC4uNTAxNDI4NDM3MDAwIDEwMDY0NA0KPiA+Pj4+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS94bG54L3p5bnFtcF9kaXNwLmMNCj4gPj4+PiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBfZGlzcC5jDQo+ID4+Pj4gQEAgLTMxMiw2ICszMTIs
+MTEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCB6eW5xbXBfZGlzcF9mb3JtYXQNCj4gYXZidWZfZ2Z4
+X2ZtdHNbXSA9IHsNCj4gPj4+PiAgICAgICAgICAgICAgICAgICAgLmJ1Zl9mbXQgICAgICAgID0N
+Cj4gWllOUU1QX0RJU1BfQVZfQlVGX0ZNVF9OTF9HRlhfUkdCQTg4ODgsDQo+ID4+Pj4gICAgICAg
+ICAgICAgICAgICAgIC5zd2FwICAgICAgICAgICA9IHRydWUsDQo+ID4+Pj4gICAgICAgICAgICAg
+ICAgICAgIC5zZiAgICAgICAgICAgICA9IHNjYWxpbmdfZmFjdG9yc184ODgsDQo+ID4+Pj4gKyAg
+fSwgew0KPiA+Pj4+ICsgICAgICAgICAgLmRybV9mbXQgICAgICAgID0gRFJNX0ZPUk1BVF9YUkdC
+ODg4OCwNCj4gPj4+PiArICAgICAgICAgIC5idWZfZm10ICAgICAgICA9DQo+IFpZTlFNUF9ESVNQ
+X0FWX0JVRl9GTVRfTkxfR0ZYX1JHQkE4ODg4LA0KPiA+Pj4+ICsgICAgICAgICAgLnN3YXAgICAg
+ICAgICAgID0gdHJ1ZSwNCj4gPj4+PiArICAgICAgICAgIC5zZiAgICAgICAgICAgICA9IHNjYWxp
+bmdfZmFjdG9yc184ODgsDQo+ID4+PiBJJ20gYWZyYWlkIHRoYXQncyBub3QgZW5vdWdoLiBUaGVy
+ZSdzIGEgY3J1Y2lhbCBkaWZmZXJlbmNlIGJldHdlZW4NCj4gPj4+IERSTV9GT1JNQVRfQVJHQjg4
+ODggKGFscmVhZHkgc3VwcG9ydGVkIGJ5IHRoaXMgZHJpdmVyKSBhbmQNCj4gPj4+IERSTV9GT1JN
+QVRfWFJHQjg4ODg6IGZvciB0aGUgbGF0dGVyLCB0aGUgJ1gnIGNvbXBvbmVudCBtdXN0IGJlDQo+
+IGlnbm9yZWQuDQo+ID4+PiBUaGUgZ3JhcGhpY3MgbGF5ZXIgaXMgYmxlbmRlZCBvbiB0b3Agb2Yg
+dGhlIHZpZGVvIGxheWVyLCBhbmQgdGhlIGJsZW5kZXINCj4gPj4+IHVzZXMgYm90aCBhIGdsb2Jh
+bCBhbHBoYSBwYXJhbWV0ZXIgYW5kIHRoZSBhbHBoYSBjaGFubmVsIG9mIHRoZSBncmFwaGljcw0K
+PiA+Pj4gbGF5ZXIgZm9yIDMyLWJpdCBSR0IgZm9ybWF0cy4gVGhpcyB3aWxsIGxlYWQgdG8gaW5j
+b3JyZWN0IG9wZXJhdGlvbiB3aGVuDQo+ID4+PiB0aGUgJ1gnIGNvbXBvbmVudCBpcyBub3Qgc2V0
+IHRvIGZ1bGwgb3BhY2l0eS4NCj4gPj4gSSBzcGVudCBhIGZldyBob3VycyBkaWdnaW5nIGluIHRo
+ZSBzb3VyY2UgY29kZSBhbmQgd2hhdCBJIGNvdWxkIGZpbmQgaW4NCj4gPj4gdGhlIFRSTSBhbmQg
+cmVnaXN0ZXIgbWFwcywgYnV0IHRoZXJlJ3Mgbm90IGVub3VnaCBpbmZvcm1hdGlvbiBpbiB0aGVy
+ZQ0KPiA+PiB0byBleHBsYWluIGhvdyB0aGUgYmxlbmRlciB3b3Jrcy4gVGhlIG9idmlvdXMgIlhS
+R0IiIGltcGxlbWVudGF0aW9uDQo+ID4+IHdvdWxkIGJlIHRvIGp1c3QgZGlzYWJsZSB0aGUgYmxl
+bmRlci4NCj4gPiBUaGF0IHdvbid0IHdvcmsgd2hlbiB1c2luZyBnbG9iYWwgYWxwaGEgdW5mb3J0
+dW5hdGVseSA6LSgNCj4gPg0KPiA+PiBXaGF0IEkgZ290IGZyb20gZXhwZXJpbWVudGluZyBzbyBm
+YXIgaXMgdGhhdCB0aGUgYWxwaGEgY29tcG9uZW50IGlzDQo+ID4+IGlnbm9yZWQgYW55d2F5IHdo
+aWxlIHRoZSB2aWRlbyBwYXRoIGlzbid0IGFjdGl2ZS4gU28gYXMgbG9uZyBhcyBvbmUNCj4gPj4g
+aXNuJ3QgdXNpbmcgdGhlIHZpZGVvIGJsZW5kaW5nIHBhdGgsIHRoZSBBUkdCIGFuZCBYUkdCIG1v
+ZGVzIGFyZQ0KPiBpZGVudGljYWwuDQo+ID4gQ29ycmVjdCwgKmlmKiBnbG9iYWwgYWxwaGEgaXMg
+c2V0IHRvIGZ1bGwgb3BhcXVlLCB0aGVuIHlvdSBjYW4gZGlzYWJsZQ0KPiA+IHRoZSBibGVuZGVy
+LiBUaGF0IGNvdWxkIGNvbmZ1c2UgdXNlcnNwYWNlIHRob3VnaCwgZW5hYmxpbmcgdGhlIGdyYXBo
+aWNzDQo+ID4gcGxhbmUgd2l0aCBYUkdCIHdvdWxkIHdvcmssIGFuZCB0aGVuIGVuYWJsaW5nIHRo
+ZSB2aWRlbyBwbGFuZSB3aXRoDQo+ID4gZ2xvYmFsIGFscGhhIHdvdWxkIGZhaWwuDQo+ID4NCj4g
+Pj4gR3Vlc3MgSSdsbCBuZWVkIGFzc2lzdGFuY2UgZnJvbSBBTUQvWGlsaW54IHRvIGNvbXBsZXRl
+bHkgaW1wbGVtZW50IHRoZQ0KPiA+PiBYUkdCIG1vZGVzLg0KPiA+IFRoZSBibGVuZGVyIGNhbiBp
+Z25vcmUgdGhlIGFscGhhIGNoYW5uZWwgb2YgdGhlIGdyYXBoaWNzIHBsYW5lIGZvcg0KPiA+IGZv
+cm1hdHMgdGhhdCBoYXZlIG5vIGFscGhhIGNoYW5uZWwuIEl0IHdvdWxkIGJlIG5pY2UgaWYgdGhl
+cmUgd2FzIGEgYml0DQo+ID4gdG8gZm9yY2UgdGhhdCBiZWhhdmlvdXIgZm9yIDMyLWJpdCBSR0Ig
+dG9vLCBidXQgSSBjb3VsZG4ndCBmaW5kIGFueSA6LSgNCj4gPiBJdCdzIHdvcnRoIGFza2luZyB0
+aG91Z2guDQo+DQoNClVuZm9ydHVuYXRlbHksIHRoZXJlIGFyZSBubyBzdWNoIGV4cGxpY2l0IGZs
+YWcgb24gdGhlIEhXIHNpZGUuIEFsdGhvdWdoLA0Kc29tZSBibGVuZGVyIG1vZGVzIG1heSB0dXJu
+IG9mZiBwZXItcGl4ZWwgYWxwaGEgYXMgYSBzaWRlIGVmZmVjdC4gTGV0IG1lDQpjaGVjayBpZiBJ
+IGNhbiBmaW5kIHNvbWUgdHJpY2sgdG8gbWFrZSBpdCBoYXBwZW4uDQoNCj4gWWVzLCBteSBwcm9i
+bGVtIGV4YWN0bHkuDQo+DQo+DQo+ID4NCj4gPj4gKEZvciBvdXIgYXBwbGljYXRpb24sIHRoaXMg
+cGF0Y2ggaXMgc3VmZmljaWVudCBhcyBpdCBzb2x2ZXMgdGhlIGlzc3Vlcw0KPiA+PiBsaWtlIFgx
+MSBub3Qgc3RhcnRpbmcgdXAsIE9wZW5HTCBub3Qgd29ya2luZyBhbmQgaG9ycmVuZG91c2x5IHNs
+b3cNCj4gPj4gc2NhbGluZyBwZXJmb3JtYW5jZSkNCj4gPj4NCj4gPj4+PiAgICAgICAgICAgIH0s
+IHsNCj4gPj4+PiAgICAgICAgICAgICAgICAgICAgLmRybV9mbXQgICAgICAgID0gRFJNX0ZPUk1B
+VF9SR0JBODg4OCwNCj4gPj4+PiAgICAgICAgICAgICAgICAgICAgLmJ1Zl9mbXQgICAgICAgID0N
+Cj4gWllOUU1QX0RJU1BfQVZfQlVGX0ZNVF9OTF9HRlhfQUJHUjg4ODgsDQo+DQo+DQo+IC0tDQo+
+IE1pa2UgTG9vaWptYW5zDQo+IFN5c3RlbSBFeHBlcnQNCj4NCj4gVE9QSUMgRW1iZWRkZWQgUHJv
+ZHVjdHMgQi5WLg0KPiBNYXRlcmlhYWx3ZWcgNCwgNTY4MSBSSiBCZXN0DQo+IFRoZSBOZXRoZXJs
+YW5kcw0KPg0KPiBUOiArMzEgKDApIDQ5OSAzMyA2OSA2OQ0KPiBFOiBtaWtlLmxvb2lqbWFuc0B0
+b3BpYy5ubA0KPiBXOiB3d3cudG9waWMubmwNCj4NCj4NCi0tDQpUaGFuayB5b3UsDQpBbmF0b2xp
+eQ0KDQoNCg==
