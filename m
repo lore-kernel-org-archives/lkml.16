@@ -1,214 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD76326F445
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84892737EA;
+	Tue,  1 Jul 2025 11:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751368855; cv=none; b=GjgmEzLi/J6TFrSovqN3HHN/8dOkGnC2CcedC+gQK6cRHfijLFEh1ApCU0HftZzTWlIw77SOefQ7SDbLD0NjzbtB0ffueLYA1rKwJxDhvUJcerxUafXEbh2J9wM1c2Ypd8Z+ARNhMuKSDsYJ1px9PkIxWvjsYQwkGjDqFQzRz5o=
+	t=1751368860; cv=none; b=Weo5ScuyXf97Tt4PCnidfQuj32DZpbIce6mbY6tSe7YmACICD7YAypqPr49awe2GGYr+2K3V9RGVsAkuzkayxhExxFb1eXxSWniv1TMLrouMXG8t4xpacrKRf1HSZg6pXeINQBDW+Z81ZrrrHGCath3+PNZHRzwLu+c2aYKoXKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751368855; c=relaxed/simple;
-	bh=ij1nHwP9563dCp6D39igVpjbrxzU+rLg/g8KA/ryBQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n11vRHdWEG/KjBOo9F1l+/PBIGLvR1E2w8LX7bq9HUgQMka1k8haZU/NLGU08bSmnT6LkzTdy2HklAGLa+HFREaBcCA6aw/A4T3/JGiBW7EordD41V1RfWa9g3PuS8ylRmf4akSSimRARjViOLT6uEzu0YPDfZcj8smu1ZuQ89U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWhccFxh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751368860; c=relaxed/simple;
+	bh=ohwdXRbQELGb/I5v2pJqnN/PwyN+M+y+nmTL+H9M26s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YhfyCZrXLZ8rsSAOPPZV95kbOfEVzO4kwrszNFoC0WMh+okbTfqlFXIm0EKL6qBMkHwQkkN6KytzJVMxd0SJ269LGTawsooIaDK9CEhZUcM1/1oloLCcDLGpPr7WmvD0OFFLtUxGTFWunXNsje9Wa+ay2PY9cOCcQsX4LQZTl5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEpASPvN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWhccFxh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751368852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ov6U1n1MDWz2D5fqtp1DKTq1qAHyWwUBf7Nu4VT/uv8=;
-	b=JWhccFxhzi6xyNlsgawy8hY+9z7f/L0JARn0ysiwQvnmtIouIdxO6rFc/gRJ5rWG4xAw54
-	Ch0wDNd/14ADbnnyr+nSsq41R6/MkwmAkFtqwBIA0SUOQi5oD5RihsAfn/t3/jtlhIq0YZ
-	SqB1PY+yWSbsAPYPIIv1ugiHDzC5g4o=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-lwODRd86NHWRHnwiqmQA9A-1; Tue, 01 Jul 2025 07:20:51 -0400
-X-MC-Unique: lwODRd86NHWRHnwiqmQA9A-1
-X-Mimecast-MFC-AGG-ID: lwODRd86NHWRHnwiqmQA9A_1751368850
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a5780e8137so3183395f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 04:20:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751368850; x=1751973650;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ov6U1n1MDWz2D5fqtp1DKTq1qAHyWwUBf7Nu4VT/uv8=;
-        b=AyHhmPi+n7w7Z6Do6JQrcMllruvRQnNrImXFu/y9pnHMxkC1lGWdsWQh7f2lBpdfoO
-         EZDwRTBLAEYtHpzlEjcehtV1NUoCFlmByC3EA1Iul/zLOis9IrrmBe53CWjscpHeYFAR
-         exu6yZjBYdjGAOKIQwZ6ur/1pv4E2Tj1AorANJJ1QsRy5tGcMQMMdytoc27MKDDqpyi0
-         kvW0s6QOaE6kyDvxennMoa032f6nwLizZcw+vr8CxB9dnl2IoFXrd1AVG522Zdu57wXO
-         10I9sKhhUoH+1/KeYBuB88lzIvu4PINCHqZEWHjOVT6yQjD1atUiMbN+AR9eCdN90t//
-         EUQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb8aOIFc+GjBeFKRf4Yv26Upjdsq5TjAd0FHZPrsF1djQEeskHGBY8IWIMDwEv/5U8iiKw4Y1qnaYxGqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVVG5LHNJm1uZLFPprVNV0hbFVVF4FYNc+IjrvoGCtWuK7eVim
-	xQTfBmtkaFq1qIPl8g6cfNN535CDzeVcGtMcqHJiqkcxRXLWnNWMH1guX5vUpv9W9c/eV23bA1K
-	riIrTEmvRfWyyatZJUmIymSn+XT/11U+qbP69HJRobAOsTwDyC1ccKtbPB9ro+xR21w==
-X-Gm-Gg: ASbGncs01xpIBGmW6uGDgdgRO5nlVu4/Bx0JQSptmUecfRnnqlvm94PlbevDfEIX/O1
-	e9kGL08hLMZg5ADcmBqzU4NQAlTyYFa9Wt/M1XQ5TZVQweTlzYI90fAvkEKKVT37SJzQ+gWG3kw
-	u+raB4Hi2Yt9svzOSnLbTjS5L2mssEs2ExfHHh77Ta42Flp7VmhWfxX2x2smhOAcEUOccUPcqX3
-	S3z+2dgo+HlD4ibUd0RasnH2+C1lvFnmc1m1lIaI8NgD78FIePhLiSM2d87rj7vtcVQShZGvFDx
-	E+Zo661Dk3FZDs9sdGoKlCgg19TKWJlr0pEerH8JjJYph5/A3qr66f0xxA3lhU3v44qw
-X-Received: by 2002:a5d:6b50:0:b0:3a4:f607:a5ad with SMTP id ffacd0b85a97d-3af1066e035mr2243957f8f.19.1751368850043;
-        Tue, 01 Jul 2025 04:20:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG6AnEMsB4u172EihzT1thVpD1PO0S/tKfcNFTL+IkHYmZz4eI4zi6zCqHfM3FwezUxcVn94A==
-X-Received: by 2002:a5d:6b50:0:b0:3a4:f607:a5ad with SMTP id ffacd0b85a97d-3af1066e035mr2243918f8f.19.1751368849575;
-        Tue, 01 Jul 2025 04:20:49 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad0fesm197728785e9.25.2025.07.01.04.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 04:20:48 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] crypto: caam - avoid option aliasing with the CONFIG_CAAM_QI build option
-Date: Tue,  1 Jul 2025 13:20:45 +0200
-Message-ID: <20250701112045.18386-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEpASPvN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9F9C4CEEB;
+	Tue,  1 Jul 2025 11:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751368859;
+	bh=ohwdXRbQELGb/I5v2pJqnN/PwyN+M+y+nmTL+H9M26s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lEpASPvNtGiveO3krzAW2dmR7TTX/X5ny9+J5+w08lvY4TxTTRC2mtQpVkncHB5CG
+	 swrOfG6KDZLxrGVRBg0hqgwwIIJoV82t3RHVLTtuGLUmc470gRu/0SuejMZL2eQuAi
+	 IY9d57xiGHY6UtYBYeMauJAlFOtMratc1bLzPJcbbGVpoyLSZIS2YyviTeWllUQnKp
+	 QMfqSKNVTEwkYswHfYG9YKhvTJ8V4c+gKxMsTbZsd1w25saSOvXCmitLxcZvmeQeUX
+	 6pzjbS+T8JcX1i8y6EPi3Wnq174HMOoGsWfogpqyX18kzjdsuJqvoxDXy9IxhRy4LO
+	 aHWKcnRPc7Hcw==
+Message-ID: <b13d7998-6a32-4e48-9964-b7162e288cf4@kernel.org>
+Date: Tue, 1 Jul 2025 13:20:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla
+ FSD SoC
+To: Shradha Todi <shradha.t@samsung.com>, 'Rob Herring' <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-fsd@tesla.com, mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+ bhelgaas@google.com, jingoohan1@gmail.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org,
+ kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com,
+ jh80.chung@samsung.com, pankaj.dubey@samsung.com
+References: <20250625165229.3458-1-shradha.t@samsung.com>
+ <CGME20250625165315epcas5p19f081c8a0e2e7dc87698577cc2d460ca@epcas5p1.samsung.com>
+ <20250625165229.3458-7-shradha.t@samsung.com>
+ <20250627211236.GA147018-robh@kernel.org>
+ <02b001dbea78$d991d5b0$8cb58110$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <02b001dbea78$d991d5b0$8cb58110$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On 01/07/2025 13:11, Shradha Todi wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Rob Herring <robh@kernel.org>
+>> Sent: 28 June 2025 02:43
+>> To: Shradha Todi <shradha.t@samsung.com>
+>> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> linux-
+>> samsung-soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; linux-
+>> fsd@tesla.com; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org; kw@linux.com;
+>> bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+>> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de;
+>> m.szyprowski@samsung.com; jh80.chung@samsung.com; pankaj.dubey@samsung.com
+>> Subject: Re: [PATCH v2 06/10] dt-bindings: PCI: Add bindings support for Tesla FSD SoC
+>>
+>> On Wed, Jun 25, 2025 at 10:22:25PM +0530, Shradha Todi wrote:
+>>> Document the PCIe controller device tree bindings for Tesla FSD
+>>> SoC for both RC and EP.
+>>
+>> Drop 'bindings support for ' in the subject.
 
-In the Makefile, the new build option CONFIG_CAAM_QI is defined conditioned
-on the existence of the CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI, which is
-properly defined in the Kconfig file. So, CONFIG_CAAM_QI is just a local
-alias for CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI.
 
-There is little benefit in the source code of having this slightly shorter
-alias for this configuration, but it complicates further maintenance, as
-searching for the impact of CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
-requires to grep once, and then identify the option introduced and continue
-searching for that. Further, tools, such as cross referencers, and scripts
-to check Kconfig definitions and their use simply do not handle this
-situation. Given that this is the only incidence of such a config alias in
-the whole kernel tree, just prefer to avoid this pattern of aliasing here.
 
-Use CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI throughout the Freescale
-CAAM-Multicore platform driver backend source code.
+Please kindly trim the replies from unnecessary context. It makes it
+much easier to find new content.
 
-No functional change.
+Where is your reply? I even scrolled till the end of email and I only
+see quotes.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- drivers/crypto/caam/Makefile  | 4 ----
- drivers/crypto/caam/ctrl.c    | 6 +++---
- drivers/crypto/caam/debugfs.c | 2 +-
- drivers/crypto/caam/debugfs.h | 2 +-
- drivers/crypto/caam/intern.h  | 4 ++--
- 5 files changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/crypto/caam/Makefile b/drivers/crypto/caam/Makefile
-index acf1b197eb84..d2eaf5205b1c 100644
---- a/drivers/crypto/caam/Makefile
-+++ b/drivers/crypto/caam/Makefile
-@@ -25,10 +25,6 @@ caam_jr-$(CONFIG_CRYPTO_DEV_FSL_CAAM_PKC_API) += caampkc.o pkc_desc.o
- caam_jr-$(CONFIG_CRYPTO_DEV_FSL_CAAM_BLOB_GEN) += blob_gen.o
- 
- caam-$(CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI) += qi.o
--ifneq ($(CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI),)
--	ccflags-y += -DCONFIG_CAAM_QI
--endif
--
- caam-$(CONFIG_DEBUG_FS) += debugfs.o
- 
- obj-$(CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM) += dpaa2_caam.o
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index ce7b99019537..a93be395c878 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -24,7 +24,7 @@
- bool caam_dpaa2;
- EXPORT_SYMBOL(caam_dpaa2);
- 
--#ifdef CONFIG_CAAM_QI
-+#ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
- #include "qi.h"
- #endif
- 
-@@ -968,7 +968,7 @@ static int caam_probe(struct platform_device *pdev)
- 	caam_dpaa2 = !!(comp_params & CTPR_MS_DPAA2);
- 	ctrlpriv->qi_present = !!(comp_params & CTPR_MS_QI_MASK);
- 
--#ifdef CONFIG_CAAM_QI
-+#ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
- 	/* If (DPAA 1.x) QI present, check whether dependencies are available */
- 	if (ctrlpriv->qi_present && !caam_dpaa2) {
- 		ret = qman_is_probed();
-@@ -1099,7 +1099,7 @@ static int caam_probe(struct platform_device *pdev)
- 		wr_reg32(&ctrlpriv->qi->qi_control_lo, QICTL_DQEN);
- 
- 		/* If QMAN driver is present, init CAAM-QI backend */
--#ifdef CONFIG_CAAM_QI
-+#ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
- 		ret = caam_qi_init(pdev);
- 		if (ret)
- 			dev_err(dev, "caam qi i/f init failed: %d\n", ret);
-diff --git a/drivers/crypto/caam/debugfs.c b/drivers/crypto/caam/debugfs.c
-index 6358d3cabf57..718352b7afb5 100644
---- a/drivers/crypto/caam/debugfs.c
-+++ b/drivers/crypto/caam/debugfs.c
-@@ -22,7 +22,7 @@ static int caam_debugfs_u32_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(caam_fops_u32_ro, caam_debugfs_u32_get, NULL, "%llu\n");
- DEFINE_DEBUGFS_ATTRIBUTE(caam_fops_u64_ro, caam_debugfs_u64_get, NULL, "%llu\n");
- 
--#ifdef CONFIG_CAAM_QI
-+#ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
- /*
-  * This is a counter for the number of times the congestion group (where all
-  * the request and response queueus are) reached congestion. Incremented
-diff --git a/drivers/crypto/caam/debugfs.h b/drivers/crypto/caam/debugfs.h
-index 8b5d1acd21a7..ef238c71f92a 100644
---- a/drivers/crypto/caam/debugfs.h
-+++ b/drivers/crypto/caam/debugfs.h
-@@ -18,7 +18,7 @@ static inline void caam_debugfs_init(struct caam_drv_private *ctrlpriv,
- {}
- #endif
- 
--#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_CAAM_QI)
-+#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI)
- void caam_debugfs_qi_congested(void);
- void caam_debugfs_qi_init(struct caam_drv_private *ctrlpriv);
- #else
-diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-index 51c90d17a40d..a88da0d31b23 100644
---- a/drivers/crypto/caam/intern.h
-+++ b/drivers/crypto/caam/intern.h
-@@ -227,7 +227,7 @@ static inline int caam_prng_register(struct device *dev)
- static inline void caam_prng_unregister(void *data) {}
- #endif /* CONFIG_CRYPTO_DEV_FSL_CAAM_PRNG_API */
- 
--#ifdef CONFIG_CAAM_QI
-+#ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI
- 
- int caam_qi_algapi_init(struct device *dev);
- void caam_qi_algapi_exit(void);
-@@ -243,7 +243,7 @@ static inline void caam_qi_algapi_exit(void)
- {
- }
- 
--#endif /* CONFIG_CAAM_QI */
-+#endif /* CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI */
- 
- static inline u64 caam_get_dma_mask(struct device *dev)
- {
--- 
-2.50.0
-
+Best regards,
+Krzysztof
