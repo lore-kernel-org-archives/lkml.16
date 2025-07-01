@@ -1,62 +1,76 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B835201004
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6926D4F2
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 10:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751365145; cv=none; b=pFh4QnL2xNofSiBP8xqFEkfJ1TuEHKFqDSZsPfRKlUqHyi4itWmEWvgZShZggDDvsvyqM7rluo/LgiA4fmvOVHqxNfWvNjvqa2n/ldfafVSCyh2UIGa/+m7zQpl5KYIkKAxl1GaLOp3H13eivgQStAKGpHsFhFXt00pBfxB1Ipk=
+	t=1751365151; cv=none; b=VTZgqkA16UAfjgAvX7NZYP3Xr1Ej08HU/ppteW0jelPFv0PPpWpRN0EtJIP1YluB9iIfzUdeuQMgHdCIOgIpxo0pyJLc3P9a70buNy+IUKpc9WUG/ZcC/fDz4J+gxx7VXmYh0wr5CwcBQ2CAZS9fypDYihE0txAgdV6qgFfQY1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751365145; c=relaxed/simple;
-	bh=+tc413pWG4zccgyt/pWIypdP+pHDD1DD5A+0A/K6d1Y=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=IG6OQyTeo/5HcvBG/jcJ8BGIu0XHq5pLJ9Sl5ekQZ0dZoZwO8l+9mDT3vAqwRb9PXoKcqE3b4cjMaDaSczlsMYILZbz93sYmExbnrTyRJCYZY/8i++iD+LaumY9jKd9QfydOVYq1FCJg7dcAjtGLldsMXnX4jpPf5FUCHO2I9Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-8760733a107so523937539f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 03:19:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751365143; x=1751969943;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+tc413pWG4zccgyt/pWIypdP+pHDD1DD5A+0A/K6d1Y=;
-        b=nyao5oa3afF0TJFKxGQB7QwgP+d4jfu05QPM66C5q3fJYggmqEvm5jgOwdcuKZeviy
-         fLMgOf0m9cCvEyUs6+NmiNG8G1WEWDqB3RrccvMGODqJq0+Ete2egFGwADu3NSgnYbfz
-         FpjbZhekpveO7v4IfHVnulsGop5LAXfzTMWwWpFURJHjaNxt/LMg62z9TI6zujGI9AUN
-         Kh9wMLa4X0k5pMoy7bddzMKFhgtqkHmQMz8ex6J2WfUhurk6r3nGfC3+/W5M9hBZ9VIo
-         wq9d4EZCmGU0vhePHxEPao0ZPeqZ/UaTIU/9uR8g/FTXzEUZ1GRCWyjnjIiXWFe/uwET
-         6KsQ==
-X-Gm-Message-State: AOJu0YxqAjqNJSmxvxGWn9U7ORFCcgCHmynLJHoqQ+3AURX300bqOeQK
-	egomSuKbDejwSWRqb1neFHIxAvlEubitTxfowbeNrUUwcMJQ5v38OJeFVq0sVb2NJM7l/zutLT4
-	jfUQGwJ1ip9UJpan4Bs8Y8jRLSaRHt7NEhvqGwzZv1bvo8AaIKbGo5qi8Cfg=
-X-Google-Smtp-Source: AGHT+IE9knGQ+CQQP4mvycdEBq4BUs5hKF/7bRL0JwR7+tKHRW25/npt0iPCmeQ1+00ISy+2EtJ8q4R+Yb5FVz1J0fddK4inu4CD
+	s=arc-20240116; t=1751365151; c=relaxed/simple;
+	bh=5ePagLuYL2VMDsyEsu/qgLhyb3aM5Fm7sdWD4I5OQt4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=EBaxKK+YLoO6goqE8/ywDsh2Cc3UIc3LiaQ4K6yCyXUEMVyPnaDdxB9JkNIXLQu0ByjbUCMheCmddYlTRcrqrOWpDAdX7PABsfKPPdWLAE2EkcJHaGILut4AWR+FR1RwS2Mozd6Lpu0J3HxbH+mrZhHw4lY8Yftw/4FGvp2f7Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Dgs+Rrop; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Dgs+Rrop"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751365137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UA19yU7D1UtfNEkINMRSif5lUbUOppk7unuGTMpUYp4=;
+	b=Dgs+RropsLYy+2N/qGBKOnygdXq+3FU8t47D7NylSvWNUn8Mr/G9rm/FSGhLbhjX0LOUzk
+	c3Xcc3jPcigu2FjP3JsbDewKDES7/ZgmBHgdwC7jrFxZ85SY0Hm29BlX4s63FZ7U0Kmt5F
+	WDtG7HA+i/AY6qvko48/wOTYvBkvkMw=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a6b:f411:0:b0:86c:f2ea:d8d3 with SMTP id
- ca18e2360f4ac-87688349035mr1297837239f.10.1751365143319; Tue, 01 Jul 2025
- 03:19:03 -0700 (PDT)
-Date: Tue, 01 Jul 2025 03:19:03 -0700
-In-Reply-To: <6862c942.a70a0220.2f4de1.002c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6863b617.a70a0220.3b7e22.193a.GAE@google.com>
-Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
- 66701750d5565c574af42bef0b789ce0203e3071
-From: syzbot <syzbot+5322c5c260eb44d209ed@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH] ALSA: mips/hal2: Refactor and improve hal2_compute_rate()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <87wm8sclf8.wl-tiwai@suse.de>
+Date: Tue, 1 Jul 2025 12:18:44 +0200
+Cc: Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <64167092-D0B5-4E78-AC07-62733EEEAD65@linux.dev>
+References: <20250630214554.182953-2-thorsten.blum@linux.dev>
+ <87wm8sclf8.wl-tiwai@suse.de>
+To: Takashi Iwai <tiwai@suse.de>
+X-Migadu-Flow: FLOW_OUT
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On 1. Jul 2025, at 11:25, Takashi Iwai wrote:
+> IMHO, this doesn't look improving the code readability than the
+> original code.  And the generated code doesn't seem significantly
+> better, either.
 
-***
+I didn't look at the generated code, but I think the patch definitely
+improves the function (not necessarily its runtime, but its readability
+and maintainability).
 
-Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 66701750d5565c574af42bef0b789ce0203e3071
-Author: dmantipov@yandex.ru
+I think the patch primarily improves maintainability by eliminating the
+magic number '4' that was scattered throughout the function. Now the
+scaling factor is assigned once to the semantically more meaningful
+variable 'codec->inc' and used consistently.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 66701750d5565c574af42bef0b789ce0203e3071
+It also improves consistency by using 'codec->master' when calculating
+'codec->mod' instead of repeating the constants '44100' and '48000'.
+
+Additionally, it removes the unnecessary local variable 'mod' and the
+'rate' update, making the function more concise (4 vs 12 lines).
+
+Thanks,
+Thorsten
+
