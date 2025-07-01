@@ -1,216 +1,388 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2303527E04E
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A43327D786
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385730; cv=none; b=Ayt5G1CuzCmxAU7Ht4tERb6MclwLfdXtzYAq2P1IRbIae1LU8UFXPWzAiCXa8PH0Yhhs2MDvQRl35aaxgdkFcAcMoivd/hoCq3Vrpb9o0Ai9fd68jrCc5yosKuzdRT0LGXD3S8wDn6TiSWp8R9LCVPDEtVmFm8j/uIIVDLQR/Ns=
+	t=1751385728; cv=none; b=kkufjCeVuxCYIldEGncoNaoMQ8sRiB9Ig2xYfqKRzFtYPueRh9inInzwgC3+8ybzJ0Ek7lZi14oDB02RZB9ySJk6iX4sTFD+2uLYMyolVafQAU/NeJqYsmp01VwpSqFytDkuDw25MObVJ+wVkjp4gbp5LVcVMtagFLk7vqmZuoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385730; c=relaxed/simple;
-	bh=oz5Q11pGlj4vDWckwpFb8BzvCiIWkmrxe+FdgamNqc0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i0lH+Baejuc2htPRLncmUefOfen9WSzP5svgtf3N/AMzRvDBu71BLQ9lrlaX6ipDcHVjC1pHSV9hqQwuvYxFn7wyLgxCPBX79o7mjN5Yu3lK+/Cl2A7PafvVIsD2g5HeZ73WsUWQ2HcraguCkaV+3yWYx7HyYRs8pd1KWfkP7ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=eoFkIUE8; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1751385728; c=relaxed/simple;
+	bh=nE61Uw/qTZmpc/kn0nklyAcOdMiEotFRbm3pCw2gIKk=;
+	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
+	 Content-Type:References; b=bcPy9hNsyUgiuzi38iOwPNnWLPV2aqHbOA1rWfHiKJ9wTlM7Pp94k8YtKBYPyLh9epp1lf4+WnclwFnIjMZsiI2dPuNf42Wf/pXO8Lc0CXShRm7GX8r3u3NGLEub7kY5gbD3UvPXPUp2xeANiv2uim5i11yy5IQ1Jru+ExS4V3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=sFLQpUrE; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="eoFkIUE8"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453643020bdso51043645e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1751385724; x=1751990524; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3iLA9QEKpGtzeHbOjLTVI4kROQlKVNQ7ikP4TAnx9ok=;
-        b=eoFkIUE8fxMfYY5VLg4eKPfVMdninL3IgBhjVjVpNouiN62RuXeqfBV9YPtNjqhPvB
-         hTUtO2sXKnZfwIy+c8TOHnN89zTZaeR4RyX444JgtbJwe5cLwZ3vx7atRhpfjFw7/3aV
-         sdK1r5/CR1dVW9+etpEc7qB9Ndbulz1noR9ewxyC0D6XxEMz3IKCHOceO0i2w7Qzwhur
-         0c1IL+LNuR1zxSREB95jgQ098iHJubkat7hHRIE2sFPRTHC0kNpDP4eX8KxrN6xaweyT
-         cu8mjQYM3X+WHn2jVdxVy+jTKEW/I0E2AbBKyudBGoBXLv4yMmMR/bsJdUh0ffbomJFN
-         SndA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751385724; x=1751990524;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3iLA9QEKpGtzeHbOjLTVI4kROQlKVNQ7ikP4TAnx9ok=;
-        b=Y4WGJda7jsGkM0vFyswYgG1HBsOGrj0kMGfQu+Tavkc8QRXMHHFYAaoQ4FphIqTOcT
-         DljjDNh9NM/eaYbPY4NsUObmlPKbkvLjmtxGQQB9ImTXbKZXl9UPPrFWfo5WBSyME6uE
-         U5M1yCVKHTjZkvyfgItqSDhGmytIfk2zhf82pZ+w2KjMNFG37AmxAktKkfVlWOWsHtHk
-         7URQLx2UGkt0PAQDYzNrM0nRwkL1ndRWSgl5ivBC2QE+zhp/BJGG2RgyJqr9xF1jJ55+
-         yPZ81A707Q+a5uwcmAEDDJp/JO3EaHEVkDU11i8ft3eeP4v/6r5T1OpSp/mMZ9kcMJLR
-         kP0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWrvnNOe3ShBADbdF/pYvGZ2wOJ3o6hfGhhTppYEbynZc6pRwdbqe+fTOa9jBd9C0me7dGXNEkpl804HeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxaCGYt+7ZSArkLxGMQDw9QH7cdl/InMUTJ1S6m/BMp4LO0Bup
-	eVLMMaXeBDWdnMVrFg+dWBVpNS2taLJYPZnLjj6SvOLksM82Amin8t1kJdO4SxhEJ5AaE40+CJt
-	9ooGY
-X-Gm-Gg: ASbGnctL18eded1e7Fvi75K++mLiv9n1rJongplYf9ydgALegOHPoNJ3Vn0tXxqJLQk
-	eaaenPf+ep6U45pr9QBDuq6Y6Ab3YmvBdfYXzNxAYBLaP7P3HCs6i1FYJVRx7zlcr+LUryQMuAV
-	JX0pgmLaCW2dcviRUV9ZJ7RkDoTaNJ3U2HVX7W/HI+pGh3wGfepDI1avpomFj9aHWoHslX8i1QV
-	xSKUI2GlQ37ovb81Ngvor4AgY49U4CAZcAEquFPA+wjFz925EnBAfyAOzuLrML4NP4e+sn8n9u3
-	kA4gAo17DDYmTKynqYZYYvu/SMryJHI7Agn/2jbHPZ8iZ3UEgkUpnNP2GTSEu8IO
-X-Google-Smtp-Source: AGHT+IGsO1Tqy1W8cXCWGy9JXBxthxXBveIor0Nz8eJbbhghY3Ud/EpiGA9Z8pt7et5bm6LvqUs4bg==
-X-Received: by 2002:a05:600c:529b:b0:453:8042:ba9a with SMTP id 5b1f17b1804b1-4538ee8590bmr157396235e9.28.1751385723610;
-        Tue, 01 Jul 2025 09:02:03 -0700 (PDT)
-Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-45388888533sm182500995e9.21.2025.07.01.09.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:02:03 -0700 (PDT)
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Tue, 01 Jul 2025 17:01:38 +0100
-Subject: [PATCH v4 3/5] dt-bindings: media: Add the Raspberry Pi HEVC
- decoder
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sFLQpUrE"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250701160202euoutp01be08190e9f8f78f79e2a2977ee57130f~OLAj7XR-F0567905679euoutp01I
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:02:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250701160202euoutp01be08190e9f8f78f79e2a2977ee57130f~OLAj7XR-F0567905679euoutp01I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751385722;
+	bh=LHJg7ZQs8tMUCQhQbLIi/7KGtk7RrMfqcwEOOjEX5Ek=;
+	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
+	b=sFLQpUrET7HmpWkpVClAh2526FpbU+3gNc4sD3ToYSTBpcsIzjpuRyqIAlJLmDymf
+	 bh3L3GVgPJBeZaVbiy0zlTEvUwTNg10B4/kaBbVs6h//z2JAkSGIX6pJHjV8tl6zz8
+	 tXyM205s3lHIjQpdbTG3uF6Qs1PH6JrYB/VSYR7g=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646~OLAjSnMcA2257022570eucas1p1v;
+	Tue,  1 Jul 2025 16:02:01 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250701160200eusmtip1f45de6d955f1c8f4a46577a3741a17d1~OLAiFODUz2322723227eusmtip1I;
+	Tue,  1 Jul 2025 16:02:00 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Date: Tue, 01 Jul 2025 18:01:40 +0200
+Subject: [PATCH v6 3/8] rust: pwm: Add core 'Device' and 'Chip' object
+ wrappers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-media-rpi-hevc-dec-v4-3-057cfa541177@raspberrypi.com>
-References: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
-In-Reply-To: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- John Cox <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>, 
- review list <kernel-list@raspberrypi.com>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: John Cox <jc@kynesim.co.uk>, Stefan Wahren <wahrenst@gmx.net>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.14.1
+Message-Id: <20250701-rust-next-pwm-working-fan-for-sending-v6-3-2710932f6f6b@samsung.com>
+In-Reply-To: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
+	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
+	Turquette <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Benno
+	Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646
+X-EPHeader: CA
+X-CMS-RootMailID: 20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646
+References: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
+	<CGME20250701160201eucas1p14d4182ecd8d6b2034f55ed5262bac646@eucas1p1.samsung.com>
 
-Adds a binding for the HEVC decoder IP owned by Raspberry Pi.
+Building on the basic data types, this commit introduces the central
+object abstractions for the PWM subsystem: Device and Chip. It also
+includes the core trait implementations that make the Chip wrapper a
+complete, safe, and managed object.
 
-Instantiations of the decoder IP can currently be found in
-the Broadcom BCM2711 and BCM2712 SoCs.
+The main components of this change are:
+ - Device and Chip Structs: These structs wrap the underlying struct
+   pwm_device and struct pwm_chip C objects, providing safe, idiomatic
+   methods to access their fields.
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+ - High-Level `Device` API: Exposes safe wrappers for the modern
+   `waveform` API, allowing consumers to apply, read, and pre-validate
+   hardware configurations.
 
+ - Core Trait Implementations for Chip:
+    - AlwaysRefCounted: Links the Chip's lifetime to its embedded
+      struct device reference counter. This enables automatic lifetime
+      management via ARef.
+    - Send and Sync: Marks the Chip wrapper as safe for use across
+      threads. This is sound because the C core handles all necessary
+      locking for the underlying object's state.
+
+These wrappers and traits form a robust foundation for building PWM
+drivers in Rust.
+
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
+ rust/kernel/pwm.rs | 261 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 258 insertions(+), 3 deletions(-)
 
-Updated based on the thread in v3 [1] with Krzystof to drop to only SoC
-specific compatible strings.
-
-This still feels wrong to me as this is NOT Broadcom IP - it is solely
-owned by Raspberry Pi.
-
-It is the same situation as for the Raspberry Pi ISP Backend where
-it was proposed to have
-  compatible = "brcm,pispbe-bcm2712", "raspberrypi,pispbe";
-in [2]. That proposal was viewed as acceptable by both Rob[3] and Conor[4],
-and the binding given a Reviewed-by by Rob[5].
-
-Yes it is found as a block inside an SoC, but the same could be said
-for a Synopsys I2C controller ("snps,designware-i2c"), Cadence ethernet
-MAC ("cdns,macb"), ARM CPU (eg "arm,cortex-a53"), or any number of other
-examples. They are all 3rd party IP blocks found in SoCs, have an SoC specific
-compatible defined, but acknowledge the IP owner and use a common fallback
-compatible where possible.
-
-Please could we have confirmation that this really is what is required
-by device tree?
-
-Thanks
-  Dave
-
-[1] https://lore.kernel.org/linux-media/20250423-media-rpi-hevc-dec-v3-3-8fd3fad1d6fb@raspberrypi.com/
-[2] https://lore.kernel.org/linux-media/20240213104405.GB5012@pendragon.ideasonboard.com/
-[3] https://lore.kernel.org/linux-media/20240215140058.GA4147262-robh@kernel.org/
-[4] https://lore.kernel.org/linux-media/20240213-landlady-backstab-6e7da824c99a@spud/
-[5] https://lore.kernel.org/linux-media/170932821578.3062059.18150159256247255021.robh@kernel.org/
----
- .../bindings/media/raspberrypi,hevc-dec.yaml       | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml b/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml
-new file mode 100644
-index 000000000000..fe3361bddd1f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/raspberrypi,hevc-dec.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/raspberrypi,hevc-dec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+index 3fad101406eac728d9b12083fad7abf7b7f89b25..2c3b6edd8ded8dadaad003b63d38973e04b99379 100644
+--- a/rust/kernel/pwm.rs
++++ b/rust/kernel/pwm.rs
+@@ -7,11 +7,12 @@
+ //! C header: [`include/linux/pwm.h`](srctree/include/linux/pwm.h).
+ 
+ use crate::{
+-    bindings,
++    bindings, device,
++    error::{self, to_result},
+     prelude::*,
+-    types::Opaque,
++    types::{ARef, AlwaysRefCounted, ForeignOwnable, Opaque},
+ };
+-use core::convert::TryFrom;
++use core::{convert::TryFrom, ptr::NonNull};
+ 
+ /// PWM polarity. Mirrors [`enum pwm_polarity`](srctree/include/linux/pwm.h).
+ #[derive(Copy, Clone, Debug, PartialEq, Eq)]
+@@ -135,3 +136,257 @@ pub fn enabled(&self) -> bool {
+         self.0.enabled
+     }
+ }
 +
-+title: Raspberry Pi HEVC Decoder
++/// Describes the outcome of a `round_waveform` operation.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum RoundingOutcome {
++    /// The requested waveform was achievable exactly or by rounding values down.
++    ExactOrRoundedDown,
 +
-+maintainers:
-+  - John Cox <john.cox@raspberrypi.com>
-+  - Dom Cobley <dom@raspberrypi.com>
-+  - Dave Stevenson <dave.stevenson@raspberrypi.com>
++    /// The requested waveform could only be achieved by rounding up.
++    RoundedUp,
++}
 +
-+description:
-+  The Raspberry Pi HEVC decoder is a hardware video decode accelerator IP block
-+  developed and owned by Raspberry Pi.
++/// Wrapper for a PWM device [`struct pwm_device`](srctree/include/linux/pwm.h).
++#[repr(transparent)]
++pub struct Device(Opaque<bindings::pwm_device>);
 +
-+  Currently it can be found in the Broadcom BCM2711 and BCM2712 processors used
-+  on Raspberry Pi 4 and 5 boards respectively.
++impl Device {
++    /// Creates a reference to a [`Device`] from a valid C pointer.
++    ///
++    /// # Safety
++    ///
++    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
++    /// returned [`Device`] reference.
++    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_device) -> &'a Self {
++        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
++        // `Device` type being transparent makes the cast ok.
++        unsafe { &*ptr.cast::<Self>() }
++    }
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: brcm,bcm2711-hevc-dec
-+      - items:
-+          - enum:
-+              - brcm,bcm2712-hevc-dec
-+          - const: brcm,bcm2711-hevc-dec
++    /// Returns a raw pointer to the underlying `pwm_device`.
++    fn as_raw(&self) -> *mut bindings::pwm_device {
++        self.0.get()
++    }
 +
-+  reg:
-+    items:
-+      - description: The HEVC main register region
-+      - description: The Interrupt control register region
++    /// Gets the hardware PWM index for this device within its chip.
++    pub fn hwpwm(&self) -> u32 {
++        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
++        unsafe { (*self.as_raw()).hwpwm }
++    }
 +
-+  reg-names:
-+    items:
-+      - const: hevc
-+      - const: intc
++    /// Gets a reference to the parent `Chip` that this device belongs to.
++    pub fn chip(&self) -> &Chip {
++        // SAFETY: `self.as_raw()` provides a valid pointer. (*self.as_raw()).chip
++        // is assumed to be a valid pointer to `pwm_chip` managed by the kernel.
++        // Chip::as_ref's safety conditions must be met.
++        unsafe { Chip::as_ref((*self.as_raw()).chip) }
++    }
 +
-+  interrupts:
-+    maxItems: 1
++    /// Gets the label for this PWM device, if any.
++    pub fn label(&self) -> Option<&CStr> {
++        // SAFETY: self.as_raw() provides a valid pointer.
++        let label_ptr = unsafe { (*self.as_raw()).label };
++        if label_ptr.is_null() {
++            None
++        } else {
++            // SAFETY: label_ptr is non-null and points to a C string
++            // managed by the kernel, valid for the lifetime of the PWM device.
++            Some(unsafe { CStr::from_char_ptr(label_ptr) })
++        }
++    }
 +
-+  clocks:
-+    items:
-+      - description: The HEVC block clock
++    /// Gets a copy of the board-dependent arguments for this PWM device.
++    pub fn args(&self) -> Args {
++        // SAFETY: self.as_raw() gives a valid pointer to `pwm_device`.
++        // The `args` field is a valid `pwm_args` struct embedded within `pwm_device`.
++        // `Args::from_c_ptr`'s safety conditions are met by providing this pointer.
++        unsafe { Args::from_c_ptr(&(*self.as_raw()).args) }
++    }
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
++    /// Gets a copy of the current state of this PWM device.
++    pub fn state(&self) -> State {
++        // SAFETY: `self.as_raw()` gives a valid pointer. `(*self.as_raw()).state`
++        // is a valid `pwm_state` struct. `State::from_c` copies this data.
++        State::from_c(unsafe { (*self.as_raw()).state })
++    }
 +
-+additionalProperties: false
++    /// Sets the PWM waveform configuration and enables the PWM signal.
++    pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
++        let c_wf = bindings::pwm_waveform::from(*wf);
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
++        // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` pointer.
++        // `&c_wf` is a valid pointer to a `pwm_waveform` struct. The C function
++        // handles all necessary internal locking.
++        let ret = unsafe { bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) };
++        to_result(ret)
++    }
 +
-+    video-codec@7eb10000 {
-+        compatible = "brcm,bcm2711-hevc-dec";
-+        reg = <0x7eb00000 0x10000>, /* HEVC */
-+              <0x7eb10000 0x1000>;  /* INTC */
-+        reg-names = "hevc",
-+                    "intc";
++    /// Queries the hardware for the configuration it would apply for a given
++    /// request.
++    pub fn round_waveform(&self, wf: &mut Waveform) -> Result<RoundingOutcome> {
++        let mut c_wf = bindings::pwm_waveform::from(*wf);
 +
-+        interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++        // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` pointer.
++        // `&mut c_wf` is a valid pointer to a mutable `pwm_waveform` struct that
++        // the C function will update.
++        let ret = unsafe { bindings::pwm_round_waveform_might_sleep(self.as_raw(), &mut c_wf) };
 +
-+        clocks = <&clk 0>;
-+    };
++        to_result(ret)?;
 +
-+...
++        *wf = Waveform::from(c_wf);
++
++        if ret == 1 {
++            Ok(RoundingOutcome::RoundedUp)
++        } else {
++            Ok(RoundingOutcome::ExactOrRoundedDown)
++        }
++    }
++
++    /// Reads the current waveform configuration directly from the hardware.
++    pub fn get_waveform(&self) -> Result<Waveform> {
++        let mut c_wf = bindings::pwm_waveform::default();
++
++        // SAFETY: `self.as_raw()` is a valid pointer. We provide a valid pointer
++        // to a stack-allocated `pwm_waveform` struct for the kernel to fill.
++        let ret = unsafe { bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) };
++
++        to_result(ret)?;
++
++        Ok(Waveform::from(c_wf))
++    }
++}
++
++/// Wrapper for a PWM chip/controller ([`struct pwm_chip`](srctree/include/linux/pwm.h)).
++#[repr(transparent)]
++pub struct Chip(Opaque<bindings::pwm_chip>);
++
++impl Chip {
++    /// Creates a reference to a [`Chip`] from a valid pointer.
++    ///
++    /// # Safety
++    ///
++    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
++    /// returned [`Chip`] reference.
++    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> &'a Self {
++        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
++        // `Chip` type being transparent makes the cast ok.
++        unsafe { &*ptr.cast::<Self>() }
++    }
++
++    /// Returns a raw pointer to the underlying `pwm_chip`.
++    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
++        self.0.get()
++    }
++
++    /// Gets the number of PWM channels (hardware PWMs) on this chip.
++    pub fn npwm(&self) -> u32 {
++        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
++        unsafe { (*self.as_raw()).npwm }
++    }
++
++    /// Returns `true` if the chip supports atomic operations for configuration.
++    pub fn is_atomic(&self) -> bool {
++        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
++        unsafe { (*self.as_raw()).atomic }
++    }
++
++    /// Returns a reference to the embedded `struct device` abstraction.
++    pub fn device(&self) -> &device::Device {
++        // SAFETY: `self.as_raw()` provides a valid pointer to `bindings::pwm_chip`.
++        // The `dev` field is an instance of `bindings::device` embedded within `pwm_chip`.
++        // Taking a pointer to this embedded field is valid.
++        // `device::Device` is `#[repr(transparent)]`.
++        // The lifetime of the returned reference is tied to `self`.
++        let dev_field_ptr = unsafe { core::ptr::addr_of!((*self.as_raw()).dev) };
++        // SAFETY: `dev_field_ptr` is a valid pointer to `bindings::device`.
++        // Casting and dereferencing is safe due to `repr(transparent)` and lifetime.
++        unsafe { &*(dev_field_ptr.cast::<device::Device>()) }
++    }
++
++    /// Returns a reference to the parent device of this PWM chip's device.
++    pub fn parent_device(&self) -> Option<&device::Device> {
++        self.device().parent()
++    }
++
++    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
++    pub fn drvdata<T: 'static>(&self) -> &T {
++        // SAFETY: `self.as_raw()` gives a valid pwm_chip pointer.
++        // `bindings::pwmchip_get_drvdata` is the C function to retrieve driver data.
++        let ptr = unsafe { bindings::pwmchip_get_drvdata(self.as_raw()) };
++
++        // SAFETY: The only way to create a chip is through Chip::new, which initializes
++        // this pointer.
++        unsafe { &*ptr.cast::<T>() }
++    }
++
++    /// Allocates and wraps a PWM chip using `bindings::pwmchip_alloc`.
++    ///
++    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via refcounting
++    /// on its embedded `struct device`.
++    pub fn new<T: 'static + ForeignOwnable>(
++        parent_dev: &device::Device,
++        npwm: u32,
++        sizeof_priv: usize,
++        drvdata: T,
++    ) -> Result<ARef<Self>> {
++        // SAFETY: `parent_device_for_dev_field.as_raw()` is valid.
++        // `bindings::pwmchip_alloc` returns a valid `*mut bindings::pwm_chip` (refcount 1)
++        // or an ERR_PTR.
++        let c_chip_ptr_raw =
++            unsafe { bindings::pwmchip_alloc(parent_dev.as_raw(), npwm, sizeof_priv) };
++
++        let c_chip_ptr: *mut bindings::pwm_chip = error::from_err_ptr(c_chip_ptr_raw)?;
++
++        // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is valid because
++        // `Chip` is `repr(transparent)` over `Opaque<bindings::pwm_chip>`, and
++        // `Opaque<T>` is `repr(transparent)` over `T`.
++        let chip_ptr_as_self = c_chip_ptr.cast::<Self>();
++
++        // SAFETY: The pointer is valid, so we can create a temporary ref to set data.
++        let chip_ref = unsafe { &*chip_ptr_as_self };
++        // SAFETY: `chip_ref` points to a valid chip from `pwmchip_alloc` and `drvdata` is a valid,
++        // owned pointer from `ForeignOwnable` to be stored in the chip's private data.
++        unsafe { bindings::pwmchip_set_drvdata(chip_ref.as_raw(), drvdata.into_foreign().cast()) }
++
++        // SAFETY: `chip_ptr_as_self` points to a valid `Chip` (layout-compatible with
++        // `bindings::pwm_chip`) whose embedded device has refcount 1.
++        // `ARef::from_raw` takes this pointer and manages it via `AlwaysRefCounted`.
++        Ok(unsafe { ARef::from_raw(NonNull::new_unchecked(chip_ptr_as_self)) })
++    }
++}
++
++// SAFETY: Implements refcounting for `Chip` using the embedded `struct device`.
++unsafe impl AlwaysRefCounted for Chip {
++    #[inline]
++    fn inc_ref(&self) {
++        // SAFETY: `self.0.get()` points to a valid `pwm_chip` because `self` exists.
++        // The embedded `dev` is valid. `get_device` increments its refcount.
++        unsafe {
++            bindings::get_device(core::ptr::addr_of_mut!((*self.0.get()).dev));
++        }
++    }
++
++    #[inline]
++    unsafe fn dec_ref(obj: NonNull<Chip>) {
++        let c_chip_ptr = obj.cast::<bindings::pwm_chip>().as_ptr();
++
++        // SAFETY: `obj` is a valid pointer to a `Chip` (and thus `bindings::pwm_chip`)
++        // with a non-zero refcount. `put_device` handles decrement and final release.
++        unsafe {
++            bindings::put_device(core::ptr::addr_of_mut!((*c_chip_ptr).dev));
++        }
++    }
++}
++
++// SAFETY: `Chip` is a wrapper around `*mut bindings::pwm_chip`. The underlying C
++// structure's state is managed and synchronized by the kernel's device model
++// and PWM core locking mechanisms. Therefore, it is safe to move the `Chip`
++// wrapper (and the pointer it contains) across threads.
++unsafe impl Send for Chip {}
++
++// SAFETY: It is safe for multiple threads to have shared access (`&Chip`) because
++// the `Chip` data is immutable from the Rust side without holding the appropriate
++// kernel locks, which the C core is responsible for. Any interior mutability is
++// handled and synchronized by the C kernel code.
++unsafe impl Sync for Chip {}
 
 -- 
 2.34.1
