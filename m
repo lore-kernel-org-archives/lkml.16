@@ -1,322 +1,236 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BD126FA62
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15AB2798F0
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385719; cv=none; b=SG0GtIuhzDCg6iaWDkqWweIryZ4ZOZkNkLpeEVKK4F7agezJaRhfZqdvLG1zsXbrX8afxu7CS3kkRgBJkzl4u+jEQUA7NDl8f4JQNR5LLcOrhnQ2gUkzy7nEM60NGha1oirEKRbDluMDfgGtBAXQWpe9meaUTN+D3OpHe337Ilw=
+	t=1751385722; cv=none; b=BtDk5Z0Puq/duru1Se1xIJKelz1WNSXOdzJuVZns7F7hb/ANNrcIUp7cnpaxyFQN+bXQbuJZfTicJ9TDjWvdc2ajfxXdKBXZ8U0wyb80MpVMwaWItWS6XhnZpZ34VRWn0/n24IaVtkoqSRnVW1WhCt+qCSdqAfNjm5YpEjisO3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385719; c=relaxed/simple;
-	bh=VaU9KtiEsZd2EVUAjLlTgYQ2bd05wAjb2rXv02gqKkQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P6k0mhgOD+PehwXBB+0OZVQjl+hymRcXLZSGev6Ou1F2BB+e0d8CnyFZHdCPUfzz7s/fGHFtzmHIOPeZyei0rtwn5csMu3sMeNJ6yIGEJqzopyLTGCLz2Lfx0GT9RhnkpqhxOIyoWaI04HM2ujMP2rXM94gDwNVAHzfv2vXnTmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=LMilzz2Z; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1751385722; c=relaxed/simple;
+	bh=040vOLQwR8JrMNChzmbUVJ0PKgPoBcjIL8VgA54XFYI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type:
+	 References; b=XDhg/drAnzNSn1PH0koY63AVZlC3MSrDrHgN7iIQ74mUEQE2q+XWjN2lt4G19uTUBODAeBmU7V5itVU+/YXJvcxvVz1UPG9cDGFog85hbmKxH0TOAh5D7qgmq7XlR3+YM70xJE/1NA53azdX+kJq6t8zmoWDHrn1pXq5hpUXAWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PZM++IsE; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="LMilzz2Z"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450ce671a08so23290005e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1751385715; x=1751990515; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fs3JAozsYsD/2WW79a82RkP4PH1iMiVPVWhyq+47Szo=;
-        b=LMilzz2ZxfkX9vcplcK6Ig38tDOuz5HVOLkN11AdcnesdIGX+SOjDW0p/1mJHdznXE
-         UIx+BMA1cjTrKqXPfWvJvCYjq81ALZJUkmk6GIq9RAfA7OJ+TS4PZCqOHLVGmW/xAaoI
-         nzeYf+iAGwBZh+MJ1oKrJmmhB57ab/nKW1MfVdeIofHvOvqwuBUnVhfYVvRJPuV1s564
-         ZAyUaUdj/nUMTATeYFnP7vsam3zXMALaYz82CH1jLHYhD7BKuF1HQFh44FvxrS/KkAeo
-         N7R1SotFZAVh3bw7MhpTGo/pEI8XtLfC7meBtr//3FjCYqDU1/yVfB2cyTHmuPqcyhMz
-         JJYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751385715; x=1751990515;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Fs3JAozsYsD/2WW79a82RkP4PH1iMiVPVWhyq+47Szo=;
-        b=NRx7XubqB86qt7KYzQJr2p/Evh1RmiwV01EmNyTTCoMMbtXM5CKjJpb8hbjmo8ktah
-         Ql+y4JBxNDxEQfFK6NJ2IMOSFw2QuvIU1tVtRS41XZt4C2n3pV5vwKVRyVsRuZy9U5Kh
-         GKDV4ZyGfxZ0sYjrocT1VQFex/jbXOpJcOYCLxrd8PEu7Yl7x+4jk9sKdaLX6EV234HN
-         itku8ZNB1XDu3lSrHKjHobxGAKRFNcRgawF2ZtWfnJJtow/rXdrX4kKwAH/Dv0BCZ8b9
-         /Omnvh1sGO+wtaWOZFh6wURoZ+fCuJDyTzCRF8sEv7dOnXeJ9wULqOqPXXNdTeNrl3La
-         udBw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+IQ3d86f7gxiUXb6IykNZp3s/OcbhdWBpH15E+vcV2dRjOr82idJa62KdTzs+/ZXyNmut4bLfssamMj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3QCJrtISivpwOsR2kfhaf2lCfgBuV5zdTqtViXA9S7bpfxGMU
-	qFE/j2Nif/3xvCi5bF1sWgv5qict1XupRlXm+z2Cqe9bkgJdbnfg1HjnWXbW85u2sgM=
-X-Gm-Gg: ASbGncvgRLXGqUyKZthhqzXgamUmWtP2UixPBT6TMkuwfzDFPvH4ziY9DKqCKzFDG0G
-	CXVyCierbNRhlSfM8z2H4GPEZhL8PEQriM4eMY1B7ZTRuE8hYHtmN5BWe12j2JgvIk4CETloJqC
-	BOQupLmIpXxfkBNrF7ne4dYGyFfr991aXPMObVcKv58Zl5AuslYARC3gEaUI0MZlt7eTpwIfvjy
-	58XZlm0L1plYfkJPl/0GYnmN1BCmIt7k8zdyT6c8knwq81Z2wGCWVsZcb7pGLiHCJLDnJUYUTnU
-	vucHGZ0jA4i2PLGYOcEIBJ0AY382TYwe1dnFMPQt+w7qZ4G2jOS4vw==
-X-Google-Smtp-Source: AGHT+IGMMAfyKj8jFqWLmzk8Rj2j7dBknlV19cnUCzUeiREguJOJeqK8EAyxRItVH48lXpZUOSz4ig==
-X-Received: by 2002:a05:600c:1d1a:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4538ee790admr211077095e9.31.1751385714401;
-        Tue, 01 Jul 2025 09:01:54 -0700 (PDT)
-Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-45388888533sm182500995e9.21.2025.07.01.09.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 09:01:53 -0700 (PDT)
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: [PATCH v4 0/5] Raspberry Pi HEVC decoder driver
-Date: Tue, 01 Jul 2025 17:01:35 +0100
-Message-Id: <20250701-media-rpi-hevc-dec-v4-0-057cfa541177@raspberrypi.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PZM++IsE"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250701160158euoutp02aefb68995221d1a32ced61313996e0f2~OLAgM9VO03181331813euoutp02B
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:01:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250701160158euoutp02aefb68995221d1a32ced61313996e0f2~OLAgM9VO03181331813euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751385718;
+	bh=2JY0hmDEKtxAbt+YyzeRDCtSLspXLG6myRWdwEK6X+g=;
+	h=From:Subject:Date:To:Cc:References:From;
+	b=PZM++IsE4GHX9BMUPNhalSX2gbdxGLy+F1pY9LJ6rkuRLtX5IW3V7rsqol4GbsM7L
+	 HnSZO7rA5U6XRsUjYKKqjCkyrtG/Ml2Ml0vYTbhkExEz9USsLV+k78tP2eNg1DTWo+
+	 qLZRWybZIsEPWgyksUpsr2tnIVbYEsAf1DQFhJDg=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939~OLAfhFj9_1816518165eucas1p14;
+	Tue,  1 Jul 2025 16:01:57 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250701160156eusmtip1ef59cffc0013f5cb7dd114fbf1b32962~OLAeR_eBl1730317303eusmtip1I;
+	Tue,  1 Jul 2025 16:01:56 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v6 0/8] Rust Abstractions for PWM subsystem with TH1520 PWM
+ driver
+Date: Tue, 01 Jul 2025 18:01:37 +0200
+Message-Id: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGAGZGgC/23NQQ7CIBCF4as0rMXADK3VlfcwLgoMdhbaBgyxM
- b272Ghc2OX/kvnmKRJFpiQO1VNEypx4uJUwm0q4vrtdSLIvLUCB0aBBXslzJ+PIsqfspCcn0da
- WdrgPaL0oh2OkwI8FPZ1L95zuQ5yWH1m/1w8Hao3LWiqpyDqnDHkDdIxdGi3FOI28dcNVvNEMX
- 6hWoJpVCArU7LFG17aqtrAO4Q8ygKsQFqgNHkPntW+C/YfmeX4B4Q5RtkwBAAA=
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- John Cox <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>, 
- review list <kernel-list@raspberrypi.com>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: John Cox <jc@kynesim.co.uk>, Stefan Wahren <wahrenst@gmx.net>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.14.1
+X-B4-Tracking: v=1; b=H4sIAGIGZGgC/5XOTW7DIBCG4atErEsFAxi7q96j6gLz46DKEIHjp
+	Ip8946zqStv3OU3i+edB6m+RF/J2+lBip9jjTnhaF5OxJ5NGjyNDjcBBoopkLRc60STv0/0chv
+	pLZevmAYaTKIhF1p9cutWCowDx3veCYLWpfgQ78/Oxyfuc6xTLt/P7MzX638LM6eM9g4jinUyB
+	P1ezVivaXi1eSRrY4Zft+HsqAvoaiU8dEoFztneFVtXH3UFutxa00ptm9CFvSu3bnvUleiaxkA
+	boG9ca/au2rggjroKXWYNCI0Pg/B/3WVZfgAxeRJvPAIAAA==
+X-Change-ID: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
+	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
+	Turquette <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Benno
+	Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,  Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939
+X-EPHeader: CA
+X-CMS-RootMailID: 20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939
+References: <CGME20250701160157eucas1p1b6dfd8bf3859b07bff0cfcd171d7c939@eucas1p1.samsung.com>
 
-Hi All
+This patch series introduces Rust support for the T-HEAD TH1520 PWM
+controller and demonstrates its use for fan control on the Sipeed Lichee
+Pi 4A board.
 
-This has been in the pipeline for a while, but I've finally cleaned
-up our HEVC decoder driver to be in a shape to at least get a first
-review.
-John Cox has done almost all of the work under contract to Raspberry
-Pi, and I'm largely just doing the process of patch curation and
-sending.
+The primary goal of this patch series is to introduce a basic set of
+Rust abstractions for the Linux PWM subsystem. As a first user and
+practical demonstration of these abstractions, the series also provides
+a functional PWM driver for the T-HEAD TH1520 SoC. This allows control
+of its PWM channels and ultimately enables temperature controlled fan
+support for the Lichee Pi 4A board. This work aims to explore the use of
+Rust for PWM drivers and lay a foundation for potential future
+Rust based PWM drivers.
 
-This series has been updated to use the manual request completion
-framework from Hans and Nicolas as a dependency
-https://lore.kernel.org/linux-media/20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com/
+The core of this series is a new rust/kernel/pwm.rs module that provides
+abstractions for writing PWM chip provider drivers in Rust. This has
+been significantly reworked from v1 based on extensive feedback. The key
+features of the new abstraction layer include:
 
-Thanks
-  Dave
+ - Ownership and Lifetime Management: The pwm::Chip wrapper is managed
+   by ARef, correctly tying its lifetime to its embedded struct device
+   reference counter. Chip registration is handled by a pwm::Registration
+   RAII guard, which guarantees that pwmchip_add is always paired with
+   pwmchip_remove, preventing resource leaks.
 
-v4l2-compliance output:
-v4l-utils $ ./build/utils/v4l2-compliance/v4l2-compliance 
-v4l2-compliance 1.31.0-5374, 64 bits, 64-bit time_t
-v4l2-compliance SHA: b8c26bb16d75 2025-06-10 21:30:38
+ - Modern and Safe API: The PwmOps trait is now based on the modern
+   waveform API (round_waveform_tohw, write_waveform, etc.) as recommended
+   by the subsystem maintainer. It is generic over a driver's
+   hardware specific data structure, moving all unsafe serialization logic
+   into the abstraction layer and allowing drivers to be written in 100%
+   safe Rust.
 
-Compliance test for rpi-hevc-dec device /dev/video0:
+ - Ergonomics: The API provides safe, idiomatic wrappers for other PWM
+   types (State, Args, Device, etc.) and uses standard kernel error
+   handling patterns.
 
-Driver Info:
-	Driver name      : rpi-hevc-dec
-	Card type        : rpi-hevc-dec
-	Bus info         : platform:rpi-hevc-dec
-	Driver version   : 6.16.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-	Detected Stateless Decoder
-Media Driver Info:
-	Driver name      : rpi-hevc-dec
-	Model            : rpi-hevc-dec
-	Serial           : 
-	Bus info         : platform:rpi-hevc-dec
-	Media version    : 6.16.0
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 6.16.0
-Interface Info:
-	ID               : 0x0300000c
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000001 (1)
-	Name             : rpi-hevc-dec-source
-	Function         : V4L2 I/O
-	Pad 0x01000002   : 0: Source
-	  Link 0x02000008: to remote pad 0x1000004 of entity 'rpi-hevc-dec-proc' (Video Decoder): Data, Enabled, Immutable
+The series is structured as follows:
+ - Expose PWM_WFHWSIZE in public header for bindgen.
+ - Rust PWM Abstractions: The new safe abstraction layer.
+ - TH1520 PWM Driver: A new Rust driver for the TH1520 SoC, built on
+   top of the new abstractions.
+ - Device Tree Bindings & Nodes: The remaining patches add the necessary
+   DT bindings and nodes for the TH1520 PWM controller, and the PWM fan
+   configuration for the Lichee Pi 4A board.
 
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-	test invalid ioctls: OK
+Testing:
+Tested on the TH1520 SoC. The fan works correctly. The duty/period
+calculations are correct. Fan starts slow when the chip is not hot and
+gradually increases the speed when PVT reports higher temperatures.
 
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
+The patches are based on mainline, with some dependencies which are not
+merged yet - platform Io support [1].
 
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
+Reference repository with all the patches together can be found on
+github [2].
 
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
+[1] - https://lore.kernel.org/rust-for-linux/20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com/
+[2] - https://github.com/mwilczy/linux/commits/rust-next-pwm-working-fan-for-sending-v10/
 
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-		fail: v4l2-test-controls.cpp(939): try_ext_ctrls returned an error (22)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 3 Private Controls: 0
-	Standard Compound Controls: 5 Private Compound Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test CREATE_BUFS maximum buffers: OK
-	test VIDIOC_REMOVE_BUFS: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-	test blocking wait: OK
-
-Total for rpi-hevc-dec device /dev/video0: 49, Succeeded: 48, Failed: 1, Warnings: 0
-
-Testing is mainly with a downstream patchset to FFmpeg. I'm told FFmpeg
-currently has no stateless decode support, but we will be reviewing
-works that have been in progress and our downstream patches to see
-whether that can be pushed onwards.
-Downstream tree is at
-https://github.com/jc-kynesim/rpi-ffmpeg/tree/dev/5.1.6/sandm_1
-
-https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/9247
-adds support for the new formats to GStreamer, and allows Fluster to run.
-Using the JCT-VC-HEVC_V1 test suite we get 142 passes out of 147 tests.
-PICSIZE_[ABCD]_Bossen_1 all fail due to the image sizes being greater than
-the 4096x4096 limit of this driver.
-TSUNEQBD_A_MAIN10_Technicolor_2 fails as the hardware doesn't support
-having a different bit depth for luma and chroma.
-
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 ---
+Changes in v6:
+ - Re-based on top of linux-next, dropped two already accepted commits.
+ - After re-basing the IoMem dependent patchset stopped working,
+   reworked it to use similar API like the PCI subsystem (I think it
+   will end up the same). Re-worked the driver for it as well.
+ - Remove the apply and get_state callbacks, amd most of the State as
+   well, as the old way of implementing drivers should not be possible
+   in Rust. Left only enabled(), since it's useful for my driver.
+ - Removed the public set_drvdata() method from pwm::Chip
+ - Moved WFHWSIZE to the public include/linux/pwm.h header and renamed it
+   to PWM_WFHWSIZE, allowing bindgen to create safe FFI bindings.
+ - Corrected the ns_to_cycles integer calculation in the TH1520 driver to
+   handle overflow correctly.
+ - Updated the Kconfig entry for the TH1520 driver to select the Rust
+   abstractions for a better user experience.
+
+- Link to v5: https://lore.kernel.org/r/20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com
+
+Changes in v5:
+- Reworked `pwm::Chip` creation to take driver data directly, which
+  allowed making the `chip.drvdata()` accessor infallible
+- added missing `pwm.c` file lost during the commit split (sorry !)
+- Link to v4: https://lore.kernel.org/r/20250618-rust-next-pwm-working-fan-for-sending-v4-0-a6a28f2b6d8a@samsung.com
+
 Changes in v4:
-- dt-bindings: Drop to just SoC compatibles and updated description (Krzysztof).
-- dts: Corrected address in node name.
-- NV12MT_COL128 format description added vertical alignment to a
-  multiple of 8 (Nicolas)
-- driver: Merged in driver updates based on Nicolas' review.
-- driver: Added debug module parameter to avoid log spam due to some bitstreams.
-- cover-letter: Added Fluster results.
-- rebased and based on the updated version of 
-  https://lore.kernel.org/linux-media/20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com/
-- update v4l2-compliance output
-- Link to v3: https://lore.kernel.org/r/20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com
+ - Reworked the pwm::Registration API to use the devres framework,
+   addressing lifetime issue.
+ - Corrected the PwmOps trait and its callbacks to use immutable references
+   (&Chip, &Device) for improved safety.
+ - Applied various code style and naming cleanups based on feedback
+
+- Link to v3: https://lore.kernel.org/r/20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com
 
 Changes in v3:
-- Updated the dtbinding with SoC specific compatible strings (Rob).
-- Reordered hevc_dec and v3d in bcm2711.dtsi to keep them in ascending
-  register order (Stefan).
-- Reordered hevc_dec in bcm2711-rpi.dtsi to keep them in alphabetical
-  order (Stefan).
-- Tested on top of Nicolas' revised version of Hans' patch set for
-  manual request completion.
-  https://lore.kernel.org/all/20250410-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v2-0-5b99ec0450e6@collabora.com/
-- Link to v2: https://lore.kernel.org/r/20250206-media-rpi-hevc-dec-v2-0-69353c8805b2@raspberrypi.com
+ - Addressed feedback from Uwe by making multiple changes to the TH1520
+   driver and the abstraction layer.
+ - Split the core PWM abstractions into three focused commits to ease
+   review per Benno request.
+ - Confirmed the driver now works correctly with CONFIG_PWM_DEBUG enabled
+   by implementing the full waveform API, which correctly reads the
+   hardware state.
+ - Refactored the Rust code to build cleanly with
+   CONFIG_RUST_BUILD_ASSERT_ALLOW=n, primarily by using the try_* family of
+   functions for IoMem access.
+ - Included several cosmetic changes and cleanups to the abstractions
+   per Miguel review.
+
+- Link to v2: https://lore.kernel.org/r/20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com
 
 Changes in v2:
-- Rebased to use Hans' manual request completion scheme.
-  https://lore.kernel.org/linux-media/cover.1724928939.git.hverkuil-cisco@xs4all.nl/
-- Require all slices for a frame to be submitted in one request.
-- Added the missing header file.
-- Used the full macro name for pix format docs (Sakari)
-- Dropped unneeded |- from dtbinding (Rob)
-- Made reg and reg-names match in order (Rob)
-- Removed clock-names from dtbinding (Rob)
-- Driver changed to not request the clock by name
-- Dropped clock-names from DTS file
-- Minor fixes for compliance failures
-  fail: v4l2-test-formats.cpp(958): fmt_cap.g_colorspace() != col
-  fail: v4l2-test-buffers.cpp(901): q.create_bufs(node, 1, &fmt) != EINVAL
-- v4l2-compliance output added to cover letter (Nicholas)
-  I believe the "fail: v4l2-test-controls.cpp(939): try_ext_ctrls
-  returned an error (22)" is expected as it is validating the SPS.
-  Hantro and Cedrus certainly both appear to return errors in the same place
-- Link to v1: https://lore.kernel.org/r/20241220-media-rpi-hevc-dec-v1-0-0ebcc04ed42e@raspberrypi.com
+ - Reworked the PWM abstraction layer based on extensive feedback.
+ - Replaced initial devm allocation with a proper ARef<Chip> lifetime model
+   using AlwaysRefCounted.
+ - Implemented a Registration RAII guard to ensure safe chip add/remove.
+ - Migrated the PwmOps trait from the legacy .apply callback to the modern
+   waveform API.
+ - Refactored the TH1520 driver to use the new, safer abstractions.
+ - Added a patch to mark essential bus clocks as CLK_IGNORE_UNUSED to fix
+   boot hangs when the PWM and thermal sensors are enabled.
+- Link to v1: https://lore.kernel.org/r/20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com
 
 ---
-Dave Stevenson (4):
-      docs: uapi: media: Document Raspberry Pi NV12 column format
-      media: ioctl: Add pixel formats NV12MT_COL128 and NV12MT_10_COL128
-      dt-bindings: media: Add the Raspberry Pi HEVC decoder
-      arm: dts: bcm2711-rpi: Add HEVC decoder node
+Michal Wilczynski (8):
+      pwm: Expose PWM_WFHWSIZE in public header
+      rust: pwm: Add Kconfig and basic data structures
+      rust: pwm: Add core 'Device' and 'Chip' object wrappers
+      rust: pwm: Add driver operations trait and registration support
+      pwm: Add Rust driver for T-HEAD TH1520 SoC
+      dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM controller
+      riscv: dts: thead: Add PWM controller node
+      riscv: dts: thead: Add PWM fan and thermal control
 
-John Cox (1):
-      media: platform: Add Raspberry Pi HEVC decoder driver
-
- .../bindings/media/raspberrypi,hevc-dec.yaml       |   72 +
- .../media/v4l/ext-ctrls-codec-stateless.rst        |    6 +-
- .../userspace-api/media/v4l/pixfmt-yuv-planar.rst  |   42 +
- MAINTAINERS                                        |   10 +
- arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi        |    4 +
- arch/arm/boot/dts/broadcom/bcm2711.dtsi            |    9 +
- drivers/media/platform/raspberrypi/Kconfig         |    1 +
- drivers/media/platform/raspberrypi/Makefile        |    1 +
- .../media/platform/raspberrypi/hevc_dec/Kconfig    |   17 +
- .../media/platform/raspberrypi/hevc_dec/Makefile   |    5 +
- .../media/platform/raspberrypi/hevc_dec/hevc_d.c   |  369 +++
- .../media/platform/raspberrypi/hevc_dec/hevc_d.h   |  192 ++
- .../platform/raspberrypi/hevc_dec/hevc_d_h265.c    | 2554 ++++++++++++++++++++
- .../platform/raspberrypi/hevc_dec/hevc_d_h265.h    |   23 +
- .../platform/raspberrypi/hevc_dec/hevc_d_hw.c      |  376 +++
- .../platform/raspberrypi/hevc_dec/hevc_d_hw.h      |  314 +++
- .../platform/raspberrypi/hevc_dec/hevc_d_video.c   |  674 ++++++
- .../platform/raspberrypi/hevc_dec/hevc_d_video.h   |   38 +
- drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
- include/uapi/linux/videodev2.h                     |    4 +
- 20 files changed, 4711 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  |  48 ++
+ MAINTAINERS                                        |   8 +
+ arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts  |  67 ++
+ arch/riscv/boot/dts/thead/th1520.dtsi              |   7 +
+ drivers/pwm/Kconfig                                |  24 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/core.c                                 |  26 +-
+ drivers/pwm/pwm_th1520.rs                          | 338 +++++++++
+ include/linux/pwm.h                                |   2 +
+ rust/bindings/bindings_helper.h                    |   1 +
+ rust/helpers/helpers.c                             |   1 +
+ rust/helpers/pwm.c                                 |  20 +
+ rust/kernel/lib.rs                                 |   2 +
+ rust/kernel/pwm.rs                                 | 809 +++++++++++++++++++++
+ 14 files changed, 1340 insertions(+), 14 deletions(-)
 ---
-base-commit: 6669fd53a3c2be6dc632a87d9105016139088144
-change-id: 20241212-media-rpi-hevc-dec-3b5be739f3bd
+base-commit: d52ca12c4915f3ee67aeaa5ad9e3597a40e4620e
+change-id: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
 
 Best regards,
 -- 
-Dave Stevenson <dave.stevenson@raspberrypi.com>
+Michal Wilczynski <m.wilczynski@samsung.com>
 
