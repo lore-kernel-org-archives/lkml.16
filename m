@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3073019CD13;
-	Tue,  1 Jul 2025 01:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7160A18C00B;
+	Tue,  1 Jul 2025 01:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751333986; cv=none; b=e8NEGlLy7P5bAcaPSg/r1xppqpkK7ARufJ4z/OqPx/sZ+M4Px0IvJD48fkyFzw47NACgzVFgtHeryga4bzWfX74W8bw+51hkqNfbys6A91rezuky4vq+bjP9Y2SqLbHdZOq/JYDdB8ivfLDr1GJptw7DPRqK4ymVW6e7DXoSYjk=
+	t=1751334000; cv=none; b=Ed1uo065g6Lt1NZnXQTsmmRkTo7XBOGg7ZDp14uErDytCSPUW1x3s3t1oFlfpnvYn3K7hYHgKd6+o6QGwrBpnIhnf4ySXwAJfxfMbs1XS+ratQaK+qGJE05LJ5evOPurocjuq4Ljfn3cpXijU+KSPpL9t3+0YwktC+wPq7A3Rh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751333986; c=relaxed/simple;
-	bh=hNW7Z/hU4G5S0IRXdCYnRXl5RwKhn/46t5ucRp82Imw=;
+	s=arc-20240116; t=1751334000; c=relaxed/simple;
+	bh=ICONkQkCpQFoOiUXYBMrxqK0UDBNHNHIU53LNkZXmJI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Bs2b675VuOh8EgQ3Np9wGT3s1CZxf2pHHSwIffLO4vzA6WH/hYT7Pt/5xZR902EN57uw/sGzpKZybQsWJaczIXyiCc8NRj3w2KTcyiaczNsEb5ppxlC4GlagL3RYQGZFmkvD1j36XkJViO1Xf8ld9jIe0xmEkzLhPKyw7vHFSO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJBzXRUy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DxD8hHPaDFA5Fl+pefa1KwVYH6F59d1UjHqsDh6DDtTtuZlvLaNEib+fJvIWpP1jzwmJr8bOph/RAJFMCaWKSZ2f/EmOWIgLlgVJU+mZij7W9T98+KHX6Ee/ZRcxJMZ9MI4f2Mny++as+cFmsEM+C78efctO0p3172cZEBeIpWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6/Rqufo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJBzXRUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08D0C4CEF5;
-	Tue,  1 Jul 2025 01:39:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6/Rqufo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA321C4CEE3;
+	Tue,  1 Jul 2025 01:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751333985;
-	bh=hNW7Z/hU4G5S0IRXdCYnRXl5RwKhn/46t5ucRp82Imw=;
+	s=k20201202; t=1751334000;
+	bh=ICONkQkCpQFoOiUXYBMrxqK0UDBNHNHIU53LNkZXmJI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oJBzXRUyDlh8xRMWoWy3U4atiU2VW45LGOeRpgVyJP6I+zATQq3dhjWCSY1BQS20l
-	 juWLbqtuJyb+sgAqX2DeQ91SeiEv6pkSbyzpNzH28IqRYlkGzFlWV1QMsjJjzSWQbn
-	 1tGKOVTPDs4cRUpTOLDrxGFIWzXF/lMt3xd7vSMEKVdkvrU1AdSl2JZ7wrYlWhuvPN
-	 NR7WaRErlYY3wzp4gMySSW08Of0gIseWJV1KzLUrSId2FbP3/GO9iyu2zOW6HUCMfc
-	 UkYzjhnuM6uk0qONBv2rE7rO5xK+j4jPDkpkvja767UWO6Bw7IJnvZyy/pIPL7o/US
-	 GKgO0Cuk1lxOw==
+	b=V6/RqufowaKBEQEiNtBV1HfXXeXCfayaRjT737jkxVPpgxh7e5uXy+5+1fl4y2p3z
+	 MHNXkhPfoM7yOnvh4w4VuYQu9HV4v31rqzbzPen8V8wmJ8f/YX73J3bGyCI76g6D/h
+	 Oi6BgX6Aq2QSnS08ZLGLGL7zKklQ0YDABkjrJzv1TUoOZMjEGNbwChTzarYHEveXXO
+	 YszElpR9bRBLPbBdAQ0SAwOKoOuPw5NLKnBAyTeak9wuOaiorBXdeb/MefkvANkCyC
+	 e/HLQyHFfOOXw2MmlTAeiuoAxdWJzolVhXzYKmArHTDPY7jylYFjkN9gj9nH4bk1T+
+	 QA1lPcTVZVyRg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFB438111CE;
-	Tue,  1 Jul 2025 01:40:11 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B5738111CE;
+	Tue,  1 Jul 2025 01:40:26 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,40 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] MAINTAINERS: adjust file entry after renaming rzv2h-gbeth
- dtb
+Subject: Re: [PATCH v2 RESEND 0/3] net: enetc: change some statistics to
+ 64-bit
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175133401075.3632945.11017105407045410659.git-patchwork-notify@kernel.org>
-Date: Tue, 01 Jul 2025 01:40:10 +0000
-References: <20250627134453.51780-1-lukas.bulwahn@redhat.com>
-In-Reply-To: <20250627134453.51780-1-lukas.bulwahn@redhat.com>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: geert+renesas@glider.be, prabhakar.mahadev-lad.rj@bp.renesas.com,
+ <175133402474.3632945.10665763594347995873.git-patchwork-notify@kernel.org>
+Date: Tue, 01 Jul 2025 01:40:24 +0000
+References: <20250627021108.3359642-1-wei.fang@nxp.com>
+In-Reply-To: <20250627021108.3359642-1-wei.fang@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
  andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org, lukas.bulwahn@redhat.com
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, frank.li@nxp.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 27 Jun 2025 15:44:53 +0200 you wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Fri, 27 Jun 2025 10:11:05 +0800 you wrote:
+> The port MAC counters of ENETC are 64-bit registers and the statistics
+> of ethtool are also u64 type, so add enetc_port_rd64() helper function
+> to read 64-bit statistics from these registers, and also change the
+> statistics of ring to unsigned long type to be consistent with the
+> statistics type in struct net_device_stats.
 > 
-> Commit d53320aeef18 ("dt-bindings: net: Rename
-> renesas,r9a09g057-gbeth.yaml") renames the net devicetree binding
-> renesas,r9a09g057-gbeth.yaml to renesas,rzv2h-gbeth.yaml, but misses to
-> adjust the file entry in the RENESAS RZ/V2H(P) DWMAC GBETH GLUE LAYER
-> DRIVER section in MAINTAINERS.
 > 
 > [...]
 
 Here is the summary with links:
-  - MAINTAINERS: adjust file entry after renaming rzv2h-gbeth dtb
-    https://git.kernel.org/netdev/net/c/3b2c45cb1b50
+  - [v2,RESEND,1/3] net: enetc: change the statistics of ring to unsigned long type
+    https://git.kernel.org/netdev/net-next/c/f5ed33771bce
+  - [v2,RESEND,2/3] net: enetc: separate 64-bit counters from enetc_port_counters
+    https://git.kernel.org/netdev/net-next/c/9fe5f7145ad7
+  - [v2,RESEND,3/3] net: enetc: read 64-bit statistics from port MAC counters
+    https://git.kernel.org/netdev/net-next/c/4c7ef319848f
 
 You are awesome, thank you!
 -- 
