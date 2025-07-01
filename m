@@ -1,128 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD90B27E7FC;
-	Tue,  1 Jul 2025 13:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F191427F18C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 13:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751378229; cv=none; b=Afbrpv4q2huOnuepVlPlfh3mt9m2l3t0D2cO2zi6FcQnLCBNrP3BUGyWekeHoCqoFEqajqZeJ+wDV25j4cVEtGM7Gqco8ulfpYebe/peIWsretbqs/S+1Si/unUUnDc/m/pP98gztzbsjGi1FIQfgIbUOgHR4EP7uGyAfpX/d3E=
+	t=1751378231; cv=none; b=l3gguJP5Jn3AW9NOWXojMoRH6JHIxkT/qVevrRrT050cjIllZPGgERhqQb5u2/kzEcn+Tuc3pZMQWlJrIB1BpfcCM0c7L0tlSxCHLxbEO+ZLcsBa5YvsmHEHTs0CBdStgI+ot5QtC04SMrtCkXgflK/zT9F0csX1HSu4emyTrx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751378229; c=relaxed/simple;
-	bh=bfyf64/9Lz8TeBB7ZRQVJI6e73cpzQVKOsse3DwDWRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZuznBmkR8XfmmWI4SZ7dyqWJ/HytVTGGBLqK9XLO4rQDy8xS4jRO64XL9jJHHMbLtlyIi7MLDh1B/X9bRagtWB+xW32IevjbWBeKb7bL/2xHj7fI+MzMsRTLCtmOcfhsSqMGI4HWmxqnVaDSae1CRJtziDnjJU0YHDvWPFAFFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahU48zzh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahU48zzh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D558C4CEF7;
-	Tue,  1 Jul 2025 13:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751378229;
-	bh=bfyf64/9Lz8TeBB7ZRQVJI6e73cpzQVKOsse3DwDWRA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ahU48zzhuH3p0zjEEHJCC+eyqLqcVOS6ZGsdCIeneizv3aQAg97P2s3FrQBaEpu/T
-	 zc6YioylJbdVu47UwHW6qo6wJ93aZz+E5j/MLruvSvwKVzzRgtiu+4bhm4mOx6a06c
-	 n13afKMjPR6sxyjncmIFbIzvBdQcbgj/Zp7Qb2lmlWWu1xL/3ZQeYGtfkcIB3C3HuR
-	 REmvCvt4QUcSQ2rJwPKk3CZJVSxp+SrfxLAWXGjn86gF6xll986zDjE4k2e9xzKYJZ
-	 g4lAAgQ71DCVPESNVYtMOZyJ9B/Igc9pk8NkaEZGLZTyQjKe8OhxkAvMi4TTsbZ2sX
-	 5XwpoS4YiTdwA==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6118c1775dbso1681003eaf.1;
-        Tue, 01 Jul 2025 06:57:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXnN3znckr+n/FMKKO1StreYa4w05oGe3de2T/lkcOh8KJZRmacvBkUm8QPPWbvFHyCGkXsIXImLvmc@vger.kernel.org, AJvYcCXslInms+M45J32zTtsKd+0FGQm0cOYjm7JB1N9P/cyJhuYfqeJQ/oYX+pmlUGYSZlzJjAy/25waNfH0w==@vger.kernel.org, AJvYcCXsoqwh17eLWjaVhEtNw80L19nBh2XVGv5iL5UL2Cxmd2pVqsw9Fg/QNra/a2QBDcjHX516zDhZ+05t5UYS@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt5RVXSzqTrWqavbudZrBfIGuEkFmMh0B8Nmd45gseX1oM8En8
-	3rAN5lBMQMS//oajI2AoR/Jw/0eQ/Tk5vioA/SwqT8yv6/SmzSwIKXsPCWHGwFHOay5zomWy6pH
-	56ALjP7l4YI7u0xG50iFjgG7PUrAJpZQ=
-X-Google-Smtp-Source: AGHT+IH8y5e96zUJRFb1OuI8gvD6XWj6u4OkFPyGcGOEmUKVc6TEctKaRmc0KPqe/ewtdYlc9kWivElDVmZVzHILVRs=
-X-Received: by 2002:a4a:ee96:0:b0:605:f34d:7e00 with SMTP id
- 006d021491bc7-611b914ca94mr11199187eaf.7.1751378226833; Tue, 01 Jul 2025
- 06:57:06 -0700 (PDT)
+	s=arc-20240116; t=1751378231; c=relaxed/simple;
+	bh=nkf3sQ7q7SJbL/+5fAV0ezxYJVbd/mAcUBUYHmZnM7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y0T6uR7haxf3K/qgHlcPtV4aj5lkx9Pgd9lq+eshSaBtT1QcSfomsQsf3rjHFDvX0/UJS/pcGXDl9z9jr/APp/RKv9QxuKI5FfU/y7HWXwVviR0sp+wyuqapJCveMSt1eZ7WucvxoK0Vj2RQQqbjvPhpFqkU9JIQclJP21MqBBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CEFF2F7D;
+	Tue,  1 Jul 2025 06:56:54 -0700 (PDT)
+Received: from e133380.cambridge.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A21B3F58B;
+	Tue,  1 Jul 2025 06:57:08 -0700 (PDT)
+From: Dave Martin <Dave.Martin@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: [PATCH 22/23] xtensa: ptrace: Use USER_REGSET_NOTE_TYPE() to specify regset note names
+Date: Tue,  1 Jul 2025 14:56:15 +0100
+Message-Id: <20250701135616.29630-23-Dave.Martin@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250701135616.29630-1-Dave.Martin@arm.com>
+References: <20250701135616.29630-1-Dave.Martin@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
- <20250404112050.42040-2-xueshuai@linux.alibaba.com> <0c0bc332-0323-4e43-a96b-dd5f5957ecc9@huawei.com>
- <709ee8d2-8969-424c-b32b-101c6a8220fb@linux.alibaba.com> <353809e7-5373-0d54-6ddb-767bc5af9e5f@huawei.com>
- <653abdd4-46d2-4956-b49c-8f9c309af34d@linux.alibaba.com> <de5d2417-dc92-b276-1125-4feb5151de7f@huawei.com>
- <f60f1128-0d42-48e5-9a06-6ed7ca10767f@linux.alibaba.com> <20250428152350.GA23615@willie-the-truck>
- <6671c3cc-5119-4544-bcb5-17e8cc2d7057@linux.alibaba.com>
-In-Reply-To: <6671c3cc-5119-4544-bcb5-17e8cc2d7057@linux.alibaba.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 1 Jul 2025 15:56:53 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j3NC2ki1XPXfznxZRBLaReDBJ+nzHFgvqMx5+MgERL-A@mail.gmail.com>
-X-Gm-Features: Ac12FXx9H-3vG8ZmZDA8pugDyN2jgQvzGSowL6_ycQvP5EUOr-jzraGGBrVWxV0
-Message-ID: <CAJZ5v0j3NC2ki1XPXfznxZRBLaReDBJ+nzHFgvqMx5+MgERL-A@mail.gmail.com>
-Subject: Re: [RESEND PATCH v18 1/2] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, rafael@kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, "Luck, Tony" <tony.luck@intel.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-edac@vger.kernel.org, x86@kernel.org, justin.he@arm.com, 
-	ardb@kernel.org, ying.huang@linux.alibaba.com, ashish.kalra@amd.com, 
-	baolin.wang@linux.alibaba.com, tglx@linutronix.de, 
-	dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com, 
-	robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com, 
-	zhuo.song@linux.alibaba.com, sudeep.holla@arm.com, lpieralisi@kernel.org, 
-	linux-acpi@vger.kernel.org, yazen.ghannam@amd.com, mark.rutland@arm.com, 
-	mingo@redhat.com, robin.murphy@arm.com, Jonathan.Cameron@huawei.com, 
-	bp@alien8.de, linux-arm-kernel@lists.infradead.org, 
-	wangkefeng.wang@huawei.com, tanxiaofei@huawei.com, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, naoya.horiguchi@nec.com, james.morse@arm.com, 
-	tongtiangen@huawei.com, gregkh@linuxfoundation.org, jarkko@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 1, 2025 at 1:00=E2=80=AFPM Shuai Xue <xueshuai@linux.alibaba.co=
-m> wrote:
->
->  >=E5=9C=A8 2025/4/28 23:23, Will Deacon =E5=86=99=E9=81=93:
->  >> On Fri, Apr 25, 2025 at 09:10:09AM +0800, Shuai Xue wrote:
->  >>> =E5=9C=A8 2025/4/25 09:00, Hanjun Guo =E5=86=99=E9=81=93:
->  >>>> Call force_sig(SIGBUS) directly in ghes_do_proc() is not my favouri=
-te,
->  >>>> but I can bear that, please add
->  >>>>
->  >>>> Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
->  >>>>
->  >>>> Thanks
->  >>>> Hanjun
->  >>>
->  >>> Thanks. Hanjun.
->  >>>
->  >>> @Rafael, @Catalin,
->  >>>
->  >>> Both patch 1 and 2 have reviewed-by tag from the arm64 ACPI
-> maintainers, Hanjun,
->  >>> now. Are you happpy to pick and queue this patch set to acpi tree
-> or arm tree?
->  >>
->  >> Since this primarily touches drivers/acpi/apei/ghes.c, I think it sho=
-uld
->  >> go via the ACPI tree and not the arm64 one.
->  >>
->  >> Will
->  >
->  >Hi, Will,
->  >
->  >Thank you for your confirmation :)
->  >
->  >@Rafael, do you have more comments on this patch set?
->  >
->  >Thanks you.
->  >
->  >Best Regards,
->  >Shuai
->
-> Hi, all,
->
-> Gentle ping.
->
-> Does ACPI or APEI tree still active? Looking forward to any response.
+Instead of having the core code guess the note name for each regset,
+use USER_REGSET_NOTE_TYPE() to pick the correct name from elf.h.
 
-For APEI changes, you need an ACK from one of the reviewers listed in
-the MAINTAINERS entry for APEI.
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Kees Cook <kees@kernel.org>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>
+---
+ arch/xtensa/kernel/ptrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
+diff --git a/arch/xtensa/kernel/ptrace.c b/arch/xtensa/kernel/ptrace.c
+index 9056cd1a8302..ff0600a0584c 100644
+--- a/arch/xtensa/kernel/ptrace.c
++++ b/arch/xtensa/kernel/ptrace.c
+@@ -193,7 +193,7 @@ enum xtensa_regset {
+ 
+ static const struct user_regset xtensa_regsets[] = {
+ 	[REGSET_GPR] = {
+-		.core_note_type = NT_PRSTATUS,
++		USER_REGSET_NOTE_TYPE(PRSTATUS),
+ 		.n = sizeof(struct user_pt_regs) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+@@ -201,7 +201,7 @@ static const struct user_regset xtensa_regsets[] = {
+ 		.set = gpr_set,
+ 	},
+ 	[REGSET_TIE] = {
+-		.core_note_type = NT_PRFPREG,
++		USER_REGSET_NOTE_TYPE(PRFPREG),
+ 		.n = sizeof(elf_xtregs_t) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+-- 
+2.34.1
+
