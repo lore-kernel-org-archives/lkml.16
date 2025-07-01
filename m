@@ -1,154 +1,99 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433F612B71
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428FA12B71
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751336551; cv=none; b=XAk/Di91TLFzc2h+fAhHMy2IF5uzlzcJ3lNuj5azu4duLKlSnSP/457N7jMw87HbacL3Xpe004kMmc5r4seeb7qXJmzHlC7QzgnZ04OfwToGXE5LeiOXnYPX2uSXmpqNHOSTMauLxoQbHmGn0tZ8V3e9y/UZGrMVc7vM08ogug0=
+	t=1751336613; cv=none; b=OxedfM86QyEc6Snm9qm7aRZI9Lm3F2YonujLDfklhPTScf04SCmikjGdoJ1VdOvpezolTMp2uoH0uU/Pc0iZjVv8gBV059PTPuVrPgpfI/AhjXlmLP9kQ57uPi1rnRoutP4e0n2Vwws4nnrdKcVSAiDdFyAIGwKdvKxC3lSDf7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751336551; c=relaxed/simple;
-	bh=ZkPbJxIIMqC8h2mKATTtgFcOTL2GQ88ep/KaCL+CZkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l0NtmUSn5tviHQ4R+xlX3rgkz5bs/PnIQIaqi6KmlPuUXK25LYF2WF4CrBff2N1vlRo3Jv3rLzb7QLdcTItr6lALzlwCKiYTdwJ692t8npWCFaJfufjfHMkNRVkIS7KpTMfwTLcleQQ83/e8gnQ38SdBlk0OHMGpKdDjmtlYDxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FLkZquI+; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751336613; c=relaxed/simple;
+	bh=UzEAJUUD9OK3W0bVuYO+NSmpMMWNsePaoIENu1gvApg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=INCCSQ56QxesWIjWCvh2EjiJZzMtAgnmoQ9z+aHacsHxUOXt8aRdYJBmeFUr7p/JciGUXzNODg8b3CbTIQqRTUHFN82uC85hZ/vwR7kDAExaTriMUo1qB2pTsWowXg45Y6ZTii2qUpKs1hQvBuKjhQCCSILt+73LRcRySSvMSZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A54fC3Us; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FLkZquI+"
-Date: Mon, 30 Jun 2025 19:22:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751336534;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A54fC3Us"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751336611;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PBSYSV/tsnN0QEIHvavUlaNVSbWkSEkmYInLCDpNg2s=;
-	b=FLkZquI+v8KCzjQWG1NDBQkfaEzF+Bk8ndaZn71BYU/+P0eIQhEM9nAdZfxt4+/UjBqo17
-	RJjXxq++7lGfsLUzha0x++G7gjH+ZlHcte7/H6wVHKY0Esu+HQ9BHKw+pphUf4JBEUbMi1
-	xjFMPfeqBJkvGUeJSGoMNLwflruVN8c=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jai Luthra <jai.luthra@linux.dev>
-To: Julien Massot <julien.massot@collabora.com>
-Cc: kernel@collabora.com, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Vaishnav Achath <vaishnav.a@ti.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Sjoerd Simons <sjoerd@collabora.com>, 
-	Rishikesh Donadkar <r-donadkar@ti.com>
-Subject: Re: [PATCH] media: ti: j721e-csi2rx: fix list_del corruption
-Message-ID: <2cmc6er7ixv4ii2zg3t2dlaq45f3ksj5cygfvsbgbzalni7mpk@m5hk7pug2izn>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250630-j721e-dma-fixup-v1-1-591e378ab3a8@collabora.com>
+	bh=UzEAJUUD9OK3W0bVuYO+NSmpMMWNsePaoIENu1gvApg=;
+	b=A54fC3Usp6IAEXfjI9BhNmg6Wg97Ae8qnkVGyCZf+Fl/5dJNbVXPUXyjhSNfbLKY4Dv1G1
+	5xlqYj7HbIl8jx7tm2DQiIWUNdTztaewCaPn/lxpQM1HHHHmXvdhUnkv5dWmccaj0gXnCn
+	uThczIaGgz/iHkYpn1tWBalU3tgllSs=
+Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
+ [209.85.221.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-10-DBy4hGBVORWNC9SMvH_bSQ-1; Mon, 30 Jun 2025 22:23:29 -0400
+X-MC-Unique: DBy4hGBVORWNC9SMvH_bSQ-1
+X-Mimecast-MFC-AGG-ID: DBy4hGBVORWNC9SMvH_bSQ_1751336609
+Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-5314dd44553so1644496e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:23:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751336609; x=1751941409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UzEAJUUD9OK3W0bVuYO+NSmpMMWNsePaoIENu1gvApg=;
+        b=R1ymGV6X6qe1eq0+R8oy8joCt09skqdiIJKYxDOH+MYWoQHcYbwzl5NsMO82Iyx/nz
+         vQ06ZRjBpM4vHyf4ag31rN56MwdDjD+uzkR+z11ufyAV2czJ7DIjOj8r3iSErbn07uag
+         Aa9m6KeInr2MBlbEQA+8GnK29pgm/8+Q3sQ2WDN6TifU56D7ELhQfqrO7ZBHM8vUGN19
+         mOxApsPP1YQebURumpXfe8Iibrln668wHTNx8DPW3zEBeXEswM2hsL0nb8wp5N5Iaxk/
+         lPc0JP7VoHQy2AzsO50rhpu9Ik3SDrFIuRX3iE3mljmqk03s6TZlbUh9I7MprTge5pAb
+         kCqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXny+IkzMf/gjV/e8DFDqV0TGZmPmN7AeKqfslxsX3hXbN6dp5EzIpLQS3kLiL82zsBYPT4VNCqk5N7xbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGqobx9a0ZfP2FUDgf8Hp5TuJ5d3uri0k1vq2td9NhoZvwfUN4
+	jw/Ftd3bEb+QRTkka9TPGQmw339en9+ntgntO1jykvU9scghMUFyu6gaiaRC/NVO/9fy0f4g7bL
+	cUVmah6Hx02JHszd5n+vB1w9QcXrV0GjuC0bEJ3Dyylr9luIlDcO1xm3Ihq3QXG5U0IJ89s7XIs
+	FFho7jMFtkXiue4cRQK8B4v4jjjR6AS4m/n3q8OgfY
+X-Gm-Gg: ASbGncsZEy2zuW/qO0rbNqHPuGZjiwN/IDrXKEAY1BdQ0rJcizDgsMy0cjkctwyyhFE
+	xsodp5RvVrZXmZigc3WahA7uHH+ldfMOz0LqqM5JogOwyejsFR4gIMOJNSrMnFFb1/7vJwnPqZ/
+	+/
+X-Received: by 2002:a05:6102:5123:b0:4eb:eedf:df65 with SMTP id ada2fe7eead31-4ee4f55fa28mr10132608137.11.1751336608771;
+        Mon, 30 Jun 2025 19:23:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEYUKosjg1xV3/2kEIImXNwrpXMZl3+XgrJg900Mb6VAWhQ1VVykJLy6Rp+l/68SJ/VfW9TfhDDb0JYqP7DqAE=
+X-Received: by 2002:a05:6102:5123:b0:4eb:eedf:df65 with SMTP id
+ ada2fe7eead31-4ee4f55fa28mr10132595137.11.1751336608477; Mon, 30 Jun 2025
+ 19:23:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630-j721e-dma-fixup-v1-1-591e378ab3a8@collabora.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250630151315.86722-1-minhquangbui99@gmail.com> <20250630151315.86722-3-minhquangbui99@gmail.com>
+In-Reply-To: <20250630151315.86722-3-minhquangbui99@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Tue, 1 Jul 2025 10:23:16 +0800
+X-Gm-Features: Ac12FXwmRMP0wrScNXo4jLviRavx1GRKuzUNyZLulsaizoOGTdjbvUZnQk8mBA4
+Message-ID: <CACGkMEtv+v3JozrNLvOYapE6uyYuaxpDn88PeMH1X4LcuSQfjw@mail.gmail.com>
+Subject: Re: [PATCH net v3 2/2] virtio-net: xsk: rx: move the xdp->data
+ adjustment to buf_to_xdp()
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@fomichev.me>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Julien,
+On Mon, Jun 30, 2025 at 11:13=E2=80=AFPM Bui Quang Minh
+<minhquangbui99@gmail.com> wrote:
+>
+> This commit does not do any functional changes. It moves xdp->data
+> adjustment for buffer other than first buffer to buf_to_xdp() helper so
+> that the xdp_buff adjustment does not scatter over different functions.
 
-Thanks for the fix.
+So I think this should go for net-next not net.
 
-On Mon, Jun 30, 2025 at 12:46:43PM +0200, Julien Massot wrote:
-> If ti_csi2rx_start_dma() fails in ti_csi2rx_dma_callback(), the buffer is
-> marked done with VB2_BUF_STATE_ERROR but is not removed from the DMA queue.
-> This causes the same buffer to be retried in the next iteration, resulting in
-> a double list_del() and eventual list corruption.
-> 
-> Fix this by removing the buffer from the queue before calling vb2_buffer_done()
-> on error.
-> 
-> This resolves a crash due to list_del corruption:
-> [   37.811243] j721e-csi2rx 30102000.ticsi2rx: Failed to queue the next buffer for DMA
-> [   37.832187]  slab kmalloc-2k start ffff00000255b000 pointer offset 1064 size 2048
-> [   37.839761] list_del corruption. next->prev should be ffff00000255bc28, but was ffff00000255d428. (next=ffff00000255b428)
-> [   37.850799] ------------[ cut here ]------------
-> [   37.855424] kernel BUG at lib/list_debug.c:65!
-> [   37.859876] Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
-> [   37.866061] Modules linked in: i2c_dev usb_f_rndis u_ether libcomposite dwc3 udc_core usb_common aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha1_ce cpufreq_dt dwc3_am62 phy_gmii_sel sa2ul
-> [   37.882830] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.16.0-rc3+ #28 VOLUNTARY
-> [   37.890851] Hardware name: Bosch STLA-GSRV2-B0 (DT)
-> [   37.895737] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   37.902703] pc : __list_del_entry_valid_or_report+0xdc/0x114
-> [   37.908390] lr : __list_del_entry_valid_or_report+0xdc/0x114
-> [   37.914059] sp : ffff800080003db0
-> [   37.917375] x29: ffff800080003db0 x28: 0000000000000007 x27: ffff800080e50000
-> [   37.924521] x26: 0000000000000000 x25: ffff0000016abb50 x24: dead000000000122
-> [   37.931666] x23: ffff0000016abb78 x22: ffff0000016ab080 x21: ffff800080003de0
-> [   37.938810] x20: ffff00000255bc00 x19: ffff00000255b800 x18: 000000000000000a
-> [   37.945956] x17: 20747562202c3832 x16: 6362353532303030 x15: 0720072007200720
-> [   37.953101] x14: 0720072007200720 x13: 0720072007200720 x12: 00000000ffffffea
-> [   37.960248] x11: ffff800080003b18 x10: 00000000ffffefff x9 : ffff800080f5b568
-> [   37.967396] x8 : ffff800080f5b5c0 x7 : 0000000000017fe8 x6 : c0000000ffffefff
-> [   37.974542] x5 : ffff00000fea6688 x4 : 0000000000000000 x3 : 0000000000000000
-> [   37.981686] x2 : 0000000000000000 x1 : ffff800080ef2b40 x0 : 000000000000006d
-> [   37.988832] Call trace:
-> [   37.991281]  __list_del_entry_valid_or_report+0xdc/0x114 (P)
-> [   37.996959]  ti_csi2rx_dma_callback+0x84/0x1c4
-> [   38.001419]  udma_vchan_complete+0x1e0/0x344
-> [   38.005705]  tasklet_action_common+0x118/0x310
-> [   38.010163]  tasklet_action+0x30/0x3c
-> [   38.013832]  handle_softirqs+0x10c/0x2e0
-> [   38.017761]  __do_softirq+0x14/0x20
-> [   38.021256]  ____do_softirq+0x10/0x20
-> [   38.024931]  call_on_irq_stack+0x24/0x60
-> [   38.028873]  do_softirq_own_stack+0x1c/0x40
-> [   38.033064]  __irq_exit_rcu+0x130/0x15c
-> [   38.036909]  irq_exit_rcu+0x10/0x20
-> [   38.040403]  el1_interrupt+0x38/0x60
-> [   38.043987]  el1h_64_irq_handler+0x18/0x24
-> [   38.048091]  el1h_64_irq+0x6c/0x70
-> [   38.051501]  default_idle_call+0x34/0xe0 (P)
-> [   38.055783]  do_idle+0x1f8/0x250
-> [   38.059021]  cpu_startup_entry+0x34/0x3c
-> [   38.062951]  rest_init+0xb4/0xc0
-> [   38.066186]  console_on_rootfs+0x0/0x6c
-> [   38.070031]  __primary_switched+0x88/0x90
-> [   38.074059] Code: b00037e0 91378000 f9400462 97e9bf49 (d4210000)
-> [   38.080168] ---[ end trace 0000000000000000 ]---
-> [   38.084795] Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt
-> [   38.092197] SMP: stopping secondary CPUs
-> [   38.096139] Kernel Offset: disabled
-> [   38.099631] CPU features: 0x0000,00002000,02000801,0400420b
-> [   38.105202] Memory Limit: none
-> [   38.108260] ---[ end Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt ]---
-> 
-> Fixes: b4a3d877dc92 ("media: ti: Add CSI2RX support for J721E")
-> Suggested-by: Sjoerd Simons <sjoerd@collabora.com>
-> Signed-off-by: Sjoerd Simons <sjoerd@collabora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+Thanks
 
-Reviewed-by: Jai Luthra <jai.luthra@linux.dev>
-
-> ---
->  drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 6412a00be8eab89548950dd21b3b3ec02dafa5b4..0e358759e35faac95d1520e14a75096375c806bb 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -619,6 +619,7 @@ static void ti_csi2rx_dma_callback(void *param)
->  
->  		if (ti_csi2rx_start_dma(csi, buf)) {
->  			dev_err(csi->dev, "Failed to queue the next buffer for DMA\n");
-> +			list_del(&buf->list);
->  			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
->  		} else {
->  			list_move_tail(&buf->list, &dma->submitted);
-> 
-> ---
-> base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
-> change-id: 20250630-j721e-dma-fixup-5b4f9678b7a6
-> 
-> Best regards,
-> -- 
-> Julien Massot <julien.massot@collabora.com>
-> 
-
-Thanks,
-Jai
