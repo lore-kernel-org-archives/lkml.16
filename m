@@ -1,81 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397AE223327;
-	Tue,  1 Jul 2025 08:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF9622259D;
+	Tue,  1 Jul 2025 08:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360191; cv=none; b=QFtZGYBk37qwsGRSAUQ9Yv5GMLjBQTb+xzt1u1cFRAbhLz6yu5CkpWLTFfpepGCmxalrmoRHBWT77hbqnRwU5ry//yiVoWnH8mufq1+zHKhdlkbONWsHtG1bHxMkbjVw5TI/lk1Glrqb58DaecGUeR0Qk19hTBDwGdUuAGlN1TE=
+	t=1751360201; cv=none; b=DPbLpv8aZrlgZ/G2m8Sgkq4yzk3ukWYrgHqAB4lnW2myX922ul/dVkVapg+b+IRDGOmNBjZRvY1i9361Ypb8PyfXCcwSogWM+q/zEtxj/oJ9tKYdfP4b/lp9Pae8z2V1gBbuIqdRV7oLKpOYdwaQac+8ExF2V/uCY9SjJSuEbFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360191; c=relaxed/simple;
-	bh=uH6Yw7bGTeucDzsgGjJzwn8ma4BLY0noOggnXGhbx7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJDEH8KdGnMxUj9LlWsm47h56u6jyoLEOIQhPbkudltAuRwY+nFfBSVwiaMtfUceoQUJqAgoYXpEAz9UeJyoEPL8feKHaiOqVgPONtBs4VBN4vft3AZSEMT3deeiIynIh576nbggFs+7gaHqT+inCPvMsuvpWlvuWgQYAgr9PWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7u19ud0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751360201; c=relaxed/simple;
+	bh=hGTbzFeiGRAeM/xA+LxhQGuTssE+brcCTfBWGQ03zYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=quqT7udNfaM3zkWqZgEDRVBDjYD5V4ktpn8GYlRQlXLPP6K7Hky2hHZKDJDAANyM2dKTRB50saMD4UUsdczKZHLLBighqw/LNxLhwuErpggzJd8SvGR/ihN3ja2qKEUS3LBmvBjAIp+QGQHc4lRCaFTQz/pod4OtYAUhxqoha3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuDEAy/B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7u19ud0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7703C4CEEB;
-	Tue,  1 Jul 2025 08:56:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuDEAy/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16504C4CEEB;
+	Tue,  1 Jul 2025 08:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751360190;
-	bh=uH6Yw7bGTeucDzsgGjJzwn8ma4BLY0noOggnXGhbx7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7u19ud0KQHc/RXrkQcbavbkINfsEfhbE0Lu22PrJjR54sRcsF8sf9fVrOryFwgZ/
-	 QdrRZ+DlmPngMUwKUZlSbcarU/amUEdWfWMAdLNTHVgE8oxxFsfG8tT7PNoyScPWJF
-	 25f0mTQaWnCcNJd3WsKlGywLgNnVlP+64vO1yhoM+vU8k85TZP+ObsgyFBg+mF++Gu
-	 ptAPpP840Omt9L+zpx+D9tv9njuEdRLdHSAVcmBmgi5fIqfv3a2SNbHVp9PC2lG2Kd
-	 J37VxIAxDe4KiQlURcpEQive5NyHYkK7cH4VwcZKCWFsf56kEWZdgI3N+K4mKdsdF6
-	 PlOjY+LYyPB0A==
-Date: Tue, 1 Jul 2025 08:56:27 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Dawid =?utf-8?Q?Nied=C5=BAwiecki?= <dawidn@google.com>
-Cc: Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com,
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>
-Subject: Re: [PATCH] platform/chrome: Add ChromeOS EC USB driver
-Message-ID: <aGOiu-sXFj1EUQAB@google.com>
-References: <20250624110028.409318-1-dawidn@google.com>
- <aF5N5jrRUlj3SUGS@google.com>
- <CAJ_BA_CppC58kc-Uv49PSmWFcCih-ySuGDuRcO5-AWQQqcqWVQ@mail.gmail.com>
+	s=k20201202; t=1751360200;
+	bh=hGTbzFeiGRAeM/xA+LxhQGuTssE+brcCTfBWGQ03zYs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SuDEAy/BcOF3bR4Z3Nw6y20gcqjY4x+/rNNLjYYHiBv5QIC2cSLEZZ24Ct5O49ul5
+	 3BtF8t3wk63JfKvdlo7jRoU0lq0njvAYZ+1EELhx4wV+fTNndy1AJq6GfKAILJZoLv
+	 CDLm6RrO0fzgii7I7d8E5uX8OHkplK7DAiHZEYvA7cTSTFwOPgQbm8nQoGXKjnlqpe
+	 hUR6Wu1hfkWuV4m/+8YvPX/7o6ARANlOf7T5JDy+Dg7CttWG94Y/ZIANTxYdKYFD/g
+	 fvw/+IGI/Jskf3rc5rSuq9HYNWE8xmo9TlT5mN65OHvczflGO22Zfe/8s2W3qNd5Dm
+	 M1rH9nO9tBEjQ==
+Message-ID: <0fd1cb1e-61ca-41ea-8fba-5b160e901b87@kernel.org>
+Date: Tue, 1 Jul 2025 10:56:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ_BA_CppC58kc-Uv49PSmWFcCih-ySuGDuRcO5-AWQQqcqWVQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1 1/2] selftests: pp-bench: remove unneeded
+ linux/version.h
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+ <toke@redhat.com>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ kernel test robot <lkp@intel.com>
+References: <20250627200501.1712389-1-almasrymina@google.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250627200501.1712389-1-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 30, 2025 at 01:59:39PM +0200, Dawid Niedźwiecki wrote:
-> On Fri, Jun 27, 2025 at 9:53 AM Tzung-Bi Shih <tzungbi@kernel.org> wrote:
-> > On Tue, Jun 24, 2025 at 11:00:28AM +0000, Dawid Niedzwiecki wrote:
-> > > +     /*
-> > > +      * Do not register the same EC device twice. The probing is performed every
-> > > +      * reboot, sysjump, crash etc. Recreating the /dev/cros_X file every time
-> > > +      * would force all application to reopen the file, which is not a case for
-> > > +      * other cros_ec_x divers. Instead, keep the cros_ec_device and cros_ec_usb
-> > > +      * structures constant and replace USB related structures for the same EC
-> > > +      * that is reprobed.
-> > > +      *
-> > > +      * The driver doesn't support handling two devices with the same idProduct,
-> > > +      * but it will never be a real usecase.
-> > > +      */
-> >
-> > I don't quite understand why does it need to memorize the registered ECs.
-> > Supposedly, the probe function is only called few times during booting, and
-> > gets success once. Hot-plugs?
-> >
+
+
+On 27/06/2025 22.04, Mina Almasry wrote:
+> linux/version.h was used by the out-of-tree version, but not needed in
+> the upstream one anymore.
 > 
-> The probe is called every time the EC device boots from the beginning
-> - sysjumps, crashes, reboots etc. It succeeds the first time.
-> Once the /dev/cros_X file is created, we need the possibility to
-> access the same EC device, with the same, previously created file.
-> The only way to do that is to reused the already created
-> cros_ec_device structure.
+> While I'm at it, sort the includes.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506271434.Gk0epC9H-lkp@intel.com/
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> ---
+>   .../selftests/net/bench/page_pool/bench_page_pool_simple.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
 
-What are the shortcomings if it re-creates /dev/cros_X everytime? Isn't it
-also a way for userland programs to be aware of the EC device crashes?
-
-Why other cros_ec_X drivers doesn't need the mechanism?
+Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
