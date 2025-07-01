@@ -1,131 +1,164 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CE323A9A3;
-	Tue,  1 Jul 2025 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC07F223716;
+	Tue,  1 Jul 2025 09:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751360892; cv=none; b=U1TKMsnZsiJUlto51cZxRij8/oAM6DOk23X/mv8fJbKkAD9k7dPHkA+DXs7TaX53azC/LWZuT1hQ6/jFhBtQ4M33yA5u0yWmt/dNzL06xxT/nfTkRCRiSxQTIiCHhD+Yktv3N6GIAQQ1pD/N3cb2woJFQMnbB8O/qk6WSUzve08=
+	t=1751360945; cv=none; b=qoVbX9stopa86gEqL+B7USEOskTlByeWs5843buRmni5/L2wGoejBJOG9c4DnK855KK5BY7BOSrjGmyu6T5twfd2ObiWz5+Ihz8vOHLaKcdaBgjVThqQwt+B7KuVGhOcV2CGb2OM2uUBQFowx2Ov5EgYfVCDAtK/6Oz9BgiGBao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751360892; c=relaxed/simple;
-	bh=sQOR5Ukb5Jem/GnNplbF10cI9ssq5tp3I425VLznSko=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=LDmZ6v/9QP72Jz6IPH0DcUUfAGm2z/69hhT97xmDfo7LRuQo4Xtm9Wcw0VUHZwIx0AV6qJWz0QIP0mhqg/HJm9I3xAfXtx39W6/AkOM4BWN8oHN5lV3FB9ZyE7UfJN1w0OZz6dn4ziB2asTyC+nepdftk/ZNdM4xhGlBDDLrUxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=hwwkWF8S; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1751360945; c=relaxed/simple;
+	bh=6UDM5fNF57aJf6DmBghu+lhkpkzxGnJVIa2mlP4nq4w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GaVMwEAIALjG+093Dq9M/44D1VAadTq/UmhAWAEUpkcu6iI9Kk4le8BQ8dzXyE6gZ6B/kyG7PtBXDI6e9SwrGNhg5DJhg6HC1lZcAVth1UWmf12PVBdWQeK4ktFomM+eCpUHOlakjf5/xGZOfEARpxup08swpJth035eep5ijUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWBF/aL9; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="hwwkWF8S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWBF/aL9"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-236192f8770so34420895ad.0;
+        Tue, 01 Jul 2025 02:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751360943; x=1751965743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NWlbP5Cgher1hLjR8FaEXf/IQPBYBpXZBtIHixSbQv0=;
+        b=RWBF/aL9KYhzkwdrl251fDfGgZfE4J30C0eV5nZCVrJbf7SOtWGkLQllKycWr+saWm
+         B0m2qEwKrfP+wCjG3zFVAb79GQ4HbPFY/QX2bKc2WdrdzbbDY2TkRZy7714LuZDOPTgn
+         4g2Ae8AubkBuumy7OTGnWPsI6MFe+THn9HHoLyXBfPYNMdEfHTk7QjAhPGLzKSDT8MLW
+         kB+A8nD6QpnTNDI+X1ALdhYZPY5U/IHZEtBm5UIMSZNiws+38G209fiadkhwhaGnnslo
+         d3aE+qQjOV/8vwpb9bpNBMnf8sNifCcG5ViIS8LSLQ6NXLCfleXfzjQgDjwsjxEGcBlk
+         gV5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751360943; x=1751965743;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NWlbP5Cgher1hLjR8FaEXf/IQPBYBpXZBtIHixSbQv0=;
+        b=nc9C5ppkZjG9Y4l3ahY10r/MI9+6OLsRQDReYqdSWY2/XL+iOK0PogMnilKixrmvXu
+         3k1Yxv/vqJEvnOfRCeiz5EPRBBZK01MWiPjmwn74FzBDSqQgeame7NOMXzepJvt9Nexl
+         BLSzj9160kdyAqBwLpufnGyG4Sm9grsdyFlNOdBHNPH2TsWH8nEld56AYpigVdgaR0h2
+         +hOzS7aaLnTJ+TeUaN8g25Mpfy/CBZQ5xPqIiCfVDExXeZPWwVv9HQwt8ZRZsslPrCB6
+         le7bkEb1sYfzjHqx4L2znOIJ61sfwYdyvBPhqXLR1mHowPcWx9ALS7plKajGPqTVcmDk
+         9+lg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOyMHDrcjNnI8J9PixdZVGuUrKQ4djtVbWqmiLg7+AmyYtUvpxCHj3zc2/53DWmJ2bui5GYNwL@vger.kernel.org, AJvYcCWB+gpu/dGRdRu4BEvRnKLRWfuj2A6npSSBRNID2+9QNpHIX1EwpAJLX0EEyD3vNISxeM+cZeXUhJMUvLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN24AkCkcuK04+ALcCCo6OsNlW/kA7YIjInda9rf/QIBvIQdDi
+	EAqOgEh/bsRtRGD9UpZLcOjONQPZbbXJneyGHxsAYAR7Ua46OAoibrLq
+X-Gm-Gg: ASbGncteChIaifGN9NUvxja5lVN8ga94EypTG/AliqqnOGHebSlqBetxuRRBZJdZqYF
+	Iz+GGdASEYuHLjThFKM1/Vu4Dkg88xaaGmiMYOrGCG6cvwLNIloEfbirrOxA+wIP8D11FeeXxvb
+	GJc1oXL9mNCR0DedtkkKks69N+jbs2CIB2YfJHFjtB3pDEmAtiyqC8Ol5GptwE2Dz/BQD7r4tUJ
+	tYFEJd/wcKrh4wRHxG4LNVVQx3Yez2Ykkvbk3PXlyylvpTSS/O5vof+4rtbqbmXC4h4cp8RVIsD
+	SHNc8wVXZoB5azb0J41Gcdz00HOVO+SKSfzTn6H2HvRzf6OMPHbIQDBmJUrRhrLkGMwmcDA12jI
+	8XGZ7dZs5nUcyMwfyddZub0cOsu5Gmt0e
+X-Google-Smtp-Source: AGHT+IH4br/vkS1TA5kOB0JT6na6FWAWji5Ksq2QJ8zm41vhk8hFAwkD6uASfLWv3LauaAlZIzweIQ==
+X-Received: by 2002:a17:902:da48:b0:235:e94b:62dd with SMTP id d9443c01a7336-23b355469f9mr44669715ad.12.1751360943048;
+        Tue, 01 Jul 2025 02:09:03 -0700 (PDT)
+Received: from DESKTOP-NBGHJ1C.local.valinux.co.jp (vagw.valinux.co.jp. [210.128.90.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb39bcbcsm99758425ad.134.2025.07.01.02.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jul 2025 02:09:02 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: horms@kernel.org
+Cc: andrew+netdev@lunn.ch,
+	bcm-kernel-feedback-list@broadcom.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	florian.fainelli@broadcom.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	opendmb@gmail.com,
+	pabeni@redhat.com,
+	ryotkkr98@gmail.com,
+	zakkemble@gmail.com
+Subject: Re: [PATCH] net: bcmgenet: Initialize u64 stats seq counter
+Date: Tue,  1 Jul 2025 18:08:58 +0900
+Message-Id: <20250701090858.7954-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250630162147.GJ41770@horms.kernel.org>
+References: <20250630162147.GJ41770@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1751360887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sCKhaBsg8xUAooQ2UnBR99qEvYpdT0zIlTvlGHqxLsI=;
-	b=hwwkWF8SmOXJLw9wzALqdogqAoTe/5RQm7bPFyxQrcWnFMjdT2GuLKk21ZDWysMGviZ5f9
-	bFW5nLhOSzTFNd/KKAgJys6NIt5GGPMzTN5ExlBdQ+ttoSfDQf813i2zfAhSjBy5T9S5nm
-	29imL8mAXYjoMtwg6ieAmEp4bhhpPxmNV3e4mokzW0Q5uHpiToqxC+UdhwIeghoW2Rr5Yc
-	MEgpH9jb0lb+sGuLV3r7uZu3Xe32CPkiZyHDzGbG2mp5HMb9juEXMXYXFjErEa7CJNckxS
-	o2HuCpmNUldlDxBTa1/KBP1Tidc4c6apZEkK2BCsDZDzHI0/9eb/zNK1mHafGQ==
-Content-Type: multipart/signed;
- boundary=b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Tue, 01 Jul 2025 11:07:51 +0200
-Message-Id: <DB0LM56C47LH.YYFY0ZGCVVKC@cknow.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Heiko
- Stuebner" <heiko@sntech.de>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
- <kernel@collabora.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: adjust dcin regulator on ROCK
- 4D
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Nicolas Frattaroli" <nicolas.frattaroli@collabora.com>, "Sebastian
- Reichel" <sebastian.reichel@collabora.com>
-References: <20250630-rock4d-reg-usb-wifi-v1-0-1057f412d98c@collabora.com>
- <5acizoywvjolaffojiawqlzixiclrqzohuhq55lbsjm6yhhlwi@w2amqugl3ee2>
- <DB0KL629S4E4.3ENNM27XN3IYM@cknow.org> <5039013.31r3eYUQgx@workhorse>
-In-Reply-To: <5039013.31r3eYUQgx@workhorse>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Hello Horman-san!
 
-On Tue Jul 1, 2025 at 10:55 AM CEST, Nicolas Frattaroli wrote:
-> On Tuesday, 1 July 2025 10:19:33 Central European Summer Time Diederik de=
- Haas wrote:
->> On Tue Jul 1, 2025 at 1:10 AM CEST, Sebastian Reichel wrote:
->> > On Mon, Jun 30, 2025 at 08:12:27PM +0200, Diederik de Haas wrote:
->> >> On Mon Jun 30, 2025 at 5:36 PM CEST, Nicolas Frattaroli wrote:
->> >> > The ROCK 4D's actual DC input is 5V, and the schematic names it as =
-being
->> >> > 5V as well.
->> >> >
->> >> > Rename the regulator, and change the voltage it claims to be at.
->> >>=20
->> >> Shouldn't it have a fixes tag then? Providing 12V where 5V is expecte=
-d
->> >> sounds problematic ;-)
->> >
->> > This is basically "just" documentation, as the DT just describes
->> > a fixed regulator (i.e. nothing software controllable). This just
->> > changes a number in sysfs :)
->> >
->> > Note, that the 5V DCIN is a USB-C port, which does not do any PD
->> > negotiation, but has the 5K1 resistors on the CC lines to "request"
->> > 5V. If for whatever reason a higher voltage is applied (which does
->> > not happen as long as the power is provided by anything remotely
->> > following the USB specifications) there also is an over-voltage
->> > protection chip. So it's not problematic :)
->>=20
->> I was worried about and wondered why I/we did NOT receive reports about
->> boards being fried. Good to know, thanks!
->>=20
->> > OTOH adding a Fixes tag does not hurt ;)
+On Mon, 30 Jun 2025 17:21:47 +0100, Simon Horman wrote:
+>On Sun, Jun 29, 2025 at 11:41:09AM +0000, Ryo Takakura wrote:
+>> Initialize u64 stats as it uses seq counter on 32bit machines
+>> as suggested by lockdep below.
+>> 
+>> [    1.830953][    T1] INFO: trying to register non-static key.
+>> [    1.830993][    T1] The code is fine but needs lockdep annotation, or maybe
+>> [    1.831027][    T1] you didn't initialize this object before use?
+>> [    1.831057][    T1] turning off the locking correctness validator.
+>> [    1.831090][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.16.0-rc2-v7l+ #1 PREEMPT
+>> [    1.831097][    T1] Tainted: [W]=WARN
+>> [    1.831099][    T1] Hardware name: BCM2711
+>> [    1.831101][    T1] Call trace:
+>> [    1.831104][    T1]  unwind_backtrace from show_stack+0x18/0x1c
+>> [    1.831120][    T1]  show_stack from dump_stack_lvl+0x8c/0xcc
+>> [    1.831129][    T1]  dump_stack_lvl from register_lock_class+0x9e8/0x9fc
+>> [    1.831141][    T1]  register_lock_class from __lock_acquire+0x420/0x22c0
+>> [    1.831154][    T1]  __lock_acquire from lock_acquire+0x130/0x3f8
+>> [    1.831166][    T1]  lock_acquire from bcmgenet_get_stats64+0x4a4/0x4c8
+>> [    1.831176][    T1]  bcmgenet_get_stats64 from dev_get_stats+0x4c/0x408
+>> [    1.831184][    T1]  dev_get_stats from rtnl_fill_stats+0x38/0x120
+>> [    1.831193][    T1]  rtnl_fill_stats from rtnl_fill_ifinfo+0x7f8/0x1890
+>> [    1.831203][    T1]  rtnl_fill_ifinfo from rtmsg_ifinfo_build_skb+0xd0/0x138
+>> [    1.831214][    T1]  rtmsg_ifinfo_build_skb from rtmsg_ifinfo+0x48/0x8c
+>> [    1.831225][    T1]  rtmsg_ifinfo from register_netdevice+0x8c0/0x95c
+>> [    1.831237][    T1]  register_netdevice from register_netdev+0x28/0x40
+>> [    1.831247][    T1]  register_netdev from bcmgenet_probe+0x690/0x6bc
+>> [    1.831255][    T1]  bcmgenet_probe from platform_probe+0x64/0xbc
+>> [    1.831263][    T1]  platform_probe from really_probe+0xd0/0x2d4
+>> [    1.831269][    T1]  really_probe from __driver_probe_device+0x90/0x1a4
+>> [    1.831273][    T1]  __driver_probe_device from driver_probe_device+0x38/0x11c
+>> [    1.831278][    T1]  driver_probe_device from __driver_attach+0x9c/0x18c
+>> [    1.831282][    T1]  __driver_attach from bus_for_each_dev+0x84/0xd4
+>> [    1.831291][    T1]  bus_for_each_dev from bus_add_driver+0xd4/0x1f4
+>> [    1.831303][    T1]  bus_add_driver from driver_register+0x88/0x120
+>> [    1.831312][    T1]  driver_register from do_one_initcall+0x78/0x360
+>> [    1.831320][    T1]  do_one_initcall from kernel_init_freeable+0x2bc/0x314
+>> [    1.831331][    T1]  kernel_init_freeable from kernel_init+0x1c/0x144
+>> [    1.831339][    T1]  kernel_init from ret_from_fork+0x14/0x20
+>> [    1.831344][    T1] Exception stack(0xf082dfb0 to 0xf082dff8)
+>> [    1.831349][    T1] dfa0:                                     00000000 00000000 00000000 00000000
+>> [    1.831353][    T1] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> [    1.831356][    T1] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>> 
+>> Fixes: 59aa6e3072aa ("net: bcmgenet: switch to use 64bit statistics")
+>> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
 >
-> to add to what Sebastian already said: I purposefully didn't include the
-> Fixes: tag because there is no functional change here. I don't think
-> cosmetic fixes are worth pulling into stable kernels unless they're a
-
-Then I agree with you. I didn't realize it was not a functional change.
-I guess I didn't (fully) understand the "just documentation" remark.
-
-Cheers,
-  Diederik
-
-> dependency of a follow-up functional fix patch, which isn't the case
-> right now. If such a functional fix patch does emerge, it can explicitly
-> declare its dependence on this patch, or even have our robot overlords
-> figure it out itself.
+>Hi Takakura-san,
 >
-> In that sense, I do think a Fixes tag hurts, because it needlessly
-> adds to the patch queue of the stable kernel people, and it's worth
-> pointing out that while I claim this patch has no functional change,
-> that's always predicated on the understanding that it does not
-> unintentionally break anything. In this case the chance is essentially
-> zero though, but I won't bother re-rolling this for that tag alone.
+>Thanks for your patch.
 >
-> Regards,
-> Nicolas Frattaroli
+>Unfortunately it doesn't apply cleanly which is needed by our CI to process
+>your patch.
+>
+>Please:
+>
+>* Rebase and repost your patch on the net tree
+>
+>* Target your patch at net (as opposed to net-next) like this
+>
+>	Subject: [PATCH net v2] ...
+>
+>* And include Florian's tag in v2
+>
+>* Post v2 as a new thread
+>
+>For more information please see
+>https://docs.kernel.org/process/maintainer-netdev.html
 
+Thank you for elaborating.
+I'll resend v2 accordingly!
 
---b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaGOlcAAKCRDXblvOeH7b
-bhLJAP97JDpJXhGMfDQaNL37OzPukLBLbOqLs8V/lgGwI5aFpAEAhggtFpJ3o9PL
-NRBJV2vUQPI7/xkFk0EFLqPv3aJFcAo=
-=mOO0
------END PGP SIGNATURE-----
-
---b8323306f1bbbc5afcc52f8f8b6518b1db3b53e34623a0a8a033e4200c2d--
+Sincerely,
+Ryo Takakura
