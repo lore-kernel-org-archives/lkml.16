@@ -1,311 +1,121 @@
-Received: from rtg-sunil-navi33.amd.com (unknown [165.204.156.251])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E96A25DAFF
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.204.156.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D9E19F130
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 06:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751352008; cv=none; b=k7Y4JjLkZcrC31LReoU9s06slSasTTb32F4aTV6fTqy5p9nZWSw6MMLq0Ierjd29ORgdwzKqgi4qN0frhrHMjwpUmP8B9mV0q3GS9Ohd7RbE9hIESpijI66AVSpmcxf1satwEzjfBjlx3UhiFsdSWiI6z4WIJaqNhxA2dTwxMvw=
+	t=1751352104; cv=none; b=prYtBVdSydtH1aIS8ZAP8PDWMTcfO8ECOfa5HK6xSWUVBRvuGRMQTQKJkWsxzda8CYj+Ugor4qhdk+Pwm91rh90ibMMYVSJMfIoJQMdD/DBPL3Zt/q4GUOJs3rlGLPwL74dt2QjMU1QAfM27WB+qd7g7DutbPtuaO1eAFbfKu7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751352008; c=relaxed/simple;
-	bh=rSEF8HSN8CgFP1N8JPHzQ2rHHEIB+0IdMrs9C+K7g0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tBtH7M9cMbvpwjf6Zxc+my21tlYqG5Eh9j6dJyEIBgRfRr4pRQG5692ddmUMmS5PGb24Yqlie0GGfMWRdsdGYnHOcYuX6EidrPKHSI8fzqnYDjaohRm6ytI5PICjuqMFfrLyZWw/KUaH6kwlGzV69bOjDmjVwYhECfvOdZoFVvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com; arc=none smtp.client-ip=165.204.156.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rtg-sunil-navi33.amd.com
-Received: from rtg-sunil-navi33.amd.com (localhost [127.0.0.1])
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 5616X9GW3210752;
-	Tue, 1 Jul 2025 12:03:09 +0530
-Received: (from sunil@localhost)
-	by rtg-sunil-navi33.amd.com (8.15.2/8.15.2/Submit) id 5616X8i03210727;
-	Tue, 1 Jul 2025 12:03:08 +0530
-From: Sunil Khatri <sunil.khatri@amd.com>
-To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        dri-devel@lists.freedesktop.org
-Cc: amd-gfx@lists.freedesktop.org, simona@ffwll.ch, tzimmermann@suse.de,
-        tursulin@ursulin.net, phasta@kernel.org, dakr@kernel.org,
-        linux-kernel@vger.kernel.org, Oded Gabbay <ogabbay@kernel.org>,
-        Sunil Khatri <sunil.khatri@amd.com>
-Subject: [PATCH v8 1/4] drm: move drm based debugfs funcs to drm_debugfs.c
-Date: Tue,  1 Jul 2025 12:03:00 +0530
-Message-Id: <20250701063303.3210665-1-sunil.khatri@amd.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1751352104; c=relaxed/simple;
+	bh=kGpgLRB+mp02Cl1q11HP6F3dDAhpnnUXWI58xYxcPZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VvjLFdrQuZuXz57q0jniZTQNYIrELibUiHCGlEfGE14GWxpeSJgDYGJULoCn8vHRB4iOz/VXwoRx2XbA1GWZRsDUszcafgp5GBx3WDqx6hjVQDPb/G2/RiuvwvgKIXKcFc0lSXfKPYr1ebOJSTifWtF6+09cuY9C/v++s4bkg6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hxOoqMLc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hxOoqMLc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751352102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yQYfrw2czgfVr+YerX7siCfmJocpn7Zqz18UhcgAHpo=;
+	b=hxOoqMLcIVT1HQARS0yN6JLq1PINIlxGxo8olS8g7ndhsiMbe7CuboDjpU8ivRHZSP+a66
+	3CnCH2l0FdvsZUt33BwI35th4KEBvKAennJQFuSeCnlKj4wZAlD+H6BiGjULNqJqiBe6UB
+	hH4wKyxWfvuB5sb9IqN8wApCfLUG634=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-MgdLvNx5Ppuhlct1dngDNQ-1; Tue, 01 Jul 2025 02:41:41 -0400
+X-MC-Unique: MgdLvNx5Ppuhlct1dngDNQ-1
+X-Mimecast-MFC-AGG-ID: MgdLvNx5Ppuhlct1dngDNQ_1751352100
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2349498f00eso50222945ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 23:41:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751352100; x=1751956900;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yQYfrw2czgfVr+YerX7siCfmJocpn7Zqz18UhcgAHpo=;
+        b=N1zY9nDoOZNa4VjLxD4BtQK0JhDuHzxPharJFuZT8hBwmN5VHgXwfariGe+rnMQs7T
+         gpbI9i+5z52mDUzcTyx38jT27evZDumZLNIt9TfQNCmA6cyLP+MvORiBf2ik4EMjbZ1a
+         AcqjVZxIEK3dM3Df0wWH9/wF3cuAE6TWte6AiCWAuYuHhkr/IVhng2bzFx+aFV92SZEA
+         dFPDRpBrJwg0BYteqXuIzUGkmtw/PM/iLwSbw4I4q4nzzv5lf4z5Z1rv41eg8nnVRDeR
+         AOXNWim14ArUJJ8yewnIxdnJJMuBgK1ZXBDod3f2PJPHSIiD6sOM81Dw6KZ+QGuw1i06
+         hKRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ7vN8TmnBLJK2fbQUyFFCXNy91d/TPfuPDYL9dqLXl5Ww3sPPzEeVZdnWeKO6rUkRuFp7BtcCH93SG0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw67XptmYrDuHAPAI9ySHfRM20EH70hA7s+k8x2ufGJPt9kKErI
+	0+qDeuNR+71VcpRM7owVBX8XCiaUWm+TkdqhBITOSaw5ox0XT/U8WXrU7ZJAmcbSKkx42nPmxpf
+	doA0sJ/jYxmqLIuXSRd6PnzamsSb16UgGUMkhkEr2EDnYAZeFHzpXpzo36Ng3uplU4Q==
+X-Gm-Gg: ASbGncuoYbrdmspEjktXzs36pd7wAFxIDDTpnV//j6BI+jH91uizQkK+RG3RLw3Y1Z6
+	VE4fAESUKOBjAAv2s+QvNDeMIvbxZ3zClPMiQKMiKaORtx5ppRXALhmzFfiAvXbevJWz9zLU7Qi
+	i8abXbCjJ1qTsPSkk27EUHG/gxq2XO3ah2PEkgiye6yihUbTJ/UIDgaj3ckjvjamdQgSVfeHxw2
+	17KSeFd1JscfOhxk5tojbSwQbPP1L0whbS6UVjIAb3vCNmHU3NR6nc9qgMujgux2Dg3aksl3fcN
+	YRLUvxk21GxGNiB5+40fkPFm8jhfnnIVguKaZOImLnIIr2iKHYc8b+OoX6h8hg==
+X-Received: by 2002:a17:903:19c6:b0:237:e3bc:7691 with SMTP id d9443c01a7336-23b354ccb5fmr48817395ad.13.1751352100098;
+        Mon, 30 Jun 2025 23:41:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEzRrkg75jFwfmHGPour3us0gMVNM40EjoGoGZlYrZyd2YrJY+nKplS2aGywWS1wb1p46z/mQ==
+X-Received: by 2002:a17:903:19c6:b0:237:e3bc:7691 with SMTP id d9443c01a7336-23b354ccb5fmr48816855ad.13.1751352099716;
+        Mon, 30 Jun 2025 23:41:39 -0700 (PDT)
+Received: from [192.168.68.51] (n175-34-62-5.mrk21.qld.optusnet.com.au. [175.34.62.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb2e1b3esm96630595ad.35.2025.06.30.23.41.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jun 2025 23:41:39 -0700 (PDT)
+Message-ID: <5930a931-b809-497d-8eb2-076570738ef7@redhat.com>
+Date: Tue, 1 Jul 2025 16:41:30 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 13/43] arm64: RME: Support for the VGIC in realms
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Emi Kisanuki <fj0570is@fujitsu.com>
+References: <20250611104844.245235-1-steven.price@arm.com>
+ <20250611104844.245235-14-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250611104844.245235-14-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Requirement is to create per client-id based directories to
-hold key debugging information and for that access to
-root debugfs dentry is need which is not in one place
-and that information cannot be stored in drm_device.
-
-Move the debugfs functionality from drm_drv.c and drm_accel.c
-to drm_debugfs.c This enables debugfs root node reference
-directly drm_debugfs.c and hence enable to create per client-id
-directory.
-
-v8: Create drm_accel dentry only if it's config is enabled (Jeff, Hugo)
-v8: Merge drm_drv and drm_accel debugfs patches (Koenig, Christian)
-
-Suggested-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sunil Khatri <sunil.khatri@amd.com>
----
- drivers/accel/drm_accel.c      | 16 ----------------
- drivers/gpu/drm/drm_debugfs.c  | 32 ++++++++++++++++++++++++++------
- drivers/gpu/drm/drm_drv.c      | 14 ++++----------
- drivers/gpu/drm/drm_internal.h |  6 ++----
- include/drm/drm_accel.h        |  5 -----
- include/drm/drm_drv.h          | 14 ++++++++++++--
- 6 files changed, 44 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/accel/drm_accel.c b/drivers/accel/drm_accel.c
-index aa826033b0ce..ca3357acd127 100644
---- a/drivers/accel/drm_accel.c
-+++ b/drivers/accel/drm_accel.c
-@@ -20,8 +20,6 @@
- 
- DEFINE_XARRAY_ALLOC(accel_minors_xa);
- 
--static struct dentry *accel_debugfs_root;
--
- static const struct device_type accel_sysfs_device_minor = {
- 	.name = "accel_minor"
- };
-@@ -73,17 +71,6 @@ static const struct drm_info_list accel_debugfs_list[] = {
- };
- #define ACCEL_DEBUGFS_ENTRIES ARRAY_SIZE(accel_debugfs_list)
- 
--/**
-- * accel_debugfs_init() - Initialize debugfs for device
-- * @dev: Pointer to the device instance.
-- *
-- * This function creates a root directory for the device in debugfs.
-- */
--void accel_debugfs_init(struct drm_device *dev)
--{
--	drm_debugfs_dev_init(dev, accel_debugfs_root);
--}
--
- /**
-  * accel_debugfs_register() - Register debugfs for device
-  * @dev: Pointer to the device instance.
-@@ -194,7 +181,6 @@ static const struct file_operations accel_stub_fops = {
- void accel_core_exit(void)
- {
- 	unregister_chrdev(ACCEL_MAJOR, "accel");
--	debugfs_remove(accel_debugfs_root);
- 	accel_sysfs_destroy();
- 	WARN_ON(!xa_empty(&accel_minors_xa));
- }
-@@ -209,8 +195,6 @@ int __init accel_core_init(void)
- 		goto error;
- 	}
- 
--	accel_debugfs_root = debugfs_create_dir("accel", NULL);
--
- 	ret = register_chrdev(ACCEL_MAJOR, "accel", &accel_stub_fops);
- 	if (ret < 0)
- 		DRM_ERROR("Cannot register ACCEL major: %d\n", ret);
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 2d43bda82887..04da7c27ff7c 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -44,6 +44,9 @@
- #include "drm_crtc_internal.h"
- #include "drm_internal.h"
- 
-+static struct dentry *accel_debugfs_root;
-+static struct dentry *drm_debugfs_root;
-+
- /***************************************************
-  * Initialization, etc.
-  **************************************************/
-@@ -286,16 +289,34 @@ int drm_debugfs_remove_files(const struct drm_info_list *files, int count,
- }
- EXPORT_SYMBOL(drm_debugfs_remove_files);
- 
-+void drm_debugfs_init_root(void)
-+{
-+	drm_debugfs_root = debugfs_create_dir("dri", NULL);
-+#if IS_ENABLED(CONFIG_DRM_ACCEL)
-+	accel_debugfs_root = debugfs_create_dir("accel", NULL);
-+#endif
-+}
-+
-+void drm_debugfs_remove_root(void)
-+{
-+#if IS_ENABLED(CONFIG_DRM_ACCEL)
-+	debugfs_remove(accel_debugfs_root);
-+#endif
-+	debugfs_remove(drm_debugfs_root);
-+}
-+
- /**
-  * drm_debugfs_dev_init - create debugfs directory for the device
-  * @dev: the device which we want to create the directory for
-- * @root: the parent directory depending on the device type
-  *
-  * Creates the debugfs directory for the device under the given root directory.
-  */
--void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root)
-+void drm_debugfs_dev_init(struct drm_device *dev)
- {
--	dev->debugfs_root = debugfs_create_dir(dev->unique, root);
-+	if (drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
-+		dev->debugfs_root = debugfs_create_dir(dev->unique, accel_debugfs_root);
-+	else
-+		dev->debugfs_root = debugfs_create_dir(dev->unique, drm_debugfs_root);
- }
- 
- /**
-@@ -322,14 +343,13 @@ void drm_debugfs_dev_register(struct drm_device *dev)
- 		drm_atomic_debugfs_init(dev);
- }
- 
--int drm_debugfs_register(struct drm_minor *minor, int minor_id,
--			 struct dentry *root)
-+int drm_debugfs_register(struct drm_minor *minor, int minor_id)
- {
- 	struct drm_device *dev = minor->dev;
- 	char name[64];
- 
- 	sprintf(name, "%d", minor_id);
--	minor->debugfs_symlink = debugfs_create_symlink(name, root,
-+	minor->debugfs_symlink = debugfs_create_symlink(name, drm_debugfs_root,
- 							dev->unique);
- 
- 	/* TODO: Only for compatibility with drivers */
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 17fc5dc708f4..b9b5c9f953af 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -69,8 +69,6 @@ DEFINE_XARRAY_ALLOC(drm_minors_xa);
-  */
- static bool drm_core_init_complete;
- 
--static struct dentry *drm_debugfs_root;
--
- DEFINE_STATIC_SRCU(drm_unplug_srcu);
- 
- /*
-@@ -183,8 +181,7 @@ static int drm_minor_register(struct drm_device *dev, enum drm_minor_type type)
- 		return 0;
- 
- 	if (minor->type != DRM_MINOR_ACCEL) {
--		ret = drm_debugfs_register(minor, minor->index,
--					   drm_debugfs_root);
-+		ret = drm_debugfs_register(minor, minor->index);
- 		if (ret) {
- 			DRM_ERROR("DRM: Failed to initialize /sys/kernel/debug/dri.\n");
- 			goto err_debugfs;
-@@ -751,10 +748,7 @@ static int drm_dev_init(struct drm_device *dev,
- 		goto err;
- 	}
- 
--	if (drm_core_check_feature(dev, DRIVER_COMPUTE_ACCEL))
--		accel_debugfs_init(dev);
--	else
--		drm_debugfs_dev_init(dev, drm_debugfs_root);
-+	drm_debugfs_dev_init(dev);
- 
- 	return 0;
- 
-@@ -1168,7 +1162,7 @@ static void drm_core_exit(void)
- 	drm_panic_exit();
- 	accel_core_exit();
- 	unregister_chrdev(DRM_MAJOR, "drm");
--	debugfs_remove(drm_debugfs_root);
-+	drm_debugfs_remove_root();
- 	drm_sysfs_destroy();
- 	WARN_ON(!xa_empty(&drm_minors_xa));
- 	drm_connector_ida_destroy();
-@@ -1187,7 +1181,7 @@ static int __init drm_core_init(void)
- 		goto error;
- 	}
- 
--	drm_debugfs_root = debugfs_create_dir("dri", NULL);
-+	drm_debugfs_init_root();
- 
- 	ret = register_chrdev(DRM_MAJOR, "drm", &drm_stub_fops);
- 	if (ret < 0)
-diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
-index b2b6a8e49dda..d2d8e72f32d9 100644
---- a/drivers/gpu/drm/drm_internal.h
-+++ b/drivers/gpu/drm/drm_internal.h
-@@ -186,8 +186,7 @@ void drm_gem_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
- #if defined(CONFIG_DEBUG_FS)
- void drm_debugfs_dev_fini(struct drm_device *dev);
- void drm_debugfs_dev_register(struct drm_device *dev);
--int drm_debugfs_register(struct drm_minor *minor, int minor_id,
--			 struct dentry *root);
-+int drm_debugfs_register(struct drm_minor *minor, int minor_id);
- void drm_debugfs_unregister(struct drm_minor *minor);
- void drm_debugfs_connector_add(struct drm_connector *connector);
- void drm_debugfs_connector_remove(struct drm_connector *connector);
-@@ -205,8 +204,7 @@ static inline void drm_debugfs_dev_register(struct drm_device *dev)
- {
- }
- 
--static inline int drm_debugfs_register(struct drm_minor *minor, int minor_id,
--				       struct dentry *root)
-+static inline int drm_debugfs_register(struct drm_minor *minor, int minor_id)
- {
- 	return 0;
- }
-diff --git a/include/drm/drm_accel.h b/include/drm/drm_accel.h
-index 038ccb02f9a3..20a665ec6f16 100644
---- a/include/drm/drm_accel.h
-+++ b/include/drm/drm_accel.h
-@@ -58,7 +58,6 @@ void accel_core_exit(void);
- int accel_core_init(void);
- void accel_set_device_instance_params(struct device *kdev, int index);
- int accel_open(struct inode *inode, struct file *filp);
--void accel_debugfs_init(struct drm_device *dev);
- void accel_debugfs_register(struct drm_device *dev);
- 
- #else
-@@ -77,10 +76,6 @@ static inline void accel_set_device_instance_params(struct device *kdev, int ind
- {
- }
- 
--static inline void accel_debugfs_init(struct drm_device *dev)
--{
--}
--
- static inline void accel_debugfs_register(struct drm_device *dev)
- {
- }
-diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
-index a43d707b5f36..392baeaaa4a1 100644
---- a/include/drm/drm_drv.h
-+++ b/include/drm/drm_drv.h
-@@ -566,9 +566,19 @@ static inline bool drm_firmware_drivers_only(void)
- }
- 
- #if defined(CONFIG_DEBUG_FS)
--void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root);
-+void drm_debugfs_dev_init(struct drm_device *dev);
-+void drm_debugfs_init_root(void);
-+void drm_debugfs_remove_root(void);
- #else
--static inline void drm_debugfs_dev_init(struct drm_device *dev, struct dentry *root)
-+static inline void drm_debugfs_dev_init(struct drm_device *dev)
-+{
-+}
-+
-+static inline void drm_debugfs_init_root(void)
-+{
-+}
-+
-+static inline void drm_debugfs_remove_root(void)
- {
- }
- #endif
--- 
-2.34.1
+On 6/11/25 8:48 PM, Steven Price wrote:
+> The RMM provides emulation of a VGIC to the realm guest but delegates
+> much of the handling to the host. Implement support in KVM for
+> saving/restoring state to/from the REC structure.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes from v8:
+>   * Propagate gicv3_hcr to from the RMM.
+> Changes from v5:
+>   * Handle RMM providing fewer GIC LRs than the hardware supports.
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |  1 +
+>   arch/arm64/kvm/arm.c             | 16 +++++++++--
+>   arch/arm64/kvm/rme.c             |  5 ++++
+>   arch/arm64/kvm/vgic/vgic-init.c  |  2 +-
+>   arch/arm64/kvm/vgic/vgic-v3.c    |  6 +++-
+>   arch/arm64/kvm/vgic/vgic.c       | 49 ++++++++++++++++++++++++++++++--
+>   6 files changed, 72 insertions(+), 7 deletions(-)
+> 
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
