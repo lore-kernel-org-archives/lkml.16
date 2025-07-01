@@ -1,66 +1,67 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE13527A927
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4D927F18C
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751390937; cv=none; b=cC8P5qktFB0T1CFf3vlw1d3yULg481z6E6JusNCMaHdAyTkEJxyXGR8oqZhi+QMaxOC5tWxrtK5cTF/ArjT53MBenRnJlW+AxDNxRy3TJV7gVQ3sl07UcVbutjKi91MlO9K3ljY1vqWvifc8hcQ7IeWswuBmtr9afgvVSdE4ut0=
+	t=1751390938; cv=none; b=Az5+be07+akp8gXhJMu+cPHvJsxUbV4vEjdqLXpsUO74c6sqwlBRjZK+rS7gSd4ZwCinKxwFE0S0T1HZg2k5ZOF3D2hfAIp8WijhC3ufcyQUdeD4qn9eXGzAKSczes/hhaRNIK7z+tVJjXYSdeZdu04W73QhOX1QBogg0iMs0Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751390937; c=relaxed/simple;
-	bh=3IyHkvcQPjT+L7Hw7Xdc4sAUW0eW1K5VesBjPPWvXGA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=blRlXb6/UAiBb/ZpSxpgjf3IbpQX9yFPabXS5ClzmECy2XkHsuXQdpSnD62reEPbgnuFqMFQWwebdzTUOvhrjoUVUFv9zdjf+nu2tBxprZ2qbprftmivDYlOrr/+TfDGg9Cxpf1EA76ZpsvyTDpqiM90gGpPlgfojQQWQltlsck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VZ/zFZrW; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1751390938; c=relaxed/simple;
+	bh=Zujt7XXF2JCBnDponojkL+Lg3jkgrBtStEB3brioxIk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Akn3RbdAo08Z09W2Z2nDI8hAoK59RLhxXm/cm5GaZwjx52YeDyQv0RXME0whN697N9tSnMepQ3Ti2Qiz0k7+sy1PdE2FdcJU4HhRFz8SP9x7nFbfDyfLbS7lqFb+UwLBTGRvX5sE/gHR7/dNKSFJNwhnILLpJqD2n7/2m9JwrFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qm5NCs6v; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VZ/zFZrW"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cfb79177so35652915e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qm5NCs6v"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453426170b6so37140415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:28:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1751390934; x=1751995734; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9y0xKUQz6sJ9RW7ntZ21D6nwLji1yQQHh6OPtk5BYu0=;
-        b=VZ/zFZrW7ahTV/sbU0j8irOlop2ubwfjGC0a0MWNDNeEw/A1XmDpJL3TNxuYEPGB9t
-         YvIhrnmx6hiC7PvEhUs47Bp2CjsAzVZlISmeQJAEpbrZSY4XYnayHFzmtxDtuINj7l7x
-         +S3yXYZpWrukhmqdZneLE0SPSd/cgHsmx6g3gE+wiHlgd1HccJ2e1a4fMUdzLY4J7TRn
-         ojVpsYJhDkUx69cH0SWPxxM8ZPleJ7wZ/mSGSu5GmXXl7TmiqLSgUhS355mNZPH9/3gK
-         fcGZUSGGYmhUVG9NyU6pWBWOWGE5yzc9Qmr6Iks4D9lk3mub8/ZEM1s00qmjBqz4EYtK
-         ePqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751390934; x=1751995734;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1751390935; x=1751995735; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9y0xKUQz6sJ9RW7ntZ21D6nwLji1yQQHh6OPtk5BYu0=;
-        b=Us9mfMQxEvQTz7C1FBZAIGWu4OjT7TpWhZhZgPhG7NWEOSgCUl0kBJlGjvlha7+GFt
-         U0V0eNjcRPxI8qOU5rJR3AqeVFZ96ya3cTjEzwrrSaCIVlfMwiEDIlHhUl0uQsoPmNe2
-         8it+5yCSMmniXzEOY/UjQQMZIOKuTRNZEvJk5JZaXVRYLTAJzDYRF/I08JhEMSpJ3WSD
-         bWrNe3MCDuFcbZYVtji7N4PLx210WVAQlbObQYi6NtvdZAjyqe3AGAktQNmB8h47tXwN
-         SaMKDHWKJnHAliSyahQiVMzQwZ6CDR1XNTxjtU65mOzQ8nQnPwKwlIDmNkMTjQebAHTU
-         exLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIBh7L8VQJsjX4zrmVZiUviC79NuoCZLuf+988HyWMBEolKBjZfqLR4EFJ1EAtiBhyIW3Lpm1R8lirpxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypUxr+N8XrqqRhaNq2o8JBKv8kCoF+edyQaw/Wc3/ARfjx8I1a
-	TC8e486wFKHI2cd+hrt952P5F3+v79wvxnTHWaeDk5bYr2rq4unfqKo3g/ocnYcKfvw=
-X-Gm-Gg: ASbGncthyq7hev9/QGfSz2gRSgu0AJe1HzxCvXLBJirjf7IFGTtpttwnhKlcebxqUxY
-	Fb1jMfj16jfvCXsR2mi1h1gE8yh2dLvTzL8EbQqh4rKgTV3+Vp3HBEQmumYRGVYx+8g77OlXU1+
-	jqSZyGfNKi47KSXZ78f3DfPj0aN12gNZ28bCKVfkHSbGpfjybQ1JnM/LDnByhIVPw3QCFR9W135
-	fAQM/4eQvle76oqR/5Z9fryVIS/kx+cpyIdqaEo/sSBZyEOUfTq/wZrAv8i2WCOKTs35To2o+3/
-	18oALfElwWgVHo4sFOpZSxXr9FKaDw2ziDypUfU0L4XbAPiL0xwhfAQe3CXqAJ1Kggavmi1XDok
-	PZA==
-X-Google-Smtp-Source: AGHT+IEVPWfLWerA9EVdvnKKYjWG1lZ011oDFmffIcgOCtKr7rOwtYs8Wzefb09xq5LURBKmZ+ztig==
-X-Received: by 2002:a05:600c:c169:b0:453:9bf:6f79 with SMTP id 5b1f17b1804b1-4538ee624cdmr155141935e9.26.1751390933910;
-        Tue, 01 Jul 2025 10:28:53 -0700 (PDT)
+        bh=wi7fY/KxdNeetANCh6SKDsJR8TexnSGBGPpGc2ysHjU=;
+        b=Qm5NCs6vJsoBX3RpAkc7Y8vAGU3R03dXgAJ4ky5vCF9g/BM+QHufXOXsTtVzC7CVb+
+         o0sjtcUIzUPN0hlVkclHY2O/0I54ENzKWvsG7pSiYaljBkm2QwQJYO9Llg8fpPbQdcNp
+         hdXCo266ap8Zg3+FP5TMmQOU8ZjhpgIOLLV29zQTOR+sOFd/wD0zWuofswadjd5OIS8M
+         bqgYmzAsTqZnZNXg9gzmUbNZHyUtG+d7SKGb5Ywrq8deh+Nc/Bfj8SJnYESaL5qenUX8
+         GtT+mLirzQotO20KoQ82KR7+ovrw2uo+mrbI5FMJERJk9l3GyRbJqKIoYfaJgNGHZv1O
+         E+5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751390935; x=1751995735;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wi7fY/KxdNeetANCh6SKDsJR8TexnSGBGPpGc2ysHjU=;
+        b=Y4onkoJ0bHuC0+VeAzftvkBpRDfgTFR/3PD+vVllp4L7PuBlYsXyMnoczsQXleCLvK
+         aXriFZOHJ7hFrnGCw7DNQqwCsz7LfzkgAXbY9dU1KCEJRdvdjiu7B7rFB3ahhDJDsRhw
+         6zuQq2wOjnn0D0kn7x5DvKag6/fc7r/vre7T2IuPfn3ttEPpuhzTKB5LbRfW98MdxD2B
+         TH8XLILQO4xC2xRmnLcep80uOkqByb0UynHp16VRE81HGzTGhAZZy1zOGLxGoubrPqTp
+         trVnKtAOTIlG6uKfaPmpz051s0Y39sbUTNs785MQcD7hR59iS5EwnHioxyaDkgoRpkBq
+         0TGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHE1CRQ9zCH2ZHjQYkD3/gS7h4tEiW3KmNHGuf3MPJfn8aWEJQ/dtG9N3CSnnrqDKyflpH2GlFMnVGU4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaQeXsWnzAKlNCzY/x9nVc1pZItLEChg5mKowZF6gMfhInjRS4
+	UsiK/sqnVVQsaIYrFFEQ3ZBHhWpMCJXpguKbsj20YSpL2itgjQijECm9EFlhU4sjlvo=
+X-Gm-Gg: ASbGnctYrIGqXxQouR6DU5jespfoBxY4DDxFiSqN7/UMAdyJ1HgLuKRJFldMPOFs0y1
+	U+YHqXZr9hDMiMerMu0VdF6ij62R66u33AH/aKZJ2cz1QS/LEjn6gVCto7e7nAnq6sWIGMGgCWW
+	xi7uj4pClw8pjq1mWsg3kTasImduEJFrdj9+YykKxn7yFtNysvkwfmTfazcOM1lO8077k+bF/9c
+	Qa3an3bJOZ7F1bl0RVss5fzJvwK0DVFCVj1VlG2GS0lRjylZsPzW84VgIR9vdZ7WWqOgORT+CBc
+	NDoRjLHdj5LMPGWA3gKMFEe4iyUlirW+ll8Tn8ANKAAcCWJLhaUvxJe0gU1s3VR+R5dAm4wpSyG
+	w1w==
+X-Google-Smtp-Source: AGHT+IETZJBfTD9XuFDlt03qYFLOlybO8L1BIgA2+brpgkJyTjecZyDbBkqpSABvlGgIIszRDeEhrQ==
+X-Received: by 2002:a05:600c:46d1:b0:453:84a:e8d6 with SMTP id 5b1f17b1804b1-453a78b99f6mr49058275e9.1.1751390934981;
+        Tue, 01 Jul 2025 10:28:54 -0700 (PDT)
 Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:1425:eda1:87ab:f850])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234b1b9sm198716175e9.11.2025.07.01.10.28.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234b1b9sm198716175e9.11.2025.07.01.10.28.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 10:28:53 -0700 (PDT)
+        Tue, 01 Jul 2025 10:28:54 -0700 (PDT)
 From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Subject: [PATCH 0/6] clk: qcom: Add video clock controller and resets for
- X1E80100
-Date: Tue, 01 Jul 2025 19:28:32 +0200
-Message-Id: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
+Date: Tue, 01 Jul 2025 19:28:33 +0200
+Subject: [PATCH 1/6] dt-bindings: clock: qcom,sm8450-videocc: Document
+ X1E80100 compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMAaZGgC/x3MQQqAIBBA0avIrBMcy4SuEi1Cx5qNhkII4t2Tl
- m/xf4NCmanAJhpkerlwigM4CXD3GS+S7IdBK22UVSgrknzZU3JOogoYtDZ2WWcYxZMpcP1v+9H
- 7BzuhM6VdAAAA
-X-Change-ID: 20250701-x1e-videocc-10f1f2257463
+Message-Id: <20250701-x1e-videocc-v1-1-785d393be502@linaro.org>
+References: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
+In-Reply-To: <20250701-x1e-videocc-v1-0-785d393be502@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>
 Cc: Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -87,34 +87,28 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
 
-In preparation of adding iris (video acceleration) for Qualcomm X1E80100,
-enable support for the video clock controller and additional needed reset
-controls. Since iris in X1E is largely identical to SM8550, reuse the
-existing videocc-sm8550 driver with slightly adjusted PLL frequencies and
-adapt the reset definitions from the SM8550 GCC driver.
+X1E80100 videocc is largely identical to SM8550, but needs slightly
+different PLL frequencies. Add a separate qcom,x1e80100-videocc compatible
+to the existing schema used for SM8550.
 
 Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 ---
-Stephan Gerhold (6):
-      dt-bindings: clock: qcom,sm8450-videocc: Document X1E80100 compatible
-      clk: qcom: videocc-sm8550: Allow building without SM8550/SM8560 GCC
-      clk: qcom: videocc-sm8550: Add separate frequency tables for X1E80100
-      dt-bindings: clock: qcom,x1e80100-gcc: Add missing video resets
-      clk: qcom: gcc-x1e80100: Add missing video resets
-      arm64: dts: qcom: x1e80100: Add videocc
+ Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../bindings/clock/qcom,sm8450-videocc.yaml        |  1 +
- arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 15 +++++++++++
- drivers/clk/qcom/Kconfig                           |  3 +--
- drivers/clk/qcom/gcc-x1e80100.c                    |  2 ++
- drivers/clk/qcom/videocc-sm8550.c                  | 29 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,x1e80100-gcc.h      |  2 ++
- 6 files changed, 50 insertions(+), 2 deletions(-)
----
-base-commit: 0672fe83ed07387afb88653ab3b5dae4c84cf3ce
-change-id: 20250701-x1e-videocc-10f1f2257463
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
+index 0d99178332cb99d3f02f50605e19b9b26e3ec807..fcd2727dae46711650fc8fe71221a06630040026 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
+@@ -25,6 +25,7 @@ properties:
+       - qcom,sm8475-videocc
+       - qcom,sm8550-videocc
+       - qcom,sm8650-videocc
++      - qcom,x1e80100-videocc
+ 
+   clocks:
+     items:
 
-Best regards,
 -- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+2.49.0
 
