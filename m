@@ -1,172 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FFA25A655
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E51263F30;
+	Tue,  1 Jul 2025 07:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751356369; cv=none; b=ZpaYwySPXKS1RzSECBBs7VX9llXCGNOMUDeXqWjzzR0o5psEGwb/GxwuKoCUeQ3+N59FMTrlDgODQJr8ClpyhW0HrQmQcHF2xKftSdGC+11jn+wU+QrlCuAsJDAnwwcgR1Z1yUvsoQE/PepPI/iRRedsz8v12cXAznwNNE7WvfY=
+	t=1751356455; cv=none; b=orfvOII40x1UR6j4Fos2ilJl5Kev/yRYKBCOprquT+jpRQgxQmCHVrxiRN2cbVGI+i1X3A1wDEjbCemC1r7uK9AO7FSBWPk7dIVMn81uUDUkTEfF3UZ2DTBZOPvdSgGJMzcKIpHGroOph/zSi0idGyNu4GJfw6PjwcJea63S6Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751356369; c=relaxed/simple;
-	bh=iqtTO7BdgSOS0hugcE5p2vfRNGvtKPLOW4//tI8bFOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZELzmFzmQbkmfaFYDkH+VRj8mKQZfk3y2lxg24K6u6oMev7d32mPO2e+hbynq6N9g3gptevkdHI962tlc1juPppw4x6aWYAt3tAV+OswGut9sdgbZuHpeEEDvHYIM4L18A9Bsm2jaF1iJnoY3dG8Eg1JgKDxKezrYhVSdUcmVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Clj0XtqE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751356455; c=relaxed/simple;
+	bh=h+G1tTJ0bFf9zk0gY6dlDAUz1LYkXgQlPfSzWe/IUJg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=G2frK6YnRuIBl+9wthC6HWbrh3tvFuvcUi769AGFjiFZjdYKB2r82FbjxJ7lihj1j/851nASUEwF15OwgW187+9p1zknSL3oUB1l6GqR6W6zYc6N3J7sIkXt4O9qeNR7nqx/N/ZxTb2hCQD6VxC/qx49nCfNHRKtr1qtVH7jh6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fQvKWJVy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VSKx4sNM; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Clj0XtqE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751356367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5W4qfJP5trIgKgYi+NpmwjcNUOZanDpnOGZEn8fp13E=;
-	b=Clj0XtqE34PmdGzC1W2D7cdWD5jUL5Srr9XHtqpJ3JdpU1399kp3xVVv5kA4NsAU1VP3V9
-	jGcfU76GM48LvMRDeyb3Df35FGGqURL9AmywFw5b0eOG3SIZ4xTP/utYFbQ0O/YeaGX0cU
-	hyWaKb3XJrdqg+YqnMQhrEeJTO3Ih5Y=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-Fv9rWUr5PLqirjF3KDcgcQ-1; Tue, 01 Jul 2025 03:52:46 -0400
-X-MC-Unique: Fv9rWUr5PLqirjF3KDcgcQ-1
-X-Mimecast-MFC-AGG-ID: Fv9rWUr5PLqirjF3KDcgcQ_1751356365
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a58939191eso1015724f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:52:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751356364; x=1751961164;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5W4qfJP5trIgKgYi+NpmwjcNUOZanDpnOGZEn8fp13E=;
-        b=tdJRkpn87d2Q+xFs13pF/OIRztMmTqUUASGptxKvL2RVGMTAkC+EYmu8+MDwHzZm1x
-         6gd+vKjdLa8VBxAHmIJ0ykiviponFA+xgmm4wF9QjNWli2r68OsH/lXTVWs/qYNCygbP
-         zZHWairvB6jjqFBuHu/Y9QgWtRlBuPkBiDwOJH/MwlMMGTjBCkZHJZodGu7jWokOW6R4
-         NnGBM7AHMqq2Cs3nf+BRdMBMXgcHKJruqHH3G+lLdnt5oeL4F/ClArydTaraR43vlVaJ
-         6ub2L9Ou3Y4lbTsOA3k7kMSQVSCHnlADyvRjeKQVCy09Gdrapc13Tb2SUJjqKZhWVao0
-         PJOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/jklopkR7V+V8zwqPhrzDxBdYnnmSvo/e5FKSlsdB7FYQ3bN/IbXtF9CnkMuMaroqfXmlnJkTkDSmXes=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt/RO9/rlUuWqXmt58i9GzrIWt2Uk8/PRtNPyGSN1uEm0nI1aC
-	yeDRaICMiRI/GVqJU1+3KZhpI/YQojESw4NYMIZpJl2Lk3I1csFLJX/0ZoZ8D3+RskxZj+ER0Vm
-	XBOtqVa4njWRNS8oJ0UovTfIqRBl3V7cnirmrS8AcdROfDdpuNf0tNgarRhSIXh02FXJZfn/q9A
-	==
-X-Gm-Gg: ASbGncs3QMxnSxRWF4QFQIA36Qdq/hdXyd5x0akwxs8J951AvhIkXMyxL/SGYg6pxOj
-	nRYsAqKhZed3mmjlxFehUIf7W1iKSRuvS2KANHNwU9K1baXYqB3+AFxUeMhxNrQoDqAmm5om08T
-	BsTG80ImN+bcWz/l44LKG76qndrxJyPlwLuW39ljKqo7Bm0nMwPVG3E8YGyTW35bhSgkKrrsSEO
-	+lbu7qkCOLxh4q9lljijO5EoF3Ji/O/a0m9ey0FOmsk3W66WK1bZvIMmSh6kJjPTsNfsxuWys3o
-	wHz98mjS/qDLoYDv
-X-Received: by 2002:a05:6000:25ca:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a8f51c1a81mr12478143f8f.22.1751356364393;
-        Tue, 01 Jul 2025 00:52:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXOoMiKZEJq6ceWK4Q10DrkD7JlKwDdbKrLj6V8anCMySNXNp0lfxDJ0dXtxq9+6g1HirIxw==
-X-Received: by 2002:a05:6000:25ca:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a8f51c1a81mr12478113f8f.22.1751356363901;
-        Tue, 01 Jul 2025 00:52:43 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:152e:1400:856d:9957:3ec3:1ddc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52a5asm12587008f8f.54.2025.07.01.00.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 00:52:43 -0700 (PDT)
-Date: Tue, 1 Jul 2025 03:52:40 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Zigit Zo <zuozhijie@bytedance.com>
-Cc: jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-	virtualization@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH net] virtio-net: fix a rtnl_lock()
- deadlock during probing
-Message-ID: <20250701035110-mutt-send-email-mst@kernel.org>
-References: <20250630095109.214013-1-zuozhijie@bytedance.com>
- <20250630103240-mutt-send-email-mst@kernel.org>
- <20250630105328-mutt-send-email-mst@kernel.org>
- <f1f68fbd-e2cf-40c5-a6b8-533cb3ec798f@bytedance.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fQvKWJVy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VSKx4sNM"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 4BB3CEC04B8;
+	Tue,  1 Jul 2025 03:54:11 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Tue, 01 Jul 2025 03:54:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1751356451;
+	 x=1751442851; bh=zYIM/y5KUb8LuLsTwnFRYfBitpCmTyytEVjI+bZcC+M=; b=
+	fQvKWJVy2F3XL9mrW/NsX/znHcPnnTFslnWBNBlOamy2LW4SuQaEyFVZxZP0TPGL
+	h24EJEbr2R0HrUPO6hUYxeDCUpwbWANk3gaCg3BndYUyUY3fPMm/kt3lyQQbsY5B
+	Qgffs2amWH6K5UtF9OGJo8DsHytlaLgajonYKqzKvEYBzr5MKTy2/d1fS1Rv1hjN
+	Tqrlxr8Pjl/EYxhzvJ6LY64woUgvSJlZmckvcn7146lOs3CA/otzxs/21jlY6Knr
+	nFjmawuOv9oNUD28wJFbb2zGfCayZDb8lUWzo0pXx/kjfYnTb7ySCL5x+TgnZcvE
+	oFuGYjWsu0/XCzgXZfhXrg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1751356451; x=
+	1751442851; bh=zYIM/y5KUb8LuLsTwnFRYfBitpCmTyytEVjI+bZcC+M=; b=V
+	SKx4sNM2UGFbEnljcl6Y58fity3E1hqrLS2cdYU50g5m1XH+4Gy2iI0xOiyY64Pm
+	l37XCLysJd9arB8gs9uTuZrDirMv+maPlHY4Q7hOrHvDhRUJjHmLcPE0kY7/vniy
+	4Cgbh6PwaCafaGgMKkjIXRPbi1NreRcRoQ7JkJqVt6bW06luGBghN0V8K3F9v8p1
+	b5CNYMY6UKasWTV+D8qEyjvgmPVHpKZJo6YAH6rQLa1CqxwF6T8tM+hLv27Jhhmc
+	ZI23FoaPD8LEUFm8/AW8NydgIgKjIkbZDvIzY34cyVZvN+tyCoL72tXbFrUV5FqV
+	mpolCCIdrGzm8RbS64b9g==
+X-ME-Sender: <xms:I5RjaE9borZee998x-h_5WVKHMNTHkps3VnUh9PTj4kTa4i1KK1TWA>
+    <xme:I5RjaMv285eOopSFmrNL2zt94807nqhXbs6RCRnSBPqIQpdxGpCQlqnQfCgLVRlIe
+    sn4BocR7nYIyWkiZHU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddugedtvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepjhhsthhulhhtiiesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsh
+    grrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepfihilhhlmhgtvhhi
+    tghkvghrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehhrghnshhgsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    shgsohihugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrhigrnhdrohguohhnoh
+    hghhhuvgeslhhinhgrrhhordhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggr
+    nhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehlohhrvghniihordhpihgvrhgrlh
+    hishhisehlihhnrghrohdrohhrgh
+X-ME-Proxy: <xmx:I5RjaKDOHmfxwDXqz6reR74Lp2qNwZ0tnhwyINVohVBmr3SxDc0-Qw>
+    <xmx:I5RjaEcmJRYHeoPYaMv99I6yPTutVSAhzTydwxd7tM6iGaMNlBxwlQ>
+    <xmx:I5RjaJPa7OXiI8J-zZyOCzVZIr5DGUEDP2FNQM4KzV01AWhDT6QhKA>
+    <xmx:I5RjaOm-oywwV26M2wEaJUVCX7K6ffXR310n0WndyUn81ud1BsCbDw>
+    <xmx:I5RjaFXfvouvH1YOkUeI79muLG8uoWNYvYRRg5Uvn_zAB9nuADwzfmRR>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 05E2B700063; Tue,  1 Jul 2025 03:54:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1f68fbd-e2cf-40c5-a6b8-533cb3ec798f@bytedance.com>
+X-ThreadId: T1067a3d3a42d0b8a
+Date: Tue, 01 Jul 2025 09:52:45 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "William McVicker" <willmcvicker@google.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org,
+ "Lorenzo Pieralisi" <lorenzo.pieralisi@linaro.org>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+ "Rob Herring" <robh@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
+ "John Stultz" <jstultz@google.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Message-Id: <27644998-b089-44ae-ae5f-95f4d7cbe756@app.fastmail.com>
+In-Reply-To: <aGMjfxIvbCkyR5rw@google.com>
+References: <20250625085715.889837-1-daniel.lezcano@linaro.org>
+ <aGMjfxIvbCkyR5rw@google.com>
+Subject: Re: [PATCH RFC] timer: of: Create a platform_device before the framework is
+ initialized
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 03:48:41PM +0800, Zigit Zo wrote:
-> On 6/30/25 10:54 PM, Michael S. Tsirkin wrote:
-> > On Mon, Jun 30, 2025 at 10:50:55AM -0400, Michael S. Tsirkin wrote:
-> >> On Mon, Jun 30, 2025 at 05:51:09PM +0800, Zigit Zo wrote:
-> >>> This bug happens if the VMM sends a VIRTIO_NET_S_ANNOUNCE request while
-> >>> the virtio-net driver is still probing with rtnl_lock() hold, this will
-> >>> cause a recursive mutex in netdev_notify_peers().
-> >>>
-> >>> Fix it by skip acking the annouce in virtnet_config_changed_work() when
-> >>> probing. The annouce will still get done when ndo_open() enables the
-> >>> virtio_config_driver_enable().
-> >>
-> >> I am not so sure it will be - while driver is not loaded, device does
-> >> not have to send interrupts, and there's no rule I'm aware of that says
-> >> we'll get one after DRIVER_OK.
-> 
-> Yep, at first we're thinking that when the VIRTIO_NET_S_ANNOUNCE flag set,
-> we can always assure an interrupt has fired by VMM, to notify the driver
-> to do the announcement.
-> 
-> But later we realized that the S_ANNOUNCE flag can be sent before the
-> driver's probing, and for QEMU seems to set the status flag regardless of
-> whether driver is ready, so the problem you're talking still may happens.
-> >> How about, we instead just schedule the work to do it later?I'm not sure if scheduling the work later will break df28de7b0050, the work
-> was being scheduled before that commit, and we have no much idea of why that
-> commit removes the schedule_work, we just keep it for safe...
+On Tue, Jul 1, 2025, at 01:53, William McVicker wrote:
+>> @@ -1550,6 +1553,8 @@ typedef void (*of_init_fn_1)(struct device_node *);
+>>  		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
+>>  #define OF_DECLARE_2(table, name, compat, fn) \
+>>  		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
+>> +#define OF_DECLARE_PDEV(table, name, compat, fn) \
+>> +		_OF_DECLARE(table, name, compat, fn, of_init_fn_pdev)
+>
+> To support auto-module loading you'll need to also define the
+> MODULE_DEVICE_TABLE() as part of TIMER_OF_DECLARE_PDEV().
+>
+> I haven't tested the patch yet, but aside from my comment above it LGTM.
 
-Well managing async things is always tricky. Direct call is safer.
-If you reintroduce it, you need to audit all call paths for safely.
+The patch doesn't actually have a module_platform_driver_probe()
+yet either, so loading the module wouldn't actually do anything.
 
+I feel that this RFC by itself a good step in the direction we want, 
+so Daniel should go ahead with prototyping the next two steps:
+adding the platform_driver registration into OF_DECLARE_PDEV,
+and converting a driver so it can be used either with the _OF_DECLARE()
+or the platform_driver case.
 
-> Then, for plan A, we change the check_announce to schedule_announce, and if
-> that's true, we do another schedule_work to call virtnet_config_changed_work
-> again to finish the announcement, like
-> 
-> 	if (v & VIRTIO_NET_S_ANNOUNCE) {
-> 		if (unlikely(schedule_announce))
-> 			schedule_work(&vi->config_work);
-> 		else {
-> 			netdev_notify_peers(vi->dev);
-> 			virtnet_ack_link_announce(vi);
-> 		}
-> 	}
-> 
-> >>
-> >> Also, there is another bug here.
-> >> If ndo_open did not run, we actually should not send any announcements.
-> >>
-> >> Do we care if carrier on is set on probe or on open?
-> >> If not, let's just defer this to ndo_open?
-> > 
-> > Hmm yes I think we do, device is visible to userspace is it not?
-> > 
-> > Hmm.  We can keep the announce bit set in vi->status and on open, check
-> > it and then schedule a work to do the announcement.
-> 
-> Okay, so there's a plan B, we save the bit and re-check it in ndo_open, like
-> 
-> 	/* __virtnet_config_changed_work() */
-> 	if (v & VIRTIO_NET_S_ANNOUNCE) {
-> 		vi->status |= VIRTIO_NET_S_ANNOUNCE;
-> 		if (unlikely(!check_announce))
-> 			goto check_link;
-> 
-> 		netdev_notify_peers(vi->dev);
-> 		virtnet_ack_link_announce(vi);
-> 		vi->status &= ~VIRTIO_NET_S_ANNOUNCE;
-> 	}
-> 
-> 	/* virtnet_open() */
-> 	if (virtio_has_feature(vi->vdev, VIRTIO_NET_F_STATUS)) {
-> 		if (vi->status & VIRTIO_NET_S_LINK_UP)
-> 			netif_carrier_on(vi->dev);
-> 		if
-> 		if (vi->status & VIRTIO_NET_S_ANNOUNCE)
-> 			schedule_work(&vi->config_work);
-> 		virtio_config_driver_enable(vi->vdev);
-> 	}
-> 
-> This is a dirty demo, any ideas are welcomed :)
-> 
-> (I think in virtnet_open() we can make the S_LINK_UP being scheduled as well?)
+Regarding the sh_early_platform_driver code that Rob mentioned,
+I think this one is already better since it doesn't duplicate
+parts of the platform_driver framework and it interfaces with
+device tree based probing.
 
+     Arnd
