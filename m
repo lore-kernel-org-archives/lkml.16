@@ -1,132 +1,205 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CAD19995E;
-	Tue,  1 Jul 2025 22:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218ED27A903;
+	Tue,  1 Jul 2025 22:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407387; cv=none; b=Nz6e77lQLEtEPmqb3LgV5Qow+1OqskjN5pSRUL8urkRjsNXrlyWKV4oMXaXWy2dg6MLR5QBx0UHwUI/tVjKLimcAcsTDi9eAlFApFZh3sk7LEJdx4eeQN0R0RFBMo8iepGRC+vbQL9yyIAXVu6vGmuqwaSfXa2s0bO2oQ5vEAtk=
+	t=1751407502; cv=none; b=G+nYqzJCuc54K061giN6le4/zKzfKbpgMtw3s0rj8Dz8bdgwCz+9W+raxxx1i/Zh3B/T35IhOoFS/YQuFh/ttQ8KUqoRGRIZyprnZvMXGYiQIf7LFTTi9V/RuEIV/VH+irsJ17XNklM7He6Mg9AbCRcRwEvB/8BmfDy25q57rxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407387; c=relaxed/simple;
-	bh=6u6DYp8XHiqMAtZhMlgpyQ1cp2/ZUdYKWCN5VTWJ8x4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E4NKIqEd8K8vDjOzRr+t1v2u+3mplHWoF2/9jRyYYFsJhdmxbYCxdM8xGUGvBdPisd1R1faVHini3XnrxgcZsPrPgEyEDgmuLQvlyT8ChdAR5wUo3DWnDxc0uWtKRs3JvaHhgrbqg9W73xYBOTY9WThn6I77RcorYEiSVdNyaeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AHlaW8L8; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1751407502; c=relaxed/simple;
+	bh=ppyu9gsbxrpZ5wf+weVHPIJpVDOSetdVu4g7Nd8pDvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kkZ0BjRVOAp7lJo9AAFI4z0W68zutkp3WIO6YbGEAnoZsiVBVUhgP2YewOBARnKUcwbaivdsEfTL33tiJSLoyqnmd0Gp1jHfY8zVvHvcIqBxDIXcB+bHp6WlwVCUGV8d+Tzf1/iBU9fjx+33DgkV9nu/I5pAqMeN73jYQXDarQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MwmLeB8m; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHlaW8L8"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60c3aafae23so15533790a12.1;
-        Tue, 01 Jul 2025 15:03:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwmLeB8m"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a522224582so3243676f8f.3;
+        Tue, 01 Jul 2025 15:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751407384; x=1752012184; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aCH6UWaWdMtSV5w3YLUgKyRDkxeGFe8bXumroDH0Y/Y=;
-        b=AHlaW8L8poAYNfhMAgrnvz8shBpO+4+lbBWtR+hkTeZV5oZ+jKmY5cKbtdfWZ6DzaP
-         wJGE03BXi78yXgJAx3pLK02YHbBF3HbM2mYAwJ0FyK/S44O1gviC61IVn7zWIAXcJq3/
-         S11k5lvOQq6wGZaVXT91tXM8gsdRNOuBk0Xpmu4m+EIxKcTS9Oyshx7/l6i1c3409XxC
-         sXA0UQ8ctt33EO1dlt6IJVMGwpledBntDYiYdxus9UAocs4RsOBs67ga9mOAgScnF+uI
-         ZR/O8ofhNCjcVYhG3Cpo3FT4+q/TmWWebaTbRS4uQ4h2SpPe+qh5d1gSqws4tG/weKMO
-         f7Cw==
+        d=gmail.com; s=20230601; t=1751407499; x=1752012299; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlce9+BeXYIb9jHut9yceCFyP7M78KNxQm8S2SUpS/U=;
+        b=MwmLeB8mGz//ZMuq/BTLY+TnncIOEtP202I7IQwmrTgkzwgfaHT0zTrhWxfRpuYDHE
+         mmuVR0PAdz5tmodedL1n1LvKs6DkvdLW7GAXdccUkDEEzbr5maUhVNUSkR+jc+ODW1bs
+         qaDJ2cN39O3UpXibbvkBsFLppMb61NqZX78P2ev0DZBtpkBSQbSncUrDDIm+c7/2OnE6
+         1Ecb5ZwepOd803b0s+v2CY88HK3zqc0qA2Z3Xyi0iJcS4qX0WyFqyVw80tlTEZ9XhDQs
+         Vdxjsc1HLgTywnGd/XTY0zcSriLbRm2JZIIiLS9ESk0KBSGuoiEqzxCzxTdBKwyhCGVz
+         3J9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751407384; x=1752012184;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751407499; x=1752012299;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aCH6UWaWdMtSV5w3YLUgKyRDkxeGFe8bXumroDH0Y/Y=;
-        b=p+1UTQ0U/m9qZO5HEbhrJpVJtPGqqtn7hxm457zc+cFgHEzjrueFUZtci8BU5RSJY0
-         yNsKh76UO8l6ZNjrBOoBEmSJtlL4vVgdpZ/JxnJ+ER0nMBDShF3CKni6VEZ52n9uj7Mw
-         6LjJYABolv5TFr+6piVfOH4Ry8K9pQDHaaqBSJQ6pVRCtK3/by2WGTyuR1Osf3MAXoca
-         88Wor6dK3XeCwERDecWmIxIekvFgYfTpfTXoFbzYOyeyFgD/Rn58+mnWUDGbTnKHzsIS
-         bYPfJaH6+t11TV4NxD0h7BH1huZrPBm16xwMocceb7Wu4KwbETlBZB/z4mW859tCPYWV
-         nasA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2rKvPPV+Fb7wM/XATbzBK3KXUXOs0FykU9b146dSC3PM3rr8YHjiYc2W4umWaVN1fpM1RzQokXUE+WR8=@vger.kernel.org, AJvYcCVNYVJz1IoTIBYerwDJ/y+LNRp0DtnzqwEQ7C3OF8wjmK6szzH4UKFiD5AUVSvXyMwmHuiH7ArnjOFG@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ9LySHQZxbNN0m6HJLIOzz3NlSh8+GOA8KaGC5ngGm+b27jBh
-	TY0EClxwj/R0Mi67tTGehhEK9Zrm2XHeZOxwIdEYYcPF2TtK0QMSYO8AJ1Eceg==
-X-Gm-Gg: ASbGnctpjn4H4ZEa//0RVI6Wy+BrUp66Pp3WWMwqH3GSQrw+5Rj8KIM8c4J/EKW1p1a
-	HBFzGKol9ZYzBkfjqOnlu63FL/j/1pGXrI03X+KAHf1h/tJ4uaLZ8Vyx7nTpQD6P4xHJYT+HuTp
-	nzn0tFBNL7278gaoy37h5vAF97Tq+3bs0IbpBkW//K/fYqh9QIPWyAZq7jlJab22KgcCVh4Im/y
-	UHGIZ3T8pk9Qc6fVUGK1+v84QIpV05O1UiGSjMXOIcU7cGoNB3GvPcSUicdDE6yCCxt8AubzANd
-	er43DvE5uz1QVlJ+29lsX9JrAuiM+LPfKvruBOzp1fYv4so08n3bHgyq97eXMN0r7+RN+nl6PEQ
-	GrP3qqW2VgmqeHa2xbBVc138iaigSeiOBlg==
-X-Google-Smtp-Source: AGHT+IGb0hSrbnoMf338DLIN4x8Shdh32qqzM9p3b8N6w2kChFiXV5nx4bbPUXJPHmioNc/LM3NIog==
-X-Received: by 2002:a17:907:9448:b0:ae3:6dc7:1ac3 with SMTP id a640c23a62f3a-ae3c399eaf1mr20986466b.15.1751407383224;
-        Tue, 01 Jul 2025 15:03:03 -0700 (PDT)
-Received: from playground.localdomain ([82.79.237.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35365a16asm959756266b.72.2025.07.01.15.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 15:03:02 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
-	linux-pwm@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: imx-tpm: reset counter if CMOD is 0
-Date: Tue,  1 Jul 2025 18:01:47 -0400
-Message-Id: <20250701220147.1007786-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        bh=mlce9+BeXYIb9jHut9yceCFyP7M78KNxQm8S2SUpS/U=;
+        b=vb5kHlolGVF759B6AQmPjmZtAcjDoSYBR0BZp75ip68QU+E5GDIhJc0QVsynCXcPqP
+         ouOHZd5iBgeVRwShTkW8YPAsc5BrgxeSszWPoX7NDZbPGGDPf21w6EWemgTdan2UmR8O
+         /Lm4z8YtM17y4SEUKrOq7iuPJi43Ul0ljswltfLBrD11FNlWRWGwlfjJJRcJd1GRyYo+
+         xyL8RxP04JdW3nFRbGPwFjjeil7pYNKtPS+P/iGQk6m+3awzJNfNwcZ6Tm1ZC23+JtsY
+         /fb3k15BRy2RvzxA5ahZVnaAW/pt5ykZAfLcroKv5/AFsGo4eggTXG4kvf4xB5dZogAC
+         SUPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXD/KsHnOoIfnv/6Ffmiez0COV2OgXR6eQE691zz4GUiSW9nWIBE6hqEaCZNVhCjaRu7Us57zlbgy4vZHP@vger.kernel.org, AJvYcCWRx0aJ5/dnmwirQNlhhzWURx7EbZGAapHfW/C6ISw5iUxBd4DJ5YefpMqM2HU+NZvYqs8jztillBV6@vger.kernel.org, AJvYcCXK7E/ABVzWBfSI2eatrn33Xz17Z+/h3blsxJzKAY8KU0B8cs0mbSorrlIYrC98vubgzRzMNIAoNG2PUTC3zQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDVq/iBkpFawpXFPlLYtLNc/Fwq9GA6oOwcnWpNPoE6LQc3XmM
+	1osrDjPJzEWHOgA3G7ejiu9Y6AD4sqTDbjpio9rTjKam0Ix3GSty6e4Nj+SmSDcVutU8z/SaVvW
+	nVBHuQcPN9cF0ZmSdRkv+exE5v0NHdw==
+X-Gm-Gg: ASbGncuiKN4CcqzmMrsnEZ99YXNia1m7XpQ4lUoOOVdb+D1DX1LpX5K0ySEhYqe/Grr
+	mMHl1WL0da2jWpyWpVjb6IFS1+4YAqCAIPvuuWqxl9xnEuOBY6RdgF2dvJoxR87PYWFzxkrLny2
+	nGWJiCRZo2k9EDqfs2e49S9uLP3QI7n9SXQAFCONJXfnQ=
+X-Google-Smtp-Source: AGHT+IHjLaG9uF4AM4EItWeYaIVJxKo6+RzYJTHMBps8viAftxipMeaZJC6Qc8Ep9KjZU4hh3ATWv5tQbD/6trWHavg=
+X-Received: by 2002:a05:6000:4287:b0:3a4:f7dc:8a62 with SMTP id
+ ffacd0b85a97d-3b1fb0666bdmr139399f8f.0.1751407499166; Tue, 01 Jul 2025
+ 15:04:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250424-qcom-linux-arm64-for-6-16-dell-inspiron14p-v1-0-ace76b31d024@linaro.org>
+ <86116ada-51e6-4eef-bff1-f8b10a5edacc@gmail.com> <266fdeb50ba3926a3edbda71201ffa021afecd62.camel@packett.cool>
+In-Reply-To: <266fdeb50ba3926a3edbda71201ffa021afecd62.camel@packett.cool>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Wed, 2 Jul 2025 00:04:48 +0200
+X-Gm-Features: Ac12FXzuppBAG49XsmSbJt1Ald2C7YNcvTNDKcyljW0_CK-KpUrTr0TdTrfqVzQ
+Message-ID: <CAMcHhXqcf5F+02+9XnpXWSvUrkhmfbaAtK9sJtghD4sh9yKA9w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Add x1e Dell Inpsiron 14p
+To: Val Packett <val@packett.cool>
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Tue, 1 Jul 2025 at 23:48, Val Packett <val@packett.cool> wrote:
+>
+> On Tue, 2025-07-01 at 22:43 +0200, Aleksandrs Vinarskis wrote:
+> >
+> > On 4/24/25 01:53, Bryan O'Donoghue wrote:
+> > > Add in a dtsi for the Dell Inspiron 14p.
+> > >
+> > > I'm currently using this as a daily driver including sending this
+> > > series
+> > > from. Its reasonably stable on 6.15-rcX.
+> > >
+> > > The first two patches can be applied without dependency, the final
+> > > patch
+> > > relies on patches staged for -next in the media tree to be applied,
+> > > presently.
+> > >
+> > > https://gitlab.freedesktop.org/linux-media/media-committers/-/commit/2ab7f87a7f4bf392e3836a2600f115a1baa1415c
+> > > https://lore.kernel.org/linux-media/20250407-b4-media-comitters-next-25-03-13-ov02e10-v4-0-211e3e6fae90@linaro.org/
+> > >
+> > > Working for me included in this series:
+> > >
+> > > - USB
+> > >    Both Type-C USB ports
+> > >    Type-A port
+> > >    Fingerprint reader
+> > > - WiFi
+> > > - Bluetooth
+> > > - RGB Camera
+> > > - Toucpad, keyboard
+> > > - Display
+> > >
+> > > Working for me but not included:
+> > > - Audio jack
+> > > - Iris
+> > >
+> > > Not working:
+> > > - Speaker output
+> > >    Still WiP haven't touched this in a while
+> > >
+> > > - Battery
+> > >    Dell has its own Embedded Controller likely from the x86
+> > > platform reused
+> > >    on Qcom which we need to reverse engineer or get some
+> > > information on to
+> > >    make faster progress on.
+> > >
+> > > - cDSP
+> > >    Haven't tried to bring this up.
+> > >
+> > > - EVA
+> > >    No driver haven't tried it.
+> > >
+> > > - Bugs
+> > >    Occasionally when resuming I get a fencing error with hyperlock
+> > > and
+> > >    freedreno, TBH it looks like something in the GPU or SMMU
+> > > according to
+> > >    Rob Clark: https://pastebin.com/AWjCyaap
+> > >
+> > >    Ath12k has been splatting for me up to 6.14 when removing a
+> > > SSID.
+> > >    I switched on ath12k debug when going to 6.15 and predictably
+> > > couldn't
+> > >    reproduce the bug, either because the timings have changed as a
+> > > result
+> > >    of Heisenbugging or because a fix has been slipped into ath12k.
+> > >
+> > >    Other than those two I'm pretty happy with this system.
+> > >
+> > >    The DTS is based on Aleksandrs Vinarskis XPS, Lenovo T14s and
+> > > Qcom CRD.
+> > >
+> > >
+> > > Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> >
+> > Hi,
+> >
+> > Just noticed that the device name is misspelled in a few occasions,
+> > need
+> > to s/inspirion/inspiron/. DT filename is wrong, model name in DT is
+> > wrong, one of commit messages is wrong. Firmware paths and compatible
+> > in
+> > DT are correct.
+>
+> (BTW, in this submission in particular, firmware paths are not
+> consistent with existing models: the XPS uses lowercase 'dell')
+>
 
-As per the i.MX93 TRM, section 67.3.2.1 "MOD register update", the value
-of the TPM counter does NOT get updated when writing MOD.MOD unless
-SC.CMOD != 0. Therefore, with the current code, assuming the following
-sequence:
+Good catch
 
-	1) pwm_disable()
-	2) pwm_apply_might_sleep() /* period is changed here */
-	3) pwm_enable()
+> > Otherwise, is the plan to wait for CAMSS to land, and then land this
+> > one, or perhaps the rest of it can go in already? There is also
+> > Latitude
+> > that was recently submitted which is very similar, perhaps those
+> > should
+> > be unified (CC: Val), probably easier to do if Inspiron lands first.
+> >
+>
+> I have a unified patchset pretty much ready to go since yesterday.
+> With the way I have it, landing any one of the non-unified
+> submissions would only increase churn. I'll submit it now.
+>
 
-and assuming only one channel is active, if CNT.COUNT is higher than the
-MOD.MOD value written during the pwm_apply_might_sleep() call then, when
-re-enabling the PWM during pwm_enable(), the counter will end up resetting
-after UINT32_MAX - CNT.COUNT + MOD.MOD cycles instead of MOD.MOD cycles as
-normally expected.
+Nice, then my assumption was wrong, ignore it.
 
-Fix this problem by forcing a reset of the TPM counter before MOD.MOD is
-written.
+Thanks,
+Alex
 
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- drivers/pwm/pwm-imx-tpm.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index 7ee7b65b9b90..30f271826aed 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -204,6 +204,19 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
- 		val |= FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
- 		writel(val, tpm->base + PWM_IMX_TPM_SC);
- 
-+		/*
-+		 * VERY IMPORTANT: if CMOD is set to 0 then writing
-+		 * MOD will NOT reset the value of the TPM counter.
-+		 *
-+		 * Therefore, if CNT.COUNT > MOD.MOD, the counter will reset
-+		 * after UINT32_MAX - CNT.COUNT + MOD.MOD cycles, which is
-+		 * incorrect.
-+		 *
-+		 * To avoid this, we need to force a reset of the
-+		 * counter before writing the new MOD value.
-+		 */
-+		if (!cmod)
-+			writel(0x0, tpm->base + PWM_IMX_TPM_CNT);
- 		/*
- 		 * set period count:
- 		 * if the PWM is disabled (CMOD[1:0] = 2b00), then MOD register
--- 
-2.34.1
-
+> > Regards,
+> > Alex
+> >
+> > > ---
+> > > Bryan O'Donoghue (3):
+> > >        dt-bindings: arm: qcom: Add Dell Inspiron 14 Plus 7441
+> > >        arm64: dts: qcom: Add support for X1E80100 Dell Inspirion 14
+> > > Plus 7441
+> > >        arm64: dts: qcom: x1e80100-dell-inspiron14-7441: Switch on
+> > > CAMSS RGB sensor
+> > >
+> > >   Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
+> > >   arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+> > >   .../qcom/x1e80100-dell-inspirion-14-plus-7441.dts  | 1490
+> > > ++++++++++++++++++++
+> > >   3 files changed, 1492 insertions(+)
+> > > ---
+> > > base-commit: f7570505263aff2b63142f0d68fa607cd60eb060
+> > > change-id: 20250417-qcom-linux-arm64-for-6-16-dell-inspiron14p-
+> > > ed68cd65ebad
+> > >
+> > > Best regards,
