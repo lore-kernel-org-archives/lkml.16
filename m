@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CC2273818
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 11:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA26B2737F5
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 12:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751371156; cv=none; b=WMGEJnueu3mbC6ibLBLAaXFUhu9QnhFYOzIF+RsQH5YyqB9gUNhPG57+6L3loCfSUH1IBZLw8oiG+mKlRxC61UUVYFEotl6k1CyqdmVaraeTf5Iq0kJMDsgao3X+h7v+3W4xyDEurNpUaM4FsRq7NDtP90pJQaJtu2+QhUV/Y/c=
+	t=1751371347; cv=none; b=aF91NSw9MPjrN034p+iGeaFvwJF3Lvs8W47t8B17zoU6MWopGaptzN9Sieqn5dD4UgwGoyVDulpmKSj9i7Db1LgXCNnPzwg4NiRZTIgBq9LoqAD39pK3Sad8wQpPxtwJ4jdWIuBKyMC2o/OFP7ag7h0aO6J94LWpcmoVsOjIQ0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751371156; c=relaxed/simple;
-	bh=HfTVNI7rdK6Io5T9ZQlrNOYvYrXJshBjnn1l46ol3vg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NqW5nlHV4vU83XJCdl8rb+LMvGjGJG138zBxMIZGusK3bgrZfyzFpMwftGLrN6fduHFnc3ZXdakIayeUu3bhv7lMAnSctas0S35Ol3BHp1l5C9G2qmxohxzzF4nvPTKW+rSlZQyRIphVkOuJZMqsdhZDoB4r3RUhVx6Fk9Nf+Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Bx1F1hgT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751371347; c=relaxed/simple;
+	bh=RvKrbR7rC6HMkMypNpw8oY7SOj4JFfsc8Nsm4Wygm+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oVoI8QpAw+MRa/PMSy7bsC4XITn/7MIz+58a1Smj6dyzarKMtdaGsLW0o6HBlm6rYmJZxjONLqLEowDRYvU4P099vE6hVOO/FNAGf1mEg3PY3qraAQiTvjasnoT0ufSRVuLggVgxA0YKLMY0DnVjoGlMEm3xsnt34cOuTGspP9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wyGMCrD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Bx1F1hgT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EAEC4CEEB;
-	Tue,  1 Jul 2025 11:59:15 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wyGMCrD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243C7C4CEEF;
+	Tue,  1 Jul 2025 12:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751371156;
-	bh=HfTVNI7rdK6Io5T9ZQlrNOYvYrXJshBjnn1l46ol3vg=;
+	s=korg; t=1751371347;
+	bh=RvKrbR7rC6HMkMypNpw8oY7SOj4JFfsc8Nsm4Wygm+w=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Bx1F1hgTlvjV83AMgNoV1CmBFPwpqumOFXIGYAfl1QZ4vaz/xTqLzhyGtg8jssiYL
-	 xqdECaLTYhmF/hlNpzGD9Q5LJ59ufpfGUJGRXKli1yPW2pUgSmHNplPHXuJ8dAt66A
-	 +SFo2VWqx7qEEGm5OJ44yWFeX0eE2Gpfuz2PlDIw=
+	b=wyGMCrD/dQBTa/veK9Ubv/w0cvWGHyKW3WgtxS5GOCUUen0dIu444Hm/GkoZCHqu0
+	 Dpayabf6gu5kJWLH+gFqu9KKHciAnjJwF/Dk26i9E27CBRU67i4C2/LKjIkP09TNbG
+	 AxrC6qji4itZmWJI+HgtVdTyWj1Z5PUDaMetAyII=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Eddie James <eajames@linux.ibm.com>,
-	Ninad Palsule <ninad@linux.ibm.com>,
-	linux-fsi@lists.ozlabs.org
-Subject: [PATCH] fsi: make cdx_bus_type constant
-Date: Tue,  1 Jul 2025 13:59:12 +0200
-Message-ID: <2025070111-magma-scheme-313d@gregkh>
+	Srinivas Kandagatla <srini@kernel.org>
+Subject: [PATCH] nvmem: make nvmem_bus_type constant
+Date: Tue,  1 Jul 2025 14:02:24 +0200
+Message-ID: <2025070123-spray-denatured-dda3@gregkh>
 X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,49 +36,33 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1448; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=HfTVNI7rdK6Io5T9ZQlrNOYvYrXJshBjnn1l46ol3vg=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJZydEcU3Y/LHrNr9f+cI3FjM7bjzTtswPZBTUFY93s 04JyXTuiGVhEGRikBVTZPmyjefo/opDil6Gtqdh5rAygQxh4OIUgIlozGdY0CW001Fg8sG2y6Xy P/meZPCknZCfwjDfYdWqM4Ymmcs7GSUqFnOe957052sTAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=814; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=RvKrbR7rC6HMkMypNpw8oY7SOj4JFfsc8Nsm4Wygm+w=; b=owGbwMvMwCRo6H6F97bub03G02pJDBnJ5/xvarA79i83b/jcqLdfI1GlOmzmVd9PzBfCbxTfN RWaGPmqI5aFQZCJQVZMkeXLNp6j+ysOKXoZ2p6GmcPKBDKEgYtTACZiG8owT0WTY+esNbGrgyrM pS/YSKcwbA2+z7Dg3JMKmT7dtbcFen69W/xiTruiqOdDAA==
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 
 Now that the driver core can properly handle constant struct bus_type,
-move the fsi_bus_type variable to be a constant structure as well,
+move the nvmem_bus_type variable to be a constant structure as well,
 placing it into read-only memory which can not be modified at runtime.
 
-Cc: Eddie James <eajames@linux.ibm.com>
-Cc: Ninad Palsule <ninad@linux.ibm.com>
-Cc: linux-fsi@lists.ozlabs.org
+Cc: Srinivas Kandagatla <srini@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/fsi/fsi-core.c | 2 +-
- include/linux/fsi.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 50e8736039fe..ee39d1699387 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -1404,7 +1404,7 @@ void fsi_driver_unregister(struct fsi_driver *fsi_drv)
- }
- EXPORT_SYMBOL_GPL(fsi_driver_unregister);
- 
--struct bus_type fsi_bus_type = {
-+const struct bus_type fsi_bus_type = {
- 	.name		= "fsi",
- 	.match		= fsi_bus_match,
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index fd2a9698d1c9..e74bfb956dac 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -544,7 +544,7 @@ static const struct device_type nvmem_provider_type = {
+ 	.release	= nvmem_release,
  };
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 8c5eef808788..adea1b432f2d 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -68,7 +68,7 @@ extern int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
- extern int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
- 		const void *val, size_t size);
  
--extern struct bus_type fsi_bus_type;
-+extern const struct bus_type fsi_bus_type;
- extern const struct device_type fsi_cdev_type;
+-static struct bus_type nvmem_bus_type = {
++static const struct bus_type nvmem_bus_type = {
+ 	.name		= "nvmem",
+ };
  
- enum fsi_dev_type {
 -- 
 2.50.0
 
