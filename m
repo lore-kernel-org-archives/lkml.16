@@ -1,125 +1,109 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE95278E7C;
-	Tue,  1 Jul 2025 16:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C85D27703A;
+	Tue,  1 Jul 2025 16:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751386122; cv=none; b=b0UL7j0zz510cMGgsuPZqMxkLHHigK8xIeiRxIjS93iXU7ZKqf6LxdD2rA7JllRyzNSk6jkdrENuiqVM+pM8dCb4LcCc4wx8MI5NW5izoGTGvYBfbjk0QO3irr+8XL4cQtCbw6akim4LMUrox9wfYmIpe2Sle5wOiF5rHkJhlcg=
+	t=1751386130; cv=none; b=fvc2qQgTAe0Jr156hBAPgMexuBfYnwq0iuJTxpTpMFXGaXq/MRAVoCcu/aIoDFv0cyYBdYY+sHvMG1eth/9E3+G9Z7kE8d8B75kSQbipA2eyfsNelpG9O3+i/SBT+iQP2X/doQwbbXMCNf2BYRDkkWaD/1C9rJThqUu8VOR2do8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751386122; c=relaxed/simple;
-	bh=g/GS7iYo0DvmCAHdTRbNmxu7tE6/RBT/m+tGVE65GYc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OJJ6NsTOz8LYaJILAHjDu+oxeFAB06Qg7hUAKPphvAs/qQmDLFb6vnqMsNN3197gcBjJW0ZpZnj/Eu/+FokaVjnY1SwjWq/z06vMQybl5eGRWaj8JGAbxkrdr3qx/5GkaIzcFuK/DC1qidSZU5Ts3BBC6BqPBsvLSBLVJmGn+Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YvqxZK1R; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1751386130; c=relaxed/simple;
+	bh=cSdRz0+Vph5c0cn4p2UTtWwJEHxmrCBQ1XvTs7jlibo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YEaqc/kqO7qsTDHvuFEBCYRRwlE+uMQq6DN4Vv1K9ZxLDGLdZKNo22MMpSHXqcFdaKjgzI5GoPobh8m21GtNt4uOXWE/RN2eVnWrUd7yRRZxVOoS74torpGTbqVmJtIMbiHcyceJXEz47fNRs9ESsv3rbId4V/y7NF6LB4j6/JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuFhaSHD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YvqxZK1R"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 561G8Tq43682752;
-	Tue, 1 Jul 2025 11:08:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1751386109;
-	bh=u2QdfPMZKjTriOw/UTDyBbsrhrWHxRSetfZIlOQ8wps=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=YvqxZK1RLT+rgLhoas2X7ZELky8RTCy3U1gssPxAE5Gyz88Vm+V4OZ9r5KVepH4Og
-	 OCznBMhMkUrlQpy/3ebg1/vl3ooC5O3CgVKPhhUdBmZW4UOG2WL/k/4BqBu5tQxWWH
-	 eOoINwCYQageT6yoPUcfz45x56NmuC/yoj/DXrSE=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 561G8TgT028847
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 1 Jul 2025 11:08:29 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 1
- Jul 2025 11:08:28 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 1 Jul 2025 11:08:28 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 561G8SmU1852701;
-	Tue, 1 Jul 2025 11:08:28 -0500
-Date: Tue, 1 Jul 2025 11:08:28 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Paresh Bhagat <p-bhagat@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
-        <afd@ti.com>, <devarsht@ti.com>, <s-vadapalli@ti.com>,
-        <andrew@lunn.ch>
-Subject: Re: [PATCH v5 1/4] arm64: dts: ti: Add bootph property to nodes at
- source for am62a
-Message-ID: <20250701160828.lmmfgfrmfcqiwpzz@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250627115753.2246881-1-p-bhagat@ti.com>
- <20250627115753.2246881-2-p-bhagat@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuFhaSHD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF49AC4CEEB;
+	Tue,  1 Jul 2025 16:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751386129;
+	bh=cSdRz0+Vph5c0cn4p2UTtWwJEHxmrCBQ1XvTs7jlibo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cuFhaSHDAVgWvq7HUuEg9fCe8TENJ191iB4eAR5BiE4zempPB55qfMAa0dfP+9hTQ
+	 7u4kxMp+rjbHlKajyJkeCs2V5hnnSy9JTL9xYxxQg7fdgdjGl27byVEkKMDe4kZTAr
+	 OOWTKdi5//OatEJ22nbaFa4Z+ad1bfEXLqOqevpx/wec9G/jZq79ceqRNfA1jK3ou3
+	 ET9Gj/CRwbVHL6vL3Z+GLr/YYQV/vmbCRDAafcMRFhzM3X6CbFx4Bep8lOYbl+02k9
+	 5aZjsUOWSLuPzft4TQ9EzLDO6eetUw9Cpfv0WdOvx67iyzfgsj/GPnCNuaznfCGLt2
+	 1thNAdRmzTkvw==
+Date: Tue, 1 Jul 2025 17:08:45 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Maria Garcia <mariagarcia7293@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maria Garcia <mgarcia@qblox.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: pca95xx: add TI TCA6418
+Message-ID: <20250701-taunt-tasting-71cede1f14c4@spud>
+References: <20250701100537.91491-1-mariagarcia7293@gmail.com>
+ <20250701100537.91491-2-mariagarcia7293@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hbRYoNHRBHhoLqZ0"
 Content-Disposition: inline
-In-Reply-To: <20250627115753.2246881-2-p-bhagat@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250701100537.91491-2-mariagarcia7293@gmail.com>
 
-On June 27, 2025 thus sayeth Paresh Bhagat:
-> Add bootph property directly into the original definitions of relevant
-> nodes (e.g., power domains, USB controllers, and other peripherals)
-> within their respective DTSI files (ex. main, mcu, and wakeup) for
-> am62a.
-> 
-> By defining bootph in the nodes source definitions instead of appending
-> it later in final DTS files, this change ensures that the property is
-> inherently present wherever the nodes are reused across derived device
-> trees.
-> 
-> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+
+--hbRYoNHRBHhoLqZ0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 01, 2025 at 12:05:36PM +0200, Maria Garcia wrote:
+> The TCA6418E is a 18-channel I2C I/O expander with integrated ESD
+> protection.
+>=20
+> Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
+> Acked-by: Conor Dooley <conor@kernel.org>
+
+This tag is fake, I never provide tags using that email address.
+Please do not make up tags, instead copy them exactly as they are given
+to you:
+https://lore.kernel.org/all/20250618-concierge-fencing-e62c1e884ce9@spud/
+
+Additionally, you forgot to mark this patch as v2.
+
+Cheers,
+Conor.
+
 > ---
->  arch/arm64/boot/dts/ti/k3-am62a-main.dtsi   | 14 ++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi    |  1 +
->  arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi |  2 ++
->  3 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> index 63e097ddf988..770f1258b0aa 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
->  
+>  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/D=
+ocumentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> index 4d3f52f8d1b8..12134c737ad8 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+> @@ -68,6 +68,7 @@ properties:
+>                - ti,pca9536
+>                - ti,tca6408
+>                - ti,tca6416
+> +              - ti,tca6418
+>                - ti,tca6424
+>                - ti,tca9535
+>                - ti,tca9538
+> --=20
+> 2.43.0
+>=20
 
-...
+--hbRYoNHRBHhoLqZ0
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  	main_pmx0: pinctrl@f4000 {
-> @@ -262,6 +271,7 @@ main_pmx0: pinctrl@f4000 {
->  		#pinctrl-cells = <1>;
->  		pinctrl-single,register-width = <32>;
->  		pinctrl-single,function-mask = <0xffffffff>;
-> +		bootph-all;
->  	};
+-----BEGIN PGP SIGNATURE-----
 
-I don't think the boot phase flags for the pinmux nodes need to be here. 
-The child nodes for the MMC, UART and Ethernet pins should take care of 
-this.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaGQIDQAKCRB4tDGHoIJi
+0pAjAQCJWHuKInPaPBiJFtjeWi1Ol/SFGNyOoglbXknEcrinkQEAuHu/YXAKiOZk
+uOGnqeXB9iUuU9ptER0lQWwfk9cgbAE=
+=pn/Q
+-----END PGP SIGNATURE-----
 
-...
-
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi 
-> b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-> index ee961ced7208..df4aa131097f 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
-> @@ -12,6 +12,7 @@ mcu_pmx0: pinctrl@4084000 {
->  		#pinctrl-cells = <1>;
->  		pinctrl-single,register-width = <32>;
->  		pinctrl-single,function-mask = <0xffffffff>;
-> +		bootph-all;
->  	};
-
-Same here. If we need any pins from the MCU domain during bootup those 
-nodes can take care of adding the boot phase flag.
-
-~Bryan
+--hbRYoNHRBHhoLqZ0--
