@@ -1,277 +1,357 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353DE26B971;
-	Tue,  1 Jul 2025 08:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359126; cv=fail; b=QCvW4FUtvOTA08hx5jRvuz42jxrCUEPvJ8itrgukxC+gnbcvcwyTowaj120KM36ZvVwHGcSOdMpnEC3U+qjK+vHlJ5Wd8w83XxdgWx/joTLPZ7ZOCkSQvXOzNi3f2PaA6Feml9sLNNpHgxx9mADB0QKzEKaxW1IIKtQW+4Meikc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359126; c=relaxed/simple;
-	bh=b6EoKGqX+0cCuez3AcJUMlCrMmeDj3ous/RjA4SPcjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=daUNDbEoRtt2Hgbu/qwLXne4//txLsZs77XvEFKUHROMIKH5ELWEeDILGzS9wphM+Z/2kCm0EzzuYBdmOQA7G2GVmEuxOnSZ0WOmNqadPxusjEzs8nsrbYUMKjPi0cfamBSenqvJ9W7YuFiuSMMBeo5URo1Luc6dIEobTLPR2cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hJ6Ga4zB; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=sD+sAw6l; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AF25C6EC;
+	Tue,  1 Jul 2025 08:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751359180; cv=none; b=OfrG2/6k2OHCLbsG9MmSm+t3o/VHfwVxOQnf0XNt+hqYG0rxOI8bafnAHra3R+Z0sgI7RM26Uas23rcWuzxH0lcGHRhMankgxRe0lBL2tAgSSVvHMTuco0MfRh1lrrqFqXqfubmJpfopu7gF23GEOWxT8Fd1MrfT2CW353WrX0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751359180; c=relaxed/simple;
+	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=a/s8+SMGz5fJdqW9FFY3kFLyySCxsfwdUvhC5LBAJFevdrBj/4Pme/wyfHSViCktstMRZ+5swa5//9CC2mztl9u7m4mwyPCZ/jug8HJw7i1Bf1BEOgRYHXYGSyE0Iey/0znLlwVxr+ThlvhV2KqzrEPiISGCeXJ9jrP/TpwwQm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCm73nGU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hJ6Ga4zB";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="sD+sAw6l"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5611MeID023776;
-	Tue, 1 Jul 2025 08:37:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=qZgWi+sR98uE+ZtIQD
-	+ee2zIavzo+dBExBIzbSgrjhQ=; b=hJ6Ga4zBVzP5srsHhUTmlfNmr764c9/yzr
-	xYzg5o8zsjifNhIasnk6E/e32DylGwo17EjUdWUMqeD3X3hUiEQQ7UNDg5yBvQGp
-	BlXSgPtwWv/F/+L28+nVA0J+pTm9YzwecWvA+fY/TqJ3Cy1BVwk4xabnwNbA+JAK
-	sAcwwFywPKtChFkK3qhKzp0+VHNcV0vpVTjZOdCg9u0jgti018kz1dWN1lNVKZNF
-	sgHI1w0wcGvn7PgZiSGaJpZdSvmXpKO5YnfhDjwRou09xDzpLm1C7KrRgSC/k7RQ
-	Jl3AniISiWonruZeBpztI6kx0yTh1CQZt0NFcHTc0gkr9yPVNRuA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47j8ef48mw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 01 Jul 2025 08:37:21 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5617K1JX025831;
-	Tue, 1 Jul 2025 08:37:20 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47j6u9f38p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 01 Jul 2025 08:37:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WesZuEbj9NH0guFIqHTwmMZ3YkC9KmF5B9hvM8L69cVFEz+UBCP6zG19z1ABtYRsyjOAzEiJIhepgaErsZmvuBFAWkVzzZkhVvnS34ySKy4rpudWlv3rxrpc+ijw+PLfUR0TqIrnz+fakWrwoiBPZfsnH9rC4iAFiP5j7GHvj4rzjzifRzI3Jxo+qMFG2melZQN97N+RLT0wvLdLZVmmgPDcJ2m6aXSyNb2rhzsP/3e+mpbYhGSHtxYtPGtHHHYjYrmNcVlG3e3hNFi/9X0m/4Bc2fGoVS3o65dbXAFOw8Ug/onDDyOxIUB/geGgc7KZ7ifKRBjBvbeiAsVE+wb/jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qZgWi+sR98uE+ZtIQD+ee2zIavzo+dBExBIzbSgrjhQ=;
- b=J/8CSAr0HQKjAotMC8Ihx7qVK+VbMYa/GQkiEiVi+2XXJaf2yzedz60c1EJuZ+RNNGCfTieZ/NuPQ7ekuTjd+8u+PveMRmc4cn1c9RBbdWR6MhhhALSCG7eblT4CMw+5ig4pHE5MgY/h963VmagY87taOVJv46Xkzh425CxK8uqgYl6Zu+/Q+kVdtTPklb8oLOFu68FRe0U4/qWKLlXeZnWVWYHEyVA5yCig5IVyc12Qkguj19bO1tvtC6ZfLIM4EA8/VpsIVtJ948PoKk00pKNhwvbSUia5Dqpyvtm58K8hb8ewLMlHX49wtSf2FjOqi9YxQL4/nkecJb8126a72Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qZgWi+sR98uE+ZtIQD+ee2zIavzo+dBExBIzbSgrjhQ=;
- b=sD+sAw6lFO95sQ2YLgG4or2ekTDyQz5Nlqr13XTh486qsyZhnge7yI7juk+GDZkxWqiIbWr7Utre57Mk5hD3qXy61Yj0SSXhEXYPCaAcf19LpmJZ+QckUbfF015ZB8JkE3OrMerMU5AxWr3q0ON5gnZKPGjjmIShz6kegxMjI/Q=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS7PR10MB4960.namprd10.prod.outlook.com (2603:10b6:5:38c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Tue, 1 Jul
- 2025 08:37:15 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8880.027; Tue, 1 Jul 2025
- 08:37:15 +0000
-Date: Tue, 1 Jul 2025 09:37:13 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
-        Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-        Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
-        Ying Huang <ying.huang@linux.alibaba.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Naoya Horiguchi <nao.horiguchi@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
-        Harry Yoo <harry.yoo@oracle.com>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH v1 04/29] mm/page_alloc: let page freeing clear any set
- page type
-Message-ID: <b0069788-2940-4634-ada1-224b927154dd@lucifer.local>
-References: <20250630130011.330477-1-david@redhat.com>
- <20250630130011.330477-5-david@redhat.com>
- <8c5392d6-372c-4d5d-8446-6af48fba4548@lucifer.local>
- <d4d8b891-008d-4cbc-950f-2e44c4445904@redhat.com>
- <06e260cf-9b63-4d7c-809c-a9f2cda58939@lucifer.local>
- <84e1eeeb-c78f-4735-a6d2-4bb15ea1fbce@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84e1eeeb-c78f-4735-a6d2-4bb15ea1fbce@redhat.com>
-X-ClientProxiedBy: LO4P123CA0196.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a4::21) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCm73nGU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EAAFC4CEEB;
+	Tue,  1 Jul 2025 08:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751359179;
+	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GCm73nGU15vuV2sTjTwwXn59T9LmFXeMdS+GEy1dhUPutHdW61z0dbqa33kLknsjA
+	 V3js4HL7jNYC9mKajEgkRipDo7+6fyP/+pwfid/yGs6uJinH3hFIxRsmpSjPDZ7R/i
+	 1OnDkV1UJABp5u0XzYdqGMQx333tHFmQzBvRVfCEC6FRlyL0GtUZEelhb2TFtiarbH
+	 ZaycuwMtRKXTPp9xaKfoiVSvi+zl/qXQZrteVa9h6ak0klUYtxPxDMxgesJv7izsEB
+	 W5dCQZKH42CnbxmRnGJptcX4yviL1iPVWJI9JsjdGXdU3xwWDe7Kyo/XgIMTQSLEJD
+	 7+XMuVY4oDe7A==
+Date: Tue, 1 Jul 2025 17:39:34 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Andy Chiu <andybnac@gmail.com>, alexghiti@rivosinc.com,
+ palmer@dabbelt.com, "Andy Chiu" <andy.chiu@sifive.com>, =?UTF-8?B?Qmo=?=
+ =?UTF-8?B?w7ZybiBUw7ZwZWw=?= <bjorn@rivosinc.com>, Mark Rutland
+ <mark.rutland@arm.com>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
+ nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+ vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
+ samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com, Han
+ Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
+ dynamic ftrace
+Message-Id: <20250701173934.cc92a6d1d5a976a6556e6863@kernel.org>
+In-Reply-To: <aGODMpq7TGINddzM@pie.lan>
+References: <aGODMpq7TGINddzM@pie.lan>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB4960:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd7aae4e-3a1e-45aa-8be4-08ddb87a7b76
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WGBAEn+UUz+srKLsV+brNZObL/Wbm9wrZ9FMdj1YLJNy6bP9ldTEDaWJBHRL?=
- =?us-ascii?Q?0lw9Kq/6QAH0oIVELrec3fAEBPVf4GjlpYBrzW3M20B0iZbOYt93ZUqJBSuJ?=
- =?us-ascii?Q?waa6x3mjpFjDsxFvdo+HeKwt00v7nyGDKqCvkzpHyMG8PAEm7/cPMBAXgPUd?=
- =?us-ascii?Q?1iH5RIuKxK7IX5kxwtdGA3D4r3hcHiMZa7LYPJPlWCYtrfkhlIZycRugQBaT?=
- =?us-ascii?Q?zlwRfaI8xO34zYQzpjxNtg/zAHGLwmAYvNr/mijbS36cx3uoquwFWRVrE0uI?=
- =?us-ascii?Q?l6HymiU+kHMeKyXiOLWGroGLXSGcmAkypusjpU/0tqQxajwfE9k33JLBgXSr?=
- =?us-ascii?Q?9o5sBuQ5NGZYEI85t14GzvHpcZLgVHJAmhmw0DYQM/xmuSAIOHfM7yArQgwq?=
- =?us-ascii?Q?mF7B0Z8i4SmrT7vXx6mxVqxn1zXY6hnVfAmUXqP3SBTsaR7/UdNsqNw7icAw?=
- =?us-ascii?Q?mkFqrwEjGTc+aLAPZ7O8lvJSw9kEFdPT+/vc8Kr3asdIHtR11VgD4m1qld17?=
- =?us-ascii?Q?FtHkEbAmOZSDZU9YgxINSSkjEi6lBdd9zlxUeIIvTS+KzXawjO7ZzYp9dJcK?=
- =?us-ascii?Q?3O3x2J/avGQ9EeGIMt6Q0bauHAFVyzyNdVM8Ne3X0583sRkcQhZxhieef+VJ?=
- =?us-ascii?Q?qDPgkg4d8oLG24LqS8LYfQul/HtoALAwgWDNQ5SKVu9wFw7cbnERsgJYj4nQ?=
- =?us-ascii?Q?HgYuyfa/abQ+bopeNnjRNps6FwWJdX7hzq3YopGTj/FVKThRT5QFnoAdl+x8?=
- =?us-ascii?Q?JqFgqdCar/PGprZk4WYuboRvoQuHW2SIUAJNFLWheVQnaZnLtzIBG6C5taF6?=
- =?us-ascii?Q?6BL/DDGgu/PKPR6xJ5DsgkhGQYLERuIztRGySQ0zQ8eK6PRMk9HM1uFEOndi?=
- =?us-ascii?Q?ABhBLoHF8FkV28OUL7krGMpH+KnFpXoENynMkAgxickr5m5cN/+btlqax1sq?=
- =?us-ascii?Q?kHfjlbHB0L9kmeLuvzISaY29Gc/t5Wi7cJL1+hbq5N3nqRPLsbUg+S/XL1Y3?=
- =?us-ascii?Q?eAFb9jd8vhApWgchDYFhOyGdKttCfnuJP4RUp8Rh0FZlUxKkZ1uFgNlLenGF?=
- =?us-ascii?Q?X+InntaeMT0uYzfsE4excVAIDpz7Cw7dFddVg83v/fjwuFSv2XjR6+3hloZh?=
- =?us-ascii?Q?m9j/KkSf1GxRIZybPV1K47P90DigHu1JBBJrGbwXzTduiFdzEz18cth1UHBn?=
- =?us-ascii?Q?d5FOCMPQ0TJ0JTPDjn1ez1pMYj3Wpu99WLuRvN9F9W6OHaEv1iJ64kjOZ5vq?=
- =?us-ascii?Q?sp/Wygq0jJmm2nq9lcBFVJH1PeHvZg+Cv+1NWezzLvGJbMngMPQkx6mMZIBA?=
- =?us-ascii?Q?yuSh3QonWWmoWl5GC9Du8IlYjKqTwOpnKIz4YcWFiHn7YdJTCVbK8z4S7HMj?=
- =?us-ascii?Q?PVwC5rOt53ifWfHuX1YWZeCi7jytuCVwIe9KPi/DmuaCVJ5mrUnwxHi8iOyL?=
- =?us-ascii?Q?oD6MiD1rYcs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/FIvv6HpOdFg0yg7I0mTojWtCopImsXzE+XUR0MSEs6w3Vn/qYwyfsUeVGiF?=
- =?us-ascii?Q?sxkzeIPVCdkk+46jG88JuPhV0K9qcCdRRcr2LwmhnshhaP7eG6eMQHup3H6v?=
- =?us-ascii?Q?Q2fmskm1yNRfeNS65F82CJh5XLZmOtiy/TRhAaSoxKVcrzegYzDJ6iqHXM4e?=
- =?us-ascii?Q?4Sa2ypoyNik6Ihcy/+4gic0dqrD2rSOoYHT/wSA/M9NmIgZ7bi4oHPpsHiaX?=
- =?us-ascii?Q?ClUDVVG5ju5Cj5K9Yzpdy9EOzW9ewKLwSD8Vul8ppwM4BbL8wYP6D46NB9IE?=
- =?us-ascii?Q?G+be1o6Fc36G7eqcOfXv/YpvEtBAx0i2jN1oOw8qRhEwZ19sjaIAwW2hdPHk?=
- =?us-ascii?Q?uv1ygm66ZstCR+J9PJGM16XdbpER94YmUWpB6OhVFAWzPu+kuA1O4/WhbpbV?=
- =?us-ascii?Q?CCilHjumCNIjIBR/GRiphp++pB3KFtSUZ3ewq6g2Q0t+0eMbWxVw00YSKIGj?=
- =?us-ascii?Q?qK+F8H77eSrNSt+6/DFCXGMu3oPtOzJR4vrjyY0DvDXzTrWhSc/82h9KF5GT?=
- =?us-ascii?Q?whxfFf/TaY/mpwyu4lj7vrhl3kB9OnvbchBOyeWuK25x/kVKWKdF0kY3AT0d?=
- =?us-ascii?Q?oAcTy0zbhZxL3CjDQ+gx2ygkmddm3w27OF5Iwk5w875lyfaHYYRT3hGZiekN?=
- =?us-ascii?Q?nYliAA/RsNLAbV2Chbi9rzstGF5qU3VmEQLyHqzHBe/KgCdqpGtBgDGKoNDO?=
- =?us-ascii?Q?BEvLY0RhX0Q374OY5gVQ0MyRWPZpphBPR2qwfLYenf2pnA6C6mIZEkO2Ej7j?=
- =?us-ascii?Q?sMO3VxBsCbSjC/Wwi5XFPmexcV08ybNDOiBPcQin0F8/2pE5oLR3SCGIX8S2?=
- =?us-ascii?Q?TagMI++AqF6n5WzuBdRRnhFxm9PmwcdWB1U6NodNbrLQ1BodrDLR8LefDxC3?=
- =?us-ascii?Q?86BWVhBYQ6l/vgIoo1upvgf1b7OfC56W8vM12ewRYcjWdy5JDTBO+R7PZsSs?=
- =?us-ascii?Q?uTtlFnuk22E5cApZp1xhyZYOsbNXbeoAbJbQIT4nTm8CgRiTQaeEi1TkNWWA?=
- =?us-ascii?Q?4TawKsF2iuwQ2LrOKunuDsPejyD43xFdC8e8IIwFvR7W6KjbWeWlFTg0HR4M?=
- =?us-ascii?Q?3+hluy7zkrj/lle+begr2Y1C2lt0I+5YPel31gwgTeT++hQAlbk3jMDUzaGj?=
- =?us-ascii?Q?zEMMAycVMRkqEmdiF/V/5C0hyduJz6XtAdZjtPYKzfK5bKLxmbE2eKCcqBT8?=
- =?us-ascii?Q?6wAtBVDFQgWoFr/duL8MCvltqKqBJ5tFnLJM5LzxeKvCIbZFaspgnbF6fKBo?=
- =?us-ascii?Q?GvKZNQ/Awa4mLI4Exa60n4cJRakLegl9To7cTOJ/hYGurmboCZjKlXn6m/fg?=
- =?us-ascii?Q?dz+421l11J0Ho/PqAOvI9qAMQpaxU8wKx1zjOFx2NQOnQL6O8FZYaoU7qAZ4?=
- =?us-ascii?Q?IOf16Vn6z5pCVcqhVLFwbfQUlW6ml4rTi5Tpmdr2SJMWcLTItJBRJGYDWLjR?=
- =?us-ascii?Q?yzfvk0gefozFH/jegLjYcOXz2lpZ3rKqOyypID2BHfjNeJQkVG3H2pwhUlss?=
- =?us-ascii?Q?KodH1xf9pHUF6ozUUYTNYx/f7CQfr51qbonI2AGAgfItpOTeWCjegsvjTypI?=
- =?us-ascii?Q?OYgfKQGdqlmJfSjq7OGe4CaYDoRF32ZThWODD1nH9Q0ts0Is+Qm9ethneKI9?=
- =?us-ascii?Q?kA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	j9U2rdLTEkStfNHJrMkM7H/jqPspIN1tPZksW8TqUABchjkZNC97FyqM0CH076hpUrLnNrMVq2hgp/zlGSEQfArF6hlZoHNq65jZEd7uCJtc8ftHLq+G6O1eQhgNilugteWfEYszoeyVOdtjruK3CZJPN7jpxyz/0Cq7qRQ0j0DGZwNL0RMGh4G/LNpy92g9ouD87g8RE/BTUsy3Rp2fifyqRHma6TV4z7+SJ/0RZrz0wJQJHce9r+1NM8F0V6tN5TkXNC47RWuh0DenBbKYCcEOzZ++i/aPN8Es7lNLEOSKRbd4ifrzlu1N2nsMfiHh1SdQFDBvbSyim58Y8xuiKbNZz5TBQRgSTFFLHWQwFNcRjsUnoAb4IGLzDsWbgEU9nz5QCkOCHfcb3HRscxJEX6+glgyzyWJwbDi14JChU/iM9kIMXfy+AuJJ+oRFv+ijsvk0ajhz4WQt2D6Lyl3YVOOPLniETrZIc7k9lJAwDetkQ2vNBOGk3j3uIcWIZJy0c7S66DsOBL+rxl4kJk2d+CMuxHRaEToDMh5eadk1hyqTc5KppgpKORwKR2u1fepRgM/bvmXyXG1SnjqaEjNfowuMqoINeOS/E5UFGREmeqI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd7aae4e-3a1e-45aa-8be4-08ddb87a7b76
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 08:37:15.4033
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qH0jHg6INuoKMfyzVn1kijj2gKKy145dA7oBNcexzEPhMvAWHaOYsjPrmMNFjPNO1bY+65HehOzzpUmMGkqA99eUNcxA59ypUoAgQA4Y7AY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4960
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_01,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2507010049
-X-Proofpoint-GUID: Z5JtoLIeOYZrMeiPTcoHh1SgNt9YG2-h
-X-Proofpoint-ORIG-GUID: Z5JtoLIeOYZrMeiPTcoHh1SgNt9YG2-h
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA0OSBTYWx0ZWRfX2f9mm5i01k6R divcnH1M+/BFkLXj+Z3OY8W2Pz4TY0VomGURXAn4CJKEs3tOAth/3RIwDj5d+Mf0fSScWz5z9be ImuL6QcYY4ud5aoO946oB7prKANVk8F9VXCjRZnRKYpw6543C7gNAzP29TGmFbinZ7dMICMjwJE
- ZZwuKCyL7m7uMoFKTIrHRms/kVhgsvzRXVCukHCZ6iw/BdSZJV3c2tB8IgB65ERs1FAhDAY4O/g bTWsv7UE4tAJxLPv4rzXCbB+QVtj5KnVYZyhOdJQJLCcAgefaLwUZipUgLuuM+hCG8WswFjUybj Qpw7tNcdNOwakLnKaGbGJdyXf3gQA3iJJX0k2Gkpi5OTlWisne/k7/6tDR3EzTUOisOFqhA1tyW
- uae6nRk/6IZT5bdE3QvFqcxUYgLsYQE5BWSNcE2gfeGFY1k2bTqDruCQ6dJE9CP4KOFdwm/4
-X-Authority-Analysis: v=2.4 cv=ONgn3TaB c=1 sm=1 tr=0 ts=68639e41 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=GoEa3M9JfhUA:10 a=Ikd4Dj_1AAAA:8 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8 a=L9TIf8G5Rp6rEUXyDIQA:9 a=CjuIK1q_8ugA:10
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 01, 2025 at 10:34:33AM +0200, David Hildenbrand wrote:
-> > > > > Reviewed-by: Zi Yan <ziy@nvidia.com>
-> > > > > Acked-by: Harry Yoo <harry.yoo@oracle.com>
-> > > > > Signed-off-by: David Hildenbrand <david@redhat.com>
+On Tue, 1 Jul 2025 06:41:54 +0000
+Yao Zi <ziyao@disroot.org> wrote:
 
-Based on discussion below, I'm good with this now with the comment change, so
-feel free to add:
+> Linux v6.16 built with dynamic ftrace randomly oops or triggers
+> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+> 
+> [    9.913462] ------------[ ftrace bug ]------------
+> [    9.913921] usbcore: registered new interface driver hub
+> [    9.917914] ftrace faulted on modifying
+> [    9.922947] usbcore: registered new device driver usb
+> [    9.928062] [<ffffffff030b7a7c>] 0xffffffff030b7a7c
+> [    9.941963] Initializing ftrace call sites
+> [    9.946086] ftrace record flags: 2000000
+> [    9.950028]  (0)
+>                 expected tramp: ffffffff8001f840
+> [    9.956592] ------------[ cut here ]------------
+> [    9.956597] WARNING: CPU: 3 PID: 673 at kernel/trace/ftrace.c:2213 ftrace_bug+0x278/0x2b0
+> [    9.956625] Modules linked in: fixed_phy(E+) fwnode_mdio(E) nvme_core(E) usbcore(E) scsi_mod(E) sdhci(E) libphy(E) nvme_keyring(E) scsi_common(E) usb_common(E) nvme_auth(E) cqhci(E) mdio_bus(E) mdio(E) mmc_core(E) gpio_dwapb(E) spi_sg2044_nor(E) i2c_designware_platform(E)
+> [    9.956667] CPU: 3 UID: 0 PID: 673 Comm: (udev-worker) Tainted: G            E       6.16.0-rc3-pioneer #2025.06.24.16.00+074b194ff VOLUNTARY
+> [    9.956677] Tainted: [E]=UNSIGNED_MODULE
+> [    9.956680] Hardware name: Milk-V Pioneer (DT)
+> [    9.956683] epc : ftrace_bug+0x278/0x2b0
+> [    9.956689]  ra : ftrace_bug+0x278/0x2b0
+> [    9.956694] epc : ffffffff80007018 ra : ffffffff80007018 sp : ffffffc60a2b3800
+> [    9.956698]  gp : ffffffff81dbf1e8 tp : ffffffd70246aac0 t0 : ffffffff8001ff48
+> [    9.956702]  t1 : 0000000000000020 t2 : 6465746365707865 s0 : ffffffc60a2b3830
+> [    9.956705]  s1 : ffffffff030b7a7c a0 : 0000000000000022 a1 : fffffff5ffaad8c0
+> [    9.956708]  a2 : 0000000000000010 a3 : fffffff5ffaad8c0 a4 : 0000000000000000
+> [    9.956711]  a5 : 0000000000000000 a6 : 0000000000007ffe a7 : 000000000015ffa8
+> [    9.956715]  s2 : ffffffd722b77130 s3 : fffffffffffffff2 s4 : ffffffd722b77130
+> [    9.956718]  s5 : fffffff5dda52b60 s6 : ffffffff030ca500 s7 : 0000000002000000
+> [    9.956721]  s8 : 0000000000000013 s9 : fffffff5dda52b60 s10: 0000000000000046
+> [    9.956724]  s11: 0000000000000014 t3 : ffffffff81dda237 t4 : ffffffff81dda237
+> [    9.956727]  t5 : ffffffff81dda238 t6 : ffffffc60a2b3628
+> [    9.956730] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000003
+> [    9.956735] [<ffffffff80007018>] ftrace_bug+0x278/0x2b0
+> [    9.956753] [<ffffffff8015cc32>] ftrace_process_locs+0x392/0x4f0
+> [    9.956762] [<ffffffff80160a3c>] ftrace_module_init+0x3c/0x58
+> [    9.956768] [<ffffffff800f4c8e>] load_module+0x178e/0x1f78
+> [    9.956777] [<ffffffff800f5682>] init_module_from_file+0x82/0xc8
+> [    9.956783] [<ffffffff800f58e8>] __riscv_sys_finit_module+0x1c0/0x300
+> [    9.956789] [<ffffffff80b10c58>] do_trap_ecall_u+0xa0/0x420
+> [    9.956795] [<ffffffff80b1e17a>] handle_exception+0x14a/0x156
+> [    9.956804] ---[ end trace 0000000000000000 ]---
+> 
+> Here's the log when ftrace_bug() is triggered. It's worth noting that
+> all strange behaviors happen after the userspace starts to load modules.
+> 
+> During debugging, we found if the kernel is built with lockdep enabled,
+> it triggers tons of warnings during kernel startup and module
+> initialization, which is reproducible on QEMU as well. A typical log
+> looks like,
+> 
+> [   30.219049] ------------[ cut here ]------------
+> [   30.219072] WARNING: CPU: 0 PID: 61 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
+> [   30.219113] Modules linked in:
+> [   30.219145] CPU: 0 UID: 0 PID: 61 Comm: modprobe Tainted: G        W           6.16.0-rc4 #64 NONE
+> [   30.219170] Tainted: [W]=WARN
+> [   30.219179] Hardware name: riscv-virtio,qemu (DT)
+> [   30.219189] epc : __patch_insn_write+0x356/0x3b8
+> [   30.219209]  ra : __patch_insn_write+0x352/0x3b8
+> [   30.219227] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000032b9e0
+> [   30.219239]  gp : ffffffff81a07500 tp : ff600000823199c0 t0 : ffffffff8001ee78
+> [   30.219250]  t1 : ff6000008231a9c0 t2 : 0000000000000000 s0 : ff2000000032ba30
+> [   30.219261]  s1 : 0000000000000008 a0 : 0000000000000000 a1 : ffffffff8181f318
+> [   30.219272]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000faa43398
+> [   30.219283]  a5 : 0000000000000000 a6 : 000000000e2d0519 a7 : 0000000000000004
+> [   30.219294]  s2 : ffffffff0258b3a0 s3 : 0000000000000008 s4 : 00000000000003a0
+> [   30.219305]  s5 : ff2000000032ba78 s6 : 00000000000003a8 s7 : 0000000002000000
+> [   30.219316]  s8 : 000000000000007a s9 : ff60000083a8a040 s10: 0000000000000147
+> [   30.219327]  s11: 000000000000007b t3 : 0000000000001fff t4 : 0000000000000004
+> [   30.219338]  t5 : 0000000000000002 t6 : 0000000000040000
+> [   30.219347] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
+> [   30.219360] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
+> [   30.219380] [<ffffffff80019268>] patch_text_nosync+0x48/0x80
+> [   30.219400] [<ffffffff8001ebb6>] ftrace_init_nop+0x3e/0xd0
+> [   30.219417] [<ffffffff8016cbe4>] ftrace_process_locs+0x29c/0x530
+> [   30.219436] [<ffffffff80170d14>] ftrace_module_init+0x3c/0x58
+> [   30.219454] [<ffffffff800f8500>] load_module+0x14f0/0x1c70
+> [   30.219473] [<ffffffff800f8e6a>] init_module_from_file+0x82/0xc8
+> [   30.219491] [<ffffffff800f9066>] idempotent_init_module+0x1b6/0x2b8
+> [   30.219510] [<ffffffff800f922c>] __riscv_sys_finit_module+0x64/0xa0
+> [   30.219528] [<ffffffff80b1c590>] do_trap_ecall_u+0x2b0/0x4e0
+> [   30.219549] [<ffffffff80b2b172>] handle_exception+0x14a/0x156
+> [   30.219573] irq event stamp: 5143
+> [   30.219582] hardirqs last  enabled at (5143): [<ffffffff80b1d55a>] irqentry_exit+0x6a/0x128
+> [   30.219601] hardirqs last disabled at (5141): [<ffffffff800365fc>] handle_softirqs+0x4a4/0x518
+> [   30.219620] softirqs last  enabled at (5142): [<ffffffff8003661a>] handle_softirqs+0x4c2/0x518
+> [   30.219637] softirqs last disabled at (5137): [<ffffffff800367ee>] __irq_exit_rcu+0xe6/0x120
+> [   30.219656] ---[ end trace 0000000000000000 ]---
+> [   30.219858] ------------[ cut here ]------------
+> 
+> With some digging, it's found that mutex_lock isn't correctly held when
+> ftrace_init_nop() initializes the address of ops stored before the
+> function entry., which is the cause of crashes: without correct lock
+> protection, __patch_insn_write() may wrongly modify the text segment if
+> the userspace concurrently issues module initialization, since all code
+> patching functions share two fixmap pages to modify the code.
+> 
+> The bug was newly introduced by recent RISC-V ftrace changes[1] in
+> v6.16-rc1, precisely saying commit 881dadf0792c ("Merge patch series
+> "riscv: ftrace: atmoic patching and preempt improvements"").
+> 
+> We also found another lockdep failure introduced by the series, which
+> could be reproduced by loading a module after enabling a tracer,
+> 
+>         cd /sys/kernel/debug/tracing
+>         echo 0 > tracing_on
+>         echo function > current_tracer
+>         echo printk > set_ftrace_filter
+>         echo 1 > tracing_on
+>         modprobe xxx    # loading anything causes lockdep failures
+> 
+> a typical log for the issue looks like,
+> 
+> [   40.420039] ------------[ cut here ]------------
+> [   40.420078] WARNING: CPU: 1 PID: 60 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
+> [   40.420145] Modules linked in: fuse(+)
+> [   40.420229] CPU: 1 UID: 0 PID: 60 Comm: modprobe Tainted: G        W           6.16.0-rc4+ #69 NONE
+> [   40.420272] Tainted: [W]=WARN
+> [   40.420296] Hardware name: riscv-virtio,qemu (DT)
+> [   40.420323] epc : __patch_insn_write+0x356/0x3b8
+> [   40.420367]  ra : __patch_insn_write+0x352/0x3b8
+> [   40.420409] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000030b9d0
+> [   40.420437]  gp : ffffffff81a07500 tp : ff60000083433380 t0 : ffffffff80024060
+> [   40.420465]  t1 : ffffffff81a0a250 t2 : 0000000000000001 s0 : ff2000000030ba20
+> [   40.420492]  s1 : 0000000000000004 a0 : 0000000000000000 a1 : ffffffff8181f318
+> [   40.420519]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000fac22398
+> [   40.420546]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000052464e43
+> [   40.420573]  s2 : ffffffff02581804 s3 : 0000000000000004 s4 : 0000000000000804
+> [   40.420600]  s5 : ff2000000030ba74 s6 : 0000000000000808 s7 : 0000000000000002
+> [   40.420628]  s8 : 0000000000000001 s9 : ffffffff818b09d8 s10: 00000000efffffff
+> [   40.420655]  s11: 0000000040000000 t3 : 0000000000100000 t4 : 0000000000000064
+> [   40.420682]  t5 : ff6000008392a9d0 t6 : ff600000837c6fff
+> [   40.420708] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
+> [   40.420740] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
+> [   40.420783] [<ffffffff800191f8>] patch_insn_write+0x48/0x70
+> [   40.420825] [<ffffffff8001eacc>] ftrace_make_call+0x8c/0xc0
+> [   40.420866] [<ffffffff8016c928>] __ftrace_replace_code+0xc0/0xd0
+> [   40.420909] [<ffffffff80170c82>] ftrace_module_enable+0x292/0x2d8
+> [   40.420951] [<ffffffff800f85e4>] load_module+0x15e4/0x1c70
+> [   40.420993] [<ffffffff800f8e5a>] init_module_from_file+0x82/0xc8
+> [   40.421035] [<ffffffff800f9056>] idempotent_init_module+0x1b6/0x2b8
+> [   40.421076] [<ffffffff800f921c>] __riscv_sys_finit_module+0x64/0xa0
+> [   40.421118] [<ffffffff80b1c580>] do_trap_ecall_u+0x2b0/0x4e0
+> [   40.421160] [<ffffffff80b2b162>] handle_exception+0x14a/0x156
+> [   40.421210] irq event stamp: 5977
+> [   40.421234] hardirqs last  enabled at (5977): [<ffffffff80b1d54a>] irqentry_exit+0x6a/0x128
+> [   40.421275] hardirqs last disabled at (5975): [<ffffffff800365ec>] handle_softirqs+0x4a4/0x518
+> [   40.421315] softirqs last  enabled at (5976): [<ffffffff8003660a>] handle_softirqs+0x4c2/0x518
+> [   40.421355] softirqs last disabled at (5969): [<ffffffff800367de>] __irq_exit_rcu+0xe6/0x120
+> [   40.421397] ---[ end trace 0000000000000000 ]---
+> 
+> the text_mutex lock isn't taken when ftrace_module_enable() indirectly
+> calls ftrace_make_call(), which *theoretically* may trigger a race, too.
 
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Good catch! Thanks for this precise report.
 
-> > > > > ---
-> > > > >    mm/page_alloc.c | 3 +++
-> > > > >    1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > > > > index 858bc17653af9..44e56d31cfeb1 100644
-> > > > > --- a/mm/page_alloc.c
-> > > > > +++ b/mm/page_alloc.c
-> > > > > @@ -1380,6 +1380,9 @@ __always_inline bool free_pages_prepare(struct page *page,
-> > > > >    			mod_mthp_stat(order, MTHP_STAT_NR_ANON, -1);
-> > > > >    		page->mapping = NULL;
-> > > > >    	}
-> > > > > +	if (unlikely(page_has_type(page)))
-> > > > > +		page->page_type = UINT_MAX;
-> > > >
-> > > > Feels like this could do with a comment!
-> > >
-> > > /* Reset the page_type -> _mapcount to -1 */
-> >
-> > Hm this feels like saying 'the reason we set it to -1 is to set it to -1' :P
->
-> Bingo! Guess why I didn't add a comment in the first place :P
->
-> >
-> > I'd be fine with something simple like
-> >
-> > /* Set page_type to reset value */
->
-> "Reset the page_type (which overlays _mapcount)"
->
-> ?
+Hm, it seems that the ftrace_module_enable() takes a text_mutex via
+ftrace_arch_code_modify_prepare() on x86. But commit 5aa4ef955884 
+("riscv: ftrace: do not use stop_machine to update code") removed it
+from RISCV.
 
-Sounds good thanks, have an R-b above on the basis of this change.
 
->
-> > > But... Can't we just put a #define somewhere here to make life easy?
-> Like:
->
-> Given that Willy will change all that soon, I'm not in favor of doing that
-> in this series.
+> 
+> Reverting the series fixes the second problem as well, but it's worth
+> noting that lockdep still reports a possible dead lock condition when
+> setting the tracer with
+> 
+>         echo function > /sys/kernel/debug/tracing/current_tracer
+> 
+> [   21.344316] ======================================================
+> [   21.345382] WARNING: possible circular locking dependency detected
+> [   21.346914] 6.16.0-rc4+ #70 Not tainted
+> [   21.347924] ------------------------------------------------------
+> [   21.348961] bash/58 is trying to acquire lock:
+> [   21.349844] ffffffff8181a0a0 (cpu_hotplug_lock){++++}-{0:0}, at: stop_machine+0x24/0x4c
+> [   21.354283]
+> [   21.354283] but task is already holding lock:
+> [   21.355431] ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
+> [   21.357233]
+> [   21.357233] which lock already depends on the new lock.
+> [   21.357233]
+> [   21.358534]
+> [   21.358534] the existing dependency chain (in reverse order) is:
+> [   21.359668]
+> [   21.359668] -> #2 (text_mutex){+.+.}-{4:4}:
+> [   21.360862]        lock_acquire+0xf0/0x30e
+> [   21.361749]        __mutex_lock+0xa6/0x8ee
+> [   21.362566]        mutex_lock_nested+0x20/0x28
+> [   21.363310]        arch_jump_label_transform_queue+0x48/0x100
+> [   21.364226]        __jump_label_update+0x42/0xe8
+> [   21.365034]        jump_label_update+0x126/0x1da
+> [   21.365764]        static_key_slow_inc_cpuslocked+0x6c/0xa4
+> [   21.366579]        static_key_slow_inc+0x26/0x3c
+> [   21.367305]        sched_clock_init+0x20/0x50
+> [   21.368041]        start_kernel+0x9b8/0xa94
+> [   21.368940]
+> [   21.368940] -> #1 (jump_label_mutex){+.+.}-{4:4}:
+> [   21.370062]        lock_acquire+0xf0/0x30e
+> [   21.370748]        __mutex_lock+0xa6/0x8ee
+> [   21.371459]        mutex_lock_nested+0x20/0x28
+> [   21.372136]        jump_label_init+0x38/0xee
+> [   21.372894]        setup_arch+0xd0/0x634
+> [   21.373568]        start_kernel+0x90/0xa94
+> [   21.374310]
+> [   21.374310] -> #0 (cpu_hotplug_lock){++++}-{0:0}:
+> [   21.375509]        check_noncircular+0x144/0x15c
+> [   21.376313]        __lock_acquire+0xd88/0x2176
+> [   21.377029]        lock_acquire+0xf0/0x30e
+> [   21.377683]        cpus_read_lock+0x44/0x118
+> [   21.378447]        stop_machine+0x24/0x4c
+> [   21.379123]        arch_ftrace_update_code+0x38/0x56
+> [   21.379896]        ftrace_startup+0xd0/0x170
+> [   21.380673]        register_ftrace_function+0x11c/0x1f0
+> [   21.381489]        function_trace_init+0x6c/0xae
+> [   21.382238]        tracing_set_tracer+0xba/0x14c
+> [   21.383044]        tracing_set_trace_write+0x96/0xd0
+> [   21.383871]        vfs_writev+0x1b8/0x400
+> [   21.384501]        do_writev+0x6e/0xe8
+> [   21.385168]        __riscv_sys_writev+0x22/0x2a
+> [   21.385919]        do_trap_ecall_u+0x2b0/0x4de
+> [   21.386695]        handle_exception+0x14a/0x156
+> [   21.387516]
+> [   21.387516] other info that might help us debug this:
+> [   21.387516]
+> [   21.388995] Chain exists of:
+> [   21.388995]   cpu_hotplug_lock --> jump_label_mutex --> text_mutex
 
-Ah is he? I mean of course he is :))) this does seem like a prime target for the
-ongoing memdesc/foliofication efforts.
+Yeah, this chain is correct. We can not get cpus_read_lock() after
+text_mutex. cpus_read_lock() before text_mutex and use
+stop_machine_cpuslocked() instead. (if revert the series).
+
+Thank you,
+
+
+> [   21.388995]
+> [   21.390786]  Possible unsafe locking scenario:
+> [   21.390786]
+> [   21.391724]        CPU0                    CPU1
+> [   21.392608]        ----                    ----
+> [   21.393357]   lock(text_mutex);
+> [   21.394035]                                lock(jump_label_mutex);
+> [   21.395118]                                lock(text_mutex);
+> [   21.396157]   rlock(cpu_hotplug_lock);
+> [   21.397030]
+> [   21.397030]  *** DEADLOCK ***
+> [   21.397030]
+> [   21.398110] 5 locks held by bash/58:
+> [   21.398751]  #0: ff60000080a59430 (sb_writers#6){.+.+}-{0:0}, at: do_writev+0x6e/0xe8
+> [   21.400343]  #1: ffffffff818b1548 (trace_types_lock){+.+.}-{4:4}, at: tracing_set_tracer+0x24/0x14c
+> [   21.401948]  #2: ffffffff818b0df8 (direct_mutex){+.+.}-{4:4}, at: register_ftrace_function+0x20/0x1f0
+> [   21.403531]  #3: ffffffff818b0908 (ftrace_lock){+.+.}-{4:4}, at: register_ftrace_function+0x110/0x1f0
+> [   21.405208]  #4: ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
+> [   21.406948]
+> [   21.406948] stack backtrace:
+> [   21.408285] CPU: 1 UID: 0 PID: 58 Comm: bash Not tainted 6.16.0-rc4+ #70 NONE
+> [   21.408915] Hardware name: riscv-virtio,qemu (DT)
+> [   21.409325] Call Trace:
+> [   21.409448] [<ffffffff80016fa8>] dump_backtrace+0x28/0x30
+> [   21.409546] [<ffffffff80002534>] show_stack+0x38/0x44
+> [   21.409595] [<ffffffff8000fe1a>] dump_stack_lvl+0x70/0x9c
+> [   21.409644] [<ffffffff8000fe5e>] dump_stack+0x18/0x20
+> [   21.409691] [<ffffffff800a764c>] print_circular_bug+0x26c/0x2bc
+> [   21.409744] [<ffffffff800a77e0>] check_noncircular+0x144/0x15c
+> [   21.409797] [<ffffffff800aa1a6>] __lock_acquire+0xd88/0x2176
+> [   21.409850] [<ffffffff800ab684>] lock_acquire+0xf0/0x30e
+> [   21.409902] [<ffffffff8002bd76>] cpus_read_lock+0x44/0x118
+> [   21.409954] [<ffffffff80144498>] stop_machine+0x24/0x4c
+> [   21.410000] [<ffffffff8001d1ea>] arch_ftrace_update_code+0x38/0x56
+> [   21.410050] [<ffffffff80161fe4>] ftrace_startup+0xd0/0x170
+> [   21.410102] [<ffffffff80162ee8>] register_ftrace_function+0x11c/0x1f0
+> [   21.410154] [<ffffffff8017d9ac>] function_trace_init+0x6c/0xae
+> [   21.410207] [<ffffffff80176444>] tracing_set_tracer+0xba/0x14c
+> [   21.410262] [<ffffffff8017656c>] tracing_set_trace_write+0x96/0xd0
+> [   21.410318] [<ffffffff80292d70>] vfs_writev+0x1b8/0x400
+> [   21.410365] [<ffffffff80293026>] do_writev+0x6e/0xe8
+> [   21.410411] [<ffffffff80294982>] __riscv_sys_writev+0x22/0x2a
+> [   21.410460] [<ffffffff80ab6704>] do_trap_ecall_u+0x2b0/0x4de
+> [   21.410508] [<ffffffff80ac4b0e>] handle_exception+0x14a/0x156
+> 
+> which seems to exist since at least v6.15.
+> 
+> Not sure either reverting the commits or fixing them up is a better
+> idea, but anyway the fatal first issue shouidn't go into the stable
+> release.
+> 
+> Thanks for your suggestions on the problems.
+> 
+> Regards,
+> Yao Zi
+> 
+> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+> 
+> #regzbot introduced: 881dadf0792c
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
