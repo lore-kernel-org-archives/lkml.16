@@ -1,241 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755231EA6F
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 07:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735C772627;
+	Tue,  1 Jul 2025 07:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751354744; cv=none; b=tLXAD5sISVjoXIbBIqVzr1WzfAOw971m8kwBKKcojznYXvJGRbqrJQYi2JlFDmg7835pjk9TZTA4iH9hO0bfbFpOKHZPyW1NavOgGp1y1anTuSmhJbobFme1MB+OJJ+MqzCX3vMJFT8q7iR5CFscqHBGIctIeB4kn9AuG9pxTX0=
+	t=1751354892; cv=none; b=NO7CBtgCQqj9PjnTDT7GLIYv4N11pnRiGV21ge4gC56UNbdGevtFB0fjbL0QjvOewiJZ8mnhhy/eTt/g3iRIVPaTH9upS1c9PCPCx4vC85FJtBt1DsrIDgtsPB/l3xgoyXvR0STC59BMDxblI65JL7sPqMZ1ul96+C0LqHPfLQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751354744; c=relaxed/simple;
-	bh=zli4l6+3Cz6XqiZS68d2p3HIE0BKInGPc9eQIG4Kzvk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kpAIs2MkBOKP5JiGQtxJlM+R0dqFDW+BwoCIFTs9PG0GRDu5J0X7ivaYSR/SKo1qlGaiQ469B1MAikSgA0/V9fFSNsEs5IIwpBGVFppRkVulVqtpHyfHh4eSAdTygQxVoy7LAo0EPwCjHmX1366r6pT+tOTsi1sg4xG7YAQ2N6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hQiDh9sL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751354892; c=relaxed/simple;
+	bh=YDEbnGhuOWLsVA+sCNJxV/TpybCXlMAB4+pgRB4AFgQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VoLulGQ7m6deCn8WSj1nKxct2k+BnPCjJWmcwivO8C+54LHZwLpX5d8MygqIyKl7aaSCv0wQ/wdr+XzFTRDkhuwkJ+1JXdWja5QA58K3FLMjJpMdKQg7hq4OkRqKJtRA8BJJm76xoYFPMlEYazk55C7mkVCTqDA1hEEGr3G8o5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=GfhxbFUk; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQiDh9sL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751354741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RqfjgkpvPqfNyTCCIdxVSSiYliy/Ldo4Tby8Qm2Lb+I=;
-	b=hQiDh9sLhrybXSVvkB1JYYhySejakw0xETAib/B2qqEG0LywcCs+vL2LXTb9CAH0JZzTpN
-	jNCQMKy1o/aeyL0sswjDLBM0t/fFy3zUxt3LanuTsVHXfzUq7vBEQCkKjx4MojYUO94eUT
-	HUF52DQqQL/NzqSsJUyU/ChrOqMMwws=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-txx9GHz2PEeEU1FPUOW18A-1; Tue, 01 Jul 2025 03:25:39 -0400
-X-MC-Unique: txx9GHz2PEeEU1FPUOW18A-1
-X-Mimecast-MFC-AGG-ID: txx9GHz2PEeEU1FPUOW18A_1751354739
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3121cffd7e8so2277567a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 00:25:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751354739; x=1751959539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RqfjgkpvPqfNyTCCIdxVSSiYliy/Ldo4Tby8Qm2Lb+I=;
-        b=lqF/x5j6i8YrBWlh2VIShBhMgUrRN9CZPuPNW1BCsMajhWBY5AzLEAzi5VxtG7Z+kn
-         DhBv46lhuOylhsLRiZGySd01YV5Dm8Hm1pou3SABofLtKcpcs41blkEJE7I7jC7+j0m7
-         pu9YgBtToP5SJ98CRKQoRNngK6lGJIFun49cXGErIsjsd6M90/G+UkWfHGeO9ei5OA1P
-         Fled7X7DBN4MYSbyUtHECwpSEZK9caGu3RXQR3o4OqZe+u+r6Ptbqk9Klh8rTx+NbPM2
-         3JFEjeuu0MvV3sIKNpwcefJOdWNofWbSfuBu3rfsmt5oQ6ZnxM3X1YG2B4CivW47NXc+
-         sQFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYiCdU27ZUPboYeWUIQUARvh/hgC9i5s+tK6XJHEtfGVf9KV4QsG2TI+M17uoAFeIjNSrBq21xY7Jui3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhpKHYL0lNKQtgWx/Ns3VuVvGXKODq25G/1v6vA+Y8B0K61Mmr
-	NWPCegcBDMz51x7RAGaxXd3G2TleajLPbWcmyQtA9vXf96/rbropSsKj8jYzQRxFlnSwwgWq1Nm
-	wo6MylPqGU2ZTJMIA5HUn37uT/Hz/94QvKsn6tY8unz73WXOFh7wXQMHDhr0KwSO4bh/cZg+gP5
-	mJJt1Kwm7Gi6Kag6CmOW+qJXgYhgutaXLGMCV761gB
-X-Gm-Gg: ASbGncvRG0GbEJZzwFqk8+fKCTVQIEZCC23aaeGfgo3VAOR6O8g8GTw6oOBai+VX2Um
-	+ejMkuRcY2J6IyMkpXtNSHpRjBtcOP9H4rKyISjbsKzvvt99Dxr6JkPcVQj4c7/LJQZ2ShuA7io
-	/g
-X-Received: by 2002:a17:90b:1c0f:b0:30c:540b:9ba with SMTP id 98e67ed59e1d1-318c8ee5649mr22932469a91.10.1751354738655;
-        Tue, 01 Jul 2025 00:25:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOq+uG0FaUURtz7jeSaS2hmgJsfIY1SbLYfvpWWdj22laRnsWVajTqtVC9jWNJzKXroXYApr8VhD3fK3IByrw=
-X-Received: by 2002:a17:90b:1c0f:b0:30c:540b:9ba with SMTP id
- 98e67ed59e1d1-318c8ee5649mr22932441a91.10.1751354738143; Tue, 01 Jul 2025
- 00:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="GfhxbFUk"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWVOt-00DBu9-Kt; Tue, 01 Jul 2025 09:27:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
+	bh=Rkdk2rPksLpTTEM7JfKIBHo3x2rKNHPrlN3G2XHmJyE=; b=GfhxbFUkoy8GS/INc8QHy3peIx
+	zAk3bRrn5f22LX1XhffCbRVtSG+IYOYUXmC1eqG8GcYmhckSwbJ6DPzJVW2/NkXn6DVcg571sDI8W
+	SBaiZX9KdVOX2NxHUQvl+wMDViHZz+OPBtof82UPBLiSEM906u4K3k6c1hYe96ZxN3+JUQszHcP30
+	j7791qWTu0J4Msgw5d5I38wcYToDoRC4UNlZx+N+vEju0IE6ooDRvIDj1jqHLXZ0yOUpE4D9BC9kb
+	7m3+oUF+k2A1/XqBip9cjSX6OsFA5oEZIEudkXa+7eB/myI6rAi/i8cQTYcTNp3/as9IzM1JwI7rp
+	7p/Am+Xw==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uWVOs-0000QG-4G; Tue, 01 Jul 2025 09:27:30 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uWVOZ-001vyL-CH; Tue, 01 Jul 2025 09:27:11 +0200
+Message-ID: <beea4b9f-657f-4f98-a853-e40a503e2274@rbox.co>
+Date: Tue, 1 Jul 2025 09:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616082518.10411-1-jasowang@redhat.com> <20250616082518.10411-15-jasowang@redhat.com>
- <20250701023157-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20250701023157-mutt-send-email-mst@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 1 Jul 2025 15:25:26 +0800
-X-Gm-Features: Ac12FXxqBoyRRVzktN6qu-dSbPSkI2Sh4uKMEzaFGTTMmSWmu6MM19PxRao70Rk
-Message-ID: <CACGkMEu=BC5eYoExaUqLp-QZFKq31BrGvvEy0xvAwfCg28690Q@mail.gmail.com>
-Subject: Re: [PATCH V3 14/19] virtio_ring: determine descriptor flags at one time
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Michal Luczaj <mhal@rbox.co>
+Subject: Re: [PATCH net-next v2 0/9] net: Remove unused function parameters in
+ skbuff.c
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>,
+ Kuniyuki Iwashima <kuniyu@google.com>, David Ahern <dsahern@kernel.org>,
+ Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Wenjia Zhang <wenjia@linux.ibm.com>,
+ Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>,
+ Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+ <20250630181847.525a0ad6@kernel.org>
+Content-Language: pl-PL, en-GB
+In-Reply-To: <20250630181847.525a0ad6@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 1, 2025 at 2:42=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com> =
-wrote:
->
-> On Mon, Jun 16, 2025 at 04:25:12PM +0800, Jason Wang wrote:
-> > Let's determine the last descriptor by counting the number of sg. This
-> > would be consistent with packed virtqueue implementation and ease the
-> > future in-order implementation.
-> >
-> > Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/virtio/virtio_ring.c | 25 +++++++++++++------------
-> >  1 file changed, 13 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.=
-c
-> > index af32d1a1a1db..d5e4d4cd2487 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -570,7 +570,7 @@ static inline int virtqueue_add_split(struct vring_=
-virtqueue *vq,
-> >       struct vring_desc_extra *extra;
-> >       struct scatterlist *sg;
-> >       struct vring_desc *desc;
-> > -     unsigned int i, n, avail, descs_used, prev, err_idx;
-> > +     unsigned int i, n, c, avail, descs_used, err_idx;
-> >       int head;
-> >       bool indirect;
-> >
-> > @@ -626,46 +626,47 @@ static inline int virtqueue_add_split(struct vrin=
-g_virtqueue *vq,
-> >               return -ENOSPC;
-> >       }
-> >
-> > +     c =3D 0;
->
-> initialize at point of declaration?
+On 7/1/25 03:18, Jakub Kicinski wrote:
+> On Thu, 26 Jun 2025 10:33:33 +0200 Michal Luczaj wrote:
+>> Couple of cleanup patches to get rid of unused function parameters around
+>> skbuff.c, plus little things spotted along the way.
+>>
+>> Offshoot of my question in [1], but way more contained. Found by adding
+>> "-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+>> skbuff.c warnings.
+> 
+> I feel a little ambivalent about the removal of the flags arguments.
+> I understand that they are unused now, but theoretically the operation
+> as a whole has flags so it's not crazy to pass them along.. Dunno.
 
-Fine.
+I suspect you can say the same about @gfp. Even though they've both became
+irrelevant for the functions that define them. But I understand your
+hesitation. Should I post v3 without this/these changes?
 
->
-> >       for (n =3D 0; n < out_sgs; n++) {
-> > +             sg =3D sgs[n];
-> >               for (sg =3D sgs[n]; sg; sg =3D sg_next(sg)) {
-> >                       dma_addr_t addr;
-> >                       u32 len;
-> > +                     u16 flags =3D 0;
-> >
-> >                       if (vring_map_one_sg(vq, sg, DMA_TO_DEVICE, &addr=
-, &len, premapped))
-> >                               goto unmap_release;
-> >
-> > -                     prev =3D i;
-> > +                     if (++c !=3D total_sg)
-> > +                             flags =3D VRING_DESC_F_NEXT;
-> > +
->
-> Don't like it how the logic is split.
-> flags isn't used before that.
-> So I prefer:
->
->         flags =3D ++c =3D=3D total_sg ? 0 : VRING_DESC_F_NEXT;
->
-> and at that point, we do not really need flags anymore:
->
->
-> >                       /* Note that we trust indirect descriptor
-> >                        * table since it use stream DMA mapping.
-> >                        */
-> >                       i =3D virtqueue_add_desc_split(vq, desc, extra, i=
-, addr, len,
-> > -                                                  VRING_DESC_F_NEXT,
-> > +                                                  flags,
->
-> So just:
->
->
->         i =3D virtqueue_add_desc_split(vq, desc, extra, i, addr, len,
->                                      ++c =3D=3D total_sg ? 0 : VRING_DESC=
-_F_NEXT,
->
-> here and we are done.
->
->
-> >                                                    premapped);
-> >               }
-> >       }
-> >       for (; n < (out_sgs + in_sgs); n++) {
-> >               for (sg =3D sgs[n]; sg; sg =3D sg_next(sg)) {
-> > +                     u16 flags =3D VRING_DESC_F_WRITE;
-> >                       dma_addr_t addr;
-> >                       u32 len;
-> >
-> >                       if (vring_map_one_sg(vq, sg, DMA_FROM_DEVICE, &ad=
-dr, &len, premapped))
-> >                               goto unmap_release;
-> >
-> > -                     prev =3D i;
-> > +                     if (++c !=3D total_sg)
-> > +                             flags |=3D VRING_DESC_F_NEXT;
-> > +
->
-> Don't like it that above it's "=3D" here it is "|=3D".
-> And flags isn't used before that.
-> So I prefer:
->
->         flags =3D ++c =3D=3D total_sg ? VRING_DESC_F_WRITE : VRING_DESC_F=
-_WRITE | VRING_DESC_F_NEXT;
->
-> and again we don't really need the variable:
->
->
-> >                       /* Note that we trust indirect descriptor
-> >                        * table since it use stream DMA mapping.
-> >                        */
-> >                       i =3D virtqueue_add_desc_split(vq, desc, extra, i=
-, addr, len,
-> > -                                                  VRING_DESC_F_NEXT |
-> > -                                                  VRING_DESC_F_WRITE,
->
->
-> so just:
->
->                 i =3D virtqueue_add_desc_split(vq, desc, extra, i, addr, =
-len,
->                                              (++c =3D=3D total_sg ? 0 : V=
-RING_DESC_F_NEXT) |
->                                              VRING_DESC_F_WRITE,
->
->
-> is clearer, and the patch smaller.
+What's netdev's stance on using __always_unused in such cases?
 
-Right, I just copy the logic of packed.
-
-Let me do that for both split and packed for the next version.
-
-Thanks
-
->
->
->
-> > -                                                  premapped);
-> > +                                                  flags, premapped);
-> >               }
-> >       }
-> > -     /* Last one doesn't continue. */
-> > -     desc[prev].flags &=3D cpu_to_virtio16(vq->vq.vdev, ~VRING_DESC_F_=
-NEXT);
-> > -     if (!indirect && vring_need_unmap_buffer(vq, &extra[prev]))
-> > -             vq->split.desc_extra[prev & (vq->split.vring.num - 1)].fl=
-ags &=3D
-> > -                     ~VRING_DESC_F_NEXT;
-> >
-> >       if (indirect) {
-> >               /* Now that the indirect table is filled in, map it. */
-> > --
-> > 2.34.1
->
+Thanks,
+Michal
 
