@@ -1,91 +1,147 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F0B27FD52;
-	Tue,  1 Jul 2025 20:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A6125D53C;
+	Tue,  1 Jul 2025 20:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751401012; cv=none; b=vDjkJ0Al3ik0ha1nKt3g+6zq2nhZRsJGhHyD0TU/VLjdeugwIC+puJj1M7DqzxjtlayHELSCH2unlIsXuNJSl+6FEN6LyeTSULGZ4jbwacRKPPcrRKNz7gJlGUDNa2+1Ppogn2ogz0eapU1hwrBMemvnTXjuGkoy6D3BNhQzpmc=
+	t=1751401018; cv=none; b=H66z7HGA8gpPXJHkuzOXAg0/Ai2bcnNlvVk2HN4IaEf/yOjq2MQgR2uMekqxeljbqq4la7o7jCcPAbhPmTM6c2fiwo5mnS8MHvr/VH4zC8TLxKyhdYpb+dRdwm6YMSgFned42roRtauCsnXbcg0uoDVuUseacrHQzqdNTzDUP/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751401012; c=relaxed/simple;
-	bh=2nmS+ZO80l1f6pv4DQyGZ/GajhbX3jsugminurl4syU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oIU/pd1pQrr3F+gFbe2HK9ieBZZl86yKxTEjQvTVj9QONnHt11BAt9dU6z8w2B3PfnIrs/TEQWv72p7UOrEcgHTYCpT1jIiBnSeVvyU/braC2Q6Yw+Lyzv+5RLPjSozUspvUwxrL0FMW/YLMpOqlu8CiHnfkucU9wHH9iaRqouA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id 705651F0003D;
-	Tue,  1 Jul 2025 20:16:49 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id E3C54AC9686; Tue,  1 Jul 2025 20:16:48 +0000 (UTC)
-X-Spam-Level: *
-Received: from localhost.localdomain (unknown [192.168.1.64])
-	by laika.paulk.fr (Postfix) with ESMTP id B6A8BAC9686;
-	Tue,  1 Jul 2025 20:11:33 +0000 (UTC)
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-gpio@vger.kernel.org
-Cc: Yong Deng <yong.deng@magewell.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Icenowy Zheng <icenowy@aosc.xyz>,
-	Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 3/5] clk: sunxi-ng: v3s: Fix CSI1 MCLK clock name
-Date: Tue,  1 Jul 2025 22:11:22 +0200
-Message-ID: <20250701201124.812882-4-paulk@sys-base.io>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250701201124.812882-1-paulk@sys-base.io>
-References: <20250701201124.812882-1-paulk@sys-base.io>
+	s=arc-20240116; t=1751401018; c=relaxed/simple;
+	bh=uQ0iJKDAhEGdn0ddItDR1dQ8NW4FG3aqRSr3W+jd0CI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BQ4lDbCsYDksF3NVW+TMUW/FNF9rWR6FSa+R+PbgptNtpIA+SVGtWIFmq2nDKL6tuGqVbr2sawFFtgUSlCef1iMeHOkG0G/f/w4uxtRQ06PrIMs+RgBWcUVuENVUn1d6AcS2LvM5T16waPVOdFQaR5tlKvbbYxcR0fWIBsMumOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VssRePWb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VssRePWb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD2F8C4CEEB;
+	Tue,  1 Jul 2025 20:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751401018;
+	bh=uQ0iJKDAhEGdn0ddItDR1dQ8NW4FG3aqRSr3W+jd0CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VssRePWb/qHNJPZ2Mz+uZv0sI9fsMaeoWoNZVVuYzBEItA/fnJ00QWc92ay0Tj+Ew
+	 bNAUiiP1QFHRWH1y4PRwbPJgkkHIRsM+i3+UyXrru1D1gvM/9RHWmXPFavyuULQfZ7
+	 aMubAxFQd6UX89rUbI7b6IyLNxqD7TYzc9KaquDvoTBKTf32KDasvzaAnSDOeDMVkP
+	 T9x9cJV+kDdTgFmJicbYwb9+OpG3WnhoANKRwLFhrJpMSfDGwJUtwjEkPrerDKUoeS
+	 8vLj5A2UK7Q+U8pn8eRP1EEIgk1IvZ4yULLnZ2qZN5mMCbPm4v7zneqAm9N8hDfc7Z
+	 333NF4wEqKUxA==
+Date: Tue, 1 Jul 2025 22:16:51 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: [PATCH v8 4/6] rust: debugfs: Support arbitrary owned backing
+ for File
+Message-ID: <aGRCM1VRHI8EvZmd@pollux>
+References: <2025070131-icon-quarters-0c16@gregkh>
+ <aGPtCBB6nWTNJuwK@pollux>
+ <2025070137-tartar-juncture-fcd2@gregkh>
+ <aGP6d2-jJy5rtjMK@pollux>
+ <CAGSQo00eG5oRdN_xORLUyUauLi_vzypU-gz6DSU_FzaAbHRLng@mail.gmail.com>
+ <aGQ1VsnFaxBo9zaM@pollux>
+ <DB0Z71SF488V.3QURUHHELOY84@kernel.org>
+ <3c928a0e-ccd4-4ba0-9f42-9f2bb0203e75@kernel.org>
+ <DB0ZJVL0682F.ZNNOXEIDL5NN@kernel.org>
+ <DB0ZOHPFJR7T.1W3OF32GDL55O@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB0ZOHPFJR7T.1W3OF32GDL55O@kernel.org>
 
-The CSI1 MCLK clock is reported as "csi-mclk" while it is specific to
-CSI1 as the name of the definition indicates. Fix it in the driver.
+On Tue, Jul 01, 2025 at 10:09:10PM +0200, Benno Lossin wrote:
+> On Tue Jul 1, 2025 at 10:03 PM CEST, Benno Lossin wrote:
+> > On Tue Jul 1, 2025 at 9:58 PM CEST, Danilo Krummrich wrote:
+> >> On 7/1/25 9:46 PM, Benno Lossin wrote:
+> >>> On Tue Jul 1, 2025 at 9:21 PM CEST, Danilo Krummrich wrote:
+> >>>> On Tue, Jul 01, 2025 at 11:11:13AM -0700, Matthew Maurer wrote:
+> >>>>> If we implement *only* pinned files, we run into an additional problem
+> >>>>> - you can't easily extend a pinned vector. This means that you cannot
+> >>>>> have dynamically created devices unless you're willing to put every
+> >>>>> new `File` into its own `Box`, because you aren't allowed to move any
+> >>>>> of the previously allocated `File`s for a resize.
+> >>>>>
+> >>>>> Where previously you would have had
+> >>>>>
+> >>>>> ```
+> >>>>> debug_files: Vec<File>
+> >>>>> ```
+> >>>>>
+> >>>>> you would now have
+> >>>>>
+> >>>>> ```
+> >>>>> debug_files: Vec<PinBox<File<T>>>
+> >>>>> ```
+> >>>>
+> >>>> Stuffing single File instances into a Vec seems like the wrong thing to do.
+> >>>>
+> >>>> Instead you may have instances of some data structure that is created
+> >>>> dynamically in your driver that you want to expose through debugfs.
+> >>>>
+> >>>> Let's say you have (userspace) clients that can be registered arbitrarily, then
+> >>>> you want a Vec<Client>, which contains the client instances. In order to provide
+> >>>> information about the Client in debugfs you then have the client embed things as
+> >>>> discussed above.
+> >>>>
+> >>>> 	struct Client {
+> >>>> 	   id: File<ClientId>,
+> >>>> 	   data: File<ClientData>,
+> >>>> 	   ...
+> >>>> 	}
+> >>>>
+> >>>> I think that makes much more sense than keeping a Vec<Arc<Client>> *and* a
+> >>>> Vec<File> separately. Also, note that with the above, your Client instances
+> >>>> don't need to be reference counted anymore.
+> >>>>
+> >>>> I think this addresses the concerns below.
+> >>> 
+> >>> You still have the issue that `Client` now needs to be pinned and the
+> >>> vector can't be resized. But if you know that it's bounded, then we
+> >>> could just make `Pin<Vec<T>>` work as expected (not relocating the
+> >>> underlying allocation by not exposing `push`, only
+> >>> `push_within_capacity`).
+> >>> 
+> >>> We also could have a `SegmentedVec<T>` that doesn't move elements.
+> >>> Essentially it is
+> >>>      
+> >>>      enum SegmentedVec<T> {
+> >>>          Cons(Segment<T>, KBox<SegmentedVec<T>>)
+> >>>          Nul,
+> >>>      }
+> >>> 
+> >>>      struct Segment<T> {
+> >>>          elements: [T; 16]
+> >>>      }
+> >>> 
+> >>> or make the segments variable-sized and grow them accordingly.
+> >>
+> >> That sounds a lot like the perfect application for XArray. :)
+> >
+> > Haha I didn't know this already existed in the kernel :) Yeah then we
+> > should make XArray work for this use-case.
+> 
+> Ah wait, I meant for `SegmentedVec<T>` to store multiple `T` in the same
+> allocation, so it would only grow sometimes and amortize the allocations
+> just like `Vec`. It seems to me that XArray only stores pointers, so you
+> have to box everything (which we're trying to avoid IIUC).
 
-Fixes: d0f11d14b0bc ("clk: sunxi-ng: add support for V3s CCU")
-Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
----
- drivers/clk/sunxi-ng/ccu-sun8i-v3s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-index d12791b31a9d..86d933d1ac72 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-v3s.c
-@@ -366,7 +366,7 @@ static const char * const csi_sclk_parents[] = { "pll-video", "pll-isp" };
- static SUNXI_CCU_M_WITH_MUX_GATE(csi_sclk_clk, "csi-sclk", csi_sclk_parents,
- 				 0x134, 16, 4, 24, 3, BIT(31), 0);
- 
--static SUNXI_CCU_M_WITH_MUX_GATE(csi1_mclk_clk, "csi-mclk", csi_mclk_parents,
-+static SUNXI_CCU_M_WITH_MUX_GATE(csi1_mclk_clk, "csi1-mclk", csi_mclk_parents,
- 				 0x134, 0, 5, 8, 3, BIT(15), 0);
- 
- static SUNXI_CCU_M_WITH_GATE(ve_clk, "ve", "pll-ve",
--- 
-2.49.0
-
+Yes, that sounds good. And if the potential number of Client instances can get
+pretty large Vec isn't a good choice anyways. If we really get a ton of clients,
+they should be allocated with a kmem_cache and stored in an XArray, maple tree,
+etc.
