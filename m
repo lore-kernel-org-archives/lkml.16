@@ -1,135 +1,153 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A741C272811;
-	Tue,  1 Jul 2025 12:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949A026C3A3;
+	Tue,  1 Jul 2025 12:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751371706; cv=none; b=A4oi899vwDWoDNvRok5AdrxDLZIb3IaRl0+nVicwYaVQEpK2P/i33oq1TfoMmvlkWaXYlppl90qMa7WolJV138GaAGveObTQifOCiCdaBBBt39QEF0Kb2Yrz45xq6GSocRBZxn+AdAF5qGG+CALhxqSE/Bm/g6QiJV7eKrjDhLA=
+	t=1751371733; cv=none; b=bFgVpX8BSm7lcXSgGJPlsaJlrhdxtnJNd4EayaXjIrS4LMemuxjVgouenvUTGvAjTA7LfYrwxoUXr6oF4bd2MwsvmN0DF3PlQFuXGeOM/Lb391Pcxew9z5B//ioloyNenZpPZhDCMl7MweMOssub7F4o/O69v0aDdHf+0kUcLlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751371706; c=relaxed/simple;
-	bh=ZtWMnNs93dbR9aNFNiHFIEma/yL8FNd0BF7lG5Ouv0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lDJyXpwSy4STPYHUK6FMwJ7ybkJzAD/xhutsEi+tYhB53mxiTJup5a02kMnSR04ndbmbqckE8NK0Z3pkqkrU1QD3jrsFBUfCoAyO3gDouDFmH45apBVoYwpULpmmAZ9mswUc8ai/UqshOIgsPpUx4khm6No4fljLVvvfyXouu+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fae04a3795so59984696d6.3;
-        Tue, 01 Jul 2025 05:08:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751371703; x=1751976503;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hb7h5o3Z3SHRmkV5QpQJDs20BcvG/ga4TovqIGM5xnM=;
-        b=MigvWZV4rEKGdyBSHIJS/h3p3TTRKCjBMwL+mIdrz8EsHw+khu5zQAfsFaQnE8UF1n
-         B5C89UeQ6dFuJKJXTjnAwbZPDyLrVi5y3ZKk7JD7KZVSkLGNQiI1BHPQzVdG6zwFzqtA
-         gBdD9qZQVvfq3A0ZqT5EJkY3Y6xVDEPwM83o7CCIZ8frAutHKmy8pa8B5ggtVs1fAhXX
-         ECHYS+2RLLREMjtL0+Z3sY1FetGd4InIDX/AkeqNIvMuz5yn7PYEePcxlobyDaVr00Rg
-         urD7JivXDZ/i6gWeR1KgZVy5yxdzjTnORaCv1fJ1w3P+UhbvvtLS1G7PjWUcmdGYFwWE
-         0cWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEQzqWQ2MSzWqPC9YkFsWHXSVzPj7qMmFpASBv4xGVfz9jHUURsoxOnyTdqEG6iV0498+jTTDMfCq4FI31xeiNfq0=@vger.kernel.org, AJvYcCULdymfeNff/fBLvMDwqMuLh70OJJ1BNxVcAByR2/eT95gEDmaqUrG93p1/Y3fYtNN2CdFOyfik8woFYN9R@vger.kernel.org, AJvYcCUz4QPi7lR1nRc+K3C9NI60XWiRJvIfmUEPLsDGYZJBv6WSwRRio9uovzNVTillXpMySFskKxjcvet8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKEztNIO5xPDPY8TZoa9d7CDNfTMNTBpuHHI6oxnQm1X3fYZpO
-	iif/dlt076wacCGoHBDMwJ1itTwb+2uLBCxGiuI+iJZF9RJMwVWiKq9CzlqjlBPp
-X-Gm-Gg: ASbGnctZjsH6fhAM5eFK2J+Ml45LwtLtnZK+pHF01yLLqz8iCKQWJureVgzXgURixfu
-	rTt8r4kXUt0HEDAKj3cheYEaVOnn2HlMxFxv3bNAHoQxUWJmY8A3V467wHT5yQCz//q53de0t4w
-	2Cr1Rn3vyA1KhWBYs4BOaVVEu9XvKqAE9c2oqWb9uPb5zIu/qZHnm3sxJuBKV/PaxOgXCciNF/Q
-	O9Xehzw8eLMwgMdf+3C309pU6lMFTciVQDJinbepmcyMZJyx8sJraDZF2AFB65DoTRzXm1Ubunk
-	9eW1sgaqwfymS1b4k07uTk6ItgNNjr8scNisWJOt/oRZKY8i5oZ1PBpYMQ63XDawVZ8Y9zsxiEH
-	AGpn7JSYrINyHRFosOpbiHWaEPyH4
-X-Google-Smtp-Source: AGHT+IGC/1CLLDimb7FZ1/m74qD3WEzlnaXd/grNcjL20rJUEnRVo7vAzMtc0GHA7q2GaIIwbyTXIQ==
-X-Received: by 2002:a05:6214:801c:b0:701:923:8980 with SMTP id 6a1803df08f44-701092389a4mr60556786d6.4.1751371702937;
-        Tue, 01 Jul 2025 05:08:22 -0700 (PDT)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd771dcd5dsm82869326d6.51.2025.07.01.05.08.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Jul 2025 05:08:22 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d412988b14so569562885a.3;
-        Tue, 01 Jul 2025 05:08:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWY3lEUEZ+xVRMs9/N32PqV8is9o4ha3ErLrTmJ6K/Zzr1RhA8EkrVy8D7GQPNApM/sgwbakGVEq2a59Hdq@vger.kernel.org, AJvYcCXPcxLP6rsW0slyAY1O4Xlei2FXDb465MA+/4luh6/nl5X0T7ALPM5TBpPmpCspxOKQ1u+bIEwELQr3MgIu9LHv9HQ=@vger.kernel.org, AJvYcCXZ0uh4S1oZPkRSkaQPaQfW37U5UfBp+k0aH1LCZzm7KFXw6yAkozT2fr94MEQIW1twISwyfORSWVrw@vger.kernel.org
-X-Received: by 2002:a05:620a:4623:b0:7d1:fc53:c6b2 with SMTP id
- af79cd13be357-7d443974577mr2478327385a.41.1751371702104; Tue, 01 Jul 2025
- 05:08:22 -0700 (PDT)
+	s=arc-20240116; t=1751371733; c=relaxed/simple;
+	bh=QhHQRHt4VQ81RUqeccFLG6YC8L9K3fNKHrFbwwLvNUo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=PB++V39Tz+SoXb1UHO+DtymuwK1Yh6F7a6Qtr5ZQkYsVfykc/7K6mOe4W9AxMZRZu7UwXgznV+TRkZe5VDa6qj1RS4kYRdbSFViRvuO3/089HElPjT+FjID2907hnu09nDK5rZNDJTp4+k6zqnjjHahCwGc5xgnZeOWVEF69IEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fp906hrx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fp906hrx"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5619oRdd008527;
+	Tue, 1 Jul 2025 12:08:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	58l8T/OOo3ZCMXUklFmgtyHY1VmXpl5dXrfeRDP8j7I=; b=Fp906hrxou7mwLeS
+	mFd4s6IwIsLo45JjzWTZM2mHs3IrhkyZvrhcfosqPMFcRYneTDE7rjj0Ccr8qJJq
+	n3vfg/67iUgT5Uo1/ZeIYUm3OghrsIdOCZB9nDr/+zCt/VTYswacwbD741OWR7R+
+	xNDd3adJdO+jc8Nl4VhB1WzAfbgasHeEKFGz3XzkqV6Ho5ZXBsKiyJOnFocLgtES
+	bffCXegvlXBByKyym5l48OmgU2G6V9XzYjNgpCrW4To5WEQRLS5b/dnvHoG4BzBH
+	fTiD+jVdHtCmoibI/nee5oHMm1LC/sJzzlF7Ft2cKd4TjlL/aXuv+Se1tL9RfCJ3
+	eoryRA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47kkfmwgdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Jul 2025 12:08:37 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 561C8aNx012429
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 1 Jul 2025 12:08:36 GMT
+Received: from [10.235.9.75] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 1 Jul
+ 2025 05:08:29 -0700
+Message-ID: <db1d07f4-f87d-403a-9ab3-bf8e5b9465b3@quicinc.com>
+Date: Tue, 1 Jul 2025 20:08:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624174033.475401-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250624174033.475401-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250624174033.475401-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Jul 2025 14:08:09 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW2fkQZf_WG5X5oOnJJiU13gw16soH+V8xyb8X2WtoiWA@mail.gmail.com>
-X-Gm-Features: Ac12FXyHp1c3fNK4d_55dLmyCa2_Rc1m0vo3vGVcYi2i-kyWjuY5jauEF4RAF3g
-Message-ID: <CAMuHMdW2fkQZf_WG5X5oOnJJiU13gw16soH+V8xyb8X2WtoiWA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] arm64: dts: renesas: r9a09g057: Add XSPI node
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Luo Jie <quic_luoj@quicinc.com>
+Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: ipq5424: Add NSS clock
+ controller node
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Georgi Djakov
+	<djakov@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Catalin
+ Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Anusha Rao
+	<quic_anusha@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
+References: <20250627-qcom_ipq5424_nsscc-v2-0-8d392f65102a@quicinc.com>
+ <20250627-qcom_ipq5424_nsscc-v2-7-8d392f65102a@quicinc.com>
+ <cd6f018d-5653-47d8-abd2-a13f780eb38f@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <cd6f018d-5653-47d8-abd2-a13f780eb38f@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 53KUHXRXMg_U-w1wGFJp9ve0aqlWp6mS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDA3NSBTYWx0ZWRfXydNpWbOOQGf1
+ Wv+siRXa/2cbh3Z8Eot4kcDX+2h6b7kX/JioCBVsghq5jUWr9KcDnW5swNqBn7tC/bCiizQf5ca
+ vQAtClfnilZtupqGfVaV10qNUocag9nSM+OqIrsY+BnxqFZhMoxb2RK3ijlo4Af5WvOsNAlkNyk
+ gx2Yqd++S5ol6Gk7G5vV0lt55rJJL6BBkVUQeGG6IselcbCmRlT2Y1VLZawJb78I1N+74wkBEEn
+ EcbGm+PxV+fzTwHfyL54oq3owHMNU09Pnr7uYJTKm+NzA5nVSkpT/d+9Qkycd1j2GKkKIPgxVUB
+ goqX4dVBlCVkYg4viZedXrBnozlZazfIbDBtrvtaUWbhlRU1R8tDm53kms2igQ8m2pz+vdUjLlx
+ RlTAuD61CHme3I6B9dxnjgYmhOuW6Mmc2VEn12Z3kZ4quTdjED7pqLDovWrEL1M0uHNBwLl9
+X-Authority-Analysis: v=2.4 cv=L9sdQ/T8 c=1 sm=1 tr=0 ts=6863cfc6 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=8K8LTxnoByzQzqUqCa4A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 53KUHXRXMg_U-w1wGFJp9ve0aqlWp6mS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 spamscore=0 phishscore=0 impostorscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507010075
 
-Hi Prabhakar,
 
-On Tue, 24 Jun 2025 at 19:40, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add XSPI node to RZ/V2H(P) ("R9A09G057") SoC DTSI.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks for your patch!
+On 6/28/2025 12:27 AM, Konrad Dybcio wrote:
+> On 6/27/25 2:09 PM, Luo Jie wrote:
+>> NSS clock controller provides the clocks and resets to the networking
+>> hardware blocks on the IPQ5424, such as PPE (Packet Process Engine) and
+>> UNIPHY (PCS) blocks.
+>>
+>> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/ipq5424.dtsi | 30 ++++++++++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>> index 2eea8a078595..eb4aa778269c 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+>> @@ -730,6 +730,36 @@ frame@f42d000 {
+>>   			};
+>>   		};
+>>   
+>> +		clock-controller@39b00000 {
+>> +			compatible = "qcom,ipq5424-nsscc";
+>> +			reg = <0 0x39b00000 0 0x800>;
+> 
+> size = 0x100_000
+> 
+> with that:
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> Konrad
 
-> --- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-> @@ -280,6 +280,29 @@ sys: system-controller@10430000 {
->                         resets = <&cpg 0x30>;
->                 };
->
-> +               xspi: spi@11030000 {
-> +                       compatible = "renesas,r9a09g057-xspi", "renesas,r9a09g047-xspi";
-> +                       reg = <0 0x11030000 0 0x10000>,
-> +                             <0 0x20000000 0 0x10000000>;
-> +                       reg-names = "regs", "dirmap";
-> +                       interrupts = <GIC_SPI 228 IRQ_TYPE_EDGE_RISING>,
-> +                                    <GIC_SPI 229 IRQ_TYPE_EDGE_RISING>;
-> +                       interrupt-names = "pulse", "err_pulse";
-> +                       clocks = <&cpg CPG_MOD 0x9f>,
-> +                                <&cpg CPG_MOD 0xa0>,
-> +                                <&cpg CPG_CORE R9A09G057_SPI_CLK_SPI>,
-> +                                <&cpg CPG_MOD 0xa1>;
-> +                       clock-names = "ahb", "axi", "spi", "spix2";
-> +                       assigned-clocks = <&cpg CPG_CORE R9A09G057_SPI_CLK_SPI>;
-> +                       assigned-clock-rates = <133333334>;
+I initially thought that a block size of 0x800 would be sufficient, as
+it covers the maximum address range needed for the clock configurations.
+However, the NSS clock controller block actually occupies an address
+range of 0x80000. I will update this to 0x80000 in the next version.
+Thank you for your feedback.
 
-Same question as [PATCH 1/4].
-
-> +                       resets = <&cpg 0xa3>, <&cpg 0xa4>;
-> +                       reset-names = "hresetn", "aresetn";
-> +                       power-domains = <&cpg>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
->                 dmac0: dma-controller@11400000 {
->                         compatible = "renesas,r9a09g057-dmac";
->                         reg = <0 0x11400000 0 0x10000>;
-
-The rest LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
