@@ -1,110 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F951A0BC5
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FB6140E34
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 02:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751337139; cv=none; b=ENKJaiGASa/N4ZfeE4LRSJDDN0XqDevEA/Yuo1uQUlyy49wDbHauI7OKUDbxtJ8s3qDl6Hm0qyO+HXu6QCB1JZjJ3c6c+t5DYG2u6zHCHJ5CyrZkMnhRLyhOaPsiPxtFCfNZObSB6dwBwr+4KDYQoAKk8MXmcuvEXrOIJD2Q/vE=
+	t=1751337461; cv=none; b=aRoaDjq4VXb4wCH7QUHSW9B+oLrrszXhXk8/HLKPVIFvDaiMr1sZUsOT/Ni4bLrx8vpeqsqOUOpIrzqx9oE2RMtTVzJACoLtUM47X3qXqDPuhQBxJhq+psGuvrZ2OwmT7W+ISfgeRvtT1aOleGoSAnw3QT5iZ4FJ2nLrWp5ifN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751337139; c=relaxed/simple;
-	bh=rRVdG5V5THof2kVFbuGpoPO6Ew/jSkC8Uar+R290sas=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rFT3sh6dhHVCATFFAH5egNI6rt2a8fET2kBKCOf11Vsty/JII4ytxHv0U1ixcQLjUehq+5gZ6Q2SytTrDFvz6GtHCo36Weo4jScqQ0omNygJjdL6ng/6wkYzRMPFpdrHiOda07CW6Q8g0E2kEEhmF63VEB6wPrufHF7NxRkh9VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B1Ug2UxX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751337461; c=relaxed/simple;
+	bh=zv8H/ueXxWC5DLY5dbZxw8M8pOFqP7G7c0K9+DxAf18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IH7BhRpYV8Bq5+ctqn52cup4Ba+sm86uRQg8PbxwntEyffY01a219orIKNeQfXTUCqIfzq85bXrmADBEeNHMvEfJ/XMF4xkL2reUZpoi0LqQwd+Ma0DXNhZgtdx4Wq6xLbvRZ+RSGV4582cyU1DR2T42BHMx2DUrNaO2G6a0djo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hpMmAtnr; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B1Ug2UxX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751337135;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rRVdG5V5THof2kVFbuGpoPO6Ew/jSkC8Uar+R290sas=;
-	b=B1Ug2UxXuxBDK6RomLCi+pF45h4AuxyNB0VRNZ2e86hWhcKagkkXZ+AyGnX44vCgfsbp2j
-	M30zpuuJyqRIlQ03SAJYCdFEMMOU42yKwZVc2raTHPB2dB2nDwr6r7pTdZ0t32lk85n0o7
-	hjsH5TzPxOj7tA75CjTjY47CBPIkhYg=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-DbIXytX8MrKFuv0Yx5x4jQ-1; Mon, 30 Jun 2025 22:32:11 -0400
-X-MC-Unique: DbIXytX8MrKFuv0Yx5x4jQ-1
-X-Mimecast-MFC-AGG-ID: DbIXytX8MrKFuv0Yx5x4jQ_1751337130
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-553addbf0beso2764195e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:32:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpMmAtnr"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235d6de331fso34014895ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Jun 2025 19:37:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751337459; x=1751942259; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HUEbK//prruDZHN241dDRLIKIkZ6TnXwENFQ7i5Q1V0=;
+        b=hpMmAtnrB/5bmy3ENTirxvGwaOdINxAkxWCC5ePaij8s/47dLRpNizimK+7gMQnslE
+         A5G/+FQ+pIjCfy8P23w9hfpPwvNOxSKzfINhiuwnOhQfdNH6MsDnEf+Um/4HwAvVRhHO
+         KIo9lhDh5gQ8ZGFV1Gvh36lXFf+8Al74XU5nAYrdW64LDSV4rR611zBL9ltsg64CUGhO
+         N67fhXlYDrJ4Rmhu+aEDyGKvrqbxXPGozaHDhf4BSeEtBLzHbVu25pHEE51mWNUQVRY1
+         Qu4F/cvrtUfWCHxoNNSStPe2yNlKUNB3qUZE4C1kC5ctghfUIZCZe/2m6XLax0RkPi91
+         cbwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751337130; x=1751941930;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rRVdG5V5THof2kVFbuGpoPO6Ew/jSkC8Uar+R290sas=;
-        b=AvDjvN+tn3FKHF17bpINWmaJAT99saxhAGwJGwqrUk36Fb6H49mPX9m3deqUH3+DI+
-         BdWB0Z4gpZa5ikNan25spZm/Woi+QzQJ4f8h5zGUcC7PIeXPGM125uszF1oEY1IO5PZb
-         3z7ubRFGUvqdaqSTbivI9DRpd3ZkLXm2vyyFxjJeQr55BvlOwUT4vb7vxoFqr3UQKOtW
-         EMu33qIUPff2AmKNVUOrS1wjX2ZvJeAacDYgu7gY+8WjiV7xIlvgkJjkgSFdMUADS28b
-         GjknbhTr7qyWeLNKYWOH6sz8UodHdu+SFCn8mK0rdl7StHJPn9/TfVhWt09LdXmA9SOX
-         LPLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC3IBv8zk1ehpp9RvXf8mDxpiErlwnENarXlIpCqcF0r4knOzh4QOnjCLuAN4PrSp1dbxqWVq7TADGa4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWEMBW8bnL7tXzDgIAVgakw1rRhTojcrz/j0OmCIk66IQdDKmR
-	V0o6O5DeiCHGug4oM/MpYp+A6OLa41bspahQWqLvJLeLTTrc9gJX/hAQZUW+QlYDUfJE1KcyPC0
-	hTKULly1P0qdgw3WLjXei9I9kVP8uPcpFAlAzAewFEq2lFaspMVJBNOmCMlP5sWw7McET7Sn/K4
-	p0/aWN90AFLm31MyYq4A5QojMuK9Myz37tcyCHyKVH
-X-Gm-Gg: ASbGncte4MtXm0vzvXUVCj81wqipkHRLfEhn9U9tL2dlBPvWAYomKL3LYdsvlJ/nhCt
-	c/iolIS5T8azRWbLTWcX/1Wn+S/eRvArX42rV77YeuKxqQVZhX56WHnTeuxsa5j9ER2vLbMOZ0Z
-	XifYBT
-X-Received: by 2002:a05:6512:3f14:b0:553:33d5:8463 with SMTP id 2adb3069b0e04-5550b85a6aemr5124502e87.24.1751337130031;
-        Mon, 30 Jun 2025 19:32:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHYxhicPvjsrYMTzNnBgN66EEIC9O090pHpKX6MSHN6FdUCZQawP5ktZNml7ohAaKF8rzbjcIZejG5Mnsuzl5U=
-X-Received: by 2002:a05:6512:3f14:b0:553:33d5:8463 with SMTP id
- 2adb3069b0e04-5550b85a6aemr5124492e87.24.1751337129620; Mon, 30 Jun 2025
- 19:32:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751337459; x=1751942259;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HUEbK//prruDZHN241dDRLIKIkZ6TnXwENFQ7i5Q1V0=;
+        b=Pac8VRNfMQumgQMEJuzYrj9+BCFBmr/SzXhYZd1HAjKkEW5o+PnKio0dmxL4bR6KjH
+         V6+LyTj1TrAllPTW+Ij6kPt+ohZ5Al5mIGCRS0DgJGeO2u7yQIIqy1Nj8SfFRoiQLtvW
+         UHHCDOtv7exAG6iBA1rv3AQsNCORy9Sm8p3dRipwdCWNiOLR+oyC2RqWeuNcTUFFhm4W
+         yxV+tyVh4uAn9xIN7b5zI4/30YhMrwwkNC5MyApoF2LGUvaN5DsLpS5t0sJBc9tjbeCV
+         sVWih30H06bsKULV8mbuoL6XKHrJfkLhqvIEnFP04jNvrKt37gS6UA3W+4tqglr8Zxn1
+         at9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXYRvnYMjuGTlcurkhbOMgw4RKszA6oikpkj4ZNQhGmP9nUuatbvZ05OnWcjEc8nIJ0XO0tD/eT/fQpwPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIRdam3YWliMH/pvPz0Da2/cd9KjhEnJ154zAIyjoi6FYsK1hM
+	UWSBO4K3rOyQ3TnDZZj3vUJNg18FjRawD30SMGCnrYORz2aICZvqTdXk
+X-Gm-Gg: ASbGnctxGGLIWt2kLb1rluSpsGNABBE5uyGUK0gMrpv0l5+eAlTL4/1h/SsQ31Brroi
+	Nzi844Q6FLajh3/nNHfDQ29UYarxsmwBqPYFQNbWeRGIhEAef/jF9SR9bf55kFGOSnkOW2oIM2Q
+	nU0KGvCpGuJK0Fhp4vz27UOLMIDu97XT2x8BkojoihfIp5rdXtl3Ae25GgQP1EeeLXQkceaFZFA
+	azYhJqNSveVn/YhA1jJfm5UCMkNa4J9fSisYhYB0PT+ilv+WbJTkq0s3SEZWeIie/TnEou7srdQ
+	RpnnvOpVgsRqHBEVsFRwcj9hCWBbqitcL5l6Gdv3mLiIjCxijyKePZKVIvLcpicauznm55RIvs5
+	RFYoQql1urznqHHSq/xK/L/V6jLq6V/gN7BrG4L5oi3Dfh3AY
+X-Google-Smtp-Source: AGHT+IHyuRcYmYE04g95LBJExejQ8LrpV+fanzEQ2/mJIcpOF7EtQio0DMLDMxrMqUaUoP91ln/zVg==
+X-Received: by 2002:a17:903:1988:b0:234:bef7:e227 with SMTP id d9443c01a7336-23ac3dec2ccmr188501485ad.18.1751337459451;
+        Mon, 30 Jun 2025 19:37:39 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:185e:4baa:85df:637])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34e31db000sm9017202a12.65.2025.06.30.19.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jun 2025 19:37:39 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: mark@fasheh.com,
+	jlbec@evilplan.org,
+	joseph.qi@linux.alibaba.com,
+	ocfs2-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Ivan Pravdin <ipravdin.official@gmail.com>,
+	syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
+Subject: [PATCH v2] ocfs2: Avoid NULL pointer dereference in dx_dir_lookup_rec()
+Date: Mon, 30 Jun 2025 22:37:17 -0400
+Message-ID: <20250701023717.543972-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-17-yukuai1@huaweicloud.com> <c76f44c0-fc61-41da-a16b-5a3510141487@redhat.com>
- <cf6d7be1-af73-216c-b2ab-b34a8890450d@huaweicloud.com> <CALTww2-RT64+twHo3=Djpuj81jArmePQShGynDrRtYab3c1i2w@mail.gmail.com>
- <93166d88-710f-c416-b009-5d57f870b152@huaweicloud.com> <CALTww2820X=HU3Zuu+z19oCaPL+oQ4bMNostoAgfDk1-3nB3aQ@mail.gmail.com>
- <ede16ca4-96ef-e8e6-45fd-1c88cddc7f4a@huaweicloud.com>
-In-Reply-To: <ede16ca4-96ef-e8e6-45fd-1c88cddc7f4a@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Tue, 1 Jul 2025 10:31:56 +0800
-X-Gm-Features: Ac12FXzhMQGjHMGlqGWC7dqp0aHNgDpMVdT7Q6bEMzZcdixQ6dP5r4Yqwzr1sd4
-Message-ID: <CALTww29r76X9C2-AEVGLqQ=BaWba8yrCCLcwkwVdO9ZhpkvWvA@mail.gmail.com>
-Subject: Re: [PATCH 16/23] md/md-llbitmap: implement bit state machine
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, johnny.chenyi@huawei.com, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 1, 2025 at 10:03=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi,
->
-> =E5=9C=A8 2025/07/01 9:55, Xiao Ni =E5=86=99=E9=81=93:
-> > If there is a filesystem and the write io returns. The discard must
-> > see the memory changes without any memory barrier apis?
->
-> It's the filesystem itself should manage free blocks, and gurantee
-> discard can only be issued to free blocks that is not used at all.
+When a directory entry is not found, ocfs2_dx_dir_lookup_rec() prints an
+error message that unconditionally dereferences the 'rec' pointer.
+However, if 'rec' is NULL, this leads to a NULL pointer dereference and
+a kernel panic.
 
-Hi Kuai
+Add an explicit check for a NULL 'rec' and use an alternate error
+message in that case to avoid unsafe access.
 
-Thanks for all the explanations and your patience.
+Reported-by: syzbot+20282c1b2184a857ac4c@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67cd7e29.050a0220.e1a89.0007.GAE@google.com/
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+---
+v1 -> v2: Changed 'Closes:' tag to point to the correct bug report.
 
-Regards
-Xiao
->
-> Thanks,
-> Kuai
->
+ fs/ocfs2/dir.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/fs/ocfs2/dir.c b/fs/ocfs2/dir.c
+index 7799f4d16ce9..dccf0349e523 100644
+--- a/fs/ocfs2/dir.c
++++ b/fs/ocfs2/dir.c
+@@ -809,11 +809,17 @@ static int ocfs2_dx_dir_lookup_rec(struct inode *inode,
+ 	}
+ 
+ 	if (!found) {
+-		ret = ocfs2_error(inode->i_sb,
+-				  "Inode %lu has bad extent record (%u, %u, 0) in btree\n",
+-				  inode->i_ino,
+-				  le32_to_cpu(rec->e_cpos),
+-				  ocfs2_rec_clusters(el, rec));
++		if (rec) {
++			ret = ocfs2_error(inode->i_sb,
++					"Inode %lu has bad extent record (%u, %u, 0) in btree\n",
++					inode->i_ino,
++					le32_to_cpu(rec->e_cpos),
++					ocfs2_rec_clusters(el, rec));
++		} else {
++			ret = ocfs2_error(inode->i_sb,
++					"Inode %lu has no extent records in btree\n",
++					inode->i_ino);
++		}
+ 		goto out;
+ 	}
+ 
+-- 
+2.45.2
 
