@@ -1,137 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C8B23B60B;
-	Tue,  1 Jul 2025 06:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47731F0E4B;
+	Tue,  1 Jul 2025 06:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751351236; cv=none; b=tuEIt+xLM7UMvKRoJfyaDQJ82mkvlDxvDOoO4NUqjnbWo3Nt/RKRIn/Am0qAqvwXoqfR8vOvx2yAJV/pIZye+sQDj1Hq36H6LZqlrUbFJGyYIG/wLTkEnf1MHrWDbtYqajC2D0Q37wgfcLGC0XzWXvhL2f4VSyqy4B/vKjfxoUA=
+	t=1751351313; cv=none; b=eYzPjPEL7o5N/1a2l3IVln9ERCIrMvhmp8YTzTk9K4ZGoUUwnCqiO/L3egtD1oLvzUqPYvmigk65dL8EbUyq9+88yVhajnuzEL9PGaakWBhP7Qu1xCrzDleAZLIRlIFXQ8EmFRw6+ihq783SKNYM7EjAPTV6GWQA3hW91gje/yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751351236; c=relaxed/simple;
-	bh=EVqZ5AXgN+Lqg5d4ako7k4AxyCn3s4HtFBq5nXm8ww4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHYRbPDn2Ab/CgdmcdxIEh7hBt/zbXk1NuSWdIs8YfIx9gj4Wdct9JkOlBDAXhulMjtZYsTAhsKDzbaWKaaz8xnh8WqySSqTbN/Gwg9Hv8ZkeN6drKDNQbNV0NFqfaSN1YnTWLKWwHXoMQtAdnbCs6tUHWATliAQpmeSLZ/tsjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2MTiFaf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751351313; c=relaxed/simple;
+	bh=2wxZIi4gIiYCNlqWQVBFfErN3PZGpEH+z0uZFe8pTVc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hJ37TorZgXxY44OZetJzEaGTgJQzRKASceq1AJIBeiVY1JD2ehmeuDmjFmT5heGrMRsLpQm/lrAdgL/9eKvDdZ1LxnagUYaRk4L6h80v0X3SOJ+fYj4BtHNlFdylwcaXjpxRvW+EPTdxtfZsCGpksURJyb4sYzLLZzdZmyQpAQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8kJ94W4; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2MTiFaf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23714C4CEEB;
-	Tue,  1 Jul 2025 06:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751351235;
-	bh=EVqZ5AXgN+Lqg5d4ako7k4AxyCn3s4HtFBq5nXm8ww4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m2MTiFafr+Bb7phzcdlc8BYCSyf2gRzghdPPMWyhLwl5KMpPhehDIwesSV+U402vW
-	 M1peJ9nnjknmCW/NF+SaoPDC+hEL6e1FEeodSiuTudcI/GptQdfQK/4T8IhiWyy4dW
-	 GVpVdPtQj9FewVwR+MwqWtKALjd4PSNmxxZgQDw7x4ppCTdXoEYLAHLME+eW/s7vXd
-	 jE9yHrH9Lkr/G+gu/CTSCQRpkIft1sOAMMOWIJCyLNpKWEPqquO47G6WX6U8cad29Y
-	 uEgL2MrINmz48RtA/sj1che6hUUa+Dl8pLhRSEllKKTwvJRRWaYoT6DitmvdeVJigO
-	 nWJn8OT293EcA==
-Date: Mon, 30 Jun 2025 23:27:12 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Levi Yun <yeoreum.yun@arm.com>, Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Matt Fleming <matt@readmodwrite.com>,
-	Veronika Molnarova <vmolnaro@redhat.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	Martin Liska <martin.liska@hey.com>,
-	Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>,
-	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 10/23] perf session: Add an env pointer for the
- current perf_env
-Message-ID: <aGN_wBXVt6YN4Itb@google.com>
-References: <20250628045017.1361563-1-irogers@google.com>
- <20250628045017.1361563-11-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8kJ94W4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751351311; x=1782887311;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=2wxZIi4gIiYCNlqWQVBFfErN3PZGpEH+z0uZFe8pTVc=;
+  b=a8kJ94W44v42gO4nx+YU1N02fsvmJzaw8uc5nMFoPDA8HZsO9uSek+Zr
+   uM2AfgwzUpAnVyZdKyMriGmIFdsIk6FC7rTMYIrNJTHLJt0LJm3hrnks7
+   vD2RGSvCxQn3knUbqanI71EU2WwJWizezwpZ7CNsdUlwbbC8o+1qtMuRD
+   XR+Lhqs8dwuB4hgBBT0T+ZuA6n6GG9aUKZYMcoW1/KkDh2z1/UlCckWu9
+   wqpBnim1YfkMSdz92eof29IWCgJuwy1NKKFxpvFFvIOKDlE2NvK/0r4LB
+   HPsUaJ9vQQcWnXtifgViPLBKRB8OgO/Gnv75XfMMWz/eD2aM0c/nIn59F
+   Q==;
+X-CSE-ConnectionGUID: vRB6oKBWTra3xuf9d+7O3w==
+X-CSE-MsgGUID: ekS3ScIGTbi+4YLxJok7eg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="65043610"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="65043610"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 23:28:30 -0700
+X-CSE-ConnectionGUID: b0z2PZPcQWiCmARapqI1rg==
+X-CSE-MsgGUID: smPg3RhPTbmyJqqZ1EgBwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="159384160"
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.239])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 23:28:26 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Ruben Wauters <rubenru09@aol.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <arlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: Ruben Wauters <rubenru09@aol.com>, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: replace DRM_DEBUG_SELFTEST with DRM_KUNIT_TEST
+In-Reply-To: <20250701025426.262129-1-rubenru09@aol.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250701025426.262129-1-rubenru09.ref@aol.com>
+ <20250701025426.262129-1-rubenru09@aol.com>
+Date: Tue, 01 Jul 2025 09:28:23 +0300
+Message-ID: <8a3ef0b42de25db3faf384260b7abdce468cb65f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250628045017.1361563-11-irogers@google.com>
+Content-Type: text/plain
 
-On Fri, Jun 27, 2025 at 09:50:04PM -0700, Ian Rogers wrote:
-> Initialize to `&header.env`. This will later allow the env value to be
-> changed.
+On Tue, 01 Jul 2025, Ruben Wauters <rubenru09@aol.com> wrote:
+> DRM_DEBUG_SELFTEST was replaced with DRM_KUNIT_TEST.
+>
+> This patch replaces the select in Kconfig.debug to use the replacement.
 
-I'm curious when it is changed.
+Why? That's the most important questions the commit messages should
+answer.
 
-Thanks,
-Namhyung
+BR,
+Jani.
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
 > ---
->  tools/perf/util/session.c | 3 ++-
->  tools/perf/util/session.h | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index b09d157f7d04..e39a1df7c044 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -156,6 +156,7 @@ struct perf_session *__perf_session__new(struct perf_data *data,
->  			     ordered_events__deliver_event, NULL);
->  
->  	perf_env__init(&session->header.env);
-> +	session->env = &session->header.env;
->  	if (data) {
->  		ret = perf_data__open(data);
->  		if (ret < 0)
-> @@ -2750,5 +2751,5 @@ int perf_session__dsos_hit_all(struct perf_session *session)
->  
->  struct perf_env *perf_session__env(struct perf_session *session)
->  {
-> -	return &session->header.env;
-> +	return session->env;
->  }
-> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-> index e7f7464b838f..088868f1004a 100644
-> --- a/tools/perf/util/session.h
-> +++ b/tools/perf/util/session.h
-> @@ -45,6 +45,8 @@ struct perf_session {
->  	struct perf_header	header;
->  	/** @machines: Machines within the session a host and 0 or more guests. */
->  	struct machines		machines;
-> +	/** @env: The perf_env being worked with, either from a data file or the host's. */
-> +	struct perf_env		*env;
->  	/** @evlist: List of evsels/events of the session. */
->  	struct evlist	*evlist;
->  	/** @auxtrace: callbacks to allow AUX area data decoding. */
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+>  drivers/gpu/drm/i915/Kconfig.debug | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/Kconfig.debug b/drivers/gpu/drm/i915/Kconfig.debug
+> index 1852e0804942..b15b1cecb3aa 100644
+> --- a/drivers/gpu/drm/i915/Kconfig.debug
+> +++ b/drivers/gpu/drm/i915/Kconfig.debug
+> @@ -50,7 +50,7 @@ config DRM_I915_DEBUG
+>  	select DRM_VGEM # used by igt/prime_vgem (dmabuf interop checks)
+>  	select DRM_DEBUG_MM if DRM=y
+>  	select DRM_EXPORT_FOR_TESTS if m
+> -	select DRM_DEBUG_SELFTEST
+> +	select DRM_KUNIT_TEST
+>  	select DMABUF_SELFTESTS
+>  	select SW_SYNC # signaling validation framework (igt/syncobj*)
+>  	select DRM_I915_WERROR
+
+-- 
+Jani Nikula, Intel
