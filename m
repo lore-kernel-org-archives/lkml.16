@@ -1,95 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7214D1DF73A
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9964221F12
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 09:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751363131; cv=none; b=ueav9tdE6T1gvjPeXgC/QyGqK4HkuH/QoGnEvK4DZ/dNtLfi71AKdwJ7HhbrZalWLX8fIdzBmfknIBh+lje0NMbuCNAtRIkEpgUHuCOrSfvZeWHRTz6Wf0eWgF0IE89jcMmGRw5jjtiGYVgxglKd+Uiq8e+fufupJWulT3WAWdE=
+	t=1751363150; cv=none; b=SOnbGUtTvgm9ZsYNKyxGEHjQ1X4EFZpFESqfyRN4O+1b119lr5oLjziTo3Bwx8xmT3lZB6T8totum9vLfGVQEsy5pzCpgXmv3e0Vrs5vs/8RbJlnWGZm7QHK4dnFb8BHxvogL/9FdQtY1jBjAdSgRN5y0d/CAI+xQ34Iqw6fI2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751363131; c=relaxed/simple;
-	bh=pVIhHa7BZghr6WPhnp4Wn0yHjQ+2eVAdSo3qe0WjfQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hZ2gPqz6Uwj9B1lToTTb7EJiJ57+VphxvCiySLkV4q/G+A9CDQMKTI1x1YH9nicrlpv90vk6TwFvATdhIgX2AlCF6JO0wiatYAVkjkh12Mf6YNN0Ccw5MOA3Bc9H+XFBgj1/3NHCA7DPA7u+tv3nsyESmtGLO4qMQsS9xD+WBNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DPXIGDOK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751363150; c=relaxed/simple;
+	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LPksNCapob9L/jlbeHhq8n4VpQUI0Mev19OVUWSyW7GVTalbhINmNUSD50PUAUlvj1eT8lAYLWst20p6xMNRvISW3j7p4YiEarpVSFXldXRJ7stiHc1GZgKWfBHPCDIR+7zuSFe2eV4IyvuvEzXFgTCcupc+Jf4FhDUeL0gFovo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=DU5BuadJ; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=jDp8C9ny; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DPXIGDOK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88ABFC4CEEB;
-	Tue,  1 Jul 2025 09:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1751363131;
-	bh=pVIhHa7BZghr6WPhnp4Wn0yHjQ+2eVAdSo3qe0WjfQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DPXIGDOKCY5VQCBVfcdtq4dHiYLiUBfIsvZ/Z4RHCvULXkAmAqPbk9cIkQC0N/8Y4
-	 tSWDkB+UU0HuytjPmwPH+11qNDnSXUWSEorXMYHzxuLtrgSLT/Tsp1UitgSeZvKYMU
-	 xisrDBMvHL6i3VEeUGN/MP1dwLcu06Q7ZmhodPU8=
-Date: Tue, 1 Jul 2025 11:45:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Nilawar, Badal" <badal.nilawar@intel.com>
-Cc: "Usyskin, Alexander" <alexander.usyskin@intel.com>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com, daniele.ceraolospurio@intel.com
-Subject: Re: [PATCH v4 02/10] mei: late_bind: add late binding component
- driver
-Message-ID: <2025070140-dad-jaywalker-0774@gregkh>
-References: <20250625170015.33912-1-badal.nilawar@intel.com>
- <20250625170015.33912-3-badal.nilawar@intel.com>
- <2025062834-scraggly-barracuda-7ea6@gregkh>
- <205cc43a-4254-4d27-9b4f-139006e871e4@intel.com>
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="DU5BuadJ";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="jDp8C9ny"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1751363144; x=1751967944;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
+	b=DU5BuadJ8RYFEdu/uevam2G6DqQZQnnf7tFi5jbIkVmFHyh87z4UqCXHLZtEn8mJEQA0sg0BB0abD
+	 +AGHpR1PHt390/AKC9kp2+SOe/DQLtVK2A8CqfFPUslOQbQzUiCc2iCWlQdINdKwGwqsui9RlEBOUn
+	 d0cPz8ZlP5zlDMpSKDfy03fHszIiSnKVa4qzsBmJriag4ycrmQYOPhF7IfQSDkgPL9GQUWKvKXGpOf
+	 5LW9Io81nXAzcxWxJonGeZlbgUhRMfq3viGftxXr9D0PJFQHw8bryyhaeGXGpT/c+LZyk73AeJu8IT
+	 /XBLMS/MNgVyQXny/9YcEInQZcuTXAQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1751363144; x=1751967944;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=ZKV49xrH1en0LN+o1bxz7jbN5/MlqIHiSsutGOWpoj4=;
+	b=jDp8C9nyUrGztV4nz223BpyGLbeqrMQor86FZHrvNtq1Onl3ZCiuOtWDgmvXZKZAho4OduZQLCSQ/
+	 BGSsLAQCA==
+X-HalOne-ID: 272f01c6-5660-11f0-8f4d-e90f2b8e16ca
+Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
+	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 272f01c6-5660-11f0-8f4d-e90f2b8e16ca;
+	Tue, 01 Jul 2025 09:45:43 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <205cc43a-4254-4d27-9b4f-139006e871e4@intel.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v9 2/4] mm/slub: allow to set node and align in
+ k[v]realloc
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <CAJ-ks9me9i-zkJcZerixEcyxQK764ubL9KQ22kM6B48du_fBig@mail.gmail.com>
+Date: Tue, 1 Jul 2025 11:45:33 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5B3F6032-1971-439F-8A4B-344B6136A4A2@konsulko.se>
+References: <20250630221511.3325123-1-vitaly.wool@konsulko.se>
+ <20250630221628.3325244-1-vitaly.wool@konsulko.se>
+ <CAJ-ks9me9i-zkJcZerixEcyxQK764ubL9KQ22kM6B48du_fBig@mail.gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-On Tue, Jul 01, 2025 at 02:02:15PM +0530, Nilawar, Badal wrote:
-> On 28-06-2025 17:48, Greg KH wrote:
-> > > + * @payload_size: size of the payload data in bytes
-> > > + * @payload: data to be sent to the firmware
-> > > + */
-> > > +struct csc_heci_late_bind_req {
-> > > +	struct mkhi_msg_hdr header;
-> > > +	u32 type;
-> > > +	u32 flags;
-> > What is the endian of these fields?  And as this crosses the
-> > kernel/hardware boundry, shouldn't these be __u32?
-> 
-> endian of these fields is little endian, all the headers are little endian. 
-> I will add comment at top.
 
-No, use the proper types if this is little endian.  Don't rely on a
-comment to catch things when it goes wrong.
 
-> On __u32 I doubt we need to do it as csc send copy it to internal buffer.
+> On Jul 1, 2025, at 1:41=E2=80=AFAM, Tamir Duberstein =
+<tamird@gmail.com> wrote:
+>=20
+> On Mon, Jun 30, 2025 at 6:16=E2=80=AFPM Vitaly Wool =
+<vitaly.wool@konsulko.se> wrote:
+>>=20
+>> Reimplement k[v]realloc_node() to be able to set node and
+>> alignment should a user need to do so. In order to do that while
+>> retaining the maximal backward compatibility, add
+>> k[v]realloc_node_align() functions and redefine the rest of API
+>> using these new ones.
+>>=20
+>> With that change we also provide the ability for the Rust part of
+>> the kernel to set node and aligmnent in its K[v]xxx
+>> [re]allocations.
+>>=20
+>> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+>=20
+> The typo (slub) snuck back in.
 
-If this crosses the kernel boundry, it needs to use the proper type.
+Bummer. ;)
 
-> > > +{
-> > > +	struct mei_cl_device *cldev;
-> > > +	struct csc_heci_late_bind_req *req = NULL;
-> > > +	struct csc_heci_late_bind_rsp rsp;
-> > > +	size_t req_size;
-> > > +	ssize_t ret;
-> > > +
-> > > +	if (!dev || !payload || !payload_size)
-> > > +		return -EINVAL;
-> > How can any of these ever happen as you control the callers of this
-> > function?
-> I will add WARN here.
+Thanks for pointing that out. I=E2=80=99ll fix it in the anniversary =
+patchset, hopefully this will be the only thing to fix.
 
-So you will end up crashing the machine and getting a CVE assigned for
-it?
-
-Please no.  If it can't happen, then don't check for it.  If it can
-happen, great, handle it properly.  Don't just give up and cause a
-system to reboot, that's a horrible way to write kernel code.
-
-thanks,
-
-greg k-h
+~Vitaly=
