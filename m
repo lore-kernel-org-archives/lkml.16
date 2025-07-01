@@ -1,190 +1,76 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99164261591
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 21:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C7230BE4;
+	Tue,  1 Jul 2025 21:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407082; cv=none; b=BKJX79gqJXSjsUse8L49znuQ/yMx1SUZYsJ0UOXuNX30mkNXtMzVKrlchEUYOA31y2GlvxyZbGpCx/OHjEo0dVIoGnieR1H1eTaLAZG4fJhxizlx46/1MhWWfrJwiMrs9zO8461IgN7vC2PfmZ7p7wNnKGYgSBKDz6vT8eO53tA=
+	t=1751407119; cv=none; b=rRJMOVGKM2Rod054dxbIt8SLwsfdo6O+DPTsy6JzhTRskc/IDEBMNYLas3E0v7InLCOcZd6VQnKkRdGuVnDezUwS/CsFn27sYJG2yq3J55eJ4E+hfqO/iCuezP+qcPGdVSctj1fODD2/ap50wg+dUaRRzjbitboY+SqZzax1O3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407082; c=relaxed/simple;
-	bh=mDm2ehfj5Q3NF8ozQa+enr7H58lNW9py2cKuCC+5zPc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P7v0FN6jsNLLWlMAWUVy9up4O7EC02UF4H3tHNI9glY1UA7hpwFcFlkmkYym+vqO5E9ezzEngjeLgPMsTm2SSSTd3rmUoi28h9+pcoYk6x8ZTrMyNowzY5EjjeVv/SA8zJ70lO7nHpAcw0TMyG7P4Wc9OnsIvgCJwRbNRlq11Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m1TEvbpk; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m1TEvbpk"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b31ca4b6a8eso3838019a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 14:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751407080; x=1752011880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DEMJ9ahJmlFLn1yESDOTbai4m4HBBaTLoX/RasSIl9E=;
-        b=m1TEvbpkgRQQf5G62WbXxu99elt38gBJSF813KPd5nZsRHb0mUbtGcuLXBRorQwZOV
-         4bGeg6sFa/F+UlFB7FSTlvqnKqkcZFm4vJId8Geq0lJh0jfyLL0RgvJ+WFqqagCIFeRK
-         2sPqnStKmzTDfuVAjzEqIFqRHaI5obMCFL9y5BqHCPixlPmV+YpJ39LfW1jsNGp9DnEq
-         E968aQtk4B4fKyH8HtKZA2uZHvJj3S0+4yNg/br19nl6lWPX0oLWUyFGZuMWpVgR4RQi
-         FRuxtJhdTEQSl6KhnBmSH4bhxuNzxQzyjFL3s+hFpNJQoFqMOthWPSsIw5HV8TJEet6a
-         EgSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751407080; x=1752011880;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DEMJ9ahJmlFLn1yESDOTbai4m4HBBaTLoX/RasSIl9E=;
-        b=HK1ydJ4V7SriIc3iJQeKDXMo+SXQypCOttRLMO+GE8caZqIg3gTzV2ZaRQdd0YeBhv
-         erYamk8E4tprVWPgNbRVkS/NHvBnHWCLuJpnhMkBPv9kmagXefWpobs8gV1lH+dNVd8L
-         3sIbOUiCXwhpX9DVcEQOJEiy7HMg7qN85afwlmVn6N917TcMyGHafX6SOrVfNITyU7k1
-         X9YujYlst4G1FEMt+fI/pWbI7wCVhCc1XkQQbr2Ui7s3LdUhfk+h7GS2JhEbo2/gDVtF
-         jxm2KY9UrH7m5KBDq4vU1zuuL019EIjaW8EYvhPFcIZRCIzZbNzlfQWrHX6HcS5jnTCk
-         Fumw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZP/YVjC2/2TiZ7p3xTV/9XoDqKSyZWpkFrjDT3FdF8JuxNovHw5uDkU3PtfaV4GARSmG8HdrgSp+pT2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyuPOhE+B9QgAr6D/nfYsp3IhFSwRY7X+XvKa48hzOyC9BrmNb
-	RzC2THWfv8HRf2RlLB8rcuOznNC6vd0MXxDl9KrEdgMu3KGBLo1lOQ7DE3D8GaDN86qunQj/I7d
-	eba+fdOjI2udqrUjYG+YHDWe0pw==
-X-Google-Smtp-Source: AGHT+IHI1rzsU+9GV8xzFMDh4yw3G10yPBB7NoB4Ea/5w0yFsZzcT9zZm65gbX0Rlw8COJlOytlTQlVzIX/NQMS3gA==
-X-Received: from pfbbx7.prod.google.com ([2002:a05:6a00:4287:b0:747:b682:5cc0])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:3948:b0:1f5:9016:3594 with SMTP id adf61e73a8af0-222d7e16281mr1203700637.18.1751407079873;
- Tue, 01 Jul 2025 14:57:59 -0700 (PDT)
-Date: Tue, 01 Jul 2025 14:57:58 -0700
-In-Reply-To: <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com>
+	s=arc-20240116; t=1751407119; c=relaxed/simple;
+	bh=Gd7h7V4tZUgx/tp/sk3Qd8v2RvWILzZB8Eff/zz4YZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V2ncaaNn8n0nMkPVVoph0EhhU9ckodnRE6cxm0+RqxdkHTR7MGsSXeGOoc4RTq03GfHCaYLhK4tcerjssaMfR2T+dO0Tr2QficiGtRdOnEFde0sGbqFMEpsCPi0HONSc6Gu1rDwdJCqQYqXmid1+VhAFcMURf7kJWcz8PIfOhR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0A9AAC0636;
+	Tue,  1 Jul 2025 21:58:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 24A4C20030;
+	Tue,  1 Jul 2025 21:58:27 +0000 (UTC)
+Date: Tue, 1 Jul 2025 17:58:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ acarmina@redhat.com, chuck.wolber@boeing.com
+Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
+Message-ID: <20250701175826.429a7b4b@batman.local.home>
+In-Reply-To: <CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
+References: <20250612104349.5047-1-gpaoloni@redhat.com>
+	<20250612104349.5047-2-gpaoloni@redhat.com>
+	<20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
+	<CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
+	<20250620183503.6c84eb22cca206cd10418c04@kernel.org>
+	<CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <a3cace55ee878fefc50c68bb2b1fa38851a67dd8.camel@intel.com>
- <diqzms9vju5j.fsf@ackerleytng-ctop.c.googlers.com> <447bae3b7f5f2439b0cb4eb77976d9be843f689b.camel@intel.com>
- <zlxgzuoqwrbuf54wfqycnuxzxz2yduqtsjinr5uq4ss7iuk2rt@qaaolzwsy6ki>
- <4cbdfd3128a6dcc67df41b47336a4479a07bf1bd.camel@intel.com>
- <diqz5xghjca4.fsf@ackerleytng-ctop.c.googlers.com> <aGJxU95VvQvQ3bj6@yzhao56-desk.sh.intel.com>
- <a40d2c0105652dfcc01169775d6852bd4729c0a3.camel@intel.com>
- <diqzms9pjaki.fsf@ackerleytng-ctop.c.googlers.com> <fe6de7e7d72d0eed6c7a8df4ebff5f79259bd008.camel@intel.com>
- <aGNrlWw1K6nkWdmg@yzhao56-desk.sh.intel.com> <cd806e9a190c6915cde16a6d411c32df133a265b.camel@intel.com>
- <diqzy0t74m61.fsf@ackerleytng-ctop.c.googlers.com>
-Message-ID: <diqzqzyz4lqx.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Du, Fan" <fan.du@intel.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
-	"x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: xsr3n6d733jgjkmmfciss1nb8euuoupd
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 24A4C20030
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+l/RQALv1HGE4aDzquDMpry/1Cchsc5q0=
+X-HE-Tag: 1751407107-332310
+X-HE-Meta: U2FsdGVkX1+ODILg/f0VuTzk7kNGIH/z+A3/7X+kaAtzbsqbVhRIGSqpb8avD5REDBlmQ2wUkIf1CAXuOJxqC1fkg8BBgLE2hNvKhsUl2lC/9O5A2g9YDHyuiLb8fespd3oqCr04jD4E0udf5smTgoBdSEvFIZuCkEuZ7PQ2q5zcOS3vOPQsdYpFLoFlzE3LqzA1ECf9zoIt1/CI2abBolG5pYQSh4ic7eanoys73bn4MUaiMDBdd310qoBoEmBTodZLWy0SMZrR9wwWfZamEiU4QiXEwm5pY0IqPWCrK7Q26rDRHQjBkVFK941/O1cP+yDeoIqu1k4dfW0hQ+vLZccqk3O0v5dI
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Fri, 20 Jun 2025 15:26:27 +0200
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
->
->> On Tue, 2025-07-01 at 13:01 +0800, Yan Zhao wrote:
->>> > Maybe Yan can clarify here. I thought the HWpoison scenario was about=
- TDX
->>> > module
->>> My thinking is to set HWPoison to private pages whenever KVM_BUG_ON() w=
-as hit
->>> in
->>> TDX. i.e., when the page is still mapped in S-EPT but the TD is bugged =
-on and
->>> about to tear down.
->>>=20
->>> So, it could be due to KVM or TDX module bugs, which retries can't help=
-.
->>
->> We were going to call back into guestmemfd for this, right? Not set it i=
-nside
->> KVM code.
->>
->
-> Perhaps we had different understandings of f/g :P
->
-> I meant that TDX module should directly set the HWpoison flag on the
-> folio (HugeTLB or 4K, guest_memfd or not), not call into guest_memfd.
->
+> I think that from my side I do not have comprehensive answers to all your
+> questions (I need to read the code more in depth).
+> So to be pragmatic I can split this effort into two parts (documentation and
+> redesign); I will propose documentation first with the TIPs that you mentioned
+> above and later, if we find a better re-design solution, we can also amend
+> the documentation as needed.
 
-Sorry, correction here, not "TDX module" but the TDX part of KVM within
-the kernel. Not the TDX module code itself. Sorry for the confusion.
+Just to confirm, I agree with Masami. The enable file is quite special,
+and I don't see the use of user space playing tricks with it, which
+even includes lseek. Maybe to keep rewinding a read to get a new status
+change?
 
-> guest_memfd will then check this flag when necessary, specifically:
->
-> * On faults, either into guest or host page tables=20
-> * When freeing the page
->     * guest_memfd will not return HugeTLB pages that are poisoned to
->       HugeTLB and just leak it
->     * 4K pages will be freed normally, because free_pages_prepare() will
->       check for HWpoison and skip freeing, from __folio_put() ->
->       free_frozen_pages() -> __free_frozen_pages() ->
->       free_pages_prepare()
-> * I believe guest_memfd doesn't need to check HWpoison on conversions [1]
->
-> [1] https://lore.kernel.org/all/diqz5xghjca4.fsf@ackerleytng-ctop.c.googl=
-ers.com/
->
->> What about a kvm_gmem_buggy_cleanup() instead of the system wide one. KV=
-M calls
->> it and then proceeds to bug the TD only from the KVM side. It's not as s=
-afe for
->> the system, because who knows what a buggy TDX module could do. But TDX =
-module
->> could also be buggy without the kernel catching wind of it.
->>
->> Having a single callback to basically bug the fd would solve the atomic =
-context
->> issue. Then guestmemfd could dump the entire fd into memory_failure() in=
-stead of
->> returning the pages. And developers could respond by fixing the bug.
->>
->
-> This could work too.
->
-> I'm in favor of buying into the HWpoison system though, since we're
-> quite sure this is fair use of HWpoison.
->
-> Are you saying kvm_gmem_buggy_cleanup() will just set the HWpoison flag
-> on the parts of the folios in trouble?
->
->> IMO maintainability needs to be balanced with efforts to minimize the fa=
-llout
->> from bugs. In the end a system that is too complex is going to have more=
- bugs
->> anyway.
->>
->>>=20
->>> > bugs. Not TDX busy errors, demote failures, etc. If there are "normal=
-"
->>> > failures,
->>> > like the ones that can be fixed with retries, then I think HWPoison i=
-s not a
->>> > good option though.
->>> >=20
->>> > > =C2=A0 there is a way to make 100%
->>> > > sure all memory becomes re-usable by the rest of the host, using
->>> > > tdx_buggy_shutdown(), wbinvd, etc?
->>>=20
->>> Not sure about this approach. When TDX module is buggy and the page is =
-still
->>> accessible to guest as private pages, even with no-more SEAMCALLs flag,=
- is it
->>> safe enough for guest_memfd/hugetlb to re-assign the page to allow
->>> simultaneous
->>> access in shared memory with potential private access from TD or TDX mo=
-dule?
->>
->> With the no more seamcall's approach it should be safe (for the system).=
- This is
->> essentially what we are doing for kexec.
+But it usually contains a single character (sometimes two) and a new
+line. It's not something that's ever been reported as an issue. I
+rather not touch it if it hasn't been reported as broken because
+there's some hypothetical use case that can see it as broken.
+
+Documenting its current behavior is perfectly fine with me.
+
+-- Steve
