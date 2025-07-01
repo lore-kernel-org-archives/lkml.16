@@ -1,121 +1,97 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF47C27E071
-	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC52C27EFF1
+	for <linux-kernel@vger.kernel.org>; Tue,  1 Jul 2025 17:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751390659; cv=none; b=OiVMXhAhNEZzGFNZpSl1wN8y3smGjON08oX/awSaBjrv6N4meOMxxgQFVMdgTo3o5WoUsxZRQ8f+Qc8/JuJJ6tUD+S3GYlouqmjVlO2xfPEhuTox/pHmWPTQ4nZ2vCZArL899LRQAkV6Kv4CioXsHhu9QglifF5g0sV2vSwTC1s=
+	t=1751390852; cv=none; b=kQGZIfFVqEH/f/ZtVDem1xlgjzqpib4jErXeUe5utvGeA1gIIKwsXwTlR+9aiyHr53nbHDcsdDjENHeeO2kiCDzGXyVpEH8OWvToXol6++FL/kc3kgzUEiXJVnp7dcnSBFlU5V2G08tNrEdnu2KfRFej8iUJ64uk0iYd3YJFxjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751390659; c=relaxed/simple;
-	bh=zXorP0aHXYEM7YGD8CdDJaNtPHdWDyvo5IePuvsVQ1I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AGPnId9JMWwCsa6NOnlPDFRlsIn+lOfqEaRUU2XBKe9W0VDYrZcZQNgL4hS01XnEs1INQXawLOBNEFN8IIoXQY4fr0GM7/WlIqWWr+MdN2QrwO5M3a61pt1i8jevZlozr2oe3bvlgnLBABC5OKcMDygn8J4gxZvy3IQ3t9B3FC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MjkQpnuI; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1751390852; c=relaxed/simple;
+	bh=hCQyShvOpRw5lxwsZbE3F4nxUON5xrMzrTJ6bOYAHTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WbC9vTJOOlYQPIu2R0uDfLJ1TaE2AghtFKY58EyGyNA9Ie10acXungcfYN+ikVG8/O6BIv0sZqviKjOUUcPQPOwel2hRcsFRQUOYAOj7PixnldWCGU683Jq3rnvx3qefqvJOSPEewo6ou+0vdA9pqyBk625lOWxwateDA7YQkXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cNwRxRpR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MjkQpnuI"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso11815a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Jul 2025 10:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751390656; x=1751995456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SQNkN/ZgyhuKuim3tffdar1QYfhVDSTf7v9swXpgSLs=;
-        b=MjkQpnuIO/8UbDJWYXVRZhRclXw4rftbwonZq/zLBbAdVbk/PiTpgGHf/PFgpgBL2F
-         R7pYG54P6tIb8S7uUF8Q1jkskTuCOPvsosf9a1esO0XanMAaOKpsLzCxtY5EdbyT3Aaf
-         hsPncFJzJXjz+B16XxjSTnykx9x24eInLz5VmmiG0zPgkDTeASXy+UrDXLEP12pJ9ZMb
-         6NIRYK+ObPJbwl53BG148MrmFWg0RGxpf9c3kYX4x2H3hslRXImvB6XG0kB6oy5jDeT3
-         8xnb2BEi9b7GSSsFRy+DWT45iBCuru/KluXoIxd301QINm6KQE5KxXUE1+CF5i81cFni
-         Hftw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751390656; x=1751995456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SQNkN/ZgyhuKuim3tffdar1QYfhVDSTf7v9swXpgSLs=;
-        b=OLH6bAVO+x7Sidf8EPaD27/SrpaJg+srUwyL1067W2zXZZqfIhAokjNGtT0I1tzTki
-         YuInSBZiugnX3y3Nwh0G2o7NawILy5wzS+qyrgm/N2ieqJBS1jFMFGyYvbWXUYYtNLdr
-         R+E7TFajyogVQUGUGwQ3jGqOZUhm0PE03zRQ89nPqrzX2K7dWnWavwmVBr9XFtvnAd/J
-         AbLWGcvEexLn66+2+hsbUz3Hgm3W7YRRfjztm9BK4KXl/xKAePNS0mFcQuMLposxUQv9
-         1WdDh8RTPQLL6IOIwfN7lvpo74ELlEG+lPY2YIqfatopGs6Rr2z/iEZ2IJyfWWiKgOQW
-         2whQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuqxw1l25ZI2JeBWPsF69q1I5b5HN/HP4CqGmmW/c3HZPTkcukBNC2Pp5CQEBiBOFHM1MfF14iSa0+4Yk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxIbi9a02wOK3+J0+kDAwTvrOBYjwqiOhuetHZ2yiwZU3XpaGg
-	OgPQICQmql77p8va1FqbY4IG/isBZvQlFub15hOTjKo/v3j2E8Q3MM+wez1J5EPvcSMGszTakgg
-	mbd2q6szGjCQBZ/ULUVnLQRD9YXwpiKTwhMNTwY+b
-X-Gm-Gg: ASbGnctkY/MwM8zWpQfpTJalnNvehsGSZw3Db1dJGc4AU/iqDJX9K3M0Od9CkhaZ/bq
-	M3HFU+i+hIVsp9LyVVCi8HEISayVX53juny6E3AdXegAidRFafxLcFPz3oHRC9Rayln+1bgvFOt
-	vXIECG7NvKcFvTnOi9s0tCn1BIRKrUCXfGGm0Y8JRON0nr//1tAkzNgTbWGxqUlkVJ9/hMT8tp
-X-Google-Smtp-Source: AGHT+IGhH9LZcfaTk04JJmUrOjkTq7VQ1GKaFo5Pj4fM5cCZrHXRkP5priFsjf6di2GqQgivM7JMchuH4R3ybVvXIQg=
-X-Received: by 2002:a05:6402:1d55:b0:607:d206:7657 with SMTP id
- 4fb4d7f45d1cf-60e4ba76fddmr30992a12.2.1751390655895; Tue, 01 Jul 2025
- 10:24:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cNwRxRpR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751390849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lLcLNVGFCtTCwwH5Vuz0JRd2+UgjBFKMxo5m9TEWhz8=;
+	b=cNwRxRpRrjWI53GWWcq4JicIxgK9pNIF74ZuG3Gc6UikW7UNCf5uWKpLppRRYVWpCss5f7
+	YV5Kau3ebLuz0mBGsaaBmFf0yENSnp8LPY7flbyGTkzmZq6Z7TWonZ0ZXRimA0jLEX8hap
+	JyOTlXbv7vx3ZgybF+fQRVcsNCdPu/o=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-117-2WSNerf1NXKFNMHmuIUwzA-1; Tue,
+ 01 Jul 2025 13:27:24 -0400
+X-MC-Unique: 2WSNerf1NXKFNMHmuIUwzA-1
+X-Mimecast-MFC-AGG-ID: 2WSNerf1NXKFNMHmuIUwzA_1751390843
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DEB8B192E8DB;
+	Tue,  1 Jul 2025 17:27:02 +0000 (UTC)
+Received: from desnesn-thinkpadp16vgen1.rmtbr.csb (unknown [10.96.134.31])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C67F31956066;
+	Tue,  1 Jul 2025 17:27:00 +0000 (UTC)
+From: Desnes Nunes <desnesn@redhat.com>
+To: laurent.pinchart@ideasonboard.com,
+	hansg@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Desnes Nunes <desnesn@redhat.com>,
+	stable@kernel.org
+Subject: [PATCH v2] media: uvcvideo: avoid variable shadowing in uvc_ctrl_cleanup_fh
+Date: Tue,  1 Jul 2025 14:25:56 -0300
+Message-ID: <20250701172556.117872-1-desnesn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250627-debugfs-rust-v8-0-c6526e413d40@google.com>
- <20250627-debugfs-rust-v8-6-c6526e413d40@google.com> <2025070148-primer-stillness-0409@gregkh>
-In-Reply-To: <2025070148-primer-stillness-0409@gregkh>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Tue, 1 Jul 2025 10:24:04 -0700
-X-Gm-Features: Ac12FXy0gxiaMyTy9WQGgYK34RtWEzDFpqk47coJhyeL-x7WameSHxw2w-MkJYs
-Message-ID: <CAGSQo00UiOUAgYODhXT9BWLW0bXoCxMzt9fV2F2aiTEOG1vwyA@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] rust: samples: Add debugfs sample
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Jul 1, 2025 at 7:03=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Jun 27, 2025 at 11:18:29PM +0000, Matthew Maurer wrote:
-> > +        // An `Arc<Mutex<usize>>` doesn't implement display, so let's =
-give explicit instructions on
-> > +        // how to print it
-> > +        let file_2 =3D sub.fmt_file(c_str!("arc_backed"), my_arc.clone=
-(), &|val, f| {
-> > +            writeln!(f, "locked value: {:#010x}", *val.lock())
-> > +        });
->
-> While cute, is this really going to be the way to describe all "custom"
-> debugfs function callbacks?  No other way to point to a function itself
-> instead?  Look at "fun" debugfs functions like qh_lines() in
-> drivers/usb/host/ehci-dbg.c that is dumping tons of data out.  Putting
-> that inline here is going to be a bit ackward :)
+This avoids a variable loop shadowing occurring between the local loop
+iterating through the uvc_entity's controls and the global one going
+through the pending async controls of the file handle
 
-Good news, function pointers are legal to pass in here as well
-already, I can add that usage to make it clear.
+Cc: stable@kernel.org
+Fixes: 10acb9101355 ("media: uvcvideo: Increase/decrease the PM counter per IOCTL")
+Signed-off-by: Desnes Nunes <desnesn@redhat.com>
+---
+ drivers/media/usb/uvc/uvc_ctrl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> So can you show an example of a "traditional" debugfs file output with
-> multiple lines that is dealing with a dynamically allocated device that
-> is associated with the module (not the static example you showed here),
-> as that's going to be the real way this is used, not with static
-> variables.
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index 44b6513c5264..532615d8484b 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -3260,7 +3260,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+ {
+ 	struct uvc_entity *entity;
+-	int i;
++	unsigned int i;
+ 
+ 	guard(mutex)(&handle->chain->ctrl_mutex);
+ 
+@@ -3268,7 +3268,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+ 		return;
+ 
+ 	list_for_each_entry(entity, &handle->chain->dev->entities, list) {
+-		for (unsigned int i = 0; i < entity->ncontrols; ++i) {
++		for (i = 0; i < entity->ncontrols; ++i) {
+ 			if (entity->controls[i].handle != handle)
+ 				continue;
+ 			uvc_ctrl_set_handle(handle, &entity->controls[i], NULL);
+-- 
+2.49.0
 
-Sure, do we want to:
-* Finish creating the driver struct early in `init`, then call dynamic
-`.create(&str)` or `.destroy(&str)` `.modify(&str)` type things on it
-in `init` to show how it would work
-* Actually wire up an input source to drive create/destroy/modify
-dynamically (e.g. I could implement a miscdevice) - if you want this
-one, do you have a preference on where I get my input signal from?
-
->
-> thanks,
->
-> greg k-h
